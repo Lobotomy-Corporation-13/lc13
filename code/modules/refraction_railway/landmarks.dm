@@ -5,12 +5,14 @@
  * room_id / section_id lets the run controller filter to the right set when
  * advancing rooms / activating wave controllers.
  *
- * The wave-extending landmarks (`/obj/effect/landmark/refraction/wave_spawn`
- * and `/obj/effect/landmark/refraction/boss_spawn`) are not defined here yet:
- * `/obj/effect/landmark/wave_spawn` lives in `wave_system.dm` at the repo root
- * and is not currently included in the DME. Once wave_system is wired into the
- * project, add the refraction subtypes here that override `Initialize()` to
- * derive a per-run `controller_id` of the form `"refraction_<run_uid>_<authored_id>"`.
+ * The wave-extending landmarks (`/obj/effect/landmark/refraction/wave_spawn`,
+ * `/obj/effect/landmark/refraction/boss_spawn`, `/wave_trigger`, `/wave_barrier`)
+ * inherit from the upstream wave_system types. They set `defer_bind = TRUE`
+ * so the upstream Initialize does NOT auto-bind them to a global controller.
+ * Instead, `SSrefraction_railway.RestampWaveLandmarks` runs after the dmm
+ * loads and stamps a per-run `controller_id` of the form
+ * `"refraction_<run_uid>_<authored_id>"`, then binds them to the refraction
+ * wave_controller subtype.
  */
 
 /obj/effect/landmark/refraction
@@ -72,3 +74,9 @@
 	if(!R)
 		return
 	R.OnRunComplete()
+
+// The wave-spawning landmarks + per-room controller live in
+// `code/modules/refraction_railway/wave_system.dm`. They are intentionally
+// independent of the W-Corp wave_system module so the two systems don't
+// share types. Refraction starts spawning programmatically (ActivateRoom on
+// the run datum), so there is no Crossed-style trigger landmark.

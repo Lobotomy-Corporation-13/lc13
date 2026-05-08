@@ -2,7 +2,7 @@
 
 A ghost-side game mode where dead/observer players spawn into a "Refraction Railway" — a series of timed combat lines (themed after Limbus Company's Refraction Railways). Each line is a sequence of mob-fight rooms loaded from a dedicated `.dmm`, traversed by a lobby of 1–N players who picked a preset E.G.O. loadout. The objective is to clear every section as fast as possible; the final time and loadout are recorded to a per-line leaderboard.
 
-This is a design document. Implementation has not started yet — see "Files to create" below for the planned layout.
+This document describes the implemented design. See the file list below for the actual layout. Maps (`.dmm`s) and concrete line subtypes are still to-do.
 
 ## Goals
 
@@ -21,7 +21,7 @@ This is a design document. Implementation has not started yet — see "Files to 
 | Loadout selector UI | `TestRangeEgoPrinter.js` + `code/game/objects/structures/test_range.dm` |
 | Ghost → body spawn | `/obj/effect/mob_spawn/human/testrange` (in `code/game/objects/structures/ghost_role_spawners.dm`) |
 | Map loading | `/obj/structure/maploader` → `load_new_z_level()` (in `ModularLobotomy/associations/machines.dm`); refraction wraps it via `SSrefraction_railway.LoadLineZ` so the assigned z is captured per lane |
-| Wave / boss spawning | `/datum/wave_controller` + landmarks (in `wave_system.dm` at repo root) |
+| Wave / boss spawning | refraction-only stack at `code/modules/refraction_railway/wave_system.dm` — controller-driven, configured by `/datum/refraction_node` (one per combat node). Inspired by the W-Corp `wave_system.dm` pattern but does **not** share types. |
 | Run-state controller | new — `/datum/refraction_run` |
 | Leaderboard persistence | `SSpersistence` (`code/controllers/subsystem/persistence.dm`) |
 
@@ -38,8 +38,10 @@ A new `SSrefraction_railway` subsystem owns active runs, line definitions, and l
   - `Initialize()` populates lines from a hardcoded list, pulls `leaderboards` and `encountered_mobs` from `SSpersistence`, populates `mob_tips` from a static hardcoded table.
   - `fire()` ticks active runs (timer increment, idle/checkpoint detection).
 - `code/modules/refraction_railway/line_datum.dm`
-  - `/datum/refraction_line` — defines: `id`, `name`, `description`, `map_path` (`.dmm`), `attribute_set_value` (e.g. `80`), `max_lobby_size`, `section_count`, `display_color`, `node_coords` (for the subway-map UI), and `sector_briefings` — a list of per-sector preview entries (see "Checkpoint room → Briefing display" below for fields).
+  - `/datum/refraction_line` — defines: `id`, `name`, `description`, `map_path` (`.dmm`), `attribute_set_value` (e.g. `80`), `max_lobby_size`, `section_count`, `display_color`, `nodes`+`edges` (for the subway-map UI), `sector_briefings` (per-sector preview entries — see "Checkpoint room → Briefing display"), and `combat_nodes` (id → `/datum/refraction_node` registry, populated by `AddNode()` in the concrete subtype's `New()`).
   - Concrete subtypes per line (one per `.dmm`).
+- `code/modules/refraction_railway/node_datum.dm`
+  - `/datum/refraction_node` — single source of truth for both the briefing card (name, description, mob list) and the spawning system (mob_stock, concurrent_max, is_boss). Vars: `id`, `landmark_id`, `name`, `description`, `mob_stock` (assoc `path => 1-player baseline count`), `concurrent_max`, `is_boss`. Lines instantiate one per combat node via `AddNode()`.
 - `code/modules/refraction_railway/run_datum.dm`
   - `/datum/refraction_run` — instance for an active run. Tracks: `line` ref, `members` (list of mobs), `current_section`, `current_room`, `loaded_z`, `elapsed_deciseconds`, `timer_paused`, `lobby_owner`, `lobby_state` (`LOBBY_OPEN` / `LOBBY_RUNNING` / `LOBBY_FINISHED`), `loadouts` (assoc `ckey` → list of paths), `original_attributes` (assoc `ckey` → list, for restoration), `last_checkpoint` (assoc `ckey` → section index), `ready_states` (assoc `ckey` → bool), `usable_ego_weapons` (list of weapon paths eligible at the line's `attribute_set_value`), `usable_ego_armor` (list of armor paths eligible at the same).
   - Procs: `AddMember`, `RemoveMember`, `StartRun`, `BuildEligibleEgoLists`, `ApplyLoadout`, `OnRoomCleared`, `OnSectionCleared`, `AdvanceRoom`, `BeginSector`, `OnMemberDeath`, `OnRunComplete`, `Cleanup`, `ApplyAttributeOverride`, `RestoreAttributes`, `ReequipLoadout`, `ScalePower(num_players)`.
@@ -49,14 +51,15 @@ A new `SSrefraction_railway` subsystem owns active runs, line definitions, and l
   - `/obj/effect/landmark/refraction/section_end` — flags end of a section; teleports party to the line's checkpoint area and pauses the timer.
   - `/obj/effect/landmark/refraction/checkpoint_spawn` — destination inside the line's checkpoint area (authored as part of each line's dmm; shared between sectors of that line).
   - `/obj/effect/landmark/refraction/finish` — final landmark; ends the run, records the score.
-  - `/obj/effect/landmark/refraction/wave_spawn` (extends `/obj/effect/landmark/wave_spawn`) — adds `room_id` so the run controller can pull only the right room's spawners. Re-uses dynamic mob picking already in `wave_system.dm`.
-  - `/obj/effect/landmark/refraction/boss_spawn` — single spawn, fires immediately on room enter.
+- `code/modules/refraction_railway/wave_system.dm`
+  - `/obj/effect/landmark/refraction/spawn` — **passive position marker** with a single `landmark_id` var. Authors drop one or many of these in the dmm; every landmark whose `landmark_id` matches a node datum's `landmark_id` becomes a valid spawn point for that node.
+  - `/datum/refraction_wave_controller` — owns all spawn state and logic. One per node, created by `SSrefraction_railway.RestampWaveLandmarks` after the dmm loads. Holds `current_stock` (live, scaled), `living_mobs`, `current_alive`, picks types via `pickweight`, picks landmarks at random from its bound list, and fires `OnRoomCleared` when the room is empty. There is **no** boss landmark subtype — `is_boss` lives on the node datum and changes scaling/cap defaults.
 - `code/modules/refraction_railway/console.dm`
   - `/obj/machinery/computer/refraction_railway_console` — the line selector. `attack_ghost()` spawns a body if needed (testrange-style flow, factored into a small helper); `ui_interact()` opens the subway-map UI. `ui_act()` handles `select_line`, `create_lobby`, `join_lobby`, `leave_lobby`, `start_run`, `view_leaderboard`.
 - `code/modules/refraction_railway/loadout_console.dm`
   - `/obj/machinery/computer/refraction_loadout` — opens the loadout selector. Mirrors `/obj/machinery/ego_printer`'s `ui_static_data()` / `ui_act()`. The catalog it sends is the run datum's **pre-filtered eligible E.G.O. list** (see "Eligible-gear filtering" below) — only items the players can actually equip at the line's `attribute_set_value`. Adds a header-panel snippet of the upcoming sector's briefing (faction / threat / damage hints). Accepts a `confirm_loadout` action with `{weapons: [path1, path2], armor: path3}`; rejects any path not in the eligible list (defense-in-depth against client tampering). On confirm: strips the player's existing E.G.O. items (typecache on `/obj/item/ego_weapon` and `/obj/item/clothing/suit/armor/ego_gear`), spawns the chosen items, force-equips via the no-delay equip path used by purchase consoles, and updates `loadouts[ckey]`. Re-confirming repeatedly is harmless.
 - `code/modules/refraction_railway/briefing.dm`
-  - `/obj/structure/refraction_briefing` — wall-mounted display in the checkpoint room. `ui_data()` reads the active run's `line.sector_briefings[current_section + 1]` and surfaces the upcoming sector's name, flavor, faction, threat range, mob silhouettes (via `SStestrange.GenerateEgoPreviewIcon`-style asset cache), suggested damage types, room count, and a boss flag for the final sector.
+  - `/obj/structure/refraction_briefing` — wall-mounted display in the checkpoint room. `ui_data()` reads the active run's `line.sector_briefings[current_section + 1]` and surfaces the upcoming sector's name, flavor, faction, mob silhouettes (via `SStestrange.GenerateEgoPreviewIcon`-style asset cache), suggested damage types, room count, and a boss flag for the final sector.
   - `/obj/machinery/computer/refraction_advance` — the "Begin Sector N" console. `ui_data()` shows the member roster with each player's ready state and equipped loadout. `ui_act()` handles `toggle_ready` (per player; rejected if the player has no confirmed loadout) and `begin_sector` (owner-only; rejected unless every member is ready). On `begin_sector`: activates the next room's wave controller, force-moves all members to that room's `player_spawn` landmark, unpauses the timer (and resets it to 0 only on the very first sector start), clears every member's `ready` flag.
 - `code/modules/refraction_railway/scaling.dm`
   - Helper procs that scale wave reserve, mob max HP, and mob damage based on lobby size. Called from `StartRun` before each room's wave activates.
@@ -72,10 +75,10 @@ A new `SSrefraction_railway` subsystem owns active runs, line definitions, and l
 ### Maps (`.dmm`)
 
 - `_maps/refraction_railway/line_1_template.dmm` — placeholder line with 2 sections of 2 rooms each AND its own checkpoint / staging area. The checkpoint area is part of the line dmm itself, not a separate file. Includes:
-  - `player_spawn` landmarks per combat room
-  - `wave_spawn` landmarks per combat room
-  - `section_end` landmarks
-  - A boss room with `boss_spawn` for the final section
+  - `player_spawn` landmarks per combat room (each set to that room's `room_id`)
+  - `/obj/effect/landmark/refraction/spawn` landmarks (one or many per node) with `landmark_id` matching the corresponding node datum's `landmark_id`
+  - `section_end` landmarks at the exit tile of each room (so crossing one ends the section)
+  - The boss room is just another node with `is_boss = TRUE` on the node datum — no special landmark subtype.
   - **Checkpoint area** (anywhere on the same z; reachable only via teleport) containing:
     - 4–6 `/obj/effect/landmark/refraction/checkpoint_spawn` turfs (player arrival points, spread out so the team doesn't pile on one tile).
     - 1 `/obj/structure/refraction_briefing` (wall display showing the upcoming sector).
@@ -124,41 +127,46 @@ When teleported into the checkpoint:
 
 #### Briefing display
 
-A wall-mounted `/obj/structure/refraction_briefing` shows the upcoming sector's preview. Its TGUI reads `line.sector_briefings[current_section + 1]` — a per-sector entry shaped like:
+A wall-mounted `/obj/structure/refraction_briefing` shows the upcoming sector's preview. Its TGUI reads two structures off the line:
+
+1. `line.sector_briefings[current_section + 1]` — per-sector header data, shaped like:
 
 ```dm
 list(
     "name"         = "Sector 2: The Liu Compound",
     "description"  = "Brief flavor text...",
     "faction"      = "Peccatulum",
-    "threat_range" = "TETH–HE",
     "damage_hints" = "Mostly RED damage",
     "is_boss"      = FALSE,
-    "nodes"        = list(
-        list(
-            "name"        = "Node 1 — Front Courtyard",
-            "description" = "Optional flavor for this node",  // optional
-            "mobs"        = list(
-                /mob/living/simple_animal/hostile/ordeal/sin_gluttony/wave,
-                /mob/living/simple_animal/hostile/ordeal/sin_sloth/wave,
-            ),
-        ),
-        list(
-            "name" = "Node 2 — Inner Hall",
-            "mobs" = list(
-                /mob/living/simple_animal/hostile/ordeal/sin_pride/noon/wave,
-            ),
-        ),
-        // ...one entry per room in the sector
-    ),
+    "node_ids"     = list("liu_courtyard", "liu_inner_hall"),
 )
 ```
 
-The UI renders the sector header (name, faction-themed color, threat range, optional damage hints) at the top, then a vertical timeline of **nodes** below it. Each node card shows the node's name, optional flavor description, and a row of mob cards — one per `mobs` entry. Each mob card has two states (unrevealed / revealed) described in the next subsection.
+2. `line.combat_nodes[node_id]` — the actual `/datum/refraction_node` for each id in `node_ids`. The datum holds the name, description, mob_stock (assoc `path => count`), `concurrent_max`, and `is_boss`. Nodes are populated by the line subtype's `New()` via `AddNode()`:
 
-The number of nodes in `nodes` should match the number of combat rooms in that sector (each `room_id` in the sector). Authoring the briefing is therefore a 1:1 reflection of the dmm's combat rooms — easy to keep in sync.
+```dm
+/datum/refraction_line/liu_compound/New()
+    . = ..()
+    AddNode("liu_courtyard", "liu_courtyard_spawns",
+        "Node 1 — Front Courtyard", "Optional flavor for this node",
+        list(
+            /mob/living/simple_animal/hostile/ordeal/sin_gluttony = 8,
+            /mob/living/simple_animal/hostile/ordeal/sin_sloth    = 4,
+        ),
+        c_max = 4)
+    AddNode("liu_inner_hall", "liu_inner_hall_spawns",
+        "Node 2 — Inner Hall", null,
+        list(/mob/living/simple_animal/hostile/ordeal/sin_pride = 1),
+        boss = TRUE)
+```
 
-If the final sector's last node is a boss encounter, the briefing renders in red and adds a "FINAL SECTOR — boss encounter" banner above the node list.
+Spawn landmarks in the dmm are matched by `landmark_id` (the second arg to `AddNode`). Drop one or many landmarks per node — the controller picks one at random per spawn.
+
+The UI renders the sector header (name, faction-themed color, optional damage hints) at the top, then a vertical timeline of node cards. Each node card shows the node's name, optional flavor description, and a row of mob cards — one per unique entry in `mob_stock`. Each mob card has two states (unrevealed / revealed) described in the next subsection.
+
+The number of node ids in `node_ids` should match the number of combat rooms in that sector. Authoring the briefing is therefore a 1:1 reflection of the dmm's combat rooms — easy to keep in sync.
+
+If the final sector's last node is a boss encounter (`is_boss = TRUE` on its `/datum/refraction_node`), the briefing renders in red and adds a "FINAL SECTOR — boss encounter" banner above the node list. Boss nodes also skip the player-count multiplier on `mob_stock`, so the authored count is honored exactly regardless of lobby size, and `concurrent_max` defaults to 1 unless overridden.
 
 #### Mob card states (unrevealed → revealed)
 
@@ -194,7 +202,7 @@ To avoid spawn-and-qdel on every briefing open, `SSrefraction_railway.mob_stats_
 
 ##### Encounter trigger
 
-`OnSectionRoomEntered(room_id)` (or the equivalent hook in `BeginSector` / `AdvanceRoom` — wherever the team is forceMove'd into a combat room) iterates the briefing entry for that room and `|=`'s every `mobs` path into each live member's `SSrefraction_railway.encountered_mobs[ckey]` set. This means: the player must actually arrive in the node — opening the briefing alone never counts.
+`MarkRoomEntered(room_id)` (called from `BeginSector` / `AdvanceRoom`, wherever the team is forceMove'd into a combat room) looks up the node via `line.combat_nodes[room_id]` and adds every key of `node.mob_stock` to each live member's `SSrefraction_railway.encountered_mobs[ckey]` set. This means: the player must actually arrive in the node — opening the briefing alone never counts.
 
 Persistence: `SSrefraction_railway.encountered_mobs` is saved via `SSpersistence` alongside the leaderboard, so a player who fought Big Bird last week sees Big Bird's full data sheet immediately the next time they preview a sector that contains it.
 
@@ -218,7 +226,7 @@ The loadout console's `ui_static_data()` reads from these cached lists, so its c
 `/obj/machinery/computer/refraction_loadout` (2-3 of them in the checkpoint room).
 
 - **Catalog**: full E.G.O. (city + non-city), weapons + armor, sourced from `SStestrange.ego_datums` — same datum list the testrange printer uses, so any E.G.O. authored anywhere in the codebase shows up automatically.
-- **UI layout**: tabs for Weapons (must select 2) and Armor (must select 1), reusing `TestRangeEgoPrinter.js`'s threat / origin / tag filter UI. Three slot indicators at the top show what's currently picked. A header panel re-surfaces the briefing's faction / threat range / damage hints so players don't have to walk back to the briefing display while picking gear.
+- **UI layout**: tabs for Weapons (must select 2) and Armor (must select 1), reusing `TestRangeEgoPrinter.js`'s threat / origin / tag filter UI. Three slot indicators at the top show what's currently picked. A header panel re-surfaces the briefing's faction / damage hints so players don't have to walk back to the briefing display while picking gear.
 - **Per-slot edits**: the UI lets players change a single slot at a time without re-confirming all three. The `confirm_loadout` action takes whichever subset changed.
 - **Confirm flow** (run datum's `ApplyLoadout(ckey, weapons, armor)`):
   1. Strip the player's current E.G.O. items by typecache (`/obj/item/ego_weapon`, `/obj/item/clothing/suit/armor/ego_gear`) and `qdel` them. (Items dropped on the floor are unaffected — only equipped/held E.G.O. is touched.)
@@ -260,11 +268,11 @@ When a member dies during combat (not in a checkpoint room), the run datum's `On
 
 ## Mob scaling (per-room)
 
-Applied at spawn time in `ScalePower(num_players)`:
+Applied at spawn time via the helpers in `code/modules/refraction_railway/scaling.dm`:
 
 - **HP multiplier**: `1 + 0.20 * (num_players − 1)` — roughly +20% per extra player.
 - **Damage multiplier**: `1 + 0.10 * (num_players − 1)` — applied to `melee_damage_lower` / `melee_damage_upper` and to ability damage where exposed via standard hooks. Mobs without those vars are out of scope for v1.
-- **Wave reserve** still uses `WAVE_MOBS_PER_PLAYER` from `wave_system.dm`.
+- **Stock multiplier**: `refraction_stock_mult(num_players) = 1 + 0.20 * (num_players − 1)` — applied to each entry of `node.mob_stock` at activation. Boss nodes (`is_boss = TRUE`) skip this multiplier.
 
 These constants live as `#define`s at the top of `scaling.dm` for easy tuning.
 
@@ -272,11 +280,11 @@ These constants live as `#define`s at the top of `scaling.dm` for easy tuning.
 
 ## Wave controller namespacing
 
-`/datum/wave_controller` registers globally in `GLOB.wave_controllers` keyed by `controller_id`. Without namespacing, multiple concurrent runs (different lines OR same-line lobbies on different lanes) and consecutive reuses of the same lane would all collide.
+Each `/datum/refraction_wave_controller` registers itself in `GLOB.refraction_wave_controllers` keyed by `id`. Without namespacing, multiple concurrent runs (different lines OR same-line lobbies on different lanes) and consecutive reuses of the same lane would all collide.
 
-The refraction landmarks (`/obj/effect/landmark/refraction/wave_spawn`, `/wave_trigger`, `/wave_barrier`) override the parent's init flow to derive a per-run `controller_id` of the form `"refraction_<run_uid>_<authored_id>"`. The re-stamping happens as part of `SSrefraction_railway.ClaimLane` (immediately after a fresh load OR when a free lane is reclaimed): the run iterates the refraction wave landmarks on its `loaded_z`, sets their `controller_id` to the namespaced form, and rebinds them to a freshly-built `wave_controller` datum. `ReleaseLane` qdels those controllers and any wave-spawned mobs so the lane is clean for the next claim. This keeps `wave_system.dm` untouched and gives each run a private namespace.
+`SSrefraction_railway.RestampWaveLandmarks` (called from `ClaimLane`) builds a fresh controller per `/datum/refraction_node` on the run's line, with `id = "refraction_<run_uid>_<node.id>"`. It then walks every `/obj/effect/landmark/refraction/spawn` on the run's `loaded_z` and binds each landmark whose `landmark_id` matches the node's `landmark_id` as a spawn point. `ReleaseLane` finds every controller whose id starts with the prior run's prefix and qdels them, which also drops their living mobs.
 
-**Reuse caveat**: `/obj/structure/wave_barrier` self-deletes on `Unlock()` in the base `wave_system.dm`. The refraction wave_barrier subtype must override `Unlock()` to become passable (e.g. `density = FALSE`) instead of qdel-ing, and `ClaimLane` re-blocks it on each claim. Otherwise a reused lane would have no barriers on its second run.
+The landmark itself is **completely passive** — it has no spawn state, no controller reference, no per-run mutation. It's just `landmark_id`. All of the lifecycle complexity lives on the controller.
 
 ---
 
@@ -360,7 +368,8 @@ If `SSpersistence` lacks a JSON helper, fall back to plain `text2file` / `file2t
 - `tgui/packages/tgui/interfaces/TestRangeEgoPrinter.js` — UI structure to clone for the loadout selector.
 - `code/game/objects/structures/ghost_role_spawners.dm` — `/obj/effect/mob_spawn/human/testrange`, `/datum/outfit/testrange_agent`. Ghost-to-body spawn pattern.
 - `ModularLobotomy/associations/machines.dm` — `/obj/structure/maploader`, `load_new_z_level` callsite. Runtime dmm load.
-- `wave_system.dm` (repo root) — wave controller, dynamic mob picking, scaling, signal hooks.
+- `code/modules/refraction_railway/wave_system.dm` — refraction-only spawner stack: controller, passive landmark, mob spawn warning effect.
+- `code/modules/refraction_railway/node_datum.dm` — `/datum/refraction_node` (node configuration: stock, concurrent_max, is_boss, landmark_id).
 - `code/datums/attributes/_attribute.dm` — `adjust_attribute_level`, `adjust_all_attribute_levels` (additive only; we snapshot + delta to set & restore).
 - `code/modules/awaymissions/corpse.dm` — `/obj/effect/mob_spawn/spawn_user_as_role`, `create()`.
 - `code/controllers/subsystem/persistence.dm` — leaderboard persistence layer.
@@ -375,7 +384,7 @@ If `SSpersistence` lacks a JSON helper, fall back to plain `text2file` / `file2t
    - Open the subway-map UI; confirm Line 1 highlights, the rest are "under construction".
    - Confirm the hub UI does **not** offer gear selection (no loadout console at the hub).
    - Create a lobby, click Start solo. Confirm: attribute override fires (check stat panel), team is teleported to the **checkpoint room**, timer is paused, hands are empty.
-   - Click the briefing display — confirm it shows the upcoming Sector 1 entry from `line.sector_briefings`, with **per-node** mob cards (not a single sector-wide pile). Each node card should reflect exactly the mobs of one combat room; node count should equal the sector's room count.
+   - Click the briefing display — confirm it shows the upcoming Sector 1 entry from `line.sector_briefings` (header data) joined with `line.combat_nodes[node_id]` (per-node datums), with **per-node** mob cards (not a single sector-wide pile). Each node card should reflect exactly the mobs of one combat room; node count should equal the length of that sector's `node_ids` list.
    - Confirm every mob card is in the **unrevealed** state on a fresh ckey (no entry in `SSrefraction_railway.encountered_mobs[your_ckey]`): pure-black silhouette, only damage type dealt + damage weakness label visible; HP, exact damage, attack speed, resistances all hidden behind `???`.
    - Begin Sector 1. Once you arrive in node 1, exit the run and re-open the briefing for Line 1 — confirm node 1's mobs are now **revealed** with the full combat-log-book-style data sheet: name, flat icon, raw HP, raw damage range, raw resistance multipliers, attack cadence in seconds, and the author-written tip from `SSrefraction_railway.mob_tips` if one is registered.
    - Restart the server with the round end having saved encounters; confirm the previously-revealed mobs are *still* revealed for that ckey on a fresh round (persistence hook works).
@@ -383,11 +392,12 @@ If `SSpersistence` lacks a JSON helper, fall back to plain `text2file` / `file2t
    - Open a loadout console; confirm the catalog is **already filtered** to only items usable at the line's `attribute_set_value` (e.g. for an 80-attr line, ALEPH-tier items requiring 100+ should not appear at all). With dev tools, try sending a `confirm_loadout` action with a path that's not in the eligible list — confirm it's rejected server-side.
    - Pick 2 weapons (one city, one non-city) + 1 armor; confirm validation rejects 1-weapon, 3-weapon, and 0-armor cases. Confirm the briefing snippet is visible in the loadout UI header.
    - Confirm the loadout, then re-confirm with a different weapon — verify the previous E.G.O. is `qdel`'d (not duplicated) and the new set is equipped.
-   - Toggle Ready, then click Begin Sector 1. Confirm: timer resets to 0 and starts ticking, team teleports to room 1's `player_spawn`, mobs spawn, mob HP/damage roughly 1.0× (solo), wave clears → 5 s delay → next room.
+   - Toggle Ready, then click Begin Sector 1. Confirm: timer resets to 0 and starts ticking, team teleports to room 1's `player_spawn`, mobs spawn at `/obj/effect/landmark/refraction/spawn` landmarks whose `landmark_id` matches the node datum, mob HP/damage roughly 1.0× (solo). The first batch is bounded by `node.concurrent_max`; replacements come in as kills happen until `node.mob_stock` is exhausted, then the room clears → 5 s delay → next room.
+   - Confirm the controller picks types weighted by remaining stock: with `mob_stock = list(/path/A = 8, /path/B = 4)`, early kills lean towards type A.
    - Drop one of your weapons before the next-room teleport; confirm re-equip on arrival.
    - Reach a `section_end`; confirm checkpoint teleport, timer pause, full heal, briefing now shows the *next* sector, ready flag was reset, and re-picking gear works without re-spawning duplicates.
-   - Reach the final boss; confirm single-mob spawn, completion teleport back, leaderboard entry, attributes restored.
-3. Open a second client, observer-spawn, join the lobby, verify scaling: HP/damage scale up roughly 1.2× / 1.1×, wave reserve scales per `WAVE_MOBS_PER_PLAYER`.
+   - Reach the final boss; confirm a single mob spawns (boss node has `is_boss = TRUE`, defaulting `concurrent_max = 1` and skipping the player-count multiplier on stock). On boss death: completion teleport back, leaderboard entry, attributes restored.
+3. Open a second client, observer-spawn, join the lobby, verify scaling: HP/damage scale up roughly 1.2× / 1.1× per the helpers in `scaling.dm`, and per-mob stock scales by `refraction_stock_mult` (1 + 0.20 × (n − 1)) — so a node with `mob_stock = list(/path = 8, /other = 4)` becomes `~10 / ~5` at 4 players.
 4. Stress: leave lobby mid-fight → confirm cleanup; lobby owner disconnects → confirm ownership transfers or the run cancels cleanly; whole run dies → confirm attributes are restored on every member.
 5. Repeat the same line twice in one round; confirm the dmm is *not* reloaded (lane reuse via `loaded_lanes`) but landmarks/wave controllers are reset (per-run namespacing should make this clean — verify the wave controller's `activated`/`triggered`/`completed` flags don't leak between runs, and the refraction wave_barrier subtype's `density` flips back on re-claim).
 6. **Concurrency check**: open lobbies of two different lines simultaneously (two ghosts, two lobbies) → `SSrefraction_railway.loaded_lanes` should have two entries with different z values, both claimed. Each run's `GetRefractionLandmarks(...)` should only return landmarks on its own `loaded_z`, never the other run's. Then start two lobbies of the SAME line back-to-back: the second should reuse the first's lane after the first cleans up; if the first is still running, the second should load a fresh lane.

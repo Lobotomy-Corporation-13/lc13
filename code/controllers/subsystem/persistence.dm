@@ -5,6 +5,8 @@
 #define FILE_ABNO_PICKS "data/abno_rates/[mode].json"
 #define FILE_CORE_SUPPRESSIONS "data/ClearedCores.json"
 #define FILE_RCE_EXPEDITION "data/RCEExpedition.json"
+#define FILE_REFRACTION_LEADERBOARDS "data/refraction_railway_leaderboards.json"
+#define FILE_REFRACTION_ENCOUNTERS "data/refraction_railway_encounters.json"
 #define ROUNDCOUNT_BUTTON_PRESSED 0
 
 #define KEEP_ROUNDS_MAP 3
@@ -258,6 +260,8 @@ SUBSYSTEM_DEF(persistence)
 	SaveScars()
 	save_custom_outfits()
 	SaveDoorToNowhereTapes()
+	SaveRefractionLeaderboards()
+	SaveRefractionEncounters()
 
 /datum/controller/subsystem/persistence/proc/GetPhotoAlbums()
 	var/album_path = file("data/photo_albums.json")
@@ -647,3 +651,53 @@ SUBSYSTEM_DEF(persistence)
 
 	fdel(json_file)
 	WRITE_FILE(json_file, json_encode(list("tapes" = tape_data)))
+
+// ---------- Refraction Railway persistence ----------
+
+/// Loads per-line leaderboards into SSrefraction_railway.leaderboards.
+/datum/controller/subsystem/persistence/proc/LoadRefractionLeaderboards()
+	if(!fexists(FILE_REFRACTION_LEADERBOARDS))
+		return
+	var/raw = file2text(FILE_REFRACTION_LEADERBOARDS)
+	if(!raw)
+		return
+	var/list/decoded = json_decode(raw)
+	if(islist(decoded))
+		SSrefraction_railway.leaderboards = decoded
+
+/// Writes the in-memory leaderboard state to disk. Called from CollectData
+/// at round end and immediately after every successful run completion.
+/datum/controller/subsystem/persistence/proc/SaveRefractionLeaderboards()
+	fdel(FILE_REFRACTION_LEADERBOARDS)
+	text2file(json_encode(SSrefraction_railway.leaderboards), FILE_REFRACTION_LEADERBOARDS)
+
+/// Loads per-ckey encountered-mob sets. Type paths serialize as strings, so
+/// we convert them back via text2path() and silently drop any stale entries
+/// (renamed/removed mob types).
+/datum/controller/subsystem/persistence/proc/LoadRefractionEncounters()
+	if(!fexists(FILE_REFRACTION_ENCOUNTERS))
+		return
+	var/raw = file2text(FILE_REFRACTION_ENCOUNTERS)
+	if(!raw)
+		return
+	var/list/decoded = json_decode(raw)
+	if(!islist(decoded))
+		return
+	var/list/converted = list()
+	for(var/ckey in decoded)
+		var/list/raw_paths = decoded[ckey]
+		if(!islist(raw_paths))
+			continue
+		var/list/paths = list()
+		for(var/path_str in raw_paths)
+			var/path = text2path(path_str)
+			if(path)
+				paths += path
+		converted[ckey] = paths
+	SSrefraction_railway.encountered_mobs = converted
+
+/// Writes the in-memory encounter set to disk. json_encode serializes type
+/// paths as strings; the load path roundtrips them via text2path.
+/datum/controller/subsystem/persistence/proc/SaveRefractionEncounters()
+	fdel(FILE_REFRACTION_ENCOUNTERS)
+	text2file(json_encode(SSrefraction_railway.encountered_mobs), FILE_REFRACTION_ENCOUNTERS)

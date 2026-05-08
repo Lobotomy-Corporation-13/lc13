@@ -348,11 +348,18 @@ GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 		"timestamp" = world.realtime,
 	)
 	SSrefraction_railway.RecordRun(line.id, entry)
-	// TODO: persist via SSpersistence.SaveRefractionLeaderboards once that's added.
+	// Save-after-write: a crash mid-round still preserves the leaderboard
+	// without waiting for SSpersistence.CollectData at round end.
+	SSpersistence.SaveRefractionLeaderboards()
 	for(var/mob/living/carbon/human/H as anything in members)
 		if(ishuman(H))
 			RestoreAttributes(H)
 	TeleportAllToHub()
+	// Release the lane BEFORE Cleanup() qdels src so the next same-line lobby
+	// can reuse it immediately.
+	if(loaded_z)
+		SSrefraction_railway.ReleaseLane(loaded_z)
+		loaded_z = 0
 	Cleanup()
 
 /datum/refraction_run/proc/OnMemberDeath(mob/source, gibbed)
@@ -404,25 +411,23 @@ GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 
 // ---------- Sector / room helpers ----------
 
-/// Returns the room_id of the first node in the given (1-based) sector.
+/// Returns the room_id (which equals the node id) of the first node in the
+/// given (1-based) sector.
 /datum/refraction_run/proc/GetFirstRoomIdInSection(section_index)
 	var/list/sector = GetSectorBriefing(section_index)
-	if(!islist(sector) || !islist(sector["nodes"]) || !length(sector["nodes"]))
+	if(!islist(sector) || !islist(sector["node_ids"]) || !length(sector["node_ids"]))
 		return ""
-	var/list/node = sector["nodes"][1]
-	return node["name"]
+	return sector["node_ids"][1]
 
 /// Returns the room_id of the next node in the same sector, or "" if last.
 /datum/refraction_run/proc/GetNextRoomIdInSection(section_index, room_id)
 	var/list/sector = GetSectorBriefing(section_index)
-	if(!islist(sector) || !islist(sector["nodes"]))
+	if(!islist(sector) || !islist(sector["node_ids"]))
 		return ""
-	var/list/nodes = sector["nodes"]
-	for(var/i in 1 to length(nodes))
-		var/list/node = nodes[i]
-		if(node["name"] == room_id && i < length(nodes))
-			var/list/next_node = nodes[i + 1]
-			return next_node["name"]
+	var/list/node_ids = sector["node_ids"]
+	for(var/i in 1 to length(node_ids))
+		if(node_ids[i] == room_id && i < length(node_ids))
+			return node_ids[i + 1]
 	return ""
 
 /datum/refraction_run/proc/GetSectorBriefing(section_index)
@@ -494,32 +499,63 @@ GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 	return
 
 /datum/refraction_run/proc/ActivateRoom(room_id)
-	// TODO: once wave_system.dm is in the DME, find the wave_controllers with
-	// id == "refraction_<run_uid>_<room_id>" and call Activate() on them.
-	return
+	if(!room_id)
+		return
+	var/wanted_id = "refraction_[run_uid]_[room_id]"
+	var/datum/refraction_wave_controller/found
+	for(var/datum/refraction_wave_controller/C as anything in GLOB.refraction_wave_controllers)
+		if(C.id != wanted_id)
+			continue
+		found = C
+		break
+	if(!found)
+		return
+	// Lane reuse: a previous run on this z may have left the controller in
+	// `completed = TRUE`. Reset before re-activating.
+	if(found.completed || found.activated)
+		found.Reset()
+	found.run_uid = run_uid
+	found.Activate(LiveMemberCount())
 
 /datum/refraction_run/proc/WipeRoomReserves(room_id)
-	// TODO: drop any lingering reserve / pending spawns for the named room
-	// to prevent stale mobs after a wipe.
-	return
+	if(!room_id)
+		return
+	var/wanted_id = "refraction_[run_uid]_[room_id]"
+	for(var/datum/refraction_wave_controller/C as anything in GLOB.refraction_wave_controllers)
+		if(C.id != wanted_id)
+			continue
+		// Drain remaining stock so no further mobs queue up, then qdel the
+		// living ones to flush the room.
+		C.current_stock.Cut()
+		C.pending_spawns = 0
+		var/list/snapshot = C.living_mobs.Copy()
+		C.living_mobs.Cut()
+		for(var/mob/M as anything in snapshot)
+			if(!QDELETED(M))
+				qdel(M)
+		return
+
+/datum/refraction_run/proc/LiveMemberCount()
+	var/count = 0
+	for(var/mob/M as anything in members)
+		if(M && M.stat != DEAD)
+			count++
+	return count
 
 /datum/refraction_run/proc/MarkRoomEntered(room_id)
-	var/list/sector = GetSectorBriefing(current_section)
-	if(!islist(sector) || !islist(sector["nodes"]))
+	var/datum/refraction_node/N = line.combat_nodes[room_id]
+	if(!istype(N))
 		return
-	var/list/nodes = sector["nodes"]
-	for(var/list/node as anything in nodes)
-		if(node["name"] != room_id)
-			continue
-		var/list/mobs = node["mobs"]
-		if(!islist(mobs))
-			return
-		var/list/live_ckeys = list()
-		for(var/mob/M as anything in members)
-			if(M.ckey && M.stat != DEAD)
-				live_ckeys += M.ckey
-		SSrefraction_railway.MarkEncountered(live_ckeys, mobs)
+	var/list/mob_paths = list()
+	for(var/path in N.mob_stock)
+		mob_paths += path
+	if(!length(mob_paths))
 		return
+	var/list/live_ckeys = list()
+	for(var/mob/M as anything in members)
+		if(M.ckey && M.stat != DEAD)
+			live_ckeys += M.ckey
+	SSrefraction_railway.MarkEncountered(live_ckeys, mob_paths)
 
 // ---------- Cleanup ----------
 
