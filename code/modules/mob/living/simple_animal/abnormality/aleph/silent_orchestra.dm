@@ -76,7 +76,7 @@
 
 /mob/living/simple_animal/hostile/abnormality/silentorchestra/proc/DamagePulse()
 	if(current_movement_num < 5)
-		for(var/mob/living/L in GLOB.mob_list)
+		for(var/mob/living/L as anything in GLOB.mob_living_list)
 			if(faction_check_mob(L))
 				continue
 
