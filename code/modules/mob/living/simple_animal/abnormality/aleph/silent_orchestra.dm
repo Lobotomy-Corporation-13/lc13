@@ -159,8 +159,8 @@
 					if(listener.z == z && listener.stat != DEAD)
 						listener.client?.give_award(/datum/award/achievement/abno/orchestra_listener, listener)
 
-				for(var/mob/living/carbon/human/H in GLOB.mob_list)
-					if(H.z!=z)
+				for(var/mob/living/carbon/human/H as anything in GLOB.human_list)
+					if(H.z != z)
 						continue
 					if(H.sanity_lost || (H.sanityhealth < H.maxSanity * 0.5))
 						var/obj/item/bodypart/head/head = H.get_bodypart("head")
