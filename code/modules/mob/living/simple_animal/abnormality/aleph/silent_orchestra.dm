@@ -81,10 +81,9 @@
 				continue
 
 			//Man. This is for simplemobs
-			if(ishuman(L))
-				if(L.z != z)
-					continue
-				L.deal_damage(symphony_damage, WHITE_DAMAGE, src, flags = (DAMAGE_FORCED | DAMAGE_UNTRACKABLE))
+			if(!ishuman(L))
+				if(L.z == z)
+					L.deal_damage(symphony_damage, WHITE_DAMAGE, src, flags = (DAMAGE_FORCED | DAMAGE_UNTRACKABLE))
 				continue
 
 			var/mob/living/carbon/human/H = L
