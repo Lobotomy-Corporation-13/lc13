@@ -188,8 +188,8 @@
 	return
 
 /mob/living/simple_animal/hostile/abnormality/silentorchestra/Destroy()
-	..()
 	on_z = null
+	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/silentorchestra/SuccessEffect(mob/living/carbon/human/user, work_type, pe)
 	. = ..()
