@@ -90,6 +90,9 @@
 			if(H.z != z)
 				//Kill them if they change Z levels.
 				if(H in on_z)
+					if(H.stat == DEAD)	//They can't live without a head, so if we got here, they're dead.
+						continue
+
 					to_chat(H, span_boldwarning("The performance is not over!"))
 
 					//Just blow their fucking head off.
@@ -188,8 +191,8 @@
 	return
 
 /mob/living/simple_animal/hostile/abnormality/silentorchestra/Destroy()
+	..()
 	on_z = null
-	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/silentorchestra/SuccessEffect(mob/living/carbon/human/user, work_type, pe)
 	. = ..()
