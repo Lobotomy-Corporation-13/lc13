@@ -144,7 +144,7 @@
 		//Lower your stats by 2 for each phase change.
 		//This is the replacement for it eating your PE.
 		if(current_movement_num > 1)	//Okay maybe you shouldn't lose stats immediately.
-			for(var/mob/living/carbon/human/H in GLOB.mob_list)
+			for(var/mob/living/carbon/human/H as anything in GLOB.human_list)
 				if(H.z != z)
 					continue
 				if(!HAS_TRAIT(H, TRAIT_WORK_FORBIDDEN))
