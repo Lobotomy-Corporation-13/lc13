@@ -101,7 +101,13 @@
 				new /obj/effect/titania_aoe(get_turf(getting_shelled))
 
 			if(2)
-				for(var/i in 1 to 7)
+				for(var/i in 1 to 3)//Make them start to run
+					new /obj/effect/titania_small(get_turf(getting_shelled))
+					SLEEP_CHECK_DEATH(2)
+
+				SLEEP_CHECK_DEATH(7)
+
+				for(var/i in 1 to 5)//Then make them suffer
 					new /obj/effect/titania_small(get_turf(getting_shelled))
 					SLEEP_CHECK_DEATH(2)
 
