@@ -176,7 +176,6 @@
 	var/dash_cooldown = 0
 	var/dash_cooldown_time = 4 SECONDS
 	var/charge_progress = 0
-	var/soullink = "Thunder Warrior"
 
 /mob/living/simple_animal/hostile/ordeal/thunderbird_corrosion/Moved(atom/OldLoc, Dir, Forced = FALSE)
 	. = ..()
@@ -184,10 +183,6 @@
 	if(charge_progress >= 10)
 		charge_progress = 0
 		AdjustCharge(1)
-
-/mob/living/simple_animal/hostile/ordeal/thunderbird_corrosion/Initialize()
-	. = ..()
-	AddElement(/datum/element/soul_link,soullink)
 
 /mob/living/simple_animal/hostile/ordeal/thunderbird_corrosion/Destroy()
 	QDEL_NULL(current_beam)
@@ -261,9 +256,7 @@
 		C.name = "[H.real_name]"//applies the target's name and adds the name to its description
 		C.desc = "What appears to be [H.real_name], only charred and screaming incoherently..."
 		C.gender = H.gender
-		if(soullink)
-			C.LinkSoul(soullink)
-		C.faction = faction.Copy()
+		C.LinkSoul(src)
 		H.gib(TRUE,TRUE,TRUE)
 
 /mob/living/simple_animal/hostile/ordeal/KHz_corrosion
@@ -422,7 +415,6 @@
 		)
 	AddComponent(/datum/component/ai_leadership, units_to_add, 8, TRUE)
 	lightning_aoe_cooldown = (world.time + 10 SECONDS) // No instant charge, that would be bad.
-	AddElement(/datum/element/soul_link,soullink)
 
 /mob/living/simple_animal/hostile/ordeal/thunderbird_corrosion_boss/Life()
 	. = ..()
@@ -498,7 +490,7 @@
 	if(!current_bolts && prob(75))
 		return
 	var/obj/effect/thunderbolt/big/E = new(get_turf(L.loc))
-	E.soullink = soullink
+	E.creator = src
 	current_bolts -= 1
 
 /obj/effect/thunderbolt/big

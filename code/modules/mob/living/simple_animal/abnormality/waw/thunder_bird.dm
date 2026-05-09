@@ -92,17 +92,9 @@
 
 	var/obj/effect/proc_holder/ability/aimed/dash/thunderbird/ourdash
 
-	/*
-	* Thunderbird has a issue with second generation zombies due to
-	* how its coded. So im going to LINK its soul to the zombies.
-	* When Thunderbird dies, the zombies have their souls exploded. -IP
-	*/
-	var/soullink = "thunderbird"
-
 /mob/living/simple_animal/hostile/abnormality/thunder_bird/Initialize()
 	.  = ..()
 	ourdash = new()
-	AddElement(/datum/element/soul_link,soullink)
 
 /*---Simple Mob Procs---*/
 /mob/living/simple_animal/hostile/abnormality/thunder_bird/PostSpawn()
@@ -222,14 +214,18 @@
 //thunderbolts
 /mob/living/simple_animal/hostile/abnormality/thunder_bird/proc/fireshell()
 	fire_cooldown = world.time + fire_cooldown_time
+	var/list/hit_turfs = list()
 	for(var/mob/living/carbon/human/L in range(fireball_range, src))
 		if(faction_check_mob(L, FALSE))
 			continue
-		if (targetAmount <= 2)
+		var/turf_tag = "[L.x],[L.y]"
+		if(turf_tag in hit_turfs)
+			continue
+		if(targetAmount <= 2)
 			++targetAmount
 			var/obj/effect/thunderbolt/E = new(get_turf(L.loc))//do this for the # of targets + 1
-			E.faction = faction.Copy()
-			E.soullink = soullink
+			E.creator = src
+			hit_turfs = turf_tag
 	targetAmount = 0
 
 //thunderbolt objects
@@ -244,15 +240,17 @@
 	movement_type = PHASING | FLYING
 	var/boom_damage = 50
 	layer = POINT_LAYER	//Sprite should always be visible
-	var/datum/weakref/master_memory
 	var/duration = 3 SECONDS
 	var/range = 1
-	var/soullink
-	var/list/faction = list("hostile")
+	var/mob/living/creator
 
 /obj/effect/thunderbolt/Initialize()
 	. = ..()
 	addtimer(CALLBACK(src, PROC_REF(Explode)), duration)
+
+/obj/effect/thunderbolt/Destroy()
+	creator = null
+	return ..()
 
 //Zombie conversion through lightning bombs
 /obj/effect/thunderbolt/proc/Convert(mob/living/carbon/human/H)
@@ -260,13 +258,12 @@
 		return
 	playsound(get_turf(src), 'sound/abnormalities/thunderbird/tbird_zombify.ogg', 45, FALSE, 5)
 	var/mob/living/simple_animal/hostile/thunder_zombie/C = new(get_turf(H))
-	if(soullink)
-		C.LinkSoul(soullink)
+	if(creator)
+		C.LinkSoul(creator)
 	if(!QDELETED(H))
 		C.name = "[H.real_name]"//applies the target's name and adds the name to its description
 		C.desc = "What appears to be [H.real_name], only charred and screaming incoherently..."
 		C.gender = H.gender
-		C.faction = faction.Copy()
 		H.gib(TRUE,TRUE,TRUE)
 
 //Smaller Scorched Girl bomb
@@ -318,7 +315,7 @@
 	density = TRUE
 	guaranteed_butcher_results = list(/obj/item/food/badrecipe = 1)
 	var/ressurection_cooldown = 0
-	var/soullink
+	var/mob/living/master
 
 //Zombie conversion from zombie kills
 /mob/living/simple_animal/hostile/thunder_zombie/AttackingTarget(atom/attacked_target)
@@ -342,7 +339,7 @@
 /mob/living/simple_animal/hostile/thunder_zombie/Life()
 	. = ..()
 	if(!.) // Dead
-		if(ressurection_cooldown <= world.time)
+		if(ressurection_cooldown <= world.time && master)
 			resurrect()
 		return FALSE
 	if(status_flags & GODMODE)
@@ -352,6 +349,12 @@
 /mob/living/simple_animal/hostile/thunder_zombie/death(gibbed)
 	if(!gibbed)
 		ressurection_cooldown = world.time + (30 SECONDS)
+	return ..()
+
+/mob/living/simple_animal/hostile/thunder_zombie/Destroy()
+	if(master)
+		UnregisterSignal(master, list(COMSIG_PARENT_QDELETING))
+	master = null
 	return ..()
 
 /mob/living/simple_animal/hostile/thunder_zombie/proc/resurrect()
@@ -378,19 +381,28 @@
 		if(!H.real_name)
 			return FALSE
 		var/mob/living/simple_animal/hostile/thunder_zombie/C = new(get_turf(src))
-		if(soullink)
-			C.LinkSoul(soullink)
+		if(master)
+			C.LinkSoul(master)
 		C.name = "[H.real_name]"//applies the target's name and adds the name to its description
 		C.desc = "What appears to be [H.real_name], only charred and screaming incoherently..."
-		C.faction = faction.Copy()
 		C.gender = H.gender
 		H.gib(TRUE,TRUE,TRUE)
 	can_act = TRUE
 
 /mob/living/simple_animal/hostile/thunder_zombie/proc/LinkSoul(new_link)
-	soullink = new_link
-	if(soullink)
-		AddElement(/datum/element/soul_link,null,soullink)
+	if(!new_link)
+		return
+	master = new_link
+	RegisterSignal(new_link, list(COMSIG_PARENT_QDELETING), PROC_REF(ShatterSoul))
+	if(isliving(new_link))
+		var/mob/living/L = new_link
+		faction = L.faction.Copy()
+
+/mob/living/simple_animal/hostile/thunder_zombie/proc/ShatterSoul()
+	if(master)
+		UnregisterSignal(master, list(COMSIG_PARENT_QDELETING))
+	master = null
+	dust(TRUE,TRUE,TRUE)
 
 //The perch
 /obj/structure/tbird_perch
