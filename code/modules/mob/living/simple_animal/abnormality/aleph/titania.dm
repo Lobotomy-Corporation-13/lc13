@@ -84,13 +84,16 @@
 		adjustBruteLoss(-(maxHealth))
 	if(IsContained())
 		return
-	if(prob(10))
+	if(prob(30))
 		var/mob/living/getting_shelled
 		var/list/players_near = list()
 
 		for(var/mob/living/carbon/human/H in view(5, src))
 			players_near |= H
 
+		//Got no players :(
+		if(!length(players_near))
+			return
 		getting_shelled = pick(players_near)
 
 		switch(rand(1,2))
@@ -98,7 +101,7 @@
 				new /obj/effect/titania_aoe(get_turf(getting_shelled))
 
 			if(2)
-				for(var/i in 1 to 5)
+				for(var/i in 1 to 7)
 					new /obj/effect/titania_small(get_turf(getting_shelled))
 					SLEEP_CHECK_DEATH(2)
 
@@ -355,10 +358,12 @@
 
 /obj/effect/titania_aoe/Initialize()
 	. = ..()
-	addtimer(CALLBACK(src, PROC_REF(explode)), lifetime SECONDS)
+	addtimer(CALLBACK(src, PROC_REF(explode)), lifetime)
 
 /obj/effect/titania_aoe/proc/explode()
 	playsound(get_turf(src), 'sound/magic/magic_missile.ogg', 50, 0, 8)
+	for(var/turf/T in range(2, src))
+		new /obj/effect/temp_visual/pale_eye_attack(T)
 	for(var/mob/living/L in view(2, src))
 		L.deal_damage(boom_damage, WHITE_DAMAGE, src, flags = (DAMAGE_FORCED | DAMAGE_UNTRACKABLE), attack_type = (ATTACK_TYPE_SPECIAL))
 	qdel(src)
@@ -383,6 +388,7 @@
 
 /obj/effect/titania_small/proc/explode()
 	playsound(get_turf(src), 'sound/magic/blind.ogg', 50, 0, 8)
+	new /obj/effect/temp_visual/pale_eye_attack(get_turf(src))
 	for(var/mob/living/L in get_turf(src))
 		L.deal_damage(boom_damage, WHITE_DAMAGE, src, flags = (DAMAGE_FORCED | DAMAGE_UNTRACKABLE), attack_type = (ATTACK_TYPE_SPECIAL))
 		L.apply_lc_white_fragile(3)
