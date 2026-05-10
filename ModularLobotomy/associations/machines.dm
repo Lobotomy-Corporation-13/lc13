@@ -260,7 +260,7 @@
 	resistance_flags = INDESTRUCTIBLE
 
 /obj/structure/timelock/Initialize()
-	..()
+	. = ..()
 	if(SSmaptype.maptype in list("city", "fixers"))
 		new /obj/machinery/scanner_gate/officescanner (get_turf(src))
 	addtimer(CALLBACK(src, PROC_REF(die)), 15 MINUTES)
