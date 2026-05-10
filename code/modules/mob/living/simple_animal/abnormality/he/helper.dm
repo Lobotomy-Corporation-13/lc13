@@ -117,7 +117,7 @@
 	if(dash_cooldown <= world.time && prob(10) && !client)
 		helper_dash(attacked_target)
 		return
-	else(if(prob(20))
+	else if(prob(20))
 		spin_start()
 		return
 	return ..()
