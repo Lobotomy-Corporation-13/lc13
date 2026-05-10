@@ -50,6 +50,8 @@
 	var/petals_next_time = 5 SECONDS
 	/// Amount of white damage done to everyone in view by the attack
 	var/pulse_damage = 180
+	/// Chance of you breaching on a good
+	var/good_breach = 60
 
 	ego_list = list(
 		/datum/ego_datum/weapon/aroma,
@@ -83,10 +85,12 @@
 		if(petals_current >= 3) // Attack
 			petals_current = 0
 			playsound(src, 'sound/abnormalities/alriune/damage.ogg', 75, TRUE, 12)
+
 			// Attack visual effect, so to speak
 			for(var/turf/T in view(7, get_turf(src)))
 				animate(T, color = COLOR_PINK, time = 2)
 				addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(SetColorOverTime), T, initial(T.color), (2 SECONDS)), 4)
+
 			for(var/mob/living/L in livinginview(7, get_turf(src)))
 				if(faction_check_mob(L))
 					continue
@@ -102,6 +106,7 @@
 							icon('ModularLobotomy/_Lobotomyicons/tegu_effects.dmi', "alriune_kill")), 5)
 						playsound(H, 'sound/abnormalities/alriune/kill.ogg', 75, TRUE)
 						H.death()
+
 			petals_next = world.time + (petals_next_time * 2)
 			addtimer(CALLBACK(src, PROC_REF(TeleportAway)), 2 SECONDS)
 		else
@@ -140,8 +145,14 @@
 /* Work stuff */
 /mob/living/simple_animal/hostile/abnormality/alriune/SuccessEffect(mob/living/carbon/human/user, work_type, pe)
 	. = ..()
-	if(prob(33))
+	if(prob(good_breach))
 		datum_reference.qliphoth_change(-1)
+	return
+
+/mob/living/simple_animal/hostile/abnormality/alriune/NeutralEffect(mob/living/carbon/human/user, work_type, pe)
+	. = ..()
+	good_breach -= pe
+	good_breach = max(0, good_breach)
 	return
 
 /mob/living/simple_animal/hostile/abnormality/alriune/FailureEffect(mob/living/carbon/human/user, work_type, pe)
@@ -158,3 +169,30 @@
 	icon_state = "alriune_active"
 	return
 
+
+
+/*  */
+#define STATUS_EFFECT_LCBURN /datum/status_effect/stacking/lc_burn
+/datum/status_effect/stacking/lc_burn
+	id = "lc_burn"
+	alert_type = /atom/movable/screen/alert/status_effect/lc_burn
+	max_stacks = 50
+	tick_interval = 5 SECONDS
+	consumed_on_threshold = FALSE
+	var/new_stack = FALSE
+	var/safety = TRUE
+	var/extinguishable = TRUE
+
+/atom/movable/screen/alert/status_effect/lc_burn
+	name = "Burning"
+	desc = "You're on fire!"
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
+	icon_state = "lc_burn"
+
+/datum/status_effect/stacking/lc_burn/on_apply()
+	. = ..()
+	if(extinguishable)
+		RegisterSignal(owner, COMSIG_LIVING_EXTINGUISHED, PROC_REF(Extinguished))
+
+/datum/status_effect/stacking/lc_burn/can_have_status()
+	return (owner.stat != DEAD || !(owner.status_flags & GODMODE))
