@@ -183,7 +183,8 @@
 	abno_type = /mob/living/simple_animal/hostile/abnormality/alriune
 	abno_code = "T-04-53"
 	abno_info = list(
-		"When the work result was Good, the Qliphoth Counter lowered with a normal probability.",
+		"When the work result was Good, the Qliphoth Counter lowered with a High probability.",
+		"However, this chance was reduced with each Normal work achieved.",
 		"When the work result was Bad, the Qliphoth Counter lowered.",
 		"Any employee who panicked from Alriune’s attacks died insantly.")
 	abno_breach_damage_type = "White"
