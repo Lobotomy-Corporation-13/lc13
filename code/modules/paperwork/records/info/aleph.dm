@@ -75,9 +75,10 @@
 	abno_type = /mob/living/simple_animal/hostile/abnormality/staining_rose
 	abno_code = "F-04-116"
 	abno_info = list(
-		"The first employee who works on Staining Rose will resonate with it and become the Chosen.",
-		"If anyone other than the Chosen worked on Staining Rose, they became more vulnerable to damage until Staining Rose wilted.",
+		"The first employee who works Repression on Staining Rose will resonate with it and become the Chosen.",
+		"If anyone other than the Chosen worked Repression on Staining Rose, they became more vulnerable to damage, and gained more damage until Staining Rose wilted.",
 		"When an employee with Justice 4 or lower finished their work, Staining Rose seemed to reset its satisfaction. The employee became more vulnerable to damage until Staining Rose wilted.",
+		"However, this increased the time between breaches, and when the effects wore off, the employee seemed to be stronger.",
 		"Every 15 minutes, the Qliphoth Counter lowered unless Staining Rose was worked on within the time period.",
 		"When the Qliphoth Counter reached 0, Staining Rose shed its petals, and everyone in the facility became more vulnerable to damage.")
 
