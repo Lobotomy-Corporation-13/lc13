@@ -27,8 +27,7 @@
 	// Resistances similar to Dulcinea
 	damage_coeff = list(BRUTE = 1, RED_DAMAGE = 0.6, WHITE_DAMAGE = 1.2, BLACK_DAMAGE = 0.6, PALE_DAMAGE = 1.2)
 	ranged = TRUE
-	/// Whether Sancho can currently act
-	var/can_act = TRUE
+	can_act = TRUE
 	// Topple/Wound Attack (Skill 1)
 	/// Cooldown tracker for Topple/Wound
 	var/topple_cooldown = 0

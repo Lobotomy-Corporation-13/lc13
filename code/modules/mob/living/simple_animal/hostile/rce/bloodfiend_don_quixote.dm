@@ -490,8 +490,7 @@
 	boss_death_signal = COMSIG_GLOB_BLOODFIEND_DONQUIXOTE_DIED
 	damage_coeff = list(BRUTE = 1, RED_DAMAGE = 0.8, WHITE_DAMAGE = 0.9, BLACK_DAMAGE = 0.8, PALE_DAMAGE = 1.3)
 	ranged = TRUE
-	/// Whether Don Quixote can currently act
-	var/can_act = FALSE
+	can_act = FALSE
 	/// Whether Don Quixote has landed from spawn animation
 	var/landed = FALSE
 	// Line Mark Attack (Skill 1)

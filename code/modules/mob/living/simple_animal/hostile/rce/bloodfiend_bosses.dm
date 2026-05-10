@@ -154,8 +154,7 @@
 	boss_death_signal = COMSIG_GLOB_BLOODFIEND_BARBER_DIED
 	damage_coeff = list(BRUTE = 1, RED_DAMAGE = 1.2, WHITE_DAMAGE = 0.5, BLACK_DAMAGE = 0.9, PALE_DAMAGE = 1.1)
 	ranged = TRUE
-	/// Whether the barber can currently act
-	var/can_act = TRUE
+	can_act = TRUE
 	/// Base icon state (normal)
 	var/icon_base = "nicolina_base"
 	/// Buffed icon state (50%+ bloodfeast)
@@ -606,8 +605,7 @@
 	ranged = TRUE
 	retreat_distance = 0
 	minimum_distance = 0
-	/// Whether the priest can currently act
-	var/can_act = TRUE
+	can_act = TRUE
 	/// Self-harm damage before each attack
 	var/self_harm_damage = 35
 	/// Whip attack range
@@ -866,8 +864,7 @@
 	bleed_stacks = 6
 	boss_death_signal = COMSIG_GLOB_BLOODFIEND_DULCINEA_DIED
 	damage_coeff = list(BRUTE = 1, RED_DAMAGE = 0.6, WHITE_DAMAGE = 1.2, BLACK_DAMAGE = 0.6, PALE_DAMAGE = 1.2)
-	/// Whether Dulcinea can currently act
-	var/can_act = TRUE
+	can_act = TRUE
 	/// List of spawned units
 	var/list/spawned_units = list()
 	/// List of bodyguard units
