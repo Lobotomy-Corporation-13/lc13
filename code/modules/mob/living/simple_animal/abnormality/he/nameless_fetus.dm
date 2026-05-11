@@ -104,7 +104,7 @@
 	var/list/qliphoth_abnos = list()
 	for(var/mob/living/simple_animal/hostile/abnormality/V in GLOB.abnormality_mob_list)
 		if(V.IsContained())
-			if((initial(abno.threat_level)) <= HE_LEVEL)
+			if((initial(V.threat_level)) <= HE_LEVEL)
 				qliphoth_abnos += V
 
 	if(LAZYLEN(qliphoth_abnos))
