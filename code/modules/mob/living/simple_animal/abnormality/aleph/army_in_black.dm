@@ -62,7 +62,6 @@ GLOBAL_LIST_EMPTY(army)
 			Yours is rife with sin. <br>Ours are...\" <br>The soldier falls silent, as if in deep thought."),
 		"Salute him back" = list(FALSE, "The soldier in pink smiles. <br>\"Glad to have you on board Sir, with our help, there will be no more black hearts.\""),
 	)
-	being_tested = TRUE // REMOVE BEFORE MERGE !!!!!!!!!!!!!!
 
 	//Unique variables
 	var/death_counter = 0

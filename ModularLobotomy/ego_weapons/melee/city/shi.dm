@@ -204,7 +204,7 @@ Arrows will never be deleted when used (unless something goes horribly wrong), t
 	name = "shi association bowblade"
 	desc = "A great blade which is also strung with a tense, red bowstring. This is a stealthy hybrid weapon used by the Shi Association's eastern branch, able to puncture distant targets and cleave through nearby ones. \n\
 	It feels ominous to look at."
-	special = "This weapon functions as a hybrid melee-ranged weapon. When unloaded, use as a common melee weapon. To load this weapon, hit it with a Shi East Arrow. You will be slowed if moving with a loaded arrow. To unload, alt-click. \n\
+	special = "This weapon functions as a hybrid melee-ranged weapon. When unloaded, use as a common melee weapon. To load this weapon, hit it with a Shi East Arrow, or use the arrow in-hand while the bowblade is in your other hand. You will be slowed if moving with a loaded arrow. To unload, alt-click. \n\
 	After loading, you may fire the weapon. Normal shots will be ineffective - you must gain and stack the \"Target Aim\" status effect to unlock the full potential of this weapon. Do this by using the weapon in-hand with a loaded arrow - melee strikes will also stack it to a lower maximum."
 
 	lefthand_file = 'ModularLobotomy/_Lobotomyicons/shi_east_held_left_64x64.dmi'
@@ -552,7 +552,7 @@ Arrows will never be deleted when used (unless something goes horribly wrong), t
 
 	// Telegraph, and do a do_after to see if we can successfully hit the target.
 	GlimmerTelegraph(target, glimmer_windup)
-	if(!do_after(user, glimmer_windup, target, timed_action_flags = IGNORE_TARGET_LOC_CHANGE, interaction_key = "shi_east_glimmer", max_interact_count = 1))
+	if(!do_after(user, glimmer_windup, target, timed_action_flags = IGNORE_TARGET_LOC_CHANGE, extra_checks = CALLBACK(src, PROC_REF(GlimmerChecks), user, target), interaction_key = "shi_east_glimmer", max_interact_count = 1))
 		CleanupGlimmerTelegraph()
 		return
 
@@ -588,9 +588,18 @@ Arrows will never be deleted when used (unless something goes horribly wrong), t
 	UnloadArrow(user, SHI_EAST_UNLOAD_FIRED_SHOT)
 	user.remove_status_effect(/datum/status_effect/stacking/shi_east_target_aim)
 
+/obj/item/ego_weapon/ranged/city/shi_east/proc/GlimmerChecks(mob/living/user, mob/living/target)
+	if(can_see(user, target, 20))
+		return TRUE
+	if(user in view(20, target))
+		return TRUE
+	return FALSE
+
 /obj/item/ego_weapon/ranged/city/shi_east/proc/GlimmerHit(mob/living/target, mob/living/carbon/human/user, obj/item/shi_east_arrow/arrow, angle)
 	if(!istype(target) || !user || !arrow)
 		return
+
+	var/turf/impact_turf = get_turf(target)
 
 	var/obj/effect/shi_east_glimmer_arrow/shi_east_glimmer_arrow = new(target.loc)
 	shi_east_glimmer_arrow.pixel_x = sin(angle) * 32 * 9
@@ -602,9 +611,12 @@ Arrows will never be deleted when used (unless something goes horribly wrong), t
 	QDEL_IN(shi_east_glimmer_arrow, 0.2 SECONDS)
 
 	target.deal_damage(arrow.damage_per_target_aim[4], PALE_DAMAGE, source = user, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_RANGED | ATTACK_TYPE_SPECIAL))
-	playsound(get_turf(target), 'sound/weapons/ego/shi_east_glimmer_hit.ogg', 100, FALSE)
-	if(!(arrow.Embed(user, target, 4, Get_Angle(user, target))))
-		arrow.forceMove(get_turf(target))
+	playsound(impact_turf, 'sound/weapons/ego/shi_east_glimmer_hit.ogg', 100, FALSE)
+	var/datum/status_effect/stacking/shi_east_lodged_arrow/LA = arrow.Embed(user, target, 4, Get_Angle(user, target))
+	if(QDELETED(LA) || QDELETED(target))
+		arrow.forceMove(impact_turf)
+		arrow.visible_message(span_danger("[arrow] falls to the ground!"))
+		arrow.AestheticOffset()
 	log_combat(user, target, "shot (Bow's Glimmer)", src)
 	to_chat(target, span_userdanger("You're hit by a [arrow.name]!"))
 
@@ -678,7 +690,8 @@ Arrows will never be deleted when used (unless something goes horribly wrong), t
 	. = ..()
 	var/datum/component/storage/STR = GetComponent(/datum/component/storage)
 	STR.max_w_class = WEIGHT_CLASS_BULKY
-	STR.max_combined_w_class = 16
+	STR.max_combined_w_class = 99
+	STR.max_items = 4
 	STR.set_holdable(list(
 		/obj/item/shi_east_arrow
 		))
@@ -799,6 +812,17 @@ Arrows will never be deleted when used (unless something goes horribly wrong), t
 	. += span_info("<b>Removal Damage:</b> [removal_damage]")
 	. += span_info("<b>Removal Bleed Stacks:</b> [removal_bleed_stacks]")
 
+/// Allows you to use the arrow in-hand while the bowblade is in your offhand to load it.
+/obj/item/shi_east_arrow/attack_self(mob/user)
+	. = ..()
+	if(!ishuman(user))
+		return
+	var/mob/living/carbon/human/human_user = user
+	var/obj/item/ego_weapon/ranged/city/shi_east/bowblade = human_user.get_inactive_held_item()
+	if(!istype(bowblade))
+		return
+	bowblade.LoadArrow(human_user, src)
+
 /// Called by the projectile to embed the arrow item into the victim, applying the status effect.
 /obj/item/shi_east_arrow/proc/Embed(mob/living/shi_assassin, mob/living/victim, target_aim_stacks = 2, angle)
 	if(victim && victim.status_flags & GODMODE)
@@ -851,8 +875,8 @@ Arrows will never be deleted when used (unless something goes horribly wrong), t
 
 /// Called by the status effect once it's time to remove the arrow item from the victim, placing it back into the playfield.
 /obj/item/shi_east_arrow/proc/Unembed(destination)
-	// Case 1: Destination is null. If the arrow still has data on who fired it, and that person hasn't been deleted, teleport the arrow to them. Otherwise, delete the arrow.
-	if(!destination) // I pray this never happens.
+	// Case 1: Destination is null, and we're in nullspace. If the arrow still has data on who fired it, and that person hasn't been deleted, teleport the arrow to them. Otherwise, delete the arrow.
+	if(!destination && !loc) // I pray this never happens.
 		var/mob/living/shi_assassin = current_embed_data["firer"]
 		if(!QDELETED(shi_assassin)) // Teleport the arrow to the shooter I guess.
 			forceMove(get_turf(shi_assassin))
@@ -999,7 +1023,12 @@ Arrows will never be deleted when used (unless something goes horribly wrong), t
 	. = ..()
 	// If we get slept here and our arrow hits a wall and deletes itself, linked_arrow_item will be nulled and cause a runtime. Don't ask how I know this. (it was a bug with chunky sweepers and PostDamageReaction())
 	if(target_aim_stacks >= 2 && isliving(target))
-		linked_arrow_item.Embed(firer, target, target_aim_stacks, original_angle)
+		var/datum/status_effect/stacking/shi_east_lodged_arrow/LA = linked_arrow_item.Embed(firer, target, target_aim_stacks, original_angle)
+		if(QDELETED(LA) || QDELETED(target))
+			linked_arrow_item.forceMove(get_turf(src))
+			linked_arrow_item.visible_message(span_danger("[linked_arrow_item] falls to the ground!"))
+			linked_arrow_item.AestheticOffset()
+			linked_arrow_item = null
 
 /obj/projectile/ego_bullet/shi_east_arrow/proc/DropArrowItem()
 	SIGNAL_HANDLER
@@ -1068,7 +1097,6 @@ Arrows will never be deleted when used (unless something goes horribly wrong), t
 	id = "shi_east_lodged_arrow"
 	status_type = STATUS_EFFECT_UNIQUE
 	duration = -1
-	tick_interval = 51
 	max_stacks = 4
 	stacks = 1
 	stack_decay = 0
@@ -1084,10 +1112,10 @@ Arrows will never be deleted when used (unless something goes horribly wrong), t
 	var/movement_proc_cooldown
 
 /datum/status_effect/stacking/shi_east_lodged_arrow/can_have_status()
-	return !QDELETED(owner)
+	return !QDELETED(owner) && owner.loc
 
 /datum/status_effect/stacking/shi_east_lodged_arrow/on_creation(mob/living/new_owner, stacks_to_apply, obj/item/shi_east_arrow/source_arrow)
-	if(!istype(new_owner) || !istype(source_arrow))
+	if(!istype(new_owner) || !istype(source_arrow) || QDELETED(new_owner))
 		return FALSE
 	owner = new_owner
 	. = ..()
@@ -1114,7 +1142,7 @@ Arrows will never be deleted when used (unless something goes horribly wrong), t
 
 /datum/status_effect/stacking/shi_east_lodged_arrow/on_apply()
 	. = ..()
-	if(!owner)
+	if(QDELETED(owner))
 		return FALSE
 	RegisterSignal(owner, COMSIG_PARENT_QDELETING, PROC_REF(DropAllArrows))
 	return TRUE
@@ -1139,7 +1167,7 @@ Arrows will never be deleted when used (unless something goes horribly wrong), t
 	if(istype(owner, /mob/living/simple_animal))
 		addtimer(CALLBACK(src, PROC_REF(RemoveArrow), owner), duration_on_simplemobs)
 
-	return TRUE
+	return src
 
 /// Removes one of the arrows lodged into our owner.
 /datum/status_effect/stacking/shi_east_lodged_arrow/proc/RemoveArrow(mob/living/removing, brutal = FALSE)
