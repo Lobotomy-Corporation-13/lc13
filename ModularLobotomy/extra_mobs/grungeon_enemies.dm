@@ -62,7 +62,7 @@
 
 /obj/effect/shielder_field/Initialize()
 	. = ..()
-	animate(src, alpha = 255, time = 0.3 SECONDS)
+	animate(src, alpha = 200, time = 0.1 SECONDS)
 
 /obj/effect/shielder_field/Crossed(atom/movable/AM)
 	. = ..()
@@ -77,7 +77,7 @@
 	status_type = STATUS_EFFECT_UNIQUE
 	alert_type = /atom/movable/screen/alert/status_effect/grungeon_shield
 	var/list/list_of_shielders = list()
-
+	var/mutable_appearance/shield_icon
 
 /atom/movable/screen/alert/status_effect/grungeon_shield
 	name = "Shielded"
@@ -87,6 +87,9 @@
 
 /datum/status_effect/grungeon_shield/on_apply()
 	. = ..()
+	var/mob/living/simple_animal/status_holder = owner
+	status_holder.add_overlay(shield_icon)
+	shield_icon = mutable_appearance('icons/effects/effects.dmi', "shield-red", -ABOVE_MOB_LAYER)
 	RegisterSignal(owner, COMSIG_MOVABLE_PRE_MOVE, PROC_REF(Moved))
 	RegisterSignal(owner, COMSIG_MOB_APPLY_DAMGE, PROC_REF(Damaged))
 
@@ -112,11 +115,23 @@
 /datum/status_effect/grungeon_shield/on_remove()
 	UnregisterSignal(owner, COMSIG_MOVABLE_PRE_MOVE)
 	UnregisterSignal(owner, COMSIG_MOB_APPLY_DAMGE)
+	var/mob/living/simple_animal/status_holder = owner
+	status_holder.cut_overlay(shield_icon)
 	return ..()
 
 /datum/status_effect/grungeon_shield/proc/Damaged(datum/source, damage, damagetype, def_zone, atom/damage_source, flags, attack_type)
 	SIGNAL_HANDLER
 	return COMPONENT_MOB_DENY_DAMAGE
+
+/mob/living/simple_animal/hostile/ordeal/grungeon_shielder/death()
+	for(var/obj/effect/shielder_field/F in range(4, src))
+		qdel(F)
+		continue
+	for(var/mob/living/S in range (4, src))
+		S.remove_status_effect(/datum/status_effect/grungeon_shield)
+	. = ..()
+	gib()
+
 
 
 

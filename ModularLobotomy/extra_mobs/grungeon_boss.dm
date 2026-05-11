@@ -17,8 +17,8 @@
 	faction = list("green_ordeal")
 	gender = NEUTER
 	mob_biotypes = MOB_ROBOTIC
-	maxHealth = 25000
-	health = 25000
+	maxHealth = 20000
+	health = 20000
 	melee_damage_lower = 5
 	melee_damage_upper = 5
 	ranged = TRUE

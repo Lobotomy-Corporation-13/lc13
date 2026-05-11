@@ -111,6 +111,14 @@
 	},
 /turf/open/floor/pod/light,
 /area/city/outskirtsfactory)
+"aI" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/sigsystem/tower{
+	dir = 1;
+	signal_code = 26
+	},
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
 "aP" = (
 /obj/machinery/conveyor/auto{
 	dir = 8;
@@ -227,6 +235,10 @@
 /area/department_main/manager)
 "cb" = (
 /obj/structure/closet/crate,
+/obj/item/tresmetal/copper,
+/obj/item/tresmetal/bloodiron,
+/obj/item/tresmetal,
+/obj/item/tresmetal,
 /turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
 "cg" = (
@@ -361,13 +373,18 @@
 /turf/open/floor/carpet/black,
 /area/facility_hallway/manager)
 "de" = (
-/obj/structure/sigsystem/connector{
+/obj/structure/sigsystem/connector/split{
 	dir = 4
 	},
 /obj/machinery/light/red{
 	dir = 8
 	},
 /obj/structure/closet/crate,
+/obj/item/tresmetal,
+/obj/item/tresmetal,
+/obj/item/tresmetal,
+/obj/item/tresmetal/copper,
+/obj/item/tresmetal/bloodiron,
 /turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
 "dg" = (
@@ -1171,9 +1188,9 @@
 	pixel_x = 9;
 	pixel_y = 8
 	},
-/obj/item/ego_weapon/ranged/malicedescent{
+/obj/item/ego_weapon/painprocess{
 	pixel_y = -5;
-	pixel_x = -7
+	pixel_x = -6
 	},
 /turf/open/floor/facility/dark,
 /area/city/outskirtsfactory)
@@ -1493,6 +1510,12 @@
 	},
 /turf/open/floor/facility/dark,
 /area/department_main/manager)
+"lL" = (
+/obj/machinery/light,
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/turf_decal/siding/red,
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
 "lN" = (
 /obj/structure/sigsystem/connector{
 	dir = 8
@@ -1735,8 +1758,9 @@
 /turf/closed/indestructible/rock,
 /area/city/outskirtsfactory)
 "mY" = (
+/obj/effect/decal/cleanable/blood/footprints,
 /obj/structure/sigsystem/connector{
-	delay_time = 25
+	dir = 4
 	},
 /turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
@@ -1783,7 +1807,7 @@
 "nh" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/structure/sigsystem/connector{
-	delay_time = 100;
+	delay_time = 90;
 	dir = 1;
 	happens_once = 1
 	},
@@ -1871,6 +1895,9 @@
 /turf/closed/indestructible/reinforced,
 /area/facility_hallway/manager)
 "oh" = (
+/obj/structure/sigsystem/connector{
+	dir = 8
+	},
 /obj/effect/turf_decal/siding/red{
 	dir = 4
 	},
@@ -1970,9 +1997,8 @@
 /turf/open/floor/carpet/black,
 /area/facility_hallway/manager)
 "oQ" = (
-/obj/effect/decal/cleanable/dirt/dust,
-/obj/effect/decal/cleanable/blood/drip,
-/turf/open/floor/pod/dark,
+/mob/living/simple_animal/hostile/ordeal/green_bot_big,
+/turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
 "oW" = (
 /obj/effect/turf_decal/tile{
@@ -2328,9 +2354,8 @@
 /turf/open/floor/carpet/orange,
 /area/facility_hallway/manager)
 "ry" = (
-/obj/structure/sigsystem/connector{
-	delay_time = 300;
-	dir = 4
+/obj/structure/sigsystem/connector/split{
+	dir = 1
 	},
 /turf/closed/indestructible/rock,
 /area/city/outskirtsfactory)
@@ -2352,7 +2377,7 @@
 /turf/open/floor/plasteel/dark,
 /area/department_main/manager)
 "rB" = (
-/mob/living/simple_animal/hostile/ordeal/green_bot,
+/mob/living/simple_animal/hostile/ordeal/green_bot/fast,
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
 "rD" = (
@@ -2623,8 +2648,8 @@
 /area/city/outskirtsfactory)
 "tE" = (
 /obj/structure/sigsystem/announcer{
-	message = "Dance, organic! Dance!";
-	message_range = 6
+	message_range = 6;
+	message = "Dance for us, organic!"
 	},
 /turf/closed/indestructible/syndicate,
 /area/city/outskirtsfactory)
@@ -2992,6 +3017,12 @@
 /area/city/outskirtsfactory)
 "wD" = (
 /obj/effect/decal/cleanable/blood,
+/obj/structure/sigsystem/announcer{
+	sound = sound/machines/warning-buzzer.ogg;
+	sound_volume = 50;
+	message_range = 5;
+	message = "Intruders detected. All units, prepare for battle."
+	},
 /turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
 "wF" = (
@@ -3149,8 +3180,10 @@
 /turf/open/floor/wood,
 /area/facility_hallway/manager)
 "xQ" = (
-/mob/living/simple_animal/hostile/ordeal/green_bot,
 /obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/turf_decal/siding/red/corner{
+	dir = 1
+	},
 /turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
 "xY" = (
@@ -3344,6 +3377,13 @@
 	},
 /turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
+"zr" = (
+/obj/structure/sigsystem/connector{
+	dir = 4;
+	delay_time = 30
+	},
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
 "zv" = (
 /obj/structure/chair/comfy/black{
 	dir = 4
@@ -3450,7 +3490,7 @@
 /area/city/outskirtsfactory)
 "Aa" = (
 /obj/structure/sigsystem/connector{
-	delay_time = 100;
+	delay_time = 90;
 	dir = 1;
 	happens_once = 1
 	},
@@ -3478,6 +3518,13 @@
 	},
 /turf/open/floor/plasteel/white,
 /area/facility_hallway/manager)
+"Ai" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/turf_decal/siding/red/corner{
+	dir = 4
+	},
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
 "Aj" = (
 /obj/effect/turf_decal/siding/blue{
 	dir = 8
@@ -3705,6 +3752,11 @@
 	resistance_flags = 64
 	},
 /turf/closed/indestructible/syndicate,
+/area/city/outskirtsfactory)
+"Cd" = (
+/obj/structure/sigsystem/connector,
+/obj/effect/turf_decal/siding/red/corner,
+/turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
 "Cg" = (
 /obj/effect/turf_decal/siding/blue{
@@ -3996,7 +4048,7 @@
 	},
 /obj/structure/sigsystem/connector{
 	dir = 1;
-	delay_time = 300
+	delay_time = 250
 	},
 /turf/open/floor/facility/dark,
 /area/city/outskirtsfactory)
@@ -4027,7 +4079,8 @@
 /area/department_main/manager)
 "EY" = (
 /obj/structure/sigsystem/tower/button{
-	signal_code = 07
+	signal_code = 07;
+	happens_once = 1
 	},
 /turf/closed/indestructible/syndicate,
 /area/city/outskirtsfactory)
@@ -4383,9 +4436,11 @@
 /turf/open/floor/facility/dark,
 /area/department_main/manager)
 "Hv" = (
-/mob/living/simple_animal/hostile/ordeal/green_bot/fast,
-/obj/effect/decal/cleanable/dirt/dust,
-/turf/open/floor/pod/dark,
+/obj/structure/sigsystem/connector{
+	delay_time = 450;
+	dir = 4
+	},
+/turf/closed/indestructible/rock,
 /area/city/outskirtsfactory)
 "Hw" = (
 /obj/item/toy/plush/gebura,
@@ -4685,6 +4740,15 @@
 /obj/item/clothing/head/helmet/danteh,
 /turf/open/floor/plasteel/showroomfloor,
 /area/facility_hallway/manager)
+"JQ" = (
+/obj/machinery/conveyor/auto{
+	dir = 8;
+	resistance_flags = 64;
+	tamperproof = 1
+	},
+/obj/machinery/light/small,
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
 "JS" = (
 /obj/effect/turf_decal/tile{
 	color = "#111111";
@@ -4733,7 +4797,17 @@
 	lockpickable = 0
 	},
 /obj/structure/sigsystem/activator,
+/obj/structure/sigsystem/connector,
 /turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"Kk" = (
+/obj/structure/sigsystem/announcer{
+	sound = sound/machines/warning-buzzer.ogg;
+	sound_volume = 50;
+	message_range = 5;
+	message = "Unauthorized access detected. Door opening delayed."
+	},
+/turf/closed/indestructible/syndicate,
 /area/city/outskirtsfactory)
 "Kl" = (
 /obj/machinery/light{
@@ -5035,6 +5109,15 @@
 /obj/structure/sigsystem/tower/button{
 	pixel_y = 27;
 	signal_code = 26
+	},
+/obj/structure/sigsystem/announcer{
+	sound = sound/machines/warning-buzzer.ogg;
+	sound_volume = 50;
+	message_range = 5;
+	message = "Unauthorized access detected. Door opening delayed."
+	},
+/obj/effect/turf_decal/siding/red{
+	dir = 1
 	},
 /turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
@@ -5658,6 +5741,15 @@
 /obj/machinery/light/floor,
 /turf/open/floor/carpet/black,
 /area/facility_hallway/manager)
+"Tb" = (
+/obj/structure/sigsystem/announcer{
+	sound = sound/machines/warning-buzzer.ogg;
+	sound_volume = 50;
+	message_range = 5;
+	message = "Unauthorized access detected. Engaging temporary lockdown."
+	},
+/turf/closed/indestructible/syndicate,
+/area/city/outskirtsfactory)
 "Tf" = (
 /obj/machinery/light{
 	dir = 1
@@ -5727,6 +5819,13 @@
 	resistance_flags = 64
 	},
 /turf/open/floor/plating/asteroid/basalt,
+/area/city/outskirtsfactory)
+"TY" = (
+/obj/item/caution{
+	pixel_y = 7;
+	pixel_x = -3
+	},
+/turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
 "TZ" = (
 /obj/effect/turf_decal/siding/wood{
@@ -5955,7 +6054,7 @@
 /area/facility_hallway/manager)
 "Wc" = (
 /obj/structure/sigsystem/connector{
-	delay_time = 150;
+	delay_time = 100;
 	dir = 4
 	},
 /turf/closed/indestructible/syndicate,
@@ -6127,10 +6226,7 @@
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
 "Xw" = (
-/obj/machinery/light{
-	dir = 4
-	},
-/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/sigsystem/connector,
 /obj/effect/turf_decal/siding/red{
 	dir = 4
 	},
@@ -6393,6 +6489,10 @@
 	},
 /turf/open/floor/plasteel/showroomfloor,
 /area/facility_hallway/manager)
+"Zf" = (
+/obj/structure/sigsystem/connector/split,
+/turf/closed/indestructible/syndicate,
+/area/city/outskirtsfactory)
 "Zg" = (
 /obj/effect/turf_decal/siding/yellow{
 	dir = 4
@@ -6479,6 +6579,15 @@
 	},
 /turf/open/floor/carpet/green,
 /area/facility_hallway/manager)
+"ZT" = (
+/obj/structure/sigsystem/announcer{
+	sound = sound/machines/warning-buzzer.ogg;
+	sound_volume = 50;
+	message_range = 5;
+	message = "Unauthorized access detected. Engaging temporary lockdown."
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirtsfactory)
 "ZU" = (
 /obj/machinery/computer/abnormality_archive,
 /obj/effect/turf_decal/siding/green{
@@ -13494,11 +13603,11 @@ dF
 oq
 rB
 oq
-rB
+oQ
 gv
 Ve
 ar
-oq
+TY
 GY
 pq
 vF
@@ -13517,7 +13626,7 @@ dF
 dF
 Tk
 dF
-dF
+Kk
 dF
 dF
 dF
@@ -13773,9 +13882,9 @@ dF
 dF
 Wc
 kX
-mY
+js
 de
-lB
+sk
 cb
 dF
 Li
@@ -14031,9 +14140,9 @@ dF
 JV
 RI
 lB
-cU
+zr
 lB
-xQ
+Fi
 cs
 Lp
 wq
@@ -14538,7 +14647,7 @@ xM
 sr
 dF
 dF
-iU
+JQ
 dF
 dF
 dF
@@ -14804,10 +14913,10 @@ gS
 Fi
 cU
 lB
-lB
 dF
 dF
 dF
+vp
 vp
 vp
 vp
@@ -15030,12 +15139,12 @@ XO
 XO
 XO
 XO
-IN
-IN
-IN
-UA
-eo
-Mn
+XO
+XO
+XO
+dF
+Ve
+oq
 dF
 XO
 XO
@@ -15061,10 +15170,10 @@ hX
 lB
 js
 js
-js
 Vf
 Dd
 dF
+vp
 vp
 vp
 vp
@@ -15287,12 +15396,12 @@ XO
 XO
 XO
 XO
-MP
-ry
-in
-lU
-Jf
-oq
+IN
+IN
+IN
+UA
+eo
+Mn
 dF
 XO
 XO
@@ -15321,7 +15430,7 @@ Qn
 dF
 dF
 dF
-dF
+vp
 vp
 vp
 vp
@@ -15544,13 +15653,13 @@ XO
 XO
 XO
 XO
-XO
-zW
-Zr
-JV
-tD
-oq
-dF
+MP
+Hv
+in
+lU
+Jf
+ZT
+vC
 XO
 XO
 XO
@@ -15801,17 +15910,16 @@ XO
 XO
 XO
 XO
-dF
-dF
-dF
-UA
-nI
-AE
-dF
-dF
-dF
-dF
-dF
+XO
+zW
+Zr
+JV
+tD
+oq
+Ly
+XO
+XO
+XO
 XO
 XO
 XO
@@ -15828,7 +15936,8 @@ XO
 XO
 XO
 RV
-dF
+ry
+Tb
 gG
 lB
 wp
@@ -16059,15 +16168,15 @@ XO
 XO
 XO
 dF
-Fi
-Fi
-lB
-lB
-lB
-lB
-Fi
-lB
-Fi
+dF
+JV
+Zf
+nI
+AE
+Ly
+dF
+dF
+dF
 dF
 XO
 XO
@@ -16083,7 +16192,7 @@ XO
 XO
 XO
 XO
-XO
+IN
 IN
 UA
 Db
@@ -16316,13 +16425,13 @@ XO
 XO
 XO
 dF
-lB
-oQ
-nO
-DL
+Fi
+VP
+Cd
+Xw
 Xw
 oh
-DU
+Ai
 lB
 Fi
 dF
@@ -16573,7 +16682,7 @@ XO
 XO
 XO
 dF
-YJ
+lB
 lB
 jx
 dF
@@ -17609,7 +17718,7 @@ AB
 lB
 Fi
 Fi
-sk
+lB
 dF
 XO
 XO
@@ -17861,9 +17970,9 @@ dF
 lB
 Fi
 lB
-lB
-Fi
-lB
+nO
+DL
+DU
 lB
 lB
 lB
@@ -18116,12 +18225,12 @@ XO
 XO
 dF
 Tf
-lB
-Hv
-zB
+ex
+Fi
+lL
 dF
 Nb
-Fi
+aI
 Fi
 zB
 dF
@@ -18375,9 +18484,9 @@ dF
 Fi
 Fi
 lB
-lB
-lB
-Fi
+vo
+yw
+xQ
 lB
 ja
 VP
@@ -18408,7 +18517,7 @@ qN
 rN
 rN
 Kg
-fC
+mY
 Fi
 gA
 fC
@@ -18886,14 +18995,14 @@ XO
 XO
 XO
 dF
-ex
+YJ
 Fi
 AC
 dF
 Jr
 dF
 xA
-ex
+sk
 lB
 Qn
 lB
@@ -19918,7 +20027,7 @@ Fi
 YJ
 Fi
 lB
-sk
+ex
 lB
 Fi
 lB
