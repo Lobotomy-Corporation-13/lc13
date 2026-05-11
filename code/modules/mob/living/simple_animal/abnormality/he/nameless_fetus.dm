@@ -50,8 +50,8 @@
 	addtimer(CALLBACK(src, PROC_REF(IncreaseCries)), 90 SECONDS)
 	. = ..()
 
-/mob/living/simple_animal/hostile/abnormality/fetus/IncreaseCries()
-	addtimer(CALLBACK(src, PROC_REF(IncreaseCries)), 2 MINUTES)
+/mob/living/simple_animal/hostile/abnormality/fetus/proc/IncreaseCries()
+	addtimer(CALLBACK(src, PROC_REF(IncreaseCries)), 3 MINUTES)
 	criesleft++
 
 
@@ -104,7 +104,8 @@
 	var/list/qliphoth_abnos = list()
 	for(var/mob/living/simple_animal/hostile/abnormality/V in GLOB.abnormality_mob_list)
 		if(V.IsContained())
-			qliphoth_abnos += V
+			if((initial(abno.threat_level)) <= HE_LEVEL)
+				qliphoth_abnos += V
 
 	if(LAZYLEN(qliphoth_abnos))
 		var/mob/living/simple_animal/hostile/abnormality/meltem = pick(qliphoth_abnos)
