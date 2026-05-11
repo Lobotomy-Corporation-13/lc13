@@ -698,7 +698,7 @@
 /mob/living/simple_animal/hostile/soulless
 	name = "Soulless husk"
 	desc = "A flesh automaton animated only by neurotransmitters after having their divine light severed."
-	icon = 'ModularLobotomy/Lobotomyicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "soulless_husk" // Whatever! Go my codersprite!
 	icon_living = "soulless_husk"
 	speak_emote = list("screeches")
