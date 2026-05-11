@@ -534,7 +534,9 @@
 
 /datum/status_effect/display/crimlust_hemorrhage/be_replaced()
 	if(icon_overlay)
-		owner.cut_overlay(icon_overlay) // Need to put this here 'cause apparently on_remove and be_replaced are different, which makes sense honestly but if I don't do this the overlay sticks forever
+		remove_image_from_clients(icon_overlay)
+		GLOB.status_display_icons -= icon_overlay
+		icon_overlay = null
 	. = ..()
 
 /// Called when the mob dies or when it's hit by a Hollowpoint Shell
