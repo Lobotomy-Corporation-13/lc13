@@ -74,7 +74,6 @@
 //Meltdown
 /mob/living/simple_animal/hostile/abnormality/silence/ZeroQliphoth(mob/living/carbon/human/user)
 	// You have mere seconds to live
-	SLEEP_CHECK_DEATH(5 SECONDS)
 	sound_to_playing_players_on_level('sound/abnormalities/silence/price.ogg', 50, zlevel = z)
 	for(var/mob/living/carbon/human/H in GLOB.player_list)
 		if(faction_check_mob(H, FALSE) || H.z != z || H.stat == DEAD)
@@ -92,7 +91,6 @@
 	set waitfor = FALSE
 	if(!target)
 		return
-	playsound(target, 'sound/weapons/ego/price_of_silence.ogg', 25, FALSE, 9)
 	target.add_overlay(icon('icons/effects/effects.dmi', "chronofield"))
 	addtimer(CALLBACK(target, TYPE_PROC_REF(/atom, cut_overlay), \
 							icon('icons/effects/effects.dmi', "chronofield")), 40)
