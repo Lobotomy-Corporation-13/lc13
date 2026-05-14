@@ -5,7 +5,7 @@
 	desc = "A robot rooted to the ground by a teeming mass of cables. The antenna at the top of its frame beeps occasionally, as if sending out some kind of signal."
 	icon = 'ModularLobotomy/_Lobotomyicons/48x48.dmi'
 	icon_state = "green_shielder"
-	icon_living = "green_shielder"
+	icon_living = "green_shielder" //Thank you, SumirekoFan, for providing sprites for these
 	icon_dead = "green_shielder"
 	faction = list("green_ordeal")
 	gender = NEUTER
@@ -149,7 +149,7 @@ datum/status_effect/grungeon_shield/proc/ApplyShieldOverlay(mob/living/owner)
 
 
 
-/mob/living/simple_animal/hostile/ordeal/green_bot_rocket //Rocket Noons
+/mob/living/simple_animal/hostile/ordeal/green_bot_rocket //Rocket Noons, thanks to Raye Aleciania on the LC13 discord for providing sprites
 	name = "pursuit of purpose"
 	desc = "A big robot with a saw and a rocket launcher in place of its hands."
 	icon = 'ModularLobotomy/_Lobotomyicons/48x48.dmi'
@@ -182,7 +182,6 @@ datum/status_effect/grungeon_shield/proc/ApplyShieldOverlay(mob/living/owner)
 	silk_results = list(/obj/item/stack/sheet/silk/green_advanced = 2,
 						/obj/item/stack/sheet/silk/green_simple = 2)
 	var/datum/beam/current_beam = null
-	var/can_act = TRUE
 
 /mob/living/simple_animal/hostile/ordeal/green_bot_rocket/OpenFire(atom/A)
 	if(!can_act)
