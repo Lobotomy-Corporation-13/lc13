@@ -3023,8 +3023,6 @@
 "wD" = (
 /obj/effect/decal/cleanable/blood,
 /obj/structure/sigsystem/announcer{
-	sound = sound/machines/warning-buzzer.ogg;
-	sound_volume = 50;
 	message_range = 5;
 	message = "Intruders detected. All units, prepare for battle."
 	},
@@ -4813,8 +4811,6 @@
 /area/city/outskirtsfactory)
 "Kk" = (
 /obj/structure/sigsystem/announcer{
-	sound = sound/machines/warning-buzzer.ogg;
-	sound_volume = 50;
 	message_range = 5;
 	message = "Unauthorized access detected. Door opening delayed."
 	},
@@ -5122,8 +5118,6 @@
 	signal_code = 26
 	},
 /obj/structure/sigsystem/announcer{
-	sound = sound/machines/warning-buzzer.ogg;
-	sound_volume = 50;
 	message_range = 5;
 	message = "Unauthorized access detected. Door opening delayed."
 	},
@@ -5754,8 +5748,6 @@
 /area/facility_hallway/manager)
 "Tb" = (
 /obj/structure/sigsystem/announcer{
-	sound = sound/machines/warning-buzzer.ogg;
-	sound_volume = 50;
 	message_range = 5;
 	message = "Unauthorized access detected. Engaging temporary lockdown."
 	},
@@ -6592,8 +6584,6 @@
 /area/facility_hallway/manager)
 "ZT" = (
 /obj/structure/sigsystem/announcer{
-	sound = sound/machines/warning-buzzer.ogg;
-	sound_volume = 50;
 	message_range = 5;
 	message = "Unauthorized access detected. Engaging temporary lockdown."
 	},
