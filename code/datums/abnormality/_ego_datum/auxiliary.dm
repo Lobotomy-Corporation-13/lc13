@@ -23,6 +23,13 @@ Oh please give these a nice name by the way
 	information["name"] = src.name ? src.name : E.name // Use datum name where possible, otherwise use item's name
 	information["description"] = E.desc
 
+// Medipen Kit
+/datum/ego_datum/auxiliary/medkit
+	cost = 20
+	item_category = "Medicine"
+	item_path = /obj/item/storage/firstaid/revival
+	well_enabled = FALSE
+
 // Bongbread
 /datum/ego_datum/auxiliary/bongbread
 	cost = 12
