@@ -353,12 +353,12 @@
 							TEMPERANCE_ATTRIBUTE = 80,
 							JUSTICE_ATTRIBUTE = 80
 							)
-	special = "Reload this weapon by <b>alt-clicking</b> it.\n\
-	You can <b>use this weapon in-hand</b> to spend health to enter the <b>Inexorable</b> state after a brief wind-up, \
+	special = "Reload this weapon by alt-clicking it.\n\
+	You can use this weapon in-hand to spend health to enter the Inexorable state after a brief wind-up, \
 	during which you will gain a slight slowdown, damage resistance, stun immunity, resistance to being pushed, and an unlimited amount of higher caliber bullets.\n\
-	After 7 seconds of being in the Inexorable state, you will enter the <b>Entrenched</b> state, which increases damage resistance further \
+	After 7 seconds of being in the Inexorable state, you will enter the Entrenched state, which increases damage resistance further \
 	and empowers the bullets to deal more damage and pierce through a single target.\n\
-	<b>If you move while Entrenched, you will exit the state</b>. \n\
+	If you move while Entrenched, you will exit the state. \n\
 	You can also cancel the process of activating Inexorable by swapping hands, or dropping or storing the weapon. \
 	Once you've entered Inexorable or Entrenched, you cannot drop or store the weapon."
 
@@ -605,3 +605,292 @@
 #undef STATUS_EFFECT_ENTRENCHED_INITIAL
 #undef STATUS_EFFECT_ENTRENCHED_FINAL
 
+// AiB's alternate ranged weapon. This one deals BLACK damage, has AoE, knockback, friendly fires...
+/obj/item/ego_weapon/ranged/black
+	name = "black"
+	desc = "We'll purge every last speck of evil out of your heart, even if it must blacken our own."
+	lefthand_file = 'icons/mob/inhands/64x64_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/64x64_righthand.dmi'
+	inhand_x_dimension = 64
+	inhand_y_dimension = 64
+	// Sprites by amanitaspooder
+	icon_state = "black"
+	inhand_icon_state = "black"
+	damtype = BLACK_DAMAGE
+	force = 65
+	attack_speed = 1.8
+	weapon_weight = WEAPON_MEDIUM // I may live to regret this?
+	hitsound = 'sound/weapons/fast_slam.ogg'
+	fire_sound = 'sound/weapons/gun/general/rocket_launch.ogg'
+	fire_sound_volume = 40
+	projectile_path = /obj/projectile/ego_bullet/black
+	shotsleft = 4
+	reloadtime = 3.2 SECONDS
+	roundsreload = TRUE
+
+	attribute_requirements = list(
+							FORTITUDE_ATTRIBUTE = 80,
+							PRUDENCE_ATTRIBUTE = 80,
+							TEMPERANCE_ATTRIBUTE = 80,
+							JUSTICE_ATTRIBUTE = 100
+							)
+	special = "This weapon fires missiles that deal AoE BLACK damage indiscriminately, and also cause knockback. \n\
+	You may resonate with it to fire the missiles in an arc instead, causing a delay in their launch and arrival, but increasing the damage, radius and applying Shellshock to enemies hit."
+	actions_types = list(/datum/action/item_action/black_weapon_resonance)
+	zoomable = TRUE
+	zoom_amt = 0
+	zoom_out_amt = 8
+	/// Alternate fire mode, basically. I don't wanna use the altfire framework for this, don't think there's a point to it
+	var/resonance_enabled = FALSE
+	/// Spam prevention
+	var/resonance_toggle_cooldown
+	/// So you can't fire all 4 missiles at the exact same time in Resonance mode
+	var/resonance_queue_shot_delay = 0.2 SECONDS
+	var/resonance_queue_shot_cd
+	/// Windup before firing each missile in Resonance mode
+	var/resonance_fire_delay = 0.8 SECONDS
+	/// Time-until-impact of the missile in Resonance mode
+	var/resonance_landing_delay = 1.6 SECONDS
+	/// Deal burn damage to people behind you when firing this, because it's funny
+	var/backblast_damage = 10
+
+// Full override; we don't need rotation behaviour, and we want it to cancel as soon as the user moves because having a permanently better viewport is not ideal
+/obj/item/ego_weapon/ranged/black/zoom(mob/living/user, direc, forced_zoom)
+	if(!user || !user.client)
+		return
+
+	if(isnull(forced_zoom))
+		zoomed = !zoomed
+	else
+		zoomed = forced_zoom
+
+	if(zoomed)
+		RegisterSignal(user, COMSIG_MOVABLE_MOVED, PROC_REF(BreakZoom))
+		user.client.view_size.zoomOut(zoom_out_amt, zoom_amt, direc)
+	else
+		UnregisterSignal(user, COMSIG_MOVABLE_MOVED)
+		user.client.view_size.zoomIn()
+	return zoomed
+
+/obj/item/ego_weapon/ranged/black/proc/BreakZoom(mob/living/user)
+	SIGNAL_HANDLER
+	UnregisterSignal(user, COMSIG_MOVABLE_MOVED)
+	if(!istype(user))
+		return
+	if(!user.client)
+		return
+	zoomed = FALSE
+	user.client.view_size.zoomIn()
+
+// Expanded description stuff
+/obj/item/ego_weapon/ranged/black/examine(mob/user)
+	. = ..()
+	. += span_notice("<a href='?src=[REF(src)];action=full_examine'>\[View Expanded Description]</a>")
+
+/obj/item/ego_weapon/ranged/black/Topic(href, list/href_list)
+	. = ..()
+	if(.)
+		return
+	if(href_list["action"] != "full_examine")
+		return
+	var/mob/user = usr
+	if(!QDELETED(user) && istype(user))
+		on_examine(user, user)
+
+/obj/item/ego_weapon/ranged/black/proc/on_examine(mob/user)
+	if(QDELETED(user) || !istype(user))
+		return
+	var/obj/projectile/ego_bullet/black/our_projectile = projectile_path
+	if(!ispath(our_projectile, /obj/projectile/ego_bullet/black))
+		to_chat(user, span_warning("WARNING: This weapon has been modified, and is not using its regular projectile. Cannot show expanded description."))
+		return
+
+	. = list()
+	. += span_info("In its normal fire-mode, this weapon directly fires [our_projectile.damage_type] damage missiles.")
+	. += span_info("<b>Direct-fire Missile Damage</b>: [our_projectile.damage * projectile_damage_multiplier]")
+	. += span_info("<b>Direct-fire Missile Explosion Damage</b>: [our_projectile.base_explosion_damage * projectile_damage_multiplier]")
+	. += span_info("<b>Direct-fire Missile Explosion Radius</b>: [our_projectile.explosion_radius]")
+	. += span_info("<b>Direct-fire Missile IFF Modifier</b>: [our_projectile.iff_coeff]x explosion damage to friendlies.")
+	. += span_info("\n")
+	. += span_info("You may toggle this weapon by alt-clicking it, or using its special action, to activate Resonance. This allows you to use indirect-fire for your missiles, increasing their damage and radius, as well as applying a debuff called Shellshock.")
+	. += span_info("Missiles fired in this manner have a brief wind-up before firing (though you may queue several shots at once), and a longer delay before landing.")
+	. += span_info("<b>Indirect Fire Missile Windup</b>: [resonance_fire_delay * 0.1]s")
+	. += span_info("<b>Indirect Fire Missile Flight Time</b>: [resonance_landing_delay * 0.1]s")
+	. += span_info("<b>Indirect Fire Missile Explosion Damage</b>: [(our_projectile.base_explosion_damage + our_projectile.resonance_damage_increase) * projectile_damage_multiplier]")
+	. += span_info("<b>Indirect Fire Missile Explosion Radius</b>: [our_projectile.explosion_radius + our_projectile.resonance_radius_increase]")
+	. += span_info("<b>Indirect Fire Missile IFF Modifier</b>: [our_projectile.resonance_iff_coeff]x explosion damage to friendlies.")
+	. += span_info("\n")
+	// I can't be bothered to pull the actual datums and link to them. Hardcoding (hard-writing?) this.
+	. += span_info("<b>Shellshock Duration</b>: 10s")
+	. += span_info("<b>Shellshock Enemy Slowdown</b>: 1.6x")
+	. += span_info("<b>Shellshock Enemy Multiplicative Shred</b>: 1.25x")
+	for(var/line in .)
+		to_chat(user, line)
+
+/// Method 1 of accessing Resonance: alt click the weapon
+/obj/item/ego_weapon/ranged/black/AltClick(mob/user)
+	ToggleResonance(user)
+
+/// Method 2 of accessing Resonance: item action
+/datum/action/item_action/black_weapon_resonance
+	name = "E.G.O. Resonance: Black"
+	desc = "Resonate with your E.G.O. weapon in order to fire more powerful ammunition, dealing more damage in a larger radius and applying Shellshock, but your shots will be delayed. \
+	Can be freely toggled every 2 seconds."
+	icon_icon = 'icons/obj/ego_weapons.dmi'
+	button_icon_state = "black"
+
+/datum/action/item_action/black_weapon_resonance/Trigger()
+	if(!IsAvailable())
+		return FALSE
+	if(SEND_SIGNAL(src, COMSIG_ACTION_TRIGGER, src) & COMPONENT_ACTION_BLOCK_TRIGGER)
+		return FALSE
+	if(target && ismob(owner))
+		var/obj/item/ego_weapon/ranged/black/I = target
+		I.ToggleResonance(owner)
+	return TRUE
+
+/// Flips Resonance between active and inactive. Tiny cooldown for spam prevention
+/obj/item/ego_weapon/ranged/black/proc/ToggleResonance(user)
+	if(resonance_toggle_cooldown > world.time)
+		to_chat(user, span_warning("Wait a bit longer before changing your resonance."))
+		balloon_alert(user, "Resonance toggle on cooldown. Wait [(resonance_toggle_cooldown - world.time) * 0.1]s.")
+		return FALSE
+
+	resonance_toggle_cooldown = world.time + 2 SECONDS
+
+	if(resonance_enabled)
+		to_chat(user, span_warning("You halt your resonance with your [src.name] E.G.O. weapon. You will now fire normally."))
+		balloon_alert(user, "Resonance disabled.")
+	else
+		to_chat(user, span_nicegreen("You begin resonating with your [src.name] E.G.O. weapon. You will now fire in an arc, causing greater explosions and applying Shellshock."))
+		balloon_alert(user, "Resonance enabled.")
+
+	resonance_enabled = !resonance_enabled
+
+/// When clicking with this weapon...
+/obj/item/ego_weapon/ranged/black/afterattack(atom/target, mob/living/user, flag, params)
+	if(is_reloading) // Can't fire while reloading
+		shoot_with_empty_chamber(user)
+		return
+
+	// If Resonance is enabled, we have a target and we're not adjacent to that target:
+	if(resonance_enabled && !flag && !QDELETED(target))
+		if(resonance_queue_shot_cd > world.time) // Chill a little bit
+			return
+		resonance_queue_shot_cd = world.time + resonance_queue_shot_delay
+		if(!can_see(user, target, 16)) // This check is unreliable, because it literally tries to walk, which isn't the same path that light follows
+			var/list/viewable_things = view(16, user) // I don't know a better way to do this.
+			if(!(target in viewable_things))
+				to_chat(user, span_danger("You can't fire your [src.name] E.G.O. weapon in that trajectory, there's an obstacle in the way!"))
+				balloon_alert(user, "Trajectory obstructed.")
+				return FALSE
+
+
+		if(!do_after(user, resonance_fire_delay)) // Windup for firing the missile. Hold still!
+			return FALSE
+		else // Windup concluded successfully.
+			if(!resonance_enabled) // Someone did a sneaky and toggled mid-windup. Fire a normal missile.
+				return ..()
+			if(!can_shoot()) // No ammo? Click click.
+				shoot_with_empty_chamber(user)
+				return
+			FireResonanceShot(target, user) // Fire an indirect missile!
+			return
+
+	// Resonance is disabled. Continue regular behaviour instead.
+	. = ..()
+
+/obj/item/ego_weapon/ranged/black/proc/FireResonanceShot(atom/target, mob/living/user)
+	if(!target)
+		return
+	if(!CanUseEgo(user))
+		return
+	shoot_live_shot(user) // This is just for a firenoise and firing message
+
+	var/turf/epicenter = get_turf(target)
+	if(!epicenter)
+		return
+	var/obj/projectile/ego_bullet/black/resonant_shot = new(null) // We're literally just using the existing projectile...
+	resonant_shot.firer = user
+	resonant_shot.resonance = TRUE // ...but we flip this var to indicate it's an empowered shot.
+	resonant_shot.damage *= projectile_damage_multiplier
+
+	// Telegraph the danger zone.
+	for(var/turf/T in view((resonant_shot.explosion_radius + resonant_shot.resonance_radius_increase), target))
+		new /obj/effect/black_weapon_airstrike_marker(T, resonance_landing_delay, (220 - (get_dist(epicenter, T) * 40))) // More intense markers towards the center
+
+	addtimer(CALLBACK(resonant_shot, TYPE_PROC_REF(/obj/projectile/ego_bullet/black, Detonate), epicenter), resonance_landing_delay)
+	new /obj/effect/black_weapon_airstrike_missile(epicenter, resonance_landing_delay, 0.4 SECONDS)
+
+	process_chamber()
+
+/obj/item/ego_weapon/ranged/black/process_chamber()
+	. = ..()
+	var/mob/living/carbon/human/just_fired = src.loc
+	if(!istype(just_fired))
+		return
+
+	// Spawn backblast smoke behind us it's funny
+	var/opposite_direction = turn(just_fired.dir, 180)
+	var/turf/behind_us = get_ranged_target_turf(just_fired, opposite_direction, 2)
+	var/list/backblast_tiles = list(behind_us)
+	for(var/turf/open/T in view(1, behind_us))
+		backblast_tiles |= T
+
+	var/datum/effect_system/smoke_spread/transparent/backblast = new
+	backblast.set_up(1, behind_us)
+	backblast.start()
+
+	for(var/turf/T2 in backblast_tiles)
+		for(var/mob/living/L in T2)
+			L.deal_damage(backblast_damage, FIRE, just_fired, attack_type = (ATTACK_TYPE_SPECIAL))
+			L.visible_message(span_danger("[L] is scorched by the backblast from [just_fired]'s [src.name] E.G.O.!"))
+
+/obj/effect/black_weapon_airstrike_marker
+	name = "danger close"
+	desc = "MOVE!"
+	alpha = 200
+	icon_state = "zorowarning"
+	color = COLOR_BLACK
+	layer = POINT_LAYER
+	anchored = TRUE
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+	var/duration
+	var/timerid
+
+// Pass necessary arguments to it on Initialize
+/obj/effect/black_weapon_airstrike_marker/Initialize(mapload, final_duration = 1.6 SECONDS, opacity = 200)
+	. = ..()
+	duration = final_duration
+	alpha = opacity
+	timerid = QDEL_IN(src, duration)
+
+/obj/effect/black_weapon_airstrike_missile
+	name = "black"
+	desc = "YOU SHOULD'VE BEEN MOVING 2 SECONDS AGO!!!!!!!!!!!"
+	alpha = 255
+	icon = 'icons/obj/projectiles.dmi'
+	icon_state = "atrocket"
+	layer = POINT_LAYER
+	anchored = TRUE
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+
+// Shamelessly (a bit shamefully) stolen and adapted entry animation from supply pod code
+/obj/effect/black_weapon_airstrike_missile/Initialize(mapload, delayed_by = 1.6 SECONDS, visual_travel_time = 0.3 SECONDS)
+	. = ..()
+	alpha = 0
+	var/angle = rand(70,110)
+	src.pixel_x = cos(angle)*32*13
+	src.pixel_z = sin(angle)*32*13
+	src.add_filter("motionblur",1,list("type"="motion_blur", "x"=0, "y"=2))
+	addtimer(CALLBACK(src, PROC_REF(PlayEntryAnimation), visual_travel_time), delayed_by - visual_travel_time)
+	QDEL_IN(src, delayed_by)
+
+/obj/effect/black_weapon_airstrike_missile/proc/PlayEntryAnimation(travel_time)
+	alpha = 255
+	var/rotation = Get_Pixel_Angle(src.pixel_z, src.pixel_x)
+	var/matrix/M = matrix().Turn(rotation)
+	M.Turn(180)
+	src.transform = M
+	animate(src.get_filter("motionblur"), y = 0, time = travel_time, flags = ANIMATION_PARALLEL)
+	animate(src, pixel_z = -1 * abs(sin(rotation))*4, pixel_x = (sin(rotation) * 20), time = travel_time, easing = LINEAR_EASING, flags = ANIMATION_PARALLEL)

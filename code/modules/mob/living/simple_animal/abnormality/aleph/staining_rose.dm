@@ -41,7 +41,7 @@
 			... <br>that's all."),
 	)
 
-	var/chosen
+	var/datum/weakref/chosen_memory
 	var/list/sacrificed = list()
 	var/list/heretics = list()
 	var/meltdown_cooldown_time = 15 MINUTES
@@ -54,8 +54,17 @@
 	. = ..()
 	meltdown_cooldown = world.time + meltdown_cooldown_time
 
+/mob/living/simple_animal/hostile/abnormality/staining_rose/Destroy()
+	var/list/signal_list = sacrificed + heretics
+	for(var/mob/living/L in signal_list)
+		ForceUnregisterMob(L)
+	sacrificed = null
+	heretics = null
+	return ..()
+
 /mob/living/simple_animal/hostile/abnormality/staining_rose/PostWorkEffect(mob/living/carbon/human/user, work_type, pe)
 	safe = TRUE
+	var/mob/living/chosen = chosen_memory ? chosen_memory.resolve() : null
 	if (chosen == null)
 		chosen = user
 		user.visible_message(span_warning("You are now Staining Rose's Chosen."))
@@ -66,7 +75,7 @@
 		user.apply_status_effect(STATUS_EFFECT_SCHISMATIC)
 		user.client?.give_award(/datum/award/achievement/abno/schismatic, user)
 		if(!(user in heretics))
-			heretics += user
+			RegisterMob(user, heretics)
 		pissed()
 	else
 		user.visible_message(span_warning("Staining Rose is content."))
@@ -74,7 +83,7 @@
 	if(get_attribute_level(user, JUSTICE_ATTRIBUTE) < 100)
 		user.apply_status_effect(STATUS_EFFECT_SACRIFICE)
 		if(!(user in sacrificed))
-			sacrificed += user
+			RegisterMob(user, sacrificed)
 			user.visible_message(span_warning("Staining Rose drains your strength, and it is born anew."))
 			meltdown_cooldown = world.time + meltdown_cooldown_time	//There we go!
 		pissed()
@@ -84,6 +93,7 @@
 	if(meltdown_cooldown < world.time && !datum_reference.working)
 		meltdown_cooldown = world.time + meltdown_cooldown_time
 		sound_to_playing_players('sound/abnormalities/rose/meltdown.ogg')	//Church bells ringing, whether it happens or not.
+		var/mob/living/chosen = chosen_memory ? chosen_memory.resolve() : null
 		if(chosen)
 			to_chat(chosen, span_boldwarning("Staining Rose requires you to resonate with it again!"))
 		if(!safe)
@@ -102,13 +112,15 @@
 //Death and Meltdown
 /mob/living/simple_animal/hostile/abnormality/staining_rose/ZeroQliphoth(mob/living/carbon/human/user)
 	SSweather.run_weather(/datum/weather/petals)
-	chosen = null 	//You breached, now pick a new person to work on you
+	chosen_memory = null 	//You breached, now pick a new person to work on you
 	icon_state = "rose"
 	//Clean up the sacrificed and schismatic
 	for(var/mob/living/carbon/human/G in sacrificed)
+		ForceUnregisterMob(G)
 		G.remove_status_effect(STATUS_EFFECT_SACRIFICE)
-	for(var/mob/living/carbon/human/G in heretics)
-		G.remove_status_effect(STATUS_EFFECT_SCHISMATIC)
+	for(var/mob/living/carbon/human/H in heretics)
+		ForceUnregisterMob(H)
+		H.remove_status_effect(STATUS_EFFECT_SCHISMATIC)
 	death()	//It wilts away.
 
 /mob/living/simple_animal/hostile/abnormality/staining_rose/death(gibbed)
@@ -116,6 +128,20 @@
 	animate(src, alpha = 0, time = 10 SECONDS)
 	QDEL_IN(src, 10 SECONDS)
 	..()
+
+/mob/living/simple_animal/hostile/abnormality/staining_rose/proc/RegisterMob(mob/living/L, list/record)
+	RegisterSignal(L, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING), PROC_REF(ForceUnregisterMob))
+	record += L
+
+/mob/living/simple_animal/hostile/abnormality/staining_rose/proc/UnregisterMob(mob/living/L, list/record)
+	record -= L
+	if(!(L in sacrificed) && !(L in heretics))
+		UnregisterSignal(L, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING))
+
+/mob/living/simple_animal/hostile/abnormality/staining_rose/proc/ForceUnregisterMob(mob/living/L)
+	UnregisterSignal(L, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING))
+	sacrificed -= L
+	heretics -= L
 
 //Weather and such
 /datum/weather/petals

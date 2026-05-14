@@ -3,7 +3,6 @@
 	name = "heart of aspiration"
 	desc = "A giant red heart."
 	icon_state = "heart"
-	var/list/active_users = list()
 
 	ego_list = list(
 		/datum/ego_datum/weapon/aspiration,
@@ -14,12 +13,10 @@
 	. = ..()
 	if(!do_after(user, 6))
 		return
-	if(user in active_users)
-		active_users -= user
+	if(user.has_status_effect(STATUS_EFFECT_ASPIRATION))
 		user.remove_status_effect(STATUS_EFFECT_ASPIRATION)
 		to_chat(user, span_notice("You feel your heart slow again."))
 	else
-		active_users += user
 		user.apply_status_effect(STATUS_EFFECT_ASPIRATION)
 		to_chat(user, span_userdanger("You feel your blood pumping faster."))
 

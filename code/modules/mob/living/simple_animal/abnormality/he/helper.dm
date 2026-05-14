@@ -271,6 +271,60 @@
 	clogged_blades = FALSE
 	color = null
 
+//If it gets melee'd, it has a chance to spin, knocking enemies back.
+
+/mob/living/simple_animal/hostile/abnormality/helper/attacked_by(obj/item/I, mob/living/user)
+	..()
+	if(charging)
+		return
+	if(prob(12))
+		spin_start()
+
+/mob/living/simple_animal/hostile/abnormality/helper/proc/spin_start()
+	SpinAnimation(1.3 SECONDS, 1, TRUE)
+	addtimer(CALLBACK(src, PROC_REF(do_spin), 0), 1.5 SECONDS)
+	playsound(src, 'sound/abnormalities/helper/rise.ogg', 100, 1)
+	charging = TRUE
+	color = "#f5413b"
+
+/mob/living/simple_animal/hostile/abnormality/helper/proc/do_spin()
+	SpinAnimation(3, 1, TRUE)
+	for(var/mob/living/carbon/human/H in range(1, src))
+		if(H.stat >= SOFT_CRIT)
+			continue
+		visible_message("[src] tosses [H] out of the way!")
+		H.deal_damage(dash_damage, RED_DAMAGE, src)
+		H.apply_lc_bleed(7)
+
+		var/rand_dir = pick(NORTH, SOUTH, EAST, WEST)
+		var/atom/throw_target = get_edge_target_turf(H, rand_dir)
+		if(!H.anchored)
+			H.throw_at(throw_target, rand(6, 10), 18, H)
+
+		if(H.stat == DEAD)
+			H.gib(FALSE, FALSE, FALSE)
+	SLEEP_CHECK_DEATH(5)
+	charging = FALSE
+	dash_cooldown = world.time + dash_cooldown_time
+	color = null
+
+
+//If you get shot while you are spinning, throw bullets back
+/mob/living/simple_animal/hostile/abnormality/helper/bullet_act(obj/projectile/P)
+	if(charging)
+		if(is_A_facing_B(src,P.firer))
+			if(P.reflectable != NONE)
+				visible_message(span_userdanger("[src] deflects [P] with it's spinning blades!"))
+				if(P.starting)
+					var/new_x = P.starting.x + pick(0, 0, 0, 0, 0, -1, 1, -2, 2)
+					var/new_y = P.starting.y + pick(0, 0, 0, 0, 0, -1, 1, -2, 2)
+					// redirect the projectile
+					P.firer = src
+					P.preparePixelProjectile(locate(clamp(new_x, 1, world.maxx), clamp(new_y, 1, world.maxy), z), src)
+				return BULLET_ACT_FORCE_PIERCE
+			return BULLET_ACT_BLOCK
+	..()
+
 /* Work effects */
 /mob/living/simple_animal/hostile/abnormality/helper/NeutralEffect(mob/living/carbon/human/user, work_type, pe)
 	. = ..()

@@ -373,7 +373,6 @@
 	var/isolation_check_range = 3
 	var/z_level_hunt_mode = FALSE
 	var/mob/living/carbon/human/hunt_target = null
-	var/can_act = TRUE
 
 /mob/living/simple_animal/hostile/clan/assassin/Initialize()
 	. = ..()

@@ -77,7 +77,16 @@
 
 	return FALSE
 
-/obj/projectile/ego_bullet/ego_harmony/on_hit(atom/target, blocked = FALSE)
+
+/obj/projectile/ego_bullet/ego_harmonyfast
+	name = "Musical Addiction"
+	icon_state = "harmony_fast"
+	damage = 16
+	damage_type = WHITE_DAMAGE
+	speed = 0.5
+	projectile_piercing = PASSMOB
+
+/obj/projectile/ego_bullet/ego_harmonyfast/on_hit(atom/target, blocked = FALSE)
 	if(ishuman(target))
 		var/mob/living/carbon/human/H = target
 		if(H.sanity_lost)
@@ -163,6 +172,13 @@
 	damage_type = RED_DAMAGE
 	damage = 70
 	projectile_piercing = PASSMOB
+
+	//The alt-fire for Ardor Blossom Star
+/obj/projectile/ego_bullet/ego_match/hellterfly
+	name = "Hellterfly’s Dream"
+	icon_state = "atrocket"
+	damage = 10 // Direct hit
+	aoedamage = 60
 
 /obj/projectile/ego_bullet/ego_squeak
 	name = "squeak"

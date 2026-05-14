@@ -1599,9 +1599,8 @@
 /turf/open/floor/carpet/orange,
 /area/department_main/training)
 "HN" = (
-/obj/machinery/computer/med_data{
-	dir = 8;
-	req_one_access = "0"
+/obj/machinery/computer/extraction_cargo/records{
+	dir = 8
 	},
 /turf/open/floor/carpet/black,
 /area/facility_hallway/records)

@@ -12,13 +12,16 @@
 	var/mob/living/picked_abno
 
 //This should stop someone to spawn as an abno if none of their preferences are available at round start.
-/datum/job/limbus_specimen/unique_job_check(client/C)
+/datum/job/limbus_specimen/unique_job_check(client/C, occupation_divide)
 	if(!LAZYLEN(return_sec_list(GLOB.low_security.Copy(), C)) && !LAZYLEN(return_sec_list(GLOB.high_security.Copy(), C)))
 		return FALSE
-	return TRUE
+	return attribute_abno(C, occupation_divide)
 
 //Checks if any abnos are available for a latejoin.
 /datum/job/limbus_specimen/special_check_latejoin(client/C)
+	var/found_abno = LAZYACCESS(GLOB.attributed_lcl_abno, C)
+	if(LAZYFIND(GLOB.lcl_spawned_abno, found_abno)) //The player's attributed abno has already been spawned, not allowed to try again.
+		return FALSE
 	for(var/obj/effect/landmark/start/limbus_abnospawn/LAS in GLOB.start_landmarks_list)
 		if(LAZYLEN(return_sec_list(GLOB.available_low_sec_abno.Copy(), C)) || LAZYLEN(return_sec_list(GLOB.available_high_sec_abno.Copy(), C)))
 			return TRUE
@@ -29,33 +32,31 @@
 	if(!H?.mind || visualsOnly || !preference_source)
 		return FALSE
 
-	var/spawning
+	if(latejoin)
+		attribute_abno(preference_source)
+
+	var/abno_path = LAZYACCESS(GLOB.attributed_lcl_abno, preference_source)
 	var/turf/abno_turf
-	var/list/low_sec_list = return_sec_list(GLOB.available_low_sec_abno.Copy(), preference_source)
-	var/list/high_sec_list = return_sec_list(GLOB.available_high_sec_abno.Copy(), preference_source)
 
-	spawning = pick_n_take(low_sec_list) //Prioritize lowsec spawns first.
-	for(var/obj/effect/landmark/start/limbus_abnospawn/lowsec/LS in GLOB.start_landmarks_list)
-		GLOB.start_landmarks_list -= LS
-		abno_turf = get_turf(LS)
-		qdel(LS)
-		GLOB.available_low_sec_abno -= spawning
-		break
-
-	if(!abno_turf || !spawning) //If no lowsec landmarks/abno are available, we go for highsec.
-		spawning = pick_n_take(high_sec_list)
+	if(LAZYFIND(GLOB.low_security, abno_path))
+		for(var/obj/effect/landmark/start/limbus_abnospawn/lowsec/LS in GLOB.start_landmarks_list)
+			GLOB.start_landmarks_list -= LS
+			abno_turf = get_turf(LS)
+			qdel(LS)
+			break
+	else
 		for(var/obj/effect/landmark/start/limbus_abnospawn/highsec/HS in GLOB.start_landmarks_list)
 			GLOB.start_landmarks_list -= HS
 			abno_turf = get_turf(HS)
 			qdel(HS)
-			GLOB.available_high_sec_abno -= spawning
 			break
 
-	if(!isnull(spawning) && !isnull(abno_turf))
-		var/mob/living/simple_animal/hostile/limbus_abno/LA = new spawning(abno_turf)
+	if(!isnull(abno_path) && !isnull(abno_turf))
+		var/mob/living/simple_animal/hostile/limbus_abno/LA = new abno_path(abno_turf)
 		picked_abno = LA
 		H.mind.transfer_to(picked_abno)
 		qdel(H)
+		GLOB.lcl_spawned_abno += abno_path
 		return picked_abno
 	return FALSE
 
@@ -75,3 +76,29 @@
 		if(LAZYFIND(abno_list, limbus_abno) && !LAZYACCESS(abno_pref_list, limbus_abno))
 			abno_list -= limbus_abno
 	return abno_list
+
+/datum/job/limbus_specimen/proc/attribute_abno(client/C, occupation_divide = FALSE)
+	var/found_abno = LAZYACCESS(GLOB.attributed_lcl_abno, C)
+	if(LAZYFIND(GLOB.lcl_spawned_abno, found_abno)) //The player's attributed abno has already been spawned, not allowed to try again. Pick another job jackass.
+		return FALSE
+	if(LAZYFIND(GLOB.attributed_lcl_abno, C))
+		return TRUE //In that case, they already have an abno assigned to you, but it hasn't been spawned so we skip the selection process.
+	var/spawning
+	var/list/low_sec_list = return_sec_list(GLOB.available_low_sec_abno.Copy(), C)
+	var/list/high_sec_list = return_sec_list(GLOB.available_high_sec_abno.Copy(), C)
+
+	spawning = pick_n_take(low_sec_list) //Prioritize lowsec spawns first.
+	if(!isnull(spawning))
+		if(!occupation_divide)
+			GLOB.available_low_sec_abno -= spawning
+			LAZYSET(GLOB.attributed_lcl_abno, C, spawning)
+		return TRUE
+
+//If no lowsec landmarks/abno are available, we go for highsec.
+	spawning = pick_n_take(high_sec_list)
+	if(!isnull(spawning))
+		if(!occupation_divide)
+			GLOB.available_high_sec_abno -= spawning
+			LAZYSET(GLOB.attributed_lcl_abno, C, spawning)
+		return TRUE
+	return FALSE

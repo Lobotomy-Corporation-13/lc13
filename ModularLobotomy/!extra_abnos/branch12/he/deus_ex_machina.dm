@@ -42,8 +42,8 @@
 		return FALSE
 	if(died.z != z)
 		return FALSE
-	datum_reference.qliphoth_change(-1) // One death reduces it
 	recently_departed = died.type
+	datum_reference.qliphoth_change(-1) // One death reduces it
 	return TRUE
 
 /mob/living/simple_animal/hostile/abnormality/branch12/deus_ex_machina/ZeroQliphoth()

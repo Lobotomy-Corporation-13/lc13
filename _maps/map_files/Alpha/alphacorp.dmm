@@ -6245,9 +6245,8 @@
 /turf/open/floor/carpet/red,
 /area/department_main/discipline)
 "VA" = (
-/obj/machinery/computer/med_data{
-	dir = 8;
-	req_one_access = "0"
+/obj/machinery/computer/extraction_cargo/records{
+	dir = 8
 	},
 /turf/open/floor/carpet/black,
 /area/department_main/records)

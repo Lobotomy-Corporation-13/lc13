@@ -24,7 +24,6 @@
 	var/leap_sound = 'sound/abnormalities/nosferatu/attack_special.ogg'
 	var/blood_feast = 450
 	var/max_blood_feast = 500
-	var/can_act = TRUE
 	var/leap_damage = 50
 	var/slash_damage = 25
 	var/drain_cooldown = 0
@@ -32,11 +31,17 @@
 	var/bleed_stacks = 2
 	var/leap_bleed_stacks = 5
 	var/drop_outfit = TRUE
+	var/dash_charges = 0
+	var/obj/effect/proc_holder/ability/aimed/dash/ourdash
 
 /mob/living/simple_animal/hostile/humanoid/blood/fiend/Initialize()
 	. = ..()
 	if(SSmaptype.maptype == "wcorp")
 		drop_outfit = FALSE
+	grantAbilities()
+
+/mob/living/simple_animal/hostile/humanoid/blood/fiend/proc/grantAbilities()
+	ourdash = new /obj/effect/proc_holder/ability/aimed/dash/bloodfiend
 
 /mob/living/simple_animal/hostile/humanoid/blood/fiend/proc/AdjustBloodFeast(amount)
 	if(stat != DEAD)
@@ -67,29 +72,6 @@
 					else
 						AdjustBloodFeast(max((B.bloodiness**2)/800,1))
 				qdel(B)
-
-/mob/living/simple_animal/hostile/humanoid/blood/fiend/proc/Dash(target_turf)
-	target_turf = get_turf(target)
-	var/list/hit_mob = list()
-	do_shaky_animation(1)
-	if(do_after(src, 0.5 SECONDS, target = src))
-		var/turf/wallcheck = get_turf(src)
-		var/enemy_direction = get_dir(src, target_turf)
-		for(var/i = 0 to 4)
-			if(get_turf(src) != wallcheck || stat == DEAD)
-				break
-			wallcheck = get_step(src, enemy_direction)
-			if(!ClearSky(wallcheck))
-				break
-			sleep(0.25)//without this the attack happens instantly
-			forceMove(wallcheck)
-			playsound(wallcheck, 'sound/abnormalities/doomsdaycalendar/Lor_Slash_Generic.ogg', 20, 0, 4)
-			for(var/turf/T in orange(get_turf(src), 1))
-				if(isclosedturf(T))
-					continue
-				var/obj/effect/temp_visual/slice/blood = new(T)
-				blood.color = "#b52e19"
-				hit_mob = HurtInTurf(T, hit_mob, slash_damage, RED_DAMAGE, null, TRUE, FALSE, TRUE, hurt_structure = TRUE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 
 /obj/effect/temp_visual/warning3x3/bloodfiend
 	duration = 1.5 SECONDS
@@ -126,8 +108,8 @@
 	SLEEP_CHECK_DEATH(0.5 SECONDS)
 	say("No... I NEED MORE!!!")
 	SLEEP_CHECK_DEATH(1.5 SECONDS)
-	Dash(target_turf)
-	Dash(target_turf)
+	ourdash.AlterCharge(2)
+	dash_charges += 2
 	can_act = TRUE
 
 /mob/living/simple_animal/hostile/humanoid/blood/fiend/ClearSky(turf/T)
@@ -161,6 +143,9 @@
 /mob/living/simple_animal/hostile/humanoid/blood/fiend/OpenFire()
 	if(!can_act)
 		return FALSE
+	if(dash_charges > 0 && target)
+		ourdash.Perform(target,src)
+		dash_charges--
 	if(max_blood_feast == blood_feast)
 		Leap(target)
 		return
@@ -170,7 +155,7 @@
 		return FALSE
 	if(stat != DEAD)
 		Drain()
-	..()
+	return ..()
 
 /mob/living/simple_animal/hostile/humanoid/blood/fiend/boss
 	name = "royal bloodfiend"
@@ -197,7 +182,6 @@
 	slash_damage = 100
 	blood_feast = 700
 	max_blood_feast = 750
-	var/cutter_bleed_stacks = 15
 	var/readyToSpawn75 = TRUE
 	var/timeToSpawn75
 	var/readyToSpawn25 = TRUE
@@ -208,6 +192,9 @@
 	var/mob/living/blood_target
 	var/summon_cost = 25
 	var/slashing = FALSE
+
+/mob/living/simple_animal/hostile/humanoid/blood/fiend/boss/grantAbilities()
+	ourdash = new /obj/effect/proc_holder/ability/aimed/dash/bloodboss
 
 /mob/living/simple_animal/hostile/humanoid/blood/fiend/boss/AdjustBloodFeast(amount)
 	. = ..()
@@ -293,7 +280,7 @@
 			say("Just...")
 		if (i == 3)
 			say("ROT AWAY!!!")
-		Dash(blood_target)
+		ourdash.Perform(blood_target,src)
 		sleep(0.25 SECONDS)
 	blood_target.faction -= "hostile"
 	if (!cutter_hit)
@@ -310,51 +297,6 @@
 	ChangeResistances(list(RED_DAMAGE = 1, WHITE_DAMAGE = 0.6, BLACK_DAMAGE = 0.4, PALE_DAMAGE = 1.5))
 	slashing = FALSE
 	can_act = TRUE
-
-/mob/living/simple_animal/hostile/humanoid/blood/fiend/boss/Dash(target_turf)
-	target_turf = get_turf(blood_target)
-
-	do_shaky_animation(1)
-	var/dx = src.x - blood_target.x
-	var/dy = src.y - blood_target.y
-	var/turf/safe_turf = locate(blood_target.x - dx, blood_target.y - dy, blood_target.z)
-	if (safe_turf.density)
-		safe_turf = locate(blood_target.x, blood_target.y, blood_target.z)
-	var/list/warning_overlays = list()
-	var/list/warning_turfs = list()
-	for(var/turf/T in view(target_turf, 2))
-		if (T == safe_turf)
-			var/image/S = image(icon='icons/effects/eldritch.dmi',icon_state="cloud_swirl")
-			T.add_overlay(S)
-			warning_overlays.Add(S)
-			warning_turfs.Add(T)
-			continue;
-		var/image/O = image(icon='icons/effects/eldritch.dmi',icon_state="blood_cloud_swirl")
-		T.add_overlay(O)
-		warning_overlays.Add(O)
-		warning_turfs.Add(T)
-
-
-	sleep(15)
-	for (var/i in 1 to warning_turfs.len)
-		var/turf/T = warning_turfs[i]
-		T.cut_overlay(warning_overlays[i])
-
-	if (stat == DEAD)
-		return
-	playsound(blood_target, 'sound/abnormalities/doomsdaycalendar/Lor_Slash_Generic.ogg', 20, 0, 4)
-	var/list/hit_list = list()
-	for(var/turf/T in range(target_turf, 2))
-		if (T == safe_turf)
-			continue;
-		var/obj/effect/temp_visual/slice/blood = new(T)
-		blood.color = "#b52e19"
-		hit_list = HurtInTurf(T, hit_list, slash_damage, RED_DAMAGE, null, TRUE, TRUE, TRUE, hurt_structure = TRUE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
-	for (var/hit in hit_list)
-		if (istype(hit, /mob/living))
-			var/mob/living/L = hit
-			cutter_hit = TRUE
-			L.apply_lc_bleed(cutter_bleed_stacks)
 
 /mob/living/simple_animal/hostile/humanoid/blood/fiend/boss/adjustHealth(amount, updating_health = TRUE, forced = FALSE)
 	if (health/maxHealth > 0.75)
@@ -464,7 +406,7 @@
 		if(prob(10))
 			new /obj/item/clothing/suit/armor/ego_gear/city/masquerade_cloak/masquerade_coat (get_turf(src))
 	QDEL_IN(src, 15)
-	..()
+	return ..()
 
 /mob/living/simple_animal/hostile/humanoid/blood/bag/proc/DeathExplosion()
 	playsound(loc, 'sound/effects/ordeals/crimson/dusk_dead.ogg', 60, TRUE)

@@ -6,6 +6,7 @@
  * and storage is anywhere a storage component is used.
  * Scaling should affect the item's icon and all attached overlays (such as blood decals).
  *
+ * LC13 ADDITION IN 2026/02: Added translation support (x/y offsets) because my boundless greed demands being able to put 64x64 obj sprites into inventories
  */
 /datum/element/item_scaling
 	element_flags = ELEMENT_BESPOKE
@@ -14,6 +15,10 @@
 	var/overworld_scaling
 	/// Scaling value when the attached item is in a storage component or inventory slot.
 	var/storage_scaling
+	/// Matrix will be translated in X by this amount
+	var/horizontal_translate
+	/// Matrix will be translated in Y by this amount
+	var/vertical_translate
 
 /**
  * Attach proc for the item_scaling element
@@ -28,15 +33,20 @@
  * * overworld_scaling - Integer or float to scale the item in the overworld.
  * * storage_scaling - Integer or float to scale the item in storage/inventory.
  */
-/datum/element/item_scaling/Attach(datum/target, overworld_scaling, storage_scaling)
+/datum/element/item_scaling/Attach(datum/target, overworld_scaling, storage_scaling, horizontal_translate = 0, vertical_translate = 0)
 	. = ..()
 	if(!isatom(target))
 		return ELEMENT_INCOMPATIBLE
-	// Initial scaling set to overworld_scaling when item is spawned.
-	scale(target, overworld_scaling)
+	if(!isnum(overworld_scaling) || !isnum(storage_scaling))
+		return ELEMENT_INCOMPATIBLE
 
 	src.overworld_scaling = overworld_scaling
 	src.storage_scaling = storage_scaling
+	src.horizontal_translate = horizontal_translate
+	src.vertical_translate = vertical_translate
+
+	// Initial scaling set to overworld_scaling when item is spawned.
+	scale(target, overworld_scaling)
 
 	// Object scaled when dropped/thrown OR when exiting a storage component.
 	RegisterSignal(target, list(COMSIG_ITEM_DROPPED, COMSIG_STORAGE_EXITED), PROC_REF(scale_overworld))
@@ -72,6 +82,7 @@
 /datum/element/item_scaling/proc/scale(datum/source, scaling)
 	var/atom/scalable_object = source
 	var/matrix/M = matrix()
+	M.Translate(horizontal_translate, vertical_translate)
 	scalable_object.transform = M.Scale(scaling)
 
 /**

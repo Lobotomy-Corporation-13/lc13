@@ -600,11 +600,11 @@ Core mechanics:
 	if(fear_level <= 0)
 		return
 	for(var/mob/living/carbon/human/H in view(7, src))
-		if(H in breach_affected)
+		if(H.tag in breach_affected)
 			continue
 		if(H.stat == DEAD)
 			continue
-		breach_affected += H
+		breach_affected += H.tag
 		if(HAS_TRAIT(H, TRAIT_COMBATFEAR_IMMUNE))
 			to_chat(H, span_notice("The music is haunting, but you resist its call."))
 			H.apply_status_effect(/datum/status_effect/panicked_lvl_0)

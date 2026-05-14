@@ -201,7 +201,7 @@
 
 	playsound(src, 'sound/machines/hiss.ogg', 50, FALSE, FALSE)
 
-	pipe_eject(H)
+	pipe_eject(H, source_area = H.source_area)
 
 	qdel(H)
 

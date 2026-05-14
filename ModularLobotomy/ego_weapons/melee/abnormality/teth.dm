@@ -317,6 +317,10 @@
 	var/burst_cooldown
 	var/burst_cooldown_time = 5 SECONDS
 
+/obj/item/ego_weapon/lantern/Destroy()
+	QDEL_LIST(traps)
+	return ..()
+
 /obj/item/ego_weapon/lantern/attack_self(mob/user)
 	if(mode == LANTERN_MODE_REMOTE)
 		to_chat(user, span_info("You adjust any newly-placed traps to be set off by motion."))
@@ -795,6 +799,46 @@
 		for(var/mob/living/L in ohearers(3, src))
 			L.deal_damage(30, RED_DAMAGE, user, flags = (DAMAGE_UNTRACKABLE), attack_type = (ATTACK_TYPE_OTHER))
 		qdel(src)
+
+//Placeholder
+/obj/item/ego_weapon/shield/recollection
+	name = "recollection"
+	desc = "A portrait crudely fasioned into a shield."
+	special = "Upon deflecting a attack, spawn a row of three portraits that block projectiles."
+	icon_state = "recollection"
+	damtype = WHITE_DAMAGE
+	var/abi_cooldown = 0
+	var/abi_cooldown_delay = 5 SECONDS
+
+/obj/item/ego_weapon/shield/recollection/attack_self(mob/user)
+	. = ..()
+	if(abi_cooldown < world.time)
+		Ability(user)
+
+/obj/item/ego_weapon/shield/recollection/proc/ThreebyOne(direction = NORTH)
+	var/our_location = get_turf(src)
+	. = list(our_location)
+	//Directional Calculation, only applies to cardinal directions.
+	var/dir1
+	var/dir2
+
+	if(direction == NORTH || direction == SOUTH)
+		dir1 = EAST
+		dir2 = WEST
+	if(direction == EAST || direction == WEST)
+		dir1 = NORTH
+		dir2 = SOUTH
+
+	. += get_open_turf_in_dir(our_location, dir1)
+	. += get_open_turf_in_dir(our_location, dir2)
+
+/obj/item/ego_weapon/shield/recollection/proc/Ability(mob/user)
+	var/list/placement_area = ThreebyOne(user.dir)
+	for(var/turf/T in placement_area)
+		var/obj/structure/certain_portrait/pic = new /obj/structure/certain_portrait(T)
+		QDEL_IN(pic, abi_cooldown_delay)
+	//Half a second more so the last ones can fade.
+	abi_cooldown = world.time + abi_cooldown_delay + 5
 
 /obj/item/ego_weapon/mini/patch
 	name = "patch"

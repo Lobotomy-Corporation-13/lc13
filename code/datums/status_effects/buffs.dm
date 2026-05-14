@@ -586,12 +586,13 @@
 //Global Damage Type Protections
 /datum/status_effect/stacking/protection
 	id = "protection"
-	status_type = STATUS_EFFECT_MULTIPLE
+	status_type = STATUS_EFFECT_UNIQUE
 	duration = 100
 	max_stacks = 9
 	stacks = 0
 	consumed_on_threshold = FALSE
 	alert_type = /atom/movable/screen/alert/status_effect/protection
+	stacking_display_name = "protection"
 	var/protection_mod = /datum/dc_change/protection
 	var/physiology_mod
 	var/protection = 1
@@ -681,12 +682,13 @@
 //Specific Damage Type Protections
 /datum/status_effect/stacking/damtype_protection
 	id = "red_protection"
-	status_type = STATUS_EFFECT_MULTIPLE
+	status_type = STATUS_EFFECT_UNIQUE
 	duration = 100
 	max_stacks = 9
 	stacks = 0
 	consumed_on_threshold = FALSE
 	alert_type = /atom/movable/screen/alert/status_effect/damtype_protection
+	stacking_display_name = "protection_red"
 	var/protection_mod = /datum/dc_change/red_protection
 	var/physiology_mod
 	var/damage_type = RED_DAMAGE
@@ -795,6 +797,7 @@
 	alert_type = /atom/movable/screen/alert/status_effect/damtype_protection/white
 	protection_mod = /datum/dc_change/white_protection
 	damage_type = WHITE_DAMAGE
+	stacking_display_name = "protection_white"
 
 /atom/movable/screen/alert/status_effect/damtype_protection/white
 	name = "White Protection"
@@ -819,6 +822,7 @@
 	alert_type = /atom/movable/screen/alert/status_effect/damtype_protection/black
 	protection_mod = /datum/dc_change/black_protection
 	damage_type = BLACK_DAMAGE
+	stacking_display_name = "protection_black"
 
 /atom/movable/screen/alert/status_effect/damtype_protection/black
 	name = "Black Protection"
@@ -843,6 +847,7 @@
 	alert_type = /atom/movable/screen/alert/status_effect/damtype_protection/pale
 	protection_mod = /datum/dc_change/pale_protection
 	damage_type = PALE_DAMAGE
+	stacking_display_name = "protection_pale"
 
 /atom/movable/screen/alert/status_effect/damtype_protection/pale
 	name = "Pale Protection"
@@ -862,15 +867,115 @@
 		src.apply_status_effect(/datum/status_effect/stacking/damtype_protection/pale, stacks)
 		return
 
+//Defense Level Up - Diminishing returns defense: (stacks / (stacks + 25)) * 100
+//  1 stack = 3%, 9 = 26%, 20 = 44%, 100 = 80%
+//  Stacks additively, halves every 5 seconds
+/datum/status_effect/stacking/defense_level_up
+	id = "defense_level_up"
+	status_type = STATUS_EFFECT_MULTIPLE
+	duration = -1
+	tick_interval = 50
+	max_stacks = 100
+	stacks = 0
+	consumed_on_threshold = FALSE
+	alert_type = null
+	stacking_display_name = "DLU"
+	var/protection_mod = /datum/dc_change/defense_level_up
+	var/physiology_mod
+	var/protection = 1
+
+/atom/movable/screen/alert/status_effect/defense_level_up
+	name = "Defense Level Up"
+	desc = "Your defense is enhanced! All damage taken will be decreased by "
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
+	icon_state = "protection"
+
+/datum/status_effect/stacking/defense_level_up/on_apply()
+	. = ..()
+	if(!owner)
+		return
+	var/mob/living/carbon/human/H = owner
+	physiology_mod = (1 - protection * (stacks / (stacks + 25)))
+	if(ishuman(H))
+		H.physiology.red_mod *= physiology_mod
+		H.physiology.white_mod *= physiology_mod
+		H.physiology.black_mod *= physiology_mod
+		H.physiology.pale_mod *= physiology_mod
+		return
+	if(!isanimal(owner))
+		return
+	var/mob/living/simple_animal/A = owner
+	A.AddModifier(protection_mod)
+	var/datum/dc_change/mod = A.HasDamageMod(protection_mod)
+	mod.potency = 1 - ((stacks / (stacks + 25)) * protection)
+	A.UpdateResistances()
+
+/datum/status_effect/stacking/defense_level_up/add_stacks(stacks_added)
+	. = ..()
+	if(!owner)
+		return
+	if(linked_alert)
+		linked_alert.desc = initial(linked_alert.desc)+"[round((stacks / (stacks + 25)) * 100)]%!"
+	var/mob/living/carbon/human/H = owner
+	if(ishuman(H))
+		if(physiology_mod)
+			H.physiology.red_mod /= physiology_mod
+			H.physiology.white_mod /= physiology_mod
+			H.physiology.black_mod /= physiology_mod
+			H.physiology.pale_mod /= physiology_mod
+		physiology_mod = (1 - protection * (stacks / (stacks + 25)))
+		H.physiology.red_mod *= physiology_mod
+		H.physiology.white_mod *= physiology_mod
+		H.physiology.black_mod *= physiology_mod
+		H.physiology.pale_mod *= physiology_mod
+		return
+	if(!isanimal(owner))
+		return
+	var/mob/living/simple_animal/A = owner
+	var/datum/dc_change/mod = A.HasDamageMod(protection_mod)
+	mod.potency = 1 - ((stacks / (stacks + 25)) * protection)
+	A.UpdateResistances()
+
+/datum/status_effect/stacking/defense_level_up/on_remove()
+	. = ..()
+	if(!owner)
+		return
+	var/mob/living/carbon/human/H = owner
+	if(ishuman(H))
+		H.physiology.red_mod /= physiology_mod
+		H.physiology.white_mod /= physiology_mod
+		H.physiology.black_mod /= physiology_mod
+		H.physiology.pale_mod /= physiology_mod
+		return
+	var/mob/living/simple_animal/A = owner
+	if(A.HasDamageMod(protection_mod))
+		A.RemoveModifier(protection_mod)
+
+/datum/status_effect/stacking/defense_level_up/tick()
+	if(!can_have_status())
+		qdel(src)
+		return
+	var/decay = max(1, round(stacks / 2))
+	add_stacks(-decay)
+
+//Mob Proc
+/mob/living/proc/apply_lc_defense_level_up(stacks)
+	var/datum/status_effect/stacking/defense_level_up/P = src.has_status_effect(/datum/status_effect/stacking/defense_level_up)
+	if(!P)
+		src.apply_status_effect(/datum/status_effect/stacking/defense_level_up, stacks)
+		return
+	P.add_stacks(stacks)
+
 //Global Damage Up
 /datum/status_effect/stacking/damage_up
 	id = "damage_up"
-	status_type = STATUS_EFFECT_MULTIPLE
+	status_type = STATUS_EFFECT_UNIQUE
 	duration = 100
 	max_stacks = 10
 	stacks = 0
 	consumed_on_threshold = FALSE
 	alert_type = /atom/movable/screen/alert/status_effect/damage_up
+	stacking_display_name = "damage_up"
 	var/damage_mode = 1
 	var/damage_increase = 0
 
@@ -927,12 +1032,13 @@
 //Specific Damage Up
 /datum/status_effect/stacking/damtype_damage_up
 	id = "red_damage_up"
-	status_type = STATUS_EFFECT_MULTIPLE
+	status_type = STATUS_EFFECT_UNIQUE
 	duration = 100
 	max_stacks = 10
 	stacks = 0
 	consumed_on_threshold = FALSE
 	alert_type = /atom/movable/screen/alert/status_effect/red_damage_up
+	stacking_display_name = "damage_up_red"
 	var/damage_mode = 1
 	var/damage_increase = 0
 	var/damage_type = RED_DAMAGE
@@ -1019,6 +1125,7 @@
 	id = "white_damage_up"
 	alert_type = /atom/movable/screen/alert/status_effect/white_damage_up
 	damage_type = WHITE_DAMAGE
+	stacking_display_name = "damage_up_white"
 
 /atom/movable/screen/alert/status_effect/white_damage_up
 	name = "White Damage Up"
@@ -1042,6 +1149,7 @@
 	id = "black_damage_up"
 	alert_type = /atom/movable/screen/alert/status_effect/black_damage_up
 	damage_type = BLACK_DAMAGE
+	stacking_display_name = "damage_up_black"
 
 /atom/movable/screen/alert/status_effect/black_damage_up
 	name = "Black Damage Up"
@@ -1065,6 +1173,7 @@
 	id = "pale_damage_up"
 	alert_type = /atom/movable/screen/alert/status_effect/pale_damage_up
 	damage_type = PALE_DAMAGE
+	stacking_display_name = "damage_up_pale"
 
 /atom/movable/screen/alert/status_effect/pale_damage_up
 	name = "Pale Damage Up"
@@ -1083,3 +1192,234 @@
 		qdel(S)
 		src.apply_status_effect(/datum/status_effect/stacking/damtype_damage_up/pale, stacks)
 		return
+
+//Offense Level Up - Diminishing returns offense: (stacks / (stacks + 25)) * 100
+//  1 stack = 3%, 9 = 26%, 20 = 44%, 100 = 80%
+//  Stacks additively, halves every 5 seconds
+/datum/status_effect/stacking/offense_level_up
+	id = "offense_level_up"
+	status_type = STATUS_EFFECT_MULTIPLE
+	duration = -1
+	tick_interval = 50
+	max_stacks = 100
+	stacks = 0
+	consumed_on_threshold = FALSE
+	alert_type = null
+	stacking_display_name = "OLU"
+	var/damage_mode = 1
+	/// Tracks the extra_damage amount currently applied to the owner
+	var/applied_extra_damage = 0
+
+/atom/movable/screen/alert/status_effect/offense_level_up
+	name = "Offense Level Up"
+	desc = "Your offense is enhanced! Your melee damage is increased by "
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
+	icon_state = "strength"
+
+/datum/status_effect/stacking/offense_level_up/on_apply()
+	. = ..()
+	if(!owner)
+		return
+	if(isliving(owner))
+		var/mob/living/L = owner
+		applied_extra_damage = (stacks / (stacks + 25)) * 100 * damage_mode
+		L.extra_damage += applied_extra_damage
+
+/datum/status_effect/stacking/offense_level_up/add_stacks(stacks_added)
+	. = ..()
+	if(!owner)
+		return
+	if(linked_alert)
+		linked_alert.desc = initial(linked_alert.desc)+"[round((stacks / (stacks + 25)) * 100)]%!"
+	if(isliving(owner))
+		var/mob/living/L = owner
+		L.extra_damage -= applied_extra_damage
+		applied_extra_damage = (stacks / (stacks + 25)) * 100 * damage_mode
+		L.extra_damage += applied_extra_damage
+
+/datum/status_effect/stacking/offense_level_up/on_remove()
+	. = ..()
+	if(!owner)
+		return
+	if(isliving(owner))
+		var/mob/living/L = owner
+		L.extra_damage -= applied_extra_damage
+
+/datum/status_effect/stacking/offense_level_up/tick()
+	if(!can_have_status())
+		qdel(src)
+		return
+	var/decay = max(1, round(stacks / 2))
+	add_stacks(-decay)
+
+//Mob Proc
+/mob/living/proc/apply_lc_offense_level_up(stacks)
+	var/datum/status_effect/stacking/offense_level_up/S = src.has_status_effect(/datum/status_effect/stacking/offense_level_up)
+	if(!S)
+		src.apply_status_effect(/datum/status_effect/stacking/offense_level_up, stacks)
+		return
+	S.add_stacks(stacks)
+
+//Poise - Crit chance stacking buff
+//  Each attack: (stacks * 2.5)% crit chance
+//  On crit: 25% more damage, send signal, halve stacks (or consume 1 Concentration instead)
+//  Every 10s: if no crit performed and no new poise gained, lose all stacks
+/datum/status_effect/stacking/poise
+	id = "poise"
+	status_type = STATUS_EFFECT_MULTIPLE
+	duration = -1
+	tick_interval = 10 SECONDS
+	max_stacks = 50
+	stacks = 0
+	consumed_on_threshold = FALSE
+	alert_type = /atom/movable/screen/alert/status_effect/poise
+	stacking_display_name = "poise"
+	/// Whether a crit was performed or new stacks were gained this tick period
+	var/active_this_period = TRUE
+
+/atom/movable/screen/alert/status_effect/poise
+	name = "Poise"
+	desc = "You are poised for a critical strike! Crit chance: "
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
+	icon_state = "poise"
+
+/datum/status_effect/stacking/poise/on_apply()
+	. = ..()
+	if(!owner)
+		return
+	RegisterSignal(owner, COMSIG_MOB_ITEM_ATTACK, PROC_REF(on_attack))
+
+/datum/status_effect/stacking/poise/on_remove()
+	UnregisterSignal(owner, COMSIG_MOB_ITEM_ATTACK)
+	return ..()
+
+/datum/status_effect/stacking/poise/add_stacks(stacks_added)
+	. = ..()
+	if(!owner)
+		return
+	if(stacks_added > 0)
+		active_this_period = TRUE
+	linked_alert.desc = initial(linked_alert.desc) + "[round(stacks * 2.5)]%!"
+
+/// Every 10 seconds, check if a crit was performed or new poise was gained. If not, lose all poise.
+/datum/status_effect/stacking/poise/tick()
+	if(!can_have_status())
+		qdel(src)
+		return
+	if(!active_this_period)
+		qdel(src)
+		return
+	active_this_period = FALSE
+
+/// On melee attack, roll for crit based on poise stacks
+/datum/status_effect/stacking/poise/proc/on_attack(datum/source, mob/living/target, mob/living/user, obj/item/weapon)
+	SIGNAL_HANDLER
+
+	if(!isliving(target) || stacks <= 0)
+		return
+	var/crit_chance = stacks * 2.5
+	if(!prob(crit_chance))
+		return
+
+	// Crit success
+	active_this_period = TRUE
+	INVOKE_ASYNC(src, PROC_REF(do_poise_crit), target, user, weapon)
+
+/// Handles the poise crit effect: bonus damage, signals, stack consumption
+/datum/status_effect/stacking/poise/proc/do_poise_crit(mob/living/target, mob/living/user, obj/item/weapon)
+	if(QDELETED(target) || QDELETED(user))
+		return
+
+	// Deal 25% of the weapon's force as bonus damage
+	var/bonus_damage = 0
+	if(weapon)
+		bonus_damage = weapon.force * 0.25
+		if(istype(weapon, /obj/item/ego_weapon))
+			var/obj/item/ego_weapon/E = weapon
+			bonus_damage = weapon.force * E.force_multiplier * 0.25
+	if(bonus_damage > 0)
+		target.deal_damage(bonus_damage, weapon?.damtype || BRUTE, source = user, attack_type = ATTACK_TYPE_MELEE)
+
+	new /obj/effect/temp_visual/crit(get_turf(user))
+	to_chat(user, span_green("Your poise allows a critical strike!"))
+	to_chat(target, span_userdanger("[user]'s attack finds a critical opening!"))
+
+	// Send signals to both attacker and target
+	SEND_SIGNAL(user, COMSIG_POISE_CRIT_ATTACKER, target, bonus_damage)
+	SEND_SIGNAL(target, COMSIG_POISE_CRIT_TARGET, user, bonus_damage)
+
+	// Check for Concentration: consume 1 stack instead of halving poise
+	var/datum/status_effect/stacking/concentration/C = user.has_status_effect(/datum/status_effect/stacking/concentration)
+	if(C && C.stacks > 0)
+		C.add_stacks(-1)
+		if(C.stacks <= 0)
+			qdel(C)
+	else
+		// Halve poise stacks
+		var/new_stacks = max(0, round(stacks / 2))
+		if(new_stacks <= 0)
+			qdel(src)
+			return
+		stacks = new_stacks
+		update_stacking_number()
+		linked_alert.desc = initial(linked_alert.desc) + "[round(stacks * 2.5)]%!"
+
+//Mob Proc
+/mob/living/proc/apply_lc_poise(stacks)
+	var/datum/status_effect/stacking/poise/P = src.has_status_effect(/datum/status_effect/stacking/poise)
+	if(!P)
+		src.apply_status_effect(/datum/status_effect/stacking/poise, stacks)
+		return
+	P.add_stacks(stacks)
+	new /obj/effect/temp_visual/damage_effect/poise(get_turf(src))
+
+//Concentration - Poise support buff
+//  Max 20 stacks, decays 1 every 15s
+//  On decay: if no Poise, clear all Concentration
+/datum/status_effect/stacking/concentration
+	id = "concentration"
+	status_type = STATUS_EFFECT_MULTIPLE
+	duration = -1
+	tick_interval = 15 SECONDS
+	max_stacks = 20
+	stacks = 0
+	consumed_on_threshold = FALSE
+	alert_type = /atom/movable/screen/alert/status_effect/concentration
+	stacking_display_name = "concentration"
+
+/atom/movable/screen/alert/status_effect/concentration
+	name = "Concentration"
+	desc = "You are concentrated! Your focus protects your poise. Stacks: "
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
+	icon_state = "concentration"
+
+/datum/status_effect/stacking/concentration/add_stacks(stacks_added)
+	. = ..()
+	if(!owner)
+		return
+	linked_alert.desc = initial(linked_alert.desc) + "[stacks]"
+
+/// Decay 1 stack every 15 seconds. If owner has no Poise when decaying, clear all Concentration.
+/datum/status_effect/stacking/concentration/tick()
+	if(!can_have_status())
+		qdel(src)
+		return
+	// Check if owner has Poise
+	var/datum/status_effect/stacking/poise/P = owner.has_status_effect(/datum/status_effect/stacking/poise)
+	if(!P)
+		// No Poise - clear all Concentration
+		qdel(src)
+		return
+	// Decay by 1
+	add_stacks(-1)
+	if(stacks <= 0)
+		qdel(src)
+
+//Mob Proc
+/mob/living/proc/apply_lc_concentration(stacks)
+	var/datum/status_effect/stacking/concentration/C = src.has_status_effect(/datum/status_effect/stacking/concentration)
+	if(!C)
+		src.apply_status_effect(/datum/status_effect/stacking/concentration, stacks)
+		return
+	C.add_stacks(stacks)
+	new /obj/effect/temp_visual/damage_effect/concentration(get_turf(src))

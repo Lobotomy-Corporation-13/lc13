@@ -63,7 +63,7 @@
 
 /mob/living/simple_animal/hostile/abnormality/lunar_rabbit/Initialize(atom/attacked_target)
 	.=..()
-	var/breachtime = 5 MINUTES + rand(1, 10 MINUTES) + datum_reference.transferable_simple * 3 MINUTES
+	var/breachtime = 5 MINUTES + rand(1, 10 MINUTES) + (datum_reference ? datum_reference.transferable_simple : 1) * 3 MINUTES
 	addtimer(CALLBACK(src, PROC_REF(BreachMe)), breachtime)
 
 /mob/living/simple_animal/hostile/abnormality/lunar_rabbit/proc/BreachMe(atom/attacked_target)
@@ -92,6 +92,7 @@
 				L.adjust_blindness(5)
 			if(4)
 				return
+	SLEEP_CHECK_DEATH(3)
 
 /mob/living/simple_animal/hostile/abnormality/lunar_rabbit/PostWorkEffect(mob/living/carbon/human/user, work_type, pe, work_time)
 	..()

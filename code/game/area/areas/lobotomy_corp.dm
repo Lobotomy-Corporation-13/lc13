@@ -270,14 +270,20 @@
 	dynamic_lighting = DYNAMIC_LIGHTING_FORCED
 	outdoors = TRUE
 	var/in_city = TRUE
+	/// Color used on the city map display for this area type
+	var/map_color = "#8899aa"
 
 /area/city/house
 	name = "Employee Housing"
+	icon_state = "dorms"
 	outdoors = FALSE
+	map_color = "#66aa66"
 
 /area/city/shop
-	name = "Employee Services"
+	name = "Shop"
+	icon_state = "fitness"
 	outdoors = FALSE
+	map_color = "#ccaa33"
 
 /area/city/outskirts
 	name = "Outskirts"
@@ -289,12 +295,95 @@
 
 /area/city/fixers
 	name = "Fixer Office"
+	icon_state = "quart_office"
 	outdoors = FALSE
+	map_color = "#5588cc"
+
+/area/city/hana
+	name = "Hana Office"
+	icon_state = "mainroom_records"
+	map_color = "#3355bb"
+
+/area/city/hhpp
+	name = "HamHamPangPang"
+	icon_state = "kitchen"
+	map_color = "#dd8833"
+
+/area/city/bar
+	name = "The Alibi"
+	icon_state = "bar"
+	map_color = "#bb7744"
+
+/area/city/bar
+	name = "The Alibi"
+	icon_state = "bar"
+	map_color = "#bb7744"
+
+/area/city/workshop
+	name = "Workshop"
+	icon_state = "quart"
+	map_color = "#44aaaa"
+
+/area/city/clinic
+	name = "Clinic"
+	icon_state = "medbay1"
+	map_color = "#cc5588"
+
+/area/city/carnival
+	name = "Carnival Base"
+	icon_state = "syndie-control"
+	map_color = "#cc4444"
+
+/area/city/antag_base
+	name = "Abandoned Hideout"
+	icon_state = "syndie-elite"
+	map_color = "#aa3344"
+
+/area/city/assoc_base
+	name = "Association Office"
+	icon_state = "security"
+	map_color = "#77aadd"
+
+/area/city/roaming_base
+	name = "Roaming Fixers Office"
+	icon_state = "investigate_office"
+	map_color = "#55bbaa"
+
+/area/city/bistro
+	name = "The Bistro"
+	icon_state = "cafeteria"
+	map_color = "#bb9955"
+
+/area/city/library
+	name = "Library"
+	icon_state = "library"
+	map_color = "#9966bb"
+
+/area/city/alleyways
+	name = "Alleyways"
+	icon_state = "abandoned_g_den"
+	map_color = "#777788"
+
+/area/city/alleyway_room
+	name = "Alleyway Room"
+	icon_state = "vacant_room"
+	map_color = "#888899"
+
+/area/city/lake
+	name = "Water"
+	icon_state = "awaycontent16"
+	map_color = "#1872cc"
+
+/area/city/bus_stop
+	name = "Bus Stop"
+	icon_state = "gateway"
+	map_color = "#cccc18"
 
 //Areas for ruins
 
 /area/city/backstreets_checkpoint
 	name = "Ruins Checkpoint"
+	map_color = "#999977"
 
 /area/city/backstreets_alley
 	name = "Ruins Alley"

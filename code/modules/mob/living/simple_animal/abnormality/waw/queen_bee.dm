@@ -120,6 +120,7 @@
 	attack_sound = 'sound/weapons/bite.ogg'
 	speak_emote = list("buzzes")
 	var/created_bee_type = /mob/living/simple_animal/hostile/worker_bee
+	var/obj/item/organ/brain/original_brain //Pretty much only used by LCL Qbee, remembers who the original brain was before being turned into a bee, if any.
 
 /mob/living/simple_animal/hostile/worker_bee/Initialize()
 	. = ..()

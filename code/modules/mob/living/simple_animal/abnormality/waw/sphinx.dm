@@ -76,7 +76,6 @@
 		/obj/item/canopic_jar,
 	)
 	//breach
-	var/can_act = TRUE
 	var/curse_cooldown
 	var/curse_cooldown_time = 12 SECONDS
 	var/quake_cooldown

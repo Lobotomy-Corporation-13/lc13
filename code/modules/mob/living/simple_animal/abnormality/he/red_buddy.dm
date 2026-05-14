@@ -81,6 +81,10 @@
 	var/accumulated_damage = 0
 	///how many times buddy howled while awakened, is in decimals because of the equation it's used in
 	var/awoo_count = 0.1
+	//Are you Mauling someone?
+	var/mauling
+	//Are you about to maul someone
+	var/maulready
 
 /mob/living/simple_animal/hostile/abnormality/red_buddy/Initialize()
 	. = ..()
@@ -199,6 +203,9 @@
 
 	if(!awakened_master.Adjacent(newloc) && !awakened_master.moving_diagonally)
 		return FALSE
+
+	if(mauling)
+		return FALSE
 	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/red_buddy/BreachEffect()
@@ -250,6 +257,7 @@
 	AdjustSuffering(5)
 	lying = FALSE
 
+
 /mob/living/simple_animal/hostile/abnormality/red_buddy/death(gibbed)
 	if(awakened_master)
 		awakened_master.melee_damage_lower = 10
@@ -263,3 +271,59 @@
 	QDEL_IN(src, 10 SECONDS)
 	UnregisterSignal(SSdcs, COMSIG_GLOB_ABNORMALITY_SPAWN)
 	..()
+
+
+//Red Buddy Attacks
+/mob/living/simple_animal/hostile/abnormality/red_buddy/AttackingTarget()
+	if(maulready && Adjacent(target))
+		Maul(target)
+		endMaul()
+		return
+
+	if(prob(30))
+		startMaul()
+		return
+	. = ..()
+
+
+/mob/living/simple_animal/hostile/abnormality/red_buddy/proc/startMaul()
+	if(maulready)
+		return
+	manual_emote("rears back")
+	maulready = TRUE
+	addtimer(CALLBACK(src, PROC_REF(endMaul)), 5 SECONDS)
+	SLEEP_CHECK_DEATH(10)
+	TemporarySpeedChange(-2.4, 1 SECONDS)
+
+/mob/living/simple_animal/hostile/abnormality/red_buddy/proc/endMaul()
+	if(!maulready)
+		return
+	maulready = FALSE
+
+/mob/living/simple_animal/hostile/abnormality/red_buddy/proc/Maul()
+	mauling = TRUE
+	if(!isliving(target))
+		return
+	var/mob/living/L = target
+
+	var/attacks = rand(3, 5)
+	for(var/i = 1 to attacks)
+		playsound(src, 'sound/weapons/bite.ogg', 100, FALSE, 8)
+		if(ishuman(target))
+			var/mob/living/carbon/human/H = target
+			H.Knockdown(2)
+			H.Stun(2)
+			SLEEP_CHECK_DEATH(2)
+		L.deal_damage(50, RED_DAMAGE, src, attack_type = (ATTACK_TYPE_SPECIAL))
+
+		var/turf/target_turf = get_turf(L)
+		new /obj/effect/temp_visual/smash_effect(target_turf)
+		for(var/j in 1 to 3)
+			new /obj/effect/temp_visual/dir_setting/bloodsplatter(target_turf, pick(GLOB.alldirs))
+	mauling = FALSE
+	SLEEP_CHECK_DEATH(10)
+
+/mob/living/simple_animal/hostile/abnormality/red_buddy/bullet_act(obj/projectile/P)
+	..()
+	if(P.firer == target)
+		startMaul()

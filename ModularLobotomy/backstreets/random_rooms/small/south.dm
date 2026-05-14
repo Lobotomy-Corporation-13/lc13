@@ -52,6 +52,12 @@
 	mappath = "_maps/RandomRooms/backstreets/small_south/locked_crate.dmm"
 	stock = 1
 
+/datum/map_template/random_room/backstreets/small_south/sandstone_summoning
+	name = "Sandstone Summoning - Small South"
+	room_id = "sandstone_summoning"
+	mappath = "_maps/RandomRooms/backstreets/small_south/sandstone_summoning.dmm"
+	stock = 1
+
 /datum/map_template/random_room/backstreets/small_south/rat_ssa
 	name = "Rat - Small South A"
 	room_id = "rat_ssa"

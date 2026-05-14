@@ -63,8 +63,9 @@
 	var/fairy_spawn_limit = 30 // Oh boy, what can go wrong?
 	//Fairy spawn limit only matters for the spawn loop, players she kills and spawned via the law don't count
 	var/list/spawned_mobs = list()
+	//Tags of agents who worked on titania
 	var/list/worked = list()
-	var/mob/living/carbon/human/nemesis			//Who is her nemesis?
+	var/datum/weakref/nemesis_memory //Who is her nemesis?
 	//The nemesis is referred to as Oberon in the rest of the comments.
 
 	//Laws
@@ -81,6 +82,10 @@
 	. = ..()
 	if(fused) // So you can't just spoon her to death while in nobody is.
 		adjustBruteLoss(-(maxHealth))
+
+/mob/living/simple_animal/hostile/abnormality/titania/Destroy()
+	UnregisterAll()
+	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/titania/Move()
 	if(fused)
@@ -104,7 +109,7 @@
 		SpawnFairies(fairy_spawn_number * 2, H, ignore_cap = TRUE)
 		H.gib()
 		return
-
+	var/mob/living/carbon/human/nemesis = nemesis_memory ? nemesis_memory.resolve() : null
 	if(attacked_target == nemesis)	//Deals pale damage to Oberon, fuck you.
 		melee_damage_type = PALE_DAMAGE
 		melee_damage_lower = 61
@@ -122,7 +127,7 @@
 		adjustBruteLoss(-maxHealth, forced = TRUE) // Round 2, baby
 
 		to_chat(src, span_userdanger("[nemesis], my beloved devil, I finally get my revenge."))
-		nemesis = null
+		nemesis_memory = null
 		if(!client)
 			say("Oberon. The abhorrent taker of my child. You are slain.")
 
@@ -147,8 +152,7 @@
 	for(var/i in 1 to amount)
 		var/mob/living/simple_animal/hostile/fairyswarm/fairy = new(spawn_turf)
 		fairy.faction = faction
-		fairy.mommy = src
-		spawned_mobs += fairy
+		RegisterMob(fairy)
 
 //Setting the nemesis
 /mob/living/simple_animal/hostile/abnormality/titania/proc/ChooseNemesis()
@@ -163,7 +167,7 @@
 			continue
 		potentialmarked += L
 	if(LAZYLEN(potentialmarked))
-		nemesis = pick(potentialmarked)
+		nemesis_memory = WEAKREF(pick(potentialmarked))
 
 //Cleaning fairies
 /mob/living/simple_animal/hostile/abnormality/titania/death(gibbed)
@@ -180,6 +184,7 @@
 	if(IsCombatMap())
 		return
 
+	var/mob/living/carbon/human/nemesis = nemesis_memory ? nemesis_memory.resolve() : null
 
 	var/lawmessage
 
@@ -240,6 +245,8 @@
 	if(currentlaw == "armor" && Proj.damage_type == RED_DAMAGE)
 		Punishment(Proj.firer)
 
+	var/mob/living/carbon/human/nemesis = nemesis_memory ? nemesis_memory.resolve() : null
+
 	if(currentlaw == "nemesis" && H != nemesis)
 		Punishment(Proj.firer)
 		H.apply_lc_fragile(5)
@@ -262,6 +269,7 @@
 	if(currentlaw == "armor" && I.damtype == RED_DAMAGE && I.force >= 10)
 		Punishment(user)
 
+	var/mob/living/carbon/human/nemesis = nemesis_memory ? nemesis_memory.resolve() : null
 	if(currentlaw == "nemesis" && user != nemesis)
 		Punishment(user)
 		user.apply_lc_fragile(5)
@@ -275,20 +283,37 @@
 	ChooseNemesis()
 	addtimer(CALLBACK(src, PROC_REF(FairyLoop)), 10 SECONDS)	//10 seconds from now you start spawning fairies
 	addtimer(CALLBACK(src, PROC_REF(SetLaw)), law_timer)	//Set Laws in 30 Seconds
+
+	var/mob/living/carbon/human/nemesis = nemesis_memory ? nemesis_memory.resolve() : null
 	if(nemesis)
 		to_chat(src, span_userdanger("[nemesis], you are to die!"))
 	if(!client && nemesis)
 		say("[nemesis], you are a monster and I will slay you.")
 
 /mob/living/simple_animal/hostile/abnormality/titania/PostWorkEffect(mob/living/carbon/human/user, work_type, pe, work_time)
-	if(!(user in worked))
+	if(!(user.tag in worked))
 		datum_reference.qliphoth_change(-1)
-		worked+=user
+		worked+=user.tag
 	return
 
 /mob/living/simple_animal/hostile/abnormality/titania/FailureEffect(mob/living/carbon/human/user, work_type, pe)
 	. = ..()
 	datum_reference.qliphoth_change(-1)
+
+
+/mob/living/simple_animal/hostile/abnormality/titania/proc/RegisterMob(mob/living/L)
+	RegisterSignal(L, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING), PROC_REF(UnregisterMob))
+	spawned_mobs += L
+
+/mob/living/simple_animal/hostile/abnormality/titania/proc/UnregisterMob(mob/living/L)
+	UnregisterSignal(L, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING))
+	spawned_mobs -= L
+
+/mob/living/simple_animal/hostile/abnormality/titania/proc/UnregisterAll()
+	for(var/mob/living/L in spawned_mobs)
+		UnregisterMob(L)
+		qdel(L)
+	spawned_mobs.Cut()
 
 
 //The Mini fairies
@@ -314,18 +339,11 @@
 	attack_sound = 'sound/weapons/bladeslice.ogg'
 	mob_size = MOB_SIZE_TINY
 	del_on_death = TRUE
-	var/mob/living/simple_animal/hostile/abnormality/titania/mommy
 
 /mob/living/simple_animal/hostile/fairyswarm/Initialize()
 	. = ..()
 	pixel_x = rand(-16, 16)
 	pixel_y = rand(-16, 16)
-
-/mob/living/simple_animal/hostile/fairyswarm/Destroy()
-	if(mommy)
-		mommy.spawned_mobs -= src
-		mommy = null
-	return ..()
 
 /mob/living/simple_animal/hostile/fairyswarm/AttackingTarget(atom/attacked_target)
 	..()

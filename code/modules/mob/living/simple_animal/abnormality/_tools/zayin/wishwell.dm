@@ -4,7 +4,6 @@
 	icon_state = "wishwell"
 	can_buckle = TRUE
 	max_buckled_mobs = 1
-	var/list/bastards = list()
 
 	ego_list = list(
 		/datum/ego_datum/weapon/bucket,
@@ -395,10 +394,10 @@
 
 	qdel(M)
 	playsound(src, 'sound/voice/human/wilhelm_scream.ogg', 50, TRUE, -3)
-	if((M.ckey in bastards)) //prevents respawn abuse
+	if((M.ckey in operators)) //prevents respawn abuse
 		deathgift = pick(trash)
 
-	bastards += M.ckey
+	operators += M.ckey
 	sleep(1 SECONDS)
 	Dispense(deathgift)
 	..()

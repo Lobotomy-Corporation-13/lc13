@@ -15,7 +15,7 @@
 
 	playsound(user.loc, 'sound/items/drink.ogg', rand(10,50), TRUE)
 
-	if(used_by[user] != 1) // Not their first use
+	if(used_by[user.tag] != 1) // Not their first use
 		user.physiology.red_mod *= 1.10
 
 // Status Effect

@@ -66,6 +66,11 @@
 	user.physiology.repression_success_mod -= src.repression_mod
 	QDEL_NULL(src)
 
+/datum/ego_gifts/Destroy()
+	owner = null
+	datum_reference = null
+	return ..()
+
 /datum/ego_gifts/Topic(href, list/href_list)
 	switch(href_list["choice"])
 		if("lock")
@@ -1674,6 +1679,13 @@
 /datum/ego_gifts/ardor_moth/Remove(mob/living/carbon/human/user)
 	user.physiology.burn_mod /= 0.8
 	return ..()
+
+/datum/ego_gifts/recollection
+	name = "Recollection"
+	icon_state = "recollection"
+	temperance_bonus = -4
+	prudence_bonus = 2
+	slot = BROOCH
 
 /datum/ego_gifts/caterpillar
 	name = "Havana"

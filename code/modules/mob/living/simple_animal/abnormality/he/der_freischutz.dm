@@ -47,7 +47,6 @@
 		"Don't pay" = list(FALSE, "The man scowls. <br>\"Don't waste my time with such shaky conviction.\""),
 	)
 
-	var/can_act = TRUE
 	var/can_move = TRUE
 	var/already_fled = FALSE
 	var/bullet_cooldown

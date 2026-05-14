@@ -110,6 +110,15 @@
 /mob/living/simple_animal/hostile/abnormality/sirocco/PickTarget(list/Targets)
 	return
 
+/mob/living/simple_animal/hostile/abnormality/sirocco/FindTarget(list/possible_targets, HasTargetsList)
+	return
+
+/mob/living/simple_animal/hostile/abnormality/sirocco/RegisterAttackAggro(damage_amount, damage_type, source)
+	return
+
+/mob/living/simple_animal/hostile/abnormality/sirocco/ListTargets()
+	return list()
+
 /* Qliphoth/Breach effects */
 /mob/living/simple_animal/hostile/abnormality/sirocco/BreachEffect(mob/living/carbon/human/user, breach_type)
 	. = ..()

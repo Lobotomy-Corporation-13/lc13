@@ -58,6 +58,16 @@
 	var/protect_cooldown
 	var/retaliation = 10
 	var/PRUDENCE_CAP = 60
+	var/unfocused_talent_cooldown = 0
+	var/unfocused_talent_delay = 10 SECONDS
+
+/mob/living/simple_animal/hostile/abnormality/pygmalion/handle_automated_action()
+	. = ..()
+	if(IsContained() || stat == DEAD)
+		return
+
+	if(unfocused_talent_cooldown <= world.time)
+		UnfocusedTalent()
 
 /mob/living/simple_animal/hostile/abnormality/pygmalion/CanAllowThrough(atom/movable/mover, turf/target)
 	if(sculptor && ishuman(mover))
@@ -152,7 +162,7 @@
 		sculptor.remove_status_effect(STATUS_EFFECT_SCULPTOR)
 	if (missing_prudence)
 		restorePrudence()
-	faction = list()
+	faction = list("mob_[tag]")
 	sculptor = null
 	swap_area_index(MOB_ABNORMALITY_INDEX)
 	if(client)
@@ -191,16 +201,19 @@
 	missing_prudence = null
 	to_chat(sculptor, span_nicegreen("As soon as Pygmalion has fallen, You feel like your mind is back on track."))
 
-/mob/living/simple_animal/hostile/abnormality/pygmalion/death(gibbed)
+/mob/living/simple_animal/hostile/abnormality/pygmalion/Destroy()
 	swap_area_index(MOB_ABNORMALITY_INDEX) // Return to normal.
 	if (sculptor)
 		sculptor.remove_status_effect(STATUS_EFFECT_SCULPTOR)
 		if (missing_prudence)
 			restorePrudence()
+	return ..()
+
+/mob/living/simple_animal/hostile/abnormality/pygmalion/death(gibbed)
 	density = FALSE
 	animate(src, alpha = 0, time = 5 SECONDS)
 	QDEL_IN(src, 5 SECONDS)
-	..()
+	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/pygmalion/PostDamageReaction(damage_amount, damage_type, source, attack_type)
 	. = ..()
@@ -212,6 +225,78 @@
 	if (attacker == sculptor)
 		attacker.deal_damage(retaliation, PALE_DAMAGE, src, attack_type = (ATTACK_TYPE_COUNTER))
 		to_chat(attacker, span_userdanger("You feel your heart break!"))
+
+/mob/living/simple_animal/hostile/abnormality/pygmalion/proc/UnfocusedTalent()
+	var/our_turf = get_turf(src)
+	unfocused_talent_cooldown = world.time + unfocused_talent_delay
+	if(!our_turf)
+		return
+	var/list/directions = GLOB.cardinals.Copy()
+	directions -= dir
+	var/direction_pattern = FormatPattern()
+	for(var/i = 1 to 3)
+		var/turf/deploy = get_step(our_turf, pop(directions))
+		if(deploy.density)
+			continue
+		var/obj/effect/ambient_danger/pyg/P = new(deploy, faction, direction_pattern)
+		if(!("neutral" in faction))
+			P.color = "red"
+	return direction_pattern
+
+/mob/living/simple_animal/hostile/abnormality/pygmalion/proc/FormatPattern()
+	var/list/return_list = list()
+	//Gimme our cords. We arnt going to check anything on the turfs so just cords.
+	var/originx = x
+	var/originy = y
+	for(var/cycle = 1 to 4)
+		var/offsetx = 0
+		var/offsety = 0
+		var/turn_rate = 0
+		var/initial_direction = NORTH
+		switch(cycle)
+			//South
+			if(2)
+				initial_direction = SOUTH
+				offsety = -1
+			//East
+			if(3)
+				initial_direction = EAST
+				offsetx = 1
+			//West
+			if(4)
+				initial_direction = WEST
+				offsetx = -1
+			//North
+			else
+				offsety = 1
+		var/path_direction = initial_direction
+		for(var/iteration = 1 to 5)
+			var/x_tag = originx + offsetx
+			var/y_tag = originy + offsety
+			var/turf_tag = "[x_tag],[y_tag]"
+			return_list += turf_tag
+			turn_rate = turn_rate + 45
+			path_direction = turn(initial_direction,turn_rate)
+			new /obj/effect/temp_visual/dir_setting/bloodsplatter(locate(x_tag,y_tag,z), path_direction)
+			return_list[turf_tag] = path_direction
+			if(path_direction == NORTH || path_direction == NORTHWEST  || path_direction ==  NORTHEAST)
+				offsety++
+			if(path_direction == SOUTH  || path_direction ==  SOUTHWEST  || path_direction ==  SOUTHEAST)
+				offsety--
+			if(path_direction == EAST  || path_direction ==  NORTHEAST  || path_direction ==  SOUTHEAST)
+				offsetx++
+			if(path_direction == WEST  || path_direction ==  NORTHWEST  || path_direction ==  SOUTHWEST)
+				offsetx--
+
+	return return_list
+
+/obj/effect/ambient_danger/pyg
+	name = "pygmalion mote"
+	icon = 'icons/obj/projectiles.dmi'
+	icon_state = "bride_bolt"
+	//Double that of the normal projectile due to the avoidability.
+	damage = 50
+	damage_type = WHITE_DAMAGE
 
 /datum/status_effect/sculptor
 	id = "Sculptor"

@@ -50,7 +50,6 @@
 	)
 
 	//teleport
-	var/can_act = TRUE
 	var/teleport_cooldown
 	var/teleport_cooldown_time = 30 SECONDS
 	//attack

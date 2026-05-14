@@ -1,4 +1,4 @@
-//Seven Association; the information gathering fixer office.
+//Seven Association Section 6; the information gathering fixer office.
 //They deal 25% less damage, on average.
 //Hit something 7 times (3 with the cane) to store a target, and get its information stored
 //You can examine the weapon to see the HP of the stored abno on last hit
@@ -7,8 +7,8 @@
 //Normal is grade 5, Vet is Grade 4, director equipment is grade 2.
 
 /obj/item/ego_weapon/city/seven
-	name = "Seven Association blade"
-	desc = "A sheathed blade used by seven association ."
+	name = "Seven Association Section 6 blade"
+	desc = "A sheathed blade used by Seven Association Section 6 fixers."
 	special = "Deal 50% more damage to the stored target. \
 				Use weapon in hand to see stored target, and its current health."
 	icon_state = "sevenassociation"
@@ -77,8 +77,8 @@
 
 
 /obj/item/ego_weapon/city/seven/vet
-	name = "Seven Association veteran blade"
-	desc = "A blade used by veteran seven association fixers."
+	name = "Seven Association Section 6 veteran blade"
+	desc = "A blade used by Seven Association Section 6 veteran fixers."
 	icon_state = "sevenassociation_vet"
 	inhand_icon_state = "sevenassociation_vet"
 	hitsound = 'sound/weapons/bladeslice.ogg'
@@ -94,8 +94,8 @@
 
 //Director weapons. If you use both; you can actually get info on two targets at once, but it requires
 /obj/item/ego_weapon/city/seven/director
-	name = "Seven Association director's blade"
-	desc = "A blade used by seven association branch directors."
+	name = "Seven Association Section 6 director's blade"
+	desc = "A blade used by Seven Association Section 6 branch directors."
 	icon_state = "sevenassociation_director"
 	inhand_icon_state = "sevenassociation_director"
 	hitsound = 'sound/weapons/rapierhit.ogg'
@@ -110,8 +110,8 @@
 							)
 
 /obj/item/ego_weapon/city/seven/cane
-	name = "Seven Association director's cane"
-	desc = "A cane used by seven association branch directors, gathers information significantly faster."
+	name = "Seven Association Section 6 director's cane"
+	desc = "A cane used by Seven Association Section 6 branch directors. Gathers information significantly faster."
 	special = "Attack an enemy 3 times to store it. \
 				Deal 50% more damage to the stored target. \
 				Use weapon in hand to see stored target, and its current health."
@@ -126,10 +126,10 @@
 							JUSTICE_ATTRIBUTE = 100
 							)
 
-//Seven Fencing - Lack the Health gaining ability, and gain an ability similar to Capo, where they do bonus damage when attacking the same person.
+//Seven Section 6 Fencing - Lack the Health gaining ability, and gain an ability similar to Capo, where they do bonus damage when attacking the same person.
 /obj/item/ego_weapon/city/seven_fencing
-	name = "seven association fencing foil"
-	desc = "A fencing foil used by seven association to destroy singular targets."
+	name = "Seven Association Section 6 fencing foil"
+	desc = "A fencing foil used by Seven Association Section 6 fixers to destroy singular targets."
 	special = "This weapon does 35% more damage when attacking the same target more than once."
 	icon_state = "sevenfencing"
 	hitsound = 'sound/weapons/rapierhit.ogg'
@@ -158,8 +158,8 @@
 	force = initial(force)
 
 /obj/item/ego_weapon/city/seven_fencing/vet
-	name = "seven association veteran fencing foil"
-	desc = "A fencing foil used by seven association veterans to destroy singular targets."
+	name = "Seven Association Section 6 veteran fencing foil"
+	desc = "A fencing foil used by Seven Association Section 6 veterans to destroy singular targets."
 	icon_state = "sevenfencing_vet"
 	force = 45
 	attribute_requirements = list(
@@ -170,8 +170,8 @@
 							)
 
 /obj/item/ego_weapon/city/seven_fencing/dagger
-	name = "seven association fencing dagger"
-	desc = "A small, mailbreaking dagger used as a sidearm by specific seven association veterans."
+	name = "Seven Association Section 6 fencing dagger"
+	desc = "A small, mailbreaking dagger used as a sidearm by Seven Association Section 6 directors."
 	special = "This weapon does 35% more damage when attacking the same target more than once. This weapon fits in an EGO belt."
 	icon_state = "sevenfencing_dagger"
 	force = 32

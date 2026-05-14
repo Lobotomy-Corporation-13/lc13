@@ -71,7 +71,6 @@
 	var/swarm_length = 24
 	var/swarm_width = 3
 	var/list/swarm_killed = list()
-	var/can_act = TRUE
 	var/gives_achievement = FALSE
 
 	//PLAYABLES ATTACKS

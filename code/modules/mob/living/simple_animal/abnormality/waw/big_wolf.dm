@@ -68,7 +68,6 @@
 			(The wolf seems unhappy)"),
 	)
 
-	var/can_act = TRUE
 	//For when the wolf becomes incorporal and flees.
 	var/last_reached_health = 75
 	//For some reason wolf's AI just turns off when there is if(fleeing_now)
@@ -77,6 +76,8 @@
 	var/hp_check_cooldown = 0
 	var/howl_cooldown = 0
 	var/howl_cooldown_time = BIGWOLF_COOLDOWN_HOWL
+
+	var/obj/effect/proc_holder/ability/aimed/dash/big_wolf/ourdash
 
 //Obligatory ability buttons for the dreaded player.
 /datum/action/innate/abnormality_attack/toggle/wolf_dash_toggle
@@ -108,6 +109,10 @@
 	wolf.Howl()
 	StartCooldown()
 	return TRUE
+
+/mob/living/simple_animal/hostile/abnormality/big_wolf/Initialize()
+	.  = ..()
+	ourdash = new()
 
 /mob/living/simple_animal/hostile/abnormality/big_wolf/SuccessEffect(mob/living/carbon/human/user, work_type, pe)
 	. = ..()
@@ -315,33 +320,7 @@
 // Simple dash attack that deals 50 damage to all those nearby. This is optimized for AI rather than players.
 /mob/living/simple_animal/hostile/abnormality/big_wolf/proc/ScratchDash(dash_target)
 	ranged_cooldown = world.time + ranged_cooldown_time
-	can_act = FALSE
-	if(IsContained())
-		return
-	var/turf/target_turf = get_turf(dash_target)
-	var/list/hit_mob = list()
-	do_shaky_animation(2)
-	if(do_after(src, 1 SECONDS, target = src))
-		var/turf/wallcheck = get_turf(src)
-		var/enemy_direction = get_dir(src, target_turf)
-		for(var/i = 0 to 7)
-			if(get_turf(src) != wallcheck || stat == DEAD || IsContained())
-				break
-			wallcheck = get_step(src, enemy_direction)
-			if(!ClearSky(wallcheck))
-				break
-			//without this the attack happens instantly
-			sleep(1)
-			forceMove(wallcheck)
-			playsound(wallcheck, 'sound/abnormalities/doomsdaycalendar/Lor_Slash_Generic.ogg', 20, 0, 4)
-			for(var/turf/T in orange(get_turf(src), 1))
-				if(isclosedturf(T))
-					continue
-				new /obj/effect/temp_visual/slice(T)
-				hit_mob = HurtInTurf(T, hit_mob, 50, RED_DAMAGE, null, TRUE, FALSE, TRUE, hurt_structure = TRUE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
-				for(var/mob/living/simple_animal/hostile/abnormality/red_hood/mercenary in hit_mob)
-					mercenary.deal_damage(100, RED_DAMAGE, src, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)) //triple damge to red
-	can_act = TRUE
+	ourdash.Perform(dash_target, src)
 
 // Very simple ranged howl that applies white damage.
 /mob/living/simple_animal/hostile/abnormality/big_wolf/proc/Howl()

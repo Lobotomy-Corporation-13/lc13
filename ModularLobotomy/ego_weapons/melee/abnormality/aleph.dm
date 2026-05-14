@@ -514,6 +514,7 @@
 	visible_image = image(icon, src, visible_icon_state, layer)
 	visible_image.override = TRUE
 	visible_image.filters += filter(type="drop_shadow", x=0, y=0, size = 1, offset = 1, color=rgb(240, 240, 240)) // Players were struggling to find them over darker enemies
+	RegisterSignal(src, COMSIG_MOVABLE_PRE_THROW, PROC_REF(DenyThrow))
 	QDEL_IN(src, duration) // It's a temporary thing.
 
 /mob/da_capo_musicnote/attackby(obj/item/W, mob/user, params)
@@ -522,8 +523,14 @@
 	if(istype(W, /obj/item/ego_weapon/da_capo))
 		return W.attack(src, user)
 
+/// Stops Sirocco from stealing the damn thing
+/mob/da_capo_musicnote/proc/DenyThrow()
+	SIGNAL_HANDLER
+	return COMPONENT_CANCEL_THROW
+
 /mob/da_capo_musicnote/Destroy(force)
 	Cleanup(TRUE) // We call this with TRUE so it doesn't try to qdel itself again, we're already destroying it
+	UnregisterSignal(src, COMSIG_MOVABLE_PRE_THROW)
 	return ..()
 
 /// We call this proc when a note is hit by Da Capo.
@@ -2879,7 +2886,7 @@
 // Root any nearby enemies with Contempt in sight. We'll store their status effects in a list so we can delete them later.
 /obj/item/ego_weapon/perversion/proc/DrawAttackRootContempt(mob/living/carbon/human/user)
 	for(var/mob/living/L in viewers(cascading_gaze_radius, user))
-		if(!(L.has_status_effect(STATUS_EFFECT_CONTEMPT)))
+		if(!(L.has_status_effect(STATUS_EFFECT_CONTEMPT)) || L.status_flags & GODMODE)
 			continue
 		if(user.faction_check_mob(L))
 			continue
@@ -2922,16 +2929,23 @@
 /datum/status_effect/perversion_weapon_root/on_apply()
 	. = ..()
 	TrapVictim()
-	animate(owner, 0.3 SECONDS, pixel_y = owner.pixel_y + 16)
 	attached_vfx = new(get_turf(owner))
+	// We buckle to stop mobs from running away like rats because their AI gets toggled on randomly for whatever reason. It also stops them from getting knocked out of our reach.
+	attached_vfx.buckle_mob(owner, force = TRUE, check_loc = FALSE)
+	// Animating them being lifted up
+	animate(owner, 0.3 SECONDS, pixel_y = owner.pixel_y + 16)
 
 /datum/status_effect/perversion_weapon_root/on_remove()
 	. = ..()
 	FreeVictim()
-	animate(owner, 0.2 SECONDS, pixel_y = owner.pixel_y - 16)
+	animate(owner, 0.2 SECONDS, pixel_y = owner.base_pixel_y)
 
 /datum/status_effect/perversion_weapon_root/Destroy(force)
-	QDEL_NULL(attached_vfx) // This must be here and not on_remove because on_remove is not called if the owner is qdeleted on death
+	// These things must be here and not on_remove because on_remove is not called if the owner is qdeleted on death
+	attached_vfx.unbuckle_all_mobs(force = TRUE)
+	if(owner && !ishuman(owner))
+		owner.set_glide_size() // ... Buckling, unbuckling mobs changes their glide size.
+	QDEL_NULL(attached_vfx)
 	return ..()
 
 /obj/effect/perversion_weapon_root_vfx
@@ -2999,7 +3013,7 @@
 	for(var/turf/T in cascading_gaze_affected_turfs)
 		var/sent_visual = FALSE
 		for(var/mob/living/L in T)
-			if((L in shared_hitlist) || (user.faction_check_mob(L)) || (L.stat >= DEAD))
+			if((L in shared_hitlist) || (user.faction_check_mob(L)) || (L.stat >= DEAD) || (L.status_flags & GODMODE))
 				continue
 
 			shared_hitlist |= L
@@ -3094,6 +3108,7 @@
 		original_proj_damtype = gotcha.damage_type
 
 	// Destroy the projectile.
+	gotcha.on_hit(place_of_intercept) // Give certain things a chance to set off AoEs...
 	qdel(gotcha)
 	playsound(place_of_intercept, 'sound/weapons/ego/clash1.ogg', 75, TRUE, 8)
 
@@ -3302,6 +3317,8 @@
 /* ------------------------ COMBAT ------------------------ */
 // Basic proc used to apply this weapon's version of Gaze. Will not apply Gaze if they already have Contempt.
 /obj/item/ego_weapon/perversion/proc/ApplyGaze(mob/living/target, stacks_to_apply)
+	if(!target || !isliving(target) || target.status_flags & GODMODE)
+		return
 	var/datum/status_effect/stacking/perversion_weapon_gaze/gazing = target.has_status_effect(STATUS_EFFECT_GAZE)
 	var/datum/status_effect/display/perversion_weapon_contempt/contempting = target.has_status_effect(STATUS_EFFECT_CONTEMPT)
 	if(contempting)
@@ -3577,7 +3594,8 @@
 				continue
 			if(L.stat >= DEAD)
 				continue
-
+			if(L.status_flags & GODMODE)
+				continue
 			shared_hitlist |= L
 
 			new /obj/effect/temp_visual/dir_setting/bloodsplatter(T3, pick(GLOB.alldirs))
@@ -3658,6 +3676,8 @@
 			if(user.faction_check_mob(L))
 				continue
 			if(L.stat >= DEAD)
+				continue
+			if(L.status_flags & GODMODE)
 				continue
 
 			shared_hitlist |= L

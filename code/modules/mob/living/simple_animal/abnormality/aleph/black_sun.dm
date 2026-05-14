@@ -37,6 +37,12 @@
 	RegisterSignal(SSdcs, COMSIG_GLOB_MOB_DEATH, PROC_REF(on_mob_death))
 	nextstage = world.time + 1 MINUTES
 
+/mob/living/simple_animal/hostile/abnormality/black_sun/Destroy()
+	Refreshment(-1 * (stage*10))
+	pillars = null
+	UnregisterAll()
+	return ..()
+
 /mob/living/simple_animal/hostile/abnormality/black_sun/Life()
 	. = ..()
 	if(nextstage < world.time && !LAZYLEN(pillars))
@@ -46,14 +52,11 @@
 	stage++
 	//Add 10 stats to everyone.
 	if(stage == 1)
-		affected_players = list()	//Clear the list, then fill it up
+		UnregisterAll()
 		for(var/mob/living/carbon/human/L in GLOB.player_list)
-			affected_players += L
+			RegisterMob(L)
 
-	for(var/mob/living/carbon/human/L in affected_players)
-		L.adjust_attribute_buff(FORTITUDE_ATTRIBUTE, 10)
-		L.adjust_attribute_buff(PRUDENCE_ATTRIBUTE, 10)
-		L.adjust_attribute_buff(JUSTICE_ATTRIBUTE, 10)
+	Refreshment(10)
 
 	switch(stage)
 		if(1)
@@ -79,11 +82,7 @@
 
 	to_chat(GLOB.clients,"<span class='colossus'>THE BLACK SUN HAS RISEN.</span>")
 	//Also remove your stats
-	var/removestats = stage*10
-	for(var/mob/living/carbon/human/L in affected_players)
-		L.adjust_attribute_buff(FORTITUDE_ATTRIBUTE, -removestats)
-		L.adjust_attribute_buff(PRUDENCE_ATTRIBUTE, -removestats)
-		L.adjust_attribute_buff(JUSTICE_ATTRIBUTE, -removestats)
+	Refreshment(-1 * (stage*10))
 	stage = 0
 	for(var/i = 0 to 2)
 		var/X = pick(GLOB.department_centers)
@@ -110,12 +109,30 @@
 
 /mob/living/simple_animal/hostile/abnormality/black_sun/PostWorkEffect(mob/living/carbon/human/user, work_type, pe, work_time)
 	to_chat(GLOB.clients, span_warning("The Black Sun fades from the sky. You are safe for now."))
-	var/removestats = stage*10
-	for(var/mob/living/carbon/human/L in affected_players)
-		L.adjust_attribute_buff(FORTITUDE_ATTRIBUTE, -removestats)
-		L.adjust_attribute_buff(PRUDENCE_ATTRIBUTE, -removestats)
-		L.adjust_attribute_buff(JUSTICE_ATTRIBUTE, -removestats)
+	Refreshment(-1 * (stage*10))
 	stage = 0
+
+/mob/living/simple_animal/hostile/abnormality/black_sun/proc/Refreshment(stat_change = 0)
+	for(var/mob/living/carbon/human/L in affected_players)
+		if(QDELETED(L))
+			UnregisterMob(affected_players)
+			continue
+		L.adjust_attribute_buff(FORTITUDE_ATTRIBUTE, stat_change)
+		L.adjust_attribute_buff(PRUDENCE_ATTRIBUTE, stat_change)
+		L.adjust_attribute_buff(JUSTICE_ATTRIBUTE, stat_change)
+
+/mob/living/simple_animal/hostile/abnormality/black_sun/proc/RegisterMob(mob/living/L)
+	RegisterSignal(L, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING), PROC_REF(UnregisterMob))
+	affected_players += L
+
+/mob/living/simple_animal/hostile/abnormality/black_sun/proc/UnregisterMob(mob/living/L)
+	UnregisterSignal(L, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING))
+	affected_players -= L
+
+/mob/living/simple_animal/hostile/abnormality/black_sun/proc/UnregisterAll()
+	for(var/mob/living/L in affected_players)
+		UnregisterMob(L)
+	affected_players.Cut()
 
 //Weather effect
 /datum/weather/bloody_water

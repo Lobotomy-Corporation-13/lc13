@@ -27,7 +27,7 @@
 		ABNORMALITY_WORK_ATTACHMENT = 0,
 		ABNORMALITY_WORK_REPRESSION = 40,
 	)
-	work_damage_amount = 16
+	work_damage_amount = 32
 	work_damage_type = WHITE_DAMAGE
 	chem_type = /datum/reagent/abnormality/sin/gloom
 	can_patrol = FALSE
@@ -57,15 +57,27 @@
 			You opened your eyes and looked again at the heart. <br>It remains in the air, floating towards a new beginning."),
 	)
 
+
+	var/buff_cooldown
+	var/buff_cooldown_time = 30 SECONDS
+
 	var/pulse_cooldown
 	var/pulse_cooldown_time = 12 SECONDS
-	var/pulse_damage = 120 // Scales with distance; Ideally, you shouldn't be able to outheal it with white V armor or less
+	var/pulse_damage = 100 // Scales with distance; Ideally, you shouldn't be able to outheal it with white V armor or less.
+	//Ramps up as time goes on.
 
 	var/datum/looping_sound/bluestar/soundloop
 
 /mob/living/simple_animal/hostile/abnormality/bluestar/Initialize()
 	. = ..()
 	soundloop = new(list(src), FALSE)
+
+/mob/living/simple_animal/hostile/abnormality/bluestar/PostSpawn()
+	. = ..()
+	if(core_enabled)
+		var/turf/W = pick(GLOB.xeno_spawn)
+		new /obj/structure/blue_core (get_turf(W))
+
 
 /mob/living/simple_animal/hostile/abnormality/bluestar/Destroy()
 	QDEL_NULL(soundloop)
@@ -86,6 +98,18 @@
 		return FALSE
 	if((pulse_cooldown < world.time) && !(status_flags & GODMODE))
 		BluePulse()
+
+	if((buff_cooldown < world.time) && (status_flags & GODMODE))
+		work_damage_amount = initial(work_damage_amount)
+
+	//If you have a supplies crate nearby, delete it, spawn a new one, and set the things proper
+	for(var/obj/structure/blue_core/Y in range(2, src))
+		qdel(Y)
+		buff_cooldown = world.time + buff_cooldown_time
+		work_damage_amount = 16
+		pulse_damage = initial(pulse_damage)
+		var/turf/W = pick(GLOB.xeno_spawn)
+		new /obj/structure/blue_core (get_turf(W))
 
 /mob/living/simple_animal/hostile/abnormality/bluestar/CanAttack(atom/the_target)
 	return FALSE
@@ -111,6 +135,9 @@
 			QDEL_IN(H, 5)
 	SLEEP_CHECK_DEATH(3)
 	animate(src, transform = init_transform, time = 5)
+
+	//Pulse damage increases as time goes on.
+	pulse_damage += 10
 
 /mob/living/simple_animal/hostile/abnormality/bluestar/AttemptWork(mob/living/carbon/human/user, work_type)
 	if(get_attribute_level(user, TEMPERANCE_ATTRIBUTE) < 80)
@@ -143,3 +170,16 @@
 		forceMove(T)
 	BluePulse()
 	return
+
+
+//The Heart stuff
+//The Cores you drag to blue star
+/obj/structure/blue_core
+	name = "Core of a Star"
+	desc = "Seemingly the core of a star. Hums faintly."
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
+	icon_state = "blue_core"
+	resistance_flags = INDESTRUCTIBLE
+	anchored = FALSE
+	density = TRUE
+

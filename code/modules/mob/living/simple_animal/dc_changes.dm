@@ -122,3 +122,11 @@
 /datum/dc_change/pale_fragility
 	potency = 1
 	damage_type = list(PALE_DAMAGE)
+
+/datum/dc_change/defense_level_up
+	potency = 1
+	damage_type = list(RED_DAMAGE, WHITE_DAMAGE, BLACK_DAMAGE, PALE_DAMAGE)
+
+/datum/dc_change/defense_level_down
+	potency = 1
+	damage_type = list(RED_DAMAGE, WHITE_DAMAGE, BLACK_DAMAGE, PALE_DAMAGE)

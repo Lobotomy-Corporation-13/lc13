@@ -516,7 +516,7 @@
 	abno_code = "T-02-182"
 	abno_info = list(
 		"When Attachment work was completed on T-02-182 the employee working started to stoke the moth's flames.",
-		"While stoked, work chance was increased, and the Qliphoth Counter increased.",
+		"While stoked, work chance was increased, and the Qliphoth Counter increased, and T-02-182 became less agressive.",
 		"Employees who worked on Ardor Blossom Moth without a proper fire had a small chance of lowering the Qliphoth counter by 2.",
 		)
 

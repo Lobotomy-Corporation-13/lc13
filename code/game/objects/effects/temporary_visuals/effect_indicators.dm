@@ -61,6 +61,15 @@
 /obj/effect/temp_visual/damage_effect/rupture
 	icon_state = "rupture"
 
+/obj/effect/temp_visual/damage_effect/poise
+	icon_state = "poise"
+
+/obj/effect/temp_visual/damage_effect/concentration
+	icon_state = "concentration"
+
+/obj/effect/temp_visual/damage_effect/nervous_impairment
+	icon_state = "nervous_impairment"
+
 //Stuntime visual for when you're stunned by your weapon, so you know what happened.
 /obj/effect/temp_visual/weapon_stun
 	icon = 'ModularLobotomy/_Lobotomyicons/lc13_coloreffect.dmi'

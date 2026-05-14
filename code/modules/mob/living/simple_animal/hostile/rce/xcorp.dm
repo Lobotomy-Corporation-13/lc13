@@ -86,7 +86,7 @@
 	dash_cooldown = world.time + dash_cooldown_time
 	charging = TRUE
 	var/dir_to_target = get_dir(get_turf(src), get_turf(target))
-	been_hit = list()
+	been_hit.Cut()
 	SpinAnimation(3, 20)
 	dash_num = (get_dist(src, target) + extra_dash_distance)
 	addtimer(CALLBACK(src, PROC_REF(Charge), dir_to_target, 0), 2 SECONDS)
@@ -122,7 +122,7 @@
 	for(var/mob/living/L in range(dash_range, T))//damage applied to targets in range
 		if(faction_check_mob(L))
 			continue
-		if(L in been_hit)
+		if(L.tag in been_hit)
 			continue
 		if(L.z != z)
 			continue
@@ -130,7 +130,7 @@
 		var/turf/LT = get_turf(L)
 		new /obj/effect/temp_visual/kinetic_blast(LT)
 		L.deal_damage(dash_damage, BLACK_DAMAGE, source = src, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
-		been_hit += L
+		been_hit += L.tag
 		playsound(L, 'sound/weapons/fixer/generic/sword4.ogg', 75, 1)
 		if(!ishuman(L))
 			continue

@@ -63,7 +63,6 @@
 	)
 	gift_type = /datum/ego_gifts/frostcrown
 	abnormality_origin = ABNORMALITY_ORIGIN_LOBOTOMY
-	var/can_act = TRUE
 	//The purpose of this variable is to prevent people from ghosting in the arena and making snow queen unworkable.
 	var/arena_timer = 0
 	var/slash_cooldown = 0
@@ -71,13 +70,16 @@
 	//Arena attack cooldown.
 	var/cleave_cooldown = 0
 	var/cleave_cooldown_time = 7 SECONDS
+	//Cooldown for normal slash
+	var/smash_length = 2
+	var/smash_width = 2
 	//If the snow queen activates her arena based attacks or not.
 	var/arena_attacks = FALSE
 	//Double Check if i need to have this variable.
 	var/mob/living/carbon/human/frozen_employee
 	var/mob/living/carbon/human/storybook_hero
 	var/obj/structure/snowqueened_employee/snow_prison
-	//A List of people who have been kissed.
+	//A List of people tags who have been kissed.
 	var/list/kissed = list()
 		//Static variables shared by all iterations of Snow Queen and are not reset upon her defeat
 	//Where the duelest and the victem are dropped off.
@@ -92,11 +94,16 @@
 	var/static/list/temp_effects = list()
 	//Reusable visuals for cleave attacks.
 	var/datum/reusable_visual_pool/RVP = new(200)
+	var/obj/effect/proc_holder/ability/aimed/dash/big_wolf/snowqueen/ourdash
+
+/mob/living/simple_animal/hostile/abnormality/snow_queen/Initialize()
+	. = ..()
+	ourdash = new()
 
 /mob/living/simple_animal/hostile/abnormality/snow_queen/Move()
 	if(!can_act)
 		return FALSE
-	..()
+	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/snow_queen/PostSpawn()
 	..()
@@ -149,6 +156,7 @@
 			to_chat(user, span_notice("No one is frozen by the Snow Queen yet."))
 			frozen_employee = null
 		return FALSE
+
 	if(frozen_employee || snow_prison)
 		if(QDELETED(snow_prison))
 			to_chat(user, span_notice("You brush the shards of ice out of the way."))
@@ -176,9 +184,9 @@
 		return
 	return ..()
 
-/mob/living/simple_animal/hostile/abnormality/snow_queen/Life()
+/mob/living/simple_animal/hostile/abnormality/snow_queen/handle_automated_action()
 	. = ..()
-	if(status_flags & GODMODE)
+	if(!can_act || IsContained() || stat == DEAD)
 		return
 	if(arena_attacks)
 		if(arena_timer <= world.time)
@@ -256,11 +264,40 @@
 		ReleasePrisoners()
 	ClearEffects()
 	QDEL_NULL(RVP)
-	kissed = null
-	snow_prison = null
-	storybook_hero = null
-	frozen_employee = null
+	kissed.Cut()
+	UnregisterAll()
 	return ..()
+
+		/*------------------\
+		|SIGNAL REGISTRATION|
+		\------------------*/
+//Register for prision and victem is in FreezeEmployee proc
+/mob/living/simple_animal/hostile/abnormality/snow_queen/proc/RegisterHero(mob/living/carbon/human/H)
+	RegisterSignal(H, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING), PROC_REF(WinterContinues))
+	storybook_hero = H
+
+/mob/living/simple_animal/hostile/abnormality/snow_queen/proc/UnregisterHero()
+	if(!storybook_hero)
+		return
+	UnregisterSignal(storybook_hero, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING))
+	storybook_hero = null
+
+/mob/living/simple_animal/hostile/abnormality/snow_queen/proc/UnregisterVictem()
+	if(!frozen_employee)
+		return
+	UnregisterSignal(frozen_employee, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING))
+	frozen_employee = null
+
+/mob/living/simple_animal/hostile/abnormality/snow_queen/proc/UnregisterPrison()
+	if(!snow_prison)
+		return
+	UnregisterSignal(snow_prison, COMSIG_PARENT_QDELETING)
+	snow_prison = null
+
+/mob/living/simple_animal/hostile/abnormality/snow_queen/proc/UnregisterAll()
+	UnregisterHero()
+	UnregisterPrison()
+	UnregisterVictem()
 
 		/*---------------------\
 		|CROSS ABNO INTERACTION|
@@ -282,48 +319,46 @@
 	if (!client && (get_dist(src, target) > 4))
 		return
 	slash_cooldown = world.time + slash_cooldown_time
-	var/dir_to_target = get_cardinal_dir(get_turf(src), get_turf(target))
-	var/turf/source_turf = get_turf(src)
+	playsound(get_turf(src), 'sound/weapons/bladeslice.ogg', 50, 0, 5)
+	//Turfs we will be hitting
 	var/turf/area_of_effect = list()
-	var/turf/middle_line = list()
-	var/upline = NORTH
-	var/downline = SOUTH
-	var/smash_length = 2
-	var/smash_width = 2
-	if(wide)
-		playsound(get_turf(src), 'sound/weapons/bladeslice.ogg', 50, 0, 5)
-	else
-		playsound(get_turf(src), 'sound/weapons/bladeslice.ogg', 50, 0, 5)
-		smash_length = 4
-		smash_width = 1
-	middle_line = getline(source_turf, get_ranged_target_turf(source_turf, dir_to_target, smash_length))
-	if(dir_to_target == NORTH || dir_to_target == SOUTH)
-		upline = EAST
-		downline = WEST
-	for(var/turf/T in middle_line)
-		if(T.density)
-			break
-		for(var/turf/Y in getline(T, get_ranged_target_turf(T, upline, smash_width)))
-			if (Y.density)
-				break
-			if (Y in area_of_effect)
-				continue
-			area_of_effect += Y
-		for(var/turf/U in getline(T, get_ranged_target_turf(T, downline, smash_width)))
-			if (U.density)
-				break
-			if (U in area_of_effect)
-				continue
-			area_of_effect += U
-	if(!dir_to_target)
-		for(var/turf/TT in view(1, src))
-			if (TT.density)
-				break
-			if (TT in area_of_effect)
-				continue
-			area_of_effect |= TT
+	//We need 2 numbers. The lower left and the upper right of the square.
+	//Lower Left
+	var/offsetx1 = 0
+	var/offsety1 = 0
+	//Upper Right
+	var/offsetx2 = 0
+	var/offsety2 = 0
+	//Give me where theoretically the center of the turf we would be hitting be.
+	//Gimme a direction.
+	var/dir_to_target = get_cardinal_dir(get_turf(src), get_turf(target))
+	switch(dir_to_target)
+		if(EAST)
+			offsetx1 = 1
+			offsety1 = -smash_width
+			offsetx2 = smash_length
+			offsety2 = smash_width
+		if(WEST)
+			offsetx1 = -smash_length
+			offsety1 = -smash_width
+			offsetx2 = -1
+			offsety2 = smash_width
+		if(SOUTH)
+			offsetx1 = -smash_width
+			offsety1 = -smash_length
+			offsetx2 = smash_width
+			offsety2 = -1
+		if(NORTH)
+			offsetx1 = -smash_width
+			offsety1 = 1
+			offsetx2 = smash_width
+			offsety2 = smash_length
+
+	//Give me ONLY the turfs between these cords
+	area_of_effect = block(x+offsetx1,y+offsety1,z,x+offsetx2,y+offsety2)
 	if (!LAZYLEN(area_of_effect))
 		return
+
 	can_act = FALSE
 	dir = dir_to_target
 	for(var/turf/T in area_of_effect)
@@ -340,11 +375,11 @@
 //This can be connected to a LCL gamemode ability
 /mob/living/simple_animal/hostile/abnormality/snow_queen/proc/KissEmployee(mob/living/carbon/human/H)
 	to_chat(H, span_notice("[src] gives you a kiss."))
-	if(!locate(H) in kissed)
-		kissed += H
-		kissed[H] = 0
-	kissed[H] += 1
-	if(kissed[H] >= 2)
+	if(!(H.tag in kissed))
+		kissed += H.tag
+		kissed[H.tag] = 0
+	kissed[H.tag] += 1
+	if(kissed[H.tag] >= 2)
 		FreezeEmployee(H)
 
 //Imprisons employee who was kissed twice by Snow Queen.
@@ -356,10 +391,14 @@
 	var/obj/item/radio/headset/radio = H.get_item_by_slot(ITEM_SLOT_EARS)
 	if(radio)
 		radio.forceMove(get_turf(H))
+	RegisterSignal(H, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING), PROC_REF(UnregisterVictem))
+	frozen_employee = H
+
 	var/obj/structure/snowqueened_employee/P = new(get_turf(H))
+	RegisterSignal(P, list(COMSIG_PARENT_QDELETING), PROC_REF(UnregisterPrison))
 	P.GrabEmployee(H)
 	snow_prison = P
-	frozen_employee = H
+
 	to_chat(frozen_employee, "In an unforgiving blizzard, Kai met the Snow Queen. He became curious of the world beyond his knowledge..")
 	return TRUE
 
@@ -419,31 +458,6 @@
 		if(isfloorturf(T))
 			. += T
 
-//Collects 8 turfs surrounding the target.
-/mob/living/simple_animal/hostile/abnormality/snow_queen/proc/SurroundTarget(mob/living/L)
-	. = list()
-	var/turf/enemy_turf = get_turf(L)
-	//Four Tiles North
-	. += locate(enemy_turf.x ,enemy_turf.y +4,enemy_turf.z)
-	//Four Tiles South
-	. += locate(enemy_turf.x ,enemy_turf.y -4,enemy_turf.z)
-	//Four Tiles East
-	. += locate(enemy_turf.x +4 ,enemy_turf.y,enemy_turf.z)
-	//Four Tiles West
-	. += locate(enemy_turf.x -4 ,enemy_turf.y,enemy_turf.z)
-	//Four Tiles Northeast
-	. += locate(enemy_turf.x +4 ,enemy_turf.y +3,enemy_turf.z)
-	//Four Tiles Southeast
-	. += locate(enemy_turf.x +4,enemy_turf.y -3,enemy_turf.z)
-	//Four Tiles Northwest
-	. += locate(enemy_turf.x -4 ,enemy_turf.y +3,enemy_turf.z)
-	//Four Tiles Southwest
-	. += locate(enemy_turf.x -4 ,enemy_turf.y -3,enemy_turf.z)
-	//Double check that all areas are nondense
-	for(var/turf/good_area in .)
-		if(!isfloorturf(good_area))
-			. -= good_area
-
 //Combines two parts of the arena without having overlap.
 /mob/living/simple_animal/hostile/abnormality/snow_queen/proc/ReturnNoOverlap(list/area_one, list/area_two)
 	var/list/unique_list = area_one + area_two
@@ -477,7 +491,7 @@
 		hero.dropItemToGround(E, TRUE, TRUE)
 	hero.forceMove(arena_landmarks[ICE_ARENA_HERO_SPAWN])
 	storybook_hero = hero
-	RegisterSignal(hero, COMSIG_PARENT_QDELETING, PROC_REF(WinterContinues))
+	RegisterSignal(hero, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING), PROC_REF(WinterContinues))
 	prison.forceMove(arena_landmarks[ICE_ARENA_VICTEM_SPAWN])
 	var/storybook_text = "Gerda was strong enough to remain unpierced by the mirror, and brave enough to go on a journey to rescue Kai. So she set off towards the Snow Palace."
 	to_chat(storybook_hero, storybook_text)
@@ -499,13 +513,15 @@
 
 //Procs when the hero saves Snow Queens captive
 /mob/living/simple_animal/hostile/abnormality/snow_queen/proc/ReleasePrisoners()
-	if(!QDELETED(snow_prison))
-		Defrost(snow_prison)
-	if(!QDELETED(frozen_employee))
-		RewardPrisoner(frozen_employee)
-	RewardPrisoner(storybook_hero)
-	storybook_hero = null
-	frozen_employee = null
+	var/mob/living/hero = storybook_hero
+	var/mob/living/rescuee = frozen_employee
+	var/obj/prison = snow_prison
+	UnregisterAll()
+	if(!QDELETED(prison))
+		Defrost(prison)
+	if(!QDELETED(rescuee))
+		RewardPrisoner(rescuee)
+	RewardPrisoner(hero)
 
 /mob/living/simple_animal/hostile/abnormality/snow_queen/proc/RewardPrisoner(mob/living/carbon/human/rewardee)
 	if(!rewardee)
@@ -526,12 +542,18 @@
 /mob/living/simple_animal/hostile/abnormality/snow_queen/proc/WinterContinues()
 	SIGNAL_HANDLER
 	Defrost(snow_prison, TRUE)
-	if(!QDELETED(storybook_hero))
-		storybook_hero.dust(TRUE, TRUE)
-	if(!QDELETED(frozen_employee))
-		frozen_employee.dust(TRUE, TRUE)
-	frozen_employee = null
-	storybook_hero = null
+	var/mob/living/doomed_hero = storybook_hero
+	var/mob/living/doomed_captive = frozen_employee
+	UnregisterAll()
+	if(!QDELETED(doomed_hero))
+		var/mob/living/hero = doomed_hero
+		storybook_hero = null
+		hero.dust(TRUE, TRUE)
+	if(!QDELETED(doomed_captive))
+		var/mob/living/frozen = doomed_captive
+		frozen_employee = null
+		frozen.dust(TRUE, TRUE)
+
 	QDEL_IN(src, 10)
 	//The story is over.
 
@@ -562,6 +584,8 @@
 		if(do_after(src, 1 SECONDS, target = src) && get_health == health)
 			for(var/turf/after_spike in after_image_locations)
 				AoeTurfEffect(after_spike, 6)
+			//Always 1 free dash attack
+			ourdash.AlterCharge(1)
 			BladeDash(target)
 
 //Rapidly shoots frost splinters at the target
@@ -668,32 +692,15 @@
 	can_act = FALSE
 	if(IsContained())
 		return
-	var/turf/target_turf = get_turf(dash_target)
-	var/list/hit_mob = list()
 	icon_state = "snowqueen_charge"
 	update_icon()
-	if(do_after(src, 1 SECONDS, target = src))
-		//I know it isnt a directional sprite... maybe one day -IP
-		icon_state = "snowqueen_burst"
-		update_icon()
-		var/turf/wallcheck = get_turf(src)
-		var/enemy_direction = get_dir(src, target_turf)
-		for(var/i = 0 to 7)
-			if(get_turf(src) != wallcheck || stat == DEAD || IsContained())
-				break
-			wallcheck = get_step(src, enemy_direction)
-			if(!ClearSky(wallcheck))
-				break
-			//without this the attack happens instantly
-			sleep(1)
-			forceMove(wallcheck)
-			playsound(wallcheck, 'sound/abnormalities/doomsdaycalendar/Lor_Slash_Generic.ogg', 20, 0, 4)
-			for(var/turf/T in orange(get_turf(src), 1))
-				if(isclosedturf(T))
-					continue
-				new /obj/effect/temp_visual/slice(T)
-				hit_mob = HurtInTurf(T, hit_mob, 20, RED_DAMAGE, null, TRUE, FALSE, TRUE, hurt_structure = FALSE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
-	can_act = TRUE
+	ourdash.Perform(dash_target,src)
+
+/mob/living/simple_animal/hostile/abnormality/snow_queen/proc/startCharge()
+	icon_state = "snowqueen_burst"
+	update_icon()
+
+/mob/living/simple_animal/hostile/abnormality/snow_queen/proc/endCharge()
 	icon_state = "snowqueen"
 	update_icon()
 

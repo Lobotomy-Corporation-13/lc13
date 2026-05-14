@@ -92,6 +92,16 @@ Oh please give these a nice name by the way
 	item_path = /obj/item/storage/box/thumb_east_ammo/tigermark
 	cost = 80
 
+// Thumb East Propellant Ammo Bandolier
+// Holds ammo!
+/datum/ego_datum/auxiliary/thumb_east_bandolier
+	name = "Thumb East Ammo Bandolier"
+	origin = "City"
+	item_category = "Belt"
+	item_path = /obj/item/storage/belt/bandolier/thumb_east
+	cost = 35
+	well_enabled = FALSE
+
 // Middle Book of Vengeance and subtypes
 // Mark attackers with Vengeance mark and provide IFF for Big Brother's leap.
 // You can actually get them in both LC13 and COL.

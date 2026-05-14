@@ -58,14 +58,15 @@
 	var/pulse_cooldown
 	var/pulse_cooldown_time = 1 SECONDS
 	var/pulse_damage = 6
-	var/can_act = TRUE
 	var/dash_cooldown
 	var/dash_cooldown_time = 5 SECONDS
-	var/dash_max = 50
-	var/dash_damage = 200
-	var/list/been_hit = list()
+	var/obj/effect/proc_holder/ability/aimed/dash/firebird/ourdash
 
 //Initialize
+/mob/living/simple_animal/hostile/abnormality/fire_bird/Initialize()
+	. = ..()
+	ourdash = new()
+
 /mob/living/simple_animal/hostile/abnormality/fire_bird/HandleStructures()
 	. = ..()
 	if(!.)
@@ -157,58 +158,8 @@
 		return
 	dash_cooldown = world.time + dash_cooldown_time
 	if(!(status_flags & GODMODE))
-		can_act = FALSE
-		var/dir_to_target = get_dir(src, target)
-		var/turf/T = get_turf(src)
-		for(var/i = 1 to dash_max)
-			T = get_step(T, dir_to_target)
-			if(T.density)
-				if(i < 4) // Mob attempted to dash into a wall too close, stop it
-					can_act = TRUE
-					return
-				break
-			new /obj/effect/temp_visual/small_smoke(T)
 		dash_cooldown = world.time + dash_cooldown_time
-		SLEEP_CHECK_DEATH(11)
-		been_hit = list()
-		playsound(get_turf(src), 'sound/abnormalities/firebird/Firebird_Hit.ogg', 100, 0, 20) //TEMPORARY
-		DoDash(dir_to_target, 0)
-
-/mob/living/simple_animal/hostile/abnormality/fire_bird/proc/DoDash(move_dir, times_ran)
-	var/stop_charge = FALSE
-	if(times_ran >= dash_max)
-		stop_charge = TRUE
-	var/turf/T = get_step(get_turf(src), move_dir)
-	if(!T)
-		can_act = TRUE
-		return
-	if(T.density)
-		stop_charge = TRUE
-	for(var/obj/structure/window/W in T.contents)
-		W.obj_destruction("flames")
-	for(var/obj/machinery/door/D in T.contents)
-		if(D.density)
-			addtimer(CALLBACK (D, TYPE_PROC_REF(/obj/machinery/door, open)))
-	if(stop_charge)
-		can_act = TRUE
-		return
-	forceMove(T)
-	for(var/turf/TF in view(1, T))
-		new /obj/effect/temp_visual/fire/fast(TF)
-		for(var/mob/living/carbon/human/L in TF)
-			if(L in been_hit)
-				continue
-			visible_message(span_boldwarning("[src] blazes through [L]!"))
-			L.deal_damage(dash_damage, WHITE_DAMAGE, src, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
-			L.deal_damage(dash_damage * 0.1, FIRE, src, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
-			new /obj/effect/temp_visual/cleave(get_turf(L))
-			if(L.sanity_lost) // TODO: TEMPORARY AS HELL
-				L.deal_damage(999, FIRE, src, flags = (DAMAGE_FORCED))
-			if(!(L in been_hit))
-				been_hit += L
-
-
-	addtimer(CALLBACK(src, PROC_REF(DoDash), move_dir, (times_ran + 1)), 0.5) // SPEED
+		ourdash.Perform(target,src)
 
 /mob/living/simple_animal/hostile/abnormality/fire_bird/attackby(obj/item/I, mob/living/user, params)
 	..()

@@ -121,7 +121,6 @@
 	var/safe
 	var/work_timer
 	// Breach Vars
-	var/can_act = TRUE
 	var/slam_damage = 200
 	var/slam_cooldown
 	var/slam_cooldown_time = 20 SECONDS
@@ -327,6 +326,7 @@
 	EndWeather()
 	for(var/obj/effect/season_turf/newturf in spawned_turfs)
 		newturf.DoDelete()
+	spawned_turfs = null
 	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/seasons/BreachEffect(mob/living/carbon/human/user, breach_type)

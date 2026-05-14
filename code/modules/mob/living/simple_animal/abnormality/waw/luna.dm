@@ -57,10 +57,10 @@
 /mob/living/simple_animal/hostile/abnormality/luna/CanAttack(atom/the_target)
 	return FALSE
 
-/mob/living/simple_animal/hostile/abnormality/luna/death(gibbed)
+/mob/living/simple_animal/hostile/abnormality/luna/Destroy()
 	if(breached_monster)
 		qdel(breached_monster)
-	..()
+	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/luna/NeutralEffect(mob/living/carbon/human/user, work_type, pe)
 	. = ..()

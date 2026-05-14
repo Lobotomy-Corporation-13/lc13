@@ -31,7 +31,6 @@
 	loot = list(/obj/effect/mob_spawn/human/clown/corpse)
 	// pressure_resistance = 200
 
-	var/can_act = TRUE
 	var/scream_cooldown
 	var/scream_cooldown_time = 5 SECONDS
 	var/scream_damage = 15

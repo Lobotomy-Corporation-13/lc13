@@ -27,6 +27,12 @@ GLOBAL_LIST_INIT(available_high_sec_abno, list(
 	/mob/living/simple_animal/hostile/limbus_abno/mountain,
 	/mob/living/simple_animal/hostile/limbus_abno/queen_bee))
 
+//This is to keep track of which lcl abno was already physically spawned.
+GLOBAL_LIST_EMPTY(lcl_spawned_abno)
+
+//This one is to see which player client is associated with each abno, there should almost only ever be one person per existing abno.
+GLOBAL_LIST_EMPTY(attributed_lcl_abno)
+
 /obj/effect/landmark/start/limbus_abnospawn
 	name = "Limbus abno spawner"
 	desc = "It spawns a limbus abno. Notify a coder. Thanks!"

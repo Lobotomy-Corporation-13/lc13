@@ -350,6 +350,15 @@ Any attempt to code risk class armor will result in a 10 day Github ban.*/
 
 	to_chat(H, span_notice("The panic fades as you find yourself in the liminal space. The suit feels oddly comfortable here, like it belongs."))
 
+//placeholder
+/obj/item/clothing/suit/armor/ego_gear/teth/recollection
+	name = "recollection"
+	desc = "A old grey coat. Wearing it makes you dwell on those you left behind."
+	icon = 'icons/obj/clothing/ego_gear/abnormality/tools.dmi'
+	worn_icon = 'icons/mob/clothing/ego_gear/abnormality/tools.dmi'
+	icon_state = "mirror"
+	armor = list(RED_DAMAGE = 35, WHITE_DAMAGE = 35, BLACK_DAMAGE = -25, PALE_DAMAGE = -25)
+
 /obj/item/clothing/suit/armor/ego_gear/teth/patch
 	name = "patch"
 	desc = "A white labcoat stained lightly with blood."

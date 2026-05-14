@@ -10,7 +10,6 @@
 
 	var/light_count = 0
 	var/duplicate_crankers = 0
-	var/list/banned = list()
 	var/list/crankers = list()
 	var/clock_cooldown_time = 5 MINUTES
 	var/clock_cooldown //prevents an exploit
@@ -27,9 +26,13 @@
 		/datum/ego_datum/armor/windup,
 	)
 
+/obj/structure/toolabnormality/clock/Destroy()
+	crankers = null
+	return ..()
+
 /obj/structure/toolabnormality/clock/attack_hand(mob/living/carbon/human/user)
 	..()
-	if(user.ckey in banned)
+	if(user.ckey in operators)
 		to_chat(user, span_notice("It won't respond to you at all."))
 		return
 	if(get_user_level(user) <= 2)
@@ -65,7 +68,7 @@
 
 	Operate(get_user_level(user))
 	clock_cooldown = world.time + clock_cooldown_time
-	banned += user.ckey
+	operators += user.ckey
 	user.dust()
 	light_count = 0
 	sleep(70)

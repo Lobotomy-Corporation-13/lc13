@@ -484,6 +484,18 @@
 		"When the work result was Normal, the Qliphoth Counter lowered with a normal probability.",
 		"When the work result was Bad, the Qliphoth Counter lowered.")
 
+// Lunar Physician
+/obj/item/paper/fluff/info/teth/portrait_certain
+	abno_type = /mob/living/simple_animal/hostile/abnormality/portrait_certain
+	abno_code = "O-02-209"
+	abno_info = list(
+		"O-02-209 will manifest a portrait with a frame resembling one of the four work types after each work.",
+		"O-02-209 will become aggressive if the work type does not correspond to its portrait from the prior work.",
+		"O-02-209 will occasionally surround itself with 4-8 portraits and gain resistance to all damage.",
+		"If the masters portrait is not found and destroyed before 6 seconds the portraits will explode into white damage.",
+		"Each time O-02-209 loses 10% of its health it marks a nearby human as a interloper.",
+		"O-02-209 is more aggressive towards interlopers and deals greater damage to them."
+	)
 
 // Lunar Physician
 /obj/item/paper/fluff/info/teth/lunar_rabbit

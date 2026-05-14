@@ -34,6 +34,14 @@
 	var/special_type = null // Variant-specific
 	var/shield_generator_type = null // Shield generator to spawn
 
+/obj/structure/seed_of_greed/Destroy()
+	barricade_positions_inner = null
+	barricade_positions_outer = null
+	turret_positions = null
+	anchor_positions = null
+	special_positions = null
+	return ..()
+
 /obj/structure/seed_of_greed/Initialize()
 	. = ..()
 	StartSpawnSequence()
@@ -379,6 +387,10 @@
 	name = "Seed of Greed (Defensive)"
 	desc = "Constructs a heavily fortified position."
 	var/list/barricade_positions_extra = list() // Third ring for higher levels
+
+/obj/structure/seed_of_greed/defensive/Destroy()
+	barricade_positions_extra = null
+	return ..()
 
 /obj/structure/seed_of_greed/defensive/level1
 	name = "Seed of Greed (Defensive I)"

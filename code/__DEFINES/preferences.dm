@@ -76,6 +76,40 @@
 #define RELATION_SKEPTICAL "Skeptical"
 #define RELATION_OPPOSED "Opposed"
 
+//Wing Selection
+#define WING_A "District 1"
+#define WING_B "District 2"
+#define WING_C "District 3"
+#define WING_D "District 4"
+#define WING_E "District 5"
+#define WING_F "District 6"
+#define WING_G "District 7"
+#define WING_H "District 8"
+#define WING_I "District 9"
+#define WING_J "District 10"
+#define WING_K "District 11"
+#define WING_L "District 12"
+#define WING_M "District 13"
+#define WING_N "District 14"
+#define WING_O "District 15"
+#define WING_P "District 16"
+#define WING_Q "District 17"
+#define WING_R "District 18"
+#define WING_S "District 19"
+#define WING_T "District 20"
+#define WING_U "District 21"
+#define WING_V "District 22"
+#define WING_W "District 23"
+#define WING_X "District 24"
+#define WING_Y "District 25"
+#define WING_Z "District 26"
+#define WING_UNKNOWN "UNKNOWN"
+
+//Are you from the Nest or Backstreets?
+#define WING_NEST "Nest"
+#define WING_BACKSTREET "Backstreets"
+
+
 // Playtime tracking system, see jobs_exp.dm
 #define EXP_TYPE_LIVING			"Living"
 #define EXP_TYPE_CREW			"Crew"

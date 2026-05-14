@@ -46,13 +46,18 @@
 	base_pixel_x = -16
 	pixel_x = -16
 
+/mob/living/simple_animal/hostile/abnormality/little_prince/Destroy()
+	UnregisterAll()
+	QDEL_NULL(spore_icon)
+	return ..()
+
 /mob/living/simple_animal/hostile/abnormality/little_prince/Life()
 	..()
 	for(var/mob/living/carbon/human/user in hypnotized)
 		if ((user.stat == DEAD) || !(user.sanity_lost))
 			QDEL_NULL(user.ai_controller)
 			user.cut_overlay(mutable_appearance('ModularLobotomy/_Lobotomyicons/tegu_effects32x48.dmi', "spore_hypno", -HALO_LAYER))
-			hypnotized -= user
+			UnregisterMob(user)
 	if(LAZYLEN(hypnotized))
 		icon_state = "little_princea"
 	else
@@ -65,7 +70,7 @@
 		user.deal_damage(user.maxSanity, WHITE_DAMAGE, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_SPECIAL))
 		if (!(user.sanity_lost))
 			//Check Sanity twice to make sure you're actually insane
-			twice -= user
+			twice -= user.tag
 			to_chat(user, span_userdanger("You see mushrooms growing all over your body, and you tear them off!"))
 			return
 	to_chat(user, span_userdanger("You see mushrooms growing all over your body!"))
@@ -73,7 +78,7 @@
 	QDEL_NULL(user.ai_controller)
 	user.ai_controller = /datum/ai_controller/insane/hypno
 	user.InitializeAIController()
-	hypnotized += user
+	RegisterMob(user)
 	return
 
 /mob/living/simple_animal/hostile/abnormality/little_prince/proc/Infect(mob/living/carbon/human/user)
@@ -96,9 +101,9 @@
 	return TRUE
 
 /mob/living/simple_animal/hostile/abnormality/little_prince/proc/Fungify(mob/living/carbon/human/user)
-	once -= user
-	twice -= user
-	hypnotized -= user
+	once -= user.tag
+	twice -= user.tag
+	UnregisterMob(user)
 	user.cut_overlay(mutable_appearance('ModularLobotomy/_Lobotomyicons/tegu_effects32x48.dmi', "spore_hypno", -HALO_LAYER))
 	var/turf/T = get_turf(user)
 	user.visible_message(span_danger("Mushrooms rapidly grow all over [user]'s body, forming a giant mass!"))
@@ -112,12 +117,12 @@
 	SIGNAL_HANDLER
 	if (abno_datum == datum_reference) // They worked on us!
 		return FALSE
-	if (user in twice)
-		once += user
-		twice -= user
+	if (user.tag in twice)
+		once += user.tag
+		twice -= user.tag
 		return TRUE
-	if (user in once)
-		once -= user
+	if (user.tag in once)
+		once -= user.tag
 		UnregisterSignal(user, COMSIG_WORK_STARTED)
 		return FALSE
 	return TRUE
@@ -128,11 +133,11 @@
 	user_check = FALSE
 
 	//checks how many times they worked on prince
-	if (user in once)
-		once -= user
-		twice += user
-	if (!(user in once) && !(user in twice))
-		once += user
+	if (user.tag in once)
+		once -= user.tag
+		twice += user.tag
+	if (!(user.tag in once) && !(user.tag in twice))
+		once += user.tag
 		RegisterSignal(user, COMSIG_WORK_STARTED, PROC_REF(OnAbnoWork))
 
 	//insight work checks
@@ -158,7 +163,7 @@
 	return
 
 /mob/living/simple_animal/hostile/abnormality/little_prince/AttemptWork(mob/living/carbon/human/user, work_type)
-	if ((user in twice) || (user in hypnotized))
+	if ((user.tag in twice) || (user in hypnotized))
 		datum_reference.qliphoth_change(2)
 		UnregisterSignal(user, COMSIG_WORK_STARTED)
 		Fungify(user)
@@ -182,6 +187,19 @@
 			potential_hypno += H
 		Hypno(pick(potential_hypno))
 	return
+
+/mob/living/simple_animal/hostile/abnormality/little_prince/proc/RegisterMob(mob/living/L)
+	RegisterSignal(L, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING), PROC_REF(UnregisterMob))
+	hypnotized += L
+
+/mob/living/simple_animal/hostile/abnormality/little_prince/proc/UnregisterMob(mob/living/L)
+	UnregisterSignal(L, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING))
+	hypnotized -= L
+
+/mob/living/simple_animal/hostile/abnormality/little_prince/proc/UnregisterAll()
+	for(var/mob/living/L in hypnotized)
+		UnregisterMob(L)
+	hypnotized.Cut()
 
 /* Prince-01 */
 /mob/living/simple_animal/hostile/little_prince_1

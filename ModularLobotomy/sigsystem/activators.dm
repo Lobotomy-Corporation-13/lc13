@@ -48,7 +48,6 @@
 		return
 	PingDirection()
 
-
 	/*----------\
 	|Signal Node|
 	\-----------/
@@ -78,7 +77,7 @@
 	desc = "A rectangular steel crate. Wired to be unlocked remotely."
 	icon_state = "securecrate"
 	anchored = TRUE
-	anchorable = TRUE
+	anchorable = FALSE
 	//If the crate fires a signal upon opening once
 	var/once = TRUE
 	var/fired = FALSE
@@ -118,3 +117,11 @@
 	var/location = get_turf(src)
 	for(var/obj/structure/sigsystem/signal_node/node in location)
 		node.NodePing()
+
+/obj/structure/closet/crate/sigsystem/sarcophagus
+	name = "sarcophagus"
+	desc = "A stone coffin commonly found above ground."
+	icon_state = "sarcophagus"
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_structures.dmi'
+	open_sound = 'sound/effects/stonedoor_openclose.ogg'
+	close_sound = 'sound/effects/stonedoor_openclose.ogg'

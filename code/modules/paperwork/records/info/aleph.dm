@@ -20,11 +20,13 @@
 	abno_type = /mob/living/simple_animal/hostile/abnormality/bluestar
 	abno_code = "O-03-93"
 	abno_info = list(
-		"Agents with Temperance Level 3 or lower immediately threw themselves into Blue Star upon working with the Abnormality.",
+		"Agents with Temperance Level 3 or lower immediately threw themselves into O-03-93 upon working with the Abnormality.",
 		"When an Agent with Prudence Level 4 or lower completed their work, the Qliphoth Counter lowered.",
-		"When more than 40 seconds of work time had taken place, the Qliphoth Counter lowered by 1, and the Agent who was working with Blue Star threw themself in.",
-		"While Blue Star is outside of its containment, all sounds will be reduced to silence, with a low pitched tone emerging. The pitch will accompany a visually disruptive effect.",
-		"While Blue Star is outside of its containment, all panicking employees in the facility will be sucked into the center of the Abnormality and vanish.")
+		"When more than 40 seconds of work time had taken place, the Qliphoth Counter lowered by 1, and the Agent who was working with O-03-93 threw themself in.",
+		"While O-03-93 is outside of its containment, all sounds will be reduced to silence, with a low pitched tone emerging. The pitch will accompany a visually disruptive effect.",
+		"The white damage O-03-93 emits increases as time goes on.",
+		"While O-03-93 is outside of its containment, all panicking employees in the facility will be sucked into the center of the Abnormality and vanish.",
+		"O-03-93's Work damage and breach damage can both be decreased by offering it a Core of a Star.")
 	abno_breach_damage_type = "White"
 	abno_breach_damage_count = "Very High"
 

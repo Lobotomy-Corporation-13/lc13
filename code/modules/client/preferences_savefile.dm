@@ -167,6 +167,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	READ_FILE(S["max_chat_length"], max_chat_length)
 	READ_FILE(S["see_chat_non_mob"] , see_chat_non_mob)
 	READ_FILE(S["see_rc_emotes"] , see_rc_emotes)
+	READ_FILE(S["show_status_display"], show_status_display)
 	READ_FILE(S["broadcast_login_logout"] , broadcast_login_logout)
 
 	READ_FILE(S["tgui_fancy"], tgui_fancy)
@@ -241,6 +242,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	max_chat_length = sanitize_integer(max_chat_length, 1, CHAT_MESSAGE_MAX_LENGTH, initial(max_chat_length))
 	see_chat_non_mob	= sanitize_integer(see_chat_non_mob, FALSE, TRUE, initial(see_chat_non_mob))
 	see_rc_emotes	= sanitize_integer(see_rc_emotes, FALSE, TRUE, initial(see_rc_emotes))
+	show_status_display = sanitize_integer(show_status_display, 0, 2, initial(show_status_display))
 	broadcast_login_logout = sanitize_integer(broadcast_login_logout, FALSE, TRUE, initial(broadcast_login_logout))
 	tgui_fancy		= sanitize_integer(tgui_fancy, FALSE, TRUE, initial(tgui_fancy))
 	tgui_lock		= sanitize_integer(tgui_lock, FALSE, TRUE, initial(tgui_lock))
@@ -312,6 +314,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["max_chat_length"], max_chat_length)
 	WRITE_FILE(S["see_chat_non_mob"], see_chat_non_mob)
 	WRITE_FILE(S["see_rc_emotes"], see_rc_emotes)
+	WRITE_FILE(S["show_status_display"], show_status_display)
 	WRITE_FILE(S["broadcast_login_logout"], broadcast_login_logout)
 	WRITE_FILE(S["tgui_fancy"], tgui_fancy)
 	WRITE_FILE(S["tgui_lock"], tgui_lock)
@@ -405,6 +408,8 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	READ_FILE(S["uplink_loc"], uplink_spawn_loc)
 	READ_FILE(S["playtime_reward_cloak"], playtime_reward_cloak)
 	READ_FILE(S["phobia"], phobia)
+	READ_FILE(S["district_origin"], district_origin)
+	READ_FILE(S["zone_origin"], zone_origin)
 	READ_FILE(S["randomise"],  randomise)
 	READ_FILE(S["feature_mcolor"], features["mcolor"])
 	READ_FILE(S["feature_ethcolor"], features["ethcolor"])
@@ -537,6 +542,8 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 
 	//Lore
 	terragov_relation = sanitize_inlist(terragov_relation, GLOB.relationship_prefs, initial(terragov_relation))
+	district_origin = sanitize_inlist(district_origin, GLOB.district_prefs, initial(district_origin))
+	zone_origin = sanitize_inlist(zone_origin, GLOB.wing_section_prefs, initial(zone_origin))
 
 	joblessrole	= sanitize_integer(joblessrole, 1, 3, initial(joblessrole))
 	//Validate job prefs
@@ -586,6 +593,8 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["randomise"]		, randomise)
 	WRITE_FILE(S["species"]			, pref_species.id)
 	WRITE_FILE(S["phobia"], phobia)
+	WRITE_FILE(S["district_origin"], district_origin)
+	WRITE_FILE(S["zone_origin"], zone_origin)
 	WRITE_FILE(S["feature_mcolor"]					, features["mcolor"])
 	WRITE_FILE(S["feature_ethcolor"]					, features["ethcolor"])
 	WRITE_FILE(S["feature_lizard_tail"]			, features["tail_lizard"])

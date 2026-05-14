@@ -21,18 +21,6 @@
 		pulse_damage = 100
 	return ..()
 
-//Helper can't be stunned for a million fuckin years
-/mob/living/simple_animal/hostile/abnormality/helper/Initialize()
-	if(IsCombatMap())
-		stuntime = 2 SECONDS
-		dash_num = 250
-		dash_damage = 60
-		dash_speed = 0.75
-		dash_attack_volune = 25
-		dash_move_min_volune = 10
-		dash_move_max_volune = 20
-	return ..()
-
 //Frag needs a little damage buff
 /mob/living/simple_animal/hostile/abnormality/fragment/Initialize()
 	if(IsCombatMap())
@@ -133,10 +121,4 @@
 		move_to_delay = 5
 		UpdateSpeed()
 		ranged = TRUE
-	return ..()
-
-/mob/living/simple_animal/hostile/abnormality/greed_king/Initialize()
-	if(IsCombatMap())
-		initial_charge_damage = 200
-		growing_charge_damage = 80
 	return ..()

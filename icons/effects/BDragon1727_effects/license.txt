@@ -1,0 +1,42 @@
+﻿Assets in this directory are created by BDragon1727.
+Source: https://bdragon1727.itch.io/
+
+Original License Terms (as published by BDragon1727):
+------------------------------------------------------
+You may use these assets in personal, commercial or non-commercial projects.
+You may modify these assets to suit your needs.
+Credit is not necessary, but highly appreciated.
+You can NOT re-distribute the file, no matter how much you modify it
+you can use it but not share or re-sell it.
+
+Redistribution Permission:
+------------------------------------------------------
+The creator has granted explicit permission for these assets to be
+included in this open-source project. This permission does not extend
+to extracting and redistributing these assets independently outside
+of this project.
+
+All rights to the original assets remain with BDragon1727.
+
+Email Correspondence (proof of permission):
+------------------------------------------------------
+On Mar 4, 2026, Ender Mage wrote:
+> Hello Bdragon!
+>
+> I was looking for sprites for a game that I have been working on,
+> and found your amazing collection! I was thinking of using it, but
+> I have a few questions about licensing. The game I am working on is
+> free and open-source, so I was wondering if that would fall under
+> re-distributing since anyone can see your sprites. If not, do you
+> have any sprites under an open-source license?
+
+On Mar 5, 2026, Dragon1727 B wrote:
+> If they are characters and non-commercial, feel free to use them.
+
+On Mar 6, 2026, Ender Mage wrote:
+> Just to clarify, I was looking into using your temporary visual
+> effects, like the smoke or blade slices, would those ones be okay
+> to use?
+
+On Mar 7, 2026, Dragon1727 B wrote:
+> Of course you can!

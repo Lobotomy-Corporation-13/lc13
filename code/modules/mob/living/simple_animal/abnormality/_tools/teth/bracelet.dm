@@ -3,7 +3,6 @@
 	name = "luminous bracelet"
 	desc = "A glowing white bracelet."
 	icon_state = "bracelet"
-	var/list/active_users = list()
 
 	ego_list = list(
 		/datum/ego_datum/weapon/luminosity,
@@ -14,8 +13,8 @@
 	. = ..()
 	if(!do_after(user, 6))
 		return
-	if(user in active_users)
-		active_users -= user
+
+	if(user.has_status_effect(STATUS_EFFECT_BRACELET))
 		user.remove_status_effect(STATUS_EFFECT_BRACELET)
 		if(user.health != user.maxHealth) // check for oxyloss, because of anemics
 			if(user.oxyloss > 0)
@@ -27,7 +26,6 @@
 		else
 			to_chat(user, span_userdanger("You put the bracelet back, and take a sigh of relief."))
 	else
-		active_users += user
 		user.apply_status_effect(STATUS_EFFECT_BRACELET)
 		to_chat(user, span_userdanger("You pick up the bracelet, and feel your wounds mending."))
 

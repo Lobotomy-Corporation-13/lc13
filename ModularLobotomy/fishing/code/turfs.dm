@@ -48,6 +48,10 @@
 
 	var/safe = FALSE
 
+/turf/open/water/deep/Destroy()
+	target_turf = null
+	return ..()
+
 /turf/open/water/deep/Initialize()
 	. = ..()
 	WashedOnTheShore()
