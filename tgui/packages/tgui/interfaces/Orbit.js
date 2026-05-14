@@ -209,7 +209,7 @@ export const Orbit = (props, context) => {
             ))}
         </Section>
 
-        <BasicSection // LOBOTOMYCORPORATION ADDITION -- Test Range Threats & Agents
+        <BasicSection // LC13 ADDITION -- Test Range Threats & Agents
           title="Test Range"
           source={testrange}
           searchText={searchText}
