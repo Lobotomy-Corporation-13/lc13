@@ -52,8 +52,6 @@
 	var/petals_next_time = 7 SECONDS
 	/// Amount of white damage done to everyone in view by the attack
 	var/pulse_damage = 180
-	/// Chance of you breaching on a good
-	var/good_breach = 60
 
 	/// Attack_type
 	var/pulsing = FALSE
@@ -218,7 +216,7 @@
 /mob/living/simple_animal/hostile/abnormality/alriune/NeutralEffect(mob/living/carbon/human/user, work_type, pe)
 	. = ..()
 	good_droprate -= pe
-	good_droprate = max(0, good_breach)
+	good_droprate = max(0, good_droprate)
 	return
 
 /* Qliphoth/Breach effects */
