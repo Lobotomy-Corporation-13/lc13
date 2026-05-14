@@ -65,6 +65,9 @@
 			continue
 		var/mob/living/carbon/human/C = L
 
+		//Give them white fragile
+		L.apply_lc_white_fragile(2)
+
 		//Remove Radio if HP under 50%
 		if(L.health<=L.maxHealth*0.5)
 			for(var/obj/item/radio/R in C.get_all_gear())
