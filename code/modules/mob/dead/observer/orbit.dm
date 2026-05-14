@@ -57,6 +57,8 @@
 	var/list/misc = list()
 	var/list/npcs = list()
 	var/list/abnormalities = list() // LOBOTOMYCORPORATION ADDITION -- Abnormalities
+	var/list/testrange = list() // LOBOTOMYCORPORATION ADDITION -- Test Range Agents & Threats
+	var/list/testrange_comparison_list = SStestrange.test_range_living_threats + SStestrange.test_range_agents
 
 	var/list/pois = getpois(skip_mindless = TRUE, specify_dead_role = FALSE)
 	for (var/name in pois)
@@ -74,6 +76,9 @@
 				if (number_of_orbiters)
 					serialized["orbiters"] = number_of_orbiters
 				ghosts += list(serialized)
+
+			else if (M in testrange_comparison_list) // LOBOTOMYCORPORATION ADDITION -- Test Range Agents & Threats
+				testrange += list(serialized)
 
 			else if (isabnormalitymob(M)) // LOBOTOMYCORPORATION ADDITION -- Abnormalities
 				var/mob/living/simple_animal/hostile/abnormality/abno = M
@@ -116,6 +121,7 @@
 	data["ghosts"] = ghosts
 	data["misc"] = misc
 	data["npcs"] = npcs
+	data["testrange"] = testrange
 	return data
 
 /datum/orbit_menu/ui_assets()
