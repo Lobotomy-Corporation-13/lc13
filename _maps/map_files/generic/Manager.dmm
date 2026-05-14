@@ -2837,7 +2837,7 @@
 /obj/machinery/light{
 	dir = 1
 	},
-/mob/living/simple_animal/hostile/ordeal/green_bot,
+/mob/living/simple_animal/hostile/ordeal/green_bot/syringe,
 /turf/open/floor/facility,
 /area/city/outskirtsfactory)
 "vE" = (

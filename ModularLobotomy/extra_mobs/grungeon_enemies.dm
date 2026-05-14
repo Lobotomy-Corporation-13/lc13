@@ -153,9 +153,9 @@ datum/status_effect/grungeon_shield/proc/ApplyShieldOverlay(mob/living/owner)
 	name = "pursuit of purpose"
 	desc = "A big robot with a saw and a rocket launcher in place of its hands."
 	icon = 'ModularLobotomy/_Lobotomyicons/48x48.dmi'
-	icon_state = "green_bot"
-	icon_living = "green_bot"
-	icon_dead = "green_bot_dead"
+	icon_state = "green_bot_rocket"
+	icon_living = "green_bot_rocket"
+	icon_dead = "green_bot_rocket_dead"
 	faction = list("green_ordeal")
 	pixel_x = -8
 	base_pixel_x = -8
