@@ -60,13 +60,25 @@
 		L.deal_damage(aoe_damage, RED_DAMAGE, flags = (DAMAGE_UNTRACKABLE | DAMAGE_FORCED), attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 		new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(L), pick(GLOB.alldirs))
 
-		//Dismember if under 30% HP
+
+		if(!ishuman(L))
+			continue
+		var/mob/living/carbon/human/C = L
+
+		//Remove Radio if HP under 50%
+		if(L.health<=L.maxHealth*0.5)
+			for(var/obj/item/radio/R in C.get_all_gear())
+				R.emp_act(EMP_LIGHT)
+				to_chat(C,span_danger("You hear your radio crackle!!"))
+
+
+		//Dismember if under 10% HP
 		if(L.health<=L.maxHealth*0.1)
 			//Lop off a random arm
 			new /obj/effect/temp_visual/smash_effect(get_turf(C))
 			var/obj/item/bodypart/arm = pick(C.get_bodypart(BODY_ZONE_R_ARM), C.get_bodypart(BODY_ZONE_L_ARM), C.get_bodypart(BODY_ZONE_L_LEG), C.get_bodypart(BODY_ZONE_L_LEG))
 
-			var/did_the_thing = (arm?.dismember()) //not all limbs can be removed.
+			arm?.dismember() //not all limbs can be removed.
 
 	addtimer(CALLBACK(src, PROC_REF(Melter)), cooldown_time)
 
