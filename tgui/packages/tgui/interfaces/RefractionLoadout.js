@@ -2,59 +2,96 @@ import { useBackend, useLocalState } from '../backend';
 import {
   Box,
   Button,
-  ButtonCheckbox,
+  Divider,
+  Flex,
   Input,
   Section,
   Stack,
+  Table,
+  Tabs,
 } from '../components';
+import { ButtonCheckbox } from '../components/Button';
+import { FlexItem } from '../components/Flex';
+import { TableCell, TableRow } from '../components/Table';
 import { Window } from '../layouts';
 
-const THREAT_TIERS = ['ZAYIN', 'TETH', 'HE', 'WAW', 'ALEPH'];
+const THREAT_COLORS = {
+  1: '#008000',
+  2: '#0000FF',
+  3: '#C3630C',
+  4: '#800080',
+  5: '#FF0000',
+};
 
-const THREAT_COLOR = {
-  ZAYIN: '#16a34a',
-  TETH: '#0ea5e9',
-  HE: '#facc15',
-  WAW: '#a855f7',
-  ALEPH: '#f43f5e',
+const THREAT_NAMES = {
+  1: 'ZAYIN',
+  2: 'TETH',
+  3: 'HE',
+  4: 'WAW',
+  5: 'ALEPH',
+};
+
+const REGEX_GUN = /ego_weapon\/ranged\//;
+const REGEX_SHIELD = /ego_weapon\/shield\//;
+const REGEX_ARMOR = /clothing\/suit\/armor\/ego_gear\//;
+
+const classifyPath = path => {
+  const tail = path?.slice(10) || '';
+  if (REGEX_ARMOR.test(tail)) return 'armor';
+  if (REGEX_GUN.test(tail)) return 'gun';
+  if (REGEX_SHIELD.test(tail)) return 'shield';
+  return 'melee';
+};
+
+const passesNameFilter = (entry, name) => {
+  if (!name) return true;
+  const hay = (entry.information && entry.information.name) || '';
+  return hay.toLowerCase().includes(name.toLowerCase());
+};
+
+const passesThreatFilter = (entry, threats) => {
+  const any = Object.values(threats).some(v => v);
+  if (!any) return true;
+  return !!threats[entry.threatclass];
+};
+
+const passesOriginFilter = (entry, origins) => {
+  const any = Object.values(origins).some(v => v);
+  if (!any) return true;
+  return !!origins[entry.origin];
+};
+
+const passesTagFilter = (entry, tags) => {
+  const enabled = Object.entries(tags)
+    .filter(([_, v]) => v)
+    .map(([k]) => k);
+  if (!enabled.length) return true;
+  if (!entry.tags || !entry.tags.length) return false;
+  return enabled.every(t => entry.tags.includes(t));
 };
 
 const Header = props => {
   const { briefing, sectorIndex } = props;
   if (!briefing || !briefing.name) {
     return (
-      <Box p={1} color="label">
-        Sector {sectorIndex} briefing unavailable.
-      </Box>
+      <Section>
+        <Box color="label">
+          Sector {sectorIndex} briefing unavailable.
+        </Box>
+      </Section>
     );
   }
   return (
-    <Box p={1} backgroundColor="rgba(27, 124, 237, 0.12)">
-      <Stack>
-        <Stack.Item grow={1}>
-          <Box bold>{briefing.name}</Box>
-          <Box color="label" fontSize="11px">
-            {briefing.faction}
-          </Box>
-        </Stack.Item>
-        <Stack.Item color="average">{briefing.damage_hints}</Stack.Item>
-      </Stack>
-      {briefing.is_boss && (
-        <Box mt={0.5} color="bad" bold>
-          FINAL SECTOR &mdash; boss encounter ahead.
-        </Box>
-      )}
-    </Box>
+    <Section>
+      <Box bold fontSize="14px">
+        Sector {sectorIndex}: {briefing.name}
+      </Box>
+    </Section>
   );
 };
 
-const SlotIndicators = (props, context) => {
-  const { current } = props;
-  const slots = [
-    { label: 'W1', icon: current[0] },
-    { label: 'W2', icon: current[1] },
-    { label: 'Armor', icon: current[2] },
-  ];
+const SlotIndicators = props => {
+  const { slots } = props;
   return (
     <Stack mb={1}>
       {slots.map((slot, i) => (
@@ -72,6 +109,9 @@ const SlotIndicators = (props, context) => {
             ) : (
               <Box color="bad">empty</Box>
             )}
+            <Box fontSize="10px" mt={0.5}>
+              {slot.name || ''}
+            </Box>
           </Box>
         </Stack.Item>
       ))}
@@ -81,122 +121,305 @@ const SlotIndicators = (props, context) => {
 
 const FilterBar = props => {
   const {
-    name,
-    setName,
-    threats,
-    setThreats,
-    origins,
-    setOrigins,
+    name, setName,
+    threats, setThreats,
+    origins, setOrigins,
+    tagOptions, tags, setTags,
   } = props;
   return (
-    <Box mb={1}>
-      <Stack>
+    <Section>
+      <Stack mb={0.5}>
         <Stack.Item grow={1}>
           <Input
-            placeholder="Search..."
+            placeholder="Search by name..."
             value={name}
             onInput={(_, value) => setName(value)}
             fluid
           />
         </Stack.Item>
       </Stack>
-      <Stack mt={0.5}>
-        {THREAT_TIERS.map(tier => (
-          <Stack.Item key={tier}>
+      <Stack mb={0.5} wrap>
+        {Object.keys(THREAT_NAMES).map(k => (
+          <Stack.Item key={k}>
             <ButtonCheckbox
-              checked={threats[tier]}
+              checked={threats[k]}
               onClick={() =>
-                setThreats({ ...threats, [tier]: !threats[tier] })
-              }>
-              <Box style={{ color: THREAT_COLOR[tier] }} bold>
-                {tier}
+                setThreats({ ...threats, [k]: !threats[k] })}>
+              <Box style={{ color: THREAT_COLORS[k] }} bold>
+                {THREAT_NAMES[k]}
               </Box>
             </ButtonCheckbox>
           </Stack.Item>
         ))}
       </Stack>
-      <Stack mt={0.5}>
-        {['LC13', 'Branch12', 'City'].map(o => (
+      <Stack mb={0.5} wrap>
+        {['LC13', 'Branch 12', 'City'].map(o => (
           <Stack.Item key={o}>
             <ButtonCheckbox
               checked={origins[o]}
               onClick={() =>
-                setOrigins({ ...origins, [o]: !origins[o] })
-              }>
+                setOrigins({ ...origins, [o]: !origins[o] })}>
               {o}
             </ButtonCheckbox>
           </Stack.Item>
         ))}
       </Stack>
+      {!!tagOptions.length && (
+        <Box
+          maxHeight="80px"
+          style={{
+            'overflow-y': 'auto',
+            'border-top': '1px solid rgba(255, 255, 255, 0.08)',
+            'padding-top': '4px',
+          }}>
+          <Stack wrap>
+            {tagOptions.map(tag => (
+              <Stack.Item key={tag.tag_name}>
+                <ButtonCheckbox
+                  checked={!!tags[tag.tag_name]}
+                  tooltip={tag.tag_description}
+                  onClick={() =>
+                    setTags({
+                      ...tags,
+                      [tag.tag_name]: !tags[tag.tag_name],
+                    })}>
+                  {tag.tag_name}
+                </ButtonCheckbox>
+              </Stack.Item>
+            ))}
+          </Stack>
+        </Box>
+      )}
+    </Section>
+  );
+};
+
+const StatLine = props => {
+  const { entry, type } = props;
+  const info = entry.information || {};
+  if (type === 'armor') {
+    const a = info.armor || {};
+    return (
+      <Box fontSize="11px" color="label">
+        <Table>
+          <TableRow color="#020202" bold>
+            <TableCell
+              textAlign="center"
+              backgroundColor="#d11616">RED
+            </TableCell>
+            <TableCell
+              textAlign="center"
+              backgroundColor="#dad6d6">WHITE
+            </TableCell>
+            <TableCell
+              textAlign="center"
+              backgroundColor="#3a0b77">BLACK
+            </TableCell>
+            <TableCell
+              textAlign="center"
+              backgroundColor="#4baac2">PALE
+            </TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell textAlign="center">{a.red ?? '-'}</TableCell>
+            <TableCell textAlign="center">{a.white ?? '-'}</TableCell>
+            <TableCell textAlign="center">{a.black ?? '-'}</TableCell>
+            <TableCell textAlign="center">{a.pale ?? '-'}</TableCell>
+          </TableRow>
+        </Table>
+      </Box>
+    );
+  }
+  if (type === 'gun') {
+    return (
+      <Box fontSize="11px">
+        Projectile: <b>{info.force_ranged}</b> {info.damtype_ranged}
+        <br />
+        Fire Rate: {info.ranged_attack_speed}
+        {' • '}
+        Mag: {info.magazine_size === 0 ? '∞' : info.magazine_size}
+        <br />
+        Melee: {info.force_melee} {info.damtype_melee}
+      </Box>
+    );
+  }
+  return (
+    <Box fontSize="11px">
+      Damage: <b>{info.force_melee}</b> {info.damtype_melee}
+      <br />
+      Speed: {info.melee_attack_speed}
+      {' • '}
+      Reach: {info.reach}
     </Box>
   );
 };
 
-const passesFilter = (entry, name, threats, origins) => {
-  if (name && name.length > 0) {
-    const haystack = (entry.information && entry.information.name) || '';
-    if (!haystack.toLowerCase().includes(name.toLowerCase())) return false;
-  }
-  const anyThreat = Object.values(threats).some(v => v);
-  if (anyThreat && !threats[entry.threatclass]) return false;
-  const anyOrigin = Object.values(origins).some(v => v);
-  if (anyOrigin && !origins[entry.origin]) return false;
-  return true;
+const AttributeReqs = props => {
+  const { entry } = props;
+  const reqs = (entry.information && entry.information.attribute_requirements)
+    || {};
+  return (
+    <Table>
+      <TableRow>
+        <TableCell backgroundColor="red" px={1}>FOR</TableCell>
+        <TableCell backgroundColor="white" color="black" px={1}>PRU</TableCell>
+        <TableCell backgroundColor="violet" px={1}>TEM</TableCell>
+        <TableCell backgroundColor="teal" px={1}>JUS</TableCell>
+      </TableRow>
+      <TableRow textAlign="center">
+        <TableCell backgroundColor="red">{reqs.Fortitude ?? '-'}</TableCell>
+        <TableCell backgroundColor="white" color="black">
+          {reqs.Prudence ?? '-'}
+        </TableCell>
+        <TableCell backgroundColor="violet">
+          {reqs.Temperance ?? '-'}
+        </TableCell>
+        <TableCell backgroundColor="teal">{reqs.Justice ?? '-'}</TableCell>
+      </TableRow>
+    </Table>
+  );
 };
 
-const ItemGrid = props => {
-  const { entries, selected, onToggle, maxSelect } = props;
+const ItemRow = props => {
+  const {
+    entry, type, isSelected, atCap, onToggle, onDetails,
+  } = props;
   return (
-    <Box>
-      {entries.map(entry => {
-        const isSelected = selected.includes(entry.path);
-        const atCap = !isSelected && selected.length >= maxSelect;
-        return (
-          <Box
-            key={entry.path}
-            p={0.5}
-            mb={0.5}
-            style={{
-              'cursor': atCap ? 'default' : 'pointer',
-              'border-radius': '4px',
-              'opacity': atCap ? 0.5 : 1,
-            }}
-            backgroundColor={
-              isSelected
-                ? 'rgba(34, 197, 94, 0.18)'
-                : 'rgba(255, 255, 255, 0.04)'
-            }
-            onClick={() => !atCap && onToggle(entry.path)}>
-            <Stack>
-              <Stack.Item width="48px">
-                {entry.icon && (
-                  <img
-                    src={`data:image/jpeg;base64,${entry.icon}`}
-                    style={{ height: '40px' }}
-                  />
-                )}
-              </Stack.Item>
-              <Stack.Item grow={1}>
-                <Box bold>
-                  {entry.information && entry.information.name}
-                </Box>
-                <Box
-                  color="label"
-                  fontSize="11px"
-                  style={{ color: THREAT_COLOR[entry.threatclass] }}>
-                  {entry.threatclass} &bull; {entry.origin}
-                </Box>
-              </Stack.Item>
-            </Stack>
+    <Box
+      p={1}
+      mb={0.5}
+      style={{ 'border-radius': '4px' }}
+      backgroundColor={
+        isSelected
+          ? 'rgba(34, 197, 94, 0.18)'
+          : 'rgba(255, 255, 255, 0.04)'
+      }>
+      <Flex>
+        <FlexItem>
+          <Flex direction="column" align="center" minWidth="80px">
+            {entry.icon && (
+              <Box
+                as="img"
+                src={`data:image/jpeg;base64,${entry.icon}`}
+                style={{ height: '32px', width: '32px' }}
+              />
+            )}
+            <Box
+              bold
+              mt={0.5}
+              style={{ color: THREAT_COLORS[entry.threatclass] }}>
+              {THREAT_NAMES[entry.threatclass]}
+            </Box>
+            <Box color="label" fontSize="10px">{entry.origin}</Box>
+          </Flex>
+        </FlexItem>
+        <FlexItem grow={1} ml={1}>
+          <Box bold>{entry.information?.name}</Box>
+          <Box mt={0.5}>
+            <StatLine entry={entry} type={type} />
           </Box>
-        );
-      })}
-      {entries.length === 0 && (
-        <Box color="label" p={1}>
-          No items match the current filter.
-        </Box>
-      )}
+          {!!entry.tags?.length && (
+            <Box mt={0.5} fontSize="10px" color="label">
+              {entry.tags.join(' • ')}
+            </Box>
+          )}
+        </FlexItem>
+        <FlexItem ml={1}>
+          <Stack vertical>
+            <Stack.Item>
+              <Button
+                fluid
+                color={isSelected ? 'good' : null}
+                disabled={atCap && !isSelected}
+                content={isSelected ? 'Selected' : 'Select'}
+                onClick={() => onToggle(entry.path)}
+              />
+            </Stack.Item>
+            <Stack.Item>
+              <Button
+                fluid
+                content="Details"
+                onClick={() => onDetails(entry)}
+              />
+            </Stack.Item>
+          </Stack>
+        </FlexItem>
+      </Flex>
     </Box>
+  );
+};
+
+const DetailsView = props => {
+  const {
+    entry, type, isSelected, atCap, onToggle, onBack,
+  } = props;
+  const info = entry.information || {};
+  return (
+    <Section
+      title={`Details — ${info.name}`}
+      buttons={
+        <>
+          <Button
+            color={isSelected ? 'bad' : 'good'}
+            disabled={atCap && !isSelected}
+            content={isSelected ? 'Deselect' : 'Select'}
+            onClick={() => onToggle(entry.path)}
+          />
+          <Button content="Back" onClick={onBack} />
+        </>
+      }
+      scrollable
+      fill>
+      <Flex direction="column" align="center" mt={2}>
+        {entry.icon && (
+          <FlexItem>
+            <Box
+              as="img"
+              mb={1}
+              src={`data:image/jpeg;base64,${entry.icon}`}
+              style={{ height: '32px', width: '32px' }}
+            />
+          </FlexItem>
+        )}
+        <FlexItem>
+          <Box bold fontSize="14px">{info.name}</Box>
+        </FlexItem>
+        <FlexItem mb={1}>
+          <Box bold style={{ color: THREAT_COLORS[entry.threatclass] }}>
+            {THREAT_NAMES[entry.threatclass]} • {entry.origin}
+          </Box>
+        </FlexItem>
+        <FlexItem my={1}>
+          <AttributeReqs entry={entry} />
+        </FlexItem>
+        <FlexItem mt={1} mb={1}>
+          <StatLine entry={entry} type={type} />
+        </FlexItem>
+        {info.attack_info && (
+          <FlexItem color="label" textAlign="center">
+            {info.attack_info}
+          </FlexItem>
+        )}
+        {info.description && (
+          <FlexItem mt={1} textAlign="center">
+            {info.description}
+          </FlexItem>
+        )}
+        {info.special && (
+          <FlexItem mt={1} textAlign="center" color="average">
+            {info.special}
+          </FlexItem>
+        )}
+        {!!entry.tags?.length && (
+          <FlexItem mt={1} fontSize="11px" color="label">
+            Tags: {entry.tags.join(', ')}
+          </FlexItem>
+        )}
+        <FlexItem mt={1} fontSize="10px" color="label">
+          {entry.path}
+        </FlexItem>
+      </Flex>
+    </Section>
   );
 };
 
@@ -207,11 +430,16 @@ export const RefractionLoadout = (props, context) => {
   const briefing = data.briefing_header || {};
   const sectorIndex = data.sector_index || 1;
   const current = data.current_loadout || [];
+  const allTags = data.all_tags || [];
 
   const [tab, setTab] = useLocalState(context, 'tab', 'weapons');
   const [name, setName] = useLocalState(context, 'name', '');
   const [threats, setThreats] = useLocalState(context, 'threats', {});
-  const [origins, setOrigins] = useLocalState(context, 'origins', {});
+  const [origins, setOrigins] = useLocalState(context, 'origins', {
+    LC13: true,
+  });
+  const [tags, setTags] = useLocalState(context, 'tags', {});
+  const [detailed, setDetailed] = useLocalState(context, 'detailed', null);
   const [pickedWeapons, setPickedWeapons] = useLocalState(
     context,
     'pickedWeapons',
@@ -234,85 +462,137 @@ export const RefractionLoadout = (props, context) => {
     setPickedArmor(pickedArmor === path ? null : path);
   };
 
-  const canConfirm =
-    pickedWeapons.length === 2 && !!pickedArmor;
+  const canConfirm = pickedWeapons.length === 2 && !!pickedArmor;
 
-  const filteredWeapons = weapons.filter(e =>
-    passesFilter(e, name, threats, origins)
-  );
-  const filteredArmor = armor.filter(e =>
-    passesFilter(e, name, threats, origins)
-  );
+  const matchesAll = e =>
+    passesNameFilter(e, name)
+    && passesThreatFilter(e, threats)
+    && passesOriginFilter(e, origins)
+    && passesTagFilter(e, tags);
 
-  const indicatorIcons = [
-    weapons.find(w => w.path === pickedWeapons[0])?.icon,
-    weapons.find(w => w.path === pickedWeapons[1])?.icon,
-    armor.find(a => a.path === pickedArmor)?.icon,
+  const filteredWeapons = weapons.filter(matchesAll);
+  const filteredArmor = armor.filter(matchesAll);
+
+  const findEntry = path =>
+    weapons.find(w => w.path === path) || armor.find(a => a.path === path);
+
+  const w1 = findEntry(pickedWeapons[0]);
+  const w2 = findEntry(pickedWeapons[1]);
+  const aSel = findEntry(pickedArmor);
+  const slots = [
+    { label: 'W1', icon: w1?.icon, name: w1?.information?.name },
+    { label: 'W2', icon: w2?.icon, name: w2?.information?.name },
+    { label: 'Armor', icon: aSel?.icon, name: aSel?.information?.name },
   ];
 
+  const tabIsArmor = tab === 'armor';
+  const entries = tabIsArmor ? filteredArmor : filteredWeapons;
+  const entryType = entry => {
+    if (tabIsArmor) return 'armor';
+    return classifyPath(entry.path);
+  };
+  const isPicked = entry => tabIsArmor
+    ? pickedArmor === entry.path
+    : pickedWeapons.includes(entry.path);
+  const atCapWeapons = pickedWeapons.length >= 2;
+  const atCapArmor = !!pickedArmor;
+  const onToggle = path => {
+    if (tabIsArmor) toggleArmor(path);
+    else toggleWeapon(path);
+  };
+
   return (
-    <Window width={720} height={640} theme="syndicate">
+    <Window width={760} height={720} theme="syndicate">
       <Window.Content>
-        <Header briefing={briefing} sectorIndex={sectorIndex} />
-        <Section>
-          <SlotIndicators current={indicatorIcons} />
-          <Stack mb={1}>
-            <Stack.Item grow={1}>
-              <Button
-                fluid
-                color={tab === 'weapons' ? 'good' : null}
-                content={`Weapons (${pickedWeapons.length}/2)`}
-                onClick={() => setTab('weapons')}
+        <Stack vertical fill>
+          <Stack.Item>
+            <Header briefing={briefing} sectorIndex={sectorIndex} />
+          </Stack.Item>
+          <Stack.Item>
+            <Section title="Selected Loadout">
+              <SlotIndicators slots={slots} />
+              <Stack>
+                <Stack.Item grow={1}>
+                  <Tabs>
+                    <Tabs.Tab
+                      selected={tab === 'weapons'}
+                      onClick={() => {
+                        setTab('weapons');
+                        setDetailed(null);
+                      }}>
+                      Weapons ({pickedWeapons.length}/2)
+                    </Tabs.Tab>
+                    <Tabs.Tab
+                      selected={tab === 'armor'}
+                      onClick={() => {
+                        setTab('armor');
+                        setDetailed(null);
+                      }}>
+                      Armor ({pickedArmor ? 1 : 0}/1)
+                    </Tabs.Tab>
+                  </Tabs>
+                </Stack.Item>
+                <Stack.Item>
+                  <Button
+                    color="good"
+                    icon="check"
+                    content="Confirm Loadout"
+                    disabled={!canConfirm}
+                    onClick={() =>
+                      act('confirm_loadout', {
+                        weapons: pickedWeapons,
+                        armor: pickedArmor,
+                      })}
+                  />
+                </Stack.Item>
+              </Stack>
+            </Section>
+          </Stack.Item>
+          {!detailed && (
+            <Stack.Item>
+              <FilterBar
+                name={name} setName={setName}
+                threats={threats} setThreats={setThreats}
+                origins={origins} setOrigins={setOrigins}
+                tagOptions={allTags} tags={tags} setTags={setTags}
               />
             </Stack.Item>
-            <Stack.Item grow={1}>
-              <Button
-                fluid
-                color={tab === 'armor' ? 'good' : null}
-                content={`Armor (${pickedArmor ? 1 : 0}/1)`}
-                onClick={() => setTab('armor')}
+          )}
+          <Stack.Item grow={1}>
+            {detailed ? (
+              <DetailsView
+                entry={detailed}
+                type={entryType(detailed)}
+                isSelected={isPicked(detailed)}
+                atCap={tabIsArmor ? atCapArmor : atCapWeapons}
+                onToggle={onToggle}
+                onBack={() => setDetailed(null)}
               />
-            </Stack.Item>
-          </Stack>
-          <FilterBar
-            name={name}
-            setName={setName}
-            threats={threats}
-            setThreats={setThreats}
-            origins={origins}
-            setOrigins={setOrigins}
-          />
-          {tab === 'weapons' && (
-            <ItemGrid
-              entries={filteredWeapons}
-              selected={pickedWeapons}
-              onToggle={toggleWeapon}
-              maxSelect={2}
-            />
-          )}
-          {tab === 'armor' && (
-            <ItemGrid
-              entries={filteredArmor}
-              selected={pickedArmor ? [pickedArmor] : []}
-              onToggle={toggleArmor}
-              maxSelect={1}
-            />
-          )}
-          <Button
-            fluid
-            mt={1}
-            color="good"
-            icon="check"
-            content="Confirm Loadout"
-            disabled={!canConfirm}
-            onClick={() =>
-              act('confirm_loadout', {
-                weapons: pickedWeapons,
-                armor: pickedArmor,
-              })
-            }
-          />
-        </Section>
+            ) : (
+              <Section
+                title={tabIsArmor ? 'Available Armor' : 'Available Weapons'}
+                scrollable
+                fill>
+                {entries.map(entry => (
+                  <ItemRow
+                    key={entry.path}
+                    entry={entry}
+                    type={entryType(entry)}
+                    isSelected={isPicked(entry)}
+                    atCap={tabIsArmor ? atCapArmor : atCapWeapons}
+                    onToggle={onToggle}
+                    onDetails={setDetailed}
+                  />
+                ))}
+                {entries.length === 0 && (
+                  <Box color="label" p={1}>
+                    No items match the current filter.
+                  </Box>
+                )}
+              </Section>
+            )}
+          </Stack.Item>
+        </Stack>
       </Window.Content>
     </Window>
   );

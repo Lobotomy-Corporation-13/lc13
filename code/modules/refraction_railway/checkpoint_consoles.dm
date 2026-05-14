@@ -47,11 +47,8 @@
 		return data
 	var/list/sector = R.line.sector_briefings[idx]
 	data["sector"] = list(
-		"name"         = sector["name"],
-		"description"  = sector["description"],
-		"faction"      = sector["faction"],
-		"damage_hints" = sector["damage_hints"],
-		"is_boss"      = sector["is_boss"],
+		"name"        = sector["name"],
+		"description" = sector["description"],
 	)
 	data["sector_index"] = idx
 	data["nodes"] = BuildNodesPayload(user, sector, R)
@@ -61,14 +58,13 @@
 	var/list/out = list()
 	if(!islist(sector["node_ids"]))
 		return out
-	var/list/seen = SSrefraction_railway.encountered_mobs[user.ckey] || list()
 	for(var/node_id in sector["node_ids"])
 		var/datum/refraction_node/N = R.line.combat_nodes[node_id]
 		if(!istype(N))
 			continue
 		var/list/mob_payloads = list()
 		for(var/mob_path in N.mob_stock)
-			var/list/payload = BuildMobCardPayload(mob_path, mob_path in seen)
+			var/list/payload = SSrefraction_railway.BuildMobCardPayload(user.ckey, mob_path)
 			payload["count"] = N.mob_stock[mob_path]
 			mob_payloads += list(payload)
 		out += list(list(
@@ -79,30 +75,6 @@
 			"mobs"        = mob_payloads,
 		))
 	return out
-
-/obj/structure/refraction_briefing/proc/BuildMobCardPayload(mob_path, revealed)
-	var/list/stats = SSrefraction_railway.GetMobStats(mob_path)
-	if(!islist(stats))
-		return list("path" = "[mob_path]", "revealed" = FALSE, "missing" = TRUE)
-	if(revealed)
-		var/tip = SSrefraction_railway.mob_tips[mob_path]
-		var/list/payload = stats.Copy()
-		payload["path"] = "[mob_path]"
-		payload["revealed"] = TRUE
-		if(tip)
-			payload["tip"] = tip
-		return payload
-	// Unrevealed: silhouette icon + dealt damage type + derived weakness.
-	var/list/payload = list(
-		"path"               = "[mob_path]",
-		"revealed"           = FALSE,
-		"icon"               = stats["icon"],
-		"melee_damage_type"  = stats["melee_damage_type"],
-		"weakness"           = SSrefraction_railway.DerivedDamageWeakness(stats["resistances"]),
-	)
-	if(stats["is_ranged"])
-		payload["ranged_damage_type"] = stats["ranged_damage_type"]
-	return payload
 
 // ---------- Advance ("Begin Sector") console ----------
 
@@ -123,12 +95,24 @@
 
 /obj/machinery/computer/refraction_advance/ui_interact(mob/user, datum/tgui/ui)
 	var/datum/refraction_run/R = SSrefraction_railway.GetRunForCkey(user.ckey)
-	if(!R || R.lobby_state != LOBBY_RUNNING || !R.in_checkpoint)
-		to_chat(user, span_warning("You aren't currently staging in a refraction lobby."))
+	// Only warn when the user genuinely has no business with the console
+	// (no run at all). Wrong-state silently bails — TGUI re-invokes
+	// ui_interact during state transitions (Begin Sector, Return to Lobby)
+	// and a chat warning there reads like a failure even though the action
+	// succeeded.
+	if(!R)
+		to_chat(user, span_warning("You aren't currently part of a refraction run."))
+		return
+	if(R.lobby_state != LOBBY_RUNNING && R.lobby_state != LOBBY_FINISHED)
+		return
+	if(R.lobby_state == LOBBY_RUNNING && !R.in_checkpoint)
 		return
 	ui = SStgui.try_update_ui(user, src, ui)
 	if(!ui)
 		ui = new(user, src, "RefractionAdvance", "Begin Sector")
+		// Auto-update so owner-active state and the LOBBY_RUNNING ->
+		// LOBBY_FINISHED transition propagate without requiring a click.
+		ui.set_autoupdate(TRUE)
 		ui.open()
 
 /obj/machinery/computer/refraction_advance/ui_data(mob/user)
@@ -145,6 +129,7 @@
 		members_payload += list(BuildMemberPayload(M, R, ready))
 	data["members"] = members_payload
 	data["is_lobby_owner"] = R.lobby_owner == user.ckey
+	data["is_owner_active"] = R.IsOwnerActive()
 	data["my_ckey"] = user.ckey
 	data["my_loadout_set"] = (R.loadouts[user.ckey] && length(R.loadouts[user.ckey]) >= 3) ? TRUE : FALSE
 	data["current_sector"] = R.current_section
@@ -154,7 +139,59 @@
 	data["all_ready"] = all_ready && length(members_payload) > 0
 	data["leaderboard"] = SSrefraction_railway.leaderboards[R.line.id]
 	data["line_id"] = R.line.id
+	// Last completed sector's elapsed time (deciseconds), if any. Lets the
+	// staging view show "Sector N took: X" between sectors. Zero if no
+	// sector has been completed yet.
+	data["last_sector_time_ds"] = GetLastSectorTimeDs(R)
+	// Finished-state payload: full per-sector breakdown + total + per-player
+	// loadouts captured at each clear. The TGUI swaps to the results view
+	// when lobby_state == "lobby_finished".
+	data["lobby_state"] = R.lobby_state
+	if(R.lobby_state == LOBBY_FINISHED)
+		data["results"] = BuildResultsPayload(R)
 	return data
+
+/obj/machinery/computer/refraction_advance/proc/GetLastSectorTimeDs(datum/refraction_run/R)
+	var/list/finishes = R.sector_finish_times
+	if(!islist(finishes) || !length(finishes))
+		return 0
+	var/end_t = finishes[length(finishes)]
+	var/start_t = (length(finishes) >= 2) ? finishes[length(finishes) - 1] : 0
+	return max(0, end_t - start_t)
+
+/obj/machinery/computer/refraction_advance/proc/BuildResultsPayload(datum/refraction_run/R)
+	var/list/sectors = list()
+	var/list/finishes = R.sector_finish_times
+	for(var/i in 1 to length(finishes))
+		var/end_t = finishes[i]
+		var/start_t = (i > 1) ? finishes[i - 1] : 0
+		var/list/per_player = list()
+		if(islist(R.sector_loadouts) && i <= length(R.sector_loadouts))
+			var/list/snap = R.sector_loadouts[i]
+			if(islist(snap))
+				for(var/list/entry as anything in snap)
+					var/list/loadout = entry["loadout"]
+					var/list/icons = list(null, null, null)
+					if(islist(loadout))
+						for(var/j in 1 to min(3, length(loadout)))
+							icons[j] = SStestrange.GenerateEgoPreviewIcon(loadout[j])
+					per_player += list(list(
+						"ckey"          = entry["ckey"],
+						"name"          = entry["name"],
+						"loadout_icons" = icons,
+					))
+		var/list/sector_briefing = (islist(R.line.sector_briefings) && i <= length(R.line.sector_briefings)) ? R.line.sector_briefings[i] : null
+		sectors += list(list(
+			"index"   = i,
+			"name"    = sector_briefing ? sector_briefing["name"] : "Sector [i]",
+			"time_ds" = end_t - start_t,
+			"players" = per_player,
+		))
+	return list(
+		"line_name" = R.line.name,
+		"total_ds"  = R.ElapsedDeciseconds(),
+		"sectors"   = sectors,
+	)
 
 /obj/machinery/computer/refraction_advance/proc/BuildMemberPayload(mob/M, datum/refraction_run/R, ready)
 	var/list/loadout = R.loadouts[M.ckey]
@@ -196,3 +233,17 @@
 			R.ready_states[usr.ckey] = !R.ready_states[usr.ckey]
 		if("begin_sector")
 			R.BeginSector(usr.ckey)
+		if("force_begin_sector")
+			// Owner-only escape hatch for AFK members. Skips the ready /
+			// loadout requirements; BeginSector itself enforces owner.
+			R.BeginSector(usr.ckey, TRUE)
+		if("return_to_lobby")
+			// Anyone in the run can press this; the run is over and we're
+			// just shuttling everybody back to where they joined from.
+			if(R.lobby_state == LOBBY_FINISHED)
+				R.ReturnToLobby()
+		if("abandon_run")
+			// Owner-only — destroys the run, releases the lane, and dumps
+			// the team back at the hub with no rewards. Two-click confirm
+			// is enforced UI-side; backend just trusts the call.
+			R.AbandonRun(usr.ckey)

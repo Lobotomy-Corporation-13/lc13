@@ -61,15 +61,19 @@
 	 * list(
 	 *     "name"         = "Sector N: ...",
 	 *     "description"  = "...",
-	 *     "faction"      = "...",
-	 *     "damage_hints" = "Mostly RED damage",
-	 *     "is_boss"      = FALSE,
 	 *     "node_ids"     = list("node_1", "node_2", ...),
 	 * )
 	 *
 	 * `node_ids` is an ordered list of node ids; each id resolves to a
-	 * /datum/refraction_node in this line's `nodes` registry. The order
-	 * defines the in-room progression (room 1 → room 2 → ...).
+	 * /datum/refraction_node in this line's `combat_nodes` registry. The
+	 * order defines the in-room progression (room 1 → room 2 → ...).
+	 *
+	 * There is no sector-level `faction`, `damage_hints`, or `is_boss`
+	 * field. Per-mob tips registered in `SSrefraction_railway.mob_tips`
+	 * cover faction context and incoming-damage advice; the per-node
+	 * `is_boss` flag (set via AddNode) is rendered on the node's own
+	 * card. Duplicating any of that at the sector level just creates a
+	 * maintenance burden.
 	 */
 	var/list/sector_briefings = list()
 
@@ -78,6 +82,30 @@
 	/// the briefing UI and the spawning system. Distinct from `nodes` above,
 	/// which holds subway-map-UI coordinates.
 	var/list/combat_nodes = list()
+
+/*
+ * Per-line passive / attack contributions.
+ *
+ * Override these in the concrete line subtype to declare the mob passives
+ * and special attacks that line authors. Each returns a flat assoc list:
+ *   mob_path => list(entry, entry, ...)
+ *
+ * Convention: each line subdirectory holds one or more companion files
+ * (`lines/<line_id>/passives.dm`, `lines/<line_id>/attacks.dm`) that
+ * carry the override. See AUTHORING.md Step 5b/5c for the entry shape
+ * and style rules.
+ *
+ * The subsystem's InitializeMobPassives / InitializeMobAttacks walks
+ * every registered line and merges these into SSrefraction_railway's
+ * mob_passives / mob_attacks tables. First registration wins on
+ * collision; the loser's contribution is dropped with a stack_trace
+ * naming both lines.
+ */
+/datum/refraction_line/proc/GetMobPassives()
+	return list()
+
+/datum/refraction_line/proc/GetMobAttacks()
+	return list()
 
 /// Helper called from the concrete line subtype's New() to register a node.
 /// `mob_stock` is an assoc list `path => 1-player baseline count`. For boss

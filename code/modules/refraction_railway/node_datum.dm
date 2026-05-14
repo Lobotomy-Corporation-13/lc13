@@ -10,16 +10,16 @@
  * showing "Node N: Front Courtyard, contents: 5x slasher + 3x stabber, ...")
  * and the spawning system. The wave controller copies mob_stock at activation.
  *
- * Spawn locations: any /obj/effect/landmark/refraction/spawn whose
- * landmark_id matches this node's `landmark_id` becomes a valid spawn point.
- * Authors can drop one or many spawn landmarks per node.
+ * Spawn locations: any /obj/effect/landmark/refraction/spawner whose
+ * `id` matches this node's `landmark_id` becomes a valid spawn point.
+ * Authors can drop one or many spawner landmarks per node.
  */
 /datum/refraction_node
 	/// String identifier, unique within a line. Used in
 	/// sector_briefings.node_ids and as the room_id key the run datum hands
 	/// to ActivateRoom / WipeRoomReserves.
 	var/id = ""
-	/// Matches /obj/effect/landmark/refraction/spawn.landmark_id in the dmm.
+	/// Matches /obj/effect/landmark/refraction/spawner.id in the dmm.
 	/// Multiple landmarks can share an id; the wave controller uses every
 	/// matching landmark on the run's z as a spawn point.
 	var/landmark_id = ""

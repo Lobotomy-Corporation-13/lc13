@@ -8,19 +8,27 @@ For the architectural overview see [README.md](README.md) in this folder.
 
 ## What you'll create
 
-For one new line you author:
+For one new line you author, create a subdirectory `code/modules/refraction_railway/lines/<your_line>/` containing:
 
-1. **One DM file** under `code/modules/refraction_railway/lines/` — a `/datum/refraction_line` subtype.
-2. **One `.dmm` file** under `_maps/refraction_railway/` — combat rooms + the line's checkpoint room + spawn landmarks.
-3. **(Optional) Mob tips** — registered into `SSrefraction_railway.mob_tips` at subsystem init. One-liner per mob type.
+1. **`<your_line>.dm`** — a `/datum/refraction_line` subtype with the line config and `AddNode(...)` calls.
+2. **`passives.dm`** *(optional)* — overrides `GetMobPassives()` for the mobs your line introduces.
+3. **`attacks.dm`** *(optional)* — overrides `GetMobAttacks()` for the same.
 
-That's it. No JS edits, no subsystem edits, no console wiring.
+Plus one map file:
+
+4. **`<your_line>.dmm`** under `_maps/refraction_railway/` — combat rooms + the line's checkpoint room + spawn landmarks.
+
+And optionally:
+
+5. **Mob tips** — registered into `SSrefraction_railway.mob_tips` at subsystem init. One-liner per mob type.
+
+That's it. No JS edits, no subsystem edits, no console wiring, no central passive/attack registry to fight over with other line authors.
 
 ---
 
 ## Step 1 — Create the line subtype
 
-Create a new file at `code/modules/refraction_railway/lines/<your_line>.dm`. Don't forget to add it to `lobotomy-corp13.dme`.
+Create a new file at `code/modules/refraction_railway/lines/<your_line>/<your_line>.dm`. Don't forget to add it to `lobotomy-corp13.dme`.
 
 ```dm
 /datum/refraction_line/mirage
@@ -77,9 +85,9 @@ This is what shows up on the line-selector hub. Two lists drive it: `nodes` (pos
 	)
 
 	recommended_tier_lines = list(
-		"- E.G.O Tier: HE",
-		"- Recommended uptie: 4",
+		"- Bring E.G.O. with stat requirements around 80.",
 	)
+
 	recommended_tier_offset = list("x" = 40, "y" = -60)
 ```
 
@@ -152,7 +160,7 @@ AddNode(node_id, lm_id, n_name, n_desc, list/stock, c_max = 4, boss = FALSE)
 ```
 
 - `node_id` — unique within this line. Used as the room_id when teleporting players in, and as the key into `combat_nodes`. Reference it from `sector_briefings` (Step 4).
-- `lm_id` — every `/obj/effect/landmark/refraction/spawn` in the dmm with this same `landmark_id` becomes a valid spawn point for this node. Drop one or many landmarks per node.
+- `lm_id` — every `/obj/effect/landmark/refraction/spawner` in the dmm with this same `id` becomes a valid spawn point for this node. Drop one or many landmarks per node.
 - `n_name` — shown as the node card title in the briefing.
 - `n_desc` — flavor text under the node name. Pass `null` if you don't want one.
 - `stock` — assoc list `mob_path => 1-player baseline count`. At runtime it's multiplied by `1 + 0.20*(num_players − 1)` (boss nodes skip this).
@@ -170,20 +178,14 @@ Add this inside `New()`, after the `AddNode(...)` calls:
 ```dm
 	sector_briefings = list(
 		list(
-			"name"         = "Sector 1: Approach",
-			"description"  = "The first stop arrives before the carriage has truly started moving. Things sharpen here, though we cannot yet say into what.",
-			"faction"      = "G-Corp",
-			"damage_hints" = "Persistent RED melee from the rank-and-file. WHITE shielding earns its keep.",
-			"is_boss"      = FALSE,
-			"node_ids"     = list("mirage_threshold", "mirage_hollow"),
+			"name"        = "Sector 1: Approach",
+			"description" = "The first stop arrives before the carriage has truly started moving. Things sharpen here, though we cannot yet say into what.",
+			"node_ids"    = list("mirage_threshold", "mirage_hollow"),
 		),
 		list(
-			"name"         = "Sector 2: Reception",
-			"description"  = "The end is closer than we feel. Whatever waits at the apse has not turned to face us, and may never need to.",
-			"faction"      = "G-Corp",
-			"damage_hints" = "Sustained pressure. Survival earns more than burst here.",
-			"is_boss"      = TRUE,
-			"node_ids"     = list("mirage_apse"),
+			"name"        = "Sector 2: Reception",
+			"description" = "The end is closer than we feel. Whatever waits at the apse has not turned to face us, and may never need to.",
+			"node_ids"    = list("mirage_apse"),
 		),
 	)
 ```
@@ -191,8 +193,8 @@ Add this inside `New()`, after the `AddNode(...)` calls:
 **Field notes:**
 
 - `node_ids` — must be **node ids you registered in Step 3**, in the order players will encounter them.
-- `name` / `description` / `faction` / `damage_hints` — surface in the briefing UI header above the node cards. The faction is rendered with the line's `display_color` accent.
-- `is_boss` — when TRUE, the briefing UI flips to red and shows the "FINAL SECTOR — boss encounter" banner. Authors typically only set this on the final sector.
+- `name` / `description` — surface in the briefing UI header above the node cards. Per-mob faction context and incoming-damage advice belong on the per-mob `mob_tips` (Step 5), not duplicated at the sector level.
+- **No sector-level `faction`, `damage_hints`, or `is_boss` field.** Boss-ness is per-node — passed to `AddNode(... boss = TRUE)` and rendered on that specific node's card.
 
 The number of entries in `sector_briefings` must equal `section_count` from Step 1. The briefing won't crash if mismatched, but the advance console will refuse to begin a sector that doesn't exist.
 
@@ -226,6 +228,118 @@ To add tips for your line's mobs, edit `code/modules/refraction_railway/_railway
 
 ---
 
+## Step 5b — Add mob passives (longer-form)
+
+Where a tip is one sentence, a **passive** is a titled card with a paragraph of explanatory text and a severity indicator. Passives surface in the "Passives" section of a mob's full data sheet (revealed cards only — silhouettes don't show them).
+
+**Where they live**: in your line's own subdirectory, in a `passives.dm` file that overrides `/datum/refraction_line/<your_line>/GetMobPassives()`. You never touch any other line's file or any central table.
+
+```dm
+// code/modules/refraction_railway/lines/mirage/passives.dm
+
+/datum/refraction_line/mirage/GetMobPassives()
+    return list(
+        /mob/living/simple_animal/hostile/ordeal/steel_dawn/steel_noon = list(
+            list(
+                "title"    = "Last Stand",
+                "severity" = "high",
+                "text"     = "While attacking at 25% HP or below, 75% chance per attack to trigger Self-Destruct.",
+            ),
+            list(
+                "title"    = "Zealous Squadmate",
+                "severity" = "low",
+                "text"     = "When Self-Destruct goes off, every Steel Dawn within 7 tiles becomes Zealous and is healed to nearly full.",
+            ),
+        ),
+    )
+```
+
+The subsystem walks every registered line at init and merges all `GetMobPassives()` returns into `SSrefraction_railway.mob_passives`.
+
+**Severity tiers** (drives banner color + warning-icon count):
+
+| `severity` | Banner    | Icons | Use for |
+|---|---|---|---|
+| `"info"`   | brown     | none  | Informational only — "has reach 2", etc. |
+| `"low"`    | yellow    | ⚠     | Worth knowing; doesn't immediately threaten you. |
+| `"medium"` | orange    | ⚠⚠    | Active mid-combat consideration. Telegraphed AoEs, faction synergies. |
+| `"high"`   | red       | ⚠⚠⚠   | Immediately dangerous. Self-destructs, screech AoEs, boss phase shifts. |
+
+**Passive rules:**
+
+- Two to four sentences. Lead with the trigger, end with the consequence. "Below 25% HP, it … so it then …"
+- One passive per gimmick — if a mob has both a self-destruct and a death buff, that's two cards.
+- Player-readable language only. No proc names, type paths, variable names, or DM expressions (`view(N)`, `oview(N)`, `TemporarySpeedChange(...)`, `damage_coeff`, etc).
+- Resistances belong on the data sheet's resistance row, not in passives.
+- A mob with no passive entry simply renders no Passives section. Empty cards are not rendered.
+
+**Collisions**: if two lines both register passives for the same mob path, the *first* line to be loaded wins; the second's contribution is dropped with a `stack_trace` naming both lines. So if you reuse a mob another line already covers, just don't redeclare it — your line will inherit the existing entries automatically.
+
+---
+
+## Step 5c — Add mob attacks
+
+The Attacks section renders **above** Passives on a revealed mob card. Use it for discrete damage-dealing actions beyond basic melee — screeches, dashes, AoE slams, conditional self-destructs. Each attack is a four-field assoc list.
+
+**Where they live**: in your line's own subdirectory, in an `attacks.dm` file that overrides `/datum/refraction_line/<your_line>/GetMobAttacks()`:
+
+```dm
+// code/modules/refraction_railway/lines/mirage/attacks.dm
+
+/datum/refraction_line/mirage/GetMobAttacks()
+    return list(
+        /mob/living/simple_animal/hostile/ordeal/steel_dusk = list(
+            list(
+                "name"     = "Screech",
+                "damage"   = "60 WHITE in a 10-tile radius",
+                "cooldown" = "15 seconds",
+                "desc"     = "Spends 5 seconds winding up — cannot move or attack during this time. On release, blasts a shockwave that hits everything in the area.",
+            ),
+        ),
+    )
+```
+
+Same load + merge + collision flow as passives.
+
+**Cooldown conventions** (free-form, but stay consistent):
+
+- Clean interval: `"15 seconds"` / `"4 seconds"`
+- Always-on: `"Replaces basic melee"`
+- Trigger-driven: `"Triggered (see Last Stand)"` — name the passive that arms it
+- Conditional + interval: `"15 seconds, 30% chance per attack"`
+- Stage-locked: append `", Stage 2 only"`
+
+**Cross-referencing with passives**: when a passive arms or gates an attack, write the passive as the *trigger only* and let the attack carry the mechanics. For example:
+
+```dm
+// passives.dm
+list(
+    "title"    = "Last Stand",
+    "severity" = "high",
+    "text"     = "While attacking at 25% HP or below, 75% chance per attack to trigger Self-Destruct.",
+)
+```
+
+```dm
+// attacks.dm
+list(
+    "name"     = "Self-Destruct",
+    "damage"   = "60 RED in a 3-tile radius",
+    "cooldown" = "Triggered (see Last Stand)",
+    "desc"     = "Stops moving. Grows to nearly 2x size with a red glow over 1.5 seconds. Then explodes, hitting everything close to it.",
+)
+```
+
+The passive references the attack by name; the attack references the passive by name. Players reading either card find their way to the other.
+
+**Style rules** (same as passives):
+
+- Player-readable language only. Tiles, seconds, HP, "winds up", "stunned", "moves faster".
+- No proc names, type paths, variable names, or DM expressions.
+- Resistances belong on the data sheet's resistance row, not in attacks.
+
+---
+
 ## Step 6 — Author the `.dmm`
 
 This is the only non-DM step. The dmm holds:
@@ -234,9 +348,12 @@ This is the only non-DM step. The dmm holds:
 
 For each combat node (each `AddNode` call you made):
 
-- One or more **`/obj/effect/landmark/refraction/spawn`** with `landmark_id` matching the node's `landmark_id`. Drop them where you want mobs to materialize.
-- One **`/obj/effect/landmark/refraction/player_spawn`** with `room_id = "<node_id>"` per player slot — these are the tiles players are forceMoved onto when entering the room.
-- One **`/obj/effect/landmark/refraction/section_end`** at the exit tile of the *last* room in each sector. Crossing it ends the section.
+- One or more **`/obj/effect/landmark/refraction/spawner`** with `id` matching the node's `landmark_id`. Drop them where you want mobs to materialize.
+- One **`/obj/effect/landmark/refraction/start_point`** with `id = "<node_id>"` per player slot — these are the tiles players are forceMoved onto when entering the room.
+
+For per-line authoring, prefer typed subtypes that bake `id` into the path (see `lines/nova_flare/landmarks.dm` for the pattern). StrongDMM treats them as standard obj paths and there's nothing to override per-tile.
+
+**No section-end or finish landmarks needed.** A sector ends automatically once the last node's mobs are all dead (the controller fires `RoomCleared`, `AdvanceRoom` finds no next room, and `OnSectionCleared` runs). After the 5-second breather, the team is teleported to the checkpoint area. The same path runs the final-results display + cleanup when the last sector clears.
 
 ### Checkpoint room (one per line)
 
@@ -247,13 +364,9 @@ Same z as the combat rooms, reachable only via teleport:
 - 2–3 **`/obj/machinery/computer/refraction_loadout`** consoles (parallel access avoids queueing).
 - 1 **`/obj/machinery/computer/refraction_advance`** ("Begin Sector" console).
 
-### The finish landmark
-
-One **`/obj/effect/landmark/refraction/finish`** placed on the floor of the boss room, at the spot players step onto after the boss dies. Crossing it ends the run.
-
 ### Visual conventions
 
-Spawn landmarks use icon_state `"x3"`; player-spawn / section-end / checkpoint-spawn use `"x2"` / `"x4"` / `"x3"` respectively. They all live on `'icons/effects/landmarks_static.dmi'`. They're invisible to players in-round.
+Spawn landmarks use icon_state `"x3"`; player-spawn / checkpoint-spawn use `"x2"` / `"x3"`. They all live on `'icons/effects/landmarks_static.dmi'`. They're invisible to players in-round.
 
 ---
 
@@ -264,10 +377,8 @@ Before you commit:
 - [ ] `id` is unique across all `/datum/refraction_line` subtypes.
 - [ ] `section_count` equals `length(sector_briefings)`.
 - [ ] Every node id in `sector_briefings.node_ids` was created via `AddNode(...)`.
-- [ ] Every node's `landmark_id` has at least one matching `/obj/effect/landmark/refraction/spawn` in the dmm.
-- [ ] Every combat room has a `player_spawn` landmark with `room_id` matching the node id.
-- [ ] The last room of each sector has a `section_end` landmark.
-- [ ] The boss room has a `finish` landmark.
+- [ ] Every node's `landmark_id` has at least one matching `/obj/effect/landmark/refraction/spawner` (`id` set) in the dmm.
+- [ ] Every combat room has a `start_point` landmark with `id` matching the node id.
 - [ ] The checkpoint room has briefing display, advance console, ≥ 2 loadout consoles, ≥ 4 checkpoint_spawn tiles.
 - [ ] The dmm is included via `lobotomy-corp13.dme` (under the `_maps` block).
 - [ ] Your line subtype file is included via `lobotomy-corp13.dme` (under `code/modules/refraction_railway/lines/`).
@@ -340,7 +451,6 @@ Combine everything into one file:
 			"description"  = "The first stop arrives before the carriage has truly started moving. Things sharpen here, though we cannot yet say into what.",
 			"faction"      = "G-Corp",
 			"damage_hints" = "Persistent RED melee from the rank-and-file. WHITE shielding earns its keep.",
-			"is_boss"      = FALSE,
 			"node_ids"     = list("mirage_threshold", "mirage_hollow"),
 		),
 		list(
@@ -348,7 +458,6 @@ Combine everything into one file:
 			"description"  = "The end is closer than we feel. Whatever waits at the apse has not turned to face us, and may never need to.",
 			"faction"      = "G-Corp",
 			"damage_hints" = "Sustained pressure. Survival earns more than burst here.",
-			"is_boss"      = TRUE,
 			"node_ids"     = list("mirage_apse"),
 		),
 	)
