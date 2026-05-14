@@ -77,7 +77,7 @@
 	status_type = STATUS_EFFECT_UNIQUE
 	alert_type = /atom/movable/screen/alert/status_effect/grungeon_shield
 	var/list/list_of_shielders = list()
-	var/mutable_appearance/shield_icon
+	var/mutable_appearance/shield_overlay
 
 /atom/movable/screen/alert/status_effect/grungeon_shield
 	name = "Shielded"
@@ -85,13 +85,28 @@
 	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "protection"
 
+
+
 /datum/status_effect/grungeon_shield/on_apply()
 	. = ..()
-	var/mob/living/simple_animal/status_holder = owner
-	status_holder.add_overlay(shield_icon)
-	shield_icon = mutable_appearance('icons/effects/effects.dmi', "shield-red", -ABOVE_MOB_LAYER)
+	ApplyShieldOverlay(owner)
 	RegisterSignal(owner, COMSIG_MOVABLE_PRE_MOVE, PROC_REF(Moved))
 	RegisterSignal(owner, COMSIG_MOB_APPLY_DAMGE, PROC_REF(Damaged))
+
+datum/status_effect/grungeon_shield/proc/ApplyShieldOverlay(mob/living/owner)
+	shield_overlay = mutable_appearance('icons/effects/effects.dmi', "shield-red", ABOVE_MOB_LAYER)
+	var/icon/owner_icon = icon(owner.icon, owner.icon_state, owner.dir)
+	var/icon_height = owner_icon.Height()
+	var/icon_width = owner_icon.Width()
+	var/height_diff = 32 - icon_height
+	var/width_diff = 32 - icon_width
+
+	shield_overlay.pixel_x -= (width_diff * 0.5)
+	shield_overlay.pixel_y -= (height_diff * 0.5)
+
+	owner.add_overlay(shield_overlay)
+
+
 
 /datum/status_effect/grungeon_shield/proc/Moved(mob/user, atom/new_location)
 	SIGNAL_HANDLER
@@ -115,8 +130,7 @@
 /datum/status_effect/grungeon_shield/on_remove()
 	UnregisterSignal(owner, COMSIG_MOVABLE_PRE_MOVE)
 	UnregisterSignal(owner, COMSIG_MOB_APPLY_DAMGE)
-	var/mob/living/simple_animal/status_holder = owner
-	status_holder.cut_overlay(shield_icon)
+	owner.cut_overlay(shield_overlay)
 	return ..()
 
 /datum/status_effect/grungeon_shield/proc/Damaged(datum/source, damage, damagetype, def_zone, atom/damage_source, flags, attack_type)
