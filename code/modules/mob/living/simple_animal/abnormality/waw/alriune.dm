@@ -26,6 +26,7 @@
 	)
 	work_damage_amount = 10
 	work_damage_type = WHITE_DAMAGE
+	good_droprate = 60
 	bad_droprate = 100
 	chem_type = /datum/reagent/abnormality/sin/pride
 	good_hater = TRUE
@@ -213,21 +214,11 @@
 	. += petal_overlay
 
 /* Work stuff */
-/mob/living/simple_animal/hostile/abnormality/alriune/SuccessEffect(mob/living/carbon/human/user, work_type, pe)
-	. = ..()
-	if(prob(good_breach))
-		datum_reference.qliphoth_change(-1)
-	return
-
+//It's droprate on good goes down on a normal work.
 /mob/living/simple_animal/hostile/abnormality/alriune/NeutralEffect(mob/living/carbon/human/user, work_type, pe)
 	. = ..()
-	good_breach -= pe
-	good_breach = max(0, good_breach)
-	return
-
-/mob/living/simple_animal/hostile/abnormality/alriune/FailureEffect(mob/living/carbon/human/user, work_type, pe)
-	. = ..()
-	datum_reference.qliphoth_change(-1)
+	good_droprate -= pe
+	good_droprate = max(0, good_breach)
 	return
 
 /* Qliphoth/Breach effects */
