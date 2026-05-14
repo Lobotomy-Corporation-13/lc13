@@ -21,7 +21,7 @@
 	threat_level = WAW_LEVEL
 	fear_level = 0
 	start_qliphoth = 2
-	move_to_delay = 6
+	move_to_delay = 3
 
 	work_chances = list(
 		ABNORMALITY_WORK_INSTINCT = list(0, 0, 40, 40, 40),
@@ -50,14 +50,24 @@
 	)
 
 	var/cooldown_time = 3
-	var/aoe_damage = 12
+	var/aoe_damage = 20
 
 /mob/living/simple_animal/hostile/abnormality/dimensional_refraction/proc/Melter()
 	for(var/mob/living/L in livinginview(1, src))
 		if(faction_check_mob(L))
 			continue
+
 		L.deal_damage(aoe_damage, RED_DAMAGE, flags = (DAMAGE_UNTRACKABLE | DAMAGE_FORCED), attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 		new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(L), pick(GLOB.alldirs))
+
+		//Dismember if under 30% HP
+		if(L.health<=L.maxHealth*0.1)
+			//Lop off a random arm
+			new /obj/effect/temp_visual/smash_effect(get_turf(C))
+			var/obj/item/bodypart/arm = pick(C.get_bodypart(BODY_ZONE_R_ARM), C.get_bodypart(BODY_ZONE_L_ARM), C.get_bodypart(BODY_ZONE_L_LEG), C.get_bodypart(BODY_ZONE_L_LEG))
+
+			var/did_the_thing = (arm?.dismember()) //not all limbs can be removed.
+
 	addtimer(CALLBACK(src, PROC_REF(Melter)), cooldown_time)
 
 
