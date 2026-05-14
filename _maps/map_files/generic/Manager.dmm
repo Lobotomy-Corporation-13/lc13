@@ -351,6 +351,12 @@
 	},
 /turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
+"cW" = (
+/obj/structure/sigsystem/connector{
+	happens_once = 1
+	},
+/turf/open/floor/facility/dark,
+/area/city/outskirtsfactory)
 "cY" = (
 /obj/machinery/vending/coffee,
 /turf/open/floor/plasteel/dark,
@@ -859,9 +865,9 @@
 /area/city/outskirtsfactory)
 "gL" = (
 /obj/machinery/door/poddoor/shutters/indestructible{
-	id = "factoryvault";
 	lockpickable = 0
 	},
+/obj/structure/sigsystem/activator,
 /turf/open/floor/facility/dark,
 /area/city/outskirtsfactory)
 "gP" = (
@@ -1671,10 +1677,9 @@
 /turf/open/floor/carpet/green,
 /area/facility_hallway/manager)
 "mI" = (
-/obj/machinery/button/door{
-	id = "factoryvault";
-	resistance_flags = 64;
-	idle_power_usage = 0
+/obj/structure/sigsystem/tower/button{
+	signal_code = 92;
+	signal_range = 3
 	},
 /turf/closed/indestructible/syndicate,
 /area/city/outskirtsfactory)
@@ -4480,6 +4485,12 @@
 	},
 /turf/open/floor/plasteel/white,
 /area/facility_hallway/manager)
+"HC" = (
+/obj/structure/sigsystem/tower{
+	signal_code = 92
+	},
+/turf/open/floor/mineral/gold,
+/area/city/outskirtsfactory)
 "HD" = (
 /obj/effect/turf_decal/siding/red,
 /obj/structure/sigsystem/connector/split{
@@ -21018,8 +21029,8 @@ XO
 dF
 jl
 Vx
-Vx
-Lp
+HC
+cW
 gL
 Nm
 Hl
