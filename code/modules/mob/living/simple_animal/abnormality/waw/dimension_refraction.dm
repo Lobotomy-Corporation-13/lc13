@@ -29,6 +29,7 @@
 		ABNORMALITY_WORK_ATTACHMENT = list(0, 0, 40, 40, 40),
 		ABNORMALITY_WORK_REPRESSION = list(0, 0, 40, 40, 40),
 	)
+	bad_droprate = 100
 	work_damage_amount = 10
 	work_damage_type = WHITE_DAMAGE
 	chem_type = /datum/reagent/abnormality/sin/sloth
@@ -102,8 +103,3 @@
 	alpha = 30
 	addtimer(CALLBACK(src, PROC_REF(Melter)), cooldown_time)
 
-
-/mob/living/simple_animal/hostile/abnormality/dimensional_refraction/FailureEffect(mob/living/carbon/human/user, work_type, pe)
-	. = ..()
-	datum_reference.qliphoth_change(-1)
-	return
