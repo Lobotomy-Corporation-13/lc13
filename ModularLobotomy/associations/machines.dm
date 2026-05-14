@@ -328,9 +328,9 @@ GLOBAL_LIST_EMPTY(loaded_quest_z_levels)
 
 /obj/item/quest_ticket/grungeon
 	name = "'Outskirts Factory' ticket"
-	desc = "A small sheet of paper with a barcode, stained by what appears to be oil. Could be given to a ticket reader to access to a new area."
+	desc = "A small sheet of paper with a barcode. Could be given to a ticket reader to access to a new area."
 	icon = 'icons/obj/bureaucracy.dmi'
-	icon_state = "ticket_grungeon"
+	icon_state = "ticket"
 	inhand_icon_state = "ticket"
 	worn_icon_state = "ticket"
 	map = "_maps/Quests/green_dungeon.dmm"
