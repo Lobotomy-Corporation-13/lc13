@@ -1715,8 +1715,6 @@
 	signal_code = 26
 	},
 /obj/structure/sigsystem/announcer{
-	sound = sound/machines/warning-buzzer.ogg;
-	sound_volume = 50;
 	message_range = 5;
 	message = "Unauthorized access detected. Door opening delayed."
 	},
@@ -2114,8 +2112,6 @@
 /area/city/outskirtsfactory)
 "SF" = (
 /obj/structure/sigsystem/announcer{
-	sound = sound/machines/warning-buzzer.ogg;
-	sound_volume = 50;
 	message_range = 5;
 	message = "Unauthorized access detected. Engaging temporary lockdown."
 	},
@@ -2173,8 +2169,6 @@
 /area/city/outskirtsfactory)
 "Tz" = (
 /obj/structure/sigsystem/announcer{
-	sound = sound/machines/warning-buzzer.ogg;
-	sound_volume = 50;
 	message_range = 5;
 	message = "Unauthorized access detected. Door opening delayed."
 	},
@@ -2202,8 +2196,6 @@
 "TH" = (
 /obj/effect/decal/cleanable/blood,
 /obj/structure/sigsystem/announcer{
-	sound = sound/machines/warning-buzzer.ogg;
-	sound_volume = 50;
 	message_range = 5;
 	message = "Intruders detected. All units, prepare for battle."
 	},
