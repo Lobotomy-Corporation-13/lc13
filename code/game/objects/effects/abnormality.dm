@@ -306,6 +306,8 @@
 	var/fire_turf_check_time = 4
 	//Total health only used in reaction to getting extinguished
 	var/fire_health = 4
+	//The Fire Damage
+	var/fire_damage = 2
 
 /obj/effect/turf_fire/Initialize()
 	. = ..()
@@ -335,7 +337,7 @@
 
 //If this doesnt return true then the entity will not be counted towards the next check for burning.
 /obj/effect/turf_fire/proc/DoDamage(mob/living/fuel)
-	fuel.adjust_fire_stacks(2)
+	fuel.adjust_fire_stacks(fire_damage)
 	fuel.IgniteMob()
 	return TRUE
 

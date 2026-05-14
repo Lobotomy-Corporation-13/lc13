@@ -587,9 +587,9 @@
 /obj/effect/proc_holder/ability/aimed/dash/firebird
 	name = "firebird dash"
 	dash_speed =  0.5
-	dash_damage = 200
+	dash_damage = 20
 	dash_range = 50
-	windup_delay = 0
+	windup_delay = 1 SECONDS
 	cooldown_time = 5 SECONDS
 	env_breaking = TRUE
 
@@ -608,12 +608,12 @@
 			break
 		if(isopenturf(U) && !HasIdentList(U))
 			//Real effect since fire produces light
-			new /obj/effect/temp_visual/fire/fast(U)
+			new /obj/effect/turf_fire/firebird(U)
 		var/list/new_hits = HurtInTurf(ourthing, U, list(), dash_damage, WHITE_DAMAGE, hurt_mechs = TRUE, flags = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 		var/flicks = FALSE
 		for(var/mob/living/L in new_hits)//damage applied to targets in range
 			visible_message(span_boldwarning("[src] blazes through [L]!"))
-			L.deal_damage(dash_damage * 0.1, FIRE, ourthing, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
+			L.deal_damage(dash_damage, FIRE, ourthing, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 			if(ishuman(L))
 				var/mob/living/carbon/human/H = L
 				if(H.sanity_lost) // TODO: TEMPORARY AS HELL

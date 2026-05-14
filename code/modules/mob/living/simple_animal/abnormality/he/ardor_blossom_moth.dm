@@ -179,10 +179,5 @@
 
 //The special fire type
 /obj/effect/turf_fire/ardor
-	burn_time = 30 SECONDS
+	fire_damage = 4
 
-/obj/effect/turf_fire/ardor/DoDamage(mob/living/fuel)
-	if(ishuman(fuel))
-		fuel.deal_damage(4, FIRE, attack_type = (ATTACK_TYPE_ENVIRONMENT))
-		fuel.apply_lc_burn(2)
-		return TRUE
