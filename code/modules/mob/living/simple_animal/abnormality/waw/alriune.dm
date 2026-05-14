@@ -26,6 +26,7 @@
 	)
 	work_damage_amount = 10
 	work_damage_type = WHITE_DAMAGE
+	bad_droprate = 100
 	chem_type = /datum/reagent/abnormality/sin/pride
 	good_hater = TRUE
 
@@ -47,11 +48,15 @@
 	/// World time when petals_current will increase by 1
 	var/petals_next = 0
 	/// Delay used for petals_next
-	var/petals_next_time = 5 SECONDS
+	var/petals_next_time = 7 SECONDS
 	/// Amount of white damage done to everyone in view by the attack
 	var/pulse_damage = 180
 	/// Chance of you breaching on a good
 	var/good_breach = 60
+
+	/// Attack_type
+	var/pulsing = FALSE
+	var/attacking = FALSE
 
 	ego_list = list(
 		/datum/ego_datum/weapon/aroma,
@@ -71,8 +76,30 @@
 	. = ..()
 	if(!.) // Dead
 		return FALSE
-	if(!(status_flags & GODMODE))
+	if(status_flags & GODMODE)
+		return
+
+	//If you're working on a pulse, do it
+	if(pulsing)
+
 		CheckAndPulse()
+		return
+
+	if(attacking)
+		return
+
+	switch(rand(1,5))
+		if(1 to 2)
+			attacking = TRUE
+			ConstantAttack()
+
+		if(3 to 4)
+			attacking = TRUE
+			AlriuneAOE()
+
+		if(5)
+			pulsing = TRUE
+			CheckAndPulse()
 
 /mob/living/simple_animal/hostile/abnormality/alriune/CanAttack(atom/the_target)
 	return FALSE
@@ -108,7 +135,7 @@
 						H.death()
 
 			petals_next = world.time + (petals_next_time * 2)
-			addtimer(CALLBACK(src, PROC_REF(TeleportAway)), 2 SECONDS)
+			addtimer(CALLBACK(src, PROC_REF(TeleportAway)), 3 SECONDS)
 		else
 			playsound(src, 'sound/abnormalities/alriune/timer.ogg', 50, FALSE, 12)
 		update_icon()
@@ -131,6 +158,49 @@
 	forceMove(T)
 	animate(src, alpha = 255, time = 15)
 	playsound(src, 'sound/abnormalities/alriune/curtain_in.ogg', 50, TRUE, 12)
+	pulsing = FALSE
+
+
+//Other Attacks
+/mob/living/simple_animal/hostile/abnormality/alriune/proc/ConstantAttack()
+	for(var/i in 1 to 3)
+		for(var/mob/living/carbon/human/L in view(9, src))
+			var/turf/shoot_from = pick(range(1, src))
+			var/obj/projectile/alriune/P = new(shoot_from)
+			P.starting = shoot_from
+			P.firer = src
+			P.fired_from = src
+			P.yo = L.y - shoot_from.y
+			P.xo = L.x - shoot_from.x
+			P.original = target
+			P.preparePixelProjectile(L, shoot_from)
+			SLEEP_CHECK_DEATH(2)
+			P.fire()
+
+		SLEEP_CHECK_DEATH(10)
+	attacking = FALSE
+
+
+/mob/living/simple_animal/hostile/abnormality/alriune/proc/AlriuneAOE()
+	var/turf/startloc = get_turf(targets_from)
+
+	var/turf/target_turf = locate(x, y+1, z)
+	for(var/i in 1 to 10)
+		var/obj/projectile/alriune/aoe/P = new(get_turf(src))
+		P.starting = startloc
+		P.firer = src
+		P.fired_from = src
+		P.yo = target_turf.y - startloc.y
+		P.xo = target_turf.x - startloc.x
+		P.original = target_turf
+		P.preparePixelProjectile(target_turf, src)
+		P.fire()
+
+		SLEEP_CHECK_DEATH(5)
+
+	attacking = FALSE
+
+
 
 /* Overlays */
 /mob/living/simple_animal/hostile/abnormality/alriune/update_overlays()
@@ -171,28 +241,38 @@
 
 
 
-/*  */
-#define STATUS_EFFECT_LCBURN /datum/status_effect/stacking/lc_burn
-/datum/status_effect/stacking/lc_burn
-	id = "lc_burn"
-	alert_type = /atom/movable/screen/alert/status_effect/lc_burn
-	max_stacks = 50
-	tick_interval = 5 SECONDS
-	consumed_on_threshold = FALSE
-	var/new_stack = FALSE
-	var/safety = TRUE
-	var/extinguishable = TRUE
+//Bullets
+/obj/projectile/alriune
+	name = "petals"
+	icon_state = "alriune"
+	icon = 'ModularLobotomy/_Lobotomyicons/abno_projectiles.dmi'
+	desc = "a sharpened petal"
+	hitsound = "sound/weapons/throwtap.ogg"
+	speed = 4		//very slow bullets
+	damage = 20		//She fires a lot of them
+	damage_type = WHITE_DAMAGE
+	white_healing = FALSE
 
-/atom/movable/screen/alert/status_effect/lc_burn
-	name = "Burning"
-	desc = "You're on fire!"
-	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
-	icon_state = "lc_burn"
 
-/datum/status_effect/stacking/lc_burn/on_apply()
-	. = ..()
-	if(extinguishable)
-		RegisterSignal(owner, COMSIG_LIVING_EXTINGUISHED, PROC_REF(Extinguished))
+/obj/projectile/alriune/aoe
+	name = "petals"
+	icon_state = "alriune_AOE"
+	desc = "a sharpened leaf"
+	spread = 360	//Fires in a 360 Degree radius
 
-/datum/status_effect/stacking/lc_burn/can_have_status()
-	return (owner.stat != DEAD || !(owner.status_flags & GODMODE))
+	ricochets_max = 3
+	ricochet_chance = 70
+	ricochet_decay_chance = 1
+	ricochet_decay_damage = 0.7	//Decays a bit
+	ricochet_auto_aim_range = 10
+	ricochet_incidence_leeway = 0
+
+/obj/projectile/alriune/aoe/check_ricochet_flag(atom/A)
+	if(istype(A, /turf/closed))
+		return TRUE
+	if(istype(A, /obj/structure/window))
+		return TRUE
+	if(istype(A, /obj/machinery/door))
+		return TRUE
+
+	return FALSE
