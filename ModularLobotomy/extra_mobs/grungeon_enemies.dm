@@ -93,7 +93,7 @@
 	RegisterSignal(owner, COMSIG_MOVABLE_PRE_MOVE, PROC_REF(Moved))
 	RegisterSignal(owner, COMSIG_MOB_APPLY_DAMGE, PROC_REF(Damaged))
 
-datum/status_effect/grungeon_shield/proc/ApplyShieldOverlay(mob/living/owner)
+/datum/status_effect/grungeon_shield/proc/ApplyShieldOverlay(mob/living/owner)
 	shield_overlay = mutable_appearance('icons/effects/effects.dmi', "shield-red", ABOVE_MOB_LAYER)
 	var/icon/owner_icon = icon(owner.icon, owner.icon_state, owner.dir)
 	var/icon_height = owner_icon.Height()
