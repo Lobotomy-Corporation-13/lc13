@@ -1,0 +1,656 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"aa" = (
+/turf/open/floor/plating,
+/area/refraction/nova_flare)
+"ad" = (
+/turf/closed/indestructible/reinforced/cheap/blue,
+/area/refraction/nova_flare)
+"as" = (
+/turf/open/floor/carpet/red,
+/area/refraction/nova_flare)
+"br" = (
+/obj/structure/refraction_briefing,
+/obj/machinery/light/warm{
+	dir = 1
+	},
+/turf/open/floor/carpet/executive,
+/area/refraction/nova_flare)
+"bx" = (
+/obj/machinery/light/warm,
+/turf/open/floor/carpet/executive,
+/area/refraction/nova_flare)
+"bH" = (
+/turf/open/floor/carpet/green,
+/area/refraction/nova_flare)
+"bR" = (
+/turf/open/floor/carpet/executive,
+/area/refraction/nova_flare)
+"cs" = (
+/obj/effect/landmark/refraction/checkpoint_spawn,
+/turf/open/floor/carpet/executive,
+/area/refraction/nova_flare)
+"fH" = (
+/obj/machinery/computer/refraction_loadout,
+/turf/open/floor/carpet/executive,
+/area/refraction/nova_flare)
+"kn" = (
+/turf/open/floor/carpet/orange,
+/area/refraction/nova_flare)
+"lo" = (
+/turf/open/floor/carpet/royalblue,
+/area/refraction/nova_flare)
+"md" = (
+/obj/effect/landmark/refraction/spawner/nova_s2n1,
+/turf/open/floor/carpet/royalblue,
+/area/refraction/nova_flare)
+"me" = (
+/obj/effect/landmark/refraction/spawner/nova_s2n2,
+/turf/open/floor/carpet/royalblue,
+/area/refraction/nova_flare)
+"mi" = (
+/obj/effect/landmark/refraction/spawner/nova_core,
+/turf/open/floor/carpet/royalblue,
+/area/refraction/nova_flare)
+"mb" = (
+/obj/effect/landmark/refraction/spawner/nova_s1n2,
+/turf/open/floor/carpet/royalblue,
+/area/refraction/nova_flare)
+"mg" = (
+/obj/effect/landmark/refraction/spawner/nova_s3n1,
+/turf/open/floor/carpet/royalblue,
+/area/refraction/nova_flare)
+"mf" = (
+/obj/effect/landmark/refraction/spawner/nova_s2n3,
+/turf/open/floor/carpet/royalblue,
+/area/refraction/nova_flare)
+"ma" = (
+/obj/effect/landmark/refraction/spawner/nova_s1n1,
+/turf/open/floor/carpet/royalblue,
+/area/refraction/nova_flare)
+"mh" = (
+/obj/effect/landmark/refraction/spawner/nova_s3n2,
+/turf/open/floor/carpet/royalblue,
+/area/refraction/nova_flare)
+"mc" = (
+/obj/effect/landmark/refraction/spawner/nova_s1n3,
+/turf/open/floor/carpet/royalblue,
+/area/refraction/nova_flare)
+"ok" = (
+/obj/machinery/computer/refraction_advance,
+/turf/open/floor/carpet/executive,
+/area/refraction/nova_flare)
+"pd" = (
+/obj/effect/landmark/refraction/start_point/nova_s2n1,
+/turf/open/floor/carpet/royalblue,
+/area/refraction/nova_flare)
+"pi" = (
+/obj/effect/landmark/refraction/start_point/nova_core,
+/turf/open/floor/carpet/royalblue,
+/area/refraction/nova_flare)
+"pa" = (
+/obj/effect/landmark/refraction/start_point/nova_s1n1,
+/turf/open/floor/carpet/royalblue,
+/area/refraction/nova_flare)
+"ph" = (
+/obj/effect/landmark/refraction/start_point/nova_s3n2,
+/turf/open/floor/carpet/royalblue,
+/area/refraction/nova_flare)
+"pf" = (
+/obj/effect/landmark/refraction/start_point/nova_s2n3,
+/turf/open/floor/carpet/royalblue,
+/area/refraction/nova_flare)
+"pb" = (
+/obj/effect/landmark/refraction/start_point/nova_s1n2,
+/turf/open/floor/carpet/royalblue,
+/area/refraction/nova_flare)
+"pc" = (
+/obj/effect/landmark/refraction/start_point/nova_s1n3,
+/turf/open/floor/carpet/royalblue,
+/area/refraction/nova_flare)
+"pg" = (
+/obj/effect/landmark/refraction/start_point/nova_s3n1,
+/turf/open/floor/carpet/royalblue,
+/area/refraction/nova_flare)
+"pe" = (
+/obj/effect/landmark/refraction/start_point/nova_s2n2,
+/turf/open/floor/carpet/royalblue,
+/area/refraction/nova_flare)
+"ww" = (
+/obj/machinery/light/warm{
+	dir = 1
+	},
+/turf/open/floor/carpet/royalblue,
+/area/refraction/nova_flare)
+"Qi" = (
+/obj/machinery/computer/refraction_loadout,
+/obj/machinery/light/warm{
+	dir = 1
+	},
+/turf/open/floor/carpet/executive,
+/area/refraction/nova_flare)
+
+(1,1,1) = {"
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+"}
+(2,1,1) = {"
+ad
+lo
+lo
+lo
+ad
+lo
+lo
+lo
+ad
+lo
+lo
+lo
+ad
+bR
+bR
+bR
+bR
+bR
+ad
+"}
+(3,1,1) = {"
+ad
+ww
+lo
+lo
+ad
+ww
+lo
+lo
+ad
+ww
+lo
+lo
+ad
+br
+bR
+bR
+cs
+bx
+ad
+"}
+(4,1,1) = {"
+ad
+lo
+pa
+lo
+ad
+lo
+pd
+lo
+ad
+lo
+pg
+lo
+ad
+fH
+bR
+bR
+cs
+bR
+ad
+"}
+(5,1,1) = {"
+ad
+lo
+lo
+lo
+ad
+lo
+lo
+lo
+ad
+lo
+lo
+lo
+ad
+ok
+bR
+bR
+cs
+bR
+ad
+"}
+(6,1,1) = {"
+ad
+lo
+ma
+lo
+ad
+lo
+md
+lo
+ad
+lo
+mg
+lo
+ad
+bR
+bR
+bR
+cs
+bx
+ad
+"}
+(7,1,1) = {"
+ad
+ww
+lo
+lo
+ad
+ww
+lo
+lo
+ad
+ww
+lo
+lo
+ad
+Qi
+bR
+bR
+bR
+bR
+ad
+"}
+(8,1,1) = {"
+ad
+bH
+lo
+ma
+ad
+lo
+bH
+lo
+ad
+lo
+lo
+bH
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+"}
+(9,1,1) = {"
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+aa
+aa
+aa
+aa
+aa
+ad
+"}
+(10,1,1) = {"
+ad
+lo
+lo
+lo
+ad
+lo
+lo
+lo
+ad
+lo
+lo
+lo
+ad
+aa
+aa
+aa
+aa
+aa
+ad
+"}
+(11,1,1) = {"
+ad
+ww
+lo
+lo
+ad
+ww
+lo
+lo
+ad
+ww
+lo
+lo
+ad
+aa
+aa
+aa
+aa
+aa
+ad
+"}
+(12,1,1) = {"
+ad
+lo
+pb
+lo
+ad
+lo
+pe
+lo
+ad
+lo
+ph
+lo
+ad
+aa
+aa
+aa
+aa
+aa
+ad
+"}
+(13,1,1) = {"
+ad
+lo
+lo
+lo
+ad
+lo
+lo
+lo
+ad
+lo
+lo
+lo
+ad
+aa
+aa
+aa
+aa
+aa
+ad
+"}
+(14,1,1) = {"
+ad
+lo
+mb
+lo
+ad
+lo
+me
+lo
+ad
+lo
+mh
+lo
+ad
+aa
+aa
+aa
+aa
+aa
+ad
+"}
+(15,1,1) = {"
+ad
+ww
+lo
+lo
+ad
+ww
+lo
+lo
+ad
+ww
+lo
+lo
+ad
+aa
+aa
+aa
+aa
+aa
+ad
+"}
+(16,1,1) = {"
+ad
+kn
+lo
+lo
+ad
+lo
+kn
+lo
+ad
+lo
+lo
+kn
+ad
+aa
+aa
+aa
+aa
+aa
+ad
+"}
+(17,1,1) = {"
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+aa
+aa
+aa
+aa
+aa
+ad
+"}
+(18,1,1) = {"
+ad
+lo
+lo
+lo
+ad
+lo
+lo
+lo
+ad
+lo
+lo
+lo
+ad
+aa
+aa
+aa
+aa
+aa
+ad
+"}
+(19,1,1) = {"
+ad
+ww
+lo
+lo
+ad
+ww
+lo
+lo
+ad
+ww
+lo
+lo
+ad
+aa
+aa
+aa
+aa
+aa
+ad
+"}
+(20,1,1) = {"
+ad
+lo
+pc
+lo
+ad
+lo
+pf
+lo
+ad
+lo
+pi
+lo
+ad
+aa
+aa
+aa
+aa
+aa
+ad
+"}
+(21,1,1) = {"
+ad
+lo
+lo
+lo
+ad
+lo
+lo
+lo
+ad
+lo
+lo
+lo
+ad
+aa
+aa
+aa
+aa
+aa
+ad
+"}
+(22,1,1) = {"
+ad
+lo
+mc
+lo
+ad
+lo
+mf
+lo
+ad
+lo
+mi
+lo
+ad
+aa
+aa
+aa
+aa
+aa
+ad
+"}
+(23,1,1) = {"
+ad
+ww
+lo
+lo
+ad
+ww
+lo
+lo
+ad
+ww
+lo
+lo
+ad
+aa
+aa
+aa
+aa
+aa
+ad
+"}
+(24,1,1) = {"
+ad
+as
+lo
+lo
+ad
+lo
+as
+lo
+ad
+lo
+lo
+as
+ad
+aa
+aa
+aa
+aa
+aa
+ad
+"}
+(25,1,1) = {"
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+"}

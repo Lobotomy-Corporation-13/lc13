@@ -29,8 +29,14 @@
 	if(!CheckInitializedDatums(user))
 		return
 	var/datum/refraction_run/R = SSrefraction_railway.GetRunForCkey(user.ckey)
-	if(!R || R.lobby_state != LOBBY_RUNNING || !R.in_checkpoint)
-		to_chat(user, span_warning("You aren't currently staging in a refraction lobby."))
+	// Only warn when the user has no run at all. Wrong-state silently bails;
+	// TGUI re-invokes ui_interact during state transitions (Begin Sector,
+	// Return to Lobby) and a chat warning there reads like a failure even
+	// though the click that triggered it succeeded.
+	if(!R)
+		to_chat(user, span_warning("You aren't currently part of a refraction run."))
+		return
+	if(R.lobby_state != LOBBY_RUNNING || !R.in_checkpoint)
 		return
 	ui = SStgui.try_update_ui(user, src, ui)
 	if(!ui)
@@ -109,10 +115,7 @@
 		return list()
 	var/list/sector = R.line.sector_briefings[idx]
 	return list(
-		"name"         = sector["name"],
-		"faction"      = sector["faction"],
-		"damage_hints" = sector["damage_hints"],
-		"is_boss"      = sector["is_boss"],
+		"name" = sector["name"],
 	)
 
 /obj/machinery/computer/refraction_loadout/ui_act(action, list/params)

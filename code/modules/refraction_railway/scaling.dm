@@ -9,9 +9,10 @@
  * controller; this file does not duplicate it.
  */
 
-#define REFRACTION_HP_PER_EXTRA_PLAYER    0.20
-#define REFRACTION_DMG_PER_EXTRA_PLAYER   0.10
-#define REFRACTION_STOCK_PER_EXTRA_PLAYER 0.20
+#define REFRACTION_HP_PER_EXTRA_PLAYER         0.20
+#define REFRACTION_DMG_PER_EXTRA_PLAYER        0.10
+#define REFRACTION_STOCK_PER_EXTRA_PLAYER      0.20
+#define REFRACTION_CONCURRENT_PER_EXTRA_PLAYER 0.20
 
 /// Returns the HP multiplier for a given lobby size (n >= 1).
 /proc/refraction_hp_mult(num_players)
@@ -25,6 +26,13 @@
 /// Authored stock (1-player baseline) is multiplied by this at activation.
 /proc/refraction_stock_mult(num_players)
 	return 1 + REFRACTION_STOCK_PER_EXTRA_PLAYER * max(0, num_players - 1)
+
+/// Returns the concurrent-cap multiplier for a given lobby size. Mirrors the
+/// stock multiplier so authored `concurrent_max` reflects the 1-player
+/// baseline; larger lobbies see proportionally more mobs at once. Bosses
+/// skip this (see wave_system.dm) so their authored cap is honored exactly.
+/proc/refraction_concurrent_mult(num_players)
+	return 1 + REFRACTION_CONCURRENT_PER_EXTRA_PLAYER * max(0, num_players - 1)
 
 /// Scales the given hostile mob's HP and melee damage by the lobby-size multipliers.
 /// Ability damage and other custom hooks are out of scope for this helper.

@@ -1,6 +1,7 @@
 import { useBackend, useLocalState } from '../backend';
 import { Box, Button, Section, Stack } from '../components';
 import { Window } from '../layouts';
+import { MobCard, MobModal } from './RefractionMobCards';
 
 const NODE_COLORS = {
   start: '#4ade80',
@@ -11,16 +12,180 @@ const NODE_COLORS = {
 };
 
 const formatTime = ds => {
-  if (ds == null) return '--:--';
+  if (ds === null || ds === undefined) return '--:--';
   const totalSeconds = ds / 10;
   const minutes = Math.floor(totalSeconds / 60);
   const seconds = (totalSeconds - minutes * 60).toFixed(1);
   return `${minutes}:${seconds.padStart(4, '0')}`;
 };
 
+// Returns the Nth combat-or-boss node from the line's `combat_nodes`
+// payload (1-based). Subway-map authors place combat/boss circles in the
+// same order as their AddNode() calls, so a click on the Nth combat-style
+// circle on the map maps cleanly to combat_nodes[N - 1].
+const combatNodeForMapIndex = (line, combatIndex) => {
+  if (!line || !line.combat_nodes) return null;
+  return line.combat_nodes[combatIndex - 1] || null;
+};
+
+const RecordSectorBreakdown = props => {
+  const { sectors } = props;
+  const list = sectors || [];
+  if (!list.length) {
+    return (
+      <Box mt={0.5} color="label" fontSize="11px">
+        No per-sector data recorded for this run.
+      </Box>
+    );
+  }
+  return (
+    <Box mt={0.5}>
+      {list.map(sector => (
+        <Box
+          key={sector.index}
+          p={0.5}
+          mb={0.5}
+          backgroundColor="rgba(255, 255, 255, 0.06)"
+          style={{ 'border-radius': '4px' }}>
+          <Stack>
+            <Stack.Item grow={1} bold>
+              {`Sector ${sector.index}`}
+            </Stack.Item>
+            <Stack.Item color="good">
+              {formatTime(sector.time_ds)}
+            </Stack.Item>
+          </Stack>
+          {(sector.players || []).map(p => (
+            <Box key={p.ckey} mt={0.5}>
+              <Stack>
+                <Stack.Item grow={1} fontSize="11px">
+                  {p.name || p.ckey}
+                </Stack.Item>
+                <Stack.Item>
+                  <Stack>
+                    {(p.loadout_icons || [null, null, null]).map(
+                      (icon, i) => (
+                        <Stack.Item key={i}>
+                          {icon ? (
+                            <img
+                              src={`data:image/jpeg;base64,${icon}`}
+                              style={{
+                                'height': '24px',
+                                'image-rendering': 'pixelated',
+                              }}
+                            />
+                          ) : (
+                            <Box
+                              width="24px"
+                              height="24px"
+                              backgroundColor="rgba(255, 255, 255, 0.05)"
+                              textAlign="center"
+                              color="label"
+                              fontSize="9px">
+                              ?
+                            </Box>
+                          )}
+                        </Stack.Item>
+                      ))}
+                  </Stack>
+                </Stack.Item>
+              </Stack>
+            </Box>
+          ))}
+        </Box>
+      ))}
+    </Box>
+  );
+};
+
 export const RecordsModal = (props, context) => {
   const { lineId, lineName, leaderboard, onClose } = props;
   const rows = leaderboard || [];
+  const [expandedIdx, setExpandedIdx] = useLocalState(
+    context,
+    'recordsExpanded',
+    null
+  );
+  return (
+    <Box
+      position="fixed"
+      top={0}
+      left={0}
+      right={0}
+      bottom={0}
+      backgroundColor="rgba(0, 0, 0, 0.75)"
+      style={{ 'z-index': 50 }}
+      onClick={onClose}>
+      <Box
+        position="fixed"
+        top="20px"
+        left="50%"
+        width="680px"
+        style={{
+          'transform': 'translate(-50%, 0)',
+          'max-height': 'calc(100vh - 40px)',
+        }}
+        onClick={e => e.stopPropagation()}>
+        <Section
+          title={`Records: ${lineName || lineId}`}
+          buttons={
+            <Button icon="times" content="Close" onClick={onClose} />
+          }
+          scrollable
+          style={{ 'max-height': 'calc(100vh - 40px)' }}>
+          {rows.length === 0 && (
+            <Box color="label">No records yet for this line.</Box>
+          )}
+          {rows.map((row, i) => {
+            const isOpen = expandedIdx === i;
+            return (
+              <Box
+                key={i}
+                p={1}
+                mb={0.5}
+                backgroundColor="rgba(255, 255, 255, 0.04)"
+                style={{ 'border-radius': '4px' }}>
+                <Stack>
+                  <Stack.Item width="32px" bold>
+                    #{i + 1}
+                  </Stack.Item>
+                  <Stack.Item width="80px" color="good" bold>
+                    {formatTime(row.time_ds)}
+                  </Stack.Item>
+                  <Stack.Item grow={1}>
+                    <Box bold>{row.ckey || row.name || '???'}</Box>
+                    <Box color="label">
+                      {(row.members || []).join(', ')}
+                    </Box>
+                  </Stack.Item>
+                  <Stack.Item>
+                    <Button
+                      icon={isOpen ? 'chevron-up' : 'chevron-down'}
+                      content={isOpen ? 'Collapse' : 'Per-sector'}
+                      onClick={() => setExpandedIdx(isOpen ? null : i)}
+                    />
+                  </Stack.Item>
+                </Stack>
+                {isOpen && (
+                  <RecordSectorBreakdown sectors={row.sectors} />
+                )}
+              </Box>
+            );
+          })}
+        </Section>
+      </Box>
+    </Box>
+  );
+};
+
+// Modal panel that shows every mob in a single combat / boss node, using
+// the shared MobCard component. Click a card to drill into the full
+// datasheet (or silhouette if the player hasn't fought it yet).
+const NodeMobsModal = (props, context) => {
+  const { node, onClose } = props;
+  const [modalMob, setModalMob] = useLocalState(
+    context, 'nodeModalMob', null);
+  if (!node) return null;
   return (
     <Box
       position="absolute"
@@ -29,42 +194,35 @@ export const RecordsModal = (props, context) => {
       right={0}
       bottom={0}
       backgroundColor="rgba(0, 0, 0, 0.75)"
-      style={{ 'z-index': 50 }}>
+      style={{ 'z-index': 40 }}
+      onClick={onClose}>
       <Box
         position="absolute"
         top="50%"
         left="50%"
         width="640px"
-        style={{ transform: 'translate(-50%, -50%)' }}>
+        style={{ transform: 'translate(-50%, -50%)' }}
+        onClick={e => e.stopPropagation()}>
         <Section
-          title={`Records: ${lineName || lineId}`}
-          buttons={<Button icon="times" onClick={onClose} />}>
-          {rows.length === 0 && (
-            <Box color="label">No records yet for this line.</Box>
+          title={node.name + (node.is_boss ? ' (Boss)' : '')}
+          buttons={<Button icon="times" onClick={() => {
+            setModalMob(null);
+            onClose();
+          }} />}>
+          {node.description && (
+            <Box mb={1} color="label">{node.description}</Box>
           )}
-          {rows.map((row, i) => (
-            <Box
-              key={i}
-              p={1}
-              mb={0.5}
-              backgroundColor="rgba(255, 255, 255, 0.04)">
-              <Stack>
-                <Stack.Item width="32px" bold>
-                  #{i + 1}
-                </Stack.Item>
-                <Stack.Item width="80px" color="good" bold>
-                  {formatTime(row.time_ds)}
-                </Stack.Item>
-                <Stack.Item grow={1}>
-                  <Box bold>{row.ckey || row.name || '???'}</Box>
-                  <Box color="label">
-                    {(row.members || []).join(', ')}
-                  </Box>
-                </Stack.Item>
-              </Stack>
-            </Box>
-          ))}
+          <Stack wrap>
+            {(node.mobs || []).map((mob, j) => (
+              <Stack.Item key={j}>
+                <MobCard mob={mob} onClick={() => setModalMob(mob)} />
+              </Stack.Item>
+            ))}
+          </Stack>
         </Section>
+        {modalMob && (
+          <MobModal mob={modalMob} onClose={() => setModalMob(null)} />
+        )}
       </Box>
     </Box>
   );
@@ -131,7 +289,7 @@ const Edge = props => {
 };
 
 const RailwayMap = props => {
-  const { line, selected, onSelect } = props;
+  const { line, onCombatNodeClick } = props;
   if (!line) return null;
   const vb = line.map_viewbox || { w: 600, h: 360 };
   const nodes = line.nodes || [];
@@ -142,6 +300,9 @@ const RailwayMap = props => {
   const tierAnchor = startNode
     ? { x: startNode.x + tierOffset.x, y: startNode.y + tierOffset.y }
     : null;
+  // Track combat/boss circles in render order so a click maps cleanly back
+  // to the Nth combat node in the line's combat_nodes payload.
+  let combatIndex = 0;
   return (
     <svg
       viewBox={`0 0 ${vb.w} ${vb.h}`}
@@ -162,19 +323,23 @@ const RailwayMap = props => {
       {nodes.map((node, i) => {
         const radius = node.radius || 14;
         const fill = NODE_COLORS[node.kind] || line.display_color;
-        const isSelected = selected;
+        const isClickable = node.kind === 'combat' || node.kind === 'boss';
+        const myCombatIndex = isClickable ? ++combatIndex : 0;
+        const handleClick = isClickable && onCombatNodeClick
+          ? () => onCombatNodeClick(myCombatIndex)
+          : null;
         return (
           <g
             key={i}
-            style={{ cursor: 'pointer' }}
-            onClick={() => onSelect && onSelect(line.id)}>
+            style={{ cursor: handleClick ? 'pointer' : 'default' }}
+            onClick={handleClick || undefined}>
             <circle
               cx={node.x}
               cy={node.y}
-              r={radius + (isSelected ? 4 : 0)}
+              r={radius}
               fill="#0a0e1f"
               stroke={fill}
-              strokeWidth={isSelected ? 4 : 2}
+              strokeWidth={2}
             />
             <circle cx={node.x} cy={node.y} r={radius - 5} fill={fill} />
           </g>
@@ -206,37 +371,90 @@ const RailwayMap = props => {
   );
 };
 
+const CompensationsPanel = props => {
+  const { compensations } = props;
+  if (!compensations || !compensations.length) return null;
+  return (
+    <Section title="Party Scaling Effects">
+      <Box color="label" fontSize="10px" mb={0.5}>
+        How encounters scale with lobby size. Most effects scale UP for
+        larger parties; pens compensate smaller parties.
+      </Box>
+      <Box
+        maxHeight="140px"
+        style={{ 'overflow-y': 'auto' }}>
+        {compensations.map((c, i) => (
+          <Box
+            key={i}
+            p={0.5}
+            mb={0.25}
+            style={{ 'border-radius': '3px' }}
+            backgroundColor={
+              c.enabled
+                ? 'rgba(34, 197, 94, 0.08)'
+                : 'rgba(120, 120, 120, 0.08)'
+            }>
+            <Stack>
+              <Stack.Item
+                width="14px"
+                color={c.enabled ? 'good' : 'bad'}
+                bold>
+                {c.enabled ? '✓' : '✗'}
+              </Stack.Item>
+              <Stack.Item grow={1}>
+                <Box bold fontSize="11px">{c.name}</Box>
+                <Box color="label" fontSize="10px">
+                  {c.description}
+                </Box>
+              </Stack.Item>
+            </Stack>
+          </Box>
+        ))}
+      </Box>
+    </Section>
+  );
+};
+
 const LineSidebar = (props, context) => {
   const { act } = useBackend(context);
-  const { lines, selectedId, onSelect, myRun, openLobbies } = props;
+  const {
+    lines, selectedId, onSelect, myRun, openLobbies, compensations,
+  } = props;
   return (
     <Stack vertical>
       <Stack.Item>
         <Section title="Lines">
-          {(lines || []).map(line => {
-            const isSelected = line.id === selectedId;
-            return (
-              <Box
-                key={line.id}
-                p={1}
-                mb={0.5}
-                backgroundColor={
-                  isSelected
-                    ? 'rgba(27, 124, 237, 0.25)'
-                    : 'rgba(255, 255, 255, 0.04)'
-                }
-                style={{ cursor: 'pointer', 'border-radius': '4px' }}
-                onClick={() => onSelect(line.id)}>
-                <Box bold style={{ color: line.display_color }}>
-                  {line.name}
+          <Box
+            maxHeight="180px"
+            style={{ 'overflow-y': 'auto' }}>
+            {(lines || []).map(line => {
+              const isSelected = line.id === selectedId;
+              return (
+                <Box
+                  key={line.id}
+                  p={1}
+                  mb={0.5}
+                  backgroundColor={
+                    isSelected
+                      ? 'rgba(27, 124, 237, 0.25)'
+                      : 'rgba(255, 255, 255, 0.04)'
+                  }
+                  style={{ cursor: 'pointer', 'border-radius': '4px' }}
+                  onClick={() => onSelect(line.id)}>
+                  <Box bold style={{ color: line.display_color }}>
+                    {line.name}
+                  </Box>
+                  <Box color="label" fontSize="11px">
+                    {line.description}
+                  </Box>
                 </Box>
-                <Box color="label" fontSize="11px">
-                  {line.description}
-                </Box>
-              </Box>
-            );
-          })}
+              );
+            })}
+          </Box>
         </Section>
+      </Stack.Item>
+      <Stack.Item>
+        <CompensationsPanel compensations={compensations} />
       </Stack.Item>
       <Stack.Item grow={1}>
         <LobbyPanel
@@ -253,8 +471,22 @@ const LineSidebar = (props, context) => {
 const LobbyPanel = props => {
   const { selectedId, myRun, openLobbies, act } = props;
   if (myRun) {
+    const isStarting = myRun.lobby_state === 'lobby_starting';
     return (
       <Section title={`Lobby: ${myRun.line_id}`}>
+        {isStarting && (
+          <Box
+            p={1}
+            mb={1}
+            backgroundColor="rgba(251, 191, 36, 0.12)"
+            color="average">
+            <Box bold>Loading new Z-level…</Box>
+            <Box fontSize="11px">
+              The line&apos;s map is being built. Lobby actions are paused until
+              the load finishes.
+            </Box>
+          </Box>
+        )}
         <Box mb={1}>
           {(myRun.member_ckeys || []).map(ckey => (
             <Box key={ckey} p={0.5}>
@@ -268,6 +500,10 @@ const LobbyPanel = props => {
                     <Button
                       icon="times"
                       color="bad"
+                      disabled={isStarting}
+                      tooltip={isStarting
+                        ? 'Locked while the new Z-level is loading.'
+                        : null}
                       onClick={() => act('kick_member', { ckey })}
                     />
                   </Stack.Item>
@@ -286,11 +522,26 @@ const LobbyPanel = props => {
             onClick={() => act('start_run')}
           />
         )}
+        {isStarting && (
+          <Button
+            fluid
+            color="good"
+            icon="hourglass-half"
+            content="Loading Z-level…"
+            disabled
+            tooltip={'A new Z-level is being assembled for this lobby.'
+              + ' Start is locked until it finishes.'}
+          />
+        )}
         <Button
           fluid
           mt={0.5}
           icon="sign-out-alt"
           content="Leave"
+          disabled={isStarting}
+          tooltip={isStarting
+            ? 'You can\'t leave while the new Z-level is loading.'
+            : null}
           onClick={() => act('leave_lobby')}
         />
       </Section>
@@ -331,8 +582,7 @@ const LobbyPanel = props => {
                   content="Join"
                   disabled={l.member_count >= l.max_lobby_size}
                   onClick={() =>
-                    act('join_lobby', { run_uid: l.run_uid })
-                  }
+                    act('join_lobby', { run_uid: l.run_uid })}
                 />
               </Stack.Item>
             </Stack>
@@ -359,6 +609,11 @@ export const RefractionRailway = (props, context) => {
     'recordsLineId',
     null
   );
+  const [previewNode, setPreviewNode] = useLocalState(
+    context,
+    'previewNode',
+    null
+  );
   const selectedLine = lines.find(l => l.id === selectedId) || null;
   const recordsLine = lines.find(l => l.id === recordsLineId);
   return (
@@ -369,9 +624,13 @@ export const RefractionRailway = (props, context) => {
             <LineSidebar
               lines={lines}
               selectedId={selectedId}
-              onSelect={setSelectedId}
+              onSelect={id => {
+                setSelectedId(id);
+                setPreviewNode(null);
+              }}
               myRun={myRun}
               openLobbies={openLobbies}
+              compensations={data.compensations}
             />
           </Stack.Item>
           <Stack.Item grow={1}>
@@ -382,19 +641,17 @@ export const RefractionRailway = (props, context) => {
                   ? selectedLine.name
                   : '“What Line will you travel?”'
               }
-              buttons={
-                selectedLine && (
-                  <Button
-                    icon="trophy"
-                    content="Records"
-                    onClick={() => setRecordsLineId(selectedLine.id)}
-                  />
-                )
-              }>
+              buttons={selectedLine && (
+                <Button
+                  icon="trophy"
+                  content="Records"
+                  onClick={() => setRecordsLineId(selectedLine.id)}
+                />
+              )}>
               <RailwayMap
                 line={selectedLine}
-                selected
-                onSelect={setSelectedId}
+                onCombatNodeClick={i => setPreviewNode(
+                  combatNodeForMapIndex(selectedLine, i))}
               />
             </Section>
           </Stack.Item>
@@ -405,6 +662,12 @@ export const RefractionRailway = (props, context) => {
             lineName={recordsLine.name}
             leaderboard={leaderboards[recordsLine.id]}
             onClose={() => setRecordsLineId(null)}
+          />
+        )}
+        {previewNode && (
+          <NodeMobsModal
+            node={previewNode}
+            onClose={() => setPreviewNode(null)}
           />
         )}
       </Window.Content>

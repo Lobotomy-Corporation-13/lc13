@@ -11,6 +11,11 @@
  */
 
 #define LOBBY_OPEN     "lobby_open"
+/// Set the moment the owner clicks Start; cleared when the lane finishes
+/// loading (then transitions to LOBBY_RUNNING) or when the load fails (then
+/// reverts to LOBBY_OPEN). While in this state, all join/leave/start/kick
+/// actions on the lobby are refused so the team can't mutate mid-load.
+#define LOBBY_STARTING "lobby_starting"
 #define LOBBY_RUNNING  "lobby_running"
 #define LOBBY_FINISHED "lobby_finished"
 
@@ -35,16 +40,60 @@ SUBSYSTEM_DEF(refraction_railway)
 	var/list/mob_stats_cache = list()
 	/// mob_type (path) -> short author-written tip string. Hardcoded at init.
 	var/list/mob_tips = list()
+	/// mob_type (path) -> list(passive_entry, ...). Each passive entry is an
+	/// assoc list with "title", "severity", "text". Aggregated at init from
+	/// every registered line's GetMobPassives() override (see
+	/// lines/<line>/passives.dm files for authored content).
+	var/list/mob_passives = list()
+	/// mob_type (path) -> list(attack_entry, ...). Each attack entry is an
+	/// assoc list with "name", "damage", "cooldown", "desc". Aggregated at
+	/// init from every registered line's GetMobAttacks() override (see
+	/// lines/<line>/attacks.dm files for authored content).
+	var/list/mob_attacks = list()
 	/// One entry per loaded line dmm. Each entry:
 	///   list("map_path" = str, "z" = int, "claimed_by" = /datum/refraction_run or null)
 	/// A new lobby reuses the first free entry whose map_path matches; otherwise
 	/// a new z is loaded and a new entry appended. BYOND has no clean unload-z
 	/// primitive, so entries persist for the round once created.
 	var/list/loaded_lanes = list()
+	/// VV-toggleable debug flag. When TRUE, every mob is treated as encountered
+	/// for every player — useful for previewing all mob cards on the hub /
+	/// briefing UIs without grinding the line. Persistence is unaffected; this
+	/// is purely a render override on top of the encountered_mobs set.
+	var/debug_reveal_all = FALSE
+	// ---------- Party-size compensation toggles ----------
+	// All TRUE by default; flip individual flags to disable that particular
+	// scaling without rebuilding. Effects are checked at the spawn / room
+	// activation hot path; toggles take effect on the NEXT activation /
+	// spawn batch, not retroactively on already-spawned mobs.
+	/// Per-mob-type stock multiplier (refraction_stock_mult). When OFF,
+	/// authored mob_stock counts are used as-is regardless of party size.
+	var/scale_stock = TRUE
+	/// Concurrent-alive cap multiplier (refraction_concurrent_mult). When
+	/// OFF, authored node.concurrent_max is used as-is.
+	var/scale_concurrent = TRUE
+	/// Per-cycle spawn batch = num_players. When OFF, exactly 1 mob spawns
+	/// per cooldown cycle regardless of party size.
+	var/scale_spawn_batch = TRUE
+	/// Non-boss per-mob HP / damage scaling (refraction_scale_hostile,
+	/// +20% HP / +10% damage per extra player). When OFF, regular wave
+	/// mobs spawn with authored stats regardless of party size.
+	var/scale_wave_stats = TRUE
+	/// Boss per-mob HP scaling (raw HP × num_players). Boss damage is
+	/// always left at authored values — there is no "scale boss damage"
+	/// flag because the design intent is that bosses get tankier with
+	/// more players but never deadlier. When OFF, bosses spawn with
+	/// authored HP regardless of party size.
+	var/scale_boss_stats = TRUE
+	/// Compensation medipens (mental + salacid) given to smaller parties
+	/// at the start of every sector. When OFF, no pens are issued.
+	var/give_compensation_pens = TRUE
 
 /datum/controller/subsystem/refraction_railway/Initialize()
 	InitializeLines()
 	InitializeMobTips()
+	InitializeMobPassives()
+	InitializeMobAttacks()
 	// SSpersistence (-2) is fully initialized by the time we run (-71), so we
 	// can pull saved leaderboards + encounter sets directly here.
 	SSpersistence.LoadRefractionLeaderboards()
@@ -66,6 +115,45 @@ SUBSYSTEM_DEF(refraction_railway)
 /datum/controller/subsystem/refraction_railway/proc/InitializeMobTips()
 	// path -> tip string. Add entries as lines are authored.
 	mob_tips = list()
+
+/// Walks every registered line and merges its `GetMobPassives()` return
+/// into mob_passives. First registration wins on collision; the loser is
+/// dropped with a stack_trace naming both the duplicate-attempting line
+/// and the line that originally registered the mob path.
+/datum/controller/subsystem/refraction_railway/proc/InitializeMobPassives()
+	mob_passives = list()
+	var/list/owners = list()  // mob_path -> line.id, used for the warning text
+	for(var/id in lines)
+		var/datum/refraction_line/L = lines[id]
+		var/list/contributions = L.GetMobPassives()
+		if(!islist(contributions))
+			continue
+		for(var/mob_path in contributions)
+			if(mob_passives[mob_path])
+				stack_trace("Refraction passive collision: line '[L.id]' tried to register \
+					passives for [mob_path], but line '[owners[mob_path]]' already owns it. \
+					Ignoring the duplicate.")
+				continue
+			mob_passives[mob_path] = contributions[mob_path]
+			owners[mob_path] = L.id
+
+/// Mirrors InitializeMobPassives, walking every line's GetMobAttacks().
+/datum/controller/subsystem/refraction_railway/proc/InitializeMobAttacks()
+	mob_attacks = list()
+	var/list/owners = list()
+	for(var/id in lines)
+		var/datum/refraction_line/L = lines[id]
+		var/list/contributions = L.GetMobAttacks()
+		if(!islist(contributions))
+			continue
+		for(var/mob_path in contributions)
+			if(mob_attacks[mob_path])
+				stack_trace("Refraction attack collision: line '[L.id]' tried to register \
+					attacks for [mob_path], but line '[owners[mob_path]]' already owns it. \
+					Ignoring the duplicate.")
+				continue
+			mob_attacks[mob_path] = contributions[mob_path]
+			owners[mob_path] = L.id
 
 /datum/controller/subsystem/refraction_railway/fire(resumed = FALSE)
 	for(var/datum/refraction_run/R as anything in active_runs)
@@ -210,6 +298,54 @@ SUBSYSTEM_DEF(refraction_railway)
 		board.Cut(11)
 	leaderboards[line_id] = board
 
+/// Returns TRUE if `mob_path` should be shown as revealed (full datasheet)
+/// for this ckey. Driven by the per-ckey encountered_mobs set, with an
+/// override from `debug_reveal_all` for development convenience.
+/datum/controller/subsystem/refraction_railway/proc/IsMobRevealed(ckey, mob_path)
+	if(debug_reveal_all)
+		return TRUE
+	if(!ckey)
+		return FALSE
+	var/list/seen = encountered_mobs[ckey]
+	return islist(seen) && (mob_path in seen)
+
+/// Single source of truth for the mob-card payload shape used by both the
+/// hub subway-map preview and the in-run briefing display. Returns the full
+/// extracted stats + tip if revealed, or a silhouette payload (icon, dealt
+/// damage type, derived weakness, optional ranged dmg type) if not.
+/datum/controller/subsystem/refraction_railway/proc/BuildMobCardPayload(ckey, mob_path)
+	var/list/stats = GetMobStats(mob_path)
+	if(!islist(stats))
+		return list(
+			"path"     = "[mob_path]",
+			"revealed" = FALSE,
+			"missing"  = TRUE,
+		)
+	if(IsMobRevealed(ckey, mob_path))
+		var/list/payload = stats.Copy()
+		payload["path"] = "[mob_path]"
+		payload["revealed"] = TRUE
+		var/tip = mob_tips[mob_path]
+		if(tip)
+			payload["tip"] = tip
+		var/list/attacks = mob_attacks[mob_path]
+		if(islist(attacks) && length(attacks))
+			payload["attacks"] = attacks
+		var/list/passives = mob_passives[mob_path]
+		if(islist(passives) && length(passives))
+			payload["passives"] = passives
+		return payload
+	var/list/payload = list(
+		"path"              = "[mob_path]",
+		"revealed"          = FALSE,
+		"icon"              = stats["icon"],
+		"melee_damage_type" = stats["melee_damage_type"],
+		"weakness"          = DerivedDamageWeakness(stats["resistances"]),
+	)
+	if(stats["is_ranged"])
+		payload["ranged_damage_type"] = stats["ranged_damage_type"]
+	return payload
+
 /// Marks the given mob types as encountered for every live ckey in the list.
 /datum/controller/subsystem/refraction_railway/proc/MarkEncountered(list/ckeys, list/mob_types)
 	if(!islist(ckeys) || !islist(mob_types))
@@ -272,9 +408,9 @@ SUBSYSTEM_DEF(refraction_railway)
 		return
 
 /// Builds one refraction_wave_controller per /datum/refraction_node defined
-/// on the run's line, then binds every /obj/effect/landmark/refraction/spawn
-/// on the run's z whose `landmark_id` matches the node's `landmark_id` as a
-/// spawn point. The controller's id is namespaced
+/// on the run's line, then binds every /obj/effect/landmark/refraction/spawner
+/// on the run's z whose `id` matches the node's `landmark_id` as a spawn
+/// point. The controller's id is namespaced
 /// "refraction_<run_uid>_<node.id>" so concurrent runs don't collide.
 /datum/controller/subsystem/refraction_railway/proc/RestampWaveLandmarks(datum/refraction_run/run)
 	if(!istype(run) || !run.loaded_z)
@@ -292,10 +428,10 @@ SUBSYSTEM_DEF(refraction_railway)
 		C.run_uid = run_uid
 		C.room_id = N.id
 		C.node = N
-		for(var/obj/effect/landmark/refraction/spawn/L in GLOB.landmarks_list)
+		for(var/obj/effect/landmark/refraction/spawner/L in GLOB.landmarks_list)
 			if(L.z != run.loaded_z)
 				continue
-			if(L.landmark_id != N.landmark_id)
+			if(L.id != N.landmark_id)
 				continue
 			C.RegisterLandmark(L)
 
@@ -321,7 +457,25 @@ SUBSYSTEM_DEF(refraction_railway)
 /datum/controller/subsystem/refraction_railway/proc/LoadLineZ(datum/refraction_line/line)
 	if(!line || !line.map_path)
 		return 0
+	// Defensive: SSatoms.initialized_changed can be left stuck >0 by some
+	// other system in the round. When non-zero, build_coordinate's call to
+	// set_tracked_initalized(INSSATOMS) silently no-ops, so SSatoms.initialized
+	// stays at INNEW_REGULAR during our load. Atoms then init via the
+	// immediate path inside /atom/New (atoms.dm:170-173) instead of being
+	// deferred to initTemplateBounds, which corrupts the dmm load and drops
+	// chunks of tiles. Snapshot+reset around the load so we always run with
+	// a clean counter, then restore the leaked value so we don't perturb
+	// whatever else is using it.
+	var/saved_changed = SSatoms.initialized_changed
+	var/saved_initialized = SSatoms.initialized
+	if(saved_changed != 0)
+		log_world("SSrefraction_railway: SSatoms.initialized_changed=[saved_changed] before load — resetting for safe maploading.")
+		SSatoms.initialized_changed = 0
+		SSatoms.initialized = INITIALIZATION_INNEW_REGULAR
 	var/datum/map_template/template = new(line.map_path, line.id)
 	var/datum/space_level/level = template.load_new_z()
+	if(saved_changed != 0)
+		SSatoms.initialized_changed = saved_changed
+		SSatoms.initialized = saved_initialized
 	return level?.z_value || 0
 

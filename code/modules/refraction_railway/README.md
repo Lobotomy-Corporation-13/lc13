@@ -47,12 +47,11 @@ A new `SSrefraction_railway` subsystem owns active runs, line definitions, and l
   - Procs: `AddMember`, `RemoveMember`, `StartRun`, `BuildEligibleEgoLists`, `ApplyLoadout`, `OnRoomCleared`, `OnSectionCleared`, `AdvanceRoom`, `BeginSector`, `OnMemberDeath`, `OnRunComplete`, `Cleanup`, `ApplyAttributeOverride`, `RestoreAttributes`, `ReequipLoadout`, `ScalePower(num_players)`.
   - Hooks `COMSIG_MOB_DEATH` for tracked members and `COMSIG_PARENT_QDELETING` for cleanup.
 - `code/modules/refraction_railway/landmarks.dm`
-  - `/obj/effect/landmark/refraction/player_spawn` — `room_id`, `section_id` vars.
-  - `/obj/effect/landmark/refraction/section_end` — flags end of a section; teleports party to the line's checkpoint area and pauses the timer.
-  - `/obj/effect/landmark/refraction/checkpoint_spawn` — destination inside the line's checkpoint area (authored as part of each line's dmm; shared between sectors of that line).
-  - `/obj/effect/landmark/refraction/finish` — final landmark; ends the run, records the score.
+  - `/obj/effect/landmark/refraction/start_point` — `id` var (room id). The run datum forceMoves live members onto these when entering a node.
+  - `/obj/effect/landmark/refraction/checkpoint_spawn` — arrival point inside the line's checkpoint area (authored as part of each line's dmm; shared between sectors of that line).
+  - **No section-end or finish landmarks.** Section/run completion is automatic: when a node's controller fires `RoomCleared` and `AdvanceRoom` finds no next room in the sector, `OnSectionCleared` runs. If it was the final sector, `OnRunComplete` records the leaderboard entry and shows the per-sector + total time to every member.
 - `code/modules/refraction_railway/wave_system.dm`
-  - `/obj/effect/landmark/refraction/spawn` — **passive position marker** with a single `landmark_id` var. Authors drop one or many of these in the dmm; every landmark whose `landmark_id` matches a node datum's `landmark_id` becomes a valid spawn point for that node.
+  - `/obj/effect/landmark/refraction/spawner` — **passive position marker** with a single `id` var. Authors drop one or many of these in the dmm; every landmark whose `id` matches a node datum's `landmark_id` becomes a valid spawn point for that node.
   - `/datum/refraction_wave_controller` — owns all spawn state and logic. One per node, created by `SSrefraction_railway.RestampWaveLandmarks` after the dmm loads. Holds `current_stock` (live, scaled), `living_mobs`, `current_alive`, picks types via `pickweight`, picks landmarks at random from its bound list, and fires `OnRoomCleared` when the room is empty. There is **no** boss landmark subtype — `is_boss` lives on the node datum and changes scaling/cap defaults.
 - `code/modules/refraction_railway/console.dm`
   - `/obj/machinery/computer/refraction_railway_console` — the line selector. `attack_ghost()` spawns a body if needed (testrange-style flow, factored into a small helper); `ui_interact()` opens the subway-map UI. `ui_act()` handles `select_line`, `create_lobby`, `join_lobby`, `leave_lobby`, `start_run`, `view_leaderboard`.
@@ -75,10 +74,10 @@ A new `SSrefraction_railway` subsystem owns active runs, line definitions, and l
 ### Maps (`.dmm`)
 
 - `_maps/refraction_railway/line_1_template.dmm` — placeholder line with 2 sections of 2 rooms each AND its own checkpoint / staging area. The checkpoint area is part of the line dmm itself, not a separate file. Includes:
-  - `player_spawn` landmarks per combat room (each set to that room's `room_id`)
-  - `/obj/effect/landmark/refraction/spawn` landmarks (one or many per node) with `landmark_id` matching the corresponding node datum's `landmark_id`
-  - `section_end` landmarks at the exit tile of each room (so crossing one ends the section)
+  - `start_point` landmarks per combat room (each set to that room's `id`)
+  - `/obj/effect/landmark/refraction/spawner` landmarks (one or many per node) with `id` matching the corresponding node datum's `landmark_id`
   - The boss room is just another node with `is_boss = TRUE` on the node datum — no special landmark subtype.
+  - **No section-end or finish landmarks.** Sectors and runs end automatically when the last node's mobs are all dead.
   - **Checkpoint area** (anywhere on the same z; reachable only via teleport) containing:
     - 4–6 `/obj/effect/landmark/refraction/checkpoint_spawn` turfs (player arrival points, spread out so the team doesn't pile on one tile).
     - 1 `/obj/structure/refraction_briefing` (wall display showing the upcoming sector).
@@ -108,8 +107,8 @@ A new `SSrefraction_railway` subsystem owns active runs, line definitions, and l
    - On wave clear (handled by `/datum/wave_controller/proc/CompleteWaves`), the run datum's `OnRoomCleared` fires.
    - `addtimer(CALLBACK(src, PROC_REF(AdvanceRoom)), 5 SECONDS)`. The timer keeps ticking during this delay.
    - `AdvanceRoom`: re-equip any missing weapons/armor on every member (compare current inventory to stored loadout, instantiate + equip what's missing), `forceMove` everyone to the next room's spawn landmark, activate the next room's wave controller.
-7. **Section end**: `forceMove` everyone to a `checkpoint_spawn` landmark in the checkpoint room. Pause the timer (`timer_paused = TRUE` once *all* live members are in the checkpoint room), full heal (HP + sanity), update each member's `last_checkpoint`, reset every member's `ready` flag, and update the briefing console to display the *next* sector. Players re-enter the staging flow from step 5; the owner clicks "Begin Sector N+1" when the team is ready.
-8. **Final section cleared**: stop the timer, record `{ckey list, loadouts, elapsed_deciseconds, line.id}` to the leaderboard, restore each member's original attributes, `forceMove` everyone back to the railway hub.
+7. **Section end (automatic)**: when `OnRoomCleared` fires for the *last* node of a sector, `AdvanceRoom` finds no next room and dispatches `OnSectionCleared`. That snapshots cumulative `ElapsedDeciseconds()` into `sector_finish_times`, then calls `EnterCheckpoint` — `forceMove` everyone to a `checkpoint_spawn`, `PauseTimer()` (folds the running interval into `elapsed_baseline`), full heal, update each member's `last_checkpoint`, reset `ready` flags, briefing now shows the *next* sector. Players re-enter the staging flow; owner clicks "Begin Sector N+1".
+8. **Final section cleared (automatic)**: same `OnSectionCleared` path, but since `section_id == line.section_count`, it calls `OnRunComplete` instead of `EnterCheckpoint`. That records `{ckey list, loadouts, total time_ds, line.id}` to the leaderboard, fires `ShowFinalResults` (per-sector + total time chat message to every member), restores each member's original attributes, and `forceMove`s everyone back to the railway hub.
 
 ### Checkpoint room (pre-sector staging)
 
@@ -229,10 +228,11 @@ The loadout console's `ui_static_data()` reads from these cached lists, so its c
 - **UI layout**: tabs for Weapons (must select 2) and Armor (must select 1), reusing `TestRangeEgoPrinter.js`'s threat / origin / tag filter UI. Three slot indicators at the top show what's currently picked. A header panel re-surfaces the briefing's faction / damage hints so players don't have to walk back to the briefing display while picking gear.
 - **Per-slot edits**: the UI lets players change a single slot at a time without re-confirming all three. The `confirm_loadout` action takes whichever subset changed.
 - **Confirm flow** (run datum's `ApplyLoadout(ckey, weapons, armor)`):
-  1. Strip the player's current E.G.O. items by typecache (`/obj/item/ego_weapon`, `/obj/item/clothing/suit/armor/ego_gear`) and `qdel` them. (Items dropped on the floor are unaffected — only equipped/held E.G.O. is touched.)
-  2. Spawn the chosen items at the player and force-equip them via the no-delay path used by the existing purchase consoles.
-  3. Update `loadouts[ckey]` so `ReequipLoadout` (used between rooms during combat) knows the new authoritative set.
-- **Re-pick is free**: a player can re-confirm at any time while in the checkpoint — even repeatedly — without penalty. The strip-and-spawn flow ensures no inventory accumulation.
+  1. `StripMemberGear(ckey)` — qdels every item ref recorded in `gear_refs[ckey]` regardless of where it ended up (floor, another mob's pocket, a backpack on the ground), then sweeps `H.contents` for any pre-existing ego gear (catches stuff brought from outside the railway).
+  2. Spawn the chosen items at the player. Weapons go via `put_in_hands`. Armor's `equip_delay_self` is overwritten to `0` on the spawned instance (so re-equipping after a drop is instant), then it's force-equipped via the no-delay bypass path used by purchase consoles. Each new ref is registered for `COMSIG_PARENT_QDELETING` so `gear_refs` stays in sync if the item is ever externally destroyed.
+  3. Store `gear_refs[ckey] = list(W1, W2, A)` (refs) and `loadouts[ckey] = list(p1, p2, ap)` (paths). Refs drive ReequipLoadout / strip; paths drive UI icons and item respawn-on-external-qdel.
+- **Re-pick is free**: a player can re-confirm at any time while in the checkpoint — even repeatedly — without penalty. The strip-and-spawn flow guarantees no item accumulation.
+- **Drops never duplicate gear**: `ReequipLoadout` (called between rooms and on revive) walks `gear_refs[ckey]` and `forceMove`s every tracked ref back to the player's tile from wherever it is. Dropped items, items handed to teammates, items stuck in containers — all are recovered. If a tracked ref was qdel'd by something outside our control, the slot is respawned from `loadouts[ckey]`'s path.
 - **First-time entry** (pre-Sector-1): every player has empty hands. They MUST confirm a loadout before being allowed to toggle Ready on the Advance console.
 - **Subsequent visits**: the previous loadout is still equipped on arrival, but the timer is paused and they can change it at no cost. If they don't visit a console, their existing loadout carries over unchanged.
 
@@ -282,9 +282,9 @@ These constants live as `#define`s at the top of `scaling.dm` for easy tuning.
 
 Each `/datum/refraction_wave_controller` registers itself in `GLOB.refraction_wave_controllers` keyed by `id`. Without namespacing, multiple concurrent runs (different lines OR same-line lobbies on different lanes) and consecutive reuses of the same lane would all collide.
 
-`SSrefraction_railway.RestampWaveLandmarks` (called from `ClaimLane`) builds a fresh controller per `/datum/refraction_node` on the run's line, with `id = "refraction_<run_uid>_<node.id>"`. It then walks every `/obj/effect/landmark/refraction/spawn` on the run's `loaded_z` and binds each landmark whose `landmark_id` matches the node's `landmark_id` as a spawn point. `ReleaseLane` finds every controller whose id starts with the prior run's prefix and qdels them, which also drops their living mobs.
+`SSrefraction_railway.RestampWaveLandmarks` (called from `ClaimLane`) builds a fresh controller per `/datum/refraction_node` on the run's line, with `id = "refraction_<run_uid>_<node.id>"`. It then walks every `/obj/effect/landmark/refraction/spawner` on the run's `loaded_z` and binds each landmark whose `id` matches the node's `landmark_id` as a spawn point. `ReleaseLane` finds every controller whose id starts with the prior run's prefix and qdels them, which also drops their living mobs.
 
-The landmark itself is **completely passive** — it has no spawn state, no controller reference, no per-run mutation. It's just `landmark_id`. All of the lifecycle complexity lives on the controller.
+The landmark itself is **completely passive** — it has no spawn state, no controller reference, no per-run mutation. It's just `id`. All of the lifecycle complexity lives on the controller.
 
 ---
 
@@ -392,11 +392,12 @@ If `SSpersistence` lacks a JSON helper, fall back to plain `text2file` / `file2t
    - Open a loadout console; confirm the catalog is **already filtered** to only items usable at the line's `attribute_set_value` (e.g. for an 80-attr line, ALEPH-tier items requiring 100+ should not appear at all). With dev tools, try sending a `confirm_loadout` action with a path that's not in the eligible list — confirm it's rejected server-side.
    - Pick 2 weapons (one city, one non-city) + 1 armor; confirm validation rejects 1-weapon, 3-weapon, and 0-armor cases. Confirm the briefing snippet is visible in the loadout UI header.
    - Confirm the loadout, then re-confirm with a different weapon — verify the previous E.G.O. is `qdel`'d (not duplicated) and the new set is equipped.
-   - Toggle Ready, then click Begin Sector 1. Confirm: timer resets to 0 and starts ticking, team teleports to room 1's `player_spawn`, mobs spawn at `/obj/effect/landmark/refraction/spawn` landmarks whose `landmark_id` matches the node datum, mob HP/damage roughly 1.0× (solo). The first batch is bounded by `node.concurrent_max`; replacements come in as kills happen until `node.mob_stock` is exhausted, then the room clears → 5 s delay → next room.
+   - Toggle Ready, then click Begin Sector 1. Confirm: timer resets to 0 and starts ticking, team teleports to room 1's `start_point`, mobs spawn at `/obj/effect/landmark/refraction/spawner` landmarks whose `id` matches the node datum's `landmark_id`, mob HP/damage roughly 1.0× (solo). The first batch is bounded by `node.concurrent_max`; replacements come in as kills happen until `node.mob_stock` is exhausted, then the room clears → 5 s delay → next room.
    - Confirm the controller picks types weighted by remaining stock: with `mob_stock = list(/path/A = 8, /path/B = 4)`, early kills lean towards type A.
-   - Drop one of your weapons before the next-room teleport; confirm re-equip on arrival.
-   - Reach a `section_end`; confirm checkpoint teleport, timer pause, full heal, briefing now shows the *next* sector, ready flag was reset, and re-picking gear works without re-spawning duplicates.
-   - Reach the final boss; confirm a single mob spawns (boss node has `is_boss = TRUE`, defaulting `concurrent_max = 1` and skipping the player-count multiplier on stock). On boss death: completion teleport back, leaderboard entry, attributes restored.
+   - Drop one of your weapons (and your armor) on the floor before the next-room teleport; confirm `ReequipLoadout` `forceMove`s them back into your hands / suit slot from the floor — no duplicates spawn. Hand a weapon to a teammate; confirm it's yanked back to you on the next room transition.
+   - Re-pick a different loadout at the checkpoint console; confirm the previous tracked items are qdel'd no matter where they are (floor, container, teammate's pocket).
+   - Clear the last node of a sector (no walking needed — sector ends as soon as all mobs are dead). Confirm the team is teleported to the checkpoint after the 5-second breather, timer pauses *with* the running interval folded into `elapsed_baseline` (not zeroed), full heal, briefing now shows the *next* sector, ready flag was reset.
+   - Reach the final boss; confirm a single mob spawns (boss node has `is_boss = TRUE`, defaulting `concurrent_max = 1` and skipping the player-count multiplier on stock). On boss death: `OnRunComplete` fires automatically (no finish-landmark crossing required), the per-sector + total time is sent to chat as a `nicegreen` block, leaderboard entry recorded, attributes restored, lane released.
 3. Open a second client, observer-spawn, join the lobby, verify scaling: HP/damage scale up roughly 1.2× / 1.1× per the helpers in `scaling.dm`, and per-mob stock scales by `refraction_stock_mult` (1 + 0.20 × (n − 1)) — so a node with `mob_stock = list(/path = 8, /other = 4)` becomes `~10 / ~5` at 4 players.
 4. Stress: leave lobby mid-fight → confirm cleanup; lobby owner disconnects → confirm ownership transfers or the run cancels cleanly; whole run dies → confirm attributes are restored on every member.
 5. Repeat the same line twice in one round; confirm the dmm is *not* reloaded (lane reuse via `loaded_lanes`) but landmarks/wave controllers are reset (per-run namespacing should make this clean — verify the wave controller's `activated`/`triggered`/`completed` flags don't leak between runs, and the refraction wave_barrier subtype's `density` flips back on re-claim).
