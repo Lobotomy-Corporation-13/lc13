@@ -174,8 +174,10 @@
 	damage_coeff = list(RED_DAMAGE = 0.6, WHITE_DAMAGE = 1, BLACK_DAMAGE = 1.8, PALE_DAMAGE = 1)
 	butcher_results = list(/obj/item/food/meat/slab/robot = 4)
 	guaranteed_butcher_results = list(/obj/item/food/meat/slab/robot = 2)
-	silk_results = list(/obj/item/stack/sheet/silk/green_advanced = 2,
-						/obj/item/stack/sheet/silk/green_simple = 2)
+	silk_results = list(
+		/obj/item/stack/sheet/silk/green_advanced = 2,
+		/obj/item/stack/sheet/silk/green_simple = 2,
+	)
 	var/datum/beam/current_beam = null
 
 /mob/living/simple_animal/hostile/ordeal/green_bot_rocket/OpenFire(atom/A)
