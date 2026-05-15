@@ -22,8 +22,8 @@
 	guaranteed_butcher_results = list(/obj/item/food/meat/slab/robot = 4)
 	silk_results = list(
 		/obj/item/stack/sheet/silk/green_advanced = 2,
-		/obj/item/stack/sheet/silk/green_simple = 3
-		)
+		/obj/item/stack/sheet/silk/green_simple = 3,
+	)
 	var/shieldable = FALSE
 	var/can_protect = TRUE
 
