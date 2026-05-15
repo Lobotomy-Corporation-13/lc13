@@ -4405,6 +4405,7 @@
 #include "ModularLobotomy\extra_mobs\butcher.dm"
 #include "ModularLobotomy\extra_mobs\chaos_marine.dm"
 #include "ModularLobotomy\extra_mobs\grungeon_boss.dm"
+#include "ModularLobotomy\extra_mobs\grungeon_enemies.dm"
 #include "ModularLobotomy\extra_mobs\lc13_blood_fiend.dm"
 #include "ModularLobotomy\extra_mobs\lc13_bongy.dm"
 #include "ModularLobotomy\extra_mobs\lc13_corrosions.dm"
