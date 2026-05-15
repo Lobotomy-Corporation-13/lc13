@@ -803,7 +803,8 @@
 "qM" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/structure/sigsystem/connector{
-	dir = 4
+	dir = 4;
+	happens_once = 1
 	},
 /turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
@@ -1213,6 +1214,14 @@
 	name = "asphalt"
 	},
 /area/city/outskirtsfactory)
+"zZ" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/sigsystem/tower{
+	dir = 8;
+	signal_code = 24
+	},
+/turf/open/floor/pod/light,
+/area/city/outskirtsfactory)
 "Ah" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/turf_decal/siding/red{
@@ -1570,9 +1579,9 @@
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
 "Gs" = (
-/obj/machinery/button/door{
-	id = "foundryaccess";
-	resistance_flags = 64
+/obj/structure/sigsystem/tower/button{
+	signal_code = 24;
+	signal_range = 3
 	},
 /turf/closed/indestructible/syndicate,
 /area/city/outskirtsfactory)
@@ -1700,7 +1709,7 @@
 "Iq" = (
 /obj/structure/sigsystem/tower{
 	dir = 8;
-	signal_code = 39
+	signal_code = 24
 	},
 /turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
@@ -1867,6 +1876,17 @@
 	},
 /turf/open/floor/mineral/plastitanium/red,
 /area/city/outskirtsfactory)
+"Lm" = (
+/obj/machinery/door/poddoor/shutters/indestructible{
+	id = "foundryaccess";
+	lockpickable = 0
+	},
+/obj/structure/sigsystem/connector/split{
+	dir = 4
+	},
+/obj/structure/sigsystem/activator,
+/turf/open/floor/pod/light,
+/area/city/outskirtsfactory)
 "Lq" = (
 /obj/effect/turf_decal/stripes/corner{
 	dir = 1
@@ -1886,6 +1906,12 @@
 	dir = 1
 	},
 /turf/open/floor/facility,
+/area/city/outskirtsfactory)
+"LR" = (
+/obj/structure/sigsystem/connector{
+	happens_once = 1
+	},
+/turf/open/floor/pod/light,
 /area/city/outskirtsfactory)
 "LZ" = (
 /obj/effect/light_emitter{
@@ -1956,6 +1982,13 @@
 /obj/structure/lootcrate/money,
 /turf/open/floor/facility/dark,
 /area/city/outskirtsfactory)
+"Oh" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/sigsystem/connector{
+	happens_once = 1
+	},
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
 "Ol" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/structure/sign/warning/securearea{
@@ -2017,6 +2050,7 @@
 	id = "foundryaccess";
 	lockpickable = 0
 	},
+/obj/structure/sigsystem/activator,
 /turf/open/floor/pod/light,
 /area/city/outskirtsfactory)
 "Qi" = (
@@ -5856,7 +5890,7 @@ tQ
 et
 tQ
 KH
-Re
+Oh
 vd
 et
 et
@@ -5965,8 +5999,8 @@ yy
 Tm
 yy
 yy
-Tm
-PZ
+LR
+Lm
 Tm
 Tm
 yy
@@ -6062,7 +6096,7 @@ Tm
 Tm
 Tm
 yy
-yy
+zZ
 PZ
 Tm
 Tm

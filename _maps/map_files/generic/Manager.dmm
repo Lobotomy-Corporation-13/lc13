@@ -3104,6 +3104,23 @@
 /obj/machinery/light,
 /turf/open/floor/plasteel/white,
 /area/facility_hallway/manager)
+"xs" = (
+/obj/structure/sigsystem/connector{
+	happens_once = 1
+	},
+/turf/open/floor/pod/light,
+/area/city/outskirtsfactory)
+"xx" = (
+/obj/machinery/door/poddoor/shutters/indestructible{
+	id = "foundryaccess";
+	lockpickable = 0
+	},
+/obj/structure/sigsystem/connector/split{
+	dir = 4
+	},
+/obj/structure/sigsystem/activator,
+/turf/open/floor/pod/light,
+/area/city/outskirtsfactory)
 "xA" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/turf_decal/siding/red{
@@ -3855,6 +3872,14 @@
 	},
 /turf/open/floor/wood,
 /area/facility_hallway/manager)
+"CU" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/sigsystem/tower{
+	dir = 8;
+	signal_code = 24
+	},
+/turf/open/floor/pod/light,
+/area/city/outskirtsfactory)
 "CY" = (
 /obj/structure/chair/stool,
 /obj/effect/turf_decal/siding/wood{
@@ -4566,6 +4591,7 @@
 	id = "foundryaccess";
 	lockpickable = 0
 	},
+/obj/structure/sigsystem/activator,
 /turf/open/floor/pod/light,
 /area/city/outskirtsfactory)
 "Iu" = (
@@ -5979,7 +6005,8 @@
 "VC" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/structure/sigsystem/connector{
-	dir = 4
+	dir = 4;
+	happens_once = 1
 	},
 /turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
@@ -6038,6 +6065,13 @@
 /obj/structure/chair/comfy/beige,
 /turf/open/floor/carpet/green,
 /area/facility_hallway/manager)
+"VM" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/sigsystem/connector{
+	happens_once = 1
+	},
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
 "VP" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/structure/sigsystem/connector,
@@ -6529,9 +6563,9 @@
 /turf/closed/indestructible/rock,
 /area/city/outskirtsfactory)
 "Zt" = (
-/obj/machinery/button/door{
-	id = "foundryaccess";
-	resistance_flags = 64
+/obj/structure/sigsystem/tower/button{
+	signal_code = 24;
+	signal_range = 3
 	},
 /turf/closed/indestructible/syndicate,
 /area/city/outskirtsfactory)
@@ -18490,7 +18524,7 @@ yw
 xQ
 lB
 ja
-VP
+VM
 kN
 Fi
 Fi
@@ -18759,8 +18793,8 @@ rN
 qN
 rN
 rN
-qN
-Ir
+xs
+xx
 qN
 qN
 rN
@@ -19016,7 +19050,7 @@ qN
 qN
 qN
 rN
-rN
+CU
 Ir
 qN
 qN
