@@ -20,12 +20,12 @@
 	damage_coeff = list(RED_DAMAGE = 0.7, WHITE_DAMAGE = 0.8, BLACK_DAMAGE = 1.4, PALE_DAMAGE = 1.2)
 	butcher_results = list(/obj/item/food/meat/slab/robot = 6)
 	guaranteed_butcher_results = list(/obj/item/food/meat/slab/robot = 4)
-	silk_results = list(/obj/item/stack/sheet/silk/green_advanced = 2,
-						/obj/item/stack/sheet/silk/green_simple = 3)
+	silk_results = list(
+		/obj/item/stack/sheet/silk/green_advanced = 2,
+		/obj/item/stack/sheet/silk/green_simple = 3
+		)
 	var/shieldable = FALSE
 	var/can_protect = TRUE
-	var/shielded_list = list()
-	var/shielded_tiles_list = list()
 
 /mob/living/simple_animal/hostile/ordeal/grungeon_shielder/Move()
 	return FALSE
@@ -37,7 +37,6 @@
 	. = ..()
 	for(var/turf/T in range(4, src))
 		var/obj/effect/shielder_field/DF = new(T)
-		shielded_tiles_list += DF
 		DF.shielder = src
 
 /mob/living/simple_animal/hostile/ordeal/grungeon_shielder/proc/ApplyShield(mob/living/L)
@@ -47,9 +46,6 @@
 			var/datum/status_effect/grungeon_shield/S = L.has_status_effect(/datum/status_effect/grungeon_shield)
 			if(!S)
 				S = L.apply_status_effect(/datum/status_effect/grungeon_shield)
-			if (!S.list_of_shielders.Find(src))
-				S.list_of_shielders += src
-				shielded_list += L
 			// keep a list of everyone shielded
 
 /obj/effect/shielder_field
@@ -76,7 +72,6 @@
 	id = "grungeon_shield"
 	status_type = STATUS_EFFECT_UNIQUE
 	alert_type = /atom/movable/screen/alert/status_effect/grungeon_shield
-	var/list/list_of_shielders = list()
 	var/mutable_appearance/shield_overlay
 
 /atom/movable/screen/alert/status_effect/grungeon_shield
