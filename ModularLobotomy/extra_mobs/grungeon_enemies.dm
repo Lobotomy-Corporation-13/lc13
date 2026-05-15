@@ -56,6 +56,10 @@
 	var/mob/living/simple_animal/hostile/ordeal/grungeon_shielder/shielder
 	mouse_opacity = 0
 
+/obj/effect/shielder_field/Destroy()
+	shielder = null
+	return ..()
+
 /obj/effect/shielder_field/Initialize()
 	. = ..()
 	animate(src, alpha = 200, time = 0.1 SECONDS)
@@ -132,14 +136,15 @@
 	SIGNAL_HANDLER
 	return COMPONENT_MOB_DENY_DAMAGE
 
-/mob/living/simple_animal/hostile/ordeal/grungeon_shielder/death()
+/mob/living/simple_animal/hostile/ordeal/grungeon_shielder/death(gibbed)
 	for(var/obj/effect/shielder_field/F in range(4, src))
 		qdel(F)
 		continue
 	for(var/mob/living/S in range (4, src))
 		S.remove_status_effect(/datum/status_effect/grungeon_shield)
 	. = ..()
-	gib()
+	if(!gibbed)
+		gib()
 
 
 
@@ -230,3 +235,7 @@
 		new /obj/effect/temp_visual/fire/fast(get_turf(L))
 		L.deal_damage(10, RED_DAMAGE, firer, attack_type = (ATTACK_TYPE_RANGED))
 	return BULLET_ACT_HIT
+
+/mob/living/simple_animal/hostile/ordeal/green_bot_rocket/Destroy()
+	QDEL_NULL(current_beam)
+	return ..()
