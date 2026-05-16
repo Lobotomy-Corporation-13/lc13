@@ -231,6 +231,12 @@
 				flicks  = TRUE
 	return ..()
 
+/obj/effect/proc_holder/ability/aimed/dash/spear_apostle/AbnoInteraction(mob/living/user)
+	if(!istype(user, /mob/living/simple_animal/hostile/abnormality/distortedform))
+		return
+	var/mob/living/simple_animal/hostile/abnormality/distortedform/abno = user
+	ToggleAct(abno,TRUE)
+	abno.endCharge()
 
 /obj/effect/proc_holder/ability/aimed/dash/big_wolf
 	name = "big wolf dash"
