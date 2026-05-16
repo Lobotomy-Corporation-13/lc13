@@ -315,15 +315,15 @@ Arrows will never be deleted when used (unless something goes horribly wrong), t
 	if(!(src in user.held_items)) // Stop people from loading the bow in our inventory. You have to be holding it.
 		to_chat(user, span_warning("You must hold [src] to nock an arrow onto it!"))
 		return FALSE
-	if(loaded_arrow)
-		to_chat(user, span_warning("There's already an arrow nocked in [src]!"))
-		return FALSE
 
 	return LoadArrow(user, I)
 
 /// Handles the loading of arrows.
 /obj/item/ego_weapon/ranged/city/shi_east/proc/LoadArrow(mob/user, obj/item/shi_east_arrow/arrow)
 	if(!istype(user) || !istype(arrow))
+		return FALSE
+	if(loaded_arrow)
+		to_chat(user, span_warning("There's already an arrow nocked in [src]!"))
 		return FALSE
 
 	// Set the loaded arrow and allow us to fire it.
