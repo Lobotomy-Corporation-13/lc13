@@ -89,7 +89,7 @@
 
 /mob/living/simple_animal/hostile/abnormality/portrait_certain/ChanceWorktickOverride(mob/living/carbon/human/user, work_chance, init_work_chance, work_type)
 	if(angry)
-		return 20
+		return work_chance / 2
 	return work_chance
 
 /mob/living/simple_animal/hostile/abnormality/portrait_certain/PostWorkEffect()
@@ -203,11 +203,12 @@
 	var/list/places = list()
 	places += SurroundTarget(src, 2)
 	var/amt = length(places)
-	if(amt < 4)
+	if(amt < 5)
 		return FALSE
 
 	dir = 2
-	var/true_portrait = rand(1,amt)
+	var/portrait_random = rand(1,amt)
+	var/true_portrait = clamp(portrait_random, 1 , 4)
 	for(var/I = 1 to 5)
 		var/spawn_location = pick_n_take(places)
 		var/obj/structure/certain_portrait/P = new(get_turf(spawn_location))
@@ -215,6 +216,7 @@
 		P.abno_reference = src
 		if(I == true_portrait)
 			P.master_port = TRUE
+			P.update_icon()
 		portraits += P
 	var/prev_color = color
 	color = COLOR_PALE_BLUE_GRAY
@@ -233,6 +235,7 @@
 /mob/living/simple_animal/hostile/abnormality/portrait_certain/proc/PortraitDestroyed(obj/structure/certain_portrait/P, master_port)
 	portraits -= P
 	if(master_port)
+		apply_lc_protection(0)
 		apply_lc_fragile(5)
 		DetonatePortraits(TRUE)
 
@@ -241,8 +244,9 @@
 		if(!QDELETED(P))
 			UnregisterSignal(P, list(COMSIG_PARENT_QDELETING))
 			P.Detonate(safe)
-			//Should be -0.5 resistance
-			apply_lc_protection(5)
+			if(!safe)
+				//Should be -0.5 resistance
+				apply_lc_protection(5)
 
 	portraits.Cut()
 
@@ -256,7 +260,7 @@
 	icon_state = "portrait5"
 	density = FALSE
 	anchored = TRUE
-	max_integrity = 50
+	max_integrity = 30
 	integrity_failure = 0
 	var/mob/living/simple_animal/hostile/abnormality/portrait_certain/abno_reference
 	var/master_port = FALSE
@@ -269,6 +273,11 @@
 	. = ..()
 	if(master_port)
 		. += span_notice("This one looks older than the others.")
+
+/obj/structure/certain_portrait/update_icon_state()
+	if(master_port)
+		icon_state = "portrait[8]"
+	return ..()
 
 /obj/structure/certain_portrait/Destroy()
 	if(abno_reference)
@@ -286,10 +295,11 @@
 	if(!no_damage)
 		new /obj/effect/temp_visual/screech(get_turf(src))
 		if(abno_reference)
-			for(var/mob/living/L in oview(6, src))
+			for(var/mob/living/L in oview(4, src))
 				if(!abno_reference.faction_check_mob(L))
 					L.deal_damage(30, WHITE_DAMAGE, src, attack_type = (ATTACK_TYPE_SPECIAL))
 
+	master_port = FALSE
 	QDEL_IN(src, 1)
 
 /*-----------*\
