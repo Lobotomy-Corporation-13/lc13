@@ -1203,7 +1203,7 @@ Arrows will never be deleted when used (unless something goes horribly wrong), t
 	if(!QDELETED(remover) && istype(remover) && remover.Adjacent(owner))
 		var/message = (remover == owner) ? "[remover] begins pulling an arrow out from [remover.p_their()] own chest...!" : "[remover] begins pulling an arrow out from [owner]'s chest...!"
 		remover.visible_message(span_danger(message))
-		if(do_after(remover, 1.4 SECONDS, owner))
+		if(do_after(remover, 3 SECONDS, owner))
 			RemoveArrow(remover)
 
 /datum/status_effect/stacking/shi_east_lodged_arrow/Topic(href, list/href_list)
