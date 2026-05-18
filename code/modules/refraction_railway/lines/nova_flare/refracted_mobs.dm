@@ -14,9 +14,9 @@
 /mob/living/simple_animal/hostile/netherworld/migo/refracted
 	name = "drifting thing"
 	desc = "Something the line let through. It does not belong in any of the directions you can point."
-	maxHealth = 110
-	health = 110
-	scream_damage = 6
+	maxHealth = 140
+	health = 140
+	scream_damage = 5
 
 // ---------- Mutant Clowns (Node 2: "The Family") ----------
 // Two-stage mask-break kept (rebalanced down). Scream keeps its WHITE hit
@@ -25,11 +25,11 @@
 /mob/living/simple_animal/hostile/mutant_clown/refracted
 	name = "'Son'"
 	desc = "A survivor the blast did not finish. It still wears the face it had."
-	maxHealth = 320
-	health = 320
-	melee_damage_lower = 10
-	melee_damage_upper = 16
-	scream_damage = 16
+	maxHealth = 400
+	health = 400
+	melee_damage_lower = 8
+	melee_damage_upper = 12
+	scream_damage = 12
 	scream_cooldown_time = 6 SECONDS
 	move_to_delay = 16
 	move_speed_maskbreak = 7
@@ -93,10 +93,10 @@
 	desc = "Lighter than the others. It keeps its distance and screams instead."
 	icon_state = "pie spewer"
 	icon_living = "pie spewer"
-	maxHealth = 150
-	health = 150
-	melee_damage_lower = 8
-	melee_damage_upper = 12
+	maxHealth = 190
+	health = 190
+	melee_damage_lower = 6
+	melee_damage_upper = 9
 	move_to_delay = 14
 	retreat_distance = 8
 	minimum_distance = 8
@@ -110,13 +110,13 @@
 	icon_living = "glutton"
 	base_pixel_x = -16
 	pixel_x = -16
-	maxHealth = 460
-	health = 460
-	melee_damage_lower = 14
-	melee_damage_upper = 22
+	maxHealth = 575
+	health = 575
+	melee_damage_lower = 11
+	melee_damage_upper = 17
 	move_to_delay = 22
 	move_speed_maskbreak = 10
-	scream_damage = 22
+	scream_damage = 17
 	scream_cooldown_time = 7 SECONDS
 	retreat_distance = 0
 	minimum_distance = 0

@@ -176,16 +176,19 @@
 			list(
 				"title"    = "Constant Wail",
 				"severity" = "medium",
-				"text"     = "Whenever it moves or makes a sound, and at random, it \
-					deals a small WHITE hit to everything within 7 tiles (see \
-					Dissonant Wail). No wind-up and no cooldown.",
+				"text"     = "140 HP. Every ~2 seconds it has a 10% chance — and \
+					always whenever it speaks — to deal 5 WHITE to everything \
+					within 7 tiles. No wind-up, no cooldown, cannot be \
+					interrupted; with a pack these pulses stack with nothing to \
+					dodge.",
 			),
 			list(
 				"title"    = "Mind-Eater",
 				"severity" = "medium",
-				"text"     = "While its target's sanity is broken, each of its melee \
-					hits also deals PALE damage on top of the WHITE melee (see \
-					Feast).",
+				"text"     = "Basic attack is 4 hits of 3 WHITE. While its \
+					target is Insane (0 SP), every one of those 4 hits also \
+					deals +5 PALE — up to 20 extra PALE per attack. Stay above 0 \
+					SP near it.",
 			),
 		),
 
@@ -193,19 +196,21 @@
 			list(
 				"title"    = "Mask Break",
 				"severity" = "high",
-				"text"     = "Two stages. Stage 1 it keeps its distance and Wails. \
-					At 50% HP its mask breaks: for about 2.5 seconds it takes 0.2× \
-					from every damage type, then it is permanently Stage 2 — no \
-					longer keeps distance, moves faster, and replaces its basic \
-					attack with Slam. In Stage 2 it takes RED 1.6×, WHITE 0.6×, \
-					BLACK 0.8×, PALE 2×.",
+				"text"     = "400 HP. Stage 1: keeps ~6 tiles away. Damage taken \
+					RED x1.4 / WHITE x0.6 / BLACK x0.8 / PALE x2. At 50% HP \
+					(200) the mask breaks: 2.5 seconds taking x0.2 from \
+					everything (do not waste burst here), then permanently \
+					Stage 2 — can no longer be kept at range, moves faster, \
+					basic attack becomes Slam, and damage taken becomes RED \
+					x1.6 / WHITE x0.6 / BLACK x0.8 / PALE x2. Never reverts.",
 			),
 			list(
 				"title"    = "Wail and Slam",
 				"severity" = "medium",
-				"text"     = "Its Wail applies 2 RED Fragile; RED Fragile increases \
-					the RED damage that target takes. Its Stage 2 Slam deals RED, so \
-					the Slam is increased by RED Fragile applied by any clown.",
+				"text"     = "Wail (every 6s) applies 2 RED Fragile: +10% RED \
+					damage taken per stack for 10s (here +20%), refreshing to \
+					the higher stack, max 9. Stage 2 Slam (8-12 RED) is RED, so \
+					RED Fragile from ANY clown amplifies it.",
 			),
 		),
 
@@ -213,18 +218,18 @@
 			list(
 				"title"    = "Mask Break",
 				"severity" = "high",
-				"text"     = "Frail and low on HP; keeps about 8 tiles away and \
-					Wails. Its mask breaks only after it loses about 75% of its HP. \
-					During the break (about 2.5 seconds) it takes 0.2× from every \
-					damage type. In Stage 2 it takes RED 1.6×, WHITE 0.6×, BLACK \
-					0.8×, PALE 2×.",
+				"text"     = "190 HP, frail. Keeps ~8 tiles away and Wails. Mask \
+					breaks only at 25% HP (≈48, after losing 75%), so it stays \
+					in ranged Stage 1 almost the whole fight. Break = 2.5s at \
+					x0.2; Stage 2 RED x1.6 / WHITE x0.6 / BLACK x0.8 / PALE x2.",
 			),
 			list(
 				"title"    = "Wail and Slam",
-				"severity" = "medium",
-				"text"     = "Its Wail applies 5 RED Fragile; RED Fragile increases \
-					the RED damage that target takes. Its Stage 2 Slam deals RED, so \
-					the Slam is increased by RED Fragile applied by any clown.",
+				"severity" = "high",
+				"text"     = "Its Wail (every 6s) applies 5 RED Fragile: +10% \
+					RED taken per stack for 10s (here +50%), max 9. It is the \
+					family's Fragile engine — kill it first; its own Slam is \
+					6-9 RED.",
 			),
 		),
 
@@ -232,17 +237,18 @@
 			list(
 				"title"    = "Mask Break",
 				"severity" = "high",
-				"text"     = "Large and high-HP; never retreats. Its mask breaks \
-					after it loses only about 25% of its HP. During the break (about \
-					2.5 seconds) it takes 0.2× from every damage type. In Stage 2 it \
-					takes RED 1.6×, WHITE 0.6×, BLACK 0.8×, PALE 2×.",
+				"text"     = "575 HP, never retreats. Mask breaks at 75% HP \
+					(≈431, after losing only 25%), so it enters Stage 2 almost \
+					immediately — fast, un-kiteable, Slam. Break = 2.5s at x0.2; \
+					Stage 2 RED x1.6 / WHITE x0.6 / BLACK x0.8 / PALE x2.",
 			),
 			list(
 				"title"    = "Wail and Slam",
 				"severity" = "medium",
-				"text"     = "Its Wail applies 2 RED Fragile; RED Fragile increases \
-					the RED damage that target takes. Its Stage 2 Slam deals RED, so \
-					the Slam is increased by RED Fragile applied by any clown.",
+				"text"     = "Its Wail (every 7s) applies 2 RED Fragile (+10% \
+					RED taken/stack, 10s, here +20%, max 9). Its Stage 2 Slam is \
+					the family's heaviest at 11-17 RED — lethal stacked with the \
+					Sister's 5 RED Fragile.",
 			),
 		),
 
@@ -250,31 +256,34 @@
 			list(
 				"title"    = "Beating Hearts",
 				"severity" = "high",
-				"text"     = "It appears ringed by 4 hearts. While any heart \
-					still lives it cannot move and takes no damage at all. Each \
-					heart has half of the Grandfather's max HP.",
+				"text"     = "1250 HP (x player count). Spawns ringed by 4 \
+					hearts, each at 50% of its scaled max HP (625 solo). While \
+					ANY heart lives it cannot move and takes 0 damage. Kill all \
+					4 hearts to make it vulnerable.",
 			),
 			list(
 				"title"    = "The Whole Family",
-				"severity" = "medium",
-				"text"     = "While the hearts live it wails every 15 seconds \
-					and summons 1 reinforcement clown per player (so 1 in a \
-					solo run, up to 4 in a full lobby). The pool is 70% Son/\
-					Father, 20% Sister, and 10% Mother — see Wail.",
+				"severity" = "high",
+				"text"     = "While the hearts live it Wails every 15s: 15 \
+					WHITE within 7 tiles + 2 RED Fragile, AND summons 1 \
+					reinforcement clown per player (70% Son/Father, 20% Sister, \
+					10% Mother). It also drops a 40 RED meat bomb (0.9s \
+					telegraph, 1 tile) on every player within 7 tiles each \
+					~2.5s.",
 			),
 			list(
 				"title"    = "Broken Mask",
 				"severity" = "high",
-				"text"     = "Once the hearts are gone, at 50% HP its mask \
-					breaks: about 2.5 seconds taking 0.2× from everything, then \
-					permanently Stage 2 — much faster, and it takes RED 1.6×, \
-					WHITE 0.6×, BLACK 0.8×, PALE 2×.",
+				"text"     = "Hearts gone, mobile. Melee 26-38 RED. At 50% HP \
+					(625) the mask breaks: 2.5s at x0.2, then permanent Stage 2 \
+					— faster, Slam, RED x1.6 / WHITE x0.6 / BLACK x0.8 / PALE \
+					x2. Meat now becomes the Barrage (see attacks).",
 			),
 			list(
 				"title"    = "One Last Laugh",
 				"severity" = "medium",
-				"text"     = "When the Grandfather dies, every clown near it \
-					dies with it.",
+				"text"     = "On death, every clown within 12 tiles dies with \
+					it and all hearts are removed.",
 			),
 		),
 
@@ -282,15 +291,138 @@
 			list(
 				"title"    = "Lifeline",
 				"severity" = "high",
-				"text"     = "While it lives the Grandfather takes no damage and \
-					cannot move. Has half the Grandfather's max HP. It does not \
-					move or attack.",
+				"text"     = "625 HP solo (50% of the Grandfather's scaled max, \
+					so x player count). Immobile, never attacks. While it lives \
+					the Grandfather cannot move and takes 0 damage.",
 			),
 			list(
-				"title"    = "Hardened Shell",
+				"title"    = "Backlash Shell",
+				"severity" = "high",
+				"text"     = "Takes x0.5 from projectiles (melee is 2x more \
+					effective). Each time it is damaged (max once per 1s) it \
+					pulses 3 Defense Level Down onto EVERY living thing within 2 \
+					tiles — players AND the boss/clowns. Defense Level Down: all \
+					damage taken x(1 + stacks/(stacks+25)); 3 stacks ≈ +11%, \
+					decays ~half every 5s.",
+			),
+		),
+
+		// ---------- Refracted (Sector 2) ----------
+
+		/mob/living/simple_animal/hostile/mad_fly_nest/refracted = list(
+			list(
+				"title"    = "Endless Brood",
+				"severity" = "high",
+				"text"     = "1650 HP, immobile, never attacks, won't aggro. \
+					Hatches 1 refracted fly at a time, up to 3 alive per nest, \
+					roughly one every ~38 seconds (first ~8s). 3 nests this \
+					node.",
+			),
+			list(
+				"title"    = "Brood Collapse",
 				"severity" = "medium",
-				"text"     = "Takes 50% less damage from projectiles — melee is \
-					far more effective against it.",
+				"text"     = "When a nest dies, all of its flies die with it. \
+					The node clears only once every nest AND every fly is dead — \
+					destroy the nests, don't chase flies.",
+			),
+			list(
+				"title"    = "Tough Hide",
+				"severity" = "info",
+				"text"     = "While a refracted fly is burrowed inside you, your \
+					own hits on any nest deal x1.5 damage — being infested is \
+					the fast way to break the nests.",
+			),
+		),
+
+		/mob/living/simple_animal/hostile/mad_fly_swarm/refracted = list(
+			list(
+				"title"    = "Swarm",
+				"severity" = "low",
+				"text"     = "45 HP, very fast. Basic attack is 4 hits of 1 \
+					WHITE. Trivial alone; the nests never stop making more.",
+			),
+			list(
+				"title"    = "Infest",
+				"severity" = "high",
+				"text"     = "On hitting a player at or below 50% sanity (and \
+					off its 5s cooldown) it burrows in. Every 2 seconds inside \
+					it deals 12 WHITE to your sanity. After at least 2 bites it \
+					leaves once your SP is back above 50% (or instantly if you \
+					die or go fully Insane), then can't re-burrow anyone for 5 \
+					seconds.",
+			),
+		),
+
+		/mob/living/simple_animal/hostile/clan/stone_guard/refracted = list(
+			list(
+				"title"    = "Charge Armor",
+				"severity" = "high",
+				"text"     = "520 HP. Starts at 5 charge (max 20), regains ~1/s. \
+					Base damage taken RED x0.6 / WHITE x0.8 / BLACK x1.2 / PALE \
+					x1.5. At 10+ charge it hardens to RED/WHITE/BLACK x0.3 / \
+					PALE x0.8. Every damage instance it takes removes 1 charge — \
+					burn its charge down to trigger Stagger.",
+			),
+			list(
+				"title"    = "Stagger",
+				"severity" = "medium",
+				"text"     = "At 1 or less charge it Staggers: 4 seconds unable \
+					to act, taking RED x1.2 / WHITE x1.6 / BLACK x2.4 / PALE x3 \
+					(≈2-3x) — the burst window. Then its charge resets to 15.",
+			),
+			list(
+				"title"    = "Hardened Stone",
+				"severity" = "info",
+				"text"     = "Melee is 8-11 RED and applies 3 Tremor. Its damage \
+					resistances shift with its charge state — see Charge Armor \
+					and Stagger.",
+			),
+		),
+
+		/mob/living/simple_animal/hostile/scarlet_rose/refracted = list(
+			list(
+				"title"    = "Vine Gauntlet",
+				"severity" = "high",
+				"text"     = "1400 HP (x player count), immobile, never melees. \
+					While ANY vine is within 2 tiles of it it takes only x0.15 \
+					incoming; clear the vines next to it and it takes full \
+					damage. It spawns surrounded by a full 5-tile vine field \
+					and regrows vines — cut a lane (sharp melee cuts fastest; \
+					one cut snaps up to 4 neighbours).",
+			),
+			list(
+				"title"    = "Bloodfeast",
+				"severity" = "high",
+				"text"     = "Thornlash (every 9s) detonates your Bleed: deals \
+					BRUTE equal to your current Bleed, then halves your Bleed; \
+					repeats up to 4 times, removing Bleed once it falls to 1 or \
+					less. Zero effect if you carry no Bleed — don't shove \
+					through vines.",
+			),
+			list(
+				"title"    = "Garden Collapse",
+				"severity" = "low",
+				"text"     = "Cannot move or attack on its own; the only \
+					registered enemy here. When it dies every vine is removed \
+					instantly and the node clears.",
+			),
+		),
+
+		/obj/structure/spreading/scarlet_vine/refracted = list(
+			list(
+				"title"    = "Thornwall",
+				"severity" = "medium",
+				"text"     = "Blocks movement (must be forced twice to pass; ~10% \
+					per forced push roots you + 5 Bleed). A sharp-edged weapon of \
+					5+ force cuts it. Destroying a vine by damage snaps up to 4 \
+					adjacent vines too — one good cut opens a lane.",
+			),
+			list(
+				"title"    = "Bloodroot",
+				"severity" = "info",
+				"text"     = "Only 5 integrity, but armored: RED 80 (near-immune \
+					to RED), BLACK 40, WHITE 0, FIRE -50 and PALE -50 (takes \
+					x1.5). Use fire/PALE/sharp melee, not RED.",
 			),
 		),
 

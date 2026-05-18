@@ -140,48 +140,30 @@
 		/mob/living/simple_animal/hostile/netherworld/migo/refracted = list(
 			list(
 				"name"     = "Dissonant Wail",
-				"damage"   = "6 WHITE in a 7-tile radius",
+				"damage"   = "5 WHITE in a 7-tile radius",
 				"cooldown" = "Constant — no wind-up, no cooldown",
-				"desc"     = "Deals 6 WHITE to everything alive within 7 tiles \
+				"desc"     = "Deals 5 WHITE to everything alive within 7 tiles \
 					whenever it moves or makes a sound, and at random. Cannot be \
 					interrupted.",
 			),
 			list(
 				"name"     = "Feast",
-				"damage"   = "6 PALE per melee hit, up to 4 hits per attack",
+				"damage"   = "5 PALE per melee hit, up to 4 hits per attack",
 				"cooldown" = "Only vs an Insane target (see Mind-Eater)",
 				"desc"     = "Against a target whose sanity has broken, each hit of \
-					its rapid melee flurry deals 6 PALE on top of its WHITE melee.",
+					its rapid melee flurry deals 5 PALE on top of its WHITE melee.",
 			),
 		),
 
 		/mob/living/simple_animal/hostile/mutant_clown/refracted = list(
 			list(
 				"name"     = "Wail",
-				"damage"   = "16 WHITE in a 7-tile radius, applies 2 RED Fragile",
+				"damage"   = "12 WHITE in a 7-tile radius, applies 2 RED Fragile",
 				"cooldown" = "6 seconds",
-				"desc"     = "Winds up for about 0.5 seconds, then deals 16 WHITE \
-					to everything within 7 tiles and applies 2 RED Fragile. Cannot \
-					move while screaming.",
-			),
-			list(
-				"name"     = "Slam",
-				"damage"   = "10-16 RED in a 1-tile radius",
-				"cooldown" = "Replaces its basic attack, Stage 2 only",
-				"desc"     = "Stage 2 only. Slams the ground, dealing 10-16 RED to \
-					everything within 1 tile. Increased by the target's RED \
-					Fragile.",
-			),
-		),
-
-		/mob/living/simple_animal/hostile/mutant_clown/refracted/sister = list(
-			list(
-				"name"     = "Wail",
-				"damage"   = "16 WHITE in a 7-tile radius, applies 5 RED Fragile",
-				"cooldown" = "6 seconds",
-				"desc"     = "Winds up for about 0.5 seconds, then deals 16 WHITE \
-					to everything within 7 tiles and applies 5 RED Fragile. Cannot \
-					move while screaming.",
+				"desc"     = "~0.5s decoy + ~0.6s wind-up (can't move), then 12 \
+					WHITE to everything within 7 tiles and 2 RED Fragile (+10% \
+					RED damage taken per stack, 10s, refreshes to the higher \
+					stack, max 9).",
 			),
 			list(
 				"name"     = "Slam",
@@ -193,20 +175,40 @@
 			),
 		),
 
-		/mob/living/simple_animal/hostile/mutant_clown/refracted/mother = list(
+		/mob/living/simple_animal/hostile/mutant_clown/refracted/sister = list(
 			list(
 				"name"     = "Wail",
-				"damage"   = "22 WHITE in a 7-tile radius, applies 2 RED Fragile",
-				"cooldown" = "7 seconds",
-				"desc"     = "Winds up for about 0.5 seconds, then deals 22 WHITE \
-					to everything within 7 tiles and applies 2 RED Fragile. Cannot \
-					move while screaming.",
+				"damage"   = "12 WHITE in a 7-tile radius, applies 5 RED Fragile",
+				"cooldown" = "6 seconds",
+				"desc"     = "~0.5s decoy + ~0.6s wind-up (can't move), then 12 \
+					WHITE to everything within 7 tiles and 5 RED Fragile (+10% \
+					RED damage taken per stack, here +50%, 10s, max 9). The \
+					family's main Fragile source.",
 			),
 			list(
 				"name"     = "Slam",
-				"damage"   = "14-22 RED in a 1-tile radius",
+				"damage"   = "6-9 RED in a 1-tile radius",
 				"cooldown" = "Replaces its basic attack, Stage 2 only",
-				"desc"     = "Stage 2 only. Slams the ground, dealing 14-22 RED to \
+				"desc"     = "Stage 2 only. Slams the ground, dealing 6-9 RED to \
+					everything within 1 tile. Increased by the target's RED \
+					Fragile.",
+			),
+		),
+
+		/mob/living/simple_animal/hostile/mutant_clown/refracted/mother = list(
+			list(
+				"name"     = "Wail",
+				"damage"   = "17 WHITE in a 7-tile radius, applies 2 RED Fragile",
+				"cooldown" = "7 seconds",
+				"desc"     = "~0.5s decoy + ~0.6s wind-up (can't move), then 17 \
+					WHITE to everything within 7 tiles and 2 RED Fragile (+10% \
+					RED damage taken per stack, 10s, max 9).",
+			),
+			list(
+				"name"     = "Slam",
+				"damage"   = "11-17 RED in a 1-tile radius",
+				"cooldown" = "Replaces its basic attack, Stage 2 only",
+				"desc"     = "Stage 2 only. Slams the ground, dealing 11-17 RED to \
 					everything within 1 tile. Increased by the target's RED \
 					Fragile.",
 			),
@@ -215,19 +217,18 @@
 		/mob/living/simple_animal/hostile/mutant_clown/boss/refracted = list(
 			list(
 				"name"     = "Wail",
-				"damage"   = "20 WHITE in a 7-tile radius, applies 2 RED Fragile",
+				"damage"   = "15 WHITE in a 7-tile radius, applies 2 RED Fragile",
 				"cooldown" = "15 seconds",
-				"desc"     = "Wails for 20 WHITE to everything within 7 tiles and \
-					applies 2 RED Fragile. While the hearts live, every wail also \
-					summons 1 reinforcement clown per player (so 1 in a solo run, \
-					up to 4 in a full lobby), drawn mostly from Son/Father with \
-					a rarer chance of Sister or Mother.",
+				"desc"     = "15 WHITE to everything within 7 tiles + 2 RED \
+					Fragile (+10% RED taken/stack, 10s, max 9). While the hearts \
+					live, every Wail also summons 1 reinforcement clown per \
+					player (70% Son/Father, 20% Sister, 10% Mother).",
 			),
 			list(
 				"name"     = "Slam",
-				"damage"   = "35-50 RED in a 1-tile radius",
+				"damage"   = "26-38 RED in a 1-tile radius",
 				"cooldown" = "Replaces its basic attack, Stage 2 only",
-				"desc"     = "Stage 2 only. Slams the ground, dealing 35-50 RED to \
+				"desc"     = "Stage 2 only. Slams the ground, dealing 26-38 RED to \
 					everything within 1 tile. Increased by the target's RED \
 					Fragile.",
 			),
@@ -256,24 +257,63 @@
 			),
 			list(
 				"name"     = "Grief Stomp",
-				"damage"   = "40 RED in a 2-tile radius, applies 10 Defense \
-					Level Down",
+				"damage"   = "75 RED in a 2-tile radius + 10 Defense Level Down",
 				"cooldown" = "On mask break, then every 10 seconds",
-				"desc"     = "Telegraphs the ground for about 0.7 seconds, then \
-					stomps everything within 2 tiles for RED and weakens their \
-					defenses.",
+				"desc"     = "~0.7s ground-reticle telegraph, then 75 RED to \
+					everything within 2 tiles + 10 Defense Level Down (all \
+					damage taken x(1 + stacks/(stacks+25)), ≈+29% at 10, \
+					decays ~half every 5s). Dodge the reticle.",
 			),
 		),
 
 		/mob/living/simple_animal/hostile/mutant_heart/refracted = list(
 			list(
 				"name"     = "Backlash",
-				"damage"   = "3 Defense Level Down to every living thing within \
-					2 tiles",
-				"cooldown" = "Whenever it is damaged, 1 second",
-				"desc"     = "Each time the heart is hurt it pulses, raising all \
-					damage taken by everything within 2 tiles. Stacks and decays \
-					over time.",
+				"damage"   = "3 Defense Level Down to all living within 2 tiles",
+				"cooldown" = "On taking damage, max once per 1 second",
+				"desc"     = "When hurt it pulses 3 Defense Level Down to EVERY \
+					living thing within 2 tiles (players, boss and clowns alike) \
+					— all damage taken x(1 + stacks/(stacks+25)), ≈+11% at 3, \
+					decays ~half every 5s. It also takes x0.5 from projectiles.",
+			),
+		),
+
+		// ---------- Refracted (Sector 2) ----------
+
+		/mob/living/simple_animal/hostile/clan/stone_guard/refracted = list(
+			list(
+				"name"     = "Transpierce",
+				"damage"   = "25 RED + 6 Tremor per tile, line up to 5 tiles",
+				"cooldown" = "12 seconds",
+				"desc"     = "Calls out + ~0.5s of fading decoys, then spikes \
+					every tile in a line up to 5 tiles toward where its target \
+					was: 25 RED + 6 Tremor each. If it hits nothing it loses 5 \
+					charge (closer to Stagger).",
+			),
+		),
+
+		/mob/living/simple_animal/hostile/scarlet_rose/refracted = list(
+			list(
+				"name"     = "Thornlash",
+				"damage"   = "No flat damage — BRUTE = your current Bleed, x4",
+				"cooldown" = "9 seconds",
+				"desc"     = "Marks the ground under each target ~3s, then to \
+					everything within 3 tiles of a marker: deal BRUTE equal to \
+					their current Bleed, then halve their Bleed; repeat up to 4 \
+					times, removing Bleed once it falls to 1 or less. Nothing if \
+					you carry no Bleed.",
+			),
+		),
+
+		/obj/structure/spreading/scarlet_vine/refracted = list(
+			list(
+				"name"     = "Tangle",
+				"damage"   = "5 Bleed (~10% chance when forced through)",
+				"cooldown" = "On contact",
+				"desc"     = "Shoving through a vine instead of cutting it can \
+					snag your legs and apply Bleed — the Bleed Thornlash feeds \
+					on. Sharp melee cuts vines (snapping up to 4 neighbours) \
+					without the Bleed risk.",
 			),
 		),
 

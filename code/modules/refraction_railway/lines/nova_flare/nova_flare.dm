@@ -104,34 +104,39 @@
 			/mob/living/simple_animal/hostile/mutant_clown/refracted/mother,
 		))
 
-	// ----- Sector 2: Stellar Currents -----
+	// ----- Sector 2: the Garden Below -----
 	AddNode("nova_s2n1", "nova_s2n1_spawns",
-		"Updraft",
-		"Heated wind rises through the deck plates. Drones ride the thermals.",
+		"The Hive",
+		"Gel and resin coat the walls. The nests do not stop feeding the \
+			air with wings.",
 		list(
-			/mob/living/simple_animal/hostile/ordeal/steel_dawn/steel_noon         = 5,
-			/mob/living/simple_animal/hostile/ordeal/steel_dawn/steel_noon/flying  = 3,
+			/mob/living/simple_animal/hostile/mad_fly_nest/refracted = 3,
 		),
-		c_max = 4)
+		c_max = 3,
+		extra_preview = list(
+			/mob/living/simple_animal/hostile/mad_fly_swarm/refracted,
+		))
 
 	AddNode("nova_s2n2", "nova_s2n2_spawns",
-		"Crossfire",
-		"Two galleries open onto the same hall. Whoever's directing this \
-			knows what crossfire is.",
+		"The Clan Wall",
+		"Stone statues with a clan etched into their backs. They were left \
+			here to hold the line, and they still do.",
 		list(
-			/mob/living/simple_animal/hostile/ordeal/steel_dawn/steel_noon = 4,
-			/mob/living/simple_animal/hostile/lovetown/slasher             = 4,
+			/mob/living/simple_animal/hostile/clan/stone_guard/refracted = 4,
 		),
-		c_max = 4)
+		c_max = 3)
 
 	AddNode("nova_s2n3", "nova_s2n3_spawns",
-		"Inner Corona",
-		"The light here is no longer light. Glass cracks in the heat.",
+		"The Scarlet Garden",
+		"Red vines have taken the whole hall. Something at the center is \
+			still feeding them.",
 		list(
-			/mob/living/simple_animal/hostile/ordeal/steel_dawn/steel_noon/flying = 5,
-			/mob/living/simple_animal/hostile/ordeal/steel_dusk                   = 3,
+			/mob/living/simple_animal/hostile/scarlet_rose/refracted = 1,
 		),
-		c_max = 4)
+		boss = TRUE,
+		extra_preview = list(
+			/obj/structure/spreading/scarlet_vine/refracted,
+		))
 
 	// ----- Sector 3: Heart -----
 	AddNode("nova_s3n1", "nova_s3n1_spawns",
@@ -171,8 +176,10 @@
 			"node_ids"    = list("nova_s1n1", "nova_s1n2", "nova_s1n3"),
 		),
 		list(
-			"name"        = "Sector 2: Stellar Currents",
-			"description" = "Heat rises. Flying drones cut overhead — the corona is no longer just light.",
+			"name"        = "Sector 2: the Garden Below",
+			"description" = "The line runs through something overgrown. A hive \
+				feeds the air, a clan holds the wall, and a red garden waits \
+				over the far end.",
 			"node_ids"    = list("nova_s2n1", "nova_s2n2", "nova_s2n3"),
 		),
 		list(

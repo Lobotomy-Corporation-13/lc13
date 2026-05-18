@@ -183,6 +183,7 @@ export const RecordsModal = (props, context) => {
 // datasheet (or silhouette if the player hasn't fought it yet).
 const NodeMobsModal = (props, context) => {
   const { node, onClose } = props;
+  const { data } = useBackend(context);
   const [modalMob, setModalMob] = useLocalState(
     context, 'nodeModalMob', null);
   if (!node) return null;
@@ -221,7 +222,11 @@ const NodeMobsModal = (props, context) => {
           </Stack>
         </Section>
         {modalMob && (
-          <MobModal mob={modalMob} onClose={() => setModalMob(null)} />
+          <MobModal
+            mob={modalMob}
+            onClose={() => setModalMob(null)}
+            glossary={data.status_glossary}
+          />
         )}
       </Box>
     </Box>
