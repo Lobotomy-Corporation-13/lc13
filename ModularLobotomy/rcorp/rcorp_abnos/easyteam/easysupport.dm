@@ -1,0 +1,1 @@
+//Easysupport, these abnos are far less capable of defending themselves and are often fragile but will support their team through buffs, ranged or stuns. Note that easysupports will often have far more utility than hardsupports which revolve more around damage, meaning a easysupport reaching hardteam can be gamechanging.
