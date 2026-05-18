@@ -39,3 +39,8 @@
 	/// If TRUE: skip player-count scaling on stock; default concurrent_max
 	/// = 1 unless the author overrides. Used for boss encounters.
 	var/is_boss = FALSE
+	/// Flat list of mob paths to surface on this node's briefing card even
+	/// though they don't spawn through the normal wave system — e.g., a boss
+	/// summons hearts or reinforcement waves on its own. Marked encountered
+	/// alongside mob_stock when the team arrives. Cards render without a count.
+	var/list/extra_preview_mobs = list()

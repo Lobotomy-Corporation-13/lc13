@@ -15,7 +15,7 @@
 	name = "refraction sector briefing"
 	desc = "A wall-mounted display showing the upcoming sector's hostile composition."
 	icon = 'icons/obj/computer.dmi'
-	icon_state = "explosive"
+	icon_state = "cameras"
 	density = FALSE
 	anchored = TRUE
 	resistance_flags = INDESTRUCTIBLE
@@ -67,6 +67,12 @@
 			var/list/payload = SSrefraction_railway.BuildMobCardPayload(user.ckey, mob_path)
 			payload["count"] = N.mob_stock[mob_path]
 			mob_payloads += list(payload)
+		for(var/mob_path in N.extra_preview_mobs)
+			if(mob_path in N.mob_stock)
+				continue
+			var/list/payload = SSrefraction_railway.BuildMobCardPayload(user.ckey, mob_path)
+			payload["count"] = null
+			mob_payloads += list(payload)
 		out += list(list(
 			"id"          = N.id,
 			"name"        = N.name,
@@ -82,7 +88,7 @@
 	name = "refraction advance console"
 	desc = "Coordinates the team's readiness for the upcoming sector. Lobby \
 		owner triggers the actual sector start."
-	icon_screen = "explosive"
+	icon_screen = "teleport"
 	icon_keyboard = "rd_key"
 	circuit = null
 	resistance_flags = INDESTRUCTIBLE

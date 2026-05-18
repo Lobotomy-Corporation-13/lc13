@@ -2213,12 +2213,6 @@
 	},
 /turf/open/floor/plasteel/dark,
 /area/centcom/evac)
-"nu" = (
-/obj/structure/chair/sofa{
-	dir = 4
-	},
-/turf/open/floor/carpet,
-/area/centcom/holding)
 "nx" = (
 /obj/structure/flora/bush,
 /turf/open/floor/plating/asteroid/snow/airless,
@@ -2350,6 +2344,9 @@
 /area/centcom/supply)
 "oA" = (
 /obj/structure/table/wood,
+/obj/item/kirbyplants{
+	icon_state = "plant-10"
+	},
 /turf/open/floor/carpet,
 /area/centcom/holding)
 "oB" = (
@@ -2366,12 +2363,6 @@
 	},
 /turf/open/floor/plasteel/dark,
 /area/centcom/control)
-"oF" = (
-/obj/structure/chair/sofa{
-	dir = 8
-	},
-/turf/open/floor/carpet,
-/area/centcom/holding)
 "oG" = (
 /obj/effect/turf_decal/tile{
 	color = "#CC5500";
@@ -2689,7 +2680,7 @@
 /obj/machinery/light{
 	dir = 1
 	},
-/turf/open/floor/carpet/black,
+/turf/open/floor/mineral/titanium/tiled/blue,
 /area/centcom/holding)
 "qZ" = (
 /turf/open/floor/engine/cult,
@@ -2765,7 +2756,7 @@
 /obj/machinery/light{
 	dir = 1
 	},
-/turf/open/floor/plasteel,
+/turf/open/floor/mineral/titanium/tiled,
 /area/centcom/holding)
 "rn" = (
 /obj/structure/rack,
@@ -2799,6 +2790,11 @@
 /obj/structure/sign/warning/securearea,
 /turf/closed/indestructible/riveted,
 /area/centcom/ferry)
+"rE" = (
+/obj/structure/table/wood,
+/obj/item/kirbyplants,
+/turf/open/floor/carpet,
+/area/centcom/holding)
 "rG" = (
 /obj/effect/turf_decal/siding/thinplating/dark/corner{
 	dir = 4
@@ -3218,7 +3214,6 @@
 /turf/open/floor/plating/airless,
 /area/syndicate_mothership/control)
 "uc" = (
-/obj/effect/mob_spawn/human/refraction_railway_agent,
 /obj/machinery/light,
 /turf/open/floor/carpet/black,
 /area/centcom/holding)
@@ -4683,6 +4678,12 @@
 /obj/item/stock_parts/cell/hyper,
 /turf/open/floor/plasteel/dark,
 /area/centcom/ferry)
+"Bc" = (
+/obj/machinery/cryopod{
+	dir = 1
+	},
+/turf/open/floor/carpet/black,
+/area/centcom/holding)
 "Be" = (
 /obj/machinery/computer/camera_advanced/abductor{
 	team_number = 3
@@ -4985,6 +4986,13 @@
 /obj/effect/turf_decal/tile/blue,
 /turf/open/floor/plasteel,
 /area/centcom/hub)
+"Dp" = (
+/obj/structure/table/wood,
+/obj/item/kirbyplants{
+	icon_state = "applebush"
+	},
+/turf/open/floor/carpet,
+/area/centcom/holding)
 "Dw" = (
 /obj/structure/filingcabinet/chestdrawer,
 /turf/open/floor/wood,
@@ -5306,6 +5314,10 @@
 	},
 /turf/open/floor/plasteel/dark/corner,
 /area/tdome/tdomeobserve)
+"Fq" = (
+/obj/machinery/computer/security/wooden_tv,
+/turf/open/floor/mineral/titanium/tiled,
+/area/centcom/holding)
 "Fr" = (
 /obj/machinery/light,
 /obj/effect/turf_decal/tile{
@@ -7123,8 +7135,7 @@
 "OH" = (
 /obj/machinery/door/poddoor/shuttledock{
 	checkdir = 1;
-	name = "hub blast door";
-	turftype = /turf/open/space
+	name = "hub blast door"
 	},
 /turf/open/floor/plating,
 /area/centcom/hub)
@@ -7788,6 +7799,9 @@
 	},
 /turf/open/floor/plasteel/white,
 /area/centcom/holding)
+"SY" = (
+/turf/open/floor/mineral/titanium/tiled/blue,
+/area/centcom/holding)
 "Tb" = (
 /obj/structure/closet/crate/freezer/blood,
 /turf/open/floor/wood,
@@ -8015,7 +8029,7 @@
 /turf/open/floor/wood,
 /area/centcom/holding)
 "UH" = (
-/turf/open/floor/plasteel,
+/turf/open/floor/mineral/titanium/tiled,
 /area/centcom/holding)
 "UI" = (
 /obj/docking_port/stationary{
@@ -8097,10 +8111,6 @@
 /obj/effect/turf_decal/delivery,
 /turf/open/floor/plasteel,
 /area/centcom/supplypod/loading/three)
-"Vo" = (
-/obj/effect/mob_spawn/human/refraction_railway_agent,
-/turf/open/floor/carpet/black,
-/area/centcom/holding)
 "Vp" = (
 /turf/closed/indestructible/riveted,
 /area/centcom/supply)
@@ -8510,6 +8520,12 @@
 	},
 /turf/open/floor/wood,
 /area/centcom/holding)
+"Yr" = (
+/obj/effect/mob_spawn/human/refraction_railway_agent{
+	dir = 1
+	},
+/turf/open/floor/carpet/black,
+/area/centcom/holding)
 "Yt" = (
 /obj/effect/turf_decal/tile/brown,
 /obj/effect/turf_decal/tile/brown{
@@ -8520,6 +8536,10 @@
 "Yu" = (
 /obj/structure/closet/secure_closet/freezer/fridge/open,
 /turf/open/floor/plasteel/cafeteria,
+/area/centcom/holding)
+"Yv" = (
+/obj/machinery/cryopod,
+/turf/open/floor/carpet/black,
 /area/centcom/holding)
 "YA" = (
 /turf/closed/indestructible/fakeglass,
@@ -59423,7 +59443,7 @@ FM
 FM
 FM
 FM
-FM
+aa
 aa
 aa
 aa
@@ -59674,13 +59694,13 @@ aa
 aa
 aa
 FM
-oA
+rE
 Kz
-nu
 TU
 EQ
-oA
+rE
 FM
+aa
 aa
 aa
 aa
@@ -59935,8 +59955,8 @@ rl
 WU
 WU
 WU
-WU
 UH
+FM
 FM
 aa
 aa
@@ -60190,8 +60210,8 @@ aa
 FM
 UH
 UH
-FM
-FM
+Fq
+UH
 UH
 UH
 FM
@@ -60445,14 +60465,14 @@ aa
 aa
 aa
 FM
-Sd
+SY
 UH
-FM
+UH
 UH
 UH
 uc
 FM
-aa
+FM
 aa
 aa
 aa
@@ -60702,15 +60722,15 @@ aa
 aa
 aa
 FM
-Sd
-Sd
+SY
+SY
 UH
 UH
 Sd
-Vo
+Sd
+Bc
 FM
-aa
-aa
+FM
 aa
 aa
 aa
@@ -60960,14 +60980,14 @@ aa
 aa
 FM
 qW
+SY
+UH
+UH
 Sd
 Sd
 Sd
-Sd
-Sd
+Yr
 FM
-aa
-aa
 aa
 aa
 aa
@@ -61216,15 +61236,15 @@ aa
 aa
 aa
 FM
-Sd
-Sd
+SY
+SY
 UH
 UH
 Sd
-Vo
+Sd
+Yv
 FM
-aa
-aa
+FM
 aa
 aa
 aa
@@ -61473,14 +61493,14 @@ aa
 aa
 aa
 FM
-Sd
+SY
 UH
-FM
+UH
 UH
 UH
 uc
 FM
-aa
+FM
 aa
 aa
 aa
@@ -61732,8 +61752,8 @@ aa
 FM
 UH
 UH
-FM
-FM
+Fq
+UH
 UH
 UH
 FM
@@ -61991,8 +62011,8 @@ rl
 WU
 WU
 WU
-WU
 UH
+FM
 FM
 aa
 aa
@@ -62246,11 +62266,11 @@ aa
 FM
 oA
 yj
-oF
 yv
 Bq
-oA
+Dp
 FM
+aa
 aa
 aa
 aa
@@ -62507,7 +62527,7 @@ FM
 FM
 FM
 FM
-FM
+aa
 aa
 aa
 aa

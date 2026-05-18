@@ -14,8 +14,8 @@
 	name = "refraction loadout console"
 	desc = "Selects the E.G.O. loadout for the upcoming sector. Only items \
 		you can equip at the line's attribute level appear here."
-	icon_screen = "explosive"
-	icon_keyboard = "rd_key"
+	icon_screen = "request"
+	icon_keyboard = "power_key"
 	circuit = null
 	resistance_flags = INDESTRUCTIBLE
 
