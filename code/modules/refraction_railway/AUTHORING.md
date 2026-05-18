@@ -267,11 +267,68 @@ The subsystem walks every registered line at init and merges all `GetMobPassives
 
 **Passive rules:**
 
-- Two to four sentences. Lead with the trigger, end with the consequence. "Below 25% HP, it … so it then …"
 - One passive per gimmick — if a mob has both a self-destruct and a death buff, that's two cards.
 - Player-readable language only. No proc names, type paths, variable names, or DM expressions (`view(N)`, `oview(N)`, `TemporarySpeedChange(...)`, `damage_coeff`, etc).
-- Resistances belong on the data sheet's resistance row, not in passives.
 - A mob with no passive entry simply renders no Passives section. Empty cards are not rendered.
+
+### Card-writing style guide (passives **and** attacks)
+
+Write cards like a Limbus Company identity passive: terse, mechanical,
+number-dense. Every clause must change what the player knows or does. This
+guide is shared by `passives.dm` and `attacks.dm` (Step 5c's "same as
+passives" rule points here).
+
+**1. Lead every clause with its trigger, then state the exact effect.**
+Use this real-time trigger vocabulary (our analogue of LCB's Turn Start/End):
+
+| Write | Means |
+|---|---|
+| `On spawn:` / `Encounter start:` | Initialize / first Life tick |
+| `Every N seconds:` | cooldown-gated recurring action |
+| `On hit:` / `On its melee:` | per AttackingTarget |
+| `On taking damage:` | per damage instance |
+| `At <value> HP:` / `Below <value> HP:` | health threshold |
+| `While <condition>:` | persistent conditional |
+| `On death:` | death() / on its defeat |
+| `Phase 2 (after <event>):` | staged transition, name the event |
+
+**2. Always give the exact numbers.** Damage value + type, radius in tiles,
+cooldown/wind-up in seconds, stack counts, status duration, the actual
+HP/SP threshold *number* (a % alone is not enough — write "at 50% HP
+(625)"), and any scaling written as a formula (`damage × player count`,
+`1 fly per nest per ~38s`, `BRUTE = your current Bleed`). Approximate only
+a genuinely derived value, and mark it (`≈+29%`).
+
+**3. State every cap and frequency limit** in parentheses: `(max 9)`,
+`(up to 4 times)`, `(once per 1s)`, `(cap 3 alive per nest)`,
+`(3 nests this node)`.
+
+**4. Define a status the first time, then reference it.** First mention:
+`2 RED Fragile (+10% RED damage taken per stack, 10s, refreshes to the
+higher stack, max 9)`. Later cards: `5 RED Fragile (see Wail and Slam)`.
+
+**5. Resistances:** do **not** list a mob's static damage multipliers.
+Include them only when (a) they **change** under a condition or phase —
+then show each state explicitly (Stage 1 → break window → Stage 2), or
+(b) the entity is a **structure / non-mob** the player otherwise cannot
+read (e.g. a vine's armor table). The data sheet's resistance row covers
+the static case for mobs.
+
+**6. No flavor, no strategy.** No prose mood ("the family runs one
+plan"), no advice ("kill her first", "dodge the reticle"). State the
+mechanic; the player draws the conclusion. A bare factual qualifier
+("frail", "never retreats") is fine when it *is* the mechanic.
+
+**7. Branch with `If … ; otherwise …`** for conditional effects, exactly
+as the mechanic resolves. Cross-reference partner cards by name (passive
+names the trigger, attack carries the numbers).
+
+**Bad** → `"Its Wail leaves you RED Fragile for a while and its Slam hits
+harder; kill it fast."`
+**Good** → `"Wail (every 6s) applies 2 RED Fragile: +10% RED damage taken
+per stack for 10s (here +20%), refreshes to the higher stack, max 9.
+Stage 2 Slam (8-12 RED) is RED, so RED Fragile from ANY clown amplifies
+it."`
 
 **Collisions**: if two lines both register passives for the same mob path, the *first* line to be loaded wins; the second's contribution is dropped with a `stack_trace` naming both lines. So if you reuse a mob another line already covers, just don't redeclare it — your line will inherit the existing entries automatically.
 
@@ -332,11 +389,13 @@ list(
 
 The passive references the attack by name; the attack references the passive by name. Players reading either card find their way to the other.
 
-**Style rules** (same as passives):
+**Style rules**: follow the **Card-writing style guide** in Step 5b — it
+applies verbatim to attacks (lead with the trigger, exact numbers, caps,
+define statuses once, omit static resistances, no flavor/strategy). Plus:
 
 - Player-readable language only. Tiles, seconds, HP, "winds up", "stunned", "moves faster".
 - No proc names, type paths, variable names, or DM expressions.
-- Resistances belong on the data sheet's resistance row, not in attacks.
+- `damage`/`cooldown` are their own fields — keep them exact; `desc` carries the wind-up, conditions, caps, and status definitions.
 
 ---
 

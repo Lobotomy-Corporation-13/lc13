@@ -61,6 +61,62 @@ const tilesPerSecond = moveDelay => {
   return (10 / moveDelay).toFixed(2);
 };
 
+const escapeRegex = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+// Underlines any status name found in card text and shows that status's
+// glossary blurb on hover. `glossary` is [{ name, desc }] from the server
+// (data.status_glossary). Names are matched longest-first so "RED Fragile"
+// wins over "Fragile".
+const GlossaryText = props => {
+  const { text, glossary } = props;
+  if (text === null || text === undefined || text === '') {
+    return text || null;
+  }
+  if (!glossary || !glossary.length) {
+    return text;
+  }
+  const meta = {};
+  glossary.forEach(g => {
+    meta[g.name.toLowerCase()] = g;
+  });
+  const names = glossary
+    .map(g => g.name)
+    .sort((a, b) => b.length - a.length)
+    .map(escapeRegex);
+  const re = new RegExp('(' + names.join('|') + ')', 'gi');
+  return String(text).split(re).map((part, i) => {
+    const g = meta[(part || '').toLowerCase()];
+    if (!g) {
+      return part;
+    }
+    return (
+      <Box
+        key={i}
+        as="span"
+        inline
+        tooltip={g.desc}
+        tooltipPosition="bottom"
+        style={{
+          'text-decoration': 'underline dotted',
+          'cursor': 'help',
+        }}>
+        {g.icon && (
+          <img
+            src={`data:image/png;base64,${g.icon}`}
+            style={{
+              'height': '1em',
+              'vertical-align': 'middle',
+              'image-rendering': 'pixelated',
+              'margin-right': '2px',
+            }}
+          />
+        )}
+        {part}
+      </Box>
+    );
+  });
+};
+
 export const MobCardSilhouette = props => {
   const { mob, large } = props;
   const size = large ? '160px' : '64px';
@@ -164,7 +220,7 @@ const ResistanceRow = props => {
 // produced by /datum/controller/subsystem/refraction_railway in the
 // "attacks" payload (name / damage / cooldown / desc).
 const AttackCard = props => {
-  const { attack } = props;
+  const { attack, glossary } = props;
   return (
     <Box
       mb={1}
@@ -187,13 +243,15 @@ const AttackCard = props => {
       <Box p={1} fontSize="11px">
         <LabeledList>
           <LabeledList.Item label="Damage">
-            {attack.damage}
+            <GlossaryText text={attack.damage} glossary={glossary} />
           </LabeledList.Item>
           <LabeledList.Item label="Cooldown">
-            {attack.cooldown}
+            <GlossaryText text={attack.cooldown} glossary={glossary} />
           </LabeledList.Item>
         </LabeledList>
-        <Box mt={0.5}>{attack.desc}</Box>
+        <Box mt={0.5}>
+          <GlossaryText text={attack.desc} glossary={glossary} />
+        </Box>
       </Box>
     </Box>
   );
@@ -201,13 +259,13 @@ const AttackCard = props => {
 
 // "Attacks" header + list. Renders nothing if the mob has no attacks.
 const Attacks = props => {
-  const { attacks } = props;
+  const { attacks, glossary } = props;
   if (!attacks || attacks.length === 0) return null;
   return (
     <Box mt={1}>
       <Box bold mb={0.5}>Attacks</Box>
       {attacks.map((attack, i) => (
-        <AttackCard key={i} attack={attack} />
+        <AttackCard key={i} attack={attack} glossary={glossary} />
       ))}
     </Box>
   );
@@ -217,7 +275,7 @@ const Attacks = props => {
 // on the right, body paragraph below. Banner color + warning-icon
 // count both come from the severity preset.
 const PassiveCard = props => {
-  const { passive } = props;
+  const { passive, glossary } = props;
   const preset = passivePreset(passive.severity);
   const icons = [];
   for (let i = 0; i < preset.icons; i++) {
@@ -258,7 +316,7 @@ const PassiveCard = props => {
         )}
       </Stack>
       <Box p={1} fontSize="11px">
-        {passive.text}
+        <GlossaryText text={passive.text} glossary={glossary} />
       </Box>
     </Box>
   );
@@ -266,20 +324,20 @@ const PassiveCard = props => {
 
 // "Passives" header + list. Renders nothing if the mob has no passives.
 const Passives = props => {
-  const { passives } = props;
+  const { passives, glossary } = props;
   if (!passives || passives.length === 0) return null;
   return (
     <Box mt={1}>
       <Box bold mb={0.5}>Passives</Box>
       {passives.map((passive, i) => (
-        <PassiveCard key={i} passive={passive} />
+        <PassiveCard key={i} passive={passive} glossary={glossary} />
       ))}
     </Box>
   );
 };
 
 const FullDataSheet = props => {
-  const { mob, onClose } = props;
+  const { mob, onClose, glossary } = props;
   return (
     <Section
       title={mob.name || 'Unknown'}
@@ -324,8 +382,8 @@ const FullDataSheet = props => {
               </LabeledList.Item>
             )}
           </LabeledList>
-          <Attacks attacks={mob.attacks} />
-          <Passives passives={mob.passives} />
+          <Attacks attacks={mob.attacks} glossary={glossary} />
+          <Passives passives={mob.passives} glossary={glossary} />
           {mob.tip && (
             <Box mt={1} p={1} backgroundColor="rgba(34, 197, 94, 0.1)">
               <Box bold color="good" fontSize="11px">Tip</Box>
@@ -376,7 +434,7 @@ export const MobCard = props => {
 };
 
 export const MobModal = props => {
-  const { mob, onClose } = props;
+  const { mob, onClose, glossary } = props;
   // Fixed positioning so the dimmer covers the entire TGUI window viewport
   // even when the parent Window.Content is scrolled — otherwise the modal
   // gets stranded at the top of the scroll buffer and the bottom of the
@@ -403,7 +461,7 @@ export const MobModal = props => {
         }}
         onClick={e => e.stopPropagation()}>
         {mob.revealed ? (
-          <FullDataSheet mob={mob} onClose={onClose} />
+          <FullDataSheet mob={mob} onClose={onClose} glossary={glossary} />
         ) : (
           <Section
             title="Unidentified Hostile"

@@ -4,7 +4,9 @@ import {
   Button,
   Flex,
   Input,
+  LabeledControls,
   Section,
+  Slider,
   Stack,
   Table,
   Tabs,
@@ -69,6 +71,47 @@ const passesTagFilter = (entry, tags) => {
   return enabled.every(t => entry.tags.includes(t));
 };
 
+const NUMERALS_TO_DECIMALS = {
+  X: 10, IX: 9, VIII: 8, VII: 7, VI: 6, V: 5, IV: 4, III: 3, II: 2, I: 1,
+  '-': 0,
+  '-I': -1, '-II': -2, '-III': -3, '-IV': -4, '-V': -5,
+  '-VI': -6, '-VII': -7, '-VIII': -8, '-IX': -9, '-X': -10,
+};
+
+const DECIMALS_TO_NUMERALS = Object.fromEntries(
+  Object.entries(NUMERALS_TO_DECIMALS).map(([k, v]) => [v, k])
+);
+
+const ARMOR_KEYS = ['red', 'white', 'black', 'pale'];
+
+const DAMTYPE_OPTIONS = [
+  ['red', 'RED', 'red'],
+  ['white', 'WHITE', 'white'],
+  ['black', 'BLACK', 'violet'],
+  ['pale', 'PALE', 'teal'],
+];
+
+const decodeArmor = info => {
+  const a = (info && info.armor) || {};
+  const out = {};
+  ARMOR_KEYS.forEach(k => {
+    out[k] = a[k] ? (NUMERALS_TO_DECIMALS[a[k]] ?? 0) : 0;
+  });
+  return out;
+};
+
+const passesWeaponDamtype = (entry, dmg) => {
+  if (!dmg) return true;
+  const info = entry.information || {};
+  if (info.damtype_ranged && info.damtype_ranged === dmg) return true;
+  return info.damtype_melee === dmg;
+};
+
+const passesArmorResist = (entry, mins) => {
+  const dec = decodeArmor(entry.information);
+  return ARMOR_KEYS.every(k => dec[k] >= mins[k]);
+};
+
 const Header = props => {
   const { briefing, sectorIndex } = props;
   if (!briefing || !briefing.name) {
@@ -124,6 +167,9 @@ const FilterBar = props => {
     threats, setThreats,
     origins, setOrigins,
     tagOptions, tags, setTags,
+    tabIsArmor,
+    weaponDamtype, setWeaponDamtype,
+    armorResist, setArmorResist,
   } = props;
   return (
     <Section title="Filters" scrollable fill>
@@ -199,6 +245,63 @@ const FilterBar = props => {
             </FlexItem>
           </Flex>
         </FlexItem>
+
+        {!tabIsArmor && (
+          <FlexItem mb={2}>
+            <Box mb={1} color="label">Weapon Damage Type</Box>
+            <Flex wrap>
+              {DAMTYPE_OPTIONS.map(([key, label, col]) => (
+                <FlexItem key={key} mr={0.5} mb={0.5}>
+                  <Button
+                    content={label}
+                    color={
+                      weaponDamtype && weaponDamtype !== key
+                        ? 'transparent'
+                        : col
+                    }
+                    onClick={() =>
+                      setWeaponDamtype(weaponDamtype === key ? null : key)}
+                  />
+                </FlexItem>
+              ))}
+            </Flex>
+          </FlexItem>
+        )}
+
+        {tabIsArmor && (
+          <FlexItem mb={2}>
+            <Box mb={1} color="label">Min. Resistance</Box>
+            <LabeledControls>
+              {DAMTYPE_OPTIONS.map(([key, label, col]) => (
+                <LabeledControls.Item key={key} label={label}>
+                  <Slider
+                    width="5rem"
+                    color={col}
+                    step={1}
+                    stepPixelSize={5}
+                    value={armorResist[key]}
+                    minValue={-10}
+                    maxValue={10}
+                    format={v => DECIMALS_TO_NUMERALS[v]}
+                    onChange={(e, v) =>
+                      setArmorResist({ ...armorResist, [key]: v })}
+                  />
+                </LabeledControls.Item>
+              ))}
+            </LabeledControls>
+            <Box mt={1}>
+              <Button
+                icon="sync"
+                color="red"
+                content="Reset"
+                onClick={() =>
+                  setArmorResist({
+                    red: -10, white: -10, black: -10, pale: -10,
+                  })}
+              />
+            </Box>
+          </FlexItem>
+        )}
 
         {!!tagOptions.length && (
           <FlexItem>
@@ -472,6 +575,13 @@ export const RefractionLoadout = (props, context) => {
     LC13: true,
   });
   const [tags, setTags] = useLocalState(context, 'tags', {});
+  const [weaponDamtype, setWeaponDamtype]
+    = useLocalState(context, 'weaponDamtype', null);
+  const [armorResist, setArmorResist] = useLocalState(
+    context,
+    'armorResist',
+    { red: -10, white: -10, black: -10, pale: -10 }
+  );
   const [detailed, setDetailed] = useLocalState(context, 'detailed', null);
   const [pickedWeapons, setPickedWeapons] = useLocalState(
     context,
@@ -503,8 +613,12 @@ export const RefractionLoadout = (props, context) => {
     && passesOriginFilter(e, origins)
     && passesTagFilter(e, tags);
 
-  const filteredWeapons = weapons.filter(matchesAll);
-  const filteredArmor = armor.filter(matchesAll);
+  const filteredWeapons = weapons.filter(
+    e => matchesAll(e) && passesWeaponDamtype(e, weaponDamtype)
+  );
+  const filteredArmor = armor.filter(
+    e => matchesAll(e) && passesArmorResist(e, armorResist)
+  );
 
   const findEntry = path =>
     weapons.find(w => w.path === path) || armor.find(a => a.path === path);
@@ -625,6 +739,11 @@ export const RefractionLoadout = (props, context) => {
                   threats={threats} setThreats={setThreats}
                   origins={origins} setOrigins={setOrigins}
                   tagOptions={allTags} tags={tags} setTags={setTags}
+                  tabIsArmor={tabIsArmor}
+                  weaponDamtype={weaponDamtype}
+                  setWeaponDamtype={setWeaponDamtype}
+                  armorResist={armorResist}
+                  setArmorResist={setArmorResist}
                 />
               </Stack.Item>
             </Stack>

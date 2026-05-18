@@ -41,6 +41,7 @@
 	data["open_lobbies"] = BuildOpenLobbiesPayload()
 	data["leaderboards"] = BuildLeaderboardsPayload()
 	data["compensations"] = BuildCompensationsPayload()
+	data["status_glossary"] = RefractionStatusGlossary()
 	return data
 
 /// Builds the small per-effect payload shown under the line list, so

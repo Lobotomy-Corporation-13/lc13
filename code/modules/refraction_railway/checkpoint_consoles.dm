@@ -52,6 +52,7 @@
 	)
 	data["sector_index"] = idx
 	data["nodes"] = BuildNodesPayload(user, sector, R)
+	data["status_glossary"] = RefractionStatusGlossary()
 	return data
 
 /obj/structure/refraction_briefing/proc/BuildNodesPayload(mob/user, list/sector, datum/refraction_run/R)

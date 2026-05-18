@@ -69,9 +69,18 @@
 /mob/living/simple_animal/hostile/mutant_clown/boss/refracted
 	desc = "The family's head. It will not fall while the hearts still beat \
 		for it."
-	// Refracted bosses are disposable — no corpse or organ drop. Spawned
-	// hearts get cleaned up explicitly in death() below.
+	// Refracted bosses are disposable — no corpse or organ drop, and no
+	// City achievement. Spawned hearts are cleaned up explicitly in death().
 	loot = list()
+	give_boss_achievement = FALSE
+	// +25% HP / -25% damage tuning: a longer, not deadlier Sector 1. Base
+	// /boss is 1000 HP, 35-50 melee, 20 scream. Hearts auto-derive 50% of
+	// this. Meat bomb damage is base-file (meat_warning), left as-is.
+	maxHealth = 1250
+	health = 1250
+	melee_damage_lower = 26
+	melee_damage_upper = 38
+	scream_damage = 15
 	scream_cooldown_time = 15 SECONDS
 	/// RED Fragile stacks applied by the wail.
 	var/scream_fragile_stacks = 2
@@ -88,7 +97,8 @@
 	var/grief_stomp_cooldown = 0
 	var/grief_stomp_cooldown_time = 10 SECONDS
 	var/grief_stomp_range = 2
-	var/grief_stomp_damage = 40
+	// High, but fully telegraphed + dodgeable (0.7s ground reticle).
+	var/grief_stomp_damage = 75
 	var/grief_stomp_def_stacks = 10
 	/// Reinforcement pool — mostly Son/Father, rare Sister/Mother.
 	var/list/reinforcement_weights = list(
@@ -289,7 +299,9 @@
 	SLEEP_CHECK_DEATH(4)
 	can_act = TRUE
 
-// On death, drag the whole family down with him.
+// On death, drag the whole family down with him. give_boss_achievement is
+// FALSE on this datum, so the inherited /boss/death() skips the City
+// achievement for the refracted copy.
 /mob/living/simple_animal/hostile/mutant_clown/boss/refracted/death(gibbed)
 	for(var/mob/living/simple_animal/hostile/mutant_clown/Clown in range(12, src))
 		if(Clown == src)

@@ -46,7 +46,11 @@ export const RefractionBriefing = (props, context) => {
           ))}
         </Section>
         {modalMob && (
-          <MobModal mob={modalMob} onClose={() => setModalMob(null)} />
+          <MobModal
+            mob={modalMob}
+            onClose={() => setModalMob(null)}
+            glossary={data.status_glossary}
+          />
         )}
       </Window.Content>
     </Window>
