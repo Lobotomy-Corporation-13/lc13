@@ -3638,6 +3638,8 @@
 #include "code\modules\refraction_railway\lines\nova_flare\passives.dm"
 #include "code\modules\refraction_railway\lines\nova_flare\attacks.dm"
 #include "code\modules\refraction_railway\lines\nova_flare\landmarks.dm"
+#include "code\modules\refraction_railway\lines\nova_flare\refracted_mobs.dm"
+#include "code\modules\refraction_railway\lines\nova_flare\core_boss.dm"
 #include "code\modules\recycling\conveyor2.dm"
 #include "code\modules\recycling\conveyor_filter.dm"
 #include "code\modules\recycling\conveyor_splitter.dm"

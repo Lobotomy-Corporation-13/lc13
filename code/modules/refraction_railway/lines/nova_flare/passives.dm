@@ -170,4 +170,127 @@
 			),
 		),
 
+		// ---------- Refracted (Sector 1) ----------
+
+		/mob/living/simple_animal/hostile/netherworld/migo/refracted = list(
+			list(
+				"title"    = "Constant Wail",
+				"severity" = "medium",
+				"text"     = "Whenever it moves or makes a sound, and at random, it \
+					deals a small WHITE hit to everything within 7 tiles (see \
+					Dissonant Wail). No wind-up and no cooldown.",
+			),
+			list(
+				"title"    = "Mind-Eater",
+				"severity" = "medium",
+				"text"     = "While its target's sanity is broken, each of its melee \
+					hits also deals PALE damage on top of the WHITE melee (see \
+					Feast).",
+			),
+		),
+
+		/mob/living/simple_animal/hostile/mutant_clown/refracted = list(
+			list(
+				"title"    = "Mask Break",
+				"severity" = "high",
+				"text"     = "Two stages. Stage 1 it keeps its distance and Wails. \
+					At 50% HP its mask breaks: for about 2.5 seconds it takes 0.2× \
+					from every damage type, then it is permanently Stage 2 — no \
+					longer keeps distance, moves faster, and replaces its basic \
+					attack with Slam. In Stage 2 it takes RED 1.6×, WHITE 0.6×, \
+					BLACK 0.8×, PALE 2×.",
+			),
+			list(
+				"title"    = "Wail and Slam",
+				"severity" = "medium",
+				"text"     = "Its Wail applies 2 RED Fragile; RED Fragile increases \
+					the RED damage that target takes. Its Stage 2 Slam deals RED, so \
+					the Slam is increased by RED Fragile applied by any clown.",
+			),
+		),
+
+		/mob/living/simple_animal/hostile/mutant_clown/refracted/sister = list(
+			list(
+				"title"    = "Mask Break",
+				"severity" = "high",
+				"text"     = "Frail and low on HP; keeps about 8 tiles away and \
+					Wails. Its mask breaks only after it loses about 75% of its HP. \
+					During the break (about 2.5 seconds) it takes 0.2× from every \
+					damage type. In Stage 2 it takes RED 1.6×, WHITE 0.6×, BLACK \
+					0.8×, PALE 2×.",
+			),
+			list(
+				"title"    = "Wail and Slam",
+				"severity" = "medium",
+				"text"     = "Its Wail applies 5 RED Fragile; RED Fragile increases \
+					the RED damage that target takes. Its Stage 2 Slam deals RED, so \
+					the Slam is increased by RED Fragile applied by any clown.",
+			),
+		),
+
+		/mob/living/simple_animal/hostile/mutant_clown/refracted/mother = list(
+			list(
+				"title"    = "Mask Break",
+				"severity" = "high",
+				"text"     = "Large and high-HP; never retreats. Its mask breaks \
+					after it loses only about 25% of its HP. During the break (about \
+					2.5 seconds) it takes 0.2× from every damage type. In Stage 2 it \
+					takes RED 1.6×, WHITE 0.6×, BLACK 0.8×, PALE 2×.",
+			),
+			list(
+				"title"    = "Wail and Slam",
+				"severity" = "medium",
+				"text"     = "Its Wail applies 2 RED Fragile; RED Fragile increases \
+					the RED damage that target takes. Its Stage 2 Slam deals RED, so \
+					the Slam is increased by RED Fragile applied by any clown.",
+			),
+		),
+
+		/mob/living/simple_animal/hostile/mutant_clown/boss/refracted = list(
+			list(
+				"title"    = "Beating Hearts",
+				"severity" = "high",
+				"text"     = "It appears ringed by 4 hearts. While any heart \
+					still lives it cannot move and takes no damage at all. Each \
+					heart has half of the Grandfather's max HP.",
+			),
+			list(
+				"title"    = "The Whole Family",
+				"severity" = "medium",
+				"text"     = "While the hearts live it wails every 15 seconds \
+					and summons reinforcement clowns — more with a larger lobby, \
+					mostly Son/Father and only rarely Sister or Mother.",
+			),
+			list(
+				"title"    = "Broken Mask",
+				"severity" = "high",
+				"text"     = "Once the hearts are gone, at 50% HP its mask \
+					breaks: about 2.5 seconds taking 0.2× from everything, then \
+					permanently Stage 2 — much faster, and it takes RED 1.6×, \
+					WHITE 0.6×, BLACK 0.8×, PALE 2×.",
+			),
+			list(
+				"title"    = "One Last Laugh",
+				"severity" = "medium",
+				"text"     = "When the Grandfather dies, every clown near it \
+					dies with it.",
+			),
+		),
+
+		/mob/living/simple_animal/hostile/mutant_heart/refracted = list(
+			list(
+				"title"    = "Lifeline",
+				"severity" = "high",
+				"text"     = "While it lives the Grandfather takes no damage and \
+					cannot move. Has half the Grandfather's max HP. It does not \
+					move or attack.",
+			),
+			list(
+				"title"    = "Hardened Shell",
+				"severity" = "medium",
+				"text"     = "Takes 50% less damage from projectiles — melee is \
+					far more effective against it.",
+			),
+		),
+
 	)
