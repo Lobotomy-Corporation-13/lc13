@@ -747,7 +747,7 @@ Arrows will never be deleted when used (unless something goes horribly wrong), t
 		)
 
 	var/embed_offense_level_down = 0
-	var/embed_defense_level_down = 3
+	var/embed_defense_level_down = 4
 	var/embed_bleed = 4
 
 	var/removal_delay = 2.5 SECONDS
@@ -783,8 +783,8 @@ Arrows will never be deleted when used (unless something goes horribly wrong), t
 	embed_procced_organ_damage = 3
 	embed_organ_damage_simplemob_conversion_coeff = 16
 
-	embed_offense_level_down = 2
-	embed_defense_level_down = 3
+	embed_offense_level_down = 3
+	embed_defense_level_down = 4
 	embed_bleed = 0
 
 	removal_bleed_stacks = 0
@@ -1105,7 +1105,7 @@ Arrows will never be deleted when used (unless something goes horribly wrong), t
 	display_icon_file = 'ModularLobotomy/_Lobotomyicons/shi_east_status_10x10.dmi'
 	stacking_display_name = "lodged_arrow"
 	var/list/lodged_arrows = list()
-	var/duration_on_simplemobs = 20 SECONDS
+	var/duration_on_simplemobs = 40 SECONDS
 	var/steps_per_movement_proc = 4
 	var/steps = 0
 	var/movement_proc_cooldown_duration = 1.2 SECONDS
