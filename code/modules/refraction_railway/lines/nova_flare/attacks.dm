@@ -135,4 +135,139 @@
 			),
 		),
 
+		// ---------- Refracted (Sector 1) ----------
+
+		/mob/living/simple_animal/hostile/netherworld/migo/refracted = list(
+			list(
+				"name"     = "Dissonant Wail",
+				"damage"   = "6 WHITE in a 7-tile radius",
+				"cooldown" = "Constant — no wind-up, no cooldown",
+				"desc"     = "Deals 6 WHITE to everything alive within 7 tiles \
+					whenever it moves or makes a sound, and at random. Cannot be \
+					interrupted.",
+			),
+			list(
+				"name"     = "Feast",
+				"damage"   = "6 PALE per melee hit, up to 4 hits per attack",
+				"cooldown" = "Only vs an Insane target (see Mind-Eater)",
+				"desc"     = "Against a target whose sanity has broken, each hit of \
+					its rapid melee flurry deals 6 PALE on top of its WHITE melee.",
+			),
+		),
+
+		/mob/living/simple_animal/hostile/mutant_clown/refracted = list(
+			list(
+				"name"     = "Wail",
+				"damage"   = "16 WHITE in a 7-tile radius, applies 2 RED Fragile",
+				"cooldown" = "6 seconds",
+				"desc"     = "Winds up for about 0.5 seconds, then deals 16 WHITE \
+					to everything within 7 tiles and applies 2 RED Fragile. Cannot \
+					move while screaming.",
+			),
+			list(
+				"name"     = "Slam",
+				"damage"   = "10-16 RED in a 1-tile radius",
+				"cooldown" = "Replaces its basic attack, Stage 2 only",
+				"desc"     = "Stage 2 only. Slams the ground, dealing 10-16 RED to \
+					everything within 1 tile. Increased by the target's RED \
+					Fragile.",
+			),
+		),
+
+		/mob/living/simple_animal/hostile/mutant_clown/refracted/sister = list(
+			list(
+				"name"     = "Wail",
+				"damage"   = "16 WHITE in a 7-tile radius, applies 5 RED Fragile",
+				"cooldown" = "6 seconds",
+				"desc"     = "Winds up for about 0.5 seconds, then deals 16 WHITE \
+					to everything within 7 tiles and applies 5 RED Fragile. Cannot \
+					move while screaming.",
+			),
+			list(
+				"name"     = "Slam",
+				"damage"   = "8-12 RED in a 1-tile radius",
+				"cooldown" = "Replaces its basic attack, Stage 2 only",
+				"desc"     = "Stage 2 only. Slams the ground, dealing 8-12 RED to \
+					everything within 1 tile. Increased by the target's RED \
+					Fragile.",
+			),
+		),
+
+		/mob/living/simple_animal/hostile/mutant_clown/refracted/mother = list(
+			list(
+				"name"     = "Wail",
+				"damage"   = "22 WHITE in a 7-tile radius, applies 2 RED Fragile",
+				"cooldown" = "7 seconds",
+				"desc"     = "Winds up for about 0.5 seconds, then deals 22 WHITE \
+					to everything within 7 tiles and applies 2 RED Fragile. Cannot \
+					move while screaming.",
+			),
+			list(
+				"name"     = "Slam",
+				"damage"   = "14-22 RED in a 1-tile radius",
+				"cooldown" = "Replaces its basic attack, Stage 2 only",
+				"desc"     = "Stage 2 only. Slams the ground, dealing 14-22 RED to \
+					everything within 1 tile. Increased by the target's RED \
+					Fragile.",
+			),
+		),
+
+		/mob/living/simple_animal/hostile/mutant_clown/boss/refracted = list(
+			list(
+				"name"     = "Wail",
+				"damage"   = "20 WHITE in a 7-tile radius, applies 2 RED Fragile",
+				"cooldown" = "15 seconds",
+				"desc"     = "Wails for 20 WHITE to everything within 7 tiles and \
+					applies 2 RED Fragile. While the hearts live, every wail also \
+					summons reinforcement clowns.",
+			),
+			list(
+				"name"     = "Slam",
+				"damage"   = "35-50 RED in a 1-tile radius",
+				"cooldown" = "Replaces its basic attack, Stage 2 only",
+				"desc"     = "Stage 2 only. Slams the ground, dealing 35-50 RED to \
+					everything within 1 tile. Increased by the target's RED \
+					Fragile.",
+			),
+			list(
+				"name"     = "Meat Drop",
+				"damage"   = "40 RED in a 1-tile radius",
+				"cooldown" = "2.5 seconds",
+				"desc"     = "Marks the target's tile with bloated meat; it \
+					detonates after about 0.9 seconds for RED in a 1-tile \
+					radius. Its standard ranged attack until the hearts are \
+					destroyed.",
+			),
+			list(
+				"name"     = "Meat Barrage",
+				"damage"   = "40 RED per bomb in a 1-tile radius",
+				"cooldown" = "6 seconds, after the hearts are destroyed",
+				"desc"     = "Once every heart is destroyed the Meat Drop \
+					escalates: it scatters several markers across the area (more \
+					with a larger lobby), each detonating after about 0.9 \
+					seconds.",
+			),
+			list(
+				"name"     = "Grief Stomp",
+				"damage"   = "40 RED in a 2-tile radius, applies 10 Defense \
+					Level Down",
+				"cooldown" = "On mask break, then every 10 seconds",
+				"desc"     = "Telegraphs the ground for about 0.7 seconds, then \
+					stomps everything within 2 tiles for RED and weakens their \
+					defenses.",
+			),
+		),
+
+		/mob/living/simple_animal/hostile/mutant_heart/refracted = list(
+			list(
+				"name"     = "Backlash",
+				"damage"   = "3 Defense Level Down to every living thing within \
+					2 tiles",
+				"cooldown" = "Whenever it is damaged, 1 second",
+				"desc"     = "Each time the heart is hurt it pulses, raising all \
+					damage taken by everything within 2 tiles. Stacks and decays \
+					over time.",
+			),
+		),
+
 	)

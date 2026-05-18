@@ -2,7 +2,6 @@ import { useBackend, useLocalState } from '../backend';
 import {
   Box,
   Button,
-  Divider,
   Flex,
   Input,
   Section,
@@ -127,69 +126,103 @@ const FilterBar = props => {
     tagOptions, tags, setTags,
   } = props;
   return (
-    <Section>
-      <Stack mb={0.5}>
-        <Stack.Item grow={1}>
-          <Input
-            placeholder="Search by name..."
-            value={name}
-            onInput={(_, value) => setName(value)}
-            fluid
-          />
-        </Stack.Item>
-      </Stack>
-      <Stack mb={0.5} wrap>
-        {Object.keys(THREAT_NAMES).map(k => (
-          <Stack.Item key={k}>
-            <ButtonCheckbox
-              checked={threats[k]}
-              onClick={() =>
-                setThreats({ ...threats, [k]: !threats[k] })}>
-              <Box style={{ color: THREAT_COLORS[k] }} bold>
-                {THREAT_NAMES[k]}
-              </Box>
-            </ButtonCheckbox>
-          </Stack.Item>
-        ))}
-      </Stack>
-      <Stack mb={0.5} wrap>
-        {['LC13', 'Branch 12', 'City'].map(o => (
-          <Stack.Item key={o}>
-            <ButtonCheckbox
-              checked={origins[o]}
-              onClick={() =>
-                setOrigins({ ...origins, [o]: !origins[o] })}>
-              {o}
-            </ButtonCheckbox>
-          </Stack.Item>
-        ))}
-      </Stack>
-      {!!tagOptions.length && (
-        <Box
-          maxHeight="80px"
-          style={{
-            'overflow-y': 'auto',
-            'border-top': '1px solid rgba(255, 255, 255, 0.08)',
-            'padding-top': '4px',
-          }}>
-          <Stack wrap>
-            {tagOptions.map(tag => (
-              <Stack.Item key={tag.tag_name}>
+    <Section title="Filters" scrollable fill>
+      <Flex direction="column">
+        <FlexItem mb={2}>
+          <Box mb={1} color="label">Name Search</Box>
+          <Flex>
+            <FlexItem grow={1}>
+              <Input
+                placeholder="Search..."
+                value={name}
+                onInput={(_, value) => setName(value)}
+                fluid
+              />
+            </FlexItem>
+            <FlexItem ml={1}>
+              <Button
+                icon="trash"
+                color="red"
+                content="Clear"
+                onClick={() => setName('')}
+              />
+            </FlexItem>
+          </Flex>
+        </FlexItem>
+
+        <FlexItem mb={2}>
+          <Box mb={1} color="label">Threat Class</Box>
+          <Flex wrap>
+            {Object.keys(THREAT_NAMES).map(k => (
+              <FlexItem key={k} mr={0.5} mb={0.5}>
                 <ButtonCheckbox
-                  checked={!!tags[tag.tag_name]}
-                  tooltip={tag.tag_description}
+                  checked={threats[k]}
                   onClick={() =>
-                    setTags({
-                      ...tags,
-                      [tag.tag_name]: !tags[tag.tag_name],
-                    })}>
-                  {tag.tag_name}
+                    setThreats({ ...threats, [k]: !threats[k] })}>
+                  <Box style={{ color: THREAT_COLORS[k] }} bold>
+                    {THREAT_NAMES[k]}
+                  </Box>
                 </ButtonCheckbox>
-              </Stack.Item>
+              </FlexItem>
             ))}
-          </Stack>
-        </Box>
-      )}
+            <FlexItem mb={0.5}>
+              <Button
+                icon="sync"
+                color="red"
+                content="Reset"
+                onClick={() => setThreats({})}
+              />
+            </FlexItem>
+          </Flex>
+        </FlexItem>
+
+        <FlexItem mb={2}>
+          <Box mb={1} color="label">Origin</Box>
+          <Flex wrap>
+            {['LC13', 'Branch 12', 'City'].map(o => (
+              <FlexItem key={o} mr={0.5} mb={0.5}>
+                <ButtonCheckbox
+                  checked={origins[o]}
+                  onClick={() =>
+                    setOrigins({ ...origins, [o]: !origins[o] })}>
+                  {o}
+                </ButtonCheckbox>
+              </FlexItem>
+            ))}
+            <FlexItem mb={0.5}>
+              <Button
+                icon="sync"
+                color="red"
+                content="Reset"
+                onClick={() => setOrigins({ LC13: true })}
+              />
+            </FlexItem>
+          </Flex>
+        </FlexItem>
+
+        {!!tagOptions.length && (
+          <FlexItem>
+            <Box mb={1} color="label">Tags</Box>
+            <Flex direction="column">
+              {tagOptions.map(tag => (
+                <FlexItem key={tag.tag_name} mb={0.5}>
+                  <ButtonCheckbox
+                    checked={!!tags[tag.tag_name]}
+                    tooltip={tag.tag_description}
+                    tooltipPosition="left"
+                    onClick={() =>
+                      setTags({
+                        ...tags,
+                        [tag.tag_name]: !tags[tag.tag_name],
+                      })}>
+                    {tag.tag_name}
+                  </ButtonCheckbox>
+                </FlexItem>
+              ))}
+            </Flex>
+          </FlexItem>
+        )}
+      </Flex>
     </Section>
   );
 };
@@ -502,7 +535,7 @@ export const RefractionLoadout = (props, context) => {
   };
 
   return (
-    <Window width={760} height={720} theme="syndicate">
+    <Window width={940} height={720} theme="syndicate">
       <Window.Content>
         <Stack vertical fill>
           <Stack.Item>
@@ -548,49 +581,53 @@ export const RefractionLoadout = (props, context) => {
               </Stack>
             </Section>
           </Stack.Item>
-          {!detailed && (
-            <Stack.Item>
-              <FilterBar
-                name={name} setName={setName}
-                threats={threats} setThreats={setThreats}
-                origins={origins} setOrigins={setOrigins}
-                tagOptions={allTags} tags={tags} setTags={setTags}
-              />
-            </Stack.Item>
-          )}
           <Stack.Item grow={1}>
-            {detailed ? (
-              <DetailsView
-                entry={detailed}
-                type={entryType(detailed)}
-                isSelected={isPicked(detailed)}
-                atCap={tabIsArmor ? atCapArmor : atCapWeapons}
-                onToggle={onToggle}
-                onBack={() => setDetailed(null)}
-              />
-            ) : (
-              <Section
-                title={tabIsArmor ? 'Available Armor' : 'Available Weapons'}
-                scrollable
-                fill>
-                {entries.map(entry => (
-                  <ItemRow
-                    key={entry.path}
-                    entry={entry}
-                    type={entryType(entry)}
-                    isSelected={isPicked(entry)}
+            <Stack fill>
+              <Stack.Item grow={3}>
+                {detailed ? (
+                  <DetailsView
+                    entry={detailed}
+                    type={entryType(detailed)}
+                    isSelected={isPicked(detailed)}
                     atCap={tabIsArmor ? atCapArmor : atCapWeapons}
                     onToggle={onToggle}
-                    onDetails={setDetailed}
+                    onBack={() => setDetailed(null)}
                   />
-                ))}
-                {entries.length === 0 && (
-                  <Box color="label" p={1}>
-                    No items match the current filter.
-                  </Box>
+                ) : (
+                  <Section
+                    title={
+                      tabIsArmor ? 'Available Armor' : 'Available Weapons'
+                    }
+                    scrollable
+                    fill>
+                    {entries.map(entry => (
+                      <ItemRow
+                        key={entry.path}
+                        entry={entry}
+                        type={entryType(entry)}
+                        isSelected={isPicked(entry)}
+                        atCap={tabIsArmor ? atCapArmor : atCapWeapons}
+                        onToggle={onToggle}
+                        onDetails={setDetailed}
+                      />
+                    ))}
+                    {entries.length === 0 && (
+                      <Box color="label" p={1}>
+                        No items match the current filter.
+                      </Box>
+                    )}
+                  </Section>
                 )}
-              </Section>
-            )}
+              </Stack.Item>
+              <Stack.Item width="22rem">
+                <FilterBar
+                  name={name} setName={setName}
+                  threats={threats} setThreats={setThreats}
+                  origins={origins} setOrigins={setOrigins}
+                  tagOptions={allTags} tags={tags} setTags={setTags}
+                />
+              </Stack.Item>
+            </Stack>
           </Stack.Item>
         </Stack>
       </Window.Content>

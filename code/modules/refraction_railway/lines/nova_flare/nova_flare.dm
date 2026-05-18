@@ -70,31 +70,33 @@
 
 	// ----- Sector 1: Outer Reach -----
 	AddNode("nova_s1n1", "nova_s1n1_spawns",
-		"Threshold",
-		"Distant heat. Boots on plating; nothing else stirs yet.",
+		"The Gap",
+		"The line thins here. Something the railway should have kept out is \
+			already through.",
 		list(
-			/mob/living/simple_animal/hostile/ordeal/steel_dawn = 6,
+			/mob/living/simple_animal/hostile/netherworld/migo/refracted = 4,
 		),
-		c_max = 4)
+		c_max = 3)
 
 	AddNode("nova_s1n2", "nova_s1n2_spawns",
-		"Outer Corridor",
-		"Gantries on either side. Movement above and behind.",
+		"The Family",
+		"A side gallery the survivors never left. They still call each \
+			other by name.",
 		list(
-			/mob/living/simple_animal/hostile/ordeal/steel_dawn = 5,
-			/mob/living/simple_animal/hostile/lovetown/suicidal = 3,
+			/mob/living/simple_animal/hostile/mutant_clown/refracted = 3,
+			/mob/living/simple_animal/hostile/mutant_clown/refracted/sister = 2,
+			/mob/living/simple_animal/hostile/mutant_clown/refracted/mother = 1,
 		),
-		c_max = 4)
+		c_max = 3)
 
 	AddNode("nova_s1n3", "nova_s1n3_spawns",
-		"Foundry Gate",
-		"The line narrows. Steel rolls in from gantries that haven't \
-			stopped feeding the gate yet.",
+		"The Grandfather",
+		"The sector ends here. The Grandfather will not fall while the hearts \
+			still beat for it.",
 		list(
-			/mob/living/simple_animal/hostile/ordeal/steel_dawn             = 4,
-			/mob/living/simple_animal/hostile/ordeal/steel_dawn/steel_noon  = 4,
+			/mob/living/simple_animal/hostile/mutant_clown/boss/refracted = 1,
 		),
-		c_max = 4)
+		boss = TRUE)
 
 	// ----- Sector 2: Stellar Currents -----
 	AddNode("nova_s2n1", "nova_s2n1_spawns",
@@ -157,8 +159,9 @@
 	sector_briefings = list(
 		list(
 			"name"        = "Sector 1: Outer Reach",
-			"description" = "Faint heat at the edge of the line. Nothing yet to \
-				suggest what burns at its core.",
+			"description" = "The edge of the line never sealed clean. The family \
+				that came through it is here — and the one they all answer to \
+				is waiting at the end.",
 			"node_ids"    = list("nova_s1n1", "nova_s1n2", "nova_s1n3"),
 		),
 		list(
