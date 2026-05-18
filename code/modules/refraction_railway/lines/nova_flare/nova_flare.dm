@@ -74,7 +74,7 @@
 		"The line thins here. Something the railway should have kept out is \
 			already through.",
 		list(
-			/mob/living/simple_animal/hostile/netherworld/migo/refracted = 4,
+			/mob/living/simple_animal/hostile/netherworld/migo/refracted = 6,
 		),
 		c_max = 3)
 
@@ -96,7 +96,13 @@
 		list(
 			/mob/living/simple_animal/hostile/mutant_clown/boss/refracted = 1,
 		),
-		boss = TRUE)
+		boss = TRUE,
+		extra_preview = list(
+			/mob/living/simple_animal/hostile/mutant_heart/refracted,
+			/mob/living/simple_animal/hostile/mutant_clown/refracted,
+			/mob/living/simple_animal/hostile/mutant_clown/refracted/sister,
+			/mob/living/simple_animal/hostile/mutant_clown/refracted/mother,
+		))
 
 	// ----- Sector 2: Stellar Currents -----
 	AddNode("nova_s2n1", "nova_s2n1_spawns",

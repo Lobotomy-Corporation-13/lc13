@@ -209,7 +209,9 @@ SUBSYSTEM_DEF(refraction_railway)
 	var/list/data = list()
 	data["type"] = H.type
 	data["name"] = H.name
-	data["icon"] = icon2base64(getFlatIcon(H))
+	// no_anim=TRUE flattens to the first frame so mob card previews stay
+	// static instead of cycling through multi-frame front sprites.
+	data["icon"] = icon2base64(getFlatIcon(H, no_anim = TRUE))
 	data["health"] = H.maxHealth
 	data["max_health"] = H.maxHealth
 	data["move_to_delay"] = H.move_to_delay

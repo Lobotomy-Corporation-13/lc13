@@ -258,8 +258,9 @@
 				"title"    = "The Whole Family",
 				"severity" = "medium",
 				"text"     = "While the hearts live it wails every 15 seconds \
-					and summons reinforcement clowns — more with a larger lobby, \
-					mostly Son/Father and only rarely Sister or Mother.",
+					and summons 1 reinforcement clown per player (so 1 in a \
+					solo run, up to 4 in a full lobby). The pool is 70% Son/\
+					Father, 20% Sister, and 10% Mother — see Wail.",
 			),
 			list(
 				"title"    = "Broken Mask",

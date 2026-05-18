@@ -480,9 +480,22 @@ GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 	MarkRoomEntered(room_id)
 	ActivateRoom(room_id)
 
+/// Sweeps the line's z-level of every blood/gib/viscera decal and any
+/// pending gibspawner. Called whenever the team returns to the checkpoint
+/// (sector clear or wipe) so each sector entry sees a clean stage.
+/datum/refraction_run/proc/CleanLineArea()
+	if(!loaded_z)
+		return
+	for(var/turf/T as anything in Z_TURFS(loaded_z))
+		for(var/obj/effect/decal/cleanable/D in T)
+			qdel(D)
+		for(var/obj/effect/gibspawner/G in T)
+			qdel(G)
+
 /datum/refraction_run/proc/OnSectionCleared(section_id)
 	if(section_id != current_section)
 		return
+	CleanLineArea()
 	last_checkpoint_for_all(section_id)
 	// Snapshot cumulative time before the timer is paused by EnterCheckpoint
 	// so the per-sector breakdown in the final results is accurate.
@@ -744,6 +757,7 @@ GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 	// pre-increments it at sector start.
 	if(!HasLiveMemberInCombat())
 		WipeRoomReserves(current_room)
+		CleanLineArea()
 		current_section = max(0, current_section - 1)
 		elapsed_baseline = elapsed_baseline_at_section_start
 		EnterCheckpoint()
@@ -1159,6 +1173,10 @@ GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 		return
 	var/list/mob_paths = list()
 	for(var/path in N.mob_stock)
+		mob_paths += path
+	for(var/path in N.extra_preview_mobs)
+		if(path in mob_paths)
+			continue
 		mob_paths += path
 	if(!length(mob_paths))
 		return

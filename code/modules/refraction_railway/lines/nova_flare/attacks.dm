@@ -219,7 +219,9 @@
 				"cooldown" = "15 seconds",
 				"desc"     = "Wails for 20 WHITE to everything within 7 tiles and \
 					applies 2 RED Fragile. While the hearts live, every wail also \
-					summons reinforcement clowns.",
+					summons 1 reinforcement clown per player (so 1 in a solo run, \
+					up to 4 in a full lobby), drawn mostly from Son/Father with \
+					a rarer chance of Sister or Mother.",
 			),
 			list(
 				"name"     = "Slam",
@@ -231,21 +233,26 @@
 			),
 			list(
 				"name"     = "Meat Drop",
-				"damage"   = "40 RED in a 1-tile radius",
-				"cooldown" = "2.5 seconds",
-				"desc"     = "Marks the target's tile with bloated meat; it \
-					detonates after about 0.9 seconds for RED in a 1-tile \
-					radius. Its standard ranged attack until the hearts are \
-					destroyed.",
+				"damage"   = "40 RED per bomb in a 1-tile radius",
+				"cooldown" = "2.5 seconds, while the hearts live",
+				"desc"     = "Marks every nearby human (within 7 tiles) with \
+					bloated meat on their current tile. Each marker detonates \
+					about 0.9 seconds later for 40 RED in a 1-tile radius. One \
+					bomb per human, every 2.5 seconds. Once every heart is \
+					destroyed, this attack is replaced by Meat Barrage.",
 			),
 			list(
 				"name"     = "Meat Barrage",
 				"damage"   = "40 RED per bomb in a 1-tile radius",
 				"cooldown" = "6 seconds, after the hearts are destroyed",
-				"desc"     = "Once every heart is destroyed the Meat Drop \
-					escalates: it scatters several markers across the area (more \
-					with a larger lobby), each detonating after about 0.9 \
-					seconds.",
+				"desc"     = "The enhanced form of Meat Drop, unlocked once \
+					every heart is destroyed. Locks onto 1 player (solo or 2-\
+					player lobby) or half the lobby rounded up (1 in a 1-2 \
+					lobby, 2 in a 3-4 lobby). For 4 seconds, drops a marker \
+					directly on each locked target's current tile every 0.5 \
+					seconds — 8 markers per target across the barrage. Each \
+					marker detonates about 0.9 seconds after it lands, so \
+					locked targets must keep moving.",
 			),
 			list(
 				"name"     = "Grief Stomp",

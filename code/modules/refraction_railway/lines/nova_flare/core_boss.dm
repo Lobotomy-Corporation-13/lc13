@@ -43,14 +43,16 @@
 	var/pulse_range = 2
 	var/defense_down_stacks = 3
 
+// Backlash hook lives on deal_damage instead of adjustHealth: the parent
+// adjustHealth chain can flag the heart DEAD before our override runs,
+// which silently swallows the pulse. deal_damage returns the post-
+// reduction damage in `.`, so we can fire on any positive incoming hit
+// even on the killing blow.
 /mob/living/simple_animal/hostile/mutant_heart/refracted/deal_damage(damage_amount, damage_type, source = null, flags = null, attack_type = null, blocked = null, def_zone = null, wound_bonus = 0, bare_wound_bonus = 0, sharpness = SHARP_NONE)
 	if(attack_type & ATTACK_TYPE_RANGED)
 		damage_amount *= projectile_resist
-	return ..()
-
-/mob/living/simple_animal/hostile/mutant_heart/refracted/adjustHealth(amount, updating_health = TRUE, forced = FALSE)
 	. = ..()
-	if(amount >= 0 || stat == DEAD)
+	if(. <= 0)
 		return
 	if(world.time < pulse_cooldown)
 		return
@@ -58,6 +60,8 @@
 	playsound(get_turf(src), 'sound/creatures/lc13/lovetown/abomination_stagetransition.ogg', 40, TRUE, 3)
 	new /obj/effect/temp_visual/blood_shield(src.loc)
 	for(var/mob/living/L in range(pulse_range, src))
+		if(L == src)
+			continue
 		L.apply_lc_defense_level_down(defense_down_stacks)
 
 // ---------- Refracted Grandfather ----------
@@ -65,6 +69,9 @@
 /mob/living/simple_animal/hostile/mutant_clown/boss/refracted
 	desc = "The family's head. It will not fall while the hearts still beat \
 		for it."
+	// Refracted bosses are disposable — no corpse or organ drop. Spawned
+	// hearts get cleaned up explicitly in death() below.
+	loot = list()
 	scream_cooldown_time = 15 SECONDS
 	/// RED Fragile stacks applied by the wail.
 	var/scream_fragile_stacks = 2
@@ -132,8 +139,17 @@
 	)
 	for(var/list/off in offsets)
 		var/turf/T = locate(center.x + off[1], center.y + off[2], center.z)
+		// If the ideal corner is blocked, search outward for the nearest
+		// non-dense open turf so hearts don't all pile onto the boss tile
+		// (which would also make their tether beams zero-length / invisible).
 		if(!T || T.density)
-			T = center
+			T = null
+			for(var/turf/open/candidate in range(2, locate(center.x + off[1], center.y + off[2], center.z) || center))
+				if(!candidate.density)
+					T = candidate
+					break
+			if(!T)
+				T = center
 		var/mob/living/simple_animal/hostile/mutant_heart/refracted/Hh = new(T)
 		Hh.maxHealth = round(maxHealth * heart_hp_fraction)
 		Hh.health = Hh.maxHealth
@@ -142,6 +158,17 @@
 		Hh.guaranteed_butcher_results = null
 		if(C)
 			C.RegisterSpawnedMob(Hh)
+		// The base mutant_heart Initialize auto-binds to the nearest boss in
+		// view(10) and draws its own beam, but the bind is fragile (depends
+		// on the view check passing at exactly the Initialize tick) and can
+		// silently no-op. Replace it with an explicit boss-anchored beam.
+		if(Hh.current_connection)
+			qdel(Hh.current_connection)
+			Hh.current_connection = null
+		Hh.connected_mob = src
+		if(!(Hh in spawned_hearts))
+			spawned_hearts += Hh
+		Hh.current_connection = Beam(Hh, icon_state = "blood", time = INFINITY, maxdistance = heart_offset * 4, beam_type = /obj/effect/ebeam/blood_connection)
 
 /mob/living/simple_animal/hostile/mutant_clown/boss/refracted/proc/SpawnReinforcements()
 	var/datum/refraction_wave_controller/C = GLOB.refraction_wave_mob_owners[src]
@@ -164,36 +191,82 @@
 		if(C)
 			C.RegisterSpawnedMob(M)
 
-// Hearts alive → the inherited single-bomb Meat Drop (~2.5s). Once every
-// heart is destroyed it escalates into a multi-bomb barrage.
+// Hearts alive → Meat Drop drops one bomb on every nearby human (not just
+// the boss's current target). Once every heart is destroyed it escalates
+// into the Meat Barrage: lock onto half the lobby (rounded up, minimum 1)
+// and rain bombs directly on each locked target's current tile every 0.5
+// seconds for 4 seconds. Targets must keep moving to survive.
 /mob/living/simple_animal/hostile/mutant_clown/boss/refracted/MeatDrop()
 	if(LAZYLEN(spawned_hearts))
-		return ..()
+		meat_cooldown = world.time + meat_cooldown_time
+		playsound(get_turf(src), 'sound/magic/arbiter/repulse.ogg', 25, FALSE, 5)
+		for(var/mob/living/carbon/human/H in view(7, src))
+			if(faction_check_mob(H))
+				continue
+			var/turf/T = get_turf(H)
+			if(!T)
+				continue
+			new /obj/effect/temp_visual/meat_warning(T, src)
+		return
 	meat_cooldown = world.time + meat_barrage_cooldown_time
 	if(!target)
 		return
 	var/datum/refraction_wave_controller/C = GLOB.refraction_wave_mob_owners[src]
 	var/np = C ? C.num_players : 1
-	var/barrage_count = 2 + np
-	playsound(get_turf(target), 'sound/magic/arbiter/repulse.ogg', 20, 0, 5)
-	var/list/spots = list()
-	spots += get_turf(target)
+	var/target_count = max(1, round((np + 1) / 2))
+	var/list/candidates = list()
+	if(ishuman(target) && !faction_check_mob(target))
+		candidates += target
 	for(var/mob/living/carbon/human/H in view(7, src))
+		if(H in candidates)
+			continue
 		if(!faction_check_mob(H))
-			spots += get_turf(H)
-	for(var/turf/T in view(5, src))
-		spots += T
-	for(var/i in 1 to barrage_count)
-		if(!length(spots))
-			break
-		var/turf/T = pick(spots)
-		spots -= T
+			candidates += H
+	if(!length(candidates))
+		return
+	var/list/locked = list()
+	for(var/i in 1 to min(target_count, length(candidates)))
+		var/mob/living/carbon/human/L = pick(candidates)
+		candidates -= L
+		locked += L
+	playsound(get_turf(src), 'sound/magic/arbiter/repulse.ogg', 35, FALSE, 6)
+	// 8 ticks × 0.5s = 4 seconds of barrage. Each tick drops one warning
+	// per still-living locked target on that target's CURRENT tile.
+	for(var/i in 0 to 7)
+		addtimer(CALLBACK(src, PROC_REF(MeatBarrageTick), locked), i * (0.5 SECONDS))
+
+/mob/living/simple_animal/hostile/mutant_clown/boss/refracted/proc/MeatBarrageTick(list/locked)
+	if(stat == DEAD)
+		return
+	for(var/mob/living/carbon/human/H in locked)
+		if(QDELETED(H) || H.stat == DEAD)
+			continue
+		var/turf/T = get_turf(H)
+		if(!T)
+			continue
 		new /obj/effect/temp_visual/meat_warning(T, src)
 
-// Mask-break opener: the inherited enrage, then a Grief Stomp.
+// Mask-break opener: inlined parent body (minus the gibspawner spawn so
+// refracted bosses leave no remains), then a Grief Stomp. Kept in sync
+// with /mob/living/simple_animal/hostile/mutant_clown/BreakMask().
 /mob/living/simple_animal/hostile/mutant_clown/boss/refracted/BreakMask()
-	..()
+	can_act = FALSE
+	icon_living = icon_state + "_unmasked"
+	icon_state = icon_living
+	desc += "Now with their mask broken... You can see their mutated face."
+	current_stage = 2
+	retreat_distance = 0
+	minimum_distance = 0
+	say(maskbreak_say_1)
+	move_to_delay = move_speed_maskbreak
+	UpdateSpeed()
+	playsound(get_turf(src), 'sound/creatures/lc13/lovetown/scream.ogg', 50, TRUE, 3)
+	ChangeResistances(list(RED_DAMAGE = 0.2, WHITE_DAMAGE = 0.2, BLACK_DAMAGE = 0.2, PALE_DAMAGE = 0.2))
 	INVOKE_ASYNC(src, PROC_REF(GriefStomp))
+	SLEEP_CHECK_DEATH(25)
+	ChangeResistances(list(BRUTE = 1, RED_DAMAGE = 1.6, WHITE_DAMAGE = 0.6, BLACK_DAMAGE = 0.8, PALE_DAMAGE = 2))
+	say(maskbreak_say_2)
+	can_act = TRUE
 
 /mob/living/simple_animal/hostile/mutant_clown/boss/refracted/proc/GriefStomp()
 	if(stat == DEAD || !can_act)

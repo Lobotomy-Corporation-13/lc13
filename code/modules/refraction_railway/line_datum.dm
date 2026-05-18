@@ -110,7 +110,10 @@
 /// Helper called from the concrete line subtype's New() to register a node.
 /// `mob_stock` is an assoc list `path => 1-player baseline count`. For boss
 /// nodes pass `boss = TRUE` and (optionally) override `c_max` (defaults to 1).
-/datum/refraction_line/proc/AddNode(node_id, lm_id, n_name, n_desc, list/stock, c_max = 4, boss = FALSE)
+/// `extra_preview` is an optional flat list of mob paths to surface on the
+/// briefing card without going through the wave spawner — for mobs the
+/// encounter itself summons (e.g., a boss's hearts or reinforcements).
+/datum/refraction_line/proc/AddNode(node_id, lm_id, n_name, n_desc, list/stock, c_max = 4, boss = FALSE, list/extra_preview)
 	var/datum/refraction_node/N = new
 	N.id = node_id
 	N.landmark_id = lm_id
@@ -121,4 +124,5 @@
 	// explicit c_max different from the default.
 	N.concurrent_max = (boss && c_max == 4) ? 1 : c_max
 	N.is_boss = boss
+	N.extra_preview_mobs = extra_preview || list()
 	combat_nodes[node_id] = N

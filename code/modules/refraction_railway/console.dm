@@ -175,6 +175,12 @@
 			var/list/payload = SSrefraction_railway.BuildMobCardPayload(ckey, mob_path)
 			payload["count"] = N.mob_stock[mob_path]
 			mob_payloads += list(payload)
+		for(var/mob_path in N.extra_preview_mobs)
+			if(mob_path in N.mob_stock)
+				continue
+			var/list/payload = SSrefraction_railway.BuildMobCardPayload(ckey, mob_path)
+			payload["count"] = null
+			mob_payloads += list(payload)
 		out += list(list(
 			"id"          = N.id,
 			"name"        = N.name,

@@ -35,6 +35,9 @@
 	move_speed_maskbreak = 7
 	retreat_distance = 6
 	minimum_distance = 6
+	// Refracted mobs are disposable — no human corpse on death and no
+	// mask-break gibspawner (handled in BreakMask override below).
+	loot = list()
 	/// RED Fragile stacks applied to each human caught in a Scream.
 	var/scream_fragile_stacks = 2
 	/// Mask breaks once health drops to this fraction of maxHealth.
@@ -60,12 +63,30 @@
 	if(current_stage == 1 && health <= (maxHealth * maskbreak_threshold))
 		BreakMask()
 
+// Inlined copy of the parent BreakMask() minus the gibspawner spawn so
+// refracted mobs leave no remains. Kept in sync with
+// /mob/living/simple_animal/hostile/mutant_clown/BreakMask().
 /mob/living/simple_animal/hostile/mutant_clown/refracted/BreakMask()
 	if(current_stage != 1)
 		return
 	if(health > (maxHealth * maskbreak_threshold))
 		return
-	..()
+	can_act = FALSE
+	icon_living = icon_state + "_unmasked"
+	icon_state = icon_living
+	desc += "Now with their mask broken... You can see their mutated face."
+	current_stage = 2
+	retreat_distance = 0
+	minimum_distance = 0
+	say(maskbreak_say_1)
+	move_to_delay = move_speed_maskbreak
+	UpdateSpeed()
+	playsound(get_turf(src), 'sound/creatures/lc13/lovetown/scream.ogg', 50, TRUE, 3)
+	ChangeResistances(list(RED_DAMAGE = 0.2, WHITE_DAMAGE = 0.2, BLACK_DAMAGE = 0.2, PALE_DAMAGE = 0.2))
+	SLEEP_CHECK_DEATH(25)
+	ChangeResistances(list(BRUTE = 1, RED_DAMAGE = 1.6, WHITE_DAMAGE = 0.6, BLACK_DAMAGE = 0.8, PALE_DAMAGE = 2))
+	say(maskbreak_say_2)
+	can_act = TRUE
 
 /mob/living/simple_animal/hostile/mutant_clown/refracted/sister
 	name = "'Sister'"
