@@ -1,32 +1,7 @@
 /*
- * Nova Flare mob passives.
- *
- * Returned by /datum/refraction_line/nova_flare/GetMobPassives() — the
- * subsystem walks every line at init and merges these into the canonical
- * SSrefraction_railway.mob_passives table. First registration wins on
- * collision; the loser is dropped with a stack_trace.
- *
- * Each passive entry is a flat assoc list:
- *
- *   list(
- *       "title"    = "Banner title",
- *       "severity" = "info" / "low" / "medium" / "high",
- *       "text"     = "Body paragraph.",
- *   )
- *
- * Severity drives the banner color and warning-icon count in the UI:
- *   info   = brown,  no warning icons (informational only)
- *   low    = yellow, 1 warning icon  (worth knowing about)
- *   medium = orange, 2 warning icons (active mid-combat consideration)
- *   high   = red,    3 warning icons (immediately dangerous)
- *
- * Style rules (see AUTHORING.md Step 5b for the full set):
- *   - Player-readable language only. No proc names, type paths, internal
- *     variable names, or DM expressions like view(N), oview(N), ohearers(N).
- *   - Use "tiles", "seconds", "HP", "moves much faster", "stunned", etc.
- *   - Discrete damage-dealing actions go in this line's attacks.dm. If a
- *     passive triggers an attack, name the attack and let attacks carry
- *     the mechanics.
+ * Nova Flare mob passives, returned by GetMobPassives().
+ * Each entry: list("title", "severity", "text").
+ * severity: info / low / medium / high. See AUTHORING.md Step 5b.
  */
 /datum/refraction_line/nova_flare/GetMobPassives()
 	return list(
@@ -265,9 +240,11 @@
 				"title"    = "The Whole Family",
 				"severity" = "high",
 				"text"     = "While the hearts live it Wails every 15s: 15 \
-					WHITE within 7 tiles + 2 RED Fragile, AND summons 1 \
-					reinforcement clown per player (70% Son/Father, 20% Sister, \
-					10% Mother). It also drops a 40 RED meat bomb (0.9s \
+					WHITE within 7 tiles + 2 RED Fragile, AND summons \
+					reinforcement clowns equal to half the party (1 in a 1-2 \
+					player run, 2 in a 3-4 player run) \
+					weighted 70% Son/Father, 20% Sister, \
+					and 10% Mother. It also drops a 40 RED meat bomb (0.9s \
 					telegraph, 1 tile) on every player within 7 tiles each \
 					~2.5s.",
 			),
@@ -314,9 +291,27 @@
 				"title"    = "Endless Brood",
 				"severity" = "high",
 				"text"     = "1650 HP, immobile, never attacks, won't aggro. \
-					Hatches 1 refracted fly at a time, up to 3 alive per nest, \
-					roughly one every ~38 seconds (first ~8s). 3 nests this \
-					node.",
+					Hatches a batch of 2 refracted flies every ~8 seconds, up \
+					to 6 alive per nest (the first batch almost immediately). 3 \
+					nests this node.",
+			),
+			list(
+				"title"    = "Rupturing Brood",
+				"severity" = "high",
+				"text"     = "Every time a nest loses another 33% of its max HP \
+					it ruptures, bursting 3 extra flies on the spot — on top of \
+					normal production and ignoring the alive cap. That's ~2 \
+					panic bursts over the course of killing one nest, so the \
+					pressure spikes the harder you hit it.",
+			),
+			list(
+				"title"    = "Caustic Hide",
+				"severity" = "medium",
+				"text"     = "Every hit you land on a nest leaves you WHITE \
+					Fragile (+10% WHITE taken per stack). The amount scales with \
+					how hurt the nest is: 1 stack near full, up to 5 once it has \
+					lost 20% of its max HP or more — so the longer a nest fight \
+					drags, the more its flies' WHITE bites hurt.",
 			),
 			list(
 				"title"    = "Brood Collapse",
@@ -338,8 +333,9 @@
 			list(
 				"title"    = "Swarm",
 				"severity" = "low",
-				"text"     = "45 HP, very fast. Basic attack is 4 hits of 1 \
-					WHITE. Trivial alone; the nests never stop making more.",
+				"text"     = "200 HP, very fast. Basic attack is 4 hits of 1 \
+					WHITE. Weak alone, but the nests never stop making more and \
+					rupture out extra bursts as you damage them.",
 			),
 			list(
 				"title"    = "Infest",
@@ -357,11 +353,13 @@
 			list(
 				"title"    = "Charge Armor",
 				"severity" = "high",
-				"text"     = "520 HP. Starts at 5 charge (max 20), regains ~1/s. \
+				"text"     = "800 HP. Starts at 10 charge (max 20), regains ~1/s. \
 					Base damage taken RED x0.6 / WHITE x0.8 / BLACK x1.2 / PALE \
 					x1.5. At 10+ charge it hardens to RED/WHITE/BLACK x0.3 / \
-					PALE x0.8. Every damage instance it takes removes 1 charge — \
-					burn its charge down to trigger Stagger.",
+					PALE x0.8. Every damage instance it takes removes 1 charge, \
+					and a missed Transpierce costs 5 — burn its charge down to \
+					trigger Stagger (one whiffed ability no longer drops it \
+					straight into Stagger).",
 			),
 			list(
 				"title"    = "Stagger",
@@ -406,23 +404,21 @@
 					registered enemy here. When it dies every vine is removed \
 					instantly and the node clears.",
 			),
-		),
-
-		/obj/structure/spreading/scarlet_vine/refracted = list(
 			list(
 				"title"    = "Thornwall",
 				"severity" = "medium",
-				"text"     = "Blocks movement (must be forced twice to pass; ~10% \
-					per forced push roots you + 5 Bleed). A sharp-edged weapon of \
-					5+ force cuts it. Destroying a vine by damage snaps up to 4 \
+				"text"     = "Its vines block movement (forced twice to pass; \
+					~10% per forced push roots you + 5 Bleed). A sharp 5+ force \
+					weapon cuts a vine; destroying one by damage snaps up to 4 \
 					adjacent vines too — one good cut opens a lane.",
 			),
 			list(
 				"title"    = "Bloodroot",
 				"severity" = "info",
-				"text"     = "Only 5 integrity, but armored: RED 80 (near-immune \
-					to RED), BLACK 40, WHITE 0, FIRE -50 and PALE -50 (takes \
-					x1.5). Use fire/PALE/sharp melee, not RED.",
+				"text"     = "Each vine has only 5 integrity but is armored: RED \
+					80 (near-immune to RED), BLACK 40, WHITE 0, FIRE -50 and PALE \
+					-50 (takes x1.5). Use fire/PALE/sharp melee on the vines, \
+					not RED.",
 			),
 		),
 

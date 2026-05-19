@@ -1,13 +1,6 @@
 /*
- * Refraction Railway loadout console.
- *
- * Authored 2-3 per checkpoint room. Catalog is built from the run datum's
- * pre-filtered usable_ego_weapons / usable_ego_armor (built in StartRun once
- * per run from SStestrange.ego_datums + the line's attribute_set_value), so
- * every player sees the same eligible set and ineligible items never appear.
- *
- * Server-side validation is defense-in-depth: ApplyLoadout (on the run datum)
- * re-checks the path against the eligible set before equipping.
+ * Refraction Railway loadout console. Catalog comes from the run datum's
+ * pre-filtered usable_ego_weapons / usable_ego_armor.
  */
 
 /obj/machinery/computer/refraction_loadout
@@ -29,10 +22,8 @@
 	if(!CheckInitializedDatums(user))
 		return
 	var/datum/refraction_run/R = SSrefraction_railway.GetRunForCkey(user.ckey)
-	// Only warn when the user has no run at all. Wrong-state silently bails;
-	// TGUI re-invokes ui_interact during state transitions (Begin Sector,
-	// Return to Lobby) and a chat warning there reads like a failure even
-	// though the click that triggered it succeeded.
+	// Warn only with no run; wrong-state bails silently (TGUI re-invokes
+	// ui_interact during state transitions).
 	if(!R)
 		to_chat(user, span_warning("You aren't currently part of a refraction run."))
 		return
@@ -44,8 +35,7 @@
 		ui.set_autoupdate(FALSE)
 		ui.open()
 
-/// Mirrors /obj/machinery/ego_printer.CheckInitializedDatums so we don't have
-/// to subtype the printer just to gate on the same condition.
+/// Gates UI on SStestrange ego_datums being initialized.
 /obj/machinery/computer/refraction_loadout/proc/CheckInitializedDatums(mob/living/user)
 	if(SStestrange.ego_datums_initializing || !SStestrange.ego_datums_initialized)
 		var/loaded = SStestrange.ego_datums ? length(SStestrange.ego_datums) : 0

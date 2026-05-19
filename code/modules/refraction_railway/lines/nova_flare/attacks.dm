@@ -1,33 +1,7 @@
 /*
- * Nova Flare mob attacks.
- *
- * Returned by /datum/refraction_line/nova_flare/GetMobAttacks() — the
- * subsystem walks every line at init and merges these into the canonical
- * SSrefraction_railway.mob_attacks table. First registration wins on
- * collision; the loser is dropped with a stack_trace.
- *
- * Each attack entry is a flat assoc list:
- *
- *   list(
- *       "name"     = "Attack name",
- *       "damage"   = "Damage value + type + area",
- *       "cooldown" = "Player-readable cooldown phrase",
- *       "desc"     = "Short paragraph describing the attack.",
- *   )
- *
- * Cooldown conventions:
- *   "15 seconds"                            — clean interval
- *   "4 seconds, 30% chance per attack"      — interval + probability
- *   "Replaces basic melee"                  — always-on
- *   "Triggered (see Last Stand)"            — armed by a passive; references it
- *   ", Stage 2 only"                        — append for stage-locked attacks
- *
- * Style rules (see AUTHORING.md Step 5c for the full set):
- *   - Player-readable language only. No proc names, type paths, or DM
- *     expressions.
- *   - Use tile counts, seconds, "winds up", "stunned", "knocks back".
- *
- * Like passives, attacks only surface on the *revealed* mob card.
+ * Nova Flare mob attacks, returned by GetMobAttacks().
+ * Each entry: list("name", "damage", "cooldown", "desc").
+ * Player-readable language only. See AUTHORING.md Step 5c.
  */
 /datum/refraction_line/nova_flare/GetMobAttacks()
 	return list(
@@ -221,8 +195,10 @@
 				"cooldown" = "15 seconds",
 				"desc"     = "15 WHITE to everything within 7 tiles + 2 RED \
 					Fragile (+10% RED taken/stack, 10s, max 9). While the hearts \
-					live, every Wail also summons 1 reinforcement clown per \
-					player (70% Son/Father, 20% Sister, 10% Mother).",
+					live, every Wail also summons reinforcement clowns equal \
+					to half the party — 1 clown in a 1-2 player run, 2 in a \
+					3-4 player run; weighted \
+					70% Son/Father, 20% Sister, 10% Mother.",
 			),
 			list(
 				"name"     = "Slam",
@@ -245,7 +221,7 @@
 			list(
 				"name"     = "Meat Barrage",
 				"damage"   = "40 RED per bomb in a 1-tile radius",
-				"cooldown" = "6 seconds, after the hearts are destroyed",
+				"cooldown" = "18 seconds, after the hearts are destroyed",
 				"desc"     = "The enhanced form of Meat Drop, unlocked once \
 					every heart is destroyed. Locks onto 1 player (solo or 2-\
 					player lobby) or half the lobby rounded up (1 in a 1-2 \
@@ -303,17 +279,14 @@
 					times, removing Bleed once it falls to 1 or less. Nothing if \
 					you carry no Bleed.",
 			),
-		),
-
-		/obj/structure/spreading/scarlet_vine/refracted = list(
 			list(
 				"name"     = "Tangle",
 				"damage"   = "5 Bleed (~10% chance when forced through)",
-				"cooldown" = "On contact",
-				"desc"     = "Shoving through a vine instead of cutting it can \
-					snag your legs and apply Bleed — the Bleed Thornlash feeds \
-					on. Sharp melee cuts vines (snapping up to 4 neighbours) \
-					without the Bleed risk.",
+				"cooldown" = "On contact with its vines",
+				"desc"     = "Shoving through one of its vines instead of \
+					cutting it can snag your legs and apply Bleed — the Bleed \
+					Thornlash feeds on. Sharp melee cuts vines (snapping up to 4 \
+					neighbours) without the Bleed risk.",
 			),
 		),
 

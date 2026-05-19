@@ -1,16 +1,9 @@
 /*
  * Nova Flare — refracted Sector 1 mobs.
- *
- * "Refracted" subtypes of base-game mobs, tuned for the Nova Flare line's
- * solo 80-stat player profile. Base mobs are left untouched so non-railway
- * content keeps its original balance. Player-facing briefing text for these
- * lives in passives.dm and attacks.dm.
+ * Subtypes of base-game mobs tuned for the Nova Flare line.
  */
 
 // ---------- Mi-Go (Node 1: "The Gap") ----------
-// Health and damage only. Inherits the parent wail (WHITE), insane-melee
-// PALE, disabled teleport, damage_coeff, rapid_melee, speed and icons.
-
 /mob/living/simple_animal/hostile/netherworld/migo/refracted
 	name = "drifting thing"
 	desc = "Something the line let through. It does not belong in any of the directions you can point."
@@ -19,9 +12,6 @@
 	scream_damage = 5
 
 // ---------- Mutant Clowns (Node 2: "The Family") ----------
-// Two-stage mask-break kept (rebalanced down). Scream keeps its WHITE hit
-// and additionally leaves humans RED Fragile.
-
 /mob/living/simple_animal/hostile/mutant_clown/refracted
 	name = "'Son'"
 	desc = "A survivor the blast did not finish. It still wears the face it had."
@@ -35,8 +25,6 @@
 	move_speed_maskbreak = 7
 	retreat_distance = 6
 	minimum_distance = 6
-	// Refracted mobs are disposable — no human corpse on death and no
-	// mask-break gibspawner (handled in BreakMask override below).
 	loot = list()
 	/// RED Fragile stacks applied to each human caught in a Scream.
 	var/scream_fragile_stacks = 2
@@ -54,18 +42,13 @@
 		if(!faction_check_mob(H))
 			H.apply_lc_red_fragile(scream_fragile_stacks)
 
-// The parent fires BreakMask() at a hardcoded 50% HP. Drive it at
-// maskbreak_threshold instead: trigger here (handles thresholds above
-// 50%, which the parent's 50% check is too late for) and gate the parent's
-// own call so it can't break early or twice.
+// Drive BreakMask() at maskbreak_threshold instead of the parent's 50%.
 /mob/living/simple_animal/hostile/mutant_clown/refracted/adjustHealth(amount, updating_health = TRUE, forced = FALSE)
 	. = ..()
 	if(current_stage == 1 && health <= (maxHealth * maskbreak_threshold))
 		BreakMask()
 
-// Inlined copy of the parent BreakMask() minus the gibspawner spawn so
-// refracted mobs leave no remains. Kept in sync with
-// /mob/living/simple_animal/hostile/mutant_clown/BreakMask().
+// Inlined parent BreakMask() minus the gibspawner.
 /mob/living/simple_animal/hostile/mutant_clown/refracted/BreakMask()
 	if(current_stage != 1)
 		return

@@ -1,26 +1,12 @@
 /*
- * Refraction Railway status-effect glossary.
- *
- * Single source of truth for the short, mechanics-only blurbs (and the
- * status's own sprite) shown when a player hovers an underlined status
- * name on a mob's passive/attack card (RefractionMobCards.js GlossaryText).
- * Sent to the consoles as data["status_glossary"] via
- * RefractionStatusGlossary(). Pure mechanics — never name where a status
- * comes from (that belongs on the mob card, not the status definition).
- *
- * Numbers here MUST match the real implementations in
- * code/datums/status_effects/ (lc_bleed's walk exemption, the
- * (stacks/(stacks+25)) Level curves, the x4-vs-mobs riders, etc.).
- *
- * Built lazily on first console open (not at global init) so the alert
- * sprites can be instantiated safely after SSatoms.
+ * Refraction Railway status-effect glossary: mechanics-only blurbs shown
+ * on mob cards. Numbers MUST match code/datums/status_effects/.
+ * Built lazily on first console open (safe after SSatoms).
  */
 
 GLOBAL_LIST_EMPTY(refraction_status_glossary)
 
-/// Base64 of a status's own alert sprite, read off a transient instance so
-/// it tracks the real sprite without hardcoding icon_states. NULL if the
-/// alert path is bad / has no sprite (the card then shows name only).
+/// Base64 of a status's alert sprite, or null if the path has no sprite.
 /proc/RefractionStatusAlertIcon(alert_path)
 	if(!ispath(alert_path, /atom/movable/screen/alert))
 		return null
