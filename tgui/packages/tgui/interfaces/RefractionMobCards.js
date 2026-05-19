@@ -12,7 +12,15 @@
  *                       label (HP, exact damage, attack speed all hidden)
  */
 
-import { Box, Button, Icon, LabeledList, Section, Stack } from '../components';
+import {
+  Box,
+  Button,
+  Icon,
+  LabeledList,
+  Section,
+  Stack,
+  Tooltip,
+} from '../components';
 
 // Banner color + warning-icon count per severity tier. Authors set
 // `severity` on a passive entry server-side; the renderer picks both
@@ -89,13 +97,15 @@ const GlossaryText = props => {
     if (!g) {
       return part;
     }
+    // The status name is wrapped in a position:relative inline-block Box
+    // with a <Tooltip> child — that is the only tooltip mechanism tgui's
+    // Box supports (the bare `tooltip` prop is silently dropped, which is
+    // why hovering used to do nothing).
     return (
       <Box
         key={i}
-        as="span"
         inline
-        tooltip={g.desc}
-        tooltipPosition="bottom"
+        position="relative"
         style={{
           'text-decoration': 'underline dotted',
           'cursor': 'help',
@@ -112,6 +122,7 @@ const GlossaryText = props => {
           />
         )}
         {part}
+        <Tooltip content={g.desc} position="bottom" />
       </Box>
     );
   });

@@ -1,15 +1,9 @@
 /*
- * Checkpoint-room consoles: the wall-mounted briefing display, and the
- * "Begin Sector" advance console. Both live in every line's checkpoint area
- * (one of each per line) and read run state from /datum/refraction_run.
- *
- * Briefing cards have two states per ckey: unrevealed (silhouette + damage
- * type + derived weakness) and revealed (full combat-log-book stats + tip).
- * The encountered-mob set is persisted via SSpersistence; cards stay revealed
- * across rounds.
+ * Checkpoint-room consoles: wall-mounted briefing display and the
+ * "Begin Sector" advance console. Read run state from /datum/refraction_run.
  */
 
-// ---------- Briefing display ----------
+// Briefing display
 
 /obj/structure/refraction_briefing
 	name = "refraction sector briefing"
@@ -83,7 +77,7 @@
 		))
 	return out
 
-// ---------- Advance ("Begin Sector") console ----------
+// Advance ("Begin Sector") console
 
 /obj/machinery/computer/refraction_advance
 	name = "refraction advance console"
@@ -102,11 +96,8 @@
 
 /obj/machinery/computer/refraction_advance/ui_interact(mob/user, datum/tgui/ui)
 	var/datum/refraction_run/R = SSrefraction_railway.GetRunForCkey(user.ckey)
-	// Only warn when the user genuinely has no business with the console
-	// (no run at all). Wrong-state silently bails — TGUI re-invokes
-	// ui_interact during state transitions (Begin Sector, Return to Lobby)
-	// and a chat warning there reads like a failure even though the action
-	// succeeded.
+	// Warn only with no run; wrong-state bails silently (TGUI re-invokes
+	// ui_interact during state transitions).
 	if(!R)
 		to_chat(user, span_warning("You aren't currently part of a refraction run."))
 		return
@@ -117,8 +108,7 @@
 	ui = SStgui.try_update_ui(user, src, ui)
 	if(!ui)
 		ui = new(user, src, "RefractionAdvance", "Begin Sector")
-		// Auto-update so owner-active state and the LOBBY_RUNNING ->
-		// LOBBY_FINISHED transition propagate without requiring a click.
+		// Autoupdate so state transitions propagate without a click.
 		ui.set_autoupdate(TRUE)
 		ui.open()
 
@@ -146,13 +136,8 @@
 	data["all_ready"] = all_ready && length(members_payload) > 0
 	data["leaderboard"] = SSrefraction_railway.leaderboards[R.line.id]
 	data["line_id"] = R.line.id
-	// Last completed sector's elapsed time (deciseconds), if any. Lets the
-	// staging view show "Sector N took: X" between sectors. Zero if no
-	// sector has been completed yet.
+	// Last completed sector's elapsed time in deciseconds, 0 if none.
 	data["last_sector_time_ds"] = GetLastSectorTimeDs(R)
-	// Finished-state payload: full per-sector breakdown + total + per-player
-	// loadouts captured at each clear. The TGUI swaps to the results view
-	// when lobby_state == "lobby_finished".
 	data["lobby_state"] = R.lobby_state
 	if(R.lobby_state == LOBBY_FINISHED)
 		data["results"] = BuildResultsPayload(R)
@@ -241,16 +226,11 @@
 		if("begin_sector")
 			R.BeginSector(usr.ckey)
 		if("force_begin_sector")
-			// Owner-only escape hatch for AFK members. Skips the ready /
-			// loadout requirements; BeginSector itself enforces owner.
+			// Owner-only AFK escape hatch; BeginSector enforces owner.
 			R.BeginSector(usr.ckey, TRUE)
 		if("return_to_lobby")
-			// Anyone in the run can press this; the run is over and we're
-			// just shuttling everybody back to where they joined from.
 			if(R.lobby_state == LOBBY_FINISHED)
 				R.ReturnToLobby()
 		if("abandon_run")
-			// Owner-only — destroys the run, releases the lane, and dumps
-			// the team back at the hub with no rewards. Two-click confirm
-			// is enforced UI-side; backend just trusts the call.
+			// Owner-only; two-click confirm is enforced UI-side.
 			R.AbandonRun(usr.ckey)

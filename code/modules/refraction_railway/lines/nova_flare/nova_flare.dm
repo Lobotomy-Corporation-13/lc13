@@ -1,14 +1,5 @@
 /*
- * Line 1: Nova Flare.
- *
- * Three sectors of three nodes each. Mob composition is placeholder — to be
- * replaced once the line's final encounter design is locked. The third node
- * of sector 3 is the boss (is_boss = TRUE on the node datum).
- *
- * Companion files in this same directory:
- *   passives.dm — /datum/refraction_line/nova_flare/GetMobPassives() override
- *   attacks.dm  — /datum/refraction_line/nova_flare/GetMobAttacks() override
- *
+ * Line 1: Nova Flare. Three sectors of three nodes each.
  * Authoring conventions: see code/modules/refraction_railway/AUTHORING.md.
  */
 
@@ -28,9 +19,7 @@
 
 	map_viewbox = list("w" = 600, "h" = 400)
 
-	// 13 visual nodes laid out as a top-to-bottom snake:
-	//   sector 1 left→right on row 1, drop to sector 2 right→left on row 2,
-	//   drop to sector 3 left→right on row 3 ending in the boss + finish.
+	// 13 visual nodes laid out as a top-to-bottom snake.
 	nodes = list(
 		list("x" = 50,  "y" = 80,  "kind" = "start"),       //  1
 		list("x" = 150, "y" = 80,  "kind" = "combat"),      //  2  s1n1
@@ -133,10 +122,7 @@
 		list(
 			/mob/living/simple_animal/hostile/scarlet_rose/refracted = 1,
 		),
-		boss = TRUE,
-		extra_preview = list(
-			/obj/structure/spreading/scarlet_vine/refracted,
-		))
+		boss = TRUE)
 
 	// ----- Sector 3: Heart -----
 	AddNode("nova_s3n1", "nova_s3n1_spawns",

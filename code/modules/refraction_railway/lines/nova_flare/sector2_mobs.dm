@@ -1,29 +1,11 @@
 /*
  * Nova Flare — Sector 2: refracted Motus Temple encounters.
- *
- * Node 1 "The Hive": refracted mad-fly Nests (destructible spawner
- *   objective) that hatch refracted Flies. Flies burrow into players at
- *   <=50% sanity, drain sanity, and leave once the host recovers; while a
- *   fly is inside you, you hit Nests 50% harder.
- * Node 2 "The Clan Wall": refracted Stone Guards (charge/stagger/Transpierce
- *   identity kept).
- * Node 3 "The Scarlet Garden": refracted Scarlet Rose boss — a 5-tile vine
- *   field pre-spread at spawn (Vine Gauntlet: reduced damage while dense
- *   vines remain near it), cutting a vine snaps up to 4 adjacent vines, and
- *   Thornlash detonates accumulated Bleed. Vines vanish on rose death.
- *
- * Base file (lc13_motus_temple.dm) is touched only via defaulted gate vars
- * (mirrors the give_boss_achievement precedent). Conventions: loot=list(),
- * null butcher results, drop chemical_harvest, deferred runtime spawns,
- * INVOKE_ASYNC for sleeping attacks, RegisterSpawnedMob for runtime children.
+ * Node 1 The Hive (mad-fly nests/flies), Node 2 The Clan Wall (stone
+ * guards), Node 3 The Scarlet Garden (refracted Scarlet Rose boss).
  */
 
 // ---------- Thornlash telegraph ----------
-// Subtype of the rose_sign /obj/effect/rose_target: inherits its
-// icon (64x64.dmi "warning_rose"), pixel offsets, and Initialize() ->
-// addtimer(GrabAttack, 3 SECONDS) ground-marker delay. We only swap what
-// GrabAttack does: detonate the victim's Bleed instead of the BLACK grab.
-
+// GrabAttack detonates the victim's Bleed instead of the base BLACK grab.
 /obj/effect/rose_target/thornlash
 	name = "lashing thorns"
 	desc = "LOOK OUT!"
@@ -35,8 +17,6 @@
 		var/datum/status_effect/stacking/lc_bleed/B = H.has_status_effect(/datum/status_effect/stacking/lc_bleed)
 		if(!B)
 			continue
-		// Pop the Bleed up to 4 times: BRUTE = current stacks, then halve;
-		// clear it once a halved value falls to <=1.
 		for(var/i = 1 to 4)
 			if(QDELETED(B))
 				break
@@ -50,23 +30,17 @@
 	qdel(src)
 
 // ---------- Refracted Scarlet Vine ----------
-// Self-contained: bound to its spawning rose via a NON-static ref so the
-// base static connected_rose/vine_list are never relied on (instanced-z
-// safety). Inherits armor / VineEffect / VineAttack / CanAllowThrough.
+// Bound to its rose via a non-static ref (instanced-z safe).
 
 /obj/structure/spreading/scarlet_vine/refracted
-	/// The refracted rose that owns this vine (non-static; replaces the
-	/// base static connected_rose binding).
+	/// The refracted rose that owns this vine.
 	var/mob/living/simple_animal/hostile/scarlet_rose/refracted/bound_rose
-	/// TRUE when this vine is being torn down as part of a chain-break, so
-	/// it does not itself re-propagate the chain.
+	/// TRUE while being torn down in a chain-break, to stop re-propagation.
 	var/chained = FALSE
 
 /obj/structure/spreading/scarlet_vine/refracted/Initialize()
 	. = ..()
-	// Base Initialize() may have captured us into the static vine_list of
-	// whatever rose it scanned; detach immediately. bound_rose is assigned
-	// by the rose right after `new`.
+	// Detach from any static vine_list the base Initialize() captured us into.
 	if(connected_rose)
 		connected_rose.vine_list -= src
 
@@ -76,11 +50,7 @@
 		bound_rose = null
 	return ..()
 
-// Chain-break: when destroyed BY DAMAGE (obj_destruction fires on integrity
-// loss; a plain qdel from the rose's cleanup does NOT route here, so the
-// mass teardown can't cascade), snap up to 4 adjacent refracted vines.
-// Those are qdel'd (Destroy(), not obj_destruction) so they do not
-// re-propagate — single-step only, never a full-field wipe.
+// On being destroyed by damage, snap up to 4 adjacent refracted vines.
 /obj/structure/spreading/scarlet_vine/refracted/obj_destruction(damage_flag)
 	if(!chained)
 		var/snapped = 0
@@ -94,9 +64,7 @@
 				break
 	return ..()
 
-// Inlined from /obj/structure/spreading/expand() (ModularLobotomy/
-// lc13_structures.dm) + binding the new vine to bound_rose so regrown lane
-// vines are torn down on rose death. Keep in sync with the base proc.
+// Inlined base expand() plus binding the new vine to bound_rose.
 /obj/structure/spreading/scarlet_vine/refracted/expand(bypasscooldown = FALSE)
 	if(!can_expand)
 		return
@@ -132,11 +100,10 @@
 // ---------- Refracted Mad Fly ----------
 
 /mob/living/simple_animal/hostile/mad_fly_swarm/refracted
-	maxHealth = 45
-	health = 45
+	maxHealth = 200
+	health = 200
 	loot = list()
 	use_base_nesting = FALSE
-	/// Burrow tuning.
 	var/burrow_bites = 0
 	var/min_bites = 2
 	var/sp_threshold = 0.5
@@ -147,7 +114,7 @@
 	var/reenter_cooldown_time = 5 SECONDS
 
 /mob/living/simple_animal/hostile/mad_fly_swarm/refracted/AttackingTarget(atom/attacked_target)
-	. = ..() // 4x bite + lunge onto the target tile; base nesting gated off.
+	. = ..()
 	if(nesting_target)
 		return
 	if(world.time < reenter_cooldown)
@@ -165,7 +132,7 @@
 	forceMove(H)
 
 /mob/living/simple_animal/hostile/mad_fly_swarm/refracted/Life()
-	. = ..() // grandparent upkeep; base devour/throw-up gated off.
+	. = ..()
 	if(!.)
 		return
 	if(stat == DEAD || !nesting_target)
@@ -201,11 +168,20 @@
 	butcher_results = null
 	guaranteed_butcher_results = null
 	spawn_fly_type = /mob/living/simple_animal/hostile/mad_fly_swarm/refracted
-	fly_cap = 3
-	spawn_threshold = 14
+	fly_cap = 6
+	spawn_threshold = 4
 	spawn_gib_on_death = FALSE
 	/// Damage multiplier a host carrying a burrowed refracted fly deals.
 	var/infested_dmg_mult = 1.5
+	/// Flies hatched per production cycle.
+	var/flies_per_batch = 2
+	/// Each crossed hp_burst_fraction band of lost maxHealth bursts flies.
+	var/hp_burst_fraction = 0.33
+	var/burst_flies_count = 3
+	var/bursts_done = 0
+	/// On being hit, the attacker gets WHITE Fragile scaling with missing HP.
+	var/white_fragile_max = 5
+	var/white_fragile_hp_scale = 0.20
 
 /mob/living/simple_animal/hostile/mad_fly_nest/refracted/Initialize()
 	. = ..()
@@ -217,28 +193,62 @@
 			if(F.nesting_target == source)
 				damage_amount *= infested_dmg_mult
 				break
-	return ..()
+	. = ..()
+	if(stat == DEAD || maxHealth <= 0)
+		return
+	if(. > 0 && isliving(source))
+		var/mob/living/attacker = source
+		if(!faction_check_mob(attacker))
+			var/missing_frac = (maxHealth - health) / maxHealth
+			var/ratio = clamp(missing_frac / white_fragile_hp_scale, 0, 1)
+			var/stacks = clamp(round(ratio * white_fragile_max), 1, white_fragile_max)
+			attacker.apply_lc_white_fragile(stacks)
+	var/bands = round((maxHealth - health) / (maxHealth * hp_burst_fraction))
+	while(bands > bursts_done)
+		bursts_done++
+		BurstFlies(burst_flies_count)
 
-// Inlined from base Produce() + wave-controller registration so the node
-// tracks nest-born flies (base never registers them). Keep in sync.
+/// Spit out `count` flies on top of normal production (not fly_cap-gated).
+/mob/living/simple_animal/hostile/mad_fly_nest/refracted/proc/BurstFlies(count)
+	if(stat == DEAD)
+		return
+	visible_message(span_danger("\The [src] ruptures, spilling a fresh swarm!"))
+	playsound(get_turf(src), 'sound/effects/splat.ogg', 60, TRUE, 4)
+	var/datum/refraction_wave_controller/C = GLOB.refraction_wave_mob_owners[src]
+	for(var/i in 1 to count)
+		var/turf/T = get_step(get_turf(src), pick(0, EAST, WEST, NORTH, SOUTH))
+		if(!T || T.density)
+			T = get_turf(src)
+		var/mob/living/simple_animal/hostile/mad_fly_swarm/nb = new spawn_fly_type(T)
+		nb.return_to_origin = TRUE
+		spawned_mobs += nb
+		if(C)
+			C.RegisterSpawnedMob(nb)
+
+// Inlined base Produce(), hatching a whole batch and registering each fly.
 /mob/living/simple_animal/hostile/mad_fly_nest/refracted/Produce()
 	if(producing || stat == DEAD)
 		return
 	producing = TRUE
 	icon_state = "egg_opening"
-	SLEEP_CHECK_DEATH(10)
+	SLEEP_CHECK_DEATH(5)
 	visible_message(span_danger("\A new swarm climbs out of [src]!"))
-	var/turf/T = get_step(get_turf(src), pick(0, EAST))
-	var/mob/living/simple_animal/hostile/mad_fly_swarm/nb = new spawn_fly_type(T)
-	nb.return_to_origin = TRUE
-	spawned_mobs += nb
 	var/datum/refraction_wave_controller/C = GLOB.refraction_wave_mob_owners[src]
-	if(C)
-		C.RegisterSpawnedMob(nb)
+	for(var/i in 1 to flies_per_batch)
+		if(length(spawned_mobs) >= fly_cap)
+			break
+		var/turf/T = get_step(get_turf(src), pick(0, EAST, WEST, NORTH, SOUTH))
+		if(!T || T.density)
+			T = get_turf(src)
+		var/mob/living/simple_animal/hostile/mad_fly_swarm/nb = new spawn_fly_type(T)
+		nb.return_to_origin = TRUE
+		spawned_mobs += nb
+		if(C)
+			C.RegisterSpawnedMob(nb)
 	SLEEP_CHECK_DEATH(2)
 	icon_state = "egg"
 	producing = FALSE
-	spawn_progress = -5
+	spawn_progress = 0
 
 /mob/living/simple_animal/hostile/mad_fly_nest/refracted/death(gibbed)
 	for(var/mob/living/L in spawned_mobs.Copy())
@@ -248,13 +258,13 @@
 	return ..()
 
 // ---------- Refracted Stone Guard ----------
-// Vars only; charge/stagger/Transpierce/Move-gating all inherited.
 
 /mob/living/simple_animal/hostile/clan/stone_guard/refracted
-	maxHealth = 520
-	health = 520
+	maxHealth = 800
+	health = 800
 	melee_damage_lower = 8
 	melee_damage_upper = 11
+	charge = 10
 	ability_cooldown_time = 12 SECONDS
 	stun_duration = 4 SECONDS
 	loot = list()
@@ -287,7 +297,7 @@
 	qdel(GetComponent(/datum/component/chemical_harvest))
 
 /mob/living/simple_animal/hostile/scarlet_rose/refracted/Life()
-	. = ..() // grandparent upkeep only; base static-vine loop gated off.
+	. = ..()
 	if(!.)
 		return
 	if(stat == DEAD)
@@ -307,8 +317,7 @@
 		thornlash_cooldown = world.time + thornlash_cooldown_time
 		INVOKE_ASYNC(src, PROC_REF(Thornlash))
 
-// Vine Gauntlet: heavily reduced incoming damage while dense vines remain
-// near the rose (amount > 0 = damage taken, per the stone_guard precedent).
+// Vine Gauntlet: reduced incoming damage while vines remain near the rose.
 /mob/living/simple_animal/hostile/scarlet_rose/refracted/adjustHealth(amount, updating_health = TRUE, forced = FALSE)
 	if(amount > 0 && VinesShielding())
 		amount *= shielded_mult
@@ -323,7 +332,7 @@
 			return TRUE
 	return FALSE
 
-// Inlined from base SpreadPlants() + binding. Keep in sync.
+// Inlined base SpreadPlants() plus binding the new vine to the rose.
 /mob/living/simple_animal/hostile/scarlet_rose/refracted/SpreadPlants()
 	if(!isturf(loc) || isspaceturf(loc))
 		return

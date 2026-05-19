@@ -70,6 +70,15 @@
 /obj/effect/landmark/refraction/start_point/nova_s2n1,
 /turf/open/floor/stone,
 /area/refraction/nova_flare)
+"dl" = (
+/obj/effect/light_emitter{
+	light_power = 4;
+	light_range = 25;
+	set_cap = 3;
+	set_luminosity = 24
+	},
+/turf/open/floor/wood,
+/area/refraction/nova_flare)
 "dE" = (
 /obj/structure/bed/maint,
 /obj/effect/light_emitter{
@@ -99,6 +108,12 @@
 /area/refraction/nova_flare)
 "hH" = (
 /obj/effect/landmark/refraction/spawner/nova_s2n3,
+/obj/effect/light_emitter{
+	light_power = 4;
+	light_range = 25;
+	set_cap = 3;
+	set_luminosity = 24
+	},
 /turf/open/floor/wood,
 /area/refraction/nova_flare)
 "hK" = (
@@ -2030,7 +2045,7 @@ pe
 pe
 qk
 qk
-pe
+dl
 pe
 pe
 qk
@@ -2242,7 +2257,7 @@ pb
 ad
 Ua
 pe
-pe
+dl
 pe
 pe
 pe
@@ -2464,7 +2479,7 @@ hH
 pe
 pe
 qk
-pe
+dl
 Ua
 ad
 mb

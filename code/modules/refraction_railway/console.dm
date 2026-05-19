@@ -1,12 +1,6 @@
 /*
- * Refraction Railway hub console.
- *
- * Lives in the railway hub area on a permanent z. Ghosts attack-click it to
- * be funneled into the nearby /obj/effect/mob_spawn/human/refraction_railway_agent
- * (a testrange-style sleeper). Bodies then click it to open the subway-map UI
- * for line selection, lobby creation, and leaderboard browsing.
- *
- * Lobby state lives on /datum/refraction_run; this console is purely a view.
+ * Refraction Railway hub console. Ghosts click to spawn a body in a nearby
+ * sleeper; bodies open the subway-map UI for lines, lobbies, leaderboards.
  */
 
 /obj/machinery/computer/refraction_railway_console
@@ -28,9 +22,7 @@
 	ui = SStgui.try_update_ui(user, src, ui)
 	if(!ui)
 		ui = new(user, src, "RefractionRailway", "Refraction Railway")
-		// Auto-update so the LOBBY_STARTING -> LOBBY_RUNNING transition (and
-		// the loading-state UI feedback) propagates without requiring the
-		// user to click anything.
+		// Autoupdate so lobby state transitions propagate without a click.
 		ui.set_autoupdate(TRUE)
 		ui.open()
 
@@ -44,9 +36,7 @@
 	data["status_glossary"] = RefractionStatusGlossary()
 	return data
 
-/// Builds the small per-effect payload shown under the line list, so
-/// players can tell at a glance which small-party compensation effects
-/// are currently active. Source-of-truth flags live on SSrefraction_railway.
+/// Per-effect payload of active small-party compensation flags.
 /obj/machinery/computer/refraction_railway_console/proc/BuildCompensationsPayload()
 	return list(
 		list(
@@ -81,10 +71,7 @@
 		),
 	)
 
-/// Augments each leaderboard entry's per-sector breakdown with rendered
-/// loadout icons so the records modal can show what gear each player used
-/// per sector. Loadouts are stored as paths (or strings post-JSON-load);
-/// here they're converted to base64 icons via SStestrange's cached helper.
+/// Leaderboard payload with per-sector loadout icons rendered.
 /obj/machinery/computer/refraction_railway_console/proc/BuildLeaderboardsPayload()
 	var/list/out = list()
 	for(var/line_id in SSrefraction_railway.leaderboards)
@@ -129,8 +116,7 @@
 		return icons
 	for(var/i in 1 to min(3, length(paths)))
 		var/p = paths[i]
-		// Post-JSON entries arrive as strings; fresh in-memory entries are
-		// real paths. GenerateEgoPreviewIcon needs a path either way.
+		// Post-JSON entries arrive as strings; in-memory ones are real paths.
 		if(istext(p))
 			p = text2path(p)
 		if(!ispath(p))
@@ -160,9 +146,7 @@
 		))
 	return out
 
-/// Returns one entry per /datum/refraction_node on the line, each with its
-/// mob cards (revealed/unrevealed per `ckey`). Used by the subway-map node
-/// click flow on the hub UI.
+/// One entry per combat node with its mob cards (revealed per ckey).
 /obj/machinery/computer/refraction_railway_console/proc/BuildLineCombatNodesPayload(datum/refraction_line/L, ckey)
 	var/list/out = list()
 	if(!islist(L?.combat_nodes))
@@ -301,7 +285,7 @@
 		return FALSE
 	return R.StartRun()
 
-// ---------- Ghost-spawn sleeper ----------
+// Ghost-spawn sleeper
 
 /obj/effect/mob_spawn/human/refraction_railway_agent
 	uses = -1
