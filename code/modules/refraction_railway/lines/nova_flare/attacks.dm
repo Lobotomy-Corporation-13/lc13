@@ -2,6 +2,12 @@
  * Nova Flare mob attacks, returned by GetMobAttacks().
  * Each entry: list("name", "damage", "cooldown", "desc").
  * Player-readable language only. See AUTHORING.md Step 5c.
+ *
+ * Card-writing rules (see AUTHORING.md): the "damage" field is the only
+ * place numbers belong. Never restate it in "desc"; never re-explain a
+ * glossary status (name it); never spell out synergy/strategy; a basic
+ * melee replacement names its type/scaling, not a number. Wrap any
+ * reference to another card's name in **double asterisks** (bold).
  */
 /datum/refraction_line/nova_flare/GetMobAttacks()
 	return list(
@@ -12,8 +18,8 @@
 			list(
 				"name"     = "Self-Destruct",
 				"damage"   = "60 RED in a 3-tile radius",
-				"cooldown" = "Triggered (see Last Stand)",
-				"desc"     = "Stops moving. Grows to nearly 2x size with a red glow over 1.5 seconds. Then explodes, hitting everything close to it.",
+				"cooldown" = "Triggered (see **Last Stand**)",
+				"desc"     = "Stops moving. Grows to nearly 2x size with a red glow over 1.5 seconds, then explodes, hitting everything close to it.",
 			),
 		),
 
@@ -21,8 +27,8 @@
 			list(
 				"name"     = "Self-Destruct",
 				"damage"   = "60 RED in a 3-tile radius",
-				"cooldown" = "Triggered (see Last Stand)",
-				"desc"     = "Stops moving. Grows to nearly 2x size with a red glow over 1.5 seconds. Then explodes, hitting everything close to it.",
+				"cooldown" = "Triggered (see **Last Stand**)",
+				"desc"     = "Stops moving. Grows to nearly 2x size with a red glow over 1.5 seconds, then explodes, hitting everything close to it.",
 			),
 			list(
 				"name"     = "Air Sweep",
@@ -43,7 +49,7 @@
 				"cooldown" = "15 seconds",
 				"desc"     = "Spends 5 seconds winding up — cannot move or attack during this \
 					time. On release, blasts a shockwave that hits everything in the area. The \
-					next windup is shorter (3 seconds) if a Steel Corporal's Self-Destruct went \
+					next windup is shorter (3 seconds) if a Steel Corporal's **Self-Destruct** went \
 					off near it.",
 			),
 		),
@@ -84,18 +90,18 @@
 			list(
 				"name"     = "Bullrush",
 				"damage"   = "30-40 RED plus a hard knockback (target is thrown several tiles)",
-				"cooldown" = "Triggered (see Retaliation)",
+				"cooldown" = "Triggered (see **Retaliation**)",
 				"desc"     = "Sprints forward for 4 seconds, moving much faster than usual. The \
 					very next melee swing during the dash launches the target away.",
 			),
 			list(
 				"name"     = "Love Whip",
 				"damage"   = "100 RED across a long cone in front of it (about 8 tiles deep, fanning out toward the end)",
-				"cooldown" = "Triggered (see Retaliation), Stage 2 only",
+				"cooldown" = "Triggered (see **Retaliation**), Stage 2 only",
 				"desc"     = "Winds up for 2.5 seconds — cannot move during this. On release, \
 					swings a wide cone in the direction of its target. Anything alive caught in \
 					the cone is yanked back toward the abomination. 20% chance to immediately \
-					follow up with Bullrush.",
+					follow up with **Bullrush**.",
 			),
 			list(
 				"name"     = "Finisher",
@@ -116,16 +122,16 @@
 				"name"     = "Dissonant Wail",
 				"damage"   = "5 WHITE in a 7-tile radius",
 				"cooldown" = "Constant — no wind-up, no cooldown",
-				"desc"     = "Deals 5 WHITE to everything alive within 7 tiles \
-					whenever it moves or makes a sound, and at random. Cannot be \
-					interrupted.",
+				"desc"     = "Hits everything alive nearby whenever it moves, \
+					makes a sound, or at random. Cannot be interrupted.",
 			),
 			list(
 				"name"     = "Feast",
-				"damage"   = "5 PALE per melee hit, up to 4 hits per attack",
-				"cooldown" = "Only vs an Insane target (see Mind-Eater)",
-				"desc"     = "Against a target whose sanity has broken, each hit of \
-					its rapid melee flurry deals 5 PALE on top of its WHITE melee.",
+				"damage"   = "Adds PALE per melee hit, up to 4 hits (Insane targets only)",
+				"cooldown" = "Only vs an Insane target",
+				"desc"     = "Against a target whose sanity has broken, each hit \
+					of its rapid melee flurry adds PALE on top of its WHITE \
+					melee.",
 			),
 		),
 
@@ -134,18 +140,14 @@
 				"name"     = "Wail",
 				"damage"   = "12 WHITE in a 7-tile radius, applies 2 RED Fragile",
 				"cooldown" = "6 seconds",
-				"desc"     = "~0.5s decoy + ~0.6s wind-up (can't move), then 12 \
-					WHITE to everything within 7 tiles and 2 RED Fragile (+10% \
-					RED damage taken per stack, 10s, refreshes to the higher \
-					stack, max 9).",
+				"desc"     = "~0.5s decoy + ~0.6s wind-up (can't move), then \
+					hits everything within 7 tiles and applies 2 RED Fragile.",
 			),
 			list(
 				"name"     = "Slam",
-				"damage"   = "8-12 RED in a 1-tile radius",
+				"damage"   = "RED in a 1-tile radius, scales with the target's RED Fragile",
 				"cooldown" = "Replaces its basic attack, Stage 2 only",
-				"desc"     = "Stage 2 only. Slams the ground, dealing 8-12 RED to \
-					everything within 1 tile. Increased by the target's RED \
-					Fragile.",
+				"desc"     = "Stage 2 only. Slams the ground around itself.",
 			),
 		),
 
@@ -154,18 +156,14 @@
 				"name"     = "Wail",
 				"damage"   = "12 WHITE in a 7-tile radius, applies 5 RED Fragile",
 				"cooldown" = "6 seconds",
-				"desc"     = "~0.5s decoy + ~0.6s wind-up (can't move), then 12 \
-					WHITE to everything within 7 tiles and 5 RED Fragile (+10% \
-					RED damage taken per stack, here +50%, 10s, max 9). The \
-					family's main Fragile source.",
+				"desc"     = "~0.5s decoy + ~0.6s wind-up (can't move), then \
+					hits everything within 7 tiles and applies 5 RED Fragile.",
 			),
 			list(
 				"name"     = "Slam",
-				"damage"   = "6-9 RED in a 1-tile radius",
+				"damage"   = "RED in a 1-tile radius, scales with the target's RED Fragile",
 				"cooldown" = "Replaces its basic attack, Stage 2 only",
-				"desc"     = "Stage 2 only. Slams the ground, dealing 6-9 RED to \
-					everything within 1 tile. Increased by the target's RED \
-					Fragile.",
+				"desc"     = "Stage 2 only. Slams the ground around itself.",
 			),
 		),
 
@@ -174,17 +172,14 @@
 				"name"     = "Wail",
 				"damage"   = "17 WHITE in a 7-tile radius, applies 2 RED Fragile",
 				"cooldown" = "7 seconds",
-				"desc"     = "~0.5s decoy + ~0.6s wind-up (can't move), then 17 \
-					WHITE to everything within 7 tiles and 2 RED Fragile (+10% \
-					RED damage taken per stack, 10s, max 9).",
+				"desc"     = "~0.5s decoy + ~0.6s wind-up (can't move), then \
+					hits everything within 7 tiles and applies 2 RED Fragile.",
 			),
 			list(
 				"name"     = "Slam",
-				"damage"   = "11-17 RED in a 1-tile radius",
+				"damage"   = "RED in a 1-tile radius, scales with the target's RED Fragile",
 				"cooldown" = "Replaces its basic attack, Stage 2 only",
-				"desc"     = "Stage 2 only. Slams the ground, dealing 11-17 RED to \
-					everything within 1 tile. Increased by the target's RED \
-					Fragile.",
+				"desc"     = "Stage 2 only. Slams the ground around itself.",
 			),
 		),
 
@@ -193,52 +188,43 @@
 				"name"     = "Wail",
 				"damage"   = "15 WHITE in a 7-tile radius, applies 2 RED Fragile",
 				"cooldown" = "15 seconds",
-				"desc"     = "15 WHITE to everything within 7 tiles + 2 RED \
-					Fragile (+10% RED taken/stack, 10s, max 9). While the hearts \
-					live, every Wail also summons reinforcement clowns equal \
-					to half the party — 1 clown in a 1-2 player run, 2 in a \
-					3-4 player run; weighted \
-					70% Son/Father, 20% Sister, 10% Mother.",
+				"desc"     = "Hits everything within 7 tiles and applies 2 RED \
+					Fragile. While the hearts live, every Wail also summons \
+					reinforcement clowns, weighted 70% Son/Father, 20% Sister, \
+					10% Mother.",
 			),
 			list(
 				"name"     = "Slam",
-				"damage"   = "26-38 RED in a 1-tile radius",
+				"damage"   = "RED in a 1-tile radius, scales with the target's RED Fragile",
 				"cooldown" = "Replaces its basic attack, Stage 2 only",
-				"desc"     = "Stage 2 only. Slams the ground, dealing 26-38 RED to \
-					everything within 1 tile. Increased by the target's RED \
-					Fragile.",
+				"desc"     = "Stage 2 only. Slams the ground around itself.",
 			),
 			list(
 				"name"     = "Meat Drop",
 				"damage"   = "40 RED per bomb in a 1-tile radius",
 				"cooldown" = "2.5 seconds, while the hearts live",
-				"desc"     = "Marks every nearby human (within 7 tiles) with \
-					bloated meat on their current tile. Each marker detonates \
-					about 0.9 seconds later for 40 RED in a 1-tile radius. One \
-					bomb per human, every 2.5 seconds. Once every heart is \
-					destroyed, this attack is replaced by Meat Barrage.",
+				"desc"     = "Marks every nearby human on their current tile. \
+					Each marker detonates about 0.9 seconds later. One bomb per \
+					human, every 2.5 seconds. Once every heart is destroyed, \
+					this attack is replaced by **Meat Barrage**.",
 			),
 			list(
 				"name"     = "Meat Barrage",
 				"damage"   = "40 RED per bomb in a 1-tile radius",
 				"cooldown" = "18 seconds, after the hearts are destroyed",
-				"desc"     = "The enhanced form of Meat Drop, unlocked once \
-					every heart is destroyed. Locks onto 1 player (solo or 2-\
-					player lobby) or half the lobby rounded up (1 in a 1-2 \
-					lobby, 2 in a 3-4 lobby). For 4 seconds, drops a marker \
-					directly on each locked target's current tile every 0.5 \
-					seconds — 8 markers per target across the barrage. Each \
-					marker detonates about 0.9 seconds after it lands, so \
-					locked targets must keep moving.",
+				"desc"     = "The enhanced form of **Meat Drop**, unlocked once \
+					every heart is destroyed. Locks onto one or more players. \
+					For 4 seconds, drops a marker on each locked target's \
+					current tile every 0.5 seconds; each marker detonates about \
+					0.9 seconds after it lands.",
 			),
 			list(
 				"name"     = "Grief Stomp",
 				"damage"   = "75 RED in a 2-tile radius + 10 Defense Level Down",
 				"cooldown" = "On mask break, then every 10 seconds",
-				"desc"     = "~0.7s ground-reticle telegraph, then 75 RED to \
-					everything within 2 tiles + 10 Defense Level Down (all \
-					damage taken x(1 + stacks/(stacks+25)), ≈+29% at 10, \
-					decays ~half every 5s). Dodge the reticle.",
+				"desc"     = "~0.7s ground-reticle telegraph, then hits \
+					everything within 2 tiles and applies 10 Defense Level \
+					Down.",
 			),
 		),
 
@@ -248,9 +234,8 @@
 				"damage"   = "3 Defense Level Down to all living within 2 tiles",
 				"cooldown" = "On taking damage, max once per 1 second",
 				"desc"     = "When hurt it pulses 3 Defense Level Down to EVERY \
-					living thing within 2 tiles (players, boss and clowns alike) \
-					— all damage taken x(1 + stacks/(stacks+25)), ≈+11% at 3, \
-					decays ~half every 5s. It also takes x0.5 from projectiles.",
+					living thing within 2 tiles — players, the boss and the \
+					clowns alike. See its **Backlash Shell** passive.",
 			),
 		),
 
@@ -263,30 +248,90 @@
 				"cooldown" = "12 seconds",
 				"desc"     = "Calls out + ~0.5s of fading decoys, then spikes \
 					every tile in a line up to 5 tiles toward where its target \
-					was: 25 RED + 6 Tremor each. If it hits nothing it loses 5 \
-					charge (closer to Stagger).",
+					was. If it hits nothing it loses 5 charge.",
 			),
 		),
 
 		/mob/living/simple_animal/hostile/scarlet_rose/refracted = list(
 			list(
 				"name"     = "Thornlash",
-				"damage"   = "No flat damage — BRUTE = your current Bleed, x4",
+				"damage"   = "10 RED, then detonate the target's Bleed (BRUTE = the Bleed, halving each pulse) or, under 5 Bleed, +30 Bleed",
 				"cooldown" = "9 seconds",
-				"desc"     = "Marks the ground under each target ~3s, then to \
-					everything within 3 tiles of a marker: deal BRUTE equal to \
-					their current Bleed, then halve their Bleed; repeat up to 4 \
-					times, removing Bleed once it falls to 1 or less. Nothing if \
-					you carry no Bleed.",
+				"desc"     = "Marks the ground under each target ~3s. On the \
+					strike it hits everything within 3 tiles of a marker. If \
+					the target has 5 or more Bleed, that Bleed detonates (up to \
+					4 pulses, clearing once it drops to 1 or less); otherwise \
+					the target gains 30 Bleed instead.",
 			),
 			list(
 				"name"     = "Tangle",
 				"damage"   = "5 Bleed (~10% chance when forced through)",
 				"cooldown" = "On contact with its vines",
 				"desc"     = "Shoving through one of its vines instead of \
-					cutting it can snag your legs and apply Bleed — the Bleed \
-					Thornlash feeds on. Sharp melee cuts vines (snapping up to 4 \
-					neighbours) without the Bleed risk.",
+					cutting it can snag your legs and apply Bleed. See \
+					**Thornwall**.",
+			),
+		),
+
+		// ---------- Refracted (Sector 3) ----------
+
+		/mob/living/simple_animal/hostile/clan/ranged/gunner/refracted = list(
+			list(
+				"name"     = "Burst Fire",
+				"damage"   = "3 bolts, each 15 RED",
+				"cooldown" = "~10 seconds, 30% chance per ranged shot",
+				"desc"     = "Replaces a normal ranged shot with a tight \
+					burst of bolts fired in quick succession.",
+			),
+		),
+
+		/mob/living/simple_animal/hostile/clan/ranged/rapid/refracted = list(
+			list(
+				"name"     = "Overdrive",
+				"damage"   = "Up to 5 bolts per volley, each 5 RED",
+				"cooldown" = "~10 seconds, 30% chance per ranged shot",
+				"desc"     = "For ~5 seconds its volley count and fire rate \
+					climb, then it returns to normal.",
+			),
+		),
+
+		/mob/living/simple_animal/hostile/clan/ranged/harpooner/refracted = list(
+			list(
+				"name"     = "Harpoon",
+				"damage"   = "20 RED on hit; 50 RED + Knockdown on drop",
+				"cooldown" = "~20 seconds, prefers human targets; costs 5 charge (falls back to a normal shot if under-charged)",
+				"desc"     = "Fires a chained harpoon at a player. On hit it \
+					drags them in (they cannot move away from it) for up to 15 \
+					seconds; on arrival within 2 tiles it slams them.",
+			),
+		),
+
+		/mob/living/simple_animal/hostile/keeper_piller/refracted = list(
+			list(
+				"name"     = "Sunfall Lasers",
+				"damage"   = "60 WHITE + 30 PALE per tile (+60 PALE vs Insane)",
+				"cooldown" = "Constant while active",
+				"desc"     = "Marks scattered tiles around itself with a brief \
+					telegraph; each marker detonates ~1 second later, hitting \
+					any human standing on it.",
+			),
+		),
+
+		/mob/living/simple_animal/hostile/clan/stone_keeper/refracted = list(
+			list(
+				"name"     = "Slam",
+				"damage"   = "PALE in a 2-tile radius",
+				"cooldown" = "Replaces its basic attack",
+				"desc"     = "~0.8s windup (icon swap), then slams everything \
+					within 2 tiles.",
+			),
+			list(
+				"name"     = "Annihilation Beam",
+				"damage"   = "100 PALE per tile along the line",
+				"cooldown" = "20 seconds",
+				"desc"     = "~2.5s charge with a visible aiming beam, then \
+					fires a piercing line in its facing direction; stopped by \
+					dense walls.",
 			),
 		),
 

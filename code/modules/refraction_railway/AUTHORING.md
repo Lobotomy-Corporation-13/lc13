@@ -292,20 +292,42 @@ Use this real-time trigger vocabulary (our analogue of LCB's Turn Start/End):
 | `On death:` | death() / on its defeat |
 | `Phase 2 (after <event>):` | staged transition, name the event |
 
-**2. Always give the exact numbers.** Damage value + type, radius in tiles,
-cooldown/wind-up in seconds, stack counts, status duration, the actual
-HP/SP threshold *number* (a % alone is not enough — write "at 50% HP
-(625)"), and any scaling written as a formula (`damage × player count`,
-`1 fly per nest per ~38s`, `BRUTE = your current Bleed`). Approximate only
-a genuinely derived value, and mark it (`≈+29%`).
+**2. The card UI already shows the mob's data sheet** (HP, move speed,
+resistance row, melee damage + type + cadence, ranged details). For
+mobs with 0/0 melee the data sheet renders "no basic melee attack"
+automatically. Never restate any of that in a card — including
+qualitative paraphrases ("fast", "fragile", "tanky") or a redundant
+"no melee" / "never attacks" line. Saying a mob is "immobile" / "can't
+move" **is** allowed (the move-delay row doesn't make immobility
+obvious). If a card would only restate data-sheet info, delete it.
+
+**Give exact numbers for ability effects only — never for the mob's
+own stat block.** Do state: an attack's damage value + type, radius,
+cooldown/wind-up, stack counts, status duration, % thresholds
+("at 50% HP"). Do **not** state: the mob's HP pool, its basic-melee
+damage numbers, or any player-count / Railway scaling (HP × players,
+"summons N per 2 players"), nor any run-system framing ("the node
+clears", "the only registered enemy", "N spawn this node") — that
+coupling belongs to the run system, not the mob. Describe only what the
+mob itself does ("when it dies, every vine it spread is removed"). For basic melee write only whether it exists and what
+**status / mechanical effect** it inflicts: "Has no melee attack", "Its
+melee applies 3 Tremor". Do **not** state its damage type alone ("Its
+melee deals RED") — the data sheet shows that. A basic-attack *replacement* (e.g. Stage-2 Slam) names
+its type and scaling, not a number: `RED, scales with the target's RED
+Fragile`. Numbers live in the attack card's `damage` field only — never
+restate that field inside `desc`.
 
 **3. State every cap and frequency limit** in parentheses: `(max 9)`,
-`(up to 4 times)`, `(once per 1s)`, `(cap 3 alive per nest)`,
+`(up to 4 times)`, `(once per 1s)`, `(cap 6 alive per nest)`,
 `(3 nests this node)`.
 
-**4. Define a status the first time, then reference it.** First mention:
-`2 RED Fragile (+10% RED damage taken per stack, 10s, refreshes to the
-higher stack, max 9)`. Later cards: `5 RED Fragile (see Wail and Slam)`.
+**4. Never re-explain a status — the glossary tooltip does that.**
+Status names (Bleed, Tremor, RED Fragile, Defense Level Down, Sinking,
+…) are auto-underlined on the card with a hover description sourced from
+`status_glossary.dm`. Write only the per-card specifics: the stack count
+and any gating (`applies 2 RED Fragile`, `pulses 3 Defense Level Down`).
+Do **not** add `(+10% RED per stack, 10s, max 9)` — that is duplicated,
+forbidden text. If a status's numbers change, fix the glossary entry.
 
 **5. Resistances:** do **not** list a mob's static damage multipliers.
 Include them only when (a) they **change** under a condition or phase —
@@ -314,21 +336,30 @@ then show each state explicitly (Stage 1 → break window → Stage 2), or
 read (e.g. a vine's armor table). The data sheet's resistance row covers
 the static case for mobs.
 
-**6. No flavor, no strategy.** No prose mood ("the family runs one
-plan"), no advice ("kill her first", "dodge the reticle"). State the
-mechanic; the player draws the conclusion. A bare factual qualifier
-("frail", "never retreats") is fine when it *is* the mechanic.
+**6. No flavor, no strategy, no synergy.** No prose mood ("the family
+runs one plan"), no advice ("kill her first", "dodge the reticle"), and
+do **not** spell out how two cards combine ("RED Fragile from ANY clown
+amplifies this", "the Bleed Thornlash feeds on"). State each mechanic
+once, on its own card; the player draws the conclusion. A bare factual
+qualifier ("frail", "never retreats") is fine when it *is* the mechanic.
 
-**7. Branch with `If … ; otherwise …`** for conditional effects, exactly
-as the mechanic resolves. Cross-reference partner cards by name (passive
-names the trigger, attack carries the numbers).
+**7. State each fact once; cross-reference by bold name.** Never repeat
+what another card already says. If a card needs to point at another,
+name it and stop — wrap the referenced card name in `**double
+asterisks**` so it renders bold (`See the **Thornlash** attack`, `same
+as the Refracted Clown's **Mask Break**`). Do not describe what the
+referenced card does; that is its card's job. Branch conditional effects
+with `If … ; otherwise …`, exactly as the mechanic resolves.
 
-**Bad** → `"Its Wail leaves you RED Fragile for a while and its Slam hits
-harder; kill it fast."`
-**Good** → `"Wail (every 6s) applies 2 RED Fragile: +10% RED damage taken
-per stack for 10s (here +20%), refreshes to the higher stack, max 9.
-Stage 2 Slam (8-12 RED) is RED, so RED Fragile from ANY clown amplifies
-it."`
+**Bad** → `"400 HP. Its Wail (every 6s) applies 2 RED Fragile (+10% RED
+damage taken per stack, 10s, max 9) and its Slam (8-12 RED) is RED, so
+RED Fragile from ANY clown amplifies it — kill it fast."`
+**Good** (passive) → `"Stage 1: keeps ~6 tiles away. At 50% HP the mask
+breaks: 2.5s taking x0.2, then permanently Stage 2 — its basic attack
+becomes **Slam**. The other clowns share this break window."`
+**Good** (attack) → `Wail · "12 WHITE in a 7-tile radius, applies 2 RED
+Fragile" · "~0.5s decoy + ~0.6s wind-up, then hits everything within 7
+tiles and applies 2 RED Fragile."`
 
 **Collisions**: if two lines both register passives for the same mob path, the *first* line to be loaded wins; the second's contribution is dropped with a `stack_trace` naming both lines. So if you reuse a mob another line already covers, just don't redeclare it — your line will inherit the existing entries automatically.
 

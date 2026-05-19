@@ -5,19 +5,30 @@
  */
 
 // ---------- Thornlash telegraph ----------
-// GrabAttack detonates the victim's Bleed instead of the base BLACK grab.
+// On the strike: 10 RED to each target, then a Bleed payload — detonate
+// if it has 5+ Bleed, otherwise pile on 30 Bleed instead.
 /obj/effect/rose_target/thornlash
 	name = "lashing thorns"
 	desc = "LOOK OUT!"
+	/// Flat RED dealt to every target on the strike.
+	var/strike_damage = 10
+	/// Minimum Bleed on the target to detonate instead of stacking.
+	var/detonate_threshold = 5
+	/// Bleed applied when the target is under the detonate threshold.
+	var/seed_bleed_stacks = 30
+	/// Max detonation pulses.
+	var/detonate_pops = 4
 
 /obj/effect/rose_target/thornlash/GrabAttack()
 	playsound(get_turf(src), 'sound/abnormalities/rosesign/vinegrab.ogg', 75, FALSE, 3)
 	new /obj/effect/temp_visual/rose_vine(get_turf(src))
-	for(var/mob/living/carbon/human/H in view(3, src))
+	for(var/mob/living/carbon/human/H in view(2, src))
+		H.deal_damage(strike_damage, RED_DAMAGE)
 		var/datum/status_effect/stacking/lc_bleed/B = H.has_status_effect(/datum/status_effect/stacking/lc_bleed)
-		if(!B)
+		if(!B || B.stacks < detonate_threshold)
+			H.apply_lc_bleed(seed_bleed_stacks)
 			continue
-		for(var/i = 1 to 4)
+		for(var/i = 1 to detonate_pops)
 			if(QDELETED(B))
 				break
 			H.adjustBruteLoss(max(0, B.stacks))
@@ -37,12 +48,17 @@
 	var/mob/living/simple_animal/hostile/scarlet_rose/refracted/bound_rose
 	/// TRUE while being torn down in a chain-break, to stop re-propagation.
 	var/chained = FALSE
+	/// Bleed applied to a human the vine grows onto.
+	var/grow_bleed_stacks = 4
 
 /obj/structure/spreading/scarlet_vine/refracted/Initialize()
 	. = ..()
 	// Detach from any static vine_list the base Initialize() captured us into.
 	if(connected_rose)
 		connected_rose.vine_list -= src
+	// Growing onto a tile bleeds any human standing on it.
+	for(var/mob/living/carbon/human/H in get_turf(src))
+		H.apply_lc_bleed(grow_bleed_stacks)
 
 /obj/structure/spreading/scarlet_vine/refracted/Destroy()
 	if(bound_rose)
@@ -107,7 +123,8 @@
 	var/burrow_bites = 0
 	var/min_bites = 2
 	var/sp_threshold = 0.5
-	var/bite_sanity = 12
+	/// RED dealt per bite while burrowed inside the host.
+	var/bite_damage = 12
 	var/bite_cooldown = 0
 	var/bite_cooldown_time = 2 SECONDS
 	var/reenter_cooldown = 0
@@ -144,7 +161,7 @@
 	if(!ishuman(H) || H.stat == DEAD || H.sanity_lost)
 		LeaveHost()
 		return
-	H.deal_damage(bite_sanity, WHITE_DAMAGE, src, attack_type = (ATTACK_TYPE_SPECIAL))
+	H.deal_damage(bite_damage, RED_DAMAGE, src, attack_type = (ATTACK_TYPE_SPECIAL))
 	burrow_bites++
 	H.visible_message(span_danger("\The [src] gnaws at [H] from the inside!"))
 	if(burrow_bites >= min_bites && H.sanityhealth > H.maxSanity * sp_threshold)
@@ -287,7 +304,10 @@
 	var/list/bound_vines = list()
 	var/prespread_done = FALSE
 	var/gauntlet_check_range = 2
-	var/shielded_mult = 0.15
+	/// Incoming-damage reduction per nearby refracted vine.
+	var/per_vine_reduction = 0.05
+	/// Cap on the stacked per-vine damage reduction.
+	var/max_vine_reduction = 0.40
 	var/shield_fx_cooldown = 0
 	var/thornlash_cooldown = 0
 	var/thornlash_cooldown_time = 9 SECONDS
@@ -317,20 +337,24 @@
 		thornlash_cooldown = world.time + thornlash_cooldown_time
 		INVOKE_ASYNC(src, PROC_REF(Thornlash))
 
-// Vine Gauntlet: reduced incoming damage while vines remain near the rose.
+// Vine Gauntlet: 5% less incoming damage per nearby refracted vine,
+// stacking up to a 40% cap. Cut a lane to strip the shield.
 /mob/living/simple_animal/hostile/scarlet_rose/refracted/adjustHealth(amount, updating_health = TRUE, forced = FALSE)
-	if(amount > 0 && VinesShielding())
-		amount *= shielded_mult
-		if(world.time >= shield_fx_cooldown)
-			shield_fx_cooldown = world.time + 0.5 SECONDS
-			new /obj/effect/temp_visual/blood_shield(loc)
+	if(amount > 0)
+		var/nearby_vines = CountShieldingVines()
+		if(nearby_vines)
+			var/reduction = min(max_vine_reduction, nearby_vines * per_vine_reduction)
+			amount *= (1 - reduction)
+			if(world.time >= shield_fx_cooldown)
+				shield_fx_cooldown = world.time + 0.5 SECONDS
+				new /obj/effect/temp_visual/blood_shield(loc)
 	return ..(amount, updating_health, forced)
 
-/mob/living/simple_animal/hostile/scarlet_rose/refracted/proc/VinesShielding()
+/mob/living/simple_animal/hostile/scarlet_rose/refracted/proc/CountShieldingVines()
+	. = 0
 	for(var/obj/structure/spreading/scarlet_vine/refracted/W in range(gauntlet_check_range, src))
 		if(!QDELETED(W))
-			return TRUE
-	return FALSE
+			.++
 
 // Inlined base SpreadPlants() plus binding the new vine to the rose.
 /mob/living/simple_animal/hostile/scarlet_rose/refracted/SpreadPlants()
