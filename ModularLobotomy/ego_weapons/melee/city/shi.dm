@@ -399,7 +399,7 @@ Arrows will never be deleted when used (unless something goes horribly wrong), t
 		return
 	if(!CanUseEgo(user))
 		return FALSE
-	user.visible_message(span_danger("[user] begins holding [user.p_their()] breath! It looks like they're about to loose an arrow!"), span_info("You begin preparing to take the shot."))
+	user.visible_message(span_danger("[user] begins holding [user.p_their()] breath! It looks like [user.p_theyre()] about to loose an arrow!"), span_info("You begin preparing to take the shot."))
 	playsound(get_turf(user), 'sound/weapons/ego/shi_east_holdbreath_start.ogg', 100, FALSE)
 	hold_breath_active = TRUE // Won't be able to melee while this is active, btw
 
