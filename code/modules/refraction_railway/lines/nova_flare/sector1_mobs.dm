@@ -1,7 +1,114 @@
 /*
- * Nova Flare — core node boss: the refracted "Grandfather".
- * Two-phase fight subtyped from the base Grandfather + mutant_heart.
+ * Nova Flare — Sector 1 encounters.
+ * Node 1 the Mi-Go pack, Node 2 the mutant-clown family
+ * (Son/Father/Sister/Mother), Node 3 the refracted "Grandfather" boss
+ * with its four hearts. Refracted subtypes of base-game mobs tuned for
+ * the Nova Flare line.
  */
+
+// ---------- Mi-Go (Node 1: "The Gap") ----------
+/mob/living/simple_animal/hostile/netherworld/migo/refracted
+	name = "drifting thing"
+	desc = "Something the line let through. It does not belong in any of the directions you can point."
+	maxHealth = 140
+	health = 140
+	scream_damage = 5
+
+// ---------- Mutant Clowns (Node 2: "The Family") ----------
+/mob/living/simple_animal/hostile/mutant_clown/refracted
+	name = "'Son'"
+	desc = "A survivor the blast did not finish. It still wears the face it had."
+	maxHealth = 400
+	health = 400
+	melee_damage_lower = 8
+	melee_damage_upper = 12
+	scream_damage = 12
+	scream_cooldown_time = 6 SECONDS
+	move_to_delay = 16
+	move_speed_maskbreak = 7
+	retreat_distance = 6
+	minimum_distance = 6
+	loot = list()
+	/// RED Fragile stacks applied to each human caught in a Scream.
+	var/scream_fragile_stacks = 2
+	/// Mask breaks once health drops to this fraction of maxHealth.
+	var/maskbreak_threshold = 0.5
+
+/mob/living/simple_animal/hostile/mutant_clown/refracted/Initialize(mapload)
+	. = ..()
+	if(type == /mob/living/simple_animal/hostile/mutant_clown/refracted)
+		name = pick("'Son'", "'Father'")
+
+/mob/living/simple_animal/hostile/mutant_clown/refracted/Scream()
+	..()
+	for(var/mob/living/carbon/human/H in view(7, src))
+		if(!faction_check_mob(H))
+			H.apply_lc_red_fragile(scream_fragile_stacks)
+
+// Drive BreakMask() at maskbreak_threshold instead of the parent's 50%.
+/mob/living/simple_animal/hostile/mutant_clown/refracted/adjustHealth(amount, updating_health = TRUE, forced = FALSE)
+	. = ..()
+	if(current_stage == 1 && health <= (maxHealth * maskbreak_threshold))
+		BreakMask()
+
+// Inlined parent BreakMask() minus the gibspawner.
+/mob/living/simple_animal/hostile/mutant_clown/refracted/BreakMask()
+	if(current_stage != 1)
+		return
+	if(health > (maxHealth * maskbreak_threshold))
+		return
+	can_act = FALSE
+	icon_living = icon_state + "_unmasked"
+	icon_state = icon_living
+	desc += "Now with their mask broken... You can see their mutated face."
+	current_stage = 2
+	retreat_distance = 0
+	minimum_distance = 0
+	say(maskbreak_say_1)
+	move_to_delay = move_speed_maskbreak
+	UpdateSpeed()
+	playsound(get_turf(src), 'sound/creatures/lc13/lovetown/scream.ogg', 50, TRUE, 3)
+	ChangeResistances(list(RED_DAMAGE = 0.2, WHITE_DAMAGE = 0.2, BLACK_DAMAGE = 0.2, PALE_DAMAGE = 0.2))
+	SLEEP_CHECK_DEATH(25)
+	ChangeResistances(list(BRUTE = 1, RED_DAMAGE = 1.6, WHITE_DAMAGE = 0.6, BLACK_DAMAGE = 0.8, PALE_DAMAGE = 2))
+	say(maskbreak_say_2)
+	can_act = TRUE
+
+/mob/living/simple_animal/hostile/mutant_clown/refracted/sister
+	name = "'Sister'"
+	desc = "Lighter than the others. It keeps its distance and screams instead."
+	icon_state = "pie spewer"
+	icon_living = "pie spewer"
+	maxHealth = 190
+	health = 190
+	melee_damage_lower = 6
+	melee_damage_upper = 9
+	move_to_delay = 14
+	retreat_distance = 8
+	minimum_distance = 8
+	scream_fragile_stacks = 5
+	maskbreak_threshold = 0.25
+
+/mob/living/simple_animal/hostile/mutant_clown/refracted/mother
+	name = "'Mother?'"
+	desc = "Too large to have survived intact. It does not retreat."
+	icon_state = "glutton"
+	icon_living = "glutton"
+	base_pixel_x = -16
+	pixel_x = -16
+	maxHealth = 575
+	health = 575
+	melee_damage_lower = 11
+	melee_damage_upper = 17
+	move_to_delay = 22
+	move_speed_maskbreak = 10
+	scream_damage = 17
+	scream_cooldown_time = 7 SECONDS
+	retreat_distance = 0
+	minimum_distance = 0
+	maskbreak_threshold = 0.75
+
+// ---------- Node 3 boss: the refracted "Grandfather" (nova_s1n3) ----------
 
 // Targeting reticle marking each tile a Grief Stomp will hit.
 /obj/effect/temp_visual/grief_stomp_warning
@@ -49,11 +156,11 @@
 		return
 	pulse_cooldown = world.time + pulse_cooldown_time
 	playsound(get_turf(src), 'sound/effects/wounds/pierce2.ogg', 45, TRUE, 4)
+	new /obj/effect/temp_visual/screech(get_turf(src))
 	for(var/mob/living/L in range(pulse_range, src))
 		if(L == src)
 			continue
 		L.apply_lc_defense_level_down(defense_down_stacks)
-		new /obj/effect/temp_visual/screech(get_turf(L))
 
 // ---------- Refracted Grandfather ----------
 

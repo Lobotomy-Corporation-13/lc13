@@ -2,6 +2,26 @@
  * Nova Flare mob passives, returned by GetMobPassives().
  * Each entry: list("title", "severity", "text").
  * severity: info / low / medium / high. See AUTHORING.md Step 5b.
+ *
+ * Card-writing rules (see AUTHORING.md):
+ *  - The card UI already shows the mob's data sheet (HP, move speed,
+ *    resistance row, melee damage + type + cadence, ranged details).
+ *    For mobs with 0/0 melee the data sheet renders "no basic melee
+ *    attack" automatically. Never restate any of that in a card —
+ *    including qualitative paraphrases ("fast", "fragile", "tanky") or
+ *    a redundant "no melee" / "never attacks" line. Saying a mob is
+ *    "immobile" / "can't move" IS allowed (the data sheet's move-delay
+ *    row doesn't make immobility obvious).
+ *  - Never state a mob's HP pool or basic-melee damage numbers nor its
+ *    melee damage TYPE, nor any player-count / railway scaling. Say
+ *    only what its melee INFLICTS (status / mechanical effect, e.g.
+ *    "applies 3 Tremor"). Percentage thresholds are fine.
+ *  - Never re-explain a status the glossary defines (Bleed, Tremor, RED
+ *    Fragile, Defense Level Down, ...). Name it; the hover does the rest.
+ *  - Never repeat what another card says, and never spell out the synergy
+ *    between cards. State each effect once; refer to other cards by name,
+ *    wrapping the referenced card name in **double asterisks** so it
+ *    renders bold.
  */
 /datum/refraction_line/nova_flare/GetMobPassives()
 	return list(
@@ -22,21 +42,21 @@
 			list(
 				"title"    = "Last Stand",
 				"severity" = "high",
-				"text"     = "While attacking at 25% HP or below, 75% chance per attack to trigger Self-Destruct.",
+				"text"     = "While attacking at 25% HP or below, 75% chance per attack to trigger **Self-Destruct**.",
 			),
 			list(
 				"title"    = "Zealous Squadmate",
 				"severity" = "low",
-				"text"     = "When Self-Destruct goes off, every Steel Dawn within 7 tiles \
+				"text"     = "When **Self-Destruct** goes off, every Steel Dawn within 7 tiles \
 					becomes Zealous (won't retreat anymore) and is healed to nearly full. Any \
 					Steel Manager within 7 tiles speeds up its next Screech (5 seconds → 3 \
-					seconds). If the Steel Corporal dies without triggering Self-Destruct, no \
+					seconds). If the Steel Corporal dies without triggering **Self-Destruct**, no \
 					buff is applied.",
 			),
 			list(
 				"title"    = "Vigor on Strike",
 				"severity" = "info",
-				"text"     = "Heals 10 HP for every melee hit it lands.",
+				"text"     = "Heals for every melee hit it lands.",
 			),
 			list(
 				"title"    = "Adrenaline",
@@ -52,13 +72,13 @@
 				"title"    = "Last Stand",
 				"severity" = "high",
 				"text"     = "Inherited from Steel Corporal. While attacking at 25% HP or below, \
-					75% chance per attack to trigger Self-Destruct. Air Sweep replaces some \
+					75% chance per attack to trigger **Self-Destruct**. **Air Sweep** replaces some \
 					attacks, so the trigger rolls less often.",
 			),
 			list(
 				"title"    = "Zealous Squadmate",
 				"severity" = "low",
-				"text"     = "Inherited from Steel Corporal. When Self-Destruct goes off, every \
+				"text"     = "Inherited from Steel Corporal. When **Self-Destruct** goes off, every \
 					Steel Dawn within 7 tiles becomes Zealous and heals; nearby Steel Managers \
 					speed up their next Screech.",
 			),
@@ -79,7 +99,7 @@
 				"severity" = "info",
 				"text"     = "On first aggro and again every minute, every nearby Steel unit \
 					(within 9 tiles) is forced onto the Manager's current target and briefly \
-					speeds up. Also delays the Manager's own next Screech by 10 seconds.",
+					speeds up. Also delays the Manager's own next **Screech** by 10 seconds.",
 			),
 			list(
 				"title"    = "Self-Repair",
@@ -104,7 +124,7 @@
 			list(
 				"title"    = "Scream Only",
 				"severity" = "info",
-				"text"     = "Has no melee attack. Its only way to deal damage is Echoing Scream.",
+				"text"     = "Its only way to deal damage is **Echoing Scream**.",
 			),
 		),
 
@@ -123,20 +143,20 @@
 				"text"     = "When its HP drops to 50% or below, enters Stage 2 once and cannot \
 					revert. In Stage 2: moves much faster, AoE Slam expands from a 1-tile to a \
 					2-tile radius, AoE Slam takes longer to wind up, the damage threshold to arm \
-					a counter drops from 500 to 300, and Love Whip becomes available.",
+					a counter drops from 500 to 300, and **Love Whip** becomes available.",
 			),
 			list(
 				"title"    = "Retaliation",
 				"severity" = "medium",
 				"text"     = "Tracks total damage taken. Once it has taken 500 damage (or 300 \
-					in Stage 2), it immediately retaliates: triggers Bullrush (Stage 1, always) \
-					or one of Love Whip (Stage 2, 80%) / Bullrush (Stage 2, 20%). The damage \
+					in Stage 2), it immediately retaliates: triggers **Bullrush** (Stage 1, always) \
+					or one of **Love Whip** (Stage 2, 80%) / **Bullrush** (Stage 2, 20%). The damage \
 					counter resets after each retaliation, then starts ticking again.",
 			),
 			list(
 				"title"    = "Stage 2 Vigor",
 				"severity" = "medium",
-				"text"     = "In Stage 2, heals 40 HP for every melee attack it lands.",
+				"text"     = "In Stage 2, heals for every melee attack it lands.",
 			),
 			list(
 				"title"    = "Birthing Pool",
@@ -147,45 +167,18 @@
 
 		// ---------- Refracted (Sector 1) ----------
 
-		/mob/living/simple_animal/hostile/netherworld/migo/refracted = list(
-			list(
-				"title"    = "Constant Wail",
-				"severity" = "medium",
-				"text"     = "140 HP. Every ~2 seconds it has a 10% chance — and \
-					always whenever it speaks — to deal 5 WHITE to everything \
-					within 7 tiles. No wind-up, no cooldown, cannot be \
-					interrupted; with a pack these pulses stack with nothing to \
-					dodge.",
-			),
-			list(
-				"title"    = "Mind-Eater",
-				"severity" = "medium",
-				"text"     = "Basic attack is 4 hits of 3 WHITE. While its \
-					target is Insane (0 SP), every one of those 4 hits also \
-					deals +5 PALE — up to 20 extra PALE per attack. Stay above 0 \
-					SP near it.",
-			),
-		),
-
 		/mob/living/simple_animal/hostile/mutant_clown/refracted = list(
 			list(
 				"title"    = "Mask Break",
 				"severity" = "high",
-				"text"     = "400 HP. Stage 1: keeps ~6 tiles away. Damage taken \
-					RED x1.4 / WHITE x0.6 / BLACK x0.8 / PALE x2. At 50% HP \
-					(200) the mask breaks: 2.5 seconds taking x0.2 from \
-					everything (do not waste burst here), then permanently \
-					Stage 2 — can no longer be kept at range, moves faster, \
-					basic attack becomes Slam, and damage taken becomes RED \
-					x1.6 / WHITE x0.6 / BLACK x0.8 / PALE x2. Never reverts.",
-			),
-			list(
-				"title"    = "Wail and Slam",
-				"severity" = "medium",
-				"text"     = "Wail (every 6s) applies 2 RED Fragile: +10% RED \
-					damage taken per stack for 10s (here +20%), refreshing to \
-					the higher stack, max 9. Stage 2 Slam (8-12 RED) is RED, so \
-					RED Fragile from ANY clown amplifies it.",
+				"text"     = "Stage 1: keeps ~6 tiles away. Damage taken RED x1.4 \
+					/ WHITE x0.6 / BLACK x0.8 / PALE x2. At 50% HP the mask \
+					breaks: 2.5 seconds taking x0.2 from everything, then \
+					permanently Stage 2 — can no longer be kept at range, moves \
+					faster, its basic attack becomes **Slam**, and damage taken \
+					becomes RED x1.6 / WHITE x0.6 / BLACK x0.8 / PALE x2. Never \
+					reverts. The other clowns share this break window and \
+					Stage-2 profile.",
 			),
 		),
 
@@ -193,18 +186,10 @@
 			list(
 				"title"    = "Mask Break",
 				"severity" = "high",
-				"text"     = "190 HP, frail. Keeps ~8 tiles away and Wails. Mask \
-					breaks only at 25% HP (≈48, after losing 75%), so it stays \
-					in ranged Stage 1 almost the whole fight. Break = 2.5s at \
-					x0.2; Stage 2 RED x1.6 / WHITE x0.6 / BLACK x0.8 / PALE x2.",
-			),
-			list(
-				"title"    = "Wail and Slam",
-				"severity" = "high",
-				"text"     = "Its Wail (every 6s) applies 5 RED Fragile: +10% \
-					RED taken per stack for 10s (here +50%), max 9. It is the \
-					family's Fragile engine — kill it first; its own Slam is \
-					6-9 RED.",
+				"text"     = "Frail. Keeps ~8 tiles away. Its mask breaks only at \
+					25% HP (after losing 75%), so it stays in ranged Stage 1 \
+					almost the whole fight. Same break window and Stage-2 \
+					profile as the Refracted Clown's **Mask Break**.",
 			),
 		),
 
@@ -212,18 +197,10 @@
 			list(
 				"title"    = "Mask Break",
 				"severity" = "high",
-				"text"     = "575 HP, never retreats. Mask breaks at 75% HP \
-					(≈431, after losing only 25%), so it enters Stage 2 almost \
-					immediately — fast, un-kiteable, Slam. Break = 2.5s at x0.2; \
-					Stage 2 RED x1.6 / WHITE x0.6 / BLACK x0.8 / PALE x2.",
-			),
-			list(
-				"title"    = "Wail and Slam",
-				"severity" = "medium",
-				"text"     = "Its Wail (every 7s) applies 2 RED Fragile (+10% \
-					RED taken/stack, 10s, here +20%, max 9). Its Stage 2 Slam is \
-					the family's heaviest at 11-17 RED — lethal stacked with the \
-					Sister's 5 RED Fragile.",
+				"text"     = "Never retreats. Its mask breaks at 75% HP (after \
+					losing only 25%), so it enters Stage 2 almost immediately. \
+					Same break window and Stage-2 profile as the Refracted \
+					Clown's **Mask Break**.",
 			),
 		),
 
@@ -231,30 +208,26 @@
 			list(
 				"title"    = "Beating Hearts",
 				"severity" = "high",
-				"text"     = "1250 HP (x player count). Spawns ringed by 4 \
-					hearts, each at 50% of its scaled max HP (625 solo). While \
-					ANY heart lives it cannot move and takes 0 damage. Kill all \
-					4 hearts to make it vulnerable.",
+				"text"     = "Spawns ringed by 4 hearts. While ANY heart lives \
+					it cannot move and takes 0 damage; with all 4 dead it \
+					becomes vulnerable.",
 			),
 			list(
 				"title"    = "The Whole Family",
 				"severity" = "high",
-				"text"     = "While the hearts live it Wails every 15s: 15 \
-					WHITE within 7 tiles + 2 RED Fragile, AND summons \
-					reinforcement clowns equal to half the party (1 in a 1-2 \
-					player run, 2 in a 3-4 player run) \
-					weighted 70% Son/Father, 20% Sister, \
-					and 10% Mother. It also drops a 40 RED meat bomb (0.9s \
-					telegraph, 1 tile) on every player within 7 tiles each \
-					~2.5s.",
+				"text"     = "While the hearts live, every **Wail** also summons \
+					reinforcement clowns and it uses **Meat Drop** on nearby \
+					players. Once every heart is destroyed, **Wail** stops \
+					summoning and **Meat Drop** becomes **Meat Barrage**. See \
+					those attacks.",
 			),
 			list(
 				"title"    = "Broken Mask",
 				"severity" = "high",
-				"text"     = "Hearts gone, mobile. Melee 26-38 RED. At 50% HP \
-					(625) the mask breaks: 2.5s at x0.2, then permanent Stage 2 \
-					— faster, Slam, RED x1.6 / WHITE x0.6 / BLACK x0.8 / PALE \
-					x2. Meat now becomes the Barrage (see attacks).",
+				"text"     = "Once the hearts are gone it can move. At 50% HP the \
+					mask breaks with the same window and Stage-2 profile as the \
+					Refracted Clown's **Mask Break**, and it begins **Grief \
+					Stomp** (see attacks).",
 			),
 			list(
 				"title"    = "One Last Laugh",
@@ -268,19 +241,16 @@
 			list(
 				"title"    = "Lifeline",
 				"severity" = "high",
-				"text"     = "625 HP solo (50% of the Grandfather's scaled max, \
-					so x player count). Immobile, never attacks. While it lives \
-					the Grandfather cannot move and takes 0 damage.",
+				"text"     = "Immobile. Gates the Grandfather's **Beating \
+					Hearts** — see that passive.",
 			),
 			list(
 				"title"    = "Backlash Shell",
 				"severity" = "high",
-				"text"     = "Takes x0.5 from projectiles (melee is 2x more \
-					effective). Each time it is damaged (max once per 1s) it \
+				"text"     = "Takes x0.5 from projectiles. Its **Backlash** \
 					pulses 3 Defense Level Down onto EVERY living thing within 2 \
-					tiles — players AND the boss/clowns. Defense Level Down: all \
-					damage taken x(1 + stacks/(stacks+25)); 3 stacks ≈ +11%, \
-					decays ~half every 5s.",
+					tiles — players, the boss and the clowns alike — whenever \
+					it is hurt. See the **Backlash** attack.",
 			),
 		),
 
@@ -290,62 +260,46 @@
 			list(
 				"title"    = "Endless Brood",
 				"severity" = "high",
-				"text"     = "1650 HP, immobile, never attacks, won't aggro. \
-					Hatches a batch of 2 refracted flies every ~8 seconds, up \
-					to 6 alive per nest (the first batch almost immediately). 3 \
-					nests this node.",
+				"text"     = "Immobile, won't aggro. Hatches a batch of 2 \
+					refracted flies every ~8 seconds, up to 6 alive per nest \
+					(the first batch almost immediately).",
 			),
 			list(
 				"title"    = "Rupturing Brood",
 				"severity" = "high",
 				"text"     = "Every time a nest loses another 33% of its max HP \
 					it ruptures, bursting 3 extra flies on the spot — on top of \
-					normal production and ignoring the alive cap. That's ~2 \
-					panic bursts over the course of killing one nest, so the \
-					pressure spikes the harder you hit it.",
+					normal production and ignoring the alive cap.",
 			),
 			list(
 				"title"    = "Caustic Hide",
 				"severity" = "medium",
 				"text"     = "Every hit you land on a nest leaves you WHITE \
-					Fragile (+10% WHITE taken per stack). The amount scales with \
-					how hurt the nest is: 1 stack near full, up to 5 once it has \
-					lost 20% of its max HP or more — so the longer a nest fight \
-					drags, the more its flies' WHITE bites hurt.",
+					Fragile, scaling with how hurt the nest is: 1 stack near \
+					full, up to 5 once it has lost 20% or more of its max HP.",
 			),
 			list(
 				"title"    = "Brood Collapse",
 				"severity" = "medium",
-				"text"     = "When a nest dies, all of its flies die with it. \
-					The node clears only once every nest AND every fly is dead — \
-					destroy the nests, don't chase flies.",
+				"text"     = "When a nest dies, all of its flies die with it.",
 			),
 			list(
 				"title"    = "Tough Hide",
 				"severity" = "info",
 				"text"     = "While a refracted fly is burrowed inside you, your \
-					own hits on any nest deal x1.5 damage — being infested is \
-					the fast way to break the nests.",
+					own hits on any nest deal x1.5 damage.",
 			),
 		),
 
 		/mob/living/simple_animal/hostile/mad_fly_swarm/refracted = list(
 			list(
-				"title"    = "Swarm",
-				"severity" = "low",
-				"text"     = "200 HP, very fast. Basic attack is 4 hits of 1 \
-					WHITE. Weak alone, but the nests never stop making more and \
-					rupture out extra bursts as you damage them.",
-			),
-			list(
 				"title"    = "Infest",
 				"severity" = "high",
 				"text"     = "On hitting a player at or below 50% sanity (and \
 					off its 5s cooldown) it burrows in. Every 2 seconds inside \
-					it deals 12 WHITE to your sanity. After at least 2 bites it \
-					leaves once your SP is back above 50% (or instantly if you \
-					die or go fully Insane), then can't re-burrow anyone for 5 \
-					seconds.",
+					it deals 12 RED. After at least 2 bites it leaves once your \
+					SP is back above 50% (or instantly if you die or go fully \
+					Insane), then can't re-burrow anyone for 5 seconds.",
 			),
 		),
 
@@ -353,27 +307,26 @@
 			list(
 				"title"    = "Charge Armor",
 				"severity" = "high",
-				"text"     = "800 HP. Starts at 10 charge (max 20), regains ~1/s. \
-					Base damage taken RED x0.6 / WHITE x0.8 / BLACK x1.2 / PALE \
-					x1.5. At 10+ charge it hardens to RED/WHITE/BLACK x0.3 / \
-					PALE x0.8. Every damage instance it takes removes 1 charge, \
-					and a missed Transpierce costs 5 — burn its charge down to \
-					trigger Stagger (one whiffed ability no longer drops it \
-					straight into Stagger).",
+				"text"     = "Starts at 10 charge (max 20), regains ~1/s. Base \
+					damage taken RED x0.6 / WHITE x0.8 / BLACK x1.2 / PALE x1.5. \
+					At 10+ charge it hardens to RED/WHITE/BLACK x0.3 / PALE x0.8. \
+					Every damage instance it takes removes 1 charge, and a \
+					missed **Transpierce** costs 5. At 1 or less charge it \
+					enters **Stagger**.",
 			),
 			list(
 				"title"    = "Stagger",
 				"severity" = "medium",
 				"text"     = "At 1 or less charge it Staggers: 4 seconds unable \
 					to act, taking RED x1.2 / WHITE x1.6 / BLACK x2.4 / PALE x3 \
-					(≈2-3x) — the burst window. Then its charge resets to 15.",
+					(≈2-3x). Then its charge resets to 15.",
 			),
 			list(
 				"title"    = "Hardened Stone",
 				"severity" = "info",
-				"text"     = "Melee is 8-11 RED and applies 3 Tremor. Its damage \
-					resistances shift with its charge state — see Charge Armor \
-					and Stagger.",
+				"text"     = "Its melee applies 3 Tremor. Its damage resistances \
+					shift with its charge state — see **Charge Armor** and \
+					**Stagger**.",
 			),
 		),
 
@@ -381,44 +334,184 @@
 			list(
 				"title"    = "Vine Gauntlet",
 				"severity" = "high",
-				"text"     = "1400 HP (x player count), immobile, never melees. \
-					While ANY vine is within 2 tiles of it it takes only x0.15 \
-					incoming; clear the vines next to it and it takes full \
-					damage. It spawns surrounded by a full 5-tile vine field \
-					and regrows vines — cut a lane (sharp melee cuts fastest; \
-					one cut snaps up to 4 neighbours).",
-			),
-			list(
-				"title"    = "Bloodfeast",
-				"severity" = "high",
-				"text"     = "Thornlash (every 9s) detonates your Bleed: deals \
-					BRUTE equal to your current Bleed, then halves your Bleed; \
-					repeats up to 4 times, removing Bleed once it falls to 1 or \
-					less. Zero effect if you carry no Bleed — don't shove \
-					through vines.",
+				"text"     = "Immobile. Takes 5% less incoming damage for every \
+					refracted vine within 2 tiles of it, stacking up to a 40% \
+					cap (8+ vines); with no vines next to it, full damage. It \
+					spawns surrounded by a full 5-tile vine field and regrows \
+					them. See the vine's **Thornwall**.",
 			),
 			list(
 				"title"    = "Garden Collapse",
 				"severity" = "low",
-				"text"     = "Cannot move or attack on its own; the only \
-					registered enemy here. When it dies every vine is removed \
-					instantly and the node clears.",
+				"text"     = "When it dies, every vine it spread is removed \
+					instantly.",
 			),
 			list(
 				"title"    = "Thornwall",
 				"severity" = "medium",
-				"text"     = "Its vines block movement (forced twice to pass; \
-					~10% per forced push roots you + 5 Bleed). A sharp 5+ force \
-					weapon cuts a vine; destroying one by damage snaps up to 4 \
-					adjacent vines too — one good cut opens a lane.",
+				"text"     = "Its vines block movement (forced twice to pass), \
+					and a vine that grows onto your tile applies 4 Bleed. A \
+					sharp 5+ force weapon cuts a vine; destroying one by damage \
+					snaps up to 4 adjacent vines too. Shoving through instead of \
+					cutting risks Bleed (see the **Tangle** attack).",
 			),
 			list(
 				"title"    = "Bloodroot",
 				"severity" = "info",
 				"text"     = "Each vine has only 5 integrity but is armored: RED \
-					80 (near-immune to RED), BLACK 40, WHITE 0, FIRE -50 and PALE \
-					-50 (takes x1.5). Use fire/PALE/sharp melee on the vines, \
-					not RED.",
+					80 (near-immune to RED), BLACK 40, WHITE 0, FIRE -50 and \
+					PALE -50 (takes x1.5).",
+			),
+		),
+
+		// ---------- Refracted (Sector 3) ----------
+
+		/mob/living/simple_animal/hostile/clan/scout/refracted = list(
+			list(
+				"title"    = "Charge",
+				"severity" = "info",
+				"text"     = "Starts at 5 charge, max 10. Gains 1 every 2 \
+					seconds.",
+			),
+			list(
+				"title"    = "Overclock",
+				"severity" = "medium",
+				"text"     = "The more charge it has, the faster it moves and \
+					the more times its basic attack lands per swing (up to 4 \
+					hits per swing). Each hit it lands spends 2 charge.",
+			),
+		),
+
+		/mob/living/simple_animal/hostile/clan/defender/refracted = list(
+			list(
+				"title"    = "Charge",
+				"severity" = "info",
+				"text"     = "Starts at 5 charge, max 10. Gains 1 every 2 \
+					seconds (paused while locked).",
+			),
+			list(
+				"title"    = "Lockdown",
+				"severity" = "high",
+				"text"     = "At full charge (10), on its next melee, it plants \
+					and projects a field that roots everything within 2 tiles \
+					(they cannot move away from it). For ~10 seconds it cannot \
+					move; resistances shift from RED x0.6 / WHITE x0.8 / BLACK \
+					x1.2 / PALE x1.5 to RED/WHITE/BLACK x0.4 / PALE x1.0. When \
+					the lock ends its charge resets to 0.",
+			),
+		),
+
+		/mob/living/simple_animal/hostile/clan/drone/refracted = list(
+			list(
+				"title"    = "Charge",
+				"severity" = "info",
+				"text"     = "Starts at 10 charge, max 20. Gains 1 every 1 \
+					second.",
+			),
+			list(
+				"title"    = "Mender",
+				"severity" = "high",
+				"text"     = "Targets only clan allies, never players. Locks a \
+					heal beam onto the most-wounded clan ally within ~6 tiles, \
+					healing it every tick and feeding it 1 charge per tick.",
+			),
+			list(
+				"title"    = "Emergency Repairs",
+				"severity" = "medium",
+				"text"     = "When its beam target drops to 20% HP or below, \
+					it dumps its charge into them as a burst heal (charge x 25 \
+					— up to 500 at full charge). 5-second cooldown.",
+			),
+		),
+
+		/mob/living/simple_animal/hostile/clan/ranged/gunner/refracted = list(
+			list(
+				"title"    = "Charge",
+				"severity" = "info",
+				"text"     = "Starts at 10 charge, max 20. Gains 1 every 2 \
+					seconds. **Burst Fire** costs 5 charge.",
+			),
+		),
+
+		/mob/living/simple_animal/hostile/clan/ranged/rapid/refracted = list(
+			list(
+				"title"    = "Charge",
+				"severity" = "info",
+				"text"     = "Starts at 10 charge, max 20. Gains 1 every 2 \
+					seconds. **Overdrive** costs 5 charge.",
+			),
+		),
+
+		/mob/living/simple_animal/hostile/clan/ranged/harpooner/refracted = list(
+			list(
+				"title"    = "Charge",
+				"severity" = "info",
+				"text"     = "Starts at 10 charge, max 20. Gains 1 every 2 \
+					seconds. **Harpoon** costs 5 charge.",
+			),
+		),
+
+		/mob/living/simple_animal/hostile/keeper_piller/refracted = list(
+			list(
+				"title"    = "Mimic Pillar",
+				"severity" = "medium",
+				"text"     = "Immobile. On arrival it drops from above, RED to \
+					everything beneath it. Dies when the boss dies.",
+			),
+		),
+
+		/mob/living/simple_animal/hostile/clan/stone_keeper/refracted = list(
+			list(
+				"title"    = "Entrance",
+				"severity" = "low",
+				"text"     = "On encounter start it drops from above, RED to \
+					everything beneath it.",
+			),
+			list(
+				"title"    = "Charge",
+				"severity" = "info",
+				"text"     = "Starts at 15 charge, max 20. Gains 1 every 30 \
+					seconds. Each hit it takes spends 1 charge.",
+			),
+			list(
+				"title"    = "Charge Shield",
+				"severity" = "high",
+				"text"     = "While its charge is 5 or more it is shielded: \
+					damage taken RED/WHITE/BLACK x0.1 / PALE x0.5. While its \
+					charge is under 5 it is bare: damage taken RED x0.6 / \
+					WHITE x0.8 / BLACK x1.2 / PALE x1.5.",
+			),
+			list(
+				"title"    = "The Pillars",
+				"severity" = "high",
+				"text"     = "Below half HP it raises area-denial **Mimic \
+					Pillar**s at fixed points around the arena. When it dies, \
+					every pillar it raised falls with it.",
+			),
+			list(
+				"title"    = "Mine Scatter",
+				"severity" = "medium",
+				"text"     = "After every **Slam** it scatters 2-3 blue \
+					**Keeper Mine**s onto random open tiles within 2 tiles of \
+					itself. After every **Annihilation Beam** it scatters 7 \
+					mines onto random open tiles within 3 tiles of itself. On \
+					taking projectile damage it also drops 1 mine within 2 \
+					tiles (1-second cooldown). Each mine lasts 30 seconds. \
+					Stacking is allowed but uncommon — the first roll on an \
+					already-mined tile re-rolls once.",
+			),
+			list(
+				"title"    = "Keeper Mine",
+				"severity" = "medium",
+				"text"     = "Falls in from above on spawn and is only \
+					triggerable after ~0.5 seconds. If a player then steps \
+					within 1 tile of one, the mine launches into the air, \
+					beeps for ~1 second, then explodes at the start of its \
+					descent for 30 PALE in the 3x3 area around where it \
+					stood. Each target hit gains 3 PALE Fragile, or +1 above \
+					their current stack if they already have it. After \
+					landing, if a player is still within 1 tile it triggers \
+					again.",
 			),
 		),
 

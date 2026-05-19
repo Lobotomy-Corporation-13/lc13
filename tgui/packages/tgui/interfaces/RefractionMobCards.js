@@ -69,17 +69,17 @@ const tilesPerSecond = moveDelay => {
   return (10 / moveDelay).toFixed(2);
 };
 
+// 0/0 melee = no basic-attack damage. Authoring rule: don't restate
+// "no melee" in cards; the data sheet shows it here.
+const hasMelee = mob =>
+  mob.melee_damage_lower !== 0 || mob.melee_damage_upper !== 0;
+
 const escapeRegex = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
-// Underlines any status name found in card text and shows that status's
-// glossary blurb on hover. `glossary` is [{ name, desc }] from the server
-// (data.status_glossary). Names are matched longest-first so "RED Fragile"
-// wins over "Fragile".
-const GlossaryText = props => {
-  const { text, glossary } = props;
-  if (text === null || text === undefined || text === '') {
-    return text || null;
-  }
+// Renders one plain string: underline any glossary status name and show
+// its blurb on hover. `glossary` is [{ name, desc, icon }] from the
+// server. Names match longest-first so "RED Fragile" beats "Fragile".
+const renderGlossary = (text, glossary, keyBase) => {
   if (!glossary || !glossary.length) {
     return text;
   }
@@ -97,13 +97,12 @@ const GlossaryText = props => {
     if (!g) {
       return part;
     }
-    // The status name is wrapped in a position:relative inline-block Box
-    // with a <Tooltip> child — that is the only tooltip mechanism tgui's
-    // Box supports (the bare `tooltip` prop is silently dropped, which is
-    // why hovering used to do nothing).
+    // The status name is wrapped in a position:relative inline Box with
+    // a <Tooltip> child — the only tooltip mechanism tgui's Box supports
+    // (the bare `tooltip` prop is silently dropped).
     return (
       <Box
-        key={i}
+        key={`${keyBase}-g${i}`}
         inline
         position="relative"
         style={{
@@ -122,9 +121,30 @@ const GlossaryText = props => {
           />
         )}
         {part}
-        <Tooltip content={g.desc} position="bottom" />
+        <Tooltip content={g.desc} position="bottom" overrideLong />
       </Box>
     );
+  });
+};
+
+// Card body renderer. `**Name**` marks a cross-reference to another
+// passive/attack and renders bold (not glossary-scanned); every other
+// span is glossary-scanned for status names.
+const GlossaryText = props => {
+  const { text, glossary } = props;
+  if (text === null || text === undefined || text === '') {
+    return text || null;
+  }
+  // Bold/text spans are NOT wrapped in <Box inline> — tgui's `inline`
+  // is display:inline-block, which strips its content's leading/trailing
+  // whitespace and eats the spaces around each reference. A native <b>
+  // and the raw glossary output stay in normal inline flow, so the
+  // surrounding spaces (plain text nodes) are preserved.
+  return String(text).split(/\*\*([^*]+)\*\*/).map((seg, i) => {
+    if (i % 2 === 1) {
+      return <b key={`b${i}`}>{seg}</b>;
+    }
+    return renderGlossary(seg, glossary, i);
   });
 };
 
@@ -171,12 +191,18 @@ const UnrevealedSummary = props => {
     <Box>
       <Stack>
         <Stack.Item>
-          <Box
-            color={damageTypeColor(mob.melee_damage_type)}
-            fontSize="11px"
-            bold>
-            Melee: {(mob.melee_damage_type || '???').replace('_DAMAGE', '')}
-          </Box>
+          {hasMelee(mob) ? (
+            <Box
+              color={damageTypeColor(mob.melee_damage_type)}
+              fontSize="11px"
+              bold>
+              Melee: {(mob.melee_damage_type || '???').replace('_DAMAGE', '')}
+            </Box>
+          ) : (
+            <Box color="label" fontSize="11px" bold>
+              Melee: none
+            </Box>
+          )}
           {mob.ranged_damage_type && (
             <Box
               color={damageTypeColor(mob.ranged_damage_type)}
@@ -205,10 +231,14 @@ const RevealedSummary = props => {
       <Box color="label">
         HP: {mob.max_health}
       </Box>
-      <Box color={damageTypeColor(mob.melee_damage_type)}>
-        Melee: {mob.melee_damage_lower}&ndash;{mob.melee_damage_upper}
-        {' '}{(mob.melee_damage_type || '').replace('_DAMAGE', '')}
-      </Box>
+      {hasMelee(mob) ? (
+        <Box color={damageTypeColor(mob.melee_damage_type)}>
+          Melee: {mob.melee_damage_lower}&ndash;{mob.melee_damage_upper}
+          {' '}{(mob.melee_damage_type || '').replace('_DAMAGE', '')}
+        </Box>
+      ) : (
+        <Box color="label">Melee: none</Box>
+      )}
     </Box>
   );
 };
@@ -371,11 +401,15 @@ const FullDataSheet = props => {
               <ResistanceRow resistances={mob.resistances} />
             </LabeledList.Item>
             <LabeledList.Item label="Melee">
-              <Box color={damageTypeColor(mob.melee_damage_type)}>
-                {mob.melee_damage_lower}&ndash;{mob.melee_damage_upper}
-                {' '}{(mob.melee_damage_type || '').replace('_DAMAGE', '')}
-                , every {cadenceFromMob(mob)}
-              </Box>
+              {hasMelee(mob) ? (
+                <Box color={damageTypeColor(mob.melee_damage_type)}>
+                  {mob.melee_damage_lower}&ndash;{mob.melee_damage_upper}
+                  {' '}{(mob.melee_damage_type || '').replace('_DAMAGE', '')}
+                  , every {cadenceFromMob(mob)}
+                </Box>
+              ) : (
+                <Box color="label">No basic melee attack</Box>
+              )}
             </LabeledList.Item>
             {mob.is_ranged && (
               <LabeledList.Item label="Ranged">

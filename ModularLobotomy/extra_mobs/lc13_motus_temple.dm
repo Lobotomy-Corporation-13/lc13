@@ -692,6 +692,13 @@
 	var/beep_time = 20
 	var/talking = FALSE
 	var/elliot_killed_once = FALSE
+	/// Refraction-overridable. Default reproduces stock behaviour. When
+	/// FALSE, death() performs a normal death (no ending/Self-Detonate/
+	/// achievements) and the StealElliot end-cutscene never fires.
+	var/run_ending = TRUE
+	/// Refraction-overridable. Default reproduces stock behaviour. When
+	/// FALSE, Elliot-specific branches are skipped.
+	var/use_elliot_interactions = TRUE
 
 /mob/living/simple_animal/hostile/clan/stone_keeper/Initialize()
 	. = ..()
@@ -813,6 +820,8 @@
 
 
 /mob/living/simple_animal/hostile/clan/stone_keeper/death(gibbed)
+	if(!run_ending)
+		return ..()
 	if(ending)
 		Unlock()
 		new /obj/item/keycard/motus_treasure(get_turf(src))
@@ -832,6 +841,8 @@
 	return FALSE
 
 /mob/living/simple_animal/hostile/clan/stone_keeper/proc/Self_Detonate_Timer()
+	if(!run_ending)
+		return
 	var/elliot_alive = FALSE
 	var/mob/living/simple_animal/hostile/ui_npc/elliot/hero
 	for(var/mob/living/simple_animal/hostile/ui_npc/elliot/victim in range(10, src))
@@ -930,7 +941,7 @@
 	visible_message(span_danger("[src] starts charging something at [cooler_target]!"))
 	say("Tinkerer's Order...")
 	var/mob/living/simple_animal/hostile/ui_npc/elliot/victim
-	if(is_elliot(cooler_target))
+	if(use_elliot_interactions && is_elliot(cooler_target))
 		victim = cooler_target
 	dir = get_cardinal_dir(src, target)
 	if(victim)
@@ -1033,10 +1044,12 @@
 			continue
 		if(L.stat != DEAD && !faction_check_mob(L, FALSE))
 			everyone_dead = FALSE
-	if(everyone_dead)
+	if(everyone_dead && run_ending)
 		StealElliot()
 
 /mob/living/simple_animal/hostile/clan/stone_keeper/proc/StealElliot()
+	if(!run_ending)
+		return
 	var/mob/living/simple_animal/hostile/ui_npc/elliot/victim
 	for(var/mob/living/simple_animal/hostile/ui_npc/elliot/steal_target in range(20, src))
 		victim = steal_target

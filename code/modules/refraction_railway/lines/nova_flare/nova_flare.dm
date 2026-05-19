@@ -124,34 +124,41 @@
 		),
 		boss = TRUE)
 
-	// ----- Sector 3: Heart -----
+	// ----- Sector 3: the Tinkerer's Keep -----
 	AddNode("nova_s3n1", "nova_s3n1_spawns",
-		"Approach",
-		"Visibility falls off. The space ahead has been cleared by something \
-			that intends to be alone in it.",
+		"The Vanguard",
+		"A clan etched into steel backs holds the approach. One of them \
+			walks the line mending the others.",
 		list(
-			/mob/living/simple_animal/hostile/ordeal/steel_dusk                   = 4,
-			/mob/living/simple_animal/hostile/ordeal/steel_dawn/steel_noon/flying = 3,
+			/mob/living/simple_animal/hostile/clan/scout/refracted    = 4,
+			/mob/living/simple_animal/hostile/clan/defender/refracted = 2,
+			/mob/living/simple_animal/hostile/clan/drone/refracted    = 2,
 		),
 		c_max = 4)
 
 	AddNode("nova_s3n2", "nova_s3n2_spawns",
-		"Antechamber",
-		"Honor guard. They were left here to be killed; whoever they \
-			answered to has already moved on.",
+		"The Firing Line",
+		"The hall narrows under their guns. Get dragged out of cover and \
+			the rest will not miss.",
 		list(
-			/mob/living/simple_animal/hostile/ordeal/steel_dusk     = 3,
-			/mob/living/simple_animal/hostile/ordeal/sin_pride/noon = 4,
+			/mob/living/simple_animal/hostile/clan/ranged/gunner/refracted    = 3,
+			/mob/living/simple_animal/hostile/clan/ranged/rapid/refracted     = 3,
+			/mob/living/simple_animal/hostile/clan/ranged/harpooner/refracted = 2,
+			/mob/living/simple_animal/hostile/clan/defender/refracted         = 1,
 		),
 		c_max = 4)
 
 	AddNode("nova_core", "nova_core_spawns",
-		"Core",
-		"Whatever burns at the center of the flare. The carriage stops here.",
+		"The Keeper",
+		"The Tinkerer's guardian drops out of the dark to meet the \
+			carriage. The line ends here.",
 		list(
-			/mob/living/simple_animal/hostile/lovetown/abomination = 1,
+			/mob/living/simple_animal/hostile/clan/stone_keeper/refracted = 1,
 		),
-		boss = TRUE)
+		boss = TRUE,
+		extra_preview = list(
+			/mob/living/simple_animal/hostile/keeper_piller/refracted,
+		))
 
 	sector_briefings = list(
 		list(
@@ -169,9 +176,10 @@
 			"node_ids"    = list("nova_s2n1", "nova_s2n2", "nova_s2n3"),
 		),
 		list(
-			"name"        = "Sector 3: Heart",
-			"description" = "Whatever waits at the core of the flare has already \
-				noticed us. The carriage burns ahead anyway.",
+			"name"        = "Sector 3: the Tinkerer's Keep",
+			"description" = "Past the garden the line was never abandoned. A \
+				clan still holds it, and the Tinkerer's Keeper waits at the \
+				end of the carriage's road.",
 			"node_ids"    = list("nova_s3n1", "nova_s3n2", "nova_core"),
 		),
 	)
