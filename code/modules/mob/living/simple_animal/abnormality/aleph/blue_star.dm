@@ -95,7 +95,6 @@
 /mob/living/simple_animal/hostile/abnormality/bluestar/Life()
 	//If you have a supplies crate nearby, delete it, spawn a new one, and set the things proper
 	for(var/obj/structure/blue_core/Y in range(2, src))
-		to_chat(world, "Found core: [Y]")
 		qdel(Y)
 		buff_cooldown = world.time + buff_cooldown_time
 		work_damage_amount = 16
