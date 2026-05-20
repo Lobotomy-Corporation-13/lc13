@@ -3646,6 +3646,7 @@
 #include "code\modules\refraction_railway\lines\curtain_call\passives.dm"
 #include "code\modules\refraction_railway\lines\curtain_call\attacks.dm"
 #include "code\modules\refraction_railway\lines\curtain_call\landmarks.dm"
+#include "code\modules\refraction_railway\lines\curtain_call\sector1_mobs.dm"
 #include "code\modules\recycling\conveyor2.dm"
 #include "code\modules\recycling\conveyor_filter.dm"
 #include "code\modules\recycling\conveyor_splitter.dm"

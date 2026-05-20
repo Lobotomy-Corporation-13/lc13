@@ -68,12 +68,14 @@
 
 	// ----- Sector 1: Opening Act -----
 	AddNode("zeal_s1n1", "zeal_s1n1_spawns",
-		"Sector 1, Act I: <pending>",
-		"<pending flavor — admin-event reference goes here>.",
+		"Sector 1, Act I: The Capo and Their Rat",
+		"A capo of the Thumb East family steps onto the platform with a \
+			red-stained rat at their heel. They have rehearsed this scene.",
 		list(
-			// TODO: replace with this sector's boss mob
-			/mob/living/simple_animal/hostile/netherworld/migo/refracted = 1,
+			/mob/living/simple_animal/hostile/thumb_east_capo/refracted = 1,
+			/mob/living/simple_animal/hostile/rat/capo_rat/refracted   = 1,
 		),
+		c_max = 2,
 		boss = TRUE)
 
 	AddNode("zeal_s1n2", "zeal_s1n2_spawns",
