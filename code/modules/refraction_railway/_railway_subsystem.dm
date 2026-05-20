@@ -160,6 +160,11 @@ SUBSYSTEM_DEF(refraction_railway)
 	var/list/data = list()
 	data["type"] = H.type
 	data["name"] = H.name
+	// Some mobs (Stone Keeper, keeper_piller) default to alpha=0 for an
+	// entrance-fall cutscene, which would snapshot the card as an invisible
+	// PNG. Force a fully opaque, on-ground render for the card icon.
+	H.alpha = 255
+	H.pixel_z = 0
 	data["icon"] = icon2base64(getFlatIcon(H, no_anim = TRUE))
 	data["health"] = H.maxHealth
 	data["max_health"] = H.maxHealth

@@ -101,7 +101,7 @@
 		list(
 			/mob/living/simple_animal/hostile/mad_fly_nest/refracted = 3,
 		),
-		c_max = 3,
+		c_max = 2,
 		extra_preview = list(
 			/mob/living/simple_animal/hostile/mad_fly_swarm/refracted,
 		))

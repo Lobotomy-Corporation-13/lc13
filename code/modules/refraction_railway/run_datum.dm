@@ -335,14 +335,17 @@ GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 	// Sweep last sector's pens before healing (pens are per-sector).
 	RemoveUnusedPens()
 	for(var/mob/living/carbon/human/H as anything in members)
-		if(!ishuman(H))
+		if(QDELETED(H) || !ishuman(H))
 			continue
 		ready_states[H.ckey] = FALSE
-		// Skip dead/insane: bench timer handles them. Healing insane here is
-		// unsafe — EnterCheckpoint can run mid insanity-onset.
-		if(IsMemberOutOfAction(H))
+		// Insane (but alive) members defer to the 1s bench timer — healing
+		// here would race the COMSIG_HUMAN_INSANE onset and let the AI
+		// rebuild itself after we cleared it. Dead members ARE healed here
+		// so the run no longer depends on the bench timer alone to revive.
+		if(H.sanity_lost && H.stat != DEAD)
 			continue
 		HealMember(H)
+		ReequipLoadout(H)
 	TeleportToCheckpoint()
 
 /// Starts the next sector. `force` skips the all-ready + loadout gate.
@@ -491,10 +494,13 @@ GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 	// Bring everyone to the checkpoint; dead ones via the bench timer.
 	TeleportToCheckpoint()
 	for(var/mob/living/carbon/human/H as anything in members)
-		// Dead/insane members are handled by the bench timer; healing insane
-		// here could land mid insanity-onset.
-		if(ishuman(H) && !IsMemberOutOfAction(H))
-			HealMember(H)
+		if(QDELETED(H) || !ishuman(H))
+			continue
+		// Insane (but alive): bench timer cures after onset finishes.
+		// Dead: revived here so success isn't gated on the bench timer.
+		if(H.sanity_lost && H.stat != DEAD)
+			continue
+		HealMember(H)
 	var/list/owner_loadout = loadouts[lobby_owner]
 	var/list/member_ckeys = list()
 	for(var/mob/M as anything in members)
@@ -625,25 +631,21 @@ GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 		CleanLineArea()
 		current_section = max(0, current_section - 1)
 		elapsed_baseline = elapsed_baseline_at_section_start
-		EnterCheckpoint()
+		// EnterCheckpoint -> HealMember -> ReequipLoadout can sleep via
+		// equip_to_slot_or_del's do_after, and we're in a SIGNAL_HANDLER.
+		// Defer to a fresh chain.
+		INVOKE_ASYNC(src, PROC_REF(EnterCheckpoint))
 
-/// Fires 1s after death/insanity: revive + cure as needed, then re-equip.
+/// Fires 1s after death/insanity: revive + heal + cure, then re-equip.
+/// Always runs both halves — HealMember is a safe no-op when already
+/// healed (EnterCheckpoint's wipe pass may have beat us to it), and
+/// ReequipLoadout is idempotent (gear on the player is left alone).
 /datum/refraction_run/proc/BenchIncapacitatedMember(mob/living/carbon/human/H)
-	if(!ishuman(H) || !(H in members))
+	if(QDELETED(H) || !ishuman(H) || !(H in members))
 		return
 	if(H.ckey)
 		pending_bench -= H.ckey
-	var/was_dead = (H.stat == DEAD)
-	var/was_insane = H.sanity_lost
-	if(!was_dead && !was_insane)
-		// Recovered externally during the 1s window; nothing to do.
-		return
-	if(was_dead)
-		H.revive(full_heal = TRUE, admin_revive = FALSE)
-	// Always cure: revive()'s fully_heal no-ops sanity while stat == DEAD.
-	// Unconditional, safe no-op when healthy; runs 1s post-signal so
-	// insanity onset has finished.
-	CureMemberInsanity(H)
+	HealMember(H)
 	ReequipLoadout(H)
 
 // ---------- Timer ----------
@@ -746,9 +748,12 @@ GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 	return FALSE
 
 /datum/refraction_run/proc/HealMember(mob/living/carbon/human/H)
-	if(!ishuman(H))
+	if(QDELETED(H) || !ishuman(H))
 		return
-	H.revive(full_heal = TRUE, admin_revive = FALSE)
+	// admin_revive forces regenerate_limbs / regenerate_organs so a
+	// dismembered or brain-missing body can come back. Without it,
+	// can_be_revived() returns FALSE and the body stays DEAD.
+	H.revive(full_heal = TRUE, admin_revive = TRUE)
 	// revive()'s fully_heal can no-op the sanity reset (stat == DEAD), so
 	// always cure. Safe no-op when healthy.
 	CureMemberInsanity(H)

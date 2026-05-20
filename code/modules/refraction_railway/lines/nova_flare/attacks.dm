@@ -244,7 +244,7 @@
 		/mob/living/simple_animal/hostile/clan/stone_guard/refracted = list(
 			list(
 				"name"     = "Transpierce",
-				"damage"   = "25 RED + 6 Tremor per tile, line up to 5 tiles",
+				"damage"   = "25 RED + 4 Tremor per tile, line up to 5 tiles",
 				"cooldown" = "12 seconds",
 				"desc"     = "Calls out + ~0.5s of fading decoys, then spikes \
 					every tile in a line up to 5 tiles toward where its target \
@@ -258,7 +258,7 @@
 				"damage"   = "10 RED, then detonate the target's Bleed (BRUTE = the Bleed, halving each pulse) or, under 5 Bleed, +30 Bleed",
 				"cooldown" = "9 seconds",
 				"desc"     = "Marks the ground under each target ~3s. On the \
-					strike it hits everything within 3 tiles of a marker. If \
+					strike it hits everything within 1 tile of a marker. If \
 					the target has 5 or more Bleed, that Bleed detonates (up to \
 					4 pulses, clearing once it drops to 1 or less); otherwise \
 					the target gains 30 Bleed instead.",
@@ -299,7 +299,7 @@
 			list(
 				"name"     = "Harpoon",
 				"damage"   = "20 RED on hit; 50 RED + Knockdown on drop",
-				"cooldown" = "~20 seconds, prefers human targets; costs 5 charge (falls back to a normal shot if under-charged)",
+				"cooldown" = "~20 seconds, prefers human targets; costs 20 charge (falls back to a normal shot if under-charged)",
 				"desc"     = "Fires a chained harpoon at a player. On hit it \
 					drags them in (they cannot move away from it) for up to 15 \
 					seconds; on arrival within 2 tiles it slams them.",

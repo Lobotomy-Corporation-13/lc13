@@ -25,6 +25,8 @@
 	return 1 + REFRACTION_CONCURRENT_PER_EXTRA_PLAYER * max(0, num_players - 1)
 
 /// Scales a hostile mob's HP and melee damage by the lobby-size multipliers.
+/// Mobs with 0/0 melee (pillars, summoners, area-denial constructs) keep
+/// their non-melee profile — scaling never promotes them to a meleeer.
 /proc/refraction_scale_hostile(mob/living/simple_animal/hostile/H, num_players)
 	if(!istype(H) || num_players <= 1)
 		return
@@ -33,5 +35,6 @@
 	var/new_max = round(H.maxHealth * hp_mult)
 	H.maxHealth = new_max
 	H.health = new_max
-	H.melee_damage_lower = round(H.melee_damage_lower * dmg_mult)
-	H.melee_damage_upper = round(H.melee_damage_upper * dmg_mult)
+	if(H.melee_damage_lower > 0 || H.melee_damage_upper > 0)
+		H.melee_damage_lower = round(H.melee_damage_lower * dmg_mult)
+		H.melee_damage_upper = round(H.melee_damage_upper * dmg_mult)
