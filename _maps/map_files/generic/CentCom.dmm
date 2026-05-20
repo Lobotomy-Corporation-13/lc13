@@ -2342,13 +2342,6 @@
 	},
 /turf/open/floor/plasteel,
 /area/centcom/supply)
-"oA" = (
-/obj/structure/table/wood,
-/obj/item/kirbyplants{
-	icon_state = "plant-10"
-	},
-/turf/open/floor/carpet,
-/area/centcom/holding)
 "oB" = (
 /obj/effect/turf_decal/tile{
 	color = "#CC5500";
@@ -3240,6 +3233,10 @@
 	},
 /turf/open/floor/plating/airless,
 /area/syndicate_mothership/control)
+"um" = (
+/obj/machinery/computer/refraction_railway_console/leaderboard,
+/turf/open/floor/carpet,
+/area/centcom/holding)
 "us" = (
 /obj/effect/turf_decal/tile{
 	color = "#CC5500"
@@ -59698,7 +59695,7 @@ aa
 aa
 aa
 FM
-rE
+um
 Kz
 TU
 EQ
@@ -62268,7 +62265,7 @@ aa
 aa
 aa
 FM
-oA
+um
 yj
 yv
 Bq
