@@ -314,3 +314,27 @@
 	gloves = /obj/item/clothing/gloves/color/black
 	implants = list(/obj/item/organ/cyberimp/eyes/hud/security)
 	back = /obj/item/storage/backpack
+
+// After the parent's create() builds a vanilla human and transfers the
+// ghost's client onto it, copy the ghost's character preferences across so
+// the body looks (and is named) like their saved character instead of a
+// random Refraction Railway Agent. set_species() inside copy_to() can
+// reset bodyparts, so re-equip the outfit afterwards.
+/obj/effect/mob_spawn/human/refraction_railway_agent/create(ckey, newname)
+	var/mob/M = ..()
+	if(!ishuman(M))
+		return M
+	var/mob/living/carbon/human/H = M
+	if(!H.client?.prefs)
+		return H
+	H.client.prefs.copy_to(H, roundstart_checks = FALSE)
+	if(H.dna)
+		H.dna.update_dna_identity()
+	H.updateappearance(mutcolor_update = 1, mutations_overlay_update = 1)
+	if(outfit)
+		if(ispath(outfit))
+			outfit = new outfit()
+		H.equipOutfit(outfit)
+	if(H.mind)
+		H.mind.name = H.real_name
+	return H

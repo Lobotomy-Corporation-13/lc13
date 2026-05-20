@@ -260,23 +260,24 @@
 			list(
 				"title"    = "Endless Brood",
 				"severity" = "high",
-				"text"     = "Immobile, won't aggro. Hatches a batch of 2 \
-					refracted flies every ~8 seconds, up to 6 alive per nest \
-					(the first batch almost immediately).",
+				"text"     = "Immobile, won't aggro. Hatches 1 refracted fly \
+					every ~16 seconds, capped at 1 alive per nest (the \
+					first hatch is almost immediate).",
 			),
 			list(
 				"title"    = "Rupturing Brood",
 				"severity" = "high",
 				"text"     = "Every time a nest loses another 33% of its max HP \
-					it ruptures, bursting 3 extra flies on the spot — on top of \
-					normal production and ignoring the alive cap.",
+					it ruptures, bursting 1 extra fly on the spot — capped at \
+					the nest's 1-fly limit, so the burst is suppressed while a \
+					fly is still alive. At most one burst per 10 seconds.",
 			),
 			list(
 				"title"    = "Caustic Hide",
 				"severity" = "medium",
 				"text"     = "Every hit you land on a nest leaves you WHITE \
 					Fragile, scaling with how hurt the nest is: 1 stack near \
-					full, up to 5 once it has lost 20% or more of its max HP.",
+					full, up to 5 once it has lost 90% of its max HP.",
 			),
 			list(
 				"title"    = "Brood Collapse",
@@ -324,9 +325,15 @@
 			list(
 				"title"    = "Hardened Stone",
 				"severity" = "info",
-				"text"     = "Its melee applies 3 Tremor. Its damage resistances \
+				"text"     = "Its melee applies 2 Tremor. Its damage resistances \
 					shift with its charge state — see **Charge Armor** and \
 					**Stagger**.",
+			),
+			list(
+				"title"    = "Fault Line",
+				"severity" = "high",
+				"text"     = "Striking a target carrying 30 or more Tremor flips \
+					its melee from RED to BLACK on that strike.",
 			),
 		),
 
@@ -447,7 +454,7 @@
 				"title"    = "Charge",
 				"severity" = "info",
 				"text"     = "Starts at 10 charge, max 20. Gains 1 every 2 \
-					seconds. **Harpoon** costs 5 charge.",
+					seconds. **Harpoon** costs 20 charge.",
 			),
 		),
 
@@ -505,13 +512,11 @@
 				"severity" = "medium",
 				"text"     = "Falls in from above on spawn and is only \
 					triggerable after ~0.5 seconds. If a player then steps \
-					within 1 tile of one, the mine launches into the air, \
-					beeps for ~1 second, then explodes at the start of its \
-					descent for 30 PALE in the 3x3 area around where it \
-					stood. Each target hit gains 3 PALE Fragile, or +1 above \
-					their current stack if they already have it. After \
-					landing, if a player is still within 1 tile it triggers \
-					again.",
+					within 1 tile of one, the mine hops up, beeps for ~1 \
+					second, then explodes at the start of its descent for 30 \
+					PALE in the 3x3 area around where it stood and \
+					disappears. Each target hit gains 3 PALE Fragile, or +1 \
+					above their current stack if they already have it.",
 			),
 		),
 

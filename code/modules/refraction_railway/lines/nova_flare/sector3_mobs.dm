@@ -16,8 +16,8 @@
 /mob/living/simple_animal/hostile/clan/scout/refracted
 	maxHealth = 320
 	health = 320
-	melee_damage_lower = 7
-	melee_damage_upper = 10
+	melee_damage_lower = 5
+	melee_damage_upper = 7
 	teleport_away = FALSE
 	loot = list()
 	butcher_results = null
@@ -25,10 +25,10 @@
 	silk_results = null
 
 /mob/living/simple_animal/hostile/clan/defender/refracted
-	maxHealth = 1000
-	health = 1000
-	melee_damage_lower = 18
-	melee_damage_upper = 24
+	maxHealth = 600
+	health = 600
+	melee_damage_lower = 8
+	melee_damage_upper = 11
 	teleport_away = FALSE
 	loot = list()
 	butcher_results = null
@@ -46,18 +46,44 @@
 
 // ---------- Node 2: the clan firing line ----------
 
+// Halved-damage projectile variants used by the refracted ranged trio.
+// Base damages: medium 15, rapid 5, harpoon 20.
+/obj/projectile/clan_bullet/medium/refracted
+	damage = 8
+
+/obj/projectile/clan_bullet/rapid/refracted
+	damage = 3
+
+/obj/projectile/clan_bullet/harpoon/refracted
+	damage = 10
+
 /mob/living/simple_animal/hostile/clan/ranged/gunner/refracted
-	maxHealth = 450
-	health = 450
+	maxHealth = 180
+	health = 180
+	move_to_delay = 6
+	projectiletype = /obj/projectile/clan_bullet/medium/refracted
 	teleport_away = FALSE
 	loot = list()
 	butcher_results = null
 	guaranteed_butcher_results = null
 	silk_results = null
 
+// Inlined base BurstFire(): swaps in the refracted medium bullet.
+/mob/living/simple_animal/hostile/clan/ranged/gunner/refracted/BurstFire(atom/target)
+	if(stat == DEAD || !target)
+		return
+	var/turf/startloc = get_turf(src)
+	var/obj/projectile/clan_bullet/medium/refracted/P = new(startloc)
+	P.preparePixelProjectile(target, src)
+	P.firer = src
+	P.fire()
+	playsound(src, projectilesound, 50, TRUE)
+
 /mob/living/simple_animal/hostile/clan/ranged/rapid/refracted
-	maxHealth = 280
-	health = 280
+	maxHealth = 115
+	health = 115
+	move_to_delay = 4
+	projectiletype = /obj/projectile/clan_bullet/rapid/refracted
 	teleport_away = FALSE
 	loot = list()
 	butcher_results = null
@@ -65,17 +91,19 @@
 	silk_results = null
 
 /mob/living/simple_animal/hostile/clan/ranged/harpooner/refracted
-	maxHealth = 520
-	health = 520
-	melee_damage_lower = 10
-	melee_damage_upper = 14
+	maxHealth = 210
+	health = 210
+	move_to_delay = 6
+	melee_damage_lower = 5
+	melee_damage_upper = 7
+	projectiletype = /obj/projectile/clan_bullet/medium/refracted
 	teleport_away = FALSE
 	loot = list()
 	butcher_results = null
 	guaranteed_butcher_results = null
 	silk_results = null
 	/// Charge spent per harpoon fired.
-	var/harpoon_charge_cost = 5
+	var/harpoon_charge_cost = 20
 
 // Inlined replacement of base OpenFire(): also gates the harpoon on
 // charge, falling through to a regular ranged shot when under-charged.
@@ -91,20 +119,45 @@
 		return
 	return ..()
 
+// Inlined base FireHarpoon(): swaps in the refracted harpoon bullet.
+/mob/living/simple_animal/hostile/clan/ranged/harpooner/refracted/FireHarpoon(atom/target)
+	if(chained_target || world.time < harpoon_cooldown)
+		return
+	visible_message(span_danger("[src] fires a chain harpoon at [target]!"))
+	playsound(src, 'sound/weapons/chainhit.ogg', 75, TRUE)
+	var/obj/projectile/clan_bullet/harpoon/refracted/H = new(get_turf(src))
+	H.firer = src
+	H.preparePixelProjectile(target, src)
+	H.fire()
+	harpoon_cooldown = world.time + harpoon_cooldown_time
+
 // ---------- Node 3: the Stone Keeper boss + pillars ----------
 
-// Area-denial add; dies with the boss. Behaviour inherited (immobile,
-// no melee, telegraphed laser tiles); stat-override only.
+// Area-denial add; dies with the boss. Behaviour inherited (immobile, no
+// melee, telegraphed laser tiles). HP is filled in at runtime by the
+// keeper's summon_piller() (summoner.maxHealth * 1.5); the literal here
+// is just a safety fallback if one is ever spawned without a summoner.
 /mob/living/simple_animal/hostile/keeper_piller/refracted
-	maxHealth = 650
-	health = 650
+	maxHealth = 1500
+	health = 1500
 	loot = list()
+	/// Pillar HP = summoner.maxHealth * this multiplier.
+	var/summoner_hp_mult = 1.5
+
+// Accept the summoning keeper as new()'s second arg and scale our HP off
+// its current maxHealth. The wave system's HP scaling has already
+// applied to the keeper by the time it summons pillars (50% HP trigger),
+// so this tracks the player-count-scaled value automatically.
+/mob/living/simple_animal/hostile/keeper_piller/refracted/Initialize(mapload, mob/living/simple_animal/hostile/clan/stone_keeper/summoner)
+	. = ..()
+	if(summoner)
+		maxHealth = round(summoner.maxHealth * summoner_hp_mult)
+		health = maxHealth
 
 // Blue mine scattered by the Stone Keeper after every Slam. A player
-// stepping within 1 tile launches it: ~0.5s up, ~1s of beeps, then it
-// explodes at the start of its descent for 30 PALE in a 1-tile radius
-// around where it stood. After landing, if a player is still within 1
-// tile the cycle restarts. Auto-despawns after 30s.
+// stepping within 1 tile launches it: a short hop up, ~1s of beeps, then
+// it explodes at the start of its descent for 30 PALE in a 1-tile radius
+// and the mine deletes itself. Auto-despawns after 30s if never tripped.
 /obj/effect/keeper_mine
 	name = "keeper's mine"
 	desc = "A pulsing blue mine. Don't stand near it."
@@ -128,8 +181,8 @@
 	/// Pixel drop on spawn (~4 tiles up).
 	var/fall_height = 128
 	var/launching = FALSE
-	/// Pixel rise on launch (10 tiles x 32px).
-	var/launch_height = 320
+	/// Pixel rise on launch — a small hop, not a full toss.
+	var/launch_height = 15
 	var/launch_up_time = 0.5 SECONDS
 	var/airborne_beep_time = 1 SECONDS
 	var/launch_down_time = 0.4 SECONDS
@@ -187,15 +240,13 @@
 		sleep(2)
 	if(QDELETED(src))
 		return
-	// Begin descent and explode at the start of the lowering.
+	// Begin descent and explode at the start of the lowering, then qdel.
 	animate(src, pixel_y = pixel_y_rest, time = launch_down_time)
 	Explode()
 	sleep(launch_down_time)
 	if(QDELETED(src))
 		return
-	launching = FALSE
-	// On the next process tick, if a player is still within
-	// detect_range the cycle re-triggers automatically.
+	qdel(src)
 
 /obj/effect/keeper_mine/proc/Explode()
 	new /obj/effect/temp_visual/explosion(get_turf(src))
@@ -212,8 +263,8 @@
 		H.apply_lc_pale_fragile(stacks_to_apply)
 
 /mob/living/simple_animal/hostile/clan/stone_keeper/refracted
-	maxHealth = 2800
-	health = 2800
+	maxHealth = 1820
+	health = 1820
 	melee_damage_lower = 24
 	melee_damage_upper = 34
 	tentacle_damage = 100
@@ -333,7 +384,7 @@
 		var/turf/T = get_turf(L)
 		if(!T)
 			continue
-		var/mob/living/simple_animal/hostile/keeper_piller/refracted/P = new(T)
+		var/mob/living/simple_animal/hostile/keeper_piller/refracted/P = new(T, src)
 		spawned_pillars += P
 	icon_state = "stone_keeper"
 	talking = FALSE

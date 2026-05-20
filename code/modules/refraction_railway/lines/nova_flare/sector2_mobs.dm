@@ -22,7 +22,7 @@
 /obj/effect/rose_target/thornlash/GrabAttack()
 	playsound(get_turf(src), 'sound/abnormalities/rosesign/vinegrab.ogg', 75, FALSE, 3)
 	new /obj/effect/temp_visual/rose_vine(get_turf(src))
-	for(var/mob/living/carbon/human/H in view(2, src))
+	for(var/mob/living/carbon/human/H in view(1, src))
 		H.deal_damage(strike_damage, RED_DAMAGE)
 		var/datum/status_effect/stacking/lc_bleed/B = H.has_status_effect(/datum/status_effect/stacking/lc_bleed)
 		if(!B || B.stacks < detonate_threshold)
@@ -116,8 +116,8 @@
 // ---------- Refracted Mad Fly ----------
 
 /mob/living/simple_animal/hostile/mad_fly_swarm/refracted
-	maxHealth = 200
-	health = 200
+	maxHealth = 350
+	health = 350
 	loot = list()
 	use_base_nesting = FALSE
 	var/burrow_bites = 0
@@ -179,26 +179,30 @@
 // ---------- Refracted Mad Fly Nest ----------
 
 /mob/living/simple_animal/hostile/mad_fly_nest/refracted
-	maxHealth = 1650
-	health = 1650
+	maxHealth = 825
+	health = 825
 	loot = list()
 	butcher_results = null
 	guaranteed_butcher_results = null
 	spawn_fly_type = /mob/living/simple_animal/hostile/mad_fly_swarm/refracted
-	fly_cap = 6
-	spawn_threshold = 4
+	fly_cap = 1
+	spawn_threshold = 8
 	spawn_gib_on_death = FALSE
 	/// Damage multiplier a host carrying a burrowed refracted fly deals.
 	var/infested_dmg_mult = 1.5
 	/// Flies hatched per production cycle.
-	var/flies_per_batch = 2
+	var/flies_per_batch = 1
 	/// Each crossed hp_burst_fraction band of lost maxHealth bursts flies.
 	var/hp_burst_fraction = 0.33
-	var/burst_flies_count = 3
+	var/burst_flies_count = 1
 	var/bursts_done = 0
+	/// Minimum gap between consecutive HP-band bursts.
+	var/burst_cooldown = 0
+	var/burst_cooldown_time = 10 SECONDS
 	/// On being hit, the attacker gets WHITE Fragile scaling with missing HP.
 	var/white_fragile_max = 5
-	var/white_fragile_hp_scale = 0.20
+	/// Stacks ramp to max once this fraction of maxHealth is missing.
+	var/white_fragile_hp_scale = 0.90
 
 /mob/living/simple_animal/hostile/mad_fly_nest/refracted/Initialize()
 	. = ..()
@@ -221,18 +225,28 @@
 			var/stacks = clamp(round(ratio * white_fragile_max), 1, white_fragile_max)
 			attacker.apply_lc_white_fragile(stacks)
 	var/bands = round((maxHealth - health) / (maxHealth * hp_burst_fraction))
-	while(bands > bursts_done)
+	if(bands > bursts_done && world.time >= burst_cooldown)
 		bursts_done++
+		burst_cooldown = world.time + burst_cooldown_time
 		BurstFlies(burst_flies_count)
 
-/// Spit out `count` flies on top of normal production (not fly_cap-gated).
+/// Spit out up to `count` flies, capped by the nest's remaining fly_cap
+/// headroom. If the cap is already full, the burst is suppressed.
 /mob/living/simple_animal/hostile/mad_fly_nest/refracted/proc/BurstFlies(count)
 	if(stat == DEAD)
 		return
+	listclearnulls(spawned_mobs)
+	for(var/mob/living/L in spawned_mobs)
+		if(L.stat == DEAD || QDELETED(L))
+			spawned_mobs -= L
+	var/headroom = fly_cap - length(spawned_mobs)
+	if(headroom <= 0)
+		return
+	var/actual = min(count, headroom)
 	visible_message(span_danger("\The [src] ruptures, spilling a fresh swarm!"))
 	playsound(get_turf(src), 'sound/effects/splat.ogg', 60, TRUE, 4)
 	var/datum/refraction_wave_controller/C = GLOB.refraction_wave_mob_owners[src]
-	for(var/i in 1 to count)
+	for(var/i in 1 to actual)
 		var/turf/T = get_step(get_turf(src), pick(0, EAST, WEST, NORTH, SOUTH))
 		if(!T || T.density)
 			T = get_turf(src)
@@ -279,8 +293,9 @@
 /mob/living/simple_animal/hostile/clan/stone_guard/refracted
 	maxHealth = 800
 	health = 800
-	melee_damage_lower = 8
-	melee_damage_upper = 11
+	melee_damage_lower = 5
+	melee_damage_upper = 7
+	attack_tremor = 2
 	charge = 10
 	ability_cooldown_time = 12 SECONDS
 	stun_duration = 4 SECONDS
@@ -288,6 +303,22 @@
 	butcher_results = null
 	guaranteed_butcher_results = null
 	silk_results = null
+	/// Target Tremor stacks needed to flip its melee to BLACK for the strike.
+	var/black_tremor_threshold = 30
+
+// On hitting a target carrying 30+ Tremor, swap RED → BLACK for this strike.
+// Stashed/restored so concurrent observers still see the default stat block.
+/mob/living/simple_animal/hostile/clan/stone_guard/refracted/AttackingTarget(atom/attacked_target)
+	if(!isliving(attacked_target))
+		return ..()
+	var/mob/living/L = attacked_target
+	var/datum/status_effect/stacking/lc_tremor/T = L.has_status_effect(/datum/status_effect/stacking/lc_tremor)
+	if(!T || T.stacks < black_tremor_threshold)
+		return ..()
+	var/saved_type = melee_damage_type
+	melee_damage_type = BLACK_DAMAGE
+	. = ..()
+	melee_damage_type = saved_type
 
 // ---------- Refracted Scarlet Rose (boss) ----------
 
