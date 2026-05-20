@@ -61,3 +61,16 @@
 
 /obj/effect/landmark/refraction/spawner/serio_zeal
 	id = "serio_zeal_spawns"
+
+// ---------- Per-node misc landmarks ----------
+// Reload point: the Capo Rat in zeal_s1n1 pathfinds to one of these when the
+// Thumb East Capo runs out of ammo, "loads up" for a few seconds, then runs
+// the package back. If no landmark of this type is on the arena, the rat
+// silently stays in normal-AI mode (graceful degradation).
+
+/obj/effect/landmark/refraction/reload_point
+	name = "refraction reload point"
+	desc = "Courier-AI pathfinding target."
+
+/obj/effect/landmark/refraction/reload_point/zeal_s1n1
+	id = "zeal_s1n1_reload"
