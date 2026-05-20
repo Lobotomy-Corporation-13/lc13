@@ -285,6 +285,58 @@
 		return FALSE
 	return R.StartRun()
 
+// Read-only records terminal: a separate machine that only shows
+// leaderboards, so checkpoint rooms / lobby halls can host a "scoreboard"
+// without the full hub UI. Subclasses the hub console to inherit the
+// BuildLeaderboardsPayload + BuildLeaderboardEntryPayload + LoadoutIconsForPaths
+// helpers; it overrides the icon (no keyboard/screen overlays) and the UI
+// surface (different TGUI interface, no lobby actions).
+/obj/machinery/computer/refraction_railway_console/leaderboard
+	name = "refraction railway records terminal"
+	desc = "A terminal that displays the fastest recorded clears for each \
+		refraction railway line."
+	icon = 'ModularLobotomy/_Lobotomyicons/teaser_mobs.dmi'
+	icon_state = "drone_maker"
+
+// The base /obj/machinery/computer/update_overlays() adds keyboard/screen
+// overlays sourced from icons/obj/computer.dmi, which would be invisible (and
+// nonsensical) on top of the drone_maker sprite. It also side-effects via
+// SSvis_overlays.add_vis_overlay, so we must skip the parent call entirely
+// rather than just discarding its return.
+/obj/machinery/computer/refraction_railway_console/leaderboard/update_overlays()
+	SHOULD_CALL_PARENT(FALSE)
+	return list()
+
+/obj/machinery/computer/refraction_railway_console/leaderboard/ui_interact(mob/user, datum/tgui/ui)
+	ui = SStgui.try_update_ui(user, src, ui)
+	if(!ui)
+		ui = new(user, src, "RefractionLeaderboard", "Refraction Railway Records")
+		ui.set_autoupdate(TRUE)
+		ui.open()
+
+/obj/machinery/computer/refraction_railway_console/leaderboard/ui_data(mob/user)
+	var/list/lines_out = list()
+	for(var/id in SSrefraction_railway.lines)
+		var/datum/refraction_line/L = SSrefraction_railway.lines[id]
+		lines_out += list(list(
+			"id"            = L.id,
+			"name"          = L.name,
+			"description"   = L.description,
+			"display_color" = L.display_color,
+		))
+	return list(
+		"lines"        = lines_out,
+		"leaderboards" = BuildLeaderboardsPayload(),
+	)
+
+// Read-only: no lobby / kick / start actions. We deliberately do NOT call
+// parent — the inherited switch handles create_lobby / join_lobby / kick /
+// start_run, and a client crafting one of those payloads against this
+// terminal must not be able to mutate run state through it.
+/obj/machinery/computer/refraction_railway_console/leaderboard/ui_act(action, list/params)
+	SHOULD_CALL_PARENT(FALSE)
+	return
+
 // Ghost-spawn sleeper
 
 /obj/effect/mob_spawn/human/refraction_railway_agent

@@ -11,7 +11,7 @@ const NODE_COLORS = {
   finish: '#fbbf24',
 };
 
-const formatTime = ds => {
+export const formatTime = ds => {
   if (ds === null || ds === undefined) return '--:--';
   const totalSeconds = ds / 10;
   const minutes = Math.floor(totalSeconds / 60);
@@ -28,7 +28,7 @@ const combatNodeForMapIndex = (line, combatIndex) => {
   return line.combat_nodes[combatIndex - 1] || null;
 };
 
-const RecordSectorBreakdown = props => {
+export const RecordSectorBreakdown = props => {
   const { sectors } = props;
   const list = sectors || [];
   if (!list.length) {
