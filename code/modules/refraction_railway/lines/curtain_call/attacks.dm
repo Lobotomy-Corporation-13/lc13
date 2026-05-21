@@ -11,45 +11,64 @@
 		/mob/living/simple_animal/hostile/thumb_east_capo/refracted = list(
 			list(
 				"name"     = "Lunge",
-				"damage"   = "20 RED + 4 Tremor per tile in a line up to 5 tiles",
+				"damage"   = "20 RED (up to +50% via **Tiantui Star**) + 1 Tremor + 2 Overheat per tile, in a 3x3 strip",
 				"cooldown" = "~6 seconds; costs 1 ammo",
-				"desc"     = "Marks every tile in a line up to 5 tiles toward \
-					where the target was, then dashes through them; anything \
-					still standing on a marked tile takes the hit.",
+				"desc"     = "Marks a 3x3 strip running from the Capo through \
+					the target's snapshot tile and 4 tiles further. After \
+					~1.3s the strip resolves and the Capo teleports to the \
+					end of the line. Stops at the first wall or water tile. \
+					Tremor does not burst from this attack.",
 			),
 			list(
 				"name"     = "Sweep",
-				"damage"   = "18 RED + 2 Tremor in a 3x3 area",
+				"damage"   = "18 RED (up to +50% via **Tiantui Star**) + 1 Tremor + 2 Overheat in a 5x5 area",
 				"cooldown" = "~8 seconds; costs 1 ammo",
-				"desc"     = "Picks the target's tile, marks the 3x3 around it, \
-					then strikes everyone still inside.",
+				"desc"     = "Melee only. Marks the 5x5 around the target's \
+					snapshot tile, holds for ~0.9s, then strikes everyone \
+					still inside. Capo cannot move during the wind-up. \
+					Tremor on this hit detonates a stacked target (burst at 25).",
 			),
 			list(
 				"name"     = "Leap Finisher",
-				"damage"   = "35 RED + Knockdown in a 5x5 area; 3 Tremor",
+				"damage"   = "35 RED (up to +50% via **Tiantui Star**) + Knockdown + 2 Tremor + 2 Overheat in a 5x5 area",
 				"cooldown" = "~15 seconds; costs 2 ammo",
-				"desc"     = "Picks the target's tile, marks the 5x5 around it \
-					for ~1.5 seconds, then leaps in. Briefly airborne \
-					(non-dense) during the jump.",
+				"desc"     = "Picks the target's snapshot tile, marks the 5x5 \
+					around it for ~1.9 seconds, then leaps in. Briefly airborne \
+					(non-dense) during the jump. Tremor detonates (burst at 25).",
 			),
 			list(
 				"name"     = "Savage Tigerslayer's Perfected Flurry of Blades",
-				"damage"   = "5x (15 RED + 2 Tremor on the target's tile), then 25 RED + Knockdown in a 3x3",
+				"damage"   = "5x (1-wide line, 15 RED + 1 Tremor + 2 Overheat per tile), then 25 RED + Knockdown + 2 Tremor + 3 Overheat in a 3x3 (all up to +50% via **Tiantui Star**)",
 				"cooldown" = "~25 seconds; costs 6 ammo (a full magazine)",
-				"desc"     = "Six rapid hits, each re-snapshotting the target's \
-					current tile so a moving target can break the pattern. \
-					First five are single-tile; the sixth is the burst finisher.",
+				"desc"     = "Five rapid line-dashes — each one a 1-wide line \
+					re-snapshotting the target's current tile so a moving \
+					target can break the pattern — then a finisher whose \
+					marker tracks the target for ~2 seconds, locks in place \
+					for ~1.5 seconds, and lands a 3x3 Knockdown on the locked \
+					tile (step off it to dodge). Only the finisher detonates \
+					Tremor (burst at 25).",
+			),
+			list(
+				"name"     = "Basic Melee",
+				"damage"   = "15-20 RED + 1 Tremor + 1 Overheat",
+				"cooldown" = "Replaces basic melee",
+				"desc"     = "Even the Capo's plain swing tags the target with \
+					Tremor; while the Capo still has rounds loaded, it also \
+					stacks Overheat. Cannot burst.",
 			),
 		),
 
 		/mob/living/simple_animal/hostile/rat/capo_rat/refracted = list(
 			list(
-				"name"     = "Dash",
-				"damage"   = "12 RED + Knockdown per tile in a line up to 5 tiles",
+				"name"     = "Hogtie",
+				"damage"   = "7+1/hit melee + 4 Defense Level Down per hit, up to 8 hits",
 				"cooldown" = "~12 seconds",
-				"desc"     = "Marks a straight line up to 5 tiles toward the \
-					target, then charges through it tile by tile; anything \
-					still on a marked tile takes the hit.",
+				"desc"     = "Telegraphs a leap (~4 seconds; rat cannot move \
+					during the wind-up), then throws itself at the target. \
+					On impact, pins humans for ~4 seconds and rips them up \
+					to 8 times, speeding up by 0.1s and gaining +1 damage \
+					each hit. Taking ~200 damage during the sequence \
+					interrupts it.",
 			),
 		),
 	)
