@@ -76,13 +76,13 @@
 	melee_damage_type = RED_DAMAGE
 	attack_verb_continuous = "strikes"
 	attack_verb_simple = "strike"
-	attack_sound = 'sound/weapons/punch1.ogg'
+	attack_sound = 'sound/weapons/ego/thumb_east_podao_attack.ogg'
 	speak_chance = 0
 	turns_per_move = 5
 	move_to_delay = 6
 	stat_attack = HARD_CRIT
 	robust_searching = TRUE
-	damage_coeff = list(RED_DAMAGE = 1, WHITE_DAMAGE = 1, BLACK_DAMAGE = 1, PALE_DAMAGE = 1)
+	damage_coeff = list(RED_DAMAGE = 0.5, WHITE_DAMAGE = 0.5, BLACK_DAMAGE = 0.5, PALE_DAMAGE = 0.5)
 	// FALSE + opt out of the wave's auto-delete so the death() fade can play.
 	del_on_death = FALSE
 	refraction_manages_own_death = TRUE

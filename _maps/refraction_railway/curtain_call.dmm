@@ -31,6 +31,14 @@
 	color = "#589662"
 	},
 /area/refraction/curtain_call)
+"bI" = (
+/obj/effect/landmark/refraction/start_point/zeal_s1n2,
+/turf/open/floor/carpet/red,
+/area/refraction/curtain_call)
+"bP" = (
+/obj/machinery/computer/slot_machine,
+/turf/open/indestructible/necropolis/air,
+/area/refraction/curtain_call)
 "cB" = (
 /obj/structure/railing{
 	dir = 8
@@ -75,6 +83,15 @@
 	},
 /turf/open/floor/stone,
 /area/refraction/curtain_call)
+"lk" = (
+/obj/effect/light_emitter{
+	light_power = 4;
+	light_range = 25;
+	set_cap = 3;
+	set_luminosity = 24
+	},
+/turf/open/floor/carpet/red,
+/area/refraction/curtain_call)
 "lK" = (
 /turf/open/water,
 /area/refraction/curtain_call)
@@ -88,6 +105,10 @@
 /turf/open/floor/mineral/titanium/tiled{
 	color = "#589662"
 	},
+/area/refraction/curtain_call)
+"nB" = (
+/obj/effect/landmark/refraction/spawner/zeal_s1n2,
+/turf/open/floor/carpet/red,
 /area/refraction/curtain_call)
 "nE" = (
 /obj/effect/landmark/refraction/spawner/serio_zeal,
@@ -147,6 +168,10 @@
 /obj/structure/flora/grass/jungle/b,
 /turf/open/water,
 /area/refraction/curtain_call)
+"tP" = (
+/obj/structure/table/wood/fancy/red,
+/turf/open/indestructible/necropolis/air,
+/area/refraction/curtain_call)
 "tZ" = (
 /obj/effect/landmark/refraction/spawner/zeal_s1n1,
 /turf/open/floor/stone,
@@ -158,6 +183,9 @@
 /turf/open/floor/mineral/titanium/tiled{
 	color = "#589662"
 	},
+/area/refraction/curtain_call)
+"uQ" = (
+/turf/open/indestructible/necropolis/air,
 /area/refraction/curtain_call)
 "vp" = (
 /obj/structure/railing{
@@ -186,6 +214,9 @@
 	pixel_y = -5
 	},
 /turf/open/floor/stone,
+/area/refraction/curtain_call)
+"vJ" = (
+/turf/open/floor/carpet/red,
 /area/refraction/curtain_call)
 "wF" = (
 /obj/effect/landmark/refraction/start_point/zeal_s3n2,
@@ -220,8 +251,13 @@
 /turf/open/floor/stone,
 /area/refraction/curtain_call)
 "DR" = (
-/obj/effect/landmark/refraction/spawner/zeal_s1n2,
-/turf/open/floor/stone,
+/obj/effect/light_emitter{
+	light_power = 4;
+	light_range = 25;
+	set_cap = 3;
+	set_luminosity = 24
+	},
+/turf/open/indestructible/necropolis/air,
 /area/refraction/curtain_call)
 "Eh" = (
 /obj/structure/railing/corner,
@@ -240,8 +276,7 @@
 	},
 /area/refraction/curtain_call)
 "Ff" = (
-/obj/effect/landmark/refraction/start_point/zeal_s1n2,
-/turf/open/floor/stone,
+/turf/closed/indestructible/necropolis,
 /area/refraction/curtain_call)
 "FI" = (
 /obj/structure/railing{
@@ -349,6 +384,9 @@
 	dir = 8
 	},
 /turf/open/floor/stone,
+/area/refraction/curtain_call)
+"YR" = (
+/turf/open/space/basic,
 /area/refraction/curtain_call)
 "YY" = (
 /obj/machinery/computer/refraction_advance,
@@ -3311,20 +3349,20 @@ JY
 (33,1,1) = {"
 JY
 Of
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
+bP
+bP
+bP
+uQ
+uQ
+uQ
+uQ
+DR
+uQ
+uQ
+uQ
+bP
+bP
+bP
 Of
 JY
 Of
@@ -3403,20 +3441,20 @@ JY
 (34,1,1) = {"
 JY
 Of
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-Ff
-xn
-xn
-xn
-xn
-xn
-xn
+uQ
+uQ
+uQ
+uQ
+uQ
+uQ
+tP
+tP
+uQ
+uQ
+uQ
+uQ
+uQ
+uQ
 Of
 JY
 Of
@@ -3495,20 +3533,20 @@ JY
 (35,1,1) = {"
 JY
 Of
-xn
-xn
-xn
-xn
-xn
-xn
+uQ
+uQ
+uQ
+uQ
+uQ
+bP
 Ff
-bA
 Ff
-xn
-xn
-xn
-xn
-xn
+bP
+uQ
+uQ
+uQ
+uQ
+uQ
 Of
 JY
 Of
@@ -3587,20 +3625,20 @@ JY
 (36,1,1) = {"
 JY
 Of
-xn
-xn
-xn
-xn
-xn
-xn
-xn
+tP
+tP
+uQ
+uQ
+uQ
+bP
 Ff
-xn
-xn
-xn
-xn
-xn
-xn
+Ff
+bP
+uQ
+uQ
+uQ
+tP
+tP
 Of
 JY
 Of
@@ -3679,20 +3717,20 @@ JY
 (37,1,1) = {"
 JY
 Of
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
+Ff
+Ff
+uQ
+uQ
+uQ
+uQ
+uQ
+uQ
+uQ
+uQ
+uQ
+uQ
+Ff
+Ff
 Of
 JY
 Of
@@ -3771,20 +3809,20 @@ JY
 (38,1,1) = {"
 JY
 Of
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
+Ff
+Ff
+vJ
+uQ
+uQ
+uQ
+uQ
+uQ
+uQ
+uQ
+uQ
+vJ
+Ff
+Ff
 Of
 JY
 Of
@@ -3863,20 +3901,20 @@ JY
 (39,1,1) = {"
 JY
 Of
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
+uQ
+vJ
+vJ
+vJ
+uQ
+uQ
+uQ
+uQ
+uQ
+uQ
+vJ
+bI
+vJ
+uQ
 Of
 JY
 Of
@@ -3955,20 +3993,20 @@ JY
 (40,1,1) = {"
 JY
 Of
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
+uQ
+vJ
+vJ
+vJ
+vJ
+vJ
+nB
+lk
+vJ
+vJ
+bI
+vJ
+bI
+uQ
 Of
 JY
 Of
@@ -4047,20 +4085,20 @@ JY
 (41,1,1) = {"
 JY
 Of
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
+uQ
+vJ
+vJ
+vJ
+uQ
+uQ
+uQ
+uQ
+uQ
+uQ
+vJ
+bI
+vJ
+uQ
 Of
 JY
 Of
@@ -4139,20 +4177,20 @@ JY
 (42,1,1) = {"
 JY
 Of
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
+Ff
+Ff
+vJ
+uQ
+uQ
+uQ
+uQ
+uQ
+uQ
+uQ
+uQ
+vJ
+Ff
+Ff
 Of
 JY
 Of
@@ -4231,20 +4269,20 @@ JY
 (43,1,1) = {"
 JY
 Of
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
+Ff
+Ff
+uQ
+uQ
+uQ
+uQ
+uQ
+uQ
+uQ
+uQ
+uQ
+uQ
+Ff
+Ff
 Of
 JY
 Of
@@ -4323,20 +4361,20 @@ JY
 (44,1,1) = {"
 JY
 Of
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
+tP
+tP
+uQ
+uQ
+uQ
+bP
+Ff
+Ff
+bP
+uQ
+uQ
+uQ
+tP
+tP
 Of
 JY
 Of
@@ -4415,20 +4453,20 @@ JY
 (45,1,1) = {"
 JY
 Of
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
+uQ
+uQ
+uQ
+uQ
+uQ
+bP
+Ff
+Ff
+bP
+uQ
+uQ
+uQ
+uQ
+uQ
 Of
 JY
 Of
@@ -4507,20 +4545,20 @@ JY
 (46,1,1) = {"
 JY
 Of
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
+uQ
+uQ
+uQ
+uQ
+uQ
+uQ
+tP
+tP
+uQ
+uQ
+uQ
+uQ
+uQ
+uQ
 Of
 JY
 Of
@@ -4599,20 +4637,20 @@ JY
 (47,1,1) = {"
 JY
 Of
-xn
-xn
-xn
-xn
-xn
-xn
-xn
+bP
+bP
+bP
+uQ
+uQ
+uQ
+uQ
 DR
-xn
-xn
-xn
-xn
-xn
-xn
+uQ
+uQ
+uQ
+bP
+bP
+bP
 Of
 JY
 Of
@@ -4691,20 +4729,20 @@ JY
 (48,1,1) = {"
 JY
 Of
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-bA
-xn
-xn
-xn
-xn
-xn
-xn
+Of
+Of
+Of
+Of
+Of
+Of
+Of
+Of
+Of
+Of
+Of
+Of
+Of
+Of
 Of
 JY
 Of
@@ -4782,22 +4820,22 @@ JY
 "}
 (49,1,1) = {"
 JY
-Of
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-Of
+YR
+YR
+YR
+YR
+YR
+YR
+YR
+YR
+YR
+YR
+YR
+YR
+YR
+YR
+YR
+YR
 JY
 Of
 xn
@@ -4874,22 +4912,22 @@ JY
 "}
 (50,1,1) = {"
 JY
-Of
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-Of
+YR
+YR
+YR
+YR
+YR
+YR
+YR
+YR
+YR
+YR
+YR
+YR
+YR
+YR
+YR
+YR
 JY
 Of
 xn
@@ -4966,22 +5004,22 @@ JY
 "}
 (51,1,1) = {"
 JY
-Of
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-xn
-Of
+YR
+YR
+YR
+YR
+YR
+YR
+YR
+YR
+YR
+YR
+YR
+YR
+YR
+YR
+YR
+YR
 JY
 Of
 xn
@@ -5058,22 +5096,22 @@ JY
 "}
 (52,1,1) = {"
 JY
-Of
-Of
-Of
-Of
-Of
-Of
-Of
-Of
-Of
-Of
-Of
-Of
-Of
-Of
-Of
-Of
+YR
+YR
+YR
+YR
+YR
+YR
+YR
+YR
+YR
+YR
+YR
+YR
+YR
+YR
+YR
+YR
 JY
 Of
 Of

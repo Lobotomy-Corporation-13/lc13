@@ -181,16 +181,22 @@
 	var/datum/refraction_run/R = SSrefraction_railway.GetRunForCkey(user.ckey)
 	if(!R)
 		return null
-	var/list/member_ckeys = list()
+	// Members carry both their ckey (owner check + kick action key) and the
+	// display name shown in the UI — the player's mob name, not their ckey.
+	var/list/members = list()
 	for(var/mob/M as anything in R.members)
-		if(M.ckey)
-			member_ckeys += M.ckey
+		if(!M.ckey)
+			continue
+		members += list(list(
+			"ckey" = M.ckey,
+			"name" = M.real_name || M.name,
+		))
 	return list(
 		"run_uid"       = R.run_uid,
 		"line_id"       = R.line.id,
 		"lobby_state"   = R.lobby_state,
 		"lobby_owner"   = R.lobby_owner,
-		"member_ckeys"  = member_ckeys,
+		"members"       = members,
 		"is_owner"      = R.lobby_owner == user.ckey,
 	)
 
@@ -199,16 +205,21 @@
 	for(var/datum/refraction_run/R as anything in SSrefraction_railway.active_runs)
 		if(R.lobby_state != LOBBY_OPEN)
 			continue
-		var/list/member_ckeys = list()
+		// Show the owner's mob name in the open-lobby list rather than ckey.
+		var/member_count = 0
+		var/owner_name = R.lobby_owner
 		for(var/mob/M as anything in R.members)
-			if(M.ckey)
-				member_ckeys += M.ckey
+			if(!M.ckey)
+				continue
+			member_count++
+			if(M.ckey == R.lobby_owner)
+				owner_name = M.real_name || M.name
 		out += list(list(
 			"run_uid"      = R.run_uid,
 			"line_id"      = R.line.id,
 			"owner_ckey"   = R.lobby_owner,
-			"member_ckeys" = member_ckeys,
-			"member_count" = length(member_ckeys),
+			"owner_name"   = owner_name,
+			"member_count" = member_count,
 			"max_lobby_size" = R.line.max_lobby_size,
 		))
 	return out
