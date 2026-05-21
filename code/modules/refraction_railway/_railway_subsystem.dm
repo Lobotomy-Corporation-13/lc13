@@ -55,7 +55,36 @@ SUBSYSTEM_DEF(refraction_railway)
 	InitializeMobAttacks()
 	SSpersistence.LoadRefractionLeaderboards()
 	SSpersistence.LoadRefractionEncounters()
+	// Warm the mob-card cache in the background so the first hub-console
+	// open doesn't pay for ~20 getFlatIcon + base64 encodes all at once.
+	INVOKE_ASYNC(src, PROC_REF(PrewarmMobCards))
 	return ..()
+
+/// Pre-extracts stats (and the expensive flat-icon snapshot) for every mob
+/// any line previews. Runs once, yielding between mobs so it never stalls
+/// a tick. By the time a player reaches the console the cache is hot.
+/datum/controller/subsystem/refraction_railway/proc/PrewarmMobCards()
+	var/list/seen = list()
+	for(var/id in lines)
+		var/datum/refraction_line/L = lines[id]
+		if(!istype(L) || !islist(L.combat_nodes))
+			continue
+		for(var/node_id in L.combat_nodes)
+			var/datum/refraction_node/N = L.combat_nodes[node_id]
+			if(!istype(N))
+				continue
+			for(var/mob_path in N.mob_stock)
+				if(seen[mob_path])
+					continue
+				seen[mob_path] = TRUE
+				GetMobStats(mob_path)
+				CHECK_TICK
+			for(var/mob_path in N.extra_preview_mobs)
+				if(seen[mob_path])
+					continue
+				seen[mob_path] = TRUE
+				GetMobStats(mob_path)
+				CHECK_TICK
 
 /datum/controller/subsystem/refraction_railway/proc/InitializeLines()
 	for(var/path in subtypesof(/datum/refraction_line))

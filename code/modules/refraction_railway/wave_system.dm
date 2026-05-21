@@ -8,6 +8,10 @@ GLOBAL_LIST_EMPTY(refraction_wave_controllers)
 /// Spawned mob ref -> the controller that produced it.
 GLOBAL_LIST_EMPTY(refraction_wave_mob_owners)
 
+/// Set TRUE by mobs that run their own death sequence (fade-outs, etc.) so
+/// the wave spawner doesn't force del_on_death and cut the animation short.
+/mob/living/simple_animal/hostile/var/refraction_manages_own_death = FALSE
+
 /// Visual warning before a mob materializes (deciseconds).
 #define REFRACTION_SPAWN_DELAY 6
 /// Per-controller cooldown after a spawn fires.
@@ -94,7 +98,15 @@ GLOBAL_LIST_EMPTY(refraction_wave_mob_owners)
 	if(effective_max < 1)
 		effective_max = 1
 	src.num_players = max(1, num_players)
-	spawns_per_cycle = SSrefraction_railway.scale_spawn_batch ? src.num_players : 1
+	if(node.is_boss)
+		// Boss nodes bring their whole authored party in at once (e.g. the
+		// Capo and their rat materialize together) rather than trickling in.
+		var/total = 0
+		for(var/path in current_stock)
+			total += current_stock[path]
+		spawns_per_cycle = max(1, total)
+	else
+		spawns_per_cycle = SSrefraction_railway.scale_spawn_batch ? src.num_players : 1
 	RegisterSignal(SSdcs, COMSIG_GLOB_MOB_DEATH, PROC_REF(OnMobDeath))
 	SpawnBatch()
 
@@ -173,6 +185,19 @@ GLOBAL_LIST_EMPTY(refraction_wave_mob_owners)
 		return
 	living_mobs -= dead_mob
 	GLOB.refraction_wave_mob_owners -= dead_mob
+	current_alive = max(0, current_alive - 1)
+	if(IsRoomEmpty())
+		INVOKE_ASYNC(src, PROC_REF(RoomCleared))
+	else if(HasStock())
+		INVOKE_ASYNC(src, PROC_REF(TryReplacement))
+
+/// Removes a still-living mob from room tracking (e.g. a pet playing out a
+/// death fade) so the room can clear without that mob actually dying.
+/datum/refraction_wave_controller/proc/DropMob(mob/living/M)
+	if(!(M in living_mobs))
+		return
+	living_mobs -= M
+	GLOB.refraction_wave_mob_owners -= M
 	current_alive = max(0, current_alive - 1)
 	if(IsRoomEmpty())
 		INVOKE_ASYNC(src, PROC_REF(RoomCleared))
@@ -276,7 +301,10 @@ GLOBAL_LIST_EMPTY(refraction_wave_mob_owners)
 		qdel(src)
 		return
 	var/mob/living/simple_animal/hostile/H = new mob_type(get_turf(src))
-	H.del_on_death = TRUE
+	// Auto-delete on death so cleared rooms don't litter — unless the mob
+	// plays out its own death (e.g. a fade animation) and opts out.
+	if(!H.refraction_manages_own_death)
+		H.del_on_death = TRUE
 	// Suppress butcher loot so cleared rooms don't litter the floor.
 	H.butcher_results = null
 	H.guaranteed_butcher_results = null
