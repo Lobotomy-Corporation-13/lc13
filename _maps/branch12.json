@@ -3,13 +3,11 @@
 	"map_name": "Branch 12",
 	"map_path": "map_files/Branch12",
 	"map_file": [
-		"Alpha12.dmm",
-		"Proto12.dmm"
+		"Alpha12.dmm"
 	],
 	"pick_one": 1,
 	"submap_names": {
-		"Alpha12.dmm": "Alpha-12",
-		"Proto12.dmm": "Proto-12"
+		"Alpha12.dmm": "Alpha-12"
 	},
 	"traits": [
 		{
