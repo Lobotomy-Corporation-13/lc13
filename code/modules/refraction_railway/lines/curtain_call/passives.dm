@@ -83,4 +83,46 @@
 					half HP to run a reload.",
 			),
 		),
+
+		// ---------- zeal_s1n2: Azarus, the House ----------
+
+		/mob/living/simple_animal/hostile/azarus/refracted = list(
+			list(
+				"title"    = "The Table",
+				"severity" = "info",
+				"text"     = "Azarus scatters oversized dice across the floor. \
+					Shoot one or strike it in melee to make it spin into the \
+					air for ~3 seconds and land on a random face.",
+			),
+			list(
+				"title"    = "Lock on a Six",
+				"severity" = "medium",
+				"text"     = "A die that lands on 6 locks and can no longer be \
+					re-rolled. Any other die can be hit again to gamble for a \
+					higher face - but a re-roll can just as easily land lower.",
+			),
+			list(
+				"title"    = "The Wager",
+				"severity" = "high",
+				"text"     = "On a timer, Azarus calls in an unavoidable, \
+					room-wide hit. Its damage drops with the total showing on \
+					the table; max the table out and the House **busts** - the \
+					Wager whiffs and Azarus is left staggered and wide open.",
+			),
+			list(
+				"title"    = "Buying Time",
+				"severity" = "medium",
+				"text"     = "Every die that lands pushes the Wager's countdown \
+					back a few seconds (up to one full window), so keeping the \
+					table spinning both raises the score and stalls the bet.",
+			),
+			list(
+				"title"    = "Raising the Stakes",
+				"severity" = "high",
+				"text"     = "At or below 50% HP Azarus doubles down: far more \
+					dice hit the floor, the score needed to bust climbs, the \
+					Wager fires faster, and a fragile mirror-double appears to \
+					feed still more dice. Smashing the mirror eases the table.",
+			),
+		),
 	)
