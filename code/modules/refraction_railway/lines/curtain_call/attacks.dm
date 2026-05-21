@@ -94,7 +94,7 @@
 			),
 			list(
 				"name"     = "Snake Eyes",
-				"damage"   = "35 RED in a 3x3 area",
+				"damage"   = "35 BLACK in a 3x3 area",
 				"cooldown" = "~10 seconds",
 				"desc"     = "Flicks a die at the target's tile; after a short \
 					telegraph it lands in a 3x3 blast. Step off the marked \
@@ -102,7 +102,7 @@
 			),
 			list(
 				"name"     = "House Edge",
-				"damage"   = "30 RED + knockback in a 5x5 area",
+				"damage"   = "30 BLACK + knockback in a 5x5 area",
 				"cooldown" = "~12 seconds",
 				"desc"     = "When players crowd into melee, Azarus telegraphs a \
 					5x5 sweep around itself, then strikes and knocks survivors \

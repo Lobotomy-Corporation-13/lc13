@@ -1,5 +1,5 @@
 import { useBackend, useLocalState } from '../backend';
-import { Box, Button, Section, Stack } from '../components';
+import { Box, Button, Section, Stack, Tabs } from '../components';
 import { Window } from '../layouts';
 import { MobCard, MobModal } from './RefractionMobCards';
 
@@ -420,11 +420,9 @@ const CompensationsPanel = props => {
   );
 };
 
-const LineSidebar = (props, context) => {
-  const { act } = useBackend(context);
-  const {
-    lines, selectedId, onSelect, myRun, openLobbies, compensations,
-  } = props;
+// The "Lines" tab: the line picker plus the party-scaling readout.
+const LinesTab = props => {
+  const { lines, selectedId, onSelect, compensations } = props;
   return (
     <Stack vertical>
       <Stack.Item>
@@ -461,13 +459,55 @@ const LineSidebar = (props, context) => {
       <Stack.Item>
         <CompensationsPanel compensations={compensations} />
       </Stack.Item>
+    </Stack>
+  );
+};
+
+// Left column: a tab strip switching between the line picker (Lines) and the
+// lobby controls (Lobby), so a growing line list can't push the lobby —
+// and its Start button — off the bottom of the window.
+const LineSidebar = (props, context) => {
+  const { act } = useBackend(context);
+  const {
+    lines, selectedId, onSelect, myRun, openLobbies, compensations,
+  } = props;
+  const [sidebarTab, setSidebarTab] = useLocalState(
+    context, 'sidebarTab', myRun ? 'lobby' : 'lines');
+  return (
+    <Stack vertical fill>
+      <Stack.Item>
+        <Tabs fluid>
+          <Tabs.Tab
+            selected={sidebarTab === 'lines'}
+            onClick={() => setSidebarTab('lines')}>
+            Lines
+          </Tabs.Tab>
+          <Tabs.Tab
+            selected={sidebarTab === 'lobby'}
+            icon={myRun ? 'play' : undefined}
+            onClick={() => setSidebarTab('lobby')}>
+            Lobby
+          </Tabs.Tab>
+        </Tabs>
+      </Stack.Item>
       <Stack.Item grow={1}>
-        <LobbyPanel
-          selectedId={selectedId}
-          myRun={myRun}
-          openLobbies={openLobbies}
-          act={act}
-        />
+        <Box height="100%" style={{ 'overflow-y': 'auto' }}>
+          {sidebarTab === 'lines' ? (
+            <LinesTab
+              lines={lines}
+              selectedId={selectedId}
+              onSelect={onSelect}
+              compensations={compensations}
+            />
+          ) : (
+            <LobbyPanel
+              selectedId={selectedId}
+              myRun={myRun}
+              openLobbies={openLobbies}
+              act={act}
+            />
+          )}
+        </Box>
       </Stack.Item>
     </Stack>
   );
@@ -493,14 +533,14 @@ const LobbyPanel = props => {
           </Box>
         )}
         <Box mb={1}>
-          {(myRun.member_ckeys || []).map(ckey => (
-            <Box key={ckey} p={0.5}>
+          {(myRun.members || []).map(m => (
+            <Box key={m.ckey} p={0.5}>
               <Stack>
                 <Stack.Item grow={1}>
-                  {ckey}
-                  {ckey === myRun.lobby_owner && ' (owner)'}
+                  {m.name}
+                  {m.ckey === myRun.lobby_owner && ' (owner)'}
                 </Stack.Item>
-                {myRun.is_owner && ckey !== myRun.lobby_owner && (
+                {myRun.is_owner && m.ckey !== myRun.lobby_owner && (
                   <Stack.Item>
                     <Button
                       icon="times"
@@ -509,7 +549,8 @@ const LobbyPanel = props => {
                       tooltip={isStarting
                         ? 'Locked while the new Z-level is loading.'
                         : null}
-                      onClick={() => act('kick_member', { ckey })}
+                      onClick={() =>
+                        act('kick_member', { ckey: m.ckey })}
                     />
                   </Stack.Item>
                 )}
@@ -523,7 +564,7 @@ const LobbyPanel = props => {
             color="good"
             icon="play"
             content="Start"
-            disabled={(myRun.member_ckeys || []).length < 1}
+            disabled={(myRun.members || []).length < 1}
             onClick={() => act('start_run')}
           />
         )}
@@ -576,7 +617,7 @@ const LobbyPanel = props => {
           {sameLineLobbies.map(l => (
             <Stack key={l.run_uid} p={0.5}>
               <Stack.Item grow={1}>
-                <Box>{l.owner_ckey}</Box>
+                <Box>{l.owner_name}</Box>
                 <Box color="label" fontSize="11px">
                   {l.member_count}/{l.max_lobby_size}
                 </Box>
