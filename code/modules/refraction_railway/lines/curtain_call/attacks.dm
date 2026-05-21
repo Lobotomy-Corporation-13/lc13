@@ -71,4 +71,50 @@
 					interrupts it.",
 			),
 		),
+
+		// ---------- zeal_s1n2: Azarus, the House ----------
+
+		/mob/living/simple_animal/hostile/azarus/refracted = list(
+			list(
+				"name"     = "Ante Up",
+				"damage"   = "No damage; scatters 5 dice (9 in phase 2)",
+				"cooldown" = "Fight start, after each Wager, and on phase change",
+				"desc"     = "Flings oversized loaded dice across the floor. \
+					Each die shows a face that counts toward the table total.",
+			),
+			list(
+				"name"     = "The Wager",
+				"damage"   = "Up to 200 PALE, room-wide and unavoidable; reduced by the table total",
+				"cooldown" = "~40 seconds (~30 in phase 2); pushed back by every die that lands",
+				"desc"     = "A ~6s call (Azarus raises its hands and the screen \
+					flashes), then an unavoidable hit to everyone in the room. \
+					Damage scales down with the table total - reach the target \
+					score and the House busts for near-zero, leaving Azarus \
+					staggered for ~5 seconds.",
+			),
+			list(
+				"name"     = "Snake Eyes",
+				"damage"   = "35 RED in a 3x3 area",
+				"cooldown" = "~10 seconds",
+				"desc"     = "Flicks a die at the target's tile; after a short \
+					telegraph it lands in a 3x3 blast. Step off the marked \
+					tiles to dodge.",
+			),
+			list(
+				"name"     = "House Edge",
+				"damage"   = "30 RED + knockback in a 5x5 area",
+				"cooldown" = "~12 seconds",
+				"desc"     = "When players crowd into melee, Azarus telegraphs a \
+					5x5 sweep around itself, then strikes and knocks survivors \
+					back. Punishes stacking on the dealer.",
+			),
+			list(
+				"name"     = "Mirror Gambit",
+				"damage"   = "No direct damage",
+				"cooldown" = "Once, on entering phase 2",
+				"desc"     = "Conjures a fragile mirror-double that keeps tossing \
+					extra dice onto the table while it lives. Killing it stops \
+					the extra dice.",
+			),
+		),
 	)

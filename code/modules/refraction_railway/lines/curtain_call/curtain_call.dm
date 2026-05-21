@@ -79,11 +79,12 @@
 		boss = TRUE)
 
 	AddNode("zeal_s1n2", "zeal_s1n2_spawns",
-		"Sector 1, Act II: <pending>",
-		"<pending flavor — admin-event reference goes here>.",
+		"Sector 1, Act II: Azarus, the House",
+		"The Game Master deals a gambling demon onto the stage. Azarus scatters \
+			loaded dice across the floor and calls a bet that cannot be dodged \
+			- only out-gambled. Roll the table high to fold the House's hand.",
 		list(
-			// TODO: replace with this sector's boss mob
-			/mob/living/simple_animal/hostile/netherworld/migo/refracted = 1,
+			/mob/living/simple_animal/hostile/azarus/refracted = 1,
 		),
 		boss = TRUE)
 
