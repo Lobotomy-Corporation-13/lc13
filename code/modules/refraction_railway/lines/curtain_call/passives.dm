@@ -90,39 +90,79 @@
 			list(
 				"title"    = "The Table",
 				"severity" = "info",
-				"text"     = "Azarus scatters oversized dice across the floor. \
-					Shoot one or strike it in melee to make it spin into the \
-					air for ~3 seconds and land on a random face.",
+				"text"     = "Azarus scatters oversized dice across the floor, \
+					each starting on 1. Shoot or strike one to make it spin ~3 \
+					seconds and land on a random face. A die that lands slams \
+					the floor for BLACK in a small area - bigger on a high roll - \
+					so rolling is a risk as well as a reward.",
 			),
 			list(
 				"title"    = "Lock on a Six",
 				"severity" = "medium",
-				"text"     = "A die that lands on 6 locks and can no longer be \
-					re-rolled. Any other die can be hit again to gamble for a \
-					higher face - but a re-roll can just as easily land lower.",
+				"text"     = "A die that lands on 6 locks and can't be re-rolled. \
+					Other dice can be hit again to gamble higher - but Azarus's \
+					own blasts knock any die showing 4 or more loose for a fresh \
+					spin, so a good table isn't safe.",
 			),
 			list(
 				"title"    = "The Wager",
 				"severity" = "high",
-				"text"     = "On a timer, Azarus calls in an unavoidable, \
-					room-wide hit. Its damage drops with the total showing on \
-					the table; max the table out and the House **busts** - the \
-					Wager whiffs and Azarus is left staggered and wide open.",
+				"text"     = "On a timer (the red number over its head), Azarus \
+					calls an unavoidable, room-wide PALE hit. Its damage drops \
+					with the table total (the gold number); max the table out \
+					and the House **busts** - the Wager whiffs and Azarus is left \
+					staggered and wide open.",
 			),
 			list(
-				"title"    = "Buying Time",
+				"title"    = "Stalling the Bet",
 				"severity" = "medium",
 				"text"     = "Every die that lands pushes the Wager's countdown \
-					back a few seconds (up to one full window), so keeping the \
-					table spinning both raises the score and stalls the bet.",
+					back a little (it can't be held more than ~20 seconds out), \
+					while hitting Azarus rushes it. After a Wager resolves the \
+					whole table is swept away for ~15 seconds before fresh dice \
+					are dealt.",
 			),
 			list(
 				"title"    = "Raising the Stakes",
 				"severity" = "high",
-				"text"     = "At or below 50% HP Azarus doubles down: far more \
-					dice hit the floor, the score needed to bust climbs, the \
-					Wager fires faster, and a fragile mirror-double appears to \
-					feed still more dice. Smashing the mirror eases the table.",
+				"text"     = "At or below 50% HP Azarus forces any pending Wager \
+					off at once, then doubles down: more dice, a higher score to \
+					bust, a faster Wager, and four stationary mirror-doubles. The \
+					mirrors mimic its attacks and shunt most of the damage dealt \
+					to them onto Azarus itself.",
+			),
+		),
+
+		// ---------- zeal_s2n1: The Envy of Humanity ----------
+
+		/mob/living/simple_animal/hostile/understudy = list(
+			list(
+				"title"    = "No Self of Its Own",
+				"severity" = "info",
+				"text"     = "It never fights as itself. It wears a premade human \
+					form - a city role, with that role's gear - and fights you \
+					through it. Its true shape only shows between costumes.",
+			),
+			list(
+				"title"    = "Borrowed Hands",
+				"severity" = "medium",
+				"text"     = "A worn form keeps its gear locked in hand - it can't \
+					be disarmed - and is immune to stun, knockback, and sleep. \
+					Each form has one telegraphed signature attack you can dodge.",
+			),
+			list(
+				"title"    = "Stripped Bare",
+				"severity" = "high",
+				"text"     = "Break the form it wears and the true shape is dragged \
+					out: stunned, hurt for the loss, and open to direct attack \
+					for a few seconds before it pulls on a new face.",
+			),
+			list(
+				"title"    = "Threadbare",
+				"severity" = "high",
+				"text"     = "Every time it is stripped bare it grows more fragile - \
+					its resistances worsen with each reveal, so the later windows \
+					hurt it far more than the first.",
 			),
 		),
 	)

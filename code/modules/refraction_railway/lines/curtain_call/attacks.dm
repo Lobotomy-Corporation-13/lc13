@@ -77,28 +77,40 @@
 		/mob/living/simple_animal/hostile/azarus/refracted = list(
 			list(
 				"name"     = "Ante Up",
-				"damage"   = "No damage; scatters 5 dice (9 in phase 2)",
-				"cooldown" = "Fight start, after each Wager, and on phase change",
-				"desc"     = "Flings oversized loaded dice across the floor. \
-					Each die shows a face that counts toward the table total.",
+				"damage"   = "No direct damage; scatters 5 dice (9 in phase 2)",
+				"cooldown" = "Fight start, ~15s after each Wager, and on phase change",
+				"desc"     = "Flings oversized dice across the floor, kept apart \
+					and each starting on 1. Shoot or strike a die to spin it ~3s \
+					onto a random face; its face counts toward the table total. A \
+					6 locks and can't be re-rolled.",
+			),
+			list(
+				"name"     = "Loaded Dice",
+				"damage"   = "BLACK in a 3x3, scaling with the face (5x5 on a 6)",
+				"cooldown" = "Whenever a spun die lands",
+				"desc"     = "Every die slams the floor when it lands - the higher \
+					it rolls, the harder it hits and the wider the blast. Rolling \
+					can also tempt the dealer into a **Snake Eyes**.",
 			),
 			list(
 				"name"     = "The Wager",
 				"damage"   = "Up to 200 PALE, room-wide and unavoidable; reduced by the table total",
-				"cooldown" = "~40 seconds (~30 in phase 2); pushed back by every die that lands",
+				"cooldown" = "~40s (~30s in phase 2); each landing adds time (cap ~20s out), and hitting Azarus rushes it",
 				"desc"     = "A ~6s call (Azarus raises its hands and the screen \
 					flashes), then an unavoidable hit to everyone in the room. \
 					Damage scales down with the table total - reach the target \
 					score and the House busts for near-zero, leaving Azarus \
-					staggered for ~5 seconds.",
+					staggered for ~5 seconds. The red/gold numbers over its head \
+					are the countdown and the current score.",
 			),
 			list(
 				"name"     = "Snake Eyes",
 				"damage"   = "35 BLACK in a 3x3 area",
 				"cooldown" = "~10 seconds",
 				"desc"     = "Flicks a die at the target's tile; after a short \
-					telegraph it lands in a 3x3 blast. Step off the marked \
-					tiles to dodge.",
+					telegraph it lands in a 3x3 blast. Step off the marked tiles \
+					to dodge. The blast also knocks any die showing 4+ loose for \
+					a fresh spin.",
 			),
 			list(
 				"name"     = "House Edge",
@@ -106,15 +118,63 @@
 				"cooldown" = "~12 seconds",
 				"desc"     = "When players crowd into melee, Azarus telegraphs a \
 					5x5 sweep around itself, then strikes and knocks survivors \
-					back. Punishes stacking on the dealer.",
+					back. Also knocks any die showing 4+ loose for a fresh spin.",
 			),
 			list(
 				"name"     = "Mirror Gambit",
 				"damage"   = "No direct damage",
 				"cooldown" = "Once, on entering phase 2",
-				"desc"     = "Conjures a fragile mirror-double that keeps tossing \
-					extra dice onto the table while it lives. Killing it stops \
-					the extra dice.",
+				"desc"     = "Conjures four stationary mirror-doubles. They take \
+					almost no damage themselves - most of what you deal to a \
+					mirror is shunted onto Azarus - and they mimic its **Snake \
+					Eyes** and **House Edge** a beat after it casts them.",
+			),
+		),
+
+		// ---------- zeal_s2n1: The Envy of Humanity (form specials) ----------
+
+		/mob/living/simple_animal/hostile/understudy = list(
+			list(
+				"name"     = "Iaido Dash (Ronin form)",
+				"damage"   = "30 RED along the line",
+				"cooldown" = "~9 seconds",
+				"desc"     = "Marks a straight line up to ~5 tiles toward the \
+					target, then dashes through it. Step off the line to dodge.",
+			),
+			list(
+				"name"     = "Meat Hook (Butcher form)",
+				"damage"   = "28 RED + drag-in",
+				"cooldown" = "~10 seconds",
+				"desc"     = "Marks a line, then yanks the first person on it back \
+					to the form and bites them. Step off the line to dodge.",
+			),
+			list(
+				"name"     = "Junk Lob (Scavenger form)",
+				"damage"   = "24 RED in a 3x3 area",
+				"cooldown" = "~7 seconds",
+				"desc"     = "Hurls debris at the target's tile, marking a 3x3 \
+					before it lands. Leave the marked tiles to dodge.",
+			),
+			list(
+				"name"     = "Hot Plate (Chef form)",
+				"damage"   = "26 RED + Knockdown in a 3x3 area",
+				"cooldown" = "~8 seconds",
+				"desc"     = "Marks a 3x3 just ahead of itself, then a shock swing \
+					strikes everyone still inside. Get out of the front.",
+			),
+			list(
+				"name"     = "Sawblade Spin (Carnival form)",
+				"damage"   = "22 RED to all adjacent",
+				"cooldown" = "~7 seconds",
+				"desc"     = "Marks the 3x3 around itself, then spins blades through \
+					everything next to it. Back away to dodge.",
+			),
+			list(
+				"name"     = "Cross-Slash (Captain form)",
+				"damage"   = "28 RED in a wide arc",
+				"cooldown" = "~9 seconds",
+				"desc"     = "Marks a wide arc two tiles deep in front, then cuts \
+					across it. Don't stand in front of it.",
 			),
 		),
 	)

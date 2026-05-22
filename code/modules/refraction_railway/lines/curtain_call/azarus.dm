@@ -223,6 +223,8 @@
 
 	var/dice_count = 5
 	var/table_set = FALSE
+	/// The turf the dice scatter around — fixed at Azarus's spawn point.
+	var/turf/table_center
 	/// Chance, per player-initiated roll, that the dealer fires a Snake Eyes.
 	var/roll_attack_chance = 35
 
@@ -288,8 +290,10 @@
 
 /mob/living/simple_animal/hostile/azarus/Initialize(mapload)
 	. = ..()
-	// Only the real House carries the table readout; the mirror has none.
+	// Only the real House carries the table readout + the table; the mirror
+	// has neither. The table stays anchored to where Azarus first drops in.
 	if(!is_mirror)
+		table_center = get_turf(src)
 		hud_timer = addtimer(CALLBACK(src, PROC_REF(UpdateHUD)), 1 SECONDS, TIMER_LOOP | TIMER_STOPPABLE)
 
 /mob/living/simple_animal/hostile/azarus/Destroy()
@@ -372,8 +376,9 @@
 // Scatters `count` dice onto open floor in range. Dice keep at least 2
 // tiles between one another (and away from existing ones on the table).
 /mob/living/simple_animal/hostile/azarus/proc/ThrowDice(count)
+	var/turf/center = table_center || get_turf(src)
 	var/list/spots = list()
-	for(var/turf/open/T in range(6, src))
+	for(var/turf/open/T in range(6, center))
 		if(T.density || istype(T, /turf/open/water))
 			continue
 		if(locate(/obj/structure/azarus_die) in T)
