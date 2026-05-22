@@ -14,7 +14,7 @@
  * After a Wager resolves the whole table clears for a 15s dead window, then
  * re-deals. Taking damage rushes the Wager clock. Phase 2 (<=50% HP) forces
  * any pending Wager off, then conjures four stationary mirror-doubles that
- * mimic the dealer's attacks and funnel damage they take (at 0.25x) to him.
+ * mimic the dealer's attacks; each has 25% of his HP and is broken normally.
  */
 
 // ---------- Telegraph and warning effects ----------
@@ -182,8 +182,8 @@
 	faction = list("serio_zeal")
 	maxHealth = 2400
 	health = 2400
-	melee_damage_lower = 15
-	melee_damage_upper = 20
+	melee_damage_lower = 5
+	melee_damage_upper = 7
 	// Everything but the Wager (which is PALE) deals BLACK.
 	melee_damage_type = BLACK_DAMAGE
 	attack_verb_continuous = "deals a blow to"
@@ -240,7 +240,7 @@
 	var/phase = 1
 	var/is_mirror = FALSE
 	var/mob/living/simple_animal/hostile/azarus/owner
-	/// Phase-2 mirror funnels. The boss qdel's them on death.
+	/// Phase-2 mirror-doubles. The boss qdel's them on death.
 	var/list/mirrors = list()
 	var/mirror_count = 4
 	/// Min spacing (tiles) a mirror must keep from the boss and other mirrors.
@@ -655,9 +655,9 @@
 		ThrowDice(dice_count - LAZYLEN(live_dice))
 	SpawnMirrors()
 
-// Conjures mirror-doubles that stand guard, mirror the dealer's attacks, and
-// funnel any damage they take back to the House. They keep mirror_spacing
-// tiles from the boss and from each other.
+// Conjures mirror-doubles that stand guard and echo the dealer's attacks,
+// each with a quarter of the House's HP. They keep mirror_spacing tiles from
+// the boss and from each other.
 /mob/living/simple_animal/hostile/azarus/proc/SpawnMirrors()
 	var/list/spots = list()
 	for(var/turf/open/T in range(9, src))
@@ -681,6 +681,9 @@
 			continue
 		var/mob/living/simple_animal/hostile/azarus/mirror/M = new(T)
 		M.owner = src
+		// Real HP equal to a quarter of the House's own maximum.
+		M.maxHealth = round(maxHealth * 0.25)
+		M.health = M.maxHealth
 		mirrors += M
 		placed++
 	if(placed)
@@ -746,35 +749,28 @@
 	QDEL_IN(src, death_fade_time)
 
 // ---------- Mirror-double (phase 2 add) ----------
-// A stationary funnel: it never moves and takes no damage of its own —
-// everything dealt to it is passed (at its 0.25 resist) to the House. It
-// mimics the dealer's Snake Eyes / House Edge whenever they're cast.
+// A stationary double with real HP (set to 25% of the House's max on spawn).
+// It never moves and never melees - it only echoes the dealer's Snake Eyes /
+// House Edge. Shatter one to remove that extra pressure.
 /mob/living/simple_animal/hostile/azarus/mirror
 	name = "the dealer's mirror"
-	desc = "A mirror with the dealer's face leering out of it. Strike it and \
-		the House feels it - though only a sliver."
+	desc = "A mirror with the dealer's face leering out of it. Shatter it to \
+		stop it echoing the House's attacks."
 	icon_state = "herald_mirror"
 	icon_living = "herald_mirror"
 	icon_dead = "herald_mirror"
-	maxHealth = 1000
-	health = 1000
+	maxHealth = 600
+	health = 600
+	melee_damage_lower = 0
+	melee_damage_upper = 0
 	is_mirror = TRUE
 	del_on_death = TRUE
 	refraction_manages_own_death = FALSE
-	// 0.25 resist on every type; whatever gets through is forwarded whole to
-	// the master in adjustHealth().
-	damage_coeff = list(RED_DAMAGE = 0.25, WHITE_DAMAGE = 0.25, BLACK_DAMAGE = 0.25, PALE_DAMAGE = 0.25)
+	damage_coeff = list(RED_DAMAGE = 1, WHITE_DAMAGE = 1, BLACK_DAMAGE = 1, PALE_DAMAGE = 1)
 
 // Stationary — never takes a step.
 /mob/living/simple_animal/hostile/azarus/mirror/Move(atom/newloc, dir, step_x, step_y)
 	return FALSE
-
-// Pure damage funnel: take none, pass the (already 0.25-scaled) amount to the
-// master. Never calls ..(), so the mirror's own health never changes.
-/mob/living/simple_animal/hostile/azarus/mirror/adjustHealth(amount, updating_health = TRUE, forced = FALSE)
-	if(amount > 0 && owner && !QDELETED(owner) && owner.stat != DEAD)
-		owner.adjustHealth(amount, updating_health, forced)
-	return 0
 
 /mob/living/simple_animal/hostile/azarus/mirror/handle_automated_action()
 	if(stat == DEAD)

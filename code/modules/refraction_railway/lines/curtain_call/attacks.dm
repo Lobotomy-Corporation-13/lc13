@@ -122,12 +122,12 @@
 			),
 			list(
 				"name"     = "Mirror Gambit",
-				"damage"   = "No direct damage",
+				"damage"   = "No direct damage; each mirror has ~25% of Azarus's max HP",
 				"cooldown" = "Once, on entering phase 2",
-				"desc"     = "Conjures four stationary mirror-doubles. They take \
-					almost no damage themselves - most of what you deal to a \
-					mirror is shunted onto Azarus - and they mimic its **Snake \
-					Eyes** and **House Edge** a beat after it casts them.",
+				"desc"     = "Conjures four stationary mirror-doubles. They never \
+					move or melee - they only echo its **Snake Eyes** and **House \
+					Edge** a beat after it casts them. Shatter a mirror to stop \
+					its echo.",
 			),
 		),
 
@@ -135,11 +135,12 @@
 
 		/mob/living/simple_animal/hostile/understudy = list(
 			list(
-				"name"     = "Iaido Dash (Ronin form)",
-				"damage"   = "30 RED along the line",
+				"name"     = "Yield My Flesh (Ronin form)",
+				"damage"   = "26 RED along the line, scaling up to ~78 the lower the form's own HP",
 				"cooldown" = "~9 seconds",
-				"desc"     = "Marks a straight line up to ~5 tiles toward the \
-					target, then dashes through it. Step off the line to dodge.",
+				"desc"     = "Copies the Blade Lineage katana: a rooted wind-up, \
+					then a lunge down a short line that hits harder the closer the \
+					skin is to breaking. Step off the line to dodge.",
 			),
 			list(
 				"name"     = "Meat Hook (Butcher form)",
@@ -156,25 +157,45 @@
 					before it lands. Leave the marked tiles to dodge.",
 			),
 			list(
-				"name"     = "Hot Plate (Chef form)",
-				"damage"   = "26 RED + Knockdown in a 3x3 area",
-				"cooldown" = "~8 seconds",
-				"desc"     = "Marks a 3x3 just ahead of itself, then a shock swing \
-					strikes everyone still inside. Get out of the front.",
-			),
-			list(
-				"name"     = "Sawblade Spin (Carnival form)",
-				"damage"   = "22 RED to all adjacent",
-				"cooldown" = "~7 seconds",
-				"desc"     = "Marks the 3x3 around itself, then spins blades through \
-					everything next to it. Back away to dodge.",
-			),
-			list(
-				"name"     = "Cross-Slash (Captain form)",
-				"damage"   = "28 RED in a wide arc",
+				"name"     = "Poise Strike (Kurokumo Captain form)",
+				"damage"   = "72 RED (a guaranteed 3x crit) in a wide arc",
 				"cooldown" = "~9 seconds",
-				"desc"     = "Marks a wide arc two tiles deep in front, then cuts \
-					across it. Don't stand in front of it.",
+				"desc"     = "Copies the kurokumo blade's poise: the payoff of a \
+					built-up critical, released as a telegraphed two-deep arc in \
+					front. Don't stand ahead of it.",
+			),
+			list(
+				"name"     = "Family Comes First (Big Brother form)",
+				"damage"   = "45 BLACK + throw + knockdown on the counter",
+				"cooldown" = "~11 seconds",
+				"desc"     = "Copies the Middle chain: enters a ~2.5s purple guard \
+					stance. The first hit it takes during the stance is blocked \
+					and countered - it lashes the attacker, throws them clear, and \
+					blinks to a shooter first. Don't hit it while it's guarding.",
+			),
+			list(
+				"name"     = "Mark & Detonate (Grosshammer form)",
+				"damage"   = "32 BLACK on every marked tile, all at once",
+				"cooldown" = "~11 seconds",
+				"desc"     = "Copies the N Corp nail + hammer: drops a mark on each \
+					nearby target's tile, then slams to detonate every mark \
+					simultaneously. Step off your mark to dodge.",
+			),
+			list(
+				"name"     = "Prescript (Index Messenger form)",
+				"damage"   = "34 BLACK in a 3x3 (x1.45 vs a target already below half HP)",
+				"cooldown" = "~10 seconds",
+				"desc"     = "Copies the Index greatsword's execute: marks a tile, \
+					then a heavy slam that hits far harder if the marked victim is \
+					already wounded. Leave the marked tiles to dodge.",
+			),
+			list(
+				"name"     = "Grand Finale (Dieci form)",
+				"damage"   = "24 PALE + 4 Sinking + knockback, 5x5 around itself",
+				"cooldown" = "~9 seconds",
+				"desc"     = "Copies the Dieci finisher: a PALE shockwave that throws \
+					everyone nearby outward and stacks Sinking. Back out of the \
+					ring before it lands.",
 			),
 		),
 	)

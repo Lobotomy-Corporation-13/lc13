@@ -127,9 +127,9 @@
 				"severity" = "high",
 				"text"     = "At or below 50% HP Azarus forces any pending Wager \
 					off at once, then doubles down: more dice, a higher score to \
-					bust, a faster Wager, and four stationary mirror-doubles. The \
-					mirrors mimic its attacks and shunt most of the damage dealt \
-					to them onto Azarus itself.",
+					bust, a faster Wager, and four stationary mirror-doubles. Each \
+					mirror has a quarter of the House's HP and echoes its attacks; \
+					shatter them to cut the extra pressure.",
 			),
 		),
 
