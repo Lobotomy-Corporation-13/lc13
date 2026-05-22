@@ -90,11 +90,12 @@
 
 	// ----- Sector 2: Rising Action -----
 	AddNode("zeal_s2n1", "zeal_s2n1_spawns",
-		"Sector 2, Act I: <pending>",
-		"<pending flavor — admin-event reference goes here>.",
+		"Sector 2, Act I: The Envy of Humanity",
+		"The next performer has no face of its own, so it borrows the \
+			cast's. It will play role after role at us, and only between \
+			costumes can you see the envious thing wearing them.",
 		list(
-			// TODO: replace with this sector's boss mob
-			/mob/living/simple_animal/hostile/netherworld/migo/refracted = 1,
+			/mob/living/simple_animal/hostile/understudy = 1,
 		),
 		boss = TRUE)
 
@@ -158,10 +159,10 @@
 
 	sector_briefings = list(
 		list(
-			"name"        = "Sector 1: Opening Act",
-			"description" = "The curtain rises. Two pieces have already been \
-				set in motion before we boarded — both wait at the edge of \
-				the line for us to catch up.",
+			"name"        = "Sector 1: The Opening Double-Bill",
+			"description" = "The curtain rises on a double-bill — two headline \
+				acts queued back to back before the show has even found its \
+				feet. Clear one, and the next is already taking the stage.",
 			"node_ids"    = list("zeal_s1n1", "zeal_s1n2"),
 		),
 		list(
