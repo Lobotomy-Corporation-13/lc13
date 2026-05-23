@@ -93,6 +93,11 @@
 		/mob/living/carbon/human/understudy_form/grosshammer,
 		/mob/living/carbon/human/understudy_form/messenger,
 		/mob/living/carbon/human/understudy_form/dieci,
+		/mob/living/carbon/human/understudy_form/zwei,
+		/mob/living/carbon/human/understudy_form/shi,
+		/mob/living/carbon/human/understudy_form/liu,
+		/mob/living/carbon/human/understudy_form/seven,
+		/mob/living/carbon/human/understudy_form/devyat,
 	)
 	var/last_form
 	var/mob/living/carbon/human/understudy_form/current_form
@@ -168,9 +173,6 @@
 	LoseTarget()
 	walk(src, 0)
 	visible_message(span_warning("[skin] steps onto the stage."))
-	// The skin speaks in a warped echo of the role it is mimicking.
-	if(LAZYLEN(skin.assume_lines))
-		skin.say(pick(skin.assume_lines))
 
 // Shift to a different form mid-fight WITHOUT revealing the true form, carrying
 // the skin's current HP across. Fired after each ability and when a form has
@@ -278,12 +280,13 @@
 	var/special_timer
 	/// Outfit equipped for the look.
 	var/form_outfit
-	/// Warped mimicry of the role, spoken when the Envy first dons this skin.
-	var/list/assume_lines
 	/// Extra worn items forced on after the outfit (item path = slot define;
 	/// path-keyed so list lookup isn't mistaken for a numeric index), for EGO
 	/// armor and cosmetics the job outfit lacks or strips from a non-player.
 	var/list/extra_worn
+	/// Dash forms set this: the instant the skin is donned it begins its dash
+	/// special, if a foe is already within special_range.
+	var/dash_on_assume = FALSE
 
 /mob/living/carbon/human/understudy_form/Initialize(mapload)
 	. = ..()
@@ -359,6 +362,9 @@
 	ai_controller = /datum/ai_controller/insane/murder/understudy
 	InitializeAIController()
 	special_timer = addtimer(CALLBACK(src, PROC_REF(SpecialTick)), 1 SECONDS, TIMER_LOOP | TIMER_STOPPABLE)
+	// Dash forms wind up their dash the moment they appear, if a foe is near.
+	if(dash_on_assume)
+		addtimer(CALLBACK(src, PROC_REF(TryOpeningDash)), 3)
 
 /mob/living/carbon/human/understudy_form/Destroy()
 	deltimer(special_timer)
@@ -405,6 +411,33 @@
 	if(master && !QDELETED(master) && master.current_form == src)
 		master.MorphForm()
 
+// Nearest living non-faction foe within special_range, or null.
+/mob/living/carbon/human/understudy_form/proc/FindNearbyPrey()
+	var/mob/living/best
+	var/best_dist = INFINITY
+	for(var/mob/living/L in livinginrange(special_range, src))
+		if(L == src || faction_check_mob(L) || L.stat == DEAD)
+			continue
+		var/d = get_dist(src, L)
+		if(d < best_dist)
+			best_dist = d
+			best = L
+	return best
+
+// Opening dash: fired right after a dash skin is donned. If a foe is near,
+// lock onto it and begin the dash immediately instead of waiting for the
+// SpecialTick / AI to acquire a target.
+/mob/living/carbon/human/understudy_form/proc/TryOpeningDash()
+	if(QDELETED(src) || stat == DEAD)
+		return
+	var/mob/living/prey = FindNearbyPrey()
+	if(!prey)
+		return
+	if(ai_controller)
+		ai_controller.blackboard[BB_INSANE_CURRENT_ATTACK_TARGET] = prey
+	special_cooldown = world.time + special_cooldown_time
+	INVOKE_ASYNC(src, PROC_REF(DoSpecial), prey)
+
 // Tracks punishment soaked; once over the threshold (and not mid-ability) the
 // Envy force-switches to a fresh form, carrying the current HP.
 /mob/living/carbon/human/understudy_form/proc/OnDamageTaken(datum/source, damage_amount)
@@ -450,10 +483,6 @@
 	weapon_type = /obj/item/ego_weapon/city/bladelineage
 	weapon_force = 27
 	special_cooldown_time = 9 SECONDS
-	assume_lines = list(
-		"the b-b-blade... only honest th-thing... c-cut me, cut, t-teach me to be t-true like y-you -",
-		"to d-draw a sword is to BE someone, some-ONE... I'd die a r-real death, a HUman death, j-just to -",
-	)
 
 /mob/living/carbon/human/understudy_form/ronin/UseSpecial(mob/living/target)
 	face_atom(target)
@@ -468,55 +497,49 @@
 	var/list/line = getline(start, dest)
 	if(length(line) > 5)
 		line.Cut(6)
+	// Widen the cut to a 3-wide strip running along the lunge path.
+	var/list/strip = list()
+	for(var/turf/T in line)
+		for(var/turf/W in range(1, T))
+			strip |= W
 	playsound(get_turf(src), 'sound/weapons/sear.ogg', 70, TRUE, 5)
 	var/ratio = clamp(health / maxHealth, 0, 1)
 	var/scaled = round(26 * (3 - 2 * ratio))
-	StrikeTurfs(line, 8, scaled)
+	StrikeTurfs(strip, 8, scaled)
 	var/turf/landing = line[length(line)]
 	if(landing && !landing.density)
 		forceMove(landing)
 
-// ---------- Skin: Backstreets Butcher — Meat Hook ----------
+// ---------- Skin: Backstreets Butcher — Backstab ----------
+// Blinks to the tile directly behind its target, then after a tell drives a
+// 5x5 stab out from where it landed - so the target it appeared behind is
+// caught unless it clears the ring.
 /mob/living/carbon/human/understudy_form/butcher
 	form_outfit = /datum/outfit/job/butcher
 	weapon_type = /obj/item/ego_weapon/city/district23/pierre
 	weapon_force = 27
 	special_cooldown_time = 10 SECONDS
-	assume_lines = list(
-		"fresh - f-fresh meat... you're all such b-beautiful meat and I am not, not even TH-THAT -",
-		"h-hold still, hold ST-STILL... I only - only want the p-part of you that gets to be a p-p-person -",
-	)
 
 /mob/living/carbon/human/understudy_form/butcher/UseSpecial(mob/living/target)
-	face_atom(target)
-	say("C-come... be my m-meat-")
-	var/turf/start = get_turf(src)
-	var/turf/dest = get_turf(target)
-	if(!start || !dest)
-		return
-	var/list/line = getline(start, dest)
-	if(length(line) > 7)
-		line.Cut(8)
-	for(var/turf/T in line)
-		new /obj/effect/temp_visual/understudy_warning(T)
-	playsound(get_turf(src), 'sound/weapons/chainhit.ogg', 70, TRUE, 5)
-	SLEEP_CHECK_DEATH(7)
-	// Pull the first living victim on the line in, then bite it.
-	for(var/turf/T in line)
-		if(T == start)
-			continue
-		var/mob/living/victim
-		for(var/mob/living/L in T)
-			if(L == src || faction_check_mob(L))
+	say("B-behind... you-")
+	// Blink to the tile directly behind the target.
+	var/turf/behind = get_step(target, turn(target.dir, 180))
+	if(!behind || behind.density)
+		// Fall back to any free tile next to the target.
+		for(var/turf/T in shuffle(range(1, target)))
+			if(T == get_turf(target) || T.density)
 				continue
-			victim = L
+			behind = T
 			break
-		if(victim)
-			victim.throw_at(start, 7, 2, src)
-			victim.deal_damage(28, RED_DAMAGE, src,
-				attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
-			new /obj/effect/temp_visual/small_smoke/halfsecond(get_turf(victim))
-			break
+	if(behind && !behind.density)
+		forceMove(behind)
+	face_atom(target)
+	new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(src), dir)
+	playsound(get_turf(src), 'sound/weapons/chainhit.ogg', 70, TRUE, 5)
+	var/turf/center = get_turf(src)
+	if(!center)
+		return
+	StrikeTurfs(range(2, center), 8, 28)
 
 // ---------- Skin: Rat Scavenger — Junk Lob ----------
 /mob/living/carbon/human/understudy_form/scavenger
@@ -524,10 +547,6 @@
 	weapon_type = /obj/item/ego_weapon/city/rats
 	weapon_force = 27
 	special_cooldown_time = 7 SECONDS
-	assume_lines = list(
-		"scraps, sc-scraps... a p-person can be built from scraps, c-can't it? please, p-please let it be b-built -",
-		"you th-throw away so much of being... of being HUman... let me have it, the l-leftovers, ANY - any of it -",
-	)
 
 /mob/living/carbon/human/understudy_form/scavenger/UseSpecial(mob/living/target)
 	say("Scraps... for s-scraps-")
@@ -535,7 +554,7 @@
 	if(!center)
 		return
 	playsound(get_turf(src), 'sound/items/dodgeball.ogg', 60, TRUE, 4)
-	StrikeTurfs(range(1, center), 8, 24)
+	StrikeTurfs(range(2, center), 9, 24)
 
 // ---------- Skin: Kurokumo Captain - Poise crit ----------
 // The kurokumo blade builds Poise on its own swings; this special is the
@@ -547,10 +566,6 @@
 	// Kurokumo self-crits for 3x, so target ~10 to keep even crits near 30.
 	weapon_force = 10
 	special_cooldown_time = 9 SECONDS
-	assume_lines = list(
-		"p-poise... com-composure... is THIS how a - how a person h-holds itself? I p-practiced, watch, w-watch me -",
-		"I st-studied your stillness so l-long... tell me it looks h-human, tell me, t-tell me it d-does -",
-	)
 
 /mob/living/carbon/human/understudy_form/captain/UseSpecial(mob/living/target)
 	face_atom(target)
@@ -558,11 +573,14 @@
 	Immobilize(1 SECONDS, TRUE)
 	var/turf/ahead = get_step(src, dir)
 	var/turf/far = ahead ? get_step(ahead, dir) : null
+	var/turf/farther = far ? get_step(far, dir) : null
 	var/list/arc = list()
 	if(ahead)
 		arc += range(1, ahead)
 	if(far)
 		arc |= range(1, far)
+	if(farther)
+		arc |= range(1, farther)
 	visible_message(span_danger("[src] coils for a critical stroke!"))
 	playsound(get_turf(src), 'sound/weapons/bladeslice.ogg', 75, TRUE, 5)
 	StrikeTurfs(arc, 8, 72)
@@ -583,10 +601,6 @@
 	weapon_force = 27
 	special_range = 9
 	special_cooldown_time = 11 SECONDS
-	assume_lines = list(
-		"f-family... fa-FAMily... if I l-love you enough, will you - will you let me be one of the -",
-		"I'll p-protect you, I'll PROVIDE, just - just call me b-brother, call me a-anything human -",
-	)
 	var/countering = FALSE
 	var/counter_window = 2.5 SECONDS
 	var/counter_damage = 45
@@ -628,6 +642,18 @@
 		attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 	attacker.throw_at(get_edge_target_turf(attacker, get_dir(src, attacker)), 3, 2, src)
 	attacker.Knockdown(1 SECONDS)
+	// The riposte also shocks the 3x3 around the form, knocking other nearby
+	// foes back.
+	var/list/been_hit = list()
+	for(var/turf/T in range(1, src))
+		new /obj/effect/temp_visual/small_smoke/halfsecond(T)
+		been_hit = HurtInTurf(T, been_hit, 18, BLACK_DAMAGE,
+			check_faction = TRUE, hurt_mechs = TRUE,
+			attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
+		for(var/mob/living/L in T)
+			if(L == src || L == attacker || faction_check_mob(L))
+				continue
+			L.Knockdown(1 SECONDS)
 
 // While guarding, the first melee hit is blocked and countered.
 /mob/living/carbon/human/understudy_form/big_brother/attacked_by(obj/item/I, mob/living/user)
@@ -656,10 +682,6 @@
 	weapon_force = 28
 	special_range = 8
 	special_cooldown_time = 11 SECONDS
-	assume_lines = list(
-		"flesh is h-holy and I am n-not... not flesh... let me hammer the wr-wrongness OUT and be cl-clean like you -",
-		"impure, im-pure... I am the m-most impure thing h-here... p-purge me, purge me into a p-person -",
-	)
 
 /mob/living/carbon/human/understudy_form/grosshammer/UseSpecial(mob/living/target)
 	say("P-purge... purge it ALL-")
@@ -672,12 +694,18 @@
 		marks += get_turf(target)
 	if(!length(marks))
 		return
-	for(var/turf/T in marks)
+	// Each mark detonates a 3x3, not just its own tile.
+	var/list/blast = list()
+	for(var/turf/M in marks)
+		new /obj/effect/temp_visual/remorse(M)
+		for(var/turf/T in range(1, M))
+			blast |= T
+	for(var/turf/T in blast)
 		new /obj/effect/temp_visual/understudy_warning(T)
 	playsound(get_turf(src), 'sound/weapons/fixer/generic/nail2.ogg', 70, TRUE, 5)
 	SLEEP_CHECK_DEATH(9)
 	var/list/been_hit = list()
-	for(var/turf/T in marks)
+	for(var/turf/T in blast)
 		new /obj/effect/temp_visual/small_smoke/halfsecond(T)
 		been_hit = HurtInTurf(T, been_hit, 32, BLACK_DAMAGE,
 			check_faction = TRUE, hurt_mechs = TRUE,
@@ -694,10 +722,6 @@
 	weapon_force = 30
 	special_range = 7
 	special_cooldown_time = 10 SECONDS
-	assume_lines = list(
-		"a p-prescript... I'll w-write myself a self... follow the l-lines, follow, b-become the part -",
-		"tell me the o-orders, tell me how to - how to BE... I'll obey my w-way into being h-human -",
-	)
 
 /mob/living/carbon/human/understudy_form/messenger/UseSpecial(mob/living/target)
 	face_atom(target)
@@ -706,11 +730,11 @@
 	var/turf/mark = get_turf(target)
 	if(!mark)
 		return
-	for(var/turf/T in range(1, mark))
+	for(var/turf/T in range(2, mark))
 		new /obj/effect/temp_visual/understudy_warning(T)
 	playsound(get_turf(src), 'sound/weapons/sear.ogg', 70, TRUE, 5)
 	SLEEP_CHECK_DEATH(9)
-	for(var/turf/T in range(1, mark))
+	for(var/turf/T in range(2, mark))
 		new /obj/effect/temp_visual/small_smoke/halfsecond(T)
 		for(var/mob/living/L in T)
 			if(L == src || faction_check_mob(L))
@@ -732,23 +756,19 @@
 	weapon_force = 27
 	special_range = 5
 	special_cooldown_time = 9 SECONDS
-	assume_lines = list(
-		"kn-knowledge... if I l-learn enough of you... I'll KNOW how to b-be you, won't I? w-won't I?",
-		"I r-read every page of every l-life you lived... and st-still I cannot... cannot b-become the r-reader -",
-	)
 
 /mob/living/carbon/human/understudy_form/dieci/UseSpecial(mob/living/target)
 	say("The g-grand... finale-")
-	for(var/turf/T in range(2, src))
+	for(var/turf/T in range(3, src))
 		new /obj/effect/temp_visual/understudy_warning(T)
 	playsound(get_turf(src), 'sound/weapons/sear.ogg', 70, TRUE, 6)
-	SLEEP_CHECK_DEATH(8)
+	SLEEP_CHECK_DEATH(9)
 	var/turf/center = get_turf(src)
 	if(!center)
 		return
 	var/list/been_hit = list()
 	var/list/victims = list()
-	for(var/turf/T in range(2, center))
+	for(var/turf/T in range(3, center))
 		new /obj/effect/temp_visual/small_smoke/halfsecond(T)
 		been_hit = HurtInTurf(T, been_hit, 24, PALE_DAMAGE,
 			check_faction = TRUE, hurt_mechs = TRUE,
@@ -764,4 +784,221 @@
 // Dieci has no job outfit; dress the skin in the association robe.
 /datum/outfit/understudy_dieci
 	name = "Understudy - Dieci"
+	uniform = /obj/item/clothing/under/color/black
+
+// ============================================================
+// City Association forms
+// ============================================================
+// The Envy is cardinal-only like any mob, which leaves it sluggish at
+// closing on a diagonally-placed target. These association skins make up for
+// it with dashes (base: shock_centipede's TailAttack) - a 3-wide strip warned
+// along the line to the target, then the skin forceMoves to the far end and
+// strikes it. forceMove ignores the cardinal step limit, so the dash lands the
+// skin on top of whoever it was chasing. Devyat is the lone exception: the
+// heavy one stays put and drops a slow 5x5.
+
+// Centipede-style lunge. Warns a 3-wide strip along the line to the target
+// (aimed a couple tiles past it so we land on top), waits, dashes the skin to
+// the far open tile, then strikes the strip. Returns the living victims so the
+// caller can apply its status.
+/mob/living/carbon/human/understudy_form/proc/DashStrike(atom/target, reach = 6, damage = 26, delay = 7, trail_type = null)
+	face_atom(target)
+	var/turf/start = get_turf(src)
+	var/turf/dest = get_turf(target)
+	if(!start || !dest)
+		return list()
+	// Aim a couple tiles past the target so the dash ends on top of them.
+	var/dir_to = get_dir(start, dest)
+	var/turf/endpoint = dest
+	for(var/i in 1 to 2)
+		var/turf/nxt = get_step(endpoint, dir_to)
+		if(!nxt || nxt.density)
+			break
+		endpoint = nxt
+	var/list/line = getline(start, endpoint)
+	if(length(line) > reach + 1)
+		line.Cut(reach + 2)
+	// Build the 3-wide strip and find the landing (last open tile before a wall).
+	var/list/strip = list()
+	var/turf/landing = start
+	var/broken = FALSE
+	for(var/turf/T in line)
+		if(T.density)
+			broken = TRUE
+		else if(!broken)
+			landing = T
+		for(var/turf/W in range(1, T))
+			strip |= W
+	for(var/turf/T in strip)
+		new /obj/effect/temp_visual/understudy_warning(T)
+	Immobilize(delay + 1, TRUE)
+	SLEEP_CHECK_DEATH(delay)
+	if(landing && !landing.density)
+		forceMove(landing)
+	var/list/been_hit = list()
+	for(var/turf/T in strip)
+		new /obj/effect/temp_visual/small_smoke/halfsecond(T)
+		been_hit = HurtInTurf(T, been_hit, damage, RED_DAMAGE,
+			check_faction = TRUE, hurt_mechs = TRUE,
+			attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
+	// Optional trail left down the dash path (e.g. Liu's fire).
+	if(trail_type)
+		for(var/turf/T in line)
+			if(!T.density)
+				new trail_type(T)
+	var/list/victims = list()
+	for(var/mob/living/L in been_hit)
+		if(L != src && !faction_check_mob(L))
+			victims |= L
+	return victims
+
+// ---------- Skin: Zwei Association - Shield Charge (dash) ----------
+/mob/living/carbon/human/understudy_form/zwei
+	form_outfit = /datum/outfit/understudy_zwei
+	extra_worn = list(/obj/item/clothing/suit/armor/ego_gear/city/zwei = ITEM_SLOT_OCLOTHING)
+	weapon_type = /obj/item/ego_weapon/city/zweihander
+	weapon_force = 27
+	special_range = 8
+	special_cooldown_time = 10 SECONDS
+	dash_on_assume = TRUE
+
+/mob/living/carbon/human/understudy_form/zwei/UseSpecial(mob/living/target)
+	say("F-fall... in line-")
+	playsound(get_turf(src), 'sound/weapons/genhit.ogg', 70, TRUE, 4)
+	DashStrike(target, 6, 26, 7)
+	if(QDELETED(src) || stat == DEAD)
+		return
+	// Once the charge lands, it slams a 5x5 shockwave out from itself that
+	// throws survivors back.
+	var/turf/center = get_turf(src)
+	if(!center)
+		return
+	for(var/turf/T in range(2, center))
+		new /obj/effect/temp_visual/understudy_warning(T)
+	playsound(get_turf(src), 'sound/weapons/genhit.ogg', 80, TRUE, 5)
+	SLEEP_CHECK_DEATH(5)
+	var/list/been_hit = list()
+	for(var/turf/T in range(2, center))
+		new /obj/effect/temp_visual/small_smoke/halfsecond(T)
+		been_hit = HurtInTurf(T, been_hit, 18, RED_DAMAGE,
+			check_faction = TRUE, hurt_mechs = TRUE,
+			attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
+		for(var/mob/living/L in T)
+			if(L == src || faction_check_mob(L))
+				continue
+			L.throw_at(get_edge_target_turf(L, get_dir(center, L)), 4, 2, src)
+			L.Knockdown(1 SECONDS)
+
+// ---------- Skin: Shi Association - Flickerstep (dash) ----------
+/mob/living/carbon/human/understudy_form/shi
+	form_outfit = /datum/outfit/understudy_shi
+	extra_worn = list(/obj/item/clothing/suit/armor/ego_gear/city/shi = ITEM_SLOT_OCLOTHING)
+	weapon_type = /obj/item/ego_weapon/city/shi_assassin
+	weapon_force = 26
+	special_range = 8
+	special_cooldown_time = 8 SECONDS
+	dash_on_assume = TRUE
+
+/mob/living/carbon/human/understudy_form/shi/UseSpecial(mob/living/target)
+	say("...n-no witnesses-")
+	playsound(get_turf(src), 'sound/weapons/bladeslice.ogg', 75, TRUE, 4)
+	DashStrike(target, 6, 28, 6)
+	// Instantly flickers a second time at the (possibly moved) target - half
+	// the damage, half the wind-up.
+	if(QDELETED(src) || stat == DEAD || QDELETED(target) || target.stat == DEAD)
+		return
+	playsound(get_turf(src), 'sound/weapons/bladeslice.ogg', 75, TRUE, 4)
+	DashStrike(target, 6, 14, 3)
+
+// Short-lived (10s) Ardor fire the Liu skin trails behind its dash.
+/obj/effect/turf_fire/ardor/understudy
+	burn_time = 10 SECONDS
+
+// ---------- Skin: Liu Association - Burning Charge (dash) ----------
+/mob/living/carbon/human/understudy_form/liu
+	form_outfit = /datum/outfit/understudy_liu
+	extra_worn = list(/obj/item/clothing/suit/armor/ego_gear/city/liu = ITEM_SLOT_OCLOTHING)
+	weapon_type = /obj/item/ego_weapon/city/liu/fire
+	weapon_force = 26
+	special_range = 8
+	special_cooldown_time = 9 SECONDS
+	dash_on_assume = TRUE
+
+/mob/living/carbon/human/understudy_form/liu/UseSpecial(mob/living/target)
+	say("F-feel it... feel ALIVE-")
+	playsound(get_turf(src), 'sound/weapons/sear.ogg', 70, TRUE, 5)
+	// Leaves a 10-second fire trail down its dash path.
+	var/list/victims = DashStrike(target, 6, 22, 7, /obj/effect/turf_fire/ardor/understudy)
+	for(var/mob/living/L in victims)
+		L.apply_lc_overheat(6)
+
+// ---------- Skin: Seven Association - Lunging Thrust (dash) ----------
+/mob/living/carbon/human/understudy_form/seven
+	form_outfit = /datum/outfit/understudy_seven
+	extra_worn = list(/obj/item/clothing/suit/armor/ego_gear/city/seven = ITEM_SLOT_OCLOTHING)
+	weapon_type = /obj/item/ego_weapon/city/seven
+	weapon_force = 25
+	special_range = 8
+	special_cooldown_time = 9 SECONDS
+	dash_on_assume = TRUE
+
+/mob/living/carbon/human/understudy_form/seven/UseSpecial(mob/living/target)
+	say("H-hold... still-")
+	playsound(get_turf(src), 'sound/weapons/sear.ogg', 70, TRUE, 4)
+	var/list/victims = DashStrike(target, 6, 24, 7)
+	for(var/mob/living/L in victims)
+		L.apply_lc_rupture(6)
+
+// ---------- Skin: Devyat Association - Cargo Drop (heavy, no dash) ----------
+// The heavy one: it doesn't dash. It drops a slow, telegraphed 5x5 slam on the
+// target's tile that knocks down and tears defenses open.
+/mob/living/carbon/human/understudy_form/devyat
+	form_outfit = /datum/outfit/understudy_devyat
+	extra_worn = list(/obj/item/clothing/suit/armor/ego_gear/city/devyat_suit = ITEM_SLOT_OCLOTHING)
+	weapon_type = /obj/item/ego_weapon/city/devyat_trunk
+	weapon_force = 28
+	special_range = 7
+	special_cooldown_time = 11 SECONDS
+
+/mob/living/carbon/human/understudy_form/devyat/UseSpecial(mob/living/target)
+	say("D-down... you go-")
+	var/turf/center = get_turf(target)
+	if(!center)
+		return
+	for(var/turf/T in range(2, center))
+		new /obj/effect/temp_visual/understudy_warning(T)
+	playsound(get_turf(src), 'sound/weapons/genhit3.ogg', 70, TRUE, 6)
+	SLEEP_CHECK_DEATH(11)
+	var/list/been_hit = list()
+	for(var/turf/T in range(2, center))
+		new /obj/effect/temp_visual/small_smoke/halfsecond(T)
+		been_hit = HurtInTurf(T, been_hit, 28, RED_DAMAGE,
+			check_faction = TRUE, hurt_mechs = TRUE,
+			attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
+		for(var/mob/living/L in T)
+			if(L == src || faction_check_mob(L))
+				continue
+			L.Knockdown(2 SECONDS)
+			L.apply_lc_defense_level_down(4)
+	playsound(get_turf(src), 'sound/weapons/genhit3.ogg', 80, TRUE, 6)
+
+// Association skins have no job outfits; dress them under the EGO armor.
+/datum/outfit/understudy_zwei
+	name = "Understudy - Zwei"
+	uniform = /obj/item/clothing/under/color/black
+
+/datum/outfit/understudy_shi
+	name = "Understudy - Shi"
+	uniform = /obj/item/clothing/under/color/black
+
+/datum/outfit/understudy_liu
+	name = "Understudy - Liu"
+	uniform = /obj/item/clothing/under/color/black
+
+/datum/outfit/understudy_seven
+	name = "Understudy - Seven"
+	uniform = /obj/item/clothing/under/color/black
+
+/datum/outfit/understudy_devyat
+	name = "Understudy - Devyat"
 	uniform = /obj/item/clothing/under/color/black

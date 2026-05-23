@@ -136,24 +136,26 @@
 		/mob/living/simple_animal/hostile/understudy = list(
 			list(
 				"name"     = "Yield My Flesh (Ronin form)",
-				"damage"   = "26 RED along the line, scaling up to ~78 the lower the form's own HP",
+				"damage"   = "26 RED in a 3-wide line, scaling up to ~78 the lower the form's own HP",
 				"cooldown" = "~9 seconds",
 				"desc"     = "Copies the Blade Lineage katana: a rooted wind-up, \
-					then a lunge down a short line that hits harder the closer the \
-					skin is to breaking. Step off the line to dodge.",
+					then a lunge that cleaves a 3-wide strip down its path, \
+					hitting harder the closer the skin is to breaking. Step out \
+					of the strip to dodge.",
 			),
 			list(
-				"name"     = "Meat Hook (Butcher form)",
-				"damage"   = "28 RED + drag-in",
+				"name"     = "Backstab (Butcher form)",
+				"damage"   = "28 RED in a 5x5 area",
 				"cooldown" = "~10 seconds",
-				"desc"     = "Marks a line, then yanks the first person on it back \
-					to the form and bites them. Step off the line to dodge.",
+				"desc"     = "Blinks to the tile right behind its target, then \
+					after a short tell drives a 5x5 stab out from where it landed. \
+					Clear the marked tiles to dodge.",
 			),
 			list(
 				"name"     = "Junk Lob (Scavenger form)",
-				"damage"   = "24 RED in a 3x3 area",
+				"damage"   = "24 RED in a 5x5 area",
 				"cooldown" = "~7 seconds",
-				"desc"     = "Hurls debris at the target's tile, marking a 3x3 \
+				"desc"     = "Hurls debris at the target's tile, marking a 5x5 \
 					before it lands. Leave the marked tiles to dodge.",
 			),
 			list(
@@ -161,41 +163,83 @@
 				"damage"   = "72 RED (a guaranteed 3x crit) in a wide arc",
 				"cooldown" = "~9 seconds",
 				"desc"     = "Copies the kurokumo blade's poise: the payoff of a \
-					built-up critical, released as a telegraphed two-deep arc in \
+					built-up critical, released as a telegraphed three-deep arc in \
 					front. Don't stand ahead of it.",
 			),
 			list(
 				"name"     = "Family Comes First (Big Brother form)",
-				"damage"   = "45 BLACK + throw + knockdown on the counter",
+				"damage"   = "45 BLACK + throw + knockdown; a 3x3 shock ring on the counter",
 				"cooldown" = "~11 seconds",
 				"desc"     = "Copies the Middle chain: enters a ~2.5s purple guard \
 					stance. The first hit it takes during the stance is blocked \
-					and countered - it lashes the attacker, throws them clear, and \
-					blinks to a shooter first. Don't hit it while it's guarding.",
+					and countered - it lashes the attacker, throws them clear \
+					(blinking to a shooter first), and shocks the 3x3 around \
+					itself. Don't hit it while it's guarding.",
 			),
 			list(
 				"name"     = "Mark & Detonate (Grosshammer form)",
-				"damage"   = "32 BLACK on every marked tile, all at once",
+				"damage"   = "32 BLACK in a 3x3 on every marked tile, all at once",
 				"cooldown" = "~11 seconds",
 				"desc"     = "Copies the N Corp nail + hammer: drops a mark on each \
-					nearby target's tile, then slams to detonate every mark \
-					simultaneously. Step off your mark to dodge.",
+					nearby target, then slams to detonate every mark - each as a \
+					3x3 - simultaneously. Step well off your mark to dodge.",
 			),
 			list(
 				"name"     = "Prescript (Index Messenger form)",
-				"damage"   = "34 BLACK in a 3x3 (x1.45 vs a target already below half HP)",
+				"damage"   = "34 BLACK in a 5x5 (x1.45 vs a target already below half HP)",
 				"cooldown" = "~10 seconds",
 				"desc"     = "Copies the Index greatsword's execute: marks a tile, \
-					then a heavy slam that hits far harder if the marked victim is \
-					already wounded. Leave the marked tiles to dodge.",
+					then a heavy 5x5 slam that hits far harder if the marked \
+					victim is already wounded. Leave the marked tiles to dodge.",
 			),
 			list(
 				"name"     = "Grand Finale (Dieci form)",
-				"damage"   = "24 PALE + 4 Sinking + knockback, 5x5 around itself",
+				"damage"   = "24 PALE + 4 Sinking + knockback, 7x7 around itself",
 				"cooldown" = "~9 seconds",
-				"desc"     = "Copies the Dieci finisher: a PALE shockwave that throws \
-					everyone nearby outward and stacks Sinking. Back out of the \
-					ring before it lands.",
+				"desc"     = "Copies the Dieci finisher: a wide PALE shockwave that \
+					throws everyone nearby outward and stacks Sinking. Back out of \
+					the ring before it lands.",
+			),
+			list(
+				"name"     = "Shield Charge (Zwei form)",
+				"damage"   = "26 RED dash, then a 5x5 shockwave that throws you back",
+				"cooldown" = "~10 seconds (and the instant it dons this form)",
+				"desc"     = "Marks a 3-wide line to the target and dashes its full \
+					length - landing on top of them - then slams a 5x5 shockwave \
+					out from where it lands, hurling survivors away. Step off the \
+					line, then clear the ring.",
+			),
+			list(
+				"name"     = "Flickerstep (Shi form)",
+				"damage"   = "28 RED, then a 14 RED follow-up, each in a 3-wide dash line",
+				"cooldown" = "~8 seconds (and the instant it dons this form)",
+				"desc"     = "Flash-steps along a marked 3-wide line onto its \
+					target, then instantly flickers a second time at it for half \
+					the damage and a far shorter wind-up. Keep moving off the \
+					lines.",
+			),
+			list(
+				"name"     = "Burning Charge (Liu form)",
+				"damage"   = "22 RED + Overheat in a 3-wide dash line",
+				"cooldown" = "~9 seconds (and the instant it dons this form)",
+				"desc"     = "Charges down a marked 3-wide line onto the target, \
+					leaving Overheat and a fire trail down its path that burns for \
+					~10 seconds. Step off the line and out of the flames.",
+			),
+			list(
+				"name"     = "Lunging Thrust (Seven form)",
+				"damage"   = "24 RED + Rupture in a 3-wide dash line",
+				"cooldown" = "~9 seconds (and the instant it dons this form)",
+				"desc"     = "Lunges down a marked 3-wide line onto its target, \
+					applying Rupture to anyone caught. Step off the line.",
+			),
+			list(
+				"name"     = "Cargo Drop (Devyat form)",
+				"damage"   = "28 RED + Knockdown + Defense Level Down in a 5x5",
+				"cooldown" = "~11 seconds",
+				"desc"     = "The heavy one doesn't dash. It marks a 5x5 on the \
+					target's tile and drops a slow, telegraphed slam. Leave the \
+					marked tiles to dodge.",
 			),
 		),
 	)
