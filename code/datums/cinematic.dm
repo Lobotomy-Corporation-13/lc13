@@ -284,6 +284,33 @@
 	flick("chaos_dunk",screen)
 	cinematic_sound(sound('sound/misc/nest_announcement.ogg'))
 
+// Red Mist - Greater Split: Vertical. Per-target cinematic before the slash
+// lands. content() blocks for 1.52 s; damage is dealt by the caller after
+// play() returns, so cleanup_time is left at 0 to keep the screen up only as
+// long as content() wants.
+/datum/cinematic/greater_split_v
+	id = CINEMATIC_GREATER_SPLIT_V
+	cleanup_time = 0
+
+/datum/cinematic/greater_split_v/content()
+	flick("greater_split_v", screen)
+	cinematic_sound(sound('sound/weapons/fixer/red_mist_vert_hit.ogg'))
+	sleep(15.2)
+	cinematic_sound(sound('sound/weapons/fixer/red_mist_vert_fin.ogg'))
+
+// Red Mist - Greater Split: Horizontal. Same shape, slightly shorter
+// animation (1.4 s).
+/datum/cinematic/greater_split_h
+	id = CINEMATIC_GREATER_SPLIT_H
+	cleanup_time = 0
+
+/datum/cinematic/greater_split_h/content()
+	flick("greater_split_h", screen)
+	cinematic_sound(sound('sound/weapons/fixer/red_mist_hori_eyeon.ogg'))
+	cinematic_sound(sound('sound/weapons/fixer/red_mist_hori_start.ogg'))
+	sleep(14)
+	cinematic_sound(sound('sound/weapons/fixer/red_mist_hori_fin.ogg'))
+
 /* Intended usage.
 Nuke.Explosion()
 	-> Cinematic(NUKE_BOOM,world)
