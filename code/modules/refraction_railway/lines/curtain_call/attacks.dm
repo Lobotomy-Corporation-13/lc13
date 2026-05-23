@@ -131,115 +131,262 @@
 			),
 		),
 
-		// ---------- zeal_s2n1: The Envy of Humanity (form specials) ----------
+		// ---------- zeal_s2n1: The Envy of Humanity (form attacks) ----------
 
 		/mob/living/simple_animal/hostile/understudy = list(
+			// ---------- City roster (phase 1) ----------
 			list(
 				"name"     = "Yield My Flesh (Ronin form)",
-				"damage"   = "26 RED in a 3-wide line, scaling up to ~78 the lower the form's own HP",
-				"cooldown" = "~9 seconds",
-				"desc"     = "Copies the Blade Lineage katana: a rooted wind-up, \
-					then a lunge that cleaves a 3-wide strip down its path, \
-					hitting harder the closer the skin is to breaking. Step out \
-					of the strip to dodge.",
+				"damage"   = "On the riposte: 40 RED + 3 Bleed on the attacker, scaling up to 120 the lower the form's HP",
+				"cooldown" = "9 seconds; 2.5s parry window",
+				"desc"     = "Enters a 2.5s parry stance (deep-red tint), \
+					rooted. First melee or ranged hit landed during the \
+					window is consumed and triggers the counter (blinks to a \
+					ranged shooter first). The counter scales inversely with \
+					the form's current HP — 40 at full HP, up to 120 near \
+					death. If no hit lands, the stance ends without a counter.",
 			),
 			list(
 				"name"     = "Backstab (Butcher form)",
-				"damage"   = "28 RED in a 5x5 area",
-				"cooldown" = "~10 seconds",
-				"desc"     = "Blinks to the tile right behind its target, then \
-					after a short tell drives a 5x5 stab out from where it landed. \
-					Clear the marked tiles to dodge.",
+				"damage"   = "28 RED in a 5x5 around the form's landing tile",
+				"cooldown" = "10 seconds",
+				"desc"     = "Blinks to the tile directly behind the target. \
+					Telegraphs the 5x5 around the form's new tile, 1.4s \
+					wind-up, then resolves.",
 			),
 			list(
 				"name"     = "Junk Lob (Scavenger form)",
-				"damage"   = "24 RED in a 5x5 area",
-				"cooldown" = "~7 seconds",
-				"desc"     = "Hurls debris at the target's tile, marking a 5x5 \
-					before it lands. Leave the marked tiles to dodge.",
+				"damage"   = "24 RED in a 5x5 on the target's snapshot tile",
+				"cooldown" = "7 seconds",
+				"desc"     = "Telegraphs the 5x5 around the target's current \
+					tile, 0.8s wind-up, then resolves.",
 			),
 			list(
 				"name"     = "Poise Strike (Kurokumo Captain form)",
-				"damage"   = "72 RED (a guaranteed 3x crit) in a wide arc",
-				"cooldown" = "~9 seconds",
-				"desc"     = "Copies the kurokumo blade's poise: the payoff of a \
-					built-up critical, released as a telegraphed three-deep arc in \
-					front. Don't stand ahead of it.",
+				"damage"   = "72 RED in a 3-deep forward arc (the kurokumo blade's built-in 3x crit baked in)",
+				"cooldown" = "9 seconds",
+				"desc"     = "Rooted 1.4s wind-up. Telegraphs a 3-deep arc in \
+					the form's facing direction, then resolves.",
 			),
 			list(
 				"name"     = "Family Comes First (Big Brother form)",
-				"damage"   = "45 BLACK + throw + knockdown; a 3x3 shock ring on the counter",
-				"cooldown" = "~11 seconds",
-				"desc"     = "Copies the Middle chain: enters a ~2.5s purple guard \
-					stance. The first hit it takes during the stance is blocked \
-					and countered - it lashes the attacker, throws them clear \
-					(blinking to a shooter first), and shocks the 3x3 around \
-					itself. Don't hit it while it's guarding.",
+				"damage"   = "On the riposte: 45 BLACK + throw 3 tiles + Knockdown 1s on the attacker, plus 18 BLACK + Knockdown 1s in a 3x3 around the form",
+				"cooldown" = "11 seconds; 2.5s parry window",
+				"desc"     = "Enters a 2.5s parry stance (purple tint), rooted. \
+					First melee or ranged hit landed during the window is \
+					consumed and triggers the counter (blinks to a ranged \
+					shooter first). If no hit lands, the stance ends without \
+					a counter.",
 			),
 			list(
 				"name"     = "Mark & Detonate (Grosshammer form)",
-				"damage"   = "32 BLACK in a 3x3 on every marked tile, all at once",
-				"cooldown" = "~11 seconds",
-				"desc"     = "Copies the N Corp nail + hammer: drops a mark on each \
-					nearby target, then slams to detonate every mark - each as a \
-					3x3 - simultaneously. Step well off your mark to dodge.",
+				"damage"   = "32 BLACK in a 3x3 around each marked target's snapshot tile, all detonating simultaneously",
+				"cooldown" = "11 seconds",
+				"desc"     = "Marks every living enemy within 8 tiles (one mark \
+					per enemy). 0.8s wind-up, then every marked 3x3 detonates \
+					together.",
 			),
 			list(
 				"name"     = "Prescript (Index Messenger form)",
-				"damage"   = "34 BLACK in a 5x5 (x1.45 vs a target already below half HP)",
-				"cooldown" = "~10 seconds",
-				"desc"     = "Copies the Index greatsword's execute: marks a tile, \
-					then a heavy 5x5 slam that hits far harder if the marked \
-					victim is already wounded. Leave the marked tiles to dodge.",
+				"damage"   = "34 BLACK (x1.45 on a target under 50% HP) in a 5x5 on the marked tile",
+				"cooldown" = "10 seconds",
+				"desc"     = "Rooted 0.8s wind-up. Telegraphs the 5x5 around the \
+					target's snapshot tile, then resolves.",
 			),
 			list(
 				"name"     = "Grand Finale (Dieci form)",
-				"damage"   = "24 PALE + 4 Sinking + knockback, 7x7 around itself",
-				"cooldown" = "~9 seconds",
-				"desc"     = "Copies the Dieci finisher: a wide PALE shockwave that \
-					throws everyone nearby outward and stacks Sinking. Back out of \
-					the ring before it lands.",
+				"damage"   = "24 PALE + 4 Sinking + throw outward, in a 7x7 around the form",
+				"cooldown" = "9 seconds",
+				"desc"     = "Telegraphs the 7x7 around the form's current tile, \
+					2s wind-up, then resolves.",
 			),
 			list(
 				"name"     = "Shield Charge (Zwei form)",
-				"damage"   = "26 RED dash, then a 5x5 shockwave that throws you back",
-				"cooldown" = "~10 seconds (and the instant it dons this form)",
-				"desc"     = "Marks a 3-wide line to the target and dashes its full \
-					length - landing on top of them - then slams a 5x5 shockwave \
-					out from where it lands, hurling survivors away. Step off the \
-					line, then clear the ring.",
+				"damage"   = "Dash: 26 RED in the 3-wide path. Shockwave: 18 RED + throw outward + Knockdown 1s in a 5x5 around the landing tile",
+				"cooldown" = "10 seconds (and the instant it dons this form)",
+				"desc"     = "Dashes down a 3-wide line onto the target, 1.4s \
+					wind-up. On landing: telegraphs the 5x5 shockwave, 1.4s \
+					wind-up, then resolves.",
 			),
 			list(
 				"name"     = "Flickerstep (Shi form)",
-				"damage"   = "28 RED, then a 14 RED follow-up, each in a 3-wide dash line",
-				"cooldown" = "~8 seconds (and the instant it dons this form)",
-				"desc"     = "Flash-steps along a marked 3-wide line onto its \
-					target, then instantly flickers a second time at it for half \
-					the damage and a far shorter wind-up. Keep moving off the \
-					lines.",
+				"damage"   = "First strike: 28 RED in a 3-wide dash line. Second strike: 14 RED in a 3-wide dash line.",
+				"cooldown" = "8 seconds (and the instant it dons this form)",
+				"desc"     = "Dashes onto the target along a 3-wide line, 1.4s \
+					wind-up. Immediately dashes again at the target's new \
+					position, 0.8s wind-up.",
 			),
 			list(
 				"name"     = "Burning Charge (Liu form)",
-				"damage"   = "22 RED + Overheat in a 3-wide dash line",
-				"cooldown" = "~9 seconds (and the instant it dons this form)",
-				"desc"     = "Charges down a marked 3-wide line onto the target, \
-					leaving Overheat and a fire trail down its path that burns for \
-					~10 seconds. Step off the line and out of the flames.",
+				"damage"   = "22 RED + 6 Overheat in a 3-wide dash line; leaves a fire trail along the dash path",
+				"cooldown" = "9 seconds (and the instant it dons this form)",
+				"desc"     = "Dashes onto the target along a 3-wide line, 1.4s \
+					wind-up. Fire trail along the dash path burns for 10 \
+					seconds.",
 			),
 			list(
 				"name"     = "Lunging Thrust (Seven form)",
-				"damage"   = "24 RED + Rupture in a 3-wide dash line",
-				"cooldown" = "~9 seconds (and the instant it dons this form)",
-				"desc"     = "Lunges down a marked 3-wide line onto its target, \
-					applying Rupture to anyone caught. Step off the line.",
+				"damage"   = "24 RED + 6 Rupture in a 3-wide dash line",
+				"cooldown" = "9 seconds (and the instant it dons this form)",
+				"desc"     = "Dashes onto the target along a 3-wide line, 1.4s \
+					wind-up.",
 			),
 			list(
 				"name"     = "Cargo Drop (Devyat form)",
-				"damage"   = "28 RED + Knockdown + Defense Level Down in a 5x5",
-				"cooldown" = "~11 seconds",
-				"desc"     = "The heavy one doesn't dash. It marks a 5x5 on the \
-					target's tile and drops a slow, telegraphed slam. Leave the \
-					marked tiles to dodge.",
+				"damage"   = "28 RED + Knockdown 2s + 4 Defense Level Down in a 5x5 on the marked tile",
+				"cooldown" = "11 seconds",
+				"desc"     = "Telegraphs the 5x5 around the target's snapshot \
+					tile, 1.4s wind-up. On resolve: leaps onto the marked \
+					tile, then the 5x5 hits around it.",
+			),
+			// ---------- Phase 2: Red Mist ----------
+			list(
+				"name"     = "Realization (Red Mist ability 1)",
+				"damage"   = "32 RED in a 7x7 around the form; heals the form 40 HP per unique target hit (cap 3 targets)",
+				"cooldown" = "Slot 1 of Red Mist's rotation; rotation morphs after 5 abilities",
+				"desc"     = "Rooted 2s wind-up. Telegraphs the 7x7 around the \
+					form's current tile, then resolves.",
+			),
+			list(
+				"name"     = "Onrush (Red Mist ability 2)",
+				"damage"   = "26 RED + 3 Bleed in a 3-wide forward dash line; on a kill in the line, chains to the nearest enemy (up to 2 chains)",
+				"cooldown" = "Slot 2 of Red Mist's rotation",
+				"desc"     = "Telegraphs a 3-wide strip from the form through \
+					the target and a couple tiles past it. 1.4s wind-up. On \
+					resolve: the form teleports to the line's end (or to the \
+					tile just before the first wall in the path, if any) and \
+					the strip hits. If anyone in the strip dies from the \
+					slash, immediately winds up another dash on the next \
+					nearest enemy.",
+			),
+			list(
+				"name"     = "Focus Spirit (Red Mist ability 3)",
+				"damage"   = "On release: 45 RED + 4 Bleed in a 5x5 around the form",
+				"cooldown" = "Slot 3 of Red Mist's rotation; 1.5s buff stance",
+				"desc"     = "Rooted 1.5s self-buff stance — applies 20 Defense \
+					Level Up to the form during the wind-up. On stance end: \
+					telegraphs the 5x5 around the form, 1.4s wind-up, then \
+					resolves.",
+			),
+			list(
+				"name"     = "Greater Split: Vertical (Red Mist ability 4)",
+				"damage"   = "500 RED to every enemy caught in the cinematic",
+				"cooldown" = "Slot 4 of Red Mist's rotation",
+				"desc"     = "Rooted 1.4s wind-up. Telegraphs the 5x5 around the \
+					form. On resolve: every living enemy still in the 5x5 is \
+					Immobilized 1.52s, plays the Greater Split Vertical \
+					cinematic, and takes the damage at its end.",
+			),
+			list(
+				"name"     = "Greater Split: Horizontal (Red Mist ability 5)",
+				"damage"   = "750 RED to every enemy caught in the cinematic",
+				"cooldown" = "Slot 5 of Red Mist's rotation",
+				"desc"     = "Rooted 2s wind-up. Telegraphs the 9x9 around the \
+					form. On resolve: every living enemy still in the 9x9 is \
+					Immobilized 1.4s, plays the Greater Split Horizontal \
+					cinematic, and takes the damage at its end.",
+			),
+			// ---------- Phase 2: Black Silence ----------
+			list(
+				"name"     = "Zelkova Slam (Black Silence slot 1)",
+				"damage"   = "35 BLACK in a 3x3 on the target's snapshot tile",
+				"cooldown" = "Slot 1 of Black Silence's rotation (and the instant it dons this form)",
+				"desc"     = "Telegraphs the 3x3 around the target's snapshot \
+					tile, 0.8s wind-up, then resolves.",
+			),
+			list(
+				"name"     = "Ranga Dash (Black Silence slot 2)",
+				"damage"   = "28 BLACK in a 3-wide dash line",
+				"cooldown" = "Slot 2 of Black Silence's rotation",
+				"desc"     = "Dashes onto the target along a 3-wide line, 1.4s \
+					wind-up.",
+			),
+			list(
+				"name"     = "Old Boys Counter (Black Silence slot 3)",
+				"damage"   = "On the riposte: 40 BLACK + throw 3 tiles + Knockdown 1s on the attacker",
+				"cooldown" = "Slot 3 of Black Silence's rotation; 1.5s parry window",
+				"desc"     = "Enters a 1.5s parry stance (dark-blue tint), rooted. \
+					First melee or ranged hit landed during the window is \
+					consumed and triggers the counter (blinks to a ranged \
+					shooter first). If no hit lands, the stance ends without \
+					a counter.",
+			),
+			list(
+				"name"     = "Allas Lunge (Black Silence slot 4)",
+				"damage"   = "32 BLACK + Rend Black in a 3-wide dash line",
+				"cooldown" = "Slot 4 of Black Silence's rotation",
+				"desc"     = "Dashes onto the target along a 3-wide line, 1.4s \
+					wind-up.",
+			),
+			list(
+				"name"     = "Mook Cut (Black Silence slot 5)",
+				"damage"   = "40 BLACK in a 3x3 on the target's snapshot tile",
+				"cooldown" = "Slot 5 of Black Silence's rotation",
+				"desc"     = "Telegraphs the 3x3 around the target's snapshot \
+					tile, 0.8s wind-up, then resolves.",
+			),
+			list(
+				"name"     = "Logic Shotgun (Black Silence slot 6)",
+				"damage"   = "30 BLACK + throw 3 tiles outward, in a 3-tile-deep forward cone (3 tiles wide at its base)",
+				"cooldown" = "Slot 6 of Black Silence's rotation",
+				"desc"     = "Telegraphs the cone in the form's facing direction, \
+					1.4s wind-up, then resolves.",
+			),
+			list(
+				"name"     = "Durandal Strike (Black Silence slot 7)",
+				"damage"   = "50 BLACK on the target's snapshot tile (1x1)",
+				"cooldown" = "Slot 7 of Black Silence's rotation",
+				"desc"     = "Telegraphs the target's snapshot tile, 0.8s \
+					wind-up, then resolves on it.",
+			),
+			list(
+				"name"     = "Crystal Dash (Black Silence slot 8)",
+				"damage"   = "30 BLACK in a 3-wide dash line",
+				"cooldown" = "Slot 8 of Black Silence's rotation",
+				"desc"     = "Dashes onto the target along a 3-wide line, 1.4s \
+					wind-up. On landing: evade-teleports up to 3 tiles in a \
+					random cardinal direction.",
+			),
+			list(
+				"name"     = "Wheels Swing (Black Silence slot 9)",
+				"damage"   = "45 BLACK + throw outward, in a 5-tile-deep forward cone (3 tiles wide at its base)",
+				"cooldown" = "Slot 9 of Black Silence's rotation",
+				"desc"     = "Telegraphs the cone in the form's facing direction, \
+					1.4s wind-up, then resolves.",
+			),
+			list(
+				"name"     = "Furioso (Black Silence slot 10) — UNAVOIDABLE",
+				"damage"   = "1500 BLACK to the locked target. Target is also Stunned 6s and silenced for the duration.",
+				"cooldown" = "Slot 10 of Black Silence's rotation. See **Black Silence — Spent After Furioso**.",
+				"desc"     = "Anchors itself in place and becomes invulnerable; \
+					the locked target is Stunned and silenced. After ~6 \
+					seconds the 1500 BLACK lands on the target directly — no \
+					positional dodge, no line-of-sight check. On resolve: \
+					invulnerability / anchor / Stun / silence all clear.",
+			),
+			// ---------- Phase 2: Blue Reverberation ----------
+			list(
+				"name"     = "Resonant Wave (Blue Reverberation ability 1)",
+				"damage"   = "Ring 1: 22 WHITE in a 3x3. Ring 2: 22 WHITE in a 5x5. Ring 3: 26 PALE + 3 Sinking in a 7x7. All centered on the form.",
+				"cooldown" = "Slot 1 of Blue Reverberation's rotation; rotation morphs after 5 abilities",
+				"desc"     = "Rooted 2.4s total. Each ring telegraphs 0.8s then \
+					resolves. Rings fire in order: 3x3, then 5x5, then 7x7.",
+			),
+			list(
+				"name"     = "Tempestuous Danza (Blue Reverberation ability 2)",
+				"damage"   = "24 WHITE + 1 Vibration per enemy struck",
+				"cooldown" = "Slot 2 of Blue Reverberation's rotation",
+				"desc"     = "1.4s wind-up. On resolve: teleport-strikes every \
+					living enemy within 8 tiles once each, in sequence.",
+			),
+			list(
+				"name"     = "Grand Finale (Blue Reverberation ability 3)",
+				"damage"   = "60 PALE per marked target; 90 PALE if the marked target has 3+ Vibration stacks",
+				"cooldown" = "Slot 3 of Blue Reverberation's rotation",
+				"desc"     = "Rooted 2s wind-up. Dashes to every living enemy \
+					within 10 tiles and tags each (no damage), then teleports \
+					back to its starting tile. After 0.8s: every marked target \
+					takes the PALE burst at their current position.",
 			),
 		),
 	)

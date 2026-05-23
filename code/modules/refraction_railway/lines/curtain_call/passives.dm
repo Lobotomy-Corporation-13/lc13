@@ -137,32 +137,87 @@
 
 		/mob/living/simple_animal/hostile/understudy = list(
 			list(
-				"title"    = "No Self of Its Own",
+				"title"    = "Wears a Face",
 				"severity" = "info",
-				"text"     = "It never fights as itself. It wears a premade human \
-					form - a city role, with that role's gear - and fights you \
-					through it. Its true shape only shows between costumes.",
+				"text"     = "On spawn: dons a random form from the city roster \
+					(Ronin, Butcher, Scavenger, Kurokumo Captain, Big Brother, \
+					Grosshammer, Messenger, Dieci, Zwei, Shi, Liu, Seven, \
+					Devyat) and fights through it. Has no basic melee of its \
+					own; the worn form does the attacking.",
 			),
 			list(
-				"title"    = "Borrowed Hands",
+				"title"    = "Untouchable While Worn",
 				"severity" = "medium",
-				"text"     = "A worn form keeps its gear locked in hand - it can't \
-					be disarmed - and is immune to stun, knockback, and sleep. \
-					Each form has one telegraphed signature attack you can dodge.",
+				"text"     = "While wearing a form: cannot be targeted, hit, or \
+					moved. All damage and crowd-control land on the worn form \
+					instead. The worn form keeps its gear locked in-hand, takes \
+					~250 HP to break (~375 for the phase-2 faces), and is \
+					immune to stun, knockback, and sleep.",
 			),
 			list(
 				"title"    = "Stripped Bare",
 				"severity" = "high",
-				"text"     = "Break the form it wears and the true shape is dragged \
-					out: stunned, hurt for the loss, and open to direct attack \
-					for a few seconds before it pulls on a new face.",
+				"text"     = "On the worn form's death: emerges on its tile, \
+					takes 300 BRUTE chip, stays visible and damageable for \
+					~5 seconds, then dons a new face.",
 			),
 			list(
 				"title"    = "Threadbare",
 				"severity" = "high",
-				"text"     = "Every time it is stripped bare it grows more fragile - \
-					its resistances worsen with each reveal, so the later windows \
-					hurt it far more than the first.",
+				"text"     = "Each Stripped Bare worsens its resistances by one \
+					tier (cap 5). RED / WHITE / BLACK / PALE: \
+					0.6/0.6/0.4/0.8 → 0.8/0.8/0.6/1.0 → 1.0/1.0/0.8/1.2 → \
+					1.25/1.25/1.0/1.5 → 1.5/1.5/1.25/2.0.",
+			),
+			list(
+				"title"    = "Carry-Over HP",
+				"severity" = "info",
+				"text"     = "On a form rotation (not death): the new form \
+					spawns at full HP, then takes BRUTE equal to the previous \
+					form's missing HP (capped to leave at least 1 HP). Faces \
+					after the first don't reset the boss's effective HP.",
+			),
+			list(
+				"title"    = "Phase 2: Final Faces",
+				"severity" = "high",
+				"text"     = "Below 25% HP: HP cannot drop further until phase 2 \
+					triggers. The attack that would cross the floor caps damage \
+					there and swaps the form pool from city skins to three \
+					hostile cabals (**Red Mist**, **Black Silence**, **Blue \
+					Reverberation**). Each phase-2 face stays for a fixed \
+					number of abilities before rotating: Red Mist and Blue \
+					Reverberation 5, Black Silence 10.",
+			),
+			// ---------- Phase-2 form passives ----------
+			list(
+				"title"    = "Red Mist — The Strongest",
+				"severity" = "low",
+				"text"     = "While worn: moves at roughly 4x the city-skin pace.",
+			),
+			list(
+				"title"    = "Black Silence — Honed Edge",
+				"severity" = "medium",
+				"text"     = "After each ability resolves: gains 8 Offense Level Up.",
+			),
+			list(
+				"title"    = "Black Silence — Weapon Rotation",
+				"severity" = "medium",
+				"text"     = "Cycles 9 workshop weapons + Furioso in fixed order: \
+					Zelkova → Ranga → Old Boys → Allas → Mook → Logic → \
+					Durandal → Crystal → Wheels → **Furioso**. The held weapon \
+					icon visibly swaps each slot.",
+			),
+			list(
+				"title"    = "Black Silence — Spent After Furioso",
+				"severity" = "high",
+				"text"     = "On the resolve of **Furioso**: force-morphs to a \
+					new face regardless of damage taken.",
+			),
+			list(
+				"title"    = "Blue Reverberation — Resonant Hum",
+				"severity" = "medium",
+				"text"     = "Every 8 seconds: applies 1 Vibration to every enemy \
+					within 5 tiles.",
 			),
 		),
 	)
