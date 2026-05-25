@@ -452,4 +452,69 @@
 					instead of a free zone.",
 			),
 		),
+
+		// ---------- zeal_s3n1: The One That Got Out ----------
+
+		/mob/living/simple_animal/hostile/mirror_shattered_reaper/refracted = list(
+			list(
+				"name"     = "Refraction Sweep",
+				"damage"   = "100 BLACK to every mob in a **single forward cone** — **4 tiles deep in P1 (~10 tiles total)**, **5 tiles deep in P2 (~13 tiles total)**. Always 3 wide at the base in front of the Reaper, tapering to a **1-tile tip** at max range.",
+				"cooldown" = "~10 seconds",
+				"desc"     = "**Faces her target**, then paints the \
+					cone tiles in purple mirror-shard chevrons for \
+					**1.5 seconds** — the shape is a wide swipe with \
+					the broad base right in front of her, narrowing to \
+					a single tile at the far edge. **She is rooted in \
+					place and can't melee while the cone charges** — \
+					this is the safe window to flank her, since the \
+					sides and rear are clear. On resolve she **absorbs \
+					only the Mirror Variants standing inside the cone** \
+					(each refunds its HP share and adds 1 Reverberation \
+					Charge) — Variants outside the cone keep walking. \
+					**Spawns 2 new Variants (4 in Phase 2)** scattered \
+					at random turfs around her (not adjacent — they rift \
+					in 2-5 tiles away).",
+			),
+			list(
+				"name"     = "Crossing Over",
+				"damage"   = "150 BLACK to every mob inside a **5x5 area in P1, 7x7 in P2**, centered on a snapshot tile",
+				"cooldown" = "~18 seconds",
+				"desc"     = "Picks a random player, paints **5x5 tiles \
+					(7x7 in Phase 2)** around their current position \
+					in lighter-purple mirror markers, then **roots \
+					herself in place for 1.5 seconds** (she can't move \
+					or melee during the windup). On resolve she \
+					**teleports to the center of the warning area** \
+					and slams it — anyone still inside eats the hit. \
+					The warning **does not follow the player** — step \
+					off the painted tiles before the timer ends to \
+					escape. On impact she **absorbs only the Mirror \
+					Variants standing inside the warning area** and \
+					**spawns 2 new ones (4 in Phase 2)** scattered \
+					around her new position.",
+			),
+			list(
+				"name"     = "Reverberation",
+				"damage"   = "35 BLACK per damage instance (split evenly across the instance's rifts). Instance count equals current Reverberation Charge (capped at 15). At cap: **525 BLACK total** spread across the cast (~210 actual damage to a player at 60% DR).",
+				"cooldown" = "**45 seconds**, gated by Reverberation Charge ≥ 5 for the first cast. Force-fires once on Phase 2 entry if charges are ready.",
+				"desc"     = "**On cast, any still-alive Mirror Variants \
+					are yanked back into her regardless of distance** — \
+					each one refunds its ~150 HP cost and adds 1 \
+					Reverberation Charge before the cast resolves. The \
+					Reaper then goes **invisible at her current tile, \
+					locked in place** for the entire cast. For every \
+					Reverberation Charge (post-absorb total), one \
+					**damage instance** plays out: she rifts to **3 or \
+					4 random points** in the room, striking a player on \
+					each step with the rip_space dash visual. **Every \
+					rift deals damage** — no free telegraph hops — but \
+					the per-instance total is constant: a 3-rift \
+					instance is three larger hits, a 4-rift instance is \
+					four smaller hits, both summing to 35 BLACK. After \
+					the last instance she rifts back to her starting \
+					tile, and all Reverberation Charges reset to 0. \
+					**Killing Variants before the ult triggers is the \
+					only way to deny her the Charges they'd feed.**",
+			),
+		),
 	)

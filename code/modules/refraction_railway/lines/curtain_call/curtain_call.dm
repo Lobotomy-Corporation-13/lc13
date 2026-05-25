@@ -112,11 +112,13 @@
 
 	// ----- Sector 3: The Twist -----
 	AddNode("zeal_s3n1", "zeal_s3n1_spawns",
-		"Sector 3, Act I: <pending>",
-		"<pending flavor — admin-event reference goes here>.",
+		"Sector 3, Act I: The One That Got Out",
+		"This scene was not in the script. Something stepped through a \
+			crack in the stage with too many versions of itself in tow, \
+			and it is hunting the rest of them down so it can keep them. \
+			It only ever wanted to be more than it was.",
 		list(
-			// TODO: replace with this sector's boss mob
-			/mob/living/simple_animal/hostile/netherworld/migo/refracted = 1,
+			/mob/living/simple_animal/hostile/mirror_shattered_reaper/refracted = 1,
 		),
 		boss = TRUE)
 
