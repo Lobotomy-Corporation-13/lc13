@@ -72,7 +72,7 @@
 		picture = SpawnConnectedStructure(/obj/structure/certain_portrait, 0, 2)
 
 /mob/living/simple_animal/hostile/abnormality/portrait_certain/AttemptWork(mob/living/carbon/human/user, work_type)
-	var/list/worktypes  = list(1 = ABNORMALITY_WORK_INSTINCT,2 = ABNORMALITY_WORK_INSIGHT,3 = ABNORMALITY_WORK_ATTACHMENT,4 = ABNORMALITY_WORK_REPRESSION)
+	var/alist/worktypes  = alist(1 = ABNORMALITY_WORK_INSTINCT,2 = ABNORMALITY_WORK_INSIGHT,3 = ABNORMALITY_WORK_ATTACHMENT,4 = ABNORMALITY_WORK_REPRESSION)
 	var/prefer_work = worktypes[old_portrait]
 	if(old_portrait && prefer_work != work_type)
 		say("You dont belong here.")
