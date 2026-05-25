@@ -517,4 +517,59 @@
 					only way to deny her the Charges they'd feed.**",
 			),
 		),
+
+		// ---------- zeal_s3n2: The Apotheosis ----------
+
+		/mob/living/simple_animal/hostile/achiyalabopa/refracted = list(
+			list(
+				"name"     = "Divine Judgment",
+				"damage"   = "100 PALE per tile, per wave (3 waves). **Instantly unmakes any Mirage Reaper caught in the cross** — each Reaper unmade cracks her composure and brings enrage **5 seconds** closer.",
+				"cooldown" = "~15 seconds",
+				"desc"     = "Three waves of cardinal cross-fire, **10 \
+					tiles long in every direction**. Each wave randomly \
+					rolls between a **thin plus** (her own tile included, \
+					arms 1 tile wide) and a **wide plus** (3 tiles wide \
+					with a **safe corridor** along her own row and column). \
+					**1-second telegraph** per wave — the wide-plus's \
+					safe corridor is the only consistent dodge if a wave \
+					rolls that pattern. **Mirage Reapers in the cross \
+					die outright** (no damage roll, just death) — herd \
+					them into the telegraph zones to crack her \
+					composure faster.",
+			),
+			list(
+				"name"     = "Thunder Whip",
+				"damage"   = "100 PALE per tile, struck in waves of 3 sorted by distance. **Instantly unmakes any Mirage Reaper caught in the cone** — each Reaper unmade cracks her composure and brings enrage **5 seconds** closer.",
+				"cooldown" = "~20 seconds",
+				"desc"     = "**0.5-second wind-up** (she rears back). \
+					The cone is the slow part — the lash itself walks \
+					outward through two iterations: **5 tiles deep × 1 \
+					wide**, then **7 deep × 2 wide**, then **9 deep × \
+					3 wide** at the far edge. Strikes resolve in waves \
+					of 3 tiles, sweeping outward from her position — \
+					closer tiles hit first, so backing further into the \
+					cone buys a little time, but the only true dodge is \
+					to step out to the side. **Mirage Reapers in the \
+					cone die outright** (no damage roll) — kite them \
+					into the cone to crack her composure.",
+			),
+			list(
+				"name"     = "Divine Thunderbolt",
+				"damage"   = "50 PALE + electrocute in a **3×3 area** around the marker. **Instantly unmakes any Mirage Reaper in the blast** — each Reaper unmade cracks her composure and brings enrage **5 seconds** closer.",
+				"cooldown" = "~3 seconds; passive",
+				"desc"     = "Drops a marker on **up to 3 humans within \
+					7 tiles** of her, **plus 5 random scatter-marks** on \
+					floor tiles within 7 tiles (each at least 1 tile \
+					apart so they spread out instead of clustering). \
+					Every marker telegraphs as a **purple 3×3 warning \
+					ring** for **2 seconds**, then explodes for 50 PALE \
+					across the whole 3×3 (ignores line-of-sight, so \
+					hiding behind a tile inside the ring doesn't help). \
+					Step out of the ring to dodge — but **don't bunch \
+					up under her**, since one ring catches everyone in \
+					its 9 tiles. **Reapers in any blast die outright** \
+					— the scatter-marks are free composure crackers if \
+					you can herd Reapers onto them.",
+			),
+		),
 	)
