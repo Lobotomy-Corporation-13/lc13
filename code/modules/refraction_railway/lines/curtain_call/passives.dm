@@ -379,4 +379,96 @@
 					window opens about 20 s later.",
 			),
 		),
+
+		// ---------- zeal_s3n2: The Apotheosis ----------
+
+		/mob/living/simple_animal/hostile/achiyalabopa/refracted = list(
+			list(
+				"title"    = "Untouchable Apotheosis",
+				"severity" = "high",
+				"text"     = "She **cannot be wounded while she stands \
+					as a god**. Her divine pose holds for **up to 90 \
+					seconds** before she descends on her own, enraged — \
+					but you can **break her composure faster** by turning \
+					her own storm against her flock (see **Composure \
+					Cracks**). She chases and casts AoEs the whole time \
+					her pose holds; **enraging her is the only path to \
+					damaging her**.",
+			),
+			list(
+				"title"    = "Pressure of Apotheosis (Awe Struck)",
+				"severity" = "high",
+				"text"     = "Every ~3 seconds she re-applies **Awe \
+					Struck** to every human in her sight. Awe Struck \
+					itself inflicts no stacks — it's a marker. While \
+					awe-struck, **every attack she lands deals 50% \
+					more damage**: melee, Divine Judgment, Thunder \
+					Whip, and Divine Thunderbolt all multiply on \
+					awe-struck targets. **Hope** and **Will of \
+					Humanity** both dispel the marker and grant \
+					immunity for their duration. Only one player can \
+					carry the Coreflame at a time, so the Coreflame \
+					bearer should use the **Hope Aura** action to \
+					spread the buff to teammates and keep the awe \
+					multiplier off them.",
+			),
+			list(
+				"title"    = "Composure Cracks",
+				"severity" = "high",
+				"text"     = "**Mirage Reapers drip from the storm** \
+					around her every ~8 seconds (cap **6 alive**). \
+					**Killing them with your own weapons does nothing.** \
+					What breaks her is **watching her own storm unmake \
+					her flock** — every Reaper struck down by Divine \
+					Judgment, Thunder Whip, or Divine Thunderbolt is \
+					**instantly unmade** and **brings her enrage 5 \
+					seconds closer**. The strong play is stacking as many \
+					Reapers as possible into a single AoE for a big \
+					composure crack.",
+			),
+			list(
+				"title"    = "Phase 2: Enraged",
+				"severity" = "high",
+				"text"     = "When her composure finally breaks — by \
+					timer or by enough flock-kills — she descends, \
+					enraged. Her defenses settle to **80% DR (60% to \
+					PALE)**. From this point on, **a Coreflame blooms \
+					near her every ~20 seconds** (cap 2 on the ground at \
+					once). Pick one up to gain **Will of Humanity** — a \
+					**Piercing Strike** spell that calls a divine spear \
+					down on a target tile after a **1.5-second delay** \
+					(aim where she'll be, not where she is). On a hit \
+					she's impaled for an **8-second vulnerability window** \
+					(1.5× from RED/WHITE/BLACK, 3× from PALE), the \
+					Coreflame burns out, and the bearer gets **15 \
+					seconds of Hope** — awe immunity and time to grab \
+					the next Coreflame. On a miss, the Coreflame stays \
+					— you can try again after the spell cooldown.",
+			),
+		),
+
+		/mob/living/simple_animal/hostile/mirage_reaper = list(
+			list(
+				"title"    = "Sacrifice the Flock",
+				"severity" = "high",
+				"text"     = "**Killing a Mirage Reaper with player damage \
+					does nothing.** What hurts Achiyalabopa is watching \
+					her **own AoEs** (Divine Judgment, Thunder Whip, \
+					Divine Thunderbolt) cut them down — any AoE that \
+					touches a Reaper **instantly unmakes it**, no damage \
+					roll. **Each Reaper unmade this way cracks her \
+					composure and brings her enrage 5 seconds closer**, \
+					so the puzzle is herding as many as possible into a \
+					single AoE.",
+			),
+			list(
+				"title"    = "Burst on Hope",
+				"severity" = "medium",
+				"text"     = "A Reaper that touches a **Will of Humanity** \
+					holder **burns to nothing instantly** — letting the \
+					Coreflame-bearer melee them straight off the field. \
+					Note this is a player kill, so her composure is \
+					unaffected.",
+			),
+		),
 	)
