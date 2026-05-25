@@ -311,4 +311,72 @@
 					Resets the moment he takes damage during a window.",
 			),
 		),
+
+		// ---------- zeal_s3n1: The One That Got Out ----------
+
+		/mob/living/simple_animal/hostile/mirror_shattered_reaper/refracted = list(
+			list(
+				"title"    = "Mirror Variants",
+				"severity" = "high",
+				"text"     = "**Refraction Sweep** and **Crossing Over** \
+					each crack the Reaper apart — every Variant she \
+					spawns comes out at **1.5% of her current Max HP** \
+					(≈150 each at base) and she pays that cost per \
+					Variant. **3 Variants in Phase 1** = ~4.5% Max HP \
+					per wave; **6 Variants in Phase 2** = ~9% Max HP per \
+					wave. **A hard cap of 3 alive Variants in P1, 6 in \
+					P2** — if she'd spawn into a full board, the extra \
+					slots just don't spawn (and she pays no cost for \
+					the skipped ones). On the **next** Refraction \
+					Sweep or Crossing Over cast, **only the Variants \
+					standing inside the AoE's damage area** are absorbed \
+					back into her — refunding **their full ≈150 HP \
+					each** and granting **+1 Reverberation Charge each** \
+					(cap 15). Variants outside the AoE keep walking — \
+					they have to be caught by another AoE later, or \
+					killed. A Variant killed before absorb leaves its \
+					HP share **unrefunded** AND deals **an extra ≈150 \
+					HP self-damage** to the Reaper (its summon cost \
+					again) — plus strips **1 stack of Resolute Glass**. \
+					**At 0 stacks (no resistance), that kill-bonus is \
+					multiplied ×2.5** (~375 per kill), so finishing the \
+					ladder turns every subsequent kill into a much \
+					heavier punish. **Killing the Variants is how you \
+					bleed the Reaper and starve Reverberation.** \
+					**Visual stockpile cue:** every **4 absorbed \
+					Variants** spawns a translucent purple afterimage \
+					of her that trails one tile behind her until \
+					Reverberation fires.",
+			),
+			list(
+				"title"    = "Resolute Glass",
+				"severity" = "high",
+				"text"     = "Carries **8 stacks of Resolute Glass** at \
+					phase entry — a flat **10% damage reduction per \
+					stack** (**80% at full ladder, 0% at empty**). \
+					**Loses 1 stack per Mirror Variant killed** \
+					(permanent within the phase, no regen). The **only \
+					way she gains stacks is by entering a new phase** — \
+					she starts P1 with 8, and Phase 2 entry refreshes \
+					her back to 8. At 80% DR almost nothing chips her; \
+					**every Variant killed is worth 10% of her total \
+					damage taken from there on**, so clearing the \
+					Variants is the only way to make direct DPS land.",
+			),
+			list(
+				"title"    = "Phase 2: Hood Torn Back",
+				"severity" = "high",
+				"text"     = "At **50% HP** her hood tears open and the \
+					stitched-composite face underneath comes out. \
+					**Variants per summon doubles to 6** (the alive-cap \
+					rises with it to 6), **Refraction Sweep's cone gains \
+					1 tile of depth** (P1's 4-deep / ~10-tile cone → P2's \
+					5-deep / ~13-tile cone), **Crossing Over's warning \
+					area grows from 5×5 to 7×7**, **Resolute Glass \
+					refreshes** back to 8 stacks, and if **Reverberation \
+					Charge ≥ 5** she immediately fires Reverberation as \
+					the transition. Otherwise the next Reverberation \
+					window opens about 20 s later.",
+			),
+		),
 	)
