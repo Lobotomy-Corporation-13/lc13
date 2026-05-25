@@ -105,6 +105,8 @@
 		/obj/item/tresmetal,
 	)
 
+	jcorp_banned = TRUE
+
 	rareloot =	list(
 		/obj/item/workshop_mod/regular/red,
 		/obj/item/workshop_mod/regular/white,

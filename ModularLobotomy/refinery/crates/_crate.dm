@@ -31,6 +31,8 @@
 	var/cosmeticchance = 0 //These do not count on the total odds of a crate
 	var/repmodifier = 0
 	var/crate_multiplier = 2
+	/// Set this var to TRUE to make it impossible for this crate's contents to show up in J Corp lootboxes.
+	var/jcorp_banned = FALSE
 
 /obj/structure/lootcrate/Initialize()
 	. = ..()
