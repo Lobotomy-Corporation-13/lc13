@@ -389,4 +389,67 @@
 					takes the PALE burst at their current position.",
 			),
 		),
+
+		// ---------- zeal_s2n2: The Greed Touched Clone ----------
+
+		/mob/living/simple_animal/hostile/greed_touched_eric/refracted = list(
+			list(
+				"name"     = "Sanguine Feast",
+				"damage"   = "80 RED + 3 Bleed per human standing on a marked tile when the tendril lands; **non-human mobs under 800 HP on a marked tile are executed instantly** and feed him ~half their max HP in bloodfeast",
+				"cooldown" = "~30 seconds",
+				"desc"     = "Locks in place and marks the tile under every \
+					human in view (~7 tiles). After ~4s a blood tendril \
+					rises through each marked tile and spikes whatever \
+					stands on it — step off the marked tile during the \
+					wind-up to dodge. Catches his own summons too, which \
+					is how he refills mid-fight.",
+			),
+			list(
+				"name"     = "Greed Burst",
+				"damage"   = "30 RED to every enemy in view (~8 tiles) + 2 Bleed (60 RED if **Glutted**). Each live summon also bursts in place for 50 RED + 2 Bleed in a 3x3 around their tile.",
+				"cooldown" = "Auto-fires when his bloodfeast pool fills (~700 in P1, ~500 in P2)",
+				"desc"     = "2s telegraph (warning tiles ring the room and he \
+					convulses), then a room-wide RED pulse + every live \
+					summon is **sacrificed** in place. The minion bursts hit \
+					harder than the room-wide pulse because you can step \
+					away from them. Each sacrificed minion beams its blood \
+					back to him on death, so a fat wave means a fatter \
+					shield after the window closes.",
+			),
+			list(
+				"name"     = "Hardblood Arts",
+				"damage"   = "90 RED + 3 Bleed + 1s Knockdown per strike, 3 strikes per cycle (eating all three is ~68% of a 200-HP / 50%-DR player's pool)",
+				"cooldown" = "~10 seconds in phase 3 only",
+				"desc"     = "Phase 3 only. Drops three **blood-sparkle \
+					brackets** around the target (one per landing \
+					direction, ~1s apart) — these are the tell. Then says \
+					'Heart's snare!' and dashes in from each direction in \
+					turn, striking with ~1s between each. Step off the \
+					target tile between sparkles to break the bracket; \
+					Knockdown chains into the next teleport if you eat one.",
+			),
+			list(
+				"name"     = "Sanguine Rush",
+				"damage"   = "40 RED + 2 Bleed per tile hit in a 3-wide strip; charges three times per cast (a player caught in all three takes 120+ raw before DR)",
+				"cooldown" = "~15 seconds in phase 3 only",
+				"desc"     = "Phase 3 only. After a 2s wind-up (he hunches \
+					forward, claws weeping crimson) **and a short shout of \
+					'BEHOLD, CHILDREN!'**, barrels through up to 7 tiles \
+					toward the nearest enemy and back-to-back repeats it \
+					two more times. Each step paints a 3x3 strip with \
+					blood splatters and tags everything in it. Alternates \
+					with **Hardblood Arts** to keep his last phase \
+					unpredictable.",
+			),
+			list(
+				"name"     = "P3 Melee",
+				"damage"   = "25-35 RED on melee swing",
+				"cooldown" = "Standard simple-animal swing cadence",
+				"desc"     = "Phase 3 only. He stops being a pure summoner \
+					and starts actually swinging at adjacent targets. \
+					Pursuit also speeds up (move_to_delay drops from 16 \
+					to 6) — staying in melee range becomes a steady chip \
+					instead of a free zone.",
+			),
+		),
 	)

@@ -100,11 +100,13 @@
 		boss = TRUE)
 
 	AddNode("zeal_s2n2", "zeal_s2n2_spawns",
-		"Sector 2, Act II: <pending>",
-		"<pending flavor — admin-event reference goes here>.",
+		"Sector 2, Act II: The Greed Touched Clone",
+		"The next scene is staged in a clinic that has finished turning \
+			into a fleshly temple. A bloody copy of a polite man we may \
+			have met stands at its altar, and every drop spilt here \
+			belongs to him.",
 		list(
-			// TODO: replace with this sector's boss mob
-			/mob/living/simple_animal/hostile/netherworld/migo/refracted = 1,
+			/mob/living/simple_animal/hostile/greed_touched_eric/refracted = 1,
 		),
 		boss = TRUE)
 

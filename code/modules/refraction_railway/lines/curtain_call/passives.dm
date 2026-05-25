@@ -220,4 +220,95 @@
 					within 5 tiles.",
 			),
 		),
+
+		// ---------- zeal_s2n2: The Greed Touched Clone ----------
+
+		/mob/living/simple_animal/hostile/greed_touched_eric/refracted = list(
+			list(
+				"title"    = "Greed Touched",
+				"severity" = "info",
+				"text"     = "Doesn't strike on his own. Spawns waves of \
+					followers — **X-Corp fixers in phase 1**, **greed-touched \
+					clan units in phase 2** — **3 per wave every 12s**, \
+					**capped at 6 alive**. Each kill beams blood back to \
+					him: **+(maxHealth ÷ 3) bloodfeast** per kill (a 180-HP \
+					scout = 60; a 550-HP defender = 183). If **20s pass \
+					with no minion death**, the next wave size **doubles**.",
+			),
+			list(
+				"title"    = "Unholy Presence",
+				"severity" = "info",
+				"text"     = "In phases 1 and 2 he creeps toward whoever \
+					he's locked onto at **~1.6 seconds per tile** and tries \
+					to settle **1 tile away (adjacent)**. He never swings — \
+					being adjacent is just where he channels his ranged \
+					feast from.",
+			),
+			list(
+				"title"    = "Bloodfeast Shield",
+				"severity" = "high",
+				"text"     = "**Subtracts up to 150 raw damage** from every \
+					hit. Almost every workshop weapon bounces clean off \
+					him while his pool is full; only very heavy crits chip \
+					through. The subtracted amount scales linearly with \
+					his bloodfeast pool: **150 at a full pool, 0 when \
+					empty**. **Killing his summons is the way to drop the \
+					shield** — direct DPS is wasted until the pool empties \
+					out (or a Greed Burst forces the window).",
+			),
+			list(
+				"title"    = "Sanguine Feast",
+				"severity" = "high",
+				"text"     = "Marks the tile under **every human player in \
+					view (7 tiles)**, then **locks in place for 4s** while \
+					the markers resolve. On resolve a blood tendril rises \
+					through each marked tile and spikes whatever stands on \
+					it: **120 RED + 3 Bleed** to a human; any **non-human \
+					mob with under 800 max HP** on the tile is **executed \
+					instantly** and feeds him **+(its maxHealth ÷ 2) \
+					bloodfeast** — easily 200+ blood if multiple summons \
+					get caught. **30s cooldown.**",
+			),
+			list(
+				"title"    = "Greed Burst",
+				"severity" = "high",
+				"text"     = "When his pool fills (**700 in P1, 500 in \
+					P2**): **2s telegraph**, then a **room-wide pulse for \
+					30 RED + 2 Bleed** (every enemy in view 8 tiles, \
+					unavoidable), AND every live follower **bursts in place \
+					for 50 RED + 2 Bleed in a 3×3** around them (avoidable \
+					by spacing). After the burst his shield drops for \
+					**6s** — the window to push damage.",
+			),
+			list(
+				"title"    = "The Famine",
+				"severity" = "high",
+				"text"     = "Below 50% HP: the X-Corp roster gives way to \
+					the **greed-touched clan** (defender, gunner, sniper, \
+					harpooner, drone, scout). His **bloodfeast cap drops \
+					from 700 to 500**, so bursts come noticeably faster. \
+					Wave cadence and vulnerable window length are unchanged.",
+			),
+			list(
+				"title"    = "Hardblood Greed",
+				"severity" = "high",
+				"text"     = "Below 25% HP: **summons stop entirely** and \
+					his shield **permanently collapses** (blood_resistance \
+					forced to 0). On a **10s cycle** he teleport-strikes \
+					the closest target **3 times in a row, 1s between \
+					strikes**: each lands **90 RED + 3 Bleed + 1s \
+					Knockdown**. Knockdown chains into the next teleport, \
+					so missing a dodge floors you for the follow-up. \
+					Alternates with **Sanguine Rush** (15s cooldown), a \
+					three-dash bloody charge along a 3x3 strip.",
+			),
+			list(
+				"title"    = "Glutted",
+				"severity" = "medium",
+				"text"     = "If **two Greed Bursts** fire without him \
+					taking any HP damage in the windows between them, the \
+					**next burst's room-wide pulse doubles (30 → 60 RED)**. \
+					Resets the moment he takes damage during a window.",
+			),
+		),
 	)
