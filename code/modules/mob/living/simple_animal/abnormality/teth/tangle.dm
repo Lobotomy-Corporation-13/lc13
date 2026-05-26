@@ -43,7 +43,7 @@
 	return FALSE
 
 /mob/living/simple_animal/hostile/abnormality/tangle/Life()
-	..()
+	. = ..()
 	if(.)
 		return
 	if(IsContained())
