@@ -89,7 +89,7 @@
 			var/mob/living/carbon/human/H = L
 			if(H.z != z)
 				//Kill them if they change Z levels.
-				if(H in on_z)
+				if(H.tag in on_z)
 					if(H.stat == DEAD)	//They can't live without a head, so if we got here, they're dead.
 						continue
 
@@ -107,8 +107,8 @@
 			H.deal_damage(symphony_damage, WHITE_DAMAGE, src, flags = (DAMAGE_FORCED | DAMAGE_UNTRACKABLE))
 
 			//Logging you if you're new.
-			if(!(H in on_z))
-				on_z |= H
+			if(!(H.tag in on_z))
+				on_z |= H.tag
 				to_chat(H, span_warning("You shouldn't leave until the performance is over..."))
 
 			//#TODO
