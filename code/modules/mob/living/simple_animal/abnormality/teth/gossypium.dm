@@ -12,6 +12,7 @@
 	ranged = TRUE
 	melee_damage_lower = 8
 	melee_damage_upper = 12
+	ranged_cooldown_time = 2
 	rapid_melee = 2
 	melee_damage_type = BLACK_DAMAGE
 	stat_attack = HARD_CRIT
@@ -39,8 +40,8 @@
 	gift_type =  /datum/ego_gifts/fragments
 	abnormality_origin = ABNORMALITY_ORIGIN_LIMBUS
 
-	var/angy = FALSE
-	var/calm_down_time = 30 SECONDS
+	var/burst_cooldown
+	var/burst_cooldown_time = 10 SECONDS
 
 /mob/living/simple_animal/hostile/abnormality/gossypium/Initialize(mapload) //Code shamelessly yoinked from Nosferatu
 	. = ..()
@@ -49,23 +50,167 @@
 /mob/living/simple_animal/hostile/abnormality/gossypium/Life()
 	. = ..()
 	var/datum/component/bloodfeast/gathered_blood = GetComponent(/datum/component/bloodfeast)
-	if(!angy && gathered_blood)
-		if(gathered_blood.blood_amount > 500)
-			Enrage(gathered_blood)
-		return
+	if(gathered_blood.blood_amount > 500)
+		Enrage(gathered_blood)
+		gathered_blood.blood_amount -= 500 //Prevent it from looping
+	return
 
 /mob/living/simple_animal/hostile/abnormality/gossypium/proc/Enrage(datum/component/bloodfeast/bloodfeast_component)
 	if(IsContained()) // No bricking the mob by Berzerking when we aren't supposed to.
 		return
-	angy = TRUE
 	playsound(get_turf(src), 'sound/abnormalities/nosferatu/transform.ogg', 35, 8)
 	animate(src, 1 SECONDS, color = "#882020", transform = matrix()*1.10)
-	ChangeMoveToDelay(move_to_delay - 0.5)
-	rapid_melee += 0.5
+	ranged_cooldown_time -= 0.1
+	rapid_melee += 0.5 //Was gonna have this douche calm down after a while and not stack but it kept breaking so you'll just have to deal with the bastard snowballing
 
-//fuck's sake man, how do I get this numbskull to calm down without breaking everything...
-//	calm_down_time = (world.time+calm_down_time) //Calms down after a bit
-//	if(calm_down_time>world.time)
-//		angy = FALSE
-//		ChangeMoveToDelayBy(move_to_delay + 0.5) //resets the movespeed so stacks don't result in permanent zoomies
-//		return
+/mob/living/simple_animal/hostile/abnormality/gossypium/Move()
+	if(!can_act)
+		return
+	return ..()
+
+/mob/living/simple_animal/hostile/abnormality/gossypium/Goto(target, delay, minimum_distance)
+	if(!can_act)
+		return
+	return ..()
+
+/mob/living/simple_animal/hostile/abnormality/gossypium/MoveToTarget(list/possible_targets)
+	if(!can_act)
+		return TRUE
+	return ..()
+
+/mob/living/simple_animal/hostile/abnormality/gossypium/DestroySurroundings()
+	if(!can_act)
+		return
+	return ..()
+
+
+/mob/living/simple_animal/hostile/abnormality/gossypium/AttackingTarget(atom/attacked_target)
+	if(!can_act)
+		return
+
+	if(!target)
+		GiveTarget(attacked_target)
+
+	if(client)
+		OpenFire()
+		return
+
+	if(attacked_target) // You'd think this should be "attacked_target" but no this shit still uses target I hate it. // Now uses attacked_target I love it.
+		if(ismecha(attacked_target))
+			if(burst_cooldown <= world.time && prob(50))
+				thornBurst()
+			else
+				OpenFire()
+			return
+		else if(isliving(attacked_target))
+			var/mob/living/L = attacked_target
+			if(L.stat != DEAD)
+				if(burst_cooldown <= world.time && prob(50))
+					thornBurst()
+				else
+					OpenFire()
+			return
+	return ..()
+
+/mob/living/simple_animal/hostile/abnormality/gossypium/proc/thornBurst() //expanding square in melee
+	if(burst_cooldown > world.time || !can_act)
+		return
+	burst_cooldown = world.time + burst_cooldown_time
+	can_act = FALSE
+	var/turf/origin = get_turf(src)
+	playsound(origin, 'sound/abnormalities/ebonyqueen/strongcharge.ogg', 75, 0, 5)
+	playsound(origin, 'sound/creatures/venus_trap_hurt.ogg', 75, 0, 5)
+	SLEEP_CHECK_DEATH(9)
+	var/last_dist = 0
+	for(var/turf/T in spiral_range_turfs(2, origin))
+		if(!T)
+			continue
+		var/dist = get_dist(origin, T)
+		if(dist > last_dist)
+			last_dist = dist
+			SLEEP_CHECK_DEATH(1 + min(2 - last_dist, 12) * 0.25) //gets faster as it gets further out
+		new /obj/effect/temp_visual/vine(T, src)
+	SLEEP_CHECK_DEATH(8)
+	icon_state = icon_living
+	SLEEP_CHECK_DEATH(3)
+	can_act = TRUE
+
+/mob/living/simple_animal/hostile/abnormality/gossypium/OpenFire()
+	if(!can_act)
+		return
+
+	ranged_cooldown = world.time + ranged_cooldown_time
+	vineStab(target)
+
+/mob/living/simple_animal/hostile/abnormality/gossypium/proc/vineStab(atom/attack_target) //single target
+	if(!can_act)
+		return
+	can_act = FALSE
+	playsound(get_turf(src), 'sound/creatures/venus_trap_hurt.ogg', 75, 0, 5)
+	icon_state = "ebonyqueen_attack2"
+	var/turf/T = get_turf(attack_target)
+	SLEEP_CHECK_DEATH(1)
+	new /obj/effect/temp_visual/vine(T, src)
+	SLEEP_CHECK_DEATH(4)
+	icon_state = icon_living
+	SLEEP_CHECK_DEATH(2)
+	can_act = TRUE
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/obj/effect/temp_visual/vine //Keeping this shit far away for organization purposes
+	name = "thirsting vines"
+	desc = "A target warning you of incoming pain"
+	icon = 'ModularLobotomy/_Lobotomyicons/tegu_effects.dmi'
+	icon_state = "vines"
+	duration = 6
+	layer = RIPPLE_LAYER	//We want this HIGH. SUPER HIGH. We want it so that you can absolutely, guaranteed, see exactly what is about to hit you.
+	var/vine_damage = 25 //40 less Black Damage than Ebony
+	var/mob/living/source //who made this, anyway
+
+
+/obj/effect/temp_visual/vine/Initialize(mapload, new_source)
+	. = ..()
+	if(new_source)
+		source = new_source
+	addtimer(CALLBACK(src, PROC_REF(explode)), 0.5 SECONDS)
+
+/obj/effect/temp_visual/vine/proc/explode()
+	var/turf/target_turf = get_turf(src)
+	if(!target_turf)
+		return
+	if(QDELETED(source) || source?.stat == DEAD || !source)
+		return
+	playsound(target_turf, 'sound/abnormalities/ebonyqueen/attack.ogg', 40, 0, 8)
+	new /obj/effect/temp_visual/thornspike(target_turf)
+	var/list/hit = source.HurtInTurf(target_turf, list(), damage = vine_damage, damage_type = BLACK_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, mech_damage = vine_damage/2, attack_type = (ATTACK_TYPE_SPECIAL))
+	for(var/mob/living/L in hit)
+		if(L.stat == DEAD || L.throwing)
+			continue
+		L.visible_message(span_userdanger("[src] knocks [L] away!"), span_userdanger("[src] knocks you away!"))
+		var/turf/thrownat = get_ranged_target_turf(src, pick(GLOB.alldirs), 2)
+		L.throw_at(thrownat, 1, 1, spin = TRUE, force = MOVE_FORCE_OVERPOWERING, gentle = TRUE)
+	for(var/obj/vehicle/sealed/mecha/M in hit) //also damage mechs.
+		for(var/O in M.occupants)
+			var/mob/living/occupant = O
+			to_chat(occupant, span_userdanger("Your [M.name] is struck by [src]!"))
+	qdel(src)
