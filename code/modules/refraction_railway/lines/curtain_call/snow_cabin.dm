@@ -741,13 +741,13 @@
 	// (alive minions of that type) + (pending pods/prisons of that type)
 	// so the cap survives the whole spawn → hatch → death cycle.
 	if(phase == 2)
-		if(world.time >= next_meatpod_spawn
-			&& length(active_meatpods) < meatpod_cap
+		if(world.time >= next_meatpod_spawn \
+			&& length(active_meatpods) < meatpod_cap \
 			&& (CountActiveMeatlings() + length(active_meatpods)) < meatling_cap)
 			SpawnMeatpod()
 			next_meatpod_spawn = world.time + meatpod_spawn_interval
-		if(world.time >= next_ice_prison_spawn
-			&& length(active_ice_prisons) < ice_prison_cap
+		if(world.time >= next_ice_prison_spawn \
+			&& length(active_ice_prisons) < ice_prison_cap \
 			&& (CountActiveYagaslaves() + length(active_ice_prisons)) < yagaslave_cap)
 			SpawnIcePrison()
 			next_ice_prison_spawn = world.time + ice_prison_spawn_interval

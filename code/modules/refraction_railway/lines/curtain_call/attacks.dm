@@ -48,14 +48,6 @@
 					tile (step off it to dodge). Only the finisher detonates \
 					Tremor (burst at 25).",
 			),
-			list(
-				"name"     = "Basic Melee",
-				"damage"   = "15-20 RED + 1 Tremor + 1 Overheat",
-				"cooldown" = "Replaces basic melee",
-				"desc"     = "Even the Capo's plain swing tags the target with \
-					Tremor; while the Capo still has rounds loaded, it also \
-					stacks Overheat. Cannot burst.",
-			),
 		),
 
 		/mob/living/simple_animal/hostile/rat/capo_rat/refracted = list(
@@ -79,18 +71,17 @@
 				"name"     = "Ante Up",
 				"damage"   = "No direct damage; scatters 5 dice (9 in phase 2)",
 				"cooldown" = "Fight start, ~15s after each Wager, and on phase change",
-				"desc"     = "Flings oversized dice across the floor, kept apart \
-					and each starting on 1. Shoot or strike a die to spin it ~3s \
-					onto a random face; its face counts toward the table total. A \
-					6 locks and can't be re-rolled.",
+				"desc"     = "Flings 5 dice (9 in phase 2) across the floor onto \
+					non-adjacent tiles. See **The Table** passive for spin/lock \
+					rules.",
 			),
 			list(
 				"name"     = "Loaded Dice",
 				"damage"   = "BLACK in a 3x3, scaling with the face (5x5 on a 6)",
 				"cooldown" = "Whenever a spun die lands",
-				"desc"     = "Every die slams the floor when it lands - the higher \
-					it rolls, the harder it hits and the wider the blast. Rolling \
-					can also tempt the dealer into a **Snake Eyes**.",
+				"desc"     = "On a die landing: slams the floor at its tile. \
+					Damage and radius scale with the face shown (per damage \
+					field).",
 			),
 			list(
 				"name"     = "The Wager",
@@ -98,27 +89,22 @@
 				"cooldown" = "~40s (~30s in phase 2); each landing adds time (cap ~20s out), and hitting Azarus rushes it",
 				"desc"     = "A ~6s call (Azarus raises its hands and the screen \
 					flashes), then an unavoidable hit to everyone in the room. \
-					Damage scales down with the table total - reach the target \
-					score and the House busts for near-zero, leaving Azarus \
-					staggered for ~5 seconds. The red/gold numbers over its head \
-					are the countdown and the current score.",
+					See **The Wager** passive for the bust window. The red/gold \
+					numbers over its head are the countdown and the current score.",
 			),
 			list(
 				"name"     = "Snake Eyes",
 				"damage"   = "35 BLACK in a 3x3 area",
 				"cooldown" = "~10 seconds",
 				"desc"     = "Flicks a die at the target's tile; after a short \
-					telegraph it lands in a 3x3 blast. Step off the marked tiles \
-					to dodge. The blast also knocks any die showing 4+ loose for \
-					a fresh spin.",
+					telegraph it lands in a 3x3 blast.",
 			),
 			list(
 				"name"     = "House Edge",
 				"damage"   = "30 BLACK + knockback in a 5x5 area",
 				"cooldown" = "~12 seconds",
-				"desc"     = "When players crowd into melee, Azarus telegraphs a \
-					5x5 sweep around itself, then strikes and knocks survivors \
-					back. Also knocks any die showing 4+ loose for a fresh spin.",
+				"desc"     = "On a player entering melee: telegraphs a 5x5 sweep \
+					around itself, then strikes and knocks survivors back.",
 			),
 			list(
 				"name"     = "Mirror Gambit",
@@ -126,8 +112,8 @@
 				"cooldown" = "Once, on entering phase 2",
 				"desc"     = "Conjures four stationary mirror-doubles. They never \
 					move or melee - they only echo its **Snake Eyes** and **House \
-					Edge** a beat after it casts them. Shatter a mirror to stop \
-					its echo.",
+					Edge** a beat after it casts them. Killing a mirror stops its \
+					echo.",
 			),
 		),
 
@@ -142,9 +128,8 @@
 				"desc"     = "Enters a 2.5s parry stance (deep-red tint), \
 					rooted. First melee or ranged hit landed during the \
 					window is consumed and triggers the counter (blinks to a \
-					ranged shooter first). The counter scales inversely with \
-					the form's current HP — 40 at full HP, up to 120 near \
-					death. If no hit lands, the stance ends without a counter.",
+					ranged shooter first). If no hit lands, the stance ends \
+					without a counter.",
 			),
 			list(
 				"name"     = "Backstab (Butcher form)",
@@ -163,7 +148,7 @@
 			),
 			list(
 				"name"     = "Poise Strike (Kurokumo Captain form)",
-				"damage"   = "72 RED in a 3-deep forward arc (the kurokumo blade's built-in 3x crit baked in)",
+				"damage"   = "72 RED in a 3-deep forward arc",
 				"cooldown" = "9 seconds",
 				"desc"     = "Rooted 1.4s wind-up. Telegraphs a 3-deep arc in \
 					the form's facing direction, then resolves.",
@@ -401,8 +386,7 @@
 					human in view (~7 tiles). After ~4s a blood tendril \
 					rises through each marked tile and spikes whatever \
 					stands on it — step off the marked tile during the \
-					wind-up to dodge. Catches his own summons too, which \
-					is how he refills mid-fight.",
+					wind-up to dodge.",
 			),
 			list(
 				"name"     = "Greed Burst",
@@ -410,27 +394,27 @@
 				"cooldown" = "Auto-fires when his bloodfeast pool fills (~700 in P1, ~500 in P2)",
 				"desc"     = "2s telegraph (warning tiles ring the room and he \
 					convulses), then a room-wide RED pulse + every live \
-					summon is **sacrificed** in place. The minion bursts hit \
-					harder than the room-wide pulse because you can step \
-					away from them. Each sacrificed minion beams its blood \
-					back to him on death, so a fat wave means a fatter \
-					shield after the window closes.",
+					summon is **sacrificed** in place. Minion bursts are \
+					positional (3x3 around each summon); the room-wide \
+					pulse is unavoidable. Each sacrificed minion beams its \
+					blood back to him on death.",
 			),
 			list(
 				"name"     = "Hardblood Arts",
-				"damage"   = "90 RED + 3 Bleed + 1s Knockdown per strike, 3 strikes per cycle (eating all three is ~68% of a 200-HP / 50%-DR player's pool)",
+				"damage"   = "90 RED + 3 Bleed + 1s Knockdown per strike, 3 strikes per cycle",
 				"cooldown" = "~10 seconds in phase 3 only",
 				"desc"     = "Phase 3 only. Drops three **blood-sparkle \
 					brackets** around the target (one per landing \
 					direction, ~1s apart) — these are the tell. Then says \
 					'Heart's snare!' and dashes in from each direction in \
 					turn, striking with ~1s between each. Step off the \
-					target tile between sparkles to break the bracket; \
-					Knockdown chains into the next teleport if you eat one.",
+					target tile between sparkles to break the bracket. \
+					Knockdown duration overlaps the next teleport-strike's \
+					wind-up.",
 			),
 			list(
 				"name"     = "Sanguine Rush",
-				"damage"   = "40 RED + 2 Bleed per tile hit in a 3-wide strip; charges three times per cast (a player caught in all three takes 120+ raw before DR)",
+				"damage"   = "40 RED + 2 Bleed per tile hit in a 3-wide strip; charges three times per cast",
 				"cooldown" = "~15 seconds in phase 3 only",
 				"desc"     = "Phase 3 only. After a 2s wind-up (he hunches \
 					forward, claws weeping crimson) **and a short shout of \
@@ -438,18 +422,14 @@
 					toward the nearest enemy and back-to-back repeats it \
 					two more times. Each step paints a 3x3 strip with \
 					blood splatters and tags everything in it. Alternates \
-					with **Hardblood Arts** to keep his last phase \
-					unpredictable.",
+					with **Hardblood Arts** on cooldown.",
 			),
 			list(
 				"name"     = "P3 Melee",
 				"damage"   = "25-35 RED on melee swing",
 				"cooldown" = "Standard simple-animal swing cadence",
-				"desc"     = "Phase 3 only. He stops being a pure summoner \
-					and starts actually swinging at adjacent targets. \
-					Pursuit also speeds up (move_to_delay drops from 16 \
-					to 6) — staying in melee range becomes a steady chip \
-					instead of a free zone.",
+				"desc"     = "Phase 3 only. Begins basic-melee swings on \
+					adjacent targets. Move delay drops from 16 to 6.",
 			),
 		),
 
@@ -464,16 +444,13 @@
 					cone tiles in purple mirror-shard chevrons for \
 					**1.5 seconds** — the shape is a wide swipe with \
 					the broad base right in front of her, narrowing to \
-					a single tile at the far edge. **She is rooted in \
-					place and can't melee while the cone charges** — \
-					this is the safe window to flank her, since the \
-					sides and rear are clear. On resolve she **absorbs \
-					only the Mirror Variants standing inside the cone** \
-					(each refunds its HP share and adds 1 Reverberation \
-					Charge) — Variants outside the cone keep walking. \
-					**Spawns 2 new Variants (4 in Phase 2)** scattered \
-					at random turfs around her (not adjacent — they rift \
-					in 2-5 tiles away).",
+					a single tile at the far edge. She is rooted and \
+					cannot melee during the 1.5s charge; the cone covers \
+					only the forward arc. On resolve: see **Mirror \
+					Variants** passive for the absorb mechanic. **Spawns \
+					3 new Variants (6 in Phase 2)** scattered at random \
+					turfs around her (not adjacent — they rift in 2-5 \
+					tiles away).",
 			),
 			list(
 				"name"     = "Crossing Over",
@@ -488,10 +465,9 @@
 					and slams it — anyone still inside eats the hit. \
 					The warning **does not follow the player** — step \
 					off the painted tiles before the timer ends to \
-					escape. On impact she **absorbs only the Mirror \
-					Variants standing inside the warning area** and \
-					**spawns 2 new ones (4 in Phase 2)** scattered \
-					around her new position.",
+					escape. On impact: see **Mirror Variants** passive \
+					for the absorb mechanic. **Spawns 3 new Variants (6 \
+					in Phase 2)** scattered around her new position.",
 			),
 			list(
 				"name"     = "Reverberation",
@@ -512,9 +488,7 @@
 					instance is three larger hits, a 4-rift instance is \
 					four smaller hits, both summing to 35 BLACK. After \
 					the last instance she rifts back to her starting \
-					tile, and all Reverberation Charges reset to 0. \
-					**Killing Variants before the ult triggers is the \
-					only way to deny her the Charges they'd feed.**",
+					tile, and all Reverberation Charges reset to 0.",
 			),
 		),
 
@@ -523,23 +497,19 @@
 		/mob/living/simple_animal/hostile/achiyalabopa/refracted = list(
 			list(
 				"name"     = "Divine Judgment",
-				"damage"   = "100 PALE per tile, per wave (3 waves). **Instantly unmakes any Mirage Reaper caught in the cross** — each Reaper unmade cracks her composure and brings enrage **5 seconds** closer.",
+				"damage"   = "100 PALE per tile, per wave (3 waves)",
 				"cooldown" = "~15 seconds",
 				"desc"     = "Three waves of cardinal cross-fire, **10 \
 					tiles long in every direction**. Each wave randomly \
 					rolls between a **thin plus** (her own tile included, \
 					arms 1 tile wide) and a **wide plus** (3 tiles wide \
 					with a **safe corridor** along her own row and column). \
-					**1-second telegraph** per wave — the wide-plus's \
-					safe corridor is the only consistent dodge if a wave \
-					rolls that pattern. **Mirage Reapers in the cross \
-					die outright** (no damage roll, just death) — herd \
-					them into the telegraph zones to crack her \
-					composure faster.",
+					**1-second telegraph** per wave. See **Composure \
+					Cracks** for the Reaper-unmake interaction.",
 			),
 			list(
 				"name"     = "Thunder Whip",
-				"damage"   = "100 PALE per tile, struck in waves of 3 sorted by distance. **Instantly unmakes any Mirage Reaper caught in the cone** — each Reaper unmade cracks her composure and brings enrage **5 seconds** closer.",
+				"damage"   = "100 PALE per tile, struck in waves of 3 sorted by distance",
 				"cooldown" = "~20 seconds",
 				"desc"     = "**0.5-second wind-up** (she rears back). \
 					The cone is the slow part — the lash itself walks \
@@ -547,15 +517,12 @@
 					wide**, then **7 deep × 2 wide**, then **9 deep × \
 					3 wide** at the far edge. Strikes resolve in waves \
 					of 3 tiles, sweeping outward from her position — \
-					closer tiles hit first, so backing further into the \
-					cone buys a little time, but the only true dodge is \
-					to step out to the side. **Mirage Reapers in the \
-					cone die outright** (no damage roll) — kite them \
-					into the cone to crack her composure.",
+					closer tiles hit first. See **Composure Cracks** for \
+					the Reaper-unmake interaction.",
 			),
 			list(
 				"name"     = "Divine Thunderbolt",
-				"damage"   = "50 PALE + electrocute in a **3×3 area** around the marker. **Instantly unmakes any Mirage Reaper in the blast** — each Reaper unmade cracks her composure and brings enrage **5 seconds** closer.",
+				"damage"   = "50 PALE + electrocute in a **3×3 area** around the marker",
 				"cooldown" = "~3 seconds; passive",
 				"desc"     = "Drops a marker on **up to 3 humans within \
 					7 tiles** of her, **plus 5 random scatter-marks** on \
@@ -565,11 +532,8 @@
 					ring** for **2 seconds**, then explodes for 50 PALE \
 					across the whole 3×3 (ignores line-of-sight, so \
 					hiding behind a tile inside the ring doesn't help). \
-					Step out of the ring to dodge — but **don't bunch \
-					up under her**, since one ring catches everyone in \
-					its 9 tiles. **Reapers in any blast die outright** \
-					— the scatter-marks are free composure crackers if \
-					you can herd Reapers onto them.",
+					See **Composure Cracks** for the Reaper-unmake \
+					interaction.",
 			),
 		),
 

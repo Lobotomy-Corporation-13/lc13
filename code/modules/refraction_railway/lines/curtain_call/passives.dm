@@ -90,11 +90,11 @@
 			list(
 				"title"    = "The Table",
 				"severity" = "info",
-				"text"     = "Azarus scatters oversized dice across the floor, \
-					each starting on 1. Shoot or strike one to make it spin ~3 \
+				"text"     = "On encounter start and ~15s after each **Wager** \
+					resolves: scatters oversized dice across the floor, each \
+					starting on 1. Shoot or strike one to make it spin ~3 \
 					seconds and land on a random face. A die that lands slams \
-					the floor for BLACK in a small area - bigger on a high roll - \
-					so rolling is a risk as well as a reward.",
+					the floor for BLACK in a small area, bigger on a high roll.",
 			),
 			list(
 				"title"    = "Lock on a Six",
@@ -248,26 +248,11 @@
 				"title"    = "Bloodfeast Shield",
 				"severity" = "high",
 				"text"     = "**Subtracts up to 150 raw damage** from every \
-					hit. Almost every workshop weapon bounces clean off \
-					him while his pool is full; only very heavy crits chip \
-					through. The subtracted amount scales linearly with \
-					his bloodfeast pool: **150 at a full pool, 0 when \
-					empty**. **Killing his summons is the way to drop the \
-					shield** — direct DPS is wasted until the pool empties \
-					out (or a Greed Burst forces the window).",
-			),
-			list(
-				"title"    = "Sanguine Feast",
-				"severity" = "high",
-				"text"     = "Marks the tile under **every human player in \
-					view (7 tiles)**, then **locks in place for 4s** while \
-					the markers resolve. On resolve a blood tendril rises \
-					through each marked tile and spikes whatever stands on \
-					it: **120 RED + 3 Bleed** to a human; any **non-human \
-					mob with under 800 max HP** on the tile is **executed \
-					instantly** and feeds him **+(its maxHealth ÷ 2) \
-					bloodfeast** — easily 200+ blood if multiple summons \
-					get caught. **30s cooldown.**",
+					hit. The subtracted amount scales linearly with his \
+					bloodfeast pool: **150 at a full pool, 0 when empty**. \
+					The pool decreases only when his summons die; direct \
+					damage does not drain it. **Greed Burst** also empties \
+					it.",
 			),
 			list(
 				"title"    = "Greed Burst",
@@ -317,36 +302,49 @@
 		/mob/living/simple_animal/hostile/mirror_shattered_reaper/refracted = list(
 			list(
 				"title"    = "Mirror Variants",
+				"severity" = "medium",
+				"text"     = "On **Refraction Sweep** or **Crossing Over** \
+					cast: spawns Mirror Variants. Each Variant comes out \
+					at **1.5% of the Reaper's current Max HP** (~150 \
+					each at base); she pays that HP cost per Variant. \
+					**3 per cast in Phase 1 (~4.5% Max HP), 6 per cast \
+					in Phase 2 (~9% Max HP).** Hard cap of **3 alive \
+					Variants in P1, 6 in P2** — extra slots don't spawn \
+					and cost nothing.",
+			),
+			list(
+				"title"    = "Reabsorption",
+				"severity" = "medium",
+				"text"     = "On the next **Refraction Sweep** or \
+					**Crossing Over** cast: every Variant standing \
+					inside the AoE damage area is absorbed back into \
+					her. Each refunds its full ~150 HP and grants \
+					**+1 Reverberation Charge** (cap 15). Variants \
+					outside the AoE remain on the field.",
+			),
+			list(
+				"title"    = "Shatter Cost",
 				"severity" = "high",
-				"text"     = "**Refraction Sweep** and **Crossing Over** \
-					each crack the Reaper apart — every Variant she \
-					spawns comes out at **1.5% of her current Max HP** \
-					(≈150 each at base) and she pays that cost per \
-					Variant. **3 Variants in Phase 1** = ~4.5% Max HP \
-					per wave; **6 Variants in Phase 2** = ~9% Max HP per \
-					wave. **A hard cap of 3 alive Variants in P1, 6 in \
-					P2** — if she'd spawn into a full board, the extra \
-					slots just don't spawn (and she pays no cost for \
-					the skipped ones). On the **next** Refraction \
-					Sweep or Crossing Over cast, **only the Variants \
-					standing inside the AoE's damage area** are absorbed \
-					back into her — refunding **their full ≈150 HP \
-					each** and granting **+1 Reverberation Charge each** \
-					(cap 15). Variants outside the AoE keep walking — \
-					they have to be caught by another AoE later, or \
-					killed. A Variant killed before absorb leaves its \
-					HP share **unrefunded** AND deals **an extra ≈150 \
-					HP self-damage** to the Reaper (its summon cost \
-					again) — plus strips **1 stack of Resolute Glass**. \
-					**At 0 stacks (no resistance), that kill-bonus is \
-					multiplied ×2.5** (~375 per kill), so finishing the \
-					ladder turns every subsequent kill into a much \
-					heavier punish. **Killing the Variants is how you \
-					bleed the Reaper and starve Reverberation.** \
-					**Visual stockpile cue:** every **4 absorbed \
-					Variants** spawns a translucent purple afterimage \
-					of her that trails one tile behind her until \
-					Reverberation fires.",
+				"text"     = "On a Variant killed before absorb: its HP \
+					cost goes unrefunded AND the Reaper takes an extra \
+					~150 HP self-damage (its summon cost again), plus \
+					loses **1 stack of Resolute Glass**.",
+			),
+			list(
+				"title"    = "Empty Glass",
+				"severity" = "high",
+				"text"     = "At 0 stacks of **Resolute Glass**: the \
+					**Shatter Cost** self-damage is multiplied \
+					**×2.5** (~375 per Variant kill from there on).",
+			),
+			list(
+				"title"    = "Gathering Echoes",
+				"severity" = "low",
+				"text"     = "Every 4 absorbed Variants: spawns a \
+					translucent purple afterimage of the Reaper that \
+					trails one tile behind her until **Reverberation** \
+					fires (cap 3 afterimages, matching the 15-Charge \
+					cap).",
 			),
 			list(
 				"title"    = "Resolute Glass",
@@ -358,25 +356,19 @@
 					(permanent within the phase, no regen). The **only \
 					way she gains stacks is by entering a new phase** — \
 					she starts P1 with 8, and Phase 2 entry refreshes \
-					her back to 8. At 80% DR almost nothing chips her; \
-					**every Variant killed is worth 10% of her total \
-					damage taken from there on**, so clearing the \
-					Variants is the only way to make direct DPS land.",
+					her back to 8. **Every Variant killed is worth 10% \
+					of her total damage taken from there on.**",
 			),
 			list(
 				"title"    = "Phase 2: Hood Torn Back",
 				"severity" = "high",
-				"text"     = "At **50% HP** her hood tears open and the \
+				"text"     = "At **50% HP**: her hood tears open and the \
 					stitched-composite face underneath comes out. \
 					**Variants per summon doubles to 6** (the alive-cap \
-					rises with it to 6), **Refraction Sweep's cone gains \
-					1 tile of depth** (P1's 4-deep / ~10-tile cone → P2's \
-					5-deep / ~13-tile cone), **Crossing Over's warning \
-					area grows from 5×5 to 7×7**, **Resolute Glass \
-					refreshes** back to 8 stacks, and if **Reverberation \
-					Charge ≥ 5** she immediately fires Reverberation as \
-					the transition. Otherwise the next Reverberation \
-					window opens about 20 s later.",
+					rises with it to 6). **Resolute Glass refreshes** \
+					back to 8 stacks. If **Reverberation Charge ≥ 5** at \
+					the transition, she immediately fires Reverberation; \
+					otherwise the next window opens about 20s later.",
 			),
 		),
 
@@ -388,12 +380,10 @@
 				"severity" = "high",
 				"text"     = "She **cannot be wounded while she stands \
 					as a god**. Her divine pose holds for **up to 90 \
-					seconds** before she descends on her own, enraged — \
-					but you can **break her composure faster** by turning \
-					her own storm against her flock (see **Composure \
-					Cracks**). She chases and casts AoEs the whole time \
-					her pose holds; **enraging her is the only path to \
-					damaging her**.",
+					seconds** before she descends on her own, enraged. \
+					Composure can break earlier — see **Composure \
+					Cracks**. She chases and casts AoEs the whole time \
+					her pose holds.",
 			),
 			list(
 				"title"    = "Pressure of Apotheosis (Awe Struck)",
@@ -407,10 +397,9 @@
 					awe-struck targets. **Hope** and **Will of \
 					Humanity** both dispel the marker and grant \
 					immunity for their duration. Only one player can \
-					carry the Coreflame at a time, so the Coreflame \
-					bearer should use the **Hope Aura** action to \
-					spread the buff to teammates and keep the awe \
-					multiplier off them.",
+					carry the Coreflame at a time. The bearer can use \
+					the **Hope Aura** action to spread Hope to nearby \
+					teammates.",
 			),
 			list(
 				"title"    = "Composure Cracks",
@@ -418,13 +407,9 @@
 				"text"     = "**Mirage Reapers drip from the storm** \
 					around her every ~8 seconds (cap **6 alive**). \
 					**Killing them with your own weapons does nothing.** \
-					What breaks her is **watching her own storm unmake \
-					her flock** — every Reaper struck down by Divine \
-					Judgment, Thunder Whip, or Divine Thunderbolt is \
-					**instantly unmade** and **brings her enrage 5 \
-					seconds closer**. The strong play is stacking as many \
-					Reapers as possible into a single AoE for a big \
-					composure crack.",
+					Every Reaper struck down by Divine Judgment, Thunder \
+					Whip, or Divine Thunderbolt is **instantly unmade** \
+					and **brings her enrage 5 seconds closer**.",
 			),
 			list(
 				"title"    = "Phase 2: Enraged",
@@ -452,23 +437,18 @@
 				"title"    = "Sacrifice the Flock",
 				"severity" = "high",
 				"text"     = "**Killing a Mirage Reaper with player damage \
-					does nothing.** What hurts Achiyalabopa is watching \
-					her **own AoEs** (Divine Judgment, Thunder Whip, \
-					Divine Thunderbolt) cut them down — any AoE that \
+					does nothing.** Any AoE from Achiyalabopa (Divine \
+					Judgment, Thunder Whip, Divine Thunderbolt) that \
 					touches a Reaper **instantly unmakes it**, no damage \
 					roll. **Each Reaper unmade this way cracks her \
-					composure and brings her enrage 5 seconds closer**, \
-					so the puzzle is herding as many as possible into a \
-					single AoE.",
+					composure and brings her enrage 5 seconds closer**.",
 			),
 			list(
 				"title"    = "Burst on Hope",
 				"severity" = "medium",
-				"text"     = "A Reaper that touches a **Will of Humanity** \
-					holder **burns to nothing instantly** — letting the \
-					Coreflame-bearer melee them straight off the field. \
-					Note this is a player kill, so her composure is \
-					unaffected.",
+				"text"     = "On contact with a **Will of Humanity** \
+					holder: burns to nothing instantly. Counts as a \
+					player kill — does not crack her composure.",
 			),
 		),
 
@@ -502,14 +482,11 @@
 			list(
 				"title"    = "Phase 2 (below 50% HP)",
 				"severity" = "high",
-				"text"     = "Weakpoint targets shift to the Phase 2 row \
-					of **Weakpoint Spawning**. **Bone Stab Line** fires \
-					two perpendicular sweeps at once and **Bladed Teeth** \
-					covers 40% of the floor instead of 25% — both keep \
-					their raw cooldowns. **Ice Spike** and **Ice Shard \
-					Spray** cooldowns × 0.75. Begins spawning **Meatpods** \
-					and **Ice Prisons**. Adds **Ice Shard Spray** to the \
-					attack rotation.",
+				"text"     = "Below 50% HP: weakpoint targets shift to \
+					the Phase 2 row of **Weakpoint Spawning**. Begins \
+					spawning **Meatpods** and **Ice Prisons**. Adds \
+					**Ice Shard Spray** to the attack rotation. See each \
+					attack card for its Phase 2 variant.",
 			),
 			list(
 				"title"    = "Meatpod",
