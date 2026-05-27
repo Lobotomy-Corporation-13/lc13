@@ -716,8 +716,12 @@
 /turf/open/indestructible/necropolis/air,
 /area/refraction/nova_flare)
 "Rg" = (
-/obj/structure/refraction_briefing,
-/turf/closed/indestructible/reinforced/cheap/blue,
+/obj/structure/refraction_briefing{
+	custom_frame = 1;
+	inner_frame_color = "#00bcff";
+	outer_frame_color = "#0035ff"
+	},
+/turf/open/floor/mineral/titanium/tiled/blue,
 /area/refraction/nova_flare)
 "Rh" = (
 /obj/structure/chair/sofa/corp/corner{
@@ -900,6 +904,7 @@ mb
 mb
 mb
 mb
+mb
 "}
 (2,1,1) = {"
 mb
@@ -944,6 +949,7 @@ ad
 ad
 ad
 ad
+mb
 mb
 mb
 mb
@@ -1006,6 +1012,7 @@ mb
 mb
 mb
 mb
+mb
 "}
 (4,1,1) = {"
 mb
@@ -1050,6 +1057,7 @@ lG
 SQ
 SQ
 ad
+mb
 mb
 mb
 mb
@@ -1112,6 +1120,7 @@ mb
 mb
 mb
 mb
+mb
 "}
 (6,1,1) = {"
 mb
@@ -1157,6 +1166,7 @@ SQ
 SQ
 ad
 mb
+ad
 ad
 ad
 ad
@@ -1213,6 +1223,7 @@ mb
 ad
 fH
 Se
+Se
 ts
 yl
 Rh
@@ -1263,8 +1274,9 @@ sm
 SQ
 ad
 mb
-Rg
+ad
 Se
+bR
 bR
 bR
 cs
@@ -1319,6 +1331,7 @@ mb
 ad
 qX
 bR
+Rg
 bR
 cs
 bx
@@ -1369,8 +1382,9 @@ sm
 SQ
 ad
 mb
-Rg
+ad
 Se
+bR
 bR
 bR
 cs
@@ -1424,6 +1438,7 @@ ad
 mb
 ad
 fH
+Se
 Se
 ts
 Kr
@@ -1482,6 +1497,7 @@ ad
 ad
 ad
 ad
+ad
 mb
 "}
 (13,1,1) = {"
@@ -1527,6 +1543,7 @@ SQ
 SQ
 SQ
 ad
+mb
 mb
 mb
 mb
@@ -1589,6 +1606,7 @@ mb
 mb
 mb
 mb
+mb
 "}
 (15,1,1) = {"
 mb
@@ -1633,6 +1651,7 @@ SQ
 SQ
 SQ
 ad
+mb
 mb
 mb
 mb
@@ -1695,8 +1714,10 @@ mb
 mb
 mb
 mb
+mb
 "}
 (17,1,1) = {"
+mb
 mb
 mb
 mb
@@ -1801,6 +1822,7 @@ mb
 mb
 mb
 mb
+mb
 "}
 (19,1,1) = {"
 mb
@@ -1848,6 +1870,7 @@ pe
 pe
 Ts
 ad
+mb
 mb
 mb
 mb
@@ -1907,6 +1930,7 @@ mb
 mb
 mb
 mb
+mb
 "}
 (21,1,1) = {"
 mb
@@ -1954,6 +1978,7 @@ bH
 pe
 pe
 ad
+mb
 mb
 mb
 mb
@@ -2013,6 +2038,7 @@ mb
 mb
 mb
 mb
+mb
 "}
 (23,1,1) = {"
 mb
@@ -2060,6 +2086,7 @@ lo
 ES
 ES
 ad
+mb
 mb
 mb
 mb
@@ -2119,6 +2146,7 @@ mb
 mb
 mb
 mb
+mb
 "}
 (25,1,1) = {"
 mb
@@ -2166,6 +2194,7 @@ mi
 pf
 pf
 ad
+mb
 mb
 mb
 mb
@@ -2225,6 +2254,7 @@ mb
 mb
 mb
 mb
+mb
 "}
 (27,1,1) = {"
 mb
@@ -2272,6 +2302,7 @@ pf
 pf
 pf
 ad
+mb
 mb
 mb
 mb
@@ -2331,6 +2362,7 @@ mb
 mb
 mb
 mb
+mb
 "}
 (29,1,1) = {"
 mb
@@ -2378,6 +2410,7 @@ Jf
 mh
 Jf
 ad
+mb
 mb
 mb
 mb
@@ -2437,6 +2470,7 @@ mb
 mb
 mb
 mb
+mb
 "}
 (31,1,1) = {"
 mb
@@ -2490,6 +2524,7 @@ mb
 mb
 mb
 mb
+mb
 "}
 (32,1,1) = {"
 mb
@@ -2519,6 +2554,7 @@ me
 me
 me
 ad
+mb
 mb
 mb
 mb
@@ -2596,6 +2632,7 @@ mb
 mb
 mb
 mb
+mb
 "}
 (34,1,1) = {"
 mb
@@ -2644,6 +2681,7 @@ ES
 ES
 ES
 ad
+mb
 mb
 mb
 mb
@@ -2702,6 +2740,7 @@ mb
 mb
 mb
 mb
+mb
 "}
 (36,1,1) = {"
 mb
@@ -2750,6 +2789,7 @@ pf
 pf
 ES
 ad
+mb
 mb
 mb
 mb
@@ -2808,6 +2848,7 @@ mb
 mb
 mb
 mb
+mb
 "}
 (38,1,1) = {"
 mb
@@ -2856,6 +2897,7 @@ pf
 pf
 ES
 ad
+mb
 mb
 mb
 mb
@@ -2914,6 +2956,7 @@ mb
 mb
 mb
 mb
+mb
 "}
 (40,1,1) = {"
 mb
@@ -2962,6 +3005,7 @@ pf
 pf
 ES
 ad
+mb
 mb
 mb
 mb
@@ -3020,6 +3064,7 @@ mb
 mb
 mb
 mb
+mb
 "}
 (42,1,1) = {"
 mb
@@ -3068,6 +3113,7 @@ pf
 mi
 ES
 ad
+mb
 mb
 mb
 mb
@@ -3126,6 +3172,7 @@ mb
 mb
 mb
 mb
+mb
 "}
 (44,1,1) = {"
 mb
@@ -3174,6 +3221,7 @@ pf
 pf
 ES
 ad
+mb
 mb
 mb
 mb
@@ -3232,6 +3280,7 @@ mb
 mb
 mb
 mb
+mb
 "}
 (46,1,1) = {"
 mb
@@ -3280,6 +3329,7 @@ pf
 pf
 ES
 ad
+mb
 mb
 mb
 mb
@@ -3338,6 +3388,7 @@ mb
 mb
 mb
 mb
+mb
 "}
 (48,1,1) = {"
 mb
@@ -3386,6 +3437,7 @@ pf
 pf
 ES
 ad
+mb
 mb
 mb
 mb
@@ -3444,6 +3496,7 @@ mb
 mb
 mb
 mb
+mb
 "}
 (50,1,1) = {"
 mb
@@ -3492,6 +3545,7 @@ pf
 pf
 ES
 ad
+mb
 mb
 mb
 mb
@@ -3550,6 +3604,7 @@ mb
 mb
 mb
 mb
+mb
 "}
 (52,1,1) = {"
 mb
@@ -3598,6 +3653,7 @@ pf
 pf
 ES
 ad
+mb
 mb
 mb
 mb
@@ -3656,6 +3712,7 @@ mb
 mb
 mb
 mb
+mb
 "}
 (54,1,1) = {"
 mb
@@ -3704,6 +3761,7 @@ ES
 ES
 ES
 ad
+mb
 mb
 mb
 mb
@@ -3762,8 +3820,10 @@ mb
 mb
 mb
 mb
+mb
 "}
 (56,1,1) = {"
+mb
 mb
 mb
 mb

@@ -97,6 +97,15 @@ SUBSYSTEM_DEF(refraction_railway)
 			qdel(L)
 			continue
 		lines[L.id] = L
+	// Re-key in display-name order so the hub sidebar lists "Line 1: ..."
+	// above "Line 2: ..." regardless of subtype iteration order.
+	var/list/sorted = list()
+	for(var/id in lines)
+		sorted += lines[id]
+	sortTim(sorted, GLOBAL_PROC_REF(cmp_name_asc))
+	lines = list()
+	for(var/datum/refraction_line/L in sorted)
+		lines[L.id] = L
 
 /datum/controller/subsystem/refraction_railway/proc/InitializeMobTips()
 	mob_tips = list()
@@ -338,6 +347,21 @@ SUBSYSTEM_DEF(refraction_railway)
 
 /proc/cmp_refraction_entry_asc(list/A, list/B)
 	return A["time_ds"] - B["time_ds"]
+
+/// TRUE if the given ckey has ever finished any refraction-railway line
+/// (i.e. appears on any leaderboard). Used by the Star Memories door to
+/// gate access to the hidden room.
+/datum/controller/subsystem/refraction_railway/proc/HasCkeyCompletedAnyLine(ckey)
+	if(!ckey)
+		return FALSE
+	for(var/line_id in leaderboards)
+		var/list/board = leaderboards[line_id]
+		if(!islist(board))
+			continue
+		for(var/list/entry as anything in board)
+			if(entry["ckey"] == ckey)
+				return TRUE
+	return FALSE
 
 // ---------- Lane management ----------
 

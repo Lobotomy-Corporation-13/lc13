@@ -8,11 +8,30 @@
 /obj/structure/refraction_briefing
 	name = "refraction sector briefing"
 	desc = "A wall-mounted display showing the upcoming sector's hostile composition."
-	icon = 'icons/obj/computer.dmi'
-	icon_state = "cameras"
-	density = FALSE
+	icon = 'ModularLobotomy/_Lobotomyicons/teaser_mobs.dmi'
+	icon_state = "departmentdrone"
+	density = TRUE
 	anchored = TRUE
 	resistance_flags = INDESTRUCTIBLE
+	/// Mappers flip this on to swap the briefing to its framed look —
+	/// "departmentdrone_base" sprite + two color-tintable frame overlays.
+	var/custom_frame = FALSE
+	/// Color tints applied to the inner and outer frame overlays when
+	/// custom_frame is enabled. Hex strings ("#ffffff" leaves the sprite
+	/// at its authored color).
+	var/inner_frame_color = "#ffffff"
+	var/outer_frame_color = "#ffffff"
+
+/obj/structure/refraction_briefing/Initialize(mapload)
+	. = ..()
+	if(custom_frame)
+		icon_state = "departmentdrone_base"
+		var/mutable_appearance/inner = mutable_appearance(icon, "departmentdrone_inner_frame")
+		inner.color = inner_frame_color
+		add_overlay(inner)
+		var/mutable_appearance/outer = mutable_appearance(icon, "departmentdrone_outer_frame")
+		outer.color = outer_frame_color
+		add_overlay(outer)
 
 /obj/structure/refraction_briefing/attack_hand(mob/user)
 	. = ..()

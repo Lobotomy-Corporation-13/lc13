@@ -471,4 +471,123 @@
 					unaffected.",
 			),
 		),
+
+		// ---------- zeal_s3n2: The Snow Cabin ----------
+
+		/mob/living/simple_animal/hostile/snow_cabin/refracted = list(
+			list(
+				"title"    = "Untouchable Cabin",
+				"severity" = "high",
+				"text"     = "All direct damage to the cabin does nothing \
+					— melee, items, projectiles, and area effects. Its HP \
+					moves only via weakpoint deaths (see **HP / Damage \
+					Funnel**).",
+			),
+			list(
+				"title"    = "HP / Damage Funnel",
+				"severity" = "high",
+				"text"     = "On an **Eye** or **Mouth** death: the cabin \
+					takes BRUTE damage equal to the killed weakpoint's max \
+					HP.",
+			),
+			list(
+				"title"    = "Weakpoint Spawning",
+				"severity" = "medium",
+				"text"     = "Every ~1s: refills weakpoints toward a \
+					target count on random floor tiles (skipping tiles \
+					that already host a weakpoint or hatching event). \
+					**Phase 1: 6 Eyes + 4 Mouths. Phase 2: 12 Eyes + 10 \
+					Mouths.**",
+			),
+			list(
+				"title"    = "Phase 2 (below 50% HP)",
+				"severity" = "high",
+				"text"     = "Weakpoint targets shift to the Phase 2 row \
+					of **Weakpoint Spawning**. **Bone Stab Line** fires \
+					two perpendicular sweeps at once and **Bladed Teeth** \
+					covers 40% of the floor instead of 25% — both keep \
+					their raw cooldowns. **Ice Spike** and **Ice Shard \
+					Spray** cooldowns × 0.75. Begins spawning **Meatpods** \
+					and **Ice Prisons**. Adds **Ice Shard Spray** to the \
+					attack rotation.",
+			),
+			list(
+				"title"    = "Meatpod",
+				"severity" = "medium",
+				"text"     = "Phase 2, every 12s: spawns a pulsing fleshy \
+					pod on a random floor tile. Cannot be attacked. 4s \
+					after spawn it bursts, spawning one **Meatling**. \
+					Caps: 3 pre-burst pods, **2 alive Meatlings** \
+					(spawning halts when full).",
+			),
+			list(
+				"title"    = "Ice Prison",
+				"severity" = "medium",
+				"text"     = "Phase 2, every 14s: a small block of ice \
+					grows on a random floor tile. Cannot be attacked. \
+					Cycles through three growth stages over ~12s, then \
+					cracks and spawns one **Yagaslave**. Caps: 2 \
+					pre-hatch prisons, **1 alive Yagaslave** (spawning \
+					halts when full).",
+			),
+		),
+
+		/mob/living/simple_animal/hostile/snow_cabin_eye = list(
+			list(
+				"title"    = "Stationary Watcher",
+				"severity" = "info",
+				"text"     = "Cannot move. Every 1s: rotates to face the \
+					nearest living player.",
+			),
+			list(
+				"title"    = "Cabin Weakpoint",
+				"severity" = "medium",
+				"text"     = "On its death: deals BRUTE damage to the \
+					cabin equal to its own max HP.",
+			),
+		),
+
+		/mob/living/simple_animal/hostile/snow_cabin_mouth = list(
+			list(
+				"title"    = "Four-Stage Cycle",
+				"severity" = "medium",
+				"text"     = "Cycles **closed → opening → open → closing → \
+					closed**, repeating. Closed: 4s. Opening: 1.1s. Open: \
+					3s. Closing: 1.1s. **Bite** can only fire during the \
+					open stage.",
+			),
+			list(
+				"title"    = "Bite",
+				"severity" = "high",
+				"text"     = "Open stage only: bites adjacent humans via \
+					the standard hostile AI tick. The chomp sprite \
+					flashes for 0.6s on each connect. Attempted bites in \
+					the closed, opening, or closing stages are silently \
+					rejected.",
+			),
+			list(
+				"title"    = "Cabin Weakpoint",
+				"severity" = "medium",
+				"text"     = "On its death: deals BRUTE damage to the \
+					cabin equal to its own max HP.",
+			),
+		),
+
+		/mob/living/simple_animal/hostile/cabin_meatling = list(
+			list(
+				"title"    = "Summoned by Meatpods",
+				"severity" = "info",
+				"text"     = "Spawned by a **Meatpod** bursting. Its \
+					death does not damage the cabin.",
+			),
+		),
+
+		/mob/living/simple_animal/hostile/cabin_yagaslave = list(
+			list(
+				"title"    = "Summoned by Ice Prisons",
+				"severity" = "info",
+				"text"     = "Spawned by an **Ice Prison** cracking open. \
+					Its death does not damage the cabin.",
+			),
+		),
 	)

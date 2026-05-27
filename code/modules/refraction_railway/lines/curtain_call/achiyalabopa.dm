@@ -1,5 +1,5 @@
 /*
- * Curtain Call — zeal_s3n2: Achiyalabopa.
+ * Curtain Call — zeal_s4n2: Achiyalabopa.
  *
  * An actor who climbed too high. The stage became their temple, the
  * audience their congregation, and somewhere along the line they

@@ -572,4 +572,49 @@
 					you can herd Reapers onto them.",
 			),
 		),
+
+		// ---------- zeal_s3n2: The Snow Cabin ----------
+
+		/mob/living/simple_animal/hostile/snow_cabin/refracted = list(
+			list(
+				"name"     = "Bone Stab Line",
+				"damage"   = "60 RED per tile along a 3-wide stripe sweeping wall to wall (Phase 2: two perpendicular sweeps simultaneously)",
+				"cooldown" = "12 seconds",
+				"desc"     = "Picks a random cardinal direction and a \
+					random 3-wide perpendicular slice of the floor. The \
+					full stripe shows a directional wood-splinter warning \
+					for 1.5s, then bone spikes raise one 1×3 / 3×1 chunk \
+					at a time, walking across the room every 0.1s until \
+					they hit the opposite wall. Phase 2: two perpendicular \
+					sweeps fire at the same time — one on the N–S axis, \
+					one on the E–W axis.",
+			),
+			list(
+				"name"     = "Bladed Teeth",
+				"damage"   = "50 RED per tile on 25% of all floor tiles (Phase 2: 40%)",
+				"cooldown" = "10 seconds",
+				"desc"     = "Marks a fraction of the entire floor with a \
+					red warning for 1.2s. Then teeth rise from every \
+					marked tile, bite once, and vanish after 0.6s.",
+			),
+			list(
+				"name"     = "Ice Spike",
+				"damage"   = "100 PALE per tile across a 3×3 area",
+				"cooldown" = "18 seconds (~13.5s in Phase 2)",
+				"desc"     = "Picks a random player. Their tile and the 8 \
+					tiles around it show the shaking-ice-shards warning \
+					for 1.2s, then ice spikes resolve across the full 3×3 \
+					(one of two visual variants picked at random per cast).",
+			),
+			list(
+				"name"     = "Ice Shard Spray",
+				"damage"   = "80 PALE per tile on 6–10 random floor tiles within 3 tiles of a player",
+				"cooldown" = "28 seconds (~21s in Phase 2), Phase 2 only",
+				"desc"     = "Picks a random player. Marks 6 to 10 \
+					random floor tiles within 3 tiles of them with the \
+					shaking ice-shard warning for 2s, then each marked \
+					tile resolves into a pile of shards hitting any \
+					human on it.",
+			),
+		),
 	)
