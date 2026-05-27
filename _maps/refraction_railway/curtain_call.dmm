@@ -118,6 +118,12 @@
 /obj/effect/landmark/refraction/start_point/zeal_s1n1,
 /turf/open/floor/stone,
 /area/refraction/curtain_call)
+"nV" = (
+/obj/structure/refraction_briefing,
+/turf/open/floor/mineral/titanium{
+	color = "#589662"
+	},
+/area/refraction/curtain_call)
 "os" = (
 /obj/structure/railing{
 	dir = 8
@@ -283,10 +289,6 @@
 	dir = 10
 	},
 /turf/open/floor/stone,
-/area/refraction/curtain_call)
-"FY" = (
-/obj/structure/refraction_briefing,
-/turf/closed/indestructible/reinforced/cheap/green,
 /area/refraction/curtain_call)
 "Gy" = (
 /obj/structure/chair/sofa/corp/corner{
@@ -576,7 +578,7 @@ JY
 JY
 JY
 JY
-JY
+Of
 Of
 Of
 Of
@@ -668,9 +670,9 @@ JY
 JY
 JY
 JY
-JY
 Of
 nf
+mP
 mP
 bH
 Ol
@@ -760,9 +762,9 @@ JY
 JY
 JY
 JY
-JY
-FY
+Of
 mP
+CO
 CO
 CO
 aJ
@@ -852,10 +854,10 @@ JY
 JY
 JY
 JY
-JY
 Of
 YY
 CO
+nV
 CO
 aJ
 Lz
@@ -944,9 +946,9 @@ JY
 JY
 JY
 JY
-JY
-FY
+Of
 mP
+CO
 CO
 CO
 aJ
@@ -1036,9 +1038,9 @@ JY
 JY
 JY
 JY
-JY
 Of
 nf
+mP
 mP
 bH
 EU
@@ -1128,7 +1130,7 @@ JY
 JY
 JY
 JY
-JY
+Of
 Of
 Of
 Of
@@ -3591,7 +3593,7 @@ xn
 xn
 xn
 Hy
-xn
+bA
 Hy
 xn
 xn
