@@ -194,9 +194,13 @@
 	// ---- Greed Burst ----
 	var/burst_telegraph_time = 2 SECONDS
 	var/burst_window_time    = 6 SECONDS
-	// Room-wide raw damage; halved by the standard 50% player DR. Kept
-	// modest because there is no positional dodge — every fight will eat it.
-	var/burst_player_damage  = 30
+	/// Total RED damage pool for the room-wide pulse — split evenly across
+	/// every mob caught in view(8) at detonation, including Eric's own
+	/// summons. Alone, the pulse is nearly lethal; in a full swarm, the
+	/// followers soak most of it. This is the lever that ties Eric's
+	/// "kill the summons first" tension to immediate survival pressure:
+	/// drain the pool too aggressively and you have nothing to hide behind.
+	var/burst_total_damage   = 400
 	// Localized 3x3 around each sacrificed minion; only hits players who
 	// stand close, so it punishes failure to space. Heavier than the
 	// room-wide pulse precisely because players have agency to avoid it.
@@ -536,15 +540,23 @@
 	if(dying || stat == DEAD)
 		can_act = TRUE
 		return
-	// Detonation: room-wide RED pulse on players + sacrifice all live summons.
+	// Detonation: a single RED damage pool split across every live mob in
+	// view, summons included. Eric himself is excluded. Bleed only lands on
+	// humans — summons soak the share but don't bleed for flavor.
 	playsound(get_turf(src), 'sound/effects/explosion1.ogg', 100, FALSE, 8)
-	var/burst_damage = glutted ? burst_player_damage * 2 : burst_player_damage
+	var/total_damage = glutted ? burst_total_damage * 2 : burst_total_damage
+	var/list/burst_targets = list()
 	for(var/mob/living/L in view(8, src))
-		if(L == src || faction_check_mob(L))
+		if(L == src || QDELETED(L) || L.stat == DEAD)
 			continue
-		L.deal_damage(burst_damage, RED_DAMAGE, src,
-			attack_type = (ATTACK_TYPE_RANGED | ATTACK_TYPE_SPECIAL))
-		L.apply_lc_bleed(2)
+		burst_targets += L
+	if(length(burst_targets))
+		var/split = round(total_damage / length(burst_targets))
+		for(var/mob/living/L in burst_targets)
+			L.deal_damage(split, RED_DAMAGE, src,
+				attack_type = (ATTACK_TYPE_RANGED | ATTACK_TYPE_SPECIAL))
+			if(ishuman(L))
+				L.apply_lc_bleed(2)
 	// Iterate over a snapshot — M.death() fires OnSummonDeath, which mutates summoned_mobs.
 	for(var/mob/living/M in summoned_mobs.Copy())
 		if(QDELETED(M) || M.stat == DEAD)

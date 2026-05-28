@@ -632,6 +632,12 @@
 	var/obj/effect/landmark/refraction/reload_point/reload_landmark
 	var/mob/living/simple_animal/hostile/thumb_east_capo/capo_target
 	var/load_pickup_time = 4 SECONDS
+	/// move_to_delay used while running the reload package (to_reload and
+	/// to_capo legs). Half the base 4-tick value, so the rat hauls. The
+	/// "loading" stage parks the rat in place and is unaffected. Reset
+	/// to initial(move_to_delay) whenever reload_mode returns to
+	/// "fighting", on EnterDowned, and on BeginDeathFade.
+	var/reload_move_to_delay = 2
 
 	// Downed loop (Elliot pattern).
 	var/downed       = FALSE
@@ -842,8 +848,20 @@
 		return
 	reload_mode = "to_reload"
 	LoseTarget()
+	SetReloadSpeedActive()
 	visible_message(span_warning("[src] scurries off to fetch ammunition!"))
 	StepReloadRun()
+
+// Blue-shepherd-style speed boost: swap move_to_delay and call UpdateSpeed
+// so both BYOND's walk_to ticks AND the cached movespeed modifier reflect
+// the new pace. SetReloadSpeedInactive restores `initial(move_to_delay)`.
+/mob/living/simple_animal/hostile/rat/capo_rat/proc/SetReloadSpeedActive()
+	move_to_delay = reload_move_to_delay
+	UpdateSpeed()
+
+/mob/living/simple_animal/hostile/rat/capo_rat/proc/SetReloadSpeedInactive()
+	move_to_delay = initial(move_to_delay)
+	UpdateSpeed()
 
 /mob/living/simple_animal/hostile/rat/capo_rat/proc/StepReloadRun()
 	if(downed || stat == DEAD)
@@ -852,6 +870,7 @@
 		if("to_reload")
 			if(!reload_landmark || QDELETED(reload_landmark))
 				reload_mode = "fighting"
+				SetReloadSpeedInactive()
 				walk(src, 0)
 				return
 			walk_to(src, reload_landmark, 0, move_to_delay)
@@ -864,6 +883,7 @@
 		if("to_capo")
 			if(!capo_target || QDELETED(capo_target) || capo_target.stat == DEAD)
 				reload_mode = "fighting"
+				SetReloadSpeedInactive()
 				color = saved_color
 				walk(src, 0)
 				return
@@ -872,6 +892,7 @@
 				walk(src, 0)
 				capo_target.Refill()
 				reload_mode = "fighting"
+				SetReloadSpeedInactive()
 				color = saved_color
 
 /mob/living/simple_animal/hostile/rat/capo_rat/proc/FinishLoading()
@@ -914,6 +935,7 @@
 	status_flags |= GODMODE
 	walk(src, 0)
 	reload_mode  = "fighting"
+	SetReloadSpeedInactive()
 	LoseTarget()
 	icon_state   = icon_dead
 	saved_color  = color
@@ -961,6 +983,7 @@
 	td_charging = FALSE
 	downed = FALSE
 	reload_mode = "fighting"
+	SetReloadSpeedInactive()
 	status_flags &= ~GODMODE
 	move_resist = initial(move_resist)
 	density = FALSE

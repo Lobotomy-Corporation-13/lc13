@@ -492,7 +492,62 @@
 			),
 		),
 
-		// ---------- zeal_s3n2: The Apotheosis ----------
+		// ---------- zeal_s4n1: A Sermon Without a Mouth ----------
+
+		/mob/living/simple_animal/hostile/distortion/blade_priest/refracted = list(
+			list(
+				"name"     = "Sermon Volley",
+				"damage"   = "80 BLACK + 10 Rupture per blade on the line (20 Rupture on the **Skull Mark** target); each launched blade runs a 3-dash chain",
+				"cooldown" = "20 seconds; per-blade reuse: see **Disconnect Cadence**",
+				"desc"     = "Triggers a blue order — see **Issuing an \
+					Order**. Spawns blades one by one at the priest's tile, \
+					0.3 seconds apart; each blade's first dash aims at a \
+					freshly-repicked target. After landing, each blade \
+					chains 2 more autonomous dashes (3s park between) \
+					before returning to orbit.",
+			),
+			list(
+				"name"     = "Scatter",
+				"damage"   = "80 BLACK + 10 Rupture per blade on the line (20 Rupture on the **Skull Mark** target during follow-up dashes); each launched blade runs a 3-dash chain",
+				"cooldown" = "18 seconds; per-blade reuse: see **Disconnect Cadence**",
+				"desc"     = "Triggers a red order — see **Issuing an \
+					Order**. Every launched blade emerges at the priest's \
+					tile at the same instant, each in a distinct compass \
+					direction from a shuffled 8-direction pool. First dash \
+					is direction-locked and ignores targets; the 2 follow-up \
+					dashes pick targets normally.",
+			),
+			list(
+				"name"     = "Inversion",
+				"damage"   = "80 BLACK + 10 Rupture per blade crossing on the priest's tile (20 Rupture per blade on a **Skull Mark** target standing in a line); each launched blade then runs a 2-dash autonomous chain",
+				"cooldown" = "30 seconds; per-blade reuse: see **Disconnect Cadence**",
+				"desc"     = "Triggers a purple order — see **Issuing an \
+					Order**. Each launched blade teleports to a perimeter \
+					tile 6 tiles from the priest in a distinct compass \
+					direction, telegraphs 1.5 seconds with a line through \
+					the priest's tile, then all blades dash inward through \
+					the priest simultaneously. After crossing, each blade \
+					chains 2 autonomous dashes before returning to orbit.",
+			),
+			list(
+				"name"     = "Body Sweep",
+				"damage"   = "35 BLACK in a 5x5 around the priest; throws caught humans 3 tiles outward",
+				"cooldown" = "5 seconds; triggers while a human is within 2 tiles",
+				"desc"     = "Telegraphs the 5x5, 0.9s wind-up, then \
+					resolves. The priest is rooted during the wind-up.",
+			),
+			list(
+				"name"     = "Skull Mark",
+				"damage"   = "No direct damage",
+				"cooldown" = "12 seconds; mark lasts 8 seconds (max 1 active)",
+				"desc"     = "Tags a random live human in view 8 with a \
+					skull overlay. While the mark holds, **Blade Dash**, \
+					**Sermon Volley**, and **Verdict's Cage** all target \
+					the marked player first.",
+			),
+		),
+
+		// ---------- zeal_s4n2: The Apotheosis ----------
 
 		/mob/living/simple_animal/hostile/achiyalabopa/refracted = list(
 			list(
