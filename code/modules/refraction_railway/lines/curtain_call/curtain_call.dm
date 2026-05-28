@@ -155,8 +155,7 @@
 			met with kindness. He has since revised the lesson - and he \
 			believes he is helping.",
 		list(
-			// TODO: replace with The Distorted Priest boss mob (lore_notes.md)
-			/mob/living/simple_animal/hostile/netherworld/migo/refracted = 1,
+			/mob/living/simple_animal/hostile/distortion/blade_priest/refracted = 1,
 		),
 		boss = TRUE)
 

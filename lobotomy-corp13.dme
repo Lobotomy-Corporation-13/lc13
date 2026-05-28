@@ -3652,6 +3652,7 @@
 #include "code\modules\refraction_railway\lines\curtain_call\attacks.dm"
 #include "code\modules\refraction_railway\lines\curtain_call\azarus.dm"
 #include "code\modules\refraction_railway\lines\curtain_call\capo_and_rat.dm"
+#include "code\modules\refraction_railway\lines\curtain_call\blade_priest.dm"
 #include "code\modules\refraction_railway\lines\curtain_call\curtain_call.dm"
 #include "code\modules\refraction_railway\lines\curtain_call\greed_touched_eric.dm"
 #include "code\modules\refraction_railway\lines\curtain_call\landmarks.dm"

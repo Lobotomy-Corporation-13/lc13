@@ -115,9 +115,11 @@
 	layer = BELOW_MOB_LAYER
 	duration = 15
 
-// Permanent floor scarring. Cleaned up when the cabin dies. Only the
-// cabin's floor-bound parts leave these behind — mouths and hatched
-// meatpods. Eyes (mounted on walls) and free-roaming minions don't.
+// Persistent floor scarring. Tracked on the parent cabin so they can be
+// faded out together when the cabin dies (each crack gets its own random
+// interval so the room "rots closed" organically rather than all-at-once).
+// Only the cabin's floor-bound parts leave these behind — mouths and
+// hatched meatpods. Eyes (mounted on walls) and free-roaming minions don't.
 /obj/effect/snow_cabin_meat_crack
 	name = "meat crack"
 	desc = "The floorboards have split apart, showing something pink and warm beneath."
@@ -128,6 +130,19 @@
 	layer = ABOVE_OPEN_TURF_LAYER
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	resistance_flags = INDESTRUCTIBLE
+	var/mob/living/simple_animal/hostile/snow_cabin/parent_cabin
+
+/obj/effect/snow_cabin_meat_crack/Initialize(mapload, mob/living/simple_animal/hostile/snow_cabin/cabin)
+	. = ..()
+	if(cabin)
+		parent_cabin = cabin
+		cabin.active_meat_cracks += src
+
+/obj/effect/snow_cabin_meat_crack/Destroy()
+	if(parent_cabin && !QDELETED(parent_cabin))
+		parent_cabin.active_meat_cracks -= src
+	parent_cabin = null
+	return ..()
 
 // ---------- Eye weakpoint ----------
 
@@ -319,7 +334,7 @@
 	if(parent_cabin)
 		parent_cabin.OnMouthKilled(src)
 	. = ..()
-	new /obj/effect/snow_cabin_meat_crack(get_turf(src))
+	new /obj/effect/snow_cabin_meat_crack(get_turf(src), parent_cabin)
 	QDEL_IN(src, 5)
 
 // ---------- Meatpod hatching event + meatling minion ----------
@@ -358,7 +373,7 @@
 	visible_message(span_warning("[src] splits open!"))
 	playsound(T, 'sound/effects/splat.ogg', 70, TRUE)
 	// The pod was anchored to the floor — it leaves a scar where it burst.
-	new /obj/effect/snow_cabin_meat_crack(T)
+	new /obj/effect/snow_cabin_meat_crack(T, parent_cabin)
 	var/mob/living/simple_animal/hostile/cabin_meatling/M = new(T)
 	if(parent_cabin)
 		M.faction = list("snow_cabin")
@@ -560,6 +575,11 @@
 	/// mouths / meatpods / ice prisons (floor). The cabin doesn't move,
 	/// so the eligible-tile cache is built once and reused.
 	var/weakpoint_spawn_range = 20
+	/// Tile-distance cap from the cabin for considering a player part of
+	/// this encounter. Targeting (AoE picks), gating (HasActivePlayers),
+	/// voice fallback, and the death broadcast all use this — players on
+	/// the other side of the map are ignored even on the same Z.
+	var/arena_range = 20
 	/// Minimum spacing between any two weakpoints (eye OR mouth). A
 	/// candidate tile is rejected if any existing eye or mouth sits
 	/// within this many tiles of it (chebyshev). 2 = at least a 2-tile
@@ -632,6 +652,10 @@
 	var/list/active_ice_prisons = list()
 	/// Spawned minions still alive (meatlings + yagaslaves).
 	var/list/active_minions = list()
+	/// Persistent floor decals left by mouth deaths, meatpod bursts, and
+	/// the cabin's own death scatter. Iterated on cabin death so each
+	/// crack can fade out at its own random interval.
+	var/list/active_meat_cracks = list()
 
 	/// Cached floor tiles (mouths, meatpods, ice prisons spawn here) and
 	/// wall tiles (eyes spawn here). Built lazily on first need.
@@ -780,9 +804,7 @@
 	return (phase == 2) ? mouth_target_phase_2 : mouth_target_phase_1
 
 /mob/living/simple_animal/hostile/snow_cabin/proc/HasActivePlayers()
-	for(var/mob/living/carbon/human/H in GLOB.player_list)
-		if(H.z != z)
-			continue
+	for(var/mob/living/carbon/human/H in range(arena_range, src))
 		if(H.stat == DEAD)
 			continue
 		return TRUE
@@ -826,9 +848,7 @@
 		speaker.say(message)
 		return
 	// No mouth alive — fall back so a line is never silently dropped.
-	for(var/mob/living/carbon/human/H in GLOB.player_list)
-		if(H.z != z)
-			continue
+	for(var/mob/living/carbon/human/H in range(arena_range, src))
 		to_chat(H, span_warning("The walls whisper: \"[message]\""))
 
 // ---------- Floor tile resolution ----------
@@ -1186,9 +1206,7 @@
 
 /mob/living/simple_animal/hostile/snow_cabin/proc/PickRandomPlayer()
 	var/list/candidates = list()
-	for(var/mob/living/carbon/human/H in GLOB.player_list)
-		if(H.z != z)
-			continue
+	for(var/mob/living/carbon/human/H in range(arena_range, src))
 		if(H.stat == DEAD)
 			continue
 		candidates += H
@@ -1201,14 +1219,12 @@
 /mob/living/simple_animal/hostile/snow_cabin/death(gibbed)
 	. = ..()
 	// Announce + scatter a few more meat_crack decals as the room "rots open."
-	for(var/mob/living/carbon/human/H in GLOB.player_list)
-		if(H.z != z)
-			continue
+	for(var/mob/living/carbon/human/H in range(arena_range, src))
 		to_chat(H, span_userdanger("The cabin breaks apart around you."))
 	var/list/floor = GetFloorTiles()
 	for(var/i in 1 to min(8, length(floor)))
 		var/turf/T = pick(floor)
-		new /obj/effect/snow_cabin_meat_crack(T)
+		new /obj/effect/snow_cabin_meat_crack(T, src)
 	CleanupArena()
 
 /mob/living/simple_animal/hostile/snow_cabin/proc/CleanupArena()
@@ -1232,6 +1248,16 @@
 		if(!QDELETED(M))
 			qdel(M)
 	active_minions.Cut()
+	// Meat cracks fade out at staggered intervals so the room "rots
+	// closed" rather than vanishing all at once. Mirrors the vine-fade
+	// pattern in snow_whites_apple.dm:132-139.
+	for(var/obj/effect/snow_cabin_meat_crack/C as anything in active_meat_cracks)
+		if(QDELETED(C))
+			continue
+		var/del_time = rand(3, 8)
+		animate(C, alpha = 0, time = del_time SECONDS)
+		QDEL_IN(C, del_time SECONDS)
+	active_meat_cracks.Cut()
 
 // ---------- Refraction tuning subtype ----------
 

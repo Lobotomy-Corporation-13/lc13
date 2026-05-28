@@ -75,6 +75,14 @@
 					Capo dry.",
 			),
 			list(
+				"title"    = "Hauling",
+				"severity" = "low",
+				"text"     = "Moves at **double pace** while running its \
+					reload package — both on the way to its reload point \
+					and on the way back to the Capo. Slows to normal once \
+					the magazine is delivered, or if it's downed or killed.",
+			),
+			list(
 				"title"    = "Plays Dead",
 				"severity" = "high",
 				"text"     = "At 1 HP it falls down, takes no damage, and gets \
@@ -258,12 +266,16 @@
 				"title"    = "Greed Burst",
 				"severity" = "high",
 				"text"     = "When his pool fills (**700 in P1, 500 in \
-					P2**): **2s telegraph**, then a **room-wide pulse for \
-					30 RED + 2 Bleed** (every enemy in view 8 tiles, \
-					unavoidable), AND every live follower **bursts in place \
-					for 50 RED + 2 Bleed in a 3×3** around them (avoidable \
-					by spacing). After the burst his shield drops for \
-					**6s** — the window to push damage.",
+					P2**): **2s telegraph**, then a **room-wide pool of \
+					400 RED** split evenly across every live mob in view \
+					8 — players AND Eric's own followers each take a \
+					share, humans bleed for 2. **In a full swarm the \
+					followers soak most of it; alone, the entire pool \
+					lands on you.** On top of that, every live follower \
+					**bursts in place for 50 RED + 2 Bleed in a 3×3** \
+					around them (avoidable by spacing). After the burst \
+					his shield drops for **6s** — the window to push \
+					damage.",
 			),
 			list(
 				"title"    = "The Famine",
@@ -292,8 +304,9 @@
 				"severity" = "medium",
 				"text"     = "If **two Greed Bursts** fire without him \
 					taking any HP damage in the windows between them, the \
-					**next burst's room-wide pulse doubles (30 → 60 RED)**. \
-					Resets the moment he takes damage during a window.",
+					**next burst's pool doubles (400 → 800 total RED)** \
+					before it's split across the crowd. Resets the moment \
+					he takes damage during a window.",
 			),
 		),
 
@@ -372,7 +385,48 @@
 			),
 		),
 
-		// ---------- zeal_s3n2: The Apotheosis ----------
+		// ---------- zeal_s4n1: A Sermon Without a Mouth ----------
+
+		/mob/living/simple_animal/hostile/distortion/blade_priest/refracted = list(
+			list(
+				"title"    = "Possessed Blades",
+				"severity" = "info",
+				"text"     = "On spawn: **4 blades** enter orbit around \
+					the priest. Every **25% HP lost** (**75%, 50%, 25%**): \
+					**+2 blades** join the orbit (**cap 10**). Each order \
+					launches half the currently-orbiting blades into the \
+					active state (floor 2).",
+			),
+			list(
+				"title"    = "Blade Aegis",
+				"severity" = "high",
+				"text"     = "While taking damage: **-10% damage taken per \
+					currently-orbiting blade** (cap **-90%**). Blades \
+					loosed onto the field by any order no longer shield \
+					him — emptying the orbit is what makes him fragile.",
+			),
+			list(
+				"title"    = "Issuing an Order",
+				"severity" = "high",
+				"text"     = "On any blade ability cast: rooted in place \
+					and the body sprite re-colours by attack — **red** for \
+					**Scatter**, **blue** for **Sermon Volley**, **purple** \
+					for **Inversion**. The lock holds for **4 / 5 / 6 \
+					seconds** respectively, persisting after the blade(s) \
+					have left orbit.",
+			),
+			list(
+				"title"    = "Disconnect Cadence",
+				"severity" = "medium",
+				"text"     = "After a blade lands its final chain dash and \
+					returns to orbit, it sits idle **6 seconds** before \
+					becoming eligible for another order. **Scatter**, \
+					**Sermon Volley**, and **Inversion** all skip blades \
+					still inside this reuse window.",
+			),
+		),
+
+		// ---------- zeal_s4n2: The Apotheosis ----------
 
 		/mob/living/simple_animal/hostile/achiyalabopa/refracted = list(
 			list(
