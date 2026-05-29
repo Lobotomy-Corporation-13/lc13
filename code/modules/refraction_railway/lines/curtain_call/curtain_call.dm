@@ -23,7 +23,7 @@
 	description         = "Four acts an unseen director has rehearsed for \
 		you, and a fifth that wants to meet its audience."
 	map_path            = "_maps/refraction_railway/curtain_call.dmm"
-	attribute_set_value = 90
+	attribute_set_value = 80
 	max_lobby_size      = 4
 	section_count       = 5
 	display_color       = "#22c55e"
@@ -62,7 +62,7 @@
 	)
 
 	recommended_tier_lines = list(
-		"- Bring E.G.O. with stat requirements around 90.",
+		"- Bring E.G.O. with stat requirements around 80.",
 	)
 
 /datum/refraction_line/curtain_call/New()

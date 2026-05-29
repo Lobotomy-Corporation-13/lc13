@@ -663,6 +663,17 @@
 
 // ---------- Death ----------
 
+// Mirrors death's afterimage + variant teardown so a hard qdel doesn't orphan the variants or visual layers.
+/mob/living/simple_animal/hostile/mirror_shattered_reaper/Destroy()
+	if(active_afterimages)
+		QDEL_LIST(active_afterimages)
+	for(var/mob/living/simple_animal/hostile/mirror_variant/V in active_variants.Copy())
+		UnregisterSignal(V, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING))
+		if(!QDELETED(V))
+			qdel(V)
+	active_variants.Cut()
+	return ..()
+
 /mob/living/simple_animal/hostile/mirror_shattered_reaper/death(gibbed)
 	dying = TRUE
 	QDEL_LIST(active_afterimages)

@@ -86,9 +86,25 @@
 /obj/structure/azarus_die/Destroy()
 	deltimer(spin_timer)
 	if(owner)
+		UnregisterSignal(owner, COMSIG_PARENT_QDELETING)
 		owner.live_dice -= src
 		owner = null
 	return ..()
+
+/// Two-step bind so the die also auto-qdels if the owner is destroyed
+/// out-of-band (run wipe via WipeRoomReserves, hard-delete, etc.) —
+/// CleanupBoard catches the normal Destroy path, this signal catches
+/// every other path the owner can leave by.
+/obj/structure/azarus_die/proc/BindOwner(mob/living/simple_animal/hostile/azarus/parent)
+	if(owner)
+		UnregisterSignal(owner, COMSIG_PARENT_QDELETING)
+	owner = parent
+	if(owner)
+		RegisterSignal(owner, COMSIG_PARENT_QDELETING, PROC_REF(OnOwnerQdel))
+
+/obj/structure/azarus_die/proc/OnOwnerQdel(datum/source)
+	SIGNAL_HANDLER
+	qdel(src)
 
 /obj/structure/azarus_die/update_overlays()
 	. = ..()
@@ -207,7 +223,7 @@
 	var/wager_base_damage = 200
 	var/score_target = 24
 	/// Each die landing pushes the Wager clock back by this much.
-	var/roll_delay = 1 SECONDS
+	var/roll_delay = 3 SECONDS
 	/// Hard ceiling on how far landings can push the Wager clock out.
 	var/wager_max_countdown = 20 SECONDS
 	var/wager_telegraph = 3 SECONDS
@@ -242,7 +258,7 @@
 	var/mob/living/simple_animal/hostile/azarus/owner
 	/// Phase-2 mirror-doubles. The boss qdel's them on death.
 	var/list/mirrors = list()
-	var/mirror_count = 4
+	var/mirror_count = 2
 	/// Min spacing (tiles) a mirror must keep from the boss and other mirrors.
 	var/mirror_spacing = 3
 	/// Stagger for mimicked attacks: the Nth mirror waits base + N*step (plus
@@ -295,6 +311,16 @@
 	if(!is_mirror)
 		table_center = get_turf(src)
 		hud_timer = addtimer(CALLBACK(src, PROC_REF(UpdateHUD)), 1 SECONDS, TIMER_LOOP | TIMER_STOPPABLE)
+		// Defensive sweep: a previous Azarus instance in the same arena
+		// (e.g., team wiped this room mid-fight) may have left stray dice
+		// behind despite CleanupBoard. Wipe any unowned/orphaned die in
+		// the table area before the fresh fight begins.
+		for(var/obj/structure/azarus_die/D in range(8, src))
+			if(QDELETED(D))
+				continue
+			if(D.owner == src)
+				continue
+			qdel(D)
 
 /mob/living/simple_animal/hostile/azarus/Destroy()
 	deltimer(hud_timer)
@@ -392,13 +418,15 @@
 		if(!QDELETED(existing))
 			placed_turfs += get_turf(existing)
 	var/thrown = 0
-	for(var/i in 1 to count)
-		if(!LAZYLEN(spots))
-			break
+	// Loop until we hit `count` placements OR exhaust every candidate
+	// tile. Previously this was a `for(var/i in 1 to count)` with
+	// `continue` on a spacing failure, which burned one of the `count`
+	// slots per rejected tile and could quietly underspawn the table.
+	// If the spacing rule wipes out every remaining candidate, the
+	// loop exits naturally at LAZYLEN(spots) == 0.
+	while(thrown < count && LAZYLEN(spots))
 		var/turf/T = pick(spots)
 		spots -= T
-		// Reject tiles within 2 of an already-placed die; fall through to the
-		// next candidate if none is far enough.
 		var/too_close = FALSE
 		for(var/turf/P in placed_turfs)
 			if(get_dist(T, P) < 2)
@@ -407,7 +435,7 @@
 		if(too_close)
 			continue
 		var/obj/structure/azarus_die/die = new(T)
-		die.owner = src
+		die.BindOwner(src)
 		live_dice += die
 		placed_turfs += T
 		thrown++
@@ -506,7 +534,9 @@
 	playsound(get_turf(src), 'sound/magic/demon_dies.ogg', 80, FALSE, 10)
 	visible_message(span_nicegreen("[src] busts! The House is left wide open!"))
 	new /obj/effect/temp_visual/cult/sparks(get_turf(src))
-	apply_lc_defense_level_down(8)
+	// Crank every incoming-damage coeff to 4x the baseline (0.5 → 2.0)
+	// across all four LC13 types. EndStagger restores the baseline.
+	ChangeResistances(list(RED_DAMAGE = 2, WHITE_DAMAGE = 2, BLACK_DAMAGE = 2, PALE_DAMAGE = 2))
 	WagerResolved()
 	// Stagger window: stays put and vulnerable before recovering.
 	addtimer(CALLBACK(src, PROC_REF(EndStagger)), 5 SECONDS)
@@ -515,6 +545,8 @@
 	if(stat == DEAD || dying)
 		return
 	can_act = TRUE
+	// Restore the baseline coeffs the boss spawns with.
+	ChangeResistances(list(RED_DAMAGE = 0.5, WHITE_DAMAGE = 0.5, BLACK_DAMAGE = 0.5, PALE_DAMAGE = 0.5))
 
 // A resolved Wager clears the whole table and opens a dead-table window:
 // no dice, no countdown, for wager_intermission_time. OpenTable re-deals.
@@ -645,7 +677,7 @@
 	if(stat == DEAD || dying)
 		return
 	dice_count = 9
-	score_target = 42
+	score_target = 36
 	wager_cooldown_time = 30 SECONDS
 	say(pick(phase_lines))
 	playsound(get_turf(src), 'sound/magic/clockwork/narsie_attack.ogg', 75, FALSE, 8)
@@ -759,8 +791,8 @@
 	icon_state = "herald_mirror"
 	icon_living = "herald_mirror"
 	icon_dead = "herald_mirror"
-	maxHealth = 600
-	health = 600
+	maxHealth = 1000
+	health = 1000
 	melee_damage_lower = 0
 	melee_damage_upper = 0
 	is_mirror = TRUE

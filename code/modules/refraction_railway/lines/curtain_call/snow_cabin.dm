@@ -3,8 +3,11 @@
  *
  * The cabin protects its master by morphing into a dream-place that
  * eats its visitors. Theme: flesh + snow fused. Players fight inside a
- * 15x10 arena pre-built by the mapper (walls = /turf/closed/indestructible/wood,
- * floor = /turf/open/indestructible/hotelwood). The cabin itself is an
+ * 15x10 arena pre-built by the mapper. Floor weakpoints / hatching events
+ * land on any open turf (mouths, meatpods, ice prisons) except the snow
+ * and ice variants the cabin can't pierce; eyes mount on any closed wall
+ * except the fakeglass — see IsValidFloorTile / IsValidWallTile. The
+ * cabin itself is an
  * invisible controller mob; players damage it only through weakpoints
  * it spits up onto the floor (eyes + mouths). On a separate Phase 2
  * timer it also spawns environmental hatching events that disgorge
@@ -661,6 +664,10 @@
 	/// wall tiles (eyes spawn here). Built lazily on first need.
 	var/list/cached_floor_tiles
 	var/list/cached_wall_tiles
+	/// Cached area-lock. Snapshotted on first GetFloorTiles / GetWallTiles
+	/// call (the cabin can't move, so it's safe to freeze once). Tile
+	/// validators reject any turf in a different area.
+	var/area/locked_area
 
 	// Cooldown timestamps (world.time of next ready).
 	var/next_bone_stab = 0
@@ -711,6 +718,11 @@
 /mob/living/simple_animal/hostile/snow_cabin/Initialize(mapload)
 	. = ..()
 	toggle_ai(AI_OFF)
+	// Pin the area-lock at spawn so IsValidFloorTile / IsValidWallTile
+	// reject any turf outside this arena, even before the floor/wall
+	// caches are built. The cabin doesn't move so this never needs to
+	// be refreshed.
+	locked_area = get_area(src)
 	// Start the cabin's tick loop. 1s granularity is plenty.
 	main_tick_timer_id = addtimer(CALLBACK(src, PROC_REF(MainTick)), 1 SECONDS, TIMER_LOOP | TIMER_STOPPABLE)
 	// Seed AoE timers so the first attacks land a couple seconds in.
@@ -853,10 +865,49 @@
 
 // ---------- Floor tile resolution ----------
 
+/// TRUE if T is a floor the cabin can sprout a weakpoint or hatch event
+/// through. Tile must be in the cabin's own area (area-lock prevents
+/// cross-arena bleed when multiple arenas share a Z). Snow and ice
+/// variants are excluded — the cabin can't pierce them.
+/// /turf/open/floor/plating/ice/smooth is a subtype of
+/// /turf/open/floor/plating/ice, so the single istype on the parent
+/// covers both.
+/mob/living/simple_animal/hostile/snow_cabin/proc/IsValidFloorTile(turf/T)
+	if(!isopenturf(T))
+		return FALSE
+	if(locked_area && get_area(T) != locked_area)
+		return FALSE
+	if(istype(T, /turf/open/floor/holofloor/snow))
+		return FALSE
+	if(istype(T, /turf/open/floor/plating/ice))
+		return FALSE
+	return TRUE
+
+/// TRUE if T is a wall the cabin can mount an eye on. Tile must be in
+/// the cabin's own area. Fakeglass and the cheap reinforced family are
+/// excluded — the eye can't anchor through either.
+/mob/living/simple_animal/hostile/snow_cabin/proc/IsValidWallTile(turf/T)
+	if(!isclosedturf(T))
+		return FALSE
+	if(locked_area && get_area(T) != locked_area)
+		return FALSE
+	if(istype(T, /turf/closed/indestructible/fakeglass))
+		return FALSE
+	if(istype(T, /turf/closed/indestructible/reinforced/cheap))
+		return FALSE
+	return TRUE
+
 /mob/living/simple_animal/hostile/snow_cabin/proc/GetFloorTiles()
 	if(!islist(cached_floor_tiles) || !length(cached_floor_tiles))
+		// Snapshot the area-lock once. The cabin can't move, so this
+		// captures the arena the boss was placed in and pins every
+		// future validator call to it.
+		if(!locked_area)
+			locked_area = get_area(src)
 		cached_floor_tiles = list()
-		for(var/turf/open/indestructible/hotelwood/T in Z_TURFS(z))
+		for(var/turf/T in Z_TURFS(z))
+			if(!IsValidFloorTile(T))
+				continue
 			if(get_dist(src, T) > weakpoint_spawn_range)
 				continue
 			cached_floor_tiles += T
@@ -864,8 +915,12 @@
 
 /mob/living/simple_animal/hostile/snow_cabin/proc/GetWallTiles()
 	if(!islist(cached_wall_tiles) || !length(cached_wall_tiles))
+		if(!locked_area)
+			locked_area = get_area(src)
 		cached_wall_tiles = list()
-		for(var/turf/closed/indestructible/wood/T in Z_TURFS(z))
+		for(var/turf/T in Z_TURFS(z))
+			if(!IsValidWallTile(T))
+				continue
 			if(get_dist(src, T) > weakpoint_spawn_range)
 				continue
 			cached_wall_tiles += T
@@ -1048,7 +1103,7 @@
 			var/list/chunk = list()
 			for(var/dx in -1 to 1)
 				var/turf/T = locate(center_x + dx, y, z)
-				if(istype(T, /turf/open/indestructible/hotelwood))
+				if(IsValidFloorTile(T))
 					chunk += T
 					all_tiles += T
 			if(length(chunk))
@@ -1068,7 +1123,7 @@
 			var/list/chunk = list()
 			for(var/dy in -1 to 1)
 				var/turf/T = locate(x, center_y + dy, z)
-				if(istype(T, /turf/open/indestructible/hotelwood))
+				if(IsValidFloorTile(T))
 					chunk += T
 					all_tiles += T
 			if(length(chunk))
@@ -1177,8 +1232,9 @@
 	if(!center)
 		return
 	var/list/pool = list()
-	for(var/turf/open/indestructible/hotelwood/T in range(ice_shard_radius, center))
-		pool += T
+	for(var/turf/T in range(ice_shard_radius, center))
+		if(IsValidFloorTile(T))
+			pool += T
 	if(!length(pool))
 		return
 	var/count = rand(ice_shard_count_min, ice_shard_count_max)

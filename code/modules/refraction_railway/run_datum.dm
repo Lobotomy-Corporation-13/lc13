@@ -286,6 +286,43 @@ GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 		else
 			H.put_in_hands(I)
 
+/// Strip-and-rebuild: qdels every tracked weapon/armor on this member,
+/// then spawns fresh items from the stored loadout paths and re-equips
+/// them. Used at sector boundaries and on team wipe to scrub any
+/// run-time state that built up on the items (charge counters, kill
+/// trackers, stack buffs, etc.) so progress doesn't carry between
+/// sectors or wipe attempts. Idempotent on a stripped-then-rebuilt
+/// player; safe to call back-to-back.
+/datum/refraction_run/proc/FreshenLoadout(mob/living/carbon/human/H)
+	if(!ishuman(H) || !H.ckey)
+		return
+	var/list/paths = loadouts[H.ckey]
+	if(!islist(paths) || !length(paths))
+		return
+	// Phase 1: tear down. StripMemberGear qdels every tracked ref and
+	// sweeps any stray ego items on the player so we can rebuild from a
+	// clean slot triple.
+	StripMemberGear(H.ckey)
+	// Phase 2: rebuild from the stored paths. Mirrors ApplyLoadout's
+	// flow (positions 1 & 2 are weapons, position 3 is armor).
+	var/list/new_refs = list()
+	var/turf/dest = get_turf(H)
+	for(var/i in 1 to length(paths))
+		var/path = paths[i]
+		if(!path)
+			new_refs += null
+			continue
+		var/obj/item/I = new path(dest)
+		if(istype(I, /obj/item/clothing/suit/armor/ego_gear))
+			var/obj/item/clothing/suit/armor/ego_gear/A = I
+			A.equip_delay_self = 0
+			H.equip_to_slot_or_del(A, ITEM_SLOT_OCLOTHING, TRUE)
+		else
+			H.put_in_hands(I)
+		RegisterSignal(I, COMSIG_PARENT_QDELETING, PROC_REF(OnTrackedGearQdel))
+		new_refs += I
+	gear_refs[H.ckey] = new_refs
+
 /// Removes all gear issued to this ckey, then sweeps any other ego items on
 /// the player (gear brought from outside the railway).
 /datum/refraction_run/proc/StripMemberGear(ckey)
@@ -345,7 +382,11 @@ GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 		if(H.sanity_lost && H.stat != DEAD)
 			continue
 		HealMember(H)
-		ReequipLoadout(H)
+		// FreshenLoadout (not ReequipLoadout) so any per-run state built
+		// up on the items — charge counters, kill trackers, accumulated
+		// stack buffs — is discarded at every sector boundary AND on
+		// every team wipe (both routes hit EnterCheckpoint).
+		FreshenLoadout(H)
 	TeleportToCheckpoint()
 
 /// Starts the next sector. `force` skips the all-ready + loadout gate.

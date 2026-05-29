@@ -87,6 +87,11 @@
 	},
 /turf/open/floor/wood,
 /area/refraction/nova_flare)
+"du" = (
+/turf/open/floor/wood{
+	icon_state = "wood-broken"
+	},
+/area/refraction/nova_flare)
 "dy" = (
 /obj/structure/flora/rock/pile/largejungle,
 /turf/open/water/jungle,
@@ -661,6 +666,12 @@
 	},
 /turf/open/floor/mineral/titanium/blue,
 /area/refraction/nova_flare)
+"LI" = (
+/obj/effect/decal/cleanable/cobweb/cobweb2,
+/turf/open/floor/wood{
+	icon_state = "wood-broken6"
+	},
+/area/refraction/nova_flare)
 "LP" = (
 /obj/structure/table/greyscale{
 	color = "#8a8a8a"
@@ -805,6 +816,11 @@
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/plasteel/vaporwave,
 /area/refraction/nova_flare)
+"WR" = (
+/turf/open/floor/wood{
+	icon_state = "wood-broken7"
+	},
+/area/refraction/nova_flare)
 "WS" = (
 /obj/effect/landmark/refraction/spawner/nova_s3n1,
 /turf/open/floor/plating/ironsand,
@@ -850,6 +866,10 @@
 "Yq" = (
 /obj/effect/landmark/refraction/start_point/nova_s1n2,
 /turf/open/floor/plating/asteroid,
+/area/refraction/nova_flare)
+"ZQ" = (
+/obj/structure/refraction_healing_pod,
+/turf/open/floor/mineral/titanium/blue,
 /area/refraction/nova_flare)
 
 (1,1,1) = {"
@@ -1493,7 +1513,7 @@ mb
 ad
 ad
 ad
-ad
+ZQ
 ad
 ad
 ad
@@ -1546,9 +1566,9 @@ ad
 mb
 mb
 mb
-mb
-mb
-mb
+ad
+ad
+ad
 mb
 mb
 mb
@@ -2817,7 +2837,7 @@ mb
 ad
 Ua
 pe
-pe
+WR
 ze
 pe
 pe
@@ -3090,7 +3110,7 @@ qk
 pe
 qk
 qk
-pe
+du
 pe
 qk
 qk
@@ -3148,7 +3168,7 @@ pe
 pe
 qk
 pe
-pe
+WR
 Ua
 ad
 mb
@@ -3305,11 +3325,11 @@ Ua
 pe
 pe
 qk
-nZ
+LI
 pe
 pe
 pe
-pe
+du
 pe
 Ua
 ad
@@ -3411,7 +3431,7 @@ mb
 ad
 Ua
 pe
-pe
+du
 pe
 pe
 pe
@@ -3523,7 +3543,7 @@ pe
 qk
 nZ
 pe
-pe
+du
 pe
 qk
 pe
@@ -3572,7 +3592,7 @@ ad
 mb
 ad
 Ua
-pe
+WR
 qk
 qk
 qk

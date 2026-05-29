@@ -726,7 +726,11 @@
 	for(var/mob/living/simple_animal/hostile/mirage_reaper/R in active_reapers)
 		if(!QDELETED(R))
 			UnregisterSignal(R, COMSIG_LIVING_DEATH)
+			qdel(R)
 	active_reapers = null
+	for(var/obj/item/coreflame/CF in active_coreflames)
+		if(!QDELETED(CF))
+			qdel(CF)
 	active_coreflames = null
 	if(impaled_spear && !QDELETED(impaled_spear))
 		UnregisterSignal(src, COMSIG_MOVABLE_MOVED)
