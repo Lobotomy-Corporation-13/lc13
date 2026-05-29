@@ -3640,6 +3640,7 @@
 #include "code\modules\refraction_railway\_railway_subsystem.dm"
 #include "code\modules\refraction_railway\checkpoint_consoles.dm"
 #include "code\modules\refraction_railway\console.dm"
+#include "code\modules\refraction_railway\healing_pod.dm"
 #include "code\modules\refraction_railway\landmarks.dm"
 #include "code\modules\refraction_railway\line_datum.dm"
 #include "code\modules\refraction_railway\loadout_console.dm"

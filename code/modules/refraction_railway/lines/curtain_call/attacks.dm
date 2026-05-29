@@ -44,7 +44,7 @@
 					re-snapshotting the target's current tile so a moving \
 					target can break the pattern — then a finisher whose \
 					marker tracks the target for ~2 seconds, locks in place \
-					for ~1.5 seconds, and lands a 3x3 Knockdown on the locked \
+					for ~1 second, and lands a 3x3 Knockdown on the locked \
 					tile (step off it to dodge). Only the finisher detonates \
 					Tremor (burst at 25).",
 			),
@@ -110,10 +110,11 @@
 				"name"     = "Mirror Gambit",
 				"damage"   = "No direct damage; each mirror has ~25% of Azarus's max HP",
 				"cooldown" = "Once, on entering phase 2",
-				"desc"     = "Conjures four stationary mirror-doubles. They never \
-					move or melee - they only echo its **Snake Eyes** and **House \
-					Edge** a beat after it casts them. Killing a mirror stops its \
-					echo.",
+				"desc"     = "Conjures two stationary mirror-doubles, kept at \
+					least 3 tiles from each other and from the boss. They \
+					never move or melee - they only echo its **Snake Eyes** \
+					and **House Edge** a beat after it casts them. Killing a \
+					mirror stops its echo.",
 			),
 		),
 
@@ -390,27 +391,27 @@
 			),
 			list(
 				"name"     = "Greed Burst",
-				"damage"   = "30 RED to every enemy in view (~8 tiles) + 2 Bleed (60 RED if **Glutted**). Each live summon also bursts in place for 50 RED + 2 Bleed in a 3x3 around their tile.",
+				"damage"   = "200 RED total pool split evenly across every live mob in view (~8 tiles, players AND his own summons share the split); humans also take 2 Bleed. 400 if **Glutted**. Each live summon additionally bursts in place for 50 RED + 2 Bleed in a 3x3 around their tile.",
 				"cooldown" = "Auto-fires when his bloodfeast pool fills (~700 in P1, ~500 in P2)",
 				"desc"     = "2s telegraph (warning tiles ring the room and he \
-					convulses), then a room-wide RED pulse + every live \
-					summon is **sacrificed** in place. Minion bursts are \
-					positional (3x3 around each summon); the room-wide \
-					pulse is unavoidable. Each sacrificed minion beams its \
-					blood back to him on death.",
+					convulses), then the room-wide pool resolves + every \
+					live summon is **sacrificed** in place. Each sacrificed \
+					minion beams its blood back to him on death.",
 			),
 			list(
 				"name"     = "Hardblood Arts",
-				"damage"   = "90 RED + 3 Bleed + 1s Knockdown per strike, 3 strikes per cycle",
+				"damage"   = "90 RED + 3 Bleed + 1s Knockdown per unsafe tile hit; one mist pulse per sparkle (default 3)",
 				"cooldown" = "~10 seconds in phase 3 only",
-				"desc"     = "Phase 3 only. Drops three **blood-sparkle \
-					brackets** around the target (one per landing \
-					direction, ~1s apart) — these are the tell. Then says \
-					'Heart's snare!' and dashes in from each direction in \
-					turn, striking with ~1s between each. Step off the \
-					target tile between sparkles to break the bracket. \
-					Knockdown duration overlaps the next teleport-strike's \
-					wind-up.",
+				"desc"     = "Phase 3 only. Target gets **Bloodhold** (1/4 \
+					speed, 8s) and **3 sparkle overlays** float above \
+					their head — each sparkle is one pending mist pulse. \
+					Before every pulse Eric **teleports to a fresh tile \
+					3-5 from the target**, then paints the 5x5 around \
+					the target in red mist with exactly **one safe tile \
+					(opposite his new position)**. After a **~1.5s \
+					telegraph**, every unsafe tile resolves into blood \
+					slices and damages anyone on it. One sparkle dims \
+					per pulse, so the visible count is the strikes left.",
 			),
 			list(
 				"name"     = "Sanguine Rush",

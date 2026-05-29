@@ -36,6 +36,10 @@
 /datum/ai_controller/insane/murder/understudy/TryFindWeapon(is_white_allowed = TRUE)
 	return null
 
+// Belt-and-suspenders: TryFindWeapon returning null already starves every standard call site, but if any path ever hands TryEquipWeapon a list directly, swallow it. The form's costume is the only kit it ever wields.
+/datum/ai_controller/insane/murder/understudy/TryEquipWeapon(list/potential_weapons)
+	return
+
 // Silent variant of the insane-murder voiceline behaviour.
 /datum/ai_behavior/say_line/insanity_lines/understudy_silent
 	line_type = "murder"
@@ -135,6 +139,14 @@
 	. = ..()
 	phase_trigger_hp = round(maxHealth * phase_trigger_threshold)
 	addtimer(CALLBACK(src, PROC_REF(AssumeForm)), 1 SECONDS)
+
+// Carries current_form down with the true form so a hard qdel path (team wipe via WipeRoomReserves) doesn't orphan the skin.
+/mob/living/simple_animal/hostile/understudy/Destroy()
+	if(current_form && !QDELETED(current_form))
+		UnregisterSignal(current_form, COMSIG_LIVING_DEATH)
+		qdel(current_form)
+	current_form = null
+	return ..()
 
 // Phase-1 HP floor: any hit below phase_trigger_hp caps and triggers phase 2.
 /mob/living/simple_animal/hostile/understudy/adjustHealth(amount, updating_health = TRUE, forced = FALSE)
@@ -354,6 +366,9 @@
 	var/abilities_used_this_form = 0
 	/// Force-morph after this many abilities (phase-2 faces override the 2).
 	var/morph_after_abilities = 2
+	/// Every weapon/armor/clothing item spawned for this form, kept so
+	/// they qdel with the form regardless of where they ended up.
+	var/list/costume_items = list()
 
 /mob/living/carbon/human/understudy_form/Initialize(mapload)
 	. = ..()
@@ -366,12 +381,23 @@
 		return
 	if(form_outfit)
 		equipOutfit(form_outfit)
+	// Strip any ego_weapon the outfit handed us — the form's weapon_type below is the authoritative kit. Without this, outfits like Ronin (belt katana) leave a second katana in inventory beside the hand one.
+	if(weapon_type)
+		for(var/obj/item/ego_weapon/E in get_equipped_items(TRUE))
+			qdel(E)
+		for(var/obj/item/I in held_items)
+			if(istype(I, /obj/item/ego_weapon))
+				qdel(I)
 	for(var/worn_path in extra_worn)
 		var/obj/item/X = new worn_path(src)
 		MakeCostumeItem(X)
 		equip_to_slot_or_del(X, extra_worn[worn_path])
+	// Track equipped-slot items AND held items — get_equipped_items explicitly excludes held_items, which used to orphan the Ronin outfit's l_hand admin armor.
 	for(var/obj/item/I in get_equipped_items(TRUE))
 		MakeCostumeItem(I)
+	for(var/obj/item/I in held_items)
+		if(I)
+			MakeCostumeItem(I)
 	if(weapon_type)
 		var/obj/item/W = new weapon_type(src)
 		if(istype(W, /obj/item/ego_weapon))
@@ -401,6 +427,8 @@
 			F.adjust_buff(src, needed)
 	updatehealth()
 	RegisterSignal(src, COMSIG_MOB_AFTER_APPLY_DAMGE, PROC_REF(OnDamageTaken))
+	// Recompute force_multiplier per swing so weapons whose own attack() mutates `force` (Black Silence mook → 200 inside the concentration window, old_boys → 130 on parry_buff, allas → 70+ on dash) can't break the DPS-normalize.
+	RegisterSignal(src, COMSIG_MOB_ITEM_ATTACK, PROC_REF(OnFormItemAttack))
 	var/datum/attribute/J = attributes?[JUSTICE_ATTRIBUTE]
 	if(J)
 		J.adjust_buff(src, -get_attribute_level(src, JUSTICE_ATTRIBUTE))
@@ -410,19 +438,40 @@
 	if(dash_on_assume)
 		addtimer(CALLBACK(src, PROC_REF(TryOpeningDash)), 3)
 
+// Qdels every tracked costume item by ref so disarmed/floor-dropped pieces still vanish with the form, not just gear still on the body.
 /mob/living/carbon/human/understudy_form/Destroy()
 	deltimer(special_timer)
 	special_timer = null
 	master = null
-	// TRAIT_NODROP isn't guaranteed at cleanup; explicitly qdel gear.
-	for(var/obj/item/I in get_equipped_items(TRUE))
+	for(var/obj/item/I as anything in costume_items.Copy())
+		if(QDELETED(I))
+			continue
+		UnregisterSignal(I, COMSIG_PARENT_QDELETING)
 		REMOVE_TRAIT(I, TRAIT_NODROP, "understudy")
 		qdel(I)
-	for(var/obj/item/I in held_items)
-		if(I)
-			REMOVE_TRAIT(I, TRAIT_NODROP, "understudy")
-			qdel(I)
+	costume_items.Cut()
 	return ..()
+
+// The insane/murder AI calls dropItemToGround(I, force=TRUE) on weapons it deems underpowered, which bypasses TRAIT_NODROP. Refuse for tracked costume items.
+/mob/living/carbon/human/understudy_form/dropItemToGround(obj/item/I, force = FALSE, silent = FALSE, invdrop = TRUE)
+	if(I in costume_items)
+		return FALSE
+	return ..()
+
+/mob/living/carbon/human/understudy_form/proc/OnCostumeItemQdel(datum/source)
+	SIGNAL_HANDLER
+	costume_items -= source
+
+// Fires from the base /obj/item/proc/attack right before damage applies — subclass attack overrides have already mutated `force` by this point, so reading W.force gives the live value. Reclamp the multiplier so effective per-hit damage stays at weapon_force * min(1, attack_speed).
+/mob/living/carbon/human/understudy_form/proc/OnFormItemAttack(datum/source, mob/living/M, mob/living/user, obj/item/weapon)
+	SIGNAL_HANDLER
+	if(!istype(weapon, /obj/item/ego_weapon))
+		return
+	var/obj/item/ego_weapon/W = weapon
+	if(W.force <= 0)
+		return
+	var/aspeed = W.attack_speed ? W.attack_speed : 1
+	W.force_multiplier = (weapon_force * min(1, aspeed)) / W.force
 
 // Deferred via addtimer from AssumeForm so SetupCostume's Fortitude buff has
 // settled. adjustBruteLoss bypasses COMSIG_MOB_AFTER_APPLY_DAMGE so this
@@ -447,6 +496,9 @@
 		var/obj/item/clothing/suit/armor/ego_gear/G = I
 		G.attribute_requirements = list()
 	ADD_TRAIT(I, TRAIT_NODROP, "understudy")
+	if(!(I in costume_items))
+		costume_items += I
+		RegisterSignal(I, COMSIG_PARENT_QDELETING, PROC_REF(OnCostumeItemQdel))
 
 // Fires the signature special on cooldown when the AI has a live target.
 /mob/living/carbon/human/understudy_form/proc/SpecialTick()
@@ -512,11 +564,11 @@
 	special_cooldown = world.time + special_cooldown_time
 	INVOKE_ASYNC(src, PROC_REF(DoSpecial), prey)
 
+// Damage accumulates every tick and the morph fires the instant the threshold is crossed, even mid-special — the in-flight ability proc's SLEEP_CHECK_DEATH bails as soon as the form is qdel'd by MorphForm.
 /mob/living/carbon/human/understudy_form/proc/OnDamageTaken(datum/source, damage_amount)
 	SIGNAL_HANDLER
-	if(in_special || stat == DEAD || QDELETED(src) || damage_amount <= 0)
+	if(stat == DEAD || QDELETED(src) || damage_amount <= 0)
 		return
-	// Killing blows reveal the true form instead of morphing.
 	if(health <= 0)
 		return
 	damage_taken_this_form += damage_amount
@@ -547,8 +599,15 @@
 				L.Knockdown(knockdown_time)
 
 // ---------- Skin: Blade Lineage Ronin ----------
+// Bespoke outfit — the original /datum/outfit/job/ronin shipped a belt katana (caused the second-weapon stack) and an admin armor in l_hand (the AI tried to swing it as a weapon). Strip both, keep only the cosmetic uniform/glasses/shoes; the form's own weapon_type + extra_worn line below cover the real kit.
+/datum/outfit/understudy_ronin
+	name = "Understudy: Blade Lineage Ronin"
+	uniform = /obj/item/clothing/under/suit/lobotomy/plain
+	glasses = /obj/item/clothing/glasses/sunglasses
+	shoes = /obj/item/clothing/shoes/laceup
+
 /mob/living/carbon/human/understudy_form/ronin
-	form_outfit = /datum/outfit/job/ronin
+	form_outfit = /datum/outfit/understudy_ronin
 	extra_worn = list(/obj/item/clothing/suit/armor/ego_gear/city/blade_lineage_salsu = ITEM_SLOT_OCLOTHING)
 	weapon_type = /obj/item/ego_weapon/city/bladelineage
 	weapon_force = 14
@@ -1089,11 +1148,11 @@
 	form_outfit = /datum/outfit/understudy_red_mist
 	weapon_type = /obj/item/ego_weapon/mimicry/kali
 	weapon_force = 16
-	form_health = 375
+	form_health = 250
 	special_range = 7
 	special_cooldown_time = 9 SECONDS
 	persistent_form = TRUE
-	force_switch_threshold = 200
+	force_switch_threshold = 100
 	morph_after_abilities = 5
 
 /mob/living/carbon/human/understudy_form/red_mist/SetupCostume()
@@ -1349,12 +1408,12 @@
 	form_outfit = /datum/outfit/understudy_black_silence
 	weapon_type = /obj/item/ego_weapon/black_silence_gloves/zelkova
 	weapon_force = 14
-	form_health = 375
+	form_health = 250
 	special_range = 8
 	special_cooldown_time = 6 SECONDS
 	dash_on_assume = TRUE
 	persistent_form = TRUE
-	force_switch_threshold = 200
+	force_switch_threshold = 75
 	morph_after_abilities = 11
 	/// 9 canon workshops + base Gloves for the Furioso slot.
 	var/list/weapon_rotation = list(
@@ -1850,11 +1909,11 @@
 	extra_worn = list(/obj/item/clothing/suit/armor/ego_gear/city/blue_reverb = ITEM_SLOT_OCLOTHING)
 	weapon_type = /obj/item/ego_weapon/city/reverberation
 	weapon_force = 14
-	form_health = 375
+	form_health = 250
 	special_range = 8
 	special_cooldown_time = 12 SECONDS
 	persistent_form = TRUE
-	force_switch_threshold = 200
+	force_switch_threshold = 100
 	morph_after_abilities = 5
 	/// Looping timer driving the Resonant Hum aura.
 	var/hum_timer

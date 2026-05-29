@@ -99,10 +99,11 @@
 				"title"    = "The Table",
 				"severity" = "info",
 				"text"     = "On encounter start and ~15s after each **Wager** \
-					resolves: scatters oversized dice across the floor, each \
-					starting on 1. Shoot or strike one to make it spin ~3 \
-					seconds and land on a random face. A die that lands slams \
-					the floor for BLACK in a small area, bigger on a high roll.",
+					resolves: scatters oversized dice across the floor \
+					(**5 in Phase 1, 9 in Phase 2**), each starting on 1. \
+					Shoot or strike one to make it spin ~3 seconds and land \
+					on a random face. A die that lands slams the floor for \
+					BLACK in a small area, bigger on a high roll.",
 			),
 			list(
 				"title"    = "Lock on a Six",
@@ -117,27 +118,32 @@
 				"severity" = "high",
 				"text"     = "On a timer (the red number over its head), Azarus \
 					calls an unavoidable, room-wide PALE hit. Its damage drops \
-					with the table total (the gold number); max the table out \
-					and the House **busts** - the Wager whiffs and Azarus is left \
-					staggered and wide open.",
+					with the table total (the gold number); reach the bust \
+					threshold (**24 in Phase 1, 36 in Phase 2**) and the House \
+					**busts** — the Wager whiffs and Azarus is rooted in \
+					place for **5 seconds**, during which every RED / WHITE / \
+					BLACK / PALE coeff jumps from **0.5 → 2.0 (4x damage \
+					taken)**.",
 			),
 			list(
 				"title"    = "Stalling the Bet",
 				"severity" = "medium",
 				"text"     = "Every die that lands pushes the Wager's countdown \
-					back a little (it can't be held more than ~20 seconds out), \
-					while hitting Azarus rushes it. After a Wager resolves the \
-					whole table is swept away for ~15 seconds before fresh dice \
-					are dealt.",
+					back **3 seconds** (it can't be held more than ~20 \
+					seconds out), while hitting Azarus rushes it. After a \
+					Wager resolves the whole table is swept away for ~15 \
+					seconds before fresh dice are dealt.",
 			),
 			list(
 				"title"    = "Raising the Stakes",
 				"severity" = "high",
 				"text"     = "At or below 50% HP Azarus forces any pending Wager \
-					off at once, then doubles down: more dice, a higher score to \
-					bust, a faster Wager, and four stationary mirror-doubles. Each \
-					mirror has a quarter of the House's HP and echoes its attacks; \
-					shatter them to cut the extra pressure.",
+					off at once, then doubles down: **dice count rises 5 → \
+					9**, a higher bust threshold (**24 → 36**), a faster \
+					Wager, and **two stationary mirror-doubles** (kept 3 \
+					tiles apart). Each mirror has a quarter of the House's \
+					HP and echoes its attacks; shatter them to cut the \
+					extra pressure.",
 			),
 		),
 
@@ -195,6 +201,15 @@
 					Reverberation**). Each phase-2 face stays for a fixed \
 					number of abilities before rotating: Red Mist and Blue \
 					Reverberation 5, Black Silence 10.",
+			),
+			list(
+				"title"    = "Phase 2: Hardened Hide",
+				"severity" = "high",
+				"text"     = "All three phase-2 faces wear armor with **70% \
+					RED/WHITE/BLACK reduction and 90% PALE reduction**. \
+					PALE weapons in particular are barely scratching them — \
+					bring mixed damage if you want the force-switch \
+					threshold to actually trip.",
 			),
 			// ---------- Phase-2 form passives ----------
 			list(
@@ -255,19 +270,29 @@
 			list(
 				"title"    = "Bloodfeast Shield",
 				"severity" = "high",
-				"text"     = "**Subtracts up to 150 raw damage** from every \
-					hit. The subtracted amount scales linearly with his \
-					bloodfeast pool: **150 at a full pool, 0 when empty**. \
-					The pool decreases only when his summons die; direct \
-					damage does not drain it. **Greed Burst** also empties \
-					it.",
+				"text"     = "**Subtracts raw damage** from every hit, scaled \
+					**inversely** to his bloodfeast pool: **full blood_cap \
+					(700 P1 / 500 P2) at an empty pool, 0 at a full one**. \
+					An empty Heart is his tankiest state — the pool only \
+					grows when his summons die, so killing followers \
+					actively *weakens* the shield. **Greed Burst** drains \
+					the pool to 0, slamming the shield back to max.",
+			),
+			list(
+				"title"    = "Heart's Panic",
+				"severity" = "medium",
+				"text"     = "When the shield blocks a hit: triggers a fresh \
+					follower wave on a **1.5s cooldown**. Chip-swinging \
+					through the shield buys him reinforcements — the \
+					only stable way to drain the pool is to commit \
+					to killing the existing flock.",
 			),
 			list(
 				"title"    = "Greed Burst",
 				"severity" = "high",
 				"text"     = "When his pool fills (**700 in P1, 500 in \
 					P2**): **2s telegraph**, then a **room-wide pool of \
-					400 RED** split evenly across every live mob in view \
+					200 RED** split evenly across every live mob in view \
 					8 — players AND Eric's own followers each take a \
 					share, humans bleed for 2. **In a full swarm the \
 					followers soak most of it; alone, the entire pool \
@@ -291,20 +316,25 @@
 				"severity" = "high",
 				"text"     = "Below 25% HP: **summons stop entirely** and \
 					his shield **permanently collapses** (blood_resistance \
-					forced to 0). On a **10s cycle** he teleport-strikes \
-					the closest target **3 times in a row, 1s between \
-					strikes**: each lands **90 RED + 3 Bleed + 1s \
-					Knockdown**. Knockdown chains into the next teleport, \
-					so missing a dodge floors you for the follow-up. \
-					Alternates with **Sanguine Rush** (15s cooldown), a \
-					three-dash bloody charge along a 3x3 strip.",
+					forced to 0). On a **10s cycle** he slows the target \
+					to **1/4 speed** (Bloodhold, 8s) and floats **3 \
+					sparkle overlays** above their head — one pulse per \
+					sparkle. Before every pulse he **teleports to a fresh \
+					tile 3-5 from the target** so the safe tile (opposite \
+					his new position) jumps each time. After a ~1.5s \
+					telegraph, every unsafe tile lands **90 RED + 3 Bleed \
+					+ 1s Knockdown** on anyone on it. One sparkle dims \
+					per resolved pulse, so the visible count *is* the \
+					strikes remaining. Alternates with **Sanguine Rush** \
+					(15s cooldown), a three-dash bloody charge along a \
+					3x3 strip.",
 			),
 			list(
 				"title"    = "Glutted",
 				"severity" = "medium",
 				"text"     = "If **two Greed Bursts** fire without him \
 					taking any HP damage in the windows between them, the \
-					**next burst's pool doubles (400 → 800 total RED)** \
+					**next burst's pool doubles (200 → 400 total RED)** \
 					before it's split across the crowd. Resets the moment \
 					he takes damage during a window.",
 			),

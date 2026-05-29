@@ -69,10 +69,10 @@
 	icon_dead = "capo_boss"
 	mob_biotypes = MOB_ORGANIC|MOB_HUMANOID
 	faction = list("thumb_east")
-	maxHealth = 2000
-	health = 2000
-	melee_damage_lower = 15
-	melee_damage_upper = 20
+	maxHealth = 1800
+	health = 1800
+	melee_damage_lower = 10
+	melee_damage_upper = 10
 	melee_damage_type = RED_DAMAGE
 	attack_verb_continuous = "strikes"
 	attack_verb_simple = "strike"
@@ -229,7 +229,13 @@
 	if(isliving(attacked_target))
 		var/mob/living/L = attacked_target
 		if(!faction_check_mob(L))
-			ApplyHitStatuses(L, basic_tremor_stacks,
+			// Dry-fire melee: an empty mag also strips Tremor on the
+			// basic swing. ApplyHitStatuses already gates Overheat on
+			// current_ammo > 0, so this matches it. Specials still
+			// inflict their Tremor — they spent ammo to fire and the
+			// status application is part of that paid action.
+			var/tremor = current_ammo > 0 ? basic_tremor_stacks : 0
+			ApplyHitStatuses(L, tremor,
 				/* can_burst = */ FALSE, basic_overheat_stacks)
 
 /// Always-Tremor, Overheat-when-armed. `can_burst` is reserved for Sweep,
@@ -309,15 +315,21 @@
 		OnEmptyMagazine()
 	return TRUE
 
-/// Fires once when the magazine empties: announce it, and if the pet is
-/// playing dead, rouse it early at half HP so it can run a reload.
+/// Fires once when the magazine empties: announce it, and kick the rat
+/// into a reload run immediately. A downed rat is revived at half HP;
+/// a live rat is yanked out of whatever Hogtie sequence it's in the
+/// middle of and pointed at the loading landmark.
 /mob/living/simple_animal/hostile/thumb_east_capo/proc/OnEmptyMagazine()
 	say(pick(empty_lines))
 	playsound(get_turf(src), 'sound/weapons/gun/general/dry_fire.ogg', 60, FALSE, 4)
 	if(!pet_rat)
 		pet_rat = locate(/mob/living/simple_animal/hostile/rat/capo_rat) in range(15, src)
-	if(!QDELETED(pet_rat) && pet_rat.downed)
+	if(QDELETED(pet_rat))
+		return
+	if(pet_rat.downed)
 		pet_rat.ReviveForReload()
+	else
+		pet_rat.InterruptForReload()
 
 /mob/living/simple_animal/hostile/thumb_east_capo/proc/Refill()
 	current_ammo = max_ammo
@@ -490,7 +502,7 @@
 	if(locked)
 		for(var/turf/W in range(2, locked))
 			new /obj/effect/temp_visual/capo_leap_warning(W)
-	SLEEP_CHECK_DEATH(15)
+	SLEEP_CHECK_DEATH(10)
 	qdel(track)
 	if(locked)
 		// Leap animation mirroring the tiantui FlurryCombo finisher: rise
@@ -571,6 +583,13 @@
 
 // Death sequence: say a parting line, fade out, and call the rat to its
 // side to fade with it. del_on_death is FALSE, so we qdel after the fade.
+// Mirrors death()'s rat-fade so a hard qdel (team wipe via WipeRoomReserves) doesn't orphan the pet rat alive.
+/mob/living/simple_animal/hostile/thumb_east_capo/Destroy()
+	if(pet_rat && !QDELETED(pet_rat))
+		pet_rat.BeginDeathFade(get_turf(src))
+	pet_rat = null
+	return ..()
+
 /mob/living/simple_animal/hostile/thumb_east_capo/death(gibbed)
 	if(dying)
 		return ..()
@@ -595,8 +614,8 @@
 		brushes it. Stays close to its handler."
 	color = "#ff3030"
 	faction = list("thumb_east")
-	maxHealth = 600
-	health = 600
+	maxHealth = 300
+	health = 300
 	damage_coeff = list(RED_DAMAGE = 1, WHITE_DAMAGE = 1, BLACK_DAMAGE = 1, PALE_DAMAGE = 1)
 	melee_damage_lower = 8
 	melee_damage_upper = 12
@@ -626,6 +645,14 @@
 	/// TRUE only during the windup; Move() blocks on this.
 	var/td_charging                = FALSE
 	var/td_lunge_reset_timer
+	/// The mob currently pinned by an active Hogtie. Cached so an
+	/// out-of-band interrupt (Capo running dry mid-pin) can free the
+	/// victim without scanning every turf.
+	var/mob/living/td_victim
+	/// Live Hogtie windup warning effect. Tracked on the rat so an
+	/// interrupt mid-windup can yank the visual the same instant it
+	/// aborts the leap; cleared once the windup completes naturally.
+	var/obj/effect/temp_visual/trash_disposal_telegraph/td_warning
 
 	// Reload-run state machine: "fighting" / "to_reload" / "loading" / "to_capo".
 	var/reload_mode = "fighting"
@@ -643,6 +670,15 @@
 	var/downed       = FALSE
 	var/revive_time  = 10 SECONDS
 	var/saved_color  = "#ff3030"
+	/// TRUE while a StandBackUp callback is pending. Tracked so an
+	/// early ReviveForReload can cancel it and a fresh downed cycle
+	/// schedules cleanly without stacking duplicate revivals.
+	var/standback_timer_id
+	/// Set on EnterDowned if the rat was carrying ammo back to the
+	/// Capo (reload_mode == "to_capo"). The revive paths read this to
+	/// resume delivery + yellow colour instead of dropping back into
+	/// the red fighting state.
+	var/was_delivering_when_downed = FALSE
 
 	/// Set when the Capo dies — the rat runs to its side and fades out.
 	var/dying = FALSE
@@ -726,14 +762,18 @@
 	move_resist = INFINITY
 	LoseTarget()
 	walk(src, 0)
-	var/obj/effect/temp_visual/trash_disposal_telegraph/warning = new /obj/effect/temp_visual/trash_disposal_telegraph/capo_rat(get_turf(src))
+	td_warning = new /obj/effect/temp_visual/trash_disposal_telegraph/capo_rat(get_turf(src))
 	visible_message(span_userdanger("[src] coils to leap at [victim]!"))
 	playsound(get_turf(src), 'sound/abnormalities/crumbling/warning.ogg', 50, FALSE, 5)
-	walk_towards(warning, victim, 0.1 SECONDS)
+	walk_towards(td_warning, victim, 0.1 SECONDS)
 	SLEEP_CHECK_DEATH(td_telegraph_windup)
+	// Bail if ClearTrashDisposalState ran during the sleep — downed isn't caught by SLEEP_CHECK_DEATH.
+	if(QDELETED(src) || downed || !td_throwing)
+		return
 	td_charging = FALSE
 	move_resist = initial(move_resist)
 	can_act = TRUE
+	td_warning = null
 	if(QDELETED(victim) || stat == DEAD)
 		td_throwing = FALSE
 		return
@@ -773,6 +813,7 @@
 		return
 	td_damagetaken = 0
 	td_active = TRUE
+	td_victim = victim
 	td_cooldown = world.time + td_cooldown_time
 	td_time_between_hits = initial(td_time_between_hits)
 	td_damage_per_hit = initial(td_damage_per_hit)
@@ -824,6 +865,7 @@
 /mob/living/simple_animal/hostile/rat/capo_rat/proc/TrashDisposalCleanup(mob/living/victim)
 	td_active = FALSE
 	td_throwing = FALSE
+	td_victim = null
 	td_time_between_hits = initial(td_time_between_hits)
 	td_damage_per_hit = initial(td_damage_per_hit)
 	td_damagetaken = 0
@@ -843,6 +885,41 @@
 		GiveTarget(victim)
 
 // ---- Reload-run state machine ----
+
+/// Tears down any in-flight Hogtie state — victim pin, warning effect,
+/// pending lunge timer, every td_* flag, and move_resist. Idempotent;
+/// safe to call from both the Capo-runs-dry interrupt and the
+/// rat-just-got-KO'd path. Does NOT touch can_act or start follow-up
+/// flows — the caller decides what state the rat ends in.
+/mob/living/simple_animal/hostile/rat/capo_rat/proc/ClearTrashDisposalState()
+	if(td_active && td_victim)
+		TrashDisposalCleanup(td_victim)
+	if(td_warning && !QDELETED(td_warning))
+		qdel(td_warning)
+	td_warning = null
+	deltimer(td_lunge_reset_timer)
+	td_lunge_reset_timer = null
+	td_active = FALSE
+	td_throwing = FALSE
+	td_charging = FALSE
+	td_victim = null
+	move_resist = initial(move_resist)
+
+/// Forcibly aborts any in-flight Hogtie sequence and starts a reload
+/// run immediately. Called by the Capo's OnEmptyMagazine when the rat
+/// is alive — the rat drops its current attack and bolts for the
+/// reload landmark without waiting for the leap windup or pin chain
+/// to finish.
+/mob/living/simple_animal/hostile/rat/capo_rat/proc/InterruptForReload()
+	if(dying || downed || stat == DEAD)
+		return
+	if(reload_mode != "fighting")
+		return  // already running a reload
+	ClearTrashDisposalState()
+	can_act = TRUE
+	walk(src, 0)
+	StartReloadRun()
+
 /mob/living/simple_animal/hostile/rat/capo_rat/proc/StartReloadRun()
 	if(downed || stat == DEAD)
 		return
@@ -855,13 +932,18 @@
 // Blue-shepherd-style speed boost: swap move_to_delay and call UpdateSpeed
 // so both BYOND's walk_to ticks AND the cached movespeed modifier reflect
 // the new pace. SetReloadSpeedInactive restores `initial(move_to_delay)`.
+// Also flips the rat's visible colour so any non-fighting reload state
+// reads as yellow — the moment the rat leaves combat to fetch ammo, it
+// turns yellow and stays that way until it delivers and returns to red.
 /mob/living/simple_animal/hostile/rat/capo_rat/proc/SetReloadSpeedActive()
 	move_to_delay = reload_move_to_delay
 	UpdateSpeed()
+	color = "#ffd060"
 
 /mob/living/simple_animal/hostile/rat/capo_rat/proc/SetReloadSpeedInactive()
 	move_to_delay = initial(move_to_delay)
 	UpdateSpeed()
+	color = saved_color
 
 /mob/living/simple_animal/hostile/rat/capo_rat/proc/StepReloadRun()
 	if(downed || stat == DEAD)
@@ -884,7 +966,6 @@
 			if(!capo_target || QDELETED(capo_target) || capo_target.stat == DEAD)
 				reload_mode = "fighting"
 				SetReloadSpeedInactive()
-				color = saved_color
 				walk(src, 0)
 				return
 			walk_to(src, capo_target, 1, move_to_delay)
@@ -893,13 +974,11 @@
 				capo_target.Refill()
 				reload_mode = "fighting"
 				SetReloadSpeedInactive()
-				color = saved_color
 
 /mob/living/simple_animal/hostile/rat/capo_rat/proc/FinishLoading()
 	if(QDELETED(src) || downed || stat == DEAD || reload_mode != "loading")
 		return
 	reload_mode = "to_capo"
-	color = "#ffd060"
 	visible_message(span_warning("[src] grabs a fresh magazine and bolts for [capo_target]!"))
 
 // ---- Downed loop (Elliot pattern) ----
@@ -918,6 +997,14 @@
 
 // Catches lethal damage that bypassed adjustHealth (fire DoT, direct
 // writes) and reroutes to Downed; suppresses the base deadmouse spawn.
+// Hard-qdel cleanup: cancel pending revive/lunge timers so their callbacks don't fire on a dead ref. Parent /rat/Destroy already removes from SSmobs.cheeserats.
+/mob/living/simple_animal/hostile/rat/capo_rat/Destroy()
+	deltimer(standback_timer_id)
+	deltimer(td_lunge_reset_timer)
+	standback_timer_id = null
+	td_lunge_reset_timer = null
+	return ..()
+
 /mob/living/simple_animal/hostile/rat/capo_rat/death(gibbed)
 	if(!downed && !dying && !QDELETED(src) && !gibbed)
 		EnterDowned()
@@ -928,47 +1015,68 @@
 /mob/living/simple_animal/hostile/rat/capo_rat/proc/EnterDowned()
 	if(downed)
 		return
+	// Cancel any in-flight Hogtie state; the post-sleep guard in TrashDisposalTelegraph bails any pending windup.
+	ClearTrashDisposalState()
 	downed       = TRUE
 	can_act      = FALSE
 	density      = FALSE
 	health       = 1
 	status_flags |= GODMODE
 	walk(src, 0)
-	reload_mode  = "fighting"
-	SetReloadSpeedInactive()
 	LoseTarget()
 	icon_state   = icon_dead
-	saved_color  = color
+	// Always snapshot the baseline red; yellow-while-delivering is preserved via was_delivering_when_downed below.
+	saved_color = initial(color)
+	if(reload_mode == "to_capo")
+		was_delivering_when_downed = TRUE
+	else
+		was_delivering_when_downed = FALSE
+		reload_mode = "fighting"
+		SetReloadSpeedInactive()
 	visible_message(span_warning("[src] keels over!"))
 	playsound(get_turf(src), 'sound/effects/mousesqueek.ogg', 40, TRUE)
-	addtimer(CALLBACK(src, PROC_REF(StandBackUp)), revive_time)
+	deltimer(standback_timer_id)
+	standback_timer_id = addtimer(CALLBACK(src, PROC_REF(StandBackUp)), revive_time, TIMER_STOPPABLE)
 
 /mob/living/simple_animal/hostile/rat/capo_rat/proc/StandBackUp()
 	if(QDELETED(src) || !downed)
 		return
+	standback_timer_id = null
 	downed       = FALSE
 	density      = TRUE
-	health       = maxHealth
 	status_flags &= ~GODMODE
+	// Elliot's downed-but-not-out heal — forced=TRUE clears bruteloss past the GODMODE gate and runs updatehealth.
+	adjustBruteLoss(-maxHealth, forced = TRUE)
 	icon_state   = icon_living
-	color        = saved_color
 	can_act      = TRUE
+	if(was_delivering_when_downed)
+		was_delivering_when_downed = FALSE
+		SetReloadSpeedActive()
+	else
+		color = saved_color
 	visible_message(span_warning("[src] gets back up!"))
 	playsound(get_turf(src), 'sound/effects/mousesqueek.ogg', 50, TRUE)
 
-// Early rouse triggered when the Capo runs dry mid-Plays-Dead: gets up at
-// half HP (vs the full-HP StandBackUp) so it can run a reload. The pending
-// StandBackUp timer no-ops since `downed` is already cleared.
+// Early rouse triggered when the Capo runs dry mid-Plays-Dead. Comes
+// back at full HP so the rat isn't immediately re-downed by the first
+// hit on its way to the reload landmark. Cancels the pending standback
+// timer so the original 10s callback doesn't fire a duplicate revive.
 /mob/living/simple_animal/hostile/rat/capo_rat/proc/ReviveForReload()
 	if(!downed)
 		return
+	deltimer(standback_timer_id)
+	standback_timer_id = null
 	downed       = FALSE
 	density      = TRUE
-	health       = round(maxHealth * 0.5)
 	status_flags &= ~GODMODE
+	adjustBruteLoss(-maxHealth, forced = TRUE)
 	icon_state   = icon_living
-	color        = saved_color
 	can_act      = TRUE
+	if(was_delivering_when_downed)
+		was_delivering_when_downed = FALSE
+		SetReloadSpeedActive()
+	else
+		color = saved_color
 	visible_message(span_warning("[src] springs back up at its master's call!"))
 	playsound(get_turf(src), 'sound/effects/mousesqueek.ogg', 50, TRUE)
 
