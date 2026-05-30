@@ -26,6 +26,8 @@ GLOBAL_LIST_EMPTY(refraction_wave_mob_owners)
 	var/room_id = ""
 	/// Source of truth for stock + concurrent_max + is_boss.
 	var/datum/refraction_node/node
+	/// Run's parent line, set at controller stamp time. Drives per-line scaling tweak reads.
+	var/datum/refraction_line/line
 	/// Matching spawner landmarks on the run's z; picked at random per spawn.
 	var/list/spawn_landmarks = list()
 	/// Live stock; decremented per spawn, key pruned at 0.
@@ -87,13 +89,16 @@ GLOBAL_LIST_EMPTY(refraction_wave_mob_owners)
 	on_cooldown = FALSE
 	pending_spawns = 0
 	current_stock = list()
-	var/stock_mult = (node.is_boss || !SSrefraction_railway.scale_stock) ? 1 : refraction_stock_mult(num_players)
+	var/scale_stock_on = SSrefraction_railway.scale_stock && (!line || line.scale_stock)
+	var/scale_concurrent_on = SSrefraction_railway.scale_concurrent && (!line || line.scale_concurrent)
+	var/scale_spawn_batch_on = SSrefraction_railway.scale_spawn_batch && (!line || line.scale_spawn_batch)
+	var/stock_mult = (node.is_boss || !scale_stock_on) ? 1 : refraction_stock_mult(num_players)
 	for(var/path in node.mob_stock)
 		var/scaled = round(node.mob_stock[path] * stock_mult)
 		if(scaled < 1)
 			scaled = 1
 		current_stock[path] = scaled
-	var/conc_mult = (node.is_boss || !SSrefraction_railway.scale_concurrent) ? 1 : refraction_concurrent_mult(num_players)
+	var/conc_mult = (node.is_boss || !scale_concurrent_on) ? 1 : refraction_concurrent_mult(num_players)
 	effective_max = round(node.concurrent_max * conc_mult)
 	if(effective_max < 1)
 		effective_max = 1
@@ -106,7 +111,7 @@ GLOBAL_LIST_EMPTY(refraction_wave_mob_owners)
 			total += current_stock[path]
 		spawns_per_cycle = max(1, total)
 	else
-		spawns_per_cycle = SSrefraction_railway.scale_spawn_batch ? src.num_players : 1
+		spawns_per_cycle = scale_spawn_batch_on ? src.num_players : 1
 	RegisterSignal(SSdcs, COMSIG_GLOB_MOB_DEATH, PROC_REF(OnMobDeath))
 	SpawnBatch()
 
@@ -311,11 +316,14 @@ GLOBAL_LIST_EMPTY(refraction_wave_mob_owners)
 	// Per-mob party-size scaling: bosses get HP only, non-bosses use
 	// refraction_scale_hostile (+20% HP / +10% damage per extra player).
 	var/n = max(1, controller.num_players)
+	var/datum/refraction_line/ctrl_line = controller.line
+	var/scale_boss_on = SSrefraction_railway.scale_boss_stats && (!ctrl_line || ctrl_line.scale_boss_stats)
+	var/scale_wave_on = SSrefraction_railway.scale_wave_stats && (!ctrl_line || ctrl_line.scale_wave_stats)
 	if(controller.node && controller.node.is_boss)
-		if(SSrefraction_railway.scale_boss_stats && n > 1)
+		if(scale_boss_on && n > 1)
 			H.maxHealth = round(H.maxHealth * n)
 			H.health = H.maxHealth
-	else if(SSrefraction_railway.scale_wave_stats)
+	else if(scale_wave_on)
 		refraction_scale_hostile(H, n)
 	controller.RegisterSpawnedMob(H)
 	controller.ResolvePendingSpawn()

@@ -94,7 +94,7 @@
 
 		// ---------- zeal_s1n2: Azarus, the House ----------
 
-		/mob/living/simple_animal/hostile/azarus/refracted = list(
+		/mob/living/simple_animal/hostile/distortion/azarus/refracted = list(
 			list(
 				"title"    = "The Table",
 				"severity" = "info",
@@ -149,7 +149,7 @@
 
 		// ---------- zeal_s2n1: The Envy of Humanity ----------
 
-		/mob/living/simple_animal/hostile/understudy = list(
+		/mob/living/simple_animal/hostile/distortion/understudy = list(
 			list(
 				"title"    = "Wears a Face",
 				"severity" = "info",
@@ -251,12 +251,15 @@
 				"title"    = "Greed Touched",
 				"severity" = "info",
 				"text"     = "Doesn't strike on his own. Spawns waves of \
-					followers — **X-Corp fixers in phase 1**, **greed-touched \
-					clan units in phase 2** — **3 per wave every 12s**, \
-					**capped at 6 alive**. Each kill beams blood back to \
-					him: **+(maxHealth ÷ 3) bloodfeast** per kill (a 180-HP \
-					scout = 60; a 550-HP defender = 183). If **20s pass \
-					with no minion death**, the next wave size **doubles**.",
+					followers — **greed-touched X-Corp workers in phase \
+					1**, **greed-touched clan units in phase 2** — **3 \
+					per wave every 12s**, **capped at 6 alive**. **Every \
+					player past the first adds +2 to both the wave size \
+					and the field cap** (2 humans → 5 per wave / 8 cap, \
+					3 humans → 7 per wave / 10 cap). Each kill beams \
+					blood back to him: **+(maxHealth ÷ 3) bloodfeast** \
+					per kill. If **20s pass with no minion death**, the \
+					next wave size **doubles**.",
 			),
 			list(
 				"title"    = "Unholy Presence",
@@ -270,10 +273,10 @@
 			list(
 				"title"    = "Bloodfeast Shield",
 				"severity" = "high",
-				"text"     = "**Subtracts raw damage** from every hit, scaled \
-					**inversely** to his bloodfeast pool: **full blood_cap \
-					(700 P1 / 500 P2) at an empty pool, 0 at a full one**. \
-					An empty Heart is his tankiest state — the pool only \
+				"text"     = "**Subtracts raw damage** from every hit equal to \
+					**(blood_cap - blood_amount) / 4** — the *missing* \
+					quarter of his pool. Empty pool → peak shield \
+					(**175 P1 / 125 P2**); full pool → 0. The pool only \
 					grows when his summons die, so killing followers \
 					actively *weakens* the shield. **Greed Burst** drains \
 					the pool to 0, slamming the shield back to max.",
@@ -291,43 +294,57 @@
 				"title"    = "Greed Burst",
 				"severity" = "high",
 				"text"     = "When his pool fills (**700 in P1, 500 in \
-					P2**): **2s telegraph**, then a **room-wide pool of \
-					200 RED** split evenly across every live mob in view \
-					8 — players AND Eric's own followers each take a \
-					share, humans bleed for 2. **In a full swarm the \
-					followers soak most of it; alone, the entire pool \
-					lands on you.** On top of that, every live follower \
-					**bursts in place for 50 RED + 2 Bleed in a 3×3** \
-					around them (avoidable by spacing). After the burst \
-					his shield drops for **6s** — the window to push \
-					damage.",
+					P2**): **2s telegraph**, then a **pool of 200 RED** \
+					split evenly across every live mob in view 5 — \
+					players AND Eric's own followers each take a share, \
+					humans bleed for 2. **In a full swarm the followers \
+					soak most of it; alone, the entire pool lands on \
+					you.** On top of that, every live follower **bursts \
+					in place for 50 RED + 2 Bleed in a 3×3** around them \
+					(avoidable by spacing). After the burst his shield \
+					drops for **6s** — the window to push damage.",
 			),
 			list(
 				"title"    = "The Famine",
 				"severity" = "high",
-				"text"     = "Below 50% HP: the X-Corp roster gives way to \
-					the **greed-touched clan** (defender, gunner, sniper, \
-					harpooner, drone, scout). His **bloodfeast cap drops \
-					from 700 to 500**, so bursts come noticeably faster. \
-					Wave cadence and vulnerable window length are unchanged.",
+				"text"     = "Below 50% HP: the greed-touched X-Corp \
+					workers give way to the **greed-touched clan** \
+					(defender, gunner, sniper, harpooner, drone, \
+					scout). His **bloodfeast cap drops from 700 to \
+					500**, so bursts come noticeably faster. Wave \
+					cadence and vulnerable window length are unchanged.",
 			),
 			list(
 				"title"    = "Hardblood Greed",
 				"severity" = "high",
 				"text"     = "Below 25% HP: **summons stop entirely** and \
 					his shield **permanently collapses** (blood_resistance \
-					forced to 0). On a **10s cycle** he slows the target \
-					to **1/4 speed** (Bloodhold, 8s) and floats **3 \
-					sparkle overlays** above their head — one pulse per \
-					sparkle. Before every pulse he **teleports to a fresh \
-					tile 3-5 from the target** so the safe tile (opposite \
-					his new position) jumps each time. After a ~1.5s \
-					telegraph, every unsafe tile lands **90 RED + 3 Bleed \
-					+ 1s Knockdown** on anyone on it. One sparkle dims \
-					per resolved pulse, so the visible count *is* the \
-					strikes remaining. Alternates with **Sanguine Rush** \
-					(15s cooldown), a three-dash bloody charge along a \
-					3x3 strip.",
+					forced to 0). Pool starts the phase at **50% of \
+					blood_cap** (~250) and is the only fuel he has left. \
+					On a **10s cycle** he slows the target to **1/4 \
+					speed** (Bloodhold, 8s) and floats **3 sparkles** \
+					above their head — one pulse per sparkle. Before \
+					every pulse he **teleports to a tile adjacent to \
+					the target** so the safe tile (the diagonal \
+					opposite of where he just landed) jumps each \
+					strike, and at the end of the attack he **retreats \
+					4-6 tiles away** even on a miss. After a ~1.5s \
+					telegraph, each unsafe tile lands **45 RED + 3 \
+					Bleed**. Alternates with **Sanguine Rush** (15s \
+					cooldown), a three-dash bloody charge along a 3x3 \
+					strip.",
+			),
+			list(
+				"title"    = "Heart's Tribute",
+				"severity" = "medium",
+				"text"     = "Every P3 action draws from the pool: \
+					**HardbloodStrike 60, SanguineRush 40, each \
+					teleport 10**. When the pool runs dry he **tears \
+					the cost out of his own HP at half rate** (forced \
+					damage, bypasses shields). With no summons left to \
+					refill the pool in P3, every special he throws \
+					eventually bleeds him for the rest of the cost — \
+					stall his cycles and he kills himself.",
 			),
 			list(
 				"title"    = "Glutted",
@@ -532,7 +549,9 @@
 				"severity" = "medium",
 				"text"     = "On contact with a **Will of Humanity** \
 					holder: burns to nothing instantly. Counts as a \
-					player kill — does not crack her composure.",
+					player kill — does not crack her composure. **The \
+					burst also heals every living human within 5 tiles \
+					of the bearer (the bearer included) for 10 HP.**",
 			),
 		),
 

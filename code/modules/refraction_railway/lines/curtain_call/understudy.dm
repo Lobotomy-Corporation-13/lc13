@@ -48,7 +48,7 @@
 	finish_action(controller, TRUE)
 
 // ---------- True form ----------
-/mob/living/simple_animal/hostile/understudy
+/mob/living/simple_animal/hostile/distortion/understudy
 	name = "The Envy of Humanity"
 	desc = "A writhing, shifting mass that grew so far past human it forgot the \
 		way back - and adores humanity with all the wretched hunger that growing \
@@ -133,15 +133,15 @@
 		"...I l-loved you... loved you so m-much I... c-couldn't... st-stop... t-taking...",
 	)
 
-/mob/living/simple_animal/hostile/understudy/refracted
+/mob/living/simple_animal/hostile/distortion/understudy/refracted
 
-/mob/living/simple_animal/hostile/understudy/Initialize(mapload)
+/mob/living/simple_animal/hostile/distortion/understudy/Initialize(mapload)
 	. = ..()
 	phase_trigger_hp = round(maxHealth * phase_trigger_threshold)
 	addtimer(CALLBACK(src, PROC_REF(AssumeForm)), 1 SECONDS)
 
 // Carries current_form down with the true form so a hard qdel path (team wipe via WipeRoomReserves) doesn't orphan the skin.
-/mob/living/simple_animal/hostile/understudy/Destroy()
+/mob/living/simple_animal/hostile/distortion/understudy/Destroy()
 	if(current_form && !QDELETED(current_form))
 		UnregisterSignal(current_form, COMSIG_LIVING_DEATH)
 		qdel(current_form)
@@ -149,7 +149,7 @@
 	return ..()
 
 // Phase-1 HP floor: any hit below phase_trigger_hp caps and triggers phase 2.
-/mob/living/simple_animal/hostile/understudy/adjustHealth(amount, updating_health = TRUE, forced = FALSE)
+/mob/living/simple_animal/hostile/distortion/understudy/adjustHealth(amount, updating_health = TRUE, forced = FALSE)
 	if(!forced && !phase_2_triggered && amount > 0 && stat != DEAD)
 		if((health - amount) <= phase_trigger_hp)
 			amount = max(0, health - phase_trigger_hp)
@@ -159,24 +159,24 @@
 	return ..(amount, updating_health, forced)
 
 // can_act gates AI/Move/Attack without deregistering the controller.
-/mob/living/simple_animal/hostile/understudy/handle_automated_action()
+/mob/living/simple_animal/hostile/distortion/understudy/handle_automated_action()
 	if(!can_act)
 		return
 	return ..()
 
-/mob/living/simple_animal/hostile/understudy/Move(atom/newloc, dir, step_x, step_y)
+/mob/living/simple_animal/hostile/distortion/understudy/Move(atom/newloc, dir, step_x, step_y)
 	if(!can_act)
 		return FALSE
 	return ..()
 
-/mob/living/simple_animal/hostile/understudy/AttackingTarget(atom/attacked_target)
+/mob/living/simple_animal/hostile/distortion/understudy/AttackingTarget(atom/attacked_target)
 	if(!can_act)
 		return
 	return ..()
 
 // carry_damage = previous skin's missing HP; applied as delayed BRUTE so
 // SetupCostume's Fortitude buff lands first.
-/mob/living/simple_animal/hostile/understudy/proc/AssumeForm(carry_damage = 0, turf/at_turf = null)
+/mob/living/simple_animal/hostile/distortion/understudy/proc/AssumeForm(carry_damage = 0, turf/at_turf = null)
 	if(dying || stat == DEAD || QDELETED(src))
 		return
 	if(current_form && !QDELETED(current_form))
@@ -206,7 +206,7 @@
 	visible_message(span_warning("[skin] steps onto the stage."))
 
 // Rotate without revealing the true form; HP carries via missing-HP brute.
-/mob/living/simple_animal/hostile/understudy/proc/MorphForm()
+/mob/living/simple_animal/hostile/distortion/understudy/proc/MorphForm()
 	if(dying || stat == DEAD || QDELETED(src) || !current_form || QDELETED(current_form))
 		return
 	var/missing_hp = max(0, current_form.maxHealth - current_form.health)
@@ -216,14 +216,14 @@
 	current_form = null
 	AssumeForm(missing_hp, T)
 
-/mob/living/simple_animal/hostile/understudy/proc/OnFormDeath(mob/living/source)
+/mob/living/simple_animal/hostile/distortion/understudy/proc/OnFormDeath(mob/living/source)
 	SIGNAL_HANDLER
 	if(source != current_form)
 		return
 	UnregisterSignal(source, COMSIG_LIVING_DEATH)
 	INVOKE_ASYNC(src, PROC_REF(RevealTrueForm), get_turf(source))
 
-/mob/living/simple_animal/hostile/understudy/proc/RevealTrueForm(turf/exit_turf)
+/mob/living/simple_animal/hostile/distortion/understudy/proc/RevealTrueForm(turf/exit_turf)
 	if(dying || QDELETED(src))
 		return
 	if(!exit_turf)
@@ -248,8 +248,6 @@
 	mouse_opacity = initial(mouse_opacity)
 	new /obj/effect/temp_visual/dir_setting/wraith(exit_turf)
 	say(pick(reveal_lines))
-	// One tier weaker per reveal; ChangeResistances keeps the dam_coeff datum
-	// intact (direct list assignment would break getCoeff).
 	reveals_done++
 	ChangeResistances(resist_tiers[clamp(reveals_done, 1, length(resist_tiers))])
 	adjustHealth(reveal_damage)
@@ -263,7 +261,7 @@
 
 // Phase-2 flip; PlayPhase2Cutscene runs async so the HP floor stays clamped
 // (via phase_2_triggered) for the duration of the transition.
-/mob/living/simple_animal/hostile/understudy/proc/EnterPhase2()
+/mob/living/simple_animal/hostile/distortion/understudy/proc/EnterPhase2()
 	if(phase_2_triggered || dying || QDELETED(src) || stat == DEAD)
 		return
 	phase_2_triggered = TRUE
@@ -276,7 +274,7 @@
 	INVOKE_ASYNC(src, PROC_REF(PlayPhase2Cutscene))
 
 // 3s transition: knockback ring, jitter loop, all damage coeffs zeroed.
-/mob/living/simple_animal/hostile/understudy/proc/PlayPhase2Cutscene()
+/mob/living/simple_animal/hostile/distortion/understudy/proc/PlayPhase2Cutscene()
 	if(dying || QDELETED(src) || stat == DEAD)
 		return
 	var/turf/center = get_turf(src)
@@ -309,7 +307,7 @@
 	ChangeResistances(resist_tiers[clamp(reveals_done, 1, length(resist_tiers))])
 	AssumeForm()
 
-/mob/living/simple_animal/hostile/understudy/death(gibbed)
+/mob/living/simple_animal/hostile/distortion/understudy/death(gibbed)
 	if(dying)
 		return ..()
 	dying = TRUE
@@ -334,7 +332,7 @@
 	// disarming a downed form and walking off with its weapon.
 	death_threshold = 0
 	/// The true form hiding inside us.
-	var/mob/living/simple_animal/hostile/understudy/master
+	var/mob/living/simple_animal/hostile/distortion/understudy/master
 	/// The role's signature melee weapon, placed in-hand for the AI.
 	var/weapon_type
 	/// Target effective basic-melee damage per hit; enforced via force_multiplier.
@@ -403,8 +401,6 @@
 		if(istype(W, /obj/item/ego_weapon))
 			var/obj/item/ego_weapon/E = W
 			if(E.force > 0)
-				// Some EGO weapons reset force per swing; cap effective DPS via
-				// force_multiplier and DPS-normalize for fast weapons.
 				var/aspeed = E.attack_speed ? E.attack_speed : 1
 				E.force_multiplier = (weapon_force * min(1, aspeed)) / E.force
 		else
@@ -575,7 +571,7 @@
 	if(damage_taken_this_form < force_switch_threshold)
 		return
 	if(master && !QDELETED(master) && master.current_form == src)
-		INVOKE_ASYNC(master, TYPE_PROC_REF(/mob/living/simple_animal/hostile/understudy, MorphForm))
+		INVOKE_ASYNC(master, TYPE_PROC_REF(/mob/living/simple_animal/hostile/distortion/understudy, MorphForm))
 
 /// Per-form telegraphed, dodgeable attack. Overridden by each skin.
 /mob/living/carbon/human/understudy_form/proc/UseSpecial(mob/living/target)
@@ -1896,7 +1892,7 @@
 
 	// Spent: force a morph (morph_after_abilities = 11 is a backstop).
 	if(master && !QDELETED(master) && master.current_form == src)
-		INVOKE_ASYNC(master, TYPE_PROC_REF(/mob/living/simple_animal/hostile/understudy, MorphForm))
+		INVOKE_ASYNC(master, TYPE_PROC_REF(/mob/living/simple_animal/hostile/distortion/understudy, MorphForm))
 
 // ---------- Skin: Blue Reverberation (Argalia) ----------
 /datum/outfit/understudy_blue_reverberation

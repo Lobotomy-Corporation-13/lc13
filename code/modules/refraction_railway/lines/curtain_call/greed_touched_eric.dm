@@ -79,13 +79,17 @@
 	for(var/mob/living/L in T)
 		if(L == source)
 			continue
-		if(ishuman(L))
-			L.deal_damage(damage, RED_DAMAGE, source,
-				attack_type = (ATTACK_TYPE_RANGED | ATTACK_TYPE_SPECIAL))
-			L.apply_lc_bleed(3)
-		else if(L.maxHealth < execute_threshold)
-			// Execute non-human mob (including Eric's own summons) and feed
-			// Eric extra blood — the "feast" eats whatever's caught in it.
+		if(!ishuman(L))
+			continue
+		L.deal_damage(damage, RED_DAMAGE, source,
+			attack_type = (ATTACK_TYPE_RANGED | ATTACK_TYPE_SPECIAL))
+		L.apply_lc_bleed(3)
+	for(var/turf/scan_tile in range(1, T))
+		for(var/mob/living/L in scan_tile)
+			if(L == source || ishuman(L) || L.stat == DEAD)
+				continue
+			if(L.maxHealth >= execute_threshold)
+				continue
 			L.visible_message(span_warning("[L] withers into a husk as the feast claims it!"))
 			if(source && !QDELETED(source))
 				var/datum/component/bloodfeast/C = source.GetComponent(/datum/component/bloodfeast)
@@ -191,12 +195,9 @@
 	// ---- Greed Burst ----
 	var/burst_telegraph_time = 2 SECONDS
 	var/burst_window_time    = 6 SECONDS
-	/// Total RED damage pool for the room-wide pulse — split evenly across
-	/// every mob caught in view(8) at detonation, including Eric's own
-	/// summons. Alone, the pulse is nearly lethal; in a full swarm, the
-	/// followers soak most of it. This is the lever that ties Eric's
-	/// "kill the summons first" tension to immediate survival pressure:
-	/// drain the pool too aggressively and you have nothing to hide behind.
+	/// Total RED damage pool for the burst — split evenly across every mob
+	/// caught in view(5) at detonation, summons included. Alone the pulse
+	/// is nearly lethal; in a full swarm the followers soak most of it.
 	var/burst_total_damage   = 200
 	// Localized 3x3 around each sacrificed minion; only hits players who
 	// stand close, so it punishes failure to space. Heavier than the
@@ -220,17 +221,24 @@
 	// ---- Hardblood (phase 3) ----
 	var/hardblood_cooldown = 0
 	var/hardblood_cooldown_time = 10 SECONDS
-	// 90 raw per strike = 45 effective post-DR; eating all 3 is ~68% HP
-	// loss, plus a 1s Knockdown each so the player gets staggered between
-	// strikes. P3 is Eric's last stand — losing a Hardblood cycle should hurt.
-	var/hardblood_strike_damage = 90
-	var/hardblood_knockdown_time = 1 SECONDS
+	// 45 raw per unsafe tile = ~22 effective post-DR.
+	var/hardblood_strike_damage = 45
 	/// Deciseconds the 5x5 mist holds before unsafe tiles deal damage.
 	/// Matches the bloodboss dash's `do_after(15)` window.
 	var/mist_telegraph_time = 15
 	/// One sparkle overlay floats above the target per pending strike — the
 	/// number of sparkles drives the loop, and each pulse consumes one.
 	var/hardblood_strike_count = 3
+
+	// ---- P3 blood-cost economy ----
+	/// Pool spent each time HardbloodStrike fires.
+	var/hardblood_cost = 60
+	/// Pool spent each time SanguineRush fires.
+	var/sanguine_rush_cost = 40
+	/// Pool spent per Teleport().
+	var/teleport_cost = 10
+	/// Tracked so Life() can toggle the stagger visual when CC lands/expires.
+	var/mutable_appearance/stagger_overlay
 
 	// ---- Sanguine Rush (phase 3 triple-dash) ----
 	// Cribbed from /mob/living/simple_animal/hostile/humanoid/fixer/flame's
@@ -245,7 +253,7 @@
 
 	// ---- Sanguine Feast ----
 	var/sanguine_feast_cooldown = 0
-	var/sanguine_feast_cooldown_time = 30 SECONDS
+	var/sanguine_feast_cooldown_time = 15 SECONDS
 	/// Raw damage to a player standing on the marker tile at Blowup. Heavy
 	/// because the 4s marker telegraph is fully avoidable — stepping off
 	/// the marked tile dodges it entirely.
@@ -312,25 +320,21 @@
 /// phase transitions clamp damage at the threshold and trigger the cutscene.
 /mob/living/simple_animal/hostile/greed_touched_eric/adjustHealth(amount, updating_health = TRUE, forced = FALSE)
 	if(!forced && amount > 0 && stat != DEAD && !dying)
-		// Flat shield first.
 		amount = max(0, amount - blood_resistance)
 		if(amount == 0)
 			new /obj/effect/temp_visual/blood_shield(loc)
 			if(last_shielded_say < world.time - say_cooldown)
 				say(shielded_line)
 				last_shielded_say = world.time
-			// Inverse-scaling shield means an empty pool is his tankiest state. A blocked hit panics the Heart into spawning a fresh wave so the pool can refill — capped at 1.5s so a chip storm doesn't deluge the room.
 			if(phase != ERIC_PHASE_3 && world.time >= shield_summon_cooldown && !ShieldLocked())
 				shield_summon_cooldown = world.time + shield_summon_cooldown_time
 				INVOKE_ASYNC(src, PROC_REF(SummonWave))
 			return 0
-		// Phase-2 HP floor.
 		if(!phase_2_triggered && (health - amount) <= phase_2_trigger_hp)
 			amount = max(0, health - phase_2_trigger_hp)
 			. = ..(amount, updating_health, forced)
 			EnterPhase2()
 			return
-		// Phase-3 HP floor.
 		if(!phase_3_triggered && (health - amount) <= phase_3_trigger_hp)
 			amount = max(0, health - phase_3_trigger_hp)
 			. = ..(amount, updating_health, forced)
@@ -338,9 +342,8 @@
 			return
 	return ..(amount, updating_health, forced)
 
-/// Inverse: pool 0 → blood_cap resistance (peak shield), pool blood_cap → 0.
-/// Empty pool is now Eric's tankiest state — the Heart hoards its strength
-/// until it has worshippers to spend. Forced to 0 while a burst window is locked.
+/// Inverse: shield = round((blood_cap - blood_amount) / 4). Peak at an empty
+/// pool, zero at a full one. Forced to 0 in P3 and during the post-burst window.
 /mob/living/simple_animal/hostile/greed_touched_eric/proc/RecomputeShield()
 	if(world.time < shield_locked_until || phase == ERIC_PHASE_3)
 		blood_resistance = 0
@@ -349,8 +352,8 @@
 	if(!C || !blood_cap)
 		blood_resistance = 0
 		return
-	var/ratio = clamp(C.blood_amount / blood_cap, 0, 1)
-	blood_resistance = round(blood_cap * (1 - ratio))
+	var/missing = max(0, blood_cap - C.blood_amount)
+	blood_resistance = round(missing / 4)
 
 /mob/living/simple_animal/hostile/greed_touched_eric/proc/ShieldLocked()
 	return world.time < shield_locked_until
@@ -364,17 +367,56 @@
 	C.AdjustBlood(amount)
 	RecomputeShield()
 
+/// Single source of truth for every boss teleport: phase-out VFX at the
+/// origin, phase-in VFX at the destination, blood-exit playsound, and the
+/// P3 teleport_cost paid out of the pool.
+/mob/living/simple_animal/hostile/greed_touched_eric/proc/Teleport(turf/dest)
+	if(!dest || QDELETED(src) || stat == DEAD || dying)
+		return
+	var/turf/origin = get_turf(src)
+	if(origin)
+		new /obj/effect/temp_visual/dir_setting/cult/phase/out(origin, dir)
+	forceMove(dest)
+	new /obj/effect/temp_visual/dir_setting/cult/phase(dest, dir)
+	playsound(src, 'sound/magic/exit_blood.ogg', 100, FALSE, 4)
+	if(phase == ERIC_PHASE_3 && teleport_cost > 0)
+		SpendBlood(teleport_cost)
+
+/// Try to spend `amount` from the bloodfeast pool. Insufficient pool ->
+/// pool zeroes and Eric eats round(amount / 2) self-damage (forced past the
+/// shield).
+/mob/living/simple_animal/hostile/greed_touched_eric/proc/SpendBlood(amount)
+	if(amount <= 0 || stat == DEAD || dying)
+		return
+	var/datum/component/bloodfeast/C = GetComponent(/datum/component/bloodfeast)
+	if(!C)
+		return
+	if(C.blood_amount >= amount)
+		C.AdjustBlood(-amount)
+		RecomputeShield()
+		return
+	C.blood_amount = 0
+	RecomputeShield()
+	var/self_damage = round(amount / 2)
+	visible_message(span_warning("[src] tears at himself to fuel the Heart — wounds re-open for [self_damage]!"))
+	adjustHealth(self_damage, forced = TRUE)
+
+/// Show the stagger overlay any tick the boss is stunned/knocked/paralyzed
+/// and hide it once the CC clears.
+/mob/living/simple_animal/hostile/greed_touched_eric/proc/UpdateStaggerOverlay()
+	var/should_stagger = (stat != DEAD) && !dying && (IsStun() || IsKnockdown() || IsParalyzed())
+	if(should_stagger && !stagger_overlay)
+		stagger_overlay = mutable_appearance(icon, "small_stagger", layer + 0.1)
+		add_overlay(stagger_overlay)
+	else if(!should_stagger && stagger_overlay)
+		cut_overlay(stagger_overlay)
+		stagger_overlay = null
+
 // ---------- Pure-summoner AI ----------
 
 /mob/living/simple_animal/hostile/greed_touched_eric/handle_automated_action()
 	if(!can_act || stat == DEAD || dying)
 		return
-	// P3 abilities resolve BEFORE the parent's Goto+CheckAndAttack. The
-	// INVOKE_ASYNC means the special's own `can_act = FALSE` only takes
-	// effect a beat later, so we flip the gate synchronously here —
-	// otherwise the AI lands a basic melee on the same tick it triggers
-	// HardbloodStrike, which is what players see as "the smoke attack
-	// leaks a melee swing after the first AoE".
 	if(phase == ERIC_PHASE_3)
 		if(world.time >= hardblood_cooldown)
 			can_act = FALSE
@@ -386,9 +428,6 @@
 			walk(src, 0)
 			INVOKE_ASYNC(src, PROC_REF(SanguineRush))
 			return
-	// Slow pursuit to ~1 tile from target — base AI handles target-find +
-	// walk_to. Melee = 0 and AttackingTarget no-ops, so chasing-to-adjacent
-	// never deals damage; the threat is Sanguine Feast and Greed Burst.
 	. = ..()
 	if(phase == ERIC_PHASE_3)
 		return
@@ -405,6 +444,7 @@
 	. = ..()
 	if(stat == DEAD || dying)
 		return
+	UpdateStaggerOverlay()
 	// Drop dead/qdel'd summons before the burst-trigger checks them.
 	for(var/mob/M in summoned_mobs)
 		if(QDELETED(M) || M.stat == DEAD)
@@ -416,13 +456,8 @@
 		INVOKE_ASYNC(src, PROC_REF(GreedBurst))
 
 /mob/living/simple_animal/hostile/greed_touched_eric/AttackingTarget(atom/attacked_target)
-	// Pure summoner in P1/P2 — let the parent run only in P3, where
-	// melee_damage was bumped and he closes the distance properly.
 	if(phase != ERIC_PHASE_3)
 		return
-	// Specials hold `can_act = FALSE`; without this gate, an in-progress
-	// HardbloodStrike or SanguineRush can leak a basic melee on top of the
-	// special when a player walks adjacent mid-cast.
 	if(!can_act)
 		return
 	return ..()
@@ -435,9 +470,6 @@
 // ---------- Wave summon ----------
 
 /mob/living/simple_animal/hostile/greed_touched_eric/proc/GetWavePool()
-	// Phase 1: X-Corp swarm (lighter, faster). Phase 2: greed-touched roster
-	// (heavier, deadlier). All paths are /refracted variants tuned for the
-	// boss; see the bottom of this file.
 	if(phase >= ERIC_PHASE_2)
 		return list(
 			/mob/living/simple_animal/hostile/clan/scout/greed/refracted         = 25,
@@ -454,14 +486,23 @@
 		/mob/living/simple_animal/hostile/xcorp/tank/refracted   = 20,
 	)
 
+/// Spawns a wave of greed-touched followers. Wave size and the field cap
+/// both scale by +2 per human past the first in view, and stall_grace_time
+/// without a minion death doubles the next wave.
 /mob/living/simple_animal/hostile/greed_touched_eric/proc/SummonWave()
 	if(!can_act || dying || stat == DEAD || phase == ERIC_PHASE_3)
 		return
-	// Anti-stall: if no summon has died in stall_grace_time, double the size.
-	var/count = summons_per_wave
+	var/humans_in_view = 0
+	for(var/mob/living/carbon/human/H in view(8, src))
+		if(H.stat == DEAD)
+			continue
+		humans_in_view++
+	var/extras = max(0, (humans_in_view - 1) * 2)
+	var/count = summons_per_wave + extras
+	var/effective_max = max_summons + extras
 	if(world.time - last_minion_death_time >= stall_grace_time)
 		count *= 2
-	count = min(count, max_summons - length(summoned_mobs))
+	count = min(count, effective_max - length(summoned_mobs))
 	if(count <= 0)
 		summon_cooldown = world.time + summon_cooldown_time
 		return
@@ -506,8 +547,6 @@
 	UnregisterSignal(source, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING))
 	summoned_mobs -= source
 	last_minion_death_time = world.time
-	// Stop the mob's death() from auto-qdel'ing before the fade completes.
-	// (del_on_death lives on /mob/living/simple_animal/hostile, not /mob/living.)
 	source.del_on_death = FALSE
 	INVOKE_ASYNC(src, PROC_REF(DrainSummon), source)
 
@@ -528,15 +567,11 @@
 		B.visuals.color = "#aa0000"
 	playsound(corpse_turf, 'sound/abnormalities/nosferatu/bloodcollect.ogg', 50, TRUE)
 	new /obj/effect/temp_visual/cult/sparks(corpse_turf)
-	// Blood payout scales with the summon's HP pool — heavies are worth chasing.
-	// /3 paces the fight to ~2 bursts per cleared "light wave" cycle in P1.
 	var/blood_value = round(max(1, M.maxHealth / 3))
 	// Bloodbags pay double (Phase 2's priority kill).
 	if(istype(M, /mob/living/simple_animal/hostile/humanoid/blood/bag))
 		blood_value *= 2
 	AdjustEricBlood(blood_value)
-	// Drop a fresh blood decal so the bloodfeast component's passive scan has
-	// something to chew on while the corpse fades.
 	if(!locate(/obj/effect/decal/cleanable/blood) in corpse_turf)
 		var/obj/effect/decal/cleanable/blood/BD = new(corpse_turf)
 		BD.bloodiness = 100
@@ -552,8 +587,7 @@
 	walk(src, 0)
 	say(pick(burst_lines))
 	playsound(get_turf(src), 'sound/abnormalities/nosferatu/attack_special.ogg', 80, TRUE, 6)
-	// 2s telegraph: ring of warning tiles in view(8) and Eric jitters.
-	for(var/turf/T in view(8, src))
+	for(var/turf/T in view(5, src))
 		new /obj/effect/temp_visual/greed_burst_warning(T)
 	var/end_telegraph = world.time + burst_telegraph_time
 	while(world.time < end_telegraph)
@@ -565,13 +599,10 @@
 	if(dying || stat == DEAD)
 		can_act = TRUE
 		return
-	// Detonation: a single RED damage pool split across every live mob in
-	// view, summons included. Eric himself is excluded. Bleed only lands on
-	// humans — summons soak the share but don't bleed for flavor.
 	playsound(get_turf(src), 'sound/effects/explosion1.ogg', 100, FALSE, 8)
 	var/total_damage = glutted ? burst_total_damage * 2 : burst_total_damage
 	var/list/burst_targets = list()
-	for(var/mob/living/L in view(8, src))
+	for(var/mob/living/L in view(5, src))
 		if(L == src || QDELETED(L) || L.stat == DEAD)
 			continue
 		burst_targets += L
@@ -596,11 +627,7 @@
 					L.deal_damage(burst_minion_damage, RED_DAMAGE, src,
 						attack_type = (ATTACK_TYPE_RANGED | ATTACK_TYPE_SPECIAL))
 					L.apply_lc_bleed(burst_minion_bleed)
-		// Routes through OnSummonDeath → DrainSummon, so each sacrificed
-		// minion still beams its blood back into Eric before fading.
 		M.death()
-	// Glutted check: did Eric take HP damage since the last burst? If not,
-	// flag for double-damage on the NEXT burst. Resets when he takes a hit.
 	if(health >= hp_at_last_burst)
 		bursts_without_damage++
 		if(bursts_without_damage >= 2)
@@ -609,10 +636,6 @@
 		bursts_without_damage = 0
 		glutted = FALSE
 	hp_at_last_burst = health
-	// Aftermath: pool drained, shield locked off, summon timer reset.
-	// Flavor: the Heart has overflowed and Eric is *drowning in it* — the
-	// hoarded bloodfeast is pouring out of every wound, leaving him
-	// shieldless until the spill ends and the Heart hauls its reserves back.
 	var/datum/component/bloodfeast/C = GetComponent(/datum/component/bloodfeast)
 	if(C)
 		C.blood_amount = 0
@@ -626,7 +649,6 @@
 		return
 	icon_state = (phase == ERIC_PHASE_3) ? hardblood_state : normal_state
 	visible_message(span_userdanger("[src] shudders — the spilled bloodfeast surges back into him as the Heart re-asserts its grip!"))
-	// Brief breath before resuming summons so the window doesn't bleed into a wave.
 	summon_cooldown = world.time + 3 SECONDS
 	can_act = TRUE
 	RecomputeShield()
@@ -640,6 +662,8 @@
 		return TRUE
 	return FALSE
 
+/// Plants up to 6 sanguine_marker tendrils: humans first (one each), then
+/// random open turfs in view at least 3 tiles from any prior marker.
 /mob/living/simple_animal/hostile/greed_touched_eric/proc/SanguineFeast()
 	if(!can_act || dying || stat == DEAD)
 		return
@@ -648,24 +672,40 @@
 	say("Settle down, children. The Heart wants a sample. All of it.")
 	visible_message(span_userdanger("[src] reaches both hands toward the marked tiles, channeling a feast of blood!"))
 	playsound(get_turf(src), 'sound/abnormalities/nosferatu/attack_special.ogg', 60, TRUE, 6)
-	var/spawned = 0
+	var/list/marker_turfs = list()
+	var/marker_target = 6
 	for(var/mob/living/carbon/human/H in view(7, src))
+		if(length(marker_turfs) >= marker_target)
+			break
 		if(QDELETED(H) || H.stat == DEAD)
 			continue
-		var/turf/T = get_turf(H)
-		if(!T)
+		var/turf/HT = get_turf(H)
+		if(!HT)
 			continue
+		marker_turfs |= HT
+	if(length(marker_turfs) < marker_target)
+		var/list/candidate_turfs = list()
+		for(var/turf/open/T in view(7, src))
+			candidate_turfs += T
+		candidate_turfs = shuffle(candidate_turfs)
+		for(var/turf/picked in candidate_turfs)
+			if(length(marker_turfs) >= marker_target)
+				break
+			var/valid = TRUE
+			for(var/turf/existing in marker_turfs)
+				if(get_dist(picked, existing) < 3)
+					valid = FALSE
+					break
+			if(valid)
+				marker_turfs += picked
+	for(var/turf/T in marker_turfs)
 		var/obj/effect/temp_visual/sanguine_marker/M = new(T, src)
 		M.damage = sanguine_feast_damage
 		M.execute_threshold = sanguine_feast_execute_threshold
-		spawned++
-	if(spawned == 0)
-		// No humans landed under the cast — short retry cooldown.
+	if(!length(marker_turfs))
 		can_act = TRUE
 		sanguine_feast_cooldown = world.time + 5 SECONDS
 		return
-	// Lock-in lasts only through the marker's Blowup tick; the visual lingers
-	// another ~1.4s as afterglow but Eric is free to resume his loop.
 	sleep(sanguine_feast_charge_time)
 	if(!QDELETED(src) && stat != DEAD)
 		can_act = TRUE
@@ -696,11 +736,6 @@
 		do_jitter_animation(300)
 		sleep(5)
 	ChangeResistances(list(RED_DAMAGE = 1, WHITE_DAMAGE = 1, BLACK_DAMAGE = 1, PALE_DAMAGE = 1.2))
-	// Smaller bloodfeast cap = bursts come faster. Summon cadence and burst
-	// window are intentionally unchanged — the swarm flow is the fun part,
-	// and the roster swap (X-Corp → greed-touched) is the real escalation.
-	// Cap scaled proportionally to P1's 700 (~5/7), still leaves headroom
-	// for Sanguine Feast's execute bonuses.
 	blood_cap = 500
 	var/datum/component/bloodfeast/C = GetComponent(/datum/component/bloodfeast)
 	if(C)
@@ -724,8 +759,6 @@
 	walk(src, 0)
 	say(pick(phase_3_lines))
 	visible_message(span_userdanger("[src] tears open his own chest and drinks straight from the Heart of Greed — the herd is forgotten!"))
-	// Reclaim every summon's life-thread at once — visual closure on the wave loop.
-	// Iterate over a snapshot; M.death() fires OnSummonDeath which mutates summoned_mobs.
 	for(var/mob/living/M in summoned_mobs.Copy())
 		if(QDELETED(M) || M.stat == DEAD)
 			continue
@@ -739,29 +772,27 @@
 			return
 		do_jitter_animation(300)
 		sleep(5)
-	// Permanent shield collapse: pool is unused now, shield stays at 0.
 	blood_resistance = 0
 	shield_locked_until = 0
-	// P3 melee — drops the pure-summoner restriction. Adjacency hurts now.
+	var/datum/component/bloodfeast/PC = GetComponent(/datum/component/bloodfeast)
+	if(PC)
+		PC.blood_amount = round(blood_cap * 0.5)
 	melee_damage_lower = 25
 	melee_damage_upper = 35
 	melee_damage_type = RED_DAMAGE
 	attack_verb_continuous = "rakes"
 	attack_verb_simple = "rake"
 	attack_sound = 'sound/abnormalities/nosferatu/attack.ogg'
-	// Faster pursuit — the slow-stalker tempo was P1/P2; P3 he closes hard.
 	move_to_delay = 6
 	hardblood_cooldown = world.time + 4 SECONDS
-	// Sanguine Rush opens slightly later so Hardblood lands first in P3.
 	sanguine_rush_cooldown = world.time + 9 SECONDS
 	can_act = TRUE
 
-// Mist marker attack — replicates the bloodboss dash pattern
-// (_abno_abilities.dm:662-709). After applying Bloodhold, Eric floats one
-// sparkle overlay above the target per pending strike (default 3) — those
-// sparkles are the "marks" players see during the wind-up, and they drive
-// the loop count one-to-one. Before every pulse Eric teleports near the
-// target so the safe tile (opposite his new position) jumps each strike.
+// Mist marker attack — replicates the bloodboss dash pattern. Floats one
+// sparkle above the target per pending strike, then loops once per sparkle:
+// teleport adjacent, paint a 5x5 mist with the mirror-across-target tile safe,
+// resolve damage, consume one sparkle. Disengage-teleports a few tiles back at
+// the end of the cast.
 /mob/living/simple_animal/hostile/greed_touched_eric/proc/HardbloodStrike()
 	if(dying || stat == DEAD)
 		can_act = TRUE
@@ -774,10 +805,9 @@
 	walk(src, 0)
 	say("Hardblood arts. You children needed correcting.")
 	playsound(get_turf(src), 'sound/weapons/ego/thumb_east_podao_clash.ogg', 70, FALSE, 6)
+	if(hardblood_cost > 0)
+		SpendBlood(hardblood_cost)
 	L.apply_status_effect(/datum/status_effect/bloodhold)
-	// Float one sparkle above the target per pending strike; consumed
-	// one-at-a-time as each pulse resolves so the player can read remaining
-	// strikes off the visible mark count.
 	var/list/sparkles = list()
 	for(var/i in 1 to hardblood_strike_count)
 		var/image/sparkle = image('icons/effects/cult_effects.dmi', L, "bloodsparkles", ABOVE_MOB_LAYER)
@@ -785,34 +815,41 @@
 		sparkle.pixel_y = 24
 		sparkles += sparkle
 		L.add_overlay(sparkle)
+		addtimer(CALLBACK(L, TYPE_PROC_REF(/atom, cut_overlay), sparkle), 30 SECONDS)
 	for(var/i in 1 to hardblood_strike_count)
 		if(QDELETED(L) || L.stat == DEAD || dying || stat == DEAD)
 			continue
 		var/turf/center = get_turf(L)
 		if(!center)
 			continue
-		// Teleport Eric to a random open tile 3-5 from the target so the
-		// safe-tile direction shifts every pulse.
 		var/list/teleport_candidates = list()
-		for(var/turf/T in view(5, center))
-			if(get_dist(T, center) < 3)
+		for(var/turf/T in range(1, center))
+			if(T == center)
 				continue
 			if(T.density)
 				continue
 			if(locate(/mob/living) in T)
 				continue
 			teleport_candidates += T
+		var/turf/eric_pos = get_turf(src)
 		if(length(teleport_candidates))
-			var/turf/dest = pick(teleport_candidates)
-			new /obj/effect/temp_visual/dir_setting/cult/phase(get_turf(src))
-			forceMove(dest)
-			new /obj/effect/temp_visual/dir_setting/cult/phase(dest)
+			eric_pos = pick(teleport_candidates)
+			Teleport(eric_pos)
 			face_atom(L)
-		var/dx = src.x - center.x
-		var/dy = src.y - center.y
-		var/turf/safe_turf = locate(center.x - dx, center.y - dy, center.z)
+		var/dx = clamp(eric_pos.x - center.x, -1, 1)
+		var/dy = clamp(eric_pos.y - center.y, -1, 1)
+		var/turf/safe_turf
+		if(dx || dy)
+			safe_turf = locate(center.x - dx, center.y - dy, center.z)
 		if(!safe_turf || safe_turf.density)
-			safe_turf = center
+			var/list/safe_candidates = list()
+			for(var/turf/T in range(1, center))
+				if(T == center)
+					continue
+				if(T.density)
+					continue
+				safe_candidates += T
+			safe_turf = length(safe_candidates) ? pick(safe_candidates) : center
 		for(var/turf/T in view(2, center))
 			var/state = (T == safe_turf) ? "cloud_swirl" : "blood_cloud_swirl"
 			var/image/mist = image('icons/effects/eldritch.dmi', T, state, CLOSED_FIREDOOR_LAYER)
@@ -836,17 +873,28 @@
 				L_hit.deal_damage(hardblood_strike_damage, RED_DAMAGE, src,
 					attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 				L_hit.apply_lc_bleed(3)
-				L_hit.Knockdown(hardblood_knockdown_time)
 		if(!QDELETED(L) && length(sparkles))
 			L.cut_overlay(sparkles[1])
 			sparkles.Cut(1, 2)
 		SLEEP_CHECK_DEATH(1 SECONDS)
-	// Strip any leftover sparkles if the loop broke early (target died
-	// mid-cycle, Eric died, etc.) so the overlay can't outlive the attack.
 	if(!QDELETED(L) && length(sparkles))
 		for(var/image/leftover in sparkles)
 			L.cut_overlay(leftover)
 		sparkles.Cut()
+	if(!QDELETED(L) && stat != DEAD && !dying)
+		var/turf/anchor = get_turf(L)
+		if(anchor)
+			var/list/escape_candidates = list()
+			for(var/turf/T in view(6, anchor))
+				if(get_dist(T, anchor) < 4)
+					continue
+				if(T.density)
+					continue
+				if(locate(/mob/living) in T)
+					continue
+				escape_candidates += T
+			if(length(escape_candidates))
+				Teleport(pick(escape_candidates))
 	hardblood_cooldown = world.time + hardblood_cooldown_time
 	can_act = TRUE
 
@@ -866,9 +914,9 @@
 	say("I told you to behave! Coming for it, children!")
 	playsound(get_turf(src), 'sound/abnormalities/big_wolf/Wolf_Scratch.ogg', 80, FALSE, 6)
 	visible_message(span_userdanger("[src] hunches forward, claws weeping crimson — about to rush!"))
+	if(sanguine_rush_cost > 0)
+		SpendBlood(sanguine_rush_cost)
 	SLEEP_CHECK_DEATH(2 SECONDS)
-	// Short tell so the very first dash isn't a surprise opener — players
-	// catch the cue and can sidestep before the strip lands.
 	if(!dying && stat != DEAD)
 		say("BEHOLD, CHILDREN!")
 	for(var/i in 1 to 3)
@@ -941,8 +989,6 @@
 	. = ..()
 	can_act = FALSE
 	walk(src, 0)
-	// Kill all summons so the wave doesn't outlive the boss.
-	// Iterate over a snapshot; M.death() fires OnSummonDeath which mutates summoned_mobs.
 	for(var/mob/living/M in summoned_mobs.Copy())
 		if(QDELETED(M) || M.stat == DEAD)
 			continue
@@ -962,58 +1008,58 @@
 /mob/living/simple_animal/hostile/clan/scout/greed/refracted
 	maxHealth = 113
 	health = 113
-	melee_damage_lower = 3
-	melee_damage_upper = 4
+	melee_damage_lower = 1
+	melee_damage_upper = 2
 
 /mob/living/simple_animal/hostile/clan/drone/greed/refracted
 	maxHealth = 175
 	health = 175
-	melee_damage_lower = 2
-	melee_damage_upper = 3
+	melee_damage_lower = 1
+	melee_damage_upper = 2
 
 /mob/living/simple_animal/hostile/clan/defender/greed/refracted
 	maxHealth = 344
 	health = 344
-	melee_damage_lower = 4
-	melee_damage_upper = 6
+	melee_damage_lower = 2
+	melee_damage_upper = 3
 
 /mob/living/simple_animal/hostile/clan/ranged/sniper/greed/refracted
 	maxHealth = 156
 	health = 156
-	melee_damage_lower = 2
-	melee_damage_upper = 4
+	melee_damage_lower = 1
+	melee_damage_upper = 2
 
 /mob/living/simple_animal/hostile/clan/ranged/gunner/greed/refracted
 	maxHealth = 200
 	health = 200
-	melee_damage_lower = 3
-	melee_damage_upper = 4
+	melee_damage_lower = 1
+	melee_damage_upper = 2
 
 /mob/living/simple_animal/hostile/clan/ranged/harpooner/greed/refracted
 	maxHealth = 238
 	health = 238
-	melee_damage_lower = 3
-	melee_damage_upper = 5
+	melee_damage_lower = 1
+	melee_damage_upper = 3
 
 // ---- X-Corp ----
 
 /mob/living/simple_animal/hostile/xcorp/dps/refracted
 	maxHealth = 81
 	health = 81
-	melee_damage_lower = 3
-	melee_damage_upper = 4
+	melee_damage_lower = 1
+	melee_damage_upper = 2
 
 /mob/living/simple_animal/hostile/xcorp/scout/refracted
 	maxHealth = 113
 	health = 113
-	melee_damage_lower = 2
-	melee_damage_upper = 4
+	melee_damage_lower = 1
+	melee_damage_upper = 2
 
 /mob/living/simple_animal/hostile/xcorp/sapper/refracted
 	maxHealth = 156
 	health = 156
-	melee_damage_lower = 2
-	melee_damage_upper = 3
+	melee_damage_lower = 1
+	melee_damage_upper = 2
 	// Scream goes off at random Life ticks; 10 raw = 5 effective. Without
 	// this cap the inherited 20 spikes too hard against 200-HP players.
 	scream_damage = 10
@@ -1021,8 +1067,8 @@
 /mob/living/simple_animal/hostile/xcorp/tank/refracted
 	maxHealth = 263
 	health = 263
-	melee_damage_lower = 4
-	melee_damage_upper = 6
+	melee_damage_lower = 2
+	melee_damage_upper = 3
 
 #undef ERIC_PHASE_1
 #undef ERIC_PHASE_2

@@ -47,6 +47,9 @@ SUBSYSTEM_DEF(refraction_railway)
 	var/scale_boss_stats = TRUE
 	/// Compensation medipens for smaller parties each sector.
 	var/give_compensation_pens = TRUE
+	/// Forbid re-using EGO weapons/armor across sectors of the same run.
+	/// Default ON at the SS level — per-line override is the authoring control.
+	var/unique_loadout_per_sector = TRUE
 
 /datum/controller/subsystem/refraction_railway/Initialize()
 	InitializeLines()
@@ -422,6 +425,7 @@ SUBSYSTEM_DEF(refraction_railway)
 		C.run_uid = run_uid
 		C.room_id = N.id
 		C.node = N
+		C.line = run.line
 		for(var/obj/effect/landmark/refraction/spawner/L in GLOB.landmarks_list)
 			if(L.z != run.loaded_z)
 				continue

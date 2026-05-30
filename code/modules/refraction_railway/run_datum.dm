@@ -220,6 +220,32 @@ GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 
 // ---------- Loadouts ----------
 
+/// TRUE iff SS-level AND this run's line both have unique-loadout-per-sector on.
+/datum/refraction_run/proc/IsUniqueLoadoutEnforced()
+	if(!SSrefraction_railway.unique_loadout_per_sector)
+		return FALSE
+	if(line && !line.unique_loadout_per_sector)
+		return FALSE
+	return TRUE
+
+/// TRUE iff `ckey` already used `path` in a prior sector's loadout this run.
+/// Always FALSE when unique-loadout enforcement is off.
+/datum/refraction_run/proc/IsItemPathBlocked(ckey, path)
+	if(!ckey || !path)
+		return FALSE
+	if(!IsUniqueLoadoutEnforced())
+		return FALSE
+	for(var/list/per_player as anything in sector_loadouts)
+		if(!islist(per_player))
+			continue
+		for(var/list/entry as anything in per_player)
+			if(entry["ckey"] != ckey)
+				continue
+			var/list/lo = entry["loadout"]
+			if(islist(lo) && (path in lo))
+				return TRUE
+	return FALSE
+
 /datum/refraction_run/proc/ApplyLoadout(ckey, list/weapon_paths, armor_path)
 	if(!ckey || !islist(weapon_paths) || length(weapon_paths) != 2)
 		return FALSE
@@ -228,7 +254,11 @@ GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 	for(var/wpath in weapon_paths)
 		if(!(wpath in usable_ego_weapons))
 			return FALSE
+		if(IsItemPathBlocked(ckey, wpath))
+			return FALSE
 	if(!(armor_path in usable_ego_armor))
+		return FALSE
+	if(IsItemPathBlocked(ckey, armor_path))
 		return FALSE
 	var/mob/living/carbon/human/H = FindMemberByCkey(ckey)
 	if(!ishuman(H))
@@ -676,6 +706,13 @@ GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 		// equip_to_slot_or_del's do_after, and we're in a SIGNAL_HANDLER.
 		// Defer to a fresh chain.
 		INVOKE_ASYNC(src, PROC_REF(EnterCheckpoint))
+		// Retry the heal twice — the initial pass during EnterCheckpoint
+		// can leave a die-and-insane player with sanity stuck (revive's
+		// fully_heal no-ops adjustSanityLoss while stat == DEAD). By t+2s
+		// the revive has settled; t+4s catches anything the first retry
+		// missed.
+		addtimer(CALLBACK(src, PROC_REF(WipeHealRetry)), 2 SECONDS)
+		addtimer(CALLBACK(src, PROC_REF(WipeHealRetry)), 4 SECONDS)
 
 /// Fires 1s after death/insanity: revive + heal + cure, then re-equip.
 /// Always runs both halves — HealMember is a safe no-op when already
@@ -688,6 +725,18 @@ GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 		pending_bench -= H.ckey
 	HealMember(H)
 	ReequipLoadout(H)
+
+/// Post-wipe safety pass — re-applies HealMember only to members who are
+/// still incapacitated (dead or insane). Run twice (2s and 4s after the
+/// wipe) so a dead-and-insane player whose first revive left sanity stuck
+/// gets a second chance once their stat has transitioned off DEAD.
+/datum/refraction_run/proc/WipeHealRetry()
+	for(var/mob/living/carbon/human/H as anything in members)
+		if(QDELETED(H) || !ishuman(H))
+			continue
+		if(H.stat != DEAD && !H.sanity_lost)
+			continue
+		HealMember(H)
 
 // ---------- Timer ----------
 
@@ -795,8 +844,14 @@ GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 	// dismembered or brain-missing body can come back. Without it,
 	// can_be_revived() returns FALSE and the body stays DEAD.
 	H.revive(full_heal = TRUE, admin_revive = TRUE)
-	// revive()'s fully_heal can no-op the sanity reset (stat == DEAD), so
-	// always cure. Safe no-op when healthy.
+	// Fallback: if revive's can_be_revived gate refused, the body stays
+	// stat == DEAD. Force the stat transition and re-run fully_heal so the
+	// in-revive adjustSanityLoss (which silently no-ops on dead bodies)
+	// actually clears sanityloss on the retry pass.
+	if(H.stat == DEAD)
+		H.set_stat(UNCONSCIOUS)
+		H.fully_heal(admin_revive = TRUE)
+		H.updatehealth()
 	CureMemberInsanity(H)
 
 /// Restores a member to fully sane + player-controlled. Safe no-op when
@@ -863,6 +918,8 @@ GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 /// Spawns this sector's mental + salacid medipens into member backpacks.
 /datum/refraction_run/proc/GiveSectorPens()
 	if(!SSrefraction_railway.give_compensation_pens)
+		return
+	if(line && !line.give_compensation_pens)
 		return
 	var/count = PenCountForLobby(LiveMemberCount())
 	if(count <= 0)

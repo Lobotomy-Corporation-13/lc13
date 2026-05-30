@@ -36,40 +36,33 @@
 	data["status_glossary"] = RefractionStatusGlossary()
 	return data
 
-/// Per-effect payload of active small-party compensation flags.
+/// Per-(line × flag) payload of small-party compensation flags. Each row
+/// shows the *effective* state for that line — `SS.flag && line.flag` — so
+/// per-line author overrides are visible alongside the global SS toggles.
 /obj/machinery/computer/refraction_railway_console/proc/BuildCompensationsPayload()
-	return list(
-		list(
-			"name"        = "Stock multiplier",
-			"description" = "Per-mob-type reserves scale +20% per extra player. Bosses unaffected.",
-			"enabled"     = SSrefraction_railway.scale_stock,
-		),
-		list(
-			"name"        = "Concurrent cap",
-			"description" = "Max simultaneously-alive mobs scales +20% per extra player. Bosses unaffected.",
-			"enabled"     = SSrefraction_railway.scale_concurrent,
-		),
-		list(
-			"name"        = "Spawn batch",
-			"description" = "Mobs per spawn cycle equals the lobby size (1 solo, 4 quad).",
-			"enabled"     = SSrefraction_railway.scale_spawn_batch,
-		),
-		list(
-			"name"        = "Wave mob stats",
-			"description" = "Non-boss mobs gain +20% HP / +10% damage per extra player.",
-			"enabled"     = SSrefraction_railway.scale_wave_stats,
-		),
-		list(
-			"name"        = "Boss HP",
-			"description" = "Boss HP × player count (1x solo, 4x quad). Boss damage is always left at authored values.",
-			"enabled"     = SSrefraction_railway.scale_boss_stats,
-		),
-		list(
-			"name"        = "Compensation pens",
-			"description" = "Smaller parties get mental + salacid medipens at the start of each sector (4/2/1/0 by lobby size).",
-			"enabled"     = SSrefraction_railway.give_compensation_pens,
-		),
+	var/static/list/flag_specs = list(
+		list("name" = "Stock multiplier",  "description" = "Per-mob-type reserves scale +20% per extra player. Bosses unaffected.",                                            "var" = "scale_stock"),
+		list("name" = "Concurrent cap",    "description" = "Max simultaneously-alive mobs scales +20% per extra player. Bosses unaffected.",                                  "var" = "scale_concurrent"),
+		list("name" = "Spawn batch",       "description" = "Mobs per spawn cycle equals the lobby size (1 solo, 4 quad).",                                                    "var" = "scale_spawn_batch"),
+		list("name" = "Wave mob stats",    "description" = "Non-boss mobs gain +20% HP / +10% damage per extra player.",                                                      "var" = "scale_wave_stats"),
+		list("name" = "Boss HP",           "description" = "Boss HP × player count (1x solo, 4x quad). Boss damage is always left at authored values.",                       "var" = "scale_boss_stats"),
+		list("name" = "Compensation pens", "description" = "Smaller parties get mental + salacid medipens at the start of each sector (4/2/1/0 by lobby size).",              "var" = "give_compensation_pens"),
+		list("name" = "Unique loadout per sector", "description" = "Players can't re-use the same EGO weapons or armor across sectors of the same run. Used items still appear in the loadout UI, crossed out and unselectable.", "var" = "unique_loadout_per_sector"),
 	)
+	var/list/out = list()
+	for(var/line_id in SSrefraction_railway.lines)
+		var/datum/refraction_line/L = SSrefraction_railway.lines[line_id]
+		if(!istype(L))
+			continue
+		for(var/list/flag as anything in flag_specs)
+			var/ss_on = SSrefraction_railway.vars[flag["var"]]
+			var/line_on = L.vars[flag["var"]]
+			out += list(list(
+				"name"        = "[L.name] — [flag["name"]]",
+				"description" = flag["description"],
+				"enabled"     = ss_on && line_on,
+			))
+	return out
 
 /// Leaderboard payload with per-sector loadout icons rendered.
 /obj/machinery/computer/refraction_railway_console/proc/BuildLeaderboardsPayload()

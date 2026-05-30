@@ -66,7 +66,7 @@
 
 		// ---------- zeal_s1n2: Azarus, the House ----------
 
-		/mob/living/simple_animal/hostile/azarus/refracted = list(
+		/mob/living/simple_animal/hostile/distortion/azarus/refracted = list(
 			list(
 				"name"     = "Ante Up",
 				"damage"   = "No direct damage; scatters 5 dice (9 in phase 2)",
@@ -120,7 +120,7 @@
 
 		// ---------- zeal_s2n1: The Envy of Humanity (form attacks) ----------
 
-		/mob/living/simple_animal/hostile/understudy = list(
+		/mob/living/simple_animal/hostile/distortion/understudy = list(
 			// ---------- City roster (phase 1) ----------
 			list(
 				"name"     = "Yield My Flesh (Ronin form)",
@@ -382,16 +382,21 @@
 			list(
 				"name"     = "Sanguine Feast",
 				"damage"   = "80 RED + 3 Bleed per human standing on a marked tile when the tendril lands; **non-human mobs under 800 HP on a marked tile are executed instantly** and feed him ~half their max HP in bloodfeast",
-				"cooldown" = "~30 seconds",
-				"desc"     = "Locks in place and marks the tile under every \
-					human in view (~7 tiles). After ~4s a blood tendril \
-					rises through each marked tile and spikes whatever \
-					stands on it — step off the marked tile during the \
-					wind-up to dodge.",
+				"cooldown" = "~15 seconds",
+				"desc"     = "Locks in place and tries to plant **6 markers \
+					total** — one under every human he can see, then \
+					random open tiles in view filling the rest (each \
+					random tile sits at least 3 tiles from any other \
+					marker). After ~4s a blood tendril rises through \
+					each marker. Humans take damage only if they're on \
+					the exact tile (step off to dodge), but **any \
+					simple mob within a 3x3 of the tendril is instantly \
+					executed** — followers caught near the feast feed \
+					his pool.",
 			),
 			list(
 				"name"     = "Greed Burst",
-				"damage"   = "200 RED total pool split evenly across every live mob in view (~8 tiles, players AND his own summons share the split); humans also take 2 Bleed. 400 if **Glutted**. Each live summon additionally bursts in place for 50 RED + 2 Bleed in a 3x3 around their tile.",
+				"damage"   = "200 RED total pool split evenly across every live mob in view (~5 tiles, players AND his own summons share the split); humans also take 2 Bleed. 400 if **Glutted**. Each live summon additionally bursts in place for 50 RED + 2 Bleed in a 3x3 around their tile.",
 				"cooldown" = "Auto-fires when his bloodfeast pool fills (~700 in P1, ~500 in P2)",
 				"desc"     = "2s telegraph (warning tiles ring the room and he \
 					convulses), then the room-wide pool resolves + every \
@@ -400,18 +405,19 @@
 			),
 			list(
 				"name"     = "Hardblood Arts",
-				"damage"   = "90 RED + 3 Bleed + 1s Knockdown per unsafe tile hit; one mist pulse per sparkle (default 3)",
+				"damage"   = "45 RED + 3 Bleed per unsafe tile hit; one mist pulse per sparkle (default 3)",
 				"cooldown" = "~10 seconds in phase 3 only",
 				"desc"     = "Phase 3 only. Target gets **Bloodhold** (1/4 \
 					speed, 8s) and **3 sparkle overlays** float above \
 					their head — each sparkle is one pending mist pulse. \
-					Before every pulse Eric **teleports to a fresh tile \
-					3-5 from the target**, then paints the 5x5 around \
-					the target in red mist with exactly **one safe tile \
-					(opposite his new position)**. After a **~1.5s \
-					telegraph**, every unsafe tile resolves into blood \
-					slices and damages anyone on it. One sparkle dims \
-					per pulse, so the visible count is the strikes left.",
+					Before every pulse Eric **teleports to an adjacent \
+					tile next to the target**, then paints the 5x5 \
+					around the target in red mist with exactly **one \
+					safe tile (the diagonal opposite of where he just \
+					landed)**. After a **~1.5s telegraph**, every \
+					unsafe tile resolves into blood slices and damages \
+					anyone on it. One sparkle dims per pulse, so the \
+					visible count is the strikes left.",
 			),
 			list(
 				"name"     = "Sanguine Rush",
@@ -472,8 +478,8 @@
 			),
 			list(
 				"name"     = "Reverberation",
-				"damage"   = "35 BLACK per damage instance (split evenly across the instance's rifts). Instance count equals current Reverberation Charge (capped at 15). At cap: **525 BLACK total** spread across the cast (~210 actual damage to a player at 60% DR).",
-				"cooldown" = "**45 seconds**, gated by Reverberation Charge ≥ 5 for the first cast. Force-fires once on Phase 2 entry if charges are ready.",
+				"damage"   = "55 BLACK per damage instance (split evenly across the instance's rifts). Instance count equals current Reverberation Charge (capped at 15). At cap: **825 BLACK total** spread across the cast. **Diminishing returns on a single target: each repeat hit deals 10% less than the previous (so hit 2 = 90%, hit 3 = 80%, …), floored at -80% (20% damage).**",
+				"cooldown" = "**45 seconds after a cast**, with a **30-second re-attempt clock** while waiting on charges. Every 30s she tries: with **Reverberation Charge ≥ 5** she fires (the 45s post-cast cooldown then resets), otherwise nothing happens and the next attempt is another 30s out. **Phase 2 entry**: if charges are below 3 she's topped up to 3, then **force-casts immediately** regardless of the normal 5-charge gate.",
 				"desc"     = "**On cast, any still-alive Mirror Variants \
 					are yanked back into her regardless of distance** — \
 					each one refunds its ~150 HP cost and adds 1 \

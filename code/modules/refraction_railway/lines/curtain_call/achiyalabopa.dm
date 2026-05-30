@@ -126,14 +126,10 @@
 
 /obj/effect/divine_thunderbolt/proc/Explode()
 	playsound(get_turf(src), 'sound/abnormalities/thunderbird/tbird_bolt.ogg', 50, FALSE, 8)
-	// range() instead of view() — the 3x3 ignores line-of-sight so
-	// walls inside the danger zone don't hide tiles from the AoE.
 	var/list/turfs_to_check = range(range, src)
 	var/list/reapers_hit = list()
 	for(var/mob/living/L in turfs_to_check)
 		if(QDELETED(master) && istype(L, /mob/living/simple_animal/hostile/mirage_reaper))
-			// No backref to the boss — can't route reaper hits. Skip them
-			// and just damage humans (legacy behavior).
 			continue
 		if(istype(L, /mob/living/simple_animal/hostile/mirage_reaper))
 			reapers_hit |= L
@@ -218,9 +214,6 @@
 		return
 	if(owner.has_status_effect(/datum/status_effect/hope) || owner.has_status_effect(/datum/status_effect/will_of_humanity))
 		return FALSE
-	// Awe Struck is now a pure marker — no Fragile is applied. The
-	// damage scaling is done on the attacker side: every Achiyalabopa
-	// attack against an awe-struck target multiplies its damage by 1.5.
 	to_chat(owner, span_userdanger("The storm's pressure bears down on you — every blow she lands will strike you harder."))
 	return TRUE
 
@@ -263,8 +256,6 @@
 	. = ..()
 	if(!.)
 		return
-	// Hope dispels Awe Struck and clears every Fragile-family debuff on
-	// the bearer — Awe's pressure is the whole reason these were applied.
 	owner.remove_status_effect(/datum/status_effect/awe_struck)
 	ClearAllFragile(owner)
 	owner.apply_lc_strength(4)
@@ -400,8 +391,6 @@
 	. = ..()
 	if(!.)
 		return
-	// Will of Humanity also dispels Awe Struck and clears every Fragile
-	// stack — Coreflame-bearer is exempt from the storm's pressure.
 	owner.remove_status_effect(/datum/status_effect/awe_struck)
 	ClearAllFragile(owner)
 	will_overlay = mutable_appearance('icons/effects/effects.dmi', "blessed", ABOVE_MOB_LAYER)
@@ -469,10 +458,6 @@
 	var/turf/target_turf = get_turf(targets[1])
 	if(!target_turf)
 		return
-	// Coreflame is NOT consumed at cast time — only when the spear
-	// actually impales the boss. A miss leaves the Coreflame in the
-	// caster's inventory so they can try again after the spell
-	// cooldown.
 	ExecuteStrike(user, target_turf)
 	return TRUE
 
@@ -483,11 +468,7 @@
 	set waitfor = FALSE
 	user.visible_message(span_userdanger("[user] calls down a divine spear from the heavens!"))
 	playsound(target_turf, 'sound/magic/staff_healing.ogg', 50, TRUE)
-	// Single sparks on the target tile — that's the only spot the
-	// spear is going to hit. No radius warning.
 	new /obj/effect/temp_visual/cult/sparks(target_turf)
-	// Spawn the spear high above the target, fade it in, then drop.
-	// Total time from spawn to impact = 0.5s fade + 1.0s drop = 1.5s.
 	var/obj/effect/piercing_spear/spear = new(target_turf)
 	spear.pixel_y = 96
 	spear.alpha = 100
@@ -507,10 +488,6 @@
 	if(hit_boss && !hit_boss.dying && hit_boss.stat != DEAD)
 		hit_boss.visible_message(span_userdanger("[hit_boss] is impaled by the divine spear! Her defenses crumble!"))
 		hit_boss.MakeVulnerable(ACHIYA_VULN_DURATION, spear)
-		// The Coreflame only burns up when the strike actually lands.
-		// Grant the bearer 15 seconds of Hope so the next Coreflame
-		// has time to spawn without the bearer immediately falling
-		// back under the awe damage multiplier.
 		if(!QDELETED(user))
 			var/obj/item/coreflame/CF = locate(/obj/item/coreflame) in user.get_contents()
 			if(CF)
@@ -521,9 +498,6 @@
 					burnup_hope.duration = world.time + (15 SECONDS)
 				to_chat(user, span_nicegreen("The Coreflame burns out — its last warmth keeps the awe off you for fifteen seconds."))
 	else
-		// Missed — Coreflame stays in the bearer's inventory; fade the
-		// spear out after a beat instead of leaving a glowing prop on
-		// the floor.
 		QDEL_IN(spear, 2 SECONDS)
 		if(!QDELETED(user))
 			to_chat(user, span_warning("The spear missed — the Coreflame is still yours."))
@@ -589,9 +563,6 @@
 	if(!current_holder || QDELETED(current_holder))
 		return
 	current_holder.dropItemToGround(src)
-	// On bearer death, hurl the Coreflame onto the boss's tile so other
-	// players can rush in to claim it instead of having to fight through
-	// to a corpse on the far side of the arena.
 	if(parent_boss && !QDELETED(parent_boss))
 		forceMove(get_turf(parent_boss))
 		visible_message(span_userdanger("The Coreflame tears free of [current_holder] and hurls itself toward [parent_boss]!"))
@@ -636,6 +607,11 @@
 			visible_message(span_warning("[src] bursts into flames upon touching [L]!"))
 			playsound(get_turf(src), 'sound/magic/fireball.ogg', 50, TRUE)
 			new /obj/effect/temp_visual/fire(get_turf(src))
+			// 10 HP to the bearer + every living human within 5 tiles of them.
+			for(var/mob/living/carbon/human/H in range(5, L))
+				if(H.stat == DEAD)
+					continue
+				H.adjustBruteLoss(-10, forced = TRUE)
 			dust()
 			return
 	return ..()
@@ -744,9 +720,6 @@
 	var/list/floor_tiles = list()
 	for(var/turf/open/floor/T in view(ACHIYA_STORM_RADIUS, src))
 		floor_tiles += T
-	// Hard ceiling — if the arena is huge (open city block, long
-	// corridors) and would need >500 storm overlays, skip painting
-	// entirely. The fight still runs fine without the ambient layer.
 	if(length(floor_tiles) > 500)
 		return
 	for(var/turf/open/floor/T in floor_tiles)
@@ -830,9 +803,6 @@
 /mob/living/simple_animal/hostile/achiyalabopa/AttackingTarget(atom/attacked_target)
 	if(is_performing_aoe || is_performing_whip)
 		return FALSE
-	// 50% melee bonus to awe-struck targets. Temporarily inflate the
-	// stored melee_damage_lower/upper around the parent call (the
-	// parent rolls damage off those vars at attack time), then restore.
 	if(isliving(attacked_target))
 		var/mob/living/L = attacked_target
 		if(L.has_status_effect(/datum/status_effect/awe_struck))
@@ -871,9 +841,6 @@
 		candidates += T
 	if(!length(candidates))
 		return
-	// Spawn 3-4 reapers per call, clamped to remaining cap slots and
-	// the available tile pool. pick_n_take so no two reapers land on
-	// the same tile.
 	var/spawn_count = rand(3, 4)
 	spawn_count = min(spawn_count, ACHIYA_REAPER_CAP - length(active_reapers), length(candidates))
 	if(spawn_count <= 0)
@@ -889,19 +856,12 @@
 		active_reapers += R
 		RegisterSignal(R, COMSIG_LIVING_DEATH, PROC_REF(OnReaperDeath))
 		RegisterSignal(R, COMSIG_PARENT_QDELETING, PROC_REF(OnReaperQdel))
-		// Force their AI active so they hunt immediately. By default
-		// SSidlenpcpool may leave them in AI_IDLE until a client gets
-		// very close, which manifests as "Reapers stand still until
-		// bumped".
 		R.toggle_ai(AI_ON)
 		playsound(spawn_turf, 'sound/magic/lightningshock.ogg', 35, TRUE)
 		new /obj/effect/temp_visual/thunderbolt_strike(spawn_turf)
 
 /mob/living/simple_animal/hostile/achiyalabopa/proc/OnReaperDeath(mob/living/simple_animal/hostile/mirage_reaper/source)
 	SIGNAL_HANDLER
-	// Plain bookkeeping — the timer shave now happens inside each AoE
-	// when it hits a reaper, not here, so this proc only unhooks the
-	// signals and drops the reaper from active_reapers.
 	UnregisterSignal(source, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING))
 	active_reapers -= source
 
@@ -949,9 +909,6 @@
 		return FALSE
 	if(faction_check_mob(L))
 		return FALSE
-	// Awe-struck targets take 50% more damage from every Achiyalabopa
-	// attack. This is the only effect Awe Struck still has on the
-	// target — it's a marker, no Fragile stacks involved.
 	if(L.has_status_effect(/datum/status_effect/awe_struck))
 		amount = amount * 1.5
 	L.deal_damage(amount, damtype)
@@ -1011,10 +968,6 @@
 		targets_hit++
 		var/obj/effect/divine_thunderbolt/E = new(get_turf(L.loc))
 		E.master = src
-	// Also paint 5 random floor turfs in range as scatter-marks — each
-	// at least 2 tiles apart from the others so the marks spread out
-	// instead of clustering. Players can use these as free composure
-	// crackers by herding Reapers onto them.
 	var/turf/origin = get_turf(src)
 	var/list/candidate_turfs = list()
 	for(var/turf/open/floor/T in range(thunder_range, src))
@@ -1147,9 +1100,6 @@
 	var/turf/source_turf = get_turf(src)
 	var/list/area_of_effect = list()
 	var/turf/second_line = get_ranged_target_turf(source_turf, dir_to_target, smash_length - 2)
-	// Build the cone FIRST so we can paint per-tile warnings during
-	// the wind-up. The build is deterministic — no sleeps, no world
-	// state changes between iterations.
 	for(var/i = 0, i < 2, i++)
 		var/list/middle_line = getline(source_turf, get_ranged_target_turf(source_turf, dir_to_target, smash_length))
 		for(var/turf/T in middle_line)
@@ -1175,8 +1125,6 @@
 		source_turf = get_ranged_target_turf(second_line, dir_to_target, smash_length)
 		smash_length += 2
 		smash_width++
-	// Paint the warning bolt on every cone tile, then sleep the
-	// wind-up so players get the visual before strikes start.
 	for(var/turf/T in area_of_effect)
 		new /obj/effect/temp_visual/thunder_whip_warning(T)
 	SLEEP_CHECK_DEATH(0.5 SECONDS)
@@ -1235,9 +1183,6 @@
 	if(spear && !QDELETED(spear))
 		impaled_spear = spear
 		spear.forceMove(loc)
-		// Keep the spear's natural pose from Initialize (slight 15° tilt,
-		// 3-tile-tall icon hovering above the boss tile). No rotation or
-		// pixel-y override — the new icon already reads as "impaled".
 		spear.layer = ABOVE_MOB_LAYER
 		RegisterSignal(src, COMSIG_MOVABLE_MOVED, PROC_REF(UpdateSpearPosition))
 		addtimer(CALLBACK(src, PROC_REF(RemoveImpaledSpear), impaled_spear), duration)
@@ -1284,18 +1229,10 @@
 		UnregisterSignal(src, COMSIG_MOVABLE_MOVED)
 		qdel(impaled_spear)
 		impaled_spear = null
-	// Wipe every Coreflame the boss has handed out — both loose ones on
-	// the ground and any still in a holder's inventory. Railway is a
-	// boss-rush; nothing meant for this fight should survive into the
-	// next node. Each Coreflame's Destroy proc handles dropping it from
-	// the holder and self-removing from active_coreflames.
 	for(var/obj/item/coreflame/CF in active_coreflames.Copy())
 		if(!QDELETED(CF))
 			qdel(CF)
 	active_coreflames = null
-	// Clear lingering Awe Struck on anyone still in the arena — without
-	// the boss continuously reapplying it, players would otherwise keep
-	// the debuff forever.
 	for(var/mob/living/carbon/human/H in view(ACHIYA_STORM_RADIUS, src))
 		var/datum/status_effect/awe_struck/awe = H.has_status_effect(/datum/status_effect/awe_struck)
 		if(awe)

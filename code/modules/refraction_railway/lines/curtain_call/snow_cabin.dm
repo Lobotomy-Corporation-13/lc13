@@ -69,14 +69,21 @@
 	layer = BELOW_MOB_LAYER
 	duration = 3
 
-/obj/effect/temp_visual/snow_cabin_ice_spike
+/obj/structure/snow_cabin_ice_spike
 	name = "ice spike"
+	desc = "A solid spike of ice jutting from the floor. Cold to the touch and impossible to chip."
 	icon = 'ModularLobotomy/_Lobotomyicons/tegu_effects32x48.dmi'
 	icon_state = "ice_spikes"
 	pixel_x = -1
 	pixel_y = -8
 	layer = BELOW_MOB_LAYER
-	duration = 15
+	density = TRUE
+	anchored = TRUE
+	resistance_flags = INDESTRUCTIBLE
+
+/obj/structure/snow_cabin_ice_spike/Initialize(mapload)
+	. = ..()
+	QDEL_IN(src, 35)
 
 /obj/effect/temp_visual/snow_cabin_ice_rupture_rise
 	name = "rising ice"
@@ -87,14 +94,21 @@
 	layer = BELOW_MOB_LAYER
 	duration = 4
 
-/obj/effect/temp_visual/snow_cabin_ice_rupture
+/obj/structure/snow_cabin_ice_rupture
 	name = "ice spike"
+	desc = "A jagged rupture of ice torn up through the floor. Cold to the touch and impossible to chip."
 	icon = 'ModularLobotomy/_Lobotomyicons/tegu_effects32x48.dmi'
 	icon_state = "ice_rupture"
 	pixel_x = -1
 	pixel_y = -8
 	layer = BELOW_MOB_LAYER
-	duration = 15
+	density = TRUE
+	anchored = TRUE
+	resistance_flags = INDESTRUCTIBLE
+
+/obj/structure/snow_cabin_ice_rupture/Initialize(mapload)
+	. = ..()
+	QDEL_IN(src, 35)
 
 /obj/effect/temp_visual/snow_cabin_ice_shard_warning
 	name = "splintering ice"
@@ -116,7 +130,7 @@
 	pixel_x = -1
 	pixel_y = -8
 	layer = BELOW_MOB_LAYER
-	duration = 15
+	duration = 35
 
 // Persistent floor scarring. Tracked on the parent cabin so they can be
 // faded out together when the cabin dies (each crack gets its own random
@@ -718,10 +732,6 @@
 /mob/living/simple_animal/hostile/snow_cabin/Initialize(mapload)
 	. = ..()
 	toggle_ai(AI_OFF)
-	// Pin the area-lock at spawn so IsValidFloorTile / IsValidWallTile
-	// reject any turf outside this arena, even before the floor/wall
-	// caches are built. The cabin doesn't move so this never needs to
-	// be refreshed.
 	locked_area = get_area(src)
 	// Start the cabin's tick loop. 1s granularity is plenty.
 	main_tick_timer_id = addtimer(CALLBACK(src, PROC_REF(MainTick)), 1 SECONDS, TIMER_LOOP | TIMER_STOPPABLE)
@@ -766,16 +776,10 @@
 		return
 	if(!HasActivePlayers())
 		return
-	// Weakpoint spawning — refill toward the phase's targets every tick.
-	// One per tick keeps the initial fill from being a burst, and means a
-	// killed weakpoint is replaced within ~1 second.
 	if(length(active_eyes) < GetEyeTarget())
 		SpawnEye()
 	if(length(active_mouths) < GetMouthTarget())
 		SpawnMouth()
-	// Phase 2 hatching events. The minion cap is checked against
-	// (alive minions of that type) + (pending pods/prisons of that type)
-	// so the cap survives the whole spawn → hatch → death cycle.
 	if(phase == 2)
 		if(world.time >= next_meatpod_spawn \
 			&& length(active_meatpods) < meatpod_cap \
@@ -787,10 +791,6 @@
 			&& (CountActiveYagaslaves() + length(active_ice_prisons)) < yagaslave_cap)
 			SpawnIcePrison()
 			next_ice_prison_spawn = world.time + ice_prison_spawn_interval
-	// AoE attacks. Bone Stab Line and Bladed Teeth keep their raw
-	// cooldowns in Phase 2 — their Phase 2 buff is bigger area, not
-	// faster firing. Ice Spike and Ice Shard Spray still get the
-	// ×phase_2_cooldown_factor reduction.
 	if(world.time >= next_bone_stab)
 		INVOKE_ASYNC(src, PROC_REF(BoneStabLine))
 		next_bone_stab = world.time + bone_stab_cooldown
@@ -869,9 +869,6 @@
 /// through. Tile must be in the cabin's own area (area-lock prevents
 /// cross-arena bleed when multiple arenas share a Z). Snow and ice
 /// variants are excluded — the cabin can't pierce them.
-/// /turf/open/floor/plating/ice/smooth is a subtype of
-/// /turf/open/floor/plating/ice, so the single istype on the parent
-/// covers both.
 /mob/living/simple_animal/hostile/snow_cabin/proc/IsValidFloorTile(turf/T)
 	if(!isopenturf(T))
 		return FALSE
@@ -899,16 +896,11 @@
 
 /mob/living/simple_animal/hostile/snow_cabin/proc/GetFloorTiles()
 	if(!islist(cached_floor_tiles) || !length(cached_floor_tiles))
-		// Snapshot the area-lock once. The cabin can't move, so this
-		// captures the arena the boss was placed in and pins every
-		// future validator call to it.
 		if(!locked_area)
 			locked_area = get_area(src)
 		cached_floor_tiles = list()
-		for(var/turf/T in Z_TURFS(z))
+		for(var/turf/T in view(weakpoint_spawn_range, src))
 			if(!IsValidFloorTile(T))
-				continue
-			if(get_dist(src, T) > weakpoint_spawn_range)
 				continue
 			cached_floor_tiles += T
 	return cached_floor_tiles
@@ -918,10 +910,8 @@
 		if(!locked_area)
 			locked_area = get_area(src)
 		cached_wall_tiles = list()
-		for(var/turf/T in Z_TURFS(z))
+		for(var/turf/T in view(weakpoint_spawn_range, src))
 			if(!IsValidWallTile(T))
-				continue
-			if(get_dist(src, T) > weakpoint_spawn_range)
 				continue
 			cached_wall_tiles += T
 	return cached_wall_tiles
@@ -933,10 +923,6 @@
 	return pick(tiles)
 
 /mob/living/simple_animal/hostile/snow_cabin/proc/PickRandomFloorTileWithoutLandmark()
-	// For mouth / meatpod / ice-prison spawns: reject tiles within
-	// weakpoint_min_spacing of an existing eye OR mouth, and tiles
-	// already hosting a hatching event. Falls through to any floor tile
-	// if the spacing rule wipes the pool clean.
 	var/list/tiles = GetFloorTiles()
 	if(!length(tiles))
 		return null
@@ -950,8 +936,6 @@
 	return pick(clean)
 
 /mob/living/simple_animal/hostile/snow_cabin/proc/PickRandomWallTileWithoutEye()
-	// For eye spawns: reject walls within weakpoint_min_spacing of any
-	// existing eye OR mouth so weakpoints don't clump.
 	var/list/tiles = GetWallTiles()
 	if(!length(tiles))
 		return null
@@ -1055,8 +1039,6 @@
 	var/list/floor = GetFloorTiles()
 	if(!length(floor))
 		return
-	// Arena bounds — derived from the floor cache so the sweep runs from
-	// wall to wall regardless of room shape.
 	var/min_x = INFINITY
 	var/max_x = -INFINITY
 	var/min_y = INFINITY
@@ -1071,28 +1053,39 @@
 		if(T.y > max_y)
 			max_y = T.y
 	Speak(lines_bone_stab)
+	// Always 2 non-overlapping EAST/WEST rows; phase 2 adds 1 NORTH/SOUTH column.
+	var/list/row_choices = list()
+	for(var/y in (min_y + 1) to (max_y - 1))
+		row_choices += y
+	if(length(row_choices) >= 2)
+		var/first_y = pick(row_choices)
+		var/list/valid_seconds = list()
+		for(var/y in row_choices)
+			if(abs(y - first_y) >= 3)
+				valid_seconds += y
+		var/second_y = length(valid_seconds) ? pick(valid_seconds) : null
+		INVOKE_ASYNC(src, PROC_REF(SweepBoneSpikes), pick(EAST, WEST), min_x, max_x, min_y, max_y, first_y)
+		if(second_y)
+			INVOKE_ASYNC(src, PROC_REF(SweepBoneSpikes), pick(EAST, WEST), min_x, max_x, min_y, max_y, second_y)
+	else if(length(row_choices))
+		INVOKE_ASYNC(src, PROC_REF(SweepBoneSpikes), pick(EAST, WEST), min_x, max_x, min_y, max_y, pick(row_choices))
 	if(phase == 2)
-		var/v_dir = pick(NORTH, SOUTH)
-		var/h_dir = pick(EAST, WEST)
-		INVOKE_ASYNC(src, PROC_REF(SweepBoneSpikes), v_dir, min_x, max_x, min_y, max_y)
-		INVOKE_ASYNC(src, PROC_REF(SweepBoneSpikes), h_dir, min_x, max_x, min_y, max_y)
-	else
-		var/dir = pick(NORTH, SOUTH, EAST, WEST)
-		INVOKE_ASYNC(src, PROC_REF(SweepBoneSpikes), dir, min_x, max_x, min_y, max_y)
+		INVOKE_ASYNC(src, PROC_REF(SweepBoneSpikes), pick(NORTH, SOUTH), min_x, max_x, min_y, max_y)
 
 /// One sweep. Picks a 3-wide perpendicular stripe, paints the warning
 /// across the whole path, waits bone_stab_windup, then raises one
 /// 1×3 / 3×1 chunk every bone_stab_chunk_delay deciseconds.
-/mob/living/simple_animal/hostile/snow_cabin/proc/SweepBoneSpikes(direction, min_x, max_x, min_y, max_y)
+/mob/living/simple_animal/hostile/snow_cabin/proc/SweepBoneSpikes(direction, min_x, max_x, min_y, max_y, axis_center = null)
 	if(QDELETED(src) || stat == DEAD)
 		return
+	var/list/visible_floor = GetFloorTiles()
 	var/list/chunks = list()
 	var/list/all_tiles = list()
 	if(direction == NORTH || direction == SOUTH)
 		// Sweep along the Y axis; the perpendicular stripe is 3 wide on X.
 		if(max_x - min_x < 2)
 			return
-		var/center_x = rand(min_x + 1, max_x - 1)
+		var/center_x = isnull(axis_center) ? rand(min_x + 1, max_x - 1) : axis_center
 		var/list/y_values = list()
 		for(var/y in min_y to max_y)
 			if(direction == NORTH)
@@ -1103,7 +1096,7 @@
 			var/list/chunk = list()
 			for(var/dx in -1 to 1)
 				var/turf/T = locate(center_x + dx, y, z)
-				if(IsValidFloorTile(T))
+				if(T in visible_floor)
 					chunk += T
 					all_tiles += T
 			if(length(chunk))
@@ -1112,7 +1105,7 @@
 		// EAST/WEST: sweep along the X axis; stripe is 3 tall on Y.
 		if(max_y - min_y < 2)
 			return
-		var/center_y = rand(min_y + 1, max_y - 1)
+		var/center_y = isnull(axis_center) ? rand(min_y + 1, max_y - 1) : axis_center
 		var/list/x_values = list()
 		for(var/x in min_x to max_x)
 			if(direction == EAST)
@@ -1123,7 +1116,7 @@
 			var/list/chunk = list()
 			for(var/dy in -1 to 1)
 				var/turf/T = locate(x, center_y + dy, z)
-				if(IsValidFloorTile(T))
+				if(T in visible_floor)
 					chunk += T
 					all_tiles += T
 			if(length(chunk))
@@ -1136,8 +1129,6 @@
 		W.setDir(direction)
 	SLEEP_CHECK_DEATH(bone_stab_windup)
 	playsound(get_turf(src), 'sound/weapons/bladeslice.ogg', 70, TRUE)
-	// Wave: raise one chunk at a time, sleeping bone_stab_chunk_delay
-	// between chunks so the spikes visibly march across the room.
 	for(var/list/chunk as anything in chunks)
 		if(QDELETED(src) || stat == DEAD)
 			return
@@ -1196,23 +1187,25 @@
 	var/turf/center = get_turf(target)
 	if(!center)
 		return
-	// Collect the 3×3 affected tiles up-front. The "rise" animation alone
-	// was only ~0.4s and felt unreadable, so the telegraph now uses the
-	// shaking-ice-shards warning for ice_spike_windup deciseconds.
+	// Pick the variant up front so the rise that plays as damage lands matches the strike visual that lingers after.
+	var/use_rupture = prob(50)
+	var/rise_type = use_rupture ? /obj/effect/temp_visual/snow_cabin_ice_rupture_rise : /obj/effect/temp_visual/snow_cabin_ice_spike_rise
+	var/strike_type = use_rupture ? /obj/structure/snow_cabin_ice_rupture : /obj/structure/snow_cabin_ice_spike
+	var/list/visible_floor = GetFloorTiles()
 	var/list/area_turfs = list()
 	for(var/turf/T in range(1, center))
-		if(!istype(T, /turf/open))
+		if(!(T in visible_floor))
 			continue
 		area_turfs += T
 		new /obj/effect/temp_visual/snow_cabin_ice_shard_warning(T, ice_spike_windup)
 	Speak(lines_ice_spike)
 	SLEEP_CHECK_DEATH(ice_spike_windup)
-	// Pick a variant (spikes vs rupture) for visual variety at strike time.
-	var/use_rupture = prob(50)
-	var/strike_type = use_rupture ? /obj/effect/temp_visual/snow_cabin_ice_rupture : /obj/effect/temp_visual/snow_cabin_ice_spike
 	playsound(center, 'sound/effects/glassbr1.ogg', 60, TRUE)
+	// Rise plays as damage lands; the strike visual is delayed until the
+	// rise animation finishes so the spike "wall" appears once the rise
+	// is done coming up out of the floor.
 	for(var/turf/T as anything in area_turfs)
-		new strike_type(T)
+		new rise_type(T)
 		for(var/mob/living/L in T)
 			if(faction_check_mob(L))
 				continue
@@ -1220,6 +1213,9 @@
 				continue
 			L.deal_damage(ice_spike_damage, PALE_DAMAGE, src,
 				attack_type = (ATTACK_TYPE_RANGED | ATTACK_TYPE_SPECIAL))
+	SLEEP_CHECK_DEATH(4)
+	for(var/turf/T as anything in area_turfs)
+		new strike_type(T)
 
 // ---------- AoE: Ice Shard Spray ----------
 
@@ -1231,9 +1227,10 @@
 	var/turf/center = get_turf(target)
 	if(!center)
 		return
+	var/list/visible_floor = GetFloorTiles()
 	var/list/pool = list()
 	for(var/turf/T in range(ice_shard_radius, center))
-		if(IsValidFloorTile(T))
+		if(T in visible_floor)
 			pool += T
 	if(!length(pool))
 		return
@@ -1249,7 +1246,7 @@
 	SLEEP_CHECK_DEATH(ice_shard_windup)
 	playsound(get_turf(src), 'sound/effects/glassbr3.ogg', 70, TRUE)
 	for(var/turf/T as anything in picks)
-		new /obj/effect/temp_visual/snow_cabin_ice_shards(T)
+		new /obj/effect/temp_visual/snow_cabin_ice_rupture_rise(T)
 		for(var/mob/living/L in T)
 			if(faction_check_mob(L))
 				continue
@@ -1257,6 +1254,10 @@
 				continue
 			L.deal_damage(ice_shard_damage, PALE_DAMAGE, src,
 				attack_type = (ATTACK_TYPE_RANGED | ATTACK_TYPE_SPECIAL))
+	SLEEP_CHECK_DEATH(4)
+	for(var/turf/T as anything in picks)
+		new /obj/effect/temp_visual/snow_cabin_ice_shards(T)
+		new /obj/structure/snow_cabin_ice_rupture(T)
 
 // ---------- Player targeting ----------
 
@@ -1304,9 +1305,6 @@
 		if(!QDELETED(M))
 			qdel(M)
 	active_minions.Cut()
-	// Meat cracks fade out at staggered intervals so the room "rots
-	// closed" rather than vanishing all at once. Mirrors the vine-fade
-	// pattern in snow_whites_apple.dm:132-139.
 	for(var/obj/effect/snow_cabin_meat_crack/C as anything in active_meat_cracks)
 		if(QDELETED(C))
 			continue
