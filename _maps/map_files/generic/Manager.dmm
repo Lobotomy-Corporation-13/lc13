@@ -1194,9 +1194,9 @@
 	pixel_x = 9;
 	pixel_y = 8
 	},
-/obj/item/ego_weapon/painprocess{
-	pixel_y = -5;
-	pixel_x = -6
+/obj/item/ego_weapon/ranged/malicedescent{
+	pixel_y = -6;
+	pixel_x = -5
 	},
 /turf/open/floor/facility/dark,
 /area/city/outskirtsfactory)
