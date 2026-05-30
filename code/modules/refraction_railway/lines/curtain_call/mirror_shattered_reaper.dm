@@ -27,7 +27,7 @@
 #define MIRROR_DR_TIERS 9             // 0–8 stacks inclusive
 #define MIRROR_ULT_TRIGGER 5          // min absorbed_counter for first ult
 #define MIRROR_ULT_INSTANCE_CAP 15
-#define MIRROR_ULT_INSTANCE_DAMAGE 35 // raw BLACK per instance (split across rifts)
+#define MIRROR_ULT_INSTANCE_DAMAGE 55 // raw BLACK per instance (split across rifts)
 #define MIRROR_VARIANT_HP_FRACTION 0.015 // each Mirror Variant's maxHealth = 1.5% of the Reaper's current Max HP (≈150 at maxHealth 10000). Reaper pays that amount per Variant spawned, so a wave's total cost scales with Variants-per-summon.
 
 // ---------- Telegraph & visual effects ----------
@@ -138,8 +138,8 @@
 	alpha = 120
 	health = 200
 	maxHealth = 200
-	melee_damage_lower = 6
-	melee_damage_upper = 10
+	melee_damage_lower = 3
+	melee_damage_upper = 5
 	melee_damage_type = BLACK_DAMAGE
 	attack_verb_continuous = "strikes"
 	attack_verb_simple = "strike"
@@ -155,6 +155,13 @@
 	is_flying_animal = TRUE
 	damage_coeff = list(RED_DAMAGE = 0.7, WHITE_DAMAGE = 0.7, BLACK_DAMAGE = 0.7, PALE_DAMAGE = 0.7)
 	var/mob/living/simple_animal/hostile/mirror_shattered_reaper/parent_reaper
+	/// Last living mob to land damage on us — credited the 10 HP/SP kill heal.
+	var/mob/living/last_player_attacker
+
+/mob/living/simple_animal/hostile/mirror_variant/deal_damage(damage_amount, damage_type, source = null, flags = null, attack_type = null, blocked = null, def_zone = null, wound_bonus = 0, bare_wound_bonus = 0, sharpness = SHARP_NONE)
+	. = ..()
+	if(. > 0 && isliving(source) && !faction_check_mob(source))
+		last_player_attacker = source
 
 // ---------- The Reaper ----------
 
@@ -170,8 +177,8 @@
 	icon_dead = "mirror_shattered"
 	health = 10000
 	maxHealth = 10000
-	melee_damage_lower = 10
-	melee_damage_upper = 15
+	melee_damage_lower = 5
+	melee_damage_upper = 8
 	melee_damage_type = BLACK_DAMAGE
 	attack_verb_continuous = "carves"
 	attack_verb_simple = "carve"
@@ -202,6 +209,10 @@
 	var/next_absorb_voice = 0
 	var/next_kill_voice = 0
 	var/dying = FALSE
+	/// Per-Reverberation cast: REF(mob) -> hit count. Reset each cast.
+	/// Each repeat hit on the same target drops damage by 10% (so hit 2
+	/// is 90%, hit 3 is 80%, …), capped at -80% (20% floor).
+	var/list/reverberation_hits = list()
 
 	var/list/refraction_sweep_lines = list(
 		"Through... and through...",
@@ -303,9 +314,11 @@
 	if(!can_act || stat == DEAD || dying)
 		return
 	. = ..()
-	if(absorbed_counter >= MIRROR_ULT_TRIGGER && world.time >= next_ult)
-		INVOKE_ASYNC(src, PROC_REF(Reverberation))
-		return
+	if(world.time >= next_ult)
+		if(absorbed_counter >= MIRROR_ULT_TRIGGER)
+			INVOKE_ASYNC(src, PROC_REF(Reverberation))
+			return
+		next_ult = world.time + 30 SECONDS
 	if(world.time >= next_crossing_over)
 		INVOKE_ASYNC(src, PROC_REF(CrossingOver))
 		return
@@ -359,9 +372,6 @@
 	var/turf/origin = get_turf(src)
 	if(!origin)
 		return
-	// Reversed cone: wide base at the Reaper's front (3 wide), tapering to a
-	// 1-tile tip at max range. Mimics a wide forward swipe. Max depth grows
-	// by 1 in Phase 2.
 	var/max_depth = (phase >= MIRROR_PHASE_2) ? 5 : 4
 	var/turf/center = origin
 	for(var/depth in 1 to max_depth)
@@ -439,11 +449,10 @@
 	adjustHealth(per_variant_hp * spawn_count)
 	for(var/i in 1 to spawn_count)
 		var/turf/spawn_turf = origin
-		// Pick a random turf at least 1 tile of separation from the Reaper
-		// (range 2-5, skipping dense tiles). Falls back to any adjacent
-		// non-dense tile, then to the Reaper's own tile if cramped.
+		// view() respects LOS, so variants can't appear outside the arena
+		// (or behind a wall the Reaper can't see through).
 		var/list/scatter_candidates = list()
-		for(var/turf/T in range(5, origin))
+		for(var/turf/T in view(5, origin))
 			if(T in range(1, origin))
 				continue
 			if(T.density)
@@ -453,7 +462,7 @@
 			spawn_turf = pick(scatter_candidates)
 		else
 			var/list/adjacent = list()
-			for(var/turf/T in range(1, origin))
+			for(var/turf/T in view(1, origin))
 				if(T == origin)
 					continue
 				if(T.density)
@@ -506,14 +515,10 @@
 		return
 	UnregisterSignal(source, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING))
 	active_variants -= source
+	HealVariantKiller(source.last_player_attacker)
 	if(defense_stacks > 0)
 		defense_stacks--
 		UpdateDR()
-	// Kill bonus = the Variant's summon cost (its maxHealth, since
-	// per_variant_hp = round(maxHealth * MIRROR_VARIANT_HP_FRACTION)).
-	// When Resolute Glass is fully stripped (defense_stacks == 0) the
-	// bonus is amplified ×2.5 — the late-game snowball reward for
-	// finishing the ladder.
 	var/bonus = source.maxHealth
 	if(defense_stacks == 0)
 		bonus *= 2.5
@@ -521,6 +526,14 @@
 	if(world.time >= next_kill_voice)
 		next_kill_voice = world.time + 15 SECONDS
 		INVOKE_ASYNC(src, PROC_REF(SayVariantKilledLine))
+
+/// 10 HP + 10 SP to the player who landed the killing blow on a Variant.
+/mob/living/simple_animal/hostile/mirror_shattered_reaper/proc/HealVariantKiller(mob/living/L)
+	if(!L || QDELETED(L) || L.stat == DEAD || !ishuman(L))
+		return
+	var/mob/living/carbon/human/H = L
+	H.adjustBruteLoss(-10, forced = TRUE)
+	H.adjustSanityLoss(-10, TRUE)
 
 /mob/living/simple_animal/hostile/mirror_shattered_reaper/proc/SayVariantKilledLine()
 	say(pick(variant_killed_lines))
@@ -539,8 +552,6 @@
 		return
 	if(absorbed_counter <= 0 && !length(active_variants))
 		return
-	// Any still-alive Variants are pulled in regardless of distance — the
-	// ult is the Reaper reconsolidating everything she has split off.
 	if(length(active_variants))
 		AbsorbVariants(active_variants.Copy())
 	if(absorbed_counter <= 0)
@@ -561,6 +572,7 @@
 	SLEEP_CHECK_DEATH(0.3 SECONDS)
 	qdel(P)
 	alpha = 0
+	reverberation_hits.Cut()
 	for(var/instance in 1 to instances)
 		if(dying || stat == DEAD)
 			break
@@ -576,7 +588,13 @@
 			if(!length(targets))
 				break
 			var/mob/living/L = pick(targets)
-			UltDashAttack(L, per_rift_damage)
+			var/this_hit = (reverberation_hits[REF(L)] || 0) + 1
+			reverberation_hits[REF(L)] = this_hit
+			var/scaled_damage = per_rift_damage
+			if(this_hit >= 2)
+				var/reduction = min(0.8, (this_hit - 1) * 0.10)
+				scaled_damage = per_rift_damage * (1 - reduction)
+			UltDashAttack(L, scaled_damage)
 	alpha = 255
 	new /obj/effect/temp_visual/rip_space(origin)
 	forceMove(origin)
@@ -656,10 +674,11 @@
 	INVOKE_ASYNC(src, PROC_REF(SayPhase2Line))
 	visible_message(span_userdanger("[src]'s hood tears open — there is nothing underneath but a stitched composite of every life they ever stole!"))
 	playsound(src, 'sound/abnormalities/wayward_passenger/ripspace_end.ogg', 100, FALSE)
-	if(absorbed_counter >= MIRROR_ULT_TRIGGER)
-		INVOKE_ASYNC(src, PROC_REF(Reverberation))
-	else
-		next_ult = world.time + 20 SECONDS
+	if(absorbed_counter < 3)
+		absorbed_counter = 3
+		UpdateHUD()
+		UpdateAfterimages()
+	INVOKE_ASYNC(src, PROC_REF(Reverberation))
 
 // ---------- Death ----------
 

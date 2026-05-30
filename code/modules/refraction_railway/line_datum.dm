@@ -43,6 +43,26 @@
 	/// node_id => /datum/refraction_node; populated by AddNode().
 	var/list/combat_nodes = list()
 
+	// ---------- Per-line wave-scaling tweaks ----------
+	// Each line authors its own defaults; the SS-level toggles still gate
+	// globally (effective flag = SS.flag && line.flag), so admins can kill
+	// scaling at the subsystem level if they need to.
+
+	/// Per-mob-type stock multiplier (scales the type reserves by party size).
+	var/scale_stock = TRUE
+	/// Concurrent-alive cap multiplier.
+	var/scale_concurrent = TRUE
+	/// Per-cycle spawn batch = num_players; OFF means 1 per cycle.
+	var/scale_spawn_batch = TRUE
+	/// Non-boss per-mob HP/damage scaling.
+	var/scale_wave_stats = TRUE
+	/// Boss per-mob HP scaling (HP only, never damage).
+	var/scale_boss_stats = TRUE
+	/// Compensation medipens for smaller parties each sector.
+	var/give_compensation_pens = TRUE
+	/// Forbid re-using EGO weapons/armor across sectors of the same run.
+	var/unique_loadout_per_sector = FALSE
+
 /// Override in subtypes to declare mob passives (mob_path => list of entries).
 /datum/refraction_line/proc/GetMobPassives()
 	return list()

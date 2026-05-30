@@ -420,6 +420,10 @@ const ItemRow = props => {
   const {
     entry, type, isSelected, atCap, onToggle, onDetails,
   } = props;
+  const blocked = !!entry.blocked;
+  const blockedStyle = blocked
+    ? { 'text-decoration': 'line-through', opacity: 0.55 }
+    : {};
   return (
     <Box
       p={1}
@@ -428,7 +432,9 @@ const ItemRow = props => {
       backgroundColor={
         isSelected
           ? 'rgba(34, 197, 94, 0.18)'
-          : 'rgba(255, 255, 255, 0.04)'
+          : blocked
+            ? 'rgba(120, 0, 0, 0.16)'
+            : 'rgba(255, 255, 255, 0.04)'
       }>
       <Flex>
         <FlexItem>
@@ -437,26 +443,40 @@ const ItemRow = props => {
               <Box
                 as="img"
                 src={`data:image/jpeg;base64,${entry.icon}`}
-                style={{ height: '32px', width: '32px' }}
+                style={{
+                  height: '32px',
+                  width: '32px',
+                  ...(blocked && { filter: 'grayscale(1)', opacity: 0.5 }),
+                }}
               />
             )}
             <Box
               bold
               mt={0.5}
-              style={{ color: THREAT_COLORS[entry.threatclass] }}>
+              style={{
+                color: THREAT_COLORS[entry.threatclass],
+                ...blockedStyle,
+              }}>
               {THREAT_NAMES[entry.threatclass]}
             </Box>
-            <Box color="label" fontSize="10px">{entry.origin}</Box>
+            <Box color="label" fontSize="10px" style={blockedStyle}>
+              {entry.origin}
+            </Box>
           </Flex>
         </FlexItem>
         <FlexItem grow={1} ml={1}>
-          <Box bold>{entry.information?.name}</Box>
-          <Box mt={0.5}>
+          <Box bold style={blockedStyle}>{entry.information?.name}</Box>
+          <Box mt={0.5} style={blockedStyle}>
             <StatLine entry={entry} type={type} />
           </Box>
           {!!entry.tags?.length && (
-            <Box mt={0.5} fontSize="10px" color="label">
+            <Box mt={0.5} fontSize="10px" color="label" style={blockedStyle}>
               {entry.tags.join(' • ')}
+            </Box>
+          )}
+          {blocked && (
+            <Box mt={0.5} fontSize="10px" color="bad" bold>
+              Already used this run
             </Box>
           )}
         </FlexItem>
@@ -466,9 +486,13 @@ const ItemRow = props => {
               <Button
                 fluid
                 color={isSelected ? 'good' : null}
-                disabled={atCap && !isSelected}
-                content={isSelected ? 'Selected' : 'Select'}
-                onClick={() => onToggle(entry.path)}
+                disabled={blocked || (atCap && !isSelected)}
+                content={
+                  blocked
+                    ? 'Used'
+                    : isSelected ? 'Selected' : 'Select'
+                }
+                onClick={() => !blocked && onToggle(entry.path)}
               />
             </Stack.Item>
             <Stack.Item>
@@ -490,16 +514,24 @@ const DetailsView = props => {
     entry, type, isSelected, atCap, onToggle, onBack,
   } = props;
   const info = entry.information || {};
+  const blocked = !!entry.blocked;
   return (
     <Section
-      title={`Details — ${info.name}`}
+      title={
+        `Details — ${info.name}`
+        + (blocked ? ' (already used this run)' : '')
+      }
       buttons={
         <>
           <Button
             color={isSelected ? 'bad' : 'good'}
-            disabled={atCap && !isSelected}
-            content={isSelected ? 'Deselect' : 'Select'}
-            onClick={() => onToggle(entry.path)}
+            disabled={blocked || (atCap && !isSelected)}
+            content={
+              blocked
+                ? 'Used'
+                : isSelected ? 'Deselect' : 'Select'
+            }
+            onClick={() => !blocked && onToggle(entry.path)}
           />
           <Button content="Back" onClick={onBack} />
         </>

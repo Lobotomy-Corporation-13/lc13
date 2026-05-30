@@ -229,11 +229,6 @@
 	if(isliving(attacked_target))
 		var/mob/living/L = attacked_target
 		if(!faction_check_mob(L))
-			// Dry-fire melee: an empty mag also strips Tremor on the
-			// basic swing. ApplyHitStatuses already gates Overheat on
-			// current_ammo > 0, so this matches it. Specials still
-			// inflict their Tremor — they spent ammo to fire and the
-			// status application is part of that paid action.
 			var/tremor = current_ammo > 0 ? basic_tremor_stacks : 0
 			ApplyHitStatuses(L, tremor,
 				/* can_burst = */ FALSE, basic_overheat_stacks)
@@ -490,8 +485,6 @@
 	if(stat == DEAD || QDELETED(F_target))
 		can_act = TRUE
 		return
-	// Finisher telegraph follows the player (2s), locks in place (1.5s),
-	// then the Capo leaps to the locked tile — dodgeable by leaving it.
 	face_atom(F_target)
 	var/obj/effect/temp_visual/trash_disposal_telegraph/capo_flurry/track = new(get_turf(src))
 	walk_towards(track, F_target, 0.1 SECONDS)
@@ -505,9 +498,6 @@
 	SLEEP_CHECK_DEATH(10)
 	qdel(track)
 	if(locked)
-		// Leap animation mirroring the tiantui FlurryCombo finisher: rise
-		// and fade out toward the locked tile, then slam back in fast from
-		// the takeoff direction.
 		var/x_to_offset = 0
 		if(locked.x > x)
 			x_to_offset = 32
@@ -594,8 +584,6 @@
 	if(dying)
 		return ..()
 	dying = TRUE
-	// Say the parting line while still alive — dead mobs can't speak (the
-	// joey NPC dodges this the same way). Then run the standard death.
 	say(pick(death_lines))
 	. = ..()
 	can_act = FALSE
@@ -701,10 +689,6 @@
 		&& capo_target.stat != DEAD && capo_target.current_ammo <= 0)
 		StartReloadRun()
 		return
-	// Trash Disposal — open-fire at range, melee fallback otherwise.
-	// Cancel any persistent walk_to BEFORE INVOKE_ASYNC so BYOND can't
-	// take one more chase step in the gap before TrashDisposalTelegraph
-	// flips `td_throwing` and freezes us.
 	if(target && !QDELETED(target) && world.time >= td_cooldown)
 		var/d = get_dist(src, target)
 		if(d >= 2 && d <= 7 && isliving(target))
@@ -870,8 +854,6 @@
 	td_damage_per_hit = initial(td_damage_per_hit)
 	td_damagetaken = 0
 	move_resist = initial(move_resist)
-	// Always free the victim from the pin, but don't wake our own AI back
-	// up or re-target if the master is already fading.
 	if(victim && !QDELETED(victim))
 		if(ishuman(victim))
 			victim.remove_status_effect(/datum/status_effect/incapacitating/paralyzed)
@@ -930,11 +912,9 @@
 	StepReloadRun()
 
 // Blue-shepherd-style speed boost: swap move_to_delay and call UpdateSpeed
-// so both BYOND's walk_to ticks AND the cached movespeed modifier reflect
-// the new pace. SetReloadSpeedInactive restores `initial(move_to_delay)`.
-// Also flips the rat's visible colour so any non-fighting reload state
-// reads as yellow — the moment the rat leaves combat to fetch ammo, it
-// turns yellow and stays that way until it delivers and returns to red.
+// so BYOND's walk_to ticks AND the cached movespeed modifier both reflect
+// the new pace. Also flips the rat yellow so any non-fighting reload state
+// reads at a glance. SetReloadSpeedInactive restores the baseline.
 /mob/living/simple_animal/hostile/rat/capo_rat/proc/SetReloadSpeedActive()
 	move_to_delay = reload_move_to_delay
 	UpdateSpeed()
@@ -1100,8 +1080,6 @@
 	can_act = FALSE
 	LoseTarget()
 	walk(src, 0)
-	// Leave the wave's living set (we won't fire a death) so the boss room
-	// can still clear while we play out the fade.
 	var/datum/refraction_wave_controller/C = GLOB.refraction_wave_mob_owners[src]
 	if(C)
 		C.DropMob(src)

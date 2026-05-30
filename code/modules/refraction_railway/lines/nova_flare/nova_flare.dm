@@ -10,12 +10,17 @@
 /datum/refraction_line/nova_flare
 	id                  = "nova_flare"
 	name                = "Line 1: Nova Flare"
-	description         = "The first run. Steel and starlight, in that order."
+	description         = "As the Young Star steps on to the empty stage, they take it upon themselves to fill this stage with their tales. Only then, they shall make an impact on their unseen audience."
 	map_path            = "_maps/refraction_railway/nova_flare.dmm"
 	attribute_set_value = 80
 	max_lobby_size      = 4
 	section_count       = 3
 	display_color       = "#1e4ba8"
+
+	// Nova Flare enforces unique loadouts per sector: a weapon or armor
+	// piece chosen in a prior sector this run gets crossed out and locked
+	// in the loadout UI on subsequent sectors.
+	unique_loadout_per_sector = TRUE
 
 	map_viewbox = list("w" = 600, "h" = 400)
 

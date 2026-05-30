@@ -28,6 +28,14 @@
 	section_count       = 5
 	display_color       = "#22c55e"
 
+	// Curtain Call is hand-balanced per mob, so the wave-scaling tweaks that
+	// inflate stock / concurrent caps / batch size / non-boss stats are off.
+	// Boss HP × players and compensation pens stay on.
+	scale_stock         = FALSE
+	scale_concurrent    = FALSE
+	scale_spawn_batch   = FALSE
+	scale_wave_stats    = FALSE
+
 	map_viewbox = list("w" = 600, "h" = 400)
 
 	// 11 visual nodes arranged as a constellation. The broken-snake turn at
@@ -90,7 +98,7 @@
 			will refuse - only the table can answer it. Roll the table \
 			high.",
 		list(
-			/mob/living/simple_animal/hostile/azarus/refracted = 1,
+			/mob/living/simple_animal/hostile/distortion/azarus/refracted = 1,
 		),
 		boss = TRUE)
 
@@ -101,7 +109,7 @@
 			cast's. It will play role after role at us, and only between \
 			costumes can we glimpse the longing thing wearing them.",
 		list(
-			/mob/living/simple_animal/hostile/understudy = 1,
+			/mob/living/simple_animal/hostile/distortion/understudy = 1,
 		),
 		boss = TRUE)
 

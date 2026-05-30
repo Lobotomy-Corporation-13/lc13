@@ -243,10 +243,12 @@
 				return
 			R.ready_states[usr.ckey] = !R.ready_states[usr.ckey]
 		if("begin_sector")
-			R.BeginSector(usr.ckey)
+			if(R.BeginSector(usr.ckey))
+				SStgui.close_uis(src)
 		if("force_begin_sector")
 			// Owner-only AFK escape hatch; BeginSector enforces owner.
-			R.BeginSector(usr.ckey, TRUE)
+			if(R.BeginSector(usr.ckey, TRUE))
+				SStgui.close_uis(src)
 		if("return_to_lobby")
 			if(R.lobby_state == LOBBY_FINISHED)
 				R.ReturnToLobby()

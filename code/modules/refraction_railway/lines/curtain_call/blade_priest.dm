@@ -108,11 +108,6 @@
 /obj/effect/possessed_blade/proc/StartOrbit()
 	if(QDELETED(parent_priest))
 		return
-	// Distance ~48px keeps the blades inside the priest's 32x48 body's
-	// visual footprint while remaining individually readable. Speed 24 ds
-	// per rotation is slow enough to track each blade's identity.
-	// pre_rotation=FALSE so the orbit doesn't apply its own 90° offset
-	// to our sprite — we control rotation explicitly during dashes.
 	orbit(parent_priest, 48, preferred_cw, 24, 36, FALSE)
 
 /obj/effect/possessed_blade/proc/StopOrbit()
@@ -121,18 +116,10 @@
 		O.end_orbit(src)
 
 /// Unified dash-chain entry point. The order proc shapes ONLY the first
-/// dash via the override args; every follow-up dash autonomously picks
-/// a target via parent_priest.PickBladeTarget.
-///
-/// Args:
-///  - turns_remaining: follow-up dashes after the first (2 = 3 total).
-///  - initial_target: first-dash target; null means pick normally.
-///  - dir_override: if set, first dash is direction-locked along this
-///    compass dir from start tile (Scatter / Inversion). Mutually
-///    exclusive with initial_target — dir_override wins if both set.
-///  - start_turf_override: forceMove the blade here before the first
-///    dash. Used by Inversion's perimeter launch. Volley / Scatter
-///    leave it null, which falls back to the priest's tile.
+/// dash via the override args; follow-up dashes autonomously pick a
+/// target via parent_priest.PickBladeTarget. dir_override direction-locks
+/// the first dash (Scatter/Inversion); start_turf_override forceMoves the
+/// blade before the first dash (Inversion's perimeter launch).
 /obj/effect/possessed_blade/proc/BeginDashChain(turns_remaining = 0, atom/initial_target = null, dir_override = null, turf/start_turf_override = null)
 	set waitfor = FALSE
 	if(QDELETED(src) || QDELETED(parent_priest) || parent_priest.dying)
@@ -141,8 +128,6 @@
 		return
 	state = "active"
 	StopOrbit()
-	// First-dash start tile — explicit override (Inversion) or the
-	// priest's tile (Volley / Scatter).
 	var/turf/start = start_turf_override || get_turf(parent_priest)
 	if(!start)
 		ReturnToOrbit()
@@ -167,24 +152,15 @@
 		return
 	var/turf/end_turf
 	if(dir_override)
-		// Direction-locked dash — line goes from blade_turf outward in
-		// the given compass direction for the standard 8-tile reach. No
-		// target tracking. Used by Scatter (outward) and Inversion
-		// (inward — get_dir from perimeter to priest).
 		end_turf = get_ranged_target_turf(blade_turf, dir_override, 8)
 	else
 		var/atom/target = force_target || parent_priest.PickBladeTarget(blade_turf)
 		if(!target || QDELETED(target))
-			// Nothing to chase — sit still for one beat so the chain
-			// still paces through its 3s park.
 			sleep(30)
 			return
 		var/turf/target_turf = get_turf(target)
 		if(!target_turf)
 			return
-		// Extend the line so the total length is at least 7 tiles, padded
-		// 3 more so the blade clearly continues *through* its victim
-		// rather than stopping on them.
 		var/dist_to_target = get_dist(blade_turf, target_turf)
 		var/overshoot = max(0, 7 - dist_to_target) + 3
 		end_turf = get_ranged_target_turf_direct(blade_turf, target_turf, dist_to_target + overshoot)
@@ -200,9 +176,6 @@
 		line += T
 	if(!length(line))
 		return
-	// Rotate the blade to face the dash direction. Get_Angle returns
-	// compass degrees (CW from north); BLADE_ANGLE_OFFSET accounts for
-	// the sprite's natural NW facing.
 	transform = matrix().Turn(Get_Angle(blade_turf, landing) + BLADE_ANGLE_OFFSET)
 	// Telegraph: 0.8s of warning tiles along the whole projected line.
 	for(var/turf/T as anything in line)
@@ -211,24 +184,15 @@
 	sleep(8)
 	if(QDELETED(src) || QDELETED(parent_priest) || parent_priest.dying)
 		return
-	// Free-angle visual travel via pixel animation. The blade's loc
-	// stays at blade_turf while the animation runs, then we forceMove
-	// it to landing and reset pixel offsets so subsequent dashes can
-	// re-anchor cleanly.
 	var/dx_px = (landing.x - blade_turf.x) * 32
 	var/dy_px = (landing.y - blade_turf.y) * 32
 	animate(src, pixel_x = dx_px, pixel_y = dy_px, time = 4, easing = QUAD_EASING)
 	playsound(blade_turf, 'sound/weapons/rapierhit.ogg', 75, TRUE, 6)
-	// Apply damage snapshot — every human caught on the projected line
-	// eats one hit. been_hit dedupes via the standard HurtInTurf flow.
 	var/list/been_hit = list()
 	for(var/turf/T as anything in line)
 		been_hit = parent_priest.HurtInTurf(T, been_hit, parent_priest.blade_dash_damage, BLACK_DAMAGE,
 			check_faction = TRUE, hurt_mechs = TRUE,
 			attack_type = (ATTACK_TYPE_RANGED | ATTACK_TYPE_SPECIAL))
-	// Rupture every living thing caught, with a bonus stack on the
-	// skull-marked target. Iterating typed-pulls only /mob/living
-	// entries; mechs in been_hit are skipped automatically.
 	for(var/mob/living/L in been_hit)
 		parent_priest.ApplyBladeRupture(L)
 	sleep(4)
@@ -237,8 +201,6 @@
 	forceMove(landing)
 	pixel_x = 0
 	pixel_y = 0
-	// 3-second hover at the landing tile — the user-described pause
-	// before the next chain dash.
 	sleep(30)
 
 /obj/effect/possessed_blade/proc/ReturnToOrbit()
@@ -251,8 +213,6 @@
 	pixel_x = 0
 	pixel_y = 0
 	state = "stored"
-	// Stamp the return time so the priest's per-blade reuse gate can
-	// keep this blade out of rotation for blade_reuse_cooldown_time.
 	orbit_returned_at = world.time
 	StartOrbit()
 
@@ -421,8 +381,6 @@
 	for(var/i in 1 to starting_blade_count)
 		new /obj/effect/possessed_blade(get_turf(src), src, (i % 2 == 1))
 	main_tick_timer_id = addtimer(CALLBACK(src, PROC_REF(MainTick)), 1 SECONDS, TIMER_LOOP | TIMER_STOPPABLE)
-	// Stagger opening cooldowns so the priest doesn't dump every ability
-	// in the first second.
 	scatter_cooldown = world.time + 4 SECONDS
 	volley_cooldown = world.time + 12 SECONDS
 	inversion_cooldown = world.time + 20 SECONDS
@@ -457,10 +415,6 @@
 		return
 	if(world.time >= mark_cooldown)
 		TryMarkPlayer()
-	// Body Sweep fires first so the priest punishes anyone in melee
-	// before the bigger ability cooldowns get spent. Otherwise dispatch
-	// in longest-cooldown-first order so the rare specials aren't
-	// starved by the basic.
 	if(world.time >= body_sweep_cooldown && HasMeleeThreat())
 		INVOKE_ASYNC(src, PROC_REF(CastBodySweep))
 	else if(world.time >= inversion_cooldown)
@@ -529,12 +483,10 @@
 
 // ---------- Order lock ----------
 
-/// Lock the priest in place while a blade attack is being issued.
-/// Sets can_act = FALSE (Move + MainTick both gate on it), stops any
-/// pending walk, swaps the body sprite to the colour-coded order
-/// variant, and schedules ExitOrder to revert after `duration`. The
-/// blade(s) carry out the order in parallel — the priest's lock is
-/// the punish window, not the attack runtime.
+/// Lock the priest in place while a blade attack is issued: can_act=FALSE
+/// (gates Move + MainTick), stops walk, swaps to colour-coded order sprite,
+/// schedules ExitOrder after `duration`. Blade(s) run the order in parallel
+/// — the priest's lock is the punish window, not the attack runtime.
 /mob/living/simple_animal/hostile/distortion/blade_priest/proc/EnterOrder(order_icon, duration)
 	if(stat == DEAD || dying)
 		return
@@ -606,12 +558,11 @@
 		return FALSE
 	return TRUE
 
-/// Returns the list of blades each order should detach this cast.
-/// Target count = half of currently-stored blades, floored at
-/// order_blade_floor (default 2). Walks the orbit and picks the first
-/// `target_count` blades that pass BladeIsReady. Returned list may be
-/// shorter than target_count if too few blades are off-cooldown — the
-/// caller decides whether to short-circuit.
+/// Returns the list of blades each order should detach this cast. Target
+/// count = half of stored blades, floored at order_blade_floor (default 2).
+/// Walks the orbit and picks the first `target_count` blades passing
+/// BladeIsReady. May return shorter than target_count if too few are
+/// off-cooldown — the caller decides whether to short-circuit.
 /mob/living/simple_animal/hostile/distortion/blade_priest/proc/PickBladesForOrder()
 	var/stored_count = 0
 	for(var/obj/effect/possessed_blade/B as anything in active_blades)
@@ -633,18 +584,12 @@
 		return
 	var/list/blades = PickBladesForOrder()
 	if(length(blades) < order_blade_floor)
-		// Not enough fresh blades; retry shortly without burning the
-		// full cooldown or locking the priest.
 		volley_cooldown = world.time + 1 SECONDS
 		return
 	volley_cooldown = world.time + volley_cooldown_time
 	EnterOrder(order_icon_volley, order_lock_time_volley)
 	SpeakLine(volley_lines)
 	playsound(get_turf(src), 'sound/weapons/rapierhit.ogg', 60, TRUE, 8)
-	// Spawn each blade beneath the priest with a stagger so the volley
-	// reads as a sequence of launches rather than a chord. Target is
-	// re-picked at the moment each blade's chain begins, so the mark
-	// can change between blades.
 	var/i = 0
 	for(var/obj/effect/possessed_blade/B as anything in blades)
 		addtimer(CALLBACK(src, PROC_REF(LaunchVolleyBlade), B), i * volley_blade_stagger)
@@ -673,10 +618,6 @@
 	EnterOrder(order_icon_scatter, order_lock_time_scatter)
 	SpeakLine(scatter_lines)
 	playsound(get_turf(src), 'sound/weapons/rapierhit.ogg', 60, TRUE, 8)
-	// Shuffle the 8-compass list and hand out the first N directions
-	// to the N picked blades. With 2 blades you get 2 directions; with
-	// 5 blades you get 5 — always evenly distributed because each
-	// direction is unique.
 	var/list/dirs = shuffle(list(NORTH, NORTHEAST, EAST, SOUTHEAST, SOUTH, SOUTHWEST, WEST, NORTHWEST))
 	var/i = 1
 	for(var/obj/effect/possessed_blade/B as anything in blades)
@@ -703,10 +644,6 @@
 	EnterOrder(order_icon_inversion, order_lock_time_inversion)
 	SpeakLine(inversion_lines)
 	playsound(center, 'sound/weapons/rapierhit.ogg', 50, TRUE, 6)
-	// Pick N evenly-distributed compass directions and stage one blade
-	// per perimeter tile. Each blade gets parked + faced + has its line
-	// telegraphed; FireInversion fires the dashes simultaneously after
-	// the 1.5s warning.
 	var/list/dirs = shuffle(list(NORTH, NORTHEAST, EAST, SOUTHEAST, SOUTH, SOUTHWEST, WEST, NORTHWEST))
 	var/list/staged = list()  // assoc list of blade => perimeter_turf
 	var/i = 1
@@ -725,8 +662,6 @@
 		B.pixel_x = 0
 		B.pixel_y = 0
 		B.transform = matrix().Turn(Get_Angle(perimeter, center) + BLADE_ANGLE_OFFSET)
-		// Telegraph the inward line from perimeter through the priest
-		// and out the other side so players can read the convergence.
 		var/inward_dir = get_dir(perimeter, center)
 		var/turf/line_end = get_ranged_target_turf(perimeter, inward_dir, inversion_perimeter_distance + 3)
 		var/list/line = getline(perimeter, line_end)
@@ -739,18 +674,12 @@
 
 /mob/living/simple_animal/hostile/distortion/blade_priest/proc/FireInversion(list/staged, turf/center)
 	if(QDELETED(src) || stat == DEAD || dying)
-		// Even on death, send the parked blades back to orbit so they
-		// aren't stuck in "active" forever — Destroy will qdel them
-		// anyway, but be safe.
 		for(var/obj/effect/possessed_blade/B as anything in staged)
 			if(!QDELETED(B))
 				B.ReturnToOrbit()
 		return
 	if(!center)
 		return
-	// All staged blades dash inward through the priest's tile at the
-	// same instant. Direction-locked so the line goes straight through
-	// the center regardless of where any player is standing.
 	for(var/obj/effect/possessed_blade/B as anything in staged)
 		if(QDELETED(B))
 			continue
@@ -758,8 +687,6 @@
 		if(!perimeter)
 			continue
 		var/inward_dir = get_dir(perimeter, center)
-		// Reset state so BeginDashChain accepts the call (it gates on
-		// state != "active"). The chain itself flips it back.
 		B.state = "stored"
 		INVOKE_ASYNC(B, TYPE_PROC_REF(/obj/effect/possessed_blade, BeginDashChain), dash_chain_length, null, inward_dir, perimeter)
 
@@ -797,9 +724,6 @@
 // ---------- Phase scaling: new blades on HP thresholds ----------
 
 /mob/living/simple_animal/hostile/distortion/blade_priest/adjustHealth(amount, updating_health = TRUE, forced = FALSE)
-	// Blade-aegis: every currently-stored (orbiting) blade subtracts a
-	// flat fraction of the incoming damage, clamped at the configured
-	// ceiling. Healing (negative amount) and forced damage bypass.
 	if(!forced && amount > 0 && stat != DEAD && !dying)
 		var/reduction = min(CountStoredBlades() * blade_aegis_per_blade, blade_aegis_max_reduction)
 		if(reduction > 0)
@@ -827,9 +751,6 @@
 	return n
 
 /mob/living/simple_animal/hostile/distortion/blade_priest/proc/SpawnExtraBlades(count = 1)
-	// Alternate orbit direction with each new blade so the swarm
-	// visually contains both sweeps. Speak / sound fire once per
-	// burst so a 2-blade threshold doesn't double-trigger.
 	for(var/i in 1 to count)
 		var/clockwise = (length(active_blades) % 2 == 0)
 		new /obj/effect/possessed_blade(get_turf(src), src, clockwise)
@@ -850,9 +771,6 @@
 	can_act = FALSE
 	walk(src, 0)
 	ClearMark()
-	// Blades go silent with the priest: stop orbiting, fade out, then
-	// qdel. Snapshot the list so the Destroy chain below doesn't fight
-	// our iteration.
 	for(var/obj/effect/possessed_blade/B as anything in active_blades.Copy())
 		if(QDELETED(B))
 			continue

@@ -63,17 +63,19 @@
 	if(!R)
 		return data
 	for(var/wpath in R.usable_ego_weapons)
-		var/list/entry = BuildEgoEntry(wpath)
+		var/list/entry = BuildEgoEntry(wpath, user.ckey, R)
 		if(entry)
 			data["weapons"] += list(entry)
 	for(var/apath in R.usable_ego_armor)
-		var/list/entry = BuildEgoEntry(apath)
+		var/list/entry = BuildEgoEntry(apath, user.ckey, R)
 		if(entry)
 			data["armor"] += list(entry)
 	return data
 
 /// Looks up the cached /datum/ego_datum by path and emits the TGUI payload.
-/obj/machinery/computer/refraction_loadout/proc/BuildEgoEntry(item_path)
+/// `blocked` is TRUE iff the run's unique-loadout-per-sector rule is on and
+/// the player has already used this item in a prior sector.
+/obj/machinery/computer/refraction_loadout/proc/BuildEgoEntry(item_path, ckey, datum/refraction_run/R)
 	var/datum/ego_datum/ED = SStestrange.ego_datums_by_path[item_path]
 	if(!ED)
 		return null
@@ -85,6 +87,7 @@
 		"icon"        = SStestrange.GenerateEgoPreviewIcon(ED.item_path),
 		"threatclass" = ED.CostToThreatClass(),
 		"origin"      = ED.origin,
+		"blocked"     = R ? R.IsItemPathBlocked(ckey, ED.item_path) : FALSE,
 	)
 
 /obj/machinery/computer/refraction_loadout/ui_data(mob/user)

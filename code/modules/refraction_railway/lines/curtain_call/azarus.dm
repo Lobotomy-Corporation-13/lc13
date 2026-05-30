@@ -70,7 +70,7 @@
 	/// Face counted toward the table while airborne (no mid-spin exploit).
 	var/score_value = 1
 	var/spin_timer
-	var/mob/living/simple_animal/hostile/azarus/owner
+	var/mob/living/simple_animal/hostile/distortion/azarus/owner
 	/// Landing-blast BLACK damage per pip (result * this). A 6 also widens
 	/// the blast from 3x3 to 5x5.
 	var/dice_impact_per_pip = 6
@@ -95,7 +95,7 @@
 /// out-of-band (run wipe via WipeRoomReserves, hard-delete, etc.) —
 /// CleanupBoard catches the normal Destroy path, this signal catches
 /// every other path the owner can leave by.
-/obj/structure/azarus_die/proc/BindOwner(mob/living/simple_animal/hostile/azarus/parent)
+/obj/structure/azarus_die/proc/BindOwner(mob/living/simple_animal/hostile/distortion/azarus/parent)
 	if(owner)
 		UnregisterSignal(owner, COMSIG_PARENT_QDELETING)
 	owner = parent
@@ -186,7 +186,7 @@
 	StartSpin()
 
 // ---------- Azarus, the House (Node zeal_s1n2: boss) ----------
-/mob/living/simple_animal/hostile/azarus
+/mob/living/simple_animal/hostile/distortion/azarus
 	name = "Azarus, the House"
 	desc = "A demon dealt into the show to run a game of chance. Its grin never \
 		reaches the mirror it carries for a face. The House always wins."
@@ -236,6 +236,9 @@
 	var/wager_speedup_per_damage = 0.25
 	/// Looping timer that refreshes the over-head countdown + score readout.
 	var/hud_timer
+	/// Held while the post-Bust stagger window is open so EndStagger can
+	/// strip the exact overlay it added.
+	var/mutable_appearance/stagger_overlay
 
 	var/dice_count = 5
 	var/table_set = FALSE
@@ -255,7 +258,7 @@
 	// Phase 2 (<=50% HP).
 	var/phase = 1
 	var/is_mirror = FALSE
-	var/mob/living/simple_animal/hostile/azarus/owner
+	var/mob/living/simple_animal/hostile/distortion/azarus/owner
 	/// Phase-2 mirror-doubles. The boss qdel's them on death.
 	var/list/mirrors = list()
 	var/mirror_count = 2
@@ -298,23 +301,17 @@
 	var/death_fade_time = 1 SECONDS
 	var/dying = FALSE
 
-/mob/living/simple_animal/hostile/azarus/refracted
+/mob/living/simple_animal/hostile/distortion/azarus/refracted
 
-/mob/living/simple_animal/hostile/azarus/say(message, bubble_type, list/spans = list(), sanitize = TRUE, datum/language/language = null, ignore_spam = FALSE, forced = null)
+/mob/living/simple_animal/hostile/distortion/azarus/say(message, bubble_type, list/spans = list(), sanitize = TRUE, datum/language/language = null, ignore_spam = FALSE, forced = null)
 	. = ..()
 	playsound(get_turf(src), 'sound/magic/clockwork/invoke_general.ogg', 20, TRUE)
 
-/mob/living/simple_animal/hostile/azarus/Initialize(mapload)
+/mob/living/simple_animal/hostile/distortion/azarus/Initialize(mapload)
 	. = ..()
-	// Only the real House carries the table readout + the table; the mirror
-	// has neither. The table stays anchored to where Azarus first drops in.
 	if(!is_mirror)
 		table_center = get_turf(src)
 		hud_timer = addtimer(CALLBACK(src, PROC_REF(UpdateHUD)), 1 SECONDS, TIMER_LOOP | TIMER_STOPPABLE)
-		// Defensive sweep: a previous Azarus instance in the same arena
-		// (e.g., team wiped this room mid-fight) may have left stray dice
-		// behind despite CleanupBoard. Wipe any unowned/orphaned die in
-		// the table area before the fresh fight begins.
 		for(var/obj/structure/azarus_die/D in range(8, src))
 			if(QDELETED(D))
 				continue
@@ -322,31 +319,28 @@
 				continue
 			qdel(D)
 
-/mob/living/simple_animal/hostile/azarus/Destroy()
+/mob/living/simple_animal/hostile/distortion/azarus/Destroy()
 	deltimer(hud_timer)
 	hud_timer = null
-	// Catch-all so any removal path — death fade, or being deleted because a
-	// player failed the fight and the run tore the boss down — also clears
-	// the table and the mirrors.
 	if(!is_mirror)
 		CleanupBoard()
 	return ..()
 
 // Removes every live die and mirror this House owns. Iterates copies so the
 // children deregistering themselves mid-loop can't make us skip any.
-/mob/living/simple_animal/hostile/azarus/proc/CleanupBoard()
+/mob/living/simple_animal/hostile/distortion/azarus/proc/CleanupBoard()
 	for(var/obj/structure/azarus_die/die in live_dice.Copy())
 		if(!QDELETED(die))
 			qdel(die)
 	live_dice.Cut()
-	for(var/mob/living/simple_animal/hostile/azarus/mirror/M in mirrors.Copy())
+	for(var/mob/living/simple_animal/hostile/distortion/azarus/mirror/M in mirrors.Copy())
 		if(!QDELETED(M))
 			qdel(M)
 	mirrors.Cut()
 
 // Over-head readout: red = seconds until the next Wager, gold = the current
 // table score. Refreshed once a second by hud_timer.
-/mob/living/simple_animal/hostile/azarus/proc/UpdateHUD()
+/mob/living/simple_animal/hostile/distortion/azarus/proc/UpdateHUD()
 	if(QDELETED(src))
 		return
 	if(is_mirror || stat == DEAD || dying || !table_set)
@@ -362,14 +356,12 @@
 	maptext = MAPTEXT("<font color='#ff3030'>[countdown]</font> <font color='#ffd700'>[TableScore()]</font>")
 
 // Block self-movement during any special; forceMove still works.
-/mob/living/simple_animal/hostile/azarus/Move(atom/newloc, dir, step_x, step_y)
+/mob/living/simple_animal/hostile/distortion/azarus/Move(atom/newloc, dir, step_x, step_y)
 	if(!can_act)
 		return FALSE
 	return ..()
 
-/mob/living/simple_animal/hostile/azarus/handle_automated_action()
-	// The mirror chains here via ..(); it has no table or Wager, so fall
-	// straight through to the base movement/melee AI.
+/mob/living/simple_animal/hostile/distortion/azarus/handle_automated_action()
 	if(is_mirror)
 		return ..()
 	if(!can_act || dying)
@@ -395,13 +387,13 @@
 	return ..()
 
 // Throws the opening hand onto the floor.
-/mob/living/simple_animal/hostile/azarus/proc/SetupTable()
+/mob/living/simple_animal/hostile/distortion/azarus/proc/SetupTable()
 	table_set = TRUE
 	ThrowDice(dice_count)
 
 // Scatters `count` dice onto open floor in range. Dice keep at least 2
 // tiles between one another (and away from existing ones on the table).
-/mob/living/simple_animal/hostile/azarus/proc/ThrowDice(count)
+/mob/living/simple_animal/hostile/distortion/azarus/proc/ThrowDice(count)
 	var/turf/center = table_center || get_turf(src)
 	var/list/spots = list()
 	for(var/turf/open/T in range(6, center))
@@ -418,12 +410,6 @@
 		if(!QDELETED(existing))
 			placed_turfs += get_turf(existing)
 	var/thrown = 0
-	// Loop until we hit `count` placements OR exhaust every candidate
-	// tile. Previously this was a `for(var/i in 1 to count)` with
-	// `continue` on a spacing failure, which burned one of the `count`
-	// slots per rejected tile and could quietly underspawn the table.
-	// If the spacing rule wipes out every remaining candidate, the
-	// loop exits naturally at LAZYLEN(spots) == 0.
 	while(thrown < count && LAZYLEN(spots))
 		var/turf/T = pick(spots)
 		spots -= T
@@ -444,7 +430,7 @@
 		playsound(get_turf(src), 'sound/items/cardshuffle.ogg', 70, TRUE, 6)
 
 // Each landing buys time, but never past one full cooldown window.
-/mob/living/simple_animal/hostile/azarus/proc/OnDieLanded(obj/structure/azarus_die/die)
+/mob/living/simple_animal/hostile/distortion/azarus/proc/OnDieLanded(obj/structure/azarus_die/die)
 	if(wager_deadline <= 0)
 		return
 	wager_deadline = min(wager_deadline + roll_delay, world.time + wager_max_countdown)
@@ -452,7 +438,7 @@
 // A player rolling a die may draw a Snake Eyes at that die's tile. Gated by
 // can_act (no interrupt mid-special) and the normal Snake Eyes cooldown, so
 // it can't chain.
-/mob/living/simple_animal/hostile/azarus/proc/OnDieRolled(obj/structure/azarus_die/die)
+/mob/living/simple_animal/hostile/distortion/azarus/proc/OnDieRolled(obj/structure/azarus_die/die)
 	if(is_mirror || stat == DEAD || dying || !can_act)
 		return
 	if(world.time < snake_cooldown || !prob(roll_attack_chance))
@@ -461,7 +447,7 @@
 
 // One of the dealer's own AoEs sweeping the table knocks any die showing 4+
 // loose for a fresh spin; losing a locked six earns a remark.
-/mob/living/simple_animal/hostile/azarus/proc/RattleDiceInRange(turf/center, radius)
+/mob/living/simple_animal/hostile/distortion/azarus/proc/RattleDiceInRange(turf/center, radius)
 	if(!center)
 		return
 	var/rerolled_six = FALSE
@@ -476,7 +462,7 @@
 		say(pick(reroll_six_lines))
 
 // Sum of every live die's current face (airborne dice use their snapshot).
-/mob/living/simple_animal/hostile/azarus/proc/TableScore()
+/mob/living/simple_animal/hostile/distortion/azarus/proc/TableScore()
 	var/total = 0
 	for(var/obj/structure/azarus_die/die in live_dice)
 		if(QDELETED(die))
@@ -484,7 +470,7 @@
 		total += die.spinning ? die.score_value : die.result
 	return total
 
-/mob/living/simple_animal/hostile/azarus/proc/CastWager(early = FALSE)
+/mob/living/simple_animal/hostile/distortion/azarus/proc/CastWager(early = FALSE)
 	if(!can_act || stat == DEAD || dying)
 		return
 	can_act = FALSE
@@ -495,8 +481,6 @@
 	wager_die.pixel_x = 1
 	wager_die.pixel_y = 35
 	add_overlay(wager_die)
-	// A forced (phase-change) Wager gets its own callout in place of the
-	// usual one.
 	say(pick(early ? wager_early_lines : wager_taunts))
 	playsound(get_turf(src), 'sound/magic/clockwork/invoke_general.ogg', 80, FALSE, 12)
 	for(var/mob/M in GLOB.player_list)
@@ -529,19 +513,23 @@
 	can_act = TRUE
 
 // Maxed table: the House folds. The Wager whiffs and Azarus is left open.
-/mob/living/simple_animal/hostile/azarus/proc/WagerBust()
+/mob/living/simple_animal/hostile/distortion/azarus/proc/WagerBust()
 	say(pick(bust_lines))
 	playsound(get_turf(src), 'sound/magic/demon_dies.ogg', 80, FALSE, 10)
 	visible_message(span_nicegreen("[src] busts! The House is left wide open!"))
 	new /obj/effect/temp_visual/cult/sparks(get_turf(src))
-	// Crank every incoming-damage coeff to 4x the baseline (0.5 → 2.0)
-	// across all four LC13 types. EndStagger restores the baseline.
 	ChangeResistances(list(RED_DAMAGE = 2, WHITE_DAMAGE = 2, BLACK_DAMAGE = 2, PALE_DAMAGE = 2))
+	if(!stagger_overlay)
+		stagger_overlay = mutable_appearance('ModularLobotomy/_Lobotomyicons/tegumobs.dmi', "small_stagger", layer + 0.1)
+		add_overlay(stagger_overlay)
 	WagerResolved()
 	// Stagger window: stays put and vulnerable before recovering.
 	addtimer(CALLBACK(src, PROC_REF(EndStagger)), 5 SECONDS)
 
-/mob/living/simple_animal/hostile/azarus/proc/EndStagger()
+/mob/living/simple_animal/hostile/distortion/azarus/proc/EndStagger()
+	if(stagger_overlay)
+		cut_overlay(stagger_overlay)
+		stagger_overlay = null
 	if(stat == DEAD || dying)
 		return
 	can_act = TRUE
@@ -550,7 +538,7 @@
 
 // A resolved Wager clears the whole table and opens a dead-table window:
 // no dice, no countdown, for wager_intermission_time. OpenTable re-deals.
-/mob/living/simple_animal/hostile/azarus/proc/WagerResolved()
+/mob/living/simple_animal/hostile/distortion/azarus/proc/WagerResolved()
 	for(var/obj/structure/azarus_die/die in live_dice)
 		if(!QDELETED(die))
 			qdel(die)
@@ -560,7 +548,7 @@
 	addtimer(CALLBACK(src, PROC_REF(OpenTable)), wager_intermission_time)
 
 // End of the intermission: deal a fresh table and restart the Wager clock.
-/mob/living/simple_animal/hostile/azarus/proc/OpenTable()
+/mob/living/simple_animal/hostile/distortion/azarus/proc/OpenTable()
 	if(stat == DEAD || dying)
 		return
 	in_intermission = FALSE
@@ -568,7 +556,7 @@
 	wager_deadline = world.time + wager_cooldown_time
 
 // Flicks a die at the target tile; it lands in a 3x3 blast.
-/mob/living/simple_animal/hostile/azarus/proc/SnakeEyes(atom/S_target)
+/mob/living/simple_animal/hostile/distortion/azarus/proc/SnakeEyes(atom/S_target)
 	if(!can_act || stat == DEAD || dying || QDELETED(S_target))
 		return
 	can_act = FALSE
@@ -600,7 +588,7 @@
 	can_act = TRUE
 
 // Anti-crowding 5x5 cleave with knockback when players stack on the dealer.
-/mob/living/simple_animal/hostile/azarus/proc/HouseEdge()
+/mob/living/simple_animal/hostile/distortion/azarus/proc/HouseEdge()
 	if(!can_act || stat == DEAD || dying)
 		return
 	can_act = FALSE
@@ -634,31 +622,25 @@
 	can_act = TRUE
 
 // ---- Phase 2 ----
-/mob/living/simple_animal/hostile/azarus/adjustHealth(amount, updating_health = TRUE, forced = FALSE)
+/mob/living/simple_animal/hostile/distortion/azarus/adjustHealth(amount, updating_health = TRUE, forced = FALSE)
 	. = ..()
-	// Taking damage rushes the bet — but only while a Wager is actually
-	// counting down (not mid-cast, not during the dead-table window).
 	if(!is_mirror && amount > 0 && wager_deadline > 0 && !wager_casting && !in_intermission)
 		wager_deadline = max(world.time, wager_deadline - round(amount * wager_speedup_per_damage))
 	CheckPhase()
 
-/mob/living/simple_animal/hostile/azarus/proc/CheckPhase()
+/mob/living/simple_animal/hostile/distortion/azarus/proc/CheckPhase()
 	if(is_mirror || stat == DEAD || dying || !maxHealth || health <= 0)
 		return
 	if(phase >= 2 || health > maxHealth * 0.5)
 		return
-	// Latch the phase immediately so repeated adjustHealth calls don't queue
-	// the transition twice, then resolve it asynchronously.
 	phase = 2
 	INVOKE_ASYNC(src, PROC_REF(EnterPhase2))
 
 // If a Wager is still counting down (not yet resolved) when phase 2 hits,
 // force it to fire first, then apply the phase-2 changes.
-/mob/living/simple_animal/hostile/azarus/proc/EnterPhase2()
+/mob/living/simple_animal/hostile/distortion/azarus/proc/EnterPhase2()
 	if(stat == DEAD || dying)
 		return
-	// A Wager already mid-telegraph counts as "triggered" — wait it out and
-	// phase in afterward without stacking a second one.
 	if(wager_casting)
 		addtimer(CALLBACK(src, PROC_REF(EnterPhase2)), 0.5 SECONDS)
 		return
@@ -673,7 +655,7 @@
 			return
 	ApplyPhase2()
 
-/mob/living/simple_animal/hostile/azarus/proc/ApplyPhase2()
+/mob/living/simple_animal/hostile/distortion/azarus/proc/ApplyPhase2()
 	if(stat == DEAD || dying)
 		return
 	dice_count = 9
@@ -681,8 +663,6 @@
 	wager_cooldown_time = 30 SECONDS
 	say(pick(phase_lines))
 	playsound(get_turf(src), 'sound/magic/clockwork/narsie_attack.ogg', 75, FALSE, 8)
-	// Don't deal a fresh table mid-intermission — OpenTable will deal all 9
-	// when the dead-table window ends.
 	if(!in_intermission)
 		ThrowDice(dice_count - LAZYLEN(live_dice))
 	SpawnMirrors()
@@ -690,7 +670,7 @@
 // Conjures mirror-doubles that stand guard and echo the dealer's attacks,
 // each with a quarter of the House's HP. They keep mirror_spacing tiles from
 // the boss and from each other.
-/mob/living/simple_animal/hostile/azarus/proc/SpawnMirrors()
+/mob/living/simple_animal/hostile/distortion/azarus/proc/SpawnMirrors()
 	var/list/spots = list()
 	for(var/turf/open/T in range(9, src))
 		if(T.density || istype(T, /turf/open/water))
@@ -703,7 +683,7 @@
 		var/turf/T = pick(spots)
 		spots -= T
 		var/ok = TRUE
-		for(var/mob/living/simple_animal/hostile/azarus/mirror/M in mirrors)
+		for(var/mob/living/simple_animal/hostile/distortion/azarus/mirror/M in mirrors)
 			if(QDELETED(M))
 				continue
 			if(get_dist(T, M) < mirror_spacing)
@@ -711,7 +691,7 @@
 				break
 		if(!ok)
 			continue
-		var/mob/living/simple_animal/hostile/azarus/mirror/M = new(T)
+		var/mob/living/simple_animal/hostile/distortion/azarus/mirror/M = new(T)
 		M.owner = src
 		// Real HP equal to a quarter of the House's own maximum.
 		M.maxHealth = round(maxHealth * 0.25)
@@ -722,14 +702,13 @@
 		visible_message(span_warning("[src] conjures mirror-doubles to raise the stakes!"))
 
 // Tells every living mirror to replay the attack the House just cast. Each
-// mirror waits a bit longer than the last (base + N*step + jitter) so the
-// copies cascade across the room instead of landing all at once. For Snake
-// Eyes the mirrors are handed distinct targets (round-robin over a pool that
-// deprioritizes the House's own mark) so they spread out — only doubling up
-// when there are fewer players than attackers.
-/mob/living/simple_animal/hostile/azarus/proc/MirrorMimic(what, atom/the_target)
+// mirror waits longer than the last (base + N*step + jitter) so copies
+// cascade. Snake Eyes targets are round-robin over a pool that
+// deprioritizes the House's own mark — doubling up only when there are
+// fewer players than attackers.
+/mob/living/simple_animal/hostile/distortion/azarus/proc/MirrorMimic(what, atom/the_target)
 	var/list/living_mirrors = list()
-	for(var/mob/living/simple_animal/hostile/azarus/mirror/M in mirrors)
+	for(var/mob/living/simple_animal/hostile/distortion/azarus/mirror/M in mirrors)
 		if(!QDELETED(M) && M.stat != DEAD)
 			living_mirrors += M
 	if(!length(living_mirrors))
@@ -738,20 +717,20 @@
 	if(what == "snake")
 		snake_pool = BuildMirrorTargetPool(the_target)
 	var/index = 0
-	for(var/mob/living/simple_animal/hostile/azarus/mirror/M in living_mirrors)
+	for(var/mob/living/simple_animal/hostile/distortion/azarus/mirror/M in living_mirrors)
 		index++
 		var/delay = mirror_mimic_base_delay + (index * mirror_mimic_stagger) + rand(0, 3)
 		if(what == "snake")
 			var/atom/assigned = the_target
 			if(length(snake_pool))
 				assigned = snake_pool[((index - 1) % length(snake_pool)) + 1]
-			addtimer(CALLBACK(M, TYPE_PROC_REF(/mob/living/simple_animal/hostile/azarus/mirror, MimicSnake), assigned), delay)
+			addtimer(CALLBACK(M, TYPE_PROC_REF(/mob/living/simple_animal/hostile/distortion/azarus/mirror, MimicSnake), assigned), delay)
 		else if(what == "house")
-			addtimer(CALLBACK(M, TYPE_PROC_REF(/mob/living/simple_animal/hostile/azarus/mirror, MimicHouse)), delay)
+			addtimer(CALLBACK(M, TYPE_PROC_REF(/mob/living/simple_animal/hostile/distortion/azarus/mirror, MimicHouse)), delay)
 
 // Candidate Snake Eyes targets for the mirrors, with the House's own mark
 // pushed to the back so the doubles hit the other players first.
-/mob/living/simple_animal/hostile/azarus/proc/BuildMirrorTargetPool(atom/boss_target)
+/mob/living/simple_animal/hostile/distortion/azarus/proc/BuildMirrorTargetPool(atom/boss_target)
 	var/list/pool = list()
 	for(var/mob/living/L in livinginrange(20, src))
 		if(L == src || faction_check_mob(L) || L.stat == DEAD)
@@ -762,9 +741,7 @@
 		pool += boss_target
 	return pool
 
-/mob/living/simple_animal/hostile/azarus/death(gibbed)
-	// A mirror that somehow dies just deregisters; only the real boss runs
-	// the fade-out and cleans up the table + mirrors.
+/mob/living/simple_animal/hostile/distortion/azarus/death(gibbed)
 	if(is_mirror)
 		if(owner && !QDELETED(owner))
 			owner.mirrors -= src
@@ -784,7 +761,7 @@
 // A stationary double with real HP (set to 25% of the House's max on spawn).
 // It never moves and never melees - it only echoes the dealer's Snake Eyes /
 // House Edge. Shatter one to remove that extra pressure.
-/mob/living/simple_animal/hostile/azarus/mirror
+/mob/living/simple_animal/hostile/distortion/azarus/mirror
 	name = "the dealer's mirror"
 	desc = "A mirror with the dealer's face leering out of it. Shatter it to \
 		stop it echoing the House's attacks."
@@ -801,22 +778,20 @@
 	damage_coeff = list(RED_DAMAGE = 1, WHITE_DAMAGE = 1, BLACK_DAMAGE = 1, PALE_DAMAGE = 1)
 
 // Stationary — never takes a step.
-/mob/living/simple_animal/hostile/azarus/mirror/Move(atom/newloc, dir, step_x, step_y)
+/mob/living/simple_animal/hostile/distortion/azarus/mirror/Move(atom/newloc, dir, step_x, step_y)
 	return FALSE
 
-/mob/living/simple_animal/hostile/azarus/mirror/handle_automated_action()
+/mob/living/simple_animal/hostile/distortion/azarus/mirror/handle_automated_action()
 	if(stat == DEAD)
 		return
 	if(!owner || QDELETED(owner) || owner.stat == DEAD)
 		qdel(src)
 		return
-	// Otherwise idle: it doesn't chase or attack on its own — it only
-	// mirrors the House via MimicSnake / MimicHouse timers.
 	return
 
 // Nearest living non-faction target to the mirror itself, so the mirrors
 // cover their own corners of the room.
-/mob/living/simple_animal/hostile/azarus/mirror/proc/FindMimicTarget()
+/mob/living/simple_animal/hostile/distortion/azarus/mirror/proc/FindMimicTarget()
 	var/mob/living/best
 	var/best_dist = INFINITY
 	for(var/mob/living/L in livinginrange(9, src))
@@ -830,7 +805,7 @@
 
 // Uses the target the House assigned (kept distinct from the other mirrors),
 // falling back to its own nearest if that one died or vanished mid-stagger.
-/mob/living/simple_animal/hostile/azarus/mirror/proc/MimicSnake(atom/the_target)
+/mob/living/simple_animal/hostile/distortion/azarus/mirror/proc/MimicSnake(atom/the_target)
 	if(stat == DEAD || QDELETED(src))
 		return
 	var/atom/t
@@ -843,7 +818,7 @@
 	if(t)
 		SnakeEyes(t)
 
-/mob/living/simple_animal/hostile/azarus/mirror/proc/MimicHouse()
+/mob/living/simple_animal/hostile/distortion/azarus/mirror/proc/MimicHouse()
 	if(stat == DEAD || QDELETED(src))
 		return
 	HouseEdge()
