@@ -62,6 +62,9 @@ PROCESSING_SUBSYSTEM_DEF(quirks)
 	for(var/V in cli.prefs.all_quirks)
 		var/datum/quirk/Q = quirks[V]
 		if(Q)
+			if(!SSrefraction_railway.IsQuirkAvailable(cli.ckey, V))
+				to_chat(user, span_warning("[V] is locked and was skipped — unlock it via the Starlight shop or complete the required line first."))
+				continue
 			user.add_quirk(Q, spawn_effects)
 		else
 			stack_trace("Invalid quirk \"[V]\" in client [cli.ckey] preferences")

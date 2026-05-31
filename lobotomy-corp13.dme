@@ -829,6 +829,7 @@
 #include "code\datums\quirks\good.dm"
 #include "code\datums\quirks\negative.dm"
 #include "code\datums\quirks\neutral.dm"
+#include "code\datums\quirks\starlight.dm"
 #include "code\datums\ruins\icemoon.dm"
 #include "code\datums\ruins\lavaland.dm"
 #include "code\datums\ruins\space.dm"

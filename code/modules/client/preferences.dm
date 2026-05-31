@@ -110,6 +110,7 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 		)
 	var/list/randomise = list(RANDOM_UNDERWEAR = TRUE, RANDOM_UNDERWEAR_COLOR = TRUE, RANDOM_UNDERSHIRT = TRUE, RANDOM_SOCKS = TRUE, RANDOM_BACKPACK = TRUE, RANDOM_JUMPSUIT_STYLE = TRUE, RANDOM_HAIRSTYLE = TRUE, RANDOM_HAIR_COLOR = TRUE, RANDOM_FACIAL_HAIRSTYLE = TRUE, RANDOM_FACIAL_HAIR_COLOR = TRUE, RANDOM_SKIN_TONE = TRUE, RANDOM_EYE_COLOR = TRUE)
 	var/phobia = "spiders"
+	var/pet_rat_color = "#888888"
 
 	var/list/alt_titles_preferences = list() // Tegu
 
@@ -627,6 +628,10 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 				dat += "<h3>Phobia</h3>"
 
 				dat += "<a href='byond://?_src_=prefs;preference=phobia;task=input'>[phobia]</a><BR>"
+
+			if("Tagalong Rat" in all_quirks)
+				dat += "<h3>Pet Rat Color</h3>"
+				dat += "<a href='byond://?_src_=prefs;preference=pet_rat_color;task=input'><span style='background-color:[pet_rat_color]'>&nbsp;&nbsp;&nbsp;[pet_rat_color]&nbsp;&nbsp;&nbsp;</span></a><BR>"
 
 			if(CONFIG_GET(flag/join_with_mutant_humans))
 
@@ -1175,6 +1180,19 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 			if(initial(T.mood_quirk) && CONFIG_GET(flag/disable_human_mood))
 				lock_reason = "Mood is disabled."
 				quirk_conflict = TRUE
+			// Starlight + line-completion gate: visible but unselectable until unlocked.
+			var/starlight_locked = initial(T.starlight_locked)
+			var/required_line = initial(T.required_line_completed)
+			if(starlight_locked || required_line)
+				if(!SSrefraction_railway.IsQuirkAvailable(user.ckey, quirk_name))
+					quirk_conflict = TRUE
+					var/list/reasons = list()
+					if(starlight_locked && !SSrefraction_railway.IsQuirkUnlocked(user.ckey, quirk_name))
+						reasons += "★[initial(T.starlight_cost)]"
+					if(required_line && !SSrefraction_railway.HasCompletedLine(user.ckey, required_line))
+						var/datum/refraction_line/RL = SSrefraction_railway.lines[required_line]
+						reasons += "clear [RL ? RL.name : required_line]"
+					lock_reason = "Starlight Locked ([reasons.Join(" · ")])"
 			if(has_quirk)
 				if(quirk_conflict)
 					all_quirks -= quirk_name
@@ -1187,7 +1205,7 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 			if(initial(T.value) != 0)
 				font_color = initial(T.value) > 0 ? "#AAFFAA" : "#FFAAAA"
 			if(quirk_conflict)
-				dat += "<font color='[font_color]'>[quirk_name]</font> - [initial(T.desc)] \
+				dat += "<s><font color='[font_color]'>[quirk_name]</font> - [initial(T.desc)]</s> \
 				<font color='red'><b>LOCKED: [lock_reason]</b></font><br>"
 			else
 				if(has_quirk)
@@ -1301,6 +1319,9 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 			if("update")
 				var/quirk = href_list["trait"]
 				if(!SSquirks.quirks[quirk])
+					return
+				if(!SSrefraction_railway.IsQuirkAvailable(user.ckey, quirk))
+					to_chat(user, span_warning("[quirk] is Starlight-locked. Unlock it via the Starlight shop or complete the required line first."))
 					return
 				for(var/V in SSquirks.quirk_blacklist) //V is a list
 					var/list/L = V
@@ -1828,6 +1849,11 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 					var/phobiaType = input(user, "What are you scared of?", "Character Preference", phobia) as null|anything in SStraumas.phobia_types
 					if(phobiaType)
 						phobia = phobiaType
+
+				if("pet_rat_color")
+					var/picked = input(user, "Choose your pet rat's color.", "Character Preference", pet_rat_color) as color|null
+					if(picked)
+						pet_rat_color = picked
 
 				if ("max_chat_length")
 					var/desiredlength = input(user, "Choose the max character length of shown Runechat messages. Valid range is 1 to [CHAT_MESSAGE_MAX_LENGTH] (default: [initial(max_chat_length)]))", "Character Preference", max_chat_length)  as null|num

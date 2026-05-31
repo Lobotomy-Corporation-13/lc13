@@ -8704,6 +8704,14 @@
 	},
 /turf/open/floor/carpet/black,
 /area/centcom/holding)
+"Ys" = (
+/obj/structure/refraction_starlight_shop{
+	custom_frame = 1;
+	inner_frame_color = "#ff715e";
+	outer_frame_color = "#ff1e00"
+	},
+/turf/open/floor/carpet,
+/area/centcom/holding)
 "Yt" = (
 /obj/effect/turf_decal/tile/brown,
 /obj/effect/turf_decal/tile/brown{
@@ -59877,7 +59885,7 @@ aa
 aa
 aa
 FM
-um
+Ys
 Kz
 TU
 EQ
