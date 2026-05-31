@@ -58,6 +58,7 @@ SUBSYSTEM_DEF(refraction_railway)
 	InitializeMobAttacks()
 	SSpersistence.LoadRefractionLeaderboards()
 	SSpersistence.LoadRefractionEncounters()
+	SSpersistence.LoadRefractionStarlight()
 	// Warm the mob-card cache in the background so the first hub-console
 	// open doesn't pay for ~20 getFlatIcon + base64 encodes all at once.
 	INVOKE_ASYNC(src, PROC_REF(PrewarmMobCards))
@@ -464,4 +465,114 @@ SUBSYSTEM_DEF(refraction_railway)
 		SSatoms.initialized_changed = saved_changed
 		SSatoms.initialized = saved_initialized
 	return level?.z_value || 0
+
+// ---------- Starlight progression ----------
+
+/// Returns the live entry for `ckey`, creating an empty one if missing.
+/datum/controller/subsystem/refraction_railway/proc/GetOrCreateStarlightEntry(ckey)
+	if(!ckey)
+		return null
+	var/list/entry = SSpersistence.starlight_data[ckey]
+	if(!islist(entry))
+		entry = list("balance" = 0, "unlocked" = list(), "completed_lines" = list())
+		SSpersistence.starlight_data[ckey] = entry
+	if(!islist(entry["unlocked"]))
+		entry["unlocked"] = list()
+	if(!islist(entry["completed_lines"]))
+		entry["completed_lines"] = list()
+	if(isnull(entry["balance"]))
+		entry["balance"] = 0
+	return entry
+
+/datum/controller/subsystem/refraction_railway/proc/GetStarlight(ckey)
+	var/list/entry = SSpersistence.starlight_data[ckey]
+	return islist(entry) ? (entry["balance"] || 0) : 0
+
+/datum/controller/subsystem/refraction_railway/proc/GetUnlockedQuirks(ckey)
+	var/list/entry = SSpersistence.starlight_data[ckey]
+	if(!islist(entry))
+		return list()
+	var/list/unlocked = entry["unlocked"]
+	return islist(unlocked) ? unlocked.Copy() : list()
+
+/datum/controller/subsystem/refraction_railway/proc/IsQuirkUnlocked(ckey, quirk_name)
+	if(!ckey || !quirk_name)
+		return FALSE
+	var/list/entry = SSpersistence.starlight_data[ckey]
+	if(!islist(entry))
+		return FALSE
+	var/list/unlocked = entry["unlocked"]
+	return islist(unlocked) && (quirk_name in unlocked)
+
+/datum/controller/subsystem/refraction_railway/proc/HasCompletedLine(ckey, line_id)
+	if(!ckey || !line_id)
+		return FALSE
+	var/list/entry = SSpersistence.starlight_data[ckey]
+	if(!islist(entry))
+		return FALSE
+	var/list/done = entry["completed_lines"]
+	return islist(done) && (line_id in done)
+
+/datum/controller/subsystem/refraction_railway/proc/MarkLineCompleted(ckey, line_id)
+	if(!ckey || !line_id)
+		return
+	var/list/entry = GetOrCreateStarlightEntry(ckey)
+	if(!entry)
+		return
+	var/list/done = entry["completed_lines"]
+	if(!(line_id in done))
+		done += line_id
+		SSpersistence.SaveRefractionStarlight()
+
+/datum/controller/subsystem/refraction_railway/proc/AwardStarlight(ckey, amount)
+	if(!ckey || amount <= 0)
+		return
+	var/list/entry = GetOrCreateStarlightEntry(ckey)
+	if(!entry)
+		return
+	entry["balance"] = (entry["balance"] || 0) + amount
+	SSpersistence.SaveRefractionStarlight()
+
+/// Combined locks check used by the picker, server-side gate, and shop. TRUE iff:
+///   - The quirk isn't `starlight_locked`, OR the ckey has purchased it.
+///   - AND the quirk has no `required_line_completed`, OR the ckey has finished it.
+/datum/controller/subsystem/refraction_railway/proc/IsQuirkAvailable(ckey, quirk_name)
+	if(!quirk_name)
+		return TRUE
+	var/datum/quirk/Q = SSquirks.quirks[quirk_name]
+	if(!Q)
+		return TRUE
+	if(initial(Q.starlight_locked) && !IsQuirkUnlocked(ckey, quirk_name))
+		return FALSE
+	var/req_line = initial(Q.required_line_completed)
+	if(req_line && !HasCompletedLine(ckey, req_line))
+		return FALSE
+	return TRUE
+
+/// Spends starlight to permanently unlock a quirk for `ckey`. Returns TRUE on success.
+/datum/controller/subsystem/refraction_railway/proc/PurchaseQuirk(ckey, quirk_name)
+	if(!ckey || !quirk_name)
+		return FALSE
+	var/datum/quirk/Q = SSquirks.quirks[quirk_name]
+	if(!Q || !initial(Q.starlight_locked))
+		return FALSE
+	if(IsQuirkUnlocked(ckey, quirk_name))
+		return FALSE
+	var/cost = initial(Q.starlight_cost)
+	if(cost < 0)
+		return FALSE
+	var/req_line = initial(Q.required_line_completed)
+	if(req_line && !HasCompletedLine(ckey, req_line))
+		return FALSE
+	var/list/entry = GetOrCreateStarlightEntry(ckey)
+	if(!entry)
+		return FALSE
+	var/balance = entry["balance"] || 0
+	if(balance < cost)
+		return FALSE
+	entry["balance"] = balance - cost
+	var/list/unlocked = entry["unlocked"]
+	unlocked |= quirk_name
+	SSpersistence.SaveRefractionStarlight()
+	return TRUE
 

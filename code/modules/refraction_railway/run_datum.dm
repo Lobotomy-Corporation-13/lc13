@@ -9,6 +9,13 @@ GLOBAL_LIST_INIT(refraction_attribute_keys, list(
 	TEMPERANCE_ATTRIBUTE,
 	JUSTICE_ATTRIBUTE,
 ))
+
+// Starlight award constants — tune here, knob in one place.
+#define STARLIGHT_BASE_AWARD 100
+#define STARLIGHT_PER_UNIQUE_ITEM 25
+#define STARLIGHT_TIME_BONUS_CAP 100
+/// Seconds-per-point decay for the time bonus. At 10 minutes flat = 0 bonus.
+#define STARLIGHT_TIME_BONUS_DIVISOR 6
 GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 	/obj/item/ego_weapon,
 	/obj/item/clothing/suit/armor/ego_gear,
@@ -589,7 +596,39 @@ GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 	SSrefraction_railway.RecordRun(line.id, entry)
 	// Save now so a mid-round crash still preserves the leaderboard.
 	SSpersistence.SaveRefractionLeaderboards()
+	AwardStarlightProgression(total_ds)
 	ShowFinalResults(total_ds)
+
+/// Awards per-ckey Starlight + marks the line completed. Award formula:
+///   base + (unique loadout items across all sectors × per-item) + time bonus.
+/// Time bonus floors at 0 and decays linearly so longer runs get less.
+/datum/refraction_run/proc/AwardStarlightProgression(total_ds)
+	var/total_seconds = round(total_ds / 10)
+	var/time_bonus = max(0, STARLIGHT_TIME_BONUS_CAP - round(total_seconds / STARLIGHT_TIME_BONUS_DIVISOR))
+	var/list/unique_by_ckey = list()
+	for(var/list/snap as anything in sector_loadouts)
+		if(!islist(snap))
+			continue
+		for(var/list/entry as anything in snap)
+			var/ck = entry["ckey"]
+			if(!ck)
+				continue
+			var/list/seen = unique_by_ckey[ck]
+			if(!islist(seen))
+				seen = list()
+				unique_by_ckey[ck] = seen
+			var/list/lo = entry["loadout"]
+			if(islist(lo))
+				seen |= lo
+	for(var/ckey in unique_by_ckey)
+		var/list/seen = unique_by_ckey[ckey]
+		var/unique_count = length(seen)
+		var/award = STARLIGHT_BASE_AWARD + (unique_count * STARLIGHT_PER_UNIQUE_ITEM) + time_bonus
+		SSrefraction_railway.AwardStarlight(ckey, award)
+		SSrefraction_railway.MarkLineCompleted(ckey, line.id)
+		var/mob/M = FindMemberByCkey(ckey)
+		if(M)
+			to_chat(M, span_nicegreen("You earned [award] Starlight. (balance: [SSrefraction_railway.GetStarlight(ckey)])"))
 
 /// TRUE iff the lobby owner has a mind AND a client on a member mob.
 /datum/refraction_run/proc/IsOwnerActive()

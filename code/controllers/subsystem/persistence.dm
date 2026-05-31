@@ -7,6 +7,7 @@
 #define FILE_RCE_EXPEDITION "data/RCEExpedition.json"
 #define FILE_REFRACTION_LEADERBOARDS "data/refraction_railway_leaderboards.json"
 #define FILE_REFRACTION_ENCOUNTERS "data/refraction_railway_encounters.json"
+#define FILE_REFRACTION_STARLIGHT "data/refraction_railway_starlight.json"
 #define ROUNDCOUNT_BUTTON_PRESSED 0
 
 #define KEEP_ROUNDS_MAP 3
@@ -44,6 +45,8 @@ SUBSYSTEM_DEF(persistence)
 	/// Door to Nowhere tape archive
 	var/list/door_to_nowhere_tapes = list()
 	var/list/obj/machinery/tape_archive/tape_archive_machines = list()
+	/// Per-ckey refraction-railway progression. ckey -> list("balance" = N, "unlocked" = list(quirk_names), "completed_lines" = list(line_ids)).
+	var/list/starlight_data = list()
 
 /datum/controller/subsystem/persistence/Initialize()
 	LoadPoly()
@@ -262,6 +265,7 @@ SUBSYSTEM_DEF(persistence)
 	SaveDoorToNowhereTapes()
 	SaveRefractionLeaderboards()
 	SaveRefractionEncounters()
+	SaveRefractionStarlight()
 
 /datum/controller/subsystem/persistence/proc/GetPhotoAlbums()
 	var/album_path = file("data/photo_albums.json")
@@ -701,3 +705,21 @@ SUBSYSTEM_DEF(persistence)
 /datum/controller/subsystem/persistence/proc/SaveRefractionEncounters()
 	fdel(FILE_REFRACTION_ENCOUNTERS)
 	text2file(json_encode(SSrefraction_railway.encountered_mobs), FILE_REFRACTION_ENCOUNTERS)
+
+/// Loads per-ckey Starlight balance + unlocked-quirks set + completed-lines set.
+/datum/controller/subsystem/persistence/proc/LoadRefractionStarlight()
+	if(!fexists(FILE_REFRACTION_STARLIGHT))
+		return
+	var/raw = file2text(FILE_REFRACTION_STARLIGHT)
+	if(!raw)
+		return
+	var/list/decoded = json_decode(raw)
+	if(islist(decoded))
+		starlight_data = decoded
+
+/// Writes the in-memory Starlight progression to disk. Called from CollectData
+/// at round end and after every mutation (award / purchase / line-complete)
+/// so a crash mid-round can't lose progression.
+/datum/controller/subsystem/persistence/proc/SaveRefractionStarlight()
+	fdel(FILE_REFRACTION_STARLIGHT)
+	text2file(json_encode(starlight_data), FILE_REFRACTION_STARLIGHT)
