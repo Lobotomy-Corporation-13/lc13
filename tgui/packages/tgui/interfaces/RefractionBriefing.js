@@ -32,16 +32,27 @@ export const RefractionBriefing = (props, context) => {
               key={i}
               title={node.name}
               level={2}>
-              {node.description && (
-                <Box mb={0.5} color="label">{node.description}</Box>
+              {node.locked ? (
+                <Box p={1} color="bad">
+                  Restricted — encounter not yet authored.
+                </Box>
+              ) : (
+                <>
+                  {node.description && (
+                    <Box mb={0.5} color="label">{node.description}</Box>
+                  )}
+                  <Stack wrap>
+                    {(node.mobs || []).map((mob, j) => (
+                      <Stack.Item key={j}>
+                        <MobCard
+                          mob={mob}
+                          onClick={() => setModalMob(mob)}
+                        />
+                      </Stack.Item>
+                    ))}
+                  </Stack>
+                </>
               )}
-              <Stack wrap>
-                {(node.mobs || []).map((mob, j) => (
-                  <Stack.Item key={j}>
-                    <MobCard mob={mob} onClick={() => setModalMob(mob)} />
-                  </Stack.Item>
-                ))}
-              </Stack>
             </Section>
           ))}
         </Section>

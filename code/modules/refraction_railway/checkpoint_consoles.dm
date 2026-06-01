@@ -95,6 +95,7 @@
 			"line_name"     = RL ? RL.name : null,
 			"line_color"    = RL ? RL.display_color : null,
 			"line_done"     = req_line ? SSrefraction_railway.HasCompletedLine(user.ckey, req_line) : TRUE,
+			"line_locked"   = (RL && RL.locked) ? TRUE : FALSE,
 		))
 	data["quirks"] = rows
 	return data
@@ -156,6 +157,16 @@
 		var/datum/refraction_node/N = R.line.combat_nodes[node_id]
 		if(!istype(N))
 			continue
+		if(N.locked)
+			out += list(list(
+				"id"          = N.id,
+				"name"        = "Restricted",
+				"description" = "Encounter not yet authored.",
+				"is_boss"     = N.is_boss,
+				"mobs"        = list(),
+				"locked"      = TRUE,
+			))
+			continue
 		var/list/mob_payloads = list()
 		for(var/mob_path in N.mob_stock)
 			var/list/payload = SSrefraction_railway.BuildMobCardPayload(user.ckey, mob_path)
@@ -173,6 +184,7 @@
 			"description" = N.description,
 			"is_boss"     = N.is_boss,
 			"mobs"        = mob_payloads,
+			"locked"      = FALSE,
 		))
 	return out
 

@@ -36,25 +36,35 @@
 	scale_spawn_batch   = FALSE
 	scale_wave_stats    = FALSE
 
+	// Phases 2 + 3 of the Serio Zeal finale aren't authored yet, so the
+	// whole line stays Hub-visible but lobby-locked until they ship.
+	locked              = TRUE
+
 	map_viewbox = list("w" = 600, "h" = 400)
 
-	// 11 visual nodes arranged as a constellation. The broken-snake turn at
-	// node 5 -> 6 and the vertical spur 6 -> 7 give the figure its
-	// constellation feel without any node jutting backward out of frame.
-	// Viewbox matches Nova Flare's (600x400) so node sizes render at the
-	// same visual scale across both lines.
+	// 17 visual nodes: start, 4×(2 combat + 1 checkpoint), 3 boss-wave
+	// combat nodes, finish. Same 600x400 viewBox as Nova Flare so node
+	// sizes render at the same visual scale across both lines. Sector
+	// pairs are tightly clustered (~45-55px apart); checkpoints sit far
+	// from neighbours (~80-115px) to read as breaks in the chain.
 	nodes = list(
-		list("x" = 40,  "y" = 80,  "kind" = "start"),       //  1
-		list("x" = 130, "y" = 130, "kind" = "combat"),      //  2  s1n1
-		list("x" = 210, "y" = 80,  "kind" = "combat"),      //  3  s1n2
-		list("x" = 290, "y" = 145, "kind" = "combat"),      //  4  s2n1
-		list("x" = 370, "y" = 215, "kind" = "combat"),      //  5  s2n2
-		list("x" = 300, "y" = 285, "kind" = "combat"),      //  6  s3n1
-		list("x" = 300, "y" = 360, "kind" = "combat"),      //  7  s3n2
-		list("x" = 400, "y" = 315, "kind" = "combat"),      //  8  s4n1
-		list("x" = 490, "y" = 240, "kind" = "combat"),      //  9  s4n2
-		list("x" = 545, "y" = 160, "kind" = "boss"),        // 10  serio_zeal
-		list("x" = 585, "y" = 80,  "kind" = "finish"),      // 11
+		list("x" = 40,  "y" = 90,  "kind" = "start"),       //  1
+		list("x" = 110, "y" = 120, "kind" = "combat"),      //  2  zeal_s1n1
+		list("x" = 155, "y" = 95,  "kind" = "combat"),      //  3  zeal_s1n2
+		list("x" = 235, "y" = 135, "kind" = "checkpoint"),  //  4
+		list("x" = 290, "y" = 180, "kind" = "combat"),      //  5  zeal_s2n1
+		list("x" = 335, "y" = 200, "kind" = "combat"),      //  6  zeal_s2n2
+		list("x" = 370, "y" = 285, "kind" = "checkpoint"),  //  7
+		list("x" = 290, "y" = 325, "kind" = "combat"),      //  8  zeal_s3n1
+		list("x" = 245, "y" = 345, "kind" = "combat"),      //  9  zeal_s3n2
+		list("x" = 360, "y" = 360, "kind" = "checkpoint"),  // 10
+		list("x" = 440, "y" = 340, "kind" = "combat"),      // 11  zeal_s4n1
+		list("x" = 475, "y" = 305, "kind" = "combat"),      // 12  zeal_s4n2
+		list("x" = 510, "y" = 230, "kind" = "checkpoint"),  // 13
+		list("x" = 525, "y" = 165, "kind" = "combat"),      // 14  serio_zeal_w1
+		list("x" = 545, "y" = 135, "kind" = "combat"),      // 15  serio_zeal_w2
+		list("x" = 565, "y" = 100, "kind" = "boss"),        // 16  serio_zeal_w3
+		list("x" = 585, "y" = 55,  "kind" = "finish"),      // 17
 	)
 	edges = list(
 		list("from" = 1,  "to" = 2,  "shape" = "line"),
@@ -63,10 +73,16 @@
 		list("from" = 4,  "to" = 5,  "shape" = "line"),
 		list("from" = 5,  "to" = 6,  "shape" = "line"),
 		list("from" = 6,  "to" = 7,  "shape" = "line"),
-		list("from" = 6,  "to" = 8,  "shape" = "line"),
+		list("from" = 7,  "to" = 8,  "shape" = "line"),
 		list("from" = 8,  "to" = 9,  "shape" = "line"),
-		list("from" = 9,  "to" = 10, "shape" = "line", "dashed" = TRUE),
-		list("from" = 10, "to" = 11, "shape" = "curve", "dashed" = TRUE),
+		list("from" = 9,  "to" = 10, "shape" = "line"),
+		list("from" = 10, "to" = 11, "shape" = "line"),
+		list("from" = 11, "to" = 12, "shape" = "line"),
+		list("from" = 12, "to" = 13, "shape" = "line"),
+		list("from" = 13, "to" = 14, "shape" = "line"),
+		list("from" = 14, "to" = 15, "shape" = "line", "dashed" = TRUE),
+		list("from" = 15, "to" = 16, "shape" = "line", "dashed" = TRUE),
+		list("from" = 16, "to" = 17, "shape" = "curve", "dashed" = TRUE),
 	)
 
 	recommended_tier_lines = list(
@@ -183,16 +199,44 @@
 		))
 
 	// ----- Sector 5: Curtain Fall -----
-	AddNode("serio_zeal", "serio_zeal_spawns",
-		"Curtain Fall: The Author Onstage",
-		"Whoever has been rehearsing this with us steps out from behind \
-			the curtain. They have been watching this whole time, and \
-			they are proud of the show.",
+	// Three sequential boss-waves at one physical arena. Mappers can place
+	// the wave-specific start_point landmarks at the same coords if they
+	// want a single-room finale.
+	AddNode("serio_zeal_w1", "serio_zeal_w1_spawns",
+		"Curtain Fall, Wave I: The Director Enters",
+		"The curtain ripples and the writer steps onto the stage in \
+			person. He bows once for the audience that has been here \
+			the whole time, and signals for the first wave of his \
+			finale to begin.",
 		list(
-			// TODO: replace with the real Serio Zeal boss mob
+			/mob/living/simple_animal/hostile/young_star = 1,
+		),
+		boss = TRUE,
+		locked = TRUE)
+
+	AddNode("serio_zeal_w2", "serio_zeal_w2_spawns",
+		"Curtain Fall, Wave II: The Cast Returns",
+		"Performers we thought were retired step back onto the stage \
+			to support the director. They have new lines, and the \
+			lights have brightened to match.",
+		list(
+			// TODO: replace with the real Serio Zeal Wave II roster
 			/mob/living/simple_animal/hostile/netherworld/migo/refracted = 1,
 		),
-		boss = TRUE)
+		boss = TRUE,
+		locked = TRUE)
+
+	AddNode("serio_zeal_w3", "serio_zeal_w3_spawns",
+		"Curtain Fall, Wave III: The Final Bow",
+		"The stage has become unrecognisable. The director has \
+			discarded the last of his persona, and what is left of him \
+			intends to leave a mark on the audience worth remembering.",
+		list(
+			// TODO: replace with the real Serio Zeal Wave III roster
+			/mob/living/simple_animal/hostile/netherworld/migo/refracted = 1,
+		),
+		boss = TRUE,
+		locked = TRUE)
 
 	sector_briefings = list(
 		list(
@@ -233,8 +277,8 @@
 		list(
 			"name"        = "Sector 5: Curtain Fall",
 			"description" = "The director steps onto the stage in person. \
-				They mean every word of the story they have written for us, \
-				and they will see it finished.",
-			"node_ids"    = list("serio_zeal"),
+				He means every word of the story he has written for us, \
+				and he will see it finished across three rising waves.",
+			"node_ids"    = list("serio_zeal_w1", "serio_zeal_w2", "serio_zeal_w3"),
 		),
 	)

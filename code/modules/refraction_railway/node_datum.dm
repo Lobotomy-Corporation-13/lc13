@@ -19,3 +19,8 @@
 	var/is_boss = FALSE
 	/// Extra mob paths shown on the card but not wave-spawned (boss summons).
 	var/list/extra_preview_mobs = list()
+	/// When TRUE, the briefing UI hides this node's desc + mob cards behind a
+	/// "Restricted" placeholder and the SVG map renders it un-clickable.
+	/// Server-side, the wave system still accepts the node — locking is purely
+	/// a UI-level gate so players can't preview unfinished encounters.
+	var/locked = FALSE

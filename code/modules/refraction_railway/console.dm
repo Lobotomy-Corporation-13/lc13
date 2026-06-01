@@ -58,6 +58,7 @@
 			var/ss_on = SSrefraction_railway.vars[flag["var"]]
 			var/line_on = L.vars[flag["var"]]
 			out += list(list(
+				"line_id"     = L.id,
 				"name"        = "[L.name] — [flag["name"]]",
 				"description" = flag["description"],
 				"enabled"     = ss_on && line_on,
@@ -136,6 +137,7 @@
 			"attribute_set_value"     = L.attribute_set_value,
 			"max_lobby_size"          = L.max_lobby_size,
 			"section_count"           = L.section_count,
+			"locked"                  = L.locked,
 		))
 	return out
 
@@ -159,12 +161,26 @@
 			var/list/payload = SSrefraction_railway.BuildMobCardPayload(ckey, mob_path)
 			payload["count"] = null
 			mob_payloads += list(payload)
+		if(N.locked)
+			// Locked nodes are still listed (so the SVG map's per-circle
+			// indices stay aligned with the line's visual node list), but
+			// they ship as a Restricted stub — no desc, no mob cards.
+			out += list(list(
+				"id"          = N.id,
+				"name"        = "Restricted",
+				"description" = "Encounter not yet authored.",
+				"is_boss"     = N.is_boss,
+				"mobs"        = list(),
+				"locked"      = TRUE,
+			))
+			continue
 		out += list(list(
 			"id"          = N.id,
 			"name"        = N.name,
 			"description" = N.description,
 			"is_boss"     = N.is_boss,
 			"mobs"        = mob_payloads,
+			"locked"      = FALSE,
 		))
 	return out
 
@@ -241,6 +257,9 @@
 		return FALSE
 	var/datum/refraction_line/L = SSrefraction_railway.lines[line_id]
 	if(!istype(L))
+		return FALSE
+	if(L.locked)
+		to_chat(user, span_warning("[L.name] is under construction. No lobbies for it yet."))
 		return FALSE
 	var/datum/refraction_run/R = new(L, user.ckey)
 	R.AddMember(user)

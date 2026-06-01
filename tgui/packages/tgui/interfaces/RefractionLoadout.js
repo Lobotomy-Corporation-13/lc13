@@ -486,11 +486,12 @@ const ItemRow = props => {
               <Button
                 fluid
                 color={isSelected ? 'good' : null}
-                disabled={blocked || (atCap && !isSelected)}
+                disabled={blocked}
                 content={
                   blocked
                     ? 'Used'
-                    : isSelected ? 'Selected' : 'Select'
+                    : isSelected ? 'Selected'
+                      : atCap ? 'Replace' : 'Select'
                 }
                 onClick={() => !blocked && onToggle(entry.path)}
               />
@@ -525,11 +526,12 @@ const DetailsView = props => {
         <>
           <Button
             color={isSelected ? 'bad' : 'good'}
-            disabled={blocked || (atCap && !isSelected)}
+            disabled={blocked}
             content={
               blocked
                 ? 'Used'
-                : isSelected ? 'Deselect' : 'Select'
+                : isSelected ? 'Deselect'
+                  : atCap ? 'Replace' : 'Select'
             }
             onClick={() => !blocked && onToggle(entry.path)}
           />
@@ -626,13 +628,19 @@ export const RefractionLoadout = (props, context) => {
     current[2] || null
   );
 
+  // Weapons: click a selected one to unselect; otherwise prepend the new
+  // pick and slice to 2 — so when the slots are full, the new weapon
+  // becomes W1, the previous W1 slides down to W2, and the previous W2
+  // is dropped. FIFO replacement, no need to unselect first.
   const toggleWeapon = path => {
     if (pickedWeapons.includes(path)) {
       setPickedWeapons(pickedWeapons.filter(p => p !== path));
-    } else if (pickedWeapons.length < 2) {
-      setPickedWeapons([...pickedWeapons, path]);
+    } else {
+      setPickedWeapons([path, ...pickedWeapons].slice(0, 2));
     }
   };
+  // Armor: click the current one to unselect; otherwise replace
+  // outright. No need to manually unselect the current armor first.
   const toggleArmor = path => {
     setPickedArmor(pickedArmor === path ? null : path);
   };

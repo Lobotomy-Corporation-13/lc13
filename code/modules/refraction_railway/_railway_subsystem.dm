@@ -545,8 +545,12 @@ SUBSYSTEM_DEF(refraction_railway)
 	if(initial(Q.starlight_locked) && !IsQuirkUnlocked(ckey, quirk_name))
 		return FALSE
 	var/req_line = initial(Q.required_line_completed)
-	if(req_line && !HasCompletedLine(ckey, req_line))
-		return FALSE
+	if(req_line)
+		if(!HasCompletedLine(ckey, req_line))
+			return FALSE
+		var/datum/refraction_line/RL = lines[req_line]
+		if(istype(RL) && RL.locked)
+			return FALSE
 	return TRUE
 
 /// Spends starlight to permanently unlock a quirk for `ckey`. Returns TRUE on success.
@@ -562,8 +566,12 @@ SUBSYSTEM_DEF(refraction_railway)
 	if(cost < 0)
 		return FALSE
 	var/req_line = initial(Q.required_line_completed)
-	if(req_line && !HasCompletedLine(ckey, req_line))
-		return FALSE
+	if(req_line)
+		if(!HasCompletedLine(ckey, req_line))
+			return FALSE
+		var/datum/refraction_line/RL = lines[req_line]
+		if(istype(RL) && RL.locked)
+			return FALSE
 	var/list/entry = GetOrCreateStarlightEntry(ckey)
 	if(!entry)
 		return FALSE

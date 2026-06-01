@@ -502,6 +502,20 @@ GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 	if(section_id >= line.section_count)
 		OnRunComplete()
 		return
+	// Unique-loadout lines force a fresh pick each sector. Strip every
+	// member's gear + clear their stored loadout so the BeginSector gate
+	// (`if(!loadouts[M.ckey]) return FALSE`) makes them re-author from
+	// the loadout console. SnapshotSectorLoadouts above already recorded
+	// the items used this sector for IsItemPathBlocked's blocklist, so
+	// they can't be re-picked. Team-wipe paths into EnterCheckpoint do
+	// NOT pass through here, so a wipe still resets gear via
+	// FreshenLoadout instead of forcing a new loadout.
+	if(IsUniqueLoadoutEnforced())
+		for(var/mob/M as anything in members)
+			if(!M?.ckey)
+				continue
+			StripMemberGear(M.ckey)
+			loadouts -= M.ckey
 	EnterCheckpoint()
 
 /// Builds a per-sector breakdown (time + loadouts) for the leaderboard entry.
