@@ -37,7 +37,7 @@
 		list("x" = 150, "y" = 200, "kind" = "checkpoint"),  //  9
 		list("x" = 150, "y" = 320, "kind" = "combat"),      // 10  s3n1
 		list("x" = 250, "y" = 320, "kind" = "combat"),      // 11  s3n2
-		list("x" = 350, "y" = 320, "kind" = "boss"),        // 12  nova_core
+		list("x" = 350, "y" = 320, "kind" = "combat"),      // 12  nova_core
 		list("x" = 450, "y" = 320, "kind" = "finish"),      // 13
 	)
 	edges = list(
@@ -52,7 +52,7 @@
 		list("from" = 9,  "to" = 10, "shape" = "line"),
 		list("from" = 10, "to" = 11, "shape" = "line"),
 		list("from" = 11, "to" = 12, "shape" = "line"),
-		list("from" = 12, "to" = 13, "shape" = "curve", "dashed" = TRUE),
+		list("from" = 12, "to" = 13, "shape" = "line"),
 	)
 
 	recommended_tier_lines = list(

@@ -30,8 +30,19 @@
 /obj/effect/landmark/refraction/start_point/zeal_s4n2
 	id = "zeal_s4n2"
 
+// Kept so the existing curtain_call.dmm continues to load while mappers
+// migrate to the per-wave landmarks below.
 /obj/effect/landmark/refraction/start_point/serio_zeal
 	id = "serio_zeal"
+
+/obj/effect/landmark/refraction/start_point/serio_zeal_w1
+	id = "serio_zeal_w1"
+
+/obj/effect/landmark/refraction/start_point/serio_zeal_w2
+	id = "serio_zeal_w2"
+
+/obj/effect/landmark/refraction/start_point/serio_zeal_w3
+	id = "serio_zeal_w3"
 
 // ---------- Mob spawners (one per node) ----------
 
@@ -59,8 +70,19 @@
 /obj/effect/landmark/refraction/spawner/zeal_s4n2
 	id = "zeal_s4n2_spawns"
 
+// Kept so the existing curtain_call.dmm continues to load while mappers
+// migrate to the per-wave spawners below.
 /obj/effect/landmark/refraction/spawner/serio_zeal
 	id = "serio_zeal_spawns"
+
+/obj/effect/landmark/refraction/spawner/serio_zeal_w1
+	id = "serio_zeal_w1_spawns"
+
+/obj/effect/landmark/refraction/spawner/serio_zeal_w2
+	id = "serio_zeal_w2_spawns"
+
+/obj/effect/landmark/refraction/spawner/serio_zeal_w3
+	id = "serio_zeal_w3_spawns"
 
 // ---------- Per-node misc landmarks ----------
 // Reload point: the Capo Rat in zeal_s1n1 pathfinds to one of these when the

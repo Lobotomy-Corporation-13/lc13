@@ -8,6 +8,7 @@ import {
   Stack,
 } from '../components';
 import { Window } from '../layouts';
+import { HazardTape } from './common/HazardTape';
 
 const SORT_MODES = [
   { value: 'cost_asc', label: 'Cost: Low → High' },
@@ -31,9 +32,10 @@ const sortQuirks = (list, mode) => {
 const QuirkRow = props => {
   const { entry, balance, onBuy } = props;
   const unlocked = !!entry.unlocked;
+  const lineLocked = !!entry.line_locked;
   const lineGated
     = !!entry.line_required && !entry.line_done;
-  const tooPoor = !unlocked && !lineGated
+  const tooPoor = !unlocked && !lineGated && !lineLocked
     && balance < entry.cost;
   const accent = entry.line_color || null;
 
@@ -43,6 +45,9 @@ const QuirkRow = props => {
   if (unlocked) {
     label = 'Owned';
     color = 'good';
+    disabled = true;
+  } else if (lineLocked) {
+    label = 'Under Construction';
     disabled = true;
   } else if (lineGated) {
     label = 'Locked';
@@ -68,6 +73,8 @@ const QuirkRow = props => {
       style={{
         'border-radius': '6px',
         'border-left': borderLeft,
+        'position': 'relative',
+        'overflow': 'hidden',
         opacity: unlocked || lineGated ? 0.75 : 1,
       }}
       backgroundColor={bgColor}>
@@ -105,6 +112,9 @@ const QuirkRow = props => {
           </Stack>
         </Flex.Item>
       </Flex>
+      {lineLocked ? (
+        <HazardTape count={3} />
+      ) : null}
     </Box>
   );
 };

@@ -62,6 +62,10 @@
 	var/give_compensation_pens = TRUE
 	/// Forbid re-using EGO weapons/armor across sectors of the same run.
 	var/unique_loadout_per_sector = FALSE
+	/// When TRUE, the Hub still shows this line but the Create Lobby action
+	/// is disabled (server-side guard + greyed UI). Players can still browse
+	/// the subway map. Set per-line by hand for WIP content.
+	var/locked = FALSE
 
 /// Override in subtypes to declare mob passives (mob_path => list of entries).
 /datum/refraction_line/proc/GetMobPassives()
@@ -72,7 +76,7 @@
 	return list()
 
 /// Registers a combat node; called from the subtype's New().
-/datum/refraction_line/proc/AddNode(node_id, lm_id, n_name, n_desc, list/stock, c_max = 4, boss = FALSE, list/extra_preview)
+/datum/refraction_line/proc/AddNode(node_id, lm_id, n_name, n_desc, list/stock, c_max = 4, boss = FALSE, list/extra_preview, locked = FALSE)
 	var/datum/refraction_node/N = new
 	N.id = node_id
 	N.landmark_id = lm_id
@@ -83,4 +87,5 @@
 	N.concurrent_max = (boss && c_max == 4) ? 1 : c_max
 	N.is_boss = boss
 	N.extra_preview_mobs = extra_preview || list()
+	N.locked = locked
 	combat_nodes[node_id] = N

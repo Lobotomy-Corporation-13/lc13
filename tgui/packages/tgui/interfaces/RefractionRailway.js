@@ -2,6 +2,7 @@ import { useBackend, useLocalState } from '../backend';
 import { Box, Button, Section, Stack, Tabs } from '../components';
 import { Window } from '../layouts';
 import { MobCard, MobModal } from './RefractionMobCards';
+import { HazardTape } from './common/HazardTape';
 
 const NODE_COLORS = {
   start: '#4ade80',
@@ -210,16 +211,24 @@ const NodeMobsModal = (props, context) => {
             setModalMob(null);
             onClose();
           }} />}>
-          {node.description && (
-            <Box mb={1} color="label">{node.description}</Box>
+          {node.locked ? (
+            <Box p={1} color="bad">
+              Restricted — encounter not yet authored.
+            </Box>
+          ) : (
+            <>
+              {node.description && (
+                <Box mb={1} color="label">{node.description}</Box>
+              )}
+              <Stack wrap>
+                {(node.mobs || []).map((mob, j) => (
+                  <Stack.Item key={j}>
+                    <MobCard mob={mob} onClick={() => setModalMob(mob)} />
+                  </Stack.Item>
+                ))}
+              </Stack>
+            </>
           )}
-          <Stack wrap>
-            {(node.mobs || []).map((mob, j) => (
-              <Stack.Item key={j}>
-                <MobCard mob={mob} onClick={() => setModalMob(mob)} />
-              </Stack.Item>
-            ))}
-          </Stack>
         </Section>
         {modalMob && (
           <MobModal
@@ -330,9 +339,14 @@ const RailwayMap = props => {
         const fill = NODE_COLORS[node.kind] || line.display_color;
         const isClickable = node.kind === 'combat' || node.kind === 'boss';
         const myCombatIndex = isClickable ? ++combatIndex : 0;
-        const handleClick = isClickable && onCombatNodeClick
+        const combatNode = isClickable
+          ? combatNodeForMapIndex(line, myCombatIndex)
+          : null;
+        const isLocked = !!(combatNode && combatNode.locked);
+        const handleClick = isClickable && !isLocked && onCombatNodeClick
           ? () => onCombatNodeClick(myCombatIndex)
           : null;
+        const renderFill = isLocked ? '#5a5a5a' : fill;
         return (
           <g
             key={i}
@@ -343,10 +357,29 @@ const RailwayMap = props => {
               cy={node.y}
               r={radius}
               fill="#0a0e1f"
-              stroke={fill}
+              stroke={renderFill}
               strokeWidth={2}
+              opacity={isLocked ? 0.55 : 1}
             />
-            <circle cx={node.x} cy={node.y} r={radius - 5} fill={fill} />
+            <circle
+              cx={node.x}
+              cy={node.y}
+              r={radius - 5}
+              fill={renderFill}
+              opacity={isLocked ? 0.55 : 1}
+            />
+            {isLocked ? (
+              <text
+                x={node.x}
+                y={node.y + 4}
+                fill="#ffd400"
+                fontSize="14"
+                fontWeight="bold"
+                textAnchor="middle"
+                style={{ 'pointer-events': 'none' }}>
+                ✕
+              </text>
+            ) : null}
           </g>
         );
       })}
@@ -377,42 +410,35 @@ const RailwayMap = props => {
 };
 
 const CompensationsPanel = props => {
-  const { compensations } = props;
-  if (!compensations || !compensations.length) return null;
+  const { compensations, selectedId } = props;
+  if (!selectedId || !compensations || !compensations.length) {
+    return null;
+  }
+  const visible = compensations.filter(
+    c => c.line_id === selectedId && c.enabled);
+  if (!visible.length) {
+    return null;
+  }
   return (
     <Section title="Party Scaling Effects">
       <Box color="label" fontSize="10px" mb={0.5}>
-        How encounters scale with lobby size. Most effects scale UP for
+        Active scaling rules for this line. Most effects scale UP for
         larger parties; pens compensate smaller parties.
       </Box>
       <Box
         maxHeight="140px"
         style={{ 'overflow-y': 'auto' }}>
-        {compensations.map((c, i) => (
+        {visible.map((c, i) => (
           <Box
             key={i}
             p={0.5}
             mb={0.25}
             style={{ 'border-radius': '3px' }}
-            backgroundColor={
-              c.enabled
-                ? 'rgba(34, 197, 94, 0.08)'
-                : 'rgba(120, 120, 120, 0.08)'
-            }>
-            <Stack>
-              <Stack.Item
-                width="14px"
-                color={c.enabled ? 'good' : 'bad'}
-                bold>
-                {c.enabled ? '✓' : '✗'}
-              </Stack.Item>
-              <Stack.Item grow={1}>
-                <Box bold fontSize="11px">{c.name}</Box>
-                <Box color="label" fontSize="10px">
-                  {c.description}
-                </Box>
-              </Stack.Item>
-            </Stack>
+            backgroundColor="rgba(34, 197, 94, 0.08)">
+            <Box bold fontSize="11px">{c.name}</Box>
+            <Box color="label" fontSize="10px">
+              {c.description}
+            </Box>
           </Box>
         ))}
       </Box>
@@ -442,7 +468,12 @@ const LinesTab = props => {
                       ? 'rgba(27, 124, 237, 0.25)'
                       : 'rgba(255, 255, 255, 0.04)'
                   }
-                  style={{ cursor: 'pointer', 'border-radius': '4px' }}
+                  style={{
+                    'cursor': 'pointer',
+                    'border-radius': '4px',
+                    'position': 'relative',
+                    'overflow': 'hidden',
+                  }}
                   onClick={() => onSelect(line.id)}>
                   <Box bold style={{ color: line.display_color }}>
                     {line.name}
@@ -450,6 +481,9 @@ const LinesTab = props => {
                   <Box color="label" fontSize="11px">
                     {line.description}
                   </Box>
+                  {line.locked ? (
+                    <HazardTape count={3} />
+                  ) : null}
                 </Box>
               );
             })}
@@ -457,7 +491,10 @@ const LinesTab = props => {
         </Section>
       </Stack.Item>
       <Stack.Item>
-        <CompensationsPanel compensations={compensations} />
+        <CompensationsPanel
+          compensations={compensations}
+          selectedId={selectedId}
+        />
       </Stack.Item>
     </Stack>
   );
@@ -471,6 +508,8 @@ const LineSidebar = (props, context) => {
   const {
     lines, selectedId, onSelect, myRun, openLobbies, compensations,
   } = props;
+  const selectedLine = (lines || []).find(l => l.id === selectedId) || null;
+  const selectedLineLocked = !!(selectedLine && selectedLine.locked);
   const [sidebarTab, setSidebarTab] = useLocalState(
     context, 'sidebarTab', myRun ? 'lobby' : 'lines');
   return (
@@ -502,6 +541,7 @@ const LineSidebar = (props, context) => {
           ) : (
             <LobbyPanel
               selectedId={selectedId}
+              selectedLineLocked={selectedLineLocked}
               myRun={myRun}
               openLobbies={openLobbies}
               act={act}
@@ -514,7 +554,7 @@ const LineSidebar = (props, context) => {
 };
 
 const LobbyPanel = props => {
-  const { selectedId, myRun, openLobbies, act } = props;
+  const { selectedId, selectedLineLocked, myRun, openLobbies, act } = props;
   if (myRun) {
     const isStarting = myRun.lobby_state === 'lobby_starting';
     return (
@@ -606,10 +646,17 @@ const LobbyPanel = props => {
     <Section title="Lobby">
       <Button
         fluid
-        color="good"
-        icon="plus"
-        content="Create Lobby"
-        onClick={() => act('create_lobby', { line_id: selectedId })}
+        color={selectedLineLocked ? null : 'good'}
+        icon={selectedLineLocked ? 'lock' : 'plus'}
+        content={selectedLineLocked
+          ? 'Under Construction'
+          : 'Create Lobby'}
+        disabled={selectedLineLocked}
+        tooltip={selectedLineLocked
+          ? 'This line is locked — no lobbies until it ships.'
+          : null}
+        onClick={() => !selectedLineLocked
+          && act('create_lobby', { line_id: selectedId })}
       />
       {sameLineLobbies.length > 0 && (
         <Box mt={1}>
@@ -694,11 +741,30 @@ export const RefractionRailway = (props, context) => {
                   onClick={() => setRecordsLineId(selectedLine.id)}
                 />
               )}>
-              <RailwayMap
-                line={selectedLine}
-                onCombatNodeClick={i => setPreviewNode(
-                  combatNodeForMapIndex(selectedLine, i))}
-              />
+              <Box
+                style={{
+                  'position': 'relative',
+                  'overflow': 'hidden',
+                  'width': '100%',
+                  'height': '100%',
+                }}>
+                <RailwayMap
+                  line={selectedLine}
+                  onCombatNodeClick={i => {
+                    if (selectedLine && selectedLine.locked) {
+                      return;
+                    }
+                    const node = combatNodeForMapIndex(selectedLine, i);
+                    if (node && node.locked) {
+                      return;
+                    }
+                    setPreviewNode(node);
+                  }}
+                />
+                {selectedLine && selectedLine.locked ? (
+                  <HazardTape count={5} />
+                ) : null}
+              </Box>
             </Section>
           </Stack.Item>
         </Stack>
