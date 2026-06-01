@@ -366,7 +366,6 @@
 	attack_sound = 'sound/weapons/fixer/generic/nail1.ogg'
 	butcher_results = list(/obj/item/food/meat/slab = 1)
 	guaranteed_butcher_results = list(/obj/item/food/meat/slab = 1)
-	var/can_act = TRUE
 	var/ranged_damage = 25
 	var/nail_delay = 1 SECONDS
 	var/hammer_aoe = 1

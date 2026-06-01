@@ -149,7 +149,7 @@
 /obj/item/proc/get_sweep_turfs(atom/target, mob/user)
 	var/target_turf = get_step_towards(user, target)
 	// Icon Setup
-	var/swipe_icon = "swipe_"
+	var/swipe_icon = custom_sweep_state
 	if(user.active_hand_index % 2 == 0)
 		swipe_icon += "r"
 	else
@@ -195,14 +195,14 @@
 	else
 		. = list(target_turf)
 
-	new /obj/effect/temp_visual/swipe(get_step(user, SOUTHWEST), get_dir(user, target), swingcolor ? swingcolor : COLOR_GRAY, swipe_icon)
+	new /obj/effect/temp_visual/swipe(get_step(user, SOUTHWEST), custom_sweep_icon, get_dir(user, target), swingcolor ? swingcolor : COLOR_GRAY, swipe_icon)
 
 	return
 
 /obj/item/proc/get_thrust_turfs(atom/target, mob/user)
 	. = getline(get_step_towards(user, target), target)
 	for(var/turf/T in .)
-		var/obj/effect/temp_visual/thrust/TT = new(T, swingcolor ? swingcolor : COLOR_GRAY)
+		var/obj/effect/temp_visual/thrust/TT = new(T, swingcolor ? swingcolor : COLOR_GRAY, custom_thrust_icon, custom_thrust_state)
 		var/matrix/M = matrix(TT.transform)
 		M.Turn(Get_Angle(user, target)-90)
 		TT.transform = M
@@ -384,27 +384,34 @@
 	return 1
 
 /obj/effect/temp_visual/swipe
-	icon = 'ModularLobotomy/_Lobotomyicons/96x96.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/weaponanim_96x96.dmi'
 	duration = 4
 	randomdir = FALSE
 	alpha = 200
 
-/obj/effect/temp_visual/swipe/New(loc, ...)
+/obj/effect/temp_visual/swipe/New(loc, custom_sweep_icon, ...)
 	. = ..()
-	setDir(args[2])
-	if(args[3])
-		color = args[3]
-	flick(args[4], src) // if this isn't used, it synchronizes all swipe animations.
+	if(custom_sweep_icon)
+		icon = custom_sweep_icon
+	setDir(args[3])
+	if(args[4])
+		color = args[4]
+	flick(args[5], src) // if this isn't used, it synchronizes all swipe animations.
 
 /obj/effect/temp_visual/thrust
-	icon = 'ModularLobotomy/_Lobotomyicons/64x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/weaponanim_64x32.dmi'
 	duration = 4
 	randomdir = FALSE
 	pixel_x = -16
 	alpha = 200
 
-/obj/effect/temp_visual/thrust/New(loc, ...)
+/obj/effect/temp_visual/thrust/New(loc, swingcolor, custom_thrust_icon, custom_thrust_state, ...)
 	. = ..()
+	var/flick_state = "thrust"
 	if(args[2])
 		color = args[2]
-	flick("thrust", src)
+	if(custom_thrust_icon)
+		icon = custom_thrust_icon
+	if(custom_thrust_state)
+		flick_state = custom_thrust_state
+	flick(flick_state, src)

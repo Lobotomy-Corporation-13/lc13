@@ -5,8 +5,7 @@
 	icon_state = "eye"
 	anchored = FALSE
 	drag_slowdown = 1.5
-	var/list/users = list()
-	var/list/double_users = list()
+	var/list/double_operators = list()
 
 /obj/structure/toolabnormality/eye/Initialize()
 	. = ..()
@@ -14,8 +13,8 @@
 
 /obj/structure/toolabnormality/eye/proc/reset()
 	addtimer(CALLBACK(src, PROC_REF(reset)), 10 MINUTES)
-	users = list()
-	double_users = list()
+	operators = list()
+	double_operators = list()
 
 	for(var/mob/living/carbon/human/L in GLOB.player_list)
 		if(L.stat >= HARD_CRIT || L.sanity_lost || z != L.z) // Dead or in hard crit, insane, or on a different Z level.
@@ -28,20 +27,20 @@
 		return
 
 	to_chat(user, span_notice("You tip the scales in your favor."))
-	//check your users, make them mad
-	if(user in users)
-		double_users+=user
+	//check your operators, make them mad
+	if(user.tag in operators)
+		double_operators+=user.tag
 		user.adjustSanityLoss(999)
 		user.adjustBruteLoss(-user.maxHealth)
 		return
 
-	//check your users, make them dead
-	if(user in double_users)
+	//check your operators, make them dead
+	if(user.tag in double_operators)
 		user.adjustBruteLoss(999)
 		return
 
 	//okay now let's change HP and SP
-	users+=user
+	operators+=user.tag
 	//store current sanity
 	var/stored_sanity = user.sanityhealth
 	var/stored_health = user.health

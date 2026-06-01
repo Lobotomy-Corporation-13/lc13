@@ -40,7 +40,6 @@
 	city_faction = FALSE
 	var/ending = FALSE
 	var/stunned = FALSE
-	var/can_act = TRUE
 	var/mob/living/Leader = null // AI variable - tells the slime to follow this person
 	var/holding_still = 0
 	var/attack_tremor = 3

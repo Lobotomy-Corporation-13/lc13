@@ -7,9 +7,10 @@
 	icon_living = "executive"
 	core_icon = "shrimpexec_egg"
 	portrait = "shrimp_executive"
-	faction = list("neutral")
+	faction = list("shrimp")
 	speak_emote = list("burbles")
 	threat_level = WAW_LEVEL
+	can_breach = TRUE
 	start_qliphoth = 1
 	work_chances = list(
 		ABNORMALITY_WORK_INSTINCT = 30,
@@ -17,6 +18,10 @@
 		ABNORMALITY_WORK_ATTACHMENT = 30,
 		ABNORMALITY_WORK_REPRESSION = -100,	//He's a snobby shrimp dude.
 	)
+	retreat_distance = 3
+	minimum_distance = 4
+	maxHealth = 700
+	health = 700
 	work_damage_amount = 11
 	work_damage_type = WHITE_DAMAGE	//He insults you
 	chem_type = /datum/reagent/abnormality/sin/pride
@@ -98,6 +103,34 @@
 		/obj/item/reagent_containers/food/drinks/soda_cans/wellcheers_white,
 	)
 
+	var/obj/effect/proc_holder/ability/aimed/firingsquad/shootems
+	var/fire_squad_cd = 0
+	var/fire_squad_delay = 15 SECONDS
+
+/mob/living/simple_animal/hostile/abnormality/shrimp_exec/Initialize(mapload)
+	. = ..()
+	var/list/units_to_add = list(
+		/mob/living/simple_animal/hostile/shrimp_soldier = 5,
+		/mob/living/simple_animal/hostile/shrimp = 2
+		)
+	AddComponent(/datum/component/ai_leadership, units_to_add, 7, TRUE, TRUE)
+	shootems = new()
+	src.AddSpell(shootems)
+
+/mob/living/simple_animal/hostile/abnormality/shrimp_exec/handle_automated_action()
+	. = ..()
+	if(IsContained() || stat == DEAD || client)
+		return
+	if(target)
+		/*
+		* Okay so follow me here. The absolute of
+		* their x minus their enemies x would be 1
+		* if they are south of eachother.
+		*/
+		if(fire_squad_cd < world.time && (abs(x - target.x) < 2 || abs(y - target.y) < 2))
+			fire_squad_cd = world.time + fire_squad_delay
+			shootems.Perform(target,src)
+
 /mob/living/simple_animal/hostile/abnormality/shrimp_exec/WorkChance(mob/living/carbon/human/user, chance)
 	if(happy)
 		chance+=30
@@ -117,14 +150,12 @@
 	return
 
 /mob/living/simple_animal/hostile/abnormality/shrimp_exec/ZeroQliphoth(mob/living/carbon/human/user)
-	pissed()
 	datum_reference.qliphoth_change(1)
-	return
+	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/shrimp_exec/BreachEffect(mob/living/carbon/human/user, breach_type)
-	if(breach_type == BREACH_MINING)
-		pissed()
-		addtimer(CALLBACK(src, PROC_REF(pissed)), 20 SECONDS)
+	pissed()
+	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/shrimp_exec/AttemptWork(mob/living/carbon/human/user, work_type)
 	if(work_type == liked || !liked)
@@ -146,13 +177,17 @@
 
 /mob/living/simple_animal/hostile/abnormality/shrimp_exec/proc/pissed()
 	var/turf/W = pick(GLOB.department_centers)
-	for(var/turf/T in orange(1, W))
+	forceMove(W)
+	var/iter = 1
+	var/list/landing_area = block(W.x-1,W.y-1,W.z,W.x+1,W.y+1,W.z) - W
+	for(var/turf/T in landing_area)
 		var/obj/structure/closet/supplypod/extractionpod/pod = new()
 		pod.explosionSize = list(0,0,0,0)
-		if(prob(70))
+		if(iter > 5)
 			new /mob/living/simple_animal/hostile/shrimp(pod)
 		else
 			new /mob/living/simple_animal/hostile/shrimp_soldier(pod)
+		iter++
 
 		new /obj/effect/pod_landingzone(T, pod)
 		stoplag(2)
@@ -264,3 +299,136 @@
 
 /obj/item/grenade/spawnergrenade/shrimp/hostile
 	spawner_type = list(/mob/living/simple_animal/hostile/shrimp, /mob/living/simple_animal/hostile/shrimp_soldier) //Gacha Only, just put it here with the other shrimp grenades.
+
+/*--------------------------\
+|Unique Firing Squad Ability|
+\--------------------------*/
+/obj/effect/proc_holder/ability/aimed/firingsquad
+	name = "Firing Squad"
+	desc = "Group from up to 5 shrimp soldiers from the surrounding area to preform a firing line in the direction you click."
+	action_icon_state = "general_shadow0"
+	action_background_icon_state = "bg_cult"
+	base_icon_state = "general_shadow"
+	cooldown = 15 SECONDS
+	var/list/soldiers = list()
+
+/obj/effect/proc_holder/ability/aimed/firingsquad/Perform(target, user)
+	. = ..()
+	//Turf Handling
+	var/our_turf = get_turf(user)
+	var/trg_turf = get_turf(target)
+	if(!our_turf || !trg_turf)
+		stack_trace("ShrimpleError1:ability/aimed/firingsquad")
+		return
+
+	var/direct = get_cardinal_dir(our_turf, trg_turf)
+	var/turf/focus_turf = get_step(our_turf,direct)
+	if(!focus_turf)
+		stack_trace("ShrimpleError2:ability/aimed/firingsquad")
+		return
+	if(focus_turf.density)
+		return
+
+	var/focx = focus_turf.x
+	var/focy = focus_turf.y
+	var/focz = focus_turf.z
+	var/xoffset1 = 0
+	var/xoffset2 = 0
+	var/yoffset1 = 0
+	var/yoffset2 = 0
+
+	//Gimme those offsets for the SQUARE
+	if(direct == EAST || direct == WEST)
+		yoffset1 = -2
+		yoffset2 = 2
+	if(direct == NORTH || direct == SOUTH)
+		xoffset1 = -2
+		xoffset2 = 2
+
+	var/list/firing_line = block(focx+xoffset1,focy+yoffset1,focz,focx+xoffset2,focy+yoffset2,focz)
+
+	for(var/turf/open_turf in firing_line)
+		if(istype(open_turf, /turf/open) && !open_turf.density)
+			continue
+		firing_line -= open_turf
+	var/line_length = length(firing_line)
+	if(!line_length)
+		return
+
+	for(var/mob/living/simple_animal/hostile/shrimp_soldier/srimp in orange(6,get_turf(user)))
+		if(srimp.client || srimp.AIStatus != AI_ON)
+			//I take orders from a higher authority.
+			continue
+		if(length(soldiers) > line_length)
+			break
+		RegisterMob(srimp)
+
+	if(length(soldiers) < line_length)
+		firing_line.Cut(1,2)
+
+	//We give Shrimp Executive the microphone.
+	var/mob/living/caster = user
+
+	if(length(soldiers) < 2)
+		caster.say("Rea-, oh we dont have enough...")
+		UnregisterAll()
+		return
+
+	var/list/temp_firing = firing_line.Copy()
+	for(var/mob/living/simple_animal/hostile/shrimp_soldier/srimple in soldiers)
+		if(!length(temp_firing))
+			break
+		var/turf/T = pop(temp_firing)
+		walk_to(srimple,T)
+
+	if(ishostile(caster) && !caster.client)
+		var/mob/living/simple_animal/hostile/H = caster
+		walk(caster,0)
+		H.toggle_ai(AI_OFF)
+	caster.say("Ready...")
+	if(do_after(caster, 2 SECONDS, target = caster) && !QDELETED(caster))
+		caster.say("FIRE!")
+		if(do_after(caster, 1, target = caster) && !QDELETED(caster))
+			Shootems(direct, firing_line)
+	if(ishostile(caster) && !caster.client && !QDELETED(caster))
+		var/mob/living/simple_animal/hostile/H = caster
+		H.toggle_ai(AI_ON)
+	UnregisterAll()
+
+/obj/effect/proc_holder/ability/aimed/firingsquad/Destroy()
+	UnregisterAll()
+	return ..()
+
+/obj/effect/proc_holder/ability/aimed/firingsquad/proc/Shootems(direct, list/correct_turfs)
+	for(var/mob/living/simple_animal/hostile/shrimp_soldier/sri in soldiers)
+		if(QDELETED(sri))
+			continue
+		var/turf/shrimple_geometry = get_turf(sri)
+		if(!(shrimple_geometry in correct_turfs))
+			UnregisterMob(sri)
+			continue
+		var/turf/shoot_turf = get_ranged_target_turf(get_turf(sri),direct,3)
+		sri.Shoot(shoot_turf)
+
+/obj/effect/proc_holder/ability/aimed/firingsquad/proc/RegisterMob(mob/living/L)
+	if(!L)
+		return
+	RegisterSignal(L, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING), PROC_REF(UnregisterMob), override = TRUE)
+	soldiers += L
+	if(ishostile(L))
+		var/mob/living/simple_animal/hostile/H = L
+		H.toggle_ai(AI_OFF)
+
+/obj/effect/proc_holder/ability/aimed/firingsquad/proc/UnregisterMob(mob/living/L)
+	if(!L)
+		return
+	UnregisterSignal(L, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING))
+	soldiers -= L
+	if(ishostile(L))
+		var/mob/living/simple_animal/hostile/H = L
+		H.toggle_ai(AI_ON)
+
+/obj/effect/proc_holder/ability/aimed/firingsquad/proc/UnregisterAll()
+	for(var/mob/living/L in soldiers)
+		UnregisterMob(L)
+	soldiers.Cut()

@@ -78,9 +78,6 @@
 	aggro_vision_range = 30
 	ranged = TRUE//allows it to attempt charging without being in melee range
 
-	//Zombie list
-	var/list/spawned_mobs = list()
-
 	//range and attack speed for thunder bombs, taken from general bee
 	var/fire_cooldown_time = 3 SECONDS
 	var/fireball_range = 7
@@ -92,7 +89,12 @@
 	var/dash_num = 10//the length of the dash, in tiles
 	var/dash_cooldown = 0
 	var/dash_cooldown_time = 4 SECONDS
-	var/list/been_hit = list() // Don't get hit twice.
+
+	var/obj/effect/proc_holder/ability/aimed/dash/thunderbird/ourdash
+
+/mob/living/simple_animal/hostile/abnormality/thunder_bird/Initialize()
+	.  = ..()
+	ourdash = new()
 
 /*---Simple Mob Procs---*/
 /mob/living/simple_animal/hostile/abnormality/thunder_bird/PostSpawn()
@@ -132,10 +134,10 @@
 		icon_state = icon_dead
 		return
 	if(charging)
-		icon_state = initial(icon)
-	else
 		icon_state = "thunderbird_charge"
-	..()
+		return ..()
+	icon_state = icon_living
+	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/thunder_bird/death()
 	if(health > 0)
@@ -145,7 +147,7 @@
 	playsound(src, 'sound/abnormalities/thunderbird/tbird_charge.ogg', 100, 1)
 	animate(src, alpha = 0, time = 10 SECONDS)
 	QDEL_IN(src, 10 SECONDS)
-	..()
+	return ..()
 
 //fires bombs that deal 45 black damage towards anyone within 1 tile, they also turn the dead and dying into zombies.
 /mob/living/simple_animal/hostile/abnormality/thunder_bird/Life()
@@ -155,78 +157,18 @@
 	if((fire_cooldown < world.time))
 		fireshell()
 
-//delete the zombies on death
-/mob/living/simple_animal/hostile/abnormality/thunder_bird/Destroy()
-	. = ..()
-	for(var/mob/living/simple_animal/hostile/thunder_zombie/Z in spawned_mobs)
-		QDEL_IN(Z, rand(3) SECONDS)
-		spawned_mobs -= Z
-
 /*---Dash Stuff ---*/
 /mob/living/simple_animal/hostile/abnormality/thunder_bird/proc/thunder_bird_dash(target)
 	if(charging || dash_cooldown > world.time)
 		return
+	charging = TRUE
 	update_icon()
 	dash_cooldown = world.time + dash_cooldown_time
-	charging = TRUE
-	var/dir_to_target = get_dir(get_turf(src), get_turf(target))
-	been_hit = list()
-	addtimer(CALLBACK(src, PROC_REF(do_dash), dir_to_target, 0), 1.5 SECONDS)//how long it takes for the dash to initiate. Set it back to 1 second when thunderbird gets directional sprites
-	playsound(src, 'sound/abnormalities/thunderbird/tbird_charge.ogg', 100, 1)
+	ourdash.Perform(target,src)
 
-/mob/living/simple_animal/hostile/abnormality/thunder_bird/proc/do_dash(move_dir, times_ran)
-	var/stop_charge = FALSE
-	if(times_ran >= dash_num)
-		stop_charge = TRUE
-	var/turf/T = get_step(get_turf(src), move_dir)
-	if(!T)
-		charging = FALSE
-		return
-	if(T.density)
-		stop_charge = TRUE
-	for(var/obj/structure/window/W in T.contents)
-		stop_charge = TRUE
-		break
-	for(var/obj/machinery/door/D in T.contents)
-		if(!D.CanAStarPass(null))
-			stop_charge = TRUE
-			break
-		if(D.density)
-			INVOKE_ASYNC(D, TYPE_PROC_REF(/obj/machinery/door, open), 2)
-	if(stop_charge)
-		playsound(src, 'sound/abnormalities/thunderbird/tbird_bolt.ogg', 75, 1)
-		charging = FALSE
-		icon_state = "thunderbird_breach"
-		return
-	forceMove(T)
-	playsound(src,"sound/abnormalities/thunderbird/tbird_peck.ogg", rand(50, 70), 1)
-	var/list/turfs_to_hit = range(1, T)
-	for(var/turf/TF in turfs_to_hit)//Smash AOE visual
-		new /obj/effect/temp_visual/smash_effect(TF)
-	for(var/mob/living/L in turfs_to_hit)//damage applied to targets in range
-		if(!faction_check_mob(L))
-			if(L in been_hit)
-				continue
-			visible_message(span_boldwarning("[src] runs through [L]!"))
-			to_chat(L, span_userdanger("[src] rushes past you, arcing electricity throughout the way!"))
-			playsound(L, attack_sound, 75, 1)
-			var/turf/LT = get_turf(L)
-			new /obj/effect/temp_visual/kinetic_blast(LT)
-			L.deal_damage(100, BLACK_DAMAGE, src, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
-			if(ishuman(L))
-				var/mob/living/carbon/human/H = L
-				H.electrocute_act(1, src, flags = SHOCK_NOSTUN)
-			if(!(L in been_hit))
-				been_hit += L
-	for(var/obj/vehicle/sealed/mecha/V in turfs_to_hit)
-		if(V in been_hit)
-			continue
-		visible_message(span_boldwarning("[src] runs through [V]!"))
-		to_chat(V.occupants, span_userdanger("[src] rushes past you, arcing electricity throughout the way!"))
-		playsound(V, attack_sound, 75, 1)
-		V.take_damage(100, BLACK_DAMAGE, attack_dir = get_dir(V, src))
-		been_hit += V
-	addtimer(CALLBACK(src, PROC_REF(do_dash), move_dir, (times_ran + 1)), 1)
+/mob/living/simple_animal/hostile/abnormality/thunder_bird/proc/endCharge()
+	charging = FALSE
+	update_icon()
 
 /*---Qliphoth Counter---*/
 //counter goes up when you're above 80% hp on a good result, 50% down otherwise
@@ -239,11 +181,11 @@
 		say(pick(thunder_bird_lines))
 		user.electrocute_act(1, src, flags = SHOCK_NOSTUN)
 		user.Knockdown(20)
-	else
-		if(prob(50))
-			datum_reference.qliphoth_change(-1)
-			say("Begone, fool!")
-	return
+		return
+
+	if(prob(50))
+		datum_reference.qliphoth_change(-1)
+		say("Begone, fool!")
 
 /mob/living/simple_animal/hostile/abnormality/thunder_bird/FailureEffect(mob/living/carbon/human/user, work_type, pe)
 	. = ..()
@@ -272,13 +214,18 @@
 //thunderbolts
 /mob/living/simple_animal/hostile/abnormality/thunder_bird/proc/fireshell()
 	fire_cooldown = world.time + fire_cooldown_time
+	var/list/hit_turfs = list()
 	for(var/mob/living/carbon/human/L in range(fireball_range, src))
 		if(faction_check_mob(L, FALSE))
 			continue
-		if (targetAmount <= 2)
+		var/turf_tag = "[L.x],[L.y]"
+		if(turf_tag in hit_turfs)
+			continue
+		if(targetAmount <= 2)
 			++targetAmount
 			var/obj/effect/thunderbolt/E = new(get_turf(L.loc))//do this for the # of targets + 1
-			E.master = src
+			E.creator = src
+			hit_turfs = turf_tag
 	targetAmount = 0
 
 //thunderbolt objects
@@ -293,33 +240,31 @@
 	movement_type = PHASING | FLYING
 	var/boom_damage = 50
 	layer = POINT_LAYER	//Sprite should always be visible
-	var/mob/living/simple_animal/hostile/abnormality/thunder_bird/master
 	var/duration = 3 SECONDS
 	var/range = 1
+	var/mob/living/creator
 
 /obj/effect/thunderbolt/Initialize()
 	. = ..()
 	addtimer(CALLBACK(src, PROC_REF(Explode)), duration)
 
+/obj/effect/thunderbolt/Destroy()
+	creator = null
+	return ..()
+
 //Zombie conversion through lightning bombs
 /obj/effect/thunderbolt/proc/Convert(mob/living/carbon/human/H)
-	var/can_act = TRUE
 	if(!istype(H))
 		return
-	if(!can_act)
-		return
-	can_act = FALSE
-	playsound(src, 'sound/abnormalities/thunderbird/tbird_zombify.ogg', 45, FALSE, 5)
-	var/mob/living/simple_animal/hostile/thunder_zombie/C = new(get_turf(src))
-	master.spawned_mobs += C
-	C.master = master
+	playsound(get_turf(src), 'sound/abnormalities/thunderbird/tbird_zombify.ogg', 45, FALSE, 5)
+	var/mob/living/simple_animal/hostile/thunder_zombie/C = new(get_turf(H))
+	if(creator)
+		C.LinkSoul(creator)
 	if(!QDELETED(H))
 		C.name = "[H.real_name]"//applies the target's name and adds the name to its description
 		C.desc = "What appears to be [H.real_name], only charred and screaming incoherently..."
 		C.gender = H.gender
-		C.faction = master.faction
-		H.gib()
-	can_act = TRUE
+		H.gib(TRUE,TRUE,TRUE)
 
 //Smaller Scorched Girl bomb
 /obj/effect/thunderbolt/proc/Explode()
@@ -337,7 +282,6 @@
 	S.set_up(0, get_turf(src))	//Smoke shouldn't really obstruct your vision
 	S.start()
 	qdel(src)
-
 
 /*--Zombies!--*/
 //zombie mob
@@ -366,12 +310,12 @@
 	move_to_delay = 3
 	robust_searching = TRUE
 	stat_attack = HARD_CRIT
+	//Ressurects
 	del_on_death = FALSE
 	density = TRUE
 	guaranteed_butcher_results = list(/obj/item/food/badrecipe = 1)
-	var/list/breach_affected = list()
-	var/can_act = TRUE
-	var/mob/living/simple_animal/hostile/abnormality/thunder_bird/master
+	var/ressurection_cooldown = 0
+	var/mob/living/master
 
 //Zombie conversion from zombie kills
 /mob/living/simple_animal/hostile/thunder_zombie/AttackingTarget(atom/attacked_target)
@@ -395,13 +339,22 @@
 /mob/living/simple_animal/hostile/thunder_zombie/Life()
 	. = ..()
 	if(!.) // Dead
+		if(ressurection_cooldown <= world.time && master)
+			resurrect()
 		return FALSE
 	if(status_flags & GODMODE)
 		return FALSE
 
 //reanimated if thunderbird isn't suppressed within 30 seconds
 /mob/living/simple_animal/hostile/thunder_zombie/death(gibbed)
-	addtimer(CALLBACK(src, PROC_REF(resurrect)), 30 SECONDS)
+	if(!gibbed)
+		ressurection_cooldown = world.time + (30 SECONDS)
+	return ..()
+
+/mob/living/simple_animal/hostile/thunder_zombie/Destroy()
+	if(master)
+		UnregisterSignal(master, list(COMSIG_PARENT_QDELETING))
+	master = null
 	return ..()
 
 /mob/living/simple_animal/hostile/thunder_zombie/proc/resurrect()
@@ -429,14 +382,27 @@
 			return FALSE
 		var/mob/living/simple_animal/hostile/thunder_zombie/C = new(get_turf(src))
 		if(master)
-			master.spawned_mobs += C
-			C.master = master
+			C.LinkSoul(master)
 		C.name = "[H.real_name]"//applies the target's name and adds the name to its description
 		C.desc = "What appears to be [H.real_name], only charred and screaming incoherently..."
 		C.gender = H.gender
-		C.faction = src.faction
-		H.gib()
+		H.gib(TRUE,TRUE,TRUE)
 	can_act = TRUE
+
+/mob/living/simple_animal/hostile/thunder_zombie/proc/LinkSoul(new_link)
+	if(!new_link)
+		return
+	master = new_link
+	RegisterSignal(new_link, list(COMSIG_PARENT_QDELETING), PROC_REF(ShatterSoul))
+	if(isliving(new_link))
+		var/mob/living/L = new_link
+		faction = L.faction.Copy()
+
+/mob/living/simple_animal/hostile/thunder_zombie/proc/ShatterSoul()
+	if(master)
+		UnregisterSignal(master, list(COMSIG_PARENT_QDELETING))
+	master = null
+	dust(TRUE,TRUE,TRUE)
 
 //The perch
 /obj/structure/tbird_perch

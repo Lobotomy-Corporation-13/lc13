@@ -17,23 +17,23 @@
 	faction = list("green_ordeal")
 	gender = NEUTER
 	mob_biotypes = MOB_ROBOTIC
-	maxHealth = 25000
-	health = 25000
+	maxHealth = 20000
+	health = 20000
 	melee_damage_lower = 5
 	melee_damage_upper = 5
 	ranged = TRUE
 	damage_coeff = list(RED_DAMAGE = 0.5, WHITE_DAMAGE = 0.8, BLACK_DAMAGE = 1.2, PALE_DAMAGE = 1)
 	butcher_results = list(/obj/item/food/meat/slab/robot = 22)
-	guaranteed_butcher_results = list(/obj/item/food/meat/slab/robot = 16)
+	guaranteed_butcher_results = list(/obj/item/food/meat/slab/robot = 16, /obj/item/head_trophy/grungeon_cell = 1)
 	death_sound = 'sound/effects/ordeals/green/midnight_dead.ogg'
 	offsets_pixel_x = list("south" = -96, "north" = -96, "west" = -96, "east" = -96)
 	damage_effect_scale = 1.25
 	rapid = 40
 	rapid_fire_delay = 0.4
+	ranged_cooldown_time = 15
 	projectilesound = 'sound/weapons/gun/smg/shot.ogg'
 	casingtype = /obj/item/ammo_casing/caseless/soda_mini
 	var/datum/beam/current_beam = null
-	var/can_act = TRUE
 	var/napalm_cooldown
 	var/napalm_cd_duration = 60 SECONDS
 	melee_reach = 0

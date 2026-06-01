@@ -11,6 +11,7 @@ SUBSYSTEM_DEF(cityevents)
 	var/daystatus = TRUE	//True to darken lights, false to lighten them
 	var/raiding = FALSE
 	var/globalillumination = 1
+	var/night_active = FALSE	//TRUE during the Night in the Backstreets
 	var/list/total_events = list()
 	var/list/distortions_available = list()
 	var/helpful_events = list("chickens", "money", "tresmetal", "hppens", "sppens")
@@ -245,6 +246,8 @@ SUBSYSTEM_DEF(cityevents)
 		addtimer(CALLBACK(src, PROC_REF(Daynight)), 5 MINUTES)
 		daystatus = FALSE
 		globalillumination = -0.18	//Ship it back up
+		if(!night_active)
+			StartNight()
 		return
 
 	if(globalillumination >= 1.1)	//Go back down.
@@ -259,3 +262,16 @@ SUBSYSTEM_DEF(cityevents)
 	else		//before noon
 		globalillumination += 0.02
 		addtimer(CALLBACK(src, PROC_REF(Daynight)), 10 SECONDS)
+
+/// Begins the Night in the Backstreets. Lasts for 5 minutes (the duration of maximum darkness).
+/datum/controller/subsystem/cityevents/proc/StartNight()
+	night_active = TRUE
+	for(var/obj/machinery/newscaster/N in GLOB.allCasters)
+		N.say("ALERT: The Night in the Backstreets has begun. Stay indoors. Do not record. Do not investigate.")
+	addtimer(CALLBACK(src, PROC_REF(EndNight)), 5 MINUTES)
+
+/// Ends the Night in the Backstreets.
+/datum/controller/subsystem/cityevents/proc/EndNight()
+	night_active = FALSE
+	for(var/obj/machinery/newscaster/N in GLOB.allCasters)
+		N.say("ALERT: The Night in the Backstreets has ended. Normal operations may resume.")

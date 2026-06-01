@@ -1,5 +1,6 @@
 /*
 * Sigsystem, originally made with signals now made more directional.
+* V3.0
 */
 
 /obj/structure/sigsystem
@@ -229,6 +230,8 @@
 	var/message_range = 2
 
 /obj/structure/sigsystem/announcer/ReceivePing()
+	if(happens_once && fired)
+		return
 	if(sound)
 		playsound(get_turf(src),sound,sound_volume,FALSE,3)
 
@@ -237,7 +240,7 @@
 			if(L.client)
 				to_chat(L, span_boldwarning("[message]"))
 	if(happens_once)
-		qdel(src)
+		fired = TRUE
 
 	/*-----------------------\
 	|Trap Projectile Launcher|
@@ -277,15 +280,19 @@
 	//Cords are offset from current position.
 	var/spawn_dist_x = 0
 	var/spawn_dist_y = 0
+	//If when a mob created by this deployer dies it pings.
+	var/ping_on_death = FALSE
 
 /obj/structure/sigsystem/deployer/ReceivePing()
+	if(happens_once && fired)
+		return
 	//Remotely finds the turf where we spawn the thing.
 	var/checkturf = get_turf(locate(x + spawn_dist_x, y + spawn_dist_y, z))
 	if(checkturf)
 		CreateThing(checkturf)
 		fire_cooldown = world.time + fire_delay
 		if(happens_once)
-			qdel(src)
+			fired = TRUE
 
 /obj/structure/sigsystem/deployer/proc/CreateThing(turf/T)
 	if(atom_path)
@@ -300,4 +307,11 @@
 			M.name = atom_rename
 		if(spawn_flavor_text)
 			M.visible_message(span_danger("[M] [spawn_flavor_text]."))
+		if(ping_on_death && isliving(M))
+			RegisterSignal(M, COMSIG_LIVING_DEATH, PROC_REF(SignalPing))
 		return M
+
+/obj/structure/sigsystem/deployer/proc/SignalPing()
+	SIGNAL_HANDLER
+
+	PingDirection()

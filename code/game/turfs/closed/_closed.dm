@@ -108,7 +108,7 @@
 
 //////This is absurd that i have to carry over wall code to a indestructable wall duplicate.
 
-/turf/closed/indestructible/reinforced/attackby(obj/item/W, mob/user, params)
+/turf/closed/indestructible/attackby(obj/item/W, mob/user, params)
 	//get the user's location
 	if(!isturf(user.loc))
 		return	//can't do this stuff whilst inside objects and such
@@ -121,7 +121,7 @@
 
 	return ..()
 
-/turf/closed/indestructible/reinforced/proc/try_wallmount(obj/item/W, mob/user, turf/T)
+/turf/closed/indestructible/proc/try_wallmount(obj/item/W, mob/user, turf/T)
 	//check for wall mounted frames
 	if(istype(W, /obj/item/wallframe))
 		var/obj/item/wallframe/F = W
@@ -135,7 +135,7 @@
 
 	return FALSE
 
-/turf/closed/indestructible/reinforced/proc/place_poster(obj/item/poster/P, mob/user)
+/turf/closed/indestructible/proc/place_poster(obj/item/poster/P, mob/user)
 	if(!P.poster_structure)
 		to_chat(user, "<span class='warning'>[P] has no poster... inside it? Inform a coder!</span>")
 		return

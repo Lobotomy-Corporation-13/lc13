@@ -200,6 +200,13 @@
 /mob/living/carbon/human/Destroy()
 	QDEL_NULL(physiology)
 	GLOB.human_list -= src
+	wear_suit = null
+	w_uniform = null
+	belt = null
+	wear_id = null
+	r_store = null
+	l_store = null
+	s_store = null
 	return ..()
 
 /mob/living/carbon/human/ZImpactDamage(turf/T, levels)

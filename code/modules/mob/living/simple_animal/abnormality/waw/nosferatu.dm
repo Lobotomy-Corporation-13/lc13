@@ -68,7 +68,6 @@
 	var/banquet_cooldown_time = 12 SECONDS
 	var/banquet_damage = 100
 	var/banquet_range = 3
-	var/can_act = TRUE
 	var/berzerk = FALSE
 	var/mist_cooldown
 	var/mist_cooldown_time = 30 SECONDS

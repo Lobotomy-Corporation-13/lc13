@@ -63,7 +63,6 @@
 	)
 
 	var/revealed = TRUE
-	var/can_act = TRUE
 	var/backstab_damage = 200
 	var/agent_status //Used for insanity
 

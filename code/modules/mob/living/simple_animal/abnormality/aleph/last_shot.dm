@@ -64,6 +64,11 @@ GLOBAL_LIST_EMPTY(meat_list)
 /mob/living/simple_animal/hostile/abnormality/last_shot/Move()
 	return FALSE
 
+/mob/living/simple_animal/hostile/abnormality/last_shot/Destroy()
+	UnregisterAll()
+	meat = null
+	return ..()
+
 /mob/living/simple_animal/hostile/abnormality/last_shot/BreachEffect(mob/living/carbon/human/user, breach_type)
 	if(breach_type == BREACH_MINING)
 		return ..()
@@ -103,7 +108,6 @@ GLOBAL_LIST_EMPTY(meat_list)
 	datum_reference.qliphoth_change(-1)
 	return
 
-
 /mob/living/simple_animal/hostile/abnormality/last_shot/Life()
 	. = ..()
 	if(!.)
@@ -118,19 +122,19 @@ GLOBAL_LIST_EMPTY(meat_list)
 	for(var/i=spawn_number, i>=1, i--)	//This counts down. - Spawn meat guards
 		if(prob(gunnerchance))
 			var/mob/living/simple_animal/hostile/meatblob/gunner/G = new(get_turf(src))
-			gremlins+=G
+			RegisterMob(G)
 			continue
 		if(prob(gunnerchance))
 			var/mob/living/simple_animal/hostile/meatblob/gunner/sniper/S = new(get_turf(src))
-			gremlins+=S
+			RegisterMob(S)
 			continue
 		if(prob(gunnerchance))
 			var/mob/living/simple_animal/hostile/meatblob/gunner/shotgun/SG = new(get_turf(src))
-			gremlins+=SG
+			RegisterMob(SG)
 			continue
 		else
 			var/mob/living/simple_animal/hostile/meatblob/V = new(get_turf(src))
-			gremlins+=V
+			RegisterMob(V)
 
 	for(var/turf/open/L in view(7, src)) //Spawn barricades on meat
 		if((get_dist(src, L) % 2 != 1))
@@ -165,14 +169,24 @@ GLOBAL_LIST_EMPTY(meat_list)
 	meat_reach = clamp(meat_reach + 1, 0, 10) //MEAT!!!!!
 
 /mob/living/simple_animal/hostile/abnormality/last_shot/death()
-	for(var/V in gremlins)
-		QDEL_NULL(V)
-		gremlins-=V
-
 	for(var/Y in GLOB.meat_list)
 		QDEL_NULL(Y)
 		GLOB.meat_list-=Y
-	..()
+	return ..()
+
+/mob/living/simple_animal/hostile/abnormality/last_shot/proc/RegisterMob(mob/living/L)
+	RegisterSignal(L, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING), PROC_REF(UnregisterMob))
+	gremlins += L
+
+/mob/living/simple_animal/hostile/abnormality/last_shot/proc/UnregisterMob(mob/living/L)
+	UnregisterSignal(L, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING))
+	gremlins -= L
+
+/mob/living/simple_animal/hostile/abnormality/last_shot/proc/UnregisterAll()
+	for(var/mob/living/L in gremlins)
+		UnregisterMob(L)
+		qdel(L)
+	gremlins.Cut()
 
 //////////////
 //STRUCTURES//
@@ -230,7 +244,6 @@ GLOBAL_LIST_EMPTY(meat_list)
 	GLOB.meat_list += src
 
 /obj/structure/barricade/meatbags/CanAllowThrough(atom/movable/mover, turf/target)
-	. = ..()
 	if(ishuman(mover))
 		return FALSE
 	if(ismecha(mover))
@@ -312,14 +325,13 @@ GLOBAL_LIST_EMPTY(meat_list)
 	projectilesound = 'sound/weapons/gun/rifle/shot_alt.ogg'
 	can_patrol = FALSE //They're sent out in waves
 	var/guntimer //takes time to reload after 20 shots
-	var/can_act = TRUE
 	var/reload_time = 15
 	var/remaining_bullets = 20
 	var/maximum_bullets = 20
 	var/reload_sound = 'sound/weapons/gun/general/bolt_rack.ogg'
 
 /mob/living/simple_animal/hostile/meatblob/gunner/Initialize(mapload)
-	..()
+	. = ..()
 	var/units_to_add = list(
 		/mob/living/simple_animal/hostile/meatblob = 1,
 		)

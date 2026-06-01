@@ -54,7 +54,7 @@
 
 /obj/item/structurecapsule/fixer
 	name = "Fishing Office Capsule"
-	desc = "Use this capsule in a designated fixer office area to start your fishing fixer office."
+	desc = "Use this capsule in a designated fixer office area to start your office."
 	template_id = "fishingfixers_office"
 	delay_time = 0
 
@@ -93,6 +93,17 @@
 /obj/item/structurecapsule/fixer/contract
 	name = "Contract Office Capsule"
 	template_id = "contractfixers_office"
+
+/obj/item/structurecapsule/fixer/bank
+	name = "Banking Office Capsule"
+	template_id = "bankciv_office"
+
+/obj/item/structurecapsule/fixer/bank/attack_self(mob/living/carbon/human/user)
+	. = ..()
+	if(used)
+		user.set_attribute_limit(20)
+		user.adjust_all_attribute_levels(20)
+		src.loc.visible_message(span_warning("You feel \The [src] draining you of your potential for the sake of business!"))
 
 
 //Office templates
@@ -137,6 +148,12 @@
 	shelter_id = "contractfixers_office"
 	description = "A fixer office made for contract oriented fixers."
 	mappath = "_maps/templates/fixer_office/contractfixers.dmm"
+
+/datum/map_template/shelter/bankcivs
+	name = "Banking Office"
+	shelter_id = "bankciv_office"
+	description = "WARNING: Rapid accumulation of net worth has been proven to cause permanent potentiality loss!."
+	mappath = "_maps/templates/fixer_office/bankciv.dmm"
 
 
 

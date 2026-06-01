@@ -5,9 +5,7 @@
 /obj/item/ego_weapon/branch12/plagiarism
 	name = "plagiarism"
 	desc = "This is my, my work!."
-	special = "This weapon has a random damage type, also you are able to turn on 'Idea Theift'. Which causes this weapon to consume 8 Mental Decay from the target, to inflict Mental Detonation. <br><br>\
-	(Mental Detonation: Does nothing until it is 'Shattered.' Once it is 'Shattered,' it will cause Mental Decay to trigger without reducing it's stack. Weapons that cause 'Shatter' gain other benefits as well.) <br>\
-	(Mental Decay: Deals White damage every 5 seconds, equal to its stack, and then halves it. If it is on a mob, then it deals *4 more damage.)"
+	special = "This weapon has a random damage type."
 	icon_state = "plagiarism"
 	force = 60
 	swingstyle = WEAPONSWING_LARGESWEEP
@@ -38,11 +36,14 @@
 	if(!CanUseEgo(user))
 		return
 	damtype = pick(RED_DAMAGE, WHITE_DAMAGE, BLACK_DAMAGE, PALE_DAMAGE)
-	var/datum/status_effect/stacking/lc_mental_decay/D = target.has_status_effect(/datum/status_effect/stacking/lc_mental_decay)
+	/*var/datum/status_effect/stacking/lc_mental_decay/D = target.has_status_effect(/datum/status_effect/stacking/lc_mental_decay)
 	if(D.stacks >= detonation_breakpoint)
 		D.stacks -= detonation_breakpoint
-		target.apply_status_effect(/datum/status_effect/mental_detonate)
+		target.apply_status_effect(/datum/status_effect/mental_detonate)*/
+		//Bugged for now. Runtimes when it reads 0
 	..()
+
+
 
 //Degrading Honor
 /obj/item/ego_weapon/branch12/honor
@@ -64,7 +65,6 @@
 							)
 	var/warcry_cooldown
 	var/warcry_cooldown_time = 60 SECONDS
-	var/list/affected = list()
 	var/range = 5
 	var/affect_self = TRUE
 	var/justice_buff = 40
@@ -72,6 +72,7 @@
 	var/inflicted_mental_decay = 6
 
 /obj/item/ego_weapon/branch12/honor/attack_self(mob/user)
+	var/list/affected = list()
 	if(!CanUseEgo(user))
 		return
 	if(warcry_cooldown > world.time)
@@ -91,18 +92,20 @@
 		human.adjust_attribute_buff(JUSTICE_ATTRIBUTE, justice_buff)
 		affected+=human
 
-	addtimer(CALLBACK(src, PROC_REF(Warcry), commander), 0.5 SECONDS, TIMER_UNIQUE | TIMER_OVERRIDE)
-	addtimer(CALLBACK(src, PROC_REF(RemoveBuff), commander), 5 SECONDS, TIMER_UNIQUE | TIMER_OVERRIDE)
+	addtimer(CALLBACK(src, PROC_REF(Warcry), commander, affected), 0.5 SECONDS, TIMER_UNIQUE | TIMER_OVERRIDE)
+	addtimer(CALLBACK(src, PROC_REF(RemoveBuff), commander, affected), 5 SECONDS, TIMER_UNIQUE | TIMER_OVERRIDE)
 
 
-/obj/item/ego_weapon/branch12/honor/proc/Warcry(mob/user)
+/obj/item/ego_weapon/branch12/honor/proc/Warcry(mob/user, list/affected)
 	for(var/mob/living/carbon/human/human in affected)
 		if(human == user)
 			continue
 		human.say("FOR THE QUEEN!")
 
-/obj/item/ego_weapon/branch12/honor/proc/RemoveBuff(mob/user)
+/obj/item/ego_weapon/branch12/honor/proc/RemoveBuff(mob/user, list/affected)
 	for(var/mob/living/carbon/human/human in affected)
+		if(!human)
+			continue
 		if (human == user && !affect_self)
 			continue
 		human.adjust_attribute_buff(JUSTICE_ATTRIBUTE, -justice_buff)
@@ -171,7 +174,6 @@
 							)
 	var/active = FALSE
 	var/range = 4
-	var/list/other_targets = list()
 	var/sp_cost = 45
 	var/inflicted_decay = 4
 	var/detonation_breakpoint = 15
@@ -189,7 +191,8 @@
 		return
 
 /obj/item/ego_weapon/branch12/joe/attack(mob/living/target, mob/living/user)
-	..()
+	. = ..()
+	var/list/other_targets = list()
 	var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
 	var/justicemod = 1 + userjust / 100
 	var/extra_damage = force * justicemod
@@ -219,7 +222,6 @@
 					getawayplease.GiveTarget(killthem)
 					to_chat(user, span_nicegreen("Ignore me, am just a normal joe..."))
 					joe.adjustSanityLoss(sp_cost)
-	other_targets = list()
 
 //Medea
 /obj/item/ego_weapon/ranged/branch12/mini/medea
@@ -564,7 +566,7 @@
 	shotsleft = 15
 
 /obj/item/ego_weapon/ranged/branch12/antique/Initialize()
-	..()
+	. = ..()
 	addtimer(CALLBACK(src, PROC_REF(charge)), 10 SECONDS)
 
 /obj/item/ego_weapon/ranged/branch12/antique/proc/charge()

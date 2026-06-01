@@ -2,9 +2,11 @@
 /mob/living/simple_animal/hostile/abnormality/branch12/eye_bird
 	name = "Seeing Bird"
 	desc = "A small floating eye."
-	icon = 'ModularLobotomy/_Lobotomyicons/branch12/32x32.dmi'
-	icon_state = "seeing_bird"
-	icon_living = "seeing_bird"
+	icon = 'ModularLobotomy/_Lobotomyicons/branch12/48x48.dmi'
+	icon_state = "seer"
+	icon_living = "seer"
+	pixel_x = -8
+	base_pixel_x = -8
 	portrait = "eye_bird"
 	maxHealth = 2200
 	health = 2200

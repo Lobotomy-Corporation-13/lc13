@@ -65,7 +65,6 @@
 	var/flurry_big = 60 // It was requested that he beats their ass harder
 	var/flurry_length = 3
 	var/flurry_width = 2
-	var/can_act = TRUE
 
 	// Combat map check
 	var/combat_map = FALSE
@@ -194,8 +193,8 @@
 		initial_flurry_delay = flurry_delay
 		initial_flurry_pause = flurry_pause
 		initial_move_to_delay = move_to_delay
-		var/obj/effect/proc_holder/spell/pointed/axe_throw/AS = new /obj/effect/proc_holder/spell/pointed/axe_throw(src)
-		AddSpell(AS)
+	var/obj/effect/proc_holder/spell/pointed/axe_throw/AS = new /obj/effect/proc_holder/spell/pointed/axe_throw(src)
+	AddSpell(AS)
 
 /mob/living/simple_animal/hostile/abnormality/woodsman/Destroy()
 	QDEL_NULL(soundloop)
@@ -223,7 +222,8 @@
 
 	var/current_dist = get_dist(get_turf(chained_target), get_turf(src))
 	if (current_dist < 2)
-		chained_target.Knockdown(3 SECONDS)
+		if(client)
+			chained_target.Knockdown(3 SECONDS)
 		release_target()
 		return
 
@@ -428,7 +428,14 @@
 
 	if(flurry_cooldown <= world.time)
 		if(prob(75))
-			Woodsman_Flurry(target)
+			switch(rand(1,3))
+				if(1)
+					Woodsman_Flurry(target)
+				if(2)
+					begin_chain_pull(target)
+				if(3)
+					AxeThrow(target)
+
 
 /mob/living/simple_animal/hostile/abnormality/woodsman/proc/Woodsman_Flurry(target)
 	if(flurry_cooldown > world.time)
@@ -532,6 +539,28 @@
 		icon_state = "woodsman_prepare"
 	icon_state = icon_living
 	can_act = TRUE
+
+//A Simpler Axe Throw.
+
+/mob/living/simple_animal/hostile/abnormality/woodsman/proc/AxeThrow()
+	playsound(get_turf(src), 'sound/abnormalities/woodsman/woodsman_prepare.ogg', 75, 0, 5)
+	icon_state = "woodsman_prepare"
+	can_act = FALSE
+	SLEEP_CHECK_DEATH(10)
+	var/obj/projectile/normalaxe/P = new(get_turf(src))
+	P.firer = src
+	P.preparePixelProjectile(target, src)
+	P.fire()
+	icon_state = icon_living
+	can_act = TRUE
+
+/obj/projectile/normalaxe
+	name = "woodsman axe"
+	icon_state = "wood_axe_animated"
+	damage_type = RED_DAMAGE
+	damage = 80	//It is very slow/
+	hitsound = 'sound/effects/splat.ogg'
+	color = COLOR_RED
 
 
 /mob/living/simple_animal/hostile/abnormality/woodsman/WorkChance(mob/living/carbon/human/user, chance, work_type)

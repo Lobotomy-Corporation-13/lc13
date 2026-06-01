@@ -72,7 +72,9 @@ SUBSYSTEM_DEF(maptype)
 
 /datum/controller/subsystem/maptype/Initialize()
 	..()
-	if(SSmaptype.maptype in SSmaptype.lc_maps)
+	maptype = GLOB.map_config_global.maptype
+
+	if(maptype in SSmaptype.lc_maps)
 		if(!CONFIG_GET(flag/enabletraits))
 			message_admins("Notice! Station Traits are disabled!")
 			return
@@ -91,7 +93,7 @@ SUBSYSTEM_DEF(maptype)
 					SSlobotomy_corp.enable_possession = TRUE
 
 	//Badda Bing Badda Da. This makes the latejoin menu cleaner
-	switch(SSmaptype.maptype)
+	switch(maptype)
 		if("wonderlabs")
 			departments = list("Command", "Fixers", "Security", "Service")
 		if("city")

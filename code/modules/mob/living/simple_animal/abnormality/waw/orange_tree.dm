@@ -52,7 +52,8 @@
 	soundloop = new(list(src), TRUE)
 
 /mob/living/simple_animal/hostile/abnormality/orange_tree/Destroy()
-	QDEL_NULL(soundloop)
+	if(soundloop)
+		QDEL_NULL(soundloop)
 	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/orange_tree/PostSpawn()
@@ -222,6 +223,11 @@
 	resistance_flags = INDESTRUCTIBLE
 	var/open = FALSE
 	var/obj/item/ego_weapon/ranged/flammenwerfer/flamethrower
+
+/obj/structure/flamethrowercabinet/Destroy()
+	if(flamethrower)
+		QDEL_NULL(flamethrower)
+	return ..()
 
 /obj/structure/flamethrowercabinet/Initialize()
 	. = ..()

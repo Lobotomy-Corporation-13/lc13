@@ -1899,6 +1899,7 @@
 	duration = -1 // We remove this with a timer set by the ability that causes it.
 	tick_interval = -1 // We don't need to tick
 	alert_type = null
+	display_icon = 'ModularLobotomy/_Lobotomyicons/status_icons_10x10.dmi'
 	display_name = "fairy_lure"
 
 	var/mob/living/simple_animal/hostile/lured

@@ -45,7 +45,6 @@
 			Nothing matters. <br>We will repeat this song and dance until the end of time.<br> I can only laugh at this pointless endeavor."),
 	)
 
-	var/can_act = TRUE
 	//Teleports
 	var/icon_inverted
 	var/teleport_cooldown
@@ -294,16 +293,7 @@
 				if(T.density)
 					i -= 1
 					continue
-				var/obj/projectile/despair_rapier/P
-				P = new(T)
-				P.starting = T
-				P.firer = src
-				P.fired_from = T
-				P.yo = target.y - T.y
-				P.xo = target.x - T.x
-				P.original = target
-				P.preparePixelProjectile(target, T)
-				addtimer(CALLBACK (P, TYPE_PROC_REF(/obj/projectile, fire)), 30)
+				DeferProjectile(/obj/projectile/despair_rapier, target, T, 30)
 				var/list/hit_line = getline(T, get_turf(target)) //targetting line
 				for(var/turf/TF in hit_line)
 					if(TF.density)

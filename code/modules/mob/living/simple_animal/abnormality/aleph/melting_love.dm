@@ -80,6 +80,10 @@
 		|Stay Together...|: When you click on a tile outside your melee range, You will fire a slime projectile towards that tile. The projectile will inflict the target with 'SLIMED' and deal BLACK damage.\
 		If the projectile hits a dead body, it will convert it into a slime pawn.</b>")
 
+/mob/living/simple_animal/hostile/abnormality/melting_love/Destroy()
+	UnregisterMob()
+	return ..()
+
 /mob/living/simple_animal/hostile/abnormality/melting_love/death(gibbed)
 	density = FALSE
 	animate(src, alpha = 0, time = (5 SECONDS))
@@ -196,7 +200,7 @@
 	if(GODMODE in user.status_flags)
 		return
 	if(!gifted_human && istype(user) && work_type != ABNORMALITY_WORK_REPRESSION && user.stat != DEAD && (status_flags & GODMODE))
-		gifted_human = user
+		RegisterMob(user)
 		RegisterSignal(gifted_human, COMSIG_WORK_COMPLETED, PROC_REF(GiftedAnger))
 		user.apply_status_effect(STATUS_EFFECT_MELTYLOVE)
 		to_chat(user, span_nicegreen("You feel like you received a gift..."))
@@ -218,6 +222,7 @@
 	C.emote("scream")
 	C.deal_damage(800, BLACK_DAMAGE, src, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_STATUS))
 	C.remove_status_effect(STATUS_EFFECT_MELTYLOVE)
+
 
 /mob/living/simple_animal/hostile/abnormality/melting_love/proc/UnregisterGiftedSignals(mob/living/carbon/human/user)
 	if(user)
@@ -256,10 +261,18 @@
 	desc += " It looks angry."
 
 /mob/living/simple_animal/hostile/abnormality/melting_love/proc/SpawnBigSlime(mob/living/simple_animal/hostile/slime/big/S)
-	gifted_human = null
+	UnregisterMob()
 	datum_reference.qliphoth_change(-9)
 	if(S)
 		RegisterSignal(S, COMSIG_LIVING_DEATH, PROC_REF(SlimeDeath))
+
+/mob/living/simple_animal/hostile/abnormality/melting_love/proc/RegisterMob(mob/living/L)
+	RegisterSignal(L, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING), PROC_REF(UnregisterMob))
+	gifted_human = L
+
+/mob/living/simple_animal/hostile/abnormality/melting_love/proc/UnregisterMob()
+	UnregisterSignal(gifted_human, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING))
+	gifted_human = null
 
 /* Slimes (HE) */
 /mob/living/simple_animal/hostile/slime
@@ -355,11 +368,6 @@
 	new /mob/living/simple_animal/hostile/slime(get_turf(H))
 	H.gib(FALSE, TRUE, TRUE)
 	return TRUE
-
-//3 monsters including parasite tree sapling and naked nest use this proc i might make it part of the root in the future -IP
-/mob/living/simple_animal/hostile/slime/proc/NestedItems(mob/living/simple_animal/hostile/nest, obj/item/nested_item)
-	if(nested_item)
-		nested_item.forceMove(nest)
 
 /* Big Slimes (WAW) */
 /mob/living/simple_animal/hostile/slime/big

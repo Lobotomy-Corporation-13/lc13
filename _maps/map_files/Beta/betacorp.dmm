@@ -6416,13 +6416,10 @@
 /turf/open/floor/plasteel,
 /area/facility_hallway/information)
 "Gs" = (
-/obj/machinery/computer/secure_data{
-	dir = 1;
-	req_one_access = "0"
-	},
 /obj/structure/sign/ordealmonitor{
 	pixel_y = -32
 	},
+/obj/machinery/photocopier,
 /turf/open/floor/carpet/black,
 /area/department_main/records)
 "Gt" = (
@@ -6539,7 +6536,9 @@
 /turf/open/floor/plasteel,
 /area/facility_hallway/south)
 "Hj" = (
-/obj/machinery/photocopier,
+/obj/machinery/computer/extraction_cargo/records{
+	dir = 4
+	},
 /turf/open/floor/carpet/black,
 /area/department_main/records)
 "Hm" = (

@@ -84,7 +84,7 @@
 	var/turf/thrownat = get_ranged_target_turf_direct(src, L, 4, rand(-10, 10))
 	L.throw_at(thrownat, 8, 2, src, TRUE, force = MOVE_FORCE_OVERPOWERING, gentle = TRUE)
 	shake_camera(L, 2, 1)
-	if(target_memory[L] < 100)
+	if(target_memory[AddIdentifier(L)] < 100)
 		LoseTarget()
 	swat_cooldown = world.time + swat_delay
 

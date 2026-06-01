@@ -19,6 +19,7 @@
 	diet_value = 50
 	desire_loss = 5
 	desire_on_pet = 40
+	desire_on_talk = 1
 	desire_on_eat = 20
 	rep_desire_gain = 20
 	insight_cooldown_time = 1 MINUTES

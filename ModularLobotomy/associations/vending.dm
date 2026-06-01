@@ -30,6 +30,7 @@
 		/obj/item/structurecapsule/fixer/recon = 1,
 		/obj/item/structurecapsule/fixer/peacekeeper = 1,
 		/obj/item/structurecapsule/fixer/contract = 1,
+		/obj/item/structurecapsule/fixer/bank = 1,
 
 		//Boxes cost you an extra 700
 		/obj/item/storage/box/fixer/wedge = 1,
@@ -433,27 +434,32 @@
 
 	// Is this conditional true? Means we vended a scorch box. Remove the discount that we got on them from our credit pool
 	if(last_known_scorch_amount > current_scorch_amount)
-		thumb_goodboypoints -= currently_discounting_scorch
+		thumb_goodboypoints = max(thumb_goodboypoints - currently_discounting_scorch, 0)
 		last_known_scorch_amount = current_scorch_amount
 
 	if(last_known_quake_amount > current_quake_amount)
-		thumb_goodboypoints -= currently_discounting_quake
+		thumb_goodboypoints = max(thumb_goodboypoints - currently_discounting_quake, 0)
 		last_known_quake_amount = current_quake_amount
 
 	if(last_known_inferno_amount > current_inferno_amount)
-		thumb_goodboypoints -= currently_discounting_inferno
+		thumb_goodboypoints = max(thumb_goodboypoints - currently_discounting_inferno, 0)
 		last_known_inferno_amount = current_inferno_amount
 
 	// Same here but for tigermark. Only one of these should ever trigger at any given time, I think
 	if(last_known_tigermark_amount > current_tigermark_amount)
-		thumb_goodboypoints -= currently_discounting_tigermark
+		thumb_goodboypoints = max(thumb_goodboypoints - currently_discounting_tigermark, 0)
 		last_known_tigermark_amount = current_tigermark_amount
 
 	HandleDiscounting()
 
 /// Updates the prices on the vending product datums, lowering them according to how many credits we've saved by recycling
+// Unwieldy solution but I really can't be bothered to care, I really hate working on vending machine code
 /obj/machinery/vending/thumb_east_ammo/proc/HandleDiscounting()
-	// Unwieldy solution but I really can't be bothered to care, I really hate working on vending machine code
+	currently_discounting_scorch = 0
+	currently_discounting_quake = 0
+	currently_discounting_inferno = 0
+	currently_discounting_tigermark = 0
+
 	var/list/all_records = product_records + coin_records
 	for(var/datum/data/vending_product/the_goods in all_records)
 		// Processing Scorch

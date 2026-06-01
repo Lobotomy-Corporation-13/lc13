@@ -15,6 +15,7 @@
 		ABNORMALITY_WORK_INSIGHT = 70,
 		ABNORMALITY_WORK_ATTACHMENT = 50,
 		ABNORMALITY_WORK_REPRESSION = 50,
+		"Purchase EGO Gift" = 100
 	)
 	work_damage_amount = 5
 	work_damage_type = RED_DAMAGE
@@ -68,6 +69,21 @@
 	var/currentvend
 
 //Shrimple work stuff
+
+/mob/living/simple_animal/hostile/abnormality/oceanicwaves/AttemptWork(mob/living/carbon/human/user, work_type)
+	if(work_type == "Purchase EGO Gift")
+		//Get a random EGO gift, but lower your maximum stats
+		var/list/gifts = subtypesof(/datum/ego_gifts)
+		var/chosen_type = pick(gifts)
+		var/datum/ego_gifts/new_gift = new chosen_type()
+		manual_emote("hums and distributes an EGO gift...")
+
+		user.adjust_attribute_limit(-4)
+		user.Apply_Gift(new_gift)
+		return FALSE
+
+	return TRUE
+
 /mob/living/simple_animal/hostile/abnormality/oceanicwaves/SuccessEffect(mob/living/carbon/human/user, work_type, pe)
 	. = ..()
 	//Randomize the soders then vend.

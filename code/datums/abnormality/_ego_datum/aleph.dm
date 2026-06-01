@@ -192,6 +192,11 @@
 	item_path = /obj/item/ego_weapon/ranged/pink
 	cost = 100
 
+/datum/ego_datum/weapon/black
+	item_path = /obj/item/ego_weapon/ranged/black
+	cost = 100
+	ego_tags = list(EGO_TAG_AOE_RADIAL, EGO_TAG_SPECIAL_RANGED, EGO_TAG_HAZARDOUS, EGO_TAG_KNOCKBACK, EGO_TAG_DEBUFFER)
+
 // We Can Change Anything - Iron maiden
 /datum/ego_datum/weapon/iron_maiden
 	item_path = /obj/item/ego_weapon/iron_maiden

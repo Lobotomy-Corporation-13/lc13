@@ -38,7 +38,6 @@
 	monolith_abnormality = /mob/living/simple_animal/hostile/abnormality/clouded_monk //Both hate their time being wasted and that there is a price to it, even if this thing cannot fight back.
 	egoist_attributes = 130
 
-	var/can_act = TRUE
 	/// When this reaches 400 - begins reflecting damage
 	var/damage_reflection = FALSE
 	var/hello_cooldown

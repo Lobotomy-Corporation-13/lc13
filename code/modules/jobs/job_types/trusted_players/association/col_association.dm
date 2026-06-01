@@ -17,8 +17,8 @@ GLOBAL_LIST_INIT(association_jobs, list(
 	spawn_positions = 1
 	display_order = JOB_DISPLAY_ORDER_DIRECTOR
 	trusted_only = TRUE
-	access = list(ACCESS_PHARMACY, ACCESS_NETWORK, ACCESS_RC_ANNOUNCE) // I want to use the number 69.
-	minimal_access = list(ACCESS_PHARMACY, ACCESS_NETWORK, ACCESS_RC_ANNOUNCE)
+	access = list(ACCESS_PHARMACY, ACCESS_NETWORK, ACCESS_RC_ANNOUNCE, ACCESS_SECURITY) // I want to use the number 69.
+	minimal_access = list(ACCESS_PHARMACY, ACCESS_NETWORK, ACCESS_RC_ANNOUNCE, ACCESS_SECURITY)
 	departments = DEPARTMENT_COMMAND | DEPARTMENT_ASSOCIATION
 	paycheck = 700
 	maptype = list("wonderlabs", "city")
@@ -32,14 +32,14 @@ GLOBAL_LIST_INIT(association_jobs, list(
 	)
 
 	var/list/antagroles = list(
-		/datum/job/messenger,
-		/datum/job/cutthroat,
+		// /datum/job/messenger,
+		// /datum/job/cutthroat,
 		/datum/job/sottocapo,
-		/datum/job/grandinquis,
-		/datum/job/kurocaptain,
+		// /datum/job/grandinquis,
+		// /datum/job/kurocaptain,
 		/datum/job/east_capo,
 		/datum/job/big_brother,
-		/datum/job/nightwatch_agent,
+		// /datum/job/nightwatch_agent,
 	)
 	var/antag_chosen
 
@@ -79,8 +79,6 @@ GLOBAL_LIST_INIT(association_jobs, list(
 	glasses = /obj/item/clothing/glasses/sunglasses
 	shoes = /obj/item/clothing/shoes/laceup
 	id = /obj/item/card/id/association
-
-	backpack_contents = list()
 
 //Veteran
 /datum/job/veteran

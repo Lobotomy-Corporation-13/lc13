@@ -5,7 +5,6 @@
 	desc = "Unidentified creature."
 	maxHealth = 400
 	health = 400
-	faction = ("Neutral") //This should be irrelevant in most context, abnormalities should primarily rely on the friend list and not factions.
 	melee_damage_lower = 1
 	melee_damage_upper = 2
 	attack_sound = 'sound/abnormalities/fragment/attack.ogg'
@@ -15,6 +14,7 @@
 	a_intent = INTENT_HARM
 	move_resist = MOVE_FORCE_STRONG
 	pull_force = MOVE_FORCE_STRONG
+	faction = list("neutral")
 	var/abno_additional_instructions = "" //Unique additional info to the abnormality.
 	var/true_name = "Limbus specimen" //The true name of the abnormality if it can get revealed after enough study.
 	var/mob/living/simple_animal/hostile/abnormality/original_abno = null//The original abno type this is based on. If defined, it'll automatically add the name, description and sprite of that abno.
@@ -24,7 +24,7 @@
 	var/attack_friend = FALSE //If they can hit their friends with unarmed attacks.
 	var/list/friend_list = list() //Similar to a faction list, but handpicked by the player abno itself.
 	var/list/attack_action_types = list()
-	var/kickstart_timer = 3.5 MINUTES //How long it will take before an abno's desire and hunger bar will start dropping due to their cooldown after the player logs in.
+	var/kickstart_timer = 15 MINUTES //How long it will take before an abno's desire and hunger bar will start dropping due to their cooldown after the player logs in.
 
 	//Counter stuff
 	var/max_counter = 0 //If set to 0, they have no counter.
@@ -52,6 +52,7 @@
 	var/desire_on_eat = 0 //How much desire is gained per regular eating.
 	var/desire_on_eat_threshold = 0 //Will only gain desire_on_eat amount of desire if hunger_bar is above that threshold
 	var/desire_on_pet = 0 //How much desire is gained on pet. Can be negative.
+	var/desire_on_talk = 0 //How much is gained from hearing anyone other than yourself speak. Works per line spoken and through radio.
 
 	//Repression work stuff
 	var/rep_desire_gain = 0 //How much desire is gained or lost per point of damage when you're hit.
@@ -264,10 +265,21 @@
 	. = ..()
 	AbnoEat(A)
 
+//Abnos will revive after 5 minutes of timeout. Using NT egg as placeholder.
 /mob/living/simple_animal/hostile/limbus_abno/death()
-	animate(src, alpha = 0, time = 10 SECONDS)
-	QDEL_IN(src, 10 SECONDS)
+	icon = 'ModularLobotomy/_Lobotomyicons/48x48.dmi'
+	icon_state = "nothing_egg"
+	icon_dead = "nothing_egg"
+	addtimer(CALLBACK(src, PROC_REF(Rebirth)), 5 MINUTES)
+	to_chat(src,span_userdanger("Your shell burst apart at the seams, but you remain. 5 minutes before your return."))
 	..()
+
+//Maybe make it distance related later, but for now I'm just making most base desire on talk really low.
+/mob/living/simple_animal/hostile/limbus_abno/Hear(message, atom/movable/speaker, datum/language/message_language, raw_message, radio_freq, list/spans, list/message_mods)
+	..()
+	if(desire_on_talk != 0 && speaker != src)
+		AdjustDesire(desire_on_talk)
+
 
 /mob/living/simple_animal/hostile/limbus_abno/funpet(mob/living/carbon/human/petter)
 	..()
@@ -441,6 +453,17 @@
 	var/counter_req
 	var/starving_req = FALSE
 
+/mob/living/simple_animal/hostile/limbus_abno/proc/Rebirth()
+	grab_ghost()
+	icon = original_abno.icon
+	icon_state = original_abno.icon_state
+	icon_living = original_abno.icon_living
+	icon_dead = original_abno.icon_dead
+	revive(full_heal = TRUE, admin_revive = TRUE)
+	AdjustCounter(max_counter)
+	AdjustHunger(max_hunger)
+	AdjustDesire(max_desire)
+
 ///Checks if the user is a limbus abno, and removes it if not.
 /datum/action/cooldown/limbus_abno_action/Grant(mob/M)
 	..()
@@ -459,6 +482,8 @@
 /datum/action/cooldown/limbus_abno_action/IsAvailable()
 	. = ..()
 	if(isnull(abno_user) || !.)
+		return FALSE
+	if(abno_user.stat >= DEAD)
 		return FALSE
 	if(starving_req && abno_user.starving)
 		return FALSE

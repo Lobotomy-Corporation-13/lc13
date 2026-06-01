@@ -4,18 +4,15 @@
 	desc = "A bronze compass with 8 needles."
 	icon_state = "compass"
 	icon = 'ModularLobotomy/_Lobotomyicons/branch12/32x32.dmi'
-	var/list/active_users = list()
 
 /obj/structure/toolabnormality/compass/attack_hand(mob/living/carbon/human/user)
 	. = ..()
 	if(!do_after(user, 6))
 		return
-	if(user in active_users)
-		active_users -= user
+	if(user.has_status_effect(STATUS_EFFECT_COMPASS))
 		user.remove_status_effect(STATUS_EFFECT_COMPASS)
 		to_chat(user, span_userdanger("You put the compass back. You feel a lot more composed"))
 	else
-		active_users += user
 		user.apply_status_effect(STATUS_EFFECT_COMPASS)
 		to_chat(user, span_userdanger("You pick up the compass, and feel a like you can't sit still"))
 

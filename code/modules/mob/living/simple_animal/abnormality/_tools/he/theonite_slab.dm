@@ -3,7 +3,6 @@
 	name = "theonite slab"
 	desc = "A slab, made out of a seamless mixture of stone and metal. It's covered in runes, and bloody spikes erupt from the centerpiece."
 	icon_state = "slab"
-	var/list/users = list()
 
 	max_boost = 50
 	given_attribute = JUSTICE_ATTRIBUTE
@@ -23,7 +22,7 @@
 
 	flick(icon_state, src)
 
-	if(used_by[user] == 1) // Lets start effects AFTER their first use
+	if(used_by[user.tag] == 1) // Lets start effects AFTER their first use
 		return
 
 	user.physiology.pale_mod *= 1.06

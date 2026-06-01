@@ -145,6 +145,9 @@
 	if(!ishuman(H))
 		return
 
+	if(SSmaptype.maptype in SSmaptype.citymaps)
+		ADD_TRAIT(H, TRAIT_COMBATFEAR_IMMUNE, CITY_TRAIT)
+
 	if(!config)	//Needed for robots.
 		roundstart_experience = minimal_skills
 
@@ -256,7 +259,7 @@
 	return FALSE
 
 //Used to check for unique job circumstances that may change at any moment. Return false if you want the job to to be skipped in the job assignment process for this client.
-/datum/job/proc/unique_job_check(client/C)
+/datum/job/proc/unique_job_check(client/C, occupation_divide = FALSE)
 	return TRUE
 
 /datum/job/proc/available_in_days(client/C)

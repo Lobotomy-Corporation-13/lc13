@@ -2,9 +2,11 @@
 /mob/living/simple_animal/hostile/abnormality/branch12/long_bird
 	name = "Long Bird"
 	desc = "Jesus what the fuck man, how did its legs get so big?"
-	icon = 'ModularLobotomy/_Lobotomyicons/branch12/32x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/branch12/64x64.dmi'
 	icon_state = "long_bird"
 	icon_living = "long_bird"
+	pixel_x = -16
+	base_pixel_x = -16
 	del_on_death = TRUE
 	maxHealth = 2100	//should be a little tankier as it's a bit slow
 	health = 2100

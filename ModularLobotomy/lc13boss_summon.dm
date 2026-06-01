@@ -59,7 +59,10 @@
 	ReleasePrisioner(user)
 
 /obj/item/lor_boss_book/Destroy()
-	UnregisterSignal(escapee, COMSIG_LIVING_DEATH)
+	if(escapee)
+		UnregisterSignal(escapee, COMSIG_LIVING_DEATH)
+	monster = null
+	escapee = null
 	return ..()
 
 /obj/item/lor_boss_book/proc/WinReward(mob/living/carbon/user)
@@ -142,10 +145,12 @@
 //Deletes released abno and changes to reward mode.
 /obj/item/lor_boss_book/proc/Reward()
 	SIGNAL_HANDLER
+	UnregisterSignal(escapee, COMSIG_LIVING_DEATH)
 
 	//Abnormalities auto clean up themselves.
 	if(escapee && !isabnormalitymob(escapee))
-		qdel(escapee)
+		QDEL_IN(escapee,1)
+	escapee = null
 	book_mode = REWARD_MODE
 	color = COLOR_VIVID_YELLOW
 

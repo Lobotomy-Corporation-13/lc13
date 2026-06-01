@@ -45,7 +45,14 @@
 			The memory becomes more and more vivid as if its happening now... <br>when you finally break free you cannot recall what you fought so hard for."),
 	)
 
-	var/minions = 0
+	//A list for tracking the enemies
+	var/list/signal_tracker = list()
+
+/mob/living/simple_animal/hostile/abnormality/better_memories/Destroy()
+	for(var/mob/living/memory in signal_tracker)
+		UnregisterSignal(memory,COMSIG_PARENT_QDELETING)
+	signal_tracker.Cut()
+	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/better_memories/Login()
 	. = ..()
@@ -66,7 +73,7 @@
 
 // Better memories can have 3 seperate minions who will terroize the facility. Code modified from luna.dm
 /mob/living/simple_animal/hostile/abnormality/better_memories/ZeroQliphoth(mob/living/carbon/human/user)
-	if(minions >= 3)
+	if(length(signal_tracker) >= 3)
 		return FALSE
 	var/mob/living/breaching_minion
 	//Normal breach
@@ -96,12 +103,13 @@
 /mob/living/simple_animal/hostile/abnormality/better_memories/proc/SpawnMinion(turf/spawn_turf)
 	var/mob/living/simple_animal/hostile/better_memories_minion/spawningmonster = new(spawn_turf)
 	RegisterSignal(spawningmonster, COMSIG_PARENT_QDELETING, PROC_REF(MinionSlain))
-	minions++
+	signal_tracker += spawningmonster
 	return spawningmonster
 
-/mob/living/simple_animal/hostile/abnormality/better_memories/proc/MinionSlain()
+/mob/living/simple_animal/hostile/abnormality/better_memories/proc/MinionSlain(mob/living/L)
 	SIGNAL_HANDLER
-	minions--
+	signal_tracker -= L
+	UnregisterSignal(L,COMSIG_PARENT_QDELETING)
 
 
 //Minion Spawn
@@ -129,14 +137,17 @@
 	attack_verb_simple = "jab"
 	can_patrol = TRUE
 	patrol_cooldown_time = 10 SECONDS
-	var/can_act = TRUE
 	//For when the creature is fleeing
 	var/fleeing_now = FALSE
 	//Variables used to keep track of who each memory is hunting
 	var/current_target
 	var/list/static/hunt_targets = list()
 
-/mob/living/simple_animal/hostile/abnormality/better_memories/Login()
+/mob/living/simple_animal/hostile/better_memories_minion/Destroy()
+	current_target = null
+	return ..()
+
+/mob/living/simple_animal/hostile/better_memories_minion/Login()
 	. = ..()
 	if(!. || !client)
 		return FALSE
@@ -197,11 +208,11 @@
 	if(patrol_path.len)
 		if(!H.is_working)
 			return FALSE
-		if(target_memory[the_target] <= 100)
+		if(target_memory[AddIdentifier(H)] <= 100)
 			return FALSE
 	if(H.has_status_effect(MEMORY_DEBUFF))
 		//You have inflicted 100 damage to us. Get jabbed.
-		if(target_memory[the_target] <= 100)
+		if(target_memory[AddIdentifier(H)] <= 100)
 			return FALSE
 
 /mob/living/simple_animal/hostile/better_memories_minion/AttackingTarget(atom/attacked_target)
@@ -285,10 +296,12 @@
 			if(!P.firer)
 				if(target_memory["nobuddy"] > 100)
 					patrol_reset()
-			//If our damage value for that person exceeds this number then we consider targeting them.
-			if(target_memory[P.firer] > 100)
-				FindTarget(list(P.firer), 1)
-		return second_on_hit_state
+			if(isliving(P.firer))
+				var/mob/living/L = P.firer
+				//If our damage value for that person exceeds this number then we consider targeting them.
+				if(target_memory[AddIdentifier(L)] > 100)
+					FindTarget(list(L), 1)
+			return second_on_hit_state
 	return ..()
 
 /mob/living/simple_animal/hostile/better_memories_minion/attacked_by(obj/item/I, mob/living/L)

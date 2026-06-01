@@ -2,8 +2,8 @@
 	name = "Ulies Workshop"
 	desc = "A table stands in front of you with some ahn and a blade. a masked figure stands behind it."
 	icon = 'ModularLobotomy/_Lobotomyicons/branch12/48x64.dmi'
-	icon_state = "workshop"
-	icon_living = "workshop"
+	icon_state = "ulies"
+	icon_living = "ulies"
 	pixel_x = -8
 	base_pixel_x = -8
 

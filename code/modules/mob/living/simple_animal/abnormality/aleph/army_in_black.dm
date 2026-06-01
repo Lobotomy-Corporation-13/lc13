@@ -43,6 +43,7 @@ GLOBAL_LIST_EMPTY(army)
 	//E.G.O list
 	ego_list = list(
 		/datum/ego_datum/weapon/pink,
+		/datum/ego_datum/weapon/black,
 		/datum/ego_datum/armor/pink,
 	)
 	gift_type =  /datum/ego_gifts/pink
@@ -61,15 +62,16 @@ GLOBAL_LIST_EMPTY(army)
 			Yours is rife with sin. <br>Ours are...\" <br>The soldier falls silent, as if in deep thought."),
 		"Salute him back" = list(FALSE, "The soldier in pink smiles. <br>\"Glad to have you on board Sir, with our help, there will be no more black hearts.\""),
 	)
+	being_tested = TRUE // REMOVE BEFORE MERGE !!!!!!!!!!!!!!
 
 	//Unique variables
 	var/death_counter = 0
 	var/protection_duration = 120 SECONDS
-	var/protected_targets = list()
-	var/summoned_army = list()//hostile unit list
 	var/boom_radius = 20
 	var/boom_damage = 70
 	var/adds_max = 1
+	var/list/protected_targets = list()
+	var/list/summoned_army = list()//hostile unit list
 
 /***Simple mob procs***/
 //checks for deaths
@@ -81,15 +83,8 @@ GLOBAL_LIST_EMPTY(army)
 //stops the previous snippet from destroying the server
 /mob/living/simple_animal/hostile/abnormality/army/Destroy()
 	UnregisterSignal(SSdcs, COMSIG_GLOB_MOB_DEATH)
+	MassUnregisterMob()
 	return ..()
-
-/mob/living/simple_animal/hostile/abnormality/army/Life()
-	..()
-	if(LAZYLEN(protected_targets))
-		for(var/mob/living/carbon/human/H in protected_targets)
-			if(!H.has_status_effect(STATUS_EFFECT_PROTECTION))
-				protected_targets -= H
-	return
 
 //no more nuzzling
 /mob/living/simple_animal/hostile/abnormality/army/AttackingTarget()
@@ -110,7 +105,7 @@ GLOBAL_LIST_EMPTY(army)
 			if((get_user_level(user)) < 4)
 				user.SanityLossEffect(TEMPERANCE_ATTRIBUTE)
 				return FALSE
-			protected_targets += user
+			RegisterMob(user,protected_targets)
 			user.apply_status_effect(STATUS_EFFECT_PROTECTION)
 			to_chat(user, span_nicegreen("You feel like you're in good company."))
 			playsound(get_turf(user), 'sound/abnormalities/armyinblack/pink_heal.ogg', 50, 0, 2)
@@ -154,7 +149,7 @@ GLOBAL_LIST_EMPTY(army)
 	if(breach_type == BREACH_MINING)
 		for(var/i in 1 to 3)
 			var/mob/living/simple_animal/hostile/army_enemy/E = new(get_turf(src))
-			RegisterSignal(E, COMSIG_PARENT_QDELETING, PROC_REF(ArmyDeath))
+			RegisterMob(E,summoned_army)
 	else
 		FearEffect()
 		Blackify()
@@ -171,17 +166,9 @@ GLOBAL_LIST_EMPTY(army)
 	for(var/i = 1 to adds_max)//# of iterations is equal to adds_max
 		for(var/turf/T in spawns)//this picks the first few shuffled xeno spawns. Maybe change it to a different type of loop
 			var/mob/living/simple_animal/hostile/army_enemy/E = new(get_turf(T))
-			summoned_army += E//the actual army list
-			RegisterSignal(E, COMSIG_PARENT_QDELETING, PROC_REF(ArmyDeath))
+			RegisterMob(E,summoned_army)
 			spawns -= T
 			break
-
-/mob/living/simple_animal/hostile/abnormality/army/proc/ArmyDeath(mob/E)//return to containment when all armies are dead
-	UnregisterSignal(E, COMSIG_PARENT_QDELETING)
-	summoned_army -= E
-	if(LAZYLEN(summoned_army) <=1)
-		qdel(src)//suppress the abnormality
-		return
 
 //convert all protection buffs into hostile units
 /mob/living/simple_animal/hostile/abnormality/army/proc/Blackify()
@@ -190,10 +177,32 @@ GLOBAL_LIST_EMPTY(army)
 		P.boom = FALSE
 		A.remove_status_effect(STATUS_EFFECT_PROTECTION)
 		var/mob/living/simple_animal/hostile/army_enemy/B = new(get_turf(A))
-		protected_targets -= A
-		summoned_army += B
+		UnregisterMob(A)
+		RegisterMob(B, summoned_army)
+
+/mob/living/simple_animal/hostile/abnormality/army/proc/RegisterMob(mob/living/signalee, list/add_list)
+	RegisterSignal(signalee, list(COMSIG_PARENT_QDELETING), PROC_REF(UnregisterMob))
+	add_list += signalee
+
+/mob/living/simple_animal/hostile/abnormality/army/proc/UnregisterMob(mob/living/designal)
+	UnregisterSignal(designal, list(COMSIG_PARENT_QDELETING))
+	if(designal in protected_targets)
+		protected_targets -= designal
+	if(designal in summoned_army)
+		summoned_army -= designal
+		if(LAZYLEN(summoned_army) <=1)
+			qdel(src)//suppress the abnormality
+
+/mob/living/simple_animal/hostile/abnormality/army/proc/MassUnregisterMob()
+	var/unit_track_lists = protected_targets + summoned_army
+	LAZYCLEARLIST(protected_targets)
+	LAZYCLEARLIST(summoned_army)
+	for(var/mob/living/targets in unit_track_lists)
+		UnregisterMob(targets)
+
 
 //hostile breach mob
+//Theres a rutime of this having a timer conected to a qdeleted object. Im not sure how to fix it -IP
 /mob/living/simple_animal/hostile/army_enemy
 	name = "Army In Black"
 	desc = "Yes.. we, the Army in Black.. blend into the human heart.. and drive away good thoughts.."
@@ -226,6 +235,12 @@ GLOBAL_LIST_EMPTY(army)
 	var/boom_damage = 70
 	var/targetted_beacon
 	var/list/moving_path
+
+
+/mob/living/simple_animal/hostile/army_enemy/Destroy()
+	moving_path = null
+	targetted_beacon = null
+	return ..()
 
 //movement and AI
 /mob/living/simple_animal/hostile/army_enemy/AttackingTarget()
@@ -289,12 +304,12 @@ GLOBAL_LIST_EMPTY(army)
 
 /mob/living/simple_animal/hostile/army_enemy/proc/FearEffect()
 	for(var/mob/living/carbon/human/H in view(7, src))
-		if(H in fear_affected)
+		if(H.tag in fear_affected)
 			continue
 		if(HAS_TRAIT(H, TRAIT_COMBATFEAR_IMMUNE))
 			continue
 		H.adjustSanityLoss(H.maxSanity*0.3)
-		fear_affected += H
+		fear_affected += H.tag
 		if(H.sanity_lost)
 			continue
 		to_chat(H, span_warning("Oh dear."))

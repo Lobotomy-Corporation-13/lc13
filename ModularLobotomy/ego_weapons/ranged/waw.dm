@@ -16,6 +16,18 @@
 	roundsreload = TRUE
 	fire_sound = 'sound/weapons/gun/shotgun/shot_auto.ogg'
 
+	alternate_fire_name = "warden"
+	alternate_pellets = 1
+	alternate_info = "This weapon fires a heavy slug."
+	alternate_reload_type = RANGEDEGO_ALTERNATEFIRE_RELOADTYPE_EMPTY_MAG
+	alternate_projectile_path = /obj/projectile/ego_bullet/ego_correctionalslug
+	alternate_fire_sound = 'sound/weapons/gun/shotgun/shot_auto.ogg'
+	alternate_fire_sound_volume = 70
+	alternate_toggle_sound = 'sound/machines/click.ogg'
+	alternate_toggle_sound_volume = 65
+	alternate_toggle_enabled_message = span_notice("You switch to slug rounds.")
+	alternate_toggle_disabled_message = span_notice("You switch to buckshot rounds.")
+
 	attribute_requirements = list(
 							FORTITUDE_ATTRIBUTE = 60,
 							JUSTICE_ATTRIBUTE = 60
@@ -25,7 +37,6 @@
 	name = "hornet"
 	desc = "The kingdom needed to stay prosperous, and more bees were required for that task. \
 	The projectiles relive the legacy of the kingdom as they travel toward the target."
-	special = "Attack an enemy with your bayonet to reload."
 	icon_state = "hornet"
 	inhand_icon_state = "hornet"
 	force = 41
@@ -34,18 +45,26 @@
 	projectile_path = /obj/projectile/ego_bullet/ego_hornet
 	weapon_weight = WEAPON_HEAVY
 	fire_sound = 'sound/weapons/gun/rifle/leveraction.ogg'
-	fire_delay = 2
-	shotsleft = 10
-	reloadtime = 1.4 SECONDS
+	fire_delay = 5
+	shotsleft = 10	//Hornet has 10 bullets
+	reloadtime = 2.3 SECONDS	//You gotta load both shells and bullets
 	attribute_requirements = list(
 							FORTITUDE_ATTRIBUTE = 80
 							)
 
-/obj/item/ego_weapon/ranged/hornet/attack(mob/living/target, mob/living/carbon/human/user)
-	..()
-	if(shotsleft < initial(shotsleft))
-		shotsleft = initial(shotsleft)
-
+	alternate_fire_name = "dust spark"
+	alternate_shotsleft = 6	// And 6 shells
+	alternate_pellets = 3
+	alternate_variance = 20
+	alternate_info = "This weapon fires a spread of bullets."
+	alternate_reload_type = RANGEDEGO_ALTERNATEFIRE_RELOADTYPE_SHARED_RELOAD
+	alternate_projectile_path = /obj/projectile/ego_bullet/ego_hornetshotty
+	alternate_fire_sound = 'sound/weapons/gun/shotgun/shot_auto.ogg'
+	alternate_fire_sound_volume = 70
+	alternate_toggle_sound = 'sound/machines/click.ogg'
+	alternate_toggle_sound_volume = 65
+	alternate_toggle_enabled_message = span_notice("You toggle into buckshot mode.")
+	alternate_toggle_disabled_message = span_notice("You switch to rifle rounds.")
 
 /obj/item/ego_weapon/ranged/hatred
 	name = "in the name of love and hate"
@@ -203,9 +222,7 @@
 /obj/item/ego_weapon/ranged/loyalty
 	name = "loyalty"
 	desc = "Courtesy of the 16th Ego Rifleman's Brigade."
-	special = "This weapon has IFF capabilities. \n\
-	This rifle has an underslung grenade launcher. Grenades fired from this rifle also have IFF, and knock back enemies while dealing AoE RED damage. \n\
-	The underslung grenade launcher may only be fired once per magazine."
+	special = "This weapon has IFF capabilities."
 	icon_state = "loyalty"
 	inhand_icon_state = "loyalty"
 	force = 28
@@ -220,6 +237,7 @@
 							FORTITUDE_ATTRIBUTE = 80
 	)
 	alternate_fire_name = "Underslung Grenade Launcher"
+	alternate_info = "This rifle has an underslung grenade launcher. Grenades fired from this rifle also have IFF, and knock back enemies while dealing AoE RED damage."
 	alternate_shotsleft = 1
 	alternate_pellets = 1
 	alternate_reload_type = RANGEDEGO_ALTERNATEFIRE_RELOADTYPE_SHARED_RELOAD
@@ -1427,7 +1445,7 @@
 	name = "fell scatter"
 	desc = "A bolt-action rifle fitted with a wider barrel. It fires cursed shells."
 	icon_state = "fell_scatter"
-	//TODO: inhands
+	inhand_icon_state = "fell_scatter"
 	special = "Activate in your hand to load a magical slug. \
 	The slug will penetrate most targets. Shooting a human will deal half damage and produce a special effect. \
 	You can manually reload this weapon by pressing ALT + left mouse button."

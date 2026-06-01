@@ -395,5 +395,3 @@
 		return
 	target.BreachEffect(user, breach_type)
 	to_chat(user, span_nicegreen("You triggered a [breach_type] breach!"))
-
-

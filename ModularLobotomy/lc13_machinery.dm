@@ -19,6 +19,10 @@
 	var/work
 	var/relative_location
 
+/obj/machinery/containment_panel/Destroy()
+	linked_console = null
+	return ..()
+
 /obj/machinery/containment_panel/Initialize()
 	. = ..()
 	var/turf/closest_department
@@ -169,6 +173,12 @@
 	var/prosthetic_cost = 0
 	var/organic_cost = 800
 	var/obj/item/organ/brain/slotted_brain
+
+/obj/machinery/body_fabricator/Destroy()
+	if(slotted_brain)
+		slotted_brain.forceMove(get_turf(src))
+		slotted_brain = null
+	return ..()
 
 /obj/machinery/body_fabricator/attackby(obj/item/I, mob/user)
 	if(istype(I, /obj/item/holochip))
@@ -362,6 +372,213 @@
 		if(length(B.initial_traits) == 0)
 			B.initial_traits = H.status_traits
 
+/*--------------\
+|Mortar Ego Code|
+\--------------*/
+/obj/machinery/mortar
+	name = "mortar"
+	desc = "A mortar! Used to fire exlosive \
+		payloads in a arch over the battlefield. Needs to be \
+		anchored with a wrench to fire."
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_structures.dmi'
+	icon_state = "mortar"
+	can_be_unanchored = TRUE
+	density = TRUE
+	layer = BELOW_OBJ_LAYER
+	use_power = NO_POWER_USE
+	var/offsety = 0
+	var/offsetx = 0
+	var/max_range = 15
+	var/inaccuracy = 3
+	var/firing = FALSE
+	var/obj/item/mshell/mortar_shell
+
+/obj/machinery/mortar/Destroy()
+	if(mortar_shell)
+		mortar_shell.forceMove(get_turf(src))
+		mortar_shell = null
+	return ..()
+
+/obj/machinery/mortar/attackby(obj/item/I, mob/user)
+	if(istype(I, /obj/item/mshell))
+		LoadShell(I)
+		return
+	if(default_unfasten_wrench(user, I))
+		update_icon()
+		return
+	return ..()
+
+/obj/machinery/mortar/update_icon_state()
+	if(mortar_shell)
+		icon_state = "mortar_a"
+	else
+		icon_state = "mortar"
+	return ..()
+
+/obj/machinery/mortar/update_overlays()
+	. = ..()
+	if(!anchored)
+		. += mutable_appearance('ModularLobotomy/_Lobotomyicons/lc13_structures.dmi', "mortar_wheel")
+
+/obj/machinery/mortar/ui_interact(mob/user)
+	. = ..()
+	if(!anchored)
+		return
+	if(isliving(user))
+		playsound(src, 'sound/machines/terminal_prompt_confirm.ogg', 50, FALSE)
+	var/dat = ReturnUI(user)
+	var/datum/browser/popup = new(user, "mortar", "mortar controls", 500, 550)
+	popup.set_content(dat)
+	popup.open()
+	return
+
+/obj/machinery/mortar/Topic(href, href_list)
+	if(..() && !isobserver(usr) || !anchored)
+		return
+
+	if(href_list["eject"])
+		EjectShell()
+
+	if(href_list["shiftx"])
+		var/set_x = text2num(href_list["shiftx"])
+		offsetx = clamp(offsetx + set_x,-max_range,max_range)
+
+	if(href_list["shifty"])
+		var/set_y = text2num(href_list["shifty"])
+		offsety = clamp(offsety + set_y,-max_range,max_range)
+
+	if(href_list["fire"])
+		FireShell()
+
+	updateUsrDialog()
+
+/obj/machinery/mortar/proc/ReturnUI()
+	. = "----------------------<br>"
+	. += "<b>AIM__COORDNATES: \[x[x + offsetx],y[y+offsety]\]</b>"
+	. += "<br>----------------------<br>"
+	. += "<b>TRUE_COORDNATES: \[x[x],y[y]\]</b>"
+	. += "<br>----------------------<br>"
+	. += "<b>IMPACT_INACCURACY: [inaccuracy] TILES</b>"
+	. += "<br>----------------------<br>"
+
+	GENERAL_BUTTON(REF(src),"shiftx",-1,"-")
+	. += "|x[offsetx]|"
+	GENERAL_BUTTON(REF(src),"shiftx",1,"+")
+	. += "<br>"
+	GENERAL_BUTTON(REF(src),"shifty",-1,"-")
+	. += "|y[offsety]|"
+	GENERAL_BUTTON(REF(src),"shifty",1,"+")
+	. += "<br>----------------------<br>"
+	var/current_shell = mortar_shell ? "[mortar_shell]" : "NONE"
+	. += "|CURRENT_SHELL:[current_shell]|"
+	. += "<br>----------------------<br>"
+	if(mortar_shell)
+		GENERAL_BUTTON(REF(src),"fire",REF(src),"FIRE")
+		. += "<br>"
+		GENERAL_BUTTON(REF(src),"eject",REF(src),"UNLOAD")
+
+/obj/machinery/mortar/proc/LoadShell(obj/new_shell)
+	if(mortar_shell || !new_shell || firing)
+		return
+	mortar_shell = new_shell
+	mortar_shell.forceMove(src)
+	update_icon_state()
+	flick("mortar_d", src)
+	updateUsrDialog()
+
+/obj/machinery/mortar/proc/EjectShell()
+	if(!mortar_shell)
+		return
+	mortar_shell.forceMove(get_turf(src))
+	mortar_shell = null
+	update_icon_state()
+	flick("mortar_u", src)
+	updateUsrDialog()
+
+/obj/machinery/mortar/proc/FireShell()
+	if(!anchored)
+		return
+	var/true_x = x + offsetx
+	var/true_y = y + offsety
+	if(!mortar_shell)
+		mortar_shell = null
+		return
+	var/turf/impact = locate(true_x,true_y,z)
+	if(!impact || isclosedturf(impact))
+		return
+	//For the icon to actually be acurate
+	var/obj/item/mshell/fired_shell = mortar_shell
+	firing = TRUE
+	mortar_shell = null
+	update_icon_state()
+	playsound(get_turf(src), 'sound/weapons/sonic_jackhammer.ogg', 50, FALSE)
+	flick("mortar_s", src)
+	/*
+	* If the mortar gets destroyed while its still
+	* landing the nullspace should protect the shell... maybe? -IP
+	*/
+	fired_shell.moveToNullspace()
+	fired_shell.FireAt(impact, inaccuracy)
+	firing = FALSE
+	updateUsrDialog()
+
+//Rangefinder
+//Consider making the command projector return coords when putting down a command.
+/obj/item/rangefinder
+	name = "handheld rangefinder"
+	desc = "A device used to quickly get coordnates without having to walk all the way there."
+	icon = 'ModularLobotomy/_Lobotomyicons/teguitems.dmi'
+	icon_state = "gadget3"
+	color = "red"
+	slot_flags = ITEM_SLOT_BELT | ITEM_SLOT_POCKETS
+	w_class = WEIGHT_CLASS_SMALL
+
+/obj/item/rangefinder/afterattack(atom/target, mob/user, proximity_flag)
+	. = ..()
+	if(!target)
+		return
+	var/turf/T = get_turf(target)
+	if(!T)
+		return
+	var/trg_x = T.x
+	var/trg_y = T.y
+	if(!trg_x || !trg_y)
+		return
+	to_chat(user, span_notice("The rangefinder returns x[trg_x],y[trg_y]."))
+	playsound(src, 'sound/machines/pda_button1.ogg', 20, TRUE)
+
+//Shells
+/obj/item/mshell
+	name = "mortar shell"
+	desc = "An explosive shell for use in a mortar emplacement."
+	icon = 'icons/obj/ammo.dmi'
+	icon_state = "40mmHE-live"
+	var/total_damage = 50
+
+/obj/item/mshell/proc/FireAt(turf/impact, inaccuracy)
+	if(!impact)
+		return
+	//Give me only turfs we can see
+	var/list/viewable_turfs = RANGE_TURFS(inaccuracy, impact) & view(inaccuracy, impact)
+	var/turf/T = pick(viewable_turfs)
+
+	new /obj/effect/temp_visual/telegraphing/(T)
+	sleep(2 SECONDS)
+	if(QDELETED(src))
+		return
+	playsound(T, 'sound/weapons/mortar_long_whistle.ogg', 30, TRUE)
+	sleep(1)
+	var/list/aoe = range(1,T)
+
+	for(var/mob/living/L in aoe)
+		L.deal_damage(total_damage, RED_DAMAGE)
+	for(var/obj/S in aoe)
+		S.take_damage(total_damage / 2, RED_DAMAGE)
+
+	new /obj/effect/temp_visual/explosion/fast(T)
+	playsound(T, 'sound/effects/explosion3.ogg', 30, TRUE)
+	qdel(src)
+
 /*---------------------\
 |Body Preservation Unit|
 \---------------------*/
@@ -384,6 +601,10 @@
 	var/cost_multiplier = 5
 	resistance_flags = INDESTRUCTIBLE
 	max_integrity = 1000000
+
+/obj/machinery/body_preservation_unit/Destroy()
+	stored_bodies = null
+	return ..()
 
 /obj/machinery/body_preservation_unit/Initialize()
 	. = ..()

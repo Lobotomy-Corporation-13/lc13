@@ -85,7 +85,7 @@
 		sanity_lost = TRUE
 		apply_status_effect(/datum/status_effect/panicked)
 		var/highest_atr = PRUDENCE_ATTRIBUTE
-		if(LAZYLEN(attributes))
+		if(!(SSmaptype.maptype in SSmaptype.citymaps) && LAZYLEN(attributes))
 			var/highest_level = -1
 			for(var/i in shuffle(attributes))
 				var/datum/attribute/atr = attributes[i]

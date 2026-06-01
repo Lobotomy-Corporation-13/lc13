@@ -42,12 +42,20 @@
 	)
 
 	var/mob/living/carbon/human/calling = null
-	var/criesleft
+	var/criesleft = 2
+
+
+/* Work effects */
+/mob/living/simple_animal/hostile/abnormality/fetus/Initialize()
+	addtimer(CALLBACK(src, PROC_REF(IncreaseCries)), 90 SECONDS)
+	. = ..()
+
+/mob/living/simple_animal/hostile/abnormality/fetus/proc/IncreaseCries()
+	addtimer(CALLBACK(src, PROC_REF(IncreaseCries)), 3 MINUTES)
+	criesleft++
+
 
 /mob/living/simple_animal/hostile/abnormality/fetus/ZeroQliphoth(mob/living/carbon/human/user)
-	for(var/mob/living/carbon/human/H in GLOB.player_list)	//Way harder to get a list of living humans.
-		if(H.stat != DEAD)
-			criesleft+=3		//Get a max of 3 cries per person.
 	check_players()
 	check_range()
 
@@ -92,10 +100,12 @@
 
 		notify_ghosts("The fetus calls out for [calling.real_name].", source = src, action = NOTIFY_ORBIT, header="Something Interesting!") // bless this mess
 
+	//Grab contained abnos
 	var/list/qliphoth_abnos = list()
 	for(var/mob/living/simple_animal/hostile/abnormality/V in GLOB.abnormality_mob_list)
 		if(V.IsContained())
-			qliphoth_abnos += V
+			if((initial(V.threat_level)) <= HE_LEVEL)
+				qliphoth_abnos += V
 
 	if(LAZYLEN(qliphoth_abnos))
 		var/mob/living/simple_animal/hostile/abnormality/meltem = pick(qliphoth_abnos)
@@ -112,7 +122,7 @@
 		L.deal_damage(20, WHITE_DAMAGE, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_SPECIAL))
 		L.playsound_local(get_turf(L), 'sound/abnormalities/fetus/crying.ogg', 50, FALSE)
 
-	addtimer(CALLBACK(src, PROC_REF(check_players)), 30 SECONDS)
+	addtimer(CALLBACK(src, PROC_REF(check_players)), 90 SECONDS)
 
 
 /* Work effects */

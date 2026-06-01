@@ -60,7 +60,6 @@
 	var/hug_progress = 0
 	var/hug_damage = 8
 	var/crush_damage = 3
-	var/can_act = TRUE
 
 //Work Mechanics
 
