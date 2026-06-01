@@ -1237,7 +1237,7 @@
 
 /datum/ego_gifts/rosa
 	name = "Crown of Roses"
-	icon_state = "penitence"//TODO: make an actual sprite
+	icon_state = "rosa"
 	prudence_bonus = 3
 	temperance_bonus = 3
 	slot = HAT
