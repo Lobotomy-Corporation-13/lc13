@@ -27,6 +27,9 @@
 	var/shieldable = FALSE
 	var/can_protect = TRUE
 
+/mob/living/simple_animal/hostile/ordeal/grungeon_shielder/spawn_gibs()
+	new /obj/effect/gibspawner/scrap_metal(drop_location(), src)
+
 /mob/living/simple_animal/hostile/ordeal/grungeon_shielder/Move()
 	return FALSE
 

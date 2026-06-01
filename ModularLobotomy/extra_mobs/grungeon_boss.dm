@@ -187,6 +187,9 @@
 	for(var/mob/living/simple_animal/hostile/ordeal/grungeon_spawner/Z in range(15, src)) //Many thanks to Ender for helping me see the minor error in the code that prevented this from working.
 		Z.death()
 
+/mob/living/simple_animal/hostile/ordeal/grungeon_boss/spawn_gibs()
+	new /obj/effect/gibspawner/scrap_metal(drop_location(), src)
+
 /obj/structure/grungeon_bomb //bomb shamelessly copypasted from Ender's Resurgence Demoman
 	name = "Bomb of Oblivion"
 	icon = 'ModularLobotomy/_Lobotomyicons/resurgence_48x48.dmi'
