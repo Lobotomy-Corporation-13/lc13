@@ -83,8 +83,9 @@
 				"damage"   = "15 WHITE in a 7-tile radius, applies 2 RED Fragile",
 				"cooldown" = "15 seconds",
 				"desc"     = "While the hearts live, every Wail also summons \
-					reinforcement clowns, weighted 70% Son/Father, 20% Sister, \
-					10% Mother.",
+					one reinforcement clown — weighted 70% Son/Father, 20% \
+					Sister, 10% Mother. The count is fixed regardless of \
+					lobby size.",
 			),
 			list(
 				"name"     = "Slam",
@@ -94,19 +95,20 @@
 			),
 			list(
 				"name"     = "Meat Drop",
-				"damage"   = "40 RED per bomb in a 1-tile radius",
+				"damage"   = "30 RED per bomb in a 1-tile radius",
 				"cooldown" = "2.5 seconds, while the hearts live",
-				"desc"     = "Marks every nearby human on their current tile. \
-					Each marker detonates about 0.9 seconds later. One bomb per \
-					human, every 2.5 seconds. Once every heart is destroyed, \
-					this attack is replaced by **Meat Barrage**.",
+				"desc"     = "Picks up to two nearby humans and marks each \
+					on their current tile. Each marker detonates about 0.9 \
+					seconds later. If more than two humans are in range, the \
+					targets are picked at random. Once every heart is \
+					destroyed, this attack is replaced by **Meat Barrage**.",
 			),
 			list(
 				"name"     = "Meat Barrage",
-				"damage"   = "40 RED per bomb in a 1-tile radius",
+				"damage"   = "30 RED per bomb in a 1-tile radius",
 				"cooldown" = "18 seconds, after the hearts are destroyed",
 				"desc"     = "The enhanced form of **Meat Drop**, unlocked once \
-					every heart is destroyed. Locks onto one or more players. \
+					every heart is destroyed. Locks onto up to two players. \
 					For 4 seconds, drops a marker on each locked target's \
 					current tile every 0.5 seconds; each marker detonates about \
 					0.9 seconds after it lands.",
