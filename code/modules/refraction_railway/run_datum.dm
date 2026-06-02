@@ -17,6 +17,14 @@ GLOBAL_LIST_INIT(refraction_attribute_keys, list(
 /// (or overrunning) the expected time by 50% of itself: e.g. on a 9-min
 /// expected line, finishing in 4:30 = +50, finishing in 13:30 = -50.
 #define STARLIGHT_TIME_BONUS_CAP 50
+/// Bias applied to PRUDENCE on every member at run start so that
+/// `SanityLossEffect`'s "highest attribute" selector always picks
+/// prudence — forcing prudence panics (not justice / fortitude /
+/// temperance) inside the railway. The level_buff bumps get_level(),
+/// which is what the selector reads; the offsetting stat_bonus
+/// cancels the max-sanity inflation that the buff would otherwise
+/// cause via get_printed_level_bonus.
+#define REFRACTION_PRUDENCE_PANIC_BUFF 5
 GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 	/obj/item/ego_weapon,
 	/obj/item/clothing/suit/armor/ego_gear,
@@ -221,6 +229,13 @@ GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 			continue
 		snapshot[key] = atr.level
 		H.adjust_attribute_level(key, target - atr.level)
+	// Force prudence to be the highest get_level() so panic always
+	// resolves to a prudence panic. Offset stat_bonus by the same
+	// amount × PRUDENCE_MOD so max sanity stays where the equalized
+	// level set it.
+	H.adjust_attribute_buff(PRUDENCE_ATTRIBUTE, REFRACTION_PRUDENCE_PANIC_BUFF)
+	H.adjust_attribute_bonus(PRUDENCE_ATTRIBUTE, -REFRACTION_PRUDENCE_PANIC_BUFF * PRUDENCE_MOD)
+	H.updatehealth()
 	original_attributes[H.ckey] = snapshot
 
 /datum/refraction_run/proc/RestoreAttributes(mob/living/carbon/human/H)
@@ -234,6 +249,10 @@ GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 		if(!istype(atr))
 			continue
 		H.adjust_attribute_level(key, snapshot[key] - atr.level)
+	// Undo the prudence-panic bias.
+	H.adjust_attribute_buff(PRUDENCE_ATTRIBUTE, -REFRACTION_PRUDENCE_PANIC_BUFF)
+	H.adjust_attribute_bonus(PRUDENCE_ATTRIBUTE, REFRACTION_PRUDENCE_PANIC_BUFF * PRUDENCE_MOD)
+	H.updatehealth()
 	original_attributes -= H.ckey
 
 // ---------- Loadouts ----------

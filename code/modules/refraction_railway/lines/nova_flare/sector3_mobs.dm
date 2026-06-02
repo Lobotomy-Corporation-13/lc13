@@ -183,7 +183,7 @@
 	health = 1500
 	loot = list()
 	/// Pillar HP = summoner.maxHealth * this multiplier.
-	var/summoner_hp_mult = 1.5
+	var/summoner_hp_mult = 0.5
 	/// Set from the summoning keeper so death() can earn the achievement.
 	var/datum/refraction_run/refraction_run_ref
 
