@@ -7573,10 +7573,6 @@
 /obj/machinery/deepfryer,
 /turf/open/floor/plasteel/cafeteria,
 /area/centcom/holding)
-"QF" = (
-/obj/structure/mirror/magic,
-/turf/closed/indestructible/reinforced/cheap,
-/area/centcom/holding)
 "QH" = (
 /obj/machinery/chem_master/condimaster{
 	desc = "Used to separate out liquids - useful for purifying botanical extracts. Also dispenses condiments.";
@@ -60398,7 +60394,7 @@ aa
 aa
 aa
 aa
-QF
+FM
 UH
 UH
 Fq
