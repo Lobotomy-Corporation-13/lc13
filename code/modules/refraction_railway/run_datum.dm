@@ -780,7 +780,11 @@ GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 ///                         weapon/armor path across all sectors.
 ///   achievements        — sums `reward` of every achievement_state entry
 ///                         that resolved to TRUE for this ckey.
-/datum/refraction_run/proc/AwardStarlightProgression(total_ds)
+/// `multiplier` < 1 scales the final per-ckey award (used by
+/// EndRunEarly so leaving partway pays a fraction). When `early` is
+/// TRUE the line completion mark is skipped — quitting early doesn't
+/// satisfy the veteran gate for achievement seeding.
+/datum/refraction_run/proc/AwardStarlightProgression(total_ds, multiplier = 1.0, early = FALSE)
 	var/total_seconds = round(total_ds / 10)
 	var/expected = max(1, line.expected_time_seconds)
 	var/time_diff = expected - total_seconds
@@ -808,6 +812,7 @@ GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 		var/unique_bonus = unique_count * STARLIGHT_PER_UNIQUE_ITEM
 		var/list/earned_names = list()
 		var/list/earned_rewards = list()
+		var/list/earned_awards = list()
 		var/achievement_bonus = 0
 		var/list/per = achievement_state[ckey]
 		if(islist(per))
@@ -820,12 +825,23 @@ GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 				achievement_bonus += entry["reward"]
 				earned_names += entry["name"]
 				earned_rewards += entry["reward"]
-		var/award = STARLIGHT_BASE_AWARD + time_bonus + unique_bonus + achievement_bonus
+				if(entry["award"])
+					earned_awards += entry["award"]
+		var/raw_award = STARLIGHT_BASE_AWARD + time_bonus + unique_bonus + achievement_bonus
+		var/award = round(raw_award * multiplier)
 		SSrefraction_railway.AwardStarlight(ckey, award)
-		SSrefraction_railway.MarkLineCompleted(ckey, line.id)
+		if(!early)
+			SSrefraction_railway.MarkLineCompleted(ckey, line.id)
 		var/mob/M = FindMemberByCkey(ckey)
 		if(!M)
 			continue
+		// Cross-register the LC13 medal so the railway achievement shows
+		// up in the standard achievements HUD / profile, not just in the
+		// railway's own record. The Starlight bonus has already been
+		// banked above.
+		if(M.client)
+			for(var/award_path in earned_awards)
+				M.client.give_award(award_path, M)
 		var/balance = SSrefraction_railway.GetStarlight(ckey)
 		// Headline: total + new balance.
 		if(award > 0)
@@ -835,6 +851,9 @@ GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 		else
 			to_chat(M, span_notice("You finished, but earned no Starlight this run. (balance: [balance])"))
 		// Breakdown: one line per source, signed.
+		if(early)
+			var/pct = round(multiplier * 100)
+			to_chat(M, span_warning("• Run ended early ([current_section]/[line.section_count] sectors cleared, [pct]%) — final award scaled by [pct]%"))
 		to_chat(M, span_notice("• Base clear: +[STARLIGHT_BASE_AWARD] SL"))
 		if(time_bonus > 0)
 			to_chat(M, span_notice("• Time bonus (under expected): +[time_bonus] SL"))
@@ -874,6 +893,37 @@ GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 	ForceCleanup("Run abandoned by [initiator_ckey].")
 	return TRUE
 
+/// Owner-triggered early end. Pays a fraction of the normal award
+/// scaled by sectors-cleared / total-sectors, then sends everyone
+/// back to the hub via the same path as a successful return. Skips
+/// the leaderboard record and the line-completion mark.
+/datum/refraction_run/proc/EndRunEarly(initiator_ckey)
+	if(initiator_ckey != lobby_owner && IsOwnerActive())
+		return FALSE
+	if(lobby_state != LOBBY_RUNNING)
+		return FALSE
+	if(!in_checkpoint)
+		return FALSE
+	lobby_state = LOBBY_FINISHED
+	PauseTimer()
+	in_checkpoint = TRUE
+	current_room = ""
+	RemoveUnusedPens()
+	var/total_ds = ElapsedDeciseconds()
+	var/section_count = max(1, line.section_count)
+	var/multiplier = clamp(current_section / section_count, 0, 1)
+	AwardStarlightProgression(total_ds, multiplier, TRUE)
+	log_world("SSrefraction_railway run #[run_uid] ([line?.id]): ended early by [initiator_ckey] at sector [current_section]/[section_count]")
+	for(var/mob/living/carbon/human/H as anything in members)
+		if(ishuman(H))
+			RestoreAttributes(H)
+	TeleportAllToHub()
+	if(loaded_z)
+		SSrefraction_railway.ReleaseLane(loaded_z)
+		loaded_z = 0
+	Cleanup()
+	return TRUE
+
 /// State-check-free finalizer for AbandonRun and the disconnect watchdog.
 /datum/refraction_run/proc/ForceCleanup(reason)
 	if(lobby_state == LOBBY_FINISHED)
@@ -896,21 +946,12 @@ GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 		loaded_z = 0
 	Cleanup()
 
-/// Return-to-Lobby (finished run): untrack gear so it's kept as the reward.
+/// Return-to-Lobby (finished run): teleport everyone home. Cleanup's
+/// StripMemberGear then qdels every issued (and stray) EGO item so
+/// players leave the run with nothing.
 /datum/refraction_run/proc/ReturnToLobby()
 	if(lobby_state != LOBBY_FINISHED)
 		return
-	// Untrack issued gear so Cleanup's StripMemberGear doesn't qdel it.
-	for(var/ckey in gear_refs)
-		var/list/refs = gear_refs[ckey]
-		if(!islist(refs))
-			continue
-		for(var/obj/item/I as anything in refs)
-			if(QDELETED(I))
-				continue
-			UnregisterSignal(I, COMSIG_PARENT_QDELETING)
-		refs.Cut()
-	gear_refs.Cut()
 	TeleportAllToHub()
 	if(loaded_z)
 		SSrefraction_railway.ReleaseLane(loaded_z)
@@ -946,26 +987,26 @@ GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 	SIGNAL_HANDLER
 	if(!source || !(source in members))
 		return
-	// Death: relocate body + gear to checkpoint and queue a 1s revive.
-	// Insanity: leave the player in place so teammates can apply a
-	// mental medipen to un-panic them. Panicked players are only pulled
-	// to the checkpoint when the WHOLE team goes down (wipe path below);
-	// the deferred sanity heal at sector clear is scheduled from
-	// EnterCheckpoint instead. Dying-while-insane fires both signals on
-	// the same tick — by the time the second fires, stat == DEAD, so
-	// this branch covers it cleanly.
-	if(source.stat == DEAD)
-		TeleportIncapacitatedToCheckpoint(source)
-		if(source.ckey && !pending_bench[source.ckey])
-			pending_bench[source.ckey] = TRUE
-			addtimer(CALLBACK(src, PROC_REF(BenchIncapacitatedMember), source), 1 SECONDS)
+	// Both death and insanity now leave the affected player in place
+	// so teammates can intervene (defib a corpse, mental medipen a
+	// panicked teammate, etc.). Individuals are only pulled to the
+	// checkpoint when the WHOLE team goes down — see the wipe block
+	// below. Sector-clear EnterCheckpoint will pull leftover corpses
+	// and heal them as part of its normal sweep.
 	// No live members left: roll the failed-sector clock back and retry.
 	// current_section is decremented since BeginSector pre-increments it.
 	if(!HasLiveMemberInCombat())
 		WipeRoomReserves(current_room)
 		CleanLineArea()
 		current_section = max(0, current_section - 1)
+		// Roll the clock back AND mark the timer paused so the async
+		// EnterCheckpoint below doesn't re-add the failed-attempt
+		// duration via PauseTimer's `elapsed_baseline += world.time -
+		// timer_started_at` math. Without this, the failed attempt
+		// leaks into sector_finish_times even though room_times for
+		// the failed sector are correctly cut below.
 		elapsed_baseline = elapsed_baseline_at_section_start
+		timer_paused = TRUE
 		// Discard any room_times from the failed sector — the clock is
 		// rolling back to its start, so those entries are stale.
 		for(var/i in length(room_times) to 1 step -1)

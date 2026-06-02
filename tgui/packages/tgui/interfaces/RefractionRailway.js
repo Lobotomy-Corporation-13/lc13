@@ -1,5 +1,12 @@
 import { useBackend, useLocalState } from '../backend';
-import { Box, Button, Section, Stack, Tabs } from '../components';
+import {
+  Box,
+  Button,
+  Input,
+  Section,
+  Stack,
+  Tabs,
+} from '../components';
 import { Window } from '../layouts';
 import { MobCard, MobModal } from './RefractionMobCards';
 import { HazardTape } from './common/HazardTape';
@@ -117,6 +124,121 @@ export const RecordSectorBreakdown = props => {
   );
 };
 
+// Computes a stable group key for an entry: sorted, joined member
+// ckeys. Solo runs land in a one-element group keyed by that ckey.
+const recordGroupKey = entry => {
+  const members
+    = entry.members && entry.members.length
+      ? entry.members.slice().sort()
+      : [entry.ckey || ''];
+  return members.join('|');
+};
+
+// Builds an ordered list of { key, entries[] } from a server-sorted
+// (ascending by time_ds) row array. entries[0] of each group is the
+// group's BEST run; subsequent entries are slower attempts of the
+// same set of players.
+const buildRecordGroups = rows => {
+  const map = {};
+  const order = [];
+  for (let i = 0; i < rows.length; i++) {
+    const r = rows[i];
+    const key = recordGroupKey(r);
+    if (!map[key]) {
+      map[key] = { key, entries: [], indices: [] };
+      order.push(key);
+    }
+    map[key].entries.push(r);
+    map[key].indices.push(i);
+  }
+  return order.map(k => map[k]);
+};
+
+// Case-insensitive substring match: returns true if any member ckey
+// in any entry of the group contains the trimmed query.
+const groupMatchesQuery = (group, query) => {
+  if (!query) return true;
+  const needle = query.toLowerCase();
+  for (const entry of group.entries) {
+    const haystack = [entry.ckey, ...(entry.members || [])]
+      .filter(Boolean)
+      .map(s => String(s).toLowerCase());
+    if (haystack.some(s => s.includes(needle))) {
+      return true;
+    }
+  }
+  return false;
+};
+
+// Single-row layout shared by the group's best run and its expanded
+// slower-runs sublist. The caller supplies a rank label, a sector
+// expand handler, and optionally a "show older runs" button.
+const RecordRow = props => {
+  const {
+    entry,
+    rank,
+    isSectorOpen,
+    onToggleSector,
+    extraButton,
+    mini,
+  } = props;
+  return (
+    <Box
+      p={mini ? 0.5 : 1}
+      mb={0.5}
+      backgroundColor={
+        mini
+          ? 'rgba(255, 255, 255, 0.025)'
+          : 'rgba(255, 255, 255, 0.04)'
+      }
+      style={{
+        'border-radius': '4px',
+        ...(mini && {
+          'border-left': '3px solid rgba(255, 255, 255, 0.12)',
+        }),
+      }}>
+      <Stack>
+        <Stack.Item width="44px" bold>
+          {rank}
+        </Stack.Item>
+        <Stack.Item width="80px" color="good" bold>
+          {formatTime(entry.time_ds)}
+        </Stack.Item>
+        <Stack.Item grow={1}>
+          {!mini && (
+            <Box bold>{entry.ckey || entry.name || '???'}</Box>
+          )}
+          <Box color="label" fontSize={mini ? '10px' : '11px'}>
+            {(entry.members || []).join(', ')}
+          </Box>
+          {!!entry.timestamp_text && (
+            <Box color="label" fontSize="10px" mt={0.2}>
+              {entry.timestamp_text}
+            </Box>
+          )}
+        </Stack.Item>
+        <Stack.Item>
+          <Stack>
+            {extraButton && (
+              <Stack.Item>{extraButton}</Stack.Item>
+            )}
+            <Stack.Item>
+              <Button
+                icon={isSectorOpen ? 'chevron-up' : 'chevron-down'}
+                content={isSectorOpen ? 'Collapse' : 'Per-sector'}
+                onClick={onToggleSector}
+              />
+            </Stack.Item>
+          </Stack>
+        </Stack.Item>
+      </Stack>
+      {isSectorOpen && (
+        <RecordSectorBreakdown sectors={entry.sectors} />
+      )}
+    </Box>
+  );
+};
+
 export const RecordsModal = (props, context) => {
   const { lineId, lineName, leaderboard, onClose } = props;
   const rows = leaderboard || [];
@@ -125,6 +247,26 @@ export const RecordsModal = (props, context) => {
     'recordsExpanded',
     null
   );
+  const [expandedGroups, setExpandedGroups] = useLocalState(
+    context,
+    'recordsGroupExpanded',
+    {}
+  );
+  const [search, setSearch] = useLocalState(
+    context,
+    'recordsSearch',
+    ''
+  );
+  const trimmed = (search || '').trim();
+  const allGroups = buildRecordGroups(rows);
+  const groups = allGroups.filter(
+    g => groupMatchesQuery(g, trimmed));
+  const toggleGroup = key => {
+    setExpandedGroups({
+      ...expandedGroups,
+      [key]: !expandedGroups[key],
+    });
+  };
   return (
     <Box
       position="fixed"
@@ -152,41 +294,77 @@ export const RecordsModal = (props, context) => {
           }
           scrollable
           style={{ 'max-height': 'calc(100vh - 40px)' }}>
+          <Box mb={1}>
+            <Input
+              fluid
+              value={search}
+              placeholder="Search by player name..."
+              onInput={(_, value) => setSearch(value)}
+            />
+            <Box color="label" fontSize="10px" mt={0.3}>
+              {`${groups.length} group${
+                groups.length === 1 ? '' : 's'} · ${rows.length} `
+              + `run${rows.length === 1 ? '' : 's'} total`}
+            </Box>
+          </Box>
           {rows.length === 0 && (
             <Box color="label">No records yet for this line.</Box>
           )}
-          {rows.map((row, i) => {
-            const isOpen = expandedIdx === i;
+          {rows.length > 0 && groups.length === 0 && (
+            <Box color="label" mt={1}>
+              No records match the search.
+            </Box>
+          )}
+          {groups.map(group => {
+            const bestIdx = group.indices[0];
+            const bestEntry = group.entries[0];
+            const olderCount = group.entries.length - 1;
+            const isGroupOpen = !!expandedGroups[group.key];
             return (
-              <Box
-                key={i}
-                p={1}
-                mb={0.5}
-                backgroundColor="rgba(255, 255, 255, 0.04)"
-                style={{ 'border-radius': '4px' }}>
-                <Stack>
-                  <Stack.Item width="32px" bold>
-                    #{i + 1}
-                  </Stack.Item>
-                  <Stack.Item width="80px" color="good" bold>
-                    {formatTime(row.time_ds)}
-                  </Stack.Item>
-                  <Stack.Item grow={1}>
-                    <Box bold>{row.ckey || row.name || '???'}</Box>
-                    <Box color="label">
-                      {(row.members || []).join(', ')}
-                    </Box>
-                  </Stack.Item>
-                  <Stack.Item>
-                    <Button
-                      icon={isOpen ? 'chevron-up' : 'chevron-down'}
-                      content={isOpen ? 'Collapse' : 'Per-sector'}
-                      onClick={() => setExpandedIdx(isOpen ? null : i)}
-                    />
-                  </Stack.Item>
-                </Stack>
-                {isOpen && (
-                  <RecordSectorBreakdown sectors={row.sectors} />
+              <Box key={group.key}>
+                <RecordRow
+                  entry={bestEntry}
+                  rank={`#${bestIdx + 1}`}
+                  isSectorOpen={expandedIdx === bestIdx}
+                  onToggleSector={() =>
+                    setExpandedIdx(
+                      expandedIdx === bestIdx ? null : bestIdx)
+                  }
+                  extraButton={
+                    olderCount > 0 && (
+                      <Button
+                        icon={
+                          isGroupOpen ? 'chevron-up' : 'history'
+                        }
+                        content={
+                          isGroupOpen
+                            ? 'Hide older'
+                            : `Older runs (${olderCount})`
+                        }
+                        onClick={() => toggleGroup(group.key)}
+                      />
+                    )
+                  }
+                />
+                {isGroupOpen && olderCount > 0 && (
+                  <Box ml={2} mb={0.5}>
+                    {group.entries.slice(1).map((entry, k) => {
+                      const idx = group.indices[k + 1];
+                      return (
+                        <RecordRow
+                          key={idx}
+                          entry={entry}
+                          rank={`#${idx + 1}`}
+                          isSectorOpen={expandedIdx === idx}
+                          onToggleSector={() =>
+                            setExpandedIdx(
+                              expandedIdx === idx ? null : idx)
+                          }
+                          mini
+                        />
+                      );
+                    })}
+                  </Box>
                 )}
               </Box>
             );

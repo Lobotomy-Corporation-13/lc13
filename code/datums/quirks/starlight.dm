@@ -4,6 +4,25 @@
  * Replace these with real mechanics once the system is locked in.
  */
 
+// Robust slot-cascade for item-granting starlight quirks.
+//
+// `equip_in_one_of_slots` (carbon/inventory.dm) calls
+// `equip_to_slot_if_possible` with `bypass_equip_delay_self = FALSE`
+// AND `redraw_mob = TRUE`. At roundstart / latejoin, quirk on_spawn()
+// fires before `transfer_character()` hands the client over to the
+// body — `mob_can_equip`'s implicit do_after path bails immediately
+// without a client, and the redraw can also fail on a transient mob,
+// silently dropping the item at the player's feet. We bypass both by
+// using the same `initial = TRUE` path the job outfit equipper takes.
+/proc/starlight_quirk_grant(mob/living/carbon/human/H, obj/item/I, list/slots)
+	if(!ishuman(H) || !I)
+		return FALSE
+	for(var/slot_name in slots)
+		if(H.equip_to_slot_if_possible(I, slots[slot_name], FALSE, TRUE, FALSE, TRUE, TRUE))
+			return TRUE
+	I.forceMove(get_turf(H))
+	return FALSE
+
 // ---- Afterimage Entanglement ----
 // Curtain Call reward: two translucent silhouettes that trail one tile
 // behind the holder, mirroring the holder's appearance (clothing + held
@@ -335,14 +354,12 @@
 	var/obj/item/clothing/head/mob_holder/holder = new(get_turf(H), rat, rat.held_state, null, null, null, NONE)
 	holder.name = rat.name
 	holder.desc = "Your pet rat, curled up small. Drop them on the ground to set them down."
-	var/list/slots = list(
+	starlight_quirk_grant(H, holder, list(
 		"backpack" = ITEM_SLOT_BACKPACK,
 		"left pocket" = ITEM_SLOT_LPOCKET,
 		"right pocket" = ITEM_SLOT_RPOCKET,
 		"hands" = ITEM_SLOT_HANDS,
-	)
-	if(!H.equip_in_one_of_slots(holder, slots, qdel_on_fail = FALSE))
-		holder.forceMove(get_turf(H))
+	))
 
 // ---- Scarlet Bouquet ----
 // Subtype of /obj/item/bouquet that hosts a bloodfeast pool with a hard
@@ -420,14 +437,12 @@
 	if(!ishuman(H))
 		return
 	var/obj/item/bouquet/scarlet/bouquet = new(get_turf(H))
-	var/list/slots = list(
+	starlight_quirk_grant(H, bouquet, list(
 		"backpack" = ITEM_SLOT_BACKPACK,
 		"left pocket" = ITEM_SLOT_LPOCKET,
 		"right pocket" = ITEM_SLOT_RPOCKET,
 		"hands" = ITEM_SLOT_HANDS,
-	)
-	if(!H.equip_in_one_of_slots(bouquet, slots, qdel_on_fail = FALSE))
-		bouquet.forceMove(get_turf(H))
+	))
 
 // ---- Sparkle Mine Launcher ----
 // A harmless party launcher: planting a sparkle mine on a target tile drops
@@ -607,14 +622,12 @@
 	if(!ishuman(H))
 		return
 	var/obj/item/sparkle_mine_launcher/launcher = new(get_turf(H))
-	var/list/slots = list(
+	starlight_quirk_grant(H, launcher, list(
 		"backpack" = ITEM_SLOT_BACKPACK,
 		"left pocket" = ITEM_SLOT_LPOCKET,
 		"right pocket" = ITEM_SLOT_RPOCKET,
 		"hands" = ITEM_SLOT_HANDS,
-	)
-	if(!H.equip_in_one_of_slots(launcher, slots, qdel_on_fail = FALSE))
-		launcher.forceMove(get_turf(H))
+	))
 
 // ---- Mutated Form ----
 // Negative-cost Starlight quirk: paints a red "mutant_face" overlay on
@@ -664,15 +677,13 @@
 	if(!ishuman(H))
 		return
 	var/obj/item/clothing/mask/gas/clown_hat/M = new(get_turf(H))
-	var/list/slots = list(
+	starlight_quirk_grant(H, M, list(
 		"mask" = ITEM_SLOT_MASK,
 		"backpack" = ITEM_SLOT_BACKPACK,
 		"left pocket" = ITEM_SLOT_LPOCKET,
 		"right pocket" = ITEM_SLOT_RPOCKET,
 		"hands" = ITEM_SLOT_HANDS,
-	)
-	if(!H.equip_in_one_of_slots(M, slots, qdel_on_fail = FALSE))
-		M.forceMove(get_turf(H))
+	))
 
 /datum/quirk/starlight_mutated_form/proc/OnExamined(datum/source, mob/user, list/examine_list)
 	SIGNAL_HANDLER

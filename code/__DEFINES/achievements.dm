@@ -57,6 +57,18 @@
 #define MEDAL_ACTIVATE_HAMMER "Divine Intervention"
 #define MEDAL_DAMAGE_PBIRD "Dont Poke the Bird"
 
+//Refraction Railway — Nova Flare
+#define MEDAL_REFRACTION_ROSE_NO_HIGH_BLEED "Refraction: Stay Unbled"
+#define MEDAL_REFRACTION_GUARD_NO_BLACK_SWAP "Refraction: Restraint"
+#define MEDAL_REFRACTION_SWARM_LET_BURROW "Refraction: Welcoming Host"
+#define MEDAL_REFRACTION_GRANDFATHER_NO_MEAT_HIT "Refraction: Untouched by Flesh"
+#define MEDAL_REFRACTION_GRANDFATHER_CALM "Refraction: Calm Patriarch"
+#define MEDAL_REFRACTION_DRONE_NO_EMERGENCY_HEAL "Refraction: No Repairs Needed"
+#define MEDAL_REFRACTION_HARPOONER_NO_PROX_BREAK "Refraction: Untethered"
+#define MEDAL_REFRACTION_KEEPER_NO_MINE_HIT "Refraction: Mineless"
+#define MEDAL_REFRACTION_KEEPER_KILL_PILLAR "Refraction: Topple the Pillar"
+#define MEDAL_REFRACTION_KEEPER_NO_MINE_SWARM "Refraction: Mine Hoarder"
+
 // Temple Quest Achievements
 #define MEDAL_TEMPLE_GUARDIAN "Temple Guardian"
 #define MEDAL_ELLIOT_SACRIFICE "Elliot Sacrifice"

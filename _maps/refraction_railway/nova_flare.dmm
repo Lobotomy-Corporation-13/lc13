@@ -68,7 +68,8 @@
 /area/refraction/nova_flare)
 "ct" = (
 /obj/structure/fluff/divine/convertaltar{
-	density = 1
+	density = 1;
+	mouse_opacity = 0
 	},
 /turf/open/floor/holofloor/chapel{
 	dir = 1
@@ -213,7 +214,8 @@
 /area/refraction/nova_flare)
 "lu" = (
 /obj/structure/chair/pew/left{
-	dir = 1
+	dir = 1;
+	mouse_opacity = 0
 	},
 /turf/open/floor/holofloor/chapel{
 	dir = 8
@@ -260,7 +262,8 @@
 /area/refraction/nova_flare)
 "mf" = (
 /obj/structure/chair/pew/right{
-	dir = 1
+	dir = 1;
+	mouse_opacity = 0
 	},
 /turf/open/floor/holofloor/chapel,
 /area/refraction/nova_flare)
@@ -395,7 +398,8 @@
 /area/refraction/nova_flare)
 "qB" = (
 /obj/structure/chair/pew{
-	dir = 1
+	dir = 1;
+	mouse_opacity = 0
 	},
 /turf/open/floor/holofloor/chapel{
 	dir = 8
@@ -493,7 +497,8 @@
 /area/refraction/nova_flare)
 "xT" = (
 /obj/structure/fluff/divine/convertaltar{
-	density = 1
+	density = 1;
+	mouse_opacity = 0
 	},
 /turf/open/floor/holofloor/chapel{
 	dir = 4
@@ -859,7 +864,8 @@
 /area/refraction/nova_flare)
 "XD" = (
 /obj/structure/chair/pew{
-	dir = 1
+	dir = 1;
+	mouse_opacity = 0
 	},
 /turf/open/floor/holofloor/chapel,
 /area/refraction/nova_flare)

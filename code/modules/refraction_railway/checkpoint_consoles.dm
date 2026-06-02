@@ -91,6 +91,7 @@
 			"desc"          = initial(T.desc),
 			"cost"          = initial(T.starlight_cost),
 			"unlocked"      = SSrefraction_railway.IsQuirkUnlocked(user.ckey, quirk_name),
+			"active"        = SSrefraction_railway.IsHubQuirkActive(user.ckey, quirk_name),
 			"line_required" = req_line,
 			"line_name"     = RL ? RL.name : null,
 			"line_color"    = RL ? RL.display_color : null,
@@ -104,15 +105,23 @@
 	. = ..()
 	if(.)
 		return
-	if(action != "purchase")
-		return
 	var/quirk_name = params["name"]
 	if(!quirk_name)
 		return
-	if(SSrefraction_railway.PurchaseQuirk(usr.ckey, quirk_name))
-		to_chat(usr, span_nicegreen("Unlocked [quirk_name]. (balance: [SSrefraction_railway.GetStarlight(usr.ckey)])"))
-	else
-		to_chat(usr, span_warning("Cannot purchase [quirk_name]."))
+	switch(action)
+		if("purchase")
+			if(SSrefraction_railway.PurchaseQuirk(usr.ckey, quirk_name))
+				to_chat(usr, span_nicegreen("Unlocked [quirk_name]. (balance: [SSrefraction_railway.GetStarlight(usr.ckey)])"))
+			else
+				to_chat(usr, span_warning("Cannot purchase [quirk_name]."))
+		if("toggle_active")
+			if(SSrefraction_railway.ToggleHubQuirk(usr, quirk_name))
+				if(SSrefraction_railway.IsHubQuirkActive(usr.ckey, quirk_name))
+					to_chat(usr, span_nicegreen("Equipped [quirk_name] for hub testing."))
+				else
+					to_chat(usr, span_notice("Unequipped [quirk_name]."))
+			else
+				to_chat(usr, span_warning("Cannot equip [quirk_name]. (Owned?)"))
 
 /obj/structure/refraction_briefing/attack_hand(mob/user)
 	. = ..()
@@ -379,3 +388,6 @@
 		if("abandon_run")
 			// Owner-only; two-click confirm is enforced UI-side.
 			R.AbandonRun(usr.ckey)
+		if("end_run_early")
+			// Owner-only; two-click confirm is enforced UI-side.
+			R.EndRunEarly(usr.ckey)

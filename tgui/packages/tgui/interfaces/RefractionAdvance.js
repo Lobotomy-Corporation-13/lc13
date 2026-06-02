@@ -163,8 +163,9 @@ const FinishedView = (props, context) => {
           onClick={() => act('return_to_lobby')}
         />
         <Box color="label" fontSize="11px" mt={0.5}>
-          Returns everyone to where they joined from. The E.G.O. you
-          earned this run is yours to keep.
+          Returns everyone to where they joined from. All E.G.O.
+          weapons and armor issued for this run are surrendered on
+          the way out.
         </Box>
       </Box>
     </Section>
@@ -196,6 +197,14 @@ const StagingView = (props, context) => {
     'forceArmed',
     false
   );
+  const [endEarlyArmed, setEndEarlyArmed] = useLocalState(
+    context,
+    'endEarlyArmed',
+    false
+  );
+  const earlyPercent = sectionCount > 0
+    ? Math.round((currentSector / sectionCount) * 100)
+    : 0;
   return (
     <Section
       title={`Sector ${nextSectorIndex}/${sectionCount}: ${
@@ -306,6 +315,35 @@ const StagingView = (props, context) => {
                 Owner is AFK / disconnected — anyone can end the run.
               </Box>
             )}
+          </Box>
+        </Box>
+      )}
+      {isOwner && (
+        <Box mt={1}>
+          <Button
+            fluid
+            icon={endEarlyArmed ? 'exclamation-triangle' : 'flag'}
+            color="average"
+            content={
+              endEarlyArmed
+                ? 'Click again to confirm: END EARLY'
+                : 'End Run Early (partial reward)'
+            }
+            onClick={() => {
+              if (endEarlyArmed) {
+                setEndEarlyArmed(false);
+                act('end_run_early');
+              } else {
+                setEndEarlyArmed(true);
+              }
+            }}
+          />
+          <Box color="label" fontSize="11px" mt={0.5}>
+            Ends the run cleanly and pays a fraction of the normal
+            Starlight based on sectors cleared (
+            {currentSector}/{sectionCount} ={' '}
+            {earlyPercent}%). Does not unlock achievements for the
+            line.
           </Box>
         </Box>
       )}

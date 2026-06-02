@@ -184,8 +184,14 @@
 	loot = list()
 	/// Pillar HP = summoner.maxHealth * this multiplier.
 	var/summoner_hp_mult = 0.5
-	/// Set from the summoning keeper so death() can earn the achievement.
+	/// Set from the summoning keeper so Destroy() can earn the
+	/// achievement.
 	var/datum/refraction_run/refraction_run_ref
+	/// Set to TRUE in death() so Destroy() can tell "player killed
+	/// this" from "keeper's death loop qdel'd this." Without the
+	/// flag, the keeper's cleanup qdel would spuriously award the
+	/// achievement to every member.
+	var/killed_by_damage = FALSE
 
 // Accept the summoning keeper as new()'s second arg and scale our HP off
 // its current maxHealth. The wave system's HP scaling has already
@@ -199,11 +205,17 @@
 		if(istype(summoner))
 			refraction_run_ref = summoner.refraction_run_ref
 
-// death() fires only on damage-driven death — qdel() (e.g. the keeper
-// cleaning up its pillars after its own death) calls Destroy() instead,
-// so this only earns when players actually kill the pillar.
+// death() just records intent — the actual achievement award fires
+// in Destroy() so it survives any path where the pillar is qdel'd
+// without going through the full death chain. The flag distinguishes
+// "player killed this" from "keeper's death loop qdel'd this," so the
+// achievement isn't spuriously awarded during the keeper's cleanup.
 /mob/living/simple_animal/hostile/keeper_piller/refracted/death(gibbed)
-	if(refraction_run_ref)
+	killed_by_damage = TRUE
+	return ..()
+
+/mob/living/simple_animal/hostile/keeper_piller/refracted/Destroy()
+	if(killed_by_damage && refraction_run_ref)
 		for(var/mob/Mem as anything in refraction_run_ref.members)
 			if(Mem?.ckey)
 				refraction_run_ref.EarnAchievement(Mem.ckey, "keeper_kill_pillar")
@@ -486,7 +498,7 @@
 // outside our code path, and pillar spawner landmarks aren't
 // guaranteed to be within 20 tiles of the keeper's death tile. Boss
 // node is single-room so the full-z scan is cheap.
-/mob/living/simple_animal/hostile/clan/stone_keeper/refracted/death(gibbed)
+/mob/living/simple_animal/hostile/clan/stone_keeper/refracted/Destroy()
 	for(var/turf/T as anything in Z_TURFS(z))
 		for(var/mob/living/simple_animal/hostile/keeper_piller/P in T)
 			if(!QDELETED(P))
