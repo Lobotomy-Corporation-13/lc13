@@ -2,6 +2,7 @@ import { useBackend, useLocalState } from '../backend';
 import { Box, Section, Stack } from '../components';
 import { Window } from '../layouts';
 import { MobCard, MobModal } from './RefractionMobCards';
+import { AchievementList } from './common/AchievementList';
 
 export const RefractionBriefing = (props, context) => {
   const { data } = useBackend(context);
@@ -51,6 +52,7 @@ export const RefractionBriefing = (props, context) => {
                       </Stack.Item>
                     ))}
                   </Stack>
+                  <AchievementList achievements={node.achievements} />
                 </>
               )}
             </Section>

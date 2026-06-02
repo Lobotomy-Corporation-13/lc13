@@ -179,13 +179,44 @@
 			payload["count"] = null
 			mob_payloads += list(payload)
 		out += list(list(
-			"id"          = N.id,
-			"name"        = N.name,
-			"description" = N.description,
-			"is_boss"     = N.is_boss,
-			"mobs"        = mob_payloads,
-			"locked"      = FALSE,
+			"id"           = N.id,
+			"name"         = N.name,
+			"description"  = N.description,
+			"is_boss"      = N.is_boss,
+			"mobs"         = mob_payloads,
+			"locked"       = FALSE,
+			"achievements" = BuildNodeAchievementsPayload(N, R.line.id, user.ckey),
 		))
+	return out
+
+/// One assoc-list per achievement bound to any of this node's stocked
+/// mob paths. Returns empty list if the ckey hasn't completed the line
+/// yet — achievements stay hidden until a veteran clear unlocks them.
+/obj/structure/refraction_briefing/proc/BuildNodeAchievementsPayload(datum/refraction_node/N, line_id, ckey)
+	var/list/out = list()
+	if(!N || !line_id || !ckey)
+		return out
+	if(!SSrefraction_railway.HasCompletedLine(ckey, line_id))
+		return out
+	var/list/seen = list()
+	for(var/mob_path in N.mob_stock)
+		var/list/achs = SSrefraction_railway.mob_achievements[mob_path]
+		if(!islist(achs))
+			continue
+		for(var/list/ach as anything in achs)
+			if(!islist(ach))
+				continue
+			var/aid = ach["id"]
+			if(!aid || seen[aid])
+				continue
+			seen[aid] = TRUE
+			out += list(list(
+				"id"     = aid,
+				"name"   = ach["name"],
+				"desc"   = ach["desc"],
+				"reward" = ach["reward"],
+				"kind"   = ach["default_state"] ? "avoid" : "earn",
+			))
 	return out
 
 // Advance ("Begin Sector") console
@@ -245,7 +276,7 @@
 	data["section_count"] = R.line.section_count
 	data["next_sector_name"] = GetNextSectorName(R)
 	data["all_ready"] = all_ready && length(members_payload) > 0
-	data["leaderboard"] = SSrefraction_railway.leaderboards[R.line.id]
+	data["leaderboard"] = SSrefraction_railway.BuildLeaderboardPayload(R.line.id)
 	data["line_id"] = R.line.id
 	// Last completed sector's elapsed time in deciseconds, 0 if none.
 	data["last_sector_time_ds"] = GetLastSectorTimeDs(R)
@@ -289,6 +320,7 @@
 			"name"    = sector_briefing ? sector_briefing["name"] : "Sector [i]",
 			"time_ds" = end_t - start_t,
 			"players" = per_player,
+			"rooms"   = R.BuildRoomTimesForSector(i),
 		))
 	return list(
 		"line_name" = R.line.name,

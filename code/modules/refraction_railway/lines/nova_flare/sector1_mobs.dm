@@ -129,6 +129,17 @@
 /obj/effect/temp_visual/meat_warning/refracted/explode()
 	if(caster && !QDELETED(caster) && caster.stat != DEAD)
 		playsound(get_turf(src), 'sound/effects/splat.ogg', 45, TRUE, 4)
+		// Fail "untouched by flesh" for every human about to be hit.
+		// Mirrors base explode()'s view(1, src) damage scan + faction
+		// filter — anyone HurtInTurf would damage we mark as "hit by meat."
+		var/mob/living/simple_animal/hostile/mutant_clown/boss/refracted/G = caster
+		if(istype(G) && G.refraction_run_ref)
+			for(var/mob/living/carbon/human/H in view(1, src))
+				if(QDELETED(H) || H.stat == DEAD || !H.ckey)
+					continue
+				if(G.faction_check_mob(H))
+					continue
+				G.refraction_run_ref.FailAchievement(H.ckey, "grandfather_no_meat_hit")
 	return ..()
 
 // ---------- Refracted heart ----------
@@ -196,6 +207,17 @@
 		/mob/living/simple_animal/hostile/mutant_clown/refracted/sister = 20,
 		/mob/living/simple_animal/hostile/mutant_clown/refracted/mother = 10,
 	)
+	/// Back-ref to the refraction run, used for achievement event hooks.
+	var/datum/refraction_run/refraction_run_ref
+	/// Reinforcements summoned so far this fight. The
+	/// `grandfather_calm` achievement fails on the 4th onward.
+	var/reinforcement_count = 0
+
+/mob/living/simple_animal/hostile/mutant_clown/boss/refracted/Initialize(mapload)
+	. = ..()
+	refraction_run_ref = FindRefractionRunForZ(z)
+	if(refraction_run_ref)
+		refraction_run_ref.InitAchievementsForMob(src)
 
 /mob/living/simple_animal/hostile/mutant_clown/boss/refracted/Life()
 	. = ..()
@@ -282,6 +304,14 @@
 		M.guaranteed_butcher_results = null
 		if(C)
 			C.RegisterSpawnedMob(M)
+		reinforcement_count++
+		// Fight-wide achievement: the 4th reinforcement onward fails it
+		// for every live member ckey (one player can't cap a teammate's
+		// scream timing).
+		if(reinforcement_count >= 4 && refraction_run_ref)
+			for(var/mob/Mem as anything in refraction_run_ref.members)
+				if(Mem?.ckey)
+					refraction_run_ref.FailAchievement(Mem.ckey, "grandfather_calm")
 
 // Hearts alive: one bomb on every nearby human. Hearts dead: Meat Barrage,
 // raining bombs on half the lobby's current tiles for 4 seconds.

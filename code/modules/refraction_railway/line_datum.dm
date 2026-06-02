@@ -66,6 +66,10 @@
 	/// is disabled (server-side guard + greyed UI). Players can still browse
 	/// the subway map. Set per-line by hand for WIP content.
 	var/locked = FALSE
+	/// Target completion time in seconds for the Starlight time bonus. Runs
+	/// faster than this get positive bonus per second saved; slower runs get
+	/// negative bonus per second over. Default 9 minutes; override per line.
+	var/expected_time_seconds = 540
 
 /// Override in subtypes to declare mob passives (mob_path => list of entries).
 /datum/refraction_line/proc/GetMobPassives()

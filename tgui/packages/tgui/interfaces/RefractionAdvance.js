@@ -78,6 +78,7 @@ const MemberRow = props => {
 const SectorResultRow = props => {
   const { sector } = props;
   const players = sector.players || [];
+  const rooms = sector.rooms || [];
   return (
     <Box
       p={1}
@@ -94,6 +95,20 @@ const SectorResultRow = props => {
           </Box>
         </Stack.Item>
       </Stack>
+      {!!rooms.length && (
+        <Box mt={0.3} ml={1}>
+          {rooms.map((room, ri) => (
+            <Stack key={ri}>
+              <Stack.Item grow={1} fontSize="11px" color="label">
+                {`└ ${room.name || room.room_id}`}
+              </Stack.Item>
+              <Stack.Item fontSize="11px" color="label">
+                {formatDs(room.time_ds)}
+              </Stack.Item>
+            </Stack>
+          ))}
+        </Box>
+      )}
       <Box mt={0.5}>
         {players.length === 0 && (
           <Box color="label" fontSize="11px">

@@ -3,6 +3,7 @@ import { Box, Button, Section, Stack, Tabs } from '../components';
 import { Window } from '../layouts';
 import { MobCard, MobModal } from './RefractionMobCards';
 import { HazardTape } from './common/HazardTape';
+import { AchievementList } from './common/AchievementList';
 
 const NODE_COLORS = {
   start: '#4ade80',
@@ -56,6 +57,23 @@ export const RecordSectorBreakdown = props => {
               {formatTime(sector.time_ds)}
             </Stack.Item>
           </Stack>
+          {!!(sector.rooms || []).length && (
+            <Box mt={0.3} ml={1}>
+              {sector.rooms.map((room, ri) => (
+                <Stack key={ri}>
+                  <Stack.Item
+                    grow={1}
+                    fontSize="10px"
+                    color="label">
+                    {`└ ${room.name || room.room_id}`}
+                  </Stack.Item>
+                  <Stack.Item fontSize="10px" color="label">
+                    {formatTime(room.time_ds)}
+                  </Stack.Item>
+                </Stack>
+              ))}
+            </Box>
+          )}
           {(sector.players || []).map(p => (
             <Box key={p.ckey} mt={0.5}>
               <Stack>
@@ -227,6 +245,7 @@ const NodeMobsModal = (props, context) => {
                   </Stack.Item>
                 ))}
               </Stack>
+              <AchievementList achievements={node.achievements} />
             </>
           )}
         </Section>

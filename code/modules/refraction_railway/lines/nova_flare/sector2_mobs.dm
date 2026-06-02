@@ -129,6 +129,14 @@
 	var/bite_cooldown_time = 2 SECONDS
 	var/reenter_cooldown = 0
 	var/reenter_cooldown_time = 5 SECONDS
+	/// Cached refraction run for achievement-state writes (set in Initialize).
+	var/datum/refraction_run/refraction_run_ref
+
+/mob/living/simple_animal/hostile/mad_fly_swarm/refracted/Initialize()
+	. = ..()
+	refraction_run_ref = FindRefractionRunForZ(z)
+	if(refraction_run_ref)
+		refraction_run_ref.InitAchievementsForMob(src)
 
 /mob/living/simple_animal/hostile/mad_fly_swarm/refracted/AttackingTarget(atom/attacked_target)
 	. = ..()
@@ -147,6 +155,9 @@
 	burrow_bites = 0
 	H.visible_message(span_danger("\The [src] burrows into [H]!"))
 	forceMove(H)
+	// "Welcoming Host": the player let a swarm burrow in. Earned.
+	if(refraction_run_ref && H.ckey)
+		refraction_run_ref.EarnAchievement(H.ckey, "swarm_let_burrow")
 
 /mob/living/simple_animal/hostile/mad_fly_swarm/refracted/Life()
 	. = ..()
@@ -305,6 +316,14 @@
 	silk_results = null
 	/// Target Tremor stacks needed to flip its melee to BLACK for the strike.
 	var/black_tremor_threshold = 30
+	/// Cached refraction run for achievement-state writes (set in Initialize).
+	var/datum/refraction_run/refraction_run_ref
+
+/mob/living/simple_animal/hostile/clan/stone_guard/refracted/Initialize()
+	. = ..()
+	refraction_run_ref = FindRefractionRunForZ(z)
+	if(refraction_run_ref)
+		refraction_run_ref.InitAchievementsForMob(src)
 
 // On hitting a target carrying 30+ Tremor, swap RED → BLACK for this strike.
 // Stashed/restored so concurrent observers still see the default stat block.
@@ -315,6 +334,10 @@
 	var/datum/status_effect/stacking/lc_tremor/T = L.has_status_effect(/datum/status_effect/stacking/lc_tremor)
 	if(!T || T.stacks < black_tremor_threshold)
 		return ..()
+	// BLACK-swap path: the target took the punishing strike, so fail their
+	// "Restraint" achievement for this run.
+	if(refraction_run_ref && L.ckey)
+		refraction_run_ref.FailAchievement(L.ckey, "guard_no_black_swap")
 	var/saved_type = melee_damage_type
 	melee_damage_type = BLACK_DAMAGE
 	. = ..()
@@ -342,10 +365,17 @@
 	var/shield_fx_cooldown = 0
 	var/thornlash_cooldown = 0
 	var/thornlash_cooldown_time = 9 SECONDS
+	/// Cached refraction run for achievement-state writes (set in Initialize).
+	var/datum/refraction_run/refraction_run_ref
+	/// "Stay Unbled" fails any player crossing this Bleed stack count.
+	var/bleed_achievement_threshold = 40
 
 /mob/living/simple_animal/hostile/scarlet_rose/refracted/Initialize()
 	. = ..()
 	qdel(GetComponent(/datum/component/chemical_harvest))
+	refraction_run_ref = FindRefractionRunForZ(z)
+	if(refraction_run_ref)
+		refraction_run_ref.InitAchievementsForMob(src)
 
 /mob/living/simple_animal/hostile/scarlet_rose/refracted/Life()
 	. = ..()
@@ -353,6 +383,16 @@
 		return
 	if(stat == DEAD)
 		return
+	// "Stay Unbled": any human in view carrying > threshold Bleed stacks
+	// fails the achievement for the rest of the run. Polled per tick so
+	// we don't need a status-effect signal hook.
+	if(refraction_run_ref)
+		for(var/mob/living/carbon/human/H in view(15, src))
+			if(!H.ckey || H.stat == DEAD)
+				continue
+			var/datum/status_effect/stacking/lc_bleed/B = H.has_status_effect(/datum/status_effect/stacking/lc_bleed)
+			if(B && B.stacks > bleed_achievement_threshold)
+				refraction_run_ref.FailAchievement(H.ckey, "rose_no_high_bleed")
 	// Deferred so the wave system's post-`new` HP scaling has applied.
 	if(!prespread_done)
 		prespread_done = TRUE

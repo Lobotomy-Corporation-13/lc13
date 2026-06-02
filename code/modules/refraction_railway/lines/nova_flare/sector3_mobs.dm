@@ -43,6 +43,29 @@
 	butcher_results = null
 	guaranteed_butcher_results = null
 	silk_results = null
+	/// Back-ref for achievement event hooks.
+	var/datum/refraction_run/refraction_run_ref
+
+/mob/living/simple_animal/hostile/clan/drone/refracted/Initialize()
+	. = ..()
+	refraction_run_ref = FindRefractionRunForZ(z)
+	if(refraction_run_ref)
+		refraction_run_ref.InitAchievementsForMob(src)
+
+// Detect base Life()'s emergency-heal trigger by watching for
+// overheal_cooldown to advance. The base sets it to `world.time +
+// overheal_cooldown_time` inside the heal branch (and nowhere else), so
+// any forward jump means the heal fired this tick. Fight-wide
+// achievement — fails for every member ckey.
+/mob/living/simple_animal/hostile/clan/drone/refracted/Life()
+	var/pre_cooldown = overheal_cooldown
+	. = ..()
+	if(stat == DEAD || !refraction_run_ref)
+		return
+	if(overheal_cooldown > pre_cooldown)
+		for(var/mob/Mem as anything in refraction_run_ref.members)
+			if(Mem?.ckey)
+				refraction_run_ref.FailAchievement(Mem.ckey, "drone_no_emergency_heal")
 
 // ---------- Node 2: the clan firing line ----------
 
@@ -104,6 +127,24 @@
 	silk_results = null
 	/// Charge spent per harpoon fired.
 	var/harpoon_charge_cost = 20
+	/// Back-ref for achievement event hooks.
+	var/datum/refraction_run/refraction_run_ref
+
+/mob/living/simple_animal/hostile/clan/ranged/harpooner/refracted/Initialize()
+	. = ..()
+	refraction_run_ref = FindRefractionRunForZ(z)
+	if(refraction_run_ref)
+		refraction_run_ref.InitAchievementsForMob(src)
+
+// DropTarget() is the FAIL path — base PullLoop calls it on proximity
+// break or chain timeout. The LOS-break path goes straight to
+// ReleaseTarget() and is the GOOD path, so we leave that alone.
+// Per-player: only the chained ckey loses the achievement.
+/mob/living/simple_animal/hostile/clan/ranged/harpooner/refracted/DropTarget()
+	var/mob/living/carbon/human/H = chained_target
+	. = ..()
+	if(refraction_run_ref && istype(H) && H.ckey)
+		refraction_run_ref.FailAchievement(H.ckey, "harpooner_no_proximity_break")
 
 // Inlined replacement of base OpenFire(): also gates the harpoon on
 // charge, falling through to a regular ranged shot when under-charged.
@@ -143,16 +184,30 @@
 	loot = list()
 	/// Pillar HP = summoner.maxHealth * this multiplier.
 	var/summoner_hp_mult = 1.5
+	/// Set from the summoning keeper so death() can earn the achievement.
+	var/datum/refraction_run/refraction_run_ref
 
 // Accept the summoning keeper as new()'s second arg and scale our HP off
 // its current maxHealth. The wave system's HP scaling has already
 // applied to the keeper by the time it summons pillars (50% HP trigger),
 // so this tracks the player-count-scaled value automatically.
-/mob/living/simple_animal/hostile/keeper_piller/refracted/Initialize(mapload, mob/living/simple_animal/hostile/clan/stone_keeper/summoner)
+/mob/living/simple_animal/hostile/keeper_piller/refracted/Initialize(mapload, mob/living/simple_animal/hostile/clan/stone_keeper/refracted/summoner)
 	. = ..()
 	if(summoner)
 		maxHealth = round(summoner.maxHealth * summoner_hp_mult)
 		health = maxHealth
+		if(istype(summoner))
+			refraction_run_ref = summoner.refraction_run_ref
+
+// death() fires only on damage-driven death — qdel() (e.g. the keeper
+// cleaning up its pillars after its own death) calls Destroy() instead,
+// so this only earns when players actually kill the pillar.
+/mob/living/simple_animal/hostile/keeper_piller/refracted/death(gibbed)
+	if(refraction_run_ref)
+		for(var/mob/Mem as anything in refraction_run_ref.members)
+			if(Mem?.ckey)
+				refraction_run_ref.EarnAchievement(Mem.ckey, "keeper_kill_pillar")
+	return ..()
 
 // Blue mine scattered by the Stone Keeper after every Slam. A player
 // stepping within 1 tile launches it: a short hop up, ~1s of beeps, then
@@ -189,6 +244,9 @@
 	/// "Ground" pixel_y. Jittered for stacked mines so they don't
 	/// visually overlap. Fall/launch animations are relative to it.
 	var/pixel_y_rest = 0
+	/// Set by the spawning keeper so Explode() can post achievement
+	/// fails to the right run.
+	var/datum/refraction_run/refraction_run_ref
 
 /obj/effect/keeper_mine/Initialize()
 	. = ..()
@@ -261,6 +319,8 @@
 		var/datum/status_effect/stacking/damtype_protection/pale/fragile/F = H.has_status_effect(/datum/status_effect/stacking/damtype_protection/pale/fragile)
 		var/stacks_to_apply = F ? (F.stacks + 1) : fragile_stacks
 		H.apply_lc_pale_fragile(stacks_to_apply)
+		if(refraction_run_ref && H.ckey)
+			refraction_run_ref.FailAchievement(H.ckey, "keeper_no_mine_hit")
 
 /mob/living/simple_animal/hostile/clan/stone_keeper/refracted
 	maxHealth = 1820
@@ -300,6 +360,24 @@
 		"Mine... Order...",
 		"Tread... Carefully...",
 	)
+	/// Back-ref for achievement event hooks.
+	var/datum/refraction_run/refraction_run_ref
+	/// Live keeper_mine objs spawned by this keeper. Pruned on qdel via
+	/// COMSIG_PARENT_QDELETING. Used by the "Mine Hoarder" achievement:
+	/// any scatter that pushes length here >= 20 fails it.
+	var/list/live_mines = list()
+	/// Threshold for the Mine Hoarder achievement.
+	var/mine_swarm_threshold = 20
+
+/mob/living/simple_animal/hostile/clan/stone_keeper/refracted/Initialize()
+	. = ..()
+	refraction_run_ref = FindRefractionRunForZ(z)
+	if(refraction_run_ref)
+		refraction_run_ref.InitAchievementsForMob(src)
+
+/mob/living/simple_animal/hostile/clan/stone_keeper/refracted/proc/OnTrackedMineQdel(obj/effect/keeper_mine/M)
+	SIGNAL_HANDLER
+	live_mines -= M
 
 // After every slam (the AoeAttack inherited from base), scatter slam
 // mines around itself; do nothing if the slam killed us.
@@ -356,11 +434,20 @@
 		var/turf/T = pick(all_turfs)
 		if((locate(/obj/effect/keeper_mine) in T) && length(all_turfs) > 1)
 			T = pick(all_turfs - T)
-		new mine_type(T)
+		var/obj/effect/keeper_mine/M = new mine_type(T)
+		M.refraction_run_ref = refraction_run_ref
+		live_mines += M
+		RegisterSignal(M, COMSIG_PARENT_QDELETING, PROC_REF(OnTrackedMineQdel))
 		placed++
 	if(placed > 0 && length(mine_lines) && world.time >= mine_taunt_cooldown)
 		mine_taunt_cooldown = world.time + mine_taunt_cooldown_time
 		say(pick(mine_lines))
+	// Mine Hoarder: any scatter that pushes the live count over the
+	// threshold fails for every member ckey. Fight-wide.
+	if(refraction_run_ref && length(live_mines) >= mine_swarm_threshold)
+		for(var/mob/Mem as anything in refraction_run_ref.members)
+			if(Mem?.ckey)
+				refraction_run_ref.FailAchievement(Mem.ckey, "keeper_no_mine_swarm")
 	return placed
 
 // Inlined, shortened replacement of base summon_piller(): a brief

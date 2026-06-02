@@ -421,6 +421,7 @@ const ItemRow = props => {
     entry, type, isSelected, atCap, onToggle, onDetails,
   } = props;
   const blocked = !!entry.blocked;
+  const usedBefore = !blocked && !!entry.used_before;
   const blockedStyle = blocked
     ? { 'text-decoration': 'line-through', opacity: 0.55 }
     : {};
@@ -428,13 +429,20 @@ const ItemRow = props => {
     <Box
       p={1}
       mb={0.5}
-      style={{ 'border-radius': '4px' }}
+      style={{
+        'border-radius': '4px',
+        ...(usedBefore && {
+          'border-left': '4px solid #fbbf24',
+        }),
+      }}
       backgroundColor={
         isSelected
           ? 'rgba(34, 197, 94, 0.18)'
           : blocked
             ? 'rgba(120, 0, 0, 0.16)'
-            : 'rgba(255, 255, 255, 0.04)'
+            : usedBefore
+              ? 'rgba(251, 191, 36, 0.08)'
+              : 'rgba(255, 255, 255, 0.04)'
       }>
       <Flex>
         <FlexItem>
@@ -479,6 +487,15 @@ const ItemRow = props => {
               Already used this run
             </Box>
           )}
+          {usedBefore && (
+            <Box
+              mt={0.5}
+              fontSize="10px"
+              bold
+              style={{ color: '#fbbf24' }}>
+              Used in a prior sector — no unique-gear bonus
+            </Box>
+          )}
         </FlexItem>
         <FlexItem ml={1}>
           <Stack vertical>
@@ -516,11 +533,13 @@ const DetailsView = props => {
   } = props;
   const info = entry.information || {};
   const blocked = !!entry.blocked;
+  const usedBefore = !blocked && !!entry.used_before;
   return (
     <Section
       title={
         `Details — ${info.name}`
         + (blocked ? ' (already used this run)' : '')
+        + (usedBefore ? ' (used — no bonus)' : '')
       }
       buttons={
         <>

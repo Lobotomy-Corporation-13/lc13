@@ -30,6 +30,10 @@ SUBSYSTEM_DEF(refraction_railway)
 	var/list/mob_passives = list()
 	/// mob_type (path) -> list of assoc attack entries (name/damage/cooldown/desc).
 	var/list/mob_attacks = list()
+	/// mob_type (path) -> list of assoc achievement entries (id/name/desc/reward/default_state).
+	var/list/mob_achievements = list()
+	/// Flat lookup for achievement entries by id, populated alongside mob_achievements.
+	var/list/achievements_by_id = list()
 	/// One entry per loaded line dmm: list(map_path, z, claimed_by). Persists for the round.
 	var/list/loaded_lanes = list()
 	/// VV debug flag: treat every mob as encountered for every player.
@@ -56,6 +60,7 @@ SUBSYSTEM_DEF(refraction_railway)
 	InitializeMobTips()
 	InitializeMobPassives()
 	InitializeMobAttacks()
+	InitializeMobAchievements()
 	SSpersistence.LoadRefractionLeaderboards()
 	SSpersistence.LoadRefractionEncounters()
 	SSpersistence.LoadRefractionStarlight()
@@ -150,9 +155,59 @@ SUBSYSTEM_DEF(refraction_railway)
 			mob_attacks[mob_path] = contributions[mob_path]
 			owners[mob_path] = L.id
 
+/// Merges every line's GetMobAchievements() into mob_achievements +
+/// achievements_by_id. Entries collide on either the mob path or the
+/// achievement id; first registration wins, the duplicate is dropped
+/// with a stack trace.
+/datum/controller/subsystem/refraction_railway/proc/InitializeMobAchievements()
+	mob_achievements = list()
+	achievements_by_id = list()
+	var/list/mob_owners = list()
+	var/list/id_owners = list()
+	for(var/id in lines)
+		var/datum/refraction_line/L = lines[id]
+		var/list/contributions = L.GetMobAchievements()
+		if(!islist(contributions))
+			continue
+		for(var/mob_path in contributions)
+			if(mob_achievements[mob_path])
+				stack_trace("Refraction achievement collision: line '[L.id]' \
+					tried to register achievements for [mob_path], but line \
+					'[mob_owners[mob_path]]' already owns it. Ignoring.")
+				continue
+			var/list/entries = contributions[mob_path]
+			if(!islist(entries))
+				continue
+			mob_achievements[mob_path] = entries
+			mob_owners[mob_path] = L.id
+			for(var/list/entry as anything in entries)
+				if(!islist(entry))
+					continue
+				var/aid = entry["id"]
+				if(!aid)
+					continue
+				if(achievements_by_id[aid])
+					stack_trace("Refraction achievement id collision: line \
+						'[L.id]' tried to register id '[aid]', but line \
+						'[id_owners[aid]]' already owns it. Ignoring.")
+					continue
+				achievements_by_id[aid] = entry
+				id_owners[aid] = L.id
+
 /datum/controller/subsystem/refraction_railway/fire(resumed = FALSE)
 	for(var/datum/refraction_run/R as anything in active_runs)
 		R.Tick(wait)
+
+/// Returns the run that currently owns the given z-level, or null. Boss
+/// mobs spawned on a refraction line z use this to find their run for
+/// achievement-state writes without walking the members list.
+/proc/FindRefractionRunForZ(z)
+	if(!z)
+		return null
+	for(var/datum/refraction_run/R as anything in SSrefraction_railway.active_runs)
+		if(R.loaded_z == z)
+			return R
+	return null
 
 /// Returns the run a given mob currently belongs to, or null.
 /datum/controller/subsystem/refraction_railway/proc/GetRunForMob(mob/M)
@@ -294,6 +349,69 @@ SUBSYSTEM_DEF(refraction_railway)
 	if(length(board) > 10)
 		board.Cut(11)
 	leaderboards[line_id] = board
+
+/// Builds every leaderboard's UI-ready payload, with per-sector loadout
+/// icons rendered. Shared between the Hub console and the per-sector
+/// advance console so both surfaces show the same icon-rich records.
+/datum/controller/subsystem/refraction_railway/proc/BuildLeaderboardsPayload()
+	var/list/out = list()
+	for(var/line_id in leaderboards)
+		out[line_id] = BuildLeaderboardPayload(line_id)
+	return out
+
+/// Returns one line's leaderboard as a list of UI-ready entries.
+/datum/controller/subsystem/refraction_railway/proc/BuildLeaderboardPayload(line_id)
+	var/list/entries_out = list()
+	var/list/board = leaderboards[line_id]
+	if(!islist(board))
+		return entries_out
+	for(var/list/entry as anything in board)
+		entries_out += list(BuildLeaderboardEntryPayload(entry))
+	return entries_out
+
+/datum/controller/subsystem/refraction_railway/proc/BuildLeaderboardEntryPayload(list/entry)
+	if(!islist(entry))
+		return list()
+	var/list/sectors_in = entry["sectors"]
+	var/list/sectors_out = list()
+	if(islist(sectors_in))
+		for(var/list/sector as anything in sectors_in)
+			var/list/players_in = sector["players"]
+			var/list/players_out = list()
+			if(islist(players_in))
+				for(var/list/p as anything in players_in)
+					players_out += list(list(
+						"ckey"          = p["ckey"],
+						"name"          = p["name"],
+						"loadout_icons" = LoadoutIconsForPaths(p["loadout"]),
+					))
+			sectors_out += list(list(
+				"index"   = sector["index"],
+				"time_ds" = sector["time_ds"],
+				"players" = players_out,
+				"rooms"   = islist(sector["rooms"]) ? sector["rooms"].Copy() : list(),
+			))
+	return list(
+		"ckey"     = entry["ckey"],
+		"name"     = entry["name"],
+		"time_ds"  = entry["time_ds"],
+		"members"  = entry["members"],
+		"sectors"  = sectors_out,
+	)
+
+/datum/controller/subsystem/refraction_railway/proc/LoadoutIconsForPaths(list/paths)
+	var/list/icons = list(null, null, null)
+	if(!islist(paths))
+		return icons
+	for(var/i in 1 to min(3, length(paths)))
+		var/p = paths[i]
+		// Post-JSON entries arrive as strings; in-memory ones are real paths.
+		if(istext(p))
+			p = text2path(p)
+		if(!ispath(p))
+			continue
+		icons[i] = SStestrange.GenerateEgoPreviewIcon(p)
+	return icons
 
 /// Returns TRUE if `mob_path` should be shown revealed for this ckey.
 /datum/controller/subsystem/refraction_railway/proc/IsMobRevealed(ckey, mob_path)
@@ -525,12 +643,14 @@ SUBSYSTEM_DEF(refraction_railway)
 		SSpersistence.SaveRefractionStarlight()
 
 /datum/controller/subsystem/refraction_railway/proc/AwardStarlight(ckey, amount)
-	if(!ckey || amount <= 0)
+	if(!ckey || amount == 0)
 		return
 	var/list/entry = GetOrCreateStarlightEntry(ckey)
 	if(!entry)
 		return
-	entry["balance"] = (entry["balance"] || 0) + amount
+	// Allow negative deductions (slow runs), but never let the balance
+	// roll below zero — a bad run zeroes out, doesn't accumulate debt.
+	entry["balance"] = max(0, (entry["balance"] || 0) + amount)
 	SSpersistence.SaveRefractionStarlight()
 
 /// Combined locks check used by the picker, server-side gate, and shop. TRUE iff:
