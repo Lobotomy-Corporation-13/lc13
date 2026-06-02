@@ -214,10 +214,19 @@
 		/mob/living/simple_animal/hostile/mutant_clown/refracted/sister = 20,
 		/mob/living/simple_animal/hostile/mutant_clown/refracted/mother = 10,
 	)
+	/// Hard cap on the number of reinforcement clowns alive at any one
+	/// time. SpawnReinforcements skips the spawn if the count is at the
+	/// cap, regardless of the Scream cycle firing.
+	var/max_alive_reinforcements = 3
+	/// Live reinforcement refs tracked since last prune. Pruned at the
+	/// top of each SpawnReinforcements call.
+	var/list/alive_reinforcements = list()
 	/// Back-ref to the refraction run, used for achievement event hooks.
 	var/datum/refraction_run/refraction_run_ref
-	/// Reinforcements summoned so far this fight. The
-	/// `grandfather_calm` achievement fails on the 4th onward.
+	/// Reinforcements summoned so far this fight (lifetime). The
+	/// `grandfather_calm` achievement fails on the 4th onward — kept
+	/// separate from `alive_reinforcements` so killing a clown and
+	/// spawning a replacement still fails the achievement.
 	var/reinforcement_count = 0
 
 /mob/living/simple_animal/hostile/mutant_clown/boss/refracted/Initialize(mapload)
@@ -293,15 +302,25 @@
 
 /mob/living/simple_animal/hostile/mutant_clown/boss/refracted/proc/SpawnReinforcements()
 	var/datum/refraction_wave_controller/C = GLOB.refraction_wave_mob_owners[src]
-	// Fixed reinforcement count regardless of lobby size — the
-	// `grandfather_calm` achievement depends on the 4-spawn threshold
-	// staying meaningful, and scaling here would push solo and quad
-	// runs onto different sides of that bar.
+	// Prune dead / qdel'd refs from the tracked alive list, then bail
+	// if we're already at the concurrent cap.
+	for(var/i in length(alive_reinforcements) to 1 step -1)
+		var/mob/living/M = alive_reinforcements[i]
+		if(QDELETED(M) || M.stat == DEAD)
+			alive_reinforcements.Cut(i, i + 1)
+	if(length(alive_reinforcements) >= max_alive_reinforcements)
+		return
+	// Fixed reinforcement count per Scream regardless of lobby size —
+	// the `grandfather_calm` achievement depends on the 4-spawn
+	// threshold staying meaningful, and scaling here would push solo
+	// and quad runs onto different sides of that bar.
 	var/count = 1
 	var/turf/center = get_turf(src)
 	if(!center)
 		return
 	for(var/i in 1 to count)
+		if(length(alive_reinforcements) >= max_alive_reinforcements)
+			break
 		var/spawn_path = pickweight(reinforcement_weights)
 		var/list/open = list()
 		for(var/turf/open/T in range(2, center))
@@ -314,8 +333,9 @@
 		M.guaranteed_butcher_results = null
 		if(C)
 			C.RegisterSpawnedMob(M)
+		alive_reinforcements += M
 		reinforcement_count++
-		// Fight-wide achievement: the 4th reinforcement onward fails it
+		// Fight-wide achievement: the 4th lifetime spawn onward fails
 		// for every live member ckey (one player can't cap a teammate's
 		// scream timing).
 		if(reinforcement_count >= 4 && refraction_run_ref)

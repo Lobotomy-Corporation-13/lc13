@@ -480,12 +480,16 @@
 // Remove the pillars, then fall through to the base death() — which,
 // with run_ending = FALSE, performs a normal clan death so the wave
 // controller clears the node (no ending/Self-Detonate/Elliot/loot).
+//
+// Cleanup walks the whole z, not just `spawned_pillars` or
+// `range(20, src)`: the tracked list can drift if a pillar is qdel'd
+// outside our code path, and pillar spawner landmarks aren't
+// guaranteed to be within 20 tiles of the keeper's death tile. Boss
+// node is single-room so the full-z scan is cheap.
 /mob/living/simple_animal/hostile/clan/stone_keeper/refracted/death(gibbed)
-	for(var/mob/living/simple_animal/hostile/keeper_piller/P in spawned_pillars)
-		if(!QDELETED(P))
-			qdel(P)
-	for(var/mob/living/simple_animal/hostile/keeper_piller/P in range(20, src))
-		if(!QDELETED(P))
-			qdel(P)
+	for(var/turf/T as anything in Z_TURFS(z))
+		for(var/mob/living/simple_animal/hostile/keeper_piller/P in T)
+			if(!QDELETED(P))
+				qdel(P)
 	spawned_pillars.Cut()
 	return ..()
