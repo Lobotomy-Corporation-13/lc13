@@ -406,4 +406,12 @@
 		H.equipOutfit(outfit)
 	if(H.mind)
 		H.mind.name = H.real_name
+	// `copy_to(..., roundstart_checks = FALSE)` attaches the player's
+	// quirks but suppresses each quirk's on_spawn() — the hook that
+	// item-granting starlight quirks (Tagalong Rat, Scarlet Bouquet,
+	// Sparkle Mine Launcher, Mutated Form) use to issue their item.
+	// Re-fire on_spawn here so those items actually appear in the
+	// player's slots.
+	for(var/datum/quirk/Q as anything in H.roundstart_quirks)
+		Q.on_spawn()
 	return H

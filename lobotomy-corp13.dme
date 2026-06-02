@@ -473,6 +473,7 @@
 #include "code\datums\achievements\LC13_achievements_extended.dm"
 #include "code\datums\achievements\mafia_achievements.dm"
 #include "code\datums\achievements\other.dm"
+#include "code\datums\achievements\refraction_achievements.dm"
 #include "code\datums\achievements\ss13_achievements.dm"
 #include "code\datums\achievements\legacy\boss.dm"
 #include "code\datums\achievements\legacy\boss_scores.dm"

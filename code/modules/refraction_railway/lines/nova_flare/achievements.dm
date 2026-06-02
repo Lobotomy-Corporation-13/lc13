@@ -33,6 +33,7 @@
 				"desc"          = "Never get hit by the Grandfather's meat-drop attacks.",
 				"reward"        = 28,
 				"default_state" = TRUE,
+				"award"         = /datum/award/achievement/lc13/refraction/grandfather_no_meat_hit,
 			),
 			list(
 				"id"            = "grandfather_calm",
@@ -40,6 +41,7 @@
 				"desc"          = "Don't let the Grandfather summon more than 3 reinforcements.",
 				"reward"        = 14,
 				"default_state" = TRUE,
+				"award"         = /datum/award/achievement/lc13/refraction/grandfather_calm,
 			),
 		),
 
@@ -51,6 +53,7 @@
 				"desc"          = "Never cross 40 Bleed stacks during the Scarlet Rose fight.",
 				"reward"        = 28,
 				"default_state" = TRUE,
+				"award"         = /datum/award/achievement/lc13/refraction/rose_no_high_bleed,
 			),
 		),
 
@@ -62,6 +65,7 @@
 				"desc"          = "Never get hit while carrying enough Tremor to flip the Stone Guard's strike to BLACK.",
 				"reward"        = 22,
 				"default_state" = TRUE,
+				"award"         = /datum/award/achievement/lc13/refraction/guard_no_black_swap,
 			),
 		),
 
@@ -73,6 +77,7 @@
 				"desc"          = "Let a refracted swarm burrow into you at least once.",
 				"reward"        = 8,
 				"default_state" = FALSE,
+				"award"         = /datum/award/achievement/lc13/refraction/swarm_let_burrow,
 			),
 		),
 
@@ -84,6 +89,7 @@
 				"desc"          = "Don't let the Clan Drone trigger its emergency heal.",
 				"reward"        = 18,
 				"default_state" = TRUE,
+				"award"         = /datum/award/achievement/lc13/refraction/drone_no_emergency_heal,
 			),
 		),
 
@@ -95,6 +101,7 @@
 				"desc"          = "Don't get chained by the Harpooner — or if chained, break it by breaking line of sight (not by approach or timeout).",
 				"reward"        = 22,
 				"default_state" = TRUE,
+				"award"         = /datum/award/achievement/lc13/refraction/harpooner_no_proximity_break,
 			),
 		),
 
@@ -106,6 +113,7 @@
 				"desc"          = "Never take damage from one of the Keeper's mines.",
 				"reward"        = 18,
 				"default_state" = TRUE,
+				"award"         = /datum/award/achievement/lc13/refraction/keeper_no_mine_hit,
 			),
 			list(
 				"id"            = "keeper_kill_pillar",
@@ -113,6 +121,7 @@
 				"desc"          = "Destroy one of the Keeper's pillars before the Keeper itself dies.",
 				"reward"        = 14,
 				"default_state" = FALSE,
+				"award"         = /datum/award/achievement/lc13/refraction/keeper_kill_pillar,
 			),
 			list(
 				"id"            = "keeper_no_mine_swarm",
@@ -120,6 +129,7 @@
 				"desc"          = "Don't let 20 or more of the Keeper's mines exist at once.",
 				"reward"        = 28,
 				"default_state" = TRUE,
+				"award"         = /datum/award/achievement/lc13/refraction/keeper_no_mine_swarm,
 			),
 		),
 

@@ -31,8 +31,9 @@ const sortQuirks = (list, mode) => {
 };
 
 const QuirkRow = props => {
-  const { entry, balance, onBuy } = props;
+  const { entry, balance, onBuy, onToggle } = props;
   const unlocked = !!entry.unlocked;
+  const active = !!entry.active;
   const lineLocked = !!entry.line_locked;
   const lineGated
     = !!entry.line_required && !entry.line_done;
@@ -57,11 +58,13 @@ const QuirkRow = props => {
     disabled = true;
   }
 
-  const bgColor = unlocked
-    ? 'rgba(34, 197, 94, 0.14)'
-    : lineGated
-      ? 'rgba(120, 0, 120, 0.14)'
-      : 'rgba(255, 255, 255, 0.035)';
+  const bgColor = active
+    ? 'rgba(96, 165, 250, 0.18)'
+    : unlocked
+      ? 'rgba(34, 197, 94, 0.14)'
+      : lineGated
+        ? 'rgba(120, 0, 120, 0.14)'
+        : 'rgba(255, 255, 255, 0.035)';
 
   const borderLeft = accent
     ? `4px solid ${accent}`
@@ -76,7 +79,7 @@ const QuirkRow = props => {
         'border-left': borderLeft,
         'position': 'relative',
         'overflow': 'hidden',
-        opacity: unlocked || lineGated ? 0.75 : 1,
+        opacity: (unlocked && !active) || lineGated ? 0.75 : 1,
       }}
       backgroundColor={bgColor}>
       <Flex>
@@ -110,6 +113,17 @@ const QuirkRow = props => {
                 onClick={() => !disabled && onBuy(entry.name)}
               />
             </Stack.Item>
+            {unlocked && (
+              <Stack.Item>
+                <Button
+                  fluid
+                  icon={active ? 'times' : 'vial'}
+                  color={active ? 'average' : null}
+                  content={active ? 'Unequip' : 'Equip for Testing'}
+                  onClick={() => onToggle(entry.name)}
+                />
+              </Stack.Item>
+            )}
           </Stack>
         </Flex.Item>
       </Flex>
@@ -121,7 +135,7 @@ const QuirkRow = props => {
 };
 
 const Category = props => {
-  const { title, accent, list, balance, onBuy } = props;
+  const { title, accent, list, balance, onBuy, onToggle } = props;
   if (!list || !list.length) {
     return null;
   }
@@ -137,6 +151,7 @@ const Category = props => {
           entry={entry}
           balance={balance}
           onBuy={onBuy}
+          onToggle={onToggle}
         />
       ))}
     </Section>
@@ -329,6 +344,7 @@ const ShopView = (props, context) => {
             list={sortQuirks(groups[key], sortMode)}
             balance={balance}
             onBuy={name => act('purchase', { name })}
+            onToggle={name => act('toggle_active', { name })}
           />
         ))
       )}

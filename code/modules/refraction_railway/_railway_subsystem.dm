@@ -38,6 +38,9 @@ SUBSYSTEM_DEF(refraction_railway)
 	var/list/loaded_lanes = list()
 	/// VV debug flag: treat every mob as encountered for every player.
 	var/debug_reveal_all = FALSE
+	/// ckey (string) -> list of quirk-name strings the player has equipped
+	/// in the hub for testing. Session-scoped (not persisted).
+	var/list/hub_active_quirks = list()
 	// Party-size compensation toggles. Take effect on the next activation/spawn batch.
 	/// Per-mob-type stock multiplier.
 	var/scale_stock = TRUE
@@ -337,7 +340,7 @@ SUBSYSTEM_DEF(refraction_railway)
 		return "Even"
 	return winner
 
-/// Records a finished run on the leaderboard for that line. Top 10 ascending.
+/// Records a finished run on the leaderboard for that line. Top 50 ascending.
 /datum/controller/subsystem/refraction_railway/proc/RecordRun(line_id, list/entry)
 	if(!line_id || !islist(entry))
 		return
@@ -346,8 +349,8 @@ SUBSYSTEM_DEF(refraction_railway)
 		board = list()
 	board += list(entry)
 	sortTim(board, cmp = GLOBAL_PROC_REF(cmp_refraction_entry_asc))
-	if(length(board) > 10)
-		board.Cut(11)
+	if(length(board) > 50)
+		board.Cut(51)
 	leaderboards[line_id] = board
 
 /// Builds every leaderboard's UI-ready payload, with per-sector loadout
@@ -391,12 +394,15 @@ SUBSYSTEM_DEF(refraction_railway)
 				"players" = players_out,
 				"rooms"   = islist(sector["rooms"]) ? sector["rooms"].Copy() : list(),
 			))
+	var/raw_ts = entry["timestamp"]
 	return list(
-		"ckey"     = entry["ckey"],
-		"name"     = entry["name"],
-		"time_ds"  = entry["time_ds"],
-		"members"  = entry["members"],
-		"sectors"  = sectors_out,
+		"ckey"           = entry["ckey"],
+		"name"           = entry["name"],
+		"time_ds"        = entry["time_ds"],
+		"members"        = entry["members"],
+		"sectors"        = sectors_out,
+		"timestamp"      = raw_ts,
+		"timestamp_text" = raw_ts ? time2text(raw_ts, "YYYY-MM-DD hh:mm") : "",
 	)
 
 /datum/controller/subsystem/refraction_railway/proc/LoadoutIconsForPaths(list/paths)
@@ -621,6 +627,52 @@ SUBSYSTEM_DEF(refraction_railway)
 		return FALSE
 	var/list/unlocked = entry["unlocked"]
 	return islist(unlocked) && (quirk_name in unlocked)
+
+/// TRUE if the given ckey has the quirk attached to its hub body
+/// for testing. Session-scoped; not persisted.
+/datum/controller/subsystem/refraction_railway/proc/IsHubQuirkActive(ckey, quirk_name)
+	if(!ckey || !quirk_name)
+		return FALSE
+	var/list/active = hub_active_quirks[ckey]
+	return islist(active) && (quirk_name in active)
+
+/// Attaches or detaches a purchased quirk on the user's mob for hub
+/// testing. Owner-checked via IsQuirkUnlocked. Returns TRUE on a
+/// successful toggle (either direction), FALSE on rejection. When
+/// attaching, on_spawn() is fired so item-granting quirks actually
+/// deliver their item.
+/datum/controller/subsystem/refraction_railway/proc/ToggleHubQuirk(mob/living/user, quirk_name)
+	if(!user?.ckey || !quirk_name)
+		return FALSE
+	if(!isliving(user))
+		return FALSE
+	if(!IsQuirkUnlocked(user.ckey, quirk_name))
+		return FALSE
+	var/datum/quirk/proto = SSquirks.quirks[quirk_name]
+	if(!proto)
+		return FALSE
+	var/quirk_type = proto.type
+	var/list/active = hub_active_quirks[user.ckey]
+	if(!islist(active))
+		active = list()
+		hub_active_quirks[user.ckey] = active
+	// Currently active → detach. Quirk Destroy() handles remove() +
+	// trait removal + roundstart_quirks fixup.
+	if(quirk_name in active)
+		for(var/datum/quirk/Q as anything in user.roundstart_quirks)
+			if(Q.type == quirk_type)
+				qdel(Q)
+				break
+		active -= quirk_name
+		return TRUE
+	// Currently inactive → attach + fire on_spawn. Quirk New() takes
+	// the holder and runs add() + post_add(); we manually run
+	// on_spawn() because the base path gates it on a `spawn_effects`
+	// flag we can't toggle from here.
+	var/datum/quirk/Q = new quirk_type(user)
+	Q.on_spawn()
+	active += quirk_name
+	return TRUE
 
 /datum/controller/subsystem/refraction_railway/proc/HasCompletedLine(ckey, line_id)
 	if(!ckey || !line_id)
