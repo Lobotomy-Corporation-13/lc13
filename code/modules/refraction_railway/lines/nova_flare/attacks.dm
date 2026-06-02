@@ -85,7 +85,8 @@
 				"desc"     = "While the hearts live, every Wail also summons \
 					one reinforcement clown — weighted 70% Son/Father, 20% \
 					Sister, 10% Mother. The count is fixed regardless of \
-					lobby size.",
+					lobby size. At most 3 reinforcement clowns are alive at \
+					once; further Wails skip the summon until a clown dies.",
 			),
 			list(
 				"name"     = "Slam",
