@@ -615,3 +615,97 @@
 	)
 	if(!H.equip_in_one_of_slots(launcher, slots, qdel_on_fail = FALSE))
 		launcher.forceMove(get_turf(H))
+
+// ---- Mutated Form ----
+// Negative-cost Starlight quirk: paints a red "mutant_face" overlay on
+// the holder. Any other carbon examining them takes 5 SP; the holder
+// takes 20 SP. Wearing a HIDEFACE mask suppresses the trigger — the
+// quirk hands out a clown wig + mask as the on-spawn suppressant.
+
+/datum/quirk/starlight_mutated_form
+	name = "Mutated Form"
+	desc = "Something has rewritten your face. Anyone looking at it takes a sliver of sanity off the top, and you take a heavier hit. Wearing a face-hiding mask suppresses the effect — a clown wig and mask come with the package."
+	value = -4
+	starlight_locked = TRUE
+	starlight_cost = 400
+	required_line_completed = "nova_flare"
+	medical_record_text = "Subject's face presents an acute psychogenic hazard to direct observers."
+	gain_text = "<span class='warning'>Something stretches across your face and settles into place.</span>"
+	lose_text = "<span class='notice'>The mutation peels away. Your face is yours again.</span>"
+	/// SP applied to a carbon examiner that gets a clear look.
+	var/examiner_damage = 5
+	/// SP applied to the holder per such examine.
+	var/holder_damage = 20
+	var/mutable_appearance/face_overlay
+
+/datum/quirk/starlight_mutated_form/add()
+	if(QDELETED(quirk_holder))
+		return
+	// BODY_ADJ_LAYER is the "body markings / snout" tier — sits above the
+	// body sprite but under underwear (BODY_LAYER) and every worn slot,
+	// so the mask + uniform cover the mutation when worn.
+	face_overlay = mutable_appearance('ModularLobotomy/_Lobotomyicons/teaser_mobs.dmi', "mutant_face", -BODY_ADJ_LAYER)
+	face_overlay.color = "#ff0000"
+	quirk_holder.add_overlay(face_overlay)
+	RegisterSignal(quirk_holder, COMSIG_PARENT_EXAMINE, PROC_REF(OnExamined))
+
+/datum/quirk/starlight_mutated_form/on_transfer()
+	add()
+
+/datum/quirk/starlight_mutated_form/remove()
+	if(quirk_holder)
+		UnregisterSignal(quirk_holder, COMSIG_PARENT_EXAMINE)
+		if(face_overlay)
+			quirk_holder.cut_overlay(face_overlay)
+	face_overlay = null
+
+/datum/quirk/starlight_mutated_form/on_spawn()
+	var/mob/living/carbon/human/H = quirk_holder
+	if(!ishuman(H))
+		return
+	var/obj/item/clothing/mask/gas/clown_hat/M = new(get_turf(H))
+	var/list/slots = list(
+		"mask" = ITEM_SLOT_MASK,
+		"backpack" = ITEM_SLOT_BACKPACK,
+		"left pocket" = ITEM_SLOT_LPOCKET,
+		"right pocket" = ITEM_SLOT_RPOCKET,
+		"hands" = ITEM_SLOT_HANDS,
+	)
+	if(!H.equip_in_one_of_slots(M, slots, qdel_on_fail = FALSE))
+		M.forceMove(get_turf(H))
+
+/datum/quirk/starlight_mutated_form/proc/OnExamined(datum/source, mob/user, list/examine_list)
+	SIGNAL_HANDLER
+	if(!iscarbon(user) || user == quirk_holder)
+		return
+	if(!ishuman(quirk_holder))
+		return
+	var/mob/living/carbon/human/H = quirk_holder
+	if(H.wear_mask && (H.wear_mask.flags_inv & HIDEFACE))
+		to_chat(user, span_notice("[H]'s mask hides whatever crawls under it. You look away easily."))
+		to_chat(H, span_notice("[user]'s eyes touch your mask and slide off. Whatever's under it stays under."))
+		return
+	to_chat(user, span_warning("You catch a glimpse of [H]'s face — something inside you reels back."))
+	to_chat(H, span_warning("[user]'s eyes land on your face. The mutation answers — something in you twists."))
+	H.adjustSanityLoss(holder_damage)
+	if(ishuman(user))
+		var/mob/living/carbon/human/U = user
+		U.adjustSanityLoss(examiner_damage)
+
+// ---- Chemical Expertise ----
+// Permanent SCAN_REAGENTS via TRAIT_SEE_REAGENTS — the human helper proc
+// can_see_reagents() picks the trait up alongside the worn-goggles check.
+// The /datum/quirk base class auto-applies and auto-removes mob_trait, so
+// nothing else needs to be wired up here.
+
+/datum/quirk/starlight_chemical_expertise
+	name = "Chemical Expertise"
+	desc = "You can read the contents of any reagent container at a glance — same effect as a pair of science goggles, no goggles required."
+	value = 2
+	starlight_locked = TRUE
+	starlight_cost = 200
+	required_line_completed = "nova_flare"
+	mob_trait = TRAIT_SEE_REAGENTS
+	medical_record_text = "Subject reads reagent containers without instruments."
+	gain_text = "<span class='notice'>You realise you can read what's in every beaker around you without looking at the label.</span>"
+	lose_text = "<span class='notice'>Beakers fade back into opaque shapes — whatever sense you had for their contents is gone.</span>"

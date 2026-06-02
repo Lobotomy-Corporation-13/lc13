@@ -16,11 +16,10 @@
 	max_lobby_size      = 4
 	section_count       = 3
 	display_color       = "#1e4ba8"
+	// 9 minutes target for the Starlight time bonus.
+	expected_time_seconds = 540
 
-	// Nova Flare enforces unique loadouts per sector: a weapon or armor
-	// piece chosen in a prior sector this run gets crossed out and locked
-	// in the loadout UI on subsequent sectors.
-	unique_loadout_per_sector = TRUE
+	unique_loadout_per_sector = FALSE
 
 	map_viewbox = list("w" = 600, "h" = 400)
 
@@ -64,9 +63,8 @@
 
 	// ----- Sector 1: Outer Reach -----
 	AddNode("nova_s1n1", "nova_s1n1_spawns",
-		"The Gap",
-		"The line thins here. Something the railway should have kept out is \
-			already through.",
+		"The Cries",
+		"There is something echoing in the distance, no... They are still screaming for their mentor who shall never reach them.",
 		list(
 			/mob/living/simple_animal/hostile/netherworld/migo/refracted = 6,
 		),
@@ -74,8 +72,7 @@
 
 	AddNode("nova_s1n2", "nova_s1n2_spawns",
 		"The Family",
-		"A side gallery the survivors never left. They still call each \
-			other by name.",
+		"The same family is still here, still playing the parts they walked in with. The patriarch never came home, and the household has not allowed itself to know it.",
 		list(
 			/mob/living/simple_animal/hostile/mutant_clown/refracted = 3,
 			/mob/living/simple_animal/hostile/mutant_clown/refracted/sister = 2,
@@ -85,8 +82,7 @@
 
 	AddNode("nova_s1n3", "nova_s1n3_spawns",
 		"The Grandfather",
-		"The sector ends here. The Grandfather will not fall while the hearts \
-			still beat for it.",
+		"The family now cries into the depths of their false shelter. They have endured for so long, HE will be able to fix them again. Just as he kept them togther though this hell.",
 		list(
 			/mob/living/simple_animal/hostile/mutant_clown/boss/refracted = 1,
 		),
@@ -101,8 +97,7 @@
 	// ----- Sector 2: the Garden Below -----
 	AddNode("nova_s2n1", "nova_s2n1_spawns",
 		"The Hive",
-		"Gel and resin coat the walls. The nests do not stop feeding the \
-			air with wings.",
+		"The temple sings with a wet hum now. The scholars who first studied the brood are no longer in the building, and the brood has finished inheriting what they left behind.",
 		list(
 			/mob/living/simple_animal/hostile/mad_fly_nest/refracted = 3,
 		),
@@ -112,9 +107,8 @@
 		))
 
 	AddNode("nova_s2n2", "nova_s2n2_spawns",
-		"The Clan Wall",
-		"Stone statues with a clan etched into their backs. They were left \
-			here to hold the line, and they still do.",
+		"The Fallen Guard",
+		"The statues still stand watch. The clan that carved them and gave them their post has been quiet for a long age, and none of the elders who remain ever came back to call the watch done.",
 		list(
 			/mob/living/simple_animal/hostile/clan/stone_guard/refracted = 4,
 		),
@@ -122,8 +116,7 @@
 
 	AddNode("nova_s2n3", "nova_s2n3_spawns",
 		"The Scarlet Garden",
-		"Red vines have taken the whole hall. Something at the center is \
-			still feeding them.",
+		"Red vines have taken the whole hall. Yet... is there not beauty in watching such a foul place, be returned to nature? It has been contained for far too long, it's only fair for it to feast.",
 		list(
 			/mob/living/simple_animal/hostile/scarlet_rose/refracted = 1,
 		),
@@ -132,8 +125,7 @@
 	// ----- Sector 3: the Tinkerer's Keep -----
 	AddNode("nova_s3n1", "nova_s3n1_spawns",
 		"The Vanguard",
-		"A clan etched into steel backs holds the approach. One of them \
-			walks the line mending the others.",
+		"The clan's plating, the clan's marching gait, the clan's old cadence kept out of habit. The eyes inside the visors glow the wrong color, and the will those eyes used to answer to was given up — or taken — somewhere a long time ago.",
 		list(
 			/mob/living/simple_animal/hostile/clan/scout/refracted    = 4,
 			/mob/living/simple_animal/hostile/clan/defender/refracted = 2,
@@ -143,8 +135,7 @@
 
 	AddNode("nova_s3n2", "nova_s3n2_spawns",
 		"The Firing Line",
-		"The hall narrows under their guns. Get dragged out of cover and \
-			the rest will not miss.",
+		"The hall is full of guns held by hands that no longer answer their own names. The one moving them was once a member of the clan; he no longer thinks of them that way.",
 		list(
 			/mob/living/simple_animal/hostile/clan/ranged/gunner/refracted    = 3,
 			/mob/living/simple_animal/hostile/clan/ranged/rapid/refracted     = 3,
@@ -155,8 +146,7 @@
 
 	AddNode("nova_core", "nova_core_spawns",
 		"The Keeper",
-		"The Tinkerer's guardian drops out of the dark to meet the \
-			carriage. The line ends here.",
+		"The hand that once mended the clan's cores has been gone for a long time. What it has built in its absence drops out of the dark to meet the carriage. The line ends here.",
 		list(
 			/mob/living/simple_animal/hostile/clan/stone_keeper/refracted = 1,
 		),
@@ -167,24 +157,24 @@
 
 	sector_briefings = list(
 		list(
-			"name"        = "Sector 1: Outer Reach",
-			"description" = "The edge of the line never sealed clean. The family \
-				that came through it is here — and the one they all answer to \
-				is waiting at the end.",
+			"name"        = "Sector 1: What the Family Kept",
+			"description" = "A family at the edge of the line, still gathered \
+				around the one they grieve. They have not allowed anything \
+				to change.",
 			"node_ids"    = list("nova_s1n1", "nova_s1n2", "nova_s1n3"),
 		),
 		list(
-			"name"        = "Sector 2: the Garden Below",
-			"description" = "The line runs through something overgrown. A hive \
-				feeds the air, a clan holds the wall, and a red garden waits \
-				over the far end.",
+			"name"        = "Sector 2: The Hollow Temple",
+			"description" = "A place once kept holy now stands hollow. Roots \
+				have taken the columns; whatever the scholars here were \
+				studying, the building has long since forgotten.",
 			"node_ids"    = list("nova_s2n1", "nova_s2n2", "nova_s2n3"),
 		),
 		list(
-			"name"        = "Sector 3: the Tinkerer's Keep",
-			"description" = "Past the garden the line was never abandoned. A \
-				clan still holds it, and the Tinkerer's Keeper waits at the \
-				end of the carriage's road.",
+			"name"        = "Sector 3: Under Other Eyes",
+			"description" = "A clan still patrols this stretch, but the eyes \
+				are wrong. Something behind them is driving, and what it has \
+				built waits at the end of the road.",
 			"node_ids"    = list("nova_s3n1", "nova_s3n2", "nova_core"),
 		),
 	)

@@ -31,7 +31,7 @@
 	data["lines"] = BuildLinesPayload(user)
 	data["my_run"] = BuildMyRunPayload(user)
 	data["open_lobbies"] = BuildOpenLobbiesPayload()
-	data["leaderboards"] = BuildLeaderboardsPayload()
+	data["leaderboards"] = SSrefraction_railway.BuildLeaderboardsPayload()
 	data["compensations"] = BuildCompensationsPayload()
 	data["status_glossary"] = RefractionStatusGlossary()
 	return data
@@ -64,59 +64,6 @@
 				"enabled"     = ss_on && line_on,
 			))
 	return out
-
-/// Leaderboard payload with per-sector loadout icons rendered.
-/obj/machinery/computer/refraction_railway_console/proc/BuildLeaderboardsPayload()
-	var/list/out = list()
-	for(var/line_id in SSrefraction_railway.leaderboards)
-		var/list/board = SSrefraction_railway.leaderboards[line_id]
-		var/list/entries_out = list()
-		if(islist(board))
-			for(var/list/entry as anything in board)
-				entries_out += list(BuildLeaderboardEntryPayload(entry))
-		out[line_id] = entries_out
-	return out
-
-/obj/machinery/computer/refraction_railway_console/proc/BuildLeaderboardEntryPayload(list/entry)
-	var/list/sectors_in = entry["sectors"]
-	var/list/sectors_out = list()
-	if(islist(sectors_in))
-		for(var/list/sector as anything in sectors_in)
-			var/list/players_in = sector["players"]
-			var/list/players_out = list()
-			if(islist(players_in))
-				for(var/list/p as anything in players_in)
-					players_out += list(list(
-						"ckey"          = p["ckey"],
-						"name"          = p["name"],
-						"loadout_icons" = LoadoutIconsForPaths(p["loadout"]),
-					))
-			sectors_out += list(list(
-				"index"   = sector["index"],
-				"time_ds" = sector["time_ds"],
-				"players" = players_out,
-			))
-	return list(
-		"ckey"     = entry["ckey"],
-		"name"     = entry["name"],
-		"time_ds"  = entry["time_ds"],
-		"members"  = entry["members"],
-		"sectors"  = sectors_out,
-	)
-
-/obj/machinery/computer/refraction_railway_console/proc/LoadoutIconsForPaths(list/paths)
-	var/list/icons = list(null, null, null)
-	if(!islist(paths))
-		return icons
-	for(var/i in 1 to min(3, length(paths)))
-		var/p = paths[i]
-		// Post-JSON entries arrive as strings; in-memory ones are real paths.
-		if(istext(p))
-			p = text2path(p)
-		if(!ispath(p))
-			continue
-		icons[i] = SStestrange.GenerateEgoPreviewIcon(p)
-	return icons
 
 /obj/machinery/computer/refraction_railway_console/proc/BuildLinesPayload(mob/user)
 	var/list/out = list()
@@ -175,13 +122,44 @@
 			))
 			continue
 		out += list(list(
-			"id"          = N.id,
-			"name"        = N.name,
-			"description" = N.description,
-			"is_boss"     = N.is_boss,
-			"mobs"        = mob_payloads,
-			"locked"      = FALSE,
+			"id"           = N.id,
+			"name"         = N.name,
+			"description"  = N.description,
+			"is_boss"      = N.is_boss,
+			"mobs"         = mob_payloads,
+			"locked"       = FALSE,
+			"achievements" = BuildNodeAchievementsPayload(N, L.id, ckey),
 		))
+	return out
+
+/// One assoc-list per achievement bound to any of this node's stocked
+/// mob paths. Returns empty list if the ckey hasn't completed the line
+/// yet — achievements stay hidden until a veteran clear unlocks them.
+/obj/machinery/computer/refraction_railway_console/proc/BuildNodeAchievementsPayload(datum/refraction_node/N, line_id, ckey)
+	var/list/out = list()
+	if(!N || !line_id || !ckey)
+		return out
+	if(!SSrefraction_railway.HasCompletedLine(ckey, line_id))
+		return out
+	var/list/seen = list()
+	for(var/mob_path in N.mob_stock)
+		var/list/achs = SSrefraction_railway.mob_achievements[mob_path]
+		if(!islist(achs))
+			continue
+		for(var/list/ach as anything in achs)
+			if(!islist(ach))
+				continue
+			var/aid = ach["id"]
+			if(!aid || seen[aid])
+				continue
+			seen[aid] = TRUE
+			out += list(list(
+				"id"     = aid,
+				"name"   = ach["name"],
+				"desc"   = ach["desc"],
+				"reward" = ach["reward"],
+				"kind"   = ach["default_state"] ? "avoid" : "earn",
+			))
 	return out
 
 /obj/machinery/computer/refraction_railway_console/proc/BuildMyRunPayload(mob/user)
@@ -310,10 +288,9 @@
 
 // Read-only records terminal: a separate machine that only shows
 // leaderboards, so checkpoint rooms / lobby halls can host a "scoreboard"
-// without the full hub UI. Subclasses the hub console to inherit the
-// BuildLeaderboardsPayload + BuildLeaderboardEntryPayload + LoadoutIconsForPaths
-// helpers; it overrides the icon (no keyboard/screen overlays) and the UI
-// surface (different TGUI interface, no lobby actions).
+// without the full hub UI. Inherits everything but overrides the icon (no
+// keyboard/screen overlays) and the UI surface (different TGUI interface,
+// no lobby actions). All leaderboard payload work lives on the subsystem.
 /obj/machinery/computer/refraction_railway_console/leaderboard
 	name = "refraction railway records terminal"
 	desc = "A terminal that displays the fastest recorded clears for each \
@@ -349,7 +326,7 @@
 		))
 	return list(
 		"lines"        = lines_out,
-		"leaderboards" = BuildLeaderboardsPayload(),
+		"leaderboards" = SSrefraction_railway.BuildLeaderboardsPayload(),
 	)
 
 // Read-only: no lobby / kick / start actions. We deliberately do NOT call
@@ -376,6 +353,23 @@
 	resistance_flags = INDESTRUCTIBLE
 	outfit = /datum/outfit/refraction_railway_agent
 	short_desc = "Bodies spawned here run the refraction railway."
+	flavour_text = "The Refraction Railway is a set of authored boss-rush lines that you and a small \
+		party can re-run as often as you want.\n\
+		Each run is a chain of sectors. Before every sector you pick a loadout at the loadout \
+		console (two weapons + one armor — chosen from the gear you can equip at the line's \
+		attribute floor); when the team is ready, the lobby owner starts the sector and you're \
+		dropped into a series of combat rooms that culminate in a boss.\n\
+		Clearing the whole line pays out Starlight, a meta-currency you spend at the Starlight \
+		terminal for permanent quirk unlocks. Your award is itemised on completion: a flat clear \
+		bonus, a signed time bonus against the line's expected time, +10 per distinct weapon or \
+		armor you used across the run, and any per-mob achievements you cleared.\n\
+		Achievements are short per-encounter challenges (avoid a damage type, prevent a heal, \
+		survive a mechanic) authored per line. They only become earnable AFTER your first clear of \
+		the line — first-time runners earn nothing from them and don't see them listed.\n\
+		Mobs start hidden in the Hub map and briefing console; the first time you actually walk \
+		into a node you fight, every mob in that node is permanently revealed for you across \
+		rounds. Death is not the end of a run — incapacitated players are revived and benched at \
+		the last checkpoint."
 	assignedrole = "Refraction Railway Agent"
 
 /datum/outfit/refraction_railway_agent

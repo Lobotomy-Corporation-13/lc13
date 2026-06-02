@@ -12,10 +12,11 @@ GLOBAL_LIST_INIT(refraction_attribute_keys, list(
 
 // Starlight award constants — tune here, knob in one place.
 #define STARLIGHT_BASE_AWARD 100
-#define STARLIGHT_PER_UNIQUE_ITEM 25
-#define STARLIGHT_TIME_BONUS_CAP 100
-/// Seconds-per-point decay for the time bonus. At 10 minutes flat = 0 bonus.
-#define STARLIGHT_TIME_BONUS_DIVISOR 6
+#define STARLIGHT_PER_UNIQUE_ITEM 10
+/// Caps the time bonus on both sides. Reaching the cap requires beating
+/// (or overrunning) the expected time by 50% of itself: e.g. on a 9-min
+/// expected line, finishing in 4:30 = +50, finishing in 13:30 = -50.
+#define STARLIGHT_TIME_BONUS_CAP 50
 GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 	/obj/item/ego_weapon,
 	/obj/item/clothing/suit/armor/ego_gear,
@@ -46,6 +47,16 @@ GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 	var/list/gear_refs = list()
 	/// Cumulative ElapsedDeciseconds at the moment each sector finished.
 	var/list/sector_finish_times = list()
+	/// Per-room timing entries, one per room actually entered this run.
+	/// Each entry: list("room_id"=..., "sector"=..., "start_ds"=...,
+	/// "end_ds"=...). end_ds == 0 means in-progress; closed by the next
+	/// AdvanceRoomById or by OnSectionCleared.
+	var/list/room_times = list()
+	/// Per-ckey achievement state. ckey → list(achievement_id → TRUE/FALSE).
+	/// TRUE = "currently earned" (or "still passing" for default-pass
+	/// achievements). Evaluated at run complete; entries that resolve to
+	/// TRUE fold their `reward` into that player's final Starlight.
+	var/list/achievement_state = list()
 	/// elapsed_baseline snapshot at sector start; restored on team wipe.
 	var/elapsed_baseline_at_section_start = 0
 	/// Per-sector per-ckey loadout snapshot. Index N = list of assoc lists.
@@ -238,9 +249,16 @@ GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 /// TRUE iff `ckey` already used `path` in a prior sector's loadout this run.
 /// Always FALSE when unique-loadout enforcement is off.
 /datum/refraction_run/proc/IsItemPathBlocked(ckey, path)
-	if(!ckey || !path)
-		return FALSE
 	if(!IsUniqueLoadoutEnforced())
+		return FALSE
+	return HasUsedItemPath(ckey, path)
+
+/// TRUE iff `ckey` already used `path` in a prior sector's loadout this run.
+/// Unlike IsItemPathBlocked, this is independent of the unique-loadout rule —
+/// it's informational ("you won't earn the +unique-gear bonus from this one
+/// again"), not a hard block on selection.
+/datum/refraction_run/proc/HasUsedItemPath(ckey, path)
+	if(!ckey || !path)
 		return FALSE
 	for(var/list/per_player as anything in sector_loadouts)
 		if(!islist(per_player))
@@ -419,10 +437,13 @@ GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 		if(H.sanity_lost && H.stat != DEAD)
 			continue
 		HealMember(H)
-		// FreshenLoadout (not ReequipLoadout) so any per-run state built
-		// up on the items — charge counters, kill trackers, accumulated
-		// stack buffs — is discarded at every sector boundary AND on
-		// every team wipe (both routes hit EnterCheckpoint).
+		// Always strip and rebuild gear between sectors. Wipes any
+		// accumulated run-time state on the items (charge counters, kill
+		// trackers, stack buffs, ammo) so progress doesn't carry across
+		// the sector boundary. On unique-loadout lines OnSectionCleared
+		// has already cleared `loadouts[ckey]` before getting here, so
+		// FreshenLoadout no-ops and the player goes into the loadout
+		// console for a fresh pick.
 		FreshenLoadout(H)
 	TeleportToCheckpoint()
 
@@ -472,6 +493,7 @@ GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 /datum/refraction_run/proc/AdvanceRoomById(room_id)
 	if(!room_id)
 		return
+	CloseLastRoomTime()
 	current_room = room_id
 	for(var/mob/living/carbon/human/H as anything in members)
 		if(!ishuman(H) || H.stat == DEAD)
@@ -479,7 +501,23 @@ GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 		ReequipLoadout(H)
 	TeleportToRoom(room_id)
 	MarkRoomEntered(room_id)
+	OpenRoomTime(room_id)
 	ActivateRoom(room_id)
+
+/datum/refraction_run/proc/OpenRoomTime(room_id)
+	room_times += list(list(
+		"room_id"  = room_id,
+		"sector"   = current_section,
+		"start_ds" = ElapsedDeciseconds(),
+		"end_ds"   = 0,
+	))
+
+/datum/refraction_run/proc/CloseLastRoomTime()
+	if(!length(room_times))
+		return
+	var/list/last = room_times[length(room_times)]
+	if(last["end_ds"] == 0)
+		last["end_ds"] = ElapsedDeciseconds()
 
 /// Sweeps the line z of cleanable decals and pending gibspawners.
 /datum/refraction_run/proc/CleanLineArea()
@@ -497,6 +535,7 @@ GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 	CleanLineArea()
 	last_checkpoint_for_all(section_id)
 	// Snapshot cumulative time before EnterCheckpoint pauses the timer.
+	CloseLastRoomTime()
 	sector_finish_times += ElapsedDeciseconds()
 	SnapshotSectorLoadouts(section_id)
 	if(section_id >= line.section_count)
@@ -518,7 +557,8 @@ GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 			loadouts -= M.ckey
 	EnterCheckpoint()
 
-/// Builds a per-sector breakdown (time + loadouts) for the leaderboard entry.
+/// Builds a per-sector breakdown (time + loadouts + per-room times) for
+/// the leaderboard entry.
 /datum/refraction_run/proc/BuildSectorBreakdownForLeaderboard()
 	var/list/out = list()
 	for(var/i in 1 to length(sector_finish_times))
@@ -539,6 +579,30 @@ GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 			"index"   = i,
 			"time_ds" = end_t - start_t,
 			"players" = players_out,
+			"rooms"   = BuildRoomTimesForSector(i),
+		))
+	return out
+
+/// Builds a list of {room_id, name, time_ds} for every room entered in
+/// the given sector index. Filters room_times by sector and resolves the
+/// node display name from line.combat_nodes.
+/datum/refraction_run/proc/BuildRoomTimesForSector(sector_index)
+	var/list/out = list()
+	for(var/list/rt as anything in room_times)
+		if(rt["sector"] != sector_index)
+			continue
+		if(rt["end_ds"] <= 0)
+			continue
+		var/elapsed = rt["end_ds"] - rt["start_ds"]
+		var/rid = rt["room_id"]
+		var/node_name = ""
+		var/datum/refraction_node/N = islist(line?.combat_nodes) ? line.combat_nodes[rid] : null
+		if(istype(N))
+			node_name = N.name
+		out += list(list(
+			"room_id" = rid,
+			"name"    = node_name,
+			"time_ds" = max(0, elapsed),
 		))
 	return out
 
@@ -608,17 +672,95 @@ GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 		"sectors"   = BuildSectorBreakdownForLeaderboard(),
 	)
 	SSrefraction_railway.RecordRun(line.id, entry)
-	// Save now so a mid-round crash still preserves the leaderboard.
+	// Save now so a mid-round crash, sandbox round, or admin abort still
+	// preserves the leaderboard AND the mobs we revealed during the run.
+	// Round-end persistence (CollectData) handles these too but is gated
+	// on `mode.allow_persistence_save`.
 	SSpersistence.SaveRefractionLeaderboards()
+	SSpersistence.SaveRefractionEncounters()
 	AwardStarlightProgression(total_ds)
 	ShowFinalResults(total_ds)
 
 /// Awards per-ckey Starlight + marks the line completed. Award formula:
-///   base + (unique loadout items across all sectors × per-item) + time bonus.
-/// Time bonus floors at 0 and decays linearly so longer runs get less.
+///   base + time bonus + (unique loadout items × per-item, only when
+///   loadout variety is a player choice).
+/// Time bonus is signed: positive when the run beats `line.expected_time_seconds`,
+/// negative when it overruns. Loadout-variety bonus is suppressed when the
+/// line forces a new loadout per sector — players don't get rewarded for a
+/// variety the system was going to enforce on them anyway.
+// ---------- Achievements ----------
+
+/// Seed achievement state for every living member when a boss mob with
+/// registered achievements spawns. Each member's per-achievement entry
+/// is set to the achievement's default_state — but only if the entry
+/// isn't already present, so a player who already earned a re-spawned
+/// boss's achievement on an earlier kill doesn't get reset.
+/datum/refraction_run/proc/InitAchievementsForMob(mob/M)
+	if(!M)
+		return
+	var/list/entries = SSrefraction_railway.mob_achievements[M.type]
+	if(!islist(entries) || !length(entries))
+		return
+	for(var/mob/X as anything in members)
+		if(!X?.ckey)
+			continue
+		// Veteran gate: achievements are only earnable for ckeys that
+		// have completed this line at least once. First-time runners
+		// don't get their state seeded → no chat callout, no SL grant,
+		// no leakage that the achievements exist yet.
+		if(!SSrefraction_railway.HasCompletedLine(X.ckey, line.id))
+			continue
+		var/list/per = achievement_state[X.ckey]
+		if(!islist(per))
+			per = list()
+			achievement_state[X.ckey] = per
+		for(var/list/entry as anything in entries)
+			if(!islist(entry))
+				continue
+			var/aid = entry["id"]
+			if(!aid)
+				continue
+			if(per[aid] != null)
+				continue
+			per[aid] = entry["default_state"] ? TRUE : FALSE
+
+/// Sets achievement_state[ckey][id] = value, but ONLY if the ckey was
+/// already seeded by InitAchievementsForMob (i.e. they are a veteran of
+/// this line). First-time runners have no state, and event hooks calling
+/// this proc no-op on them — keeps the gate honest at the event layer.
+/datum/refraction_run/proc/MarkAchievement(ckey, achievement_id, value)
+	if(!ckey || !achievement_id)
+		return
+	var/list/per = achievement_state[ckey]
+	if(!islist(per))
+		return
+	if(per[achievement_id] == null)
+		return
+	per[achievement_id] = value ? TRUE : FALSE
+
+/datum/refraction_run/proc/EarnAchievement(ckey, achievement_id)
+	MarkAchievement(ckey, achievement_id, TRUE)
+
+/datum/refraction_run/proc/FailAchievement(ckey, achievement_id)
+	MarkAchievement(ckey, achievement_id, FALSE)
+
+/// Awards per-ckey Starlight + marks the line completed. Components:
+///   base                — fixed STARLIGHT_BASE_AWARD floor.
+///   time bonus          — signed. Reaches ±STARLIGHT_TIME_BONUS_CAP when
+///                         the run beats / overruns expected by 50% of
+///                         itself (e.g. on a 9-min line: 4:30 = +50,
+///                         13:30 = -50).
+///   unique gear         — +STARLIGHT_PER_UNIQUE_ITEM per distinct
+///                         weapon/armor path across all sectors.
+///   achievements        — sums `reward` of every achievement_state entry
+///                         that resolved to TRUE for this ckey.
 /datum/refraction_run/proc/AwardStarlightProgression(total_ds)
 	var/total_seconds = round(total_ds / 10)
-	var/time_bonus = max(0, STARLIGHT_TIME_BONUS_CAP - round(total_seconds / STARLIGHT_TIME_BONUS_DIVISOR))
+	var/expected = max(1, line.expected_time_seconds)
+	var/time_diff = expected - total_seconds
+	var/half_expected = max(1, round(expected / 2))
+	var/time_bonus = clamp(round(time_diff * STARLIGHT_TIME_BONUS_CAP / half_expected), -STARLIGHT_TIME_BONUS_CAP, STARLIGHT_TIME_BONUS_CAP)
+	// Per-ckey: collect unique weapon/armor paths used across every sector.
 	var/list/unique_by_ckey = list()
 	for(var/list/snap as anything in sector_loadouts)
 		if(!islist(snap))
@@ -637,12 +779,48 @@ GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 	for(var/ckey in unique_by_ckey)
 		var/list/seen = unique_by_ckey[ckey]
 		var/unique_count = length(seen)
-		var/award = STARLIGHT_BASE_AWARD + (unique_count * STARLIGHT_PER_UNIQUE_ITEM) + time_bonus
+		var/unique_bonus = unique_count * STARLIGHT_PER_UNIQUE_ITEM
+		var/list/earned_names = list()
+		var/list/earned_rewards = list()
+		var/achievement_bonus = 0
+		var/list/per = achievement_state[ckey]
+		if(islist(per))
+			for(var/aid in per)
+				if(!per[aid])
+					continue
+				var/list/entry = SSrefraction_railway.achievements_by_id[aid]
+				if(!islist(entry))
+					continue
+				achievement_bonus += entry["reward"]
+				earned_names += entry["name"]
+				earned_rewards += entry["reward"]
+		var/award = STARLIGHT_BASE_AWARD + time_bonus + unique_bonus + achievement_bonus
 		SSrefraction_railway.AwardStarlight(ckey, award)
 		SSrefraction_railway.MarkLineCompleted(ckey, line.id)
 		var/mob/M = FindMemberByCkey(ckey)
-		if(M)
-			to_chat(M, span_nicegreen("You earned [award] Starlight. (balance: [SSrefraction_railway.GetStarlight(ckey)])"))
+		if(!M)
+			continue
+		var/balance = SSrefraction_railway.GetStarlight(ckey)
+		// Headline: total + new balance.
+		if(award > 0)
+			to_chat(M, span_nicegreen("You earned [award] Starlight. (balance: [balance])"))
+		else if(award < 0)
+			to_chat(M, span_warning("Your slow finish cost you [-award] Starlight. (balance: [balance])"))
+		else
+			to_chat(M, span_notice("You finished, but earned no Starlight this run. (balance: [balance])"))
+		// Breakdown: one line per source, signed.
+		to_chat(M, span_notice("• Base clear: +[STARLIGHT_BASE_AWARD] SL"))
+		if(time_bonus > 0)
+			to_chat(M, span_notice("• Time bonus (under expected): +[time_bonus] SL"))
+		else if(time_bonus < 0)
+			to_chat(M, span_warning("• Time penalty (over expected): [time_bonus] SL"))
+		else
+			to_chat(M, span_notice("• Time bonus: 0 SL"))
+		if(unique_bonus > 0)
+			to_chat(M, span_notice("• Unique gear ([unique_count] item\s): +[unique_bonus] SL"))
+		if(length(earned_names))
+			for(var/i in 1 to length(earned_names))
+				to_chat(M, span_nicegreen("• Achievement \"[earned_names[i]]\": +[earned_rewards[i]] SL"))
 
 /// TRUE iff the lobby owner has a mind AND a client on a member mob.
 /datum/refraction_run/proc/IsOwnerActive()
@@ -755,6 +933,12 @@ GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 		CleanLineArea()
 		current_section = max(0, current_section - 1)
 		elapsed_baseline = elapsed_baseline_at_section_start
+		// Discard any room_times from the failed sector — the clock is
+		// rolling back to its start, so those entries are stale.
+		for(var/i in length(room_times) to 1 step -1)
+			var/list/rt = room_times[i]
+			if(rt["sector"] > current_section)
+				room_times.Cut(i, i + 1)
 		// EnterCheckpoint -> HealMember -> ReequipLoadout can sleep via
 		// equip_to_slot_or_del's do_after, and we're in a SIGNAL_HANDLER.
 		// Defer to a fresh chain.
@@ -1167,7 +1351,26 @@ GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 	for(var/mob/M as anything in members)
 		if(M.ckey && M.stat != DEAD)
 			live_ckeys += M.ckey
+	if(!length(live_ckeys))
+		return
+	// Snapshot the pre-mark state so we only persist when a brand-new
+	// (ckey, mob_path) pair was actually added. Avoids hammering disk on
+	// every room hop when nothing new was learned.
+	var/dirty = FALSE
+	for(var/ckey in live_ckeys)
+		var/list/seen = SSrefraction_railway.encountered_mobs[ckey]
+		if(!islist(seen))
+			dirty = TRUE
+			break
+		for(var/path in mob_paths)
+			if(!(path in seen))
+				dirty = TRUE
+				break
+		if(dirty)
+			break
 	SSrefraction_railway.MarkEncountered(live_ckeys, mob_paths)
+	if(dirty)
+		SSpersistence.SaveRefractionEncounters()
 
 // ---------- Cleanup ----------
 

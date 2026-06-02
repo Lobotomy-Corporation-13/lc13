@@ -88,6 +88,7 @@
 		"threatclass" = ED.CostToThreatClass(),
 		"origin"      = ED.origin,
 		"blocked"     = R ? R.IsItemPathBlocked(ckey, ED.item_path) : FALSE,
+		"used_before" = R ? R.HasUsedItemPath(ckey, ED.item_path) : FALSE,
 	)
 
 /obj/machinery/computer/refraction_loadout/ui_data(mob/user)
