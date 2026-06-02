@@ -120,7 +120,10 @@
 	duration = 8
 
 // Meat Drop / Meat Barrage marker that adds landing and detonation sounds.
+// 25% under the base nuke-clown meat warning's damage (40 → 30) to tune
+// the Grandfather encounter for railway-level loadouts.
 /obj/effect/temp_visual/meat_warning/refracted
+	damage = 30
 
 /obj/effect/temp_visual/meat_warning/refracted/Initialize(mapload, new_caster)
 	. = ..()
@@ -190,6 +193,10 @@
 	var/scream_fragile_stacks = 2
 	/// Cooldown for the phase-2 (hearts destroyed) Meat Barrage.
 	var/meat_barrage_cooldown_time = 18 SECONDS
+	/// Hard cap on how many distinct humans MeatDrop / Meat Barrage will
+	/// target per cycle. Does NOT scale with lobby size on purpose — extra
+	/// players make this attack easier to dodge, not harder.
+	var/meat_target_cap = 2
 	/// One-shot guard: hearts spawn once, after wave HP-scaling has applied.
 	var/hearts_spawned = FALSE
 	/// Square radius (tiles) the 4 hearts spawn at around the boss.
@@ -316,15 +323,24 @@
 				if(Mem?.ckey)
 					refraction_run_ref.FailAchievement(Mem.ckey, "grandfather_calm")
 
-// Hearts alive: one bomb on every nearby human. Hearts dead: Meat Barrage,
-// raining bombs on half the lobby's current tiles for 4 seconds.
+// Hearts alive: one bomb on up to `meat_target_cap` nearby humans.
+// Hearts dead: Meat Barrage rains bombs on up to the same number of
+// locked targets for 4 seconds. The cap intentionally doesn't scale
+// with lobby size — extra players make the fight easier on this attack.
 /mob/living/simple_animal/hostile/mutant_clown/boss/refracted/MeatDrop()
 	if(LAZYLEN(spawned_hearts))
 		meat_cooldown = world.time + meat_cooldown_time
 		playsound(get_turf(src), 'sound/magic/arbiter/repulse.ogg', 25, FALSE, 5)
+		var/list/eligible = list()
 		for(var/mob/living/carbon/human/H in view(7, src))
 			if(faction_check_mob(H))
 				continue
+			eligible += H
+		// Cap targets at meat_target_cap, picked at random when more
+		// humans are in range than the cap allows.
+		while(length(eligible) > meat_target_cap)
+			eligible -= pick(eligible)
+		for(var/mob/living/carbon/human/H as anything in eligible)
 			var/turf/T = get_turf(H)
 			if(!T)
 				continue
@@ -333,9 +349,7 @@
 	meat_cooldown = world.time + meat_barrage_cooldown_time
 	if(!target)
 		return
-	var/datum/refraction_wave_controller/C = GLOB.refraction_wave_mob_owners[src]
-	var/np = C ? C.num_players : 1
-	var/target_count = max(1, round((np + 1) / 2))
+	var/target_count = meat_target_cap
 	var/list/candidates = list()
 	if(ishuman(target) && !faction_check_mob(target))
 		candidates += target
