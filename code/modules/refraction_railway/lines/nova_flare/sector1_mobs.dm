@@ -286,8 +286,11 @@
 
 /mob/living/simple_animal/hostile/mutant_clown/boss/refracted/proc/SpawnReinforcements()
 	var/datum/refraction_wave_controller/C = GLOB.refraction_wave_mob_owners[src]
-	var/np = C ? C.num_players : 1
-	var/count = max(1, round((np + 1) / 2))
+	// Fixed reinforcement count regardless of lobby size — the
+	// `grandfather_calm` achievement depends on the 4-spawn threshold
+	// staying meaningful, and scaling here would push solo and quad
+	// runs onto different sides of that bar.
+	var/count = 1
 	var/turf/center = get_turf(src)
 	if(!center)
 		return
