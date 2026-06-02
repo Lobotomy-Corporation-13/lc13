@@ -430,11 +430,18 @@ GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 		if(QDELETED(H) || !ishuman(H))
 			continue
 		ready_states[H.ckey] = FALSE
-		// Insane (but alive) members defer to the 1s bench timer — healing
+		// Insane (but alive) members defer to a 1s bench timer — healing
 		// here would race the COMSIG_HUMAN_INSANE onset and let the AI
-		// rebuild itself after we cleared it. Dead members ARE healed here
-		// so the run no longer depends on the bench timer alone to revive.
+		// rebuild itself after we cleared it. The timer used to be
+		// scheduled from OnMemberIncapacitated; since insanity no longer
+		// teleports individuals, we schedule it from here at sector
+		// clear (the first time the panicked player is brought to the
+		// checkpoint). Dead members ARE healed here so the run no
+		// longer depends on the bench timer alone to revive.
 		if(H.sanity_lost && H.stat != DEAD)
+			if(H.ckey && !pending_bench[H.ckey])
+				pending_bench[H.ckey] = TRUE
+				addtimer(CALLBACK(src, PROC_REF(BenchIncapacitatedMember), H), 1 SECONDS)
 			continue
 		HealMember(H)
 		// Always strip and rebuild gear between sectors. Wipes any
@@ -920,12 +927,19 @@ GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 	SIGNAL_HANDLER
 	if(!source || !(source in members))
 		return
-	// Body + dropped gear move to the checkpoint now; bench timer below.
-	TeleportIncapacitatedToCheckpoint(source)
-	// Dedupe: dying-while-insane fires both signals.
-	if(source.ckey && !pending_bench[source.ckey])
-		pending_bench[source.ckey] = TRUE
-		addtimer(CALLBACK(src, PROC_REF(BenchIncapacitatedMember), source), 1 SECONDS)
+	// Death: relocate body + gear to checkpoint and queue a 1s revive.
+	// Insanity: leave the player in place so teammates can apply a
+	// mental medipen to un-panic them. Panicked players are only pulled
+	// to the checkpoint when the WHOLE team goes down (wipe path below);
+	// the deferred sanity heal at sector clear is scheduled from
+	// EnterCheckpoint instead. Dying-while-insane fires both signals on
+	// the same tick — by the time the second fires, stat == DEAD, so
+	// this branch covers it cleanly.
+	if(source.stat == DEAD)
+		TeleportIncapacitatedToCheckpoint(source)
+		if(source.ckey && !pending_bench[source.ckey])
+			pending_bench[source.ckey] = TRUE
+			addtimer(CALLBACK(src, PROC_REF(BenchIncapacitatedMember), source), 1 SECONDS)
 	// No live members left: roll the failed-sector clock back and retry.
 	// current_section is decremented since BeginSector pre-increments it.
 	if(!HasLiveMemberInCombat())
