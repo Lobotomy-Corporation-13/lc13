@@ -163,7 +163,7 @@
 	if(!ishuman(user))
 		return
 	if(isnull(hat))
-		Destroy()
+		qdel(src)
 		return
 	var/mob/living/carbon/human/H = user
 	var/obj/item/clothing/head/headgear = H.get_item_by_slot(ITEM_SLOT_HEAD)
@@ -175,8 +175,7 @@
 			H.dropItemToGround(headgear) // Drop the other hat, if it exists.
 		H.equip_to_slot(new hat, ITEM_SLOT_HEAD) // Equip the hat!
 		return
-	headgear.Destroy()
-	return
+	qdel(headgear)
 
 /obj/effect/proc_holder/ability/neck_ability
 	name = "Toggle Neckwear"
@@ -194,7 +193,7 @@
 	if(!ishuman(user))
 		return
 	if(isnull(neck))
-		Destroy()
+		qdel(src)
 		return
 	var/mob/living/carbon/human/H = user
 	var/obj/item/clothing/neck/neckwear = H.get_item_by_slot(ITEM_SLOT_NECK)
@@ -206,7 +205,7 @@
 			H.dropItemToGround(neckwear )
 		H.equip_to_slot(new neck, ITEM_SLOT_NECK)
 		return
-	neckwear.Destroy()
+	qdel(neckwear)
 	return
 
 /obj/effect/proc_holder/ability/mask_ability
@@ -225,7 +224,7 @@
 	if(!ishuman(user))
 		return
 	if(isnull(mask))
-		Destroy()
+		qdel(src)
 		return
 	var/mob/living/carbon/human/H = user
 	var/obj/item/clothing/mask/maskwear = H.get_item_by_slot(ITEM_SLOT_MASK)
@@ -237,5 +236,5 @@
 			H.dropItemToGround(maskwear)
 		H.equip_to_slot(new mask, ITEM_SLOT_MASK)
 		return
-	maskwear.Destroy()
+	qdel(maskwear)
 	return

@@ -449,7 +449,7 @@
 			var/obj/effect/qoh_sygil/kog/KS = FX
 			KS.fade_out()
 			continue
-		FX.Destroy()
+		qdel(FX)
 	listclearnulls(spawned_effects)
 
 /obj/effect/proc_holder/ability/road_of_gold/proc/Circle(turf/first_target, turf/second_target, mob/user = null)

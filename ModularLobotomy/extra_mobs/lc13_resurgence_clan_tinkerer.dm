@@ -501,8 +501,7 @@
 
 /mob/living/simple_animal/hostile/clan/tinkerer/death(gibbed)
 	// Destroy all factories and units
-	for(var/obj/structure/clan_factory/F in owned_factories)
-		F.Destroy()
+	QDEL_LIST(owned_factories)
 	for(var/mob/living/simple_animal/hostile/clan/unit in controlled_units)
 		unit.commander_died()
 	. = ..()
@@ -553,7 +552,7 @@
 
 /obj/structure/clan_factory/process()
 	if(!owner || owner.stat == DEAD)
-		Destroy()
+		qdel(src)
 		return
 
 	// Clean up dead units
