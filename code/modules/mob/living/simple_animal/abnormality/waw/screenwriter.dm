@@ -13,6 +13,7 @@
 	portrait = "screenwriter"
 	maxHealth = 4000
 	health = 4000
+	del_on_death = FALSE
 	damage_coeff = list(RED_DAMAGE = 1.3, WHITE_DAMAGE = 0.5, BLACK_DAMAGE = 1.3, PALE_DAMAGE = 1.5)
 	faction = list("hostile")
 	threat_level = WAW_LEVEL
@@ -56,6 +57,8 @@
 	var/happy = FALSE
 	var/melting
 	var/preferred_work_type
+	/// Are we ending the scenario and deleting?
+	var/ending = FALSE
 
 //Init stuff
 /mob/living/simple_animal/hostile/abnormality/screenwriter/PostSpawn()
@@ -69,10 +72,26 @@
 /mob/living/simple_animal/hostile/abnormality/screenwriter/CanAttack(atom/the_target)
 	return FALSE
 
-/mob/living/simple_animal/hostile/abnormality/screenwriter/Destroy()
+/mob/living/simple_animal/hostile/abnormality/screenwriter/death(gibbed)
+	if(ending)
+		return
+	ending = TRUE
+	. = ..()
+	INVOKE_ASYNC(src, PROC_REF(do_death_anim))
+
+/mob/living/simple_animal/hostile/abnormality/screenwriter/proc/do_death_anim()
 	if(our_actor)
 		our_actor.death()
+		our_actor = null
+	sleep(3 SECONDS)
 	EndScenario()
+	qdel(src)
+
+/mob/living/simple_animal/hostile/abnormality/screenwriter/Destroy()
+	if(!ending)
+		ending = TRUE
+		QDEL_NULL(our_actor)
+		EndScenario()
 	return ..()
 
 //Work stuff
@@ -174,7 +193,9 @@
 		S.AssignRole()
 
 /mob/living/simple_animal/hostile/abnormality/screenwriter/proc/EndScenario()
-	sleep(30)
+	if(our_actor)
+		UnregisterSignal(our_actor, COMSIG_LIVING_DEATH)
+		our_actor = null
 	sound_to_playing_players_on_level('sound/abnormalities/screenwriter/finish.ogg', 25, zlevel = z)
 	for(var/mob/living/carbon/human/L in GLOB.player_list) // cleanse debuffs
 		if(faction_check_mob(L, FALSE) || L.stat >= HARD_CRIT || L.sanity_lost || z != L.z) // Dead or in hard crit, insane, or on a different Z level.
@@ -182,8 +203,6 @@
 		var/datum/status_effect/actor/S = L.has_status_effect(/datum/status_effect/actor)
 		if(S)
 			qdel(S)
-	if(our_actor)
-		UnregisterSignal(our_actor, COMSIG_LIVING_DEATH)
 
 //Overlays
 /mob/living/simple_animal/hostile/abnormality/screenwriter/proc/SpawnIcon()
@@ -355,8 +374,8 @@
 	visible_message(span_nicegreen("You hear gunfire from the distance, and [src] collapses to the ground!"))
 	density = FALSE
 	animate(src, alpha = 0, time = 5 SECONDS)
+	. = ..()
 	QDEL_IN(src, 5 SECONDS)
-	..()
 
 //AI
 /datum/ai_controller/insane/suicide/scene
