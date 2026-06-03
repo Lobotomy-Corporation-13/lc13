@@ -87,6 +87,15 @@ export const LC13AbnormalityArchive = (props, context) => {
                       content="Print File"
                       onClick={() => act('print_file', { ref: current_abnormality.type })} />
                   </LabeledList.Item>
+                  <LabeledList.Item>
+                    {data.attached_device && <Button.Confirm
+                      fluid
+                     icon="check"
+                     color="red"
+                      textAlign="center"
+                      content="Download Data"
+                      onClick={() => act('download_data', { ref: current_abnormality.type })} />}
+                  </LabeledList.Item>
                 </LabeledList>
               )}
             </Section>
