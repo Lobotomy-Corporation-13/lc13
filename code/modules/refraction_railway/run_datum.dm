@@ -669,20 +669,21 @@ GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 	// Unused sector pens don't carry out as a reward.
 	RemoveUnusedPens()
 	var/total_ds = ElapsedDeciseconds()
-	// Restore attributes now so a player stepping off isn't stuck overridden.
-	for(var/mob/living/carbon/human/H as anything in members)
-		if(ishuman(H))
-			RestoreAttributes(H)
-	// Bring everyone to the checkpoint; dead ones via the bench timer.
-	TeleportToCheckpoint()
+	// Heal before RestoreAttributes: the attribute drop recalcs maxHealth
+	// via updatehealth(), which kills any wounded player whose damage now
+	// exceeds the new max. Heal first zeros damage, so the recalc lands
+	// at health == new maxHealth. TeleportToCheckpoint runs last because
+	// it skips DEAD mobs.
 	for(var/mob/living/carbon/human/H as anything in members)
 		if(QDELETED(H) || !ishuman(H))
 			continue
-		// Insane (but alive): bench timer cures after onset finishes.
-		// Dead: revived here so success isn't gated on the bench timer.
 		if(H.sanity_lost && H.stat != DEAD)
 			continue
 		HealMember(H)
+	for(var/mob/living/carbon/human/H as anything in members)
+		if(ishuman(H))
+			RestoreAttributes(H)
+	TeleportToCheckpoint()
 	var/list/owner_loadout = loadouts[lobby_owner]
 	var/list/member_ckeys = list()
 	for(var/mob/M as anything in members)

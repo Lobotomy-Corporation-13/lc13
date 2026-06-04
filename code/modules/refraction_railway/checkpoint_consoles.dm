@@ -78,25 +78,23 @@
 /obj/structure/refraction_starlight_shop/ui_data(mob/user)
 	var/list/data = list()
 	data["balance"] = SSrefraction_railway.GetStarlight(user.ckey)
+	data["deprecation_note"] = "Starlight quirks are being retired. \
+		Refund here to recover your full spent Starlight \
+		— a replacement progression system is in development."
 	var/list/rows = list()
 	for(var/V in SSquirks.quirks)
 		var/datum/quirk/T = SSquirks.quirks[V]
 		if(!initial(T.starlight_locked))
 			continue
 		var/quirk_name = initial(T.name)
-		var/req_line = initial(T.required_line_completed)
-		var/datum/refraction_line/RL = req_line ? SSrefraction_railway.lines[req_line] : null
+		if(!SSrefraction_railway.IsQuirkUnlocked(user.ckey, quirk_name))
+			continue
 		rows += list(list(
-			"name"          = quirk_name,
-			"desc"          = initial(T.desc),
-			"cost"          = initial(T.starlight_cost),
-			"unlocked"      = SSrefraction_railway.IsQuirkUnlocked(user.ckey, quirk_name),
-			"active"        = SSrefraction_railway.IsHubQuirkActive(user.ckey, quirk_name),
-			"line_required" = req_line,
-			"line_name"     = RL ? RL.name : null,
-			"line_color"    = RL ? RL.display_color : null,
-			"line_done"     = req_line ? SSrefraction_railway.HasCompletedLine(user.ckey, req_line) : TRUE,
-			"line_locked"   = (RL && RL.locked) ? TRUE : FALSE,
+			"name"     = quirk_name,
+			"desc"     = initial(T.desc),
+			"cost"     = initial(T.starlight_cost),
+			"unlocked" = TRUE,
+			"active"   = SSrefraction_railway.IsHubQuirkActive(user.ckey, quirk_name),
 		))
 	data["quirks"] = rows
 	return data
@@ -109,11 +107,13 @@
 	if(!quirk_name)
 		return
 	switch(action)
-		if("purchase")
-			if(SSrefraction_railway.PurchaseQuirk(usr.ckey, quirk_name))
-				to_chat(usr, span_nicegreen("Unlocked [quirk_name]. (balance: [SSrefraction_railway.GetStarlight(usr.ckey)])"))
+		if("refund")
+			var/datum/quirk/Q = SSquirks.quirks[quirk_name]
+			var/refunded = Q ? initial(Q.starlight_cost) : 0
+			if(SSrefraction_railway.RefundQuirk(usr, quirk_name))
+				to_chat(usr, span_nicegreen("Refunded [quirk_name] (+[refunded] ★). Balance: [SSrefraction_railway.GetStarlight(usr.ckey)]"))
 			else
-				to_chat(usr, span_warning("Cannot purchase [quirk_name]."))
+				to_chat(usr, span_warning("Cannot refund [quirk_name]."))
 		if("toggle_active")
 			if(SSrefraction_railway.ToggleHubQuirk(usr, quirk_name))
 				if(SSrefraction_railway.IsHubQuirkActive(usr.ckey, quirk_name))

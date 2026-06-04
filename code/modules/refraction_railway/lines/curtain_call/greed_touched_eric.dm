@@ -18,7 +18,7 @@
 /obj/effect/temp_visual/greed_burst_warning
 	name = "danger"
 	icon = 'icons/mob/actions/actions_items.dmi'
-	icon_state = "sniper_zoom"
+	icon_state = "sniper_zoom_blank"
 	layer = BELOW_MOB_LAYER
 	color = "#aa0000"
 	light_range = 2
@@ -27,7 +27,7 @@
 /obj/effect/temp_visual/greed_minion_burst
 	name = "danger"
 	icon = 'icons/mob/actions/actions_items.dmi'
-	icon_state = "sniper_zoom"
+	icon_state = "sniper_zoom_blank"
 	layer = BELOW_MOB_LAYER
 	color = "#ff3030"
 	duration = 8

@@ -10,7 +10,7 @@
 /obj/effect/temp_visual/capo_lunge_warning
 	name = "danger"
 	icon = 'icons/mob/actions/actions_items.dmi'
-	icon_state = "sniper_zoom"
+	icon_state = "sniper_zoom_blank"
 	layer = BELOW_MOB_LAYER
 	color = "#ff3030"
 	duration = 15
@@ -18,7 +18,7 @@
 /obj/effect/temp_visual/capo_sweep_warning
 	name = "danger"
 	icon = 'icons/mob/actions/actions_items.dmi'
-	icon_state = "sniper_zoom"
+	icon_state = "sniper_zoom_blank"
 	layer = BELOW_MOB_LAYER
 	color = "#ff8030"
 	duration = 11
@@ -26,7 +26,7 @@
 /obj/effect/temp_visual/capo_leap_warning
 	name = "danger"
 	icon = 'icons/mob/actions/actions_items.dmi'
-	icon_state = "sniper_zoom"
+	icon_state = "sniper_zoom_blank"
 	layer = BELOW_MOB_LAYER
 	color = "#9e1638"
 	light_range = 2
@@ -35,7 +35,7 @@
 /obj/effect/temp_visual/capo_flurry_warning
 	name = "danger"
 	icon = 'icons/mob/actions/actions_items.dmi'
-	icon_state = "sniper_zoom"
+	icon_state = "sniper_zoom_blank"
 	layer = BELOW_MOB_LAYER
 	color = "#9e1638"
 	duration = 6
@@ -43,7 +43,7 @@
 /obj/effect/temp_visual/capo_rat_loading_marker
 	name = "loading up"
 	icon = 'icons/mob/actions/actions_items.dmi'
-	icon_state = "sniper_zoom"
+	icon_state = "sniper_zoom_blank"
 	layer = BELOW_MOB_LAYER
 	color = "#ffd060"
 	duration = 40

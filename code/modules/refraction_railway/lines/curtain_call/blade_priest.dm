@@ -40,7 +40,7 @@
 /obj/effect/temp_visual/blade_priest_dash_warning
 	name = "danger"
 	icon = 'icons/mob/actions/actions_items.dmi'
-	icon_state = "sniper_zoom"
+	icon_state = "sniper_zoom_blank"
 	layer = BELOW_MOB_LAYER
 	color = "#aa0033"
 	duration = 8
@@ -49,7 +49,7 @@
 /obj/effect/temp_visual/blade_priest_sweep_warning
 	name = "danger"
 	icon = 'icons/mob/actions/actions_items.dmi'
-	icon_state = "sniper_zoom"
+	icon_state = "sniper_zoom_blank"
 	layer = BELOW_MOB_LAYER
 	color = "#5e1620"
 	duration = 9
@@ -58,7 +58,7 @@
 /obj/effect/temp_visual/blade_priest_cage_park
 	name = "verdict"
 	icon = 'icons/mob/actions/actions_items.dmi'
-	icon_state = "sniper_zoom"
+	icon_state = "sniper_zoom_blank"
 	layer = BELOW_MOB_LAYER
 	color = "#220011"
 	duration = 18

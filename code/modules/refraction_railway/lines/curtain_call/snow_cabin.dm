@@ -24,7 +24,7 @@
 /obj/effect/temp_visual/snow_cabin_warning
 	name = "danger"
 	icon = 'icons/mob/actions/actions_items.dmi'
-	icon_state = "sniper_zoom"
+	icon_state = "sniper_zoom_blank"
 	layer = BELOW_MOB_LAYER
 	color = "#c44b6e"
 

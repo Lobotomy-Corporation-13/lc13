@@ -22,7 +22,7 @@
 /obj/effect/temp_visual/azarus_snake_warning
 	name = "danger"
 	icon = 'icons/mob/actions/actions_items.dmi'
-	icon_state = "sniper_zoom"
+	icon_state = "sniper_zoom_blank"
 	layer = BELOW_MOB_LAYER
 	color = "#ffd700"
 	duration = 10
@@ -30,7 +30,7 @@
 /obj/effect/temp_visual/azarus_house_warning
 	name = "danger"
 	icon = 'icons/mob/actions/actions_items.dmi'
-	icon_state = "sniper_zoom"
+	icon_state = "sniper_zoom_blank"
 	layer = BELOW_MOB_LAYER
 	color = "#c41e3a"
 	duration = 9
@@ -38,7 +38,7 @@
 /obj/effect/temp_visual/azarus_wager_warning
 	name = "the house calls the bet"
 	icon = 'icons/mob/actions/actions_items.dmi'
-	icon_state = "sniper_zoom"
+	icon_state = "sniper_zoom_blank"
 	layer = BELOW_MOB_LAYER
 	color = "#c41e3a"
 	duration = 30
