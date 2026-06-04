@@ -2,6 +2,7 @@ import { useBackend, useLocalState } from '../backend';
 import {
   Box,
   Button,
+  Icon,
   Input,
   Section,
   Stack,
@@ -179,9 +180,12 @@ const RecordRow = props => {
     rank,
     isSectorOpen,
     onToggleSector,
-    extraButton,
+    olderCount,
+    isGroupOpen,
+    onToggleGroup,
     mini,
   } = props;
+  const hasOlder = !mini && (olderCount || 0) > 0;
   return (
     <Box
       p={mini ? 0.5 : 1}
@@ -206,7 +210,33 @@ const RecordRow = props => {
         </Stack.Item>
         <Stack.Item grow={1}>
           {!mini && (
-            <Box bold>{entry.ckey || entry.name || '???'}</Box>
+            <Box
+              bold
+              style={
+                hasOlder
+                  ? { cursor: 'pointer', 'user-select': 'none' }
+                  : {}
+              }
+              onClick={hasOlder ? onToggleGroup : undefined}>
+              {entry.ckey || entry.name || '???'}
+              {hasOlder && (
+                <Box
+                  as="span"
+                  ml={0.5}
+                  color="label"
+                  fontSize="11px">
+                  <Icon
+                    name={
+                      isGroupOpen ? 'chevron-up' : 'chevron-down'
+                    }
+                  />
+                  {' '}
+                  {isGroupOpen
+                    ? 'hide older'
+                    : `+${olderCount} older`}
+                </Box>
+              )}
+            </Box>
           )}
           <Box color="label" fontSize={mini ? '10px' : '11px'}>
             {(entry.members || []).join(', ')}
@@ -218,18 +248,11 @@ const RecordRow = props => {
           )}
         </Stack.Item>
         <Stack.Item>
-          <Stack>
-            {extraButton && (
-              <Stack.Item>{extraButton}</Stack.Item>
-            )}
-            <Stack.Item>
-              <Button
-                icon={isSectorOpen ? 'chevron-up' : 'chevron-down'}
-                content={isSectorOpen ? 'Collapse' : 'Per-sector'}
-                onClick={onToggleSector}
-              />
-            </Stack.Item>
-          </Stack>
+          <Button
+            icon={isSectorOpen ? 'chevron-up' : 'chevron-down'}
+            content={isSectorOpen ? 'Collapse' : 'Per-sector'}
+            onClick={onToggleSector}
+          />
         </Stack.Item>
       </Stack>
       {isSectorOpen && (
@@ -330,21 +353,9 @@ export const RecordsModal = (props, context) => {
                     setExpandedIdx(
                       expandedIdx === bestIdx ? null : bestIdx)
                   }
-                  extraButton={
-                    olderCount > 0 && (
-                      <Button
-                        icon={
-                          isGroupOpen ? 'chevron-up' : 'history'
-                        }
-                        content={
-                          isGroupOpen
-                            ? 'Hide older'
-                            : `Older runs (${olderCount})`
-                        }
-                        onClick={() => toggleGroup(group.key)}
-                      />
-                    )
-                  }
+                  olderCount={olderCount}
+                  isGroupOpen={isGroupOpen}
+                  onToggleGroup={() => toggleGroup(group.key)}
                 />
                 {isGroupOpen && olderCount > 0 && (
                   <Box ml={2} mb={0.5}>

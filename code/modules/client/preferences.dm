@@ -1170,6 +1170,12 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 		for(var/V in SSquirks.quirks)
 			var/datum/quirk/T = SSquirks.quirks[V]
 			var/quirk_name = initial(T.name)
+			// Sunset: Starlight quirks are no longer selectable here.
+			// Stale saved selections are silently dropped so they stop
+			// applying at spawn. Refunds happen at the SL terminal.
+			if(initial(T.starlight_locked))
+				all_quirks -= quirk_name
+				continue
 			var/has_quirk
 			var/quirk_cost = initial(T.value) * -1
 			var/lock_reason = "This trait is unavailable."

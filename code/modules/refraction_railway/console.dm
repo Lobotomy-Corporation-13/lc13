@@ -353,23 +353,15 @@
 	resistance_flags = INDESTRUCTIBLE
 	outfit = /datum/outfit/refraction_railway_agent
 	short_desc = "Bodies spawned here run the refraction railway."
-	flavour_text = "The Refraction Railway is a set of authored boss-rush lines that you and a small \
-		party can re-run as often as you want.\n\
-		Each run is a chain of sectors. Before every sector you pick a loadout at the loadout \
-		console (two weapons + one armor — chosen from the gear you can equip at the line's \
-		attribute floor); when the team is ready, the lobby owner starts the sector and you're \
-		dropped into a series of combat rooms that culminate in a boss.\n\
-		Clearing the whole line pays out Starlight, a meta-currency you spend at the Starlight \
-		terminal for permanent quirk unlocks. Your award is itemised on completion: a flat clear \
-		bonus, a signed time bonus against the line's expected time, +10 per distinct weapon or \
-		armor you used across the run, and any per-mob achievements you cleared.\n\
-		Achievements are short per-encounter challenges (avoid a damage type, prevent a heal, \
-		survive a mechanic) authored per line. They only become earnable AFTER your first clear of \
-		the line — first-time runners earn nothing from them and don't see them listed.\n\
-		Mobs start hidden in the Hub map and briefing console; the first time you actually walk \
-		into a node you fight, every mob in that node is permanently revealed for you across \
-		rounds. Death is not the end of a run — incapacitated players are revived and benched at \
-		the last checkpoint."
+	flavour_text = "\[Refraction Railway\] An authored boss-rush. Pick a line, party up, re-run as often as you want.\n\
+		\n\
+		\[Runs\] Each line is a chain of sectors. Pick a loadout (2 weapons + 1 armor) at the loadout console before each sector; the owner starts when ready. Incapacitated players revive at the last checkpoint.\n\
+		\n\
+		\[Rewards\] Clearing pays Starlight — meta-currency for permanent quirk unlocks at the Starlight terminal. The award itemises: flat clear bonus, signed time bonus vs. expected, +10 per distinct weapon/armor used, plus any achievements earned.\n\
+		\n\
+		\[Achievements\] Per-encounter challenges. Earnable only after your first clear of the line.\n\
+		\n\
+		\[Hub map\] Mobs in each node start hidden. Walking into a node reveals its mobs to you permanently."
 	assignedrole = "Refraction Railway Agent"
 
 /datum/outfit/refraction_railway_agent

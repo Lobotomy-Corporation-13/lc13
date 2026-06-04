@@ -35,7 +35,7 @@
 /obj/effect/temp_visual/mirror_warning
 	name = "mirror shards"
 	icon = 'icons/mob/actions/actions_items.dmi'
-	icon_state = "sniper_zoom"
+	icon_state = "sniper_zoom_blank"
 	layer = BELOW_MOB_LAYER
 	color = "#8a4dff"
 	light_range = 1
@@ -44,7 +44,7 @@
 /obj/effect/temp_visual/mirror_warning_zone
 	name = "mirror collapse"
 	icon = 'icons/mob/actions/actions_items.dmi'
-	icon_state = "sniper_zoom"
+	icon_state = "sniper_zoom_blank"
 	layer = BELOW_MOB_LAYER
 	color = "#c1a0ff"
 	duration = 15

@@ -388,11 +388,12 @@ SUBSYSTEM_DEF(refraction_railway)
 						"name"          = p["name"],
 						"loadout_icons" = LoadoutIconsForPaths(p["loadout"]),
 					))
+			var/list/rooms_in = sector["rooms"]
 			sectors_out += list(list(
 				"index"   = sector["index"],
 				"time_ds" = sector["time_ds"],
 				"players" = players_out,
-				"rooms"   = islist(sector["rooms"]) ? sector["rooms"].Copy() : list(),
+				"rooms"   = islist(rooms_in) ? rooms_in.Copy() : list(),
 			))
 	var/raw_ts = entry["timestamp"]
 	return list(
@@ -725,34 +726,28 @@ SUBSYSTEM_DEF(refraction_railway)
 			return FALSE
 	return TRUE
 
-/// Spends starlight to permanently unlock a quirk for `ckey`. Returns TRUE on success.
-/datum/controller/subsystem/refraction_railway/proc/PurchaseQuirk(ckey, quirk_name)
-	if(!ckey || !quirk_name)
+/// Refunds an unlocked Starlight quirk: returns 100% of the original
+/// `starlight_cost` to the player's balance and removes the quirk from
+/// their unlocked list. Auto-unequips any hub-test instance first so
+/// the refund doesn't leave an orphaned attached quirk on the mob.
+/// Takes a mob (not a ckey) so the unequip helper can reach the body.
+/datum/controller/subsystem/refraction_railway/proc/RefundQuirk(mob/living/user, quirk_name)
+	if(!user?.ckey || !quirk_name)
 		return FALSE
 	var/datum/quirk/Q = SSquirks.quirks[quirk_name]
 	if(!Q || !initial(Q.starlight_locked))
 		return FALSE
-	if(IsQuirkUnlocked(ckey, quirk_name))
+	if(!IsQuirkUnlocked(user.ckey, quirk_name))
 		return FALSE
-	var/cost = initial(Q.starlight_cost)
-	if(cost < 0)
-		return FALSE
-	var/req_line = initial(Q.required_line_completed)
-	if(req_line)
-		if(!HasCompletedLine(ckey, req_line))
-			return FALSE
-		var/datum/refraction_line/RL = lines[req_line]
-		if(istype(RL) && RL.locked)
-			return FALSE
-	var/list/entry = GetOrCreateStarlightEntry(ckey)
+	if(IsHubQuirkActive(user.ckey, quirk_name))
+		ToggleHubQuirk(user, quirk_name)
+	var/list/entry = GetOrCreateStarlightEntry(user.ckey)
 	if(!entry)
 		return FALSE
-	var/balance = entry["balance"] || 0
-	if(balance < cost)
-		return FALSE
-	entry["balance"] = balance - cost
+	var/cost = initial(Q.starlight_cost)
+	entry["balance"] = (entry["balance"] || 0) + cost
 	var/list/unlocked = entry["unlocked"]
-	unlocked |= quirk_name
+	unlocked -= quirk_name
 	SSpersistence.SaveRefractionStarlight()
 	return TRUE
 
