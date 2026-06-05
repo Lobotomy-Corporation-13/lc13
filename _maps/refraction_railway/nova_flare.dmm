@@ -209,7 +209,7 @@
 /turf/open/floor/stone,
 /area/refraction/nova_flare)
 "lo" = (
-/obj/structure/mineral_door/iron,
+/obj/structure/grille/broken,
 /turf/open/floor/wood,
 /area/refraction/nova_flare)
 "lu" = (
@@ -2099,8 +2099,8 @@ mb
 ad
 ES
 ES
-xp
-xp
+ph
+ph
 ES
 ES
 ES
@@ -2321,7 +2321,7 @@ ES
 ES
 ES
 VV
-xp
+ph
 VV
 ES
 pf
