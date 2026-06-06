@@ -4,7 +4,7 @@
 		return FALSE
 
 	// Damage shuffler station trait.
-	if(GLOB.damage_type_shuffler?.is_enabled && IsColorDamageType(damage_type))
+	if(SSmaptype.shuffler_active_for(src) && IsColorDamageType(damage_type))
 		var/datum/damage_type_shuffler/shuffler = GLOB.damage_type_shuffler
 		var/new_damage_type = shuffler.mapping_offense[damage_type]
 		damage_type = new_damage_type

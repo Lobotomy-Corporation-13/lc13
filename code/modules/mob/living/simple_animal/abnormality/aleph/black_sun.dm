@@ -54,6 +54,8 @@
 	if(stage == 1)
 		UnregisterAll()
 		for(var/mob/living/carbon/human/L in GLOB.player_list)
+			if(!is_station_level(L.z))
+				continue
 			RegisterMob(L)
 
 	Refreshment(10)
@@ -72,6 +74,8 @@
 			to_chat(GLOB.clients,span_danger("YOUR TIME IS LIMITED. THE SUN IS NEAR IT'S ZENITH."))
 			SSweather.run_weather(/datum/weather/bloody_water)
 			for(var/mob/living/carbon/human/L in GLOB.player_list)
+				if(!is_station_level(L.z))
+					continue
 				flash_color(L, flash_color = COLOR_RED, flash_time = 150)
 			nextstage = world.time + 2 MINUTES
 		if(5)
