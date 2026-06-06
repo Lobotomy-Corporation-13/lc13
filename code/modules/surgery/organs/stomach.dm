@@ -189,18 +189,18 @@
 	var/crystal_charge = ETHEREAL_CHARGE_FULL
 
 /obj/item/organ/stomach/ethereal/on_life()
-	..()
+	. = ..()
 	adjust_charge(-ETHEREAL_CHARGE_FACTOR)
 
 /obj/item/organ/stomach/ethereal/Insert(mob/living/carbon/M, special = 0)
-	..()
+	. = ..()
 	RegisterSignal(owner, COMSIG_PROCESS_BORGCHARGER_OCCUPANT, PROC_REF(charge))
 	RegisterSignal(owner, COMSIG_LIVING_ELECTROCUTE_ACT, PROC_REF(on_electrocute))
 
 /obj/item/organ/stomach/ethereal/Remove(mob/living/carbon/M, special = 0)
 	UnregisterSignal(owner, COMSIG_PROCESS_BORGCHARGER_OCCUPANT)
 	UnregisterSignal(owner, COMSIG_LIVING_ELECTROCUTE_ACT)
-	..()
+	return ..()
 
 /obj/item/organ/stomach/ethereal/proc/charge(datum/source, amount, repairs)
 	adjust_charge(amount / 3.5)
