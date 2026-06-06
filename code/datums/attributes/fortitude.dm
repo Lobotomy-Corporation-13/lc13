@@ -10,7 +10,7 @@
 /datum/attribute/fortitude/on_update(mob/living/carbon/human/user)
 	if(!istype(user))
 		return FALSE
-	initial_stat_value = SSmaptype.chosen_trait == FACILITY_TRAIT_XP_MOD ? DEFAULT_HUMAN_MAX_HEALTH_XP : DEFAULT_HUMAN_MAX_HEALTH
+	initial_stat_value = SSmaptype.trait_active_for(user, FACILITY_TRAIT_XP_MOD) ? DEFAULT_HUMAN_MAX_HEALTH_XP : DEFAULT_HUMAN_MAX_HEALTH
 	user.death_threshold = HEALTH_THRESHOLD_DEAD - round((level + level_buff) * 0.5)
 	user.hardcrit_threshold = HEALTH_THRESHOLD_FULLCRIT - round((level + level_buff) * 0.25)
 	return TRUE
