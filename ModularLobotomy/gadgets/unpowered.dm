@@ -1016,8 +1016,8 @@
 	popup.open()
 
 /obj/item/advanced_printer/Topic(href, href_list)
-
-	if(..())
+	. = ..()
+	if(.)
 		return
 	switch(href_list["choice"])
 		if("print")

@@ -77,7 +77,6 @@
 		paper = paper + 1
 	
 	if(istype(O, /obj/item/advanced_printer))
-		. = 1
 		if(device)
 			to_chat(user, "<span class='warning'>A device is already loaded into the machine.</span>")
 		else
@@ -86,8 +85,7 @@
 			var/obj/item/advanced_printer/dummy_device = O
 			device = dummy_device
 			to_chat(user, "<span class='notice'>You insert the device into the machine.</span>")
-
-	..()
+	return ..()
 
 /obj/machinery/computer/abnormality_archive/AltClick(mob/living/user)
 	if(device)
