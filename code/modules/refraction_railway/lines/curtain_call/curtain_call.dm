@@ -8,9 +8,10 @@
  * line is end-to-end playable for layout / briefing / leaderboard testing
  * while the real per-encounter bosses are authored elsewhere.
  *
- * Subway-map layout: 11 visual nodes (1 start + 9 boss-combat + 1 finish)
- * positioned to evoke the Sculptor constellation rather than a horizontal
- * snake. Authoring conventions: see code/modules/refraction_railway/AUTHORING.md.
+ * Subway-map layout: 16 visual nodes (start + 8 boss-combat + 4 checkpoints
+ * + 2 boss-wave finale nodes + finish) positioned to evoke the Sculptor
+ * constellation rather than a horizontal snake. Authoring conventions: see
+ * code/modules/refraction_railway/AUTHORING.md.
  */
 
 /area/refraction/curtain_call
@@ -20,8 +21,9 @@
 /datum/refraction_line/curtain_call
 	id                  = "curtain_call"
 	name                = "Line 2: Curtain Call"
-	description         = "Four acts an unseen director has rehearsed for \
-		you, and a fifth that wants to meet its audience."
+	description         = "Four acts a hand we haven't met has rehearsed \
+		for you, and a fifth where that hand steps under the lights to \
+		introduce itself."
 	map_path            = "_maps/refraction_railway/curtain_call.dmm"
 	attribute_set_value = 80
 	max_lobby_size      = 4
@@ -42,11 +44,13 @@
 
 	map_viewbox = list("w" = 600, "h" = 400)
 
-	// 17 visual nodes: start, 4×(2 combat + 1 checkpoint), 3 boss-wave
-	// combat nodes, finish. Same 600x400 viewBox as Nova Flare so node
-	// sizes render at the same visual scale across both lines. Sector
-	// pairs are tightly clustered (~45-55px apart); checkpoints sit far
-	// from neighbours (~80-115px) to read as breaks in the chain.
+	// 16 visual nodes: start, 4×(2 combat + 1 checkpoint), 2 boss-wave
+	// nodes (w1 combat + w2 boss — w2 holds Phase 2 and Phase 3 in a
+	// single in-node transition), finish. Same 600x400 viewBox as Nova
+	// Flare so node sizes render at the same visual scale across both
+	// lines. Sector pairs are tightly clustered (~45-55px apart);
+	// checkpoints sit far from neighbours (~80-115px) to read as breaks
+	// in the chain.
 	nodes = list(
 		list("x" = 40,  "y" = 90,  "kind" = "start"),       //  1
 		list("x" = 110, "y" = 120, "kind" = "combat"),      //  2  zeal_s1n1
@@ -62,9 +66,8 @@
 		list("x" = 475, "y" = 305, "kind" = "combat"),      // 12  zeal_s4n2
 		list("x" = 510, "y" = 230, "kind" = "checkpoint"),  // 13
 		list("x" = 525, "y" = 165, "kind" = "combat"),      // 14  serio_zeal_w1
-		list("x" = 545, "y" = 135, "kind" = "combat"),      // 15  serio_zeal_w2
-		list("x" = 565, "y" = 100, "kind" = "boss"),        // 16  serio_zeal_w3
-		list("x" = 585, "y" = 55,  "kind" = "finish"),      // 17
+		list("x" = 555, "y" = 115, "kind" = "boss"),        // 15  serio_zeal_w2 (holds Phase 2 + Phase 3)
+		list("x" = 585, "y" = 55,  "kind" = "finish"),      // 16
 	)
 	edges = list(
 		list("from" = 1,  "to" = 2,  "shape" = "line"),
@@ -81,8 +84,7 @@
 		list("from" = 12, "to" = 13, "shape" = "line"),
 		list("from" = 13, "to" = 14, "shape" = "line"),
 		list("from" = 14, "to" = 15, "shape" = "line", "dashed" = TRUE),
-		list("from" = 15, "to" = 16, "shape" = "line", "dashed" = TRUE),
-		list("from" = 16, "to" = 17, "shape" = "curve", "dashed" = TRUE),
+		list("from" = 15, "to" = 16, "shape" = "curve", "dashed" = TRUE),
 	)
 
 	recommended_tier_lines = list(
@@ -98,7 +100,9 @@
 		"Two figures step onto the platform in matched colours. The taller \
 			is dressed for the audience - a hand-tailored Thumb East \
 			black. The smaller pads at his heel, leashless, still red \
-			around the mouth. They have rehearsed this scene.",
+			around the mouth. They have rehearsed this scene many \
+			times - a pairing the one writing this has been one half \
+			of for as long as he has been writing.",
 		list(
 			/mob/living/simple_animal/hostile/thumb_east_capo/refracted = 1,
 			/mob/living/simple_animal/hostile/rat/capo_rat/refracted   = 1,
@@ -111,8 +115,9 @@
 		"The next performer is dealt onto the stage like a card. Oversized \
 			ebony dice clatter across the boards in front of him, every \
 			one showing the lowest face. He calls a bet that no shield \
-			will refuse - only the table can answer it. Roll the table \
-			high.",
+			will refuse - only the table can answer it. It is the kind \
+			of bet the one writing this has been losing for a long \
+			time. Roll the table high.",
 		list(
 			/mob/living/simple_animal/hostile/distortion/azarus/refracted = 1,
 		),
@@ -123,7 +128,9 @@
 		"Sector 2, Act I: Borrowed Faces",
 		"The next performer has no face of its own, so it borrows the \
 			cast's. It will play role after role at us, and only between \
-			costumes can we glimpse the longing thing wearing them.",
+			costumes can we glimpse the longing thing wearing them - the \
+			same complaint someone in the wings has heard about himself \
+			more than once, and once mistook for a compliment.",
 		list(
 			/mob/living/simple_animal/hostile/distortion/understudy = 1,
 		),
@@ -134,7 +141,9 @@
 		"The next scene is staged in a clinic that has finished turning \
 			into a fleshly temple. A bloody copy of a polite man we may \
 			have met stands at its altar, and every drop spilt here \
-			belongs to him.",
+			belongs to him. The playbill notes he was kind once. He \
+			thought he was helping - a line someone in the wings has \
+			underlined twice in his own copy.",
 		list(
 			/mob/living/simple_animal/hostile/greed_touched_eric/refracted = 1,
 		),
@@ -146,7 +155,9 @@
 		"The next scene calls in something the audience cannot place. \
 			It steps through a crack in the stage with too many versions \
 			of itself in tow, and it is hunting the rest of them down so \
-			it can keep them. It only ever wanted to be more than it was.",
+			it can keep them. It only ever wanted to be more than it \
+			was - a line a young star somewhere keeps a copy of, in \
+			case one of his own sent-out pieces ever comes back wrong.",
 		list(
 			/mob/living/simple_animal/hostile/mirror_shattered_reaper/refracted = 1,
 		),
@@ -157,8 +168,10 @@
 		"The line bends through a clearing. A small wooden cabin sits in \
 			fresh snow, its windows yellow with warmth. Step closer and \
 			the snow turns dense, drawing in toward the windows. Inside, \
-			something is being kept safe. Whatever it is, it would rather \
-			no one ever found it.",
+			something is being kept safe. It would rather no one ever \
+			found it - a young star, perhaps, who sketched a house like \
+			this on the inside cover of every notebook he ever owned, \
+			and thought he was sketching a refuge.",
 		list(
 			/mob/living/simple_animal/hostile/snow_cabin/refracted = 1,
 		),
@@ -177,7 +190,9 @@
 			circles them at shoulder height, unsupported, and it is the \
 			blade that speaks. He once believed kind people ought to be \
 			met with kindness. He has since revised the lesson - and he \
-			believes he is helping.",
+			believes he is helping. It is an argument someone off-stage \
+			has met inside their own head and lost to before. They have \
+			not warned the audience about that part.",
 		list(
 			/mob/living/simple_animal/hostile/distortion/blade_priest/refracted = 1,
 		),
@@ -188,7 +203,11 @@
 		"Someone who came onto the platform to play the lead, and stopped \
 			being lead-of-a-play somewhere along the way. The stage has \
 			become a temple under her feet; the audience worships in the \
-			wings. She will not come down on her own.",
+			wings. She will not come down on her own. Someone off-stage \
+			has read warnings about her shape their whole career - the \
+			cost of staying so long the role becomes the only ground \
+			left to stand on - and is afraid they will not feel the \
+			moment it happens to them.",
 		list(
 			/mob/living/simple_animal/hostile/achiyalabopa/refracted = 1,
 		),
@@ -203,11 +222,13 @@
 	// the wave-specific start_point landmarks at the same coords if they
 	// want a single-room finale.
 	AddNode("serio_zeal_w1", "serio_zeal_w1_spawns",
-		"Curtain Fall, Wave I: The Director Enters",
+		"Curtain Fall, Wave I: The Writer Enters",
 		"The curtain ripples and the writer steps onto the stage in \
 			person. He bows once for the audience that has been here \
 			the whole time, and signals for the first wave of his \
-			finale to begin.",
+			finale to begin. Every role he has ever borrowed is loaded \
+			into the script of this wave. He is the only one who \
+			remembers which performer he was first rehearsing for.",
 		list(
 			/mob/living/simple_animal/hostile/young_star = 1,
 		),
@@ -216,23 +237,13 @@
 
 	AddNode("serio_zeal_w2", "serio_zeal_w2_spawns",
 		"Curtain Fall, Wave II: The Cast Returns",
-		"Performers we thought were retired step back onto the stage \
-			to support the director. They have new lines, and the \
-			lights have brightened to match.",
+		"A voice that has been waiting in the wings steps to centre \
+			stage. The writer is no longer the one speaking - and what \
+			is speaking for him has spent a long time rehearsing the \
+			case that he should not be here at all. The lights brighten \
+			on the new act. It believes it is helping.",
 		list(
 			// TODO: replace with the real Serio Zeal Wave II roster
-			/mob/living/simple_animal/hostile/netherworld/migo/refracted = 1,
-		),
-		boss = TRUE,
-		locked = TRUE)
-
-	AddNode("serio_zeal_w3", "serio_zeal_w3_spawns",
-		"Curtain Fall, Wave III: The Final Bow",
-		"The stage has become unrecognisable. The director has \
-			discarded the last of his persona, and what is left of him \
-			intends to leave a mark on the audience worth remembering.",
-		list(
-			// TODO: replace with the real Serio Zeal Wave III roster
 			/mob/living/simple_animal/hostile/netherworld/migo/refracted = 1,
 		),
 		boss = TRUE,
@@ -242,43 +253,62 @@
 		list(
 			"name"        = "Sector 1: The Opening Bill",
 			"description" = "The first act of a play is always cheap, the \
-				playbill insists. A street brawl. A loaded dice game. The \
-				director borrowed two performers from the city below and \
-				put them under the stage lights just to see if we'd notice \
-				the difference.",
+				playbill insists. A street brawl in matched colours, a \
+				loaded dice game where every face has been turned the \
+				same way. The one writing this borrowed two performers \
+				from the city below and put them under the stage lights \
+				to see if we'd notice the difference - and to see if \
+				anyone notices he has been rehearsing the look of being \
+				fine for a very long time.",
 			"node_ids"    = list("zeal_s1n1", "zeal_s1n2"),
 		),
 		list(
 			"name"        = "Sector 2: The Sin Plays",
 			"description" = "The next two performers are not playing roles; \
 				they are the role. One of them wants to be everyone in the \
-				audience. The other wants what those people are holding. \
-				They are very honest about it.",
+				audience - would peel a face off the front row if no one \
+				stopped him. The other wants what those people are \
+				holding - and what they are holding is what runs in their \
+				veins. They are very honest about it, which is more than \
+				someone in the wings has ever been able to manage about \
+				himself.",
 			"node_ids"    = list("zeal_s2n1", "zeal_s2n2"),
 		),
 		list(
 			"name"        = "Sector 3: Where the Stage Folds",
 			"description" = "The set folds the way it was rehearsed to. \
 				Through one crack, more of someone than the audience can \
-				keep track of. Through another, a cottage in fresh snow \
-				that takes its mark on cue. The playhouse is more than a \
-				playhouse this act.",
+				keep track of, pulling every spare version back inside. \
+				Through another, a small lit cottage in fresh snow whose \
+				door has been closed for a long time. The playhouse is \
+				more than a playhouse this act. A young star somewhere \
+				has stayed up nights worrying he could end up at either \
+				address.",
 			"node_ids"    = list("zeal_s3n1", "zeal_s3n2"),
 		),
 		list(
 			"name"        = "Sector 4: After Humanity",
 			"description" = "Two performers who are no longer playing human \
-				roles. One because he believed he could carve the human out \
-				and keep the better half; one because she became something \
-				past being human and her audience agreed. They will not \
-				return on their own.",
+				roles. One because he believed he could carve the human \
+				out and keep the better half - that the kindness people \
+				deserved was the cut, and he was being merciful. One \
+				because she became something past being human and her \
+				audience agreed, and now neither one can let the other \
+				come down. They will not return on their own. Someone \
+				off-stage has built the rest of the line as a chase \
+				between these two endings, and is no longer sure which \
+				of them they are running from.",
 			"node_ids"    = list("zeal_s4n1", "zeal_s4n2"),
 		),
 		list(
 			"name"        = "Sector 5: Curtain Fall",
-			"description" = "The director steps onto the stage in person. \
-				He means every word of the story he has written for us, \
-				and he will see it finished across three rising waves.",
-			"node_ids"    = list("serio_zeal_w1", "serio_zeal_w2", "serio_zeal_w3"),
+			"description" = "The writer steps onto the stage in person at \
+				last. The audience has been here the whole time, and so \
+				has the script. Every performer in the line has been a \
+				piece of him put under the lights to see if we'd \
+				recognise it. He has written this finale across two \
+				rising waves - the second one containing more than one \
+				ending - and he means every word.",
+			"node_ids"    = list("serio_zeal_w1", "serio_zeal_w2"),
 		),
 	)

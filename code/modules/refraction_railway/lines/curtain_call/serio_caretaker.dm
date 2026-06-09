@@ -28,8 +28,6 @@
  * Sprites (placeholder):
  *   Crystal:   icons/effects/96x96.dmi state "smoke2" (96x96, needs
  *              pixel_x/y = -32 to center on the 32x32 tile)
- *   Caretaker: ModularLobotomy/_Lobotomyicons/teaser_mobs.dmi state
- *              "young_star" recolored to #c30fff
  */
 
 // ---------- The Crystal (Star's seal) ----------
@@ -63,6 +61,11 @@
 	anchored = TRUE
 	move_to_delay = 999
 	mob_biotypes = MOB_MINERAL
+	// Marks the crystal as "glass-like" so Phase 3 projectiles with
+	// projectile_phasing = PASSGLASS phase through harmlessly. Without
+	// this, the lance from echo_anchor would impact the crystal en
+	// route to the Knight on the same row.
+	pass_flags_self = PASSGLASS
 	del_on_death = FALSE
 	refraction_manages_own_death = TRUE
 	loot = list()
@@ -86,6 +89,9 @@
 	var/blue_tint = "#a0d0ff"
 	/// Tint applied during Red, per bracket. Looked up in OnBracketChanged.
 	var/red_tint = "#ff5f5f"
+	/// Phase 3 marker. Once flipped, the Crystal is permanently
+	/// invulnerable and the Caretaker has transitioned to Phase 3.
+	var/is_invulnerable_p3 = FALSE
 
 /mob/living/simple_animal/hostile/serio_crystal/Initialize(mapload)
 	. = ..()
@@ -106,11 +112,17 @@
 /// Run the parent adjust and then re-check the HP bracket. Blue vs
 /// Red is enforced through `damage_coeff` (set in EnterBlue/EnterRed
 /// via ChangeResistances) — Blue takes 10% damage, Red takes 100%.
-/// No early-out here.
+/// Phase 3 lockout: once `is_invulnerable_p3` is set, all damage is
+/// blocked outright. On the first crystal "death" (health <= 0) the
+/// parent Caretaker is signalled to enter Phase 3.
 /mob/living/simple_animal/hostile/serio_crystal/adjustHealth(amount, updating_health = TRUE, forced = FALSE)
+	if(is_invulnerable_p3 && amount > 0)
+		return 0
 	. = ..(amount, updating_health, forced)
 	if(. > 0)
 		UpdateBracket()
+	if(health <= 0 && parent_caretaker && !QDELETED(parent_caretaker) && !parent_caretaker.phase_3)
+		parent_caretaker.TriggerPhase3Entry()
 
 /// Recalculates `current_bracket` from current health ratio. Called
 /// from adjustHealth on damage. The bracket controls which attack
@@ -169,13 +181,10 @@
 	name = "the Caretaker"
 	desc = "Serio Zeal's inner voice given a body. It paces around the crystal, \
 		watching over it. It does not look unkind."
-	// Placeholder visual: reuse the Young Star sprite, recolored to the
-	// brainstorm's Phase-2 violet palette (matches memory-attack rings).
 	icon = 'ModularLobotomy/_Lobotomyicons/teaser_mobs.dmi'
-	icon_state = "young_star"
-	icon_living = "young_star"
-	icon_dead = "young_star"
-	color = "#c30fff"
+	icon_state = "caretaker"
+	icon_living = "caretaker"
+	icon_dead = "caretaker"
 	faction = list("serio_zeal")
 	// `maxHealth` here is STAGGER HP, not kill HP. Reaching 0 enters the
 	// knockdown state; the Caretaker cannot be killed.
@@ -197,6 +206,33 @@
 	/// The Crystal this Caretaker is defending. Wired by external spawn
 	/// code or by Initialize when no Crystal is present.
 	var/mob/living/simple_animal/hostile/serio_crystal/parent_crystal
+	// ---- Phase 3 ----
+	/// Set TRUE on Phase 3 entry. Locks the Caretaker in place
+	/// (Move() returns FALSE), kills MainTick, and gates the Phase 3
+	/// attack rotation when later steps wire it up.
+	var/phase_3 = FALSE
+	/// Cached spawn anchors for anti-Knight attacks. Computed once at
+	/// Phase 3 entry: a 1×5 vertical column of turfs 2 tiles behind
+	/// the Caretaker. Each projectile picks a random tile from this
+	/// pool so spawns feel atmospheric instead of single-point.
+	var/list/turf/echo_anchor_pool
+	/// Phase 3 support mob refs. Spawned by SpawnSupportMobs() at
+	/// Phase 3 entry.
+	var/mob/living/simple_animal/hostile/serio_knight/knight_ref
+	var/mob/living/simple_animal/hostile/serio_sage/sage_ref
+	/// Set TRUE while a B3 Knight-aware AoE is telegraphing. Blocks
+	/// FireKnightAwareAoE from re-firing during the 5s charge window.
+	var/aoe_charging = FALSE
+	// ---- Murmur (Phase 3 minion) spawn state ----
+	/// Cached perimeter turfs (outer ring around the crystal) used as
+	/// Murmur spawn points. Built once at Phase 3 entry.
+	var/list/turf/perimeter_spawn_pool
+	/// Live Murmur references. Updated by SpawnMurmur / Murmur Destroy.
+	var/list/active_murmurs = list()
+	/// Per-bracket Murmur cap: 2 in B1, 3 in B2, 4 in B3.
+	var/murmurs_max_for_bracket = 2
+	/// world.time tracker for MurmurSpawnTick — when to spawn the next.
+	var/next_murmur_spawn_at = 0
 	// ---- Knockdown ----
 	var/knocked_down = FALSE
 	var/standup_at = 0
@@ -292,6 +328,211 @@
 	parent_crystal = C
 	C.parent_caretaker = src
 
+// ---------- Phase 3 entry ----------
+
+/// Phase 3 lock on movement. Once `phase_3` is set, the Caretaker
+/// becomes stationary at its fixed stage position. TRAIT_IMMOBILIZED
+/// has no effect on simple_animal mobs in this codebase, so this is
+/// the override path.
+/mob/living/simple_animal/hostile/serio_caretaker/Move()
+	if(phase_3)
+		return FALSE
+	return ..()
+
+/// Called from the Crystal's adjustHealth the first time its HP
+/// hits 0. Refills the Crystal, flips it permanently invulnerable,
+/// then hands off to EnterPhase3 for the actual stage setup.
+/mob/living/simple_animal/hostile/serio_caretaker/proc/TriggerPhase3Entry()
+	if(phase_3)
+		return
+	if(QDELETED(parent_crystal))
+		return
+	parent_crystal.adjustBruteLoss(-parent_crystal.maxHealth, forced = TRUE)
+	parent_crystal.is_invulnerable_p3 = TRUE
+	parent_crystal.ChangeResistances(list(RED_DAMAGE = 0, WHITE_DAMAGE = 0, BLACK_DAMAGE = 0, PALE_DAMAGE = 0))
+	EnterPhase3()
+
+/// Locks the stage: flips the phase_3 flag, snaps the Caretaker to its
+/// fixed tile (3 west of the crystal), caches the echo-line anchor for
+/// later anti-Knight attack spawns, and brings the support mobs onto
+/// the stage via SpawnSupportMobs.
+/mob/living/simple_animal/hostile/serio_caretaker/proc/EnterPhase3()
+	if(phase_3)
+		return
+	phase_3 = TRUE
+	visible_message(span_userdanger("The seal strains. The stage rearranges itself."))
+	var/turf/crystal_turf = get_turf(parent_crystal)
+	if(crystal_turf)
+		var/turf/caretaker_pos = locate(crystal_turf.x - 3, crystal_turf.y, crystal_turf.z)
+		if(caretaker_pos)
+			forceMove(caretaker_pos)
+		// Caretaker is west of the crystal — face EAST to look at it.
+		setDir(EAST)
+		// Echo-line column sits 2 tiles west of the Caretaker (which is
+		// 3 tiles west of the crystal), spanning 5 tiles vertically.
+		// Each projectile picks a random tile from this pool at fire
+		// time; the salvo uses all 5 for a wider fan.
+		echo_anchor_pool = list()
+		for(var/dy in -2 to 2)
+			var/turf/T = locate(crystal_turf.x - 5, crystal_turf.y + dy, crystal_turf.z)
+			if(T)
+				echo_anchor_pool += T
+				new /obj/effect/temp_visual/serio_echo_anchor(T)
+	SpawnSupportMobs()
+	BuildPerimeterPool()
+	// First anti-Knight attack fires 2s after Phase 3 entry — quick
+	// enough to read as "the encounter is alive", short enough that
+	// players know something is wrong if nothing fires. Subsequent
+	// ticks chain themselves at the bracket cadence (see Phase3Tick).
+	addtimer(CALLBACK(src, PROC_REF(Phase3Tick)), 2 SECONDS, TIMER_STOPPABLE)
+	// Murmur spawn loop runs on its own 1s tick so the 5s
+	// empty-recovery clock keeps ticking between Phase3Tick casts.
+	addtimer(CALLBACK(src, PROC_REF(MurmurSpawnTick)), 1 SECONDS, TIMER_STOPPABLE)
+	// B1 dialogue exchange fires after the support mobs finish their
+	// fade-in. B2/B3 exchanges fire from OnKnightSlashLanded.
+	addtimer(CALLBACK(src, PROC_REF(PlayBracketDialogue), 1), 1.5 SECONDS, TIMER_STOPPABLE)
+
+/mob/living/simple_animal/hostile/serio_caretaker/proc/BuildPerimeterPool()
+	perimeter_spawn_pool = list()
+	if(QDELETED(parent_crystal))
+		return
+	var/turf/crystal_turf = get_turf(parent_crystal)
+	if(!crystal_turf)
+		return
+	// Spawn pool: any non-dense tile within view 8 of the crystal,
+	// but at least 3 tiles away from the Knight and the Sage so
+	// Murmurs don't crowd the support mobs.
+	for(var/turf/T in view(8, crystal_turf))
+		if(T.density)
+			continue
+		if(knight_ref && !QDELETED(knight_ref) && get_dist(T, knight_ref) < 3)
+			continue
+		if(sage_ref && !QDELETED(sage_ref) && get_dist(T, sage_ref) < 3)
+			continue
+		perimeter_spawn_pool += T
+
+/// Spawn the Sage and Knight at their fixed stage tiles. Mirrors the
+/// SpawnCrystalNearby() pattern: the parent boss creates the support
+/// mobs mid-encounter rather than them being part of the wave roster.
+/mob/living/simple_animal/hostile/serio_caretaker/proc/SpawnSupportMobs()
+	if(QDELETED(parent_crystal))
+		return
+	var/turf/crystal_turf = get_turf(parent_crystal)
+	if(!crystal_turf)
+		return
+	var/turf/knight_pos = locate(crystal_turf.x + 2, crystal_turf.y, crystal_turf.z)
+	var/turf/sage_pos = locate(crystal_turf.x + 2, crystal_turf.y + 3, crystal_turf.z)
+	if(knight_pos)
+		knight_ref = new /mob/living/simple_animal/hostile/serio_knight(knight_pos)
+		// Knight is east of the crystal — face WEST to look at it.
+		knight_ref.setDir(WEST)
+	if(sage_pos)
+		sage_ref = new /mob/living/simple_animal/hostile/serio_sage(sage_pos)
+		// Sage is north of the Knight (= north-east of the crystal) —
+		// face SOUTH so the sight-line covers both the Knight tile and
+		// the crystal/player movement zone.
+		sage_ref.setDir(SOUTH)
+	BindSupport(knight_ref, sage_ref)
+
+/// Wire up the parent/sibling back-references on the support mobs.
+/// Mirrors BindCrystal().
+/mob/living/simple_animal/hostile/serio_caretaker/proc/BindSupport(mob/living/simple_animal/hostile/serio_knight/K, mob/living/simple_animal/hostile/serio_sage/S)
+	if(K && !QDELETED(K))
+		K.parent_caretaker = src
+		K.sage_ref = S
+	if(S && !QDELETED(S))
+		S.parent_caretaker = src
+		S.knight_ref = K
+
+/// Murmur spawn loop. Two modes: when no Murmurs are alive, a 5-second
+/// empty-recovery timer arms and spawns 2 Murmurs in one burst. With
+/// 1+ alive (but under the bracket cap), a 15-second steady trickle
+/// spawns one Murmur at a time. At cap, the timer pauses. Self-reschedules
+/// every second so the timers tick independently of the Phase3Tick
+/// attack cadence.
+/mob/living/simple_animal/hostile/serio_caretaker/proc/MurmurSpawnTick()
+	if(!phase_3 || QDELETED(src))
+		return
+	var/now = world.time
+	var/alive_count = length(active_murmurs)
+	if(alive_count == 0)
+		if(next_murmur_spawn_at == 0 || next_murmur_spawn_at > now + 5 SECONDS)
+			next_murmur_spawn_at = now + 5 SECONDS
+		if(now >= next_murmur_spawn_at)
+			var/to_spawn = min(2, murmurs_max_for_bracket)
+			for(var/i in 1 to to_spawn)
+				SpawnMurmur()
+			next_murmur_spawn_at = now + 15 SECONDS
+	else if(alive_count < murmurs_max_for_bracket)
+		if(next_murmur_spawn_at == 0)
+			next_murmur_spawn_at = now + 15 SECONDS
+		if(now >= next_murmur_spawn_at)
+			SpawnMurmur()
+			next_murmur_spawn_at = now + 15 SECONDS
+	else
+		next_murmur_spawn_at = 0
+	addtimer(CALLBACK(src, PROC_REF(MurmurSpawnTick)), 1 SECONDS, TIMER_STOPPABLE)
+
+/// Spawn one Murmur on a free perimeter tile. Filters out tiles with
+/// a live player on them. Picks a random attack ID 1-7 for the Murmur's
+/// per-cadence attack.
+/mob/living/simple_animal/hostile/serio_caretaker/proc/SpawnMurmur()
+	if(!length(perimeter_spawn_pool))
+		return
+	var/list/candidates = perimeter_spawn_pool.Copy()
+	var/turf/picked = null
+	while(length(candidates))
+		var/turf/T = pick_n_take(candidates)
+		var/blocked = FALSE
+		for(var/mob/living/carbon/human/H in T)
+			if(H.stat != DEAD)
+				blocked = TRUE
+				break
+		if(!blocked)
+			picked = T
+			break
+	if(!picked)
+		return
+	var/attack_id = rand(1, 7)
+	var/mob/living/simple_animal/hostile/serio_murmur/M = new(picked, src, knight_ref, attack_id)
+	active_murmurs += M
+
+/// Called by the Knight after a slash animation completes. Snaps the
+/// crystal HP to just below the next bracket threshold and calls
+/// UpdateBracket() so the existing Phase 2 bracket-transition logic
+/// fires (dialogue beat, memory-pool swap, tint shift). For the
+/// final slash (bracket 3) the resolution sequence is a future step;
+/// for now the HP just snaps to 0 and the encounter stalls there.
+/mob/living/simple_animal/hostile/serio_caretaker/proc/OnKnightSlashLanded(bracket_just_cleared)
+	if(QDELETED(parent_crystal))
+		return
+	if(bracket_just_cleared >= 3)
+		// Bracket-3 slash: resolution sequence.
+		EndEncounter()
+		return
+	var/maxh = parent_crystal.maxHealth
+	var/target_health
+	switch(bracket_just_cleared)
+		if(1)
+			target_health = round(maxh * 0.75) - 1
+			murmurs_max_for_bracket = 3  // entering B2
+		if(2)
+			target_health = round(maxh * 0.25) - 1
+			murmurs_max_for_bracket = 4  // entering B3
+	// Bracket transition unpauses the Murmur spawn timer so the new
+	// cap is honored on the next tick.
+	next_murmur_spawn_at = 0
+	if(target_health)
+		// Direct write bypasses adjustHealth, so the invuln flag set in
+		// TriggerPhase3Entry doesn't block the snap. UpdateBracket()
+		// then detects the threshold cross and fires the existing
+		// Phase 2 transition handler.
+		parent_crystal.health = target_health
+		parent_crystal.UpdateBracket()
+	// New bracket dialogue exchange (delayed slightly so the slash
+	// finisher animation lands first).
+	addtimer(CALLBACK(src, PROC_REF(PlayBracketDialogue), bracket_just_cleared + 1), 1 SECONDS, TIMER_STOPPABLE)
+
 // ---------- Knockdown ----------
 
 /// Damage gate. While knocked down: immune. Otherwise: **intercept**
@@ -350,6 +591,10 @@
 /mob/living/simple_animal/hostile/serio_caretaker/proc/MainTick()
 	main_tick_timer = null
 	if(QDELETED(src) || stat == DEAD)
+		return
+	if(phase_3)
+		// Phase 2 mechanics are silenced in Phase 3. The Phase 3 attack
+		// rotation runs from its own loop (added in step 6).
 		return
 	if(!knocked_down && !invoking_memory)
 		// Memory invocation has top priority — overrides patrol + Blue.
@@ -757,13 +1002,17 @@
 /// knocks them toward the huddle.
 /mob/living/simple_animal/hostile/serio_caretaker/proc/StartClosedCircleRing(turf/huddle, current_radius, contraction_delay, ring_damage, knockback_tiles, decay_stacks, can_shatter)
 	set waitfor = FALSE
-	var/list/ring_visuals = SpawnClosedCircleRing(huddle, current_radius, contraction_delay)
-	// Contract until we hit the 5x5 (radius 2) — the ring stops there.
+	// Every ring tile (every stage of the contraction, not just the
+	// final 5x5) is now a persistent damaging ring obj. That way
+	// crossing the flames mid-contraction also takes damage + the
+	// knockback toward the huddle via COMSIG_ATOM_ENTERED — not just
+	// at the final stable perimeter.
+	var/list/ring_visuals = SpawnClosedCircleRing(huddle, current_radius, ring_damage, knockback_tiles, decay_stacks, can_shatter)
 	while(current_radius > 2 && !QDELETED(src))
 		sleep(contraction_delay)
 		if(QDELETED(src))
 			break
-		for(var/obj/effect/temp_visual/serio_closed_circle_ring/R as anything in ring_visuals)
+		for(var/obj/effect/serio_light_wind_ring/R as anything in ring_visuals)
 			if(!QDELETED(R))
 				qdel(R)
 		ring_visuals.Cut()
@@ -771,7 +1020,10 @@
 		for(var/turf/T in range(current_radius, huddle))
 			if(get_dist(T, huddle) != current_radius)
 				continue
-			ring_visuals += new /obj/effect/temp_visual/serio_closed_circle_ring(T, contraction_delay)
+			ring_visuals += new /obj/effect/serio_light_wind_ring(T, 0, ring_damage, knockback_tiles, decay_stacks, can_shatter, src, huddle)
+			// "Ring lands on stander" case — COMSIG_ATOM_ENTERED only
+			// fires on entry, so we still apply damage manually to
+			// anyone already on the freshly-spawned ring tile.
 			for(var/mob/living/carbon/human/H in T)
 				if(H.stat == DEAD)
 					continue
@@ -786,28 +1038,23 @@
 						if(dest)
 							H.throw_at(dest, knockback_tiles, 2, src)
 	if(QDELETED(src))
+		for(var/obj/effect/serio_light_wind_ring/R as anything in ring_visuals)
+			if(!QDELETED(R))
+				qdel(R)
 		return
-	// At the 5x5, replace the temp_visual ring with a persistent
-	// damaging perimeter. Anyone trying to cross now takes the same
-	// damage + knockback toward the huddle "as if the ring passed over
-	// them" — reuses the Light Wind ring obj because the behavior
-	// matches.
-	for(var/obj/effect/temp_visual/serio_closed_circle_ring/R as anything in ring_visuals)
-		if(!QDELETED(R))
-			qdel(R)
-	ring_visuals.Cut()
+	// At the 5x5 the ring stops contracting and just stays. Cap each
+	// remaining ring obj at perimeter_duration via QDEL_IN.
 	var/perimeter_duration = 5 SECONDS
-	for(var/turf/T in range(2, huddle))
-		if(get_dist(T, huddle) != 2)
-			continue
-		new /obj/effect/serio_light_wind_ring(T, perimeter_duration, ring_damage, knockback_tiles, decay_stacks, can_shatter, src, huddle)
+	for(var/obj/effect/serio_light_wind_ring/R as anything in ring_visuals)
+		if(!QDELETED(R))
+			QDEL_IN(R, perimeter_duration)
 
-/mob/living/simple_animal/hostile/serio_caretaker/proc/SpawnClosedCircleRing(turf/huddle, radius, lifetime)
+/mob/living/simple_animal/hostile/serio_caretaker/proc/SpawnClosedCircleRing(turf/huddle, radius, ring_damage, knockback_tiles, decay_stacks, can_shatter)
 	var/list/result = list()
 	for(var/turf/T in range(radius, huddle))
 		if(get_dist(T, huddle) != radius)
 			continue
-		result += new /obj/effect/temp_visual/serio_closed_circle_ring(T, lifetime)
+		result += new /obj/effect/serio_light_wind_ring(T, 0, ring_damage, knockback_tiles, decay_stacks, can_shatter, src, huddle)
 	return result
 
 // ---- Light Wind ----
@@ -1001,11 +1248,258 @@
 			active_visuals.Cut(1, 2)
 		sleep(advance_delay)
 
+// ---- Void Pull ----
+// Spawns a "singularity_s3" visual on the crystal (96x96 sprite,
+// pixel-offset to center). 1.5s setup with no damage. Then suction:
+// every tick pulls all visible humans 1 tile toward the crystal, and
+// the 3x3 around the crystal becomes a kill zone (massive BLACK +
+// decay + shatter). When the pull ends, the crystal stays Red for an
+// extended afterglow — the normal `EnterRed(memory_red_duration +
+// memory_afterglow)` already covers this; the brainstorm just calls
+// the trade-off out explicitly.
 /mob/living/simple_animal/hostile/serio_caretaker/proc/InvokeVoidPull(weakened)
-	visible_message(span_userdanger("A black-hole image blooms on the crystal[weakened ? " — small" : ""]."))
+	visible_message(span_userdanger("A black-hole image blooms on the crystal."))
+	if(QDELETED(parent_crystal))
+		return
+	var/turf/crystal_turf = get_turf(parent_crystal)
+	if(!crystal_turf)
+		return
+	var/setup_duration = 1.5 SECONDS
+	var/suction_duration = max(2 SECONDS, memory_red_duration - setup_duration)
+	var/kill_radius = weakened ? 0 : 1
+	var/pull_interval = weakened ? 1 SECONDS : 0.5 SECONDS
+	var/tick_damage = weakened ? 15 : 35
+	var/decay_stacks = weakened ? 2 : 5
+	var/can_shatter = !weakened
+	var/total_singularity_duration = setup_duration + suction_duration
+	// Atmospheric fog around the singularity — same overlay as the
+	// Light Wind so the arena reads as "the air itself is being
+	// dragged in." Lasts the full setup + suction window.
+	for(var/turf/T in view(15, crystal_turf))
+		new /obj/effect/temp_visual/serio_light_wind_fog(T, total_singularity_duration)
+	new /obj/effect/temp_visual/serio_void_singularity(crystal_turf, total_singularity_duration, setup_duration)
+	addtimer(CALLBACK(src, PROC_REF(StartVoidSuction), crystal_turf, suction_duration, kill_radius, pull_interval, tick_damage, decay_stacks, can_shatter), setup_duration, TIMER_STOPPABLE)
+	// Contracting perimeter ring 10 → 5 across the suction. Pure
+	// damage-on-cross obstacle; knockback is 0 so the ring doesn't
+	// fight (or compound) the singularity's pull.
+	var/ring_damage = weakened ? 15 : 30
+	var/ring_decay = weakened ? 1 : 3
+	addtimer(CALLBACK(src, PROC_REF(StartVoidPullRing), crystal_turf, suction_duration, ring_damage, ring_decay, can_shatter), setup_duration, TIMER_STOPPABLE)
 
+/mob/living/simple_animal/hostile/serio_caretaker/proc/StartVoidSuction(turf/center, duration, kill_radius, pull_interval, damage, decay, can_shatter)
+	set waitfor = FALSE
+	// Kick off the AoE barrage in parallel — the singularity rips
+	// random 1x1 and 3x3 chunks out of the floor around itself the
+	// whole time it's pulling, midnight-style.
+	INVOKE_ASYNC(src, PROC_REF(VoidAoEBarrage), center, duration)
+	var/elapsed = 0
+	while(elapsed < duration && !QDELETED(src))
+		sleep(pull_interval)
+		elapsed += pull_interval
+		if(QDELETED(src) || QDELETED(center))
+			return
+		for(var/mob/living/carbon/human/H in view(view_range, src))
+			if(H.stat == DEAD)
+				continue
+			var/turf/H_turf = get_turf(H)
+			if(!H_turf)
+				continue
+			var/dist = get_dist(H_turf, center)
+			// Kill zone — anyone inside takes the tick damage.
+			if(dist <= kill_radius)
+				H.deal_damage(damage, BLACK_DAMAGE, src, attack_type = (ATTACK_TYPE_SPECIAL))
+				H.apply_lc_mental_decay(decay)
+				if(can_shatter)
+					serio_shatter_detonate(H)
+			// Pull every visible human 1 tile toward the crystal.
+			if(dist > 0)
+				var/pull_dir = get_dir(H_turf, center)
+				if(pull_dir)
+					var/turf/dest = get_step(H_turf, pull_dir)
+					if(dest && !dest.density)
+						H.Move(dest, pull_dir)
+
+/// Random AoE barrage around the singularity. Each tick rolls a small
+/// chance per nearby tile to schedule a 1x1 (mini) or 3x3 (macro) AoE
+/// at that location, with a randomized short delay so the bursts
+/// stagger naturally. Mirrors midnight's `FireLaserBarrage` shape.
+/mob/living/simple_animal/hostile/serio_caretaker/proc/VoidAoEBarrage(turf/center, duration)
+	set waitfor = FALSE
+	var/elapsed = 0
+	var/barrage_interval = 0.5 SECONDS
+	var/barrage_radius = 8
+	while(elapsed < duration && !QDELETED(src))
+		if(QDELETED(center))
+			return
+		for(var/turf/T in range(barrage_radius, center))
+			if(T == center)
+				continue
+			if(prob(3))
+				addtimer(CALLBACK(src, PROC_REF(SpawnVoidMiniAoE), T), rand(1, 15))
+			else if(prob(1))
+				addtimer(CALLBACK(src, PROC_REF(SpawnVoidMacroAoE), T), rand(1, 15))
+		sleep(barrage_interval)
+		elapsed += barrage_interval
+
+/mob/living/simple_animal/hostile/serio_caretaker/proc/SpawnVoidMiniAoE(turf/target)
+	if(!target)
+		return
+	new /obj/effect/temp_visual/serio_void_mini_aoe(target, src)
+
+/mob/living/simple_animal/hostile/serio_caretaker/proc/SpawnVoidMacroAoE(turf/target)
+	if(!target)
+		return
+	new /obj/effect/temp_visual/serio_void_macro_aoe(target, src)
+
+/// Spawns a hollow ring at radius 10 around the singularity, then
+/// every `contraction_delay` shrinks it inward by 1 tile until it
+/// reaches radius 5 — five contractions across the suction. Reuses
+/// the violet `serio_light_wind_ring` obj so cross-damage works via
+/// COMSIG_ATOM_ENTERED. Knockback is hard-zero so the ring is purely
+/// a damage obstacle the pull drags people through.
+/mob/living/simple_animal/hostile/serio_caretaker/proc/StartVoidPullRing(turf/center, duration, ring_damage, decay_stacks, can_shatter)
+	set waitfor = FALSE
+	var/start_radius = 10
+	var/end_radius = 5
+	var/steps = start_radius - end_radius
+	var/contraction_delay = max(1, duration / steps)
+	var/current_radius = start_radius
+	var/list/ring_visuals = SpawnVoidPullRing(center, current_radius, ring_damage, decay_stacks, can_shatter)
+	while(current_radius > end_radius && !QDELETED(src))
+		sleep(contraction_delay)
+		if(QDELETED(src) || QDELETED(center))
+			break
+		for(var/obj/effect/serio_light_wind_ring/R as anything in ring_visuals)
+			if(!QDELETED(R))
+				qdel(R)
+		ring_visuals.Cut()
+		current_radius -= 1
+		ring_visuals = SpawnVoidPullRing(center, current_radius, ring_damage, decay_stacks, can_shatter)
+		// Ring lands on stander — apply the cross hit manually since
+		// COMSIG_ATOM_ENTERED only fires on movement.
+		for(var/turf/T in range(current_radius, center))
+			if(get_dist(T, center) != current_radius)
+				continue
+			for(var/mob/living/carbon/human/H in T)
+				if(H.stat == DEAD)
+					continue
+				H.deal_damage(ring_damage, BLACK_DAMAGE, src, attack_type = (ATTACK_TYPE_SPECIAL))
+				H.apply_lc_mental_decay(decay_stacks)
+				if(can_shatter)
+					serio_shatter_detonate(H)
+	// Suction ends right as we hit radius 5 — wipe the ring so it
+	// doesn't outlive the pull. (Defensive cleanup if QDELETED triggered early.)
+	for(var/obj/effect/serio_light_wind_ring/R as anything in ring_visuals)
+		if(!QDELETED(R))
+			qdel(R)
+
+/mob/living/simple_animal/hostile/serio_caretaker/proc/SpawnVoidPullRing(turf/center, radius, ring_damage, decay_stacks, can_shatter)
+	var/list/result = list()
+	for(var/turf/T in range(radius, center))
+		if(get_dist(T, center) != radius)
+			continue
+		result += new /obj/effect/serio_light_wind_ring(T, 0, ring_damage, 0, decay_stacks, can_shatter, src, center)
+	return result
+
+// ---- Echo of Her ----
+// Three stages: snow falls (arena overlay + per-open-tile snow fade-in),
+// then 5-7 translucent figures spawn around the crystal and walk past
+// it dealing very heavy contact damage, then the snow lifts. Figures
+// can't be damaged, slowed, or CC'd — only avoided.
 /mob/living/simple_animal/hostile/serio_caretaker/proc/InvokeEchoOfHer(weakened)
-	visible_message(span_userdanger("Snow falls. The room freezes over[weakened ? " — briefly" : ""]."))
+	visible_message(span_userdanger("Snow falls. The room freezes over."))
+	if(QDELETED(parent_crystal))
+		return
+	var/turf/crystal_turf = get_turf(parent_crystal)
+	if(!crystal_turf)
+		return
+	var/walk_distance = weakened ? rand(3, 4) : rand(5, 7)
+	var/figure_damage = weakened ? 25 : 60
+	var/decay_stacks = weakened ? 2 : 6
+	var/can_shatter = !weakened
+	var/snow_setup_time = 2 SECONDS
+	var/figure_step_delay = 0.5 SECONDS
+	var/figure_walk_duration = walk_distance * figure_step_delay + 1 SECONDS
+	// Continuous spawning: figures keep coming as old ones fade so the
+	// arena reads as crowded with passing memories the whole window.
+	var/wave_interval = weakened ? 3 SECONDS : 1.5 SECONDS
+	var/crystal_per_wave = weakened ? 1 : 2
+	var/player_per_wave = weakened ? 1 : 2
+	var/spawn_duration = max(3 SECONDS, memory_red_duration - snow_setup_time)
+	// Snow lifts when the LAST figure finishes — spawn_duration of
+	// waves + the last figure's walk duration.
+	var/snow_total_duration = snow_setup_time + spawn_duration + figure_walk_duration
+	// Stage 1: arena-wide snow_storm overlay + per-open-tile ground freeze.
+	for(var/turf/T in view(15, crystal_turf))
+		new /obj/effect/temp_visual/serio_echo_snow_storm(T, snow_total_duration)
+	for(var/turf/open/T in view(15, crystal_turf))
+		new /obj/effect/temp_visual/serio_echo_snow_ground(T, snow_total_duration - snow_setup_time)
+	// Stage 2: continuous figure waves after snow setup completes.
+	addtimer(CALLBACK(src, PROC_REF(SpawnEchoFigures), crystal_turf, spawn_duration, walk_distance, figure_step_delay, figure_damage, decay_stacks, can_shatter, wave_interval, crystal_per_wave, player_per_wave), snow_setup_time, TIMER_STOPPABLE)
+
+/// Continuous wave loop. Each wave drops `crystal_per_wave` figures
+/// that walk past the crystal (adjacent — they sidestep around its
+/// tile) plus `player_per_wave` figures that home in on the current
+/// nearest players. Loops every `wave_interval` for `spawn_duration`.
+/mob/living/simple_animal/hostile/serio_caretaker/proc/SpawnEchoFigures(turf/center, spawn_duration, walk_distance, step_delay, damage, decay, can_shatter, wave_interval, crystal_per_wave, player_per_wave)
+	set waitfor = FALSE
+	var/elapsed = 0
+	while(elapsed < spawn_duration && !QDELETED(src))
+		for(var/i in 1 to crystal_per_wave)
+			SpawnCrystalAdjacentFigure(center, walk_distance, step_delay, damage, decay, can_shatter)
+		var/list/players = list()
+		for(var/mob/living/carbon/human/H in view(view_range, src))
+			if(H.stat == DEAD)
+				continue
+			players += H
+		var/p_count = min(player_per_wave, length(players))
+		for(var/i in 1 to p_count)
+			if(!length(players))
+				break
+			var/mob/living/carbon/human/target = pick_n_take(players)
+			SpawnPlayerSeekFigure(target, walk_distance, step_delay, damage, decay, can_shatter)
+		sleep(wave_interval)
+		elapsed += wave_interval
+
+/// Spawns one figure at the perimeter around the crystal walking
+/// toward (and past) the crystal. The crystal's own tile is passed as
+/// `avoid_turf` so the figure sidesteps around it instead of crossing
+/// through it.
+/mob/living/simple_animal/hostile/serio_caretaker/proc/SpawnCrystalAdjacentFigure(turf/center, walk_distance, step_delay, damage, decay, can_shatter)
+	if(!center)
+		return
+	var/spawn_radius = 7
+	var/angle = rand(0, 359)
+	var/dx = round(spawn_radius * cos(angle))
+	var/dy = round(spawn_radius * sin(angle))
+	var/turf/spawn_turf = locate(clamp(center.x + dx, 1, world.maxx), clamp(center.y + dy, 1, world.maxy), center.z)
+	if(!spawn_turf || spawn_turf == center)
+		return
+	var/walk_dir = get_dir(spawn_turf, center)
+	if(!walk_dir)
+		walk_dir = pick(GLOB.cardinals)
+	new /obj/effect/temp_visual/serio_echo_figure(spawn_turf, walk_distance, step_delay, damage, decay, can_shatter, src, walk_dir, center, null)
+
+/// Spawns one figure near the target player walking toward them.
+/// Each step the figure re-aims at the player's CURRENT position —
+/// the brainstorm's "walking toward the player's current positions".
+/mob/living/simple_animal/hostile/serio_caretaker/proc/SpawnPlayerSeekFigure(mob/living/carbon/human/target, walk_distance, step_delay, damage, decay, can_shatter)
+	if(QDELETED(target))
+		return
+	var/turf/target_turf = get_turf(target)
+	if(!target_turf)
+		return
+	var/spawn_radius = 6
+	var/angle = rand(0, 359)
+	var/dx = round(spawn_radius * cos(angle))
+	var/dy = round(spawn_radius * sin(angle))
+	var/turf/spawn_turf = locate(clamp(target_turf.x + dx, 1, world.maxx), clamp(target_turf.y + dy, 1, world.maxy), target_turf.z)
+	if(!spawn_turf)
+		return
+	var/walk_dir = get_dir(spawn_turf, target_turf)
+	if(!walk_dir)
+		walk_dir = pick(GLOB.cardinals)
+	new /obj/effect/temp_visual/serio_echo_figure(spawn_turf, walk_distance, step_delay, damage, decay, can_shatter, src, walk_dir, null, target)
 
 // ---------- Targeting helpers ----------
 
@@ -1058,6 +1552,10 @@
 /// Crystal calls this when current_bracket changes; we say the
 /// transition line for the new bracket.
 /mob/living/simple_animal/hostile/serio_caretaker/proc/OnCrystalBracketChanged(new_bracket)
+	if(phase_3)
+		// Phase 3 owns bracket transitions via PlayBracketDialogue —
+		// skip the Phase 2 single-line monologue to avoid double-up.
+		return
 	if(!islist(bracket_transition_lines))
 		return
 	var/list/pool = bracket_transition_lines["bracket[new_bracket]"]
@@ -1463,9 +1961,10 @@
 	if(T)
 		// The user asked for /obj/effect/temp_visual/beam_out, which
 		// doesn't exist in this codebase. beam_in is the closest
-		// available analogue — same 96x96 sprite family. Swap if a
-		// proper beam_out gets authored.
-		new /obj/effect/temp_visual/beam_in(T)
+		// available analogue — same 96x96 sprite family. Tinted
+		// orange per request so it reads as a distinct cue.
+		var/obj/effect/temp_visual/beam_in/B = new(T)
+		B.color = "#ff9933"
 		playsound(T, 'sound/effects/ordeals/white/pale_teleport_out.ogg', 25, TRUE)
 		for(var/mob/living/carbon/human/H in T)
 			if(H.stat == DEAD)
@@ -1690,3 +2189,276 @@
 	if(custom_duration)
 		duration = custom_duration
 	. = ..()
+
+// ---------- Bracket 3 memory attack support ----------
+
+// Void Pull singularity — 96x96 sprite pixel-offset to center on the
+// crystal's 32-tile. Fades in over the `setup_duration` window so the
+// player has a visible warning before the suction begins.
+/obj/effect/temp_visual/serio_void_singularity
+	name = "singularity"
+	desc = "A void blooming where the seal used to be."
+	icon = 'icons/effects/96x96.dmi'
+	icon_state = "singularity_s3"
+	pixel_x = -32
+	base_pixel_x = -32
+	pixel_y = -32
+	base_pixel_y = -32
+	layer = ABOVE_MOB_LAYER
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+	duration = 7 SECONDS
+	alpha = 0
+
+/obj/effect/temp_visual/serio_void_singularity/Initialize(mapload, custom_duration, fade_in_time)
+	if(custom_duration)
+		duration = custom_duration
+	. = ..()
+	if(fade_in_time)
+		animate(src, alpha = 255, time = fade_in_time, easing = LINEAR_EASING)
+	else
+		alpha = 255
+
+// Echo of Her snow_storm overlay — arena-wide weather effect. Fades in
+// during the setup window and fades out at the end of its duration so
+// the room's "freezing over → thawing out" beats are visible.
+/obj/effect/temp_visual/serio_echo_snow_storm
+	name = "snow storm"
+	icon = 'icons/effects/weather_effects.dmi'
+	icon_state = "snow_storm"
+	layer = ABOVE_OPEN_TURF_LAYER
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+	duration = 12 SECONDS
+	alpha = 0
+
+/obj/effect/temp_visual/serio_echo_snow_storm/Initialize(mapload, custom_duration)
+	if(custom_duration)
+		duration = custom_duration
+	. = ..()
+	animate(src, alpha = 200, time = 2 SECONDS)
+	addtimer(CALLBACK(src, PROC_REF(StartFadeOut)), max(1, duration - 1 SECONDS), TIMER_STOPPABLE)
+
+/obj/effect/temp_visual/serio_echo_snow_storm/proc/StartFadeOut()
+	if(QDELETED(src))
+		return
+	animate(src, alpha = 0, time = 1 SECONDS)
+
+// Echo of Her per-open-tile ground-freeze overlay — uses the
+// `/turf/open/floor/grass/snow` icon family ('icons/turf/snow.dmi'
+// state "snow") so the ground visibly freezes over while the figures
+// cross.
+/obj/effect/temp_visual/serio_echo_snow_ground
+	name = "frozen ground"
+	icon = 'icons/turf/snow.dmi'
+	icon_state = "snow"
+	layer = ABOVE_OPEN_TURF_LAYER
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+	duration = 10 SECONDS
+	alpha = 0
+
+/obj/effect/temp_visual/serio_echo_snow_ground/Initialize(mapload, custom_duration)
+	if(custom_duration)
+		duration = custom_duration
+	. = ..()
+	animate(src, alpha = 180, time = 1 SECONDS)
+
+// Echo of Her walking figure — fades in, walks toward the crystal for
+// `walk_distance` tiles, applies very heavy contact damage on every
+// step, then fades out and qdels. Cannot be damaged, slowed, or CC'd.
+/obj/effect/temp_visual/serio_echo_figure
+	name = "static figure"
+	desc = "A translucent shape of someone who isn't here anymore."
+	icon = 'icons/effects/effects.dmi'
+	icon_state = "static"
+	layer = ABOVE_MOB_LAYER
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+	duration = 12 SECONDS
+	alpha = 0
+	var/walk_distance = 6
+	var/step_delay = 0.5 SECONDS
+	var/damage = 60
+	var/decay = 6
+	var/can_shatter = TRUE
+	var/mob/living/source
+	/// Cardinal direction the figure walks every step. Fixed for
+	/// crystal-walkers; re-aimed every step when `target_player` is set.
+	var/walk_dir
+	/// If the figure's next step would land on this turf, sidestep
+	/// perpendicular. Used to keep crystal-adjacent walkers from
+	/// crossing the crystal's own tile.
+	var/turf/avoid_turf
+	/// If set, the figure homes in on this player — re-aims every step.
+	var/mob/living/target_player
+
+/obj/effect/temp_visual/serio_echo_figure/Initialize(mapload, custom_walk, custom_step, custom_damage, custom_decay, custom_shatter, mob/living/new_source, custom_walk_dir, turf/turf_to_avoid, mob/living/player_to_track)
+	. = ..()
+	if(custom_walk)
+		walk_distance = custom_walk
+	if(custom_step)
+		step_delay = custom_step
+	if(custom_damage)
+		damage = custom_damage
+	if(custom_decay)
+		decay = custom_decay
+	can_shatter = custom_shatter
+	source = new_source
+	walk_dir = custom_walk_dir || pick(GLOB.cardinals)
+	avoid_turf = turf_to_avoid
+	target_player = player_to_track
+	animate(src, alpha = 200, time = 0.5 SECONDS)
+	INVOKE_ASYNC(src, PROC_REF(WalkPastCenter))
+
+/// Walks `walk_distance` tiles. Crystal-walkers use a fixed walk_dir
+/// and sidestep around `avoid_turf` (the crystal). Player-walkers
+/// re-aim toward `target_player`'s current position every step. Per
+/// brainstorm: figures can't be damaged, slowed, or CC'd — only
+/// avoided. Every step damages anyone standing on the new tile.
+/obj/effect/temp_visual/serio_echo_figure/proc/WalkPastCenter()
+	if(QDELETED(src))
+		return
+	var/turf/current = get_turf(src)
+	if(!current)
+		return
+	for(var/i in 1 to walk_distance)
+		if(QDELETED(src))
+			return
+		sleep(step_delay)
+		if(QDELETED(src))
+			return
+		current = get_turf(src)
+		if(!current)
+			return
+		// Chase mode: re-aim toward player's current tile each step.
+		if(target_player && !QDELETED(target_player) && target_player.stat != DEAD)
+			var/new_dir = get_dir(current, get_turf(target_player))
+			if(new_dir)
+				walk_dir = new_dir
+		var/turf/next_tile = get_step(current, walk_dir)
+		// Sidestep around the avoid_turf so we never cross it.
+		if(next_tile && next_tile == avoid_turf)
+			var/sidestep_dir = pick(turn(walk_dir, 90), turn(walk_dir, -90))
+			next_tile = get_step(current, sidestep_dir)
+		if(next_tile && !next_tile.density)
+			forceMove(next_tile)
+			ApplyContactDamage()
+		else
+			break
+	animate(src, alpha = 0, time = 0.5 SECONDS)
+	QDEL_IN(src, 0.5 SECONDS)
+
+/obj/effect/temp_visual/serio_echo_figure/proc/ApplyContactDamage()
+	var/turf/T = get_turf(src)
+	if(!T)
+		return
+	for(var/mob/living/carbon/human/H in T)
+		if(H.stat == DEAD)
+			continue
+		H.deal_damage(damage, BLACK_DAMAGE, source, attack_type = (ATTACK_TYPE_SPECIAL))
+		H.apply_lc_mental_decay(decay)
+		if(can_shatter)
+			serio_shatter_detonate(H)
+
+// ---------- Void Pull AoE barrage visuals ----------
+
+// 1x1 mini-AoE: telegraphs at a target tile for ~1s, then damages
+// anyone on that tile when it detonates. Mirrors midnight's
+// helix_minilaser shape.
+/obj/effect/temp_visual/serio_void_mini_aoe
+	name = "void rupture"
+	icon = 'icons/effects/effects.dmi'
+	icon_state = "target"
+	color = "#c30fff"
+	layer = ABOVE_OPEN_TURF_LAYER
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+	duration = 1.2 SECONDS
+	alpha = 180
+	var/damage = 50
+	var/decay = 2
+	var/mob/living/source
+
+/obj/effect/temp_visual/serio_void_mini_aoe/Initialize(mapload, mob/living/new_source)
+	. = ..()
+	source = new_source
+	addtimer(CALLBACK(src, PROC_REF(Blowup)), 1 SECONDS, TIMER_STOPPABLE)
+
+/obj/effect/temp_visual/serio_void_mini_aoe/proc/Blowup()
+	if(QDELETED(src))
+		return
+	var/turf/T = get_turf(src)
+	if(!T)
+		return
+	for(var/mob/living/carbon/human/H in T)
+		if(H.stat == DEAD)
+			continue
+		H.deal_damage(damage, BLACK_DAMAGE, source, attack_type = (ATTACK_TYPE_SPECIAL))
+		H.apply_lc_mental_decay(decay)
+
+// 3x3 macro-AoE: telegraphs at a target tile via a 96x96 warning
+// sprite, detonates the full 3x3 around its center. Pixel-offset so
+// the warning lines up with the center turf. Mirrors midnight's
+// helix_macrolaser shape.
+/obj/effect/temp_visual/serio_void_macro_aoe
+	name = "void rupture"
+	icon = 'icons/effects/96x96.dmi'
+	icon_state = "warning"
+	color = "#c30fff"
+	pixel_x = -32
+	base_pixel_x = -32
+	pixel_y = -32
+	base_pixel_y = -32
+	layer = ABOVE_OPEN_TURF_LAYER
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+	duration = 1.7 SECONDS
+	alpha = 180
+	var/damage = 75
+	var/decay = 3
+	var/mob/living/source
+	/// Set TRUE when the Caretaker fires this AoE as a Phase 3 B3
+	/// K-aware sub-attack. Unlocks the Knight-tile player-intercept
+	/// path in Blowup() and the Knight damage + charge-loss path. Phase
+	/// 2 Void Pull spawns leave this FALSE.
+	var/is_knight_aware = FALSE
+
+/obj/effect/temp_visual/serio_void_macro_aoe/Initialize(mapload, mob/living/new_source, custom_telegraph)
+	// Bump duration BEFORE the parent Initialize so the temp_visual
+	// auto-qdel timer uses the larger value when custom_telegraph is
+	// longer than the default 1.7s.
+	if(!isnull(custom_telegraph) && custom_telegraph + 2 > duration)
+		duration = custom_telegraph + 2
+	. = ..()
+	source = new_source
+	var/telegraph_delay = isnull(custom_telegraph) ? 1.5 SECONDS : custom_telegraph
+	addtimer(CALLBACK(src, PROC_REF(Blowup)), telegraph_delay, TIMER_STOPPABLE)
+
+/obj/effect/temp_visual/serio_void_macro_aoe/proc/Blowup()
+	if(QDELETED(src))
+		return
+	var/turf/T = get_turf(src)
+	if(!T)
+		return
+	// Phase 3 Knight-aware AoE intercept: any live human standing on
+	// the Knight's tile sets the Knight's one-shot exempt flag so the
+	// downstream damage + charge-loss path below skips it. The player
+	// still takes the 3×3 AoE damage as the intercept cost.
+	if(is_knight_aware)
+		var/mob/living/simple_animal/hostile/serio_knight/K_on_tile = locate() in T
+		if(K_on_tile)
+			for(var/mob/living/carbon/human/H in T)
+				if(H.stat == DEAD)
+					continue
+				K_on_tile.knight_aware_aoe_exempt = TRUE
+				break
+	for(var/turf/A in range(1, T))
+		for(var/mob/living/carbon/human/H in A)
+			if(H.stat == DEAD)
+				continue
+			H.deal_damage(damage, BLACK_DAMAGE, source, attack_type = (ATTACK_TYPE_SPECIAL))
+			H.apply_lc_mental_decay(decay)
+		// Knight damage + charge-loss path (Phase 3 K-aware AoE only).
+		// OnAntiKnightHit reads the exempt flag and short-circuits if
+		// a player intercepted on the Knight's tile. Un-intercepted
+		// the AoE drains the Knight's charge fully (100%).
+		if(is_knight_aware)
+			for(var/mob/living/simple_animal/hostile/serio_knight/K in A)
+				if(K.stat == DEAD)
+					continue
+				K.OnAntiKnightHit(damage, 100)

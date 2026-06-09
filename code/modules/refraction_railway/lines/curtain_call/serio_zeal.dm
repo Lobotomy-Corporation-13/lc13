@@ -142,7 +142,6 @@
 /mob/living/simple_animal/hostile/young_star/Initialize(mapload)
 	. = ..()
 	InitPanicLines()
-	UpdateHUD()
 	main_tick_timer = addtimer(CALLBACK(src, PROC_REF(MainTick)), GetTierCooldown(), TIMER_STOPPABLE)
 
 /mob/living/simple_animal/hostile/young_star/Destroy()
@@ -232,26 +231,25 @@
 /mob/living/simple_animal/hostile/young_star/proc/UpdatePressure(amount, reason)
 	if(cracking || stat == DEAD)
 		return
+	var/old_pressure = pressure
 	pressure = clamp(pressure + amount, 0, pressure_max)
-	UpdateHUD()
+	if(pressure > old_pressure)
+		FlickerRed()
 	if(pressure >= pressure_max)
 		Crack()
 
-/mob/living/simple_animal/hostile/young_star/proc/UpdateHUD()
-	maptext_width = 96
-	maptext_height = 32
-	maptext_x = -32
-	maptext_y = 40
-	var/p = round(pressure)
-	var/color
-	switch(GetPressureTier())
-		if(3)
-			color = "#ff5f5f"
-		if(2)
-			color = "#ffd86b"
-		else
-			color = "#cccccc"
-	maptext = MAPTEXT("<font color='[color]'><b>PRESSURE [p]%</b></font>")
+/// Three quick red pulses across 1.5s — the boss's only feedback that
+/// it gained pressure. Skipped during summoning so the chained color
+/// animation doesn't fight `summon_tint`.
+/mob/living/simple_animal/hostile/young_star/proc/FlickerRed()
+	if(summoning)
+		return
+	animate(src, color = "#ff3333", time = 0.15 SECONDS)
+	animate(color = null, time = 0.35 SECONDS)
+	animate(color = "#ff3333", time = 0.15 SECONDS)
+	animate(color = null, time = 0.35 SECONDS)
+	animate(color = "#ff3333", time = 0.15 SECONDS)
+	animate(color = null, time = 0.35 SECONDS)
 
 /// An attack (afterimage cast or wind-up melee AoE) resolved without
 /// hitting anyone in its danger zone. Fires once per attack — not once

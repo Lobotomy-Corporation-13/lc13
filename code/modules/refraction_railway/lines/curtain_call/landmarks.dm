@@ -41,9 +41,6 @@
 /obj/effect/landmark/refraction/start_point/serio_zeal_w2
 	id = "serio_zeal_w2"
 
-/obj/effect/landmark/refraction/start_point/serio_zeal_w3
-	id = "serio_zeal_w3"
-
 // ---------- Mob spawners (one per node) ----------
 
 /obj/effect/landmark/refraction/spawner/zeal_s1n1
@@ -80,9 +77,6 @@
 
 /obj/effect/landmark/refraction/spawner/serio_zeal_w2
 	id = "serio_zeal_w2_spawns"
-
-/obj/effect/landmark/refraction/spawner/serio_zeal_w3
-	id = "serio_zeal_w3_spawns"
 
 // ---------- Per-node misc landmarks ----------
 // Reload point: the Capo Rat in zeal_s1n1 pathfinds to one of these when the
