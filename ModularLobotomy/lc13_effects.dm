@@ -265,3 +265,88 @@
 		qdel(src)
 		return TRUE
 	return FALSE
+
+/*-------------\
+|Blood Splatter|
+\-------------*/
+/obj/effect/bloodspawner
+	icon_state = "gibspawner"// For the map editor
+	var/gib_mob_type  //generate a fake mob to transfer DNA from if we weren't passed a mob.
+	var/sound_to_play = 'sound/effects/wounds/crackandbleed.ogg'
+	var/sound_vol = 60
+	//DNA on the Blood for flavor
+	var/list/dna_to_add
+	//If the blood hits all adjacent tiles
+	var/all_around_splatter = FALSE
+	var/core_gib_type = /obj/effect/decal/cleanable/blood/gibs/core
+
+/obj/effect/bloodspawner/Initialize(mapload, mob/living/source_mob)
+	. = ..()
+
+	if(sound_to_play && isnum(sound_vol))
+		playsound(src, sound_to_play, sound_vol, TRUE)
+
+	if(source_mob)
+		dna_to_add = source_mob.get_blood_dna_list() //ez pz
+	else
+		dna_to_add = list("Non-human DNA" = random_blood_type()) //else, generate a random bloodtype for it.
+	var/turf/our_turf = get_turf(src)
+	if(!our_turf)
+		return INITIALIZE_HINT_QDEL
+	var/list/all_turfs = RANGE_TURFS(1, our_turf) - our_turf
+	//Spawn Blood where we are.
+	SpawnEffect(our_turf, /obj/effect/decal/cleanable/blood, dna_to_add)
+	if(core_gib_type)
+		SpawnEffect(our_turf, core_gib_type, dna_to_add)
+	if(!all_around_splatter)
+		for(var/i = 1 to 5)
+			pick_n_take(all_turfs)
+
+	for(var/turf/T in all_turfs)
+		if(!T)
+			continue
+		var/splash_dir = get_dir(our_turf,T)
+		if(isclosedturf(T) || locate(/obj/structure/window) in T)
+			SplashOnWall(our_turf, splash_dir)
+		else
+			SpawnEffect(T, /obj/effect/decal/cleanable/blood)
+
+		if(T != our_turf && !T.density)
+			new /obj/effect/temp_visual/dir_setting/bloodsplatter(T, splash_dir)
+
+	return INITIALIZE_HINT_QDEL
+
+/obj/effect/bloodspawner/proc/SpawnEffect(location, effect_type)
+	if(!effect_type)
+		return
+	var/obj/effect/decal/cleanable/blood/blerd = new effect_type(location)
+	blerd.add_blood_DNA(dna_to_add)
+	return blerd
+
+//The reason posters do not show up on the other side of the wall is because they are technically offset spritewise
+/obj/effect/bloodspawner/proc/SplashOnWall(location, dir)
+	var/obj/effect/decal/cleanable/blood/splatter/over_window/splat = new(location)
+	splat.add_blood_DNA(dna_to_add)
+	var/offsetx = 0
+	var/offsety = 0
+	if(dir == NORTH || dir == NORTHWEST  || dir ==  NORTHEAST)
+		offsety = 32
+	if(dir == SOUTH  || dir ==  SOUTHWEST  || dir ==  SOUTHEAST)
+		offsety = -32
+	if(dir == EAST  || dir ==  NORTHEAST  || dir ==  SOUTHEAST)
+		offsetx = 32
+	if(dir == WEST  || dir ==  NORTHWEST  || dir ==  SOUTHWEST)
+		offsetx = -32
+	splat.pixel_x = offsetx
+	splat.pixel_y = offsety
+
+/obj/effect/bloodspawner/nogibs
+	core_gib_type = null
+
+/obj/effect/bloodspawner/silent
+	sound_to_play = null
+	sound_vol = 0
+
+/obj/effect/bloodspawner/nogibs/silent
+	sound_to_play = null
+	sound_vol = 0

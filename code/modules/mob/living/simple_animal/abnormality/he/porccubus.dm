@@ -387,7 +387,7 @@
 	playsound(addict, 'sound/abnormalities/porccubus/head_explode.ogg', 50, FALSE, 4)
 	var/turf/orgin = get_turf(addict)
 	var/list/all_turfs = RANGE_TURFS(2, orgin)
-	new /obj/effect/gibspawner/generic/silent(get_turf(addict))
+	new /obj/effect/bloodspawner/silent(get_turf(addict))
 	for(var/i = 1 to 3)
 		var/obj/item/porccubus_drug/drug = new(get_turf(addict)) //if you still want to try it out after seeing a man's head fucking explode
 		var/turf/open/Y = pick(all_turfs - orgin)

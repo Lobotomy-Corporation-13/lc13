@@ -69,7 +69,7 @@
 				if(BP.dismemberable)
 					BP.dismember()
 		playsound(H, 'sound/abnormalities/fateloom/garrote_bloody.ogg', 80, TRUE, -3)
-		new /obj/effect/gibspawner/generic/silent(get_turf(H))
+		new /obj/effect/bloodspawner/nogibs/silent(get_turf(H))
 		H.regenerate_icons()
 	add_stacks(-1)
 

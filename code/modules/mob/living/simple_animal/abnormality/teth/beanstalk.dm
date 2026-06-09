@@ -89,7 +89,7 @@
 	playsound(user, 'sound/effects/wounds/pierce1.ogg', 75, FALSE, -1)
 	head.dismember()
 	QDEL_NULL(head)
-	new /obj/effect/gibspawner/generic/silent(get_turf(user))
+	new /obj/effect/bloodspawner/silent(get_turf(user))
 
 /mob/living/simple_animal/hostile/abnormality/beanstalk/proc/fallinganimation(mob/living/carbon/human/user)
 	user.pixel_z = 128
