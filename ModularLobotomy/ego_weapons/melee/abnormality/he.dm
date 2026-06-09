@@ -2076,6 +2076,7 @@
 	name = "Go Fer Scissors"
 	desc = "What seems to be a giant half of a scissors pair."
 	icon_state = "voodoo" //I can change the icon state name later if you want, but I'm on the middle of City of Light and it's too much work to open Dream Maker, sorry...
+	inhand_icon_state = "little_alice"
 	special = "This weapon can be paired with a second copy to use both at the same time."
 	force = 18
 	swingstyle = WEAPONSWING_LARGESWEEP

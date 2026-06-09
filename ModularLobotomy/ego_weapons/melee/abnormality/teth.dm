@@ -844,6 +844,9 @@
 	name = "patch"
 	desc = "A little first aid kit."
 	icon_state = "patch"
+	inhand_icon_state = "firstaid"
+	lefthand_file = 'icons/mob/inhands/equipment/medical_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/equipment/medical_righthand.dmi'
 	special = "Activate in hand to heal and apply protection to every person(With the exception of the user) on a 4 tile radius in exchange for taking toxin damage. \
 	Has a cooldown of 8 seconds."
 	force = 20
