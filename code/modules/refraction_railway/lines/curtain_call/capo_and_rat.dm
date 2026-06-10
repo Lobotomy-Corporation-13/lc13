@@ -184,7 +184,87 @@
 	/// Cleared in death() so the rat is qdel'd with the boss.
 	var/mob/living/simple_animal/hostile/rat/capo_rat/pet_rat
 
+	// ---- Refraction Railway recognition ----
+	/// Character this boss recognizes among the railway party, matched as a
+	/// case-insensitive substring of a member's mob name. Empty = no one.
+	/// The Capo speaks for the pairing (the rat has no human speech).
+	var/recognition_target_name = "Buck Jewell"
+	/// Two-part recognition line, said at the start of combat when matched.
+	var/recognition_line_1 = "Hwell, I'll be — Buck Jewell. Every owner this lil' fella had wound up on your loom."
+	var/recognition_line_2 = "Come to card a tiger for the Carnival? Strong cloth's gotta be EARNED, partner."
+	/// Said as the Capo fades on death (replaces his normal death line when
+	/// Buck is the one who put him down).
+	var/boss_final_line = "Hwell... spin me up nice... that lil' fella's already gone, though. Always is..."
+	/// Once-guard so recognition is attempted a single time per fight.
+	var/recognition_attempted = FALSE
+	/// TRUE once a party member was actually recognized this fight; makes the
+	/// death sequence speak only the final recognition line.
+	var/recognized = FALSE
+	/// While TRUE the recognition sequence (both halves + 3s after) owns the
+	/// Capo's voice; every other line is dropped. Sanctioned lines pass via
+	/// recognition_bypass.
+	var/recognition_locked = FALSE
+	var/recognition_bypass = FALSE
+
 /mob/living/simple_animal/hostile/thumb_east_capo/refracted
+
+/mob/living/simple_animal/hostile/thumb_east_capo/Initialize(mapload)
+	. = ..()
+	addtimer(CALLBACK(src, PROC_REF(TryRecognition)), 1.5 SECONDS)
+
+// ---------- Refraction Railway recognition ----------
+
+/// Recognition + death lines bypass the lock; every other line is dropped
+/// while the recognition sequence holds the Capo's voice.
+/mob/living/simple_animal/hostile/thumb_east_capo/say(message, bubble_type, list/spans = list(), sanitize = TRUE, datum/language/language = null, ignore_spam = FALSE, forced = null)
+	if(recognition_locked && !recognition_bypass)
+		return
+	return ..()
+
+/// Says a framework-sanctioned line past the recognition lock.
+/mob/living/simple_animal/hostile/thumb_east_capo/proc/SpeakRecognition(message)
+	if(!message)
+		return
+	recognition_bypass = TRUE
+	say(message)
+	recognition_bypass = FALSE
+
+/// Start of combat: if a railway party member's mob name contains
+/// recognition_target_name, play the two-part recognition line and hold the
+/// speech lock through both parts plus 3 seconds.
+/mob/living/simple_animal/hostile/thumb_east_capo/proc/TryRecognition()
+	if(recognition_attempted || stat == DEAD || dying)
+		return
+	recognition_attempted = TRUE
+	if(!recognition_target_name)
+		return
+	var/datum/refraction_run/R = FindRefractionRunForZ(z)
+	if(!R)
+		return
+	var/found = FALSE
+	for(var/mob/M as anything in R.members)
+		if(QDELETED(M))
+			continue
+		var/their_name = M.real_name || M.name
+		if(their_name && findtext(their_name, recognition_target_name))
+			found = TRUE
+			break
+	if(!found)
+		return
+	recognized = TRUE
+	recognition_locked = TRUE
+	SpeakRecognition(recognition_line_1)
+	addtimer(CALLBACK(src, PROC_REF(RecognitionPart2)), 2 SECONDS)
+
+/mob/living/simple_animal/hostile/thumb_east_capo/proc/RecognitionPart2()
+	if(QDELETED(src) || stat == DEAD || dying)
+		recognition_locked = FALSE
+		return
+	SpeakRecognition(recognition_line_2)
+	addtimer(CALLBACK(src, PROC_REF(EndRecognitionLock)), 3 SECONDS)
+
+/mob/living/simple_animal/hostile/thumb_east_capo/proc/EndRecognitionLock()
+	recognition_locked = FALSE
 
 // Block self-movement during any special; forceMove still works.
 /mob/living/simple_animal/hostile/thumb_east_capo/Move(atom/newloc, dir, step_x, step_y)
@@ -283,7 +363,10 @@
 	UpdateStarOverlay()
 	if(escalating)
 		if(star_stage >= 2)
-			say("Can't leave a dance unfinished. Ain't that right?")
+			if(recognized)
+				say("Y'all want strong cloth, tailor? Then BLEED me for every thread!")
+			else
+				say("Can't leave a dance unfinished. Ain't that right?")
 		else if(star_stage >= 1)
 			say("That's more like it. Y'all are firin' me up!")
 		playsound(get_turf(src), 'sound/weapons/ego/thumb_east_podao_clash.ogg', 70, FALSE, 6)
@@ -584,7 +667,11 @@
 	if(dying)
 		return ..()
 	dying = TRUE
-	say(pick(death_lines))
+	recognition_locked = FALSE
+	if(recognized && boss_final_line)
+		SpeakRecognition(boss_final_line)
+	else
+		say(pick(death_lines))
 	. = ..()
 	can_act = FALSE
 	walk(src, 0)

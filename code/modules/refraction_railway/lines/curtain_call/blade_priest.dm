@@ -334,6 +334,27 @@
 	var/speak_cooldown = 0
 	var/speak_cooldown_time = 8 SECONDS
 
+	// ---- Refraction Railway recognition ----
+	/// Character this boss recognizes among the railway party, matched as a
+	/// case-insensitive substring of a member's mob name. Empty = no one.
+	var/recognition_target_name = "Raye Alecinn"
+	/// Two-part recognition line, said at the start of combat when matched.
+	var/recognition_line_1 = "Raye Alecinn. The one who told them what I do here. I hold no anger for you, child."
+	var/recognition_line_2 = "Your friend, the one I cured... I carved the wickedness out. They're so peaceful now, Raye."
+	/// Said as the priest fades on death (replaces his normal death line when
+	/// Raye is the one who puts him down).
+	var/boss_final_line = "...I only... carved out the cruelty... that was kindness... wasn't it, Raye...?"
+	/// Once-guard so recognition is attempted a single time per fight.
+	var/recognition_attempted = FALSE
+	/// TRUE once a party member was actually recognized this fight; makes the
+	/// death sequence speak only the final recognition line.
+	var/recognized = FALSE
+	/// While TRUE the recognition sequence (both halves + 3s after) owns the
+	/// priest's voice; every other line is dropped. Sanctioned lines pass
+	/// via recognition_bypass.
+	var/recognition_locked = FALSE
+	var/recognition_bypass = FALSE
+
 	// ---- Lifecycle ----
 	var/dying = FALSE
 	var/death_fade_time = 2 SECONDS
@@ -385,6 +406,7 @@
 	volley_cooldown = world.time + 12 SECONDS
 	inversion_cooldown = world.time + 20 SECONDS
 	mark_cooldown = world.time + 6 SECONDS
+	addtimer(CALLBACK(src, PROC_REF(TryRecognition)), 1.5 SECONDS)
 
 /mob/living/simple_animal/hostile/distortion/blade_priest/Destroy()
 	deltimer(main_tick_timer_id)
@@ -529,6 +551,60 @@
 		message = message_or_list
 	speak_cooldown = world.time + speak_cooldown_time
 	say(message)
+
+// ---------- Refraction Railway recognition ----------
+
+/// Recognition + death lines bypass the lock; every other line is dropped
+/// while the recognition sequence holds the priest's voice.
+/mob/living/simple_animal/hostile/distortion/blade_priest/say(message, bubble_type, list/spans = list(), sanitize = TRUE, datum/language/language = null, ignore_spam = FALSE, forced = null)
+	if(recognition_locked && !recognition_bypass)
+		return
+	return ..()
+
+/// Says a framework-sanctioned line past the recognition lock + throttle.
+/mob/living/simple_animal/hostile/distortion/blade_priest/proc/SpeakRecognition(message)
+	if(!message)
+		return
+	recognition_bypass = TRUE
+	say(message)
+	recognition_bypass = FALSE
+
+/// Start of combat: if a railway party member's mob name contains
+/// recognition_target_name, play the two-part recognition line and hold the
+/// speech lock through both parts plus 3 seconds.
+/mob/living/simple_animal/hostile/distortion/blade_priest/proc/TryRecognition()
+	if(recognition_attempted || stat == DEAD || dying)
+		return
+	recognition_attempted = TRUE
+	if(!recognition_target_name)
+		return
+	var/datum/refraction_run/R = FindRefractionRunForZ(z)
+	if(!R)
+		return
+	var/found = FALSE
+	for(var/mob/M as anything in R.members)
+		if(QDELETED(M))
+			continue
+		var/their_name = M.real_name || M.name
+		if(their_name && findtext(their_name, recognition_target_name))
+			found = TRUE
+			break
+	if(!found)
+		return
+	recognized = TRUE
+	recognition_locked = TRUE
+	SpeakRecognition(recognition_line_1)
+	addtimer(CALLBACK(src, PROC_REF(RecognitionPart2)), 2 SECONDS)
+
+/mob/living/simple_animal/hostile/distortion/blade_priest/proc/RecognitionPart2()
+	if(QDELETED(src) || stat == DEAD || dying)
+		recognition_locked = FALSE
+		return
+	SpeakRecognition(recognition_line_2)
+	addtimer(CALLBACK(src, PROC_REF(EndRecognitionLock)), 3 SECONDS)
+
+/mob/living/simple_animal/hostile/distortion/blade_priest/proc/EndRecognitionLock()
+	recognition_locked = FALSE
 
 // ---------- Per-hit Rupture application ----------
 
@@ -763,10 +839,15 @@
 	if(dying)
 		return ..()
 	dying = TRUE
+	recognition_locked = FALSE
 	deltimer(order_timer_id)
 	in_order = FALSE
-	// Bypass the speech throttle — the death line should always land.
-	say(pick(death_lines))
+	// Bypass the speech throttle — the death line should always land. A
+	// recognized run says only the final recognition line, not the normal one.
+	if(recognized && boss_final_line)
+		SpeakRecognition(boss_final_line)
+	else
+		say(pick(death_lines))
 	. = ..()
 	can_act = FALSE
 	walk(src, 0)

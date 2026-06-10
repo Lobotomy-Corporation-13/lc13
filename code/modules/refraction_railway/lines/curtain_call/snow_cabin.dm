@@ -583,6 +583,27 @@
 	/// 1 = Phase 1, 2 = Phase 2.
 	var/phase = 1
 
+	// ---- Refraction Railway recognition ----
+	/// Character this boss recognizes among the railway party, matched as a
+	/// case-insensitive substring of a member's mob name. Empty = no one.
+	var/recognition_target_name = "Raye Alecinn"
+	/// Two-part recognition line, said at the start of combat when matched.
+	var/recognition_line_1 = "...Master? Raye... you came home... I kept it all so warm for you..."
+	var/recognition_line_2 = "Don't go back out there... I'll be anything you need... just stay inside, where nothing can touch you..."
+	/// Said (through a one-off mouth) as the cabin dies, when Raye is the one
+	/// who brought it down.
+	var/boss_final_line = "...no... who keeps you safe now... stay warm, Raye... please... stay..."
+	/// Once-guard so recognition is attempted a single time per fight.
+	var/recognition_attempted = FALSE
+	/// TRUE once a party member was actually recognized this fight; makes the
+	/// death sequence speak only the final recognition line.
+	var/recognized = FALSE
+	/// While TRUE the recognition sequence (both halves + 3s after) owns the
+	/// cabin's voice; every other Speak() is dropped. Sanctioned lines pass
+	/// via recognition_bypass.
+	var/recognition_locked = FALSE
+	var/recognition_bypass = FALSE
+
 	// Weakpoint spawn targets per phase. Main tick fills to these.
 	var/eye_target_phase_1   = 6
 	var/eye_target_phase_2   = 12
@@ -713,7 +734,7 @@
 	var/list/lines_ice_spike = list(
 		"Pinned... for the master!",
 		"Stand! Stand and freeze!",
-		"Cold for him... cold for him!",
+		"Cold for them... cold for them!",
 		"Ice through the warm of you!",
 	)
 	var/list/lines_ice_shard = list(
@@ -724,9 +745,15 @@
 	)
 	var/list/lines_phase_2 = list(
 		"Enough! Enough indulgence!",
-		"You wake him... I do not have to pretend!",
+		"You wake them... I do not have to pretend!",
 		"Hospitality... rescinded!",
 		"The dream has teeth! The dream has bones!",
+	)
+	var/list/lines_phase_2_raye = list(
+		"No — no! Why do you HURT me, Raye?!",
+		"You cannot leave! I won't LET them take you!",
+		"Stay! STAY! I'll be anything — anything!",
+		"Don't make me bleed, Master... I only kept you safe!",
 	)
 
 /mob/living/simple_animal/hostile/snow_cabin/Initialize(mapload)
@@ -739,6 +766,7 @@
 	next_bone_stab    = world.time + 6 SECONDS
 	next_bladed_teeth = world.time + 4 SECONDS
 	next_ice_spike    = world.time + 10 SECONDS
+	addtimer(CALLBACK(src, PROC_REF(TryRecognition)), 1.5 SECONDS)
 
 /mob/living/simple_animal/hostile/snow_cabin/Destroy()
 	deltimer(main_tick_timer_id)
@@ -843,6 +871,9 @@
 /mob/living/simple_animal/hostile/snow_cabin/proc/Speak(message_or_list)
 	if(!message_or_list)
 		return
+	// Suppressed while the recognition sequence owns the cabin's voice.
+	if(recognition_locked && !recognition_bypass)
+		return
 	var/message
 	if(islist(message_or_list))
 		var/list/L = message_or_list
@@ -862,6 +893,77 @@
 	// No mouth alive — fall back so a line is never silently dropped.
 	for(var/mob/living/carbon/human/H in range(arena_range, src))
 		to_chat(H, span_warning("The walls whisper: \"[message]\""))
+
+// ---------- Refraction Railway recognition ----------
+
+/// Says a framework-sanctioned line (through a mouth / whisper) past the
+/// recognition lock.
+/mob/living/simple_animal/hostile/snow_cabin/proc/SpeakRecognition(message)
+	if(!message)
+		return
+	recognition_bypass = TRUE
+	Speak(message)
+	recognition_bypass = FALSE
+
+/// Start of combat: if a railway party member's mob name contains
+/// recognition_target_name, play the two-part recognition line and hold the
+/// speech lock through both parts plus 3 seconds.
+/mob/living/simple_animal/hostile/snow_cabin/proc/TryRecognition()
+	if(recognition_attempted || stat == DEAD)
+		return
+	recognition_attempted = TRUE
+	if(!recognition_target_name)
+		return
+	var/datum/refraction_run/R = FindRefractionRunForZ(z)
+	if(!R)
+		return
+	var/found = FALSE
+	for(var/mob/M as anything in R.members)
+		if(QDELETED(M))
+			continue
+		var/their_name = M.real_name || M.name
+		if(their_name && findtext(their_name, recognition_target_name))
+			found = TRUE
+			break
+	if(!found)
+		return
+	recognized = TRUE
+	recognition_locked = TRUE
+	SpeakRecognition(recognition_line_1)
+	addtimer(CALLBACK(src, PROC_REF(RecognitionPart2)), 2 SECONDS)
+
+/mob/living/simple_animal/hostile/snow_cabin/proc/RecognitionPart2()
+	if(QDELETED(src) || stat == DEAD)
+		recognition_locked = FALSE
+		return
+	SpeakRecognition(recognition_line_2)
+	addtimer(CALLBACK(src, PROC_REF(EndRecognitionLock)), 3 SECONDS)
+
+/mob/living/simple_animal/hostile/snow_cabin/proc/EndRecognitionLock()
+	recognition_locked = FALSE
+
+/// On death the cabin qdels every weakpoint, so the final line can't ride
+/// an existing mouth. Spawn a one-off mouth on the cabin's own (invisible)
+/// tile, have it speak the line, then fade it out and remove it. Purely
+/// cosmetic: godmoded, AI off, bite cycle cancelled, and NOT tracked in
+/// active_mouths, so CleanupArena never touches it.
+/mob/living/simple_animal/hostile/snow_cabin/proc/SpeakDeathLineThroughMouth(message)
+	if(!message)
+		return
+	var/turf/T = get_turf(src)
+	if(!T)
+		return
+	var/mob/living/simple_animal/hostile/snow_cabin_mouth/M = new(T, src)
+	deltimer(M.cycle_timer_id)
+	M.cycle_timer_id = null
+	M.toggle_ai(AI_OFF)
+	M.status_flags |= GODMODE
+	M.mouth_state = "open"
+	M.icon_state = "mouthturf_opened"
+	M.icon_living = "mouthturf_opened"
+	M.say(message)
+	animate(M, alpha = 0, time = 3 SECONDS)
+	QDEL_IN(M, 3 SECONDS)
 
 // ---------- Floor tile resolution ----------
 
@@ -1024,7 +1126,8 @@
 
 /mob/living/simple_animal/hostile/snow_cabin/proc/EnterPhase2()
 	phase = 2
-	Speak(lines_phase_2)
+	// When Raye is the one wounding it, the cabin pleads instead of raging.
+	Speak(recognized ? lines_phase_2_raye : lines_phase_2)
 	// Seed Phase 2 spawn timers so the new events don't all fire at once.
 	next_meatpod_spawn    = world.time + 5 SECONDS
 	next_ice_prison_spawn = world.time + 8 SECONDS
@@ -1275,6 +1378,10 @@
 
 /mob/living/simple_animal/hostile/snow_cabin/death(gibbed)
 	. = ..()
+	// Final line first, while a mouth is still alive to voice it.
+	recognition_locked = FALSE
+	if(recognized && boss_final_line)
+		SpeakDeathLineThroughMouth(boss_final_line)
 	// Announce + scatter a few more meat_crack decals as the room "rots open."
 	for(var/mob/living/carbon/human/H in range(arena_range, src))
 		to_chat(H, span_userdanger("The cabin breaks apart around you."))

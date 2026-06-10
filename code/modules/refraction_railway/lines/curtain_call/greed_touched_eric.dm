@@ -286,11 +286,37 @@
 		"The sermon ends! The Heart hungers, and you children WILL feed it!",
 		"Kids these days! The faithful would never make me work this hard. SIT STILL!",
 	)
+	/// Phase-3 lines when Sana is the one bleeding him out. The preacher
+	/// cracks into a desperate plea, still certain he is curing her.
+	var/list/phase_3_lines_sana = list(
+		"Why do you FIGHT me, Sana?! I only want to end your thirst!",
+		"Stop this! The Heart is the CURE - let me GIVE it to you!",
+	)
 	var/list/death_lines = list(
 		"...the herd... was almost... mine...",
 		"...the Heart... was supposed to... fill me...",
 		"...kids these days... never knew... their place...",
 	)
+	// ---- Refraction Railway recognition ----
+	/// Character this boss recognizes among the railway party, matched as a
+	/// case-insensitive substring of a member's mob name. Empty = no one.
+	var/recognition_target_name = "Sana Valkyrie"
+	/// Two-part recognition line, said at the start of combat when matched.
+	var/recognition_line_1 = "Sana Valkyrie — you of all souls KNOW the thirst. Why do you still turn from the Heart?"
+	var/recognition_line_2 = "It is the CURE, child — an end to the hunger. Why raise a blade at your own salvation?"
+	/// Said as Eric fades on death (replaces his normal death line when Sana
+	/// is the one who puts him down).
+	var/boss_final_line = "...I only... wanted to end your hunger... why wouldn't you... let me, Sana..."
+	/// Once-guard so recognition is attempted a single time per fight.
+	var/recognition_attempted = FALSE
+	/// TRUE once a party member was actually recognized this fight; makes the
+	/// death sequence speak only the final recognition line.
+	var/recognized = FALSE
+	/// While TRUE the recognition sequence (both halves + 3s after) owns
+	/// Eric's voice; every other line is dropped. Sanctioned lines pass via
+	/// recognition_bypass.
+	var/recognition_locked = FALSE
+	var/recognition_bypass = FALSE
 
 /mob/living/simple_animal/hostile/greed_touched_eric/refracted
 
@@ -308,11 +334,66 @@
 	// Grace before the first Sanguine Feast so the fight opens with a wave.
 	sanguine_feast_cooldown = world.time + 15 SECONDS
 	addtimer(CALLBACK(src, PROC_REF(Greet)), 1 SECONDS)
+	addtimer(CALLBACK(src, PROC_REF(TryRecognition)), 1.5 SECONDS)
 
 /mob/living/simple_animal/hostile/greed_touched_eric/proc/Greet()
 	if(QDELETED(src) || dying || stat == DEAD)
 		return
 	say(pick(spawn_lines))
+
+// ---------- Refraction Railway recognition ----------
+
+/// Recognition + death lines bypass the lock; every other line is dropped
+/// while the recognition sequence holds Eric's voice.
+/mob/living/simple_animal/hostile/greed_touched_eric/say(message, bubble_type, list/spans = list(), sanitize = TRUE, datum/language/language = null, ignore_spam = FALSE, forced = null)
+	if(recognition_locked && !recognition_bypass)
+		return
+	return ..()
+
+/// Says a framework-sanctioned line past the recognition lock.
+/mob/living/simple_animal/hostile/greed_touched_eric/proc/SpeakRecognition(message)
+	if(!message)
+		return
+	recognition_bypass = TRUE
+	say(message)
+	recognition_bypass = FALSE
+
+/// Start of combat: if a railway party member's mob name contains
+/// recognition_target_name, play the two-part recognition line and hold the
+/// speech lock through both parts plus 3 seconds.
+/mob/living/simple_animal/hostile/greed_touched_eric/proc/TryRecognition()
+	if(recognition_attempted || stat == DEAD || dying)
+		return
+	recognition_attempted = TRUE
+	if(!recognition_target_name)
+		return
+	var/datum/refraction_run/R = FindRefractionRunForZ(z)
+	if(!R)
+		return
+	var/found = FALSE
+	for(var/mob/M as anything in R.members)
+		if(QDELETED(M))
+			continue
+		var/their_name = M.real_name || M.name
+		if(their_name && findtext(their_name, recognition_target_name))
+			found = TRUE
+			break
+	if(!found)
+		return
+	recognized = TRUE
+	recognition_locked = TRUE
+	SpeakRecognition(recognition_line_1)
+	addtimer(CALLBACK(src, PROC_REF(RecognitionPart2)), 2 SECONDS)
+
+/mob/living/simple_animal/hostile/greed_touched_eric/proc/RecognitionPart2()
+	if(QDELETED(src) || stat == DEAD || dying)
+		recognition_locked = FALSE
+		return
+	SpeakRecognition(recognition_line_2)
+	addtimer(CALLBACK(src, PROC_REF(EndRecognitionLock)), 3 SECONDS)
+
+/mob/living/simple_animal/hostile/greed_touched_eric/proc/EndRecognitionLock()
+	recognition_locked = FALSE
 
 // ---------- Shield: flat subtraction + HP clamp ----------
 
@@ -757,7 +838,7 @@
 		return
 	can_act = FALSE
 	walk(src, 0)
-	say(pick(phase_3_lines))
+	say(pick(recognized ? phase_3_lines_sana : phase_3_lines))
 	visible_message(span_userdanger("[src] tears open his own chest and drinks straight from the Heart of Greed — the herd is forgotten!"))
 	for(var/mob/living/M in summoned_mobs.Copy())
 		if(QDELETED(M) || M.stat == DEAD)
@@ -985,7 +1066,11 @@
 	if(dying)
 		return ..()
 	dying = TRUE
-	say(pick(death_lines))
+	recognition_locked = FALSE
+	if(recognized && boss_final_line)
+		SpeakRecognition(boss_final_line)
+	else
+		say(pick(death_lines))
 	. = ..()
 	can_act = FALSE
 	walk(src, 0)

@@ -293,6 +293,10 @@
 		"Now the stakes get interesting. Double the dice!",
 		"The House never sweats - it just raises the bet.",
 	)
+	var/list/phase_lines_quinn = list(
+		"You FORCE the House's hand, Quinn! Double the dice - let's see that luck hold!",
+		"Just like old times, lucky charm. The House doubles down on YOU.",
+	)
 	var/list/death_lines = list(
 		"The House... finally lost a hand...",
 		"Funny... I never figured the odds... for this...",
@@ -301,11 +305,83 @@
 	var/death_fade_time = 1 SECONDS
 	var/dying = FALSE
 
+	// ---- Refraction Railway recognition ----
+	/// Character this boss recognizes among the railway party, matched as a
+	/// case-insensitive substring of a member's mob name. Empty = no one.
+	/// Mirror-doubles never recognize (guarded in TryRecognition).
+	var/recognition_target_name = "Quinn Lester"
+	/// Two-part recognition line, said at the start of combat when matched.
+	var/recognition_line_1 = "Well, well — Quinn Lester. The luckiest hand the House ever dealt, back at my table."
+	var/recognition_line_2 = "Only soul alive who matches my nerve. Let's see whose luck folds first!"
+	/// Said as the House fades on death (replaces its normal death line when
+	/// Quinn is the one who busts it).
+	var/boss_final_line = "Beaten... by my own lucky charm. Heh... should've seen those odds..."
+	/// Once-guard so recognition is attempted a single time per fight.
+	var/recognition_attempted = FALSE
+	/// TRUE once a party member was actually recognized this fight; makes the
+	/// death sequence speak only the final recognition line.
+	var/recognized = FALSE
+	/// While TRUE the recognition sequence (both halves + 3s after) owns the
+	/// House's voice; every other line is dropped. Sanctioned lines pass via
+	/// recognition_bypass.
+	var/recognition_locked = FALSE
+	var/recognition_bypass = FALSE
+
 /mob/living/simple_animal/hostile/distortion/azarus/refracted
 
 /mob/living/simple_animal/hostile/distortion/azarus/say(message, bubble_type, list/spans = list(), sanitize = TRUE, datum/language/language = null, ignore_spam = FALSE, forced = null)
+	// Suppressed while the recognition sequence owns the House's voice.
+	if(recognition_locked && !recognition_bypass)
+		return
 	. = ..()
 	playsound(get_turf(src), 'sound/magic/clockwork/invoke_general.ogg', 20, TRUE)
+
+// ---------- Refraction Railway recognition ----------
+
+/// Says a framework-sanctioned line past the recognition lock.
+/mob/living/simple_animal/hostile/distortion/azarus/proc/SpeakRecognition(message)
+	if(!message)
+		return
+	recognition_bypass = TRUE
+	say(message)
+	recognition_bypass = FALSE
+
+/// Start of combat: if a railway party member's mob name contains
+/// recognition_target_name, play the two-part recognition line and hold the
+/// speech lock through both parts plus 3 seconds. Mirror-doubles skip this.
+/mob/living/simple_animal/hostile/distortion/azarus/proc/TryRecognition()
+	if(recognition_attempted || stat == DEAD || dying || is_mirror)
+		return
+	recognition_attempted = TRUE
+	if(!recognition_target_name)
+		return
+	var/datum/refraction_run/R = FindRefractionRunForZ(z)
+	if(!R)
+		return
+	var/found = FALSE
+	for(var/mob/M as anything in R.members)
+		if(QDELETED(M))
+			continue
+		var/their_name = M.real_name || M.name
+		if(their_name && findtext(their_name, recognition_target_name))
+			found = TRUE
+			break
+	if(!found)
+		return
+	recognized = TRUE
+	recognition_locked = TRUE
+	SpeakRecognition(recognition_line_1)
+	addtimer(CALLBACK(src, PROC_REF(RecognitionPart2)), 2 SECONDS)
+
+/mob/living/simple_animal/hostile/distortion/azarus/proc/RecognitionPart2()
+	if(QDELETED(src) || stat == DEAD || dying)
+		recognition_locked = FALSE
+		return
+	SpeakRecognition(recognition_line_2)
+	addtimer(CALLBACK(src, PROC_REF(EndRecognitionLock)), 3 SECONDS)
+
+/mob/living/simple_animal/hostile/distortion/azarus/proc/EndRecognitionLock()
+	recognition_locked = FALSE
 
 /mob/living/simple_animal/hostile/distortion/azarus/Initialize(mapload)
 	. = ..()
@@ -318,6 +394,7 @@
 			if(D.owner == src)
 				continue
 			qdel(D)
+		addtimer(CALLBACK(src, PROC_REF(TryRecognition)), 1.5 SECONDS)
 
 /mob/living/simple_animal/hostile/distortion/azarus/Destroy()
 	deltimer(hud_timer)
@@ -661,7 +738,7 @@
 	dice_count = 9
 	score_target = 36
 	wager_cooldown_time = 30 SECONDS
-	say(pick(phase_lines))
+	say(pick(recognized ? phase_lines_quinn : phase_lines))
 	playsound(get_turf(src), 'sound/magic/clockwork/narsie_attack.ogg', 75, FALSE, 8)
 	if(!in_intermission)
 		ThrowDice(dice_count - LAZYLEN(live_dice))
@@ -749,7 +826,11 @@
 	if(dying)
 		return ..()
 	dying = TRUE
-	say(pick(death_lines))
+	recognition_locked = FALSE
+	if(recognized && boss_final_line)
+		SpeakRecognition(boss_final_line)
+	else
+		say(pick(death_lines))
 	. = ..()
 	can_act = FALSE
 	walk(src, 0)
