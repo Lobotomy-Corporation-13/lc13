@@ -360,6 +360,10 @@
 	},
 /turf/open/floor/stone,
 /area/refraction/curtain_call)
+"tB" = (
+/obj/structure/window/shuttle/survival_pod,
+/turf/open/floor/plasteel/dark,
+/area/refraction/curtain_call)
 "tP" = (
 /obj/structure/table/wood/fancy/red,
 /turf/open/indestructible/necropolis/air,
@@ -1474,7 +1478,7 @@ qG
 qG
 qG
 qG
-XR
+tB
 qG
 qG
 qG
@@ -1737,11 +1741,11 @@ Of
 wI
 zT
 zT
-XR
+tB
 Tb
 Tb
-XR
-XR
+tB
+tB
 qG
 qG
 qG
@@ -2043,11 +2047,11 @@ Kq
 Kq
 Kq
 DO
-Kq
-Kq
-Kq
-Kq
 hG
+Kq
+Kq
+Kq
+Kq
 Vi
 Of
 JY
@@ -2363,11 +2367,11 @@ qG
 qG
 EH
 Tb
-XR
-XR
+tB
+tB
 qG
 Tb
-XR
+tB
 zT
 zT
 UK
@@ -2540,7 +2544,7 @@ Jf
 IU
 qG
 qG
-XR
+tB
 qG
 qG
 qG

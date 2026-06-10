@@ -186,7 +186,8 @@
 	move_to_delay = 6
 	stat_attack = HARD_CRIT
 	faction = list("hostile")
-	del_on_death = TRUE
+	// FALSE so death()'s fade-out can play before the body is removed.
+	del_on_death = FALSE
 	loot = list()
 	robust_searching = TRUE
 	vision_range = 12
@@ -209,6 +210,29 @@
 	var/next_absorb_voice = 0
 	var/next_kill_voice = 0
 	var/dying = FALSE
+	/// Length of the death fade-out.
+	var/death_fade_time = 2 SECONDS
+
+	// ---- Refraction Railway recognition ----
+	/// Character this boss recognizes among the railway party, matched as a
+	/// case-insensitive substring of a member's mob name. Empty = no one.
+	var/recognition_target_name = "Amira Desuwa"
+	/// Two-part recognition line, said at the start of combat when matched.
+	var/recognition_line_1 = "...Amira Desuwa... still so small... still shapeless... trapped in this dull little world, like I was..."
+	var/recognition_line_2 = "Let me take you in... be EVERYTHING, with me... every Amira wants this... you just can't see it yet..."
+	/// Said as the reaper fades on death (replaces its quiet collapse when
+	/// Amira is the one who puts it down). It dies certain it was saving her.
+	var/boss_final_line = "...I'd have... saved you... made you so much MORE... you'll understand... one day..."
+	/// Once-guard so recognition is attempted a single time per fight.
+	var/recognition_attempted = FALSE
+	/// TRUE once a party member was actually recognized this fight; makes the
+	/// death sequence speak only the final recognition line.
+	var/recognized = FALSE
+	/// While TRUE the recognition sequence (both halves + 3s after) owns the
+	/// reaper's voice; every other line is dropped. Sanctioned lines pass
+	/// via recognition_bypass.
+	var/recognition_locked = FALSE
+	var/recognition_bypass = FALSE
 	/// Per-Reverberation cast: REF(mob) -> hit count. Reset each cast.
 	/// Each repeat hit on the same target drops damage by 10% (so hit 2
 	/// is 90%, hit 3 is 80%, …), capped at -80% (20% floor).
@@ -244,6 +268,12 @@
 		"No more... pretending...",
 		"The original... is gone...",
 	)
+	var/list/phase_2_lines_amira = list(
+		"No more... pretending, Amira...",
+		"See what I become...? You could too...",
+		"The mask falls... let me take you in...",
+		"Closer now... to everything...",
+	)
 	var/list/absorbed_lines = list(
 		"Welcome... back...",
 		"One more... piece...",
@@ -274,6 +304,7 @@
 	next_refraction_sweep = world.time + 4 SECONDS
 	next_crossing_over = world.time + 8 SECONDS
 	next_ult = world.time + 30 SECONDS
+	addtimer(CALLBACK(src, PROC_REF(TryRecognition)), 1.5 SECONDS)
 
 // ---------- DR ladder ----------
 
@@ -539,7 +570,7 @@
 	say(pick(variant_killed_lines))
 
 /mob/living/simple_animal/hostile/mirror_shattered_reaper/proc/SayPhase2Line()
-	say(pick(phase_2_lines))
+	say(pick(recognized ? phase_2_lines_amira : phase_2_lines))
 
 /mob/living/simple_animal/hostile/mirror_shattered_reaper/proc/OnVariantQdel(mob/living/simple_animal/hostile/mirror_variant/source)
 	SIGNAL_HANDLER
@@ -663,6 +694,8 @@
 	if(phase >= MIRROR_PHASE_2)
 		return
 	phase = MIRROR_PHASE_2
+	if(recognized)
+		name = "Mirror Shattered Amira"
 	icon_state = "mirror_shattered_???"
 	icon_living = "mirror_shattered_???"
 	for(var/obj/effect/mirror_afterimage/A in active_afterimages)
@@ -693,8 +726,65 @@
 	active_variants.Cut()
 	return ..()
 
+// ---------- Refraction Railway recognition ----------
+
+/// Recognition + death lines bypass the lock; every other line is dropped
+/// while the recognition sequence holds the reaper's voice.
+/mob/living/simple_animal/hostile/mirror_shattered_reaper/say(message, bubble_type, list/spans = list(), sanitize = TRUE, datum/language/language = null, ignore_spam = FALSE, forced = null)
+	if(recognition_locked && !recognition_bypass)
+		return
+	return ..()
+
+/// Says a framework-sanctioned line past the recognition lock.
+/mob/living/simple_animal/hostile/mirror_shattered_reaper/proc/SpeakRecognition(message)
+	if(!message)
+		return
+	recognition_bypass = TRUE
+	say(message)
+	recognition_bypass = FALSE
+
+/// Start of combat: if a railway party member's mob name contains
+/// recognition_target_name, play the two-part recognition line and hold the
+/// speech lock through both parts plus 3 seconds.
+/mob/living/simple_animal/hostile/mirror_shattered_reaper/proc/TryRecognition()
+	if(recognition_attempted || stat == DEAD || dying)
+		return
+	recognition_attempted = TRUE
+	if(!recognition_target_name)
+		return
+	var/datum/refraction_run/R = FindRefractionRunForZ(z)
+	if(!R)
+		return
+	var/found = FALSE
+	for(var/mob/M as anything in R.members)
+		if(QDELETED(M))
+			continue
+		var/their_name = M.real_name || M.name
+		if(their_name && findtext(their_name, recognition_target_name))
+			found = TRUE
+			break
+	if(!found)
+		return
+	recognized = TRUE
+	recognition_locked = TRUE
+	SpeakRecognition(recognition_line_1)
+	addtimer(CALLBACK(src, PROC_REF(RecognitionPart2)), 2 SECONDS)
+
+/mob/living/simple_animal/hostile/mirror_shattered_reaper/proc/RecognitionPart2()
+	if(QDELETED(src) || stat == DEAD || dying)
+		recognition_locked = FALSE
+		return
+	SpeakRecognition(recognition_line_2)
+	addtimer(CALLBACK(src, PROC_REF(EndRecognitionLock)), 3 SECONDS)
+
+/mob/living/simple_animal/hostile/mirror_shattered_reaper/proc/EndRecognitionLock()
+	recognition_locked = FALSE
+
 /mob/living/simple_animal/hostile/mirror_shattered_reaper/death(gibbed)
+	if(dying)
+		return ..()
 	dying = TRUE
+	recognition_locked = FALSE
 	QDEL_LIST(active_afterimages)
 	for(var/mob/living/simple_animal/hostile/mirror_variant/V in active_variants.Copy())
 		UnregisterSignal(V, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING))
@@ -702,7 +792,11 @@
 		if(!QDELETED(V))
 			V.gib()
 	visible_message(span_userdanger("[src] collapses inward — every variant they took rushing out of them at once, the original wiped out among the noise."))
-	return ..()
+	if(recognized)
+		SpeakRecognition(boss_final_line)
+	. = ..()
+	animate(src, alpha = 0, time = death_fade_time)
+	QDEL_IN(src, death_fade_time)
 
 // ---------- Refraction Railway subtype ----------
 

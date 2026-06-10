@@ -660,6 +660,36 @@
 	var/phase_1_remaining = ACHIYA_PHASE_1_DURATION
 	var/is_vulnerable = FALSE
 	var/dying = FALSE
+	/// Length of the death fade-out.
+	var/death_fade_time = 2 SECONDS
+
+	// ---- Refraction Railway recognition ----
+	/// Character this boss recognizes among the railway party, matched as a
+	/// case-insensitive substring of a member's mob name. Empty = no one.
+	var/recognition_target_name = "Bong Bong"
+	/// Two-part recognition line, said at the start of combat when matched.
+	var/recognition_line_1 = "Bong Bong. You who hurled the coreflames and cast a GOD from the heavens. I have not forgotten."
+	var/recognition_line_2 = "Kneel, blasphemer. You will be PUNISHED for your crimes against a GOD — as all heretics must."
+	/// Said as she fades on death (replaces her silent collapse when Bong Bong
+	/// is the one who brings her down).
+	var/boss_final_line = "...impossible... a GOD... cannot fall... to you... again..."
+	/// Once-guard so recognition is attempted a single time per fight.
+	var/recognition_attempted = FALSE
+	/// TRUE once a party member was actually recognized this fight; makes the
+	/// death sequence speak only the final recognition line.
+	var/recognized = FALSE
+	/// While TRUE the recognition sequence (both halves + 3s after) owns her
+	/// voice; every other line is dropped. Sanctioned lines pass via
+	/// recognition_bypass.
+	var/recognition_locked = FALSE
+	var/recognition_bypass = FALSE
+
+	/// Phase-shift barks when Bong Bong is on field: the Coreflame that once
+	/// felled her blooms again, and she names her judge.
+	var/list/phase_2_lines_bong = list(
+		"The flame again?! You would cast a GOD down a SECOND time, Bong Bong?!",
+		"So the heretic returns with my own fire. KNEEL - and be JUDGED!",
+	)
 
 	var/list/storm_overlays = list()
 	var/list/active_reapers = list()
@@ -690,6 +720,61 @@
 	phase_1_timer_id = addtimer(CALLBACK(src, PROC_REF(Phase1Tick)), 1 SECONDS, TIMER_LOOP | TIMER_STOPPABLE)
 	UpdateHUD()
 	visible_message(span_userdanger("Achiyalabopa descends. The storm settles over the stage."))
+	addtimer(CALLBACK(src, PROC_REF(TryRecognition)), 1.5 SECONDS)
+
+// ---------- Refraction Railway recognition ----------
+
+/// Recognition + death lines bypass the lock; every other line is dropped
+/// while the recognition sequence holds her voice.
+/mob/living/simple_animal/hostile/achiyalabopa/say(message, bubble_type, list/spans = list(), sanitize = TRUE, datum/language/language = null, ignore_spam = FALSE, forced = null)
+	if(recognition_locked && !recognition_bypass)
+		return
+	return ..()
+
+/// Says a framework-sanctioned line past the recognition lock.
+/mob/living/simple_animal/hostile/achiyalabopa/proc/SpeakRecognition(message)
+	if(!message)
+		return
+	recognition_bypass = TRUE
+	say(message)
+	recognition_bypass = FALSE
+
+/// Start of combat: if a railway party member's mob name contains
+/// recognition_target_name, play the two-part recognition line and hold the
+/// speech lock through both parts plus 3 seconds.
+/mob/living/simple_animal/hostile/achiyalabopa/proc/TryRecognition()
+	if(recognition_attempted || stat == DEAD || dying)
+		return
+	recognition_attempted = TRUE
+	if(!recognition_target_name)
+		return
+	var/datum/refraction_run/R = FindRefractionRunForZ(z)
+	if(!R)
+		return
+	var/found = FALSE
+	for(var/mob/M as anything in R.members)
+		if(QDELETED(M))
+			continue
+		var/their_name = M.real_name || M.name
+		if(their_name && findtext(their_name, recognition_target_name))
+			found = TRUE
+			break
+	if(!found)
+		return
+	recognized = TRUE
+	recognition_locked = TRUE
+	SpeakRecognition(recognition_line_1)
+	addtimer(CALLBACK(src, PROC_REF(RecognitionPart2)), 2 SECONDS)
+
+/mob/living/simple_animal/hostile/achiyalabopa/proc/RecognitionPart2()
+	if(QDELETED(src) || stat == DEAD || dying)
+		recognition_locked = FALSE
+		return
+	SpeakRecognition(recognition_line_2)
+	addtimer(CALLBACK(src, PROC_REF(EndRecognitionLock)), 3 SECONDS)
+
+/mob/living/simple_animal/hostile/achiyalabopa/proc/EndRecognitionLock()
+	recognition_locked = FALSE
 
 /mob/living/simple_animal/hostile/achiyalabopa/Destroy()
 	if(phase_1_timer_id)
@@ -765,6 +850,8 @@
 	ChangeResistances(baseline_phase_2_coeff)
 	UpdateHUD()
 	visible_message(span_userdanger("[src] roars — the storm thins, and a Coreflame begins to bloom in her shadow!"))
+	if(recognized)
+		say(pick(phase_2_lines_bong))
 	playsound(src, 'sound/magic/clockwork/narsie_attack.ogg', 75, TRUE, 20)
 	next_coreflame_spawn = world.time + 2 SECONDS
 
@@ -926,7 +1013,7 @@
 	if(phase == ACHIYA_PHASE_1)
 		phase_1_remaining = max(0, phase_1_remaining - (count * ACHIYA_AOE_HIT_SHAVE))
 		UpdateHUD()
-		playsound(src, 'sound/effects/clockcult_gateway_closing.ogg', 60, FALSE)
+		playsound(src, 'sound/creatures/lc13/sea_terrors/reaper_scream.ogg', 60, FALSE)
 		visible_message(span_nicegreen("[count] Mirage Reaper\s torn out of the storm — her countdown lurches forward!"))
 		if(phase_1_remaining <= 0)
 			EnterPhase2()
@@ -1212,7 +1299,10 @@
 // ---------- Death ----------
 
 /mob/living/simple_animal/hostile/achiyalabopa/death(gibbed)
+	if(dying)
+		return ..()
 	dying = TRUE
+	recognition_locked = FALSE
 	if(phase_1_timer_id)
 		deltimer(phase_1_timer_id)
 		phase_1_timer_id = null
@@ -1239,7 +1329,11 @@
 			qdel(awe)
 	maptext = ""
 	visible_message(span_userdanger("[src] collapses. The storm fades from the stage."))
-	return ..()
+	if(recognized)
+		SpeakRecognition(boss_final_line)
+	. = ..()
+	animate(src, alpha = 0, time = death_fade_time)
+	QDEL_IN(src, death_fade_time)
 
 // ---------- Refraction Railway subtype ----------
 

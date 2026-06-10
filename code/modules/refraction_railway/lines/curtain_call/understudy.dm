@@ -108,6 +108,27 @@
 	var/dying = FALSE
 	var/death_fade_time = 1 SECONDS
 
+	// ---- Refraction Railway recognition ----
+	/// Character this boss recognizes among the railway party, matched as a
+	/// case-insensitive substring of a member's mob name. Empty = no one.
+	var/recognition_target_name = "Ruvin"
+	/// Two-part recognition line, said at the start of combat when matched.
+	var/recognition_line_1 = "R-Ruvin... I w-wore your face so WELL... your Brothers never even knew-"
+	var/recognition_line_2 = "You h-hated yourself enough to t-tear me out... and still I l-love you for it-"
+	/// Said as the understudy fades on death (replaces its normal death line
+	/// when Ruvin is the one who puts it down).
+	var/boss_final_line = "...I just w-wanted to be one of them... like you w-were, Ruvin..."
+	/// Once-guard so recognition is attempted a single time per fight.
+	var/recognition_attempted = FALSE
+	/// TRUE once a party member was actually recognized this fight; makes the
+	/// death sequence speak only the final recognition line.
+	var/recognized = FALSE
+	/// While TRUE the recognition sequence (both halves + 3s after) owns the
+	/// understudy's voice; every other line is dropped. Sanctioned lines pass
+	/// via recognition_bypass.
+	var/recognition_locked = FALSE
+	var/recognition_bypass = FALSE
+
 	/// Phase 1 HP floor as a fraction of maxHealth.
 	var/phase_trigger_threshold = 0.25
 	/// Absolute HP floor, resolved at Initialize.
@@ -132,6 +153,10 @@
 		"...the un-understudy... n-never does... go on... d-does it...",
 		"...I l-loved you... loved you so m-much I... c-couldn't... st-stop... t-taking...",
 	)
+	var/list/lines_phase_2_ruvin = list(
+		"...n-no more h-hiding, Ruvin... not from YOU-",
+		"...you w-wanted me GONE... so LOOK... look at what's left-",
+	)
 
 /mob/living/simple_animal/hostile/distortion/understudy/refracted
 
@@ -139,6 +164,61 @@
 	. = ..()
 	phase_trigger_hp = round(maxHealth * phase_trigger_threshold)
 	addtimer(CALLBACK(src, PROC_REF(AssumeForm)), 1 SECONDS)
+	addtimer(CALLBACK(src, PROC_REF(TryRecognition)), 1.5 SECONDS)
+
+// ---------- Refraction Railway recognition ----------
+
+/// Recognition + death lines bypass the lock; every other line is dropped
+/// while the recognition sequence holds the understudy's voice.
+/mob/living/simple_animal/hostile/distortion/understudy/say(message, bubble_type, list/spans = list(), sanitize = TRUE, datum/language/language = null, ignore_spam = FALSE, forced = null)
+	if(recognition_locked && !recognition_bypass)
+		return
+	return ..()
+
+/// Says a framework-sanctioned line past the recognition lock.
+/mob/living/simple_animal/hostile/distortion/understudy/proc/SpeakRecognition(message)
+	if(!message)
+		return
+	recognition_bypass = TRUE
+	say(message)
+	recognition_bypass = FALSE
+
+/// Start of combat: if a railway party member's mob name contains
+/// recognition_target_name, play the two-part recognition line and hold the
+/// speech lock through both parts plus 3 seconds.
+/mob/living/simple_animal/hostile/distortion/understudy/proc/TryRecognition()
+	if(recognition_attempted || stat == DEAD || dying)
+		return
+	recognition_attempted = TRUE
+	if(!recognition_target_name)
+		return
+	var/datum/refraction_run/R = FindRefractionRunForZ(z)
+	if(!R)
+		return
+	var/found = FALSE
+	for(var/mob/M as anything in R.members)
+		if(QDELETED(M))
+			continue
+		var/their_name = M.real_name || M.name
+		if(their_name && findtext(their_name, recognition_target_name))
+			found = TRUE
+			break
+	if(!found)
+		return
+	recognized = TRUE
+	recognition_locked = TRUE
+	SpeakRecognition(recognition_line_1)
+	addtimer(CALLBACK(src, PROC_REF(RecognitionPart2)), 2 SECONDS)
+
+/mob/living/simple_animal/hostile/distortion/understudy/proc/RecognitionPart2()
+	if(QDELETED(src) || stat == DEAD || dying)
+		recognition_locked = FALSE
+		return
+	SpeakRecognition(recognition_line_2)
+	addtimer(CALLBACK(src, PROC_REF(EndRecognitionLock)), 3 SECONDS)
+
+/mob/living/simple_animal/hostile/distortion/understudy/proc/EndRecognitionLock()
+	recognition_locked = FALSE
 
 // Carries current_form down with the true form so a hard qdel path (team wipe via WipeRoomReserves) doesn't orphan the skin.
 /mob/living/simple_animal/hostile/distortion/understudy/Destroy()
@@ -295,7 +375,10 @@
 	mouse_opacity = initial(mouse_opacity)
 	ChangeResistances(list(RED_DAMAGE = 0, WHITE_DAMAGE = 0, BLACK_DAMAGE = 0, PALE_DAMAGE = 0))
 	visible_message(span_userdanger("\The [src] convulses, the borrowed shape splitting open as something hungrier rises through it!"))
-	say("...n-no more h-hiding... I'll be the th-thing you're afraid of-")
+	if(recognized)
+		say(pick(lines_phase_2_ruvin))
+	else
+		say("...n-no more h-hiding... I'll be the th-thing you're afraid of-")
 	var/end_time = world.time + 3 SECONDS
 	while(world.time < end_time)
 		if(dying || QDELETED(src) || stat == DEAD)
@@ -321,7 +404,11 @@
 	density = TRUE
 	alpha = 255
 	invisibility = initial(invisibility)
-	say(pick(death_lines))
+	recognition_locked = FALSE
+	if(recognized && boss_final_line)
+		SpeakRecognition(boss_final_line)
+	else
+		say(pick(death_lines))
 	. = ..()
 	animate(src, alpha = 0, time = death_fade_time)
 	QDEL_IN(src, death_fade_time)
