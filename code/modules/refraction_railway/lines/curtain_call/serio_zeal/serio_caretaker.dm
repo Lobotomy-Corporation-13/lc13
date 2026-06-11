@@ -58,7 +58,7 @@
 	damage_coeff = list(RED_DAMAGE = 0.1, WHITE_DAMAGE = 0.1, BLACK_DAMAGE = 0.1, PALE_DAMAGE = 0.1)
 	stat_attack = HARD_CRIT
 	density = TRUE
-	anchored = TRUE
+	move_resist = MOVE_FORCE_OVERPOWERING
 	move_to_delay = 999
 	mob_biotypes = MOB_MINERAL
 	// Marks the crystal as "glass-like" so Phase 3 projectiles with

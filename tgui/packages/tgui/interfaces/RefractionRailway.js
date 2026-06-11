@@ -350,9 +350,7 @@ export const RecordsModal = (props, context) => {
                   rank={`#${bestIdx + 1}`}
                   isSectorOpen={expandedIdx === bestIdx}
                   onToggleSector={() =>
-                    setExpandedIdx(
-                      expandedIdx === bestIdx ? null : bestIdx)
-                  }
+                    setExpandedIdx(expandedIdx === bestIdx ? null : bestIdx)}
                   olderCount={olderCount}
                   isGroupOpen={isGroupOpen}
                   onToggleGroup={() => toggleGroup(group.key)}
@@ -368,9 +366,7 @@ export const RecordsModal = (props, context) => {
                           rank={`#${idx + 1}`}
                           isSectorOpen={expandedIdx === idx}
                           onToggleSector={() =>
-                            setExpandedIdx(
-                              expandedIdx === idx ? null : idx)
-                          }
+                            setExpandedIdx(expandedIdx === idx ? null : idx)}
                           mini
                         />
                       );
