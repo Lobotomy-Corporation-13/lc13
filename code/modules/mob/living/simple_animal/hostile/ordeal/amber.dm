@@ -106,10 +106,15 @@
 				var/parasite_slot = H.getorganslot(ORGAN_SLOT_PARASITE_EGG)
 				if(H.stat != CONSCIOUS && !parasite_slot) //Only infect people in crit/dead and that don't have a parasite of some kind already.
 					var/obj/item/organ/amber_bug/amber_parasite = new(H)
-					amber_parasite.ordeal_reference = ordeal_reference
+					//Spawned amber bugs only produce spawned parasites.
+					if(istype(src, /mob/living/simple_animal/hostile/ordeal/amber_bug/spawned))
+						amber_parasite.offspring = /mob/living/simple_animal/hostile/ordeal/amber_bug/spawned
+					if(ordeal_reference)
+						amber_parasite.ordeal_reference = ordeal_reference
 					playsound(get_turf(src), 'sound/effects/ordeals/amber/dawn_dig_in.ogg', 25, 1)
 					to_chat(H, span_danger("The bug is eating its way inside your chest!"))
 					qdel(src)
+					return
 			forceMove(T)
 			SLEEP_CHECK_DEATH(2)
 
@@ -277,6 +282,7 @@
 	var/feeding_duration
 	var/total_bug_spawned = 0
 	var/cured = FALSE
+	var/offspring = /mob/living/simple_animal/hostile/ordeal/amber_bug
 	var/datum/ordeal/ordeal_reference
 
 	var/feeding_interval = 1.5 MINUTES
@@ -296,7 +302,7 @@
 	if(M && !cured)
 		visible_message(span_warning("A bug leaps out of [M]!"))
 		SpawnBug(1)
-	. = ..()
+	return ..()
 
 /obj/item/organ/amber_bug/on_life()
 	. = ..()
@@ -309,24 +315,21 @@
 /obj/item/organ/amber_bug/proc/SpawnBug(bug_spawned)
 	var/max_spawn_amount = max_feeding_stage + spawn_amount
 	var/max_spawn = clamp(length(GLOB.clients) * 5, 2, max_spawn_amount) //Has a much higher cap per player than dusk at 5 bugs per client, due to the circumstances of spawn being rarer and longer.
-	var/list/amber_list
-	if(ordeal_reference)
-		amber_list = ordeal_reference.ordeal_mobs
 
 	var/turf/T = get_turf(owner)
 
 	for(var/i = 0, i < spawn_amount, i++)
-		var/mob/living/simple_animal/hostile/ordeal/amber_bug/bug = new(T)
-		total_bug_spawned++
-		if(length(total_bug_spawned) > max_spawn || length(amber_list) > 50)
+		if(length(total_bug_spawned) > max_spawn)
 			if(owner.stat == DEAD)
 				owner.gib()
 			qdel(src)
 			return
+		var/mob/living/simple_animal/hostile/ordeal/amber_bug/bug = new offspring(T)
 
 		if(ordeal_reference)
 			bug.ordeal_reference = ordeal_reference
 			ordeal_reference.ordeal_mobs += bug
+		total_bug_spawned++
 
 /obj/item/organ/amber_bug/proc/growProcess()
 	if(!src || QDELETED(src))
@@ -351,6 +354,10 @@
 
 	if(world.time <= feeding_duration)
 		return
+
+	if(ordeal_reference)
+		if(length(ordeal_reference.ordeal_mobs) > 60)
+			return
 
 	var/bug_spawned = feeding_stage + 2 //Should go 3,4,5 bugs then explode, for a total of 12 bugs per body over 4.5 minutes.
 	feeding_duration = world.time + (feeding_interval)
@@ -503,11 +510,20 @@
 	if(length(spawned_mobs) >= max_spawn)
 		return FALSE
 
+	if(ordeal_reference)
+		if(length(ordeal_reference.ordeal_mobs) > 60)
+			return FALSE
+
 	burrowing = TRUE
 	playsound(get_turf(src), 'sound/effects/ordeals/amber/dusk_create.ogg', 50, FALSE)
 	SLEEP_CHECK_DEATH(5)
 	visible_message(span_danger("Four smaller bugs emerge from [src]!"))
+	var/max_tries = 6
 	for(var/i = 1 to 4)
+		max_tries--
+		//Do not go on forever.
+		if(max_tries <= 0)
+			break
 		var/turf/Turf = get_step(get_turf(src), pick(0, NORTH, SOUTH, EAST, WEST, NORTHEAST, NORTHWEST, SOUTHEAST, SOUTHWEST))
 		if(Turf.density) // Retry
 			i -= 1
@@ -659,6 +675,10 @@
 	var/max_spawn = clamp(length(GLOB.clients) * 0.6, 2, 8)
 	if(length(spawned_mobs) >= max_spawn)
 		return FALSE
+
+	if(ordeal_reference)
+		if(length(ordeal_reference.ordeal_mobs) > 60)
+			return FALSE
 
 	burrowing = TRUE
 	playsound(get_turf(src), 'sound/effects/ordeals/amber/midnight_create.ogg', 50, FALSE)
