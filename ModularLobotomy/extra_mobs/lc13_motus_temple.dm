@@ -1282,7 +1282,7 @@
 	var/active = FALSE
 
 /mob/living/simple_animal/hostile/keeper_piller/Initialize()
-	..()
+	. = ..()
 	addtimer(CALLBACK(src, PROC_REF(piller_fall)), 0)
 
 /mob/living/simple_animal/hostile/keeper_piller/proc/piller_fall()

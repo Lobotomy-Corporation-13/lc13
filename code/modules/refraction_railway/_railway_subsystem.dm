@@ -10,6 +10,9 @@
 #define LOBBY_FINISHED "lobby_finished"
 
 GLOBAL_VAR_INIT(refraction_run_uid_counter, 0)
+/// TRUE only while ExtractMobStats spawns a throwaway prototype in nullspace
+/// to read its card stats; suppresses simple_animal's nullspace warning.
+GLOBAL_VAR_INIT(refraction_extracting_mob_stats, FALSE)
 
 SUBSYSTEM_DEF(refraction_railway)
 	name = "Refraction Railway"
@@ -256,7 +259,9 @@ SUBSYSTEM_DEF(refraction_railway)
 /datum/controller/subsystem/refraction_railway/proc/ExtractMobStats(mob_type)
 	if(!ispath(mob_type, /mob/living/simple_animal/hostile))
 		return null
+	GLOB.refraction_extracting_mob_stats = TRUE
 	var/mob/living/simple_animal/hostile/H = new mob_type(null)
+	GLOB.refraction_extracting_mob_stats = FALSE
 	var/list/data = list()
 	data["type"] = H.type
 	data["name"] = H.name
