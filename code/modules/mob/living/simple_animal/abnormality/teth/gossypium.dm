@@ -10,8 +10,8 @@
 	health = 900
 	damage_coeff = list(BRUTE = 1, RED_DAMAGE = 1, WHITE_DAMAGE = 0.8, BLACK_DAMAGE = 1.5, PALE_DAMAGE = 1.5)
 	ranged = TRUE
-	melee_damage_lower = 8
-	melee_damage_upper = 12
+	melee_damage_lower = 6
+	melee_damage_upper = 10
 	ranged_cooldown_time = 2
 	rapid_melee = 2
 	melee_damage_type = BLACK_DAMAGE
@@ -82,14 +82,17 @@
 		return
 	return ..()
 
-
-/mob/living/simple_animal/hostile/abnormality/gossypium/AttackingTarget()
+/mob/living/simple_animal/hostile/abnormality/gossypium/AttackingTarget(atom/attack_target)
 	if(!can_act)
 		return
-
 	if(burst_cooldown <= world.time && prob(50))
 		thornBurst()
 	return ..()
+
+/mob/living/simple_animal/hostile/abnormality/gossypium/AttackCondition(atom/attack_target)
+	. = TRUE
+	if(!Adjacent(attack_target)) //Prevents this bozo from getting Extendo-Arms after doing the burst
+		return FALSE
 
 /mob/living/simple_animal/hostile/abnormality/gossypium/OpenFire()
 	if(!can_act)
@@ -103,12 +106,9 @@
 		return
 	can_act = FALSE
 	playsound(get_turf(src), 'sound/creatures/venus_trap_hurt.ogg', 75, 0, 5)
-	icon_state = "ebonyqueen_attack2"
 	var/turf/T = get_turf(attack_target)
 	SLEEP_CHECK_DEATH(1)
 	new /obj/effect/temp_visual/vine(T, src)
-	SLEEP_CHECK_DEATH(4)
-	icon_state = icon_living
 	SLEEP_CHECK_DEATH(2)
 	can_act = TRUE
 
@@ -120,12 +120,11 @@
 	var/turf/origin = get_turf(src)
 	playsound(origin, 'sound/abnormalities/ebonyqueen/strongcharge.ogg', 75, 0, 5)
 	playsound(origin, 'sound/creatures/venus_trap_hurt.ogg', 75, 0, 5)
-	SLEEP_CHECK_DEATH(9)
-	for(var/turf/T in spiral_range_turfs(1, origin))
+	SLEEP_CHECK_DEATH(7)
+	for(var/turf/T in spiral_range_turfs(2, origin))
 		new /obj/effect/temp_visual/vine(T, src)
-	SLEEP_CHECK_DEATH(8)
+	SLEEP_CHECK_DEATH(6)
 	can_act = TRUE
-
 
 
 
@@ -148,7 +147,7 @@
 	icon_state = "vines"
 	duration = 6
 	layer = RIPPLE_LAYER	//We want this HIGH. SUPER HIGH. We want it so that you can absolutely, guaranteed, see exactly what is about to hit you.
-	var/vine_damage = 25 //40 less Black Damage than Ebony
+	var/vine_damage = 15 //50 less Black Damage than Ebony
 	var/mob/living/source //who made this, anyway
 
 
@@ -173,6 +172,7 @@
 		L.visible_message(span_userdanger("[src] knocks [L] away!"), span_userdanger("[src] knocks you away!"))
 		var/turf/thrownat = get_ranged_target_turf(src, pick(GLOB.alldirs), 2)
 		L.throw_at(thrownat, 1, 1, spin = TRUE, force = MOVE_FORCE_OVERPOWERING, gentle = TRUE)
+		L.apply_lc_bleed(3)
 	for(var/obj/vehicle/sealed/mecha/M in hit) //also damage mechs.
 		for(var/O in M.occupants)
 			var/mob/living/occupant = O
