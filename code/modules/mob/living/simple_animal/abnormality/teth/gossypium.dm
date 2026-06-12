@@ -52,7 +52,7 @@
 	var/datum/component/bloodfeast/gathered_blood = GetComponent(/datum/component/bloodfeast)
 	if(gathered_blood.blood_amount > 500)
 		Enrage(gathered_blood)
-		gathered_blood.blood_amount -= 500 //Prevent it from looping
+		gathered_blood.blood_amount -= 750 //Prevent it from looping
 	return
 
 /mob/living/simple_animal/hostile/abnormality/gossypium/proc/Enrage(datum/component/bloodfeast/bloodfeast_component)
@@ -60,7 +60,6 @@
 		return
 	playsound(get_turf(src), 'sound/abnormalities/nosferatu/transform.ogg', 35, 8)
 	animate(src, 1 SECONDS, color = "#882020", transform = matrix()*1.10)
-	ranged_cooldown_time -= 0.1
 	rapid_melee += 0.5 //Was gonna have this douche calm down after a while and not stack but it kept breaking so you'll just have to deal with the bastard snowballing
 
 /mob/living/simple_animal/hostile/abnormality/gossypium/Move()
@@ -84,56 +83,13 @@
 	return ..()
 
 
-/mob/living/simple_animal/hostile/abnormality/gossypium/AttackingTarget(atom/attacked_target)
+/mob/living/simple_animal/hostile/abnormality/gossypium/AttackingTarget()
 	if(!can_act)
 		return
 
-	if(!target)
-		GiveTarget(attacked_target)
-
-	if(client)
-		OpenFire()
-		return
-
-	if(attacked_target) // You'd think this should be "attacked_target" but no this shit still uses target I hate it. // Now uses attacked_target I love it.
-		if(ismecha(attacked_target))
-			if(burst_cooldown <= world.time && prob(50))
-				thornBurst()
-			else
-				OpenFire()
-			return
-		else if(isliving(attacked_target))
-			var/mob/living/L = attacked_target
-			if(L.stat != DEAD)
-				if(burst_cooldown <= world.time && prob(50))
-					thornBurst()
-				else
-					OpenFire()
-			return
+	if(burst_cooldown <= world.time && prob(50))
+		thornBurst()
 	return ..()
-
-/mob/living/simple_animal/hostile/abnormality/gossypium/proc/thornBurst() //expanding square in melee
-	if(burst_cooldown > world.time || !can_act)
-		return
-	burst_cooldown = world.time + burst_cooldown_time
-	can_act = FALSE
-	var/turf/origin = get_turf(src)
-	playsound(origin, 'sound/abnormalities/ebonyqueen/strongcharge.ogg', 75, 0, 5)
-	playsound(origin, 'sound/creatures/venus_trap_hurt.ogg', 75, 0, 5)
-	SLEEP_CHECK_DEATH(9)
-	var/last_dist = 0
-	for(var/turf/T in spiral_range_turfs(2, origin))
-		if(!T)
-			continue
-		var/dist = get_dist(origin, T)
-		if(dist > last_dist)
-			last_dist = dist
-			SLEEP_CHECK_DEATH(1 + min(2 - last_dist, 12) * 0.25) //gets faster as it gets further out
-		new /obj/effect/temp_visual/vine(T, src)
-	SLEEP_CHECK_DEATH(8)
-	icon_state = icon_living
-	SLEEP_CHECK_DEATH(3)
-	can_act = TRUE
 
 /mob/living/simple_animal/hostile/abnormality/gossypium/OpenFire()
 	if(!can_act)
@@ -156,11 +112,19 @@
 	SLEEP_CHECK_DEATH(2)
 	can_act = TRUE
 
-
-
-
-
-
+/mob/living/simple_animal/hostile/abnormality/gossypium/proc/thornBurst() //expanding square in melee
+	if(burst_cooldown > world.time)
+		return
+	burst_cooldown = world.time + burst_cooldown_time
+	can_act = FALSE
+	var/turf/origin = get_turf(src)
+	playsound(origin, 'sound/abnormalities/ebonyqueen/strongcharge.ogg', 75, 0, 5)
+	playsound(origin, 'sound/creatures/venus_trap_hurt.ogg', 75, 0, 5)
+	SLEEP_CHECK_DEATH(9)
+	for(var/turf/T in spiral_range_turfs(1, origin))
+		new /obj/effect/temp_visual/vine(T, src)
+	SLEEP_CHECK_DEATH(8)
+	can_act = TRUE
 
 
 
