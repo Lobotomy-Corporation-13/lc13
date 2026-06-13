@@ -36,19 +36,13 @@
 	name = "the Crystal"
 	desc = "A crystal seal holding Star inside. It is glassy and cool when sealed; \
 		it turns hot and crackable when the Overseer invokes a memory."
-	// Placeholder visual: smoke2 from icons/effects/96x96.dmi.
-	// 96x96 sprite — pixel-offset to center on the 32x32 tile.
-	icon = 'icons/effects/96x96.dmi'
-	icon_state = "smoke2"
-	icon_living = "smoke2"
-	icon_dead = "smoke2"
+	icon = 'ModularLobotomy/_Lobotomyicons/teaser_mobs3.dmi'
+	icon_state = "overseer_crystal"
+	icon_living = "overseer_crystal"
+	icon_dead = "overseer_crystal"
 	pixel_x = -32
 	base_pixel_x = -32
-	pixel_y = -32
-	base_pixel_y = -32
 	faction = list("serio_zeal")
-	// Total HP to break the seal. Phase-2 tuning placeholder; bosses on
-	// this line tend to land in the 5k–10k range.
 	maxHealth = 10000
 	health = 10000
 	melee_damage_lower = 0
@@ -96,6 +90,18 @@
 /mob/living/simple_animal/hostile/serio_crystal/Initialize(mapload)
 	. = ..()
 	toggle_ai(AI_OFF)
+	// Sealed-star underlay — renders behind the crystal sprite so it
+	// reads as Star trapped inside the seal. The crystal's pixel_x = -32
+	// is the 96x96 centering offset; the 32x32 sealed_star cancels that
+	// to recentre on the tile, and pixel_y pushes it up into the visual
+	// middle of the crystal body.
+	var/mutable_appearance/sealed_star = mutable_appearance(
+		'ModularLobotomy/_Lobotomyicons/teaser_mobs.dmi',
+		"sealed_star"
+	)
+	sealed_star.pixel_x = 32
+	sealed_star.pixel_y = 32
+	underlays += sealed_star
 
 /mob/living/simple_animal/hostile/serio_crystal/Destroy()
 	if(parent_overseer && !QDELETED(parent_overseer))
@@ -178,7 +184,7 @@
 // ---------- The Overseer ----------
 
 /mob/living/simple_animal/hostile/serio_overseer
-	name = "the Overseer"
+	name = "Overseer"
 	desc = "Serio Zeal's inner voice given a body. It paces around the crystal, \
 		watching over it. It does not look unkind."
 	icon = 'ModularLobotomy/_Lobotomyicons/teaser_mobs.dmi'
@@ -233,6 +239,15 @@
 	var/murmurs_max_for_bracket = 2
 	/// world.time tracker for MurmurSpawnTick — when to spawn the next.
 	var/next_murmur_spawn_at = 0
+	// ---- Bracket 3 persistent storm ----
+	/// TRUE between bracket-2→bracket-3 transition and the third slash.
+	/// Gates Bracket3EchoTick + survives across the bracket; cleared by
+	/// EndBracket3Storm.
+	var/b3_storm_active = FALSE
+	/// Live snow-overlay refs placed at bracket-3 entry. Qdel'd on
+	/// EndBracket3Storm (and on the Overseer's own Destroy via
+	/// CleanupSpawnedObjects).
+	var/list/b3_snow_overlays = list()
 	// ---- Knockdown ----
 	var/knocked_down = FALSE
 	var/standup_at = 0
@@ -302,10 +317,42 @@
 	if(main_tick_timer)
 		deltimer(main_tick_timer)
 		main_tick_timer = null
+	CleanupSpawnedObjects()
 	if(parent_crystal && !QDELETED(parent_crystal))
 		parent_crystal.parent_overseer = null
+		qdel(parent_crystal)
 	parent_crystal = null
+	if(knight_ref && !QDELETED(knight_ref))
+		qdel(knight_ref)
+	knight_ref = null
+	if(sage_ref && !QDELETED(sage_ref))
+		qdel(sage_ref)
+	sage_ref = null
 	return ..()
+
+/// Wipes the long-lived objects the Overseer owns — the Murmur choir
+/// and the echo-line sparkle column. Short-lived attack visuals
+/// (puddles, AoE warnings, walker figures, in-flight lances) all carry
+/// their own auto-qdel timers and clean themselves up within a few
+/// seconds; iterating `world` for them would be much more expensive
+/// than just letting them expire. Called from Destroy.
+/mob/living/simple_animal/hostile/serio_overseer/proc/CleanupSpawnedObjects()
+	for(var/mob/living/simple_animal/hostile/serio_murmur/M as anything in active_murmurs)
+		if(!QDELETED(M))
+			qdel(M)
+	active_murmurs.Cut()
+	if(islist(echo_anchor_pool))
+		for(var/turf/T as anything in echo_anchor_pool)
+			if(!T)
+				continue
+			for(var/obj/effect/temp_visual/serio_echo_anchor/E in T)
+				qdel(E)
+		echo_anchor_pool.Cut()
+	for(var/obj/effect/temp_visual/V as anything in b3_snow_overlays)
+		if(!QDELETED(V))
+			qdel(V)
+	b3_snow_overlays.Cut()
+	b3_storm_active = FALSE
 
 /// Convenience for admin / varedit spawning: drops a Crystal at the
 /// Overseer's tile and steps the Overseer to a starting patrol slot.
@@ -383,6 +430,7 @@
 	// hit is blocked by the warding shield (see /deal_damage override).
 	ChangeResistances(list(RED_DAMAGE = 0, WHITE_DAMAGE = 0, BLACK_DAMAGE = 0, PALE_DAMAGE = 0))
 	UnlockOverseerPhase2Reveal()
+	SetCrystalIconState("overseer_crystal_crack")
 	var/turf/crystal_turf = get_turf(parent_crystal)
 	if(crystal_turf)
 		var/turf/overseer_pos = locate(crystal_turf.x - 3, crystal_turf.y, crystal_turf.z)
@@ -550,8 +598,9 @@
 	if(QDELETED(parent_crystal))
 		return
 	if(bracket_just_cleared >= 3)
-		// Bracket-3 slash: resolution sequence.
-		EndEncounter()
+		// Bracket-3 slash: terminal shatter + final-beat sequence.
+		SetCrystalIconState("overseer_crystal_shatter_3")
+		ShatterAndFinalBeat()
 		return
 	var/maxh = parent_crystal.maxHealth
 	var/target_health
@@ -559,9 +608,12 @@
 		if(1)
 			target_health = round(maxh * 0.75) - 1
 			murmurs_max_for_bracket = 3  // entering B2
+			SetCrystalIconState("overseer_crystal_shatter_1")
 		if(2)
 			target_health = round(maxh * 0.25) - 1
 			murmurs_max_for_bracket = 4  // entering B3
+			SetCrystalIconState("overseer_crystal_shatter_2")
+			StartBracket3Storm()
 	// Bracket transition unpauses the Murmur spawn timer so the new
 	// cap is honored on the next tick.
 	next_murmur_spawn_at = 0
@@ -575,6 +627,67 @@
 	// New bracket dialogue exchange (delayed slightly so the slash
 	// finisher animation lands first).
 	addtimer(CALLBACK(src, PROC_REF(PlayBracketDialogue), bracket_just_cleared + 1), 1 SECONDS, TIMER_STOPPABLE)
+
+// ---------- Bracket 3 persistent storm ----------
+
+/// Bracket-2 slash entry hook. Places the Echo of Her snow overlay
+/// across the arena for the entire B3 window and kicks off a passive
+/// 15-second tick that drops echo figures around the crystal +
+/// players. Idempotent — only fires once per B3 entry.
+/mob/living/simple_animal/hostile/serio_overseer/proc/StartBracket3Storm()
+	if(b3_storm_active || QDELETED(parent_crystal))
+		return
+	b3_storm_active = TRUE
+	var/turf/center = get_turf(parent_crystal)
+	if(!center)
+		return
+	// Use a long safety duration — actual end is gated on
+	// EndBracket3Storm running. 15 minutes covers any plausible B3 length.
+	var/safety_duration = 15 MINUTES
+	for(var/turf/T in view(15, center))
+		b3_snow_overlays += new /obj/effect/temp_visual/serio_echo_snow_storm(T, safety_duration)
+	for(var/turf/open/T in view(15, center))
+		b3_snow_overlays += new /obj/effect/temp_visual/serio_echo_snow_ground(T, safety_duration)
+	addtimer(CALLBACK(src, PROC_REF(Bracket3EchoTick)), 15 SECONDS, TIMER_STOPPABLE)
+
+/// 15-second self-rescheduling tick. Each call drops 2 crystal-adjacent
+/// figures + up to 2 player-seek figures. Uses the non-weakened
+/// Echo of Her tuning. Bails when the storm flag is cleared.
+/mob/living/simple_animal/hostile/serio_overseer/proc/Bracket3EchoTick()
+	if(!b3_storm_active || QDELETED(src) || QDELETED(parent_crystal))
+		return
+	var/turf/center = get_turf(parent_crystal)
+	if(!center)
+		return
+	var/walk_distance = rand(5, 7)
+	var/figure_damage = 60
+	var/decay_stacks = 6
+	var/can_shatter = TRUE
+	var/figure_step_delay = 0.5 SECONDS
+	for(var/i in 1 to 2)
+		SpawnCrystalAdjacentFigure(center, walk_distance, figure_step_delay, figure_damage, decay_stacks, can_shatter)
+	var/list/players = list()
+	for(var/mob/living/carbon/human/H in view(view_range, src))
+		if(H.stat == DEAD)
+			continue
+		players += H
+	var/p_count = min(2, length(players))
+	for(var/i in 1 to p_count)
+		if(!length(players))
+			break
+		var/mob/living/carbon/human/target = pick_n_take(players)
+		SpawnPlayerSeekFigure(target, walk_distance, figure_step_delay, figure_damage, decay_stacks, can_shatter)
+	addtimer(CALLBACK(src, PROC_REF(Bracket3EchoTick)), 15 SECONDS, TIMER_STOPPABLE)
+
+/// Bracket-3 slash exit hook. Tears down the persistent snow overlay
+/// and stops the echo tick from rescheduling. Called from
+/// ShatterAndFinalBeat before phase_2 flips.
+/mob/living/simple_animal/hostile/serio_overseer/proc/EndBracket3Storm()
+	b3_storm_active = FALSE
+	for(var/obj/effect/temp_visual/V as anything in b3_snow_overlays)
+		if(!QDELETED(V))
+			qdel(V)
+	b3_snow_overlays.Cut()
 
 // ---------- Knockdown ----------
 
@@ -2334,8 +2447,8 @@
 /obj/effect/temp_visual/serio_echo_figure
 	name = "static figure"
 	desc = "A translucent shape of someone who isn't here anymore."
-	icon = 'ModularLobotomy/_Lobotomyicons/teaser_mobs.dmi'
-	icon_state = "her"
+	icon = 'icons/effects/effects.dmi'
+	icon_state = "static"
 	layer = ABOVE_MOB_LAYER
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	duration = 12 SECONDS

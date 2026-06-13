@@ -27,6 +27,10 @@ SUBSYSTEM_DEF(refraction_railway)
 	var/list/leaderboards = list()
 	/// ckey (string) -> list of mob type-paths the player has fought.
 	var/list/encountered_mobs = list()
+	/// ckey (string) -> list of event id strings the player has unlocked.
+	/// Drives the per-card `hidden_until` field and the per-line
+	/// silhouette gate (`GetMobSilhouetteGates()`).
+	var/list/unlocked_events = list()
 	var/list/mob_stats_cache = list()
 	var/list/mob_tips = list()
 	/// mob_type (path) -> list of assoc passive entries (title/severity/text).
@@ -69,6 +73,7 @@ SUBSYSTEM_DEF(refraction_railway)
 	InitializeMobAchievements()
 	SSpersistence.LoadRefractionLeaderboards()
 	SSpersistence.LoadRefractionEncounters()
+	SSpersistence.LoadRefractionEvents()
 	SSpersistence.LoadRefractionStarlight()
 	// Warm the mob-card cache in the background so the first hub-console
 	// open doesn't pay for ~20 getFlatIcon + base64 encodes all at once.
@@ -426,13 +431,75 @@ SUBSYSTEM_DEF(refraction_railway)
 	return icons
 
 /// Returns TRUE if `mob_path` should be shown revealed for this ckey.
+/// Honors the per-line silhouette gate: even an encountered mob stays
+/// silhouette until its gating event is unlocked.
 /datum/controller/subsystem/refraction_railway/proc/IsMobRevealed(ckey, mob_path)
 	if(debug_reveal_all)
 		return TRUE
 	if(!ckey)
 		return FALSE
 	var/list/seen = encountered_mobs[ckey]
-	return islist(seen) && (mob_path in seen)
+	if(!islist(seen) || !(mob_path in seen))
+		return FALSE
+	var/gate_event = GetMobSilhouetteGate(mob_path)
+	if(gate_event && !IsEventUnlocked(ckey, gate_event))
+		return FALSE
+	return TRUE
+
+/// Returns the gating event id for a mob path by polling every registered
+/// line's GetMobSilhouetteGates(), or null if none gates this mob.
+/datum/controller/subsystem/refraction_railway/proc/GetMobSilhouetteGate(mob_path)
+	for(var/datum/refraction_line/L as anything in lines)
+		var/list/gates = L.GetMobSilhouetteGates()
+		if(islist(gates) && gates[mob_path])
+			return gates[mob_path]
+	return null
+
+/// Returns TRUE if `ckey` has unlocked `event_id`. debug_reveal_all
+/// short-circuits to TRUE so VV testing reveals everything.
+/datum/controller/subsystem/refraction_railway/proc/IsEventUnlocked(ckey, event_id)
+	if(debug_reveal_all)
+		return TRUE
+	if(!ckey || !event_id)
+		return FALSE
+	var/list/seen = unlocked_events[ckey]
+	return islist(seen) && (event_id in seen)
+
+/// Marks `event_id` as unlocked for each ckey in `ckeys`. Persists to
+/// disk if any new (ckey, event_id) pair was actually added.
+/datum/controller/subsystem/refraction_railway/proc/MarkEventUnlocked(list/ckeys, event_id)
+	if(!event_id || !islist(ckeys) || !length(ckeys))
+		return
+	var/dirty = FALSE
+	for(var/ckey in ckeys)
+		if(!ckey)
+			continue
+		var/list/seen = unlocked_events[ckey]
+		if(!islist(seen))
+			seen = list()
+			unlocked_events[ckey] = seen
+		if(!(event_id in seen))
+			seen += event_id
+			dirty = TRUE
+	if(dirty)
+		SSpersistence.SaveRefractionEvents()
+
+/// Returns a copy of `cards` (assoc-list attack or passive entries)
+/// where any entry whose `hidden_until` event is still locked is
+/// replaced with a placeholder `list("hidden" = TRUE)` so the briefing
+/// UI can render a locked slot in its position. Entries without a
+/// `hidden_until` field pass through unchanged.
+/datum/controller/subsystem/refraction_railway/proc/MaskGatedCards(list/cards, ckey)
+	if(!islist(cards) || !length(cards))
+		return cards
+	var/list/result = list()
+	for(var/list/card as anything in cards)
+		var/event_id = card["hidden_until"]
+		if(event_id && !IsEventUnlocked(ckey, event_id))
+			result += list(list("hidden" = TRUE))
+			continue
+		result += list(card)
+	return result
 
 /// Returns the mob-card payload: full stats+tip if revealed, else a silhouette.
 /datum/controller/subsystem/refraction_railway/proc/BuildMobCardPayload(ckey, mob_path)
@@ -450,10 +517,10 @@ SUBSYSTEM_DEF(refraction_railway)
 		var/tip = mob_tips[mob_path]
 		if(tip)
 			payload["tip"] = tip
-		var/list/attacks = mob_attacks[mob_path]
+		var/list/attacks = MaskGatedCards(mob_attacks[mob_path], ckey)
 		if(islist(attacks) && length(attacks))
 			payload["attacks"] = attacks
-		var/list/passives = mob_passives[mob_path]
+		var/list/passives = MaskGatedCards(mob_passives[mob_path], ckey)
 		if(islist(passives) && length(passives))
 			payload["passives"] = passives
 		return payload

@@ -1,5 +1,5 @@
 /*
- * The Sage — Phase 3 support mob (counter-argument + heals).
+ * The Sage — Phase 2 support mob (counter-argument + heals).
  *
  * Build-order step 2: bare mob shell + fade-in.
  * Build-order step 15: support kit — healing wells, cleanse pulse,
@@ -10,9 +10,9 @@
 	name = "the Sage"
 	desc = "A figure whose voice has been waiting for this exchange."
 	icon = 'ModularLobotomy/_Lobotomyicons/teaser_mobs.dmi'
-	icon_state = "priest"
-	icon_living = "priest"
-	icon_dead = "priest"
+	icon_state = "sage"
+	icon_living = "sage"
+	icon_dead = "sage"
 	faction = list("neutral")
 	maxHealth = 800
 	health = 800
@@ -27,14 +27,35 @@
 	refraction_manages_own_death = TRUE
 	loot = list()
 	gold_core_spawnable = NO_SPAWN
-	/// Back-ref to the Caretaker that brought the Sage onto the stage.
-	var/mob/living/simple_animal/hostile/serio_caretaker/parent_caretaker
+	/// Back-ref to the Overseer that brought the Sage onto the stage.
+	var/mob/living/simple_animal/hostile/serio_overseer/parent_overseer
 	/// Sibling support mob.
 	var/mob/living/simple_animal/hostile/serio_knight/knight_ref
 	// ---- Support kit state ----
-	var/well_cooldown_until = 0
-	var/cleanse_cooldown_until = 0
+	/// Unified aura cooldown. Every 20s the Sage fires one aura, picked
+	/// by TryAura: cleanse if any player within 7 has 15+ decay stacks,
+	/// heal otherwise.
+	var/aura_cooldown_until = 0
 	var/bubble_cooldown_until = 0
+	/// Reusable visual pool for the aura sparkles. Created lazily on
+	/// the first aura cast so we don't allocate before Phase 2.
+	var/datum/reusable_visual_pool/sage_rvp
+	// ---- Healing crystal state ----
+	/// Cooldown timer for placing healing crystals.
+	var/crystal_cooldown_until = 0
+	/// Max alive at once.
+	var/crystal_max_alive = 3
+	/// Live healing-word refs the Sage placed. Lets us cap the count
+	/// + clean up on Destroy without iterating world.
+	var/list/spawned_wells = list()
+	/// Humans currently carrying a Sage-projected defense bubble.
+	/// Walked on Destroy so dead-with-shield carriers don't keep the
+	/// "shield1" overlay after the Sage is gone.
+	var/list/bubbled_humans = list()
+	/// Minimum tile spacing between two crystals at spawn time.
+	var/crystal_min_spacing = 2
+	/// One-time tutorial line on the first crystal drop.
+	var/crystal_tutorial_said = FALSE
 
 /mob/living/simple_animal/hostile/serio_sage/Initialize(mapload)
 	. = ..()
@@ -46,13 +67,30 @@
 	addtimer(CALLBACK(src, PROC_REF(TickSupport)), 2 SECONDS, TIMER_STOPPABLE)
 
 /mob/living/simple_animal/hostile/serio_sage/Destroy()
-	if(parent_caretaker && !QDELETED(parent_caretaker) && parent_caretaker.sage_ref == src)
-		parent_caretaker.sage_ref = null
-	parent_caretaker = null
+	// Clean up every healing word this Sage placed by walking the
+	// tracking list — no world iteration. Each well may already have
+	// qdel'd itself (struck, charged, pulsed) so QDELETED-skip first.
+	for(var/obj/structure/serio_healing_well/W as anything in spawned_wells)
+		if(!QDELETED(W))
+			qdel(W)
+	spawned_wells.Cut()
+	// Clean up the defense-bubble status on every player the Sage ever
+	// shielded — dead carriers with un-consumed charges would otherwise
+	// keep the "shield1" overlay forever after the Sage is gone.
+	for(var/mob/living/carbon/human/H as anything in bubbled_humans)
+		if(QDELETED(H))
+			continue
+		var/datum/status_effect/serio_defense_bubble/B = H.has_status_effect(/datum/status_effect/serio_defense_bubble)
+		if(B)
+			qdel(B)
+	bubbled_humans.Cut()
+	if(parent_overseer && !QDELETED(parent_overseer) && parent_overseer.sage_ref == src)
+		parent_overseer.sage_ref = null
+	parent_overseer = null
 	knight_ref = null
 	return ..()
 
-/// Stationary for the duration of Phase 3.
+/// Stationary for the duration of Phase 2.
 /mob/living/simple_animal/hostile/serio_sage/Move()
 	return FALSE
 
@@ -61,88 +99,83 @@
 
 // ---------- Support kit AI loop ----------
 
-/// 1s tick. Each branch evaluates its own cooldown and trigger
-/// independently — healing well drops on a slow timer, cleanse fires
-/// when a nearby human has enough decay stacks, defense bubble fires
-/// when an anti-Knight projectile is in flight toward the Knight.
+/// 1s tick. Aura branch fires on a unified 20s cooldown — TryAura picks
+/// cleanse if any player within 7 has 15+ decay stacks, otherwise heal.
+/// Bubble branch fires independently when an anti-Knight lance is in
+/// flight toward the Knight and a player without a bubble exists.
 /mob/living/simple_animal/hostile/serio_sage/proc/TickSupport()
 	if(QDELETED(src) || stat == DEAD)
 		return
-	if(world.time >= well_cooldown_until)
-		DropHealingWell()
-	if(world.time >= cleanse_cooldown_until && FindCleanseTarget())
-		FireCleansePulse()
+	if(world.time >= aura_cooldown_until)
+		TryAura()
+	if(world.time >= crystal_cooldown_until)
+		DropHealingCrystal()
 	if(world.time >= bubble_cooldown_until && FindIncomingAntiKnightProjectile())
 		var/mob/living/carbon/human/target = FindBubbleTarget()
 		if(target)
 			ProjectDefenseBubble(target)
 	addtimer(CALLBACK(src, PROC_REF(TickSupport)), 1 SECONDS, TIMER_STOPPABLE)
 
-// ---------- Healing well ----------
+// ---------- Aura dispatcher ----------
 
-/// Drops a healing word marker on a tile near a player. Marker is
-/// inert until a player melee-hits it; on hit it charges 3s then
-/// pulses a 5×5 heal.
-/mob/living/simple_animal/hostile/serio_sage/proc/DropHealingWell()
-	var/list/turf/candidates = list()
+/// Locks the 20s aura cooldown, then picks cleanse or heal. Triggered
+/// every 20s by TickSupport.
+/mob/living/simple_animal/hostile/serio_sage/proc/TryAura()
+	aura_cooldown_until = world.time + 20 SECONDS
+	if(HasNearbyDecayTarget())
+		FireCleansePulse()
+	else
+		FireHealPulse()
+
+/// Returns TRUE if any live human within 7 tiles of the Sage has 15+
+/// stacks of mental decay — the cleanse-aura trigger condition.
+/mob/living/simple_animal/hostile/serio_sage/proc/HasNearbyDecayTarget()
 	for(var/mob/living/carbon/human/H in view(7, src))
 		if(H.stat == DEAD)
 			continue
-		for(var/turf/T in range(2, get_turf(H)))
-			if(T.density)
+		var/datum/status_effect/stacking/lc_mental_decay/D = H.has_status_effect(/datum/status_effect/stacking/lc_mental_decay)
+		if(D && D.stacks >= 15)
+			return TRUE
+	return FALSE
+
+// ---------- Heal aura ----------
+
+/// Expanding-ring heal cast directly from the Sage. Gold sparkles
+/// ripple outward 5 rings (11×11 footprint), restoring 50 HP / SP to
+/// every human the ring sweeps over (de-duped — each player heals
+/// once per cast). Same expansion pattern as FireCleansePulse for
+/// visual consistency; colour swap is the only differentiator.
+/mob/living/simple_animal/hostile/serio_sage/proc/FireHealPulse()
+	set waitfor = FALSE
+	visible_message(span_nicegreen("[src] hums; the air warms."))
+	if(!sage_rvp)
+		sage_rvp = new(100)
+	var/turf/center = get_turf(src)
+	if(!center)
+		return
+	var/list/healed = list()
+	sage_rvp.NewSparkles(center, 10, "#ffd56b")
+	HealTargetsOnTile(center, healed)
+	// 8 rings — 17×17 footprint.
+	for(var/i = 1 to 8)
+		var/list/ring = SerioGetExpandingRing(center, i)
+		for(var/turf/T as anything in ring)
+			if(!isturf(T))
 				continue
-			candidates += T
-	if(!length(candidates))
-		return
-	var/turf/picked = pick(candidates)
-	new /obj/effect/serio_healing_well(picked, src)
-	visible_message(span_nicegreen("[src] places a healing word on the floor."))
-	well_cooldown_until = world.time + 30 SECONDS
+			sage_rvp.NewSparkles(T, 10, "#ffd56b")
+			HealTargetsOnTile(T, healed)
+		SLEEP_CHECK_DEATH(1.5)
 
-/obj/effect/serio_healing_well
-	name = "healing word"
-	desc = "Gold light gathers at the floor. Strike it to make it bloom."
-	icon = 'icons/effects/effects.dmi'
-	icon_state = "shieldsparkles"
-	color = "#ffd56b"
-	alpha = 220
-	layer = ABOVE_OPEN_TURF_LAYER
-	mouse_opacity = MOUSE_OPACITY_ICON
-	anchored = TRUE
-	density = FALSE
-	var/activated = FALSE
-	var/heal_amount = 80
-	var/mob/living/source
-
-/obj/effect/serio_healing_well/Initialize(mapload, mob/living/new_source)
-	. = ..()
-	source = new_source
-
-/obj/effect/serio_healing_well/attack_hand(mob/user)
-	if(activated)
-		return
-	if(!ishuman(user))
-		return
-	activated = TRUE
-	visible_message(span_nicegreen("The healing word brightens, gathering its bloom."))
-	animate(src, alpha = 255, time = 3 SECONDS)
-	addtimer(CALLBACK(src, PROC_REF(Pulse)), 3 SECONDS, TIMER_STOPPABLE)
-
-/obj/effect/serio_healing_well/proc/Pulse()
-	if(QDELETED(src))
-		return
-	var/turf/T = get_turf(src)
-	if(!T)
-		qdel(src)
-		return
-	new /obj/effect/temp_visual/serio_heal_burst(T)
-	for(var/mob/living/carbon/human/H in range(2, T))
+/mob/living/simple_animal/hostile/serio_sage/proc/HealTargetsOnTile(turf/T, list/healed)
+	for(var/mob/living/carbon/human/H in T)
 		if(H.stat == DEAD)
 			continue
-		H.adjustBruteLoss(-heal_amount, forced = TRUE)
-		H.adjustFireLoss(-heal_amount, forced = TRUE)
-		H.adjustSanityLoss(-heal_amount, forced = TRUE)
-	qdel(src)
+		if(H in healed)
+			continue
+		healed += H
+		H.adjustBruteLoss(-50, forced = TRUE)
+		H.adjustFireLoss(-50, forced = TRUE)
+		H.adjustSanityLoss(-50, forced = TRUE)
 
 /obj/effect/temp_visual/serio_heal_burst
 	name = "healing bloom"
@@ -155,30 +188,45 @@
 	base_pixel_y = -32
 	layer = ABOVE_OPEN_TURF_LAYER
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
-	duration = 1 SECONDS
+	// 3s duration matches the crystal's charge window so the warning
+	// telegraphs the full pre-pulse charge time.
+	duration = 3 SECONDS
 	alpha = 220
 
-// ---------- Cleanse pulse ----------
+// ---------- Cleanse aura ----------
 
-/// Finds the first human in cleanse range with ≥15 decay stacks.
-/// Returns the human, or null if no qualifying target.
-/mob/living/simple_animal/hostile/serio_sage/proc/FindCleanseTarget()
-	for(var/mob/living/carbon/human/H in view(6, src))
-		if(H.stat == DEAD)
-			continue
-		var/datum/status_effect/stacking/lc_mental_decay/D = H.has_status_effect(/datum/status_effect/stacking/lc_mental_decay)
-		if(D && D.stacks >= 15)
-			return H
-	return null
-
-/// Sends a wave that clears mental_decay stacks and safely removes
-/// mental_detonate primers without triggering the shatter payoff.
+/// Expanding-ring cleanse: cyan sparkles ripple outward from the Sage
+/// over 5 rings (11×11 footprint), clearing mental_decay stacks and
+/// removing mental_detonate primers (without firing shatter()) from
+/// any human the ring sweeps over.
 /mob/living/simple_animal/hostile/serio_sage/proc/FireCleansePulse()
+	set waitfor = FALSE
 	visible_message(span_nicegreen("[src] speaks; the decay quiets."))
-	new /obj/effect/temp_visual/serio_cleanse_wave(get_turf(src))
-	for(var/mob/living/carbon/human/H in view(6, src))
+	if(!sage_rvp)
+		sage_rvp = new(100)
+	var/turf/center = get_turf(src)
+	if(!center)
+		return
+	var/list/cleansed = list()
+	sage_rvp.NewSparkles(center, 10, "#b3e0ff")
+	CleanseTargetsOnTile(center, cleansed)
+	// 8 rings — matches the heal aura footprint.
+	for(var/i = 1 to 8)
+		var/list/ring = SerioGetExpandingRing(center, i)
+		for(var/turf/T as anything in ring)
+			if(!isturf(T))
+				continue
+			sage_rvp.NewSparkles(T, 10, "#b3e0ff")
+			CleanseTargetsOnTile(T, cleansed)
+		SLEEP_CHECK_DEATH(1.5)
+
+/mob/living/simple_animal/hostile/serio_sage/proc/CleanseTargetsOnTile(turf/T, list/cleansed)
+	for(var/mob/living/carbon/human/H in T)
 		if(H.stat == DEAD)
 			continue
+		if(H in cleansed)
+			continue
+		cleansed += H
 		var/datum/status_effect/stacking/lc_mental_decay/D = H.has_status_effect(/datum/status_effect/stacking/lc_mental_decay)
 		if(D)
 			qdel(D)
@@ -187,17 +235,27 @@
 			// qdel'ing the status removes it cleanly via the standard
 			// status-effect Destroy path — does NOT call shatter().
 			qdel(MD)
-	cleanse_cooldown_until = world.time + 15 SECONDS
 
-/obj/effect/temp_visual/serio_cleanse_wave
-	name = "cleanse"
-	icon = 'icons/effects/effects.dmi'
-	icon_state = "shieldsparkles"
-	color = "#ffd56b"
-	alpha = 220
-	layer = ABOVE_MOB_LAYER
-	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
-	duration = 1 SECONDS
+/// Returns the 1-tile-wide perimeter ring of `radius` around `center`.
+/// 4 getline() edges per ring, mirroring white_night.dm:151. Used by
+/// both the Sage's cleanse pulse and the healing word's heal pulse to
+/// produce expanding-AoE visuals.
+/proc/SerioGetExpandingRing(turf/center, radius)
+	if(!center || radius <= 0)
+		return list()
+	var/cx = center.x
+	var/cy = center.y
+	var/cz = center.z
+	var/list/ring = list()
+	if(cy - radius > 0)
+		ring += getline(locate(max(cx - radius, 1), cy - radius, cz), locate(min(cx + radius - 1, world.maxx), cy - radius, cz))
+	if(cx + radius <= world.maxx)
+		ring += getline(locate(cx + radius, max(cy - radius, 1), cz), locate(cx + radius, min(cy + radius - 1, world.maxy), cz))
+	if(cy + radius <= world.maxy)
+		ring += getline(locate(min(cx + radius, world.maxx), cy + radius, cz), locate(max(cx - radius + 1, 1), cy + radius, cz))
+	if(cx - radius > 0)
+		ring += getline(locate(cx - radius, min(cy + radius, world.maxy), cz), locate(cx - radius, max(cy - radius + 1, 1), cz))
+	return ring
 
 // ---------- Defense bubble ----------
 
@@ -229,19 +287,26 @@
 	if(QDELETED(H))
 		return
 	var/charges = 1
-	if(parent_caretaker && !QDELETED(parent_caretaker.parent_crystal))
-		switch(parent_caretaker.parent_crystal.current_bracket)
+	if(parent_overseer && !QDELETED(parent_overseer.parent_crystal))
+		switch(parent_overseer.parent_crystal.current_bracket)
 			if(1)
 				charges = 1
 			if(2)
 				charges = 2
 			else
 				charges = 3
+	// 1-second beam from the Sage to the target so the projection
+	// reads as a connection — players see *who* is being shielded.
+	Beam(H, "light_beam", time = 1 SECONDS, beam_type = /obj/effect/ebeam/serio_sage_shield)
 	var/datum/status_effect/serio_defense_bubble/B = H.apply_status_effect(/datum/status_effect/serio_defense_bubble)
 	if(B)
 		B.charges = charges
+		bubbled_humans |= H
 	visible_message(span_nicegreen("[src] projects a shimmering bubble onto [H]."))
 	bubble_cooldown_until = world.time + 20 SECONDS
+
+/obj/effect/ebeam/serio_sage_shield
+	color = "#1e2a8c"
 
 /datum/status_effect/serio_defense_bubble
 	id = "serio_defense_bubble"
@@ -255,8 +320,7 @@
 	. = ..()
 	if(!owner)
 		return FALSE
-	bubble_overlay = mutable_appearance('icons/effects/effects.dmi', "shieldsparkles", ABOVE_MOB_LAYER)
-	bubble_overlay.color = "#ffd56b"
+	bubble_overlay = mutable_appearance('icons/effects/effects.dmi', "shield1", ABOVE_MOB_LAYER)
 	bubble_overlay.alpha = 220
 	owner.add_overlay(bubble_overlay)
 
@@ -276,3 +340,129 @@
 		if(owner)
 			owner.visible_message(span_warning("The bubble pops."))
 		qdel(src)
+
+// ---------- Healing crystals (struck-to-bloom) ----------
+
+/// Drops one healing crystal on a tile near a player. Crystal is inert
+/// until struck with a weapon or bullet; on strike it charges 3s and
+/// pulses a 5×5 heal. Capped at `crystal_max_alive`, with a
+/// `crystal_min_spacing` tile buffer between any two.
+/mob/living/simple_animal/hostile/serio_sage/proc/DropHealingCrystal()
+	crystal_cooldown_until = world.time + 15 SECONDS
+	// Compact the tracking list (drop qdel'd wells) and use it as the
+	// cap source — no world iteration.
+	listclearnulls(spawned_wells)
+	for(var/obj/structure/serio_healing_well/W as anything in spawned_wells)
+		if(QDELETED(W))
+			spawned_wells -= W
+	if(length(spawned_wells) >= crystal_max_alive)
+		return
+	var/list/turf/candidates = list()
+	for(var/mob/living/carbon/human/H in view(7, src))
+		if(H.stat == DEAD)
+			continue
+		for(var/turf/T in range(2, get_turf(H)))
+			if(T.density)
+				continue
+			// Skip tiles with a mob already on them — no overlapping
+			// wells with players, the Knight, the Sage, etc.
+			var/blocked = FALSE
+			for(var/mob/living/L in T)
+				if(L.stat == DEAD)
+					continue
+				blocked = TRUE
+				break
+			if(blocked)
+				continue
+			var/too_close = FALSE
+			for(var/obj/structure/serio_healing_well/W as anything in spawned_wells)
+				if(get_dist(T, get_turf(W)) <= crystal_min_spacing)
+					too_close = TRUE
+					break
+			if(too_close)
+				continue
+			candidates += T
+	if(!length(candidates))
+		return
+	var/turf/picked = pick(candidates)
+	spawned_wells += new /obj/structure/serio_healing_well(picked, src)
+	visible_message(span_nicegreen("[src] places a healing word on the floor."))
+	if(!crystal_tutorial_said)
+		crystal_tutorial_said = TRUE
+		say("Strike the ice with a weapon — it holds what you need to mend.")
+
+/obj/structure/serio_healing_well
+	name = "healing word"
+	desc = "A chunk of resonant ice. Strike it with a weapon or a bullet to release its bloom."
+	icon = 'icons/obj/flora/icedecor.dmi'
+	icon_state = "ice_chunk1"
+	color = "#88ffaa"
+	density = FALSE
+	anchored = TRUE
+	max_integrity = 1000
+	var/activated = FALSE
+	var/heal_amount = 80
+	var/mob/living/source
+
+/obj/structure/serio_healing_well/Initialize(mapload, mob/living/new_source)
+	. = ..()
+	source = new_source
+
+/// Both attack hooks call ..() so the parent's normal hit-feedback
+/// path runs (sound, animation, integrity tick). Activate() is
+/// idempotent so subsequent hits don't restart the charge.
+/obj/structure/serio_healing_well/bullet_act(obj/projectile/P, def_zone, piercing_hit = FALSE)
+	Activate()
+	return ..()
+
+/obj/structure/serio_healing_well/attackby(obj/item/I, mob/user, params)
+	Activate()
+	return ..()
+
+/obj/structure/serio_healing_well/proc/Activate()
+	if(activated)
+		return
+	activated = TRUE
+	visible_message(span_nicegreen("The healing word brightens, gathering its bloom."))
+	// 3-second warning that telegraphs where the bloom will land.
+	// Duration matches the Pulse charge time so the visual fades right
+	// as the heal triggers.
+	new /obj/effect/temp_visual/serio_heal_burst(get_turf(src))
+	addtimer(CALLBACK(src, PROC_REF(Pulse)), 3 SECONDS, TIMER_STOPPABLE)
+
+/obj/structure/serio_healing_well/proc/Pulse()
+	set waitfor = FALSE
+	if(QDELETED(src))
+		return
+	var/turf/T = get_turf(src)
+	if(!T)
+		qdel(src)
+		return
+	// Warning visual spawned at Activate carries through to here; the
+	// expanding ring is the bloom itself.
+	var/datum/reusable_visual_pool/pool = new(30)
+	var/list/healed = list()
+	pool.NewSparkles(T, 10, "#ffd56b")
+	HealOnTile(T, healed)
+	for(var/i = 1 to 2)
+		var/list/ring = SerioGetExpandingRing(T, i)
+		for(var/turf/tile as anything in ring)
+			if(!isturf(tile))
+				continue
+			pool.NewSparkles(tile, 10, "#ffd56b")
+			HealOnTile(tile, healed)
+		sleep(1.5)
+		if(QDELETED(src))
+			return
+	qdel(src)
+
+/obj/structure/serio_healing_well/proc/HealOnTile(turf/T, list/healed)
+	for(var/mob/living/carbon/human/H in T)
+		if(H.stat == DEAD)
+			continue
+		if(H in healed)
+			continue
+		healed += H
+		H.adjustBruteLoss(-heal_amount, forced = TRUE)
+		H.adjustFireLoss(-heal_amount, forced = TRUE)
+		H.adjustSanityLoss(-heal_amount, forced = TRUE)

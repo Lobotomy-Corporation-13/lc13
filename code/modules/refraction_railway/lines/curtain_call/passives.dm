@@ -555,6 +555,264 @@
 			),
 		),
 
+		// ---------- serio_zeal_w1: The Writer Enters (Phase 1) ----------
+
+		/mob/living/simple_animal/hostile/young_star = list(
+				list(
+					"title"    = "Stage Nerves",
+					"severity" = "high",
+					"text"     = "Star cannot die from HP. A 0-100 Pressure meter \
+						is the only exit from this phase; on Pressure 100 the \
+						Crack ends the phase. Pressure ticks: +1 per 5% \
+						maxHealth chunk of incoming damage, +1 per attack \
+						that hits zero players, +1 per wave with a misfire \
+						(dedup'd per wave), +25 per **The Show Goes On** trigger.",
+				),
+				list(
+					"title"    = "The Show Goes On",
+					"severity" = "medium",
+					"text"     = "At lethal HP: refills to full HP, +25 \
+						Pressure, **Blocking the Bug** thresholds reset to 85%.",
+				),
+				list(
+					"title"    = "Stage Nerves Tiers",
+					"severity" = "medium",
+					"text"     = "Tier 1 (0-33 Pressure): 5s afterimage cooldown, \
+						1 cast per wave. Tier 2 (34-66): 4s cooldown, 1-2 \
+						concurrent casts. Tier 3 (67-100): 3s cooldown, 2-3 \
+						concurrent casts. Higher tiers also widen the panic-line \
+						pool on misfires.",
+				),
+				list(
+					"title"    = "Blocking the Bug",
+					"severity" = "medium",
+					"text"     = "On Star crossing 85% / 70% / 55% / ... HP \
+						(15% step): quick-teleports to a random nearby tile. \
+						Thresholds reset to 85% on every **The Show Goes On**.",
+				),
+				list(
+					"title"    = "Borrowed-Act Roster",
+					"severity" = "info",
+					"text"     = "Afterimage attacks pull from a fixed roster: \
+						Capo Sweep, Azarus Dice, Reaper Refraction, Understudy \
+						Costume Dash, Eric Sanguine Marker, Snow Cabin Bone Stab, \
+						Blade Priest Volley, Achiya Thunderbolt. Each cast picks \
+						from the roster.",
+				),
+				list(
+					"title"    = "The Performer Holds",
+					"severity" = "medium",
+					"text"     = "While a wave's longest afterimage cast is still \
+						resolving: Star is rooted and tinted light blue.",
+				),
+		),
+
+		// ---------- serio_zeal_w2 (Phase 2): the Overseer ----------
+
+		/mob/living/simple_animal/hostile/serio_overseer = list(
+				list(
+					"title"    = "The Voice Persists",
+					"severity" = "info",
+					"text"     = "On HP reaching 0 outside Phase 2: enters a \
+						knockdown window. Heals back up and resumes patrol. \
+						Cannot be killed by HP.",
+				),
+				list(
+					"title"    = "Hand on the Crystal",
+					"severity" = "high",
+					"text"     = "Every 20 seconds: 1s channel cue, then the \
+						Crystal flips Red for 7 seconds while one of 8 memory \
+						attacks runs. Memory pool: **Errant Drafts**, **Chase \
+						the Bug**, **Burnout Bill**, **Closed Circle**, **Storm \
+						Approach**, **Void Pull**, **Echo of Her**, **Light \
+						Wind**.",
+				),
+				list(
+					"title"    = "The Seal Strains",
+					"severity" = "low",
+					"hidden_until" = "overseer_phase_2",
+					"text"     = "On the Crystal hitting 0 HP: Phase 2 \
+						begins. Teleports to a fixed tile 3 west of the \
+						Crystal, faces east, becomes rooted. Resistances drop \
+						to 0 across all damage types. No longer patrols or \
+						runs **Hand on the Crystal**.",
+				),
+				list(
+					"title"    = "The Case Stands",
+					"severity" = "medium",
+					"hidden_until" = "overseer_phase_2",
+					"text"     = "Phase 2 only. On taking damage: spawns a \
+						dark-purple ward visual at the Overseer's tile for \
+						1s and reflects 15% of the attempted damage back at \
+						the attacker as BLACK.",
+				),
+				list(
+					"title"    = "Echo Line",
+					"severity" = "info",
+					"hidden_until" = "overseer_phase_2",
+					"text"     = "Phase 2 only. A vertical 1x5 column of \
+						pulsing violet tiles sits 5 tiles west of the \
+						Crystal. Every **Sealing Lance**, **Sealing Volley**, \
+						**Crawling Argument**, and **Closing Argument** \
+						spawns from a tile in this column.",
+				),
+				list(
+					"title"    = "Walking the Case",
+					"severity" = "medium",
+					"hidden_until" = "overseer_phase_2",
+					"text"     = "Phase 2 only. Crystal bracket gates the \
+						attack tick rate. B1: 6s tick → **Sealing Lance**. \
+						B2: 10s tick → **Sealing Volley**. B3: 4s tick → 40% \
+						**Crawling Argument** / 35% **Verdict on the \
+						Knight** / 25% **Closing Argument**.",
+				),
+		),
+
+		// ---------- serio_zeal_w2 support: Sealing Crystal ----------
+
+		/mob/living/simple_animal/hostile/serio_crystal = list(
+				list(
+					"title"    = "The Sealed Crystal",
+					"severity" = "info",
+					"text"     = "Immobile. On HP 0: triggers the **The Seal \
+						Strains** transition.",
+				),
+				list(
+					"title"    = "Cracking, Sealing",
+					"severity" = "medium",
+					"text"     = "Blue: damage_coeff 0.1 across all damage \
+						types. Red: damage_coeff 1.0. The Crystal is Blue at \
+						rest; the Overseer's **Hand on the Crystal** flips \
+						it Red for the cast duration.",
+				),
+				list(
+					"title"    = "Three-Step Indictment",
+					"severity" = "medium",
+					"text"     = "At 75% HP: advances to Bracket 2. At 25% HP: \
+						advances to Bracket 3. Each bracket re-tunes the \
+						Overseer's memory cooldown and attack intensity.",
+				),
+				list(
+					"title"    = "Held Closed",
+					"severity" = "info",
+					"hidden_until" = "overseer_phase_2",
+					"text"     = "Overseer's Phase 2 only. Becomes \
+						invulnerable to player damage. Only the Knight's \
+						**Three-Slash Verdict** reduces HP — snapped to 75% / \
+						25% / 0% per slash.",
+				),
+		),
+
+		// ---------- serio_zeal_w2 support: the Knight ----------
+
+		/mob/living/simple_animal/hostile/serio_knight = list(
+				list(
+					"title"    = "Holds the Line",
+					"severity" = "info",
+					"text"     = "Overseer's Phase 2 only. Immobile, no \
+						player-targeted attacks. Drives the encounter via \
+						**Gathering the Strike** + **Three-Slash Verdict**.",
+				),
+				list(
+					"title"    = "Gathering the Strike",
+					"severity" = "high",
+					"text"     = "Overseer's Phase 2 only. +1.66% per 0.5s \
+						tick (30s base time to 100%). Display rendered as \
+						maptext above the Knight. On 100%: **Three-Slash \
+						Verdict** fires.",
+				),
+				list(
+					"title"    = "Drowned by the Chorus",
+					"severity" = "high",
+					"text"     = "Each Murmur with a **Reinforcing Voice** beam \
+						to the Knight multiplies **Gathering the Strike** \
+						ticks: 0 beams: 1.0x. 1: 0.75x. 2: 0.5x. 3: 0.25x. 4: \
+						0x (stalled). 5: -0.1x. 6+: -0.25x (drains).",
+				),
+				list(
+					"title"    = "The Knight Falters",
+					"severity" = "low",
+					"text"     = "On HP dropping at or below 30%: enters a 3s \
+						stagger. **Gathering the Strike** resets to 0% and \
+						pauses, then HP heals back to 80% and the stagger \
+						clears.",
+				),
+		),
+
+		// ---------- serio_zeal_w2 support: the Sage ----------
+
+		/mob/living/simple_animal/hostile/serio_sage = list(
+				list(
+					"title"    = "The Friend Who Stays",
+					"severity" = "info",
+					"text"     = "**Sealing Lance** phases through the Sage \
+						without applying damage. Has no melee attack.",
+				),
+				list(
+					"title"    = "Speaks On Schedule",
+					"severity" = "medium",
+					"text"     = "Every 20 seconds: picks **Counter-Argument** \
+						or **A Chair in the Room** by branch. If any human in \
+						view 7 has 15+ mental decay stacks → cleanse. \
+						Otherwise → heal.",
+				),
+				list(
+					"title"    = "Held Across the Brackets",
+					"severity" = "medium",
+					"text"     = "**Stays Anyway** charge count by current \
+						bracket: B1: 1 hit. B2: 2 hits. B3: 3 hits.",
+				),
+		),
+
+		// ---------- serio_zeal_w2 support: Murmurs ----------
+
+		/mob/living/simple_animal/hostile/serio_murmur = list(
+				list(
+					"title"    = "Reinforcing Voice",
+					"severity" = "high",
+					"text"     = "On spawn: draws a violet beam to the Knight \
+						that scales his charge tick (see the Knight's **Drowned \
+						by the Chorus**). Removed on death.",
+				),
+				list(
+					"title"    = "The Chorus Swells",
+					"severity" = "medium",
+					"text"     = "Overseer's Phase 2 only. Overseer spawns \
+						Murmurs on a 20s cycle. Per-tick count = current \
+						bracket (1 / 2 / 3 in B1 / B2 / B3), +1 if the choir \
+						is empty. Cap alive: 2 / 3 / 4 by bracket. Spawn \
+						tiles: within view 8 of the Crystal, at least 3 \
+						tiles from Knight and Sage.",
+				),
+				list(
+					"title"    = "Anchored Voice",
+					"severity" = "info",
+					"text"     = "Stationary. No melee attack. Ranged attacks \
+						fire on a 5-second cooldown — 50/50 between \
+						**Whispered Glance** and **Whispered Cold Word**.",
+				),
+				list(
+					"title"    = "Made of Murmur",
+					"severity" = "info",
+					"text"     = "**Sealing Lance** phases through Murmurs \
+						without applying damage. Other projectiles impact \
+						normally.",
+				),
+				list(
+					"title"    = "Spite of the Silenced",
+					"severity" = "medium",
+					"text"     = "On taking damage from a non-faction-mate: \
+						applies 3 BLACK fragile to the attacker.",
+				),
+				list(
+					"title"    = "The Voice Quiets",
+					"severity" = "info",
+					"text"     = "On death: heals every live human in view 7 \
+						for +10 brute / +10 fire / +10 sanity, then qdels \
+						immediately.",
+				),
+		),
+
 		// ---------- zeal_s3n2: The Snow Cabin ----------
 
 		/mob/living/simple_animal/hostile/snow_cabin/refracted = list(

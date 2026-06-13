@@ -7,6 +7,7 @@
 #define FILE_RCE_EXPEDITION "data/RCEExpedition.json"
 #define FILE_REFRACTION_LEADERBOARDS "data/refraction_railway_leaderboards.json"
 #define FILE_REFRACTION_ENCOUNTERS "data/refraction_railway_encounters.json"
+#define FILE_REFRACTION_EVENTS "data/refraction_railway_events.json"
 #define FILE_REFRACTION_STARLIGHT "data/refraction_railway_starlight.json"
 #define ROUNDCOUNT_BUTTON_PRESSED 0
 
@@ -265,6 +266,7 @@ SUBSYSTEM_DEF(persistence)
 	SaveDoorToNowhereTapes()
 	SaveRefractionLeaderboards()
 	SaveRefractionEncounters()
+	SaveRefractionEvents()
 	SaveRefractionStarlight()
 
 /datum/controller/subsystem/persistence/proc/GetPhotoAlbums()
@@ -705,6 +707,31 @@ SUBSYSTEM_DEF(persistence)
 /datum/controller/subsystem/persistence/proc/SaveRefractionEncounters()
 	fdel(FILE_REFRACTION_ENCOUNTERS)
 	text2file(json_encode(SSrefraction_railway.encountered_mobs), FILE_REFRACTION_ENCOUNTERS)
+
+/// Loads per-ckey unlocked-event sets. Stored as plain strings, so no
+/// path conversion is needed — but we still validate that each value is
+/// a list before assignment to survive malformed files.
+/datum/controller/subsystem/persistence/proc/LoadRefractionEvents()
+	if(!fexists(FILE_REFRACTION_EVENTS))
+		return
+	var/raw = file2text(FILE_REFRACTION_EVENTS)
+	if(!raw)
+		return
+	var/list/decoded = json_decode(raw)
+	if(!islist(decoded))
+		return
+	var/list/converted = list()
+	for(var/ckey in decoded)
+		var/list/raw_events = decoded[ckey]
+		if(!islist(raw_events))
+			continue
+		converted[ckey] = raw_events.Copy()
+	SSrefraction_railway.unlocked_events = converted
+
+/// Writes the in-memory unlocked-event set to disk.
+/datum/controller/subsystem/persistence/proc/SaveRefractionEvents()
+	fdel(FILE_REFRACTION_EVENTS)
+	text2file(json_encode(SSrefraction_railway.unlocked_events), FILE_REFRACTION_EVENTS)
 
 /// Loads per-ckey Starlight balance + unlocked-quirks set + completed-lines set.
 /datum/controller/subsystem/persistence/proc/LoadRefractionStarlight()

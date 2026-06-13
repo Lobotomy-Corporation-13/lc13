@@ -79,6 +79,13 @@
 /datum/refraction_line/proc/GetMobAttacks()
 	return list()
 
+/// Override in subtypes to gate whole mobs behind a runtime event. Even an
+/// encountered mob keeps its silhouette payload until the event is
+/// unlocked for the viewing ckey (via SSrefraction_railway.MarkEventUnlocked).
+/// Shape: list(mob_path => "event_id_string").
+/datum/refraction_line/proc/GetMobSilhouetteGates()
+	return list()
+
 /// Registers a combat node; called from the subtype's New().
 /datum/refraction_line/proc/AddNode(node_id, lm_id, n_name, n_desc, list/stock, c_max = 4, boss = FALSE, list/extra_preview, locked = FALSE)
 	var/datum/refraction_node/N = new

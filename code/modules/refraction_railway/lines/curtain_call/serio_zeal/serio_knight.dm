@@ -1,5 +1,5 @@
 /*
- * The Knight — Phase 3 support mob (kill condition mover).
+ * The Knight — Phase 2 support mob (kill condition mover).
  *
  * Build-order step 2: bare mob shell. No charge mechanic, no slash, no
  * AI loop, no melee. The Knight just stands at its fixed tile and fades
@@ -10,9 +10,9 @@
 	name = "the Knight"
 	desc = "A figure who came to swing once. They are waiting on the right moment."
 	icon = 'ModularLobotomy/_Lobotomyicons/teaser_mobs.dmi'
-	icon_state = "stone_guard"
-	icon_living = "stone_guard"
-	icon_dead = "stone_guard"
+	icon_state = "knight"
+	icon_living = "knight"
+	icon_dead = "knight"
 	faction = list("neutral")
 	maxHealth = 1500
 	health = 1500
@@ -27,8 +27,8 @@
 	refraction_manages_own_death = TRUE
 	loot = list()
 	gold_core_spawnable = NO_SPAWN
-	/// Back-ref to the Caretaker that brought the Knight onto the stage.
-	var/mob/living/simple_animal/hostile/serio_caretaker/parent_caretaker
+	/// Back-ref to the Overseer that brought the Knight onto the stage.
+	var/mob/living/simple_animal/hostile/serio_overseer/parent_overseer
 	/// Sibling support mob.
 	var/mob/living/simple_animal/hostile/serio_sage/sage_ref
 	// ---- Charge mechanic ----
@@ -38,9 +38,9 @@
 	var/charge_per_tick = 1.66
 	/// Charge tick interval in deciseconds. 5 ds = twice per second.
 	var/charge_tick_interval = 5
-	/// Bracket mirror — tracks the Caretaker's current bracket so the
+	/// Bracket mirror — tracks the Overseer's current bracket so the
 	/// per-bracket slash finisher animation picks the right visual.
-	/// Updated when the Caretaker calls back from OnKnightSlashLanded.
+	/// Updated when the Overseer calls back from OnKnightSlashLanded.
 	var/current_bracket = 1
 	/// Set TRUE while a slash animation is mid-play. Suppresses further
 	/// charge ticks so we don't queue a second slash mid-cinematic.
@@ -69,13 +69,13 @@
 	addtimer(CALLBACK(src, PROC_REF(ChargeTick)), charge_tick_interval, TIMER_STOPPABLE)
 
 /mob/living/simple_animal/hostile/serio_knight/Destroy()
-	if(parent_caretaker && !QDELETED(parent_caretaker) && parent_caretaker.knight_ref == src)
-		parent_caretaker.knight_ref = null
-	parent_caretaker = null
+	if(parent_overseer && !QDELETED(parent_overseer) && parent_overseer.knight_ref == src)
+		parent_overseer.knight_ref = null
+	parent_overseer = null
 	sage_ref = null
 	return ..()
 
-/// Stationary for the duration of Phase 3.
+/// Stationary for the duration of Phase 2.
 /mob/living/simple_animal/hostile/serio_knight/Move()
 	return FALSE
 
@@ -139,7 +139,7 @@
 
 /// Triggered when charge reaches 100. Resets the bar and hands off to
 /// PlaySlashFinisher, which owns the per-bracket animation timing,
-/// the NotifyCaretaker schedule, and the firing_slash release.
+/// the NotifyOverseer schedule, and the firing_slash release.
 /mob/living/simple_animal/hostile/serio_knight/proc/FireSlash()
 	if(firing_slash)
 		return
@@ -148,17 +148,17 @@
 	UpdateChargeMaptext()
 	PlaySlashFinisher(current_bracket)
 
-/// Tells the Caretaker the slash landed. Called by an addtimer scheduled
+/// Tells the Overseer the slash landed. Called by an addtimer scheduled
 /// in PlaySlashFinisher at the impact moment (when the Knight has slid
-/// onto the crystal). The Caretaker handles the crystal HP snap +
+/// onto the crystal). The Overseer handles the crystal HP snap +
 /// bracket transition; we mirror the new bracket here so the next
 /// slash's finisher animation picks the right visual.
-/mob/living/simple_animal/hostile/serio_knight/proc/NotifyCaretaker()
-	if(QDELETED(parent_caretaker))
+/mob/living/simple_animal/hostile/serio_knight/proc/NotifyOverseer()
+	if(QDELETED(parent_overseer))
 		return
 	var/cleared = current_bracket
 	current_bracket = min(current_bracket + 1, 3)
-	parent_caretaker.OnKnightSlashLanded(cleared)
+	parent_overseer.OnKnightSlashLanded(cleared)
 
 /// Releases the charge lock after the slide-back animation completes,
 /// so the next charge cycle can start cleanly.
@@ -222,15 +222,15 @@
 /// multi-segment pixel-offset path onto the crystal's tile (visually
 /// only — the logical tile is unchanged), the crystal flashes for the
 /// impact beat, then the Knight returns to its starting tile.
-/// NotifyCaretaker fires at the impact moment; the charge lock
+/// NotifyOverseer fires at the impact moment; the charge lock
 /// releases when the slide-back ends. Each bracket has its own
 /// movement signature — horizontal sweep, diagonal cleave arc,
 /// overhead rise + slam.
 /mob/living/simple_animal/hostile/serio_knight/proc/PlaySlashFinisher(bracket)
-	if(QDELETED(parent_caretaker) || QDELETED(parent_caretaker.parent_crystal))
+	if(QDELETED(parent_overseer) || QDELETED(parent_overseer.parent_crystal))
 		firing_slash = FALSE
 		return
-	var/atom/crystal = parent_caretaker.parent_crystal
+	var/atom/crystal = parent_overseer.parent_crystal
 	var/saved_color = crystal.color
 	// Knight starts 2 tiles east of the crystal (32 px/tile × 2 = 64 px).
 	// pixel_x = -64 brings the sprite over the crystal's tile.
@@ -295,5 +295,5 @@
 			addtimer(CALLBACK(src, PROC_REF(ShakeViewersAt), crystal, 10, 2 SECONDS, 4), impact_delay, TIMER_STOPPABLE)
 	// Bracket transition fires on impact (when Knight reaches the crystal).
 	// Charge lock releases after the recovery animation completes.
-	addtimer(CALLBACK(src, PROC_REF(NotifyCaretaker)), impact_delay, TIMER_STOPPABLE)
+	addtimer(CALLBACK(src, PROC_REF(NotifyOverseer)), impact_delay, TIMER_STOPPABLE)
 	addtimer(CALLBACK(src, PROC_REF(UnlockChargeAfterSlash)), impact_delay + hold_time + recovery_time, TIMER_STOPPABLE)
