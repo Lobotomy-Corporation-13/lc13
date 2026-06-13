@@ -256,6 +256,39 @@ const ResistanceRow = props => {
   );
 };
 
+// Optional lore footer for an attack or passive card. Renders nothing
+// when `lore` is empty. Splits the string on newlines so authors can
+// write multi-paragraph fluff text. Styled muted-orange italic with a
+// thin divider above so the body text and the lore stay visually
+// distinct (matches the look of the in-game datasheet excerpt).
+const LoreBlock = props => {
+  const { lore } = props;
+  if (!lore) return null;
+  const paragraphs = String(lore).split(/\n/).filter(p => p.trim());
+  if (!paragraphs.length) return null;
+  return (
+    <Box
+      mt={0.5}
+      pt={0.5}
+      style={{
+        'border-top': '1px solid #4b3a23',
+      }}>
+      {paragraphs.map((para, i) => (
+        <Box
+          key={i}
+          fontSize="11px"
+          mt={i > 0 ? 0.5 : 0}
+          style={{
+            'color': '#c89358',
+            'font-style': 'italic',
+          }}>
+          {para}
+        </Box>
+      ))}
+    </Box>
+  );
+};
+
 // Placeholder card rendered in place of any attack/passive entry whose
 // `hidden_until` event is still locked for the viewing ckey. Solid
 // black fill, visible border, centered "Undiscovered" text. Same
@@ -317,6 +350,7 @@ const AttackCard = props => {
         <Box mt={0.5}>
           <GlossaryText text={attack.desc} glossary={glossary} />
         </Box>
+        <LoreBlock lore={attack.lore} />
       </Box>
     </Box>
   );
@@ -383,6 +417,7 @@ const PassiveCard = props => {
       </Stack>
       <Box p={1} fontSize="11px">
         <GlossaryText text={passive.text} glossary={glossary} />
+        <LoreBlock lore={passive.lore} />
       </Box>
     </Box>
   );
