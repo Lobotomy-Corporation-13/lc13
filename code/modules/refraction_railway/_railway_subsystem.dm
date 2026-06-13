@@ -378,17 +378,27 @@ SUBSYSTEM_DEF(refraction_railway)
 	var/list/board = leaderboards[line_id]
 	if(!islist(board))
 		return entries_out
+	var/datum/refraction_line/line = lines[line_id]
 	for(var/list/entry as anything in board)
-		entries_out += list(BuildLeaderboardEntryPayload(entry))
+		entries_out += list(BuildLeaderboardEntryPayload(entry, line))
 	return entries_out
 
-/datum/controller/subsystem/refraction_railway/proc/BuildLeaderboardEntryPayload(list/entry)
+/datum/controller/subsystem/refraction_railway/proc/BuildLeaderboardEntryPayload(list/entry, datum/refraction_line/line)
 	if(!islist(entry))
 		return list()
 	var/list/sectors_in = entry["sectors"]
 	var/list/sectors_out = list()
+	// Cap output to the line's real sector count so historical entries
+	// whose `sectors` lists were inflated by the OnSectionCleared
+	// double-append bug don't surface the bogus rows in the UI.
+	var/sector_cap = islist(sectors_in) ? length(sectors_in) : 0
+	if(line && line.section_count > 0)
+		sector_cap = min(sector_cap, line.section_count)
 	if(islist(sectors_in))
-		for(var/list/sector as anything in sectors_in)
+		for(var/i in 1 to sector_cap)
+			var/list/sector = sectors_in[i]
+			if(!islist(sector))
+				continue
 			var/list/players_in = sector["players"]
 			var/list/players_out = list()
 			if(islist(players_in))

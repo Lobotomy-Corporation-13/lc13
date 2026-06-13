@@ -243,8 +243,7 @@
 		list(
 			/mob/living/simple_animal/hostile/young_star = 1,
 		),
-		boss = TRUE,
-		locked = TRUE)
+		boss = TRUE)
 
 	AddNode("serio_zeal_w2", "serio_zeal_w2_spawns",
 		"Curtain Fall, Wave II: The Cast Returns",
@@ -256,18 +255,13 @@
 		list(
 			/mob/living/simple_animal/hostile/serio_overseer = 1,
 		),
-		boss = TRUE,
-		// Crystal + the Phase 2 cast appear on the room briefing the
-		// first time players enter. The Knight / Sage / Murmur cards
-		// stay silhouette via GetMobSilhouetteGates() until the
-		// Overseer's Phase 2 trigger unlocks the event.
 		extra_preview = list(
 			/mob/living/simple_animal/hostile/serio_crystal,
 			/mob/living/simple_animal/hostile/serio_knight,
 			/mob/living/simple_animal/hostile/serio_sage,
 			/mob/living/simple_animal/hostile/serio_murmur,
 		),
-		locked = TRUE)
+		boss = TRUE)
 
 	sector_briefings = list(
 		list(
@@ -326,9 +320,7 @@
 				last. The audience has been here the whole time, and so \
 				has the script. Every performer in the line has been a \
 				piece of him put under the lights to see if we'd \
-				recognise it. He has written this finale across two \
-				rising waves - the second one containing more than one \
-				ending - and he means every word.",
+				recognise it.",
 			"node_ids"    = list("serio_zeal_w1", "serio_zeal_w2"),
 		),
 	)

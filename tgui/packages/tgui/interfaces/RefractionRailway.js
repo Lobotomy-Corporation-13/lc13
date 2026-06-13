@@ -139,7 +139,7 @@ const recordGroupKey = entry => {
 // (ascending by time_ds) row array. entries[0] of each group is the
 // group's BEST run; subsequent entries are slower attempts of the
 // same set of players.
-const buildRecordGroups = rows => {
+export const buildRecordGroups = rows => {
   const map = {};
   const order = [];
   for (let i = 0; i < rows.length; i++) {
@@ -157,7 +157,7 @@ const buildRecordGroups = rows => {
 
 // Case-insensitive substring match: returns true if any member ckey
 // in any entry of the group contains the trimmed query.
-const groupMatchesQuery = (group, query) => {
+export const groupMatchesQuery = (group, query) => {
   if (!query) return true;
   const needle = query.toLowerCase();
   for (const entry of group.entries) {
@@ -174,7 +174,7 @@ const groupMatchesQuery = (group, query) => {
 // Single-row layout shared by the group's best run and its expanded
 // slower-runs sublist. The caller supplies a rank label, a sector
 // expand handler, and optionally a "show older runs" button.
-const RecordRow = props => {
+export const RecordRow = props => {
   const {
     entry,
     rank,

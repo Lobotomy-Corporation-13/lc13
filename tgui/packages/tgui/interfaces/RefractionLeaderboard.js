@@ -1,7 +1,11 @@
 import { useBackend, useLocalState } from '../backend';
-import { Box, Button, Section, Stack } from '../components';
+import { Box, Input, Section } from '../components';
 import { Window } from '../layouts';
-import { formatTime, RecordSectorBreakdown } from './RefractionRailway';
+import {
+  buildRecordGroups,
+  groupMatchesQuery,
+  RecordRow,
+} from './RefractionRailway';
 
 // Standalone read-only leaderboard browser. Pairs with
 // /obj/machinery/computer/refraction_railway_console/leaderboard. No lobby
@@ -52,6 +56,16 @@ const LeaderboardPane = (props, context) => {
     'leaderboardExpandedIdx',
     null
   );
+  const [expandedGroups, setExpandedGroups] = useLocalState(
+    context,
+    'leaderboardGroupExpanded',
+    {}
+  );
+  const [search, setSearch] = useLocalState(
+    context,
+    'leaderboardSearch',
+    ''
+  );
   if (!line) {
     return (
       <Section fill title="Records">
@@ -59,46 +73,75 @@ const LeaderboardPane = (props, context) => {
       </Section>
     );
   }
+  const trimmed = (search || '').trim();
+  const allGroups = buildRecordGroups(rows);
+  const groups = allGroups.filter(g => groupMatchesQuery(g, trimmed));
+  const toggleGroup = key => {
+    setExpandedGroups({
+      ...expandedGroups,
+      [key]: !expandedGroups[key],
+    });
+  };
   return (
     <Section
       fill
       scrollable
       title={`Records: ${line.name}`}>
+      <Box mb={1}>
+        <Input
+          fluid
+          value={search}
+          placeholder="Search by player name..."
+          onInput={(_, value) => setSearch(value)}
+        />
+        <Box color="label" fontSize="10px" mt={0.3}>
+          {`${groups.length} group${
+            groups.length === 1 ? '' : 's'} · ${rows.length} `
+          + `run${rows.length === 1 ? '' : 's'} total`}
+        </Box>
+      </Box>
       {rows.length === 0 && (
         <Box color="label">No records yet for this line.</Box>
       )}
-      {rows.map((row, i) => {
-        const isOpen = expandedIdx === i;
+      {rows.length > 0 && groups.length === 0 && (
+        <Box color="label" mt={1}>
+          No records match the search.
+        </Box>
+      )}
+      {groups.map(group => {
+        const bestIdx = group.indices[0];
+        const bestEntry = group.entries[0];
+        const olderCount = group.entries.length - 1;
+        const isGroupOpen = !!expandedGroups[group.key];
         return (
-          <Box
-            key={i}
-            p={1}
-            mb={0.5}
-            backgroundColor="rgba(255, 255, 255, 0.04)"
-            style={{ 'border-radius': '4px' }}>
-            <Stack>
-              <Stack.Item width="32px" bold>
-                #{i + 1}
-              </Stack.Item>
-              <Stack.Item width="80px" color="good" bold>
-                {formatTime(row.time_ds)}
-              </Stack.Item>
-              <Stack.Item grow={1}>
-                <Box bold>{row.ckey || row.name || '???'}</Box>
-                <Box color="label">
-                  {(row.members || []).join(', ')}
-                </Box>
-              </Stack.Item>
-              <Stack.Item>
-                <Button
-                  icon={isOpen ? 'chevron-up' : 'chevron-down'}
-                  content={isOpen ? 'Collapse' : 'Per-sector'}
-                  onClick={() => setExpandedIdx(isOpen ? null : i)}
-                />
-              </Stack.Item>
-            </Stack>
-            {isOpen && (
-              <RecordSectorBreakdown sectors={row.sectors} />
+          <Box key={group.key}>
+            <RecordRow
+              entry={bestEntry}
+              rank={`#${bestIdx + 1}`}
+              isSectorOpen={expandedIdx === bestIdx}
+              onToggleSector={() =>
+                setExpandedIdx(expandedIdx === bestIdx ? null : bestIdx)}
+              olderCount={olderCount}
+              isGroupOpen={isGroupOpen}
+              onToggleGroup={() => toggleGroup(group.key)}
+            />
+            {isGroupOpen && olderCount > 0 && (
+              <Box ml={2} mb={0.5}>
+                {group.entries.slice(1).map((entry, k) => {
+                  const idx = group.indices[k + 1];
+                  return (
+                    <RecordRow
+                      key={idx}
+                      entry={entry}
+                      rank={`#${idx + 1}`}
+                      isSectorOpen={expandedIdx === idx}
+                      onToggleSector={() =>
+                        setExpandedIdx(expandedIdx === idx ? null : idx)}
+                      mini
+                    />
+                  );
+                })}
+              </Box>
             )}
           </Box>
         );

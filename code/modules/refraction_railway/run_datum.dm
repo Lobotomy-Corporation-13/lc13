@@ -323,6 +323,7 @@ GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 	new_refs += A
 	gear_refs[ckey] = new_refs
 	loadouts[ckey] = list(weapon_paths[1], weapon_paths[2], armor_path)
+	GiveSectorPensForPlayer(H)
 	return TRUE
 
 /// Per-slot reconcile of a player's tracked gear (leave/recover/respawn).
@@ -396,6 +397,7 @@ GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 		RegisterSignal(I, COMSIG_PARENT_QDELETING, PROC_REF(OnTrackedGearQdel))
 		new_refs += I
 	gear_refs[H.ckey] = new_refs
+	GiveSectorPensForPlayer(H)
 
 /// Removes all gear issued to this ckey, then sweeps any other ego items on
 /// the player (gear brought from outside the railway).
@@ -498,8 +500,6 @@ GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 	elapsed_baseline_at_section_start = elapsed_baseline
 	timer_paused = FALSE
 	timer_started_at = world.time
-	// Hand out pens BEFORE the AdvanceRoomById teleport so they ride along.
-	GiveSectorPens()
 	AdvanceRoomById(GetFirstRoomIdInSection(current_section))
 	return TRUE
 
@@ -558,6 +558,14 @@ GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 /datum/refraction_run/proc/OnSectionCleared(section_id)
 	if(section_id != current_section)
 		return
+	// Idempotent against duplicate AdvanceRoom callbacks for the same
+	// sector-end boundary (e.g. a stale OnRoomCleared 5s timer firing
+	// after the legitimate one already snapshotted the sector).
+	// Without this, each duplicate appends another ElapsedDeciseconds()
+	// to sector_finish_times, inflating the per-sector breakdown in
+	// every persisted leaderboard entry.
+	if(length(sector_finish_times) >= section_id)
+		return
 	CleanLineArea()
 	last_checkpoint_for_all(section_id)
 	// Snapshot cumulative time before EnterCheckpoint pauses the timer.
@@ -587,7 +595,10 @@ GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 /// the leaderboard entry.
 /datum/refraction_run/proc/BuildSectorBreakdownForLeaderboard()
 	var/list/out = list()
-	for(var/i in 1 to length(sector_finish_times))
+	var/cap = length(sector_finish_times)
+	if(line && line.section_count > 0)
+		cap = min(cap, line.section_count)
+	for(var/i in 1 to cap)
 		var/end_t = sector_finish_times[i]
 		var/start_t = (i > 1) ? sector_finish_times[i - 1] : 0
 		var/list/players_out = list()
@@ -963,7 +974,10 @@ GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 /datum/refraction_run/proc/ShowFinalResults(total_ds)
 	var/list/lines_text = list()
 	lines_text += "<b>Refraction Railway: [line.name] cleared!</b>"
-	for(var/i in 1 to length(sector_finish_times))
+	var/cap = length(sector_finish_times)
+	if(line && line.section_count > 0)
+		cap = min(cap, line.section_count)
+	for(var/i in 1 to cap)
 		var/end_t = sector_finish_times[i]
 		var/start_t = (i > 1) ? sector_finish_times[i - 1] : 0
 		lines_text += "Sector [i]: [FormatRefractionTime(end_t - start_t)]"
@@ -1227,27 +1241,32 @@ GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 			return 1
 	return 0
 
-/// Spawns this sector's mental + salacid medipens into member backpacks.
-/datum/refraction_run/proc/GiveSectorPens()
+/// Spawns this sector's mental + salacid medipens into one member's
+/// backpack, alongside the weapon/armor handout. Called from
+/// ApplyLoadout (first/unique-loadout pick) and FreshenLoadout
+/// (re-issue at sector boundary), so pens land in the checkpoint
+/// instead of mid-room. Idempotent per sector: pen_refs[ckey] is
+/// cleared at EnterCheckpoint, so a second loadout pick before the
+/// sector starts won't double-issue.
+/datum/refraction_run/proc/GiveSectorPensForPlayer(mob/living/carbon/human/H)
 	if(!SSrefraction_railway.give_compensation_pens)
 		return
 	if(line && !line.give_compensation_pens)
 		return
+	if(!ishuman(H) || !H.ckey || IsMemberOutOfAction(H))
+		return
+	var/list/refs = pen_refs[H.ckey]
+	if(islist(refs) && length(refs))
+		return
 	var/count = PenCountForLobby(LiveMemberCount())
 	if(count <= 0)
 		return
-	for(var/mob/living/carbon/human/H as anything in members)
-		if(!ishuman(H) || IsMemberOutOfAction(H))
-			continue
-		if(!H.ckey)
-			continue
-		var/list/refs = pen_refs[H.ckey]
-		if(!islist(refs))
-			refs = list()
-			pen_refs[H.ckey] = refs
-		for(var/i = 1 to count)
-			IssuePenAndTrack(H, /obj/item/reagent_containers/hypospray/medipen/mental, refs)
-			IssuePenAndTrack(H, /obj/item/reagent_containers/hypospray/medipen/salacid, refs)
+	if(!islist(refs))
+		refs = list()
+		pen_refs[H.ckey] = refs
+	for(var/i = 1 to count)
+		IssuePenAndTrack(H, /obj/item/reagent_containers/hypospray/medipen/mental, refs)
+		IssuePenAndTrack(H, /obj/item/reagent_containers/hypospray/medipen/salacid, refs)
 
 /datum/refraction_run/proc/IssuePenAndTrack(mob/living/carbon/human/H, pen_path, list/refs)
 	var/obj/item/I = new pen_path(H)

@@ -425,13 +425,73 @@
 	if(phase_2)
 		return
 	phase_2 = TRUE
+	// Stage 1 (instant): crystal cracks, Overseer takes the floor with
+	// a line, becomes invulnerable. Phase 1 in-flight attacks force-end.
+	SetCrystalIconState("overseer_crystal_crack")
+	say("Wait — no. The seal was supposed to hold. You weren't meant to reach me.")
 	visible_message(span_userdanger("The seal strains. The stage rearranges itself."))
-	// Phase 2 Overseer is functionally invulnerable — every incoming
-	// hit is blocked by the warding shield (see /deal_damage override).
 	ChangeResistances(list(RED_DAMAGE = 0, WHITE_DAMAGE = 0, BLACK_DAMAGE = 0, PALE_DAMAGE = 0))
 	UnlockOverseerPhase2Reveal()
-	SetCrystalIconState("overseer_crystal_crack")
-	var/turf/crystal_turf = get_turf(parent_crystal)
+	ForceEndInflightAttacks()
+	// Stage 2 (5s later): support mobs arrive, Overseer takes its
+	// fixed tile, echo-anchor column boots up.
+	addtimer(CALLBACK(src, PROC_REF(CompletePhase2Transition)), 5 SECONDS, TIMER_STOPPABLE)
+
+/// Wipes every persistent Phase 1 attack visual within view of the
+/// Crystal so the 5-second Phase 2 transition window starts on a
+/// clean stage. Also drops the memory-invocation lock + the Red
+/// damage window so a stuck cycle doesn't leak past the transition.
+/mob/living/simple_animal/hostile/serio_overseer/proc/ForceEndInflightAttacks()
+	invoking_memory = FALSE
+	walk(src, 0)
+	if(parent_crystal && !QDELETED(parent_crystal))
+		parent_crystal.EnterBlue()
+	var/turf/center = parent_crystal ? get_turf(parent_crystal) : get_turf(src)
+	if(!center)
+		return
+	for(var/obj/effect/temp_visual/serio_void_singularity/V in view(20, center))
+		qdel(V)
+	for(var/obj/effect/temp_visual/serio_void_storm/V in view(20, center))
+		qdel(V)
+	for(var/obj/effect/temp_visual/serio_void_macro_aoe/V in view(20, center))
+		qdel(V)
+	for(var/obj/effect/temp_visual/serio_void_mini_aoe/V in view(20, center))
+		qdel(V)
+	for(var/obj/effect/temp_visual/serio_light_wind_fog/V in view(20, center))
+		qdel(V)
+	for(var/obj/effect/serio_light_wind_ring/V in view(20, center))
+		qdel(V)
+	for(var/obj/effect/temp_visual/serio_echo_snow_storm/V in view(20, center))
+		qdel(V)
+	for(var/obj/effect/temp_visual/serio_echo_snow_ground/V in view(20, center))
+		qdel(V)
+	for(var/obj/effect/temp_visual/serio_echo_figure/V in view(20, center))
+		qdel(V)
+	for(var/obj/effect/serio_cold_word_puddle/V in view(20, center))
+		qdel(V)
+	for(var/obj/effect/temp_visual/serio_closed_circle_ring/V in view(20, center))
+		qdel(V)
+	for(var/obj/effect/temp_visual/serio_errant_draft/V in view(20, center))
+		qdel(V)
+	for(var/obj/effect/temp_visual/serio_huddle_illusion/V in view(20, center))
+		qdel(V)
+	for(var/obj/effect/temp_visual/serio_galaxy_safe_zone/V in view(20, center))
+		qdel(V)
+	for(var/obj/effect/temp_visual/serio_glance_warning/V in view(20, center))
+		qdel(V)
+	for(var/obj/effect/temp_visual/serio_cold_word_warning/V in view(20, center))
+		qdel(V)
+	for(var/obj/effect/temp_visual/serio_burnout_pulse_warning/V in view(20, center))
+		qdel(V)
+
+/// Second-stage Phase 2 entry. Runs 5 seconds after EnterPhase2 once
+/// the in-flight Phase 1 attacks have been swept. Builds the echo
+/// column, snaps the Overseer to its fixed tile, brings the support
+/// mobs onstage, kicks off the anti-Knight + Murmur ticks.
+/mob/living/simple_animal/hostile/serio_overseer/proc/CompletePhase2Transition()
+	if(QDELETED(src))
+		return
+	var/turf/crystal_turf = parent_crystal ? get_turf(parent_crystal) : null
 	if(crystal_turf)
 		var/turf/overseer_pos = locate(crystal_turf.x - 3, crystal_turf.y, crystal_turf.z)
 		if(overseer_pos)
@@ -909,18 +969,14 @@
 	invoking_memory = TRUE
 	next_memory_invocation = world.time + memory_invocation_cooldown
 	walk(src, 0)
-	// Teleport adjacent to the Crystal so the channel reads as "going
-	// to touch it".
+	// Teleport to the tile directly south of the Crystal and face north
+	// so the channel reads as "kneeling under the seal to invoke it."
 	var/turf/crystal_turf = get_turf(parent_crystal)
 	if(crystal_turf)
-		var/turf/adj
-		for(var/d in GLOB.cardinals)
-			var/turf/T = get_step(crystal_turf, d)
-			if(T && !T.density)
-				adj = T
-				break
-		if(adj)
-			forceMove(adj)
+		var/turf/below = locate(crystal_turf.x, crystal_turf.y - 1, crystal_turf.z)
+		if(below && !below.density)
+			forceMove(below)
+		setDir(NORTH)
 	SayChannelLine()
 	addtimer(CALLBACK(src, PROC_REF(InvokeMemoryAttack)), channel_duration, TIMER_STOPPABLE)
 
@@ -1254,7 +1310,7 @@
 	var/wind_dir = pick(GLOB.cardinals)
 	var/push_interval = weakened ? 1 SECONDS : 0.5 SECONDS
 	var/ring_damage = weakened ? 25 : 110
-	var/ring_knockback = weakened ? 0 : 3
+	var/ring_knockback = weakened ? 0 : 2
 	var/decay_stacks = weakened ? 2 : 4
 	var/can_shatter = !weakened
 	for(var/turf/T in view(15, crystal_turf))
@@ -1457,7 +1513,14 @@
 	// dragged in." Lasts the full setup + suction window.
 	for(var/turf/T in view(15, crystal_turf))
 		new /obj/effect/temp_visual/serio_light_wind_fog(T, total_singularity_duration)
-	new /obj/effect/temp_visual/serio_void_singularity(crystal_turf, total_singularity_duration, setup_duration)
+	// Crystal bracket 3 swaps in the 5x5 singularity variant — bigger
+	// silhouette + an extra player-targeted macro AoE barrage.
+	var/is_b3 = parent_crystal && parent_crystal.current_bracket >= 3
+	if(is_b3)
+		new /obj/effect/temp_visual/serio_void_singularity/s5(crystal_turf, total_singularity_duration, setup_duration)
+		addtimer(CALLBACK(src, PROC_REF(StartVoidPlayerBarrage), suction_duration), setup_duration, TIMER_STOPPABLE)
+	else
+		new /obj/effect/temp_visual/serio_void_singularity(crystal_turf, total_singularity_duration, setup_duration)
 	addtimer(CALLBACK(src, PROC_REF(StartVoidSuction), crystal_turf, suction_duration, kill_radius, pull_interval, tick_damage, decay_stacks, can_shatter), setup_duration, TIMER_STOPPABLE)
 	// Contracting perimeter ring 10 → 5 across the suction. Pure
 	// damage-on-cross obstacle; knockback is 0 so the ring doesn't
@@ -1524,12 +1587,30 @@
 /mob/living/simple_animal/hostile/serio_overseer/proc/SpawnVoidMiniAoE(turf/target)
 	if(!target)
 		return
-	new /obj/effect/temp_visual/serio_void_mini_aoe(target, src)
+	new /obj/effect/temp_visual/serio_void_mini_aoe(target, src, 2.5 SECONDS)
 
 /mob/living/simple_animal/hostile/serio_overseer/proc/SpawnVoidMacroAoE(turf/target)
 	if(!target)
 		return
-	new /obj/effect/temp_visual/serio_void_macro_aoe(target, src)
+	new /obj/effect/temp_visual/serio_void_macro_aoe(target, src, 3 SECONDS)
+
+/// Bracket-3 Void Pull only. Every 2 seconds across the suction window,
+/// force-spawns a macro AoE on the tile of every live human in view 10.
+/// Runs alongside the random VoidAoEBarrage so the arena is genuinely
+/// dangerous everywhere by B3.
+/mob/living/simple_animal/hostile/serio_overseer/proc/StartVoidPlayerBarrage(duration)
+	set waitfor = FALSE
+	var/elapsed = 0
+	var/interval = 2 SECONDS
+	while(elapsed < duration && !QDELETED(src))
+		for(var/mob/living/carbon/human/H in view(10, src))
+			if(H.stat == DEAD)
+				continue
+			var/turf/T = get_turf(H)
+			if(T)
+				SpawnVoidMacroAoE(T)
+		sleep(interval)
+		elapsed += interval
 
 /// Spawns a hollow ring at radius 10 around the singularity, then
 /// every `contraction_delay` shrinks it inward by 1 tile until it
@@ -2398,6 +2479,17 @@
 	else
 		alpha = 255
 
+// Bracket-3 variant — 5x5 / 160x160 silhouette. Pixel offsets shift the
+// 160x160 sprite so its centre aligns with the 32x32 crystal tile
+// (sprite spans tiles -2..+2 on each axis).
+/obj/effect/temp_visual/serio_void_singularity/s5
+	icon = 'icons/effects/160x160.dmi'
+	icon_state = "singularity_s5"
+	pixel_x = -64
+	base_pixel_x = -64
+	pixel_y = -64
+	base_pixel_y = -64
+
 // Echo of Her snow_storm overlay — arena-wide weather effect. Fades in
 // during the setup window and fades out at the end of its duration so
 // the room's "freezing over → thawing out" beats are visible.
@@ -2447,8 +2539,8 @@
 /obj/effect/temp_visual/serio_echo_figure
 	name = "static figure"
 	desc = "A translucent shape of someone who isn't here anymore."
-	icon = 'icons/effects/effects.dmi'
-	icon_state = "static"
+	icon = 'ModularLobotomy/_Lobotomyicons/teaser_mobs.dmi'
+	icon_state = "her"
 	layer = ABOVE_MOB_LAYER
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	duration = 12 SECONDS
@@ -2484,6 +2576,7 @@
 	walk_dir = custom_walk_dir || pick(GLOB.cardinals)
 	avoid_turf = turf_to_avoid
 	target_player = player_to_track
+	setDir(walk_dir)
 	animate(src, alpha = 200, time = 0.5 SECONDS)
 	INVOKE_ASYNC(src, PROC_REF(WalkPastCenter))
 
@@ -2513,11 +2606,14 @@
 			if(new_dir)
 				walk_dir = new_dir
 		var/turf/next_tile = get_step(current, walk_dir)
+		var/actual_dir = walk_dir
 		// Sidestep around the avoid_turf so we never cross it.
 		if(next_tile && next_tile == avoid_turf)
 			var/sidestep_dir = pick(turn(walk_dir, 90), turn(walk_dir, -90))
 			next_tile = get_step(current, sidestep_dir)
+			actual_dir = sidestep_dir
 		if(next_tile && !next_tile.density)
+			setDir(actual_dir)
 			forceMove(next_tile)
 			ApplyContactDamage()
 		else
@@ -2544,8 +2640,8 @@
 // helix_minilaser shape.
 /obj/effect/temp_visual/serio_void_mini_aoe
 	name = "void rupture"
-	icon = 'icons/effects/effects.dmi'
-	icon_state = "target"
+	icon = 'icons/mob/actions/actions_items.dmi'
+	icon_state = "sniper_zoom_blank"
 	color = "#c30fff"
 	layer = ABOVE_OPEN_TURF_LAYER
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
@@ -2555,10 +2651,15 @@
 	var/decay = 2
 	var/mob/living/source
 
-/obj/effect/temp_visual/serio_void_mini_aoe/Initialize(mapload, mob/living/new_source)
+/obj/effect/temp_visual/serio_void_mini_aoe/Initialize(mapload, mob/living/new_source, custom_telegraph)
+	// Bump duration BEFORE parent Initialize when a longer telegraph is
+	// requested so the auto-qdel timer outlives the detonation.
+	if(!isnull(custom_telegraph) && custom_telegraph + 0.2 SECONDS > duration)
+		duration = custom_telegraph + 0.2 SECONDS
 	. = ..()
 	source = new_source
-	addtimer(CALLBACK(src, PROC_REF(Blowup)), 1 SECONDS, TIMER_STOPPABLE)
+	var/telegraph_delay = isnull(custom_telegraph) ? 1 SECONDS : custom_telegraph
+	addtimer(CALLBACK(src, PROC_REF(Blowup)), telegraph_delay, TIMER_STOPPABLE)
 
 /obj/effect/temp_visual/serio_void_mini_aoe/proc/Blowup()
 	if(QDELETED(src))
