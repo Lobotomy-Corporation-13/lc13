@@ -1,22 +1,21 @@
 /*
- * The Murmur — Phase 3 minion mob. Stationary, projectile-permeable,
+ * The Murmur — Phase 2 minion mob. Stationary, projectile-permeable,
  * draws a beam to the Knight that scales the Knight's charge tick down.
- * Spawned on the arena perimeter by the Caretaker; killing them is the
+ * Spawned on the arena perimeter by the Overseer; killing them is the
  * second player priority alongside body-blocking anti-Knight projectiles.
  *
- * Build-order steps 11 (skeleton + beam + charge multiplier),
- * 13 (3 reused Phase 2 attacks), 14 (4 new movement-friendly attacks).
+ * Retaliation: any damage taken applies BLACK fragile stacks to the
+ *   attacker (mirrors the mad_fly_nest pattern). Hitting Murmurs makes
+ *   you take more BLACK damage for a while — the encounter wants you
+ *   to think about who kills them and when.
+ *
+ * Attack rotation: every 5 seconds the Murmur picks Cold Word OR
+ *   Glance (50/50) and casts a smaller mimic of the Overseer's
+ *   version, with the beam drawn from the Murmur itself.
+ *
+ * Build-order step 11 (skeleton + beam + charge multiplier) plus the
+ * post-step retaliation + Cold-Word / Glance mimic rework.
  */
-
-// ---------- Attack ID enum ----------
-
-#define MURMUR_ATTACK_ERRANT_DRAFTS 1
-#define MURMUR_ATTACK_CHASE_THE_BUG 2
-#define MURMUR_ATTACK_BURNOUT_BILL  3
-#define MURMUR_ATTACK_WHISPER_HEX   4
-#define MURMUR_ATTACK_MEMORY_STAB   5
-#define MURMUR_ATTACK_ECHO_MOTE     6
-#define MURMUR_ATTACK_DRAG_PULSE    7
 
 // ---------- Custom beam type (tint only) ----------
 
@@ -50,27 +49,33 @@
 	refraction_manages_own_death = TRUE
 	loot = list()
 	gold_core_spawnable = NO_SPAWN
-	/// Back-ref to the Caretaker that spawned this Murmur.
-	var/mob/living/simple_animal/hostile/serio_caretaker/parent_caretaker
+	/// Back-ref to the Overseer that spawned this Murmur.
+	var/mob/living/simple_animal/hostile/serio_overseer/parent_overseer
 	/// Knight this Murmur is tethered to.
 	var/mob/living/simple_animal/hostile/serio_knight/knight_ref
 	/// The persistent beam tether obj.
 	var/datum/beam/charge_beam
-	/// Which attack this Murmur runs on its cadence (one of the 7 IDs).
-	var/assigned_attack = MURMUR_ATTACK_ERRANT_DRAFTS
-	/// World.time of next attack cast.
+	/// world.time of next Cold Word / Glance cast.
 	var/next_attack_at = 0
+	// ---- Retaliation ----
+	/// BLACK fragile stacks applied to any mob that damages this Murmur.
+	var/black_fragile_per_hit = 3
+	// ---- Attack tuning ----
+	var/murmur_attack_cooldown = 5 SECONDS
+	var/attack_telegraph = 1 SECONDS
+	var/attack_damage = 20
+	var/attack_decay_stacks_min = 4
+	var/attack_decay_stacks_max = 8
 
-/mob/living/simple_animal/hostile/serio_murmur/Initialize(mapload, mob/living/parent, mob/living/knight, attack_id)
+/mob/living/simple_animal/hostile/serio_murmur/Initialize(mapload, mob/living/parent, mob/living/knight)
 	. = ..()
 	toggle_ai(AI_OFF)
-	parent_caretaker = parent
+	parent_overseer = parent
 	knight_ref = knight
-	if(attack_id)
-		assigned_attack = attack_id
 	if(knight_ref && !QDELETED(knight_ref))
 		knight_ref.active_murmur_beams++
 		charge_beam = Beam(knight_ref, "1-full", time = INFINITY, beam_type = /obj/effect/ebeam/serio_murmur)
+	// First attack window: 2-4s after spawn so it doesn't fire instantly.
 	next_attack_at = world.time + rand(2 SECONDS, 4 SECONDS)
 
 /mob/living/simple_animal/hostile/serio_murmur/Destroy()
@@ -79,225 +84,158 @@
 	if(charge_beam && !QDELETED(charge_beam))
 		qdel(charge_beam)
 	charge_beam = null
-	if(parent_caretaker && !QDELETED(parent_caretaker))
-		parent_caretaker.active_murmurs -= src
-	parent_caretaker = null
+	if(parent_overseer && !QDELETED(parent_overseer))
+		parent_overseer.active_murmurs -= src
+	parent_overseer = null
 	knight_ref = null
 	return ..()
 
-/// Stationary for the duration of Phase 3.
+/// Stationary for the duration of Phase 2.
 /mob/living/simple_animal/hostile/serio_murmur/Move()
 	return FALSE
 
 /mob/living/simple_animal/hostile/serio_murmur/AttackingTarget(atom/attacked_target)
 	return FALSE
 
+/// On death: heal nearby players a small amount, then immediately qdel
+/// the Murmur (and its beam) so no invisible corpse + dangling beam
+/// lingers on the map. Parent death() handles standard simple_animal
+/// stat changes; we run heal before so the visible_message order
+/// reads "Murmur dies → players heal → Murmur disappears".
+/mob/living/simple_animal/hostile/serio_murmur/death(gibbed)
+	for(var/mob/living/carbon/human/H in view(7, src))
+		if(H.stat == DEAD)
+			continue
+		H.adjustBruteLoss(-10, forced = TRUE)
+		H.adjustFireLoss(-10, forced = TRUE)
+		H.adjustSanityLoss(-10, forced = TRUE)
+	. = ..()
+	qdel(src)
+
 /mob/living/simple_animal/hostile/serio_murmur/Life()
 	. = ..()
 	if(stat == DEAD)
 		return
 	if(world.time >= next_attack_at)
-		FireAssignedAttack()
-		next_attack_at = world.time + rand(8 SECONDS, 12 SECONDS)
+		FireMurmurAttack()
+		next_attack_at = world.time + murmur_attack_cooldown
 
-/// Dispatches to the right attack proc based on `assigned_attack`.
-/// IDs 1-3 reuse the Caretaker's existing Phase 2 procs (called with
-/// `weakened = TRUE` so damage/decay/shatter scale down). IDs 4-7 are
-/// new Murmur-only attacks that fire from the Murmur's own tile.
-/mob/living/simple_animal/hostile/serio_murmur/proc/FireAssignedAttack()
+// ---------- Retaliation ----------
+
+/// Mirrors the mad_fly_nest pattern in sector2_mobs.dm:222. Any damage
+/// from a non-faction-mate applies BLACK fragile stacks to the attacker,
+/// so killing Murmurs costs the player ongoing damage vulnerability.
+/mob/living/simple_animal/hostile/serio_murmur/deal_damage(damage_amount, damage_type, source = null, flags = null, attack_type = null, blocked = null, def_zone = null, wound_bonus = 0, bare_wound_bonus = 0, sharpness = SHARP_NONE)
+	. = ..()
+	if(stat == DEAD || maxHealth <= 0)
+		return
+	if(. > 0 && isliving(source))
+		var/mob/living/attacker = source
+		if(!faction_check_mob(attacker))
+			attacker.apply_lc_black_fragile(black_fragile_per_hit)
+
+// ---------- Attack rotation ----------
+
+/// 50/50 between a Cold Word mimic and a Glance mimic. Both use the
+/// same telegraph + damage / decay constants tuned on the Murmur.
+/mob/living/simple_animal/hostile/serio_murmur/proc/FireMurmurAttack()
 	if(QDELETED(src) || stat == DEAD)
 		return
-	switch(assigned_attack)
-		if(MURMUR_ATTACK_ERRANT_DRAFTS)
-			if(parent_caretaker && !QDELETED(parent_caretaker))
-				parent_caretaker.InvokeErrantDrafts(TRUE)
-		if(MURMUR_ATTACK_CHASE_THE_BUG)
-			if(parent_caretaker && !QDELETED(parent_caretaker))
-				parent_caretaker.InvokeChaseTheBug(TRUE)
-		if(MURMUR_ATTACK_BURNOUT_BILL)
-			if(parent_caretaker && !QDELETED(parent_caretaker))
-				parent_caretaker.InvokeBurnoutBill(TRUE)
-		if(MURMUR_ATTACK_WHISPER_HEX)
-			FireWhisperHex()
-		if(MURMUR_ATTACK_MEMORY_STAB)
-			FireMemoryStab()
-		if(MURMUR_ATTACK_ECHO_MOTE)
-			FireEchoMote()
-		if(MURMUR_ATTACK_DRAG_PULSE)
-			FireDragPulse()
+	if(prob(50))
+		MurmurCastColdWord()
+	else
+		MurmurCastGlance()
 
-// ---------- Step 14: four new Murmur-only attacks ----------
-
-// Whisper-Hex: a stationary 3x3 hex on a random nearby tile. 2s
-// telegraph then detonates. Players step off; no contraction, no
-// forced movement.
-/obj/effect/temp_visual/serio_whisper_hex
-	name = "whisper hex"
-	icon = 'icons/effects/96x96.dmi'
-	icon_state = "warning"
-	color = "#9966ff"
-	pixel_x = -32
-	base_pixel_x = -32
-	pixel_y = -32
-	base_pixel_y = -32
-	layer = ABOVE_OPEN_TURF_LAYER
-	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
-	duration = 2.5 SECONDS
-	alpha = 180
-	var/damage = 25
-	var/mob/living/source
-
-/obj/effect/temp_visual/serio_whisper_hex/Initialize(mapload, mob/living/new_source)
-	. = ..()
-	source = new_source
-	addtimer(CALLBACK(src, PROC_REF(Detonate)), 2 SECONDS, TIMER_STOPPABLE)
-
-/obj/effect/temp_visual/serio_whisper_hex/proc/Detonate()
-	if(QDELETED(src))
+/// Single 3×3 BLACK AoE around the nearest player, telegraphed and
+/// preceded by a beam from the Murmur. Mirror of CastGlance, scaled
+/// down: just the AoE + decay tick, no lingering puddle.
+/mob/living/simple_animal/hostile/serio_murmur/proc/MurmurCastGlance()
+	var/mob/living/carbon/human/target = FindMurmurTargetPlayer(nearest = TRUE)
+	if(!target)
 		return
-	var/turf/T = get_turf(src)
-	if(!T)
-		return
-	for(var/turf/A in range(1, T))
-		for(var/mob/living/carbon/human/H in A)
-			if(H.stat == DEAD)
-				continue
-			H.deal_damage(damage, BLACK_DAMAGE, source, attack_type = (ATTACK_TYPE_SPECIAL))
-
-/mob/living/simple_animal/hostile/serio_murmur/proc/FireWhisperHex()
-	var/turf/center = get_turf(src)
+	var/turf/center = get_turf(target)
 	if(!center)
 		return
-	var/list/candidates = list()
-	for(var/turf/T in range(8, center))
-		if(get_dist(T, center) < 4)
+	var/list/spots = list()
+	for(var/turf/T in range(1, center))
+		spots += T
+		new /obj/effect/temp_visual/serio_glance_warning(T)
+	Beam(center, "drain_life", time = attack_telegraph)
+	addtimer(CALLBACK(src, PROC_REF(ResolveMurmurGlance), spots), attack_telegraph, TIMER_STOPPABLE)
+
+/mob/living/simple_animal/hostile/serio_murmur/proc/ResolveMurmurGlance(list/spots)
+	if(!islist(spots))
+		return
+	for(var/turf/T as anything in spots)
+		if(QDELETED(T))
 			continue
-		if(T.density)
-			continue
-		candidates += T
-	if(!length(candidates))
-		return
-	new /obj/effect/temp_visual/serio_whisper_hex(pick(candidates), src)
-
-// Memory-Stab: a stationary 1-tile-wide line beam from the Murmur in a
-// random cardinal. 1.5s telegraph, then detonates along the line.
-/obj/effect/temp_visual/serio_memory_stab_telegraph
-	name = "memory stab"
-	icon = 'icons/effects/effects.dmi'
-	icon_state = "shieldsparkles"
-	color = "#9966ff"
-	alpha = 130
-	layer = ABOVE_OPEN_TURF_LAYER
-	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
-	duration = 1.6 SECONDS
-
-/obj/effect/temp_visual/serio_memory_stab_detonation
-	name = "memory stab"
-	icon = 'icons/effects/effects.dmi'
-	icon_state = "explosion"
-	color = "#9966ff"
-	alpha = 200
-	layer = ABOVE_OPEN_TURF_LAYER
-	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
-	duration = 0.6 SECONDS
-
-/mob/living/simple_animal/hostile/serio_murmur/proc/FireMemoryStab()
-	var/turf/center = get_turf(src)
-	if(!center)
-		return
-	var/line_dir = pick(GLOB.cardinals)
-	var/list/line_tiles = list()
-	var/turf/cur = center
-	for(var/i in 1 to 8)
-		cur = get_step(cur, line_dir)
-		if(!cur || cur.density)
-			break
-		line_tiles += cur
-		new /obj/effect/temp_visual/serio_memory_stab_telegraph(cur)
-	if(!length(line_tiles))
-		return
-	addtimer(CALLBACK(src, PROC_REF(MemoryStabDetonate), line_tiles), 1.5 SECONDS, TIMER_STOPPABLE)
-
-/mob/living/simple_animal/hostile/serio_murmur/proc/MemoryStabDetonate(list/line_tiles)
-	if(!islist(line_tiles))
-		return
-	for(var/turf/T as anything in line_tiles)
-		if(!T)
-			continue
-		new /obj/effect/temp_visual/serio_memory_stab_detonation(T)
 		for(var/mob/living/carbon/human/H in T)
 			if(H.stat == DEAD)
 				continue
-			H.deal_damage(20, BLACK_DAMAGE, src, attack_type = (ATTACK_TYPE_SPECIAL))
+			H.deal_damage(attack_damage, BLACK_DAMAGE, src, attack_type = (ATTACK_TYPE_RANGED | ATTACK_TYPE_SPECIAL))
+			H.apply_lc_mental_decay(rand(attack_decay_stacks_min, attack_decay_stacks_max))
+			// Mark the target — if a Overseer lance lands on them
+			// later, the lance will shatter this mark for sanity damage.
+			H.apply_status_effect(/datum/status_effect/mental_detonate)
 
-// Echo-Mote: a single walker spawned at the Murmur's tile. Walks 5-6
-// tiles in a random cardinal, dealing damage to anything on each tile
-// it lands on. No snow overlay (vs. Phase 2 Echo of Her).
-/obj/effect/temp_visual/serio_echo_mote
-	name = "echo"
-	icon = 'icons/effects/effects.dmi'
-	icon_state = "shieldsparkles"
-	color = "#9966ff"
-	alpha = 200
-	layer = ABOVE_MOB_LAYER
-	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
-	duration = 5 SECONDS
-	var/mob/living/source
-	var/walk_dir
-	var/walk_distance = 6
-	var/step_delay = 4
-	var/damage = 25
-	var/walked = 0
-
-/obj/effect/temp_visual/serio_echo_mote/Initialize(mapload, mob/living/new_source, custom_walk_dir)
-	. = ..()
-	source = new_source
-	walk_dir = custom_walk_dir || pick(GLOB.cardinals)
-	addtimer(CALLBACK(src, PROC_REF(StepForward)), step_delay)
-
-/obj/effect/temp_visual/serio_echo_mote/proc/StepForward()
-	if(QDELETED(src) || walked >= walk_distance)
+/// Scatter of 3-5 cold-word puddles around a random player, each with
+/// its own telegraph beam from the Murmur. Mirror of CastColdWord.
+/mob/living/simple_animal/hostile/serio_murmur/proc/MurmurCastColdWord()
+	var/mob/living/carbon/human/target = FindMurmurTargetPlayer(nearest = FALSE)
+	if(!target)
 		return
-	var/turf/T = get_step(src, walk_dir)
-	if(!T || T.density)
-		return
-	forceMove(T)
-	for(var/mob/living/carbon/human/H in T)
-		if(H.stat == DEAD)
-			continue
-		H.deal_damage(damage, BLACK_DAMAGE, source, attack_type = (ATTACK_TYPE_SPECIAL))
-	walked++
-	addtimer(CALLBACK(src, PROC_REF(StepForward)), step_delay)
-
-/mob/living/simple_animal/hostile/serio_murmur/proc/FireEchoMote()
-	var/turf/T = get_turf(src)
-	if(!T)
-		return
-	new /obj/effect/temp_visual/serio_echo_mote(T, src)
-
-// Drag-Pulse: one-time 1-tile pull on each player within 6 tiles of
-// the Murmur. Brief disruption, no continuous suction.
-/obj/effect/temp_visual/serio_drag_pulse
-	name = "drag pulse"
-	icon = 'icons/effects/effects.dmi'
-	icon_state = "shieldsparkles"
-	color = "#9966ff"
-	alpha = 200
-	layer = ABOVE_OPEN_TURF_LAYER
-	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
-	duration = 0.7 SECONDS
-
-/mob/living/simple_animal/hostile/serio_murmur/proc/FireDragPulse()
-	var/turf/center = get_turf(src)
+	var/turf/center = get_turf(target)
 	if(!center)
 		return
-	new /obj/effect/temp_visual/serio_drag_pulse(center)
-	for(var/mob/living/carbon/human/H in view(6, center))
+	var/list/spots = list(center)
+	var/list/candidates = list()
+	for(var/turf/open/T in range(2, center))
+		if(T == center)
+			continue
+		candidates += T
+	var/extras = rand(3, 5)
+	for(var/i in 1 to extras)
+		if(!length(candidates))
+			break
+		spots += pick_n_take(candidates)
+	for(var/turf/S as anything in spots)
+		new /obj/effect/temp_visual/serio_cold_word_warning(S)
+		Beam(S, "drain_life", time = attack_telegraph)
+	addtimer(CALLBACK(src, PROC_REF(ResolveMurmurColdWord), spots), attack_telegraph, TIMER_STOPPABLE)
+
+/mob/living/simple_animal/hostile/serio_murmur/proc/ResolveMurmurColdWord(list/spots)
+	if(!islist(spots))
+		return
+	for(var/turf/T as anything in spots)
+		if(QDELETED(T))
+			continue
+		// Anyone caught at puddle-spawn gets a chunk of decay + the
+		// mark; later Overseer lance can shatter that mark. The
+		// puddle's tick keeps dripping smaller decay separately.
+		for(var/mob/living/carbon/human/H in T)
+			if(H.stat == DEAD)
+				continue
+			H.apply_lc_mental_decay(rand(attack_decay_stacks_min, attack_decay_stacks_max))
+			H.apply_status_effect(/datum/status_effect/mental_detonate)
+		// Reuse the Overseer's puddle type — tuned tick: 6 BLACK / 1s for 2s.
+		new /obj/effect/serio_cold_word_puddle(T, 2 SECONDS, 6, 1, 1 SECONDS)
+
+/// Player lookup helper. `nearest = TRUE` picks the closest live human
+/// in view; `nearest = FALSE` picks any live human at random.
+/mob/living/simple_animal/hostile/serio_murmur/proc/FindMurmurTargetPlayer(nearest = TRUE)
+	var/mob/living/carbon/human/best
+	var/best_dist = INFINITY
+	var/list/candidates = list()
+	for(var/mob/living/carbon/human/H in view(8, src))
 		if(H.stat == DEAD)
 			continue
-		var/pull_dir = get_dir(H, src)
-		if(!pull_dir)
-			continue
-		var/turf/dest = get_step(H, pull_dir)
-		if(dest && !dest.density)
-			H.Move(dest, pull_dir)
+		if(nearest)
+			var/d = get_dist(src, H)
+			if(d < best_dist)
+				best_dist = d
+				best = H
+		else
+			candidates += H
+	if(nearest)
+		return best
+	return length(candidates) ? pick(candidates) : null

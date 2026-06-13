@@ -599,6 +599,322 @@
 			),
 		),
 
+		// ---------- serio_zeal_w1: The Writer Enters (Phase 1) ----------
+
+		/mob/living/simple_animal/hostile/young_star = list(
+			list(
+				"name"     = "Galaxy Aura",
+				"damage"   = "35 PALE + 4-tile knockback outward in a 5x5 around Star",
+				"cooldown" = "8 seconds, 25% chance per basic melee swing",
+				"desc"     = "On melee proc: rooted 1.5s wind-up while a \
+					galaxy-tinted ring telegraphs the 5x5. Resolves on every \
+					tile inside.",
+			),
+			list(
+				"name"     = "Echo of the Capo: Sweep",
+				"damage"   = "See the Capo's **Sweep** card",
+				"cooldown" = "Tier 1: 5s. Tier 2: 4s. Tier 3: 3s",
+				"desc"     = "Every cooldown: spawns a translucent Capo East \
+					afterimage that runs **Sweep** at a picked player.",
+			),
+			list(
+				"name"     = "Echo of Azarus: Scatter Dice",
+				"damage"   = "See Azarus's **Ante Up** + **Loaded Dice** cards",
+				"cooldown" = "Tier 1: 5s. Tier 2: 4s. Tier 3: 3s",
+				"desc"     = "Every cooldown: spawns a translucent Azarus \
+					afterimage that flings 5 dice across the floor. Each \
+					landing tile resolves per **Loaded Dice**.",
+			),
+			list(
+				"name"     = "Echo of the Reaper: Refraction Sweep",
+				"damage"   = "See the Mirror Shattered Reaper's **Refraction Sweep** card",
+				"cooldown" = "Tier 1: 5s. Tier 2: 4s. Tier 3: 3s",
+				"desc"     = "Every cooldown: spawns a translucent Reaper \
+					afterimage that runs **Refraction Sweep** aimed at a \
+					picked player.",
+			),
+			list(
+				"name"     = "Echo of the Understudy: Costume Dash",
+				"damage"   = "See the Understudy's form cards (random form per cast)",
+				"cooldown" = "Tier 1: 5s. Tier 2: 4s. Tier 3: 3s",
+				"desc"     = "Every cooldown: spawns a translucent Understudy \
+					afterimage that picks a random City-roster form and runs \
+					that form's dash.",
+			),
+			list(
+				"name"     = "Echo of Eric: Sanguine Marker",
+				"damage"   = "See Greed Touched Eric's **Sanguine Feast** card",
+				"cooldown" = "Tier 1: 5s. Tier 2: 4s. Tier 3: 3s",
+				"desc"     = "Every cooldown: spawns a translucent Eric \
+					afterimage that plants a Sanguine Feast marker on a picked \
+					player's tile.",
+			),
+			list(
+				"name"     = "Echo of the Cabin: Bone Stab Line",
+				"damage"   = "See the Snow Cabin's **Bone Stab Line** card",
+				"cooldown" = "Tier 1: 5s. Tier 2: 4s. Tier 3: 3s",
+				"desc"     = "Every cooldown: spawns a translucent Snow Cabin \
+					afterimage that runs **Bone Stab Line**.",
+			),
+			list(
+				"name"     = "Echo of the Priest: Sermon Volley",
+				"damage"   = "See the Blade Priest's **Sermon Volley** card",
+				"cooldown" = "Tier 1: 5s. Tier 2: 4s. Tier 3: 3s",
+				"desc"     = "Every cooldown: spawns a translucent Blade Priest \
+					afterimage that runs **Sermon Volley** at a picked player.",
+			),
+			list(
+				"name"     = "Echo of the Apotheosis: Divine Thunderbolt",
+				"damage"   = "See the Apotheosis's **Divine Thunderbolt** card",
+				"cooldown" = "Tier 1: 5s. Tier 2: 4s. Tier 3: 3s",
+				"desc"     = "Every cooldown: spawns a translucent Apotheosis \
+					afterimage that drops a Divine Thunderbolt marker on a \
+					picked player's tile.",
+			),
+		),
+
+		// ---------- serio_zeal_w2 (Phase 2): the Overseer ----------
+
+		/mob/living/simple_animal/hostile/serio_overseer = list(
+			list(
+				"name"     = "Patrol Trail",
+				"damage"   = "15 BLACK + 1 mental decay per tile contact",
+				"cooldown" = "1 trail tile per patrol step (5 seconds)",
+				"desc"     = "Every patrol step: the vacated tile leaves a \
+					violet trail for 1.5s. Standing on a live trail tile \
+					applies the hit.",
+			),
+			list(
+				"name"     = "Glance",
+				"damage"   = "25 BLACK + 2 mental decay in a 3x3 on the target's snapshot tile, then spawns 9 **Cold-Word Puddles** on the resolved tiles",
+				"cooldown" = "5 seconds",
+				"desc"     = "Every cooldown: telegraphs the 3x3 around the \
+					target's snapshot tile for 1s, then resolves. Each detonated \
+					tile spawns a 3s **Cold-Word Puddle**.",
+			),
+			list(
+				"name"     = "Cold-Word Puddle",
+				"damage"   = "8 BLACK + 1 mental decay per 0.7s tick (3s lifetime)",
+				"cooldown" = "Spawned by **Glance** and **Cold Word**",
+				"desc"     = "While a human stands on the puddle: ticks every \
+					0.7s. The puddle clears at the end of its lifetime.",
+			),
+			list(
+				"name"     = "Cold Word",
+				"damage"   = "Spawns 5-7 **Cold-Word Puddles** around a random player",
+				"cooldown" = "7 seconds",
+				"desc"     = "Every cooldown: telegraphs the target's tile + 4-6 \
+					more open tiles within 2 of it for 1s, then spawns a \
+					**Cold-Word Puddle** on each.",
+			),
+			list(
+				"name"     = "Errant Drafts",
+				"damage"   = "On chaser contact: 35 BLACK + 4 mental decay (one hit, chaser dies)",
+				"cooldown" = "**Hand on the Crystal** slot",
+				"desc"     = "On cast: Crystal flips Red for 7 seconds. Spawns \
+					4-6 cardinal-walking chasers around the arena. Each chaser \
+					dies on first contact.",
+			),
+			list(
+				"name"     = "Chase the Bug",
+				"damage"   = "35 BLACK + 4 mental decay per marker on its detonation tile",
+				"cooldown" = "**Hand on the Crystal** slot",
+				"desc"     = "On cast: Crystal flips Red for 7 seconds. Drops a \
+					floor marker under every human and tracks them for 2.5s; \
+					on lock the marker resolves into an orange beam.",
+			),
+			list(
+				"name"     = "Burnout Bill",
+				"damage"   = "35 BLACK in a 1-tile pulse on each marked player",
+				"cooldown" = "**Hand on the Crystal** slot",
+				"desc"     = "On cast: Crystal flips Red for 7 seconds. Marks \
+					each human with a pulse target that tracks their current \
+					tile, then resolves on each.",
+			),
+			list(
+				"name"     = "Closed Circle",
+				"damage"   = "110 BLACK + 5-tile knockback toward center + mental detonate shatter trigger on every ring-cross",
+				"cooldown" = "**Hand on the Crystal** slot",
+				"desc"     = "On cast: Crystal flips Red for 7 seconds. A violet \
+					flame ring contracts inward in stages over 4s, then holds \
+					at a 5x5 for 5s. Crossing the ring tiles in either \
+					direction applies the hit.",
+			),
+			list(
+				"name"     = "Storm Approach",
+				"damage"   = "40 BLACK + 2 mental decay per tick to humans inside the storm aura",
+				"cooldown" = "**Hand on the Crystal** slot",
+				"desc"     = "On cast: Crystal flips Red for 7 seconds. A \
+					galaxy-aura storm spawns at a random edge and walks across \
+					the arena at 2x base speed, changing direction every 2s.",
+			),
+			list(
+				"name"     = "Void Pull",
+				"damage"   = "50 BLACK + 2 mental decay per 1s tick inside the suction; 50 BLACK + 3 mental decay on the outer ring resolve",
+				"cooldown" = "**Hand on the Crystal** slot",
+				"desc"     = "On cast: Crystal flips Red for 7 seconds. A \
+					singularity spawns at a random tile and drags every human \
+					toward center for 5s. While the pull is active, **Void \
+					AoE Barrage** rolls every 0.5s.",
+			),
+			list(
+				"name"     = "Void Rupture Barrage",
+				"damage"   = "Mini: 50 BLACK + 2 mental decay on a 1x1. Macro: 140 BLACK + 3 mental decay on a 3x3.",
+				"cooldown" = "Rolls while **Void Pull** is active. 3% mini / 1% macro per nearby tile per 0.5s tick",
+				"desc"     = "Every 0.5s during Void Pull: each open tile within \
+					8 of the singularity rolls for a mini or macro AoE. Mini: \
+					1s telegraph then detonate. Macro: 1.5s telegraph then \
+					detonate.",
+			),
+			list(
+				"name"     = "Echo of Her",
+				"damage"   = "110 BLACK + 6 mental decay per static-figure contact tile (figures die on cap)",
+				"cooldown" = "**Hand on the Crystal** slot",
+				"desc"     = "On cast: Crystal flips Red for 7 seconds. Snow \
+					falls across the arena. Continuously spawns translucent \
+					figures around the crystal (4-6 per wave) and around live \
+					humans (1-2 per wave) every 1.5s. Each walks 6 tiles in a \
+					cardinal direction.",
+			),
+			list(
+				"name"     = "Light Wind",
+				"damage"   = "100 BLACK + 3-tile knockback + 4 mental decay per ring-cross",
+				"cooldown" = "**Hand on the Crystal** slot",
+				"desc"     = "On cast: Crystal flips Red for 7 seconds. Spawns \
+					expanding wind rings at the arena center that contract \
+					inward in stages. Crossing a ring applies the hit.",
+			),
+			list(
+				"name"     = "Sealing Lance",
+				"hidden_until" = "overseer_phase_2",
+				"damage"   = "30 BLACK + rand(4-8) mental decay on contact + 25% Knight charge loss; shatters mental detonate for sanity damage + 3 BLACK fragile",
+				"cooldown" = "Bracket 1: 6 seconds",
+				"desc"     = "Phase 2, every cooldown: spawns a violet homing \
+					lance from a random tile in the 1x5 echo-anchor column 5 \
+					tiles west of the Crystal. Arcs through a waypoint 2 N or \
+					2 S of the Crystal, then snaps straight at the Knight. \
+					Bounces off walls up to 5 times.",
+			),
+			list(
+				"name"     = "Sealing Volley",
+				"hidden_until" = "overseer_phase_2",
+				"damage"   = "30 BLACK + rand(4-8) mental decay per lance hit + 5% Knight charge loss; 5 lances total",
+				"cooldown" = "Bracket 2: 10 seconds",
+				"desc"     = "Phase 2, every cooldown: 5 lances fire \
+					bottom-to-top from the 5 column tiles with 0.3s stagger. \
+					Each lance arcs via its row's waypoint (top → N, bottom → \
+					S, middle → random).",
+			),
+			list(
+				"name"     = "Crawling Argument",
+				"hidden_until" = "overseer_phase_2",
+				"damage"   = "38 BLACK on contact + 18% Knight charge loss (single hit, seeker dies)",
+				"cooldown" = "Bracket 3: 4 seconds, 40% dispatcher roll",
+				"desc"     = "Phase 2, every cooldown roll: spawns a violet \
+					crawler from a random column tile that pathfinds tile-by-tile \
+					toward the Knight using cardinal steps, recalculating \
+					direction every step. Dies on first contact.",
+			),
+			list(
+				"name"     = "Closing Argument",
+				"hidden_until" = "overseer_phase_2",
+				"damage"   = "30 BLACK + rand(4-8) mental decay per lance hit + 18% Knight charge loss; 2-3 lances per cast",
+				"cooldown" = "Bracket 3: 4 seconds, 25% dispatcher roll",
+				"desc"     = "Phase 2, every cooldown roll: 2-3 lances fire \
+					with 0.25s stagger from independently-picked column tiles. \
+					Same waypoint arc as **Sealing Lance** but faster speed \
+					and tighter homing.",
+			),
+			list(
+				"name"     = "Verdict on the Knight",
+				"hidden_until" = "overseer_phase_2",
+				"damage"   = "75 BLACK in a 3x3 around the Knight's tile + 100% Knight charge drain (consumed by **Knight-Tile Body Block**)",
+				"cooldown" = "Bracket 3: 4 seconds, 35% dispatcher roll, blocked while one is telegraphing",
+				"desc"     = "Phase 2, every cooldown roll: telegraphs a 3x3 \
+					on the Knight's tile for 5s, then resolves. The Knight \
+					speaks a warning line at cast start.",
+			),
+		),
+
+		// ---------- serio_zeal_w2 support: Sealing Crystal ----------
+
+		/mob/living/simple_animal/hostile/serio_crystal = list(
+			// No attack cards — Crystal has no actions. Behaviour lives in
+			// passives (see **Three-Step Indictment**, **Cracking, Sealing**,
+			// **Held Closed**).
+		),
+
+		// ---------- serio_zeal_w2 support: the Knight ----------
+
+		/mob/living/simple_animal/hostile/serio_knight = list(
+			list(
+				"name"     = "Three-Slash Verdict",
+				"damage"   = "Snaps the Crystal's HP to the next bracket threshold (75% → 25% → 0%)",
+				"cooldown" = "On charge meter reaching 100% (see **Gathering the Strike** + **Drowned by the Chorus**)",
+				"desc"     = "On charge cap: 1.5s slash animation, then the Knight \
+					sweeps onto the Crystal and resolves. Crystal HP snaps.",
+			),
+		),
+
+		// ---------- serio_zeal_w2 support: the Sage ----------
+
+		/mob/living/simple_animal/hostile/serio_sage = list(
+			list(
+				"name"     = "Counter-Argument",
+				"damage"   = "Removes mental decay stacks + removes mental detonate primer (no shatter) from every human swept",
+				"cooldown" = "20 seconds (see **Speaks On Schedule**); fires when any human in view 7 has 15+ mental decay",
+				"desc"     = "Every aura tick (when triggered): a cyan ring \
+					expands outward 8 rings (17x17 footprint) from the Sage. \
+					Each ring resolves on the humans it sweeps.",
+			),
+			list(
+				"name"     = "A Chair in the Room",
+				"damage"   = "+50 brute / +50 fire / +50 sanity per human swept (once per cast)",
+				"cooldown" = "20 seconds (see **Speaks On Schedule**); fires when no human in view 7 has 15+ mental decay",
+				"desc"     = "Every aura tick (when triggered): a gold ring \
+					expands outward 8 rings (17x17 footprint) from the Sage. \
+					Each ring resolves on the humans it sweeps.",
+			),
+			list(
+				"name"     = "Resonant Word",
+				"damage"   = "On the word's bloom: +80 brute / +80 fire / +80 sanity in a 5x5",
+				"cooldown" = "15 seconds (cap 3 alive, 2-tile spacing)",
+				"desc"     = "Every cooldown: sets a struck-to-bloom word on \
+					a non-dense tile within 2 of a live human in view 7. On \
+					strike (bullet or melee): 3s charge, then the word blooms.",
+			),
+			list(
+				"name"     = "Stays Anyway",
+				"damage"   = "Absorbs N **Sealing Lance** hits on the bubbled human (N per **Held Across the Brackets**)",
+				"cooldown" = "20 seconds; fires when a **Sealing Lance** is in flight and a human in view has no bubble",
+				"desc"     = "On trigger: 1s dark-blue beam from the Sage to a \
+					human in view 15. The human gains the bubble; each lance \
+					hit consumes a charge, the bubble pops at 0.",
+			),
+		),
+
+		// ---------- serio_zeal_w2 support: Murmurs ----------
+
+		/mob/living/simple_animal/hostile/serio_murmur = list(
+			list(
+				"name"     = "Whispered Glance",
+				"damage"   = "20 BLACK + rand(4-8) mental decay + applies mental detonate in a 3x3 on the target's snapshot tile",
+				"cooldown" = "5 seconds, 50% roll",
+				"desc"     = "Every cooldown roll: telegraphs the 3x3 around \
+					the nearest human's snapshot tile for 1s with a violet \
+					beam from the Murmur, then resolves.",
+			),
+			list(
+				"name"     = "Whispered Cold Word",
+				"damage"   = "On puddle landing: rand(4-8) mental decay + applies mental detonate to humans on the tile. **Cold-Word Puddle** tick: 6 BLACK + 1 mental decay per 1s tick (2s lifetime).",
+				"cooldown" = "5 seconds, 50% roll",
+				"desc"     = "Every cooldown roll: picks a random human's tile \
+					+ 3-5 more open tiles within 2 of it. Telegraphs each for \
+					1s with violet beams from the Murmur, then spawns a 2s \
+					puddle on each.",
+			),
+		),
+
 		// ---------- zeal_s3n2: The Snow Cabin ----------
 
 		/mob/living/simple_animal/hostile/snow_cabin/refracted = list(

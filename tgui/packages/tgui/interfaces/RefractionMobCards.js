@@ -256,12 +256,36 @@ const ResistanceRow = props => {
   );
 };
 
+// Placeholder card rendered in place of any attack/passive entry whose
+// `hidden_until` event is still locked for the viewing ckey. Solid
+// black fill, visible border, centered "Undiscovered" text. Same
+// vertical footprint as a real card so the briefing doesn't jump
+// around when the gate unlocks.
+const UndiscoveredCard = () => (
+  <Box
+    mb={1}
+    py={1.5}
+    textAlign="center"
+    style={{
+      'background': '#000000',
+      'border': '1px solid #4b5563',
+      'border-radius': '3px',
+      'color': '#9ca3af',
+      'font-style': 'italic',
+      'font-size': '11px',
+      'letter-spacing': '0.05em',
+    }}>
+    Undiscovered
+  </Box>
+);
+
 // One attack card. Neutral title bar (no severity), then a two-row
 // damage/cooldown summary, then the body text. Mirrors the data shape
 // produced by /datum/controller/subsystem/refraction_railway in the
 // "attacks" payload (name / damage / cooldown / desc).
 const AttackCard = props => {
   const { attack, glossary } = props;
+  if (attack.hidden) return <UndiscoveredCard />;
   return (
     <Box
       mb={1}
@@ -317,6 +341,7 @@ const Attacks = props => {
 // count both come from the severity preset.
 const PassiveCard = props => {
   const { passive, glossary } = props;
+  if (passive.hidden) return <UndiscoveredCard />;
   const preset = passivePreset(passive.severity);
   const icons = [];
   for (let i = 0; i < preset.icons; i++) {

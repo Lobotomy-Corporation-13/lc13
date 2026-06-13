@@ -1,6 +1,6 @@
 /*
- * Phase 3 anti-Knight attack rotation. Spawned by the Caretaker from
- * Phase3Loop based on the current bracket. All attacks aim at the
+ * Phase 2 anti-Knight attack rotation. Spawned by the Overseer from
+ * Phase2Loop based on the current bracket. All attacks aim at the
  * Knight; players intercept by body-blocking the projectile/seeker
  * path (lance, salvo, seeker, chaser) or by standing on the Knight's
  * tile during the telegraph (Knight-aware AoE).
@@ -12,7 +12,7 @@
 
 // ---------- Echo-line anchor visual ----------
 
-/// Faint pulsing tile west of the Caretaker. Pure visual — marks the
+/// Faint pulsing tile west of the Overseer. Pure visual — marks the
 /// spawn point of every anti-Knight projectile so players learn where
 /// to pre-stack interceptors.
 /obj/effect/temp_visual/serio_echo_anchor
@@ -36,9 +36,9 @@
 /obj/projectile/serio_lance
 	name = "violet lance"
 	icon = 'icons/obj/projectiles.dmi'
-	icon_state = "helios_fire"
+	icon_state = "logic"
 	color = "#c30fff"
-	damage = 18
+	damage = 60
 	damage_type = BLACK_DAMAGE
 	// 4x slower than typical SS13 projectiles so players have time to
 	// see the trajectory + step into the path. With speed = 4 the
@@ -70,6 +70,16 @@
 		// Parent on_hit already applied HP damage. Pass 0 here so we
 		// don't double-damage; the charge_loss is the only extra hit.
 		K.OnAntiKnightHit(0, charge_loss_on_hit)
+	else if(ishuman(target))
+		// Lance hits on players apply mental decay; if the player is
+		// already marked, shatter the mark (sanity payoff) and pile on
+		// 3 BLACK fragile stacks so subsequent hits hurt more.
+		var/mob/living/carbon/human/H = target
+		H.apply_lc_mental_decay(rand(4, 8))
+		var/datum/status_effect/mental_detonate/MD = H.has_status_effect(/datum/status_effect/mental_detonate)
+		if(MD)
+			MD.shatter()
+			H.apply_lc_black_fragile(3)
 
 /// Ricochet off closed turfs (walls) but not floors. Matches the
 /// flame_fixer pattern at lc13_humanoids.dm:749.
@@ -134,8 +144,7 @@
 	name = "void seeker"
 	desc = "A crawling whisper that pathfinds toward the Knight."
 	icon = 'icons/effects/effects.dmi'
-	icon_state = "smoke"
-	color = "#c30fff"
+	icon_state = "curseblob"
 	layer = BELOW_MOB_LAYER
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	duration = 12 SECONDS
@@ -154,7 +163,7 @@
 	var/standard_moving_before_recalc = 1
 	var/tiles_per_step = 1
 	var/speed = 6
-	var/damage = 30
+	var/damage = 76
 	var/charge_loss = 18
 	var/currently_seeking = FALSE
 
@@ -174,7 +183,7 @@
 		. = pick(cardinal_copy)
 
 /// Cardinal-step seek loop. Same shape as the Errant Drafts chaser
-/// (serio_caretaker.dm:1699) but the target is the Knight instead of
+/// (serio_overseer.dm:1699) but the target is the Knight instead of
 /// a player-pool, and ApplyContactDamage kills the seeker on any
 /// contact so it functions as a single-hit projectile-equivalent.
 /obj/effect/temp_visual/serio_anti_knight_seeker/proc/seek_target()
@@ -232,12 +241,12 @@
 		return TRUE
 	return FALSE
 
-// ---------- Caretaker fire procs ----------
+// ---------- Overseer fire procs ----------
 
 /// Pick a random anchor tile from the column for projectile spawn.
-/// Returns null if the column is empty (e.g. Phase 3 entered in a
+/// Returns null if the column is empty (e.g. Phase 2 entered in a
 /// tight space where no column tiles could be located).
-/mob/living/simple_animal/hostile/serio_caretaker/proc/PickEchoAnchor()
+/mob/living/simple_animal/hostile/serio_overseer/proc/PickEchoAnchor()
 	if(!length(echo_anchor_pool))
 		return null
 	return pick(echo_anchor_pool)
@@ -247,9 +256,9 @@
 /// above the crystal; bottom half → 2 tiles below; the centre row
 /// picks randomly. The lance flies to the waypoint, then switches
 /// homing to the Knight (see FireLanceFromAnchor). This makes the
-/// projectile arc around the Caretaker + crystal rather than going
+/// projectile arc around the Overseer + crystal rather than going
 /// straight through them.
-/mob/living/simple_animal/hostile/serio_caretaker/proc/GetWaypointForAnchor(turf/anchor)
+/mob/living/simple_animal/hostile/serio_overseer/proc/GetWaypointForAnchor(turf/anchor)
 	if(!anchor || QDELETED(parent_crystal))
 		return null
 	var/turf/crystal_turf = get_turf(parent_crystal)
@@ -269,7 +278,7 @@
 /// the waypoint (or the Knight if no waypoint), and schedules the
 /// waypoint→Knight homing-target switch after 2 seconds so the lance
 /// curves cleanly around the crystal.
-/mob/living/simple_animal/hostile/serio_caretaker/proc/FireLanceFromAnchor(turf/anchor, charge_loss, lance_speed, turn_speed)
+/mob/living/simple_animal/hostile/serio_overseer/proc/FireLanceFromAnchor(turf/anchor, charge_loss, lance_speed, turn_speed, lance_damage)
 	if(QDELETED(src) || QDELETED(knight_ref) || !anchor)
 		return null
 	var/turf/waypoint = GetWaypointForAnchor(anchor)
@@ -287,6 +296,8 @@
 		P.charge_loss_on_hit = charge_loss
 	if(!isnull(lance_speed))
 		P.speed = lance_speed
+	if(!isnull(lance_damage))
+		P.damage = lance_damage
 	P.preparePixelProjectile(initial_target, anchor)
 	P.fire()
 	// Set homing target manually (not via set_homing_target) so we
@@ -303,7 +314,7 @@
 
 /// B1 lance. Single lance from a random column tile. Arcs around the
 /// crystal via the waypoint, then homes onto the Knight.
-/mob/living/simple_animal/hostile/serio_caretaker/proc/FireAntiKnightLance()
+/mob/living/simple_animal/hostile/serio_overseer/proc/FireAntiKnightLance()
 	if(QDELETED(knight_ref) || !length(echo_anchor_pool))
 		return
 	var/turf/anchor = PickEchoAnchor()
@@ -312,8 +323,19 @@
 /// B3 lance chaser. Same arc shape as B1 lance but with a tighter
 /// homing turn radius and bigger charge bite. Designed to come in
 /// after the seeker so interceptors have to re-position quickly.
-/mob/living/simple_animal/hostile/serio_caretaker/proc/FireAntiKnightLanceChaser()
+/// Fires 2-3 lances per cast, each from an independently-picked
+/// column tile, staggered 0.25s apart so players can read the wave.
+/mob/living/simple_animal/hostile/serio_overseer/proc/FireAntiKnightLanceChaser()
 	if(QDELETED(knight_ref) || !length(echo_anchor_pool))
+		return
+	var/count = rand(2, 3)
+	for(var/i in 1 to count)
+		addtimer(CALLBACK(src, PROC_REF(FireAntiKnightLanceChaserOne)), (i - 1) * 0.25 SECONDS, TIMER_STOPPABLE)
+
+/// One projectile of the B3 chaser wave. Stagger-scheduled by
+/// FireAntiKnightLanceChaser.
+/mob/living/simple_animal/hostile/serio_overseer/proc/FireAntiKnightLanceChaserOne()
+	if(QDELETED(src) || QDELETED(knight_ref) || !length(echo_anchor_pool))
 		return
 	var/turf/anchor = PickEchoAnchor()
 	FireLanceFromAnchor(anchor, charge_loss = 18, lance_speed = 3.2, turn_speed = 10)
@@ -323,7 +345,7 @@
 /// waypoint matching its column row (top half → north of crystal,
 /// bottom half → south, middle row → random). If the column shrunk
 /// (fewer than 5 valid tiles, e.g. arena edge), fires what it can.
-/mob/living/simple_animal/hostile/serio_caretaker/proc/FireAntiKnightSalvo()
+/mob/living/simple_animal/hostile/serio_overseer/proc/FireAntiKnightSalvo()
 	if(QDELETED(knight_ref) || !length(echo_anchor_pool))
 		return
 	var/list/anchors = echo_anchor_pool.Copy()
@@ -334,13 +356,15 @@
 /// One projectile of the B2 salvo. Stagger-scheduled by
 /// FireAntiKnightSalvo so each anchor in the column gets its own
 /// firing tick.
-/mob/living/simple_animal/hostile/serio_caretaker/proc/FireSalvoLanceAt(turf/anchor)
+/mob/living/simple_animal/hostile/serio_overseer/proc/FireSalvoLanceAt(turf/anchor)
 	if(QDELETED(src) || QDELETED(knight_ref) || !anchor)
 		return
-	FireLanceFromAnchor(anchor, charge_loss = 5, lance_speed = 4, turn_speed = 8)
+	// Salvo lances: 50% damage and 50% charge bite of the base lance —
+	// 5 hits per cast adds up fast, so each one carries less weight.
+	FireLanceFromAnchor(anchor, charge_loss = 3, lance_speed = 4, turn_speed = 8, lance_damage = 30)
 
 /// B3 seeker. Wall-pathfinding chaser variant of Errant Drafts.
-/mob/living/simple_animal/hostile/serio_caretaker/proc/FireAntiKnightSeeker()
+/mob/living/simple_animal/hostile/serio_overseer/proc/FireAntiKnightSeeker()
 	if(QDELETED(knight_ref) || !length(echo_anchor_pool))
 		return
 	var/turf/anchor = PickEchoAnchor()
@@ -354,7 +378,7 @@
 /// Knight's tile during the telegraph; see serio_void_macro_aoe.Blowup().
 /// If un-intercepted, the AoE drains the Knight's charge fully (100%).
 /// Cannot re-fire while a K-aware AoE is already telegraphing.
-/mob/living/simple_animal/hostile/serio_caretaker/proc/FireKnightAwareAoE()
+/mob/living/simple_animal/hostile/serio_overseer/proc/FireKnightAwareAoE()
 	if(QDELETED(knight_ref) || aoe_charging)
 		return
 	var/turf/knight_turf = get_turf(knight_ref)
@@ -363,22 +387,19 @@
 	aoe_charging = TRUE
 	var/obj/effect/temp_visual/serio_void_macro_aoe/A = new(knight_turf, src, 5 SECONDS)
 	A.is_knight_aware = TRUE
-	knight_ref.say("Block this one — it'll drain my charge!")
+	// K-aware override: typepath default is 140 (Phase 2 barrage value).
+	A.damage = 150
+	knight_ref.say("Intercept this one — it will be a heavy blow!")
 	// Release the charging lock just after detonation completes. The
 	// extra 0.5s buffer covers the Blowup() processing window.
 	addtimer(CALLBACK(src, PROC_REF(ClearAoECharging)), 5 SECONDS + 0.5 SECONDS, TIMER_STOPPABLE)
 
-/mob/living/simple_animal/hostile/serio_caretaker/proc/ClearAoECharging()
+/mob/living/simple_animal/hostile/serio_overseer/proc/ClearAoECharging()
 	aoe_charging = FALSE
 
 /// Dispatcher. Picks the right attack(s) for the current bracket;
 /// B3 rolls between three sub-attacks per cast for variety.
-/mob/living/simple_animal/hostile/serio_caretaker/proc/FireAntiKnightForBracket(bracket)
-	// DIAGNOSTIC (remove once anti-Knight firing is verified): announce
-	// each dispatch in chat so we can confirm the tick is reaching the
-	// fire procs. If you see this message but no projectile, the bug
-	// is in the spawn; if you never see it, the tick isn't firing.
-	visible_message(span_warning("[src] dispatches anti-Knight attack for bracket [bracket]."))
+/mob/living/simple_animal/hostile/serio_overseer/proc/FireAntiKnightForBracket(bracket)
 	switch(bracket)
 		if(1)
 			FireAntiKnightLance()

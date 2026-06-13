@@ -91,6 +91,17 @@
 		"- Bring E.G.O. with stat requirements around 80.",
 	)
 
+/// Knight / Sage / Murmur briefing cards stay silhouette until the
+/// Overseer's `EnterPhase2()` fires `SSrefraction_railway.MarkEventUnlocked`
+/// for the lobby. The Overseer + Crystal P2-specific attack/passive
+/// cards use the per-card `hidden_until` field on the same event id.
+/datum/refraction_line/curtain_call/GetMobSilhouetteGates()
+	return list(
+		/mob/living/simple_animal/hostile/serio_knight = "overseer_phase_2",
+		/mob/living/simple_animal/hostile/serio_sage   = "overseer_phase_2",
+		/mob/living/simple_animal/hostile/serio_murmur = "overseer_phase_2",
+	)
+
 /datum/refraction_line/curtain_call/New()
 	. = ..()
 
@@ -243,10 +254,19 @@
 			case that he should not be here at all. The lights brighten \
 			on the new act. It believes it is helping.",
 		list(
-			// TODO: replace with the real Serio Zeal Wave II roster
-			/mob/living/simple_animal/hostile/netherworld/migo/refracted = 1,
+			/mob/living/simple_animal/hostile/serio_overseer = 1,
 		),
 		boss = TRUE,
+		// Crystal + the Phase 2 cast appear on the room briefing the
+		// first time players enter. The Knight / Sage / Murmur cards
+		// stay silhouette via GetMobSilhouetteGates() until the
+		// Overseer's Phase 2 trigger unlocks the event.
+		extra_preview = list(
+			/mob/living/simple_animal/hostile/serio_crystal,
+			/mob/living/simple_animal/hostile/serio_knight,
+			/mob/living/simple_animal/hostile/serio_sage,
+			/mob/living/simple_animal/hostile/serio_murmur,
+		),
 		locked = TRUE)
 
 	sector_briefings = list(
