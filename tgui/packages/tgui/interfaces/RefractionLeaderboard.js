@@ -123,7 +123,7 @@ const LeaderboardPane = (props, context) => {
           No records match the search.
         </Box>
       )}
-      {groups.map(group => {
+      {groups.map((group, groupIdx) => {
         const bestIdx = group.indices[0];
         const bestEntry = group.entries[0];
         const olderCount = group.entries.length - 1;
@@ -132,7 +132,7 @@ const LeaderboardPane = (props, context) => {
           <Box key={group.key}>
             <RecordRow
               entry={bestEntry}
-              rank={`#${bestIdx + 1}`}
+              rank={`#${groupIdx + 1}`}
               isSectorOpen={expandedIdx === bestIdx}
               onToggleSector={() =>
                 setExpandedIdx(expandedIdx === bestIdx ? null : bestIdx)}
@@ -148,7 +148,7 @@ const LeaderboardPane = (props, context) => {
                     <RecordRow
                       key={idx}
                       entry={entry}
-                      rank={`#${idx + 1}`}
+                      rank={`P#${k + 2}`}
                       isSectorOpen={expandedIdx === idx}
                       onToggleSector={() =>
                         setExpandedIdx(expandedIdx === idx ? null : idx)}

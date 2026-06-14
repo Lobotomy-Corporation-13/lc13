@@ -315,7 +315,6 @@ export const RecordsModal = (props, context) => {
           buttons={
             <Button icon="times" content="Close" onClick={onClose} />
           }
-          scrollable
           style={{ 'max-height': 'calc(100vh - 40px)' }}>
           <Box mb={1}>
             <Input
@@ -330,52 +329,61 @@ export const RecordsModal = (props, context) => {
               + `run${rows.length === 1 ? '' : 's'} total`}
             </Box>
           </Box>
-          {rows.length === 0 && (
-            <Box color="label">No records yet for this line.</Box>
-          )}
-          {rows.length > 0 && groups.length === 0 && (
-            <Box color="label" mt={1}>
-              No records match the search.
-            </Box>
-          )}
-          {groups.map(group => {
-            const bestIdx = group.indices[0];
-            const bestEntry = group.entries[0];
-            const olderCount = group.entries.length - 1;
-            const isGroupOpen = !!expandedGroups[group.key];
-            return (
-              <Box key={group.key}>
-                <RecordRow
-                  entry={bestEntry}
-                  rank={`#${bestIdx + 1}`}
-                  isSectorOpen={expandedIdx === bestIdx}
-                  onToggleSector={() =>
-                    setExpandedIdx(expandedIdx === bestIdx ? null : bestIdx)}
-                  olderCount={olderCount}
-                  isGroupOpen={isGroupOpen}
-                  onToggleGroup={() => toggleGroup(group.key)}
-                />
-                {isGroupOpen && olderCount > 0 && (
-                  <Box ml={2} mb={0.5}>
-                    {group.entries.slice(1).map((entry, k) => {
-                      const idx = group.indices[k + 1];
-                      return (
-                        <RecordRow
-                          key={idx}
-                          entry={entry}
-                          rank={`#${idx + 1}`}
-                          isSectorOpen={expandedIdx === idx}
-                          onToggleSector={() =>
-                            setExpandedIdx(expandedIdx === idx ? null : idx)}
-                          mini
-                        />
-                      );
-                    })}
-                  </Box>
-                )}
+          <Box
+            style={{
+              'overflow-y': 'auto',
+              'max-height': 'calc(100vh - 180px)',
+              'padding-right': '4px',
+            }}>
+            {rows.length === 0 && (
+              <Box color="label">No records yet for this line.</Box>
+            )}
+            {rows.length > 0 && groups.length === 0 && (
+              <Box color="label" mt={1}>
+                No records match the search.
               </Box>
-            );
-          })}
+            )}
+            {groups.map((group, groupIdx) => {
+              const bestIdx = group.indices[0];
+              const bestEntry = group.entries[0];
+              const olderCount = group.entries.length - 1;
+              const isGroupOpen = !!expandedGroups[group.key];
+              return (
+                <Box key={group.key}>
+                  <RecordRow
+                    entry={bestEntry}
+                    rank={`#${groupIdx + 1}`}
+                    isSectorOpen={expandedIdx === bestIdx}
+                    onToggleSector={() =>
+                      setExpandedIdx(
+                        expandedIdx === bestIdx ? null : bestIdx)}
+                    olderCount={olderCount}
+                    isGroupOpen={isGroupOpen}
+                    onToggleGroup={() => toggleGroup(group.key)}
+                  />
+                  {isGroupOpen && olderCount > 0 && (
+                    <Box ml={2} mb={0.5}>
+                      {group.entries.slice(1).map((entry, k) => {
+                        const idx = group.indices[k + 1];
+                        return (
+                          <RecordRow
+                            key={idx}
+                            entry={entry}
+                            rank={`P#${k + 2}`}
+                            isSectorOpen={expandedIdx === idx}
+                            onToggleSector={() =>
+                              setExpandedIdx(
+                                expandedIdx === idx ? null : idx)}
+                            mini
+                          />
+                        );
+                      })}
+                    </Box>
+                  )}
+                </Box>
+              );
+            })}
+          </Box>
         </Section>
       </Box>
     </Box>
