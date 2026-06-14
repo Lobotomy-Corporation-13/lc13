@@ -466,14 +466,22 @@
 		StartAoEWindup()
 
 /// Pressure max: play the cracking beat and inflict a lethal hit on
-/// ourselves so the normal death pipeline fires. The wave-controller
-/// notices the empty room and advances to wave 2 on its own.
+/// ourselves so the normal death pipeline fires. Before the lethal
+/// hit, every live human within 15 tiles is restored for **50% of
+/// their max HP and SP** — the act collapsing inward sends a
+/// catharsis pulse out across the wings. The wave-controller notices
+/// the empty room and advances to wave 2 on its own.
 /mob/living/simple_animal/hostile/young_star/proc/Crack()
 	if(cracking)
 		return
 	cracking = TRUE
 	visible_message(span_userdanger("[src] cracks — the stage lights stutter as the act collapses inward!"))
 	do_sparks(12, FALSE, get_turf(src))
+	for(var/mob/living/carbon/human/H in range(15, src))
+		if(H.stat == DEAD)
+			continue
+		H.adjustBruteLoss(-round(H.maxHealth * 0.5), forced = TRUE)
+		H.adjustSanityLoss(-round(H.maxSanity * 0.5), forced = TRUE)
 	adjustBruteLoss(maxHealth * 2, forced = TRUE)
 
 /// Brainstorm-seeded panic lines (one or two per tier per implemented

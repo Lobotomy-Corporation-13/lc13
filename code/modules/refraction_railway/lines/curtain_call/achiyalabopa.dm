@@ -36,6 +36,7 @@
 #define ACHIYA_COREFLAME_CAP          2
 #define ACHIYA_COREFLAME_INTERVAL     (20 SECONDS)
 #define ACHIYA_VULN_DURATION          (8 SECONDS)
+#define ACHIYA_IMPALE_IMMUNITY_DURATION (10 SECONDS)
 #define ACHIYA_THUNDER_INTERVAL       (3 SECONDS)
 #define ACHIYA_JUDGMENT_INTERVAL      (15 SECONDS)
 #define ACHIYA_WHIP_INTERVAL          (20 SECONDS)
@@ -118,7 +119,7 @@
 	var/mob/living/simple_animal/hostile/achiyalabopa/master
 	var/duration = 2 SECONDS
 	var/range = 1
-	var/boom_damage = 50
+	var/boom_damage = 37
 
 /obj/effect/divine_thunderbolt/Initialize()
 	. = ..()
@@ -525,6 +526,23 @@
 	. = ..()
 	set_light_on(TRUE)
 
+/// Walk-over auto-pickup. Routes through put_in_hands so the standard
+/// equipped() flow still registers the Will of Humanity status and the
+/// death signal — no special-case duplicate logic. Silently bails if a
+/// holder already has it or the walker already carries Will.
+/obj/item/coreflame/Crossed(atom/movable/AM)
+	. = ..()
+	if(!ishuman(AM))
+		return
+	var/mob/living/carbon/human/H = AM
+	if(H.stat == DEAD)
+		return
+	if(current_holder)
+		return
+	if(H.has_status_effect(/datum/status_effect/will_of_humanity))
+		return
+	H.put_in_hands(src)
+
 /obj/item/coreflame/equipped(mob/user, slot)
 	. = ..()
 	if(!ishuman(user))
@@ -599,29 +617,55 @@
 	del_on_death = TRUE
 	faction = list("hostile")
 	var/mob/living/simple_animal/hostile/achiyalabopa/parent_boss
+	/// Set to "aoe" by ShaveAndKillReapers right before death() so the
+	/// boss-side OnReaperDeath handler can tell an Achi-AoE consumption
+	/// (+4 Fallen Faith) apart from a player-killed natural death (+1).
+	/// Burn-up paths never reach OnReaperDeath (they use dust()), so the
+	/// "burn" cause never needs to be stamped here.
+	var/last_death_cause = "natural"
 
 /mob/living/simple_animal/hostile/mirage_reaper/AttackingTarget(atom/attacked_target)
 	if(isliving(attacked_target))
 		var/mob/living/L = attacked_target
+		// Will of Humanity wins ties: if the target has both Hope AND
+		// Will, the Reaper still burns up. Only checking the Hope-only
+		// gate after the Will branch keeps Hope-immune walking but
+		// stops it from skipping the burn payout.
 		if(L.has_status_effect(/datum/status_effect/will_of_humanity))
 			visible_message(span_warning("[src] bursts into flames upon touching [L]!"))
 			playsound(get_turf(src), 'sound/magic/fireball.ogg', 50, TRUE)
 			new /obj/effect/temp_visual/fire(get_turf(src))
-			// 10 HP to the bearer + every living human within 5 tiles of them.
+			// +10 HP to the bearer + every living human within 5 tiles
+			// of them (halved from the prior +20 pass).
 			for(var/mob/living/carbon/human/H in range(5, L))
 				if(H.stat == DEAD)
 					continue
 				H.adjustBruteLoss(-10, forced = TRUE)
+			// Burn-up uses dust() instead of death(), so COMSIG_LIVING_DEATH
+			// never fires on this path — give Fallen Faith its +4 here
+			// explicitly so OnReaperDeath stays the "natural-death only"
+			// hook on the boss side.
+			if(parent_boss)
+				parent_boss.AddFallenFaith(4)
 			dust()
 			return
+		// Hope-only holders are off-limits to basic melee — the Reaper
+		// closes, registers the marker, and walks away clean.
+		if(L.has_status_effect(/datum/status_effect/hope))
+			return FALSE
 	return ..()
 
-// Phase 2 visual variant — spawned with the v2 icon set once the boss
-// has transitioned. Mechanically identical to the base reaper.
+// Phase 2 reaper variant — spawned with the v2 icon set once the boss
+// has transitioned. +200 HP over the base mirage (storm-hardened) at
+// the cost of a slightly slower pursuit cadence. AttackingTarget +
+// burn-up rules are inherited unchanged.
 /mob/living/simple_animal/hostile/mirage_reaper/v2
 	icon_state = "mirage_reaper_v2"
 	icon_living = "mirage_reaper_v2"
 	icon_dead = "mirage_reaper_v2_dead"
+	maxHealth = 350
+	health = 350
+	move_to_delay = 6
 
 // ---------- Achiyalabopa ----------
 
@@ -632,8 +676,8 @@
 	icon_state = "achiyalabopa"
 	icon_living = "achiyalabopa"
 	icon_dead = "achiyalabopa"
-	maxHealth = 8000
-	health = 8000
+	maxHealth = 7500
+	health = 7500
 	damage_coeff = list(RED_DAMAGE = 0.0, WHITE_DAMAGE = 0.0, BLACK_DAMAGE = 0.0, PALE_DAMAGE = 0.0)
 	melee_damage_lower = 15
 	melee_damage_upper = 25
@@ -659,6 +703,10 @@
 	var/phase = ACHIYA_PHASE_1
 	var/phase_1_remaining = ACHIYA_PHASE_1_DURATION
 	var/is_vulnerable = FALSE
+	/// world.time after which the post-impale grace expires. While in
+	/// the future, MakeVulnerable bails before applying — the storm has
+	/// not closed enough to re-open.
+	var/impale_immunity_until = 0
 	var/dying = FALSE
 	/// Length of the death fade-out.
 	var/death_fade_time = 2 SECONDS
@@ -691,6 +739,17 @@
 		"So the heretic returns with my own fire. KNEEL - and be JUDGED!",
 	)
 
+	/// One-shot bark when 50% HP burns away all Fallen Faith.
+	var/list/fallen_faith_burn_lines = list(
+		"ENOUGH. The faith you owed me will not be SPENT on saving you.",
+		"This was MY furnace! I take it BACK.",
+		"You would haunt me with the dead — I will burn your reckoning out!",
+	)
+	/// One-shot gate for the 50% Fallen Faith burn. Set TRUE the first
+	/// time BurnFallenFaith runs; the adjustHealth check uses it to stay
+	/// inert for the rest of the fight.
+	var/has_burned_fallen_faith = FALSE
+
 	var/list/storm_overlays = list()
 	var/list/active_reapers = list()
 	var/list/active_coreflames = list()
@@ -708,6 +767,11 @@
 	var/phase_1_timer_id = null
 	var/is_performing_aoe = FALSE
 	var/is_performing_whip = FALSE
+	/// Fallen Faith stacks. Ticks in both phases (so the players see the
+	/// counter rising once Phase 2 starts), but the outgoing-damage
+	/// multiplier only pays out in Phase 2. Survives the enraged ↔
+	/// weakened toggle since it's a counter, not a buff datum.
+	var/fallen_faith = 0
 
 /mob/living/simple_animal/hostile/achiyalabopa/Initialize(mapload)
 	. = ..()
@@ -824,7 +888,10 @@
 		var/seconds = round(phase_1_remaining / 10)
 		maptext = MAPTEXT("<font color='#ffd700'>[seconds]s</font>")
 	else
-		maptext = ""
+		// Phase 2: timer is gone; the slot now belongs to Fallen Faith
+		// (orange-tan to mirror the lore-block accent so it reads as the
+		// "burning" follow-up to the gold countdown).
+		maptext = MAPTEXT("<font color='#c89358'>[fallen_faith]</font>")
 
 // ---------- Phase 1 timer ----------
 
@@ -847,7 +914,7 @@
 		phase_1_timer_id = null
 	icon_state = "achiyalabopa_enraged"
 	icon_living = "achiyalabopa_enraged"
-	ChangeResistances(baseline_phase_2_coeff)
+	ChangeResistances(CurrentBaselineCoeff())
 	UpdateHUD()
 	visible_message(span_userdanger("[src] roars — the storm thins, and a Coreflame begins to bloom in her shadow!"))
 	if(recognized)
@@ -873,7 +940,11 @@
 	if(phase >= ACHIYA_PHASE_2 && world.time >= next_coreflame_spawn && length(active_coreflames) < ACHIYA_COREFLAME_CAP)
 		next_coreflame_spawn = world.time + ACHIYA_COREFLAME_INTERVAL
 		INVOKE_ASYNC(src, PROC_REF(SpawnCoreflame))
-	if(!is_performing_aoe && !is_performing_whip)
+	// Impaled = no new non-passive AoE casts. Reaper spawning, Coreflame
+	// blooming, Awe-Struck refresh, and the Divine Thunderbolt drip
+	// (which is fired by SummonThunder, the user-classified passive AoE)
+	// all keep ticking — only Divine Judgment and Thunder Whip lock.
+	if(!is_performing_aoe && !is_performing_whip && !is_vulnerable)
 		if(world.time >= next_judgment)
 			next_judgment = world.time + ACHIYA_JUDGMENT_INTERVAL
 			INVOKE_ASYNC(src, PROC_REF(DivineJudgment))
@@ -885,10 +956,18 @@
 /mob/living/simple_animal/hostile/achiyalabopa/Move()
 	if(is_performing_aoe || is_performing_whip)
 		return FALSE
+	// Impaled: rooted while the spear is in her. The Move gate is
+	// enough — handle_automated_action stops dispatching new AoE casts,
+	// and any in-flight AoE early-returns on its next is_vulnerable
+	// check.
+	if(is_vulnerable)
+		return FALSE
 	return ..()
 
 /mob/living/simple_animal/hostile/achiyalabopa/AttackingTarget(atom/attacked_target)
 	if(is_performing_aoe || is_performing_whip)
+		return FALSE
+	if(is_vulnerable)
 		return FALSE
 	if(isliving(attacked_target))
 		var/mob/living/L = attacked_target
@@ -911,7 +990,15 @@
 	if(phase == ACHIYA_PHASE_1 && amount > 0)
 		new /obj/effect/temp_visual/healing/no_dam(get_turf(src))
 		return 0
-	return ..()
+	// "Phase 3" beat — the moment incoming damage carries her past 50%
+	// maxHealth she sheds every Fallen Faith stack and her resistances
+	// snap back to the bare baseline. One-shot — gated by the
+	// has_burned_fallen_faith flag so the check stays inert afterwards.
+	// We do NOT advance the phase enum here; downstream logic that
+	// branches on phase >= ACHIYA_PHASE_2 must keep firing.
+	. = ..()
+	if(!has_burned_fallen_faith && phase >= ACHIYA_PHASE_2 && health <= (maxHealth * 0.5) && stat != DEAD)
+		BurnFallenFaith()
 
 // ---------- Passive Mirage Reaper spawn ----------
 
@@ -951,10 +1038,100 @@
 	SIGNAL_HANDLER
 	UnregisterSignal(source, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING))
 	active_reapers -= source
+	// Fallen Faith credit: +4 when the AoE pre-marker stamped the cause,
+	// +1 for any other death (player-killed, despawned, etc.). Burn-up
+	// path bypasses this proc entirely (it uses dust()), so this branch
+	// only ever sees AoE or natural.
+	if(source.last_death_cause == "aoe")
+		AddFallenFaith(4)
+	else
+		AddFallenFaith(1)
 
 /mob/living/simple_animal/hostile/achiyalabopa/proc/OnReaperQdel(mob/living/simple_animal/hostile/mirage_reaper/source)
 	SIGNAL_HANDLER
 	active_reapers -= source
+
+// ---------- Fallen Faith ----------
+// Tracker for "every Reaper removed from the field." +4 stacks on a
+// Will-of-Humanity burn-up (instrumented in the Reaper's own
+// AttackingTarget), +4 stacks on an Achi-AoE consumption (set by
+// ShaveAndKillReapers via last_death_cause = "aoe", read here in
+// OnReaperDeath), +1 stack on any other death. Stacks rise during
+// Phase 1 — the multiplier only pays out in Phase 2.
+
+/mob/living/simple_animal/hostile/achiyalabopa/proc/AddFallenFaith(amount)
+	if(amount <= 0)
+		return
+	fallen_faith += amount
+	UpdateHUD()
+	// Resistances climb live as the counter grows in Phase 2+ — every
+	// completed block of 20 stacks bumps every damage type by +0.1.
+	ReapplyResistances()
+
+/// Additive bump to every damage-type coeff (incoming-damage
+/// vulnerability). 0 in Phase 1; in Phase 2+ returns 0.1 × every
+/// completed block of 20 stacks. Stays at 0 after a Phase 3 burn-away
+/// until the counter rebuilds.
+/mob/living/simple_animal/hostile/achiyalabopa/proc/FallenFaithBonus()
+	if(phase < ACHIYA_PHASE_2)
+		return 0
+	return 0.1 * round(fallen_faith / 20)
+
+/// Builds the live baseline-coeff dict by folding the current Fallen
+/// Faith bonus on top of the Phase 2 floor. Used every time
+/// ChangeResistances needs the "she is not currently impaled" value.
+/mob/living/simple_animal/hostile/achiyalabopa/proc/CurrentBaselineCoeff()
+	var/bonus = FallenFaithBonus()
+	return list(
+		RED_DAMAGE   = baseline_phase_2_coeff[RED_DAMAGE]   + bonus,
+		WHITE_DAMAGE = baseline_phase_2_coeff[WHITE_DAMAGE] + bonus,
+		BLACK_DAMAGE = baseline_phase_2_coeff[BLACK_DAMAGE] + bonus,
+		PALE_DAMAGE  = baseline_phase_2_coeff[PALE_DAMAGE]  + bonus,
+	)
+
+/// Vulnerable-window coeff dict with the live Fallen Faith bonus
+/// folded in. Used by MakeVulnerable; the bonus stacks on top of
+/// vulnerable_coeff's already-amplified multipliers.
+/mob/living/simple_animal/hostile/achiyalabopa/proc/CurrentVulnerableCoeff()
+	var/bonus = FallenFaithBonus()
+	return list(
+		RED_DAMAGE   = vulnerable_coeff[RED_DAMAGE]   + bonus,
+		WHITE_DAMAGE = vulnerable_coeff[WHITE_DAMAGE] + bonus,
+		BLACK_DAMAGE = vulnerable_coeff[BLACK_DAMAGE] + bonus,
+		PALE_DAMAGE  = vulnerable_coeff[PALE_DAMAGE]  + bonus,
+	)
+
+/// Snaps her resistance datum to whichever live coeff dict applies
+/// right now — vulnerable if impaled, otherwise baseline. Called every
+/// time `fallen_faith` shifts, and at the entry/exit of the
+/// vulnerability window.
+/mob/living/simple_animal/hostile/achiyalabopa/proc/ReapplyResistances()
+	if(phase < ACHIYA_PHASE_2)
+		return
+	if(is_vulnerable)
+		ChangeResistances(CurrentVulnerableCoeff())
+	else
+		ChangeResistances(CurrentBaselineCoeff())
+
+/// One-shot 50% HP beat. Zeroes the Fallen Faith counter (so the
+/// resistance bonus collapses back to baseline), reapplies the live
+/// coeff, refreshes the HUD, and barks one of the burn voicelines.
+/mob/living/simple_animal/hostile/achiyalabopa/proc/BurnFallenFaith()
+	if(has_burned_fallen_faith)
+		return
+	has_burned_fallen_faith = TRUE
+	fallen_faith = 0
+	ReapplyResistances()
+	UpdateHUD()
+	say(pick(fallen_faith_burn_lines))
+	playsound(src, 'sound/magic/clockwork/narsie_attack.ogg', 75, TRUE, 20)
+	visible_message(span_userdanger("[src]'s stormlight flares — every name she owed the storm is burned out at once!"))
+	// Crossfade the node theme into the phase-2 vocal track at the
+	// 50% HP burn beat. FindRefractionRunForZ resolves the live run
+	// for this lane; skipped silently outside a refraction z.
+	var/datum/refraction_run/R = FindRefractionRunForZ(z)
+	if(R)
+		R.SwitchThemeMusic('sound/ambience/boss_themes/achiyalabopa_phase_2_afterglow_in_dust.ogg', 2 SECONDS)
 
 // ---------- Coreflame spawn ----------
 
@@ -1019,6 +1196,7 @@
 			EnterPhase2()
 	for(var/mob/living/simple_animal/hostile/mirage_reaper/R in reapers_hit)
 		if(!QDELETED(R) && R.stat != DEAD)
+			R.last_death_cause = "aoe"
 			R.death()
 
 // ---------- Awe Struck aura ----------
@@ -1093,6 +1271,11 @@
 	if(stat == DEAD || dying)
 		is_performing_aoe = FALSE
 		return
+	// Impaled mid-judgment: drop the whole chain. The MakeVulnerable
+	// path has already cleared is_performing_aoe and stopped pathing.
+	if(is_vulnerable)
+		is_performing_aoe = FALSE
+		return
 	var/pattern_type = pick("plus", "plus_wide")
 	var/list/danger_tiles = (pattern_type == "plus") ? GetPlusPattern() : GetWidePlusPattern()
 	for(var/turf/T in danger_tiles)
@@ -1103,12 +1286,15 @@
 	if(stat == DEAD || dying)
 		is_performing_aoe = FALSE
 		return
+	if(is_vulnerable)
+		is_performing_aoe = FALSE
+		return
 	playsound(get_turf(src), 'sound/magic/lightningbolt.ogg', 100, TRUE, 20)
 	var/list/reapers_hit = list()
 	for(var/turf/T in danger_tiles)
 		new /obj/effect/temp_visual/divine_judgment_strike(T)
 		for(var/mob/living/L in T)
-			if(AoEDamageMob(L, 100, PALE_DAMAGE, reapers_hit))
+			if(AoEDamageMob(L, 75, PALE_DAMAGE, reapers_hit))
 				to_chat(L, span_userdanger("You are struck by divine judgment!"))
 	ShaveAndKillReapers(reapers_hit)
 	if(wave_number < 3)
@@ -1215,6 +1401,12 @@
 	for(var/turf/T in area_of_effect)
 		new /obj/effect/temp_visual/thunder_whip_warning(T)
 	SLEEP_CHECK_DEATH(0.5 SECONDS)
+	// Impale during the 0.5s wind-up: drop the cast cleanly.
+	if(is_vulnerable)
+		is_performing_whip = FALSE
+		if(phase < ACHIYA_PHASE_2)
+			icon_state = "achiyalabopa"
+		return
 	if(!LAZYLEN(area_of_effect))
 		is_performing_whip = FALSE
 		if(phase < ACHIYA_PHASE_2)
@@ -1239,7 +1431,7 @@
 		if(!turfs_at_distance)
 			continue
 		for(var/turf/T in turfs_at_distance)
-			if(stat == DEAD || dying)
+			if(stat == DEAD || dying || is_vulnerable)
 				is_performing_whip = FALSE
 				if(phase < ACHIYA_PHASE_2)
 					icon_state = "achiyalabopa"
@@ -1248,7 +1440,7 @@
 			new /obj/effect/temp_visual/thunderbolt_strike(T)
 			playsound(T, 'sound/magic/lightningbolt.ogg', 50, TRUE)
 			for(var/mob/living/L in T)
-				if(AoEDamageMob(L, 100, PALE_DAMAGE, reapers_hit))
+				if(AoEDamageMob(L, 75, PALE_DAMAGE, reapers_hit))
 					to_chat(L, span_userdanger("You are struck by divine lightning!"))
 			turfs_struck++
 			if(turfs_struck % turfs_per_wave == 0)
@@ -1263,8 +1455,18 @@
 /mob/living/simple_animal/hostile/achiyalabopa/proc/MakeVulnerable(duration, obj/effect/piercing_spear/spear)
 	if(is_vulnerable)
 		return
+	// Post-impale immunity window blocks subsequent spears for the
+	// 3-second purple-outline grace period; see RestoreDefenses below.
+	if(impale_immunity_until > world.time)
+		return
 	is_vulnerable = TRUE
-	ChangeResistances(vulnerable_coeff)
+	// Drop the in-flight AoE/Whip flags so handle_automated_action
+	// won't queue a new cast and the running cast bails on its next
+	// is_vulnerable check inside the wave/strike chain.
+	is_performing_aoe = FALSE
+	is_performing_whip = FALSE
+	walk(src, 0)
+	ChangeResistances(CurrentVulnerableCoeff())
 	animate(src, color = "#FF8888", time = 5)
 	visible_message(span_userdanger("[src]'s storm falters — the spear finds the seam in her wings!"))
 	if(spear && !QDELETED(spear))
@@ -1292,9 +1494,24 @@
 	if(!is_vulnerable)
 		return
 	is_vulnerable = FALSE
-	ChangeResistances(baseline_phase_2_coeff)
+	ChangeResistances(CurrentBaselineCoeff())
+	// 3-second purple-outline grace: the storm scars over and rejects
+	// any second spear that would land before the wound closes. Outline
+	// is driven by `color = "#8a4dff"` (the same violet used on the
+	// thunderbolt warning) so the immunity is visually distinct from
+	// the salmon-pink vulnerable tint.
+	impale_immunity_until = world.time + ACHIYA_IMPALE_IMMUNITY_DURATION
+	animate(src, color = "#8a4dff", time = 5)
+	visible_message(span_warning("[src]'s storm closes around the wound, edged in violet light!"))
+	addtimer(CALLBACK(src, PROC_REF(EndImpaleImmunity)), ACHIYA_IMPALE_IMMUNITY_DURATION)
+
+/// Clears the purple outline at the end of the grace window. Restores
+/// her natural color (initial(color)) so she reads as "back to normal"
+/// before the next Coreflame bloom.
+/mob/living/simple_animal/hostile/achiyalabopa/proc/EndImpaleImmunity()
+	if(impale_immunity_until > world.time)
+		return
 	animate(src, color = initial(color), time = 10)
-	visible_message(span_warning("[src]'s storm closes around the wound."))
 
 // ---------- Death ----------
 

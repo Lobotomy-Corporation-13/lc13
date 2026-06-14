@@ -445,7 +445,7 @@
 		/mob/living/simple_animal/hostile/mirror_shattered_reaper/refracted = list(
 			list(
 				"name"     = "Refraction Sweep",
-				"damage"   = "100 BLACK to every mob in a **single forward cone** — **4 tiles deep in P1 (~10 tiles total)**, **5 tiles deep in P2 (~13 tiles total)**. Always 3 wide at the base in front of the Reaper, tapering to a **1-tile tip** at max range.",
+				"damage"   = "100 BLACK to every mob in a **single forward cone** — **4 tiles deep (~10 tiles total)** in both phases. Always 3 wide at the base in front of the Reaper, tapering to a **1-tile tip** at max range.",
 				"cooldown" = "~10 seconds",
 				"desc"     = "**Faces her target**, then paints the \
 					cone tiles in purple mirror-shard chevrons for \
@@ -461,31 +461,32 @@
 			),
 			list(
 				"name"     = "Crossing Over",
-				"damage"   = "150 BLACK to every mob inside a **5x5 area in P1, 7x7 in P2**, centered on a snapshot tile",
+				"damage"   = "150 BLACK to every mob inside a **5x5 area** (unchanged in both phases), centered on a snapshot tile",
 				"cooldown" = "~18 seconds",
-				"desc"     = "Picks a random player, paints **5x5 tiles \
-					(7x7 in Phase 2)** around their current position \
-					in lighter-purple mirror markers, then **roots \
-					herself in place for 1.5 seconds** (she can't move \
-					or melee during the windup). On resolve she \
-					**teleports to the center of the warning area** \
-					and slams it — anyone still inside eats the hit. \
-					The warning **does not follow the player** — step \
-					off the painted tiles before the timer ends to \
-					escape. On impact: see **Mirror Variants** passive \
-					for the absorb mechanic. **Spawns 3 new Variants (6 \
-					in Phase 2)** scattered around her new position.",
+				"desc"     = "Picks a random player, paints **5x5 tiles** \
+					around their current position in lighter-purple \
+					mirror markers, then **roots herself in place for \
+					1.5 seconds** (she can't move or melee during the \
+					windup). On resolve she **teleports to the center \
+					of the warning area** and slams it — anyone still \
+					inside eats the hit. The warning **does not follow \
+					the player** — step off the painted tiles before \
+					the timer ends to escape. On impact: see **Mirror \
+					Variants** passive for the absorb mechanic. **Spawns \
+					3 new Variants (6 in Phase 2)** scattered around her \
+					new position.",
 			),
 			list(
 				"name"     = "Reverberation",
-				"damage"   = "55 BLACK per damage instance (split evenly across the instance's rifts). Instance count equals current Reverberation Charge (capped at 15). At cap: **825 BLACK total** spread across the cast. **Diminishing returns on a single target: each repeat hit deals 10% less than the previous (so hit 2 = 90%, hit 3 = 80%, …), floored at -80% (20% damage).**",
+				"damage"   = "55 BLACK per damage instance (split evenly across the instance's rifts). Instance count equals current Reverberation Charge (capped at 15). At cap: **825 BLACK total** spread across the cast. **Diminishing returns on a single target: hits 1 and 2 land at full damage; the −30%-per-hit ramp begins on hit 3 (hit 3 = 70%, hit 4 = 40%) and floors at 20% damage from hit 5 onward.**",
 				"cooldown" = "**45 seconds after a cast**, with a **30-second re-attempt clock** while waiting on charges. Every 30s she tries: with **Reverberation Charge ≥ 5** she fires (the 45s post-cast cooldown then resets), otherwise nothing happens and the next attempt is another 30s out. **Phase 2 entry**: if charges are below 3 she's topped up to 3, then **force-casts immediately** regardless of the normal 5-charge gate.",
 				"desc"     = "**On cast, any still-alive Mirror Variants \
 					are yanked back into her regardless of distance** — \
-					each one refunds its ~150 HP cost and adds 1 \
-					Reverberation Charge before the cast resolves. The \
-					Reaper then goes **invisible at her current tile, \
-					locked in place** for the entire cast. For every \
+					each one refunds its ~150 HP cost, but **does not \
+					grant a Reverberation Charge** (the cast resolves on \
+					the charges she already had). The Reaper then goes \
+					**invisible at her current tile, locked in place** \
+					for the entire cast. For every \
 					Reverberation Charge (post-absorb total), one \
 					**damage instance** plays out: she rifts to **3 or \
 					4 random points** in the room, striking a player on \
@@ -504,29 +505,29 @@
 		/mob/living/simple_animal/hostile/distortion/blade_priest/refracted = list(
 			list(
 				"name"     = "Sermon Volley",
-				"damage"   = "80 BLACK + 10 Rupture per blade on the line (20 Rupture on the **Skull Mark** target); each launched blade runs a 3-dash chain",
+				"damage"   = "80 BLACK + 10 Rupture per blade on the line (20 Rupture on the **Skull Mark** target); each launched blade runs a 5-dash chain",
 				"cooldown" = "20 seconds; per-blade reuse: see **Disconnect Cadence**",
 				"desc"     = "Triggers a blue order — see **Issuing an \
 					Order**. Spawns blades one by one at the priest's tile, \
 					0.3 seconds apart; each blade's first dash aims at a \
 					freshly-repicked target. After landing, each blade \
-					chains 2 more autonomous dashes (3s park between) \
+					chains 4 more autonomous dashes (3s park between) \
 					before returning to orbit.",
 			),
 			list(
 				"name"     = "Scatter",
-				"damage"   = "80 BLACK + 10 Rupture per blade on the line (20 Rupture on the **Skull Mark** target during follow-up dashes); each launched blade runs a 3-dash chain",
+				"damage"   = "80 BLACK + 10 Rupture per blade on the line (20 Rupture on the **Skull Mark** target during follow-up dashes); each launched blade runs a 5-dash chain",
 				"cooldown" = "18 seconds; per-blade reuse: see **Disconnect Cadence**",
 				"desc"     = "Triggers a red order — see **Issuing an \
 					Order**. Every launched blade emerges at the priest's \
 					tile at the same instant, each in a distinct compass \
 					direction from a shuffled 8-direction pool. First dash \
-					is direction-locked and ignores targets; the 2 follow-up \
+					is direction-locked and ignores targets; the 4 follow-up \
 					dashes pick targets normally.",
 			),
 			list(
 				"name"     = "Inversion",
-				"damage"   = "80 BLACK + 10 Rupture per blade crossing on the priest's tile (20 Rupture per blade on a **Skull Mark** target standing in a line); each launched blade then runs a 2-dash autonomous chain",
+				"damage"   = "80 BLACK + 10 Rupture per blade crossing on the priest's tile (20 Rupture per blade on a **Skull Mark** target standing in a line); each launched blade then runs a 4-dash autonomous chain",
 				"cooldown" = "30 seconds; per-blade reuse: see **Disconnect Cadence**",
 				"desc"     = "Triggers a purple order — see **Issuing an \
 					Order**. Each launched blade teleports to a perimeter \
@@ -534,13 +535,13 @@
 					direction, telegraphs 1.5 seconds with a line through \
 					the priest's tile, then all blades dash inward through \
 					the priest simultaneously. After crossing, each blade \
-					chains 2 autonomous dashes before returning to orbit.",
+					chains 4 autonomous dashes before returning to orbit.",
 			),
 			list(
 				"name"     = "Body Sweep",
 				"damage"   = "35 BLACK in a 5x5 around the priest; throws caught humans 3 tiles outward",
 				"cooldown" = "5 seconds; triggers while a human is within 2 tiles",
-				"desc"     = "Telegraphs the 5x5, 0.9s wind-up, then \
+				"desc"     = "Telegraphs the 5x5, 1.6s wind-up, then \
 					resolves. The priest is rooted during the wind-up.",
 			),
 			list(
@@ -559,39 +560,41 @@
 		/mob/living/simple_animal/hostile/achiyalabopa/refracted = list(
 			list(
 				"name"     = "Divine Judgment",
-				"damage"   = "100 PALE per tile, per wave (3 waves)",
-				"cooldown" = "~15 seconds",
+				"damage"   = "75 PALE per tile, per wave (3 waves)",
+				"cooldown" = "~15 seconds; cannot start while she is impaled",
 				"desc"     = "Three waves of cardinal cross-fire, **10 \
 					tiles long in every direction**. Each wave randomly \
 					rolls between a **thin plus** (her own tile included, \
 					arms 1 tile wide) and a **wide plus** (3 tiles wide \
 					with a **safe corridor** along her own row and column). \
-					**1-second telegraph** per wave. See **Composure \
-					Cracks** for the Reaper-unmake interaction.",
+					**1-second telegraph** per wave. Spear-impaling her \
+					mid-cast aborts every remaining wave outright. See \
+					**Composure Cracks** for the Reaper-unmake interaction.",
 			),
 			list(
 				"name"     = "Thunder Whip",
-				"damage"   = "100 PALE per tile, struck in waves of 3 sorted by distance",
-				"cooldown" = "~20 seconds",
+				"damage"   = "75 PALE per tile, struck in waves of 3 sorted by distance",
+				"cooldown" = "~20 seconds; cannot start while she is impaled",
 				"desc"     = "**0.5-second wind-up** (she rears back). \
 					The cone is the slow part — the lash itself walks \
 					outward through two iterations: **5 tiles deep × 1 \
 					wide**, then **7 deep × 2 wide**, then **9 deep × \
 					3 wide** at the far edge. Strikes resolve in waves \
 					of 3 tiles, sweeping outward from her position — \
-					closer tiles hit first. See **Composure Cracks** for \
-					the Reaper-unmake interaction.",
+					closer tiles hit first. Spear-impaling her mid-cast \
+					aborts every remaining wave outright. See **Composure \
+					Cracks** for the Reaper-unmake interaction.",
 			),
 			list(
 				"name"     = "Divine Thunderbolt",
-				"damage"   = "50 PALE + electrocute in a **3×3 area** around the marker",
-				"cooldown" = "~3 seconds; passive",
+				"damage"   = "37 PALE + electrocute in a **3×3 area** around the marker",
+				"cooldown" = "~3 seconds; passive — keeps firing even while she is impaled",
 				"desc"     = "Drops a marker on **up to 3 humans within \
 					7 tiles** of her, **plus 5 random scatter-marks** on \
 					floor tiles within 7 tiles (each at least 1 tile \
 					apart so they spread out instead of clustering). \
 					Every marker telegraphs as a **purple 3×3 warning \
-					ring** for **2 seconds**, then explodes for 50 PALE \
+					ring** for **2 seconds**, then explodes for 37 PALE \
 					across the whole 3×3 (ignores line-of-sight, so \
 					hiding behind a tile inside the ring doesn't help). \
 					See **Composure Cracks** for the Reaper-unmake \
@@ -734,11 +737,15 @@
 			list(
 				"name"     = "Closed Circle",
 				"damage"   = "110 BLACK + 5-tile knockback toward center + mental detonate shatter trigger on every ring-cross",
-				"cooldown" = "**Hand on the Crystal** slot",
+				"cooldown" = "**Hand on the Crystal** slot; adds a **+5-second post-cast lockout** before any other memory can fire",
 				"desc"     = "On cast: Crystal flips Red for 7 seconds. A violet \
 					flame ring contracts inward in stages over 4s, then holds \
 					at a 5x5 for 5s. Crossing the ring tiles in either \
-					direction applies the hit.",
+					direction applies the hit. After the cast resolves, the \
+					Overseer holds its breath for **5 extra seconds** before \
+					it can start the next memory invocation — the contracted \
+					3×3 leaves trapped players almost no room to dodge an \
+					immediate follow-up.",
 			),
 			list(
 				"name"     = "Storm Approach",
@@ -750,31 +757,35 @@
 			),
 			list(
 				"name"     = "Void Pull",
-				"damage"   = "50 BLACK + 2 mental decay per 1s tick inside the suction; 50 BLACK + 3 mental decay on the outer ring resolve",
+				"damage"   = "50 BLACK + 2 mental decay per 1s tick inside the suction",
 				"cooldown" = "**Hand on the Crystal** slot",
 				"desc"     = "On cast: Crystal flips Red for 7 seconds. A \
 					singularity spawns at a random tile and drags every human \
 					toward center for 5s. While the pull is active, **Void \
-					AoE Barrage** rolls every 0.5s.",
+					AoE Barrage** rolls every 1s. **No perimeter ring** — \
+					the suction and the barrage own all the pressure.",
 			),
 			list(
 				"name"     = "Void Rupture Barrage",
-				"damage"   = "Mini: 50 BLACK + 2 mental decay on a 1x1. Macro: 140 BLACK + 3 mental decay on a 3x3.",
-				"cooldown" = "Rolls while **Void Pull** is active. 3% mini / 1% macro per nearby tile per 0.5s tick",
-				"desc"     = "Every 0.5s during Void Pull: each open tile within \
+				"damage"   = "Mini: 50 BLACK + 2 mental decay on a 1x1, violet sparks on detonation. Macro: 140 BLACK + 3 mental decay across a 3x3 with sparks on every tile.",
+				"cooldown" = "Rolls while **Void Pull** is active. 3% mini / 1% macro per nearby tile per 1s tick (halved cadence)",
+				"desc"     = "Every 1s during Void Pull: each open tile within \
 					8 of the singularity rolls for a mini or macro AoE. Mini: \
-					1s telegraph then detonate. Macro: 1.5s telegraph then \
-					detonate.",
+					~1s telegraph then detonate with sparks. Macro: ~1.5s \
+					telegraph then detonate across the 3x3 with sparks + an \
+					impact thud. Total projectile count is roughly half what \
+					the 0.5s cadence used to throw.",
 			),
 			list(
 				"name"     = "Echo of Her",
 				"damage"   = "110 BLACK + 6 mental decay per static-figure contact tile (figures die on cap)",
 				"cooldown" = "**Hand on the Crystal** slot",
 				"desc"     = "On cast: Crystal flips Red for 7 seconds. Snow \
-					falls across the arena. Continuously spawns translucent \
-					figures around the crystal (4-6 per wave) and around live \
-					humans (1-2 per wave) every 1.5s. Each walks 6 tiles in a \
-					cardinal direction.",
+					falls across the arena. Spawns translucent figures around \
+					the crystal (**1 per wave**) and around live humans (**1 \
+					per wave**) every **2.5s**. Each walks 6 tiles in a \
+					cardinal direction at a slightly slower **0.7s/step** \
+					pace.",
 			),
 			list(
 				"name"     = "Light Wind",
@@ -849,6 +860,7 @@
 		/mob/living/simple_animal/hostile/serio_knight = list(
 			list(
 				"name"     = "Three-Slash Verdict",
+				"hidden_until" = "overseer_phase_2",
 				"damage"   = "Snaps the Crystal's HP to the next bracket threshold (75% → 25% → 0%)",
 				"cooldown" = "On charge meter reaching 100% (see **Gathering the Strike** + **Drowned by the Chorus**)",
 				"desc"     = "On charge cap: 1.5s slash animation, then the Knight \
@@ -861,6 +873,7 @@
 		/mob/living/simple_animal/hostile/serio_sage = list(
 			list(
 				"name"     = "Counter-Argument",
+				"hidden_until" = "overseer_phase_2",
 				"damage"   = "Removes mental decay stacks + removes mental detonate primer (no shatter) from every human swept",
 				"cooldown" = "20 seconds (see **Speaks On Schedule**); fires when any human in view 7 has 15+ mental decay",
 				"desc"     = "Every aura tick (when triggered): a cyan ring \
@@ -869,6 +882,7 @@
 			),
 			list(
 				"name"     = "A Chair in the Room",
+				"hidden_until" = "overseer_phase_2",
 				"damage"   = "+50 brute / +50 fire / +50 sanity per human swept (once per cast)",
 				"cooldown" = "20 seconds (see **Speaks On Schedule**); fires when no human in view 7 has 15+ mental decay",
 				"desc"     = "Every aura tick (when triggered): a gold ring \
@@ -877,6 +891,7 @@
 			),
 			list(
 				"name"     = "Resonant Word",
+				"hidden_until" = "overseer_phase_2",
 				"damage"   = "On the word's bloom: +80 brute / +80 fire / +80 sanity in a 5x5",
 				"cooldown" = "15 seconds (cap 3 alive, 2-tile spacing)",
 				"desc"     = "Every cooldown: sets a struck-to-bloom word on \
@@ -885,6 +900,7 @@
 			),
 			list(
 				"name"     = "Stays Anyway",
+				"hidden_until" = "overseer_phase_2",
 				"damage"   = "Absorbs N **Sealing Lance** hits on the bubbled human (N per **Held Across the Brackets**)",
 				"cooldown" = "20 seconds; fires when a **Sealing Lance** is in flight and a human in view has no bubble",
 				"desc"     = "On trigger: 1s dark-blue beam from the Sage to a \
@@ -898,6 +914,7 @@
 		/mob/living/simple_animal/hostile/serio_murmur = list(
 			list(
 				"name"     = "Whispered Glance",
+				"hidden_until" = "overseer_phase_2",
 				"damage"   = "20 BLACK + rand(4-8) mental decay + applies mental detonate in a 3x3 on the target's snapshot tile",
 				"cooldown" = "5 seconds, 50% roll",
 				"desc"     = "Every cooldown roll: telegraphs the 3x3 around \
@@ -906,6 +923,7 @@
 			),
 			list(
 				"name"     = "Whispered Cold Word",
+				"hidden_until" = "overseer_phase_2",
 				"damage"   = "On puddle landing: rand(4-8) mental decay + applies mental detonate to humans on the tile. **Cold-Word Puddle** tick: 6 BLACK + 1 mental decay per 1s tick (2s lifetime).",
 				"cooldown" = "5 seconds, 50% roll",
 				"desc"     = "Every cooldown roll: picks a random human's tile \

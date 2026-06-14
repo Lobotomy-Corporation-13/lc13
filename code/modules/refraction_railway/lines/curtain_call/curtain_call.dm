@@ -40,7 +40,7 @@
 
 	// Phases 2 + 3 of the Serio Zeal finale aren't authored yet, so the
 	// whole line stays Hub-visible but lobby-locked until they ship.
-	locked              = TRUE
+	locked              = FALSE
 
 	map_viewbox = list("w" = 600, "h" = 400)
 
@@ -119,7 +119,8 @@
 			/mob/living/simple_animal/hostile/rat/capo_rat/refracted   = 1,
 		),
 		c_max = 2,
-		boss = TRUE)
+		boss = TRUE,
+		theme_music = 'sound/ambience/boss_themes/capo_boss_theme.ogg')
 
 	AddNode("zeal_s1n2", "zeal_s1n2_spawns",
 		"Sector 1, Act II: The Dealer's Cut",
@@ -132,7 +133,8 @@
 		list(
 			/mob/living/simple_animal/hostile/distortion/azarus/refracted = 1,
 		),
-		boss = TRUE)
+		boss = TRUE,
+		theme_music = 'sound/ambience/boss_themes/azarus_preferable_to_nihility.ogg')
 
 	// ----- Sector 2: The Sin Plays -----
 	AddNode("zeal_s2n1", "zeal_s2n1_spawns",
@@ -145,7 +147,8 @@
 		list(
 			/mob/living/simple_animal/hostile/distortion/understudy = 1,
 		),
-		boss = TRUE)
+		boss = TRUE,
+		theme_music = 'sound/ambience/boss_themes/understudy_foetor_combat.ogg')
 
 	AddNode("zeal_s2n2", "zeal_s2n2_spawns",
 		"Sector 2, Act II: The Altar in the Clinic",
@@ -158,7 +161,20 @@
 		list(
 			/mob/living/simple_animal/hostile/greed_touched_eric/refracted = 1,
 		),
-		boss = TRUE)
+		boss = TRUE,
+		extra_preview = list(
+			// Phase 1 — greed-touched X-Corp.
+			/mob/living/simple_animal/hostile/xcorp/dps/refracted,
+			/mob/living/simple_animal/hostile/xcorp/scout/refracted,
+			/mob/living/simple_animal/hostile/xcorp/sapper/refracted,
+			/mob/living/simple_animal/hostile/xcorp/tank/refracted,
+			// Phase 2 — greed-touched clan.
+			/mob/living/simple_animal/hostile/clan/scout/greed/refracted,
+			/mob/living/simple_animal/hostile/clan/drone/greed/refracted,
+			/mob/living/simple_animal/hostile/clan/defender/greed/refracted,
+			/mob/living/simple_animal/hostile/clan/ranged/gunner/greed/refracted,
+		),
+		theme_music = 'sound/ambience/boss_themes/eric_t_bloodletting_crimson_court.ogg')
 
 	// ----- Sector 3: Where the Stage Folds -----
 	AddNode("zeal_s3n1", "zeal_s3n1_spawns",
@@ -172,7 +188,8 @@
 		list(
 			/mob/living/simple_animal/hostile/mirror_shattered_reaper/refracted = 1,
 		),
-		boss = TRUE)
+		boss = TRUE,
+		theme_music = 'sound/ambience/boss_themes/reaper_phase_1_broken_blade.ogg')
 
 	AddNode("zeal_s3n2", "zeal_s3n2_spawns",
 		"Sector 3, Act II: A Lit Window in the Snow",
@@ -192,7 +209,8 @@
 			/mob/living/simple_animal/hostile/snow_cabin_mouth,
 			/mob/living/simple_animal/hostile/cabin_meatling,
 			/mob/living/simple_animal/hostile/cabin_yagaslave,
-		))
+		),
+		theme_music = 'sound/ambience/boss_themes/snow_cabin_unholy_blood.ogg')
 
 	// ----- Sector 4: After Humanity -----
 	AddNode("zeal_s4n1", "zeal_s4n1_spawns",
@@ -207,7 +225,8 @@
 		list(
 			/mob/living/simple_animal/hostile/distortion/blade_priest/refracted = 1,
 		),
-		boss = TRUE)
+		boss = TRUE,
+		theme_music = 'sound/ambience/boss_themes/blade_priest_corrupt_clergy.ogg')
 
 	AddNode("zeal_s4n2", "zeal_s4n2_spawns",
 		"Sector 4, Act II: The Apotheosis",
@@ -226,7 +245,8 @@
 		extra_preview = list(
 			/mob/living/simple_animal/hostile/mirage_reaper,
 			/mob/living/simple_animal/hostile/mirage_reaper/v2,
-		))
+		),
+		theme_music = 'sound/ambience/boss_themes/achiyalabopa_phase_1_sunslayer.ogg')
 
 	// ----- Sector 5: Curtain Fall -----
 	// Three sequential boss-waves at one physical arena. Mappers can place
@@ -243,7 +263,8 @@
 		list(
 			/mob/living/simple_animal/hostile/young_star = 1,
 		),
-		boss = TRUE)
+		boss = TRUE,
+		theme_music = 'sound/ambience/boss_themes/young_star_lygus_theme.ogg')
 
 	AddNode("serio_zeal_w2", "serio_zeal_w2_spawns",
 		"Curtain Fall, Wave II: The Cast Returns",
@@ -261,7 +282,9 @@
 			/mob/living/simple_animal/hostile/serio_sage,
 			/mob/living/simple_animal/hostile/serio_murmur,
 		),
-		boss = TRUE)
+		boss = TRUE,
+		theme_music = 'sound/ambience/boss_themes/mili_birthday_kid_instrumental.ogg',
+		theme_music_name = "Birthday Kid (Instrumental)")
 
 	sector_briefings = list(
 		list(

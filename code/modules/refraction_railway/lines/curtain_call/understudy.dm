@@ -175,9 +175,14 @@
 		return
 	return ..()
 
-/// Says a framework-sanctioned line past the recognition lock.
+/// Says a framework-sanctioned line past the recognition lock. When an
+/// active skin is worn, the line comes out of the FORM's mouth instead
+/// of the understudy's — the borrowed face is what Ruvin hears.
 /mob/living/simple_animal/hostile/distortion/understudy/proc/SpeakRecognition(message)
 	if(!message)
+		return
+	if(current_form && !QDELETED(current_form))
+		current_form.say(message)
 		return
 	recognition_bypass = TRUE
 	say(message)

@@ -178,11 +178,15 @@
 			continue
 		var/list/mob_payloads = list()
 		for(var/mob_path in N.mob_stock)
+			if(IsMobBriefingHidden(user.ckey, mob_path))
+				continue
 			var/list/payload = SSrefraction_railway.BuildMobCardPayload(user.ckey, mob_path)
 			payload["count"] = N.mob_stock[mob_path]
 			mob_payloads += list(payload)
 		for(var/mob_path in N.extra_preview_mobs)
 			if(mob_path in N.mob_stock)
+				continue
+			if(IsMobBriefingHidden(user.ckey, mob_path))
 				continue
 			var/list/payload = SSrefraction_railway.BuildMobCardPayload(user.ckey, mob_path)
 			payload["count"] = null
@@ -197,6 +201,21 @@
 			"achievements" = BuildNodeAchievementsPayload(N, R.line.id, user.ckey),
 		))
 	return out
+
+/// TRUE when `mob_path` is fully hidden from the briefing — its
+/// silhouette gate is registered AND the gating event has not been
+/// unlocked for this ckey yet. Hidden mobs are omitted from the
+/// payload entirely so the card doesn't render at all (no name, no
+/// silhouette, no weakness label) — as if it were never authored.
+/obj/structure/refraction_briefing/proc/IsMobBriefingHidden(ckey, mob_path)
+	if(!ckey)
+		return FALSE
+	if(SSrefraction_railway.debug_reveal_all)
+		return FALSE
+	var/gate_event = SSrefraction_railway.GetMobSilhouetteGate(mob_path)
+	if(!gate_event)
+		return FALSE
+	return !SSrefraction_railway.IsEventUnlocked(ckey, gate_event)
 
 /// One assoc-list per achievement bound to any of this node's stocked
 /// mob paths. Returns empty list if the ckey hasn't completed the line
@@ -290,9 +309,32 @@
 	// Last completed sector's elapsed time in deciseconds, 0 if none.
 	data["last_sector_time_ds"] = GetLastSectorTimeDs(R)
 	data["lobby_state"] = R.lobby_state
+	// Theme music panel: only surfaced when at least one node in the
+	// upcoming sector declares theme_music. We intentionally do NOT
+	// ship the track name or path to the client — preserves the
+	// surprise of whatever theme the encounter is about to spin up.
+	data["theme_music_available"] = NextSectorHasThemeMusic(R)
+	data["theme_music_volume"] = R.GetMusicVolume(user.ckey)
 	if(R.lobby_state == LOBBY_FINISHED)
 		data["results"] = BuildResultsPayload(R)
 	return data
+
+/obj/machinery/computer/refraction_advance/proc/NextSectorHasThemeMusic(datum/refraction_run/R)
+	if(!R || !R.line)
+		return FALSE
+	var/next_idx = R.current_section + 1
+	if(!islist(R.line.sector_briefings))
+		return FALSE
+	if(next_idx < 1 || next_idx > length(R.line.sector_briefings))
+		return FALSE
+	var/list/sector = R.line.sector_briefings[next_idx]
+	if(!islist(sector) || !islist(sector["node_ids"]))
+		return FALSE
+	for(var/node_id in sector["node_ids"])
+		var/datum/refraction_node/N = R.line.combat_nodes[node_id]
+		if(istype(N) && N.theme_music)
+			return TRUE
+	return FALSE
 
 /obj/machinery/computer/refraction_advance/proc/GetLastSectorTimeDs(datum/refraction_run/R)
 	var/list/finishes = R.sector_finish_times
@@ -391,3 +433,7 @@
 		if("end_run_early")
 			// Owner-only; two-click confirm is enforced UI-side.
 			R.EndRunEarly(usr.ckey)
+		if("set_theme_music_volume")
+			R.SetMusicVolume(usr.ckey, params["volume"])
+		if("test_theme_music")
+			R.PlayMusicTestSound(usr.ckey)

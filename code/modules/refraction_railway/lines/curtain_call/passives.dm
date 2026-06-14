@@ -252,14 +252,25 @@
 				"severity" = "info",
 				"text"     = "Doesn't strike on his own. Spawns waves of \
 					followers — **greed-touched X-Corp workers in phase \
-					1**, **greed-touched clan units in phase 2** — **3 \
-					per wave every 12s**, **capped at 6 alive**. **Every \
-					player past the first adds +2 to both the wave size \
-					and the field cap** (2 humans → 5 per wave / 8 cap, \
-					3 humans → 7 per wave / 10 cap). Each kill beams \
-					blood back to him: **+(maxHealth ÷ 3) bloodfeast** \
-					per kill. If **20s pass with no minion death**, the \
-					next wave size **doubles**.",
+					1** (DPS, Scout, Sapper, Tank), **greed-touched clan \
+					units in phase 2** (Scout, Drone, Defender, Gunner) \
+					— **3 per wave every 12s**, **capped at 6 \
+					alive**. **Every player past the first adds +2 to \
+					both the wave size and the field cap** (2 humans → \
+					5 per wave / 8 cap, 3 humans → 7 per wave / 10 \
+					cap). Each kill beams blood back to him: \
+					**+(maxHealth ÷ 3) bloodfeast** per kill. If **20s \
+					pass with no minion death**, the next wave size \
+					**doubles**.",
+			),
+			list(
+				"title"    = "Spilt Blood, Stolen Vigor",
+				"severity" = "info",
+				"text"     = "On a summoned follower's death: every live \
+					human within **2 tiles** of the corpse is healed for \
+					**+5 brute and +5 sanity** in Phase 1, **doubled to \
+					+10 / +10** in Phase 2 (the greed-touched clan \
+					flock).",
 			),
 			list(
 				"title"    = "Unholy Presence",
@@ -284,11 +295,13 @@
 			list(
 				"title"    = "Heart's Panic",
 				"severity" = "medium",
-				"text"     = "When the shield blocks a hit: triggers a fresh \
-					follower wave on a **1.5s cooldown**. Chip-swinging \
-					through the shield buys him reinforcements — the \
-					only stable way to drain the pool is to commit \
-					to killing the existing flock.",
+				"text"     = "When the shield blocks a hit: triggers a panic \
+					summon on a **1.5s cooldown**. **Spawns up to 3 \
+					followers per trigger**, but **never past a field \
+					cap of 5 alive** (0 alive → 3 spawn, 3 alive → 2 \
+					spawn, 5+ alive → nothing). Independent of the \
+					normal **Greed Touched** wave size and the party \
+					scaling.",
 			),
 			list(
 				"title"    = "Greed Burst",
@@ -309,10 +322,20 @@
 				"severity" = "high",
 				"text"     = "Below 50% HP: the greed-touched X-Corp \
 					workers give way to the **greed-touched clan** \
-					(defender, gunner, sniper, harpooner, drone, \
-					scout). His **bloodfeast cap drops from 700 to \
-					500**, so bursts come noticeably faster. Wave \
-					cadence and vulnerable window length are unchanged.",
+					(defender, gunner, drone, scout). His **bloodfeast \
+					cap drops from 700 to 500**, so bursts come \
+					noticeably faster. Wave cadence and vulnerable \
+					window length are unchanged.",
+			),
+			list(
+				"title"    = "The Heart Drinks",
+				"severity" = "medium",
+				"text"     = "While he tears open his chest for **Hardblood \
+					Greed** (~3-second cutscene at 25% HP): his \
+					**damage_coeff is forced to 0 across all four damage \
+					types**, so he cannot be hurt during the transition. \
+					Resistances restore to normal (RED/WHITE/BLACK 1.0, \
+					PALE 1.2) the instant the cutscene resolves.",
 			),
 			list(
 				"title"    = "Hardblood Greed",
@@ -503,6 +526,28 @@
 					teammates.",
 			),
 			list(
+				"title"    = "Fallen Faith",
+				"severity" = "medium",
+				"text"     = "Every Reaper removed from the field grants \
+					Fallen Faith stacks (accumulated in both phases; \
+					only active in Phase 2): **+4 on a burn-up (Will \
+					of Humanity contact)**, **+4 on an Achiya-AoE \
+					consumption (Divine Judgment, Thunder Whip, Divine \
+					Thunderbolt)**, **+1 on any other Reaper death**. \
+					Phase 2 only: every full **20 stacks** adds **+0.1 \
+					to every damage-type resistance coeff** — both her \
+					**baseline (0.2/0.2/0.2/0.4)** and **vulnerable \
+					(1.5/1.5/1.5/3.0)** dicts climb in step, so she \
+					takes progressively more damage from RED, WHITE, \
+					BLACK, and PALE. Outgoing damage is untouched. \
+					The stack count replaces the Phase 1 countdown \
+					maptext above her head once Phase 2 begins. \
+					Persists across the enraged ↔ weakened flip. **At \
+					50% HP it all burns away once** — counter snaps to \
+					0, resistances fall back to the bare baseline, and \
+					she barks a recognition line.",
+			),
+			list(
 				"title"    = "Composure Cracks",
 				"severity" = "high",
 				"text"     = "**Mirage Reapers drip from the storm** \
@@ -520,7 +565,9 @@
 					enraged. Her defenses settle to **80% DR (60% to \
 					PALE)**. From this point on, **a Coreflame blooms \
 					near her every ~20 seconds** (cap 2 on the ground at \
-					once). Pick one up to gain **Will of Humanity** — a \
+					once). **Walking onto a Coreflame picks it up \
+					automatically — no use action.** Holding it grants \
+					**Will of Humanity** — a \
 					**Piercing Strike** spell that calls a divine spear \
 					down on a target tile after a **1.5-second delay** \
 					(aim where she'll be, not where she is). On a hit \
@@ -530,6 +577,21 @@
 					seconds of Hope** — awe immunity and time to grab \
 					the next Coreflame. On a miss, the Coreflame stays \
 					— you can try again after the spell cooldown.",
+			),
+			list(
+				"title"    = "Impaled Lockout",
+				"severity" = "medium",
+				"text"     = "While the divine spear is in her: **cannot \
+					move**, **cannot basic-melee**, and **cannot start a \
+					new Divine Judgment or Thunder Whip**. Any in-flight \
+					Judgment or Whip cast **stops on its next tick** — \
+					the remaining waves are dropped. **Divine \
+					Thunderbolt** is passive and keeps dripping. Once \
+					the spear pops out, she gains a **10-second \
+					purple-outline grace** — every Piercing Strike that \
+					would land in that window is rejected outright. \
+					Wait for the violet glow to fade before re-engaging \
+					with another Coreflame.",
 			),
 		),
 
@@ -551,7 +613,65 @@
 					holder: burns to nothing instantly. Counts as a \
 					player kill — does not crack her composure. **The \
 					burst also heals every living human within 5 tiles \
-					of the bearer (the bearer included) for 10 HP.**",
+					of the bearer (the bearer included) for 10 HP.** \
+					Burn-up takes priority — a target carrying both \
+					**Hope** and **Will of Humanity** still triggers \
+					the burn instead of the Hope skip.",
+			),
+			list(
+				"title"    = "Refuses the Hopeful",
+				"severity" = "info",
+				"text"     = "Reapers will not basic-melee any human \
+					carrying ONLY the **Hope** status — they close, \
+					register the marker, and break off without \
+					striking. Adding Will of Humanity on top overrides \
+					this and routes the contact through **Burst on \
+					Hope** instead.",
+			),
+		),
+
+		// ---------- Mirage Reaper v2 (Phase 2 storm-hardened variant) ----------
+
+		/mob/living/simple_animal/hostile/mirage_reaper/v2 = list(
+			list(
+				"title"    = "Storm-Hardened",
+				"severity" = "medium",
+				"text"     = "Phase 2 variant. Carries **350 HP (+200 over \
+					the base mirage)** and pursues at a **slower cadence** \
+					(move_to_delay 6 vs. 4). Resistances, melee damage, \
+					and faction wiring match the base mirage.",
+			),
+			list(
+				"title"    = "Sacrifice the Flock",
+				"severity" = "high",
+				"text"     = "**Killing a Mirage Reaper with player damage \
+					does nothing.** Any AoE from Achiyalabopa (Divine \
+					Judgment, Thunder Whip, Divine Thunderbolt) that \
+					touches a Reaper **instantly unmakes it**, no damage \
+					roll. **Each Reaper unmade this way cracks her \
+					composure and brings her enrage 5 seconds closer**.",
+			),
+			list(
+				"title"    = "Burst on Hope",
+				"severity" = "medium",
+				"text"     = "On contact with a **Will of Humanity** \
+					holder: burns to nothing instantly. Counts as a \
+					player kill — does not crack her composure. **The \
+					burst also heals every living human within 5 tiles \
+					of the bearer (the bearer included) for 10 HP.** \
+					Burn-up takes priority — a target carrying both \
+					**Hope** and **Will of Humanity** still triggers \
+					the burn instead of the Hope skip.",
+			),
+			list(
+				"title"    = "Refuses the Hopeful",
+				"severity" = "info",
+				"text"     = "Reapers will not basic-melee any human \
+					carrying ONLY the **Hope** status — they close, \
+					register the marker, and break off without \
+					striking. Adding Will of Humanity on top overrides \
+					this and routes the contact through **Burst on \
+					Hope** instead.",
 			),
 		),
 
@@ -666,6 +786,23 @@
 						**Crawling Argument** / 35% **Verdict on the \
 						Knight** / 25% **Closing Argument**.",
 				),
+				list(
+					"title"    = "Closing Storm",
+					"severity" = "high",
+					"hidden_until" = "overseer_phase_2",
+					"text"     = "Phase 2, Bracket 3 only. The moment the \
+						Knight's second slash lands and B3 begins, an \
+						arena-wide snow overlay drapes the floor and stays \
+						up until the third slash. Every **15 seconds** \
+						underneath the overlay, **1 crystal-adjacent figure** \
+						and **1 player-seek figure** drift in from the \
+						perimeter walking at **0.7s per tile** (matching \
+						the slowed Echo of Her tuning) — same 110 BLACK + 6 \
+						mental decay + mental detonate contact rules as the \
+						active version, but layered passively on top of the \
+						bracket's anti-Knight rotation. Storm clears the \
+						instant Slash 3 fires.",
+				),
 		),
 
 		// ---------- serio_zeal_w2 support: Sealing Crystal ----------
@@ -709,6 +846,7 @@
 				list(
 					"title"    = "Holds the Line",
 					"severity" = "info",
+					"hidden_until" = "overseer_phase_2",
 					"text"     = "Overseer's Phase 2 only. Immobile, no \
 						player-targeted attacks. Drives the encounter via \
 						**Gathering the Strike** + **Three-Slash Verdict**.",
@@ -716,6 +854,7 @@
 				list(
 					"title"    = "Gathering the Strike",
 					"severity" = "high",
+					"hidden_until" = "overseer_phase_2",
 					"text"     = "Overseer's Phase 2 only. +1.66% per 0.5s \
 						tick (30s base time to 100%). Display rendered as \
 						maptext above the Knight. On 100%: **Three-Slash \
@@ -724,6 +863,7 @@
 				list(
 					"title"    = "Drowned by the Chorus",
 					"severity" = "high",
+					"hidden_until" = "overseer_phase_2",
 					"text"     = "Each Murmur with a **Reinforcing Voice** beam \
 						to the Knight multiplies **Gathering the Strike** \
 						ticks: 0 beams: 1.0x. 1: 0.75x. 2: 0.5x. 3: 0.25x. 4: \
@@ -732,6 +872,7 @@
 				list(
 					"title"    = "The Knight Falters",
 					"severity" = "low",
+					"hidden_until" = "overseer_phase_2",
 					"text"     = "On HP dropping at or below 30%: enters a 3s \
 						stagger. **Gathering the Strike** resets to 0% and \
 						pauses, then HP heals back to 80% and the stagger \
@@ -745,12 +886,14 @@
 				list(
 					"title"    = "The Friend Who Stays",
 					"severity" = "info",
+					"hidden_until" = "overseer_phase_2",
 					"text"     = "**Sealing Lance** phases through the Sage \
 						without applying damage. Has no melee attack.",
 				),
 				list(
 					"title"    = "Speaks On Schedule",
 					"severity" = "medium",
+					"hidden_until" = "overseer_phase_2",
 					"text"     = "Every 20 seconds: picks **Counter-Argument** \
 						or **A Chair in the Room** by branch. If any human in \
 						view 7 has 15+ mental decay stacks → cleanse. \
@@ -759,6 +902,7 @@
 				list(
 					"title"    = "Held Across the Brackets",
 					"severity" = "medium",
+					"hidden_until" = "overseer_phase_2",
 					"text"     = "**Stays Anyway** charge count by current \
 						bracket: B1: 1 hit. B2: 2 hits. B3: 3 hits.",
 				),
@@ -770,6 +914,7 @@
 				list(
 					"title"    = "Reinforcing Voice",
 					"severity" = "high",
+					"hidden_until" = "overseer_phase_2",
 					"text"     = "On spawn: draws a violet beam to the Knight \
 						that scales his charge tick (see the Knight's **Drowned \
 						by the Chorus**). Removed on death.",
@@ -777,6 +922,7 @@
 				list(
 					"title"    = "The Chorus Swells",
 					"severity" = "medium",
+					"hidden_until" = "overseer_phase_2",
 					"text"     = "Overseer's Phase 2 only. Overseer spawns \
 						Murmurs on a 20s cycle. Per-tick count = current \
 						bracket (1 / 2 / 3 in B1 / B2 / B3), +1 if the choir \
@@ -787,6 +933,7 @@
 				list(
 					"title"    = "Anchored Voice",
 					"severity" = "info",
+					"hidden_until" = "overseer_phase_2",
 					"text"     = "Stationary. No melee attack. Ranged attacks \
 						fire on a 5-second cooldown — 50/50 between \
 						**Whispered Glance** and **Whispered Cold Word**.",
@@ -794,6 +941,7 @@
 				list(
 					"title"    = "Made of Murmur",
 					"severity" = "info",
+					"hidden_until" = "overseer_phase_2",
 					"text"     = "**Sealing Lance** phases through Murmurs \
 						without applying damage. Other projectiles impact \
 						normally.",
@@ -801,12 +949,14 @@
 				list(
 					"title"    = "Spite of the Silenced",
 					"severity" = "medium",
+					"hidden_until" = "overseer_phase_2",
 					"text"     = "On taking damage from a non-faction-mate: \
 						applies 3 BLACK fragile to the attacker.",
 				),
 				list(
 					"title"    = "The Voice Quiets",
 					"severity" = "info",
+					"hidden_until" = "overseer_phase_2",
 					"text"     = "On death: heals every live human in view 7 \
 						for +10 brute / +10 fire / +10 sanity, then qdels \
 						immediately.",
@@ -823,6 +973,16 @@
 					— melee, items, projectiles, and area effects. Its HP \
 					moves only via weakpoint deaths (see **HP / Damage \
 					Funnel**).",
+			),
+			list(
+				"title"    = "Frozen By Numbers",
+				"severity" = "info",
+				"text"     = "AoE damage (**Bone Stab Line**, **Bladed \
+					Teeth**, **Ice Spike**, **Ice Shard Spray**) drops \
+					by **15% per extra player past the first**, derived \
+					from the cabin's HP scale (1.0× HP = solo, 2.0× HP \
+					= duo, etc.). Solo: 100%. Duo: 85%. Trio: 70%. \
+					Quad: 55%. Floored at 25%.",
 			),
 			list(
 				"title"    = "HP / Damage Funnel",
@@ -918,6 +1078,12 @@
 				"text"     = "Spawned by a **Meatpod** bursting. Its \
 					death does not damage the cabin.",
 			),
+			list(
+				"title"    = "Spilt Cabin",
+				"severity" = "info",
+				"text"     = "On its death: the human credited with the \
+					killing blow heals **+25 brute**.",
+			),
 		),
 
 		/mob/living/simple_animal/hostile/cabin_yagaslave = list(
@@ -926,6 +1092,12 @@
 				"severity" = "info",
 				"text"     = "Spawned by an **Ice Prison** cracking open. \
 					Its death does not damage the cabin.",
+			),
+			list(
+				"title"    = "Spilt Cabin",
+				"severity" = "info",
+				"text"     = "On its death: the human credited with the \
+					killing blow heals **+25 brute**.",
 			),
 		),
 	)

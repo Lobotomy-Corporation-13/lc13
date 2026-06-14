@@ -24,3 +24,12 @@
 	/// Server-side, the wave system still accepts the node — locking is purely
 	/// a UI-level gate so players can't preview unfinished encounters.
 	var/locked = FALSE
+	/// Optional looping theme music. When set, the run datum starts playing
+	/// this sound file on CHANNEL_REFRACTION_THEME for every member while the
+	/// node is active. Encounter procs can crossfade to a different track via
+	/// run.SwitchThemeMusic(). Null = no theme music for this node.
+	var/theme_music = null
+	/// Human-readable label rendered on the advance console's volume panel
+	/// (e.g. "Birthday Kid (Instrumental)"). Falls back to the node name
+	/// when blank.
+	var/theme_music_name = ""
