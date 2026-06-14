@@ -14,6 +14,18 @@ GLOBAL_VAR_INIT(refraction_run_uid_counter, 0)
 /// to read its card stats; suppresses simple_animal's nullspace warning.
 GLOBAL_VAR_INIT(refraction_extracting_mob_stats, FALSE)
 
+/// Runs whose `entry["timestamp"]` (world.realtime at RecordRun time) is
+/// strictly less than this value are silently hidden from leaderboard
+/// payloads. The cutoff is 2026-06-14 15:00 EDT (= 19:00 UTC), expressed
+/// in deciseconds since 2000-01-01 (BYOND world.realtime epoch).
+/// Computed as: 9661 days × 86400 s × 10 ds = 8,347,104,000 ds for
+/// 2026-06-14 00:00 UTC, plus 19 hours × 3600 s × 10 ds = 684,000 ds
+/// to land on 19:00 UTC. Total: 8,347,788,000 ds.
+/// Pre-cutoff runs are still persisted on disk — only the render path
+/// hides them. The UI explains the gap via the cutoff-notice text.
+#define REFRACTION_LEADERBOARD_CUTOFF_DS 8347788000
+#define REFRACTION_LEADERBOARD_CUTOFF_TEXT "3:00 PM EDT, Sunday June 14, 2026"
+
 SUBSYSTEM_DEF(refraction_railway)
 	name = "Refraction Railway"
 	flags = SS_KEEP_TIMING | SS_BACKGROUND
@@ -373,6 +385,10 @@ SUBSYSTEM_DEF(refraction_railway)
 	return out
 
 /// Returns one line's leaderboard as a list of UI-ready entries.
+/// Entries whose timestamp predates REFRACTION_LEADERBOARD_CUTOFF_DS
+/// are silently skipped — pre-update runs sat under different balance
+/// (station traits, meltdowns, etc.) and aren't meaningfully
+/// comparable with current results.
 /datum/controller/subsystem/refraction_railway/proc/BuildLeaderboardPayload(line_id)
 	var/list/entries_out = list()
 	var/list/board = leaderboards[line_id]
@@ -380,6 +396,9 @@ SUBSYSTEM_DEF(refraction_railway)
 		return entries_out
 	var/datum/refraction_line/line = lines[line_id]
 	for(var/list/entry as anything in board)
+		var/ts = entry["timestamp"]
+		if(isnum(ts) && ts < REFRACTION_LEADERBOARD_CUTOFF_DS)
+			continue
 		entries_out += list(BuildLeaderboardEntryPayload(entry, line))
 	return entries_out
 
