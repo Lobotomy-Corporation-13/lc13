@@ -1,5 +1,5 @@
 import { useBackend, useLocalState } from '../backend';
-import { Box, Input, Section } from '../components';
+import { Box, Input, Section, Stack } from '../components';
 import { Window } from '../layouts';
 import {
   buildRecordGroups,
@@ -50,7 +50,7 @@ const LineSidebar = props => {
 };
 
 const LeaderboardPane = (props, context) => {
-  const { line, rows } = props;
+  const { line, rows, cutoff } = props;
   const [expandedIdx, setExpandedIdx] = useLocalState(
     context,
     'leaderboardExpandedIdx',
@@ -87,6 +87,21 @@ const LeaderboardPane = (props, context) => {
       fill
       scrollable
       title={`Records: ${line.name}`}>
+      {!!cutoff && (
+        <Box
+          mb={1}
+          p={1}
+          color="label"
+          fontSize="11px"
+          backgroundColor="rgba(255, 200, 60, 0.08)"
+          style={{ 'border-radius': '4px' }}>
+          Records set before <b>{cutoff}</b> are no longer shown.
+          Pre-cutoff runs sat under different balance — station
+          traits, ordeals, and meltdowns could distort their timing,
+          so they aren&apos;t meaningfully comparable with current
+          results.
+        </Box>
+      )}
       <Box mb={1}>
         <Input
           fluid
@@ -179,7 +194,11 @@ export const RefractionLeaderboard = (props, context) => {
             />
           </Stack.Item>
           <Stack.Item grow={1}>
-            <LeaderboardPane line={selectedLine} rows={rows} />
+            <LeaderboardPane
+              line={selectedLine}
+              rows={rows}
+              cutoff={data.leaderboard_cutoff}
+            />
           </Stack.Item>
         </Stack>
       </Window.Content>

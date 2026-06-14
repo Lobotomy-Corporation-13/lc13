@@ -216,9 +216,9 @@
 	// ---- Refraction Railway recognition ----
 	/// Character this boss recognizes among the railway party, matched as a
 	/// case-insensitive substring of a member's mob name. Empty = no one.
-	var/recognition_target_name = "Amira Desuwa"
+	var/recognition_target_name = "Amira"
 	/// Two-part recognition line, said at the start of combat when matched.
-	var/recognition_line_1 = "...Amira Desuwa... still so small... still shapeless... trapped in this dull little world, like I was..."
+	var/recognition_line_1 = "...Amira... still so small... still shapeless... trapped in this dull little world, like I was..."
 	var/recognition_line_2 = "Let me take you in... be EVERYTHING, with me... every Amira wants this... you just can't see it yet..."
 	/// Said as the reaper fades on death (replaces its quiet collapse when
 	/// Amira is the one who puts it down). It dies certain it was saving her.

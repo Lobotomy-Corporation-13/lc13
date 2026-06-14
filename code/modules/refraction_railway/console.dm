@@ -325,8 +325,9 @@
 			"display_color" = L.display_color,
 		))
 	return list(
-		"lines"        = lines_out,
-		"leaderboards" = SSrefraction_railway.BuildLeaderboardsPayload(),
+		"lines"               = lines_out,
+		"leaderboards"        = SSrefraction_railway.BuildLeaderboardsPayload(),
+		"leaderboard_cutoff"  = REFRACTION_LEADERBOARD_CUTOFF_TEXT,
 	)
 
 // Read-only: no lobby / kick / start actions. We deliberately do NOT call
