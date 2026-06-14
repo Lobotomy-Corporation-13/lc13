@@ -407,9 +407,9 @@
 			if(last_shielded_say < world.time - say_cooldown)
 				say(shielded_line)
 				last_shielded_say = world.time
-			if(phase != ERIC_PHASE_3 && world.time >= shield_summon_cooldown && !ShieldLocked())
+			if(phase != ERIC_PHASE_3 && world.time >= shield_summon_cooldown && !ShieldLocked() && length(summoned_mobs) < 5)
 				shield_summon_cooldown = world.time + shield_summon_cooldown_time
-				INVOKE_ASYNC(src, PROC_REF(SummonWave))
+				INVOKE_ASYNC(src, PROC_REF(ShieldPanicSummon))
 			return 0
 		if(!phase_2_triggered && (health - amount) <= phase_2_trigger_hp)
 			amount = max(0, health - phase_2_trigger_hp)
@@ -553,12 +553,10 @@
 /mob/living/simple_animal/hostile/greed_touched_eric/proc/GetWavePool()
 	if(phase >= ERIC_PHASE_2)
 		return list(
-			/mob/living/simple_animal/hostile/clan/scout/greed/refracted         = 25,
-			/mob/living/simple_animal/hostile/clan/drone/greed/refracted         = 20,
-			/mob/living/simple_animal/hostile/clan/defender/greed/refracted      = 15,
-			/mob/living/simple_animal/hostile/clan/ranged/sniper/greed/refracted = 15,
-			/mob/living/simple_animal/hostile/clan/ranged/gunner/greed/refracted = 15,
-			/mob/living/simple_animal/hostile/clan/ranged/harpooner/greed/refracted = 10,
+			/mob/living/simple_animal/hostile/clan/scout/greed/refracted         = 30,
+			/mob/living/simple_animal/hostile/clan/drone/greed/refracted         = 10,
+			/mob/living/simple_animal/hostile/clan/defender/greed/refracted      = 10,
+			/mob/living/simple_animal/hostile/clan/ranged/gunner/greed/refracted = 20,
 		)
 	return list(
 		/mob/living/simple_animal/hostile/xcorp/dps/refracted    = 35,
@@ -620,6 +618,49 @@
 		manual_emote("raises a bloody hand, calling more of the flock to the harvest.")
 	summon_cooldown = world.time + summon_cooldown_time
 
+/// Shield-block panic spawn. Fires from the **Heart's Panic** path in
+/// adjustHealth. Spawns up to 3 followers per trigger, but never past
+/// a hard field cap of 5 alive — so 0 alive → 3 spawn, 3 alive → 2
+/// spawn (top-up to the 5 cap), 5+ alive → bail. Bypasses the standard
+/// SummonWave size/cap math so the panic burst is independent of party
+/// size and stall doubling.
+/mob/living/simple_animal/hostile/greed_touched_eric/proc/ShieldPanicSummon()
+	if(!can_act || dying || stat == DEAD || phase == ERIC_PHASE_3)
+		return
+	var/count = min(3, 5 - length(summoned_mobs))
+	if(count <= 0)
+		return
+	var/list/pool = GetWavePool()
+	var/list/valid_turfs = list()
+	for(var/turf/T in orange(3, src))
+		if(T.density)
+			continue
+		if(locate(/mob/living) in T)
+			continue
+		valid_turfs += T
+	if(!length(valid_turfs))
+		return
+	var/spawned = 0
+	for(var/i in 1 to count)
+		if(!length(valid_turfs))
+			break
+		var/mob_type = pickweight(pool)
+		if(!mob_type)
+			break
+		var/turf/T = pick(valid_turfs)
+		valid_turfs -= T
+		new /obj/effect/temp_visual/dir_setting/cult/phase(T)
+		playsound(T, 'sound/effects/curse4.ogg', 40, TRUE)
+		var/mob/living/simple_animal/hostile/M = new mob_type(T)
+		M.faction = faction.Copy()
+		summoned_mobs += M
+		RegisterSignal(M, COMSIG_LIVING_DEATH, PROC_REF(OnSummonDeath))
+		RegisterSignal(M, COMSIG_PARENT_QDELETING, PROC_REF(OnSummonQdel))
+		spawned++
+	if(spawned > 0)
+		visible_message(span_warning("[src] calls forth [spawned] greed-touched follower\s!"))
+		manual_emote("raises a bloody hand, calling more of the flock to the harvest.")
+
 // Beam + fade-out + bloodfeed: the dying summon's life-thread arcs back to Eric.
 /mob/living/simple_animal/hostile/greed_touched_eric/proc/OnSummonDeath(mob/living/simple_animal/hostile/source)
 	SIGNAL_HANDLER
@@ -629,6 +670,16 @@
 	summoned_mobs -= source
 	last_minion_death_time = world.time
 	source.del_on_death = FALSE
+	// Killing a summon spills a small lifeline into nearby humans. The
+	// corpse still sits on its tile here (DrainSummon's fade is queued
+	// async), so view(2, source) lands on the right anchor. Phase 2's
+	// clan flock spill twice as much (Eric is bleeding harder by then).
+	var/heal_amount = (phase >= ERIC_PHASE_2) ? 10 : 5
+	for(var/mob/living/carbon/human/H in view(2, source))
+		if(H.stat == DEAD)
+			continue
+		H.adjustBruteLoss(-heal_amount, forced = TRUE)
+		H.adjustSanityLoss(-heal_amount, forced = TRUE)
 	INVOKE_ASYNC(src, PROC_REF(DrainSummon), source)
 
 /mob/living/simple_animal/hostile/greed_touched_eric/proc/OnSummonQdel(datum/source)
@@ -847,12 +898,22 @@
 	summoned_mobs.Cut()
 	icon_state = hardblood_state
 	playsound(get_turf(src), 'sound/abnormalities/nosferatu/attack_special.ogg', 100, FALSE, 10)
+	// Lock him invulnerable while the chest-tear cutscene plays — a stray
+	// chip-hit here used to be able to leak through to the death gate
+	// before the phase-3 stat block finished applying. See the **The
+	// Heart Drinks** passive. ChangeResistances rebuilds the
+	// /datum/dam_coeff datum through the helper so the restore on the
+	// other side of the sleep loop actually takes (assigning to
+	// damage_coeff directly replaces the datum with a bare list and
+	// strands the mob in whatever state was last written).
+	ChangeResistances(list(RED_DAMAGE = 0, WHITE_DAMAGE = 0, BLACK_DAMAGE = 0, PALE_DAMAGE = 0))
 	var/end_time = world.time + 3 SECONDS
 	while(world.time < end_time)
 		if(dying || stat == DEAD)
 			return
 		do_jitter_animation(300)
 		sleep(5)
+	ChangeResistances(list(RED_DAMAGE = 1, WHITE_DAMAGE = 1, BLACK_DAMAGE = 1, PALE_DAMAGE = 1.2))
 	blood_resistance = 0
 	shield_locked_until = 0
 	var/datum/component/bloodfeast/PC = GetComponent(/datum/component/bloodfeast)

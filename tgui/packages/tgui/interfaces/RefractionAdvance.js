@@ -1,5 +1,5 @@
 import { useBackend, useLocalState } from '../backend';
-import { Box, Button, Section, Stack } from '../components';
+import { Box, Button, Section, Slider, Stack } from '../components';
 import { Window } from '../layouts';
 import { RecordsModal } from './RefractionRailway';
 
@@ -172,6 +172,50 @@ const FinishedView = (props, context) => {
   );
 };
 
+// Per-player theme-music mixer. Surfaced only when the upcoming
+// sector contains a node that declares theme_music server-side.
+// The actual track name is intentionally NOT shipped to the client —
+// the panel just lets the player dial in their volume and preview it
+// with the mailman.ogg test clip.
+const ThemeMusicPanel = props => {
+  const { volume, onChange, onTest } = props;
+  return (
+    <Section title="Theme Music" mb={1}>
+      <Box color="label" fontSize="11px" mb={0.5}>
+        The upcoming sector has an ambient track that will play in your
+        ear during the encounter. Dial in your personal volume now —
+        it sticks for the rest of the run.
+      </Box>
+      <Stack align="center">
+        <Stack.Item grow={1}>
+          <Slider
+            value={volume}
+            minValue={0}
+            maxValue={100}
+            step={1}
+            stepPixelSize={4}
+            onChange={(_, value) => onChange(value)}
+            onDrag={(_, value) => onChange(value)}
+          />
+        </Stack.Item>
+        <Stack.Item width="120px">
+          <Button
+            fluid
+            icon="volume-up"
+            content="Test Volume"
+            onClick={onTest}
+          />
+        </Stack.Item>
+      </Stack>
+      <Box mt={0.5} color="label" fontSize="10px" italic>
+        Note: the actual encounter track sits a little louder than
+        this test clip — dial the slider a hair below the level
+        you&apos;d normally want.
+      </Box>
+    </Section>
+  );
+};
+
 const StagingView = (props, context) => {
   const { act, data } = useBackend(context);
   const members = data.members || [];
@@ -228,6 +272,13 @@ const StagingView = (props, context) => {
           <Box color="label">No members in this lobby.</Box>
         )}
       </Box>
+      {!!data.theme_music_available && (
+        <ThemeMusicPanel
+          volume={data.theme_music_volume}
+          onChange={vol => act('set_theme_music_volume', { volume: vol })}
+          onTest={() => act('test_theme_music')}
+        />
+      )}
       <Stack>
         <Stack.Item grow={1}>
           <Button

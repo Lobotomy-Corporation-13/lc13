@@ -403,7 +403,7 @@
 	var/turf/origin = get_turf(src)
 	if(!origin)
 		return
-	var/max_depth = (phase >= MIRROR_PHASE_2) ? 5 : 4
+	var/max_depth = 4
 	var/turf/center = origin
 	for(var/depth in 1 to max_depth)
 		center = get_step(center, facing)
@@ -436,7 +436,7 @@
 	if(!zone_center)
 		return
 	var/list/zone_turfs = list()
-	var/zone_radius = (phase >= MIRROR_PHASE_2) ? 3 : 2 // 5x5 in P1, 7x7 in P2
+	var/zone_radius = 2 // 5x5 in both phases
 	for(var/turf/T in range(zone_radius, zone_center))
 		zone_turfs += T
 		new /obj/effect/temp_visual/mirror_warning_zone(T)
@@ -513,7 +513,7 @@
 		if(stat == DEAD || dying)
 			return
 
-/mob/living/simple_animal/hostile/mirror_shattered_reaper/proc/AbsorbVariants(list/variants_to_absorb)
+/mob/living/simple_animal/hostile/mirror_shattered_reaper/proc/AbsorbVariants(list/variants_to_absorb, gain_charge = TRUE)
 	if(!islist(variants_to_absorb) || !length(variants_to_absorb))
 		return
 	var/any_absorbed = FALSE
@@ -530,7 +530,12 @@
 		animate(V, alpha = 0, transform = matrix() * 0.2, time = 3)
 		adjustHealth(-V.maxHealth)
 		QDEL_IN(V, 3)
-		absorbed_counter = min(absorbed_counter + 1, MIRROR_ULT_INSTANCE_CAP)
+		// Reverberation's own pre-cast sweep passes gain_charge = FALSE:
+		// the variant still vanishes and refunds her HP, but the cast
+		// resolves on the charge count she already had — no free
+		// instances tacked on the front.
+		if(gain_charge)
+			absorbed_counter = min(absorbed_counter + 1, MIRROR_ULT_INSTANCE_CAP)
 		any_absorbed = TRUE
 	if(any_absorbed)
 		playsound(src, 'sound/abnormalities/wayward_passenger/ripspace_begin.ogg', 50, TRUE)
@@ -584,7 +589,7 @@
 	if(absorbed_counter <= 0 && !length(active_variants))
 		return
 	if(length(active_variants))
-		AbsorbVariants(active_variants.Copy())
+		AbsorbVariants(active_variants.Copy(), gain_charge = FALSE)
 	if(absorbed_counter <= 0)
 		return
 	next_ult = world.time + 45 SECONDS
@@ -622,8 +627,11 @@
 			var/this_hit = (reverberation_hits[REF(L)] || 0) + 1
 			reverberation_hits[REF(L)] = this_hit
 			var/scaled_damage = per_rift_damage
-			if(this_hit >= 2)
-				var/reduction = min(0.8, (this_hit - 1) * 0.10)
+			// Same-target diminishing returns: hit 1 and hit 2 land
+			// clean (100%), and the gradual −30%-per-hit ramp begins
+			// on hit 3. Floor stays at 20% (reached on hit 5).
+			if(this_hit >= 3)
+				var/reduction = min(0.8, (this_hit - 2) * 0.30)
 				scaled_damage = per_rift_damage * (1 - reduction)
 			UltDashAttack(L, scaled_damage)
 	alpha = 255
@@ -707,6 +715,12 @@
 	INVOKE_ASYNC(src, PROC_REF(SayPhase2Line))
 	visible_message(span_userdanger("[src]'s hood tears open — there is nothing underneath but a stitched composite of every life they ever stole!"))
 	playsound(src, 'sound/abnormalities/wayward_passenger/ripspace_end.ogg', 100, FALSE)
+	// Crossfade the node theme from the phase-1 track to the phase-2
+	// vocal cut. FindRefractionRunForZ resolves the live run for this
+	// lane; skipped silently outside a refraction z (admin spawn).
+	var/datum/refraction_run/R = FindRefractionRunForZ(z)
+	if(R)
+		R.SwitchThemeMusic('sound/ambience/boss_themes/reaper_phase_2_dawn_denied.ogg', 2 SECONDS)
 	if(absorbed_counter < 3)
 		absorbed_counter = 3
 		UpdateHUD()

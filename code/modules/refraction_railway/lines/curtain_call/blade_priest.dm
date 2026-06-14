@@ -52,7 +52,7 @@
 	icon_state = "sniper_zoom_blank"
 	layer = BELOW_MOB_LAYER
 	color = "#5e1620"
-	duration = 9
+	duration = 16
 	randomdir = FALSE
 
 /obj/effect/temp_visual/blade_priest_cage_park
@@ -228,8 +228,8 @@
 	icon_dead = "blade_priest"
 	mob_biotypes = MOB_ORGANIC|MOB_HUMANOID
 	faction = list("blade_priest")
-	maxHealth = 2500
-	health = 2500
+	maxHealth = 3500
+	health = 3500
 	melee_damage_lower = 0
 	melee_damage_upper = 0
 	speak_chance = 0
@@ -263,9 +263,9 @@
 	/// the base status effect.
 	var/blade_rupture_stacks = 10
 	var/blade_rupture_marked_bonus = 10
-	/// Follow-up dashes after the first; 2 = 3 total dashes per chain.
+	/// Follow-up dashes after the first; 4 = 5 total dashes per chain.
 	/// Shared by every order — the order only shapes the first dash.
-	var/dash_chain_length = 2
+	var/dash_chain_length = 4
 	/// After a blade returns to orbit it sits idle this long before
 	/// becoming eligible to be detached again. Applies to every order.
 	var/blade_reuse_cooldown_time = 6 SECONDS
@@ -285,7 +285,7 @@
 	var/body_sweep_cooldown_time = 5 SECONDS
 	var/body_sweep_damage = 35
 	var/body_sweep_knockback_dist = 3
-	var/body_sweep_telegraph = 9
+	var/body_sweep_telegraph = 16
 
 	// ---- Blade-aegis damage reduction ----
 	/// Per-stored-blade damage reduction. 0.1 = 10% off incoming damage

@@ -85,6 +85,19 @@ GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 	var/list/pending_bench = list()
 	/// ckey -> list of medipen refs issued this sector.
 	var/list/pen_refs = list()
+	/// ckey -> volume integer (0..100). Defaults to 50 when unset; the
+	/// console panel reads/writes through GetMusicVolume / SetMusicVolume.
+	/// Per-run only — never persisted to disk.
+	var/list/music_volumes = list()
+	/// Sound file path currently looping on CHANNEL_REFRACTION_THEME, or
+	/// null if no theme music is active. Used both to dedupe back-to-back
+	/// StartThemeMusic calls and to drive the crossfade's "from" track.
+	var/current_theme_music = null
+	/// Monotonic counter incremented every time a crossfade starts. Each
+	/// scheduled fade step carries the token it was queued under and
+	/// no-ops if it no longer matches — protects against overlapping
+	/// crossfades when phase transitions stack up.
+	var/theme_music_fade_token = 0
 
 /datum/refraction_run/New(datum/refraction_line/L, owner_ckey)
 	. = ..()
@@ -137,6 +150,10 @@ GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 		// Strip before dropping gear_refs so qdel handlers find their slots.
 		StripMemberGear(M.ckey)
 		gear_refs -= M.ckey
+	// Leaver should not keep hearing the run's theme on whatever z they
+	// end up on.
+	if(M && M.client)
+		M.stop_sound_channel(CHANNEL_REFRACTION_THEME)
 	members -= M
 	if(M.ckey)
 		loadouts -= M.ckey
@@ -144,6 +161,7 @@ GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 		last_checkpoint -= M.ckey
 		home_turfs -= M.ckey
 		pending_bench -= M.ckey
+		music_volumes -= M.ckey
 		RemoveUnusedPensForCkey(M.ckey)
 		if(original_attributes[M.ckey] && ishuman(M))
 			RestoreAttributes(M)
@@ -447,6 +465,8 @@ GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 	current_room = ""
 	// Sweep last sector's pens before healing (pens are per-sector).
 	RemoveUnusedPens()
+	// Checkpoint room is silent — theme music is per-combat-node only.
+	StopThemeMusic()
 	for(var/mob/living/carbon/human/H as anything in members)
 		if(QDELETED(H) || !ishuman(H))
 			continue
@@ -506,6 +526,11 @@ GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 /datum/refraction_run/proc/OnRoomCleared(cleared_room_id)
 	if(cleared_room_id != current_room)
 		return
+	// Boss dropped — gently tail off the node's theme over 3s so the
+	// silence between rooms reads as resolution, not a hard cut. Falls
+	// through to the existing 5s AdvanceRoom delay; the next room's
+	// StartThemeMusic call (if any) re-arms the channel cleanly.
+	FadeOutThemeMusic(3 SECONDS)
 	addtimer(CALLBACK(src, PROC_REF(AdvanceRoom)), 5 SECONDS)
 
 /datum/refraction_run/proc/AdvanceRoom()
@@ -529,6 +554,15 @@ GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 	MarkRoomEntered(room_id)
 	OpenRoomTime(room_id)
 	ActivateRoom(room_id)
+	// Kick the per-node theme loop. StartThemeMusic on a null path
+	// stops any prior track, so non-theme'd nodes silently clear the
+	// channel without a separate guard.
+	if(line)
+		var/datum/refraction_node/N = line.combat_nodes[room_id]
+		if(istype(N))
+			StartThemeMusic(N.theme_music)
+		else
+			StopThemeMusic()
 
 /datum/refraction_run/proc/OpenRoomTime(room_id)
 	room_times += list(list(
@@ -677,6 +711,7 @@ GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 	PauseTimer()
 	in_checkpoint = TRUE
 	current_room = ""
+	StopThemeMusic()
 	// Unused sector pens don't carry out as a reward.
 	RemoveUnusedPens()
 	var/total_ds = ElapsedDeciseconds()
@@ -1314,6 +1349,164 @@ GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 		qdel(I)
 	pen_refs -= ckey
 
+// ---------- Per-node theme music ----------
+// Each combat node may declare an optional looping theme music track.
+// When AdvanceRoomById lands on a node with theme music, the run plays
+// the track distance-independently on CHANNEL_REFRACTION_THEME at every
+// member's personal volume. Encounter procs can crossfade to a different
+// track via SwitchThemeMusic (e.g. the Overseer's phase-2 swap).
+
+/// Player's stored volume, defaulting to 50. Defaults are NOT stored —
+/// only an explicit SetMusicVolume populates the dict, so a brand-new
+/// run begins with everyone at the default without a startup pass.
+/datum/refraction_run/proc/GetMusicVolume(ckey)
+	if(!ckey)
+		return 50
+	if(!isnum(music_volumes[ckey]))
+		return 50
+	return music_volumes[ckey]
+
+/// Stores the new volume (clamped 0..100). If a theme track is live,
+/// sends a SOUND_UPDATE on that one client so the slider behaves
+/// like a live mixer without restarting the loop.
+/datum/refraction_run/proc/SetMusicVolume(ckey, volume)
+	if(!ckey)
+		return
+	volume = clamp(round(volume), 0, 100)
+	music_volumes[ckey] = volume
+	if(!current_theme_music)
+		return
+	var/mob/M = FindMemberByCkey(ckey)
+	if(!M || !M.client)
+		return
+	var/sound/upd = sound(null, repeat = TRUE, channel = CHANNEL_REFRACTION_THEME, volume = volume)
+	upd.status = SOUND_UPDATE
+	SEND_SOUND(M, upd)
+
+/// Begins (or replaces) the looping track on CHANNEL_REFRACTION_THEME
+/// for every live member at their personal volume. Idempotent: a second
+/// call with the same track is a no-op so AdvanceRoomById can call it
+/// freely. Null track_path is a hard stop.
+/datum/refraction_run/proc/StartThemeMusic(track_path)
+	if(!track_path)
+		StopThemeMusic()
+		return
+	if(current_theme_music == track_path)
+		return
+	current_theme_music = track_path
+	// Any in-flight crossfade is now stale.
+	theme_music_fade_token++
+	for(var/mob/M as anything in members)
+		PlayThemeMusicForMember(M, track_path)
+
+/// Per-member helper used by StartThemeMusic and the resume side of
+/// SwitchThemeMusic. Always plays the channel at this member's stored
+/// volume, repeating, with reverb off (distance-independent).
+/datum/refraction_run/proc/PlayThemeMusicForMember(mob/M, track_path)
+	if(!M || !M.client)
+		return
+	if(!track_path)
+		return
+	var/vol = GetMusicVolume(M.ckey)
+	var/sound/song = sound(track_path, repeat = TRUE, channel = CHANNEL_REFRACTION_THEME, volume = vol)
+	M.playsound_local(get_turf(M), null, vol, channel = CHANNEL_REFRACTION_THEME, S = song, use_reverb = FALSE)
+
+/// Crossfade entry point. Fades the current track to volume 0 across
+/// `fade_seconds` (in `steps` SOUND_UPDATE ticks), then stops the
+/// channel and starts the new track at the player's volume. Each
+/// scheduled step carries the fade token it was queued under and
+/// no-ops if a later SwitchThemeMusic / StartThemeMusic invalidated
+/// it — so back-to-back phase swaps don't cross wires.
+/datum/refraction_run/proc/SwitchThemeMusic(new_track_path, fade_seconds = 2 SECONDS, steps = 20)
+	if(!current_theme_music)
+		StartThemeMusic(new_track_path)
+		return
+	theme_music_fade_token++
+	var/token = theme_music_fade_token
+	var/step_delay = max(1, round(fade_seconds / steps))
+	for(var/step in 1 to steps)
+		addtimer(CALLBACK(src, PROC_REF(FadeThemeMusicStep), token, step, steps), step_delay * step)
+	addtimer(CALLBACK(src, PROC_REF(CompleteThemeMusicSwitch), token, new_track_path), step_delay * steps)
+
+/// Ducks every live member's CHANNEL_REFRACTION_THEME volume to
+/// `fraction = 1 - step/steps` of their stored level. Bailout on a
+/// stale token so a newer fade / Stop wins.
+/datum/refraction_run/proc/FadeThemeMusicStep(token, step, steps)
+	if(token != theme_music_fade_token)
+		return
+	var/fraction = max(0, 1 - (step / steps))
+	for(var/mob/M as anything in members)
+		if(!M || !M.client)
+			continue
+		var/vol = round(GetMusicVolume(M.ckey) * fraction)
+		var/sound/upd = sound(null, repeat = TRUE, channel = CHANNEL_REFRACTION_THEME, volume = vol)
+		upd.status = SOUND_UPDATE
+		SEND_SOUND(M, upd)
+
+/// End of fade: stop the channel cleanly, then start the new track at
+/// each member's stored volume. Stale tokens bail.
+/datum/refraction_run/proc/CompleteThemeMusicSwitch(token, new_track_path)
+	if(token != theme_music_fade_token)
+		return
+	for(var/mob/M as anything in members)
+		if(M && M.client)
+			M.stop_sound_channel(CHANNEL_REFRACTION_THEME)
+	current_theme_music = null
+	StartThemeMusic(new_track_path)
+
+/// Stops the theme music channel on every member, clears state, and
+/// invalidates any in-flight fade.
+/datum/refraction_run/proc/StopThemeMusic()
+	if(!current_theme_music)
+		return
+	current_theme_music = null
+	theme_music_fade_token++
+	for(var/mob/M as anything in members)
+		if(M && M.client)
+			M.stop_sound_channel(CHANNEL_REFRACTION_THEME)
+
+/// Soft cousin of StopThemeMusic — ducks the current track to silence
+/// over `fade_seconds` instead of cutting it. Internally routes through
+/// SwitchThemeMusic with a null target: same 20-step SOUND_UPDATE fade,
+/// then CompleteThemeMusicSwitch stops the channel cleanly. No-op if
+/// nothing is currently playing.
+/datum/refraction_run/proc/FadeOutThemeMusic(fade_seconds = 3 SECONDS)
+	if(!current_theme_music)
+		return
+	SwitchThemeMusic(null, fade_seconds)
+
+/// Plays the 5-second mailman test clip one-shot on the theme channel
+/// at this player's current volume. Re-uses the same channel so the
+/// preview matches the live track exactly. If a theme track is
+/// currently looping, that loop resumes after the clip finishes — but
+/// since the test channel overlap stops the loop on this client, we
+/// re-arm the loop right after the clip ends.
+/datum/refraction_run/proc/PlayMusicTestSound(ckey)
+	if(!ckey)
+		return
+	var/mob/M = FindMemberByCkey(ckey)
+	if(!M || !M.client)
+		return
+	var/vol = GetMusicVolume(ckey)
+	var/sound/clip = sound('sound/creatures/lc13/mailman.ogg', repeat = FALSE, channel = CHANNEL_REFRACTION_THEME, volume = vol)
+	M.playsound_local(get_turf(M), null, vol, channel = CHANNEL_REFRACTION_THEME, S = clip, use_reverb = FALSE)
+	// Re-arm the loop for this client 5s later if a track is still
+	// supposed to be playing. The test clip is ~5s and shares the
+	// channel; without this the live track stays silenced on the
+	// tester's client only.
+	if(current_theme_music)
+		var/track = current_theme_music
+		addtimer(CALLBACK(src, PROC_REF(ResumeThemeMusicForMember), M, track), 5 SECONDS)
+
+/// Restarts the supplied track on a single client if it's still the
+/// run's current_theme_music. Used by the test-sound resume hook.
+/datum/refraction_run/proc/ResumeThemeMusicForMember(mob/M, track_path)
+	if(!M || !M.client)
+		return
+	if(current_theme_music != track_path)
+		return
+	PlayThemeMusicForMember(M, track_path)
+
 // ---------- Landmark lookup ----------
 
 /// Returns refraction landmarks of `type_path` on the claimed z; if
@@ -1469,6 +1662,7 @@ GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 // ---------- Cleanup ----------
 
 /datum/refraction_run/proc/Cleanup()
+	StopThemeMusic()
 	if(loaded_z)
 		SSrefraction_railway.ReleaseLane(loaded_z)
 		loaded_z = 0

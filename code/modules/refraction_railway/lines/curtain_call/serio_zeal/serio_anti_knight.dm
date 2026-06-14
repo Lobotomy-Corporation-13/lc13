@@ -121,19 +121,6 @@
 	homing = FALSE
 	homing_target = null
 
-// DIAGNOSTIC (remove once verified): log every qdel of the lance and
-// the on_hit fire so we can see where the projectile dies in the
-// process.
-/obj/projectile/serio_lance/Destroy()
-	var/turf/T = get_turf(src)
-	var/coords = T ? "([T.x],[T.y])" : "null"
-	message_admins("DIAG: serio_lance Destroy at [coords] fired=[fired] impacted=[length(impacted)] range=[range]")
-	return ..()
-
-/obj/projectile/serio_lance/Impact(atom/A)
-	message_admins("DIAG: serio_lance Impact on [A] ([A.type]) at ([A.x],[A.y])")
-	return ..()
-
 // ---------- B3 seeker (chaser-style, wall-pathfinding, single-hit) ----------
 
 /// Walks tile-to-tile toward the Knight using the Errant Drafts seek
@@ -171,6 +158,11 @@
 	. = ..()
 	source = new_source
 	target_knight = new_target
+	// Light-purple outline mirroring the Cold Word Puddle so the
+	// crawler reads as the same family of "ambient hazard" against
+	// the stage floor. Same filter pattern as the radioactive
+	// component (code/datums/components/radioactive.dm:32).
+	add_filter("serio_seeker_glow", 2, list("type" = "outline", "color" = "#c890ff80", "size" = 1))
 	addtimer(CALLBACK(src, PROC_REF(seek_target)), 5)
 
 /// Pick a cardinal direction toward target_knight, with anti-jitter

@@ -87,7 +87,7 @@
 	return list()
 
 /// Registers a combat node; called from the subtype's New().
-/datum/refraction_line/proc/AddNode(node_id, lm_id, n_name, n_desc, list/stock, c_max = 4, boss = FALSE, list/extra_preview, locked = FALSE)
+/datum/refraction_line/proc/AddNode(node_id, lm_id, n_name, n_desc, list/stock, c_max = 4, boss = FALSE, list/extra_preview, locked = FALSE, theme_music = null, theme_music_name = "")
 	var/datum/refraction_node/N = new
 	N.id = node_id
 	N.landmark_id = lm_id
@@ -99,4 +99,6 @@
 	N.is_boss = boss
 	N.extra_preview_mobs = extra_preview || list()
 	N.locked = locked
+	N.theme_music = theme_music
+	N.theme_music_name = theme_music_name
 	combat_nodes[node_id] = N

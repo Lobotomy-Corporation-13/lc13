@@ -299,6 +299,12 @@
 	/// TRUE between StartMemoryInvocation and EndMemoryInvocation. Blocks
 	/// patrol movement, Blue-phase attacks, and concurrent invocations.
 	var/invoking_memory = FALSE
+	/// Extra deciseconds the EndMemoryInvocation timer is pushed back
+	/// past `memory_red_duration` — keeps `invoking_memory = TRUE`
+	/// through a per-attack tail lockout (Closed Circle uses 5s). Reset
+	/// to 0 at the top of InvokeMemoryAttack and re-stamped by whichever
+	/// attack proc wants a hold.
+	var/pending_extra_lockout = 0
 	// ---- Monologue ----
 	var/last_monologue_time = 0
 	var/monologue_cooldown = 8 SECONDS
@@ -413,6 +419,13 @@
 	if(QDELETED(parent_crystal))
 		return
 	parent_crystal.adjustBruteLoss(-parent_crystal.maxHealth, forced = TRUE)
+	// adjustHealth's UpdateBracket call only fires on damage (positive
+	// `.`), not on heals — so without this explicit nudge the bracket
+	// would stay at 3 from the final Phase 1 slash and Phase 2 would
+	// immediately read crystal.current_bracket == 3 and fire B3 cadence
+	// attacks. Force the recompute now that HP is back to full so the
+	// upcoming Phase 2 starts on B1 cadence as authored.
+	parent_crystal.UpdateBracket()
 	parent_crystal.is_invulnerable_p2 = TRUE
 	parent_crystal.ChangeResistances(list(RED_DAMAGE = 0, WHITE_DAMAGE = 0, BLACK_DAMAGE = 0, PALE_DAMAGE = 0))
 	EnterPhase2()
@@ -433,6 +446,23 @@
 	ChangeResistances(list(RED_DAMAGE = 0, WHITE_DAMAGE = 0, BLACK_DAMAGE = 0, PALE_DAMAGE = 0))
 	UnlockOverseerPhase2Reveal()
 	ForceEndInflightAttacks()
+	// Crossfade the node theme from the instrumental to the vocal cut.
+	// FindRefractionRunForZ (not GetRunForMob — Overseer isn't a run
+	// member) resolves the live run for this lane. Skipped silently if
+	// the boss was admin-spawned outside a refraction z.
+	var/datum/refraction_run/R = FindRefractionRunForZ(z)
+	if(R)
+		R.SwitchThemeMusic('sound/ambience/boss_themes/mili_birthday_kid.ogg', 2 SECONDS)
+		// Phase 2 entry handshake — every live run member gets fully
+		// restored on HP and SP so the second act starts on a clean
+		// slate. Lets the team commit to the new mechanics without
+		// dragging Phase 1 chip damage into them.
+		for(var/mob/living/carbon/human/H as anything in R.members)
+			if(QDELETED(H) || H.stat == DEAD)
+				continue
+			H.adjustBruteLoss(-H.maxHealth, forced = TRUE)
+			H.adjustFireLoss(-H.maxHealth, forced = TRUE)
+			H.adjustSanityLoss(-H.maxSanity, forced = TRUE)
 	// Stage 2 (5s later): support mobs arrive, Overseer takes its
 	// fixed tile, echo-anchor column boots up.
 	addtimer(CALLBACK(src, PROC_REF(CompletePhase2Transition)), 5 SECONDS, TIMER_STOPPABLE)
@@ -710,9 +740,10 @@
 		b3_snow_overlays += new /obj/effect/temp_visual/serio_echo_snow_ground(T, safety_duration)
 	addtimer(CALLBACK(src, PROC_REF(Bracket3EchoTick)), 15 SECONDS, TIMER_STOPPABLE)
 
-/// 15-second self-rescheduling tick. Each call drops 2 crystal-adjacent
-/// figures + up to 2 player-seek figures. Uses the non-weakened
-/// Echo of Her tuning. Bails when the storm flag is cleared.
+/// 15-second self-rescheduling tick. Each call drops 1 crystal-adjacent
+/// figure + 1 player-seek figure on a slightly slower walk pace —
+/// matches the halved Echo of Her tuning so the B3 passive storm
+/// doesn't outpace the active version.
 /mob/living/simple_animal/hostile/serio_overseer/proc/Bracket3EchoTick()
 	if(!b3_storm_active || QDELETED(src) || QDELETED(parent_crystal))
 		return
@@ -723,19 +754,15 @@
 	var/figure_damage = 60
 	var/decay_stacks = 6
 	var/can_shatter = TRUE
-	var/figure_step_delay = 0.5 SECONDS
-	for(var/i in 1 to 2)
-		SpawnCrystalAdjacentFigure(center, walk_distance, figure_step_delay, figure_damage, decay_stacks, can_shatter)
+	var/figure_step_delay = 0.7 SECONDS
+	SpawnCrystalAdjacentFigure(center, walk_distance, figure_step_delay, figure_damage, decay_stacks, can_shatter)
 	var/list/players = list()
 	for(var/mob/living/carbon/human/H in view(view_range, src))
 		if(H.stat == DEAD)
 			continue
 		players += H
-	var/p_count = min(2, length(players))
-	for(var/i in 1 to p_count)
-		if(!length(players))
-			break
-		var/mob/living/carbon/human/target = pick_n_take(players)
+	if(length(players))
+		var/mob/living/carbon/human/target = pick(players)
 		SpawnPlayerSeekFigure(target, walk_distance, figure_step_delay, figure_damage, decay_stacks, can_shatter)
 	addtimer(CALLBACK(src, PROC_REF(Bracket3EchoTick)), 15 SECONDS, TIMER_STOPPABLE)
 
@@ -987,11 +1014,16 @@
 	var/bracket = parent_crystal.current_bracket
 	var/total_red = memory_red_duration + memory_afterglow
 	parent_crystal.EnterRed(total_red)
+	// Per-attack tail lockout starts at 0; attacks (e.g. Closed Circle)
+	// can stamp pending_extra_lockout to hold invoking_memory true for
+	// longer than memory_red_duration. Resetting BEFORE the call so
+	// stale values from a previous invocation don't leak through.
+	pending_extra_lockout = 0
 	// Weakened path: Overseer is down at invocation time. Per the
 	// brainstorm each attack has its own weakened-form parameters;
 	// for now both branches just stub out via the flavor message.
 	InvokeAttackForBracket(bracket, knocked_down)
-	addtimer(CALLBACK(src, PROC_REF(EndMemoryInvocation)), memory_red_duration, TIMER_STOPPABLE)
+	addtimer(CALLBACK(src, PROC_REF(EndMemoryInvocation)), memory_red_duration + pending_extra_lockout, TIMER_STOPPABLE)
 
 /mob/living/simple_animal/hostile/serio_overseer/proc/EndMemoryInvocation()
 	invoking_memory = FALSE
@@ -1202,6 +1234,13 @@
 	var/turf/crystal_turf = get_turf(parent_crystal)
 	if(!crystal_turf)
 		return
+	// Held breath after the call — the Overseer stays committed to the
+	// huddle for 5 extra seconds before invoking_memory clears. Because
+	// MainTick gates BOTH memory invocations AND the Blue-tick
+	// Glance/Cold Word path behind `!invoking_memory`, holding the flag
+	// here suppresses every ranged attack the trapped 3x3 occupants
+	// would otherwise have no room to dodge.
+	pending_extra_lockout = 5 SECONDS
 	var/list/candidates = list()
 	for(var/turf/open/T in range(4, crystal_turf))
 		if(get_dist(T, crystal_turf) < 3)
@@ -1522,12 +1561,8 @@
 	else
 		new /obj/effect/temp_visual/serio_void_singularity(crystal_turf, total_singularity_duration, setup_duration)
 	addtimer(CALLBACK(src, PROC_REF(StartVoidSuction), crystal_turf, suction_duration, kill_radius, pull_interval, tick_damage, decay_stacks, can_shatter), setup_duration, TIMER_STOPPABLE)
-	// Contracting perimeter ring 10 → 5 across the suction. Pure
-	// damage-on-cross obstacle; knockback is 0 so the ring doesn't
-	// fight (or compound) the singularity's pull.
-	var/ring_damage = weakened ? 15 : 50
-	var/ring_decay = weakened ? 1 : 3
-	addtimer(CALLBACK(src, PROC_REF(StartVoidPullRing), crystal_turf, suction_duration, ring_damage, ring_decay, can_shatter), setup_duration, TIMER_STOPPABLE)
+	// (Contracting perimeter ring removed — the suction + the halved
+	// AoE barrage now own the threat budget.)
 
 /mob/living/simple_animal/hostile/serio_overseer/proc/StartVoidSuction(turf/center, duration, kill_radius, pull_interval, damage, decay, can_shatter)
 	set waitfor = FALSE
@@ -1536,10 +1571,10 @@
 	// whole time it's pulling, midnight-style.
 	INVOKE_ASYNC(src, PROC_REF(VoidAoEBarrage), center, duration)
 	var/elapsed = 0
-	while(elapsed < duration && !QDELETED(src))
+	while(elapsed < duration && !QDELETED(src) && !phase_2)
 		sleep(pull_interval)
 		elapsed += pull_interval
-		if(QDELETED(src) || QDELETED(center))
+		if(QDELETED(src) || QDELETED(center) || phase_2)
 			return
 		for(var/mob/living/carbon/human/H in view(view_range, src))
 			if(H.stat == DEAD)
@@ -1569,10 +1604,12 @@
 /mob/living/simple_animal/hostile/serio_overseer/proc/VoidAoEBarrage(turf/center, duration)
 	set waitfor = FALSE
 	var/elapsed = 0
-	var/barrage_interval = 0.5 SECONDS
+	// Halved from 0.5s → 1s so the total projectile count drops to
+	// roughly half over the same suction window.
+	var/barrage_interval = 1 SECONDS
 	var/barrage_radius = 8
-	while(elapsed < duration && !QDELETED(src))
-		if(QDELETED(center))
+	while(elapsed < duration && !QDELETED(src) && !phase_2)
+		if(QDELETED(center) || phase_2)
 			return
 		for(var/turf/T in range(barrage_radius, center))
 			if(T == center)
@@ -1602,7 +1639,7 @@
 	set waitfor = FALSE
 	var/elapsed = 0
 	var/interval = 2 SECONDS
-	while(elapsed < duration && !QDELETED(src))
+	while(elapsed < duration && !QDELETED(src) && !phase_2)
 		for(var/mob/living/carbon/human/H in view(10, src))
 			if(H.stat == DEAD)
 				continue
@@ -1679,13 +1716,17 @@
 	var/decay_stacks = weakened ? 2 : 6
 	var/can_shatter = !weakened
 	var/snow_setup_time = 2 SECONDS
-	var/figure_step_delay = 0.5 SECONDS
+	// Slightly slower step — 0.5s → 0.7s — so the figures take a beat
+	// longer between tiles. The wave_interval grows alongside it so the
+	// arena doesn't fill faster than figures clear.
+	var/figure_step_delay = 0.7 SECONDS
 	var/figure_walk_duration = walk_distance * figure_step_delay + 1 SECONDS
-	// Continuous spawning: figures keep coming as old ones fade so the
-	// arena reads as crowded with passing memories the whole window.
-	var/wave_interval = weakened ? 3 SECONDS : 1.5 SECONDS
-	var/crystal_per_wave = weakened ? 1 : 2
-	var/player_per_wave = weakened ? 1 : 2
+	// Halved spawn count: 2/wave → 1/wave per side (crystal + player),
+	// and the cadence between waves is loosened so the total figures
+	// over the suction window drop to about half.
+	var/wave_interval = weakened ? 4 SECONDS : 2.5 SECONDS
+	var/crystal_per_wave = 1
+	var/player_per_wave = 1
 	var/spawn_duration = max(3 SECONDS, memory_red_duration - snow_setup_time)
 	// Snow lifts when the LAST figure finishes — spawn_duration of
 	// waves + the last figure's walk duration.
@@ -1932,6 +1973,10 @@
 		tick_decay = custom_decay
 	if(custom_tick_interval)
 		tick_interval = custom_tick_interval
+	// Light-purple outline so the puddle reads as a clear hazard
+	// against the dark stage. Same filter pattern as the radioactive
+	// component (code/datums/components/radioactive.dm:32).
+	add_filter("serio_puddle_glow", 2, list("type" = "outline", "color" = "#c890ff80", "size" = 1))
 	QDEL_IN(src, lifetime)
 	Tick()
 	if(isturf(loc))
@@ -2667,6 +2712,10 @@
 	var/turf/T = get_turf(src)
 	if(!T)
 		return
+	// Detonation cue: violet sparks + a small impact sound so it's
+	// obviously not just the warning fading.
+	new /obj/effect/temp_visual/cult/sparks(T)
+	playsound(T, 'sound/weapons/ego/shattering_window.ogg', 35, TRUE)
 	for(var/mob/living/carbon/human/H in T)
 		if(H.stat == DEAD)
 			continue
@@ -2716,6 +2765,12 @@
 	var/turf/T = get_turf(src)
 	if(!T)
 		return
+	// Detonation cue across the whole 3×3: violet sparks on each tile
+	// + one impact sound at the center so the player gets a clear
+	// "this just went off" beat instead of a silent damage tick.
+	for(var/turf/A in range(1, T))
+		new /obj/effect/temp_visual/cult/sparks(A)
+	playsound(T, 'sound/weapons/ego/shattering_window.ogg', 55, TRUE)
 	// Phase 2 Knight-aware AoE intercept: any live human standing on
 	// the Knight's tile sets the Knight's one-shot exempt flag so the
 	// downstream damage + charge-loss path below skips it. The player

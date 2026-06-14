@@ -163,6 +163,16 @@
 
 // ---------- Eye weakpoint ----------
 
+/// Heals the human credited with the killing blow on a Snow Cabin
+/// summon for +25 brute. Each summon type tracks
+/// `last_player_attacker` via its own deal_damage override and passes
+/// it here from death().
+/proc/snow_cabin_credit_kill_heal(mob/living/L)
+	if(!L || QDELETED(L) || L.stat == DEAD || !ishuman(L))
+		return
+	var/mob/living/carbon/human/H = L
+	H.adjustBruteLoss(-25, forced = TRUE)
+
 /mob/living/simple_animal/hostile/snow_cabin_eye
 	name = "watchful eye"
 	desc = "A clouded eye blinks where there was wood. It will not look away."
@@ -443,10 +453,18 @@
 	refraction_manages_own_death = TRUE
 	loot = list()
 	gold_core_spawnable = NO_SPAWN
+	/// Last non-faction damager; credited the kill heal in death().
+	var/mob/living/last_player_attacker
+
+/mob/living/simple_animal/hostile/cabin_meatling/deal_damage(damage_amount, damage_type, source = null, flags = null, attack_type = null, blocked = null, def_zone = null, wound_bonus = 0, bare_wound_bonus = 0, sharpness = SHARP_NONE)
+	. = ..()
+	if(. > 0 && isliving(source) && !faction_check_mob(source))
+		last_player_attacker = source
 
 // Free-roaming minion — disconnected from the cabin once spawned. No
 // floor scar when it dies.
 /mob/living/simple_animal/hostile/cabin_meatling/death(gibbed)
+	snow_cabin_credit_kill_heal(last_player_attacker)
 	. = ..()
 	QDEL_IN(src, 5)
 
@@ -536,10 +554,18 @@
 	refraction_manages_own_death = TRUE
 	loot = list()
 	gold_core_spawnable = NO_SPAWN
+	/// Last non-faction damager; credited the kill heal in death().
+	var/mob/living/last_player_attacker
+
+/mob/living/simple_animal/hostile/cabin_yagaslave/deal_damage(damage_amount, damage_type, source = null, flags = null, attack_type = null, blocked = null, def_zone = null, wound_bonus = 0, bare_wound_bonus = 0, sharpness = SHARP_NONE)
+	. = ..()
+	if(. > 0 && isliving(source) && !faction_check_mob(source))
+		last_player_attacker = source
 
 // Free-roaming minion — disconnected from the cabin. No floor scar; just
 // despawn.
 /mob/living/simple_animal/hostile/cabin_yagaslave/death(gibbed)
+	snow_cabin_credit_kill_heal(last_player_attacker)
 	. = ..()
 	QDEL_IN(src, 5)
 
@@ -1133,6 +1159,15 @@
 	next_ice_prison_spawn = world.time + 8 SECONDS
 	next_ice_shard        = world.time + 12 SECONDS
 
+/// AoE damage multiplier scaled by party size. Reverse-derives the
+/// wave's player count from maxHealth (wave_system.dm:324 freezes it
+/// at 6500 × n at spawn and never re-writes), then returns
+/// 1.0 − 0.15 per extra player past the first. Solo runs return 1.0;
+/// floored at 0.25 so megaparties can't drop AoE to nothing.
+/mob/living/simple_animal/hostile/snow_cabin/proc/AoEPartyMultiplier()
+	var/extra_players = max(0, round(maxHealth / 6500) - 1)
+	return max(0.25, 1 - 0.15 * extra_players)
+
 // ---------- AoE: Bone Stab Line ----------
 
 /// Dispatcher. Phase 1 fires one wall-to-wall sweep in a random cardinal
@@ -1244,7 +1279,7 @@
 					continue
 				if(!ishuman(L))
 					continue
-				L.deal_damage(bone_stab_damage, RED_DAMAGE, src,
+				L.deal_damage(bone_stab_damage * AoEPartyMultiplier(), RED_DAMAGE, src,
 					attack_type = (ATTACK_TYPE_RANGED | ATTACK_TYPE_SPECIAL))
 		if(bone_stab_chunk_delay > 0)
 			sleep(bone_stab_chunk_delay)
@@ -1278,7 +1313,7 @@
 				continue
 			if(!ishuman(L))
 				continue
-			L.deal_damage(bladed_teeth_damage, RED_DAMAGE, src,
+			L.deal_damage(bladed_teeth_damage * AoEPartyMultiplier(), RED_DAMAGE, src,
 				attack_type = (ATTACK_TYPE_RANGED | ATTACK_TYPE_SPECIAL))
 
 // ---------- AoE: Ice Spike ----------
@@ -1314,7 +1349,7 @@
 				continue
 			if(!ishuman(L))
 				continue
-			L.deal_damage(ice_spike_damage, PALE_DAMAGE, src,
+			L.deal_damage(ice_spike_damage * AoEPartyMultiplier(), PALE_DAMAGE, src,
 				attack_type = (ATTACK_TYPE_RANGED | ATTACK_TYPE_SPECIAL))
 	SLEEP_CHECK_DEATH(4)
 	for(var/turf/T as anything in area_turfs)
@@ -1355,7 +1390,7 @@
 				continue
 			if(!ishuman(L))
 				continue
-			L.deal_damage(ice_shard_damage, PALE_DAMAGE, src,
+			L.deal_damage(ice_shard_damage * AoEPartyMultiplier(), PALE_DAMAGE, src,
 				attack_type = (ATTACK_TYPE_RANGED | ATTACK_TYPE_SPECIAL))
 	SLEEP_CHECK_DEATH(4)
 	for(var/turf/T as anything in picks)
