@@ -45,7 +45,7 @@
 		list("name" = "Concurrent cap",    "description" = "Max simultaneously-alive mobs scales +20% per extra player. Bosses unaffected.",                                  "var" = "scale_concurrent"),
 		list("name" = "Spawn batch",       "description" = "Mobs per spawn cycle equals the lobby size (1 solo, 4 quad).",                                                    "var" = "scale_spawn_batch"),
 		list("name" = "Wave mob stats",    "description" = "Non-boss mobs gain +20% HP / +10% damage per extra player.",                                                      "var" = "scale_wave_stats"),
-		list("name" = "Boss HP",           "description" = "Boss HP × player count (1x solo, 4x quad). Boss damage is always left at authored values.",                       "var" = "scale_boss_stats"),
+		list("name" = "Boss HP",           "description" = "Boss HP scales +50% per extra player past the first (1x solo, 1.5x duo, 2x trio, 2.5x quad). Boss damage is always left at authored values.", "var" = "scale_boss_stats"),
 		list("name" = "Compensation pens", "description" = "Smaller parties get mental + salacid medipens at the start of each sector (4/2/1/0 by lobby size).",              "var" = "give_compensation_pens"),
 		list("name" = "Unique loadout per sector", "description" = "Players can't re-use the same EGO weapons or armor across sectors of the same run. Used items still appear in the loadout UI, crossed out and unselectable.", "var" = "unique_loadout_per_sector"),
 	)
