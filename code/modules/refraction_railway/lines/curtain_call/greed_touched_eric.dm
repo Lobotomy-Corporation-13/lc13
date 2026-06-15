@@ -96,6 +96,13 @@
 				if(C)
 					C.AdjustBlood(round(L.maxHealth / 2))
 					source.RecomputeShield()
+				// Achievement: spike-attack killed an Eric summon.
+				if(source.refraction_run_ref)
+					source.spike_summon_kills++
+					if(source.spike_summon_kills == 3)
+						for(var/mob/Mem as anything in source.refraction_run_ref.members)
+							if(!QDELETED(Mem))
+								source.refraction_run_ref.EarnAchievement(Mem.ckey, "eric_spike_three_summons")
 			L.deal_damage(L.health + 200, RED_DAMAGE, source,
 				flags = (DAMAGE_FORCED),
 				attack_type = (ATTACK_TYPE_RANGED | ATTACK_TYPE_SPECIAL))
@@ -316,6 +323,16 @@
 	var/recognition_locked = FALSE
 	var/recognition_bypass = FALSE
 
+	// ---- Refraction Railway achievement plumbing ----
+	/// Back-ref to the run; drives the no-burst, pool-drained, and
+	/// spike-summon-kill trackers.
+	var/datum/refraction_run/refraction_run_ref
+	/// One-shot flag so the pool-drained earn fires once per fight.
+	var/pool_drained_earned = FALSE
+	/// Running count of summons the spike attack has executed; the
+	/// `eric_spike_three_summons` achievement earns at 3.
+	var/spike_summon_kills = 0
+
 /mob/living/simple_animal/hostile/greed_touched_eric/refracted
 
 /mob/living/simple_animal/hostile/greed_touched_eric/Initialize(mapload)
@@ -331,6 +348,9 @@
 	sanguine_feast_cooldown = world.time + 15 SECONDS
 	addtimer(CALLBACK(src, PROC_REF(Greet)), 1 SECONDS)
 	addtimer(CALLBACK(src, PROC_REF(TryRecognition)), 1.5 SECONDS)
+	refraction_run_ref = FindRefractionRunForZ(z)
+	if(refraction_run_ref)
+		refraction_run_ref.InitAchievementsForMob(src)
 
 /mob/living/simple_animal/hostile/greed_touched_eric/proc/Greet()
 	if(QDELETED(src) || dying || stat == DEAD)
@@ -437,6 +457,14 @@
 		return
 	var/missing = max(0, blood_cap - C.blood_amount)
 	blood_resistance = round(missing / 4)
+	// Achievement: pool dropped to empty mid-fight (not the post-burst
+	// forced-zero window, which is skipped by the shield-locked guard
+	// above). One-shot per fight via pool_drained_earned.
+	if(C.blood_amount <= 0 && refraction_run_ref && !pool_drained_earned)
+		pool_drained_earned = TRUE
+		for(var/mob/Mem as anything in refraction_run_ref.members)
+			if(!QDELETED(Mem))
+				refraction_run_ref.EarnAchievement(Mem.ckey, "eric_pool_drained")
 
 /mob/living/simple_animal/hostile/greed_touched_eric/proc/ShieldLocked()
 	return world.time < shield_locked_until
@@ -757,6 +785,8 @@
 				attack_type = (ATTACK_TYPE_RANGED | ATTACK_TYPE_SPECIAL))
 			if(ishuman(L))
 				L.apply_lc_bleed(2)
+				if(refraction_run_ref)
+					refraction_run_ref.FailAchievement(L.ckey, "eric_no_burst_hit")
 	// Iterate over a snapshot — M.death() fires OnSummonDeath, which mutates summoned_mobs.
 	for(var/mob/living/M in summoned_mobs.Copy())
 		if(QDELETED(M) || M.stat == DEAD)

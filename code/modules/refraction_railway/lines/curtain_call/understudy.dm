@@ -159,12 +159,35 @@
 		"...you w-wanted me GONE... so LOOK... look at what's left-",
 	)
 
+	// ---- Refraction Railway achievement plumbing ----
+	/// Back-ref to the run; drives `understudy_form_chain` +
+	/// `understudy_weapon_pickup`.
+	var/datum/refraction_run/refraction_run_ref
+	/// Counter for consecutive force-swap-during-special events. Bumped
+	/// on each MorphForm fired while the form was in_special; cleared
+	/// on a landed special. EarnAchievement at 4.
+	var/force_swap_streak = 0
+	/// One-shot: only the first form-break drops a trophy weapon.
+	var/trophy_dropped = FALSE
+
 /mob/living/simple_animal/hostile/distortion/understudy/refracted
 
 /mob/living/simple_animal/hostile/distortion/understudy/Initialize(mapload)
 	. = ..()
 	addtimer(CALLBACK(src, PROC_REF(AssumeForm)), 1 SECONDS)
 	addtimer(CALLBACK(src, PROC_REF(TryRecognition)), 1.5 SECONDS)
+	refraction_run_ref = FindRefractionRunForZ(z)
+	if(refraction_run_ref)
+		refraction_run_ref.InitAchievementsForMob(src)
+
+/// Signal handler for trophy weapon pickup. Granted to the first
+/// human who picks the dropped costume weapon off the floor.
+/mob/living/simple_animal/hostile/distortion/understudy/proc/OnTrophyPickup(datum/source, mob/taker)
+	SIGNAL_HANDLER
+	if(!refraction_run_ref || !ishuman(taker))
+		return
+	refraction_run_ref.EarnAchievement(taker.ckey, "understudy_weapon_pickup")
+	UnregisterSignal(source, COMSIG_ITEM_PICKUP)
 
 // ---------- Refraction Railway recognition ----------
 
@@ -298,6 +321,14 @@
 /mob/living/simple_animal/hostile/distortion/understudy/proc/MorphForm()
 	if(dying || stat == DEAD || QDELETED(src) || !current_form || QDELETED(current_form))
 		return
+	// Achievement: count force-swaps that interrupt a special. Bumped
+	// here so the streak rolls forward across the rest of the morph.
+	if(current_form.in_special && refraction_run_ref)
+		force_swap_streak++
+		if(force_swap_streak >= 4)
+			for(var/mob/Mem as anything in refraction_run_ref.members)
+				if(!QDELETED(Mem))
+					refraction_run_ref.EarnAchievement(Mem.ckey, "understudy_form_chain")
 	var/missing_hp = max(0, current_form.maxHealth - current_form.health)
 	var/turf/T = get_turf(current_form)
 	UnregisterSignal(current_form, COMSIG_LIVING_DEATH)
@@ -534,6 +565,17 @@
 /mob/living/carbon/human/understudy_form/Destroy()
 	deltimer(special_timer)
 	special_timer = null
+	// Drop one costume weapon to the floor as the "Borrowed Steel"
+	// trophy, once per fight. Subsequent breaks still qdel everything.
+	if(master && !QDELETED(master) && !master.trophy_dropped)
+		for(var/obj/item/ego_weapon/W in costume_items)
+			REMOVE_TRAIT(W, TRAIT_NODROP, "understudy")
+			UnregisterSignal(W, COMSIG_PARENT_QDELETING)
+			costume_items -= W
+			W.forceMove(get_turf(src))
+			master.trophy_dropped = TRUE
+			master.RegisterSignal(W, COMSIG_ITEM_PICKUP, TYPE_PROC_REF(/mob/living/simple_animal/hostile/distortion/understudy, OnTrophyPickup))
+			break
 	master = null
 	for(var/obj/item/I as anything in costume_items.Copy())
 		if(QDELETED(I))
@@ -617,6 +659,11 @@
 	in_special = FALSE
 	if(stat == DEAD || QDELETED(src))
 		return
+	// Special landed without being cancelled by a force-swap. Reset
+	// the master's chain counter so `understudy_form_chain` requires
+	// an unbroken run of cancels.
+	if(master && !QDELETED(master))
+		master.force_swap_streak = 0
 	if(ai_controller)
 		ai_controller.set_ai_status(AI_STATUS_ON)
 	abilities_used_this_form++

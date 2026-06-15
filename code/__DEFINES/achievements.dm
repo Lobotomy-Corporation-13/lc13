@@ -57,6 +57,32 @@
 #define MEDAL_ACTIVATE_HAMMER "Divine Intervention"
 #define MEDAL_DAMAGE_PBIRD "Dont Poke the Bird"
 
+//Refraction Railway — retroactive
+#define MEDAL_REFRACTION_CC_PRE_PATCH "Refraction: Before the Patch"
+
+//Refraction Railway — Curtain Call
+#define MEDAL_REFRACTION_CC_CAPO_NO_FLURRY "Refraction: Restrained"
+#define MEDAL_REFRACTION_CC_CAPO_RAT_FIVE "Refraction: Leash Holder"
+#define MEDAL_REFRACTION_CC_AZARUS_NO_WAGER "Refraction: House Doesn't Win"
+#define MEDAL_REFRACTION_CC_AZARUS_MIRROR "Refraction: Shattered Reflection"
+#define MEDAL_REFRACTION_CC_UNDERSTUDY_CHAIN "Refraction: Costume Catastrophe"
+#define MEDAL_REFRACTION_CC_UNDERSTUDY_WEAPON "Refraction: Borrowed Steel"
+#define MEDAL_REFRACTION_CC_ERIC_NO_BURST "Refraction: Bloodless"
+#define MEDAL_REFRACTION_CC_ERIC_POOL_DRAINED "Refraction: Drained the Pool"
+#define MEDAL_REFRACTION_CC_ERIC_SPIKE_3 "Refraction: Skewered Choir"
+#define MEDAL_REFRACTION_CC_REAPER_STARVED "Refraction: Hall Cut Short"
+#define MEDAL_REFRACTION_CC_REAPER_CAP_10 "Refraction: Hoard Capped"
+#define MEDAL_REFRACTION_CC_SNOW_NO_MOUTH_KILL "Refraction: Lip Service"
+#define MEDAL_REFRACTION_CC_SNOW_NO_MOUTH_BITE "Refraction: Lips Sealed"
+#define MEDAL_REFRACTION_CC_PRIEST_NO_MARKED "Refraction: Unmarked Lamb"
+#define MEDAL_REFRACTION_CC_PRIEST_PUNISH_3 "Refraction: Sermon Interrupted"
+#define MEDAL_REFRACTION_CC_ACHIYA_STORM "Refraction: Reverence"
+#define MEDAL_REFRACTION_CC_ACHIYA_PIERCED_3 "Refraction: Three-Times Pierced"
+#define MEDAL_REFRACTION_CC_YS_FULL_PRESSURE "Refraction: Full Pressure"
+#define MEDAL_REFRACTION_CC_YS_STEADY "Refraction: Steady Climb"
+#define MEDAL_REFRACTION_CC_OVERSEER_LOW_DECAY "Refraction: Held the Stage"
+#define MEDAL_REFRACTION_CC_OVERSEER_TRIPLE_KD "Refraction: Triple Knockdown"
+
 //Refraction Railway — Nova Flare
 #define MEDAL_REFRACTION_ROSE_NO_HIGH_BLEED "Refraction: Stay Unbled"
 #define MEDAL_REFRACTION_GUARD_NO_BLACK_SWAP "Refraction: Restraint"

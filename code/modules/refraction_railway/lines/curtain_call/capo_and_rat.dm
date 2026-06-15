@@ -206,11 +206,22 @@
 	var/recognition_locked = FALSE
 	var/recognition_bypass = FALSE
 
+	// ---- Refraction Railway achievement plumbing ----
+	/// Back-ref to the run, populated in Initialize. Used by the Flurry
+	/// finisher (Restrained) + capo_rat_five counter.
+	var/datum/refraction_run/refraction_run_ref
+	/// Lifetime count of Capo Rat downings; the `capo_rat_five`
+	/// achievement earns for everyone when this hits 5.
+	var/capo_rat_downed_count = 0
+
 /mob/living/simple_animal/hostile/thumb_east_capo/refracted
 
 /mob/living/simple_animal/hostile/thumb_east_capo/Initialize(mapload)
 	. = ..()
 	addtimer(CALLBACK(src, PROC_REF(TryRecognition)), 1.5 SECONDS)
+	refraction_run_ref = FindRefractionRunForZ(z)
+	if(refraction_run_ref)
+		refraction_run_ref.InitAchievementsForMob(src)
 
 // ---------- Refraction Railway recognition ----------
 
@@ -612,6 +623,8 @@
 				L.Knockdown(2 SECONDS)
 				ApplyHitStatuses(L, flurry_finisher_tremor,
 					/* can_burst = */ TRUE, flurry_finisher_overheat)
+				if(refraction_run_ref && ishuman(L))
+					refraction_run_ref.FailAchievement(L.ckey, "capo_no_flurry_hit")
 	can_act = TRUE
 
 // One Flurry dash — 1-wide line, no end-tile AoE. Non-burst.
@@ -1084,6 +1097,15 @@
 		return
 	// Cancel any in-flight Hogtie state; the post-sleep guard in TrashDisposalTelegraph bails any pending windup.
 	ClearTrashDisposalState()
+	// Tick the Capo's "rat downed" counter; the `capo_rat_five`
+	// achievement earns for the whole party when this hits 5.
+	var/mob/living/simple_animal/hostile/thumb_east_capo/owning_capo = locate() in range(20, src)
+	if(owning_capo && owning_capo.refraction_run_ref)
+		owning_capo.capo_rat_downed_count++
+		if(owning_capo.capo_rat_downed_count == 5)
+			for(var/mob/Mem as anything in owning_capo.refraction_run_ref.members)
+				if(!QDELETED(Mem))
+					owning_capo.refraction_run_ref.EarnAchievement(Mem.ckey, "capo_rat_five")
 	downed       = TRUE
 	can_act      = FALSE
 	density      = FALSE

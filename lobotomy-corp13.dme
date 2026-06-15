@@ -3652,6 +3652,7 @@
 #include "code\modules\refraction_railway\scaling.dm"
 #include "code\modules\refraction_railway\status_glossary.dm"
 #include "code\modules\refraction_railway\wave_system.dm"
+#include "code\modules\refraction_railway\lines\curtain_call\achievements.dm"
 #include "code\modules\refraction_railway\lines\curtain_call\achiyalabopa.dm"
 #include "code\modules\refraction_railway\lines\curtain_call\attacks.dm"
 #include "code\modules\refraction_railway\lines\curtain_call\azarus.dm"
