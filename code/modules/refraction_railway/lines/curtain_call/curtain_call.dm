@@ -44,7 +44,7 @@
 
 	// Phases 2 + 3 of the Serio Zeal finale aren't authored yet, so the
 	// whole line stays Hub-visible but lobby-locked until they ship.
-	locked              = TRUE
+	locked              = FALSE
 
 	map_viewbox = list("w" = 600, "h" = 400)
 

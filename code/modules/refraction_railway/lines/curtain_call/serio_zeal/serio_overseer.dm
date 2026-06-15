@@ -236,6 +236,11 @@
 	var/murmurs_max_for_bracket = 2
 	/// world.time tracker for MurmurSpawnTick — when to spawn the next.
 	var/next_murmur_spawn_at = 0
+	/// Per-bracket spawn counter for the Murmur damage-coeff
+	/// escalation: each new Murmur this bracket takes +0.5 more
+	/// damage than the previous (multiplier = 1.0 + N * 0.5).
+	/// Reset to 0 in OnCrystalBracketChanged. No upper bound.
+	var/murmurs_spawned_this_bracket = 0
 	// ---- Bracket 3 persistent storm ----
 	/// TRUE between bracket-2→bracket-3 transition and the third slash.
 	/// Gates Bracket3EchoTick + survives across the bracket; cleared by
@@ -701,6 +706,20 @@
 		return
 	var/mob/living/simple_animal/hostile/serio_murmur/M = new(picked, src, knight_ref)
 	ScaleSpawnedHPWithSelf(M)
+	// Per-bracket damage-coeff escalation: each successive Murmur this
+	// bracket takes more damage than the last. Multiplier = 1.0 +
+	// (already_spawned * 0.5), so M#1 is 1.0, M#2 is 1.5, M#3 is 2.0,
+	// etc. ChangeResistances is the runtime-safe write (assigning
+	// damage_coeff = list(...) at runtime strands the mob in
+	// immunity — see CLAUDE.md feedback note).
+	var/dmg_mult = 1.0 + (murmurs_spawned_this_bracket * 0.5)
+	M.ChangeResistances(list(
+		RED_DAMAGE = dmg_mult,
+		WHITE_DAMAGE = dmg_mult,
+		BLACK_DAMAGE = dmg_mult,
+		PALE_DAMAGE = dmg_mult,
+	))
+	murmurs_spawned_this_bracket++
 	active_murmurs += M
 
 /// Called by the Knight after a slash animation completes. Snaps the
@@ -1950,6 +1969,11 @@
 /// Crystal calls this when current_bracket changes; we say the
 /// transition line for the new bracket.
 /mob/living/simple_animal/hostile/serio_overseer/proc/OnCrystalBracketChanged(new_bracket)
+	// Reset the per-bracket Murmur escalation counter — the first
+	// Murmur spawned in the new bracket starts at the base 1.0×
+	// multiplier again. Done outside the phase_2 guard so the reset
+	// also fires for the unlikely Phase 1 bracket transitions.
+	murmurs_spawned_this_bracket = 0
 	if(phase_2)
 		// Phase 2 owns bracket transitions via PlayBracketDialogue —
 		// skip the Phase 2 single-line monologue to avoid double-up.

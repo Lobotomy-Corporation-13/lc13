@@ -424,6 +424,18 @@
 		return
 	activated = TRUE
 	visible_message(span_nicegreen("The healing word brightens, gathering its bloom."))
+	// Each triggered well grants the Knight +5 charge — the Sage's
+	// crystals feed the bar the same way the Murmurs do. Look-up
+	// chain: well.source = Sage, sage.parent_overseer = Overseer,
+	// overseer.knight_ref = Knight.
+	if(istype(source, /mob/living/simple_animal/hostile/serio_sage))
+		var/mob/living/simple_animal/hostile/serio_sage/sage = source
+		var/mob/living/simple_animal/hostile/serio_overseer/overseer = sage.parent_overseer
+		if(overseer && !QDELETED(overseer))
+			var/mob/living/simple_animal/hostile/serio_knight/knight = overseer.knight_ref
+			if(knight && !QDELETED(knight) && knight.stat != DEAD)
+				knight.charge_progress = clamp(knight.charge_progress + 5, 0, 100)
+				knight.UpdateChargeMaptext()
 	// 3-second warning that telegraphs where the bloom will land.
 	// Duration matches the Pulse charge time so the visual fades right
 	// as the heal triggers.

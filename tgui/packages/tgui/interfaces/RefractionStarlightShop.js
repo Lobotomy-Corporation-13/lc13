@@ -4,12 +4,12 @@ import {
   Button,
   Dropdown,
   Flex,
-  NoticeBox,
   Section,
   Stack,
   Tabs,
 } from '../components';
 import { Window } from '../layouts';
+import { HazardTape } from './common/HazardTape';
 
 const SORT_MODES = [
   { value: 'cost_asc', label: 'Cost: Low → High' },
@@ -31,18 +31,55 @@ const sortQuirks = (list, mode) => {
 };
 
 const QuirkRow = props => {
-  const { entry, onRefund, onToggle } = props;
+  const { entry, balance, onBuy, onToggle } = props;
+  const unlocked = !!entry.unlocked;
   const active = !!entry.active;
+  const lineLocked = !!entry.line_locked;
+  const lineGated
+    = !!entry.line_required && !entry.line_done;
+  const tooPoor = !unlocked && !lineGated && !lineLocked
+    && balance < entry.cost;
+  const accent = entry.line_color || null;
+
+  let label = `Buy (${entry.cost} ★)`;
+  let color = null;
+  let disabled = false;
+  if (unlocked) {
+    label = 'Owned';
+    color = 'good';
+    disabled = true;
+  } else if (lineLocked) {
+    label = 'Under Construction';
+    disabled = true;
+  } else if (lineGated) {
+    label = 'Locked';
+    disabled = true;
+  } else if (tooPoor) {
+    disabled = true;
+  }
+
   const bgColor = active
     ? 'rgba(96, 165, 250, 0.18)'
-    : 'rgba(34, 197, 94, 0.14)';
+    : unlocked
+      ? 'rgba(34, 197, 94, 0.14)'
+      : lineGated
+        ? 'rgba(120, 0, 120, 0.14)'
+        : 'rgba(255, 255, 255, 0.035)';
+
+  const borderLeft = accent
+    ? `4px solid ${accent}`
+    : '4px solid rgba(255, 255, 255, 0.08)';
+
   return (
     <Box
       p={1}
       mb={0.5}
       style={{
         'border-radius': '6px',
-        'border-left': '4px solid rgba(255, 255, 255, 0.08)',
+        'border-left': borderLeft,
+        'position': 'relative',
+        'overflow': 'hidden',
+        opacity: (unlocked && !active) || lineGated ? 0.75 : 1,
       }}
       backgroundColor={bgColor}>
       <Flex>
@@ -51,37 +88,77 @@ const QuirkRow = props => {
           <Box mt={0.5} fontSize="11px" color="label">
             {entry.desc}
           </Box>
+          {!!entry.line_required && (
+            <Box
+              mt={0.5}
+              fontSize="10px"
+              style={{ color: accent || '#888' }}>
+              Line tie-in:{' '}
+              {entry.line_name || entry.line_required}
+              {!entry.line_done && ' (not yet cleared)'}
+            </Box>
+          )}
         </Flex.Item>
         <Flex.Item ml={1} style={{ 'min-width': '190px' }}>
           <Stack vertical>
             <Stack.Item textAlign="right" color="label">
-              Refund: +{entry.cost} ★
+              Cost: {entry.cost} ★
             </Stack.Item>
             <Stack.Item>
               <Button
                 fluid
-                color="bad"
-                icon="undo"
-                tooltip={`Returns ${entry.cost} ★ to your balance.`}
-                content="Refund"
-                onClick={() => onRefund(entry.name)}
+                color={color}
+                disabled={disabled}
+                content={label}
+                onClick={() => !disabled && onBuy(entry.name)}
               />
             </Stack.Item>
-            <Stack.Item>
-              <Button
-                fluid
-                icon={active ? 'times' : 'vial'}
-                color={active ? 'average' : null}
-                content={active ? 'Unequip' : 'Equip for Testing'}
-                onClick={() => onToggle(entry.name)}
-              />
-            </Stack.Item>
+            {unlocked && (
+              <Stack.Item>
+                <Button
+                  fluid
+                  icon={active ? 'times' : 'vial'}
+                  color={active ? 'average' : null}
+                  content={active ? 'Unequip' : 'Equip for Testing'}
+                  onClick={() => onToggle(entry.name)}
+                />
+              </Stack.Item>
+            )}
           </Stack>
         </Flex.Item>
       </Flex>
+      {lineLocked ? (
+        <HazardTape count={3} />
+      ) : null}
     </Box>
   );
 };
+
+const Category = props => {
+  const { title, accent, list, balance, onBuy, onToggle } = props;
+  if (!list || !list.length) {
+    return null;
+  }
+  return (
+    <Section
+      title={title}
+      style={accent
+        ? { 'border-left': `3px solid ${accent}` }
+        : {}}>
+      {list.map(entry => (
+        <QuirkRow
+          key={entry.name}
+          entry={entry}
+          balance={balance}
+          onBuy={onBuy}
+          onToggle={onToggle}
+        />
+      ))}
+    </Section>
+  );
+};
+
+const GENERAL_KEY = '__general__';
 
 const SourceRow = props => {
   const { label, value, color, desc } = props;
@@ -189,25 +266,47 @@ const EarningView = () => (
 
 const ShopView = (props, context) => {
   const { act, data } = useBackend(context);
+  const balance = data.balance || 0;
   const quirks = data.quirks || [];
-  const deprecationNote = data.deprecation_note || '';
   const [sortMode, setSortMode] = useLocalState(
     context,
     'starlightSortMode',
     'cost_asc',
   );
 
+  const groups = {};
+  const groupOrder = [];
+  const lineColor = {};
+  const lineName = {};
+  for (let i = 0; i < quirks.length; i++) {
+    const q = quirks[i];
+    const key = q.line_required || GENERAL_KEY;
+    if (!groups[key]) {
+      groups[key] = [];
+      groupOrder.push(key);
+      if (key !== GENERAL_KEY) {
+        lineColor[key] = q.line_color || null;
+        lineName[key] = q.line_name || q.line_required;
+      }
+    }
+    groups[key].push(q);
+  }
+  groupOrder.sort((a, b) => {
+    if (a === GENERAL_KEY) {
+      return -1;
+    }
+    if (b === GENERAL_KEY) {
+      return 1;
+    }
+    return String(lineName[a] || a)
+      .localeCompare(String(lineName[b] || b));
+  });
+
   const sortLabel = (SORT_MODES.find(m => m.value === sortMode)
     || SORT_MODES[0]).label;
-  const sorted = sortQuirks(quirks, sortMode);
 
   return (
     <>
-      {!!deprecationNote && (
-        <NoticeBox warning>
-          {deprecationNote}
-        </NoticeBox>
-      )}
       <Section>
         <Flex align="center" justify="space-between">
           <Flex.Item color="label">
@@ -224,23 +323,30 @@ const ShopView = (props, context) => {
           </Flex.Item>
         </Flex>
       </Section>
-      {sorted.length === 0 ? (
+      {quirks.length === 0 ? (
         <Section>
           <Box color="label" textAlign="center" mt={2}>
-            You have no Starlight quirks to refund.
+            No Starlight quirks have been authored yet.
           </Box>
         </Section>
       ) : (
-        <Section title="Owned Starlight Quirks">
-          {sorted.map(entry => (
-            <QuirkRow
-              key={entry.name}
-              entry={entry}
-              onRefund={name => act('refund', { name })}
-              onToggle={name => act('toggle_active', { name })}
-            />
-          ))}
-        </Section>
+        groupOrder.map(key => (
+          <Category
+            key={key}
+            title={
+              key === GENERAL_KEY
+                ? 'General'
+                : (lineName[key] || key)
+            }
+            accent={
+              key === GENERAL_KEY ? null : lineColor[key]
+            }
+            list={sortQuirks(groups[key], sortMode)}
+            balance={balance}
+            onBuy={name => act('purchase', { name })}
+            onToggle={name => act('toggle_active', { name })}
+          />
+        ))
       )}
     </>
   );
@@ -267,15 +373,15 @@ export const RefractionStarlightShop = (props, context) => {
             </Box>
           </Box>
           <Box mt={0.3} fontSize="11px" color="label">
-            Purchases disabled. Refund owned quirks here to
-            recover spent Starlight.
+            Permanent unlocks. Quirks remain in your character
+            setup once purchased.
           </Box>
         </Section>
         <Tabs>
           <Tabs.Tab
             selected={tab === 'shop'}
             onClick={() => setTab('shop')}>
-            Refund
+            Shop
           </Tabs.Tab>
           <Tabs.Tab
             selected={tab === 'earning'}

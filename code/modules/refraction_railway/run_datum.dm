@@ -85,6 +85,13 @@ GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 	var/list/pending_bench = list()
 	/// ckey -> list of medipen refs issued this sector.
 	var/list/pen_refs = list()
+	/// Set of ckeys that have already received their compensation-pen
+	/// allotment this sector. Independent of `pen_refs` so the gate
+	/// fires even when the count legitimately resolves to zero (a
+	/// full 4-player party gets 0 pens; without this, the bypass
+	/// returns and a re-pick re-tries the count). Cleared in
+	/// EnterCheckpoint right after `RemoveUnusedPens()`.
+	var/list/sector_pens_issued = list()
 	/// ckey -> volume integer (0..100). Defaults to 50 when unset; the
 	/// console panel reads/writes through GetMusicVolume / SetMusicVolume.
 	/// Per-run only — never persisted to disk.
@@ -465,6 +472,7 @@ GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 	current_room = ""
 	// Sweep last sector's pens before healing (pens are per-sector).
 	RemoveUnusedPens()
+	sector_pens_issued.Cut()
 	// Checkpoint room is silent — theme music is per-combat-node only.
 	StopThemeMusic()
 	for(var/mob/living/carbon/human/H as anything in members)
@@ -1291,12 +1299,24 @@ GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 		return
 	if(!ishuman(H) || !H.ckey || IsMemberOutOfAction(H))
 		return
-	var/list/refs = pen_refs[H.ckey]
-	if(islist(refs) && length(refs))
+	// Idempotency gate: one allotment per ckey per sector. Tracked on
+	// `sector_pens_issued` so the gate also catches the zero-pen case
+	// (a 4-player party that wipes and re-picks loadouts shouldn't
+	// re-roll the count on each pick). Mark the ckey BEFORE the count
+	// check so the bookmark sticks even when 0 pens are issued.
+	if(H.ckey in sector_pens_issued)
 		return
-	var/count = PenCountForLobby(LiveMemberCount())
+	sector_pens_issued += H.ckey
+	// Party size is read off the enrolled member list — `members`
+	// only shrinks via RemoveMember (leave / DC cleanup), it doesn't
+	// dip during the post-wipe heal sequence the way LiveMemberCount
+	// does. Without this, a full team-wipe used to hand out pens
+	// because the first member healed sampled LiveMemberCount = 1
+	// (everyone else still DEAD) and read the solo bracket.
+	var/count = PenCountForLobby(length(members))
 	if(count <= 0)
 		return
+	var/list/refs = pen_refs[H.ckey]
 	if(!islist(refs))
 		refs = list()
 		pen_refs[H.ckey] = refs

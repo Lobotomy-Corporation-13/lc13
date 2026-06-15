@@ -206,6 +206,34 @@
 			H.adjustSanityLoss(50)
 			to_chat(H, span_warning("Ack! Water!"))
 		exposed_mob.extinguish_mob() // extinguish removes all fire stacks
+	// Bloodfiend Origins quirk: any water hitting the skin
+	// panics the holder. TOUCH covers thrown beakers, splashes,
+	// and fire-extinguisher cones; VAPOR covers spray bottles
+	// and water-laced smoke. Coverage of head / chest / groin
+	// softens the hit; full coverage reduces it to a trickle.
+	// See /datum/quirk/starlight_bloodfiend_origins.
+	if(HAS_TRAIT(exposed_mob, TRAIT_BLOODFIEND) && (methods & (TOUCH | VAPOR)) && ishuman(exposed_mob))
+		var/mob/living/carbon/human/B = exposed_mob
+		var/coverage = 0
+		if(B.head?.body_parts_covered & HEAD)
+			coverage += 1
+		if(B.wear_suit?.body_parts_covered & CHEST)
+			coverage += 1
+		if(B.wear_suit?.body_parts_covered & GROIN)
+			coverage += 1
+		var/sp_hit
+		switch(coverage)
+			if(0)
+				sp_hit = 15
+			if(1)
+				sp_hit = 9
+			if(2)
+				sp_hit = 6
+			if(3)
+				sp_hit = 2
+		var/datum/quirk/starlight_bloodfiend_origins/Q = locate() in B.roundstart_quirks
+		if(Q)
+			Q.ApplyWaterPanic(sp_hit, 30, "splash")
 
 /datum/reagent/water/on_mob_life(mob/living/carbon/M)
 	. = ..()

@@ -78,23 +78,25 @@
 /obj/structure/refraction_starlight_shop/ui_data(mob/user)
 	var/list/data = list()
 	data["balance"] = SSrefraction_railway.GetStarlight(user.ckey)
-	data["deprecation_note"] = "Starlight quirks are being retired. \
-		Refund here to recover your full spent Starlight \
-		— a replacement progression system is in development."
 	var/list/rows = list()
 	for(var/V in SSquirks.quirks)
 		var/datum/quirk/T = SSquirks.quirks[V]
 		if(!initial(T.starlight_locked))
 			continue
 		var/quirk_name = initial(T.name)
-		if(!SSrefraction_railway.IsQuirkUnlocked(user.ckey, quirk_name))
-			continue
+		var/req_line = initial(T.required_line_completed)
+		var/datum/refraction_line/RL = req_line ? SSrefraction_railway.lines[req_line] : null
 		rows += list(list(
-			"name"     = quirk_name,
-			"desc"     = initial(T.desc),
-			"cost"     = initial(T.starlight_cost),
-			"unlocked" = TRUE,
-			"active"   = SSrefraction_railway.IsHubQuirkActive(user.ckey, quirk_name),
+			"name"          = quirk_name,
+			"desc"          = initial(T.desc),
+			"cost"          = initial(T.starlight_cost),
+			"unlocked"      = SSrefraction_railway.IsQuirkUnlocked(user.ckey, quirk_name),
+			"active"        = SSrefraction_railway.IsHubQuirkActive(user.ckey, quirk_name),
+			"line_required" = req_line,
+			"line_name"     = istype(RL) ? RL.name : null,
+			"line_color"    = istype(RL) ? RL.display_color : null,
+			"line_done"     = req_line ? SSrefraction_railway.HasCompletedLine(user.ckey, req_line) : TRUE,
+			"line_locked"   = istype(RL) ? RL.locked : FALSE,
 		))
 	data["quirks"] = rows
 	return data
@@ -107,6 +109,13 @@
 	if(!quirk_name)
 		return
 	switch(action)
+		if("purchase")
+			var/datum/quirk/Q = SSquirks.quirks[quirk_name]
+			var/cost = Q ? initial(Q.starlight_cost) : 0
+			if(SSrefraction_railway.PurchaseQuirk(usr, quirk_name))
+				to_chat(usr, span_nicegreen("Purchased [quirk_name] (-[cost] ★). Balance: [SSrefraction_railway.GetStarlight(usr.ckey)]"))
+			else
+				to_chat(usr, span_warning("Cannot purchase [quirk_name]."))
 		if("refund")
 			var/datum/quirk/Q = SSquirks.quirks[quirk_name]
 			var/refunded = Q ? initial(Q.starlight_cost) : 0

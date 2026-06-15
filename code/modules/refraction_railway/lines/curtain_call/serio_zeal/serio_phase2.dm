@@ -98,6 +98,15 @@
 /// gone, the standard wave-clear hook fires.
 /mob/living/simple_animal/hostile/serio_overseer/proc/DissolveSequence()
 	visible_message(span_userdanger("[src] dissolves."))
+	// Tell the wave controller we're gone right now. qdel doesn't fire
+	// COMSIG_GLOB_MOB_DEATH, and the Overseer has
+	// `refraction_manages_own_death = TRUE`, so without this nudge the
+	// wave never notices the boss left the room and the checkpoint
+	// transition never fires. DropMob is the documented "still-living
+	// mob playing a death fade" hook in wave_system.dm.
+	var/datum/refraction_wave_controller/W = GLOB.refraction_wave_mob_owners[src]
+	if(W)
+		W.DropMob(src)
 	animate(src, alpha = 0, time = 3 SECONDS)
 	if(parent_crystal && !QDELETED(parent_crystal))
 		new /obj/effect/temp_visual/serio_crystal_shatter(get_turf(parent_crystal))

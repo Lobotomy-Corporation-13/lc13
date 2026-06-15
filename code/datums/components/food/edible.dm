@@ -321,6 +321,20 @@ Behavior that's still missing from this component that original food items had t
 
 	if(!owner?.reagents)
 		return FALSE
+	// Bloodfiend Origins: water-laced food refuses to go down for
+	// the holder. Self-feed bails out entirely with a tiny SP nick;
+	// force-feed lets the bite continue but applies a big SP +
+	// jitter as the body locks up around it.
+	if(HAS_TRAIT(eater, TRAIT_BLOODFIEND) && owner.reagents.has_reagent(/datum/reagent/water) && ishuman(eater))
+		var/mob/living/carbon/human/bloodfiend_eater = eater
+		if(eater == feeder)
+			to_chat(eater, span_warning("Your throat closes at the smell of water in [owner]. You can't bring yourself to bite."))
+			bloodfiend_eater.adjustSanityLoss(3)
+			return FALSE
+		else
+			to_chat(eater, span_userdanger("Water in your mouth — your body locks up but [feeder] forces it down."))
+			bloodfiend_eater.adjustSanityLoss(20)
+			bloodfiend_eater.do_jitter_animation(60)
 	if(eater.satiety > -200)
 		eater.satiety -= junkiness
 	playsound(eater.loc,'sound/items/eatfood.ogg', rand(10,50), TRUE)
