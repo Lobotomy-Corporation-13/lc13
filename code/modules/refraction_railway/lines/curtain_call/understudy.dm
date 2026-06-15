@@ -129,10 +129,11 @@
 	var/recognition_locked = FALSE
 	var/recognition_bypass = FALSE
 
-	/// Phase 1 HP floor as a fraction of maxHealth.
+	/// Phase 1 HP floor as a fraction of maxHealth. Resolved against
+	/// the live `maxHealth` each adjustHealth call so wave_system's
+	/// party-size scaling (which runs AFTER Initialize) doesn't lock
+	/// the trigger at the solo HP.
 	var/phase_trigger_threshold = 0.25
-	/// Absolute HP floor, resolved at Initialize.
-	var/phase_trigger_hp
 	var/phase_2_triggered = FALSE
 	/// Replaces form_pool once phase 2 fires.
 	var/list/phase_2_form_pool = list(
@@ -162,7 +163,6 @@
 
 /mob/living/simple_animal/hostile/distortion/understudy/Initialize(mapload)
 	. = ..()
-	phase_trigger_hp = round(maxHealth * phase_trigger_threshold)
 	addtimer(CALLBACK(src, PROC_REF(AssumeForm)), 1 SECONDS)
 	addtimer(CALLBACK(src, PROC_REF(TryRecognition)), 1.5 SECONDS)
 
@@ -233,9 +233,13 @@
 	current_form = null
 	return ..()
 
-// Phase-1 HP floor: any hit below phase_trigger_hp caps and triggers phase 2.
+// Phase-1 HP floor: any hit below `phase_trigger_threshold × maxHealth`
+// caps and triggers phase 2. Threshold is derived from the live
+// `maxHealth` here (not precomputed at Initialize) so party-scaled
+// spawns still flip at the correct percentage.
 /mob/living/simple_animal/hostile/distortion/understudy/adjustHealth(amount, updating_health = TRUE, forced = FALSE)
 	if(!forced && !phase_2_triggered && amount > 0 && stat != DEAD)
+		var/phase_trigger_hp = round(maxHealth * phase_trigger_threshold)
 		if((health - amount) <= phase_trigger_hp)
 			amount = max(0, health - phase_trigger_hp)
 			. = ..(amount, updating_health, forced)

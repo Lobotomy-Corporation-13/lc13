@@ -14,8 +14,8 @@
 	icon_living = "knight"
 	icon_dead = "knight"
 	faction = list("neutral")
-	maxHealth = 1500
-	health = 1500
+	maxHealth = 3500
+	health = 3500
 	melee_damage_lower = 0
 	melee_damage_upper = 0
 	mob_biotypes = MOB_ORGANIC|MOB_HUMANOID
@@ -34,8 +34,9 @@
 	// ---- Charge mechanic ----
 	/// Current charge percent, 0-100. Slash fires at 100.
 	var/charge_progress = 0
-	/// Charge added per tick. 1.66 * 2 ticks/s = 3.33%/s = 100% in 30s.
-	var/charge_per_tick = 1.66
+	/// Charge added per tick. 2.075 * 2 ticks/s = 4.15%/s = 100% in 24s.
+	/// (+25% over the prior 1.66 baseline.)
+	var/charge_per_tick = 2.075
 	/// Charge tick interval in deciseconds. 5 ds = twice per second.
 	var/charge_tick_interval = 5
 	/// Bracket mirror — tracks the Overseer's current bracket so the
@@ -45,12 +46,6 @@
 	/// Set TRUE while a slash animation is mid-play. Suppresses further
 	/// charge ticks so we don't queue a second slash mid-cinematic.
 	var/firing_slash = FALSE
-	/// One-shot flag set by serio_void_macro_aoe.Blowup() when a player
-	/// is standing on the Knight's tile during the B3 K-aware AoE
-	/// telegraph. Consumed (cleared) the next time OnAntiKnightHit
-	/// fires; until then, the Knight is exempt from damage + charge
-	/// loss for that one hit.
-	var/knight_aware_aoe_exempt = FALSE
 	/// Set TRUE while the Knight is in the soft-fail stagger window
 	/// (HP dropped to ≤30%). ChargeTick skips while set, then
 	/// EndStagger clears it.
@@ -165,17 +160,11 @@
 /mob/living/simple_animal/hostile/serio_knight/proc/UnlockChargeAfterSlash()
 	firing_slash = FALSE
 
-/// Applied by anti-Knight attacks (lance / salvo / seeker / K-aware
-/// AoE) that successfully reach the Knight. `damage_amount` is passed
-/// as 0 for the lance/salvo path since the projectile's parent on_hit
-/// already applied HP damage; only the seeker and the K-aware AoE
-/// pass non-zero here. `knight_aware_aoe_exempt` is a one-shot gate
-/// the K-aware AoE Blowup() flips when a player body-shields on the
-/// Knight's tile — when set, this hit is fully absorbed.
+/// Applied by anti-Knight attacks (lance / salvo / seeker) that
+/// successfully reach the Knight. `damage_amount` is passed as 0 for
+/// the lance/salvo path since the projectile's parent on_hit already
+/// applied HP damage; only the seeker passes non-zero here.
 /mob/living/simple_animal/hostile/serio_knight/proc/OnAntiKnightHit(damage_amount, charge_loss)
-	if(knight_aware_aoe_exempt)
-		knight_aware_aoe_exempt = FALSE
-		return
 	if(damage_amount > 0)
 		deal_damage(damage_amount, BLACK_DAMAGE, attack_type = (ATTACK_TYPE_SPECIAL))
 	if(charge_loss > 0)

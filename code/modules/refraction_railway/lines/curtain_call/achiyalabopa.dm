@@ -676,8 +676,8 @@
 	icon_state = "achiyalabopa"
 	icon_living = "achiyalabopa"
 	icon_dead = "achiyalabopa"
-	maxHealth = 7500
-	health = 7500
+	maxHealth = 6500
+	health = 6500
 	damage_coeff = list(RED_DAMAGE = 0.0, WHITE_DAMAGE = 0.0, BLACK_DAMAGE = 0.0, PALE_DAMAGE = 0.0)
 	melee_damage_lower = 15
 	melee_damage_upper = 25

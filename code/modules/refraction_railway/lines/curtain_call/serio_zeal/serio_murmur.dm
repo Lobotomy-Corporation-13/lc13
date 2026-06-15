@@ -31,9 +31,9 @@
 	icon_state = "static"
 	color = "#9966ff"
 	faction = list("serio_zeal")
-	maxHealth = 1000
-	health = 1000
-	damage_coeff = list(RED_DAMAGE = 0.8, WHITE_DAMAGE = 0.8, BLACK_DAMAGE = 0.8, PALE_DAMAGE = 0.8)
+	maxHealth = 800
+	health = 800
+	damage_coeff = list(RED_DAMAGE = 1, WHITE_DAMAGE = 1, BLACK_DAMAGE = 1, PALE_DAMAGE = 1)
 	// Anti-Knight lances phase through via projectile_phasing = PASSGLASS.
 	// Players still impact us normally with their EGO/weapon projectiles
 	// since those don't set projectile_phasing.
@@ -97,11 +97,13 @@
 /mob/living/simple_animal/hostile/serio_murmur/AttackingTarget(atom/attacked_target)
 	return FALSE
 
-/// On death: heal nearby players a small amount, then immediately qdel
-/// the Murmur (and its beam) so no invisible corpse + dangling beam
-/// lingers on the map. Parent death() handles standard simple_animal
-/// stat changes; we run heal before so the visible_message order
-/// reads "Murmur dies → players heal → Murmur disappears".
+/// On death: heal nearby players a small amount, kick +5% charge onto
+/// the Knight (one voice quieted, one step closer to the swing), then
+/// immediately qdel the Murmur (and its beam) so no invisible corpse
+/// + dangling beam lingers on the map. Parent death() handles standard
+/// simple_animal stat changes; we run the side-effects before so the
+/// visible_message order reads "Murmur dies → players heal → Knight
+/// charges → Murmur disappears".
 /mob/living/simple_animal/hostile/serio_murmur/death(gibbed)
 	for(var/mob/living/carbon/human/H in view(7, src))
 		if(H.stat == DEAD)
@@ -109,6 +111,9 @@
 		H.adjustBruteLoss(-10, forced = TRUE)
 		H.adjustFireLoss(-10, forced = TRUE)
 		H.adjustSanityLoss(-10, forced = TRUE)
+	if(knight_ref && !QDELETED(knight_ref) && knight_ref.stat != DEAD)
+		knight_ref.charge_progress = clamp(knight_ref.charge_progress + 5, 0, 100)
+		knight_ref.UpdateChargeMaptext()
 	. = ..()
 	qdel(src)
 
