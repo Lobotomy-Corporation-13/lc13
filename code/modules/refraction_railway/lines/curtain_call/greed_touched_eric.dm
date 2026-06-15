@@ -589,7 +589,12 @@
 		return
 	var/list/pool = GetWavePool()
 	var/list/valid_turfs = list()
-	for(var/turf/T in orange(3, src))
+	// view() instead of orange() so summons can't materialise through a
+	// wall — they need an actual line of sight from Eric's tile, which
+	// matches how the Overseer's Murmur perimeter is built.
+	for(var/turf/T in view(3, src))
+		if(T == get_turf(src))
+			continue
 		if(T.density)
 			continue
 		if(locate(/mob/living) in T)
@@ -634,7 +639,12 @@
 		return
 	var/list/pool = GetWavePool()
 	var/list/valid_turfs = list()
-	for(var/turf/T in orange(3, src))
+	// LOS-respecting spawn — see SummonWave for the same idiom. Panic
+	// reinforcements still come from view 3 of Eric's tile, never
+	// through walls.
+	for(var/turf/T in view(3, src))
+		if(T == get_turf(src))
+			continue
 		if(T.density)
 			continue
 		if(locate(/mob/living) in T)
