@@ -16,7 +16,33 @@
 	. = ..()
 	if(.)
 		return
+	GrantPrePatchVeteran(user)
 	ui_interact(user)
+
+/// Retroactive grant for the players who beat Curtain Call before the
+/// rebalance patch. Checks the user's mind ckey (falls back to live
+/// ckey) against a hand-curated list; matches receive the HARDEST
+/// difficulty achievement on first console open. `give_award` is
+/// idempotent — repeat opens after the first don't re-fire on_unlock.
+/obj/machinery/computer/refraction_railway_console/proc/GrantPrePatchVeteran(mob/user)
+	if(!user?.client)
+		return
+	var/key = user.mind?.key || user.ckey
+	if(!key)
+		return
+	var/static/list/pre_patch_veterans = list(
+		"dragonlordic",
+		"fortheend",
+		"thundershade",
+		"433luke",
+		"amanitaspooder",
+		"deadkung",
+		"aegidia",
+		"rerka",
+	)
+	if(!(ckey(key) in pre_patch_veterans))
+		return
+	user.client.give_award(/datum/award/achievement/lc13/refraction/curtain_call_pre_patch, user)
 
 /obj/machinery/computer/refraction_railway_console/ui_interact(mob/user, datum/tgui/ui)
 	ui = SStgui.try_update_ui(user, src, ui)

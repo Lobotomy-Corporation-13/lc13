@@ -302,6 +302,11 @@
 	. = ..()
 	if(.)
 		PlayChompAnimation()
+		// Achievement: bite landed on a player → fail the per-player
+		// no-bite tracker.
+		if(ishuman(attacked_target) && parent_cabin?.refraction_run_ref)
+			var/mob/living/carbon/human/H = attacked_target
+			parent_cabin.refraction_run_ref.FailAchievement(H.ckey, "snow_no_mouth_bite")
 
 // State 1 → 2: closed → opening. The animated open sprite plays the
 // transition; bites still can't fire.
@@ -630,6 +635,11 @@
 	var/recognition_locked = FALSE
 	var/recognition_bypass = FALSE
 
+	// ---- Refraction Railway achievement plumbing ----
+	/// Back-ref to the run; drives the no-mouth-kill and no-mouth-bite
+	/// trackers.
+	var/datum/refraction_run/refraction_run_ref
+
 	// Weakpoint spawn targets per phase. Main tick fills to these.
 	var/eye_target_phase_1   = 6
 	var/eye_target_phase_2   = 12
@@ -793,6 +803,9 @@
 	next_bladed_teeth = world.time + 4 SECONDS
 	next_ice_spike    = world.time + 10 SECONDS
 	addtimer(CALLBACK(src, PROC_REF(TryRecognition)), 1.5 SECONDS)
+	refraction_run_ref = FindRefractionRunForZ(z)
+	if(refraction_run_ref)
+		refraction_run_ref.InitAchievementsForMob(src)
 
 /mob/living/simple_animal/hostile/snow_cabin/Destroy()
 	deltimer(main_tick_timer_id)
@@ -1138,6 +1151,12 @@
 /mob/living/simple_animal/hostile/snow_cabin/proc/OnMouthKilled(mob/living/M)
 	active_mouths -= M
 	BleedCabin(M.maxHealth)
+	// Achievement: any Mouth death fails `snow_no_mouth_kill` for the
+	// whole party — it's a party-wide "don't kill mouths" tracker.
+	if(refraction_run_ref)
+		for(var/mob/Mem as anything in refraction_run_ref.members)
+			if(!QDELETED(Mem))
+				refraction_run_ref.FailAchievement(Mem.ckey, "snow_no_mouth_kill")
 
 /// Applies BRUTE damage to the cabin equal to the killed weakpoint's
 /// maxHealth, then checks for the Phase 2 transition. Death is handled by

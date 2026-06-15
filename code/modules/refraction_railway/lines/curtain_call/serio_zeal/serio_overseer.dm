@@ -323,6 +323,16 @@
 	var/list/bracket_channel_lines
 	var/list/bracket_transition_lines
 
+	// ---- Refraction Railway achievement plumbing ----
+	/// Back-ref to the run; drives low-decay + triple-knockdown hooks.
+	var/datum/refraction_run/refraction_run_ref
+	/// One-shot fail flag for `overseer_low_decay`. Flipped the moment
+	/// any party member's mental decay stacks exceed 30 in Phase 1.
+	var/low_decay_failed = FALSE
+	/// Lifetime knockdown count; the `overseer_triple_knockdown`
+	/// achievement earns for the party at 3.
+	var/knockdown_count = 0
+
 /mob/living/simple_animal/hostile/serio_overseer/Initialize(mapload)
 	. = ..()
 	toggle_ai(AI_OFF)
@@ -330,6 +340,9 @@
 	if(!mapload)
 		SpawnCrystalNearby()
 	main_tick_timer = addtimer(CALLBACK(src, PROC_REF(MainTick)), main_tick_interval, TIMER_STOPPABLE)
+	refraction_run_ref = FindRefractionRunForZ(z)
+	if(refraction_run_ref)
+		refraction_run_ref.InitAchievementsForMob(src)
 
 /mob/living/simple_animal/hostile/serio_overseer/Destroy()
 	if(main_tick_timer)
@@ -865,6 +878,14 @@
 	if(knocked_down)
 		return
 	knocked_down = TRUE
+	// Achievement: triple-knockdown earned at the third entry (Phase 1
+	// only — Phase 2 has no knockdown loop).
+	if(!phase_2 && refraction_run_ref)
+		knockdown_count++
+		if(knockdown_count == 3)
+			for(var/mob/Mem as anything in refraction_run_ref.members)
+				if(!QDELETED(Mem))
+					refraction_run_ref.EarnAchievement(Mem.ckey, "overseer_triple_knockdown")
 	standup_at = world.time + standup_delay
 	visible_message(span_userdanger("[src] staggers and falls!"))
 	walk(src, 0)
@@ -906,6 +927,20 @@
 		else
 			TickPatrol()
 			TickBlueAttacks()
+	// Achievement poll: fail `overseer_low_decay` for the whole party
+	// the moment any party member's mental decay stacks cross 30 in
+	// Phase 1. One-shot via `low_decay_failed`.
+	if(refraction_run_ref && !low_decay_failed)
+		for(var/mob/living/Mem as anything in refraction_run_ref.members)
+			if(QDELETED(Mem))
+				continue
+			var/datum/status_effect/stacking/lc_mental_decay/D = Mem.has_status_effect(/datum/status_effect/stacking/lc_mental_decay)
+			if(D && D.stacks > 30)
+				low_decay_failed = TRUE
+				for(var/mob/M as anything in refraction_run_ref.members)
+					if(!QDELETED(M))
+						refraction_run_ref.FailAchievement(M.ckey, "overseer_low_decay")
+				break
 	main_tick_timer = addtimer(CALLBACK(src, PROC_REF(MainTick)), main_tick_interval, TIMER_STOPPABLE)
 
 // ---------- Patrol ----------

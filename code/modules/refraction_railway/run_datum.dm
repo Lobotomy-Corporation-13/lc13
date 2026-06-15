@@ -874,7 +874,8 @@ GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 				earned_rewards += entry["reward"]
 				if(entry["award"])
 					earned_awards += entry["award"]
-		var/raw_award = STARLIGHT_BASE_AWARD + time_bonus + unique_bonus + achievement_bonus
+		var/base_award = line.base_clear_award
+		var/raw_award = base_award + time_bonus + unique_bonus + achievement_bonus
 		var/award = round(raw_award * multiplier)
 		SSrefraction_railway.AwardStarlight(ckey, award)
 		if(!early)
@@ -901,7 +902,7 @@ GLOBAL_LIST_INIT(refraction_ego_typecache, typecacheof(list(
 		if(early)
 			var/pct = round(multiplier * 100)
 			to_chat(M, span_warning("• Run ended early ([current_section]/[line.section_count] sectors cleared, [pct]%) — final award scaled by [pct]%"))
-		to_chat(M, span_notice("• Base clear: +[STARLIGHT_BASE_AWARD] SL"))
+		to_chat(M, span_notice("• Base clear: +[base_award] SL"))
 		if(time_bonus > 0)
 			to_chat(M, span_notice("• Time bonus (under expected): +[time_bonus] SL"))
 		else if(time_bonus < 0)

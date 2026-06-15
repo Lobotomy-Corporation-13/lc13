@@ -327,6 +327,11 @@
 	var/recognition_locked = FALSE
 	var/recognition_bypass = FALSE
 
+	// ---- Refraction Railway achievement plumbing ----
+	/// Back-ref to the run, populated in Initialize on the boss copy
+	/// (mirrors leave this null). Drives Wager + mirror-pre-kill hooks.
+	var/datum/refraction_run/refraction_run_ref
+
 /mob/living/simple_animal/hostile/distortion/azarus/refracted
 
 /mob/living/simple_animal/hostile/distortion/azarus/say(message, bubble_type, list/spans = list(), sanitize = TRUE, datum/language/language = null, ignore_spam = FALSE, forced = null)
@@ -395,6 +400,9 @@
 				continue
 			qdel(D)
 		addtimer(CALLBACK(src, PROC_REF(TryRecognition)), 1.5 SECONDS)
+		refraction_run_ref = FindRefractionRunForZ(z)
+		if(refraction_run_ref)
+			refraction_run_ref.InitAchievementsForMob(src)
 
 /mob/living/simple_animal/hostile/distortion/azarus/Destroy()
 	deltimer(hud_timer)
@@ -586,6 +594,8 @@
 		flash_color(L, flash_color = "#c41e3a", flash_time = 25)
 		L.deal_damage(dealt, PALE_DAMAGE, src,
 			attack_type = (ATTACK_TYPE_SPECIAL))
+		if(!is_mirror && refraction_run_ref && ishuman(L))
+			refraction_run_ref.FailAchievement(L.ckey, "azarus_no_wager_hit")
 	WagerResolved()
 	can_act = TRUE
 
@@ -822,6 +832,10 @@
 	if(is_mirror)
 		if(owner && !QDELETED(owner))
 			owner.mirrors -= src
+			if(owner.stat != DEAD && owner.refraction_run_ref)
+				for(var/mob/Mem as anything in owner.refraction_run_ref.members)
+					if(!QDELETED(Mem))
+						owner.refraction_run_ref.EarnAchievement(Mem.ckey, "azarus_mirror_pre_kill")
 		return ..()
 	if(dying)
 		return ..()

@@ -193,8 +193,13 @@
 		been_hit = parent_priest.HurtInTurf(T, been_hit, parent_priest.blade_dash_damage, BLACK_DAMAGE,
 			check_faction = TRUE, hurt_mechs = TRUE,
 			attack_type = (ATTACK_TYPE_RANGED | ATTACK_TYPE_SPECIAL))
+	// Achievement: any marked-player hit fails `priest_no_marked_hit`
+	// for that player.
+	var/mob/living/carbon/human/currently_marked = parent_priest.marked_player?.resolve()
 	for(var/mob/living/L in been_hit)
 		parent_priest.ApplyBladeRupture(L)
+		if(currently_marked && L == currently_marked && parent_priest.refraction_run_ref)
+			parent_priest.refraction_run_ref.FailAchievement(L.ckey, "priest_no_marked_hit")
 	sleep(4)
 	if(QDELETED(src))
 		return
@@ -355,6 +360,13 @@
 	var/recognition_locked = FALSE
 	var/recognition_bypass = FALSE
 
+	// ---- Refraction Railway achievement plumbing ----
+	/// Back-ref to the run; drives marked-hit + punish-window trackers.
+	var/datum/refraction_run/refraction_run_ref
+	/// Per-fight count of hits landed on the priest during an
+	/// order-lock window. `priest_punish_three` earns at 3.
+	var/order_punish_hits = 0
+
 	// ---- Lifecycle ----
 	var/dying = FALSE
 	var/death_fade_time = 2 SECONDS
@@ -407,6 +419,9 @@
 	inversion_cooldown = world.time + 20 SECONDS
 	mark_cooldown = world.time + 6 SECONDS
 	addtimer(CALLBACK(src, PROC_REF(TryRecognition)), 1.5 SECONDS)
+	refraction_run_ref = FindRefractionRunForZ(z)
+	if(refraction_run_ref)
+		refraction_run_ref.InitAchievementsForMob(src)
 
 /mob/living/simple_animal/hostile/distortion/blade_priest/Destroy()
 	deltimer(main_tick_timer_id)
@@ -804,6 +819,14 @@
 		var/reduction = min(CountStoredBlades() * blade_aegis_per_blade, blade_aegis_max_reduction)
 		if(reduction > 0)
 			amount *= (1 - reduction)
+	// Achievement: count damage that lands during an order-lock window.
+	// Earn `priest_punish_three` for the whole party at 3 hits.
+	if(!forced && amount > 0 && in_order && refraction_run_ref)
+		order_punish_hits++
+		if(order_punish_hits == 3)
+			for(var/mob/Mem as anything in refraction_run_ref.members)
+				if(!QDELETED(Mem))
+					refraction_run_ref.EarnAchievement(Mem.ckey, "priest_punish_three")
 	. = ..(amount, updating_health, forced)
 	if(stat == DEAD || dying || !maxHealth || health <= 0)
 		return

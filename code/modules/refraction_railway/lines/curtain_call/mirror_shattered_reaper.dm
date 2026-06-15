@@ -204,6 +204,13 @@
 	var/list/active_afterimages = list() // one /obj/effect/mirror_afterimage per 4 absorbed_counter, cleared on ult cast
 	var/list/resist_tiers
 
+	// ---- Refraction Railway achievement plumbing ----
+	/// Back-ref to the run; drives Phase 2-starved + absorbed-cap-10.
+	var/datum/refraction_run/refraction_run_ref
+	/// One-shot fail flag for `reaper_cap_ten`. Flipped once counter
+	/// exceeds 10 so we don't re-fail on every subsequent absorb.
+	var/cap_ten_failed = FALSE
+
 	var/next_refraction_sweep = 0
 	var/next_crossing_over = 0
 	var/next_ult = 0
@@ -305,6 +312,9 @@
 	next_crossing_over = world.time + 8 SECONDS
 	next_ult = world.time + 30 SECONDS
 	addtimer(CALLBACK(src, PROC_REF(TryRecognition)), 1.5 SECONDS)
+	refraction_run_ref = FindRefractionRunForZ(z)
+	if(refraction_run_ref)
+		refraction_run_ref.InitAchievementsForMob(src)
 
 // ---------- DR ladder ----------
 
@@ -536,6 +546,13 @@
 		// instances tacked on the front.
 		if(gain_charge)
 			absorbed_counter = min(absorbed_counter + 1, MIRROR_ULT_INSTANCE_CAP)
+			// Achievement: fail the "Hoard Capped" tracker once the
+			// counter rises above 10. One-shot via `cap_ten_failed`.
+			if(absorbed_counter > 10 && refraction_run_ref && !cap_ten_failed)
+				cap_ten_failed = TRUE
+				for(var/mob/Mem as anything in refraction_run_ref.members)
+					if(!QDELETED(Mem))
+						refraction_run_ref.FailAchievement(Mem.ckey, "reaper_cap_ten")
 		any_absorbed = TRUE
 	if(any_absorbed)
 		playsound(src, 'sound/abnormalities/wayward_passenger/ripspace_begin.ogg', 50, TRUE)
@@ -701,6 +718,11 @@
 /mob/living/simple_animal/hostile/mirror_shattered_reaper/proc/EnterPhase2()
 	if(phase >= MIRROR_PHASE_2)
 		return
+	// Achievement: triggered Phase 2 with fewer than 3 absorbed clones.
+	if(refraction_run_ref && absorbed_counter < 3)
+		for(var/mob/Mem as anything in refraction_run_ref.members)
+			if(!QDELETED(Mem))
+				refraction_run_ref.EarnAchievement(Mem.ckey, "reaper_phase2_starved")
 	phase = MIRROR_PHASE_2
 	if(recognized)
 		name = "Mirror Shattered Amira"

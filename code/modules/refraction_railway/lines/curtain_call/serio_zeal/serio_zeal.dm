@@ -43,6 +43,14 @@
 	butcher_results = null
 	guaranteed_butcher_results = null
 	silk_results = null
+
+	// ---- Refraction Railway achievement plumbing ----
+	/// Back-ref to the run; drives full-pressure and steady-climb hooks.
+	var/datum/refraction_run/refraction_run_ref
+	/// Running count of Railroad refills. `young_star_steady` fails
+	/// once this hits 2.
+	var/railroad_count = 0
+
 	/// 0–100. The only victory condition; reaching 100 kills Star, which
 	/// lets the existing wave-controller see the room empty and advance.
 	var/pressure = 0
@@ -143,6 +151,9 @@
 	. = ..()
 	InitPanicLines()
 	main_tick_timer = addtimer(CALLBACK(src, PROC_REF(MainTick)), GetTierCooldown(), TIMER_STOPPABLE)
+	refraction_run_ref = FindRefractionRunForZ(z)
+	if(refraction_run_ref)
+		refraction_run_ref.InitAchievementsForMob(src)
 
 /mob/living/simple_animal/hostile/young_star/Destroy()
 	if(main_tick_timer)
@@ -236,6 +247,13 @@
 	if(pressure > old_pressure)
 		FlickerRed()
 	if(pressure >= pressure_max)
+		// Achievement: reached 100 Pressure. Earn `young_star_full_pressure`
+		// for every party member that wasn't dead at this moment.
+		if(refraction_run_ref)
+			for(var/mob/living/Mem as anything in refraction_run_ref.members)
+				if(QDELETED(Mem) || Mem.stat == DEAD)
+					continue
+				refraction_run_ref.EarnAchievement(Mem.ckey, "young_star_full_pressure")
 		Crack()
 
 /// Three quick red pulses across 1.5s — the boss's only feedback that
@@ -320,6 +338,13 @@
 	adjustBruteLoss(-maxHealth, forced = TRUE)
 	visible_message(span_userdanger("[src] is yanked back into the act — the track holds the curtain up!"))
 	playsound(get_turf(src), 'sound/weapons/black_silence/unlock.ogg', 75, FALSE, 8)
+	// Achievement: count Railroad refills. `young_star_steady` allows at
+	// most one — fail the whole party on the second.
+	railroad_count++
+	if(railroad_count >= 2 && refraction_run_ref)
+		for(var/mob/Mem as anything in refraction_run_ref.members)
+			if(!QDELETED(Mem))
+				refraction_run_ref.FailAchievement(Mem.ckey, "young_star_steady")
 	UpdatePressure(pressure_per_railroad, "railroad")
 	// Fresh HP bar → fresh teleport ladder. Next 15% chunk lost
 	// triggers a teleport again.

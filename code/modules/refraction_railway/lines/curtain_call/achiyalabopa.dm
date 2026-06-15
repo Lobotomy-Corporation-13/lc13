@@ -489,6 +489,14 @@
 	if(hit_boss && !hit_boss.dying && hit_boss.stat != DEAD)
 		hit_boss.visible_message(span_userdanger("[hit_boss] is impaled by the divine spear! Her defenses crumble!"))
 		hit_boss.MakeVulnerable(ACHIYA_VULN_DURATION, spear)
+		// Achievement: count successful Piercing Strikes; party-wide
+		// earn at 3 lands.
+		if(hit_boss.refraction_run_ref)
+			hit_boss.piercing_strike_lands++
+			if(hit_boss.piercing_strike_lands == 3)
+				for(var/mob/Mem as anything in hit_boss.refraction_run_ref.members)
+					if(!QDELETED(Mem))
+						hit_boss.refraction_run_ref.EarnAchievement(Mem.ckey, "achiya_pierced_three")
 		if(!QDELETED(user))
 			var/obj/item/coreflame/CF = locate(/obj/item/coreflame) in user.get_contents()
 			if(CF)
@@ -773,6 +781,13 @@
 	/// weakened toggle since it's a counter, not a buff datum.
 	var/fallen_faith = 0
 
+	// ---- Refraction Railway achievement plumbing ----
+	/// Back-ref to the run; drives Storm-endured + Piercing-Strike-3.
+	var/datum/refraction_run/refraction_run_ref
+	/// Running count of successful Piercing Strikes during Phase 2.
+	/// `achiya_pierced_three` earns at 3.
+	var/piercing_strike_lands = 0
+
 /mob/living/simple_animal/hostile/achiyalabopa/Initialize(mapload)
 	. = ..()
 	set_light(8, 6, LIGHT_COLOR_ORANGE)
@@ -785,6 +800,9 @@
 	UpdateHUD()
 	visible_message(span_userdanger("Achiyalabopa descends. The storm settles over the stage."))
 	addtimer(CALLBACK(src, PROC_REF(TryRecognition)), 1.5 SECONDS)
+	refraction_run_ref = FindRefractionRunForZ(z)
+	if(refraction_run_ref)
+		refraction_run_ref.InitAchievementsForMob(src)
 
 // ---------- Refraction Railway recognition ----------
 
@@ -1038,6 +1056,13 @@
 	SIGNAL_HANDLER
 	UnregisterSignal(source, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING))
 	active_reapers -= source
+	// Achievement: in Phase 1, any player-killed reaper fails
+	// `achiya_storm_endured` for the whole party. Reapers Achiya's own
+	// AoE kills come in with last_death_cause == "aoe".
+	if(phase == ACHIYA_PHASE_1 && source.last_death_cause != "aoe" && refraction_run_ref)
+		for(var/mob/Mem as anything in refraction_run_ref.members)
+			if(!QDELETED(Mem))
+				refraction_run_ref.FailAchievement(Mem.ckey, "achiya_storm_endured")
 	// Fallen Faith credit: +4 when the AoE pre-marker stamped the cause,
 	// +1 for any other death (player-killed, despawned, etc.). Burn-up
 	// path bypasses this proc entirely (it uses dust()), so this branch

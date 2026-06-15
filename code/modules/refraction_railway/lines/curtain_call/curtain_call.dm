@@ -29,6 +29,10 @@
 	max_lobby_size      = 4
 	section_count       = 5
 	display_color       = "#22c55e"
+	// Longer + harder than Nova Flare; bumped base reward and 12-minute
+	// expected clear so the time bonus pivots around a realistic run.
+	base_clear_award      = 300
+	expected_time_seconds = 720
 
 	// Curtain Call is hand-balanced per mob, so the wave-scaling tweaks that
 	// inflate stock / concurrent caps / batch size / non-boss stats are off.

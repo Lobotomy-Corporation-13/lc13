@@ -70,6 +70,10 @@
 	/// faster than this get positive bonus per second saved; slower runs get
 	/// negative bonus per second over. Default 9 minutes; override per line.
 	var/expected_time_seconds = 540
+	/// Flat Starlight award paid for clearing this line. Matches the
+	/// global STARLIGHT_BASE_AWARD default (run_datum.dm) but can be
+	/// overridden per line for a higher or lower base reward.
+	var/base_clear_award = 100
 
 /// Override in subtypes to declare mob passives (mob_path => list of entries).
 /datum/refraction_line/proc/GetMobPassives()
