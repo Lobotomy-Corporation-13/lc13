@@ -3643,6 +3643,7 @@
 #include "code\modules\refraction_railway\achievement_datum.dm"
 #include "code\modules\refraction_railway\checkpoint_consoles.dm"
 #include "code\modules\refraction_railway\console.dm"
+#include "code\modules\refraction_railway\debug_starlight.dm"
 #include "code\modules\refraction_railway\healing_pod.dm"
 #include "code\modules\refraction_railway\landmarks.dm"
 #include "code\modules\refraction_railway\line_datum.dm"

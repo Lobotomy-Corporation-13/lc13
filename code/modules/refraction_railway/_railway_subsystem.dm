@@ -827,6 +827,42 @@ SUBSYSTEM_DEF(refraction_railway)
 			return FALSE
 	return TRUE
 
+/// Spends Starlight to unlock a `starlight_locked` quirk for the
+/// player. Validates that the quirk exists and is starlight-locked,
+/// the player hasn't already unlocked it, the line gate (if any) is
+/// satisfied, and the balance covers the cost. Returns TRUE on a
+/// successful purchase, FALSE on any rejection. Mirror of
+/// `RefundQuirk` below — kept symmetric so admins can use either side.
+/datum/controller/subsystem/refraction_railway/proc/PurchaseQuirk(mob/living/user, quirk_name)
+	if(!user?.ckey || !quirk_name)
+		return FALSE
+	var/datum/quirk/Q = SSquirks.quirks[quirk_name]
+	if(!Q || !initial(Q.starlight_locked))
+		return FALSE
+	if(IsQuirkUnlocked(user.ckey, quirk_name))
+		return FALSE
+	var/req_line = initial(Q.required_line_completed)
+	if(req_line)
+		if(!HasCompletedLine(user.ckey, req_line))
+			return FALSE
+		var/datum/refraction_line/RL = lines[req_line]
+		if(istype(RL) && RL.locked)
+			return FALSE
+	var/cost = initial(Q.starlight_cost)
+	if(GetStarlight(user.ckey) < cost)
+		return FALSE
+	var/list/entry = GetOrCreateStarlightEntry(user.ckey)
+	if(!entry)
+		return FALSE
+	entry["balance"] = max(0, (entry["balance"] || 0) - cost)
+	var/list/unlocked = entry["unlocked"]
+	if(!islist(unlocked))
+		unlocked = list()
+		entry["unlocked"] = unlocked
+	unlocked |= quirk_name
+	SSpersistence.SaveRefractionStarlight()
+	return TRUE
+
 /// Refunds an unlocked Starlight quirk: returns 100% of the original
 /// `starlight_cost` to the player's balance and removes the quirk from
 /// their unlocked list. Auto-unequips any hub-test instance first so

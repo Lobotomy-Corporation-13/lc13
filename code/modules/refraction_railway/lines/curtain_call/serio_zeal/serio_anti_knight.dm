@@ -151,7 +151,10 @@
 	var/tiles_per_step = 1
 	var/speed = 6
 	var/damage = 38
-	var/charge_loss = 18
+	// B3 seeker — halved from 18 so the bracket's heavier projectile
+	// density doesn't strip the Knight's charge bar faster than it
+	// can rebuild. Pairs with the B3 lance chaser at the same 9.
+	var/charge_loss = 9
 	var/currently_seeking = FALSE
 
 /obj/effect/temp_visual/serio_anti_knight_seeker/Initialize(mapload, mob/living/new_source, mob/living/simple_animal/hostile/serio_knight/new_target)
@@ -330,7 +333,10 @@
 	if(QDELETED(src) || QDELETED(knight_ref) || !length(echo_anchor_pool))
 		return
 	var/turf/anchor = PickEchoAnchor()
-	FireLanceFromAnchor(anchor, charge_loss = 18, lance_speed = 3.2, turn_speed = 10)
+	// B3 chaser — halved from 18 so the bracket's heavier projectile
+	// density doesn't strip the Knight's charge bar faster than it
+	// can rebuild. Pairs with the B3 seeker at the same 9.
+	FireLanceFromAnchor(anchor, charge_loss = 9, lance_speed = 3.2, turn_speed = 10)
 
 /// B2 salvo. Three lances staggered 0.3s apart, drawn from a
 /// shuffled column. Each lance picks the waypoint matching its

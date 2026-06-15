@@ -1170,12 +1170,6 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 		for(var/V in SSquirks.quirks)
 			var/datum/quirk/T = SSquirks.quirks[V]
 			var/quirk_name = initial(T.name)
-			// Sunset: Starlight quirks are no longer selectable here.
-			// Stale saved selections are silently dropped so they stop
-			// applying at spawn. Refunds happen at the SL terminal.
-			if(initial(T.starlight_locked))
-				all_quirks -= quirk_name
-				continue
 			var/has_quirk
 			var/quirk_cost = initial(T.value) * -1
 			var/lock_reason = "This trait is unavailable."
@@ -1210,16 +1204,25 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 			var/font_color = "#AAAAFF"
 			if(initial(T.value) != 0)
 				font_color = initial(T.value) > 0 ? "#AAFFAA" : "#FFAAAA"
+			// Unlocked starlight quirks render with ★ bookends so
+			// they stand out from the regular pool. Locked quirks
+			// route through the strikethrough/LOCKED branch and keep
+			// the plain name — the "★cost" tag in lock_reason
+			// already identifies them as Starlight. Href keys still
+			// use the raw quirk_name; only the display label changes.
+			var/display_name = quirk_name
+			if(starlight_locked && !quirk_conflict)
+				display_name = "★ [quirk_name] ★"
 			if(quirk_conflict)
-				dat += "<s><font color='[font_color]'>[quirk_name]</font> - [initial(T.desc)]</s> \
+				dat += "<s><font color='[font_color]'>[display_name]</font> - [initial(T.desc)]</s> \
 				<font color='red'><b>LOCKED: [lock_reason]</b></font><br>"
 			else
 				if(has_quirk)
 					dat += "<a href='byond://?_src_=prefs;preference=trait;task=update;trait=[quirk_name]'>[has_quirk ? "Remove" : "Take"] ([quirk_cost] pts.)</a> \
-					<b><font color='[font_color]'>[quirk_name]</font></b> - [initial(T.desc)]<br>"
+					<b><font color='[font_color]'>[display_name]</font></b> - [initial(T.desc)]<br>"
 				else
 					dat += "<a href='byond://?_src_=prefs;preference=trait;task=update;trait=[quirk_name]'>[has_quirk ? "Remove" : "Take"] ([quirk_cost] pts.)</a> \
-					<font color='[font_color]'>[quirk_name]</font> - [initial(T.desc)]<br>"
+					<font color='[font_color]'>[display_name]</font> - [initial(T.desc)]<br>"
 		dat += "<br><center><a href='byond://?_src_=prefs;preference=trait;task=reset'>Reset Quirks</a></center>"
 
 	var/datum/browser/popup = new(user, "mob_occupation", "<div align='center'>Quirk Preferences</div>", 900, 600) //no reason not to reuse the occupation window, as it's cleaner that way
