@@ -321,7 +321,12 @@ GLOBAL_LIST_EMPTY(refraction_wave_mob_owners)
 	var/scale_wave_on = SSrefraction_railway.scale_wave_stats && (!ctrl_line || ctrl_line.scale_wave_stats)
 	if(controller.node && controller.node.is_boss)
 		if(scale_boss_on && n > 1)
-			H.maxHealth = round(H.maxHealth * n)
+			// Each EXTRA player past the first adds +50% of base maxHealth
+			// instead of a flat ×n double. Solo = 1.0×, duo = 1.5×, trio
+			// = 2.0×, quad = 2.5×, etc. Reverse-derive on the boss side
+			// (e.g. SnowCabin.AoEPartyMultiplier) uses the same shape.
+			var/scale_multiplier = 1 + (n - 1) * 0.5
+			H.maxHealth = round(H.maxHealth * scale_multiplier)
 			H.health = H.maxHealth
 	else if(scale_wave_on)
 		refraction_scale_hostile(H, n)

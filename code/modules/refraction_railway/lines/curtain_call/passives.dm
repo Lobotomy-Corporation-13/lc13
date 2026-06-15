@@ -738,6 +738,17 @@
 						Cannot be killed by HP.",
 				),
 				list(
+					"title"    = "Bleeds Back to the Wings",
+					"severity" = "info",
+					"text"     = "Every **5% maxHealth** chunk of incoming \
+						damage taken: pulses a heal across every live \
+						human within **10 tiles** for **+25 brute and +25 \
+						sanity**. Damage carries over between pulses, so \
+						a single overkill swing can fire multiple pulses \
+						at once. Healing is paid back in real time as the \
+						HP bar drops.",
+				),
+				list(
 					"title"    = "Hand on the Crystal",
 					"severity" = "high",
 					"text"     = "Every 20 seconds: 1s channel cue, then the \
@@ -782,9 +793,9 @@
 					"hidden_until" = "overseer_phase_2",
 					"text"     = "Phase 2 only. Crystal bracket gates the \
 						attack tick rate. B1: 6s tick → **Sealing Lance**. \
-						B2: 10s tick → **Sealing Volley**. B3: 4s tick → 40% \
-						**Crawling Argument** / 35% **Verdict on the \
-						Knight** / 25% **Closing Argument**.",
+						B2: 10s tick → **Sealing Volley**. B3: 4s tick → \
+						60% **Crawling Argument** / 40% **Closing \
+						Argument**.",
 				),
 				list(
 					"title"    = "Closing Storm",
@@ -855,10 +866,11 @@
 					"title"    = "Gathering the Strike",
 					"severity" = "high",
 					"hidden_until" = "overseer_phase_2",
-					"text"     = "Overseer's Phase 2 only. +1.66% per 0.5s \
-						tick (30s base time to 100%). Display rendered as \
-						maptext above the Knight. On 100%: **Three-Slash \
-						Verdict** fires.",
+					"text"     = "Overseer's Phase 2 only. **+2.075% per \
+						0.5s tick** (24s base time to 100%, +25% over the \
+						old 30s baseline). Display rendered as maptext \
+						above the Knight. On 100%: **Three-Slash Verdict** \
+						fires.",
 				),
 				list(
 					"title"    = "Drowned by the Chorus",
@@ -924,8 +936,8 @@
 					"severity" = "medium",
 					"hidden_until" = "overseer_phase_2",
 					"text"     = "Overseer's Phase 2 only. Overseer spawns \
-						Murmurs on a 20s cycle. Per-tick count = current \
-						bracket (1 / 2 / 3 in B1 / B2 / B3), +1 if the choir \
+						Murmurs on a 20s cycle. **Per-tick count is a \
+						flat 1** regardless of bracket, +1 if the choir \
 						is empty. Cap alive: 2 / 3 / 4 by bracket. Spawn \
 						tiles: within view 8 of the Crystal, at least 3 \
 						tiles from Knight and Sage.",
@@ -958,8 +970,10 @@
 					"severity" = "info",
 					"hidden_until" = "overseer_phase_2",
 					"text"     = "On death: heals every live human in view 7 \
-						for +10 brute / +10 fire / +10 sanity, then qdels \
-						immediately.",
+						for +10 brute / +10 fire / +10 sanity, **adds \
+						+5% to the Knight's charge bar** (one voice \
+						silenced, one step closer to the swing), then \
+						qdels immediately.",
 				),
 		),
 
@@ -980,9 +994,9 @@
 				"text"     = "AoE damage (**Bone Stab Line**, **Bladed \
 					Teeth**, **Ice Spike**, **Ice Shard Spray**) drops \
 					by **15% per extra player past the first**, derived \
-					from the cabin's HP scale (1.0× HP = solo, 2.0× HP \
-					= duo, etc.). Solo: 100%. Duo: 85%. Trio: 70%. \
-					Quad: 55%. Floored at 25%.",
+					from the cabin's HP scale (1.0× HP = solo, 1.5× HP \
+					= duo, 2.0× HP = trio, 2.5× HP = quad). Solo: 100%. \
+					Duo: 85%. Trio: 70%. Quad: 55%. Floored at 25%.",
 			),
 			list(
 				"title"    = "HP / Damage Funnel",

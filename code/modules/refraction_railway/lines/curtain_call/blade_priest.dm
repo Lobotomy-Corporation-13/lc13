@@ -228,8 +228,8 @@
 	icon_dead = "blade_priest"
 	mob_biotypes = MOB_ORGANIC|MOB_HUMANOID
 	faction = list("blade_priest")
-	maxHealth = 3500
-	health = 3500
+	maxHealth = 2500
+	health = 2500
 	melee_damage_lower = 0
 	melee_damage_upper = 0
 	speak_chance = 0

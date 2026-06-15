@@ -738,14 +738,16 @@
 				"name"     = "Closed Circle",
 				"damage"   = "110 BLACK + 5-tile knockback toward center + mental detonate shatter trigger on every ring-cross",
 				"cooldown" = "**Hand on the Crystal** slot; adds a **+5-second post-cast lockout** before any other memory can fire",
-				"desc"     = "On cast: Crystal flips Red for 7 seconds. A violet \
-					flame ring contracts inward in stages over 4s, then holds \
-					at a 5x5 for 5s. Crossing the ring tiles in either \
-					direction applies the hit. After the cast resolves, the \
-					Overseer holds its breath for **5 extra seconds** before \
-					it can start the next memory invocation — the contracted \
-					3×3 leaves trapped players almost no room to dodge an \
-					immediate follow-up.",
+				"desc"     = "On cast: Crystal flips Red for 7 seconds. \
+					Huddle-illusion markers paint a 3×3, then **1 \
+					second** later a violet flame ring spawns and \
+					contracts inward in stages over 4s, then holds at a \
+					5x5 for 5s. Crossing the ring tiles in either \
+					direction applies the hit. After the cast resolves, \
+					the Overseer holds its breath for **5 extra seconds** \
+					before it can start the next memory invocation — the \
+					contracted 3×3 leaves trapped players almost no room \
+					to dodge an immediate follow-up.",
 			),
 			list(
 				"name"     = "Storm Approach",
@@ -809,12 +811,12 @@
 			list(
 				"name"     = "Sealing Volley",
 				"hidden_until" = "overseer_phase_2",
-				"damage"   = "30 BLACK + rand(4-8) mental decay per lance hit + 5% Knight charge loss; 5 lances total",
+				"damage"   = "15 BLACK + rand(4-8) mental decay per lance hit + 5% Knight charge loss; 3 lances total",
 				"cooldown" = "Bracket 2: 10 seconds",
-				"desc"     = "Phase 2, every cooldown: 5 lances fire \
-					bottom-to-top from the 5 column tiles with 0.3s stagger. \
-					Each lance arcs via its row's waypoint (top → N, bottom → \
-					S, middle → random).",
+				"desc"     = "Phase 2, every cooldown: 3 lances fire \
+					with 0.3s stagger from independently-shuffled column \
+					tiles. Each lance arcs via its row's waypoint (top → \
+					N, bottom → S, middle → random).",
 			),
 			list(
 				"name"     = "Crawling Argument",
@@ -835,15 +837,6 @@
 					with 0.25s stagger from independently-picked column tiles. \
 					Same waypoint arc as **Sealing Lance** but faster speed \
 					and tighter homing.",
-			),
-			list(
-				"name"     = "Verdict on the Knight",
-				"hidden_until" = "overseer_phase_2",
-				"damage"   = "75 BLACK in a 3x3 around the Knight's tile + 100% Knight charge drain (consumed by **Knight-Tile Body Block**)",
-				"cooldown" = "Bracket 3: 4 seconds, 35% dispatcher roll, blocked while one is telegraphing",
-				"desc"     = "Phase 2, every cooldown roll: telegraphs a 3x3 \
-					on the Knight's tile for 5s, then resolves. The Knight \
-					speaks a warning line at cast start.",
 			),
 		),
 

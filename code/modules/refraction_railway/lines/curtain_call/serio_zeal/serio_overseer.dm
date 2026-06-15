@@ -43,8 +43,8 @@
 	pixel_x = -32
 	base_pixel_x = -32
 	faction = list("serio_zeal")
-	maxHealth = 10000
-	health = 10000
+	maxHealth = 6000
+	health = 6000
 	melee_damage_lower = 0
 	melee_damage_upper = 0
 	// Spawns sealed: 10% damage on every type. EnterRed/EnterBlue flip
@@ -226,9 +226,6 @@
 	/// Phase 2 entry.
 	var/mob/living/simple_animal/hostile/serio_knight/knight_ref
 	var/mob/living/simple_animal/hostile/serio_sage/sage_ref
-	/// Set TRUE while a B3 Knight-aware AoE is telegraphing. Blocks
-	/// FireKnightAwareAoE from re-firing during the 5s charge window.
-	var/aoe_charging = FALSE
 	// ---- Murmur (Phase 2 minion) spawn state ----
 	/// Cached perimeter turfs (outer ring around the crystal) used as
 	/// Murmur spawn points. Built once at Phase 2 entry.
@@ -305,6 +302,21 @@
 	/// to 0 at the top of InvokeMemoryAttack and re-stamped by whichever
 	/// attack proc wants a hold.
 	var/pending_extra_lockout = 0
+
+	// ---- Bleed-Heal pulse ----
+	/// Cumulative damage taken since the last heal pulse. Reset by the
+	/// threshold each time a pulse fires.
+	var/damage_heal_accumulator = 0
+	/// Fraction of maxHealth per heal pulse. Resolved against the LIVE
+	/// `maxHealth` in adjustHealth so party-scaling stays accurate —
+	/// precomputing this at Initialize would lock it to the solo HP
+	/// (wave_system bumps maxHealth after Initialize runs).
+	var/damage_heal_threshold_pct = 0.05
+	/// Heal pulse range, in tiles. Live humans inside get +25 brute
+	/// + 25 sanity per pulse.
+	var/damage_heal_range = 10
+	/// HP/SP per nearby human, per pulse.
+	var/damage_heal_amount = 25
 	// ---- Monologue ----
 	var/last_monologue_time = 0
 	var/monologue_cooldown = 8 SECONDS
@@ -641,10 +653,10 @@
 	var/now = world.time
 	if(now >= next_murmur_spawn_at)
 		var/alive_count = length(active_murmurs)
-		var/bracket = 1
-		if(parent_crystal && !QDELETED(parent_crystal))
-			bracket = parent_crystal.current_bracket
-		var/per_tick = bracket
+		// Flat 1-per-cycle spawn regardless of bracket; the alive cap
+		// (`murmurs_max_for_bracket`) is still bracket-scaled, so the
+		// choir grows over time but never bursts in.
+		var/per_tick = 1
 		if(alive_count == 0)
 			per_tick += 1
 		var/headroom = murmurs_max_for_bracket - alive_count
@@ -789,7 +801,31 @@
 	if(!forced && amount > 0 && (health - amount) <= 1)
 		EnterKnockdown()
 		return 0
-	return ..()
+	. = ..()
+	// Bleed-heal aura: every 5% maxHealth chunk of incoming damage
+	// fires one heal pulse on nearby humans. Excess carries forward so
+	// an overkill hit can stack pulses in a single resolution. Heals
+	// only — we don't run on the heal side (negative `.`). Threshold
+	// is resolved from the live `maxHealth` here so party-scaling
+	// stays accurate across the fight.
+	if(. > 0)
+		var/damage_heal_threshold = round(maxHealth * damage_heal_threshold_pct)
+		if(damage_heal_threshold > 0)
+			damage_heal_accumulator += .
+			while(damage_heal_accumulator >= damage_heal_threshold)
+				damage_heal_accumulator -= damage_heal_threshold
+				EmitBleedHealPulse()
+
+/// One bleed-heal pulse: every live human in `damage_heal_range` tiles
+/// gets +damage_heal_amount brute and sanity restored. Fired by
+/// adjustHealth whenever cumulative incoming damage crosses the 5%
+/// maxHealth threshold.
+/mob/living/simple_animal/hostile/serio_overseer/proc/EmitBleedHealPulse()
+	for(var/mob/living/carbon/human/H in range(damage_heal_range, src))
+		if(H.stat == DEAD)
+			continue
+		H.adjustBruteLoss(-damage_heal_amount, forced = TRUE)
+		H.adjustSanityLoss(-damage_heal_amount, forced = TRUE)
 
 /// Phase 2 only: every incoming damage attempt spawns a 1-second
 /// "shield-old" warding visual at the Overseer's tile and reflects
@@ -1268,7 +1304,15 @@
 	var/knockback_tiles = weakened ? 1 : 2
 	var/decay_stacks = weakened ? 2 : 5
 	var/can_shatter = !weakened
-	StartClosedCircleRing(huddle, start_radius, contraction_delay, ring_damage, knockback_tiles, decay_stacks, can_shatter)
+	// 1-second beat between the huddle illusions painting and the ring
+	// spawning. During the delay, paint pre-ring warning tiles at the
+	// perimeter the ring will land on so players see exactly where the
+	// fire is about to spawn.
+	for(var/turf/T in range(start_radius, huddle))
+		if(get_dist(T, huddle) != start_radius)
+			continue
+		new /obj/effect/temp_visual/serio_fire_ring_warning(T)
+	addtimer(CALLBACK(src, PROC_REF(StartClosedCircleRing), huddle, start_radius, contraction_delay, ring_damage, knockback_tiles, decay_stacks, can_shatter), 1 SECONDS, TIMER_STOPPABLE)
 
 /// Builds an initial perimeter ring at `radius` around `huddle`, then
 /// every `contraction_delay` tightens it inward by 1 tile until it
@@ -1354,11 +1398,28 @@
 	var/can_shatter = !weakened
 	for(var/turf/T in view(15, crystal_turf))
 		new /obj/effect/temp_visual/serio_light_wind_fog(T, duration)
+	// Paint pre-ring warning tiles at the ring perimeter for 1 second
+	// before the damaging ring obj lands. Same warning visual that
+	// Closed Circle uses, so the "fire is about to spawn here" read
+	// is consistent across both attacks.
+	for(var/turf/T in range(4, crystal_turf))
+		if(get_dist(T, crystal_turf) != 4)
+			continue
+		new /obj/effect/temp_visual/serio_fire_ring_warning(T)
+	addtimer(CALLBACK(src, PROC_REF(SpawnLightWindRings), crystal_turf, duration, ring_damage, ring_knockback, decay_stacks, can_shatter), 1 SECONDS, TIMER_STOPPABLE)
+	StartLightWindLoop(wind_dir, push_interval, duration)
+
+/// Deferred ring spawn for Light Wind. Runs 1s after InvokeLightWind so
+/// the warning tiles get their full visible beat before the damaging
+/// ring obj lands. The wind-push loop starts at cast time and keeps
+/// running regardless — only the ring placement is gated.
+/mob/living/simple_animal/hostile/serio_overseer/proc/SpawnLightWindRings(turf/crystal_turf, duration, ring_damage, ring_knockback, decay_stacks, can_shatter)
+	if(QDELETED(src) || QDELETED(crystal_turf))
+		return
 	for(var/turf/T in range(4, crystal_turf))
 		if(get_dist(T, crystal_turf) != 4)
 			continue
 		new /obj/effect/serio_light_wind_ring(T, duration, ring_damage, ring_knockback, decay_stacks, can_shatter, src, crystal_turf)
-	StartLightWindLoop(wind_dir, push_interval, duration)
 
 /mob/living/simple_animal/hostile/serio_overseer/proc/StartLightWindLoop(wind_dir, push_interval, total_duration)
 	set waitfor = FALSE
@@ -2385,6 +2446,21 @@
 		duration = custom_duration
 	. = ..()
 
+// Pre-ring warning marker — same icon as the actual ring tile but
+// muted so players can clearly see "this tile is about to be on
+// fire." Used by Closed Circle and Light Wind during the 1-second
+// pre-spawn window before the damaging ring lands.
+/obj/effect/temp_visual/serio_fire_ring_warning
+	name = "violet warning"
+	icon = 'icons/effects/effects.dmi'
+	icon_state = "turf_fire"
+	color = "#c30fff"
+	layer = TURF_LAYER
+	plane = FLOOR_PLANE
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+	duration = 1 SECONDS
+	alpha = 110
+
 // Light Wind fog overlay — arena-wide weather effect, alpha-soft so
 // players can still read the floor + the perimeter ring through it.
 /obj/effect/temp_visual/serio_light_wind_fog
@@ -2742,11 +2818,6 @@
 	var/damage = 140
 	var/decay = 3
 	var/mob/living/source
-	/// Set TRUE when the Overseer fires this AoE as a Phase 2 B3
-	/// K-aware sub-attack. Unlocks the Knight-tile player-intercept
-	/// path in Blowup() and the Knight damage + charge-loss path. Phase
-	/// 2 Void Pull spawns leave this FALSE.
-	var/is_knight_aware = FALSE
 
 /obj/effect/temp_visual/serio_void_macro_aoe/Initialize(mapload, mob/living/new_source, custom_telegraph)
 	// Bump duration BEFORE the parent Initialize so the temp_visual
@@ -2771,30 +2842,9 @@
 	for(var/turf/A in range(1, T))
 		new /obj/effect/temp_visual/cult/sparks(A)
 	playsound(T, 'sound/weapons/ego/shattering_window.ogg', 55, TRUE)
-	// Phase 2 Knight-aware AoE intercept: any live human standing on
-	// the Knight's tile sets the Knight's one-shot exempt flag so the
-	// downstream damage + charge-loss path below skips it. The player
-	// still takes the 3×3 AoE damage as the intercept cost.
-	if(is_knight_aware)
-		var/mob/living/simple_animal/hostile/serio_knight/K_on_tile = locate() in T
-		if(K_on_tile)
-			for(var/mob/living/carbon/human/H in T)
-				if(H.stat == DEAD)
-					continue
-				K_on_tile.knight_aware_aoe_exempt = TRUE
-				break
 	for(var/turf/A in range(1, T))
 		for(var/mob/living/carbon/human/H in A)
 			if(H.stat == DEAD)
 				continue
 			H.deal_damage(damage, BLACK_DAMAGE, source, attack_type = (ATTACK_TYPE_SPECIAL))
 			H.apply_lc_mental_decay(decay)
-		// Knight damage + charge-loss path (Phase 2 K-aware AoE only).
-		// OnAntiKnightHit reads the exempt flag and short-circuits if
-		// a player intercepted on the Knight's tile. Un-intercepted
-		// the AoE drains the Knight's charge fully (100%).
-		if(is_knight_aware)
-			for(var/mob/living/simple_animal/hostile/serio_knight/K in A)
-				if(K.stat == DEAD)
-					continue
-				K.OnAntiKnightHit(damage, 100)

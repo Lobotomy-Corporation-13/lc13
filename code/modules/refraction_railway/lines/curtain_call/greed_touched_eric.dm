@@ -213,8 +213,6 @@
 	var/phase = ERIC_PHASE_1
 	var/phase_2_trigger_threshold = 0.50
 	var/phase_3_trigger_threshold = 0.25
-	var/phase_2_trigger_hp = 0
-	var/phase_3_trigger_hp = 0
 	var/phase_2_triggered = FALSE
 	var/phase_3_triggered = FALSE
 
@@ -324,8 +322,6 @@
 	. = ..()
 	// Red-tint the friendly NPC's existing boss sprite (CLAUDE.md: reuse icon_states).
 	add_atom_colour("#aa0000", FIXED_COLOUR_PRIORITY)
-	phase_2_trigger_hp = round(maxHealth * phase_2_trigger_threshold)
-	phase_3_trigger_hp = round(maxHealth * phase_3_trigger_threshold)
 	hp_at_last_burst = health
 	last_minion_death_time = world.time
 	// /datum/component/bloodfeast/Initialize(siphon, range, starting, threshold, max_amount)
@@ -411,11 +407,17 @@
 				shield_summon_cooldown = world.time + shield_summon_cooldown_time
 				INVOKE_ASYNC(src, PROC_REF(ShieldPanicSummon))
 			return 0
+		// True-percentage phase gates: derived from the live maxHealth
+		// every check so wave_system's party-size scaling (which runs
+		// AFTER Initialize) doesn't desync the trigger HP. Phase 2 lands
+		// at 50% maxHealth, Phase 3 at 25%, regardless of party size.
+		var/phase_2_trigger_hp = round(maxHealth * phase_2_trigger_threshold)
 		if(!phase_2_triggered && (health - amount) <= phase_2_trigger_hp)
 			amount = max(0, health - phase_2_trigger_hp)
 			. = ..(amount, updating_health, forced)
 			EnterPhase2()
 			return
+		var/phase_3_trigger_hp = round(maxHealth * phase_3_trigger_threshold)
 		if(!phase_3_triggered && (health - amount) <= phase_3_trigger_hp)
 			amount = max(0, health - phase_3_trigger_hp)
 			. = ..(amount, updating_health, forced)

@@ -540,11 +540,11 @@
 	icon_dead = "yagaslave"
 	mob_biotypes = MOB_ORGANIC|MOB_HUMANOID
 	faction = list("snow_cabin")
-	maxHealth = 250
-	health = 250
+	maxHealth = 150
+	health = 150
 	move_to_delay = 6
-	melee_damage_lower = 15
-	melee_damage_upper = 22
+	melee_damage_lower = 8
+	melee_damage_upper = 12
 	melee_damage_type = PALE_DAMAGE
 	attack_verb_continuous = "rakes at"
 	attack_verb_simple = "rake at"
@@ -589,8 +589,8 @@
 	// scale this by the player count (wave_system.dm: H.maxHealth *= n
 	// for `is_boss` nodes), so 4 players get a 26000-HP cabin and pay for
 	// it with the extra DPS the bigger party brings to the weakpoints.
-	maxHealth = 6500
-	health = 6500
+	maxHealth = 5000
+	health = 5000
 	melee_damage_lower = 0
 	melee_damage_upper = 0
 	damage_coeff = list(RED_DAMAGE = 0, WHITE_DAMAGE = 0, BLACK_DAMAGE = 0, PALE_DAMAGE = 0)
@@ -1160,12 +1160,13 @@
 	next_ice_shard        = world.time + 12 SECONDS
 
 /// AoE damage multiplier scaled by party size. Reverse-derives the
-/// wave's player count from maxHealth (wave_system.dm:324 freezes it
-/// at 6500 × n at spawn and never re-writes), then returns
-/// 1.0 − 0.15 per extra player past the first. Solo runs return 1.0;
-/// floored at 0.25 so megaparties can't drop AoE to nothing.
+/// wave's extra-player count from maxHealth — boss HP is frozen at
+/// `6500 × (1 + extra × 0.5)` at spawn by wave_system, so the
+/// `(maxHealth / 6500 − 1) × 2` inverse recovers `extra` (rounded for
+/// noise). Returns 1.0 − 0.15 per extra player past the first, floored
+/// at 0.25 so megaparties can't drop AoE output to nothing.
 /mob/living/simple_animal/hostile/snow_cabin/proc/AoEPartyMultiplier()
-	var/extra_players = max(0, round(maxHealth / 6500) - 1)
+	var/extra_players = max(0, round((maxHealth / 6500 - 1) * 2))
 	return max(0.25, 1 - 0.15 * extra_players)
 
 // ---------- AoE: Bone Stab Line ----------

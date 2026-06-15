@@ -38,7 +38,7 @@
 	icon = 'icons/obj/projectiles.dmi'
 	icon_state = "logic"
 	color = "#c30fff"
-	damage = 60
+	damage = 30
 	damage_type = BLACK_DAMAGE
 	// 4x slower than typical SS13 projectiles so players have time to
 	// see the trajectory + step into the path. With speed = 4 the
@@ -150,7 +150,7 @@
 	var/standard_moving_before_recalc = 1
 	var/tiles_per_step = 1
 	var/speed = 6
-	var/damage = 76
+	var/damage = 38
 	var/charge_loss = 18
 	var/currently_seeking = FALSE
 
@@ -332,16 +332,17 @@
 	var/turf/anchor = PickEchoAnchor()
 	FireLanceFromAnchor(anchor, charge_loss = 18, lance_speed = 3.2, turn_speed = 10)
 
-/// B2 salvo. Five lances staggered 0.3s apart, each from a different
-/// column row. Bottom-to-top firing order. Each lance picks the
-/// waypoint matching its column row (top half → north of crystal,
-/// bottom half → south, middle row → random). If the column shrunk
-/// (fewer than 5 valid tiles, e.g. arena edge), fires what it can.
+/// B2 salvo. Three lances staggered 0.3s apart, drawn from a
+/// shuffled column. Each lance picks the waypoint matching its
+/// anchor row (top half → north of crystal, bottom half → south,
+/// middle row → random). If the column shrunk (fewer than 3 valid
+/// tiles, e.g. arena edge), fires what it can.
 /mob/living/simple_animal/hostile/serio_overseer/proc/FireAntiKnightSalvo()
 	if(QDELETED(knight_ref) || !length(echo_anchor_pool))
 		return
-	var/list/anchors = echo_anchor_pool.Copy()
-	for(var/i in 1 to length(anchors))
+	var/list/anchors = shuffle(echo_anchor_pool.Copy())
+	var/count = min(3, length(anchors))
+	for(var/i in 1 to count)
 		var/turf/anchor = anchors[i]
 		addtimer(CALLBACK(src, PROC_REF(FireSalvoLanceAt), anchor), (i - 1) * 0.3 SECONDS, TIMER_STOPPABLE)
 
@@ -352,8 +353,8 @@
 	if(QDELETED(src) || QDELETED(knight_ref) || !anchor)
 		return
 	// Salvo lances: 50% damage and 50% charge bite of the base lance —
-	// 5 hits per cast adds up fast, so each one carries less weight.
-	FireLanceFromAnchor(anchor, charge_loss = 3, lance_speed = 4, turn_speed = 8, lance_damage = 30)
+	// 3 hits per cast adds up fast, so each one carries less weight.
+	FireLanceFromAnchor(anchor, charge_loss = 3, lance_speed = 4, turn_speed = 8, lance_damage = 15)
 
 /// B3 seeker. Wall-pathfinding chaser variant of Errant Drafts.
 /mob/living/simple_animal/hostile/serio_overseer/proc/FireAntiKnightSeeker()
@@ -364,33 +365,10 @@
 		return
 	new /obj/effect/temp_visual/serio_anti_knight_seeker(anchor, src, knight_ref)
 
-/// B3 Knight-aware AoE. Spawns a void macro AoE directly on the
-/// Knight's tile with the is_knight_aware flag set. 5-second telegraph
-/// — long warning window. Player intercept is by standing on the
-/// Knight's tile during the telegraph; see serio_void_macro_aoe.Blowup().
-/// If un-intercepted, the AoE drains the Knight's charge fully (100%).
-/// Cannot re-fire while a K-aware AoE is already telegraphing.
-/mob/living/simple_animal/hostile/serio_overseer/proc/FireKnightAwareAoE()
-	if(QDELETED(knight_ref) || aoe_charging)
-		return
-	var/turf/knight_turf = get_turf(knight_ref)
-	if(!knight_turf)
-		return
-	aoe_charging = TRUE
-	var/obj/effect/temp_visual/serio_void_macro_aoe/A = new(knight_turf, src, 5 SECONDS)
-	A.is_knight_aware = TRUE
-	// K-aware override: typepath default is 140 (Phase 2 barrage value).
-	A.damage = 150
-	knight_ref.say("Intercept this one — it will be a heavy blow!")
-	// Release the charging lock just after detonation completes. The
-	// extra 0.5s buffer covers the Blowup() processing window.
-	addtimer(CALLBACK(src, PROC_REF(ClearAoECharging)), 5 SECONDS + 0.5 SECONDS, TIMER_STOPPABLE)
-
-/mob/living/simple_animal/hostile/serio_overseer/proc/ClearAoECharging()
-	aoe_charging = FALSE
-
 /// Dispatcher. Picks the right attack(s) for the current bracket;
-/// B3 rolls between three sub-attacks per cast for variety.
+/// B3 rolls between two sub-attacks per cast for variety. The old
+/// Knight-aware AoE option (which required a player to body-block on
+/// the Knight's tile) was removed — see the change above.
 /mob/living/simple_animal/hostile/serio_overseer/proc/FireAntiKnightForBracket(bracket)
 	switch(bracket)
 		if(1)
@@ -398,10 +376,7 @@
 		if(2)
 			FireAntiKnightSalvo()
 		if(3)
-			var/roll = rand(1, 100)
-			if(roll <= 40)
+			if(prob(60))
 				FireAntiKnightSeeker()
-			else if(roll <= 75)
-				FireKnightAwareAoE()
 			else
 				FireAntiKnightLanceChaser()
