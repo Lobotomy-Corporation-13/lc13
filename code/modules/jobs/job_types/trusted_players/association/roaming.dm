@@ -54,7 +54,7 @@
 	var/static/list/common_associations = list("zwei", "shi5", "liu5", "seven6")
 	var/static/list/uncommon_associations = list("zweiw", "shi2", "shieast", "cinq", "cinq4", "cinqwest", "liu1", "devyat", "dieci")
 	var/static/list/rare_associations = list("hana", "liu2")
-	var/static/forced_for_testing = "shieast" // Only ever one, it'll go in the guaranteed common slot
+	var/static/forced_for_testing = null // Only ever one, it'll go in the guaranteed common slot
 
 	/// List matching the short little assoc names used previously to a full name that can be used on an ID/selection screen. I had to guess the sections for some of these since it's not included on the gear, went off the Limbus IDs
 	var/static/list/pretty_names = list(

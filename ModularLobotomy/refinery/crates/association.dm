@@ -181,14 +181,6 @@
 
 	veryrareloot = list(
 		/obj/item/ego_weapon/city/shi_assassin/director,
-		// There's 3 limbillion dupes of the Shi East kit here because it's being tested. Please do not merge without cutting this down to just one
-		/obj/item/storage/box/shi_east_kit/facility,
-		/obj/item/storage/box/shi_east_kit/facility,
-		/obj/item/storage/box/shi_east_kit/facility,
-		/obj/item/storage/box/shi_east_kit/facility,
-		/obj/item/storage/box/shi_east_kit/facility,
-		/obj/item/storage/box/shi_east_kit/facility,
-		/obj/item/storage/box/shi_east_kit/facility,
 		/obj/item/storage/box/shi_east_kit/facility,
 		/obj/item/clothing/suit/armor/ego_gear/city/shi/director,
 		/obj/item/clothing/suit/armor/ego_gear/city/shilimbus/director,
