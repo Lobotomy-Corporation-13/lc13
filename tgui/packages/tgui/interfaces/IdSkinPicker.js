@@ -1,6 +1,7 @@
-import { useBackend } from '../backend';
+import { useBackend, useLocalState } from '../backend';
 import { Box, Button, Flex, Section } from '../components';
 import { Window } from '../layouts';
+import { ZoomCard } from './RefractionGachaShop';
 
 const RARITY_COLOUR = {
   '0': '#7a7a7a',
@@ -26,23 +27,34 @@ const RarityBadge = props => {
   );
 };
 
-// A single skin tile. Clicking it equips the skin; the currently
-// equipped skin gets a brighter border + an "Equipped" label.
+// One catalogue tile. Owned skins are click-to-equip with a small
+// zoom-in icon button; unowned skins render as a completely black
+// silhouette with a "???" name, are not clickable, and don't open
+// the zoom view.
 const SkinTile = (props, context) => {
   const { act } = useBackend(context);
-  const { skin, equipped, isDefault } = props;
+  const { skin, equipped, isDefault, onZoom } = props;
+  const owned = isDefault || (skin && skin.owned);
   const colour = isDefault
     ? '#888'
     : (RARITY_COLOUR[skin && skin.rarity] || '#7a7a7a');
   const id = isDefault ? null : skin.id;
-  const onClick = () => act('equip', { skin_id: id === null ? '' : id });
+  const onClick = () => {
+    if (!owned) return;
+    act('equip', { skin_id: id === null ? '' : id });
+  };
+  const onZoomClick = e => {
+    if (e && e.stopPropagation) e.stopPropagation();
+    if (!owned || isDefault) return;
+    onZoom(skin);
+  };
   return (
     <Box
       onClick={onClick}
       style={{
         'position': 'relative',
         'padding': '10px',
-        'cursor': 'pointer',
+        'cursor': owned ? 'pointer' : 'default',
         'border': equipped
           ? '3px solid #d4af37'
           : '2px solid ' + colour,
@@ -57,6 +69,7 @@ const SkinTile = (props, context) => {
           : '0 0 6px ' + colour + '40',
         'min-width': '120px',
         'text-align': 'center',
+        'opacity': owned ? 1 : 0.7,
       }}>
       {!!equipped && (
         <Box
@@ -74,6 +87,22 @@ const SkinTile = (props, context) => {
             'letter-spacing': '0.5px',
           }}>
           EQUIPPED
+        </Box>
+      )}
+      {!isDefault && !!owned && (
+        <Box
+          style={{
+            'position': 'absolute',
+            'top': '4px',
+            'right': '4px',
+            'z-index': 2,
+          }}>
+          <Button
+            compact
+            icon="search-plus"
+            tooltip="Zoom in"
+            onClick={onZoomClick}
+          />
         </Box>
       )}
       <Box mb={0.5} mt={1}>
@@ -100,17 +129,22 @@ const SkinTile = (props, context) => {
               'width': '64px',
               'height': '64px',
               'image-rendering': 'pixelated',
+              // Mask unowned skins to a flat black silhouette so the
+              // contents stay hidden until pulled.
+              'filter': owned
+                ? null
+                : 'brightness(0)',
             }}
           />
         )}
       </Box>
-      <Box bold style={{ 'color': colour }}>
+      <Box bold style={{ 'color': owned ? colour : '#555' }}>
         {isDefault ? 'Default ID' : skin.name}
       </Box>
       {!isDefault && (
         <Box mt={0.5}>
           <RarityBadge rarity={skin.rarity} />
-          {skin.copies > 1 && (
+          {!!(owned && skin.copies > 1) && (
             <Box
               inline
               ml={0.5}
@@ -132,6 +166,9 @@ export const IdSkinPicker = (props, context) => {
   const equippedSkin = equipped
     ? skins.find(s => s.id === equipped)
     : null;
+  const [zoomedSkin, setZoomedSkin]
+    = useLocalState(context, 'zoomedSkin', null);
+  const ownedCount = skins.filter(s => s.owned).length;
   return (
     <Window width={560} height={520} title="ID Card Skin">
       <Window.Content scrollable>
@@ -174,20 +211,19 @@ export const IdSkinPicker = (props, context) => {
                   <RarityBadge rarity={equippedSkin.rarity} />
                 </Box>
               )}
-              <Box mt={0.5} color="label" style={{ 'font-size': '11px' }}>
+              <Box
+                mt={0.5}
+                color="label"
+                style={{ 'font-size': '11px' }}>
                 Worn on your spawned ID card. Cosmetic only —
                 access and registered name are unchanged.
               </Box>
             </Flex.Item>
           </Flex>
         </Section>
-        <Section title={'Your Collection (' + skins.length + ')'}>
-          {skins.length === 0 ? (
-            <Box color="label" style={{ 'text-align': 'center' }}>
-              No skins unlocked yet. Pull at the Starlight
-              Extraction terminal to roll new ID card cosmetics.
-            </Box>
-          ) : null}
+        <Section
+          title={'Catalogue (' + ownedCount + '/'
+            + skins.length + ' unlocked)'}>
           <Box
             style={{
               'display': 'grid',
@@ -204,10 +240,17 @@ export const IdSkinPicker = (props, context) => {
                 key={s.id}
                 skin={s}
                 equipped={s.id === equipped}
+                onZoom={z => setZoomedSkin(z)}
               />
             ))}
           </Box>
         </Section>
+        {!!zoomedSkin && (
+          <ZoomCard
+            skin={zoomedSkin}
+            onClose={() => setZoomedSkin(null)}
+          />
+        )}
       </Window.Content>
     </Window>
   );

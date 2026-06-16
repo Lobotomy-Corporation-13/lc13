@@ -89,12 +89,15 @@
 	var/list/owned = SSrefraction_railway.GetUnlockedIdSkins(user.ckey)
 	data["unlocked"] = owned
 	// Build the banner payload — one entry per registered banner with
-	// its preview skin list.
+	// its highlight skins (rate-up). Every banner can roll every skin
+	// in the game at the base rates; only the highlights are shown
+	// here because they're what the player is "gambling for" by
+	// picking that banner.
 	var/list/banners = list()
 	for(var/banner_id in SSrefraction_railway.gacha_banners)
 		var/datum/gacha_banner/B = SSrefraction_railway.gacha_banners[banner_id]
 		var/list/preview = list()
-		for(var/skin_id in B.skin_ids)
+		for(var/skin_id in B.highlight_skin_ids)
 			var/datum/id_skin/S = SSrefraction_railway.id_skins[skin_id]
 			if(!istype(S))
 				continue
@@ -114,6 +117,14 @@
 			"skins" = preview,
 		))
 	data["banners"] = banners
+	// Per-banner pity counters for the active player + the shared
+	// claim threshold. The UI compares them to surface a "Claim a
+	// highlight" button once a banner hits the cap.
+	var/list/pity_map = list()
+	for(var/banner_id in SSrefraction_railway.gacha_banners)
+		pity_map[banner_id] = SSrefraction_railway.GetGachaPity(user.ckey, banner_id)
+	data["pity"] = pity_map
+	data["pity_threshold"] = SSrefraction_railway.gacha_pity_threshold
 	// Rarity-tinted fracture sprites for the burst stage. Baked once
 	// at boot; shipped raw here so the UI doesn't need to know the
 	// bucket → sprite mapping itself.
@@ -142,6 +153,19 @@
 			// a per-user one-shot.
 			LAZYSET(last_pulls, usr.ckey, results)
 			SStgui.update_uis(src)
+		if("redeem_pity")
+			// Free pick from a banner's highlights once pity caps out.
+			// Stashes the result as a single-card pull payload so the
+			// existing results screen can render it without a custom
+			// celebration path.
+			var/banner_id = params["banner_id"]
+			var/skin_id = params["skin_id"]
+			var/list/result = SSrefraction_railway.RedeemGachaPity(usr, banner_id, skin_id)
+			if(islist(result))
+				LAZYSET(last_pulls, usr.ckey, list(result))
+				SStgui.update_uis(src)
+			else
+				to_chat(usr, span_warning("You can't claim that — pity not full or invalid skin."))
 		if("ack_pull")
 			// UI signals it has consumed the last_pulls payload — clear
 			// it so the next ui_data push doesn't replay the animation.

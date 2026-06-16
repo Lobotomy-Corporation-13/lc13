@@ -78,11 +78,21 @@ SUBSYSTEM_DEF(refraction_railway)
 	var/list/id_skins = list()
 	/// banner_id (string) → /datum/gacha_banner
 	var/list/gacha_banners = list()
+	/// Global rarity pools — every skin in the game indexed by tier.
+	/// Each banner rolls from these and applies its own highlight
+	/// weighting on top.
+	var/list/gacha_pool_0   = list()
+	var/list/gacha_pool_00  = list()
+	var/list/gacha_pool_000 = list()
 	/// rarity bucket name ("gray"/"red"/"gold") → base64 PNG of the
-	/// boh_tear fracture sprite tinted to that bucket. Baked once at
+	/// gatch_tear fracture sprite tinted to that bucket. Baked once at
 	/// boot time and shipped raw via ui_data so the gacha shop can
 	/// render fractures without per-open getFlatIcon calls.
 	var/list/gacha_fracture_icons = list()
+	/// Pulls a player must spend on a banner before the pity counter
+	/// caps out — at which point any of that banner's highlight skins
+	/// can be claimed for free. Cap, then reset on redemption.
+	var/gacha_pity_threshold = 100
 
 /datum/controller/subsystem/refraction_railway/Initialize()
 	InitializeLines()
@@ -836,6 +846,7 @@ SUBSYSTEM_DEF(refraction_railway)
 		return null
 	// Deduct up front so we can't double-spend on a race.
 	AwardStarlight(user.ckey, -cost)
+	AddGachaPity(user.ckey, banner_id, count)
 	var/list/entry = GetOrCreateStarlightEntry(user.ckey)
 	if(!islist(entry["id_skins"]))
 		entry["id_skins"] = list()
@@ -847,16 +858,18 @@ SUBSYSTEM_DEF(refraction_railway)
 		results += list(roll_result)
 		if(roll_result["rarity"] != "0")
 			has_high_tier = TRUE
-	// 10-pull guarantee: at least one 00+. If nothing landed, overwrite slot 10.
-	if(count == 10 && !has_high_tier && length(B.pool_00))
-		var/list/guaranteed = list(
-			"skin_id" = pick(B.pool_00),
-			"rarity" = "00",
-			"was_duplicate" = FALSE,
-			"dupe_refund" = 0,
-			"stealth_lucky" = FALSE,
-		)
-		results[10] = guaranteed
+	// 10-pull guarantee: at least one 00+. If nothing landed, overwrite slot 10
+	// with a weighted 00 pick so the banner's highlights still get their boost.
+	if(count == 10 && !has_high_tier && length(gacha_pool_00))
+		var/forced = RollFromPoolWeighted(B, "00")
+		if(forced)
+			results[10] = list(
+				"skin_id" = forced,
+				"rarity" = "00",
+				"was_duplicate" = FALSE,
+				"dupe_refund" = 0,
+				"stealth_lucky" = FALSE,
+			)
 	// Pass 2: apply dupe accounting + refunds.
 	var/total_refund = 0
 	for(var/list/r as anything in results)
@@ -880,9 +893,125 @@ SUBSYSTEM_DEF(refraction_railway)
 	SSpersistence.SaveRefractionStarlight()
 	return results
 
-/// Single-roll resolver: picks a rarity bucket, then a skin from it.
-/// Returns the per-pull result blob (no dupe accounting yet — that's
-/// applied in pass 2 inside PullGacha).
+/// Returns the player's current pity counter for `banner_id` (0 if
+/// they've never pulled on this banner).
+/datum/controller/subsystem/refraction_railway/proc/GetGachaPity(ckey, banner_id)
+	if(!ckey || !banner_id)
+		return 0
+	var/list/entry = SSpersistence?.starlight_data?[ckey]
+	if(!islist(entry))
+		return 0
+	var/list/pity_map = entry["gacha_pity"]
+	if(!islist(pity_map))
+		return 0
+	return pity_map[banner_id] || 0
+
+/// Increments the player's pity counter on `banner_id` by `amount`,
+/// capping at the threshold. Saves immediately so progress survives a
+/// crash mid-round.
+/datum/controller/subsystem/refraction_railway/proc/AddGachaPity(ckey, banner_id, amount)
+	if(!ckey || !banner_id || amount <= 0)
+		return
+	var/list/entry = GetOrCreateStarlightEntry(ckey)
+	var/list/pity_map = entry["gacha_pity"]
+	if(!islist(pity_map))
+		pity_map = list()
+		entry["gacha_pity"] = pity_map
+	var/current = pity_map[banner_id] || 0
+	pity_map[banner_id] = min(current + amount, gacha_pity_threshold)
+	SSpersistence.SaveRefractionStarlight()
+
+/// Spends a full pity counter to grant a chosen highlight skin. Returns
+/// the result blob shaped like a single pull (so the UI can stash it
+/// into pending_pull and reuse the results screen) on success, or null
+/// on rejection (no banner, not enough pity, skin not a highlight).
+/datum/controller/subsystem/refraction_railway/proc/RedeemGachaPity(mob/user, banner_id, skin_id)
+	if(!user?.ckey || !banner_id || !skin_id)
+		return null
+	var/datum/gacha_banner/B = gacha_banners[banner_id]
+	if(!istype(B))
+		return null
+	if(!(skin_id in B.highlight_skin_ids))
+		return null
+	var/datum/id_skin/picked = id_skins[skin_id]
+	if(!istype(picked))
+		return null
+	if(GetGachaPity(user.ckey, banner_id) < gacha_pity_threshold)
+		return null
+	var/list/entry = GetOrCreateStarlightEntry(user.ckey)
+	if(!islist(entry["id_skins"]))
+		entry["id_skins"] = list()
+	var/list/owned = entry["id_skins"]
+	var/was_dup = !isnull(owned[skin_id])
+	var/refund = 0
+	if(was_dup)
+		refund = GachaDupeRefund(picked.rarity)
+		owned[skin_id] = (owned[skin_id] || 0) + 1
+		if(refund > 0)
+			AwardStarlight(user.ckey, refund)
+	else
+		owned[skin_id] = 1
+	var/list/pity_map = entry["gacha_pity"]
+	if(islist(pity_map))
+		pity_map[banner_id] = 0
+	SSpersistence.SaveRefractionStarlight()
+	return list(
+		"skin_id"       = skin_id,
+		"rarity"        = picked.rarity,
+		"name"          = picked.name,
+		"icon_data"     = picked.icon_data,
+		"was_duplicate" = was_dup,
+		"dupe_refund"   = refund,
+		"stealth_lucky" = FALSE,
+	)
+
+/// Returns the global pool list for the given rarity, or null if the
+/// rarity string is unknown.
+/datum/controller/subsystem/refraction_railway/proc/GachaPoolForRarity(rarity)
+	switch(rarity)
+		if("0")
+			return gacha_pool_0
+		if("00")
+			return gacha_pool_00
+		if("000")
+			return gacha_pool_000
+	return null
+
+/// Picks one skin_id from the global `rarity` pool, respecting the
+/// banner's highlight rules:
+///   * For 000 rolls, the result is pinned to the banner's 000
+///     highlights (uniform among them). The banner's "guaranteed
+///     featured 000" is the headline reason to gamble on a specific
+///     pool. Falls through to the base 000 pool if the banner has
+///     none.
+///   * For lower tiers, highlights just get a 2x roll weight on top
+///     of the base pool — every other skin still has a real chance.
+/// Returns null if the pool is empty.
+/datum/controller/subsystem/refraction_railway/proc/RollFromPoolWeighted(datum/gacha_banner/B, rarity)
+	var/list/pool = GachaPoolForRarity(rarity)
+	if(!islist(pool) || !length(pool))
+		return null
+	var/list/highlights_for_tier = list()
+	if(istype(B) && islist(B.highlight_skin_ids))
+		for(var/skin_id in B.highlight_skin_ids)
+			var/datum/id_skin/S = id_skins[skin_id]
+			if(istype(S) && S.rarity == rarity && (skin_id in pool))
+				highlights_for_tier += skin_id
+	if(rarity == "000" && length(highlights_for_tier))
+		return pick(highlights_for_tier)
+	if(!length(highlights_for_tier))
+		return pick(pool)
+	// Each pool entry counts once; highlights get an extra duplicate
+	// appended (total 2x weight) — straightforward weighted pick.
+	var/list/weighted = pool.Copy()
+	for(var/h in highlights_for_tier)
+		weighted += h
+	return pick(weighted)
+
+/// Single-roll resolver: picks a rarity bucket from the fixed rate
+/// table, then weight-rolls a skin from the global pool of that
+/// rarity (banner highlights at 2x). Returns the per-pull result blob
+/// (no dupe accounting yet — that's applied in pass 2 inside PullGacha).
 /datum/controller/subsystem/refraction_railway/proc/RollSingleGacha(datum/gacha_banner/B)
 	// Fixed-point 1–1000 roll. Buckets:
 	//   1–29     → 000  (2.9%)
@@ -890,22 +1019,17 @@ SUBSYSTEM_DEF(refraction_railway)
 	//   158–1000 → 0    (catches the 1.3% residue too)
 	var/roll = rand(1, 1000)
 	var/rarity = "0"
-	var/list/pool
-	if(roll <= 29 && length(B.pool_000))
+	if(roll <= 29 && length(gacha_pool_000))
 		rarity = "000"
-		pool = B.pool_000
-	else if(roll <= 157 && length(B.pool_00))
+	else if(roll <= 157 && length(gacha_pool_00))
 		rarity = "00"
-		pool = B.pool_00
 	else
 		rarity = "0"
-		pool = B.pool_0
-	// Fallback: if the banner has no pool for the rolled rarity, drop
-	// to the next lower tier rather than returning a null skin.
-	if(!length(pool))
-		pool = (length(B.pool_00) ? B.pool_00 : B.pool_0)
-		rarity = (length(B.pool_00) ? "00" : "0")
-	var/picked = length(pool) ? pick(pool) : null
+	// Fallback: if the rolled rarity's pool is empty, drop to the next
+	// lower tier rather than returning a null skin.
+	if(!length(GachaPoolForRarity(rarity)))
+		rarity = (length(gacha_pool_00) ? "00" : "0")
+	var/picked = RollFromPoolWeighted(B, rarity)
 	// 75% of 000s telegraph via the golden-ball reveal flag; the
 	// other 25% are "stealth" — surprise reveal when the chain is
 	// pulled back.

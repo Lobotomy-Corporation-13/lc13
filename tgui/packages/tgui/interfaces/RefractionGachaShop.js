@@ -91,12 +91,230 @@ const RarityBadge = props => {
   );
 };
 
+// Full-screen preview overlay for a single card — used by both the
+// banner inspector and the prefs picker. Renders the card large and
+// centred, with click-anywhere-to-dismiss on the dimmed backdrop.
+// Exported so the prefs picker can reuse the same look.
+export const ZoomCard = props => {
+  const { skin, onClose } = props;
+  if (!skin) return null;
+  const colour = RARITY_COLOUR[skin.rarity] || '#7a7a7a';
+  return (
+    <Box className="gacha-card-flash" onClick={onClose}>
+      <Box
+        style={{ 'text-align': 'center' }}
+        onClick={e => e.stopPropagation()}>
+        <Box
+          style={{
+            'width': '220px',
+            'height': '300px',
+            'border': '3px solid ' + colour,
+            'background': skin.rarity === '000'
+              ? 'linear-gradient(135deg, #d4af37 0%, '
+                + '#5a4010 100%)'
+              : 'linear-gradient(135deg, #303030 0%, '
+                + '#101010 100%)',
+            'border-radius': '10px',
+            'box-shadow': '0 0 32px ' + colour,
+            'margin': '0 auto',
+            'display': 'flex',
+            'align-items': 'center',
+            'justify-content': 'center',
+          }}>
+          {skin.icon_data ? (
+            <img
+              src={'data:image/png;base64,' + skin.icon_data}
+              style={{
+                'width': '180px',
+                'height': '180px',
+                'image-rendering': 'pixelated',
+              }}
+            />
+          ) : (
+            <Box
+              bold
+              style={{
+                'color': skin.rarity === '000' ? '#000' : '#fff',
+                'font-size': '24px',
+              }}>
+              ID
+            </Box>
+          )}
+        </Box>
+        <Box
+          mt={1}
+          bold
+          style={{ 'color': colour, 'font-size': '14px' }}>
+          {skin.name}
+        </Box>
+        <Box mt={0.5}>
+          <RarityBadge rarity={skin.rarity} />
+        </Box>
+        <Box
+          mt={1.5}
+          style={{ 'font-size': '10px' }}
+          color="label"
+          onClick={onClose}>
+          Click anywhere to close.
+        </Box>
+      </Box>
+    </Box>
+  );
+};
+
+// Inspector window for one banner — opens off the magnifying-glass
+// button. Tiles for every highlight on the banner, click-to-zoom by
+// default, plus a "Claim" button on each tile when the banner's pity
+// has capped out.
+const InspectorOverlay = (props, context) => {
+  const { act } = useBackend(context);
+  const {
+    banner,
+    pity,
+    pityThreshold,
+    onClose,
+    onZoom,
+    onClaim,
+  } = props;
+  const skins = banner.skins || [];
+  const canClaim = pity >= pityThreshold;
+  return (
+    <Box
+      position="fixed"
+      top={0}
+      left={0}
+      right={0}
+      bottom={0}
+      backgroundColor="rgba(0, 0, 0, 0.7)"
+      style={{ 'z-index': 40 }}
+      onClick={onClose}>
+      <Box
+        position="fixed"
+        top="50%"
+        left="50%"
+        width="560px"
+        style={{
+          'transform': 'translate(-50%, -50%)',
+          'background': 'linear-gradient(180deg, '
+            + '#1a1a1a 0%, #0a0a0a 100%)',
+          'border': '2px solid ' + (banner.color || '#555'),
+          'border-radius': '8px',
+          'padding': '14px',
+          'max-height': '80vh',
+          'overflow-y': 'auto',
+          'box-shadow': '0 0 32px rgba(0, 0, 0, 0.8)',
+        }}
+        onClick={e => e.stopPropagation()}>
+        <Box
+          mb={1}
+          bold
+          style={{
+            'font-size': '14px',
+            'text-align': 'center',
+            'color': banner.color || '#fff',
+          }}>
+          {banner.name} — Featured Skins
+        </Box>
+        <Box
+          mb={1}
+          style={{ 'text-align': 'center', 'font-size': '11px' }}
+          color={canClaim ? 'good' : 'label'}>
+          Pity: {pity}/{pityThreshold}
+          {!!canClaim && (
+            <Box inline ml={0.5} bold>
+              — Claim a featured skin for free.
+            </Box>
+          )}
+        </Box>
+        <Box
+          style={{
+            'display': 'grid',
+            'grid-template-columns':
+              'repeat(auto-fill, minmax(150px, 1fr))',
+            'gap': '10px',
+          }}>
+          {skins.map(s => {
+            const colour = RARITY_COLOUR[s.rarity] || '#7a7a7a';
+            return (
+              <Box
+                key={s.id}
+                onClick={() => onZoom(s)}
+                style={{
+                  'position': 'relative',
+                  'padding': '8px',
+                  'border': '2px solid ' + colour,
+                  'border-radius': '6px',
+                  'background': 'linear-gradient(135deg, '
+                    + '#1f1f1f 0%, #0a0a0a 100%)',
+                  'cursor': 'pointer',
+                  'text-align': 'center',
+                  'box-shadow': '0 0 6px ' + colour + '40',
+                }}>
+                {s.icon_data && (
+                  <Box mb={0.5}>
+                    <img
+                      src={'data:image/png;base64,' + s.icon_data}
+                      style={{
+                        'width': '64px',
+                        'height': '64px',
+                        'image-rendering': 'pixelated',
+                      }}
+                    />
+                  </Box>
+                )}
+                <Box bold style={{ 'color': colour }}>
+                  {s.name}
+                </Box>
+                <Box mt={0.5}>
+                  <RarityBadge rarity={s.rarity} />
+                  <Box
+                    inline
+                    ml={0.5}
+                    bold
+                    color={s.owned ? 'good' : 'label'}>
+                    {s.owned ? 'Owned' : 'Missing'}
+                  </Box>
+                </Box>
+                {!!canClaim && (
+                  <Box mt={0.5}>
+                    <Button
+                      fluid
+                      color="good"
+                      icon="gift"
+                      content="Claim"
+                      onClick={e => {
+                        if (e && e.stopPropagation) e.stopPropagation();
+                        onClaim(s);
+                      }}
+                    />
+                  </Box>
+                )}
+              </Box>
+            );
+          })}
+        </Box>
+        <Flex justify="center" mt={1}>
+          <Flex.Item>
+            <Button
+              icon="times"
+              content="Close"
+              onClick={onClose}
+            />
+          </Flex.Item>
+        </Flex>
+      </Box>
+    </Box>
+  );
+};
+
 // ---------- Home / banner select ----------
 const HomeView = (props, context) => {
-  const { data } = useBackend(context);
+  const { act, data } = useBackend(context);
   const balance = data.balance || 0;
   const banners = data.banners || [];
   const pull_costs = data.pull_costs || { single: 50, ten: 500 };
+  const pity = data.pity || {};
+  const pityThreshold = data.pity_threshold || 100;
   const [selectedBannerIdx, setSelectedBannerIdx]
     = useLocalState(context, 'banner', 0);
   const [, setStage] = useLocalState(context, 'stage', STAGE_HOME);
@@ -104,6 +322,10 @@ const HomeView = (props, context) => {
     = useLocalState(context, 'pendingCount', 1);
   const [, setConfirmReturn]
     = useLocalState(context, 'confirmReturn', STAGE_HOME);
+  const [inspectorOpen, setInspectorOpen]
+    = useLocalState(context, 'inspectorOpen', false);
+  const [zoomedSkin, setZoomedSkin]
+    = useLocalState(context, 'zoomedSkin', null);
   const banner = banners[selectedBannerIdx] || banners[0];
   if (!banner) {
     return (
@@ -115,10 +337,19 @@ const HomeView = (props, context) => {
   const skins = banner.skins || [];
   const cantOne = balance < pull_costs.single;
   const cantTen = balance < pull_costs.ten;
+  const bannerPity = pity[banner.id] || 0;
+  const pityFull = bannerPity >= pityThreshold;
   const startPull = count => {
     setPendingCount(count);
     setConfirmReturn(STAGE_HOME);
     setStage(STAGE_CONFIRM);
+  };
+  const claimSkin = s => {
+    act('redeem_pity', { banner_id: banner.id, skin_id: s.id });
+    setInspectorOpen(false);
+    setZoomedSkin(null);
+    setPendingCount(1);
+    setStage(STAGE_RESULTS);
   };
   return (
     <Flex>
@@ -150,7 +381,16 @@ const HomeView = (props, context) => {
         </Section>
       </Flex.Item>
       <Flex.Item grow={1} ml={1}>
-        <Section title={banner.name}>
+        <Section
+          title={banner.name}
+          buttons={
+            <Button
+              icon="search-plus"
+              content="Inspect"
+              tooltip="Browse highlight skins / claim pity"
+              onClick={() => setInspectorOpen(true)}
+            />
+          }>
           {/* Chain ball with the banner's skins orbiting around it. */}
           <Box
             mb={1}
@@ -234,7 +474,8 @@ const HomeView = (props, context) => {
             mb={1}
             style={{ 'font-size': '11px' }}
             color="label">
-            Possible skins in this banner:
+            Featured skins — every 000 you pull here is one of these;
+            lower tiers get a 2x rate-up on top of the base pool.
           </Box>
           <Box mb={1}>
             {skins.map(s => (
@@ -247,15 +488,17 @@ const HomeView = (props, context) => {
                   'border': '1px solid '
                     + (RARITY_COLOUR[s.rarity] || '#888'),
                   'border-radius': '3px',
-                  'opacity': s.owned ? 1 : 0.6,
+                  'opacity': s.owned ? 1 : 0.55,
                 }}>
                 <RarityBadge rarity={s.rarity} />
                 <Box inline ml={0.5}>{s.name}</Box>
-                {s.owned ? (
-                  <Box inline ml={0.5} color="good">
-                    x{s.copies}
-                  </Box>
-                ) : null}
+                <Box
+                  inline
+                  ml={0.5}
+                  bold
+                  color={s.owned ? 'good' : 'label'}>
+                  {s.owned ? 'Owned' : 'Missing'}
+                </Box>
               </Box>
             ))}
           </Box>
@@ -279,8 +522,44 @@ const HomeView = (props, context) => {
               />
             </Flex.Item>
           </Flex>
+          {/* Pity meter — flips bright + actionable when capped. */}
+          <Box
+            mt={1}
+            style={{
+              'text-align': 'center',
+              'font-size': '11px',
+              'padding': '4px',
+              'border-radius': '3px',
+              'background': pityFull
+                ? 'rgba(34, 197, 94, 0.15)'
+                : 'rgba(255, 255, 255, 0.04)',
+            }}
+            color={pityFull ? 'good' : 'label'}>
+            Pity: <b>{bannerPity}/{pityThreshold}</b>
+            {!!pityFull && (
+              <Box inline ml={0.5} bold>
+                — open Inspect to claim a featured skin.
+              </Box>
+            )}
+          </Box>
         </Section>
       </Flex.Item>
+      {!!inspectorOpen && (
+        <InspectorOverlay
+          banner={banner}
+          pity={bannerPity}
+          pityThreshold={pityThreshold}
+          onClose={() => setInspectorOpen(false)}
+          onZoom={s => setZoomedSkin(s)}
+          onClaim={claimSkin}
+        />
+      )}
+      {!!zoomedSkin && (
+        <ZoomCard
+          skin={zoomedSkin}
+          onClose={() => setZoomedSkin(null)}
+        />
+      )}
     </Flex>
   );
 };
@@ -440,15 +719,22 @@ class CrackIntroCanvas extends Component {
   }
   handleClick() {
     if (this.props.waiting) return;
-    const next = this.state.clicks + 1;
-    if (next >= CRACK_INTRO_CLICKS) {
-      // Final click that cracks the ball open — boom!
+    let next;
+    let willCrack = false;
+    this.setState(s => {
+      next = s.clicks + 1;
+      if (next >= CRACK_INTRO_CLICKS) {
+        willCrack = true;
+        return null;
+      }
+      return { clicks: next, shaking: true };
+    });
+    if (willCrack) {
       playGachaSound(this.props.act, 'coreBoom');
       this.props.onCrack();
       return;
     }
     playGachaSound(this.props.act, 'coreClick');
-    this.setState({ clicks: next, shaking: true });
     if (this.shakeTimer) clearTimeout(this.shakeTimer);
     this.shakeTimer = setTimeout(() => {
       this.setState({ shaking: false });
@@ -688,8 +974,11 @@ class CrackBurstCanvas extends Component {
     if (this.state.finished) return;
     playGachaSound(this.props.act, 'coreClick');
     this.triggerBallShake();
-    const newBC = this.state.ballClicks + 1;
-    this.setState({ ballClicks: newBC });
+    let newBC;
+    this.setState(s => {
+      newBC = s.ballClicks + 1;
+      return { ballClicks: newBC };
+    });
     if (newBC < CRACK_BALL_CLICKS) return;
     const presentIndices = this.state.chainStates
       .map((s, i) => (s === 'present' ? i : -1))
@@ -1249,8 +1538,14 @@ const ResultsView = (props, context) => {
     setStage(STAGE_CONFIRM);
   };
   const hasGold = pending_pull.some(p => p.rarity === '000');
+  // Re-mount the canvas when the pull payload changes shape — this
+  // matters for pity claims, where the player lands on RESULTS before
+  // the back end has finished stashing the single-card result. Once
+  // pending_pull arrives, the key flips and ResultsCanvas re-runs its
+  // staggered fade-in timers with the correct data.
   return (
     <ResultsCanvas
+      key={'results-' + pending_pull.length}
       act={act}
       pending_pull={pending_pull}
       balance={balance}
@@ -1330,9 +1625,11 @@ class ResultsCanvas extends Component {
               {pending_pull.map((p, i) => (
                 i < visibleCount
                   ? <ResultTile key={i} p={p} />
-                  : <Box key={i} style={{ 'visibility': 'hidden' }}>
-                    <ResultTile p={p} />
-                  </Box>
+                  : (
+                    <Box key={i} style={{ 'visibility': 'hidden' }}>
+                      <ResultTile p={p} />
+                    </Box>
+                  )
               ))}
             </Box>
           ) : (

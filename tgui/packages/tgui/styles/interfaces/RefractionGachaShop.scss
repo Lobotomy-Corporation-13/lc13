@@ -120,9 +120,12 @@
               transform 0.18s;
 }
 
-// Card flash overlay (revealed-by-click feedback).
+// Card flash overlay — both the burst-stage reveal feedback and the
+// zoom-in preview from the inspector / prefs picker. Pinned to the
+// viewport with position: fixed so it stays in view when the host
+// Window.Content is scrolled (e.g. the prefs picker catalogue).
 .gacha-card-flash {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
@@ -131,7 +134,7 @@
   align-items: center;
   justify-content: center;
   background: rgba(0, 0, 0, 0.55);
-  z-index: 50;
+  z-index: 60;
   cursor: pointer;
   animation: gacha-card-flash 0.3s ease-out;
 }

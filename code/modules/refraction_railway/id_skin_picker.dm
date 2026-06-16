@@ -41,24 +41,24 @@
 	data["equipped"] = SSrefraction_railway.GetEquippedIdSkin(ckey)
 	var/list/owned_map = SSrefraction_railway.GetUnlockedIdSkins(ckey)
 	var/list/skins = list()
-	// Order matches the registry's insertion order so banners group
-	// together when more lines are added later.
+	// Ship every registered skin — the UI renders unowned entries
+	// as a black silhouette with a "???" name so the player can see
+	// what's still out there to chase without learning the contents
+	// from the source tree. Equipped skins still surface even if
+	// the unlock ledger ever diverges from persistence.
 	for(var/skin_id in SSrefraction_railway.id_skins)
 		var/datum/id_skin/S = SSrefraction_railway.id_skins[skin_id]
 		if(!istype(S))
 			continue
 		var/copies = owned_map[skin_id]
-		// Only surface skins the player actually owns (plus the
-		// currently equipped one, in case persistence and the
-		// unlock ledger ever diverge).
-		if(isnull(copies) && skin_id != data["equipped"])
-			continue
+		var/owned = !isnull(copies) || skin_id == data["equipped"]
 		skins += list(list(
 			"id"        = S.id,
-			"name"      = S.name,
+			"name"      = owned ? S.name : "???",
 			"rarity"    = S.rarity,
 			"icon_data" = S.icon_data,
-			"copies"    = copies || (skin_id == data["equipped"] ? 1 : 0),
+			"owned"     = owned,
+			"copies"    = owned ? (copies || 1) : 0,
 		))
 	data["skins"] = skins
 	return data
