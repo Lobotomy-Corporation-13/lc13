@@ -73,6 +73,16 @@ SUBSYSTEM_DEF(refraction_railway)
 	/// Forbid re-using EGO weapons/armor across sectors of the same run.
 	/// Default ON at the SS level — per-line override is the authoring control.
 	var/unique_loadout_per_sector = TRUE
+	// ---- Gacha ID skin registry (built in Initialize via BuildGachaRegistry) ----
+	/// skin_id (string) → /datum/id_skin
+	var/list/id_skins = list()
+	/// banner_id (string) → /datum/gacha_banner
+	var/list/gacha_banners = list()
+	/// rarity bucket name ("gray"/"red"/"gold") → base64 PNG of the
+	/// boh_tear fracture sprite tinted to that bucket. Baked once at
+	/// boot time and shipped raw via ui_data so the gacha shop can
+	/// render fractures without per-open getFlatIcon calls.
+	var/list/gacha_fracture_icons = list()
 
 /datum/controller/subsystem/refraction_railway/Initialize()
 	InitializeLines()
@@ -80,6 +90,7 @@ SUBSYSTEM_DEF(refraction_railway)
 	InitializeMobPassives()
 	InitializeMobAttacks()
 	InitializeMobAchievements()
+	BuildGachaRegistry()
 	SSpersistence.LoadRefractionLeaderboards()
 	SSpersistence.LoadRefractionEncounters()
 	SSpersistence.LoadRefractionEvents()
@@ -741,5 +752,170 @@ SUBSYSTEM_DEF(refraction_railway)
 	// roll below zero — a bad run zeroes out, doesn't accumulate debt.
 	entry["balance"] = max(0, (entry["balance"] || 0) + amount)
 	SSpersistence.SaveRefractionStarlight()
+
+// ---------- Gacha ID-skin persistence ----------
+
+/// skin_id → copies (int). Empty list if the ckey has never pulled.
+/datum/controller/subsystem/refraction_railway/proc/GetUnlockedIdSkins(ckey)
+	var/list/entry = SSpersistence.starlight_data[ckey]
+	if(!islist(entry))
+		return list()
+	var/list/skins = entry["id_skins"]
+	return islist(skins) ? skins.Copy() : list()
+
+/datum/controller/subsystem/refraction_railway/proc/IsIdSkinUnlocked(ckey, skin_id)
+	if(!ckey || !skin_id)
+		return FALSE
+	var/list/entry = SSpersistence.starlight_data[ckey]
+	if(!islist(entry))
+		return FALSE
+	var/list/skins = entry["id_skins"]
+	return islist(skins) && (skin_id in skins) && (skins[skin_id] > 0)
+
+/datum/controller/subsystem/refraction_railway/proc/GetEquippedIdSkin(ckey)
+	if(!ckey)
+		return null
+	var/list/entry = SSpersistence.starlight_data[ckey]
+	if(!islist(entry))
+		return null
+	return entry["id_skin_equipped"]
+
+/// Sets the equipped skin. Rejects if the ckey doesn't own it
+/// (passing `null` always succeeds — "revert to default").
+/datum/controller/subsystem/refraction_railway/proc/SetEquippedIdSkin(ckey, skin_id)
+	if(!ckey)
+		return FALSE
+	if(skin_id && !IsIdSkinUnlocked(ckey, skin_id))
+		return FALSE
+	var/list/entry = GetOrCreateStarlightEntry(ckey)
+	if(!entry)
+		return FALSE
+	entry["id_skin_equipped"] = skin_id
+	SSpersistence.SaveRefractionStarlight()
+	return TRUE
+
+/// Dupe-refund value per rarity tier.
+/datum/controller/subsystem/refraction_railway/proc/GachaDupeRefund(rarity)
+	switch(rarity)
+		if("0")
+			return 5
+		if("00")
+			return 15
+		if("000")
+			return 50
+	return 0
+
+/// Cost in Starlight for an N-pull (1 or 10). Anything else returns 0
+/// so the caller can detect a bad input.
+/datum/controller/subsystem/refraction_railway/proc/GachaPullCost(count)
+	switch(count)
+		if(1)
+			return 50
+		if(10)
+			return 500
+	return 0
+
+/// Resolves a pull request. Returns null on rejection (bad banner,
+/// insufficient SL, no count match). Otherwise returns a list of
+/// per-pull result blobs:
+///   list("skin_id" = ..., "rarity" = "0"|"00"|"000",
+///        "was_duplicate" = TRUE/FALSE, "dupe_refund" = <int>,
+///        "stealth_lucky" = TRUE/FALSE)
+/// stealth_lucky marks a 000 pull where the front-of-house golden
+/// reveal flag did NOT fire (25% of 000s — the surprise pull-back).
+/datum/controller/subsystem/refraction_railway/proc/PullGacha(mob/living/user, banner_id, count)
+	if(!user?.ckey)
+		return null
+	var/datum/gacha_banner/B = gacha_banners[banner_id]
+	if(!istype(B))
+		return null
+	if(count != 1 && count != 10)
+		return null
+	var/cost = GachaPullCost(count)
+	if(GetStarlight(user.ckey) < cost)
+		return null
+	// Deduct up front so we can't double-spend on a race.
+	AwardStarlight(user.ckey, -cost)
+	var/list/entry = GetOrCreateStarlightEntry(user.ckey)
+	if(!islist(entry["id_skins"]))
+		entry["id_skins"] = list()
+	var/list/owned = entry["id_skins"]
+	var/list/results = list()
+	var/has_high_tier = FALSE
+	for(var/i in 1 to count)
+		var/list/roll_result = RollSingleGacha(B)
+		results += list(roll_result)
+		if(roll_result["rarity"] != "0")
+			has_high_tier = TRUE
+	// 10-pull guarantee: at least one 00+. If nothing landed, overwrite slot 10.
+	if(count == 10 && !has_high_tier && length(B.pool_00))
+		var/list/guaranteed = list(
+			"skin_id" = pick(B.pool_00),
+			"rarity" = "00",
+			"was_duplicate" = FALSE,
+			"dupe_refund" = 0,
+			"stealth_lucky" = FALSE,
+		)
+		results[10] = guaranteed
+	// Pass 2: apply dupe accounting + refunds.
+	var/total_refund = 0
+	for(var/list/r as anything in results)
+		var/skin_id = r["skin_id"]
+		if(skin_id in owned)
+			r["was_duplicate"] = TRUE
+			r["dupe_refund"] = GachaDupeRefund(r["rarity"])
+			owned[skin_id] = (owned[skin_id] || 0) + 1
+			total_refund += r["dupe_refund"]
+		else
+			owned[skin_id] = 1
+	if(total_refund > 0)
+		AwardStarlight(user.ckey, total_refund)
+	// Pass 3: decorate with the skin's display data so the UI doesn't
+	// need to cross-reference banner state to render the reveal.
+	for(var/list/r as anything in results)
+		var/datum/id_skin/S = id_skins[r["skin_id"]]
+		if(istype(S))
+			r["name"] = S.name
+			r["icon_data"] = S.icon_data
+	SSpersistence.SaveRefractionStarlight()
+	return results
+
+/// Single-roll resolver: picks a rarity bucket, then a skin from it.
+/// Returns the per-pull result blob (no dupe accounting yet — that's
+/// applied in pass 2 inside PullGacha).
+/datum/controller/subsystem/refraction_railway/proc/RollSingleGacha(datum/gacha_banner/B)
+	// Fixed-point 1–1000 roll. Buckets:
+	//   1–29     → 000  (2.9%)
+	//   30–157   → 00   (12.8%)
+	//   158–1000 → 0    (catches the 1.3% residue too)
+	var/roll = rand(1, 1000)
+	var/rarity = "0"
+	var/list/pool
+	if(roll <= 29 && length(B.pool_000))
+		rarity = "000"
+		pool = B.pool_000
+	else if(roll <= 157 && length(B.pool_00))
+		rarity = "00"
+		pool = B.pool_00
+	else
+		rarity = "0"
+		pool = B.pool_0
+	// Fallback: if the banner has no pool for the rolled rarity, drop
+	// to the next lower tier rather than returning a null skin.
+	if(!length(pool))
+		pool = (length(B.pool_00) ? B.pool_00 : B.pool_0)
+		rarity = (length(B.pool_00) ? "00" : "0")
+	var/picked = length(pool) ? pick(pool) : null
+	// 75% of 000s telegraph via the golden-ball reveal flag; the
+	// other 25% are "stealth" — surprise reveal when the chain is
+	// pulled back.
+	var/stealth_lucky = (rarity == "000" && prob(25))
+	return list(
+		"skin_id" = picked,
+		"rarity" = rarity,
+		"was_duplicate" = FALSE,
+		"dupe_refund" = 0,
+		"stealth_lucky" = stealth_lucky,
+	)
 
 

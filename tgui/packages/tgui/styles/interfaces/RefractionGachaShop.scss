@@ -1,0 +1,308 @@
+// Animations for the Refraction Gacha Shop interface.
+//
+// All visuals here are CSS-only — there are no PNG/SVG assets yet,
+// just gradients + transforms. The keyframes here drive the home
+// preview orbit, the smooth stage-transition fades, and the chain
+// extend / retract / shake state machine on the burst screen.
+
+.gacha-orbit {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  animation: gacha-orbit-rotate 24s linear infinite;
+  pointer-events: none;
+}
+
+.gacha-orbit-slot {
+  position: absolute;
+  width: 36px;
+  height: 36px;
+  margin: -18px 0 0 -18px;
+  background: rgba(0, 0, 0, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.8);
+}
+
+.gacha-orbit-img {
+  width: 28px;
+  height: 28px;
+  image-rendering: pixelated;
+  animation: gacha-orbit-counter 24s linear infinite;
+}
+
+// Slow scale wobble for the home preview ball.
+.gacha-ball-breathe {
+  animation: gacha-ball-breathe 3s ease-in-out infinite;
+}
+
+// Container-level fade-in for stage transitions.
+.gacha-enter {
+  animation: gacha-enter 0.45s ease-out;
+}
+
+// Ball mount animation for the crack screens — pops in with a slight
+// overshoot from a small starting scale.
+.gacha-ball-zoom-in {
+  animation: gacha-ball-zoom-in 0.6s
+    cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+// Per-click ball shake. The keyframes compose with the centering
+// transform (translate(-50%, -50%)) so the shake displacements are
+// added on top of the centered position. Animation runs for 1.5s
+// then returns the ball to rest.
+.gacha-ball-shake {
+  animation: gacha-ball-shake 1.5s ease-in-out;
+}
+
+// Base style for chain beams that fly out from the ball center.
+// State classes (.gacha-chain-extend / -present / -retract / -shake)
+// drive the actual animation. Initial transform pins the inner end
+// at the ball center via transform-origin 0 50%.
+.gacha-chain-beam {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  height: 3px;
+  transform-origin: 0 50%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.gacha-chain-extend {
+  animation: gacha-chain-extend 0.5s ease-out;
+  animation-fill-mode: forwards;
+  opacity: 0;
+}
+
+.gacha-chain-present {
+  transform: rotate(var(--chain-angle)) scaleX(1);
+  opacity: 1;
+}
+
+// 2s retract: first 1s = tug (chain shakes at full extension, like
+// the puller is straining against tension), second 1s = reel-in
+// (chain shrinks scaleX 1 → 0).
+.gacha-chain-retract {
+  animation: gacha-chain-retract 2s ease-in-out;
+  animation-fill-mode: forwards;
+}
+
+// Matching 2s fracture animation: shake in place during the tug,
+// then fade + shrink during the reel.
+.gacha-fracture-retracting {
+  animation: gacha-fracture-retracting 2s ease-in-out;
+  animation-fill-mode: forwards;
+}
+
+.gacha-chain-shake {
+  animation: gacha-chain-shake 0.25s ease-in-out infinite;
+}
+
+// Fracture sprite container — the chain's "head". Pops in after the
+// chain finishes extending (delegated by the state machine; this
+// class only owns the visual mount pop).
+.gacha-fracture-pop {
+  animation: gacha-fracture-pop 0.35s
+    cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+// Smooth glow transition when hovering.
+.gacha-fracture-box {
+  border-radius: 6px;
+  transition: box-shadow 0.18s,
+              transform 0.18s;
+}
+
+// Card flash overlay (revealed-by-click feedback).
+.gacha-card-flash {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 50;
+  cursor: pointer;
+  animation: gacha-card-flash 0.3s ease-out;
+}
+
+// Per-tile fade-in on the results screen. The class component
+// staggers when each tile mounts; this animation runs once per
+// mount.
+.gacha-result-fadein {
+  animation: gacha-result-fadein 0.45s ease-out;
+}
+
+// "NEW" badge for fresh unlocks on the results screen.
+.gacha-new-badge {
+  position: absolute;
+  top: -6px;
+  left: -6px;
+  background: #c00000;
+  color: #fff;
+  font-weight: bold;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 3px;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.6);
+  letter-spacing: 0.5px;
+}
+
+@keyframes gacha-orbit-rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes gacha-orbit-counter {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(-360deg); }
+}
+
+@keyframes gacha-ball-breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.04); }
+}
+
+@keyframes gacha-enter {
+  from { opacity: 0; transform: scale(0.97); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes gacha-ball-zoom-in {
+  from {
+    transform: scale(0.25);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes gacha-chain-extend {
+  0% {
+    transform: rotate(var(--chain-angle)) scaleX(0);
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  85% {
+    transform: rotate(var(--chain-angle)) scaleX(1.08);
+  }
+  100% {
+    transform: rotate(var(--chain-angle)) scaleX(1);
+    opacity: 1;
+  }
+}
+
+@keyframes gacha-chain-retract {
+  // Tug phase — chain stays at full extension and shakes
+  // perpendicular to its length (translateY is in the rotated
+  // frame). 0–50% covers the first 1 second.
+  0% {
+    transform: rotate(var(--chain-angle)) scaleX(1) translateY(0);
+    opacity: 1;
+  }
+  6%  { transform: rotate(var(--chain-angle)) scaleX(1) translateY(-2px); }
+  12% { transform: rotate(var(--chain-angle)) scaleX(1) translateY(2px); }
+  18% { transform: rotate(var(--chain-angle)) scaleX(1) translateY(-2px); }
+  24% { transform: rotate(var(--chain-angle)) scaleX(1) translateY(2px); }
+  30% { transform: rotate(var(--chain-angle)) scaleX(1) translateY(-1.5px); }
+  36% { transform: rotate(var(--chain-angle)) scaleX(1) translateY(1.5px); }
+  42% { transform: rotate(var(--chain-angle)) scaleX(1) translateY(-1px); }
+  48% { transform: rotate(var(--chain-angle)) scaleX(1) translateY(1px); }
+  50% {
+    transform: rotate(var(--chain-angle)) scaleX(1) translateY(0);
+    opacity: 1;
+  }
+  // Reel phase — chain snaps inward to the ball. 50–100% covers
+  // the second 1 second.
+  100% {
+    transform: rotate(var(--chain-angle)) scaleX(0) translateY(0);
+    opacity: 0;
+  }
+}
+
+@keyframes gacha-fracture-retracting {
+  // Shake in place during the tug (0–50%, 1s).
+  0%  { transform: translate(-50%, -50%); opacity: 1; }
+  6%  { transform: translate(-50%, -50%) translate(-2px, -1px); opacity: 1; }
+  12% { transform: translate(-50%, -50%) translate(2px, 1px); }
+  18% { transform: translate(-50%, -50%) translate(-2px, 1px); }
+  24% { transform: translate(-50%, -50%) translate(2px, -1px); }
+  30% { transform: translate(-50%, -50%) translate(-1.5px, 0); }
+  36% { transform: translate(-50%, -50%) translate(1.5px, 0); }
+  42% { transform: translate(-50%, -50%) translate(-1px, -1px); }
+  48% { transform: translate(-50%, -50%) translate(1px, 1px); }
+  50% { transform: translate(-50%, -50%); opacity: 1; }
+  // Reel — fracture fades + shrinks while the chain pulls it in
+  // (50–100%, 1s).
+  100% {
+    transform: translate(-50%, -50%) scale(0.3);
+    opacity: 0;
+  }
+}
+
+@keyframes gacha-ball-shake {
+  0%, 100% { transform: translate(-50%, -50%); }
+  8%   { transform: translate(-50%, -50%) translate(-4px, -2px); }
+  16%  { transform: translate(-50%, -50%) translate(4px, 2px); }
+  24%  { transform: translate(-50%, -50%) translate(-3px, 3px); }
+  32%  { transform: translate(-50%, -50%) translate(3px, -3px); }
+  40%  { transform: translate(-50%, -50%) translate(-3px, -1px); }
+  48%  { transform: translate(-50%, -50%) translate(3px, 1px); }
+  56%  { transform: translate(-50%, -50%) translate(-2px, 2px); }
+  64%  { transform: translate(-50%, -50%) translate(2px, -2px); }
+  72%  { transform: translate(-50%, -50%) translate(-2px, -1px); }
+  80%  { transform: translate(-50%, -50%) translate(2px, 1px); }
+  88%  { transform: translate(-50%, -50%) translate(-1px, 1px); }
+  96%  { transform: translate(-50%, -50%) translate(1px, -1px); }
+}
+
+@keyframes gacha-chain-shake {
+  0%, 100% {
+    transform: rotate(var(--chain-angle)) scaleX(1) translateY(0);
+  }
+  25% {
+    transform: rotate(var(--chain-angle)) scaleX(1) translateY(-1.5px);
+  }
+  75% {
+    transform: rotate(var(--chain-angle)) scaleX(1) translateY(1.5px);
+  }
+}
+
+@keyframes gacha-fracture-pop {
+  0% {
+    transform: translate(-50%, -50%) scale(0.2);
+    opacity: 0;
+  }
+  60% {
+    transform: translate(-50%, -50%) scale(1.15);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes gacha-card-flash {
+  from { opacity: 0; transform: scale(0.92); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes gacha-result-fadein {
+  from { opacity: 0; transform: translateY(8px) scale(0.92); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}

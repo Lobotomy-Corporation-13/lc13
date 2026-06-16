@@ -50,6 +50,10 @@
 	var/custom_frame = FALSE
 	var/inner_frame_color = "#ffffff"
 	var/outer_frame_color = "#ffffff"
+	/// Per-ckey one-shot stash of the most recent PullGacha result list.
+	/// Surfaces in ui_data as `pending_pull`; cleared when the UI fires
+	/// the "ack_pull" action after it's done animating the reveal.
+	var/list/last_pulls
 
 /obj/structure/refraction_starlight_shop/Initialize(mapload)
 	. = ..()
@@ -66,7 +70,113 @@
 	. = ..()
 	if(.)
 		return
-	to_chat(user, span_notice("The panel hums under your hand, but nothing happens. Not yet."))
+	ui_interact(user)
+
+/obj/structure/refraction_starlight_shop/ui_interact(mob/user, datum/tgui/ui)
+	if(!user?.ckey)
+		return
+	ui = SStgui.try_update_ui(user, src, ui)
+	if(!ui)
+		ui = new(user, src, "RefractionGachaShop", "Starlight Extraction")
+		ui.open()
+
+/obj/structure/refraction_starlight_shop/ui_data(mob/user)
+	var/list/data = list()
+	data["balance"] = SSrefraction_railway.GetStarlight(user.ckey)
+	data["pull_costs"] = list("single" = 50, "ten" = 500)
+	data["rates"] = list("rate_0" = 83.0, "rate_00" = 12.8, "rate_000" = 2.9)
+	data["equipped"] = SSrefraction_railway.GetEquippedIdSkin(user.ckey)
+	var/list/owned = SSrefraction_railway.GetUnlockedIdSkins(user.ckey)
+	data["unlocked"] = owned
+	// Build the banner payload — one entry per registered banner with
+	// its preview skin list.
+	var/list/banners = list()
+	for(var/banner_id in SSrefraction_railway.gacha_banners)
+		var/datum/gacha_banner/B = SSrefraction_railway.gacha_banners[banner_id]
+		var/list/preview = list()
+		for(var/skin_id in B.skin_ids)
+			var/datum/id_skin/S = SSrefraction_railway.id_skins[skin_id]
+			if(!istype(S))
+				continue
+			preview += list(list(
+				"id" = S.id,
+				"name" = S.name,
+				"rarity" = S.rarity,
+				"icon_state" = S.icon_state,
+				"icon_data" = S.icon_data,
+				"owned" = !isnull(owned[S.id]),
+				"copies" = owned[S.id] || 0,
+			))
+		banners += list(list(
+			"id" = B.id,
+			"name" = B.name,
+			"color" = B.display_color,
+			"skins" = preview,
+		))
+	data["banners"] = banners
+	// Rarity-tinted fracture sprites for the burst stage. Baked once
+	// at boot; shipped raw here so the UI doesn't need to know the
+	// bucket → sprite mapping itself.
+	data["fracture_icons"] = SSrefraction_railway.gacha_fracture_icons
+	// One-shot pull payload for the animation. The UI fires "ack_pull"
+	// to clear it once the reveal sequence is complete.
+	data["pending_pull"] = LAZYACCESS(last_pulls, user.ckey)
+	return data
+
+/obj/structure/refraction_starlight_shop/ui_act(action, list/params)
+	. = ..()
+	if(.)
+		return
+	switch(action)
+		if("pull")
+			var/banner_id = params["banner_id"]
+			var/count = text2num(params["count"])
+			if(!(count in list(1, 10)))
+				return
+			var/list/results = SSrefraction_railway.PullGacha(usr, banner_id, count)
+			if(!islist(results))
+				to_chat(usr, span_warning("The terminal rejects your pull."))
+				return
+			// Push the resolved results back into ui_data so the UI can
+			// animate through them. We stash them onto the console as
+			// a per-user one-shot.
+			LAZYSET(last_pulls, usr.ckey, results)
+			SStgui.update_uis(src)
+		if("ack_pull")
+			// UI signals it has consumed the last_pulls payload — clear
+			// it so the next ui_data push doesn't replay the animation.
+			if(usr.ckey && LAZYACCESS(last_pulls, usr.ckey))
+				LAZYREMOVE(last_pulls, usr.ckey)
+				SStgui.update_uis(src)
+		if("equip_skin")
+			var/skin_id = params["skin_id"]
+			if(skin_id == "null" || skin_id == "")
+				skin_id = null
+			if(SSrefraction_railway.SetEquippedIdSkin(usr.ckey, skin_id))
+				usr.client?.prefs?.equipped_id_skin = skin_id
+				usr.client?.prefs?.save_preferences()
+				SStgui.update_uis(src)
+			else
+				to_chat(usr, span_warning("You don't own that skin yet."))
+		if("play_sound")
+			// Whitelisted UI sound effects fired by the gacha animation.
+			// Sent only to the acting client so other players nearby
+			// don't get bombarded by every chain pull.
+			var/static/list/gacha_sounds = list(
+				"start"         = "sound/effects/gatcha/gatcha_start.ogg",
+				"coreBoom"      = "sound/effects/gatcha/gatcha_coreBoom.ogg",
+				"coreClick"     = "sound/effects/gatcha/gatcha_coreClick.ogg",
+				"makeFracture"  = "sound/effects/gatcha/gatcha_makeFracture.ogg",
+				"chainPullback" = "sound/effects/gatcha/gatcha_chainPullback.ogg",
+				"got_000"       = "sound/effects/gatcha/gatcha_got_000.ogg",
+				"idResult"      = "sound/effects/gatcha/gatcha_idResult.ogg",
+			)
+			var/path = gacha_sounds[params["name"]]
+			if(path && usr.client)
+				var/vol = text2num(params["volume"])
+				if(isnull(vol))
+					vol = 50
+				SEND_SOUND(usr.client, sound(path, volume = vol))
 
 /obj/structure/refraction_briefing/attack_hand(mob/user)
 	. = ..()

@@ -373,22 +373,24 @@
 	random = FALSE
 	permanent = TRUE
 	name = "refraction railway sleeper"
-	desc = "A humming sleeper that materializes registered fixers for refraction railway runs."
+	desc = "A humming sleeper that materialises registered fixers for refraction railway runs. Step inside to take a body, pick a line at the briefing console, and run it as a fixer."
 	mob_name = "Refraction Railway Agent"
 	icon = 'icons/obj/machines/sleeper.dmi'
 	icon_state = "sleeper"
 	resistance_flags = INDESTRUCTIBLE
 	outfit = /datum/outfit/refraction_railway_agent
-	short_desc = "Bodies spawned here run the refraction railway."
-	flavour_text = "\[Refraction Railway\] An authored boss-rush. Pick a line, party up, re-run as often as you want.\n\
+	short_desc = "An authored, re-runnable boss-rush set apart from the main shift — clear lines for Starlight."
+	flavour_text = "\[Refraction Railway\] A self-contained boss-rush that lives alongside the main shift. Pick one of the authored lines, party up (any size — solo through full fixer squad), and run it as many times as you like.\n\
 		\n\
-		\[Runs\] Each line is a chain of sectors. Pick a loadout (2 weapons + 1 armor) at the loadout console before each sector; the owner starts when ready. Incapacitated players revive at the last checkpoint.\n\
+		\[Loop\] Each line is a chain of sectors with a boss waiting at the end. At the loadout console before each sector, equip 2 weapons + 1 armor; the run owner starts when everyone is ready. Incapacitated runners revive at the last checkpoint.\n\
 		\n\
-		\[Rewards\] Clearing pays Starlight — meta-currency for permanent quirk unlocks at the Starlight terminal. The award itemises: flat clear bonus, signed time bonus vs. expected, +10 per distinct weapon/armor used, plus any achievements earned.\n\
+		\[Starlight rewards\] Clearing a line pays Starlight — a persistent meta-currency. The award itemises: a flat clear bonus, a signed time bonus vs. the line's expected duration, +10 per distinct weapon/armor used in the run, plus any achievements earned. Starlight is spent at the Starlight Extraction terminal to roll cosmetic ID-card skins (gacha pulls — common, rare, and very rare tiers).\n\
 		\n\
 		\[Achievements\] Per-encounter challenges. Earnable only after your first clear of the line.\n\
 		\n\
-		\[Hub map\] Mobs in each node start hidden. Walking into a node reveals its mobs to you permanently."
+		\[Hub map\] Each node's mobs start hidden. Walking into a node reveals its roster to you permanently.\n\
+		\n\
+		\[Customise\] Pick which unlocked ID skin appears on your spawned card from character preferences (ID Card Skin); access and registered name are unchanged."
 	assignedrole = "Refraction Railway Agent"
 
 /datum/outfit/refraction_railway_agent
