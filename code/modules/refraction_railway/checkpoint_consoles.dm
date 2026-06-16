@@ -33,14 +33,15 @@
 		outer.color = outer_frame_color
 		add_overlay(outer)
 
-// Starlight shop — clone of the briefing structure, spends per-ckey Starlight
-// to permanently unlock `starlight_locked` quirks for the buying client. Same
-// icon, same `custom_frame` + frame-color authoring vars, mappers place it
-// wherever they like (typically in the hub alongside the briefing display).
+// Placeholder shell — the Starlight terminal sits in the hub for a
+// future feature that will repurpose Starlight currency. Keeps the
+// custom-frame authoring vars so mappers don't have to re-place it
+// when the new interaction lands. attack_hand is a tease-message
+// stub; no TGUI is bound right now.
 
 /obj/structure/refraction_starlight_shop
 	name = "starlight terminal"
-	desc = "A glittering panel that converts the starlight you carry into permanent unlocks."
+	desc = "A glittering panel. It hums quietly. Whatever it was meant for hasn't arrived yet."
 	icon = 'ModularLobotomy/_Lobotomyicons/teaser_mobs.dmi'
 	icon_state = "departmentdrone"
 	density = TRUE
@@ -65,72 +66,7 @@
 	. = ..()
 	if(.)
 		return
-	ui_interact(user)
-
-/obj/structure/refraction_starlight_shop/ui_interact(mob/user, datum/tgui/ui)
-	if(!user?.ckey)
-		return
-	ui = SStgui.try_update_ui(user, src, ui)
-	if(!ui)
-		ui = new(user, src, "RefractionStarlightShop", "Starlight Shop")
-		ui.open()
-
-/obj/structure/refraction_starlight_shop/ui_data(mob/user)
-	var/list/data = list()
-	data["balance"] = SSrefraction_railway.GetStarlight(user.ckey)
-	var/list/rows = list()
-	for(var/V in SSquirks.quirks)
-		var/datum/quirk/T = SSquirks.quirks[V]
-		if(!initial(T.starlight_locked))
-			continue
-		var/quirk_name = initial(T.name)
-		var/req_line = initial(T.required_line_completed)
-		var/datum/refraction_line/RL = req_line ? SSrefraction_railway.lines[req_line] : null
-		rows += list(list(
-			"name"          = quirk_name,
-			"desc"          = initial(T.desc),
-			"cost"          = initial(T.starlight_cost),
-			"unlocked"      = SSrefraction_railway.IsQuirkUnlocked(user.ckey, quirk_name),
-			"active"        = SSrefraction_railway.IsHubQuirkActive(user.ckey, quirk_name),
-			"line_required" = req_line,
-			"line_name"     = istype(RL) ? RL.name : null,
-			"line_color"    = istype(RL) ? RL.display_color : null,
-			"line_done"     = req_line ? SSrefraction_railway.HasCompletedLine(user.ckey, req_line) : TRUE,
-			"line_locked"   = istype(RL) ? RL.locked : FALSE,
-		))
-	data["quirks"] = rows
-	return data
-
-/obj/structure/refraction_starlight_shop/ui_act(action, list/params)
-	. = ..()
-	if(.)
-		return
-	var/quirk_name = params["name"]
-	if(!quirk_name)
-		return
-	switch(action)
-		if("purchase")
-			var/datum/quirk/Q = SSquirks.quirks[quirk_name]
-			var/cost = Q ? initial(Q.starlight_cost) : 0
-			if(SSrefraction_railway.PurchaseQuirk(usr, quirk_name))
-				to_chat(usr, span_nicegreen("Purchased [quirk_name] (-[cost] ★). Balance: [SSrefraction_railway.GetStarlight(usr.ckey)]"))
-			else
-				to_chat(usr, span_warning("Cannot purchase [quirk_name]."))
-		if("refund")
-			var/datum/quirk/Q = SSquirks.quirks[quirk_name]
-			var/refunded = Q ? initial(Q.starlight_cost) : 0
-			if(SSrefraction_railway.RefundQuirk(usr, quirk_name))
-				to_chat(usr, span_nicegreen("Refunded [quirk_name] (+[refunded] ★). Balance: [SSrefraction_railway.GetStarlight(usr.ckey)]"))
-			else
-				to_chat(usr, span_warning("Cannot refund [quirk_name]."))
-		if("toggle_active")
-			if(SSrefraction_railway.ToggleHubQuirk(usr, quirk_name))
-				if(SSrefraction_railway.IsHubQuirkActive(usr.ckey, quirk_name))
-					to_chat(usr, span_nicegreen("Equipped [quirk_name] for hub testing."))
-				else
-					to_chat(usr, span_notice("Unequipped [quirk_name]."))
-			else
-				to_chat(usr, span_warning("Cannot equip [quirk_name]. (Owned?)"))
+	to_chat(user, span_notice("The panel hums under your hand, but nothing happens. Not yet."))
 
 /obj/structure/refraction_briefing/attack_hand(mob/user)
 	. = ..()

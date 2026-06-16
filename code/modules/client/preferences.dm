@@ -1180,19 +1180,6 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 			if(initial(T.mood_quirk) && CONFIG_GET(flag/disable_human_mood))
 				lock_reason = "Mood is disabled."
 				quirk_conflict = TRUE
-			// Starlight + line-completion gate: visible but unselectable until unlocked.
-			var/starlight_locked = initial(T.starlight_locked)
-			var/required_line = initial(T.required_line_completed)
-			if(starlight_locked || required_line)
-				if(!SSrefraction_railway.IsQuirkAvailable(user.ckey, quirk_name))
-					quirk_conflict = TRUE
-					var/list/reasons = list()
-					if(starlight_locked && !SSrefraction_railway.IsQuirkUnlocked(user.ckey, quirk_name))
-						reasons += "★[initial(T.starlight_cost)]"
-					if(required_line && !SSrefraction_railway.HasCompletedLine(user.ckey, required_line))
-						var/datum/refraction_line/RL = SSrefraction_railway.lines[required_line]
-						reasons += "clear [RL ? RL.name : required_line]"
-					lock_reason = "Starlight Locked ([reasons.Join(" · ")])"
 			if(has_quirk)
 				if(quirk_conflict)
 					all_quirks -= quirk_name
@@ -1204,25 +1191,16 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 			var/font_color = "#AAAAFF"
 			if(initial(T.value) != 0)
 				font_color = initial(T.value) > 0 ? "#AAFFAA" : "#FFAAAA"
-			// Unlocked starlight quirks render with ★ bookends so
-			// they stand out from the regular pool. Locked quirks
-			// route through the strikethrough/LOCKED branch and keep
-			// the plain name — the "★cost" tag in lock_reason
-			// already identifies them as Starlight. Href keys still
-			// use the raw quirk_name; only the display label changes.
-			var/display_name = quirk_name
-			if(starlight_locked && !quirk_conflict)
-				display_name = "★ [quirk_name] ★"
 			if(quirk_conflict)
-				dat += "<s><font color='[font_color]'>[display_name]</font> - [initial(T.desc)]</s> \
+				dat += "<s><font color='[font_color]'>[quirk_name]</font> - [initial(T.desc)]</s> \
 				<font color='red'><b>LOCKED: [lock_reason]</b></font><br>"
 			else
 				if(has_quirk)
 					dat += "<a href='byond://?_src_=prefs;preference=trait;task=update;trait=[quirk_name]'>[has_quirk ? "Remove" : "Take"] ([quirk_cost] pts.)</a> \
-					<b><font color='[font_color]'>[display_name]</font></b> - [initial(T.desc)]<br>"
+					<b><font color='[font_color]'>[quirk_name]</font></b> - [initial(T.desc)]<br>"
 				else
 					dat += "<a href='byond://?_src_=prefs;preference=trait;task=update;trait=[quirk_name]'>[has_quirk ? "Remove" : "Take"] ([quirk_cost] pts.)</a> \
-					<font color='[font_color]'>[display_name]</font> - [initial(T.desc)]<br>"
+					<font color='[font_color]'>[quirk_name]</font> - [initial(T.desc)]<br>"
 		dat += "<br><center><a href='byond://?_src_=prefs;preference=trait;task=reset'>Reset Quirks</a></center>"
 
 	var/datum/browser/popup = new(user, "mob_occupation", "<div align='center'>Quirk Preferences</div>", 900, 600) //no reason not to reuse the occupation window, as it's cleaner that way
@@ -1328,9 +1306,6 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 			if("update")
 				var/quirk = href_list["trait"]
 				if(!SSquirks.quirks[quirk])
-					return
-				if(!SSrefraction_railway.IsQuirkAvailable(user.ckey, quirk))
-					to_chat(user, span_warning("[quirk] is Starlight-locked. Unlock it via the Starlight shop or complete the required line first."))
 					return
 				for(var/V in SSquirks.quirk_blacklist) //V is a list
 					var/list/L = V

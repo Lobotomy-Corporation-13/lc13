@@ -28,20 +28,6 @@
 		to_chat(user, "<span class='warning'>[src]'s lid hasn't been opened!</span>")
 		return FALSE
 
-	// Bloodfiend Origins: water in the container makes the drink
-	// impossible for the holder. Self-drink refuses outright;
-	// force-feed pushes through with a big SP hit + shake.
-	if(HAS_TRAIT(M, TRAIT_BLOODFIEND) && reagents.has_reagent(/datum/reagent/water) && ishuman(M))
-		var/mob/living/carbon/human/bloodfiend_drinker = M
-		if(M == user)
-			to_chat(user, "<span class='warning'>You can't bring [src] to your lips — the water in it makes your throat lock.</span>")
-			bloodfiend_drinker.adjustSanityLoss(3)
-			return FALSE
-		else
-			to_chat(M, "<span class='userdanger'>Water — your body locks up but [user] forces it down.</span>")
-			bloodfiend_drinker.adjustSanityLoss(20)
-			bloodfiend_drinker.do_jitter_animation(60)
-
 	if(M == user)
 		user.visible_message("<span class='notice'>[user] swallows a gulp of [src].</span>", \
 			"<span class='notice'>You swallow a gulp of [src].</span>")

@@ -668,14 +668,6 @@ GLOBAL_LIST_EMPTY(repentance_spawn_points)            // Valid spawn locations i
 
 	// Check if already in the repentance dimension
 	if(istype(M.loc.loc, /area/fishboat/repentance))
-		// "Mirror Shattered" Starlight quirk grants a custom exit
-		// menu in place of the dead-end flavour message. See
-		// /datum/quirk/starlight_mirror_shattered in
-		// code/datums/quirks/starlight.dm.
-		var/datum/quirk/starlight_mirror_shattered/MS = locate() in M.roundstart_quirks
-		if(MS)
-			MS.OpenExitMenu(M)
-			return
 		to_chat(M, span_warning("You are already within the realm of sealed regrets. This door leads nowhere from here."))
 		return
 

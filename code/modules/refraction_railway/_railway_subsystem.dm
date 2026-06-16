@@ -57,9 +57,6 @@ SUBSYSTEM_DEF(refraction_railway)
 	var/list/loaded_lanes = list()
 	/// VV debug flag: treat every mob as encountered for every player.
 	var/debug_reveal_all = FALSE
-	/// ckey (string) -> list of quirk-name strings the player has equipped
-	/// in the hub for testing. Session-scoped (not persisted).
-	var/list/hub_active_quirks = list()
 	// Party-size compensation toggles. Take effect on the next activation/spawn batch.
 	/// Per-mob-type stock multiplier.
 	var/scale_stock = TRUE
@@ -714,68 +711,6 @@ SUBSYSTEM_DEF(refraction_railway)
 	var/list/entry = SSpersistence.starlight_data[ckey]
 	return islist(entry) ? (entry["balance"] || 0) : 0
 
-/datum/controller/subsystem/refraction_railway/proc/GetUnlockedQuirks(ckey)
-	var/list/entry = SSpersistence.starlight_data[ckey]
-	if(!islist(entry))
-		return list()
-	var/list/unlocked = entry["unlocked"]
-	return islist(unlocked) ? unlocked.Copy() : list()
-
-/datum/controller/subsystem/refraction_railway/proc/IsQuirkUnlocked(ckey, quirk_name)
-	if(!ckey || !quirk_name)
-		return FALSE
-	var/list/entry = SSpersistence.starlight_data[ckey]
-	if(!islist(entry))
-		return FALSE
-	var/list/unlocked = entry["unlocked"]
-	return islist(unlocked) && (quirk_name in unlocked)
-
-/// TRUE if the given ckey has the quirk attached to its hub body
-/// for testing. Session-scoped; not persisted.
-/datum/controller/subsystem/refraction_railway/proc/IsHubQuirkActive(ckey, quirk_name)
-	if(!ckey || !quirk_name)
-		return FALSE
-	var/list/active = hub_active_quirks[ckey]
-	return islist(active) && (quirk_name in active)
-
-/// Attaches or detaches a purchased quirk on the user's mob for hub
-/// testing. Owner-checked via IsQuirkUnlocked. Returns TRUE on a
-/// successful toggle (either direction), FALSE on rejection. When
-/// attaching, on_spawn() is fired so item-granting quirks actually
-/// deliver their item.
-/datum/controller/subsystem/refraction_railway/proc/ToggleHubQuirk(mob/living/user, quirk_name)
-	if(!user?.ckey || !quirk_name)
-		return FALSE
-	if(!isliving(user))
-		return FALSE
-	if(!IsQuirkUnlocked(user.ckey, quirk_name))
-		return FALSE
-	var/datum/quirk/proto = SSquirks.quirks[quirk_name]
-	if(!proto)
-		return FALSE
-	var/quirk_type = proto.type
-	var/list/active = hub_active_quirks[user.ckey]
-	if(!islist(active))
-		active = list()
-		hub_active_quirks[user.ckey] = active
-	// Currently active → detach. Quirk Destroy() handles remove() +
-	// trait removal + roundstart_quirks fixup.
-	if(quirk_name in active)
-		for(var/datum/quirk/Q as anything in user.roundstart_quirks)
-			if(Q.type == quirk_type)
-				qdel(Q)
-				break
-		active -= quirk_name
-		return TRUE
-	// Currently inactive → attach + fire on_spawn. Quirk New() takes
-	// the holder and runs add() + post_add(); we manually run
-	// on_spawn() because the base path gates it on a `spawn_effects`
-	// flag we can't toggle from here.
-	var/datum/quirk/Q = new quirk_type(user)
-	Q.on_spawn()
-	active += quirk_name
-	return TRUE
-
 /datum/controller/subsystem/refraction_railway/proc/HasCompletedLine(ckey, line_id)
 	if(!ckey || !line_id)
 		return FALSE
@@ -807,84 +742,4 @@ SUBSYSTEM_DEF(refraction_railway)
 	entry["balance"] = max(0, (entry["balance"] || 0) + amount)
 	SSpersistence.SaveRefractionStarlight()
 
-/// Combined locks check used by the picker, server-side gate, and shop. TRUE iff:
-///   - The quirk isn't `starlight_locked`, OR the ckey has purchased it.
-///   - AND the quirk has no `required_line_completed`, OR the ckey has finished it.
-/datum/controller/subsystem/refraction_railway/proc/IsQuirkAvailable(ckey, quirk_name)
-	if(!quirk_name)
-		return TRUE
-	var/datum/quirk/Q = SSquirks.quirks[quirk_name]
-	if(!Q)
-		return TRUE
-	if(initial(Q.starlight_locked) && !IsQuirkUnlocked(ckey, quirk_name))
-		return FALSE
-	var/req_line = initial(Q.required_line_completed)
-	if(req_line)
-		if(!HasCompletedLine(ckey, req_line))
-			return FALSE
-		var/datum/refraction_line/RL = lines[req_line]
-		if(istype(RL) && RL.locked)
-			return FALSE
-	return TRUE
-
-/// Spends Starlight to unlock a `starlight_locked` quirk for the
-/// player. Validates that the quirk exists and is starlight-locked,
-/// the player hasn't already unlocked it, the line gate (if any) is
-/// satisfied, and the balance covers the cost. Returns TRUE on a
-/// successful purchase, FALSE on any rejection. Mirror of
-/// `RefundQuirk` below — kept symmetric so admins can use either side.
-/datum/controller/subsystem/refraction_railway/proc/PurchaseQuirk(mob/living/user, quirk_name)
-	if(!user?.ckey || !quirk_name)
-		return FALSE
-	var/datum/quirk/Q = SSquirks.quirks[quirk_name]
-	if(!Q || !initial(Q.starlight_locked))
-		return FALSE
-	if(IsQuirkUnlocked(user.ckey, quirk_name))
-		return FALSE
-	var/req_line = initial(Q.required_line_completed)
-	if(req_line)
-		if(!HasCompletedLine(user.ckey, req_line))
-			return FALSE
-		var/datum/refraction_line/RL = lines[req_line]
-		if(istype(RL) && RL.locked)
-			return FALSE
-	var/cost = initial(Q.starlight_cost)
-	if(GetStarlight(user.ckey) < cost)
-		return FALSE
-	var/list/entry = GetOrCreateStarlightEntry(user.ckey)
-	if(!entry)
-		return FALSE
-	entry["balance"] = max(0, (entry["balance"] || 0) - cost)
-	var/list/unlocked = entry["unlocked"]
-	if(!islist(unlocked))
-		unlocked = list()
-		entry["unlocked"] = unlocked
-	unlocked |= quirk_name
-	SSpersistence.SaveRefractionStarlight()
-	return TRUE
-
-/// Refunds an unlocked Starlight quirk: returns 100% of the original
-/// `starlight_cost` to the player's balance and removes the quirk from
-/// their unlocked list. Auto-unequips any hub-test instance first so
-/// the refund doesn't leave an orphaned attached quirk on the mob.
-/// Takes a mob (not a ckey) so the unequip helper can reach the body.
-/datum/controller/subsystem/refraction_railway/proc/RefundQuirk(mob/living/user, quirk_name)
-	if(!user?.ckey || !quirk_name)
-		return FALSE
-	var/datum/quirk/Q = SSquirks.quirks[quirk_name]
-	if(!Q || !initial(Q.starlight_locked))
-		return FALSE
-	if(!IsQuirkUnlocked(user.ckey, quirk_name))
-		return FALSE
-	if(IsHubQuirkActive(user.ckey, quirk_name))
-		ToggleHubQuirk(user, quirk_name)
-	var/list/entry = GetOrCreateStarlightEntry(user.ckey)
-	if(!entry)
-		return FALSE
-	var/cost = initial(Q.starlight_cost)
-	entry["balance"] = (entry["balance"] || 0) + cost
-	var/list/unlocked = entry["unlocked"]
-	unlocked -= quirk_name
-	SSpersistence.SaveRefractionStarlight()
-	return TRUE
 

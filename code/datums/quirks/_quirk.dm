@@ -13,12 +13,6 @@
 	///Amount of points this trait is worth towards the hardcore character mode; minus points implies a positive quirk, positive means its hard. This is used to pick the quirks assigned to a hardcore character. 0 means its not available to hardcore draws.
 	var/hardcore_value = 0
 	var/mob/living/quirk_holder
-	/// TRUE on quirks that must be purchased via the Starlight Shop before the picker will let a ckey select them.
-	var/starlight_locked = FALSE
-	/// Starlight cost when starlight_locked is TRUE.
-	var/starlight_cost = 0
-	/// Refraction line id (e.g. "nova_flare") the ckey must have finished at least once. Null = no line gate.
-	var/required_line_completed = null
 
 /datum/quirk/New(mob/living/quirk_mob, spawn_effects)
 	..()

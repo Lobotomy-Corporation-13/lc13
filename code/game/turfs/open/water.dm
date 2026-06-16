@@ -18,17 +18,3 @@
 
 /turf/open/water/jungle
 	// initial_gas_mix = OPENTURF_DEFAULT_ATMOS
-
-// Bloodfiend Origins quirk: stepping onto a water turf panics the
-// holder. The quirk's own cooldown gate handles the per-step rate
-// limit so we don't need to dedup here.
-/turf/open/water/Entered(atom/movable/AM, atom/old_loc)
-	. = ..()
-	if(!ishuman(AM))
-		return
-	if(!HAS_TRAIT(AM, TRAIT_BLOODFIEND))
-		return
-	var/mob/living/carbon/human/H = AM
-	var/datum/quirk/starlight_bloodfiend_origins/Q = locate() in H.roundstart_quirks
-	if(Q)
-		Q.ApplyWaterPanic(30, 100, "step")
