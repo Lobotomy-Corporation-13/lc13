@@ -239,11 +239,10 @@ GLOBAL_LIST_EMPTY(marked_players)
 		patrol_reset()
 		return
 	if(CanStartPatrol())
-		if(patrol_cooldown <= world.time)
-			if(!patrol_path || !patrol_path.len)
-				patrol_select()
-				if(patrol_path.len)
-					patrol_move(patrol_path[patrol_path.len])
+		if(!patrol_path || !length(patrol_path))
+			PatrolSelect()
+			if(length(patrol_path))
+				patrol_move(patrol_path[patrol_path.len])
 
 	/*		AIStatus
 	AI_ON will have the npcpool subsystem call handle_automated_action(),
@@ -384,7 +383,7 @@ GLOBAL_LIST_EMPTY(marked_players)
 	target_memory.Cut()
 	attack_is_on_cooldown = FALSE
 	LoseTarget()
-	..(gibbed)
+	return ..(gibbed)
 
 /mob/living/simple_animal/hostile/update_stamina()
 	if(staminaloss == 0)
@@ -547,6 +546,7 @@ GLOBAL_LIST_EMPTY(marked_players)
 /mob/living/simple_animal/hostile/proc/ListTargets(max_range = vision_range) //Step 1, find out what we can see
 	if(!can_act)
 		return list()
+
 	//The thorough mode, rarely used
 	if(search_objects)
 		. = oview(max_range, targets_from)
@@ -1359,6 +1359,8 @@ GLOBAL_LIST_EMPTY(marked_players)
 /mob/living/simple_animal/hostile/proc/CanStartPatrol()
 	if(!can_act)
 		return FALSE
+	if(patrol_cooldown > world.time)
+		return FALSE
 	return AIStatus == AI_IDLE //if AI is idle, begin checking for patrol
 
 /mob/living/simple_animal/hostile/proc/patrol_to(turf/target_location = null)
@@ -1371,26 +1373,36 @@ GLOBAL_LIST_EMPTY(marked_players)
 	patrol_move(patrol_path[patrol_path.len])
 	return TRUE
 
-/mob/living/simple_animal/hostile/proc/patrol_select()
+/mob/living/simple_animal/hostile/proc/PatrolSelect()
 	//Mobs should stay unpatroled on maps where they're intended to be possessed.
 	if(SSmaptype.maptype in SSmaptype.autopossess)
-		return
+		return FALSE
+
+	var/turf/target_center = SelectPatrolLocation()
+	if(!isturf(target_center))
+		target_center = get_turf(target_center)
+	if(!target_center)
+		return FALSE
+
+	SEND_SIGNAL(src, COMSIG_PATROL_START, src, target_center)
+	SEND_GLOBAL_SIGNAL(src, COMSIG_GLOB_PATROL_START, src, target_center)
+	var/temp_patrol_path = get_path_to(src, target_center, TYPE_PROC_REF(/turf, Distance_cardinal), 0, 200)
+	patrol_path = temp_patrol_path
+	return temp_patrol_path
+
+/mob/living/simple_animal/hostile/proc/SelectPatrolLocation()
 	if(!LAZYLEN(GLOB.department_centers))
 		return
 
-	var/turf/target_center
 	var/list/potential_centers = list()
 	for(var/pos_targ in GLOB.department_centers)
 		var/possible_center_distance = get_dist(src, pos_targ)
 		if(possible_center_distance > 4 && possible_center_distance < 46)
 			potential_centers += pos_targ
 	if(LAZYLEN(potential_centers))
-		target_center = pick(potential_centers)
+		return pick(potential_centers)
 	else
-		target_center = pick(GLOB.department_centers)
-	SEND_SIGNAL(src, COMSIG_PATROL_START, src, target_center)
-	SEND_GLOBAL_SIGNAL(src, COMSIG_GLOB_PATROL_START, src, target_center)
-	patrol_path = get_path_to(src, target_center, TYPE_PROC_REF(/turf, Distance_cardinal), 0, 200)
+		return pick(GLOB.department_centers)
 
 /mob/living/simple_animal/hostile/proc/patrol_reset()
 	patrol_path = list()
