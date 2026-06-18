@@ -234,6 +234,8 @@
 	/// One sparkle overlay floats above the target per pending strike — the
 	/// number of sparkles drives the loop, and each pulse consumes one.
 	var/hardblood_strike_count = 3
+	/// Belt-and-suspenders lock for the P3 AoE/dash telegraph windows. While TRUE the Move() override hard-fails so a disarm shove can't slide him off the safe-tile geometry or break the dash's do_after gate.
+	var/preparing_attack = FALSE
 
 	// ---- P3 blood-cost economy ----
 	/// Pool spent each time HardbloodStrike fires.
@@ -574,7 +576,7 @@
 	return ..()
 
 /mob/living/simple_animal/hostile/greed_touched_eric/Move(atom/newloc, dir, step_x, step_y)
-	if(!can_act)
+	if(!can_act || preparing_attack)
 		return FALSE
 	return ..()
 
@@ -986,6 +988,7 @@
 		hardblood_cooldown = world.time + 2 SECONDS
 		can_act = TRUE
 		return
+	preparing_attack = TRUE
 	walk(src, 0)
 	say("Hardblood arts. You children needed correcting.")
 	playsound(get_turf(src), 'sound/weapons/ego/thumb_east_podao_clash.ogg', 70, FALSE, 6)
@@ -1081,6 +1084,7 @@
 				Teleport(pick(escape_candidates))
 	hardblood_cooldown = world.time + hardblood_cooldown_time
 	can_act = TRUE
+	preparing_attack = FALSE
 
 // Three back-to-back dashes along a 3x3 strip. Same shape as the flame
 // fixer's TripleDash (lc13_humanoids.dm:596), but blood splatters instead
@@ -1094,6 +1098,7 @@
 		sanguine_rush_cooldown = world.time + 3 SECONDS
 		can_act = TRUE
 		return
+	preparing_attack = TRUE
 	walk(src, 0)
 	say("I told you to behave! Coming for it, children!")
 	playsound(get_turf(src), 'sound/abnormalities/big_wolf/Wolf_Scratch.ogg', 80, FALSE, 6)
@@ -1110,6 +1115,7 @@
 	sanguine_rush_cooldown = world.time + sanguine_rush_cooldown_time
 	if(!dying && stat != DEAD)
 		can_act = TRUE
+	preparing_attack = FALSE
 
 /mob/living/simple_animal/hostile/greed_touched_eric/proc/SanguineRushDash(atom/dash_target)
 	if(QDELETED(dash_target) || dying || stat == DEAD)
@@ -1169,6 +1175,7 @@
 	if(dying)
 		return ..()
 	dying = TRUE
+	preparing_attack = FALSE
 	recognition_locked = FALSE
 	if(recognized && boss_final_line)
 		SpeakRecognition(boss_final_line)

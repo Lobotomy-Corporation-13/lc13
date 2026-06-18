@@ -565,9 +565,8 @@
 /mob/living/carbon/human/understudy_form/Destroy()
 	deltimer(special_timer)
 	special_timer = null
-	// Drop one costume weapon to the floor as the "Borrowed Steel"
-	// trophy, once per fight. Subsequent breaks still qdel everything.
-	if(master && !QDELETED(master) && !master.trophy_dropped)
+	// Drop one costume weapon to the floor as the "Borrowed Steel" trophy on the first worn form actually killed by players. MorphForm qdels live forces (stat != DEAD) and must skip this, or the trophy drops the moment a force-swap fires on the very first face.
+	if(stat == DEAD && master && !QDELETED(master) && !master.trophy_dropped)
 		for(var/obj/item/ego_weapon/W in costume_items)
 			REMOVE_TRAIT(W, TRAIT_NODROP, "understudy")
 			UnregisterSignal(W, COMSIG_PARENT_QDELETING)

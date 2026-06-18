@@ -25,6 +25,9 @@
 	return GLOB.always_state
 
 /datum/id_skin_picker/ui_interact(mob/user, datum/tgui/ui)
+	var/refunded = SSrefraction_railway?.RefundRetiredIdSkins(user?.ckey)
+	if(refunded)
+		to_chat(user, span_notice("Retired ID skins pruned from your collection: refunded [refunded * 500] Starlight ([refunded] card[refunded == 1 ? "" : "s"]).") )
 	ui = SStgui.try_update_ui(user, src, ui)
 	if(!ui)
 		ui = new(user, src, "IdSkinPicker", name)

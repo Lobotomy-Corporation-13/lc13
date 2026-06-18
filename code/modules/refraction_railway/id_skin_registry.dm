@@ -92,8 +92,7 @@
 		list("id" = "roman",          "name" = "Roman",          "icon_state" = "roman",          "rarity" = "00"),
 		list("id" = "carp",           "name" = "Carp",           "icon_state" = "carp",           "rarity" = "00"),
 		// 000 (very rare)
-		list("id" = "kenyan",            "name" = "Kenyan",            "icon_state" = "kenyan",            "rarity" = "000"),
-		list("id" = "american",          "name" = "American",          "icon_state" = "american",          "rarity" = "000"),
+		// kenyan / american retired — see SSrefraction_railway.RefundRetiredIdSkins for the SL refund on owned copies.
 		list("id" = "flame",             "name" = "Flame",             "icon_state" = "flame",             "rarity" = "000"),
 		list("id" = "rainbow",           "name" = "Rainbow",           "icon_state" = "rainbow",           "rarity" = "000"),
 		list("id" = "gundam",            "name" = "Gundam",            "icon_state" = "gundam",            "rarity" = "000"),
@@ -129,7 +128,6 @@
 			"name"       = "Crimson Banner",
 			"color"      = "#dc2626",
 			"highlights" = list(
-				"kenyan", "american",
 				"bloodmoon", "medalred", "roman", "gold",
 			),
 		),

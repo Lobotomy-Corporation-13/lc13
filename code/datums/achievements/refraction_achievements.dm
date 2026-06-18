@@ -15,8 +15,7 @@
 // `MEDAL_REFRACTION_*` define in `code/__DEFINES/achievements.dm`.
 
 /datum/award/achievement/lc13/refraction
-	category = "LobotomyCorp/RefractionRailway"
-	icon = "refraction"
+	category = "Aux Staff"
 
 // ---------- Retroactive ----------
 

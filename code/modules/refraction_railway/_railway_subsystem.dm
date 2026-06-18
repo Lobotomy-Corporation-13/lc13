@@ -804,6 +804,35 @@ SUBSYSTEM_DEF(refraction_railway)
 	SSpersistence.SaveRefractionStarlight()
 	return TRUE
 
+/// IDs pulled from the registry but kept here for one-shot refund matching.
+GLOBAL_LIST_INIT(retired_id_skins, list("kenyan", "american"))
+
+/// Refunds any owned retired ID skins at 500 Starlight per copy and strips
+/// them from the ledger. Returns the number of copies refunded so the caller
+/// can surface a chat note. Idempotent — second call on a clean ledger no-ops.
+/datum/controller/subsystem/refraction_railway/proc/RefundRetiredIdSkins(ckey)
+	if(!ckey)
+		return 0
+	var/list/entry = SSpersistence.starlight_data[ckey]
+	if(!islist(entry))
+		return 0
+	var/list/owned = entry["id_skins"]
+	if(!islist(owned))
+		return 0
+	var/refunded = 0
+	for(var/skin_id in GLOB.retired_id_skins)
+		var/copies = owned[skin_id]
+		if(isnull(copies) || copies <= 0)
+			continue
+		refunded += copies
+		owned -= skin_id
+	if(!refunded)
+		return 0
+	if(entry["id_skin_equipped"] in GLOB.retired_id_skins)
+		entry["id_skin_equipped"] = null
+	AwardStarlight(ckey, refunded * 500)
+	return refunded
+
 /// Dupe-refund value per rarity tier.
 /datum/controller/subsystem/refraction_railway/proc/GachaDupeRefund(rarity)
 	switch(rarity)

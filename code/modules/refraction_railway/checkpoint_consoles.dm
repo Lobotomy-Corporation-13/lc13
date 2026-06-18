@@ -75,6 +75,9 @@
 /obj/structure/refraction_starlight_shop/ui_interact(mob/user, datum/tgui/ui)
 	if(!user?.ckey)
 		return
+	var/refunded = SSrefraction_railway?.RefundRetiredIdSkins(user.ckey)
+	if(refunded)
+		to_chat(user, span_notice("Retired ID skins pruned from your collection: refunded [refunded * 500] Starlight ([refunded] card[refunded == 1 ? "" : "s"]).") )
 	ui = SStgui.try_update_ui(user, src, ui)
 	if(!ui)
 		ui = new(user, src, "RefractionGachaShop", "Starlight Extraction")

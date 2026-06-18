@@ -16,7 +16,7 @@
 			list(
 				"id"            = "capo_no_flurry_hit",
 				"name"          = "Restrained",
-				"desc"          = "Never get hit by Capo's full Tiantui Flurry finisher.",
+				"desc"          = "Never get hit by the finisher of Capo's Flurry.",
 				"reward"        = 18,
 				"default_state" = TRUE,
 				"award"         = /datum/award/achievement/lc13/refraction/cc_capo_no_flurry,
@@ -24,7 +24,7 @@
 			list(
 				"id"            = "capo_rat_five",
 				"name"          = "Leash Holder",
-				"desc"          = "Kill the Capo Rat at least five times across the fight.",
+				"desc"          = "Force the Capo Rat into Plays Dead at least five times across the fight.",
 				"reward"        = 12,
 				"default_state" = FALSE,
 				"award"         = /datum/award/achievement/lc13/refraction/cc_capo_rat_five,
@@ -44,7 +44,7 @@
 			list(
 				"id"            = "azarus_mirror_pre_kill",
 				"name"          = "Shattered Reflection",
-				"desc"          = "Break at least one of Azarus's mirror copies before killing him.",
+				"desc"          = "Break at least one of Azarus's mirror-doubles before killing him.",
 				"reward"        = 12,
 				"default_state" = FALSE,
 				"award"         = /datum/award/achievement/lc13/refraction/cc_azarus_mirror,
@@ -56,7 +56,7 @@
 			list(
 				"id"            = "understudy_form_chain",
 				"name"          = "Costume Catastrophe",
-				"desc"          = "Force the Understudy to cancel its special form attack four times in a row.",
+				"desc"          = "Force-morph four of the Envy of Humanity's worn faces in a row before their abilities resolve.",
 				"reward"        = 20,
 				"default_state" = FALSE,
 				"award"         = /datum/award/achievement/lc13/refraction/cc_understudy_chain,
@@ -64,7 +64,7 @@
 			list(
 				"id"            = "understudy_weapon_pickup",
 				"name"          = "Borrowed Steel",
-				"desc"          = "Pick up one of the weapons the Understudy's true forms leave behind.",
+				"desc"          = "Pick up the costume weapon dropped when the Envy of Humanity's first worn form is stripped bare.",
 				"reward"        = 10,
 				"default_state" = FALSE,
 				"award"         = /datum/award/achievement/lc13/refraction/cc_understudy_weapon,
@@ -84,7 +84,7 @@
 			list(
 				"id"            = "eric_pool_drained",
 				"name"          = "Drained the Pool",
-				"desc"          = "Reduce Eric.T's blood pool to empty at least once.",
+				"desc"          = "Reduce Eric.T's bloodfeast pool to empty at least once.",
 				"reward"        = 15,
 				"default_state" = FALSE,
 				"award"         = /datum/award/achievement/lc13/refraction/cc_eric_pool_drained,
@@ -92,7 +92,7 @@
 			list(
 				"id"            = "eric_spike_three_summons",
 				"name"          = "Skewered Choir",
-				"desc"          = "Let Eric.T's spike attack kill at least three of his own summons.",
+				"desc"          = "Let Eric.T's Sanguine Feast kill at least three of his own summons.",
 				"reward"        = 10,
 				"default_state" = FALSE,
 				"award"         = /datum/award/achievement/lc13/refraction/cc_eric_spike_3,
@@ -104,7 +104,7 @@
 			list(
 				"id"            = "reaper_phase2_starved",
 				"name"          = "Hall Cut Short",
-				"desc"          = "Trigger the Reaper's Phase 2 with fewer than three absorbed clones.",
+				"desc"          = "Trigger the Reaper's Phase 2 with fewer than three Reverberation Charges.",
 				"reward"        = 18,
 				"default_state" = FALSE,
 				"award"         = /datum/award/achievement/lc13/refraction/cc_reaper_starved,
@@ -112,7 +112,7 @@
 			list(
 				"id"            = "reaper_cap_ten",
 				"name"          = "Hoard Capped",
-				"desc"          = "Never let the Reaper's absorbed-clone counter rise above ten.",
+				"desc"          = "Never let the Reaper's Reverberation Charge rise above ten.",
 				"reward"        = 12,
 				"default_state" = TRUE,
 				"award"         = /datum/award/achievement/lc13/refraction/cc_reaper_cap_10,
@@ -132,7 +132,7 @@
 			list(
 				"id"            = "snow_no_mouth_bite",
 				"name"          = "Lips Sealed",
-				"desc"          = "Don't get hit by a Snow Cabin Mouth's open-state attack.",
+				"desc"          = "Don't get hit by a Snow Cabin Mouth's Bite.",
 				"reward"        = 15,
 				"default_state" = TRUE,
 				"award"         = /datum/award/achievement/lc13/refraction/cc_snow_no_mouth_bite,
@@ -144,7 +144,7 @@
 			list(
 				"id"            = "priest_no_marked_hit",
 				"name"          = "Unmarked Lamb",
-				"desc"          = "Never get hit by a blade while carrying the skull mark.",
+				"desc"          = "Never get hit by a Possessed Blade while carrying the Skull Mark.",
 				"reward"        = 15,
 				"default_state" = TRUE,
 				"award"         = /datum/award/achievement/lc13/refraction/cc_priest_no_marked,
@@ -152,7 +152,7 @@
 			list(
 				"id"            = "priest_punish_three",
 				"name"          = "Sermon Interrupted",
-				"desc"          = "Land at least three hits on the Blade Priest during his order-lock punish window.",
+				"desc"          = "Land at least three hits on the Blade Priest while he is locked Issuing an Order.",
 				"reward"        = 15,
 				"default_state" = FALSE,
 				"award"         = /datum/award/achievement/lc13/refraction/cc_priest_punish_3,
@@ -164,7 +164,7 @@
 			list(
 				"id"            = "achiya_storm_endured",
 				"name"          = "Reverence",
-				"desc"          = "Survive the full Storm of Heaven without killing any Mirage Reaper.",
+				"desc"          = "Survive until Achiyalabopa breaks her divine pose without unmaking any Mirage Reaper.",
 				"reward"        = 20,
 				"default_state" = TRUE,
 				"award"         = /datum/award/achievement/lc13/refraction/cc_achiya_storm,
@@ -192,7 +192,7 @@
 			list(
 				"id"            = "young_star_steady",
 				"name"          = "Steady Climb",
-				"desc"          = "Don't trigger more than one Railroad refill across the fight.",
+				"desc"          = "Don't trigger The Show Goes On more than once across the fight.",
 				"reward"        = 12,
 				"default_state" = TRUE,
 				"award"         = /datum/award/achievement/lc13/refraction/cc_ys_steady,
