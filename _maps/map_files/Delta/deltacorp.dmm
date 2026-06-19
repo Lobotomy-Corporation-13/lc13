@@ -25,6 +25,9 @@
 	pixel_x = 9;
 	pixel_y = 4
 	},
+/obj/machinery/camera/autoname{
+	dir = 9
+	},
 /turf/open/floor/plasteel/dark,
 /area/department_main/control)
 "as" = (
@@ -572,12 +575,6 @@
 "jx" = (
 /turf/open/space/basic,
 /area/space)
-"jy" = (
-/obj/machinery/camera/autoname{
-	dir = 9
-	},
-/turf/open/floor/plasteel/dark,
-/area/department_main/control)
 "jE" = (
 /obj/effect/landmark/xeno_spawn,
 /turf/open/floor/plasteel,
@@ -863,6 +860,12 @@
 	},
 /turf/open/floor/facility/white,
 /area/department_main/training)
+"ov" = (
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 8
+	},
+/turf/open/floor/mineral/titanium/tiled,
+/area/department_main/control)
 "oG" = (
 /obj/machinery/smartfridge/extraction_storage/ego_weapon,
 /turf/closed/indestructible/reinforced,
@@ -1437,6 +1440,13 @@
 	},
 /turf/open/floor/facility/white,
 /area/department_main/command)
+"ye" = (
+/obj/structure/grid_crafting_station,
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 6
+	},
+/turf/open/floor/mineral/titanium/tiled,
+/area/department_main/control)
 "yp" = (
 /obj/effect/turf_decal/box/white,
 /obj/effect/landmark/toolspawn,
@@ -1494,6 +1504,19 @@
 /obj/structure/table/glass,
 /turf/open/floor/plasteel/showroomfloor,
 /area/department_main/training)
+"zE" = (
+/obj/machinery/light/small{
+	dir = 4
+	},
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 4
+	},
+/obj/machinery/camera/autoname{
+	dir = 9
+	},
+/obj/structure/table/reinforced,
+/turf/open/floor/mineral/titanium/tiled,
+/area/department_main/control)
 "zR" = (
 /obj/structure/table/glass,
 /obj/item/storage/bag/chemistry,
@@ -1647,6 +1670,9 @@
 "CK" = (
 /turf/open/floor/plating,
 /area/department_main/training)
+"CZ" = (
+/turf/open/floor/mineral/titanium/tiled,
+/area/department_main/control)
 "Da" = (
 /obj/effect/turf_decal/stripes/line,
 /turf/open/floor/plasteel/dark,
@@ -1662,6 +1688,17 @@
 /obj/structure/chair,
 /turf/open/floor/facility/dark,
 /area/department_main/training)
+"DR" = (
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 6
+	},
+/obj/structure/table/reinforced,
+/turf/open/floor/mineral/titanium/tiled,
+/area/department_main/control)
+"DT" = (
+/obj/effect/turf_decal/siding/wideplating/dark/corner,
+/turf/open/floor/mineral/titanium/tiled,
+/area/department_main/control)
 "DX" = (
 /obj/structure/table/glass,
 /obj/item/reagent_containers/medigel/sterilizine{
@@ -1870,6 +1907,19 @@
 /obj/machinery/telecomms/processor/preset_one,
 /turf/open/floor/circuit/telecomms/mainframe,
 /area/facility_hallway/training)
+"IU" = (
+/obj/structure/rack,
+/obj/machinery/light/small{
+	dir = 8
+	},
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 9
+	},
+/obj/structure/sign/ordealmonitor{
+	pixel_y = 32
+	},
+/turf/open/floor/mineral/titanium/tiled,
+/area/department_main/control)
 "Jb" = (
 /obj/effect/turf_decal/siding/yellow/corner{
 	dir = 4
@@ -1992,6 +2042,13 @@
 /obj/structure/toolabnormality/realization,
 /turf/open/floor/facility/dark,
 /area/department_main/records)
+"Mj" = (
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 5
+	},
+/obj/structure/table/reinforced,
+/turf/open/floor/mineral/titanium/tiled,
+/area/department_main/control)
 "My" = (
 /obj/structure/chair/sofa/corp/left{
 	dir = 1
@@ -2001,6 +2058,13 @@
 "MH" = (
 /obj/effect/landmark/refinerspawn,
 /turf/open/floor/carpet/royalblack,
+/area/department_main/control)
+"MK" = (
+/obj/structure/template_vendor,
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 5
+	},
+/turf/open/floor/mineral/titanium/tiled,
 /area/department_main/control)
 "MR" = (
 /obj/effect/spawner/abnormality_room,
@@ -2021,6 +2085,12 @@
 /obj/item/clothing/accessory/armband/lobotomy/extraction,
 /obj/item/clothing/accessory/armband/lobotomy/extraction,
 /turf/open/floor/carpet/royalblack,
+/area/department_main/control)
+"Nd" = (
+/obj/effect/turf_decal/siding/wideplating/dark/corner{
+	dir = 4
+	},
+/turf/open/floor/mineral/titanium/tiled,
 /area/department_main/control)
 "Nm" = (
 /obj/effect/turf_decal/plaque{
@@ -2111,6 +2181,12 @@
 /obj/structure/refinery,
 /turf/open/floor/plasteel,
 /area/facility_hallway/east)
+"Oh" = (
+/obj/structure/chair/office{
+	dir = 4
+	},
+/turf/open/floor/mineral/titanium/tiled,
+/area/department_main/control)
 "Ol" = (
 /obj/structure/window/reinforced/fulltile/indestructable,
 /obj/structure/grille,
@@ -2293,6 +2369,15 @@
 /obj/structure/sign/button_counter/directional/east,
 /turf/open/floor/facility/dark,
 /area/department_main/records)
+"Tj" = (
+/obj/effect/turf_decal/siding/wideplating/dark/end{
+	dir = 8
+	},
+/obj/machinery/door/airlock/highsecurity{
+	name = "Refinery Office"
+	},
+/turf/open/floor/mineral/titanium/tiled,
+/area/department_main/control)
 "Tm" = (
 /obj/effect/turf_decal/plaque{
 	alpha = 230;
@@ -2349,6 +2434,28 @@
 /obj/item/stack/cable_coil,
 /turf/open/floor/carpet/royalblue,
 /area/department_main/command)
+"TZ" = (
+/obj/structure/rack,
+/obj/machinery/light/small{
+	dir = 8
+	},
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 10
+	},
+/obj/machinery/newscaster{
+	pixel_y = -32
+	},
+/turf/open/floor/mineral/titanium/tiled,
+/area/department_main/control)
+"Uh" = (
+/obj/effect/turf_decal/siding/wideplating/dark/corner{
+	dir = 8
+	},
+/obj/effect/turf_decal/siding/wideplating/dark/corner{
+	dir = 1
+	},
+/turf/open/floor/mineral/titanium/tiled,
+/area/department_main/control)
 "Uk" = (
 /turf/open/floor/facility/white,
 /area/department_main/command)
@@ -2383,6 +2490,11 @@
 "Vn" = (
 /turf/open/floor/carpet/royalblack,
 /area/department_main/control)
+"Vx" = (
+/obj/effect/turf_decal/siding/wideplating/dark,
+/obj/structure/rack,
+/turf/open/floor/mineral/titanium/tiled,
+/area/department_main/control)
 "VM" = (
 /obj/effect/turf_decal/plaque{
 	alpha = 230;
@@ -2412,6 +2524,13 @@
 	pixel_y = -5
 	},
 /turf/closed/indestructible/reinforced,
+/area/department_main/control)
+"Wg" = (
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 1
+	},
+/obj/structure/rack,
+/turf/open/floor/mineral/titanium/tiled,
 /area/department_main/control)
 "Wp" = (
 /obj/effect/turf_decal/plaque{
@@ -23201,7 +23320,7 @@ lF
 lF
 lF
 Cw
-jy
+Wz
 al
 Wz
 Wa
@@ -23455,10 +23574,10 @@ lF
 lF
 lF
 lF
-lF
-lF
 Be
 Be
+Be
+Tj
 Be
 Be
 Wa
@@ -23712,12 +23831,12 @@ lF
 lF
 lF
 lF
-lF
-lF
-lF
-lF
-lF
-lF
+Be
+IU
+ov
+Uh
+ov
+TZ
 Wa
 yU
 yU
@@ -23969,12 +24088,12 @@ lF
 lF
 lF
 lF
-lF
-lF
-lF
-lF
-lF
-lF
+Be
+Wg
+CZ
+CZ
+CZ
+Vx
 Wa
 yU
 yU
@@ -24226,12 +24345,12 @@ lF
 lF
 lF
 lF
-lF
-lF
-lF
-lF
-lF
-lF
+Be
+Mj
+Nd
+Oh
+DT
+DR
 Wa
 yU
 yU
@@ -24483,12 +24602,12 @@ lF
 lF
 lF
 lF
-lF
-lF
-lF
-lF
-lF
-lF
+Be
+Be
+MK
+zE
+ye
+Be
 Wa
 yU
 tq
@@ -24741,11 +24860,11 @@ lF
 lF
 lF
 lF
-lF
-lF
-lF
-lF
-lF
+Be
+Be
+Be
+Be
+Be
 Wa
 yU
 yU
