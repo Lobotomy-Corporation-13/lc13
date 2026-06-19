@@ -466,6 +466,7 @@
 #include "code\datums\abnormality\datum\abnormality.dm"
 #include "code\datums\achievements\_achievement_data.dm"
 #include "code\datums\achievements\_awards.dm"
+#include "code\datums\achievements\achievement_spec_menu.dm"
 #include "code\datums\achievements\abno_achievements.dm"
 #include "code\datums\achievements\city_achievements.dm"
 #include "code\datums\achievements\clerk_achievements.dm"
