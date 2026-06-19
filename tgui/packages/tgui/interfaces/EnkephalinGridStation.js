@@ -1446,9 +1446,7 @@ const CoresSection = props => {
                           ? 'ban' : 'gem'}
                         color={isBlocked
                           ? 'bad'
-                          : getSinColor(
-                            core.movement_type
-                        )}
+                          : getSinColor(core.movement_type)}
                         mr={1} />
                     </Flex.Item>
                     <Flex.Item grow>
