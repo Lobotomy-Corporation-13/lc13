@@ -146,16 +146,16 @@ export const EnkephalinGridStation = (props, context) => {
                         {zone.blocked_movements
                           && zone.blocked_movements.length > 0
                           && (
-                          <Box
-                            fontSize="10px"
-                            color="bad"
-                            ml={2}>
-                            Blocked:{' '}
-                            {zone.blocked_movements.join(
-                              ', '
-                            )}
-                          </Box>
-                        )}
+                            <Box
+                              fontSize="10px"
+                              color="bad"
+                              ml={2}>
+                              Blocked:{' '}
+                              {zone.blocked_movements.join(
+                                ', '
+                              )}
+                            </Box>
+                          )}
                       </Box>
                     ))}
                   </Section>
@@ -1448,7 +1448,7 @@ const CoresSection = props => {
                           ? 'bad'
                           : getSinColor(
                             core.movement_type
-                          )}
+                        )}
                         mr={1} />
                     </Flex.Item>
                     <Flex.Item grow>
