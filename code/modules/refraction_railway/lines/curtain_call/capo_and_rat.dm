@@ -188,9 +188,9 @@
 	/// Character this boss recognizes among the railway party, matched as a
 	/// case-insensitive substring of a member's mob name. Empty = no one.
 	/// The Capo speaks for the pairing (the rat has no human speech).
-	var/recognition_target_name = "Buck Jewell"
+	var/recognition_target_name = "Buck Jewells"
 	/// Two-part recognition line, said at the start of combat when matched.
-	var/recognition_line_1 = "Hwell, I'll be — Buck Jewell. Every owner this lil' fella had wound up on your loom."
+	var/recognition_line_1 = "Hwell, I'll be — Buck Jewells. Every owner this lil' fella had wound up on your loom."
 	var/recognition_line_2 = "Come to card a tiger for the Carnival? Strong cloth's gotta be EARNED, partner."
 	/// Said as the Capo fades on death (replaces his normal death line when
 	/// Buck is the one who put him down).
