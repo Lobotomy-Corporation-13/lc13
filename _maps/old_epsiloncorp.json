@@ -1,9 +1,9 @@
 {
 	"version": 1,
 	"map_name": "Facility E-117 LAKES",
-	"map_path": "map_files/Epsilon",
+	"map_path": "map_files/Old Epsilon",
 	"map_file": [
-		"epsiloncorp.dmm"
+		"old_epsiloncorp.dmm"
 	],
 	"space_ruin_levels": 0,
 	"space_empty_levels": 0,
