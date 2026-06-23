@@ -78,7 +78,7 @@
 
 /mob/living/simple_animal/hostile/abnormality/rudolta/Destroy(list/Targets)
 	same_turf = null
-	..()
+	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/rudolta/Life()
 	. = ..()
