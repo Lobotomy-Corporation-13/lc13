@@ -328,6 +328,7 @@
 /datum/abnormality/proc/qliphoth_change(amount, user)
 	if(midwork_meter_loss && working)
 		qliphoth_midworkchange += amount
+		return
 
 	var/pre_qlip = qliphoth_meter
 	qliphoth_meter = clamp(qliphoth_meter + amount, 0, qliphoth_meter_max)
