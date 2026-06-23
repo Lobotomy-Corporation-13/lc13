@@ -341,6 +341,13 @@
 /obj/effect/landmark/latejoin,
 /turf/open/floor/plasteel/sepia,
 /area/facility_hallway/east)
+"aW" = (
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 8
+	},
+/obj/structure/grid_crafting_station,
+/turf/open/floor/mineral/titanium/tiled,
+/area/facility_hallway/welfare)
 "bb" = (
 /obj/effect/turf_decal/tile/yellow{
 	dir = 8
@@ -527,6 +534,9 @@
 	},
 /turf/open/floor/plasteel/sepia,
 /area/department_main/control)
+"bC" = (
+/turf/open/floor/mineral/titanium/tiled,
+/area/facility_hallway/welfare)
 "bD" = (
 /obj/effect/turf_decal/tile/neutral,
 /obj/effect/turf_decal/tile/neutral{
@@ -2330,13 +2340,12 @@
 /turf/open/floor/plasteel/sepia,
 /area/facility_hallway/west)
 "gW" = (
-/obj/effect/turf_decal/siding/wideplating/dark,
-/obj/structure/rack,
-/obj/machinery/newscaster{
-	pixel_y = -32
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 10
 	},
+/obj/structure/table/reinforced,
 /turf/open/floor/mineral/titanium/tiled,
-/area/facility_hallway/central)
+/area/facility_hallway/welfare)
 "gZ" = (
 /obj/effect/turf_decal/tile/blue{
 	color = "#5269e9";
@@ -4608,15 +4617,6 @@
 	},
 /turf/open/floor/holofloor/plating,
 /area/facility_hallway/control)
-"ny" = (
-/obj/effect/turf_decal/siding/wideplating/dark/end{
-	dir = 4
-	},
-/obj/machinery/door/airlock/highsecurity{
-	name = "Refinery Office"
-	},
-/turf/open/floor/plasteel/white,
-/area/facility_hallway/welfare)
 "nA" = (
 /obj/effect/turf_decal/tile/bar,
 /obj/effect/turf_decal/tile/bar{
@@ -5836,13 +5836,6 @@
 	color = "#ccc8c0"
 	},
 /area/facility_hallway/west)
-"rf" = (
-/obj/effect/turf_decal/siding/wideplating/dark{
-	dir = 6
-	},
-/obj/structure/rack,
-/turf/open/floor/mineral/titanium/tiled,
-/area/facility_hallway/central)
 "rg" = (
 /obj/structure/table/wood/fancy/purple,
 /obj/item/clothing/accessory/armband/lobotomy/info{
@@ -6005,6 +5998,13 @@
 	name = "facility wall"
 	},
 /area/facility_hallway/human)
+"rE" = (
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 9
+	},
+/obj/structure/template_vendor,
+/turf/open/floor/mineral/titanium/tiled,
+/area/facility_hallway/welfare)
 "rF" = (
 /obj/effect/turf_decal/tile/neutral{
 	color = "#000000";
@@ -6123,11 +6123,14 @@
 	},
 /area/facility_hallway/human)
 "sa" = (
-/turf/closed/indestructible/reinforced{
-	desc = "A huge chunk of wing-grade metal used in various L corporation facilities. Effectively impervious to conventional methods of destruction.";
-	name = "facility wall"
+/obj/effect/turf_decal/siding/wideplating/dark/end{
+	dir = 4
 	},
-/area/facility_hallway/central)
+/obj/machinery/door/airlock/highsecurity{
+	name = "Refinery Office"
+	},
+/turf/open/floor/plasteel/white,
+/area/facility_hallway/welfare)
 "sd" = (
 /obj/effect/turf_decal/tile/neutral{
 	color = "#090807";
@@ -6228,6 +6231,13 @@
 	},
 /turf/open/floor/plasteel/sepia,
 /area/facility_hallway/control)
+"st" = (
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 6
+	},
+/obj/structure/rack,
+/turf/open/floor/mineral/titanium/tiled,
+/area/facility_hallway/welfare)
 "sv" = (
 /obj/effect/turf_decal/tile/bar,
 /obj/effect/turf_decal/tile/bar{
@@ -6235,6 +6245,15 @@
 	},
 /turf/open/floor/plasteel/sepia,
 /area/department_main/control)
+"sy" = (
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 1
+	},
+/obj/structure/sign/ordealmonitor{
+	pixel_y = 32
+	},
+/turf/open/floor/mineral/titanium/tiled,
+/area/facility_hallway/welfare)
 "sA" = (
 /obj/effect/light_emitter{
 	light_power = 4;
@@ -6677,6 +6696,16 @@
 	},
 /turf/open/floor/plasteel/sepia,
 /area/department_main/information)
+"tZ" = (
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 8
+	},
+/obj/structure/table/reinforced,
+/obj/machinery/light/small{
+	dir = 8
+	},
+/turf/open/floor/mineral/titanium/tiled,
+/area/facility_hallway/welfare)
 "ua" = (
 /obj/effect/turf_decal/tile/neutral{
 	color = "#090807";
@@ -7600,6 +7629,15 @@
 /obj/effect/turf_decal/arrows/red,
 /turf/open/floor/plasteel/sepia,
 /area/facility_hallway/human)
+"xf" = (
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 4
+	},
+/obj/machinery/light/small{
+	dir = 4
+	},
+/turf/open/floor/mineral/titanium/tiled,
+/area/facility_hallway/welfare)
 "xi" = (
 /obj/effect/turf_decal/tile/neutral{
 	color = "#000000";
@@ -8584,13 +8622,6 @@
 	},
 /turf/open/floor/plasteel/sepia,
 /area/facility_hallway/control)
-"Am" = (
-/obj/effect/turf_decal/siding/wideplating/dark/corner,
-/obj/effect/turf_decal/siding/wideplating/dark/corner{
-	dir = 4
-	},
-/turf/open/floor/mineral/titanium/tiled,
-/area/facility_hallway/central)
 "Aq" = (
 /obj/effect/landmark/xeno_spawn,
 /turf/open/floor/plasteel/sepia{
@@ -8641,6 +8672,13 @@
 	},
 /turf/open/floor/plasteel/sepia,
 /area/department_main/training)
+"AA" = (
+/obj/effect/turf_decal/siding/wideplating/dark/corner,
+/obj/effect/turf_decal/siding/wideplating/dark/corner{
+	dir = 4
+	},
+/turf/open/floor/mineral/titanium/tiled,
+/area/facility_hallway/welfare)
 "AD" = (
 /obj/effect/turf_decal/tile/brown{
 	dir = 8
@@ -9611,6 +9649,14 @@
 "DK" = (
 /turf/open/floor/plasteel/sepia,
 /area/department_main/welfare)
+"DL" = (
+/obj/effect/turf_decal/siding/wideplating/dark,
+/obj/structure/rack,
+/obj/machinery/newscaster{
+	pixel_y = -32
+	},
+/turf/open/floor/mineral/titanium/tiled,
+/area/facility_hallway/welfare)
 "DO" = (
 /obj/effect/turf_decal/bot,
 /obj/effect/decal/cleanable/dirt,
@@ -10419,13 +10465,6 @@
 "FX" = (
 /turf/open/floor/plasteel/elevatorshaft,
 /area/facility_hallway/manager)
-"FY" = (
-/obj/effect/turf_decal/siding/wideplating/dark{
-	dir = 10
-	},
-/obj/structure/table/reinforced,
-/turf/open/floor/mineral/titanium/tiled,
-/area/facility_hallway/central)
 "FZ" = (
 /obj/effect/turf_decal/tile/brown{
 	color = "#734404";
@@ -11063,13 +11102,6 @@
 	},
 /turf/open/floor/plasteel/sepia,
 /area/facility_hallway/human)
-"HL" = (
-/obj/effect/turf_decal/siding/wideplating/dark{
-	dir = 5
-	},
-/obj/structure/rack,
-/turf/open/floor/mineral/titanium/tiled,
-/area/facility_hallway/central)
 "HN" = (
 /turf/open/floor/plasteel/sepia{
 	color = "#ccc8c0"
@@ -11307,9 +11339,6 @@
 	},
 /turf/open/floor/plasteel/sepia,
 /area/department_main/training)
-"Iu" = (
-/turf/open/floor/mineral/titanium/tiled,
-/area/facility_hallway/central)
 "Iv" = (
 /obj/effect/turf_decal/tile/neutral{
 	color = "#090807"
@@ -11575,15 +11604,6 @@
 	name = "facility wall"
 	},
 /area/facility_hallway/control)
-"IY" = (
-/obj/effect/turf_decal/siding/wideplating/dark{
-	dir = 1
-	},
-/obj/structure/sign/ordealmonitor{
-	pixel_y = 32
-	},
-/turf/open/floor/mineral/titanium/tiled,
-/area/facility_hallway/central)
 "Jd" = (
 /obj/effect/turf_decal/tile/yellow{
 	dir = 1
@@ -12893,13 +12913,6 @@
 	},
 /turf/open/floor/plasteel/sepia,
 /area/department_main/command)
-"Nd" = (
-/obj/effect/turf_decal/siding/wideplating/dark{
-	dir = 9
-	},
-/obj/structure/template_vendor,
-/turf/open/floor/mineral/titanium/tiled,
-/area/facility_hallway/central)
 "Nf" = (
 /obj/effect/turf_decal/tile/neutral{
 	color = "#090807"
@@ -13147,13 +13160,6 @@
 	color = "#ccc8c0"
 	},
 /area/department_main/training)
-"Ob" = (
-/obj/effect/turf_decal/siding/wideplating/dark{
-	dir = 8
-	},
-/obj/structure/grid_crafting_station,
-/turf/open/floor/mineral/titanium/tiled,
-/area/facility_hallway/central)
 "Oc" = (
 /obj/effect/landmark/latejoin,
 /turf/open/floor/plasteel/sepia,
@@ -13344,6 +13350,14 @@
 	},
 /turf/open/floor/plasteel/white,
 /area/facility_hallway/training)
+"Oz" = (
+/obj/effect/turf_decal/siding/purple/corner{
+	dir = 8
+	},
+/turf/open/water/deep/saltwater{
+	icon_state = "darkbluewater1"
+	},
+/area/facility_hallway/central)
 "OD" = (
 /obj/structure/bodycontainer/crematorium{
 	dir = 8;
@@ -13403,6 +13417,16 @@
 	},
 /turf/open/floor/facility/halls,
 /area/facility_hallway/information)
+"OM" = (
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 5
+	},
+/obj/structure/rack,
+/obj/machinery/light/small{
+	dir = 4
+	},
+/turf/open/floor/mineral/titanium/tiled,
+/area/facility_hallway/welfare)
 "ON" = (
 /obj/effect/turf_decal/tile/brown{
 	dir = 4
@@ -13477,14 +13501,6 @@
 	},
 /turf/open/floor/plasteel/sepia,
 /area/facility_hallway/control)
-"OU" = (
-/obj/effect/turf_decal/siding/purple/corner{
-	dir = 8
-	},
-/turf/open/water/deep/saltwater{
-	icon_state = "darkbluewater1"
-	},
-/area/facility_hallway/central)
 "OV" = (
 /obj/effect/turf_decal/plaque{
 	alpha = 230;
@@ -13719,12 +13735,6 @@
 /obj/effect/turf_decal/tile/brown,
 /turf/open/floor/plasteel/sepia,
 /area/department_main/command)
-"Pu" = (
-/obj/effect/turf_decal/siding/wideplating/dark{
-	dir = 4
-	},
-/turf/open/floor/mineral/titanium/tiled,
-/area/facility_hallway/central)
 "Pv" = (
 /turf/open/floor/plasteel/freezer,
 /area/facility_hallway/welfare)
@@ -15593,18 +15603,6 @@
 	color = "#ccc8c0"
 	},
 /area/department_main/training)
-"VB" = (
-/obj/effect/turf_decal/siding/wideplating/dark{
-	dir = 8
-	},
-/obj/structure/table/reinforced,
-/obj/machinery/light{
-	dir = 8;
-	pixel_x = -9;
-	pixel_y = 4
-	},
-/turf/open/floor/mineral/titanium/tiled,
-/area/facility_hallway/central)
 "VC" = (
 /obj/effect/turf_decal/tile/purple{
 	dir = 1
@@ -51455,11 +51453,11 @@ nX
 nX
 nX
 nX
-sa
-sa
-sa
-sa
-sa
+fb
+fb
+fb
+fb
+fb
 ey
 NB
 NB
@@ -51712,11 +51710,11 @@ nX
 nX
 nX
 nX
-sa
-Nd
-VB
-Ob
-FY
+fb
+rE
+tZ
+aW
+gW
 ey
 NB
 NB
@@ -51969,11 +51967,11 @@ nX
 nX
 nX
 nX
-sa
-IY
-Iu
-Iu
-gW
+fb
+sy
+bC
+bC
+DL
 ey
 NB
 NB
@@ -52226,11 +52224,11 @@ nX
 nX
 nX
 nX
-sa
-HL
-Am
-Pu
-rf
+fb
+OM
+AA
+xf
+st
 ey
 ey
 ey
@@ -52481,11 +52479,11 @@ nX
 nX
 nX
 nX
-OU
+Oz
 nX
 fb
 fb
-ny
+sa
 fb
 fb
 ey
