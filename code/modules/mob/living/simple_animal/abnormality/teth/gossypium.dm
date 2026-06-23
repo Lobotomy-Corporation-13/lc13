@@ -1,20 +1,22 @@
-/mob/living/simple_animal/hostile/abnormality/gossypium //That fucking flower that I hate, coded by Xeros, design by Jackfrost7157 on the LC13 discord with minor alterations
-
+//That fucking flower that I hate, coded by Xeros, design by Jackfrost7157 on the LC13 discord with minor alterations by Xeros
+/mob/living/simple_animal/hostile/abnormality/gossypium
 	name = "Drenched Gossypium"
 	desc = "A large, round cluster of white flowers, marred by patches of bloodstains. Its roots dangle beneath the cluster."
-	icon = 'ModularLobotomy/_Lobotomyicons/32x48.dmi'
-	icon_state = "fragment"
-	icon_living = "fragment"
-	portrait = "fragment"
-	maxHealth = 900
-	health = 900
-	damage_coeff = list(BRUTE = 1, RED_DAMAGE = 1, WHITE_DAMAGE = 0.8, BLACK_DAMAGE = 1.5, PALE_DAMAGE = 1.5)
+	icon = 'ModularLobotomy/_Lobotomyicons/64x96.dmi'
+	icon_state = "whitegossy"
+	icon_living = "whitegossy"
+	portrait = "drenched_gossypium"
+	maxHealth = 1300
+	health = 1300
+	base_pixel_x = -16
+	pixel_y = -12
+	damage_coeff = list(BRUTE = 1, RED_DAMAGE = 0.8, WHITE_DAMAGE = 0.8, BLACK_DAMAGE = 1.2, PALE_DAMAGE = 1.2)
 	ranged = TRUE
-	melee_damage_lower = 9
-	melee_damage_upper = 13
-	ranged_cooldown_time = 2
-	rapid_melee = 2
-	move_to_delay = 6
+	melee_damage_lower = 10
+	melee_damage_upper = 14
+	ranged_cooldown_time = 3
+	rapid_melee = 2.5
+	move_to_delay = 5
 	melee_damage_type = BLACK_DAMAGE
 	stat_attack = HARD_CRIT
 	attack_sound = 'sound/abnormalities/fragment/attack.ogg'
@@ -29,6 +31,7 @@
 		ABNORMALITY_WORK_INSIGHT = 40,
 		ABNORMALITY_WORK_ATTACHMENT = 40,
 		ABNORMALITY_WORK_REPRESSION = 40,
+		"Approach" = 0,
 	)
 	work_damage_amount = 5
 	work_damage_type = RED_DAMAGE
@@ -46,10 +49,30 @@
 
 
 
+//WORK STUFF
+/mob/living/simple_animal/hostile/abnormality/gossypium/AttemptWork(mob/living/carbon/human/user, work_type) //Code shamelessly yoinked from KQE
+	if((work_type != "Approach"))
+		return TRUE
+	if(work_type == "Approach")
+		if(!GiftUser(user, 18, 100))//always gives a gift
+			to_chat(user, span_notice("The cluster of flowers pays you no mind as you approach."))
+			return FALSE
+		to_chat(user, span_notice("As you head for the giant flower, several smaller ones close their petals, as if bowing down in respect."))
+		to_chat(user, span_notice("Once you arrived at the end, the giant flower drooped low to offer a present."))
+
+/mob/living/simple_animal/hostile/abnormality/gossypium/NeutralEffect(mob/living/carbon/human/user, work_type, pe)
+	. = ..()
+	if(prob(60))
+		datum_reference.qliphoth_change(-1)
+
+/mob/living/simple_animal/hostile/abnormality/gossypium/FailureEffect(mob/living/carbon/human/user, work_type, pe)
+	. = ..()
+	if(prob(60))
+		datum_reference.qliphoth_change(-1)
 
 
 
-
+//BREACH STUFF
 /mob/living/simple_animal/hostile/abnormality/gossypium/Initialize(mapload) //Code shamelessly yoinked from Nosferatu
 	. = ..()
 	AddComponent(/datum/component/bloodfeast, siphon = TRUE, range = 2, starting = 0)
@@ -66,7 +89,7 @@
 	if(IsContained()) // No bricking the mob by Berzerking when we aren't supposed to.
 		return
 	playsound(get_turf(src), 'sound/abnormalities/nosferatu/transform.ogg', 35, 8)
-	animate(src, 1 SECONDS, color = "#882020", transform = matrix()*1.10)
+	icon_state = "redgossy"
 	rapid_melee += 0.5 //Was gonna have this douche calm down after a while and not stack but it kept breaking so you'll just have to deal with the bastard snowballing
 
 /mob/living/simple_animal/hostile/abnormality/gossypium/Move()
@@ -121,7 +144,7 @@
 	var/turf/T = get_turf(attack_target)
 	SLEEP_CHECK_DEATH(1)
 	new /obj/effect/temp_visual/vine(T, src)
-	SLEEP_CHECK_DEATH(2)
+	SLEEP_CHECK_DEATH(1)
 	can_act = TRUE
 
 /mob/living/simple_animal/hostile/abnormality/gossypium/proc/thornBurst() //expanding square in melee
@@ -132,26 +155,15 @@
 	var/turf/origin = get_turf(src)
 	playsound(origin, 'sound/abnormalities/ebonyqueen/strongcharge.ogg', 75, 0, 5)
 	playsound(origin, 'sound/creatures/venus_trap_hurt.ogg', 75, 0, 5)
-	SLEEP_CHECK_DEATH(7)
+	SLEEP_CHECK_DEATH(6)
 	for(var/turf/T in spiral_range_turfs(2, origin))
 		new /obj/effect/temp_visual/vine(T, src)
-	SLEEP_CHECK_DEATH(6)
+	SLEEP_CHECK_DEATH(5)
 	can_act = TRUE
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+//VINE STUFF
 /obj/effect/temp_visual/vine //Keeping this shit far away for organization purposes
 	name = "thirsting vines"
 	desc = "A target warning you of incoming pain"
@@ -159,7 +171,7 @@
 	icon_state = "vines"
 	duration = 6
 	layer = RIPPLE_LAYER	//We want this HIGH. SUPER HIGH. We want it so that you can absolutely, guaranteed, see exactly what is about to hit you.
-	var/vine_damage = 20 //45 less BLACK Damage than Ebony
+	var/vine_damage = 25 //40 less BLACK Damage than Ebony
 	var/mob/living/source //who made this, anyway
 
 
@@ -167,7 +179,7 @@
 	. = ..()
 	if(new_source)
 		source = new_source
-	addtimer(CALLBACK(src, PROC_REF(explode)), 0.5 SECONDS)
+	addtimer(CALLBACK(src, PROC_REF(explode)), 0.4 SECONDS)
 
 /obj/effect/temp_visual/vine/proc/explode()
 	var/turf/target_turf = get_turf(src)
