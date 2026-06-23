@@ -707,6 +707,10 @@ SUBSYSTEM_DEF(ticker)
 
 /// Proc that does a gamespeed vote on Lobcorp Gamemodes
 /datum/controller/subsystem/ticker/proc/DoGamespeedVote()
+	// As a failsafe, if someone is being quirky and starting a vote in the window between the shift starting and the gamespeed vote going off, wait for that ongoing vote to finish before attempting this one (since we can't have parallel votes)
+	if(SSvote.time_remaining > 0)
+		addtimer(CALLBACK(src, PROC_REF(DoGamespeedVote)), SSvote.time_remaining + 5 SECONDS)
+		return
 	SSvote.initiate_vote("gamespeed", null)
 
 /datum/controller/subsystem/ticker/Shutdown()
