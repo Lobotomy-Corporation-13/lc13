@@ -8,6 +8,7 @@
 	portrait = "drenched_gossypium"
 	maxHealth = 1300
 	health = 1300
+	pixel_x = -16
 	base_pixel_x = -16
 	pixel_y = -12
 	damage_coeff = list(BRUTE = 1, RED_DAMAGE = 0.8, WHITE_DAMAGE = 0.8, BLACK_DAMAGE = 1.2, PALE_DAMAGE = 1.2)
@@ -16,7 +17,7 @@
 	melee_damage_upper = 14
 	ranged_cooldown_time = 3
 	rapid_melee = 2.5
-	move_to_delay = 5
+	move_to_delay = 4.5
 	melee_damage_type = BLACK_DAMAGE
 	stat_attack = HARD_CRIT
 	attack_sound = 'sound/abnormalities/fragment/attack.ogg'
@@ -41,8 +42,8 @@
 		/datum/ego_datum/weapon/white_gossypium,
 		/datum/ego_datum/armor/white_gossypium,
 	)
-	gift_type =  /datum/ego_gifts/white_gossypium
-	abnormality_origin = ABNORMALITY_ORIGIN_LIMBUS
+	gift_type =  /datum/ego_gifts/white_gossypium //"Terrible EGO Gift", look inside
+	abnormality_origin = ABNORMALITY_ORIGIN_LIMBUS// Mediocre at worst
 
 	var/burst_cooldown
 	var/burst_cooldown_time = 10 SECONDS
@@ -69,6 +70,16 @@
 	. = ..()
 	if(prob(60))
 		datum_reference.qliphoth_change(-1)
+
+/mob/living/simple_animal/hostile/abnormality/gossypium/PostWorkEffect(mob/living/carbon/human/user, work_type)
+	var/brooch = user.ego_gift_list[BROOCH]
+	if((work_type != "Approach")) //No dropping qlip on Approach
+		if(istype(brooch, /datum/ego_gifts/white_gossypium))
+			if(prob(20))
+				datum_reference.qliphoth_change(1)
+		else
+			if(prob(80))
+				datum_reference.qliphoth_change(-1)
 
 
 
