@@ -1,7 +1,7 @@
 /datum/round_event_control/lc13/records_knowledge
 	name = "Records Knowledge Update"
 	typepath = /datum/round_event/records_knowledge
-	weight = 15
+	weight = 3
 	max_occurrences = 150
 	alert_observers = FALSE
 	//This is so minor.
