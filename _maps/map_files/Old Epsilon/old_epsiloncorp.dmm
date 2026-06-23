@@ -2724,6 +2724,7 @@
 /area/department_main/information)
 "ih" = (
 /obj/structure/closet/secure_closet/discipline,
+/obj/item/melee/chainofcommand,
 /turf/open/floor/plasteel/dark,
 /area/facility_hallway/control)
 "ij" = (
@@ -5265,7 +5266,8 @@
 /obj/machinery/light{
 	dir = 4;
 	pixel_x = 9;
-	pixel_y = 4
+	pixel_y = 4;
+	bulb_colour = "#f8eee9"
 	},
 /turf/open/floor/carpet/red,
 /area/facility_hallway/control)
@@ -13457,6 +13459,15 @@
 	},
 /obj/effect/turf_decal/tile/green{
 	dir = 1
+	},
+/obj/structure/rack,
+/obj/effect/turf_decal/box/red,
+/obj/item/weldingtool/experimental,
+/obj/item/stack/cable_coil{
+	amount = 30
+	},
+/obj/item/stack/cable_coil{
+	amount = 30
 	},
 /turf/open/floor/plasteel/sepia,
 /area/facility_hallway/welfare)
