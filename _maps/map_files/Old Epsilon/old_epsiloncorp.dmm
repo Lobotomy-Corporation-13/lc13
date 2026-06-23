@@ -116,7 +116,7 @@
 /area/facility_hallway/training)
 "at" = (
 /turf/open/floor/plasteel/dark,
-/area/facility_hallway/central)
+/area/facility_hallway/control)
 "av" = (
 /obj/effect/turf_decal/stripes/line{
 	dir = 1
@@ -2330,7 +2330,12 @@
 /turf/open/floor/plasteel/sepia,
 /area/facility_hallway/west)
 "gW" = (
-/turf/closed/indestructible/fakeglass,
+/obj/effect/turf_decal/siding/wideplating/dark,
+/obj/structure/rack,
+/obj/machinery/newscaster{
+	pixel_y = -32
+	},
+/turf/open/floor/mineral/titanium/tiled,
 /area/facility_hallway/central)
 "gZ" = (
 /obj/effect/turf_decal/tile/blue{
@@ -2711,7 +2716,7 @@
 "ih" = (
 /obj/structure/closet/secure_closet/discipline,
 /turf/open/floor/plasteel/dark,
-/area/facility_hallway/central)
+/area/facility_hallway/control)
 "ij" = (
 /obj/effect/turf_decal/tile/red,
 /turf/open/floor/plasteel/sepia,
@@ -3394,7 +3399,7 @@
 /obj/item/paper_bin,
 /obj/item/pen/fourcolor,
 /turf/open/floor/carpet/red,
-/area/facility_hallway/central)
+/area/facility_hallway/control)
 "kc" = (
 /obj/effect/turf_decal/tile/bar{
 	dir = 4
@@ -3466,7 +3471,7 @@
 	dir = 8
 	},
 /turf/open/floor/carpet/red,
-/area/facility_hallway/central)
+/area/facility_hallway/control)
 "ko" = (
 /obj/effect/turf_decal/tile/neutral{
 	color = "#090807"
@@ -3747,7 +3752,7 @@
 /obj/structure/table/glass,
 /obj/item/storage/bag/chemistry,
 /turf/open/floor/plasteel/white,
-/area/facility_hallway/central)
+/area/facility_hallway/welfare)
 "kV" = (
 /obj/effect/turf_decal/tile/brown{
 	color = "#734404";
@@ -3776,9 +3781,9 @@
 	},
 /area/facility_hallway/training)
 "kW" = (
-/obj/machinery/door/airlock/wood{
-	name = "Discipline Office";
-	req_access_txt = "1"
+/obj/machinery/door/airlock/wood/glass{
+	req_access_txt = "1";
+	name = "Discipline Office"
 	},
 /turf/open/floor/plasteel/dark,
 /area/facility_hallway/control)
@@ -4114,7 +4119,7 @@
 	desc = "A huge chunk of wing-grade metal used in various L corporation facilities. Effectively impervious to conventional methods of destruction.";
 	name = "facility wall"
 	},
-/area/facility_hallway/central)
+/area/facility_hallway/control)
 "lX" = (
 /obj/effect/turf_decal/tile/neutral,
 /obj/effect/turf_decal/tile/neutral{
@@ -4197,7 +4202,7 @@
 "mh" = (
 /obj/structure/filingcabinet/chestdrawer,
 /turf/open/floor/plasteel/dark,
-/area/facility_hallway/central)
+/area/facility_hallway/control)
 "mj" = (
 /obj/effect/turf_decal/tile/yellow{
 	dir = 1
@@ -4603,6 +4608,15 @@
 	},
 /turf/open/floor/holofloor/plating,
 /area/facility_hallway/control)
+"ny" = (
+/obj/effect/turf_decal/siding/wideplating/dark/end{
+	dir = 4
+	},
+/obj/machinery/door/airlock/highsecurity{
+	name = "Refinery Office"
+	},
+/turf/open/floor/plasteel/white,
+/area/facility_hallway/welfare)
 "nA" = (
 /obj/effect/turf_decal/tile/bar,
 /obj/effect/turf_decal/tile/bar{
@@ -5123,7 +5137,7 @@
 	dir = 1
 	},
 /turf/open/floor/plasteel/white,
-/area/facility_hallway/central)
+/area/facility_hallway/welfare)
 "pq" = (
 /obj/effect/turf_decal/siding{
 	dir = 1
@@ -5254,7 +5268,7 @@
 	pixel_y = 4
 	},
 /turf/open/floor/carpet/red,
-/area/facility_hallway/central)
+/area/facility_hallway/control)
 "pH" = (
 /turf/closed/indestructible/reinforced{
 	desc = "A huge chunk of wing-grade metal used in various L corporation facilities. Effectively impervious to conventional methods of destruction.";
@@ -5822,6 +5836,13 @@
 	color = "#ccc8c0"
 	},
 /area/facility_hallway/west)
+"rf" = (
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 6
+	},
+/obj/structure/rack,
+/turf/open/floor/mineral/titanium/tiled,
+/area/facility_hallway/central)
 "rg" = (
 /obj/structure/table/wood/fancy/purple,
 /obj/item/clothing/accessory/armband/lobotomy/info{
@@ -5886,7 +5907,7 @@
 	dir = 10
 	},
 /turf/open/floor/plasteel/white,
-/area/facility_hallway/central)
+/area/facility_hallway/welfare)
 "rn" = (
 /obj/effect/turf_decal/tile/brown{
 	color = "#734404";
@@ -6695,7 +6716,7 @@
 	dir = 1
 	},
 /turf/open/floor/carpet/red,
-/area/facility_hallway/central)
+/area/facility_hallway/control)
 "ug" = (
 /obj/effect/turf_decal/plaque{
 	alpha = 230;
@@ -7367,9 +7388,6 @@
 /turf/open/floor/plasteel/sepia,
 /area/facility_hallway/east)
 "wl" = (
-/obj/machinery/computer/extraction_cargo/chemistry{
-	dir = 8
-	},
 /obj/effect/turf_decal/tile/purple,
 /obj/effect/turf_decal/tile/purple{
 	color = "#bf48b1";
@@ -7382,8 +7400,16 @@
 	color = "#bf48b1";
 	dir = 1
 	},
+/obj/item/work_console_upgrade/chemical_extraction_attachment,
+/obj/item/work_console_upgrade/chemical_extraction_attachment,
+/obj/item/work_console_upgrade/chemical_extraction_attachment,
+/obj/item/clothing/head/beret/tegu/chem,
+/obj/item/clothing/suit/armor/ego_gear/limbus_labs/chem{
+	name = "chemist labcoat"
+	},
+/obj/structure/closet/crate/science/abnochem_startercrate,
 /turf/open/floor/plasteel/white,
-/area/facility_hallway/central)
+/area/facility_hallway/welfare)
 "wm" = (
 /obj/structure/disposalpipe/segment{
 	dir = 4
@@ -8361,7 +8387,7 @@
 	dir = 5
 	},
 /turf/open/floor/carpet/red,
-/area/facility_hallway/central)
+/area/facility_hallway/control)
 "zy" = (
 /obj/machinery/computer/security/telescreen{
 	dir = 8;
@@ -8412,7 +8438,7 @@
 	name = "fancy leather sofa"
 	},
 /turf/open/floor/carpet/red,
-/area/facility_hallway/central)
+/area/facility_hallway/control)
 "zH" = (
 /obj/structure/disposalpipe/segment,
 /turf/open/floor/plasteel/sepia{
@@ -8558,6 +8584,13 @@
 	},
 /turf/open/floor/plasteel/sepia,
 /area/facility_hallway/control)
+"Am" = (
+/obj/effect/turf_decal/siding/wideplating/dark/corner,
+/obj/effect/turf_decal/siding/wideplating/dark/corner{
+	dir = 4
+	},
+/turf/open/floor/mineral/titanium/tiled,
+/area/facility_hallway/central)
 "Aq" = (
 /obj/effect/landmark/xeno_spawn,
 /turf/open/floor/plasteel/sepia{
@@ -9350,7 +9383,7 @@
 	dir = 6
 	},
 /turf/open/floor/carpet/red,
-/area/facility_hallway/central)
+/area/facility_hallway/control)
 "Dc" = (
 /obj/effect/turf_decal/box/red,
 /obj/structure/toolabnormality/touch,
@@ -9376,7 +9409,7 @@
 "Di" = (
 /obj/effect/turf_decal/siding/red/corner,
 /turf/open/floor/carpet/red,
-/area/facility_hallway/central)
+/area/facility_hallway/control)
 "Dj" = (
 /obj/effect/turf_decal/tile/neutral{
 	dir = 1
@@ -10048,8 +10081,12 @@
 	color = "#bf48b1";
 	dir = 1
 	},
+/obj/machinery/computer/extraction_cargo/chemistry,
+/obj/structure/sign/ordealmonitor{
+	pixel_y = 32
+	},
 /turf/open/floor/plasteel/white,
-/area/facility_hallway/central)
+/area/facility_hallway/welfare)
 "Fc" = (
 /obj/effect/turf_decal/tile/neutral{
 	color = "#000000"
@@ -10176,7 +10213,7 @@
 	color = "#bf48b1"
 	},
 /turf/open/floor/plasteel/white,
-/area/facility_hallway/central)
+/area/facility_hallway/welfare)
 "Fz" = (
 /obj/effect/turf_decal/stripes/red/line,
 /obj/structure/disposalpipe/segment,
@@ -10228,7 +10265,7 @@
 	dir = 9
 	},
 /turf/open/floor/carpet/red,
-/area/facility_hallway/central)
+/area/facility_hallway/control)
 "FI" = (
 /obj/structure/window/reinforced/spawner/west{
 	max_integrity = 25;
@@ -10278,7 +10315,7 @@
 /area/department_main/welfare)
 "FN" = (
 /turf/open/floor/carpet/red,
-/area/facility_hallway/central)
+/area/facility_hallway/control)
 "FR" = (
 /obj/effect/turf_decal/tile/blue{
 	color = "#5269e9";
@@ -10382,6 +10419,13 @@
 "FX" = (
 /turf/open/floor/plasteel/elevatorshaft,
 /area/facility_hallway/manager)
+"FY" = (
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 10
+	},
+/obj/structure/table/reinforced,
+/turf/open/floor/mineral/titanium/tiled,
+/area/facility_hallway/central)
 "FZ" = (
 /obj/effect/turf_decal/tile/brown{
 	color = "#734404";
@@ -10522,7 +10566,7 @@
 "Gq" = (
 /obj/effect/spawner/structure/window/plasma/reinforced/plastitanium,
 /turf/open/floor/plasteel/dark,
-/area/facility_hallway/central)
+/area/facility_hallway/welfare)
 "Gu" = (
 /obj/effect/turf_decal/tile/purple{
 	color = "#bf48b1"
@@ -11019,6 +11063,13 @@
 	},
 /turf/open/floor/plasteel/sepia,
 /area/facility_hallway/human)
+"HL" = (
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 5
+	},
+/obj/structure/rack,
+/turf/open/floor/mineral/titanium/tiled,
+/area/facility_hallway/central)
 "HN" = (
 /turf/open/floor/plasteel/sepia{
 	color = "#ccc8c0"
@@ -11256,6 +11307,9 @@
 	},
 /turf/open/floor/plasteel/sepia,
 /area/department_main/training)
+"Iu" = (
+/turf/open/floor/mineral/titanium/tiled,
+/area/facility_hallway/central)
 "Iv" = (
 /obj/effect/turf_decal/tile/neutral{
 	color = "#090807"
@@ -11521,6 +11575,15 @@
 	name = "facility wall"
 	},
 /area/facility_hallway/control)
+"IY" = (
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 1
+	},
+/obj/structure/sign/ordealmonitor{
+	pixel_y = 32
+	},
+/turf/open/floor/mineral/titanium/tiled,
+/area/facility_hallway/central)
 "Jd" = (
 /obj/effect/turf_decal/tile/yellow{
 	dir = 1
@@ -11643,34 +11706,12 @@
 /turf/open/floor/plasteel/sepia,
 /area/department_main/information)
 "Jt" = (
-/obj/structure/closet/crate/science/abnochem_startercrate,
-/obj/item/clothing/suit/armor/ego_gear/limbus_labs/chem{
-	name = "chemist labcoat"
-	},
-/obj/item/clothing/head/beret/tegu/chem,
-/obj/item/work_console_upgrade/chemical_extraction_attachment,
-/obj/item/work_console_upgrade/chemical_extraction_attachment,
-/obj/item/work_console_upgrade/chemical_extraction_attachment,
-/obj/machinery/light{
-	dir = 8;
-	pixel_x = -9;
-	pixel_y = 4
-	},
-/obj/effect/turf_decal/tile/purple{
-	color = "#bf48b1";
+/obj/effect/turf_decal/siding/purple{
 	dir = 1
 	},
-/obj/effect/turf_decal/tile/purple{
-	dir = 8
-	},
-/obj/effect/turf_decal/tile/purple{
-	dir = 4
-	},
-/obj/effect/turf_decal/tile/purple{
-	color = "#bf48b1"
-	},
+/obj/effect/turf_decal/siding/purple,
 /turf/open/floor/plasteel/white,
-/area/facility_hallway/central)
+/area/facility_hallway/welfare)
 "Jv" = (
 /turf/closed/indestructible/reinforced{
 	desc = "A huge chunk of wing-grade metal used in various L corporation facilities. Effectively impervious to conventional methods of destruction.";
@@ -12852,6 +12893,13 @@
 	},
 /turf/open/floor/plasteel/sepia,
 /area/department_main/command)
+"Nd" = (
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 9
+	},
+/obj/structure/template_vendor,
+/turf/open/floor/mineral/titanium/tiled,
+/area/facility_hallway/central)
 "Nf" = (
 /obj/effect/turf_decal/tile/neutral{
 	color = "#090807"
@@ -12967,7 +13015,7 @@
 	name = "chemistry"
 	},
 /turf/open/floor/plasteel/white,
-/area/facility_hallway/central)
+/area/facility_hallway/welfare)
 "Nw" = (
 /obj/structure/table/wood/poker,
 /obj/item/toy/cards/deck,
@@ -13099,6 +13147,13 @@
 	color = "#ccc8c0"
 	},
 /area/department_main/training)
+"Ob" = (
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 8
+	},
+/obj/structure/grid_crafting_station,
+/turf/open/floor/mineral/titanium/tiled,
+/area/facility_hallway/central)
 "Oc" = (
 /obj/effect/landmark/latejoin,
 /turf/open/floor/plasteel/sepia,
@@ -13324,10 +13379,13 @@
 /area/department_main/training)
 "OI" = (
 /obj/effect/turf_decal/siding/purple{
-	dir = 9
+	dir = 1
+	},
+/obj/effect/turf_decal/siding/purple/corner{
+	dir = 8
 	},
 /turf/open/floor/plasteel/white,
-/area/facility_hallway/central)
+/area/facility_hallway/welfare)
 "OJ" = (
 /obj/structure/disposalpipe/junction{
 	dir = 8
@@ -13419,6 +13477,14 @@
 	},
 /turf/open/floor/plasteel/sepia,
 /area/facility_hallway/control)
+"OU" = (
+/obj/effect/turf_decal/siding/purple/corner{
+	dir = 8
+	},
+/turf/open/water/deep/saltwater{
+	icon_state = "darkbluewater1"
+	},
+/area/facility_hallway/central)
 "OV" = (
 /obj/effect/turf_decal/plaque{
 	alpha = 230;
@@ -13653,6 +13719,12 @@
 /obj/effect/turf_decal/tile/brown,
 /turf/open/floor/plasteel/sepia,
 /area/department_main/command)
+"Pu" = (
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 4
+	},
+/turf/open/floor/mineral/titanium/tiled,
+/area/facility_hallway/central)
 "Pv" = (
 /turf/open/floor/plasteel/freezer,
 /area/facility_hallway/welfare)
@@ -13666,7 +13738,7 @@
 	dir = 9
 	},
 /turf/open/floor/carpet/red,
-/area/facility_hallway/central)
+/area/facility_hallway/control)
 "Py" = (
 /obj/machinery/recycler,
 /obj/machinery/conveyor{
@@ -13887,7 +13959,7 @@
 	dir = 6
 	},
 /turf/open/floor/plasteel/white,
-/area/facility_hallway/central)
+/area/facility_hallway/welfare)
 "Qf" = (
 /obj/effect/turf_decal/tile/yellow{
 	dir = 4
@@ -14025,7 +14097,7 @@
 	dir = 10
 	},
 /turf/open/floor/carpet/red,
-/area/facility_hallway/central)
+/area/facility_hallway/control)
 "QJ" = (
 /obj/effect/turf_decal/tile/brown{
 	dir = 8
@@ -14065,7 +14137,7 @@
 	dir = 8
 	},
 /turf/open/floor/carpet/red,
-/area/facility_hallway/central)
+/area/facility_hallway/control)
 "QP" = (
 /obj/effect/turf_decal/tile/neutral{
 	color = "#090807"
@@ -15079,7 +15151,7 @@
 	},
 /obj/effect/turf_decal/siding/purple/corner,
 /turf/open/floor/plasteel/white,
-/area/facility_hallway/central)
+/area/facility_hallway/welfare)
 "Uf" = (
 /turf/open/water/deep/saltwater/safe{
 	color = "#f5f5f5"
@@ -15331,7 +15403,7 @@
 	dir = 1
 	},
 /turf/open/floor/carpet/red,
-/area/facility_hallway/central)
+/area/facility_hallway/control)
 "Va" = (
 /obj/structure/closet/crate/freezer/surplus_limbs{
 	anchored = 1
@@ -15521,6 +15593,18 @@
 	color = "#ccc8c0"
 	},
 /area/department_main/training)
+"VB" = (
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 8
+	},
+/obj/structure/table/reinforced,
+/obj/machinery/light{
+	dir = 8;
+	pixel_x = -9;
+	pixel_y = 4
+	},
+/turf/open/floor/mineral/titanium/tiled,
+/area/facility_hallway/central)
 "VC" = (
 /obj/effect/turf_decal/tile/purple{
 	dir = 1
@@ -15548,7 +15632,7 @@
 	pixel_y = -3
 	},
 /turf/open/floor/plasteel/white,
-/area/facility_hallway/central)
+/area/facility_hallway/welfare)
 "VF" = (
 /obj/structure/table,
 /obj/effect/turf_decal/siding/red/corner{
@@ -15556,7 +15640,7 @@
 	},
 /obj/item/reagent_containers/hypospray/medipen/l_mixed,
 /turf/open/floor/carpet/red,
-/area/facility_hallway/central)
+/area/facility_hallway/control)
 "VG" = (
 /obj/machinery/light{
 	dir = 4;
@@ -16103,7 +16187,7 @@
 	density = 0
 	},
 /turf/open/floor/plasteel/dark,
-/area/facility_hallway/central)
+/area/facility_hallway/control)
 "Xa" = (
 /obj/structure/filingcabinet/alephinfo,
 /obj/structure/filingcabinet/wawinfo{
@@ -17086,8 +17170,9 @@
 /obj/item/storage/box/beakers,
 /obj/item/storage/box/pillbottles,
 /obj/item/storage/box/pillbottles,
+/obj/machinery/light,
 /turf/open/floor/plasteel/white,
-/area/facility_hallway/central)
+/area/facility_hallway/welfare)
 
 (1,1,1) = {"
 JZ
@@ -45972,7 +46057,7 @@ sE
 sE
 sE
 rd
-sa
+qj
 qj
 lj
 kW
@@ -46229,7 +46314,7 @@ sE
 sE
 sE
 rd
-sa
+qj
 mh
 FF
 kn
@@ -47000,7 +47085,7 @@ sE
 sE
 sE
 sE
-sa
+qj
 WZ
 zw
 pG
@@ -47257,12 +47342,12 @@ sE
 rd
 rd
 rd
-sa
-sa
-sa
-sa
-sa
-sa
+qj
+qj
+qj
+qj
+qj
+qj
 fc
 rp
 rp
@@ -51370,11 +51455,11 @@ nX
 nX
 nX
 nX
-nX
-nX
-nX
-nX
-uL
+sa
+sa
+sa
+sa
+sa
 ey
 NB
 NB
@@ -51627,11 +51712,11 @@ nX
 nX
 nX
 nX
-nX
-nX
-nX
-nX
-uL
+sa
+Nd
+VB
+Ob
+FY
 ey
 NB
 NB
@@ -51884,11 +51969,11 @@ nX
 nX
 nX
 nX
-nX
-nX
-nX
-nX
-uL
+sa
+IY
+Iu
+Iu
+gW
 ey
 NB
 NB
@@ -52141,11 +52226,11 @@ nX
 nX
 nX
 nX
-nX
-nX
-nX
-nX
-uL
+sa
+HL
+Am
+Pu
+rf
 ey
 ey
 ey
@@ -52396,13 +52481,13 @@ nX
 nX
 nX
 nX
+OU
 nX
-nX
-sa
-sa
-sa
-sa
-sa
+fb
+fb
+ny
+fb
+fb
 ey
 NB
 NB
@@ -52655,7 +52740,7 @@ nX
 nX
 nX
 nX
-gW
+fb
 pp
 Jt
 VC
@@ -52912,7 +52997,7 @@ nX
 nX
 nX
 nX
-gW
+fb
 EY
 OI
 rm
@@ -53169,7 +53254,7 @@ nX
 nX
 nX
 nX
-gW
+fb
 wl
 Ue
 Qd
@@ -53426,11 +53511,11 @@ nX
 nX
 nX
 uL
-sa
+fb
 Gq
 Nu
 Gq
-sa
+fb
 ey
 NB
 NB
