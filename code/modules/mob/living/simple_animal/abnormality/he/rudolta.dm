@@ -58,7 +58,7 @@
 	var/turf/same_turf
 
 /mob/living/simple_animal/hostile/abnormality/rudolta/Initialize()
-	..()
+	. = ..()
 	same_turf = get_turf(src)
 
 /mob/living/simple_animal/hostile/abnormality/rudolta/NeutralEffect(mob/living/carbon/human/user, work_type, pe)
