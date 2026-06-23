@@ -1,0 +1,4 @@
+author: "Destrok171"
+delete-after: True
+changes:
+  - bugfix: "Body temperature for carbons will now stabilize naturally."

@@ -249,7 +249,7 @@
 			return
 		L.dropItemToGround(held) //Drop weapon
 
-/mob/living/simple_animal/hostile/runawaybird/patrol_select()
+/mob/living/simple_animal/hostile/runawaybird/SelectPatrolLocation()
 	var/list/target_turfs = list()
 	for(var/mob/living/simple_animal/hostile/abnormality/judgement_bird/J in GLOB.mob_list)
 		if(J.z != z) // Not on our level
@@ -261,8 +261,7 @@
 		return ..()
 	var/turf/target_turf = pick(target_turfs)
 	if(istype(target_turf))
-		patrol_path = get_path_to(src, target_turf, TYPE_PROC_REF(/turf, Distance_cardinal), 0, 200)
-		return
+		return target_turf
 	return ..()
 
 //On-kill visual effect

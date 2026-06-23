@@ -70,7 +70,7 @@
 	var/obj/item/organ/vocal_cords/colossus/cords = null
 
 /datum/action/item_action/organ_action/colossus/New()
-	..()
+	. = ..()
 	cords = target
 
 /datum/action/item_action/organ_action/colossus/IsAvailable()

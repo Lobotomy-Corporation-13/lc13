@@ -174,6 +174,8 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 	var/broadcast_login_logout = TRUE
 	///Selected achievement to display as specialization
 	var/chosen_achievement = null
+	///Lazily-created TGUI menu for picking the achievement specialization
+	var/datum/achievement_spec_menu/achievement_spec_menu
 	///What outfit typepaths we've favorited in the SelectEquipment menu
 	var/list/favorite_outfits = list()
 	///Language that will be used for some of the strings
@@ -219,6 +221,10 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 	save_character() //let's save this new random character so it doesn't keep generating new ones.
 	menuoptions = list()
 	return
+
+/datum/preferences/Destroy(force, ...)
+	QDEL_NULL(achievement_spec_menu)
+	return ..()
 
 #define APPEARANCE_CATEGORY_COLUMN "<td valign='top' width='14%'>"
 #define MAX_MUTANT_ROWS 4
@@ -1743,26 +1749,9 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 						to_chat(user, "<span class='warning'>You have no unlocked achievements!</span>")
 						return
 
-					var/list/choices = list("None")
-					var/list/achievement_map = list()
-
-					for(var/achievement_type in unlocked)
-						var/datum/award/achievement/A = SSachievements.achievements[achievement_type]
-						if(!A || !A.name)
-							continue
-						var/color = A.get_difficulty_color()
-						var/display_name = "<font color='[color]'>[A.name] ([A.difficulty])</font>"
-						choices += display_name
-						achievement_map[display_name] = achievement_type
-
-					var/choice = input(user, "Choose your achievement specialization:", "Achievement Specialization") as null|anything in choices
-					if(!choice)
-						return
-
-					if(choice == "None")
-						chosen_achievement = null
-					else
-						chosen_achievement = achievement_map[choice]
+					if(!achievement_spec_menu)
+						achievement_spec_menu = new(src)
+					achievement_spec_menu.ui_interact(user)
 
 				// The lore stuff
 				if("govrelation")

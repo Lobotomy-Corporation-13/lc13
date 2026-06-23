@@ -412,12 +412,16 @@ GLOBAL_LIST_EMPTY(apostles)
 		return FALSE
 	return ..()
 
-/mob/living/simple_animal/hostile/apostle/scythe/guardian/patrol_select()
+/mob/living/simple_animal/hostile/apostle/scythe/guardian/SelectPatrolLocation()
 	var/mob/living/simple_animal/hostile/abnormality/white_night/WN = locate() in GLOB.abnormality_mob_list
 	if(!istype(WN))
 		return
-	var/turf/target_turf = pick(RANGE_TURFS(2, WN))
-	patrol_path = get_path_to(src, target_turf, TYPE_PROC_REF(/turf, Distance_cardinal), 0, 200)
+	return pick(RANGE_TURFS(2, WN))
+
+/mob/living/simple_animal/hostile/apostle/scythe/guardian/PatrolSelect()
+	. = ..()
+	if(.)
+		return
 	playsound(get_turf(src), 'sound/abnormalities/whitenight/apostle_growl.ogg', 75, FALSE)
 	TemporarySpeedChange(-4, 5 SECONDS) // OUT OF MY WAY
 

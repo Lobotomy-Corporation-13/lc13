@@ -300,7 +300,7 @@
 	cost = 50
 
 /datum/ego_datum/weapon/pharaoh
-	item_path = /obj/item/ego_weapon/shield/pharaoh
+	item_path = /obj/item/ego_weapon/shield/parry/pharaoh
 	cost = 50
 	ego_tags = list(EGO_TAG_GUARD)
 

@@ -71,10 +71,12 @@
 			else
 				Command(pick(2,3))
 
-/mob/living/simple_animal/hostile/ordeal/steel_dusk/patrol_select()
+/mob/living/simple_animal/hostile/ordeal/steel_dusk/PatrolSelect()
+	. = ..()
+	if(!.)
+		return
 	if(prob(25))
 		say("Nothin here. Lets move on.")
-	..()
 
 /mob/living/simple_animal/hostile/ordeal/steel_dusk/Aggro()
 	. = ..()

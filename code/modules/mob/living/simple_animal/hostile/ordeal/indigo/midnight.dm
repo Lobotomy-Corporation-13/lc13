@@ -355,7 +355,13 @@ Some other overrides like AttackingTarget() are in the Combat section instead.
 	. = ..()
 	FindTarget() // Start eating corpses IMMEDIATELLY
 
-/mob/living/simple_animal/hostile/ordeal/indigo_midnight/patrol_select()
+/mob/living/simple_animal/hostile/ordeal/indigo_midnight/PatrolSelect()
+	. = ..()
+	if(!.)
+		//unsure if this patrol reset will cause the patrol cooldown even if there is not patrol path.
+		patrol_reset()
+
+/mob/living/simple_animal/hostile/ordeal/indigo_midnight/SelectPatrolLocation()
 	var/list/low_priority_turfs = list() // Oh, you're wounded, how nice.
 	var/list/medium_priority_turfs = list() // You're about to die and you are close? Splendid.
 	var/list/high_priority_turfs = list() // IS THAT A DEAD BODY?
@@ -391,12 +397,10 @@ Some other overrides like AttackingTarget() are in the Combat section instead.
 			var/turf/the_promised_land =  our_destination// Yes yes I know .len is bad but if I use length(patrol_path) here it runtimes. For some reason...?
 			if(istype(the_promised_land))
 				SEND_SIGNAL(src, COMSIG_PATROL_START, the_promised_land) // LET'S FUCKING GOOOOOOOOOOOOOO (this makes our leadership component tell our goons to come with us)
-			return TRUE
+			return target_turf
 	//unsure if this patrol reset will cause the patrol cooldown even if there is not patrol path.
 	patrol_reset()
 	return FALSE
-
-
 
 
 /*

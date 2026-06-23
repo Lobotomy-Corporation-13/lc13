@@ -339,7 +339,7 @@
 		death_timer = addtimer(CALLBACK(src, PROC_REF(kill_bird)), 60 SECONDS, TIMER_STOPPABLE)
 
 // Modified patrolling
-/mob/living/simple_animal/hostile/abnormality/punishing_bird/patrol_select()
+/mob/living/simple_animal/hostile/abnormality/punishing_bird/SelectPatrolLocation()
 	if(obj_damage > 0) // Already transformed
 		return ..()
 
@@ -358,8 +358,7 @@
 
 	var/turf/target_turf = get_closest_atom(/turf/open, target_turfs, src)
 	if(istype(target_turf))
-		patrol_path = get_path_to(src, target_turf, TYPE_PROC_REF(/turf, Distance_cardinal), 0, 200)
-		return
+		return target_turf
 	return ..()
 
 /* Work effects */

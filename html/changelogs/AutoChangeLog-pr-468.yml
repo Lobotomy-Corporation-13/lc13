@@ -1,0 +1,5 @@
+author: "Destrok171"
+delete-after: True
+changes:
+  - bugfix: "Wet floors will once again dry over time"
+  - bugfix: "Reagent dispensers will now expose their intended radius of turfs to their chems on destruction as opposed to only the epicenter"
