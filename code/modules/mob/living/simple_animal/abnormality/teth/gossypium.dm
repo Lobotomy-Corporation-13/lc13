@@ -1,4 +1,4 @@
-/mob/living/simple_animal/hostile/abnormality/gossypium //That fucking flower that I hate, coded by Xeros
+/mob/living/simple_animal/hostile/abnormality/gossypium //That fucking flower that I hate, coded by Xeros, design by Jackfrost7157 on the LC13 discord with minor alterations
 
 	name = "Drenched Gossypium"
 	desc = "A large, round cluster of white flowers, marred by patches of bloodstains. Its roots dangle beneath the cluster."
@@ -10,10 +10,11 @@
 	health = 900
 	damage_coeff = list(BRUTE = 1, RED_DAMAGE = 1, WHITE_DAMAGE = 0.8, BLACK_DAMAGE = 1.5, PALE_DAMAGE = 1.5)
 	ranged = TRUE
-	melee_damage_lower = 6
-	melee_damage_upper = 10
+	melee_damage_lower = 9
+	melee_damage_upper = 13
 	ranged_cooldown_time = 2
 	rapid_melee = 2
+	move_to_delay = 6
 	melee_damage_type = BLACK_DAMAGE
 	stat_attack = HARD_CRIT
 	attack_sound = 'sound/abnormalities/fragment/attack.ogg'
@@ -34,14 +35,20 @@
 	chem_type = /datum/reagent/abnormality/sin/lust
 
 	ego_list = list(
-		/datum/ego_datum/weapon/fragment,
-		/datum/ego_datum/armor/fragment,
+		/datum/ego_datum/weapon/white_gossypium,
+		/datum/ego_datum/armor/white_gossypium,
 	)
-	gift_type =  /datum/ego_gifts/fragments
+	gift_type =  /datum/ego_gifts/white_gossypium
 	abnormality_origin = ABNORMALITY_ORIGIN_LIMBUS
 
 	var/burst_cooldown
 	var/burst_cooldown_time = 10 SECONDS
+
+
+
+
+
+
 
 /mob/living/simple_animal/hostile/abnormality/gossypium/Initialize(mapload) //Code shamelessly yoinked from Nosferatu
 	. = ..()
@@ -87,7 +94,12 @@
 		return
 	if(burst_cooldown <= world.time && prob(50))
 		thornBurst()
-	return ..()
+		return ..()
+	new /obj/effect/decal/cleanable/blood get_turf(target)
+	if (istype(target, /mob/living))
+		var/mob/living/H = target
+		H.apply_lc_bleed(1)
+		return ..()
 
 /mob/living/simple_animal/hostile/abnormality/gossypium/AttackCondition(atom/attack_target)
 	. = TRUE
@@ -147,7 +159,7 @@
 	icon_state = "vines"
 	duration = 6
 	layer = RIPPLE_LAYER	//We want this HIGH. SUPER HIGH. We want it so that you can absolutely, guaranteed, see exactly what is about to hit you.
-	var/vine_damage = 15 //50 less Black Damage than Ebony
+	var/vine_damage = 20 //45 less BLACK Damage than Ebony
 	var/mob/living/source //who made this, anyway
 
 
@@ -173,6 +185,7 @@
 		var/turf/thrownat = get_ranged_target_turf(src, pick(GLOB.alldirs), 2)
 		L.throw_at(thrownat, 1, 1, spin = TRUE, force = MOVE_FORCE_OVERPOWERING, gentle = TRUE)
 		L.apply_lc_bleed(3)
+		new /obj/effect/decal/cleanable/blood get_turf(L)
 	for(var/obj/vehicle/sealed/mecha/M in hit) //also damage mechs.
 		for(var/O in M.occupants)
 			var/mob/living/occupant = O
