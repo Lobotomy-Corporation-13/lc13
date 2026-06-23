@@ -80,12 +80,12 @@
 
 /mob/living/simple_animal/hostile/abnormality/gossypium/NeutralEffect(mob/living/carbon/human/user, work_type, pe)
 	. = ..()
-	if(prob(60))
+	if(prob(50))
 		datum_reference.qliphoth_change(-1)
 
 /mob/living/simple_animal/hostile/abnormality/gossypium/FailureEffect(mob/living/carbon/human/user, work_type, pe)
 	. = ..()
-	if(prob(60))
+	if(prob(80))
 		datum_reference.qliphoth_change(-1)
 
 /mob/living/simple_animal/hostile/abnormality/gossypium/PostWorkEffect(mob/living/carbon/human/user, work_type)
