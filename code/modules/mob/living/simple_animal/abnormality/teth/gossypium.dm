@@ -230,7 +230,7 @@
 		for(var/O in M.occupants)
 			var/mob/living/occupant = O
 			to_chat(occupant, span_userdanger("Your [M.name] is struck by [src]!"))
-	Destroy(src)
+	qdel(src)
 
 /obj/effect/temp_visual/vine/Destroy()
 	source = null
