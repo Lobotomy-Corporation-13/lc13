@@ -15,7 +15,7 @@
 	ranged = TRUE
 	melee_damage_lower = 10
 	melee_damage_upper = 14
-	ranged_cooldown_time = 3
+	ranged_cooldown_time = 3 //wtf was Jackfrost thinking giving this thing 5 max
 	rapid_melee = 2.5
 	move_to_delay = 4.5
 	melee_damage_type = BLACK_DAMAGE
