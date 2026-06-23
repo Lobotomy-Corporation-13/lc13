@@ -45,6 +45,23 @@
 	gift_type =  /datum/ego_gifts/white_gossypium //"Terrible EGO Gift", look inside
 	abnormality_origin = ABNORMALITY_ORIGIN_LIMBUS// Mediocre at worst
 
+	observation_prompt = "A field of white, yet somehow dark flowers is ahead. <br>\
+		The sky is red, the air windy and bleak. <br>\
+		One giant flower flutters amidst the field. <br>\
+		It resembles a person waving from afar."
+	observation_choices = list(
+		"Approach" = list(TRUE, "As you head for the giant flower, <br>\
+			the smaller ones make way. <br>\
+			They close up their petals as you pass, <br> \
+			as if to bow down in respect. <br>\
+			Once you arrived at the end, <br>\
+			the giant flower drooped low to offer a present."),
+		"Ignore it" = list(FALSE, "You look away and continue on your path. <br>\
+			The massive flower begins shaking violently, perhaps in an attempt to catch your attention. <br>\
+			It appears a tad unnatural, a tad unsettling. <br>\
+			You steel yourself and escape the field of flowers."),
+	)
+
 	var/burst_cooldown
 	var/burst_cooldown_time = 10 SECONDS
 
