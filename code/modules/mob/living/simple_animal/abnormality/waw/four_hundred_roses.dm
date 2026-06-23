@@ -74,7 +74,7 @@
 		E.boss = src
 
 /mob/living/simple_animal/hostile/abnormality/roses_waw/Life()
-	..()
+	. = ..()
 	if(bloodfeast == 100)
 		BleedAll()
 
@@ -116,8 +116,12 @@
 /mob/living/simple_animal/hostile/mini_roses/CanAttack(atom/the_target)
 	return FALSE
 
-/mob/living/simple_animal/hostile/mini_roses/Life()
+/mob/living/simple_animal/hostile/mini_roses/Destroy()
+	boss = null
 	..()
+
+/mob/living/simple_animal/hostile/mini_roses/Life()
+	. = ..()
 	if(!boss)
 		return
 	boss.bloodfeast++
@@ -125,7 +129,7 @@
 
 //Meleeing the Roses gives you bleed
 /mob/living/simple_animal/hostile/mini_roses/attacked_by(obj/item/I, mob/living/user)
-	..()
+	. = ..()
 
 	if(!user)
 		return
