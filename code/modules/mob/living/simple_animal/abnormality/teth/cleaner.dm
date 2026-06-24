@@ -92,11 +92,11 @@
 
 		var/rand_dir = pick(NORTH, SOUTH, EAST, WEST)
 		var/atom/throw_target = get_edge_target_turf(H, rand_dir)
-		if(!H.anchored)
-			H.throw_at(throw_target, rand(6, 10), 18, H)
-
 		if(H.stat == DEAD)
 			H.gib(FALSE, FALSE, FALSE)
+			continue
+		if(!H.anchored)
+			H.throw_at(throw_target, rand(6, 10), 18, H)
 
 	//destroy the unclean
 	for(var/turf/tile in view(src, 2))
