@@ -91,7 +91,7 @@
 	var/brooch = user.ego_gift_list[BROOCH]
 	if((work_type != "Approach")) //No dropping qlip on Approach
 		if(istype(brooch, /datum/ego_gifts/white_gossypium))
-			if(prob(20))
+			if(prob(25))
 				datum_reference.qliphoth_change(1)
 		else
 			if(prob(80))
