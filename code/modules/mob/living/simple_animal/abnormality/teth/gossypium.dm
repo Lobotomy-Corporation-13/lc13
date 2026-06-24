@@ -85,8 +85,7 @@
 
 /mob/living/simple_animal/hostile/abnormality/gossypium/FailureEffect(mob/living/carbon/human/user, work_type, pe)
 	. = ..()
-	if(prob(80))
-		datum_reference.qliphoth_change(-1)
+	datum_reference.qliphoth_change(-1)
 
 /mob/living/simple_animal/hostile/abnormality/gossypium/PostWorkEffect(mob/living/carbon/human/user, work_type)
 	var/brooch = user.ego_gift_list[BROOCH]
