@@ -6142,6 +6142,25 @@
 	pixel_x = -9;
 	pixel_y = 4
 	},
+/obj/structure/table/reinforced,
+/obj/item/weldingtool/experimental{
+	pixel_x = -2;
+	pixel_y = 7
+	},
+/obj/item/stack/cable_coil{
+	amount = 30;
+	pixel_x = 6;
+	pixel_y = 7
+	},
+/obj/item/stack/cable_coil{
+	amount = 30;
+	pixel_x = 3;
+	pixel_y = -4
+	},
+/obj/item/crowbar/red{
+	pixel_x = -9;
+	pixel_y = -3
+	},
 /turf/open/floor/plasteel/white,
 /area/facility_hallway/safety)
 "sN" = (
