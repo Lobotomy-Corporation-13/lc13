@@ -13,10 +13,11 @@
 	//Let you pick your agent class
 	var/list/can_class = list(
 		//Only Agents specifically and Dept Captains get this.
-		//Might be good for Interns to not have this option
+		//Might be good for Interns to not have this option - Endermage, I think it would be good to let interns use it, as it would be pretty confusing on why everyone else is getting these cool skills.
 		//Captains belong to the "Command" Class
 			"Agent",
 			"Department Captain",
+			"Agent Intern",
 			)
 
 	if(!(user?.mind?.assigned_role in can_class))
