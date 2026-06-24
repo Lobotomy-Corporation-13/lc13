@@ -215,7 +215,7 @@
 	else
 		return ..()
 
-/mob/living/simple_animal/hostile/abnormality/punishing_bird/BreachEffect(mob/living/carbon/human/user, breach_type)
+/mob/living/simple_animal/hostile/abnormality/big_bird/BreachEffect(mob/living/carbon/human/user, breach_type)
 	omw_to_apoc = FALSE
 	docile_confinement = FALSE
 	. = ..()

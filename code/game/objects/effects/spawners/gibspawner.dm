@@ -5,14 +5,13 @@
 	var/virusProb = 20 //the chance for viruses to spread on the gibs
 	var/gib_mob_type  //generate a fake mob to transfer DNA from if we weren't passed a mob.
 	var/sound_to_play = 'sound/effects/blobattack.ogg'
-	var/sound_vol = 60
+	var/sound_vol = 10
 	var/list/gibtypes = list() //typepaths of the gib decals to spawn
 	var/list/gibamounts = list() //amount to spawn for each gib decal type we'll spawn.
 	var/list/gibdirections = list() //of lists of possible directions to spread each gib decal type towards.
 
 /obj/effect/gibspawner/Initialize(mapload, mob/living/source_mob, list/datum/disease/diseases)
 	. = ..()
-
 	if(gibtypes.len != gibamounts.len)
 		stack_trace("Gib list amount length mismatch!")
 		return

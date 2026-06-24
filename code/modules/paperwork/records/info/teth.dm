@@ -484,6 +484,20 @@
 		"When the work result was Normal, the Qliphoth Counter lowered with a normal probability.",
 		"When the work result was Bad, the Qliphoth Counter lowered.")
 
+// Lunar Physician
+/obj/item/paper/fluff/info/teth/portrait_certain
+	abno_type = /mob/living/simple_animal/hostile/abnormality/portrait_certain
+	abno_code = "O-02-209"
+	abno_info = list(
+		"O-02-209 will manifest a portrait with a frame resembling one of the four work types after each work.",
+		"If the work type does not correspond to its portrait from the prior work, the entity will reduce work success rate by half.",
+		"In simple terms, if the portrait is currently purple, the work after yours should be purple.",
+		"O-02-209 will occasionally surround itself with 5 portraits and gain resistance to all damage.",
+		"If the masters portrait is not found and destroyed before 6 seconds each of the undestroyed portraits will explode into white damage.",
+		"Testing shows that the blast from 3+ portraits is enough to insane a level 1 agent.",
+		"Each time O-02-209 loses 10% of its health it marks a nearby human as a interloper.",
+		"O-02-209 is more aggressive towards interlopers and deals greater damage to them.",
+	)
 
 // Lunar Physician
 /obj/item/paper/fluff/info/teth/lunar_rabbit
@@ -497,4 +511,18 @@
 		"One senior researcher believes that M-02-207 breaches possibly off the phases of the Moon. It is unknown how it assess this.",
 		"A second researcher believes that M-02-207 breaches based off the alignment of the planets.",
 		"A third researcher believes that M-02-207 can only breach when Mercury is in retrograde.",
+	)
+
+// Drenched Gossypium
+/obj/item/paper/fluff/info/teth/gossypium
+	abno_type = /mob/living/simple_animal/hostile/abnormality/gossypium
+	abno_code = "O-04-201"
+	abno_info = list(
+		"After completing a work on the abnormality without its EGO gift, the Qliphoth Counter lowered at a high probability.",
+		"When the work result was Neutral or Bad, the Qliphoth Counter lowered at a normal probability.",
+		"When the employee performed Approach work on the abnormality, they recieved its EGO gift.",
+		"When performing work on the abnormality while wearing the EGO gift, the Qliphoth Counter increased by 1 at a low probability.",
+		"When the abnormality breached, it began drinking the blood on the floor and the blood spilled from its attacks.",
+		"When the abnormality drank enough blood, it drove into a frenzy and started attacking faster in melee.",
+		"All of the abnormality's attacks inflicted wounds harsh enough to cause bleeding.",
 	)

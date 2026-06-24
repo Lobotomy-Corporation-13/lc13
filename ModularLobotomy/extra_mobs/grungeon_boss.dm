@@ -17,8 +17,8 @@
 	faction = list("green_ordeal")
 	gender = NEUTER
 	mob_biotypes = MOB_ROBOTIC
-	maxHealth = 25000
-	health = 25000
+	maxHealth = 20000
+	health = 20000
 	melee_damage_lower = 5
 	melee_damage_upper = 5
 	ranged = TRUE
@@ -30,6 +30,7 @@
 	damage_effect_scale = 1.25
 	rapid = 40
 	rapid_fire_delay = 0.4
+	ranged_cooldown_time = 15
 	projectilesound = 'sound/weapons/gun/smg/shot.ogg'
 	casingtype = /obj/item/ammo_casing/caseless/soda_mini
 	var/datum/beam/current_beam = null
@@ -185,6 +186,9 @@
 	gib()
 	for(var/mob/living/simple_animal/hostile/ordeal/grungeon_spawner/Z in range(15, src)) //Many thanks to Ender for helping me see the minor error in the code that prevented this from working.
 		Z.death()
+
+/mob/living/simple_animal/hostile/ordeal/grungeon_boss/spawn_gibs()
+	new /obj/effect/gibspawner/scrap_metal(drop_location(), src)
 
 /obj/structure/grungeon_bomb //bomb shamelessly copypasted from Ender's Resurgence Demoman
 	name = "Bomb of Oblivion"

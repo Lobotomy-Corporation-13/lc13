@@ -10,7 +10,7 @@
 	name = "disciplinary equipment console"
 	icon_screen = "disciplinary_cargo"
 	order_list = list(
-		//Gadgets - Technical Equipment, active, that the Disc team could use.
+		//Upgrades for the RO to upgrade cells with
 		new /datum/data/extraction_cargo("Barrier Grenade Kit ",		/obj/item/storage/box/barrier,										60, CAT_GADGET) = 1,
 		new /datum/data/extraction_cargo("Forcefield Projector ",		/obj/item/forcefield_projector,										150, CAT_GADGET) = 1,
 		new /datum/data/extraction_cargo("Tracking Implant Kit ", 		/obj/item/storage/box/minertracker,									150, CAT_GADGET) = 1,

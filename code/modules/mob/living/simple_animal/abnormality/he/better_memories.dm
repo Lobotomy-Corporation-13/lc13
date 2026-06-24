@@ -208,11 +208,11 @@
 	if(patrol_path.len)
 		if(!H.is_working)
 			return FALSE
-		if(target_memory[the_target] <= 100)
+		if(target_memory[AddIdentifier(H)] <= 100)
 			return FALSE
 	if(H.has_status_effect(MEMORY_DEBUFF))
 		//You have inflicted 100 damage to us. Get jabbed.
-		if(target_memory[the_target] <= 100)
+		if(target_memory[AddIdentifier(H)] <= 100)
 			return FALSE
 
 /mob/living/simple_animal/hostile/better_memories_minion/AttackingTarget(atom/attacked_target)
@@ -251,7 +251,7 @@
 	retreat_distance = 4
 	minimum_distance = 4
 
-/mob/living/simple_animal/hostile/better_memories_minion/patrol_select()
+/mob/living/simple_animal/hostile/better_memories_minion/SelectPatrolLocation()
 	//Due to some weird thing the values in hunt_target become null so this empty's the list out before it gets too long.
 	if(hunt_targets.len > 5)
 		hunt_targets.Cut()
@@ -262,8 +262,7 @@
 		hunt_targets += target_turf
 
 	if(istype(target_turf))
-		patrol_path = get_path_to(src, target_turf, /turf/proc/Distance_cardinal, 0, 200)
-		return
+		return target_turf
 	return ..()
 
 /mob/living/simple_animal/hostile/better_memories_minion/patrol_reset()
@@ -296,10 +295,12 @@
 			if(!P.firer)
 				if(target_memory["nobuddy"] > 100)
 					patrol_reset()
-			//If our damage value for that person exceeds this number then we consider targeting them.
-			if(target_memory[P.firer] > 100)
-				FindTarget(list(P.firer), 1)
-		return second_on_hit_state
+			if(isliving(P.firer))
+				var/mob/living/L = P.firer
+				//If our damage value for that person exceeds this number then we consider targeting them.
+				if(target_memory[AddIdentifier(L)] > 100)
+					FindTarget(list(L), 1)
+			return second_on_hit_state
 	return ..()
 
 /mob/living/simple_animal/hostile/better_memories_minion/attacked_by(obj/item/I, mob/living/L)

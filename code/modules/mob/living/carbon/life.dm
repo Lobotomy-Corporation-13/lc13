@@ -36,6 +36,8 @@
 
 	check_cremation()
 
+	natural_bodytemperature_stabilization()
+
 	//Updates the number of stored chemicals for powers
 	handle_changeling()
 

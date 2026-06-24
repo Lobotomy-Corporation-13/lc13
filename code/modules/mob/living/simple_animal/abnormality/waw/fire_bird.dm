@@ -22,10 +22,13 @@
 		ABNORMALITY_WORK_ATTACHMENT = list(45, 45, 40, 40, 50),
 		ABNORMALITY_WORK_REPRESSION = list(45, 45, 40, 40, 50),
 	)
+	good_droprate = 100
+	neutral_droprate = 30
 	work_damage_amount = 10
 	work_damage_type = RED_DAMAGE
 	chem_type = /datum/reagent/abnormality/sin/lust
 	good_hater = TRUE
+
 	faction = list("hostile", "neutral")
 	can_breach = TRUE
 	start_qliphoth = 3
@@ -57,10 +60,12 @@
 
 	var/pulse_cooldown
 	var/pulse_cooldown_time = 1 SECONDS
-	var/pulse_damage = 6
+	var/pulse_damage = 12
 	var/dash_cooldown
 	var/dash_cooldown_time = 5 SECONDS
 	var/obj/effect/proc_holder/ability/aimed/dash/firebird/ourdash
+
+	var/lifetime = 3 MINUTES
 
 //Initialize
 /mob/living/simple_animal/hostile/abnormality/fire_bird/Initialize()
@@ -79,15 +84,6 @@
 /mob/living/simple_animal/hostile/abnormality/fire_bird/FailureEffect(mob/living/carbon/human/user, work_type, pe)
 	. = ..()
 	datum_reference.qliphoth_change(1)
-
-/mob/living/simple_animal/hostile/abnormality/fire_bird/NeutralEffect(mob/living/carbon/human/user, work_type, pe)
-	. = ..()
-	if(prob(30))
-		datum_reference.qliphoth_change(-1)
-
-/mob/living/simple_animal/hostile/abnormality/fire_bird/SuccessEffect(mob/living/carbon/human/user, work_type, pe)
-	. = ..()
-	datum_reference.qliphoth_change(-1)
 
 /mob/living/simple_animal/hostile/abnormality/fire_bird/OnQliphothChange(mob/living/carbon/human/user)
 	. = ..()
@@ -131,7 +127,7 @@
 	if(IsCombatMap())
 		loot = list()
 		return
-	addtimer(CALLBACK(src, PROC_REF(KillOtherBird)), 90 SECONDS)
+	addtimer(CALLBACK(src, PROC_REF(KillOtherBird)), lifetime)
 
 /mob/living/simple_animal/hostile/abnormality/fire_bird/Life()
 	. = ..()
@@ -175,6 +171,16 @@
 		GiveTarget(carbon_firer)
 		carbon_firer.apply_status_effect(STATUS_EFFECT_BLINDED)
 	retaliatedash()
+
+//The specific fire
+
+//The special fire type
+/obj/effect/turf_fire/firebird
+	fire_damage = 8
+	burn_time = 3 SECONDS
+
+
+
 
 //Containment object
 /obj/structure/firetree

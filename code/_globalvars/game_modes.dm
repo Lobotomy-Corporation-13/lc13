@@ -14,3 +14,12 @@ GLOBAL_DATUM(cult_narsie, /obj/narsie)
 
 ///We want reality_smash_tracker to exist only once and be accesable from anywhere.
 GLOBAL_DATUM_INIT(reality_smash_track, /datum/reality_smash_tracker, new)
+
+GLOBAL_DATUM_INIT(map_config_global, /datum/map_config, HACK_load_map_config())
+
+/proc/HACK_load_map_config()
+#ifdef FORCE_MAP
+	. = load_map_config(FORCE_MAP)
+#else
+	. = load_map_config(error_if_missing = FALSE)
+#endif

@@ -17,6 +17,7 @@
 	var/map_name = "Facility A-098 ALPHA"
 	var/map_path = "map_files/Alpha"
 	var/map_file = "alphacorp.dmm"
+	var/maptype = "standard"
 
 	var/traits = null
 	var/space_ruin_levels = 0
@@ -34,7 +35,7 @@
 
 	/// Dictionary of job sub-typepath to template changes dictionary
 	var/job_changes = list()
-	
+
 	/// If this map has multiple submaps to choose from
 	var/has_submaps = FALSE
 	/// List of available submaps if pick_one was set
@@ -89,6 +90,8 @@
 	map_name = json["map_name"]
 	CHECK_EXISTS("map_path")
 	map_path = json["map_path"]
+	CHECK_EXISTS("maptype")
+	maptype = json["maptype"]
 
 	map_file = json["map_file"]
 	// "map_file": "MetaStation.dmm"
@@ -111,7 +114,7 @@
 		var/list/L = map_file
 		available_submaps = L.Copy()
 		// Don't pick yet - will be decided by vote
-		
+
 		// Load custom display names if provided
 		if(json["submap_names"] && islist(json["submap_names"]))
 			var/list/names = json["submap_names"]
@@ -157,7 +160,7 @@
 		minetype = json["minetype"]
 
 	if("faction" in json)
-		SSmapping.faction = json["faction"]
+		faction = json["faction"]
 
 	allow_custom_shuttles = json["allow_custom_shuttles"] != FALSE
 
@@ -168,7 +171,7 @@
 		job_changes = json["job_changes"]
 
 	if("maptype" in json)
-		SSmaptype.maptype = json["maptype"]
+		maptype = json["maptype"]
 
 	defaulted = FALSE
 	return TRUE
@@ -195,20 +198,20 @@
 			"space_empty_levels" = space_empty_levels,
 			"minetype" = minetype
 		)
-		
+
 		if(faction)
 			json_value["faction"] = faction
 		if(job_changes && length(job_changes))
 			json_value["job_changes"] = job_changes
-		if(SSmaptype?.maptype)
-			json_value["maptype"] = SSmaptype.maptype
-			
+		if(maptype)
+			json_value["maptype"] = maptype
+
 		// Remove old file and write new one
 		if(fexists("data/next_map.json"))
 			fdel("data/next_map.json")
 		text2file(json_encode(json_value), "data/next_map.json")
 		return TRUE
-		
+
 	// Default behavior - just copy the file
 	return config_filename == "data/next_map.json" || fcopy(config_filename, "data/next_map.json")
 

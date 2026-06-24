@@ -676,7 +676,8 @@
 
 	if(P.stacks < stacks)
 		qdel(P)
-		src.apply_status_effect(/datum/status_effect/stacking/protection, stacks)
+		if(stacks != 0)
+			src.apply_status_effect(/datum/status_effect/stacking/protection, stacks)
 		return
 
 //Specific Damage Type Protections

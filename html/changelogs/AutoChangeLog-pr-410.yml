@@ -1,4 +1,0 @@
-author: "Destrok171"
-delete-after: True
-changes:
-  - bugfix: "Perversion no longer able to wake up Abnormalities in containment, or inflict its statuses on them"

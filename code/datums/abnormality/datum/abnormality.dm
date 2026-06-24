@@ -237,6 +237,8 @@
 			qliphoth_change(-1, user)
 	if(!console?.recorded && !console?.tutorial) //only training rabbit should not train stats
 		return
+	if(console?.mechanical_upgrades["free work"])	//No stats for free works
+		return
 	var/attribute_type = "N/A"
 	var/attribute_given = 0
 	if(pe > 0) // Work did not fail

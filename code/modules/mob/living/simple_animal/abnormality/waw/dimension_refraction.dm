@@ -21,7 +21,7 @@
 	threat_level = WAW_LEVEL
 	fear_level = 0
 	start_qliphoth = 2
-	move_to_delay = 6
+	move_to_delay = 3
 
 	work_chances = list(
 		ABNORMALITY_WORK_INSTINCT = list(0, 0, 40, 40, 40),
@@ -29,6 +29,7 @@
 		ABNORMALITY_WORK_ATTACHMENT = list(0, 0, 40, 40, 40),
 		ABNORMALITY_WORK_REPRESSION = list(0, 0, 40, 40, 40),
 	)
+	bad_droprate = 100
 	work_damage_amount = 10
 	work_damage_type = WHITE_DAMAGE
 	chem_type = /datum/reagent/abnormality/sin/sloth
@@ -50,14 +51,39 @@
 	)
 
 	var/cooldown_time = 3
-	var/aoe_damage = 12
+	var/aoe_damage = 20
 
 /mob/living/simple_animal/hostile/abnormality/dimensional_refraction/proc/Melter()
 	for(var/mob/living/L in livinginview(1, src))
 		if(faction_check_mob(L))
 			continue
+
 		L.deal_damage(aoe_damage, RED_DAMAGE, flags = (DAMAGE_UNTRACKABLE | DAMAGE_FORCED), attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 		new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(L), pick(GLOB.alldirs))
+
+
+		if(!ishuman(L))
+			continue
+		var/mob/living/carbon/human/C = L
+
+		//Give them white fragile
+		L.apply_lc_white_fragile(2)
+
+		//Remove Radio if HP under 50%
+		if(L.health<=L.maxHealth*0.5)
+			for(var/obj/item/radio/R in C.get_all_gear())
+				R.emp_act(EMP_LIGHT)
+				to_chat(C,span_danger("You hear your radio crackle!!"))
+
+
+		//Dismember if under 10% HP
+		if(L.health<=L.maxHealth*0.1)
+			//Lop off a random arm
+			new /obj/effect/temp_visual/smash_effect(get_turf(C))
+			var/obj/item/bodypart/arm = pick(C.get_bodypart(BODY_ZONE_R_ARM), C.get_bodypart(BODY_ZONE_L_ARM), C.get_bodypart(BODY_ZONE_L_LEG), C.get_bodypart(BODY_ZONE_L_LEG))
+
+			arm?.dismember() //not all limbs can be removed.
+
 	addtimer(CALLBACK(src, PROC_REF(Melter)), cooldown_time)
 
 
@@ -77,8 +103,3 @@
 	alpha = 30
 	addtimer(CALLBACK(src, PROC_REF(Melter)), cooldown_time)
 
-
-/mob/living/simple_animal/hostile/abnormality/dimensional_refraction/FailureEffect(mob/living/carbon/human/user, work_type, pe)
-	. = ..()
-	datum_reference.qliphoth_change(-1)
-	return

@@ -42,7 +42,7 @@
 	desc = "A compact photocopier that will print any paper it is used on. \
 	Must be fed replacement paper once in a while."
 	icon = 'ModularLobotomy/_Lobotomyicons/teguitems.dmi'
-	icon_state = "gadget3"
+	icon_state = "records_printer"
 	var/paperstock = 1
 	w_class = WEIGHT_CLASS_SMALL
 	slot_flags = ITEM_SLOT_BELT | ITEM_SLOT_POCKETS
@@ -104,7 +104,7 @@
 		a abnormality and a agent to see workrate chances.\
 		Needs to be recharged at a printer."
 	icon = 'ModularLobotomy/_Lobotomyicons/teguitems.dmi'
-	icon_state = "gadget3"
+	icon_state = "work_chance"
 	w_class = WEIGHT_CLASS_SMALL
 	slot_flags = ITEM_SLOT_BELT | ITEM_SLOT_POCKETS
 	var/mob/living/simple_animal/hostile/abnormality/target_abno
@@ -177,7 +177,7 @@
 	desc = "A portable scanner for returning the workrate chance per level\
 	 for the abnormality it is used on."
 	icon = 'ModularLobotomy/_Lobotomyicons/teguitems.dmi'
-	icon_state = "gadget3"
+	icon_state = "work_chance"
 	w_class = WEIGHT_CLASS_SMALL
 	slot_flags = ITEM_SLOT_BELT | ITEM_SLOT_POCKETS
 
@@ -218,7 +218,7 @@
 	desc = "A modified reagent scanner that estimates how long a reagent will last in a regular human body. \
 		Its uncommon to see one of these outside of well funded laboratory. Use this on a container."
 	icon = 'ModularLobotomy/_Lobotomyicons/teguitems.dmi'
-	icon_state = "gadget3"
+	icon_state = "dosage"
 
 /obj/item/dosage_est/afterattack(atom/target, mob/user, proximity_flag)
 	. = ..()
@@ -345,6 +345,7 @@
 	var/check1d
 	var/check1e
 	var/deep_scan_log
+	var/use_time = 2 SECONDS
 
 /obj/item/deepscanner/examine(mob/living/M)
 	. = ..()
@@ -365,7 +366,7 @@
 		return
 	user.visible_message(span_notice("[user] takes a tool out of [src] and begins scanning [target]."), span_notice("You begin scanning [target]."))
 	playsound(get_turf(target), 'sound/misc/box_deploy.ogg', 5, 0, 3)
-	if(!do_after(user, 2 SECONDS, target, IGNORE_USER_LOC_CHANGE | IGNORE_TARGET_LOC_CHANGE, TRUE, CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(can_see), user, target, 7)))
+	if(!do_after(user, use_time, target, IGNORE_USER_LOC_CHANGE | IGNORE_TARGET_LOC_CHANGE, TRUE, CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(can_see), user, target, 7)))
 		return
 	check1e = FALSE
 	var/should_apply_debuff = FALSE
@@ -425,6 +426,23 @@
 			if(!mon.HasDamageMod(/datum/dc_change/scanned))
 				mon.AddModifier(/datum/dc_change/scanned)
 				to_chat(user, span_nicegreen("[mon]'s weakness was analyzed!"))
+
+//A faster version
+/obj/item/deepscanner/advanced //RO update
+	name = "deep scan pro"
+	desc = "A contraption of various tools capable of scanning the interior form of an entity.\n\
+			Scanning nonhuman entities will make it 10% weaker to all damage types.\n\
+			Only usable by the Records Officer."
+	icon = 'ModularLobotomy/_Lobotomyicons/teguitems.dmi'
+	icon_state = "ro_scan"
+	use_time = 2
+
+
+/obj/item/deepscanner/advanced/afterattack(mob/living/target, mob/user, proximity_flag, click_parameters)
+	if(istype(user) && !(user?.mind?.assigned_role in list("Records Officer")))
+		to_chat(user, span_warning("You are not trained to use this!"))
+		return
+	. = ..()
 
 //General Invitation
 /obj/item/invitation //intended for ordeals

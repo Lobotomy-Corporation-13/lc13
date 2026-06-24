@@ -145,7 +145,7 @@
 		return
 	if(nihil_present)
 		return
-	if(!can_act || teleport_cooldown > world.time || (status_flags & GODMODE))
+	if(!can_act || teleport_cooldown > world.time || (status_flags & GODMODE) || stat == DEAD)
 		return
 	teleport_cooldown = world.time + 4.9 SECONDS
 	//set can_act, animate and call the proc that actually teleports.
@@ -158,7 +158,7 @@
 	animate(src, alpha = 255, time = 5)
 	forceMove(T)
 	can_act = TRUE
-	if(!client)
+	if(!client && !QDELETED(src) && stat != DEAD)
 		addtimer(CALLBACK(src, PROC_REF(startTeleport)), 5 SECONDS)
 
 /mob/living/simple_animal/hostile/abnormality/greed_king/proc/charge_check()
@@ -183,7 +183,7 @@
 	return
 
 /mob/living/simple_animal/hostile/abnormality/greed_king/proc/endCharge()
-	if(!client)
+	if(!client && !QDELETED(src) && stat != DEAD)
 		startTeleport()
 
 /* Work effects */

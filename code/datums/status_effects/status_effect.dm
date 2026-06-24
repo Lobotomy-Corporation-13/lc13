@@ -121,7 +121,7 @@ GLOBAL_LIST_EMPTY(status_display_numbers)
 		remove_image_from_clients(icon_overlay)
 		GLOB.status_display_icons -= icon_overlay
 		icon_overlay = null
-	..()
+	return ..()
 
 	//This is the system for sorting the buff/debuff icons for display status effects.-IP
 	//We can change this into a optional proc for normal status effects but display subtype is easier to find.

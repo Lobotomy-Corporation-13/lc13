@@ -393,6 +393,9 @@
 
 /obj/item/ego_weapon/ranged/proc/rounds_reload(mob/user, is_reloading_alt_mag = FALSE)
 	is_reloading = TRUE
+	//If it's only one mag type, you MUST load it.
+	if(alternate_reload_type == RANGEDEGO_ALTERNATEFIRE_RELOADTYPE_EMPTY_MAG)
+		is_reloading_alt_mag = FALSE
 
 	if(((!is_reloading_alt_mag) && (shotsleft == initial(shotsleft))) || ((is_reloading_alt_mag) && (alternate_shotsleft == initial(alternate_shotsleft))))
 		is_reloading = FALSE

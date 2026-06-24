@@ -1606,3 +1606,25 @@ GLOBAL_DATUM_INIT(dview_mob, /mob/dview, new)
 	if(W || D || V || G)
 		return FALSE
 	return TRUE
+
+/*
+* A way of recognizing entities without
+* having to keep their refrences.
+*/
+/proc/AddIdentifier(atom/whazzit)
+	if(isturf(whazzit))
+		var/turf/U = whazzit
+		return "[U.x],[U.y],[U.z]"
+	if(isliving(whazzit))
+		var/mob/living/dude = whazzit
+		return dude.tag
+	if(isvehicle(whazzit))
+		var/obj/vehicle/ride = whazzit
+		var/following_ident = "[ride.x],[ride.y],[ride.z]"
+		var/driver = ride.return_drivers()
+		if(isliving(driver))
+			var/mob/living/guy = driver
+			following_ident = "[guy.tag]"
+
+		//Only identify by the driver
+		return "[ride]:[following_ident]"

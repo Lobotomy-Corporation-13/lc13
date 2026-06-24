@@ -450,6 +450,9 @@
 			call(src, special_attack)()
 	return
 
+/mob/living/simple_animal/hostile/abnormality/distortedform/proc/endCharge()
+	ScytheAttack()
+
 /mob/living/simple_animal/hostile/abnormality/distortedform/proc/ChangeForm(form)
 	new /obj/effect/temp_visual/distortedform_shift(get_turf(src))
 	TurnNormal() //reset offsets/icon/resistances
@@ -1983,37 +1986,38 @@
 
 /obj/effect/temp_visual/remnant_of_time/proc/FormulateExplode(dir_to_target)
 	. = list()
-	var/turf/source_turf = get_turf(src)
-	var/list/middle_line = list()
-	var/list/directional_list  = list(NORTH,SOUTH,EAST,WEST)
 	//Default is North/South
-	var/right_dir = EAST
-	var/left_dir = WEST
-	if(dir_to_target ==  EAST || dir_to_target == WEST)
-		right_dir =  NORTH
-		left_dir = SOUTH
+	//We need 2 numbers. The lower left and the upper right of the square.
+	//Lower Left
+	var/offsetx1 = 0
+	var/offsety1 = 0
+	//Upper Right
+	var/offsetx2 = 0
+	var/offsety2 = 0
+	//Give me where theoretically the center of the turf we would be hitting be.
+	switch(dir_to_target)
+		if(EAST)
+			offsetx1 = 1
+			offsety1 = -slash_width
+			offsetx2 = slash_length
+			offsety2 = slash_width
+		if(WEST)
+			offsetx1 = -slash_length
+			offsety1 = -slash_width
+			offsetx2 = -1
+			offsety2 = slash_width
+		if(SOUTH)
+			offsetx1 = -slash_width
+			offsety1 = -slash_length
+			offsetx2 = slash_width
+			offsety2 = -1
+		if(NORTH)
+			offsetx1 = -slash_width
+			offsety1 = 1
+			offsetx2 = slash_width
+			offsety2 = slash_length
+		else
+			return list()
 
-	if(dir_to_target in directional_list)
-		middle_line = getline(source_turf, get_ranged_target_turf(source_turf, NORTH, slash_length))
-		for(var/turf/T in middle_line)
-			if(T.density)
-				break
-			for(var/turf/Y in getline(T, get_ranged_target_turf(T, right_dir, slash_width)))
-				if (Y.density)
-					break
-				if (Y in .)
-					continue
-				. += Y
-			for(var/turf/U in getline(T, get_ranged_target_turf(T, left_dir, slash_width)))
-				if (U.density)
-					break
-				if (U in .)
-					continue
-				. += U
-	else
-		for(var/turf/T in view(1, src))
-			if (T.density)
-				break
-			if (T in .)
-				continue
-			. |= T
+	//Give me ONLY the turfs between these cords
+	return block(x+offsetx1,y+offsety1,z,x+offsetx2,y+offsety2)

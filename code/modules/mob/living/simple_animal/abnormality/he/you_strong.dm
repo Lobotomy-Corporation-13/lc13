@@ -284,9 +284,12 @@
 	var/gear_cooldown = 1 MINUTES
 	//tracks speed change even if altered by other speed modifiers.
 	var/gear_speed = 0
+	var/spinning
 
 /mob/living/simple_animal/hostile/grown_strong/Move(atom/newloc, dir, step_x, step_y)
 	if(status_flags & GODMODE)
+		return FALSE
+	if(spinning)
 		return FALSE
 	return ..()
 
@@ -306,6 +309,52 @@
 	//CRANK UP THE SPEED.
 	ChangeMoveToDelayBy(-gear_speed)
 	rapid_melee = gear > 7 ? 2 : 1
+
+//Attacks
+/mob/living/simple_animal/hostile/grown_strong/AttackingTarget()
+	. = ..()
+	if(prob(10))
+		SpinAttack()	//Give them some love
+
+/mob/living/simple_animal/hostile/grown_strong/proc/SpinAttack()
+	spinning = TRUE
+	playsound(get_turf(src), 'sound/weapons/ego/strong_charged1.ogg', 40)
+	manual_emote("makes a whirring sound...")
+	SLEEP_CHECK_DEATH(15)
+
+	//Do the thing!
+	spin(15, 2)
+
+	//Should just make it move forwards 5 times.
+	var/go_sauce = dir
+	var/turf/next_turf = get_step(src, go_sauce)
+	for(var/i = 1 to 5)
+		next_turf = get_step(src, go_sauce)
+		if(!next_turf)
+			break
+		if(next_turf.density)
+			break
+		forceMove(next_turf)
+		ymbs_aoe(1)
+		SLEEP_CHECK_DEATH(3)
+
+	SLEEP_CHECK_DEATH(10)
+	spinning = FALSE
+
+//Generic AOE code. We use this twice
+/mob/living/simple_animal/hostile/grown_strong/proc/ymbs_aoe(aoe_range)
+	playsound(get_turf(src), 'sound/abnormalities/mountain/slam.ogg', 40, 1)
+	for(var/turf/T in range(aoe_range, src))
+		new /obj/effect/temp_visual/small_smoke/halfsecond(T)
+		for(var/mob/living/L in T)
+			if(L==src)
+				continue
+			var/throw_dir = get_dir(src, L)
+			if(!throw_dir)
+				throw_dir = pick(NORTH, SOUTH, EAST, WEST) // random dir if on same tile
+			var/throw_target = get_edge_target_turf(L, throw_dir)
+			L.throw_at(throw_target, 4, 2)
+			L.deal_damage(melee_damage_upper, RED_DAMAGE)
 
 /mob/living/simple_animal/hostile/grown_strong/Life()
 	. = ..()
@@ -327,6 +376,7 @@
 
 /mob/living/simple_animal/hostile/grown_strong/proc/Undie()
 	manual_emote("shudders to a hault, insides whirling...")
+	playsound(src, 'sound/weapons/ego/strong_uncharged.ogg', 20)
 	src.maxHealth = max(maxHealth - 100, 200)
 	src.adjustBruteLoss(-9999)
 	status_flags |= GODMODE
@@ -335,6 +385,8 @@
 	src.adjustBruteLoss(-9999)
 	gear = clamp(gear + 2, 1, 10)
 	manual_emote("shudders back to life!")
+	//People love to bodyblock you, throw them away.
+	ymbs_aoe(2)
 	UpdateGear()
 
 ////// Parts! //////

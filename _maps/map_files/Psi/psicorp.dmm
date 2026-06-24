@@ -99,6 +99,19 @@
 	},
 /turf/open/floor/plasteel/dark,
 /area/facility_hallway/west)
+"aH" = (
+/obj/structure/table/reinforced,
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 9
+	},
+/turf/open/floor/mineral/titanium/tiled,
+/area/department_main/extraction)
+"aJ" = (
+/obj/effect/turf_decal/siding/wideplating/dark/corner{
+	dir = 1
+	},
+/turf/open/floor/mineral/titanium/tiled,
+/area/department_main/extraction)
 "aM" = (
 /obj/machinery/status_display/evac{
 	pixel_y = 32
@@ -454,6 +467,18 @@
 	},
 /turf/open/floor/carpet/orange,
 /area/department_main/control)
+"cU" = (
+/obj/effect/turf_decal/siding/wideplating/dark/corner{
+	dir = 8
+	},
+/turf/open/floor/mineral/titanium/tiled,
+/area/department_main/extraction)
+"cV" = (
+/obj/machinery/door/airlock/highsecurity{
+	name = "Refinery Office"
+	},
+/turf/open/floor/facility/dark,
+/area/department_main/extraction)
 "cW" = (
 /obj/effect/turf_decal/tile/purple,
 /obj/effect/turf_decal/tile/purple{
@@ -1164,6 +1189,16 @@
 	},
 /turf/open/floor/plasteel/dark,
 /area/facility_hallway/welfare)
+"hg" = (
+/obj/structure/table/reinforced,
+/obj/machinery/light/small{
+	dir = 8
+	},
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 8
+	},
+/turf/open/floor/mineral/titanium/tiled,
+/area/department_main/extraction)
 "hh" = (
 /obj/effect/turf_decal/tile/blue{
 	color = "#3234B9";
@@ -1422,6 +1457,12 @@
 /obj/effect/turf_decal/bot_red,
 /turf/open/floor/holofloor/white,
 /area/facility_hallway/east)
+"il" = (
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 4
+	},
+/turf/open/floor/mineral/titanium/tiled,
+/area/department_main/extraction)
 "iz" = (
 /obj/effect/turf_decal/tile/bar{
 	dir = 4
@@ -2508,6 +2549,24 @@
 	},
 /turf/open/floor/plasteel/dark,
 /area/facility_hallway/welfare)
+"nH" = (
+/obj/structure/rack,
+/obj/effect/turf_decal/siding/wideplating/dark,
+/turf/open/floor/mineral/titanium/tiled,
+/area/department_main/extraction)
+"nJ" = (
+/obj/structure/rack,
+/obj/machinery/light/small{
+	dir = 4
+	},
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 6
+	},
+/obj/machinery/newscaster{
+	pixel_y = -32
+	},
+/turf/open/floor/mineral/titanium/tiled,
+/area/department_main/extraction)
 "nQ" = (
 /obj/effect/turf_decal/siding/yellow{
 	dir = 9
@@ -3484,6 +3543,13 @@
 	},
 /turf/open/floor/plasteel/dark,
 /area/department_main/control)
+"sU" = (
+/obj/structure/grid_crafting_station,
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 10
+	},
+/turf/open/floor/mineral/titanium/tiled,
+/area/department_main/extraction)
 "sV" = (
 /obj/effect/turf_decal/tile/yellow{
 	dir = 8
@@ -3789,6 +3855,12 @@
 	},
 /turf/open/floor/holofloor/white,
 /area/facility_hallway/discipline)
+"uy" = (
+/obj/machinery/light/cold/no_nightlight{
+	dir = 1
+	},
+/turf/open/floor/facility/dark,
+/area/department_main/extraction)
 "uz" = (
 /obj/effect/turf_decal/tile/blue{
 	color = "#3234B9";
@@ -4452,6 +4524,15 @@
 	},
 /turf/open/floor/plasteel/dark,
 /area/department_main/control)
+"yw" = (
+/obj/effect/turf_decal/siding/wideplating/dark/end{
+	dir = 4
+	},
+/obj/machinery/door/airlock/highsecurity{
+	name = "Refinery Office"
+	},
+/turf/open/floor/mineral/titanium/tiled,
+/area/department_main/extraction)
 "yy" = (
 /obj/structure/filingcabinet/wawinfo{
 	pixel_x = -9
@@ -5980,6 +6061,12 @@
 	},
 /turf/open/floor/carpet/stellar,
 /area/department_main/command)
+"EU" = (
+/obj/structure/chair/office{
+	dir = 8
+	},
+/turf/open/floor/mineral/titanium/tiled,
+/area/department_main/extraction)
 "EX" = (
 /obj/effect/turf_decal/tile/bar{
 	dir = 1
@@ -6014,6 +6101,19 @@
 	},
 /turf/open/floor/plasteel/sepia,
 /area/facility_hallway/command)
+"Fk" = (
+/obj/structure/rack,
+/obj/machinery/light/small{
+	dir = 4
+	},
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 5
+	},
+/obj/structure/sign/ordealmonitor{
+	pixel_y = 32
+	},
+/turf/open/floor/mineral/titanium/tiled,
+/area/department_main/extraction)
 "Fm" = (
 /obj/machinery/cryopod,
 /obj/machinery/light/cold/no_nightlight{
@@ -6343,6 +6443,9 @@
 /obj/machinery/light/cold/no_nightlight,
 /turf/open/floor/carpet/royalblue,
 /area/department_main/command)
+"Hq" = (
+/turf/open/floor/mineral/titanium/tiled,
+/area/department_main/extraction)
 "Hu" = (
 /obj/effect/turf_decal/tile/yellow{
 	dir = 1
@@ -7150,6 +7253,13 @@
 	},
 /turf/open/floor/holofloor/white,
 /area/facility_hallway/discipline)
+"Mz" = (
+/obj/structure/rack,
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 1
+	},
+/turf/open/floor/mineral/titanium/tiled,
+/area/department_main/extraction)
 "MA" = (
 /obj/effect/landmark/latejoin,
 /turf/open/floor/carpet/cyan,
@@ -7752,6 +7862,13 @@
 	},
 /turf/open/floor/plasteel/sepia,
 /area/department_main/command)
+"Qi" = (
+/obj/effect/turf_decal/siding/wideplating/dark/corner{
+	dir = 4
+	},
+/obj/effect/turf_decal/siding/wideplating/dark/corner,
+/turf/open/floor/mineral/titanium/tiled,
+/area/department_main/extraction)
 "Qj" = (
 /obj/effect/turf_decal/tile/red{
 	dir = 1
@@ -7791,6 +7908,13 @@
 	dir = 1
 	},
 /turf/open/floor/plasteel/dark,
+/area/department_main/extraction)
+"Qu" = (
+/obj/structure/template_vendor,
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 9
+	},
+/turf/open/floor/mineral/titanium/tiled,
 /area/department_main/extraction)
 "Qv" = (
 /obj/effect/turf_decal/stripes/line,
@@ -7832,6 +7956,13 @@
 /obj/machinery/door/window/southright,
 /turf/open/floor/carpet/red,
 /area/department_main/command)
+"QE" = (
+/obj/structure/table/reinforced,
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 10
+	},
+/turf/open/floor/mineral/titanium/tiled,
+/area/department_main/extraction)
 "QJ" = (
 /obj/effect/turf_decal/tile/yellow,
 /obj/effect/turf_decal/tile/yellow{
@@ -25506,11 +25637,11 @@ ml
 ml
 ml
 ml
-ml
-ml
-ml
-ml
-ml
+jc
+jc
+jc
+jc
+jc
 ml
 ml
 ml
@@ -25732,13 +25863,13 @@ ml
 ml
 ml
 ml
-ml
-ml
-ml
-ml
-ml
-ml
-ml
+jc
+jc
+Qu
+hg
+sU
+jc
+jc
 ml
 ml
 ml
@@ -25959,13 +26090,13 @@ ml
 ml
 ml
 ml
-ml
-ml
-ml
-ml
-ml
-ml
-ml
+jc
+aH
+aJ
+EU
+cU
+QE
+jc
 ml
 ml
 jc
@@ -26186,13 +26317,13 @@ ml
 ml
 ml
 ml
-ml
-ml
-ml
-ml
-ml
-ml
-ml
+jc
+Mz
+Hq
+Hq
+Hq
+nH
+jc
 ml
 jc
 od
@@ -26413,12 +26544,12 @@ ml
 ml
 ml
 ml
-ml
-ml
-ml
-ml
-ml
-ml
+jc
+Fk
+il
+Qi
+il
+nJ
 jc
 jc
 od
@@ -26640,12 +26771,12 @@ ml
 ml
 ml
 ml
-ml
-ml
-ml
-ml
-ml
-ml
+jc
+jc
+jc
+yw
+jc
+jc
 jc
 Yf
 oI
@@ -26869,12 +27000,12 @@ ml
 ml
 ml
 ml
-ml
-ml
-ml
-ml
 jc
-Yf
+uy
+sO
+sO
+cV
+sO
 pI
 jb
 jb
@@ -27096,10 +27227,10 @@ ml
 ml
 ml
 ml
-ml
-ml
-ml
-ml
+jc
+jc
+jc
+jc
 jc
 au
 pI

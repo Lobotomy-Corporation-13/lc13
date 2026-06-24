@@ -166,6 +166,12 @@
 		dash_evasivemode_client_speed += COL_dash_evasivemode_speed_adjustment
 		dash_evasivemode_noclient_speed += COL_dash_evasivemode_speed_adjustment
 
+/mob/living/simple_animal/hostile/ordeal/indigo_noon/lanky/FindTarget(list/possible_targets, HasTargetsList)
+	if(dash_dashing || dash_preparing)
+		return null
+	. = ..()
+
+
 /mob/living/simple_animal/hostile/ordeal/indigo_noon/lanky/Destroy()
 	/// To avoid a hard delete.
 	dash_hitlist = null
@@ -174,8 +180,6 @@
 
 /// When meleeing a target, will attempt to dash if it's available (and has some RNG thrown into it to keep them less predictable). Won't dash on melee if it's a possessed sweeper.
 /mob/living/simple_animal/hostile/ordeal/indigo_noon/lanky/AttackingTarget(atom/attacked_target)
-	if(!can_act)
-		return FALSE
 	if(dash_cooldown > world.time || dash_dashing || dash_preparing)
 		return ..()
 	if(!client && prob(60))
@@ -274,7 +278,6 @@
 	/// Re-target our old target.
 	if(!client)
 		GiveTarget(prospective_fuel)
-	can_act = TRUE
 	return TRUE
 
 
@@ -301,8 +304,6 @@
 /mob/living/simple_animal/hostile/ordeal/indigo_noon/lanky/proc/PrepareDash()
 	dash_preparing = TRUE
 	dash_dashing = FALSE
-	/// Can't attack.
-	can_act = FALSE
 	/// Can't get pushed away during this.
 	anchored = TRUE
 	/// Reset our hit lists.
@@ -314,8 +315,6 @@
 	dash_preparing = FALSE
 	/// All turfs we move into while dashing as long as this variable is TRUE will be registered by Move() to be passed onto SweepTheBackstreetsHit() by SweepTheBackstreets().
 	dash_dashing = TRUE
-	/// We can't attack.
-	can_act = FALSE
 	/// We can move again.
 	anchored = FALSE
 	/// We can move through mobs and tables.
@@ -426,7 +425,9 @@
 		LastStand()
 		return
 	if(extract_fuel_cooldown <= world.time && prob(60) && (get_dist(source, src) < 3))
-		PrepareExtractFuel()
+		/// Go on cooldown.
+		extract_fuel_cooldown = world.time + extract_fuel_cooldown_time
+		INVOKE_ASYNC(src, PROC_REF(PrepareExtractFuel))
 		return
 
 /// This ability is basically "333... 1973". It gives the chunky sweeper 3 persistence stacks, that's all.
@@ -462,8 +463,6 @@
 		return FALSE
 	if(stat >= DEAD)
 		return FALSE
-	/// Go on cooldown.
-	extract_fuel_cooldown = world.time + extract_fuel_cooldown_time
 	/// Warn the players so they can back off or get ready to parry.
 	say("+38725 619.+")
 	animate(src, 2 SECONDS, color = "#FE5343")
@@ -471,6 +470,8 @@
 	/// We're gonna sleep them because otherwise someone could hit the sweeper the DECISECOND before it's gonna attack and get slapped by a huge hit
 	/// This gives them enough margin to run away or parry
 	SLEEP_CHECK_DEATH(0.6 SECONDS)
+	attack_cooldown = max(SSnpcpool.wait / rapid_melee, 1)
+	changeNext_move(attack_cooldown)
 	/// Make our attack scary.
 	melee_damage_lower += extract_fuel_extra_damage
 	melee_damage_upper += extract_fuel_extra_damage

@@ -90,15 +90,43 @@
 /datum/job/command/records/after_spawn(mob/living/outfit_owner, mob/M)
 	. = ..()
 	ADD_TRAIT(outfit_owner, TRAIT_WORK_KNOWLEDGE, JOB_TRAIT)
+	var/datum/atom_hud/secsensor = GLOB.huds[DATA_HUD_SECURITY_ADVANCED]
+	var/datum/atom_hud/medsensor = GLOB.huds[DATA_HUD_MEDICAL_ADVANCED]
+	secsensor.add_hud_to(outfit_owner)
+	medsensor.add_hud_to(outfit_owner)
+	outfit_owner.apply_status_effect(/datum/status_effect/autovitals)
 
 /datum/outfit/job/command/records
 	name = "Records Officer"
 	jobtype = /datum/job/command/records
 	suit =  /obj/item/clothing/suit/armor/records
 	ears = /obj/item/radio/headset/heads/records
-
+	implants = list(/obj/item/organ/cyberimp/eyes/hud/medical)
+	r_hand = /obj/item/ego_weapon/city/cinqwest_selfiestick/ro
 	backpack_contents = list(
 		/obj/item/portacopier,
 		/obj/item/portablepredict,
 		/obj/item/agent_preservation_tool,
+		/obj/item/deepscanner/advanced,
+		//obj/item/records_broadcast,		We'll add this in later.
 	)
+
+//RO passively gives people around him vitals sight
+/datum/status_effect/autovitals
+	id = "autovitals"
+	status_type = STATUS_EFFECT_UNIQUE
+	duration = -1
+	tick_interval = 10
+	alert_type = null
+
+/datum/status_effect/autovitals/tick()
+	if(!isliving(owner))
+		qdel(src)
+	for(var/mob/living/L in view(7, owner))
+		if(!L.has_status_effect(/datum/status_effect/visualize_vitals))
+			L.apply_status_effect(/datum/status_effect/visualize_vitals)
+	. = ..()
+
+
+/obj/item/ego_weapon/city/cinqwest_selfiestick/ro
+	name = "records officer streaming stick"

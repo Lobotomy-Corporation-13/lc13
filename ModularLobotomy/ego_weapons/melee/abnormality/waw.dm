@@ -534,7 +534,9 @@
 
 /datum/status_effect/display/crimlust_hemorrhage/be_replaced()
 	if(icon_overlay)
-		owner.cut_overlay(icon_overlay) // Need to put this here 'cause apparently on_remove and be_replaced are different, which makes sense honestly but if I don't do this the overlay sticks forever
+		remove_image_from_clients(icon_overlay)
+		GLOB.status_display_icons -= icon_overlay
+		icon_overlay = null
 	. = ..()
 
 /// Called when the mob dies or when it's hit by a Hollowpoint Shell
@@ -1309,7 +1311,7 @@
 			user.adjustBruteLoss(-heal_amt)
 	..()
 
-/obj/item/ego_weapon/shield/pharaoh
+/obj/item/ego_weapon/shield/parry/pharaoh
 	name = "pharaoh"
 	desc = "Look on my Works, ye Mighty, and despair!"
 	special = "This weapon can remove petrification."
@@ -1334,7 +1336,7 @@
 							PRUDENCE_ATTRIBUTE = 80
 							)
 
-/obj/item/ego_weapon/shield/pharaoh/pre_attack(atom/A, mob/living/user, params)
+/obj/item/ego_weapon/shield/parry/pharaoh/pre_attack(atom/A, mob/living/user, params)
 	if(istype(A, /obj/structure/statue/petrified) && CanUseEgo(user))
 		playsound(A, 'sound/effects/break_stone.ogg', rand(10, 50), TRUE)
 		A.visible_message(span_danger("[A] returns to normal!"), span_userdanger("You break free of the stone!"))

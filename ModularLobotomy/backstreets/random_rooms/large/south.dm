@@ -43,6 +43,12 @@
 	mappath = "_maps/RandomRooms/backstreets/large_south/sweeper_nestsmall.dmm"
 	stock = 1
 
+/datum/map_template/random_room/backstreets/large_south/lab_lsa
+	name = "Lab - Large South A"
+	room_id = "lab_lsa"
+	mappath = "_maps/RandomRooms/backstreets/large_south/lab_lsa.dmm"
+	stock = 1
+
 /datum/map_template/random_room/backstreets/large_south/shotgun_exam
 	name = "ShotgunExam - Large South"
 	room_id = "shotgun_exam"

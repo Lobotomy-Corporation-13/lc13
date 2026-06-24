@@ -24,8 +24,8 @@
 	chem_type = /datum/reagent/abnormality/sin/lust
 	can_breach = TRUE
 
-	melee_damage_lower = 92
-	melee_damage_upper = 99		//Will never one shot you.
+	melee_damage_lower = 70
+	melee_damage_upper = 78		//Will never one shot you.
 	melee_damage_type = RED_DAMAGE
 	damage_coeff = list(RED_DAMAGE = 1.2, WHITE_DAMAGE = 0.3, BLACK_DAMAGE = 0.5, PALE_DAMAGE = 1)
 	stat_attack = HARD_CRIT
@@ -82,6 +82,36 @@
 	. = ..()
 	if(fused) // So you can't just spoon her to death while in nobody is.
 		adjustBruteLoss(-(maxHealth))
+	if(IsContained())
+		return
+	if(prob(30))
+		var/mob/living/getting_shelled
+		var/list/players_near = list()
+
+		for(var/mob/living/carbon/human/H in view(5, src))
+			players_near |= H
+
+		//Got no players :(
+		if(!length(players_near))
+			return
+		getting_shelled = pick(players_near)
+
+		switch(rand(1,2))
+			if(1)
+				new /obj/effect/titania_aoe(get_turf(getting_shelled))
+
+			if(2)
+				for(var/i in 1 to 3)//Make them start to run
+					new /obj/effect/titania_small(get_turf(getting_shelled))
+					SLEEP_CHECK_DEATH(2)
+
+				SLEEP_CHECK_DEATH(7)
+
+				for(var/i in 1 to 5)//Then make them suffer
+					new /obj/effect/titania_small(get_turf(getting_shelled))
+					SLEEP_CHECK_DEATH(2)
+
+
 
 /mob/living/simple_animal/hostile/abnormality/titania/Destroy()
 	UnregisterAll()
@@ -112,8 +142,8 @@
 	var/mob/living/carbon/human/nemesis = nemesis_memory ? nemesis_memory.resolve() : null
 	if(attacked_target == nemesis)	//Deals pale damage to Oberon, fuck you.
 		melee_damage_type = PALE_DAMAGE
-		melee_damage_lower = 61
-		melee_damage_upper = 72
+		melee_damage_lower = 38
+		melee_damage_upper = 45
 	else if(nemesis)		//If there's still a nemesis, you need to reset the damage
 		melee_damage_type = initial(melee_damage_type)
 		melee_damage_lower = initial(melee_damage_lower)
@@ -122,8 +152,8 @@
 
 	if(istype(H) && H.stat == DEAD && H == nemesis)		//Does she slay Oberon personally? If so, get buffed.
 		ChangeMoveToDelayBy(-1)
-		melee_damage_lower = 110
-		melee_damage_upper = 140
+		melee_damage_lower = 93
+		melee_damage_upper = 99
 		adjustBruteLoss(-maxHealth, forced = TRUE) // Round 2, baby
 
 		to_chat(src, span_userdanger("[nemesis], my beloved devil, I finally get my revenge."))
@@ -316,6 +346,61 @@
 	spawned_mobs.Cut()
 
 
+//The Big attacks
+/obj/effect/titania_aoe
+	name = "titania warning"
+	desc = "A target warning you of incoming pain"
+	icon = 'icons/effects/96x96.dmi'
+	icon_state = "warning_gray"
+	move_force = INFINITY
+	pull_force = INFINITY
+	pixel_x = -32
+	pixel_y = -32
+	generic_canpass = FALSE
+	movement_type = PHASING | FLYING
+	var/boom_damage = 60 //Just white.
+	var/lifetime = 2 SECONDS
+	layer = POINT_LAYER	//We want this HIGH. SUPER HIGH. We want it so that you can absolutely, guaranteed, see exactly what is about to hit you.
+
+/obj/effect/titania_aoe/Initialize()
+	. = ..()
+	addtimer(CALLBACK(src, PROC_REF(explode)), lifetime)
+
+/obj/effect/titania_aoe/proc/explode()
+	playsound(get_turf(src), 'sound/magic/magic_missile.ogg', 50, 0, 8)
+	for(var/turf/T in range(2, src))
+		new /obj/effect/temp_visual/pale_eye_attack(T)
+	for(var/mob/living/L in view(2, src))
+		L.deal_damage(boom_damage, WHITE_DAMAGE, src, flags = (DAMAGE_FORCED | DAMAGE_UNTRACKABLE), attack_type = (ATTACK_TYPE_SPECIAL))
+	qdel(src)
+
+//AOE
+/obj/effect/titania_small
+	name = "titania warning"
+	desc = "A target warning you of incoming pain"
+	icon = 'icons/effects/effects.dmi'
+	icon_state = "tbird_bolt"
+	move_force = INFINITY
+	pull_force = INFINITY
+	generic_canpass = FALSE
+	movement_type = PHASING | FLYING
+	var/boom_damage = 40 //Applies fragile
+	var/lifetime = 1.2 SECONDS
+	layer = POINT_LAYER	//We want this HIGH. SUPER HIGH. We want it so that you can absolutely, guaranteed, see exactly what is about to hit you.
+
+/obj/effect/titania_small/Initialize()
+	. = ..()
+	addtimer(CALLBACK(src, PROC_REF(explode)), lifetime)
+
+/obj/effect/titania_small/proc/explode()
+	playsound(get_turf(src), 'sound/magic/blind.ogg', 50, 0, 8)
+	new /obj/effect/temp_visual/pale_eye_attack(get_turf(src))
+	for(var/mob/living/L in get_turf(src))
+		L.deal_damage(boom_damage, WHITE_DAMAGE, src, flags = (DAMAGE_FORCED | DAMAGE_UNTRACKABLE), attack_type = (ATTACK_TYPE_SPECIAL))
+		L.apply_lc_white_fragile(3)
+	qdel(src)
+
+
 //The Mini fairies
 /mob/living/simple_animal/hostile/fairyswarm
 	name = "fairy"
@@ -349,5 +434,5 @@
 	..()
 	if(ishuman(attacked_target))
 		var/mob/living/carbon/human/H = attacked_target
-		H.apply_lc_fragile(5)
+		H.apply_lc_white_fragile(2)
 

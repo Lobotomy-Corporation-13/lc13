@@ -514,6 +514,7 @@
 	visible_image = image(icon, src, visible_icon_state, layer)
 	visible_image.override = TRUE
 	visible_image.filters += filter(type="drop_shadow", x=0, y=0, size = 1, offset = 1, color=rgb(240, 240, 240)) // Players were struggling to find them over darker enemies
+	RegisterSignal(src, COMSIG_MOVABLE_PRE_THROW, PROC_REF(DenyThrow))
 	QDEL_IN(src, duration) // It's a temporary thing.
 
 /mob/da_capo_musicnote/attackby(obj/item/W, mob/user, params)
@@ -522,8 +523,14 @@
 	if(istype(W, /obj/item/ego_weapon/da_capo))
 		return W.attack(src, user)
 
+/// Stops Sirocco from stealing the damn thing
+/mob/da_capo_musicnote/proc/DenyThrow()
+	SIGNAL_HANDLER
+	return COMPONENT_CANCEL_THROW
+
 /mob/da_capo_musicnote/Destroy(force)
 	Cleanup(TRUE) // We call this with TRUE so it doesn't try to qdel itself again, we're already destroying it
+	UnregisterSignal(src, COMSIG_MOVABLE_PRE_THROW)
 	return ..()
 
 /// We call this proc when a note is hit by Da Capo.

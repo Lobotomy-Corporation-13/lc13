@@ -49,6 +49,12 @@
 	if(is_station_level(z))
 		GLOB.station_turfs += src
 
+/turf/open/floor/Entered(atom/movable/AM)
+	. = ..()
+	if(isliving(AM) && locate(/obj/effect/decal/cleanable/blood/gibs) in src)
+		var/mob/living/L = AM
+		playsound(src, 'sound/effects/gib_step.ogg', HAS_TRAIT(L, TRAIT_LIGHT_STEP) ? 20 : 50, TRUE)
+
 /turf/open/floor/proc/setup_broken_states()
 	return list("damaged1", "damaged2", "damaged3", "damaged4", "damaged5")
 

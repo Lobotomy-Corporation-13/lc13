@@ -1777,8 +1777,8 @@
 "lF" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/structure/rack,
-/obj/item/ego_weapon/shield/maneater,
-/obj/item/ego_weapon/shield/maneater,
+/obj/item/ego_weapon/shield/parry/maneater,
+/obj/item/ego_weapon/shield/parry/maneater,
 /turf/open/floor/facility/halls,
 /area/awaymission/enkr)
 "lG" = (

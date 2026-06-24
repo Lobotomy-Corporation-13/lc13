@@ -549,6 +549,7 @@
 	prudence_bonus = 2
 	temperance_bonus = -5
 	justice_bonus = 2
+	slot = BROOCH
 
 /datum/ego_gifts/capote
 	name = "Capote"
@@ -1237,7 +1238,7 @@
 
 /datum/ego_gifts/rosa
 	name = "Crown of Roses"
-	icon_state = "penitence"//TODO: make an actual sprite
+	icon_state = "rosa"
 	prudence_bonus = 3
 	temperance_bonus = 3
 	slot = HAT
@@ -1679,6 +1680,13 @@
 /datum/ego_gifts/ardor_moth/Remove(mob/living/carbon/human/user)
 	user.physiology.burn_mod /= 0.8
 	return ..()
+
+/datum/ego_gifts/recollection
+	name = "Recollection"
+	icon_state = "recollection"
+	temperance_bonus = -4
+	prudence_bonus = 2
+	slot = BROOCH
 
 /datum/ego_gifts/caterpillar
 	name = "Havana"

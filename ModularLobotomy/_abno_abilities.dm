@@ -108,7 +108,7 @@
 		return EndCharge(user)
 	if(emergency_stop || user.stat == DEAD)
 		return EndCharge(user)
-	if(!PassCriteria(T))
+	if(!PassCriteria(T, user))
 		return EndCharge(user)
 	user.forceMove(T)
 	last_turf = T
@@ -129,7 +129,7 @@
 * If this returns false then the attack stops.
 * Scans each turf during Telegraph.
 */
-/obj/effect/proc_holder/ability/aimed/dash/proc/PassCriteria(turf/T)
+/obj/effect/proc_holder/ability/aimed/dash/proc/PassCriteria(turf/T, mob/living/user)
 	if(dash_ignore_walls)
 		return TRUE
 	if(T.density)
@@ -145,7 +145,7 @@
 		if(MD.density)
 			INVOKE_ASYNC(MD, TYPE_PROC_REF(/obj/machinery/door, open), 2)
 	for(var/mob/living/simple_animal/hostile/abnormality/D in T.contents)	//This caused issues earlier
-		if(D.density)
+		if(D.density && D != user)
 			return FALSE
 	return TRUE
 
@@ -231,6 +231,12 @@
 				flicks  = TRUE
 	return ..()
 
+/obj/effect/proc_holder/ability/aimed/dash/spear_apostle/AbnoInteraction(mob/living/user)
+	if(!istype(user, /mob/living/simple_animal/hostile/abnormality/distortedform))
+		return
+	var/mob/living/simple_animal/hostile/abnormality/distortedform/abno = user
+	ToggleAct(abno,TRUE)
+	abno.endCharge()
 
 /obj/effect/proc_holder/ability/aimed/dash/big_wolf
 	name = "big wolf dash"
@@ -239,6 +245,7 @@
 	dash_range =  7
 	windup_delay = 1 SECONDS
 	cooldown_time = 30 SECONDS
+	env_breaking = TRUE
 
 /obj/effect/proc_holder/ability/aimed/dash/big_wolf/Finalize(target, mob/living/user, list/path_list)
 	user.do_shaky_animation(2)
@@ -371,6 +378,7 @@
 	var/charge_damage = 800
 	var/growing_charge_damage = 0
 	var/nihil_present = FALSE
+	var/finish_pause = 7 SECONDS
 
 /obj/effect/proc_holder/ability/aimed/dash/kog/Initialize()
 	.  = ..()
@@ -436,6 +444,9 @@
 		charge_damage = charge_damage + growing_charge_damage
 	return ..()
 
+/obj/effect/proc_holder/ability/aimed/dash/kog/EndCharge(mob/living/user)
+	do_after(user, finish_pause, timed_action_flags = IGNORE_USER_LOC_CHANGE, target = user)
+	return ..()
 
 /obj/effect/proc_holder/ability/aimed/dash/kog/AbnoInteraction(mob/living/user)
 	if(!istype(user, /mob/living/simple_animal/hostile/abnormality/greed_king))
@@ -582,9 +593,9 @@
 /obj/effect/proc_holder/ability/aimed/dash/firebird
 	name = "firebird dash"
 	dash_speed =  0.5
-	dash_damage = 200
+	dash_damage = 20
 	dash_range = 50
-	windup_delay = 0
+	windup_delay = 1 SECONDS
 	cooldown_time = 5 SECONDS
 	env_breaking = TRUE
 
@@ -603,12 +614,12 @@
 			break
 		if(isopenturf(U) && !HasIdentList(U))
 			//Real effect since fire produces light
-			new /obj/effect/temp_visual/fire/fast(U)
+			new /obj/effect/turf_fire/firebird(U)
 		var/list/new_hits = HurtInTurf(ourthing, U, list(), dash_damage, WHITE_DAMAGE, hurt_mechs = TRUE, flags = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 		var/flicks = FALSE
 		for(var/mob/living/L in new_hits)//damage applied to targets in range
 			visible_message(span_boldwarning("[src] blazes through [L]!"))
-			L.deal_damage(dash_damage * 0.1, FIRE, ourthing, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
+			L.deal_damage(dash_damage, FIRE, ourthing, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 			if(ishuman(L))
 				var/mob/living/carbon/human/H = L
 				if(H.sanity_lost) // TODO: TEMPORARY AS HELL
