@@ -13355,14 +13355,6 @@
 	},
 /turf/open/floor/plasteel/white,
 /area/facility_hallway/training)
-"Oz" = (
-/obj/effect/turf_decal/siding/purple/corner{
-	dir = 8
-	},
-/turf/open/water/deep/saltwater{
-	icon_state = "darkbluewater1"
-	},
-/area/facility_hallway/central)
 "OD" = (
 /obj/structure/bodycontainer/crematorium{
 	dir = 8;
@@ -52493,7 +52485,7 @@ nX
 nX
 nX
 nX
-Oz
+nX
 nX
 fb
 fb
