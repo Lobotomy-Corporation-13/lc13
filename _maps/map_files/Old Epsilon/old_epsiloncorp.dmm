@@ -1300,28 +1300,12 @@
 /obj/structure/table/reinforced{
 	max_integrity = 25
 	},
-/obj/item/reagent_containers/glass/beaker/bluespace{
-	pixel_y = 12
-	},
-/obj/item/reagent_containers/glass/beaker/bluespace{
-	pixel_x = -6;
-	pixel_y = 7
-	},
-/obj/item/reagent_containers/glass/beaker/bluespace{
-	pixel_x = 4;
-	pixel_y = 1
-	},
-/obj/item/reagent_containers/glass/beaker/bluespace{
-	pixel_x = 4;
-	pixel_y = 1
-	},
-/obj/item/reagent_containers/glass/beaker/bluespace{
-	pixel_y = 12
-	},
-/obj/item/reagent_containers/glass/beaker/bluespace{
-	pixel_x = -6;
-	pixel_y = 7
-	},
+/obj/item/reagent_containers/glass/beaker/large,
+/obj/item/reagent_containers/glass/beaker/large,
+/obj/item/reagent_containers/glass/beaker/large,
+/obj/item/reagent_containers/glass/beaker/large,
+/obj/item/reagent_containers/glass/beaker/large,
+/obj/item/reagent_containers/glass/beaker/large,
 /obj/item/reagent_containers/food/condiment/enzyme{
 	pixel_x = -5;
 	pixel_y = 5
@@ -12452,16 +12436,14 @@
 	},
 /area/facility_hallway/west)
 "LJ" = (
-/obj/machinery/computer/camera_advanced{
-	dir = 8;
+/obj/machinery/computer/security{
 	pixel_x = -14;
 	pixel_y = 3;
-	resistance_flags = 115
+	dir = 8
 	},
-/obj/machinery/computer/camera_advanced{
+/obj/machinery/computer/security{
 	pixel_x = 2;
-	pixel_y = -14;
-	resistance_flags = 115
+	pixel_y = -14
 	},
 /turf/closed/indestructible/reinforced{
 	desc = "A huge chunk of wing-grade metal used in various L corporation facilities. Effectively impervious to conventional methods of destruction.";
@@ -13795,10 +13777,9 @@
 	},
 /area/facility_hallway/information)
 "PB" = (
-/obj/machinery/computer/camera_advanced{
+/obj/machinery/computer/security{
 	dir = 4;
-	pixel_x = -3;
-	resistance_flags = 115
+	pixel_x = -3
 	},
 /turf/open/floor/carpet/red,
 /area/department_main/control)
@@ -14974,16 +14955,14 @@
 /turf/open/floor/plasteel/sepia,
 /area/department_main/information)
 "Tl" = (
-/obj/machinery/computer/camera_advanced{
-	dir = 4;
+/obj/machinery/computer/security{
 	pixel_x = 12;
 	pixel_y = 3;
-	resistance_flags = 115
+	dir = 4
 	},
-/obj/machinery/computer/camera_advanced{
+/obj/machinery/computer/security{
 	pixel_x = -3;
-	pixel_y = -14;
-	resistance_flags = 115
+	pixel_y = -14
 	},
 /turf/closed/indestructible/reinforced{
 	desc = "A huge chunk of wing-grade metal used in various L corporation facilities. Effectively impervious to conventional methods of destruction.";
@@ -15078,10 +15057,9 @@
 	},
 /area/department_main/welfare)
 "TG" = (
-/obj/machinery/computer/camera_advanced{
+/obj/machinery/computer/security{
 	dir = 8;
-	pixel_x = 3;
-	resistance_flags = 115
+	pixel_x = 3
 	},
 /turf/open/floor/carpet/red,
 /area/department_main/control)
