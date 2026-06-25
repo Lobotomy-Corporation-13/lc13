@@ -14065,7 +14065,6 @@
 /area/department_main/control)
 "QE" = (
 /obj/structure/closet/crate{
-	anchored = 1;
 	name = "pe box crate";
 	opened = 1
 	},
