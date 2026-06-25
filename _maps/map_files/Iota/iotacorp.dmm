@@ -297,9 +297,8 @@
 	},
 /area/space)
 "bj" = (
-/obj/machinery/computer/camera_advanced{
-	dir = 1;
-	resistance_flags = 115
+/obj/machinery/computer/security{
+	dir = 1
 	},
 /turf/open/floor/mineral/titanium/purple{
 	color = "#ff4162";
@@ -4830,9 +4829,7 @@
 /turf/open/floor/carpet/orange,
 /area/department_main/training)
 "oL" = (
-/obj/machinery/computer/camera_advanced{
-	resistance_flags = 115
-	},
+/obj/machinery/computer/security,
 /turf/open/floor/carpet/red,
 /area/department_main/discipline)
 "oM" = (
@@ -6362,16 +6359,15 @@
 /turf/open/floor/circuit/telecomms/mainframe,
 /area/facility_hallway/training)
 "ty" = (
-/obj/machinery/computer/camera_advanced{
-	dir = 1;
-	pixel_x = 4;
-	resistance_flags = 115
-	},
 /obj/structure/window/reinforced/spawner{
 	resistance_flags = 115
 	},
 /obj/structure/window/reinforced/spawner/west{
 	max_integrity = 25
+	},
+/obj/machinery/computer/security{
+	pixel_x = 4;
+	dir = 1
 	},
 /turf/open/floor/mineral/titanium/purple{
 	color = "#ff4162";
@@ -7145,9 +7141,8 @@
 /turf/open/floor/facility/dark,
 /area/department_main/control)
 "vt" = (
-/obj/machinery/computer/camera_advanced{
-	dir = 8;
-	resistance_flags = 115
+/obj/machinery/computer/security{
+	dir = 8
 	},
 /turf/open/floor/mineral/titanium/purple{
 	color = "#ff4162";
@@ -7384,9 +7379,7 @@
 	},
 /area/department_main/control)
 "wh" = (
-/obj/machinery/computer/camera_advanced{
-	resistance_flags = 115
-	},
+/obj/machinery/computer/security,
 /turf/open/floor/mineral/titanium/purple{
 	color = "#ff4162";
 	name = "floor"
@@ -11507,16 +11500,15 @@
 /turf/open/floor/facility/dark,
 /area/department_main/discipline)
 "JY" = (
-/obj/machinery/computer/camera_advanced{
-	pixel_x = 4;
-	resistance_flags = 115
-	},
 /obj/structure/window/reinforced/spawner/north{
 	max_integrity = 25;
 	resistance_flags = 115
 	},
 /obj/structure/window/reinforced/spawner/west{
 	max_integrity = 25
+	},
+/obj/machinery/computer/security{
+	pixel_x = 4
 	},
 /turf/open/floor/mineral/titanium/purple{
 	color = "#ff4162";
@@ -12160,9 +12152,7 @@
 	},
 /area/facility_hallway/welfare)
 "Mj" = (
-/obj/machinery/computer/camera_advanced{
-	resistance_flags = 115
-	},
+/obj/machinery/computer/security,
 /turf/open/floor/mineral/titanium/purple{
 	color = "#8b0000";
 	name = "floor"
@@ -12489,9 +12479,8 @@
 	},
 /area/facility_hallway/command)
 "Nv" = (
-/obj/machinery/computer/camera_advanced{
-	dir = 4;
-	resistance_flags = 115
+/obj/machinery/computer/security{
+	dir = 4
 	},
 /turf/open/floor/carpet/red,
 /area/department_main/discipline)
@@ -13545,9 +13534,8 @@
 	},
 /area/department_main/welfare)
 "QM" = (
-/obj/machinery/computer/camera_advanced{
-	dir = 1;
-	resistance_flags = 115
+/obj/machinery/computer/security{
+	dir = 1
 	},
 /turf/open/floor/mineral/titanium/purple{
 	color = "#8b0000";
@@ -14285,13 +14273,11 @@
 	},
 /area/facility_hallway/information)
 "Ty" = (
-/obj/machinery/computer/camera_advanced{
-	resistance_flags = 115
-	},
 /obj/machinery/computer/security/telescreen{
 	pixel_x = -4;
 	pixel_y = 27
 	},
+/obj/machinery/computer/security,
 /turf/open/floor/mineral/titanium/purple{
 	color = "#ff4162";
 	name = "floor"
@@ -14340,9 +14326,6 @@
 /turf/open/floor/carpet/royalblue,
 /area/department_main/welfare)
 "TJ" = (
-/obj/machinery/computer/camera_advanced{
-	resistance_flags = 115
-	},
 /obj/machinery/computer/security/telescreen{
 	pixel_x = -17;
 	pixel_y = 27
@@ -14351,6 +14334,7 @@
 	pixel_x = 3;
 	pixel_y = 27
 	},
+/obj/machinery/computer/security,
 /turf/open/floor/mineral/titanium/purple{
 	color = "#ff4162";
 	name = "floor"
@@ -14766,28 +14750,12 @@
 /turf/open/floor/plasteel/dark,
 /area/department_main/welfare)
 "UZ" = (
-/obj/item/reagent_containers/glass/beaker/bluespace{
-	pixel_y = 12
-	},
-/obj/item/reagent_containers/glass/beaker/bluespace{
-	pixel_x = -6;
-	pixel_y = 7
-	},
-/obj/item/reagent_containers/glass/beaker/bluespace{
-	pixel_x = 4;
-	pixel_y = 1
-	},
-/obj/item/reagent_containers/glass/beaker/bluespace{
-	pixel_x = 4;
-	pixel_y = 1
-	},
-/obj/item/reagent_containers/glass/beaker/bluespace{
-	pixel_y = 12
-	},
-/obj/item/reagent_containers/glass/beaker/bluespace{
-	pixel_x = -6;
-	pixel_y = 7
-	},
+/obj/item/reagent_containers/glass/beaker,
+/obj/item/reagent_containers/glass/beaker,
+/obj/item/reagent_containers/glass/beaker,
+/obj/item/reagent_containers/glass/beaker,
+/obj/item/reagent_containers/glass/beaker,
+/obj/item/reagent_containers/glass/beaker,
 /obj/item/reagent_containers/food/condiment/enzyme{
 	pixel_x = -5;
 	pixel_y = 5
@@ -14911,9 +14879,8 @@
 /turf/open/floor/plasteel/dark,
 /area/department_main/discipline)
 "Vo" = (
-/obj/machinery/computer/camera_advanced{
-	dir = 1;
-	resistance_flags = 115
+/obj/machinery/computer/security{
+	dir = 1
 	},
 /turf/open/floor/carpet/red,
 /area/department_main/discipline)
@@ -15484,12 +15451,11 @@
 /turf/open/floor/plasteel/sepia,
 /area/department_main/welfare)
 "Xp" = (
-/obj/machinery/computer/camera_advanced{
-	dir = 8;
-	resistance_flags = 115
-	},
 /obj/structure/window/reinforced/spawner/east{
 	resistance_flags = 115
+	},
+/obj/machinery/computer/security{
+	dir = 8
 	},
 /turf/open/floor/mineral/titanium/purple{
 	color = "#ff4162";
@@ -15619,28 +15585,12 @@
 /obj/structure/table/reinforced{
 	max_integrity = 25
 	},
-/obj/item/reagent_containers/glass/beaker/bluespace{
-	pixel_y = 12
-	},
-/obj/item/reagent_containers/glass/beaker/bluespace{
-	pixel_x = -6;
-	pixel_y = 7
-	},
-/obj/item/reagent_containers/glass/beaker/bluespace{
-	pixel_x = 4;
-	pixel_y = 1
-	},
-/obj/item/reagent_containers/glass/beaker/bluespace{
-	pixel_x = 4;
-	pixel_y = 1
-	},
-/obj/item/reagent_containers/glass/beaker/bluespace{
-	pixel_y = 12
-	},
-/obj/item/reagent_containers/glass/beaker/bluespace{
-	pixel_x = -6;
-	pixel_y = 7
-	},
+/obj/item/reagent_containers/glass/beaker,
+/obj/item/reagent_containers/glass/beaker,
+/obj/item/reagent_containers/glass/beaker,
+/obj/item/reagent_containers/glass/beaker,
+/obj/item/reagent_containers/glass/beaker,
+/obj/item/reagent_containers/glass/beaker,
 /obj/item/reagent_containers/food/condiment/enzyme{
 	pixel_x = -5;
 	pixel_y = 5
@@ -15678,9 +15628,8 @@
 	},
 /area/facility_hallway/training)
 "XV" = (
-/obj/machinery/computer/camera_advanced{
-	dir = 4;
-	resistance_flags = 115
+/obj/machinery/computer/security{
+	dir = 4
 	},
 /turf/open/floor/mineral/titanium/purple{
 	color = "#8b0000";
