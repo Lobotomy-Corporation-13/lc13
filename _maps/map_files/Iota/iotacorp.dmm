@@ -12944,10 +12944,6 @@
 /turf/open/floor/plasteel/dark,
 /area/facility_hallway/command)
 "OQ" = (
-/obj/machinery/computer/message_monitor{
-	density = 0;
-	pixel_y = 13
-	},
 /obj/machinery/light{
 	dir = 1;
 	pixel_y = 19
@@ -12956,6 +12952,11 @@
 	dir = 4;
 	pixel_x = 9;
 	pixel_y = 4
+	},
+/obj/machinery/computer/extraction_cargo/records{
+	pixel_x = 0;
+	pixel_y = 13;
+	density = 0
 	},
 /turf/open/floor/facility/dark{
 	color = "#ccc8c0"
