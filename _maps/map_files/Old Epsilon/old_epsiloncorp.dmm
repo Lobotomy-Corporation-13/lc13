@@ -5912,16 +5912,16 @@
 /turf/open/floor/plating,
 /area/facility_hallway/west)
 "rv" = (
-/obj/structure/chair/comfy{
-	dir = 1;
-	pixel_y = 8
-	},
 /obj/machinery/camera/autoname{
 	alpha = 0;
 	mouse_opacity = 0;
 	name = "hidden security camera";
 	short_range = 13;
 	view_range = 13
+	},
+/obj/machinery/computer/extraction_cargo/records{
+	dir = 8;
+	pixel_x = 5
 	},
 /turf/open/floor/carpet/black,
 /area/facility_hallway/information)
@@ -15725,6 +15725,14 @@
 	icon_state = "redwater1"
 	},
 /area/facility_hallway/central)
+"VS" = (
+/obj/structure/chair/comfy{
+	dir = 4;
+	pixel_y = 3;
+	pixel_x = 11
+	},
+/turf/open/floor/carpet/black,
+/area/facility_hallway/information)
 "VT" = (
 /obj/effect/turf_decal/tile/red{
 	dir = 4
@@ -49684,7 +49692,7 @@ Xw
 jd
 FB
 je
-cY
+VS
 Xf
 Bl
 FB
