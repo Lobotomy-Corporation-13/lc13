@@ -242,6 +242,7 @@ GLOBAL_LIST_EMPTY(cryopod_computers)
 			// Reset
 			open_machine()
 			name = initial(name)
+			return
 
 		// If we reach this point we're dealing with someone genuinely in the round.
 		// Handle job slot/tater cleanup.
