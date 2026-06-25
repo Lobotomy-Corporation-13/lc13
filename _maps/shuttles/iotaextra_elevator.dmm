@@ -40,8 +40,10 @@
 /turf/open/floor/mineral/plastitanium/red,
 /area/shuttle/mining)
 "f" = (
-/obj/machinery/smartfridge/extraction_storage/ego_armor,
-/turf/open/floor/mineral/titanium/yellow,
+/obj/structure/table/reinforced,
+/obj/structure/fans/tiny/invisible,
+/obj/machinery/smartfridge/extraction_storage/ego_weapon,
+/turf/open/floor/mineral/plastitanium/red,
 /area/shuttle/mining)
 "g" = (
 /obj/structure/chair/comfy/shuttle{
@@ -131,8 +133,9 @@
 /turf/open/floor/pod/light,
 /area/shuttle/mining)
 "t" = (
-/obj/machinery/smartfridge/extraction_storage/ego_weapon,
-/turf/open/floor/mineral/titanium/yellow,
+/obj/structure/fans/tiny/invisible,
+/obj/machinery/smartfridge/extraction_storage/ego_armor,
+/turf/open/floor/mineral/plastitanium/red,
 /area/shuttle/mining)
 "u" = (
 /turf/closed/wall/mineral/titanium/survival/pod,
@@ -190,6 +193,9 @@
 	name = "metalic seat";
 	pixel_y = 6
 	},
+/obj/structure/sign/ordealmonitor{
+	pixel_y = 32
+	},
 /turf/open/floor/pod/dark,
 /area/shuttle/mining)
 "A" = (
@@ -213,7 +219,7 @@
 	},
 /area/shuttle/mining)
 "D" = (
-/obj/structure/table/reinforced,
+/obj/effect/landmark/refinerspawn,
 /turf/open/floor/carpet/royalblack,
 /area/shuttle/mining)
 "F" = (
@@ -245,12 +251,8 @@
 /turf/open/floor/pod/light,
 /area/shuttle/mining)
 "H" = (
-/obj/structure/table/reinforced,
 /obj/structure/fans/tiny/invisible,
-/obj/structure/sign/ordealmonitor,
-/obj/effect/spawner/structure/window/hollow/reinforced{
-	resistance_flags = 115
-	},
+/obj/machinery/smartfridge/extraction_storage/ego_weapon,
 /turf/open/floor/mineral/plastitanium/red,
 /area/shuttle/mining)
 "I" = (
@@ -302,6 +304,9 @@
 	desc = "A comfortable, secure seat.";
 	name = "metalic seat";
 	pixel_y = 1
+	},
+/obj/structure/sign/ordealmonitor{
+	pixel_y = -32
 	},
 /turf/open/floor/pod/dark,
 /area/shuttle/mining)
@@ -377,13 +382,13 @@ K
 y
 c
 y
-t
-H
-j
-j
-j
-H
+y
 f
+j
+j
+j
+t
+y
 y
 c
 y
@@ -479,13 +484,13 @@ K
 y
 c
 y
-f
-H
-e
-e
-e
-H
+y
 t
+e
+e
+e
+H
+y
 y
 c
 y
