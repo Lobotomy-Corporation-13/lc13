@@ -12,8 +12,8 @@
 	pixel_x = -8
 	base_pixel_x = -8
 	mob_biotypes = MOB_ROBOTIC
-	maxHealth = 500
-	health = 500
+	maxHealth = 600
+	health = 600
 	melee_damage_type = RED_DAMAGE
 	attack_verb_continuous = "lashes"
 	attack_verb_simple = "lash"
