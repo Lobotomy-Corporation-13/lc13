@@ -4086,7 +4086,7 @@
 	},
 /obj/structure/sigsystem/connector{
 	dir = 1;
-	delay_time = 250
+	delay_time = 200
 	},
 /turf/open/floor/facility/dark,
 /area/city/outskirtsfactory)
@@ -4847,7 +4847,7 @@
 /area/city/outskirtsfactory)
 "Kk" = (
 /obj/structure/sigsystem/announcer{
-	message_range = 5;
+	message_range = 7;
 	message = "Unauthorized access detected. Door opening delayed."
 	},
 /turf/closed/indestructible/syndicate,
@@ -5870,6 +5870,7 @@
 /turf/open/floor/plating/asteroid/basalt,
 /area/city/outskirtsfactory)
 "TY" = (
+/obj/effect/decal/cleanable/dirt/dust,
 /obj/item/caution{
 	pixel_y = 7;
 	pixel_x = -3
@@ -13661,7 +13662,7 @@ oQ
 gv
 Ve
 ar
-TY
+oq
 GY
 pq
 vF
@@ -13921,7 +13922,7 @@ Ve
 Ve
 tb
 oq
-Ve
+TY
 pJ
 Ve
 co

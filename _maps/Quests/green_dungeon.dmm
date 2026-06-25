@@ -861,6 +861,7 @@
 	},
 /area/city/outskirtsfactory)
 "sn" = (
+/obj/effect/decal/cleanable/dirt/dust,
 /obj/item/caution{
 	pixel_y = 7;
 	pixel_x = -3
@@ -1152,7 +1153,7 @@
 	},
 /obj/structure/sigsystem/connector{
 	dir = 1;
-	delay_time = 250
+	delay_time = 200
 	},
 /turf/open/floor/facility/dark,
 /area/city/outskirtsfactory)
@@ -4048,7 +4049,7 @@ Pb
 oS
 RK
 dt
-sn
+sJ
 Go
 iA
 wm
@@ -4148,7 +4149,7 @@ RK
 RK
 is
 sJ
-RK
+sn
 UM
 RK
 UC
