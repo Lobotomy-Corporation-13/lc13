@@ -182,7 +182,7 @@
 	var/turf/origin = get_turf(src)
 	playsound(origin, 'sound/abnormalities/ebonyqueen/strongcharge.ogg', 75, 0, 5)
 	playsound(origin, 'sound/creatures/venus_trap_hurt.ogg', 75, 0, 5)
-	SLEEP_CHECK_DEATH(6)
+	SLEEP_CHECK_DEATH(8)
 	for(var/turf/T in spiral_range_turfs(2, origin))
 		new /obj/effect/temp_visual/vine(T, src)
 	SLEEP_CHECK_DEATH(5)
