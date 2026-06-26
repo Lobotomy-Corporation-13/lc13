@@ -219,7 +219,7 @@ Association gear is mostly HE for grunts, low WAW for veterans and high WAW for 
 /datum/ego_datum/weapon/city/seven_south_s4_foil
 	item_path = /obj/item/ego_weapon/city/seven_s4_foil
 	cost = 60
-	ego_tags = (EGO_TAG_DEBUFFER)
+	ego_tags = list(EGO_TAG_DEBUFFER)
 /// Seven South Section 4 Veteran Fencing Foil
 /datum/ego_datum/weapon/city/seven_south_s4_foil/vet
 	item_path = /obj/item/ego_weapon/city/seven_s4_foil/vet
@@ -234,7 +234,7 @@ Association gear is mostly HE for grunts, low WAW for veterans and high WAW for 
 /datum/ego_datum/weapon/city/seven_south_s4_adaptive
 	item_path = /obj/item/ego_weapon/city/seven_s4_blade
 	cost = 60
-	ego_tags = (EGO_TAG_VERSATILE_DAMAGE)
+	ego_tags = list(EGO_TAG_VERSATILE_DAMAGE)
 /// Seven South Section 4 Veteran Blade
 /datum/ego_datum/weapon/city/seven_south_s4_adaptive/vet
 	item_path = /obj/item/ego_weapon/city/seven_s4_blade/vet
