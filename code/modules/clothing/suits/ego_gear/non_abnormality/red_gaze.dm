@@ -5,7 +5,7 @@
 	icon = 'ModularLobotomy/_Lobotomyicons/red_gaze_icons.dmi'
 	worn_icon = 'ModularLobotomy/_Lobotomyicons/red_gaze_worn.dmi'
 	icon_state = "red_gaze"
-	armor = list(RED_DAMAGE = 90, WHITE_DAMAGE = 70, BLACK_DAMAGE = 70, PALE_DAMAGE = 70)
+	armor = list(RED_DAMAGE = 70, WHITE_DAMAGE = 80, BLACK_DAMAGE = 80, PALE_DAMAGE = 70)
 	attribute_requirements = list(
 							FORTITUDE_ATTRIBUTE = 120,
 							PRUDENCE_ATTRIBUTE = 120,
