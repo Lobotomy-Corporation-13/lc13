@@ -2567,6 +2567,7 @@
 	force = 89 // Change lance_force too
 	swingstyle = WEAPONSWING_THRUST
 	swingcolor = null
+	forced_swingcolor = TRUE
 	custom_thrust_state = "pvthrust"
 	custom_sweep_state = "pvswipe_"
 	damtype = BLACK_DAMAGE
@@ -2813,7 +2814,6 @@
 	icon_state = lance_icon_state
 	lefthand_file = lance_inhands_list["left"]
 	righthand_file = lance_inhands_list["right"]
-	swingcolor = lance_swingcolor
 	user.regenerate_icons()
 
 	// Text
@@ -2840,7 +2840,6 @@
 	icon_state = katana_icon_state
 	lefthand_file = katana_inhands_list["left"]
 	righthand_file = katana_inhands_list["right"]
-	swingcolor = katana_swingcolor
 	user.regenerate_icons()
 
 	// Text
@@ -3087,7 +3086,7 @@
 
 	if(should_do_slash_visual)
 		var/obj/effect/temp_visual/slice/temp = new(T)
-		temp.color = swingcolor
+		temp.color = COLOR_PERVERSION_KATANA
 		temp.transform *= (finisher ? 2.2 : 1.6)
 
 // Called when some projectile gets intercepted by a projectile blocking effect, or when a projectile somehow hits the user during the attack.
@@ -3115,7 +3114,7 @@
 	// VFX
 	SendSlashDecoyVisual(place_of_intercept, owner, FALSE, FALSE)
 	var/obj/effect/temp_visual/dir_setting/slash/temp = new(place_of_intercept, pick(SOUTH, NORTH))
-	temp.color = swingcolor
+	temp.color = COLOR_PERVERSION_KATANA
 	temp.transform *= 2
 	do_sparks(3, FALSE, place_of_intercept)
 
@@ -3462,7 +3461,7 @@
 					target.remove_status_effect(STATUS_EFFECT_CONTEMPT)
 					target.remove_status_effect(STATUS_EFFECT_GAZE)
 					var/obj/effect/temp_visual/slice/temp = new(target_turf_before_possibly_obliterated)
-					temp.color = swingcolor
+					temp.color = COLOR_PERVERSION_KATANA
 					temp.transform *= 2
 					temp.layer = POINT_LAYER
 				SetComboState(0, target, user)
@@ -3519,6 +3518,7 @@
 
 			if((get_dist(user, victim) < 2))
 				victim.attackby(src, user)
+				get_thrust_turfs(victim, user) // To get the VFX
 
 		// We are currently in Katana form.
 		else
@@ -3557,6 +3557,7 @@
 			user.visible_message(span_danger("[user] dashes towards [victim] with [src]!"))
 			if((get_dist(user, victim) < 2))
 				victim.attackby(src, user)
+				get_sweep_turfs(victim, user) // To get the VFX
 
 			SetComboState(1, victim, user)
 
@@ -3598,7 +3599,8 @@
 				continue
 			shared_hitlist |= L
 
-			new /obj/effect/temp_visual/dir_setting/bloodsplatter(T3, pick(GLOB.alldirs))
+			var/atom/bloodsplatter_vfx = new /obj/effect/temp_visual/dir_setting/bloodsplatter(T3, pick(GLOB.alldirs))
+			bloodsplatter_vfx.transform *= 1.4
 
 			L.deal_damage(final_damage, damtype, source = user, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 			if(L && L.health > 0)
@@ -3668,7 +3670,7 @@
 
 		shared_hitlist |= T
 		var/obj/vfx = new /obj/effect/temp_visual/slice(T)
-		vfx.color = swingcolor
+		vfx.color = COLOR_PERVERSION_KATANA
 
 		for(var/mob/living/L in T)
 			if(L in shared_hitlist)
