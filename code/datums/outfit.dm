@@ -160,6 +160,13 @@
 
 	//Start with uniform,suit,backpack for additional slots
 	if(uniform)
+
+		// On Facility mode, remove our human's previous bodies from the suit sensors list when equipping them with an outfit... I think it's cleaner to put this here than in the code that runs every time you equip an uniform.
+		if((SSmaptype.maptype in SSmaptype.lc_maps) || SSmaptype.maptype == "mini")
+			for(var/mob/living/carbon/human/ded in GLOB.suit_sensors_list)
+				if(ded.stat >= DEAD && ded.real_name == H.real_name)
+					GLOB.suit_sensors_list -= ded
+
 		H.equip_to_slot_or_del(new uniform(H),ITEM_SLOT_ICLOTHING, TRUE)
 	if(suit)
 		H.equip_to_slot_or_del(new suit(H),ITEM_SLOT_OCLOTHING, TRUE)
