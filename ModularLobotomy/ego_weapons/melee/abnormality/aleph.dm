@@ -2566,7 +2566,8 @@
 	inhand_y_dimension = 64
 	force = 89 // Change lance_force too
 	swingstyle = WEAPONSWING_THRUST
-	swingcolor = COLOR_PERVERSION_LANCE
+	custom_thrust_state = "pvthrust"
+	custom_sweep_state = "pvswipe_"
 	damtype = BLACK_DAMAGE
 	attack_speed = 1.6 // Change lance_attack_speed too
 	attack_verb_continuous = list("pierces", "skewers", "perforates", "impales", "gores")
@@ -2719,9 +2720,7 @@
 	return ..()
 
 /obj/item/ego_weapon/perversion/GetSwingColor()
-	var/color
-	sheathed ? (color = lance_swingcolor) : (color = katana_swingcolor)
-	return color
+	return null
 
 /obj/item/ego_weapon/perversion/examine(mob/user)
 	. = ..()
