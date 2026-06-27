@@ -2566,6 +2566,7 @@
 	inhand_y_dimension = 64
 	force = 89 // Change lance_force too
 	swingstyle = WEAPONSWING_THRUST
+	swingcolor = null
 	custom_thrust_state = "pvthrust"
 	custom_sweep_state = "pvswipe_"
 	damtype = BLACK_DAMAGE
