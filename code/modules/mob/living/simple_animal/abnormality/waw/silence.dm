@@ -120,6 +120,11 @@
 	H.remove_atom_colour(TEMPORARY_COLOUR_PRIORITY)
 	time_stopped -= H
 
+/mob/living/simple_animal/hostile/abnormality/silence/Destroy(mob/living/H)
+	..()
+	for (var/mob/M in time_stopped)
+		UnFreezeMob(M)
+
 
 /obj/effect/temp_visual/remnant_of_time/price
 	damage = 70
