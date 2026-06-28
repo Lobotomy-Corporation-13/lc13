@@ -44,7 +44,7 @@
 
 /mob/living/simple_animal/hostile/abnormality/tangle/Life()
 	. = ..()
-	if(.)
+	if(!.)
 		return
 	if(IsContained())
 		return
