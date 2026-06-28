@@ -124,6 +124,7 @@
 	..()
 	for(var/mob/M in time_stopped)
 		UnFreezeMob(M)
+	time_stopped = list()
 
 
 /obj/effect/temp_visual/remnant_of_time/price
