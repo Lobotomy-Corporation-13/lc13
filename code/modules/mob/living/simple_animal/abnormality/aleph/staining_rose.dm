@@ -75,7 +75,7 @@
 	if(work_type == ABNORMALITY_WORK_REPRESSION)
 		var/mob/living/chosen = chosen_memory ? chosen_memory.resolve() : null
 		if (chosen == null)
-			chosen = user
+			chosen_memory = WEAKREF(user)
 			user.visible_message(span_warning("You are now Staining Rose's Chosen."))
 			icon_state = "rose_activated"
 
