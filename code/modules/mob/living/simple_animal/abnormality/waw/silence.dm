@@ -122,7 +122,7 @@
 
 /mob/living/simple_animal/hostile/abnormality/silence/Destroy(mob/living/H)
 	..()
-	for (var/mob/M in time_stopped)
+	for(var/mob/M in time_stopped)
 		UnFreezeMob(M)
 
 
