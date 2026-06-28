@@ -125,7 +125,7 @@
 	for(var/mob/M in time_stopped)
 		UnFreezeMob(M)
 	time_stopped = list()
-
+	return ..()
 
 /obj/effect/temp_visual/remnant_of_time/price
 	damage = 70
