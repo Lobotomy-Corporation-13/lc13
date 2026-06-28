@@ -915,3 +915,128 @@
 		charged = TRUE
 		playsound(get_turf(src), 'sound/machines/chime.ogg', 35, TRUE, 4)
 		audible_message(span_info("The [src.name] finishes recharging."))
+
+/obj/item/advanced_printer
+	name = "advanced records printer"
+	desc = "A device used for extracting information from abnormalities, scan documents or insert into archives for similar effect."
+	icon = 'ModularLobotomy/_Lobotomyicons/teguitems.dmi'
+	icon_state = "records_printer"
+	var/plushie_count = 7
+	var/paperstock = 5
+	var/mob/living/simple_animal/hostile/abnormality/stored_abno = /mob/living/simple_animal/hostile/abnormality/onesin
+	var/obj/item/paper/fluff/info/stored_info = /obj/item/paper/fluff/info/zayin/onesin
+	var/plushable = 0
+
+	var/static/list/output = list(
+		// ZAYIN
+
+        // TETH
+	/mob/living/simple_animal/hostile/abnormality/scorched_girl = /obj/item/toy/plush/scorched,
+	/mob/living/simple_animal/hostile/abnormality/punishing_bird = /obj/item/toy/plush/pbird,
+	/mob/living/simple_animal/hostile/abnormality/voiddream = /obj/item/toy/plush/voiddream,
+
+		// HE
+	/mob/living/simple_animal/hostile/abnormality/pinocchio = /obj/item/toy/plush/pinocchio,
+
+		// WAW
+	/mob/living/simple_animal/hostile/abnormality/big_bird = /obj/item/toy/plush/bigbird,
+	/mob/living/simple_animal/hostile/abnormality/wrath_servant = /obj/item/toy/plush/sow,
+	/mob/living/simple_animal/hostile/abnormality/greed_king = /obj/item/toy/plush/kog,
+	/mob/living/simple_animal/hostile/abnormality/despair_knight = /obj/item/toy/plush/kod,
+	/mob/living/simple_animal/hostile/abnormality/big_wolf = /obj/item/toy/plush/big_bad_wolf,
+	/mob/living/simple_animal/hostile/abnormality/hatred_queen = /obj/item/toy/plush/qoh,
+	/mob/living/simple_animal/hostile/abnormality/judgement_bird = /obj/item/toy/plush/jbird,
+
+		// ALEPH
+	/mob/living/simple_animal/hostile/abnormality/melting_love = /obj/item/toy/plush/melt,
+	/mob/living/simple_animal/hostile/abnormality/mountain = /obj/item/toy/plush/mosb,
+	/mob/living/simple_animal/hostile/abnormality/nihil = /obj/item/toy/plush/nihil,
+	/mob/living/simple_animal/hostile/megafauna/apocalypse_bird = /obj/item/toy/plush/apocbird,
+
+    )
+
+/obj/item/advanced_printer/examine(mob/user)
+	. = ..()
+	if(paperstock == 1)
+		. += "Currently holds [paperstock] sheet of paper."
+	else
+		. += "Currently holds [paperstock] sheets of paper."
+
+/obj/item/advanced_printer/attack(atom/target, mob/user)
+	. = ..()
+
+	if(istype(target, /mob/living/simple_animal/hostile/abnormality))
+		stored_abno = target
+		to_chat(usr, span_notice("You scan [stored_abno.name]."))
+		for(var/path in subtypesof(/obj/item/paper/fluff/info))
+			var/obj/item/paper/fluff/info/dummy_info = path
+			if(stored_abno.type == initial(dummy_info.abno_type))
+				stored_info = dummy_info
+				break
+		if(ispath(output[target.type], /obj/item/toy/plush))
+			to_chat(usr, span_notice("...Huh. Seems like you can make a plushie out of it."))
+			plushable = 1
+
+/obj/item/advanced_printer/afterattack(atom/target, mob/user, proximity_flag)
+	. = ..()
+
+	if(proximity_flag == 1)
+		if(istype(target, /obj/item/paper))
+			if(istype(target, /obj/item/paper/fluff/info))
+				stored_info = target.type
+				stored_abno = stored_info.abno_type
+				plushable = 0
+				to_chat(usr, span_notice("You scan the document"))
+
+/obj/item/advanced_printer/attackby(obj/item/W, mob/user)
+	if(istype(W, /obj/item/paper))
+		if(paperstock <= 9)
+			to_chat(user, span_notice("[src] whirrs and buzzes."))
+			playsound(get_turf(src), 'sound/effects/refill.ogg', 50, TRUE)
+			qdel(W)
+			paperstock++
+			return
+		to_chat(user, span_notice("[src] is already filled to the brim."))
+	return ..()
+
+/obj/item/advanced_printer/attack_self(mob/user)
+	. = ..()
+
+	var/dat = "<b>Records Retriver</b><br>"
+	dat += "<hr>"
+	dat += "Retrived records regarding: <b>[stored_abno.name]</b><br>"
+	dat += "<hr>"
+	dat += "<a href='byond://?src=[REF(src)];choice=print'>Print File</a><br>"
+	if(plushable)
+		dat += "<a href='byond://?src=[REF(src)];choice=plush'>Print Plushie</a><br>"
+	dat += "<hr>"
+	
+	var/datum/browser/popup = new(user, "records_retriever", "Records Printer", 400, 300)
+	popup.set_content(dat)
+	popup.open()
+
+/obj/item/advanced_printer/Topic(href, href_list)
+	. = ..()
+	if(.)
+		return
+	switch(href_list["choice"])
+		if("print")
+			if(paperstock <= 0)
+				to_chat(usr, span_notice("Out of paper."))
+				return
+			paperstock--
+			to_chat(usr, span_info("You print out the records on [stored_abno.name]."))
+			var/atom/new_file = new stored_info(get_turf(usr))
+			usr.put_in_hands(new_file)
+		if("plush")
+			if(plushie_count <= 0)
+				to_chat(usr, span_notice("Out of Plushies."))
+				return
+			if(!do_after(usr, 3.5 SECONDS, interaction_key = "plushie_extraction", max_interact_count = 1))
+				return
+			plushie_count--
+			var/atom/plush = output[stored_abno.type]
+			var/atom/new_plush = new plush(get_turf(usr))
+			usr.put_in_hands(new_plush)
+			to_chat(usr, span_info("You print out a plushie of [stored_abno.name]."))
+	updateUsrDialog()

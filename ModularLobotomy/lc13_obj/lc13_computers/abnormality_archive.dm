@@ -14,6 +14,7 @@
 	var/paper = 1
 	/// How much paper can we have at maximum capacity?
 	var/papermax = 10
+	var/obj/item/advanced_printer/device = null
 	var/list/note_list
 	var/list/abno_data = list()
 	resistance_flags = INDESTRUCTIBLE | LAVA_PROOF | FIRE_PROOF | UNACIDABLE | ACID_PROOF
@@ -50,6 +51,7 @@
 			qdel(record_detail)
 
 	.["abnormality_info"] = abno_data
+	.["attached_device"] = device
 
 /obj/machinery/computer/abnormality_archive/ui_act(action, params) //Basically catches signals caused by the Javascript act('print_file', { ref: currentAbnormality.type })
 	. = ..()
@@ -63,12 +65,36 @@
 				return
 			printfile = params["ref"]
 			print_file(printfile)
+		if("download_data")
+			device.stored_info = text2path(params["ref"])
+			device.stored_abno = device.stored_info.abno_type
+			device.plushable = 0
+			say("Download complete.")
 
 /obj/machinery/computer/abnormality_archive/attackby(obj/item/O, mob/user)
 	if(istype(O, /obj/item/paper) && paper <= papermax)
 		qdel(O)
 		paper = paper + 1
-	..()
+	
+	if(istype(O, /obj/item/advanced_printer))
+		if(device)
+			to_chat(user, "<span class='warning'>A device is already loaded into the machine.</span>")
+		else
+			if(!user.transferItemToLoc(O, src))
+				return
+			var/obj/item/advanced_printer/dummy_device = O
+			device = dummy_device
+			to_chat(user, "<span class='notice'>You insert the device into the machine.</span>")
+	return ..()
+
+/obj/machinery/computer/abnormality_archive/AltClick(mob/living/user)
+	if(device)
+		to_chat(user, "<span class='notice'>You remove the device from the machine.</span>")
+		if(can_interact(user))
+			user.put_in_hands(device)
+		else
+			device.drop_location(get_turf(src))
+		device = null
 
 /obj/machinery/computer/abnormality_archive/proc/print_file(file)
 	paper = paper - 1

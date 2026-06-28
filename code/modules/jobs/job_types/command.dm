@@ -104,8 +104,7 @@
 	implants = list(/obj/item/organ/cyberimp/eyes/hud/medical)
 	r_hand = /obj/item/ego_weapon/city/cinqwest_selfiestick/ro
 	backpack_contents = list(
-		/obj/item/portacopier,
-		/obj/item/portablepredict,
+		/obj/item/advanced_printer,
 		/obj/item/agent_preservation_tool,
 		/obj/item/deepscanner/advanced,
 		//obj/item/records_broadcast,		We'll add this in later.
