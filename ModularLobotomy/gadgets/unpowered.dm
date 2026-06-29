@@ -931,6 +931,7 @@
 	var/usesound_volume = 80
 	var/fluff = "You can spot some hastily-written reminders pertaining to Abnormality guidelines written on the margins of a few pages. \n\
 	<i>Shall we get to work? All we need to do is what we've always done</i>."
+	var/cooldown
 
 /// Makes sure to tell users about what you're meant to use the item for, also rips out a bunch of useless stuff from base examine().
 /obj/item/abnormality_work_notepad/examine(mob/user)
@@ -1000,6 +1001,9 @@
 /obj/item/abnormality_work_notepad/proc/access_work_console(obj/machinery/computer/abnormality/work_console, mob/living/carbon/human/user)
 	if(!istype(work_console) || !istype(user))
 		return FALSE
+	if(cooldown >= world.time)
+		return FALSE
 	work_console.ui_interact(user, via_notepad = TRUE)
 	playsound(get_turf(src), usesound, usesound_volume, FALSE)
+	cooldown = world.time + 1.2 SECONDS
 	return
