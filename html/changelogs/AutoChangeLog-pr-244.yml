@@ -1,0 +1,12 @@
+author: "EnderMage99"
+delete-after: True
+changes:
+  - rscadd: "Added RCE Biological Research System - harvest enemy body parts to unlock specialist classes and weapons"
+  - rscadd: "Added three specialist classes: Hellfire Roosters (fire), Venom Rattlesnakes (toxic), Storm Rams (electric - disabled)"
+  - rscadd: "Added specialist equipment including resource tanks, class-specific armor, and over 20 new weapons"
+  - rscadd: "Added central fuel storage system with tiered material efficiency"
+  - rscadd: "Added field refueling items (Power Cells, Acid Canisters) for Raven support roles"
+  - rscadd: "Added RCE Tactical Map - drawable command map synced across all team members"
+  - rscadd: "Added RCE Leaderboard System - persistent statistics tracking across expeditions"
+  - rscadd: "Added Leaderboard Console with TGUI interface showing round stats, all-time records, and expedition history"
+  - code_imp: "Added research wiki documentation for all new systems"

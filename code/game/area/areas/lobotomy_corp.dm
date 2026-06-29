@@ -505,12 +505,32 @@
 	sound_environment = SOUND_ENVIRONMENT_CAVE
 	dynamic_lighting = DYNAMIC_LIGHTING_FORCED
 
-/area/test_range
-	name = "Test Range"
+/area/test_range_arena
+	name = "Test Range Arena - Undefined"
 	requires_power = FALSE
 	has_gravity = STANDARD_GRAVITY
 	sound_environment = SOUND_ENVIRONMENT_CAVE
-	dynamic_lighting = DYNAMIC_LIGHTING_FORCED
+	dynamic_lighting = DYNAMIC_LIGHTING_DISABLED
+
+/area/test_range_arena/proc/GetArenaName()
+	var/sliced_text = splicetext_char(name, 1, 20, "")
+	return sliced_text
+
+/area/test_range_arena/classic
+	name = "Test Range Arena - Classic"
+
+/area/test_range_arena/battlefield
+	name = "Test Range Arena - Battlefield"
+
+/area/test_range_arena/ouroboros
+	name = "Test Range Arena - Ouroboros"
+
+/area/test_range_lobby
+	name = "Test Range Lobby"
+	requires_power = FALSE
+	has_gravity = STANDARD_GRAVITY
+	sound_environment = SOUND_ENVIRONMENT_CAVE
+	dynamic_lighting = DYNAMIC_LIGHTING_DISABLED
 
 /area/tinkerer_factory
 	name = "Tinkerer's Factory"

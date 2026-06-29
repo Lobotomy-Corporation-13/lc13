@@ -1311,7 +1311,7 @@
 			user.adjustBruteLoss(-heal_amt)
 	..()
 
-/obj/item/ego_weapon/shield/pharaoh
+/obj/item/ego_weapon/shield/parry/pharaoh
 	name = "pharaoh"
 	desc = "Look on my Works, ye Mighty, and despair!"
 	special = "This weapon can remove petrification."
@@ -1336,7 +1336,7 @@
 							PRUDENCE_ATTRIBUTE = 80
 							)
 
-/obj/item/ego_weapon/shield/pharaoh/pre_attack(atom/A, mob/living/user, params)
+/obj/item/ego_weapon/shield/parry/pharaoh/pre_attack(atom/A, mob/living/user, params)
 	if(istype(A, /obj/structure/statue/petrified) && CanUseEgo(user))
 		playsound(A, 'sound/effects/break_stone.ogg', rand(10, 50), TRUE)
 		A.visible_message(span_danger("[A] returns to normal!"), span_userdanger("You break free of the stone!"))
@@ -3145,4 +3145,62 @@
 		balloon_alert(user, "Your attack was unstrengthened!")
 		force = initial(force)
 		return
+
+
+/obj/item/ego_weapon/mini/yearning
+	name = "yearning"
+	desc = "Steeped in the blood of all… yes…!"
+	special = "Use this weapon in hand to increase red damage and apply bleed to self."
+	icon_state = "yearning"
+	force = 37
+	damtype = RED_DAMAGE
+	swingstyle = WEAPONSWING_THRUST
+	attack_verb_continuous = list("stabs", "attacks", "slashes")
+	attack_verb_simple = list("stab", "attack", "slash")
+	hitsound = 'sound/weapons/ego/rapier1.ogg'
+	attribute_requirements = list(
+							JUSTICE_ATTRIBUTE = 80
+							)
+	crit_multiplier = 1.5
+
+/obj/item/ego_weapon/mini/yearning/attack_self(mob/living/carbon/user)
+	if(!CanUseEgo(user))
+		return
+	..()
+	user.apply_lc_bleed(5)
+	user.apply_lc_red_strength(2)
+	to_chat(user,span_warning("Yearning drains your blood... And gives you strength"))
+	balloon_alert(user, "Yearning drains your blood... And gives you strength")
+
+
+/obj/item/ego_weapon/mini/mircalla
+	name = "mircalla"
+	desc = "Blossom from the blood, O beautiful flower."
+	special = "This weapon heals the user upon hitting a target."
+	icon_state = "mircalla"
+	force = 24
+	damtype = RED_DAMAGE
+	swingstyle = WEAPONSWING_THRUST
+	attack_verb_continuous = list("stabs", "attacks", "slashes")
+	attack_verb_simple = list("stab", "attack", "slash")
+	hitsound = 'sound/weapons/ego/rapier1.ogg'
+	attribute_requirements = list(
+							JUSTICE_ATTRIBUTE = 80
+							)
+	crit_multiplier = 1.5
+
+
+/obj/item/ego_weapon/mini/mircalla/attack(mob/living/target, mob/living/carbon/human/user)
+	if(!CanUseEgo(user))
+		return
+	if(!(target.status_flags & GODMODE) && target.stat != DEAD)
+		var/heal_amt = force*0.15
+		if(isanimal(target))
+			var/mob/living/simple_animal/S = target
+			if(S.damage_coeff.getCoeff(damtype) > 0)
+				heal_amt *= S.damage_coeff.getCoeff(damtype)
+			else
+				heal_amt = 0
+		user.adjustBruteLoss(-heal_amt)
+	..()
 

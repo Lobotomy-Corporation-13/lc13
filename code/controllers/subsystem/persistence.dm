@@ -9,6 +9,7 @@
 #define FILE_REFRACTION_ENCOUNTERS "data/refraction_railway_encounters.json"
 #define FILE_REFRACTION_EVENTS "data/refraction_railway_events.json"
 #define FILE_REFRACTION_STARLIGHT "data/refraction_railway_starlight.json"
+#define FILE_RCE_LEADERBOARD "data/RCELeaderboard.json"
 #define ROUNDCOUNT_BUTTON_PRESSED 0
 
 #define KEEP_ROUNDS_MAP 3
@@ -64,6 +65,7 @@ SUBSYSTEM_DEF(persistence)
 	LoadClearedCores()
 	Load_button_counter() // LOBOTOMYCORPORATION ADDITION: Button counter
 	LoadRCEExpedition()
+	LoadRCELeaderboard()
 	LoadRandomizedRecipes()
 	LoadPaintings()
 	load_custom_outfits()
@@ -259,6 +261,7 @@ SUBSYSTEM_DEF(persistence)
 		SaveAbnoPicks()
 	CollectAgentReputation()
 	Save_button_counter() // LOBOTOMYCORPORATION ADDITION: Button counter
+	SaveRCELeaderboard()
 	SaveRandomizedRecipes()
 	SavePaintings()
 	SaveScars()
@@ -497,6 +500,20 @@ SUBSYSTEM_DEF(persistence)
 	var/list/data = list("expedition_number" = rce_expedition_number)
 	fdel(FILE_RCE_EXPEDITION)
 	text2file(json_encode(data), FILE_RCE_EXPEDITION)
+
+/datum/controller/subsystem/persistence/proc/LoadRCELeaderboard()
+	if(SSmaptype.maptype != "rcorp_factory")
+		return
+	if(!SSgamedirector.rce_leaderboard)
+		return
+	SSgamedirector.rce_leaderboard.LoadFromFile()
+
+/datum/controller/subsystem/persistence/proc/SaveRCELeaderboard()
+	if(SSmaptype.maptype != "rcorp_factory")
+		return
+	if(!SSgamedirector.rce_leaderboard)
+		return
+	SSgamedirector.rce_leaderboard.SaveToFile()
 
 /datum/controller/subsystem/persistence/proc/ShowExpeditionNumber(mob/M)
 	if(!M || !M.client)

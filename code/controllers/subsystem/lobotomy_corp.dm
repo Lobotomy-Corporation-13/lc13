@@ -135,6 +135,8 @@ SUBSYSTEM_DEF(lobotomy_corp)
 	addtimer(CALLBACK(src, PROC_REF(SetGoal)), 5 MINUTES)
 	addtimer(CALLBACK(src, PROC_REF(InitializeOrdeals)), 60 SECONDS)
 	addtimer(CALLBACK(src, PROC_REF(PickPotentialSuppressions)), 60 SECONDS)
+	// Initialize grid crafting weapon cache in background
+	addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(InitializeGridCraftWeaponCache)), 30 SECONDS)
 	for(var/F in subtypesof(/datum/facility_upgrade))
 		upgrades += new F
 

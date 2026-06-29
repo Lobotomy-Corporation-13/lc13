@@ -26,13 +26,13 @@
 	var/max_blood_feast = 500
 	var/leap_damage = 50
 	var/slash_damage = 25
-	var/drain_cooldown = 0
-	var/drain_cooldown_time = 50
 	var/bleed_stacks = 2
 	var/leap_bleed_stacks = 5
 	var/drop_outfit = TRUE
 	var/dash_charges = 0
 	var/obj/effect/proc_holder/ability/aimed/dash/ourdash
+	// Blood cap reduced from 500 to 150 since bloodfeast component gains ~3x more blood per pool
+	var/blood_cap = 150
 
 /mob/living/simple_animal/hostile/humanoid/blood/fiend/Initialize()
 	. = ..()
@@ -44,13 +44,25 @@
 	ourdash = new /obj/effect/proc_holder/ability/aimed/dash/bloodfiend
 
 /mob/living/simple_animal/hostile/humanoid/blood/fiend/proc/AdjustBloodFeast(amount)
-	if(stat != DEAD)
-		adjustBruteLoss(-amount/4)
-		blood_feast += amount
-		if (blood_feast > max_blood_feast)
-			blood_feast = max_blood_feast
-	else
+	if(stat == DEAD)
 		return
+	var/datum/component/bloodfeast/bloodfeast = GetComponent(/datum/component/bloodfeast)
+	if(!bloodfeast)
+		return
+	adjustBruteLoss(-amount/4)
+	bloodfeast.AdjustBlood(amount)
+
+/mob/living/simple_animal/hostile/humanoid/blood/fiend/proc/GetBloodFeast()
+	var/datum/component/bloodfeast/bloodfeast = GetComponent(/datum/component/bloodfeast)
+	if(!bloodfeast)
+		return 0
+	return bloodfeast.blood_amount
+
+/mob/living/simple_animal/hostile/humanoid/blood/fiend/proc/IsBloodFull()
+	var/datum/component/bloodfeast/bloodfeast = GetComponent(/datum/component/bloodfeast)
+	if(!bloodfeast)
+		return FALSE
+	return bloodfeast.blood_amount >= bloodfeast.blood_cap
 
 /mob/living/simple_animal/hostile/humanoid/blood/fiend/death(gibbed)
 	if(drop_outfit)
@@ -79,7 +91,10 @@
 /mob/living/simple_animal/hostile/humanoid/blood/fiend/proc/Leap(mob/living/target)
 	if(!isliving(target) && !ismecha(target) || !can_act)
 		return
-	blood_feast = 0
+	// Reset blood to 0 when leaping
+	var/datum/component/bloodfeast/bloodfeast = GetComponent(/datum/component/bloodfeast)
+	if(bloodfeast)
+		bloodfeast.blood_amount = 0
 	can_act = FALSE
 	SLEEP_CHECK_DEATH(0.25 SECONDS)
 	animate(src, alpha = 1,pixel_x = 16, pixel_z = 0, time = 0.1 SECONDS)
@@ -122,17 +137,14 @@
 
 /mob/living/simple_animal/hostile/humanoid/blood/fiend/Life()
 	. = ..()
-	if(drain_cooldown > world.time)
-		return FALSE
 	if(stat == DEAD)
 		return FALSE
-	drain_cooldown = world.time + drain_cooldown_time
-	Drain()
+	// Bloodfeast component handles blood absorption automatically via process()
 
 /mob/living/simple_animal/hostile/humanoid/blood/fiend/AttackingTarget()
 	if(!can_act)
 		return
-	if(blood_feast == max_blood_feast && !client)
+	if(IsBloodFull() && !client)
 		Leap(target)
 		return
 	. = ..()
@@ -190,7 +202,7 @@
 	var/cutter_hit = FALSE
 	var/stun_duration = 3 SECONDS
 	var/mob/living/blood_target
-	var/summon_cost = 25
+	var/summon_cost = 8
 	var/slashing = FALSE
 
 /mob/living/simple_animal/hostile/humanoid/blood/fiend/boss/grantAbilities()
@@ -201,7 +213,11 @@
 	if (slashing)
 		return
 
-	if (blood_feast > max_blood_feast * 0.5)
+	var/datum/component/bloodfeast/bloodfeast = GetComponent(/datum/component/bloodfeast)
+	if(!bloodfeast)
+		return
+
+	if (bloodfeast.blood_amount > bloodfeast.blood_cap * 0.5)
 		icon_state = hardblood_state
 		melee_damage_lower = 40
 		melee_damage_upper = 45
@@ -292,7 +308,10 @@
 		sleep(stun_duration)
 		manual_emote("rises back up...")
 		cut_overlays()
-	blood_feast = 0
+	// Reset blood to 0 after leap
+	var/datum/component/bloodfeast/bloodfeast = GetComponent(/datum/component/bloodfeast)
+	if(bloodfeast)
+		bloodfeast.blood_amount = 0
 	icon_state = normal_state
 	ChangeResistances(list(RED_DAMAGE = 1, WHITE_DAMAGE = 0.6, BLACK_DAMAGE = 0.4, PALE_DAMAGE = 1.5))
 	slashing = FALSE
@@ -329,8 +348,10 @@
 /mob/living/simple_animal/hostile/humanoid/blood/fiend/boss/proc/spawnbags()
 	say("Rise... Bloodbags...")
 	var/list/turfs = shuffle(orange(1, src))
+	var/datum/component/bloodfeast/bloodfeast = GetComponent(/datum/component/bloodfeast)
 	for(var/i in 1 to 2)
-		blood_feast -= summon_cost
+		if(bloodfeast)
+			bloodfeast.AdjustBlood(-summon_cost)
 		new /obj/effect/sweeperspawn/bagspawn(turfs[i])
 
 /obj/effect/sweeperspawn/bagspawn

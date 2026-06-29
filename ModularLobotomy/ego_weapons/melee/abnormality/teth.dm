@@ -36,7 +36,7 @@
 	hitsound = 'sound/weapons/ego/spear1.ogg'
 	crit_multiplier = 1.5	//Slightly better crits because I feel bad about it
 
-/obj/item/ego_weapon/shield/lutemia
+/obj/item/ego_weapon/shield/parry/lutemia
 	name = "dear lutemia"
 	desc = "Don't you want your cares to go away?"
 	special = "Blocking with this weapon attacks all nearby targets."
@@ -56,17 +56,6 @@
 	block_message = "You attempt to parry the attack!"
 	hit_message = "parries the attack!"
 	block_cooldown_message = "You rearm your blade."
-
-/obj/item/ego_weapon/shield/lutemia/hit_reaction(mob/living/carbon/human/owner, atom/movable/hitby, attack_text = "the attack", final_block_chance = 0, damage = 0, attack_type = MELEE_ATTACK)
-	if(attack_type == MELEE_ATTACK && active_block)
-		for(var/mob/living/L in range(1, owner))
-			if(L == owner)
-				continue
-			if(owner.stat != DEAD)
-				attack(L, owner)
-				sleep(2)
-	return ..()
-
 
 /obj/item/ego_weapon/eyes
 	name = "red eyes"
@@ -464,7 +453,7 @@
 				M.apply_status_effect(/datum/status_effect/rend_black)
 				hit_count = 0
 
-/obj/item/ego_weapon/shield/capote
+/obj/item/ego_weapon/shield/parry/capote
 	name = "capote"
 	desc = "Charge me with all your strength! Your horns cannot pierce my soul!"//yes this is a SMT quote
 	icon_state = "capote"

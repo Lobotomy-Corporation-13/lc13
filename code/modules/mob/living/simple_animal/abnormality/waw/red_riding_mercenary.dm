@@ -612,14 +612,11 @@ It has now been over four months. Now we get her for real. -Coxswain
 		ContractComplete()
 		return
 
-/mob/living/simple_animal/hostile/abnormality/red_hood/patrol_select() //Path right to our target
+/mob/living/simple_animal/hostile/abnormality/red_hood/SelectPatrolLocation() //Path right to our target
 	if(out_on_request || priority_target)
 		if(!priority_target) //For some reason we never got one
 			return ..()
-		SEND_SIGNAL(src, COMSIG_PATROL_START, src, get_turf(priority_target))
-		SEND_GLOBAL_SIGNAL(src, COMSIG_GLOB_PATROL_START, src, get_turf(priority_target))
-		patrol_path = get_path_to(src, get_turf(priority_target), TYPE_PROC_REF(/turf, Distance_cardinal), 0, 200)
-		return
+		return get_turf(priority_target)
 	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/red_hood/proc/ContractComplete()

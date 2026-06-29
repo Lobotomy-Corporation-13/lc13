@@ -23,6 +23,51 @@ Oh please give these a nice name by the way
 	information["name"] = src.name ? src.name : E.name // Use datum name where possible, otherwise use item's name
 	information["description"] = E.desc
 
+// Medipen Kit
+/datum/ego_datum/auxiliary/medkit
+	cost = 20
+	item_category = "Medicine"
+	item_path = /obj/item/storage/firstaid/revival
+	well_enabled = FALSE
+
+// Bongbread
+/datum/ego_datum/auxiliary/bongbread
+	cost = 12
+	item_category = "Food"
+	item_path = /obj/item/food/bread/bongbread
+	well_enabled = FALSE
+
+// Small Arms EGO Belt
+/datum/ego_datum/auxiliary/ego_belt
+	cost = 12
+	item_category = "Belt"
+	item_path = /obj/item/storage/belt/ego
+	well_enabled = FALSE
+
+// DO's Anti-Abnormality Grenade Box
+/datum/ego_datum/auxiliary/lobotomygrenades
+	name = "Anti-Abnormality Grenade Box"
+	cost = 20
+	item_category = "Ordnance"
+	item_path = /obj/item/storage/box/lobotomygrenades
+	well_enabled = FALSE
+
+// Test Range Utilities - the ones that usually spawn on the table, in case we run out
+/datum/ego_datum/auxiliary/scrying
+	item_category = "Debug"
+	item_path = /obj/item/scrying
+	well_enabled = FALSE
+
+/datum/ego_datum/auxiliary/attributes
+	item_category = "Debug"
+	item_path = /obj/item/lc_debug/attribute_injector
+	well_enabled = FALSE
+
+/datum/ego_datum/auxiliary/augment_remover
+	item_category = "Debug"
+	item_path = /obj/item/augment_remover/debug
+	well_enabled = FALSE
+
 // Naked Nest - Cure (Can also be bought from the Cargo Console)
 /datum/ego_datum/auxiliary/exuviae
 	name = "Naked Nest Cure"
@@ -60,6 +105,26 @@ Oh please give these a nice name by the way
 	item_category = "Consumable"
 	item_path = /obj/item/nihil/club
 	cost = 150
+	well_enabled = FALSE
+
+// Thumb South Grenade Kit
+
+// Thumb South Capo Grenadier Belt
+/datum/ego_datum/auxiliary/thumb_south_grenade_belt
+	name = "Thumb South Grenadier Belt"
+	origin = "City"
+	item_category = "Belt"
+	item_path = /obj/item/storage/belt/grenade
+	cost = 12
+	well_enabled = FALSE
+
+// Thumb South Capo Fragmentation Grenades
+/datum/ego_datum/auxiliary/thumb_south_grenade
+	name = "Thumb South Fragmentation Grenade"
+	origin = "City"
+	item_category = "Ordnance"
+	item_path = /obj/item/grenade/r_corp/thumb
+	cost = 35
 	well_enabled = FALSE
 
 // Thumb East Ammo Boxes

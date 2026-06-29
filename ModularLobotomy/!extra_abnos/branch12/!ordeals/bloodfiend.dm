@@ -85,7 +85,11 @@
 	if (slashing)
 		return
 
-	if (blood_feast > max_blood_feast * 0.5)
+	var/datum/component/bloodfeast/bloodfeast = GetComponent(/datum/component/bloodfeast)
+	if(!bloodfeast)
+		return
+
+	if (bloodfeast.blood_amount > bloodfeast.blood_cap * 0.5)
 		icon_state = hardblood_state
 		melee_damage_lower = 20
 		melee_damage_upper = 24

@@ -141,7 +141,7 @@
 				return
 			patient_giveup_count++
 	if(patient_giveup_count > 30) //The medic only has so much time and supplies.
-		previous_patient_list += target
+		previous_patient_list += target.tag
 		LoseTarget()
 
 /mob/living/simple_animal/hostile/ordeal/steel_dawn/medic/AttackingTarget(atom/attacked_target)
@@ -164,7 +164,7 @@
 		if(M.status_flags & GODMODE)
 			return FALSE
 		if(M.stat != DEAD)
-			if(!(locate(M) in previous_patient_list) && faction_check_mob(M) && M.health < M.maxHealth) //is it hurt? let's go heal it if it is
+			if(!(M.tag in previous_patient_list) && faction_check_mob(M) && M.health < M.maxHealth) //is it hurt? let's go heal it if it is
 				return TRUE
 	return ..()
 

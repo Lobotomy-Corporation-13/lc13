@@ -8,7 +8,7 @@
 //////////////
 // A barricade that allows simple mobs to vault over but blocks other mobs
 /obj/structure/xcorp_barricade
-	name = "X-Corp Barricade"
+	name = "Greed-Touched Barricade"
 	desc = "A bloody barricade with meat growing from the sides... It looks low enough to vault over."
 	icon = 'icons/obj/smooth_structures/sandbags.dmi'
 	icon_state = "meatbags-0"
@@ -53,8 +53,8 @@
 //////////////
 // Base turret class - DO NOT USE DIRECTLY
 /mob/living/simple_animal/hostile/clan/ranged/turret
-	name = "X-Corp Turret"
-	desc = "An automated defense turret bearing X-Corp markings. It appears to be fused into the ground."
+	name = "Greed-Touched Turret"
+	desc = "An automated defense turret bearing Greed-Touched markings. It appears to be fused into the ground."
 	icon = 'ModularLobotomy/_Lobotomyicons/resurgence_greed_48x48.dmi'
 	faction = list("greed_clan", "hostile")
 	icon_state = "greed_turret_v2"
@@ -97,7 +97,7 @@
 /mob/living/simple_animal/hostile/clan/ranged/turret/AttackingTarget(atom/attacked_target)
 	if(!target)
 		GiveTarget(attacked_target)
-	return OpenFire()
+	return OpenFire(target)
 
 // Special attack - rapid barrage
 /mob/living/simple_animal/hostile/clan/ranged/turret/SpecialAttack(atom/target)
@@ -189,8 +189,8 @@
 //////////////
 // Level 1 Basic Turret - 20 DPS, 1000 HP
 /mob/living/simple_animal/hostile/clan/ranged/turret/level1
-	name = "X-Corp Turret, Level 1"
-	desc = "A basic automated defense turret bearing X-Corp markings."
+	name = "Greed-Touched Turret, Level 1"
+	desc = "A basic automated defense turret bearing Greed-Touched markings."
 	maxHealth = 600
 	health = 600
 	icon_state = "greed_turret_v2"
@@ -200,7 +200,7 @@
 
 // Level 2 Basic Turret - 40 DPS, 1500 HP
 /mob/living/simple_animal/hostile/clan/ranged/turret/level2
-	name = "X-Corp Turret, Level 2"
+	name = "Greed-Touched Turret, Level 2"
 	desc = "An upgraded automated defense turret with enhanced firepower."
 	maxHealth = 900
 	health = 900
@@ -211,7 +211,7 @@
 
 // Level 3 Basic Turret - 60 DPS, 2000 HP
 /mob/living/simple_animal/hostile/clan/ranged/turret/level3
-	name = "X-Corp Turret, Level 3"
+	name = "Greed-Touched Turret, Level 3"
 	desc = "An advanced automated defense turret with maximum firepower."
 	icon_state = "greed_turret_v2_3"
 	icon_living = "greed_turret_v2_3"
@@ -225,8 +225,8 @@
 //////////////
 // Base artillery turret class - DO NOT USE DIRECTLY
 /mob/living/simple_animal/hostile/clan/ranged/turret/artillery
-	name = "X-Corp Artillery Turret"
-	desc = "A heavy artillery turret with X-Corp markings. Its barrel glows with barely contained energy."
+	name = "Greed-Touched Artillery Turret"
+	desc = "A heavy artillery turret with Greed-Touched markings. Its barrel glows with barely contained energy."
 	icon_state = "greed_turret_v1"
 	maxHealth = 2000
 	health = 2000
@@ -241,6 +241,9 @@
 
 /mob/living/simple_animal/hostile/clan/ranged/turret/artillery/OpenFire(atom/A)
 	if(is_firing)
+		return FALSE
+
+	if(!A)
 		return FALSE
 
 	dir = get_cardinal_dir(src, A)
@@ -396,7 +399,7 @@
 //////////////
 // Level 1 Artillery Turret - 50 damage per shot, 1000 HP
 /mob/living/simple_animal/hostile/clan/ranged/turret/artillery/level1
-	name = "X-Corp Artillery Turret, Level 1"
+	name = "Greed-Touched Artillery Turret, Level 1"
 	desc = "A basic heavy artillery turret with explosive shells."
 	maxHealth = 800
 	health = 800
@@ -407,7 +410,7 @@
 
 // Level 2 Artillery Turret - 80 damage per shot, 2000 HP
 /mob/living/simple_animal/hostile/clan/ranged/turret/artillery/level2
-	name = "X-Corp Artillery Turret, Level 2"
+	name = "Greed-Touched Artillery Turret, Level 2"
 	desc = "An upgraded heavy artillery turret with enhanced explosive power."
 	maxHealth = 1400
 	health = 1400
@@ -418,7 +421,7 @@
 
 // Level 3 Artillery Turret - 120 damage per shot, 3000 HP
 /mob/living/simple_animal/hostile/clan/ranged/turret/artillery/level3
-	name = "X-Corp Artillery Turret, Level 3"
+	name = "Greed-Touched Artillery Turret, Level 3"
 	desc = "An advanced heavy artillery turret with devastating firepower."
 	maxHealth = 1800
 	health = 1800
@@ -478,7 +481,7 @@
 //////////////
 // Defensive building that creates a damage-redirecting shield for nearby allies
 /mob/living/simple_animal/hostile/clan/shield_generator
-	name = "X-Corp Shield Generator"
+	name = "Greed-Touched Shield Generator"
 	desc = "A defensive structure that projects protective energy shields onto nearby units."
 	icon = 'ModularLobotomy/_Lobotomyicons/resurgence_greed_48x48.dmi'
 	icon_state = "greed_bullet_shield"
@@ -603,7 +606,7 @@
 //////////////
 // Level 1 Shield Generator - 1500 HP, 3 tile radius
 /mob/living/simple_animal/hostile/clan/shield_generator/level1
-	name = "X-Corp Shield Generator, Level 1"
+	name = "Greed-Touched Shield Generator, Level 1"
 	desc = "A basic defensive structure that projects protective shields."
 	maxHealth = 1500
 	health = 1500
@@ -611,7 +614,7 @@
 
 // Level 2 Shield Generator - 2500 HP, 4 tile radius
 /mob/living/simple_animal/hostile/clan/shield_generator/level2
-	name = "X-Corp Shield Generator, Level 2"
+	name = "Greed-Touched Shield Generator, Level 2"
 	desc = "An upgraded shield generator with enhanced coverage."
 	maxHealth = 2500
 	health = 2500
@@ -619,7 +622,7 @@
 
 // Level 3 Shield Generator - 3500 HP, 5 tile radius
 /mob/living/simple_animal/hostile/clan/shield_generator/level3
-	name = "X-Corp Shield Generator, Level 3"
+	name = "Greed-Touched Shield Generator, Level 3"
 	desc = "An advanced shield generator with maximum protection range."
 	maxHealth = 3500
 	health = 3500
@@ -708,9 +711,6 @@
 
 	var/turf/spawn_turf = get_turf(src)
 	chained_unit = new mob_type_to_spawn(spawn_turf)
-
-	// Make unit aware it's chained
-	chained_unit.teleport_away = FALSE // Can't teleport when chained
 
 	visible_message(span_notice("[src] deploys [chained_unit]!"))
 	playsound(src, 'sound/effects/phasein.ogg', 50, TRUE)

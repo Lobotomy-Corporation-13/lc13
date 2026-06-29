@@ -40,6 +40,7 @@
 
 	for(var/P in typesof(/obj/item/pda) - blocked)
 		var/obj/item/pda/D = new P
+		GLOB.PDAs -= D
 
 		//D.name = "PDA Style [colorlist.len+1]" //Gotta set the name, otherwise it all comes up as "PDA"
 		D.name = D.icon_state //PDAs don't have unique names, but using the sprite names works.

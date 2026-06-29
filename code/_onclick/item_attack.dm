@@ -195,14 +195,20 @@
 	else
 		. = list(target_turf)
 
-	new /obj/effect/temp_visual/swipe(get_step(user, SOUTHWEST), custom_sweep_icon, get_dir(user, target), swingcolor ? swingcolor : COLOR_GRAY, swipe_icon)
+	// We'll use gray as a colour fallback if we don't have a swingcolour set and we don't have forced_swingcolor enabled.
+	var/color_to_use = (forced_swingcolor || swingcolor) ? swingcolor : COLOR_GRAY
+	new /obj/effect/temp_visual/swipe(get_step(user, SOUTHWEST), custom_sweep_icon, get_dir(user, target), color_to_use, swipe_icon)
 
 	return
 
 /obj/item/proc/get_thrust_turfs(atom/target, mob/user)
 	. = getline(get_step_towards(user, target), target)
+
+	// We'll use gray as a colour fallback if we don't have a swingcolour set and we don't have forced_swingcolor enabled.
+	var/color_to_use = (forced_swingcolor || swingcolor) ? swingcolor : COLOR_GRAY
+
 	for(var/turf/T in .)
-		var/obj/effect/temp_visual/thrust/TT = new(T, swingcolor ? swingcolor : COLOR_GRAY, custom_thrust_icon, custom_thrust_state)
+		var/obj/effect/temp_visual/thrust/TT = new(T, color_to_use, custom_thrust_icon, custom_thrust_state)
 		var/matrix/M = matrix(TT.transform)
 		M.Turn(Get_Angle(user, target)-90)
 		TT.transform = M

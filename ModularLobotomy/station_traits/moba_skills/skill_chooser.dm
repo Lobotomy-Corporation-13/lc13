@@ -1,3 +1,5 @@
+GLOBAL_LIST_EMPTY(classed_up)
+
 /obj/item/class_chooser
 	name = "L-Corp agent class chooser accelerator"
 	desc = "A device used to choose your agent class."
@@ -21,6 +23,12 @@
 
 	if(!(user?.mind?.assigned_role in can_class))
 		return ..()
+
+	if(user in GLOB.classed_up)
+		to_chat(user, span_notice("You already have a class."))
+		return
+
+	GLOB.classed_up |= user
 
 
 	var/list/classes = list(	//Classes that are JRPG Classes

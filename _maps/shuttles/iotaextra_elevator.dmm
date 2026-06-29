@@ -40,8 +40,10 @@
 /turf/open/floor/mineral/plastitanium/red,
 /area/shuttle/mining)
 "f" = (
-/obj/machinery/smartfridge/extraction_storage/ego_armor,
-/turf/open/floor/mineral/titanium/yellow,
+/obj/structure/table/reinforced,
+/obj/structure/fans/tiny/invisible,
+/obj/machinery/smartfridge/extraction_storage/ego_weapon,
+/turf/open/floor/mineral/plastitanium/red,
 /area/shuttle/mining)
 "g" = (
 /obj/structure/chair/comfy/shuttle{
@@ -111,13 +113,7 @@
 /turf/open/floor/pod/dark,
 /area/shuttle/mining)
 "q" = (
-/obj/machinery/computer/ego_purchase{
-	dir = 8;
-	pixel_x = 4;
-	layer = 3.0;
-	pixel_y = 7;
-	density = 0
-	},
+/obj/structure/grid_crafting_station,
 /turf/open/floor/carpet/royalblack,
 /area/shuttle/mining)
 "s" = (
@@ -137,8 +133,9 @@
 /turf/open/floor/pod/light,
 /area/shuttle/mining)
 "t" = (
-/obj/machinery/smartfridge/extraction_storage/ego_weapon,
-/turf/open/floor/mineral/titanium/yellow,
+/obj/structure/fans/tiny/invisible,
+/obj/machinery/smartfridge/extraction_storage/ego_armor,
+/turf/open/floor/mineral/plastitanium/red,
 /area/shuttle/mining)
 "u" = (
 /turf/closed/wall/mineral/titanium/survival/pod,
@@ -162,9 +159,10 @@
 "w" = (
 /obj/machinery/computer/shuttle/pod{
 	pixel_y = 23;
-	possible_destinations = "iotamain_northwest;iotamain_northeast;iotamain_southwest;iotamain_southeast";
 	name = "warp pod control computer";
-	shuttleId = "iotamain"
+	shuttleId = "iotamain";
+	possible_destinations = "iotaextra_disciplinary;iotaextra_control";
+	locked = 0
 	},
 /turf/open/floor/pod/dark,
 /area/shuttle/mining)
@@ -195,6 +193,9 @@
 	name = "metalic seat";
 	pixel_y = 6
 	},
+/obj/structure/sign/ordealmonitor{
+	pixel_y = 32
+	},
 /turf/open/floor/pod/dark,
 /area/shuttle/mining)
 "A" = (
@@ -211,24 +212,6 @@
 /turf/open/floor/pod/dark,
 /area/shuttle/mining)
 "B" = (
-/obj/machinery/button/door/indestructible{
-	id = "extraction";
-	name = "Extraction Access Shutters";
-	pixel_y = -1;
-	req_one_access_txt = "19";
-	plane = 0
-	},
-/obj/machinery/button{
-	device_type = /obj/item/assembly/signaler;
-	name = "button (Press to allow Access to other shuttle console)";
-	pixel_y = -10
-	},
-/obj/effect/light_emitter{
-	light_power = 4;
-	light_range = 25;
-	set_cap = 3;
-	set_luminosity = 24
-	},
 /obj/machinery/camera,
 /turf/closed/indestructible/reinforced{
 	name = "facility wall";
@@ -236,16 +219,26 @@
 	},
 /area/shuttle/mining)
 "D" = (
-/obj/machinery/computer/abnormality_logs{
-	dir = 8;
-	pixel_x = 4;
-	layer = 2.95;
-	pixel_y = -7
-	},
+/obj/effect/landmark/refinerspawn,
 /turf/open/floor/carpet/royalblack,
 /area/shuttle/mining)
 "F" = (
 /obj/machinery/text_adventure_console,
+/obj/machinery/button/door/indestructible{
+	id = "extraction";
+	name = "Extraction Access Shutters";
+	pixel_y = -33;
+	req_one_access_txt = "19";
+	plane = 0;
+	pixel_x = 0
+	},
+/obj/machinery/button{
+	device_type = /obj/item/assembly/signaler;
+	name = "button (Press to allow Access to other shuttle console)";
+	pixel_y = -42;
+	resistance_flags = 115;
+	pixel_x = 0
+	},
 /turf/open/floor/carpet/royalblack,
 /area/shuttle/mining)
 "G" = (
@@ -258,12 +251,8 @@
 /turf/open/floor/pod/light,
 /area/shuttle/mining)
 "H" = (
-/obj/structure/table/reinforced,
 /obj/structure/fans/tiny/invisible,
-/obj/structure/sign/ordealmonitor,
-/obj/effect/spawner/structure/window/hollow/reinforced{
-	resistance_flags = 115
-	},
+/obj/machinery/smartfridge/extraction_storage/ego_weapon,
 /turf/open/floor/mineral/plastitanium/red,
 /area/shuttle/mining)
 "I" = (
@@ -273,6 +262,19 @@
 	network = list("rd");
 	name = "\improper Shuttle Console telescreen";
 	desc = "To check if anyone wants to use shuttle consoles that control the location of this shuttle. This is for Extraction officers to be able to choose which locaiton it wants to be in without being under the whims of agent tiders."
+	},
+/obj/machinery/button{
+	device_type = /obj/item/assembly/signaler;
+	name = "button (Press to allow Access to other shuttle console)";
+	pixel_y = 22;
+	resistance_flags = 115
+	},
+/obj/machinery/button/door/indestructible{
+	id = "extraction";
+	name = "Extraction Access Shutters";
+	pixel_y = 31;
+	req_one_access_txt = "19";
+	plane = 0
 	},
 /turf/open/floor/carpet/royalblack,
 /area/shuttle/mining)
@@ -303,6 +305,9 @@
 	name = "metalic seat";
 	pixel_y = 1
 	},
+/obj/structure/sign/ordealmonitor{
+	pixel_y = -32
+	},
 /turf/open/floor/pod/dark,
 /area/shuttle/mining)
 "S" = (
@@ -318,6 +323,13 @@
 	},
 /turf/open/floor/carpet/royalblack,
 /area/shuttle/mining)
+"U" = (
+/obj/machinery/light{
+	dir = 1;
+	pixel_y = 24
+	},
+/turf/open/floor/carpet/royalblack,
+/area/shuttle/mining)
 "V" = (
 /obj/machinery/computer/abnormality_logs{
 	dir = 4;
@@ -328,11 +340,8 @@
 /turf/open/floor/carpet/royalblack,
 /area/shuttle/mining)
 "W" = (
-/obj/machinery/computer/extraction_cargo{
-	dir = 8;
-	pixel_x = 4;
-	pixel_y = -22;
-	density = 0
+/obj/structure/template_vendor{
+	icon_state = "template_vendor_dark"
 	},
 /turf/open/floor/carpet/royalblack,
 /area/shuttle/mining)
@@ -353,12 +362,6 @@
 /turf/open/floor/pod/dark,
 /area/shuttle/mining)
 "Y" = (
-/obj/effect/light_emitter{
-	light_power = 4;
-	light_range = 25;
-	set_cap = 3;
-	set_luminosity = 24
-	},
 /obj/machinery/camera,
 /turf/open/floor/pod,
 /area/shuttle/mining)
@@ -379,13 +382,13 @@ K
 y
 c
 y
-t
-H
-j
-j
-j
-H
+K
 f
+j
+j
+j
+t
+K
 y
 c
 y
@@ -397,7 +400,7 @@ X
 d
 n
 N
-i
+U
 i
 a
 i
@@ -465,7 +468,7 @@ v
 d
 h
 N
-i
+U
 i
 l
 i
@@ -481,13 +484,13 @@ K
 y
 c
 y
-f
-H
-e
-e
-e
-H
+K
 t
+e
+e
+e
+H
+K
 y
 c
 y

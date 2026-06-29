@@ -157,6 +157,7 @@
 	light_range = 5
 	light_power = 7
 	density = FALSE
+	area_index = MOB_SIMPLEANIMAL_INDEX // Won't set off regen threat status
 
 /mob/living/simple_animal/hostile/scarlet_moths/Initialize()
 	. = ..()

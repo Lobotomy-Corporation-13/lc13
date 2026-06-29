@@ -23,7 +23,7 @@
 /area/city/backstreets_room)
 "k" = (
 /obj/structure/table/wood,
-/obj/item/ego_weapon/shield/sangria,
+/obj/item/ego_weapon/shield/parry/sangria,
 /obj/item/clothing/under/limbus/prison,
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/plasteel/dark,

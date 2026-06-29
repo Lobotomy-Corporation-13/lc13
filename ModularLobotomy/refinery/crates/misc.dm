@@ -7,9 +7,9 @@
 	cosmeticchance = 25
 	lootlist =	list(
 		/obj/item/ego_weapon/mini/hayong,
-		/obj/item/ego_weapon/shield/walpurgisnacht,
+		/obj/item/ego_weapon/shield/parry/walpurgisnacht,
 		/obj/item/ego_weapon/lance/suenoimpossible,
-		/obj/item/ego_weapon/shield/sangria,
+		/obj/item/ego_weapon/shield/parry/sangria,
 		/obj/item/ego_weapon/mini/soleil,
 		/obj/item/ego_weapon/mini/crow,
 		/obj/item/ego_weapon/taixuhuanjing,

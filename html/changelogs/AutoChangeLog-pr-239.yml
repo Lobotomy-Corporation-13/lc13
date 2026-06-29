@@ -1,0 +1,5 @@
+author: "Kitsunemitsu"
+delete-after: True
+changes:
+  - rscadd: "Added new station traits"
+  - code_imp: "Reorganized the Traits folder"

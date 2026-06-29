@@ -401,9 +401,12 @@
 /mob/living/simple_animal/hostile/clan/ranged/corrupter/greed
 	name = "greed touched corrupter"
 	desc = "A horrifying fusion of corrupted flesh and dark technology. Reality itself seems to reject its presence."
-	icon = 'ModularLobotomy/_Lobotomyicons/resurgence_greed_48x48.dmi'
-	icon_state = "demolisher_bomb"
-	icon_living = "demolisher_bomb"
+	icon = 'icons/mob/lavaland/64x64megafauna.dmi'
+	icon_state = "Fugu1"
+	icon_living = "Fugu1"
+	pixel_x = -16
+	base_pixel_x = -16
+	color = "#ff0000"
 	faction = list("greed_clan", "hostile")
 	maxHealth = 4000 // More health
 	health = 4000

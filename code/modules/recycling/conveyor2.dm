@@ -447,6 +447,9 @@ GLOBAL_LIST_EMPTY(conveyors_by_id)
 	var/obj/machinery/conveyor/C = new/obj/machinery/conveyor(A, cdir, id)
 	transfer_fingerprints_to(C)
 	use(1)
+	// Track conveyor belt placement for RCE leaderboard
+	if(SSgamedirector.rce_leaderboard)
+		SSgamedirector.rce_leaderboard.RecordConveyorPlaced()
 
 /obj/item/stack/conveyor/attackby(obj/item/I, mob/user, params)
 	..()

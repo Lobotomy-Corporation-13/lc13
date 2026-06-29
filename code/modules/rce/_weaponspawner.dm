@@ -6,9 +6,9 @@
 	icon = 'icons/effects/landmarks_static.dmi'
 	icon_state = "x4"
 	var/list/possible_items = list(
-		/obj/item/gun/energy/e_gun/rabbitdash/sniper,
-		/obj/item/gun/energy/e_gun/rabbitdash/white,
-		/obj/item/gun/energy/e_gun/rabbitdash/black,
+		/obj/item/gun/energy/e_gun/rabbitdash/sniper/iff,
+		/obj/item/gun/energy/e_gun/rabbitdash/white/iff,
+		/obj/item/gun/energy/e_gun/rabbitdash/black/iff,
 	)
 
 
@@ -20,20 +20,20 @@
 
 /obj/effect/landmark/rcorp/midweapon
 	possible_items = list(
-		/obj/item/gun/energy/e_gun/rabbitdash/shotgun,
-		/obj/item/gun/energy/e_gun/rabbitdash/pale,
-		/obj/item/gun/energy/e_gun/rabbit/minigun,
+		/obj/item/gun/energy/e_gun/rabbitdash/shotgun/iff,
+		/obj/item/gun/energy/e_gun/rabbitdash/pale/iff,
+		/obj/item/gun/energy/e_gun/rabbit/minigun/iff,
 		/obj/item/gun/grenadelauncher,
 	)
 
 /obj/effect/landmark/rcorp/highweapon
 	possible_items = list(
-		/obj/item/gun/energy/e_gun/rabbitdash/shotgun/white,
-		/obj/item/gun/energy/e_gun/rabbitdash/shotgun/black,
-		/obj/item/gun/energy/e_gun/rabbitdash/heavy,
-		/obj/item/gun/energy/e_gun/rabbitdash/heavysniper,
-		/obj/item/gun/energy/e_gun/rabbit/nopin,
-		/obj/item/gun/energy/e_gun/rabbit/minigun/tricolor,
+		/obj/item/gun/energy/e_gun/rabbitdash/shotgun/white/iff,
+		/obj/item/gun/energy/e_gun/rabbitdash/shotgun/black/iff,
+		/obj/item/gun/energy/e_gun/rabbitdash/heavy/iff,
+		/obj/item/gun/energy/e_gun/rabbitdash/heavysniper, // Already IFF
+		/obj/item/gun/energy/e_gun/rabbit/nopin/iff,
+		/obj/item/gun/energy/e_gun/rabbit/minigun/tricolor, // Already IFF
 		/obj/item/minigunpack,
 
 	)
@@ -51,20 +51,20 @@
 
 /obj/effect/landmark/rcorp/pistol
 	possible_items = list(
-		/obj/item/gun/energy/e_gun/rabbitdash/small,
-		/obj/item/gun/energy/e_gun/rabbitdash/small/white,
-		/obj/item/gun/energy/e_gun/rabbitdash/small/black,
-		/obj/item/gun/energy/e_gun/rabbitdash/small/pale,
-		/obj/item/gun/energy/e_gun/rabbitdash/small/tinypale,
+		/obj/item/gun/energy/e_gun/rabbitdash/small/iff,
+		/obj/item/gun/energy/e_gun/rabbitdash/small/white/iff,
+		/obj/item/gun/energy/e_gun/rabbitdash/small/black/iff,
+		/obj/item/gun/energy/e_gun/rabbitdash/small/pale/iff,
+		/obj/item/gun/energy/e_gun/rabbitdash/small/tinypale/iff,
 	)
 
 /obj/effect/landmark/rcorp/pistol2
 	possible_items = list(
-		/obj/item/gun/energy/e_gun/rabbitdash/small/smg,
-		/obj/item/gun/energy/e_gun/rabbitdash/small/smg/white,
-		/obj/item/gun/energy/e_gun/rabbitdash/small/smg/black,
-		/obj/item/gun/energy/e_gun/rabbitdash/small/pale,
-		/obj/item/gun/energy/e_gun/rabbitdash/small/tinypale,
+		/obj/item/gun/energy/e_gun/rabbitdash/small/smg/iff,
+		/obj/item/gun/energy/e_gun/rabbitdash/small/smg/white/iff,
+		/obj/item/gun/energy/e_gun/rabbitdash/small/smg/black/iff,
+		/obj/item/gun/energy/e_gun/rabbitdash/small/pale/iff,
+		/obj/item/gun/energy/e_gun/rabbitdash/small/tinypale/iff,
 	)
 
 

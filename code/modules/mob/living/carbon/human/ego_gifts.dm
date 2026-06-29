@@ -549,6 +549,7 @@
 	prudence_bonus = 2
 	temperance_bonus = -5
 	justice_bonus = 2
+	slot = BROOCH
 
 /datum/ego_gifts/capote
 	name = "Capote"
