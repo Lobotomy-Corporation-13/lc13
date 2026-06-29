@@ -591,10 +591,10 @@
 			/mob/living/simple_animal/hostile/clan/ranged/gunner/greed/refracted = 20,
 		)
 	return list(
-		/mob/living/simple_animal/hostile/xcorp/dps/refracted    = 35,
-		/mob/living/simple_animal/hostile/xcorp/scout/refracted  = 25,
-		/mob/living/simple_animal/hostile/xcorp/sapper/refracted = 20,
-		/mob/living/simple_animal/hostile/xcorp/tank/refracted   = 20,
+		/mob/living/simple_animal/hostile/greed/dps/refracted    = 35,
+		/mob/living/simple_animal/hostile/greed/scout/refracted  = 25,
+		/mob/living/simple_animal/hostile/greed/sapper/refracted = 20,
+		/mob/living/simple_animal/hostile/greed/tank/refracted   = 20,
 	)
 
 /// Spawns a wave of greed-touched followers. Wave size and the field cap
@@ -1238,19 +1238,19 @@
 
 // ---- X-Corp ----
 
-/mob/living/simple_animal/hostile/xcorp/dps/refracted
+/mob/living/simple_animal/hostile/greed/dps/refracted
 	maxHealth = 81
 	health = 81
 	melee_damage_lower = 1
 	melee_damage_upper = 2
 
-/mob/living/simple_animal/hostile/xcorp/scout/refracted
+/mob/living/simple_animal/hostile/greed/scout/refracted
 	maxHealth = 113
 	health = 113
 	melee_damage_lower = 1
 	melee_damage_upper = 2
 
-/mob/living/simple_animal/hostile/xcorp/sapper/refracted
+/mob/living/simple_animal/hostile/greed/sapper/refracted
 	maxHealth = 156
 	health = 156
 	melee_damage_lower = 1
@@ -1259,7 +1259,7 @@
 	// this cap the inherited 20 spikes too hard against 200-HP players.
 	scream_damage = 10
 
-/mob/living/simple_animal/hostile/xcorp/tank/refracted
+/mob/living/simple_animal/hostile/greed/tank/refracted
 	maxHealth = 263
 	health = 263
 	melee_damage_lower = 2

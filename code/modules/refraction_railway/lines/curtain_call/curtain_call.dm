@@ -168,10 +168,10 @@
 		boss = TRUE,
 		extra_preview = list(
 			// Phase 1 — greed-touched X-Corp.
-			/mob/living/simple_animal/hostile/xcorp/dps/refracted,
-			/mob/living/simple_animal/hostile/xcorp/scout/refracted,
-			/mob/living/simple_animal/hostile/xcorp/sapper/refracted,
-			/mob/living/simple_animal/hostile/xcorp/tank/refracted,
+			/mob/living/simple_animal/hostile/greed/dps/refracted,
+			/mob/living/simple_animal/hostile/greed/scout/refracted,
+			/mob/living/simple_animal/hostile/greed/sapper/refracted,
+			/mob/living/simple_animal/hostile/greed/tank/refracted,
 			// Phase 2 — greed-touched clan.
 			/mob/living/simple_animal/hostile/clan/scout/greed/refracted,
 			/mob/living/simple_animal/hostile/clan/drone/greed/refracted,
