@@ -9,26 +9,44 @@
 	},
 /obj/structure/sigsystem/activator,
 /turf/open/floor/mineral/titanium,
-/area/awaymission/beach)
+/area/city/unregisteredportindoors)
 "an" = (
 /turf/open/water/deep/saltwater,
-/area/space)
+/area/city/unregisteredportoutdoors)
 "aT" = (
 /obj/structure/railing/corner{
 	resistance_flags = 64
 	},
 /turf/open/floor/mineral/titanium,
-/area/awaymission/beach)
+/area/city/unregisteredportindoors)
+"aU" = (
+/mob/living/simple_animal/hostile/shrimp_soldier{
+	name = "wellcheers corp senior security officer"
+	},
+/turf/open/floor/pod/light,
+/area/city/unregisteredportindoors)
 "bt" = (
 /obj/structure/sigsystem/connector,
 /turf/open/floor/mineral/titanium,
-/area/awaymission/beach)
+/area/city/unregisteredportindoors)
+"bW" = (
+/obj/machinery/light{
+	dir = 8
+	},
+/turf/open/floor/mineral/titanium/purple,
+/area/space)
 "bX" = (
 /obj/structure/sigsystem/connector/split{
 	dir = 4
 	},
 /turf/open/floor/mineral/titanium,
-/area/awaymission/beach)
+/area/city/unregisteredportindoors)
+"dt" = (
+/mob/living/simple_animal/hostile/shrimp{
+	name = "wellcheers corp receptionist"
+	},
+/turf/open/floor/mineral/titanium/white,
+/area/city/unregisteredportindoors)
 "dy" = (
 /obj/machinery/light{
 	dir = 1
@@ -41,30 +59,38 @@
 	dir = 1
 	},
 /turf/open/floor/pod/light,
-/area/space)
+/area/city/unregisteredportindoors)
 "dS" = (
 /obj/structure/table,
 /turf/open/floor/carpet/purple,
-/area/space)
+/area/city/unregisteredportindoors)
 "dY" = (
 /turf/open/water/deep/saltwater/extradeep,
-/area/space)
+/area/city/unregisteredportoutdoors)
 "ex" = (
 /obj/structure/table/wood,
 /obj/item/fishing_rod{
 	pixel_y = 7
 	},
 /turf/open/floor/wood,
-/area/space)
+/area/city/unregisteredportoutdoors)
 "eC" = (
 /obj/machinery/door/airlock/sandstone{
 	name = "Cargo Bay"
 	},
+/obj/machinery/door/poddoor/shutters/preopen{
+	resistance_flags = 64;
+	lockpickable = 0
+	},
 /turf/open/floor/mineral/titanium/white,
-/area/space)
+/area/city/unregisteredportindoors)
+"eX" = (
+/obj/machinery/light,
+/turf/open/floor/mineral/titanium/purple,
+/area/city/unregisteredportindoors)
 "ff" = (
 /turf/open/floor/mineral/titanium/white,
-/area/space)
+/area/city/unregisteredportindoors)
 "fw" = (
 /obj/structure/closet/crate/freezer,
 /obj/item/food/fish/fresh_water/ratfish,
@@ -72,13 +98,19 @@
 /obj/item/food/fish/salt_water/sheephead,
 /obj/item/food/fish/salt_water,
 /turf/open/floor/mineral/titanium/white,
-/area/space)
+/area/city/unregisteredportoutdoors)
+"fO" = (
+/mob/living/simple_animal/hostile/shrimp{
+	name = "wellcheers corp dock worker"
+	},
+/turf/open/floor/pod/light,
+/area/city/unregisteredportindoors)
 "gA" = (
 /obj/machinery/light{
 	dir = 4
 	},
 /turf/open/floor/mineral/titanium,
-/area/space)
+/area/city/unregisteredportindoors)
 "gH" = (
 /obj/effect/turf_decal/trimline/red/filled/warning,
 /obj/docking_port/stationary{
@@ -91,36 +123,38 @@
 /turf/open/floor/plating/ashplanet{
 	name = "asphalt"
 	},
-/area/space)
+/area/city/unregisteredportoutdoors)
 "hs" = (
 /obj/structure/closet/crate/bin,
 /obj/item/trash/can,
 /obj/item/trash/can,
 /obj/item/trash/plate,
 /turf/open/floor/carpet/purple,
-/area/space)
+/area/city/unregisteredportindoors)
 "hK" = (
 /obj/structure/sigsystem/connector,
 /turf/closed/indestructible/iron,
-/area/space)
+/area/city/unregisteredportindoors)
 "hT" = (
-/mob/living/simple_animal/hostile/shrimp,
+/mob/living/simple_animal/hostile/shrimp{
+	name = "wellcheers corp dock worker"
+	},
 /turf/open/floor/mineral/titanium/white,
-/area/space)
+/area/city/unregisteredportindoors)
 "hU" = (
 /obj/machinery/light,
 /turf/open/floor/mineral/titanium/white,
-/area/space)
+/area/city/unregisteredportindoors)
 "hY" = (
 /obj/structure/sigsystem/connector{
 	dir = 1
 	},
 /turf/closed/indestructible/iron,
-/area/space)
+/area/city/unregisteredportindoors)
 "ie" = (
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/mineral/titanium/white,
-/area/space)
+/area/city/unregisteredportoutdoors)
 "jg" = (
 /obj/structure/railing/corner{
 	dir = 4;
@@ -134,67 +168,75 @@
 	resistance_flags = 64
 	},
 /turf/open/water/deep/saltwater/extradeep,
-/area/awaymission/beach)
+/area/city/unregisteredportindoors)
+"jY" = (
+/obj/machinery/light{
+	dir = 1
+	},
+/obj/structure/closet/crate,
+/turf/open/floor/mineral/titanium/purple,
+/area/city/unregisteredportindoors)
 "kp" = (
 /obj/structure/sigsystem/connector{
 	dir = 4;
 	delay_time = 5
 	},
 /turf/open/floor/mineral/titanium,
-/area/awaymission/beach)
+/area/city/unregisteredportindoors)
 "kS" = (
-/obj/structure/chair/office/light{
-	dir = 1
-	},
 /turf/open/floor/carpet/purple,
-/area/space)
+/area/city/unregisteredportindoors)
 "la" = (
 /obj/structure/chair/office/light{
 	dir = 8
 	},
-/mob/living/simple_animal/hostile/shrimp,
+/mob/living/simple_animal/hostile/shrimp{
+	name = "wellcheers corp dock worker"
+	},
 /turf/open/floor/carpet/purple,
-/area/space)
+/area/city/unregisteredportindoors)
 "le" = (
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/vault,
-/area/space)
+/area/city/unregisteredportoutdoors)
 "lf" = (
 /obj/structure/sigsystem/connector{
 	dir = 1
 	},
 /turf/open/water/deep/saltwater/extradeep,
-/area/awaymission/beach)
+/area/city/unregisteredportindoors)
 "lG" = (
 /obj/effect/turf_decal/trimline/blue/filled/corner{
 	dir = 4
 	},
 /turf/open/floor/plating/dirt,
-/area/space)
+/area/city/unregisteredportoutdoors)
 "lK" = (
 /obj/structure/railing/corner{
 	dir = 1;
 	name = "wing-grade railing";
 	resistance_flags = 115
 	},
-/mob/living/simple_animal/hostile/senior_shrimp,
+/mob/living/simple_animal/hostile/senior_shrimp{
+	name = "wellcheers corp senior dock worker"
+	},
 /turf/open/floor/mineral/titanium/white,
-/area/space)
+/area/city/unregisteredportoutdoors)
 "lZ" = (
 /turf/open/floor/pod/light,
-/area/space)
+/area/city/unregisteredportindoors)
 "mo" = (
 /turf/open/floor/plating/ashplanet{
 	name = "asphalt"
 	},
-/area/space)
+/area/city/unregisteredportoutdoors)
 "mK" = (
 /obj/machinery/light{
 	dir = 4
 	},
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/mineral/titanium/white,
-/area/space)
+/area/city/unregisteredportoutdoors)
 "mU" = (
 /obj/structure/table,
 /obj/machinery/microwave{
@@ -202,7 +244,15 @@
 	pixel_y = 5
 	},
 /turf/open/floor/carpet/purple,
-/area/space)
+/area/city/unregisteredportindoors)
+"nf" = (
+/obj/structure/railing{
+	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
+	name = "wing-grade railing";
+	resistance_flags = 115
+	},
+/turf/open/floor/pod/light,
+/area/city/unregisteredportindoors)
 "nh" = (
 /obj/structure/closet/crate/bin{
 	pixel_y = 8
@@ -219,10 +269,10 @@
 	},
 /obj/item/trash/can,
 /turf/open/floor/wood,
-/area/space)
+/area/city/unregisteredportoutdoors)
 "nl" = (
 /turf/closed/indestructible/iron,
-/area/space)
+/area/city/unregisteredportoutdoors)
 "nq" = (
 /obj/structure/sign/departments/cargo{
 	resistance_flags = 64;
@@ -236,7 +286,7 @@
 /obj/item/fishing_component/line,
 /obj/item/reagent_containers/food/drinks/soda_cans/wellcheers_red,
 /turf/open/floor/mineral/titanium/white,
-/area/space)
+/area/city/unregisteredportoutdoors)
 "nR" = (
 /obj/structure/railing/corner{
 	dir = 8;
@@ -248,37 +298,42 @@
 	resistance_flags = 64
 	},
 /turf/open/water/deep/saltwater/extradeep,
-/area/awaymission/beach)
+/area/city/unregisteredportindoors)
 "nT" = (
 /obj/structure/closet/crate,
 /obj/item/fishing_component/line,
 /obj/item/fishing_component/hook,
 /obj/item/fishing_rod,
 /turf/open/floor/pod/light,
-/area/space)
+/area/city/unregisteredportoutdoors)
 "ob" = (
-/obj/structure/chair/office/light{
-	dir = 4
+/obj/structure/chair/office/light,
+/mob/living/simple_animal/hostile/senior_shrimp{
+	name = "wellcheers corp senior dock worker"
 	},
-/mob/living/simple_animal/hostile/senior_shrimp,
 /turf/open/floor/carpet/purple,
-/area/space)
+/area/city/unregisteredportindoors)
 "oh" = (
 /obj/machinery/door/airlock/sandstone{
 	name = "Break Room"
 	},
 /turf/open/floor/carpet/purple,
+/area/city/unregisteredportindoors)
+"oq" = (
+/turf/closed/indestructible/fakeglass{
+	baseturfs = /turf/open/water/deep/saltwater/extradeep
+	},
 /area/space)
 "ov" = (
 /turf/open/water/deep/saltwater/safe{
 	name = "shallow water";
 	desc = "Smells of the ocean. Seems shallow enough to wade through."
 	},
-/area/space)
+/area/city/unregisteredportoutdoors)
 "ox" = (
 /obj/structure/table/glass,
 /turf/open/floor/mineral/titanium/white,
-/area/space)
+/area/city/unregisteredportindoors)
 "oz" = (
 /turf/open/space/basic,
 /area/space)
@@ -293,18 +348,18 @@
 	dir = 1
 	},
 /turf/open/floor/mineral/titanium/white,
-/area/space)
+/area/city/unregisteredportoutdoors)
 "oT" = (
 /obj/machinery/light,
 /turf/open/floor/pod/light,
-/area/space)
+/area/city/unregisteredportindoors)
 "oW" = (
 /obj/structure/sigsystem/connector{
 	delay_time = 250;
 	dir = 8
 	},
 /turf/closed/indestructible/iron,
-/area/space)
+/area/city/unregisteredportindoors)
 "pd" = (
 /obj/structure/railing{
 	dir = 4;
@@ -314,13 +369,13 @@
 	dir = 8
 	},
 /turf/open/floor/mineral/titanium,
-/area/awaymission/beach)
+/area/city/unregisteredportindoors)
 "pi" = (
 /obj/structure/sigsystem/deployer{
 	atom_path = /mob/living/simple_animal/hostile/ordeal/shrimp
 	},
 /turf/open/floor/mineral/titanium,
-/area/awaymission/beach)
+/area/city/unregisteredportindoors)
 "ps" = (
 /obj/machinery/door/poddoor/shutters/preopen{
 	resistance_flags = 64;
@@ -331,7 +386,7 @@
 	},
 /obj/structure/sigsystem/activator,
 /turf/open/floor/mineral/titanium,
-/area/awaymission/beach)
+/area/city/unregisteredportindoors)
 "pz" = (
 /obj/effect/light_emitter{
 	light_power = 4;
@@ -340,31 +395,45 @@
 	set_luminosity = 24
 	},
 /turf/open/water/deep/saltwater/extradeep,
-/area/space)
+/area/city/unregisteredportoutdoors)
 "pF" = (
-/turf/open/floor/carpet/purple,
-/area/space)
-"pY" = (
-/mob/living/simple_animal/hostile/shrimp_soldier,
+/turf/open/floor/pod/light,
+/area/city/unregisteredportoutdoors)
+"pT" = (
+/mob/living/simple_animal/hostile/senior_shrimp{
+	name = "wellcheers corp senior dock worker"
+	},
 /turf/open/floor/mineral/titanium/purple,
 /area/space)
+"pY" = (
+/mob/living/simple_animal/hostile/shrimp_soldier{
+	name = "wellcheers corp senior security officer"
+	},
+/turf/open/floor/mineral/titanium/purple,
+/area/city/unregisteredportindoors)
 "qj" = (
 /obj/structure/sign/poster/lobotomycorp/wellcheers{
 	pixel_y = 32
 	},
 /turf/open/floor/plating/asteroid,
-/area/space)
+/area/city/unregisteredportoutdoors)
 "rg" = (
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	dir = 5
 	},
 /turf/open/floor/plating/dirt,
-/area/space)
+/area/city/unregisteredportoutdoors)
+"rp" = (
+/mob/living/simple_animal/hostile/senior_shrimp{
+	name = "wellcheers corp senior dock worker"
+	},
+/turf/open/floor/mineral/titanium/purple,
+/area/city/unregisteredportindoors)
 "rr" = (
 /turf/open/floor/holofloor/beach/coast_t{
 	dir = 8
 	},
-/area/space)
+/area/city/unregisteredportoutdoors)
 "rP" = (
 /obj/effect/turf_decal/trimline/white/filled/line{
 	pixel_y = 10
@@ -373,35 +442,53 @@
 	name = "asphalt";
 	density = 1
 	},
-/area/space)
+/area/city/unregisteredportoutdoors)
 "rZ" = (
 /obj/structure/lootcrate/s_corp,
 /obj/machinery/light,
 /turf/open/floor/pod/light,
-/area/space)
+/area/city/unregisteredportindoors)
 "sJ" = (
 /turf/open/floor/mineral/titanium,
-/area/space)
+/area/city/unregisteredportindoors)
 "sL" = (
 /obj/structure/chair/office/light{
 	dir = 1
 	},
-/mob/living/simple_animal/hostile/shrimp,
+/mob/living/simple_animal/hostile/shrimp{
+	name = "wellcheers corp dock worker"
+	},
 /turf/open/floor/carpet/purple,
+/area/city/unregisteredportindoors)
+"sP" = (
+/obj/machinery/door/poddoor/shutters/indestructible{
+	lockpickable = 0;
+	resistance_flags = 64
+	},
+/turf/open/floor/carpet/purple,
+/area/city/unregisteredportindoors)
+"sY" = (
+/mob/living/simple_animal/hostile/shrimp{
+	name = "wellcheers corp dock worker"
+	},
+/turf/open/floor/mineral/titanium/purple,
 /area/space)
+"ta" = (
+/turf/closed/indestructible/riveted,
+/area/city/unregisteredportoutdoors)
 "tf" = (
 /obj/structure/sigsystem/connector{
 	dir = 4
 	},
 /turf/closed/indestructible/iron,
-/area/space)
+/area/city/unregisteredportindoors)
 "tm" = (
 /obj/structure/railing{
 	dir = 1;
 	resistance_flags = 64
 	},
 /turf/open/floor/mineral/titanium,
-/area/awaymission/beach)
+/area/city/unregisteredportindoors)
 "tz" = (
 /obj/structure/railing{
 	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
@@ -414,6 +501,16 @@
 	pixel_x = 9
 	},
 /turf/open/floor/wood,
+/area/city/unregisteredportoutdoors)
+"tE" = (
+/obj/structure/fluff/big_chain,
+/obj/effect/light_emitter{
+	light_power = 4;
+	light_range = 3;
+	set_cap = 3;
+	set_luminosity = 24
+	},
+/turf/open/water/deep/saltwater/extradeep,
 /area/space)
 "tG" = (
 /obj/structure/railing{
@@ -423,14 +520,14 @@
 	resistance_flags = 115
 	},
 /turf/open/floor/wood,
-/area/space)
+/area/city/unregisteredportoutdoors)
 "tL" = (
 /obj/structure/sign/departments/cargo{
 	resistance_flags = 64;
 	pixel_y = 32
 	},
 /turf/open/floor/mineral/titanium/white,
-/area/space)
+/area/city/unregisteredportindoors)
 "tO" = (
 /obj/structure/railing{
 	resistance_flags = 64
@@ -443,7 +540,7 @@
 	resistance_flags = 64
 	},
 /turf/open/water/deep/saltwater/extradeep,
-/area/awaymission/beach)
+/area/city/unregisteredportindoors)
 "tV" = (
 /obj/structure/railing{
 	dir = 1;
@@ -454,7 +551,7 @@
 	resistance_flags = 64
 	},
 /turf/open/water/deep/saltwater/extradeep,
-/area/awaymission/beach)
+/area/city/unregisteredportindoors)
 "uc" = (
 /obj/structure/railing{
 	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
@@ -463,7 +560,7 @@
 	dir = 8
 	},
 /turf/open/floor/wood,
-/area/space)
+/area/city/unregisteredportoutdoors)
 "uC" = (
 /obj/machinery/light{
 	dir = 4
@@ -474,10 +571,10 @@
 	pixel_x = 2
 	},
 /turf/open/floor/carpet/purple,
-/area/space)
+/area/city/unregisteredportindoors)
 "uF" = (
 /turf/closed/indestructible/iron,
-/area/awaymission/beach)
+/area/city/unregisteredportindoors)
 "uI" = (
 /obj/structure/railing{
 	dir = 4;
@@ -487,16 +584,16 @@
 	dir = 4
 	},
 /turf/open/floor/mineral/titanium,
-/area/awaymission/beach)
+/area/city/unregisteredportindoors)
 "uM" = (
 /turf/open/floor/holofloor/beach,
-/area/space)
+/area/city/unregisteredportoutdoors)
 "vd" = (
 /obj/structure/sigsystem/connector{
 	dir = 4
 	},
 /turf/open/floor/mineral/titanium,
-/area/awaymission/beach)
+/area/city/unregisteredportindoors)
 "vm" = (
 /obj/machinery/door/poddoor/shutters/preopen{
 	resistance_flags = 64;
@@ -504,7 +601,7 @@
 	},
 /obj/structure/sigsystem/activator,
 /turf/open/floor/mineral/titanium,
-/area/awaymission/beach)
+/area/city/unregisteredportindoors)
 "vx" = (
 /obj/effect/light_emitter{
 	light_power = 4;
@@ -513,23 +610,27 @@
 	set_luminosity = 24
 	},
 /turf/open/floor/plating/dirt,
-/area/space)
+/area/city/unregisteredportoutdoors)
 "vH" = (
 /obj/machinery/light{
 	dir = 1
 	},
 /obj/structure/lootcrate/money,
 /turf/open/floor/pod/light,
-/area/space)
+/area/city/unregisteredportindoors)
 "vK" = (
-/turf/open/floor/mineral/titanium,
-/area/awaymission/beach)
+/obj/machinery/door/poddoor/shutters/indestructible{
+	lockpickable = 0;
+	resistance_flags = 64
+	},
+/turf/open/floor/mineral/titanium/purple,
+/area/city/unregisteredportindoors)
 "vQ" = (
 /turf/open/floor/plating/ashplanet{
 	name = "asphalt";
 	density = 1
 	},
-/area/space)
+/area/city/unregisteredportoutdoors)
 "vW" = (
 /obj/machinery/computer/shuttle/mining{
 	dir = 1;
@@ -546,7 +647,7 @@
 	resistance_flags = 64
 	},
 /turf/open/floor/plating/dirt,
-/area/space)
+/area/city/unregisteredportoutdoors)
 "wo" = (
 /obj/effect/turf_decal/trimline/red/filled/warning{
 	dir = 4
@@ -554,12 +655,18 @@
 /turf/open/floor/plating/ashplanet{
 	name = "asphalt"
 	},
-/area/space)
+/area/city/unregisteredportoutdoors)
 "wp" = (
 /obj/effect/turf_decal/trimline/red/filled/warning,
 /turf/open/floor/plating/ashplanet{
 	name = "asphalt"
 	},
+/area/city/unregisteredportoutdoors)
+"wB" = (
+/mob/living/simple_animal/hostile/shrimp_soldier{
+	name = "wellcheers corp senior security officer"
+	},
+/turf/open/floor/mineral/titanium/purple,
 /area/space)
 "wN" = (
 /obj/structure/railing{
@@ -572,26 +679,26 @@
 	resistance_flags = 64
 	},
 /turf/open/water/deep/saltwater/extradeep,
-/area/awaymission/beach)
+/area/city/unregisteredportindoors)
 "xs" = (
 /obj/structure/sigsystem/connector/split{
 	dir = 4
 	},
 /turf/closed/indestructible/iron,
-/area/space)
+/area/city/unregisteredportindoors)
 "xA" = (
 /obj/structure/railing/corner{
 	name = "wing-grade railing";
 	resistance_flags = 115
 	},
 /turf/open/floor/pod/light,
-/area/space)
+/area/city/unregisteredportoutdoors)
 "yo" = (
 /obj/structure/sign/poster/lobotomycorp/wellcheers{
 	pixel_y = 32
 	},
 /turf/open/floor/plating/dirt,
-/area/space)
+/area/city/unregisteredportoutdoors)
 "ys" = (
 /obj/structure/railing{
 	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
@@ -607,13 +714,13 @@
 /obj/item/fishing_rod,
 /obj/item/reagent_containers/food/drinks/soda_cans/wellcheers_purple,
 /turf/open/floor/pod/light,
-/area/space)
+/area/city/unregisteredportoutdoors)
 "zp" = (
 /obj/structure/sigsystem/connector{
 	dir = 8
 	},
 /turf/open/floor/mineral/titanium,
-/area/awaymission/beach)
+/area/city/unregisteredportindoors)
 "zr" = (
 /obj/structure/sigsystem/pressure_plate{
 	mobs_only = 1
@@ -622,18 +729,20 @@
 	dir = 8
 	},
 /turf/open/floor/mineral/titanium,
-/area/awaymission/beach)
+/area/city/unregisteredportindoors)
 "zE" = (
 /obj/structure/railing{
 	dir = 8;
 	resistance_flags = 64
 	},
 /turf/open/floor/mineral/titanium,
-/area/awaymission/beach)
+/area/city/unregisteredportindoors)
 "zH" = (
-/mob/living/simple_animal/hostile/shrimp,
+/mob/living/simple_animal/hostile/shrimp{
+	name = "wellcheers corp dock worker"
+	},
 /turf/open/floor/mineral/titanium/purple,
-/area/space)
+/area/city/unregisteredportindoors)
 "zT" = (
 /obj/structure/railing{
 	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
@@ -644,7 +753,7 @@
 /obj/machinery/light,
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/mineral/titanium/white,
-/area/space)
+/area/city/unregisteredportoutdoors)
 "Aj" = (
 /turf/closed/indestructible/opshuttle{
 	color = "#bc7ad6";
@@ -653,7 +762,7 @@
 /area/space)
 "Ao" = (
 /turf/closed/indestructible/rock,
-/area/space)
+/area/city/unregisteredportoutdoors)
 "Ar" = (
 /obj/effect/turf_decal/trimline/red/filled/warning{
 	dir = 5
@@ -661,7 +770,7 @@
 /turf/open/floor/plating/ashplanet{
 	name = "asphalt"
 	},
-/area/space)
+/area/city/unregisteredportoutdoors)
 "AG" = (
 /obj/structure/railing{
 	dir = 8;
@@ -671,20 +780,20 @@
 	dir = 4
 	},
 /turf/open/floor/mineral/titanium,
-/area/awaymission/beach)
+/area/city/unregisteredportindoors)
 "Bi" = (
 /obj/structure/lootcrate/money,
 /turf/open/floor/pod/light,
-/area/space)
+/area/city/unregisteredportindoors)
 "BL" = (
 /obj/structure/sigsystem/connector{
 	dir = 8
 	},
 /turf/closed/indestructible/iron,
-/area/space)
+/area/city/unregisteredportindoors)
 "BZ" = (
 /turf/open/floor/wood,
-/area/space)
+/area/city/unregisteredportoutdoors)
 "Cg" = (
 /obj/effect/turf_decal/trimline/white/filled/line{
 	pixel_y = 10
@@ -692,13 +801,19 @@
 /turf/open/floor/plating/ashplanet{
 	name = "asphalt"
 	},
-/area/space)
+/area/city/unregisteredportoutdoors)
 "Cv" = (
 /obj/machinery/light,
 /obj/structure/chair/office/light{
 	dir = 4
 	},
 /turf/open/floor/carpet/purple,
+/area/city/unregisteredportindoors)
+"CG" = (
+/obj/machinery/light{
+	dir = 4
+	},
+/turf/open/floor/mineral/titanium/purple,
 /area/space)
 "Dk" = (
 /obj/structure/sigsystem/tower{
@@ -706,7 +821,7 @@
 	signal_code = 63
 	},
 /turf/open/floor/mineral/titanium,
-/area/awaymission/beach)
+/area/city/unregisteredportindoors)
 "Do" = (
 /obj/structure/sigsystem/connector/split{
 	dir = 4
@@ -715,7 +830,7 @@
 	dir = 1
 	},
 /turf/open/floor/mineral/titanium,
-/area/awaymission/beach)
+/area/city/unregisteredportindoors)
 "DB" = (
 /obj/structure/railing{
 	dir = 1;
@@ -725,10 +840,10 @@
 	delay_time = 5
 	},
 /turf/open/floor/mineral/titanium,
-/area/awaymission/beach)
+/area/city/unregisteredportindoors)
 "DW" = (
 /turf/open/floor/vault,
-/area/space)
+/area/city/unregisteredportoutdoors)
 "DZ" = (
 /obj/structure/railing{
 	dir = 8;
@@ -738,11 +853,11 @@
 	dir = 8
 	},
 /turf/open/floor/mineral/titanium,
-/area/awaymission/beach)
+/area/city/unregisteredportindoors)
 "Ed" = (
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/pod/light,
-/area/space)
+/area/city/unregisteredportoutdoors)
 "EM" = (
 /obj/effect/turf_decal/trimline/red/filled/warning{
 	dir = 8
@@ -750,13 +865,10 @@
 /turf/open/floor/plating/ashplanet{
 	name = "asphalt"
 	},
-/area/space)
+/area/city/unregisteredportoutdoors)
 "Fa" = (
-/obj/structure/sigsystem/connector{
-	dir = 8
-	},
-/turf/closed/indestructible/iron,
-/area/awaymission/beach)
+/turf/open/floor/mineral/titanium/purple,
+/area/city/unregisteredportindoors)
 "Fi" = (
 /obj/effect/turf_decal/trimline/yellow/filled/line{
 	pixel_y = 5
@@ -769,15 +881,21 @@
 	name = "asphalt";
 	density = 1
 	},
-/area/space)
+/area/city/unregisteredportoutdoors)
 "Fk" = (
 /obj/machinery/light,
+/turf/open/floor/mineral/titanium/purple,
+/area/space)
+"Fu" = (
+/obj/structure/sign/warning/firingrange{
+	pixel_x = 32
+	},
 /turf/open/floor/mineral/titanium/purple,
 /area/space)
 "Ga" = (
 /obj/machinery/door/airlock/sandstone,
 /turf/open/floor/pod/light,
-/area/space)
+/area/city/unregisteredportindoors)
 "Gc" = (
 /mob/living/simple_animal/hostile/senior_shrimp,
 /turf/open/floor/mineral/titanium/purple,
@@ -790,7 +908,13 @@
 	resistance_flags = 115
 	},
 /turf/open/floor/mineral/titanium/white,
-/area/space)
+/area/city/unregisteredportoutdoors)
+"Gk" = (
+/obj/structure/stairs/west{
+	desc = "A flight of stairs. Unfortunately, the second floor appears to be blocked off."
+	},
+/turf/open/floor/pod/light,
+/area/city/unregisteredportindoors)
 "GH" = (
 /obj/structure/railing/corner{
 	dir = 8;
@@ -799,7 +923,7 @@
 	},
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/mineral/titanium/white,
-/area/space)
+/area/city/unregisteredportoutdoors)
 "GO" = (
 /obj/structure/closet/secure_closet/freezer/fridge,
 /obj/item/reagent_containers/food/drinks/soda_cans/wellcheers_red,
@@ -808,7 +932,7 @@
 /obj/item/reagent_containers/food/drinks/soda_cans/wellcheers_white,
 /obj/item/reagent_containers/food/drinks/soda_cans/wellcheers_purple,
 /turf/open/floor/carpet/purple,
-/area/space)
+/area/city/unregisteredportindoors)
 "GQ" = (
 /obj/structure/railing/corner{
 	dir = 1;
@@ -819,7 +943,7 @@
 	resistance_flags = 64
 	},
 /turf/open/water/deep/saltwater/extradeep,
-/area/awaymission/beach)
+/area/city/unregisteredportindoors)
 "GT" = (
 /obj/effect/light_emitter{
 	light_power = 4;
@@ -831,17 +955,17 @@
 	name = "shallow water";
 	desc = "Smells of the ocean. Seems shallow enough to wade through."
 	},
-/area/space)
+/area/city/unregisteredportoutdoors)
 "Hb" = (
 /turf/open/floor/holofloor/asteroid,
-/area/space)
+/area/city/unregisteredportoutdoors)
 "Hf" = (
 /obj/machinery/light,
 /obj/item/kirbyplants{
 	icon_state = "plant-09"
 	},
 /turf/open/floor/mineral/titanium/white,
-/area/space)
+/area/city/unregisteredportindoors)
 "Hl" = (
 /obj/structure/railing{
 	dir = 4;
@@ -853,7 +977,7 @@
 	resistance_flags = 64
 	},
 /turf/open/water/deep/saltwater/extradeep,
-/area/awaymission/beach)
+/area/city/unregisteredportindoors)
 "HA" = (
 /obj/structure/railing{
 	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
@@ -862,7 +986,7 @@
 	dir = 4
 	},
 /turf/open/floor/pod/light,
-/area/space)
+/area/city/unregisteredportoutdoors)
 "HI" = (
 /obj/structure/railing{
 	resistance_flags = 64
@@ -871,13 +995,13 @@
 	dir = 4
 	},
 /turf/open/floor/mineral/titanium,
-/area/awaymission/beach)
+/area/city/unregisteredportindoors)
 "HJ" = (
 /obj/structure/sigsystem/tower{
 	signal_code = 14
 	},
 /turf/closed/indestructible/iron,
-/area/awaymission/beach)
+/area/city/unregisteredportindoors)
 "Ih" = (
 /obj/structure/railing{
 	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
@@ -885,67 +1009,78 @@
 	name = "wing-grade railing";
 	resistance_flags = 115
 	},
-/mob/living/simple_animal/hostile/shrimp,
+/mob/living/simple_animal/hostile/shrimp{
+	name = "wellcheers corp dock worker"
+	},
 /turf/open/floor/mineral/titanium/white,
-/area/space)
+/area/city/unregisteredportoutdoors)
 "Ip" = (
 /obj/structure/sigsystem/tower{
 	dir = 8;
 	signal_code = 63
 	},
 /turf/closed/indestructible/iron,
-/area/space)
+/area/city/unregisteredportindoors)
 "IO" = (
 /obj/structure/sigsystem/connector{
 	dir = 8
 	},
 /turf/open/water/deep/saltwater/extradeep,
-/area/awaymission/beach)
+/area/city/unregisteredportindoors)
 "IY" = (
 /turf/open/floor/mineral/titanium/purple,
 /area/space)
 "Je" = (
 /obj/effect/decal/cleanable/dirt,
-/mob/living/simple_animal/hostile/shrimp,
+/mob/living/simple_animal/hostile/shrimp{
+	name = "wellcheers corp dock worker"
+	},
 /turf/open/floor/mineral/titanium/white,
-/area/space)
+/area/city/unregisteredportoutdoors)
 "JE" = (
 /obj/machinery/door/poddoor/shutters/indestructible{
 	resistance_flags = 64;
 	desc = "Heavy duty mechanical shutters with an atmospheric seal that keeps them airtight once closed. |These ones seem less secure than the others...|"
 	},
 /turf/open/space/basic,
-/area/space)
+/area/city/unregisteredportindoors)
 "JK" = (
 /obj/structure/table,
 /obj/item/trash/can{
 	pixel_y = 7;
 	pixel_x = 6
 	},
+/obj/item/reagent_containers/food/drinks/soda_cans/wellcheers_purple{
+	pixel_y = 5;
+	pixel_x = -8
+	},
+/obj/machinery/light{
+	dir = 1
+	},
 /turf/open/floor/carpet/purple,
-/area/space)
+/area/city/unregisteredportindoors)
 "Ks" = (
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	dir = 4
 	},
 /turf/open/floor/plating/dirt,
-/area/space)
+/area/city/unregisteredportoutdoors)
 "Kt" = (
 /turf/closed/indestructible/riveted,
-/area/space)
+/area/city/unregisteredportindoors)
 "Kw" = (
 /obj/structure/sigsystem/tower{
 	dir = 8;
 	signal_code = 24
 	},
 /turf/closed/indestructible/iron,
-/area/space)
+/area/city/unregisteredportindoors)
 "Ky" = (
 /obj/structure/sigsystem/tower{
 	signal_code = 24
 	},
 /turf/open/floor/mineral/titanium,
-/area/space)
+/area/city/unregisteredportindoors)
 "KX" = (
 /obj/structure/railing/corner{
 	dir = 8;
@@ -953,7 +1088,7 @@
 	resistance_flags = 115
 	},
 /turf/open/floor/mineral/titanium/white,
-/area/space)
+/area/city/unregisteredportoutdoors)
 "KY" = (
 /obj/effect/turf_decal/trimline/red/filled/warning{
 	dir = 9
@@ -961,7 +1096,7 @@
 /turf/open/floor/plating/ashplanet{
 	name = "asphalt"
 	},
-/area/space)
+/area/city/unregisteredportoutdoors)
 "Lb" = (
 /obj/structure/railing{
 	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
@@ -969,25 +1104,20 @@
 	resistance_flags = 115
 	},
 /turf/open/floor/wood,
-/area/space)
+/area/city/unregisteredportoutdoors)
 "Lk" = (
-/obj/machinery/light{
-	dir = 1
+/turf/closed/indestructible/opshuttle{
+	color = "#bc7ad6";
+	name = "shipping container"
 	},
-/obj/structure/table,
-/obj/item/reagent_containers/food/drinks/soda_cans/wellcheers_purple{
-	pixel_y = 5;
-	pixel_x = -8
-	},
-/turf/open/floor/carpet/purple,
-/area/space)
+/area/city/unregisteredportindoors)
 "Lp" = (
 /obj/structure/sigsystem/connector{
 	dir = 8
 	},
 /obj/machinery/light,
 /turf/open/floor/mineral/titanium,
-/area/awaymission/beach)
+/area/city/unregisteredportindoors)
 "Lt" = (
 /obj/structure/railing{
 	resistance_flags = 64
@@ -997,7 +1127,7 @@
 	delay_time = 5
 	},
 /turf/open/floor/mineral/titanium,
-/area/awaymission/beach)
+/area/city/unregisteredportindoors)
 "Me" = (
 /obj/structure/railing/corner{
 	dir = 1;
@@ -1010,7 +1140,7 @@
 /obj/item/food/fish/fresh_water/northernpike,
 /obj/item/food/fish/salt_water/blue_tang,
 /turf/open/floor/mineral/titanium/white,
-/area/space)
+/area/city/unregisteredportoutdoors)
 "Mm" = (
 /obj/machinery/light{
 	dir = 4
@@ -1024,21 +1154,21 @@
 /obj/item/fishing_component/hook,
 /obj/item/reagent_containers/food/drinks/soda_cans/wellcheers_white,
 /turf/open/floor/mineral/titanium/white,
-/area/space)
+/area/city/unregisteredportoutdoors)
 "Ms" = (
 /turf/closed/indestructible/sandstone,
-/area/space)
+/area/city/unregisteredportindoors)
 "Mw" = (
 /obj/structure/sigsystem/tower{
 	dir = 8;
 	signal_code = 14
 	},
 /turf/open/water/deep/saltwater/extradeep,
-/area/awaymission/beach)
+/area/city/unregisteredportindoors)
 "ML" = (
 /obj/structure/sigsystem/connector,
 /turf/open/water/deep/saltwater/extradeep,
-/area/awaymission/beach)
+/area/city/unregisteredportindoors)
 "NF" = (
 /obj/effect/turf_decal/trimline/yellow/filled/line{
 	pixel_y = 5
@@ -1050,13 +1180,13 @@
 /turf/open/floor/plating/ashplanet{
 	name = "asphalt"
 	},
-/area/space)
+/area/city/unregisteredportoutdoors)
 "NI" = (
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	dir = 1
 	},
 /turf/open/floor/plating/dirt,
-/area/space)
+/area/city/unregisteredportoutdoors)
 "ON" = (
 /obj/structure/railing{
 	dir = 1;
@@ -1066,7 +1196,7 @@
 	dir = 8
 	},
 /turf/open/floor/mineral/titanium,
-/area/awaymission/beach)
+/area/city/unregisteredportindoors)
 "OU" = (
 /obj/structure/railing{
 	dir = 8;
@@ -1076,7 +1206,14 @@
 	mobs_only = 1
 	},
 /turf/open/floor/mineral/titanium,
-/area/awaymission/beach)
+/area/city/unregisteredportindoors)
+"Pu" = (
+/obj/machinery/door/poddoor/shutters/indestructible{
+	lockpickable = 0;
+	resistance_flags = 64
+	},
+/turf/open/space/basic,
+/area/space)
 "Qz" = (
 /obj/structure/table,
 /obj/item/trash/plate{
@@ -1088,7 +1225,7 @@
 	pixel_x = 3
 	},
 /turf/open/floor/carpet/purple,
-/area/space)
+/area/city/unregisteredportindoors)
 "Re" = (
 /obj/machinery/door/poddoor/shutters/preopen{
 	resistance_flags = 64;
@@ -1099,24 +1236,24 @@
 	},
 /obj/structure/sigsystem/activator,
 /turf/open/floor/mineral/titanium,
-/area/awaymission/beach)
+/area/city/unregisteredportindoors)
 "Rj" = (
 /obj/structure/sigsystem/connector/split,
 /turf/open/water/deep/saltwater/extradeep,
-/area/awaymission/beach)
+/area/city/unregisteredportindoors)
 "Rq" = (
 /obj/machinery/light{
 	dir = 8
 	},
 /turf/open/floor/mineral/titanium/white,
-/area/space)
+/area/city/unregisteredportindoors)
 "SB" = (
 /obj/structure/sigsystem/connector{
 	dir = 4
 	},
 /obj/machinery/light,
 /turf/open/floor/mineral/titanium,
-/area/awaymission/beach)
+/area/city/unregisteredportindoors)
 "Te" = (
 /obj/structure/railing/corner{
 	name = "wing-grade railing";
@@ -1124,13 +1261,13 @@
 	dir = 4
 	},
 /turf/open/floor/pod/light,
-/area/space)
+/area/city/unregisteredportoutdoors)
 "Tj" = (
 /obj/machinery/light{
 	dir = 4
 	},
 /turf/open/floor/mineral/titanium/white,
-/area/space)
+/area/city/unregisteredportindoors)
 "Tm" = (
 /obj/effect/turf_decal/trimline/red/filled/warning{
 	dir = 6
@@ -1138,10 +1275,10 @@
 /turf/open/floor/plating/ashplanet{
 	name = "asphalt"
 	},
-/area/space)
+/area/city/unregisteredportoutdoors)
 "TS" = (
 /turf/open/floor/plating/asteroid,
-/area/space)
+/area/city/unregisteredportoutdoors)
 "UM" = (
 /obj/structure/railing/corner{
 	dir = 8;
@@ -1152,14 +1289,14 @@
 	delay_time = 5
 	},
 /turf/open/floor/mineral/titanium,
-/area/awaymission/beach)
+/area/city/unregisteredportindoors)
 "UW" = (
 /obj/structure/railing/corner{
 	dir = 4;
 	resistance_flags = 64
 	},
 /turf/open/floor/mineral/titanium,
-/area/awaymission/beach)
+/area/city/unregisteredportindoors)
 "UY" = (
 /obj/effect/light_emitter{
 	light_power = 4;
@@ -1171,7 +1308,7 @@
 	name = "asphalt";
 	density = 1
 	},
-/area/space)
+/area/city/unregisteredportoutdoors)
 "Vd" = (
 /obj/structure/railing{
 	dir = 8;
@@ -1179,13 +1316,13 @@
 	},
 /obj/structure/sigsystem/connector,
 /turf/open/floor/mineral/titanium,
-/area/awaymission/beach)
+/area/city/unregisteredportindoors)
 "Vm" = (
 /obj/item/kirbyplants{
 	icon_state = "plant-04"
 	},
 /turf/open/floor/carpet/purple,
-/area/space)
+/area/city/unregisteredportindoors)
 "Vz" = (
 /obj/machinery/door/poddoor/shutters/indestructible{
 	lockpickable = 0;
@@ -1198,7 +1335,7 @@
 	dir = 1
 	},
 /turf/open/floor/mineral/titanium,
-/area/awaymission/beach)
+/area/city/unregisteredportindoors)
 "VU" = (
 /obj/structure/railing/corner{
 	dir = 1;
@@ -1208,24 +1345,34 @@
 	dir = 8
 	},
 /turf/open/floor/mineral/titanium,
-/area/awaymission/beach)
+/area/city/unregisteredportindoors)
+"VV" = (
+/obj/structure/closet/crate/freezer,
+/turf/open/floor/mineral/titanium/purple,
+/area/city/unregisteredportindoors)
 "Wd" = (
 /obj/structure/sign/poster/official/soft_cap_pop_art{
 	pixel_x = -28;
 	pixel_y = 5
 	},
-/turf/open/floor/carpet/purple,
-/area/space)
-"Wg" = (
-/obj/structure/sigsystem/connector{
-	dir = 4
+/obj/structure/table,
+/obj/item/trash/plate{
+	pixel_y = -5;
+	pixel_x = -5
 	},
-/turf/closed/indestructible/iron,
-/area/awaymission/beach)
+/turf/open/floor/carpet/purple,
+/area/city/unregisteredportindoors)
+"Wg" = (
+/turf/open/floor/mineral/titanium/white,
+/area/city/unregisteredportoutdoors)
 "Wi" = (
 /obj/machinery/door/airlock/sandstone,
 /turf/open/floor/mineral/titanium/white,
-/area/space)
+/area/city/unregisteredportindoors)
+"Wq" = (
+/obj/structure/closet/crate,
+/turf/open/floor/mineral/titanium/purple,
+/area/city/unregisteredportindoors)
 "WI" = (
 /obj/structure/railing/corner{
 	dir = 1;
@@ -1233,7 +1380,7 @@
 	resistance_flags = 115
 	},
 /turf/open/floor/mineral/titanium/white,
-/area/space)
+/area/city/unregisteredportoutdoors)
 "WT" = (
 /obj/effect/turf_decal/trimline/red/filled/warning{
 	dir = 10
@@ -1241,25 +1388,25 @@
 /turf/open/floor/plating/ashplanet{
 	name = "asphalt"
 	},
-/area/space)
+/area/city/unregisteredportoutdoors)
 "Xb" = (
 /obj/structure/lootcrate/s_corp,
 /turf/open/floor/pod/light,
-/area/space)
+/area/city/unregisteredportindoors)
 "Xm" = (
 /obj/structure/railing{
 	dir = 4;
 	resistance_flags = 64
 	},
 /turf/open/floor/mineral/titanium,
-/area/awaymission/beach)
+/area/city/unregisteredportindoors)
 "XB" = (
 /obj/machinery/door/poddoor/shutters/indestructible{
 	resistance_flags = 64;
 	desc = "Heavy duty mechanical shutters with an atmospheric seal that keeps them airtight once closed. These ones seem less secure than the others..."
 	},
 /turf/open/space/basic,
-/area/space)
+/area/city/unregisteredportindoors)
 "XG" = (
 /obj/effect/turf_decal/trimline/red/filled/warning{
 	dir = 1
@@ -1267,10 +1414,10 @@
 /turf/open/floor/plating/ashplanet{
 	name = "asphalt"
 	},
-/area/space)
+/area/city/unregisteredportoutdoors)
 "XV" = (
 /turf/open/water/deep/saltwater/extradeep,
-/area/awaymission/beach)
+/area/city/unregisteredportindoors)
 "Yi" = (
 /obj/structure/railing/corner{
 	resistance_flags = 64
@@ -1281,7 +1428,7 @@
 	resistance_flags = 64
 	},
 /turf/open/water/deep/saltwater/extradeep,
-/area/awaymission/beach)
+/area/city/unregisteredportindoors)
 "Yl" = (
 /obj/structure/railing{
 	dir = 4;
@@ -1291,20 +1438,23 @@
 	mobs_only = 1
 	},
 /turf/open/floor/mineral/titanium,
-/area/awaymission/beach)
+/area/city/unregisteredportindoors)
 "Ys" = (
 /obj/structure/sigsystem/connector/split{
 	happens_once = 1
 	},
 /turf/closed/indestructible/iron,
-/area/space)
+/area/city/unregisteredportindoors)
 "Yz" = (
 /obj/structure/sign/poster/official/walk,
 /turf/closed/indestructible/iron,
-/area/space)
+/area/city/unregisteredportindoors)
+"YA" = (
+/turf/open/space/basic,
+/area/city/unregisteredportoutdoors)
 "YN" = (
 /turf/open/floor/plating/dirt,
-/area/space)
+/area/city/unregisteredportoutdoors)
 "ZJ" = (
 /obj/structure/sigsystem/pressure_plate{
 	mobs_only = 1
@@ -1313,11 +1463,11 @@
 	dir = 4
 	},
 /turf/open/floor/mineral/titanium,
-/area/awaymission/beach)
+/area/city/unregisteredportindoors)
 "ZQ" = (
 /mob/living/simple_animal/hostile/shrimp_soldier,
 /turf/open/floor/mineral/titanium,
-/area/awaymission/beach)
+/area/city/unregisteredportindoors)
 
 (1,1,1) = {"
 oz
@@ -10309,7 +10459,7 @@ dY
 Kt
 Kt
 lZ
-lZ
+fO
 lZ
 Kt
 Kt
@@ -10562,8 +10712,8 @@ Kt
 Bi
 lZ
 lZ
-lZ
-lZ
+nf
+Gk
 Kt
 Kt
 dY
@@ -11063,7 +11213,7 @@ dY
 dY
 Kt
 Kt
-lZ
+aU
 lZ
 lZ
 lZ
@@ -12825,15 +12975,15 @@ dY
 dY
 dY
 dY
-Kt
-lZ
+ta
+pF
 Ed
-lZ
-lZ
+pF
+pF
 Ed
-lZ
-lZ
-Kt
+pF
+pF
+ta
 dY
 dY
 dY
@@ -13077,15 +13227,15 @@ dY
 dY
 dY
 dY
-Kt
-Kt
+ta
+ta
 nT
 Ed
-lZ
-lZ
+pF
+pF
 Ed
-Kt
-Kt
+ta
+ta
 dY
 dY
 dY
@@ -13330,13 +13480,13 @@ dY
 dY
 dY
 dY
-Kt
+ta
 HA
 Te
 Ed
 xA
 ys
-Kt
+ta
 dY
 dY
 dY
@@ -14336,26 +14486,26 @@ dY
 dY
 dY
 dY
-nl
+uF
 dY
 dY
 Ih
 WI
-ff
+Wg
 KX
 Gj
 dY
 dY
-nl
-nl
-nl
-nl
-nl
-nl
-nl
-nl
-nl
-nl
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
 Ao
 Ao
 Ao
@@ -14588,28 +14738,28 @@ dY
 dY
 dY
 dY
-nl
-nl
+uF
+uF
 oB
 Me
-ff
+Wg
 ie
-ff
+Wg
 GH
 zT
-nl
-nl
-nl
-nl
-nl
-nl
-nl
-nl
-nl
-nl
-nl
-nl
-nl
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
 Ao
 Ao
 Ao
@@ -14840,45 +14990,45 @@ dY
 dY
 dY
 dY
-nl
-nl
+uF
+uF
 lK
 ie
-ff
-ff
-ff
-ff
+Wg
+Wg
+Wg
+Wg
 GH
-nl
+uF
 tL
 Rq
 ff
-nl
-nl
-nl
-nl
-nl
-nl
-nl
-nl
-nl
-nl
-nl
-nl
-nl
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
 Kw
 Ip
 hY
-nl
-nl
-nl
-nl
-nl
-nl
-nl
-nl
-nl
-nl
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
 uM
 uM
 uM
@@ -15092,46 +15242,46 @@ dY
 dY
 dY
 dY
-nl
-nl
+uF
+uF
 nq
-ff
-ff
-ff
+Wg
+Wg
+Wg
 ie
-ff
-ff
+Wg
+Wg
 eC
 ff
 ff
 ff
 ff
-nl
-nl
-nl
-nl
-nl
-nl
-nl
-nl
-nl
-nl
-nl
-nl
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
 oW
 Ys
 xs
-nl
-nl
-nl
-nl
-nl
-nl
-nl
-nl
-nl
-nl
-nl
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
 uM
 uM
 uM
@@ -15344,26 +15494,21 @@ dY
 dY
 dY
 Ao
-nl
+uF
 Yz
-ff
-ff
+Wg
+Wg
 Je
-ff
-ff
-ff
-ff
-nl
+Wg
+Wg
+Wg
+Wg
+uF
 tL
 ff
 ff
 ff
 hT
-nl
-nl
-nl
-nl
-nl
 uF
 uF
 uF
@@ -15371,19 +15516,24 @@ uF
 uF
 uF
 uF
-Fa
+uF
+uF
+uF
+uF
+uF
+BL
 HJ
 uF
 uF
-nl
-nl
-nl
-nl
-nl
-nl
-nl
-nl
-nl
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
 uM
 TS
 TS
@@ -15596,46 +15746,46 @@ dY
 dY
 dY
 Ao
-nl
-nl
-ff
+uF
+uF
+Wg
 Mm
-ff
-ff
-ff
+Wg
+Wg
+Wg
 mK
 fw
-nl
-nl
+uF
+uF
 ff
 ff
 ff
 hU
-nl
-nl
-nl
-nl
-nl
 uF
 uF
-vK
-vK
-vK
+uF
+uF
+uF
+uF
+uF
+sJ
+sJ
+sJ
 zr
 vd
 zp
-vK
+sJ
 uF
 uF
-nl
-nl
-nl
+uF
+uF
+uF
 ff
 Rq
 ff
-nl
-nl
-nl
+uF
+uF
+uF
 TS
 TS
 Hb
@@ -15848,26 +15998,26 @@ dY
 dY
 Ao
 Ao
-nl
-nl
-Aj
-Aj
-Vz
-Vz
-Vz
-Aj
-Aj
-nl
-nl
-nl
+uF
+uF
+Lk
+Lk
+vK
+vK
+vK
+Lk
+Lk
+uF
+uF
+uF
 ff
 ff
 ff
-nl
-nl
-nl
-nl
-nl
+uF
+uF
+uF
+uF
+uF
 uF
 pi
 aT
@@ -15879,15 +16029,15 @@ pd
 UW
 pi
 uF
-nl
-nl
+uF
+uF
 ff
 ff
 ff
 ff
 ff
-nl
-nl
+uF
+uF
 qj
 TS
 Hb
@@ -16100,26 +16250,26 @@ Ao
 Ao
 Ao
 Ao
-nl
-nl
-Aj
-Gc
-IY
-Gc
-IY
-Gc
-Aj
-nl
-nl
-nl
+uF
+uF
+Lk
+rp
+Fa
+Fa
+Fa
+rp
+Lk
+uF
+uF
+uF
 tL
 ff
 ff
 ff
-nl
-nl
-nl
-nl
+uF
+uF
+uF
+uF
 uF
 Do
 Lt
@@ -16131,16 +16281,16 @@ IO
 tm
 Lp
 uF
-nl
+uF
 ff
 hU
-nl
+uF
 ox
 ox
 ff
 Hf
-nl
-ff
+uF
+Wg
 Hb
 Hb
 Hb
@@ -16352,18 +16502,18 @@ Ao
 Ao
 Ao
 Ao
-nl
-nl
-Aj
-IY
-IY
-IY
-IY
-IY
-Aj
-nl
-nl
-nl
+uF
+uF
+Lk
+Fa
+Fa
+Fa
+Fa
+Wq
+Lk
+uF
+uF
+uF
 ff
 ff
 ff
@@ -16386,14 +16536,14 @@ vm
 ff
 ff
 ff
-nl
+uF
 ff
 ox
 ff
 ff
-nl
-ff
-ff
+uF
+Wg
+Wg
 Hb
 YN
 YN
@@ -16604,19 +16754,19 @@ Ao
 Ao
 Ao
 Ao
-nl
-nl
-Aj
-IY
+uF
+uF
+Lk
+Fa
 zH
-IY
-IY
-IY
-Aj
-nl
-nl
-nl
-nl
+Fa
+Fa
+Fa
+Lk
+uF
+uF
+uF
+uF
 ff
 ff
 ff
@@ -16639,13 +16789,13 @@ ff
 ff
 ff
 Wi
-hT
+dt
 ox
 ff
 ff
 Wi
-ff
-ff
+Wg
+Wg
 YN
 YN
 YN
@@ -16856,20 +17006,20 @@ Ao
 Ao
 Ao
 Ao
-nl
-nl
-Aj
-dy
-IY
-IY
+uF
+uF
+Lk
+jY
+Fa
+Fa
 zH
-Fk
-Aj
-nl
-nl
-nl
-nl
-nl
+eX
+Lk
+uF
+uF
+uF
+uF
+uF
 ff
 ff
 ff
@@ -16877,7 +17027,7 @@ gA
 sJ
 sJ
 ps
-vK
+sJ
 HI
 Mw
 nR
@@ -16890,14 +17040,14 @@ af
 ff
 ff
 ff
-nl
+uF
 ff
 ox
 ff
 ff
-nl
-ff
-ff
+uF
+Wg
+Wg
 YN
 YN
 YN
@@ -17108,27 +17258,27 @@ Ao
 Ao
 Ao
 Ao
-nl
-nl
-Aj
-IY
-IY
-IY
-IY
-IY
-Aj
-nl
-nl
-nl
-nl
-nl
+uF
+uF
+Lk
+Fa
+Fa
+Fa
+Fa
+Fa
+Lk
+uF
+uF
+uF
+uF
+uF
 ff
 ff
 ff
-nl
-nl
-nl
-Wg
+uF
+uF
+uF
+tf
 VL
 HI
 XV
@@ -17138,17 +17288,17 @@ XV
 IO
 ON
 SB
-Fa
-nl
+BL
+uF
 ff
 hU
-nl
+uF
 ox
 ox
 ff
 Hf
-nl
-ff
+uF
+Wg
 YN
 YN
 YN
@@ -17360,27 +17510,27 @@ Ao
 Ao
 Ao
 Ao
-nl
-nl
-Aj
-IY
-IY
+uF
+uF
+Lk
+VV
+Fa
 pY
-IY
-IY
-Aj
-nl
-nl
-nl
-nl
-nl
+Fa
+Wq
+Lk
+uF
+uF
+uF
+uF
+uF
 ff
 ff
 ff
-nl
-nl
-nl
-Wg
+uF
+uF
+uF
+tf
 pi
 UM
 AG
@@ -17390,16 +17540,16 @@ Vd
 DZ
 VU
 pi
-Fa
-nl
-nl
+BL
+uF
+uF
 ff
 ff
 ff
 ff
 ff
-nl
-nl
+uF
+uF
 yo
 YN
 YN
@@ -17612,46 +17762,46 @@ Ao
 Ao
 Ao
 Ao
-nl
-nl
-Aj
-Aj
-Vz
-Vz
-Vz
-Aj
-Aj
-nl
-nl
-nl
-nl
-nl
-ff
-ff
-ff
-nl
-nl
-nl
-Wg
 uF
+uF
+Lk
+Lk
 vK
+vK
+vK
+Lk
+Lk
+uF
+uF
+uF
+uF
+uF
+ff
+ff
+ff
+uF
+uF
+uF
+tf
+uF
+sJ
 vd
-vK
+sJ
 ZJ
 bt
 zp
 zp
 uF
-Fa
-nl
-nl
-nl
+BL
+uF
+uF
+uF
 ff
 Tj
 ff
-nl
-nl
-nl
+uF
+uF
+uF
 YN
 YN
 YN
@@ -17864,17 +18014,17 @@ oz
 oz
 oz
 oz
-oz
-oz
-oz
-oz
-oz
-oz
-oz
-oz
-oz
-oz
-oz
+Aj
+Aj
+Aj
+bW
+IY
+IY
+IY
+bW
+Aj
+Aj
+Aj
 Ms
 Ms
 Ms
@@ -17884,26 +18034,26 @@ Ms
 Ms
 Ms
 Ms
-Wg
+tf
 uF
 uF
-Wg
+tf
 uF
 uF
 uF
 uF
-Fa
+BL
 uF
-Fa
-nl
-nl
-nl
-nl
-nl
-nl
-nl
-nl
-nl
+BL
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
 YN
 YN
 YN
@@ -18116,46 +18266,46 @@ oz
 oz
 oz
 oz
-oz
-oz
-oz
-oz
-oz
-oz
-oz
-oz
-oz
-oz
-oz
+Aj
+Aj
+IY
+IY
+IY
+IY
+IY
+IY
+IY
+Aj
+Aj
 Ms
 ob
 Wd
-pF
-pF
-pF
+kS
+kS
+kS
 hs
 Vm
 Ms
 tf
-nl
-nl
+uF
+uF
 hK
 hK
 hK
 hK
 hK
 BL
-nl
+uF
 BL
-nl
-nl
-nl
-nl
-nl
-nl
-nl
-nl
-nl
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
 YN
 YN
 YN
@@ -18368,24 +18518,24 @@ oz
 oz
 oz
 oz
-oz
-oz
-oz
-oz
-oz
-oz
-oz
-oz
-oz
-oz
-oz
-Ms
-Lk
+Aj
+IY
+IY
+IY
+sY
+IY
+IY
+IY
+IY
+IY
+Pu
+sP
 kS
-pF
-pF
-pF
-pF
+kS
+kS
+kS
+kS
+kS
 Cv
 Ms
 hK
@@ -18399,14 +18549,14 @@ hK
 hK
 hK
 BL
-nl
-nl
-nl
-nl
-nl
-nl
-nl
-nl
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
 Ks
 Ks
 Ks
@@ -18620,24 +18770,24 @@ oz
 oz
 oz
 oz
-oz
-oz
-oz
-oz
-oz
-oz
-oz
-oz
-oz
-oz
-oz
+Aj
+dy
+IY
+IY
+IY
+IY
+IY
+sY
+IY
+Fk
+Aj
 Ms
 JK
 sL
-pF
-pF
-pF
-pF
+kS
+kS
+kS
+kS
 Qz
 Ms
 nl
@@ -18872,24 +19022,24 @@ oz
 oz
 oz
 oz
-oz
-oz
-oz
-oz
-oz
-oz
-oz
-oz
-oz
-oz
-oz
+Vz
+pT
+IY
+IY
+oq
+oq
+oq
+IY
+IY
+pT
+Aj
 Ms
 GO
-pF
+kS
 mU
 uC
 dS
-pF
+kS
 la
 Ms
 nl
@@ -19124,17 +19274,17 @@ oz
 oz
 oz
 oz
-oz
-oz
-oz
-oz
-oz
-oz
-oz
-oz
-oz
-oz
-oz
+Vz
+IY
+IY
+IY
+oq
+tE
+oq
+IY
+IY
+IY
+Aj
 Ms
 Ms
 Ms
@@ -19376,17 +19526,17 @@ oz
 oz
 oz
 oz
-oz
-oz
-oz
-oz
-oz
-oz
-oz
-oz
-oz
-oz
-oz
+Vz
+IY
+IY
+IY
+oq
+oq
+oq
+IY
+IY
+IY
+Aj
 oz
 oz
 oz
@@ -19628,17 +19778,17 @@ oz
 oz
 oz
 oz
-oz
-oz
-oz
-oz
-oz
-oz
-oz
-oz
-oz
-oz
-oz
+Aj
+dy
+wB
+IY
+IY
+IY
+IY
+IY
+wB
+Fk
+Aj
 oz
 oz
 oz
@@ -19880,17 +20030,17 @@ oz
 oz
 oz
 oz
-oz
-oz
-oz
-oz
-oz
-oz
-oz
-oz
-oz
-oz
-oz
+Aj
+IY
+IY
+IY
+IY
+Gc
+IY
+IY
+IY
+IY
+Aj
 oz
 oz
 oz
@@ -19929,7 +20079,7 @@ YN
 YN
 Ao
 Ao
-oz
+YA
 oz
 oz
 oz
@@ -20132,17 +20282,17 @@ oz
 oz
 oz
 oz
-oz
-oz
-oz
-oz
-oz
-oz
-oz
-oz
-oz
-oz
-oz
+Aj
+Aj
+IY
+CG
+Fu
+IY
+IY
+CG
+IY
+Aj
+Aj
 oz
 oz
 oz
@@ -20181,7 +20331,7 @@ YN
 YN
 Ao
 Ao
-oz
+YA
 oz
 oz
 oz
@@ -20384,17 +20534,17 @@ oz
 oz
 oz
 oz
-oz
-oz
-oz
-oz
-oz
-oz
-oz
-oz
-oz
-oz
-oz
+Aj
+Aj
+Aj
+Aj
+Aj
+Vz
+Aj
+Aj
+Aj
+Aj
+Aj
 oz
 oz
 oz
