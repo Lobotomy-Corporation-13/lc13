@@ -188,7 +188,7 @@ GLOBAL_LIST_EMPTY(possible_loot_jcorp)
 		/obj/item/trait_injector/clerk_fear_immunity_injector,
 		/obj/item/trait_injector/officer_upgrade_injector,
 		/obj/item/ego_gift_extractor,
-		/obj/item/device/plushie_extractor,
+		/obj/item/plushie_extractor,
 		/obj/item/managerbullet,
 		/obj/item/ksyringe,
 		/obj/item/ego_weapon/city/kcorp,

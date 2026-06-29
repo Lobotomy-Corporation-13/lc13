@@ -196,6 +196,16 @@
 		/obj/item/info_printer,
 	)
 
+/datum/outfit/job/agent/pre_equip(mob/living/carbon/human/H, visualsOnly)
+	. = ..()
+	if(!H.client?.prefs)
+		return
+	var/worktool = H.client.prefs.work_notepad_type
+	if(worktool == WORK_NOTEPAD_PREFERENCE_CLIPBOARD)
+		backpack_contents += /obj/item/abnormality_work_notepad
+	else if(worktool == WORK_NOTEPAD_PREFERENCE_TABLET)
+		backpack_contents += /obj/item/abnormality_work_notepad/digital
+
 // Trainee, for new players
 /datum/job/agent/intern
 	title = "Agent Intern"

@@ -821,7 +821,7 @@
 	to_chat(user, span_nicegreen("You extract [target]'s gift!"))
 	qdel(src)
 
-/obj/item/device/plushie_extractor
+/obj/item/plushie_extractor
 	name = "Plushie Extractor"
 	desc = "A device used for extracting plush versions of the abnormalities.\nThe extraction recharge period for this model lasts three minutes."
 	icon = 'icons/obj/device.dmi'
@@ -866,7 +866,7 @@
 
     )
 
-/obj/item/device/plushie_extractor/attack(mob/living/simple_animal/hostile/abnormality/I, mob/living/carbon/human/user)
+/obj/item/plushie_extractor/attack(mob/living/simple_animal/hostile/abnormality/I, mob/living/carbon/human/user)
 	. = ..()
 	if(!ishuman(user))
 		return
@@ -898,20 +898,101 @@
 	charge_timer = addtimer(CALLBACK(src, PROC_REF(Recharge)), recharge_duration, TIMER_STOPPABLE)
 
 /// Small little addition onto the description to be able to tell whether the device is charged or not.
-/obj/item/device/plushie_extractor/examine(mob/user)
+/obj/item/plushie_extractor/examine(mob/user)
 	. = ..()
 	if(charged)
 		. += span_nicegreen("It is currently charged.")
 	else
 		. += span_notice("It is currently recharging.")
 /// I'm unsure if this is necessary, but just to be safe, I want to delete the timer when the object is destroyed.
-/obj/item/device/plushie_extractor/Destroy(force)
+/obj/item/plushie_extractor/Destroy(force)
 	deltimer(charge_timer)
 	charge_timer = null
 	return ..()
 
-/obj/item/device/plushie_extractor/proc/Recharge()
+/obj/item/plushie_extractor/proc/Recharge()
 	if(!charged)
 		charged = TRUE
 		playsound(get_turf(src), 'sound/machines/chime.ogg', 35, TRUE, 4)
 		audible_message(span_info("The [src.name] finishes recharging."))
+
+/obj/item/abnormality_work_notepad
+	name = "worn clipboard"
+	desc = "This clipboard has seen its fair share of use. It's replete with work records, each one logging an Abnormality subject, the type of work performed, the quantity and quality of Enkephalin boxes produced, and a conclusive Work Result."
+	icon = 'icons/obj/device.dmi'
+	icon_state = "work_notepad_clipboard" // Edited Researcher's Notes sprite!
+	inhand_icon_state = "clipboard" // Placeholder...
+	force = 0
+	throwforce = 0
+	resistance_flags = INDESTRUCTIBLE
+	usesound = 'sound/items/handling/paper_pickup.ogg'
+	var/usesound_volume = 80
+	var/fluff = "You can spot some hastily-written reminders pertaining to Abnormality guidelines written on the margins of a few pages. \n\
+	<i>Shall we get to work? All we need to do is what we've always done</i>."
+
+/// Makes sure to tell users about what you're meant to use the item for, also rips out a bunch of useless stuff from base examine().
+/obj/item/abnormality_work_notepad/examine(mob/user)
+	// Ripped out of base examine behaviour
+	. = list("[get_examine_string(user, TRUE)].")
+	. += get_name_chaser(user)
+	if(desc)
+		. += desc
+
+	. += span_info("\n")
+	. += fluff
+
+	. += span_info("This item can be used to begin working on an Abnormality by using it in-hand or by targeting said Abnormality. \
+	You must have line of sight to the Abnormality's work console and be within 2 tiles of said console. The same restrictions apply as if you were working on a console; you cannot move.")
+
+/obj/item/abnormality_work_notepad/digital
+	name = "L-Corp abnormality work tablet"
+	desc = "This is a Lobotomy Corporation issued work tablet, intended to be used for recordkeeping by Agents as they perform work on Abnormalities."
+	icon_state = "work_notepad_tablet" // Taken from modular_tablet.dmi
+	inhand_icon_state = null // Don't have one...
+	usesound = 'sound/machines/terminal_prompt_confirm.ogg'
+	usesound_volume = 100
+	fluff = "The device lacks network interfaces or any sensors of its own (budget constraints?), so the Agent must note down the results of their work manually. \n\
+	Some of the more technically-minded Agents have tried to jailbreak these tablets, but these endeavours seem to have gone nowhere. \
+	It seems the Information Department has made the process particularly difficult - or perhaps the Disciplinary Department has 'dissuaded' such efforts."
+
+/// Stops you from whacking abnos, tries to open the UI instead.
+/obj/item/abnormality_work_notepad/pre_attack(atom/A, mob/living/user, params)
+	. = ..()
+	if(isabnormalitymob(A) && user.Adjacent(A))
+		INVOKE_ASYNC(src, PROC_REF(access_console_from_abno), A, user)
+		return TRUE
+
+/obj/item/abnormality_work_notepad/attack_self(mob/user)
+	. = ..()
+
+	for(var/turf/open/T in view(2, user))
+		for(var/obj/machinery/computer/abnormality/is_it_here in T)
+			if(istype(is_it_here))
+				INVOKE_ASYNC(src, PROC_REF(access_work_console), user, is_it_here)
+				return
+	to_chat(user, span_warning("There are no Abnormality Work consoles in range."))
+
+/obj/item/abnormality_work_notepad/afterattack(atom/target, mob/user, proximity_flag, click_parameters)
+	. = ..()
+	if(proximity_flag)
+		return
+	if((isabnormalitymob(target)))
+		access_console_from_abno(target, user)
+
+/obj/item/abnormality_work_notepad/proc/access_console_from_abno(mob/living/simple_animal/hostile/abnormality/abno, mob/living/user)
+	if(!istype(abno))
+		return FALSE
+	if(!abno.datum_reference || !abno.datum_reference.console)
+		to_chat(user, span_warning("This Abnormality can't be worked on. It's not properly integrated to a facility's Enkephalin pipelines."))
+		return
+	if(!abno.datum_reference.console.can_interact(user))
+		to_chat(user, span_warning("You're either incapacitated or too far from an Abnormality Work console to work."))
+		return
+	INVOKE_ASYNC(src, PROC_REF(access_work_console), user, abno.datum_reference.console)
+
+/obj/item/abnormality_work_notepad/proc/access_work_console(mob/living/carbon/human/user, obj/machinery/computer/abnormality/work_console)
+	if(!istype(work_console) || !istype(user))
+		return FALSE
+	work_console.ui_interact(user, via_notepad = TRUE)
+	playsound(get_turf(src), usesound, usesound_volume, FALSE)
+	return
