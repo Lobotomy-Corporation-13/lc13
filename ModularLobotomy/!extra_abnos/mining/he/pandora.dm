@@ -11,12 +11,12 @@
 	health = 1200
 	melee_damage_lower = 35
 	melee_damage_upper = 35
-	melee_damage_type = RED_DAMAGE
+	melee_damage_type = WHITE_DAMAGE
 	attack_verb_continuous = "smashes into the side of"
 	attack_verb_simple = "smash into the side of"
 	attack_sound = 'sound/weapons/sonic_jackhammer.ogg'
 	speed = 3
-	move_to_delay = 4
+	move_to_delay = 2
 	minimum_distance = 4
 	can_breach = TRUE
 	start_qliphoth = 2
