@@ -967,6 +967,8 @@
 /// On use, check for a nearby console and try to open it.
 /obj/item/abnormality_work_notepad/attack_self(mob/user)
 	. = ..()
+	if(user.next_move >= world.time)
+		return // STOP SPAMMING IT!!!!!!!!!!!!!!!
 	for(var/turf/open/T in view(2, user))
 		for(var/obj/machinery/computer/abnormality/is_it_here in T)
 			if(istype(is_it_here))
