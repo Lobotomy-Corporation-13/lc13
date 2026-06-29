@@ -916,6 +916,8 @@
 		playsound(get_turf(src), 'sound/machines/chime.ogg', 35, TRUE, 4)
 		audible_message(span_info("The [src.name] finishes recharging."))
 
+// This is an item that lets you work on Abnormalities without directly clicking on a console. It still requires a console to be very close to you.
+// It exists mostly for fluff/vibes. Maybe someday it can have a different purpose.
 /obj/item/abnormality_work_notepad
 	name = "worn clipboard"
 	desc = "This clipboard has seen its fair share of use. It's replete with work records, each one logging an Abnormality subject, the type of work performed, the quantity and quality of Enkephalin boxes produced, and a conclusive Work Result."
@@ -938,12 +940,12 @@
 	if(desc)
 		. += desc
 
-	. += span_info("\n")
 	. += fluff
-
+	. += span_info("\n")
 	. += span_info("This item can be used to begin working on an Abnormality by using it in-hand or by targeting said Abnormality. \
 	You must have line of sight to the Abnormality's work console and be within 2 tiles of said console. The same restrictions apply as if you were working on a console; you cannot move.")
 
+// A tablet instead of a clipboard. Same thing.
 /obj/item/abnormality_work_notepad/digital
 	name = "L-Corp abnormality work tablet"
 	desc = "This is a Lobotomy Corporation issued work tablet, intended to be used for recordkeeping by Agents as they perform work on Abnormalities."
@@ -959,19 +961,20 @@
 /obj/item/abnormality_work_notepad/pre_attack(atom/A, mob/living/user, params)
 	. = ..()
 	if(isabnormalitymob(A) && user.Adjacent(A))
-		INVOKE_ASYNC(src, PROC_REF(access_console_from_abno), A, user)
+		access_console_from_abno(A, user)
 		return TRUE
 
+/// On use, check for a nearby console and try to open it.
 /obj/item/abnormality_work_notepad/attack_self(mob/user)
 	. = ..()
-
 	for(var/turf/open/T in view(2, user))
 		for(var/obj/machinery/computer/abnormality/is_it_here in T)
 			if(istype(is_it_here))
-				INVOKE_ASYNC(src, PROC_REF(access_work_console), user, is_it_here)
+				INVOKE_ASYNC(src, PROC_REF(access_work_console), is_it_here, user)
 				return
 	to_chat(user, span_warning("There are no Abnormality Work consoles in range."))
 
+/// On ranged use, if we clicked an abno, try to find its corresponding console and open it.
 /obj/item/abnormality_work_notepad/afterattack(atom/target, mob/user, proximity_flag, click_parameters)
 	. = ..()
 	if(proximity_flag)
@@ -979,6 +982,7 @@
 	if((isabnormalitymob(target)))
 		access_console_from_abno(target, user)
 
+/// Given an Abno and an user, opens its corresponding work console UI.
 /obj/item/abnormality_work_notepad/proc/access_console_from_abno(mob/living/simple_animal/hostile/abnormality/abno, mob/living/user)
 	if(!istype(abno))
 		return FALSE
@@ -988,9 +992,10 @@
 	if(!abno.datum_reference.console.can_interact(user))
 		to_chat(user, span_warning("You're either incapacitated or too far from an Abnormality Work console to work."))
 		return
-	INVOKE_ASYNC(src, PROC_REF(access_work_console), user, abno.datum_reference.console)
+	INVOKE_ASYNC(src, PROC_REF(access_work_console), abno.datum_reference.console, user)
 
-/obj/item/abnormality_work_notepad/proc/access_work_console(mob/living/carbon/human/user, obj/machinery/computer/abnormality/work_console)
+/// Given a console and an user, opens the console's UI for the user.
+/obj/item/abnormality_work_notepad/proc/access_work_console(obj/machinery/computer/abnormality/work_console, mob/living/carbon/human/user)
 	if(!istype(work_console) || !istype(user))
 		return FALSE
 	work_console.ui_interact(user, via_notepad = TRUE)
