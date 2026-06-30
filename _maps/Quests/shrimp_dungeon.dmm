@@ -121,6 +121,13 @@
 /obj/structure/lootcrate/money,
 /turf/open/floor/oldshuttle,
 /area/city/unregisteredportoutdoors)
+"fg" = (
+/obj/structure/fluff/fokoff_sign{
+	desc = "A crudely-made sign which reads, 'All non-authorized personnel will be eliminated, including any foreign shrimp.'";
+	name = "warning sign"
+	},
+/turf/open/floor/plating/dirt,
+/area/city/unregisteredportoutdoors)
 "fw" = (
 /obj/structure/closet/crate/freezer,
 /obj/item/food/fish/fresh_water/ratfish,
@@ -5332,7 +5339,7 @@ Fa
 uF
 uF
 uF
-YN
+fg
 YN
 YN
 YN
