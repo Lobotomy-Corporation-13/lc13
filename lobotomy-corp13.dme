@@ -4157,6 +4157,7 @@
 #include "ModularLobotomy\!extra_abnos\branch12\he\extermination.dm"
 #include "ModularLobotomy\!extra_abnos\branch12\he\golden_weave.dm"
 #include "ModularLobotomy\!extra_abnos\branch12\he\helios.dm"
+#include "ModularLobotomy\!extra_abnos\branch12\he\lilliputian.dm"
 #include "ModularLobotomy\!extra_abnos\branch12\he\long_bird.dm"
 #include "ModularLobotomy\!extra_abnos\branch12\he\ollieoxenfree.dm"
 #include "ModularLobotomy\!extra_abnos\branch12\he\show_goes_on.dm"
