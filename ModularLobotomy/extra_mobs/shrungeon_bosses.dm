@@ -1,5 +1,5 @@
 // --------- SHRIMP DUNGEON BOSS ENEMIES ---------
-// --------- (badly) MADE BY XEROS               ---------
+// --------- (badly) MADE BY XEROS       ---------
 
 /mob/living/simple_animal/hostile/shrimp_hos
 	name = "Wellcheers Head of Security"
@@ -8,18 +8,18 @@
 	icon_state = "wellcheers_hos"
 	icon_living = "wellcheers_hos"
 	icon_dead = "wellcheers_hos_dead"
-	attack_sound = 'sound/abnormalities/clock/clank.ogg'
-	faction = list("shrimp")
+	attack_sound = 'sound/effects/meteorimpact.ogg'
+	faction = list("hostile") //Not fooled by the shrimp injector
 	gender = MALE
 	maxHealth = 7500
 	health = 7500
-	melee_damage_lower = 28
-	melee_damage_upper = 34
+	melee_damage_lower = 20
+	melee_damage_upper = 24
 	ranged = TRUE
-	damage_coeff = list(RED_DAMAGE = 0.5, WHITE_DAMAGE = 1.2, BLACK_DAMAGE = 0.7, PALE_DAMAGE = 1)
-	move_to_delay = 5.5
-	rapid = 5
-	rapid_fire_delay = 4.3
+	damage_coeff = list(RED_DAMAGE = 0.6, WHITE_DAMAGE = 1.2, BLACK_DAMAGE = 0.8, PALE_DAMAGE = 1)
+	move_to_delay = 6
+	rapid = 3
+	rapid_fire_delay = 3.5
 	ranged_cooldown_time = 23
 	casingtype = /obj/item/ammo_casing/caseless/ego_shrimpsoldier
 	projectilesound = 'sound/weapons/gun/shotgun/shot.ogg'
@@ -38,10 +38,10 @@
 	return FALSE
 
 /mob/living/simple_animal/hostile/shrimp_hos/proc/PrepareToFire(atom/A) //Copypasted code from TTLS snipers. Intended to serve as the "warning" for the shotgun.
-	current_beam = Beam(A, icon_state="blood", time = 0.7 SECONDS)
+	current_beam = Beam(A, icon_state="blood", time = 0.8 SECONDS)
 	playsound(src, 'sound/weapons/gun/shotgun/rack.ogg', 200, TRUE, 2)
 	can_act = FALSE
-	SLEEP_CHECK_DEATH(0.9 SECONDS) //WAY faster than the grungeon boss
+	SLEEP_CHECK_DEATH(0.9 SECONDS) //WAY faster than the Denial of Concept
 	can_act = TRUE
 	return TRUE
 
