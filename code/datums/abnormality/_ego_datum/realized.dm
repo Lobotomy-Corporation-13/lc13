@@ -216,5 +216,6 @@ Note: I chose to tag these Realizations based on their own active and passive ab
 /* ------------------ EGO Realizations Weapons (Just to allow them within the testing range) ------------------*/
 /datum/ego_datum/weapon/funeraldirge
 	item_path = /obj/item/ego_weapon/ranged/funeraldirge
+	well_enabled = FALSE
 	cost = 100
 	ego_tags = list(EGO_TAG_DEBUFFER, EGO_TAG_SPLIT_DAMAGE)
