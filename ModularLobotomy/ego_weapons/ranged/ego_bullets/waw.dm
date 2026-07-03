@@ -94,6 +94,26 @@
 	speed = 0.35
 	damage_type = BLACK_DAMAGE
 
+//Minigun variants: soda-bullet damage (11), fired at random by the funeral minigun.
+/obj/projectile/ego_bullet/ego_solemnlament/minigun
+	damage = 11
+
+/obj/projectile/ego_bullet/ego_solemnvow/minigun
+	damage = 11
+
+//Every 5th shot uses these variants, which also inflict 1 Sinking on hit.
+/obj/projectile/ego_bullet/ego_solemnlament/minigun/sinking/on_hit(atom/target, blocked = FALSE, pierce_hit)
+	. = ..()
+	if(isliving(target))
+		var/mob/living/L = target
+		L.apply_lc_sinking(1)
+
+/obj/projectile/ego_bullet/ego_solemnvow/minigun/sinking/on_hit(atom/target, blocked = FALSE, pierce_hit)
+	. = ..()
+	if(isliving(target))
+		var/mob/living/L = target
+		L.apply_lc_sinking(1)
+
 //Smartgun
 /obj/projectile/ego_bullet/ego_loyalty // not actually used at the moment
 	name = "loyalty"
