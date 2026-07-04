@@ -150,7 +150,7 @@
 "bm" = (
 /obj/structure/rack,
 /obj/item/food/canned/pcorp,
-/obj/item/pickaxe,
+/obj/item/ego_weapon/city/rookpick,
 /obj/item/screwdriver,
 /obj/item/storage/sandbag_pouch,
 /turf/open/floor/pod/light,
@@ -3661,7 +3661,7 @@
 "EG" = (
 /obj/structure/rack,
 /obj/item/food/canned/pcorp,
-/obj/item/pickaxe,
+/obj/item/ego_weapon/city/rookpick,
 /obj/item/screwdriver,
 /obj/item/storage/engi_pouch,
 /turf/open/floor/pod/light,
@@ -4211,7 +4211,7 @@
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/rack,
 /obj/item/food/canned/pcorp,
-/obj/item/pickaxe,
+/obj/item/ego_weapon/city/rookpick,
 /obj/item/screwdriver,
 /obj/item/storage/engi_pouch,
 /turf/open/floor/pod/light,
