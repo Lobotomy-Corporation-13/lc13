@@ -203,6 +203,7 @@
 	. = ..()
 	steps--
 	if(steps < 1)
+		DestroyTimer()
 		qdel(src)
 		return
 	if(!QDELETED(src) && isturf(loc))
@@ -221,9 +222,7 @@
 	Suffer(AM)
 
 /obj/effect/ambient_danger/Destroy()
-	if(move_cycle)
-		deltimer(move_cycle)
-		move_cycle = null
+	DestroyTimer()
 	return ..()
 
 /obj/effect/ambient_danger/proc/StartMovement()
@@ -233,13 +232,14 @@
 /obj/effect/ambient_danger/proc/MovePattern()
 	if(QDELETED(src))
 		return
-	if(move_cycle)
-		deltimer(move_cycle)
-		move_cycle = null
+	DestroyTimer()
 	var/our_turf_tag = "[x],[y]"
 	if(length(move_pattern))
 		if(our_turf_tag in move_pattern)
 			if(step(src,move_pattern[our_turf_tag],speed) && !move_cycle)
+				//A runtime occurs where a timer is being called by a qdeleted object despite DestroyTimer.
+				if(QDELETED(src))
+					return
 				move_cycle = addtimer(CALLBACK(src, PROC_REF(MovePattern)), speed, TIMER_STOPPABLE)
 				return
 	//We lost the pattern, go nuts.
@@ -273,6 +273,11 @@
 			steps = 0
 		return TRUE
 	return FALSE
+
+/obj/effect/ambient_danger/proc/DestroyTimer()
+	if(move_cycle)
+		deltimer(move_cycle)
+		move_cycle = null
 
 /*-------------\
 |Blood Splatter|
@@ -358,3 +363,4 @@
 /obj/effect/bloodspawner/nogibs/silent
 	sound_to_play = null
 	sound_vol = 0
+	

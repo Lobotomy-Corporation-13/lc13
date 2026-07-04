@@ -31,7 +31,7 @@
 	ranged = TRUE
 	is_flying_animal = TRUE
 
-	threat_level = WAW_LEVEL
+	threat_level = ALEPH_LEVEL
 	can_breach = TRUE
 	can_patrol = FALSE
 	start_qliphoth = 3
@@ -46,19 +46,22 @@
 	work_damage_type = WHITE_DAMAGE
 	chem_type = /datum/reagent/abnormality/sin/pride
 
-	/*
+
 	ego_list = list(
-		/datum/ego_datum/weapon/tearstarnished,
-		/datum/ego_datum/armor/tearstarnished,
+		/datum/ego_datum/weapon/tarnished,
+		/datum/ego_datum/armor/tarnished,
 	)
-	gift_type = /datum/ego_gifts/tearstarnished
-	*/
+	//gift_type = /datum/ego_gifts/tearstarnished
+
 	abnormality_origin = ABNORMALITY_ORIGIN_LIMBUS
 
 	//Charges for skills
 	var/flower_pins = 3
 	//Each attack occurs in a certain order
 	var/attack_cycle = 1
+	//Cooldown for ambient storms
+	var/storm_cooldown = 0
+	var/storm_cooldown_delay = 10 SECONDS
 	//For icon Changes
 	var/stance = YINGLONG_IDLE
 	//projectile this mob uses in the DecendingPin attack
@@ -102,6 +105,24 @@
 	src.AddSpell(levin_a)
 	reloc_a = new()
 	src.AddSpell(reloc_a)
+
+/mob/living/simple_animal/hostile/abnormality/yinglong/Life()
+	. = ..()
+	if(!.)
+		return
+	if(IsContained())
+		return
+	if(length(GLOB.xeno_spawn) && storm_cooldown <= world.time && !target)
+		var/list/possible_turf_list = GLOB.xeno_spawn
+		//terribly inconvient storms
+		for(var/cycle = 1 to 4)
+			var/turf/vortex_turf = pick(possible_turf_list)
+			if(vortex_turf.z != z)
+				break
+			var/obj/effect/ambient_danger/dragonvortex/D = new(vortex_turf, faction)
+			D.MovePattern()
+		storm_cooldown = world.time + storm_cooldown_delay
+	return
 
 /mob/living/simple_animal/hostile/abnormality/yinglong/Move()
 	return FALSE
@@ -180,6 +201,8 @@
 			if(5)
 				GatheringRain(trg)
 			if(6)
+				Levinfall(trg)
+			if(7)
 				WrathScale(trg)
 				attack_cycle = 0
 	YINGLONG_STANCE_CHANGE(YINGLONG_IDLE)
@@ -203,24 +226,29 @@
 
 /mob/living/simple_animal/hostile/abnormality/yinglong/proc/GatheringRain(trg)
 	var/attack_charges = flower_pins
+	var/attack_angle = Get_Angle(src, trg)
 	for(var/cycle = 1 to attack_charges)
-		if(!do_after(src, 2, target = src))
+		if(!do_after(src, 5, target = src))
 			break
 		if(!trg)
 			trg = FindTarget()
 			if(!trg)
 				break
+			attack_angle = Get_Angle(src, trg)
 			continue
-		DeferProjectile(pin_projectile_type, trg, get_turf(src))
+		for(var/iteration = 1 to 4)
+			var/obj/projectile/flowerpin/new_pin = DeferProjectile(pin_projectile_type, trg, get_turf(src), 8 + iteration)
+			new_pin.set_angle(WRAP(attack_angle + rand(-30,30), 0 ,360))
 
-/mob/living/simple_animal/hostile/abnormality/yinglong/proc/WrathScale(trg)
+/mob/living/simple_animal/hostile/abnormality/yinglong/proc/Levinfall(trg)
 	levin_a.Perform(null, src, arena_turfs)
 
-	var/flower_charges = max(360 / 30, round(flower_pins / 2))
+/mob/living/simple_animal/hostile/abnormality/yinglong/proc/WrathScale(trg)
+	var/flower_charges = clamp(flower_pins, 1, 4)
 	var/fire_angle = 180
 	if(flower_charges >= 1)
-		for(var/iteration = 1 to flower_charges)
-			var/obj/projectile/flowerpin/hellpin = DeferProjectile(pin_projectile_type, trg, get_turf(src), 10 + (iteration * 2))
+		for(var/iteration = 1 to 12 * flower_charges)
+			var/obj/projectile/flowerpin/hellpin = DeferProjectile(pin_projectile_type, trg, get_turf(src), 10 + iteration)
 			fire_angle = WRAP(fire_angle + 30, 0 ,360)
 			hellpin.set_angle(fire_angle)
 
@@ -527,6 +555,7 @@
 	icon = 'ModularLobotomy/_Lobotomyicons/tegu_effects32x48.dmi'
 	icon_state = "drgvortex"
 	max_hits = 10
+	speed = 5
 	damage = 50
 	damage_type = WHITE_DAMAGE
 
