@@ -94,11 +94,15 @@
 	speed = 0.35
 	damage_type = BLACK_DAMAGE
 
-//Minigun variants: soda-bullet damage (11), fired at random by the funeral minigun.
+//Minigun variants: soda-bullet damage (11), fired at random by the funeral minigun. Small "mini" sprites.
+//White shots don't detonate Sinking (only the Requiem does, via its Deluge) so Sinking can stack up.
 /obj/projectile/ego_bullet/ego_solemnlament/minigun
+	icon_state = "mini_whitefly"
 	damage = 11
+	no_sinking = TRUE
 
 /obj/projectile/ego_bullet/ego_solemnvow/minigun
+	icon_state = "mini_blackfly"
 	damage = 11
 
 //Every 5th shot uses these variants, which also inflict 1 Sinking on hit.
@@ -113,6 +117,31 @@
 	if(isliving(target))
 		var/mob/living/L = target
 		L.apply_lc_sinking(1)
+
+//The powerful "requiem" shot spent from the funeral dirge's Living meter. A piercing white laser beam
+//(looks like assonance) that damages every mob in its path and unleashes a Sinking Deluge on each.
+//Does not detonate Sinking itself (deluge handles it); the weapon scales its damage on firing.
+/obj/projectile/beam/requiem
+	name = "funeral requiem"
+	icon_state = "omnilaser"
+	hitsound = null
+	damage = 45
+	damage_type = WHITE_DAMAGE
+	hitscan = TRUE
+	muzzle_type = /obj/effect/projectile/muzzle/laser/white
+	tracer_type = /obj/effect/projectile/tracer/laser/white
+	impact_type = /obj/effect/projectile/impact/laser/white
+	wound_bonus = -100
+	bare_wound_bonus = -100
+	no_sinking = TRUE
+	projectile_piercing = PASSMOB
+	hit_nondense_targets = TRUE
+
+/obj/projectile/beam/requiem/on_hit(atom/target, blocked, pierce_hit)
+	. = ..()
+	if(isliving(target))
+		var/mob/living/L = target
+		L.trigger_sinking_deluge(firer)
 
 //Smartgun
 /obj/projectile/ego_bullet/ego_loyalty // not actually used at the moment

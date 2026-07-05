@@ -218,45 +218,6 @@
 	. = ..()
 	projectile_damage_multiplier = 1
 
-//A minigun that scatters both funeral butterflies at once, at soda-minigun damage and firerate.
-/obj/item/ego_weapon/ranged/funeraldirge
-	name = "funeral dirge"
-	desc = "A relic of the funeral reforged into an engine of endless mourning. \
-	It scatters butterflies of black and white without pause; grief and lamentation, side by side."
-	special = "Each shot fires either a white or a black butterfly, at random. Every 5th shot also inflicts 1 Sinking."
-	icon_state = "sl_minigame"
-	inhand_icon_state = "sl_minigame"
-	force = 105
-	attack_speed = 1.7
-	projectile_path = /obj/projectile/ego_bullet/ego_solemnlament/minigun
-	weapon_weight = WEAPON_HEAVY
-	drag_slowdown = 2
-	slowdown = 1.5
-	item_flags = SLOWS_WHILE_IN_HAND
-	fire_sound = 'sound/abnormalities/funeral/spiritgunwhite.ogg'
-	fire_sound_volume = 30
-	autofire = 0.01 SECONDS
-	projectile_damage_multiplier = 1.26
-	attribute_requirements = list(
-							FORTITUDE_ATTRIBUTE = 120,
-							PRUDENCE_ATTRIBUTE = 120,
-							TEMPERANCE_ATTRIBUTE = 120,
-							JUSTICE_ATTRIBUTE = 120
-							)
-	/// Counts shots fired; every 5th one fires a butterfly that also inflicts 1 Sinking.
-	var/shot_count = 0
-
-/obj/item/ego_weapon/ranged/funeraldirge/fire_projectile(atom/target, mob/living/user, params, distro, quiet, zone_override, spread, atom/fired_from, temporary_damage_multiplier)
-	shot_count++
-	var/inflict_sinking = (shot_count % 5 == 0)
-	if(prob(50))
-		projectile_path = inflict_sinking ? /obj/projectile/ego_bullet/ego_solemnlament/minigun/sinking : /obj/projectile/ego_bullet/ego_solemnlament/minigun
-		fire_sound = 'sound/abnormalities/funeral/spiritgunwhite.ogg'
-	else
-		projectile_path = inflict_sinking ? /obj/projectile/ego_bullet/ego_solemnvow/minigun/sinking : /obj/projectile/ego_bullet/ego_solemnvow/minigun
-		fire_sound = 'sound/abnormalities/funeral/spiritgunblack.ogg'
-	return ..()
-
 /obj/item/ego_weapon/ranged/loyalty
 	name = "loyalty"
 	desc = "Courtesy of the 16th Ego Rifleman's Brigade."

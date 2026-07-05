@@ -2100,6 +2100,31 @@
 		return
 	S.add_stacks(stacks)
 
+/// Sinking Deluge: repeatedly deal WHITE damage equal to the current Sinking stacks (x4 to simple mobs),
+/// halving the stacks after each hit, until they reach 0. Used by the funeral dirge's Requiem shot.
+/mob/living/proc/trigger_sinking_deluge(mob/living/source)
+	var/datum/status_effect/stacking/sinking/S = has_status_effect(/datum/status_effect/stacking/sinking)
+	if(S)
+		S.trigger_deluge(source)
+
+/datum/status_effect/stacking/sinking/proc/trigger_deluge(mob/living/source)
+	if(QDELETED(owner) || stacks <= 0)
+		return
+	triggering = TRUE
+	to_chat(owner, span_userdanger("A deluge of sinking crashes down!"))
+	new /obj/effect/temp_visual/damage_effect/sinking(get_turf(owner))
+	while(stacks > 0 && !QDELETED(src) && !QDELETED(owner) && owner.stat != DEAD)
+		var/dmg = ishuman(owner) ? stacks : stacks * 4
+		owner.deal_damage(dmg, WHITE_DAMAGE, source = source, flags = DAMAGE_NO_SINKING, attack_type = ATTACK_TYPE_STATUS)
+		// Halve the stacks; guarantee a strict decrease so the loop always terminates.
+		var/halved = round(stacks / 2)
+		if(halved >= stacks)
+			halved = stacks - 1
+		stacks = max(0, halved)
+	triggering = FALSE
+	if(!QDELETED(src))
+		qdel(src)
+
 //Rupture - Delayed RED/BLACK damage trigger
 //  Stacks up to 50, inactive for first 5 seconds after application
 //  Once activated, when owner takes RED or BLACK damage: deal BRUTE damage = stacks, halve stacks
