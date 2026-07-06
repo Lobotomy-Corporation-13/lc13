@@ -15,8 +15,8 @@ GLOBAL_LIST_EMPTY(estus_holders)	//list of people that have used an estus flask
 
 /obj/item/estus/attack_self(mob/living/carbon/human/user)
 	..()
-	if(user in GLOB.estus_holders)
-		to_chat(user, span_warning("You already have a class."))
+	if((user in GLOB.estus_holders) && !linked_user)
+		to_chat(user, span_warning("You already have a flask."))
 		return
 
 	if(!linked_user)
