@@ -11,11 +11,12 @@
 	base_pixel_x = -8
 	maxHealth = 500
 	health = 500
-	speed = 2
+	move_to_delay = 3.4
 	rapid_melee = 2
 	density = FALSE
-	melee_damage_lower = 10
-	melee_damage_upper = 15
+	status_flags = CANPUSH | MUST_HIT_PROJECTILE
+	melee_damage_lower = 25
+	melee_damage_upper = 30
 	turns_per_move = 2
 	attack_verb_continuous = "bites"
 	attack_verb_simple = "bite"
