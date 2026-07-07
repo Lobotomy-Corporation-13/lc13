@@ -60,6 +60,7 @@
 
 	var/buff_cooldown
 	var/buff_cooldown_time = 30 SECONDS
+	var/corebuffed = FALSE	//This is just for like, an achievement.
 
 	var/pulse_cooldown
 	var/pulse_cooldown_time = 12 SECONDS
@@ -111,6 +112,7 @@
 
 	if((buff_cooldown < world.time) && (status_flags & GODMODE))
 		work_damage_amount = initial(work_damage_amount)
+		corebuffed = FALSE
 
 /mob/living/simple_animal/hostile/abnormality/bluestar/CanAttack(atom/the_target)
 	return FALSE
@@ -161,6 +163,8 @@
 		user.death()
 		animate(user, transform = user.transform*0.01, time = 5)
 		QDEL_IN(user, 5)
+	if(buffed)
+		user.client?.give_award(/datum/award/achievement/abno/blue_core, user)
 	return
 
 /mob/living/simple_animal/hostile/abnormality/bluestar/BreachEffect(mob/living/carbon/human/user, breach_type)

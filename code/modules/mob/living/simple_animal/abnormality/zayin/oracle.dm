@@ -96,6 +96,8 @@
 			var/chosen_dream = pickweight(dream_list)
 			TransferVar("SpecialDreamDone", TRUE)
 			SpecialDreams(chosen_dream, user)
+			user.client?.give_award(/datum/award/achievement/abno/oracle_emergency, user)
+
 			return
 		for(var/line in sleeplines)
 			to_chat(user, span_notice(line))
@@ -110,6 +112,7 @@
 			to_chat(user, span_notice("All ordeals.... are completed..."))
 			return
 		to_chat(user, span_notice("[SSlobotomy_corp.next_ordeal.name]"))
+		user.client?.give_award(/datum/award/achievement/abno/oracle_scry, user)
 	..()
 
 /mob/living/simple_animal/hostile/abnormality/oracle/Initialize(mob/living/carbon/human/user)
@@ -141,6 +144,7 @@
 		if(H.IsSleeping())
 			continue //You need to be sleeping to get notified
 		to_chat(H, span_notice("Oh.... [abno]... It has breached containment..."))
+		H.client?.give_award(/datum/award/achievement/abno/oracle_emergency, H)
 
 //ER stuff
 /mob/living/simple_animal/hostile/abnormality/oracle/BreachEffect(mob/living/carbon/human/user, breach_type)//finish this shit

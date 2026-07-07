@@ -96,6 +96,8 @@
 	M.set_resting(TRUE, silent = TRUE)
 	M.apply_status_effect(STATUS_EFFECT_RESTED)
 	animate(M, pixel_y = -6, time = 3)
+	M.client?.give_award(/datum/award/achievement/abno/sleeping_buckled, M)
+
 
 /mob/living/simple_animal/hostile/abnormality/sleeping/user_unbuckle_mob(mob/living/buckled_mob, mob/living/carbon/human/user)
 	if(buckled_mob)
@@ -124,6 +126,7 @@
 		if(!M.buckled)
 			return
 		Release_Mob(M)
+		user.client?.give_award(/datum/award/achievement/abno/sleeping_unbuckle, user)
 		update_icon()
 
 /mob/living/simple_animal/hostile/abnormality/sleeping/proc/Release_Mob(mob/living/M)
