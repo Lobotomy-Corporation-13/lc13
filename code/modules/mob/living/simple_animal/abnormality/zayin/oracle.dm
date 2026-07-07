@@ -96,7 +96,7 @@
 			var/chosen_dream = pickweight(dream_list)
 			TransferVar("SpecialDreamDone", TRUE)
 			SpecialDreams(chosen_dream, user)
-			user.client?.give_award(/datum/award/achievement/abno/oracle_emergency, user)
+			user.client?.give_award(/datum/award/achievement/abno/oracle_change, user)
 
 			return
 		for(var/line in sleeplines)
