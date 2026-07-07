@@ -6,6 +6,7 @@
 	icon = 'ModularLobotomy/_Lobotomyicons/48x48.dmi'
 	icon_state = "green_bot"
 	icon_living = "green_bot"
+	var/icon_reloading = "green_bot_reload"
 	icon_dead = "green_bot_dead"
 	faction = list("green_ordeal")
 	pixel_x = -8
@@ -40,8 +41,9 @@
 	var/reloading = FALSE
 	var/firing_time = 0
 	var/firing_cooldown = 1.2
-	/// When at 12 - it will start "reloading"
+	/// When at fire_max - it will start "reloading"
 	var/fire_count = 0
+	var/fire_max = 12
 
 /mob/living/simple_animal/hostile/ordeal/green_bot_big/CanAttack(atom/the_target)
 	if(reloading)
@@ -68,7 +70,7 @@
 		return FALSE
 	firing_time = world.time
 	fire_count += 1
-	if(fire_count >= 12)
+	if(fire_count >= fire_max)
 		StartReloading()
 		return FALSE
 	return ..()
@@ -202,3 +204,27 @@
 	QDEL_NULL(current_beam)
 	return ..()
 
+/mob/living/simple_animal/hostile/ordeal/green_bot_rocket/napalm
+	projectiletype = /obj/projectile/ego_bullet/napalm
+
+
+/mob/living/simple_animal/hostile/ordeal/green_bot_big/flamer
+	name = "passion of understanding"
+	desc = "A big robot with a hammer and a flamethrower in place of its hands."
+	icon_state = "green_bot_flamer"
+	icon_living = "green_bot_flamer"
+	icon_reloading = "green_bot_flamer_reload"
+	projectilesound = null	//Everything is too loud. Please change later.
+	rapid = 30				//It does like one damage.
+	ranged_cooldown_time = 90
+	rapid_fire_delay = 1
+	projectiletype = /obj/projectile/ego_bullet/flammenwerfer
+	fire_max = 5	//has significantly less shots per reload
+	attack_verb_continuous = "bashes"
+	attack_verb_simple = "bash"
+	attack_sound = 'sound/weapons/fixer/generic/club3.ogg'
+
+
+/mob/living/simple_animal/hostile/ordeal/green_bot_big/flamer/Initialize()
+	. = ..()
+	AddComponent(/datum/component/knockback, 5, FALSE, TRUE)
