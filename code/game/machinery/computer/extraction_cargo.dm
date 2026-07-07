@@ -55,6 +55,7 @@
 		new /datum/data/extraction_cargo("Binoculars ",					/obj/item/binoculars,												200, CAT_EQUIP) = 1,
 
 		//Medical
+		new /datum/data/extraction_cargo("Cable Coil ",					/obj/item/stack/cable_coil,											40, CAT_MEDICAL) = 1,
 		new /datum/data/extraction_cargo("Epinepherine Medi-Pen ",		/obj/item/reagent_containers/hypospray/medipen,						40, CAT_MEDICAL) = 1,
 		new /datum/data/extraction_cargo("L-Corp Health Medi-Pen ",		/obj/item/reagent_containers/hypospray/medipen/l_health,			50, CAT_MEDICAL) = 1,
 		new /datum/data/extraction_cargo("L-Corp Sanity Medi-Pen ",		/obj/item/reagent_containers/hypospray/medipen/l_sanity,			50, CAT_MEDICAL) = 1,
