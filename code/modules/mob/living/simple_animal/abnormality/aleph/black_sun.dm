@@ -7,15 +7,14 @@
 	health = 1000
 	threat_level = ALEPH_LEVEL
 	work_chances = list(
-		ABNORMALITY_WORK_INSTINCT = 10,
-		ABNORMALITY_WORK_INSIGHT = 10,
-		ABNORMALITY_WORK_ATTACHMENT = 10,
-		ABNORMALITY_WORK_REPRESSION = 10
+		ABNORMALITY_WORK_INSTINCT = 55,
+		ABNORMALITY_WORK_INSIGHT = 55,
+		ABNORMALITY_WORK_ATTACHMENT = 55,
+		ABNORMALITY_WORK_REPRESSION = 55
 			)
-	work_damage_amount = 16
+	work_damage_amount = 32	//You get good work rates across the board but huge amounts of red.
 	work_damage_type = RED_DAMAGE
 	chem_type = /datum/reagent/abnormality/sin/sloth
-	start_qliphoth = 3
 
 	ego_list = list(
 		/datum/ego_datum/weapon/arcadia,
@@ -26,73 +25,19 @@
 	abnormality_origin = ABNORMALITY_ORIGIN_ORIGINAL
 
 	//takes 12 minutes from the moment of getting it to breach, and cause a headache.
-	var/stage
-	var/nextstage = 1 MINUTES
-	var/time_addition = 2 MINUTES //Goes down 5 seconds every time someone dies.
-	var/list/pillars = list()
-	var/list/affected_players = list()
+	var/breach_when
+	var/breach_timer = 12 MINUTES
+	var/timeloss = 2 MINUTES //Goes down 2 minutes every time someone dies.
 
 /mob/living/simple_animal/hostile/abnormality/black_sun/Initialize()
 	. = ..()
 	RegisterSignal(SSdcs, COMSIG_GLOB_MOB_DEATH, PROC_REF(on_mob_death))
-	nextstage = world.time + 1 MINUTES
-
-/mob/living/simple_animal/hostile/abnormality/black_sun/Destroy()
-	Refreshment(-1 * (stage*10))
-	pillars = null
-	UnregisterAll()
-	return ..()
+	breach_when = world.time + breach_timer
 
 /mob/living/simple_animal/hostile/abnormality/black_sun/Life()
 	. = ..()
-	if(nextstage < world.time && !LAZYLEN(pillars))
-		StageChange()
-
-/mob/living/simple_animal/hostile/abnormality/black_sun/proc/StageChange()
-	stage++
-	//Add 10 stats to everyone.
-	if(stage == 1)
-		UnregisterAll()
-		for(var/mob/living/carbon/human/L in GLOB.player_list)
-			if(!is_station_level(L.z))
-				continue
-			RegisterMob(L)
-
-	Refreshment(10)
-
-	switch(stage)
-		if(1)
-			to_chat(GLOB.clients,span_notice("You see The Black Sun rise in the east."))
-			nextstage = world.time + 2 MINUTES
-		if(2)
-			to_chat(GLOB.clients,span_danger("The Black Sun clears the horizon, filling you with it's warmth."))
-			nextstage = world.time + 4 MINUTES
-		if(3)
-			to_chat(GLOB.clients,span_userdanger("The Black sun is halfway to it's zenith. Dread fills you. You must hurry."))
-			nextstage = world.time + 4 MINUTES
-		if(4)
-			to_chat(GLOB.clients,span_danger("YOUR TIME IS LIMITED. THE SUN IS NEAR IT'S ZENITH."))
-			SSweather.run_weather(/datum/weather/bloody_water)
-			for(var/mob/living/carbon/human/L in GLOB.player_list)
-				if(!is_station_level(L.z))
-					continue
-				flash_color(L, flash_color = COLOR_RED, flash_time = 150)
-			nextstage = world.time + 2 MINUTES
-		if(5)
-			datum_reference.qliphoth_change(-3)
-
-/mob/living/simple_animal/hostile/abnormality/black_sun/ZeroQliphoth()
-	datum_reference.qliphoth_change(3)
-
-	to_chat(GLOB.clients,"<span class='colossus'>THE BLACK SUN HAS RISEN.</span>")
-	//Also remove your stats
-	Refreshment(-1 * (stage*10))
-	stage = 0
-	for(var/i = 0 to 2)
-		var/X = pick(GLOB.department_centers)
-		var/turf/T = get_turf(X)
-		new /mob/living/simple_animal/hostile/sun_pillar(T)
-
+	if(breach_when < world.time)
+		BreachEffect()
 
 /mob/living/simple_animal/hostile/abnormality/black_sun/proc/on_mob_death(datum/source, mob/living/died, gibbed)
 	SIGNAL_HANDLER
@@ -100,43 +45,50 @@
 		return FALSE
 	if(died.z != z)
 		return FALSE
-	nextstage += time_addition
-	if(time_addition >=0 && stage!=4)
-		time_addition =- 5 SECONDS
-	to_chat(GLOB.clients, span_notice("The sun has stalled but a moment."))
-	return TRUE
-
-/mob/living/simple_animal/hostile/abnormality/black_sun/WorkChance(mob/living/carbon/human/user, chance)
-	var/chance_modifier = 1
-	chance_modifier = stage*10
-	return chance + chance_modifier
+	breach_when += timeloss
+	timeloss -= 10 SECONDS	//You can only stall it for so long.
 
 /mob/living/simple_animal/hostile/abnormality/black_sun/PostWorkEffect(mob/living/carbon/human/user, work_type, pe, work_time)
 	to_chat(GLOB.clients, span_warning("The Black Sun fades from the sky. You are safe for now."))
-	Refreshment(-1 * (stage*10))
-	stage = 0
+	breach_when = world.time + breach_timer
 
-/mob/living/simple_animal/hostile/abnormality/black_sun/proc/Refreshment(stat_change = 0)
-	for(var/mob/living/carbon/human/L in affected_players)
-		if(QDELETED(L))
-			UnregisterMob(affected_players)
-			continue
-		L.adjust_attribute_buff(FORTITUDE_ATTRIBUTE, stat_change)
-		L.adjust_attribute_buff(PRUDENCE_ATTRIBUTE, stat_change)
-		L.adjust_attribute_buff(JUSTICE_ATTRIBUTE, stat_change)
+/mob/living/simple_animal/hostile/abnormality/black_sun/BreachEffect()
+	datum_reference.qliphoth_change(1)
+	//Okay we're gonna make everyone go murder insane for like 12 seconds
 
-/mob/living/simple_animal/hostile/abnormality/black_sun/proc/RegisterMob(mob/living/L)
-	RegisterSignal(L, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING), PROC_REF(UnregisterMob))
-	affected_players += L
+	//Thank you Branch 12
+	for(var/mob/living/carbon/human/H in GLOB.player_list)
+		if(!H.sanity_lost)
+			H.adjustSanityLoss(500)
+		QDEL_NULL(H.ai_controller)
+		H.ai_controller = /datum/ai_controller/insane/murder/black_sun
+		H.InitializeAIController()
 
-/mob/living/simple_animal/hostile/abnormality/black_sun/proc/UnregisterMob(mob/living/L)
-	UnregisterSignal(L, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING))
-	affected_players -= L
+	addtimer(CALLBACK(src, PROC_REF(resane_everyone)), 12 SECONDS)
 
-/mob/living/simple_animal/hostile/abnormality/black_sun/proc/UnregisterAll()
-	for(var/mob/living/L in affected_players)
-		UnregisterMob(L)
-	affected_players.Cut()
+
+/mob/living/simple_animal/hostile/abnormality/black_sun/proc/resane_everyone()
+	for(var/mob/living/carbon/human/H in GLOB.mob_list)
+		if(H.sanity_lost)
+			H.adjustSanityLoss(-500)
+
+
+/datum/ai_controller/insane/murder/black_sun
+	lines_type = /datum/ai_behavior/say_line/insanity_black_sun
+
+/datum/ai_behavior/say_line/insanity_black_sun
+	lines = list(
+		"The blood.... It sings to me.",
+		"Our paradise.... It's here",
+		"Perish, fool.",
+		"Violence... I need violence....",
+	)
+
+//-----------------------------------------------------
+//-----------------------------------------------------
+//--------------The Old Black Sun stuff---------------
+//-----------------------------------------------------
+//-----------------------------------------------------
 
 //Weather effect
 /datum/weather/bloody_water
