@@ -2,7 +2,7 @@
 /mob/living/simple_animal/hostile/ordeal/amber_noon
 	name = "fatty food"
 	desc = "A tiny worm-like creature covered in boils."
-	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/48x48.dmi'
 	icon_state = "amber_noon"
 	icon_living = "amber_noon"
 	icon_dead = "amber_noon_ded"
@@ -13,7 +13,7 @@
 	health = 500
 	move_to_delay = 3.4
 	rapid_melee = 2
-	density = FALSE
+	density = TRUE
 	status_flags = CANPUSH | MUST_HIT_PROJECTILE
 	melee_damage_lower = 25
 	melee_damage_upper = 30
