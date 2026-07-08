@@ -171,15 +171,6 @@
 /obj/structure/sigsystem/activator,
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
-"cs" = (
-/obj/effect/decal/cleanable/dirt/dust,
-/obj/structure/destructible/cult/forge{
-	resistance_flags = 64;
-	desc = "A forge used in crafting various parts.";
-	name = "forge"
-	},
-/turf/open/floor/mineral/plastitanium,
-/area/city/outskirtsfactory)
 "cw" = (
 /obj/effect/turf_decal/siding/thinplating/light{
 	dir = 8
@@ -836,6 +827,12 @@
 	name = "asphalt"
 	},
 /area/city/outskirtsfactory)
+"qY" = (
+/obj/structure/railing/corner{
+	dir = 8
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirtsfactory)
 "rf" = (
 /obj/machinery/light/red,
 /turf/open/floor/pod/light,
@@ -1099,6 +1096,19 @@
 "xE" = (
 /turf/closed/indestructible/syndicate,
 /area/city/outskirtsfactory)
+"xH" = (
+/obj/machinery/door/poddoor/shutters/indestructible{
+	lockpickable = 0;
+	resistance_flags = 64;
+	id = "furnaceaccess"
+	},
+/obj/structure/sigsystem/activator,
+/obj/structure/sigsystem/connector{
+	dir = 8
+	},
+/obj/effect/decal/cleanable/oil/slippery,
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirtsfactory)
 "xI" = (
 /obj/structure/sigsystem/connector{
 	dir = 4
@@ -1134,9 +1144,14 @@
 /turf/closed/indestructible/syndicate,
 /area/city/outskirtsfactory)
 "yr" = (
-/obj/structure/railing/corner{
+/obj/structure/railing{
+	resistance_flags = 115;
+	name = "wing-grade railing";
+	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
+	mouse_opacity = 0;
 	dir = 8
 	},
+/obj/effect/decal/cleanable/oil/slippery,
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
 "yt" = (
@@ -1473,17 +1488,6 @@
 "EC" = (
 /obj/structure/sigsystem/connector/split,
 /turf/closed/indestructible/syndicate,
-/area/city/outskirtsfactory)
-"EH" = (
-/obj/structure/railing{
-	resistance_flags = 115;
-	name = "wing-grade railing";
-	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
-	mouse_opacity = 0;
-	dir = 4
-	},
-/obj/effect/decal/cleanable/oil/slippery,
-/turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
 "EO" = (
 /obj/effect/turf_decal/siding/green/corner{
@@ -2027,8 +2031,9 @@
 	name = "wing-grade railing";
 	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
 	mouse_opacity = 0;
-	dir = 10
+	dir = 4
 	},
+/obj/effect/decal/cleanable/oil/slippery,
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
 "Pf" = (
@@ -2066,6 +2071,16 @@
 	},
 /mob/living/simple_animal/hostile/ordeal/green_bot_rocket,
 /turf/open/floor/pod/light,
+/area/city/outskirtsfactory)
+"PP" = (
+/obj/structure/railing{
+	resistance_flags = 115;
+	name = "wing-grade railing";
+	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
+	mouse_opacity = 0;
+	dir = 10
+	},
+/turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
 "PZ" = (
 /obj/machinery/door/poddoor/shutters/indestructible{
@@ -2145,6 +2160,15 @@
 	signal_code = 15
 	},
 /turf/closed/indestructible/rock,
+/area/city/outskirtsfactory)
+"Se" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/destructible/cult/forge{
+	resistance_flags = 64;
+	desc = "A forge used in crafting various parts.";
+	name = "forge"
+	},
+/turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
 "Sh" = (
 /obj/machinery/light/red{
@@ -2330,17 +2354,6 @@
 	},
 /obj/effect/turf_decal/siding/red,
 /turf/open/floor/facility/dark,
-/area/city/outskirtsfactory)
-"Us" = (
-/obj/structure/railing{
-	resistance_flags = 115;
-	name = "wing-grade railing";
-	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
-	mouse_opacity = 0;
-	dir = 8
-	},
-/obj/effect/decal/cleanable/oil/slippery,
-/turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
 "Uv" = (
 /obj/effect/turf_decal/trimline/blue/filled/line{
@@ -3883,7 +3896,7 @@ xE
 Uk
 RK
 UC
-cs
+Se
 xE
 xE
 xE
@@ -3988,8 +4001,8 @@ sJ
 Go
 iA
 wm
-Us
-Pb
+yr
+PP
 TT
 TT
 TT
@@ -4086,7 +4099,7 @@ is
 RK
 Pz
 RK
-yr
+qY
 Xw
 Pf
 Pf
@@ -4175,7 +4188,7 @@ Tt
 sJ
 sJ
 RK
-KU
+xH
 sJ
 RK
 RK
@@ -4279,7 +4292,7 @@ RK
 Go
 wh
 ef
-EH
+Pb
 wh
 UC
 wh

@@ -3404,11 +3404,15 @@
 /turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
 "zr" = (
-/obj/structure/sigsystem/connector{
-	dir = 4;
-	delay_time = 30
+/obj/structure/railing{
+	resistance_flags = 115;
+	name = "wing-grade railing";
+	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
+	mouse_opacity = 0;
+	dir = 4
 	},
-/turf/open/floor/pod/dark,
+/obj/effect/decal/cleanable/oil/slippery,
+/turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
 "zv" = (
 /obj/structure/chair/comfy/black{
@@ -4169,6 +4173,19 @@
 	dir = 1
 	},
 /turf/open/floor/pod/light,
+/area/city/outskirtsfactory)
+"Ft" = (
+/obj/machinery/door/poddoor/shutters/indestructible{
+	lockpickable = 0;
+	resistance_flags = 64;
+	id = "furnaceaccess"
+	},
+/obj/structure/sigsystem/activator,
+/obj/structure/sigsystem/connector{
+	dir = 8
+	},
+/obj/effect/decal/cleanable/oil/slippery,
+/turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
 "Fx" = (
 /obj/effect/turf_decal/siding/thinplating/light{
@@ -5227,6 +5244,12 @@
 	dir = 4
 	},
 /obj/structure/table/glass,
+/obj/machinery/button/door/indestructible{
+	id = "disc_blast";
+	name = "External Elevator Opening";
+	req_access_txt = "20";
+	pixel_y = 7
+	},
 /turf/open/floor/carpet/cyan,
 /area/department_main/manager)
 "NH" = (
@@ -5660,6 +5683,16 @@
 	},
 /turf/open/floor/plasteel/showroomfloor,
 /area/facility_hallway/manager)
+"RO" = (
+/obj/structure/railing{
+	resistance_flags = 115;
+	name = "wing-grade railing";
+	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
+	mouse_opacity = 0;
+	dir = 10
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirtsfactory)
 "RP" = (
 /obj/effect/turf_decal/siding/red/corner{
 	dir = 1
@@ -6112,7 +6145,7 @@
 /area/facility_hallway/manager)
 "Wc" = (
 /obj/structure/sigsystem/connector{
-	delay_time = 100;
+	delay_time = 30;
 	dir = 4
 	},
 /turf/closed/indestructible/syndicate,
@@ -6180,6 +6213,12 @@
 "WN" = (
 /obj/effect/decal/cleanable/blood/gibs/limb,
 /turf/open/floor/plating/asteroid/basalt,
+/area/city/outskirtsfactory)
+"WQ" = (
+/obj/structure/railing/corner{
+	dir = 8
+	},
+/turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
 "WS" = (
 /obj/effect/turf_decal/siding/blue{
@@ -6250,17 +6289,16 @@
 /turf/open/floor/plasteel/white,
 /area/facility_hallway/manager)
 "Xq" = (
-/obj/effect/turf_decal/siding/blue{
-	dir = 5
+/obj/structure/railing{
+	resistance_flags = 115;
+	name = "wing-grade railing";
+	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
+	mouse_opacity = 0;
+	dir = 8
 	},
-/obj/machinery/button/door/indestructible{
-	id = "disc_blast";
-	name = "External Elevator Opening";
-	pixel_y = -25;
-	req_access_txt = "20"
-	},
-/turf/open/floor/carpet/cyan,
-/area/department_main/manager)
+/obj/effect/decal/cleanable/oil/slippery,
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirtsfactory)
 "Xs" = (
 /obj/effect/turf_decal/siding/blue{
 	dir = 9
@@ -13146,8 +13184,8 @@ Ve
 co
 Ve
 dF
-XO
-XO
+dF
+dF
 dF
 aP
 sr
@@ -13402,15 +13440,15 @@ Ve
 rm
 co
 OV
-dF
-dF
-dF
-dF
-aP
-sr
-sr
-sr
-sr
+gv
+Ve
+ar
+oq
+GY
+pq
+vF
+Xq
+RO
 sr
 sr
 sr
@@ -13659,15 +13697,15 @@ oq
 rB
 oq
 oQ
-gv
-Ve
-ar
+KD
 oq
-GY
-pq
-vF
-pq
-vF
+oq
+Ve
+tb
+Ve
+DR
+Ve
+WQ
 XX
 Bv
 Bv
@@ -13916,7 +13954,7 @@ wQ
 oq
 oq
 Ve
-KD
+Ft
 oq
 Ve
 Ve
@@ -14180,7 +14218,7 @@ Ve
 GY
 mT
 yT
-mT
+zr
 mT
 co
 mT
@@ -14195,7 +14233,7 @@ dF
 JV
 RI
 lB
-zr
+cU
 lB
 Fi
 cs
@@ -18167,7 +18205,7 @@ wy
 AV
 Qf
 PN
-Xq
+Sy
 NF
 Ao
 Gy
