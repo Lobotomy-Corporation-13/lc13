@@ -748,6 +748,17 @@
 	},
 /turf/open/floor/plasteel/dark,
 /area/department_main/manager)
+"fL" = (
+/obj/structure/railing{
+	resistance_flags = 115;
+	name = "wing-grade railing";
+	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
+	mouse_opacity = 0;
+	dir = 8
+	},
+/obj/effect/decal/cleanable/oil/slippery,
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirtsfactory)
 "fU" = (
 /obj/structure/table/wood,
 /obj/item/clipboard,
@@ -866,10 +877,11 @@
 /turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
 "gL" = (
-/obj/machinery/door/poddoor/shutters/indestructible{
-	lockpickable = 0
+/obj/machinery/door/keycard{
+	puzzle_id = 32;
+	desc = "A high security vault door. This door only opens when a keycard is swiped. It looks virtually indestructable.";
+	name = "vault door"
 	},
-/obj/structure/sigsystem/activator,
 /turf/open/floor/facility/dark,
 /area/city/outskirtsfactory)
 "gP" = (
@@ -1637,11 +1649,6 @@
 /obj/structure/sigsystem/activator,
 /turf/open/floor/facility/dark,
 /area/city/outskirtsfactory)
-"mt" = (
-/obj/effect/decal/cleanable/dirt/dust,
-/obj/machinery/light,
-/turf/open/floor/mineral/plastitanium,
-/area/city/outskirtsfactory)
 "mu" = (
 /obj/structure/chair/comfy/black{
 	dir = 1
@@ -1684,11 +1691,14 @@
 /turf/open/floor/carpet/green,
 /area/facility_hallway/manager)
 "mI" = (
-/obj/structure/sigsystem/tower/button{
-	signal_code = 92;
-	signal_range = 3
+/obj/structure/railing{
+	resistance_flags = 115;
+	name = "wing-grade railing";
+	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
+	mouse_opacity = 0;
+	dir = 10
 	},
-/turf/closed/indestructible/syndicate,
+/turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
 "mK" = (
 /obj/structure/rack,
@@ -1898,17 +1908,6 @@
 /obj/structure/sigsystem/connector{
 	dir = 8
 	},
-/turf/open/floor/mineral/plastitanium,
-/area/city/outskirtsfactory)
-"oa" = (
-/obj/structure/railing{
-	resistance_flags = 115;
-	name = "wing-grade railing";
-	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
-	mouse_opacity = 0;
-	dir = 4
-	},
-/obj/effect/decal/cleanable/oil/slippery,
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
 "ob" = (
@@ -2665,19 +2664,6 @@
 	},
 /turf/open/floor/carpet/royalblue,
 /area/facility_hallway/manager)
-"tr" = (
-/obj/machinery/door/poddoor/shutters/indestructible{
-	lockpickable = 0;
-	resistance_flags = 64;
-	id = "furnaceaccess"
-	},
-/obj/structure/sigsystem/activator,
-/obj/structure/sigsystem/connector{
-	dir = 8
-	},
-/obj/effect/decal/cleanable/oil/slippery,
-/turf/open/floor/mineral/plastitanium,
-/area/city/outskirtsfactory)
 "tD" = (
 /obj/effect/decal/cleanable/blood/old,
 /obj/structure/sigsystem/tower/button{
@@ -3433,9 +3419,16 @@
 /turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
 "zr" = (
-/obj/structure/railing/corner{
+/obj/machinery/door/poddoor/shutters/indestructible{
+	lockpickable = 0;
+	resistance_flags = 64;
+	id = "furnaceaccess"
+	},
+/obj/structure/sigsystem/activator,
+/obj/structure/sigsystem/connector{
 	dir = 8
 	},
+/obj/effect/decal/cleanable/oil/slippery,
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
 "zv" = (
@@ -4561,6 +4554,11 @@
 /obj/machinery/light/small/red,
 /turf/open/floor/circuit/red,
 /area/city/outskirtsfactory)
+"HH" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/machinery/light,
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirtsfactory)
 "HI" = (
 /obj/machinery/light/red{
 	dir = 4
@@ -5356,8 +5354,9 @@
 	name = "wing-grade railing";
 	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
 	mouse_opacity = 0;
-	dir = 10
+	dir = 4
 	},
+/obj/effect/decal/cleanable/oil/slippery,
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
 "OZ" = (
@@ -6285,14 +6284,9 @@
 /turf/open/floor/plasteel/white,
 /area/facility_hallway/manager)
 "Xq" = (
-/obj/structure/railing{
-	resistance_flags = 115;
-	name = "wing-grade railing";
-	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
-	mouse_opacity = 0;
+/obj/structure/railing/corner{
 	dir = 8
 	},
-/obj/effect/decal/cleanable/oil/slippery,
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
 "Xs" = (
@@ -13178,7 +13172,7 @@ dF
 Uq
 Ve
 co
-mt
+HH
 dF
 dF
 dF
@@ -13443,8 +13437,8 @@ oq
 GY
 pq
 vF
-Xq
-OV
+fL
+mI
 sr
 sr
 sr
@@ -13701,7 +13695,7 @@ tb
 Ve
 DR
 Ve
-zr
+Xq
 XX
 Bv
 Bv
@@ -13950,7 +13944,7 @@ wQ
 oq
 oq
 Ve
-tr
+zr
 oq
 Ve
 Ve
@@ -14214,7 +14208,7 @@ Ve
 GY
 mT
 yT
-oa
+OV
 mT
 co
 mT
@@ -21366,7 +21360,7 @@ Gh
 Vx
 Vx
 zA
-mI
+dF
 Nm
 oq
 Nm

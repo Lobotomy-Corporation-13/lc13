@@ -280,10 +280,11 @@
 /turf/open/floor/pod/light,
 /area/city/outskirtsfactory)
 "eB" = (
-/obj/machinery/door/poddoor/shutters/indestructible{
-	lockpickable = 0
+/obj/machinery/door/keycard{
+	puzzle_id = 32;
+	desc = "A high security vault door. This door only opens when a keycard is swiped. It looks virtually indestructable.";
+	name = "vault door"
 	},
-/obj/structure/sigsystem/activator,
 /turf/open/floor/facility/dark,
 /area/city/outskirtsfactory)
 "eH" = (
@@ -817,13 +818,6 @@
 	happens_once = 1
 	},
 /turf/open/floor/pod/dark,
-/area/city/outskirtsfactory)
-"qO" = (
-/obj/structure/sigsystem/tower/button{
-	signal_code = 92;
-	signal_range = 3
-	},
-/turf/closed/indestructible/syndicate,
 /area/city/outskirtsfactory)
 "qP" = (
 /obj/structure/sigsystem/connector/split{
@@ -6964,7 +6958,7 @@ YL
 Hi
 Hi
 Ic
-qO
+xE
 fT
 sJ
 fT
