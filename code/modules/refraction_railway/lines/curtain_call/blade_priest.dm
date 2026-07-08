@@ -186,21 +186,34 @@
 		return
 	var/dx_px = (landing.x - blade_turf.x) * 32
 	var/dy_px = (landing.y - blade_turf.y) * 32
-	animate(src, pixel_x = dx_px, pixel_y = dy_px, time = 4, easing = QUAD_EASING)
+	var/tile_time = parent_priest.blade_dash_tile_time
+	// One smooth, constant-speed slide across the whole line. animate() is
+	// non-blocking, so the damage loop below walks the tiles in lockstep with
+	// it — linear easing keeps the two in sync so a tile only becomes deadly
+	// as the blade actually arrives on it, leaving room to step off the line.
+	animate(src, pixel_x = dx_px, pixel_y = dy_px, time = max(1, (length(line) - 1) * tile_time))
 	playsound(blade_turf, 'sound/weapons/rapierhit.ogg', 75, TRUE, 6)
-	var/list/been_hit = list()
-	for(var/turf/T as anything in line)
-		been_hit = parent_priest.HurtInTurf(T, been_hit, parent_priest.blade_dash_damage, BLACK_DAMAGE,
-			check_faction = TRUE, hurt_mechs = TRUE,
-			attack_type = (ATTACK_TYPE_RANGED | ATTACK_TYPE_SPECIAL))
 	// Achievement: any marked-player hit fails `priest_no_marked_hit`
 	// for that player.
 	var/mob/living/carbon/human/currently_marked = parent_priest.marked_player?.resolve()
-	for(var/mob/living/L in been_hit)
-		parent_priest.ApplyBladeRupture(L)
-		if(currently_marked && L == currently_marked && parent_priest.refraction_run_ref)
-			parent_priest.refraction_run_ref.FailAchievement(L.ckey, "priest_no_marked_hit")
-	sleep(4)
+	var/list/been_hit = list()
+	var/first = TRUE
+	for(var/turf/T as anything in line)
+		if(!first)
+			sleep(tile_time)
+		first = FALSE
+		if(QDELETED(src) || QDELETED(parent_priest) || parent_priest.dying)
+			break
+		var/list/hit_now = parent_priest.HurtInTurf(T, been_hit, parent_priest.blade_dash_damage, BLACK_DAMAGE,
+			check_faction = TRUE, hurt_mechs = TRUE,
+			attack_type = (ATTACK_TYPE_RANGED | ATTACK_TYPE_SPECIAL))
+		for(var/mob/living/L in hit_now)
+			if(L in been_hit)
+				continue
+			parent_priest.ApplyBladeRupture(L)
+			if(currently_marked && L == currently_marked && parent_priest.refraction_run_ref)
+				parent_priest.refraction_run_ref.FailAchievement(L.ckey, "priest_no_marked_hit")
+		been_hit = hit_now
 	if(QDELETED(src))
 		return
 	forceMove(landing)
@@ -262,6 +275,10 @@
 
 	// ---- Blade dash tuning ----
 	var/blade_dash_damage = 80
+	/// Deciseconds the blade spends advancing over each tile of a dash. The
+	/// blade only deals damage to a tile once it arrives on it, so this is
+	/// also the per-tile dodge window. 1 = 0.1s/tile (a 7-tile line ~0.7s).
+	var/blade_dash_tile_time = 1
 	/// Rupture stacks applied to every human hit by a blade dash. Marked
 	/// players take an additional `blade_rupture_marked_bonus` on top —
 	/// the skull mark deepens the cut. Rupture caps at 50 stacks per
