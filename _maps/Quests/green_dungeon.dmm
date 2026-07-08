@@ -261,6 +261,17 @@
 /obj/effect/decal/cleanable/oil/slippery,
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
+"el" = (
+/obj/structure/railing{
+	resistance_flags = 115;
+	name = "wing-grade railing";
+	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
+	mouse_opacity = 0;
+	dir = 8
+	},
+/obj/effect/decal/cleanable/oil/slippery,
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirtsfactory)
 "et" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/pod/dark,
@@ -481,6 +492,12 @@
 /mob/living/simple_animal/hostile/ordeal/green_bot_big,
 /turf/open/floor/facility,
 /area/city/outskirtsfactory)
+"iF" = (
+/obj/structure/railing/corner{
+	dir = 8
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirtsfactory)
 "iZ" = (
 /obj/machinery/door/poddoor/shutters/indestructible{
 	lockpickable = 0;
@@ -493,6 +510,17 @@
 	tamperproof = 1
 	},
 /turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"jd" = (
+/obj/structure/railing{
+	resistance_flags = 115;
+	name = "wing-grade railing";
+	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
+	mouse_opacity = 0;
+	dir = 4
+	},
+/obj/effect/decal/cleanable/oil/slippery,
+/turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
 "je" = (
 /obj/machinery/conveyor/auto{
@@ -1293,6 +1321,15 @@
 /mob/living/simple_animal/hostile/ordeal/green_bot,
 /turf/open/floor/plating/asteroid/basalt,
 /area/city/outskirtsfactory)
+"BS" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/destructible/cult/forge{
+	resistance_flags = 64;
+	desc = "A forge used in crafting various parts.";
+	name = "forge"
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirtsfactory)
 "BT" = (
 /obj/structure/railing{
 	dir = 8
@@ -1538,12 +1575,8 @@
 /turf/open/floor/circuit,
 /area/city/outskirtsfactory)
 "FF" = (
-/obj/structure/destructible/cult/forge{
-	resistance_flags = 64;
-	desc = "A forge used in crafting various parts.";
-	name = "forge"
-	},
 /obj/machinery/light,
+/mob/living/simple_animal/hostile/ordeal/green_bot,
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
 "FX" = (
@@ -2007,7 +2040,13 @@
 	},
 /area/city/outskirtsfactory)
 "Pb" = (
-/mob/living/simple_animal/hostile/ordeal/green_bot,
+/obj/structure/railing{
+	resistance_flags = 115;
+	name = "wing-grade railing";
+	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
+	mouse_opacity = 0;
+	dir = 10
+	},
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
 "Pf" = (
@@ -3851,10 +3890,10 @@ xE
 Uk
 RK
 UC
-RK
+BS
 xE
-Pn
-Pn
+xE
+xE
 xE
 Mx
 TT
@@ -3949,15 +3988,15 @@ RK
 WH
 UC
 FF
-xE
-xE
-xE
-xE
-Mx
-TT
-TT
-TT
-TT
+oS
+RK
+dt
+sJ
+Go
+iA
+wm
+el
+Pb
 TT
 TT
 TT
@@ -4045,16 +4084,16 @@ xE
 sJ
 GJ
 sJ
-Pb
-oS
-RK
-dt
 sJ
-Go
-iA
-wm
-iA
-wm
+KU
+sJ
+sJ
+RK
+is
+RK
+Pz
+RK
+iF
 Xw
 Pf
 Pf
@@ -4247,7 +4286,7 @@ RK
 Go
 wh
 ef
-wh
+jd
 wh
 UC
 wh
