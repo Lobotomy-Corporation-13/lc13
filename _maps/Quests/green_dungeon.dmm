@@ -171,6 +171,15 @@
 /obj/structure/sigsystem/activator,
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
+"cs" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/destructible/cult/forge{
+	resistance_flags = 64;
+	desc = "A forge used in crafting various parts.";
+	name = "forge"
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirtsfactory)
 "cw" = (
 /obj/effect/turf_decal/siding/thinplating/light{
 	dir = 8
@@ -258,17 +267,6 @@
 	dir = 4
 	},
 /obj/effect/decal/cleanable/dirt/dust,
-/obj/effect/decal/cleanable/oil/slippery,
-/turf/open/floor/mineral/plastitanium,
-/area/city/outskirtsfactory)
-"el" = (
-/obj/structure/railing{
-	resistance_flags = 115;
-	name = "wing-grade railing";
-	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
-	mouse_opacity = 0;
-	dir = 8
-	},
 /obj/effect/decal/cleanable/oil/slippery,
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
@@ -446,7 +444,7 @@
 /area/city/outskirtsfactory)
 "hK" = (
 /obj/structure/sigsystem/connector{
-	delay_time = 100;
+	delay_time = 30;
 	dir = 4
 	},
 /turf/closed/indestructible/syndicate,
@@ -492,12 +490,6 @@
 /mob/living/simple_animal/hostile/ordeal/green_bot_big,
 /turf/open/floor/facility,
 /area/city/outskirtsfactory)
-"iF" = (
-/obj/structure/railing/corner{
-	dir = 8
-	},
-/turf/open/floor/mineral/plastitanium,
-/area/city/outskirtsfactory)
 "iZ" = (
 /obj/machinery/door/poddoor/shutters/indestructible{
 	lockpickable = 0;
@@ -510,17 +502,6 @@
 	tamperproof = 1
 	},
 /turf/open/floor/pod/dark,
-/area/city/outskirtsfactory)
-"jd" = (
-/obj/structure/railing{
-	resistance_flags = 115;
-	name = "wing-grade railing";
-	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
-	mouse_opacity = 0;
-	dir = 4
-	},
-/obj/effect/decal/cleanable/oil/slippery,
-/turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
 "je" = (
 /obj/machinery/conveyor/auto{
@@ -1153,11 +1134,10 @@
 /turf/closed/indestructible/syndicate,
 /area/city/outskirtsfactory)
 "yr" = (
-/obj/structure/sigsystem/connector{
-	dir = 4;
-	delay_time = 30
+/obj/structure/railing/corner{
+	dir = 8
 	},
-/turf/open/floor/pod/dark,
+/turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
 "yt" = (
 /obj/effect/decal/cleanable/dirt/dust,
@@ -1320,15 +1300,6 @@
 "BR" = (
 /mob/living/simple_animal/hostile/ordeal/green_bot,
 /turf/open/floor/plating/asteroid/basalt,
-/area/city/outskirtsfactory)
-"BS" = (
-/obj/effect/decal/cleanable/dirt/dust,
-/obj/structure/destructible/cult/forge{
-	resistance_flags = 64;
-	desc = "A forge used in crafting various parts.";
-	name = "forge"
-	},
-/turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
 "BT" = (
 /obj/structure/railing{
@@ -1502,6 +1473,17 @@
 "EC" = (
 /obj/structure/sigsystem/connector/split,
 /turf/closed/indestructible/syndicate,
+/area/city/outskirtsfactory)
+"EH" = (
+/obj/structure/railing{
+	resistance_flags = 115;
+	name = "wing-grade railing";
+	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
+	mouse_opacity = 0;
+	dir = 4
+	},
+/obj/effect/decal/cleanable/oil/slippery,
+/turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
 "EO" = (
 /obj/effect/turf_decal/siding/green/corner{
@@ -2348,6 +2330,17 @@
 	},
 /obj/effect/turf_decal/siding/red,
 /turf/open/floor/facility/dark,
+/area/city/outskirtsfactory)
+"Us" = (
+/obj/structure/railing{
+	resistance_flags = 115;
+	name = "wing-grade railing";
+	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
+	mouse_opacity = 0;
+	dir = 8
+	},
+/obj/effect/decal/cleanable/oil/slippery,
+/turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
 "Uv" = (
 /obj/effect/turf_decal/trimline/blue/filled/line{
@@ -3890,7 +3883,7 @@ xE
 Uk
 RK
 UC
-BS
+cs
 xE
 xE
 xE
@@ -3995,7 +3988,7 @@ sJ
 Go
 iA
 wm
-el
+Us
 Pb
 TT
 TT
@@ -4093,7 +4086,7 @@ is
 RK
 Pz
 RK
-iF
+yr
 Xw
 Pf
 Pf
@@ -4286,7 +4279,7 @@ RK
 Go
 wh
 ef
-jd
+EH
 wh
 UC
 wh
@@ -4301,7 +4294,7 @@ xE
 xI
 mE
 tQ
-yr
+YV
 tQ
 et
 cX
