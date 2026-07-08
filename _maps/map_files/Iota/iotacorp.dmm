@@ -1679,8 +1679,9 @@
 /area/facility_hallway/west)
 "fq" = (
 /obj/machinery/vending/lobotomyheadset,
-/obj/item/wallframe/painting{
-	pixel_y = 26
+/obj/structure/sign/painting/library{
+	pixel_y = 32;
+	pixel_x = 0
 	},
 /turf/open/floor/facility/dark{
 	color = "#ccc8c0"
@@ -5245,8 +5246,9 @@
 /area/department_main/information)
 "pS" = (
 /obj/machinery/vending/lobotomyuniform,
-/obj/item/wallframe/painting{
-	pixel_y = 26
+/obj/structure/sign/painting/library{
+	pixel_y = 32;
+	pixel_x = 0
 	},
 /turf/open/floor/facility/dark{
 	color = "#ccc8c0"
@@ -5549,8 +5551,9 @@
 /area/facility_hallway/discipline)
 "qV" = (
 /obj/machinery/vending/cigarette,
-/obj/item/wallframe/painting{
-	pixel_y = 26
+/obj/structure/sign/painting/library{
+	pixel_y = 32;
+	pixel_x = 0
 	},
 /turf/open/floor/facility/dark{
 	color = "#ccc8c0"
@@ -9855,8 +9858,9 @@
 /turf/open/floor/plasteel/dark,
 /area/department_main/discipline)
 "Ed" = (
-/obj/item/wallframe/painting{
-	pixel_y = 26
+/obj/structure/sign/painting/library{
+	pixel_y = 32;
+	pixel_x = 0
 	},
 /turf/open/floor/facility/dark{
 	color = "#ccc8c0"
@@ -14801,8 +14805,9 @@
 /area/facility_hallway/training)
 "Ve" = (
 /obj/machinery/vending/snack/teal,
-/obj/item/wallframe/painting{
-	pixel_y = 26
+/obj/structure/sign/painting/library{
+	pixel_y = 32;
+	pixel_x = 0
 	},
 /turf/open/floor/facility/dark{
 	color = "#ccc8c0"
@@ -15946,8 +15951,9 @@
 /area/facility_hallway/west)
 "Zd" = (
 /obj/machinery/vending/lobotomyarmband,
-/obj/item/wallframe/painting{
-	pixel_y = 26
+/obj/structure/sign/painting/library{
+	pixel_y = 32;
+	pixel_x = 0
 	},
 /turf/open/floor/facility/dark{
 	color = "#ccc8c0"
