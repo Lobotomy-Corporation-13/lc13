@@ -50,7 +50,7 @@
 /mob/living/simple_animal/hostile/shrimp_hos/proc/gas_grenade()
 	if(grenade_cooldown>world.time)
 		return FALSE
-	playsound(src, 'sound/magic/clockwork/invoke_general.ogg', 200, TRUE, 2)
+	playsound(src, 'sound/weapons/throw.ogg', 200, TRUE, 2)
 	grenade_cooldown = (world.time+grenade_cd_duration)
 	SLEEP_CHECK_DEATH(12)
 	return TRUE
@@ -67,19 +67,18 @@
 	attack_sound = 'sound/effects/meteorimpact.ogg'
 	faction = list("hostile") //Not fooled by the shrimp injector
 	gender = MALE
-	maxHealth = 3000
-	health = 3000
+	maxHealth = 3500 //Comparatively squishy
+	health = 3500
 	melee_damage_lower = 8
 	melee_damage_upper = 12 //Fucking puny melee damage lmao
 	ranged = TRUE
 	damage_coeff = list(RED_DAMAGE = 0.8, WHITE_DAMAGE = 1.2, BLACK_DAMAGE = 0.8, PALE_DAMAGE = 1.5)
 	move_to_delay = 3
 	ranged_cooldown_time = 23
-	casingtype = /obj/item/ammo_casing/caseless/ego_shrimpsoldier
-	projectilesound = 'sound/weapons/gun/shotgun/shot.ogg'
+	casingtype = /obj/projectile/ego_bullet/ego_executive //Surprise! PALE bullets.
+	projectilesound = 'sound/weapons/gun/pistol/shot.ogg'
 	retreat_distance = 3
-	minimum_distance = 2
-	var/datum/beam/current_beam = null
+	minimum_distance = 3
 	var/reinforcements_cooldown
 	var/reinforcements_cd_duration = 30 SECONDS
 
