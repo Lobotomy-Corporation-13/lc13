@@ -894,3 +894,292 @@
 	src.transform = M
 	animate(src.get_filter("motionblur"), y = 0, time = travel_time, flags = ANIMATION_PARALLEL)
 	animate(src, pixel_z = -1 * abs(sin(rotation))*4, pixel_x = (sin(rotation) * 20), time = travel_time, easing = LINEAR_EASING, flags = ANIMATION_PARALLEL)
+
+/// A momentum minigun that spins up from slow to full while firing, building a "Living" meter and
+/// stacking Sinking as it goes without detonating it. The meter can be spent on one powerful Requiem
+/// shot, which unleashes a cascading Sinking Deluge and then drops the gun into a slow, half-damage
+/// "Fallen" state that guarantees Sinking on every shot until it burns off.
+// The intended gameplay loop is to spool up and pile Sinking onto a target, cash the whole Living
+// meter into a Requiem to detonate it, then ride out the Fallen penalty before building again.
+/obj/item/ego_weapon/ranged/funeraldirge
+	name = "funeral dirge"
+	desc = "A relic of the funeral reforged into an engine of endless mourning. \
+	It scatters butterflies of black and white without pause; grief and lamentation, side by side."
+	special = "Firing spins the gun up from slow to full over 1.5 seconds; stopping fire resets it. \
+	Sustained fire builds Living and stacks Sinking every 5th shot, but its shots do not detonate Sinking. \
+	Use the weapon in-hand (or reach full Living) to arm a powerful Requiem shot: it charges briefly (no \
+	bullets fire during the charge), then fires a piercing beam that hits every enemy in its path. Its \
+	damage scales with your Justice, your Living, and each target's Sinking, and it unleashes a Sinking \
+	Deluge on every enemy hit, repeatedly damaging for their Sinking stacks and halving them until gone. \
+	Firing it converts Living into Fallen: every shot guarantees Sinking, until the Fallen burns off."
+	icon_state = "sl_minigun"
+	inhand_icon_state = "sl_minigun"
+	force = 105
+	attack_speed = 1.7
+	projectile_path = /obj/projectile/ego_bullet/ego_solemnlament/minigun
+	weapon_weight = WEAPON_HEAVY
+	drag_slowdown = 2
+	slowdown = 1.5
+	item_flags = NEEDS_PERMIT	//SLOWS_WHILE_IN_HAND is toggled on only while firing (see UpdateSlow)
+	fire_sound = 'sound/abnormalities/funeral/spiritgunwhite.ogg'
+	fire_sound_volume = 30
+	autofire = 0.01 SECONDS
+	projectile_damage_multiplier = 1.26
+	attribute_requirements = list(
+							FORTITUDE_ATTRIBUTE = 120,
+							PRUDENCE_ATTRIBUTE = 120,
+							TEMPERANCE_ATTRIBUTE = 120,
+							JUSTICE_ATTRIBUTE = 120
+							)
+	// --- Meter state ---
+	/// Current Living charge (0-100). Built by firing; ramps fire rate and powers the Requiem shot.
+	var/living = 0
+	/// Current Fallen charge (0-100). The post-Requiem penalty state.
+	var/fallen = 0
+	/// world.time of the last shot, used to tell active firing from idle.
+	var/last_shot_time = 0
+	/// Counts Living-phase shots; every 5th inflicts Sinking.
+	var/shot_count = 0
+	/// TRUE once armed: the next shot fired becomes the Requiem shot.
+	var/pending_powerful = FALSE
+	/// TRUE during the Requiem's pre-fire charge; bullets are eaten until powerful_ready_at.
+	var/powerful_charging = FALSE
+	/// world.time at which the charging Requiem is allowed to fire.
+	var/powerful_ready_at = 0
+	/// world.time the current continuous-fire spin-up began (0 = not spun up).
+	var/spinup_start = 0
+	/// Tracks the Fallen state across ticks so a Living<->Fallen swap can reset the spin-up.
+	var/was_fallen = FALSE
+	/// Fallen amount waiting to be applied once the post-Requiem transition lockout ends.
+	var/fallen_pending = 0
+	/// The gun cannot fire until world.time passes this (post-Requiem transition into Fallen).
+	var/fallen_lock_until = 0
+	/// Cached autofire component, so we can change the fire rate at runtime.
+	var/datum/component/automatic_fire/autofire_component
+	/// Overhead meter shown to the wielder (only they can see it).
+	var/datum/progressbar/meter
+	/// The mob the meter was built for; rebuilt if the holder changes.
+	var/mob/meter_owner
+	/// TRUE while the in-hand movement slowdown is active (only while firing).
+	var/slow_active = FALSE
+	// --- Tunables ---
+	/// Living gained per second while firing (100/12 -> 12s to full).
+	var/living_gain_per_sec = 8.34
+	/// Fire delay at the start of a spin-up / when not firing (slowest, in ticks).
+	var/delay_slow = 0.5 SECONDS
+	/// Fire delay at the top of the spin-up while in Living (fastest, in ticks).
+	var/delay_fast = 0.01 SECONDS
+	/// Fire delay at the top of the spin-up while in Fallen (half the Living max rate).
+	var/fallen_delay_fast = 0.2 SECONDS
+	/// How long continuous firing takes to spin up from delay_slow to the top speed.
+	var/spinup_time = 1.5 SECONDS
+	/// Idle seconds before the meter starts decaying.
+	var/idle_decay_delay = 2 SECONDS
+	/// Seconds since the last shot still counted as "firing" (bridges the slowest 0.5s cadence).
+	var/firing_grace = 0.6 SECONDS
+	/// Idle decay rate (%/s) and how much it accelerates per idle second (%/s per s).
+	var/decay_base = 20
+	var/decay_accel = 20
+	/// Fallen removed per shot. Tuned so a full 100 Fallen burns off in ~6s at the (halved) Fallen fire rate.
+	var/fallen_per_shot = 3.7
+	/// Pre-fire charge time before the Requiem shot fires.
+	var/charge_time = 0.5 SECONDS
+	/// After the Requiem, the gun is locked out of firing for this long before it switches into Fallen.
+	var/fallen_transition_time = 0.5 SECONDS
+	/// Flat tuning multiplier on the Requiem shot's damage.
+	var/powerful_base = 1
+	/// Requiem-shot damage bonus per target Sinking stack.
+	var/sink_coeff = 0.05
+
+/obj/item/ego_weapon/ranged/funeraldirge/Initialize(mapload)
+	. = ..()
+	autofire_component = GetComponent(/datum/component/automatic_fire)
+
+/obj/item/ego_weapon/ranged/funeraldirge/Destroy()
+	STOP_PROCESSING(SSfastprocess, src)
+	ClearMeter()
+	return ..()
+
+/obj/item/ego_weapon/ranged/funeraldirge/equipped(mob/user, slot)
+	. = ..()
+	if(slot == ITEM_SLOT_HANDS)
+		SetFireDelay(delay_slow)
+		START_PROCESSING(SSfastprocess, src)
+
+/obj/item/ego_weapon/ranged/funeraldirge/dropped(mob/user)
+	. = ..()
+	STOP_PROCESSING(SSfastprocess, src)
+	ClearMeter()
+	// Clear any firing slowdown so a gun dropped mid-burst (and its next holder) starts unslowed.
+	item_flags &= ~SLOWS_WHILE_IN_HAND
+	slow_active = FALSE
+
+/// Returns the mob currently holding this weapon, or null.
+/obj/item/ego_weapon/ranged/funeraldirge/proc/GetHolder()
+	if(ismob(loc))
+		return loc
+	return null
+
+/// Applies a fire delay both to our own var and the live autofire component.
+/obj/item/ego_weapon/ranged/funeraldirge/proc/SetFireDelay(delay)
+	autofire = delay
+	if(istype(autofire_component))
+		autofire_component.autofire_shot_delay = delay
+
+/// Toggles the in-hand movement slowdown on/off (only active while firing) and refreshes the holder's speed.
+/obj/item/ego_weapon/ranged/funeraldirge/proc/UpdateSlow(active, mob/holder)
+	if(active == slow_active)
+		return
+	slow_active = active
+	if(active)
+		item_flags |= SLOWS_WHILE_IN_HAND
+	else
+		item_flags &= ~SLOWS_WHILE_IN_HAND
+	if(ismob(holder))
+		holder.update_equipment_speed_mods()
+
+/// Arms the Requiem: begins its pre-fire charge and plays the white telegraph on the wielder.
+/obj/item/ego_weapon/ranged/funeraldirge/proc/ArmRequiem(mob/user)
+	pending_powerful = TRUE
+	powerful_charging = TRUE
+	powerful_ready_at = world.time + charge_time
+	START_PROCESSING(SSfastprocess, src)
+	playsound(src, 'sound/abnormalities/funeral/spiritgun.ogg', 60, TRUE)
+	if(ismob(user))
+		user.balloon_alert(user, "requiem charging")
+		user.add_filter("requiem_glow", 2, list("type" = "outline", "color" = "#f8f8ff", "size" = 2))
+		user.add_filter("requiem_rays", 3, list("type" = "rays", "size" = 24, "color" = "#f8f8ff"))
+		addtimer(CALLBACK(user, TYPE_PROC_REF(/atom, remove_filter), list("requiem_glow", "requiem_rays")), charge_time)
+		new /obj/effect/temp_visual/healing/charge(get_turf(user))
+
+/// Builds/updates the overhead meter for the current holder, or clears it when empty.
+/obj/item/ego_weapon/ranged/funeraldirge/proc/UpdateMeter(mob/holder)
+	if((living <= 0 && fallen <= 0) || !ismob(holder))
+		ClearMeter()
+		return
+	if(meter_owner != holder)
+		ClearMeter()
+		meter = new(holder, 100, holder)
+		meter.bar.icon = 'icons/effects/progressbar_funeraldirge.dmi'	//custom living/fallen bar states
+		meter_owner = holder
+	// Drive the bar's icon_state ourselves: white "living_bar_[n]" or black "fallen_bar_[n]" (steps of 5).
+	var/value = fallen > 0 ? fallen : living
+	var/prefix = fallen > 0 ? "fallen_bar_" : "living_bar_"
+	meter.bar.icon_state = "[prefix][round(clamp(value, 0, 100), 5)]"
+
+/// Tears down the overhead meter.
+/obj/item/ego_weapon/ranged/funeraldirge/proc/ClearMeter()
+	if(meter)
+		// Our icon has no "_fail" states, so mark the bar "complete" to skip end_progress()'s fail swap.
+		meter.last_progress = meter.goal
+		meter.end_progress()
+		meter = null
+	meter_owner = null
+
+/obj/item/ego_weapon/ranged/funeraldirge/process(delta_time)
+	var/firing = (world.time < last_shot_time + firing_grace)
+	var/trigger_held = istype(autofire_component) && (autofire_component.autofire_stat == AUTOFIRE_STAT_FIRING)
+	var/idle_secs = (world.time - last_shot_time - idle_decay_delay) / (1 SECONDS)
+
+	// Post-Requiem transition: once the lockout ends, actually switch into the Fallen state.
+	if(fallen_pending > 0 && world.time >= fallen_lock_until)
+		fallen = fallen_pending
+		fallen_pending = 0
+
+	if(fallen > 0)
+		if(!firing && idle_secs > 0)
+			fallen = max(0, fallen - (decay_base + decay_accel * idle_secs) * delta_time)
+	else if(fallen_pending <= 0)
+		if(firing)
+			living = min(100, living + living_gain_per_sec * delta_time)
+			if(living >= 100 && !pending_powerful)
+				ArmRequiem(GetHolder())
+		else if(idle_secs > 0)
+			living = max(0, living - (decay_base + decay_accel * idle_secs) * delta_time)
+
+	// Fire-rate spin-up: ramp delay_slow -> top speed over spinup_time while continuously firing.
+	// Fallen's top speed is half of Living's. Reset to slow on trigger release or a Living<->Fallen swap.
+	if(!trigger_held)
+		spinup_start = 0
+		SetFireDelay(delay_slow)
+	else
+		if(spinup_start == 0 || (fallen > 0) != was_fallen)
+			spinup_start = world.time
+		var/top_delay = (fallen > 0) ? fallen_delay_fast : delay_fast
+		var/progress = clamp((world.time - spinup_start) / spinup_time, 0, 1)
+		SetFireDelay(delay_slow - (delay_slow - top_delay) * progress)
+	was_fallen = (fallen > 0)
+
+	var/mob/holder = GetHolder()
+	UpdateSlow(firing, holder)
+	UpdateMeter(holder)
+
+	if(living <= 0 && fallen <= 0 && fallen_pending <= 0 && !firing)
+		return PROCESS_KILL
+
+/obj/item/ego_weapon/ranged/funeraldirge/attack_self(mob/user)
+	if(fallen > 0)
+		balloon_alert(user, "still mourning!")
+		return
+	if(living <= 0)
+		balloon_alert(user, "no charge!")
+		return
+	if(pending_powerful)
+		return
+	ArmRequiem(user)
+
+// Eat shots during the Requiem charge and the post-Requiem transition, without stopping autofire
+// (do_autofire ignores our return, so the loop keeps running while no bullet comes out).
+/obj/item/ego_weapon/ranged/funeraldirge/process_fire(atom/target, mob/living/user, message = TRUE, params = null, zone_override = "", bonus_spread = 0, temporary_damage_multiplier = 1)
+	if(powerful_charging && world.time < powerful_ready_at)
+		return
+	if(world.time < fallen_lock_until)
+		return
+	return ..()
+
+/obj/item/ego_weapon/ranged/funeraldirge/fire_projectile(atom/target, mob/living/user, params, distro, quiet, zone_override, spread, atom/fired_from, temporary_damage_multiplier)
+	last_shot_time = world.time
+	START_PROCESSING(SSfastprocess, src)
+
+	// Requiem shot: one strong WHITE butterfly scaled by Justice, Living and the target's Sinking.
+	if(pending_powerful)
+		pending_powerful = FALSE
+		powerful_charging = FALSE
+		projectile_path = /obj/projectile/beam/requiem
+		fire_sound = 'sound/abnormalities/funeral/spiritgunwhite.ogg'
+		var/justicemod = 1 + get_attribute_level(user, JUSTICE_ATTRIBUTE) / 100
+		var/livingmod = 1 + living / 100
+		var/sinkingmod = 1
+		if(isliving(target))
+			var/mob/living/L = target
+			var/datum/status_effect/stacking/sinking/S = L.has_status_effect(/datum/status_effect/stacking/sinking)
+			if(S)
+				sinkingmod = 1 + S.stacks * sink_coeff
+		temporary_damage_multiplier = powerful_base * justicemod * livingmod * sinkingmod
+		// Lock firing (autofire keeps looping) until the transition ends and Fallen begins.
+		fallen_pending = living
+		living = 0
+		fallen_lock_until = world.time + fallen_transition_time
+		return ..()
+
+	// Fallen phase: random white/black mini butterfly, guarantees Sinking, spends the meter.
+	if(fallen > 0)
+		if(prob(50))
+			projectile_path = /obj/projectile/ego_bullet/ego_solemnlament/minigun/sinking
+			fire_sound = 'sound/abnormalities/funeral/spiritgunwhite.ogg'
+		else
+			projectile_path = /obj/projectile/ego_bullet/ego_solemnvow/minigun/sinking
+			fire_sound = 'sound/abnormalities/funeral/spiritgunblack.ogg'
+		fallen = max(0, fallen - fallen_per_shot)
+		return ..()
+
+	// Living phase: 50/50 white/black butterflies, with 1 Sinking on every 5th shot.
+	shot_count++
+	var/inflict_sinking = (shot_count % 5 == 0)
+	if(prob(50))
+		projectile_path = inflict_sinking ? /obj/projectile/ego_bullet/ego_solemnlament/minigun/sinking : /obj/projectile/ego_bullet/ego_solemnlament/minigun
+		fire_sound = 'sound/abnormalities/funeral/spiritgunwhite.ogg'
+	else
+		projectile_path = inflict_sinking ? /obj/projectile/ego_bullet/ego_solemnvow/minigun/sinking : /obj/projectile/ego_bullet/ego_solemnvow/minigun
+		fire_sound = 'sound/abnormalities/funeral/spiritgunblack.ogg'
+	return ..()

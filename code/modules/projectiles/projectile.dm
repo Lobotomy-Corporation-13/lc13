@@ -170,6 +170,8 @@
 
 	///If TRUE and damage type is either WHITE or BLACK, it will heal sanity of insane humans
 	var/white_healing = TRUE
+	///If TRUE, this projectile's damage will not trigger the target's Sinking (passes DAMAGE_NO_SINKING)
+	var/no_sinking = FALSE
 
 	///For what kind of brute wounds we're rolling for, if we're doing such a thing. Lasers obviously don't care since they do burn instead.
 	var/sharpness = SHARP_NONE

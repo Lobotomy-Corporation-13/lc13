@@ -168,7 +168,7 @@
 		for(var/i in projectile_blockers)
 			Proj.impacted[i] = TRUE
 		Proj.impacted[src] = TRUE
-	deal_damage(Proj.damage, Proj.damage_type, source = Proj.firer, attack_type = (ATTACK_TYPE_RANGED))
+	deal_damage(Proj.damage, Proj.damage_type, source = Proj.firer, flags = (Proj.no_sinking ? DAMAGE_NO_SINKING : NONE), attack_type = (ATTACK_TYPE_RANGED))
 	Proj.on_hit(src, 0, piercing_hit)
 	return BULLET_ACT_HIT
 

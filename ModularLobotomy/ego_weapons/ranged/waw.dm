@@ -218,7 +218,6 @@
 	. = ..()
 	projectile_damage_multiplier = 1
 
-
 /obj/item/ego_weapon/ranged/loyalty
 	name = "loyalty"
 	desc = "Courtesy of the 16th Ego Rifleman's Brigade."

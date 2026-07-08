@@ -74,6 +74,11 @@
 	action_icon_state = "lce_lantern"
 	target_type = /obj/item/ego_weapon/wield/eldtree
 
+/obj/effect/proc_holder/ability/ego_assimilation/funeraldirge
+	base_icon_state = "sl_minigun"
+	action_icon_state = "sl_minigun"
+	target_type = /obj/item/ego_weapon/ranged/funeraldirge
+
 /* Fragment of the Universe - One with the Universe */
 /obj/effect/proc_holder/ability/universe_song
 	name = "Song of the Universe"

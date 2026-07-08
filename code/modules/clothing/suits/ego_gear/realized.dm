@@ -224,6 +224,7 @@ or until the damage cap on the debuff is hit. While Fairy Lure is active on your
 	desc = "Death is not extinguishing the light, it is putting out the lamp as dawn has come."
 	icon_state = "eulogy"
 	armor = list(RED_DAMAGE = 30, WHITE_DAMAGE = 80, BLACK_DAMAGE = 80, PALE_DAMAGE = 40)
+	assimilation_ability = /obj/effect/proc_holder/ability/ego_assimilation/funeraldirge
 
 /obj/item/clothing/suit/armor/ego_gear/realization/ourgalaxy
 	name = "our galaxy"
