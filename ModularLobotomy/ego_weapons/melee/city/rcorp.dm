@@ -348,7 +348,7 @@
 obj/item/ego_weapon/city/rookpick //Warpick made for when Rooks spawn in RCE so they don't use fucking base SS13 ones
 	name = "R-4P R-Corp Warpick"
 	desc = "A small excavation tool used by R-corp which doubles as a melee weapon in a pinch. \
-			Discontinued quickly in the 4th Pack, but favored by other, more self-reliant packs due to its easy production."
+		Discontinued quickly in the 4th Pack, but favored by other, more self-reliant packs due to its easy production."
 	icon_state = "rookpick"
 	icon = 'ModularLobotomy/_Lobotomyicons/rcorp_weapons.dmi'
 	force = 25
