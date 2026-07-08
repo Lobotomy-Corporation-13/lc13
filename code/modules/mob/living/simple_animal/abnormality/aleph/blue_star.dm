@@ -163,7 +163,7 @@
 		user.death()
 		animate(user, transform = user.transform*0.01, time = 5)
 		QDEL_IN(user, 5)
-	if(buffed)
+	if(corebuffed)
 		user.client?.give_award(/datum/award/achievement/abno/blue_core, user)
 	return
 
