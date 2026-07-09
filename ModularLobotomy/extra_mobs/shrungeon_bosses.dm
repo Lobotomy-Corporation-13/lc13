@@ -80,7 +80,32 @@
 	retreat_distance = 3
 	minimum_distance = 3
 	var/reinforcements_cooldown
-	var/reinforcements_cd_duration = 30 SECONDS
+	var/reinforcements_cd_duration = 25 SECONDS
+
+/mob/living/simple_animal/hostile/shrimp_comms/OpenFire(atom/A) //We able to gas them? No? Bust out the shotty.
+	if(!can_act)
+		return
+	if(reinforcements())
+		return FALSE
+
+/mob/living/simple_animal/hostile/shrimp_comms/proc/reinforcements()
+	if(grenade_cooldown>world.time)
+		return FALSE
+	playsound(src, 'sound/effects/radio_clear.ogg', 200, TRUE, 2)
+	emote("calls in reinforcements!")
+	reinforcements_cooldown = (world.time+reinforcements_cd_duration)
+	SLEEP_CHECK_DEATH(12)
+	return TRUE
+
+
+
+/obj/effect/shrimp_rope
+	name = "Rope"
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
+	icon_state = "wellcheers_rope"
+	anchored = TRUE
+	var/has_spawned = FALSE
+	mouse_opacity = 0
 
 /mob/living/simple_animal/hostile/shrimp_qm
 	name = "Wellcheers Quartermaster"
