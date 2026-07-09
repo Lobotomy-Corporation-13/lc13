@@ -333,9 +333,11 @@
 
 /obj/item/clothing/head/unrequited_crown/process()
 	if((love_cooldown < world.time) && loved && mermaid.workingflag != TRUE)
-		mermaid.datum_reference.qliphoth_change(-1)
-		new /obj/effect/temp_visual/heart(get_turf(loved))
-		to_chat(loved, span_warning("You feel as though you're forgetting someone..."))
+		var/obj/item/clothing/suit/armor/ego_gear/realization/forever/Z = loved.get_item_by_slot(ITEM_SLOT_OCLOTHING)
+		if(!istype(Z))
+			mermaid.datum_reference.qliphoth_change(-1)
+			new /obj/effect/temp_visual/heart(get_turf(loved))
+			to_chat(loved, span_warning("You feel as though you're forgetting someone..."))
 		love_cooldown = world.time + love_cooldown_time
 
 /obj/item/clothing/head/unrequited_crown/Destroy()
