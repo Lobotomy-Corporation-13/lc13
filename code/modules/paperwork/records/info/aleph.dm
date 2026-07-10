@@ -253,6 +253,7 @@
 		These vortexes deal damage to anyone who comes into contact with them before tossing them in a random direction.",
 		"F-02-14-23 will summon lighting that applies RUPTURE in a checkerboard pattern around it.",
 		"F-02-14-23 will then fire pins in a circular pattern around itself before restarting its attack pattern.",)
+	abno_breach_damage_type = "Red/White"
 
 // Black Sun
 /obj/item/paper/fluff/info/aleph/blacksun
