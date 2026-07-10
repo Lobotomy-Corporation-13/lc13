@@ -484,7 +484,7 @@
 	icon_state = "greyscale_bolt"
 	color = "RED"
 	damage_type = RED_DAMAGE
-	damage = 60
+	damage = 20
 
 /obj/projectile/flowerpin/slow
 	mouse_opacity = MOUSE_OPACITY_OPAQUE //Clicking anywhere on the turf is good enough

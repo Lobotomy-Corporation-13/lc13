@@ -556,7 +556,7 @@
 	icon_state = "drgvortex"
 	max_hits = 10
 	speed = 5
-	damage = 50
+	damage = 30
 	damage_type = WHITE_DAMAGE
 
 /obj/effect/ambient_danger/dragonvortex/Suffer(atom/A)

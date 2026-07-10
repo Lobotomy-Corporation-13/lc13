@@ -255,7 +255,7 @@
 	cost = 100
 	ego_tags = list(EGO_TAG_RANKBUMP)
 
-/datum/ego_datum/armor/throne
+/datum/ego_datum/armor/tarnished
 	item_path = /obj/item/clothing/suit/armor/ego_gear/aleph/tarnished
 	cost = 100
 
