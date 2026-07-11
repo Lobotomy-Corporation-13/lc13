@@ -23,6 +23,10 @@
 /mob/living/simple_animal/hostile/ordeal/citrine/proc/FaithActivate()
 	return
 
+//Here's the gibs
+/mob/living/simple_animal/hostile/ordeal/citrine/spawn_gibs()
+	new /obj/effect/gibspawner/scrap_metal(drop_location(), src)
+
 //This is the base Citrine Fire that lasts a short period of time.
 
 /obj/effect/turf_fire/citrine
@@ -37,7 +41,6 @@
 		if(istype(T, /turf/closed))
 			break
 		new /obj/effect/turf_fire/citrine(T)
-		// T.hotspot_expose(DRAKE_FIRE_TEMP,DRAKE_FIRE_EXPOSURE,1)
 		for(var/mob/living/L in T.contents)
 			if(L in hit_list || istype(L, source.type))
 				continue

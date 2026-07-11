@@ -118,7 +118,6 @@
 	melee_damage_lower = 20
 	melee_damage_upper = 24
 	stat_attack = HARD_CRIT
-	del_on_death = TRUE
 	attack_verb_continuous = "slashes"
 	attack_verb_simple = "slash"
 	attack_sound = 'sound/weapons/fixer/generic/blade1.ogg'
