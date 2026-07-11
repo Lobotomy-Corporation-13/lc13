@@ -5,6 +5,7 @@
 	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
 	icon_state = "mechangel_face"
 	icon_living = "mechangel_face"
+	icon_dead = "mechangel_dead"
 	is_flying_animal = TRUE
 	faction = list("citrine")
 	health = 100
@@ -15,7 +16,6 @@
 	melee_damage_upper = 10
 	robust_searching = TRUE
 	stat_attack = HARD_CRIT
-	del_on_death = TRUE
 	attack_verb_continuous = "punches"
 	attack_verb_simple = "punches"
 	attack_sound = 'sound/weapons/punch2.ogg'
@@ -28,6 +28,8 @@
 	casingtype = /obj/item/ammo_casing/caseless/citrine_dawn
 	projectilesound = 'sound/weapons/bowfire.ogg'
 	faith_per_lifetick = 1
+	butcher_results = list(/obj/item/food/meat/slab/robot = 1)
+	guaranteed_butcher_results = list(/obj/item/food/meat/slab/robot = 1)
 
 	var/aoe_size = 2
 	var/can_fire = TRUE

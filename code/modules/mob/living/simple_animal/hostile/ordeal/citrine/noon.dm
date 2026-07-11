@@ -5,6 +5,7 @@
 	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
 	icon_state = "mechangel_priest"
 	icon_living = "mechangel_priest"
+	icon_dead = "priest_dead"
 	faction = list("citrine")
 	health = 500
 	maxHealth = 500
@@ -13,11 +14,12 @@
 	melee_damage_lower = 6
 	melee_damage_upper = 10
 	stat_attack = HARD_CRIT
-	del_on_death = TRUE
 	attack_verb_continuous = "whacks"
 	attack_verb_simple = "whack"
 	attack_sound = 'sound/weapons/fixer/generic/club3.ogg'
 	speak_emote = list("sings")
+	butcher_results = list(/obj/item/food/meat/slab/robot = 1)
+	guaranteed_butcher_results = list(/obj/item/food/meat/slab/robot = 1)
 
 	//They are supposed to run away.
 	ranged = 1
@@ -107,6 +109,7 @@
 	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
 	icon_state = "mechangel_knight"
 	icon_living = "mechangel_knight"
+	icon_dead = "knight_dead"
 	faction = list("citrine")
 	health = 1000
 	maxHealth = 1000
@@ -120,6 +123,8 @@
 	attack_verb_simple = "slash"
 	attack_sound = 'sound/weapons/fixer/generic/blade1.ogg'
 	speak_emote = list("sings")
+	butcher_results = list(/obj/item/food/meat/slab/robot = 1)
+	guaranteed_butcher_results = list(/obj/item/food/meat/slab/robot = 1)
 
 	//They are slow but hurt in melee
 	move_to_delay = 4
