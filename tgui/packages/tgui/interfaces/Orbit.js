@@ -88,6 +88,7 @@ export const Orbit = (props, context) => {
     ghosts,
     misc,
     npcs,
+    testrange, // LOBOTOMYCORPORATION ADDITION -- Test Range Threats & Agents
   } = data;
 
   const [searchText, setSearchText] = useLocalState(context, "searchText", "");
@@ -207,6 +208,12 @@ export const Orbit = (props, context) => {
                 thing={thing} />
             ))}
         </Section>
+
+        <BasicSection // LC13 ADDITION -- Test Range Threats & Agents
+          title="Test Range"
+          source={testrange}
+          searchText={searchText}
+        />
 
         <Section title={`Ghosts - (${ghosts.length})`}>
           {ghosts

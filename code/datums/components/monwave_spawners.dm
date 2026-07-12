@@ -64,6 +64,15 @@
 
 	addtimer(CALLBACK(src, PROC_REF(LateInitialize)))
 
+/datum/component/monwave_spawner/Destroy()
+	assult_path = null
+	current_wave = null
+	existing_mobs = null
+	last_wave = null
+	wave_leader = null
+	assault_target = null
+	return ..()
+
 /datum/component/monwave_spawner/proc/LateInitialize()
 	GeneratePath()
 	BeginProcessing()
@@ -86,6 +95,14 @@
 //If the wave_composition is empty then it will send the wave out to their assault destination while the new wave is generated.
 //If the last wave is still alive the second wave will remain where they are.
 /datum/component/monwave_spawner/proc/GenerateWave()
+	// Don't spawn if the Heart Research has been destroyed
+	if(SSgamedirector.heart_research_destroyed)
+		return FALSE
+	// Check if parent den has area restriction (previous area's boss must be dead)
+	if(istype(parent, /obj/structure/den/rce))
+		var/obj/structure/den/rce/den = parent
+		if(!den.CanSpawnInArea())
+			return FALSE
 	// Don't spawn raiders if no resource wells are active
 	if(!SSgamedirector.active_resourcewells || !length(SSgamedirector.active_resourcewells))
 		return FALSE
@@ -106,7 +123,7 @@
 	var/mob/living/simple_animal/hostile/spawned_mob = new mobtype(pick(get_adjacent_open_turfs(parent)))
 	if(!wave_leader && LeaderQualifications(spawned_mob))
 		wave_leader = spawned_mob
-	current_wave += spawned_mob
+	LAZYADD(current_wave, spawned_mob)
 	current_existing_mobs += 1
 	spawned_mob.faction = faction.Copy()
 	RegisterSignal(spawned_mob, COMSIG_LIVING_DEATH, PROC_REF(MinionSlain))
@@ -179,6 +196,10 @@
 	. = ..()
 	AddElement(/datum/element/point_of_interest)
 
+/obj/effect/wave_commander/Destroy()
+	our_path = null
+	return ..()
+
 /obj/effect/wave_commander/proc/DoPath(list/assault_path)
 	our_path = assault_path.Copy()
 	if(length(our_path) <= 0)
@@ -227,4 +248,3 @@
 	if(patrol_move_timer)
 		deltimer(patrol_move_timer)
 	QDEL_IN(src, 5)
-

@@ -126,6 +126,9 @@
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/plating,
 /area/facility_hallway/east)
+"cd" = (
+/turf/open/floor/mineral/titanium/tiled,
+/area/department_main/command)
 "cO" = (
 /obj/structure/railing{
 	dir = 5
@@ -258,7 +261,7 @@
 /area/facility_hallway/records)
 "fm" = (
 /obj/structure/table/glass,
-/obj/item/refiner_filter/green,
+/obj/item/stack/refiner_filter/green,
 /turf/open/floor/carpet/purple,
 /area/department_main/information)
 "fD" = (
@@ -279,6 +282,12 @@
 /obj/machinery/vending/lobotomyuniform,
 /turf/open/floor/carpet/purple,
 /area/department_main/information)
+"fZ" = (
+/obj/structure/chair/office{
+	dir = 8
+	},
+/turf/open/floor/mineral/titanium/tiled,
+/area/department_main/command)
 "gB" = (
 /obj/machinery/announcement_system,
 /obj/machinery/light/small{
@@ -378,6 +387,19 @@
 /obj/item/encryptionkey/headset_control,
 /turf/open/floor/carpet,
 /area/department_main/control)
+"jg" = (
+/obj/structure/rack,
+/obj/machinery/light/small{
+	dir = 4
+	},
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 5
+	},
+/obj/structure/sign/ordealmonitor{
+	pixel_y = 32
+	},
+/turf/open/floor/mineral/titanium/tiled,
+/area/department_main/command)
 "jv" = (
 /obj/machinery/computer/cryopod{
 	pixel_y = 32
@@ -650,7 +672,7 @@
 /area/facility_hallway/safety)
 "nV" = (
 /obj/structure/table/glass,
-/obj/item/refiner_filter/blue{
+/obj/item/stack/refiner_filter/blue{
 	pixel_x = 7;
 	pixel_y = 3
 	},
@@ -685,6 +707,13 @@
 /obj/machinery/light/floor,
 /turf/open/floor/wood,
 /area/facility_hallway/west)
+"pp" = (
+/obj/structure/grid_crafting_station,
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 10
+	},
+/turf/open/floor/mineral/titanium/tiled,
+/area/department_main/command)
 "pq" = (
 /obj/machinery/light,
 /turf/open/floor/plating/grass,
@@ -857,6 +886,16 @@
 "sW" = (
 /turf/open/floor/wood,
 /area/department_main/command)
+"sZ" = (
+/obj/structure/table/reinforced,
+/obj/machinery/light/small{
+	dir = 8
+	},
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 8
+	},
+/turf/open/floor/mineral/titanium/tiled,
+/area/department_main/command)
 "ta" = (
 /obj/structure/table/reinforced,
 /obj/effect/turf_decal/siding/white{
@@ -912,6 +951,19 @@
 "uA" = (
 /turf/closed/indestructible/fakeglass,
 /area/facility_hallway/east)
+"uB" = (
+/obj/structure/rack,
+/obj/machinery/light/small{
+	dir = 4
+	},
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 6
+	},
+/obj/machinery/newscaster{
+	pixel_y = -32
+	},
+/turf/open/floor/mineral/titanium/tiled,
+/area/department_main/command)
 "uC" = (
 /obj/structure/table/reinforced,
 /obj/structure/window/reinforced{
@@ -1009,6 +1061,15 @@
 /obj/effect/turf_decal/stripes/line,
 /turf/open/floor/plasteel/dark,
 /area/facility_hallway/command)
+"wv" = (
+/obj/effect/turf_decal/siding/wideplating/dark/end{
+	dir = 4
+	},
+/obj/machinery/door/airlock/highsecurity{
+	name = "Refinery Office"
+	},
+/turf/open/floor/mineral/titanium/tiled,
+/area/department_main/command)
 "wC" = (
 /obj/machinery/camera/autoname{
 	dir = 10
@@ -1018,6 +1079,13 @@
 "wF" = (
 /obj/effect/turf_decal/trimline/yellow/filled/warning,
 /turf/open/floor/plasteel,
+/area/department_main/command)
+"wL" = (
+/obj/structure/table/reinforced,
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 10
+	},
+/turf/open/floor/mineral/titanium/tiled,
 /area/department_main/command)
 "wS" = (
 /obj/machinery/camera/autoname{
@@ -1069,6 +1137,13 @@
 "xJ" = (
 /turf/open/floor/circuit/telecomms/mainframe,
 /area/department_main/control)
+"xO" = (
+/obj/structure/table/reinforced,
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 9
+	},
+/turf/open/floor/mineral/titanium/tiled,
+/area/department_main/command)
 "ya" = (
 /turf/open/floor/plasteel/dark,
 /area/department_main/information)
@@ -1143,6 +1218,13 @@
 "zM" = (
 /turf/open/floor/plasteel/dark,
 /area/facility_hallway/command)
+"zN" = (
+/obj/structure/template_vendor,
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 9
+	},
+/turf/open/floor/mineral/titanium/tiled,
+/area/department_main/command)
 "zV" = (
 /obj/effect/turf_decal/box/white,
 /obj/machinery/vending/lobotomyarmband,
@@ -1187,6 +1269,12 @@
 	},
 /turf/open/floor/plasteel,
 /area/facility_hallway/east)
+"AQ" = (
+/obj/effect/turf_decal/siding/wideplating/dark/corner{
+	dir = 8
+	},
+/turf/open/floor/mineral/titanium/tiled,
+/area/department_main/command)
 "Bf" = (
 /obj/machinery/door/airlock/highsecurity{
 	name = "Training Department"
@@ -1412,6 +1500,13 @@
 /obj/effect/landmark/xeno_spawn,
 /turf/open/floor/plasteel,
 /area/facility_hallway/command)
+"FD" = (
+/obj/effect/turf_decal/siding/wideplating/dark/corner{
+	dir = 4
+	},
+/obj/effect/turf_decal/siding/wideplating/dark/corner,
+/turf/open/floor/mineral/titanium/tiled,
+/area/department_main/command)
 "FE" = (
 /obj/structure/sign/departments/info,
 /turf/closed/indestructible/reinforced,
@@ -1459,6 +1554,13 @@
 /obj/machinery/light,
 /turf/open/floor/plasteel/white,
 /area/department_main/training)
+"Gs" = (
+/obj/structure/rack,
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 1
+	},
+/turf/open/floor/mineral/titanium/tiled,
+/area/department_main/command)
 "Gw" = (
 /obj/structure/filingcabinet/zayininfo{
 	pixel_x = -10
@@ -1599,12 +1701,17 @@
 /turf/open/floor/carpet/orange,
 /area/department_main/training)
 "HN" = (
-/obj/machinery/computer/med_data{
-	dir = 8;
-	req_one_access = "0"
+/obj/machinery/computer/extraction_cargo/records{
+	dir = 8
 	},
 /turf/open/floor/carpet/black,
 /area/facility_hallway/records)
+"HW" = (
+/obj/effect/turf_decal/siding/wideplating/dark/corner{
+	dir = 1
+	},
+/turf/open/floor/mineral/titanium/tiled,
+/area/department_main/command)
 "HZ" = (
 /obj/structure/bodycontainer/extraction{
 	dir = 1
@@ -1780,7 +1887,7 @@
 /area/department_main/control)
 "Ly" = (
 /obj/structure/table/glass,
-/obj/item/refiner_filter/yellow{
+/obj/item/stack/refiner_filter/yellow{
 	pixel_x = 1;
 	pixel_y = -4
 	},
@@ -1862,10 +1969,21 @@
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/plating,
 /area/facility_hallway/east)
+"Na" = (
+/obj/structure/rack,
+/obj/effect/turf_decal/siding/wideplating/dark,
+/turf/open/floor/mineral/titanium/tiled,
+/area/department_main/command)
 "Nc" = (
 /obj/machinery/telecomms/message_server/preset,
 /turf/open/floor/circuit/telecomms/mainframe,
 /area/facility_hallway/south)
+"Nf" = (
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 4
+	},
+/turf/open/floor/mineral/titanium/tiled,
+/area/department_main/command)
 "Nk" = (
 /obj/effect/turf_decal/bot,
 /obj/machinery/ntnet_relay,
@@ -2210,7 +2328,7 @@
 /area/department_main/training)
 "Ta" = (
 /obj/structure/table/glass,
-/obj/item/refiner_filter/red{
+/obj/item/stack/refiner_filter/red{
 	pixel_x = 3;
 	pixel_y = -7
 	},
@@ -30229,11 +30347,11 @@ dW
 US
 Hz
 ms
-Xt
-Xt
-Xt
-Xt
-Xt
+ms
+ms
+ms
+ms
+ms
 Xt
 Xt
 Xt
@@ -30486,12 +30604,12 @@ Wi
 Cd
 uG
 ms
-Xt
-Xt
-Xt
-Xt
-Xt
-Xt
+ms
+zN
+sZ
+pp
+ms
+ms
 Xt
 Xt
 Xt
@@ -30743,12 +30861,12 @@ Wi
 Wi
 wC
 ms
-Xt
-Xt
-Xt
-Xt
-Xt
-Xt
+xO
+HW
+fZ
+AQ
+wL
+ms
 Xt
 Xt
 Xt
@@ -31000,12 +31118,12 @@ Wi
 Wi
 LG
 ms
-Xt
-Xt
-Xt
-Xt
-Xt
-Xt
+Gs
+cd
+cd
+cd
+Na
+ms
 Xt
 Xt
 Xt
@@ -31257,12 +31375,12 @@ Wi
 Wi
 WR
 ms
-Xt
-Xt
-Xt
-Xt
-Xt
-Xt
+jg
+Nf
+FD
+Nf
+uB
+ms
 Xt
 Xt
 Xt
@@ -31516,10 +31634,10 @@ sD
 ms
 ms
 ms
+wv
 ms
 ms
-Xt
-Xt
+ms
 Xt
 Xt
 Xt

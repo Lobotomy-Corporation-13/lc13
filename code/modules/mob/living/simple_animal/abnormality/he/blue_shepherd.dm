@@ -66,8 +66,18 @@
 	var/slash_current = 4
 	var/slash_cooldown = 4
 	var/slash_damage = 40
+	//Disables movement and attacks.
 	var/slashing = FALSE
 	var/range = 2
+
+	//Here's for the large slash
+	var/cleave_width = 2
+	var/cleave_length = 3
+	var/cleave_damage = 60
+	var/cleave_delay = 6
+	var/cleave_pause = 5
+
+
 	var/hired = FALSE
 	var/lie_chance = 30 // % chance to lie
 	var/datum/abnormality/buddy //the red buddy datum linked to this shepherd
@@ -84,6 +94,11 @@
 		"I'll kill you!",
 		"This is for locking me up!",
 		"Die!",
+		"I'll cut you down!",
+		"Get out of my way!",
+		"Try and stop me!",
+		"You can't keep me here forever!",
+		"You'll regret this!"
 	)
 	//lines shepperd say when someone's dead
 	var/list/people_dead_lines = list(
@@ -207,19 +222,20 @@
 	button_icon_state = "hollowpoint_ability"
 	desc = "Predict an attack, to deal damage to your foes!"
 	cooldown_time = 100
-	var/counter_duration = 10
+	var/counter_duration = 1 SECONDS
 
 /datum/action/cooldown/parry/Trigger()
 	if(!..())
+		endcounter()
 		return FALSE
 	if (istype(owner, /mob/living/simple_animal/hostile/abnormality/blue_shepherd))
 		var/mob/living/simple_animal/hostile/abnormality/blue_shepherd/H = owner
 		if(H.no_counter)
 			to_chat(H, "You are currently dodging!")
+			endcounter()
 			return FALSE
 		else
 			H.countering = TRUE
-			H.slashing = TRUE
 			H.riposted = FALSE
 			H.manual_emote("raises their blade...")
 			H.color = "#26a2d4"
@@ -247,7 +263,7 @@
 			H.Knockdown(20)
 
 /datum/action/cooldown/parry/proc/endcounter()
-	if (istype(owner, /mob/living/simple_animal/hostile/abnormality/blue_shepherd))
+	if(istype(owner, /mob/living/simple_animal/hostile/abnormality/blue_shepherd))
 		var/mob/living/simple_animal/hostile/abnormality/blue_shepherd/H = owner
 		H.countering = FALSE
 		H.slashing = FALSE
@@ -353,19 +369,35 @@
 	slash_current-=1
 	if(slash_current == 0)
 		slash_current = slash_cooldown
-		say(pick(combat_lines))
 		slashing = TRUE
-		slash()
+		switch(rand(1,3))
+			if(1)
+				say(pick(combat_lines))
+				slash()
+			if(2)
+				say(pick(combat_lines))
+				cleave(target)
+			if(3)
+				TriggerCounter()
+
 	if(awakened_buddy)
 		awakened_buddy.GiveTarget(attacked_target)
 
 /mob/living/simple_animal/hostile/abnormality/blue_shepherd/OpenFire()
+	if(prob(10))
+		TriggerDodge()
 	if(slash_current == 0)
 		slash_current = slash_cooldown
-		say(pick(combat_lines))
-		slashing = TRUE
-		slash()
-	..()
+		switch(rand(1,3))
+			if(1)
+				say(pick(combat_lines))
+				slash()
+			if(2)
+				say(pick(combat_lines))
+				cleave(target)
+			if(3)
+				TriggerCounter()
+	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/blue_shepherd/death(gibbed)
 	if(awakened_buddy)
@@ -373,7 +405,7 @@
 	density = FALSE
 	animate(src, alpha = 0, time = 10 SECONDS)
 	QDEL_IN(src, 10 SECONDS)
-	..()
+	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/blue_shepherd/Life()
 	. = ..()
@@ -409,7 +441,7 @@
 /mob/living/simple_animal/hostile/abnormality/blue_shepherd/stop_pulling()
 	if(pulling == awakened_buddy) //it's tempting to make player controlled shepherd pull you forever but I'll hold off on it
 		return FALSE
-	..()
+	return ..()
 
 //stops shepherd pushing people or things he shouldn't because of his move force
 /mob/living/simple_animal/hostile/abnormality/blue_shepherd/MobBump(mob/M)
@@ -425,15 +457,21 @@
 		buddy.qliphoth_change(-1) //buddy can hear it fight
 	var/turf/orgin = get_turf(src)
 	var/list/all_turfs = RANGE_TURFS(range, orgin)
+	playsound(src, 'sound/weapons/slice.ogg', 75, FALSE, 4)
+	var/trigger_timer = FALSE
 	for(var/i = 0 to range)
-		playsound(src, 'sound/weapons/slice.ogg', 75, FALSE, 4)
 		for(var/turf/T in all_turfs)
 			if(get_dist(orgin, T) > i)
 				continue
-			addtimer(CALLBACK(src, PROC_REF(SlashHit), T, all_turfs, i, buddy_hit), (3 * (i+1)) + 0.5 SECONDS)
+			else
+				trigger_timer = TRUE
+				addtimer(CALLBACK(src, PROC_REF(SlashHit), T, all_turfs, i, buddy_hit), (3 * (i+1)) + 0.5 SECONDS)
+	if(!trigger_timer)
+		slashing = FALSE
 
 /mob/living/simple_animal/hostile/abnormality/blue_shepherd/proc/SlashHit(turf/T, list/all_turfs, slash_count, buddy_hit)
 	if(stat == DEAD)
+		slashing = FALSE
 		return
 	new /obj/effect/temp_visual/smash_effect(T)
 	for(var/mob/living/L in HurtInTurf(T, list(), slash_damage, BLACK_DAMAGE, check_faction = combat_map, hurt_mechs = TRUE, hurt_structure = TRUE, break_not_destroy = TRUE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)))
@@ -453,6 +491,66 @@
 	if(slash_count >= range)
 		buddy_hit = FALSE
 		slashing = FALSE
+		range = 2
+
+/mob/living/simple_animal/hostile/abnormality/blue_shepherd/proc/cleave(target)
+	if (get_dist(src, target) > 3)
+		slashing = FALSE
+		return
+
+	//Turfs we will be hitting
+	var/turf/area_of_effect = list()
+	//We need 2 numbers. The lower left and the upper right of the square.
+	//Lower Left
+	var/offsetx1 = 0
+	var/offsety1 = 0
+	//Upper Right
+	var/offsetx2 = 0
+	var/offsety2 = 0
+	//Give me where theoretically the center of the turf we would be hitting be.
+	//Gimme a direction.
+	var/dir_to_target = get_cardinal_dir(get_turf(src), get_turf(target))
+	switch(dir_to_target)
+		if(EAST)
+			offsetx1 = 1
+			offsety1 = -cleave_width
+			offsetx2 = cleave_length
+			offsety2 = cleave_width
+		if(WEST)
+			offsetx1 = -cleave_length
+			offsety1 = -cleave_width
+			offsetx2 = -1
+			offsety2 = cleave_width
+		if(SOUTH)
+			offsetx1 = -cleave_width
+			offsety1 = -cleave_length
+			offsetx2 = cleave_width
+			offsety2 = -1
+		if(NORTH)
+			offsetx1 = -cleave_width
+			offsety1 = 1
+			offsetx2 = cleave_width
+			offsety2 = cleave_length
+		else
+			slashing = FALSE
+			return
+
+	//Give me ONLY the turfs between these cords
+	area_of_effect = block(x+offsetx1,y+offsety1,z,x+offsetx2,y+offsety2)
+	if (!LAZYLEN(area_of_effect))
+		slashing = FALSE
+		return
+	dir = dir_to_target
+	playsound(src, 'sound/weapons/etherealmiss.ogg', 100, FALSE, 4)
+	SLEEP_CHECK_DEATH(cleave_delay)
+	icon_state = icon_living
+	var/list/been_hit = list()
+	for(var/turf/T in area_of_effect)
+		new /obj/effect/temp_visual/smash_effect(T)
+		been_hit = HurtInTurf(T, been_hit, cleave_damage, BLACK_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
+	playsound(src, 'sound/weapons/slice.ogg', 75, FALSE, 4)
+	SLEEP_CHECK_DEATH(cleave_pause)
+	slashing = FALSE
 
 /mob/living/simple_animal/hostile/abnormality/blue_shepherd/proc/OnMobDeath(datum/source, mob/living/died, gibbed)
 	SIGNAL_HANDLER
@@ -469,7 +567,6 @@
 		death_counter = 0
 		datum_reference.qliphoth_change(-1)
 	return TRUE
-
 
 //I put it into its own proc because it's a big chunk of code that bloat the entire work complete segment
 //when shepherd has work done on him, he has a 50% chance to lie about abno breach or people being alive or dead
@@ -538,9 +635,19 @@
 		UnregisterSignal(SSdcs, COMSIG_GLOB_ABNORMALITY_SPAWN)
 
 /mob/living/simple_animal/hostile/abnormality/blue_shepherd/proc/TriggerDodge()
+	var/triggered = FALSE
 	for(var/datum/action/cooldown/evade/A in actions)
-		A.Trigger()
+		if(A)
+			triggered = TRUE
+			A.Trigger()
+	if(!triggered)
+		slashing = FALSE
 
 /mob/living/simple_animal/hostile/abnormality/blue_shepherd/proc/TriggerCounter()
+	var/triggered = FALSE
 	for(var/datum/action/cooldown/parry/A in actions)
-		A.Trigger()
+		if(A)
+			triggered = TRUE
+			A.Trigger()
+	if(!triggered)
+		slashing = FALSE

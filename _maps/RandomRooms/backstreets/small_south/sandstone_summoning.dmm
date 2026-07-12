@@ -1,0 +1,230 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"a" = (
+/turf/open/floor/plasteel/rockvault/sandstone,
+/area/city/backstreets_room)
+"d" = (
+/obj/effect/turf_decal/sand,
+/obj/structure/sigsystem/deployer{
+	spawn_dist_y = -2;
+	spawn_dist_x = -1;
+	atom_path = /obj/effect/temp_visual/cult/rune_spawn/rune6
+	},
+/turf/open/floor/plasteel/rockvault/sandstone,
+/area/city/backstreets_room)
+"f" = (
+/obj/effect/turf_decal/sand,
+/obj/structure/sigsystem/connector/split{
+	dir = 8
+	},
+/turf/open/floor/plasteel/rockvault/sandstone,
+/area/city/backstreets_room)
+"k" = (
+/obj/structure/closet/crate/sigsystem/sarcophagus{
+	pixel_y = 7;
+	dense_when_open = 0;
+	density = 0;
+	allow_dense = 0;
+	anchorable = 0;
+	locked = 1
+	},
+/obj/item/kitchen/knife/combat/bone,
+/obj/item/tresmetal/human,
+/obj/item/clothing/under/costume/mummy,
+/obj/item/clothing/mask/mummy,
+/obj/structure/sigsystem/activator,
+/turf/open/floor/plasteel/rockvault/sandstone,
+/area/city/backstreets_room)
+"q" = (
+/obj/effect/turf_decal/sand,
+/turf/open/floor/plasteel/rockvault/sandstone,
+/area/city/backstreets_room)
+"t" = (
+/obj/structure/sigsystem/tower/and_gate{
+	invisibility = 101;
+	activation_code = 222;
+	signal_code = 125;
+	signal_range = 4;
+	send_on_success = 1
+	},
+/turf/open/floor/plasteel/rockvault/sandstone,
+/area/city/backstreets_room)
+"x" = (
+/obj/structure/sigsystem/tower/receptacle/sandstone{
+	signal_range = 2;
+	pixel_x = 11;
+	signal_code = 125;
+	signal_data = "two";
+	name = "offerer of the hungering worm";
+	req_item_path = /obj/item/food/meat/slab/worm
+	},
+/turf/open/floor/plasteel/rockvault/sandstone,
+/area/city/backstreets_room)
+"A" = (
+/obj/effect/turf_decal/sand,
+/obj/structure/sigsystem/deployer{
+	spawn_dist_y = -2;
+	spawn_dist_x = 1;
+	atom_path = /mob/living/simple_animal/hostile/ordeal/sin_lust/noon;
+	atom_rename = "usurper of tombs";
+	spawn_flavor_text = "crawls out of the sarcophagus.";
+	ping_on_death = 1;
+	dir = 8
+	},
+/turf/open/floor/plasteel/rockvault/sandstone,
+/area/city/backstreets_room)
+"F" = (
+/obj/effect/turf_decal/weather/sand{
+	dir = 4
+	},
+/obj/effect/turf_decal/sand,
+/obj/structure/mannequin{
+	pixel_x = 8;
+	dir = 8;
+	anchored = 1
+	},
+/turf/open/floor/plasteel/rockvault/sandstone,
+/area/city/backstreets_room)
+"G" = (
+/obj/effect/turf_decal/weather/sand{
+	dir = 6
+	},
+/obj/effect/turf_decal/sand,
+/obj/structure/mannequin{
+	pixel_x = 8;
+	pixel_y = 3;
+	dir = 8;
+	anchored = 1
+	},
+/turf/open/floor/plasteel/rockvault/sandstone,
+/area/city/backstreets_room)
+"J" = (
+/obj/effect/turf_decal/weather/sand{
+	dir = 8
+	},
+/obj/effect/turf_decal/sand,
+/obj/structure/mannequin{
+	dir = 4;
+	pixel_x = -8;
+	anchored = 1
+	},
+/obj/structure/sigsystem/connector,
+/turf/open/floor/plasteel/rockvault/sandstone,
+/area/city/backstreets_room)
+"L" = (
+/obj/effect/turf_decal/weather/sand{
+	dir = 8
+	},
+/obj/effect/turf_decal/sand,
+/obj/structure/sigsystem/connector,
+/turf/open/floor/plasteel/rockvault/sandstone,
+/area/city/backstreets_room)
+"P" = (
+/obj/structure/sigsystem/tower{
+	signal_code = 222;
+	signal_range = 4
+	},
+/obj/effect/turf_decal/sand,
+/turf/open/floor/plasteel/rockvault/sandstone,
+/area/city/backstreets_room)
+"R" = (
+/obj/structure/sigsystem/tower/receptacle/sandstone{
+	signal_range = 2;
+	pixel_x = -11;
+	signal_code = 125;
+	signal_data = "one";
+	dir = 8;
+	name = "offerer of the street cleaners remains";
+	req_item_path = /obj/item/food/meat/slab/sweeper;
+	accept_subtypes = 0
+	},
+/turf/open/floor/plasteel/rockvault/sandstone,
+/area/city/backstreets_room)
+"T" = (
+/obj/structure/sigsystem/connector{
+	dir = 4
+	},
+/turf/open/floor/plasteel/rockvault/sandstone,
+/area/city/backstreets_room)
+"U" = (
+/turf/closed/indestructible/sandstone,
+/area/city/backstreets_room)
+"V" = (
+/obj/effect/turf_decal/weather/sand{
+	dir = 4
+	},
+/obj/effect/turf_decal/sand,
+/turf/open/floor/plasteel/rockvault/sandstone,
+/area/city/backstreets_room)
+"Y" = (
+/obj/effect/turf_decal/weather/sand{
+	dir = 10
+	},
+/obj/effect/turf_decal/sand,
+/obj/structure/mannequin{
+	dir = 4;
+	pixel_x = -8;
+	pixel_y = 3;
+	anchored = 1
+	},
+/obj/structure/sigsystem/connector{
+	dir = 4
+	},
+/turf/open/floor/plasteel/rockvault/sandstone,
+/area/city/backstreets_room)
+"Z" = (
+/obj/effect/turf_decal/weather/sand{
+	dir = 8
+	},
+/obj/effect/turf_decal/sand,
+/turf/open/floor/plasteel/rockvault/sandstone,
+/area/city/backstreets_room)
+
+(1,1,1) = {"
+U
+U
+U
+U
+U
+"}
+(2,1,1) = {"
+Z
+L
+J
+Y
+U
+"}
+(3,1,1) = {"
+q
+A
+x
+T
+U
+"}
+(4,1,1) = {"
+P
+f
+t
+k
+U
+"}
+(5,1,1) = {"
+q
+d
+R
+a
+U
+"}
+(6,1,1) = {"
+V
+V
+F
+G
+U
+"}
+(7,1,1) = {"
+U
+U
+U
+U
+U
+"}

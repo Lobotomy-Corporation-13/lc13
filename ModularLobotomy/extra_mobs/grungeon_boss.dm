@@ -17,23 +17,23 @@
 	faction = list("green_ordeal")
 	gender = NEUTER
 	mob_biotypes = MOB_ROBOTIC
-	maxHealth = 25000
-	health = 25000
+	maxHealth = 20000
+	health = 20000
 	melee_damage_lower = 5
 	melee_damage_upper = 5
 	ranged = TRUE
 	damage_coeff = list(RED_DAMAGE = 0.5, WHITE_DAMAGE = 0.8, BLACK_DAMAGE = 1.2, PALE_DAMAGE = 1)
 	butcher_results = list(/obj/item/food/meat/slab/robot = 22)
-	guaranteed_butcher_results = list(/obj/item/food/meat/slab/robot = 16)
+	guaranteed_butcher_results = list(/obj/item/food/meat/slab/robot = 16, /obj/item/head_trophy/grungeon_cell = 1)
 	death_sound = 'sound/effects/ordeals/green/midnight_dead.ogg'
 	offsets_pixel_x = list("south" = -96, "north" = -96, "west" = -96, "east" = -96)
 	damage_effect_scale = 1.25
-	rapid = 50
+	rapid = 40
 	rapid_fire_delay = 0.4
+	ranged_cooldown_time = 15
 	projectilesound = 'sound/weapons/gun/smg/shot.ogg'
 	casingtype = /obj/item/ammo_casing/caseless/soda_mini
 	var/datum/beam/current_beam = null
-	var/can_act = TRUE
 	var/napalm_cooldown
 	var/napalm_cd_duration = 60 SECONDS
 	melee_reach = 0
@@ -54,9 +54,9 @@
 
 /mob/living/simple_animal/hostile/ordeal/grungeon_boss/proc/PrepareToFire(atom/A) //Copypasted code from TTLS snipers. Intended to serve as the "warning" for the minigun.
 	var/turf/my_turf = get_turf(src) //Slight alteration so there isn't any visual bugs. Many thanks to Eidos on the discord for helping me with this.
-	current_beam = my_turf.Beam(A, icon_state="blood", time = 2.2 SECONDS)
+	current_beam = my_turf.Beam(A, icon_state="blood", time = 2.3 SECONDS)
 	can_act = FALSE
-	SLEEP_CHECK_DEATH(2.6 SECONDS)
+	SLEEP_CHECK_DEATH(2.5 SECONDS)
 	can_act = TRUE
 	return TRUE
 
@@ -91,7 +91,7 @@
 		return FALSE
 	playsound(src, 'sound/magic/clockwork/invoke_general.ogg', 200, TRUE, 2)
 	napalm_cooldown = (world.time+napalm_cd_duration)
-	SLEEP_CHECK_DEATH(10)
+	SLEEP_CHECK_DEATH(12)
 	dir_shots(GLOB.cardinals)
 	dir_shots(GLOB.diagonals)
 	return TRUE
@@ -186,6 +186,9 @@
 	gib()
 	for(var/mob/living/simple_animal/hostile/ordeal/grungeon_spawner/Z in range(15, src)) //Many thanks to Ender for helping me see the minor error in the code that prevented this from working.
 		Z.death()
+
+/mob/living/simple_animal/hostile/ordeal/grungeon_boss/spawn_gibs()
+	new /obj/effect/gibspawner/scrap_metal(drop_location(), src)
 
 /obj/structure/grungeon_bomb //bomb shamelessly copypasted from Ender's Resurgence Demoman
 	name = "Bomb of Oblivion"

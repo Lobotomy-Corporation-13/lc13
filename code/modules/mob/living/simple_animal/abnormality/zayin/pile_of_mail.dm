@@ -50,7 +50,7 @@
 
 	var/cooldown
 	var/cooldown_time = 10 SECONDS
-	var/spawned_effects = list()
+	var/list/spawned_effects = list()
 	var/list/bad_mail_types = list(
 		/obj/item/mailpaper/junk,
 		/obj/item/mailpaper/pipebomb,
@@ -65,8 +65,7 @@
 	return FALSE
 
 /mob/living/simple_animal/hostile/abnormality/mailpile/Destroy()
-	for(var/obj/effect/VFX in spawned_effects)
-		qdel(VFX)
+	QDEL_LIST(spawned_effects)
 	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/mailpile/Initialize(mapload)

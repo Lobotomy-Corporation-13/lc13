@@ -6,6 +6,7 @@
 /datum/ego_datum/weapon/dragon_staff
 	item_path = /obj/item/ego_weapon/support/dragon_staff
 	cost = 12
+	ego_tags = list(EGO_TAG_SUPPORT)
 
 /datum/ego_datum/armor/dragon_staff
 	item_path = /obj/item/clothing/suit/armor/ego_gear/zayin/dragon_staff
@@ -23,6 +24,7 @@
 /datum/ego_datum/weapon/sunspit // rank-bumped
 	item_path = /obj/item/ego_weapon/sunspit
 	cost = 50
+	ego_tags = list(EGO_TAG_RANKBUMP, EGO_TAG_AOE_RADIAL)
 
 /datum/ego_datum/armor/sunspit
 	item_path = /obj/item/clothing/suit/armor/ego_gear/he/sunspit
@@ -45,6 +47,7 @@
 /datum/ego_datum/weapon/ochre // rank-bumped
 	item_path = /obj/item/ego_weapon/wield/ochre
 	cost = 100
+	ego_tags = list(EGO_TAG_RANKBUMP, EGO_TAG_GUNBLADE)
 
 /datum/ego_datum/armor/ochre
 	item_path = /obj/item/clothing/suit/armor/ego_gear/waw/ochre
@@ -54,6 +57,7 @@
 /datum/ego_datum/weapon/miasma // rank-bumped
 	item_path = /obj/item/ego_weapon/lance/miasma
 	cost = 100
+	ego_tags = list(EGO_TAG_RANKBUMP, EGO_TAG_AOE_RADIAL, EGO_TAG_DOT)
 
 /datum/ego_datum/armor/miasma
 	item_path = /obj/item/clothing/suit/armor/ego_gear/waw/miasma
@@ -78,15 +82,18 @@
 /datum/ego_datum/weapon/shield/waxen
 	item_path = /obj/item/ego_weapon/shield/waxen
 	cost = 100
+	ego_tags = list(EGO_TAG_ASSIMILATION, EGO_TAG_AOE_RADIAL, EGO_TAG_MOBILITY, EGO_TAG_HAZARDOUS, EGO_TAG_DOT)
 
 /datum/ego_datum/armor/waxen
 	item_path = /obj/item/clothing/suit/armor/ego_gear/aleph/waxen
 	cost = 100
+	ego_tags = list(EGO_TAG_REALIZABLE)
 
 // Old Mother Hunger - Limos
 /datum/ego_datum/weapon/limos
 	item_path = /obj/item/ego_weapon/mini/limos
 	cost = 100
+	ego_tags = list(EGO_TAG_COMBO, EGO_TAG_MOBILITY, EGO_TAG_SUSTAIN)
 
 /datum/ego_datum/armor/limos
 	item_path = /obj/item/clothing/suit/armor/ego_gear/aleph/limos

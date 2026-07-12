@@ -544,3 +544,9 @@
 /obj/item/clothing/shoes/gunboots/Initialize()
 	. = ..()
 	AddComponent(/datum/component/projectile_shooter, projectile_type = projectile_type, shot_prob = shot_prob, signal_or_sig_list = list(COMSIG_SHOES_STEP_ACTION, COMSIG_HUMAN_MELEE_UNARMED_ATTACK))
+
+/obj/item/clothing/shoes/pierre
+	name = "gourmand's boots"
+	desc = "Boots worn by someone delving into the culinary world"
+	icon_state = "pierre"
+	inhand_icon_state = "pierre"

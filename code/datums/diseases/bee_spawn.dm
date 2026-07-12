@@ -34,6 +34,9 @@
 		H.emote("scream")
 		var/mob/living/simple_animal/hostile/worker_bee/bee = new spawned_bee_type(T)
 		if(control_bee_on_death && H.mind)
+			var/obj/item/organ/brain/B = H.getorganslot(ORGAN_SLOT_BRAIN)
+			if(B)
+				bee.original_brain = B //This is currently unused until I can figure out a way to cleanly slam someone back into their previous lost brain.
 			H.mind.transfer_to(bee)
 		H.gib()
 		return
@@ -44,5 +47,5 @@
 /datum/disease/bee_spawn/limbus_bee_spawn
 	affected_mob_type = /mob/living/carbon
 	spawned_bee_type = /mob/living/simple_animal/hostile/worker_bee/lcl_bee
-	control_bee_on_death = TRUE
+	control_bee_on_death = FALSE //This was considered annoying to deal with, turned off until I can find a more elegant way to shove back someone into their original body.
 	spore_damage = 0.2 //10% of the original damage.

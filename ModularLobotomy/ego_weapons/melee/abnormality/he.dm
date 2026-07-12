@@ -155,7 +155,7 @@
 
 
 
-/obj/item/ego_weapon/shield/daredevil
+/obj/item/ego_weapon/shield/parry/daredevil
 	name = "life for a daredevil"
 	desc = "An ancient sword surrounded in death, yet it's having it in your grasp that makes you feel the most alive."
 	icon_state = "daredevil"
@@ -182,7 +182,7 @@
 	var/realized_parry
 	var/can_hype = TRUE
 
-/obj/item/ego_weapon/shield/daredevil/melee_attack_chain(mob/user, atom/target, params)
+/obj/item/ego_weapon/shield/parry/daredevil/melee_attack_chain(mob/user, atom/target, params)
 	if (!istype(user,/mob/living/carbon/human))
 		return
 	var/mob/living/carbon/human/myman = user
@@ -203,7 +203,7 @@
 		projectile_block_duration = 0.5 SECONDS
 	..()
 
-/obj/item/ego_weapon/shield/daredevil/attack_self(mob/user)
+/obj/item/ego_weapon/shield/parry/daredevil/attack_self(mob/user)
 	if (block == 0)
 		var/mob/living/carbon/human/cooler_user = user
 		naked_parry = isnull(cooler_user.get_item_by_slot(ITEM_SLOT_OCLOTHING))
@@ -215,28 +215,28 @@
 			reductions = list(40, 20, 20, 0)
 	..()
 
-/obj/item/ego_weapon/shield/daredevil/DisableBlock(mob/living/carbon/human/user)
+/obj/item/ego_weapon/shield/parry/daredevil/DisableBlock(mob/living/carbon/human/user)
 	if (naked_parry)
 		block_cooldown = 2 SECONDS
 	else
 		block_cooldown = 3 SECONDS
 	..()
 
-/obj/item/ego_weapon/shield/daredevil/BlockCooldown(mob/living/carbon/human/user)
+/obj/item/ego_weapon/shield/parry/daredevil/BlockCooldown(mob/living/carbon/human/user)
 	if (realized_parry)
 		force = 40
 	else
 		force = 12
 	..()
 
-/obj/item/ego_weapon/shield/daredevil/BlockFail(mob/living/carbon/human/user)
+/obj/item/ego_weapon/shield/parry/daredevil/BlockFail(mob/living/carbon/human/user)
 	if (naked_parry || realized_parry)
 		debuff_duration = 2 SECONDS
 	else
 		debuff_duration = 3 SECONDS
 	..()
 
-/obj/item/ego_weapon/shield/daredevil/AnnounceBlock(mob/living/carbon/human/source, damage, damagetype, def_zone)
+/obj/item/ego_weapon/shield/parry/daredevil/AnnounceBlock(mob/living/carbon/human/source, damage, damagetype, def_zone)
 	if(damagetype == PALE_DAMAGE && can_hype)
 		if(naked_parry || realized_parry) // You get 100% pale resist on empowered parry, it deserves it's own message.
 			to_chat(source, span_nicegreen("Stand your ground in the face of death. Struggle against the inevitable with reckless abandon, for you shall have me by your side."))
@@ -261,7 +261,7 @@
 		return
 	..()
 
-/obj/item/ego_weapon/shield/daredevil/proc/hype_returns()
+/obj/item/ego_weapon/shield/parry/daredevil/proc/hype_returns()
 	can_hype = TRUE
 
 /obj/item/ego_weapon/christmas
@@ -628,7 +628,7 @@
 	if(force < 100)
 		force += 0.25 //It charges pretty slowly, but people walk pretty fast thanks to justice.
 
-/obj/item/ego_weapon/shield/maneater
+/obj/item/ego_weapon/shield/parry/maneater
 	name = "man eater"
 	desc = "If friends were flowers, I'd pick you!"
 	icon_state = "maneater"
@@ -679,7 +679,7 @@
 /obj/item/ego_weapon/inheritance
 	name = "inheritance"
 	desc = "You should consider it an honor. The humans who have joined me could attain greater wealth and glory."
-	special = "This weapon has a combo system. To turn off this combo system, use in hand."
+	special = "This weapon has a combo system. To turn off this combo system, use in-hand."
 	icon_state = "inheritance"
 	force = 12
 	damtype = RED_DAMAGE
@@ -730,7 +730,7 @@
 	combo += 1
 	force = initial(force)
 
-/obj/item/ego_weapon/shield/legerdemain
+/obj/item/ego_weapon/shield/parry/legerdemain
 	name = "legerdemain"
 	desc = "Together, we are in rot."
 	special = "This weapon restores health on a successful parry."
@@ -754,7 +754,7 @@
 							PRUDENCE_ATTRIBUTE = 40
 							)
 
-/obj/item/ego_weapon/shield/legerdemain/attack_self(mob/user)//FIXME: Find a better way to use this override!
+/obj/item/ego_weapon/shield/parry/legerdemain/attack_self(mob/user)//FIXME: Find a better way to use this override!
 	if(block == 0) //Extra check because shields returns nothing on 1
 		if(..())
 			RegisterSignal(user, COMSIG_ATOM_ATTACK_HAND, PROC_REF(NoParry), override = TRUE)//creates runtimes without overrides, double check if something's fucked
@@ -763,11 +763,11 @@
 		else
 			return FALSE
 
-/obj/item/ego_weapon/shield/legerdemain/proc/NoParry(mob/living/carbon/human/user, obj/item/L)//Disables AnnounceBlock when attacked by an item or a human
+/obj/item/ego_weapon/shield/parry/legerdemain/proc/NoParry(mob/living/carbon/human/user, obj/item/L)//Disables AnnounceBlock when attacked by an item or a human
 	SIGNAL_HANDLER
 	UnregisterSignal(user, COMSIG_MOB_APPLY_DAMGE)//y'all can't behave
 
-/obj/item/ego_weapon/shield/legerdemain/AnnounceBlock(mob/living/carbon/human/source, damage, damagetype, def_zone)
+/obj/item/ego_weapon/shield/parry/legerdemain/AnnounceBlock(mob/living/carbon/human/source, damage, damagetype, def_zone)
 	if (damagetype == PALE_DAMAGE)
 		to_chat(source,span_nicegreen("Your [src] withers at the touch of death!"))
 		balloon_alert(source, "Your [src] withers at the touch of death!")
@@ -917,7 +917,7 @@
 /obj/item/ego_weapon/fluid_sac
 	name = "fluid sac"
 	desc = "Crush them, even if you must disgorge everything."
-	special = "This weapon can be used to perform a jump attack after a short wind-up (Middle mouse button click/alt click an enemy)."
+	special = "This weapon can be used to perform a jump attack after a short wind-up by middle mouse clicking or by alt clicking an enemy."
 	icon_state = "fluid_sac"
 	force = 55
 	attack_speed = 2
@@ -932,23 +932,10 @@
 	var/dash_cooldown
 	var/dash_cooldown_time = 8 SECONDS
 	var/dash_range = 8
-	var/can_attack = TRUE
-
-/obj/item/ego_weapon/fluid_sac/attack(mob/living/target, mob/living/user)
-	if(!can_attack)
-		return
-	..()
-	can_attack = FALSE
-	addtimer(CALLBACK(src, PROC_REF(JumpReset)), 20)
-
-/obj/item/ego_weapon/fluid_sac/proc/JumpReset()
-	can_attack = TRUE
 
 /obj/item/ego_weapon/fluid_sac/MiddleClickAction(atom/target, mob/living/user)
 	. = ..()
 	if(.)
-		return
-	if(!can_attack)
 		return
 	if(!isliving(target))
 		return
@@ -959,8 +946,9 @@
 		return
 	if((get_dist(user, A) < 2) || (!(can_see(user, A, dash_range))))
 		return
-	if(do_after(user, 5, src))
+	if(do_after(user, 5, interaction_key = "fluid_sac_jump", max_interact_count = 1))
 		dash_cooldown = world.time + dash_cooldown_time
+		user.changeNext_move(CLICK_CD_MELEE * attack_speed)
 		playsound(src, 'sound/abnormalities/ichthys/jump.ogg', 50, FALSE, -1)
 		animate(user, alpha = 1,pixel_x = 0, pixel_z = 16, time = 0.1 SECONDS)
 		user.pixel_z = 16
@@ -984,8 +972,6 @@
 	force = 30
 	A.attackby(src,user)
 	force = initial(force)
-	can_attack = FALSE
-	addtimer(CALLBACK(src, PROC_REF(JumpReset)), 20)
 	for(var/mob/living/L in range(1, A))
 		if(L.z != user.z) // Not on our level
 			continue
@@ -1032,7 +1018,7 @@
 	desc = "A mechanical yet sinewy claw ribbed with circuitry. It reminds you of toy claw machines."
 	special = "The charge effect of this weapon trips humans instead of injuring them."
 	icon_state = "replica"
-	force = 25
+	force = 30
 	damtype = BLACK_DAMAGE
 	attack_verb_continuous = list("grabs", "pinches", "snips", "attacks")
 	attack_verb_simple = list("grab", "pinch", "snip", "attack")
@@ -1293,7 +1279,7 @@
 	desc = "The elderly man showed a red thread connecting the young boy with his future lover. Disgusted at the sight, he ordered her to be executed."
 	special = "This weapon deals significantly more damage when attacking the same target repeatedly."
 	icon_state = "destiny"
-	force = 11
+	force = 16
 	swingstyle = WEAPONSWING_LARGESWEEP
 	attack_speed = 0.5
 	damtype = RED_DAMAGE
@@ -1324,6 +1310,7 @@
 /obj/item/ego_weapon/destiny/get_clamped_volume()
 	return 50
 
+/// Risk reward weapon (in realization) Lose health to ramp up in damage during chainsaw and heal based on your weapon's current damage divided by 2.
 /obj/item/ego_weapon/rhythm
 	name = "rhythm"
 	desc = "Nothing makes as fascinating music as a human can."
@@ -1334,20 +1321,211 @@
 	attack_verb_continuous = list("slices", "saws", "rips")
 	attack_verb_simple = list("slice", "saw", "rip")
 	hitsound = 'sound/abnormalities/singingmachine/crunch.ogg'
+	var/saw_loop_delay = 0.4 SECONDS
+	/// Target we're currently sawing. Change it if we click on something else.
+	var/atom/saw_target
+	/// Are we currently sawing something?
+	var/currently_sawing = FALSE
+	/// Should we interrupt the saw loop?
+	var/interrupt_loop = FALSE
+	/// True = Chainsaw False = Attack normally
+	var/revved_up = FALSE
+	/// To return the damage to normal after done chainsawing
+	var/original_damage = 25
+	/// How much is added per attack
+	var/damage_ramp = 5
 	attribute_requirements = list(
 							FORTITUDE_ATTRIBUTE = 40
 							)
 
 /obj/item/ego_weapon/rhythm/attack_self(mob/living/carbon/human/user)
-	if(do_after(user, 10, src))	//Just a second to heal people around you, but it also harms you
-		playsound(src, 'sound/abnormalities/singingmachine/music.ogg', 100, FALSE, 9)
-		for(var/mob/living/carbon/human/L in range(3, get_turf(user)))
+	var/obj/item/clothing/suit/armor/ego_gear/realization/rhythm/our_suit = user.get_item_by_slot(ITEM_SLOT_OCLOTHING)
+	if(currently_sawing)
+		if(ishuman(user))
+			if(istype(our_suit))
+				var/userjust = (get_attribute_level(user, JUSTICE_ATTRIBUTE))
+				var/justicemod = 1 + userjust/100
+				var/current_damage = force
+				current_damage*=justicemod
+				var/healing = force
+				interrupt_loop = TRUE
+				SetCrescendoTraits(user)
+				addtimer(CALLBACK(src, PROC_REF(RemoveCrescendoTraits), user), 15, TIMER_STOPPABLE)
+				if(do_after(user, 10, src))
+					playsound(src, 'sound/weapons/ego/rhythm_crescendo.ogg', 100, FALSE, 9)
+					user.adjustBruteLoss(-healing/2)
+					user.adjustSanityLoss(-healing/2)
+					RemoveCrescendoTraits(user)
+					for(var/mob/living/carbon/human/L in range(9, get_turf(user))) // Heals based on var/current_damage
+						if(user.faction_check_mob(L))
+							L.adjustSanityLoss(-healing/2)
+					for(var/mob/living/H in range(6, get_turf(user))) // Does 1.5x damage based on var/current_damage
+						if(!user.faction_check_mob(H))
+							H.deal_damage(current_damage*1.5, WHITE_DAMAGE, src, attack_type = ATTACK_TYPE_SPECIAL)
+			else
+				to_chat(user, span_danger("You cannot understand true harmony!"))// For naughty naughty people trying to use the chainsaw without wearing the realization
+				user.adjustSanityLoss(500)
+	else
+		if(do_after(user, 10, src))	//Just a second to heal people around you, but it also harms you
+			if(ishuman(user))
+				if(istype(our_suit))
+					playsound(src, 'sound/weapons/ego/rhythm_activation.ogg', 50, FALSE, 9)
+					revved_up = TRUE
+					hitsound = 'sound/weapons/ego/empowered_rhythm_attack.ogg'
+					icon_state = "empowered_rhythm"
+				else
+					playsound(src, 'sound/abnormalities/singingmachine/music.ogg', 100, FALSE, 9)
+					for(var/mob/living/carbon/human/L in range(3, get_turf(user)))
+						L.adjustSanityLoss(-20)
 			user.adjustBruteLoss(user.maxHealth*0.15)
-			L.adjustSanityLoss(-20)
-			new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(L), pick(GLOB.alldirs))
+			new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(user), pick(GLOB.alldirs))
 
 /obj/item/ego_weapon/rhythm/get_clamped_volume()
-	return 40
+	return 35
+
+/obj/item/ego_weapon/rhythm/examine(mob/user)
+	. = ..()
+	if(ishuman(user))
+		var/obj/item/clothing/suit/armor/ego_gear/realization/rhythm/our_suit = user.get_item_by_slot(ITEM_SLOT_OCLOTHING)
+		if(istype(our_suit))
+			. += span_nicegreen("Due to wearing [our_suit] E.G.O. armour, you now understand the true meaning of Harmony. Activating this will allow you to protrude and rev the hidden blades within the weapon. Attacking while the blades are out will allow you to saw into the enemy, <b>as you saw into the enemy you will begin taking damage and the weapon will ramp up in damage. Activating the weapon while sawing into an enemy will allow you to perform a Crescendo</b>, healing your health and sanity while your allies gains sanity and also dealing massive white damage to enemies around you.")
+
+/obj/item/ego_weapon/rhythm/attack(mob/living/target, mob/living/user)
+	if(!CanUseEgo(user)) // I keep forgetting this check teehee
+		return FALSE
+	// Try to start a chainsaw loop on living mobs that aren't us
+	if(revved_up)
+		if(isliving(target) && (target != user))
+			BeginSawLoop(target, user)
+			user.changeNext_move(CLICK_CD_MELEE * attack_speed)
+	// If we're not currently sawing and we couldn't start a chainsaw loop, do a regular hit
+	else if(!currently_sawing)
+		return ..()
+	// If we ARE currently sawing you don't get to hit anything
+	else
+		return FALSE
+
+/obj/item/ego_weapon/rhythm/melee_attack_chain(mob/user, atom/target, params)
+	if(HAS_TRAIT(user, TRAIT_PACIFISM)) // For some god forsaken reason I have to manually check this here.
+		return FALSE
+	. = ..()
+
+// Called when hitting a mob or structure or machine with this weapon
+/obj/item/ego_weapon/rhythm/proc/BeginSawLoop(atom/target, mob/living/user)
+	// Stop if we don't have an user
+	if(QDELETED(user) || user.stat >= DEAD)
+		return
+	// Set the sawing target to the new target
+	saw_target = target
+	interrupt_loop = FALSE
+	// If we weren't already sawing, start the chainsaw loop
+	if(!currently_sawing)
+		SawLoop(user)
+
+// Hit the target. Hit them again if we haven't broken the conditions in a certain timespan. This is a recursive proc.
+/obj/item/ego_weapon/rhythm/proc/SawLoop(mob/living/user)
+	if(QDELETED(saw_target) || QDELETED(user))
+		return FALSE
+
+	currently_sawing = TRUE
+
+	user.face_atom(saw_target)
+	user.do_attack_animation(saw_target)
+	playsound(loc, hitsound, get_clamped_volume(), TRUE, extrarange = stealthy_audio ? SILENCED_SOUND_EXTRARANGE : -1, falloff_distance = 0)
+
+	// Take damage, ramp up in weapon damage.
+	var/obj/item/clothing/suit/armor/ego_gear/realization/rhythm/our_suit = user.get_item_by_slot(ITEM_SLOT_OCLOTHING)
+	if(ishuman(user))
+		if(istype(our_suit))
+			user.adjustBruteLoss(3)
+		else // For naughty naughty people trying to use the chainsaw without wearing the realization
+			user.adjustBruteLoss(30)
+			to_chat(user, span_danger("You cannot understand true harmony!"))
+	force += damage_ramp
+
+	// If it's a mob...
+	if(isliving(saw_target))
+		var/mob/living/victim = saw_target
+		victim.attacked_by(src, user)
+		log_combat(user, victim, pick(attack_verb_continuous), src.name, "(INTENT: [uppertext(user.a_intent)]) (DAMTYPE: [uppertext(damtype)])")
+		// Stop the loop if they're dead.
+		if(victim.health <= 0)
+			interrupt_loop = TRUE
+
+		// Music Notes flying out of the victim
+		new /obj/effect/temp_visual/rhythm_melodies(get_turf(victim), pick(GLOB.alldirs))
+		// Bloodsplatter VFX.
+		var/atom/vfx = new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(victim), pick(GLOB.alldirs))
+		if(victim.mob_biotypes & MOB_ROBOTIC)
+			vfx.color = COLOR_ALMOST_BLACK // Oil...?
+
+	if(do_after(user, saw_loop_delay, timed_action_flags = (IGNORE_TARGET_LOC_CHANGE | IGNORE_USER_LOC_CHANGE), extra_checks = CALLBACK(src, PROC_REF(SawLoopChecks), saw_target, user), interaction_key = "rhythm_saw_loop", max_interact_count = 1))
+		SawLoop(user)
+	else
+		// We failed our checks or interrupted the do_after, funtime's over, reset
+		currently_sawing = FALSE
+		saw_target = null
+		revved_up = FALSE
+		force = original_damage
+		hitsound = 'sound/abnormalities/singingmachine/crunch.ogg'
+		icon_state = "rhythm"
+		return FALSE
+
+// Checked by do_after.
+/obj/item/ego_weapon/rhythm/proc/SawLoopChecks(atom/target, mob/living/user)
+	if(interrupt_loop) // User cancelled the attack or mob was killed.
+		return FALSE
+	if(QDELETED(target)) // Target was deleted.
+		return FALSE
+	if(QDELETED(src)) // Weapon is being deleted...?
+		return TRUE
+	if(src.loc != user) // User isn't holding this weapon.
+		return FALSE
+	if(!(user.Adjacent(target))) // This weapon SHOULD only ever have 1 reach... right? If you want to do a funny with reach weapons use CheckToolReach instead.
+		return FALSE
+	return TRUE
+
+/obj/item/ego_weapon/rhythm/proc/SetCrescendoTraits(mob/living/carbon/human/user)
+	if(QDELETED(user) || !istype(user))
+		return
+
+	ADD_TRAIT(user, TRAIT_PACIFISM, "rhythm_crescendo") // Can't hit enemies normally while using this attack.
+	ADD_TRAIT(user, TRAIT_IMMOBILIZED, "rhythm_crescendo") // Can't move.
+	ADD_TRAIT(user, TRAIT_STUNIMMUNE, "rhythm_crescendo") // Immune to stuns.
+	ADD_TRAIT(user, TRAIT_PUSHIMMUNE, "rhythm_crescendo") // Immune to pushing (I don't think it works on carbon shoves, though).
+	user.move_resist = MOVE_FORCE_OVERPOWERING // Immune to a different kind of pushing.
+	RegisterSignal(user, COMSIG_MOVABLE_PRE_THROW, PROC_REF(HaltThrows)) // Immune to knockback effects or throws.
+
+/obj/item/ego_weapon/rhythm/proc/RemoveCrescendoTraits(mob/living/carbon/human/user)
+	if(QDELETED(user) || !istype(user))
+		return
+
+	REMOVE_TRAIT(user, TRAIT_PACIFISM, "rhythm_crescendo")
+	REMOVE_TRAIT(user, TRAIT_IMMOBILIZED, "rhythm_crescendo")
+	REMOVE_TRAIT(user, TRAIT_STUNIMMUNE, "rhythm_crescendo")
+	REMOVE_TRAIT(user, TRAIT_PUSHIMMUNE, "rhythm_crescendo")
+	user.move_resist = MOVE_FORCE_DEFAULT // I'm making an ASSUMPTION here that you have this as your default move resist, because why would a human NOT have it, right? I can store the original and put it back here if needed...
+	UnregisterSignal(user, COMSIG_MOVABLE_PRE_THROW)
+
+/obj/item/ego_weapon/rhythm/proc/HaltThrows()
+	SIGNAL_HANDLER
+	return COMPONENT_CANCEL_THROW
+
+/obj/item/ego_weapon/rhythm/Destroy()
+	saw_target = null
+	return ..()
+
+
+/obj/effect/temp_visual/rhythm_melodies
+	name = "rhythm_melodies"
+	icon = 'ModularLobotomy/_Lobotomyicons/tegu_effects.dmi'
+	icon_state = "rhythm_music_note"
+	duration = 3 SECONDS
+
+/obj/effect/temp_visual/rhythm_melodies/Initialize()
+	. = ..()
+	pixel_x = rand(-16, 16)
+	animate(src, alpha = 0, pixel_z = rand(16, 48), time = duration)
 
 /obj/item/ego_weapon/shield/trachea
 	name = "trachea"
@@ -1607,7 +1785,7 @@
 	return 40
 
 /obj/item/ego_weapon/lifestew
-	name = "lifetime stew"
+	name = "decamillennial cauldron"
 	desc = "Take a large stone, put it into a sufficient quantity of boiling water; properly season it with pepper and salt... \
 	When the soup is made the stone may be thrown away!"
 	special = "This weapon stores up to 3 projectiles and gains a new projectile on a successful hit."
@@ -1780,16 +1958,16 @@
 	var/mob/living/H = target
 	if(!isbot(H) && isliving(H))
 		H.apply_status_effect(/datum/status_effect/fairybite)
-		H.visible_message(span_warning("The [src] latches on [target]!"))
+		H.visible_message(span_warning("The [src.name] latches onto [target]!"))
 
 /datum/status_effect/fairybite
 	id = "fairybite"
 	status_type = STATUS_EFFECT_MULTIPLE
 	duration = 10 SECONDS
-	tick_interval = 20 //One tick every 2 seconds
+	tick_interval = 20 //One tick every 2 seconds. The last tick doesn't actually go off...
 	on_remove_on_mob_delete = TRUE
 	alert_type = null
-	var/damage_amount = 6
+	var/damage_amount = 14
 
 /datum/status_effect/fairybite/on_apply()
 	return ..()
@@ -1898,6 +2076,7 @@
 	name = "Go Fer Scissors"
 	desc = "What seems to be a giant half of a scissors pair."
 	icon_state = "voodoo" //I can change the icon state name later if you want, but I'm on the middle of City of Light and it's too much work to open Dream Maker, sorry...
+	inhand_icon_state = "little_alice"
 	special = "This weapon can be paired with a second copy to use both at the same time."
 	force = 18
 	swingstyle = WEAPONSWING_LARGESWEEP
@@ -2167,7 +2346,7 @@
 		user.adjustBruteLoss(-amount_filled*2)
 		amount_filled = 0
 
-/obj/item/ego_weapon/shield/isolation
+/obj/item/ego_weapon/shield/parry/isolation
 	name = "isolation"
 	desc = "The shelter still retains the memory of that day."
 	icon_state = "isolation"
@@ -2209,6 +2388,10 @@
 	var/leap_range = 5
 	var/leap_count = 0
 	var/list/hit_turfs = list()
+
+/obj/item/ego_weapon/telepole/Destroy()
+	hit_turfs = null
+	return ..()
 
 /obj/item/ego_weapon/telepole/afterattack(atom/target, mob/living/user, proximity_flag, clickparams)
 	if(!CanUseEgo(user))

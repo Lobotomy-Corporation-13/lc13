@@ -13,6 +13,11 @@
 	var/threat_level
 	var/ego_list = list()
 
+/obj/structure/abno_core/Destroy()
+	contained_abno = null
+	ego_list = null
+	return ..()
+
 /obj/structure/abno_core/proc/Release()
 	if(!contained_abno)//Is this core properly generated?
 		return

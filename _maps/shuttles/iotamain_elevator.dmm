@@ -79,7 +79,8 @@
 	pixel_y = 23;
 	possible_destinations = "iotamain_northwest;iotamain_northeast;iotamain_southwest;iotamain_southeast";
 	name = "warp pod control computer";
-	shuttleId = "iotamain"
+	shuttleId = "iotamain";
+	locked = 0
 	},
 /turf/open/floor/pod,
 /area/shuttle/mining)
@@ -112,12 +113,6 @@
 	dir = 4;
 	pixel_x = 11;
 	resistance_flags = 115
-	},
-/obj/effect/light_emitter{
-	light_power = 4;
-	light_range = 25;
-	set_cap = 3;
-	set_luminosity = 24
 	},
 /obj/machinery/camera,
 /turf/open/floor/mineral/titanium/yellow{

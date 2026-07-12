@@ -9,7 +9,6 @@
 	del_on_death = FALSE
 	maxHealth = 12000
 	health = 12000
-	var/can_act = TRUE
 	var/list/survivors = list()
 	var/cleave_cooldown
 	var/cleave_cooldown_time = 6 SECONDS
@@ -225,7 +224,7 @@
 		if(survivor.stat == DEAD || !survivor.ckey)
 			continue
 		var/area_check = get_area(src)
-		if(istype(area_check, /area/test_range))
+		if(istype(area_check, /area/test_range_arena))
 			return ..()
 		survivor.Apply_Gift(new /datum/ego_gifts/sukuna)
 		survivor.playsound_local(get_turf(survivor), 'sound/weapons/black_silence/snap.ogg', 50)

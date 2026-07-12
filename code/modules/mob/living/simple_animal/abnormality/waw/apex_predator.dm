@@ -63,7 +63,6 @@
 	)
 
 	var/revealed = TRUE
-	var/can_act = TRUE
 	var/backstab_damage = 200
 	var/agent_status //Used for insanity
 
@@ -76,7 +75,6 @@
 
 	var/recloak_time = 0
 	var/recloak_time_cooldown = 30 SECONDS
-
 
 /mob/living/simple_animal/hostile/abnormality/apex_predator/Move()
 	if(notransform)

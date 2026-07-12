@@ -396,4 +396,77 @@
 	target.BreachEffect(user, breach_type)
 	to_chat(user, span_nicegreen("You triggered a [breach_type] breach!"))
 
+/**
+ * Opens the Achievement Specialization TGUI (the same window used by character
+ * preferences) populated with hardcoded fake achievements. Achievement data
+ * normally requires a database connection, which is unavailable on local/dev
+ * servers, so this lets a developer preview the UI layout without one.
+ */
+/obj/item/lc_debug/achievement_spec_demo
+	name = "achievement spec previewer"
+	desc = "Opens the Achievement Specialization UI with fake achievements so the layout can be previewed without a database connection."
+	icon_state = "watch_cobalt"
+	/// Currently selected fake achievement "type" key, drives the card outline
+	var/chosen = null
 
+/obj/item/lc_debug/achievement_spec_demo/attack_self(mob/user)
+	. = ..()
+	ui_interact(user)
+
+/obj/item/lc_debug/achievement_spec_demo/ui_state(mob/user)
+	return GLOB.inventory_state
+
+/obj/item/lc_debug/achievement_spec_demo/ui_assets(mob/user)
+	return list(
+		get_asset_datum(/datum/asset/spritesheet/simple/achievements),
+	)
+
+/obj/item/lc_debug/achievement_spec_demo/ui_interact(mob/user, datum/tgui/ui)
+	ui = SStgui.try_update_ui(user, src, ui)
+	if(!ui)
+		ui = new(user, src, "AchievementSpec")
+		ui.open()
+
+/obj/item/lc_debug/achievement_spec_demo/ui_data(mob/user)
+	var/datum/asset/spritesheet/simple/assets = get_asset_datum(/datum/asset/spritesheet/simple/achievements)
+	var/list/data = list()
+	data["chosen"] = chosen
+	data["achievements"] = list()
+
+	// Each entry mirrors the real ui_data shape. Difficulty colors/orders match
+	// get_difficulty_color()/get_difficulty_order() in _awards.dm. Icon keys are
+	// real spritesheet entries so the badges render.
+	var/list/fakes = list(
+		list("type" = "fake_easy", "name" = "First Day", "desc" = "Survived your very first shift.", "title" = "the Newcomer", "difficulty" = ACHIEVEMENT_EASY, "color" = "#ADD8E6", "order" = 1, "icon" = "default"),
+		list("type" = "fake_normal", "name" = "Steady Hands", "desc" = "Completed a full day without a single casualty.", "title" = "the Reliable", "difficulty" = ACHIEVEMENT_NORMAL, "color" = "#00FF00", "order" = 2, "icon" = "jackpot"),
+		list("type" = "fake_hard", "name" = "Containment Specialist", "desc" = "Suppressed a major breach single-handedly.", "title" = "the Suppressor", "difficulty" = ACHIEVEMENT_HARD, "color" = "#FF0000", "order" = 3, "icon" = "legion"),
+		list("type" = "fake_veryhard", "name" = "Against All Odds", "desc" = "Cleared an Ordeal with the whole team alive.", "title" = "the Unbroken", "difficulty" = ACHIEVEMENT_VERYHARD, "color" = "#800080", "order" = 4, "icon" = "meteors"),
+		list("type" = "fake_hardest", "name" = "Light of the Facility", "desc" = "Defeated a core suppression boss.", "title" = "the Light Seeker", "difficulty" = ACHIEVEMENT_HARDEST, "color" = "#FFA500", "order" = 5, "icon" = "colossus"),
+		list("type" = "fake_hardest2", "name" = "Feat of Strength", "desc" = "Did something almost nobody manages to do.", "title" = "the Legend", "difficulty" = ACHIEVEMENT_HARDEST, "color" = "#FFA500", "order" = 5, "icon" = "featofstrength"),
+	)
+
+	for(var/list/fake in fakes)
+		data["achievements"] += list(list(
+			"type" = fake["type"],
+			"name" = fake["name"],
+			"desc" = fake["desc"],
+			"title" = fake["title"],
+			"difficulty" = fake["difficulty"],
+			"difficulty_color" = fake["color"],
+			"difficulty_order" = fake["order"],
+			"icon_class" = assets.icon_class_name(fake["icon"]),
+		))
+
+	return data
+
+/obj/item/lc_debug/achievement_spec_demo/ui_act(action, list/params)
+	. = ..()
+	if(.)
+		return
+	switch(action)
+		if("select")
+			chosen = params["type"]
+			return TRUE
+		if("none")
+			chosen = null
+			return TRUE

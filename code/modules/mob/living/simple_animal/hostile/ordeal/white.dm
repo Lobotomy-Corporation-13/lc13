@@ -35,7 +35,6 @@
 	var/hammer_cooldown
 	var/hammer_cooldown_time = 6 SECONDS
 	var/hammer_damage = 200
-	var/list/been_hit = list()
 
 /mob/living/simple_animal/hostile/ordeal/black_fixer/Initialize()
 	. = ..()
@@ -103,7 +102,6 @@
 		return
 	hammer_cooldown = world.time + hammer_cooldown_time
 	busy = TRUE
-	been_hit = list()
 	visible_message(span_warning("[src] raises their hammer high above the ground!"))
 	var/turf/target_turf = get_ranged_target_turf_direct(src, target, 14, rand(-15,15))
 	var/list/turfs_to_hit = getline(src, target_turf)
@@ -120,7 +118,7 @@
 			break
 		for(var/turf/open/TT in RANGE_TURFS(1, T))
 			new /obj/effect/temp_visual/small_smoke/halfsecond(TT)
-			been_hit = HurtInTurf(TT, been_hit, hammer_damage, BLACK_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, hurt_structure = TRUE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
+			HurtInTurf(TT, null, hammer_damage, BLACK_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, hurt_structure = TRUE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 		sleep(1)
 	SLEEP_CHECK_DEATH(4)
 	busy = FALSE
@@ -154,7 +152,6 @@
 	del_on_death = TRUE
 	can_patrol = TRUE
 
-	var/can_act = TRUE
 	/// When this reaches 480 - begins reflecting damage
 	var/damage_taken = 0
 	var/damage_reflection = FALSE
@@ -164,7 +161,6 @@
 	var/beam_direct_damage = 250
 	/// White damage dealt every 0.5 seconds to those standing in the beam's smoke
 	var/beam_overtime_damage = 30
-	var/list/been_hit = list()
 	var/circle_cooldown
 	var/circle_cooldown_time = 30 SECONDS
 	var/circle_radius = 24
@@ -178,7 +174,6 @@
 
 /mob/living/simple_animal/hostile/ordeal/white_fixer/Destroy()
 	QDEL_NULL(RVP)
-	been_hit.Cut()
 	return ..()
 
 /mob/living/simple_animal/hostile/ordeal/white_fixer/Life()
@@ -225,7 +220,6 @@
 		RVP.NewCultSparks(T) // Prepare yourselves
 	SLEEP_CHECK_DEATH(13)
 	playsound(src, 'sound/effects/ordeals/white/white_beam.ogg', 75, FALSE, 32)
-	been_hit = list()
 	var/i = 1
 	for(var/turf/T in turfs_to_hit)
 		addtimer(CALLBACK(src, PROC_REF(LongBeamTurf), T), i*0.3)
@@ -248,7 +242,7 @@
 		affected_turfs += TT
 		var/obj/effect/reusable_visual/RV = RVP.NewSmoke(TT, 5 SECONDS)
 		RV.name = "mental smoke"
-		been_hit = HurtInTurf(TT, been_hit, beam_direct_damage, WHITE_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_RANGED | ATTACK_TYPE_SPECIAL))
+		HurtInTurf(TT, null, beam_direct_damage, WHITE_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_RANGED | ATTACK_TYPE_SPECIAL))
 
 	for(var/turf/TT in affected_turfs) // Remaining damage effect
 		BeamTurfEffect(TT, beam_overtime_damage)
@@ -499,7 +493,6 @@
 	attack_sound = 'sound/effects/ordeals/white/pale_knife.ogg'
 	del_on_death = TRUE
 
-	var/can_act = TRUE
 	var/multislash_cooldown
 	var/multislash_cooldown_time = 5 SECONDS
 	/// Amount of pale damage per slash

@@ -3,6 +3,9 @@
 	if(!. || !client)
 		return FALSE
 
+	// Add existing status display images based on client preference
+	refresh_status_display_images()
+
 	//Mind updates
 	sync_mind()
 	mind.show_memory(src, 0)

@@ -59,8 +59,9 @@
 		//Increase the amount of PE we can make from HE to Waw level
 		max_boxes = 24
 		datum_reference.max_boxes = 24
-		icon_state = "plushie_snake"
-		icon_living = "plushie_snake"
+		icon = 'ModularLobotomy/_Lobotomyicons/branch12/64x32.dmi'
+		pixel_x = -16
+		base_pixel_x = -16
 
 	if(work_type == ABNORMALITY_WORK_REPRESSION)
 		datum_reference.qliphoth_change(2)

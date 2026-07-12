@@ -29,6 +29,10 @@
 	. = ..()
 	GLOB.lobotomy_devices += src
 	flags_1 |= NODECONSTRUCT_1
+	if(SSmaptype.chosen_trait == FACILITY_TRAIT_DARK_SOULS)
+		new /obj/structure/darksouls_bonfire(get_turf(src))
+		qdel(src)
+		return INITIALIZE_HINT_QDEL
 
 /obj/machinery/regenerator/Destroy()
 	GLOB.lobotomy_devices -= src

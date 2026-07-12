@@ -36,7 +36,7 @@
 	var/landmark_type = RCE_TARGET_TYPE_GENERIC
 
 /obj/effect/landmark/rce_target/Initialize(mapload)
-	..()
+	. = ..()
 	GLOB.rce_targets += get_turf(src)
 	if(id)
 		SSgamedirector.RegisterTarget(src, landmark_type, id)
@@ -99,7 +99,7 @@
 	name = "xcorp heart spawn"
 
 /obj/effect/landmark/rce_spawn/xcorp_heart/Initialize(mapload)
-	..()
+	. = ..()
 	new /mob/living/simple_animal/hostile/megafauna/xcorp_heart(get_turf(src))
 
 // Last Wave Gateway Landmarks

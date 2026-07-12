@@ -82,7 +82,7 @@
 
 
 /obj/item/organ/eyes/on_life()
-	..()
+	. = ..()
 	var/mob/living/carbon/C = owner
 	//since we can repair fully damaged eyes, check if healing has occurred
 	if((organ_flags & ORGAN_FAILING) && (damage < maxHealth))
@@ -209,7 +209,7 @@
 	return
 
 /obj/item/organ/eyes/robotic/flashlight/Insert(mob/living/carbon/M, special = FALSE, drop_if_replaced = FALSE)
-	..()
+	. = ..()
 	if(!eye)
 		eye = new /obj/item/flashlight/eyelight()
 	eye.on = TRUE
@@ -223,7 +223,7 @@
 	eye.update_brightness(M)
 	eye.forceMove(src)
 	M.cure_blind("flashlight_eyes")
-	..()
+	return ..()
 
 // Welding shield implant
 /obj/item/organ/eyes/robotic/shield
@@ -258,11 +258,11 @@
 
 /obj/item/organ/eyes/robotic/glow/Destroy()
 	terminate_effects()
-	. = ..()
+	return ..()
 
 /obj/item/organ/eyes/robotic/glow/Remove(mob/living/carbon/M, special = FALSE)
 	terminate_effects()
-	. = ..()
+	return ..()
 
 /obj/item/organ/eyes/robotic/glow/proc/terminate_effects()
 	if(owner && active)
@@ -464,9 +464,6 @@
 	overlay_ignore_lighting = TRUE
 	var/obj/item/flashlight/eyelight/adapted/adapt_light
 
-/obj/item/organ/eyes/night_vision/maintenance_adapted/Initialize()
-	. = ..()
-
 /obj/item/organ/eyes/night_vision/maintenance_adapted/Insert(mob/living/carbon/adapted, special = FALSE)
 	. = ..()
 	//add lighting
@@ -488,7 +485,7 @@
 		playsound(owner, 'sound/machines/grill/grillsizzle.ogg', 50)
 	else
 		applyOrganDamage(-10) //heal quickly
-	. = ..()
+	return ..()
 
 /obj/item/organ/eyes/night_vision/maintenance_adapted/Remove(mob/living/carbon/unadapted, special = FALSE)
 	//remove lighting

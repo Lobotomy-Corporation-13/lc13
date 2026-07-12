@@ -6,16 +6,41 @@
 /obj/item/choice_beacon/association/generate_display_names()
 	var/static/list/beacon_item_list
 	if(!beacon_item_list)
-		beacon_item_list = list()
-		var/list/templist = subtypesof(/obj/item/storage/box/association) //we have to convert type = name to name = type, how lovely!
-		for(var/V in templist)
-			var/atom/A = V
-			beacon_item_list[initial(A.name)] = A
+		beacon_item_list = list(
+			"Zwei Association Section 6" = /obj/item/storage/box/association/zwei,
+			"Seven Association Section 4" = /obj/item/storage/box/association/seven,
+			"Dieci Association Section 4" = /obj/item/storage/box/association/dieci,
+			// "Cinq Association Section 3" = /obj/item/storage/box/association/cinq,
+		)
 	return beacon_item_list
 
-/obj/item/choice_beacon/association/spawn_option(obj/choice,mob/living/M)
+/obj/item/choice_beacon/association/spawn_option(obj/choice, mob/living/M)
+	// Determine association type from chosen box
+	var/association_type
+	if(ispath(choice, /obj/item/storage/box/association/zwei))
+		association_type = ASSOCIATION_ZWEI
+	else if(ispath(choice, /obj/item/storage/box/association/seven))
+		association_type = ASSOCIATION_SEVEN
+	else if(ispath(choice, /obj/item/storage/box/association/dieci))
+		association_type = ASSOCIATION_DIECI
+	else if(ispath(choice, /obj/item/storage/box/association/cinq))
+		association_type = ASSOCIATION_CINQ
+	// Spawn the equipment box
 	new choice(get_turf(M))
-	to_chat(M, span_hear("Make sure you put the equipment in the armory."))
+	if(!association_type || !ishuman(M))
+		to_chat(M, span_hear("Make sure you put the equipment in the armory."))
+		return
+	var/mob/living/carbon/human/director = M
+	// Create the squad datum
+	var/datum/association_squad/squad = new(association_type, director)
+	GLOB.association_squads += squad
+	// Register the Director with the squad
+	squad.register_member(director, "director")
+	// Spawn the registry tool for the Director
+	var/obj/item/association_registry/tool = new(get_turf(director))
+	tool.squad = squad
+	to_chat(director, span_notice("You have aligned your section with [squad.association_name]. Use the Association Registry on your squad members to register them."))
+	to_chat(director, span_hear("Make sure you put the equipment in the armory."))
 
 
 //Zwei Asso
@@ -24,24 +49,61 @@
 	desc = "A kit from Section 1 containing Zwei association gear."
 
 /obj/item/storage/box/association/zwei/PopulateContents()
+	// Associate weapons (3)
 	new /obj/item/ego_weapon/city/zweihander(src)
 	new /obj/item/ego_weapon/city/zweihander(src)
 	new /obj/item/ego_weapon/city/zweibaton(src)
+	// Veteran weapon (1)
 	new /obj/item/ego_weapon/city/zweihander/vet(src)
+	// Director weapon (1)
 	new /obj/item/ego_weapon/city/zweihander/vet(src)
+	// Associate armor (3)
 	new /obj/item/clothing/suit/armor/ego_gear/city/zwei(src)
 	new /obj/item/clothing/suit/armor/ego_gear/city/zwei(src)
 	new /obj/item/clothing/suit/armor/ego_gear/city/zweiriot(src)
+	// Veteran armor (1)
 	new /obj/item/clothing/suit/armor/ego_gear/city/zweivet(src)
+	// Director armor (1)
 	new /obj/item/clothing/suit/armor/ego_gear/city/zweileader(src)
-	new /obj/item/assoc_skill_granter/zwei(src)
-	new /obj/item/assoc_skill_granter/zwei(src)
-	new /obj/item/assoc_skill_granter/zwei(src)
-	new /obj/item/assoc_skill_granter/zwei/veteran(src)
-	new /obj/item/assoc_skill_granter/zwei/director(src)
 
 
-//Liu Asso
+//Dieci Asso
+/obj/item/storage/box/association/dieci
+	name = "Dieci Association Section 4"
+	desc = "A kit from Section 1 containing Dieci association gear."
+
+/obj/item/storage/box/association/dieci/PopulateContents()
+	// Associate weapons (3) — fists + key mix
+	new /obj/item/ego_weapon/city/dieci(src)
+	new /obj/item/ego_weapon/city/dieci(src)
+	new /obj/item/ego_weapon/city/dieci/key(src)
+	// Veteran weapon (1) + key option
+	new /obj/item/ego_weapon/city/dieci/vet(src)
+	new /obj/item/ego_weapon/city/dieci/key/vet(src)
+	// Director weapon (1) + key option
+	new /obj/item/ego_weapon/city/dieci/director(src)
+	new /obj/item/ego_weapon/city/dieci/key/director(src)
+	// Associate armor (3)
+	new /obj/item/clothing/suit/armor/ego_gear/city/dieci(src)
+	new /obj/item/clothing/suit/armor/ego_gear/city/dieci(src)
+	new /obj/item/clothing/suit/armor/ego_gear/city/dieci(src)
+	// Veteran armor (1)
+	new /obj/item/clothing/suit/armor/ego_gear/city/dieci/vet(src)
+	// Director armor (1)
+	new /obj/item/clothing/suit/armor/ego_gear/city/dieci/director(src)
+	// Knowledge Tome (one per squad)
+	new /obj/item/dieci_tome(src)
+
+//Cinq Asso
+/obj/item/storage/box/association/cinq
+	name = "Cinq Association Section 3"
+	desc = "A kit from Section 1 containing Cinq association gear."
+
+/obj/item/storage/box/association/cinq/PopulateContents()
+	// Stub - Cinq gear will be added in a future update
+	return
+
+//Liu Asso (deprecated - not selectable from beacon, kept for legacy compatibility)
 /obj/item/storage/box/association/liu
 	name = "Liu Association Section 5"
 	desc = "A kit from Section 1 containing Liu association gear."
@@ -63,12 +125,52 @@
 	new /obj/item/assoc_skill_granter/liu/veteran(src)
 	new /obj/item/assoc_skill_granter/liu/director(src)
 
-//Seven Asso
+//Seven Asso — Section 4 (new Rupture + Adaptive weapons)
 /obj/item/storage/box/association/seven
-	name = "Seven Association Section 6"
-	desc = "A kit from Section 1 containing Seven association gear."
+	name = "Seven Association Section 4"
+	desc = "A kit from Section 1 containing Seven Association Section 4 gear."
 
 /obj/item/storage/box/association/seven/PopulateContents()
+	// Associate weapons (3)
+	new /obj/item/ego_weapon/city/seven_s4_blade(src)
+	new /obj/item/ego_weapon/city/seven_s4_foil(src)
+	new /obj/item/ego_weapon/city/seven_s4_blade(src)
+	// Associate sidearms (3)
+	new /obj/item/ego_weapon/city/seven_s4_foil(src)
+	new /obj/item/ego_weapon/city/seven_s4_foil(src)
+	new /obj/item/ego_weapon/city/seven_s4_foil(src)
+	// Veteran weapon (1) + sidearm
+	new /obj/item/ego_weapon/city/seven_s4_blade/vet(src)
+	new /obj/item/ego_weapon/city/seven_s4_foil/dagger(src)
+	// Director weapons (blade + cane choice) + sidearm
+	new /obj/item/ego_weapon/city/seven_s4_blade/director(src)
+	new /obj/item/ego_weapon/city/seven_s4_blade/cane(src)
+	new /obj/item/ego_weapon/city/seven_s4_foil/dagger(src)
+	// Associate armor (3)
+	new /obj/item/clothing/suit/armor/ego_gear/city/seven_s4(src)
+	new /obj/item/clothing/suit/armor/ego_gear/city/seven_s4(src)
+	new /obj/item/clothing/suit/armor/ego_gear/city/seven_s4/recon(src)
+	// Veteran armor (1)
+	new /obj/item/clothing/suit/armor/ego_gear/city/seven_s4/vet(src)
+	// Director armor (1)
+	new /obj/item/clothing/suit/armor/ego_gear/city/seven_s4/director(src)
+	// Equipment
+	new /obj/item/binoculars(src)
+	new /obj/item/binoculars(src)
+	// Investigation toolkit
+	new /obj/item/camera/seven_intel(src)
+	new /obj/item/intel_report(src)
+	new /obj/item/intel_report(src)
+	new /obj/item/intel_report(src)
+	new /obj/item/seven_dossier(src)
+	new /obj/item/seven_catalog(src)
+
+//Seven Asso — Section 6 (legacy stored-target weapons)
+/obj/item/storage/box/association/seven/section6
+	name = "Seven Association Section 6"
+	desc = "A kit from Section 1 containing Seven Association Section 6 gear."
+
+/obj/item/storage/box/association/seven/section6/PopulateContents()
 	new /obj/item/ego_weapon/city/seven(src)
 	new /obj/item/ego_weapon/city/seven(src)
 	new /obj/item/ego_weapon/city/seven_fencing(src)
@@ -80,11 +182,6 @@
 	new /obj/item/clothing/suit/armor/ego_gear/city/sevenrecon(src)
 	new /obj/item/clothing/suit/armor/ego_gear/city/sevenvet(src)
 	new /obj/item/clothing/suit/armor/ego_gear/city/sevendirector(src)
-	new /obj/item/assoc_skill_granter/seven(src)
-	new /obj/item/assoc_skill_granter/seven(src)
-	new /obj/item/assoc_skill_granter/seven(src)
-	new /obj/item/assoc_skill_granter/seven/veteran(src)
-	new /obj/item/assoc_skill_granter/seven/director(src)
 	new /obj/item/binoculars(src)
 	new /obj/item/binoculars(src)
 

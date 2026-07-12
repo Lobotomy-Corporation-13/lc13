@@ -1,4 +1,4 @@
-//Regular is Grade 7, rest are grade 5
+//Regular is Grade 7, rest are grade 6
 /obj/item/ego_weapon/city/sweeper
 	name = "sweeper hook"
 	desc = "A hook cut off a sweeper. When night comes in the backstreets..."
@@ -26,7 +26,7 @@
 		user.adjustBruteLoss(-user.maxHealth * 0.1)	//Heal 10% HP
 
 /obj/item/ego_weapon/city/sweeper/sickle
-	name = "sweeper_sickle"
+	name = "sweeper sickle"
 	desc = "A sickle cut off a sweeper captain. When night comes in the backstreets..."
 	icon_state = "sweeper_sickle"
 	force = 37

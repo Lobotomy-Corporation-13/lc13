@@ -488,7 +488,7 @@
 			"name" = "Time Moratorium",
 			"ahn_cost" = 50,
 			"ep_cost" = 4,
-			"desc" = "On hit against a target with 15+ TREMOR, consume 10 TREMOR from the target to trigger the timestop effect around them, with an AoE of 2 and duration of 4 seconds. (Has a cooldown of 30 seconds.)",
+			"desc" = "On hit against a target with 40+ TREMOR, consume 50% of current TREMOR from the target to trigger the timestop effect around them, with an AoE of 2 and duration of 2 seconds. (Has a cooldown of 30 seconds.)",
 			"component" = /datum/component/augment/time_moratorium
 		),
 		list(
@@ -848,7 +848,7 @@
 
 	// --- Access Check ---
 	if(!(user?.mind?.assigned_role in roles))
-		if(SSmaptype.maptype != "office")
+		if(SSmaptype.maptype != "office" && SSmaptype.maptype != "lc13")
 			to_chat(user, "<span class='notice'>You need to be a surgeon to use this machine!</span>")
 			return TRUE
 
@@ -875,14 +875,24 @@
 			to_chat(user, span_warning("You need proper clearance to fabricate augments!"))
 			return
 
+	// Prevent the same ticket from being processed multiple times simultaneously
+	if(ticket.being_processed)
+		to_chat(user, span_warning("This ticket is already being processed!"))
+		return
+	if(QDELETED(ticket))
+		return
+	ticket.being_processed = TRUE
+
 	// Validate ticket
 	if(!ticket.form_id || !length(ticket.selected_effects))
 		to_chat(user, span_warning("This ticket appears to be invalid or blank!"))
+		ticket.being_processed = FALSE
 		return
 
 	// Check if user can afford
 	if(!deduct_cost(user, ticket.total_cost))
 		to_chat(user, span_warning("Failed to deduct [ticket.total_cost] [currencySymbol]. Insufficient funds!"))
+		ticket.being_processed = FALSE
 		return
 
 	// Create a datum/augment_design from the ticket
@@ -898,6 +908,7 @@
 
 	if(!form_data)
 		to_chat(user, span_warning("The form specified in this ticket is no longer available!"))
+		ticket.being_processed = FALSE
 		return
 
 	design.form_data = form_data
@@ -955,6 +966,7 @@
 	else
 		log_runtime("Failed to create augment item at [src] for [user] from ticket.")
 		to_chat(user, span_warning("Critical fabrication failure! Please contact administration.</span>"))
+		ticket.being_processed = FALSE
 
 
 /// Placeholder for deducting the cost.
@@ -1185,7 +1197,7 @@
 // 	return mutable_appearance(src.icon, src.overlay_icon_state, src.overlay_layer)
 
 /obj/item/augment/proc/CanUseAugment(mob/user)
-	if(user?.mind?.assigned_role in roles || SSmaptype.maptype == "office" || debug_use)
+	if((user?.mind?.assigned_role in roles) || (SSmaptype.maptype == "office") || (debug_use))
 		return TRUE
 	return FALSE
 
@@ -1341,7 +1353,8 @@
 	icon_state = "gadget1"
 	slot_flags = ITEM_SLOT_BELT | ITEM_SLOT_POCKETS
 	w_class = WEIGHT_CLASS_SMALL
-	var/list/roles = list("Prosthetics Surgeon", "Office Representative", "Office Fixer", "Doctor", "Workshop Attendant")
+	var/list/roles = list("Prosthetics Surgeon", "Office Director", "Office Representative", "Office Fixer", "Doctor", "Workshop Attendant")
+	var/debug_use = FALSE
 
 /obj/item/augment_remover/attack(mob/M, mob/user)
 	if (!CanRemoveAugment(user))
@@ -1380,9 +1393,13 @@
 		to_chat(user, span_warning("No augment found within [H.name]!"))
 
 /obj/item/augment_remover/proc/CanRemoveAugment(mob/user)
-	if(user?.mind?.assigned_role in roles || SSmaptype.maptype == "office")
+	if((user?.mind?.assigned_role in roles) || (SSmaptype.maptype == "office") || (debug_use))
 		return TRUE
 	return FALSE
+
+/obj/item/augment_remover/debug
+	desc = "A device that can remove augments. It's jailbroken!"
+	debug_use = TRUE
 
 //--------------------------------------
 // Debug Augment Fabricator
@@ -1419,13 +1436,28 @@
 	to_chat(user, "<span class='notice'>[src] is in debug mode - no charge applied.</span>")
 	return TRUE
 
+// Override to make debug augments usable by anyone
+/obj/machinery/augment_fabricator/debug/make_new_augment()
+	var/obj/item/augment/A = new /obj/item/augment
+	A.debug_use = TRUE
+	return A
+
 // Override to skip access check for tickets
 /obj/machinery/augment_fabricator/debug/process_augment_ticket(obj/item/augment_ticket/ticket, mob/user)
 	// --- NO Access Check - Debug mode! ---
 
+	// Prevent the same ticket from being processed multiple times simultaneously
+	if(ticket.being_processed)
+		to_chat(user, span_warning("This ticket is already being processed!"))
+		return
+	if(QDELETED(ticket))
+		return
+	ticket.being_processed = TRUE
+
 	// Validate ticket
 	if(!ticket.form_id || !length(ticket.selected_effects))
 		to_chat(user, span_warning("This ticket appears to be invalid or blank!"))
+		ticket.being_processed = FALSE
 		return
 
 	// No cost check in debug mode - always succeed
@@ -1444,6 +1476,7 @@
 
 	if(!form_data)
 		to_chat(user, span_warning("The form specified in this ticket is no longer available!"))
+		ticket.being_processed = FALSE
 		return
 
 	design.form_data = form_data
@@ -1502,3 +1535,4 @@
 	else
 		log_runtime("Failed to create augment item at [src] for [user] from ticket.")
 		to_chat(user, span_warning("Critical fabrication failure! Please contact administration.</span>"))
+		ticket.being_processed = FALSE

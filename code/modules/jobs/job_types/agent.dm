@@ -170,8 +170,13 @@
 //For MOBA Agents
 /datum/outfit/job/agent/post_equip(mob/living/carbon/human/outfit_owner, visualsOnly = FALSE)
 	..()
-	if(SSmaptype.chosen_trait == FACILITY_TRAIT_MOBA_AGENTS)
-		outfit_owner.equip_to_slot_or_del(new /obj/item/class_chooser(outfit_owner), ITEM_SLOT_HANDS, TRUE)
+	switch (SSmaptype.chosen_trait)
+		if(FACILITY_TRAIT_MOBA_AGENTS)
+			outfit_owner.equip_to_slot_or_del(new /obj/item/class_chooser(outfit_owner), ITEM_SLOT_HANDS, TRUE)
+		if(FACILITY_TRAIT_DARK_SOULS)
+			outfit_owner.equip_to_slot_or_del(new /obj/item/estus(outfit_owner), ITEM_SLOT_HANDS, TRUE)
+			var/datum/action/G = new /datum/action/cooldown/dash
+			G.Grant(outfit_owner)
 
 /datum/outfit/job/agent
 	name = "Agent"

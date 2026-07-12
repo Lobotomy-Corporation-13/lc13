@@ -26,7 +26,6 @@
 	var/charge_level = 0
 	var/charge_level_cap = 20
 	var/broken = FALSE
-	var/can_act = TRUE
 
 /mob/living/simple_animal/hostile/ordeal/centipede_corrosion/Move()
 	if(!can_act)
@@ -178,12 +177,21 @@
 	var/dash_cooldown_time = 4 SECONDS
 	var/charge_progress = 0
 
+/mob/living/simple_animal/hostile/ordeal/thunderbird_corrosion/Destroy()
+	QDEL_NULL(current_beam)
+	spawned_mobs = null
+	return ..()
+
 /mob/living/simple_animal/hostile/ordeal/thunderbird_corrosion/Moved(atom/OldLoc, Dir, Forced = FALSE)
 	. = ..()
 	charge_progress += 1
 	if(charge_progress >= 10)
 		charge_progress = 0
 		AdjustCharge(1)
+
+/mob/living/simple_animal/hostile/ordeal/thunderbird_corrosion/Destroy()
+	QDEL_NULL(current_beam)
+	return ..()
 
 /mob/living/simple_animal/hostile/ordeal/thunderbird_corrosion/OpenFire(atom/A)
 	var/dist = get_dist(target, src)
@@ -253,15 +261,8 @@
 		C.name = "[H.real_name]"//applies the target's name and adds the name to its description
 		C.desc = "What appears to be [H.real_name], only charred and screaming incoherently..."
 		C.gender = H.gender
-		C.faction = src.faction
-		C.master = src
-		spawned_mobs += C
-		H.gib()
-
-/mob/living/simple_animal/hostile/ordeal/thunderbird_corrosion/death(gibbed)
-	for(var/mob/living/A in spawned_mobs)
-		A.gib()
-	..()
+		C.LinkSoul(src)
+		H.gib(TRUE,TRUE,TRUE)
 
 /mob/living/simple_animal/hostile/ordeal/KHz_corrosion
 	name = "680 Ham Actor"
@@ -286,7 +287,6 @@
 	speak = list("Kilo India Lima Lima", "Delta India Echo", "Golf Echo Tango Oscar Uniform Tango", "Oscar Mike", "Charlie Mike")
 	speak_emote = list("emits", "groans")
 	ranged = TRUE
-	var/can_act = TRUE
 	var/effect_cooldown
 	var/effect_cooldown_time = 4 SECONDS
 	var/screech_cooldown
@@ -361,9 +361,8 @@
 			icon = initial(icon)
 			icon_state = icon_dead
 		return
-	var/list/been_hit = list()
 	for(var/turf/T in view(7, src))
-		HurtInTurf(T, been_hit, 25, WHITE_DAMAGE, null, TRUE, FALSE, TRUE, hurt_hidden = TRUE, attack_type = (ATTACK_TYPE_SPECIAL))
+		HurtInTurf(T, list(), 25, WHITE_DAMAGE, null, TRUE, FALSE, TRUE, hurt_hidden = TRUE, attack_type = (ATTACK_TYPE_SPECIAL))
 	sleep(3)
 	if(QDELETED(src) || stat == DEAD)
 		if(!QDELETED(src))
@@ -411,6 +410,12 @@
 	var/lightning_aoe_range = 80
 	var/minimum_bolts = 3
 	var/current_bolts = 3
+	var/soullink = "Thunder Chieftain"
+
+/mob/living/simple_animal/hostile/ordeal/thunderbird_corrosion_boss/Destroy()
+	spawned_mobs = null
+	been_hit = null
+	return ..()
 
 /mob/living/simple_animal/hostile/ordeal/thunderbird_corrosion_boss/Initialize(mapload)
 	. = ..()
@@ -467,9 +472,9 @@
 	current_bolts = minimum_bolts
 
 /mob/living/simple_animal/hostile/ordeal/thunderbird_corrosion_boss/proc/ThunderStrike(mob/living/L, attack_range = 1)
-	if(L in been_hit)
+	if(L.tag in been_hit)
 		return
-	been_hit += L
+	been_hit += L.tag
 	if(L.status_flags & GODMODE)
 		return
 	if(!faction_check_mob(L, TRUE))
@@ -494,7 +499,7 @@
 	if(!current_bolts && prob(75))
 		return
 	var/obj/effect/thunderbolt/big/E = new(get_turf(L.loc))
-	E.master = src
+	E.creator = src
 	current_bolts -= 1
 
 /obj/effect/thunderbolt/big
@@ -513,4 +518,4 @@
 		if(prob(15) && bolts)
 			new /obj/effect/temp_visual/tbirdlightning(get_turf(T))
 			bolts -= 1
-	..()
+	return ..()

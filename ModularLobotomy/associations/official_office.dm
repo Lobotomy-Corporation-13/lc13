@@ -58,7 +58,7 @@
 
 /obj/item/attribute_increase/fixer/office
 	name = "office n corp training accelerator"
-	desc = "A fluid used to increase the stats of a non-assocaition fixer. Use in hand to activate. Increases stats more the lower your potential. Effects eveyone a part of your office."
+	desc = "A fluid used to increase the stats of a non-association fixer. Use in hand to activate. Increases stats more the lower your potential. Effects eveyone a part of your office."
 	amount = 1
 	var/public_use = FALSE
 

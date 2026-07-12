@@ -20,7 +20,7 @@
 
 	can_breach = TRUE
 	threat_level = WAW_LEVEL
-	faction = list("neutral", "hostile")
+	faction = list("hostile")
 	start_qliphoth = 1
 	work_chances = list(
 		ABNORMALITY_WORK_INSTINCT = 75,
@@ -43,6 +43,15 @@
 
 	var/darts_smoked	//how many times you didnt' work repression
 	var/can_counter = TRUE
+
+
+
+//These two overrides prevent it from attacking anyone.
+/mob/living/simple_animal/hostile/abnormality/caterpillar/FindTarget(list/possible_targets, HasTargetsList = 0)
+	return FALSE
+
+/mob/living/simple_animal/hostile/abnormality/caterpillar/AttackingTarget()
+	return FALSE
 
 //Set a smoker timer for 15 seconds
 /mob/living/simple_animal/hostile/abnormality/caterpillar/BreachEffect()

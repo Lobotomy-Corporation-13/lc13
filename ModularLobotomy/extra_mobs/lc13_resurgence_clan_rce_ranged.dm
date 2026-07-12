@@ -53,7 +53,6 @@
 	move_to_delay = 5
 	melee_damage_lower = 5
 	melee_damage_upper = 10
-	var/can_act = TRUE
 	var/datum/beam/current_beam = null
 	var/aiming = FALSE
 

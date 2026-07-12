@@ -132,7 +132,7 @@
 
 
 /obj/item/ego_weapon/city/shi_assassin/serpent
-	name = "shi association seperant blade"
+	name = "shi association serpent blade"
 	desc = "A unique specialized assassin blade that is used by Shi Section 2. Created for highly armored targets, this one deals black damage"
 	icon_state = "shi_serpent"
 	damtype = BLACK_DAMAGE
@@ -141,6 +141,7 @@
 /obj/item/ego_weapon/city/shi_assassin/yokai
 	name = "shi association yokai blade"
 	desc = "A unique specialized assassin blade that is used by Shi Section 2. Created for highly armored targets, this one deals pale damage"
+	special = "Use this weapon in hand to immobilize yourself for 1 second, cut your HP by 25%, and deal 4x damage."
 	force = 18
 	icon_state = "shi_yokai"
 	damtype = PALE_DAMAGE

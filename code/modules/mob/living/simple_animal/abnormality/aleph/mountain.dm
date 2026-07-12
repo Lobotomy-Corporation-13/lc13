@@ -322,7 +322,7 @@
 	. = ..()
 	FindTarget() // Start eating corpses IMMEDIATELLY
 
-/mob/living/simple_animal/hostile/abnormality/mountain/patrol_select()
+/mob/living/simple_animal/hostile/abnormality/mountain/SelectPatrolLocation()
 	if(phase >= 3) // Ignore dead stuff from now on
 		return ..()
 
@@ -350,15 +350,15 @@
 	if(LAZYLEN(high_priority_turfs))
 		target_turf = get_closest_atom(/turf/open, high_priority_turfs, src)
 		if(phase <= 1)
-			target = null
+			LoseTarget(FALSE)
 	else if(LAZYLEN(medium_priority_turfs))
 		target_turf = get_closest_atom(/turf/open, medium_priority_turfs, src)
 	else if(LAZYLEN(low_priority_turfs))
 		target_turf = get_closest_atom(/turf/open, low_priority_turfs, src)
 
 	if(istype(target_turf))
-		patrol_path = get_path_to(src, target_turf, TYPE_PROC_REF(/turf, Distance_cardinal), 0, 200)
-		return
+		return target_turf
+
 	return ..()
 
 /* Abnormality work */

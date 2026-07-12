@@ -38,8 +38,6 @@
 	//Delay on general commands
 	var/command_cooldown = 0
 	var/command_delay = 18 SECONDS
-	//If this creature can act.
-	var/can_act = TRUE
 
 /mob/living/simple_animal/hostile/ordeal/steel_dusk/Initialize(mapload)
 	. = ..()
@@ -73,10 +71,12 @@
 			else
 				Command(pick(2,3))
 
-/mob/living/simple_animal/hostile/ordeal/steel_dusk/patrol_select()
+/mob/living/simple_animal/hostile/ordeal/steel_dusk/PatrolSelect()
+	. = ..()
+	if(!.)
+		return
 	if(prob(25))
 		say("Nothin here. Lets move on.")
-	..()
 
 /mob/living/simple_animal/hostile/ordeal/steel_dusk/Aggro()
 	. = ..()

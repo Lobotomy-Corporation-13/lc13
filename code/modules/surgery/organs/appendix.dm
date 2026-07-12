@@ -22,7 +22,7 @@
 		name = "appendix"
 
 /obj/item/organ/appendix/on_life()
-	..()
+	. = ..()
 	if(!(organ_flags & ORGAN_FAILING))
 		return
 	var/mob/living/carbon/M = owner
@@ -37,9 +37,9 @@
 		A.cure()
 		inflamed = TRUE
 	update_icon()
-	..()
+	return ..()
 
 /obj/item/organ/appendix/Insert(mob/living/carbon/M, special = 0)
-	..()
+	. = ..()
 	if(inflamed)
 		M.ForceContractDisease(new /datum/disease/appendicitis(), FALSE, TRUE)

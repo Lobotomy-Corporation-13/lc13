@@ -37,8 +37,9 @@
 	light_power = 7
 
 	ego_list = list(
-		//datum/ego_datum/weapon/departure,
-		//datum/ego_datum/armor/departure,
+		//Temporary
+		/datum/ego_datum/weapon/dipsia,
+		/datum/ego_datum/armor/dipsia,
 	)
 	//gift_type =  /datum/ego_gifts/departure
 	abnormality_origin = ABNORMALITY_ORIGIN_BRANCH12
@@ -150,12 +151,11 @@
 		say("My job here is done.")
 		death()
 
-/mob/living/simple_animal/hostile/abnormality/branch12/deadman/patrol_select()
+/mob/living/simple_animal/hostile/abnormality/branch12/deadman/SelectPatrolLocation()
 	var/patrol_turf = get_turf(marked_man)
 
 	var/turf/target_turf = get_closest_atom(/turf/open, patrol_turf, src)
 
 	if(istype(target_turf))
-		patrol_path = get_path_to(src, target_turf, TYPE_PROC_REF(/turf, Distance_cardinal), 0, 200)
-		return
+		return target_turf
 	return ..()

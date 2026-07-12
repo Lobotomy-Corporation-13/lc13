@@ -106,7 +106,7 @@
 	GLOB.ooc_allowed = FALSE
 	CONFIG_SET(flag/norespawn, 1)
 	world.update_status()
-	SSweather.run_weather(/datum/weather/bloody_water)
+	SSweather.run_weather(/datum/weather/bloody_water/b12)
 	for(var/mob/living/carbon/human/L in GLOB.player_list)
 		flash_color(L, flash_color = COLOR_RED, flash_time = 150)
 		L.adjust_attribute_buff(JUSTICE_ATTRIBUTE, 30)
@@ -142,7 +142,7 @@
 	SSlobotomy_corp.qliphoth_meter = SSlobotomy_corp.qliphoth_max
 	return TRUE
 
-/datum/weather/bloody_water
+/datum/weather/bloody_water/b12
 	name = "bloodwater"
 	desc = "A visual water weather."
 

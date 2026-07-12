@@ -20,7 +20,7 @@
 	Seeing blood in your cell makes you even hungrier. Eating humanoid corpses can sate you for longer, but it won't last. \
 	If left starving, you'll breach, growing bigger with each corpse consumed, but you'll need even more food than usual. Only overwhelming force will calm you down once you're in this state."
 	max_counter = 3
-	kickstart_timer = 10 MINUTES //More generous timer due to it being a handful once it starts going off.
+	kickstart_timer = 20 MINUTES //More generous timer due to it being a handful once it starts going off.
 	//Gets hungry REALLY fast, but will eat nearly anything edible, even if it doesn't give a lot of hunger.
 	hunger_cooldown_time =  20 SECONDS
 	hunger_bar = 80
@@ -35,7 +35,7 @@
 	rep_min_damage = 30
 	insight_cooldown_time = 5 MINUTES
 	hated_objects_list = list(/obj/effect/decal/cleanable/blood) //It's not that mountain hates it, but it makes it  thirst for blood even more if it lingers around.
-	hated_objects_value = 0.5
+	hated_objects_value = 0.1
 	ego_desire_gained = 2
 	ego_list = list(
 		/datum/ego_datum/weapon/smile,
@@ -67,6 +67,7 @@
 	. = ..()
 	icon_living = "mosb_breach"
 	icon_state = icon_living
+	new /mob/living/carbon/human/species/monkey(get_turf(src))
 
 //We don't really swap phases when mountain dies like the original, instead we make it change phases depending on its HP after updating health.
 /mob/living/simple_animal/hostile/limbus_abno/mountain/updatehealth()
@@ -176,8 +177,9 @@
 			body_count++
 		else
 			satiated = TRUE
-			addtimer(CALLBACK(src, PROC_REF(RegularHunger)), 10 MINUTES)
-			hunger_cooldown_time =  1 MINUTES //Will now lose a full hunger bar in 10 minutes instead of 2.5
+			addtimer(CALLBACK(src, PROC_REF(RegularHunger)), 20 MINUTES)
+			hunger_cooldown_time =  1.5 MINUTES //Will now lose a full hunger bar in 15 minutes instead of 2.5
+		AdjustHunger(100)
 	else
 		AdjustHunger(50)
 		AdjustDesire(20)

@@ -1,24 +1,453 @@
 //MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
-"a" = (
-/turf/closed/indestructible/rock,
-/area/space)
-"l" = (
+"br" = (
+/obj/effect/turf_decal/siding{
+	color = "#440000";
+	dir = 6
+	},
+/turf/open/floor/carpet/red,
+/area/test_range_arena/ouroboros)
+"bY" = (
+/obj/effect/turf_decal/siding{
+	color = "#440000";
+	dir = 5
+	},
+/turf/open/floor/plasteel,
+/area/test_range_arena/ouroboros)
+"cf" = (
+/obj/effect/decal/cleanable/blood/old,
+/turf/open/floor/plating/asteroid/basalt/wasteland{
+	color = "#545454";
+	slowdown = 0
+	},
+/area/test_range_arena/battlefield)
+"ci" = (
+/turf/closed/indestructible/reinforced,
+/area/test_range_arena/ouroboros)
+"dn" = (
+/obj/effect/turf_decal/siding/white/corner{
+	color = "#440000";
+	dir = 8
+	},
+/turf/open/floor/plasteel,
+/area/test_range_arena/ouroboros)
+"dr" = (
 /turf/open/floor/facility,
-/area/test_range)
-"m" = (
-/turf/open/floor/facility/dark,
-/area/test_range)
-"p" = (
+/area/test_range_arena/classic)
+"ec" = (
+/obj/structure/bed/pod,
+/obj/item/bedsheet/black,
+/turf/open/floor/pod,
+/area/test_range_arena/battlefield)
+"ed" = (
+/obj/structure/chair/plastic{
+	dir = 8
+	},
+/obj/structure/tubes,
+/turf/open/floor/pod,
+/area/test_range_arena/battlefield)
+"ek" = (
+/obj/effect/turf_decal/siding/yellow,
+/obj/structure/sign/departments/command{
+	pixel_y = -32
+	},
+/turf/open/floor/plasteel,
+/area/test_range_arena/ouroboros)
+"eN" = (
+/obj/effect/turf_decal/siding/white/corner{
+	color = "#440000"
+	},
+/turf/open/floor/plasteel,
+/area/test_range_arena/ouroboros)
+"eT" = (
+/turf/closed/indestructible/rock,
+/area/test_range_arena/ouroboros)
+"fZ" = (
+/obj/effect/decal/cleanable/blood/tracks{
+	dir = 5;
+	color = "#555555"
+	},
+/turf/open/floor/plating/asteroid/basalt/wasteland{
+	color = "#AAAAAA";
+	slowdown = 0
+	},
+/area/test_range_arena/battlefield)
+"gx" = (
+/obj/effect/turf_decal/siding/white/corner{
+	color = "#440000";
+	dir = 1
+	},
+/turf/open/floor/carpet/red,
+/area/test_range_arena/ouroboros)
+"gK" = (
+/obj/machinery/stasis/survival_pod,
+/turf/open/floor/pod,
+/area/test_range_arena/battlefield)
+"hk" = (
+/obj/effect/light_emitter{
+	light_power = 4;
+	light_range = 25;
+	set_cap = 7;
+	set_luminosity = 24;
+	light_color = "#FF8899"
+	},
+/turf/open/floor/plating/asteroid/basalt/wasteland{
+	color = "#8888AA";
+	slowdown = 0
+	},
+/area/test_range_arena/battlefield)
+"hn" = (
+/obj/effect/radiojammer{
+	range = 15
+	},
+/turf/closed/indestructible/rock,
+/area/test_range_arena/ouroboros)
+"hp" = (
+/obj/effect/decal/cleanable/blood/old,
+/turf/open/floor/plating/asteroid/basalt/wasteland{
+	color = "#6666CC";
+	slowdown = 0
+	},
+/area/test_range_arena/battlefield)
+"hw" = (
+/obj/structure/sign/departments/discipline{
+	pixel_x = 32
+	},
+/obj/effect/turf_decal/siding{
+	color = "#440000";
+	dir = 6
+	},
+/turf/open/floor/plasteel,
+/area/test_range_arena/ouroboros)
+"hy" = (
+/obj/effect/turf_decal/siding{
+	color = "#440000";
+	dir = 9
+	},
+/turf/open/floor/plasteel,
+/area/test_range_arena/ouroboros)
+"hL" = (
+/obj/effect/turf_decal/siding/white/corner{
+	color = "#440000";
+	dir = 8
+	},
+/turf/open/floor/carpet/red,
+/area/test_range_arena/ouroboros)
+"hP" = (
+/obj/effect/decal/cleanable/blood/tracks{
+	dir = 10;
+	color = "#555555"
+	},
+/turf/open/floor/plating/asteroid/basalt/wasteland{
+	color = "#AAAAAA";
+	slowdown = 0
+	},
+/area/test_range_arena/battlefield)
+"id" = (
 /obj/machinery/quantumpad/warp{
 	teleport_cooldown = 40;
-	map_pad_id = "test_range_arena";
+	map_pad_id = "test_range_arena_Ouroboros";
 	map_pad_link_id = "test_range_lobby";
 	teleport_speed = 20;
 	resistance_flags = 64
 	},
 /turf/open/floor/facility,
-/area/test_range)
-"s" = (
+/area/test_range_arena/ouroboros)
+"ir" = (
+/turf/open/floor/plating/asteroid/basalt/wasteland{
+	color = "#666688";
+	slowdown = 0
+	},
+/area/test_range_arena/battlefield)
+"iE" = (
+/obj/machinery/regenerator/safety,
+/turf/open/floor/facility,
+/area/test_range_arena/classic)
+"iM" = (
+/turf/open/floor/plating/asteroid/basalt/wasteland{
+	color = "#AAAAAA";
+	slowdown = 0
+	},
+/area/test_range_arena/battlefield)
+"iS" = (
+/obj/effect/turf_decal/siding{
+	color = "#440000";
+	dir = 1
+	},
+/turf/open/floor/plasteel,
+/area/test_range_arena/ouroboros)
+"jm" = (
+/obj/effect/turf_decal/siding/white/corner{
+	color = "#440000"
+	},
+/turf/open/floor/carpet/red,
+/area/test_range_arena/ouroboros)
+"jO" = (
+/turf/open/floor/plating/dirt/dark{
+	color = "#555555"
+	},
+/area/test_range_arena/battlefield)
+"kv" = (
+/obj/structure/mecha_wreckage/durand{
+	name = "\improper Rhino wreckage";
+	anchored = 1;
+	density = 0
+	},
+/turf/open/floor/plating/asteroid/basalt{
+	color = "#333333"
+	},
+/area/test_range_arena/battlefield)
+"kC" = (
+/obj/effect/turf_decal/siding/yellow{
+	dir = 8
+	},
+/turf/open/floor/plasteel,
+/area/test_range_arena/ouroboros)
+"lh" = (
+/obj/machinery/door/airlock,
+/turf/open/floor/facility,
+/area/test_range_arena/classic)
+"ly" = (
+/obj/machinery/button/indestructible/test_range_cleanup,
+/turf/closed/indestructible/reinforced,
+/area/test_range_arena/ouroboros)
+"me" = (
+/obj/effect/decal/cleanable/ash/large,
+/turf/open/floor/plating/asteroid/basalt{
+	color = "#333333"
+	},
+/area/test_range_arena/battlefield)
+"mq" = (
+/obj/item/head_trophy/steel_head{
+	pixel_x = 1;
+	pixel_y = -2;
+	color = "#BBBBBB";
+	desc = "A head of an old manager, now laid to rest. It's rotting.";
+	name = "rotting g-corp manager head"
+	},
+/obj/effect/decal/cleanable/blood/gibs/old{
+	color = "#777777"
+	},
+/turf/open/floor/plating/asteroid/basalt/wasteland{
+	color = "#666666";
+	slowdown = 0
+	},
+/area/test_range_arena/battlefield)
+"mJ" = (
+/turf/open/floor/plating/asteroid/basalt/wasteland{
+	color = "#6666CC";
+	slowdown = 0
+	},
+/area/test_range_arena/battlefield)
+"nD" = (
+/obj/effect/decal/cleanable/blood/tracks{
+	dir = 8;
+	color = "#555555"
+	},
+/turf/open/floor/plating/asteroid/basalt/wasteland{
+	color = "#666666";
+	slowdown = 0
+	},
+/area/test_range_arena/battlefield)
+"nQ" = (
+/obj/machinery/quantumpad/warp{
+	teleport_cooldown = 40;
+	map_pad_id = "test_range_arena_Battlefield";
+	map_pad_link_id = "test_range_lobby";
+	teleport_speed = 20;
+	resistance_flags = 64
+	},
+/turf/open/floor/pod,
+/area/test_range_arena/battlefield)
+"nS" = (
+/obj/machinery/door/airlock/survival_pod,
+/turf/open/floor/pod,
+/area/test_range_arena/battlefield)
+"oD" = (
+/obj/effect/turf_decal/siding/yellow/corner{
+	dir = 8
+	},
+/obj/effect/turf_decal/siding/yellow/corner,
+/turf/open/floor/facility,
+/area/test_range_arena/ouroboros)
+"pl" = (
+/obj/structure/flora/ausbushes/sparsegrass{
+	color = "#666666"
+	},
+/turf/open/floor/plating/dirt/dark{
+	color = "#555555"
+	},
+/area/test_range_arena/battlefield)
+"pI" = (
+/obj/structure/flora/ausbushes/sparsegrass{
+	color = "#666666"
+	},
+/turf/open/floor/plating/dirt/dark{
+	color = "#666666"
+	},
+/area/test_range_arena/battlefield)
+"pR" = (
+/obj/structure/sign/departments/discipline{
+	pixel_x = 32
+	},
+/obj/effect/turf_decal/siding{
+	color = "#440000";
+	dir = 5
+	},
+/turf/open/floor/plasteel,
+/area/test_range_arena/ouroboros)
+"qf" = (
+/obj/effect/turf_decal/siding/yellow,
+/turf/open/floor/plasteel,
+/area/test_range_arena/ouroboros)
+"rY" = (
+/obj/effect/turf_decal/siding/yellow/corner{
+	dir = 1
+	},
+/turf/open/floor/plasteel,
+/area/test_range_arena/ouroboros)
+"sA" = (
+/obj/effect/turf_decal/siding{
+	color = "#440000";
+	dir = 10
+	},
+/turf/open/floor/carpet/red,
+/area/test_range_arena/ouroboros)
+"sI" = (
+/obj/structure/firetree{
+	pixel_y = 0;
+	name = "scorched tree";
+	desc = "A burnt tree. It's a miracle it survived this fighting.";
+	density = 1
+	},
+/turf/open/floor/plating/asteroid/basalt/wasteland{
+	color = "#6666CC";
+	slowdown = 0
+	},
+/area/test_range_arena/battlefield)
+"tf" = (
+/obj/structure/table/reinforced,
+/turf/open/floor/facility/dark,
+/area/test_range_arena/ouroboros)
+"tQ" = (
+/obj/structure/sign/departments/discipline{
+	pixel_x = -32
+	},
+/obj/effect/turf_decal/siding{
+	color = "#440000";
+	dir = 9
+	},
+/turf/open/floor/plasteel,
+/area/test_range_arena/ouroboros)
+"tT" = (
+/turf/open/floor/plating/asteroid/basalt/wasteland{
+	color = "#666666";
+	slowdown = 0
+	},
+/area/test_range_arena/battlefield)
+"up" = (
+/obj/machinery/regenerator/safety,
+/turf/open/floor/pod,
+/area/test_range_arena/battlefield)
+"vp" = (
+/obj/machinery/door/airlock/highsecurity,
+/obj/effect/turf_decal/siding/yellow{
+	dir = 8
+	},
+/obj/effect/turf_decal/siding/yellow{
+	dir = 4
+	},
+/turf/open/floor/facility,
+/area/test_range_arena/ouroboros)
+"vy" = (
+/obj/effect/decal/cleanable/blood/old,
+/turf/open/floor/plating/asteroid/basalt/wasteland{
+	color = "#AAAAAA";
+	slowdown = 0
+	},
+/area/test_range_arena/battlefield)
+"vC" = (
+/turf/open/floor/plating/asteroid/basalt/wasteland{
+	color = "#444444";
+	slowdown = 0
+	},
+/area/test_range_arena/battlefield)
+"wa" = (
+/obj/structure/tubes{
+	icon = 'icons/obj/lavaland/pod_computer.dmi';
+	icon_state = "pod_computer";
+	pixel_y = -32
+	},
+/turf/open/floor/pod,
+/area/test_range_arena/battlefield)
+"wc" = (
+/obj/effect/turf_decal/siding{
+	color = "#440000";
+	dir = 8
+	},
+/turf/open/floor/carpet/red,
+/area/test_range_arena/ouroboros)
+"xi" = (
+/obj/effect/decal/cleanable/blood/old{
+	color = "#777777"
+	},
+/turf/open/floor/plating/asteroid/basalt/wasteland{
+	color = "#444444";
+	slowdown = 0
+	},
+/area/test_range_arena/battlefield)
+"xX" = (
+/obj/effect/turf_decal/siding{
+	color = "#440000";
+	dir = 4
+	},
+/turf/open/floor/carpet/red,
+/area/test_range_arena/ouroboros)
+"xY" = (
+/obj/effect/turf_decal/siding/white/corner{
+	color = "#440000";
+	dir = 4
+	},
+/turf/open/floor/carpet/red,
+/area/test_range_arena/ouroboros)
+"yg" = (
+/obj/effect/decal/cleanable/blood/old,
+/turf/open/floor/plating/asteroid/basalt/wasteland{
+	color = "#666688";
+	slowdown = 0
+	},
+/area/test_range_arena/battlefield)
+"yn" = (
+/obj/machinery/regenerator/safety,
+/turf/open/floor/facility,
+/area/test_range_arena/ouroboros)
+"yD" = (
+/obj/effect/turf_decal/siding/yellow{
+	dir = 6
+	},
+/turf/open/floor/plasteel,
+/area/test_range_arena/ouroboros)
+"yR" = (
+/turf/open/floor/plating/dirt/dark{
+	color = "#666666"
+	},
+/area/test_range_arena/battlefield)
+"zb" = (
+/turf/closed/wall/mineral/titanium/survival/pod,
+/area/test_range_arena/battlefield)
+"ze" = (
+/obj/structure/flora/rock{
+	color = "#888888"
+	},
+/turf/open/floor/plating/dirt/dark{
+	color = "#555555"
+	},
+/area/test_range_arena/battlefield)
+"zW" = (
+/turf/open/floor/plating/asteroid/basalt{
+	color = "#333333"
+	},
+/area/test_range_arena/battlefield)
+"Ae" = (
 /obj/effect/light_emitter{
 	light_power = 4;
 	light_range = 25;
@@ -26,699 +455,4202 @@
 	set_luminosity = 24
 	},
 /turf/open/floor/facility,
-/area/test_range)
-"t" = (
-/mob/living/simple_animal/bot/cleanbot,
+/area/test_range_arena/classic)
+"Bh" = (
+/obj/structure/sign/departments/discipline{
+	pixel_x = -32
+	},
+/obj/effect/turf_decal/siding{
+	color = "#440000";
+	dir = 10
+	},
+/turf/open/floor/plasteel,
+/area/test_range_arena/ouroboros)
+"Bw" = (
+/obj/effect/light_emitter{
+	light_power = 4;
+	light_range = 25;
+	set_cap = 3;
+	set_luminosity = 24
+	},
+/turf/open/floor/facility/dark,
+/area/test_range_arena/ouroboros)
+"CF" = (
+/obj/machinery/door/airlock/highsecurity,
 /turf/open/floor/facility,
-/area/test_range)
-"z" = (
-/obj/machinery/door/airlock,
+/area/test_range_arena/ouroboros)
+"CH" = (
+/obj/item/stack/sheet/mineral/sandbags/fifty{
+	color = "#656565"
+	},
+/turf/open/floor/plating/asteroid/basalt/wasteland{
+	color = "#444444";
+	slowdown = 0
+	},
+/area/test_range_arena/battlefield)
+"CI" = (
+/obj/structure/tubes{
+	icon = 'icons/obj/lavaland/donkvendor.dmi';
+	icon_state = "donkvendor"
+	},
+/turf/open/floor/pod,
+/area/test_range_arena/battlefield)
+"CP" = (
+/obj/structure/mecha_wreckage/durand{
+	name = "\improper Rhino wreckage";
+	density = 0;
+	anchored = 1
+	},
+/turf/open/floor/plating/asteroid/basalt{
+	color = "#333333"
+	},
+/area/test_range_arena/battlefield)
+"CV" = (
+/obj/structure/firetree{
+	pixel_y = 0;
+	name = "scorched tree";
+	desc = "A burnt tree. It's a miracle it survived this fighting.";
+	density = 1
+	},
+/turf/open/floor/plating/dirt/dark{
+	color = "#666666"
+	},
+/area/test_range_arena/battlefield)
+"DM" = (
+/obj/effect/turf_decal/siding{
+	color = "#440000"
+	},
+/turf/open/floor/facility/dark,
+/area/test_range_arena/ouroboros)
+"DW" = (
 /turf/open/floor/facility,
-/area/test_range)
-"J" = (
-/turf/closed/indestructible/reinforced,
-/area/test_range)
-"X" = (
+/area/test_range_arena/ouroboros)
+"Ed" = (
+/turf/closed/indestructible/rock,
+/area/space)
+"Eu" = (
+/obj/structure/barricade/sandbags/grey,
+/turf/open/floor/plating/asteroid/basalt/wasteland{
+	color = "#8888AA";
+	slowdown = 0
+	},
+/area/test_range_arena/battlefield)
+"EJ" = (
+/obj/effect/light_emitter{
+	light_power = 4;
+	light_range = 25;
+	set_cap = 3;
+	set_luminosity = 24
+	},
+/turf/open/floor/facility,
+/area/test_range_arena/ouroboros)
+"ET" = (
+/obj/effect/turf_decal/siding/yellow{
+	dir = 1
+	},
+/turf/open/floor/plasteel,
+/area/test_range_arena/ouroboros)
+"EY" = (
+/turf/open/floor/plasteel/dark,
+/area/test_range_arena/ouroboros)
+"Fi" = (
+/obj/effect/radiojammer{
+	range = 15
+	},
+/turf/open/floor/plating/asteroid/basalt/wasteland{
+	color = "#8888AA";
+	slowdown = 0
+	},
+/area/test_range_arena/battlefield)
+"FP" = (
+/obj/effect/light_emitter{
+	light_power = 4;
+	light_range = 25;
+	set_cap = 7;
+	set_luminosity = 24;
+	light_color = "#FF8899"
+	},
+/turf/open/floor/plating/dirt/dark{
+	color = "#555555"
+	},
+/area/test_range_arena/battlefield)
+"Gz" = (
+/obj/effect/turf_decal/siding{
+	color = "#440000";
+	dir = 1
+	},
+/obj/structure/sign/ordealmonitor{
+	pixel_y = 32
+	},
+/turf/open/floor/plasteel,
+/area/test_range_arena/ouroboros)
+"GC" = (
 /obj/effect/radiojammer,
 /turf/closed/indestructible/rock,
 /area/space)
-"Z" = (
-/obj/machinery/regenerator/safety,
+"Hx" = (
+/obj/effect/turf_decal/siding{
+	color = "#440000"
+	},
+/turf/open/floor/carpet/red,
+/area/test_range_arena/ouroboros)
+"Hz" = (
+/obj/effect/landmark/test_range_arena{
+	arena_name = "Classic"
+	},
+/turf/open/floor/facility/dark,
+/area/test_range_arena/classic)
+"HR" = (
+/obj/effect/decal/cleanable/blood/gibs/old{
+	color = "#444444"
+	},
+/obj/item/head_trophy/steel_head{
+	pixel_x = 1;
+	pixel_y = -2;
+	color = "#BBBBBB";
+	desc = "A head of an old manager, now laid to rest. It's rotting.";
+	name = "rotting g-corp manager head"
+	},
+/turf/open/floor/plating/asteroid/basalt/wasteland{
+	color = "#444444";
+	slowdown = 0
+	},
+/area/test_range_arena/battlefield)
+"Ii" = (
+/obj/item/banner/medical/mundane,
+/turf/open/floor/plating/asteroid/basalt/wasteland{
+	color = "#AAAAAA";
+	slowdown = 0
+	},
+/area/test_range_arena/battlefield)
+"Il" = (
+/obj/effect/landmark/test_range_arena{
+	arena_name = "Ouroboros";
+	camera_offset = list("x" = 0, "y" = -12)
+	},
+/turf/open/floor/facility/dark,
+/area/test_range_arena/ouroboros)
+"Ir" = (
+/turf/open/floor/plating/asteroid/basalt/wasteland{
+	color = "#777799";
+	slowdown = 0
+	},
+/area/test_range_arena/battlefield)
+"ID" = (
+/obj/effect/landmark/test_range_arena{
+	arena_name = "Battlefield";
+	camera_offset = list("x" = -7, "y" = 0)
+	},
+/turf/open/floor/plating/asteroid/basalt/wasteland{
+	color = "#6666CC";
+	slowdown = 0
+	},
+/area/test_range_arena/battlefield)
+"IY" = (
+/obj/effect/decal/cleanable/blood/tracks{
+	dir = 8;
+	color = "#555555"
+	},
+/turf/open/floor/plating/asteroid/basalt/wasteland{
+	color = "#AAAAAA";
+	slowdown = 0
+	},
+/area/test_range_arena/battlefield)
+"Ji" = (
+/obj/effect/decal/cleanable/blood/tracks{
+	dir = 1;
+	color = "#555555"
+	},
+/turf/open/floor/plating/asteroid/basalt/wasteland{
+	color = "#AAAAAA";
+	slowdown = 0
+	},
+/area/test_range_arena/battlefield)
+"Kq" = (
+/obj/effect/decal/cleanable/blood/old,
+/turf/open/floor/plating/asteroid/basalt/wasteland{
+	color = "#666666";
+	slowdown = 0
+	},
+/area/test_range_arena/battlefield)
+"LF" = (
+/turf/open/floor/pod,
+/area/test_range_arena/battlefield)
+"LI" = (
+/obj/effect/decal/cleanable/blood/gibs/old{
+	color = "#777777"
+	},
+/turf/open/floor/plating/asteroid/basalt/wasteland{
+	color = "#666666";
+	slowdown = 0
+	},
+/area/test_range_arena/battlefield)
+"LQ" = (
+/obj/effect/decal/cleanable/ash/large,
+/turf/open/floor/plating/asteroid/basalt/wasteland{
+	color = "#222222";
+	slowdown = 0
+	},
+/area/test_range_arena/battlefield)
+"LS" = (
+/obj/machinery/button/indestructible/test_range_cleanup,
+/turf/closed/indestructible/reinforced,
+/area/test_range_arena/battlefield)
+"Mf" = (
+/turf/open/floor/plating/asteroid/basalt/wasteland{
+	color = "#545454";
+	slowdown = 0
+	},
+/area/test_range_arena/battlefield)
+"ME" = (
+/obj/effect/turf_decal/siding/yellow{
+	dir = 4
+	},
+/turf/open/floor/plasteel,
+/area/test_range_arena/ouroboros)
+"MR" = (
+/obj/effect/turf_decal/siding/white/corner{
+	color = "#440000";
+	dir = 1
+	},
+/obj/effect/turf_decal/siding/white/corner{
+	color = "#440000";
+	dir = 8
+	},
 /turf/open/floor/facility,
-/area/test_range)
+/area/test_range_arena/ouroboros)
+"NG" = (
+/turf/closed/indestructible/reinforced,
+/area/test_range_arena/battlefield)
+"NP" = (
+/obj/effect/turf_decal/siding{
+	color = "#440000";
+	dir = 4
+	},
+/turf/open/floor/plasteel,
+/area/test_range_arena/ouroboros)
+"OF" = (
+/obj/structure/tubes{
+	icon_state = "fans"
+	},
+/turf/open/floor/pod,
+/area/test_range_arena/battlefield)
+"OG" = (
+/turf/open/floor/plating/asteroid/basalt/wasteland{
+	color = "#222222";
+	slowdown = 0
+	},
+/area/test_range_arena/battlefield)
+"OJ" = (
+/obj/effect/turf_decal/siding/yellow{
+	dir = 10
+	},
+/turf/open/floor/plasteel,
+/area/test_range_arena/ouroboros)
+"OM" = (
+/obj/effect/turf_decal/siding{
+	color = "#440000";
+	dir = 1
+	},
+/turf/open/floor/carpet/red,
+/area/test_range_arena/ouroboros)
+"Pn" = (
+/obj/machinery/door/airlock/highsecurity,
+/obj/effect/turf_decal/siding{
+	color = "#440000";
+	dir = 1
+	},
+/obj/effect/turf_decal/siding{
+	color = "#440000"
+	},
+/turf/open/floor/facility,
+/area/test_range_arena/ouroboros)
+"Px" = (
+/obj/machinery/button/indestructible/test_range_cleanup,
+/turf/closed/indestructible/reinforced,
+/area/test_range_arena/classic)
+"Qk" = (
+/obj/machinery/quantumpad/warp{
+	teleport_cooldown = 40;
+	map_pad_id = "test_range_arena_Classic";
+	map_pad_link_id = "test_range_lobby";
+	teleport_speed = 20;
+	resistance_flags = 64
+	},
+/turf/open/floor/facility,
+/area/test_range_arena/classic)
+"Qs" = (
+/obj/effect/decal/cleanable/blood/tracks{
+	dir = 8;
+	color = "#555555"
+	},
+/turf/open/floor/plating/asteroid/basalt/wasteland{
+	color = "#888888";
+	slowdown = 0
+	},
+/area/test_range_arena/battlefield)
+"RG" = (
+/obj/structure/table/reinforced,
+/obj/effect/turf_decal/tile/red{
+	dir = 1
+	},
+/obj/effect/turf_decal/tile/red{
+	dir = 4
+	},
+/obj/effect/turf_decal/tile/red{
+	dir = 8
+	},
+/obj/effect/turf_decal/tile/red,
+/turf/open/floor/plasteel/dark,
+/area/test_range_arena/ouroboros)
+"Te" = (
+/turf/closed/indestructible/reinforced,
+/area/test_range_arena/classic)
+"Tf" = (
+/obj/effect/turf_decal/siding{
+	color = "#440000"
+	},
+/turf/open/floor/plasteel,
+/area/test_range_arena/ouroboros)
+"TR" = (
+/turf/open/floor/plating/asteroid/basalt/wasteland{
+	color = "#888888";
+	slowdown = 0
+	},
+/area/test_range_arena/battlefield)
+"TS" = (
+/obj/effect/turf_decal/siding{
+	color = "#440000";
+	dir = 8
+	},
+/turf/open/floor/plasteel,
+/area/test_range_arena/ouroboros)
+"UP" = (
+/obj/effect/decal/cleanable/blood/gibs/old{
+	color = "#444444"
+	},
+/turf/open/floor/plating/asteroid/basalt/wasteland{
+	color = "#444444";
+	slowdown = 0
+	},
+/area/test_range_arena/battlefield)
+"Vn" = (
+/obj/effect/decal/cleanable/blood/old,
+/turf/open/floor/plating/asteroid/basalt/wasteland{
+	color = "#8888AA";
+	slowdown = 0
+	},
+/area/test_range_arena/battlefield)
+"Vp" = (
+/obj/structure/flora/rock{
+	color = "#888888"
+	},
+/turf/open/floor/plating/dirt/dark{
+	color = "#666666"
+	},
+/area/test_range_arena/battlefield)
+"Vw" = (
+/obj/structure/sign/departments/welfare,
+/turf/closed/wall/mineral/titanium/survival/pod,
+/area/test_range_arena/battlefield)
+"VS" = (
+/obj/effect/light_emitter{
+	light_power = 4;
+	light_range = 25;
+	set_cap = 7;
+	set_luminosity = 24;
+	light_color = "#FF8899"
+	},
+/turf/open/floor/plating/asteroid/basalt/wasteland{
+	color = "#888888";
+	slowdown = 0
+	},
+/area/test_range_arena/battlefield)
+"Wh" = (
+/obj/structure/barricade/sandbags/grey,
+/turf/open/floor/plating/asteroid/basalt/wasteland{
+	color = "#666666";
+	slowdown = 0
+	},
+/area/test_range_arena/battlefield)
+"WH" = (
+/obj/effect/turf_decal/siding{
+	color = "#440000"
+	},
+/obj/structure/sign/ordealmonitor{
+	pixel_y = 32
+	},
+/turf/open/floor/carpet/red,
+/area/test_range_arena/ouroboros)
+"XE" = (
+/obj/structure/closet/body_bag,
+/turf/open/floor/plating/asteroid/basalt/wasteland{
+	color = "#AAAAAA";
+	slowdown = 0
+	},
+/area/test_range_arena/battlefield)
+"Yq" = (
+/obj/effect/turf_decal/siding/white/corner{
+	color = "#440000"
+	},
+/obj/effect/turf_decal/siding/white/corner{
+	color = "#440000";
+	dir = 4
+	},
+/turf/open/floor/facility,
+/area/test_range_arena/ouroboros)
+"Yz" = (
+/obj/effect/light_emitter{
+	light_power = 4;
+	light_range = 25;
+	set_cap = 7;
+	set_luminosity = 24;
+	light_color = "#FF8899"
+	},
+/turf/open/floor/plating/asteroid/basalt/wasteland{
+	color = "#8888AA"
+	},
+/area/test_range_arena/battlefield)
+"YS" = (
+/turf/open/floor/carpet/red,
+/area/test_range_arena/ouroboros)
+"Zs" = (
+/obj/effect/turf_decal/siding/yellow/corner{
+	dir = 4
+	},
+/turf/open/floor/plasteel,
+/area/test_range_arena/ouroboros)
+"ZH" = (
+/turf/open/floor/plating/asteroid/basalt/wasteland{
+	color = "#8888AA";
+	slowdown = 0
+	},
+/area/test_range_arena/battlefield)
+"ZQ" = (
+/obj/effect/turf_decal/siding/yellow,
+/obj/structure/sign/ordealmonitor{
+	pixel_y = -32
+	},
+/turf/open/floor/plasteel,
+/area/test_range_arena/ouroboros)
 
 (1,1,1) = {"
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
 "}
 (2,1,1) = {"
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
 "}
 (3,1,1) = {"
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
 "}
 (4,1,1) = {"
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
 "}
 (5,1,1) = {"
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
+Ed
+Ed
+Ed
+Ed
+Ed
+NG
+NG
+NG
+NG
+NG
+NG
+NG
+NG
+NG
+NG
+NG
+NG
+NG
+NG
+NG
+NG
+NG
+NG
+NG
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
 "}
 (6,1,1) = {"
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-X
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
+Ed
+Ed
+Ed
+Ed
+Ed
+NG
+zb
+zb
+zb
+zb
+zb
+XE
+XE
+XE
+XE
+VS
+tT
+tT
+tT
+tT
+tT
+tT
+tT
+NG
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+GC
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
 "}
 (7,1,1) = {"
-a
-a
-a
-a
-a
-J
-J
-J
-J
-J
-J
-J
-J
-J
-J
-J
-J
-J
-a
-a
-a
-a
-a
-a
-a
+Ed
+Ed
+Ed
+Ed
+Ed
+NG
+zb
+OF
+gK
+up
+Vw
+iM
+iM
+iM
+iM
+TR
+tT
+tT
+Kq
+tT
+tT
+Kq
+tT
+NG
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Te
+Te
+Te
+Te
+Te
+Te
+Te
+Te
+Te
+Te
+Te
+Te
+Te
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
 "}
 (8,1,1) = {"
-a
-a
-a
-a
-a
-J
-l
-l
-l
-l
-l
-l
-l
-l
-l
-l
-l
-J
-a
-a
-a
-a
-a
-a
-a
+Ed
+Ed
+Ed
+Ed
+Ed
+NG
+zb
+CI
+nQ
+LF
+nS
+vy
+Ji
+hP
+iM
+TR
+tT
+tT
+tT
+tT
+tT
+Kq
+tT
+NG
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Te
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+Te
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
 "}
 (9,1,1) = {"
-a
-a
-a
-a
-a
-J
-l
-l
-l
-l
-l
-l
-l
-l
-l
-l
-l
-J
-a
-a
-a
-a
-a
-a
-a
+Ed
+Ed
+Ed
+Ed
+Ed
+NG
+zb
+wa
+ec
+ed
+Vw
+Ii
+iM
+fZ
+hP
+TR
+tT
+LI
+tT
+tT
+tT
+tT
+tT
+NG
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Te
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+Te
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
 "}
 (10,1,1) = {"
-a
-a
-a
-a
-a
-J
-l
-l
-l
-l
-l
-t
-l
-l
-l
-l
-l
-J
-a
-a
-a
-a
-a
-a
-a
+Ed
+Ed
+Ed
+Ed
+Ed
+NG
+zb
+zb
+zb
+zb
+zb
+iM
+iM
+iM
+IY
+TR
+tT
+tT
+tT
+tT
+mq
+tT
+tT
+NG
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Te
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+Te
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
 "}
 (11,1,1) = {"
-a
-a
-a
-a
-a
-J
-l
-l
-l
-l
-l
-l
-l
-l
-l
-l
-l
-J
-J
-J
-J
-J
-J
-a
-a
+Ed
+Ed
+Ed
+Ed
+Ed
+NG
+TR
+TR
+TR
+TR
+TR
+TR
+TR
+TR
+Qs
+TR
+tT
+tT
+Kq
+tT
+tT
+tT
+tT
+NG
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Te
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+Te
+Te
+Te
+Te
+Te
+Te
+Ed
+Ed
 "}
 (12,1,1) = {"
-a
-a
-a
-a
-a
-J
-l
-l
-l
-l
-l
-l
-l
-l
-l
-l
-l
-J
-l
-l
-l
-l
-J
-a
-a
+Ed
+Ed
+Ed
+Ed
+Ed
+NG
+tT
+tT
+tT
+tT
+tT
+tT
+tT
+tT
+nD
+tT
+tT
+tT
+tT
+tT
+tT
+tT
+tT
+NG
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Te
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+Te
+dr
+dr
+dr
+dr
+Te
+Ed
+Ed
 "}
 (13,1,1) = {"
-a
-a
-a
-a
-a
-J
-l
-l
-s
-l
-l
-m
-l
-l
-s
-l
-l
-z
-l
-s
-p
-l
-J
-a
-a
+Ed
+Ed
+Ed
+Ed
+Ed
+NG
+CH
+xi
+vC
+HR
+vC
+vC
+xi
+vC
+xi
+vC
+vC
+vC
+vC
+vC
+vC
+xi
+vC
+NG
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Px
+dr
+dr
+Ae
+dr
+dr
+Hz
+dr
+dr
+Ae
+dr
+dr
+lh
+dr
+Ae
+Qk
+dr
+Te
+Ed
+Ed
 "}
 (14,1,1) = {"
-a
-a
-a
-a
-a
-J
-l
-l
-l
-l
-l
-l
-l
-l
-l
-l
-l
-J
-l
-l
-l
-Z
-J
-a
-a
+Ed
+Ed
+Ed
+Ed
+Ed
+NG
+CH
+vC
+vC
+vC
+vC
+vC
+vC
+vC
+vC
+vC
+xi
+vC
+UP
+vC
+vC
+vC
+vC
+NG
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Te
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+Te
+dr
+dr
+dr
+iE
+Te
+Ed
+Ed
 "}
 (15,1,1) = {"
-a
-a
-a
-a
-a
-J
-l
-l
-l
-l
-l
-l
-l
-l
-l
-l
-l
-J
-J
-J
-J
-J
-J
-a
-a
+Ed
+Ed
+Ed
+Ed
+Ed
+NG
+Wh
+tT
+tT
+tT
+tT
+Wh
+Wh
+Wh
+tT
+tT
+tT
+tT
+tT
+Wh
+Wh
+tT
+tT
+NG
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Te
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+Te
+Te
+Te
+Te
+Te
+Te
+Ed
+Ed
 "}
 (16,1,1) = {"
-a
-a
-a
-a
-a
-J
-l
-l
-l
-l
-l
-t
-l
-l
-l
-l
-l
-J
-a
-a
-a
-a
-a
-a
-a
+Ed
+Ed
+Ed
+Ed
+Ed
+NG
+Wh
+Wh
+tT
+tT
+Wh
+Wh
+Wh
+Wh
+tT
+tT
+tT
+tT
+Wh
+Wh
+Wh
+tT
+tT
+NG
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Te
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+Te
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
 "}
 (17,1,1) = {"
-a
-a
-a
-a
-a
-J
-l
-l
-l
-l
-l
-l
-l
-l
-l
-l
-l
-J
-a
-a
-a
-a
-a
-a
-a
+Ed
+Ed
+Ed
+Ed
+Ed
+LS
+hk
+Eu
+ZH
+Mf
+OG
+OG
+Mf
+ZH
+ZH
+ZH
+ZH
+ZH
+Ir
+Ir
+Wh
+Ir
+Yz
+NG
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Te
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+Te
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
 "}
 (18,1,1) = {"
-a
-a
-a
-a
-a
-J
-l
-l
-l
-l
-l
-l
-l
-l
-l
-l
-l
-J
-a
-a
-a
-a
-a
-a
-a
+Ed
+Ed
+Ed
+Ed
+Ed
+NG
+ZH
+Vn
+Mf
+OG
+zW
+zW
+LQ
+cf
+Fi
+ZH
+ZH
+Ir
+tT
+tT
+tT
+tT
+Ir
+NG
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Te
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+Te
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
 "}
 (19,1,1) = {"
-a
-a
-a
-a
-a
-J
-J
-J
-J
-J
-J
-J
-J
-J
-J
-J
-J
-J
-a
-a
-a
-a
-a
-a
-a
+Ed
+Ed
+Ed
+Ed
+Ed
+NG
+ZH
+Mf
+LQ
+zW
+CP
+zW
+OG
+Mf
+ZH
+ZH
+ZH
+Ir
+tT
+OG
+LQ
+Ir
+ZH
+NG
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Te
+Te
+Te
+Te
+Te
+Te
+Te
+Te
+Te
+Te
+Te
+Te
+Te
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
 "}
 (20,1,1) = {"
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
+Ed
+Ed
+Ed
+Ed
+Ed
+NG
+ZH
+Mf
+OG
+zW
+me
+OG
+Mf
+ZH
+ZH
+ZH
+ZH
+ZH
+OG
+OG
+zW
+OG
+ZH
+NG
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
 "}
 (21,1,1) = {"
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
+Ed
+Ed
+Ed
+Ed
+Ed
+NG
+ZH
+ZH
+Mf
+OG
+OG
+Mf
+ir
+ir
+ir
+yg
+ir
+ir
+LQ
+kv
+me
+OG
+ir
+NG
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
 "}
 (22,1,1) = {"
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
+Ed
+Ed
+Ed
+Ed
+Ed
+NG
+ZH
+ZH
+ZH
+Mf
+Mf
+ir
+ir
+ir
+ir
+ir
+mJ
+mJ
+OG
+OG
+OG
+mJ
+mJ
+NG
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
 "}
 (23,1,1) = {"
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
+Ed
+Ed
+Ed
+Ed
+Ed
+NG
+mJ
+sI
+mJ
+mJ
+mJ
+hp
+mJ
+mJ
+ID
+mJ
+mJ
+mJ
+mJ
+yR
+yR
+yR
+yR
+NG
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
 "}
 (24,1,1) = {"
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
+Ed
+Ed
+Ed
+Ed
+Ed
+NG
+mJ
+mJ
+mJ
+mJ
+mJ
+mJ
+mJ
+mJ
+mJ
+mJ
+mJ
+sI
+yR
+yR
+yR
+jO
+pl
+NG
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
 "}
 (25,1,1) = {"
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
+Ed
+Ed
+Ed
+Ed
+Ed
+NG
+yR
+yR
+yR
+Vp
+yR
+yR
+yR
+yR
+yR
+yR
+yR
+yR
+yR
+yR
+jO
+jO
+jO
+NG
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+"}
+(26,1,1) = {"
+Ed
+Ed
+Ed
+Ed
+Ed
+NG
+yR
+pI
+yR
+yR
+yR
+CV
+yR
+yR
+yR
+pI
+yR
+pI
+jO
+jO
+ze
+jO
+jO
+NG
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+"}
+(27,1,1) = {"
+Ed
+Ed
+Ed
+Ed
+Ed
+NG
+jO
+jO
+jO
+pl
+jO
+jO
+jO
+pl
+jO
+jO
+jO
+jO
+jO
+jO
+jO
+jO
+pl
+NG
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+"}
+(28,1,1) = {"
+Ed
+Ed
+Ed
+Ed
+Ed
+NG
+jO
+jO
+jO
+jO
+jO
+jO
+jO
+jO
+jO
+FP
+jO
+jO
+jO
+jO
+jO
+jO
+jO
+NG
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+"}
+(29,1,1) = {"
+Ed
+Ed
+Ed
+Ed
+Ed
+NG
+NG
+NG
+NG
+NG
+NG
+NG
+NG
+NG
+NG
+NG
+NG
+NG
+NG
+NG
+NG
+NG
+NG
+NG
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+"}
+(30,1,1) = {"
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+"}
+(31,1,1) = {"
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+"}
+(32,1,1) = {"
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+"}
+(33,1,1) = {"
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+ci
+ci
+ci
+ci
+ci
+ci
+ci
+ci
+ci
+ci
+ci
+ci
+ci
+ci
+ci
+ci
+ci
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+"}
+(34,1,1) = {"
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+ci
+hy
+TS
+TS
+TS
+TS
+TS
+TS
+TS
+kC
+kC
+kC
+kC
+kC
+kC
+OJ
+ci
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+"}
+(35,1,1) = {"
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+ci
+Gz
+EJ
+DW
+DW
+DW
+DW
+DW
+DW
+DW
+DW
+DW
+DW
+DW
+EJ
+ZQ
+ci
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+"}
+(36,1,1) = {"
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+ci
+iS
+DW
+eN
+NP
+NP
+NP
+NP
+NP
+ME
+ME
+ME
+ME
+Zs
+DW
+qf
+ci
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+"}
+(37,1,1) = {"
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+ci
+ci
+ci
+ci
+ci
+ci
+ci
+iS
+DW
+Tf
+ci
+ci
+ci
+ci
+ci
+ci
+ci
+ci
+ci
+ET
+DW
+qf
+ci
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+"}
+(38,1,1) = {"
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+ci
+Hx
+RG
+RG
+RG
+OM
+ci
+pR
+Yq
+hw
+ci
+eT
+eT
+eT
+eT
+eT
+eT
+eT
+ci
+ET
+DW
+qf
+ci
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+"}
+(39,1,1) = {"
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+ci
+hL
+wc
+wc
+wc
+gx
+ci
+ci
+Pn
+ci
+ci
+eT
+eT
+eT
+eT
+eT
+eT
+eT
+ci
+ET
+DW
+qf
+ci
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+"}
+(40,1,1) = {"
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+ci
+YS
+jm
+xX
+xX
+xX
+xX
+br
+DM
+YS
+ci
+eT
+eT
+eT
+eT
+eT
+eT
+eT
+ci
+ET
+DW
+qf
+ci
+ci
+ci
+ci
+ci
+ci
+Ed
+Ed
+"}
+(41,1,1) = {"
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+ci
+jm
+br
+EY
+EY
+EY
+EY
+EY
+DM
+YS
+ci
+eT
+eT
+eT
+eT
+eT
+eT
+eT
+ci
+ET
+DW
+ek
+ci
+DW
+DW
+DW
+DW
+ci
+Ed
+Ed
+"}
+(42,1,1) = {"
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+ci
+WH
+Il
+Bw
+tf
+tf
+tf
+tf
+DM
+YS
+ci
+eT
+eT
+eT
+hn
+eT
+eT
+eT
+ly
+ET
+DW
+oD
+vp
+DW
+EJ
+id
+DW
+ci
+Ed
+Ed
+"}
+(43,1,1) = {"
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+ci
+hL
+sA
+EY
+EY
+EY
+EY
+EY
+DM
+YS
+ci
+eT
+eT
+eT
+eT
+eT
+eT
+eT
+ci
+ET
+DW
+ek
+ci
+DW
+DW
+DW
+yn
+ci
+Ed
+Ed
+"}
+(44,1,1) = {"
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+ci
+YS
+hL
+wc
+wc
+wc
+wc
+sA
+DM
+YS
+ci
+eT
+eT
+eT
+eT
+eT
+eT
+eT
+ci
+ET
+DW
+qf
+ci
+ci
+ci
+ci
+ci
+ci
+Ed
+Ed
+"}
+(45,1,1) = {"
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+ci
+jm
+xX
+xX
+xX
+xY
+ci
+ci
+CF
+ci
+ci
+eT
+eT
+eT
+eT
+eT
+eT
+eT
+ci
+ET
+DW
+qf
+ci
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+"}
+(46,1,1) = {"
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+ci
+Hx
+RG
+RG
+RG
+OM
+ci
+tQ
+MR
+Bh
+ci
+eT
+eT
+eT
+eT
+eT
+eT
+eT
+ci
+ET
+DW
+qf
+ci
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+"}
+(47,1,1) = {"
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+ci
+ci
+ci
+ci
+ci
+ci
+ci
+iS
+DW
+Tf
+ci
+ci
+ci
+ci
+ci
+ci
+ci
+ci
+ci
+ET
+DW
+qf
+ci
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+"}
+(48,1,1) = {"
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+ci
+iS
+DW
+dn
+TS
+TS
+TS
+TS
+TS
+kC
+kC
+kC
+kC
+rY
+DW
+qf
+ci
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+"}
+(49,1,1) = {"
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+ci
+Gz
+EJ
+DW
+DW
+DW
+DW
+DW
+DW
+DW
+DW
+DW
+DW
+DW
+EJ
+ZQ
+ci
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+"}
+(50,1,1) = {"
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+ci
+bY
+NP
+NP
+NP
+NP
+NP
+NP
+NP
+ME
+ME
+ME
+ME
+ME
+ME
+yD
+ci
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+"}
+(51,1,1) = {"
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+ci
+ci
+ci
+ci
+ci
+ci
+ci
+ci
+ci
+ci
+ci
+ci
+ci
+ci
+ci
+ci
+ci
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+"}
+(52,1,1) = {"
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+"}
+(53,1,1) = {"
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+"}
+(54,1,1) = {"
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+"}
+(55,1,1) = {"
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+"}
+(56,1,1) = {"
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+"}
+(57,1,1) = {"
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+"}
+(58,1,1) = {"
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+"}
+(59,1,1) = {"
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+"}
+(60,1,1) = {"
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
+Ed
 "}

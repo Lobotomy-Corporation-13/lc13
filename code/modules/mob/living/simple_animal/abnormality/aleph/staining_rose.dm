@@ -12,13 +12,13 @@
 	health = 10			//It's a rose lol
 	threat_level = ALEPH_LEVEL
 	work_chances = list(
-		ABNORMALITY_WORK_INSTINCT = 0,
-		ABNORMALITY_WORK_INSIGHT = list(0, 0, 0, 30, 40),
+		ABNORMALITY_WORK_INSTINCT = list(0, 0, 0, 30, 40),
+		ABNORMALITY_WORK_INSIGHT = list(0, 0, 0, 35, 45),
 		ABNORMALITY_WORK_ATTACHMENT = 0,
 		ABNORMALITY_WORK_REPRESSION = list(0, 0, 0, 45, 50),
 	)
 	start_qliphoth = 1
-	work_damage_amount = 14
+	work_damage_amount = 9
 	work_damage_type = PALE_DAMAGE
 	chem_type = /datum/reagent/abnormality/sin/pride
 	pixel_x = -16
@@ -41,10 +41,10 @@
 			... <br>that's all."),
 	)
 
-	var/chosen
+	var/datum/weakref/chosen_memory
 	var/list/sacrificed = list()
 	var/list/heretics = list()
-	var/meltdown_cooldown_time = 15 MINUTES
+	var/meltdown_cooldown_time = 12 MINUTES
 	var/meltdown_cooldown
 	var/safe = FALSE //work on it and you're safe for 15 minutes
 	var/reset_time = 3 MINUTES //Qliphoth resets after this time
@@ -54,29 +54,50 @@
 	. = ..()
 	meltdown_cooldown = world.time + meltdown_cooldown_time
 
+/mob/living/simple_animal/hostile/abnormality/staining_rose/Destroy()
+	var/list/signal_list = sacrificed + heretics
+	for(var/mob/living/L in signal_list)
+		ForceUnregisterMob(L)
+	sacrificed = null
+	heretics = null
+	return ..()
+
+/mob/living/simple_animal/hostile/abnormality/staining_rose/WorktickFailure(mob/living/carbon/human/user)
+	..( )
+	//Worktick failures increase damage given
+	work_damage_amount ++
+	return
+
+
 /mob/living/simple_animal/hostile/abnormality/staining_rose/PostWorkEffect(mob/living/carbon/human/user, work_type, pe)
 	safe = TRUE
-	if (chosen == null)
-		chosen = user
-		user.visible_message(span_warning("You are now Staining Rose's Chosen."))
-		icon_state = "rose_activated"
+	work_damage_amount = initial(work_damage_amount)
+	if(work_type == ABNORMALITY_WORK_REPRESSION)
+		var/mob/living/chosen = chosen_memory ? chosen_memory.resolve() : null
+		if (chosen == null)
+			chosen_memory = WEAKREF(user)
+			user.visible_message(span_warning("You are now Staining Rose's Chosen."))
+			icon_state = "rose_activated"
 
-	if (user != chosen)		//Your body starts to wilt.
-		user.visible_message(span_warning("Staining Rose already has a Chosen named [chosen]!"))
-		user.apply_status_effect(STATUS_EFFECT_SCHISMATIC)
-		user.client?.give_award(/datum/award/achievement/abno/schismatic, user)
-		if(!(user in heretics))
-			heretics += user
-		pissed()
-	else
-		user.visible_message(span_warning("Staining Rose is content."))
+		if (user != chosen)		//Your body starts to wilt.
+			user.visible_message(span_warning("Staining Rose already has a Chosen named [chosen]!"))
+			user.apply_status_effect(STATUS_EFFECT_SCHISMATIC)
+			user.client?.give_award(/datum/award/achievement/abno/schismatic, user)
+			if(!(user in heretics))
+				RegisterMob(user, heretics)
+			pissed()
+		else
+			user.visible_message(span_warning("Staining Rose is content."))
 
 	if(get_attribute_level(user, JUSTICE_ATTRIBUTE) < 100)
 		user.apply_status_effect(STATUS_EFFECT_SACRIFICE)
 		if(!(user in sacrificed))
-			sacrificed += user
-			user.visible_message(span_warning("Staining Rose drains your strength, and it is born anew."))
-			meltdown_cooldown = world.time + meltdown_cooldown_time	//There we go!
+			RegisterMob(user, sacrificed)
+			user.visible_message(span_warning("Staining Rose weakens your defenses and gives you strength. It is born anew."))
+			user.adjust_all_attribute_levels(3)
+
+			meltdown_cooldown_time = 17 MINUTES	//Sure, big bonus for it.
+			meltdown_cooldown = world.time + meltdown_cooldown_time	//Resets too.
 		pissed()
 
 /mob/living/simple_animal/hostile/abnormality/staining_rose/Life()
@@ -84,6 +105,7 @@
 	if(meltdown_cooldown < world.time && !datum_reference.working)
 		meltdown_cooldown = world.time + meltdown_cooldown_time
 		sound_to_playing_players('sound/abnormalities/rose/meltdown.ogg')	//Church bells ringing, whether it happens or not.
+		var/mob/living/chosen = chosen_memory ? chosen_memory.resolve() : null
 		if(chosen)
 			to_chat(chosen, span_boldwarning("Staining Rose requires you to resonate with it again!"))
 		if(!safe)
@@ -102,13 +124,15 @@
 //Death and Meltdown
 /mob/living/simple_animal/hostile/abnormality/staining_rose/ZeroQliphoth(mob/living/carbon/human/user)
 	SSweather.run_weather(/datum/weather/petals)
-	chosen = null 	//You breached, now pick a new person to work on you
+	chosen_memory = null 	//You breached, now pick a new person to work on you
 	icon_state = "rose"
 	//Clean up the sacrificed and schismatic
 	for(var/mob/living/carbon/human/G in sacrificed)
+		ForceUnregisterMob(G)
 		G.remove_status_effect(STATUS_EFFECT_SACRIFICE)
-	for(var/mob/living/carbon/human/G in heretics)
-		G.remove_status_effect(STATUS_EFFECT_SCHISMATIC)
+	for(var/mob/living/carbon/human/H in heretics)
+		ForceUnregisterMob(H)
+		H.remove_status_effect(STATUS_EFFECT_SCHISMATIC)
 	death()	//It wilts away.
 
 /mob/living/simple_animal/hostile/abnormality/staining_rose/death(gibbed)
@@ -116,6 +140,20 @@
 	animate(src, alpha = 0, time = 10 SECONDS)
 	QDEL_IN(src, 10 SECONDS)
 	..()
+
+/mob/living/simple_animal/hostile/abnormality/staining_rose/proc/RegisterMob(mob/living/L, list/record)
+	RegisterSignal(L, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING), PROC_REF(ForceUnregisterMob))
+	record += L
+
+/mob/living/simple_animal/hostile/abnormality/staining_rose/proc/UnregisterMob(mob/living/L, list/record)
+	record -= L
+	if(!(L in sacrificed) && !(L in heretics))
+		UnregisterSignal(L, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING))
+
+/mob/living/simple_animal/hostile/abnormality/staining_rose/proc/ForceUnregisterMob(mob/living/L)
+	UnregisterSignal(L, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING))
+	sacrificed -= L
+	heretics -= L
 
 //Weather and such
 /datum/weather/petals
@@ -161,6 +199,7 @@
 	status_holder.physiology.white_mod /= 0.5
 	status_holder.physiology.black_mod /= 0.5
 	status_holder.physiology.pale_mod /= 0.5
+	status_holder.adjust_attribute_bonus(JUSTICE_ATTRIBUTE, -30)
 
 /datum/status_effect/wilting/on_remove()
 	. = ..()
@@ -171,6 +210,7 @@
 	status_holder.physiology.white_mod *= 0.5
 	status_holder.physiology.black_mod *= 0.5
 	status_holder.physiology.pale_mod *= 0.5
+	status_holder.adjust_attribute_bonus(JUSTICE_ATTRIBUTE, 30)
 
 
 //SCHISMATIC
@@ -192,20 +232,22 @@
 	if(!ishuman(owner))
 		return
 	var/mob/living/carbon/human/status_holder = owner
-	status_holder.physiology.red_mod /= 0.8
-	status_holder.physiology.white_mod /= 0.8
-	status_holder.physiology.black_mod /= 0.8
-	status_holder.physiology.pale_mod /= 0.8
+	status_holder.physiology.red_mod /= 0.93
+	status_holder.physiology.white_mod /= 0.93
+	status_holder.physiology.black_mod /= 0.93
+	status_holder.physiology.pale_mod /= 0.93
+	status_holder.adjust_attribute_bonus(JUSTICE_ATTRIBUTE, 15)
 
 /datum/status_effect/schismatic/on_remove()
 	. = ..()
 	if(!ishuman(owner))
 		return
 	var/mob/living/carbon/human/status_holder = owner
-	status_holder.physiology.red_mod *= 0.8
-	status_holder.physiology.white_mod *= 0.8
-	status_holder.physiology.black_mod *= 0.8
-	status_holder.physiology.pale_mod *= 0.8
+	status_holder.physiology.red_mod *= 0.93
+	status_holder.physiology.white_mod *= 0.93
+	status_holder.physiology.black_mod *= 0.93
+	status_holder.physiology.pale_mod *= 0.93
+	status_holder.adjust_attribute_bonus(JUSTICE_ATTRIBUTE, -15)
 
 
 //SACRIFICE
@@ -227,20 +269,22 @@
 	if(!ishuman(owner))
 		return
 	var/mob/living/carbon/human/status_holder = owner
-	status_holder.physiology.red_mod /= 0.7
-	status_holder.physiology.white_mod /= 0.7
-	status_holder.physiology.black_mod /= 0.7
-	status_holder.physiology.pale_mod /= 0.7
+	status_holder.physiology.red_mod /= 0.9
+	status_holder.physiology.white_mod /= 0.9
+	status_holder.physiology.black_mod /= 0.9
+	status_holder.physiology.pale_mod /= 0.9
 
 /datum/status_effect/sacrifice/on_remove()
 	. = ..()
 	if(!ishuman(owner))
 		return
 	var/mob/living/carbon/human/status_holder = owner
-	status_holder.physiology.red_mod *= 0.7
-	status_holder.physiology.white_mod *= 0.7
-	status_holder.physiology.black_mod *= 0.7
-	status_holder.physiology.pale_mod *= 0.7
+	status_holder.physiology.red_mod *= 0.9
+	status_holder.physiology.white_mod *= 0.9
+	status_holder.physiology.black_mod *= 0.9
+	status_holder.physiology.pale_mod *= 0.9
+	to_chat(status_holder, span_nicegreen("Through your sacrifice, you gain strength."))
+	status_holder.adjust_all_attribute_levels(3)
 
 #undef STATUS_EFFECT_WILTING
 #undef STATUS_EFFECT_SCHISMATIC

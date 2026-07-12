@@ -20,7 +20,7 @@
 	stat_attack = HARD_CRIT
 	attack_sound = 'sound/abnormalities/cleave.ogg'
 	can_breach = TRUE
-	threat_level = HE_LEVEL
+	threat_level = WAW_LEVEL
 	start_qliphoth = 2
 
 	work_chances = list(

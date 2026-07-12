@@ -8,7 +8,7 @@ SUBSYSTEM_DEF(mobcommander)
 /datum/controller/subsystem/mobcommander/proc/RecruitFollower(follower)
 	if(!follower)
 		return FALSE
-	LAZYADD(follower_list, follower)
+	LAZYOR(follower_list, follower)
 	return TRUE
 
 //Called when a follower is removed from component and list.
@@ -16,7 +16,7 @@ SUBSYSTEM_DEF(mobcommander)
 	if(!follower)
 		return FALSE
 	CheckLedger()
-	LAZYREMOVE(follower_list, follower)
+	follower_list -= follower
 	return TRUE
 
 //Registers leader into the system
@@ -24,13 +24,13 @@ SUBSYSTEM_DEF(mobcommander)
 	if(LAZYFIND(leaders, leader))
 		return FALSE
 	CheckLedger()
-	LAZYADD(leaders, leader)
+	LAZYOR(leaders, leader)
 	return TRUE
 
 //Removes leader from the ledger
 /datum/controller/subsystem/mobcommander/proc/RemoveLeader(leader, followers)
 	CheckLedger()
-	LAZYREMOVE(leaders, leader)
+	leaders -= leader
 	for(var/minion in followers)
 		DismissFollower(minion)
 
@@ -40,14 +40,8 @@ SUBSYSTEM_DEF(mobcommander)
 		return TRUE
 	return FALSE
 
-//Does technical fixes such as remove nulls and duplicates
+//Does technical fixes such as remove nulls
 /datum/controller/subsystem/mobcommander/proc/CheckLedger()
-	//Remove duplicates.
-	var/fixed_leader_list = uniqueList(leaders)
-	var/fixed_follower_list = uniqueList(follower_list)
-	//Replace list with a sorted fixed version.
-	leaders = sortNames(fixed_leader_list)
-	follower_list = sortNames(fixed_follower_list)
 	//Remove nulls.
 	listclearnulls(leaders)
 	listclearnulls(follower_list)

@@ -49,7 +49,6 @@
 	)
 
 	var/hands = 0
-	var/can_act = TRUE
 	var/special_attack_cooldown
 
 /mob/living/simple_animal/hostile/abnormality/bloodbath/PostWorkEffect(mob/living/carbon/human/user, work_type, pe, work_time)
@@ -73,13 +72,15 @@
 		SLEEP_CHECK_DEATH(3 SECONDS)
 		hands ++
 		if(hands < 4)
-			datum_reference.max_boxes += 4
+			datum_reference.max_boxes += hands
 			icon_state = "bloodbath[hands]"
 		else
 			hands = 0
 			datum_reference.max_boxes = max_boxes
 			icon_state = "bloodbath"
 		return
+	if(hands == 3)
+		user.client?.give_award(/datum/award/achievement/abno/bloodbath_hands, user)
 
 /mob/living/simple_animal/hostile/abnormality/bloodbath/BreachEffect(mob/living/carbon/human/user, breach_type)
 	if(breach_type != BREACH_MINING && breach_type != BREACH_PINK)

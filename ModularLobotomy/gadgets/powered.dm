@@ -20,6 +20,11 @@
 	//unique overlays for powered state. This is so that a overlay can be put on instead of changing the entire sprite.
 	var/powered_overlay = null
 
+/obj/item/powered_gadget/Destroy()
+	if(cell)
+		QDEL_NULL(cell)
+	return ..()
+
 /obj/item/powered_gadget/Initialize()
 	. = ..()
 	if(!cell && cell_type)

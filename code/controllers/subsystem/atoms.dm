@@ -153,7 +153,7 @@ SUBSYSTEM_DEF(atoms)
 /datum/controller/subsystem/atoms/proc/map_loader_stop()
 	clear_tracked_initalize()
 
-/// Use this to set initialized to prevent error states where old_initialized is overriden. It keeps happening and it's cheesing me off
+/// Use this to set initialized to prevent error states where old_initialized is overriden.
 /datum/controller/subsystem/atoms/proc/set_tracked_initalized(value)
 	if(!initialized_changed)
 		old_initialized = initialized

@@ -6,6 +6,7 @@
 /*
 * Stonk Investor
 * Warning uses defines within the adventure.dm file.
+* The market calls and records the process of stock companies.
 */
 /datum/stonk_investor
 	//The name of the stonker
@@ -36,36 +37,21 @@
 		budget = 500
 
 /datum/stonk_investor/proc/InitializeCompanies()
-	public_companies = list(
-		new /datum/stonk_company("Georges Pets", "Dogs", company_desc = "\
-			\"My ARMY of PUPPERS only GROWS!\" -George <br>\
-			A dog breeder.") = 0,
-		new /datum/stonk_company("Fixers Ramen", "Ramen",company_desc = "\
-			\"Trained under the famous rank 4 chef, <br>\
-			come for the best ramen in the district!\"<br> \
-			A fixer themed ramen shop.") = 0,
-		new /datum/stonk_company("WeRCheese", "Cheese Dolls",company_desc = "\
-			\"We are the only source of true cheese.\"<br>\
-			A cafe that sells figurines made of cheese.") = 0,
-		new /datum/stonk_company("Distilled Angels", "Hard Drink",company_desc = "\
-			\"Always remember the Angels share.\"<br>\
-			A store that sells hard drinks imported from K corp.") = 0,
-		new /datum/stonk_company("Pam\'s Arsenal", "Weapons & Armor",company_desc = "\
-			\"You get what you get.\" -Pam<br>\
-			A major supplier of the districts Zwei gear.") = 0,
-		new /datum/stonk_company("Will\'s Wishing Well", "Lootboxes",company_desc = "\
-			\"Ill be honest i dont know what is down there.\" -Well Will<br>\
-			A gambling den slash pawn shop.") = 0,
-		new /datum/stonk_company("Rival Favilla", "Weapons & Armor",company_desc = "\
-			\"Rats are reduced to embers with Favilla!\"<br>\
-			Rival weapon store to Pams Arsenal.") = 0,
-		new /datum/stonk_company("Fairy Supply Depot", "Illegal Fumos",company_desc = "\
-			\"Selling the lowest quality fumos in the city!\"<br>\
-			Made taboo by 12 wings. Trading this stock is ill-advised.") = 0,
-		new /datum/stonk_company("Shrimpcoin", "Cryptocurrency",company_desc = "\
-			\"To the Moon!\"<br>\
-			Likely a scam company. Sells \"cryptocurrency\", whatever that is.") = 0,
-		)
+	public_companies = list()
+	var/possible_companies =  list()
+	for(var/_stonk in subtypesof(/datum/stonk_company))
+		var/datum/stonk_company/stonk_focus = _stonk
+		var/name_check = initial(stonk_focus.name)
+		if(!name_check)
+			continue
+		possible_companies += _stonk
+	var/add_stock
+	var/datum/stonk_company/true_stock
+	for(var/i = 0 to 7)
+		add_stock = pick_n_take(possible_companies)
+		true_stock = new add_stock
+		public_companies += true_stock
+		public_companies[true_stock] = 0
 
 	/*---------------\
 	|Return Visual UI|
@@ -119,7 +105,7 @@ a.updated {
 		GENERAL_BUTTON(REF(requester),"set_display",mode_option,"[mode_option == display_mode ? "<b><u>[nameMenu(mode_option)]</u></b>" : "[nameMenu(mode_option)]"]")
 	GENERAL_BUTTON(REF(requester),"rename","rename","RENAME USER")
 	if(debug)
-		GENERAL_BUTTON(REF(requester),"debug_process","debug_process","ADVANCE TIME 4 CYCLES")
+		GENERAL_BUTTON(REF(requester),"debug_process","debug_process","PROCESS A CYCLE")
 	. += "<br>[DisplayUI(requester, H)]<br>\
 		<tt>----------</tt><br></body></html>"
 
@@ -140,9 +126,9 @@ a.updated {
 			has improved. Buy LOW, Sell HIGH. This is a good mantra to use<br>\
 			but be careful, if a companies optimism becomes BAD, <br>\
 			locate this value on the company focus screen, then theres<br>\
-			a increasing chance of them going bankrupt which will temporarily<br>\
+			a chance of them going bankrupt which will temporarily<br>\
 			remove them from the stock market and reset all of their shares.<br>\
-			Bankruptsy can also occur if the value of a stock goes below 1 ahn.<br>\
+			Bankruptsy can also occur if the value of a stock goes below 10 ahn.<br>\
 			As a safety measure companies listed are<br>\
 			in a different district to the investor.<br>\
 			Stock values change every [COMPANY_DELAY] minutes with<br>\

@@ -53,7 +53,6 @@
 	var/courage_cooldown
 	var/courage_cooldown_time = 20 SECONDS
 	var/desperate = FALSE
-	var/can_act = TRUE
 	var/death_counter = 0
 	var/burn_mod = 1
 	var/icon_phase = "crying"
@@ -505,9 +504,9 @@
 		toggle_ai(initial(src.AIStatus))
 		for(var/mob/living/carbon/human/H in view(src, 10)) // Immediately attacks on getting tagged
 			if(get_dist(src, H) < get_dist(src, target))
-				target = H
+				FindTarget(list(H), TRUE)
 			if(!target)
-				target = H
+				FindTarget(list(H), TRUE)
 		if(target in view(1, src))
 			AttackingTarget(target)
 		tagged = TRUE

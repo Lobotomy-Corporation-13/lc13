@@ -400,7 +400,7 @@ There are several things that need to be remembered:
 	var/mutable_appearance/back_overlay = overlays_standing[BACK_LAYER]
 	if(back_overlay)
 		remove_overlay(BACK_LAYER)
-		if(istype(back, /obj/item/storage/backpack) && disabled_backpack_visibility)
+		if(istype(back, /obj/item/storage/backpack) && client && !(client.prefs?.backpack_visibility))
 			return
 		if(OFFSET_BACK in dna.species.offset_features)
 			back_overlay.pixel_x += dna.species.offset_features[OFFSET_BACK][1]

@@ -25,7 +25,7 @@
 	user.adjustStaminaLoss(20, TRUE, TRUE)
 	user.throw_at(dodgelanding, 3, 2, spin = TRUE)
 
-/obj/item/ego_weapon/shield/walpurgisnacht
+/obj/item/ego_weapon/shield/parry/walpurgisnacht
 	name = "walpurgisnacht"
 	desc = "Man errs so long as he strives."
 	icon_state = "walpurgisnacht"
@@ -69,7 +69,7 @@
 	attack_verb_simple = list("bludgeon", "whack")
 	hitsound = 'sound/weapons/fixer/generic/spear2.ogg'
 
-/obj/item/ego_weapon/shield/sangria
+/obj/item/ego_weapon/shield/parry/sangria
 	name = "S.A.N.G.R.I.A"
 	desc = "Succinct abbreviation naturally germinates rather immaculate art."
 	special = "Blocking with this weapon does not reduce damage, instead attacks all nearby targets when blocking."
@@ -93,17 +93,6 @@
 	block_message = "You prepare to strike those around you..."
 	hit_message = "prepares to strike!"
 	block_cooldown_message = "You rearm your blade."
-
-/obj/item/ego_weapon/shield/sangria/hit_reaction(mob/living/carbon/human/owner, atom/movable/hitby, attack_text = "the attack", final_block_chance = 0, damage = 0, attack_type = MELEE_ATTACK)
-	if(attack_type == MELEE_ATTACK && active_block)
-		for(var/mob/living/L in range(1, owner))
-			if(L == owner)
-				continue
-			if(owner.stat != DEAD)
-				attack(L, owner)
-				sleep(2)
-	return ..()
-
 
 /obj/item/ego_weapon/mini/soleil
 	name = "soleil"
@@ -198,7 +187,7 @@
 	lefthand_file = 'icons/mob/inhands/weapons/limbus_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/weapons/limbus_righthand.dmi'
 	force = 22
-	throwforce = 50
+	throwforce = 30
 	throw_speed = 1
 	throw_range = 7
 	damtype = RED_DAMAGE

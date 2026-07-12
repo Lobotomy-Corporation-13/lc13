@@ -166,7 +166,6 @@
 	projectiletype = null
 	simple_mob_flags = SILENCE_RANGED_MESSAGE
 	var/can_move = TRUE
-	var/can_act = TRUE
 	/// A failsafe timer in case we miss our lunge, resets it.
 	var/lunge_reset_timer
 	/// How many deciseconds between trash disposal hits? Reduced by 1 decisecond on each hit.
@@ -300,8 +299,9 @@
 	user.visible_message(span_userdanger("[user] prepares to leap at [victim]!"))
 	playsound(src, 'sound/abnormalities/crumbling/warning.ogg', 50, FALSE, 5)
 	walk_towards(warning, victim, 0.1 SECONDS) // This makes our warning move from the commander to the target.
-	SLEEP_CHECK_DEATH(trash_disposal_windup_duration)
+	addtimer(CALLBACK(src, PROC_REF(TelegraphFinale), victim, src), trash_disposal_windup_duration)
 
+/mob/living/simple_animal/hostile/ordeal/indigo_dusk/red/proc/TelegraphFinale(mob/living/victim, mob/living/user = src)
 	can_move = TRUE
 	can_act = TRUE
 	move_resist = initial(move_resist)
@@ -425,7 +425,7 @@
 	toggle_ai(AI_ON)
 	can_move = TRUE
 	can_act = TRUE
-	. = ..()
+	return ..()
 
 /// Failsafe proc in case we miss our throw entirely.
 /mob/living/simple_animal/hostile/ordeal/indigo_dusk/red/proc/StopLunging()
@@ -440,7 +440,7 @@
 	icon = 'icons/mob/telegraphing/telegraph_holographic.dmi'
 	icon_state = "target_circle"
 	desc = "Uh oh."
-	duration = 2.2 SECONDS
+	duration = 2.21 SECONDS
 	randomdir = FALSE
 	movement_type = PHASING | FLYING
 	layer = POINT_LAYER
@@ -738,6 +738,7 @@
 	visible_message(span_danger("[src] raises \his greatsword...!"))
 	SLEEP_CHECK_DEATH(0.6 SECONDS)
 	playsound(get_turf(src), 'sound/weapons/fixer/generic/blade3.ogg', 100, 0, 5)
+	var/list/hitlist = list()
 	for(var/turf/T in area_of_effect)
 		new /obj/effect/temp_visual/slice(T)
 		for(var/mob/living/L in T)
@@ -745,7 +746,11 @@
 				continue
 			if (L == src)
 				continue
-			HurtInTurf(T, list(), special_ability_damage, melee_damage_type, check_faction = TRUE, exact_faction_match = TRUE, hurt_mechs = TRUE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
+			if(L in hitlist)
+				continue
+			hitlist |= L
+			L.deal_damage(special_ability_damage, melee_damage_type, source = src, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
+			L.visible_message(span_danger("[L] is cleaved by [src]'s greatsword!"), span_userdanger("You're cleaved by [src]'s greatsword!"))
 			playsound(T, attack_sound, 100, TRUE)
 			// Big slice VFX
 			var/obj/effect/temp_visual/dir_setting/slash/temp = new (T)

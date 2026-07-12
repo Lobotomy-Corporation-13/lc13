@@ -57,7 +57,7 @@
 			As you gather yourself to continue on the journey, you realize that several branches had grown in the premises, trapping you in."),
 	)
 
-	var/can_act = FALSE
+	can_act = FALSE
 	var/break_threshold = 450
 	var/broken = FALSE
 	var/fairy_enabled

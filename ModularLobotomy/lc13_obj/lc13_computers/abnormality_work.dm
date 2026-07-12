@@ -33,16 +33,27 @@
 		"abnochem" = 0,
 		"workrate" = 0,
 		"meltdown" = 0,
+		"radio" = 0,
+		"vitals" = 0,
+		"free work" = 0,
 		)
+
+	/// Gotta give this thing a radio for an upgrade
+	var/obj/item/radio/Radio
 
 /obj/machinery/computer/abnormality/Initialize()
 	. = ..()
 	GLOB.lobotomy_devices += src
 	flags_1 |= NODECONSTRUCT_1
+	Radio = new /obj/item/radio(src)
+	Radio.listening = 0
 
 /obj/machinery/computer/abnormality/Destroy()
 	GLOB.lobotomy_devices -= src
-	..()
+	EOTool = null
+	linked_panel = null
+	datum_reference = null
+	return ..()
 
 /obj/machinery/computer/abnormality/update_overlays()
 	. = ..()
@@ -318,12 +329,22 @@
 
 /obj/machinery/computer/abnormality/proc/CheckStatus(mob/living/carbon/human/user)
 	if(user.sanity_lost)
+		if(mechanical_upgrades["vitals"])
+			Radio.set_frequency(FREQ_COMMON)
+			Radio.talk_into(src, "WARNING: [user.name] has gone insane during work with [datum_reference.GetName()].", FREQ_COMMON)
 		return FALSE // Lost sanity
 
 	//If for some reason our goober cannot die
 	if(!HAS_TRAIT(user, TRAIT_NOSOFTCRIT))
 		if(user.health < 0)
 			return FALSE // Dying
+			
+	if(user.health < 0)
+		if(mechanical_upgrades["vitals"])
+			Radio.set_frequency(FREQ_COMMON)
+			Radio.talk_into(src, "WARNING: [user.name] has gone into critical condition during work with [datum_reference.GetName()].", FREQ_COMMON)
+		return FALSE // Dying
+
 	if(!(datum_reference.current.status_flags & GODMODE))
 		return FALSE // Somehow it escaped
 	return TRUE
@@ -355,9 +376,13 @@
 		else
 			audible_message(span_notice("Work Result: Bad"),\
 				span_notice("Work Result: Bad"))
+
+	if(mechanical_upgrades["radio"])
+		Radio.set_frequency(FREQ_COMMON)
+		Radio.talk_into(src, "[user.name] completed work on [datum_reference.GetName()] is completed. Result: [pe] PE generated.", FREQ_COMMON)
 	if(istype(user))
 		datum_reference.work_complete(user, work_type, pe, work_speed*datum_reference.max_boxes, was_melting, canceled)
-		if(recorded) //neither rabbit nor tutorial calls this
+		if(recorded && !mechanical_upgrades["free work"]) //neither rabbit nor tutorial calls this
 			SSlobotomy_corp.WorkComplete(pe, (meltdown_time <= 0))
 	chem_charges ++
 	meltdown_time = 0

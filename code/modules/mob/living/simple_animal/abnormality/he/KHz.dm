@@ -100,8 +100,8 @@
 	bitcalculator = 0
 
 	//If you're new, grab a callsign paper. Also set new input
-	if(!(user in worked))
-		worked+=user
+	if(!(user.tag in worked))
+		worked+=user.tag
 		new /obj/item/paper/fluff/radio_call(get_turf(user))
 	SetInput()
 

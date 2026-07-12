@@ -462,6 +462,7 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define RESTING_TRAIT "resting" //trait associated to resting
 #define STAT_TRAIT "stat" //trait associated to a stat value or range of
 #define STATION_TRAIT "station-trait"
+#define CITY_TRAIT "city-map"
 #define MAPPING_HELPER_TRAIT "mapping-helper" //obtained from mapping helper
 /// Trait associated to wearing a suit
 #define SUIT_TRAIT "suit"

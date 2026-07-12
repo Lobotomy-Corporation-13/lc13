@@ -362,7 +362,7 @@ SUBSYSTEM_DEF(job)
 					JobDebug("DO player not old enough, Player: [player], Job:[job.title]")
 					continue
 
-				if(!job.unique_job_check(player.client))
+				if(!job.unique_job_check(player.client, TRUE))
 					JobDebug("DO player failed unique job check, Player: [player], Job:[job.title]")
 					continue
 

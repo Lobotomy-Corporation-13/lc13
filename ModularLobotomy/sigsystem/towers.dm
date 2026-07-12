@@ -183,6 +183,59 @@
 	PingTower(signal_code, signal_range, signal_data)
 	return
 
+	/*--------\
+	|Depositor|
+	\--------*/
+/obj/structure/sigsystem/tower/receptacle
+	name = "receptacle"
+	desc = "A empty structure reserved for a key item."
+	icon_state = "receptacle"
+	invisibility = SEE_INVISIBLE_MINIMUM
+	resistance_flags = INDESTRUCTIBLE | LAVA_PROOF | FIRE_PROOF | UNACIDABLE | ACID_PROOF
+	transmitter = TRUE
+	var/req_item_path
+	var/skin = "receptacle"
+	var/accept_subtypes = TRUE
+	var/deactivated = FALSE
+
+/obj/structure/sigsystem/tower/receptacle/update_icon_state()
+	if(deactivated)
+		icon_state = "[skin]_closed"
+		return
+	icon_state = skin
+
+/obj/structure/sigsystem/tower/receptacle/attackby(obj/item/W, mob/user, params)
+	if(user in src)
+		return
+	if(!deactivated)
+		if(user.a_intent != INTENT_HARM && CheckOffering(W))
+			TakeOffering(W)
+			return
+	return ..()
+
+/obj/structure/sigsystem/tower/receptacle/proc/CheckOffering(obj/item/offering)
+	if(!offering)
+		return FALSE
+	if(accept_subtypes && istype(offering, req_item_path))
+		return TRUE
+	var/offering_type = "[offering.type]"
+	var/offering_req = "[req_item_path]"
+	if(offering_type == offering_req)
+		return TRUE
+
+/obj/structure/sigsystem/tower/receptacle/proc/TakeOffering(obj/item/sacrifice)
+	PingTower(signal_code, signal_range, signal_data)
+	deactivated = TRUE
+	update_icon()
+	qdel(sacrifice)
+
+//Sandstone Statue Reskinned Varient
+/obj/structure/sigsystem/tower/receptacle/sandstone
+	name = "sandstone servent"
+	desc = "A sandstone statue holding up a gold bowl."
+	icon_state = "sandstone"
+	skin = "sandstone"
+
 	/*------------\
 	|SIGNAL BUTTON|
 	\-------------/

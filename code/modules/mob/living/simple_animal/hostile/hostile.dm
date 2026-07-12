@@ -21,6 +21,7 @@ GLOBAL_LIST_EMPTY(marked_players)
 	var/projectilesound
 	var/casingtype		//set ONLY it and NULLIFY projectiletype, if we have projectile IN CASING
 	var/move_to_delay = 3 //delay for the automated movement.
+	//Uses tags. If you respawn or change bodies who even are you?
 	var/list/friends = list()
 	var/list/emote_taunt = list()
 	var/taunt_chance = 0
@@ -106,6 +107,9 @@ GLOBAL_LIST_EMPTY(marked_players)
 	// When this var is TRUE, will not attempt to break out of somewhere it's confined in or buckled to.
 	var/docile_confinement = FALSE
 
+	//can attack and move
+	var/can_act = TRUE
+
 /mob/living/simple_animal/hostile/Initialize()
 	/*Update Speed overrides set speed and sets it
 		to the equivilent of move_to_delay. Basically
@@ -142,8 +146,8 @@ GLOBAL_LIST_EMPTY(marked_players)
 	SIGNAL_HANDLER
 	if (check_visible(user, crate) && stat != DEAD && !target)
 		addtimer(CALLBACK(src, PROC_REF(Theif_Talk)), 0)
-		if (!(user in glob_faction))
-			glob_faction += user
+		if (!(user.tag in glob_faction))
+			glob_faction += user.tag
 
 /mob/living/simple_animal/hostile/proc/Talk()
 	say(starting_looting_line)
@@ -160,36 +164,41 @@ GLOBAL_LIST_EMPTY(marked_players)
 	. = ..()
 	if(mark_once_attacked)
 		if(P.firer && get_dist(src, P.firer) <= aggro_vision_range)
-			if(!ishostile(P.firer))
-				if (!(P.firer in glob_faction))
-					glob_faction += P.firer
+			if(iscarbon(P.firer))
+				var/mob/living/carbon/C = P.firer
+				if (!(C.tag in glob_faction))
+					glob_faction += C.tag
 					say(attacked_line)
 
 	// Track damage for nuke rats achievement
 	if(glob_faction == GLOB.nuke_rats_players && P.firer && isliving(P.firer))
 		var/mob/living/L = P.firer
-		if(L.client && !(L in GLOB.nuke_rats_killers))
-			GLOB.nuke_rats_killers += L
+		if(L.client && !(L.tag in GLOB.nuke_rats_killers))
+			GLOB.nuke_rats_killers += L.tag
 
 /mob/living/simple_animal/hostile/attackby(obj/item/O, mob/user, params)
 	. = ..()
 	if(mark_once_attacked)
 		if(ishuman(user))
 			if (O.force > 0)
-				if (!(user in glob_faction ))
-					glob_faction += user
+				if (!(user.tag in glob_faction ))
+					glob_faction += user.tag
 					say(attacked_line)
 		else
-			if (!(user in glob_faction ))
-				glob_faction += user
+			if (!(user.tag in glob_faction ))
+				glob_faction += user.tag
 				say(attacked_line)
 
 	// Track damage for nuke rats achievement
-	if(glob_faction == GLOB.nuke_rats_players && user && user.client && !(user in GLOB.nuke_rats_killers))
-		GLOB.nuke_rats_killers += user
+	if(glob_faction == GLOB.nuke_rats_players && user && user.client && !(user.tag in GLOB.nuke_rats_killers))
+		GLOB.nuke_rats_killers += user.tag
 
 /mob/living/simple_animal/hostile/Destroy()
+	target = null
 	targets_from = null
+	target_memory = list()
+	friends = null
+	patrol_path = null
 	if(mark_once_attacked)
 		UnregisterSignal(SSdcs, COMSIG_CRATE_LOOTING_STARTED)
 		UnregisterSignal(SSdcs, COMSIG_CRATE_LOOTING_ENDED)
@@ -207,9 +216,9 @@ GLOBAL_LIST_EMPTY(marked_players)
 
 		if(all_dead && GLOB.nuke_rats_killers.len)
 			// Award achievement to all players who participated in killing nuke rats
-			for(var/mob/living/L in GLOB.nuke_rats_killers)
-				if(L.client)
-					L.client.give_award(/datum/award/achievement/lc13/city/nuke_rats_genocide, L)
+			for(var/mob/living/carbon/human/slayer in GLOB.player_list)
+				if(slayer.tag in GLOB.nuke_rats_killers && slayer.client)
+					slayer.client.give_award(/datum/award/achievement/lc13/city/nuke_rats_genocide, slayer)
 			// Clear the killers list after awarding
 			GLOB.nuke_rats_killers.Cut()
 
@@ -230,11 +239,10 @@ GLOBAL_LIST_EMPTY(marked_players)
 		patrol_reset()
 		return
 	if(CanStartPatrol())
-		if(patrol_cooldown <= world.time)
-			if(!patrol_path || !patrol_path.len)
-				patrol_select()
-				if(patrol_path.len)
-					patrol_move(patrol_path[patrol_path.len])
+		if(!patrol_path || !length(patrol_path))
+			PatrolSelect()
+			if(length(patrol_path))
+				patrol_move(patrol_path[patrol_path.len])
 
 	/*		AIStatus
 	AI_ON will have the npcpool subsystem call handle_automated_action(),
@@ -328,9 +336,11 @@ GLOBAL_LIST_EMPTY(marked_players)
 			if(!source_turf)
 				return
 			investigation_cooldown = world.time + investigation_cooldown_duration
-			patrol_to(source_turf)
+			INVOKE_ASYNC(src, TYPE_PROC_REF(/mob/living/simple_animal/hostile, patrol_to), source_turf) // This is an ASync because it calls AStar and that calls stoplag so if you ever have deal_damage in a signal it will throw a warning
 
 /mob/living/simple_animal/hostile/Move(atom/newloc, dir , step_x , step_y)
+	if(!can_act)
+		return
 	if(dodging && approaching_target && prob(dodge_prob) && moving_diagonally == 0 && isturf(loc) && isturf(newloc))
 		return dodge(newloc,dir)
 	else
@@ -359,7 +369,7 @@ GLOBAL_LIST_EMPTY(marked_players)
 	. = ..()
 	if(!ckey && !stat && search_objects < 3 && . > 0)//Not unconscious, and we don't ignore mobs
 		if(search_objects)//Turn off item searching and ignore whatever item we were looking at, we're more concerned with fight or flight
-			target = null
+			LoseTarget(FALSE)
 			LoseSearchObjects()
 		if(AIStatus != AI_ON && AIStatus != AI_OFF)
 			toggle_ai(AI_ON)
@@ -373,7 +383,7 @@ GLOBAL_LIST_EMPTY(marked_players)
 	target_memory.Cut()
 	attack_is_on_cooldown = FALSE
 	LoseTarget()
-	..(gibbed)
+	return ..(gibbed)
 
 /mob/living/simple_animal/hostile/update_stamina()
 	if(staminaloss == 0)
@@ -534,6 +544,9 @@ GLOBAL_LIST_EMPTY(marked_players)
 //////////////HOSTILE MOB TARGETTING AND AGGRESSION////////////
 ///Gets a list of everything that can possibly be targeted
 /mob/living/simple_animal/hostile/proc/ListTargets(max_range = vision_range) //Step 1, find out what we can see
+	if(!can_act)
+		return list()
+
 	//The thorough mode, rarely used
 	if(search_objects)
 		. = oview(max_range, targets_from)
@@ -627,7 +640,7 @@ GLOBAL_LIST_EMPTY(marked_players)
 				return FALSE
 
 			if(mark_once_attacked)
-				if (the_target in glob_faction)
+				if (L.tag in glob_faction)
 					return TRUE
 
 			var/faction_check = faction_check_mob(L)
@@ -636,7 +649,7 @@ GLOBAL_LIST_EMPTY(marked_players)
 					return FALSE
 				if(L.stat > stat_attack)
 					return FALSE
-				if(L in friends)
+				if(AddIdentifier(L) in friends)
 					return FALSE
 			else
 				if((faction_check && !attack_same) || L.stat)
@@ -707,8 +720,11 @@ GLOBAL_LIST_EMPTY(marked_players)
 /mob/living/simple_animal/hostile/proc/RegisterAggroValue(atom/remembered_target, value, damage_type)
 	if(!remembered_target || !damage_type)
 		return FALSE
-	if(!isnum(target_memory[remembered_target]))
-		target_memory += remembered_target
+	var/trg_tag = AddIdentifier(remembered_target)
+	if(!trg_tag)
+		return FALSE
+	if(!isnum(target_memory[trg_tag]))
+		target_memory += trg_tag
 
 	//could potentially add aggro as a mob armor type to also apply aggro damage coeff
 	//also could potentially check for remembered_target's aggro modifiers here such as from armor or status effects
@@ -719,11 +735,11 @@ GLOBAL_LIST_EMPTY(marked_players)
 			value *= aggro_stat_modifier
 	else
 		value *= damage_coeff.getCoeff(damage_type)
-	target_memory[remembered_target] += value
+	target_memory[trg_tag] += value
 
-	if(!QDELETED(target) && remembered_target != target && target_memory[remembered_target] > target_memory[target] + target_switch_resistance && CanAttack(remembered_target))
+	if(!QDELETED(target) && remembered_target != target && target_memory[trg_tag] > target_memory[AddIdentifier(target)] + target_switch_resistance && CanAttack(remembered_target))
 		GiveTarget(remembered_target)
-		target_memory[remembered_target] += value
+		target_memory[trg_tag] += value
 	return TRUE
 
 /*-------------------\
@@ -738,8 +754,10 @@ GLOBAL_LIST_EMPTY(marked_players)
 |Damage dealt +0 to +25
 \-------------------*/
 /mob/living/simple_animal/hostile/proc/ValueTarget(atom/target_thing)
-	if(!target_thing)
-		return
+	var/target_tag = AddIdentifier(target_thing)
+	if(!target_thing || !target_tag)
+		return 0
+
 	//This is a safety net just in the case that no value is returned.
 	. = 0
 
@@ -763,15 +781,19 @@ GLOBAL_LIST_EMPTY(marked_players)
 		. -= 60
 
 	//up to 25 points for damage taken from target_thing
-	if(target_memory[target_thing])
-		var/fraction_hp_lost_to_thing = min(target_memory[target_thing] / maxHealth, 1)
-		. += fraction_hp_lost_to_thing * 25
+	if(target_tag in target_memory)
+		if(target_memory[target_tag])
+			var/fraction_hp_lost_to_thing = min(target_memory[target_tag] / maxHealth, 1)
+			. += fraction_hp_lost_to_thing * 25
 
 /mob/living/simple_animal/hostile/proc/GiveTarget(atom/new_target)
-	target_memory.Cut()
 	if(!QDELETED(new_target))
+		var/signal_return = SEND_SIGNAL(src, COMSIG_HOSTILE_GAINEDTARGET, new_target)
+		if(signal_return & COMPONENT_HOSTILE_REFUSE_AGGRO) // We can be told to cancel our re-targeting
+			return
+		target_memory.Cut()
 		target = new_target
-		target_memory[target] = 0
+		target_memory[AddIdentifier(target)] = 0
 		GainPatience()
 		Aggro()
 		Goto(target, move_to_delay, minimum_distance)
@@ -779,11 +801,12 @@ GLOBAL_LIST_EMPTY(marked_players)
 	LoseTarget()
 	return FALSE
 
-/mob/living/simple_animal/hostile/proc/LoseTarget()
+/mob/living/simple_animal/hostile/proc/LoseTarget(stop_movement = TRUE)
 	target = null
 	approaching_target = FALSE
 	in_melee = FALSE
-	walk(src, 0)
+	if(stop_movement)
+		walk(src, 0)
 	SEND_SIGNAL(src, COMSIG_HOSTILE_LOSTTARGET)
 	LoseAggro()
 
@@ -932,7 +955,7 @@ GLOBAL_LIST_EMPTY(marked_players)
 		return FALSE
 
 	//Smashing code
-	if(environment_smash)
+	if(environment_smash && !isnull(target))
 		if(target.loc != null && get_dist(targets_from, target.loc) <= vision_range) //We can't see our target, but he's in our vision range still
 			if(ranged_ignores_vision && ranged_cooldown <= world.time) //we can't see our target... but we can fire at them!
 				OpenFire(target)
@@ -948,6 +971,8 @@ GLOBAL_LIST_EMPTY(marked_players)
 
 //Functionally this proc is a simplier version of the core code walk_to().
 /mob/living/simple_animal/hostile/proc/Goto(target, delay, minimum_distance)
+	if(!can_act)
+		return
 	if(target == src.target)
 		approaching_target = TRUE
 	else
@@ -960,6 +985,8 @@ GLOBAL_LIST_EMPTY(marked_players)
 	return TRUE
 
 /mob/living/simple_animal/hostile/proc/AttackingTarget(atom/attacked_target)
+	if(!can_act)
+		return
 	if(client)
 		if(target == src)
 			to_chat(src, span_warning("You almost attack yourself, but then decide against it."))
@@ -1011,7 +1038,7 @@ GLOBAL_LIST_EMPTY(marked_players)
 	var/stupidly_complicated_cooldown_calc = world.time - ranged_cooldown
 	if(stupidly_complicated_cooldown_calc > -SSnpcpool.wait)
 		//Our cooldown is less than the next check.
-		if(stupidly_complicated_cooldown_calc < 0)
+		if(stupidly_complicated_cooldown_calc < 0 && !QDELETED(src))
 			// Try to call this before our next check in 2 SECONDS
 			addtimer(CALLBACK(src, PROC_REF(OpenFire), shootem), clamp(abs(stupidly_complicated_cooldown_calc) + rand(-1,5), 1, 1.99 SECONDS), TIMER_STOPPABLE)
 		else
@@ -1024,6 +1051,8 @@ GLOBAL_LIST_EMPTY(marked_players)
 	if(QDELETED(src))
 		return
 	if(stat == DEAD)
+		return
+	if(!target)
 		return
 	var/in_range = melee_reach > 1 ? target.Adjacent(targets_from) || (get_dist(src, A) <= melee_reach && (target in view(src, melee_reach))) : target.Adjacent(targets_from)
 	if(in_range)
@@ -1128,6 +1157,8 @@ GLOBAL_LIST_EMPTY(marked_players)
 
 // for use with megafauna destroying everything around them
 /mob/living/simple_animal/hostile/proc/DestroySurroundings()
+	if(!can_act)
+		return
 	if(environment_smash)
 		EscapeConfinement()
 		for(var/dir in GLOB.cardinals)
@@ -1221,11 +1252,12 @@ GLOBAL_LIST_EMPTY(marked_players)
 	|UNCATAGORIZED PROCS|
 	\------------------*/
 
-/mob/living/simple_animal/hostile/tamed(whomst)
+/mob/living/simple_animal/hostile/tamed(mob/living/whomst)
 	. = ..()
-	if(isliving(whomst) && !locate(whomst) in friends)
+	var/tamed_tag = AddIdentifier(whomst)
+	if(isliving(whomst) && !(tamed_tag in friends))
 		var/mob/living/fren = whomst
-		friends += fren
+		LAZYOR(friends, tamed_tag)
 		faction = fren.faction.Copy()
 
 /mob/living/simple_animal/hostile/proc/summon_backup(distance, exact_faction_match)
@@ -1326,6 +1358,10 @@ GLOBAL_LIST_EMPTY(marked_players)
 
 ////// Patrol Code ///////
 /mob/living/simple_animal/hostile/proc/CanStartPatrol()
+	if(!can_act)
+		return FALSE
+	if(patrol_cooldown > world.time)
+		return FALSE
 	return AIStatus == AI_IDLE //if AI is idle, begin checking for patrol
 
 /mob/living/simple_animal/hostile/proc/patrol_to(turf/target_location = null)
@@ -1338,26 +1374,36 @@ GLOBAL_LIST_EMPTY(marked_players)
 	patrol_move(patrol_path[patrol_path.len])
 	return TRUE
 
-/mob/living/simple_animal/hostile/proc/patrol_select()
+/mob/living/simple_animal/hostile/proc/PatrolSelect()
 	//Mobs should stay unpatroled on maps where they're intended to be possessed.
 	if(SSmaptype.maptype in SSmaptype.autopossess)
-		return
+		return FALSE
+
+	var/turf/target_center = SelectPatrolLocation()
+	if(!isturf(target_center))
+		target_center = get_turf(target_center)
+	if(!target_center)
+		return FALSE
+
+	SEND_SIGNAL(src, COMSIG_PATROL_START, src, target_center)
+	SEND_GLOBAL_SIGNAL(src, COMSIG_GLOB_PATROL_START, src, target_center)
+	var/temp_patrol_path = get_path_to(src, target_center, TYPE_PROC_REF(/turf, Distance_cardinal), 0, 200)
+	patrol_path = temp_patrol_path
+	return temp_patrol_path
+
+/mob/living/simple_animal/hostile/proc/SelectPatrolLocation()
 	if(!LAZYLEN(GLOB.department_centers))
 		return
 
-	var/turf/target_center
 	var/list/potential_centers = list()
 	for(var/pos_targ in GLOB.department_centers)
 		var/possible_center_distance = get_dist(src, pos_targ)
 		if(possible_center_distance > 4 && possible_center_distance < 46)
 			potential_centers += pos_targ
 	if(LAZYLEN(potential_centers))
-		target_center = pick(potential_centers)
+		return pick(potential_centers)
 	else
-		target_center = pick(GLOB.department_centers)
-	SEND_SIGNAL(src, COMSIG_PATROL_START, src, target_center)
-	SEND_GLOBAL_SIGNAL(src, COMSIG_GLOB_PATROL_START, src, target_center)
-	patrol_path = get_path_to(src, target_center, TYPE_PROC_REF(/turf, Distance_cardinal), 0, 200)
+		return pick(GLOB.department_centers)
 
 /mob/living/simple_animal/hostile/proc/patrol_reset()
 	patrol_path = list()

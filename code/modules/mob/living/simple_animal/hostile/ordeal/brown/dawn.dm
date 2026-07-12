@@ -23,7 +23,6 @@
 	move_to_delay = 8
 	var/jump_cooldown_time = 10 SECONDS
 	var/jump_cooldown
-	var/can_act = TRUE
 	var/jump_range = 7
 	var/jump_aoe = 1
 	var/jump_damage = 20
@@ -183,7 +182,6 @@
 	minimum_distance = 2 // Don't move all the way to melee
 	projectiletype = /obj/projectile/beam/water_jet
 	projectilesound = 'sound/effects/ordeals/brown/flea_attack.ogg'
-	var/can_act = TRUE
 	var/sinking_damage = 10
 
 /mob/living/simple_animal/hostile/ordeal/sin_gloom/Move()
@@ -344,7 +342,7 @@
 	for(var/mob/living/L in range(dash_range, T))//damage applied to targets in range
 		if(faction_check_mob(L))
 			continue
-		if(L in been_hit)
+		if(L.tag in been_hit)
 			continue
 		if(L.z != z)
 			continue
@@ -352,7 +350,7 @@
 		var/turf/LT = get_turf(L)
 		new /obj/effect/temp_visual/kinetic_blast(LT)
 		L.deal_damage(dash_damage, BLACK_DAMAGE, src, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
-		been_hit += L
+		been_hit += L.tag
 		playsound(L, 'sound/weapons/fixer/generic/sword4.ogg', 75, 1)
 		if(!ishuman(L))
 			continue
@@ -388,7 +386,6 @@
 	guaranteed_butcher_results = list(/obj/item/food/meat/slab/sinnew = 1)
 	ranged = TRUE
 	var/block_chance = 10
-	var/can_act = TRUE
 	var/ability_damage = 25
 	var/ability_cooldown
 	var/ability_cooldown_time = 6 SECONDS

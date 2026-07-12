@@ -34,6 +34,14 @@
 	var/special_type = null // Variant-specific
 	var/shield_generator_type = null // Shield generator to spawn
 
+/obj/structure/seed_of_greed/Destroy()
+	barricade_positions_inner = null
+	barricade_positions_outer = null
+	turret_positions = null
+	anchor_positions = null
+	special_positions = null
+	return ..()
+
 /obj/structure/seed_of_greed/Initialize()
 	. = ..()
 	StartSpawnSequence()
@@ -224,17 +232,32 @@
 	if(!T || T.density)
 		return FALSE
 
-	// Check for dense objects
-	for(var/obj/O in T)
-		if(O.density && !istype(O, /obj/structure/seed_of_greed))
-			return FALSE
-
 	// Check for walls
 	if(locate(/turf/closed) in T)
 		return FALSE
 
+	// Track if we had to destroy something
+	var/destroyed_obstacle = FALSE
+
+	// Check for dense objects and try to destroy them
+	for(var/obj/O in T)
+		if(O.density && !istype(O, /obj/structure/seed_of_greed))
+			// Check if it's indestructible
+			if(O.resistance_flags & INDESTRUCTIBLE)
+				return FALSE
+			// Destroy the obstacle
+			visible_message(span_danger("[src] consumes [O] to make room!"))
+			playsound(T, 'sound/effects/splat.ogg', 30, TRUE)
+			qdel(O)
+			destroyed_obstacle = TRUE
+
 	// Safe to place
 	var/obj/placed = new obj_type(T)
+
+	// If we destroyed something, damage the placed structure by 50%
+	if(destroyed_obstacle && placed)
+		var/damage_amount = placed.max_integrity * 0.5
+		placed.take_damage(damage_amount)
 
 	// Visual effect
 	new /obj/effect/temp_visual/dir_setting/cult/phase(T)
@@ -246,9 +269,20 @@
 	if(!T || T.density)
 		return FALSE
 
+	// Track if we had to destroy something
+	var/destroyed_obstacle = FALSE
+
+	// Check for dense objects and try to destroy them
 	for(var/obj/O in T)
 		if(O.density && !istype(O, /obj/structure/seed_of_greed))
-			return FALSE
+			// Check if it's indestructible
+			if(O.resistance_flags & INDESTRUCTIBLE)
+				return FALSE
+			// Destroy the obstacle
+			visible_message(span_danger("[src] consumes [O] to make room!"))
+			playsound(T, 'sound/effects/splat.ogg', 30, TRUE)
+			qdel(O)
+			destroyed_obstacle = TRUE
 
 	var/mob/M = new mob_type(T)
 
@@ -256,6 +290,11 @@
 	if(istype(M, /mob/living/simple_animal))
 		var/mob/living/simple_animal/S = M
 		S.faction = list("greed_clan", "hostile")
+
+		// If we destroyed something, damage the spawned mob by 50%
+		if(destroyed_obstacle)
+			var/damage_amount = S.maxHealth * 0.5
+			S.adjustBruteLoss(damage_amount)
 
 	new /obj/effect/temp_visual/dir_setting/cult/phase(T)
 	playsound(T, 'sound/effects/phasein.ogg', 40, TRUE)
@@ -379,6 +418,10 @@
 	name = "Seed of Greed (Defensive)"
 	desc = "Constructs a heavily fortified position."
 	var/list/barricade_positions_extra = list() // Third ring for higher levels
+
+/obj/structure/seed_of_greed/defensive/Destroy()
+	barricade_positions_extra = null
+	return ..()
 
 /obj/structure/seed_of_greed/defensive/level1
 	name = "Seed of Greed (Defensive I)"

@@ -1,0 +1,573 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"aY" = (
+/obj/structure/mineral_door/wood,
+/turf/open/floor/wood,
+/area/city/backstreets_room)
+"bd" = (
+/turf/closed/indestructible/reinforced,
+/area/city/backstreets_room)
+"bn" = (
+/obj/machinery/hydroponics/soil,
+/obj/structure/sigsystem/pressure_plate{
+	mobs_only = 1;
+	dir = 8
+	},
+/obj/effect/decal/cleanable/dirt,
+/turf/open/floor/plating/sandy_dirt,
+/area/city/backstreets_room)
+"cd" = (
+/obj/effect/decal/cleanable/dirt,
+/turf/open/floor/plating/dirt/jungle,
+/area/city/backstreets_room)
+"cE" = (
+/obj/effect/decal/cleanable/dirt,
+/obj/structure/fluff/broken_flooring{
+	dir = 1
+	},
+/obj/structure/sigsystem/connector/split{
+	delay_time = 4
+	},
+/turf/open/floor/plating/dirt/jungle,
+/area/city/backstreets_room)
+"dB" = (
+/obj/structure/table,
+/obj/item/flashlight/lamp{
+	on = 0
+	},
+/turf/open/floor/facility/dark,
+/area/city/backstreets_room)
+"ix" = (
+/obj/structure/sigsystem/deployer{
+	spawn_dist_x = -2;
+	spawn_flavor_text = "burrows out of the soft earth.";
+	atom_path = /mob/living/simple_animal/hostile/ordeal/amber_bug
+	},
+/turf/open/floor/facility/dark,
+/area/city/backstreets_room)
+"jh" = (
+/obj/structure/chair/office{
+	dir = 4
+	},
+/turf/open/floor/facility/dark,
+/area/city/backstreets_room)
+"jW" = (
+/obj/effect/decal/cleanable/dirt,
+/obj/structure/sigsystem/pressure_plate{
+	mobs_only = 1;
+	dir = 8
+	},
+/turf/open/floor/facility/dark,
+/area/city/backstreets_room)
+"kq" = (
+/obj/structure/sigsystem/pressure_plate{
+	mobs_only = 1;
+	dir = 4
+	},
+/obj/effect/decal/cleanable/dirt,
+/turf/open/floor/plating/sandy_dirt,
+/area/city/backstreets_room)
+"kD" = (
+/turf/open/floor/plating/sandy_dirt,
+/area/city/backstreets_room)
+"kI" = (
+/obj/effect/decal/cleanable/dirt,
+/obj/structure/sigsystem/connector{
+	dir = 8
+	},
+/turf/open/floor/facility/dark,
+/area/city/backstreets_room)
+"kK" = (
+/obj/machinery/smartfridge/bottlerack/grownbin,
+/turf/open/floor/plating/sandy_dirt,
+/area/city/backstreets_room)
+"mG" = (
+/obj/effect/decal/cleanable/dirt,
+/obj/structure/sigsystem/connector{
+	dir = 1;
+	repeat_amt = 2;
+	delay_time = 60
+	},
+/obj/structure/sigsystem/connector{
+	dir = 8;
+	repeat_amt = 3;
+	delay_time = 40
+	},
+/turf/open/floor/facility/dark,
+/area/city/backstreets_room)
+"nj" = (
+/obj/effect/decal/cleanable/dirt,
+/obj/structure/flora/ausbushes/palebush,
+/turf/open/floor/plating/dirt/jungle,
+/area/city/backstreets_room)
+"nV" = (
+/obj/structure/table,
+/obj/structure/fluff/paper/stack{
+	dir = 5
+	},
+/turf/open/floor/facility/dark,
+/area/city/backstreets_room)
+"oj" = (
+/obj/structure/lootcrate/k_corp{
+	pixel_x = -10;
+	pixel_y = -3
+	},
+/turf/open/floor/facility/dark,
+/area/city/backstreets_room)
+"qo" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/machinery/smartfridge/bottlerack/seedbin,
+/obj/item/seeds/grape/green,
+/turf/open/floor/wood,
+/area/city/backstreets_room)
+"rP" = (
+/obj/effect/decal/cleanable/dirt,
+/obj/item/paper/crumpled/muddy/fluff{
+	pixel_x = 8;
+	pixel_y = -7
+	},
+/obj/effect/decal/cleanable/glass,
+/turf/open/floor/plating/dirt/jungle,
+/area/city/backstreets_room)
+"rS" = (
+/obj/effect/decal/cleanable/dirt,
+/obj/structure/sigsystem/pressure_plate{
+	mobs_only = 1;
+	dir = 8
+	},
+/obj/effect/decal/remains/human{
+	pixel_x = 3;
+	pixel_y = 15;
+	name = "gnawed remains";
+	desc = "They look like human remains. They have teethmarks all over them."
+	},
+/obj/effect/decal/cleanable/shreds,
+/turf/open/floor/plating/dirt/jungle,
+/area/city/backstreets_room)
+"sM" = (
+/obj/effect/decal/cleanable/dirt,
+/obj/structure/flora/ausbushes/leafybush,
+/obj/structure/sigsystem/connector,
+/turf/open/floor/plating/dirt/jungle,
+/area/city/backstreets_room)
+"td" = (
+/obj/structure/lootcrate/k_corp{
+	pixel_y = -3;
+	pixel_x = -3
+	},
+/turf/open/floor/facility/dark,
+/area/city/backstreets_room)
+"ti" = (
+/obj/structure/table/optable,
+/obj/structure/sigsystem/pressure_plate{
+	mobs_only = 1;
+	dir = 8
+	},
+/turf/open/floor/facility/dark,
+/area/city/backstreets_room)
+"tm" = (
+/obj/effect/decal/cleanable/dirt,
+/obj/structure/sigsystem/connector{
+	dir = 1
+	},
+/turf/open/floor/facility/dark,
+/area/city/backstreets_room)
+"tN" = (
+/obj/effect/decal/cleanable/dirt,
+/obj/structure/sigsystem/deployer{
+	spawn_dist_x = -2;
+	spawn_flavor_text = "burrows out of the soft earth.";
+	atom_path = /mob/living/simple_animal/hostile/ordeal/amber_bug
+	},
+/obj/effect/decal/cleanable/plastic,
+/turf/open/floor/facility/dark,
+/area/city/backstreets_room)
+"uv" = (
+/obj/item/reagent_containers/glass/bucket/wooden,
+/obj/machinery/hydroponics/soil,
+/turf/open/floor/plating/sandy_dirt,
+/area/city/backstreets_room)
+"vG" = (
+/obj/structure/table,
+/obj/item/paper/crumpled{
+	pixel_x = -4;
+	pixel_y = -2;
+	name = "Treatments";
+	info = "Treatment: Injection with tresmetal tonic.<br>Result: He entered cardiac arrest, we only managed to restart his heart in time but his symptoms show little change.<br>Treatment 2: Measured Sweeper fluid injected into afflicted areas.<br>Result: Successfully dissolved afflicted area but the poor percision of my equipment resulted in healthy tissue around the infection also being dissolved. He wont survive another injection.<br><br>Im keeping him in stasis until i can find a safer cure. If stasis somehow fails and your reading this ive left money on the desk for you to take a train to K corp. If we are lucky we will see eachother again soon."
+	},
+/obj/item/pen{
+	pixel_x = -7;
+	pixel_y = 9
+	},
+/turf/open/floor/facility/dark,
+/area/city/backstreets_room)
+"vJ" = (
+/obj/structure/flora/ausbushes/leafybush,
+/turf/open/floor/plating/sandy_dirt,
+/area/city/backstreets_room)
+"xd" = (
+/obj/structure/flora/ash/garden/arid,
+/obj/structure/sigsystem/deployer{
+	spawn_dist_x = 1;
+	spawn_flavor_text = "burrows out of the soft earth.";
+	atom_path = /mob/living/simple_animal/hostile/ordeal/amber_bug
+	},
+/turf/open/floor/plating/sandy_dirt,
+/area/city/backstreets_room)
+"xo" = (
+/obj/structure/closet/crate/critter,
+/turf/open/floor/facility/dark,
+/area/city/backstreets_room)
+"yk" = (
+/obj/structure/table,
+/obj/item/stack/spacecash/c200{
+	pixel_y = 8
+	},
+/turf/open/floor/facility/dark,
+/area/city/backstreets_room)
+"zl" = (
+/obj/structure/lootcrate/backstreets{
+	density = 0;
+	anchored = 1;
+	pixel_x = 5;
+	pixel_y = 15
+	},
+/obj/effect/turf_decal/siding/wood{
+	dir = 4
+	},
+/turf/open/floor/wood,
+/area/city/backstreets_room)
+"zu" = (
+/obj/effect/decal/cleanable/dirt,
+/obj/structure/sigsystem/connector,
+/turf/open/floor/plating/dirt/jungle,
+/area/city/backstreets_room)
+"Cs" = (
+/obj/structure/fluff/broken_flooring{
+	dir = 8
+	},
+/turf/open/floor/plating/dirt/jungle,
+/area/city/backstreets_room)
+"De" = (
+/obj/machinery/hydroponics/soil,
+/obj/structure/sigsystem/deployer{
+	spawn_dist_x = 4;
+	spawn_flavor_text = "burrows out of the soft earth.";
+	atom_path = /mob/living/simple_animal/hostile/ordeal/amber_bug;
+	spawn_dist_y = 1
+	},
+/turf/open/floor/plating/sandy_dirt,
+/area/city/backstreets_room)
+"DH" = (
+/obj/structure/flora/ausbushes/pointybush,
+/obj/structure/sigsystem/pressure_plate{
+	mobs_only = 1;
+	dir = 8
+	},
+/turf/open/floor/plating/dirt/jungle,
+/area/city/backstreets_room)
+"DZ" = (
+/obj/structure/closet/crate/critter,
+/obj/structure/sigsystem/connector{
+	dir = 1
+	},
+/turf/open/floor/facility/dark,
+/area/city/backstreets_room)
+"EM" = (
+/turf/closed/indestructible/wood,
+/area/city/backstreets_room)
+"Fp" = (
+/obj/effect/decal/cleanable/dirt,
+/obj/structure/fluff/dirthole{
+	pixel_x = -32;
+	pixel_y = 10
+	},
+/turf/open/floor/plating/dirt/jungle,
+/area/city/backstreets_room)
+"GI" = (
+/obj/structure/window/fulltile,
+/obj/effect/decal/cleanable/dirt,
+/turf/open/floor/wood,
+/area/city/backstreets_room)
+"Ho" = (
+/obj/structure/fluff/broken_flooring,
+/obj/item/wheelchair,
+/turf/open/floor/plating/dirt/jungle,
+/area/city/backstreets_room)
+"HF" = (
+/obj/effect/decal/cleanable/dirt,
+/obj/structure/sigsystem/deployer{
+	spawn_dist_x = 4;
+	spawn_dist_y = 1;
+	spawn_flavor_text = "burrows out of the soft earth.";
+	atom_path = /mob/living/simple_animal/hostile/ordeal/amber_bug
+	},
+/turf/open/floor/facility/dark,
+/area/city/backstreets_room)
+"HR" = (
+/turf/open/floor/facility/dark,
+/area/city/backstreets_room)
+"HS" = (
+/obj/structure/sign/painting/library{
+	pixel_x = 32
+	},
+/obj/structure/bed,
+/turf/open/floor/wood,
+/area/city/backstreets_room)
+"JD" = (
+/obj/effect/decal/cleanable/dirt,
+/obj/structure/fluff/containment_tank/open{
+	pixel_y = 5;
+	dir = 1;
+	pixel_x = 2
+	},
+/turf/open/floor/facility/dark,
+/area/city/backstreets_room)
+"Kp" = (
+/obj/structure/sigsystem/pressure_plate{
+	mobs_only = 1;
+	dir = 8
+	},
+/turf/open/floor/plating/dirt/jungle,
+/area/city/backstreets_room)
+"Kq" = (
+/obj/structure/seed_grinder,
+/turf/open/floor/wood,
+/area/city/backstreets_room)
+"La" = (
+/obj/structure/frame/computer{
+	pixel_x = -4;
+	pixel_y = 3
+	},
+/turf/open/floor/facility/dark,
+/area/city/backstreets_room)
+"Oo" = (
+/obj/machinery/smartfridge/bottlerack/gardentool/preload,
+/turf/open/floor/plating/sandy_dirt,
+/area/city/backstreets_room)
+"PK" = (
+/obj/effect/decal/cleanable/cobweb,
+/turf/open/floor/plating/dirt/jungle,
+/area/city/backstreets_room)
+"Qp" = (
+/obj/machinery/hydroponics/soil,
+/turf/open/floor/plating/sandy_dirt,
+/area/city/backstreets_room)
+"QB" = (
+/obj/machinery/smartfridge/bottlerack/grownbin,
+/obj/item/flashlight/lantern,
+/turf/open/floor/plating/sandy_dirt,
+/area/city/backstreets_room)
+"QF" = (
+/turf/open/floor/wood,
+/area/city/backstreets_room)
+"QN" = (
+/obj/effect/decal/cleanable/dirt,
+/obj/item/paper/crumpled/muddy/fluff{
+	pixel_x = -8;
+	pixel_y = 7
+	},
+/turf/open/floor/plating/dirt/jungle,
+/area/city/backstreets_room)
+"RD" = (
+/obj/effect/decal/cleanable/dirt,
+/obj/effect/turf_decal/siding/wood{
+	dir = 8
+	},
+/turf/open/floor/plating/dirt/jungle,
+/area/city/backstreets_room)
+"Ts" = (
+/obj/structure/closet/crate/bin{
+	opened = 1
+	},
+/obj/item/tresmetal/green,
+/obj/item/tresmetal/green{
+	pixel_y = -7
+	},
+/obj/item/paper/crumpled,
+/obj/item/paper/crumpled,
+/turf/open/floor/facility/dark,
+/area/city/backstreets_room)
+"Uy" = (
+/obj/machinery/computer/operating{
+	dir = 1
+	},
+/turf/open/floor/facility/dark,
+/area/city/backstreets_room)
+"WZ" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/wood,
+/area/city/backstreets_room)
+"Xl" = (
+/obj/effect/decal/cleanable/dirt,
+/obj/effect/decal/cleanable/generic,
+/turf/open/floor/facility/dark,
+/area/city/backstreets_room)
+"Yr" = (
+/obj/effect/decal/cleanable/dirt,
+/turf/open/floor/facility/dark,
+/area/city/backstreets_room)
+"Zt" = (
+/obj/structure/falsewall/wood,
+/turf/open/floor/wood,
+/area/city/backstreets_room)
+
+(1,1,1) = {"
+bd
+bd
+bd
+bd
+EM
+EM
+EM
+EM
+"}
+(2,1,1) = {"
+Qp
+De
+kD
+kK
+EM
+qo
+Kq
+EM
+"}
+(3,1,1) = {"
+Qp
+bn
+vJ
+QB
+GI
+QF
+WZ
+EM
+"}
+(4,1,1) = {"
+kD
+kD
+kD
+kq
+aY
+QF
+WZ
+EM
+"}
+(5,1,1) = {"
+kD
+kD
+kD
+xd
+GI
+WZ
+QF
+EM
+"}
+(6,1,1) = {"
+Qp
+uv
+kD
+vJ
+EM
+zl
+HS
+EM
+"}
+(7,1,1) = {"
+Qp
+Qp
+kD
+Oo
+EM
+Zt
+EM
+EM
+"}
+(8,1,1) = {"
+bd
+bd
+bd
+bd
+bd
+RD
+bd
+bd
+"}
+(9,1,1) = {"
+bd
+PK
+cd
+rP
+nj
+HR
+td
+bd
+"}
+(10,1,1) = {"
+bd
+cd
+Fp
+HF
+Xl
+cd
+oj
+bd
+"}
+(11,1,1) = {"
+bd
+QN
+tN
+mG
+cE
+ix
+xo
+bd
+"}
+(12,1,1) = {"
+bd
+cd
+zu
+sM
+kI
+tm
+DZ
+bd
+"}
+(13,1,1) = {"
+bd
+JD
+rS
+Kp
+jW
+DH
+ti
+bd
+"}
+(14,1,1) = {"
+bd
+La
+Ho
+Yr
+jh
+HR
+Uy
+bd
+"}
+(15,1,1) = {"
+bd
+Cs
+Ts
+dB
+vG
+yk
+nV
+bd
+"}
+(16,1,1) = {"
+bd
+bd
+bd
+bd
+bd
+bd
+bd
+bd
+"}

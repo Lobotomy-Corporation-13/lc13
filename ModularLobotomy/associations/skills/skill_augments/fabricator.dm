@@ -238,13 +238,6 @@
 			"skill_level" = 2,
 			"desc" = "Drain HP and SP from all living things in a 2 tile radius"
 		),
-		/datum/action/cooldown/skulk = list(
-			"name" = "Skulk",
-			"slot_cost" = 2,
-			"charge_cost" = 25,
-			"skill_level" = 2,
-			"desc" = "Become invisible for 10 seconds, but you are pacified for 12 seconds"
-		),
 		/datum/action/cooldown/autoloader = list(
 			"name" = "Autoloader",
 			"slot_cost" = 2,

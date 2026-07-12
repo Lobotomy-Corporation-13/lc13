@@ -5,6 +5,7 @@
 #define FILE_ABNO_PICKS "data/abno_rates/[mode].json"
 #define FILE_CORE_SUPPRESSIONS "data/ClearedCores.json"
 #define FILE_RCE_EXPEDITION "data/RCEExpedition.json"
+#define FILE_RCE_LEADERBOARD "data/RCELeaderboard.json"
 #define ROUNDCOUNT_BUTTON_PRESSED 0
 
 #define KEEP_ROUNDS_MAP 3
@@ -31,6 +32,8 @@ SUBSYSTEM_DEF(persistence)
 	var/list/obj/structure/sign/painting/painting_frames = list()
 	var/list/paintings = list()
 	var/list/abno_rates = list()
+	/// Stores old rates of abnormalities undergoing testing. We set their rates to 9999 temporarily then return them to their old rates before saving them again.
+	var/list/tested_abno_old_rates = list()
 	/// List of ckeys with list of core suppression names that they have cleared before
 	var/list/cleared_core_suppressions = list()
 	/// LOBOTOMYCORPORATION ADDITION: Button counter
@@ -56,6 +59,7 @@ SUBSYSTEM_DEF(persistence)
 	LoadClearedCores()
 	Load_button_counter() // LOBOTOMYCORPORATION ADDITION: Button counter
 	LoadRCEExpedition()
+	LoadRCELeaderboard()
 	LoadRandomizedRecipes()
 	LoadPaintings()
 	load_custom_outfits()
@@ -251,6 +255,7 @@ SUBSYSTEM_DEF(persistence)
 		SaveAbnoPicks()
 	CollectAgentReputation()
 	Save_button_counter() // LOBOTOMYCORPORATION ADDITION: Button counter
+	SaveRCELeaderboard()
 	SaveRandomizedRecipes()
 	SavePaintings()
 	SaveScars()
@@ -431,7 +436,10 @@ SUBSYSTEM_DEF(persistence)
 
 /datum/controller/subsystem/persistence/proc/SaveAbnoPicks()
 	for(var/datum/abnormality/abno_ref in SSlobotomy_corp.all_abnormality_datums)
-		abno_rates[abno_ref.abno_path] = text2num(abno_rates[abno_ref.abno_path]) + 1
+		if(tested_abno_old_rates[abno_ref.abno_path]) // If the Abnormality was being tested and thus had a higher spawn rate, we save their actual rate and not their weight boosted one
+			abno_rates[abno_ref.abno_path] = text2num(tested_abno_old_rates[abno_ref.abno_path])
+		else
+			abno_rates[abno_ref.abno_path] = text2num(abno_rates[abno_ref.abno_path]) + 1
 	var/mode = ""
 	if(SSticker.mode)
 		var/datum/game_mode/gm = SSticker.mode
@@ -482,6 +490,20 @@ SUBSYSTEM_DEF(persistence)
 	var/list/data = list("expedition_number" = rce_expedition_number)
 	fdel(FILE_RCE_EXPEDITION)
 	text2file(json_encode(data), FILE_RCE_EXPEDITION)
+
+/datum/controller/subsystem/persistence/proc/LoadRCELeaderboard()
+	if(SSmaptype.maptype != "rcorp_factory")
+		return
+	if(!SSgamedirector.rce_leaderboard)
+		return
+	SSgamedirector.rce_leaderboard.LoadFromFile()
+
+/datum/controller/subsystem/persistence/proc/SaveRCELeaderboard()
+	if(SSmaptype.maptype != "rcorp_factory")
+		return
+	if(!SSgamedirector.rce_leaderboard)
+		return
+	SSgamedirector.rce_leaderboard.SaveToFile()
 
 /datum/controller/subsystem/persistence/proc/ShowExpeditionNumber(mob/M)
 	if(!M || !M.client)

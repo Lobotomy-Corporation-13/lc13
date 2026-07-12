@@ -207,7 +207,7 @@
 /turf/open/floor/plasteel,
 /area/facility_hallway/north)
 "bJ" = (
-/obj/item/refiner_filter/red,
+/obj/item/stack/refiner_filter/red,
 /turf/open/floor/carpet/purple,
 /area/department_main/information)
 "bL" = (

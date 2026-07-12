@@ -29,7 +29,7 @@
 	ego_list = list(
 		/datum/ego_datum/weapon/exuviae,
 		/datum/ego_datum/armor/exuviae,
-		/datum/ego_datum/exuviae,
+		/datum/ego_datum/auxiliary/exuviae,
 	)
 	gift_type =  /datum/ego_gifts/exuviae
 	gift_message = "You manage to shave off a patch of scales."
@@ -180,13 +180,13 @@
 	del_on_death = 1
 	vision_range = 18 //two screens away
 	var/panic_timer = 0
-	var/mob/living/simple_animal/hostile/abnormality/naked_nest/origin_nest
+	var/origin_nest
 
 /mob/living/simple_animal/hostile/naked_nest_serpent/Initialize()
 	. = ..()
-	var/home_naked_nest = locate(/mob/living/simple_animal/hostile/abnormality/naked_nest) in loc
+	var/mob/living/home_naked_nest = locate(/mob/living/simple_animal/hostile/abnormality/naked_nest) in loc
 	if(home_naked_nest)
-		origin_nest = home_naked_nest
+		origin_nest = home_naked_nest.tag
 	AddComponent(/datum/component/swarming)
 
 /mob/living/simple_animal/hostile/naked_nest_serpent/AttackingTarget(atom/attacked_target)

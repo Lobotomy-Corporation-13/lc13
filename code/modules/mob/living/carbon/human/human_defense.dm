@@ -114,6 +114,12 @@
 	for(var/obj/item/I in held_items)
 		if(I.IsReflect(def_zone))
 			return TRUE
+	// Check other equipped items (pockets, suit storage, etc.)
+	for(var/obj/item/I in contents)
+		if(I == wear_suit || I == head || (I in held_items))
+			continue
+		if(I.IsReflect(def_zone))
+			return TRUE
 	return FALSE
 
 /mob/living/carbon/human/proc/check_shields(atom/AM, damage, attack_text = "the attack", attack_type = MELEE_ATTACK, armour_penetration = 0)

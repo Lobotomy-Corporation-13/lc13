@@ -1,4 +1,6 @@
 //Very simple, funny little guy.
+
+//The transferable_simple in this abnormality stores it's amount of breaches
 /mob/living/simple_animal/hostile/abnormality/lunar_rabbit
 	name = "Lunar Physician"
 	desc = "A little rabbit girl in a nurse outfit."
@@ -61,10 +63,11 @@
 
 /mob/living/simple_animal/hostile/abnormality/lunar_rabbit/Initialize(atom/attacked_target)
 	.=..()
-	var/breachtime = 5 MINUTES + rand(1, 10 MINUTES)
+	var/breachtime = 5 MINUTES + rand(1, 10 MINUTES) + (datum_reference ? datum_reference.transferable_simple : 1) * 3 MINUTES
 	addtimer(CALLBACK(src, PROC_REF(BreachMe)), breachtime)
 
 /mob/living/simple_animal/hostile/abnormality/lunar_rabbit/proc/BreachMe(atom/attacked_target)
+	datum_reference.transferable_simple++
 	datum_reference.qliphoth_change(-99)
 
 /mob/living/simple_animal/hostile/abnormality/lunar_rabbit/AttackingTarget(atom/attacked_target)
@@ -79,18 +82,17 @@
 		L.apply_lc_fragile(2)
 
 		//Also get a random between Blind, Confusion, Mute and drowsy, and none.
-		var/effect_choice = rand(1,5)
+		var/effect_choice = rand(1,4)
 		switch(effect_choice)
 			if(1)
 				L.set_confusion(10)
 			if(2)
 				L.silent = 100
 			if(3)
-				L.drowsyness += 30
-			if(4)
 				L.adjust_blindness(5)
-			if(5)
+			if(4)
 				return
+	SLEEP_CHECK_DEATH(3)
 
 /mob/living/simple_animal/hostile/abnormality/lunar_rabbit/PostWorkEffect(mob/living/carbon/human/user, work_type, pe, work_time)
 	..()

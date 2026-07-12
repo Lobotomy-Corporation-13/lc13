@@ -44,6 +44,16 @@
 		/obj/item/reagent_containers/glass/beaker/jar/syrup_random = 1,
 		)
 
+/obj/effect/spawner/lootdrop/mortar_emplacement
+	name = "mortar emplacement"
+	lootcount = 5
+	lootdoubles = FALSE
+	loot = list(
+		/obj/machinery/mortar = 1,
+		/obj/item/rangefinder = 1,
+		/obj/item/mshell = 1,
+		)
+
 /obj/effect/spawner/lootdrop/medical_random
 	name = "medical random"
 	lootcount = 3

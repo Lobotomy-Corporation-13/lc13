@@ -145,6 +145,9 @@
 	if(!ishuman(H))
 		return
 
+	if(SSmaptype.maptype in SSmaptype.citymaps)
+		ADD_TRAIT(H, TRAIT_COMBATFEAR_IMMUNE, CITY_TRAIT)
+
 	if(!config)	//Needed for robots.
 		roundstart_experience = minimal_skills
 
@@ -256,7 +259,7 @@
 	return FALSE
 
 //Used to check for unique job circumstances that may change at any moment. Return false if you want the job to to be skipped in the job assignment process for this client.
-/datum/job/proc/unique_job_check(client/C)
+/datum/job/proc/unique_job_check(client/C, occupation_divide = FALSE)
 	return TRUE
 
 /datum/job/proc/available_in_days(client/C)
@@ -349,6 +352,14 @@
 		holder = "[uniform]"
 	uniform = text2path(holder)
 
+	if(!(H.beret_enabled) && (ispath(head, /obj/item/clothing/head/beret) || ispath(head, /obj/item/clothing/head/hos/beret)))
+		head = null
+
+	// This check is a bit questionable; it's == instead of ispath because I don't want to nuke roles that spawn with HUDglasses.
+	// This pref is only intended to nuke the basic cosmetic sunglasses.
+	if(!(H.sunglasses_enabled) && ((glasses == /obj/item/clothing/glasses/sunglasses) || (glasses == /obj/item/clothing/glasses/middle_sunglasses)))
+		glasses = null
+
 /datum/outfit/job/post_equip(mob/living/carbon/human/H, visualsOnly = FALSE, client/preference_source = null) // Tegu alt job titles
 	if(visualsOnly)
 		return
@@ -356,6 +367,8 @@
 	var/datum/job/J = SSjob.GetJobType(jobtype)
 	if(!J)
 		J = SSjob.GetJob(H.job)
+	if(!J)
+		return
 
 	var/obj/item/card/id/C = H.wear_id
 	if(istype(C))
@@ -380,6 +393,16 @@
 	var/obj/item/pda/PDA = H.get_item_by_slot(pda_slot)
 	if(istype(PDA))
 		PDA.owner = H.real_name
+
+		// When a person spawns in, if there already exist PDAs with their name on it, remove them from the global PDAs list to make them unavailable to reach via messenger.
+		// But only on facility mode! This is a very arcadey fix to the issue of duplicate entries in the messenger tab, and so it should remain on the most arcadey mode.
+		if((SSmaptype.maptype in SSmaptype.lc_maps) || SSmaptype.maptype == "mini")
+			for(var/obj/item/pda/could_this_be_our_echo_from_a_past_life in GLOB.PDAs)
+				if(could_this_be_our_echo_from_a_past_life == PDA)
+					continue
+				if(could_this_be_our_echo_from_a_past_life.owner == PDA.owner)
+					GLOB.PDAs -= could_this_be_our_echo_from_a_past_life
+
 		// Tegu edit - Alt job titles
 		if(preference_source && preference_source.prefs && preference_source.prefs.alt_titles_preferences[J.title])
 			PDA.ownjob = preference_source.prefs.alt_titles_preferences[J.title]

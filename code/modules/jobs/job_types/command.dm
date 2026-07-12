@@ -34,7 +34,7 @@
 	minimal_access = list(ACCESS_COMMAND, ACCESS_SECURITY)
 	departments = DEPARTMENT_COMMAND
 
-	mapexclude = list("mini", "branch12")
+	mapexclude = list("mini")
 	job_important = "You are the Extraction Officer. Your job is to manage the EGO console, Extraction purchase console, and power generation system. Your main goal is to ensure Agents are well-equipped with EGO."
 
 	job_abbreviation = "EO"
@@ -53,8 +53,12 @@
 	ADD_TRAIT(outfit_owner, TRAIT_WORK_FORBIDDEN, JOB_TRAIT)
 	ADD_TRAIT(outfit_owner, TRAIT_ATTRIBUTES_VISION, JOB_TRAIT)
 	outfit_owner.grant_language(/datum/language/bong, TRUE, FALSE, LANGUAGE_MIND) //So they can understand the bong-bong but not speak it
-	if(SSmaptype.chosen_trait == FACILITY_TRAIT_ABNO_BLITZ)
-		outfit_owner.adjust_all_attribute_levels(40)//was at 60 but that causes some jank with it spawning with higher than 60 stats
+
+	switch(SSmaptype.chosen_trait)
+		if(FACILITY_TRAIT_ABNO_BLITZ)
+			outfit_owner.adjust_all_attribute_levels(40)
+		if(FACILITY_TRAIT_DARK_SOULS)
+			outfit_owner.equip_to_slot_or_del(new /obj/item/estus(outfit_owner), ITEM_SLOT_HANDS, TRUE)
 
 /datum/outfit/job/command/extraction
 	name = "Extraction Officer"
@@ -90,15 +94,43 @@
 /datum/job/command/records/after_spawn(mob/living/outfit_owner, mob/M)
 	. = ..()
 	ADD_TRAIT(outfit_owner, TRAIT_WORK_KNOWLEDGE, JOB_TRAIT)
+	var/datum/atom_hud/secsensor = GLOB.huds[DATA_HUD_SECURITY_ADVANCED]
+	var/datum/atom_hud/medsensor = GLOB.huds[DATA_HUD_MEDICAL_ADVANCED]
+	secsensor.add_hud_to(outfit_owner)
+	medsensor.add_hud_to(outfit_owner)
+	outfit_owner.apply_status_effect(/datum/status_effect/autovitals)
 
 /datum/outfit/job/command/records
 	name = "Records Officer"
 	jobtype = /datum/job/command/records
 	suit =  /obj/item/clothing/suit/armor/records
 	ears = /obj/item/radio/headset/heads/records
-
+	implants = list(/obj/item/organ/cyberimp/eyes/hud/medical)
+	r_hand = /obj/item/ego_weapon/city/cinqwest_selfiestick/ro
 	backpack_contents = list(
 		/obj/item/portacopier,
 		/obj/item/portablepredict,
 		/obj/item/agent_preservation_tool,
+		/obj/item/deepscanner/advanced,
+		//obj/item/records_broadcast,		We'll add this in later.
 	)
+
+//RO passively gives people around him vitals sight
+/datum/status_effect/autovitals
+	id = "autovitals"
+	status_type = STATUS_EFFECT_UNIQUE
+	duration = -1
+	tick_interval = 10
+	alert_type = null
+
+/datum/status_effect/autovitals/tick()
+	if(!isliving(owner))
+		qdel(src)
+	for(var/mob/living/L in view(7, owner))
+		if(!L.has_status_effect(/datum/status_effect/visualize_vitals))
+			L.apply_status_effect(/datum/status_effect/visualize_vitals)
+	. = ..()
+
+
+/obj/item/ego_weapon/city/cinqwest_selfiestick/ro
+	name = "records officer streaming stick"

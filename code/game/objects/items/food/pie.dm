@@ -34,6 +34,17 @@
 	foodtypes = GRAIN | DAIRY | SUGAR
 	var/stunning = TRUE
 
+/obj/item/food/pie/cream/MakeProcessable()
+	AddElement(/datum/element/processable, TOOL_KNIFE, /obj/item/food/pieslice/cream, 4, 30)
+
+/obj/item/food/pieslice/cream
+	name = "banana cream pie slice"
+	desc = "Just like back home, on clown planet! HONK!"
+	icon_state = "pieslice"
+	food_reagents = list(/datum/reagent/consumable/nutriment = 2, /datum/reagent/consumable/banana = 1, /datum/reagent/consumable/nutriment/vitamin = 1)
+	tastes = list("pie" = 1)
+	foodtypes = GRAIN | DAIRY | SUGAR
+
 /obj/item/food/pie/cream/throw_impact(atom/hit_atom, datum/thrownthing/throwingdatum)
 	. = ..()
 	if(!.) //if we're not being caught
@@ -84,6 +95,17 @@
 	tastes = list("pie" = 1, "meat" = 1)
 	foodtypes = GRAIN | MEAT
 
+/obj/item/food/pie/meatpie/MakeProcessable()
+	AddElement(/datum/element/processable, TOOL_KNIFE, /obj/item/food/pieslice/meatpie, 4, 30)
+
+/obj/item/food/pieslice/meatpie
+	name = "meat-pie slice"
+	desc = "An old barber recipe, very delicious!"
+	icon_state = "meatpieslice"
+	food_reagents = list(/datum/reagent/consumable/nutriment = 2, /datum/reagent/consumable/nutriment/vitamin = 1, /datum/reagent/consumable/nutriment/protein = 1)
+	tastes = list("pie" = 1, "meat" = 1)
+	foodtypes = GRAIN | MEAT
+
 /obj/item/food/pie/tofupie
 	name = "tofu-pie"
 	icon_state = "meatpie"
@@ -130,6 +152,17 @@
 	desc = "A pie containing sweet sweet love...or apple."
 	icon_state = "applepie"
 	food_reagents = list(/datum/reagent/consumable/nutriment = 11, /datum/reagent/consumable/nutriment/vitamin = 5)
+	tastes = list("pie" = 1, "apple" = 1)
+	foodtypes = GRAIN | FRUIT | SUGAR
+
+/obj/item/food/pie/applepie/MakeProcessable()
+	AddElement(/datum/element/processable, TOOL_KNIFE, /obj/item/food/pieslice/applepie, 4, 30)
+
+/obj/item/food/pieslice/applepie
+	name = "apple pie slice"
+	desc = "A pie slice containing sweet sweet love...or apple."
+	icon_state = "applepieslice"
+	food_reagents = list(/datum/reagent/consumable/nutriment = 2, /datum/reagent/consumable/nutriment/vitamin = 1)
 	tastes = list("pie" = 1, "apple" = 1)
 	foodtypes = GRAIN | FRUIT | SUGAR
 

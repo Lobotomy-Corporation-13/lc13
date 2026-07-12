@@ -49,7 +49,7 @@
 		/obj/structure/lootcrate/jcorp,
 		/obj/item/clothing/suit/armor/ego_gear/teth/bean,
 		/obj/item/ego_weapon/mini/bean,
-		/obj/item/storage/box/fireworks
+		/obj/item/storage/box/fireworks/dangerous
 	)
 
 /mob/living/simple_animal/hostile/abnormality/beanstalk/Move()
@@ -118,6 +118,7 @@
 			var/turf/get_tile = get_step(src, SOUTHEAST)
 			var/beanstalklootget = pick(beanstalkloot)
 			var/obj/spawned_item = new beanstalklootget(get_tile)
+			user.client?.give_award(/datum/award/achievement/abno/beanstalk_success, user)
 			to_chat(user, span_userdanger("You toss the [spawned_item] down and begin to climb back down."))
 			spawned_item.pixel_z = 128
 			spawned_item.alpha = 1
@@ -193,6 +194,7 @@
 		animate(user, alpha = 255,pixel_x = 0, pixel_z = -16, time = 3 SECONDS)
 		user.pixel_z = 0
 		to_chat(user, span_userdanger("You return with the giant's treasure!"))
+		user.client?.give_award(/datum/award/achievement/abno/beanstalk_treasure, user)
 		work_damage_amount = 7
 		climbing = FALSE
 		return
@@ -217,6 +219,7 @@
 				spawned_item.pixel_z = 128
 				spawned_item.alpha = 1
 				to_chat(user, span_userdanger("You toss the [spawned_item] down and begin to climb back down."))
+				user.client?.give_award(/datum/award/achievement/abno/beanstalk_success, user)
 				animate(spawned_item, alpha = 255,pixel_x = 0, pixel_z = 0, time = 3 SECONDS)
 				playsound(spawned_item, 'sound/abnormalities/roadhome/Cartoon_Falling_Sound_Effect.ogg', 75, FALSE, -1)
 				sleep(3 SECONDS)

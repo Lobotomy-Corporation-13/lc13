@@ -57,6 +57,12 @@
 	var/playstatus = FALSE
 	var/playrange = 40
 
+
+/mob/living/simple_animal/hostile/abnormality/siren/Destroy()
+	if(musictime)
+		QDEL_NULL(musictime)
+	return ..()
+
 //Spawn/music stuff
 /mob/living/simple_animal/hostile/abnormality/siren/Initialize()
 	. = ..()

@@ -26,6 +26,8 @@
 	var/total_cost = 0
 	var/ticket_id = ""
 	var/orderer_name = ""
+	/// Guards against the same ticket being processed multiple times simultaneously
+	var/being_processed = FALSE
 
 /obj/item/augment_ticket/Initialize(mapload)
 	. = ..()
@@ -71,10 +73,11 @@
 	icon_state = "console"
 	density = FALSE
 
-	var/busy = FALSE
+	/// Per-user busy states, keyed by REF(user)
+	var/list/user_busy = list()
 
-	// Current design being worked on
-	var/datum/augment_catalogue_design/current_design
+	/// Per-user design datums, keyed by REF(user)
+	var/list/user_designs = list()
 
 	// Share the same forms and effects as the fabricator
 	var/list/available_forms
@@ -88,7 +91,6 @@
 
 /obj/machinery/augment_catalogue/Initialize(mapload)
 	. = ..()
-	current_design = new /datum/augment_catalogue_design()
 
 	// Copy forms and effects from the closest fabricator within range 7
 	var/obj/machinery/augment_fabricator/fab = locate(/obj/machinery/augment_fabricator) in range(7, src)
@@ -123,6 +125,30 @@
 		ui = new(user, src, "AugmentCatalogue", name)
 		ui.open()
 
+/// Gets or creates a per-user design datum
+/obj/machinery/augment_catalogue/proc/get_user_design(mob/user)
+	var/user_ref = REF(user)
+	if(!user_designs[user_ref])
+		user_designs[user_ref] = new /datum/augment_catalogue_design()
+	return user_designs[user_ref]
+
+/// Checks if the given user's catalogue session is busy
+/obj/machinery/augment_catalogue/proc/is_user_busy(mob/user)
+	return user_busy[REF(user)]
+
+/// Sets the busy state for the given user's catalogue session
+/obj/machinery/augment_catalogue/proc/set_user_busy(mob/user, state)
+	user_busy[REF(user)] = state
+
+/// Clean up per-user data when UI is closed
+/obj/machinery/augment_catalogue/ui_close(mob/user)
+	var/user_ref = REF(user)
+	var/datum/augment_catalogue_design/design = user_designs[user_ref]
+	if(design)
+		qdel(design)
+	user_designs -= user_ref
+	user_busy -= user_ref
+
 /obj/machinery/augment_catalogue/ui_static_data(mob/user)
 	var/list/data = list()
 
@@ -144,9 +170,11 @@
 			"negative_immune" = form["negative_immune"] || 0
 		))
 
-	// Effects list
+	// Effects list (skip forced effects like mental_corrosion)
 	data["effects"] = list()
 	for(var/list/effect in available_effects)
+		if(effect["forced"])
+			continue
 		data["effects"] += list(list(
 			"id" = effect["id"],
 			"name" = effect["name"],
@@ -381,17 +409,18 @@
 /obj/machinery/augment_catalogue/ui_data(mob/user)
 	var/list/data = list()
 
-	// Current design info
-	data["selectedFormId"] = current_design.form_id
-	data["selectedRank"] = current_design.rank
-	data["augmentName"] = current_design.augment_name
-	data["augmentDesc"] = current_design.augment_desc
-	data["primaryColor"] = current_design.primary_color
-	data["secondaryColor"] = current_design.secondary_color
-	data["selectedEffects"] = current_design.selected_effects
-	data["totalCost"] = current_design.total_cost
+	// Current design info (per-user)
+	var/datum/augment_catalogue_design/design = get_user_design(user)
+	data["selectedFormId"] = design.form_id
+	data["selectedRank"] = design.rank
+	data["augmentName"] = design.augment_name
+	data["augmentDesc"] = design.augment_desc
+	data["primaryColor"] = design.primary_color
+	data["secondaryColor"] = design.secondary_color
+	data["selectedEffects"] = design.selected_effects
+	data["totalCost"] = design.total_cost
 
-	data["busy"] = busy
+	data["busy"] = is_user_busy(user)
 
 	// Services page data
 	data["scanCost"] = 20
@@ -410,9 +439,11 @@
 	if(.)
 		return
 
-	if(busy)
-		to_chat(usr, span_warning("[src] is currently processing!"))
+	if(is_user_busy(usr))
+		to_chat(usr, span_warning("[src] is currently processing your request!"))
 		return
+
+	var/datum/augment_catalogue_design/design = get_user_design(usr)
 
 	switch(action)
 		if("select_form")
@@ -424,62 +455,62 @@
 				var/list/form = available_forms[form_name]
 				if(form["id"] == form_id)
 					form_data = form
-					current_design.form_name = form_name
+					design.form_name = form_name
 					break
 
 			if(!form_data)
 				return
 
-			current_design.form_id = form_id
-			current_design.rank = params["rank"] || 1
-			current_design.selected_effects = list()
-			current_design.base_cost = form_data["base_cost"] * current_design.rank
+			design.form_id = form_id
+			design.rank = params["rank"] || 1
+			design.selected_effects = list()
+			design.base_cost = form_data["base_cost"] * design.rank
 
-			recalculate_cost()
+			recalculate_cost(usr)
 			return TRUE
 
 		if("set_rank")
-			current_design.rank = clamp(params["rank"], 1, maxRank)
+			design.rank = clamp(params["rank"], 1, maxRank)
 			// Recalculate base cost
-			var/list/form_data = get_form_by_id(current_design.form_id)
+			var/list/form_data = get_form_by_id(design.form_id)
 			if(form_data)
-				current_design.base_cost = form_data["base_cost"] * current_design.rank
-			recalculate_cost()
+				design.base_cost = form_data["base_cost"] * design.rank
+			recalculate_cost(usr)
 			return TRUE
 
 		if("add_effect")
 			var/effect_id = params["effectId"]
-			current_design.selected_effects += effect_id
-			recalculate_cost()
+			design.selected_effects += effect_id
+			recalculate_cost(usr)
 			return TRUE
 
 		if("remove_effect")
 			var/effect_index = params["index"]
-			if(effect_index >= 1 && effect_index <= length(current_design.selected_effects))
-				current_design.selected_effects.Cut(effect_index, effect_index + 1)
-			recalculate_cost()
+			if(effect_index >= 1 && effect_index <= length(design.selected_effects))
+				design.selected_effects.Cut(effect_index, effect_index + 1)
+			recalculate_cost(usr)
 			return TRUE
 
 		if("create_ticket")
-			if(!current_design.form_id || !length(current_design.selected_effects))
+			if(!design.form_id || !length(design.selected_effects))
 				to_chat(usr, span_warning("Design incomplete! Please select a form and at least one effect."))
 				return
 
 			// Update design with latest data from UI
 			if(params["name"])
-				current_design.augment_name = params["name"]
+				design.augment_name = params["name"]
 			if(params["description"])
-				current_design.augment_desc = params["description"]
+				design.augment_desc = params["description"]
 			if(params["primaryColor"])
-				current_design.primary_color = params["primaryColor"]
+				design.primary_color = params["primaryColor"]
 			if(params["secondaryColor"])
-				current_design.secondary_color = params["secondaryColor"]
+				design.secondary_color = params["secondaryColor"]
 
 			create_order_ticket(usr)
 			return TRUE
 
 		if("clear_design")
-			current_design = new /datum/augment_catalogue_design()
+			user_designs[REF(usr)] = new /datum/augment_catalogue_design()
 			return TRUE
 
 		if("scan_augment")
@@ -523,19 +554,19 @@
 
 		if("upload_design")
 			var/explanation = params["explanation"]
-			if(!current_design.form_id || !length(current_design.selected_effects))
+			if(!design.form_id || !length(design.selected_effects))
 				to_chat(usr, span_warning("Design incomplete! Please select a form and at least one effect."))
 				return
 
 			// Update design with latest data from UI
 			if(params["name"])
-				current_design.augment_name = params["name"]
+				design.augment_name = params["name"]
 			if(params["description"])
-				current_design.augment_desc = params["description"]
+				design.augment_desc = params["description"]
 			if(params["primaryColor"])
-				current_design.primary_color = params["primaryColor"]
+				design.primary_color = params["primaryColor"]
 			if(params["secondaryColor"])
-				current_design.secondary_color = params["secondaryColor"]
+				design.secondary_color = params["secondaryColor"]
 
 			upload_to_library(usr, explanation)
 			return TRUE
@@ -568,19 +599,20 @@
 			return effect
 	return null
 
-/obj/machinery/augment_catalogue/proc/recalculate_cost()
-	current_design.total_cost = current_design.base_cost
+/obj/machinery/augment_catalogue/proc/recalculate_cost(mob/user)
+	var/datum/augment_catalogue_design/design = get_user_design(user)
+	design.total_cost = design.base_cost
 
-	for(var/effect_id in current_design.selected_effects)
+	for(var/effect_id in design.selected_effects)
 		var/list/effect = get_effect_by_id(effect_id)
 		if(effect)
-			current_design.total_cost += effect["current_ahn_cost"]
+			design.total_cost += effect["current_ahn_cost"]
 
 	// Ensure non-negative
-	current_design.total_cost = max(0, current_design.total_cost)
+	design.total_cost = max(0, design.total_cost)
 
 /obj/machinery/augment_catalogue/proc/create_order_ticket(mob/user)
-	busy = TRUE
+	set_user_busy(user, TRUE)
 	playsound(src, 'sound/machines/terminal_button05.ogg', 50, FALSE)
 	to_chat(user, span_notice("Creating augment order ticket..."))
 
@@ -588,22 +620,25 @@
 	SStgui.update_uis(src)
 
 /obj/machinery/augment_catalogue/proc/finish_ticket_creation(mob/user)
-	busy = FALSE
+	set_user_busy(user, FALSE)
+
+	// Get this user's design
+	var/datum/augment_catalogue_design/design = get_user_design(user)
 
 	// Create the ticket
 	var/obj/item/augment_ticket/ticket = new(get_turf(src))
 
 	// Copy design data to ticket
-	ticket.form_id = current_design.form_id
-	ticket.form_name = current_design.form_name
-	ticket.rank = current_design.rank
-	ticket.augment_name = current_design.augment_name
-	ticket.augment_desc = current_design.augment_desc
-	ticket.primary_color = current_design.primary_color
-	ticket.secondary_color = current_design.secondary_color
-	ticket.selected_effects = current_design.selected_effects.Copy()
-	ticket.base_cost = current_design.base_cost
-	ticket.total_cost = current_design.total_cost
+	ticket.form_id = design.form_id
+	ticket.form_name = design.form_name
+	ticket.rank = design.rank
+	ticket.augment_name = design.augment_name
+	ticket.augment_desc = design.augment_desc
+	ticket.primary_color = design.primary_color
+	ticket.secondary_color = design.secondary_color
+	ticket.selected_effects = design.selected_effects.Copy()
+	ticket.base_cost = design.base_cost
+	ticket.total_cost = design.total_cost
 	ticket.orderer_name = user.real_name || "Unknown"
 	ticket.ticket_id = "[rand(1000, 9999)]-[world.time]"
 
@@ -687,12 +722,12 @@
 /obj/machinery/augment_catalogue/proc/remove_augment(mob/living/carbon/human/H, obj/item/augment/A)
 	playsound(src, 'sound/items/drill_use.ogg', 50, TRUE)
 	to_chat(H, span_warning("Removing [A.name]..."))
-	busy = TRUE
+	set_user_busy(H, TRUE)
 	SStgui.update_uis(src)
 
 	sleep(2 SECONDS)
 
-	busy = FALSE
+	set_user_busy(H, FALSE)
 
 	var/remove_turf = pick(get_adjacent_open_turfs(H))
 
@@ -715,14 +750,17 @@
 
 // Library system procedures
 /obj/machinery/augment_catalogue/proc/upload_to_library(mob/user, explanation)
-	busy = TRUE
+	set_user_busy(user, TRUE)
 	playsound(src, 'sound/machines/terminal_button05.ogg', 50, FALSE)
 	to_chat(user, span_notice("Uploading augment design to library..."))
 	SStgui.update_uis(src)
 
 	sleep(2 SECONDS)
 
-	busy = FALSE
+	set_user_busy(user, FALSE)
+
+	// Get this user's design
+	var/datum/augment_catalogue_design/design = get_user_design(user)
 
 	// Create library entry
 	var/list/library_entry = list()
@@ -730,21 +768,21 @@
 	library_entry["timestamp"] = world.time
 	library_entry["author"] = user.real_name || "Unknown"
 	library_entry["author_ckey"] = user.ckey || "unknown"
-	library_entry["form_id"] = current_design.form_id
-	library_entry["form_name"] = current_design.form_name
-	library_entry["rank"] = current_design.rank
-	library_entry["augment_name"] = current_design.augment_name
-	library_entry["augment_desc"] = current_design.augment_desc
+	library_entry["form_id"] = design.form_id
+	library_entry["form_name"] = design.form_name
+	library_entry["rank"] = design.rank
+	library_entry["augment_name"] = design.augment_name
+	library_entry["augment_desc"] = design.augment_desc
 	library_entry["explanation"] = explanation || "No explanation provided."
-	library_entry["primary_color"] = current_design.primary_color
-	library_entry["secondary_color"] = current_design.secondary_color
-	library_entry["selected_effects"] = current_design.selected_effects.Copy()
-	library_entry["base_cost"] = current_design.base_cost
-	library_entry["total_cost"] = current_design.total_cost
+	library_entry["primary_color"] = design.primary_color
+	library_entry["secondary_color"] = design.secondary_color
+	library_entry["selected_effects"] = design.selected_effects.Copy()
+	library_entry["base_cost"] = design.base_cost
+	library_entry["total_cost"] = design.total_cost
 
 	// Get effect details for display
 	var/list/effect_details = list()
-	for(var/effect_id in current_design.selected_effects)
+	for(var/effect_id in design.selected_effects)
 		var/list/effect = get_effect_by_id(effect_id)
 		if(effect)
 			var/list/effect_info = list()
@@ -760,9 +798,9 @@
 	// Save to persistence
 	save_augment_library()
 
-	to_chat(user, span_notice("Augment design '[current_design.augment_name]' uploaded to library!"))
+	to_chat(user, span_notice("Augment design '[design.augment_name]' uploaded to library!"))
 	playsound(src, 'sound/items/taperecorder/taperecorder_print.ogg', 50, FALSE)
-	log_game("[key_name(user)] uploaded augment design '[current_design.augment_name]' to library at [src] ([loc.x],[loc.y],[loc.z]).")
+	log_game("[key_name(user)] uploaded augment design '[design.augment_name]' to library at [src] ([loc.x],[loc.y],[loc.z]).")
 	SStgui.update_uis(src)
 
 /obj/machinery/augment_catalogue/proc/load_design_from_library(library_id)
@@ -777,18 +815,19 @@
 		to_chat(usr, span_warning("Library entry not found!"))
 		return
 
-	// Load the design into current_design
-	current_design.form_id = entry["form_id"]
-	current_design.form_name = entry["form_name"]
-	current_design.rank = entry["rank"]
-	current_design.augment_name = entry["augment_name"]
-	current_design.augment_desc = entry["augment_desc"]
-	current_design.primary_color = entry["primary_color"]
-	current_design.secondary_color = entry["secondary_color"]
+	// Load the design into user's design
+	var/datum/augment_catalogue_design/design = get_user_design(usr)
+	design.form_id = entry["form_id"]
+	design.form_name = entry["form_name"]
+	design.rank = entry["rank"]
+	design.augment_name = entry["augment_name"]
+	design.augment_desc = entry["augment_desc"]
+	design.primary_color = entry["primary_color"]
+	design.secondary_color = entry["secondary_color"]
 	var/list/effect_list = entry["selected_effects"]
-	current_design.selected_effects = effect_list?.Copy() || list()
-	current_design.base_cost = entry["base_cost"]
-	current_design.total_cost = entry["total_cost"]
+	design.selected_effects = effect_list?.Copy() || list()
+	design.base_cost = entry["base_cost"]
+	design.total_cost = entry["total_cost"]
 
 	to_chat(usr, span_notice("Loaded design '[entry["augment_name"]]' by [entry["author"]]."))
 	playsound(src, 'sound/machines/terminal_button01.ogg', 50, FALSE)
@@ -830,14 +869,14 @@
 		to_chat(user, span_warning("Library entry not found!"))
 		return
 
-	busy = TRUE
+	set_user_busy(user, TRUE)
 	playsound(src, 'sound/machines/terminal_button05.ogg', 50, FALSE)
 	to_chat(user, span_notice("Creating ticket from library design..."))
 	SStgui.update_uis(src)
 
 	sleep(2 SECONDS)
 
-	busy = FALSE
+	set_user_busy(user, FALSE)
 
 	// Create the ticket
 	var/obj/item/augment_ticket/ticket = new(get_turf(src))

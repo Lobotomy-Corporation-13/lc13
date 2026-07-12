@@ -52,10 +52,10 @@
 		coinsleft--
 		say("Thanks for finding my coin!")
 		for(var/mob/living/carbon/human/H in affected_players)
-			H.adjust_attribute_bonus(FORTITUDE_ATTRIBUTE, 10)
-			H.adjust_attribute_bonus(PRUDENCE_ATTRIBUTE, 10)
-			H.adjust_attribute_bonus(TEMPERANCE_ATTRIBUTE, 10)
-			H.adjust_attribute_bonus(JUSTICE_ATTRIBUTE, 10)
+			H.adjust_attribute_bonus(FORTITUDE_ATTRIBUTE, 5)
+			H.adjust_attribute_bonus(PRUDENCE_ATTRIBUTE, 5)
+			H.adjust_attribute_bonus(TEMPERANCE_ATTRIBUTE, 5)
+			H.adjust_attribute_bonus(JUSTICE_ATTRIBUTE, 5)
 
 	if(coinsleft == 0)
 		death()
@@ -76,10 +76,10 @@
 	forceMove(T)
 	for(var/mob/living/carbon/human/H in GLOB.mob_list)
 		affected_players +=H
-		H.adjust_attribute_bonus(FORTITUDE_ATTRIBUTE, -80)
-		H.adjust_attribute_bonus(PRUDENCE_ATTRIBUTE, -80)
-		H.adjust_attribute_bonus(TEMPERANCE_ATTRIBUTE, -80)
-		H.adjust_attribute_bonus(JUSTICE_ATTRIBUTE, -80)
+		H.adjust_attribute_bonus(FORTITUDE_ATTRIBUTE, -40)
+		H.adjust_attribute_bonus(PRUDENCE_ATTRIBUTE, -40)
+		H.adjust_attribute_bonus(TEMPERANCE_ATTRIBUTE, -40)
+		H.adjust_attribute_bonus(JUSTICE_ATTRIBUTE, -40)
 	return
 
 /mob/living/simple_animal/hostile/abnormality/branch12/pentacle_genie/BreachEffect(mob/living/carbon/human/user, breach_type)
@@ -88,7 +88,7 @@
 /* Work effects */
 /mob/living/simple_animal/hostile/abnormality/branch12/pentacle_genie/NeutralEffect(mob/living/carbon/human/user, work_type, pe)
 	. = ..()
-	if(prob(50))
+	if(prob(15))
 		datum_reference.qliphoth_change(-1)
 	return
 

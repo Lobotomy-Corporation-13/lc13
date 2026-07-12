@@ -3,13 +3,16 @@
 	desc = "You feel like you shouldn't touch this."
 	icon_state = "touch"
 	var/cooldown
-	var/list/bastards = list()
 	var/list/breaching_bastards = list()
 
 	ego_list = list(
 		/datum/ego_datum/weapon/prohibited,
 		/datum/ego_datum/armor/prohibited,
 	)
+
+/obj/structure/toolabnormality/touch/Destroy()
+	breaching_bastards = null
+	return ..()
 
 /obj/structure/toolabnormality/touch/examine(mob/user)
 	. = ..()
@@ -22,7 +25,7 @@
 		return
 
 	var/round_end = (user.a_intent != INTENT_HELP)
-	if((user.ckey in bastards) || (!round_end && (user.ckey in breaching_bastards)))
+	if((user.ckey in operators) || (!round_end && (user.ckey in breaching_bastards)))
 		to_chat(user, span_userdanger("THE BUTTON REJECTS YOU."))
 		return
 
@@ -31,7 +34,8 @@
 		to_chat(M, span_userdanger("[uppertext(user.real_name)] WILL PUSH DON'T TOUCH ME[round_end ? "" : " TO BREACH ABNORMALITIES"]."))
 
 	if(round_end)
-		bastards += user.ckey
+		//formorly bastards
+		operators += user.ckey
 		RoundEndEffect(user)
 	else
 		breaching_bastards += user.ckey

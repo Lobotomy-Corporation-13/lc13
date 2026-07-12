@@ -63,6 +63,8 @@ GLOBAL_VAR_INIT(embedpocalypse, FALSE) // if true, all items will be able to emb
 
 	///Sound played when you hit something with the item
 	var/hitsound
+	/// Should sounds played when hitting something with the item vary in pitch?
+	var/hitsound_vary = TRUE
 	///Played when the item is used, for example tools
 	var/usesound
 	///Used when yate into a mob
@@ -201,11 +203,18 @@ GLOBAL_VAR_INIT(embedpocalypse, FALSE) // if true, all items will be able to emb
 	var/swingstyle = WEAPONSWING_NONE
 	/// What Color its swing animation is
 	var/swingcolor
+	/// If TRUE, we won't try to force gray as a fallback colour for when no swingcolour is set. In other words, set this to TRUE and swingcolor to null if you don't want any colour on your custom sweep/thrust sprite.
+	var/forced_swingcolor = FALSE
 
 	/// How many deciseconds between attacks, times ten.
 	var/attack_speed = 1
 	/// A multiplier added to force through various means. Used primarily for weapon upgrades.
 	var/force_multiplier = 1
+	/// Default sweep animation sprite, change this var to use different sweep sprites.
+	var/custom_sweep_state = "swipe_"
+	var/custom_sweep_icon
+	var/custom_thrust_icon
+	var/custom_thrust_state
 
 /obj/item/Initialize()
 

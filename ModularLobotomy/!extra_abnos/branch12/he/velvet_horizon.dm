@@ -105,3 +105,11 @@
 	. = ..()
 	datum_reference.qliphoth_change(-1)
 	return
+
+/mob/living/simple_animal/hostile/abnormality/branch12/velvet_horizon/bullet_act(obj/projectile/Proj)
+	..()
+	for(var/turf/open/T in range(3, src))
+		if(locate(/obj/effect/turf_fire/ardor) in T)
+			for(var/obj/effect/turf_fire/ardor/floor_fire in T)
+				qdel(floor_fire)
+		new /obj/effect/turf_fire/ardor(T)

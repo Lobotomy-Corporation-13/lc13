@@ -26,10 +26,15 @@
 /mob/living/simple_animal/hostile/abnormality/branch12/deus_ex_machina/Initialize()
 	. = ..()
 	RegisterSignal(SSdcs, COMSIG_GLOB_MOB_DEATH, PROC_REF(on_mob_death)) // Hell
+	addtimer(CALLBACK(src, PROC_REF(UpQliphoth)), 5 MINUTES)
 
 /mob/living/simple_animal/hostile/abnormality/branch12/deus_ex_machina/Destroy()
 	UnregisterSignal(SSdcs, COMSIG_GLOB_MOB_DEATH)
 	return ..()
+
+/mob/living/simple_animal/hostile/abnormality/branch12/deus_ex_machina/proc/UpQliphoth()
+	addtimer(CALLBACK(src, PROC_REF(UpQliphoth)), 5 MINUTES)
+	datum_reference.qliphoth_change(1)
 
 /mob/living/simple_animal/hostile/abnormality/branch12/deus_ex_machina/proc/on_mob_death(datum/source, mob/living/died, gibbed)
 	SIGNAL_HANDLER
@@ -37,12 +42,12 @@
 		return FALSE
 	if(died.z != z)
 		return FALSE
-	datum_reference.qliphoth_change(-1) // One death reduces it
 	recently_departed = died.type
+	datum_reference.qliphoth_change(-1) // One death reduces it
 	return TRUE
 
 /mob/living/simple_animal/hostile/abnormality/branch12/deus_ex_machina/ZeroQliphoth()
-	datum_reference.qliphoth_change(3)
+	datum_reference.qliphoth_change(4)
 	if(!recently_departed)
 		return
 	var/mob/living/simple_animal/hostile/abnormality/spawned = new recently_departed(get_turf(src))

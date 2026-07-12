@@ -20,5 +20,5 @@
 
 	if(user.movement_locked)
 		keybind_face_direction(movement_dir)
-	else
+	else if(!(SEND_SIGNAL(src, COMSIG_MOB_CLIENT_PRE_LIVING_MOVE, get_step(src, movement_dir), movement_dir) & COMSIG_MOB_CLIENT_BLOCK_PRE_LIVING_MOVE))
 		user.Move(get_step(src, movement_dir), movement_dir)

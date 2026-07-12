@@ -6,11 +6,16 @@
 	var/firing_effect_type = null //the visual effect appearing when the ammo is fired.
 
 /obj/item/ego_weapon/ranged/proc/fire_projectile(atom/target, mob/living/user, params, distro, quiet, zone_override, spread, atom/fired_from, temporary_damage_multiplier)
-	var/obj/projectile/projectile = new projectile_path(src, src)
+	var/final_projectile_path = alternate_selected ? alternate_projectile_path : projectile_path
+	var/final_pellets = alternate_selected ? alternate_pellets : pellets
+	var/obj/projectile/projectile = new final_projectile_path(src, src)
 	projectile.original = target
 	projectile.firer = user
 	projectile.fired_from = fired_from
-	distro += variance
+	if(alternate_selected)
+		distro += alternate_variance
+	else
+		distro += variance
 	if(projectile.icon_state == "bullet")
 		switch(projectile.damage_type)
 			if(RED_DAMAGE)
@@ -35,6 +40,10 @@
 	if(HAS_TRAIT(user, TRAIT_BETTER_GUNS))
 		projectile.damage += projectile.damage*get_attribute_level(user, JUSTICE_ATTRIBUTE)/130*0.50
 
+	//Testing 20% increased damage on XP Mod
+	if(SSmaptype.chosen_trait == FACILITY_TRAIT_XP_MOD)
+		projectile.damage += projectile.damage*get_attribute_level(user, JUSTICE_ATTRIBUTE)/130*0.20
+
 	projectile.damage *= (1 + (user.extra_damage / 100))
 	if(projectile.damage_type == RED_DAMAGE)
 		projectile.damage *= (1 + (user.extra_damage_red / 100))
@@ -51,7 +60,7 @@
 	last_projectile_damage = projectile.damage
 	last_projectile_type = projectile.damage_type
 
-	if(pellets == 1)
+	if(final_pellets == 1)
 		if(distro) //We have to spread a pixel-precision bullet. throw_proj was called before so angles should exist by now...
 			if(random_spread)
 				spread = round((rand() - 0.5) * distro)
@@ -63,11 +72,11 @@
 		if(isnull(projectile))
 			return FALSE
 		var/obj/item/ammo_casing/caseless/casing = new(src)
-		casing.pellets = pellets
+		casing.pellets = final_pellets
 		casing.variance = variance
-		casing.projectile_type = projectile_path
+		casing.projectile_type = final_projectile_path
 		casing.BB = projectile
-		casing.AddComponent(/datum/component/pellet_cloud, projectile_path, pellets)
+		casing.AddComponent(/datum/component/pellet_cloud, final_projectile_path, final_pellets)
 		SEND_SIGNAL(casing, COMSIG_PELLET_CLOUD_INIT, target, user, fired_from, random_spread, spread, zone_override, params, distro)
 		qdel(casing) // don't worry, the component protects the casing from deleting until its done doing its job
 

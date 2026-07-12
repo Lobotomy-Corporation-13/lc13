@@ -248,11 +248,13 @@
 	//LC13 specific consideration
 	var/obj/item/clothing/suit/ego_armor = clothing[SLOT_MANNEQUIN_OCLOTHING]
 	if(ego_armor)
-		dat += "<BR>Mannequin Armor:<BR> \
-			[1-(ego_armor.armor[RED_DAMAGE]/100)] RED|\
-			[1-(ego_armor.armor[WHITE_DAMAGE]/100)] WHITE|\
-			[1-(ego_armor.armor[BLACK_DAMAGE]/100)] BLACK|\
-			[1-(ego_armor.armor[PALE_DAMAGE]/100)] PALE"
+		var/list/ego_damage = ego_armor.armor.getList()
+		var/list/displayable_damage_list = list(RED_DAMAGE,WHITE_DAMAGE,BLACK_DAMAGE,PALE_DAMAGE,FIRE)
+		dat += "<BR>Mannequin Armor:<BR> "
+		for(var/i in ego_damage)
+			if(!(i in displayable_damage_list))
+				continue
+			dat += "[1-(ego_damage[i]/100)] [i]|"
 	dat += "<BR>---"
 	dat += "<BR><B>RightHand:</B> <A href='byond://?src=\ref[src];item=[SLOT_MANNEQUIN_RIGHT_HAND]'>[makeStrippingButton(clothing[SLOT_MANNEQUIN_RIGHT_HAND])]</A>"
 	dat += "<BR><B>LeftHand:</B> <A href='byond://?src=\ref[src];item=[SLOT_MANNEQUIN_LEFT_HAND]'>[makeStrippingButton(clothing[SLOT_MANNEQUIN_LEFT_HAND])]</A><BR>"

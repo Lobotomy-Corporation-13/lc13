@@ -52,7 +52,6 @@
 
 	var/spit_cooldown
 	var/spit_cooldown_time = 12 SECONDS
-	var/can_act = TRUE
 	/// Actually it fires this amount thrice, so, multiply it by 3 to get actual amount
 	var/spit_amount = 9
 	/// Stolen charge code from KOG
@@ -61,12 +60,10 @@
 	var/charge_num = 10
 	var/dash_cooldown = 0
 	var/dash_cooldown_time = 8 SECONDS
-	/// Damage dealt with a charge hit, this is intentionally a bit on the low side
-	var/charge_damage = 50
-	/// Those hit by the charge won't be hit again by the same charge
-	var/list/been_hit = list()
 	/// The soup connected to us
 	var/obj/structure/basilisoup_pot/connected_soup = null
+
+	var/obj/effect/proc_holder/ability/aimed/dash/basilsoup/ourdash
 
 	attack_action_types = list(
 		/datum/action/innate/abnormality_attack/Spit,
@@ -89,6 +86,10 @@
 /mob/living/simple_animal/hostile/abnormality/basilisoup/Destroy()
 	connected_soup = null
 	return ..()
+
+/mob/living/simple_animal/hostile/abnormality/basilisoup/Initialize()
+	.  = ..()
+	ourdash = new()
 
 //Spawning
 /mob/living/simple_animal/hostile/abnormality/basilisoup/PostSpawn()
@@ -181,9 +182,7 @@
 			if(2)
 				if(dash_cooldown <= world.time)
 					dash_cooldown = world.time + dash_cooldown_time
-					var/dir_to_target = get_cardinal_dir(get_turf(src), get_turf(target))
-					can_act = FALSE
-					charge(dir_to_target, 0, target)
+					ourdash.Perform(A, src)
 		return
 	var/dist = get_dist(target, src)
 	if(dash_cooldown <= world.time)
@@ -192,9 +191,7 @@
 			chance_to_dash = 100
 		if(prob(chance_to_dash) && dash_cooldown <= world.time)
 			dash_cooldown = world.time + dash_cooldown_time
-			var/dir_to_target = get_cardinal_dir(get_turf(src), get_turf(target))
-			can_act = FALSE
-			charge(dir_to_target, 0, target)
+			ourdash.Perform(A, src)
 			return
 	if(spit_cooldown <= world.time && dist < 7)
 		Spit(target)
@@ -225,54 +222,6 @@
 			P.fire()
 		SLEEP_CHECK_DEATH(2)
 	can_act = TRUE
-
-//Charge - Deals low damage but is fast
-/mob/living/simple_animal/hostile/abnormality/basilisoup/proc/charge(move_dir, times_ran, target)
-	setDir(move_dir)
-	var/stop_charge = FALSE
-	if(times_ran >= charge_num)
-		stop_charge = TRUE
-	var/turf/T = get_step(get_turf(src), move_dir)
-	if(!T)
-		been_hit = list()
-		stop_charge = TRUE
-		return
-	if(T.density)
-		stop_charge = TRUE
-	for(var/obj/machinery/door/D in T.contents)
-		if(D.density)
-			stop_charge = TRUE
-	for(var/mob/living/simple_animal/hostile/abnormality/D in T.contents)	//This caused issues earlier
-		if(D.density)
-			stop_charge = TRUE
-
-	//Stop charging
-	if(stop_charge)
-		can_act = TRUE
-		been_hit = list()
-		return
-	forceMove(T)
-
-	for(var/turf/U in range(1, T))
-		var/list/new_hits = HurtInTurf(U, been_hit, 0, BLACK_DAMAGE, hurt_mechs = TRUE, flags = (DAMAGE_FORCED | DAMAGE_UNTRACKABLE)) - been_hit
-		been_hit += new_hits
-		for(var/mob/living/L in new_hits)
-			var/atom/throw_target = get_edge_target_turf(L, get_dir(L, get_step_away(L, get_turf(src))))
-			L.visible_message(span_boldwarning("[src] slams into [L]!"), span_userdanger("[src] rends you with its teeth and claws!"))
-			playsound(L, 'sound/weapons/genhit2.ogg', 75, 1)
-			new /obj/effect/temp_visual/kinetic_blast(get_turf(L))
-			L.deal_damage(charge_damage, BLACK_DAMAGE, src, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
-			L.throw_at(throw_target, 3, 2)
-			for(var/obj/vehicle/V in new_hits)
-				V.take_damage(charge_damage, BLACK_DAMAGE, attack_sound)
-				V.visible_message(span_boldwarning("[src] crunches [V]!"))
-				playsound(V, 'sound/weapons/genhit2.ogg', 75, 1)
-			continue
-
-	playsound(src,'sound/effects/bamf.ogg', 40, TRUE, 20)
-	for(var/turf/open/R in range(1, src))
-		new /obj/effect/temp_visual/small_smoke/halfsecond(R)
-	addtimer(CALLBACK(src, PROC_REF(charge), move_dir, (times_ran + 1)), 2)
 
 /mob/living/simple_animal/hostile/abnormality/basilisoup/Move(turf/newloc, dir, step_x, step_y)
 	if(!can_act)

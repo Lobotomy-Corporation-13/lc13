@@ -1,10 +1,16 @@
 {
 	"version": 1,
 	"map_name": "R-Corp Expedition",
-	"map_path": "map_files/Event",
+	"map_path": "map_files/RCE",
 	"map_file": [
-		"rcorp_factory.dmm"
+		"rcorp_factory.dmm",
+		"rcorp_factory_mancha.dmm"
 	],
+	"pick_one": 1,
+	"submap_names": {
+		"rcorp_factory.dmm": "R-Corp Caves Expedition",
+		"rcorp_factory_mancha.dmm": "R-Corp La Manchaland Expedition"
+	},
 	"traits": [
 		{
 			"Baseturf": "/turf/open/floor/plating/asteroid"

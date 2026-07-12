@@ -400,3 +400,30 @@
 	light_color = COLOR_PALE_BLUE_GRAY
 	icon_state = "omnilaser"
 	impact_effect_type = /obj/effect/temp_visual/impact_effect/blue_laser
+
+// Heavy IFF projectiles
+/obj/projectile/beam/laser/iff/heavy
+	damage = 100
+	icon_state = "heavylaser"
+	tracer_type = /obj/effect/projectile/tracer/heavy_laser
+	muzzle_type = /obj/effect/projectile/muzzle/heavy_laser
+	impact_type = /obj/effect/projectile/impact/heavy_laser
+
+/obj/projectile/beam/laser/iff/heavy/white
+	damage_type = WHITE_DAMAGE
+	light_color = COLOR_WHITE
+	icon_state = "whiteheavylaser"
+	impact_effect_type = /obj/effect/temp_visual/impact_effect/white_laser
+
+/obj/projectile/beam/laser/iff/heavy/black
+	damage_type = BLACK_DAMAGE
+	light_color = COLOR_PURPLE
+	icon_state = "purpleheavylaser"
+	impact_effect_type = /obj/effect/temp_visual/impact_effect/purple_laser
+
+/obj/projectile/beam/laser/iff/heavy/pale
+	damage = 35
+	damage_type = PALE_DAMAGE
+	light_color = COLOR_PALE_BLUE_GRAY
+	icon_state = "blueheavylaser"
+	impact_effect_type = /obj/effect/temp_visual/impact_effect/blue_laser

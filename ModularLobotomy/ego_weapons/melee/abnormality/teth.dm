@@ -36,7 +36,7 @@
 	hitsound = 'sound/weapons/ego/spear1.ogg'
 	crit_multiplier = 1.5	//Slightly better crits because I feel bad about it
 
-/obj/item/ego_weapon/shield/lutemia
+/obj/item/ego_weapon/shield/parry/lutemia
 	name = "dear lutemia"
 	desc = "Don't you want your cares to go away?"
 	special = "Blocking with this weapon attacks all nearby targets."
@@ -56,17 +56,6 @@
 	block_message = "You attempt to parry the attack!"
 	hit_message = "parries the attack!"
 	block_cooldown_message = "You rearm your blade."
-
-/obj/item/ego_weapon/shield/lutemia/hit_reaction(mob/living/carbon/human/owner, atom/movable/hitby, attack_text = "the attack", final_block_chance = 0, damage = 0, attack_type = MELEE_ATTACK)
-	if(attack_type == MELEE_ATTACK && active_block)
-		for(var/mob/living/L in range(1, owner))
-			if(L == owner)
-				continue
-			if(owner.stat != DEAD)
-				attack(L, owner)
-				sleep(2)
-	return ..()
-
 
 /obj/item/ego_weapon/eyes
 	name = "red eyes"
@@ -317,6 +306,10 @@
 	var/burst_cooldown
 	var/burst_cooldown_time = 5 SECONDS
 
+/obj/item/ego_weapon/lantern/Destroy()
+	QDEL_LIST(traps)
+	return ..()
+
 /obj/item/ego_weapon/lantern/attack_self(mob/user)
 	if(mode == LANTERN_MODE_REMOTE)
 		to_chat(user, span_info("You adjust any newly-placed traps to be set off by motion."))
@@ -460,7 +453,7 @@
 				M.apply_status_effect(/datum/status_effect/rend_black)
 				hit_count = 0
 
-/obj/item/ego_weapon/shield/capote
+/obj/item/ego_weapon/shield/parry/capote
 	name = "capote"
 	desc = "Charge me with all your strength! Your horns cannot pierce my soul!"//yes this is a SMT quote
 	icon_state = "capote"
@@ -598,7 +591,7 @@
 	lefthand_file = 'icons/mob/inhands/96x96_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/96x96_righthand.dmi'
 	damtype = WHITE_DAMAGE
-	force = 18
+	force = 29 // Significantly higher than Curfew due to hitting less times on a charge, being slower and having less reach.
 	inhand_x_dimension = 96
 	inhand_y_dimension = 96
 	attack_speed = 2
@@ -711,7 +704,7 @@
 /obj/item/ego_weapon/luminosity
 	name = "luminosity"
 	desc = "A weapon that is hard to use even in the best of circumstances."
-	special = "This weapon has a combo system. To turn off this combo system, use in hand. \
+	special = "This weapon has a combo system. To turn off this combo system, use in-hand. \
 			This weapon has a fast attack speed. The combo finisher heals humans in a small area."
 	icon_state = "luminosity"
 	force = 12
@@ -796,10 +789,53 @@
 			L.deal_damage(30, RED_DAMAGE, user, flags = (DAMAGE_UNTRACKABLE), attack_type = (ATTACK_TYPE_OTHER))
 		qdel(src)
 
+//Placeholder
+/obj/item/ego_weapon/shield/recollection
+	name = "recollection"
+	desc = "A portrait crudely fasioned into a shield."
+	special = "Upon deflecting a attack, spawn a row of three portraits that block projectiles."
+	icon_state = "recollection"
+	damtype = WHITE_DAMAGE
+	var/abi_cooldown = 0
+	var/abi_cooldown_delay = 5 SECONDS
+
+/obj/item/ego_weapon/shield/recollection/attack_self(mob/user)
+	. = ..()
+	if(abi_cooldown < world.time)
+		Ability(user)
+
+/obj/item/ego_weapon/shield/recollection/proc/ThreebyOne(direction = NORTH)
+	var/our_location = get_turf(src)
+	. = list(our_location)
+	//Directional Calculation, only applies to cardinal directions.
+	var/dir1
+	var/dir2
+
+	if(direction == NORTH || direction == SOUTH)
+		dir1 = EAST
+		dir2 = WEST
+	if(direction == EAST || direction == WEST)
+		dir1 = NORTH
+		dir2 = SOUTH
+
+	. += get_open_turf_in_dir(our_location, dir1)
+	. += get_open_turf_in_dir(our_location, dir2)
+
+/obj/item/ego_weapon/shield/recollection/proc/Ability(mob/user)
+	var/list/placement_area = ThreebyOne(user.dir)
+	for(var/turf/T in placement_area)
+		var/obj/structure/certain_portrait/pic = new /obj/structure/certain_portrait(T)
+		QDEL_IN(pic, abi_cooldown_delay)
+	//Half a second more so the last ones can fade.
+	abi_cooldown = world.time + abi_cooldown_delay + 5
+
 /obj/item/ego_weapon/mini/patch
 	name = "patch"
 	desc = "A little first aid kit."
 	icon_state = "patch"
+	inhand_icon_state = "firstaid"
+	lefthand_file = 'icons/mob/inhands/equipment/medical_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/equipment/medical_righthand.dmi'
 	special = "Activate in hand to heal and apply protection to every person(With the exception of the user) on a 4 tile radius in exchange for taking toxin damage. \
 	Has a cooldown of 8 seconds."
 	force = 20
@@ -824,3 +860,15 @@
 				human.adjustBruteLoss(-heal_brute)
 				human.apply_lc_protection(2)
 		cooldown = world.time + cooldown_duration
+
+/obj/item/ego_weapon/electricscreaming //someone with knowledge and free time please code in a big explosion move :)
+	name = "electric screaming"
+	desc = "A ball of fluff filled with electricity with a rod as it's handle, zap your foes with it!"
+	icon_state = "electric_screaming"
+	force = 36
+	attack_speed = 1.5
+	damtype = BLACK_DAMAGE
+	attack_verb_continuous = list("zaps", "electrocutes", "fries")
+	attack_verb_simple = list("zap", "electrocute", "fry")
+	hitsound = 'sound/abnormalities/alleywaywatchdog/telepole_1.ogg'
+
