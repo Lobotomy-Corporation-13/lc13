@@ -3,9 +3,9 @@
 	name = "Cherubim"
 	desc = "A floating monstrosity of silicon and steel."
 	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
-	icon_state = "mechangel_face"
-	icon_living = "mechangel_face"
-	icon_dead = "mechangel_dead"
+	icon_state = "mechangel_dawn"
+	icon_living = "mechangel_dawn"
+	icon_dead = "dawn_dead"
 	is_flying_animal = TRUE
 	faction = list("citrine")
 	health = 100
@@ -99,7 +99,11 @@
 	if(!ishuman(target))
 		return
 	var/mob/living/carbon/human/H = target
-	if(H.sanity_lost || faith_active)
+	if(H.sanity_lost)
+		H.adjust_fire_stacks(1)
+		H.IgniteMob()
+
+	if(faith_active)
 		H.adjust_fire_stacks(0.1)
 		H.IgniteMob()
 

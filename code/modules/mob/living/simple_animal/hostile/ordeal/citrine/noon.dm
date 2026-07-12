@@ -28,6 +28,7 @@
 	ranged_cooldown_time = 15
 	move_to_delay = 4.6
 	casingtype = /obj/item/ammo_casing/caseless/citrine_noon
+	projectilesound = 'sound/effects/sparks4.ogg'
 
 	faith_per_lifetick = 2
 	faith_line = "He is risen! Our prayers were answered!"
@@ -92,7 +93,7 @@
 	if(!ishuman(target))
 		return
 	var/mob/living/carbon/human/H = target
-	H.adjust_fire_stacks(0.1)
+	H.adjust_fire_stacks(1)
 	H.IgniteMob()
 
 /obj/item/ammo_casing/caseless/citrine_noon
@@ -157,9 +158,14 @@
 	if(!ishuman(target))
 		return
 	var/mob/living/carbon/human/H = target
+	//Make them suffer if they are insane.
+	if(H.sanity_lost)
+		H.adjust_fire_stacks(1)
+		H.IgniteMob()
+
 	//You can also light them on fire if you are empowered, but that's rather rare.
-	if(H.sanity_lost || empowered)
-		H.adjust_fire_stacks(0.5)
+	if(empowered)
+		H.adjust_fire_stacks(0.2)
 		H.IgniteMob()
 
 

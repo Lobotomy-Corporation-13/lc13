@@ -17,6 +17,11 @@
 	var/current_faith
 	var/faith_goal = 150	//Cherubim give 0.5 per second, at 6 this takes roughly 50 seconds.
 
+	// Here's the schtick, it's faith scales roughly 5% per person.
+/datum/ordeal/simplespawn/citrine/Run()
+	..()
+	faith_goal += round(length(AllLivingAgents(TRUE)) * faith_goal * 0.05)
+
 /datum/ordeal/simplespawn/citrine/noon
 	name = "The Noon of Citrine"
 	flavor_name = "His Acts II"
