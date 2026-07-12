@@ -608,7 +608,7 @@
 
 /obj/machinery/body_preservation_unit/Initialize()
 	. = ..()
-	if(SSmaptype.maptype == "office")
+	if(SSmaptype.maptype == "office" || SSmaptype.maptype == "fixers")
 		public_use = TRUE
 		clone_delay_seconds = 60
 		revival_attribute_penalty = -4
@@ -636,6 +636,17 @@
 
 	return preservation_fee
 
+/obj/machinery/body_preservation_unit/proc/is_tax_compliant(mob/living/carbon/human/H)
+	if(SSmaptype.maptype != "fixers")
+		return FALSE
+	if(!H.ckey)
+		return FALSE
+	// Check if player has no bounty and no strikes
+	if(SScity_economy.bounties[H.ckey])
+		return FALSE
+	if(SScity_economy.strikes[H.ckey])
+		return FALSE
+	return TRUE
 
 /obj/machinery/body_preservation_unit/ui_interact(mob/user)
 	. = ..()
@@ -650,15 +661,25 @@
 		if(ishuman(user))
 			var/mob/living/carbon/human/H = user
 			var/preservation_fee = calculate_fee(H)
+			var/is_compliant = is_tax_compliant(H)
 
-			dat += "Preservation Fee: [preservation_fee] AHN<br>"
+			if(is_compliant)
+				dat += "<span style='color:green'><b>Tax Status: COMPLIANT - FREE PRESERVATION</b></span><br>"
+				dat += "Preservation Fee: <b>FREE</b> (normally [preservation_fee] AHN)<br>"
+			else
+				dat += "Preservation Fee: [preservation_fee] AHN<br>"
 			dat += "<hr>"
 
-
 			if(stored_bodies[H.real_name])
-				dat += "<a href='byond://?src=[REF(src)];preserve=[REF(H)]'>Update body scan ([preservation_fee] AHN)</a><br>"
+				if(is_compliant)
+					dat += "<a href='byond://?src=[REF(src)];preserve=[REF(H)]'>Update body scan (FREE)</a><br>"
+				else
+					dat += "<a href='byond://?src=[REF(src)];preserve=[REF(H)]'>Update body scan ([preservation_fee] AHN)</a><br>"
 			else
-				dat += "<a href='byond://?src=[REF(src)];preserve=[REF(H)]'>Create body scan ([preservation_fee] AHN)</a><br>"
+				if(is_compliant)
+					dat += "<a href='byond://?src=[REF(src)];preserve=[REF(H)]'>Create body scan (FREE)</a><br>"
+				else
+					dat += "<a href='byond://?src=[REF(src)];preserve=[REF(H)]'>Create body scan ([preservation_fee] AHN)</a><br>"
 
 		if (isobserver(user))
 			dat += "<hr>"
@@ -685,8 +706,11 @@
 		var/mob/living/carbon/human/H = locate(href_list["preserve"])
 		if(H && ishuman(H))
 			var/preservation_fee = calculate_fee(H)
-			if(try_payment(preservation_fee, H))
+			var/is_compliant = is_tax_compliant(H)
+			if(is_compliant || try_payment(preservation_fee, H))
 				preserve_body(H)
+				if(is_compliant)
+					to_chat(H, "<span class='notice'>As a tax-compliant fixer, your preservation is free!</span>")
 			else
 				to_chat(H, "<span class='notice'>You don't have enough AHN.</span>")
 
@@ -723,10 +747,20 @@
 
 /obj/machinery/body_preservation_unit/proc/store_actions(mob/living/carbon/human/H, list/preserved_data)
 	var/list/action_types = list()
+
+	// Get body modification organ actions to exclude
+	var/list/body_mod_actions = list()
+	var/obj/item/organ/cyberimp/chest/body_modification/body_mod = H.getorganslot(ORGAN_SLOT_HEART_AID)
+	if(istype(body_mod))
+		body_mod_actions = body_mod.granted_actions
+
 	for(var/datum/action/A in H.actions)
 		if(istype(A, /datum/action/item_action))
 			continue
 		if(istype(A, /datum/action/spell_action))
+			continue
+		// Skip actions granted by body modifications
+		if(A in body_mod_actions)
 			continue
 		action_types += A.type
 	preserved_data["action_types"] = action_types
@@ -772,6 +806,34 @@
 	store_attributes(H, preserved_data)
 	store_actions(H, preserved_data)
 	store_skills(H, preserved_data)
+
+	// Store mind reference for quest preservation
+	preserved_data["mind_ref"] = REF(M)
+
+	// Store bank account info
+	preserved_data["bank_balance"] = null
+	preserved_data["bank_account_id"] = null
+	var/obj/item/card/id/id_card = H.get_idcard()
+	if(id_card?.registered_account)
+		preserved_data["bank_balance"] = id_card.registered_account.account_balance
+		preserved_data["bank_account_id"] = id_card.registered_account.account_id
+
+	// Store ID card info
+	if(id_card)
+		preserved_data["id_assignment"] = id_card.assignment
+		preserved_data["id_registered_name"] = id_card.registered_name
+
+	// Store registered fixer status
+	preserved_data["registered_fixer"] = H.mind?.registered_fixer
+
+	// Store office membership
+	preserved_data["office_ref"] = null
+	preserved_data["was_director"] = FALSE
+	for(var/datum/fixer_office/F in GLOB.all_fixer_offices)
+		if(H in F.members)
+			preserved_data["office_ref"] = REF(F)
+			preserved_data["was_director"] = (H == F.director)
+			break
 
 	stored_bodies[H.real_name] = preserved_data
 
@@ -829,9 +891,11 @@
 	// Apply attribute penalty and set attributes
 	var/list/stored_attributes = stored_data["attributes"]
 	if(islist(stored_attributes))
-		// TODO Punishment
 		new_body.attributes = stored_attributes
-		new_body.adjust_all_attribute_levels(revival_attribute_penalty)
+		// Only apply attribute penalty for Civilians and Office Fixers (minifixers)
+		var/datum/job/stored_job = stored_data["assigned_role"]
+		if(istype(stored_job, /datum/job/civilian) || istype(stored_job, /datum/job/fixer/smalldirector) || istype(stored_job, /datum/job/fixer/small))
+			new_body.adjust_all_attribute_levels(revival_attribute_penalty)
 		store_attributes(new_body, stored_data)
 	else
 		log_game("Body Preservation Unit: Stored attributes for [real_name] were invalid.")
@@ -857,6 +921,12 @@
 	// 	new_body.ckey = ckey
 	// else
 	new_body.equipOutfit(/datum/outfit/job/civilian)
+
+	// Transfer the original mind to preserve quests before assigning ckey
+	var/datum/mind/original_mind = locate(stored_data["mind_ref"])
+	if(original_mind)
+		original_mind.transfer_to(new_body)
+
 	new_body.ckey = ckey
 
 	var/skills_json = stored_data["skills"]
@@ -877,6 +947,50 @@
 	var/assigned_role = stored_data["assigned_role"]
 	if (assigned_role)
 		new_body.mind.assigned_role = assigned_role
+
+	// Restore registered fixer status
+	if(stored_data["registered_fixer"])
+		new_body.mind.registered_fixer = TRUE
+
+	// Create ID card with proper assignment and bank account
+	var/obj/item/card/id/new_id = new /obj/item/card/id(new_body)
+	new_id.registered_name = stored_data["real_name"]
+	if(stored_data["id_assignment"])
+		new_id.assignment = stored_data["id_assignment"]
+	new_id.update_label()
+
+	// Restore bank account - look up original instead of creating new
+	var/datum/bank_account/restored_account
+	if(stored_data["bank_account_id"])
+		restored_account = SSeconomy.bank_accounts_by_id["[stored_data["bank_account_id"]]"]
+	if(!restored_account)
+		// Fallback: create new account if original not found
+		restored_account = new /datum/bank_account(stored_data["real_name"], stored_data["ckey"])
+		if(stored_data["bank_balance"])
+			restored_account.account_balance = stored_data["bank_balance"]
+	new_id.registered_account = restored_account
+	restored_account.bank_cards += new_id
+
+	// Equip ID card
+	new_body.equip_to_slot_or_del(new_id, ITEM_SLOT_ID)
+
+	// Restore office membership - replace old body, don't just add
+	if(stored_data["office_ref"])
+		var/datum/fixer_office/office = locate(stored_data["office_ref"])
+		if(office && (office in GLOB.all_fixer_offices))
+			var/mob/living/carbon/human/old_body = locate(stored_data["ref"])
+			office.replace_member(old_body, new_body, stored_data["was_director"])
+
+	// Re-register quest signals on new body (hunt quests track attacks)
+	if(new_body.mind?.quest_tracker)
+		for(var/datum/city_quest/hunt/HQ in new_body.mind.quest_tracker.active_quests)
+			// Unregister from old attackers
+			for(var/mob/M in HQ.registered_attackers)
+				UnregisterSignal(M, COMSIG_MOB_ITEM_AFTERATTACK)
+			HQ.registered_attackers.Cut()
+			// Register on new body
+			RegisterSignal(new_body, COMSIG_MOB_ITEM_AFTERATTACK, TYPE_PROC_REF(/datum/city_quest/hunt, on_attack))
+			HQ.registered_attackers += new_body
 
 	playsound(get_turf(src), 'sound/effects/bin_close.ogg', 35, 3, 3)
 	playsound(get_turf(src), 'sound/misc/splort.ogg', 35, 3, 3)
@@ -925,3 +1039,74 @@
 		if(O.real_name == real_name)
 			return O
 	return null
+
+/*---------------------
+|BPU Auto-Registration Landmark|
+\---------------------*/
+
+/obj/effect/landmark/bpu_auto_register
+	name = "BPU auto-registration zone"
+	desc = "Automatically registers tax-compliant fixers to a random BPU."
+	icon = 'icons/effects/effects.dmi'
+	icon_state = "yourselfdeath"
+	invisibility = INVISIBILITY_ABSTRACT
+
+/obj/effect/landmark/bpu_auto_register/Crossed(atom/movable/AM)
+	. = ..()
+	if(!ishuman(AM))
+		return
+
+	var/mob/living/carbon/human/H = AM
+
+	// Only works on fixers maptype
+	if(SSmaptype.maptype != "fixers")
+		return
+
+	// Must be a registered fixer
+	if(!H.mind?.registered_fixer)
+		return
+
+	// Check if already registered in any BPU - silently do nothing
+	if(is_registered_in_any_bpu(H))
+		return
+
+	// Check if tax compliant (no bounty, no strikes) - silently do nothing if not
+	if(!is_bpu_tax_compliant(H))
+		return
+
+	// Find a random BPU and register them
+	var/obj/machinery/body_preservation_unit/target_bpu = get_random_bpu()
+	if(!target_bpu)
+		return
+
+	// Auto-register by preserving their body for free
+	target_bpu.preserve_body(H)
+	to_chat(H, span_nicegreen("As a tax-compliant fixer, you have been automatically registered to a Body Preservation Unit!"))
+	playsound(H, 'sound/machines/ping.ogg', 50, TRUE)
+
+/obj/effect/landmark/bpu_auto_register/proc/is_registered_in_any_bpu(mob/living/carbon/human/H)
+	for(var/obj/machinery/body_preservation_unit/BPU in GLOB.machines)
+		if(BPU.stored_bodies[H.real_name])
+			return TRUE
+	return FALSE
+
+/obj/effect/landmark/bpu_auto_register/proc/is_bpu_tax_compliant(mob/living/carbon/human/H)
+	if(!H.ckey)
+		return FALSE
+	// Check if player has no bounty and no strikes
+	if(SScity_economy.bounties[H.ckey])
+		return FALSE
+	if(SScity_economy.strikes[H.ckey])
+		return FALSE
+	return TRUE
+
+/obj/effect/landmark/bpu_auto_register/proc/get_random_bpu()
+	var/list/available_bpus = list()
+	for(var/obj/machinery/body_preservation_unit/BPU in GLOB.machines)
+		if(BPU.z) // Make sure it's on a valid z-level
+			available_bpus += BPU
+
+	if(!available_bpus.len)
+		return null
+
+	return pick(available_bpus)

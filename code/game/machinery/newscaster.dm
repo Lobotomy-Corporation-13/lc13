@@ -281,6 +281,24 @@ GLOBAL_LIST_EMPTY(allCasters)
 			if(0)
 				dat += "Welcome to Newscasting Unit #[unit_no].<BR> Interface & News networks Operational."
 				dat += "<BR><FONT SIZE=1>Property of N-Corporation Inc</FONT>"
+				// Add tax timer for fixers mode
+				if(SSmaptype.maptype == "fixers" && SScity_economy)
+					var/time_until_tax = SScity_economy.get_time_until_tax()
+					if(time_until_tax > 0)
+						var/minutes = round(time_until_tax / 600) // 60 seconds * 10 deciseconds
+						var/seconds = round((time_until_tax % 600) / 10)
+						dat += "<BR><BR><B><FONT COLOR='red'>NEXT TAX COLLECTION IN: [minutes]:[seconds < 10 ? "0[seconds]" : seconds]</FONT></B>"
+					else
+						dat += "<BR><BR><B><FONT COLOR='red'>TAX COLLECTION IN PROGRESS</FONT></B>"
+					dat += "<BR><FONT SIZE=1><I>Only registered fixers pay taxes. Register at a Fixer Grade Terminal to access training ampules.</I></FONT>"
+
+					// Show wanted players
+					if(SScity_economy.bounties && SScity_economy.bounties.len)
+						dat += "<BR><BR><B><FONT COLOR='orange'>WANTED INDIVIDUALS:</FONT></B>"
+						for(var/ckey in SScity_economy.bounties)
+							var/datum/city_bounty/B = SScity_economy.bounties[ckey]
+							if(B && B.target)
+								dat += "<BR>- [B.target.real_name]: TOTAL BOUNTY: [B.debt_amount * 10] Ahn"
 				if(GLOB.news_network.wanted_issue.active)
 					dat+= "<HR><A href='byond://?src=[REF(src)];view_wanted=1'>Read Wanted Issue</A>"
 				dat+= "<HR><BR><A href='byond://?src=[REF(src)];create_channel=1'>Create Feed Channel</A>"

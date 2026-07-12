@@ -25,6 +25,10 @@ SUBSYSTEM_DEF(cityevents)
 	var/list/processing
 
 /datum/controller/subsystem/cityevents/Initialize(timeofday)
+	// Disable for fixers maptype - they use the quest board system instead
+	if(SSmaptype.maptype == "fixers")
+		can_fire = FALSE
+		return ..()
 
 	..()
 	InitializeLandmarks()

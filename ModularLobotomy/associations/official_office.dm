@@ -62,43 +62,95 @@
 	amount = 1
 	var/public_use = FALSE
 
+/obj/item/attribute_increase/fixer/office/proc/ApplyBenefit(mob/living/carbon/human/H)
+	// Check fixer registration on fixers maptype
+	if(SSmaptype.maptype == "fixers")
+		if(!H.mind?.registered_fixer)
+			to_chat(H, span_danger("You must be a registered fixer to benefit from this item. Register at a Fixer Grade Terminal."))
+			return FALSE
+
+	if(!public_use)
+		if(!(H?.mind?.assigned_role in usable_roles))
+			to_chat(H, span_danger("You cannot use this item, as you must not belong to an association."))
+			return FALSE
+
+	//max stats can't gain stats
+	if(get_attribute_level(H, TEMPERANCE_ATTRIBUTE)>=130)
+		to_chat(H, span_danger("You feel like you won't gain anything."))
+		return FALSE
+
+	to_chat(H, span_nicegreen("You suddenly feel different."))
+	//Guarantee one
+	H.adjust_all_attribute_levels(amount)
+	to_chat(H, "<span class='nicegreen'>You gain 1 potential!</span>")
+
+	//Adjust by an extra attribute under level 2
+	if(get_attribute_level(H, TEMPERANCE_ATTRIBUTE)<=40)
+		H.adjust_all_attribute_levels(amount)
+		H.adjust_all_attribute_levels(amount)
+		to_chat(H, "<span class='nicegreen'>You gain 1 potential!</span>")
+
+	//And one more under level 3
+	if(get_attribute_level(H, TEMPERANCE_ATTRIBUTE)<=60)
+		H.adjust_all_attribute_levels(amount)
+		to_chat(H, "<span class='nicegreen'>You gain 1 potential!</span>")
+
+	return TRUE
+
 /obj/item/attribute_increase/fixer/office/attack_self(mob/living/carbon/human/user)
+	// Check fixer registration on fixers maptype
+	if(SSmaptype.maptype == "fixers")
+		if(!user.mind?.registered_fixer)
+			to_chat(user, span_danger("You must be a registered fixer to use this item. Register at a Fixer Grade Terminal."))
+			return
+
 	if(!public_use)
 		if(!(user?.mind?.assigned_role in usable_roles))
 			to_chat(user, span_danger("You cannot use this item, as you must not belong to an association."))
 			return
 
-	if(!user.assigned_office)
+	// Check if user is part of a new fixer office system
+	var/datum/fixer_office/user_office = null
+	for(var/datum/fixer_office/F in GLOB.all_fixer_offices)
+		if(user in F.members)
+			user_office = F
+			break
+
+	// Check if user has old assigned_office
+	var/user_has_old_office = user.assigned_office && user.assigned_office != "syndicate_bypass"
+
+	// User must be in one of the office systems
+	if(!user_office && !user_has_old_office)
 		to_chat(user, span_danger("You cannot use this item, as you are not a part of an office."))
 		return
 
+	var/list/affected_members = list()
+
+	// Apply to nearby office members
 	for(var/mob/living/carbon/human/H in range(5, get_turf(src)))
-		if(H.assigned_office == user.assigned_office && H.assigned_office != "syndicate_bypass" && H != user)
-			if(!public_use)
-				if(!(H?.mind?.assigned_role in usable_roles))
-					to_chat(H, span_danger("You cannot use this item, as you must not belong to an association."))
-					continue
+		if(H == user) // Skip user for now, we'll apply to them at the end
+			continue
 
-			//max stats can't gain stats
-			if(get_attribute_level(H, TEMPERANCE_ATTRIBUTE)>=130)
-				to_chat(H, span_danger("You feel like you won't gain anything."))
-				continue
+		var/should_apply = FALSE
 
-			to_chat(H, span_nicegreen("You suddenly feel different."))
-			//Guarantee one
-			H.adjust_all_attribute_levels(amount)
-			to_chat(H, "<span class='nicegreen'>You gain 1 potential!</span>")
+		// Check new office system
+		if(user_office && (H in user_office.members))
+			should_apply = TRUE
+		// Check old office system
+		else if(user_has_old_office && H.assigned_office == user.assigned_office)
+			should_apply = TRUE
 
-			//Adjust by an extra attribute under level 2
-			if(get_attribute_level(H, TEMPERANCE_ATTRIBUTE)<=40)
-				H.adjust_all_attribute_levels(amount)
-				H.adjust_all_attribute_levels(amount)
-				to_chat(H, "<span class='nicegreen'>You gain 1 potential!</span>")
+		if(should_apply)
+			if(ApplyBenefit(H))
+				affected_members += H
 
-			//And one more under level 3
-			if(get_attribute_level(H, TEMPERANCE_ATTRIBUTE)<=60)
-				H.adjust_all_attribute_levels(amount)
-				to_chat(H, "<span class='nicegreen'>You gain 1 potential!</span>")
+	// Apply to the user as well
+	if(ApplyBenefit(user))
+		affected_members += user
+
+	if(affected_members.len)
+		var/office_name = user_office ? user_office.name : user.assigned_office
+		visible_message(span_notice("[user] uses [src], empowering [affected_members.len] member\s of [office_name]!"))
 
 	. = ..()
 
@@ -109,8 +161,8 @@
 	use_power = FALSE
 	resistance_flags = INDESTRUCTIBLE | LAVA_PROOF | FIRE_PROOF | UNACIDABLE | ACID_PROOF
 	var/list/check_times = list()
-	var/list/usable_roles = list("Civilian", "Office Director", "Office Fixer",
-		"Subsidary Office Director", "Fixer")
+	var/list/usable_roles = list("Civilian", "Office Representative", "Office Fixer",
+		"Subsidary Office Representative", "Fixer")
 
 /obj/machinery/scanner_gate/officescanner/auto_scan(atom/movable/AM)
 	return
@@ -124,16 +176,17 @@
 #define OFFICE_MESSAGE_COOLDOWN 50
 /obj/machinery/scanner_gate/officescanner/CanAllowThrough(atom/movable/mover, turf/target)
 	. = ..()
-	if(isobj(mover))
+	if(!ishuman(mover))
+		return
+	var/mob/living/carbon/human/H = mover
+	set_scanline("scanning", 5)
+
+	// Only registered fixers can pass
+	if(!H.mind?.registered_fixer)
+		if(!check_times[H] || check_times[H] < world.time)
+			to_chat(H, span_boldwarning("ACCESS DENIED. Only registered fixers may pass. Register at a Fixer Grade Terminal."))
+			check_times[H] = world.time + OFFICE_MESSAGE_COOLDOWN
+		alarm_beep()
 		return FALSE
-	if(ishuman(mover))
-		var/mob/living/carbon/human/H = mover
-		set_scanline("scanning", 5)
-		if(H?.mind?.assigned_role in usable_roles)
-			if(!H.assigned_office)
-				if(!check_times[H] || check_times[H] < world.time) //Let's not spam the message
-					to_chat(H, span_boldwarning("You are moving into the backstreets without an offical office resignation! Your journey will be a painful one without your office."))
-					check_times[H] = world.time + OFFICE_MESSAGE_COOLDOWN
-				alarm_beep()
 
 #undef OFFICE_MESSAGE_COOLDOWN

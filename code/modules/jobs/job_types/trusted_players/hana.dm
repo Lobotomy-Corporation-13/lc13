@@ -14,7 +14,7 @@
 	minimal_access = list(ACCESS_NETWORK, ACCESS_COMMAND, ACCESS_MANAGER, ACCESS_CHANGE_IDS, ACCESS_SECURITY)
 	departments = DEPARTMENT_HANA
 	paycheck = 0
-	maptype = list("city", "fixers")
+	maptype = list("city")
 	job_important = "You are the city's administrator, and have a small sort of power over the local association. \
 		You MUST assist new fixer offices in getting set up, as well as issuing fixer licenses. \
 		All new fixer offices MUST be announced upon creation, including office name and director name."

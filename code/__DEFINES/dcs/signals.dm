@@ -479,6 +479,8 @@
 
 ///from base of mob/living/death(): (gibbed)
 #define COMSIG_LIVING_DEATH "living_death"
+///sent to nearby quest holders when a mob dies: (victim)
+#define COMSIG_QUEST_MOB_KILLED "quest_mob_killed"
 
 ///from base of mob/living/carbon/human/SanityLossEffect(): (attribute)
 #define COMSIG_HUMAN_INSANE "human_insane"

@@ -20,7 +20,7 @@ Workshop employee
 	job_attribute_limit = 0
 
 	allow_bureaucratic_error = FALSE
-	maptype = list("wonderlabs", "fixers", "city")
+	maptype = list("wonderlabs", "city")
 
 
 //My guy you work in a workshop

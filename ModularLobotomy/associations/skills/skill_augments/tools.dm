@@ -82,7 +82,7 @@
 	icon_state = "gadget1"
 	slot_flags = ITEM_SLOT_BELT | ITEM_SLOT_POCKETS
 	w_class = WEIGHT_CLASS_SMALL
-	var/list/allowed_roles = list("Prosthetics Surgeon", "Office Director", "Office Fixer", "Doctor", "Fixer")
+	var/list/allowed_roles = list("Prosthetics Surgeon", "Office Representative", "Office Fixer", "Doctor", "Fixer")
 
 /obj/item/body_modification_remover/examine(mob/user)
 	. = ..()
