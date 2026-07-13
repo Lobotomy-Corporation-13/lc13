@@ -500,19 +500,24 @@ export const EgoPurchaseConsole = (props, context) => {
       <Section scrollable fill title={(threatclass_names[selected_level]?? "UNKNOWN") + "-Class Abnormalities"}
         buttons={<RefreshButton />}>
         <Tabs align="center">
-          <Tabs.Tab selected={selected_level === 1} onClick={() => ChangeTab(1)}>
+          <Tabs.Tab selected={selected_level === 1}
+            onClick={() => ChangeTab(1)}>
             {threatclass_names[1]}
           </Tabs.Tab>
-          <Tabs.Tab selected={selected_level === 2} onClick={() => ChangeTab(2)}>
+          <Tabs.Tab selected={selected_level === 2}
+            onClick={() => ChangeTab(2)}>
             {threatclass_names[2]}
           </Tabs.Tab>
-          <Tabs.Tab selected={selected_level === 3} onClick={() => ChangeTab(3)}>
+          <Tabs.Tab selected={selected_level === 3}
+            onClick={() => ChangeTab(3)}>
             {threatclass_names[3]}
           </Tabs.Tab>
-          <Tabs.Tab selected={selected_level === 4} onClick={() => ChangeTab(4)}>
+          <Tabs.Tab selected={selected_level === 4}
+            onClick={() => ChangeTab(4)}>
             {threatclass_names[4]}
           </Tabs.Tab>
-          <Tabs.Tab selected={selected_level === 5} onClick={() => ChangeTab(5)}>
+          <Tabs.Tab selected={selected_level === 5}
+            onClick={() => ChangeTab(5)}>
             {threatclass_names[5]}
           </Tabs.Tab>
         </Tabs>
