@@ -7,8 +7,11 @@
 	var/obj/machinery/computer/ego_purchase/eo_tablet/internal_computer
 	var/obj/structure/extraction_belt/linked_structure
 
-/obj/item/extraction/delivery/Destroy()
-	stored_item = null
+/obj/item/extraction/delivery/Destroy(force)
+	QDEL_NULL(internal_computer)
+	linked_structure = null
+	return ..()
+
 // This is a special subtype of the EGO purchase console that is slotted internally into this tablet. Basically so I don't have to make a component/duplicate a ton of code. The EO tablet acts as a proxy that interacts with this console.
 /obj/machinery/computer/ego_purchase/eo_tablet
 	invisibility = INVISIBILITY_ABSTRACT

@@ -22,6 +22,10 @@
 		qdel(src)
 		return INITIALIZE_HINT_QDEL
 
+/obj/machinery/computer/ego_purchase/Destroy(force)
+	linked_structure = null
+	return ..()
+
 /obj/machinery/computer/ego_purchase/examine(mob/user)
 	. = ..()
 	if(GetFacilityUpgradeValue(UPGRADE_EXTRACTION_2))
