@@ -215,6 +215,15 @@
 	if(!canSuicide())
 		return
 	if(confirm == "Yes")
+		// On Facility mode, stop people from suiciding if they possess a mob that's part of an Ordeal, during an Ordeal. Just ghost them.
+		if(SSmaptype.maptype in SSmaptype.lc_maps)
+			var/list/ongoing_ordeals = SSlobotomy_corp.current_ordeals
+			if(length(ongoing_ordeals) > 0)
+				for(var/datum/ordeal/ord in ongoing_ordeals)
+					if(src in ord.ordeal_mobs)
+						ghostize(FALSE)
+						toggle_ai(AI_ON)
+						return FALSE
 		set_suicide(TRUE)
 		visible_message("<span class='danger'>[src] begins to fall down. It looks like [p_theyve()] lost the will to live.</span>", \
 						"<span class='userdanger'>[src] begins to fall down. It looks like [p_theyve()] lost the will to live.</span>")
@@ -231,14 +240,6 @@
 	log_message("(job: [src.job ? "[src.job]" : "None"]) committed suicide", LOG_ATTACK)
 
 /mob/living/proc/canSuicide()
-	// On Facility mode, stop people from suiciding if they possess a mob that's part of an Ordeal, during an Ordeal.
-	if(SSmaptype.maptype in SSmaptype.lc_maps)
-		var/list/ongoing_ordeals = SSlobotomy_corp.current_ordeals
-		if(length(ongoing_ordeals) > 0)
-			for(var/datum/ordeal/ord in ongoing_ordeals)
-				if(src in ord.ordeal_mobs)
-					to_chat(src, span_warning("No. Stand and fight.")) // You would just get automatically banned if you try to do this as a Crimson ordeal if I had my way
-					return FALSE
 	var/area/A = get_area(src)
 	if(A.area_flags & BLOCK_SUICIDE)
 		to_chat(src, "<span class='warning'>You can't commit suicide here! You can ghost if you'd like.</span>")
