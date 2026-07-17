@@ -219,7 +219,7 @@
 		if(SSmaptype.maptype in SSmaptype.lc_maps)
 			var/list/ongoing_ordeals = SSlobotomy_corp.current_ordeals
 			if(length(ongoing_ordeals) > 0)
-				for(var/datum/ordeal/ord in ongoing_ordeals)
+				for(var/datum/ordeal/ord as anything in ongoing_ordeals)
 					if(src in ord.ordeal_mobs)
 						ghostize(FALSE)
 						toggle_ai(AI_ON)
