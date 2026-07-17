@@ -137,6 +137,15 @@
 	var/mob_spawn_amount = 3
 	var/being_gibbed = FALSE
 
+/// Forbidden from attacking other Crimson Ordeals (or itself)
+/mob/living/simple_animal/hostile/ordeal/crimson_noon/AttackingTarget(atom/attacked_target)
+	if(ismob(attacked_target))
+		var/mob/victim = attacked_target
+		if(faction_check_mob(victim))
+			to_chat(src, span_warning("Attacking your fellow jesters simply isn't in your nature, no matter how funny it is."))
+			return FALSE
+	. = ..()
+
 /mob/living/simple_animal/hostile/ordeal/crimson_noon/gib()
 	//Please dont spam the animation sir
 	if(being_gibbed)
