@@ -123,7 +123,7 @@
 	if(GLOB.lobotomy_damages)//Enkephalin Rush baby!
 		facility_full_percentage = 100 * (GLOB.lobotomy_repairs / GLOB.lobotomy_damages)
 
-	if(SSmaptype.chosen_trait == FACILITY_TRAIT_ABNO_BLITZ)	//blitz needs you with higher stats
+	if(SSlobotomy_corp.BlitzActive())	//blitz needs you with higher stats as a latejoiner
 		set_attribute *= 4
 
 	else

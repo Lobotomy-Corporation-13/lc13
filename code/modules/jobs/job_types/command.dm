@@ -54,11 +54,11 @@
 	ADD_TRAIT(outfit_owner, TRAIT_ATTRIBUTES_VISION, JOB_TRAIT)
 	outfit_owner.grant_language(/datum/language/bong, TRUE, FALSE, LANGUAGE_MIND) //So they can understand the bong-bong but not speak it
 
-	switch(SSmaptype.chosen_trait)
-		if(FACILITY_TRAIT_ABNO_BLITZ)
-			outfit_owner.adjust_all_attribute_levels(40)
-		if(FACILITY_TRAIT_DARK_SOULS)
-			outfit_owner.equip_to_slot_or_del(new /obj/item/estus(outfit_owner), ITEM_SLOT_HANDS, TRUE)
+	if(SSlobotomy_corp.BlitzActive())
+		outfit_owner.adjust_all_attribute_levels(40)
+
+	if(SSmaptype.chosen_trait == FACILITY_TRAIT_DARK_SOULS)
+		outfit_owner.equip_to_slot_or_del(new /obj/item/estus(outfit_owner), ITEM_SLOT_HANDS, TRUE)
 
 /datum/outfit/job/command/extraction
 	name = "Extraction Officer"
