@@ -144,14 +144,12 @@
 				ChangeResistances(list(RED_DAMAGE = 0))
 				movement_volume = 65 // TA-DA!!!
 
-		//Lower your stats by 2 for each phase change.
-		//This is the replacement for it eating your PE.
-		if(current_movement_num > 1)	//Okay maybe you shouldn't lose stats immediately.
-			for(var/mob/living/carbon/human/H as anything in GLOB.human_list)
-				if(H.z != z)
-					continue
-				if(!HAS_TRAIT(H, TRAIT_WORK_FORBIDDEN))
-					H.adjust_all_attribute_levels(-2)
+		//Lower your stats by 2 at the end of breach.
+				for(var/mob/living/carbon/human/H as anything in GLOB.human_list)
+					if(H.z != z)
+						continue
+					if(!HAS_TRAIT(H, TRAIT_WORK_FORBIDDEN))
+						H.adjust_all_attribute_levels(-2)
 
 
 		if(current_movement_num < 6)
