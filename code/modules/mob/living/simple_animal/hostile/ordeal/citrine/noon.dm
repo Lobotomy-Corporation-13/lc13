@@ -112,8 +112,8 @@
 	icon_living = "mechangel_knight"
 	icon_dead = "knight_dead"
 	faction = list("citrine")
-	health = 1000
-	maxHealth = 1000
+	health = 1200
+	maxHealth = 1200
 	melee_damage_type = WHITE_DAMAGE
 	damage_coeff = list(RED_DAMAGE = 0.8, WHITE_DAMAGE = 0.4, BLACK_DAMAGE = 1.6, PALE_DAMAGE = 1)
 	melee_damage_lower = 20
