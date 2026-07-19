@@ -198,9 +198,7 @@
 
 /datum/outfit/job/agent/pre_equip(mob/living/carbon/human/H, visualsOnly)
 	. = ..()
-	if(!H.client?.prefs)
-		return
-	var/worktool = H.client.prefs.work_notepad_type
+	var/worktool = H.work_notepad_type
 	if(worktool == WORK_NOTEPAD_PREFERENCE_CLIPBOARD)
 		backpack_contents += /obj/item/abnormality_work_notepad
 	else if(worktool == WORK_NOTEPAD_PREFERENCE_TABLET)

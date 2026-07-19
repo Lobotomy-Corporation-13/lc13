@@ -2214,6 +2214,7 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 	character.jumpsuit_style = jumpsuit_style
 	character.beret_enabled = beret_enabled
 	character.sunglasses_enabled = sunglasses_enabled
+	character.work_notepad_type = work_notepad_type
 
 	character.flavor_text = features["flavor_text"] //Let's update their flavor_text at least initially
 
