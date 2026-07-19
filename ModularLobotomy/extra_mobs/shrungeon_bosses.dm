@@ -89,7 +89,7 @@
 		return FALSE
 
 /mob/living/simple_animal/hostile/shrimp_comms/proc/reinforcements()
-	if(grenade_cooldown>world.time)
+	if(reinforcements_cooldown>world.time)
 		return FALSE
 	playsound(src, 'sound/effects/radio_clear.ogg', 200, TRUE, 2)
 	emote("calls in reinforcements!")
@@ -106,6 +106,10 @@
 	anchored = TRUE
 	var/has_spawned = FALSE
 	mouse_opacity = 0
+
+
+
+
 
 /mob/living/simple_animal/hostile/shrimp_qm
 	name = "Wellcheers Quartermaster"
