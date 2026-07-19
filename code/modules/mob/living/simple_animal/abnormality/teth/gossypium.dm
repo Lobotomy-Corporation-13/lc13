@@ -80,7 +80,7 @@
 
 /mob/living/simple_animal/hostile/abnormality/gossypium/NeutralEffect(mob/living/carbon/human/user, work_type, pe)
 	. = ..()
-	if(prob(50))
+	if(prob(60))
 		datum_reference.qliphoth_change(-1)
 
 /mob/living/simple_animal/hostile/abnormality/gossypium/FailureEffect(mob/living/carbon/human/user, work_type, pe)
@@ -91,7 +91,7 @@
 	var/brooch = user.ego_gift_list[BROOCH]
 	if((work_type != "Approach")) //No dropping qlip on Approach
 		if(istype(brooch, /datum/ego_gifts/white_gossypium))
-			if(prob(25))
+			if(prob(10))
 				datum_reference.qliphoth_change(1)
 		else
 			if(prob(80))
@@ -182,7 +182,7 @@
 	var/turf/origin = get_turf(src)
 	playsound(origin, 'sound/abnormalities/ebonyqueen/strongcharge.ogg', 75, 0, 5)
 	playsound(origin, 'sound/creatures/venus_trap_hurt.ogg', 75, 0, 5)
-	SLEEP_CHECK_DEATH(8)
+	SLEEP_CHECK_DEATH(10)
 	for(var/turf/T in spiral_range_turfs(2, origin))
 		new /obj/effect/temp_visual/vine(T, src)
 	SLEEP_CHECK_DEATH(5)
