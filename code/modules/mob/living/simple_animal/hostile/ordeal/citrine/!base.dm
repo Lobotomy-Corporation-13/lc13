@@ -9,7 +9,7 @@
 
 //Check your life, add to the ordeals Faith, check the faith goal and then say the faith line.
 /mob/living/simple_animal/hostile/ordeal/citrine/Life()
-	..()
+	. = ..()
 	if(ordeal_reference && !faith_active)
 		var/datum/ordeal/simplespawn/citrine/C = ordeal_reference
 		C.current_faith += faith_per_lifetick
