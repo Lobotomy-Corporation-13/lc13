@@ -62,8 +62,6 @@ GLOBAL_LIST_EMPTY(dread_walker_patrol_points)
 	/// Cooldown for the spectral touch attack
 	var/spectral_touch_cooldown = 0
 	var/spectral_touch_cooldown_time = 3 SECONDS
-	/// Can the mob act (used during attack animations)
-	var/can_act = TRUE
 
 	// Patrol system
 	can_patrol = TRUE

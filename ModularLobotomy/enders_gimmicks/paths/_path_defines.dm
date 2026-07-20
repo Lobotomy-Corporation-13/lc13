@@ -67,6 +67,27 @@
 /// Max effective RES after PEN (clamp)
 #define PATH_RES_MAX      90
 
+// --- Progression Material Rarity Tiers ---
+/// T1 = 2-star, T2 = 3-star, T3 = 4-star (star count = tier + 1)
+#define PATH_MAT_T1 1
+#define PATH_MAT_T2 2
+#define PATH_MAT_T3 3
+
+// --- Path Keys (match /datum/path leaf types) ---
+#define PATH_KEY_DESTRUCTION  "destruction"
+#define PATH_KEY_HUNT         "hunt"
+#define PATH_KEY_ERUDITION    "erudition"
+#define PATH_KEY_NIHILITY     "nihility"
+#define PATH_KEY_HARMONY      "harmony"
+#define PATH_KEY_PRESERVATION "preservation"
+#define PATH_KEY_ABUNDANCE    "abundance"
+
+// --- Trace Material Family Keys ---
+#define TRACE_FAMILY_FANG  "fang"
+#define TRACE_FAMILY_LENS  "lens"
+#define TRACE_FAMILY_ICHOR "ichor"
+#define TRACE_FAMILY_WARD  "ward"
+
 // --- Custom Signals ---
 /// Sent when a path is assigned to a mob. Args: (datum/path)
 #define COMSIG_MOB_PATH_ASSIGNED   "mob_path_assigned"

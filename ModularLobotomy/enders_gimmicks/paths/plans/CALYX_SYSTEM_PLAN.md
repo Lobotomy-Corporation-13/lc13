@@ -1,8 +1,9 @@
 # Calyx System Plan - Fragmentum Incursions
 
-An opt-in, high-risk/high-reward event structure and the primary deliberate way
-to farm Pathstrider progression materials. Companion to
-PROGRESSION_MATERIALS_PLAN (Calyxes are a major material source).
+An opt-in, high-risk/high-reward event structure and the **sole** source of Trace
+Material (the secondary trace resource). Companion to PROGRESSION_MATERIALS_PLAN;
+ordeals give no material at all, so Calyxes carry the entire Trace-Material economy
+(the abno Extraction Module carries the Main-material economy).
 
 ## Concept
 
@@ -119,13 +120,12 @@ toward fighting) fall out of (A)'s stat bumps; specific gimmick rewrites belong 
 - On each Fragmentum mob death, drop progression material at its turf.
 - **Family = Calyx color** (via the color->family map); **rarity/amount scales
   with danger tier** (higher tier -> higher rarity, more per kill). This makes
-  Calyxes a controllable, color-targeted way to farm the Trace Material a given
-  path cluster needs, complementing the passive ordeal drops.
+  Calyxes the controllable, color-targeted way to farm the Trace Material a given
+  path cluster needs - and the only way, since ordeals drop nothing.
 - Optionally a smaller chance at the themed path's **main** (abno-sin) material too.
-- **Hard dependency:** the `path_material` / `trace_material` stack items are still
-  design-only (PROGRESSION_MATERIALS_PLAN, not yet coded). Until they exist the
-  drop is a stub. Either build those items first, or ship Calyxes with the drop
-  behind a TODO and wire it when the items land.
+- **Dependency (now met):** the `path_material` / `trace_material` stack items are
+  coded (`_path_materials.dm`), so the drop can spawn real stacks. What remains is
+  the color->family + tier->rarity lookup that picks which stack type to drop.
 
 ## 8. Balance notes
 

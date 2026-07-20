@@ -59,21 +59,27 @@
 		desc = new_desc
 
 /// Returns an assoc list of all node data for the TGUI
-/datum/path_node/proc/GetNodeData(list/unlocked_nodes)
+/datum/path_node/proc/GetNodeData(list/unlocked_nodes, datum/path/P)
 	var/list/data = list()
 	data["id"] = id
 	data["name"] = name
 	data["desc"] = desc
 	data["icon_state"] = icon_state
-	data["ahn_cost"] = ahn_cost
 	data["node_type"] = node_type
 	data["tree_x"] = tree_x
 	data["tree_y"] = tree_y
 	data["connections"] = connections
 	data["prerequisites"] = prerequisites
-	data["required_ascension"] = required_ascension
 	data["required_level"] = required_level
 	data["unlocked"] = (id in unlocked_nodes)
+	// Material cost + live gate/affordability (computed against the path).
+	if(P)
+		var/list/cost = GetCost(P)
+		data["cost"] = cost
+		data["required_ascension"] = GetRequiredAscension(P)
+		data["affordable"] = P.HasCost(cost)
+	else
+		data["required_ascension"] = required_ascension
 
 	// Type-specific data
 	if(node_type == PATH_NODE_STAT)

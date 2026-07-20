@@ -17,6 +17,9 @@
 /datum/path/ui_data(mob/user)
 	var/list/data = list()
 
+	// Reflect any attribute changes (they raise the level cap, read live).
+	RefreshLevel()
+
 	// Path identity
 	data["path_name"] = name
 	data["path_desc"] = desc
@@ -35,6 +38,8 @@
 	data["path_exp"] = path_exp
 	data["exp_at_level"] = GetExpAtLevel()
 	data["exp_to_next"] = GetExpToNext()
+	data["attribute_cap"] = GetAttributeCap()
+	data["level_cap"] = GetLevelCap()
 
 	// Turn system
 	data["turn_state"] = turn_state
@@ -181,16 +186,40 @@
 	// Skill tree nodes (Traces)
 	var/list/node_data = list()
 	for(var/datum/path_node/node in nodes)
-		node_data += list(node.GetNodeData(unlocked_nodes))
+		node_data += list(node.GetNodeData(unlocked_nodes, src))
 	data["nodes"] = node_data
 
-	// Player's current ahn balance
-	var/player_ahn = 0
-	if(owner)
-		var/obj/item/card/id/C = owner.get_idcard(TRUE)
-		if(C?.registered_account)
-			player_ahn = C.registered_account.account_balance
-	data["player_ahn"] = player_ahn
+	// Pathstrider material wallet: main + trace families, T1/T2/T3.
+	var/maink = GetMainKey()
+	var/tracek = GetTraceKey()
+	data["main_family"] = maink
+	data["trace_family"] = tracek
+	var/list/mcount = list()
+	var/list/tcount = list()
+	var/list/micon = list()
+	var/list/ticon = list()
+	for(var/t in 1 to 3)
+		mcount += CountMat("path", maink, t)
+		tcount += CountMat("trace", tracek, t)
+		micon += GetPathMatIcon("path", maink, t)
+		ticon += GetPathMatIcon("trace", tracek, t)
+	data["mat_counts"] = list("main" = mcount, "trace" = tcount)
+	data["mat_icons"] = list("main" = micon, "trace" = ticon)
+	data["rarity_colors"] = list("#3fbf5f", "#3f8fdf", "#a95fdf")
+
+	// Ascension state + next-phase cost.
+	var/cap = (ascension_phase < length(level_caps)) ? level_caps[ascension_phase + 1] : 80
+	var/list/asc = list(
+		"phase" = ascension_phase,
+		"cap" = cap,
+		"at_cap" = (path_level >= cap),
+		"can_ascend" = (ascension_phase < 6),
+	)
+	if(ascension_phase < 6)
+		var/list/acost = GetAscendCost(ascension_phase)
+		asc["cost"] = acost
+		asc["affordable"] = HasCost(acost)
+	data["ascension"] = asc
 
 	// LC13 attributes (for reference display)
 	if(owner)
@@ -239,4 +268,7 @@
 			if(!node_id)
 				return
 			if(UnlockNode(node_id))
+				. = TRUE
+		if("ascend")
+			if(DoAscend())
 				. = TRUE

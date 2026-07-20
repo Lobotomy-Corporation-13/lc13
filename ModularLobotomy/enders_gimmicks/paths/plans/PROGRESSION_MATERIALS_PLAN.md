@@ -77,28 +77,30 @@ are ordeal colors.
 
 - Item: `/obj/item/stack/trace_material`, parameterized by `family` + `tier`.
   4 families x 3 tiers = **12 stack types**.
-- **Source: ordeals** (Section 3), split by ordeal **color**. Your path's *main*
-  material comes from abno work/breaching; its *trace* material comes from
-  surviving specific ordeals - so deep trace investment requires engaging both
-  halves of the shift, and specifically the ordeals tied to your path's cluster.
-- Rarity = ordeal **tier**, mixed per tier:
-  - **Dawn** -> T1 only.
-  - **Noon** -> mix of T1 and T2 (mostly T1, some T2; e.g. ~2:1).
-  - **Dusk** -> mix of T2 and T3 (mostly T2, some T3; e.g. ~2:1).
-  - **Midnight** -> nothing. Trace Material is **not** obtainable from Midnight
-    ordeals.
+- **Source: Calyxes only** (Section 3), themed by ordeal **color**. Your path's
+  *main* material comes from abno work/breaching (the Extraction Module); its
+  *trace* material comes only from **Calyxes** of the matching color(s). Ordeals
+  give no material at all - both material kinds require active engagement (the
+  module, or opening a Calyx wave), never passive attendance.
+- Rarity = the Calyx's **danger tier** (tiers align to ordeal grades and are gated
+  by roundtime, so higher rarities appear later in a shift), mixed per tier:
+  - **Lesser** (Dawn-grade) -> T1 only.
+  - **Common** (Noon-grade) -> mix of T1 and T2 (mostly T1, some T2; e.g. ~2:1).
+  - **Greater** (Dusk-grade) -> mix of T2 and T3 (mostly T2, some T3; e.g. ~2:1).
+  - **Fractal** (Midnight-grade) -> the richest mix and the main T3 source.
 - Only traces consume Trace Material. Ascension and bonus abilities use the path's
   main material only.
 
-Excludes the white (level 6-9) and event (Christmas / Salmon-shrimp) ordeals per
-scope. Because Midnight drops nothing, **Pink is effectively dead** (it is a
-Midnight-only color) and drops out of the system; the eight remaining colors
-(Amber, Brown, Crimson, Gold, Green, Indigo, Steel, Violet) distribute across the
-four families as follows.
+Calyxes only spawn for colors that have a Fragmentum mob pool defined, so the white
+(level 6-9) and event (Christmas / Salmon-shrimp) colors are out of scope, and
+**Pink is out too** - it is a Midnight-only color with no non-Midnight Fragmentum
+mobs built, so no Pink Calyx spawns. The eight remaining colors (Amber, Brown,
+Crimson, Gold, Green, Indigo, Steel, Violet) distribute across the four families as
+follows.
 
 ### Brainstormed mapping
 
-| # | Trace Material (placeholder names T1/T2/T3) | Sub-material for paths | From ordeal colors | Theme |
+| # | Trace Material (placeholder names T1/T2/T3) | Sub-material for paths | From Calyx colors | Theme |
 |---|---|---|---|---|
 | 1 | **Fang** - Bloodworn Fang / Rending Fang / Devouring Fang | Destruction, The Hunt | Brown, Indigo | Predation, carnage, the pursuit |
 | 2 | **Lens** - Clouded Lens / Lucid Lens / Oracle Lens | Erudition, Nihility | Green, Gold | Cold intellect, the void, contemplation |
@@ -107,46 +109,35 @@ four families as follows.
 
 Rationale per family:
 
-- **Fang (Destruction / Hunt)** - the two pure-offense paths (Wrath + Envy). Brown
-  ("Peccata Capitalia / Pandaemonium" - demonic wrath and chaos) feeds Destruction;
-  Indigo ("The Scouts / The Sweepers / Night in the Backstreets" - city fixers,
-  backstreet predators) feeds the Hunt. Brown has no Dusk (T1/T2 supplement only);
-  Indigo runs a Dusk, so it supplies the family's T3.
-- **Lens (Erudition / Nihility)** - intellect and void (Pride + Gloom). Green
-  ("Doubt / Process of Understanding / Last Helix" - robots seeking the ultimate
-  answer) is pure Erudition; Gold ("Sky, Wind, Star and Poem / The Life and the
-  Death" - poetic contemplation of mortality) is Nihility's melancholy. Both are
-  full colors, so all three rarities flow.
-- **Ichor (Abundance / Harmony)** - life and bonds (Gluttony + Lust). Amber ("The
-  Perfect Meal / Food Chain / Eternal Meal" - consumption) and Crimson ("The
-  Harmony of Skin / A Chorus of Saliva" - flesh and blood) feed Abundance; Violet
-  ("Grant Us Love / The God Delusion" - love and devotion) feeds Harmony. Three
-  colors because these two support paths are the highest-demand; T3 comes from
-  Amber and Crimson Dusks (Violet has no Dusk, so it is a T1/T2 supplement).
-- **Ward (Preservation)** - the lone dedicated tank (Sloth). Steel ("War Machine /
-  The Dogs of War / Over the Top" - armor, fortification, holding the line) runs
-  Dawn/Noon/Dusk, so it supplies all three rarities on its own. Preservation is a
-  single, low-demand path, so one full color is adequate. (Pink was the intended
-  second source but is Midnight-only, so it no longer contributes - see note.)
+- **Fang (Destruction / Hunt)** - the two pure-offense paths (Wrath + Envy), fed by
+  Brown ("Peccata Capitalia / Pandaemonium" - demonic wrath and chaos) and Indigo
+  ("The Scouts / The Sweepers" - city fixers, backstreet predators).
+- **Lens (Erudition / Nihility)** - intellect and void (Pride + Gloom), fed by Green
+  ("Doubt / Last Helix" - robots seeking the ultimate answer) and Gold ("Sky, Wind,
+  Star and Poem" - poetic contemplation of mortality).
+- **Ichor (Abundance / Harmony)** - life and bonds (Gluttony + Lust), fed by Amber
+  and Crimson ("The Perfect Meal", "A Chorus of Saliva" - consumption, flesh and
+  blood) and Violet ("Grant Us Love" - love and devotion). Three colors because
+  these two support paths are the highest-demand.
+- **Ward (Preservation)** - the lone dedicated tank (Sloth), fed by Steel ("War
+  Machine / The Dogs of War" - armor, fortification, holding the line).
+  Preservation is a single, low-demand path, so one color is adequate.
 
 ### Notes / knobs
 
 - Preservation is the only path served by a solo family (7 paths / 4 families
-  forces one solo). Preservation is the singular defensive path, so a dedicated
-  Ward material is thematically clean and gives it the easiest supply (Steel runs
-  all four tiers). If you would rather every family serve two paths, the cleanest
-  alt is to fold Nihility into the Ward cluster (Gloom + Sloth = the "static"
-  paths) and shrink Lens to Erudition only - flagged in Section 9.
-- Under the new mapping only Dawn/Noon/Dusk matter (Midnight drops nothing), and
-  **T3 comes only from Dusk**. So each family needs at least one color that runs a
-  Dusk. It does: Fang via Indigo (Brown has no Dusk), Lens via Green+Gold, Ichor
-  via Amber+Crimson (Violet has no Dusk), Ward via Steel. No family is starved of
-  T3. Colors without a Dusk (Brown, Violet) are T1/T2-only supplements.
-- **Ward now leans on a single color (Steel).** Since Preservation is the sole,
-  lowest-demand path this is workable, but if one-color supply feels too swingy
-  shift-to-shift, options are: add a second enduring color to Ward, or grant a
-  small trickle of any-family Trace Material on abno forced-breach as a floor.
-  Flagged in Section 9.
+  forces one solo). It is the singular defensive path, so a dedicated Ward material
+  is thematically clean. If you would rather every family serve two paths, the
+  cleanest alt is to fold Nihility into the Ward cluster (Gloom + Sloth = the
+  "static" paths) and shrink Lens to Erudition only - flagged in Section 9.
+- **Rarity now comes from Calyx danger tier, not from which real ordeals a color
+  runs.** So the old per-color "does this color run a Dusk?" caveats no longer
+  apply - every family can reach T3 via a Greater/Fractal Calyx of any of its
+  colors, and no family is starved of high rarity.
+- Since Trace Material comes only from Calyxes, trace progression is paced by
+  **meltdown frequency** (Calyxes spawn on meltdowns) and the roundtime tier gate.
+  If that feels too swingy, the knobs are the Calyx spawn count per meltdown and
+  the tier-unlock thresholds (CALYX_SYSTEM_PLAN). Flagged in Section 9.
 
 ---
 
@@ -194,31 +185,37 @@ Reuse the `disc_researcher` breach mechanic. When the module targets a contained
 
 ---
 
-## 3. Source B - Ordeals (the four Trace Materials)
+## 3. Source B - Calyxes (the four Trace Materials)
 
-Ordeals are the sole source of Trace Material. Which **family** an ordeal drops is
-set by its **color** (Section 1b mapping); the **rarity** is set by its **tier**.
-Ordeal mobs already drop themed loot (`silk_results` on the green bots), so there
-is precedent.
+**Calyxes are the sole source of Trace Material.** Ordeals drop nothing at all -
+normal clears, per-mob kills, none of it. Trace Material comes only from clearing
+Calyx waves (CALYX_SYSTEM_PLAN), which are opt-in and require active engagement,
+matching how abno material requires the module.
+
+Each Calyx is themed to an ordeal **color** (which sets its Fragmentum mob pool and
+its Trace family) and rolls a **danger tier** gated by roundtime (which sets its
+rarity mix). So Trace Material is farmed by choosing to open Calyxes of the color(s)
+that feed your path's cluster.
 
 Color -> family: Brown/Indigo -> Fang; Green/Gold -> Lens; Amber/Crimson/Violet
--> Ichor; Steel -> Ward. Tier -> rarity (mixed): Dawn -> T1; Noon -> T1+T2 mix;
-Dusk -> T2+T3 mix; Midnight -> nothing.
+-> Ichor; Steel -> Ward. Danger tier -> rarity (mixed): Lesser -> T1; Common ->
+T1+T2 mix; Greater -> T2+T3 mix; Fractal -> the richest T2+T3 mix.
 
-- **Per-mob:** ordeal mobs drop a small amount of their color's Trace Material on
-  death, rolling the tier's rarity mix (Dawn pure T1; Noon mostly T1 with some T2;
-  Dusk mostly T2 with some T3). Midnight mobs drop no Trace Material.
-- **On ordeal clear:** award surviving Pathstriders a bonus bundle drawn from the
-  same tier mix. (Midnight clears give none.)
-- **T3 comes only from Dusk**, as the rarer half of the Dusk mix. Maxing a trace
-  (needs large T3 quantities - the reference shows 23x T3 for a 10-level trace)
-  therefore means running the cluster's Dusk ordeals many times; that is the
-  long-tail grind now, in place of Midnight.
-- The path's **main** material still comes only from abnos (Section 2); ordeals do
-  not drop path-family materials. Two separate farms, deliberately.
-- Because a path's trace family is tied to specific colors, a Pathstrider is
-  pushed toward the ordeals that match their cluster - but the Omni-Synthesizer
-  (Section 4) still lets them synthesize rarities up within a family they have.
+- **Per Fragmentum-mob death:** drop a small amount of the Calyx color's Trace
+  Material, rolling the tier's rarity mix (see MATERIAL_YIELD_PLAN for amounts).
+- **On Calyx clear (stock spent):** optionally award surviving Pathstriders a bonus
+  bundle drawn from the same tier mix.
+- **T3 comes only from Greater/Fractal Calyxes**, as the rarer half of their mix.
+  Maxing a trace (large T3 quantities - the reference shows 23x T3 for a 10-level
+  trace) therefore means clearing the cluster's high-tier Calyxes repeatedly; that
+  is the long-tail grind. Because high-tier Calyxes are roundtime-gated, T3 farming
+  is naturally a late-shift activity.
+- The path's **main** material still comes only from abnos (Section 2); Calyxes
+  primarily drop Trace Material (with an optional small chance at the themed path's
+  main material, per CALYX_SYSTEM_PLAN). Two material kinds, two sources: the module
+  (abnos -> main) and Calyxes (-> trace).
+- The Omni-Synthesizer (Section 4) still lets a player synthesize rarities up within
+  a family they already have.
 
 ---
 
@@ -292,7 +289,7 @@ consume **two** resources, mirroring the HSR reference images:
 - **Path Material (main)** - the path's own sin-tied family, shared with
   ascension. From abnos.
 - **Trace Material (secondary)** - one of the four families (Fang/Lens/Ichor/Ward)
-  tied to the path's cluster. From ordeals.
+  tied to the path's cluster. From Calyxes.
 
 Trace nodes come in three kinds in the current tree; each is costed differently.
 
@@ -394,7 +391,7 @@ Keep the existing `required_ascension` / `required_level` gates. Update
 
 This supersedes the "Option B trace points" idea from the base-game plan: leveling
 is attribute-EXP, ascension is main-material, and traces are main-material plus
-the ordeal-sourced Trace Material.
+the Calyx-sourced Trace Material.
 
 ---
 
@@ -536,27 +533,28 @@ materials instead of ahn.
 
 ## 8. Balance considerations
 
-- **Two farms, two gates.** Ascension needs the path's main material (abnos);
-  traces need main material **and** the ordeal-sourced Trace Material. A
-  Pathstrider who only works abnos can ascend but cannot deepen traces past the
-  early levels; one who only fights ordeals starves their ascension. Full power
-  requires both halves of the shift, which is the core pacing lever.
+- **Two farms, two sources.** Ascension needs the path's main material (abnos, via
+  the module); traces need main material **and** Trace Material (Calyxes). A
+  Pathstrider who only works/breaches abnos can ascend but cannot deepen traces past
+  the early levels; one who only clears Calyxes starves their ascension. Full power
+  requires engaging both the abno side (module) and the Calyx side, which is the
+  core pacing lever.
 - **Materials pace power, attributes pace level.** A Pathstrider who never fights
   can still level within their current cap from work-attribute EXP, but cannot
-  ascend or deepen traces without engaging abnos/ordeals. This keeps a
+  ascend (no module material) or deepen traces (no Calyx material). This keeps a
   low-engagement path from snowballing durability (ties into base-game plan's HP
   levers).
-- **Forced-breach risk/reward is the main knob.** T2 mostly comes from breaching,
-  which endangers the facility and alerts disc. If ascension feels too fast, raise
-  T2 costs or lengthen the 10-minute charge regen; if too slow, add a small T2
-  trickle from good work results.
+- **The two gates are independent knobs.** Ascension pace is set by the module's
+  forced-breach yield and charge regen (Section 2c); trace pace is set by Calyx
+  frequency (meltdowns) and per-Calyx yield. Tune them separately: raise breach T2
+  costs or lengthen charge regen to slow ascension; lower Calyx spawn count or
+  per-mob yield to slow traces.
 - **Top rarity is gated by the hardest sources, by material kind.** Path main T3
   (for max ascension) comes only from synthesizing up breach-obtained material, so
-  it is forced-breach-gated (abno side). Trace T3 (for maxed traces) comes only
-  from Dusk ordeals. Both demand sustained engagement, matching the "not stronger
-  than a fully-geared agent until you've earned it" curve. Note Midnight ordeals
-  no longer feed Trace Material at all, so the trace long-tail is Dusk, not
-  Midnight.
+  it is abno-breach-gated. Trace T3 (for maxed traces) comes only from Greater/
+  Fractal Calyxes, which are roundtime-gated. Both demand sustained engagement,
+  matching the "not stronger than a fully-geared agent until you've earned it"
+  curve. Ordeals feed nothing, so trace progression is entirely Calyx-paced.
 - **Exchange tax (2:1)** and **synthesis tax (3:1)** ensure converting is always
   worse than farming the correct source, so players are pushed to engage varied
   content rather than grind one abno.
@@ -579,7 +577,11 @@ materials instead of ahn.
    or a dedicated station alongside the Omni-Synthesizer?
 5. **Module acquisition** - roundstart with the path crystal, bought from the
    Pathstrider vendor, or a disciplinary/engineering craft?
-6. (Resolved - not optional) Per-level ascension gates on ability nodes are a
+6. **Trace supply floor** - Trace Material comes only from Calyxes (meltdown-gated),
+   so a quiet shift with few meltdowns starves traces. Accept that (Calyxes are the
+   deliberate farm), or add a small floor elsewhere (e.g. a rare Calyx-independent
+   trickle)?
+7. (Resolved - not optional) Per-level ascension gates on ability nodes are a
    firm requirement per the screenshots; see Section 6a for the level->ascension
    bracket and the `CanUnlock()` change needed. Only open sub-question: exact
    bracket if we want to diverge from the HSR-matching one in 6a.
@@ -588,22 +590,23 @@ materials instead of ahn.
 
 ## 10. Implementation checklist
 
-- [ ] `/obj/item/stack/path_material` base + 7 families x 3 tiers (parameterized).
-- [ ] `/obj/item/stack/trace_material` base + 4 families x 3 tiers (Fang / Lens /
-      Ichor / Ward), parameterized by `family` + `tier`.
-- [ ] Ordeal-color -> trace-family lookup (Brown/Indigo=Fang, Green/Gold=Lens,
-      Amber/Crimson/Violet=Ichor, Steel=Ward); exclude white/event; Pink is inert
-      (Midnight-only).
+- [x] `/obj/item/stack/path_material` base + 7 families x 3 tiers (parameterized).
+- [x] `/obj/item/stack/trace_material` base + 4 families x 3 tiers (Fang / Lens /
+      Ichor / Ward), parameterized by `family` + `tier`. (`_path_materials.dm`)
+- [ ] Calyx-color -> trace-family lookup (Brown/Indigo=Fang, Green/Gold=Lens,
+      Amber/Crimson/Violet=Ichor, Steel=Ward); exclude white/event; Pink has no
+      Fragmentum pool so no Pink Calyx.
 - [ ] Path<->sin<->family lookup table (single source of truth proc).
-- [ ] Extraction Module item: attach to abnormality console; charge system
-      (3 max, ~10 min regen); examine/UI charge display.
+- [ ] Extraction Module item: attach to abnormality console; charge system (3 max,
+      ~10 min regen); examine/UI charge display.
 - [ ] Hook `work_complete()` for the passive T1 path-material trickle
       (Pathstrider + module).
-- [ ] Forced-breach action reusing `disc_researcher` breach + radio alert; tag
-      breacher; on-death large T1+T2 path-material drop.
-- [ ] Ordeal drops: per-mob + on-clear Trace Material, **family by ordeal color**
-      and **rarity by tier mix** (Dawn=T1; Noon=T1+T2 ~2:1; Dusk=T2+T3 ~2:1;
-      Midnight=none). No path-family drops from ordeals.
+- [ ] Abno forced-breach action reusing `disc_researcher` breach + radio alert;
+      tag breacher; on-death large T1+T2 path-material drop.
+- [ ] Calyx Trace-Material drops (per-mob + optional on-clear bundle), **family by
+      Calyx color** and **rarity by danger tier mix** (Lesser=T1; Common=T1+T2;
+      Greater=T2+T3; Fractal=richest T2+T3) - see CALYX_SYSTEM_PLAN. Ordeals drop
+      NOTHING; Calyxes are the only Trace source.
 - [ ] Omni-Synthesizer machine + TGUI: Synthesis (3->1 rarity up, both material
       kinds) and Exchange (2->1 path-family swap only); optional ordeal-tier gate.
 - [ ] Ascension: Path Screen Ascend action consuming the phase cost table (main

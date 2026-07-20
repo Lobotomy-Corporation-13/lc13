@@ -9,8 +9,8 @@
 /obj/item/path_crystal
 	name = "Stellaron Fragment"
 	desc = "A fragment of crystallized imaginary energy. Use in hand to awaken your Path."
-	icon = 'ModularLobotomy/_Lobotomyicons/teguitems.dmi'
-	icon_state = "tcorp_syringe"
+	icon = 'ModularLobotomy/_Lobotomyicons/stellaron.dmi'
+	icon_state = "stellaron"
 	w_class = WEIGHT_CLASS_SMALL
 	custom_price = 500
 
@@ -94,11 +94,11 @@
 
 /// Base path EXP crystal stack. Use in hand to select how many to consume.
 /obj/item/stack/path_exp_crystal
-	name = "Path EXP Crystal (Small)"
-	singular_name = "Path EXP Crystal (Small)"
-	desc = "A fragment of imaginary energy. Grants 1,000 Character EXP per crystal to your active path."
-	icon = 'ModularLobotomy/_Lobotomyicons/teguitems.dmi'
-	icon_state = "tcorp_syringe"
+	name = "traveler's notes"
+	singular_name = "traveler's notes"
+	desc = "Loose notes of a Pathstrider's journey, refined from progression materials. Grants 1,000 path EXP each. Use in hand to consume."
+	icon = 'ModularLobotomy/_Lobotomyicons/path_exp_crystals.dmi'
+	icon_state = "exp_small"
 	w_class = WEIGHT_CLASS_SMALL
 	max_amount = 50
 	novariants = TRUE
@@ -147,18 +147,20 @@
 
 /// Tier 2: 5,000 EXP per crystal
 /obj/item/stack/path_exp_crystal/medium
-	name = "Path EXP Crystal (Medium)"
-	singular_name = "Path EXP Crystal (Medium)"
-	desc = "A crystal of imaginary energy. Grants 5,000 Character EXP per crystal to your active path."
+	name = "adventurer's log"
+	singular_name = "adventurer's log"
+	desc = "A star-charted logbook of a Pathstrider's travels, refined from progression materials. Grants 5,000 path EXP each. Use in hand to consume."
+	icon_state = "exp_medium"
 	custom_price = 10
 	merge_type = /obj/item/stack/path_exp_crystal/medium
 	exp_per = 5000
 
 /// Tier 3: 20,000 EXP per crystal
 /obj/item/stack/path_exp_crystal/large
-	name = "Path EXP Crystal (Large)"
-	singular_name = "Path EXP Crystal (Large)"
-	desc = "A dense crystal of imaginary energy. Grants 20,000 Character EXP per crystal to your active path."
+	name = "pathstrider's guide"
+	singular_name = "pathstrider's guide"
+	desc = "A dense chronicle of a Pathstrider's odyssey, refined from progression materials. Grants 20,000 path EXP each. Use in hand to consume."
+	icon_state = "exp_large"
 	custom_price = 42
 	merge_type = /obj/item/stack/path_exp_crystal/large
 	exp_per = 20000

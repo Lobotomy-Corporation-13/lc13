@@ -458,75 +458,74 @@
 	var/list/table = GetExpTable()
 	return table[path_level]
 
-/// Grants EXP and handles leveling up.
-/// Stops at ascension cap — use an Ascension Crystal to break through.
+/// Grants EXP, banked with no ceiling. The level rises up to the current cap
+/// (the lower of the attribute cap and the ascension cap); surplus EXP stays
+/// banked and releases when the cap rises (attributes up, or an ascension).
 /datum/path/proc/GainExp(amount)
-	if(path_level >= 80)
+	if(amount <= 0)
 		return
-	// Find the level cap for current ascension
-	var/cap = 80
-	if(ascension_phase < length(level_caps))
-		cap = level_caps[ascension_phase + 1]
-	// If already at cap, EXP is wasted — warn player
-	if(path_level >= cap)
-		if(owner)
-			to_chat(owner, span_warning("You are at the level cap ([cap]) for ascension [ascension_phase]. Use an Ascension Crystal to continue!"))
-		return
+	var/old_level = path_level
 	path_exp += amount
-	var/list/table = GetExpTable()
-	var/leveled = FALSE
-	while(path_level < 80 && path_level < cap)
-		var/needed = table[path_level + 1]
-		if(path_exp < needed)
-			break
-		path_level = min(path_level + 1, 80)
-		leveled = TRUE
-	// Cap EXP at the next level threshold to prevent waste
-	if(path_level >= cap && path_level < 80)
-		var/cap_exp = table[cap]
-		if(path_exp > cap_exp)
-			path_exp = cap_exp
-		if(owner)
-			to_chat(owner, span_warning("Reached level cap [cap]! Use an Ascension Crystal to ascend."))
-	if(leveled)
-		RecalculateStats()
-		RecalcSwingsPerTurn()
-		if(owner)
-			to_chat(owner, span_nicegreen("Path level up! Now level [path_level]."))
-
-/// Auto-levels the path based on the owner's LC13 attribute average.
-/// 0 avg = level 1 A0, 120 avg = level 80 A6.
-/datum/path/proc/CalculateLevelFromStats()
+	RefreshLevel()
 	if(!owner)
 		return
+	if(path_level > old_level)
+		to_chat(owner, span_nicegreen("Path level up! Now level [path_level]."))
+	else if(path_level >= GetLevelCap() && path_level < 80)
+		to_chat(owner, span_warning("EXP banked. You are at your cap (Lv.[GetLevelCap()]); raise your attributes or ascend to spend it."))
+
+/// The level banked EXP would reach with no cap.
+/datum/path/proc/LevelFromExp(exp)
+	var/list/table = GetExpTable()
+	var/lvl = 1
+	for(var/i in 2 to length(table))
+		if(exp >= table[i])
+			lvl = i
+		else
+			break
+	return lvl
+
+/// Max path level the owner's LC13 attributes currently allow. 0 avg -> Lv.1,
+/// 120 avg -> Lv.80. Read live, so no deep attribute hook is needed.
+/datum/path/proc/GetAttributeCap()
+	if(!owner)
+		return 80
 	var/fort = get_attribute_level(owner, FORTITUDE_ATTRIBUTE)
 	var/prud = get_attribute_level(owner, PRUDENCE_ATTRIBUTE)
 	var/temp = get_attribute_level(owner, TEMPERANCE_ATTRIBUTE)
 	var/just = get_attribute_level(owner, JUSTICE_ATTRIBUTE)
 	var/avg = (fort + prud + temp + just) / 4
+	return clamp(round(1 + (avg / 120) * 79), 1, 80)
 
-	// Map 0-120 avg to level 1-80
-	var/calc_level = clamp(round(1 + (avg / 120) * 79), 1, 80)
+/// The effective level cap: the lower of the attribute cap (how high your stats
+/// let you climb) and the ascension cap (the material-gated phase boundary).
+/datum/path/proc/GetLevelCap()
+	var/asc_cap = 80
+	if(ascension_phase < length(level_caps))
+		asc_cap = level_caps[ascension_phase + 1]
+	return min(GetAttributeCap(), asc_cap)
 
-	// Determine ascension phase from level
-	ascension_phase = 0
-	for(var/i in 1 to length(level_caps))
-		if(calc_level >= level_caps[i])
-			ascension_phase = i
-		else
-			break
+/// Recomputes the level from banked EXP, clamped to the current cap.
+/datum/path/proc/RefreshLevel()
+	var/target = min(LevelFromExp(path_exp), GetLevelCap())
+	if(target != path_level)
+		path_level = target
+		RecalculateStats()
+		RecalcSwingsPerTurn()
 
-	path_level = calc_level
-	// Set EXP to match the calculated level
-	var/list/table = GetExpTable()
-	path_exp = table[path_level]
+/// Legacy: attributes no longer set the level directly, they only raise the
+/// cap (GetAttributeCap). Kept as a thin wrapper so old callers still refresh.
+/datum/path/proc/CalculateLevelFromStats()
+	RefreshLevel()
 
 // ============================================================
 // Skill Tree (Traces)
 // ============================================================
 
-/// Attempts to unlock a trace node by spending ahn
+/// Attempts to unlock/level a trace node by spending materials.
 /datum/path/proc/UnlockNode(node_id)
+	if(!owner)
+		return FALSE
 	// Find node
 	var/datum/path_node/target_node
 	for(var/datum/path_node/node in nodes)
@@ -536,23 +535,28 @@
 	if(!target_node)
 		return FALSE
 
-	// Check can unlock
+	// Check base gates (prereqs, static ascension/level).
 	if(!target_node.CanUnlock(unlocked_nodes, ascension_phase, path_level))
 		return FALSE
 
-	// Check ahn cost via bank account
-	if(!owner)
-		return FALSE
-	var/obj/item/card/id/C = owner.get_idcard(TRUE)
-	if(!C || !C.registered_account)
-		to_chat(owner, span_warning("No bank account found!"))
-		return FALSE
-	if(!C.registered_account.has_money(target_node.ahn_cost))
-		to_chat(owner, span_warning("Not enough ahn! Need [target_node.ahn_cost]."))
-		return FALSE
+	// Ability nodes: per-level ascension gate + max-level check.
+	var/datum/path_ability/ability
+	if(target_node.node_type == PATH_NODE_ABILITY)
+		var/req = target_node.GetRequiredAscension(src)
+		if(ascension_phase < req)
+			to_chat(owner, span_warning("Requires Ascension [req] to level this further."))
+			return FALSE
+		ability = GetAbilityDatum(target_node.ability_target)
+		if(ability && ability.level >= ability.max_level)
+			to_chat(owner, span_warning("[ability.name] is already at max level!"))
+			return FALSE
 
-	// Deduct ahn
-	C.registered_account.adjust_money(-target_node.ahn_cost)
+	// Material cost.
+	var/list/cost = target_node.GetCost(src)
+	if(!HasCost(cost))
+		to_chat(owner, span_warning("You lack the required materials."))
+		return FALSE
+	SpendCost(cost)
 
 	// Apply node effect
 	switch(target_node.node_type)
@@ -561,21 +565,7 @@
 			unlocked_nodes += target_node.id
 		if(PATH_NODE_ABILITY)
 			// Level up the target ability (repeatable, don't add to unlocked)
-			var/datum/path_ability/ability
-			switch(target_node.ability_target)
-				if(PATH_ABILITY_BASIC)
-					ability = basic_attack
-				if(PATH_ABILITY_BURST)
-					ability = burst_action
-				if(PATH_ABILITY_ULTIMATE)
-					ability = ultimate_action
-				if(PATH_ABILITY_PASSIVE)
-					ability = passive_effect
 			if(ability)
-				if(ability.level >= ability.max_level)
-					to_chat(owner, span_warning("[ability.name] is already at max level!"))
-					C.registered_account.adjust_money(target_node.ahn_cost)
-					return FALSE
 				ability.level = min(ability.level + target_node.level_increase, ability.max_level)
 		if(PATH_NODE_PASSIVE)
 			// Bonus ability unlocked — subtypes handle specific logic

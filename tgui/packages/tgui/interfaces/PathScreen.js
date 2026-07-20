@@ -12,6 +12,148 @@ import {
 } from '../components';
 import { Window } from '../layouts';
 
+// ---- Material cost helpers (resources shown instead of ahn) ----
+
+const matImg = (icon, size) => (
+  icon ? (
+    <img
+      src={'data:image/png;base64,' + icon}
+      style={{
+        'width': size + 'px',
+        'height': size + 'px',
+        'image-rendering': 'pixelated',
+        'vertical-align': 'middle',
+      }}
+    />
+  ) : null
+);
+
+// One cost entry: icon on a rarity-colored tile, needed amount below,
+// dimmed/red when the player is short.
+const MatTile = props => {
+  const { icon, color, amt, have, size = 32 } = props;
+  const ok = have >= amt;
+  return (
+    <Box textAlign="center" mr={1}>
+      <Box
+        style={{
+          'background': color,
+          'border-radius': '4px',
+          'padding': '2px',
+          'display': 'inline-block',
+          'opacity': ok ? '1' : '0.45',
+        }}>
+        {matImg(icon, size)}
+      </Box>
+      <Box bold color={ok ? 'good' : 'bad'}>{amt}</Box>
+    </Box>
+  );
+};
+
+// Renders a node/ascension cost ({main:[[tier,amt]], trace:[[tier,amt]]}).
+const CostTiles = (props, context) => {
+  const { data } = useBackend(context);
+  const { cost } = props;
+  const { mat_counts = {}, mat_icons = {}, rarity_colors = [] } = data;
+  const rows = [];
+  ['main', 'trace'].forEach(kind => {
+    (cost && cost[kind] ? cost[kind] : []).forEach(entry => {
+      const tier = entry[0];
+      rows.push({
+        amt: entry[1],
+        have: (mat_counts[kind] || [])[tier - 1] || 0,
+        icon: (mat_icons[kind] || [])[tier - 1],
+        color: rarity_colors[tier - 1] || '#888',
+      });
+    });
+  });
+  if (!rows.length) {
+    return <Box color="label">Free</Box>;
+  }
+  return (
+    <Flex>
+      {rows.map((r, i) => (
+        <Flex.Item key={i}>
+          <MatTile {...r} />
+        </Flex.Item>
+      ))}
+    </Flex>
+  );
+};
+
+// Compact header wallet: main + trace families, T1/T2/T3 counts.
+const Wallet = (props, context) => {
+  const { data } = useBackend(context);
+  const {
+    mat_counts = {}, mat_icons = {}, rarity_colors = [],
+    main_family = '', trace_family = '',
+  } = data;
+  const kinds = [['main', main_family], ['trace', trace_family]];
+  return (
+    <Flex>
+      {kinds.map(([kind, fam]) => (
+        <Flex.Item key={kind} ml={2}>
+          <Box fontSize="0.7em" color="label">{fam}</Box>
+          <Flex>
+            {[1, 2, 3].map(t => (
+              <Flex.Item key={t} mr={0.5}>
+                <Box
+                  inline
+                  style={{
+                    'border': '1px solid '
+                      + (rarity_colors[t - 1] || '#888'),
+                    'border-radius': '3px',
+                  }}>
+                  {matImg((mat_icons[kind] || [])[t - 1], 18)}
+                </Box>
+                <Box inline fontSize="0.85em">
+                  {' '}{(mat_counts[kind] || [])[t - 1] || 0}
+                </Box>
+              </Flex.Item>
+            ))}
+          </Flex>
+        </Flex.Item>
+      ))}
+    </Flex>
+  );
+};
+
+// Ascend control shown in the header: cost tiles + button, gated on
+// reaching the level cap and holding the materials.
+const AscendControl = (props, context) => {
+  const { act, data } = useBackend(context);
+  const { ascension } = data;
+  if (!ascension || !ascension.can_ascend) {
+    return null;
+  }
+  const ready = ascension.at_cap && ascension.affordable;
+  return (
+    <Box mt={1}>
+      <Box fontSize="0.75em" color="label">
+        Ascend (A{ascension.phase}
+        {' -> A'}{ascension.phase + 1})
+      </Box>
+      <Flex align="center">
+        <Flex.Item>
+          <CostTiles cost={ascension.cost} />
+        </Flex.Item>
+        <Flex.Item ml={1}>
+          <Button
+            content="Ascend"
+            color="good"
+            disabled={!ready}
+            tooltip={ascension.at_cap
+              ? (ascension.affordable
+                ? 'Ascend!' : 'Need materials')
+              : 'Reach the level cap first'}
+            onClick={() => act('ascend')}
+          />
+        </Flex.Item>
+      </Flex>
+    </Box>
+  );
+};
+
 // Tree dimensions
 const TREE_W = 550;
 const TREE_H = 530;
@@ -118,6 +260,7 @@ const DetailsTab = (props, context) => {
     action_points = 0,
     max_action_points = 5,
     path_level = 1, ascension_phase = 0,
+    attribute_cap = 80, level_cap = 80,
     path_exp = 0,
     exp_at_level = 0, exp_to_next = 0,
     turn_state = 0,
@@ -126,7 +269,6 @@ const DetailsTab = (props, context) => {
     stats = {},
     abilities = [],
     lc13_attributes = {},
-    player_ahn = 0,
     allies = [],
   } = data;
   const turnNames = [
@@ -140,6 +282,16 @@ const DetailsTab = (props, context) => {
     s => !primary.includes(s)
       && s !== 'DMG Reduction'
   );
+  const lc13Vals = Object.values(lc13_attributes);
+  const lc13Avg = lc13Vals.length
+    ? Math.round(
+      lc13Vals.reduce((a, b) => a + b, 0) / lc13Vals.length)
+    : 0;
+  const capReason = level_cap >= 80
+    ? 'max'
+    : level_cap < attribute_cap
+      ? 'ascension-limited'
+      : 'attribute-limited';
   return (
     <Stack vertical>
       <Stack.Item>
@@ -150,16 +302,19 @@ const DetailsTab = (props, context) => {
                 {path_name}
               </Box>
               <Box color="label" mt={0.5}>
-                Lv. {path_level}
-                {' / A'}{ascension_phase}
+                Lv. {path_level} / {level_cap}
+                {' - A'}{ascension_phase}
                 {' - '}{element_type}
+              </Box>
+              <Box color="label" fontSize="0.8em" mt={0.25}>
+                Level cap {level_cap} ({capReason})
+                {' - attr cap '}{attribute_cap}
+                {' - avg LC13 '}{lc13Avg}
               </Box>
             </Stack.Item>
             <Stack.Item>
-              <Box color="label"
-                textAlign="right">
-                Ahn: {player_ahn}
-              </Box>
+              <Wallet />
+              <AscendControl />
             </Stack.Item>
           </Stack>
           {path_level < 80 ? (
@@ -428,8 +583,7 @@ const DetailsTab = (props, context) => {
 const canUnlock = (node, data) => {
   if (node.unlocked) return false;
   const {
-    nodes, player_ahn,
-    ascension_phase, path_level,
+    nodes, ascension_phase, path_level,
   } = data;
   if (node.required_ascension > 0
     && ascension_phase
@@ -440,7 +594,7 @@ const canUnlock = (node, data) => {
     && path_level < node.required_level) {
     return false;
   }
-  if (player_ahn < node.ahn_cost) {
+  if (!node.affordable) {
     return false;
   }
   for (const pid of node.prerequisites) {
@@ -453,7 +607,7 @@ const canUnlock = (node, data) => {
 const TracesTab = (props, context) => {
   const { act, data } = useBackend(context);
   const {
-    nodes = [], player_ahn = 0,
+    nodes = [],
   } = data;
   const [selId, setSelId] = useLocalState(
     context, 'selNode', null
@@ -470,8 +624,8 @@ const TracesTab = (props, context) => {
                 <Flex.Item bold>
                   Traces
                 </Flex.Item>
-                <Flex.Item color="label">
-                  Ahn: {player_ahn}
+                <Flex.Item>
+                  <Wallet />
                 </Flex.Item>
               </Flex>
             </Section>
@@ -903,17 +1057,7 @@ const NodeDetail = props => {
         </Stack.Item>
         <Stack.Item mt={1}>
           <Box bold mb={0.5}>Cost</Box>
-          <Box
-            color={
-              data.player_ahn >= node.ahn_cost
-                ? 'green' : 'bad'
-            }
-            fontSize="13px">
-            {node.ahn_cost} Ahn
-          </Box>
-          <Box color="label" fontSize="11px">
-            You have: {data.player_ahn}
-          </Box>
+          <CostTiles cost={node.cost} />
         </Stack.Item>
         {reqs.length > 0 && (
           <Stack.Item mt={1}>
@@ -1188,9 +1332,8 @@ const NodeDetail = props => {
             <Box color="bad"
               fontSize="11px"
               textAlign="center">
-              {data.player_ahn
-                < node.ahn_cost
-                ? 'Not enough Ahn'
+              {!node.affordable
+                ? 'Not enough materials'
                 : 'Requirements not met'}
             </Box>
           </Stack.Item>
