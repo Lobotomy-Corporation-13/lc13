@@ -87,6 +87,51 @@
 	if(secret_icon_dead)
 		icon_dead = secret_icon_dead
 
+// Actions
+/datum/action/innate/rca_abnormality_attack
+	name = "Abnormality Attack"
+	icon_icon = 'icons/mob/actions/actions_abnormality.dmi'
+	button_icon_state = ""
+	background_icon_state = "bg_abnormality"
+	var/mob/living/simple_animal/hostile/rcorp_abno/A
+	var/chosen_message
+	var/chosen_attack_num = 0
+
+/datum/action/innate/rca_abnormality_attack/Destroy()
+	A = null
+	return ..()
+
+/datum/action/innate/rca_abnormality_attack/Grant(mob/living/L)
+	if(istype(L, /mob/living/simple_animal/hostile/rcorp_abno))
+		A = L
+		return ..()
+	return FALSE
+
+/datum/action/innate/rca_abnormality_attack/Activate()
+	A.chosen_attack = chosen_attack_num
+	to_chat(A, chosen_message)
+
+/datum/action/innate/rca_abnormality_attack/toggle
+	name = "Toggle Attack"
+	var/toggle_message
+	var/toggle_attack_num = 1
+	var/button_icon_toggle_activated = ""
+	var/button_icon_toggle_deactivated = ""
+
+/datum/action/innate/rca_abnormality_attack/toggle/Activate()
+	. = ..()
+	button_icon_state = button_icon_toggle_activated
+	UpdateButtonIcon()
+	active = TRUE
+
+
+/datum/action/innate/rca_abnormality_attack/toggle/Deactivate()
+	A.chosen_attack = toggle_attack_num
+	to_chat(A, toggle_message)
+	button_icon_state = button_icon_toggle_deactivated
+	UpdateButtonIcon()
+	active = FALSE
+
 /mob/living/simple_animal/hostile/rcorp_abno/examine_more(mob/user)
 	. = ..()
 	. += span_notice("You see a hastily written note on the side, it says '1215-1217, PICK A SIDE'.")

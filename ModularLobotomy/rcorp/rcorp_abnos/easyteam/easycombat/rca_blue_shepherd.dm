@@ -49,7 +49,7 @@
 	var/riposted = FALSE
 	var/counter_damage = 20
 	//PLAYABLES ATTACKS
-	attack_action_types = list(/datum/action/innate/abnormality_attack/toggle/sheperd_spin_toggle, /datum/action/cooldown/rca_evade, /datum/action/cooldown/rca_parry)
+	attack_action_types = list(/datum/action/innate/rca_abnormality_attack/toggle/sheperd_spin_toggle, /datum/action/cooldown/rca_evade, /datum/action/cooldown/rca_parry)
 
 	abno_additional_instructions = "<h1>You are Blue Shepherd, A Combat Role Abnormality.</h1><br>\
 		<b>|Slayer|: When you attack, if your spin attack is off cooldown you will use it. \
@@ -129,7 +129,7 @@
 	cooldown_time = 100
 	var/counter_duration = 1 SECONDS
 
-/datum/action/cooldown/parry/Trigger()
+/datum/action/cooldown/rca_parry/Trigger()
 	if(!..())
 		endcounter()
 		return FALSE
@@ -174,7 +174,7 @@
 		H.slashing = FALSE
 		H.color = null
 
-/datum/action/innate/abnormality_attack/toggle/sheperd_spin_toggle
+/datum/action/innate/rca_abnormality_attack/toggle/sheperd_spin_toggle
 	name = "Toggle Spinning Slash"
 	button_icon_state = "sheperd_toggle0"
 	chosen_attack_num = 2
