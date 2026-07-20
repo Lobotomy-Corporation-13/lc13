@@ -1,5 +1,5 @@
 GLOBAL_LIST_INIT(easycombat, list(
-	/mob/living/simple_animal/hostile/abnormality/blue_shepherd,
+	/mob/living/simple_animal/hostile/rcorp_abno/easycombat/blue_shepherd,
 	/mob/living/simple_animal/hostile/abnormality/helper,
 	/mob/living/simple_animal/hostile/abnormality/smile,
 	/mob/living/simple_animal/hostile/abnormality/pinocchio,

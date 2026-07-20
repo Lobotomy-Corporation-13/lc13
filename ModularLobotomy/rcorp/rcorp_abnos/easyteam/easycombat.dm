@@ -1,1 +1,0 @@
-//Easycombat, easy classifications are more lenient and so most abnos that do damage are simply shoved here

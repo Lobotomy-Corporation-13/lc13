@@ -5,10 +5,18 @@
 	desc = "Bug report this, I may have fucked up." //Rabbits are lobotomized so when adding a abno try to warn them of their gimmick in the description
 	maxHealth = 99
 	health = 99
-	melee_damage_lower = 99
-	melee_damage_upper = 999
+	melee_damage_lower = 9
+	melee_damage_upper = 99
 	attack_sound = 'sound/voice/human/malescream_1.ogg' //This embodies my feelings if I see this shit ingame
+	robust_searching = TRUE
+	ranged_ignores_vision = TRUE
+	stat_attack = HARD_CRIT
+	layer = LARGE_MOB_LAYER
 	a_intent = INTENT_HARM
+	damage_coeff = list(RED_DAMAGE = 1, WHITE_DAMAGE = 1, BLACK_DAMAGE = 1, PALE_DAMAGE = 1)
+	see_in_dark = 7
+	vision_range = 12
+	aggro_vision_range = 20
 	move_resist = MOVE_FORCE_STRONG
 	pull_force = MOVE_FORCE_STRONG
 	can_buckle_to = FALSE
@@ -16,11 +24,10 @@
 	blood_volume = BLOOD_VOLUME_NORMAL
 	simple_mob_flags = SILENCE_RANGED_MESSAGE
 	faction = list("hostile")
-	var/dupe = FALSE //Some abnos are so absurdly weak they come in groups of 2 to do anything, this var handles that
 	var/secret_chance = FALSE //Only toggle true if you have "alternate sprites" for the abno
 	var/secret_abnormality = FALSE //This is only really here incase some funny guy decides to change something in a abno for its alternate sprite (such as its abilities)
+	var/chosen_attack = 1
 	var/small_sprite_type = /datum/action/small_sprite/abnormality //Tiny guy if your abno sprite is too large to click through, you can change it if you want but whose going to sprite extras amirite
-
 
 	var/list/attack_action_types = list()
 
@@ -47,13 +54,15 @@
 	if(small_sprite_type)
 		var/datum/action/small_sprite/small_action = new small_sprite_type()
 		small_action.Grant(src)
-	if(dupe)
-		new.src
 	if(!isnull(original_abno))
+		name = original_abno.name
 		icon = original_abno.icon
 		icon_state = original_abno.icon_state
 		icon_living = original_abno.icon_living
 		icon_dead = original_abno.icon_dead
+		attack_sound = original_abno.attack_sound
+		attack_verb_continuous = original_abno.attack_verb_continuous
+		attack_verb_simple = original_abno.attack_verb_simple
 	if(secret_chance && (prob(1)))
 		InitializeSecretIcon()
 
@@ -78,6 +87,10 @@
 	if(secret_icon_dead)
 		icon_dead = secret_icon_dead
 
+/mob/living/simple_animal/hostile/rcorp_abno/examine_more(mob/user)
+	. = ..()
+	. += span_notice("You see a hastily written note on the side, it says '1215-1217, PICK A SIDE'.")
+
 //Debrief the player
 /mob/living/simple_animal/hostile/rcorp_abno/Login()
 	. = ..()
@@ -90,3 +103,5 @@
 	..()
 	mind = null //You left, give it to someone else
 	player_desc = "" //You left, you are forgotten by history
+
+//Note that this is all a template and the rest is just copypasting the breaches
