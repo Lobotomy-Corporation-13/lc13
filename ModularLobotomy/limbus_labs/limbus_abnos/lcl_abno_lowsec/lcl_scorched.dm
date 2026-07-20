@@ -24,7 +24,7 @@
 	liked_objects_value = 3
 	ego_list = list(
 		/datum/ego_datum/weapon/match,
-		/datum/ego_datum/armor/match,
+		/datum/ego_datum/armor/lce/match,
 	)
 	breach_overlay_z = 30
 	breach_overlay_x = 3

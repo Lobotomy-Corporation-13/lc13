@@ -39,7 +39,7 @@
 	ego_desire_gained = 2
 	ego_list = list(
 		/datum/ego_datum/weapon/smile,
-		/datum/ego_datum/armor/smile,
+		/datum/ego_datum/armor/lce/smile,
 	)
 	var/phase_one_health = 2000
 	var/phase_two_health = 3000
