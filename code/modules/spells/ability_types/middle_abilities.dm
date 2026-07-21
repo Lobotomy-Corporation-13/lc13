@@ -21,6 +21,11 @@
 	var/is_landing = FALSE
 	var/mob/living/carbon/human/leaper
 	var/obj/effect/temp_visual/great_leap_warning/warning_effect
+	var/obj/effect/proc_holder/ability/great_leap_cancel/early_cancel
+
+/obj/effect/proc_holder/ability/great_leap/Initialize(mob/living/owner)
+	. = ..()
+	early_cancel = new /obj/effect/proc_holder/ability/great_leap_cancel(null, src)
 
 /obj/effect/proc_holder/ability/great_leap/Perform(target, mob/user)
 	if(!ishuman(user))
@@ -33,6 +38,7 @@
 
 	leaper = user
 	is_leaping = TRUE
+	early_cancel.action.Grant(user)
 
 	// Phase 1: Launch animation
 	user.visible_message(span_danger("[user] crouches down and prepares for a mighty leap!"))
@@ -47,10 +53,12 @@
 	user.status_flags |= GODMODE // Make invulnerable during leap
 	user.invisibility = 0 // Make invisible but still controllable
 
-	// Add flying trait, block hands, and speed boost
+	// Add flying trait and speed boost
 	ADD_TRAIT(user, TRAIT_MOVE_FLYING, SPECIES_FLIGHT_TRAIT)
-	ADD_TRAIT(user, TRAIT_HANDS_BLOCKED, "great_leap")
 	user.add_movespeed_modifier(/datum/movespeed_modifier/great_leap_flying)
+
+	// Stop them from picking up stuff or attacking midair
+	RegisterSignal(user, COMSIG_MOB_CLICKON, PROC_REF(DisallowFlyingManipulation))
 
 	// Schedule automatic landing after duration
 	addtimer(CALLBACK(src, PROC_REF(StartLanding)), leap_duration)
@@ -60,6 +68,8 @@
 /obj/effect/proc_holder/ability/great_leap/proc/StartLanding()
 	if(!leaper || is_landing)
 		return
+
+	early_cancel.action.Remove(leaper)
 
 	is_landing = TRUE
 	is_leaping = FALSE
@@ -99,9 +109,9 @@
 	if(warning_effect)
 		QDEL_NULL(warning_effect)
 
-	// Remove flying trait, hands blocked, and all speed modifiers
+	// Remove flying trait and all speed modifiers
 	REMOVE_TRAIT(leaper, TRAIT_MOVE_FLYING, SPECIES_FLIGHT_TRAIT)
-	REMOVE_TRAIT(leaper, TRAIT_HANDS_BLOCKED, "great_leap")
+	UnregisterSignal(leaper, COMSIG_MOB_CLICKON)
 	leaper.remove_movespeed_modifier(/datum/movespeed_modifier/great_leap_flying)
 	leaper.remove_movespeed_modifier(/datum/movespeed_modifier/great_leap_landing)
 
@@ -174,6 +184,35 @@
 	is_landing = FALSE
 	is_leaping = FALSE
 	leaper = null
+
+/obj/effect/proc_holder/ability/great_leap/proc/DisallowFlyingManipulation(datum/source, atom/A, params)
+	SIGNAL_HANDLER
+	// You cannot click anything but UI elements while leaping or landing. This still allows you to cancel the landing early, but not interact with the world through clicks in any way.
+	if((is_leaping || is_landing) && (!istype(A, /atom/movable/screen)))
+		return COMSIG_MOB_CANCEL_CLICKON
+
+/obj/effect/proc_holder/ability/great_leap_cancel
+	name = "COMPLETE AND TOTAL EXTERMINATION!!!"
+	desc = "Crash back down, obliterate everyone in sight! Well, except your little siblings, of course."
+	action_icon = 'icons/mob/actions/actions_silicon.dmi'
+	action_icon_state = "move_down"
+	base_icon_state = "move_down"
+	cooldown_time = 5 SECONDS
+	var/obj/effect/proc_holder/ability/great_leap/linked_leap
+
+/obj/effect/proc_holder/ability/great_leap_cancel/Initialize(mob/living/owner, obj/effect/proc_holder/ability/great_leap/creator)
+	. = ..()
+	if(!creator || !istype(creator))
+		qdel(src)
+		return
+	linked_leap = creator
+
+/obj/effect/proc_holder/ability/great_leap_cancel/Perform(target, mob/user)
+	if(!ishuman(user) || !linked_leap || linked_leap.is_landing)
+		return
+
+	if(linked_leap.is_leaping)
+		linked_leap.StartLanding()
 
 // Warning effect that follows the player during landing
 /obj/effect/temp_visual/great_leap_warning
