@@ -68,6 +68,7 @@ GLOBAL_LIST_EMPTY(path_mat_names)
 	w_class = WEIGHT_CLASS_SMALL
 	max_amount = 99
 	novariants = TRUE
+	merge_type = /obj/item/stack/path_material
 	/// Which path this feeds, one of PATH_KEY_*.
 	var/path_key = PATH_KEY_DESTRUCTION
 	/// Rarity tier: PATH_MAT_T1 / T2 / T3.
@@ -266,6 +267,7 @@ GLOBAL_LIST_EMPTY(path_mat_names)
 	w_class = WEIGHT_CLASS_SMALL
 	max_amount = 99
 	novariants = TRUE
+	merge_type = /obj/item/stack/trace_material
 	/// Which trace family, one of TRACE_FAMILY_*.
 	var/family = TRACE_FAMILY_FANG
 	/// Rarity tier: PATH_MAT_T1 / T2 / T3.

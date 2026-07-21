@@ -596,12 +596,11 @@ GLOBAL_VAR(path_realm_active)
 	faction = list("neutral")
 	a_intent = INTENT_HELP
 	stat_attack = CONSCIOUS
-	move_resist = MOVE_FORCE_STRONG // They kept stealing my abnormalities
+	move_resist = INFINITY // They kept stealing my abnormalities
 	pull_force = MOVE_FORCE_STRONG
 	can_buckle_to = FALSE // Please. I beg you. Stop stealing my vending machines.
 	mob_size = MOB_SIZE_HUGE // No more lockers, Whitaker
 	wander = FALSE
-	anchored = TRUE
 	density = FALSE
 	mouse_opacity = MOUSE_OPACITY_ICON
 
