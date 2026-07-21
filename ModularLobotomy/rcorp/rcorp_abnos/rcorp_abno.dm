@@ -13,6 +13,7 @@
 	stat_attack = HARD_CRIT
 	layer = LARGE_MOB_LAYER
 	a_intent = INTENT_HARM
+	del_on_death = TRUE
 	damage_coeff = list(RED_DAMAGE = 1, WHITE_DAMAGE = 1, BLACK_DAMAGE = 1, PALE_DAMAGE = 1)
 	see_in_dark = 7
 	vision_range = 12
@@ -23,7 +24,6 @@
 	mob_size = MOB_SIZE_HUGE
 	blood_volume = BLOOD_VOLUME_NORMAL
 	simple_mob_flags = SILENCE_RANGED_MESSAGE
-	del_on_death = TRUE
 	//For RCA abnos the threat level only matters if the abno lacking a death sprite has it replaced by abno cores.
 	var/threat_level = ZAYIN_LEVEL
 	faction = list("hostile")
@@ -61,6 +61,7 @@
 	if(small_sprite_type)
 		var/datum/action/small_sprite/small_action = new small_sprite_type()
 		small_action.Grant(src)
+	//Comically large list of things to steal, naturally these are all (mostly) cosmetic as they may be changed at anytime from the original abno
 	if(!isnull(original_abno))
 		icon = original_abno.icon
 		icon_state = original_abno.icon_state
@@ -75,11 +76,18 @@
 		aggro_vision_range = original_abno.aggro_vision_range
 		threat_level = original_abno.threat_level
 		core_icon = original_abno.core_icon
+		death_message = original_abno.death_message
+		blood_volume = original_abno.blood_volume
+		pixel_x = original_abno.pixel_x
+		base_pixel_x = original_abno.base_pixel_x
+		pixel_y = original_abno.pixel_y
+		base_pixel_y = original_abno.base_pixel_y
 
 	if(secret_chance && (prob(1)))
 		InitializeSecretIcon()
 
 /mob/living/simple_animal/hostile/rcorp_abno/proc/InitializeSecretIcon()
+	//Can probably shove a if condition somewhere to change a abnos stats or gimmick if this is true
 	secret_abnormality = TRUE
 
 	if(secret_icon_file)
@@ -105,6 +113,7 @@
 
 /mob/living/simple_animal/hostile/rcorp_abno/Destroy()
 	CreateAbnoCore(name, core_icon)
+	. = ..()
 
 /mob/living/simple_animal/hostile/rcorp_abno/proc/CreateAbnoCore()//this is called by abnormalities on Destroy()
 	var/obj/structure/abno_core/C = new(get_turf(src))
@@ -162,17 +171,12 @@
 	UpdateButtonIcon()
 	active = TRUE
 
-
 /datum/action/innate/rca_abnormality_attack/toggle/Deactivate()
 	A.chosen_attack = toggle_attack_num
 	to_chat(A, toggle_message)
 	button_icon_state = button_icon_toggle_deactivated
 	UpdateButtonIcon()
 	active = FALSE
-
-/mob/living/simple_animal/hostile/rcorp_abno/examine_more(mob/user)
-	. = ..()
-	. += span_notice("You see a hastily written note on the side, it says '1215-1217, PICK A SIDE'.")
 
 //Debrief the player
 /mob/living/simple_animal/hostile/rcorp_abno/Login()

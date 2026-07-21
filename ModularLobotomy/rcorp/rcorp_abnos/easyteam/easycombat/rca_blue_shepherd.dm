@@ -9,8 +9,6 @@
 	melee_damage_upper = 30
 	melee_damage_type = BLACK_DAMAGE
 	del_on_death = FALSE
-	pixel_x = -8
-	base_pixel_x = -8
 	original_abno = /mob/living/simple_animal/hostile/abnormality/blue_shepherd
 
 	var/slash_current = 4
@@ -56,9 +54,11 @@
 	attack_action_types = list(/datum/action/innate/rca_abnormality_attack/toggle/sheperd_spin_toggle, /datum/action/cooldown/rca_evade, /datum/action/cooldown/rca_parry)
 
 	abno_additional_instructions = "<h1>You are Blue Shepherd, A Combat Role Abnormality.</h1><br>\
-		<b>|Slayer|: When you attack, if your spin attack is off cooldown you will use it. \
+		<b>|Slayer|: When you attack, if your special attack is off cooldown you will use it. \
+		You possess two variants of this attack, a spin and a cleave. \
 		Your spin attack is a 5x5 AoE centered around you, which deals medium BLACK damage. \
-		You are able to toggle your spin attack on and off with your ability.<br>\
+		Your cleave attack is a 3x2 directional attack done in the direction of your target, which deals medium-high BLACK damage. \
+		You are able to toggle your special attack on and off with your ability.<br>\
 		<br>\
 		|Sidestep|: You are able to trigger your 'Dodge' ability using the button on the top left of your screen, \
 		Or you can use a hotkey. (Which is Spacebar by default). When you trigger your 'Dodge' ability you will gain a speed boost and lose density (Bullet will pass through you.) for 1 second. \
@@ -233,7 +233,7 @@
 				TriggerCounter()
 	return ..()
 
-/mob/living/simple_animal/hostile/abnormality/blue_shepherd/death(gibbed)
+/mob/living/simple_animal/hostile/rcorp_abno/easycombat/blue_shepherd/death(gibbed)
 	density = FALSE
 	animate(src, alpha = 0, time = 10 SECONDS)
 	QDEL_IN(src, 10 SECONDS)
