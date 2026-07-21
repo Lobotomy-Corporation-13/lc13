@@ -14,6 +14,7 @@
 	attack_speed = 1.2
 	damtype = BLACK_DAMAGE
 
+	swingcolor = "#8c559c"
 	attack_verb_continuous = list("whips", "lashes", "strikes", "batters")
 	attack_verb_simple = list("whip", "lash", "strike", "batter")
 	hitsound = 'sound/weapons/fixer/generic/middle_attack.ogg'
@@ -182,6 +183,7 @@
 		TEMPERANCE_ATTRIBUTE = 80,
 		JUSTICE_ATTRIBUTE = 80,
 	)
+	swingcolor = "#654b75"
 
 //Big Brother Chain
 /obj/item/ego_weapon/shield/middle_chain/big
@@ -200,3 +202,4 @@
 		JUSTICE_ATTRIBUTE = 100,
 	)
 	attack_types_countered = (ATTACK_TYPE_MELEE | ATTACK_TYPE_RANGED)
+	swingcolor = "#462e56"

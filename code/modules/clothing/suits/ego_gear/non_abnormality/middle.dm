@@ -165,6 +165,10 @@
 	source_of_damage.apply_vengeance_mark(vengeance_mark_stacks)
 	to_chat(awesome_sibling, span_danger("The Book of Vengeance marks [source_of_damage] for retribution!"))
 
+/obj/item/storage/book/middle/Destroy(force)
+	mark_cooldowns = null
+	return ..()
+
 //Younger Brother's Book of Vengeance
 /obj/item/storage/book/middle/younger
 	name = "the book of vengeance"

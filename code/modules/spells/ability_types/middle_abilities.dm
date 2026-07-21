@@ -27,6 +27,10 @@
 	. = ..()
 	early_cancel = new /obj/effect/proc_holder/ability/great_leap_cancel(null, src)
 
+/obj/effect/proc_holder/ability/great_leap/Destroy()
+	QDEL_NULL(early_cancel)
+	return ..()
+
 /obj/effect/proc_holder/ability/great_leap/Perform(target, mob/user)
 	if(!ishuman(user))
 		return
@@ -191,6 +195,7 @@
 	if((is_leaping || is_landing) && (!istype(A, /atom/movable/screen)))
 		return COMSIG_MOB_CANCEL_CLICKON
 
+// Cancels Great Leap early.
 /obj/effect/proc_holder/ability/great_leap_cancel
 	name = "COMPLETE AND TOTAL EXTERMINATION!!!"
 	desc = "Crash back down, obliterate everyone in sight! Well, except your little siblings, of course."
@@ -213,6 +218,11 @@
 
 	if(linked_leap.is_leaping)
 		linked_leap.StartLanding()
+
+/obj/effect/proc_holder/ability/great_leap_cancel/Destroy()
+	linked_leap = null
+	. = ..()
+
 
 // Warning effect that follows the player during landing
 /obj/effect/temp_visual/great_leap_warning
