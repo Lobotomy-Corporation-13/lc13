@@ -15,7 +15,7 @@
 	desc = "A chainsword that reminds you of something..."
 	special = "Use this weapon in hand to rev it up, making it attack 4 times in succession."
 	icon_state = "grinder"
-	force = 13
+	force = 17
 	attack_speed = 1	//has a very low DPS so that they can rev it up for multihits
 	damtype = RED_DAMAGE
 	attack_verb_continuous = list("slices", "saws", "rips")
@@ -67,7 +67,7 @@
 	if(!CanUseEgo(user))
 		return
 	..()
-	if(do_after(user, 7, src))
+	if(do_after(user, 12, src))
 		target.deal_damage(force, BLACK_DAMAGE, user, attack_type = (ATTACK_TYPE_MELEE))
 		playsound(src, 'sound/weapons/fixer/generic/gen2.ogg', 100, TRUE)
 		user.adjustBruteLoss(-force/3)
@@ -75,3 +75,26 @@
 		to_chat(user, "<span class= 'spider'><b>Your attack was interrupted!</b></span>")
 		balloon_alert(user, "Your attack was interrupted!")
 		return
+
+/obj/item/ego_weapon/lce/unrequited
+	name = "unrequited love"
+	desc = "A knife that looks like it's made from sharpened bone."
+	special = "Use this weapon in hand to dodgeroll."
+	icon_state = "unrequited"
+	force = 26
+	swingstyle = WEAPONSWING_LARGESWEEP
+	damtype = WHITE_DAMAGE
+	hitsound = 'sound/weapons/fixer/generic/knife2.ogg'
+	var/dodgelanding
+
+/obj/item/ego_weapon/lce/unrequited/attack_self(mob/living/carbon/user)
+	if(user.dir == 1)
+		dodgelanding = locate(user.x, user.y + 5, user.z)
+	if(user.dir == 2)
+		dodgelanding = locate(user.x, user.y - 5, user.z)
+	if(user.dir == 4)
+		dodgelanding = locate(user.x + 5, user.y, user.z)
+	if(user.dir == 8)
+		dodgelanding = locate(user.x - 5, user.y, user.z)
+	user.adjustStaminaLoss(20, TRUE, TRUE)
+	user.throw_at(dodgelanding, 3, 2, spin = TRUE)
