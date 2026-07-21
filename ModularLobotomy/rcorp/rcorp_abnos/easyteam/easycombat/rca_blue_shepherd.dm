@@ -1,4 +1,4 @@
-/mob/living/simple_animal/hostile/rcorp_abno/easycombat/blue_shepherd
+/mob/living/simple_animal/hostile/rcorp_abno/easy/blue_shepherd
 	name = "Blue Smocked Shepherd"
 	desc = "A strange humanoid in blue robes. They seem poised to counter careless hits, avoid being predictable"
 	maxHealth = 1200
@@ -84,8 +84,8 @@
 /datum/action/cooldown/rca_evade/Trigger()
 	if(!..())
 		return FALSE
-	if (istype(owner, /mob/living/simple_animal/hostile/rcorp_abno/easycombat/blue_shepherd))
-		var/mob/living/simple_animal/hostile/rcorp_abno/easycombat/blue_shepherd/H = owner
+	if (istype(owner, /mob/living/simple_animal/hostile/rcorp_abno/easy/blue_shepherd))
+		var/mob/living/simple_animal/hostile/rcorp_abno/easy/blue_shepherd/H = owner
 		old_speed = 3
 		H.move_to_delay = speeded_up
 		H.UpdateSpeed()
@@ -95,12 +95,12 @@
 		addtimer(CALLBACK(src, PROC_REF(slowdown)), speed_duration)
 		StartCooldown()
 
-/mob/living/simple_animal/hostile/rcorp_abno/easycombat/blue_shepherd/Moved()
+/mob/living/simple_animal/hostile/rcorp_abno/easy/blue_shepherd/Moved()
 	. = ..()
 	if (sidesteping)
 		MoveVFX()
 
-/mob/living/simple_animal/hostile/rcorp_abno/easycombat/blue_shepherd/proc/MoveVFX()
+/mob/living/simple_animal/hostile/rcorp_abno/easy/blue_shepherd/proc/MoveVFX()
 	set waitfor = FALSE
 	var/obj/viscon_filtereffect/distortedform_trail/trail = new(src.loc,themob = src, waittime = 5)
 	trail.vis_contents += src
@@ -110,8 +110,8 @@
 	animate(alpha = 0, time = 10)
 
 /datum/action/cooldown/rca_evade/proc/slowdown()
-	if (istype(owner, /mob/living/simple_animal/hostile/rcorp_abno/easycombat/blue_shepherd))
-		var/mob/living/simple_animal/hostile/rcorp_abno/easycombat/blue_shepherd/H = owner
+	if (istype(owner, /mob/living/simple_animal/hostile/rcorp_abno/easy/blue_shepherd))
+		var/mob/living/simple_animal/hostile/rcorp_abno/easy/blue_shepherd/H = owner
 		H.move_to_delay = restspeed
 		H.density = TRUE
 		H.sidesteping = FALSE
@@ -119,8 +119,8 @@
 		H.UpdateSpeed()
 
 /datum/action/cooldown/rca_evade/proc/recover()
-	if (istype(owner, /mob/living/simple_animal/hostile/rcorp_abno/easycombat/blue_shepherd))
-		var/mob/living/simple_animal/hostile/rcorp_abno/easycombat/blue_shepherd/H = owner
+	if (istype(owner, /mob/living/simple_animal/hostile/rcorp_abno/easy/blue_shepherd))
+		var/mob/living/simple_animal/hostile/rcorp_abno/easy/blue_shepherd/H = owner
 		H.move_to_delay = old_speed
 		H.no_counter = FALSE
 		H.UpdateSpeed()
@@ -137,8 +137,8 @@
 	if(!..())
 		endcounter()
 		return FALSE
-	if (istype(owner, /mob/living/simple_animal/hostile/rcorp_abno/easycombat/blue_shepherd))
-		var/mob/living/simple_animal/hostile/rcorp_abno/easycombat/blue_shepherd/H = owner
+	if (istype(owner, /mob/living/simple_animal/hostile/rcorp_abno/easy/blue_shepherd))
+		var/mob/living/simple_animal/hostile/rcorp_abno/easy/blue_shepherd/H = owner
 		if(H.no_counter)
 			to_chat(H, "You are currently dodging!")
 			endcounter()
@@ -152,7 +152,7 @@
 			addtimer(CALLBACK(src, PROC_REF(endcounter)), counter_duration)
 			StartCooldown()
 
-/mob/living/simple_animal/hostile/rcorp_abno/easycombat/blue_shepherd/PreDamageReaction(damage_amount, damage_type, source, attack_type)
+/mob/living/simple_animal/hostile/rcorp_abno/easy/blue_shepherd/PreDamageReaction(damage_amount, damage_type, source, attack_type)
 	. = ..()
 	if((!countering) || (attack_type & (ATTACK_TYPE_COUNTER | ATTACK_TYPE_ENVIRONMENT | ATTACK_TYPE_STATUS))) // We don't parry these types of attacks.
 		return
@@ -161,7 +161,7 @@
 		INVOKE_ASYNC(src, PROC_REF(counter))
 	return FALSE // Damage of the types not checked in the first conditional is prevented on us for as long as 'countering' is true.
 
-/mob/living/simple_animal/hostile/rcorp_abno/easycombat/blue_shepherd/proc/counter()
+/mob/living/simple_animal/hostile/rcorp_abno/easy/blue_shepherd/proc/counter()
 	var/list/been_hit = list()
 	say(pick(combat_lines))
 	playsound(src, 'sound/weapons/fixer/generic/finisher2.ogg', 75, TRUE, 2)
@@ -172,8 +172,8 @@
 			H.Knockdown(20)
 
 /datum/action/cooldown/rca_parry/proc/endcounter()
-	if(istype(owner, /mob/living/simple_animal/hostile/rcorp_abno/easycombat/blue_shepherd))
-		var/mob/living/simple_animal/hostile/rcorp_abno/easycombat/blue_shepherd/H = owner
+	if(istype(owner, /mob/living/simple_animal/hostile/rcorp_abno/easy/blue_shepherd))
+		var/mob/living/simple_animal/hostile/rcorp_abno/easy/blue_shepherd/H = owner
 		H.countering = FALSE
 		H.slashing = FALSE
 		H.color = null
@@ -188,7 +188,7 @@
 	toggle_message = span_colossus("You will now execute a spinning slash when ready.")
 	button_icon_toggle_deactivated = "sheperd_toggle0"
 
-/mob/living/simple_animal/hostile/rcorp_abno/easycombat/blue_shepherd/AttackingTarget(atom/attacked_target)
+/mob/living/simple_animal/hostile/rcorp_abno/easy/blue_shepherd/AttackingTarget(atom/attacked_target)
 	. = ..()
 	if(client)
 		switch(chosen_attack)
@@ -217,7 +217,7 @@
 	if(awakened_buddy)
 		awakened_buddy.GiveTarget(attacked_target)
 
-/mob/living/simple_animal/hostile/rcorp_abno/easycombat/blue_shepherd/OpenFire()
+/mob/living/simple_animal/hostile/rcorp_abno/easy/blue_shepherd/OpenFire()
 	if(prob(10))
 		TriggerDodge()
 	if(slash_current == 0)
@@ -233,18 +233,18 @@
 				TriggerCounter()
 	return ..()
 
-/mob/living/simple_animal/hostile/rcorp_abno/easycombat/blue_shepherd/death(gibbed)
+/mob/living/simple_animal/hostile/rcorp_abno/easy/blue_shepherd/death(gibbed)
 	density = FALSE
 	animate(src, alpha = 0, time = 10 SECONDS)
 	QDEL_IN(src, 10 SECONDS)
 	return ..()
 
-/mob/living/simple_animal/hostile/rcorp_abno/easycombat/blue_shepherd/CanAttack(atom/the_target)
+/mob/living/simple_animal/hostile/rcorp_abno/easy/blue_shepherd/CanAttack(atom/the_target)
 	if(slashing)
 		return FALSE
 	return ..()
 
-/mob/living/simple_animal/hostile/rcorp_abno/easycombat/blue_shepherd/proc/slash()
+/mob/living/simple_animal/hostile/rcorp_abno/easy/blue_shepherd/proc/slash()
 	var/turf/orgin = get_turf(src)
 	var/list/all_turfs = RANGE_TURFS(range, orgin)
 	playsound(src, 'sound/weapons/slice.ogg', 75, FALSE, 4)
@@ -259,7 +259,7 @@
 	if(!trigger_timer)
 		slashing = FALSE
 
-/mob/living/simple_animal/hostile/rcorp_abno/easycombat/blue_shepherd/proc/SlashHit(turf/T, list/all_turfs, slash_count, buddy_hit)
+/mob/living/simple_animal/hostile/rcorp_abno/easy/blue_shepherd/proc/SlashHit(turf/T, list/all_turfs, slash_count, buddy_hit)
 	if(stat == DEAD)
 		slashing = FALSE
 		return
@@ -270,10 +270,10 @@
 			awakened_buddy.adjustHealth(700) //it would take approximatively 9 slashes to take buddy down
 			break
 	//Will be done when Im done making red hood
-	/*	if(istype(L, /mob/living/simple_animal/hostile/rcorp_abno/hardcombat/red_hood))
+	/*	if(istype(L, /mob/living/simple_animal/hostile/rcorp_abno/hard/red_hood))
 			if(!red_hit)
 				red_hit = TRUE
-				var/mob/living/simple_animal/hostile/rcorp_abno/hardcombat/red_hood/current_red = L
+				var/mob/living/simple_animal/hostile/rcorp_abno/hard/red_hood/current_red = L
 				current_red.WatchIt() */
 			all_turfs -= T
 			continue // Red doesn't get hit.
@@ -284,7 +284,7 @@
 		slashing = FALSE
 		range = 2
 
-/mob/living/simple_animal/hostile/rcorp_abno/easycombat/blue_shepherd/proc/cleave(target)
+/mob/living/simple_animal/hostile/rcorp_abno/easy/blue_shepherd/proc/cleave(target)
 	if (get_dist(src, target) > 3)
 		slashing = FALSE
 		return
@@ -343,7 +343,7 @@
 	SLEEP_CHECK_DEATH(cleave_pause)
 	slashing = FALSE
 
-/mob/living/simple_animal/hostile/rcorp_abno/easycombat/blue_shepherd/proc/TriggerDodge()
+/mob/living/simple_animal/hostile/rcorp_abno/easy/blue_shepherd/proc/TriggerDodge()
 	var/triggered = FALSE
 	for(var/datum/action/cooldown/evade/A in actions)
 		if(A)
@@ -352,7 +352,7 @@
 	if(!triggered)
 		slashing = FALSE
 
-/mob/living/simple_animal/hostile/rcorp_abno/easycombat/blue_shepherd/proc/TriggerCounter()
+/mob/living/simple_animal/hostile/rcorp_abno/easy/blue_shepherd/proc/TriggerCounter()
 	var/triggered = FALSE
 	for(var/datum/action/cooldown/parry/A in actions)
 		if(A)

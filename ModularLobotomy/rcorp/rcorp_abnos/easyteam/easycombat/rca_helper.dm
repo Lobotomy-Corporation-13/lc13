@@ -1,6 +1,6 @@
-/mob/living/simple_animal/hostile/rcorp_abno/easycombat/helper
+/mob/living/simple_animal/hostile/rcorp_abno/easy/helper
 	name = "All-Around Helper"
-	desc = "A tiny robot with helpful intentions."
+	desc = "A tiny robot with helpful intentions. It's multitude of tools seem to easily overheat, best to attack it while it's recharging."
 	del_on_death = FALSE
 	maxHealth = 1000
 	health = 1000
@@ -36,7 +36,7 @@
 	secret_vertical_offset = -16
 	secret_icon_dead = "reddit_dead"
 
-	abno_additional_instructions = "<h1>You are All Round Helper, A Combat Role Abnormality.</h1><br>\
+	abno_additional_instructions = "<h1>You are All-Around Helper, A Combat Role Abnormality.</h1><br>\
 		<b>|Cleaning Protocol|: When you attack, if your charge attack is off cooldown you will use it. \
 		Once you start your spin attack, you will wind up for a few seconds. Then you will rush into the direction you attacked. \
 		While you are rushing, all humans next to you will take RED damage, inflict 5 'Bleed' and you will be able to move over small obstacles like barricades or windows. \
@@ -51,7 +51,7 @@
 		If shot by a projectile while actively charging you will reflect those projectiles towards your attackers. \
 		</b>"
 
-/mob/living/simple_animal/hostile/rcorp_abno/easycombat/helper/Initialize()
+/mob/living/simple_animal/hostile/rcorp_abno/easy/helper/Initialize()
 	. = ..()
 	if(!secret_abnormality)
 		icon_state = "helper_breach"
@@ -69,7 +69,7 @@
 	button_icon_toggle_deactivated = "helper_toggle0"
 
 
-/mob/living/simple_animal/hostile/rcorp_abno/easycombat/helper/AttackingTarget(atom/attacked_target)
+/mob/living/simple_animal/hostile/rcorp_abno/easy/helper/AttackingTarget(atom/attacked_target)
 	if(charging)
 		return
 	if(dash_cooldown <= world.time && prob(10) && !client)
@@ -77,7 +77,7 @@
 		return
 	return ..()
 
-/mob/living/simple_animal/hostile/rcorp_abno/easycombat/helper/Move(turf/newloc, direction, step_x, step_y)
+/mob/living/simple_animal/hostile/rcorp_abno/easy/helper/Move(turf/newloc, direction, step_x, step_y)
 	if(charging)
 		if(!clogged_blades)
 			if (turn(dir_to_target, 180) != direction)
@@ -89,7 +89,7 @@
 		return FALSE
 	return ..()
 
-/mob/living/simple_animal/hostile/rcorp_abno/easycombat/helper/OpenFire()
+/mob/living/simple_animal/hostile/rcorp_abno/easy/helper/OpenFire()
 	if(client)
 		switch(chosen_attack)
 			if(1)
@@ -104,12 +104,12 @@
 		if(prob(chance_to_dash))
 			helper_dash(target)
 
-/mob/living/simple_animal/hostile/rcorp_abno/easycombat/helper/death(gibbed)
+/mob/living/simple_animal/hostile/rcorp_abno/easy/helper/death(gibbed)
 	animate(src, alpha = 0, time = 10 SECONDS)
 	QDEL_IN(src, 10 SECONDS)
 	..()
 
-/mob/living/simple_animal/hostile/rcorp_abno/easycombat/helper/proc/helper_dash(target)
+/mob/living/simple_animal/hostile/rcorp_abno/easy/helper/proc/helper_dash(target)
 	if(charging || dash_cooldown > world.time)
 		return
 	update_icon()
@@ -124,7 +124,7 @@
 	addtimer(CALLBACK(src, PROC_REF(do_dash), 0), 1.5 SECONDS)
 	playsound(src, 'sound/abnormalities/helper/rise.ogg', 100, 1)
 
-/mob/living/simple_animal/hostile/rcorp_abno/easycombat/helper/proc/do_dash(times_ran)
+/mob/living/simple_animal/hostile/rcorp_abno/easy/helper/proc/do_dash(times_ran)
 	var/stop_charge = FALSE
 	if(times_ran >= dash_num)
 		stop_charge = TRUE
@@ -198,27 +198,27 @@
 		been_hit[V] = world.time
 	addtimer(CALLBACK(src, PROC_REF(do_dash), (times_ran + 1)), dash_speed)
 
-/mob/living/simple_animal/hostile/rcorp_abno/easycombat/helper/proc/clogged_blades()
+/mob/living/simple_animal/hostile/rcorp_abno/easy/helper/proc/clogged_blades()
 	clogged_blades = FALSE
 	color = null
 
 //If it gets melee'd, it has a chance to spin, knocking enemies back.
 
-/mob/living/simple_animal/hostile/rcorp_abno/easycombat/helper/attacked_by(obj/item/I, mob/living/user)
+/mob/living/simple_animal/hostile/rcorp_abno/easy/helper/attacked_by(obj/item/I, mob/living/user)
 	..()
 	if(charging)
 		return
 	if(prob(12))
 		spin_start()
 
-/mob/living/simple_animal/hostile/rcorp_abno/easycombat/helper/proc/spin_start()
+/mob/living/simple_animal/hostile/rcorp_abno/easy/helper/proc/spin_start()
 	SpinAnimation(1.3 SECONDS, 1, TRUE)
 	addtimer(CALLBACK(src, PROC_REF(do_spin), 0), 1.5 SECONDS)
 	playsound(src, 'sound/abnormalities/helper/rise.ogg', 100, 1)
 	charging = TRUE
 	color = "#f5413b"
 
-/mob/living/simple_animal/hostile/rcorp_abno/easycombat/helper/proc/do_spin()
+/mob/living/simple_animal/hostile/rcorp_abno/easy/helper/proc/do_spin()
 	SpinAnimation(3, 1, TRUE)
 	for(var/mob/living/carbon/human/H in range(1, src))
 		if(H.stat >= SOFT_CRIT)
@@ -241,7 +241,7 @@
 
 
 //If you get shot while you are spinning, throw bullets back
-/mob/living/simple_animal/hostile/rcorp_abno/easycombat/helper/bullet_act(obj/projectile/P)
+/mob/living/simple_animal/hostile/rcorp_abno/easy/helper/bullet_act(obj/projectile/P)
 	if(charging)
 		if(is_A_facing_B(src,P.firer))
 			if(P.reflectable != NONE)

@@ -1,4 +1,4 @@
-/mob/living/simple_animal/hostile/rcorp_abno/easysupport/cleaner
+/mob/living/simple_animal/hostile/rcorp_abno/easy/cleaner
 	name = "All-Around Cleaner"
 	desc = "A tiny robot with helpful intentions. It's cleaning tools release a strong gust, avoid closing the distance"
 	maxHealth = 800
@@ -15,7 +15,7 @@
 
 	var/bumpdamage = 10
 
-/mob/living/simple_animal/hostile/rcorp_abno/easysupport/cleaner/Initialize()
+/mob/living/simple_animal/hostile/rcorp_abno/easy/cleaner/Initialize()
 	. = ..()
 	icon = 'ModularLobotomy/_Lobotomyicons/48x48.dmi'
 	icon_state = "cleaner"
@@ -24,7 +24,7 @@
 	pixel_y = -8
 	base_pixel_y = -8
 
-/mob/living/simple_animal/hostile/rcorp_abno/easysupport/cleaner/Move()
+/mob/living/simple_animal/hostile/rcorp_abno/easy/cleaner/Move()
 	..()
 	//Toss meatbags aside
 	for(var/mob/living/carbon/human/H in range(1, src))

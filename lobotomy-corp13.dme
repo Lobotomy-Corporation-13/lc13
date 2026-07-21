@@ -4614,6 +4614,7 @@
 #include "ModularLobotomy\rcorp\rcorp_abnos\easyteam\easycombat\_easycombat.dm"
 #include "ModularLobotomy\rcorp\rcorp_abnos\easyteam\easycombat\rca_blue_shepherd.dm"
 #include "ModularLobotomy\rcorp\rcorp_abnos\easyteam\easycombat\rca_helper.dm"
+#include "ModularLobotomy\rcorp\rcorp_abnos\easyteam\easycombat\rca_simple_smile.dm"
 #include "ModularLobotomy\rcorp\rcorp_abnos\easyteam\easysupport\_easysupport.dm"
 #include "ModularLobotomy\rcorp\rcorp_abnos\easyteam\easysupport\rca_cleaner.dm"
 #include "ModularLobotomy\rcorp\rcorp_abnos\hardteam\hardcombat.dm"
