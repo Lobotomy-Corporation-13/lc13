@@ -23,11 +23,18 @@
 	mob_size = MOB_SIZE_HUGE
 	blood_volume = BLOOD_VOLUME_NORMAL
 	simple_mob_flags = SILENCE_RANGED_MESSAGE
+	del_on_death = TRUE
+	//For RCA abnos the threat level only matters if the abno lacking a death sprite has it replaced by abno cores.
+	var/threat_level = ZAYIN_LEVEL
 	faction = list("hostile")
 	var/secret_chance = FALSE //Only toggle true if you have "alternate sprites" for the abno
 	var/secret_abnormality = FALSE //This is only really here incase some funny guy decides to change something in a abno for its alternate sprite (such as its abilities)
 	var/chosen_attack = 1
 	var/small_sprite_type = /datum/action/small_sprite/abnormality //Tiny guy if your abno sprite is too large to click through, you can change it if you want but whose going to sprite extras amirite
+	var/core_icon = ""
+
+	// rcorp stuff
+	var/rcorp_team
 
 	var/list/attack_action_types = list()
 
@@ -55,7 +62,6 @@
 		var/datum/action/small_sprite/small_action = new small_sprite_type()
 		small_action.Grant(src)
 	if(!isnull(original_abno))
-		name = original_abno.name
 		icon = original_abno.icon
 		icon_state = original_abno.icon_state
 		icon_living = original_abno.icon_living
@@ -63,6 +69,13 @@
 		attack_sound = original_abno.attack_sound
 		attack_verb_continuous = original_abno.attack_verb_continuous
 		attack_verb_simple = original_abno.attack_verb_simple
+		speak_emote = original_abno.speak_emote
+		speech_span = original_abno.speech_span
+		vision_range = original_abno.vision_range
+		aggro_vision_range = original_abno.aggro_vision_range
+		threat_level = original_abno.threat_level
+		core_icon = original_abno.core_icon
+
 	if(secret_chance && (prob(1)))
 		InitializeSecretIcon()
 
@@ -86,6 +99,31 @@
 
 	if(secret_icon_dead)
 		icon_dead = secret_icon_dead
+
+/mob/living/simple_animal/hostile/rcorp_abno/proc/GetRiskLevel()
+	return threat_level
+
+/mob/living/simple_animal/hostile/rcorp_abno/Destroy()
+	CreateAbnoCore(name, core_icon)
+
+/mob/living/simple_animal/hostile/rcorp_abno/proc/CreateAbnoCore()//this is called by abnormalities on Destroy()
+	var/obj/structure/abno_core/C = new(get_turf(src))
+	C.name = initial(name) + " Core"
+	C.desc = "The core of [initial(name)]"
+	C.icon_state = core_icon
+	C.contained_abno = src.type
+	C.threat_level = threat_level
+	switch(GetRiskLevel())
+		if(1)
+			return
+		if(2)
+			C.icon = 'ModularLobotomy/_Lobotomyicons/abno_cores/teth.dmi'
+		if(3)
+			C.icon = 'ModularLobotomy/_Lobotomyicons/abno_cores/he.dmi'
+		if(4)
+			C.icon = 'ModularLobotomy/_Lobotomyicons/abno_cores/waw.dmi'
+		if(5)
+			C.icon = 'ModularLobotomy/_Lobotomyicons/abno_cores/aleph.dmi'
 
 // Actions
 /datum/action/innate/rca_abnormality_attack

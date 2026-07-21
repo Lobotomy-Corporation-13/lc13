@@ -1,12 +1,16 @@
 /mob/living/simple_animal/hostile/rcorp_abno/easycombat/blue_shepherd
+	name = "Blue Smocked Shepherd"
+	desc = "A strange humanoid in blue robes. They seem poised to counter careless hits, avoid being predictable"
 	maxHealth = 1200
 	health = 1200
-	desc = "A strange humanoid in blue robes. They seem poised to counter careless hits, avoid being predictable"
 	rapid_melee = 2
 	damage_coeff = list(BRUTE = 1, RED_DAMAGE = 0.6, WHITE_DAMAGE = 1, BLACK_DAMAGE = 0.8, PALE_DAMAGE = 1.5)
 	melee_damage_lower = 22
 	melee_damage_upper = 30
 	melee_damage_type = BLACK_DAMAGE
+	del_on_death = FALSE
+	pixel_x = -8
+	base_pixel_x = -8
 	original_abno = /mob/living/simple_animal/hostile/abnormality/blue_shepherd
 
 	var/slash_current = 4
@@ -227,6 +231,12 @@
 				cleave(target)
 			if(3)
 				TriggerCounter()
+	return ..()
+
+/mob/living/simple_animal/hostile/abnormality/blue_shepherd/death(gibbed)
+	density = FALSE
+	animate(src, alpha = 0, time = 10 SECONDS)
+	QDEL_IN(src, 10 SECONDS)
 	return ..()
 
 /mob/living/simple_animal/hostile/rcorp_abno/easycombat/blue_shepherd/CanAttack(atom/the_target)
