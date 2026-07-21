@@ -19,9 +19,7 @@
 	if(!.)
 		return FALSE
 	//damage calculations
-	var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
-	var/justicemod = 1 + userjust / 100
-	var/damage_dealt = force * justicemod * force_multiplier
+	var/damage_dealt = force * CalcDamage(user)
 	var/list/been_hit = QDELETED(target) ? list() : list(target)
 	user.HurtInTurf(T, been_hit, damage_dealt, RED_DAMAGE, hurt_mechs = TRUE, hurt_structure = TRUE, attack_type = (ATTACK_TYPE_MELEE))
 
@@ -71,11 +69,8 @@
 			new /obj/effect/temp_visual/smash_effect(T)
 
 		for(var/mob/living/L in range(1, user))
-			var/aoe = 30
-			var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
-			var/justicemod = 1 + userjust/100
-			aoe*=force_multiplier
-			aoe*=justicemod
+			var/aoe = force
+			aoe*=CalcDamage(user)
 			if(L == user || ishuman(L))
 				continue
 			L.deal_damage(aoe, BLACK_DAMAGE, user, attack_type = (ATTACK_TYPE_SPECIAL))
@@ -95,8 +90,9 @@
 	attribute_requirements = list(
 							FORTITUDE_ATTRIBUTE = 40
 							)
-	var/rage = FALSE
 	crit_multiplier = 2	//has a crit effect.
+	special_multiplier = 3	//Used for the on kill
+	var/rage = FALSE
 
 /obj/item/ego_weapon/fury/attack(mob/living/target, mob/living/carbon/human/user)
 	var/living = FALSE
@@ -113,7 +109,7 @@
 			to_chat(user, span_userdanger("LONG LIVE THE QUEEN!"))
 			balloon_alert(user, "LONG LIVE THE QUEEN!")
 			rage = FALSE
-		force *= 3
+		force *= special_multiplier
 		rage = TRUE
 		living = FALSE
 
@@ -143,11 +139,7 @@
 		new /obj/effect/temp_visual/smash_effect(T)
 
 	for(var/mob/living/L in range(1, user))
-		var/aoe = force
-		var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
-		var/justicemod = 1 + userjust/100
-		aoe*=force_multiplier
-		aoe*=justicemod
+		var/aoe = force * CalcDamage(user)
 		if(L == user || ishuman(L))
 			continue
 		L.deal_damage(aoe, RED_DAMAGE, user, attack_type = (ATTACK_TYPE_MELEE), blocked = L.run_armor_check(null, BLACK_DAMAGE))
@@ -159,7 +151,7 @@
 	name = "life for a daredevil"
 	desc = "An ancient sword surrounded in death, yet it's having it in your grasp that makes you feel the most alive."
 	icon_state = "daredevil"
-	force = 11
+	force = 12
 	attack_speed = 0.5
 	swingstyle = WEAPONSWING_LARGESWEEP
 	damtype = PALE_DAMAGE
@@ -178,26 +170,28 @@
 	attribute_requirements = list(
 							JUSTICE_ATTRIBUTE = 40
 							)
+	special_multiplier = 3.5	//Used for realization.
 	var/naked_parry
 	var/realized_parry
 	var/can_hype = TRUE
 
 /obj/item/ego_weapon/shield/parry/daredevil/melee_attack_chain(mob/user, atom/target, params)
+	//Set it here so we don't have to do it twice later
+	force = initial(force)
+
 	if (!istype(user,/mob/living/carbon/human))
 		return
 	var/mob/living/carbon/human/myman = user
 	if (isnull(myman.get_item_by_slot(ITEM_SLOT_OCLOTHING)))
-		force = 12
 		attack_speed = 0.33
 		projectile_block_duration = 0.33 SECONDS
 		block_duration = 1 SECONDS
 	else
 		var/obj/item/clothing/suit/armor/ego_gear/realization/fear/Z = myman.get_item_by_slot(ITEM_SLOT_OCLOTHING)
 		if (istype(Z))
-			force = 40
+			force = force * special_multiplier
 			block_duration = 1.5 SECONDS
 		else
-			force = 12
 			block_duration = 1 SECONDS
 		attack_speed = 0.5
 		projectile_block_duration = 0.5 SECONDS
@@ -224,9 +218,9 @@
 
 /obj/item/ego_weapon/shield/parry/daredevil/BlockCooldown(mob/living/carbon/human/user)
 	if (realized_parry)
-		force = 40
+		force = initial(force) * special_multiplier
 	else
-		force = 12
+		force = initial(force)
 	..()
 
 /obj/item/ego_weapon/shield/parry/daredevil/BlockFail(mob/living/carbon/human/user)
@@ -248,9 +242,9 @@
 		addtimer(CALLBACK(src, PROC_REF(hype_returns)), 120) // Less intrusive than the big Colossus font, still on cooldown due to being quite the long message.
 	else if(naked_parry)
 		hit_message = "is untouchable!"
-		force = 18 // bonus damage for like, 2 seconds.
+		force = initial(force) * 1.5 // bonus damage for like, 2 seconds.
 	else if(realized_parry)
-		force = 50 // bonus damage for like, 2 seconds.
+		force = initial(force) * special_multiplier * 1.2 // bonus damage for like, 2 seconds.
 		hit_message = "is untouchable!"
 		..()
 		if(can_hype)
@@ -393,8 +387,7 @@
 		var/list/been_hit = list()
 		for(var/turf/T in area_of_effect)
 			new /obj/effect/temp_visual/smash_effect(T)
-			var/smash_damage = (i > 2 ? 40 : 10)*(1+(get_modified_attribute_level(user, JUSTICE_ATTRIBUTE)/100))
-			smash_damage*=force_multiplier
+			var/smash_damage = (i > 2 ? 40 : 10)*CalcDamage(user)
 			been_hit = user.HurtInTurf(T, been_hit, smash_damage, RED_DAMAGE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 		if (i > 2)
 			playsound(get_turf(src), 'sound/abnormalities/woodsman/woodsman_strong.ogg', 75, 0, 5) // BAM
@@ -418,6 +411,7 @@
 	attribute_requirements = list(
 							FORTITUDE_ATTRIBUTE = 40
 							)
+	special_damage = 15 //increases by 15 for each player nearby
 
 /obj/item/ego_weapon/mini/courage/attack(mob/living/M, mob/living/user)
 	if(!CanUseEgo(user))
@@ -427,7 +421,7 @@
 		if(friend_count > 4) //the cap is 4 because thematically that's the rest of the oz crew (not including scaredy cat himself)
 			break
 		if(friend.ckey && friend.stat != DEAD && friend != user)
-			force += 15
+			force += special_damage
 			friend_count++
 	if(!friend_count && icon_state == "courage")
 		to_chat(user, "<span class='warning'>Your weapon cowers and shatters in your hand!")
@@ -501,6 +495,7 @@
 							PRUDENCE_ATTRIBUTE = 40
 							)
 	var/happy = FALSE
+	special_multiplier = 40 //The % of damage increase when under sanity missing
 
 /obj/item/ego_weapon/pleasure/attack(mob/living/M, mob/living/carbon/human/user)
 	if(!CanUseEgo(user))
@@ -511,7 +506,7 @@
 		var/mob/living/carbon/human/H = user
 		var/justice_mod = 1 + (get_modified_attribute_level(H, JUSTICE_ATTRIBUTE)/100)
 		H.adjustSanityLoss(force * justice_mod) //we artificially inflict the justice + force damage so it bypass armor. the sanity damage should always feel like a gamble even with armor.
-		missing_sanity = (1 - (H.sanityhealth / H.maxSanity)) * 40 //the weapon gets 40% of your missing % of sanity as force so 90% missing sanity means +36 force.
+		missing_sanity = (1 - (H.sanityhealth / H.maxSanity)) * special_multiplier //the weapon gets 40% of your missing % of sanity as force so 90% missing sanity means +36 force.
 		force = 0
 		happy = TRUE
 		icon_state = "pleasure_active"
@@ -529,7 +524,7 @@
 	balloon_alert(user, "The [src] is returning back to normal.")
 	icon_state = "pleasure"
 	happy = FALSE
-	force = 30
+	force = initial(force)
 
 /obj/item/ego_weapon/mini/metal
 	name = "bare metal"
@@ -599,6 +594,8 @@
 							JUSTICE_ATTRIBUTE = 40
 							)
 	var/mob/current_holder
+	var/force_cap = 100
+	special_damage = 0.25	//Added every time you move
 
 /obj/item/ego_weapon/homing_instinct/equipped(mob/living/carbon/human/user, slot)
 	. = ..()
@@ -625,8 +622,8 @@
 
 /obj/item/ego_weapon/homing_instinct/proc/UserMoved()
 	SIGNAL_HANDLER
-	if(force < 100)
-		force += 0.25 //It charges pretty slowly, but people walk pretty fast thanks to justice.
+	if(force < force_cap)
+		force += special_damage //It charges pretty slowly, but people walk pretty fast thanks to justice.
 
 /obj/item/ego_weapon/shield/parry/maneater
 	name = "man eater"
@@ -689,6 +686,7 @@
 	attribute_requirements = list(
 							JUSTICE_ATTRIBUTE = 40
 							)
+	special_multiplier = 6		//used on combo finisher.
 	var/combo = 0
 	var/combo_time
 	var/combo_wait = 10
@@ -719,7 +717,7 @@
 			user.changeNext_move(CLICK_CD_MELEE * 0.3)
 		if(4)
 			user.changeNext_move(CLICK_CD_MELEE * 1.8)
-			force *= 6
+			force *= special_multiplier
 			combo = -4
 			playsound(src, 'sound/weapons/fwoosh.ogg', 300, FALSE, 9)
 			to_chat(user,span_warning("You take a moment to reset your stance."))
@@ -901,11 +899,8 @@
 			playsound('sound/abnormalities/doomsdaycalendar/Doomsday_Attack.ogg', 3, TRUE)
 			sacrifice = FALSE
 		for(var/mob/living/L in range(1, target))
-			var/aoe = 50
-			var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
-			var/justicemod = 1 + userjust/100
-			aoe*=justicemod
-			aoe*=force_multiplier
+			var/aoe = force
+			aoe*=CalcDamage(user)
 			if(L == user || ishuman(L))
 				continue
 			L.deal_damage(aoe, BLACK_DAMAGE, user, attack_type = (ATTACK_TYPE_MELEE))
@@ -928,6 +923,7 @@
 	attribute_requirements = list(
 							FORTITUDE_ATTRIBUTE = 40
 							)
+	special_damage = 30		//Used on the jump attack
 
 	var/dash_cooldown
 	var/dash_cooldown_time = 8 SECONDS
@@ -969,17 +965,14 @@
 		user.pixel_z = 0
 
 /obj/item/ego_weapon/fluid_sac/proc/JumpAttack(atom/A, mob/living/user, proximity_flag, params)
-	force = 30
+	force = special_damage
 	A.attackby(src,user)
 	force = initial(force)
 	for(var/mob/living/L in range(1, A))
 		if(L.z != user.z) // Not on our level
 			continue
-		var/aoe = 25
-		var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
-		var/justicemod = 1 + userjust/100
-		aoe*=justicemod
-		aoe*=force_multiplier
+		var/aoe = force
+		aoe*=CalcDamage(user)
 		if(L == user || ishuman(L))
 			continue
 		L.deal_damage(aoe, BLACK_DAMAGE, user, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
@@ -1235,9 +1228,7 @@
 	var/datum/status_effect/stacking/slab/S = user.has_status_effect(/datum/status_effect/stacking/slab)
 	if(!S)
 		return
-	var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
-	var/justicemod = 1 + userjust/100
-	punishment_damage = (force * justicemod)
+	punishment_damage = force * CalcDamage(user)
 	punishment_size = max(2, (S.stacks / 3))//this is the same size as the AOE from theonite slab. Good luck lol
 	addtimer(CALLBACK(src, PROC_REF(WideSlash), target, user), 1)
 
@@ -1343,10 +1334,8 @@
 	if(currently_sawing)
 		if(ishuman(user))
 			if(istype(our_suit))
-				var/userjust = (get_attribute_level(user, JUSTICE_ATTRIBUTE))
-				var/justicemod = 1 + userjust/100
 				var/current_damage = force
-				current_damage*=justicemod
+				current_damage*=CalcDamage(user)
 				var/healing = force
 				interrupt_loop = TRUE
 				SetCrescendoTraits(user)
@@ -1564,7 +1553,6 @@
 							)
 
 /obj/item/ego_weapon/roseate/attack(mob/living/M, mob/living/user)//negative temperance multiplier
-	force = 35
 	var/usertemp = (get_attribute_level(user, TEMPERANCE_ATTRIBUTE))
 	var/temperancemod = 1 + usertemp/200
 	force /= temperancemod
@@ -1660,9 +1648,7 @@
 		power_attack(target, user)
 
 /obj/item/ego_weapon/aedd/proc/power_attack(mob/living/target, mob/living/user)
-	var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
-	var/justicemod = 1 + userjust/100
-	var/final_damage = force * justicemod * force_multiplier
+	var/final_damage = force * CalcDamage(user)
 	target.deal_damage((final_damage), BLACK_DAMAGE, source = user, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 	playsound(src, 'sound/abnormalities/thunderbird/tbird_charge.ogg', 40, TRUE)
 	var/turf/T = get_turf(target)
@@ -1676,10 +1662,7 @@
 	if(!istype(our_suit))
 		return
 
-	var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
-	var/justicemod = 1 + userjust/100
-
-	var/final_damage = (initial(force) * realization_force_multiplier * realization_aoe_force_multiplier * justicemod) * force_multiplier
+	var/final_damage = (initial(force) * realization_force_multiplier * realization_aoe_force_multiplier * CalcDamage(user))
 	user.visible_message(span_danger("[user] slams down [src] with great force, sending a powerful electric shockwave through [target]!"))
 	var/turf/origin_turf = get_turf(src)
 	var/turf/target_turf = get_ranged_target_turf_direct(user, target, realization_aoe_range)
@@ -1777,7 +1760,8 @@
 	for(var/turf/T in view(1, target))
 		var/obj/effect/temp_visual/small_smoke/halfsecond/FX =  new(T)
 		FX.color = "#622F22"
-		user.HurtInTurf(T, list(), 40, BLACK_DAMAGE, check_faction = TRUE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
+		var/soup_damage = force * CalcDamage(user)
+		user.HurtInTurf(T, list(), soup_damage, BLACK_DAMAGE, check_faction = TRUE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 	return
 
 
@@ -1853,10 +1837,7 @@
 		G.preparePixelProjectile(target, user, clickparams)
 		G.color = "#622F22"
 		G.fire()
-		G.damage*=force_multiplier
-		var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
-		var/justicemod = 1 + userjust/100
-		G.damage*=justicemod
+		G.damage*=CalcDamage(user)
 		firing_cooldown = firing_cooldown_time + world.time
 		stored_projectiles -= 1
 		update_icon_state(user)
@@ -2125,6 +2106,7 @@
 	attribute_requirements = list(
 							JUSTICE_ATTRIBUTE = 40
 							)
+	special_multiplier = 1.5	//For the special attack
 	var/charged = FALSE
 
 /obj/item/ego_weapon/nixie/attack(mob/living/M, mob/living/user)
@@ -2132,7 +2114,7 @@
 		playsound(src, 'sound/machines/clockcult/steam_whoosh.ogg', 100)
 		set_light(0)
 	..()
-	force = 60
+	force = initial(force)
 	charged = FALSE
 
 /obj/item/ego_weapon/nixie/attack_self(mob/user)
@@ -2142,7 +2124,7 @@
 		return
 	if(do_after(user, 12, src))
 		charged = TRUE
-		force = 90	//FULL POWER
+		force *= special_multiplier	//FULL POWER
 		to_chat(user,span_warning("You put your strength behind this attack."))
 		balloon_alert(user, "You put your strength behind this attack.")
 		playsound(src.loc, 'sound/abnormalities/clock/clank.ogg', 75, TRUE)
@@ -2256,6 +2238,7 @@
 	attribute_requirements = list(
 							FORTITUDE_ATTRIBUTE = 40
 							)
+	special_damage = 10	//Used for the AOE.
 
 /obj/item/ego_weapon/uturn/attack(mob/living/target, mob/living/user)
 	if(!CanUseEgo(user))
@@ -2263,8 +2246,7 @@
 	if(get_dist(target, user) > 2)//Spear range for full damage.
 		force = 20
 	. = ..()
-	if(force != initial(force))
-		force = initial(force)
+	force = initial(force)
 	var/list/been_hit = list(target)
 	var/turf/end_turf = get_ranged_target_turf_direct(user, target, 4, 0)
 	for(var/turf/T in getline(user, end_turf))
@@ -2273,11 +2255,8 @@
 		for(var/turf/T2 in view(T,1))
 			new /obj/effect/temp_visual/smash_effect(T2)
 			for(var/mob/living/L in T2)
-				var/aoe = 10
-				var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
-				var/justicemod = 1 + userjust/100
-				aoe*=justicemod
-				aoe*=force_multiplier
+				var/aoe = special_damage
+				aoe*=CalcDamage(user)
 				if(L == user || ishuman(L))
 					continue
 				been_hit = user.HurtInTurf(T2, been_hit, aoe, RED_DAMAGE, hurt_mechs = TRUE, hurt_structure = TRUE, attack_type = (ATTACK_TYPE_MELEE))
@@ -2425,10 +2404,7 @@
 			new /obj/effect/temp_visual/smash_effect(T)
 			for(var/mob/living/L in T.contents)
 				var/aoe = force
-				var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
-				var/justicemod = 1 + userjust/100
-				aoe*=justicemod
-				aoe*=force_multiplier
+				aoe*=CalcDamage(user)
 				if(L == user)
 					continue
 				if(ishuman(L))
