@@ -39,6 +39,7 @@ SUBSYSTEM_DEF(maptype)
 						FACILITY_TRAIT_JOKE_ABNOS = 1,			// Okay it's funny
 						FACILITY_TRAIT_VISIBLE_GHOSTS = 1,		// Very Metagamey but funny
 						FACILITY_TRAIT_PLAYABLES = 1,			//I'm going to kill myself
+						FACILITY_TRAIT_PATHSTRIDERS = 5,		//Enables Calyx incursions + spawns an Omni-Synthesizer
 
 						//Disabled traits becuase these suck lmao
 						//FACILITY_TRAIT_LEGACY_PALE = 0,			//You take 90% damage if pale damage hits you

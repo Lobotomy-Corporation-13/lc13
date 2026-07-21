@@ -80,6 +80,8 @@
 	// --- Weapon ---
 	var/obj/item/ego_weapon/path_weapon/weapon
 	var/path_weapon_type = /obj/item/ego_weapon/path_weapon
+	/// Cosmetic suit granted alongside the weapon (null = none)
+	var/path_suit_type
 
 	// --- Action Button References ---
 	var/datum/action/path_ultimate/ultimate_action_button
@@ -119,6 +121,13 @@
 	weapon = new path_weapon_type()
 	weapon.linked_path = src
 	owner.put_in_hands(weapon)
+
+	// Grant the matching cosmetic suit — equip if the slot is free,
+	// otherwise hand it over so the player can wear it themselves
+	if(path_suit_type)
+		var/obj/item/clothing/suit/path_suit = new path_suit_type()
+		if(!owner.equip_to_slot_if_possible(path_suit, ITEM_SLOT_OCLOTHING, disable_warning = TRUE))
+			owner.put_in_hands(path_suit)
 
 	// Create and grant action buttons
 	ultimate_action_button = new()
@@ -593,6 +602,10 @@
 		return
 	// Don't interact with dead targets
 	if(target.stat == DEAD)
+		return
+	// Invulnerable (GODMODE) targets can't be attacked for AP/energy or on-hit
+	// effects — otherwise a contained abnormality could be farmed for resources.
+	if(target.status_flags & GODMODE)
 		return
 
 	// During grace period, attacks deal reduced damage (10%)

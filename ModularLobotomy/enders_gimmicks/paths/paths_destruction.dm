@@ -14,6 +14,7 @@
 	element_type = PATH_ELEMENT_PHYSICAL
 	max_energy = 120
 	path_weapon_type = /obj/item/ego_weapon/path_weapon/destruction
+	path_suit_type = /obj/item/clothing/suit/path_destruction
 	basic_attack_type = /datum/path_ability/basic/destruction
 	burst_action_type = /datum/path_ability/burst/destruction
 	ultimate_type = /datum/path_ability/ultimate/destruction
@@ -45,10 +46,31 @@
 // ============================================================
 
 /obj/item/ego_weapon/path_weapon/destruction
-	name = "Destruction Blade"
-	desc = "A weapon crackling with destructive energy."
+	name = "destroyer's bat"
+	desc = "A dark bat laced with faint corrosion-purple geometry and a copper-wrapped grip. It crackles with destructive energy."
+	icon = 'ModularLobotomy/_Lobotomyicons/path_icons.dmi'
+	icon_state = "destruction"
+	inhand_icon_state = "destruction"
+	lefthand_file = 'ModularLobotomy/_Lobotomyicons/path_left.dmi'
+	righthand_file = 'ModularLobotomy/_Lobotomyicons/path_right.dmi'
 	hitsound = 'sound/weapons/bladeslice.ogg'
 	swingstyle = WEAPONSWING_LARGESWEEP
+
+// ============================================================
+// Cosmetic Suit
+// ============================================================
+
+/// Wearable cosmetic coat for the Path of Destruction (no armor value).
+/obj/item/clothing/suit/path_destruction
+	name = "destroyer's coat"
+	desc = "A black officer's coat trimmed in gold, worn open over a pale shirt. A Pathstrider's mark of the Destruction."
+	icon = 'ModularLobotomy/_Lobotomyicons/path_icons.dmi'
+	icon_state = "destruction_suit"
+	worn_icon = 'ModularLobotomy/_Lobotomyicons/path_worn.dmi'
+	worn_icon_state = "destruction_suit"
+	body_parts_covered = CHEST|GROIN|ARMS
+	blood_overlay_type = null
+	w_class = WEIGHT_CLASS_NORMAL
 
 // ============================================================
 // Basic ATK: Farewell Hit
@@ -82,9 +104,10 @@
 /datum/path_ability/basic/destruction/OnHit(mob/living/target, mob/living/user, first_hit = TRUE)
 	if(!parent_path)
 		return
-	// Check if Ultimate enhanced this attack
+	// Check if Ultimate enhanced this attack. Don't spend the empowerment on an
+	// invulnerable (GODMODE) target — keep it for a real one.
 	var/datum/path_ability/ultimate/destruction/ult = parent_path.ultimate_action
-	if(istype(ult) && ult.enhanced)
+	if(istype(ult) && ult.enhanced && !(target.status_flags & GODMODE))
 		// Empowered Farewell Hit — use Ultimate scaling, single massive hit
 		var/damage = parent_path.GetStat("ATK") * (ult.blowout_fh[ult.level] / 100)
 		var/empowered_factor = parent_path.PvPScalingFactor(ult.level, ult.blowout_fh, PATH_TARGET_TRACE_ULT)
@@ -115,7 +138,7 @@
 
 /datum/path_ability/burst/destruction
 	name = "RIP Home Run"
-	desc = "Deals Physical DMG scaling off ATK to all enemies within 1 tile. Costs 1 AP. Fighting Will bonus: +25% to primary target."
+	desc = "Deals Physical DMG scaling off ATK to all enemies within 1 tile. Costs 1 AP. Fighting Will bonus: +25% DMG to the main target (the first enemy in front of you, in your facing direction)."
 	icon_state = "rip_home_run"
 	energy_gain = 30
 	ap_cost = 1
@@ -462,7 +485,7 @@
 	nodes += N
 
 	// --- Left branch (A6 gate, from Basic ATK) ---
-	N = new /datum/path_node("bonus_a6", "Fighting Will", "Skill and Ult RIP Home Run deal 25% more DMG to the primary target.")
+	N = new /datum/path_node("bonus_a6", "Fighting Will", "RIP Home Run (the Skill and the empowered Blowout) deals 25% more DMG to the main target: the first enemy directly in front of you, up to 2 tiles away in the direction you are facing.")
 	N.node_type = PATH_NODE_PASSIVE
 	N.ahn_cost = 1000
 	N.required_ascension = 6
@@ -584,10 +607,15 @@
 
 /// Override OnWeaponHit for bonus_a2 and passive kill check
 /datum/path/destruction/OnWeaponHit(mob/living/target, mob/living/user)
+	if(target.status_flags & GODMODE) // no attacking/farming invulnerable targets
+		return
+	// Was the target alive *before* this hit? Only a hit that lands on a living
+	// target can be a kill — hitting an already-dead mob must not grant a stack.
+	var/target_was_alive = (isliving(target) && target.stat != DEAD)
 	..()
 	// Perfect Pickoff: check for kills from path damage
 	var/datum/path_ability/passive/destruction/pp = passive_effect
-	if(istype(pp))
+	if(istype(pp) && target_was_alive)
 		pp.OnPathHit(target)
 	// Ready for Battle: 15 energy on hit, 60s cooldown
 	if(HasBonus("bonus_a2") && world.time >= ready_for_battle_cd)

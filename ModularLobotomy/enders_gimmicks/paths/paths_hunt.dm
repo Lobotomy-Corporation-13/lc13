@@ -15,6 +15,7 @@
 	element_type = PATH_ELEMENT_WIND
 	max_energy = 100
 	path_weapon_type = /obj/item/ego_weapon/path_weapon/hunt
+	path_suit_type = /obj/item/clothing/suit/path_hunt
 	basic_attack_type = /datum/path_ability/basic/hunt
 	burst_action_type = /datum/path_ability/burst/hunt
 	ultimate_type = /datum/path_ability/ultimate/hunt
@@ -50,10 +51,30 @@
 // ============================================================
 
 /obj/item/ego_weapon/path_weapon/hunt
-	name = "Hunt Blade"
-	desc = "A weapon honed by the wind itself."
+	name = "cloud-piercer spear"
+	desc = "A long spear with a teal steel leaf-blade, a yin-yang socket, and a red-wrapped grip along its dark haft. It is honed by the wind itself."
+	icon = 'ModularLobotomy/_Lobotomyicons/path_icons.dmi'
+	icon_state = "hunt"
+	inhand_icon_state = "hunt"
+	lefthand_file = 'ModularLobotomy/_Lobotomyicons/path_left.dmi'
+	righthand_file = 'ModularLobotomy/_Lobotomyicons/path_right.dmi'
 	hitsound = 'sound/weapons/bladeslice.ogg'
 	swingstyle = WEAPONSWING_THRUST
+
+// ============================================================
+// Cosmetic Suit
+// ============================================================
+
+/obj/item/clothing/suit/path_hunt
+	name = "wanderer's coat"
+	desc = "A white long coat with teal-embroidered shoulders, worn open over a black high-collar shirt and grey trousers. A Pathstrider's mark of the Hunt."
+	icon = 'ModularLobotomy/_Lobotomyicons/path_icons.dmi'
+	icon_state = "hunt_suit"
+	worn_icon = 'ModularLobotomy/_Lobotomyicons/path_worn.dmi'
+	worn_icon_state = "hunt_suit"
+	body_parts_covered = CHEST|GROIN|ARMS|LEGS
+	blood_overlay_type = null
+	w_class = WEIGHT_CLASS_NORMAL
 
 // ============================================================
 // Basic ATK: Cloudlancer Art: North Wind
@@ -643,6 +664,8 @@
 
 /// Override OnWeaponHit for Faster Than Light + passive kill check
 /datum/path/hunt/OnWeaponHit(mob/living/target, mob/living/user)
+	if(target.status_flags & GODMODE) // no attacking/farming invulnerable targets
+		return
 	..()
 	// Faster Than Light (A4): 50% chance SPD +20% for 20s
 	if(HasBonus("bonus_a4") && world.time >= ftl_cooldown)

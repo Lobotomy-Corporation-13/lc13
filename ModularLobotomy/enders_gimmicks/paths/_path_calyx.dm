@@ -20,6 +20,8 @@ SUBSYSTEM_DEF(calyx)
 	/// tier only appears once its matching ordeal tier has been finished; 0 = no
 	/// Calyxes yet.
 	var/unlocked_tier = 0
+	/// TRUE only under the Pathstriders facility trait; gates all blooming.
+	var/enabled = FALSE
 	/// Currently-live Calyxes (dormant or active), for the global cap.
 	var/list/active_calyxes = list()
 	/// Most Calyxes allowed to exist at once.
@@ -35,6 +37,28 @@ SUBSYSTEM_DEF(calyx)
 	BuildPools()
 	RegisterSignal(SSdcs, COMSIG_GLOB_MELTDOWN_START, PROC_REF(OnMeltdown))
 	RegisterSignal(SSdcs, COMSIG_GLOB_ORDEAL_END, PROC_REF(OnOrdealEnd))
+	// The Pathstriders facility trait switches the whole system on. Runs after
+	// SSmaptype (trait chosen) and SSatoms (station structures exist).
+	if(SSmaptype.chosen_trait == FACILITY_TRAIT_PATHSTRIDERS)
+		enabled = TRUE
+		SpawnStarterSynth()
+
+/// Places a starter Omni-Synthesizer on a table beside a random grid crafting
+/// station, so a Pathstrider crew has somewhere to refine materials.
+/datum/controller/subsystem/calyx/proc/SpawnStarterSynth()
+	var/list/stations = list()
+	for(var/obj/structure/grid_crafting_station/G in GLOB.lobotomy_devices)
+		stations += G
+	if(!length(stations))
+		return
+	for(var/obj/structure/grid_crafting_station/G in shuffle(stations))
+		var/list/tables = list()
+		for(var/obj/structure/table/T in orange(1, G))
+			tables += T
+		if(!length(tables))
+			continue
+		new /obj/machinery/omni_synthesizer(get_turf(pick(tables)))
+		return
 
 /// Clearing an ordeal unlocks Calyxes up to that ordeal's tier.
 /datum/controller/subsystem/calyx/proc/OnOrdealEnd(datum/source, datum/ordeal/O)
@@ -166,6 +190,8 @@ SUBSYSTEM_DEF(calyx)
 	INVOKE_ASYNC(src, PROC_REF(BloomCalyxes))
 
 /datum/controller/subsystem/calyx/proc/BloomCalyxes()
+	if(!enabled) // only under the Pathstriders trait
+		return
 	if(unlocked_tier < 1) // no ordeal tier cleared yet, no Calyxes
 		return
 	if(!LAZYLEN(GLOB.xeno_spawn))

@@ -15,6 +15,7 @@
 	element_type = PATH_ELEMENT_PHYSICAL
 	max_energy = 90
 	path_weapon_type = /obj/item/ego_weapon/path_weapon/abundance
+	path_suit_type = /obj/item/clothing/suit/path_abundance
 	basic_attack_type = /datum/path_ability/basic/abundance
 	burst_action_type = /datum/path_ability/burst/abundance
 	ultimate_type = /datum/path_ability/ultimate/abundance
@@ -43,10 +44,83 @@
 // ============================================================
 
 /obj/item/ego_weapon/path_weapon/abundance
-	name = "Abundance Staff"
-	desc = "A weapon suffused with gentle, life-giving energy."
+	name = "grace launcher"
+	desc = "A drum-fed launcher with a wooden stock and blue-banded cylinder. Strike with it up close, or fire a round downrange -- either way it channels the same path damage."
+	icon = 'ModularLobotomy/_Lobotomyicons/path_icons.dmi'
+	icon_state = "abundance"
+	inhand_icon_state = "abundance"
+	lefthand_file = 'ModularLobotomy/_Lobotomyicons/path_left.dmi'
+	righthand_file = 'ModularLobotomy/_Lobotomyicons/path_right.dmi'
 	hitsound = 'sound/weapons/bladeslice.ogg'
 	swingstyle = WEAPONSWING_SMALLSWEEP
+	/// Fire sound played when a round is loosed downrange
+	var/fire_sound = 'sound/weapons/gun/shotgun/shot.ogg'
+	/// Minimum delay between fired shots (deciseconds)
+	var/fire_delay = 8
+	/// world.time the launcher is next allowed to fire
+	var/next_fire = 0
+
+/// Ranged click fires a round; the projectile runs the same OnWeaponHit as a
+/// melee basic attack, so it consumes the same turn/AP state and scales damage.
+/obj/item/ego_weapon/path_weapon/abundance/afterattack(atom/target, mob/living/user, proximity_flag, clickparams)
+	. = ..()
+	if(proximity_flag)		// adjacent: attack() already handled the melee hit
+		return
+	if(!linked_path)
+		return
+	if(target == user || target == src)
+		return
+	var/turf/target_turf = get_turf(target)
+	if(!target_turf)
+		return
+	if(world.time < next_fire)
+		return
+	next_fire = world.time + fire_delay
+	var/turf/start_turf = get_turf(user)
+	playsound(start_turf, fire_sound, 55, TRUE)
+	var/obj/projectile/ego_bullet/path_abundance/P = new(start_turf)
+	P.linked_path = linked_path
+	P.shooter = user
+	P.firer = user
+	P.fired_from = src
+	P.original = target_turf
+	P.preparePixelProjectile(target_turf, start_turf)
+	P.fire()
+
+// ============================================================
+// Fired round -- deals path damage via the same OnWeaponHit hook
+// ============================================================
+
+/obj/projectile/ego_bullet/path_abundance
+	name = "grace round"
+	damage = 0
+	damage_type = RED_DAMAGE
+	range = 8
+	icon_state = "kcorp_nade"
+	/// The path that fired this round (supplies the damage scaling)
+	var/datum/path/linked_path
+	/// The mob that fired, passed to OnWeaponHit as the attacker
+	var/mob/living/shooter
+
+/obj/projectile/ego_bullet/path_abundance/on_hit(atom/target, blocked = FALSE, pierce_hit)
+	. = ..()
+	if(isliving(target) && linked_path && shooter)
+		linked_path.OnWeaponHit(target, shooter)
+
+// ============================================================
+// Cosmetic Suit
+// ============================================================
+
+/obj/item/clothing/suit/path_abundance
+	name = "blessing coat"
+	desc = "A white coat over a teal-trimmed black bodysuit, with a green heartstone at the collar, blue skirt panels and a crimson underhem. A Pathstrider's mark of the Abundance."
+	icon = 'ModularLobotomy/_Lobotomyicons/path_icons.dmi'
+	icon_state = "abundance_suit"
+	worn_icon = 'ModularLobotomy/_Lobotomyicons/path_worn.dmi'
+	worn_icon_state = "abundance_suit"
+	body_parts_covered = CHEST|GROIN|ARMS|LEGS
+	blood_overlay_type = null
+	w_class = WEIGHT_CLASS_NORMAL
 
 // ============================================================
 // Basic ATK: Behind the Kindness

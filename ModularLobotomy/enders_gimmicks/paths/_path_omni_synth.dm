@@ -12,7 +12,7 @@
 	density = TRUE
 	anchored = TRUE
 	use_power = NO_POWER_USE
-	max_integrity = 500
+	resistance_flags = INDESTRUCTIBLE
 	/// Materials consumed to synthesize one of the next rarity up.
 	var/synth_cost = 3
 	/// Path-family materials consumed to exchange for one of another family.
@@ -35,12 +35,23 @@
 	stored = list()
 	EnsureRegistry()
 	update_icon()
+	StartHover()
+
+/// Slow, endless up-and-down bob so the orb reads as floating.
+/obj/machinery/omni_synthesizer/proc/StartHover()
+	animate(src, pixel_y = 5, time = 2 SECONDS, loop = -1, easing = SINE_EASING)
+	animate(pixel_y = 0, time = 2 SECONDS, easing = SINE_EASING)
 
 /obj/machinery/omni_synthesizer/update_overlays()
 	. = ..()
 	var/mutable_appearance/glow = mutable_appearance(icon, "omni_core")
 	glow.blend_mode = BLEND_ADD
 	. += glow
+
+/obj/machinery/omni_synthesizer/wrench_act(mob/living/user, obj/item/tool)
+	. = ..()
+	default_unfasten_wrench(user, tool)
+	return TRUE
 
 // ---- Registry ----
 

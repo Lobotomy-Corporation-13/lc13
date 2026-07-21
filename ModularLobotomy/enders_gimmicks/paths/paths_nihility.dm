@@ -15,6 +15,7 @@
 	element_type = PATH_ELEMENT_FIRE
 	max_energy = 120
 	path_weapon_type = /obj/item/ego_weapon/path_weapon/nihility
+	path_suit_type = /obj/item/clothing/suit/path_nihility
 	basic_attack_type = /datum/path_ability/basic/nihility
 	burst_action_type = /datum/path_ability/burst/nihility
 	ultimate_type = /datum/path_ability/ultimate/nihility
@@ -43,10 +44,30 @@
 // ============================================================
 
 /obj/item/ego_weapon/path_weapon/nihility
-	name = "Nihility Blade"
-	desc = "A weapon wreathed in flickering flame."
+	name = "emberdance spear"
+	desc = "A double-ended spear crowned with gold-and-crimson flame at both tips, its haft banded in red and set with gold diamonds. It is wreathed in flickering flame."
+	icon = 'ModularLobotomy/_Lobotomyicons/path_icons.dmi'
+	icon_state = "nihility"
+	inhand_icon_state = "nihility"
+	lefthand_file = 'ModularLobotomy/_Lobotomyicons/path_left.dmi'
+	righthand_file = 'ModularLobotomy/_Lobotomyicons/path_right.dmi'
 	hitsound = 'sound/weapons/bladeslice.ogg'
 	swingstyle = WEAPONSWING_SMALLSWEEP
+
+// ============================================================
+// Cosmetic Suit
+// ============================================================
+
+/obj/item/clothing/suit/path_nihility
+	name = "reveler's bustier"
+	desc = "A crimson bustier over a black corset cinched in gold, above a white skirt with red panels and black leggings. A Pathstrider's mark of the Nihility."
+	icon = 'ModularLobotomy/_Lobotomyicons/path_icons.dmi'
+	icon_state = "nihility_suit"
+	worn_icon = 'ModularLobotomy/_Lobotomyicons/path_worn.dmi'
+	worn_icon_state = "nihility_suit"
+	body_parts_covered = CHEST|GROIN|ARMS|LEGS
+	blood_overlay_type = null
+	w_class = WEIGHT_CLASS_NORMAL
 
 // ============================================================
 // Basic ATK: Standing Ovation

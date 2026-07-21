@@ -15,6 +15,7 @@
 	element_type = PATH_ELEMENT_LIGHTNING
 	max_energy = 130
 	path_weapon_type = /obj/item/ego_weapon/path_weapon/harmony
+	path_suit_type = /obj/item/clothing/suit/path_harmony
 	basic_attack_type = /datum/path_ability/basic/harmony
 	burst_action_type = /datum/path_ability/burst/harmony
 	ultimate_type = /datum/path_ability/ultimate/harmony
@@ -48,10 +49,30 @@
 // ============================================================
 
 /obj/item/ego_weapon/path_weapon/harmony
-	name = "Harmony Strings"
-	desc = "A weapon that hums with melodic energy."
+	name = "waltzing fan"
+	desc = "A folding fan of white, tan and crimson leaves on black ribs, clasped with a gold guard. It hums with a melodic charge when snapped open."
+	icon = 'ModularLobotomy/_Lobotomyicons/path_icons.dmi'
+	icon_state = "harmony"
+	inhand_icon_state = "harmony"
+	lefthand_file = 'ModularLobotomy/_Lobotomyicons/path_left.dmi'
+	righthand_file = 'ModularLobotomy/_Lobotomyicons/path_right.dmi'
 	hitsound = 'sound/weapons/bladeslice.ogg'
 	swingstyle = WEAPONSWING_SMALLSWEEP
+
+// ============================================================
+// Cosmetic Suit
+// ============================================================
+
+/obj/item/clothing/suit/path_harmony
+	name = "dancer's dress"
+	desc = "A white dress under a dark corset, wrapped in crimson shoulder drapes and side panels trimmed in gold. A Pathstrider's mark of the Harmony."
+	icon = 'ModularLobotomy/_Lobotomyicons/path_icons.dmi'
+	icon_state = "harmony_suit"
+	worn_icon = 'ModularLobotomy/_Lobotomyicons/path_worn.dmi'
+	worn_icon_state = "harmony_suit"
+	body_parts_covered = CHEST|GROIN|ARMS
+	blood_overlay_type = null
+	w_class = WEIGHT_CLASS_NORMAL
 
 // ============================================================
 // Basic ATK: Dislodged
@@ -352,16 +373,28 @@
 	/// PvP scaling factor for the bonus Lightning DMG hit. Snapshotted
 	/// from the Harmony Skill's scaling at apply time.
 	var/bonus_pvp_factor = 1
+	/// Fan-patterned aura shown on the buffed ally while active. A vis_contents
+	/// object so it can hover independently of the mob.
+	var/obj/effect/abstract/benediction_aura/aura
 
 /datum/status_effect/benediction/on_apply()
 	. = ..()
 	if(!.)
 		return
 	RegisterSignal(owner, COMSIG_MOB_ITEM_ATTACK, PROC_REF(OnOwnerAttack))
+	aura = new()
+	owner.vis_contents += aura
+	// Slow 2px hover, looping forever
+	animate(aura, pixel_y = 2, time = 1.5 SECONDS, loop = -1, easing = SINE_EASING)
+	animate(pixel_y = 0, time = 1.5 SECONDS, easing = SINE_EASING)
 	to_chat(owner, span_nicegreen("Benediction active! ATK boosted!"))
 
 /datum/status_effect/benediction/on_remove()
 	UnregisterSignal(owner, COMSIG_MOB_ITEM_ATTACK)
+	if(aura)
+		if(owner)
+			owner.vis_contents -= aura
+		QDEL_NULL(aura)
 	RemoveBuffs()
 	// Clear benediction target reference on the Harmony path
 	if(source_path)
@@ -370,6 +403,21 @@
 			H.benediction_target = null
 	to_chat(owner, span_notice("Benediction fades."))
 	return ..()
+
+/obj/effect/abstract/benediction_aura
+	icon = 'ModularLobotomy/_Lobotomyicons/path_icons.dmi'
+	icon_state = "benediction"
+	layer = ABOVE_MOB_LAYER
+	appearance_flags = KEEP_APART | RESET_TRANSFORM | RESET_COLOR
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+	anchored = TRUE
+
+/// Teal-and-gold lightning strike shown on a target hit by Benediction's bonus
+/obj/effect/temp_visual/benediction_punish
+	name = "harmonic reprisal"
+	icon = 'ModularLobotomy/_Lobotomyicons/path_icons.dmi'
+	icon_state = "benediction_punish"
+	duration = 7
 
 /// Applies the ATK buff to the target
 /datum/status_effect/benediction/proc/UpdateBuffs()
@@ -445,6 +493,7 @@
 		source_path.deal_path_damage(target, bonus_dmg, pvp_factor = bonus_pvp_factor)
 	else
 		target.adjustBruteLoss(bonus_dmg, forced = TRUE)
+	new /obj/effect/temp_visual/benediction_punish(get_turf(target))
 	to_chat(owner, span_nicegreen("Benediction bonus Lightning DMG!"))
 
 // ============================================================
@@ -754,6 +803,8 @@
 
 /// Override OnWeaponHit to trigger Benediction bonus attack consumption
 /datum/path/harmony/OnWeaponHit(mob/living/target, mob/living/user)
+	if(target.status_flags & GODMODE) // no attacking/farming invulnerable targets
+		return
 	..()
 	// Check if the target we just hit has Benediction (for when the Benediction'd ally attacks)
 	// This is handled separately — Benediction bonus triggers when the ALLY attacks, not the Harmony user

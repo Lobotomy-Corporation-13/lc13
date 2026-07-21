@@ -42,19 +42,14 @@
 
 // ---- Turn Ready Visual ----
 
-/// Adds a golden tint to indicate the turn is ready
+/// Adds a golden outline to indicate the turn is ready. An outline filter
+/// only affects the item's own icon, not the held inhand overlay.
 /obj/item/ego_weapon/path_weapon/proc/ShowTurnReady()
-	add_atom_colour("#FFD700", TEMPORARY_COLOUR_PRIORITY)
-	if(ismob(loc))
-		var/mob/M = loc
-		M.update_inv_hands()
+	add_filter("path_turn_ready", 3, list("type" = "outline", "color" = "#FFD700", "size" = 1))
 
-/// Removes the golden tint when AP is gained or skill used
+/// Removes the golden outline when AP is gained or the skill is used
 /obj/item/ego_weapon/path_weapon/proc/ClearTurnReady()
-	remove_atom_colour(TEMPORARY_COLOUR_PRIORITY)
-	if(ismob(loc))
-		var/mob/M = loc
-		M.update_inv_hands()
+	remove_filter("path_turn_ready")
 
 // ---- Core Attack Procs ----
 

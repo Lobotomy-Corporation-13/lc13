@@ -15,6 +15,7 @@
 	element_type = PATH_ELEMENT_ICE
 	max_energy = 110
 	path_weapon_type = /obj/item/ego_weapon/path_weapon/erudition
+	path_suit_type = /obj/item/clothing/suit/path_erudition
 	basic_attack_type = /datum/path_ability/basic/erudition
 	burst_action_type = /datum/path_ability/burst/erudition
 	ultimate_type = /datum/path_ability/ultimate/erudition
@@ -48,10 +49,31 @@
 // ============================================================
 
 /obj/item/ego_weapon/path_weapon/erudition
-	name = "Erudition Staff"
-	desc = "A weapon crystallized from cold logic."
+	name = "erudition maul"
+	desc = "A great navy warhammer bound in gold filigree, its head set with a faceted blue crystal and its haft tipped by a matching shard. It hums with cold logic."
+	icon = 'ModularLobotomy/_Lobotomyicons/path_icons.dmi'
+	icon_state = "erudition"
+	inhand_icon_state = "erudition"
+	lefthand_file = 'ModularLobotomy/_Lobotomyicons/path_left.dmi'
+	righthand_file = 'ModularLobotomy/_Lobotomyicons/path_right.dmi'
 	hitsound = 'sound/weapons/bladeslice.ogg'
 	swingstyle = WEAPONSWING_SMALLSWEEP
+
+// ============================================================
+// Cosmetic Suit
+// ============================================================
+
+/// Wearable cosmetic outfit for the Path of Erudition (no armor value).
+/obj/item/clothing/suit/path_erudition
+	name = "scholar's dress"
+	desc = "A black off-shoulder jacket with puffed white cuffs, worn over a white dress trimmed in purple and gold. A Pathstrider's mark of the Erudition."
+	icon = 'ModularLobotomy/_Lobotomyicons/path_icons.dmi'
+	icon_state = "erudition_suit"
+	worn_icon = 'ModularLobotomy/_Lobotomyicons/path_worn.dmi'
+	worn_icon_state = "erudition_suit"
+	body_parts_covered = CHEST|GROIN|ARMS
+	blood_overlay_type = null
+	w_class = WEIGHT_CLASS_NORMAL
 
 // ============================================================
 // Basic ATK: What Are You Looking At?
@@ -655,6 +677,8 @@
 
 /// Override OnWeaponHit for passive threshold check
 /datum/path/erudition/OnWeaponHit(mob/living/target, mob/living/user)
+	if(target.status_flags & GODMODE) // no attacking/farming invulnerable targets
+		return
 	// Capture HP before damage is dealt
 	var/hp_before = target.health
 	..()

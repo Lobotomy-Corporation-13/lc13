@@ -15,6 +15,7 @@
 	element_type = PATH_ELEMENT_FIRE
 	max_energy = 120
 	path_weapon_type = /obj/item/ego_weapon/path_weapon/preservation
+	path_suit_type = /obj/item/clothing/suit/path_preservation
 	basic_attack_type = /datum/path_ability/basic/preservation
 	burst_action_type = /datum/path_ability/burst/preservation
 	ultimate_type = /datum/path_ability/ultimate/preservation
@@ -52,10 +53,32 @@
 // ============================================================
 
 /obj/item/ego_weapon/path_weapon/preservation
-	name = "Preservation Lance"
-	desc = "A weapon forged from amber and iron will."
+	name = "amber bulwark lance"
+	desc = "A great lance with a black winged guard and a long red-orange crystal blade. It is forged from amber and iron will."
+	icon = 'ModularLobotomy/_Lobotomyicons/path_icons.dmi'
+	icon_state = "preservation"
+	inhand_icon_state = "preservation"
+	lefthand_file = 'ModularLobotomy/_Lobotomyicons/preservation_weapon_l.dmi'
+	righthand_file = 'ModularLobotomy/_Lobotomyicons/preservation_weapon_r.dmi'
+	inhand_x_dimension = 96
+	inhand_y_dimension = 96
 	hitsound = 'sound/weapons/bladeslice.ogg'
 	swingstyle = WEAPONSWING_LARGESWEEP
+
+// ============================================================
+// Cosmetic Suit -- shares the Destruction coat
+// ============================================================
+
+/obj/item/clothing/suit/path_preservation
+	name = "sentinel's coat"
+	desc = "A black officer's coat trimmed in gold, worn open over a pale shirt. A Pathstrider's mark of the Preservation."
+	icon = 'ModularLobotomy/_Lobotomyicons/path_icons.dmi'
+	icon_state = "preservation_suit"
+	worn_icon = 'ModularLobotomy/_Lobotomyicons/path_worn.dmi'
+	worn_icon_state = "preservation_suit"
+	body_parts_covered = CHEST|GROIN|ARMS
+	blood_overlay_type = null
+	w_class = WEIGHT_CLASS_NORMAL
 
 // ============================================================
 // Magma Will Helpers
@@ -155,7 +178,8 @@
 
 	var/is_enhanced = (P.magma_will >= 4 || P.free_enhanced)
 
-	if(is_enhanced && first_hit)
+	// Don't spend the empowerment on an invulnerable (GODMODE) target.
+	if(is_enhanced && first_hit && !(target.status_flags & GODMODE))
 		// Enhanced AoE attack
 		var/atk = parent_path.GetStat("ATK")
 		var/main_mult = enhanced_main[level] / 100
@@ -598,13 +622,27 @@
 	INVOKE_ASYNC(owner, TYPE_PROC_REF(/mob/living, deal_damage), overflow, damagetype, damage_source, DAMAGE_FORCED, null, null, def_zone)
 	return COMPONENT_MOB_DENY_DAMAGE
 
-/// Spawn a brief shield flash visual on the mob
+/// Flicker the golden aegis on the mob whenever the shield reduces damage
 /datum/status_effect/preservation_shield/proc/spawn_shield_visual()
 	if(!owner || QDELETED(owner))
 		return
-	var/obj/effect/temp_visual/shock_shield/effect = new(get_turf(owner))
-	effect.transform *= 0.5
-	effect.pixel_x += rand(-8, 8)
+	new /obj/effect/temp_visual/preservation_aegis(get_turf(owner))
+
+/// Golden bracket aegis that fades in and quickly fades out over ~1 second
+/obj/effect/temp_visual/preservation_aegis
+	name = "aegis"
+	icon = 'ModularLobotomy/_Lobotomyicons/path_icons.dmi'
+	icon_state = "preservation_aegis"
+	duration = 10
+	layer = ABOVE_MOB_LAYER
+	appearance_flags = KEEP_APART | RESET_TRANSFORM | RESET_COLOR
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+
+/obj/effect/temp_visual/preservation_aegis/Initialize(mapload)
+	. = ..()
+	alpha = 0
+	animate(src, alpha = 255, time = 3, easing = SINE_EASING)
+	animate(alpha = 0, time = 7, easing = SINE_EASING)
 
 /// Update the persistent shield outline visual based on current shield HP
 /datum/status_effect/preservation_shield/proc/update_shield_visual()
