@@ -55,8 +55,7 @@
 	can_act = FALSE
 
 	new /obj/effect/temp_visual/cult/turf (get_turf(target))
-	SLEEP_CHECK_DEATH(delay)
-	..()
+	DeferProjectile(/obj/projectile/citrine_noon, target, get_turf(src), delay)
 
 	can_act = TRUE
 	can_fire = TRUE
@@ -331,4 +330,21 @@
 		var/datum/ordeal/simplespawn/citrine/C = ordeal_reference
 		C.current_faith += 5	//Get 5 Faith for praying.
 	can_act = TRUE
+
+
+//Some beefier archers for us
+/mob/living/simple_animal/hostile/ordeal/citrine/archer/noon
+	name = "Seraph"
+	desc = "A floating monstrosity of silicon and steel. This one is armed with a bow."
+	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
+	icon_state = "mechangel_face"
+	icon_living = "mechangel_face"
+	projectile_firing = /obj/projectile/citrine_dawn/noon
+	health = 700
+	maxHealth = 700
+	faith_per_lifetick = 0	//Does not generate faith though.
+
+/obj/projectile/citrine_dawn/noon
+	name = "holy bolt act II"
+	damage = 35
 

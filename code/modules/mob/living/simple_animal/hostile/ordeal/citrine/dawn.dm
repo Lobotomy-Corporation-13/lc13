@@ -1,6 +1,6 @@
 // Citrine Ordeals
 /mob/living/simple_animal/hostile/ordeal/citrine/archer
-	name = "Cherubim"
+	name = "Cherub"
 	desc = "A floating monstrosity of silicon and steel."
 	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
 	icon_state = "mechangel_dawn"
@@ -25,7 +25,6 @@
 	minimum_distance = 3
 	ranged_cooldown_time = 15
 	move_to_delay = 4.2
-	casingtype = /obj/item/ammo_casing/caseless/citrine_dawn
 	projectilesound = 'sound/weapons/bowfire.ogg'
 	faith_per_lifetick = 1
 	butcher_results = list(/obj/item/food/meat/slab/robot = 1)
@@ -33,6 +32,7 @@
 
 	var/aoe_size = 2
 	var/can_fire = TRUE
+	var/projectile_firing = /obj/projectile/citrine_dawn
 
 /mob/living/simple_animal/hostile/ordeal/citrine/archer/AttackingTarget(atom/attacked_target)
 
@@ -46,7 +46,7 @@
 	else
 		say("My flame will burn you!")
 
-	can_act = FALSE
+	can_fire = FALSE
 	SLEEP_CHECK_DEATH(20)
 	for(var/i = 1 to aoe_size)
 		playsound(src, 'sound/effects/burn.ogg', 75, FALSE, 4)
@@ -68,18 +68,18 @@
 	var/list/normal_lines = list("In my sights!", "Ready to fire!", "Aiming at target!")
 	var/list/holy_lines = list("He guides my aim!", "Holy arrows of light!", "My arrow will pierce your soul!")
 
-	var/delay = 12
+	var/delay = 7
 	if(faith_active)
-		delay = 7
+		delay = 5
 		say(pick(holy_lines))
 	else
 		say(pick(normal_lines))
 	can_act = FALSE
 
 	new /obj/effect/temp_visual/cult/turf/floor (get_turf(target))
+	DeferProjectile(projectile_firing, target, get_turf(src), delay)
 	SLEEP_CHECK_DEATH(delay)
-	..()
-
+	playsound(src, 'sound/weapons/bowfire.ogg', 40, FALSE, 8)
 	can_act = TRUE
 	can_fire = TRUE
 
