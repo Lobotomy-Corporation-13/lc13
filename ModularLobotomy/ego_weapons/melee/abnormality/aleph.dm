@@ -18,7 +18,6 @@
 	)
 	var/ranged_cooldown
 	var/ranged_cooldown_time = 0.8 SECONDS
-	var/ranged_damage = 70
 
 /obj/item/ego_weapon/paradise/afterattack(atom/A, mob/living/user, proximity_flag, params)
 	if(ranged_cooldown > world.time)
@@ -35,7 +34,7 @@
 	ranged_cooldown = world.time + ranged_cooldown_time
 	playsound(target_turf, 'sound/weapons/ego/paradise_ranged.ogg', 50, TRUE)
 	var/damage_dealt = 0
-	var/modified_damage = (ranged_damage*force_multiplier)
+	var/modified_damage = force * CalcDamage(user)
 	for(var/turf/open/T in range(target_turf, 1))
 		new /obj/effect/temp_visual/paradise_attack(T)
 		for(var/mob/living/L in user.HurtInTurf(T, list(), modified_damage, PALE_DAMAGE, hurt_mechs = TRUE, attack_type = (ATTACK_TYPE_SPECIAL)))
@@ -94,7 +93,7 @@
 			user.changeNext_move(CLICK_CD_MELEE * 1.2)
 			var/turf/T = get_turf(M)
 			new /obj/effect/temp_visual/justitia_effect(T)
-			user.HurtInTurf(T, list(), 50, PALE_DAMAGE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
+			user.HurtInTurf(T, list(), force*2, PALE_DAMAGE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 		else
 			hitsound = 'sound/weapons/ego/justitia1.ogg'
 			user.changeNext_move(CLICK_CD_MELEE * 0.4)
@@ -602,13 +601,14 @@
 							TEMPERANCE_ATTRIBUTE = 80,
 							JUSTICE_ATTRIBUTE = 80
 							)
+	special_multiplier = 0.15		//Used for the healing amount
 
 
 /obj/item/ego_weapon/mimicry/attack(mob/living/target, mob/living/carbon/human/user)
 	if(!CanUseEgo(user))
 		return
 	if(!(target.status_flags & GODMODE) && target.stat != DEAD)
-		var/heal_amt = force*0.15
+		var/heal_amt = force * special_multiplier
 		if(isanimal(target))
 			var/mob/living/simple_animal/S = target
 			if(S.damage_coeff.getCoeff(damtype) > 0)
@@ -668,7 +668,6 @@
 							TEMPERANCE_ATTRIBUTE = 80,
 							JUSTICE_ATTRIBUTE = 80
 							)
-	var/goldrush_damage = 140
 	var/finisher_on = TRUE //this is for a subtype, it should NEVER be false on this item.
 	damtype = RED_DAMAGE
 	crit_multiplier = 0	//Can't crit anyways.
@@ -686,15 +685,10 @@
 						span_userdanger("[user] punches you with everything you got!!"), vision_distance = COMBAT_MESSAGE_RANGE, ignored_mobs = user)
 		to_chat(user, span_danger("You throw your entire body into this punch!"))
 		balloon_alert(user, "You throw your entire body into this punch!")
-		goldrush_damage = force
-		//I gotta regrab  justice here
-		var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
-		var/justicemod = 1 + userjust/100
-		goldrush_damage *= justicemod
-		goldrush_damage *= force_multiplier
+		var/goldrush_damage = force * CalcDamage(user)
 
 		if(ishuman(target))
-			goldrush_damage = 50
+			goldrush_damage = force / 2
 
 		target.deal_damage(goldrush_damage, RED_DAMAGE, user, attack_type = (ATTACK_TYPE_MELEE))		//MASSIVE fuckoff punch
 
@@ -761,7 +755,7 @@
 	desc = "A rose is a rose, by any other name."
 	special = "Use this weapon to change its damage type between red, white and pale."	//like a different rabbit knife. No black though
 	icon_state = "rosered"
-	force = 80 //Less damage, can swap damage type
+	force = 80
 	damtype = RED_DAMAGE
 	swingstyle = WEAPONSWING_LARGESWEEP
 	attack_verb_continuous = list("cuts", "slices")
@@ -774,19 +768,25 @@
 							JUSTICE_ATTRIBUTE = 100
 							)
 
+	//this is a REALLY shitty way of doing it but it makes it work with damage additions
+	var/red_damage = 80
+	var/white_damage = 70
+	var/pale_damage = 50
+
+
 /obj/item/ego_weapon/blooming/attack_self(mob/living/user)
 	switch(damtype)
 		if(RED_DAMAGE)
 			damtype = WHITE_DAMAGE
-			force = 70 //Prefers red, you can swap to white if needed
+			force = white_damage //Prefers red, you can swap to white if needed
 			icon_state = "rosewhite"
 		if(WHITE_DAMAGE)
 			damtype = PALE_DAMAGE
-			force = 50
+			force = pale_damage
 			icon_state = "rosepale"
 		if(PALE_DAMAGE)
 			damtype = RED_DAMAGE
-			force = 80
+			force = red_damage
 			icon_state = "rosered"
 	to_chat(user, span_notice("[src] will now deal [force] [damtype] damage."))
 	balloon_alert(user, "[src] will now deal [force] [damtype] damage.")
@@ -888,6 +888,7 @@
 							TEMPERANCE_ATTRIBUTE = 80,
 							JUSTICE_ATTRIBUTE = 100
 							)
+	special_damage = 90		//Used for the special gun damage
 
 	var/bladebuff = FALSE
 	var/gunbuff = FALSE
@@ -929,7 +930,7 @@
 			return
 		var/obj/projectile/ego_bullet/gunblade/G = new /obj/projectile/ego_bullet/gunblade(proj_turf)
 		if(gunbuff)
-			G.damage = 90
+			G.damage = special_damage
 			G.icon_state = "red_laser"
 			playsound(user, 'sound/weapons/ionrifle.ogg', 100, TRUE)
 		else
@@ -1034,9 +1035,7 @@
 	..()
 	if(!CanUseEgo(user))
 		return
-	var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
-	var/justicemod = 1 + userjust/100
-	var/damage = force * justicemod * force_multiplier
+	var/damage = force * CalcDamage(user)
 	target.deal_damage(damage, BLACK_DAMAGE, user, attack_type = (ATTACK_TYPE_MELEE))
 
 	if(!canaoe)
@@ -1048,8 +1047,7 @@
 
 		for(var/mob/living/L in range(3, user))
 			var/aoe = force
-			aoe*=justicemod
-			aoe*=force_multiplier
+			aoe*=CalcDamage(user)
 			if(L == user || ishuman(L))
 				continue
 			L.deal_damage(aoe, BLACK_DAMAGE, user, attack_type = (ATTACK_TYPE_SPECIAL))
