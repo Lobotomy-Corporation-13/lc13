@@ -54,5 +54,5 @@
 				continue
 			hit_list += M
 			M.take_damage(45, MELEE, 1)
-		sleep(1.5)
+		SLEEP_CHECK_DEATH(1.5)
 		playsound(T, 'sound/effects/burn.ogg', 75, FALSE, 4)
