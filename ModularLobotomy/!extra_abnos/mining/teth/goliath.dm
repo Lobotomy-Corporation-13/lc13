@@ -75,7 +75,8 @@
 	icon_state = pre_attack_icon
 
 /mob/living/simple_animal/hostile/abnormality/mining/goliath/revive(full_heal = FALSE, admin_revive = FALSE)//who the fuck anchors mobs
-	if(..())
+		. = ..()
+		if(.)
 		move_force = MOVE_FORCE_VERY_STRONG
 		move_resist = MOVE_FORCE_VERY_STRONG
 		pull_force = MOVE_FORCE_VERY_STRONG
