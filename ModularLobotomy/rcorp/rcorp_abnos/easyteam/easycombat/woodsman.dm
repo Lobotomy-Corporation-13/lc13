@@ -1,6 +1,6 @@
 /mob/living/simple_animal/hostile/rcorp_abno/easy/woodsman
 	name = "Warm-Hearted Woodsman"
-	desc = "A mossy old robot that reeks of iron..."
+	desc = "A mossy old robot that reeks of iron... You can hear a faint thump from within, stop it from acquiring additional hearts."
 	maxHealth = 1433
 	health = 1433
 	ranged = TRUE
@@ -170,7 +170,8 @@
 
 	var/current_dist = get_dist(get_turf(chained_target), get_turf(src))
 	if (current_dist < 2)
-		chained_target.Knockdown(3 SECONDS)
+		if(client)
+			chained_target.Knockdown(3 SECONDS)
 		release_target()
 		return
 
@@ -373,7 +374,13 @@
 
 	if(flurry_cooldown <= world.time)
 		if(prob(75))
-			Woodsman_Flurry(target)
+			switch(rand(1,3))
+				if(1)
+					Woodsman_Flurry(target)
+				if(2)
+					begin_chain_pull(target)
+				if(3)
+					AxeThrow(target)
 
 /mob/living/simple_animal/hostile/rcorp_abno/easy/woodsman/proc/Woodsman_Flurry(target)
 	if(flurry_cooldown > world.time)
@@ -478,4 +485,24 @@
 	icon_state = icon_living
 	can_act = TRUE
 
+	//A Simpler Axe Throw.
+	//Technically only usable by the AI so its fine since itll suicide rush away from its team
+/mob/living/simple_animal/hostile/rcorp_abno/easy/woodsman/proc/AxeThrow()
+	playsound(get_turf(src), 'sound/abnormalities/woodsman/woodsman_prepare.ogg', 75, 0, 5)
+	icon_state = "woodsman_prepare"
+	can_act = FALSE
+	SLEEP_CHECK_DEATH(10)
+	var/obj/projectile/rca_normalaxe/P = new(get_turf(src))
+	P.firer = src
+	P.preparePixelProjectile(target, src)
+	P.fire()
+	icon_state = icon_living
+	can_act = TRUE
 
+/obj/projectile/rca_normalaxe
+	name = "woodsman axe"
+	icon_state = "wood_axe_animated"
+	damage_type = RED_DAMAGE
+	damage = 80	//It is very slow/
+	hitsound = 'sound/effects/splat.ogg'
+	color = COLOR_RED
