@@ -57,8 +57,22 @@
 	attack_verb_continuous = list("slices", "slashes", "cleaves")
 	attack_verb_simple = list("slice", "slash", "cleaves")
 	hitsound = 'sound/weapons/bladeslice.ogg'
-	ability_type = ABILITY_ON_ACTIVATION
-	charge_cost = 4
+
+	charge = TRUE
+	charge_cost = 2
+	charge_effect = "deal an extra attack in damage."
+	successfull_activation = "You release your charge, damaging your opponent!"
+
+/obj/item/ego_weapon/miningss13/ethereal/ChargeAttack(mob/living/target, mob/living/user)
+	. = ..()
+	target.deal_damage(force, damtype, user, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
+
+
+	/*
+
+
+	//Give them a projectile shot later
+
 	charge_effect = "shoot homing projectiles."
 	successfull_activation = "You shoot some projectiles!"
 
@@ -90,3 +104,4 @@
 	speed = 3
 	homing = TRUE
 	homing_turn_speed = 25 //Angle per tick.
+	*/
