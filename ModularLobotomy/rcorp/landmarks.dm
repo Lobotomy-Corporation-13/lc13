@@ -3,7 +3,7 @@ GLOBAL_LIST_INIT(easycombat, list(
 	/mob/living/simple_animal/hostile/rcorp_abno/easy/helper,
 	/mob/living/simple_animal/hostile/rcorp_abno/easy/smile,
 	/mob/living/simple_animal/hostile/abnormality/pinocchio,
-	/mob/living/simple_animal/hostile/abnormality/fragment,
+	/mob/living/simple_animal/hostile/rcorp_abno/easy/fragment,
 	/mob/living/simple_animal/hostile/abnormality/fairy_gentleman,
 	/mob/living/simple_animal/hostile/abnormality/drifting_fox,
 	/mob/living/simple_animal/hostile/abnormality/headless_ichthys,
