@@ -1,6 +1,6 @@
 /mob/living/simple_animal/hostile/rcorp_abno/easy/headless_ichthys
 	name = "Headless Ichthys"
-	desc = "A giant, headless sea creature."
+	desc = "A giant, headless sea creature. It seems to be welling something up within it's sac, avoid leaving it alive in a critical state."
 	maxHealth = 1200
 	health = 1200
 	ranged = TRUE
@@ -22,7 +22,7 @@
 		When Blood Cannon is used you will be immobilized and fire a 3 tile wide beam for a prolonged duration of which you are vulnerable. \
 		Non-humans (of which you normally do not encounter) only take half damage from the beam, mechs still take full damage. <br> \
 		<br>\
-		|Fluid Sac|: If Blood Cannon is used while your health is at or below 30% you will enter Fluid Sac state. \
+		|Fluid Sac|: If Blood Cannon finishes while your health is at or below 30% you will enter Fluid Sac state. \
 		Upon entering Fluid Sac state your damage will be increased and your cooldowns will be reduced.\
 		Your Pressing Sac also has it's AoE range increased to 3 tiles. <br></b>"
 
