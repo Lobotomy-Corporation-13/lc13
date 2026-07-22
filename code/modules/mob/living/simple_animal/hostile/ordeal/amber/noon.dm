@@ -9,9 +9,11 @@
 	faction = list("amber_ordeal")
 	pixel_x = -8
 	base_pixel_x = -8
+	pixel_x = -8
+	base_pixel_x = -8
 	maxHealth = 500
 	health = 500
-	move_to_delay = 3.4
+	move_to_delay = 4.5
 	rapid_melee = 2
 	density = TRUE
 	status_flags = CANPUSH | MUST_HIT_PROJECTILE
