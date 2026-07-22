@@ -76,7 +76,7 @@
 
 /mob/living/simple_animal/hostile/abnormality/mining/hivelord/death(gibbed)
 	mouse_opacity = MOUSE_OPACITY_ICON
-	..(gibbed)
+	return ..(gibbed)
 
 //A fragile but rapidly produced creature
 /mob/living/simple_animal/hostile/hivelordbrood
