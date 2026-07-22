@@ -1,10 +1,10 @@
 
 /datum/job/staff
-	title = "LC Staff"
+	title = "LCE Clerk"
 	faction = "Station"
 	supervisors = "Researchers"
-	total_positions = 0
-	spawn_positions = 0
+	total_positions = -1
+	spawn_positions = -1
 	selection_color = "#bbbbbb"
 
 	outfit = /datum/outfit/job/staff
@@ -19,13 +19,13 @@
 	display_order = 999
 	alt_titles = list()
 	maptype = "limbus_labs"
-	job_important = "You are a LC Staff Member. You have little responsibilities, but are encouraged to assist research."
-	job_abbreviation = "STF"
+	job_important = "You are a LCE Clerk. You have little responsibilities, but are encouraged to assist around the facility."
+	job_abbreviation = "CLK"
 
 
 
 /datum/outfit/job/staff
-	name = "LC Staff"
+	name = "LCE Clerk"
 	jobtype = /datum/job/staff
 
 	belt = /obj/item/pda/toxins

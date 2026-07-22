@@ -23,7 +23,7 @@
 	rep_desire_gain = -50
 	ego_list = list(
 		/datum/ego_datum/weapon/prank,
-		/datum/ego_datum/armor/prank,
+		/datum/ego_datum/armor/lce/prank,
 	)
 	desire_on_talk = 1
 	var/happy_duration_time = 20 MINUTES
