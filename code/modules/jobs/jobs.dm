@@ -61,10 +61,8 @@ GLOBAL_LIST_INIT(command_positions, list(
 	// LCB Labs
 	"District Manager",
 	"LC Asset Protection",
-	"Chief Medical Officer",
+	"LCA Udjat Leader",
 	"Lead Researcher",
-	"High Security Commander",
-	"Low Security Commander",
 
 	"Office Director",
 	))
@@ -77,11 +75,7 @@ GLOBAL_LIST_INIT(engineering_positions, list(
 
 GLOBAL_LIST_INIT(medical_positions, list(
 	// LCB Labs
-	"Chief Medical Officer",
-	"Surgeon",
 	"Nurse Practitioner",
-	"Pharmacist",
-	"Emergency Medical Technician",
 
 	// City
 	"Doctor",
@@ -99,10 +93,9 @@ GLOBAL_LIST_INIT(science_positions, list(
 	// LCB Labs
 	"Lead Researcher",
 	"Senior Researcher",
-	"Information Systems Tech",
 	"Research Archivist",
 	"Researcher",
-	"LC Staff",
+	"LCE Clerk",
 	))
 
 
@@ -124,9 +117,6 @@ GLOBAL_LIST_INIT(service_positions, list(
 	"Main Office Representative",
 	"Fishhook Office Fixer",
 
-	// LCB Labs
-	"LC Chef",
-	"LC Janitor",
 
 
 	//R-Corp Sixth Pack
@@ -152,13 +142,8 @@ GLOBAL_LIST_INIT(security_positions, list(
 	"Agent Intern",
 
 	// LCB Labs
-	"High Security Commander",
-	"Low Security Commander",
-	"High Security Officer",
-	"Low Security Officer",
-	"Damage Mitigation Officer",
-	"Damage Exasperation Officer",
-	"Internal Police",
+	"LCA Udjat Leader",
+	"LCA Udjat Agent",
 	"LC Specimen", //Not really a 'security role', but putting it as a silicon/nonhuman feels wrong.
 
 	//Sixth Pack

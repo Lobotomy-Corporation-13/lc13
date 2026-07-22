@@ -30,8 +30,7 @@
 	rep_desire_gain = -100
 	ego_list = list(
 		/datum/ego_datum/weapon/beak,
-		/datum/ego_datum/weapon/beakmagnum,
-		/datum/ego_datum/armor/beak,
+		/datum/ego_datum/armor/lce/beak,
 	)
 	//Evil bird mode.
 	var/bird_angry = FALSE
