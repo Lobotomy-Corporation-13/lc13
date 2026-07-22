@@ -5,6 +5,7 @@ import {
   Flex,
   Icon,
   NoticeBox,
+  NumberInput,
   Section,
   Slider,
   Stack,
@@ -30,12 +31,11 @@ const tierLabel = tier => 'T' + tier + ' (' + (tier + 1) + '-star)';
 
 export const OmniSynthesizer = (props, context) => {
   const { data } = useBackend(context);
-  const [mode, setMode] = useLocalState(context, 'omni_mode', 'synth');
+  const [mode, setMode] = useLocalState(context, 'omni_mode', 'convert');
   const modes = [
-    { id: 'synth', name: 'Material Synthesis', icon: 'flask' },
-    { id: 'exchange', name: 'Material Exchange', icon: 'exchange-alt' },
+    { id: 'convert', name: 'Convert', icon: 'exchange-alt' },
+    { id: 'refine', name: 'Refine', icon: 'flask' },
     { id: 'storage', name: 'Storage', icon: 'box-open' },
-    { id: 'exp', name: 'EXP Refinery', icon: 'book' },
     { id: 'shop', name: 'Requisition', icon: 'shopping-cart' },
   ];
   const cur = modes.find(m => m.id === mode) || modes[0];
@@ -55,8 +55,8 @@ export const OmniSynthesizer = (props, context) => {
                     <Button
                       key={m.id}
                       icon={m.icon}
+                      content={m.name}
                       selected={m.id === mode}
-                      tooltip={m.name}
                       onClick={() => setMode(m.id)}
                     />
                   ))}
@@ -70,15 +70,77 @@ export const OmniSynthesizer = (props, context) => {
             </Section>
           </Stack.Item>
           <Stack.Item grow>
-            {mode === 'shop' && <ShopView />}
+            {mode === 'convert' && <ConvertGroup />}
+            {mode === 'refine' && <RefineGroup />}
             {mode === 'storage' && <StorageView />}
-            {mode === 'exp' && <ExpView />}
-            {(mode === 'synth' || mode === 'exchange')
-              && <ConvertView mode={mode} />}
+            {mode === 'shop' && <ShopView />}
           </Stack.Item>
         </Stack>
       </Window.Content>
     </Window>
+  );
+};
+
+// A light segmented row of buttons for switching between related sub-views.
+const SubTabs = (props, context) => {
+  const { value, setValue, options } = props;
+  return (
+    <Section>
+      {options.map(o => (
+        <Button
+          key={o.id}
+          icon={o.icon}
+          content={o.name}
+          selected={o.id === value}
+          onClick={() => setValue(o.id)}
+        />
+      ))}
+    </Section>
+  );
+};
+
+// Convert tab: reshape materials (synthesize up a tier, or trade families).
+const ConvertGroup = (props, context) => {
+  const [sub, setSub] = useLocalState(context, 'omni_convert_sub', 'synth');
+  return (
+    <Stack fill vertical>
+      <Stack.Item>
+        <SubTabs
+          value={sub}
+          setValue={setSub}
+          options={[
+            { id: 'synth', name: 'Synthesize', icon: 'flask' },
+            { id: 'exchange', name: 'Exchange', icon: 'exchange-alt' },
+          ]}
+        />
+      </Stack.Item>
+      <Stack.Item grow>
+        <ConvertView mode={sub} />
+      </Stack.Item>
+    </Stack>
+  );
+};
+
+// Refine tab: turn materials into outputs (path EXP books, or base chems/PE).
+const RefineGroup = (props, context) => {
+  const [sub, setSub] = useLocalState(context, 'omni_refine_sub', 'exp');
+  return (
+    <Stack fill vertical>
+      <Stack.Item>
+        <SubTabs
+          value={sub}
+          setValue={setSub}
+          options={[
+            { id: 'exp', name: 'EXP Books', icon: 'book' },
+            { id: 'base', name: 'Base Ops', icon: 'vial' },
+          ]}
+        />
+      </Stack.Item>
+      <Stack.Item grow>
+        {sub === 'exp' && <ExpView />}
+        {sub === 'base' && <BaseView />}
+      </Stack.Item>
+    </Stack>
   );
 };
 
@@ -407,12 +469,18 @@ const BookRow = (props, context) => {
 };
 
 const StorageView = (props, context) => {
-  const { data } = useBackend(context);
-  const { catalog = [], banked_books = [] } = data;
+  const { act, data } = useBackend(context);
+  const {
+    catalog = [],
+    banked_books = [],
+    enk_banked = 0,
+    enk_ref,
+    enk_icon,
+  } = data;
   const owned = catalog.filter(m => m.owned > 0);
   const path = owned.filter(m => m.cat === 'path');
   const trace = owned.filter(m => m.cat === 'trace');
-  const empty = !owned.length && !banked_books.length;
+  const empty = !owned.length && !banked_books.length && !enk_banked;
   return (
     <Section fill scrollable title="Banked Materials">
       {empty && (
@@ -461,6 +529,31 @@ const StorageView = (props, context) => {
             EXP Books
           </Box>
           {banked_books.map(b => <BookRow key={b.ref} book={b} />)}
+        </Box>
+      )}
+      {enk_banked > 0 && (
+        <Box mt={1}>
+          <Box
+            bold
+            style={{
+              'color': '#e0a038',
+              'border-bottom': '1px solid #e0a038',
+              'margin-bottom': '4px',
+            }}>
+            Compacted Enkephalin
+          </Box>
+          <Flex align="center" mb={0.5}>
+            <Flex.Item>{matImg(enk_icon, 28)}</Flex.Item>
+            <Flex.Item grow ml={1}>compacted enkephalin</Flex.Item>
+            <Flex.Item mr={1} bold>x{enk_banked}</Flex.Item>
+            <Flex.Item>
+              <Button
+                icon="hand-holding"
+                content="Withdraw"
+                onClick={() => act('withdraw', { ref: enk_ref })}
+              />
+            </Flex.Item>
+          </Flex>
         </Box>
       )}
     </Section>
@@ -529,5 +622,216 @@ const ExpView = (props, context) => {
         </Box>
       ))}
     </Section>
+  );
+};
+
+// ---- Base Conversion tab: chems + PE from materials ----
+
+const swatch = color => (
+  <Box
+    inline
+    mr={0.5}
+    style={{
+      'display': 'inline-block',
+      'width': '10px',
+      'height': '10px',
+      'border-radius': '2px',
+      'vertical-align': 'middle',
+      'background': color,
+    }}
+  />
+);
+
+const BeakerPanel = (props, context) => {
+  const { act } = useBackend(context);
+  const b = props.beaker || {};
+  if (!b.loaded) {
+    return (
+      <Section title="Container" fill>
+        <NoticeBox>
+          Insert an open reagent container (a beaker, bottle, jug...)
+          to read its contents and pour ground chemicals into it.
+        </NoticeBox>
+      </Section>
+    );
+  }
+  const contents = b.contents || [];
+  return (
+    <Section
+      title={b.name || 'Container'}
+      fill
+      scrollable
+      buttons={
+        <Button
+          icon="eject"
+          content="Eject"
+          onClick={() => act('eject_beaker')}
+        />
+      }>
+      <Box mb={1} color="label">
+        {b.current} / {b.max} units
+      </Box>
+      {contents.length === 0 && (
+        <Box color="label">Empty.</Box>
+      )}
+      {contents.map(r => (
+        <Box key={r.name} mb={1}>
+          <Box fontSize="0.85em">
+            {swatch(r.color)}
+            {r.name} ({r.volume}u)
+          </Box>
+          <Box
+            style={{
+              'height': '12px',
+              'border-radius': '2px',
+              'overflow': 'hidden',
+              'background': 'rgba(0,0,0,0.35)',
+            }}>
+            <Box
+              style={{
+                'height': '12px',
+                'background': r.color,
+                'width':
+                  Math.min(100, (r.volume / (b.max || 1)) * 100) + '%',
+              }}
+            />
+          </Box>
+        </Box>
+      ))}
+    </Section>
+  );
+};
+
+const GrindRow = (props, context) => {
+  const { act } = useBackend(context);
+  const { fam, points, cost, loaded } = props;
+  const [amt, setAmt] = useLocalState(context, 'omni_grind_' + fam.key, 1);
+  const owned = [fam.t1, fam.t2, fam.t3];
+  return (
+    <Flex align="center" mb="3px">
+      <Flex.Item width="9em">
+        {swatch(fam.color)}
+        {fam.name}
+      </Flex.Item>
+      <Flex.Item>
+        <NumberInput
+          value={amt}
+          minValue={1}
+          maxValue={99}
+          width="3.5em"
+          onChange={(e, v) => setAmt(v)}
+        />
+      </Flex.Item>
+      {[1, 2, 3].map(t => {
+        const have = owned[t - 1];
+        const out = Math.floor((amt * points[t - 1]) / cost);
+        return (
+          <Flex.Item key={t} ml="3px">
+            <Button
+              content={'T' + t + ' (' + have + ')'}
+              disabled={!loaded || have < amt || out < 1}
+              tooltip={'Grind ' + amt + ' -> ' + out + 'u ' + fam.chem}
+              onClick={() =>
+                act('grind_chem', { key: fam.key, tier: t, amount: amt })}
+            />
+          </Flex.Item>
+        );
+      })}
+    </Flex>
+  );
+};
+
+const CompactRow = (props, context) => {
+  const { act } = useBackend(context);
+  const { fam, points, cost } = props;
+  const [amt, setAmt] = useLocalState(context, 'omni_comp_' + fam.key, 1);
+  const owned = [fam.t1, fam.t2, fam.t3];
+  return (
+    <Flex align="center" mb="3px">
+      <Flex.Item width="9em">{fam.name}</Flex.Item>
+      <Flex.Item>
+        <NumberInput
+          value={amt}
+          minValue={1}
+          maxValue={99}
+          width="3.5em"
+          onChange={(e, v) => setAmt(v)}
+        />
+      </Flex.Item>
+      {[1, 2, 3].map(t => {
+        const have = owned[t - 1];
+        const out = Math.floor((amt * points[t - 1]) / cost);
+        return (
+          <Flex.Item key={t} ml="3px">
+            <Button
+              content={'T' + t + ' (' + have + ')'}
+              disabled={have < amt || out < 1}
+              tooltip={'Compact ' + amt + ' -> ' + out + ' enkephalin'}
+              onClick={() =>
+                act('compact_trace', { key: fam.key, tier: t, amount: amt })}
+            />
+          </Flex.Item>
+        );
+      })}
+    </Flex>
+  );
+};
+
+const BaseView = (props, context) => {
+  const { act, data } = useBackend(context);
+  const beaker = data.beaker || {};
+  const points = data.mat_points || [2, 6, 18];
+  const chemCost = data.chem_point_cost || 9;
+  const enkCost = data.enk_point_cost || 2;
+  const banked = data.enk_banked || 0;
+  const need = data.enk_refine_cost || 50;
+  return (
+    <Stack fill>
+      <Stack.Item width="33%">
+        <BeakerPanel beaker={beaker} />
+      </Stack.Item>
+      <Stack.Item grow>
+        <Section fill scrollable>
+          <Box bold mb={1}>
+            Grind Path Materials into Sin Chemicals
+          </Box>
+          <Box fontSize="0.8em" color="label" mb={1}>
+            Pours the chosen tier into the inserted container.{' '}
+            {chemCost} points make 1 unit (top-tier = 2 units).
+          </Box>
+          {(data.grind_families || []).map(f => (
+            <GrindRow
+              key={f.key}
+              fam={f}
+              points={points}
+              cost={chemCost}
+              loaded={beaker.loaded}
+            />
+          ))}
+          <Box bold mt={2} mb={1}>
+            Compact Trace Materials into Enkephalin
+          </Box>
+          {(data.compact_families || []).map(f => (
+            <CompactRow
+              key={f.key}
+              fam={f}
+              points={points}
+              cost={enkCost}
+            />
+          ))}
+          <Box mt={2}>
+            Banked enkephalin: <b>{banked}</b>
+            {' '}
+            <Button
+              icon="box"
+              content={'Refine ' + need + ' -> Refined PE Box'}
+              disabled={banked < need}
+              tooltip="Bank compacted enkephalin here, then fuse them."
+              onClick={() => act('refine_pe')}
+            />
+          </Box>
+        </Section>
+      </Stack.Item>
+    </Stack>
   );
 };

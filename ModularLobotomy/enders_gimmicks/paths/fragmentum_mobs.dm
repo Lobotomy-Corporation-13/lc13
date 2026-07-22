@@ -303,11 +303,44 @@
 	butcher_results = list(/obj/item/stack/trace_material/ichor = 1)
 	guaranteed_butcher_results = null
 	silk_results = null
+	can_burrow_solo = FALSE // Cannot burrow-teleport across the map
 
 /mob/living/simple_animal/hostile/ordeal/amber_bug/fragmentum/death(gibbed)
 	var/turf/T = get_turf(src)
 	. = ..()
 	SpawnFragmentumLoot(T, TRACE_FAMILY_ICHOR, 1)
+
+/// Resurface only on a turf that has line of sight to where it dug in, so it
+/// can't emerge through a wall from its spawn point.
+/mob/living/simple_animal/hostile/ordeal/amber_bug/fragmentum/BurrowOut(turf/T)
+	if(!T)
+		T = get_turf(src)
+	burrowing = TRUE
+	alpha = 0
+	var/list/visible = view(2, T)
+	var/list/valid_turfs = list()
+	for(var/turf/PT in RANGE_TURFS(2, T))
+		if(PT.is_blocked_turf_ignore_climbable())
+			continue
+		if(!(PT in visible)) // must have line of sight to the dig-in turf
+			continue
+		valid_turfs |= PT
+	if(!length(valid_turfs))
+		valid_turfs = list(T)
+	var/turf/target_turf = pick(valid_turfs)
+	forceMove(target_turf)
+	new /obj/effect/temp_visual/small_smoke/halfsecond(target_turf)
+	animate(src, alpha = 255, time = 5)
+	playsound(get_turf(src), 'sound/effects/ordeals/amber/dawn_dig_out.ogg', 25, 1)
+	visible_message(span_bolddanger("[src] burrows out from the ground!"))
+	SLEEP_CHECK_DEATH(5)
+	var/obj/effect/temp_visual/decoy/D = new /obj/effect/temp_visual/decoy(target_turf, src)
+	animate(D, alpha = 0, transform = matrix() * 1.5, time = 5)
+	for(var/mob/living/L in target_turf)
+		if(!faction_check_mob(L))
+			L.deal_damage(5, RED_DAMAGE, src, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
+	burrow_cooldown = world.time + burrow_cooldown_time
+	burrowing = FALSE
 
 /mob/living/simple_animal/hostile/ordeal/amber_dusk/fragmentum
 	name = "fragmentum food chain"
@@ -316,11 +349,73 @@
 	butcher_results = list(/obj/item/stack/trace_material/ichor = 1)
 	guaranteed_butcher_results = null
 	silk_results = null
+	/// How far to look for a player to resurface beneath
+	var/burrow_reach = 9
+	/// Dawns spawned each time it resurfaces
+	var/dawns_per_burrow = 3
+	/// world.time until which it cannot attack (post-emerge lockout)
+	var/emerge_attack_cd = 0
 
 /mob/living/simple_animal/hostile/ordeal/amber_dusk/fragmentum/death(gibbed)
 	var/turf/T = get_turf(src)
 	. = ..()
 	SpawnFragmentumLoot(T, TRACE_FAMILY_ICHOR, 3)
+
+/mob/living/simple_animal/hostile/ordeal/amber_dusk/fragmentum/CanAttack(atom/the_target)
+	if(world.time < emerge_attack_cd)
+		return FALSE
+	return ..()
+
+/// The periodic four-bug birth is replaced by the ambush burrow below.
+/mob/living/simple_animal/hostile/ordeal/amber_dusk/fragmentum/AttemptBirth()
+	return FALSE
+
+/// Short-range ambush burrow: dive, then resurface beneath a nearby player
+/// instead of teleporting to a random spawn across the map.
+/mob/living/simple_animal/hostile/ordeal/amber_dusk/fragmentum/BurrowIn()
+	burrowing = TRUE
+	var/turf/dest = GetBurrowDestination()
+	visible_message(span_danger("[src] burrows into the ground!"))
+	playsound(get_turf(src), 'sound/effects/ordeals/amber/dusk_dig_in.ogg', 50, 1)
+	animate(src, alpha = 0, time = 5)
+	SLEEP_CHECK_DEATH(5)
+	density = FALSE
+	forceMove(dest)
+	BurrowOut(dest)
+
+/mob/living/simple_animal/hostile/ordeal/amber_dusk/fragmentum/BurrowOut(turf/T)
+	..() // Standard resurface (smoke, dig-out sound, AoE hit, cooldown)
+	SpawnBurrowDawns()
+	emerge_attack_cd = world.time + 10 // Cannot attack for ~1 second
+
+/// Nearest living non-ally within reach; falls back to its own turf (no teleport).
+/mob/living/simple_animal/hostile/ordeal/amber_dusk/fragmentum/proc/GetBurrowDestination()
+	var/mob/living/prey
+	var/best_dist = INFINITY
+	for(var/mob/living/carbon/human/H in range(burrow_reach, src))
+		if(faction_check_mob(H) || H.stat == DEAD)
+			continue
+		var/d = get_dist(src, H)
+		if(d < best_dist)
+			best_dist = d
+			prey = H
+	return prey ? get_turf(prey) : get_turf(src)
+
+/// Spawn a few fragmentum dawns on open tiles around the dusk.
+/mob/living/simple_animal/hostile/ordeal/amber_dusk/fragmentum/proc/SpawnBurrowDawns()
+	var/turf/origin = get_turf(src)
+	var/tries = dawns_per_burrow + 3
+	var/spawned = 0
+	while(spawned < dawns_per_burrow && tries > 0)
+		tries--
+		var/turf/T = get_step(origin, pick(NORTH, SOUTH, EAST, WEST, NORTHEAST, NORTHWEST, SOUTHEAST, SOUTHWEST))
+		if(!T || T.density)
+			continue
+		var/mob/living/simple_animal/hostile/ordeal/amber_bug/fragmentum/dawn = new(T)
+		spawned++
+		if(ordeal_reference)
+			dawn.ordeal_reference = ordeal_reference
+			ordeal_reference.ordeal_mobs += dawn
 
 // Indigo (Fang)
 /mob/living/simple_animal/hostile/ordeal/indigo_dawn/fragmentum
@@ -524,9 +619,47 @@
 	name = "fragmentum fruit of understanding"
 	desc = "A round purple creature leaking mind-damaging gas, its rind cracked open by black crystal."
 	icon = 'ModularLobotomy/_Lobotomyicons/fragmentum_violet_dawn.dmi'
+	maxHealth = 625 // 2.5x the base fruit
+	health = 625
 	butcher_results = list(/obj/item/stack/trace_material/ichor = 1)
 	guaranteed_butcher_results = null
 	silk_results = null
+	/// world.time of the next AoE black burst
+	var/next_burst = 0
+	/// Delay between bursts
+	var/burst_cooldown = 12 SECONDS
+	/// Massive black damage dealt to everything nearby on burst
+	var/burst_damage = 60
+
+/mob/living/simple_animal/hostile/ordeal/violet_fruit/fragmentum/Initialize()
+	. = ..()
+	next_burst = world.time + burst_cooldown
+
+/// The fragmentum fruit never gasses itself to death — that suicide is replaced
+/// by the recurring AoE black burst in Life().
+/mob/living/simple_animal/hostile/ordeal/violet_fruit/fragmentum/ReleaseDeathGas()
+	return
+
+/mob/living/simple_animal/hostile/ordeal/violet_fruit/fragmentum/Life()
+	. = ..()
+	if(!.) // Dead
+		return FALSE
+	if(world.time >= next_burst)
+		next_burst = world.time + burst_cooldown
+		BlackBurst()
+	return TRUE
+
+/// Erupt with massive black damage to everything nearby, then keep living.
+/mob/living/simple_animal/hostile/ordeal/violet_fruit/fragmentum/proc/BlackBurst()
+	var/turf/origin = get_turf(src)
+	visible_message(span_bolddanger("[src] convulses and erupts with dark energy!"))
+	playsound(origin, 'sound/effects/ordeals/violet/fruit_suicide.ogg', 50, 1, 16)
+	for(var/turf/open/T in view(4, src))
+		new /obj/effect/temp_visual/revenant(T)
+	for(var/mob/living/L in view(4, src))
+		if(faction_check_mob(L))
+			continue
+		L.deal_damage(burst_damage, BLACK_DAMAGE, src, flags = (DAMAGE_FORCED))
 
 /mob/living/simple_animal/hostile/ordeal/violet_fruit/fragmentum/death(gibbed)
 	var/turf/T = get_turf(src)
@@ -540,11 +673,115 @@
 	butcher_results = list(/obj/item/stack/trace_material/ichor = 1)
 	guaranteed_butcher_results = null
 	silk_results = null
+	/// world.time the projectile line attack is next available
+	var/line_cooldown = 0
+	/// world.time the melee retaliation is next available
+	var/melee_warn_cd = 0
+	/// Black damage of the projectile-triggered line attack
+	var/line_damage = 20
+	/// Black damage of the melee 5x5 retaliation
+	var/melee_damage = 30
 
 /mob/living/simple_animal/hostile/ordeal/violet_monolith/fragmentum/death(gibbed)
 	var/turf/T = get_turf(src)
 	. = ..()
 	SpawnFragmentumLoot(T, TRACE_FAMILY_ICHOR, 2)
+
+/// No landing shockwave — the fragmentum monolith drops in harmlessly.
+/mob/living/simple_animal/hostile/ordeal/violet_monolith/fragmentum/FallDown()
+	pixel_z = 128
+	alpha = 0
+	density = FALSE
+	animate(src, pixel_z = 0, alpha = 255, time = 10)
+	SLEEP_CHECK_DEATH(10)
+	density = TRUE
+	visible_message(span_danger("[src] drops down from the ceiling!"))
+	playsound(get_turf(src), 'sound/effects/ordeals/violet/monolith_down.ogg', 65, 1)
+	var/obj/effect/temp_visual/decoy/D = new /obj/effect/temp_visual/decoy(get_turf(src), src)
+	animate(D, alpha = 0, transform = matrix() * 2, time = 5)
+	for(var/turf/open/T in view(4, src))
+		new /obj/effect/temp_visual/small_smoke/halfsecond(T)
+	SLEEP_CHECK_DEATH(5)
+	icon_state = "violet_noon_attack"
+
+/// Getting shot has a 50% chance to telegraph a line at the shooter.
+/mob/living/simple_animal/hostile/ordeal/violet_monolith/fragmentum/bullet_act(obj/projectile/P, def_zone, piercing_hit = FALSE)
+	. = ..()
+	if(world.time < line_cooldown)
+		return
+	var/mob/living/shooter = P?.firer
+	if(!istype(shooter) || faction_check_mob(shooter))
+		return
+	if(!prob(50))
+		return
+	line_cooldown = world.time + 2 SECONDS
+	INVOKE_ASYNC(src, PROC_REF(LineWarningAttack), shooter)
+
+/// Telegraph a line to the target (extending a little past), then after 0.5s
+/// hit whoever is still on it with black damage and reel them in.
+/mob/living/simple_animal/hostile/ordeal/violet_monolith/fragmentum/proc/LineWarningAttack(mob/living/target)
+	var/turf/origin = get_turf(src)
+	var/turf/tturf = get_turf(target)
+	if(!origin || !tturf || origin == tturf)
+		return
+	var/reach = get_dist(origin, tturf) + 2 // extend lightly past the target
+	var/turf/beyond = get_ranged_target_turf_direct(origin, tturf, reach)
+	var/list/line = getline(origin, beyond) - origin
+	for(var/turf/T in line)
+		new /obj/effect/temp_visual/violet_warning(T)
+	SLEEP_CHECK_DEATH(5) // 0.5 seconds
+	for(var/turf/T in line)
+		for(var/mob/living/L in T)
+			if(faction_check_mob(L))
+				continue
+			L.deal_damage(line_damage, BLACK_DAMAGE, src, flags = (DAMAGE_FORCED))
+			Beam(L, "tentacle", time = 1 SECONDS) // pulling tendril, lasts 1s
+			L.throw_at(src, reach, 2, src) // reel toward the monolith
+
+/// Melee strikes leave a 5x5 warning that detonates after 1 second.
+/mob/living/simple_animal/hostile/ordeal/violet_monolith/fragmentum/attacked_by(obj/item/I, mob/living/user)
+	. = ..()
+	if(world.time < melee_warn_cd)
+		return
+	melee_warn_cd = world.time + 4 SECONDS
+	INVOKE_ASYNC(src, PROC_REF(MeleeWarningAttack))
+
+/mob/living/simple_animal/hostile/ordeal/violet_monolith/fragmentum/proc/MeleeWarningAttack()
+	var/turf/origin = get_turf(src)
+	var/list/area_turfs = RANGE_TURFS(2, origin) // 5x5
+	for(var/turf/T in area_turfs)
+		new /obj/effect/temp_visual/violet_warning/melee(T)
+	SLEEP_CHECK_DEATH(10) // 1 second
+	for(var/turf/T in area_turfs)
+		for(var/mob/living/L in T)
+			if(faction_check_mob(L))
+				continue
+			L.deal_damage(melee_damage, BLACK_DAMAGE, src, flags = (DAMAGE_FORCED))
+
+/// Pulse no longer touches abnormality qliphoth — it now deals unavoidable
+/// black damage equal to 40% of max HP to everything within 7 tiles.
+/mob/living/simple_animal/hostile/ordeal/violet_monolith/fragmentum/PulseAttack()
+	next_pulse = world.time + 15 SECONDS
+	icon_state = "violet_noon_ability"
+	for(var/i = 1 to 3)
+		var/obj/effect/temp_visual/decoy/D = new /obj/effect/temp_visual/decoy(get_turf(src), src)
+		animate(D, alpha = 0, transform = matrix() * 1.5, time = 7)
+		SLEEP_CHECK_DEATH(8)
+	for(var/mob/living/L in view(7, src))
+		if(faction_check_mob(L))
+			continue
+		L.deal_damage(L.maxHealth * 0.4, BLACK_DAMAGE, src, flags = (DAMAGE_FORCED))
+	icon_state = "violet_noon_attack"
+
+/obj/effect/temp_visual/violet_warning
+	icon = 'icons/mob/telegraphing/telegraph_holographic.dmi'
+	icon_state = "target_box"
+	layer = BELOW_MOB_LAYER
+	color = "#7a3aa0"
+	duration = 0.5 SECONDS
+
+/obj/effect/temp_visual/violet_warning/melee
+	duration = 1 SECONDS
 
 // Brown / Seven Sins (Fang)
 /mob/living/simple_animal/hostile/ordeal/sin_sloth/fragmentum
@@ -742,6 +979,34 @@
 	var/turf/T = get_turf(src)
 	. = ..()
 	SpawnFragmentumLoot(T, TRACE_FAMILY_LENS, 2)
+
+/// Spawns the fragmentum handmaidens instead of the normal ones.
+/mob/living/simple_animal/hostile/ordeal/white_lake_corrosion/fragmentum/SpawnAdds()
+	if(QDELETED(src))
+		return
+	adds_spawned = TRUE
+	visible_message(span_danger("[src] screams!"))
+	playsound(get_turf(src), 'sound/voice/human/femalescream_3.ogg', 75, 0, 4)
+	var/matrix/init_transform = transform
+	animate(src, transform = transform * 1.5, time = 3, easing = BACK_EASING | EASE_OUT)
+	var/valid_directions = list(0)
+	for(var/d in list(NORTH, SOUTH, EAST, WEST, NORTHEAST, NORTHWEST, SOUTHEAST, SOUTHWEST))
+		var/turf/TF = get_step(src, d)
+		if(!istype(TF))
+			continue
+		if(!TF.is_blocked_turf(TRUE))
+			valid_directions += d
+	for(var/i = 1 to 4)
+		var/turf/T = get_step(get_turf(src), pick(valid_directions))
+		var/mob/living/simple_animal/hostile/ordeal/silentgirl_corrosion/fragmentum/nc = new(T)
+		if(ordeal_reference)
+			nc.ordeal_reference = ordeal_reference
+			ordeal_reference.ordeal_mobs += nc
+	can_act = FALSE
+	SLEEP_CHECK_DEATH(3)
+	animate(src, transform = init_transform, time = 5)
+	SLEEP_CHECK_DEATH(50)
+	can_act = TRUE
 
 /mob/living/simple_animal/hostile/ordeal/silentgirl_corrosion/fragmentum
 	name = "Fragmentum Silent Handmaiden"

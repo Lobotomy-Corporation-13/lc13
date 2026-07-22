@@ -19,6 +19,16 @@
 	var/exchange_cost = 2
 	/// Banked materials: assoc "[typepath]" -> count.
 	var/list/stored
+	/// An inserted reagent container, for the base-conversion tab.
+	var/obj/item/reagent_containers/beaker
+	/// Points a material of each tier is worth when ground down (index = tier).
+	var/static/list/mat_tier_points = list(2, 6, 18)
+	/// Points of ground material per 1 unit of sin chemical.
+	var/chem_point_cost = 9
+	/// Points of ground trace material per 1 compacted enkephalin.
+	var/enk_point_cost = 2
+	/// Compacted enkephalin banked here that fuse into one Refined PE Box.
+	var/enk_refine_cost = 50
 	/// Shared registry: forward["cat"]["key"] = list(tier1, tier2, tier3 types).
 	var/static/list/mat_forward
 	/// Shared registry: info["[type]"] = list(cat, key, tier, name, icon_state, b64).
@@ -29,6 +39,8 @@
 	var/static/list/exp_recipes
 	/// Banked-book display: "[booktype]" -> list(name, icon).
 	var/static/list/book_info
+	/// Cached base64 icon of the compacted enkephalin can (for Storage).
+	var/static/enk_icon
 
 /obj/machinery/omni_synthesizer/Initialize()
 	. = ..()
@@ -150,6 +162,7 @@
 			"combine" = rd[11],
 		))
 		book_info["[rd[3]]"] = list("name" = rd[2], "icon" = b64)
+	enk_icon = icon2base64(icon('ModularLobotomy/_Lobotomyicons/compacted_enkephalin.dmi', "enk"))
 
 /// Returns the material typepath for a (category, key, tier), or null.
 /obj/machinery/omni_synthesizer/proc/MatType(cat, key, tier)
@@ -164,7 +177,7 @@
 // ---- Deposits ----
 
 /obj/machinery/omni_synthesizer/attackby(obj/item/I, mob/user, params)
-	if(istype(I, /obj/item/stack/path_material) || istype(I, /obj/item/stack/trace_material) || istype(I, /obj/item/stack/path_exp_crystal))
+	if(istype(I, /obj/item/stack/path_material) || istype(I, /obj/item/stack/trace_material) || istype(I, /obj/item/stack/path_exp_crystal) || istype(I, /obj/item/stack/compacted_enkephalin))
 		var/obj/item/stack/S = I
 		stored["[S.type]"] += S.amount
 		to_chat(user, span_notice("You bank [S.amount] [S.name] into [src]."))
@@ -175,6 +188,39 @@
 	if(istype(I, /obj/item/storage/bag/path_materials))
 		DepositBag(I, user)
 		return
+	if(istype(I, /obj/item/reagent_containers) && I.is_open_container())
+		var/obj/item/reagent_containers/B = I
+		if(beaker)
+			to_chat(user, span_warning("[src] already holds [beaker]. Eject it first."))
+			return
+		if(!user.transferItemToLoc(B, src))
+			return
+		beaker = B
+		to_chat(user, span_notice("You slot [B] into [src]."))
+		playsound(src, 'sound/machines/terminal_prompt_confirm.ogg', 40, TRUE)
+		SStgui.update_uis(src)
+		return
+	return ..()
+
+/// Returns the inserted container to the user (or drops it).
+/obj/machinery/omni_synthesizer/proc/EjectBeaker(mob/user)
+	if(!beaker)
+		return
+	if(user)
+		user.put_in_hands(beaker)
+	else
+		beaker.forceMove(get_turf(src))
+	beaker = null
+	SStgui.update_uis(src)
+
+/obj/machinery/omni_synthesizer/Destroy()
+	QDEL_NULL(beaker)
+	return ..()
+
+/obj/machinery/omni_synthesizer/handle_atom_del(atom/A)
+	if(A == beaker)
+		beaker = null
+		SStgui.update_uis(src)
 	return ..()
 
 /// Empties every material stack out of a pouch into storage.
@@ -308,6 +354,57 @@
 			"count" = stored[key],
 		))
 	data["banked_books"] = bbooks
+
+	// ---- Base-conversion tab ----
+	// Inserted reagent container + its contents (for the coloured bars).
+	var/list/bk = list("loaded" = (beaker ? TRUE : FALSE))
+	if(beaker)
+		bk["name"] = beaker.name
+		bk["current"] = beaker.reagents.total_volume
+		bk["max"] = beaker.reagents.maximum_volume
+		var/list/cont = list()
+		for(var/datum/reagent/R in beaker.reagents.reagent_list)
+			cont += list(list("name" = R.name, "volume" = R.volume, "color" = R.color))
+		bk["contents"] = cont
+	data["beaker"] = bk
+
+	// Main path materials -> sin chemicals (per family, with owned per tier).
+	var/list/grind = list()
+	for(var/pkey in mat_forward["path"])
+		var/list/tiers = mat_forward["path"][pkey]
+		var/sin_type = PathKeyToSin(pkey)
+		var/datum/reagent/sin = sin_type ? GLOB.chemical_reagents_list[sin_type] : null
+		grind += list(list(
+			"key" = pkey,
+			"name" = PathDisplayName(pkey),
+			"chem" = sin ? sin.name : "?",
+			"color" = sin ? sin.color : "#888888",
+			"t1" = (stored["[tiers[1]]"] ? stored["[tiers[1]]"] : 0),
+			"t2" = (stored["[tiers[2]]"] ? stored["[tiers[2]]"] : 0),
+			"t3" = (stored["[tiers[3]]"] ? stored["[tiers[3]]"] : 0),
+		))
+	data["grind_families"] = grind
+
+	// Trace materials -> compacted enkephalin (per family, owned per tier).
+	var/list/comp = list()
+	for(var/tkey in mat_forward["trace"])
+		var/list/tiers = mat_forward["trace"][tkey]
+		comp += list(list(
+			"key" = tkey,
+			"name" = "[uppertext(copytext(tkey, 1, 2))][copytext(tkey, 2)]",
+			"t1" = (stored["[tiers[1]]"] ? stored["[tiers[1]]"] : 0),
+			"t2" = (stored["[tiers[2]]"] ? stored["[tiers[2]]"] : 0),
+			"t3" = (stored["[tiers[3]]"] ? stored["[tiers[3]]"] : 0),
+		))
+	data["compact_families"] = comp
+
+	data["mat_points"] = mat_tier_points
+	data["chem_point_cost"] = chem_point_cost
+	data["enk_point_cost"] = enk_point_cost
+	data["enk_refine_cost"] = enk_refine_cost
+	data["enk_banked"] = (stored["[/obj/item/stack/compacted_enkephalin]"] ? stored["[/obj/item/stack/compacted_enkephalin]"] : 0)
+	data["enk_ref"] = "[/obj/item/stack/compacted_enkephalin]"
+	data["enk_icon"] = enk_icon
 	return data
 
 /// Total banked count across all families of a category at a rarity tier.
@@ -372,6 +469,15 @@
 			return DoBuy(params["item"], user)
 		if("craft_exp")
 			return DoCraftExp(params["id"], params["source"], user)
+		if("eject_beaker")
+			EjectBeaker(user)
+			return TRUE
+		if("grind_chem")
+			return DoGrindChem(params["key"], text2num(params["tier"]), text2num(params["amount"]), user)
+		if("compact_trace")
+			return DoCompactTrace(params["key"], text2num(params["tier"]), text2num(params["amount"]), user)
+		if("refine_pe")
+			return DoRefinePE(user)
 
 /// Consumes `synth_cost` per output to bank `count` of the next rarity up.
 /obj/machinery/omni_synthesizer/proc/DoSynthesize(ref, count, mob/user)
@@ -481,3 +587,115 @@
 
 /obj/machinery/omni_synthesizer/proc/EndPulse()
 	icon_state = "omni_idle"
+
+// ---- Base-gamemode conversions ----
+
+/// The sin reagent a path family's materials grind into.
+/obj/machinery/omni_synthesizer/proc/PathKeyToSin(key)
+	switch(key)
+		if(PATH_KEY_DESTRUCTION) return /datum/reagent/abnormality/sin/wrath
+		if(PATH_KEY_HUNT) return /datum/reagent/abnormality/sin/envy
+		if(PATH_KEY_ERUDITION) return /datum/reagent/abnormality/sin/pride
+		if(PATH_KEY_NIHILITY) return /datum/reagent/abnormality/sin/gloom
+		if(PATH_KEY_HARMONY) return /datum/reagent/abnormality/sin/lust
+		if(PATH_KEY_PRESERVATION) return /datum/reagent/abnormality/sin/sloth
+		if(PATH_KEY_ABUNDANCE) return /datum/reagent/abnormality/sin/gluttony
+	return null
+
+/// Grinds banked path materials of a family+tier into their sin chemical,
+/// pouring the units into the inserted container. Yield is value-preserving:
+/// a material is worth `mat_tier_points[tier]`, and `chem_point_cost` points
+/// make one unit (so a top-tier material = 2 units, matching its synth cost).
+/obj/machinery/omni_synthesizer/proc/DoGrindChem(key, tier, count, mob/user)
+	tier = round(tier)
+	var/mat_type = MatType("path", key, tier)
+	if(!mat_type || tier < 1 || tier > 3)
+		return
+	var/have = stored["[mat_type]"] ? stored["[mat_type]"] : 0
+	count = clamp(round(count), 1, have)
+	if(count < 1)
+		return
+	if(!beaker)
+		to_chat(user, span_warning("Insert a reagent container first."))
+		return
+	var/sin_type = PathKeyToSin(key)
+	if(!sin_type)
+		return
+	var/points = count * mat_tier_points[tier]
+	var/units = (points - (points % chem_point_cost)) / chem_point_cost
+	if(units < 1)
+		to_chat(user, span_warning("That isn't enough to grind even one unit of chemical."))
+		return
+	var/free = beaker.reagents.maximum_volume - beaker.reagents.total_volume
+	if(free < units)
+		to_chat(user, span_warning("[beaker] only has room for [free] more unit\s."))
+		return
+	stored["[mat_type]"] -= count
+	beaker.reagents.add_reagent(sin_type, units)
+	var/datum/reagent/sin = GLOB.chemical_reagents_list[sin_type]
+	Pulse()
+	to_chat(user, span_nicegreen("Ground [count] material\s into [units] unit\s of [sin ? sin.name : "chemical"]."))
+	return TRUE
+
+/// Compacts banked trace materials of a family+tier into compacted enkephalin.
+/// A trace material is worth `mat_tier_points[tier]`, `enk_point_cost` points
+/// per enkephalin (so their value carries their synth cost up the tiers).
+/obj/machinery/omni_synthesizer/proc/DoCompactTrace(key, tier, count, mob/user)
+	tier = round(tier)
+	var/mat_type = MatType("trace", key, tier)
+	if(!mat_type || tier < 1 || tier > 3)
+		return
+	var/have = stored["[mat_type]"] ? stored["[mat_type]"] : 0
+	count = clamp(round(count), 1, have)
+	if(count < 1)
+		return
+	var/points = count * mat_tier_points[tier]
+	var/made = (points - (points % enk_point_cost)) / enk_point_cost
+	if(made < 1)
+		to_chat(user, span_warning("That isn't enough to compact even one enkephalin."))
+		return
+	stored["[mat_type]"] -= count
+	SpawnMaterial(/obj/item/stack/compacted_enkephalin, made, user)
+	Pulse()
+	to_chat(user, span_nicegreen("Compacted [count] trace material\s into [made] compacted enkephalin."))
+	return TRUE
+
+/// Fuses `enk_refine_cost` banked compacted enkephalin into one Refined PE Box.
+/obj/machinery/omni_synthesizer/proc/DoRefinePE(mob/user)
+	var/banked = stored["[/obj/item/stack/compacted_enkephalin]"] ? stored["[/obj/item/stack/compacted_enkephalin]"] : 0
+	if(banked < enk_refine_cost)
+		to_chat(user, span_warning("You need [enk_refine_cost] banked compacted enkephalin to refine a PE box. Place them into [src] first."))
+		return
+	stored["[/obj/item/stack/compacted_enkephalin]"] -= enk_refine_cost
+	var/obj/item/refinedpe/P = new(get_turf(src))
+	user.put_in_hands(P)
+	Pulse()
+	to_chat(user, span_nicegreen("Refined [enk_refine_cost] compacted enkephalin into a [P.name]."))
+	return TRUE
+
+// ---- Compacted enkephalin (Pathstrider -> base-gamemode PE currency) ----
+
+/obj/item/stack/compacted_enkephalin
+	name = "compacted enkephalin"
+	singular_name = "compacted enkephalin"
+	desc = "A canister of fragmentum-tempered enkephalin, pressed dense and gold-veined. The corporate trade console will read it straight as PE."
+	icon = 'ModularLobotomy/_Lobotomyicons/compacted_enkephalin.dmi'
+	icon_state = "enk"
+	w_class = WEIGHT_CLASS_SMALL
+	max_amount = 100
+	novariants = FALSE
+	merge_type = /obj/item/stack/compacted_enkephalin
+	/// PE added to the global pool per unit when fed to the trade console.
+	var/pe_value = 1
+
+// Feed compacted enkephalin into the corporate trade console for global PE.
+/obj/machinery/computer/extraction_cargo/attackby(obj/item/I, mob/user, params)
+	if(istype(I, /obj/item/stack/compacted_enkephalin))
+		var/obj/item/stack/compacted_enkephalin/E = I
+		var/pe = E.amount * E.pe_value
+		SSlobotomy_corp.AdjustAvailableBoxes(pe)
+		to_chat(user, span_notice("You feed [E.amount] compacted enkephalin into [src], adding [pe] PE to the reserve."))
+		qdel(E)
+		playsound(src, 'sound/machines/terminal_prompt_confirm.ogg', 40, TRUE)
+		return
+	return ..()

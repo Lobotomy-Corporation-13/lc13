@@ -22,10 +22,10 @@ SUBSYSTEM_DEF(calyx)
 	var/unlocked_tier = 0
 	/// TRUE only under the Pathstriders facility trait; gates all blooming.
 	var/enabled = FALSE
-	/// Currently-live Calyxes (dormant or active), for the global cap.
+	/// Currently-live Calyxes (dormant or active), oldest first, for the cap.
 	var/list/active_calyxes = list()
-	/// Most Calyxes allowed to exist at once.
-	var/max_active = 8
+	/// Most Calyxes allowed at once. Newer blooms clear the oldest over this.
+	var/max_active = 5
 	/// colour -> list(tier -> squad def). Built once. A squad def is
 	/// list("leaders" = weighted list, "grunts" = weighted list, "count" = N).
 	var/static/list/color_pools
@@ -198,8 +198,6 @@ SUBSYSTEM_DEF(calyx)
 		return
 	var/count = rand(2, 4)
 	for(var/i in 1 to count)
-		if(length(active_calyxes) >= max_active)
-			return
 		SpawnOneCalyx()
 
 /datum/controller/subsystem/calyx/proc/SpawnOneCalyx()
@@ -212,6 +210,16 @@ SUBSYSTEM_DEF(calyx)
 	var/obj/structure/calyx/C = new(T)
 	C.Setup(color, tier, pools[tier], color_tints[color])
 	active_calyxes += C
+	EnforceCap()
+
+/// Keeps at most `max_active` Calyxes alive by collapsing the oldest ones,
+/// which reverts their corrupted turfs as they die.
+/datum/controller/subsystem/calyx/proc/EnforceCap()
+	while(length(active_calyxes) > max_active)
+		var/obj/structure/calyx/oldest = active_calyxes[1]
+		active_calyxes -= oldest
+		if(!QDELETED(oldest))
+			oldest.Collapse()
 
 /// Highest cleared ordeal tier (capped by the colour's pool depth), weighted
 /// toward the top so later Calyxes lean more dangerous.
@@ -255,6 +263,17 @@ SUBSYSTEM_DEF(calyx)
 	/// TRUE until a crew member tears it open.
 	var/dormant = TRUE
 	var/collapsing = FALSE
+	/// Fragmentum turfs this Calyx has infected -> their original type. Reverted
+	/// when the Calyx dies so the corruption recedes with it.
+	var/list/corrupted_turfs
+	/// How far (tiles) the passive turf infection reaches.
+	var/infect_radius = 4
+	/// Infection ring reached so far (one new ring every 5s).
+	var/infect_ring = 0
+	/// Chance (%) a turf in the active ring is infected (patchy, natural spread).
+	var/infect_chance = 65
+	/// Origin turf for measuring infection distance.
+	var/turf/infect_origin
 	/// Guards the activation prompt against double-clicks.
 	var/prompting = FALSE
 	/// Test/admin presets: if set, the Calyx configures itself on spawn instead
@@ -267,8 +286,10 @@ SUBSYSTEM_DEF(calyx)
 	if(preset_color)
 		SelfSetup()
 	update_icon()
-	// Wither if nobody opens it within a few minutes.
-	addtimer(CALLBACK(src, PROC_REF(WitherIfDormant)), 4 MINUTES)
+	corrupted_turfs = list()
+	infect_origin = get_turf(src)
+	// begin infecting the surrounding turfs, one ring outward every 5 seconds
+	addtimer(CALLBACK(src, PROC_REF(InfectRing)), 5 SECONDS)
 
 /// Configures a preset Calyx from the subsystem's pools (for direct spawning).
 /obj/structure/calyx/proc/SelfSetup()
@@ -282,10 +303,12 @@ SUBSYSTEM_DEF(calyx)
 	Setup(preset_color, set_tier, pools[set_tier], SScalyx.color_tints[preset_color])
 
 /obj/structure/calyx/Destroy()
+	RevertTurfs()
 	STOP_PROCESSING(SSobj, src)
 	if(SScalyx)
 		SScalyx.active_calyxes -= src
 	spawned_mobs = null
+	corrupted_turfs = null
 	return ..()
 
 /// Configures colour, tier, squad and tier-scaled wave size.
@@ -417,9 +440,54 @@ SUBSYSTEM_DEF(calyx)
 	animate(src, alpha = 0, time = 1 SECONDS)
 	QDEL_IN(src, 1 SECONDS)
 
-/obj/structure/calyx/proc/WitherIfDormant()
-	if(!QDELETED(src) && dormant)
-		Collapse()
+/// Infects a patchy subset of the next ring of turfs, then schedules the ring
+/// beyond it 5 seconds later, out to infect_radius.
+/obj/structure/calyx/proc/InfectRing()
+	if(QDELETED(src) || collapsing || !infect_origin)
+		return
+	infect_ring++
+	for(var/turf/T in RANGE_TURFS(infect_ring, infect_origin))
+		if(get_dist(infect_origin, T) != infect_ring)
+			continue
+		if(!prob(infect_chance))
+			continue
+		InfectTurf(T)
+	if(infect_ring < infect_radius)
+		addtimer(CALLBACK(src, PROC_REF(InfectRing)), 5 SECONDS)
+
+/// Turns one turf into its fragmentum version, remembering its original type.
+/obj/structure/calyx/proc/InfectTurf(turf/T)
+	if(!CanCorrupt(T))
+		return
+	var/orig = T.type
+	var/turf/newT
+	if(istype(T, /turf/closed))
+		newT = T.ChangeTurf(/turf/closed/indestructible/fragmentum)
+		QUEUE_SMOOTH_NEIGHBORS(newT)
+	else
+		newT = T.ChangeTurf(/turf/open/indestructible/fragmentum)
+	corrupted_turfs[newT] = orig
+	new /obj/effect/temp_visual/fragmentum_creep(newT)
+
+/// Restores every turf this Calyx infected back to its original form.
+/obj/structure/calyx/proc/RevertTurfs()
+	if(!length(corrupted_turfs))
+		return
+	for(var/turf/T in corrupted_turfs)
+		var/orig = corrupted_turfs[T]
+		if(!orig)
+			continue
+		// only revert turfs still corrupted (don't clobber later changes)
+		if(!istype(T, /turf/open/indestructible/fragmentum) && !istype(T, /turf/closed/indestructible/fragmentum))
+			continue
+		for(var/obj/structure/fragmentum_flora/F in T)
+			qdel(F)
+		if(istype(T, /turf/closed))
+			var/turf/rT = T.ChangeTurf(orig)
+			QUEUE_SMOOTH_NEIGHBORS(rT)
+		else
+			T.ChangeTurf(orig)
+	corrupted_turfs.Cut()
 
 // ---- Preset Calyxes (for direct in-game spawning / testing) ----
 // Each configures itself on spawn with a fixed colour + tier. Tiers: t1 =
