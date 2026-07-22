@@ -12,8 +12,6 @@
 	melee_damage_upper = 25
 	melee_damage_type = WHITE_DAMAGE  //Low damage - makes you drunk on a hit
 	is_flying_animal = TRUE
-	pixel_x = -34
-	base_pixel_x = -34
 	original_abno = /mob/living/simple_animal/hostile/abnormality/fairy_gentleman
 
 	var/jump_cooldown = 0
@@ -39,7 +37,7 @@
 		<b>|Wingbeat|: Due to your fairy wings you are capable of hovering, useful incase of chasms.<br> \
 		<br>\
 		|Predation|: When attempting to attack a target outside of melee range you will initiate a leap. \
-		Upon initiating leap you will briefly disappear before falling onto the targetted area with a delay doing BLACK damage to those hit. \
+		Upon initiating leap you will briefly disappear before falling onto the targetted area doing BLACK damage in a 2 tile radius around yourself. \
 		If the target falls into a critical state from the leap they will be instantly gibbed. <br> \
 		<br>\
 		|Stimulating Smell|: Your melee attacks do WHITE, however when attacking insane targets you will instead inflict RED damage. \
