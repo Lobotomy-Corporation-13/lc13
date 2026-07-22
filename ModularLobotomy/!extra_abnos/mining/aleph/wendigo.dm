@@ -177,7 +177,7 @@ Difficulty: Hard
 				L.deal_damage(50, RED_DAMAGE, src, wound_bonus = CANT_WOUND)
 				shake_camera(L, 2, 1)
 			all_turfs -= T
-		sleep(delay)
+		SLEEP_CHECK_DEATH(delay)
 
 /// Larger but slower ground stomp
 /mob/living/simple_animal/hostile/abnormality/mining/wendigo/proc/heavy_stomp()
