@@ -2587,23 +2587,23 @@
 /area/city/house)
 "wP" = (
 /obj/structure/rack,
-/obj/item/device/plushie_extractor{
+/obj/item/plushie_extractor{
 	name = "Burner Phone";
 	desc = "The screen is broken, But it still works.."
 	},
-/obj/item/device/plushie_extractor{
+/obj/item/plushie_extractor{
 	name = "Burner Phone";
 	desc = "The screen is broken, But it still works.."
 	},
-/obj/item/device/plushie_extractor{
+/obj/item/plushie_extractor{
 	name = "Burner Phone";
 	desc = "The screen is broken, But it still works.."
 	},
-/obj/item/device/plushie_extractor{
+/obj/item/plushie_extractor{
 	name = "Burner Phone";
 	desc = "The screen is broken, But it still works.."
 	},
-/obj/item/device/plushie_extractor{
+/obj/item/plushie_extractor{
 	name = "Burner Phone";
 	desc = "The screen is broken, But it still works.."
 	},

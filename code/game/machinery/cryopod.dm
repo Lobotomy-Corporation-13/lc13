@@ -218,7 +218,33 @@ GLOBAL_LIST_EMPTY(cryopod_computers)
 
 	crew_member["name"] = mob_occupant.real_name
 
+	var/list/these_roles_arent_actually_in_the_round = list(
+		"Test Range Agent", // Test Range
+		"Lobotomy Corporation Records Librarian", // Records Library
+		"Lobotomy Corporation Intern", // Tutorial
+		"Refraction Railway Agent", // Refraction Railway
+	)
+
 	if(mob_occupant.mind && mob_occupant.mind?.assigned_role)
+		// If we're dealing with a person who's one of the listed roles which aren't really in the round, end the proc early without announcing their storage and all that.
+		if(mob_occupant.mind.assigned_role in these_roles_arent_actually_in_the_round)
+			// Message
+			visible_message(span_notice("[src] hums and hisses as it moves [mob_occupant.real_name] into storage."))
+			// Drop items
+			for(var/obj/item/item_content as anything in mob_occupant)
+				if(!istype(item_content) || HAS_TRAIT(item_content, TRAIT_NODROP))
+					continue
+				if (issilicon(mob_occupant) && istype(item_content, /obj/item/mmi))
+					continue
+				mob_occupant.transferItemToLoc(item_content, drop_location(), force = TRUE, silent = TRUE)
+			// Delete
+			QDEL_NULL(occupant)
+			// Reset
+			open_machine()
+			name = initial(name)
+			return
+
+		// If we reach this point we're dealing with someone genuinely in the round.
 		// Handle job slot/tater cleanup.
 		var/job = mob_occupant.mind.assigned_role
 		crew_member["job"] = job

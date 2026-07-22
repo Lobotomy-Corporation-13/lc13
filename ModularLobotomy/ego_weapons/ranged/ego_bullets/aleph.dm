@@ -330,3 +330,27 @@
 	desc = "Are you insane!? Your momentum carries you, increasing your Power Modifier by 100."
 	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "strength"
+
+/obj/projectile/ego_bullet/tarnished
+	name = "tarnished"
+	damage = 22
+	damage_type = RED_DAMAGE
+
+/obj/projectile/ego_bullet/tarnished_pin
+	name = "tarnished_pin"
+	icon_state = "tarnished_pin"
+	damage = 10
+	speed = 1.3
+	damage_type = WHITE_DAMAGE
+	var/lightning_damage = 50
+
+/obj/projectile/ego_bullet/tarnished_pin/on_hit(atom/target, blocked, pierce_hit)
+	..()
+	sleep(10)
+	if(!isliving(target))
+		return
+	var/mob/living/L = target
+	new /obj/effect/temp_visual/tbirdlightning (get_turf(L))
+	L.deal_damage(lightning_damage, WHITE_DAMAGE, firer, attack_type = (ATTACK_TYPE_SPECIAL))
+	playsound(src, 'sound/effects/impact_thunder.ogg', 50, FALSE, 40, falloff_distance = 10)
+

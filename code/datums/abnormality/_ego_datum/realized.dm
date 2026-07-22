@@ -114,6 +114,11 @@ Note: I chose to tag these Realizations based on their own active and passive ab
 	item_path = /obj/item/clothing/suit/armor/ego_gear/realization/experimentation
 	ego_tags = list(EGO_TAG_SUSTAIN, EGO_TAG_AOE_RADIAL, EGO_TAG_SUPPORT, EGO_TAG_HAZARDOUS)
 
+/// Rhythm - Rhythm (Singing Machine)
+/datum/ego_datum/armor/realized/rhythm
+	item_path = /obj/item/clothing/suit/armor/ego_gear/realization/rhythm
+	ego_tags = list(EGO_TAG_SUSTAIN, EGO_TAG_AOE_RADIAL, EGO_TAG_SUPPORT, EGO_TAG_HAZARDOUS)
+
 /* ------------------ WAW Realizations ------------------*/
 
 /// Gold Experience - Gold Rush (King of Greed)

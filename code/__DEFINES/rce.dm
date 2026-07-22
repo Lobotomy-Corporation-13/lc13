@@ -14,11 +14,24 @@
 #define PHASE_PRE_INIT 0
 #define PHASE_NORMAL_GAME 1
 #define PHASE_WARNING_PASSED 2
-#define PHASE_LASTWAVE_PASSED 3
-#define PHASE_ENDROUND 4
+#define PHASE_SHUTTLE_CALLED 3
+#define PHASE_LASTWAVE_PASSED 4
+#define PHASE_ENDROUND 5
 #define PHASE_NOT_RCE 65565
 
 // Gateway Types for Last Wave
 #define GATEWAY_TYPE_AIR 1
 #define GATEWAY_TYPE_WALL 2
 #define GATEWAY_TYPE_GATEWAY 3
+
+// RCE Leaderboard - Round end conditions
+#define RCE_END_UNKNOWN "unknown"
+#define RCE_END_SHUTTLE_ESCAPE "shuttle_escape"
+#define RCE_END_ALL_DIED "all_died"
+#define RCE_END_ALL_DIED_LASTWAVE "all_died_lastwave"
+#define RCE_END_HEART_KILLED "heart_killed"
+
+// Specialist class types
+#define SPECIALIST_HELLFIRE "hellfire"
+#define SPECIALIST_VENOM "venom"
+#define SPECIALIST_STORM "storm"

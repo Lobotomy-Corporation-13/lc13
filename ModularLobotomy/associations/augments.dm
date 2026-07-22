@@ -848,7 +848,7 @@
 
 	// --- Access Check ---
 	if(!(user?.mind?.assigned_role in roles))
-		if(SSmaptype.maptype != "office")
+		if(SSmaptype.maptype != "office" && SSmaptype.maptype != "lc13")
 			to_chat(user, "<span class='notice'>You need to be a surgeon to use this machine!</span>")
 			return TRUE
 
@@ -1197,7 +1197,7 @@
 // 	return mutable_appearance(src.icon, src.overlay_icon_state, src.overlay_layer)
 
 /obj/item/augment/proc/CanUseAugment(mob/user)
-	if(user?.mind?.assigned_role in roles || SSmaptype.maptype == "office" || debug_use)
+	if((user?.mind?.assigned_role in roles) || (SSmaptype.maptype == "office") || (debug_use))
 		return TRUE
 	return FALSE
 
@@ -1354,6 +1354,7 @@
 	slot_flags = ITEM_SLOT_BELT | ITEM_SLOT_POCKETS
 	w_class = WEIGHT_CLASS_SMALL
 	var/list/roles = list("Prosthetics Surgeon", "Office Director", "Office Fixer", "Doctor", "Workshop Attendant")
+	var/debug_use = FALSE
 
 /obj/item/augment_remover/attack(mob/M, mob/user)
 	if (!CanRemoveAugment(user))
@@ -1392,9 +1393,13 @@
 		to_chat(user, span_warning("No augment found within [H.name]!"))
 
 /obj/item/augment_remover/proc/CanRemoveAugment(mob/user)
-	if(user?.mind?.assigned_role in roles || SSmaptype.maptype == "office")
+	if((user?.mind?.assigned_role in roles) || (SSmaptype.maptype == "office") || (debug_use))
 		return TRUE
 	return FALSE
+
+/obj/item/augment_remover/debug
+	desc = "A device that can remove augments. It's jailbroken!"
+	debug_use = TRUE
 
 //--------------------------------------
 // Debug Augment Fabricator

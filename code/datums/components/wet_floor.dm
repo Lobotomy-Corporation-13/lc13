@@ -112,7 +112,7 @@
 
 /datum/component/wet_floor/process()
 	// var/turf/open/T = parent
-	// var/diff = world.time - last_process
+	var/diff = world.time - last_process
 	var/decrease = 0
 	// Atmos Purge: Removed due to Atmos handling of temperature.
 /* 	var/t = T.GetTemperature()
@@ -130,6 +130,10 @@
 				O.make_unfrozen()
 		add_wet(TURF_WET_WATER, max_time_left())
 		dry(null, TURF_WET_ICE) */
+
+	// POST-ATMOS-REFACTOR BANDAID: Decrease is calculated under the assumption that all air is at 20C.
+	decrease = ((293.15 - 273.15) / SSwet_floors.temperature_coeff) * (diff / SSwet_floors.time_ratio)
+
 	dry(null, ALL, FALSE, decrease)
 	check()
 	last_process = world.time

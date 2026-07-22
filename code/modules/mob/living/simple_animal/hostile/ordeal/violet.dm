@@ -215,14 +215,12 @@
 	retaliation_health = maxHealth * 0.7
 
 /mob/living/simple_animal/hostile/ordeal/violet_midnight/Destroy()
-	for(var/T in created_objects)
-		QDEL_NULL(T)
+	QDEL_LIST(created_objects)
 	QDEL_NULL(RVP)
 	return ..()
 
 /mob/living/simple_animal/hostile/ordeal/violet_midnight/death()
-	for(var/T in created_objects)
-		QDEL_NULL(T)
+	QDEL_LIST(created_objects)
 	return ..()
 
 /mob/living/simple_animal/hostile/ordeal/violet_midnight/Life()
@@ -354,11 +352,11 @@
 		for(var/turf/TT in RANGE_TURFS(3, T))
 			RVP.NewSparkles(TT, color = COLOR_RED)
 			for(var/mob/living/L in TT)
-				if(L in been_hit)
+				if(L.tag in been_hit)
 					continue
 				if(!CanAttack(L))
 					continue
-				been_hit += L
+				been_hit += L.tag
 				L.deal_damage(attack_damage, RED_DAMAGE, src, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 		SLEEP_CHECK_DEATH(0.1)
 
@@ -445,11 +443,11 @@
 			RVP.NewSparkles(TT)
 			RVP.NewSmoke(TT)
 			for(var/mob/living/L in TT)
-				if(L in been_hit)
+				if(L.tag in been_hit)
 					continue
 				if(!CanAttack(L))
 					continue
-				been_hit += L
+				been_hit += L.tag
 				L.deal_damage(attack_damage, WHITE_DAMAGE, src, attack_type = (ATTACK_TYPE_SPECIAL))
 
 /mob/living/simple_animal/hostile/ordeal/violet_midnight/black
@@ -524,11 +522,11 @@
 		for(var/turf/TT in RANGE_TURFS(2, T))
 			RVP.NewSparkles(TT, color = COLOR_PURPLE)
 			for(var/mob/living/L in TT)
-				if(L in been_hit)
+				if(L.tag in been_hit)
 					continue
 				if(!CanAttack(L))
 					continue
-				been_hit += L
+				been_hit += L.tag
 				L.deal_damage(attack_damage, BLACK_DAMAGE, src, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 		SLEEP_CHECK_DEATH(0.05)
 

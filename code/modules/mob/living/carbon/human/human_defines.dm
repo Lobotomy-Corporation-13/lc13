@@ -49,6 +49,7 @@
 	var/jumpsuit_style = PREF_SUIT		//suit/skirt
 	var/beret_enabled = TRUE // Should this character start with a beret, if available for their job?
 	var/sunglasses_enabled = TRUE // Should this character start with sunglasses, if available for their job?
+	var/work_notepad_type = WORK_NOTEPAD_PREFERENCE_CLIPBOARD // Type of work notepad they should spawn with, as an Agent. Wish I didn't have to staple this onto the human type but the order of operations at roundstart necessitates it
 
 	//Equipment slots
 	var/obj/item/clothing/wear_suit = null

@@ -39,7 +39,7 @@
 
 /obj/item/storage/bag/pe_filter
 	name = "PE filter bag"
-	desc = "A specialized bag for storing PE filters and PE boxes."
+	desc = "A specialized bag for storing PE filters."
 	icon = 'icons/obj/mining.dmi'
 	icon_state = "satchel"
 	worn_icon_state = "satchel"

@@ -53,6 +53,7 @@
 	light_range = 5
 	light_power = 7
 	var/healing = FALSE
+	var/butterfly_count
 
 /mob/living/simple_animal/hostile/abnormality/sunset_traveller/AttemptWork(mob/living/carbon/human/user, work_type)
 	if(healing)
@@ -63,6 +64,10 @@
 	. = ..()
 	new /mob/living/simple_animal/hostile/scarlet_moths(src)
 	new /mob/living/simple_animal/hostile/scarlet_moths(src)
+	butterfly_count+=2
+	if(butterfly_count >=100)
+		for(var/mob/living/carbon/human/H in GLOB.clients)
+			H.client?.give_award(/datum/award/achievement/abno/sunset_butterflies, H)
 
 /mob/living/simple_animal/hostile/abnormality/sunset_traveller/PostWorkEffect(mob/living/carbon/human/user, work_type, pe, work_time)
 	if(pe == 0)
@@ -157,6 +162,7 @@
 	light_range = 5
 	light_power = 7
 	density = FALSE
+	area_index = MOB_SIMPLEANIMAL_INDEX // Won't set off regen threat status
 
 /mob/living/simple_animal/hostile/scarlet_moths/Initialize()
 	. = ..()

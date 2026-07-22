@@ -80,7 +80,7 @@
 
 /obj/projectile/ego_bullet/ego_harmonyfast
 	name = "Musical Addiction"
-	icon_state = "harmony_fast"
+	icon_state = "harmony"
 	damage = 16
 	damage_type = WHITE_DAMAGE
 	speed = 0.5

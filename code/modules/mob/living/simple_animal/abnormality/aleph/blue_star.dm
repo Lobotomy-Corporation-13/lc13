@@ -60,6 +60,7 @@
 
 	var/buff_cooldown
 	var/buff_cooldown_time = 30 SECONDS
+	var/corebuffed = FALSE	//This is just for like, an achievement.
 
 	var/pulse_cooldown
 	var/pulse_cooldown_time = 12 SECONDS
@@ -93,15 +94,6 @@
 	return FALSE
 
 /mob/living/simple_animal/hostile/abnormality/bluestar/Life()
-	. = ..()
-	if(!.) // Dead
-		return FALSE
-	if((pulse_cooldown < world.time) && !(status_flags & GODMODE))
-		BluePulse()
-
-	if((buff_cooldown < world.time) && (status_flags & GODMODE))
-		work_damage_amount = initial(work_damage_amount)
-
 	//If you have a supplies crate nearby, delete it, spawn a new one, and set the things proper
 	for(var/obj/structure/blue_core/Y in range(2, src))
 		qdel(Y)
@@ -110,6 +102,17 @@
 		pulse_damage = initial(pulse_damage)
 		var/turf/W = pick(GLOB.xeno_spawn)
 		new /obj/structure/blue_core (get_turf(W))
+
+	. = ..()
+	if(!.) // Dead
+		return FALSE
+
+	if((pulse_cooldown < world.time) && !(status_flags & GODMODE))
+		BluePulse()
+
+	if((buff_cooldown < world.time) && (status_flags & GODMODE))
+		work_damage_amount = initial(work_damage_amount)
+		corebuffed = FALSE
 
 /mob/living/simple_animal/hostile/abnormality/bluestar/CanAttack(atom/the_target)
 	return FALSE
@@ -160,6 +163,8 @@
 		user.death()
 		animate(user, transform = user.transform*0.01, time = 5)
 		QDEL_IN(user, 5)
+	if(corebuffed)
+		user.client?.give_award(/datum/award/achievement/abno/blue_core, user)
 	return
 
 /mob/living/simple_animal/hostile/abnormality/bluestar/BreachEffect(mob/living/carbon/human/user, breach_type)

@@ -81,6 +81,7 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 	var/jumpsuit_style = PREF_SUIT		//suit/skirt
 	var/beret_enabled = TRUE // Spawns with a Beret on roles which have it available
 	var/sunglasses_enabled = TRUE // Spawns with Sunglasses on roles which have them available
+	var/work_notepad_type = WORK_NOTEPAD_PREFERENCE_CLIPBOARD // Determines which type, if any, of abno work notepad this character spawns with as an agent.
 	var/hairstyle = "Bald"				//Hair type
 	var/hair_color = "000"				//Hair color
 	var/gradient_color = "000"			//Hair gradient color
@@ -174,6 +175,8 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 	var/broadcast_login_logout = TRUE
 	///Selected achievement to display as specialization
 	var/chosen_achievement = null
+	///Lazily-created TGUI menu for picking the achievement specialization
+	var/datum/achievement_spec_menu/achievement_spec_menu
 	///What outfit typepaths we've favorited in the SelectEquipment menu
 	var/list/favorite_outfits = list()
 	///Language that will be used for some of the strings
@@ -219,6 +222,10 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 	save_character() //let's save this new random character so it doesn't keep generating new ones.
 	menuoptions = list()
 	return
+
+/datum/preferences/Destroy(force, ...)
+	QDEL_NULL(achievement_spec_menu)
+	return ..()
 
 #define APPEARANCE_CATEGORY_COLUMN "<td valign='top' width='14%'>"
 #define MAX_MUTANT_ROWS 4
@@ -373,6 +380,8 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 
 			dat += "<br><b>Jumpsuit Style:</b><BR><a href ='byond://?_src_=prefs;preference=suit;task=input'>[jumpsuit_style]</a>"
 			dat += "<a href='byond://?_src_=prefs;preference=toggle_random;random_type=[RANDOM_JUMPSUIT_STYLE]'>[(randomise[RANDOM_JUMPSUIT_STYLE]) ? "Lock" : "Unlock"]</A>"
+
+			dat += "<br><b>Abnormality Work Tool (For Agents; Optional):</b><BR><a href ='byond://?_src_=prefs;preference=work_notepad_type;task=input'>[(work_notepad_type)]</a>"
 
 			dat += "<br><b>Beret (On Applicable Jobs):</b><BR><a href ='byond://?_src_=prefs;preference=beret_enabled;task=input'>[(beret_enabled ? "Yes" : "No")]</a>"
 
@@ -1367,6 +1376,8 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 					backpack = pick(GLOB.backpacklist)
 				if("suit")
 					jumpsuit_style = pick(GLOB.jumpsuitlist)
+				if("work_notepad_type")
+					work_notepad_type = pick(WORK_NOTEPAD_PREFERENCE_TABLET, WORK_NOTEPAD_PREFERENCE_CLIPBOARD, WORK_NOTEPAD_PREFERENCE_NONE)
 				if("beret_enabled")
 					beret_enabled = !beret_enabled
 				if("sunglasses_enabled")
@@ -1694,6 +1705,12 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 						jumpsuit_style = PREF_SKIRT
 					else
 						jumpsuit_style = PREF_SUIT
+
+				if("work_notepad_type")
+					var/new_type = input(user, "Choose which kind of optional work tool your agent will spawn with:", "Abnormality Work Tool") as null|anything in list(WORK_NOTEPAD_PREFERENCE_CLIPBOARD, WORK_NOTEPAD_PREFERENCE_TABLET, WORK_NOTEPAD_PREFERENCE_NONE)
+					if(new_type)
+						work_notepad_type = new_type
+
 				if("beret_enabled")
 					beret_enabled = !beret_enabled
 
@@ -1743,26 +1760,9 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 						to_chat(user, "<span class='warning'>You have no unlocked achievements!</span>")
 						return
 
-					var/list/choices = list("None")
-					var/list/achievement_map = list()
-
-					for(var/achievement_type in unlocked)
-						var/datum/award/achievement/A = SSachievements.achievements[achievement_type]
-						if(!A || !A.name)
-							continue
-						var/color = A.get_difficulty_color()
-						var/display_name = "<font color='[color]'>[A.name] ([A.difficulty])</font>"
-						choices += display_name
-						achievement_map[display_name] = achievement_type
-
-					var/choice = input(user, "Choose your achievement specialization:", "Achievement Specialization") as null|anything in choices
-					if(!choice)
-						return
-
-					if(choice == "None")
-						chosen_achievement = null
-					else
-						chosen_achievement = achievement_map[choice]
+					if(!achievement_spec_menu)
+						achievement_spec_menu = new(src)
+					achievement_spec_menu.ui_interact(user)
 
 				// The lore stuff
 				if("govrelation")
@@ -2214,6 +2214,7 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 	character.jumpsuit_style = jumpsuit_style
 	character.beret_enabled = beret_enabled
 	character.sunglasses_enabled = sunglasses_enabled
+	character.work_notepad_type = work_notepad_type
 
 	character.flavor_text = features["flavor_text"] //Let's update their flavor_text at least initially
 

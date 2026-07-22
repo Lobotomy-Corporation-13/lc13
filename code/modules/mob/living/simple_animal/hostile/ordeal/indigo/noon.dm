@@ -166,6 +166,12 @@
 		dash_evasivemode_client_speed += COL_dash_evasivemode_speed_adjustment
 		dash_evasivemode_noclient_speed += COL_dash_evasivemode_speed_adjustment
 
+/mob/living/simple_animal/hostile/ordeal/indigo_noon/lanky/FindTarget(list/possible_targets, HasTargetsList)
+	if(dash_dashing || dash_preparing)
+		return null
+	. = ..()
+
+
 /mob/living/simple_animal/hostile/ordeal/indigo_noon/lanky/Destroy()
 	/// To avoid a hard delete.
 	dash_hitlist = null
@@ -174,8 +180,6 @@
 
 /// When meleeing a target, will attempt to dash if it's available (and has some RNG thrown into it to keep them less predictable). Won't dash on melee if it's a possessed sweeper.
 /mob/living/simple_animal/hostile/ordeal/indigo_noon/lanky/AttackingTarget(atom/attacked_target)
-	if(!can_act)
-		return FALSE
 	if(dash_cooldown > world.time || dash_dashing || dash_preparing)
 		return ..()
 	if(!client && prob(60))
@@ -274,7 +278,6 @@
 	/// Re-target our old target.
 	if(!client)
 		GiveTarget(prospective_fuel)
-	can_act = TRUE
 	return TRUE
 
 
@@ -301,8 +304,6 @@
 /mob/living/simple_animal/hostile/ordeal/indigo_noon/lanky/proc/PrepareDash()
 	dash_preparing = TRUE
 	dash_dashing = FALSE
-	/// Can't attack.
-	can_act = FALSE
 	/// Can't get pushed away during this.
 	anchored = TRUE
 	/// Reset our hit lists.
@@ -314,8 +315,6 @@
 	dash_preparing = FALSE
 	/// All turfs we move into while dashing as long as this variable is TRUE will be registered by Move() to be passed onto SweepTheBackstreetsHit() by SweepTheBackstreets().
 	dash_dashing = TRUE
-	/// We can't attack.
-	can_act = FALSE
 	/// We can move again.
 	anchored = FALSE
 	/// We can move through mobs and tables.

@@ -662,15 +662,12 @@
 			return
 	return ..()
 
-/mob/living/simple_animal/hostile/abnormality/nobody_is/patrol_select() //Hunt down the chosen one
+/mob/living/simple_animal/hostile/abnormality/nobody_is/SelectPatrolLocation() //Hunt down the chosen one
 	if(shelled) // We don't need a chosen anymore, or any special pathfinding behavior
 		return ..()
 	var/mob/living/carbon/chosen = chosen_memory ? chosen_memory.resolve() : null
 	if(chosen) //YOU'RE MINE
-		SEND_SIGNAL(src, COMSIG_PATROL_START, src, get_turf(chosen)) //Overrides the usual proc to target a specific tile
-		SEND_GLOBAL_SIGNAL(src, COMSIG_GLOB_PATROL_START, src, get_turf(chosen))
-		patrol_path = get_path_to(src, get_turf(chosen), TYPE_PROC_REF(/turf, Distance_cardinal), 0, 200)
-		return
+		return get_turf(chosen)
 	else
 		ChangeReflection()
 	return ..()

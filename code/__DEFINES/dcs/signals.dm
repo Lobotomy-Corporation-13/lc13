@@ -402,7 +402,7 @@
 ///from base of mob/create_mob_hud(): ()
 #define COMSIG_MOB_HUD_CREATED "mob_hud_created"
 
-///from base of /mob/living/proc/apply_damage(): (damage, damagetype, def_zone)
+///from base of /mob/living/proc/apply_damage(): (damage, damagetype, def_zone, source, flags, attack_type)
 #define COMSIG_MOB_APPLY_DAMGE	"mob_apply_damage"
 ///from base of /mob/living/proc/apply_damage(), happens after the mob has taken damage: (damage, damagetype, def_zone)
 #define COMSIG_MOB_AFTER_APPLY_DAMGE "mob_after_apply_damage"
@@ -1121,6 +1121,15 @@
 // Ordeal signals
 // When the ordeal ends; (/datum/ordeal)
 #define COMSIG_GLOB_ORDEAL_END "!ordeal_end"
+
+// RCE signals
+// When the first resource well is activated
+#define COMSIG_GLOB_RCE_FIRST_WELL_ACTIVATED "!rce_first_well_activated"
+// Bloodfiend boss death signals
+#define COMSIG_GLOB_BLOODFIEND_BARBER_DIED "!bloodfiend_barber_died"
+#define COMSIG_GLOB_BLOODFIEND_PRIEST_DIED "!bloodfiend_priest_died"
+#define COMSIG_GLOB_BLOODFIEND_DULCINEA_DIED "!bloodfiend_dulcinea_died"
+#define COMSIG_GLOB_BLOODFIEND_DONQUIXOTE_DIED "!bloodfiend_donquixote_died"
 
 
 // Crate signals

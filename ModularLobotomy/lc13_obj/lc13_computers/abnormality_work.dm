@@ -94,9 +94,9 @@
 		upgrade_list += "[i]|"
 	. += upgrade_list
 
-/obj/machinery/computer/abnormality/ui_interact(mob/user)
+/obj/machinery/computer/abnormality/ui_interact(mob/user, via_notepad = FALSE)
 	. = ..()
-	if(isliving(user))
+	if(isliving(user) && !via_notepad)
 		playsound(src, 'sound/machines/terminal_prompt_confirm.ogg', 50, FALSE)
 	if(!istype(datum_reference))
 		to_chat(user, span_boldannounce("The console has no information stored!"))
@@ -145,6 +145,13 @@
 	popup.set_content(dat)
 	popup.open()
 	return
+
+/// We'll let people holding abnormality_work_notepad bypass the adjacency check if they're within 2 tiles and in LOS.
+/obj/machinery/computer/abnormality/adjacency_check(mob/living/user)
+	. = ..()
+	if(istype(user.get_active_held_item(), /obj/item/abnormality_work_notepad))
+		if(can_see(user, src, 1))
+			return TRUE
 
 /obj/machinery/computer/abnormality/Topic(href, href_list)
 	. = ..()
@@ -220,6 +227,10 @@
 		SEND_GLOBAL_SIGNAL(COMSIG_GLOB_WORK_STARTED, datum_reference, user, work_type)
 	if(linked_panel)
 		linked_panel.console_working()
+	if(!user.Adjacent(src))
+		var/obj/item/card/id/idcard = user.get_idcard()
+		var/title = idcard?.assignment ? idcard.assignment + " " : null
+		say("Work commenced by [title][user].")
 	if(!HAS_TRAIT(user, TRAIT_WORKFEAR_IMMUNE))
 		user.adjustSanityLoss(sanity_damage)
 	if(user.stat == DEAD || user.sanity_lost)
@@ -338,7 +349,7 @@
 	if(!HAS_TRAIT(user, TRAIT_NOSOFTCRIT))
 		if(user.health < 0)
 			return FALSE // Dying
-			
+
 	if(user.health < 0)
 		if(mechanical_upgrades["vitals"])
 			Radio.set_frequency(FREQ_COMMON)
@@ -351,9 +362,9 @@
 
 /obj/machinery/computer/abnormality/proc/do_work(chance)
 	if(prob(chance))
-		playsound(src, 'sound/machines/synth_yes.ogg', 25, FALSE, -4)
+		playsound(src, 'sound/machines/synth_yes.ogg', 25, FALSE, -2)
 		return TRUE
-	playsound(src, 'sound/machines/synth_no.ogg', 25, FALSE, -4)
+	playsound(src, 'sound/machines/synth_no.ogg', 25, FALSE, -2)
 	return FALSE
 
 /obj/machinery/computer/abnormality/proc/finish_work(mob/living/carbon/human/user, work_type, pe = 0, work_speed = 2 SECONDS, was_melting, canceled = FALSE)

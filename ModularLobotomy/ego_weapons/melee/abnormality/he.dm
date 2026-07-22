@@ -155,7 +155,7 @@
 
 
 
-/obj/item/ego_weapon/shield/daredevil
+/obj/item/ego_weapon/shield/parry/daredevil
 	name = "life for a daredevil"
 	desc = "An ancient sword surrounded in death, yet it's having it in your grasp that makes you feel the most alive."
 	icon_state = "daredevil"
@@ -182,7 +182,7 @@
 	var/realized_parry
 	var/can_hype = TRUE
 
-/obj/item/ego_weapon/shield/daredevil/melee_attack_chain(mob/user, atom/target, params)
+/obj/item/ego_weapon/shield/parry/daredevil/melee_attack_chain(mob/user, atom/target, params)
 	if (!istype(user,/mob/living/carbon/human))
 		return
 	var/mob/living/carbon/human/myman = user
@@ -203,7 +203,7 @@
 		projectile_block_duration = 0.5 SECONDS
 	..()
 
-/obj/item/ego_weapon/shield/daredevil/attack_self(mob/user)
+/obj/item/ego_weapon/shield/parry/daredevil/attack_self(mob/user)
 	if (block == 0)
 		var/mob/living/carbon/human/cooler_user = user
 		naked_parry = isnull(cooler_user.get_item_by_slot(ITEM_SLOT_OCLOTHING))
@@ -215,28 +215,28 @@
 			reductions = list(40, 20, 20, 0)
 	..()
 
-/obj/item/ego_weapon/shield/daredevil/DisableBlock(mob/living/carbon/human/user)
+/obj/item/ego_weapon/shield/parry/daredevil/DisableBlock(mob/living/carbon/human/user)
 	if (naked_parry)
 		block_cooldown = 2 SECONDS
 	else
 		block_cooldown = 3 SECONDS
 	..()
 
-/obj/item/ego_weapon/shield/daredevil/BlockCooldown(mob/living/carbon/human/user)
+/obj/item/ego_weapon/shield/parry/daredevil/BlockCooldown(mob/living/carbon/human/user)
 	if (realized_parry)
 		force = 40
 	else
 		force = 12
 	..()
 
-/obj/item/ego_weapon/shield/daredevil/BlockFail(mob/living/carbon/human/user)
+/obj/item/ego_weapon/shield/parry/daredevil/BlockFail(mob/living/carbon/human/user)
 	if (naked_parry || realized_parry)
 		debuff_duration = 2 SECONDS
 	else
 		debuff_duration = 3 SECONDS
 	..()
 
-/obj/item/ego_weapon/shield/daredevil/AnnounceBlock(mob/living/carbon/human/source, damage, damagetype, def_zone)
+/obj/item/ego_weapon/shield/parry/daredevil/AnnounceBlock(mob/living/carbon/human/source, damage, damagetype, def_zone)
 	if(damagetype == PALE_DAMAGE && can_hype)
 		if(naked_parry || realized_parry) // You get 100% pale resist on empowered parry, it deserves it's own message.
 			to_chat(source, span_nicegreen("Stand your ground in the face of death. Struggle against the inevitable with reckless abandon, for you shall have me by your side."))
@@ -261,7 +261,7 @@
 		return
 	..()
 
-/obj/item/ego_weapon/shield/daredevil/proc/hype_returns()
+/obj/item/ego_weapon/shield/parry/daredevil/proc/hype_returns()
 	can_hype = TRUE
 
 /obj/item/ego_weapon/christmas
@@ -628,7 +628,7 @@
 	if(force < 100)
 		force += 0.25 //It charges pretty slowly, but people walk pretty fast thanks to justice.
 
-/obj/item/ego_weapon/shield/maneater
+/obj/item/ego_weapon/shield/parry/maneater
 	name = "man eater"
 	desc = "If friends were flowers, I'd pick you!"
 	icon_state = "maneater"
@@ -730,7 +730,7 @@
 	combo += 1
 	force = initial(force)
 
-/obj/item/ego_weapon/shield/legerdemain
+/obj/item/ego_weapon/shield/parry/legerdemain
 	name = "legerdemain"
 	desc = "Together, we are in rot."
 	special = "This weapon restores health on a successful parry."
@@ -754,7 +754,7 @@
 							PRUDENCE_ATTRIBUTE = 40
 							)
 
-/obj/item/ego_weapon/shield/legerdemain/attack_self(mob/user)//FIXME: Find a better way to use this override!
+/obj/item/ego_weapon/shield/parry/legerdemain/attack_self(mob/user)//FIXME: Find a better way to use this override!
 	if(block == 0) //Extra check because shields returns nothing on 1
 		if(..())
 			RegisterSignal(user, COMSIG_ATOM_ATTACK_HAND, PROC_REF(NoParry), override = TRUE)//creates runtimes without overrides, double check if something's fucked
@@ -763,11 +763,11 @@
 		else
 			return FALSE
 
-/obj/item/ego_weapon/shield/legerdemain/proc/NoParry(mob/living/carbon/human/user, obj/item/L)//Disables AnnounceBlock when attacked by an item or a human
+/obj/item/ego_weapon/shield/parry/legerdemain/proc/NoParry(mob/living/carbon/human/user, obj/item/L)//Disables AnnounceBlock when attacked by an item or a human
 	SIGNAL_HANDLER
 	UnregisterSignal(user, COMSIG_MOB_APPLY_DAMGE)//y'all can't behave
 
-/obj/item/ego_weapon/shield/legerdemain/AnnounceBlock(mob/living/carbon/human/source, damage, damagetype, def_zone)
+/obj/item/ego_weapon/shield/parry/legerdemain/AnnounceBlock(mob/living/carbon/human/source, damage, damagetype, def_zone)
 	if (damagetype == PALE_DAMAGE)
 		to_chat(source,span_nicegreen("Your [src] withers at the touch of death!"))
 		balloon_alert(source, "Your [src] withers at the touch of death!")
@@ -1785,7 +1785,7 @@
 	return 40
 
 /obj/item/ego_weapon/lifestew
-	name = "lifetime stew"
+	name = "decamillennial cauldron"
 	desc = "Take a large stone, put it into a sufficient quantity of boiling water; properly season it with pepper and salt... \
 	When the soup is made the stone may be thrown away!"
 	special = "This weapon stores up to 3 projectiles and gains a new projectile on a successful hit."
@@ -2076,6 +2076,7 @@
 	name = "Go Fer Scissors"
 	desc = "What seems to be a giant half of a scissors pair."
 	icon_state = "voodoo" //I can change the icon state name later if you want, but I'm on the middle of City of Light and it's too much work to open Dream Maker, sorry...
+	inhand_icon_state = "little_alice"
 	special = "This weapon can be paired with a second copy to use both at the same time."
 	force = 18
 	swingstyle = WEAPONSWING_LARGESWEEP
@@ -2345,7 +2346,7 @@
 		user.adjustBruteLoss(-amount_filled*2)
 		amount_filled = 0
 
-/obj/item/ego_weapon/shield/isolation
+/obj/item/ego_weapon/shield/parry/isolation
 	name = "isolation"
 	desc = "The shelter still retains the memory of that day."
 	icon_state = "isolation"

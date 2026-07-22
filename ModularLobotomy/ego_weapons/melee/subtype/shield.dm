@@ -255,3 +255,14 @@
 		if (10 to INFINITY)
 			. = "X"
 	return .
+
+//Parry Weapons. When you get attacked, you automatically respond with an attack of your own
+/obj/item/ego_weapon/shield/parry/hit_reaction(mob/living/carbon/human/owner, atom/movable/hitby, attack_text = "the attack", final_block_chance = 0, damage = 0, attack_type = MELEE_ATTACK)
+	if(attack_type == MELEE_ATTACK && active_block)
+		for(var/mob/living/L in range(1, owner))
+			if(L == owner)
+				continue
+			if(owner.stat == CONSCIOUS)
+				attack(L, owner)
+				sleep(2)
+	return ..()

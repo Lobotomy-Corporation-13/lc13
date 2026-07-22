@@ -183,7 +183,8 @@
 	abno_type = /mob/living/simple_animal/hostile/abnormality/alriune
 	abno_code = "T-04-53"
 	abno_info = list(
-		"When the work result was Good, the Qliphoth Counter lowered with a normal probability.",
+		"When the work result was Good, the Qliphoth Counter lowered with a High probability.",
+		"However, this chance was reduced with each Normal work achieved.",
 		"When the work result was Bad, the Qliphoth Counter lowered.",
 		"Any employee who panicked from Alriune’s attacks died insantly.")
 	abno_breach_damage_type = "White"
@@ -616,3 +617,14 @@
 		"Attachment" = "Very Low",
 		"Repression" = "Low | Low | Low | Common | Common"
 	)
+	
+//400 Roses
+/obj/item/paper/fluff/info/waw/four_hundred_roses
+	abno_type = /mob/living/simple_animal/hostile/abnormality/roses_waw
+	abno_code = "F-04-203"
+	abno_info = list(
+		"Every 25 bad work ticks, the Qliphoth counter lowered..",
+		"When the Qliphoth counter was 0, F-04-203 spawned roses around the facility, that would feed it.",
+		"When F-04-203 was fed enough by it's roses, it would cause Red Fragility and Bleed to all employees.")
+	abno_breach_damage_type = "Bleed"
+	abno_breach_damage_count = "High"

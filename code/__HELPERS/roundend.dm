@@ -284,7 +284,8 @@
 	CHECK_TICK
 
 	// Add AntagHUD to everyone, see who was really evil the whole time!
-	for(var/datum/atom_hud/antag/H in GLOB.huds)
+	for(var/hud in GLOB.huds)
+		var/datum/atom_hud/antag/H = GLOB.huds[hud]
 		for(var/m in GLOB.player_list)
 			var/mob/M = m
 			H.add_hud_to(M)

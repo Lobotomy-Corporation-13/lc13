@@ -66,6 +66,7 @@
 	if(behavior == 1)
 		icon_state = "gcorp_spearhead"
 		return
+	icon_state = "gcorp"
 	return ..()
 
 /mob/living/simple_animal/hostile/ordeal/steel_dawn/steel_midnight/AttackingTarget(atom/attacked_target)

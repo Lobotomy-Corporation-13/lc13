@@ -95,6 +95,14 @@
 //If the wave_composition is empty then it will send the wave out to their assault destination while the new wave is generated.
 //If the last wave is still alive the second wave will remain where they are.
 /datum/component/monwave_spawner/proc/GenerateWave()
+	// Don't spawn if the Heart Research has been destroyed
+	if(SSgamedirector.heart_research_destroyed)
+		return FALSE
+	// Check if parent den has area restriction (previous area's boss must be dead)
+	if(istype(parent, /obj/structure/den/rce))
+		var/obj/structure/den/rce/den = parent
+		if(!den.CanSpawnInArea())
+			return FALSE
 	// Don't spawn raiders if no resource wells are active
 	if(!SSgamedirector.active_resourcewells || !length(SSgamedirector.active_resourcewells))
 		return FALSE

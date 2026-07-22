@@ -117,6 +117,9 @@
 	if(dash_cooldown <= world.time && prob(10) && !client)
 		helper_dash(attacked_target)
 		return
+	else if(prob(20))
+		spin_start()
+		return
 	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/helper/Move(turf/newloc, direction, step_x, step_y)
@@ -277,14 +280,14 @@
 	..()
 	if(charging)
 		return
-	if(prob(12))
+	if(prob(27))
 		spin_start()
 
 /mob/living/simple_animal/hostile/abnormality/helper/proc/spin_start()
+	charging = TRUE
 	SpinAnimation(1.3 SECONDS, 1, TRUE)
 	addtimer(CALLBACK(src, PROC_REF(do_spin), 0), 1.5 SECONDS)
 	playsound(src, 'sound/abnormalities/helper/rise.ogg', 100, 1)
-	charging = TRUE
 	color = "#f5413b"
 
 /mob/living/simple_animal/hostile/abnormality/helper/proc/do_spin()

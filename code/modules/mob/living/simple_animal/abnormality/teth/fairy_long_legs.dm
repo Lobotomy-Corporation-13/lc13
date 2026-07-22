@@ -113,6 +113,7 @@
 		to_chat(user, span_danger("You decide to take cover under the fairy's clover."))
 		work_count = 0
 		raining = FALSE
+		user.client?.give_award(/datum/award/achievement/abno/longlegs_raining, user)
 		Execute(user)
 		return FALSE
 	if((work_type != "Take cover") && raining)

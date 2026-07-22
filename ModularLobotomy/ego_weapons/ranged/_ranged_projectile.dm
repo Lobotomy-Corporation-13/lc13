@@ -40,6 +40,10 @@
 	if(HAS_TRAIT(user, TRAIT_BETTER_GUNS))
 		projectile.damage += projectile.damage*get_attribute_level(user, JUSTICE_ATTRIBUTE)/130*0.50
 
+	//Testing 20% increased damage on XP Mod
+	if(SSmaptype.chosen_trait == FACILITY_TRAIT_XP_MOD)
+		projectile.damage += projectile.damage*get_attribute_level(user, JUSTICE_ATTRIBUTE)/130*0.20
+
 	projectile.damage *= (1 + (user.extra_damage / 100))
 	if(projectile.damage_type == RED_DAMAGE)
 		projectile.damage *= (1 + (user.extra_damage_red / 100))

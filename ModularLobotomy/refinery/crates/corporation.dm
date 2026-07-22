@@ -31,7 +31,7 @@
 		/obj/item/trait_injector/clerk_fear_immunity_injector,
 		/obj/item/trait_injector/officer_upgrade_injector,
 		/obj/item/ego_gift_extractor,
-		/obj/item/device/plushie_extractor,
+		/obj/item/plushie_extractor,
 	)
 
 //K Corporation

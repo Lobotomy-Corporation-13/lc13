@@ -55,6 +55,7 @@
 		new /datum/data/extraction_cargo("Binoculars ",					/obj/item/binoculars,												200, CAT_EQUIP) = 1,
 
 		//Medical
+		new /datum/data/extraction_cargo("Cable Coil ",					/obj/item/stack/cable_coil,											40, CAT_MEDICAL) = 1,
 		new /datum/data/extraction_cargo("Epinepherine Medi-Pen ",		/obj/item/reagent_containers/hypospray/medipen,						40, CAT_MEDICAL) = 1,
 		new /datum/data/extraction_cargo("L-Corp Health Medi-Pen ",		/obj/item/reagent_containers/hypospray/medipen/l_health,			50, CAT_MEDICAL) = 1,
 		new /datum/data/extraction_cargo("L-Corp Sanity Medi-Pen ",		/obj/item/reagent_containers/hypospray/medipen/l_sanity,			50, CAT_MEDICAL) = 1,
@@ -95,9 +96,9 @@
 		new /datum/data/extraction_cargo("Mannequin ",					/obj/structure/mannequin,											200, CAT_OTHER) = 1,
 		new /datum/data/extraction_cargo("Gold Fishing Hook ",			/obj/item/fishing_component/hook/shiny,								200, CAT_OTHER) = 1,
 		new /datum/data/extraction_cargo("Reinforced Fishing Line ",	/obj/item/fishing_component/line/reinforced,						200, CAT_OTHER) = 1,
-		new /datum/data/extraction_cargo("1000 Ahn ",					/obj/item/stack/spacecash/c1000,									200, CAT_OTHER) = 1,
 		new /datum/data/extraction_cargo("Pet Whistle",					/obj/item/pet_whistle,												200, CAT_OTHER) = 1,
 		new /datum/data/extraction_cargo("Margherita Pizza ",			/obj/item/food/pizza/margherita,									300, CAT_OTHER) = 1,
+		new /datum/data/extraction_cargo("1000 Ahn ",					/obj/item/stack/spacecash/c1000,									400, CAT_OTHER) = 1,
 		new /datum/data/extraction_cargo("Super Gar Glasses ",			/obj/item/clothing/glasses/sunglasses/gar/supergar,					500, CAT_OTHER) = 1,
 		new /datum/data/extraction_cargo("Agent Captain's Cloak ",		/obj/item/clothing/neck/cloak/hos/agent,							500, CAT_OTHER) = 1,
 		new /datum/data/extraction_cargo("Agent Captain's Cap ",		/obj/item/clothing/head/hos/agent,									500, CAT_OTHER) = 1,

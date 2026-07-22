@@ -300,7 +300,7 @@
 	cost = 50
 
 /datum/ego_datum/weapon/pharaoh
-	item_path = /obj/item/ego_weapon/shield/pharaoh
+	item_path = /obj/item/ego_weapon/shield/parry/pharaoh
 	cost = 50
 	ego_tags = list(EGO_TAG_GUARD)
 
@@ -594,11 +594,24 @@
 	item_path = /obj/item/clothing/suit/armor/ego_gear/waw/tiara
 	cost = 50
 
-// Flesh That Takes
+// Flesh That Takes - Encompassing
 /datum/ego_datum/armor/encompassing
 	item_path = /obj/item/clothing/suit/armor/ego_gear/waw/encompassing
 	cost = 50
 
 /datum/ego_datum/weapon/encompassing
 	item_path = /obj/item/ego_weapon/encompassing
+	cost = 50
+
+// Four Hundred Roses - Yearning-Mircalla
+/datum/ego_datum/weapon/yearning
+	item_path = /obj/item/ego_weapon/mini/yearning
+	cost = 50
+
+/datum/ego_datum/weapon/mircalla
+	item_path = /obj/item/ego_weapon/mini/mircalla
+	cost = 50
+
+/datum/ego_datum/armor/yearningmircalla
+	item_path = /obj/item/clothing/suit/armor/ego_gear/waw/yearningmircalla
 	cost = 50

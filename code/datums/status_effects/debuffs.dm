@@ -1005,7 +1005,6 @@
 	owner.cut_overlay(statuseffectvisual)
 	return ..()
 
-
 #define MOB_HALFSPEEDDEFENSE /datum/movespeed_modifier/qliphothshred
 /datum/status_effect/qliphothshred
 	id = "qliphoth intervention field +"
@@ -1023,6 +1022,20 @@
 	if(isanimal(owner))
 		var/mob/living/simple_animal/M = owner
 		M.RemoveModifier(/datum/dc_change/qliphothshred)
+	return ..()
+
+/datum/status_effect/slowdowngreen
+	id = "green_slowdown"
+	duration = 4 SECONDS
+	alert_type = null
+	status_type = STATUS_EFFECT_REFRESH
+
+/datum/status_effect/slowdowngreen/on_apply()
+	. = ..()
+	owner.add_movespeed_modifier(/datum/movespeed_modifier/qliphothoverload)
+
+/datum/status_effect/slowdowngreen/on_remove()
+	owner.remove_movespeed_modifier(/datum/movespeed_modifier/qliphothoverload)
 	return ..()
 
 #define MOB_QUARTERSPEED /datum/movespeed_modifier/bloodhold

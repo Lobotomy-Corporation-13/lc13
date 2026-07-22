@@ -45,6 +45,10 @@
 	},
 /turf/open/floor/plating/asteroid,
 /area/rce/rcorp_base)
+"aP" = (
+/obj/structure/resource_gate,
+/turf/open/floor/plating/beach/sand,
+/area/rce/xcorp/rce_0_0)
 "aS" = (
 /obj/structure/chair{
 	dir = 1
@@ -216,6 +220,10 @@
 "cS" = (
 /turf/open/floor/plating/asteroid,
 /area/rce/xcorp/rce_3_1)
+"cU" = (
+/obj/structure/resource_gate,
+/turf/open/floor/plating/dirt,
+/area/rce/xcorp/rce_1_1)
 "dc" = (
 /obj/structure/table/reinforced,
 /obj/item/powered_gadget/handheld_taser,
@@ -272,6 +280,11 @@
 "dU" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/closed/indestructible/rock,
+/area/rce/rcorp_base)
+"dX" = (
+/obj/effect/turf_decal/stripes/corner,
+/obj/effect/turf_decal/sand/plating,
+/turf/open/floor/plating/asteroid,
 /area/rce/rcorp_base)
 "ea" = (
 /obj/structure/bed/roller,
@@ -501,6 +514,16 @@
 	},
 /turf/open/floor/plating/asteroid,
 /area/rce/xcorp/rce_3_1)
+"hx" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 8
+	},
+/obj/effect/turf_decal/caution/stand_clear{
+	dir = 8
+	},
+/obj/effect/turf_decal/sand/plating,
+/turf/open/floor/plating/asteroid,
+/area/rce/rcorp_base)
 "hC" = (
 /turf/open/indestructible/necropolis/air,
 /area/rce/xcorp/rce_3_1)
@@ -579,6 +602,16 @@
 "iP" = (
 /turf/open/floor/plating/dirt,
 /area/rce/xcorp/rce_1_1)
+"iU" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 4
+	},
+/obj/effect/turf_decal/caution/stand_clear{
+	dir = 4
+	},
+/obj/effect/turf_decal/sand/plating,
+/turf/open/floor/plating/asteroid,
+/area/rce/rcorp_base)
 "jb" = (
 /obj/structure/holosign/barrier,
 /turf/open/floor/plating/dirt,
@@ -731,6 +764,13 @@
 /obj/effect/gibspawner/generic,
 /turf/open/floor/plating/asteroid/basalt,
 /area/rce/xcorp/rce_3_2)
+"lc" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 4
+	},
+/obj/effect/turf_decal/sand/plating,
+/turf/open/floor/plating/asteroid,
+/area/rce/rcorp_base)
 "ld" = (
 /turf/open/floor/plating/asteroid,
 /area/rce/rcorp_base)
@@ -748,6 +788,10 @@
 /obj/structure/flora/tree/jungle,
 /turf/open/floor/grass,
 /area/rce/xcorp/rce_2_3)
+"lm" = (
+/obj/structure/resource_gate,
+/turf/open/floor/grass,
+/area/rce/xcorp/rce_0_3)
 "lp" = (
 /turf/open/floor/sepia,
 /area/rce/xcorp/rce_1_2)
@@ -822,6 +866,21 @@
 /obj/effect/turf_decal/sand/plating,
 /turf/open/floor/pod/light,
 /area/rce/rcorp_base)
+"lT" = (
+/obj/structure/table/abductor{
+	name = "r&d table"
+	},
+/obj/effect/turf_decal/siding/purple{
+	dir = 10
+	},
+/obj/item/combat_log_book,
+/turf/open/floor/pod/light,
+/area/rce/rcorp_base)
+"lY" = (
+/obj/machinery/rce_research,
+/obj/effect/turf_decal/siding/purple,
+/turf/open/floor/pod/light,
+/area/rce/rcorp_base)
 "lZ" = (
 /obj/machinery/conveyor/auto,
 /obj/effect/decal/cleanable/dirt/dust,
@@ -830,6 +889,13 @@
 "mc" = (
 /obj/effect/turf_decal/caution/white,
 /turf/open/floor/pod/light,
+/area/rce/rcorp_base)
+"mf" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 8
+	},
+/obj/effect/turf_decal/sand/plating,
+/turf/open/floor/plating/asteroid,
 /area/rce/rcorp_base)
 "mh" = (
 /obj/effect/landmark/clan_raid_spot/red,
@@ -976,6 +1042,12 @@
 /obj/structure/resourcepoint,
 /turf/open/floor/plating/asteroid,
 /area/rce/xcorp/rce_0_3)
+"nV" = (
+/obj/effect/turf_decal/siding/purple/corner{
+	dir = 8
+	},
+/turf/open/floor/pod/light,
+/area/rce/rcorp_base)
 "nW" = (
 /obj/structure/table,
 /obj/structure/flora/ash/stem_shroom,
@@ -1002,6 +1074,10 @@
 /obj/structure/flora/ausbushes/fullgrass,
 /turf/open/floor/grass,
 /area/rce/xcorp/rce_1_3)
+"or" = (
+/obj/structure/resource_gate,
+/turf/open/floor/plating/asteroid,
+/area/rce/xcorp/rce_0_3)
 "os" = (
 /turf/closed/indestructible/rock,
 /area/rce/xcorp/rce_3_3)
@@ -1048,6 +1124,12 @@
 	req_access_txt = "7;5"
 	},
 /turf/open/floor/pod,
+/area/rce/rcorp_base)
+"oU" = (
+/obj/effect/turf_decal/stripes/line,
+/obj/effect/turf_decal/caution/stand_clear,
+/obj/effect/turf_decal/sand/plating,
+/turf/open/floor/plating/asteroid,
 /area/rce/rcorp_base)
 "oY" = (
 /turf/closed/indestructible/necropolis,
@@ -1535,6 +1617,16 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/pod/light,
 /area/rce/rcorp_base)
+"wW" = (
+/obj/structure/table/abductor{
+	name = "r&d table"
+	},
+/obj/item/storage/bag/rce_bodyparts,
+/obj/item/storage/bag/rce_bodyparts,
+/obj/item/storage/bag/rce_bodyparts,
+/obj/effect/turf_decal/siding/purple,
+/turf/open/floor/pod/light,
+/area/rce/rcorp_base)
 "xb" = (
 /obj/machinery/computer/operating{
 	dir = 4
@@ -1813,6 +1905,16 @@
 	},
 /turf/open/floor/pod,
 /area/rce/rcorp_base)
+"Bo" = (
+/obj/structure/table/abductor{
+	name = "r&d table"
+	},
+/obj/effect/turf_decal/siding/purple{
+	dir = 8
+	},
+/obj/item/combat_log_book,
+/turf/open/floor/pod/light,
+/area/rce/rcorp_base)
 "Bv" = (
 /mob/living/simple_animal/hostile/retaliate/tegu/atlas,
 /turf/open/floor/wood,
@@ -1986,6 +2088,15 @@
 "DU" = (
 /turf/open/floor/plating/asteroid/basalt,
 /area/rce/xcorp/rce_2_1)
+"DW" = (
+/obj/structure/rack,
+/obj/item/gun/energy/rce_harvester,
+/obj/effect/turf_decal/siding/purple{
+	dir = 4
+	},
+/obj/effect/turf_decal/delivery,
+/turf/open/floor/pod/light,
+/area/rce/rcorp_base)
 "Eb" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/rack,
@@ -2054,6 +2165,10 @@
 "Fg" = (
 /turf/closed/indestructible/rock,
 /area/rce/xcorp/boss)
+"Fh" = (
+/obj/machinery/computer/rce_leaderboard,
+/turf/open/floor/pod/light,
+/area/rce/rcorp_base)
 "Fj" = (
 /turf/closed/indestructible/rock,
 /area/rce/xcorp/rce_0_0)
@@ -2222,6 +2337,13 @@
 /obj/structure/rcorp_factory/grenade,
 /turf/open/floor/facility/halls,
 /area/rce/rcorp_base)
+"Hb" = (
+/obj/machinery/computer/rce_leaderboard,
+/obj/effect/turf_decal/siding/purple{
+	dir = 6
+	},
+/turf/open/floor/pod/light,
+/area/rce/rcorp_base)
 "He" = (
 /mob/living/simple_animal/hostile/retaliate/frog,
 /turf/open/floor/grass,
@@ -2247,6 +2369,11 @@
 	set_luminosity = 24
 	},
 /obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/pod/light,
+/area/rce/rcorp_base)
+"Ht" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/turf_decal/siding/purple,
 /turf/open/floor/pod/light,
 /area/rce/rcorp_base)
 "Hu" = (
@@ -2344,6 +2471,15 @@
 /obj/structure/flora/ausbushes/grassybush,
 /turf/open/floor/grass,
 /area/rce/xcorp/rce_1_3)
+"Jk" = (
+/obj/structure/rack,
+/obj/item/gun/energy/rce_harvester,
+/obj/effect/turf_decal/siding/purple{
+	dir = 6
+	},
+/obj/effect/turf_decal/delivery,
+/turf/open/floor/pod/light,
+/area/rce/rcorp_base)
 "Jo" = (
 /turf/open/floor/plating/dirt,
 /area/rce/xcorp/rce_3_2)
@@ -2409,6 +2545,11 @@
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/pod/light,
+/area/rce/rcorp_base)
+"Kz" = (
+/obj/effect/turf_decal/stripes/line,
+/obj/effect/turf_decal/sand/plating,
+/turf/open/floor/plating/asteroid,
 /area/rce/rcorp_base)
 "KB" = (
 /obj/item/fishing_rod,
@@ -2660,6 +2801,16 @@
 /obj/machinery/telecomms/processor/preset_two,
 /turf/open/floor/circuit/telecomms/mainframe,
 /area/rce/rcorp_base)
+"Oq" = (
+/obj/machinery/rce_fuel_storage,
+/obj/effect/turf_decal/sand/plating,
+/turf/open/floor/pod/light,
+/area/rce/rcorp_base)
+"Or" = (
+/obj/structure/flora/rock,
+/obj/structure/resource_gate,
+/turf/open/floor/plating/beach/sand,
+/area/rce/xcorp/rce_0_0)
 "Ou" = (
 /turf/closed/indestructible/rock,
 /area/rce/rcorp_base)
@@ -2691,6 +2842,16 @@
 /obj/item/storage/rcorp_grenade,
 /obj/effect/landmark/rcorp/grenade,
 /turf/open/floor/pod,
+/area/rce/rcorp_base)
+"OO" = (
+/obj/effect/turf_decal/siding/purple{
+	dir = 5
+	},
+/obj/structure/rack,
+/obj/effect/turf_decal/delivery,
+/obj/item/storage/toolbox/mechanical,
+/obj/item/storage/toolbox/mechanical,
+/turf/open/floor/pod/light,
 /area/rce/rcorp_base)
 "OQ" = (
 /obj/effect/landmark/latejoin,
@@ -2822,6 +2983,13 @@
 "QE" = (
 /turf/closed/indestructible/rock,
 /area/rce/xcorp/rce_1_3)
+"QF" = (
+/obj/effect/turf_decal/stripes/corner{
+	dir = 8
+	},
+/obj/effect/turf_decal/sand/plating,
+/turf/open/floor/plating/asteroid,
+/area/rce/rcorp_base)
 "QK" = (
 /obj/effect/turf_decal/delivery,
 /obj/structure/closet/crate,
@@ -2974,7 +3142,9 @@
 /turf/open/floor/plating/asteroid,
 /area/rce/xcorp/rce_3_1)
 "SU" = (
-/obj/effect/turf_decal/caution/stand_clear,
+/obj/effect/turf_decal/caution/stand_clear{
+	dir = 8
+	},
 /obj/effect/turf_decal/sand/plating,
 /turf/open/floor/pod/light,
 /area/rce/rcorp_base)
@@ -2996,6 +3166,10 @@
 /obj/machinery/sleeper/syndie,
 /turf/open/floor/pod/light,
 /area/rce/rcorp_base)
+"Tf" = (
+/obj/effect/turf_decal/siding/purple/corner,
+/turf/open/floor/pod/light,
+/area/rce/rcorp_base)
 "Tk" = (
 /obj/structure/table/abductor,
 /obj/item/screwdriver,
@@ -3012,6 +3186,11 @@
 	},
 /turf/open/indestructible/boss/air,
 /area/rce/xcorp/bossentrance)
+"Tn" = (
+/obj/structure/flora/ausbushes/sparsegrass,
+/obj/structure/resource_gate,
+/turf/open/floor/plating/beach/sand,
+/area/rce/xcorp/rce_0_0)
 "To" = (
 /obj/machinery/fat_sucker,
 /turf/open/floor/pod/light,
@@ -3189,6 +3368,14 @@
 	},
 /turf/open/floor/mineral/plastitanium,
 /area/rce/xcorp/rce_0_3)
+"VZ" = (
+/obj/structure/closet/crate,
+/obj/effect/turf_decal/siding/purple{
+	dir = 10
+	},
+/obj/item/storage/box/rce_guides,
+/turf/open/floor/pod/light,
+/area/rce/rcorp_base)
 "Wg" = (
 /turf/open/floor/grass,
 /area/rce/xcorp/rce_1_3)
@@ -3220,6 +3407,10 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/pod/light,
 /area/rce/rcorp_base)
+"Wv" = (
+/obj/structure/resource_gate,
+/turf/open/floor/plating/dirt,
+/area/rce/xcorp/rce_1_2)
 "WN" = (
 /obj/structure/table,
 /turf/open/floor/plating/ashplanet/ash,
@@ -3399,6 +3590,7 @@
 /area/rce/rcorp_base)
 "Zn" = (
 /obj/structure/chair/comfy/shuttle,
+/obj/machinery/rce_tactical_map,
 /turf/open/floor/pod/light,
 /area/rce/rcorp_base)
 "Zo" = (
@@ -3434,6 +3626,17 @@
 "ZU" = (
 /turf/closed/indestructible/r_wall,
 /area/rce/xcorp/rce_3_2)
+"ZV" = (
+/obj/structure/table/abductor{
+	name = "r&d table"
+	},
+/obj/effect/turf_decal/siding/purple{
+	dir = 9
+	},
+/obj/item/paper_bin,
+/obj/item/pen,
+/turf/open/floor/pod/light,
+/area/rce/rcorp_base)
 "ZX" = (
 /obj/machinery/door/airlock/survival_pod{
 	name = "robin captain bunk";
@@ -15723,10 +15926,10 @@ ld
 ld
 ld
 re
-Ou
-Ou
-qH
-qH
+re
+re
+re
+re
 qH
 qH
 qH
@@ -15979,11 +16182,11 @@ ld
 ld
 ld
 ld
+MA
+ZV
+Bo
+lT
 re
-Ou
-Ou
-qH
-qH
 qH
 qH
 qH
@@ -16235,13 +16438,13 @@ ld
 ld
 VM
 ld
-nX
+ld
+MA
+Px
+jT
+Ht
 re
-Ou
-Ou
-qH
-qH
-qH
+re
 qH
 qH
 qH
@@ -16493,12 +16696,12 @@ ld
 ld
 ld
 ld
+nB
+Px
+Px
+nV
+VZ
 re
-Ou
-Ou
-qH
-qH
-qH
 qH
 qH
 qH
@@ -16750,12 +16953,12 @@ ld
 ld
 ld
 ld
+nB
+Px
+Px
+jT
+lY
 re
-Ou
-Ou
-qH
-qH
-qH
 qH
 qH
 qH
@@ -17007,12 +17210,12 @@ ld
 ld
 ld
 ld
+nB
+Px
+Px
+Zi
+wW
 re
-Ou
-Ou
-qH
-qH
-qH
 qH
 qH
 qH
@@ -17264,12 +17467,12 @@ ld
 ld
 ld
 ld
+nB
+Px
+Px
+Tf
+Hb
 re
-Ou
-Ou
-qH
-qH
-qH
 qH
 qH
 qH
@@ -17521,12 +17724,12 @@ nX
 ld
 ld
 ld
+MA
+Px
+Zi
+Ht
 re
-Ou
-Ou
-qH
-qH
-qH
+re
 qH
 qH
 qH
@@ -17778,11 +17981,11 @@ ld
 ld
 ld
 ld
+MA
+OO
+DW
+Jk
 re
-Ou
-Ou
-qH
-qH
 qH
 qH
 qH
@@ -18036,10 +18239,10 @@ ld
 ld
 ld
 re
-Ou
-Ou
-qH
-qH
+re
+re
+re
+re
 qH
 qH
 qH
@@ -18289,9 +18492,9 @@ Zo
 ld
 ld
 VM
-ld
-ld
-ld
+dX
+lc
+iU
 re
 Ou
 Ou
@@ -18546,9 +18749,9 @@ Zo
 ld
 ld
 ld
-ld
-ld
-ld
+Kz
+lQ
+lQ
 re
 Ou
 Ou
@@ -18803,9 +19006,9 @@ Zo
 ld
 ld
 ld
-ld
-ld
-ld
+oU
+lQ
+Oq
 re
 Ou
 Ou
@@ -19060,9 +19263,9 @@ Zo
 ld
 ld
 ld
-ld
-ld
-ld
+Kz
+lQ
+lQ
 re
 re
 Ou
@@ -19294,7 +19497,7 @@ Px
 Px
 Px
 MA
-jT
+Fh
 ud
 ud
 ud
@@ -19317,10 +19520,10 @@ ld
 ld
 Xi
 ld
-ld
-ld
-ld
-ld
+QF
+mf
+hx
+mf
 re
 Ou
 qH
@@ -29366,7 +29569,7 @@ Xm
 Xm
 Xm
 Xm
-Xm
+aP
 mh
 mh
 Xm
@@ -29623,7 +29826,7 @@ Xm
 Xm
 Xm
 Xm
-Xm
+aP
 mh
 mh
 Xm
@@ -29880,7 +30083,7 @@ Xm
 Xm
 AJ
 Xm
-Xm
+aP
 mh
 Fj
 Fj
@@ -30033,7 +30236,7 @@ xS
 cG
 xS
 KF
-KF
+or
 KF
 KF
 KF
@@ -30137,7 +30340,7 @@ Xm
 Xm
 Xm
 Xm
-Xm
+aP
 Fj
 Fj
 Fj
@@ -30290,7 +30493,7 @@ cG
 cG
 cG
 KF
-KF
+or
 KF
 KF
 KF
@@ -30547,7 +30750,7 @@ Ps
 cG
 cG
 KF
-KF
+or
 KF
 KF
 KF
@@ -30804,7 +31007,7 @@ cG
 cG
 KF
 KF
-KF
+or
 KF
 KF
 KF
@@ -31061,7 +31264,7 @@ cG
 cG
 KF
 KF
-KF
+or
 KF
 KF
 KF
@@ -31835,15 +32038,15 @@ ds
 ds
 ds
 ds
-KF
-KF
-Ys
-KF
-KF
-KF
-Ys
-KF
-Ys
+or
+or
+lm
+or
+or
+or
+lm
+or
+lm
 ds
 ds
 ds
@@ -34232,18 +34435,18 @@ bN
 Fj
 Fj
 Fj
-Xm
-Xm
-Xm
-Xm
-AJ
-Xm
-Ft
-Xm
-Xm
-Xm
-Xm
-Xm
+aP
+aP
+aP
+aP
+Tn
+aP
+Or
+aP
+aP
+aP
+aP
+aP
 Fj
 Fj
 Fj
@@ -42163,10 +42366,10 @@ iN
 iN
 iN
 iN
-zA
-zA
-iP
-iP
+Wv
+Wv
+cU
+cU
 fn
 fn
 fn

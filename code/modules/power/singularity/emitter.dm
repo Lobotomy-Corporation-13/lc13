@@ -509,7 +509,7 @@
 			user.pixel_x = 8
 			user.pixel_y = -12
 
-	E.last_projectile_params = calculate_projectile_angle_and_pixel_offsets(user, clickparams)
+	E.last_projectile_params = calculate_projectile_angle_and_pixel_offsets(user, targeted_atom, clickparams)
 
 	if(E.charge >= 10 && world.time > delay)
 		E.charge -= 10

@@ -33,6 +33,12 @@
 		"Leave" = list(FALSE, "The man clearly needs help, you rush to find a medic."),
 	)
 
+	grouped_abnos = list(
+		/mob/living/simple_animal/hostile/abnormality/roses_waw = 1.5,
+		/mob/living/simple_animal/hostile/abnormality/little_prince = 1.5,
+		/mob/living/simple_animal/hostile/abnormality/parasite_tree = 1.5,
+	)
+
 	var/seed_list = list(
 		/obj/item/seeds/grass/fairy,
 		/obj/item/seeds/apple/gold,
