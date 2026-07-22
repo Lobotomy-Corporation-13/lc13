@@ -85,7 +85,7 @@
 	move_force = MOVE_FORCE_DEFAULT
 	move_resist = MOVE_RESIST_DEFAULT
 	pull_force = PULL_FORCE_DEFAULT
-	..(gibbed)
+	return ..(gibbed)
 
 /mob/living/simple_animal/hostile/abnormality/mining/goliath/OpenFire()
 	var/tturf = get_turf(target)
