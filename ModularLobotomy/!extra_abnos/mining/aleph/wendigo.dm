@@ -101,6 +101,10 @@ Difficulty: Hard
 	. = ..()
 	starting = get_turf(src)
 
+/mob/living/simple_animal/hostile/abnormality/mining/wendigo/Destroy()
+	starting = null
+	return ..()
+
 /mob/living/simple_animal/hostile/abnormality/mining/wendigo/OpenFire()
 	SetRecoveryTime(0, 100)
 	if(health <= maxHealth*0.5)
