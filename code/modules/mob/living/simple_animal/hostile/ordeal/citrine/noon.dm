@@ -189,7 +189,7 @@
 
 			else
 				manual_emote("winds up...")
-				playsound(H, 'sound/items/unsheath.ogg', 75, FALSE, 4)
+				playsound(src, 'sound/items/unsheath.ogg', 75, FALSE, 4)
 				cleave(target)
 
 
@@ -204,18 +204,18 @@
 						return FALSE
 					say("Empower my blade!")
 					SLEEP_CHECK_DEATH(15)
-					playsound(H, 'sound/effects/curseattack.ogg', 75, FALSE, 4)
+					playsound(src, 'sound/effects/curseattack.ogg', 75, FALSE, 4)
 					Empower()
 
 				if(3)
 					manual_emote("winds up...")
-					playsound(H, 'sound/items/unsheath.ogg', 75, FALSE, 4)
+					playsound(src, 'sound/items/unsheath.ogg', 75, FALSE, 4)
 					cleave(target)
 
 				if(4)
 					manual_emote("heats up...")
 					SLEEP_CHECK_DEATH(15)
-					BurnLine()
+					BurnLine(H)
 
 		can_act = TRUE
 
@@ -257,8 +257,8 @@
 		SLEEP_CHECK_DEATH(2)
 	can_act = TRUE
 
-/mob/living/simple_animal/hostile/ordeal/citrine/knight/proc/BurnLine()
-	var/turf/T = get_ranged_target_turf_direct(src, target, fire_range)
+/mob/living/simple_animal/hostile/ordeal/citrine/knight/proc/BurnLine(mob/living/L)
+	var/turf/T = get_ranged_target_turf_direct(src, L, fire_range)
 	var/list/burn_turfs = getline(src, T) - get_turf(src)
 	citrine_fire_line(src, burn_turfs, 15)
 
