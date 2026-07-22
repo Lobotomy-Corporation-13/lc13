@@ -95,7 +95,7 @@
 	var/faith_active = FALSE
 
 /obj/projectile/citrine_dawn/on_hit(atom/target, blocked = FALSE)
-	..()
+	. = ..()
 	if(!ishuman(target))
 		return
 	var/mob/living/carbon/human/H = target
