@@ -38,6 +38,13 @@
 /obj/effect/spawner/structure/window/plasma/reinforced/plastitanium,
 /turf/open/floor/plasteel/dark,
 /area/department_main/command)
+"aF" = (
+/obj/effect/turf_decal/siding/green{
+	dir = 8
+	},
+/obj/machinery/light,
+/turf/open/floor/facility/white,
+/area/department_main/safety)
 "aQ" = (
 /obj/effect/turf_decal/plaque{
 	icon_state = "LC32"
@@ -66,6 +73,13 @@
 /obj/item/clothing/suit/apron/chef,
 /obj/item/clothing/head/chefhat,
 /turf/open/floor/plasteel/white,
+/area/department_main/training)
+"bp" = (
+/obj/effect/turf_decal/siding/brown,
+/obj/machinery/light{
+	dir = 4
+	},
+/turf/open/floor/facility/white,
 /area/department_main/training)
 "bq" = (
 /obj/machinery/light{
@@ -732,6 +746,15 @@
 /obj/effect/decal/cleanable/dirt,
 /turf/closed/indestructible/reinforced,
 /area/department_main/safety)
+"lX" = (
+/obj/effect/turf_decal/siding/green{
+	dir = 8
+	},
+/obj/machinery/light{
+	dir = 1
+	},
+/turf/open/floor/facility/white,
+/area/department_main/safety)
 "lZ" = (
 /obj/machinery/shower{
 	pixel_y = 15
@@ -890,6 +913,13 @@
 "nO" = (
 /turf/closed/indestructible/reinforced,
 /area/department_main/training)
+"nV" = (
+/obj/effect/turf_decal/siding/brown,
+/obj/machinery/light{
+	dir = 8
+	},
+/turf/open/floor/facility/white,
+/area/department_main/training)
 "nZ" = (
 /obj/machinery/navbeacon/wayfinding/recorddepartment,
 /turf/open/floor/carpet/black,
@@ -908,8 +938,18 @@
 /obj/effect/turf_decal/siding/red{
 	dir = 8
 	},
+/obj/machinery/light{
+	dir = 1
+	},
 /turf/open/floor/facility/white,
 /area/department_main/control)
+"oB" = (
+/obj/effect/spawner/structure/window/plasma/reinforced/plastitanium,
+/obj/effect/turf_decal/siding/green{
+	dir = 4
+	},
+/turf/open/floor/plasteel/dark,
+/area/department_main/safety)
 "oG" = (
 /obj/machinery/light{
 	dir = 1
@@ -965,6 +1005,15 @@
 	dir = 9
 	},
 /turf/open/floor/plasteel/dark,
+/area/department_main/training)
+"pN" = (
+/obj/effect/turf_decal/siding/brown{
+	dir = 1
+	},
+/obj/machinery/light{
+	dir = 4
+	},
+/turf/open/floor/facility/white,
 /area/department_main/training)
 "pO" = (
 /obj/structure/filingcabinet/chestdrawer,
@@ -1194,6 +1243,15 @@
 /obj/item/canvas/nineteen_nineteen,
 /turf/open/floor/carpet/royalblue,
 /area/department_main/command)
+"tB" = (
+/obj/effect/turf_decal/siding/green{
+	dir = 4
+	},
+/obj/machinery/light{
+	dir = 1
+	},
+/turf/open/floor/facility/white,
+/area/department_main/safety)
 "tC" = (
 /obj/effect/turf_decal/plaque{
 	alpha = 230;
@@ -1437,6 +1495,13 @@
 	pixel_y = 32
 	},
 /turf/open/floor/carpet,
+/area/department_main/control)
+"wT" = (
+/obj/effect/turf_decal/siding/red{
+	dir = 4
+	},
+/obj/machinery/light,
+/turf/open/floor/facility/white,
 /area/department_main/control)
 "wU" = (
 /obj/structure/chair/comfy{
@@ -1849,6 +1914,15 @@
 	},
 /obj/machinery/griddle,
 /turf/open/floor/plasteel/white,
+/area/department_main/training)
+"Es" = (
+/obj/effect/turf_decal/siding/brown{
+	dir = 1
+	},
+/obj/machinery/light{
+	dir = 8
+	},
+/turf/open/floor/facility/white,
 /area/department_main/training)
 "EE" = (
 /turf/closed/indestructible/reinforced,
@@ -2309,6 +2383,13 @@
 /obj/machinery/telecomms/bus/preset_three,
 /turf/open/floor/circuit/telecomms/mainframe,
 /area/facility_hallway/training)
+"OG" = (
+/obj/effect/turf_decal/siding/red{
+	dir = 8
+	},
+/obj/machinery/light,
+/turf/open/floor/facility/white,
+/area/department_main/control)
 "OZ" = (
 /obj/docking_port/stationary{
 	dir = 2;
@@ -2439,6 +2520,15 @@
 	},
 /turf/open/floor/facility/white,
 /area/department_main/command)
+"Si" = (
+/obj/effect/turf_decal/siding/red{
+	dir = 4
+	},
+/obj/machinery/light{
+	dir = 1
+	},
+/turf/open/floor/facility/white,
+/area/department_main/control)
 "Sj" = (
 /obj/effect/turf_decal/siding/brown{
 	dir = 6
@@ -2702,6 +2792,13 @@
 /obj/machinery/camera/autoname,
 /turf/open/floor/plasteel/dark,
 /area/department_main/control)
+"Xe" = (
+/obj/effect/turf_decal/siding/green{
+	dir = 4
+	},
+/obj/machinery/light,
+/turf/open/floor/facility/white,
+/area/department_main/safety)
 "Xn" = (
 /obj/structure/barricade/sandbags,
 /obj/machinery/camera/autoname{
@@ -13689,9 +13786,9 @@ HY
 tU
 Te
 nO
-xu
+Es
 vv
-oY
+nV
 RB
 xr
 xr
@@ -14974,9 +15071,9 @@ NI
 Ef
 QB
 nO
-xu
+pN
 vv
-oY
+bp
 RB
 xr
 xr
@@ -16767,7 +16864,7 @@ MH
 MH
 MH
 MH
-MH
+OG
 bB
 Uk
 uZ
@@ -16781,12 +16878,12 @@ vO
 Hl
 Uk
 bB
-eq
+lX
 eq
 eq
 mB
 eq
-eq
+aF
 iZ
 vU
 vU
@@ -17276,12 +17373,12 @@ rA
 rA
 rA
 NB
+Si
 vP
 vP
 vP
 vP
-vP
-vP
+wT
 bB
 Uk
 uZ
@@ -17295,12 +17392,12 @@ aQ
 Hl
 Uk
 bB
-vU
+tB
 uV
 uV
 uV
 uV
-uV
+Xe
 iZ
 vU
 vU
@@ -17552,7 +17649,7 @@ bQ
 Hl
 oH
 No
-jP
+oB
 jP
 KB
 jP
