@@ -8,7 +8,7 @@ GLOBAL_LIST_INIT(easycombat, list(
 	/mob/living/simple_animal/hostile/rcorp_abno/easy/drifting_fox,
 	/mob/living/simple_animal/hostile/rcorp_abno/easy/headless_ichthys,
 	/mob/living/simple_animal/hostile/rcorp_abno/easy/puss_in_boots,
-	/mob/living/simple_animal/hostile/abnormality/woodsman,
+	/mob/living/simple_animal/hostile/rcorp_abno/easy/woodsman,
 ))
 
 GLOBAL_LIST_INIT(easysupport, list(

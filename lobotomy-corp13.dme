@@ -4620,6 +4620,7 @@
 #include "ModularLobotomy\rcorp\rcorp_abnos\easyteam\easycombat\helper.dm"
 #include "ModularLobotomy\rcorp\rcorp_abnos\easyteam\easycombat\puss_in_boots.dm"
 #include "ModularLobotomy\rcorp\rcorp_abnos\easyteam\easycombat\simple_smile.dm"
+#include "ModularLobotomy\rcorp\rcorp_abnos\easyteam\easycombat\woodsman.dm"
 #include "ModularLobotomy\rcorp\rcorp_abnos\easyteam\easysupport\_easysupport.dm"
 #include "ModularLobotomy\rcorp\rcorp_abnos\easyteam\easysupport\cleaner.dm"
 #include "ModularLobotomy\rcorp\rcorp_abnos\hardteam\hardcombat.dm"

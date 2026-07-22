@@ -1,6 +1,6 @@
 /mob/living/simple_animal/hostile/rcorp_abno/easy/puss_in_boots
 	name = "Puss in Boots"
-	desc = "He's got a sword!"
+	desc = "He's got a sword! His rapier is held steady, the only way to avoid it would be to avoid his sightline."
 	maxHealth = 1000
 	health = 1000
 	del_on_death = FALSE

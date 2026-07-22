@@ -83,6 +83,7 @@
 		pixel_y = original_abno.pixel_y
 		base_pixel_y = original_abno.base_pixel_y
 		pet_bonus = original_abno.pet_bonus
+		layer = original_abno.layer
 
 	if(secret_chance && (prob(1)))
 		InitializeSecretIcon()
