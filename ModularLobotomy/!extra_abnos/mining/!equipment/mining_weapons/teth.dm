@@ -42,7 +42,7 @@
 	force = initial(force)*4
 
 /obj/item/ego_weapon/miningss13/goliath/attack(mob/living/M, mob/living/user)
-	..()
+	. = ..()
 	force = initial(force)
 
 
