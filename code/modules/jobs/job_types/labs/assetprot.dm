@@ -8,8 +8,8 @@
 	trusted_only = TRUE
 	outfit = /datum/outfit/job/asset_protection
 
-	access = list(ACCESS_ARMORY, ACCESS_SECURITY, ACCESS_RND, ACCESS_MEDICAL, ACCESS_COMMAND, ACCESS_MANAGER)
-	minimal_access = list(ACCESS_ARMORY, ACCESS_SECURITY, ACCESS_RND, ACCESS_MEDICAL, ACCESS_COMMAND, ACCESS_MANAGER)
+	access = list(ACCESS_ARMORY, ACCESS_SECURITY, ACCESS_RND, ACCESS_MEDICAL, ACCESS_COMMAND, ACCESS_MANAGER, ACCESS_BRIG)
+	minimal_access = list(ACCESS_ARMORY, ACCESS_SECURITY, ACCESS_RND, ACCESS_MEDICAL, ACCESS_COMMAND, ACCESS_MANAGER, ACCESS_BRIG)
 	departments = DEPARTMENT_COMMAND
 
 	job_attribute_limit = 0
@@ -36,6 +36,9 @@
 	suit = /obj/item/clothing/suit/toggle/labcoat
 	shoes = /obj/item/clothing/shoes/laceup
 	l_pocket = /obj/item/radio
+
+
+
 
 
 /mob/living/carbon/human/proc/peccatulum_spawn()

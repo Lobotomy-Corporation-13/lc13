@@ -32,8 +32,7 @@
 
 	ego_list = list(
 		/datum/ego_datum/weapon/hornet,
-		/datum/ego_datum/weapon/tattered_kingdom,
-		/datum/ego_datum/armor/hornet,
+		/datum/ego_datum/armor/lce/hornet,
 	)
 
 /mob/living/simple_animal/hostile/limbus_abno/queen_bee/Initialize(mapload)

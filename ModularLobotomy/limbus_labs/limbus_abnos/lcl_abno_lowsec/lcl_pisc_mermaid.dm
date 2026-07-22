@@ -32,7 +32,7 @@
 	liked_objects_value = 10
 	ego_list = list(
 		/datum/ego_datum/weapon/unrequited,
-		/datum/ego_datum/armor/unrequited,
+		/datum/ego_datum/armor/lce/unrequited,
 	)
 	breach_overlay_z = 45
 	var/obj/item/clothing/head/unrequited_crown/crown

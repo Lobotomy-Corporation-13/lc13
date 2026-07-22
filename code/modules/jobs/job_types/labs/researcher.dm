@@ -1,7 +1,7 @@
 /datum/job/researcher
-	title = "Researcher"
+	title = "LCE Researcher"
 	faction = "Station"
-	supervisors = "Senior Researcher"
+	supervisors = "Research Director"
 	total_positions = 3
 	spawn_positions = 3
 	selection_color = "#cd6fd9"
@@ -12,10 +12,10 @@
 	minimal_access = list(ACCESS_RND)
 	departments = DEPARTMENT_SCIENCE
 
-	job_attribute_limit = 0
+	job_attribute_limit = 20
 
 
-	display_order = 6.5
+	display_order = 6
 	alt_titles = list()
 	maptype = "limbus_labs"
 	job_important = "You are a Researcher. Your job is to interact with abnormalities, write down notes based on how they reacted, and report your findings to the Senior Researcher or the office workers."
@@ -23,6 +23,7 @@
 
 /datum/job/researcher/after_spawn(mob/living/carbon/human/H, mob/M, latejoin = FALSE)
 	..()
+	H.set_attribute_limit(20)
 	ADD_TRAIT(H, TRAIT_COMBATFEAR_IMMUNE, JOB_TRAIT)
 	ADD_TRAIT(H, TRAIT_WORK_FORBIDDEN, JOB_TRAIT)
 
