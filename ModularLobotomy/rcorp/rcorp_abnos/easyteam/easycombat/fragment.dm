@@ -7,15 +7,15 @@
 	health = 800
 	damage_coeff = list(BRUTE = 1, RED_DAMAGE = 1, WHITE_DAMAGE = 1.5, BLACK_DAMAGE = 1, PALE_DAMAGE = 2)
 	ranged = TRUE
-	melee_damage_lower = 8
-	melee_damage_upper = 12
+	melee_damage_lower = 22
+	melee_damage_upper = 25
 	rapid_melee = 2
 	melee_damage_type = BLACK_DAMAGE
 	original_abno = /mob/living/simple_animal/hostile/abnormality/fragment
 
 	var/song_cooldown
 	var/song_cooldown_time = 10 SECONDS
-	var/song_damage = 5 // Dealt 8 times
+	var/song_damage = 8 // Dealt 8 times
 
 	//Visual/Animation Vars
 	var/obj/effect/rca_fragment_legs/legs

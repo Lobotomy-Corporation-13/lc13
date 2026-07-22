@@ -178,6 +178,190 @@
 	UpdateButtonIcon()
 	active = FALSE
 
+/*
+* Taken from _abno_abilities, necessary due to how many RCA abnos use this
+*/
+/obj/effect/proc_holder/ability/aimed/rca_dash
+	name = "default dash"
+	desc = "An ability that allows its user to dash six tiles forward in any direction."
+	action_icon_state = "helper_dash0"
+	base_icon_state = "helper_dash"
+	cooldown_time = 1 SECONDS
+
+	//Amount of time in deciseconds to move from one tile to another.
+	var/dash_speed = 1
+	//Used inconsistently
+	var/dash_damage = 0
+	//How many tiles this dash can move if not stopped.
+	var/dash_range = 6
+	//Delay before the ability actually activates.
+	var/windup_delay = 0
+	//For attacks that pass through walls
+	var/dash_ignore_walls = FALSE
+	//If this dash can smash through windows
+	var/env_breaking = FALSE
+	//For stopping the dash NOW
+	var/emergency_stop = FALSE
+	//If we only do cardinals
+	var/cardinal_only = FALSE
+
+/obj/effect/proc_holder/ability/aimed/rca_dash/Perform(target, mob/living/user)
+	. = ..()
+	//reset the emergency stop so we are not forever stuck.
+	emergency_stop = FALSE
+	if(!user || !target)
+		return
+	ToggleAct(user,FALSE)
+	var/overall_dir = get_dir(get_turf(user), get_turf(target))
+	user.setDir(overall_dir)
+
+	var/list/ourpath = Telegraph(target, user)
+
+	if(length(ourpath))
+		Finalize(target, user, ourpath)
+		return
+	EndCharge(user)
+
+//Returns a list of the turfs we are dashing. See spear apostle dash for actual telegraphing.
+/obj/effect/proc_holder/ability/aimed/rca_dash/proc/Telegraph(atom/target, mob/living/user)
+	. = list()
+	if(!target || !user)
+		stack_trace("Dash Skill Telegraph was called without a target or user.")
+		return list()
+	var/dir_to_target
+	if(cardinal_only && !QDELETED(target))
+		dir_to_target = get_cardinal_dir(get_turf(user), get_turf(target))
+	else
+		dir_to_target = get_dir(user, target)
+
+	var/turf/T = get_turf(user)
+	for(var/i = 1 to dash_range)
+		T = get_step(T, dir_to_target)
+		if(T.density)
+			if(i < 4) // Mob attempted to dash into a wall too close, stop it
+				return list()
+			break
+		. += T
+
+// Truely preforms the dash.
+/obj/effect/proc_holder/ability/aimed/rca_dash/proc/Finalize(target, mob/living/user, list/path_list)
+	if(windup_delay)
+		if(!do_after(user, windup_delay, target = user))
+			EndCharge(user)
+			return
+
+	if(!path_list)
+		var/dir_to_target = get_dir(user, target)
+		if(!dir_to_target)
+			EndCharge(user)
+			return
+		var/somehowloc = get_ranged_target_turf(user, dir_to_target, dash_range)
+		path_list = get_ranged_target_turf_direct(user, somehowloc, dash_range)
+
+	addtimer(CALLBACK(src, PROC_REF(DashMove), user, get_turf(user), 1, path_list), dash_speed)
+
+//Ends the charge offically
+/obj/effect/proc_holder/ability/aimed/rca_dash/proc/DashMove(mob/living/user, turf/last_turf, times_ran = 1, list/dash_list)
+	var/list/mobs_to_hit = list()
+	if(!islist(dash_list))
+		stack_trace("Dash Skill path_list was not a list.")
+		return EndCharge(user)
+
+	var/turf/T = popleft(dash_list)
+
+	if(times_ran >= dash_range)
+		return EndCharge(user)
+	if(!T || !user)
+		return EndCharge(user)
+	if(last_turf && last_turf != get_turf(user) && !dash_ignore_walls)
+		//Really cool interception.
+		return EndCharge(user)
+	if(emergency_stop || user.stat == DEAD)
+		return EndCharge(user)
+	if(!PassCriteria(T, user))
+		return EndCharge(user)
+	user.forceMove(T)
+	last_turf = T
+	// Damage
+	mobs_to_hit = TurfEffects(T, user, mobs_to_hit)
+
+	//Unsure if sleep would cause issues with this thing so i resorted to the age old method -IP
+	addtimer(CALLBACK(src, PROC_REF(DashMove), user, last_turf, (times_ran + 1), dash_list), dash_speed)
+
+//Ends the charge offically
+/obj/effect/proc_holder/ability/aimed/rca_dash/proc/EndCharge(mob/living/user)
+	if(user)
+		AbnoInteraction(user)
+		ToggleAct(user,TRUE)
+	LAZYCLEARLIST(hit_identifiers)
+
+/*
+* If this returns false then the attack stops.
+* Scans each turf during Telegraph.
+*/
+/obj/effect/proc_holder/ability/aimed/rca_dash/proc/PassCriteria(turf/T, mob/living/user)
+	if(dash_ignore_walls)
+		return TRUE
+	if(T.density)
+		return FALSE
+	for(var/obj/structure/window/W in T.contents)
+		if(W.density)
+			if(!env_breaking)
+				return FALSE
+			W.obj_destruction(name)
+	for(var/obj/machinery/door/MD in T.contents)
+		if(!MD.CanAStarPass(null))
+			return FALSE
+		if(MD.density)
+			INVOKE_ASYNC(MD, TYPE_PROC_REF(/obj/machinery/door, open), 2)
+	for(var/mob/living/simple_animal/hostile/rcorp_abno/D in T.contents)	//This caused issues earlier
+		if(D.density && D != user)
+			return FALSE
+	return TRUE
+
+/*
+* Just does damage to people on tiles we havent hit.
+*/
+/obj/effect/proc_holder/ability/aimed/rca_dash/proc/TurfEffects(turf/T, mob/living/ourthing)
+	return
+
+/*
+* Gets only the turfs around us. No reason
+* to check for all of the items if we are not looking for them
+*/
+/obj/effect/proc_holder/ability/aimed/rca_dash/proc/GetRange(A, size = 1)
+	if(!A)
+		return
+	var/turf/T = get_turf(A)
+
+	if(size < 1)
+		return list(T)
+	var/turfz = T.z
+	//Lower Left
+	var/offsetx1 = T.x -size
+	var/offsety1 = T.y -size
+	//Upper Right
+	var/offsetx2 = T.x +size
+	var/offsety2 = T.y +size
+	var/list/turfs_to_hit = block(offsetx1,offsety1,turfz,offsetx2,offsety2,turfz)
+	turfs_to_hit -= T
+	return turfs_to_hit
+
+/*
+* Requires a mob/living to call HurtInTurf
+* Uses HasIdentList to sort out the things we have already hit.
+*/
+/obj/effect/proc_holder/ability/aimed/rca_dash/proc/HurtInTurf(mob/living/ourmob, turf/target, list/hit_list = list(), damage = 0, damage_type = RED_DAMAGE, def_zone = null, check_faction = FALSE, exact_faction_match = FALSE, hurt_mechs = FALSE, mech_damage = 0, hurt_hidden = FALSE, hurt_structure = FALSE, break_not_destroy = FALSE, attack_direction = null, flags = null, attack_type = null)
+	var/list/do_not_hitlist = list()
+	for(var/obj/thing in target)
+		if(HasIdentList(thing))
+			do_not_hitlist += thing
+	for(var/mob/living/L in target)
+		if(HasIdentList(L))
+			do_not_hitlist += L
+	return ourmob.HurtInTurf(target, hit_list, damage, damage_type, def_zone, check_faction, exact_faction_match, hurt_mechs, mech_damage, hurt_hidden, hurt_structure, break_not_destroy, attack_direction, flags, attack_type) - do_not_hitlist
+
+
 //Debrief the player
 /mob/living/simple_animal/hostile/rcorp_abno/Login()
 	. = ..()
