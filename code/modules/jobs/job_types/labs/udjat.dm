@@ -62,7 +62,7 @@
 	departments = DEPARTMENT_SECURITY
 
 	outfit = /datum/outfit/job/udjatsgt
-	display_order = 4
+	display_order = 4.1
 
 	job_important = "You are an LCA Udjat agent. Assist the researchers when necessary!"
 

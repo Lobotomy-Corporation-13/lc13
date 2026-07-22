@@ -3,8 +3,8 @@
 	title = "LCE Clerk"
 	faction = "Station"
 	supervisors = "Researchers"
-	total_positions = 0
-	spawn_positions = 0
+	total_positions = -1
+	spawn_positions = -1
 	selection_color = "#bbbbbb"
 
 	outfit = /datum/outfit/job/staff
