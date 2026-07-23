@@ -25,12 +25,32 @@
 		"When the work result was Normal, the Qliphoth Counter lowered.",
 	)
 
+//Hivelord
+/obj/item/paper/fluff/info/mining/hivelord
+	abno_type = /mob/living/simple_animal/hostile/abnormality/mining/hivelord
+	abno_code = "S-06-13-02"
+	abno_info = list(
+		"When the work result was Good, the Qliphoth Counter lowered at a low rate.",
+		"When the work result was Bad, the Qliphoth Counter lowered.",
+	)
+
+//Goliath
+/obj/item/paper/fluff/info/mining/goliath
+	abno_type = /mob/living/simple_animal/hostile/abnormality/mining/goliath
+	abno_code = "S-04-13-01"
+	abno_info = list(
+		"When the work result was Good, the Qliphoth Counter lowered at a low rate.",
+		"When the work result was Bad, the Qliphoth Counter lowered.",
+	)
+
+
+
 
 //	-------------HE-------------
 // Herald
 /obj/item/paper/fluff/info/mining/herald
 	abno_type = /mob/living/simple_animal/hostile/abnormality/mining/herald
-	abno_code = "S-06-13-05"	//S for "Space" because "M" is for "Myth"
+	abno_code = "S-03-13-05"	//S for "Space" because "M" is for "Myth"
 	abno_info = list(
 		"When the work result was Normal, the Qliphoth Counter lowered with a normal probability.",
 		"When the work result was Bad, the Qliphoth Counter lowered with a high probability.",
@@ -48,8 +68,18 @@
 //Pandora
 /obj/item/paper/fluff/info/mining/pandora
 	abno_type = /mob/living/simple_animal/hostile/abnormality/mining/pandora
-	abno_code = "S-06-13-02"
+	abno_code = "S-03-13-04"
 	abno_info = list(
 		"When the work result was Normal, the Qliphoth Counter lowered with a normal probability.",
 		"When the work result was Bad, the Qliphoth Counter lowered with a high probability.",
+	)
+
+
+//	-------------ALEPH-------------
+// Wendigo
+/obj/item/paper/fluff/info/mining/wendigo
+	abno_type = /mob/living/simple_animal/hostile/abnormality/mining/wendigo
+	abno_code = "S-04-13-09"
+	abno_info = list(
+		"When the work result was Bad, the Qliphoth Counter lowered.",
 	)
