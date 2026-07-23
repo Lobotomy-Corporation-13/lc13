@@ -34,6 +34,8 @@
 	QDEL_IN(src, 10 SECONDS)
 	..()
 
+//Not having a cooldown on the oxyloss sounds bad, but people breathe at a rate of about once every 4 lifeticks, so it's only a tad faster
+//A lifetick is 2 seconds
 /mob/living/simple_animal/hostile/rcorp_abno/easy/pisc_mermaid/Life()
 	. = ..()
 	if(!.)
@@ -42,5 +44,9 @@
 		if(faction_check(src.faction, H.faction)) // I LOVE NESTING IF STATEMENTS
 			continue
 		//they suffocate everyone they can see but you can just get out of her view to stop it
-		H.adjustOxyLoss(3, updating_health=TRUE, forced=TRUE)
+		 //Medium oxyloss is technically the same damage as Low Oxyloss as while normally youd stop breathing while being choked in Piscines case youre still breathing, so the Oxyloss applied here is only half as efficient balancing out the damage.
+		 //This means that in 4 ticks you will do 32 oxyloss then have 16 of it healed on the final tick for a total of 16
+		 //a human passes out at over 50 oxy so theyll pass out within 11 lifeticks (56 oxy) though theyll wake up on the 12th lifetick as it heals 16 taking their oxy to 48, however they pass out again on the 13th lifetick and sleep for good
+		H.adjustOxyLoss(HUMAN_MEDIUM_OXYLOSS_RATE, updating_health=TRUE, forced=TRUE)
 		new /obj/effect/temp_visual/mermaid_drowning(get_turf(H))
+	return
