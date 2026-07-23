@@ -4662,6 +4662,7 @@
 #include "ModularLobotomy\rcorp\rcorp_abnos\easyteam\easysupport\pisc_mermaid.dm"
 #include "ModularLobotomy\rcorp\rcorp_abnos\easyteam\easysupport\ppodae.dm"
 #include "ModularLobotomy\rcorp\rcorp_abnos\easyteam\easysupport\redblooded.dm"
+#include "ModularLobotomy\rcorp\rcorp_abnos\easyteam\easysupport\void_dream.dm"
 #include "ModularLobotomy\rcorp\rcorp_abnos\easyteam\easysupport\wayward_passenger.dm"
 #include "ModularLobotomy\rcorp\rcorp_abnos\hardteam\hardcombat.dm"
 #include "ModularLobotomy\rcorp\rcorp_abnos\hardteam\hardsupport.dm"

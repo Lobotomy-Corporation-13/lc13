@@ -21,7 +21,7 @@ GLOBAL_LIST_INIT(easysupport, list(
 	/mob/living/simple_animal/hostile/rcorp_abno/easy/cleaner,
 	/mob/living/simple_animal/hostile/rcorp_abno/easy/der_freischutz,
 	/mob/living/simple_animal/hostile/abnormality/better_memories,
-	/mob/living/simple_animal/hostile/abnormality/voiddream,
+	/mob/living/simple_animal/hostile/rcorp_abno/easy/voiddream,
 ))
 
 GLOBAL_LIST_INIT(easytank, list(
