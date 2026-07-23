@@ -16,7 +16,7 @@ GLOBAL_LIST_INIT(easysupport, list(
 	/mob/living/simple_animal/hostile/rcorp_abno/easy/pisc_mermaid,
 	/mob/living/simple_animal/hostile/rcorp_abno/easy/redblooded,
 	/mob/living/simple_animal/hostile/rcorp_abno/easy/wayward,
-	/mob/living/simple_animal/hostile/abnormality/ppodae,
+	/mob/living/simple_animal/hostile/rcorp_abno/easy/ppodae,
 	/mob/living/simple_animal/hostile/abnormality/apex_predator,
 	/mob/living/simple_animal/hostile/rcorp_abno/easy/cleaner,
 	/mob/living/simple_animal/hostile/abnormality/der_freischutz,
@@ -38,12 +38,13 @@ GLOBAL_LIST_INIT(hardcombat, list(
 	/mob/living/simple_animal/hostile/abnormality/clouded_monk,
 	/mob/living/simple_animal/hostile/abnormality/clown,
 	/mob/living/simple_animal/hostile/abnormality/nosferatu,
-	/mob/living/simple_animal/hostile/abnormality/big_wolf,
+	/mob/living/simple_animal/hostile/abnormality/big_wolf, //Waiting for rework
 	/mob/living/simple_animal/hostile/abnormality/luna,
-	/mob/living/simple_animal/hostile/abnormality/red_hood,
+	/mob/living/simple_animal/hostile/abnormality/red_hood,//Waiting for rework
 ))
 
-GLOBAL_LIST_INIT(hardsupport, list(/mob/living/simple_animal/hostile/abnormality/sphinx,
+GLOBAL_LIST_INIT(hardsupport, list(
+	/mob/living/simple_animal/hostile/abnormality/sphinx,
 	/mob/living/simple_animal/hostile/abnormality/ebony_queen,
 	/mob/living/simple_animal/hostile/abnormality/thunder_bird,
 	/mob/living/simple_animal/hostile/abnormality/despair_knight,
@@ -52,7 +53,8 @@ GLOBAL_LIST_INIT(hardsupport, list(/mob/living/simple_animal/hostile/abnormality
 	/mob/living/simple_animal/hostile/abnormality/big_bird,
 ))
 
-GLOBAL_LIST_INIT(hardtank, list(/mob/living/simple_animal/hostile/abnormality/melting_love,
+GLOBAL_LIST_INIT(hardtank, list(
+	/mob/living/simple_animal/hostile/abnormality/melting_love,
 	/mob/living/simple_animal/hostile/abnormality/nothing_there,
 	/mob/living/simple_animal/hostile/abnormality/censored,
 	/mob/living/simple_animal/hostile/abnormality/titania,
@@ -70,7 +72,8 @@ GLOBAL_LIST_INIT(rhinobuster, list(,
 ))
 
 //Used for the specific raidboss mode
-GLOBAL_LIST_INIT(raidboss, list(/mob/living/simple_animal/hostile/distortion/shrimp_rambo/easy,
+GLOBAL_LIST_INIT(raidboss, list(
+	/mob/living/simple_animal/hostile/distortion/shrimp_rambo/easy,
 	/mob/living/simple_animal/hostile/abnormality/mountain,
 	/mob/living/simple_animal/hostile/ordeal/black_fixer,
 ))
