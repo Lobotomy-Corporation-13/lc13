@@ -52,7 +52,7 @@
 			break
 		if(isopenturf(U) && !HasIdentList(U))
 			FlickOnAtom(U,'icons/effects/effects.dmi',"smash",5)
-		var/list/new_hits = HurtInTurf(ourthing, U, list(), dash_damage, RED_DAMAGE, hurt_mechs = TRUE, flags = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
+		var/list/new_hits = HurtInTurf(ourthing, U, list(), dash_damage, RED_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, flags = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 		var/flicks = FALSE
 		for(var/mob/living/L in new_hits)//damage applied to targets in range
 			if(!ourthing.faction_check_mob(L))
