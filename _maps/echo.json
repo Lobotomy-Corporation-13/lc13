@@ -1,9 +1,9 @@
 {
 	"version": 1,
 	"map_name": "Facility E-886 UBOAT",
-	"map_path": "map_files/Epsilon",
+	"map_path": "map_files/LC13/Echo-Uboat",
 	"map_file": [
-		"epsiloncorp.dmm"
+		"echo.dmm"
 	],
 	"space_ruin_levels": 0,
 	"space_empty_levels": 0,

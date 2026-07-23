@@ -1,9 +1,9 @@
 {
 	"version": 1,
-	"map_name": "Facility W-098",
-	"map_path": "map_files/LC13/Whiskey",
+	"map_name": "Facility D-069 DEFENSE",
+	"map_path": "map_files/LC13/Delta-Defense",
 	"map_file": [
-		"whiskey.dmm"
+		"delta.dmm"
 	],
 	"traits": [
 		{
@@ -12,9 +12,6 @@
 	],
 	"space_ruin_levels": 0,
 	"space_empty_levels": 0,
-	"shuttles": {
-		"emergency": "emergency_alpha"
-	},
 	"minetype": "none",
-	"maptype": "mini"
+	"maptype": "standard"
 }

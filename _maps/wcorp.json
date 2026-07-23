@@ -1,7 +1,7 @@
 {
 	"version": 1,
 	"map_name": "W-Corp Cleanup",
-	"map_path": "map_files/Event",
+	"map_path": "map_files/Wcorp",
 	"map_file": [
 		"wcorp.dmm"
 	],

@@ -1,9 +1,9 @@
 {
 	"version": 1,
-	"map_name": "Facility B-939 BRAVO",
-	"map_path": "map_files/Beta",
+	"map_name": "Facility W-098",
+	"map_path": "map_files/LC13/Whiskey",
 	"map_file": [
-		"betacorp.dmm"
+		"whiskey.dmm"
 	],
 	"traits": [
 		{
@@ -12,6 +12,9 @@
 	],
 	"space_ruin_levels": 0,
 	"space_empty_levels": 0,
+	"shuttles": {
+		"emergency": "emergency_alpha"
+	},
 	"minetype": "none",
-	"maptype": "standard"
+	"maptype": "mini"
 }

@@ -1,7 +1,7 @@
 {
 	"version": 1,
 	"map_name": "R-Corp Assault",
-	"map_path": "map_files/Event",
+	"map_path": "map_files/RCA",
 	"map_file": [
 		"rcorp.dmm"
 	],

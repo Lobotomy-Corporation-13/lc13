@@ -1,9 +1,9 @@
 {
 	"version": 1,
-	"map_name": "Facility D-069 DEFENSE",
-	"map_path": "map_files/Delta",
+	"map_name": "Facility L-120 LUMERY",
+	"map_path": "map_files/LC13/Lima-Lumery",
 	"map_file": [
-		"deltacorp.dmm"
+		"Lima.dmm"
 	],
 	"traits": [
 		{
@@ -12,6 +12,9 @@
 	],
 	"space_ruin_levels": 0,
 	"space_empty_levels": 0,
+	"shuttles": {
+		"emergency": "emergency_alpha"
+	},
 	"minetype": "none",
 	"maptype": "standard"
 }

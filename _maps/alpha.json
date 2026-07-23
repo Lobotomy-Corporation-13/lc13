@@ -1,9 +1,9 @@
 {
 	"version": 1,
-	"map_name": "Facility C-211 AXIS",
-	"map_path": "map_files/Gamma",
+	"map_name": "Facility A-098 ALPHA",
+	"map_path": "map_files/LC13/Alpha-Alpha",
 	"map_file": [
-		"gammacorp.dmm"
+		"alpha.dmm"
 	],
 	"traits": [
 		{
@@ -12,6 +12,9 @@
 	],
 	"space_ruin_levels": 0,
 	"space_empty_levels": 0,
+	"shuttles": {
+		"emergency": "emergency_alpha"
+	},
 	"minetype": "none",
 	"maptype": "standard"
 }

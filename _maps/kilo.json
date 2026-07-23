@@ -1,9 +1,9 @@
 {
 	"version": 1,
-	"map_name": "Facility L-120 LUMERY",
-	"map_path": "map_files/Lumery",
+	"map_name": "Facility K-021 RIFT",
+	"map_path": "map_files/LC13/Kilo-Rift",
 	"map_file": [
-		"LumeryCorp.dmm"
+		"kilo.dmm"
 	],
 	"traits": [
 		{

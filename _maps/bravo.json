@@ -1,9 +1,9 @@
 {
 	"version": 1,
-	"map_name": "Facility A-098 ALPHA",
-	"map_path": "map_files/Alpha",
+	"map_name": "Facility B-939 BRAVO",
+	"map_path": "map_files/LC13/Bravo-Bravo",
 	"map_file": [
-		"alphacorp.dmm"
+		"bravo.dmm"
 	],
 	"traits": [
 		{
@@ -12,9 +12,6 @@
 	],
 	"space_ruin_levels": 0,
 	"space_empty_levels": 0,
-	"shuttles": {
-		"emergency": "emergency_alpha"
-	},
 	"minetype": "none",
 	"maptype": "standard"
 }
