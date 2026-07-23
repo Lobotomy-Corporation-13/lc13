@@ -14,11 +14,11 @@
 	original_abno = /mob/living/simple_animal/hostile/abnormality/wayward
 
 	abno_additional_instructions = "<h1>You are Wayward Passenger, A Support Role Abnormality.</h1><br>\
-		<b>|Dimensional Escape|:</b> You may select one of two abilities to use at range, the first one being your portal.<br>\
-		Upon use you will open a portal to the tile you selected then cross that portal yourself, others may cross this portal in it's 3 seconds of existence.<br>\
+		<b>|Dimensional Escape|:</b> You may select one of two abilities to use at range, the first one being your rift.<br>\
+		Upon use you will open a rift to the tile you selected then cross that rift yourself, others may also use this rift.<br>\
 		<br>\
-		<b>|Rip Space|:</b> You may select one of two abilities to use at range, the second one being your dash.<br>\
-		Upon using the dash you will initiate a 2 second windup.<br>\
+		<b>|Rip Space|:</b> You may select one of two abilities to use at range, the second one being your rip space.<br>\
+		Upon using the rip space you will initiate a 2 second windup.<br>\
 		When windup is complete you will perform a 3 tile wide dash in the direction you selected."
 
 	attack_action_types = list(
