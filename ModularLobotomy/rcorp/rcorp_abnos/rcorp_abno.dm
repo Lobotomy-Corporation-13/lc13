@@ -72,8 +72,6 @@
 		attack_verb_simple = original_abno.attack_verb_simple
 		speak_emote = original_abno.speak_emote
 		speech_span = original_abno.speech_span
-		vision_range = original_abno.vision_range
-		aggro_vision_range = original_abno.aggro_vision_range
 		threat_level = original_abno.threat_level
 		core_icon = original_abno.core_icon
 		death_message = original_abno.death_message
@@ -82,8 +80,12 @@
 		base_pixel_x = original_abno.base_pixel_x
 		pixel_y = original_abno.pixel_y
 		base_pixel_y = original_abno.base_pixel_y
+		response_help_continuous = original_abno.response_help_continuous
+		response_help_simple = original_abno.response_help_simple
 		pet_bonus = original_abno.pet_bonus
+		pet_bonus_emote = original_abno.pet_bonus_emote
 		layer = original_abno.layer
+		//I assure you the wall of vars which are 99% cosmetic and useless is crucial to my ig immersion
 
 	if(secret_chance && (prob(1)))
 		InitializeSecretIcon()

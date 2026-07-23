@@ -2,7 +2,7 @@ GLOBAL_LIST_INIT(easycombat, list(
 	/mob/living/simple_animal/hostile/rcorp_abno/easy/blue_shepherd,
 	/mob/living/simple_animal/hostile/rcorp_abno/easy/helper,
 	/mob/living/simple_animal/hostile/rcorp_abno/easy/smile,
-	/mob/living/simple_animal/hostile/abnormality/pinocchio,
+	/mob/living/simple_animal/hostile/abnormality/pinocchio, //Will be done last because carbon
 	/mob/living/simple_animal/hostile/rcorp_abno/easy/fragment,
 	/mob/living/simple_animal/hostile/rcorp_abno/easy/fairy_gentleman,
 	/mob/living/simple_animal/hostile/rcorp_abno/easy/drifting_fox,
@@ -12,8 +12,8 @@ GLOBAL_LIST_INIT(easycombat, list(
 ))
 
 GLOBAL_LIST_INIT(easysupport, list(
-	/mob/living/simple_animal/hostile/abnormality/funeral,
-	/mob/living/simple_animal/hostile/abnormality/pisc_mermaid,
+	/mob/living/simple_animal/hostile/abnormality/funeral, //Waiting for rework
+	/mob/living/simple_animal/hostile/rcorp_abno/easy/pisc_mermaid,
 	/mob/living/simple_animal/hostile/abnormality/redblooded,
 	/mob/living/simple_animal/hostile/abnormality/wayward,
 	/mob/living/simple_animal/hostile/abnormality/ppodae,
