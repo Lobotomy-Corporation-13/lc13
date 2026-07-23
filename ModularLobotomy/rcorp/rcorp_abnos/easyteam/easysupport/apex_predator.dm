@@ -25,7 +25,7 @@
 	var/recloak_time = 0
 	var/recloak_time_cooldown = 30 SECONDS
 
-	abno_additional_instructions = "<h1>You are Apex Predator, A Support/Combat Role Abnormality.</h1><br>\
+	abno_additional_instructions = "<h1>You are Apex Predator, A Support Role Abnormality.</h1><br>\
 		<b>|Adaptation|: You possess two modes as Apex Predator, Hunting and Eliminating. \
 		You will automatically enter Hunting mode upon joining the round.<br>\
 		<br>\

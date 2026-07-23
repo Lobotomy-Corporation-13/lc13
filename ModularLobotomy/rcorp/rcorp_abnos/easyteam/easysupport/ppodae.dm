@@ -31,7 +31,7 @@
 	//Other Stuff
 	var/limb_heal = 0.02
 
-	abno_additional_instructions = "<h1>You are Ppodae, A Support/Combat Role Abnormality.</h1><br>\
+	abno_additional_instructions = "<h1>You are Ppodae, A Support Role Abnormality.</h1><br>\
 		<b>|How adorable!|: You are able to switch between a 'Cute' and 'Buff' form. \
 		Switching between forms has a 10 second cooldown and each time you switch forms you create smoke which lasts for 9 seconds.<br>\
 		<br>\

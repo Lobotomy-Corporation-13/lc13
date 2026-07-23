@@ -19,7 +19,7 @@ GLOBAL_LIST_INIT(easysupport, list(
 	/mob/living/simple_animal/hostile/rcorp_abno/easy/ppodae,
 	/mob/living/simple_animal/hostile/rcorp_abno/easy/apex_predator,
 	/mob/living/simple_animal/hostile/rcorp_abno/easy/cleaner,
-	/mob/living/simple_animal/hostile/abnormality/der_freischutz,
+	/mob/living/simple_animal/hostile/rcorp_abno/easy/der_freischutz,
 	/mob/living/simple_animal/hostile/abnormality/better_memories,
 	/mob/living/simple_animal/hostile/abnormality/voiddream,
 ))

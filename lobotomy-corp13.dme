@@ -4658,6 +4658,7 @@
 #include "ModularLobotomy\rcorp\rcorp_abnos\easyteam\easysupport\_easysupport.dm"
 #include "ModularLobotomy\rcorp\rcorp_abnos\easyteam\easysupport\apex_predator.dm"
 #include "ModularLobotomy\rcorp\rcorp_abnos\easyteam\easysupport\cleaner.dm"
+#include "ModularLobotomy\rcorp\rcorp_abnos\easyteam\easysupport\der_freischutz.dm"
 #include "ModularLobotomy\rcorp\rcorp_abnos\easyteam\easysupport\pisc_mermaid.dm"
 #include "ModularLobotomy\rcorp\rcorp_abnos\easyteam\easysupport\ppodae.dm"
 #include "ModularLobotomy\rcorp\rcorp_abnos\easyteam\easysupport\redblooded.dm"
