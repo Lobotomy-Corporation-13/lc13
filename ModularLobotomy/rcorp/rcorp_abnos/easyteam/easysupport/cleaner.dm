@@ -8,7 +8,7 @@
 	damage_coeff = list(BRUTE = 1, RED_DAMAGE = 0.7, WHITE_DAMAGE = 1, BLACK_DAMAGE = 2, PALE_DAMAGE = 2)
 	original_abno = /mob/living/simple_animal/hostile/abnormality/cleaner
 
-	abno_additional_instructions = "<h1>You are All-Around Cleaner, A Combat Role Abnormality.</h1><br>\
+	abno_additional_instructions = "<h1>You are All-Around Cleaner, A Support Role Abnormality.</h1><br>\
 		<b>|Special Cleaning|: When moving within 2 tile range of a mess you will clean it. \
 		When said mess is a human you will violently toss them if they are not in crit. <br>\
 		</b>"

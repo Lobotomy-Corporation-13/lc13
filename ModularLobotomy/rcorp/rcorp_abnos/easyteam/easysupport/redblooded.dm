@@ -1,6 +1,6 @@
 /mob/living/simple_animal/hostile/rcorp_abno/easy/redblooded
 	name = "Red Blooded American"
-	desc = "A bright red demon with oversized arms and greasy black hair. It is keeping its eyes focused on you."
+	desc = "A bright red demon with oversized arms and greasy black hair. It is keeping its eyes focused on you. It seems to eagerly reload it's weapon, avoid getting close."
 	maxHealth = 1200
 	health = 1200
 	rapid_melee = 1

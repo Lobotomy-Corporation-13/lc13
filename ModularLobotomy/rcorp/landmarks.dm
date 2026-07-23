@@ -15,7 +15,7 @@ GLOBAL_LIST_INIT(easysupport, list(
 	/mob/living/simple_animal/hostile/abnormality/funeral, //Waiting for rework
 	/mob/living/simple_animal/hostile/rcorp_abno/easy/pisc_mermaid,
 	/mob/living/simple_animal/hostile/rcorp_abno/easy/redblooded,
-	/mob/living/simple_animal/hostile/abnormality/wayward,
+	/mob/living/simple_animal/hostile/rcorp_abno/easy/wayward,
 	/mob/living/simple_animal/hostile/abnormality/ppodae,
 	/mob/living/simple_animal/hostile/abnormality/apex_predator,
 	/mob/living/simple_animal/hostile/rcorp_abno/easy/cleaner,

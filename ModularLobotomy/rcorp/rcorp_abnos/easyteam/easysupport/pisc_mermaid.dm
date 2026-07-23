@@ -1,6 +1,6 @@
 /mob/living/simple_animal/hostile/rcorp_abno/easy/pisc_mermaid
 	name = "Piscine Mermaid"
-	desc = "A limbless abnormality ressembling a mermaid. Their heart shaped eyes look at you with both love and jealousy."
+	desc = "A limbless abnormality ressembling a mermaid. Their heart shaped eyes look at you with both love and jealousy. Just being near it leaves you at a loss for breath, don't stay around for too long."
 	del_on_death = FALSE
 	maxHealth = 1500
 	health = 1500
@@ -14,7 +14,7 @@
 
 	var/suffocation_range = 10
 
-	abno_additional_instructions = "<h1>You are All-Around Cleaner, A Combat Role Abnormality.</h1><br>\
+	abno_additional_instructions = "<h1>You are All-Around Cleaner, A Support Role Abnormality.</h1><br>\
 		<b>|Unrequited Love|: When within a 10 tile sightline of a hostile human being you will do passive OXY damage to them. \
 		This OXY damage also known as suffocation pierces mechs however it is also passively healed when not within your sightline. <br>\
 		</b>"
