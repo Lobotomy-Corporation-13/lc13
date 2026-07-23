@@ -84,7 +84,7 @@
 		response_help_simple = original_abno.response_help_simple
 		pet_bonus = original_abno.pet_bonus
 		pet_bonus_emote = original_abno.pet_bonus_emote
-		layer = original_abno.layer
+		projectilesound = original_abno.projectilesound
 		//I assure you the wall of vars which are 99% cosmetic and useless is crucial to my ig immersion
 
 	if(secret_chance && (prob(1)))
