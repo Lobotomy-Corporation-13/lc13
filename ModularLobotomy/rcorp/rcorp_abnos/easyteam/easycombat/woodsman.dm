@@ -47,8 +47,7 @@
 	var/datum/beam/chain_beam
 
 	//PLAYABLES ATTACKS
-	attack_action_types = list(/datum/action/innate/rca_abnormality_attack/toggle/woodsman_flurry_toggle,
-	/obj/effect/proc_holder/spell/pointed/rca_axe_throw)
+	attack_action_types = list(/datum/action/innate/rca_abnormality_attack/toggle/woodsman_flurry_toggle)
 
 	abno_additional_instructions = "<h1>You are Warm Hearted Woodsman, A Combat Role Abnormality.</h1><br>\
 		<b>|Seeking Hearts...|:</b> When you attack dead bodies, you will extract their heart.<br>\
@@ -59,7 +58,7 @@
 		If you pull them all the way next to you, they will be released and knocked down for 3 seconds. They will also be released if they break line of sight with you.<br>\
 		<br>\
 		<b>|Chopping Down|:</b> When you attack, if your flurry attack is off cooldown you will use it.<br>\
-		Your flurry attack is a 3x2 AoE in front of you, which deals RED damage, which will repeat 7 times in a row before end with a extra strong final hit.<br>\
+		Your flurry attack is a 5x3 AoE in front of you, which deals RED damage, which will repeat 7 times in a row before end with a extra strong final hit.<br>\
 		You are able to toggle your flurry attack on and off with your ability."
 
 /datum/action/spell_action/spell/rca_axe_throw/IsAvailable()
@@ -68,7 +67,6 @@
 		if (W.chained_target)
 			return FALSE
 	. = ..()
-
 
 /obj/effect/proc_holder/spell/pointed/rca_axe_throw
 	name = "Chain Axe throw"
@@ -136,13 +134,15 @@
 
 /mob/living/simple_animal/hostile/rcorp_abno/easy/woodsman/Initialize()
 	. = ..()
-	icon_state = icon_living
+	icon_state = "woodsman_breach"
 	soundloop = new(list(src), FALSE)
 	initial_melee_damage_lower = melee_damage_lower
 	initial_melee_damage_upper = melee_damage_upper
 	initial_flurry_delay = flurry_delay
 	initial_flurry_pause = flurry_pause
 	initial_move_to_delay = move_to_delay
+	var/obj/effect/proc_holder/spell/pointed/axe_throw/AS = new /obj/effect/proc_holder/spell/pointed/axe_throw(src)
+	AddSpell(AS)
 
 /mob/living/simple_animal/hostile/rcorp_abno/easy/woodsman/Destroy()
 	QDEL_NULL(soundloop)
