@@ -323,7 +323,7 @@ SUBSYSTEM_DEF(lobotomy_corp)
 			A.current.OnQliphothEvent()
 	var/ran_ordeal = FALSE
 	if(qliphoth_state + 1 >= next_ordeal_time) // If ordeal is supposed to happen on the meltdown after that one
-		if(SSlobotomy_corp.BlitzActive())
+		if(!SSlobotomy_corp.BlitzActive())
 			if(istype(next_ordeal) && ordeal_timelock[next_ordeal.level] > ROUNDTIME) // And it's on timelock
 				next_ordeal_time += 1 // So it does not appear on the ordeal monitors until timelock is off
 	if(qliphoth_state >= next_ordeal_time)
