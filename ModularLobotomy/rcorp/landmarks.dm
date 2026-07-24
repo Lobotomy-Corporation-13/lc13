@@ -28,7 +28,7 @@ GLOBAL_LIST_INIT(easytank, list(
 	/mob/living/simple_animal/hostile/rcorp_abno/easy/jangsan,
 	/mob/living/simple_animal/hostile/rcorp_abno/easy/scarecrow,
 	/mob/living/simple_animal/hostile/rcorp_abno/easy/kqe,
-	/mob/living/simple_animal/hostile/abnormality/warden,
+	/mob/living/simple_animal/hostile/rcorp_abno/easy/warden,
 	/mob/living/simple_animal/hostile/abnormality/golden_apple,
 	/mob/living/simple_animal/hostile/abnormality/porccubus,
 	/mob/living/simple_animal/hostile/abnormality/black_swan,

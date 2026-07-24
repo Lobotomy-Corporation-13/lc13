@@ -173,8 +173,6 @@
 	for(var/obj/vehicle/sealed/mecha/M in view(1, src))
 		M.ejectall()
 	for(var/mob/living/carbon/human/H in view(1, src))
-		if(faction_check_mob(H))
-			continue
 		grabbed = TRUE
 		H.deal_damage(boom_damage, BLACK_DAMAGE, src, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_SPECIAL))
 		H.forceMove(get_turf(src))//pulls them all to the target
