@@ -75,6 +75,7 @@
 		threat_level = original_abno.threat_level
 		core_icon = original_abno.core_icon
 		death_message = original_abno.death_message
+		death_sound = original_abno.death_sound
 		blood_volume = original_abno.blood_volume
 		pixel_x = original_abno.pixel_x
 		base_pixel_x = original_abno.base_pixel_x

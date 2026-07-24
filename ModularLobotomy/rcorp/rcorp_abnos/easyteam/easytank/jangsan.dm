@@ -1,9 +1,10 @@
 #define JANGSAN_FEAR_COOLDOWN (8 SECONDS)
 
+//Jangsan is in the tank category due to his projectile absorption
 //Code by Coxswain, EGO sprites by Sky_ and abnormality sprites by Mel
 /mob/living/simple_animal/hostile/rcorp_abno/easy/jangsan
 	name = "Jangsan Tiger"
-	desc = "A monster that eats children. Reforms its face for a friendly image"
+	desc = "A monster that eats children. Reforms its face for a friendly image. It's mouth is quite large... maybe avoid getting closer if you don't feel you're strong."
 	ranged = TRUE
 	maxHealth = 1200
 	health = 1200
