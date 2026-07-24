@@ -7,9 +7,10 @@
 // open, spilling waves of Fragmentum Touched creatures (which drop Trace
 // Material on death). Ignored Calyxes wither.
 //
-// Mobs come in SQUADS that mirror the matching ordeal: each squad is a leader
-// (the tier's main mob) plus a few follower grunts, e.g. a steel dusk squad is
-// one heavy leader escorted by several basic Gene Corp remnants.
+// A Calyx mirrors ONE ordeal spawn point: its squad is that point's group -
+// either a leaderless swarm (green/amber packs) or a single unique commander
+// plus a refilling escort (steel/indigo/gold). Its live size never exceeds what
+// one ordeal spawn point deploys; the commander, if any, is spawned only once.
 
 // ---- Subsystem ----
 
@@ -68,85 +69,78 @@ SUBSYSTEM_DEF(calyx)
 	if(O.level > unlocked_tier)
 		unlocked_tier = O.level
 
-/// Builds a squad def: a leader pool, a grunt pool, and grunt count per leader.
-/datum/controller/subsystem/calyx/proc/Squad(list/leaders, list/grunts, count)
-	return list("leaders" = leaders, "grunts" = grunts, "count" = count)
+/// Builds a squad def mirroring one ordeal spawn point.
+/// boss: weighted list of a single unique commander, spawned once (null for a
+///   leaderless swarm).
+/// pool: weighted list of refillable mobs - a commander's escort, or the whole
+///   swarm - respawned as they fall (null for a lone boss with no escort).
+/// alive: how many mobs one ordeal spawn point fields at once; the Calyx never
+///   keeps more than this alive.
+/datum/controller/subsystem/calyx/proc/Squad(list/boss, list/pool, alive)
+	return list("boss" = boss, "pool" = pool, "alive" = alive)
 
 /datum/controller/subsystem/calyx/proc/BuildPools()
 	if(color_pools)
 		return
 	color_pools = list(
-		// Green (Lens): loose robot packs; the dusk factory self-produces.
+		// Green (Lens): loose robot packs, 1 per spawn point; the dusk factory
+		// self-produces, so one is plenty.
 		"green" = list(
-			Squad(list(/mob/living/simple_animal/hostile/ordeal/green_bot/fragmentum = 1),
-				list(/mob/living/simple_animal/hostile/ordeal/green_bot/syringe/fragmentum = 1,
-					/mob/living/simple_animal/hostile/ordeal/green_bot/fast/fragmentum = 1), 2),
-			Squad(list(/mob/living/simple_animal/hostile/ordeal/green_bot_big/fragmentum = 1),
-				list(/mob/living/simple_animal/hostile/ordeal/green_bot/fragmentum = 1,
-					/mob/living/simple_animal/hostile/ordeal/green_bot/fast/fragmentum = 1), 2),
-			Squad(list(/mob/living/simple_animal/hostile/ordeal/green_dusk/fragmentum = 1),
-				list(/mob/living/simple_animal/hostile/ordeal/green_bot/fragmentum = 1,
-					/mob/living/simple_animal/hostile/ordeal/green_bot_big/fragmentum = 1), 2),
+			Squad(null, list(/mob/living/simple_animal/hostile/ordeal/green_bot/fragmentum = 1,
+				/mob/living/simple_animal/hostile/ordeal/green_bot/syringe/fragmentum = 1,
+				/mob/living/simple_animal/hostile/ordeal/green_bot/fast/fragmentum = 1), 1),
+			Squad(null, list(/mob/living/simple_animal/hostile/ordeal/green_bot_big/fragmentum = 1), 1),
+			Squad(null, list(/mob/living/simple_animal/hostile/ordeal/green_dusk/fragmentum = 1), 1),
 		),
-		// Crimson (Ichor): clown escorts; leaders split further on death.
+		// Crimson (Ichor): clown swarms; noon/dusk split further on death.
 		"crimson" = list(
-			Squad(list(/mob/living/simple_animal/hostile/ordeal/crimson_clown/fragmentum = 1),
-				list(/mob/living/simple_animal/hostile/ordeal/crimson_clown/fragmentum = 1), 2),
-			Squad(list(/mob/living/simple_animal/hostile/ordeal/crimson_noon/fragmentum = 1),
-				list(/mob/living/simple_animal/hostile/ordeal/crimson_clown/fragmentum = 1), 2),
-			Squad(list(/mob/living/simple_animal/hostile/ordeal/crimson_noon/crimson_dusk/fragmentum = 1),
-				list(/mob/living/simple_animal/hostile/ordeal/crimson_clown/fragmentum = 1), 2),
+			Squad(null, list(/mob/living/simple_animal/hostile/ordeal/crimson_clown/fragmentum = 1), 3),
+			Squad(null, list(/mob/living/simple_animal/hostile/ordeal/crimson_noon/fragmentum = 1), 1),
+			Squad(null, list(/mob/living/simple_animal/hostile/ordeal/crimson_noon/crimson_dusk/fragmentum = 1), 1),
 		),
-		// Amber (Ichor): the worm broods.
+		// Amber (Ichor): worm broods; dawn spawns 3 per point, dusk 1.
 		"amber" = list(
-			Squad(list(/mob/living/simple_animal/hostile/ordeal/amber_bug/fragmentum = 1),
-				list(/mob/living/simple_animal/hostile/ordeal/amber_bug/fragmentum = 1), 2),
-			Squad(list(/mob/living/simple_animal/hostile/ordeal/amber_dusk/fragmentum = 1),
-				list(/mob/living/simple_animal/hostile/ordeal/amber_bug/fragmentum = 1), 3),
+			Squad(null, list(/mob/living/simple_animal/hostile/ordeal/amber_bug/fragmentum = 1), 3),
+			Squad(null, list(/mob/living/simple_animal/hostile/ordeal/amber_dusk/fragmentum = 1), 1),
 		),
-		// Indigo (Fang): scout pairs, sweeper packs, commander + sweepers.
+		// Indigo (Fang): scout pairs, sweeper packs, then a commander + sweepers.
 		"indigo" = list(
-			Squad(list(/mob/living/simple_animal/hostile/ordeal/indigo_dawn/fragmentum = 1),
-				list(/mob/living/simple_animal/hostile/ordeal/indigo_dawn/invis/fragmentum = 1,
-					/mob/living/simple_animal/hostile/ordeal/indigo_dawn/skirmisher/fragmentum = 1), 1),
-			Squad(list(/mob/living/simple_animal/hostile/ordeal/indigo_noon/fragmentum = 3,
-					/mob/living/simple_animal/hostile/ordeal/indigo_noon/chunky/fragmentum = 1,
-					/mob/living/simple_animal/hostile/ordeal/indigo_noon/lanky/fragmentum = 1),
-				list(/mob/living/simple_animal/hostile/ordeal/indigo_noon/fragmentum = 1), 3),
+			Squad(null, list(/mob/living/simple_animal/hostile/ordeal/indigo_dawn/fragmentum = 2,
+				/mob/living/simple_animal/hostile/ordeal/indigo_dawn/invis/fragmentum = 1,
+				/mob/living/simple_animal/hostile/ordeal/indigo_dawn/skirmisher/fragmentum = 1), 2),
+			Squad(null, list(/mob/living/simple_animal/hostile/ordeal/indigo_noon/fragmentum = 3,
+				/mob/living/simple_animal/hostile/ordeal/indigo_noon/chunky/fragmentum = 1,
+				/mob/living/simple_animal/hostile/ordeal/indigo_noon/lanky/fragmentum = 1), 4),
 			Squad(list(/mob/living/simple_animal/hostile/ordeal/indigo_dusk/red/fragmentum = 1,
 					/mob/living/simple_animal/hostile/ordeal/indigo_dusk/pale/fragmentum = 1,
 					/mob/living/simple_animal/hostile/ordeal/indigo_dusk/white/fragmentum = 1,
 					/mob/living/simple_animal/hostile/ordeal/indigo_dusk/black/fragmentum = 1),
-				list(/mob/living/simple_animal/hostile/ordeal/indigo_noon/fragmentum = 1), 4),
+				list(/mob/living/simple_animal/hostile/ordeal/indigo_noon/fragmentum = 1), 5),
 		),
-		// Steel (Ward): Gene Corp squads led by heavies, escorted by remnants.
+		// Steel (Ward): remnant packs, then a Gene Corp heavy escorted by remnants.
 		"steel" = list(
-			Squad(list(/mob/living/simple_animal/hostile/ordeal/steel_dawn/fragmentum = 1),
-				list(/mob/living/simple_animal/hostile/ordeal/steel_dawn/fragmentum = 1), 1),
+			Squad(null, list(/mob/living/simple_animal/hostile/ordeal/steel_dawn/fragmentum = 1), 2),
 			Squad(list(/mob/living/simple_animal/hostile/ordeal/steel_dawn/steel_noon/fragmentum = 1,
 					/mob/living/simple_animal/hostile/ordeal/steel_dawn/medic/fragmentum = 1),
-				list(/mob/living/simple_animal/hostile/ordeal/steel_dawn/fragmentum = 1), 2),
+				list(/mob/living/simple_animal/hostile/ordeal/steel_dawn/fragmentum = 1), 4),
 			Squad(list(/mob/living/simple_animal/hostile/ordeal/steel_dusk/fragmentum = 1,
 					/mob/living/simple_animal/hostile/ordeal/steel_dawn/steel_noon/flying/fragmentum = 1,
 					/mob/living/simple_animal/hostile/ordeal/steel_dawn/medic/fragmentum = 1),
-				list(/mob/living/simple_animal/hostile/ordeal/steel_dawn/fragmentum = 1), 4),
+				list(/mob/living/simple_animal/hostile/ordeal/steel_dawn/fragmentum = 1), 7),
 		),
-		// Violet (Ichor): fruit escorting the monolith.
+		// Violet (Ichor): fruit swarm, then the lone monolith.
 		"violet" = list(
-			Squad(list(/mob/living/simple_animal/hostile/ordeal/violet_fruit/fragmentum = 1),
-				list(/mob/living/simple_animal/hostile/ordeal/violet_fruit/fragmentum = 1), 1),
-			Squad(list(/mob/living/simple_animal/hostile/ordeal/violet_monolith/fragmentum = 1),
-				list(/mob/living/simple_animal/hostile/ordeal/violet_fruit/fragmentum = 1), 2),
+			Squad(null, list(/mob/living/simple_animal/hostile/ordeal/violet_fruit/fragmentum = 1), 2),
+			Squad(list(/mob/living/simple_animal/hostile/ordeal/violet_monolith/fragmentum = 1), null, 1),
 		),
-		// Brown (Fang): a noon Peccatulum leading lesser sins.
+		// Brown (Fang): a leaderless sin swarm, then a noon Peccatulum + lesser sins.
 		"brown" = list(
-			Squad(list(/mob/living/simple_animal/hostile/ordeal/sin_sloth/fragmentum = 1,
-					/mob/living/simple_animal/hostile/ordeal/sin_gluttony/fragmentum = 1,
-					/mob/living/simple_animal/hostile/ordeal/sin_gloom/fragmentum = 1,
-					/mob/living/simple_animal/hostile/ordeal/sin_pride/fragmentum = 1,
-					/mob/living/simple_animal/hostile/ordeal/sin_wrath/fragmentum = 1,
-					/mob/living/simple_animal/hostile/ordeal/sin_lust/fragmentum = 1),
-				null, 0),
+			Squad(null, list(/mob/living/simple_animal/hostile/ordeal/sin_sloth/fragmentum = 1,
+				/mob/living/simple_animal/hostile/ordeal/sin_gluttony/fragmentum = 1,
+				/mob/living/simple_animal/hostile/ordeal/sin_gloom/fragmentum = 1,
+				/mob/living/simple_animal/hostile/ordeal/sin_pride/fragmentum = 1,
+				/mob/living/simple_animal/hostile/ordeal/sin_wrath/fragmentum = 1,
+				/mob/living/simple_animal/hostile/ordeal/sin_lust/fragmentum = 1), 2),
 			Squad(list(/mob/living/simple_animal/hostile/ordeal/sin_sloth/noon/fragmentum = 1,
 					/mob/living/simple_animal/hostile/ordeal/sin_gluttony/noon/fragmentum = 1,
 					/mob/living/simple_animal/hostile/ordeal/sin_gloom/noon/fragmentum = 1,
@@ -158,18 +152,18 @@ SUBSYSTEM_DEF(calyx)
 					/mob/living/simple_animal/hostile/ordeal/sin_gloom/fragmentum = 1,
 					/mob/living/simple_animal/hostile/ordeal/sin_pride/fragmentum = 1,
 					/mob/living/simple_animal/hostile/ordeal/sin_wrath/fragmentum = 1,
-					/mob/living/simple_animal/hostile/ordeal/sin_lust/fragmentum = 1), 3),
+					/mob/living/simple_animal/hostile/ordeal/sin_lust/fragmentum = 1), 8),
 		),
-		// Gold (Lens): corrupted agents; boss with grunt corrosion escorts.
+		// Gold (Lens): corrupted agents; a commander with corrosion escorts, and
+		// the Lady of the Lake, who fields her own handmaidens alone.
 		"gold" = list(
 			Squad(list(/mob/living/simple_animal/hostile/ordeal/fallen_amurdad_corrosion/fragmentum = 1),
-				list(/mob/living/simple_animal/hostile/ordeal/beanstalk_corrosion/fragmentum = 1), 3),
-			Squad(list(/mob/living/simple_animal/hostile/ordeal/white_lake_corrosion/fragmentum = 1),
-				list(/mob/living/simple_animal/hostile/ordeal/silentgirl_corrosion/fragmentum = 1), 2),
+				list(/mob/living/simple_animal/hostile/ordeal/beanstalk_corrosion/fragmentum = 1), 4),
+			Squad(list(/mob/living/simple_animal/hostile/ordeal/white_lake_corrosion/fragmentum = 1), null, 1),
 			Squad(list(/mob/living/simple_animal/hostile/ordeal/centipede_corrosion/fragmentum = 1,
 					/mob/living/simple_animal/hostile/ordeal/thunderbird_corrosion_boss/fragmentum = 1),
 				list(/mob/living/simple_animal/hostile/ordeal/thunderbird_corrosion/fragmentum = 2,
-					/mob/living/simple_animal/hostile/ordeal/KHz_corrosion/fragmentum = 1), 3),
+					/mob/living/simple_animal/hostile/ordeal/KHz_corrosion/fragmentum = 1), 5),
 		),
 	)
 	color_tints = list(
@@ -258,6 +252,9 @@ SUBSYSTEM_DEF(calyx)
 	var/max_alive = 6
 	var/spawned_total = 0
 	var/list/spawned_mobs = list()
+	/// TRUE once this Calyx has spilled its single commander/leader. Later waves
+	/// only refill grunts, so one Calyx never fields more than one commander.
+	var/leader_spawned = FALSE
 	var/spawn_cooldown = 0
 	var/spawn_cooldown_time = 7 SECONDS
 	/// TRUE until a crew member tears it open.
@@ -318,19 +315,11 @@ SUBSYSTEM_DEF(calyx)
 	color_tint = tint
 	squad = squad_def
 	name = "[color] calyx"
-	switch(tier)
-		if(1)
-			max_spawns = 10
-			max_alive = 6
-		if(2)
-			max_spawns = 15
-			max_alive = 8
-		if(3)
-			max_spawns = 22
-			max_alive = 10
-		else
-			max_spawns = 28
-			max_alive = 12
+	// One Calyx keeps at most one ordeal spawn point's group alive at a time, but
+	// stocks a small surplus beyond that live cap so a few fresh mobs still crawl
+	// out to replace the ones the crew kills before the Calyx runs dry.
+	max_alive = squad_def["alive"]
+	max_spawns = max_alive + max(2, CEILING(max_alive * 0.5, 1))
 	update_icon()
 	Emerge()
 
@@ -395,21 +384,23 @@ SUBSYSTEM_DEF(calyx)
 		if(QDELETED(M) || M.stat == DEAD)
 			spawned_mobs -= M
 
-/// Spawns one squad: a leader plus its grunt escort, clustered together.
-/// Returns FALSE if the squad has nothing to spawn.
+/// Spawns one mob toward filling the squad: its unique commander on the first
+/// call (if any), then refillable pool mobs. The commander is spawned only once,
+/// so a Calyx never fields more than one. Returns FALSE when nothing more can be
+/// spawned, so process() stops and eventually collapses the spent Calyx.
 /obj/structure/calyx/proc/SpawnSquad()
-	if(!squad || !LAZYLEN(squad["leaders"]))
+	var/list/boss = squad?["boss"]
+	var/list/pool = squad?["pool"]
+	if(LAZYLEN(boss) && !leader_spawned)
+		SpawnAt(pickweight(boss), ValidTurf(src, 2))
+		leader_spawned = TRUE
+		return TRUE
+	if(!LAZYLEN(pool))
+		// A lone boss with no escort: nothing left to refill, so let this Calyx
+		// wind down and collapse once its commander falls.
 		spawned_total = max_spawns
 		return FALSE
-	var/turf/anchor = ValidTurf(src, 2)
-	SpawnAt(pickweight(squad["leaders"]), anchor)
-	var/list/grunts = squad["grunts"]
-	var/gcount = squad["count"]
-	if(LAZYLEN(grunts) && gcount > 0)
-		for(var/i in 1 to gcount)
-			if(spawned_total >= max_spawns)
-				break
-			SpawnAt(pickweight(grunts), ValidTurf(anchor, 1))
+	SpawnAt(pickweight(pool), ValidTurf(src, 2))
 	return TRUE
 
 /// Spawns one mob at a turf and tracks it toward the wave count.

@@ -206,6 +206,15 @@
 	speed = 1
 	range = 12
 
+/// Against a target who has already gone insane (where white damage would only
+/// heal their sanity), the ball corrodes into flesh instead: it deals RED.
+/obj/projectile/fragmentum_dodgeball/on_hit(atom/target, blocked = FALSE, pierce_hit)
+	if(ishuman(target))
+		var/mob/living/carbon/human/H = target
+		if(H.sanity_lost)
+			damage_type = RED_DAMAGE
+	return ..()
+
 // The dawn clown drops its console-sabotage act and becomes a skittish ranged
 // kiter: it keeps its distance and pelts targets with WHITE-damage dodgeballs.
 /mob/living/simple_animal/hostile/ordeal/crimson_clown/fragmentum
@@ -1227,3 +1236,212 @@
 
 /mob/living/simple_animal/hostile/ordeal/KHz_corrosion/fragmentum/spawn_gibs()
 	return
+
+// Every Fragmentum Touched mob keeps its original colour faction, but also
+// joins a shared "fragmentum" faction so the different colour pools do not
+// infight while they overrun the facility. (|= preserves any secondary
+// factions the parent set, e.g. Gene_Corp, hostile, thunder_variant.)
+/mob/living/simple_animal/hostile/ordeal/green_bot/fragmentum/Initialize()
+	. = ..()
+	faction |= "fragmentum"
+
+/mob/living/simple_animal/hostile/ordeal/green_bot/syringe/fragmentum/Initialize()
+	. = ..()
+	faction |= "fragmentum"
+
+/mob/living/simple_animal/hostile/ordeal/green_bot/fast/fragmentum/Initialize()
+	. = ..()
+	faction |= "fragmentum"
+
+/mob/living/simple_animal/hostile/ordeal/green_bot_big/fragmentum/Initialize()
+	. = ..()
+	faction |= "fragmentum"
+
+/mob/living/simple_animal/hostile/ordeal/green_dusk/fragmentum/Initialize()
+	. = ..()
+	faction |= "fragmentum"
+
+/mob/living/simple_animal/hostile/ordeal/green_bot/factory/fragmentum/Initialize()
+	. = ..()
+	faction |= "fragmentum"
+
+/mob/living/simple_animal/hostile/ordeal/green_bot/syringe/factory/fragmentum/Initialize()
+	. = ..()
+	faction |= "fragmentum"
+
+/mob/living/simple_animal/hostile/ordeal/green_bot/fast/factory/fragmentum/Initialize()
+	. = ..()
+	faction |= "fragmentum"
+
+/mob/living/simple_animal/hostile/ordeal/green_bot_big/factory/fragmentum/Initialize()
+	. = ..()
+	faction |= "fragmentum"
+
+/mob/living/simple_animal/hostile/ordeal/crimson_clown/fragmentum/Initialize()
+	. = ..()
+	faction |= "fragmentum"
+
+/mob/living/simple_animal/hostile/ordeal/crimson_noon/fragmentum/Initialize()
+	. = ..()
+	faction |= "fragmentum"
+
+/mob/living/simple_animal/hostile/ordeal/crimson_noon/crimson_dusk/fragmentum/Initialize()
+	. = ..()
+	faction |= "fragmentum"
+
+/mob/living/simple_animal/hostile/ordeal/amber_bug/fragmentum/Initialize()
+	. = ..()
+	faction |= "fragmentum"
+
+/mob/living/simple_animal/hostile/ordeal/amber_dusk/fragmentum/Initialize()
+	. = ..()
+	faction |= "fragmentum"
+
+/mob/living/simple_animal/hostile/ordeal/indigo_dawn/fragmentum/Initialize()
+	. = ..()
+	faction |= "fragmentum"
+
+/mob/living/simple_animal/hostile/ordeal/indigo_dawn/invis/fragmentum/Initialize()
+	. = ..()
+	faction |= "fragmentum"
+
+/mob/living/simple_animal/hostile/ordeal/indigo_dawn/skirmisher/fragmentum/Initialize()
+	. = ..()
+	faction |= "fragmentum"
+
+/mob/living/simple_animal/hostile/ordeal/indigo_noon/fragmentum/Initialize()
+	. = ..()
+	faction |= "fragmentum"
+
+/mob/living/simple_animal/hostile/ordeal/indigo_noon/chunky/fragmentum/Initialize()
+	. = ..()
+	faction |= "fragmentum"
+
+/mob/living/simple_animal/hostile/ordeal/indigo_noon/lanky/fragmentum/Initialize()
+	. = ..()
+	faction |= "fragmentum"
+
+/mob/living/simple_animal/hostile/ordeal/indigo_dusk/red/fragmentum/Initialize()
+	. = ..()
+	faction |= "fragmentum"
+
+/mob/living/simple_animal/hostile/ordeal/indigo_dusk/pale/fragmentum/Initialize()
+	. = ..()
+	faction |= "fragmentum"
+
+/mob/living/simple_animal/hostile/ordeal/indigo_dusk/white/fragmentum/Initialize()
+	. = ..()
+	faction |= "fragmentum"
+
+/mob/living/simple_animal/hostile/ordeal/indigo_dusk/black/fragmentum/Initialize()
+	. = ..()
+	faction |= "fragmentum"
+
+/mob/living/simple_animal/hostile/ordeal/steel_dawn/fragmentum/Initialize()
+	. = ..()
+	faction |= "fragmentum"
+
+/mob/living/simple_animal/hostile/ordeal/steel_dawn/steel_noon/fragmentum/Initialize()
+	. = ..()
+	faction |= "fragmentum"
+
+/mob/living/simple_animal/hostile/ordeal/steel_dawn/steel_noon/flying/fragmentum/Initialize()
+	. = ..()
+	faction |= "fragmentum"
+
+/mob/living/simple_animal/hostile/ordeal/steel_dawn/medic/fragmentum/Initialize()
+	. = ..()
+	faction |= "fragmentum"
+
+/mob/living/simple_animal/hostile/ordeal/steel_dusk/fragmentum/Initialize()
+	. = ..()
+	faction |= "fragmentum"
+
+/mob/living/simple_animal/hostile/ordeal/violet_fruit/fragmentum/Initialize()
+	. = ..()
+	faction |= "fragmentum"
+
+/mob/living/simple_animal/hostile/ordeal/violet_monolith/fragmentum/Initialize()
+	. = ..()
+	faction |= "fragmentum"
+
+/mob/living/simple_animal/hostile/ordeal/sin_sloth/fragmentum/Initialize()
+	. = ..()
+	faction |= "fragmentum"
+
+/mob/living/simple_animal/hostile/ordeal/sin_gluttony/fragmentum/Initialize()
+	. = ..()
+	faction |= "fragmentum"
+
+/mob/living/simple_animal/hostile/ordeal/sin_gloom/fragmentum/Initialize()
+	. = ..()
+	faction |= "fragmentum"
+
+/mob/living/simple_animal/hostile/ordeal/sin_pride/fragmentum/Initialize()
+	. = ..()
+	faction |= "fragmentum"
+
+/mob/living/simple_animal/hostile/ordeal/sin_wrath/fragmentum/Initialize()
+	. = ..()
+	faction |= "fragmentum"
+
+/mob/living/simple_animal/hostile/ordeal/sin_lust/fragmentum/Initialize()
+	. = ..()
+	faction |= "fragmentum"
+
+/mob/living/simple_animal/hostile/ordeal/sin_sloth/noon/fragmentum/Initialize()
+	. = ..()
+	faction |= "fragmentum"
+
+/mob/living/simple_animal/hostile/ordeal/sin_gluttony/noon/fragmentum/Initialize()
+	. = ..()
+	faction |= "fragmentum"
+
+/mob/living/simple_animal/hostile/ordeal/sin_gloom/noon/fragmentum/Initialize()
+	. = ..()
+	faction |= "fragmentum"
+
+/mob/living/simple_animal/hostile/ordeal/sin_pride/noon/fragmentum/Initialize()
+	. = ..()
+	faction |= "fragmentum"
+
+/mob/living/simple_animal/hostile/ordeal/sin_wrath/noon/fragmentum/Initialize()
+	. = ..()
+	faction |= "fragmentum"
+
+/mob/living/simple_animal/hostile/ordeal/sin_lust/noon/fragmentum/Initialize()
+	. = ..()
+	faction |= "fragmentum"
+
+/mob/living/simple_animal/hostile/ordeal/fallen_amurdad_corrosion/fragmentum/Initialize()
+	. = ..()
+	faction |= "fragmentum"
+
+/mob/living/simple_animal/hostile/ordeal/beanstalk_corrosion/fragmentum/Initialize()
+	. = ..()
+	faction |= "fragmentum"
+
+/mob/living/simple_animal/hostile/ordeal/white_lake_corrosion/fragmentum/Initialize()
+	. = ..()
+	faction |= "fragmentum"
+
+/mob/living/simple_animal/hostile/ordeal/silentgirl_corrosion/fragmentum/Initialize()
+	. = ..()
+	faction |= "fragmentum"
+
+/mob/living/simple_animal/hostile/ordeal/centipede_corrosion/fragmentum/Initialize()
+	. = ..()
+	faction |= "fragmentum"
+
+/mob/living/simple_animal/hostile/ordeal/thunderbird_corrosion/fragmentum/Initialize()
+	. = ..()
+	faction |= "fragmentum"
+
+/mob/living/simple_animal/hostile/ordeal/thunderbird_corrosion_boss/fragmentum/Initialize()
+	. = ..()
+	faction |= "fragmentum"
+
+/mob/living/simple_animal/hostile/ordeal/KHz_corrosion/fragmentum/Initialize()
+	. = ..()
+	faction |= "fragmentum"
+
