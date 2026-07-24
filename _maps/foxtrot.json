@@ -1,9 +1,9 @@
 {
 	"version": 1,
 	"map_name": "Facility E-117 LAKES",
-	"map_path": "map_files/Old Epsilon",
+	"map_path": "map_files/LC13/Foxtrot-Lakes",
 	"map_file": [
-		"old_epsiloncorp.dmm"
+		"foxtrot.dmm"
 	],
 	"space_ruin_levels": 0,
 	"space_empty_levels": 0,

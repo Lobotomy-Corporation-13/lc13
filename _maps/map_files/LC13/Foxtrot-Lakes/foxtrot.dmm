@@ -2180,8 +2180,8 @@
 /area/department_main/training)
 "gA" = (
 /obj/structure/rack,
-/obj/item/reagent_containers/hypospray/medipen/mental,
-/obj/item/reagent_containers/hypospray/medipen/mental,
+/obj/item/reagent_containers/hypospray/medipen/l_sanity,
+/obj/item/reagent_containers/hypospray/medipen/l_sanity,
 /obj/effect/turf_decal/tile/green{
 	color = "#006400"
 	},
@@ -2357,8 +2357,8 @@
 	dir = 8
 	},
 /obj/structure/rack,
-/obj/item/reagent_containers/hypospray/medipen/mental,
-/obj/item/reagent_containers/hypospray/medipen/mental,
+/obj/item/reagent_containers/hypospray/medipen/l_sanity,
+/obj/item/reagent_containers/hypospray/medipen/l_sanity,
 /turf/open/floor/plasteel/dark{
 	color = "#ccc8c0"
 	},
@@ -6166,11 +6166,11 @@
 /obj/structure/window/reinforced/spawner/east{
 	resistance_flags = 115
 	},
-/obj/item/reagent_containers/hypospray/medipen/salacid,
-/obj/item/reagent_containers/hypospray/medipen/salacid,
-/obj/item/reagent_containers/hypospray/medipen/salacid,
-/obj/item/reagent_containers/hypospray/medipen/salacid,
-/obj/item/reagent_containers/hypospray/medipen/salacid,
+/obj/item/reagent_containers/hypospray/medipen/l_health,
+/obj/item/reagent_containers/hypospray/medipen/l_health,
+/obj/item/reagent_containers/hypospray/medipen/l_health,
+/obj/item/reagent_containers/hypospray/medipen/l_health,
+/obj/item/reagent_containers/hypospray/medipen/l_health,
 /turf/open/floor/carpet/blue,
 /area/department_main/welfare)
 "sg" = (
@@ -8198,8 +8198,8 @@
 	dir = 1
 	},
 /obj/structure/rack,
-/obj/item/reagent_containers/hypospray/medipen/mental,
-/obj/item/reagent_containers/hypospray/medipen/mental,
+/obj/item/reagent_containers/hypospray/medipen/l_sanity,
+/obj/item/reagent_containers/hypospray/medipen/l_sanity,
 /turf/open/floor/plasteel/dark{
 	color = "#ccc8c0"
 	},
@@ -8817,8 +8817,8 @@
 	},
 /obj/effect/turf_decal/tile/bar,
 /obj/structure/rack,
-/obj/item/reagent_containers/hypospray/medipen/salacid,
-/obj/item/reagent_containers/hypospray/medipen/salacid,
+/obj/item/reagent_containers/hypospray/medipen/l_health,
+/obj/item/reagent_containers/hypospray/medipen/l_health,
 /turf/open/floor/plasteel/sepia{
 	color = "#ccc8c0"
 	},
@@ -9664,8 +9664,8 @@
 	},
 /obj/effect/turf_decal/tile/bar,
 /obj/structure/rack,
-/obj/item/reagent_containers/hypospray/medipen/mental,
-/obj/item/reagent_containers/hypospray/medipen/mental,
+/obj/item/reagent_containers/hypospray/medipen/l_sanity,
+/obj/item/reagent_containers/hypospray/medipen/l_sanity,
 /turf/open/floor/plasteel/sepia{
 	color = "#ccc8c0"
 	},
@@ -11144,8 +11144,8 @@
 	dir = 1
 	},
 /obj/structure/rack,
-/obj/item/reagent_containers/hypospray/medipen/salacid,
-/obj/item/reagent_containers/hypospray/medipen/salacid,
+/obj/item/reagent_containers/hypospray/medipen/l_health,
+/obj/item/reagent_containers/hypospray/medipen/l_health,
 /turf/open/floor/plasteel/dark{
 	color = "#ccc8c0"
 	},
@@ -13810,8 +13810,8 @@
 	dir = 8
 	},
 /obj/structure/rack,
-/obj/item/reagent_containers/hypospray/medipen/salacid,
-/obj/item/reagent_containers/hypospray/medipen/salacid,
+/obj/item/reagent_containers/hypospray/medipen/l_health,
+/obj/item/reagent_containers/hypospray/medipen/l_health,
 /turf/open/floor/plasteel/dark{
 	color = "#ccc8c0"
 	},
@@ -14856,8 +14856,8 @@
 /area/department_main/training)
 "SU" = (
 /obj/structure/rack,
-/obj/item/reagent_containers/hypospray/medipen/salacid,
-/obj/item/reagent_containers/hypospray/medipen/salacid,
+/obj/item/reagent_containers/hypospray/medipen/l_health,
+/obj/item/reagent_containers/hypospray/medipen/l_health,
 /obj/effect/turf_decal/tile/blue{
 	color = "#5269e9"
 	},
@@ -16533,11 +16533,11 @@
 /obj/structure/window/reinforced/spawner/east{
 	resistance_flags = 115
 	},
-/obj/item/reagent_containers/hypospray/medipen/mental,
-/obj/item/reagent_containers/hypospray/medipen/mental,
-/obj/item/reagent_containers/hypospray/medipen/mental,
-/obj/item/reagent_containers/hypospray/medipen/mental,
-/obj/item/reagent_containers/hypospray/medipen/mental,
+/obj/item/reagent_containers/hypospray/medipen/l_sanity,
+/obj/item/reagent_containers/hypospray/medipen/l_sanity,
+/obj/item/reagent_containers/hypospray/medipen/l_sanity,
+/obj/item/reagent_containers/hypospray/medipen/l_sanity,
+/obj/item/reagent_containers/hypospray/medipen/l_sanity,
 /turf/open/floor/carpet/blue,
 /area/department_main/welfare)
 "Yj" = (
