@@ -387,10 +387,24 @@
 	return FALSE
 
 /mob/living/simple_animal/hostile/limbus_abno/examine_more(mob/user)
+	if(user == src) //The player sees exact numbers; onlookers only get the vague description.
+		return SelfStatusReadout()
 	if(special_desc == "" || isnull(special_desc))
 		return ..()
 
 	. = list(special_desc)
+
+///A precise, numeric rundown of the abno's needs, shown only to the player controlling it.
+/mob/living/simple_animal/hostile/limbus_abno/proc/SelfStatusReadout()
+	var/list/readout = list()
+	readout += "<span class='notice'>--- Your current state ---</span>"
+	readout += "Hunger: [round(hunger_bar)]/[max_hunger][starving ? " (STARVING)" : ""]"
+	readout += "Desire: [round(desire_bar)]/[max_desire]"
+	if(max_counter != 0)
+		readout += "Qliphoth counter: [counter]/[max_counter]"
+	if(required_ego_desire > 0)
+		readout += "Ego progress: [round(min(ego_desire_accumulation, required_ego_desire))]/[required_ego_desire]"
+	return readout
 
 ///Updates ALL bars, hunger, sanity & counter. Also adds extra info in the description.
 /mob/living/simple_animal/hostile/limbus_abno/proc/UpdateBars()
@@ -443,6 +457,15 @@
 		temp_desc += "it doesn't look like it has one?"
 
 	special_desc = temp_desc
+
+	//Persistent counter readout on the HUD, so the player doesn't have to track it from chat alone.
+	if(max_counter != 0)
+		throw_alert("abno_counter", /atom/movable/screen/alert/abno_counter)
+		var/atom/movable/screen/alert/abno_counter/counter_alert = alerts["abno_counter"]
+		if(counter_alert)
+			counter_alert.UpdateCounter(counter, max_counter)
+	else
+		clear_alert("abno_counter")
 
 ///Abno limbus actions.
 /datum/action/cooldown/limbus_abno_action
@@ -580,3 +603,23 @@
 	desc = "You can't take it anymore."
 	icon_state = "mood1"
 	color = "#e21717ff"
+
+///Qliphoth counter HUD alert. Shows the exact counter as a coloured number so the player can always see how close they are to breaching.
+///Inherits the standard alert icon (screen_alert.dmi) and reuses its generic "template" frame, matching the nutrition alert shown beside it.
+/atom/movable/screen/alert/abno_counter
+	name = "Qliphoth Counter"
+	desc = "Your qliphoth counter. If it reaches zero, you breach."
+	icon_state = "template"
+	maptext_x = 8
+	maptext_y = 7
+
+/atom/movable/screen/alert/abno_counter/proc/UpdateCounter(current, maximum)
+	desc = "Your qliphoth counter is at [current] of [maximum]. If it reaches zero, you breach."
+	var/col = "#6fb932" //Green, comfortable.
+	if(current <= 0)
+		col = "#e21717" //Red, breaching.
+	else if(current == 1)
+		col = "#eb4d42" //Orange-red, one away.
+	else if(current == 2)
+		col = "#d3d023" //Yellow, getting close.
+	maptext = MAPTEXT("<span style='color: [col]'><b>[current]</b></span>")

@@ -5,7 +5,7 @@
 //	You do not need to raise this if you are adding new values that have sane defaults.
 //	Only raise this value when changing the meaning/format/name/layout of an existing value
 //	where you would want the updater procs below to run
-#define SAVEFILE_VERSION_MAX	38
+#define SAVEFILE_VERSION_MAX	39
 
 /*
 SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Carn
@@ -86,6 +86,14 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 
 		if (!found_block_movement)
 			LAZYADD(key_bindings["Ctrl"], "block_movement")
+
+	if(current_version < 39)
+		//lcl_abno_pref changed from typepath -> bool to typepath -> priority level
+		var/list/converted = list()
+		for(var/key in lcl_abno_pref)
+			if(lcl_abno_pref[key]) //old TRUE (willing) becomes MEDIUM; FALSE/absent becomes NEVER
+				converted[key] = JP_MEDIUM
+		lcl_abno_pref = converted
 
 /datum/preferences/proc/update_character(current_version, savefile/S)
 	return

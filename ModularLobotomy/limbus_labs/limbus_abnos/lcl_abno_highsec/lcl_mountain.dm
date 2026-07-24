@@ -63,6 +63,14 @@
 	playsound(src, 'sound/abnormalities/mountain/bite.ogg', 70, TRUE)
 	to_chat(petter, span_warning("[src] bites your hand!")) //What did you expect.
 
+//Adds Mountain's unique phase/breach/body-count state to the player's numeric readout.
+/mob/living/simple_animal/hostile/limbus_abno/mountain/SelfStatusReadout()
+	. = ..()
+	. += "Phase: [phase] of 3"
+	. += "Breached: [breached ? "YES" : "no"]"
+	if(breached && phase < 3)
+		. += "Bodies until you grow: [max(0, 4 - body_count)]"
+
 /mob/living/simple_animal/hostile/limbus_abno/mountain/Login()
 	. = ..()
 	icon_living = "mosb_breach"
@@ -130,6 +138,10 @@
 	if(starving && !IsPositive(feeding_amount))
 		starving_patience--
 		AdjustDesire(-5)
+		if(starving_patience == 2)
+			to_chat(src, span_warning("Your patience frays. Feed soon, or you'll lash out."))
+		else if(starving_patience == 1)
+			to_chat(src, span_boldwarning("You are on the verge of a frenzy. FEED."))
 
 	if(starving_patience <= 0)
 		starving_patience = max_starving_patience
@@ -175,10 +187,14 @@
 		if(breached)
 			adjustBruteLoss(-maxHealth * 0.3)
 			body_count++
+			if(phase < 3 && body_count < 4)
+				var/remaining = 4 - body_count
+				to_chat(src, span_notice("Flesh knits over your frame. [remaining] more [remaining == 1 ? "body" : "bodies"] until you swell to your next form."))
 		else
 			satiated = TRUE
 			addtimer(CALLBACK(src, PROC_REF(RegularHunger)), 20 MINUTES)
 			hunger_cooldown_time =  1.5 MINUTES //Will now lose a full hunger bar in 15 minutes instead of 2.5
+			to_chat(src, span_notice("The corpse fills you deeply. Your hunger will crawl slowly for a while."))
 		AdjustHunger(100)
 	else
 		AdjustHunger(50)
@@ -189,6 +205,8 @@
 		ChangePhase(TRUE)
 
 /mob/living/simple_animal/hostile/limbus_abno/mountain/proc/RegularHunger()
+	if(satiated)
+		to_chat(src, span_notice("The fullness from your last meal fades. Your hunger quickens again."))
 	hunger_cooldown_time =  15 SECONDS
 	satiated = FALSE
 
@@ -202,6 +220,7 @@
 	satiated = FALSE
 	unstable = TRUE
 	AddBreachEffect()
+	to_chat(src, span_userdanger("You breach! You can no longer be sated the usual way. Devour humanoid corpses to grow larger and mend your wounds, but starving now tears at your health. Only overwhelming force will calm you."))
 
 /mob/living/simple_animal/hostile/limbus_abno/mountain/proc/Unbreach()
 	melee_damage_lower = 5
@@ -215,6 +234,7 @@
 	AdjustHunger(max_hunger)
 	RegularHunger()
 	manual_emote("calms down.")
+	to_chat(src, span_notice("The frenzy drains away. You settle back down, whole and sated once more."))
 	RemoveBreachEffect()
 
 ///An ability that makes everyone in area feel disgusted and puke. Cannot be used during a breach since the puke stun is kind of busted in combat.

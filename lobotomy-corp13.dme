@@ -4565,6 +4565,7 @@
 #include "ModularLobotomy\lc13_obj\lc13_computers\abnormality_queue.dm"
 #include "ModularLobotomy\lc13_obj\lc13_computers\abnormality_work.dm"
 #include "ModularLobotomy\limbus_labs\!other_overwrites.dm"
+#include "ModularLobotomy\limbus_labs\lcl_specimen_prefs_ui.dm"
 #include "ModularLobotomy\limbus_labs\spawners.dm"
 #include "ModularLobotomy\limbus_labs\lce_ego\lce_armor.dm"
 #include "ModularLobotomy\limbus_labs\lce_ego\lce_datum.dm"
