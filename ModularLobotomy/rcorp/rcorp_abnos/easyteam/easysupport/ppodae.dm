@@ -41,6 +41,13 @@
 		<br>\
 		|He's just Playing|: When you melee attack a unconscious or dead human body, you are able to tear off a limb, which heals you 2% of your max HP. (You can do this 4 time per body)</b>"
 
+/mob/living/simple_animal/hostile/rcorp_abno/easy/ppodae/examine(mob/user)
+	. = ..()
+	if(buff_form)
+		. += "It looks to have grown sturdier and stronger, don't let it get close to any structures."
+	else
+		. += "It's far more evasive but also more fragile, it can't harm you how cute."
+
 /datum/action/cooldown/rca_ppodae_transform
 	name = "Transform!"
 	icon_icon = 'icons/mob/actions/actions_abnormality.dmi'
@@ -98,6 +105,9 @@
 			// Taken from eldritch_demons.dm
 	if(can_slam)
 		return Smash(attacked_target)
+	else if(!client)
+		buff_form = TRUE
+		UpdateForm()
 	else if(isvehicle(attacked_target))
 		var/obj/vehicle/V = attacked_target
 		var/turf/target_turf = get_turf(V)
@@ -108,8 +118,6 @@
 			var/turf/target_turf = get_turf(attacked_target)
 			forceMove(target_turf)
 			manual_emote("crawls under [attacked_target]!")
-	else if(can_slam)
-		return Smash(attacked_target)
 
 /mob/living/simple_animal/hostile/rcorp_abno/easy/ppodae/proc/LimbSteal(mob/living/carbon/L)
 	if(HAS_TRAIT(L, TRAIT_NODISMEMBER))

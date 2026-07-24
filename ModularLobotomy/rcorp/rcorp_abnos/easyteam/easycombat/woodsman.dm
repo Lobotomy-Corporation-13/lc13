@@ -231,7 +231,7 @@
 
 // Status effect for chained targets
 /datum/status_effect/rca_chained
-	id = "chained"
+	id = "rca_chained"
 	status_type = STATUS_EFFECT_UNIQUE
 	alert_type = /atom/movable/screen/alert/status_effect/rca_chained
 	var/mob/living/simple_animal/hostile/rcorp_abno/easy/woodsman/W

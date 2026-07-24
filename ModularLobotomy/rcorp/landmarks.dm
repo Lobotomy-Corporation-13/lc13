@@ -20,12 +20,12 @@ GLOBAL_LIST_INIT(easysupport, list(
 	/mob/living/simple_animal/hostile/rcorp_abno/easy/apex_predator,
 	/mob/living/simple_animal/hostile/rcorp_abno/easy/cleaner,
 	/mob/living/simple_animal/hostile/rcorp_abno/easy/der_freischutz,
-	/mob/living/simple_animal/hostile/abnormality/better_memories,
+	/mob/living/simple_animal/hostile/rcorp_abno/easy/better_memories_minion,
 	/mob/living/simple_animal/hostile/rcorp_abno/easy/voiddream,
 ))
 
 GLOBAL_LIST_INIT(easytank, list(
-	/mob/living/simple_animal/hostile/abnormality/jangsan,
+	/mob/living/simple_animal/hostile/rcorp_abno/easy/jangsan,
 	/mob/living/simple_animal/hostile/abnormality/scarecrow,
 	/mob/living/simple_animal/hostile/abnormality/kqe,
 	/mob/living/simple_animal/hostile/abnormality/warden,

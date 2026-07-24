@@ -208,7 +208,7 @@
 	return
 
 /datum/status_effect/rca_false_kindness // MAYBE the black sunder shti works this time.
-	id = "false_kindness"
+	id = "rca_false_kindness"
 	duration = 2 SECONDS //lasts 2 seconds becuase this is for an AI that attacks fast as shit, its not meant to fuck you up with other things.
 	alert_type = /atom/movable/screen/alert/status_effect/rca_false_kindness
 	status_type = STATUS_EFFECT_REFRESH
