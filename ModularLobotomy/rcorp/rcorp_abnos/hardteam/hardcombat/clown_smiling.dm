@@ -28,6 +28,7 @@
 	abno_additional_instructions = "<h1>You are Clown Smiling at Me, A Combat Role Abnormality.</h1><br>\
 		<b>|Dark Carnival|: When you click on a tile which is outside your melee range, you will throw a knife towards that tile. Your knife will deal no damage to abnormalities, and will pass through them. \
 		If you hit a human with this knife, you will deal RED damage to them, slow them down massively and inflict 8 'Bleed'. \
+		Those hit by your knives are also slowed down for 1 second. \
 		Also, You blades are able to bounch against walls! Each time they bounch against a wall, their damage will be doubled! \
 		Your blades also go through friendly abnormalities, however do note they are also easily stopped by obstacles.<br>\
 		<br>\
@@ -150,11 +151,15 @@
 		nodamage = FALSE
 		var/mob/living/carbon/human/H = target
 		H.apply_lc_bleed(6)
-		H.add_movespeed_modifier(/datum/movespeed_modifier/clowned)
-		addtimer(CALLBACK(H, TYPE_PROC_REF(/mob, remove_movespeed_modifier), /datum/movespeed_modifier/clowned), 1 SECONDS, TIMER_UNIQUE | TIMER_OVERRIDE)
+		H.add_movespeed_modifier(/datum/movespeed_modifier/rca_clowned)
+		addtimer(CALLBACK(H, TYPE_PROC_REF(/mob, remove_movespeed_modifier), /datum/movespeed_modifier/rca_clowned), 1 SECONDS, TIMER_UNIQUE | TIMER_OVERRIDE)
 		qdel(src)
 
 	if(isrcabnormalitymob(target))
 		to_chat(target, "The [src] flies right past you!")
 		return
 	..()
+
+/datum/movespeed_modifier/rca_clowned
+	variable = TRUE
+	multiplicative_slowdown = 1.5
