@@ -84,11 +84,19 @@
 		for(var/mob/living/L in ohearers(2, src))
 			if(L.stat == DEAD)
 				continue
-			if(faction_check(L.faction, pusher_factions))
-				delay_amount -= delay_reduction
-				is_moving_forward = TRUE
-			else
-				is_blocked_by_enemy = TRUE
+			switch(team)
+				if("rcorp")
+					if(faction_check(L.faction, pusher_factions))
+						delay_amount -= delay_reduction
+						is_moving_forward = TRUE
+					else
+						is_blocked_by_enemy = TRUE
+				if("abno")
+					if(isrcabnormalitymob(L) || isabnormalitymob(L))
+						delay_amount -= delay_reduction
+						is_moving_forward = TRUE
+					else
+						is_blocked_by_enemy = TRUE
 		if(is_moving_forward)
 			last_friendly_interaction = world.time
 		delay_amount = max(delay_amount, minimum_delay_amount)

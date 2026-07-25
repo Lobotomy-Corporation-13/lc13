@@ -1,1 +1,0 @@
-//Easytanks, these abnos are capable of taking far more punishment through multiple methods, be it bulletproofing, resists, high HP, or extreme self healing, though there are exceptions, healers are placed within tank slots so players will lose one tank in trade for valuable healing.

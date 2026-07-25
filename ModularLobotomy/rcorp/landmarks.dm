@@ -35,8 +35,8 @@ GLOBAL_LIST_INIT(easytank, list(
 ))
 
 GLOBAL_LIST_INIT(hardcombat, list(
-	/mob/living/simple_animal/hostile/abnormality/clouded_monk,
-	/mob/living/simple_animal/hostile/abnormality/clown,
+	/mob/living/simple_animal/hostile/rcorp_abno/hard/clouded_monk,
+	/mob/living/simple_animal/hostile/rcorp_abno/hard/clown,
 	/mob/living/simple_animal/hostile/abnormality/nosferatu,
 	/mob/living/simple_animal/hostile/abnormality/big_wolf, //Waiting for rework
 	/mob/living/simple_animal/hostile/abnormality/luna,

@@ -1,3 +1,5 @@
+#define STATUS_EFFECT_DARKFLAME /datum/status_effect/stacking/rca_dark_flame
+//Support because hes a pure backliner reliant on his portals
 /mob/living/simple_animal/hostile/rcorp_abno/easy/der_freischutz
 	name = "Der Freischutz"
 	desc = "A tall man adorned in grey, gold, and regal blue. His aim is impeccable. His sights are focused on you, a single shot would leave one crippled."
@@ -47,8 +49,11 @@
 		|Devil's Sights|: You are able view through your portals using your 'Portal View' button on the top left of your screen, \
 		Or you can use a hotkey. (Which is Space by default). When you use that ability, You will be able to toggle your view between the portals you have created. \
 		While viewing through a portal, you will be able to cause them to fire towards any target you click on. They deal 25% less damage than your normal bullet, but each portal has their own cooldown between firing. \
-		Also, you are able to destroy your own portals while viewing though them using your 'Removing Portal' ability, Or you can use a hotkey. (Which is E by default).\
-		</b>"
+		Also, you are able to destroy your own portals while viewing though them using your 'Removing Portal' ability, Or you can use a hotkey. (Which is E by default).<br>\
+		<br>\
+		|Dark Flame|: Whenever you or your portals hit a target inflict 7 stacks of |Dark Flame|. \
+		Targets affected will take WHITE and BURN damage equal to stacks of |Dark Flame| every 5 seconds until effect expires. \
+		You may have up to 50 stacks on one target, applying new stacks refreshes duration.</b>"
 
 /datum/action/cooldown/rca_switch_portals
 	name = "Portal View"
@@ -256,7 +261,7 @@
 
 /mob/living/simple_animal/hostile/rcorp_abno/easy/der_freischutz/proc/FireBullet(atom/target, turf/start_turf, turf/end_turf)
 	playsound(start_turf, 'sound/abnormalities/freischutz/shoot.ogg', 35, 0, 20)
-	var/obj/projectile/ego_bullet/ego_magicbullet/abnormality/B = new(start_turf) //80 BLACK damage
+	var/obj/projectile/ego_bullet/rca_ego_magicbullet/B = new(start_turf) //80 BLACK damage
 	B.starting = start_turf
 	B.firer = src
 	B.fired_from = start_turf
@@ -420,7 +425,7 @@
 
 /mob/living/simple_animal/hostile/rca_der_freis_portal/proc/FireBullet(atom/target, turf/start_turf, turf/end_turf)
 	playsound(start_turf, 'sound/abnormalities/freischutz/shoot.ogg', 35, 0, 20)
-	var/obj/projectile/ego_bullet/ego_magicbullet/abnormality/B = new(start_turf) //80 BLACK damage.
+	var/obj/projectile/ego_bullet/rca_ego_magicbullet/B = new(start_turf) //80 BLACK damage.
 	B.starting = start_turf
 	B.firer = src
 	B.fired_from = start_turf
@@ -447,3 +452,59 @@
 /mob/living/simple_animal/hostile/rcorp_abno/easy/der_freischutz/proc/TriggerPortalRemove()
 	for(var/datum/action/cooldown/rca_remove_portal/A in actions)
 		A.Trigger()
+
+/obj/projectile/ego_bullet/rca_ego_magicbullet
+	damage = 70 // Doesnt really matter since we var edit this later
+
+/obj/projectile/ego_bullet/rca_ego_magicbullet/on_hit(atom/target, blocked = FALSE, pierce_hit)
+	if(istype(target, /mob/living/simple_animal/hostile/der_freis_portal))
+		var/mob/living/simple_animal/hostile/der_freis_portal/P = target
+		P.death()
+	else if(istype(target, /mob/living))
+		var/mob/living/the_target = target
+		the_target.apply_rca_dark_flame(7)
+	. = ..()
+
+/* TL;DR its LC_BURN but looks at black armor */
+/datum/status_effect/stacking/lc_burn/rca_dark_flame
+	id = "rca_dark_flame"
+	alert_type = /atom/movable/screen/alert/status_effect/dark_flame
+	extinguishable = FALSE
+
+/atom/movable/screen/alert/status_effect/rca_dark_flame
+	name = "Dark Flame"
+	desc = "Dark flames are scorching your body and mind. Take BURN and WHITE damage multiplied by stacks reduced by BLACK armor until this effect expires."
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
+	icon_state = "dark_flame"
+
+/datum/status_effect/stacking/lc_burn/rca_dark_flame/DealDamage()
+	owner.deal_damage(stacks, FIRE, attack_type = (ATTACK_TYPE_STATUS), blocked = owner.run_armor_check(null, BLACK_DAMAGE))
+	owner.deal_damage(stacks, WHITE_DAMAGE, attack_type = (ATTACK_TYPE_STATUS), blocked = owner.run_armor_check(null, BLACK_DAMAGE))
+
+//Update burn appearance
+/datum/status_effect/stacking/lc_burn/rca_dark_flame/Update_Burn_Overlay(mob/living/owner)
+	if(stacks && !(owner.on_fire) && ishuman(owner))
+		if(stacks >= 15)
+			owner.cut_overlay(mutable_appearance('icons/mob/OnFire.dmi', "darkfire_generic", -FIRE_LAYER))
+			owner.cut_overlay(mutable_appearance('icons/mob/OnFire.dmi', "darkfire_standing", -FIRE_LAYER))
+			owner.add_overlay(mutable_appearance('icons/mob/OnFire.dmi', "darkfire_standing", -FIRE_LAYER))
+		else
+			owner.cut_overlay(mutable_appearance('icons/mob/OnFire.dmi', "darkfire_standing", -FIRE_LAYER))
+			owner.cut_overlay(mutable_appearance('icons/mob/OnFire.dmi', "darkfire_generic", -FIRE_LAYER))
+			owner.add_overlay(mutable_appearance('icons/mob/OnFire.dmi', "darkfire_generic", -FIRE_LAYER))
+
+/datum/status_effect/stacking/lc_burn/rca_dark_flame/on_remove()
+	if(!(owner.on_fire) && ishuman(owner))
+		owner.cut_overlay(mutable_appearance('icons/mob/OnFire.dmi', "darkfire_generic", -FIRE_LAYER))
+		owner.cut_overlay(mutable_appearance('icons/mob/OnFire.dmi', "darkfire_standing", -FIRE_LAYER))
+	..()
+
+//Mob Proc
+/mob/living/proc/apply_rca_dark_flame(stacks)
+	var/datum/status_effect/stacking/lc_burn/B = src.has_status_effect(/datum/status_effect/stacking/lc_burn/rca_dark_flame)
+	if(!B)
+		src.apply_status_effect(/datum/status_effect/stacking/lc_burn/rca_dark_flame, stacks)
+	else
+		B.add_stacks(stacks)
+
+#undef STATUS_EFFECT_DARKFLAME
