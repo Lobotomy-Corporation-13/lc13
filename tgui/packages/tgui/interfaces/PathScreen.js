@@ -1052,6 +1052,11 @@ const NodeDetail = props => {
                   </Box>
                 </Box>
               ))}
+              <Box color="grey" mt={0.5}
+                fontSize="11px">
+                Damage shown is per hit before enemy
+                resistances, averaged over crits.
+              </Box>
             </Box>
           )}
         </Stack.Item>

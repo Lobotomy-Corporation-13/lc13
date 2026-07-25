@@ -63,7 +63,7 @@
 /// Wearable cosmetic coat for the Path of Destruction (no armor value).
 /obj/item/clothing/suit/path_destruction
 	name = "destroyer's coat"
-	desc = "A black officer's coat trimmed in gold, worn open over a pale shirt. A Pathstrider's mark of the Destruction."
+	desc = "A black officer's coat trimmed in gold, worn open over a pale shirt. A Pathstrider's mark of the Destruction. Purely ceremonial: a Pathstrider is protected by their own DEF, not by cloth."
 	icon = 'ModularLobotomy/_Lobotomyicons/path_icons.dmi'
 	icon_state = "destruction_suit"
 	worn_icon = 'ModularLobotomy/_Lobotomyicons/path_worn.dmi'
@@ -81,7 +81,7 @@
 
 /datum/path_ability/basic/destruction
 	name = "Farewell Hit"
-	desc = "Deals Physical DMG scaling off ATK to the target. First hit per turn deals full damage, follow-ups deal 10%."
+	desc = "Deals Physical DMG scaling off ATK to the target. First hit of a turn deals full damage, later swings deal 30%."
 	icon_state = "farewell_hit"
 	energy_gain = 20
 	max_level = 7
@@ -93,8 +93,9 @@
 	data["ATK Scaling"] = "[atk_scaling[level]]%"
 	if(parent_path)
 		var/atk = parent_path.GetStat("ATK")
-		var/dmg = round(atk * atk_scaling[level] / 100, 1)
-		data["Damage"] = "[dmg]"
+		var/dmg = parent_path.EstimateDamage(atk * atk_scaling[level] / 100)
+		data["Damage (first hit)"] = "[dmg]"
+		data["Damage (later swings)"] = "[parent_path.EstimateDamage(atk * atk_scaling[level] / 100 * PATH_FOLLOWUP_MULT)]"
 	data["Energy Gain"] = "[energy_gain]"
 	return data
 
@@ -125,7 +126,7 @@
 	var/multiplier = atk_scaling[level] / 100
 	var/total_damage = parent_path.GetStat("ATK") * multiplier
 	if(!first_hit)
-		total_damage *= 0.1
+		total_damage *= PATH_FOLLOWUP_MULT
 	var/basic_factor = parent_path.PvPScalingFactor(level, atk_scaling, PATH_TARGET_TRACE_BASIC)
 	parent_path.deal_path_damage(target, total_damage, pvp_factor = basic_factor)
 
@@ -151,7 +152,7 @@
 	data["ATK Scaling"] = "[atk_scaling[level]]%"
 	if(parent_path)
 		var/atk = parent_path.GetStat("ATK")
-		var/dmg = round(atk * atk_scaling[level] / 100, 1)
+		var/dmg = parent_path.EstimateDamage(atk * atk_scaling[level] / 100)
 		data["Damage (per target)"] = "[dmg]"
 	data["Energy Gain"] = "[energy_gain]"
 	data["AP Cost"] = "[ap_cost]"
@@ -162,7 +163,36 @@
 
 /datum/path_ability/burst/destruction/Activate(mob/living/user)
 	if(!parent_path)
-		return
+		return FALSE
+
+	// Find primary target (nearest enemy in front)
+	var/mob/living/primary
+	var/turf/scan = get_turf(user)
+	for(var/i in 1 to 2)
+		scan = get_step(scan, user.dir)
+		if(!scan)
+			break
+		for(var/mob/living/L in scan)
+			primary = GetPathTarget(L, user)
+			if(primary)
+				break
+		if(primary)
+			break
+
+	// Collect everything the swing would hit, before spending anything. The
+	// Ultimate empowerment is consumed below, so bailing has to happen first or
+	// a whiff would eat the empowered hit.
+	var/list/mob/living/targets = list()
+	var/atom/aoe_origin = primary ? primary : user
+	for(var/mob/living/L in range(1, aoe_origin))
+		var/mob/living/hit = GetPathTarget(L, user)
+		if(hit)
+			targets |= hit
+	if(primary)
+		targets |= primary
+	if(!length(targets))
+		to_chat(user, span_warning("RIP Home Run swings through empty air!"))
+		return FALSE
 
 	var/atk = parent_path.GetStat("ATK")
 	var/main_damage
@@ -195,21 +225,6 @@
 	if(istype(D) && D.HasBonus("bonus_a6"))
 		fighting_will = TRUE
 
-	// Find primary target (nearest enemy in front)
-	var/mob/living/primary
-	var/turf/T = get_step(user, user.dir)
-	for(var/i in 1 to 2)
-		if(!T)
-			break
-		for(var/mob/living/L in T)
-			if(L == user || L.stat == DEAD)
-				continue
-			primary = L
-			break
-		if(primary)
-			break
-		T = get_step(T, user.dir)
-
 	var/hit_count = 0
 	if(is_enhanced && primary)
 		// Enhanced: main target gets higher damage
@@ -219,24 +234,14 @@
 		parent_path.deal_path_damage(primary, primary_dmg, pvp_factor = main_factor)
 		hit_count++
 		// Adjacent enemies get lower damage
-		for(var/mob/living/L in range(1, primary))
-			if(L == primary || L == user)
-				continue
-			if(L.stat == DEAD)
-				continue
-			if(IsPathAlly(user, L))
+		for(var/mob/living/L in targets)
+			if(L == primary)
 				continue
 			parent_path.deal_path_damage(L, adj_damage, pvp_factor = adj_factor)
 			hit_count++
 	else
 		// Normal: AoE around user, primary gets bonus
-		for(var/mob/living/L in range(1, user))
-			if(L == user)
-				continue
-			if(L.stat == DEAD)
-				continue
-			if(IsPathAlly(user, L))
-				continue
+		for(var/mob/living/L in targets)
 			var/dmg = main_damage
 			// First target hit is "primary" for Fighting Will
 			if(fighting_will && hit_count == 0)
@@ -258,10 +263,8 @@
 	for(var/mob/living/M in view(7, user))
 		if(M.client)
 			shake_camera(M, is_enhanced ? 4 : 2, is_enhanced ? 3 : 1)
-	if(hit_count > 0)
-		user.visible_message(span_danger("[user] swings [mode_name], hitting [hit_count] target\s!"))
-	else
-		user.visible_message(span_danger("[user] swings [mode_name], but hits nothing!"))
+	user.visible_message(span_danger("[user] swings [mode_name], hitting [hit_count] target\s!"))
+	return TRUE
 
 // ============================================================
 // Ultimate: Stardust Ace
@@ -290,9 +293,9 @@
 	var/list/data = list()
 	if(parent_path)
 		var/atk = parent_path.GetStat("ATK")
-		data["Blowout: FH"] = "[blowout_fh[level]]% ([round(atk * blowout_fh[level] / 100, 1)] dmg)"
-		data["Blowout: RIP Main"] = "[blowout_rip_main[level]]% ([round(atk * blowout_rip_main[level] / 100, 1)] dmg)"
-		data["Blowout: RIP Adj"] = "[blowout_rip_adj[level]]% ([round(atk * blowout_rip_adj[level] / 100, 1)] dmg)"
+		data["Blowout: FH"] = "[blowout_fh[level]]% ([parent_path.EstimateDamage(atk * blowout_fh[level] / 100)] dmg)"
+		data["Blowout: RIP Main"] = "[blowout_rip_main[level]]% ([parent_path.EstimateDamage(atk * blowout_rip_main[level] / 100)] dmg)"
+		data["Blowout: RIP Adj"] = "[blowout_rip_adj[level]]% ([parent_path.EstimateDamage(atk * blowout_rip_adj[level] / 100)] dmg)"
 		data["Energy Cost"] = "[parent_path.max_energy]"
 	return data
 
@@ -443,11 +446,11 @@
 	N.tree_y = 6
 	nodes += N
 
-	// --- Center branch (A2 gate, from Ultimate) ---
+	// --- Center branch (A1 gate, from Ultimate) ---
 	N = new /datum/path_node("bonus_a2", "Ready for Battle", "On hit, regenerate 15 Energy. 60 second cooldown.")
 	N.node_type = PATH_NODE_PASSIVE
 	N.ahn_cost = 1000
-	N.required_ascension = 2
+	N.required_ascension = 1
 	N.tree_x = 2
 	N.tree_y = 2
 	N.connections = list("stat_c1")
@@ -457,7 +460,7 @@
 	N.stat_bonuses = list("DEF" = 5)
 	N.stat_percent = TRUE
 	N.ahn_cost = 400
-	N.required_ascension = 2
+	N.required_ascension = 1
 	N.tree_x = 2
 	N.tree_y = 1
 	N.connections = list("stat_c2", "stat_c3")
@@ -468,7 +471,7 @@
 	N.stat_bonuses = list("HP" = 4)
 	N.stat_percent = TRUE
 	N.ahn_cost = 300
-	N.required_ascension = 3
+	N.required_ascension = 2
 	N.tree_x = 1
 	N.tree_y = 0
 	N.prerequisites = list("stat_c1")
@@ -478,17 +481,17 @@
 	N.stat_bonuses = list("ATK" = 4)
 	N.stat_percent = TRUE
 	N.ahn_cost = 300
-	N.required_ascension = 3
+	N.required_ascension = 2
 	N.tree_x = 3
 	N.tree_y = 0
 	N.prerequisites = list("stat_c1")
 	nodes += N
 
-	// --- Left branch (A6 gate, from Basic ATK) ---
+	// --- Left branch (A5 gate, from Basic ATK) ---
 	N = new /datum/path_node("bonus_a6", "Fighting Will", "RIP Home Run (the Skill and the empowered Blowout) deals 25% more DMG to the main target: the first enemy directly in front of you, up to 2 tiles away in the direction you are facing.")
 	N.node_type = PATH_NODE_PASSIVE
 	N.ahn_cost = 1000
-	N.required_ascension = 6
+	N.required_ascension = 5
 	N.tree_x = 0
 	N.tree_y = 3
 	N.connections = list("stat_l1")
@@ -498,7 +501,7 @@
 	N.stat_bonuses = list("ATK" = 6)
 	N.stat_percent = TRUE
 	N.ahn_cost = 500
-	N.required_ascension = 6
+	N.required_ascension = 5
 	N.tree_x = 0
 	N.tree_y = 2
 	N.connections = list("stat_l2")
@@ -509,7 +512,7 @@
 	N.stat_bonuses = list("DEF" = 7.5)
 	N.stat_percent = TRUE
 	N.ahn_cost = 700
-	N.required_ascension = 6
+	N.required_ascension = 5
 	N.tree_x = 0
 	N.tree_y = 1
 	N.connections = list("stat_l3")
@@ -526,11 +529,11 @@
 	N.prerequisites = list("stat_l2")
 	nodes += N
 
-	// --- Right branch (A4 gate, from Skill) ---
+	// --- Right branch (A3 gate, from Skill) ---
 	N = new /datum/path_node("bonus_a4", "Tenacity", "Each Perfect Pickoff stack also increases DEF by 10%.")
 	N.node_type = PATH_NODE_PASSIVE
 	N.ahn_cost = 1000
-	N.required_ascension = 4
+	N.required_ascension = 3
 	N.tree_x = 4
 	N.tree_y = 3
 	N.connections = list("stat_r1")
@@ -540,7 +543,7 @@
 	N.stat_bonuses = list("HP" = 6)
 	N.stat_percent = TRUE
 	N.ahn_cost = 500
-	N.required_ascension = 4
+	N.required_ascension = 3
 	N.tree_x = 4
 	N.tree_y = 2
 	N.connections = list("stat_r2")
@@ -551,7 +554,7 @@
 	N.stat_bonuses = list("ATK" = 6)
 	N.stat_percent = TRUE
 	N.ahn_cost = 600
-	N.required_ascension = 5
+	N.required_ascension = 4
 	N.tree_x = 4
 	N.tree_y = 1
 	N.connections = list("stat_r3")

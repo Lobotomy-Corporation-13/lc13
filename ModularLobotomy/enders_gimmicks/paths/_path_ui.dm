@@ -54,9 +54,14 @@
 	var/list/stats = list()
 	for(var/stat_name in list("HP", "ATK", "DEF", "SPD", "CRIT Rate", "CRIT DMG", "Max Energy", "Energy Regen Rate"))
 		stats[stat_name] = GetStat(stat_name)
-	// DEF reduction percentage for display
+	// DEF reduction percentage for display. Mirrors ApplyDefense() exactly,
+	// including the low-level floor. This previously used (def + 300) while the
+	// real formula was (def + 800), so it reported roughly double the mitigation
+	// players actually had.
 	var/def_val = GetStat("DEF")
-	stats["DMG Reduction"] = round((def_val / (def_val + 300)) * 100, 0.1)
+	var/def_reduction = def_val / (def_val + 800)
+	var/floor_reduction = GetLowLevelDR() / 100
+	stats["DMG Reduction"] = round((1 - (1 - def_reduction) * (1 - floor_reduction)) * 100, 0.1)
 	// Unique stats — only include if non-zero
 	var/ehr = GetStat("Effect Hit Rate")
 	if(ehr)

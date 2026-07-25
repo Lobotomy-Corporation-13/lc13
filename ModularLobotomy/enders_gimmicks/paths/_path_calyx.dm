@@ -315,11 +315,12 @@ SUBSYSTEM_DEF(calyx)
 	color_tint = tint
 	squad = squad_def
 	name = "[color] calyx"
-	// One Calyx keeps at most one ordeal spawn point's group alive at a time, but
-	// stocks a small surplus beyond that live cap so a few fresh mobs still crawl
-	// out to replace the ones the crew kills before the Calyx runs dry.
+	// One Calyx keeps at most one ordeal spawn point's group alive at a time, so
+	// the danger at any given moment matches one spawn point. The lifetime total
+	// is a multiple of that, so a Calyx keeps feeding replacements for a while
+	// instead of running dry after a single wave.
 	max_alive = squad_def["alive"]
-	max_spawns = max_alive + max(2, CEILING(max_alive * 0.5, 1))
+	max_spawns = max(max_alive * 3, 6)
 	update_icon()
 	Emerge()
 

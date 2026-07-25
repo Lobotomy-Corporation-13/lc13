@@ -76,6 +76,8 @@
 	// --- Defense ---
 	/// How much damage_resistance we've added (for clean removal)
 	var/applied_resistance = 0
+	/// Rate limit for the "not your ally" warning
+	var/friendly_fire_warned = 0
 
 	// --- Weapon ---
 	var/obj/item/ego_weapon/path_weapon/weapon
@@ -169,6 +171,16 @@
 	ADD_TRAIT(owner, TRAIT_BRUTEPALE, "Path")
 	ADD_TRAIT(owner, TRAIT_BRUTESANITY, "Path")
 
+	// Screen readouts for turn, AP and Ultimate charge
+	CreateHud()
+
+	// First-run primer. Every one of these was asked out loud during testing.
+	to_chat(owner, span_nicegreen("<b>You walk the Path of [name].</b>"))
+	to_chat(owner, span_notice("Your weapon glows gold when your turn is ready. A turn is one strong attack (which grants an Action Point) or one Skill (which spends one). Follow-up swings hit for much less."))
+	to_chat(owner, span_notice("Skill is your weapon's attack-self. Your Ultimate unlocks at full Energy, shown on the bar by your health."))
+	to_chat(owner, span_notice("<b>Use Designate Ally on your teammates.</b> Allies are never hit by your abilities, and designating each other shares Action Points."))
+	to_chat(owner, span_notice("Your coat is cosmetic. Protection comes from your path's DEF; check the Path Screen."))
+
 	// Start turn cycle
 	StartTurnCycle()
 
@@ -214,6 +226,9 @@
 		weapon.linked_path = null
 		QDEL_NULL(weapon)
 
+	// Remove screen readouts
+	DestroyHud()
+
 	// Stop turn cycle
 	if(turn_timer_id)
 		deltimer(turn_timer_id)
@@ -256,6 +271,7 @@
 	var/duration = GetTurnDuration()
 	next_turn_time = world.time + duration
 	turn_timer_id = addtimer(CALLBACK(src, PROC_REF(OnTurnReset)), duration, TIMER_STOPPABLE)
+	UpdateTurnHud()
 
 /// Called each turn cycle. Ticks DoTs, resets state, queues next turn.
 /datum/path/proc/OnTurnReset()
@@ -266,6 +282,9 @@
 	for(var/datum/status_effect/path_dot/dot in owner.status_effects)
 		dot.DoTick()
 
+	// Did they actually spend the turn that is now refreshing?
+	var/turn_was_spent = (turn_state != PATH_TURN_READY)
+
 	// Reset turn state with 1.5s grace period for skill use
 	turn_state = PATH_TURN_READY
 	turn_grace_end = world.time + 0.75 SECONDS
@@ -274,6 +293,12 @@
 	// Golden glow on weapon to show turn is ready
 	if(weapon)
 		weapon.ShowTurnReady()
+
+	// Chime only when a spent turn comes back. Someone standing around with an
+	// unused turn does not need a beep every few seconds.
+	if(turn_was_spent)
+		SEND_SOUND(owner, sound('ModularLobotomy/enders_gimmicks/paths/path_sounds/path_turn_update.ogg', volume = 40))
+	UpdateTurnHud()
 
 	// Queue next turn
 	var/duration = GetTurnDuration()
@@ -297,10 +322,16 @@
 
 /// Adds energy, clamped to max_energy
 /datum/path/proc/GainEnergy(amount)
+	var/was_full = (energy >= max_energy)
 	energy = min(energy + amount, max_energy)
 	SEND_SIGNAL(src, COMSIG_PATH_ENERGY_CHANGED, energy, max_energy)
 	if(ultimate_action_button)
 		ultimate_action_button.UpdateButtonIcon()
+	UpdateEnergyHud()
+	// Announce the Ultimate becoming available, once, on the tick it fills
+	if(!was_full && energy >= max_energy)
+		SEND_SOUND(owner, sound('sound/machines/twobeep_high.ogg', volume = 35))
+		to_chat(owner, span_nicegreen("Your Ultimate is ready."))
 
 /// Subtracts energy, clamped to 0
 /datum/path/proc/SpendEnergy(amount)
@@ -308,13 +339,18 @@
 	SEND_SIGNAL(src, COMSIG_PATH_ENERGY_CHANGED, energy, max_energy)
 	if(ultimate_action_button)
 		ultimate_action_button.UpdateButtonIcon()
+	UpdateEnergyHud()
 
 /// +1 AP, clamped to max. If propagate is TRUE and the owner has mutual
 /// path-allies, they each gain 1 AP too (the recursive call passes
 /// propagate=FALSE to prevent loops).
 /datum/path/proc/GainActionPoint(propagate = TRUE)
+	var/old_ap = action_points
 	action_points = min(action_points + 1, max_action_points)
 	SEND_SIGNAL(src, COMSIG_PATH_AP_CHANGED, action_points, max_action_points)
+	UpdateApHud()
+	if(action_points > old_ap)
+		SEND_SOUND(owner, sound('sound/machines/ping.ogg', volume = 20))
 	if(propagate && owner)
 		for(var/datum/path/ally_path as anything in GetMutualPathAllies(owner))
 			ally_path.GainActionPoint(propagate = FALSE)
@@ -324,6 +360,7 @@
 /datum/path/proc/SpendActionPoint(propagate = TRUE)
 	action_points = max(action_points - 1, 0)
 	SEND_SIGNAL(src, COMSIG_PATH_AP_CHANGED, action_points, max_action_points)
+	UpdateApHud()
 	if(propagate && owner)
 		for(var/datum/path/ally_path as anything in GetMutualPathAllies(owner))
 			ally_path.SpendActionPoint(propagate = FALSE)
@@ -406,8 +443,18 @@
 // Defense System
 // ============================================================
 
+/// Extra damage reduction for low-level paths, decaying to zero by
+/// PATH_LOW_LEVEL_DR_ZERO. Early paths have no EGO armour and a small DEF stat,
+/// which left them far too fragile; past the decay point the DEF curve alone is
+/// already the intended value, so this contributes nothing there.
+/datum/path/proc/GetLowLevelDR()
+	if(path_level >= PATH_LOW_LEVEL_DR_ZERO)
+		return 0
+	var/remaining = (PATH_LOW_LEVEL_DR_ZERO - path_level) / (PATH_LOW_LEVEL_DR_ZERO - 1)
+	return PATH_LOW_LEVEL_DR * remaining
+
 /// Applies DEF stat as damage_resistance on the owner
-/// Formula: reduction% = DEF / (DEF + 800) * 100
+/// Formula: reduction% = DEF / (DEF + 800) * 100, stacked with the low-level floor
 /// Uses multiplicative stacking — divides out old factor, multiplies new
 /datum/path/proc/ApplyDefense()
 	if(!owner?.physiology)
@@ -419,7 +466,9 @@
 			owner.physiology.damage_resistance = 100 - ((100 - owner.physiology.damage_resistance) / old_keep)
 	// Calculate new reduction
 	var/def = GetStat("DEF")
-	applied_resistance = (def / (def + 800)) * 100
+	var/def_reduction = def / (def + 800)
+	var/floor_reduction = GetLowLevelDR() / 100
+	applied_resistance = (1 - (1 - def_reduction) * (1 - floor_reduction)) * 100
 	// Apply new multiplier
 	var/new_keep = (100 - applied_resistance) / 100
 	owner.physiology.damage_resistance = 100 - ((100 - owner.physiology.damage_resistance) * new_keep)
@@ -451,9 +500,12 @@
 	ascension_phase++
 	return TRUE
 
-/// EXP required to reach each level (index = level, value = total EXP at that level)
+/// EXP required to reach each level (index = level, value = total EXP at that level).
+/// Curve is 1.55 * (level - 1) ^ 2.75, rounded to readable steps. A shift is a
+/// couple of hours, so the original HSR-derived table (Lv.20 at 112,510) put the
+/// first ascension out of reach; this lands it at 5,100.
 /datum/path/proc/GetExpTable()
-	return list(0, 200, 500, 1000, 1600, 2650, 4320, 6640, 9700, 13560, 18300, 24010, 30740, 38570, 47570, 57810, 69360, 82280, 96640, 112510, 129090, 145930, 163030, 180400, 198040, 215950, 234140, 252620, 271380, 290420, 309760, 329390, 349320, 369540, 390070, 410910, 432050, 453500, 475260, 497340, 519730, 545280, 574420, 607250, 643850, 684320, 728750, 777230, 829860, 886730, 947920, 1013540, 1083670, 1158410, 1237860, 1322100, 1411220, 1505330, 1604520, 1708870, 1815110, 1926940, 2044470, 2167790, 2297000, 2432200, 2573490, 2720970, 2874750, 3034010, 3214180, 3414100, 3635020, 3877280, 4141210, 4427160, 4735460, 5066460, 5420500, 5797920)
+	return list(0, 10, 20, 30, 70, 130, 210, 330, 470, 650, 870, 1150, 1450, 1800, 2200, 2650, 3150, 3750, 4400, 5100, 5850, 6700, 7600, 8600, 9700, 10750, 12000, 13500, 14750, 16250, 18000, 19500, 21250, 23250, 25250, 27250, 29500, 31750, 34250, 36750, 39500, 42250, 45000, 48000, 51250, 54500, 58000, 61500, 65000, 69000, 72750, 77000, 81250, 85500, 90000, 94750, 99500, 104500, 109500, 115000, 120500, 126000, 131500, 137500, 143500, 150000, 156500, 163000, 169500, 176500, 184000, 191000, 198500, 206500, 214000, 222000, 230500, 239000, 247500, 256500)
 
 /// Returns EXP needed for the next level (0 if at max)
 /datum/path/proc/GetExpToNext()
@@ -630,6 +682,7 @@
 		GainEnergy(basic_attack.energy_gain)
 		GainActionPoint()
 		turn_state = PATH_TURN_ATTACKED
+		UpdateTurnHud()
 		// Clear golden glow — turn consumed by attack
 		if(weapon)
 			weapon.ClearTurnReady()
@@ -655,6 +708,30 @@
 		return 1
 	return scaling_table[actual_level] / target_s
 
+/// Converts a raw ATK-scaled figure into the damage a player will actually see
+/// against a mob, for display in the Path Screen. Applies the parts of
+/// deal_path_damage() that do not depend on who is being hit: the PvE scalar,
+/// elemental DMG bonus, any active external multiplier, and the average value
+/// of a crit roll.
+///
+/// Elemental RES and the target's LC13 damage coefficient are deliberately left
+/// out, because they vary per enemy. Displayed numbers are therefore an
+/// "expected hit before enemy resistances", not a guarantee.
+/// Pass do_crit = FALSE for damage that cannot crit, such as DoT ticks.
+/datum/path/proc/EstimateDamage(raw, do_crit = TRUE)
+	var/dmg = raw * PATH_PVE_DAMAGE_MULT
+	var/elem_bonus = GetStat("[element_type] DMG")
+	if(elem_bonus)
+		dmg *= (1 + elem_bonus / 100)
+	if(external_dmg_mult != 1)
+		dmg *= external_dmg_mult
+	// Average crit contribution: rate% of the time you get the crit bonus
+	if(do_crit)
+		var/crit_rate = clamp(GetStat("CRIT Rate"), 0, 100) / 100
+		var/crit_dmg = GetStat("CRIT DMG") / 100
+		dmg *= (1 + crit_rate * crit_dmg)
+	return round(dmg, 1)
+
 /// Deals path damage to a target, applying the full damage pipeline.
 /// Pass do_crit=FALSE to skip crit rolls (used by DoTs).
 /// toughness_reduction: points of toughness to remove (10=basic, 20=skill, 30=ult, 0=none)
@@ -673,6 +750,10 @@
 	var/elem_bonus = GetStat(elem_stat)
 	if(elem_bonus)
 		damage *= (1 + elem_bonus / 100)
+
+	// PvE-only scalar. Skipped against humans so PvP keeps its tuned numbers.
+	if(!ishuman(target))
+		damage *= PATH_PVE_DAMAGE_MULT
 
 	// CRIT check
 	if(do_crit)
@@ -721,6 +802,11 @@
 	// PvP balance: HP-ratio scaling + armor average vs humans
 	if(ishuman(target) && owner)
 		var/mob/living/carbon/human/H = target
+		// Friendly fire is easy to cause by accident with area abilities, and
+		// nothing told players why. Say it once every few seconds per target.
+		if(H != owner && !IsPathAlly(owner, H) && world.time >= friendly_fire_warned)
+			friendly_fire_warned = world.time + 5 SECONDS
+			to_chat(owner, span_userdanger("[H] is not your ally! Use Designate Ally to stop hitting them."))
 		// Trace-progression PvP scaling — only against non-path humans.
 		// Default-trace players land below baseline, target-trace players
 		// match the original pvp_balance.md numbers, max-trace players
@@ -858,8 +944,11 @@
 	max_level = 12
 
 /// Virtual proc. Subtypes override with unique per-path actions.
-/datum/path_ability/burst/proc/Activate(mob/living/user)
-	return
+/// Return TRUE when the skill actually did something, FALSE when it found no
+/// target or ally. A FALSE return refunds the AP, energy and turn, so a
+/// mistargeted click costs the player nothing.
+/datum/path_ability/burst/proc/Activate(mob/living/user, mob/living/forced_target)
+	return TRUE
 
 // --- Ultimate ---
 /// Activated via HUD action button. Requires full energy.

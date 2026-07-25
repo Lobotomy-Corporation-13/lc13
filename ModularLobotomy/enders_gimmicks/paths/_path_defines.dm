@@ -38,6 +38,27 @@
 #define PATH_ELEMENT_QUANTUM   "quantum"
 #define PATH_ELEMENT_IMAGINARY "imaginary"
 
+// --- Path Realm ---
+/// How many players may walk the Path Realm at once. Each loads its own
+/// Z-level, so this only bounds simultaneous Z-level loading.
+#define PATH_REALM_MAX_CONCURRENT 4
+
+// --- Combat Tuning ---
+// These two only affect PvE. The PvP pipeline in deal_path_damage() (pvp_factor,
+// HP-ratio scaling, armour average) is untouched, so the figures in
+// plans/pvp_balance.md and plans/lever_4_hp_growth_reduction.md still hold.
+
+/// Damage fraction for basic swings after the first hit of a turn. A turn fits
+/// roughly six swings, so at the old 0.1 every swing but the first read as a
+/// no-op to players.
+#define PATH_FOLLOWUP_MULT 0.3
+/// Flat damage multiplier against non-human targets only.
+#define PATH_PVE_DAMAGE_MULT 1.5
+/// Extra damage reduction at Lv.1, decaying linearly to zero at this level.
+/// Lifts the early-game floor without touching the tuned Lv.60+ endpoint.
+#define PATH_LOW_LEVEL_DR      12
+#define PATH_LOW_LEVEL_DR_ZERO 60
+
 // --- Speed & Turn System ---
 #define PATH_BASE_SPEED    100
 #define PATH_TURN_BASE     5 SECONDS

@@ -47,7 +47,18 @@
 
 // ---- Counting / spending ----
 
-/// How many of a (category, key, tier) material the owner holds.
+/// An Omni-Synthesizer the owner is standing next to, or null.
+/// Materials banked in it count toward costs, so players do not have to
+/// withdraw everything just to spend it again.
+/datum/path/proc/GetNearbySynth()
+	if(!owner)
+		return null
+	for(var/obj/machinery/omni_synthesizer/S in range(1, owner))
+		return S
+	return null
+
+/// How many of a (category, key, tier) material the owner can spend: what they
+/// carry, plus anything banked in an adjacent Omni-Synthesizer.
 /datum/path/proc/CountMat(cat, key, tier)
 	if(!owner)
 		return 0
@@ -58,6 +69,9 @@
 	for(var/obj/item/stack/S in owner.GetAllContents())
 		if(S.type == mt)
 			total += S.amount
+	var/obj/machinery/omni_synthesizer/synth = GetNearbySynth()
+	if(synth)
+		total += synth.stored["[mt]"]
 	return total
 
 /// TRUE if the owner holds everything a cost requires.
@@ -70,7 +84,8 @@
 			return FALSE
 	return TRUE
 
-/// Consumes `amount` of a (category, key, tier) from the owner's inventory.
+/// Consumes `amount` of a (category, key, tier), carried stacks first and then
+/// an adjacent Omni-Synthesizer's bank.
 /datum/path/proc/SpendMat(cat, key, tier, amount)
 	var/mt = GetPathMatType(cat, key, tier)
 	if(!mt || !owner)
@@ -84,6 +99,17 @@
 		var/take = min(remaining, S.amount)
 		S.use(take)
 		remaining -= take
+	if(remaining <= 0)
+		return
+	var/obj/machinery/omni_synthesizer/synth = GetNearbySynth()
+	if(!synth)
+		return
+	var/banked = synth.stored["[mt]"]
+	var/take = min(remaining, banked)
+	if(take <= 0)
+		return
+	synth.stored["[mt]"] = banked - take
+	SStgui.update_uis(synth)
 
 /// Spends a whole cost (assumes HasCost already passed).
 /datum/path/proc/SpendCost(list/cost)
@@ -139,8 +165,8 @@
 			list("asc" = 3, "main" = list(list(2, 2)), "trace" = list(list(2, 2))),
 			list("asc" = 4, "main" = list(list(2, 3)), "trace" = list(list(2, 4))),
 			list("asc" = 5, "main" = list(list(3, 2)), "trace" = list(list(3, 2))),
-			list("asc" = 6, "main" = list(list(3, 3)), "trace" = list(list(3, 6))),
-			list("asc" = 6, "main" = list(list(3, 4)), "trace" = list(list(3, 8))),
+			list("asc" = 5, "main" = list(list(3, 3)), "trace" = list(list(3, 6))),
+			list("asc" = 5, "main" = list(list(3, 4)), "trace" = list(list(3, 8))),
 		)
 		gentle_sched = list(
 			list("asc" = 1, "main" = list(list(1, 2)), "trace" = list()),
@@ -150,10 +176,10 @@
 			list("asc" = 4, "main" = list(list(2, 5)), "trace" = list(list(2, 6))),
 			list("asc" = 5, "main" = list(list(3, 2)), "trace" = list(list(3, 2))),
 			list("asc" = 5, "main" = list(list(3, 3)), "trace" = list(list(3, 4))),
-			list("asc" = 6, "main" = list(), "trace" = list(list(3, 6))),
-			list("asc" = 6, "main" = list(), "trace" = list(list(3, 11))),
-			list("asc" = 6, "main" = list(list(3, 3)), "trace" = list(list(3, 6))),
-			list("asc" = 6, "main" = list(list(3, 4)), "trace" = list(list(3, 8))),
+			list("asc" = 5, "main" = list(), "trace" = list(list(3, 6))),
+			list("asc" = 5, "main" = list(), "trace" = list(list(3, 11))),
+			list("asc" = 5, "main" = list(list(3, 3)), "trace" = list(list(3, 6))),
+			list("asc" = 5, "main" = list(list(3, 4)), "trace" = list(list(3, 8))),
 		)
 	var/list/sched = is_basic ? basic_sched : gentle_sched
 	if(lvl < 1 || lvl > length(sched))

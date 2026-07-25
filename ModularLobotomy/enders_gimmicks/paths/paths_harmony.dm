@@ -50,7 +50,7 @@
 
 /obj/item/ego_weapon/path_weapon/harmony
 	name = "waltzing fan"
-	desc = "A folding fan of white, tan and crimson leaves on black ribs, clasped with a gold guard. It hums with a melodic charge when snapped open."
+	desc = "A folding fan of white, tan and crimson leaves on black ribs, clasped with a gold guard. It hums with a melodic charge when snapped open. Click a designated ally to grant them Benediction directly; clicking an ally never strikes them."
 	icon = 'ModularLobotomy/_Lobotomyicons/path_icons.dmi'
 	icon_state = "harmony"
 	inhand_icon_state = "harmony"
@@ -58,6 +58,7 @@
 	righthand_file = 'ModularLobotomy/_Lobotomyicons/path_right.dmi'
 	hitsound = 'sound/weapons/bladeslice.ogg'
 	swingstyle = WEAPONSWING_SMALLSWEEP
+	skill_targets_allies = TRUE
 
 // ============================================================
 // Cosmetic Suit
@@ -65,7 +66,7 @@
 
 /obj/item/clothing/suit/path_harmony
 	name = "dancer's dress"
-	desc = "A white dress under a dark corset, wrapped in crimson shoulder drapes and side panels trimmed in gold. A Pathstrider's mark of the Harmony."
+	desc = "A white dress under a dark corset, wrapped in crimson shoulder drapes and side panels trimmed in gold. A Pathstrider's mark of the Harmony. Purely ceremonial: a Pathstrider is protected by their own DEF, not by cloth."
 	icon = 'ModularLobotomy/_Lobotomyicons/path_icons.dmi'
 	icon_state = "harmony_suit"
 	worn_icon = 'ModularLobotomy/_Lobotomyicons/path_worn.dmi'
@@ -83,7 +84,7 @@
 
 /datum/path_ability/basic/harmony
 	name = "Dislodged"
-	desc = "Deals Lightning DMG scaling off ATK to the target. Knell Subdual bonus: +40% Basic ATK DMG. First hit full, follow-ups 10%."
+	desc = "Deals Lightning DMG scaling off ATK to the target. Knell Subdual bonus: +40% Basic ATK DMG. First hit of a turn deals full damage, later swings deal 30%."
 	icon_state = "dislodged"
 	energy_gain = 20
 	max_level = 7
@@ -95,8 +96,9 @@
 	data["ATK Scaling"] = "[atk_scaling[level]]%"
 	if(parent_path)
 		var/atk = parent_path.GetStat("ATK")
-		var/dmg = round(atk * atk_scaling[level] / 100, 1)
-		data["Damage"] = "[dmg]"
+		var/dmg = parent_path.EstimateDamage(atk * atk_scaling[level] / 100)
+		data["Damage (first hit)"] = "[dmg]"
+		data["Damage (later swings)"] = "[parent_path.EstimateDamage(atk * atk_scaling[level] / 100 * PATH_FOLLOWUP_MULT)]"
 	data["Energy Gain"] = "[energy_gain]"
 	return data
 
@@ -115,7 +117,7 @@
 
 	var/total_damage = parent_path.GetStat("ATK") * multiplier
 	if(!first_hit)
-		total_damage *= 0.1
+		total_damage *= PATH_FOLLOWUP_MULT
 	var/basic_factor = parent_path.PvPScalingFactor(level, atk_scaling, PATH_TARGET_TRACE_BASIC)
 	parent_path.deal_path_damage(target, total_damage, pvp_factor = basic_factor)
 
@@ -161,29 +163,22 @@
 /datum/path_ability/burst/harmony/GetRawScaling()
 	return bonus_dmg_pct
 
-/datum/path_ability/burst/harmony/Activate(mob/living/user)
+/datum/path_ability/burst/harmony/Activate(mob/living/user, mob/living/forced_target)
 	if(!parent_path)
-		return
+		return FALSE
 
 	var/datum/path/harmony/H = parent_path
 	if(!istype(H))
-		return
+		return FALSE
 
-	// Find nearest designated ally within 7 tiles
-	var/mob/living/best_ally
-	var/best_dist = INFINITY
-	var/list/allies = GetAllyList(user)
-	for(var/mob/living/ally in allies)
-		if(QDELETED(ally) || ally.stat == DEAD)
-			continue
-		var/d = get_dist(user, ally)
-		if(d <= 7 && d < best_dist)
-			best_dist = d
-			best_ally = ally
+	// A clicked ally wins; otherwise the focused ally, else the nearest
+	var/mob/living/best_ally = forced_target
+	if(!best_ally || QDELETED(best_ally) || best_ally.stat == DEAD)
+		best_ally = parent_path.GetSupportTarget(user, 7)
 
 	if(!best_ally)
 		to_chat(user, span_warning("Soothing Melody - no ally in range!"))
-		return
+		return FALSE
 
 	// Remove existing Benediction from previous target
 	if(H.benediction_target && !QDELETED(H.benediction_target))
@@ -226,6 +221,7 @@
 	new /obj/effect/temp_visual/heal_effect(get_turf(best_ally))
 	to_chat(user, span_nicegreen("Soothing Melody grants Benediction to [best_ally]!"))
 	to_chat(best_ally, span_nicegreen("[user] grants you Benediction! ATK boosted, next attack deals bonus Lightning DMG!"))
+	return TRUE
 
 // ============================================================
 // Ultimate: Amidst the Rejoicing Clouds
@@ -260,17 +256,8 @@
 		return
 	..()
 
-	// Find nearest designated ally within 7 tiles
-	var/mob/living/best_ally
-	var/best_dist = INFINITY
-	var/list/allies = GetAllyList(user)
-	for(var/mob/living/ally in allies)
-		if(QDELETED(ally) || ally.stat == DEAD)
-			continue
-		var/d = get_dist(user, ally)
-		if(d <= 7 && d < best_dist)
-			best_dist = d
-			best_ally = ally
+	// Focused ally if one is set and in range, else the nearest
+	var/mob/living/best_ally = parent_path.GetSupportTarget(user, 7)
 
 	if(!best_ally)
 		to_chat(user, span_warning("Amidst the Rejoicing Clouds - no ally in range!"))
@@ -617,11 +604,11 @@
 	N.tree_y = 6
 	nodes += N
 
-	// --- Center branch (A2 gate) ---
+	// --- Center branch (A1 gate) ---
 	N = new /datum/path_node("bonus_a2", "Nourished Joviality", "SPD increases by 20% for 10s after using Skill.")
 	N.node_type = PATH_NODE_PASSIVE
 	N.ahn_cost = 1000
-	N.required_ascension = 2
+	N.required_ascension = 1
 	N.tree_x = 2
 	N.tree_y = 2
 	N.connections = list("stat_c1")
@@ -631,7 +618,7 @@
 	N.stat_bonuses = list("DEF" = 5)
 	N.stat_percent = TRUE
 	N.ahn_cost = 400
-	N.required_ascension = 2
+	N.required_ascension = 1
 	N.tree_x = 2
 	N.tree_y = 1
 	N.connections = list("stat_c2", "stat_c3")
@@ -642,7 +629,7 @@
 	N.stat_bonuses = list("ATK" = 4)
 	N.stat_percent = TRUE
 	N.ahn_cost = 300
-	N.required_ascension = 3
+	N.required_ascension = 2
 	N.tree_x = 1
 	N.tree_y = 0
 	N.prerequisites = list("stat_c1")
@@ -652,17 +639,17 @@
 	N.stat_bonuses = list("lightning DMG" = 3.2)
 	N.stat_percent = TRUE
 	N.ahn_cost = 300
-	N.required_ascension = 3
+	N.required_ascension = 2
 	N.tree_x = 3
 	N.tree_y = 0
 	N.prerequisites = list("stat_c1")
 	nodes += N
 
-	// --- Right branch (A4 gate) ---
+	// --- Right branch (A3 gate) ---
 	N = new /datum/path_node("bonus_a4", "Knell Subdual", "DMG dealt by Basic ATK increases by 40%.")
 	N.node_type = PATH_NODE_PASSIVE
 	N.ahn_cost = 1000
-	N.required_ascension = 4
+	N.required_ascension = 3
 	N.tree_x = 4
 	N.tree_y = 3
 	N.connections = list("stat_r1")
@@ -672,7 +659,7 @@
 	N.stat_bonuses = list("ATK" = 6)
 	N.stat_percent = TRUE
 	N.ahn_cost = 500
-	N.required_ascension = 4
+	N.required_ascension = 3
 	N.tree_x = 4
 	N.tree_y = 2
 	N.connections = list("stat_r2")
@@ -683,7 +670,7 @@
 	N.stat_bonuses = list("DEF" = 7.5)
 	N.stat_percent = TRUE
 	N.ahn_cost = 600
-	N.required_ascension = 5
+	N.required_ascension = 4
 	N.tree_x = 4
 	N.tree_y = 1
 	N.connections = list("stat_r3")
@@ -700,11 +687,11 @@
 	N.prerequisites = list("stat_r2")
 	nodes += N
 
-	// --- Left branch (A6 gate) ---
+	// --- Left branch (A5 gate) ---
 	N = new /datum/path_node("bonus_a6", "Jubilant Passage", "Regenerate 5 Energy at the start of each turn.")
 	N.node_type = PATH_NODE_PASSIVE
 	N.ahn_cost = 1000
-	N.required_ascension = 6
+	N.required_ascension = 5
 	N.tree_x = 0
 	N.tree_y = 3
 	N.connections = list("stat_l1")
@@ -714,7 +701,7 @@
 	N.stat_bonuses = list("lightning DMG" = 4.8)
 	N.stat_percent = TRUE
 	N.ahn_cost = 500
-	N.required_ascension = 6
+	N.required_ascension = 5
 	N.tree_x = 0
 	N.tree_y = 2
 	N.connections = list("stat_l2")
@@ -725,7 +712,7 @@
 	N.stat_bonuses = list("ATK" = 6)
 	N.stat_percent = TRUE
 	N.ahn_cost = 700
-	N.required_ascension = 6
+	N.required_ascension = 5
 	N.tree_x = 0
 	N.tree_y = 1
 	N.connections = list("stat_l3")

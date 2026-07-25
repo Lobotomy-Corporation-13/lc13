@@ -110,6 +110,7 @@ const ConvertGroup = (props, context) => {
           setValue={setSub}
           options={[
             { id: 'synth', name: 'Synthesize', icon: 'flask' },
+            { id: 'breakdown', name: 'Break Down', icon: 'hammer' },
             { id: 'exchange', name: 'Exchange', icon: 'exchange-alt' },
           ]}
         />
@@ -144,6 +145,18 @@ const RefineGroup = (props, context) => {
   );
 };
 
+// Convert-tab action wiring, keyed by sub-tab.
+const ACTION_LABEL = {
+  synth: 'Synthesize',
+  breakdown: 'Break Down',
+  exchange: 'Exchange',
+};
+const ACTION_NAME = {
+  synth: 'synthesize',
+  breakdown: 'breakdown',
+  exchange: 'exchange',
+};
+
 // Category accent colors, used to label path vs trace throughout.
 const PATH_COLOR = '#e0b060';
 const TRACE_COLOR = '#7fd0ff';
@@ -153,9 +166,17 @@ const catLabel = cat => (cat === 'trace' ? 'Trace' : 'Path');
 const ConvertView = ({ mode }, context) => {
   const { data } = useBackend(context);
   const { catalog = [], synth_cost, exchange_cost } = data;
-  // Synth needs a higher tier to make; exchange works on any tier/category.
-  const list = catalog.filter(m =>
-    mode === 'synth' ? m.tier < 3 : true);
+  // Synth needs a tier above it to make, breakdown needs one below it to split
+  // into; exchange works on any tier/category.
+  const list = catalog.filter(m => {
+    if (mode === 'synth') {
+      return m.tier < 3;
+    }
+    if (mode === 'breakdown') {
+      return m.tier > 1;
+    }
+    return true;
+  });
   const [selRef, setSelRef] = useLocalState(
     context, 'omni_sel_' + mode, null);
   const selected = list.find(m => m.ref === selRef) || list[0];
@@ -167,7 +188,14 @@ const ConvertView = ({ mode }, context) => {
       </NoticeBox>
     );
   }
-  const need = mode === 'synth' ? synth_cost : exchange_cost;
+  // Breaking down consumes one material and returns synth_cost of the tier
+  // below, so it costs 1 per craft rather than synth_cost.
+  let need = exchange_cost;
+  if (mode === 'synth') {
+    need = synth_cost;
+  } else if (mode === 'breakdown') {
+    need = 1;
+  }
   return (
     <Flex fill>
       <Flex.Item basis="240px">
@@ -254,7 +282,7 @@ const CenterPanel = (props, context) => {
   const { act, data } = useBackend(context);
   const { mode, selected, need } = props;
   const {
-    catalog = [], path_families = [], trace_families = [],
+    catalog = [], path_families = [], trace_families = [], synth_cost,
   } = data;
   // Exchange only swaps within the same category (path<->path, trace<->trace).
   const families = selected.cat === 'trace' ? trace_families : path_families;
@@ -264,11 +292,17 @@ const CenterPanel = (props, context) => {
   const tgtKey = mode === 'exchange'
     ? (others.find(p => p.key === target) ? target : others[0]?.key)
     : selected.key;
-  const result = mode === 'synth'
-    ? catalog.find(c => c.cat === selected.cat
-        && c.key === selected.key && c.tier === selected.tier + 1)
-    : catalog.find(c => c.cat === selected.cat
-        && c.key === tgtKey && c.tier === selected.tier);
+  let result;
+  if (mode === 'synth') {
+    result = catalog.find(c => c.cat === selected.cat
+      && c.key === selected.key && c.tier === selected.tier + 1);
+  } else if (mode === 'breakdown') {
+    result = catalog.find(c => c.cat === selected.cat
+      && c.key === selected.key && c.tier === selected.tier - 1);
+  } else {
+    result = catalog.find(c => c.cat === selected.cat
+      && c.key === tgtKey && c.tier === selected.tier);
+  }
   const maxQty = Math.floor(selected.owned / need) || 0;
   const [qty, setQty] = useLocalState(context, 'omni_qty_' + mode, 1);
   const q = Math.max(1, Math.min(qty, maxQty || 1));
@@ -307,8 +341,17 @@ const CenterPanel = (props, context) => {
           </Box>
         </Flex.Item>
         <Flex.Item mt={1}>
-          <Icon name="arrow-up" color="#ffb400" size={1.5} />
+          <Icon
+            name={mode === 'breakdown' ? 'arrow-down' : 'arrow-up'}
+            color="#ffb400"
+            size={1.5}
+          />
         </Flex.Item>
+        {mode === 'breakdown' ? (
+          <Flex.Item color="label" fontSize="0.85em">
+            Yields {synth_cost} per material
+          </Flex.Item>
+        ) : null}
         <Flex.Item mt={1} bold>Materials Needed</Flex.Item>
         <Flex.Item mt={1} textAlign="center">
           {matImg(selected.icon, 40)}
@@ -379,8 +422,8 @@ const CenterPanel = (props, context) => {
             textAlign="center"
             color="good"
             disabled={!enough}
-            content={mode === 'synth' ? 'Synthesize' : 'Exchange'}
-            onClick={() => act(mode === 'synth' ? 'synthesize' : 'exchange', {
+            content={ACTION_LABEL[mode]}
+            onClick={() => act(ACTION_NAME[mode], {
               ref: selected.ref,
               amount: q,
               target: tgtKey,
@@ -560,6 +603,43 @@ const StorageView = (props, context) => {
   );
 };
 
+// One clickable row of material families for an EXP recipe. Picking a specific
+// family spends only that one, so a player can burn what they have spare and
+// keep whatever they are saving for traces.
+const FamilyRow = (props, context) => {
+  const { act } = useBackend(context);
+  const { recipe, families = [], source, cost, color } = props;
+  if (!cost || !families.length) {
+    return null;
+  }
+  return (
+    <Flex align="center" mt={0.5} ml={4}>
+      <Flex.Item width="70px" fontSize="0.8em" color={color}>
+        {source === 'trace' ? 'Trace' : 'Path'} x{cost}
+      </Flex.Item>
+      <Flex.Item grow>
+        <Flex wrap>
+          {families.map(f => (
+            <Flex.Item key={f.key} mr={0.5}>
+              <Button
+                disabled={f.have < cost}
+                tooltip={f.name + ' (' + f.have + ' banked)'}
+                onClick={() => act('craft_exp', {
+                  id: recipe.id,
+                  source: source,
+                  key: f.key,
+                })}>
+                {matImg(f.icon, 18)}
+                <Box inline ml={0.5}>{f.have}</Box>
+              </Button>
+            </Flex.Item>
+          ))}
+        </Flex>
+      </Flex.Item>
+    </Flex>
+  );
+};
+
 const ExpView = (props, context) => {
   const { act, data } = useBackend(context);
   const { exp_recipes = [] } = data;
@@ -567,7 +647,8 @@ const ExpView = (props, context) => {
     <Section fill scrollable title="EXP Refinery">
       <Box fontSize="0.85em" color="label" mb={1}>
         Refine the T1 book from banked T1 materials (Path is cheaper than
-        Trace), then combine 3 of a tier into the next.
+        Trace), then combine 3 of a tier into the next. Pick which material
+        family to spend.
       </Box>
       {exp_recipes.map(r => (
         <Box key={r.id} mb={1}>
@@ -579,32 +660,6 @@ const ExpView = (props, context) => {
                 +{r.exp} path EXP
               </Box>
             </Flex.Item>
-            {r.main_cost > 0 && (
-              <Flex.Item>
-                <Button
-                  icon="gem"
-                  content={'Path x' + r.main_cost}
-                  disabled={r.main_have < r.main_cost}
-                  tooltip={'Uses ' + r.main_cost + ' path T' + r.tier
-                    + ' (' + r.main_have + ' banked)'}
-                  onClick={() =>
-                    act('craft_exp', { id: r.id, source: 'main' })}
-                />
-              </Flex.Item>
-            )}
-            {r.trace_cost > 0 && (
-              <Flex.Item ml={0.5}>
-                <Button
-                  icon="atom"
-                  content={'Trace x' + r.trace_cost}
-                  disabled={r.trace_have < r.trace_cost}
-                  tooltip={'Uses ' + r.trace_cost + ' trace T' + r.tier
-                    + ' (' + r.trace_have + ' banked)'}
-                  onClick={() =>
-                    act('craft_exp', { id: r.id, source: 'trace' })}
-                />
-              </Flex.Item>
-            )}
             {r.combine_cost > 0 && (
               <Flex.Item ml={0.5}>
                 <Button
@@ -619,6 +674,20 @@ const ExpView = (props, context) => {
               </Flex.Item>
             )}
           </Flex>
+          <FamilyRow
+            recipe={r}
+            families={r.main_families}
+            source="main"
+            cost={r.main_cost}
+            color={PATH_COLOR}
+          />
+          <FamilyRow
+            recipe={r}
+            families={r.trace_families}
+            source="trace"
+            cost={r.trace_cost}
+            color={TRACE_COLOR}
+          />
         </Box>
       ))}
     </Section>

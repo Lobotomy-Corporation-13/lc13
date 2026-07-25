@@ -60,7 +60,7 @@
 
 /obj/item/clothing/suit/path_nihility
 	name = "reveler's bustier"
-	desc = "A crimson bustier over a black corset cinched in gold, above a white skirt with red panels and black leggings. A Pathstrider's mark of the Nihility."
+	desc = "A crimson bustier over a black corset cinched in gold, above a white skirt with red panels and black leggings. A Pathstrider's mark of the Nihility. Purely ceremonial: a Pathstrider is protected by their own DEF, not by cloth."
 	icon = 'ModularLobotomy/_Lobotomyicons/path_icons.dmi'
 	icon_state = "nihility_suit"
 	worn_icon = 'ModularLobotomy/_Lobotomyicons/path_worn.dmi'
@@ -87,8 +87,9 @@
 	data["ATK Scaling"] = "[atk_scaling[level]]%"
 	if(parent_path)
 		var/atk = parent_path.GetStat("ATK")
-		var/dmg = round(atk * atk_scaling[level] / 100, 1)
-		data["Damage"] = "[dmg]"
+		var/dmg = parent_path.EstimateDamage(atk * atk_scaling[level] / 100)
+		data["Damage (first hit)"] = "[dmg]"
+		data["Damage (later swings)"] = "[parent_path.EstimateDamage(atk * atk_scaling[level] / 100 * PATH_FOLLOWUP_MULT)]"
 	data["Energy Gain"] = "[energy_gain]"
 	return data
 
@@ -108,7 +109,7 @@
 
 	var/total_damage = parent_path.GetStat("ATK") * multiplier
 	if(!first_hit)
-		total_damage *= 0.1
+		total_damage *= PATH_FOLLOWUP_MULT
 	var/basic_factor = parent_path.PvPScalingFactor(level, atk_scaling, PATH_TARGET_TRACE_BASIC)
 	parent_path.deal_path_damage(target, total_damage, pvp_factor = basic_factor)
 
@@ -140,9 +141,9 @@
 	var/list/data = list()
 	if(parent_path)
 		var/atk = parent_path.GetStat("ATK")
-		data["Main DMG"] = "[main_scaling[level]]% ([round(atk * main_scaling[level] / 100, 1)])"
-		data["Adjacent DMG"] = "[adj_scaling[level]]% ([round(atk * adj_scaling[level] / 100, 1)])"
-		data["Burn DoT"] = "[burn_scaling[level]]% ATK/tick"
+		data["Main DMG"] = "[main_scaling[level]]% ([parent_path.EstimateDamage(atk * main_scaling[level] / 100)])"
+		data["Adjacent DMG"] = "[adj_scaling[level]]% ([parent_path.EstimateDamage(atk * adj_scaling[level] / 100)])"
+		data["Burn DoT"] = "[burn_scaling[level]]% ATK/tick ([parent_path.EstimateDamage(atk * burn_scaling[level] / 100, do_crit = FALSE)] per tick)"
 	data["Energy Gain"] = "[energy_gain]"
 	data["AP Cost"] = "[ap_cost]"
 	return data
@@ -152,14 +153,14 @@
 
 /datum/path_ability/burst/nihility/Activate(mob/living/user)
 	if(!parent_path)
-		return
+		return FALSE
 
 	// Fire projectile in the direction the user is facing
 	var/turf/start_turf = get_turf(user)
 	var/turf/target_turf = get_ranged_target_turf(start_turf, user.dir, 7)
 	if(!target_turf)
 		to_chat(user, span_warning("Blazing Welcome - cannot fire!"))
-		return
+		return FALSE
 
 	var/obj/projectile/ego_bullet/nihility_burst/P = new(start_turf)
 	P.firer = user
@@ -176,6 +177,7 @@
 
 	playsound(start_turf, 'sound/weapons/resonator_blast.ogg', 50, TRUE)
 	user.visible_message(span_danger("[user] hurls a blazing projectile!"))
+	return TRUE
 
 // ============================================================
 // Blazing Welcome Projectile
@@ -262,7 +264,7 @@
 	var/list/data = list()
 	if(parent_path)
 		var/atk = parent_path.GetStat("ATK")
-		data["AoE DMG"] = "[aoe_scaling[level]]% ([round(atk * aoe_scaling[level] / 100, 1)])"
+		data["AoE DMG"] = "[aoe_scaling[level]]% ([parent_path.EstimateDamage(atk * aoe_scaling[level] / 100)])"
 		data["Burn Detonate"] = "[detonate_scaling[level]]% of Burn DMG"
 		data["Energy Cost"] = "[parent_path.max_energy]"
 		data["Energy Gen"] = "5"
@@ -559,11 +561,11 @@
 	N.tree_y = 6
 	nodes += N
 
-	// --- Center branch (A2 gate) ---
+	// --- Center branch (A1 gate) ---
 	N = new /datum/path_node("bonus_a2", "High Poles", "Basic ATK has 80% chance to inflict Burn equivalent to Skill.")
 	N.node_type = PATH_NODE_PASSIVE
 	N.ahn_cost = 1000
-	N.required_ascension = 2
+	N.required_ascension = 1
 	N.tree_x = 2
 	N.tree_y = 2
 	N.connections = list("stat_c1")
@@ -573,7 +575,7 @@
 	N.stat_bonuses = list("Effect Hit Rate" = 5.3)
 	N.stat_percent = TRUE
 	N.ahn_cost = 400
-	N.required_ascension = 2
+	N.required_ascension = 1
 	N.tree_x = 2
 	N.tree_y = 1
 	N.connections = list("stat_c2", "stat_c3")
@@ -584,7 +586,7 @@
 	N.stat_bonuses = list("fire DMG" = 3.2)
 	N.stat_percent = TRUE
 	N.ahn_cost = 300
-	N.required_ascension = 3
+	N.required_ascension = 2
 	N.tree_x = 1
 	N.tree_y = 0
 	N.prerequisites = list("stat_c1")
@@ -594,17 +596,17 @@
 	N.stat_bonuses = list("Effect Hit Rate" = 4)
 	N.stat_percent = TRUE
 	N.ahn_cost = 300
-	N.required_ascension = 3
+	N.required_ascension = 2
 	N.tree_x = 3
 	N.tree_y = 0
 	N.prerequisites = list("stat_c1")
 	nodes += N
 
-	// --- Right branch (A4 gate) ---
+	// --- Right branch (A3 gate) ---
 	N = new /datum/path_node("bonus_a4", "Bladed Hoop", "First turn comes 25% sooner at combat start.")
 	N.node_type = PATH_NODE_PASSIVE
 	N.ahn_cost = 1000
-	N.required_ascension = 4
+	N.required_ascension = 3
 	N.tree_x = 4
 	N.tree_y = 3
 	N.connections = list("stat_r1")
@@ -614,7 +616,7 @@
 	N.stat_bonuses = list("fire DMG" = 4.8)
 	N.stat_percent = TRUE
 	N.ahn_cost = 500
-	N.required_ascension = 4
+	N.required_ascension = 3
 	N.tree_x = 4
 	N.tree_y = 2
 	N.connections = list("stat_r2")
@@ -625,7 +627,7 @@
 	N.stat_bonuses = list("Effect Hit Rate" = 8)
 	N.stat_percent = TRUE
 	N.ahn_cost = 600
-	N.required_ascension = 5
+	N.required_ascension = 4
 	N.tree_x = 4
 	N.tree_y = 1
 	N.connections = list("stat_r3")
@@ -642,11 +644,11 @@
 	N.prerequisites = list("stat_r2")
 	nodes += N
 
-	// --- Left branch (A6 gate) ---
+	// --- Left branch (A5 gate) ---
 	N = new /datum/path_node("bonus_a6", "Walking on Knives", "Deals 20% more DMG to Burned enemies.")
 	N.node_type = PATH_NODE_PASSIVE
 	N.ahn_cost = 1000
-	N.required_ascension = 6
+	N.required_ascension = 5
 	N.tree_x = 0
 	N.tree_y = 3
 	N.connections = list("stat_l1")
@@ -656,7 +658,7 @@
 	N.stat_bonuses = list("fire DMG" = 4.8)
 	N.stat_percent = TRUE
 	N.ahn_cost = 500
-	N.required_ascension = 6
+	N.required_ascension = 5
 	N.tree_x = 0
 	N.tree_y = 2
 	N.connections = list("stat_l2")
@@ -667,7 +669,7 @@
 	N.stat_bonuses = list("Effect Hit Rate" = 6)
 	N.stat_percent = TRUE
 	N.ahn_cost = 700
-	N.required_ascension = 6
+	N.required_ascension = 5
 	N.tree_x = 0
 	N.tree_y = 1
 	N.connections = list("stat_l3")

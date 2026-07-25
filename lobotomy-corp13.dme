@@ -4421,6 +4421,7 @@
 #include "ModularLobotomy\enders_gimmicks\paths\_path_component.dm"
 #include "ModularLobotomy\enders_gimmicks\paths\_path_datum.dm"
 #include "ModularLobotomy\enders_gimmicks\paths\_path_dots.dm"
+#include "ModularLobotomy\enders_gimmicks\paths\_path_hud.dm"
 #include "ModularLobotomy\enders_gimmicks\paths\_path_items.dm"
 #include "ModularLobotomy\enders_gimmicks\paths\_path_materials.dm"
 #include "ModularLobotomy\enders_gimmicks\paths\_path_calyx.dm"

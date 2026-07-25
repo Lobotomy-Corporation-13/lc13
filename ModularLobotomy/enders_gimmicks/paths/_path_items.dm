@@ -34,8 +34,9 @@
 		to_chat(user, span_warning("You already walk a Path. You cannot choose another."))
 		return
 
-	if(GLOB.path_realm_active)
-		to_chat(user, span_warning("The Path Realm is already open. Please wait."))
+	// Realms run in parallel on their own Z-levels; only the count is limited.
+	if(length(GLOB.path_realms_active) >= PATH_REALM_MAX_CONCURRENT)
+		to_chat(user, span_warning("Too many are already walking the Path Realm. Try again in a moment."))
 		return
 
 	// Start the Path Realm experience

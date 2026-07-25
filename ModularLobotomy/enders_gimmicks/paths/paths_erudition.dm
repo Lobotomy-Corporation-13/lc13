@@ -66,7 +66,7 @@
 /// Wearable cosmetic outfit for the Path of Erudition (no armor value).
 /obj/item/clothing/suit/path_erudition
 	name = "scholar's dress"
-	desc = "A black off-shoulder jacket with puffed white cuffs, worn over a white dress trimmed in purple and gold. A Pathstrider's mark of the Erudition."
+	desc = "A black off-shoulder jacket with puffed white cuffs, worn over a white dress trimmed in purple and gold. A Pathstrider's mark of the Erudition. Purely ceremonial: a Pathstrider is protected by their own DEF, not by cloth."
 	icon = 'ModularLobotomy/_Lobotomyicons/path_icons.dmi'
 	icon_state = "erudition_suit"
 	worn_icon = 'ModularLobotomy/_Lobotomyicons/path_worn.dmi'
@@ -98,9 +98,10 @@
 	data["ATK Scaling"] = "[atk_scaling[level]]%"
 	if(parent_path)
 		var/atk = parent_path.GetStat("ATK")
-		var/dmg = round(atk * atk_scaling[level] / 100, 1)
-		var/exec_dmg = round(atk * (atk_scaling[level] + execute_bonus) / 100, 1)
-		data["Damage"] = "[dmg]"
+		var/dmg = parent_path.EstimateDamage(atk * atk_scaling[level] / 100)
+		var/exec_dmg = parent_path.EstimateDamage(atk * (atk_scaling[level] + execute_bonus) / 100)
+		data["Damage (first hit)"] = "[dmg]"
+		data["Damage (later swings)"] = "[parent_path.EstimateDamage(atk * atk_scaling[level] / 100 * PATH_FOLLOWUP_MULT)]"
 		data["vs <=50% HP"] = "[exec_dmg]"
 	data["Energy Gain"] = "[energy_gain]"
 	return data
@@ -114,7 +115,7 @@
 	var/multiplier = atk_scaling[level] / 100
 	var/total_damage = parent_path.GetStat("ATK") * multiplier
 	if(!first_hit)
-		total_damage *= 0.1
+		total_damage *= PATH_FOLLOWUP_MULT
 
 	// Deal base damage first
 	var/basic_factor = parent_path.PvPScalingFactor(level, atk_scaling, PATH_TARGET_TRACE_BASIC)
@@ -125,7 +126,7 @@
 		if(target.health <= target.maxHealth * 0.5)
 			var/exec_dmg = parent_path.GetStat("ATK") * (execute_bonus / 100)
 			if(!first_hit)
-				exec_dmg *= 0.1
+				exec_dmg *= PATH_FOLLOWUP_MULT
 			// Execute bonus rides on the basic ability's scaling channel
 			parent_path.deal_path_damage(target, exec_dmg, pvp_factor = basic_factor)
 
@@ -151,7 +152,7 @@
 	data["ATK Scaling"] = "[atk_scaling[level]]%"
 	if(parent_path)
 		var/atk = parent_path.GetStat("ATK")
-		var/dmg = round(atk * atk_scaling[level] / 100, 1)
+		var/dmg = parent_path.EstimateDamage(atk * atk_scaling[level] / 100)
 		var/bonus_dmg = round(dmg * 1.25, 1)
 		data["Damage (per target)"] = "[dmg]"
 		data["vs >=50% HP"] = "[bonus_dmg]"
@@ -169,7 +170,16 @@
 
 /datum/path_ability/burst/erudition/Activate(mob/living/user)
 	if(!parent_path)
-		return
+		return FALSE
+
+	var/list/mob/living/targets = list()
+	for(var/mob/living/L in range(3, user))
+		var/mob/living/hit = GetPathTarget(L, user)
+		if(hit)
+			targets |= hit
+	if(!length(targets))
+		to_chat(user, span_warning("One-Time Offer finds no takers!"))
+		return FALSE
 
 	var/atk = parent_path.GetStat("ATK")
 	var/multiplier = atk_scaling[level] / 100
@@ -182,13 +192,7 @@
 
 	var/skill_factor = parent_path.PvPScalingFactor(level, atk_scaling, PATH_TARGET_TRACE_SKILL)
 	var/hit_count = 0
-	for(var/mob/living/L in range(3, user))
-		if(L == user)
-			continue
-		if(L.stat == DEAD)
-			continue
-		if(IsPathAlly(user, L))
-			continue
+	for(var/mob/living/L in targets)
 		var/dmg = atk * multiplier
 		// +25% DMG to targets above 50% HP
 		if(L.health > L.maxHealth * 0.5)
@@ -206,10 +210,8 @@
 	for(var/mob/living/M in view(7, user))
 		if(M.client)
 			shake_camera(M, 3, 2)
-	if(hit_count > 0)
-		user.visible_message(span_danger("[user] casts One-Time Offer, hitting [hit_count] target\s!"))
-	else
-		user.visible_message(span_danger("[user] casts One-Time Offer, but hits nothing!"))
+	user.visible_message(span_danger("[user] casts One-Time Offer, hitting [hit_count] target\s!"))
+	return TRUE
 
 // ============================================================
 // Ultimate: It's Magic, I Added Some Magic
@@ -229,7 +231,7 @@
 	var/list/data = list()
 	if(parent_path)
 		var/atk = parent_path.GetStat("ATK")
-		var/dmg = round(atk * atk_scaling[level] / 100, 1)
+		var/dmg = parent_path.EstimateDamage(atk * atk_scaling[level] / 100)
 		data["AoE Damage"] = "[atk_scaling[level]]% ([dmg] dmg)"
 
 		// Icing bonus
@@ -362,7 +364,7 @@
 	data["AoE ATK Scaling"] = "[atk_scaling[level]]%"
 	if(parent_path)
 		var/atk = parent_path.GetStat("ATK")
-		var/dmg = round(atk * atk_scaling[level] / 100, 1)
+		var/dmg = parent_path.EstimateDamage(atk * atk_scaling[level] / 100)
 		data["AoE Damage"] = "[dmg]"
 	data["Energy Gen"] = "5"
 	data["Trigger"] = "You or ally drops enemy to 50% HP"
@@ -516,11 +518,11 @@
 	N.tree_y = 6
 	nodes += N
 
-	// --- Center branch (A2 gate) ---
+	// --- Center branch (A1 gate) ---
 	N = new /datum/path_node("bonus_a2", "Efficiency", "When Skill is used, the DMG Boost effect on target enemies increases by an extra 25%.")
 	N.node_type = PATH_NODE_PASSIVE
 	N.ahn_cost = 1000
-	N.required_ascension = 2
+	N.required_ascension = 1
 	N.tree_x = 2
 	N.tree_y = 2
 	N.connections = list("stat_c1")
@@ -530,7 +532,7 @@
 	N.stat_bonuses = list("CRIT Rate" = 2.7)
 	N.stat_percent = TRUE
 	N.ahn_cost = 400
-	N.required_ascension = 2
+	N.required_ascension = 1
 	N.tree_x = 2
 	N.tree_y = 1
 	N.connections = list("stat_c2", "stat_c3")
@@ -541,7 +543,7 @@
 	N.stat_bonuses = list("DEF" = 5)
 	N.stat_percent = TRUE
 	N.ahn_cost = 300
-	N.required_ascension = 3
+	N.required_ascension = 2
 	N.tree_x = 1
 	N.tree_y = 0
 	N.prerequisites = list("stat_c1")
@@ -551,17 +553,17 @@
 	N.stat_bonuses = list("ice DMG" = 3.2)
 	N.stat_percent = TRUE
 	N.ahn_cost = 300
-	N.required_ascension = 3
+	N.required_ascension = 2
 	N.tree_x = 3
 	N.tree_y = 0
 	N.prerequisites = list("stat_c1")
 	nodes += N
 
-	// --- Right branch (A4 gate) ---
+	// --- Right branch (A3 gate) ---
 	N = new /datum/path_node("bonus_a4", "Puppet", "Immune to knockback effects while below 70% HP.")
 	N.node_type = PATH_NODE_PASSIVE
 	N.ahn_cost = 1000
-	N.required_ascension = 4
+	N.required_ascension = 3
 	N.tree_x = 4
 	N.tree_y = 3
 	N.connections = list("stat_r1")
@@ -571,7 +573,7 @@
 	N.stat_bonuses = list("ice DMG" = 4.8)
 	N.stat_percent = TRUE
 	N.ahn_cost = 500
-	N.required_ascension = 4
+	N.required_ascension = 3
 	N.tree_x = 4
 	N.tree_y = 2
 	N.connections = list("stat_r2")
@@ -582,7 +584,7 @@
 	N.stat_bonuses = list("DEF" = 7.5)
 	N.stat_percent = TRUE
 	N.ahn_cost = 600
-	N.required_ascension = 5
+	N.required_ascension = 4
 	N.tree_x = 4
 	N.tree_y = 1
 	N.connections = list("stat_r3")
@@ -599,11 +601,11 @@
 	N.prerequisites = list("stat_r2")
 	nodes += N
 
-	// --- Left branch (A6 gate) ---
+	// --- Left branch (A5 gate) ---
 	N = new /datum/path_node("bonus_a6", "Icing", "Ultimate deals 20% more DMG to enemies below 50% HP.")
 	N.node_type = PATH_NODE_PASSIVE
 	N.ahn_cost = 1000
-	N.required_ascension = 6
+	N.required_ascension = 5
 	N.tree_x = 0
 	N.tree_y = 3
 	N.connections = list("stat_l1")
@@ -613,7 +615,7 @@
 	N.stat_bonuses = list("ice DMG" = 4.8)
 	N.stat_percent = TRUE
 	N.ahn_cost = 500
-	N.required_ascension = 6
+	N.required_ascension = 5
 	N.tree_x = 0
 	N.tree_y = 2
 	N.connections = list("stat_l2")
@@ -624,7 +626,7 @@
 	N.stat_bonuses = list("CRIT Rate" = 4)
 	N.stat_percent = TRUE
 	N.ahn_cost = 700
-	N.required_ascension = 6
+	N.required_ascension = 5
 	N.tree_x = 0
 	N.tree_y = 1
 	N.connections = list("stat_l3")

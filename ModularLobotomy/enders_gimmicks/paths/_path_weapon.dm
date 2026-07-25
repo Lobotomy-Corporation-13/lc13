@@ -36,6 +36,11 @@
 	/// Stored base attack speed before disguise modification
 	var/base_attack_speed = 1
 
+	/// TRUE on support paths, whose Skill helps an ally. Clicking a designated
+	/// ally casts the Skill on them instead of swinging at them, so a healer or
+	/// buffer can choose their target directly.
+	var/skill_targets_allies = FALSE
+
 /obj/item/ego_weapon/path_weapon/Initialize()
 	. = ..()
 	base_attack_speed = attack_speed
@@ -53,10 +58,31 @@
 
 // ---- Core Attack Procs ----
 
+/// Support weapons get clicked around constantly to aim Skills at allies, so a
+/// swing that connects with nothing stays quiet rather than announcing a miss
+/// every time. The swing animation and sound still play as feedback.
+/obj/item/ego_weapon/path_weapon/SweepMiss(atom/target, mob/living/carbon/human/user)
+	if(!skill_targets_allies)
+		return ..()
+	playsound(src, 'sound/weapons/thudswoosh.ogg', 40, TRUE)
+	user.do_attack_animation(target, used_item = src, no_effect = TRUE)
+
+/// TRUE if clicking this target should cast a support Skill rather than attack.
+/obj/item/ego_weapon/path_weapon/proc/ShouldSkillTarget(atom/target, mob/living/user)
+	if(!skill_targets_allies || !linked_path)
+		return FALSE
+	if(!isliving(target) || target == user)
+		return FALSE
+	return IsPathAlly(user, target)
+
 /// Override attack to deal path damage instead of LC13 damage
 /obj/item/ego_weapon/path_weapon/attack(mob/living/target, mob/living/user)
 	if(!linked_path)
 		to_chat(user, span_warning("This weapon has no path linked!"))
+		return FALSE
+	// Support paths help the ally they click rather than hitting them
+	if(ShouldSkillTarget(target, user))
+		TryUseSkill(user, target)
 		return FALSE
 	// Play our own hitsound since force=0 would play tap.ogg
 	if(hitsound)
@@ -73,6 +99,11 @@
 /// Clicking an EGO weapon with this will mimic its appearance
 /obj/item/ego_weapon/path_weapon/afterattack(atom/target, mob/living/user, proximity_flag, clickparams)
 	. = ..()
+	// Support paths can also aim their Skill at an ally from across the room;
+	// attack() covers the adjacent case.
+	if(!proximity_flag && ShouldSkillTarget(target, user))
+		TryUseSkill(user, target)
+		return
 	if(!proximity_flag)
 		return
 	if(!istype(target, /obj/item/ego_weapon))
@@ -84,25 +115,39 @@
 
 /// Override attack_self for Burst/Skill activation (consumes the current turn)
 /obj/item/ego_weapon/path_weapon/attack_self(mob/living/user)
+	TryUseSkill(user)
+
+/// Runs the path's Skill, gated by the turn system. `forced_target` aims a
+/// support Skill at a specific ally instead of letting it pick one; support
+/// weapons pass the ally that was clicked.
+/// Returns TRUE if the Skill actually went off.
+/obj/item/ego_weapon/path_weapon/proc/TryUseSkill(mob/living/user, mob/living/forced_target)
 	if(!linked_path || !linked_path.burst_action)
-		return
+		return FALSE
 	// Turn system check: must be in READY state (not already attacked or skilled this turn)
 	if(linked_path.turn_state != PATH_TURN_READY)
 		to_chat(user, span_warning("You already acted this turn! Wait for next turn."))
-		return
+		return FALSE
 	if(linked_path.action_points < linked_path.burst_action.ap_cost)
 		to_chat(user, span_warning("Not enough Action Points! ([linked_path.action_points]/[linked_path.burst_action.ap_cost])"))
-		return
+		return FALSE
+	// Resolve the skill BEFORE spending anything. A skill that finds no target
+	// returns FALSE, and the turn, AP and energy are left untouched so a whiff
+	// is not punished.
+	linked_path.current_toughness_reduction = 20
+	var/connected = linked_path.burst_action.Activate(user, forced_target)
+	linked_path.current_toughness_reduction = 0
+	if(!connected)
+		return FALSE
 	linked_path.SpendActionPoint()
 	linked_path.GainEnergy(linked_path.burst_action.energy_gain)
-	linked_path.current_toughness_reduction = 20
-	linked_path.burst_action.Activate(user)
-	linked_path.current_toughness_reduction = 0
 	linked_path.turn_state = PATH_TURN_SKILLED
-	// Skill counts as the first hit — subsequent attacks deal 10%
+	// Skill counts as the first hit — subsequent attacks deal reduced damage
 	linked_path.first_hit_this_turn = FALSE
+	linked_path.UpdateTurnHud()
 	// Clear golden glow — turn consumed by skill
 	ClearTurnReady()
+	return TRUE
 
 /// Path weapons are always usable if linked to a valid path
 /obj/item/ego_weapon/path_weapon/CanUseEgo(mob/living/user)
@@ -120,16 +165,27 @@
 	. += span_notice("<b>Path:</b> [linked_path.name]")
 	. += span_notice("[linked_path.desc]")
 
-	// Path stats
+	// Path stats. DEF is shown as the reduction it actually gives, since players
+	// read the raw number as "no armour" and asked where their protection was.
 	var/atk = linked_path.GetStat("ATK")
 	var/spd = linked_path.GetStat("SPD")
-	. += span_notice("<b>ATK:</b> [atk] | <b>SPD:</b> [spd]")
+	. += span_notice("<b>ATK:</b> [atk] | <b>SPD:</b> [spd] | <b>DEF:</b> [round(linked_path.GetStat("DEF"))] ([round(linked_path.applied_resistance, 0.1)]% less damage)")
+
+	// Level and what is currently capping it
+	var/cap = linked_path.GetLevelCap()
+	if(linked_path.path_level >= cap && cap < 80)
+		var/reason = (linked_path.GetAttributeCap() <= cap) ? "raise your attributes" : "ascend"
+		. += span_warning("<b>Level:</b> [linked_path.path_level] (capped at [cap] - [reason] to go higher)")
+	else
+		. += span_notice("<b>Level:</b> [linked_path.path_level] / cap [cap]")
 
 	// Abilities
 	if(linked_path.basic_attack)
 		. += span_notice("<b>Basic:</b> [linked_path.basic_attack.name] (Lv.[linked_path.basic_attack.level])")
 	if(linked_path.burst_action)
 		. += span_notice("<b>Skill:</b> [linked_path.burst_action.name] (Lv.[linked_path.burst_action.level]) — Z key, [linked_path.burst_action.ap_cost] AP, costs 1 turn")
+	if(skill_targets_allies)
+		. += span_nicegreen("Click a designated ally to use your Skill on them directly, instead of whoever is nearest. Clicking an ally never attacks them.")
 	if(linked_path.ultimate_action)
 		. += span_notice("<b>Ultimate:</b> [linked_path.ultimate_action.name] (Lv.[linked_path.ultimate_action.level])")
 	if(linked_path.passive_effect)

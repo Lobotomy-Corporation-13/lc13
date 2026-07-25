@@ -71,7 +71,7 @@
 
 /obj/item/clothing/suit/path_preservation
 	name = "sentinel's coat"
-	desc = "A black officer's coat trimmed in gold, worn open over a pale shirt. A Pathstrider's mark of the Preservation."
+	desc = "A black officer's coat trimmed in gold, worn open over a pale shirt. A Pathstrider's mark of the Preservation. Purely ceremonial: a Pathstrider is protected by their own DEF, not by cloth."
 	icon = 'ModularLobotomy/_Lobotomyicons/path_icons.dmi'
 	icon_state = "preservation_suit"
 	worn_icon = 'ModularLobotomy/_Lobotomyicons/path_worn.dmi'
@@ -154,10 +154,11 @@
 	var/list/data = list()
 	if(parent_path)
 		var/atk = parent_path.GetStat("ATK")
-		var/dmg = round(atk * atk_scaling[level] / 100, 1)
+		var/dmg = parent_path.EstimateDamage(atk * atk_scaling[level] / 100)
 		data["Normal DMG"] = "[atk_scaling[level]]% ([dmg])"
-		var/enh_dmg = round(atk * enhanced_main[level] / 100, 1)
-		var/adj_dmg = round(atk * enhanced_adj[level] / 100, 1)
+		data["Later swings"] = "[parent_path.EstimateDamage(atk * atk_scaling[level] / 100 * PATH_FOLLOWUP_MULT)]"
+		var/enh_dmg = parent_path.EstimateDamage(atk * enhanced_main[level] / 100)
+		var/adj_dmg = parent_path.EstimateDamage(atk * enhanced_adj[level] / 100)
 		data["Enhanced Main"] = "[enhanced_main[level]]% ([enh_dmg])"
 		data["Enhanced Adj"] = "[enhanced_adj[level]]% ([adj_dmg])"
 	data["Energy Gain"] = "[energy_gain] (30 enhanced)"
@@ -228,7 +229,7 @@
 		var/multiplier = atk_scaling[level] / 100
 		var/total_damage = parent_path.GetStat("ATK") * multiplier
 		if(!first_hit)
-			total_damage *= 0.1
+			total_damage *= PATH_FOLLOWUP_MULT
 		var/basic_factor = parent_path.PvPScalingFactor(level, atk_scaling, PATH_TARGET_TRACE_BASIC)
 		parent_path.deal_path_damage(target, total_damage, pvp_factor = basic_factor)
 		energy_gain = 20
@@ -273,10 +274,10 @@
 
 /datum/path_ability/burst/preservation/Activate(mob/living/user)
 	if(!parent_path)
-		return
+		return FALSE
 	var/datum/path/preservation/P = parent_path
 	if(!istype(P))
-		return
+		return FALSE
 
 	// Apply DMG Reduction status effect
 	var/datum/status_effect/preservation_dmg_red/existing = user.has_status_effect(/datum/status_effect/preservation_dmg_red)
@@ -322,6 +323,7 @@
 		if(M.client)
 			shake_camera(M, 2, 1)
 	user.visible_message(span_danger("[user] activates Ever-Burning Amber! Enemies are drawn to them!"))
+	return TRUE
 
 // ============================================================
 // Ultimate: War-Flaming Lance
@@ -346,7 +348,7 @@
 	if(parent_path)
 		var/atk = parent_path.GetStat("ATK")
 		var/def = parent_path.GetStat("DEF")
-		var/atk_dmg = round(atk * atk_scaling[level] / 100, 1)
+		var/atk_dmg = parent_path.EstimateDamage(atk * atk_scaling[level] / 100)
 		var/def_dmg = round(def * def_scaling[level] / 100, 1)
 		data["ATK Scaling"] = "[atk_scaling[level]]% ([atk_dmg])"
 		data["DEF Scaling"] = "[def_scaling[level]]% ([def_dmg])"
@@ -835,11 +837,11 @@
 	N.tree_y = 6
 	nodes += N
 
-	// --- Center branch (A2 gate) ---
+	// --- Center branch (A1 gate) ---
 	N = new /datum/path_node("bonus_a2", "The Strong Defend the Weak", "After Skill, allies take 15% less DMG for 10s.")
 	N.node_type = PATH_NODE_PASSIVE
 	N.ahn_cost = 1000
-	N.required_ascension = 2
+	N.required_ascension = 1
 	N.tree_x = 2
 	N.tree_y = 2
 	N.connections = list("stat_c1")
@@ -849,7 +851,7 @@
 	N.stat_bonuses = list("ATK" = 4)
 	N.stat_percent = TRUE
 	N.ahn_cost = 400
-	N.required_ascension = 2
+	N.required_ascension = 1
 	N.tree_x = 2
 	N.tree_y = 1
 	N.connections = list("stat_c2", "stat_c3")
@@ -860,7 +862,7 @@
 	N.stat_bonuses = list("DEF" = 5)
 	N.stat_percent = TRUE
 	N.ahn_cost = 300
-	N.required_ascension = 3
+	N.required_ascension = 2
 	N.tree_x = 1
 	N.tree_y = 0
 	N.prerequisites = list("stat_c1")
@@ -870,17 +872,17 @@
 	N.stat_bonuses = list("HP" = 4)
 	N.stat_percent = TRUE
 	N.ahn_cost = 300
-	N.required_ascension = 3
+	N.required_ascension = 2
 	N.tree_x = 3
 	N.tree_y = 0
 	N.prerequisites = list("stat_c1")
 	nodes += N
 
-	// --- Right branch (A4 gate) ---
+	// --- Right branch (A3 gate) ---
 	N = new /datum/path_node("bonus_a4", "Unwavering Gallantry", "Enhanced Basic ATK restores 5% of Max HP.")
 	N.node_type = PATH_NODE_PASSIVE
 	N.ahn_cost = 1000
-	N.required_ascension = 4
+	N.required_ascension = 3
 	N.tree_x = 4
 	N.tree_y = 3
 	N.connections = list("stat_r1")
@@ -890,7 +892,7 @@
 	N.stat_bonuses = list("DEF" = 7.5)
 	N.stat_percent = TRUE
 	N.ahn_cost = 500
-	N.required_ascension = 4
+	N.required_ascension = 3
 	N.tree_x = 4
 	N.tree_y = 2
 	N.connections = list("stat_r2")
@@ -901,7 +903,7 @@
 	N.stat_bonuses = list("ATK" = 6)
 	N.stat_percent = TRUE
 	N.ahn_cost = 600
-	N.required_ascension = 5
+	N.required_ascension = 4
 	N.tree_x = 4
 	N.tree_y = 1
 	N.connections = list("stat_r3")
@@ -918,11 +920,11 @@
 	N.prerequisites = list("stat_r2")
 	nodes += N
 
-	// --- Left branch (A6 gate) ---
+	// --- Left branch (A5 gate) ---
 	N = new /datum/path_node("bonus_a6", "Action Beats Overthinking", "At turn start with a Shield, ATK +15% and +5 Energy.")
 	N.node_type = PATH_NODE_PASSIVE
 	N.ahn_cost = 1000
-	N.required_ascension = 6
+	N.required_ascension = 5
 	N.tree_x = 0
 	N.tree_y = 3
 	N.connections = list("stat_l1")
@@ -932,7 +934,7 @@
 	N.stat_bonuses = list("HP" = 6)
 	N.stat_percent = TRUE
 	N.ahn_cost = 500
-	N.required_ascension = 6
+	N.required_ascension = 5
 	N.tree_x = 0
 	N.tree_y = 2
 	N.connections = list("stat_l2")
@@ -943,7 +945,7 @@
 	N.stat_bonuses = list("DEF" = 5)
 	N.stat_percent = TRUE
 	N.ahn_cost = 700
-	N.required_ascension = 6
+	N.required_ascension = 5
 	N.tree_x = 0
 	N.tree_y = 1
 	N.connections = list("stat_l3")

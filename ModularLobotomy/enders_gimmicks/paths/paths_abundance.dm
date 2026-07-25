@@ -45,7 +45,7 @@
 
 /obj/item/ego_weapon/path_weapon/abundance
 	name = "grace launcher"
-	desc = "A drum-fed launcher with a wooden stock and blue-banded cylinder. Strike with it up close, or fire a round downrange -- either way it channels the same path damage."
+	desc = "A drum-fed launcher with a wooden stock and blue-banded cylinder. Strike with it up close, or fire a round downrange -- either way it channels the same path damage. Click a designated ally to heal them directly instead, and fired rounds pass harmlessly through allies."
 	icon = 'ModularLobotomy/_Lobotomyicons/path_icons.dmi'
 	icon_state = "abundance"
 	inhand_icon_state = "abundance"
@@ -53,6 +53,7 @@
 	righthand_file = 'ModularLobotomy/_Lobotomyicons/path_right.dmi'
 	hitsound = 'sound/weapons/bladeslice.ogg'
 	swingstyle = WEAPONSWING_SMALLSWEEP
+	skill_targets_allies = TRUE
 	/// Fire sound played when a round is loosed downrange
 	var/fire_sound = 'sound/weapons/gun/shotgun/shot.ogg'
 	/// Minimum delay between fired shots (deciseconds)
@@ -65,6 +66,10 @@
 /obj/item/ego_weapon/path_weapon/abundance/afterattack(atom/target, mob/living/user, proximity_flag, clickparams)
 	. = ..()
 	if(proximity_flag)		// adjacent: attack() already handled the melee hit
+		return
+	// Clicking an ally casts the Skill on them (handled in the parent call), so
+	// don't also loose a round at them
+	if(ShouldSkillTarget(target, user))
 		return
 	if(!linked_path)
 		return
@@ -97,10 +102,21 @@
 	damage_type = RED_DAMAGE
 	range = 8
 	icon_state = "kcorp_nade"
+	/// Lets the round travel past the allies it declines to hit.
+	projectile_piercing = PASSMOB
 	/// The path that fired this round (supplies the damage scaling)
 	var/datum/path/linked_path
 	/// The mob that fired, passed to OnWeaponHit as the attacker
 	var/mob/living/shooter
+
+/// IFF: designated allies are not valid targets, so a round fired into a melee
+/// flies through the team instead of chewing on them. Same intent as the
+/// loyalty rifle in ego_weapons/ranged/waw.dm, but keyed to the path ally list
+/// rather than blanket-ignoring every human.
+/obj/projectile/ego_bullet/path_abundance/can_hit_target(atom/target, direct_target = FALSE, ignore_loc = FALSE, cross_failed = FALSE)
+	if(shooter && isliving(target) && target != shooter && IsPathAlly(shooter, target))
+		return FALSE
+	return ..()
 
 /obj/projectile/ego_bullet/path_abundance/on_hit(atom/target, blocked = FALSE, pierce_hit)
 	. = ..()
@@ -113,7 +129,7 @@
 
 /obj/item/clothing/suit/path_abundance
 	name = "blessing coat"
-	desc = "A white coat over a teal-trimmed black bodysuit, with a green heartstone at the collar, blue skirt panels and a crimson underhem. A Pathstrider's mark of the Abundance."
+	desc = "A white coat over a teal-trimmed black bodysuit, with a green heartstone at the collar, blue skirt panels and a crimson underhem. A Pathstrider's mark of the Abundance. Purely ceremonial: a Pathstrider is protected by their own DEF, not by cloth."
 	icon = 'ModularLobotomy/_Lobotomyicons/path_icons.dmi'
 	icon_state = "abundance_suit"
 	worn_icon = 'ModularLobotomy/_Lobotomyicons/path_worn.dmi'
@@ -131,7 +147,7 @@
 
 /datum/path_ability/basic/abundance
 	name = "Behind the Kindness"
-	desc = "Deals Physical DMG scaling off ATK to the target. Heals the lowest HP ally within 3 tiles for a portion of damage dealt. First hit full, follow-ups 10%."
+	desc = "Deals Physical DMG scaling off ATK to the target. Heals the lowest HP ally within 3 tiles for a portion of damage dealt. First hit of a turn deals full damage, later swings deal 30%."
 	icon_state = "behind_kindness"
 	energy_gain = 20
 	max_level = 7
@@ -143,8 +159,9 @@
 	data["ATK Scaling"] = "[atk_scaling[level]]%"
 	if(parent_path)
 		var/atk = parent_path.GetStat("ATK")
-		var/dmg = round(atk * atk_scaling[level] / 100, 1)
-		data["Damage"] = "[dmg]"
+		var/dmg = parent_path.EstimateDamage(atk * atk_scaling[level] / 100)
+		data["Damage (first hit)"] = "[dmg]"
+		data["Damage (later swings)"] = "[parent_path.EstimateDamage(atk * atk_scaling[level] / 100 * PATH_FOLLOWUP_MULT)]"
 	data["Energy Gain"] = "[energy_gain]"
 	return data
 
@@ -157,7 +174,7 @@
 	var/multiplier = atk_scaling[level] / 100
 	var/total_damage = parent_path.GetStat("ATK") * multiplier
 	if(!first_hit)
-		total_damage *= 0.1
+		total_damage *= PATH_FOLLOWUP_MULT
 	var/basic_factor = parent_path.PvPScalingFactor(level, atk_scaling, PATH_TARGET_TRACE_BASIC)
 	parent_path.deal_path_damage(target, total_damage, pvp_factor = basic_factor)
 
@@ -203,23 +220,18 @@
 	data["AP Cost"] = "[ap_cost]"
 	return data
 
-/datum/path_ability/burst/abundance/Activate(mob/living/user)
+/datum/path_ability/burst/abundance/Activate(mob/living/user, mob/living/forced_target)
 	if(!parent_path)
-		return
+		return FALSE
 
 	var/max_hp = parent_path.GetStat("HP")
 
-	// Find nearest designated ally within 7 tiles, or self
-	var/mob/living/heal_target = user
-	var/best_dist = INFINITY
-	var/list/allies = GetAllyList(user)
-	for(var/mob/living/ally in allies)
-		if(QDELETED(ally) || ally.stat == DEAD)
-			continue
-		var/d = get_dist(user, ally)
-		if(d <= 7 && d < best_dist)
-			best_dist = d
-			heal_target = ally
+	// A clicked ally wins; otherwise the focused ally, else the nearest, else self
+	var/mob/living/heal_target = forced_target
+	if(!heal_target || QDELETED(heal_target) || heal_target.stat == DEAD)
+		heal_target = parent_path.GetSupportTarget(user, 7)
+	if(!heal_target)
+		heal_target = user
 
 	// Calculate heal amounts
 	var/instant_amount = max_hp * instant_hp_pct[level] / 100 + instant_flat[level]
@@ -268,6 +280,7 @@
 	to_chat(user, span_nicegreen("Love, Heal, and Choose heals [heal_target == user ? "you" : heal_target]!"))
 	if(heal_target != user)
 		to_chat(heal_target, span_nicegreen("[user] heals you with Love, Heal, and Choose!"))
+	return TRUE
 
 // ============================================================
 // Ultimate: Gift of Rebirth
@@ -550,11 +563,11 @@
 	N.tree_y = 6
 	nodes += N
 
-	// --- Center branch (A2 gate) ---
+	// --- Center branch (A1 gate) ---
 	N = new /datum/path_node("bonus_a2", "Soothe", "When using Skill, dispels 1 debuff from the target.")
 	N.node_type = PATH_NODE_PASSIVE
 	N.ahn_cost = 1000
-	N.required_ascension = 2
+	N.required_ascension = 1
 	N.tree_x = 2
 	N.tree_y = 2
 	N.connections = list("stat_c1")
@@ -564,7 +577,7 @@
 	N.stat_bonuses = list("Healing Boost" = 4)
 	N.stat_percent = TRUE
 	N.ahn_cost = 400
-	N.required_ascension = 2
+	N.required_ascension = 1
 	N.tree_x = 2
 	N.tree_y = 1
 	N.connections = list("stat_c2", "stat_c3")
@@ -575,7 +588,7 @@
 	N.stat_bonuses = list("HP" = 4)
 	N.stat_percent = TRUE
 	N.ahn_cost = 300
-	N.required_ascension = 3
+	N.required_ascension = 2
 	N.tree_x = 1
 	N.tree_y = 0
 	N.prerequisites = list("stat_c1")
@@ -585,17 +598,17 @@
 	N.stat_bonuses = list("DEF" = 5)
 	N.stat_percent = TRUE
 	N.ahn_cost = 300
-	N.required_ascension = 3
+	N.required_ascension = 2
 	N.tree_x = 3
 	N.tree_y = 0
 	N.prerequisites = list("stat_c1")
 	nodes += N
 
-	// --- Right branch (A4 gate) ---
+	// --- Right branch (A3 gate) ---
 	N = new /datum/path_node("bonus_a4", "Healer", "Outgoing Healing increases by 10%.")
 	N.node_type = PATH_NODE_PASSIVE
 	N.ahn_cost = 1000
-	N.required_ascension = 4
+	N.required_ascension = 3
 	N.tree_x = 4
 	N.tree_y = 3
 	N.connections = list("stat_r1")
@@ -605,7 +618,7 @@
 	N.stat_bonuses = list("HP" = 6)
 	N.stat_percent = TRUE
 	N.ahn_cost = 500
-	N.required_ascension = 4
+	N.required_ascension = 3
 	N.tree_x = 4
 	N.tree_y = 2
 	N.connections = list("stat_r2")
@@ -616,7 +629,7 @@
 	N.stat_bonuses = list("Healing Boost" = 6)
 	N.stat_percent = TRUE
 	N.ahn_cost = 600
-	N.required_ascension = 5
+	N.required_ascension = 4
 	N.tree_x = 4
 	N.tree_y = 1
 	N.connections = list("stat_r3")
@@ -633,11 +646,11 @@
 	N.prerequisites = list("stat_r2")
 	nodes += N
 
-	// --- Left branch (A6 gate) ---
+	// --- Left branch (A5 gate) ---
 	N = new /datum/path_node("bonus_a6", "Recuperation", "Increases Skill HoT duration by 1 tick (10s).")
 	N.node_type = PATH_NODE_PASSIVE
 	N.ahn_cost = 1000
-	N.required_ascension = 6
+	N.required_ascension = 5
 	N.tree_x = 0
 	N.tree_y = 3
 	N.connections = list("stat_l1")
@@ -647,7 +660,7 @@
 	N.stat_bonuses = list("Healing Boost" = 6)
 	N.stat_percent = TRUE
 	N.ahn_cost = 500
-	N.required_ascension = 6
+	N.required_ascension = 5
 	N.tree_x = 0
 	N.tree_y = 2
 	N.connections = list("stat_l2")
@@ -658,7 +671,7 @@
 	N.stat_bonuses = list("HP" = 6)
 	N.stat_percent = TRUE
 	N.ahn_cost = 700
-	N.required_ascension = 6
+	N.required_ascension = 5
 	N.tree_x = 0
 	N.tree_y = 1
 	N.connections = list("stat_l3")

@@ -204,9 +204,11 @@
 			)
 	return list("...", "Rise, Pathstrider.")
 
-// ---- Global Lock ----
-/// Only one path realm can exist at a time
-GLOBAL_VAR(path_realm_active)
+// ---- Active Realms ----
+// Each realm loads its own Z-level and filters every landmark lookup by it, so
+// several can run side by side. The cap only exists to bound how many Z-levels
+// can be loaded at once.
+GLOBAL_LIST_EMPTY(path_realms_active)
 
 // ---- Path Realm Datum ----
 
@@ -231,13 +233,13 @@ GLOBAL_VAR(path_realm_active)
 	original_body = H
 	return_turf = get_turf(H)
 	questions = GetPathQuestions()
-	GLOB.path_realm_active = src
+	GLOB.path_realms_active += src
 	// Initialize scores
 	for(var/pname in list("Destruction", "The Hunt", "Erudition", "Harmony", "Nihility", "Preservation", "Abundance"))
 		question_scores[pname] = 0
 
 /datum/path_realm/Destroy()
-	GLOB.path_realm_active = null
+	GLOB.path_realms_active -= src
 	if(player && !QDELETED(player))
 		qdel(player) // Delete the clone
 	player = null

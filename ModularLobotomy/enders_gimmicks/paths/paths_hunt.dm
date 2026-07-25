@@ -67,7 +67,7 @@
 
 /obj/item/clothing/suit/path_hunt
 	name = "wanderer's coat"
-	desc = "A white long coat with teal-embroidered shoulders, worn open over a black high-collar shirt and grey trousers. A Pathstrider's mark of the Hunt."
+	desc = "A white long coat with teal-embroidered shoulders, worn open over a black high-collar shirt and grey trousers. A Pathstrider's mark of the Hunt. Purely ceremonial: a Pathstrider is protected by their own DEF, not by cloth."
 	icon = 'ModularLobotomy/_Lobotomyicons/path_icons.dmi'
 	icon_state = "hunt_suit"
 	worn_icon = 'ModularLobotomy/_Lobotomyicons/path_worn.dmi'
@@ -85,7 +85,7 @@
 
 /datum/path_ability/basic/hunt
 	name = "Cloudlancer Art: North Wind"
-	desc = "Deals Wind DMG scaling off ATK to the target. High Gale bonus: +40% DMG to slowed enemies. First hit full, follow-ups 10%."
+	desc = "Deals Wind DMG scaling off ATK to the target. High Gale bonus: +40% DMG to slowed enemies. First hit of a turn deals full damage, later swings deal 30%."
 	icon_state = "north_wind"
 	energy_gain = 20
 	max_level = 7
@@ -97,8 +97,9 @@
 	data["ATK Scaling"] = "[atk_scaling[level]]%"
 	if(parent_path)
 		var/atk = parent_path.GetStat("ATK")
-		var/dmg = round(atk * atk_scaling[level] / 100, 1)
-		data["Damage"] = "[dmg]"
+		var/dmg = parent_path.EstimateDamage(atk * atk_scaling[level] / 100)
+		data["Damage (first hit)"] = "[dmg]"
+		data["Damage (later swings)"] = "[parent_path.EstimateDamage(atk * atk_scaling[level] / 100 * PATH_FOLLOWUP_MULT)]"
 	data["Energy Gain"] = "[energy_gain]"
 	return data
 
@@ -118,7 +119,7 @@
 
 	var/total_damage = parent_path.GetStat("ATK") * multiplier
 	if(!first_hit)
-		total_damage *= 0.1
+		total_damage *= PATH_FOLLOWUP_MULT
 	var/basic_factor = parent_path.PvPScalingFactor(level, atk_scaling, PATH_TARGET_TRACE_BASIC)
 	parent_path.deal_path_damage(target, total_damage, pvp_factor = basic_factor)
 
@@ -144,7 +145,7 @@
 	data["ATK Scaling"] = "[atk_scaling[level]]%"
 	if(parent_path)
 		var/atk = parent_path.GetStat("ATK")
-		var/dmg = round(atk * atk_scaling[level] / 100, 1)
+		var/dmg = parent_path.EstimateDamage(atk * atk_scaling[level] / 100)
 		data["Damage"] = "[dmg]"
 	data["Energy Gain"] = "[energy_gain]"
 	data["AP Cost"] = "[ap_cost]"
@@ -156,7 +157,7 @@
 
 /datum/path_ability/burst/hunt/Activate(mob/living/user)
 	if(!parent_path)
-		return
+		return FALSE
 
 	var/atk = parent_path.GetStat("ATK")
 	var/multiplier = atk_scaling[level] / 100
@@ -180,12 +181,9 @@
 			check_turfs += side2
 		for(var/turf/CT in check_turfs)
 			for(var/mob/living/L in CT)
-				if(L == user || L.stat == DEAD)
-					continue
-				if(IsPathAlly(user, L))
-					continue
-				target = L
-				break
+				target = GetPathTarget(L, user)
+				if(target)
+					break
 			if(target)
 				break
 		if(target)
@@ -193,7 +191,7 @@
 
 	if(!target)
 		to_chat(user, span_warning("Cloudlancer Art: Torrent missed - no enemy in range!"))
-		return
+		return FALSE
 
 	var/damage = atk * multiplier
 
@@ -248,6 +246,7 @@
 		if(M.client)
 			shake_camera(M, 2, 1)
 	user.visible_message(span_danger("[user] dashes through [target] with Cloudlancer Art: Torrent!"))
+	return TRUE
 
 // ============================================================
 // Ultimate: Ethereal Dream
@@ -270,9 +269,9 @@
 	var/list/data = list()
 	if(parent_path)
 		var/atk = parent_path.GetStat("ATK")
-		var/base_dmg = round(atk * base_scaling[level] / 100, 1)
+		var/base_dmg = parent_path.EstimateDamage(atk * base_scaling[level] / 100)
 		var/total_pct = base_scaling[level] + spd_bonus[level]
-		var/bonus_dmg = round(atk * total_pct / 100, 1)
+		var/bonus_dmg = parent_path.EstimateDamage(atk * total_pct / 100)
 		data["Base"] = "[base_scaling[level]]% ([base_dmg] dmg)"
 		data["vs Slowed"] = "[total_pct]% ([bonus_dmg] dmg)"
 		data["Energy Cost"] = "[parent_path.max_energy]"
@@ -513,11 +512,11 @@
 	N.tree_y = 6
 	nodes += N
 
-	// --- Center branch (A2 gate, from Ultimate) ---
+	// --- Center branch (A1 gate, from Ultimate) ---
 	N = new /datum/path_node("bonus_a2", "Hidden Dragon", "When HP is 50% or lower, hostile mobs targeting you have a 50% chance to switch targets.")
 	N.node_type = PATH_NODE_PASSIVE
 	N.ahn_cost = 1000
-	N.required_ascension = 2
+	N.required_ascension = 1
 	N.tree_x = 2
 	N.tree_y = 2
 	N.connections = list("stat_c1")
@@ -527,7 +526,7 @@
 	N.stat_bonuses = list("DEF" = 5)
 	N.stat_percent = TRUE
 	N.ahn_cost = 400
-	N.required_ascension = 2
+	N.required_ascension = 1
 	N.tree_x = 2
 	N.tree_y = 1
 	N.connections = list("stat_c2", "stat_c3")
@@ -538,7 +537,7 @@
 	N.stat_bonuses = list("ATK" = 4)
 	N.stat_percent = TRUE
 	N.ahn_cost = 300
-	N.required_ascension = 3
+	N.required_ascension = 2
 	N.tree_x = 1
 	N.tree_y = 0
 	N.prerequisites = list("stat_c1")
@@ -548,17 +547,17 @@
 	N.stat_bonuses = list("CRIT Rate" = 3.2)
 	N.stat_percent = TRUE
 	N.ahn_cost = 300
-	N.required_ascension = 3
+	N.required_ascension = 2
 	N.tree_x = 3
 	N.tree_y = 0
 	N.prerequisites = list("stat_c1")
 	nodes += N
 
-	// --- Right branch (A4 gate, from Skill) ---
+	// --- Right branch (A3 gate, from Skill) ---
 	N = new /datum/path_node("bonus_a4", "Faster Than Light", "After attacking, 50% chance to increase SPD by 20% for 20s.")
 	N.node_type = PATH_NODE_PASSIVE
 	N.ahn_cost = 1000
-	N.required_ascension = 4
+	N.required_ascension = 3
 	N.tree_x = 4
 	N.tree_y = 3
 	N.connections = list("stat_r1")
@@ -568,7 +567,7 @@
 	N.stat_bonuses = list("CRIT Rate" = 4.8)
 	N.stat_percent = TRUE
 	N.ahn_cost = 500
-	N.required_ascension = 4
+	N.required_ascension = 3
 	N.tree_x = 4
 	N.tree_y = 2
 	N.connections = list("stat_r2")
@@ -579,7 +578,7 @@
 	N.stat_bonuses = list("ATK" = 6)
 	N.stat_percent = TRUE
 	N.ahn_cost = 600
-	N.required_ascension = 5
+	N.required_ascension = 4
 	N.tree_x = 4
 	N.tree_y = 1
 	N.connections = list("stat_r3")
@@ -596,11 +595,11 @@
 	N.prerequisites = list("stat_r2")
 	nodes += N
 
-	// --- Left branch (A6 gate, from Basic ATK) ---
+	// --- Left branch (A5 gate, from Basic ATK) ---
 	N = new /datum/path_node("bonus_a6", "High Gale", "Basic ATK deals 40% more DMG to Slowed enemies.")
 	N.node_type = PATH_NODE_PASSIVE
 	N.ahn_cost = 1000
-	N.required_ascension = 6
+	N.required_ascension = 5
 	N.tree_x = 0
 	N.tree_y = 3
 	N.connections = list("stat_l1")
@@ -610,7 +609,7 @@
 	N.stat_bonuses = list("CRIT Rate" = 4.8)
 	N.stat_percent = TRUE
 	N.ahn_cost = 500
-	N.required_ascension = 6
+	N.required_ascension = 5
 	N.tree_x = 0
 	N.tree_y = 2
 	N.connections = list("stat_l2")
@@ -621,7 +620,7 @@
 	N.stat_bonuses = list("DEF" = 7.5)
 	N.stat_percent = TRUE
 	N.ahn_cost = 700
-	N.required_ascension = 6
+	N.required_ascension = 5
 	N.tree_x = 0
 	N.tree_y = 1
 	N.connections = list("stat_l3")

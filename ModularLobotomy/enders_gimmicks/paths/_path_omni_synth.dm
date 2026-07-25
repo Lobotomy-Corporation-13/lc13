@@ -323,8 +323,30 @@
 	data["exchange_cost"] = exchange_cost
 
 	// EXP-book crafting: material cost (T1 only) + book-combine availability.
+	// Each recipe also lists what is banked per family, so the player can spend
+	// a specific one instead of draining whichever the machine reaches first.
 	var/list/exp_data = list()
 	for(var/list/r in exp_recipes)
+		var/list/main_families = list()
+		var/list/trace_families = list()
+		if(r["main"])
+			for(var/fkey in mat_forward["path"])
+				var/amt = SumStoredByFamily("path", fkey, r["tier"])
+				main_families += list(list(
+					"key" = fkey,
+					"name" = GetPathMatName("path", fkey, r["tier"]),
+					"icon" = GetPathMatIcon("path", fkey, r["tier"]),
+					"have" = amt,
+				))
+		if(r["trace"])
+			for(var/fkey in mat_forward["trace"])
+				var/amt = SumStoredByFamily("trace", fkey, r["tier"])
+				trace_families += list(list(
+					"key" = fkey,
+					"name" = GetPathMatName("trace", fkey, r["tier"]),
+					"icon" = GetPathMatIcon("trace", fkey, r["tier"]),
+					"have" = amt,
+				))
 		exp_data += list(list(
 			"id" = r["id"],
 			"name" = r["name"],
@@ -335,6 +357,8 @@
 			"trace_cost" = r["trace"],
 			"main_have" = r["main"] ? SumStoredByTier("path", r["tier"]) : 0,
 			"trace_have" = r["trace"] ? SumStoredByTier("trace", r["tier"]) : 0,
+			"main_families" = main_families,
+			"trace_families" = trace_families,
 			"lower_name" = r["lower_name"],
 			"combine_cost" = r["combine"],
 			"lower_have" = r["lower_type"] ? CountBooks(r["lower_type"]) : 0,
@@ -429,6 +453,20 @@
 		stored[key] -= take
 		remaining -= take
 
+/// How many of one specific family are banked at a tier.
+/obj/machinery/omni_synthesizer/proc/SumStoredByFamily(cat, key, tier)
+	var/mat_type = MatType(cat, key, tier)
+	if(!mat_type)
+		return 0
+	return stored["[mat_type]"] ? stored["[mat_type]"] : 0
+
+/// Consumes `amount` of one specific family at a tier. Assumes enough.
+/obj/machinery/omni_synthesizer/proc/ConsumeStoredByFamily(cat, key, tier, amount)
+	var/mat_type = MatType(cat, key, tier)
+	if(!mat_type)
+		return
+	stored["[mat_type]"] -= amount
+
 /// How many EXP books of a type are banked in the machine.
 /obj/machinery/omni_synthesizer/proc/CountBooks(book_type)
 	return stored["[book_type]"] ? stored["[book_type]"] : 0
@@ -463,12 +501,14 @@
 			return TRUE
 		if("synthesize")
 			return DoSynthesize(params["ref"], text2num(params["amount"]), user)
+		if("breakdown")
+			return DoBreakdown(params["ref"], text2num(params["amount"]), user)
 		if("exchange")
 			return DoExchange(params["ref"], params["target"], text2num(params["amount"]), user)
 		if("buy")
 			return DoBuy(params["item"], user)
 		if("craft_exp")
-			return DoCraftExp(params["id"], params["source"], user)
+			return DoCraftExp(params["id"], params["source"], user, params["key"])
 		if("eject_beaker")
 			EjectBeaker(user)
 			return TRUE
@@ -498,6 +538,29 @@
 	stored["[next_type]"] += count
 	Pulse()
 	to_chat(user, span_nicegreen("Synthesized [count] [mat_info["[next_type]"]["name"]]."))
+	return TRUE
+
+/// Splits `count` materials into `synth_cost` of the rarity below each.
+/// Exactly reverses DoSynthesize, so the worth in mat_tier_points is preserved
+/// and the pair cannot be looped for profit.
+/obj/machinery/omni_synthesizer/proc/DoBreakdown(ref, count, mob/user)
+	var/mat_type = text2path(ref)
+	var/list/info = mat_info["[mat_type]"]
+	if(!info || info["tier"] <= 1)
+		return
+	count = round(count)
+	if(count < 1)
+		count = 1
+	if(stored["[mat_type]"] < count)
+		return
+	var/prev_type = MatType(info["cat"], info["key"], info["tier"] - 1)
+	if(!prev_type)
+		return
+	var/yield = count * synth_cost
+	stored["[mat_type]"] -= count
+	stored["[prev_type]"] += yield
+	Pulse()
+	to_chat(user, span_nicegreen("Broke down [count] [info["name"]] into [yield] [mat_info["[prev_type]"]["name"]]."))
 	return TRUE
 
 /// Consumes `exchange_cost` per output to bank `count` of a chosen path family.
@@ -544,7 +607,10 @@
 
 /// Makes a path EXP book. `source` is "main"/"trace" (refine T1 from banked
 /// materials) or "combine" (fuse 3 of the tier below from the user's bag).
-/obj/machinery/omni_synthesizer/proc/DoCraftExp(id, source, mob/user)
+/// `key` optionally names a single family to draw from, so a player can spend
+/// the materials they have spare and protect the family they are saving. When
+/// it is null the cost is drawn across every family of that category, as before.
+/obj/machinery/omni_synthesizer/proc/DoCraftExp(id, source, mob/user, key)
 	var/list/recipe
 	for(var/list/r in exp_recipes)
 		if(r["id"] == id)
@@ -568,10 +634,16 @@
 			to_chat(user, span_warning("[recipe["name"]] can only be made by combining lower books."))
 			return
 		var/tier = recipe["tier"]
-		if(SumStoredByTier(cat, tier) < cost)
-			to_chat(user, span_warning("Not enough banked [source] materials (need [cost])."))
-			return
-		ConsumeStoredByTier(cat, tier, cost)
+		if(key)
+			if(SumStoredByFamily(cat, key, tier) < cost)
+				to_chat(user, span_warning("Not enough banked [GetPathMatName(cat, key, tier)] (need [cost])."))
+				return
+			ConsumeStoredByFamily(cat, key, tier, cost)
+		else
+			if(SumStoredByTier(cat, tier) < cost)
+				to_chat(user, span_warning("Not enough banked [source] materials (need [cost])."))
+				return
+			ConsumeStoredByTier(cat, tier, cost)
 	// Banked into the machine so it can chain into further combines; withdraw
 	// it from the Storage tab to use it.
 	stored["[recipe["type"]]"] += 1

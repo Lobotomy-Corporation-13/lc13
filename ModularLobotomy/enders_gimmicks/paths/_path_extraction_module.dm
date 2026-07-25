@@ -86,13 +86,13 @@
 	var/amount = 0
 	var/t2 = 0
 	if(pe >= abno.success_boxes)        // good work
-		amount = 1 + prob(50)           // 1-2
-		if(prob(12))
+		amount = rand(3, 5)
+		if(prob(25))
 			t2 = 1
 	else if(pe >= abno.neutral_boxes)   // neutral
-		amount = 1
+		amount = 2
 	else                                // bad
-		amount = prob(30) ? 1 : 0
+		amount = 1
 	var/turf/T = get_turf(user)
 	if(!T)
 		return
@@ -159,21 +159,21 @@
 	var/turf/T = get_turf(breacher)
 	if(!key || !T)
 		return
-	var/t1 = 3
-	var/t2 = 1
+	var/t1 = 6
+	var/t2 = 2
 	switch(breacher.GetRiskLevel())
 		if(HE_LEVEL)
-			t1 = rand(5, 8)
-			t2 = rand(3, 5)
+			t1 = rand(10, 16)
+			t2 = rand(6, 10)
 		if(WAW_LEVEL)
-			t1 = rand(11, 16)
-			t2 = rand(7, 12)
+			t1 = rand(16, 24)
+			t2 = rand(10, 17)
 		if(ALEPH_LEVEL)
-			t1 = rand(15, 22)
-			t2 = rand(11, 17)
+			t1 = rand(22, 33)
+			t2 = rand(16, 25)
 		else // ZAYIN / TETH
-			t1 = rand(3, 5)
-			t2 = rand(1, 2)
+			t1 = rand(6, 10)
+			t2 = rand(2, 4)
 	var/t1_type = GetPathMatType("path", key, 1)
 	var/t2_type = GetPathMatType("path", key, 2)
 	if(t1_type)

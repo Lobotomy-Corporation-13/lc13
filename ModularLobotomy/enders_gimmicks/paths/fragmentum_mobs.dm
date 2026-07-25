@@ -24,14 +24,14 @@
 		return
 	switch(tier)
 		if(1) // dawn -> T1
-			SpawnFragMat(T, family, 1, rand(1, 2))
+			SpawnFragMat(T, family, 1, rand(3, 5))
 		if(2) // noon -> mostly T1, sometimes T2
-			SpawnFragMat(T, family, 1, rand(1, 2))
-			if(prob(15))
+			SpawnFragMat(T, family, 1, rand(3, 5))
+			if(prob(35))
 				SpawnFragMat(T, family, 2, 1)
 		if(3) // dusk -> mostly T2, sometimes T3
-			SpawnFragMat(T, family, 2, rand(1, 2))
-			if(prob(15))
+			SpawnFragMat(T, family, 2, rand(3, 6))
+			if(prob(35))
 				SpawnFragMat(T, family, 3, 1)
 
 // Green (Lens)
