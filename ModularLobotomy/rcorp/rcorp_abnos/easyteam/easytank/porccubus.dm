@@ -31,7 +31,10 @@
 		However, If you click on a tile that is at least 3 tiles away from you. You will spend a leap charge to dash to that tile. \
 		You regain a leap charge every 3 seconds, and you can hold a max of 3 at a time.<br>\
 		<br>\
-		|Unbearable Pleasure|: \
+		|Unbearable Pleasure|: Upon driving a human being insane you will inflict them with |Indescribable Pleasure|.\
+		This status effect grants them increased stats and sanity regeneration however when it runs out their head will burst.\
+		The boost to stats and sanity regeneration degrades over time, if they were insane when afflicted with |Indescribable Pleasure| their head will burst upon being resaned.\
+		Those that die to |Indescribable Pleasure| will leave behind stingers that allow rabbits to self dose with |Indescribable Pleasure| if seeking strength. <br>\
 		<br>\
 		|Happiness|: Your melee attack has a range of 2 tiles.</b>"
 
@@ -53,10 +56,10 @@
 	button_icon_toggle_deactivated = "porccubus_toggle0"
 
 //Drug-related Code
-/mob/living/simple_animal/hostile/rcorp_abno/easy/porccubus/proc/DrugOverdose(mob/living/carbon/human/addict, ckey, nirvana = FALSE)//apply 3 drugs at once and speedruns the withdrawal process,
+/mob/living/simple_animal/hostile/rcorp_abno/easy/porccubus/proc/DrugOverdose(mob/living/carbon/human/addict, nirvana = FALSE)//apply 3 drugs at once and speedruns the withdrawal process,
 	var/datum/status_effect/rca_porccubus_addiction/PA = addict.has_status_effect(STATUS_EFFECT_ADDICTION)
 	if(PA)
-		OverdoseEffect(PA,nirvana)//if nirvana is false then they will barely get any buffs. bypass ckey restrictions
+		OverdoseEffect(PA,nirvana)//if nirvana is false then they will barely get any buffs.
 		return
 	PA = addict.apply_status_effect(STATUS_EFFECT_ADDICTION)
 	OverdoseEffect(PA,nirvana)
@@ -120,11 +123,11 @@
 	if(!H.sanity_lost)
 		return
 	var/nirvana = FALSE
-	if(get_attribute_level(H, TEMPERANCE_ATTRIBUTE) < 60) //if they have under 60 temp they actually get all the stats from overdose, otherwise they just get fucked.
+	if(get_attribute_level(H, TEMPERANCE_ATTRIBUTE) < 60) //if they have under 60 temp they actually get all the stats from overdose, otherwise they just get fucked, rarely happens in RCA but it does
 		nirvana = TRUE
-	DrugOverdose(H, H.ckey, nirvana)
-	LoseTarget()
+	DrugOverdose(H, nirvana)
 	if(!client) //Stops the AI but not the player, just incase some rabbit is hyperdosed on porcc juice and needs to be insaned again
+		LoseTarget()
 		H.faction += "porccubus" //that guy's already fucked, even if they can kill porccubus safely now, porccubus has done its job of being a cunt
 
 /mob/living/simple_animal/hostile/rcorp_abno/easy/porccubus/proc/AddCharge()

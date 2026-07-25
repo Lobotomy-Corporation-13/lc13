@@ -31,7 +31,7 @@ GLOBAL_LIST_INIT(easytank, list(
 	/mob/living/simple_animal/hostile/rcorp_abno/easy/warden,
 	/mob/living/simple_animal/hostile/rcorp_abno/easy/golden_apple,
 	/mob/living/simple_animal/hostile/rcorp_abno/easy/porccubus,
-	/mob/living/simple_animal/hostile/abnormality/black_swan,
+	/mob/living/simple_animal/hostile/rcorp_abno/easy/black_swan,
 ))
 
 GLOBAL_LIST_INIT(hardcombat, list(
