@@ -195,6 +195,8 @@
 		for(var/mob/living/L in range(1, target))
 			if(L == target || L == user || L.stat == DEAD)
 				continue
+			if(!PathCanHarm(L))
+				continue
 			if(IsPathAlly(user, L))
 				continue
 			parent_path.deal_path_damage(L, atk * adj_mult, pvp_factor = adj_factor)
@@ -430,6 +432,8 @@
 		for(var/mob/living/L in TT)
 			if(L == user || L.stat == DEAD)
 				continue
+			if(!PathCanHarm(L))
+				continue
 			if(IsPathAlly(user, L))
 				continue
 			if(L in hit_mobs)
@@ -463,6 +467,8 @@
 	for(var/turf/TT in sweep_turfs)
 		for(var/mob/living/L in TT)
 			if(L == user || L.stat == DEAD)
+				continue
+			if(!PathCanHarm(L))
 				continue
 			if(IsPathAlly(user, L))
 				continue

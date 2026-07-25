@@ -63,6 +63,10 @@
 		return
 	if(owner.stat == DEAD)
 		return
+	// Checked on every tick rather than only at application, so a DoT already
+	// running on someone cannot keep burning them.
+	if(!PathCanHarm(owner))
+		return
 
 	var/base_dmg = 0
 	switch(dot_type)
@@ -141,6 +145,8 @@
 /// Applies a DoT status effect to a target. Handles Wind Shear stacking.
 /proc/apply_path_dot(mob/living/target, dot_type, datum/path/source_path, duration = 20 SECONDS)
 	if(!target || QDELETED(target))
+		return null
+	if(!PathCanHarm(target))
 		return null
 
 	var/atk_snapshot = source_path ? source_path.GetStat("ATK") : 0
@@ -231,7 +237,9 @@
 				atk = SM.melee_damage_upper
 				level_mult = 1
 		var/expire_damage = 0.6 * stacks * level_mult * max(atk, 50)
-		if(expire_damage > 0)
+		// This burst is raw brute rather than path damage, so it needs its own
+		// guard: the pipeline's check never sees it.
+		if(expire_damage > 0 && PathCanHarm(owner))
 			owner.adjustBruteLoss(expire_damage, forced = TRUE)
 			to_chat(owner, span_danger("Entanglement bursts! [stacks] stacks detonate!"))
 			playsound(get_turf(owner), 'sound/effects/glass_step.ogg', 40, TRUE)
@@ -246,6 +254,8 @@
 
 /// Global proc to apply path Entanglement
 /proc/ApplyPathEntanglement(mob/living/target, mob/living/source)
+	if(!PathCanHarm(target))
+		return
 	var/datum/status_effect/path_entanglement/existing = target.has_status_effect(/datum/status_effect/path_entanglement)
 	if(existing)
 		if(existing.stacks < existing.max_stacks)
@@ -276,6 +286,10 @@
 	. = ..()
 	if(!.)
 		return
+	// Freezing a human eats their turn outright, which is the harshest thing a
+	// path can do to a crewmate short of damage.
+	if(!PathCanHarm(owner))
+		return FALSE
 	if(istype(owner, /mob/living/simple_animal/hostile))
 		// Simple mobs: disable AI
 		var/mob/living/simple_animal/hostile/SA = owner
@@ -314,6 +328,8 @@
 	. = ..()
 	if(!.)
 		return
+	if(!PathCanHarm(owner))
+		return FALSE
 	// Reduce action/turn speed (affects path turn cycle and path mob skill cooldown)
 	if(istype(owner, /mob/living/simple_animal/hostile))
 		var/mob/living/simple_animal/hostile/H = owner

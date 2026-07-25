@@ -114,6 +114,10 @@
 /// loyalty rifle in ego_weapons/ranged/waw.dm, but keyed to the path ally list
 /// rather than blanket-ignoring every human.
 /obj/projectile/ego_bullet/path_abundance/can_hit_target(atom/target, direct_target = FALSE, ignore_loc = FALSE, cross_failed = FALSE)
+	// While the trait runs the whole crew is passed through, not just the
+	// people this shooter happened to designate.
+	if(target != shooter && !PathCanHarm(target))
+		return FALSE
 	if(shooter && isliving(target) && target != shooter && IsPathAlly(shooter, target))
 		return FALSE
 	return ..()

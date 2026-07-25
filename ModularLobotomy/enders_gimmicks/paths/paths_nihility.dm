@@ -200,10 +200,21 @@
 	var/adj_mult = 0.2
 	/// Burn DoT ATK% multiplier
 	var/burn_mult = 0.839
+	/// Lets the burst travel past the crew instead of detonating on them.
+	projectile_piercing = PASSMOB
 	/// PvP scaling factors snapshotted from the path at fire time
 	var/main_pvp_factor = 1
 	var/adj_pvp_factor = 1
 	var/burn_pvp_factor = 1
+
+/// Without this the burst stops on the first agent standing in the line and
+/// detonates there, which is friendly fire even though the damage is skipped.
+/obj/projectile/ego_bullet/nihility_burst/can_hit_target(atom/target, direct_target = FALSE, ignore_loc = FALSE, cross_failed = FALSE)
+	if(target != firer && !PathCanHarm(target))
+		return FALSE
+	if(isliving(target) && isliving(firer) && target != firer && IsPathAlly(firer, target))
+		return FALSE
+	return ..()
 
 /obj/projectile/ego_bullet/nihility_burst/on_hit(atom/target, blocked = FALSE)
 	..()
@@ -226,6 +237,8 @@
 	var/hit_count = 0
 	for(var/mob/living/L in range(1, impact_turf))
 		if(L == firer || L == target || L.stat == DEAD)
+			continue
+		if(!PathCanHarm(L))
 			continue
 		if(IsPathAlly(firer, L))
 			continue
@@ -317,6 +330,8 @@
 			new /obj/effect/temp_visual/fire(TT)
 			for(var/mob/living/L in TT)
 				if(L == user || L.stat == DEAD)
+					continue
+				if(!PathCanHarm(L))
 					continue
 				if(IsPathAlly(user, L))
 					continue
@@ -420,6 +435,8 @@
 /// pvp_factor is snapshotted from the applying ability so ticks land at a
 /// consistent PvP-scaled rate even if traces change later.
 /proc/ApplyNihilityBurn(mob/living/target, burn_dmg, datum/path/source_path, pvp_factor = 1)
+	if(!PathCanHarm(target))
+		return
 	var/datum/status_effect/nihility_burn/existing = target.has_status_effect(/datum/status_effect/nihility_burn)
 	if(existing)
 		// Refresh duration and update damage if higher; snapshot the
@@ -503,6 +520,8 @@
 
 /// Global proc to apply or stack Firekiss
 /proc/ApplyFirekiss(mob/living/target, dmg_pct)
+	if(!PathCanHarm(target))
+		return
 	var/datum/status_effect/firekiss/existing = target.has_status_effect(/datum/status_effect/firekiss)
 	if(existing)
 		existing.AddStack(dmg_pct)

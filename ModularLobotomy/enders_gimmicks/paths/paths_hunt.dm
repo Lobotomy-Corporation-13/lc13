@@ -309,6 +309,8 @@
 			for(var/mob/living/L in CT)
 				if(L == user || L.stat == DEAD)
 					continue
+				if(!PathCanHarm(L))
+					continue
 				if(IsPathAlly(user, L))
 					continue
 				target = L

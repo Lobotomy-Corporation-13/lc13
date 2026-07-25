@@ -163,6 +163,10 @@ GLOBAL_LIST_EMPTY(path_ally_lists)
 	// Contained/invulnerable things must not soak abilities or grant resources
 	if(L.status_flags & GODMODE)
 		return null
+	// The crew are not targets at all while the trait runs, so area scans skip
+	// them outright rather than selecting them and then dealing nothing.
+	if(!PathCanHarm(L))
+		return null
 	if(IsPathAlly(user, L))
 		return null
 	return L

@@ -15,7 +15,6 @@
 // ---- Enemy Creatures ----
 
 /datum/databank_entry/creature
-	abstract = TRUE
 	category = DATABANK_CREATURES
 
 // ---- Factions ----
@@ -25,7 +24,6 @@
 // Characters instead of being stacked into one enormous Factions entry.
 
 /datum/databank_entry/faction
-	abstract = TRUE
 	category = DATABANK_FACTIONS
 
 /datum/databank_entry/faction/antimatter_legion
@@ -86,7 +84,6 @@ If life feeds on negentropy, then all actions will ultimately facilitate Destruc
 // than the name, so the index reads as a list of people.
 
 /datum/databank_entry/character
-	abstract = TRUE
 	category = DATABANK_CHARACTERS
 
 /datum/databank_entry/character/asat_pramad
@@ -186,7 +183,6 @@ Its "Destruction" resembles a phenomenon more than aesthetics: a corruption and 
 // ---- Aeons ----
 
 /datum/databank_entry/aeon
-	abstract = TRUE
 	category = DATABANK_AEONS
 
 /datum/databank_entry/aeon/nanook
@@ -308,7 +304,6 @@ Go chase laughter that leaves you breathless, twists born of fate's whimsy, and 
 // ---- Terms ----
 
 /datum/databank_entry/term
-	abstract = TRUE
 	category = DATABANK_TERMS
 
 /datum/databank_entry/term/herta

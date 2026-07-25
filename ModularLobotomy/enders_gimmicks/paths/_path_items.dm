@@ -108,6 +108,14 @@
 	/// EXP granted per crystal
 	var/exp_per = 1000
 
+/// The medium and large books are subtypes of this one, and stack merging
+/// matches a whole subtree, so a 20,000 EXP guide would fold into a stack of
+/// 1,000 EXP notes and pay out at the lower rate. Merge on exact type only.
+/obj/item/stack/path_exp_crystal/can_merge(obj/item/stack/check)
+	if(check.type != type)
+		return FALSE
+	return ..()
+
 /obj/item/stack/path_exp_crystal/attack_self(mob/living/user)
 	if(!ishuman(user))
 		return

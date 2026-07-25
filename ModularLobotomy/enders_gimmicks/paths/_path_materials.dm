@@ -74,6 +74,15 @@ GLOBAL_LIST_EMPTY(path_mat_names)
 	/// Rarity tier: PATH_MAT_T1 / T2 / T3.
 	var/tier = PATH_MAT_T1
 
+/// Stacks merge across a whole subtree, not just an exact type, and the higher
+/// tiers are declared as subtypes of the tier-1 entry. That let a T2 or T3
+/// stack fold into a T1 one and be spent at the lower rate. Materials merge
+/// only with their own exact type.
+/obj/item/stack/path_material/can_merge(obj/item/stack/check)
+	if(check.type != type)
+		return FALSE
+	return ..()
+
 /obj/item/stack/path_material/examine(mob/user)
 	. = ..()
 	. += span_notice("Rarity: [tier + 1]-star (Tier [tier]) path material.")
@@ -272,6 +281,12 @@ GLOBAL_LIST_EMPTY(path_mat_names)
 	var/family = TRACE_FAMILY_FANG
 	/// Rarity tier: PATH_MAT_T1 / T2 / T3.
 	var/tier = PATH_MAT_T1
+
+/// Same subtree-merge trap as the path materials above.
+/obj/item/stack/trace_material/can_merge(obj/item/stack/check)
+	if(check.type != type)
+		return FALSE
+	return ..()
 
 /obj/item/stack/trace_material/examine(mob/user)
 	. = ..()

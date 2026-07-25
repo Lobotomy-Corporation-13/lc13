@@ -463,6 +463,10 @@
 /datum/status_effect/benediction/proc/ConsumeBonusAttack(mob/living/target)
 	if(!has_bonus_attack)
 		return
+	if(!PathCanHarm(target))
+		// Checked before the charge is spent, so punching a crewmate does not
+		// waste the buff the ally is holding.
+		return
 	has_bonus_attack = FALSE
 	if(!owner || QDELETED(target))
 		return
@@ -478,7 +482,8 @@
 	var/bonus_dmg = ally_atk * bonus_lightning_pct / 100
 	if(source_path)
 		source_path.deal_path_damage(target, bonus_dmg, pvp_factor = bonus_pvp_factor)
-	else
+	else if(PathCanHarm(target))
+		// Raw brute, so the damage pipeline's guard does not cover this branch.
 		target.adjustBruteLoss(bonus_dmg, forced = TRUE)
 	new /obj/effect/temp_visual/benediction_punish(get_turf(target))
 	to_chat(owner, span_nicegreen("Benediction bonus Lightning DMG!"))

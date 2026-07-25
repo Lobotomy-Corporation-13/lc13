@@ -302,6 +302,8 @@
 			continue
 		if(L.stat == DEAD)
 			continue
+		if(!PathCanHarm(L))
+			continue
 		if(IsPathAlly(user, L))
 			continue
 		var/dmg = atk * multiplier
@@ -458,6 +460,8 @@
 	var/passive_factor = parent_path.PvPScalingFactor(level, atk_scaling, PATH_TARGET_TRACE_PASSIVE)
 	for(var/mob/living/L in range(3, user))
 		if(L == user || L.stat == DEAD)
+			continue
+		if(!PathCanHarm(L))
 			continue
 		if(IsPathAlly(user, L))
 			continue

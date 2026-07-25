@@ -50,18 +50,28 @@ GLOBAL_LIST_EMPTY(databank_loose_logs)
 	var/starts_open = FALSE
 	/// Position within its category. Equal values fall back to title order.
 	var/sort_order = 0
-	/// Set on the per-category bases, which carry settings rather than lore.
-	var/abstract = FALSE
+
+/// The per-category bases, which carry shared settings rather than lore.
+///
+/// Listed by type rather than flagged with a var on the datum: a var set on a
+/// base is inherited by every record beneath it, so a flag would mark the
+/// whole category abstract and leave the bank empty.
+GLOBAL_LIST_INIT(databank_abstract_types, list(
+	/datum/databank_entry/creature,
+	/datum/databank_entry/aeon,
+	/datum/databank_entry/character,
+	/datum/databank_entry/term,
+	/datum/databank_entry/faction,
+))
 
 /// Builds the record list on first use and hands it back.
 /proc/GetDatabankEntries()
 	if(length(GLOB.databank_entries))
 		return GLOB.databank_entries
 	for(var/entry_type in subtypesof(/datum/databank_entry))
-		var/datum/databank_entry/E = new entry_type()
-		if(E.abstract)
-			qdel(E)
+		if(entry_type in GLOB.databank_abstract_types)
 			continue
+		var/datum/databank_entry/E = new entry_type()
 		GLOB.databank_entries += E
 		if(E.starts_open)
 			GLOB.databank_unlocked["[entry_type]"] = TRUE

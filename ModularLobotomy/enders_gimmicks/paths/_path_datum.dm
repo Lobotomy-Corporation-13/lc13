@@ -652,6 +652,10 @@
 		return
 	if(!basic_attack)
 		return
+	// Swinging at a crewmate does nothing at all: no damage, and no turn, AP or
+	// energy spent, so a misclick costs the player nothing.
+	if(!PathCanHarm(target))
+		return
 	// Don't interact with dead targets
 	if(target.stat == DEAD)
 		return
@@ -738,6 +742,10 @@
 /// pvp_factor: per-ability multiplier applied only against non-path human targets.
 /datum/path/proc/deal_path_damage(mob/living/target, amount, do_crit = TRUE, toughness_reduction = 0, pvp_factor = 1)
 	if(!target || QDELETED(target))
+		return 0
+	// Single chokepoint for every path ability's damage, so the crew only has
+	// to be spared once rather than at each of the call sites.
+	if(!PathCanHarm(target))
 		return 0
 	var/damage = amount
 
@@ -853,11 +861,33 @@
 	animate(src, pixel_y = pixel_y + 7, alpha = 0, time = 7)
 
 // ============================================================
+// Friendly fire
+// ============================================================
+
+/// TRUE while path abilities must leave the crew alone.
+///
+/// Area skills, chains and damage-over-time made accidental friendly fire the
+/// normal outcome of fighting anything with an agent nearby, and the ally list
+/// only helped for people you had remembered to designate. While the trait is
+/// running, nothing a path does can touch a human at all.
+/proc/PathsSpareHumans()
+	return SSmaptype.chosen_trait == FACILITY_TRAIT_PATHSTRIDERS
+
+/// TRUE if a path ability may harm this target. Guards damage and every
+/// hostile status a path can apply; buffs and heals do not come through here.
+/proc/PathCanHarm(atom/target)
+	if(!ishuman(target))
+		return TRUE
+	return !PathsSpareHumans()
+
+// ============================================================
 // SPD Debuff System (global procs)
 // ============================================================
 
 /// Applies a SPD change to a target based on their type
 /proc/apply_path_spd_change(mob/living/target, spd_percent, duration)
+	if(!PathCanHarm(target))
+		return
 	// Apply tracking status effect
 	target.apply_status_effect(/datum/status_effect/path_spd_debuff)
 
