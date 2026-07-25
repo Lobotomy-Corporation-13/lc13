@@ -1,3 +1,4 @@
+//Defined as support due to portals
 /mob/living/simple_animal/hostile/rcorp_abno/easy/wayward
 	name = "Wayward Passenger"
 	desc = "A large humanoid with its torso caved open and lined with teeth. Thread-like projections cover its open wounds. It's form seems unstable, watch carefully for any rifts it may open."
@@ -45,8 +46,11 @@
 	cooldown_time = 4 SECONDS
 	env_breaking = TRUE
 
+/obj/effect/proc_holder/ability/aimed/rca_dash/wayward/Finalize(target, mob/living/user, list/path_list) //Doing this here because if done earlier he plays sound without a valid charge
+	..()
+	playsound(user, 'sound/abnormalities/wayward_passenger/attack1.ogg', 300, 1)
+
 /obj/effect/proc_holder/ability/aimed/rca_dash/wayward/TurfEffects(turf/T, mob/living/ourthing)
-	playsound(T,"sound/abnormalities/thunderbird/tbird_peck.ogg", rand(50, 70), 1)
 	for(var/turf/U in GetRange(T, 1))
 		if(!U)
 			break
@@ -54,17 +58,18 @@
 			FlickOnAtom(U,'icons/effects/effects.dmi',"smash",5)
 		var/list/new_hits = HurtInTurf(ourthing, U, list(), dash_damage, RED_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, flags = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 		var/flicks = FALSE
+		playsound(user,"sound/abnormalities/thunderbird/tbird_peck.ogg", rand(30, 50), 1)
 		for(var/mob/living/L in new_hits)//damage applied to targets in range
 			if(!ourthing.faction_check_mob(L))
 				L.visible_message(span_boldwarning("[ourthing] slices through [L]!"), span_userdanger("[ourthing] rushes past you, searing you with its blades!"))
 				if(!flicks)
-					playsound(U, 'sound/abnormalities/wayward_passenger/attack2.ogg', 75, 1)
+					playsound(L, 'sound/abnormalities/wayward_passenger/attack2.ogg', 75, 1)
 					FlickOnAtom(U,'icons/obj/projectiles.dmi',"kinetic_blast",4)
 					flicks = TRUE
 		for(var/obj/vehicle/sealed/mecha/V in new_hits)
 			V.visible_message(span_boldwarning("[ourthing] slices through [V]!"))
 			to_chat(V.occupants, span_userdanger("[ourthing] rushes past you, searing your mech with its blades!"))
-			playsound(U, 'sound/abnormalities/wayward_passenger/attack2.ogg', 75, 1)
+			playsound(V, 'sound/abnormalities/wayward_passenger/attack2.ogg', 75, 1)
 			if(!flicks)
 				FlickOnAtom(U,'icons/obj/projectiles.dmi',"kinetic_blast",4)
 				flicks = TRUE
@@ -74,6 +79,7 @@
 	if(!istype(user, /mob/living/simple_animal/hostile/rcorp_abno/easy/wayward))
 		return
 	var/mob/living/simple_animal/hostile/rcorp_abno/easy/wayward/abno = user
+	playsound(user, 'sound/abnormalities/thunderbird/tbird_bolt.ogg', 75, 1)
 	ToggleAct(abno,TRUE)
 	abno.endCharge()
 

@@ -1,1 +1,1 @@
-//Hardsupports, abnos which will often backline and assist their team, hardsupports will often rely on ranged attacks and be weak themselves, support varies between projectiles, buffs or stuns
+//Hardsupports, abnos which will often backline and assist their team, hardsupports will often rely on ranged attacks and be weak themselves, support varies between projectiles, buffs or stuns, however these abnos find a hard time defending themselves mostly due to being absurdly choreographed, this is what sets abnos like clown in combat while KoD is in support.

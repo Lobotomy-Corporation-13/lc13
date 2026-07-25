@@ -92,9 +92,10 @@
 		friendly_verb_simple = original_abno.friendly_verb_simple
 		emote_see = original_abno.emote_see
 		emote_hear = original_abno.emote_hear
+		attacked_sound = original_abno.attacked_sound
 		//I assure you the wall of vars which are 99% cosmetic and useless is crucial to my ig immersion
 
-	if(secret_chance && (prob(100)))
+	if(secret_chance && (prob(1)))
 		InitializeSecretIcon()
 
 /mob/living/simple_animal/hostile/rcorp_abno/proc/InitializeSecretIcon()

@@ -95,7 +95,7 @@
 					if(isrcabnormalitymob(L) || isabnormalitymob(L))
 						delay_amount -= delay_reduction
 						is_moving_forward = TRUE
-					else
+					else if(!faction_check(L.faction, pusher_factions))
 						is_blocked_by_enemy = TRUE
 		if(is_moving_forward)
 			last_friendly_interaction = world.time
