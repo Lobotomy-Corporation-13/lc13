@@ -66,6 +66,7 @@
 		new /datum/data/extraction_cargo("Orange Tree Flamer",			/obj/item/ego_weapon/ranged/flammenwerfer,							500, CAT_MEDICAL) = 1,
 		new /datum/data/extraction_cargo("Prosthetic Limb Crate ",		/obj/structure/closet/crate/freezer/surplus_limbs,					500, CAT_MEDICAL) = 1,
 		new /datum/data/extraction_cargo("Assorted Medi-Pen Kit ",		/obj/item/storage/firstaid/revival,									500, CAT_MEDICAL) = 1,
+		new /datum/data/extraction_cargo("Blood Pack (O-) ",				/obj/item/reagent_containers/blood/o_minus,							50, CAT_MEDICAL)  = 1,
 
 		//Resources - Raw PE, ETC. Abnochem stuff goes here too. This is one use items to further LC13 systems
 		new /datum/data/extraction_cargo("Blue Filter ",				/obj/item/stack/refiner_filter/blue,								5, CAT_RESOURCE) = 1,
