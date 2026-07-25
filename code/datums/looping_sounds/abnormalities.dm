@@ -198,6 +198,7 @@
 
 /datum/looping_sound/laluna
 	mid_sounds = 'sound/abnormalities/luna/mvmt3.ogg'
-	mid_length = 398 SECONDS // 6:44 is the audio duration but we are cutting it short to avoid the applausee and loop it
-	volume = 180 //Thats what the playsound said, gotta get that piano playing fullblast
-	extra_range = 28 //This shit is a banger, you WILL listen to it
+	mid_length = 403 SECONDS //Duration 1 second shorter than it actually is so the loop will cover the slight bit of silence between loops
+	volume = 180 //Thats what the playsound on the abno file was if you think its louder than usual, its a banger anyways
+	extra_range = 28
+	channel = CHANNEL_LUNA

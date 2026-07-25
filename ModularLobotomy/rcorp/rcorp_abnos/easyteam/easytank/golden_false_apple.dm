@@ -23,6 +23,7 @@
 	melee_damage_type = RED_DAMAGE
 	damage_coeff = list(BRUTE = 1, RED_DAMAGE = 1.5, WHITE_DAMAGE = 1, BLACK_DAMAGE = 0.5, PALE_DAMAGE = 2)
 	vision_range = 14
+	guaranteed_butcher_results = list(/obj/item/food/grown/apple/gold/abnormality = 1)
 	original_abno = /mob/living/simple_animal/hostile/abnormality/golden_apple
 
 	attack_action_types = list(/datum/action/cooldown/rca_gapple_pulse)
@@ -292,6 +293,7 @@
 			myhead.dismember()
 			NestedItems(src, myhead)
 		QDEL_IN(H, 1)
+	name = victim_name
 	desc = "The apple ruptured and a swarm of maggots crawled inside.. wait a minute, that's [victim_name]'s face."
 	med_hud_set_health()//took a page from smock to update medhuds
 	med_hud_set_status()

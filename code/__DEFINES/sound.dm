@@ -15,6 +15,7 @@
 #define CHANNEL_PRIEST 1011
 #define CHANNEL_DULCINEA 1010
 #define CHANNEL_BLOODFIEND_TRIO 1009
+#define CHANNEL_LUNA 1008
 
 ///Default range of a sound.
 #define SOUND_RANGE 17

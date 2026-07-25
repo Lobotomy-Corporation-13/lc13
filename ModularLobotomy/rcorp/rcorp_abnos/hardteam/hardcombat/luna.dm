@@ -29,6 +29,14 @@
 	var/aoedamage = 60
 	var/datum/looping_sound/laluna/soundloop
 
+	abno_additional_instructions = "<h1>You are La Luna, A Combat Role Abnormality.</h1><br>\
+		<b>|La Luna|: You are immune to WHITE damage.<br>\
+		<br>\
+		|Moonlight Sonata|: Upon spawning you will begin to play the Third Movement of Beethoven's Moonlight Sonata, this can be heard within a 45 tile range of your location.<br>\
+		<br>\
+		|Il Pianto|: When attempting to perform a ranged attack initiate a 11x11 AOE centered around yourself that does BLACK to all enemies afflicted. \
+		This AOE has short cooldown and may be initiated again almost immediately after it's end. </b>"
+
 /mob/living/simple_animal/hostile/rcorp_abno/hard/luna/Initialize()
 	..()
 	soundloop = new(list(src), FALSE)

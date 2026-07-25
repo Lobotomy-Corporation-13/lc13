@@ -4680,6 +4680,7 @@
 #include "ModularLobotomy\rcorp\rcorp_abnos\hardteam\hardcombat\clown_smiling.dm"
 #include "ModularLobotomy\rcorp\rcorp_abnos\hardteam\hardcombat\luna.dm"
 #include "ModularLobotomy\rcorp\rcorp_abnos\hardteam\hardcombat\nosferatu.dm"
+#include "ModularLobotomy\rcorp\rcorp_abnos\hardteam\hardsupport\sphinx.dm"
 #include "ModularLobotomy\records\broadcast.dm"
 #include "ModularLobotomy\records\cargo.dm"
 #include "ModularLobotomy\records\watches\_records.dm"
