@@ -142,7 +142,7 @@
 	var/grab_delay = (get_dist(src, target) <= 2) ? (1 SECONDS) : (0.5 SECONDS)
 	SLEEP_CHECK_DEATH(grab_delay)
 	icon_state = "kqe_grab"
-	new /obj/effect/kqe_claw(get_turf(target))
+	new /obj/effect/rca_kqe_claw(get_turf(target))
 	SLEEP_CHECK_DEATH(5 SECONDS)
 	icon_state = icon_living
 	can_act = TRUE
@@ -173,6 +173,8 @@
 	for(var/obj/vehicle/sealed/mecha/M in view(1, src))
 		M.ejectall()
 	for(var/mob/living/carbon/human/H in view(1, src))
+		if(isrcabnormalitymob(H))
+			continue
 		grabbed = TRUE
 		H.deal_damage(boom_damage, BLACK_DAMAGE, src, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_SPECIAL))
 		H.forceMove(get_turf(src))//pulls them all to the target

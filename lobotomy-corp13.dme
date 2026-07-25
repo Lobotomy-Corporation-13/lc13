@@ -4666,6 +4666,7 @@
 #include "ModularLobotomy\rcorp\rcorp_abnos\easyteam\easysupport\void_dream.dm"
 #include "ModularLobotomy\rcorp\rcorp_abnos\easyteam\easysupport\wayward_passenger.dm"
 #include "ModularLobotomy\rcorp\rcorp_abnos\easyteam\easytank\easytank.dm"
+#include "ModularLobotomy\rcorp\rcorp_abnos\easyteam\easytank\golden_false_apple.dm"
 #include "ModularLobotomy\rcorp\rcorp_abnos\easyteam\easytank\jangsan.dm"
 #include "ModularLobotomy\rcorp\rcorp_abnos\easyteam\easytank\KQE.dm"
 #include "ModularLobotomy\rcorp\rcorp_abnos\easyteam\easytank\scarecrow.dm"
