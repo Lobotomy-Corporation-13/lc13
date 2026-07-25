@@ -1,6 +1,6 @@
 #define STATUS_EFFECT_GOLDENSHEEN /datum/status_effect/stacking/rca_golden_sheen
 #define STATUS_EFFECT_MAGGOTS /datum/status_effect/stacking/rca_maggots
-//Defined as a tank due to its team healing
+//Defined as a tank due to its team healing and 2 phase gimmick
 /mob/living/simple_animal/hostile/rcorp_abno/easy/golden_apple
 	name = "Golden Apple"
 	desc = "A huge, grotesque apple with limbs."
@@ -365,7 +365,7 @@
 //***Buff Definitions***
 //For now, just a notification. If we ever want to do anything with it, it's here.
 /datum/status_effect/stacking/rca_golden_sheen
-	id = "sheen"
+	id = "rca_sheen"
 	status_type = STATUS_EFFECT_MULTIPLE
 	duration = 60 SECONDS	//Lasts for a minute
 	max_stacks = 5
@@ -412,7 +412,7 @@
 //debuff definition
 
 /datum/status_effect/stacking/rca_maggots
-	id = "maggots"
+	id = "rca_maggots"
 	status_type = STATUS_EFFECT_MULTIPLE
 	duration = 15 SECONDS	//Lasts for 15 seconds and refreshes when reapplied
 	max_stacks = 10

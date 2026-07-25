@@ -4669,6 +4669,7 @@
 #include "ModularLobotomy\rcorp\rcorp_abnos\easyteam\easytank\golden_false_apple.dm"
 #include "ModularLobotomy\rcorp\rcorp_abnos\easyteam\easytank\jangsan.dm"
 #include "ModularLobotomy\rcorp\rcorp_abnos\easyteam\easytank\KQE.dm"
+#include "ModularLobotomy\rcorp\rcorp_abnos\easyteam\easytank\porccubus.dm"
 #include "ModularLobotomy\rcorp\rcorp_abnos\easyteam\easytank\scarecrow.dm"
 #include "ModularLobotomy\rcorp\rcorp_abnos\easyteam\easytank\warden.dm"
 #include "ModularLobotomy\rcorp\rcorp_abnos\hardteam\hardcombat.dm"
