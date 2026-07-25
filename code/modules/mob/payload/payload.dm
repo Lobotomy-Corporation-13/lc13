@@ -89,7 +89,7 @@
 					if(faction_check(L.faction, pusher_factions))
 						delay_amount -= delay_reduction
 						is_moving_forward = TRUE
-					else
+					else if(isrcabnormalitymob(L) || isabnormalitymob(L))
 						is_blocked_by_enemy = TRUE
 				if("abno")
 					if(isrcabnormalitymob(L) || isabnormalitymob(L))

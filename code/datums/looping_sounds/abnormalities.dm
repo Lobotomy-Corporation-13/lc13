@@ -195,3 +195,9 @@
 	volume = 50
 	extra_range = 40
 	channel = CHANNEL_BLOODFIEND_TRIO
+
+/datum/looping_sound/laluna
+	mid_sounds = 'sound/abnormalities/luna/mvmt3.ogg'
+	mid_length = 398 SECONDS // 6:44 is the audio duration but we are cutting it short to avoid the applausee and loop it
+	volume = 180 //Thats what the playsound said, gotta get that piano playing fullblast
+	extra_range = 28 //This shit is a banger, you WILL listen to it

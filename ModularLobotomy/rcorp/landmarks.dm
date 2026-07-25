@@ -39,7 +39,7 @@ GLOBAL_LIST_INIT(hardcombat, list(
 	/mob/living/simple_animal/hostile/rcorp_abno/hard/clown,
 	/mob/living/simple_animal/hostile/rcorp_abno/hard/nosferatu,
 	/mob/living/simple_animal/hostile/abnormality/big_wolf, //Waiting for rework
-	/mob/living/simple_animal/hostile/abnormality/luna,
+	/mob/living/simple_animal/hostile/rcorp_abno/hard/luna,
 	/mob/living/simple_animal/hostile/abnormality/red_hood,//Waiting for rework
 ))
 

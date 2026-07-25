@@ -4678,6 +4678,7 @@
 #include "ModularLobotomy\rcorp\rcorp_abnos\hardteam\hardcombat\_hardcombat.dm"
 #include "ModularLobotomy\rcorp\rcorp_abnos\hardteam\hardcombat\clouded_monk.dm"
 #include "ModularLobotomy\rcorp\rcorp_abnos\hardteam\hardcombat\clown_smiling.dm"
+#include "ModularLobotomy\rcorp\rcorp_abnos\hardteam\hardcombat\luna.dm"
 #include "ModularLobotomy\rcorp\rcorp_abnos\hardteam\hardcombat\nosferatu.dm"
 #include "ModularLobotomy\records\broadcast.dm"
 #include "ModularLobotomy\records\cargo.dm"
