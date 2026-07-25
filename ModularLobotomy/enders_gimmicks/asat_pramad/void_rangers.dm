@@ -91,6 +91,7 @@
 	var/path_type = GetPathMatType("path", pick(path_families), drop_tier)
 	if(path_type)
 		new path_type(T, rand(3, 5))
+	RollHoloLog(T)
 
 /// Flashes the charged sprite on the shot, the way the gloom peccatulum does.
 /mob/living/simple_animal/hostile/void_ranger/OpenFire()

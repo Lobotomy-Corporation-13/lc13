@@ -22,6 +22,10 @@
 /proc/SpawnFragmentumLoot(turf/T, family, tier)
 	if(!T || !family)
 		return
+	// Every fragmentum mob routes its loot through here, so the log roll only
+	// needs writing once. Summoned adds skip this proc entirely and so cannot
+	// be farmed for logs.
+	RollHoloLog(T)
 	switch(tier)
 		if(1) // dawn -> T1
 			SpawnFragMat(T, family, 1, rand(3, 5))
