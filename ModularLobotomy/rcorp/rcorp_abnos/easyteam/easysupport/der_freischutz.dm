@@ -40,7 +40,8 @@
 
 	abno_additional_instructions = "<h1>You are Der Freischutz, A Support Role Abnormality.</h1><br>\
 		<b>|Magic Bullet|: When you attack while not scoped in, there will be a 1.5 second delay before you fire a Magic Bullet. \
-		The Magic Bullet deals BLACK damage and pieces through mobs. After firing a Magic Bullet, there is a 7 second cooldown between you can fire another one.<br>\
+		The Magic Bullet deals BLACK damage and pieces through mobs. After firing a Magic Bullet, there is a 7 second cooldown between you can fire another one.\
+		Hitting your own portals will instantly kill them. <br>\
 		<br>\
 		|Devil's Contract|: Using the Sniper Sights ability on the top left of your screen you are able to increase your view range, see through walls and gain the ability to place down 'Magic Portals' \
 		There is a 10 second cooldown between placing down portals, you can have a max of 7 portals and you can't place them in R-Corp's base or on dense terrain. \
@@ -379,6 +380,16 @@
 
 	var/mob/living/simple_animal/hostile/rcorp_abno/easy/der_freischutz/connected_abno
 	var/datum/component/orbiter/self_orbiter
+
+/mob/living/simple_animal/hostile/rca_der_freis_portal/Login()
+	. = ..()
+	to_chat(src, "<h1>You are Magic Portal, A Der Freischutz Minion.</h1><br>\
+		<b>|Magic Bullet|: When attacking you will perform a ranged attack that pierces all living targets dealing 150 BLACK damage and applying 7 stacks of |Dark Flame|. \
+		Piercing does not apply to mechs, if hitting another portal you will kill them instantly. <br>\
+		<br>\
+		|Dark Flame|: Whenever you hit a target inflict 7 stacks of |Dark Flame|. \
+		Targets affected will take WHITE and BURN damage equal to stacks of |Dark Flame| every 5 seconds until effect expires. \
+		You may have up to 50 stacks on one target, applying new stacks refreshes duration.</b>")
 
 /mob/living/simple_animal/hostile/rca_der_freis_portal/Initialize()
 	. = ..()

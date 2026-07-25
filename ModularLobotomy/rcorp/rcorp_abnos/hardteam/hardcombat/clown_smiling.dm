@@ -1,7 +1,7 @@
 //Placed in combat for being very frontal
 /mob/living/simple_animal/hostile/rcorp_abno/hard/clown
 	name = "Clown Smiling at Me"
-	desc = "An unnerving clown."
+	desc = "An unnerving clown. The knives it's holding seem to have barbed edges, likely to cause plenty of bleeding."
 	maxHealth = 1800
 	health = 1800
 	rapid_melee = 4
@@ -35,7 +35,7 @@
 		|Jovial Cutting|: When you attack a dead human, you will start rapidly gutting them, which will deal WHITE damage to all humans watching. \
 		A few seconds after gutting that human, you will gib them.<br>\
 		<br>\
-		|Bleed|: When a target with bleed moves, they will take True damage equal to the stack, then it reduces by half. \
+		|Bleed|: When a target with bleed moves, they will take True damage equal to the stack, then it reduces by half(rounded down). \
 		They may prevent this by either standing still until the stack expires or walking instead of running. <br>\
 		<br>\
 		|A Show’s End|: Once you reach 0 HP, you will explode which deal great RED damage to nearby humans, inflict 30 'Bleed' and leave behind a few trails of lube, which can slip humans who cross them.</b>"

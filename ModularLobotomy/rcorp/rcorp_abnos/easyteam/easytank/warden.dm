@@ -69,9 +69,13 @@
 		|Soul Warden|: If you attack a living human with less than 35% HP (or currently insane), you will kidnap them and begin to devour their soul.<br>\
 		While devouring someone's soul, you will be slower, weaker and more frail than usual. <br>\
 		If you successfully devour a soul you will heal 20% of your HP and you will spawn a subordinate mob. <br>\
-		For each soul consumed, you will become faster and more resilient, but your damage will decrease by 10.<br>\
-		If you receive 525 pre-reduction damage while in the process of devouring a soul, you will get stunned and puke every single human currently inside of you.<br>\
-		Attack a human corpse to consume whatever scraps of their soul remain, healing you for 10% of your maximum HP </b>"
+		For each soul consumed, you will become faster and more resilient, but your damage will decrease by 10. <br>\
+		If you receive 525 pre-reduction damage while in the process of devouring a soul, you will get stunned and puke every single human currently inside of you. <br>\
+		Attack a human corpse to consume whatever scraps of their soul remain, healing you for 10% of your maximum HP <br>\
+		<br>\
+		|Wake-up Call|: Every lifetick there is a 1% chance multiplied by every soul you have captured * 2 to agitate all Soulless Husks. \
+		Upon agitating Husks their upper damage will raise by 5, this is indicated by their screaming. \
+		This damage increase may be applied repeatedly for each time |Wake-up Call| is triggered.</b>"
 
 /mob/living/simple_animal/hostile/rcorp_abno/easy/warden/Initialize()
 	. = ..()
@@ -432,6 +436,12 @@
 	stat_attack = SOFT_CRIT // They do not kill, or Warden would have a hard time kidnapping people once she snowballs.
 	del_on_death = TRUE
 	var/desc_change = FALSE
+
+/mob/living/simple_animal/hostile/rca_soulless/Login()
+	. = ..()
+	to_chat(src, "<h1>You are Soulless Husk, A Warden Minion.</h1><br>\
+		<b>|Wake-up Call|: Every lifetick Warden has a chance to agitate all Soulless Husks, upon doing so their upper damage will raise by 5, this is indicated by screaming. \
+		This damage increase may be applied repeatedly for each time the Warden triggers |Wake-up Call|.</b>")
 
 /mob/living/simple_animal/hostile/rca_soulless/Life()
 	. = ..()

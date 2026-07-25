@@ -992,8 +992,9 @@ GLOBAL_LIST_EMPTY(marked_players)
 			to_chat(src, span_warning("You almost attack yourself, but then decide against it."))
 			return
 		if(SSmaptype.maptype == "rcorp" && faction_check_mob(target, FALSE))
-			to_chat(src, span_warning("You almost attack your teammate, but then decide against it."))
-			return
+			if(!istype(src, /mob/living/simple_animal/hostile/rca_nosferatu_mob))
+				to_chat(src, span_warning("You almost attack your teammate, but then decide against it."))
+				return
 
 	if(!attacked_target)
 		attacked_target = target

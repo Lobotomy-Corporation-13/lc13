@@ -30,7 +30,7 @@
 		<br>\
 		|Worn Umbrellas|: Worn Umbrellas will passively attack humans that they can see by firing a 3x3 AoE on their targets. \
 		If the target gets hit by the AoE, They will gain a debuff which causes them to take more BLACK damage from all sources. \
-		However, if the umbrellas are broken you will lose 5%  and gain slight temporary slowdown for each umbrella broken.<br></b>"
+		However, if the umbrellas are broken you will lose 5% HP and gain slight temporary slowdown for each umbrella broken.<br></b>"
 
 /mob/living/simple_animal/hostile/rcorp_abno/easy/drifting_fox/Initialize()
 		. = ..()
@@ -150,6 +150,15 @@
 	/// The drifting fox
 	var/mob/living/simple_animal/hostile/rcorp_abno/friend
 
+/mob/living/simple_animal/hostile/rca_umbrella/Login()
+	. = ..()
+	to_chat(src, "<h1>You are Umbrella, A Drifting Fox Minion.</h1><br>\
+		<b>|Scattering Sorrow|: When attacking you will perform a 3x3 AoE in the area you targetted, anyone hit will take BLACK damage and gain BLACK Fragility. <br>\
+		<br>\
+		|Sunshower|: While alive raise Drifting Fox's speed, every 10 seconds teleport to Drifting Fox if not in sight.<br>\
+		<br>\
+		|Old and Abandoned|: When killed cause Drifting Fox to lose 5% of its HP and lower it's speed.</b>")
+
 /// Deal damge to the fox
 /mob/living/simple_animal/hostile/rca_umbrella/death(gibbed)
 	visible_message(span_notice("[src] falls to the ground as the umbrella closes in on itself!"))
@@ -165,7 +174,7 @@
 	. = ..()
 	if(!friend || stat == DEAD) //for some reason life() works on death ain't that something
 		return
-	if(QDELETED(friend) || friend.status_flags & GODMODE) //Fox died, we're gone too
+	if(QDELETED(friend)) //Fox died, we're gone too
 		death()
 		return
 	if(teleport_cooldown < world.time)
