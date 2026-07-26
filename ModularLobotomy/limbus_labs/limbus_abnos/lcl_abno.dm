@@ -76,6 +76,7 @@
 	var/ego_desire_cooldown_time = 10 SECONDS
 	var/ego_desire_cooldown
 	var/list/ego_list = list() //Unfortunately, I couldn't find any easy way of copying the ego list of the original abno, so you have to do it manually for now.
+	var/attunement_family = "" //LCE attunement family. Interacting with this abno builds a player's affinity for gear of this family.
 
 	//Breach overlay stuff.
 	var/mutable_appearance/breach_overlay
@@ -120,6 +121,8 @@
 	instant_satisf.Grant(src)
 	ego_maker.Grant(src)
 	small_action.Grant(src)
+	var/datum/action/cooldown/limbus_abno_action/ego_communion/commune_action = new()
+	commune_action.Grant(src)
 	for(var/action_type in attack_action_types)
 		var/datum/action/cooldown/abno_action = new action_type()
 		abno_action.Grant(src)
@@ -177,6 +180,7 @@
 	var/calculated_damage = attack_damage * damage_coeff.getCoeff(damage_type)
 	if(calculated_damage <= rep_min_damage) //We don't acknowledge a hit that's too weak.
 		return
+	GainAffinity(user, 1)
 	if(health > rep_threshold)
 		added_desire = rep_desire_gain * calculated_damage
 	else
@@ -243,6 +247,7 @@
 			return
 
 	friend_list += target
+	GainAffinity(target, 5)
 	to_chat(src,span_notice("You now consider [target] a friend."))
 
 //This proc triggers when the abno gets hungrier. Any specific changes caused by hunger should be made within the 'AdjustHunger' proc and not this one.
@@ -283,6 +288,7 @@
 
 /mob/living/simple_animal/hostile/limbus_abno/funpet(mob/living/carbon/human/petter)
 	..()
+	GainAffinity(petter, 2)
 	if(desire_on_pet != 0) //Adjusting desire with no value might trigger stuff we don't want.
 		AdjustDesire(desire_on_pet)
 
@@ -385,6 +391,14 @@
 		if(L == friend)
 			return TRUE
 	return FALSE
+
+//Credits a player with attunement affinity for this abno's LCE family, capped. Higher
+//affinity raises the safe attunement limit of that family's gear for that player.
+/mob/living/simple_animal/hostile/limbus_abno/proc/GainAffinity(mob/user, amt = 1)
+	if(!user?.ckey || !attunement_family)
+		return
+	var/key = "[user.ckey]-[attunement_family]"
+	GLOB.lce_attunement_affinity[key] = min(300, (GLOB.lce_attunement_affinity[key] || 0) + amt)
 
 /mob/living/simple_animal/hostile/limbus_abno/examine_more(mob/user)
 	if(user == src) //The player sees exact numbers; onlookers only get the vague description.

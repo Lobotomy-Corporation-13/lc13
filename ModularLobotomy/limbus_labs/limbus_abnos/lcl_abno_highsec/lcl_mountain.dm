@@ -37,10 +37,8 @@
 	hated_objects_list = list(/obj/effect/decal/cleanable/blood) //It's not that mountain hates it, but it makes it  thirst for blood even more if it lingers around.
 	hated_objects_value = 0.1
 	ego_desire_gained = 2
-	ego_list = list(
-		/datum/ego_datum/weapon/smile,
-		/datum/ego_datum/armor/lce/smile,
-	)
+	attunement_family = "smile"
+	ego_list = list(/datum/ego_datum/armor/lce/smile)
 	var/phase_one_health = 2000
 	var/phase_two_health = 3000
 	var/phase_three_health = 4000
