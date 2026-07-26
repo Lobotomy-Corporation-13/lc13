@@ -63,42 +63,37 @@
 /datum/job/limbus_specimen/override_latejoin_spawn()
 	return TRUE
 
-//Returns a list of abno that are both still available and enabled in preferences according to the list.
-//If the preference list is empty somehow, we panic and throw a default list where every lcl abno is allowed.
+//Returns the subset of abno_list the player is willing to play (priority level above NEVER).
 /datum/job/limbus_specimen/proc/return_sec_list(list/abno_list, client/C)
-	var/list/abno_pref_list = C.prefs.lcl_abno_pref
-	if(!LAZYLEN(abno_pref_list))
-		var/list/new_pref_abno_list = GLOB.available_low_sec_abno.Copy() + GLOB.available_high_sec_abno.Copy()
-		for(var/abno in new_pref_abno_list)
-			if(isnull(LAZYACCESS(C.prefs.lcl_abno_pref, abno)))
-				LAZYSET(C.prefs.lcl_abno_pref, abno, TRUE)
-	for(var/limbus_abno in abno_pref_list)
-		if(LAZYFIND(abno_list, limbus_abno) && !LAZYACCESS(abno_pref_list, limbus_abno))
-			abno_list -= limbus_abno
-	return abno_list
+	C.prefs.reconcile_lcl_prefs()
+	var/list/out = list()
+	for(var/path in abno_list)
+		if(LAZYACCESS(C.prefs.lcl_abno_pref, path)) //truthy = HIGH/MEDIUM/LOW; 0/absent = NEVER
+			out += path
+	return out
 
+//Assigns the highest-priority available specimen. Walks tiers HIGH -> MEDIUM -> LOW,
+//lowsec before highsec within a tier. First-come-first-served between players.
 /datum/job/limbus_specimen/proc/attribute_abno(client/C, occupation_divide = FALSE)
 	var/found_abno = LAZYACCESS(GLOB.attributed_lcl_abno, C)
-	if(LAZYFIND(GLOB.lcl_spawned_abno, found_abno)) //The player's attributed abno has already been spawned, not allowed to try again. Pick another job jackass.
+	if(LAZYFIND(GLOB.lcl_spawned_abno, found_abno)) //Their abno already spawned, not allowed to try again.
 		return FALSE
 	if(LAZYFIND(GLOB.attributed_lcl_abno, C))
-		return TRUE //In that case, they already have an abno assigned to you, but it hasn't been spawned so we skip the selection process.
-	var/spawning
-	var/list/low_sec_list = return_sec_list(GLOB.available_low_sec_abno.Copy(), C)
-	var/list/high_sec_list = return_sec_list(GLOB.available_high_sec_abno.Copy(), C)
-
-	spawning = pick_n_take(low_sec_list) //Prioritize lowsec spawns first.
-	if(!isnull(spawning))
-		if(!occupation_divide)
-			GLOB.available_low_sec_abno -= spawning
-			LAZYSET(GLOB.attributed_lcl_abno, C, spawning)
-		return TRUE
-
-//If no lowsec landmarks/abno are available, we go for highsec.
-	spawning = pick_n_take(high_sec_list)
-	if(!isnull(spawning))
-		if(!occupation_divide)
-			GLOB.available_high_sec_abno -= spawning
-			LAZYSET(GLOB.attributed_lcl_abno, C, spawning)
-		return TRUE
+		return TRUE //Already assigned but not spawned; skip selection.
+	C.prefs.reconcile_lcl_prefs()
+	var/list/canonical = GLOB.low_security + GLOB.high_security //lowsec first
+	for(var/level in list(JP_HIGH, JP_MEDIUM, JP_LOW))
+		for(var/path in canonical)
+			if(LAZYACCESS(C.prefs.lcl_abno_pref, path) != level)
+				continue
+			if(path in GLOB.available_low_sec_abno)
+				if(!occupation_divide)
+					GLOB.available_low_sec_abno -= path
+					LAZYSET(GLOB.attributed_lcl_abno, C, path)
+				return TRUE
+			if(path in GLOB.available_high_sec_abno)
+				if(!occupation_divide)
+					GLOB.available_high_sec_abno -= path
+					LAZYSET(GLOB.attributed_lcl_abno, C, path)
+				return TRUE
 	return FALSE

@@ -30,10 +30,8 @@
 	/datum/action/cooldown/limbus_abno_action/helper_clean,
 	/datum/action/cooldown/limbus_abno_action/helper_cook,
 	/datum/action/cooldown/limbus_abno_action/helper_craft)
-	ego_list = list(
-		/datum/ego_datum/weapon/grinder,
-		/datum/ego_datum/armor/lce/grinder,
-	)
+	attunement_family = "grinder"
+	ego_list = list(/datum/ego_datum/armor/lce/grinder)
 	///These are the three functions mentioned in helper's main story. Bodyguard, cleaning and cooking. Of course, helper interpret those as mixed up.
 	var/cook_mode = FALSE
 	var/clean_mode = FALSE
