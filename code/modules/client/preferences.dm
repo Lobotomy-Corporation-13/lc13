@@ -26,7 +26,8 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 	var/tmp/old_be_special = 0 //Bitflag version of be_special, used to update old savefiles and nothing more
 										//If it's 0, that's good, if it's anything but 0, the owner of this prefs file's antag choices were,
 										//autocorrected this round, not that you'd need to check that.
-	var/list/lcl_abno_pref = list() //A list of all available limbus specimen.
+	var/list/lcl_abno_pref = list() //Assoc typepath -> priority level (JP_HIGH/JP_MEDIUM/JP_LOW; 0/absent = NEVER).
+	var/datum/tgui_handler/lcl_specimen_prefs/lcl_prefs_ui = null //Lazily created, not saved.
 
 	var/UI_style = null
 	var/buttons_locked = FALSE
@@ -225,6 +226,7 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 
 /datum/preferences/Destroy(force, ...)
 	QDEL_NULL(achievement_spec_menu)
+	QDEL_NULL(lcl_prefs_ui)
 	return ..()
 
 #define APPEARANCE_CATEGORY_COLUMN "<td valign='top' width='14%'>"
@@ -799,7 +801,7 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 						dat += "<b>Be [capitalize(special_role)]:</b> <a href='byond://?_src_=prefs;preference=be_special;be_special_type=[special_role]'>[(special_role in be_special) ? TeguTranslate("Enabled", src) : TeguTranslate("Disabled", src)]</a><br>"
 			dat += "<br>"
 			dat += "<b>Midround Antagonist:</b> <a href='byond://?_src_=prefs;preference=allow_midround_antag'>[(toggles & MIDROUND_ANTAG) ? TeguTranslate("Enabled", src) : TeguTranslate("Disabled", src)]</a><br>"
-			dat += "<b>[TeguTranslate("LCL Specimen Preferences", src)]:</b> <a href='byond://?_src_=prefs;task=input;preference=lcl_abno'>LCL ABNO LIST</a><br>"
+			dat += "<b>[TeguTranslate("LCL Specimen Preferences", src)]:</b> <a href='byond://?_src_=prefs;preference=lcl_specimen_window'>OPEN LCL SPECIMEN SELECTOR</a><br>"
 			dat += "</td></tr></table>"
 		if(2) //OOC Preferences
 			dat += "<table><tr><td width='340px' height='300px' valign='top'>"
@@ -1236,6 +1238,22 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 		if(C)
 			C.clear_character_previews()
 
+// Seeds any unset LCL specimen to a sane default level and prunes removed abnos.
+/datum/preferences/proc/reconcile_lcl_prefs()
+	var/list/all_abno = GLOB.low_security + GLOB.high_security
+	for(var/path in all_abno)
+		if(isnull(LAZYACCESS(lcl_abno_pref, path)))
+			LAZYSET(lcl_abno_pref, path, JP_MEDIUM)
+	for(var/path in lcl_abno_pref.Copy())
+		if(!(path in all_abno))
+			lcl_abno_pref -= path
+
+// Opens the TGUI specimen selector window for the given user.
+/datum/preferences/proc/open_lcl_specimen_ui(mob/user)
+	if(!lcl_prefs_ui)
+		lcl_prefs_ui = new(src)
+	lcl_prefs_ui.ui_interact(user)
+
 /datum/preferences/proc/process_link(mob/user, list/href_list)
 	if(href_list["bancheck"])
 		var/list/ban_details = is_banned_from_with_details(user.ckey, user.client.address, user.client.computer_id, href_list["bancheck"])
@@ -1275,6 +1293,9 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 				SetChoices(user)//tegu edit alt job titles
 			if("alt_title")
 				var/job_title = href_list["job_title"]
+				if(istype(SSjob.GetJob(job_title), /datum/job/limbus_specimen))
+					open_lcl_specimen_ui(user) //LC Specimen uses the specimen selector, not alt titles.
+					return 1
 				var/titles_list = list(job_title)
 				var/datum/job/J = SSjob.GetJob(job_title)
 				var/sen_timelock = CONFIG_GET(number/senior_timelock)
@@ -1300,6 +1321,10 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 				UpdateJobPreference(user, href_list["text"], text2num(href_list["level"]))
 			else
 				SetChoices(user)
+		return 1
+
+	else if(href_list["preference"] == "lcl_specimen_window")
+		open_lcl_specimen_ui(user)
 		return 1
 
 	else if(href_list["preference"] == "trait")
@@ -1839,24 +1864,6 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 					if(!(new_lang in GLOB.allowed_client_languages)) // Invalid language
 						new_lang = CLIENT_LANGUAGE_ENGLISH
 					client_language = new_lang
-
-				if("lcl_abno") //Awful snowflake code that probably has a better solution, but I'm tired. Automatically makes a list of available LCL abnos to disable or enable.
-					var/list/abno_list = GLOB.low_security.Copy() + GLOB.high_security.Copy()
-					var/list/abno_names = list()
-					var/fill_pref_list = FALSE
-					if(LAZYLEN(lcl_abno_pref) != LAZYLEN(abno_list))
-						fill_pref_list = TRUE
-					for(var/abno in abno_list)
-						if(fill_pref_list && isnull(LAZYACCESS(lcl_abno_pref, abno)))
-							LAZYSET(lcl_abno_pref, abno, TRUE)
-						var/mob/living/simple_animal/hostile/limbus_abno/picked_abno = abno
-						var/enabled_string = "Disabled"
-						if(LAZYACCESS(lcl_abno_pref, abno))
-							enabled_string = "Enabled"
-						LAZYSET(abno_names, "[picked_abno.true_name] ([enabled_string])", abno)
-					var/input_abno = input(user, "Add or remove an abnormality you want to play.", "Character Preference", lcl_abno_pref)  as null|anything in sortList(abno_names)
-					input_abno = LAZYACCESS(abno_names, input_abno)
-					LAZYSET(lcl_abno_pref, input_abno, !LAZYACCESS(lcl_abno_pref, input_abno))
 
 				if("backpack_visibility")
 					backpack_visibility = !backpack_visibility

@@ -22,10 +22,8 @@
 	insight_cooldown_time = 2 MINUTES
 	liked_objects_list = list(/obj/structure/bonfire)
 	liked_objects_value = 3
-	ego_list = list(
-		/datum/ego_datum/weapon/match,
-		/datum/ego_datum/armor/lce/match,
-	)
+	attunement_family = "match"
+	ego_list = list(/datum/ego_datum/armor/lce/match)
 	breach_overlay_z = 30
 	breach_overlay_x = 3
 	var/blowing_up = FALSE //To avoid her chaining multiple explosions at the same time.
