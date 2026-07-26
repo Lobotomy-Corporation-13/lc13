@@ -49,16 +49,16 @@ GLOBAL_LIST_INIT(hardsupport, list(
 	/mob/living/simple_animal/hostile/rcorp_abno/hard/thunder_bird,
 	/mob/living/simple_animal/hostile/rcorp_abno/hard/despair_knight,
 	/mob/living/simple_animal/hostile/rcorp_abno/hard/yin,
-	/mob/living/simple_animal/hostile/abnormality/pygmalion,
-	/mob/living/simple_animal/hostile/abnormality/big_bird,
+	/mob/living/simple_animal/hostile/rcorp_abno/hard/pygmalion,
+	/mob/living/simple_animal/hostile/rcorp_abno/hard/big_bird,
 ))
 
 GLOBAL_LIST_INIT(hardtank, list(
-	/mob/living/simple_animal/hostile/abnormality/melting_love,
-	/mob/living/simple_animal/hostile/abnormality/nothing_there,
-	/mob/living/simple_animal/hostile/abnormality/censored,
-	/mob/living/simple_animal/hostile/abnormality/titania,
-	/mob/living/simple_animal/hostile/abnormality/greed_king,
+	/mob/living/simple_animal/hostile/rcorp_abno/hard/melting_love,
+	/mob/living/simple_animal/hostile/rcorp_abno/hard/nothing_there,
+	/mob/living/simple_animal/hostile/rcorp_abno/hard/censored,
+	/mob/living/simple_animal/hostile/rcorp_abno/hard/titania,
+	/mob/living/simple_animal/hostile/rcorp_abno/hard/greed_king,
 	/mob/living/simple_animal/hostile/abnormality/eris,
 	/mob/living/simple_animal/hostile/abnormality/general_b,
 ))

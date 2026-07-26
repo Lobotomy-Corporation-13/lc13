@@ -12,6 +12,7 @@
 	melee_damage_type = BLACK_DAMAGE
 	del_on_death = FALSE
 	move_force = 3000 // To crush the lil' humans
+	stat_attack = DEAD //Yumyum corpses
 	original_abno = /mob/living/simple_animal/hostile/abnormality/warden
 
 	var/normal_sprite = "warden"

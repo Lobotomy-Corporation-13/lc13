@@ -198,7 +198,7 @@
 
 /datum/looping_sound/laluna
 	mid_sounds = 'sound/abnormalities/luna/mvmt3.ogg'
-	mid_length = 402 SECONDS //Duration 2 seconds shorter than it actually is so the loop will cover the slight bit of silence between loops
+	mid_length = 401 SECONDS //Duration 3 seconds shorter than it actually is so the loop will cover the slight bit of silence between loops
 	volume = 180 //Thats what the playsound on the abno file was if you think its louder than usual, its a banger anyways
 	extra_range = 28
 	channel = CHANNEL_LUNA

@@ -83,7 +83,7 @@
 	var/mob/living/simple_animal/hostile/rcorp_abno/hard/ebony_queen/EQ = owner
 	if(!istype(EQ))
 		return FALSE
-	if(EQ.barrier_cooldown > world.time || !EQ.can_act)
+	if(EQ.barrier_cooldown > world.time && !EQ.client || !EQ.can_act)
 		return FALSE
 	StartCooldown()
 	EQ.thornBurst()

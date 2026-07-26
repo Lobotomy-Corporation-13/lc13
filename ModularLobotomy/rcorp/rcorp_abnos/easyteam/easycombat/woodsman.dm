@@ -8,6 +8,7 @@
 	melee_damage_upper = 30
 	damage_coeff = list(RED_DAMAGE = 1.5, WHITE_DAMAGE = 0.8, BLACK_DAMAGE = 0.8, PALE_DAMAGE = 1)
 	move_to_delay = 4
+	stat_attack = DEAD
 	original_abno = /mob/living/simple_animal/hostile/abnormality/woodsman
 
 	// Flurry Vars
