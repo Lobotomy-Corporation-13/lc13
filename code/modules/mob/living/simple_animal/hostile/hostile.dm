@@ -110,8 +110,12 @@ GLOBAL_LIST_EMPTY(marked_players)
 	//can attack and move
 	var/can_act = TRUE
 
-	//For now the var for if a monster targets any dense objects around it is var/beserk, unoptimized. -IP
-	var/beserk
+	/*
+	* Works like a timer where if they cannot find
+	* a path to their patrol destination
+	* they freak out and start smashing everything. -IP
+	*/
+	var/beserk = 0
 
 /mob/living/simple_animal/hostile/Initialize()
 	/*Update Speed overrides set speed and sets it
@@ -246,9 +250,9 @@ GLOBAL_LIST_EMPTY(marked_players)
 			PatrolSelect()
 			if(length(patrol_path))
 				patrol_move(patrol_path[patrol_path.len])
-				Claustrophobia(FALSE)
 				return
-			Claustrophobia(TRUE)
+			if(isabnormalitymob(src))
+				Claustrophobia(10 SECONDS)
 
 	/*		AIStatus
 	AI_ON will have the npcpool subsystem call handle_automated_action(),
@@ -554,7 +558,7 @@ GLOBAL_LIST_EMPTY(marked_players)
 		return list()
 
 	//The thorough mode, rarely used
-	if(search_objects || beserk)
+	if(search_objects || beserk > world.time)
 		. = oview(max_range, targets_from)
 		return
 	//the standard mode
@@ -683,7 +687,7 @@ GLOBAL_LIST_EMPTY(marked_players)
 	if(isobj(the_target))
 		if(attack_all_objects || is_type_in_typecache(the_target, wanted_objects))
 			return TRUE
-		if(beserk)
+		if(beserk > world.time)
 			//Causes issues pathing to go attack it.
 			if(istype(the_target, /obj/structure/window/reinforced))
 				return FALSE
@@ -1142,7 +1146,7 @@ GLOBAL_LIST_EMPTY(marked_players)
 
 /mob/living/simple_animal/hostile/proc/IsSmashable(obj/O)
 	if(ismecha(O) || ismachinery(O) || isstructure(O))
-		if(beserk && istype(O, /obj/machinery/door/airlock))
+		if(beserk > world.time && istype(O, /obj/machinery/door/airlock))
 			var/obj/machinery/door/airlock/D = O
 			//Thats a unlocked door. May be a bad choice to put it here.
 			if(!D.locked)
@@ -1474,8 +1478,8 @@ GLOBAL_LIST_EMPTY(marked_players)
 	return TRUE
 
 //SMASH EVERYTHING
-/mob/living/simple_animal/hostile/proc/Claustrophobia(toggle = FALSE)
-	beserk = toggle
+/mob/living/simple_animal/hostile/proc/Claustrophobia(add_on = 0)
+	beserk = world.time + add_on
 
 
 #undef MAX_DAMAGE_SUFFERED
