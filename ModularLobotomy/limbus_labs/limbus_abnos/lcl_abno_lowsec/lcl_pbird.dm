@@ -28,10 +28,8 @@
 	desire_on_eat = 40
 	desire_on_talk = 1
 	rep_desire_gain = -100
-	ego_list = list(
-		/datum/ego_datum/weapon/beak,
-		/datum/ego_datum/armor/lce/beak,
-	)
+	attunement_family = "beak"
+	ego_list = list(/datum/ego_datum/armor/lce/beak)
 	//Evil bird mode.
 	var/bird_angry = FALSE
 	//If true, ignores the sinner list entirely, letting them hit anyone once while enraged.

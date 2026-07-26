@@ -22,10 +22,8 @@
 	desire_on_eat = 30
 	diet_value = 20
 	delete_food = FALSE
-	ego_list = list(
-		/datum/ego_datum/weapon/trick,
-		/datum/ego_datum/armor/trick,
-	)
+	attunement_family = "trick"
+	ego_list = list(/datum/ego_datum/armor/lce/trick)
 	ego_desire_gained = 15 //Creates ego really fast due to how annoying it is. Literally the only reason not to shoot it on sight beyond the roleplay aspect.
 	var/gobble = FALSE //If smile will eat the things it attacks.
 	var/max_gobble = 3 //How many things can be gobbled up at once.

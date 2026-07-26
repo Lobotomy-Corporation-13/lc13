@@ -137,6 +137,8 @@
  * Show a message to this mob (visual or audible)
  */
 /mob/proc/show_message(msg, type, alt_msg, alt_type, avoid_highlighting = FALSE)//Message, type of message (1 or 2), alternative message, alt message type (1 or 2)
+	//Relay to eavesdroppers (e.g. EGO communion) even when this mob has no client of its own.
+	SEND_SIGNAL(src, COMSIG_MOB_SHOW_MESSAGE, msg, type)
 	if(!client)
 		return
 

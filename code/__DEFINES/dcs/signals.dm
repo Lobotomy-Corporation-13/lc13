@@ -437,6 +437,8 @@
 	#define MOB_DEADSAY_SIGNAL_INTERCEPT (1<<0)
 ///from /mob/living/emote(): ()
 #define COMSIG_MOB_EMOTE "mob_emote"
+///from /mob/show_message(): (msg, type) - fired for any visible/audible message shown to this mob
+#define COMSIG_MOB_SHOW_MESSAGE "mob_show_message"
 ///from base of mob/swap_hand(): (obj/item)
 #define COMSIG_MOB_SWAP_HANDS "mob_swap_hands"
 	#define COMPONENT_BLOCK_SWAP (1<<0)
