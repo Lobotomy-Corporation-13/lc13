@@ -45,7 +45,7 @@ GLOBAL_LIST_EMPTY(lce_attunement_affinity)
 	/// Safe attunement ceiling for the current wearer, computed on equip.
 	var/safe_limit = 0
 	/// Floor everyone gets even with no bond to the abno.
-	var/safe_limit_floor = 20
+	var/safe_limit_floor = 10
 	/// Links this armor to its weapon and its source abno.
 	var/attunement_family = ""
 	/// The LCE weapon spawned with (and bound to) this armor.
