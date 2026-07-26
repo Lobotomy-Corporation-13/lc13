@@ -213,3 +213,35 @@
 		/obj/item/clothing/under/suit/lobotomy/wcorp,
 		/obj/item/powered_gadget/teleporter,
 	)
+
+
+/obj/structure/lootcrate/h_corp
+	name = "H-Corporation Bolus Crate"
+	desc = "A crate recieved from H-Corporation. Open with a Crowbar."
+	icon_state = "crate_hcorp"
+	rarechance = 40
+	veryrarechance = 10
+	lootlist =	list(
+		/obj/item/storage/box/hcorpfire,
+		/obj/item/storage/box/hcorpwater,
+		/obj/item/storage/box/hcorpearth,
+		/obj/item/storage/box/hcorpmetal,
+		/obj/item/storage/box/hcorpwood,
+	)
+
+		//This should serve you well most of the time
+	rareloot =	list(
+		/obj/item/bolus/simple,
+	)
+
+		//Gave them a few mid-tier ones.
+	veryrareloot = list(
+		/obj/item/bolus/charred,
+		/obj/item/bolus/mossy,
+		/obj/item/bolus/soaked,
+		/obj/item/bolus/rust,
+		/obj/item/bolus/clay,
+		/obj/item/bolus/armor,
+		/obj/item/bolus/flower,
+	)
+

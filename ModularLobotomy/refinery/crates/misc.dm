@@ -46,6 +46,7 @@
 		/obj/item/clothing/under/limbus/prison,
 		/obj/item/clothing/neck/limbus_tie,
 	)
+
 /obj/structure/lootcrate/money
 	name = "Money Crate"
 	desc = "You think there's ahn in here. Open with a Crowbar."
