@@ -59,7 +59,7 @@ GLOBAL_LIST_INIT(hardtank, list(
 	/mob/living/simple_animal/hostile/rcorp_abno/hard/censored,
 	/mob/living/simple_animal/hostile/rcorp_abno/hard/titania,
 	/mob/living/simple_animal/hostile/rcorp_abno/hard/greed_king,
-	/mob/living/simple_animal/hostile/abnormality/eris,
+	/mob/living/simple_animal/hostile/rcorp_abno/hard/eris,
 	/mob/living/simple_animal/hostile/abnormality/general_b,
 ))
 

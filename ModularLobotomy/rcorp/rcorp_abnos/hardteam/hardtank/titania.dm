@@ -79,7 +79,7 @@
 /mob/living/simple_animal/hostile/rcorp_abno/hard/titania/AttackingTarget(atom/attacked_target)
 	var/mob/living/carbon/human/H = attacked_target
 	//Kills the weak immediately.
-	if(ishuman(H) && get_user_level(H) < 4)
+	if(ishuman(H) && get_user_level(H) < 4 && !isrcabnormalitymob(H))
 		say("I rid you of your pain, mere human.")
 		//Double Check
 		SpawnFairies(fairy_spawn_number * 2, H)
