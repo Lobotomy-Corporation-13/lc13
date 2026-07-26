@@ -134,6 +134,21 @@
 			"type" = /obj/item/work_console_upgrade/pathstrider_extraction,
 			"desc" = "Console attachment: work abnormalities for Path Material, and force-breach them for more.",
 		),
+		// Fragmentum mobs and void rangers keep their materials in the corpse,
+		// so a blade to carve them out belongs in the same shop as everything
+		// else the material economy needs.
+		"knife" = list(
+			"name" = "Hunting Knife",
+			"cost" = 150,
+			"type" = /obj/item/kitchen/knife/hunting,
+			"desc" = "Carves materials out of fragmentum corpses and void rangers. Quick, and light enough to carry alongside a weapon.",
+		),
+		"cleaver" = list(
+			"name" = "Butcher's Cleaver",
+			"cost" = 300,
+			"type" = /obj/item/kitchen/knife/butcher,
+			"desc" = "A heavier blade that harvests the same materials and hits considerably harder in a pinch.",
+		),
 	)
 	// EXP-book recipes. Only the T1 book is refined from materials (T1 only;
 	// Path/main more efficient than Trace). Higher books come from combining
