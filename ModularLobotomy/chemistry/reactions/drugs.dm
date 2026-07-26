@@ -9,6 +9,6 @@
 
 /datum/chemical_reaction/blindsight
 	results = list(/datum/reagent/abnormality/blindsight = 1)
-	required_reagents = list(/datum/reagent/radionex = 1, /datum/chemical_reaction/hyperlithium_oxide = 1, /datum/reagent/lithene = 1)
+	required_reagents = list(/datum/reagent/radionex = 1, /datum/reagent/hyperlithium_oxide = 1, /datum/reagent/lithene = 1)
 
 
