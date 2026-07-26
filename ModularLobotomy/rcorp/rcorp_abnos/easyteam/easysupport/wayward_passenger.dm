@@ -50,6 +50,10 @@
 	..()
 	playsound(user, 'sound/abnormalities/wayward_passenger/attack1.ogg', 300, 1)
 
+/obj/effect/proc_holder/ability/aimed/rca_dash/wayward/DashMove(mob/living/user, turf/last_turf, times_ran = 1, list/dash_list)
+	..()
+	playsound(user,"sound/abnormalities/thunderbird/tbird_peck.ogg", rand(30, 50), 1) //Play this sound on every tile moved
+
 /obj/effect/proc_holder/ability/aimed/rca_dash/wayward/TurfEffects(turf/T, mob/living/ourthing)
 	for(var/turf/U in GetRange(T, 1))
 		if(!U)
@@ -58,7 +62,6 @@
 			FlickOnAtom(U,'icons/effects/effects.dmi',"smash",5)
 		var/list/new_hits = HurtInTurf(ourthing, U, list(), dash_damage, RED_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, flags = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 		var/flicks = FALSE
-		playsound(user,"sound/abnormalities/thunderbird/tbird_peck.ogg", rand(30, 50), 1)
 		for(var/mob/living/L in new_hits)//damage applied to targets in range
 			if(!ourthing.faction_check_mob(L))
 				L.visible_message(span_boldwarning("[ourthing] slices through [L]!"), span_userdanger("[ourthing] rushes past you, searing you with its blades!"))

@@ -47,8 +47,8 @@ GLOBAL_LIST_INIT(hardsupport, list(
 	/mob/living/simple_animal/hostile/rcorp_abno/hard/sphinx,
 	/mob/living/simple_animal/hostile/rcorp_abno/hard/ebony_queen,
 	/mob/living/simple_animal/hostile/rcorp_abno/hard/thunder_bird,
-	/mob/living/simple_animal/hostile/abnormality/despair_knight,
-	/mob/living/simple_animal/hostile/abnormality/yin,
+	/mob/living/simple_animal/hostile/rcorp_abno/hard/despair_knight,
+	/mob/living/simple_animal/hostile/rcorp_abno/hard/yin,
 	/mob/living/simple_animal/hostile/abnormality/pygmalion,
 	/mob/living/simple_animal/hostile/abnormality/big_bird,
 ))
