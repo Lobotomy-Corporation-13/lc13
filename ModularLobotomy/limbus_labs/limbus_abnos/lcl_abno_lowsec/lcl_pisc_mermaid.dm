@@ -30,10 +30,8 @@
 	insight_cooldown_time = 2 MINUTES
 	liked_objects_list = list(/obj/effect/decal/cleanable/food/salt)
 	liked_objects_value = 10
-	ego_list = list(
-		/datum/ego_datum/weapon/unrequited,
-		/datum/ego_datum/armor/lce/unrequited,
-	)
+	attunement_family = "unrequited"
+	ego_list = list(/datum/ego_datum/armor/lce/unrequited)
 	breach_overlay_z = 45
 	var/obj/item/clothing/head/unrequited_crown/crown
 	var/mob/living/carbon/human/love_target

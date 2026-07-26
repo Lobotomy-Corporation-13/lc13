@@ -30,10 +30,8 @@
 	liked_objects_value = 5
 
 
-	ego_list = list(
-		/datum/ego_datum/weapon/hornet,
-		/datum/ego_datum/armor/lce/hornet,
-	)
+	attunement_family = "hornet"
+	ego_list = list(/datum/ego_datum/armor/lce/hornet)
 
 /mob/living/simple_animal/hostile/limbus_abno/queen_bee/Initialize(mapload)
 	. = ..()
