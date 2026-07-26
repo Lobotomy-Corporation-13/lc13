@@ -38,12 +38,12 @@
 
 /datum/chemical_reaction/purgall
 	results = list(/datum/reagent/purgall = 3)
-	required_reagents = list(/datum/reagent/abnormality/antitoxin = 1, /datum/reagent/ionovium = 1,
+	required_reagents = list(/datum/reagent/antitoxin = 1, /datum/reagent/ionovium = 1,
 		/datum/reagent/hydrene = 1)
 
 /datum/chemical_reaction/lc13_synthflesh
 	results = list(/datum/reagent/medicine/c2/synthflesh = 3)
-	required_reagents = list(/datum/reagent/abnormality/antitoxin = 1, /datum/reagent/abnormality/healing_gel = 1,
+	required_reagents = list(/datum/reagent/antitoxin = 1, /datum/reagent/abnormality/healing_gel = 1,
 		/datum/reagent/abnormality/burn_salve = 1)
 
 
