@@ -66,6 +66,7 @@
 	var/pulse_cooldown_time = 12 SECONDS
 	var/pulse_damage = 100 // Scales with distance; Ideally, you shouldn't be able to outheal it with white V armor or less.
 	//Ramps up as time goes on.
+	var/pulse_cap = 200 // Scales with distance; Ideally, you shouldn't be able to outheal it with white V armor or less.
 
 	var/datum/looping_sound/bluestar/soundloop
 
@@ -140,7 +141,8 @@
 	animate(src, transform = init_transform, time = 5)
 
 	//Pulse damage increases as time goes on.
-	pulse_damage += 10
+	if(pulse_damage <= pulse_cap)
+		pulse_damage += 10
 
 /mob/living/simple_animal/hostile/abnormality/bluestar/AttemptWork(mob/living/carbon/human/user, work_type)
 	if(get_attribute_level(user, TEMPERANCE_ATTRIBUTE) < 80)

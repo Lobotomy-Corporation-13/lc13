@@ -343,6 +343,7 @@
 		"When the work result was Bad, the employee was forcibly drained of a moderate amount of blood.",
 		"When repression work was succesfully performed, the level of thirst increased but blood was not drawn.",
 		"If the same employee was drained of blood 3 times in a row, they were forcibly drained of a lethal amount of blood.",
+		"Feeding a bloodpack to Nosferatu seems to \"wash away\" the taste of the previous employee, restarting the counter for a lethal draining of blood.",
 		"When given far too much blood, the abnormality breached containment in a frenzy.",
 		"While Nosferatu is escaping, it will show sensitive reactions to blood. Suppression becomes difficult if blood is readily accessible to this abnormality.")
 	abno_breach_damage_type = "Red/Black"
@@ -617,7 +618,7 @@
 		"Attachment" = "Very Low",
 		"Repression" = "Low | Low | Low | Common | Common"
 	)
-	
+
 //400 Roses
 /obj/item/paper/fluff/info/waw/four_hundred_roses
 	abno_type = /mob/living/simple_animal/hostile/abnormality/roses_waw

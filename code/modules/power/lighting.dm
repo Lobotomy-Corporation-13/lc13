@@ -253,6 +253,9 @@
 	var/bulb_emergency_pow_mul = 0.75	// the multiplier for determining the light's power in emergency mode
 	var/bulb_emergency_pow_min = 0.5	// the minimum value for the light's power in emergency mode
 
+	/// If TRUE, lights have a chance to break in LateInitialize. Higher chance for bulbs than tubes.
+	var/can_break_on_init = TRUE
+
 /obj/machinery/light/broken
 	status = LIGHT_BROKEN
 	icon_state = "tube-broken"
@@ -361,13 +364,14 @@
 /obj/machinery/light/LateInitialize()
 	. = ..()
 	switch(fitting)
+		// LC13 Note: Commented out lateinit setting brightness so mappers can customize it
 		if("tube")
-			brightness = 8
-			if(prob(2))
+			//brightness = 8
+			if(can_break_on_init && prob(2))
 				break_light_tube(1)
 		if("bulb")
-			brightness = 4
-			if(prob(5))
+			//brightness = 4
+			if(can_break_on_init && prob(5))
 				break_light_tube(1)
 	addtimer(CALLBACK(src, PROC_REF(update), 0), 1)
 

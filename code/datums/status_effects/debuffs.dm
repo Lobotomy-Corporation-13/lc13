@@ -1230,8 +1230,8 @@
 
 	//Deletes itself after 2 tick if no new burn stack was given
 	if(safety)
-		if(new_stack)
-			stacks = round(stacks/2)
+		if(new_stack || (undecaying_stacks > 0)) // If you put any amount of undecaying stacks on, it will keep burning until they're gone - only the regular stacks will decay.
+			stacks = round((stacks - undecaying_stacks)/2 + undecaying_stacks)
 			new_stack = FALSE
 			Update_Burn_Overlay(owner)
 		else
@@ -1265,11 +1265,13 @@
 	..()
 
 //Mob Proc
-/mob/living/proc/apply_lc_burn(stacks)
+/mob/living/proc/apply_lc_burn(stacks, undecaying_stacks)
 	var/datum/status_effect/stacking/lc_burn/B = src.has_status_effect(/datum/status_effect/stacking/lc_burn)
 	if(!B)
-		src.apply_status_effect(/datum/status_effect/stacking/lc_burn, stacks)
+		B = src.apply_status_effect(/datum/status_effect/stacking/lc_burn, stacks)
+		B.add_undecaying_stacks(undecaying_stacks)
 	else
+		B.add_undecaying_stacks(undecaying_stacks)
 		B.add_stacks(stacks)
 
 /* Vengeance Mark - Stacking debuff applied by Middle weapons
@@ -1344,19 +1346,21 @@
 
 	//Deletes itself after 2 tick if no new burn stack was given
 	if(safety)
-		if(new_stack)
-			stacks = round(stacks/2)
+		if(new_stack || (undecaying_stacks > 0))
+			stacks = round((stacks - undecaying_stacks)/2 + undecaying_stacks) // If you put any amount of undecaying stacks on, it will keep burning until they're gone - only the regular stacks will decay.
 			new_stack = FALSE
 			update_stacking_number()
 		else
 			qdel(src)
 
 //Mob Proc
-/mob/living/proc/apply_lc_overheat(stacks)
+/mob/living/proc/apply_lc_overheat(stacks, undecaying_stacks)
 	var/datum/status_effect/stacking/lc_overheat/B = src.has_status_effect(/datum/status_effect/stacking/lc_overheat)
 	if(!B)
-		src.apply_status_effect(/datum/status_effect/stacking/lc_overheat, stacks)
+		B = src.apply_status_effect(/datum/status_effect/stacking/lc_overheat, stacks)
+		B.add_undecaying_stacks(undecaying_stacks)
 	else
+		B.add_undecaying_stacks(undecaying_stacks)
 		B.add_stacks(stacks)
 
 #define STATUS_EFFECT_LCBLEED /datum/status_effect/stacking/lc_bleed // Deals true damage every 5 sec, can't be applied to godmode (contained abos)
@@ -1408,7 +1412,7 @@
 	for(var/mob/living/L in view(5, owner))
 		SEND_SIGNAL(L, COMSIG_STATUS_BLEED_DAMAGE, owner, stacks)
 	new /obj/effect/temp_visual/damage_effect/bleed(get_turf(owner))
-	stacks = round(stacks/2)
+	stacks = round((stacks - undecaying_stacks)/2 + undecaying_stacks)
 	new_stack = TRUE
 	update_stacking_number()
 	if(stacks == 0)
@@ -1429,17 +1433,19 @@
 // The Stack Decaying
 /datum/status_effect/stacking/lc_bleed/tick()
 	if(safety)
-		if(new_stack)
+		if(new_stack || (undecaying_stacks > 0))
 			new_stack = FALSE
 		else
 			qdel(src)
 
 //Mob Proc
-/mob/living/proc/apply_lc_bleed(stacks)
+/mob/living/proc/apply_lc_bleed(stacks, undecaying_stacks)
 	var/datum/status_effect/stacking/lc_bleed/B = src.has_status_effect(/datum/status_effect/stacking/lc_bleed)
 	if(!B)
-		src.apply_status_effect(/datum/status_effect/stacking/lc_bleed, stacks)
+		B = src.apply_status_effect(/datum/status_effect/stacking/lc_bleed, stacks)
+		B.add_undecaying_stacks(undecaying_stacks)
 	else
+		B.add_undecaying_stacks(undecaying_stacks)
 		B.add_stacks(stacks)
 
 /mob/living/proc/apply_vengeance_mark(stacks)
@@ -1494,8 +1500,8 @@
 /datum/status_effect/stacking/lc_mental_decay/proc/statues_decay(passive_decay = TRUE)
 	if(passive_decay)
 		if(safety)
-			if(new_stack)
-				stacks = round(stacks/2)
+			if(new_stack || (undecaying_stacks > 0))
+				stacks = round((stacks - undecaying_stacks)/2 + undecaying_stacks)
 				new_stack = FALSE
 			else
 				qdel(src)
@@ -1504,12 +1510,14 @@
 
 //Mob Proc
 //TODO: Make it so when you inflict Metal Decay someone with 40+ stacks, you inflict Metal Detonation and when Metal is applied to someone with max stacks, cause a Shatter if they have Metal Detonation.
-/mob/living/proc/apply_lc_mental_decay(stacks)
+/mob/living/proc/apply_lc_mental_decay(stacks, undecaying_stacks)
 	new /obj/effect/temp_visual/damage_effect/mental_decay(get_turf(src))
 	var/datum/status_effect/stacking/lc_mental_decay/B = src.has_status_effect(/datum/status_effect/stacking/lc_mental_decay)
 	if(!B)
-		src.apply_status_effect(/datum/status_effect/stacking/lc_mental_decay, stacks)
+		B = src.apply_status_effect(/datum/status_effect/stacking/lc_mental_decay, stacks)
+		B.add_undecaying_stacks(undecaying_stacks)
 	else
+		B.add_undecaying_stacks(undecaying_stacks)
 		B.add_stacks(stacks)
 		if(B.stacks >= 40)
 			src.apply_status_effect(/datum/status_effect/mental_detonate)
@@ -1611,6 +1619,11 @@
 
 /datum/status_effect/stacking/lc_tremor/can_have_status()
 	return (owner.stat != DEAD || !(owner.status_flags & GODMODE))
+
+// NOTE: As of 2026/04/30 I'm trying to implement 'undecaying_stacks', but working them into tremor is hard without significantly altering how it works already
+// My first thought was to prevent the qdel if you have any, and set the stack amount to that; but then new_stack remains FALSE and any tremor added afterwards will reset faster...
+// If we set new_stack to TRUE there then it becomes possible to stack a biblical amount of tremor really easily?
+// Let's talk about it in the code review, I guess. No changes for now
 
 // The Stack Decaying
 /datum/status_effect/stacking/lc_tremor/tick()
@@ -1833,11 +1846,13 @@
 	icon_state = "fragile"
 
 //Mob Proc
-/mob/living/proc/apply_lc_defense_level_down(stacks)
+/mob/living/proc/apply_lc_defense_level_down(stacks, undecaying_stacks)
 	var/datum/status_effect/stacking/defense_level_up/defense_level_down/F = src.has_status_effect(/datum/status_effect/stacking/defense_level_up/defense_level_down)
 	if(!F)
-		src.apply_status_effect(/datum/status_effect/stacking/defense_level_up/defense_level_down, stacks)
+		F = src.apply_status_effect(/datum/status_effect/stacking/defense_level_up/defense_level_down, stacks)
+		F.add_undecaying_stacks(undecaying_stacks)
 		return
+	F.add_undecaying_stacks(undecaying_stacks)
 	F.add_stacks(stacks)
 
 //Global Damage Down
@@ -1971,11 +1986,13 @@
 	icon_state = "feeble"
 
 //Mob Proc
-/mob/living/proc/apply_lc_offense_level_down(stacks)
+/mob/living/proc/apply_lc_offense_level_down(stacks, undecaying_stacks)
 	var/datum/status_effect/stacking/offense_level_up/offense_level_down/F = src.has_status_effect(/datum/status_effect/stacking/offense_level_up/offense_level_down)
 	if(!F)
-		src.apply_status_effect(/datum/status_effect/stacking/offense_level_up/offense_level_down, stacks)
+		F = src.apply_status_effect(/datum/status_effect/stacking/offense_level_up/offense_level_down, stacks)
+		F.add_undecaying_stacks(undecaying_stacks)
 		return
+	F.add_undecaying_stacks(undecaying_stacks)
 	F.add_stacks(stacks)
 
 //Sinking - Delayed WHITE/PALE damage trigger
@@ -2035,7 +2052,10 @@
 		qdel(src)
 		return
 	if(!had_activity)
-		qdel(src)
+		if(undecaying_stacks > 0)
+			stacks = undecaying_stacks
+		else
+			qdel(src)
 		return
 	had_activity = FALSE
 
@@ -2085,7 +2105,7 @@
 	triggering = FALSE
 
 	// Halve stacks
-	stacks = max(0, round(stacks / 2))
+	stacks = max(0, round((stacks - undecaying_stacks) / 2 + undecaying_stacks))
 	if(stacks <= 0)
 		qdel(src)
 		return
@@ -2093,11 +2113,13 @@
 	linked_alert.desc = initial(linked_alert.desc) + "[stacks]"
 
 //Mob Proc
-/mob/living/proc/apply_lc_sinking(stacks)
+/mob/living/proc/apply_lc_sinking(stacks, undecaying_stacks)
 	var/datum/status_effect/stacking/sinking/S = src.has_status_effect(/datum/status_effect/stacking/sinking)
 	if(!S)
-		src.apply_status_effect(/datum/status_effect/stacking/sinking, stacks)
+		S = src.apply_status_effect(/datum/status_effect/stacking/sinking, stacks)
+		S.add_undecaying_stacks(undecaying_stacks)
 		return
+	S.add_undecaying_stacks(undecaying_stacks)
 	S.add_stacks(stacks)
 
 //Rupture - Delayed RED/BLACK damage trigger
@@ -2157,7 +2179,10 @@
 		qdel(src)
 		return
 	if(!had_activity)
-		qdel(src)
+		if(undecaying_stacks > 0)
+			stacks = undecaying_stacks
+		else
+			qdel(src)
 		return
 	had_activity = FALSE
 
@@ -2205,7 +2230,7 @@
 	triggering = FALSE
 
 	// Halve stacks
-	stacks = max(0, round(stacks / 2))
+	stacks = max(0, round((stacks - undecaying_stacks) / 2 + undecaying_stacks))
 	if(stacks <= 0)
 		qdel(src)
 		return
@@ -2213,9 +2238,11 @@
 	linked_alert.desc = initial(linked_alert.desc) + "[stacks]"
 
 //Mob Proc
-/mob/living/proc/apply_lc_rupture(stacks)
+/mob/living/proc/apply_lc_rupture(stacks, undecaying_stacks)
 	var/datum/status_effect/stacking/rupture/R = src.has_status_effect(/datum/status_effect/stacking/rupture)
 	if(!R)
-		src.apply_status_effect(/datum/status_effect/stacking/rupture, stacks)
+		R = src.apply_status_effect(/datum/status_effect/stacking/rupture, stacks)
+		R.add_undecaying_stacks(undecaying_stacks)
 		return
+	R.add_undecaying_stacks(undecaying_stacks)
 	R.add_stacks(stacks)
