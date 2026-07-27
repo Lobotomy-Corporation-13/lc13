@@ -137,6 +137,7 @@
 	// Claw kills you for tax evasion or something. There's no immersion-friendly way to do this unless you want me to script, like, a train ride coming for you and taking you elsewhere?
 	if(chosen_asso == "uh_oh")
 		if(!already_used)
+			// Do the visual
 			var/turf/origin = get_turf(probably_a_fixer)
 			var/list/all_turfs = origin.reachableAdjacentTurfs()
 			for(var/turf/T in all_turfs)
@@ -145,9 +146,29 @@
 				new /obj/effect/temp_visual/dir_setting/claw_appears(T)
 				break
 			new /obj/effect/temp_visual/justitia_effect(origin)
+
+			// Remove this goofball from the datacore, so they don't clog up the crew manifest and whatnot.
+			var/datum/data/record/genrecord = find_record("fingerprint", md5(probably_a_fixer.dna.uni_identity), GLOB.data_core.general) // Why fingerprint? In the extremely rare case two people share a name. Theoretically their fingerprint can also be duped but let's get real
+			var/record_id
+			if(genrecord && genrecord.fields["rank"] == "Roaming Association Fixer") // let's just make sure
+				record_id = genrecord.fields["id"] // The same person's records will share an ID across the different datacore lists! We can use it to find the other 2 records reliably.
+				qdel(genrecord)
+			// If we got a record_id that means we successfully found and deleted a general record, do the same for sec and medical.
+			if(record_id)
+				var/datum/data/record/secrecord = find_record("id", record_id, GLOB.data_core.security)
+				var/datum/data/record/medrecord = find_record("id", record_id, GLOB.data_core.medical)
+				if(secrecord)
+					qdel(secrecord)
+				if(medrecord)
+					qdel(medrecord)
+
+			// Open up a job slot
 			roamer_job_reference.current_positions -= 1
+
+			// GOODBYE
 			qdel(probably_a_fixer)
 			qdel(src)
+
 		return FALSE
 
 	var/armor
@@ -268,6 +289,11 @@
 
 		if(found_id && found_pda)
 			break
+
+	// Update their crew manifest entry too
+	var/datum/data/record/our_persons_record = find_record("fingerprint", md5(probably_a_fixer.dna.uni_identity), GLOB.data_core.general)
+	if(our_persons_record && our_persons_record.fields["rank"] == "Roaming Association Fixer") // let's just make sure
+		our_persons_record.fields["rank"] = what_did_they_choose
 
 	to_chat(probably_a_fixer, span_nicegreen("Delivered equipment corresponding to a [what_did_they_choose]. Make us proud."))
 	playsound(src, 'sound/machines/terminal_success.ogg', 50, FALSE)
