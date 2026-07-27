@@ -49,7 +49,6 @@
 		speak_list = pick(heard_words)
 		speak_list = heard_words[speak_list]
 		say(pick(speak_list))
-	return
 	if(.)
 		if(LAZYLEN(heard_words) && prob(utterance))
 			var/mob/living/carbon/human/speaker = pick(heard_words)
