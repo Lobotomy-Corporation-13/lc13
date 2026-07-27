@@ -36,7 +36,6 @@
 /mob/living/simple_animal/hostile/rcorp_abno/easy/redblooded/Initialize()
 	. = ..()
 	icon_state = "american_aggro"
-	say(pick(breach_quotes))
 
 /mob/living/simple_animal/hostile/rcorp_abno/easy/redblooded/proc/Reload()
 	playsound(src, 'sound/weapons/gun/general/bolt_rack.ogg', 25, TRUE)
@@ -70,6 +69,7 @@
 			return FALSE
 		else
 			ammo -= 1
+			say(pick(breach_quotes))
 			return ..()
 	else
 		return FALSE
