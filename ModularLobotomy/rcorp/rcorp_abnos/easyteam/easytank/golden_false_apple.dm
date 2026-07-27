@@ -231,7 +231,7 @@
 				var/mob/living/hit = attacked_target
 				if((hit.stat == DEAD) ||!ishuman(hit))//if the target is dead or not human
 					return ..()
-				if(istype(hit, /mob/living/carbon/human/species/pinocchio)) //Will have to change to rca pino later
+				if(istype(hit, /mob/living/carbon/human/species/rca_pinocchio)) //Will have to change to rca pino later
 					return ..()
 				pulse_count += 1
 			if(ismecha(attacked_target))

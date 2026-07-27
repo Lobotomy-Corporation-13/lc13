@@ -62,6 +62,7 @@
 	soundloop.start()
 
 /mob/living/simple_animal/hostile/rcorp_abno/hard/clouded_monk/Destroy()
+	soundloop.stop()
 	QDEL_NULL(soundloop)
 	return ..()
 

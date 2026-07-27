@@ -269,12 +269,11 @@
 			buddy_hit = TRUE //sometimes buddy get hit twice so we check if it got hit in this slash
 			awakened_buddy.adjustHealth(700) //it would take approximatively 9 slashes to take buddy down
 			break
-	//Will be done when Im done making red hood
-	/*	if(istype(L, /mob/living/simple_animal/hostile/rcorp_abno/hard/red_hood))
+		if(istype(L, /mob/living/simple_animal/hostile/rcorp_abno/hard/red_hood))
 			if(!red_hit)
 				red_hit = TRUE
 				var/mob/living/simple_animal/hostile/rcorp_abno/hard/red_hood/current_red = L
-				current_red.WatchIt() */
+				current_red.WatchIt()
 			all_turfs -= T
 			continue // Red doesn't get hit.
 		L.deal_damage(slash_damage, BLACK_DAMAGE, src, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))

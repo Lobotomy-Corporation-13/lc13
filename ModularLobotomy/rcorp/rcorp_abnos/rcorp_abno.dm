@@ -32,6 +32,7 @@
 	var/chosen_attack = 1
 	var/small_sprite_type = /datum/action/small_sprite/abnormality //Tiny guy if your abno sprite is too large to click through, you can change it if you want but whose going to sprite extras amirite
 	var/core_icon = ""
+	var/core = TRUE
 
 	// rcorp stuff
 	var/rcorp_team
@@ -124,8 +125,9 @@
 	return threat_level
 
 /mob/living/simple_animal/hostile/rcorp_abno/Destroy()
-	CreateAbnoCore(name, core_icon)
-	. = ..()
+	if(core)
+		CreateAbnoCore(name, core_icon)
+		. = ..()
 
 /mob/living/simple_animal/hostile/rcorp_abno/proc/CreateAbnoCore()//this is called by abnormalities on Destroy()
 	var/obj/structure/abno_core/C = new(get_turf(src))

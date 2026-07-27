@@ -2,7 +2,7 @@ GLOBAL_LIST_INIT(easycombat, list(
 	/mob/living/simple_animal/hostile/rcorp_abno/easy/blue_shepherd,
 	/mob/living/simple_animal/hostile/rcorp_abno/easy/helper,
 	/mob/living/simple_animal/hostile/rcorp_abno/easy/smile,
-	/mob/living/simple_animal/hostile/abnormality/pinocchio, //Will be done last because carbon
+	/mob/living/simple_animal/hostile/rcorp_abno/easy/pinocchio,
 	/mob/living/simple_animal/hostile/rcorp_abno/easy/fragment,
 	/mob/living/simple_animal/hostile/rcorp_abno/easy/fairy_gentleman,
 	/mob/living/simple_animal/hostile/rcorp_abno/easy/drifting_fox,
@@ -12,7 +12,7 @@ GLOBAL_LIST_INIT(easycombat, list(
 ))
 
 GLOBAL_LIST_INIT(easysupport, list(
-	/mob/living/simple_animal/hostile/abnormality/funeral, //Waiting for rework
+	/mob/living/simple_animal/hostile/rcorp_abno/easy/funeral,
 	/mob/living/simple_animal/hostile/rcorp_abno/easy/pisc_mermaid,
 	/mob/living/simple_animal/hostile/rcorp_abno/easy/redblooded,
 	/mob/living/simple_animal/hostile/rcorp_abno/easy/wayward,
@@ -38,9 +38,9 @@ GLOBAL_LIST_INIT(hardcombat, list(
 	/mob/living/simple_animal/hostile/rcorp_abno/hard/clouded_monk,
 	/mob/living/simple_animal/hostile/rcorp_abno/hard/clown,
 	/mob/living/simple_animal/hostile/rcorp_abno/hard/nosferatu,
-	/mob/living/simple_animal/hostile/abnormality/big_wolf, //Waiting for rework
+	/mob/living/simple_animal/hostile/rcorp_abno/hard/big_wolf,
 	/mob/living/simple_animal/hostile/rcorp_abno/hard/luna,
-	/mob/living/simple_animal/hostile/abnormality/red_hood,//Waiting for rework
+	/mob/living/simple_animal/hostile/rcorp_abno/hard/red_hood,
 ))
 
 GLOBAL_LIST_INIT(hardsupport, list(
@@ -64,11 +64,11 @@ GLOBAL_LIST_INIT(hardtank, list(
 ))
 
 GLOBAL_LIST_INIT(rhinobuster, list(,
-	/mob/living/simple_animal/hostile/abnormality/dimensional_refraction,
-	/mob/living/simple_animal/hostile/abnormality/rudolta,
-	/mob/living/simple_animal/hostile/abnormality/judgement_bird,
-	/mob/living/simple_animal/hostile/abnormality/alriune,
-	/mob/living/simple_animal/hostile/abnormality/fire_bird,
+	/mob/living/simple_animal/hostile/rcorp_abno/hard/dimensional_refraction,
+	/mob/living/simple_animal/hostile/rcorp_abno/hard/rudolta,
+	/mob/living/simple_animal/hostile/rcorp_abno/hard/judgement_bird,
+	/mob/living/simple_animal/hostile/rcorp_abno/hard/alriune,
+	/mob/living/simple_animal/hostile/rcorp_abno/hard/fire_bird,
 ))
 
 //Used for the specific raidboss mode

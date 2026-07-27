@@ -43,6 +43,7 @@
 	soundloop.start()	//Let the people know.
 
 /mob/living/simple_animal/hostile/rcorp_abno/hard/luna/Destroy()
+	soundloop.start()	//Dont let the people know
 	QDEL_NULL(soundloop)
 	return ..()
 

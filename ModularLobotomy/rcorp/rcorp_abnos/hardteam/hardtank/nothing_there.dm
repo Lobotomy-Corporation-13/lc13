@@ -38,6 +38,7 @@
 	soundloop.start()
 
 /mob/living/simple_animal/hostile/rcorp_abno/hard/nothing_there/Destroy()
+	soundloop.stop()
 	QDEL_NULL(soundloop)
 	return ..()
 
