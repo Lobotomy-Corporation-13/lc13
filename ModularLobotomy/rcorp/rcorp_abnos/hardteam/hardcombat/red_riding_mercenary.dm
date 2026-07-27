@@ -281,12 +281,11 @@
 
 /mob/living/simple_animal/hostile/rcorp_abno/hard/red_hood/proc/SpecialReset()
 	special_attacking = FALSE
-	icon = initial(icon)
-	icon_state = initial(icon_state)
-	icon_living = initial(icon_living)
-	pixel_x = initial(pixel_x)
-	base_pixel_x = initial(base_pixel_x)
-	return
+	icon = 'ModularLobotomy/_Lobotomyicons/48x64.dmi'
+	icon_state = "red_hood"
+	icon_living = "red_hood"
+	pixel_x = -8
+	base_pixel_x = -8
 
 /mob/living/simple_animal/hostile/rcorp_abno/hard/red_hood/Move()
 	if(special_attacking)
