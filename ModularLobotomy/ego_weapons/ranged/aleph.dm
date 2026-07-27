@@ -941,3 +941,18 @@
 							JUSTICE_ATTRIBUTE = 80
 							)
 
+/obj/item/ego_weapon/dreaming
+	name = "dreaming"
+	desc = "Placeholder"
+	icon_state = "Dreaming"
+	inhand_icon_state = "Dreaming"
+	force = 48
+	damtype = WHITE_DAMAGE
+	projectile_path = /obj/projectile/ego_bullet/ego_ecstasy
+	weapon_weight = WEAPON_MEDIUM
+	spread = 40
+	fire_sound = 'sounds/weapons/ego/esctasy.ogg'
+	autofire = 0.08 SECONDS
+	shotsleft = 60
+	reload_time = 1.4 SECONDS
+
