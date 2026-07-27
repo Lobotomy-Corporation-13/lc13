@@ -27,6 +27,8 @@
 	..()
 	//Toss meatbags aside
 	for(var/mob/living/carbon/human/H in range(1, src))
+		if(src.faction_check_mob(H))
+			continue
 		if(H.stat >= SOFT_CRIT)
 			continue
 		visible_message("[src] tosses [H] out of the way!")
