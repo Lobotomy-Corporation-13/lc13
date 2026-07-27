@@ -941,7 +941,7 @@
 							JUSTICE_ATTRIBUTE = 80
 							)
 
-/obj/item/ego_weapon/dreaming
+/obj/item/ego_weapon/ranged/dreaming
 	name = "dreaming"
 	desc = "Placeholder"
 	icon_state = "Dreaming"
