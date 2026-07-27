@@ -945,14 +945,19 @@
 	name = "dreaming"
 	desc = "Placeholder"
 	icon_state = "Dreaming"
+	icon = 'icons/obj/ego_weapons.dmi'
+	lefthand_file = 'icons/mob/inhands/64x64_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/64x64_righthand.dmi'
 	inhand_icon_state = "Dreaming"
-	force = 48
+	inhand_x_dimension = 64
+	inhand_y_dimension = 64
+	force = 88
 	damtype = WHITE_DAMAGE
 	projectile_path = /obj/projectile/ego_bullet/ego_ecstasy
 	weapon_weight = WEAPON_MEDIUM
 	spread = 40
-	fire_sound = 'sounds/weapons/ego/esctasy.ogg'
+	fire_sound = 'sound/weapons/ego/ecstasy.ogg'
 	autofire = 0.08 SECONDS
 	shotsleft = 60
-	reload_time = 1.4 SECONDS
+	reloadtime = 1.4 SECONDS
 
