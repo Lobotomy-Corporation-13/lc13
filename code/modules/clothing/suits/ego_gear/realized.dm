@@ -1153,4 +1153,5 @@ If you land the killing blow on that enemy, you get a buff and a heal.
 	name = "dreaming"
 	desc = "A dream to be free."
 	icon_state = "dreaming"
-	armor = list(RED_DAMAGE = 30, WHITE_DAMAGE = 80, BLACK_DAMAGE = 60, PALE_DAMAGE = 70)
+	armor = list(RED_DAMAGE = 40, WHITE_DAMAGE = 80, BLACK_DAMAGE = 60, PALE_DAMAGE = 70)
+

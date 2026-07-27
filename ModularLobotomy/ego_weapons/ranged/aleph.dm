@@ -971,6 +971,6 @@
 	. = ..()
 	var/obj/item/clothing/suit/armor/ego_gear/realization/dreaming/our_suit = user.get_item_by_slot(ITEM_SLOT_OCLOTHING)
 	if(istype(our_suit))
-		proj.damage = 20
+		proj.damage = 15
 	return
 
