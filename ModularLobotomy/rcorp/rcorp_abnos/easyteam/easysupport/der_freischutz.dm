@@ -1,4 +1,3 @@
-#define STATUS_EFFECT_DARKFLAME /datum/status_effect/stacking/rca_dark_flame
 //Support because hes a pure backliner reliant on his portals
 /mob/living/simple_animal/hostile/rcorp_abno/easy/der_freischutz
 	name = "Der Freischutz"
@@ -517,5 +516,3 @@
 		src.apply_status_effect(/datum/status_effect/stacking/lc_burn/rca_dark_flame, stacks)
 	else
 		B.add_stacks(stacks)
-
-#undef STATUS_EFFECT_DARKFLAME

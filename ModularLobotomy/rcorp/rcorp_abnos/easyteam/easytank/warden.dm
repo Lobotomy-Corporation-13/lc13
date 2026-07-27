@@ -1,4 +1,4 @@
-#define STATUS_EFFECT_SOULDRAIN /datum/status_effect/rca_souldrain
+#define STATUS_EFFECT_RCASOULDRAIN /datum/status_effect/rca_souldrain
 //A tank because of projectile immunity and healing
 /mob/living/simple_animal/hostile/rcorp_abno/easy/warden
 	name = "The Warden"
@@ -205,7 +205,7 @@
 	for(var/atom/movable/i in contents)
 		if(isliving(i))
 			var/mob/living/L = i
-			L.remove_status_effect(STATUS_EFFECT_SOULDRAIN)
+			L.remove_status_effect(STATUS_EFFECT_RCASOULDRAIN)
 			contained_people--
 			RevertWeakness()
 		i.forceMove(freedom)
@@ -345,7 +345,7 @@
 /mob/living/simple_animal/hostile/rcorp_abno/easy/warden/proc/ApplySouldrain(mob/living/carbon/human/victim)
 	if(!victim)
 		return
-	victim.apply_status_effect(STATUS_EFFECT_SOULDRAIN, src, soul_consume_rate)
+	victim.apply_status_effect(STATUS_EFFECT_RCASOULDRAIN, src, soul_consume_rate)
 
 /datum/status_effect/rca_souldrain
 	id = "souldrain"
