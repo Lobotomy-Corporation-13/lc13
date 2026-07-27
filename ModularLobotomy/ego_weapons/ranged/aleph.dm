@@ -955,9 +955,9 @@
 	damtype = WHITE_DAMAGE
 	projectile_path = /obj/projectile/ego_bullet/ego_ecstasy
 	weapon_weight = WEAPON_MEDIUM
-	spread = 40
+	spread = 30
 	fire_sound = 'sound/weapons/ego/ecstasy.ogg'
 	autofire = 0.08 SECONDS
-	shotsleft = 60
+	shotsleft = 70
 	reloadtime = 1.4 SECONDS
 
