@@ -958,7 +958,7 @@
 	spread = 40
 	fire_sound = 'sound/weapons/ego/ecstasy.ogg'
 	autofire = 0.08 SECONDS
-	shotsleft = 70
+	shotsleft = 80
 	reloadtime = 1.4 SECONDS
 	attribute_requirements = list(
 							FORTITUDE_ATTRIBUTE = 80,
