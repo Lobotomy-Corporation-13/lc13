@@ -74,6 +74,11 @@
 	action_icon_state = "lce_lantern"
 	target_type = /obj/item/ego_weapon/wield/eldtree
 
+/obj/effect/proc_holder/ability/ego_assimilation/dreaming
+	base_icon_state = "dreaming"
+	action_icon_state = "dreaming"
+	target_type = /obj/item/ego_weapon/ranged/dreaming
+
 /* Fragment of the Universe - One with the Universe */
 /obj/effect/proc_holder/ability/universe_song
 	name = "Song of the Universe"
