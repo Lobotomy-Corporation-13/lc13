@@ -943,21 +943,27 @@
 
 /obj/item/ego_weapon/ranged/dreaming
 	name = "dreaming"
-	desc = "Placeholder"
-	icon_state = "Dreaming"
+	desc = "A longing to see the current."
+	icon_state = "dreaming"
 	icon = 'icons/obj/ego_weapons.dmi'
 	lefthand_file = 'icons/mob/inhands/64x64_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/64x64_righthand.dmi'
-	inhand_icon_state = "Dreaming"
+	inhand_icon_state = "dreaming"
 	inhand_x_dimension = 64
 	inhand_y_dimension = 64
-	force = 88
+	force = 58
 	damtype = WHITE_DAMAGE
 	projectile_path = /obj/projectile/ego_bullet/ego_ecstasy
 	weapon_weight = WEAPON_MEDIUM
-	spread = 30
+	spread = 40
 	fire_sound = 'sound/weapons/ego/ecstasy.ogg'
 	autofire = 0.08 SECONDS
 	shotsleft = 70
 	reloadtime = 1.4 SECONDS
+	attribute_requirements = list(
+							FORTITUDE_ATTRIBUTE = 80,
+							PRUDENCE_ATTRIBUTE = 100,
+							TEMPERANCE_ATTRIBUTE = 80,
+							JUSTICE_ATTRIBUTE = 80
+							)
 

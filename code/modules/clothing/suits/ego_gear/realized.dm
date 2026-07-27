@@ -1150,7 +1150,7 @@ If you land the killing blow on that enemy, you get a buff and a heal.
 	assimilation_ability = /obj/effect/proc_holder/ability/ego_assimilation/gasharpoon
 
 /obj/item/clothing/suit/armor/ego_gear/realization/dreaming
-	name = "Dreaming"
-	desc = "Placeholder"
-	icon_state = "Dreaming"
+	name = "dreaming"
+	desc = "A dream to be free."
+	icon_state = "dreaming"
 	armor = list(RED_DAMAGE = 30, WHITE_DAMAGE = 80, BLACK_DAMAGE = 60, PALE_DAMAGE = 70)
