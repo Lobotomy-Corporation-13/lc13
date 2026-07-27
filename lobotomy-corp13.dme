@@ -4689,6 +4689,7 @@
 #include "ModularLobotomy\rcorp\rcorp_abnos\hardteam\hardsupport\yin.dm"
 #include "ModularLobotomy\rcorp\rcorp_abnos\hardteam\hardtank\censored.dm"
 #include "ModularLobotomy\rcorp\rcorp_abnos\hardteam\hardtank\eris.dm"
+#include "ModularLobotomy\rcorp\rcorp_abnos\hardteam\hardtank\generalb.dm"
 #include "ModularLobotomy\rcorp\rcorp_abnos\hardteam\hardtank\greed_king.dm"
 #include "ModularLobotomy\rcorp\rcorp_abnos\hardteam\hardtank\melting_love.dm"
 #include "ModularLobotomy\rcorp\rcorp_abnos\hardteam\hardtank\nothing_there.dm"

@@ -1,7 +1,7 @@
 //Tank because team healer, refer to _hardtank
 /mob/living/simple_animal/hostile/rcorp_abno/hard/eris
 	name = "Eris"
-	desc = "A towering, intimidating woman without a mouth."
+	desc = "A towering, intimidating woman without a mouth. She seems to heal those around herself including the abnormalities."
 	maxHealth = 1100
 	health = 1100
 	ranged = TRUE
