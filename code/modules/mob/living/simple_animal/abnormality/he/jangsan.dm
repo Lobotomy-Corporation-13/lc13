@@ -1,6 +1,5 @@
 #define JANGSAN_FEAR_COOLDOWN (8 SECONDS)
 
-//Jangsan is in the tank category due to his projectile absorption
 //Code by Coxswain, EGO sprites by Sky_ and abnormality sprites by Mel
 /mob/living/simple_animal/hostile/abnormality/jangsan
 	name = "Jangsan Tiger"
