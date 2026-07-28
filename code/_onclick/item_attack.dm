@@ -303,19 +303,10 @@
 					var/obj/item/ego_weapon/critting = I
 					critting.CritEffect(src, user)
 
-		var/damage = I.force * justice_mod * crit_bonus * (1 + (user.extra_damage / 100))
+		var/damage = I.force * justice_mod * crit_bonus
 		if(istype(I, /obj/item/ego_weapon))
 			var/obj/item/ego_weapon/theweapon = I
 			damage *= theweapon.force_multiplier
-
-		if(I.damtype == RED_DAMAGE)
-			damage *= (1 + (user.extra_damage_red / 100))
-		if(I.damtype == WHITE_DAMAGE)
-			damage *= (1 + (user.extra_damage_white / 100))
-		if(I.damtype == BLACK_DAMAGE)
-			damage *= (1 + (user.extra_damage_black / 100))
-		if(I.damtype == PALE_DAMAGE)
-			damage *= (1 + (user.extra_damage_pale / 100))
 
 		deal_damage(damage, I.damtype, source = user, flags = (DAMAGE_WHITE_HEALABLE), attack_type = (ATTACK_TYPE_MELEE))
 		if(I.damtype in list(RED_DAMAGE, BLACK_DAMAGE, PALE_DAMAGE))
