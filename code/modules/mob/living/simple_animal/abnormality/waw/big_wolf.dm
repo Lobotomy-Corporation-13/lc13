@@ -124,7 +124,6 @@
 	. = ..()
 	datum_reference.qliphoth_change(-1)
 	EatWorker(user)
-	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/big_wolf/BreachEffect(mob/living/carbon/human/user, breach_type)
 	. = ..()
@@ -179,8 +178,6 @@
 		pixel_x = initial(pixel_x)
 		base_pixel_x = initial(base_pixel_x)
 		icon_state = initial(icon_state)
-		if(length(contents))
-			icon_state = "wolf_full"
 	else
 		icon = 'ModularLobotomy/_Lobotomyicons/96x64.dmi'
 		pixel_x = -32
@@ -294,7 +291,7 @@
 	ADD_TRAIT(L, TRAIT_IMMOBILIZED, type)
 	ADD_TRAIT(L, TRAIT_HANDS_BLOCKED, type)
 	L.forceMove(src)
-	update_icon()
+	icon_state = "wolf_full"
 	return TRUE
 
 /* Spew Stomach procs when the wolf dies. Since people who ghost are essentially dead we do not drop
