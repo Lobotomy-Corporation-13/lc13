@@ -294,7 +294,7 @@
 	ADD_TRAIT(L, TRAIT_IMMOBILIZED, type)
 	ADD_TRAIT(L, TRAIT_HANDS_BLOCKED, type)
 	L.forceMove(src)
-	icon_state = "wolf_full"
+	update_icon()
 	return TRUE
 
 /* Spew Stomach procs when the wolf dies. Since people who ghost are essentially dead we do not drop
