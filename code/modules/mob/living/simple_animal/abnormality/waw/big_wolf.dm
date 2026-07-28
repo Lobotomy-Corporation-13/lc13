@@ -117,7 +117,6 @@
 /mob/living/simple_animal/hostile/abnormality/big_wolf/SuccessEffect(mob/living/carbon/human/user, work_type, pe)
 	. = ..()
 	if(work_type == ABNORMALITY_WORK_INSTINCT && user.stat != DEAD && locate(/mob/living) in contents)
-		flick("wolf_sad", src)
 		SpewStomach()
 	return ..()
 
@@ -293,6 +292,7 @@
 	ADD_TRAIT(L, TRAIT_IMMOBILIZED, type)
 	ADD_TRAIT(L, TRAIT_HANDS_BLOCKED, type)
 	L.forceMove(src)
+	icon_state = "wolf_full"
 	return TRUE
 
 /* Spew Stomach procs when the wolf dies. Since people who ghost are essentially dead we do not drop
@@ -315,6 +315,11 @@
 			REMOVE_TRAIT(L, TRAIT_IMMOBILIZED, type)
 			REMOVE_TRAIT(L, TRAIT_HANDS_BLOCKED, type)
 		i.forceMove(spew_turf)
+	if(IsContained())
+		sleep(1 SECONDS)
+		icon_state = "wolf_sad"
+		sleep(3 SECONDS)
+		update_icon_state()
 
 //Combat Skills
 // Simple dash attack that deals 50 damage to all those nearby. This is optimized for AI rather than players.
