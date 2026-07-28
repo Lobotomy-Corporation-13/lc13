@@ -179,7 +179,7 @@
 		pixel_x = initial(pixel_x)
 		base_pixel_x = initial(base_pixel_x)
 		icon_state = initial(icon_state)
-		if(Length(contents))
+		if(length(contents))
 			icon_state = "wolf_full"
 	else
 		icon = 'ModularLobotomy/_Lobotomyicons/96x64.dmi'
