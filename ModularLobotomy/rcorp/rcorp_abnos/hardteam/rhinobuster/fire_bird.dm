@@ -22,9 +22,7 @@
 		You are incapable of attacking others and instead rely on your 'Vivid Flame' and 'Feather of Honor' to do damage. <br>\
 		<br>\
 		|Vivid Flame|: All hostile humans within a 48 tile sightline of yourself will be burnt by you. \
-		This damage applies every second and is split in 12 RED damage and 6 BURN damage. \
-		This will be repeated 3 times before you cycle to another attack. \
-		Each petal will deal 20 WHITE damage to those they hit. <br>\
+		This damage applies every second inflicting 12 RED damage to those in it's range. <br>\
 		<br>\
 		|Feather of Honor|: When attacked you will attempt to dash at your target. \<br>\
 		This dash will leave a trail of fire and deal 20 damage to any hostile humans you hit. \
@@ -46,7 +44,6 @@
 	for(var/mob/living/carbon/human/L in livinginview(48, src))
 		if(!faction_check_mob(L))
 			L.deal_damage(pulse_damage, RED_DAMAGE, src, attack_type = (ATTACK_TYPE_SPECIAL))
-			L.deal_damage(pulse_damage * 0.5, FIRE, src, attack_type = (ATTACK_TYPE_SPECIAL))
 
 /mob/living/simple_animal/hostile/rcorp_abno/hard/fire_bird/proc/retaliatedash()
 	if(dash_cooldown > world.time)
