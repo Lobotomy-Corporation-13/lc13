@@ -86,73 +86,23 @@
 	. = ..()
 	playsound(get_turf(src), 'sound/abnormalities/bigbird/step.ogg', 50, 1)
 
-/mob/living/simple_animal/hostile/rcorp_abno/easy/jangsan/proc/StatCheck(mob/living/carbon/human/user)
-	weak_counter = 0 //Counts how many stats are below 61 AKA level 3
-	for(var/attribute in stats)
-		if(get_attribute_level(user, attribute)< weak_attribute)
-			weak_counter += 1
-	return
-
-/mob/living/simple_animal/hostile/rcorp_abno/easy/jangsan/funpet(mob/petter)
-	KillCheck(petter)
-
 //Combat
-/mob/living/simple_animal/hostile/rcorp_abno/easy/jangsan/CanAttack(atom/the_target)
-	if(!ishuman(the_target))
-		return ..()
-
-	var/mob/living/carbon/human/H = the_target
-	var/obj/item/bodypart/head/head = H.get_bodypart("head")
-	if(!istype(head)) // You, I'm afraid, are headless
-		return FALSE
-	return ..()
-
-/mob/living/simple_animal/hostile/rcorp_abno/easy/jangsan/AttackingTarget(atom/attacked_target)
-	if(bite_cooldown < world.time)
-		KillCheck(attacked_target)
-	icon_state = icon_aggro
-	return ..()
-
-/mob/living/simple_animal/hostile/rcorp_abno/easy/jangsan/proc/KillCheck(mob/living/target)
-	if(!ishuman(target))
-		return
-	if(target.status_flags & GODMODE)
-		return
-	var/mob/living/carbon/human/H = target
-	StatCheck(H)
-	if(weak_counter >= weakness_required)
-		var/obj/item/bodypart/head/head = H.get_bodypart("head")
-		if(QDELETED(head))
-			return
-		head.dismember()
-		QDEL_NULL(head)
-		H.regenerate_icons()
-		visible_message(span_danger("\The [src] bites [H]'s head off!"))
-		new /obj/effect/gibspawner/generic/silent(get_turf(H))
-		new /obj/effect/halo(get_turf(H))
-		playsound(get_turf(src), 'sound/abnormalities/bigbird/bite.ogg', 50, 1, 2)
-		return
-
 /mob/living/simple_animal/hostile/rcorp_abno/easy/jangsan/proc/FearStun(mob/living/carbon/human/H)
 	H.apply_status_effect(/datum/status_effect/panicked_lvl_4)
-	H.adjustSanityLoss(-50)
-	H.Stun(5 SECONDS)
+	H.adjustSanityLoss(30)
+	H.Immobilize(1 SECONDS)
 	to_chat(target, span_warning("Is that what it really looks like? It's over... I can’t even move my legs..."))
 	return
 
 /mob/living/simple_animal/hostile/rcorp_abno/easy/jangsan/proc/TryFearStun()
 	playsound(get_turf(src), 'sound/abnormalities/scaredycat/catgrunt.ogg', 50, 1, 2)
 	for(var/mob/living/carbon/human/H in view(3, src))
-		StatCheck(H)
 		if(faction_check_mob(H, FALSE))
 			continue
 		if(H.stat == DEAD)
 			continue
-		if(weak_counter >= weakness_required)
-			icon_state = "jangsan_bite"
-			FearStun(H)
-			chase_cooldown = world.time + chase_cooldown_time
-			break
+		icon_state = "jangsan_bite"
+		FearStun(H)
 
 /mob/living/simple_animal/hostile/rcorp_abno/easy/jangsan/proc/LureSpeak()
 	var/list/Players = list()
@@ -179,40 +129,6 @@
 	say(pick(speak_list) + pick(speak_list2))
 	name = true_name
 
-//targetting
-/mob/living/simple_animal/hostile/rcorp_abno/easy/jangsan/PickTarget(list/Targets) //Stolen from MOSB
-	var/list/highest_priority = list()
-	var/list/lower_priority = list()
-	for(var/mob/living/L in Targets)
-		if(!CanAttack(L))
-			continue
-		if(ishuman(L))
-			StatCheck(L)
-			if(weak_counter >= weakness_required)
-				highest_priority += L
-			else
-				lower_priority += L
-		else
-			lower_priority += L
-	if(LAZYLEN(highest_priority))
-		return pick(highest_priority)
-	if(LAZYLEN(lower_priority))
-		return pick(lower_priority)
-	return ..()
-
-/mob/living/simple_animal/hostile/rcorp_abno/easy/jangsan/MoveToTarget(list/possible_targets)
-	if(ishuman(target))
-		if(chase_cooldown > world.time)
-			return ..()
-		var/mob/living/carbon/human/H = target
-		StatCheck(H)
-		if(weak_counter >= weakness_required && get_dist(src, target) < 4) //clerk got too close time to die
-			icon_state = "jangsan_bite"
-			FearStun(target)
-			chase_cooldown = world.time + chase_cooldown_time
-			return ..()
-	icon_state = icon_aggro
-	return ..()
 
 /mob/living/simple_animal/hostile/rcorp_abno/easy/jangsan/bullet_act(obj/projectile/P)
 	if(P.damage <= bullet_threshold)

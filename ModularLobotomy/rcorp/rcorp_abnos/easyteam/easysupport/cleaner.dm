@@ -12,7 +12,7 @@
 		<b>|Special Cleaning|: When moving within 2 tile range of a mess you will clean it. \
 		When said mess is a human you will violently toss them if they are not in crit. </b>"
 
-	var/bumpdamage = 10
+	var/bumpdamage = 4
 
 /mob/living/simple_animal/hostile/rcorp_abno/easy/cleaner/Initialize()
 	. = ..()
@@ -25,23 +25,6 @@
 
 /mob/living/simple_animal/hostile/rcorp_abno/easy/cleaner/Move()
 	..()
-	//Toss meatbags aside
-	for(var/mob/living/carbon/human/H in range(1, src))
-		if(src.faction_check_mob(H))
-			continue
-		if(H.stat >= SOFT_CRIT)
-			continue
-		visible_message("[src] tosses [H] out of the way!")
-		H.deal_damage(bumpdamage, RED_DAMAGE, src)
-
-		var/rand_dir = pick(NORTH, SOUTH, EAST, WEST)
-		var/atom/throw_target = get_edge_target_turf(H, rand_dir)
-		if(!H.anchored)
-			H.throw_at(throw_target, rand(6, 10), 18, H)
-
-		if(H.stat == DEAD)
-			H.gib(FALSE, FALSE, FALSE)
-
 	//destroy the unclean
 	for(var/turf/tile in view(src, 2))
 		tile.wash(CLEAN_SCRUB)
@@ -59,3 +42,4 @@
 					cleaned_human.regenerate_icons()
 					to_chat(cleaned_human, span_danger("[src] flawlessly cleans you of your features!"))
 					ADD_TRAIT(cleaned_human, TRAIT_DISFIGURED, TRAIT_GENERIC) //cleans your face of uneeded features
+		new /obj/effect/turf_suds(tile)
