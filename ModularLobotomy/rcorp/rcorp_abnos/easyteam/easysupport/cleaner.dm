@@ -42,4 +42,5 @@
 					cleaned_human.regenerate_icons()
 					to_chat(cleaned_human, span_danger("[src] flawlessly cleans you of your features!"))
 					ADD_TRAIT(cleaned_human, TRAIT_DISFIGURED, TRAIT_GENERIC) //cleans your face of uneeded features
+
 		new /obj/effect/turf_suds(tile)
