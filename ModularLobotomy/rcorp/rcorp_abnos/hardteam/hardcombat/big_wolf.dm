@@ -18,7 +18,7 @@
 	melee_damage_type = RED_DAMAGE
 	melee_damage_lower = 20
 	melee_damage_upper = 40
-	original_abno = /mob/living/simple_animal/hostile/rcorp_abno/hard/big_wolf
+	original_abno = /mob/living/simple_animal/hostile/abnormality/big_wolf
 
 	//For when the wolf becomes incorporal and flees.
 	var/last_reached_health = 75
@@ -124,6 +124,12 @@
 
 /mob/living/simple_animal/hostile/rcorp_abno/hard/big_wolf/Life()
 	. = ..()
+	if(fleeing_now != TRUE && hp_check_cooldown <= world.time)
+		var/our_hp = WOLF_HP_PERCENT
+		if(our_hp <= last_reached_health)
+			FleeNow()
+			last_reached_health = last_reached_health - 25
+		hp_check_cooldown = world.time + (10 SECONDS)
 	if(!client && can_act && howl_cooldown <= world.time && fleeing_now != TRUE)
 		Howl()
 
