@@ -142,6 +142,7 @@
 		new /obj/item/ego_weapon/eyeball(get_turf(user)) // We can only ever spawn one eye scooper
 		scooped = TRUE
 
+
 	var/fortitude = get_attribute_level(user, FORTITUDE_ATTRIBUTE)
 	var/prudence = get_attribute_level(user, PRUDENCE_ATTRIBUTE)
 	var/temperance = get_attribute_level(user, TEMPERANCE_ATTRIBUTE)
@@ -169,6 +170,8 @@
 		return
 
 	user.adjustBruteLoss(-((user.maxHealth - fortitude) * 0.25)) // If you didn't die instantly, heal up some.
+	user.client?.give_award(/datum/award/achievement/abno/bottle_spoon, user)
+
 
 /mob/living/simple_animal/hostile/abnormality/bottle/proc/DecayProtagonistBuff(mob/living/carbon/human/buffed, given_justice = 0)
 	// Goes faster when the buff is higher, so you don't have an overwhelming buff for an overwhelming length of time.
@@ -209,7 +212,7 @@
 		M.apply_status_effect(STATUS_EFFECT_TEARS_LESS)
 	else
 		to_chat(M, span_notice("You decide against drinking from the bottle..."))
-		M.deal_damage(speak_damage, WHITE_DAMAGE)
+		M.deal_damage(speak_damage, WHITE_DAMAGE, flags = (DAMAGE_FORCED))
 	eating = FALSE
 
 /mob/living/simple_animal/hostile/abnormality/bottle/ListTargets()
@@ -248,7 +251,7 @@
 				continue
 			if(faction_check_mob(L, FALSE))
 				continue
-			L.deal_damage(speak_damage, BLACK_DAMAGE)
+			L.deal_damage(speak_damage, BLACK_DAMAGE, src, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_SPECIAL))
 		adjustBruteLoss(-speak_damage) // It falls further into desperation
 		if(speak_damage < 40)
 			speak_damage += 4

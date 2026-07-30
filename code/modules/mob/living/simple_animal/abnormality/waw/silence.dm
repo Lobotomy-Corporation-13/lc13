@@ -34,10 +34,10 @@
 
 	var/meltdown_cooldown_time = 13 MINUTES
 	var/meltdown_cooldown
-	var/worldwide_damage = 70	//If you're unarmored, it obliterates you
 	var/safe = FALSE //work on it and you're safe for 13 minutes
 	var/reset_time = 3 MINUTES //Don't hit everyone with the global pale if it was hit in a small period of time
 	var/datum/looping_sound/silence/soundloop // Tick-tock, tick-tock
+	var/list/time_stopped = list()
 
 /mob/living/simple_animal/hostile/abnormality/silence/Initialize()
 	. = ..()
@@ -74,16 +74,58 @@
 //Meltdown
 /mob/living/simple_animal/hostile/abnormality/silence/ZeroQliphoth(mob/living/carbon/human/user)
 	// You have mere seconds to live
-	SLEEP_CHECK_DEATH(5 SECONDS)
 	sound_to_playing_players_on_level('sound/abnormalities/silence/price.ogg', 50, zlevel = z)
 	for(var/mob/living/carbon/human/H in GLOB.player_list)
 		if(faction_check_mob(H, FALSE) || H.z != z || H.stat == DEAD)
 			continue
-
-		new /obj/effect/temp_visual/thirteen(get_turf(H))	//A visual effect if it hits
-		H.deal_damage(worldwide_damage, PALE_DAMAGE)
+		PriceOfSilenceAttack(H)
 	addtimer(CALLBACK(src, PROC_REF(Reset)), reset_time)
 	return
 
 /mob/living/simple_animal/hostile/abnormality/silence/proc/Reset()
 	datum_reference.qliphoth_change(1)
+
+
+
+/mob/living/simple_animal/hostile/abnormality/silence/proc/PriceOfSilenceAttack(mob/living/target)
+	set waitfor = FALSE
+	if(!target)
+		return
+	target.add_overlay(icon('icons/effects/effects.dmi', "chronofield"))
+	addtimer(CALLBACK(target, TYPE_PROC_REF(/atom, cut_overlay), \
+							icon('icons/effects/effects.dmi', "chronofield")), 40)
+	time_stopped += target
+	addtimer(CALLBACK(src, PROC_REF(FreezeMob), target), 40)
+
+/mob/living/simple_animal/hostile/abnormality/silence/proc/FreezeMob(mob/living/H)
+	if(!H)
+		return
+	if(!ishuman(H))
+		return
+	playsound(src, 'sound/magic/timeparadox2.ogg', 75, TRUE, -1)
+	H.Stun(20, ignore_canstun = TRUE)
+	ADD_TRAIT(H, TRAIT_MUTE, TIMESTOP_TRAIT)
+	walk(H, 0) //stops them mid pathing even if they're stunimmune
+	H.add_atom_colour(list(-1,0,0,0, 0,-1,0,0, 0,0,-1,0, 0,0,0,1, 1,1,1,0), TEMPORARY_COLOUR_PRIORITY)
+	addtimer(CALLBACK(src, PROC_REF(UnFreezeMob), H), 20)
+	var/flipped_dir = turn(H.dir, 180)
+	var/turf/T = get_step(H, flipped_dir)
+	var/obj/effect/temp_visual/remnant_of_time/price/attack = new(T, src) //Effect defined at the end of file
+	attack.dir = H.dir
+
+/mob/living/simple_animal/hostile/abnormality/silence/proc/UnFreezeMob(mob/living/H)
+	playsound(src, 'sound/magic/timeparadox2.ogg', 75, TRUE, frequency = -1) //reverse!
+	H.AdjustStun(-20, ignore_canstun = TRUE)
+	REMOVE_TRAIT(H, TRAIT_MUTE, TIMESTOP_TRAIT)
+	H.remove_atom_colour(TEMPORARY_COLOUR_PRIORITY)
+	time_stopped -= H
+
+/mob/living/simple_animal/hostile/abnormality/silence/Destroy(mob/living/H)
+	
+	for(var/mob/M in time_stopped)
+		UnFreezeMob(M)
+	time_stopped = list()
+	return ..()
+
+/obj/effect/temp_visual/remnant_of_time/price
+	damage = 70

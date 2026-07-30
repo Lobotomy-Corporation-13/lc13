@@ -111,11 +111,12 @@
 
 	var/turf/T = affected_mob.loc
 	if(istype(T))
-		for(var/mob/living/carbon/C in oview(spread_range, affected_mob))
-			var/turf/V = get_turf(C)
-			if(disease_air_spread_walk(T, V))
-				C.AirborneContractDisease(src, force_spread)
+		for(var/mob/living/carbon/C in view(spread_range, affected_mob))
+			// var/turf/V = get_turf(C)
+			// if(disease_air_spread_walk(T, V))
+			C.AirborneContractDisease(src, force_spread)
 
+/* Deleted in Atmos purge due to TURFS_CAN_SHARE depending on Atmos conditions/subsystem.
 /proc/disease_air_spread_walk(turf/start, turf/end)
 	if(!start || !end)
 		return FALSE
@@ -126,7 +127,7 @@
 		if(!TURFS_CAN_SHARE(end, Temp)) //Don't go through a wall
 			return FALSE
 		end = Temp
-
+ */
 
 /datum/disease/proc/cure(add_resistance = TRUE)
 	if(affected_mob)

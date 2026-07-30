@@ -1,4 +1,4 @@
-SUBSYSTEM_DEF(adjacent_air)
+/* SUBSYSTEM_DEF(adjacent_air)
 	name = "Atmos Adjacency"
 	flags = SS_BACKGROUND
 	runlevels = RUNLEVEL_GAME | RUNLEVEL_POSTGAME
@@ -39,3 +39,4 @@ SUBSYSTEM_DEF(adjacent_air)
 				break
 		else
 			CHECK_TICK
+ */

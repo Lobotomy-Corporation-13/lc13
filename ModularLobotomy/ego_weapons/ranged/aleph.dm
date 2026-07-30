@@ -62,6 +62,9 @@
 	projectile_path = /obj/projectile/ego_bullet/adoration
 	weapon_weight = WEAPON_HEAVY
 	fire_delay = 10
+	shotsleft = 5
+	reloadtime = 1.2 SECONDS
+
 	pellets = 3
 	variance = 20
 
@@ -281,16 +284,7 @@
 
 	shotsleft = 16	//Based off a henry .44
 	reloadtime = 0.5 SECONDS
-
-/obj/item/ego_weapon/ranged/arcadia/reload_ego(mob/user)
-	if(shotsleft == initial(shotsleft))
-		return
-	is_reloading = TRUE
-	to_chat(user,"<span class='notice'>You start loading a bullet.</span>")
-	if(do_after(user, reloadtime, src)) //gotta reload
-		playsound(src, 'sound/weapons/gun/general/slide_lock_1.ogg', 50, TRUE)
-		shotsleft +=1
-	is_reloading = FALSE
+	roundsreload = TRUE
 
 /obj/item/ego_weapon/ranged/arcadia/judge
 	name = "Judge"
@@ -328,3 +322,622 @@
 							JUSTICE_ATTRIBUTE = 100
 	)
 	shotsleft = 200
+	reloadtime = 4 SECONDS
+
+#define STATUS_EFFECT_ENTRENCHED_INITIAL /datum/status_effect/willing_weapon_entrenched
+#define STATUS_EFFECT_ENTRENCHED_FINAL /datum/status_effect/willing_weapon_entrenched/final_stage
+
+/obj/item/ego_weapon/ranged/willing
+	name = "flesh is willing"
+	desc = "And really nothing will stop it."
+	icon_state = "willing"
+	inhand_icon_state = "willing"
+	damtype = RED_DAMAGE
+	force = 60
+	attack_speed = 1.5
+	weapon_weight = WEAPON_HEAVY
+	hitsound = 'sound/weapons/fast_slam.ogg'
+	usesound = 'sound/effects/ordeals/amber/dusk_dead.ogg'
+
+	fire_sound = 'sound/weapons/ego/willing_fire1.ogg'
+	fire_sound_volume = 40
+	projectile_path = /obj/projectile/ego_bullet/willing
+	shotsleft = 100
+	reloadtime = 3 SECONDS
+	autofire = 1.4
+	spread = 25
+
+	attribute_requirements = list(
+							FORTITUDE_ATTRIBUTE = 100,
+							PRUDENCE_ATTRIBUTE = 80,
+							TEMPERANCE_ATTRIBUTE = 80,
+							JUSTICE_ATTRIBUTE = 80
+							)
+	special = "Reload this weapon by alt-clicking it.\n\
+	You can use this weapon in-hand to spend health to enter the Inexorable state after a brief wind-up, \
+	during which you will gain a slight slowdown, damage resistance, stun immunity, resistance to being pushed, and an unlimited amount of higher caliber bullets.\n\
+	After 7 seconds of being in the Inexorable state, you will enter the Entrenched state, which increases damage resistance further \
+	and empowers the bullets to deal more damage and pierce through a single target.\n\
+	If you move while Entrenched, you will exit the state. \n\
+	You can also cancel the process of activating Inexorable by swapping hands, or dropping or storing the weapon. \
+	Once you've entered Inexorable or Entrenched, you cannot drop or store the weapon."
+
+	// These two vars are for the timer that upgrades Inexorable to Entrenched. It starts running when you use the weapon's ability, and deletes the initial buff and replaces it with the final version.
+	var/entrenchment_upgrade_timer
+	var/entrenchment_upgrade_timer_duration = 7 SECONDS
+
+	/// This cooldown is just so people don't spam the hell out of the sound.
+	COOLDOWN_DECLARE(ability)
+
+	/// Holds this weapon's attached Autofire component. We will be modifying it often.
+	var/datum/component/automatic_fire/autofire_component
+
+	// These vars are all associated lists, wherein each index corresponds to a state of the weapon. 1 for base, 2 for inexorable (initial buff) and 3 for entrenched (final buff).
+	/// The spread of the weapon's bullets. Lower is more precise.
+	var/list/entrenchment_stage_spread_values = list(27, 13, 4)
+	/// The fire rate for the weapon. Higher is slower. The reason why it gets slower as your buff progresses, is because you get drastically more powerful ammo.
+	var/list/entrenchment_stage_firerate_values = list(1.4, 2.35, 3.1)
+	// These three lists are self explanatory. Projectile type, fire sound and volume used in each stage.
+	var/list/entrenchment_stage_projectile_types = list(/obj/projectile/ego_bullet/willing, /obj/projectile/ego_bullet/willing/heavy, /obj/projectile/ego_bullet/willing/superheavy)
+	var/list/entrenchment_stage_firesound = list('sound/weapons/ego/willing_fire1.ogg', 'sound/weapons/gun/rifle/shot_alt.ogg', 'sound/weapons/gun/sniper/shot.ogg')
+	var/list/entrenchment_stage_volume = list(40, 35, 43)
+
+	/// Lets you store this gun normally into your belt/suit storage/whatever. We disable this when the special ability is active.
+	var/storeable = TRUE
+
+/obj/item/ego_weapon/ranged/willing/Initialize(mapload)
+	. = ..()
+	// We're going to be using this component a few times so might as well pull it
+	autofire_component = GetComponent(/datum/component/automatic_fire)
+	// Keeps stats consistent to the entrenchment_stage_X_values variables. This is in case someone goes to buff/nerf this weapon but does it improperly, so the weapon remains consistent.
+	ChangeStats(1)
+
+/obj/item/ego_weapon/ranged/willing/mob_can_equip(mob/living/M, mob/living/equipper, slot, disable_warning, bypass_equip_delay_self)
+	if(!storeable)
+		return FALSE
+	return ..()
+
+/// When using the weapon in-hand, we activate the special ability. Reload is on altclick instead. Sorry.
+/obj/item/ego_weapon/ranged/willing/attack_self(mob/user)
+	if((!CanUseEgo(user)) || (CheckIfUserEntrenched(user)) || (!ishuman(user)) || !COOLDOWN_FINISHED(src, ability))
+		return
+	var/mob/living/carbon/human/entrencher = user
+	if(entrencher.is_working)
+		to_chat(user, span_danger("You can't call upon the power of [src] - it'd cloud your mind too much for you to be able to carry out the work."))
+		return
+
+	COOLDOWN_START(src, ability, 2 SECONDS)
+	playsound(src, usesound, 80, FALSE)
+
+	// There's a delay, but this happens on the move. You can still cancel obtaining the buff by swapping hands or dropping or storing the weapon.
+	if((do_after(user, 2 SECONDS, timed_action_flags = IGNORE_USER_LOC_CHANGE, interaction_key = "willing_entrench", max_interact_count = 1)) && (!entrencher.is_working))
+		entrencher.adjustBruteLoss(20)
+		entrencher.apply_status_effect(STATUS_EFFECT_ENTRENCHED_INITIAL)
+		entrenchment_upgrade_timer = addtimer(CALLBACK(src, PROC_REF(UpgradeEntrench), user), entrenchment_upgrade_timer_duration, TIMER_STOPPABLE)
+		return
+	else
+		to_chat(entrencher, span_danger("You decide not to call upon the power of [src]."))
+
+/obj/item/ego_weapon/ranged/willing/AltClick(mob/user)
+	if(reloadtime && !is_reloading)
+		INVOKE_ASYNC(src, PROC_REF(reload_ego), user)
+	return ..()
+
+/obj/item/ego_weapon/ranged/willing/proc/UpgradeEntrench(mob/user)
+	if(ishuman(user))
+		var/mob/living/carbon/human/entrencher = user
+		var/datum/status_effect/willing_weapon_entrenched/buff = entrencher.has_status_effect(STATUS_EFFECT_ENTRENCHED_INITIAL)
+		if(buff)
+			entrencher.remove_status_effect(STATUS_EFFECT_ENTRENCHED_INITIAL)
+			entrencher.apply_status_effect(STATUS_EFFECT_ENTRENCHED_FINAL)
+
+/obj/item/ego_weapon/ranged/willing/proc/ChangeStats(stage)
+	// If someone tries to give this proc a funny number that would cause an out of bounds error, early return.
+	if(!(stage in 1 to 3))
+		return FALSE
+
+	shotsleft = initial(shotsleft)
+	// Unlimited ammo if not in base state.
+	if(stage == 1)
+		reloadtime = initial(reloadtime)
+	else
+		reloadtime = 0
+
+	// Adjust weapon stats and aesthetic elements to match the stage.
+	projectile_path = entrenchment_stage_projectile_types[stage]
+	spread = entrenchment_stage_spread_values[stage]
+	autofire_component.autofire_shot_delay = entrenchment_stage_firerate_values[stage]
+
+	fire_sound = entrenchment_stage_firesound[stage]
+	fire_sound_volume = entrenchment_stage_volume[stage]
+
+/// Proc that checks if the user has either of the status effects (inexorable, entrenched)
+/obj/item/ego_weapon/ranged/willing/proc/CheckIfUserEntrenched(mob/living/carbon/human/user)
+	if(istype(user))
+		var/datum/status_effect/willing_weapon_entrenched/buff = user.has_status_effect(STATUS_EFFECT_ENTRENCHED_INITIAL)
+		if(buff)
+			return TRUE
+	return FALSE
+
+// Following code corresponds to the status effects granted by the Flesh is Willing weapon.
+/datum/status_effect/willing_weapon_entrenched
+	id = "willing_weapon_entrenched"
+	status_type = STATUS_EFFECT_REPLACE
+	alert_type = /atom/movable/screen/alert/status_effect/willing_weapon_entrenched
+	duration = 10 SECONDS // This status effect will be manually removed when upgraded to the next.
+
+	/// Multiplier applied to subject's physiology resistances, so 0.5 means you take half damage. Should always be lower (stronger) for the final_stage version,
+	/// and should NEVER be 0.
+	var/physiology_multiplier = 0.8
+	/// Whether this stage of the status effect roots you in place. If it does, you are very briefly immobilized when applied, then further movement breaks the status.
+	/// If it doesn't, you get slowed down.
+	var/should_immobilize = FALSE
+	/// The stage of the weapon this status corresponds to, which controls the stats applied to the weapon according to its own a-lists. It is used as an index, basically.
+	var/stage = 2
+	/// The gun that we'll be modifying. This isn't necessarily (but should be in 99.99999% of cases) the gun that applied the effect.
+	var/obj/item/ego_weapon/ranged/willing/linked_gun
+	/// Visuals applied onto the user by the effect.
+	var/mutable_appearance/visual_overlay
+
+/// This is the final stage of the buff, where you get "immobilized" (you can move but it breaks the status) and get stronger buffs.
+/datum/status_effect/willing_weapon_entrenched/final_stage
+	physiology_multiplier = 0.6
+	duration = 15 SECONDS
+	stage = 3
+	should_immobilize = TRUE
+	alert_type = /atom/movable/screen/alert/status_effect/willing_weapon_entrenched/final_stage
+
+/// Needed because throws seemingly don't care about your move resistance.
+/datum/status_effect/willing_weapon_entrenched/proc/HaltThrows()
+	SIGNAL_HANDLER
+	return COMPONENT_CANCEL_THROW
+
+/datum/status_effect/willing_weapon_entrenched/on_apply()
+	. = ..()
+	if(ishuman(owner))
+		var/mob/living/carbon/human/john_willing = owner
+		var/obj/item/ego_weapon/ranged/willing/entrenching_gun = john_willing.is_holding_item_of_type(/obj/item/ego_weapon/ranged/willing)
+		if(istype(entrenching_gun)) // We found the gun in our active hand or offhand(s)
+			// Changes to gun
+			linked_gun = entrenching_gun
+			linked_gun.ChangeStats(stage) // Change the gun's stats (spread, fire rate, ammo type, etc)
+			linked_gun.storeable = FALSE
+			ADD_TRAIT(linked_gun, TRAIT_NODROP, "willing") // You can no longer drop or throw the gun.
+
+			// Changes to user
+			RegisterSignal(john_willing, COMSIG_WORK_STARTED, PROC_REF(Revert)) // If you try to start a work with this buff it falls off, because come on
+			RegisterSignal(john_willing, COMSIG_MOVABLE_PRE_THROW, PROC_REF(HaltThrows)) // Necessary to stop being thrown by stuff like Ebony or LOOS
+			john_willing.physiology.red_mod *= physiology_multiplier
+			john_willing.physiology.white_mod *= physiology_multiplier
+			john_willing.physiology.black_mod *= physiology_multiplier
+			john_willing.physiology.pale_mod *= physiology_multiplier
+
+			// I was tempted to add move force, but sadly the amount of force required to push Abnormalities aside will also forcibly move anchored objects like glass windows or machines
+			john_willing.move_resist = MOVE_FORCE_OVERPOWERING
+			ADD_TRAIT(john_willing, TRAIT_STUNIMMUNE, "willing")
+			ADD_TRAIT(john_willing, TRAIT_PUSHIMMUNE, "willing")
+			var/turf/user_turf = get_turf(john_willing)
+			// Aesthetics.
+			AestheticBloodsplatters(user_turf)
+
+			// If this stage of the buff should immobilize us, we VERY BRIEFLY immobilize the user, and register a signal that breaks the buff if they move manually.
+			// The reason for this is that being immobilized in combat is EXTREMELY deadly, especially at ALEPH tier. This weapon would be borderline unusable if it truly rooted you.
+			if(should_immobilize)
+				john_willing.Immobilize(1.5 SECONDS, TRUE)
+				RegisterSignal(john_willing, COMSIG_MOVABLE_MOVED, PROC_REF(Revert))
+				visual_overlay = mutable_appearance('ModularLobotomy/_Lobotomyicons/48x48.dmi', "last_shot", ABOVE_MOB_LAYER)
+				visual_overlay.transform *= 0.75
+				visual_overlay.pixel_x -= 10
+				visual_overlay.pixel_y -= 16
+				john_willing.add_overlay(visual_overlay)
+				john_willing.visible_message(span_danger("A fleshy barricade envelops [john_willing], protecting \him!"), span_nicegreen("Flesh envelops your body, protecting you."))
+			// Otherwise we apply a slowdown.
+			else
+				john_willing.add_movespeed_modifier(/datum/movespeed_modifier/entrenched)
+				visual_overlay = mutable_appearance('ModularLobotomy/_Lobotomyicons/tegu_effects.dmi', "inexorable", ABOVE_MOB_LAYER)
+				john_willing.add_overlay(visual_overlay)
+				john_willing.visible_message(span_danger("Tendrils of flesh begin creeping up [john_willing], acting as armour for \him!"), span_nicegreen("Tendrils of flesh begin to creep up your body, acting as armour for you."))
+			return TRUE
+
+	return FALSE
+
+// Clean up the unholy mess we stapled onto the gun and its user
+/datum/status_effect/willing_weapon_entrenched/on_remove()
+	. = ..()
+	if(ishuman(owner))
+		var/mob/living/carbon/human/john_willing = owner
+
+		if(linked_gun)
+			// Changes to gun
+			linked_gun.ChangeStats(1)
+			linked_gun.storeable = TRUE
+			REMOVE_TRAIT(linked_gun, TRAIT_NODROP, "willing")
+			deltimer(linked_gun.entrenchment_upgrade_timer)
+			linked_gun = null
+
+		// Changes to user
+		UnregisterSignal(john_willing, COMSIG_WORK_STARTED)
+		UnregisterSignal(john_willing, COMSIG_MOVABLE_PRE_THROW)
+		john_willing.physiology.red_mod /= physiology_multiplier
+		john_willing.physiology.white_mod /= physiology_multiplier
+		john_willing.physiology.black_mod /= physiology_multiplier
+		john_willing.physiology.pale_mod /= physiology_multiplier
+
+		john_willing.move_resist = MOVE_FORCE_DEFAULT
+		REMOVE_TRAIT(john_willing, TRAIT_STUNIMMUNE, "willing")
+		REMOVE_TRAIT(john_willing, TRAIT_PUSHIMMUNE, "willing")
+
+		if(should_immobilize)
+			UnregisterSignal(john_willing, COMSIG_MOVABLE_MOVED)
+			var/turf/user_turf = get_turf(john_willing)
+			AestheticBloodsplatters(user_turf)
+		else
+			john_willing.remove_movespeed_modifier(/datum/movespeed_modifier/entrenched)
+
+		john_willing.cut_overlay(visual_overlay)
+
+/datum/status_effect/willing_weapon_entrenched/proc/Revert()
+	if(ishuman(owner))
+		var/mob/living/carbon/human/john_willing = owner
+		john_willing.remove_status_effect(STATUS_EFFECT_ENTRENCHED_INITIAL)
+		john_willing.remove_status_effect(STATUS_EFFECT_ENTRENCHED_FINAL)
+
+/// Purely aesthetic effect used when the effect upgrades/is removed at last stage
+/datum/status_effect/willing_weapon_entrenched/proc/AestheticBloodsplatters(turf/user_turf)
+	for(var/i in 1 to 3)
+		new /obj/effect/temp_visual/dir_setting/bloodsplatter(user_turf, pick(GLOB.alldirs))
+	new /obj/effect/decal/cleanable/blood(user_turf)
+	playsound(user_turf, 'sound/effects/ordeals/crimson/dusk_dead.ogg', 25, FALSE)
+
+/datum/movespeed_modifier/entrenched
+	multiplicative_slowdown = 2.2
+
+/atom/movable/screen/alert/status_effect/willing_weapon_entrenched
+	name = "Inexorable"
+	icon_state = "inexorable"
+	desc = "Forward! Until the last bullet is spent!"
+
+/atom/movable/screen/alert/status_effect/willing_weapon_entrenched/final_stage
+	name = "Entrenched"
+	icon_state = "entrenched"
+	desc = "Despite the pain and suffering, even if torn to fleshy ribbons, you'll continue the fight."
+
+#undef STATUS_EFFECT_ENTRENCHED_INITIAL
+#undef STATUS_EFFECT_ENTRENCHED_FINAL
+
+// AiB's alternate ranged weapon. This one deals BLACK damage, has AoE, knockback, friendly fires...
+/obj/item/ego_weapon/ranged/black
+	name = "black"
+	desc = "We'll purge every last speck of evil out of your heart, even if it must blacken our own."
+	lefthand_file = 'icons/mob/inhands/64x64_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/64x64_righthand.dmi'
+	inhand_x_dimension = 64
+	inhand_y_dimension = 64
+	// Sprites by amanitaspooder
+	icon_state = "black"
+	inhand_icon_state = "black"
+	damtype = BLACK_DAMAGE
+	force = 65
+	attack_speed = 1.8
+	weapon_weight = WEAPON_MEDIUM // I may live to regret this?
+	hitsound = 'sound/weapons/fast_slam.ogg'
+	fire_sound = 'sound/weapons/gun/general/rocket_launch.ogg'
+	fire_sound_volume = 40
+	projectile_path = /obj/projectile/ego_bullet/black
+	shotsleft = 4
+	reloadtime = 3.2 SECONDS
+	roundsreload = TRUE
+
+	attribute_requirements = list(
+							FORTITUDE_ATTRIBUTE = 80,
+							PRUDENCE_ATTRIBUTE = 80,
+							TEMPERANCE_ATTRIBUTE = 80,
+							JUSTICE_ATTRIBUTE = 100
+							)
+	special = "This weapon fires missiles that deal AoE BLACK damage indiscriminately, and also cause knockback. \n\
+	You may resonate with it to fire the missiles in an arc instead, causing a delay in their launch and arrival, but increasing the damage, radius and applying Shellshock to enemies hit."
+	actions_types = list(/datum/action/item_action/black_weapon_resonance)
+	zoomable = TRUE
+	zoom_amt = 0
+	zoom_out_amt = 8
+	/// Alternate fire mode, basically. I don't wanna use the altfire framework for this, don't think there's a point to it
+	var/resonance_enabled = FALSE
+	/// Spam prevention
+	var/resonance_toggle_cooldown
+	/// So you can't fire all 4 missiles at the exact same time in Resonance mode
+	var/resonance_queue_shot_delay = 0.2 SECONDS
+	var/resonance_queue_shot_cd
+	/// Windup before firing each missile in Resonance mode
+	var/resonance_fire_delay = 0.8 SECONDS
+	/// Time-until-impact of the missile in Resonance mode
+	var/resonance_landing_delay = 1.6 SECONDS
+	/// Deal burn damage to people behind you when firing this, because it's funny
+	var/backblast_damage = 10
+
+// Full override; we don't need rotation behaviour, and we want it to cancel as soon as the user moves because having a permanently better viewport is not ideal
+/obj/item/ego_weapon/ranged/black/zoom(mob/living/user, direc, forced_zoom)
+	if(!user || !user.client)
+		return
+
+	if(isnull(forced_zoom))
+		zoomed = !zoomed
+	else
+		zoomed = forced_zoom
+
+	if(zoomed)
+		RegisterSignal(user, COMSIG_MOVABLE_MOVED, PROC_REF(BreakZoom))
+		user.client.view_size.zoomOut(zoom_out_amt, zoom_amt, direc)
+	else
+		UnregisterSignal(user, COMSIG_MOVABLE_MOVED)
+		user.client.view_size.zoomIn()
+	return zoomed
+
+/obj/item/ego_weapon/ranged/black/proc/BreakZoom(mob/living/user)
+	SIGNAL_HANDLER
+	UnregisterSignal(user, COMSIG_MOVABLE_MOVED)
+	if(!istype(user))
+		return
+	if(!user.client)
+		return
+	zoomed = FALSE
+	user.client.view_size.zoomIn()
+
+// Expanded description stuff
+/obj/item/ego_weapon/ranged/black/examine(mob/user)
+	. = ..()
+	. += span_notice("<a href='?src=[REF(src)];action=full_examine'>\[View Expanded Description]</a>")
+
+/obj/item/ego_weapon/ranged/black/Topic(href, list/href_list)
+	. = ..()
+	if(.)
+		return
+	if(href_list["action"] != "full_examine")
+		return
+	var/mob/user = usr
+	if(!QDELETED(user) && istype(user))
+		on_examine(user, user)
+
+/obj/item/ego_weapon/ranged/black/proc/on_examine(mob/user)
+	if(QDELETED(user) || !istype(user))
+		return
+	var/obj/projectile/ego_bullet/black/our_projectile = projectile_path
+	if(!ispath(our_projectile, /obj/projectile/ego_bullet/black))
+		to_chat(user, span_warning("WARNING: This weapon has been modified, and is not using its regular projectile. Cannot show expanded description."))
+		return
+
+	. = list()
+	. += span_info("In its normal fire-mode, this weapon directly fires [our_projectile.damage_type] damage missiles.")
+	. += span_info("<b>Direct-fire Missile Damage</b>: [our_projectile.damage * projectile_damage_multiplier]")
+	. += span_info("<b>Direct-fire Missile Explosion Damage</b>: [our_projectile.base_explosion_damage * projectile_damage_multiplier]")
+	. += span_info("<b>Direct-fire Missile Explosion Radius</b>: [our_projectile.explosion_radius]")
+	. += span_info("<b>Direct-fire Missile IFF Modifier</b>: [our_projectile.iff_coeff]x explosion damage to friendlies.")
+	. += span_info("\n")
+	. += span_info("You may toggle this weapon by alt-clicking it, or using its special action, to activate Resonance. This allows you to use indirect-fire for your missiles, increasing their damage and radius, as well as applying a debuff called Shellshock.")
+	. += span_info("Missiles fired in this manner have a brief wind-up before firing (though you may queue several shots at once), and a longer delay before landing.")
+	. += span_info("<b>Indirect Fire Missile Windup</b>: [resonance_fire_delay * 0.1]s")
+	. += span_info("<b>Indirect Fire Missile Flight Time</b>: [resonance_landing_delay * 0.1]s")
+	. += span_info("<b>Indirect Fire Missile Explosion Damage</b>: [(our_projectile.base_explosion_damage + our_projectile.resonance_damage_increase) * projectile_damage_multiplier]")
+	. += span_info("<b>Indirect Fire Missile Explosion Radius</b>: [our_projectile.explosion_radius + our_projectile.resonance_radius_increase]")
+	. += span_info("<b>Indirect Fire Missile IFF Modifier</b>: [our_projectile.resonance_iff_coeff]x explosion damage to friendlies.")
+	. += span_info("\n")
+	// I can't be bothered to pull the actual datums and link to them. Hardcoding (hard-writing?) this.
+	. += span_info("<b>Shellshock Duration</b>: 10s")
+	. += span_info("<b>Shellshock Enemy Slowdown</b>: 1.6x")
+	. += span_info("<b>Shellshock Enemy Multiplicative Shred</b>: 1.25x")
+	for(var/line in .)
+		to_chat(user, line)
+
+/// Method 1 of accessing Resonance: alt click the weapon
+/obj/item/ego_weapon/ranged/black/AltClick(mob/user)
+	ToggleResonance(user)
+
+/// Method 2 of accessing Resonance: item action
+/datum/action/item_action/black_weapon_resonance
+	name = "E.G.O. Resonance: Black"
+	desc = "Resonate with your E.G.O. weapon in order to fire more powerful ammunition, dealing more damage in a larger radius and applying Shellshock, but your shots will be delayed. \
+	Can be freely toggled every 2 seconds."
+	icon_icon = 'icons/obj/ego_weapons.dmi'
+	button_icon_state = "black"
+
+/datum/action/item_action/black_weapon_resonance/Trigger()
+	if(!IsAvailable())
+		return FALSE
+	if(SEND_SIGNAL(src, COMSIG_ACTION_TRIGGER, src) & COMPONENT_ACTION_BLOCK_TRIGGER)
+		return FALSE
+	if(target && ismob(owner))
+		var/obj/item/ego_weapon/ranged/black/I = target
+		I.ToggleResonance(owner)
+	return TRUE
+
+/// Flips Resonance between active and inactive. Tiny cooldown for spam prevention
+/obj/item/ego_weapon/ranged/black/proc/ToggleResonance(user)
+	if(resonance_toggle_cooldown > world.time)
+		to_chat(user, span_warning("Wait a bit longer before changing your resonance."))
+		balloon_alert(user, "Resonance toggle on cooldown. Wait [(resonance_toggle_cooldown - world.time) * 0.1]s.")
+		return FALSE
+
+	resonance_toggle_cooldown = world.time + 2 SECONDS
+
+	if(resonance_enabled)
+		to_chat(user, span_warning("You halt your resonance with your [src.name] E.G.O. weapon. You will now fire normally."))
+		balloon_alert(user, "Resonance disabled.")
+	else
+		to_chat(user, span_nicegreen("You begin resonating with your [src.name] E.G.O. weapon. You will now fire in an arc, causing greater explosions and applying Shellshock."))
+		balloon_alert(user, "Resonance enabled.")
+
+	resonance_enabled = !resonance_enabled
+
+/// When clicking with this weapon...
+/obj/item/ego_weapon/ranged/black/afterattack(atom/target, mob/living/user, flag, params)
+	if(is_reloading) // Can't fire while reloading
+		shoot_with_empty_chamber(user)
+		return
+
+	// If Resonance is enabled, we have a target and we're not adjacent to that target:
+	if(resonance_enabled && !flag && !QDELETED(target))
+		if(resonance_queue_shot_cd > world.time) // Chill a little bit
+			return
+		resonance_queue_shot_cd = world.time + resonance_queue_shot_delay
+		if(!can_see(user, target, 16)) // This check is unreliable, because it literally tries to walk, which isn't the same path that light follows
+			var/list/viewable_things = view(16, user) // I don't know a better way to do this.
+			if(!(target in viewable_things))
+				to_chat(user, span_danger("You can't fire your [src.name] E.G.O. weapon in that trajectory, there's an obstacle in the way!"))
+				balloon_alert(user, "Trajectory obstructed.")
+				return FALSE
+
+
+		if(!do_after(user, resonance_fire_delay)) // Windup for firing the missile. Hold still!
+			return FALSE
+		else // Windup concluded successfully.
+			if(!resonance_enabled) // Someone did a sneaky and toggled mid-windup. Fire a normal missile.
+				return ..()
+			if(!can_shoot()) // No ammo? Click click.
+				shoot_with_empty_chamber(user)
+				return
+			FireResonanceShot(target, user) // Fire an indirect missile!
+			return
+
+	// Resonance is disabled. Continue regular behaviour instead.
+	. = ..()
+
+/obj/item/ego_weapon/ranged/black/proc/FireResonanceShot(atom/target, mob/living/user)
+	if(!target)
+		return
+	if(!CanUseEgo(user))
+		return
+	shoot_live_shot(user) // This is just for a firenoise and firing message
+
+	var/turf/epicenter = get_turf(target)
+	if(!epicenter)
+		return
+	var/obj/projectile/ego_bullet/black/resonant_shot = new(null) // We're literally just using the existing projectile...
+	resonant_shot.firer = user
+	resonant_shot.resonance = TRUE // ...but we flip this var to indicate it's an empowered shot.
+	resonant_shot.damage *= projectile_damage_multiplier
+
+	// Telegraph the danger zone.
+	for(var/turf/T in view((resonant_shot.explosion_radius + resonant_shot.resonance_radius_increase), target))
+		new /obj/effect/black_weapon_airstrike_marker(T, resonance_landing_delay, (220 - (get_dist(epicenter, T) * 40))) // More intense markers towards the center
+
+	addtimer(CALLBACK(resonant_shot, TYPE_PROC_REF(/obj/projectile/ego_bullet/black, Detonate), epicenter), resonance_landing_delay)
+	new /obj/effect/black_weapon_airstrike_missile(epicenter, resonance_landing_delay, 0.4 SECONDS)
+
+	process_chamber()
+
+/obj/item/ego_weapon/ranged/black/process_chamber()
+	. = ..()
+	var/mob/living/carbon/human/just_fired = src.loc
+	if(!istype(just_fired))
+		return
+
+	// Spawn backblast smoke behind us it's funny
+	var/opposite_direction = turn(just_fired.dir, 180)
+	var/turf/behind_us = get_ranged_target_turf(just_fired, opposite_direction, 2)
+	var/list/backblast_tiles = list(behind_us)
+	for(var/turf/open/T in view(1, behind_us))
+		backblast_tiles |= T
+
+	var/datum/effect_system/smoke_spread/transparent/backblast = new
+	backblast.set_up(1, behind_us)
+	backblast.start()
+
+	for(var/turf/T2 in backblast_tiles)
+		for(var/mob/living/L in T2)
+			L.deal_damage(backblast_damage, FIRE, just_fired, attack_type = (ATTACK_TYPE_SPECIAL))
+			L.visible_message(span_danger("[L] is scorched by the backblast from [just_fired]'s [src.name] E.G.O.!"))
+
+/obj/effect/black_weapon_airstrike_marker
+	name = "danger close"
+	desc = "MOVE!"
+	alpha = 200
+	icon_state = "zorowarning"
+	color = COLOR_BLACK
+	layer = POINT_LAYER
+	anchored = TRUE
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+	var/duration
+	var/timerid
+
+// Pass necessary arguments to it on Initialize
+/obj/effect/black_weapon_airstrike_marker/Initialize(mapload, final_duration = 1.6 SECONDS, opacity = 200)
+	. = ..()
+	duration = final_duration
+	alpha = opacity
+	timerid = QDEL_IN(src, duration)
+
+/obj/effect/black_weapon_airstrike_missile
+	name = "black"
+	desc = "YOU SHOULD'VE BEEN MOVING 2 SECONDS AGO!!!!!!!!!!!"
+	alpha = 255
+	icon = 'icons/obj/projectiles.dmi'
+	icon_state = "atrocket"
+	layer = POINT_LAYER
+	anchored = TRUE
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+
+// Shamelessly (a bit shamefully) stolen and adapted entry animation from supply pod code
+/obj/effect/black_weapon_airstrike_missile/Initialize(mapload, delayed_by = 1.6 SECONDS, visual_travel_time = 0.3 SECONDS)
+	. = ..()
+	alpha = 0
+	var/angle = rand(70,110)
+	src.pixel_x = cos(angle)*32*13
+	src.pixel_z = sin(angle)*32*13
+	src.add_filter("motionblur",1,list("type"="motion_blur", "x"=0, "y"=2))
+	addtimer(CALLBACK(src, PROC_REF(PlayEntryAnimation), visual_travel_time), delayed_by - visual_travel_time)
+	QDEL_IN(src, delayed_by)
+
+/obj/effect/black_weapon_airstrike_missile/proc/PlayEntryAnimation(travel_time)
+	alpha = 255
+	var/rotation = Get_Pixel_Angle(src.pixel_z, src.pixel_x)
+	var/matrix/M = matrix().Turn(rotation)
+	M.Turn(180)
+	src.transform = M
+	animate(src.get_filter("motionblur"), y = 0, time = travel_time, flags = ANIMATION_PARALLEL)
+	animate(src, pixel_z = -1 * abs(sin(rotation))*4, pixel_x = (sin(rotation) * 20), time = travel_time, easing = LINEAR_EASING, flags = ANIMATION_PARALLEL)
+
+/obj/item/ego_weapon/ranged/pistol/tarnished
+	name = "Tears of the Tarnished Blood"
+	desc = "With contemplation, I shall darken the clear skies above; with my sacrifice, I shall exsanguinate my carnal blood upon this earth."
+	icon_state = "tarnished"
+	inhand_icon_state = "tarnished"
+	special = ""
+
+	force = 50
+	damtype = PALE_DAMAGE
+	attack_speed = 1.0
+	swingstyle = WEAPONSWING_LARGESWEEP
+	hitsound = "sound/effects/wounds/pierce1.ogg"
+
+	projectile_path = /obj/projectile/ego_bullet/tarnished
+	weapon_weight = WEAPON_MEDIUM
+	spread = 10
+
+	autofire = 0.10 SECONDS
+	shotsleft = 33
+	reloadtime = 0.9 SECONDS
+
+
+	fire_sound = 'sound/magic/blink.ogg'
+	vary_fire_sound = TRUE
+	fire_sound_volume = 25
+
+	alternate_fire_name = "Flower Burying Pin"
+	alternate_pellets = 1
+	alternate_shotsleft = 3
+	alternate_info = "This weapon fires a levinfall pin."
+	alternate_reload_type = RANGEDEGO_ALTERNATEFIRE_RELOADTYPE_SHARED_RELOAD
+	alternate_projectile_path = /obj/projectile/ego_bullet/tarnished_pin
+	alternate_fire_sound = 'sound/weapons/bowfire.ogg'
+	alternate_fire_sound_volume = 70
+	alternate_toggle_sound = 'sound/weapons/bowdraw.ogg'
+	alternate_toggle_sound_volume = 65
+	alternate_toggle_enabled_message = span_notice("You switch to levinfall pins.")
+	alternate_toggle_disabled_message = span_notice("You switch to standard rounds.")
+
+	attribute_requirements = list(
+							FORTITUDE_ATTRIBUTE = 80,
+							PRUDENCE_ATTRIBUTE = 100,
+							TEMPERANCE_ATTRIBUTE = 80,
+							JUSTICE_ATTRIBUTE = 80
+							)
+

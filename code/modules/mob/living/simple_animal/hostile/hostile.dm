@@ -5,6 +5,7 @@ GLOBAL_LIST_EMPTY(marked_players)
 	stop_automated_movement_when_pulled = 0
 	obj_damage = 40
 	environment_smash = ENVIRONMENT_SMASH_STRUCTURES //Bitflags. Set to ENVIRONMENT_SMASH_STRUCTURES to break closets,tables,racks, etc; ENVIRONMENT_SMASH_WALLS for walls; ENVIRONMENT_SMASH_RWALLS for rwalls
+	area_index = MOB_HOSTILE_INDEX
 	var/atom/target
 	var/ranged = FALSE
 	var/rapid = 0 //How many shots per volley.
@@ -20,6 +21,7 @@ GLOBAL_LIST_EMPTY(marked_players)
 	var/projectilesound
 	var/casingtype		//set ONLY it and NULLIFY projectiletype, if we have projectile IN CASING
 	var/move_to_delay = 3 //delay for the automated movement.
+	//Uses tags. If you respawn or change bodies who even are you?
 	var/list/friends = list()
 	var/list/emote_taunt = list()
 	var/taunt_chance = 0
@@ -98,6 +100,16 @@ GLOBAL_LIST_EMPTY(marked_players)
 	var/ending_looting_line = "That's it, you asked for this."
 	var/list/glob_faction = list()
 
+	// When hit without a target, will patrol to the source of the damage (if any) as long as we're not on this cooldown.
+	var/investigation_cooldown
+	var/investigation_cooldown_duration = 20 SECONDS
+
+	// When this var is TRUE, will not attempt to break out of somewhere it's confined in or buckled to.
+	var/docile_confinement = FALSE
+
+	//can attack and move
+	var/can_act = TRUE
+
 /mob/living/simple_animal/hostile/Initialize()
 	/*Update Speed overrides set speed and sets it
 		to the equivilent of move_to_delay. Basically
@@ -134,8 +146,8 @@ GLOBAL_LIST_EMPTY(marked_players)
 	SIGNAL_HANDLER
 	if (check_visible(user, crate) && stat != DEAD && !target)
 		addtimer(CALLBACK(src, PROC_REF(Theif_Talk)), 0)
-		if (!(user in glob_faction))
-			glob_faction += user
+		if (!(user.tag in glob_faction))
+			glob_faction += user.tag
 
 /mob/living/simple_animal/hostile/proc/Talk()
 	say(starting_looting_line)
@@ -152,36 +164,41 @@ GLOBAL_LIST_EMPTY(marked_players)
 	. = ..()
 	if(mark_once_attacked)
 		if(P.firer && get_dist(src, P.firer) <= aggro_vision_range)
-			if(!ishostile(P.firer))
-				if (!(P.firer in glob_faction))
-					glob_faction += P.firer
+			if(iscarbon(P.firer))
+				var/mob/living/carbon/C = P.firer
+				if (!(C.tag in glob_faction))
+					glob_faction += C.tag
 					say(attacked_line)
 
 	// Track damage for nuke rats achievement
 	if(glob_faction == GLOB.nuke_rats_players && P.firer && isliving(P.firer))
 		var/mob/living/L = P.firer
-		if(L.client && !(L in GLOB.nuke_rats_killers))
-			GLOB.nuke_rats_killers += L
+		if(L.client && !(L.tag in GLOB.nuke_rats_killers))
+			GLOB.nuke_rats_killers += L.tag
 
 /mob/living/simple_animal/hostile/attackby(obj/item/O, mob/user, params)
 	. = ..()
 	if(mark_once_attacked)
 		if(ishuman(user))
 			if (O.force > 0)
-				if (!(user in glob_faction ))
-					glob_faction += user
+				if (!(user.tag in glob_faction ))
+					glob_faction += user.tag
 					say(attacked_line)
 		else
-			if (!(user in glob_faction ))
-				glob_faction += user
+			if (!(user.tag in glob_faction ))
+				glob_faction += user.tag
 				say(attacked_line)
 
 	// Track damage for nuke rats achievement
-	if(glob_faction == GLOB.nuke_rats_players && user && user.client && !(user in GLOB.nuke_rats_killers))
-		GLOB.nuke_rats_killers += user
+	if(glob_faction == GLOB.nuke_rats_players && user && user.client && !(user.tag in GLOB.nuke_rats_killers))
+		GLOB.nuke_rats_killers += user.tag
 
 /mob/living/simple_animal/hostile/Destroy()
+	target = null
 	targets_from = null
+	target_memory = list()
+	friends = null
+	patrol_path = null
 	if(mark_once_attacked)
 		UnregisterSignal(SSdcs, COMSIG_CRATE_LOOTING_STARTED)
 		UnregisterSignal(SSdcs, COMSIG_CRATE_LOOTING_ENDED)
@@ -199,9 +216,9 @@ GLOBAL_LIST_EMPTY(marked_players)
 
 		if(all_dead && GLOB.nuke_rats_killers.len)
 			// Award achievement to all players who participated in killing nuke rats
-			for(var/mob/living/L in GLOB.nuke_rats_killers)
-				if(L.client)
-					L.client.give_award(/datum/award/achievement/lc13/city/nuke_rats_genocide, L)
+			for(var/mob/living/carbon/human/slayer in GLOB.player_list)
+				if(slayer.tag in GLOB.nuke_rats_killers && slayer.client)
+					slayer.client.give_award(/datum/award/achievement/lc13/city/nuke_rats_genocide, slayer)
 			// Clear the killers list after awarding
 			GLOB.nuke_rats_killers.Cut()
 
@@ -222,11 +239,10 @@ GLOBAL_LIST_EMPTY(marked_players)
 		patrol_reset()
 		return
 	if(CanStartPatrol())
-		if(patrol_cooldown <= world.time)
-			if(!patrol_path || !patrol_path.len)
-				patrol_select()
-				if(patrol_path.len)
-					patrol_move(patrol_path[patrol_path.len])
+		if(!patrol_path || !length(patrol_path))
+			PatrolSelect()
+			if(length(patrol_path))
+				patrol_move(patrol_path[patrol_path.len])
 
 	/*		AIStatus
 	AI_ON will have the npcpool subsystem call handle_automated_action(),
@@ -245,8 +261,11 @@ GLOBAL_LIST_EMPTY(marked_players)
 			TryAttack()
 			if(QDELETED(src) || stat != CONSCIOUS)
 				return FALSE
-		if(!QDELETED(target) && !targets_from.Adjacent(target))
-			DestroyPathToTarget()
+		if(ranged)
+			TakeAim(target)
+		if(!QDELETED(target))
+			if(!targets_from.Adjacent(target))
+				DestroyPathToTarget()
 		if(!MoveToTarget(possible_targets))     //if we lose our target
 			if(AIShouldSleep(possible_targets))	// we try to acquire a new one
 				target_memory.Cut()
@@ -272,25 +291,6 @@ GLOBAL_LIST_EMPTY(marked_players)
 			if(AIStatus == AI_IDLE)
 				toggle_ai(AI_ON)
 			FindTarget(list(user), 1)
-		var/add_aggro = 0
-		var/add_damtype
-		if(I)
-			add_aggro = I.force
-			add_damtype = I.damtype
-			if(ishuman(user))
-				var/mob/living/carbon/human/H = user
-				var/justice_mod = 1 + get_modified_attribute_level(H, JUSTICE_ATTRIBUTE) / 100
-				add_aggro *= justice_mod
-			if(istype(I, /obj/item/ego_weapon/))
-				var/obj/item/ego_weapon/EW = I
-				add_aggro *= EW.force_multiplier
-		else
-			//this code does not seem to ever get executed
-			add_aggro = user.melee_damage_upper
-			if(isanimal(user))
-				var/mob/living/simple_animal/A = user
-				add_damtype = A.melee_damage_type
-		RegisterAggroValue(user, add_aggro, add_damtype)
 		if(target == user)
 			GainPatience()
 	return ..()
@@ -300,11 +300,6 @@ GLOBAL_LIST_EMPTY(marked_players)
 		if(!target)
 			if(P.firer && get_dist(src, P.firer) <= aggro_vision_range)
 				FindTarget(list(P.firer), 1)
-			else
-				Goto(P.starting, move_to_delay, 3)
-		//register the attacker in our memory.
-		if(P.firer)
-			RegisterAggroValue(P.firer, P.damage, P.damage_type)
 	return ..()
 
 /mob/living/simple_animal/hostile/attack_animal(mob/living/simple_animal/M, damage)
@@ -315,11 +310,28 @@ GLOBAL_LIST_EMPTY(marked_players)
 			if(AIStatus == AI_IDLE)
 				toggle_ai(AI_ON)
 			FindTarget(list(M), TRUE)
-		RegisterAggroValue(M, damage, M.melee_damage_type)
 		if(target == M)
 			GainPatience()
 
+// This proc will register the aggro value for damage taken by deal_damage. It is called by /hostile/deal_damage() which is an override of mob/living/proc/deal_damage().
+/mob/living/simple_animal/hostile/proc/RegisterAttackAggro(damage_amount, damage_type, source)
+	if(!damage_amount || stat >= DEAD || client)
+		return
+	if(isliving(source) && !faction_check_mob(source)) // If a mob is responsible for the damage we took... (Mind, we will receive source = null for attacks that are not intended to be "trackable")
+		var/mob/living/source_of_damage = source
+		if(source_of_damage.status_flags & GODMODE) // Let's not aggro on things we can't hurt anyhow
+			return
+		RegisterAggroValue(source, damage_amount, damage_type) // Regardless of whether we have an active target or not, add the damage taken to our target memory.
+		if(!target && world.time >= investigation_cooldown) // If we don't have a target right now, move to investigate the source of the damage.
+			var/turf/source_turf = get_turf(source)
+			if(!source_turf)
+				return
+			investigation_cooldown = world.time + investigation_cooldown_duration
+			INVOKE_ASYNC(src, TYPE_PROC_REF(/mob/living/simple_animal/hostile, patrol_to), source_turf) // This is an ASync because it calls AStar and that calls stoplag so if you ever have deal_damage in a signal it will throw a warning
+
 /mob/living/simple_animal/hostile/Move(atom/newloc, dir , step_x , step_y)
+	if(!can_act)
+		return
 	if(dodging && approaching_target && prob(dodge_prob) && moving_diagonally == 0 && isturf(loc) && isturf(newloc))
 		return dodge(newloc,dir)
 	else
@@ -348,17 +360,21 @@ GLOBAL_LIST_EMPTY(marked_players)
 	. = ..()
 	if(!ckey && !stat && search_objects < 3 && . > 0)//Not unconscious, and we don't ignore mobs
 		if(search_objects)//Turn off item searching and ignore whatever item we were looking at, we're more concerned with fight or flight
-			target = null
+			LoseTarget(FALSE)
 			LoseSearchObjects()
 		if(AIStatus != AI_ON && AIStatus != AI_OFF)
 			toggle_ai(AI_ON)
 			FindTarget()
 
+/mob/living/simple_animal/hostile/deal_damage(damage_amount, damage_type, source = null, flags = null, attack_type = null, blocked = null, def_zone = null, wound_bonus = 0, bare_wound_bonus = 0, sharpness = SHARP_NONE)
+	. = ..() // Returns the final damage, post reductions
+	RegisterAttackAggro(., damage_type, flags & DAMAGE_UNTRACKABLE ? null : source)
+
 /mob/living/simple_animal/hostile/death(gibbed)
 	target_memory.Cut()
 	attack_is_on_cooldown = FALSE
 	LoseTarget()
-	..(gibbed)
+	return ..(gibbed)
 
 /mob/living/simple_animal/hostile/update_stamina()
 	if(staminaloss == 0)
@@ -403,37 +419,41 @@ GLOBAL_LIST_EMPTY(marked_players)
 				return null
 
 /mob/living/simple_animal/hostile/DamageEffect(damage, damtype)
-	var/obj/effect/dam_effect = null
+	var/effect_name
 	if(!damage)
-		dam_effect = new /obj/effect/temp_visual/healing/no_dam(get_turf(src))
-		if(damage_effect_scale != 1)
-			dam_effect.transform *= damage_effect_scale
-		return dam_effect
+		effect_name = "no_dam"
 	if(damage < 0)
-		dam_effect = new /obj/effect/temp_visual/healing(get_turf(src))
-		if(damage_effect_scale != 1)
-			dam_effect.transform *= damage_effect_scale
-		return dam_effect
-	switch(damtype)
-		if(RED_DAMAGE, BRUTE)
-			dam_effect = new /obj/effect/temp_visual/damage_effect/red(get_turf(src))
-		if(WHITE_DAMAGE)
-			dam_effect = new /obj/effect/temp_visual/damage_effect/white(get_turf(src))
-		if(BLACK_DAMAGE)
-			dam_effect = new /obj/effect/temp_visual/damage_effect/black(get_turf(src))
-		if(PALE_DAMAGE)
-			dam_effect = new /obj/effect/temp_visual/damage_effect/pale(get_turf(src))
-		if(FIRE)
-			dam_effect = new /obj/effect/temp_visual/damage_effect/burn(get_turf(src))
-		if(TOX)
-			dam_effect = new /obj/effect/temp_visual/damage_effect/tox(get_turf(src))
-		else
+		effect_name = "healing"
+	if(!effect_name)
+		switch(damtype)
+			if(RED_DAMAGE, BRUTE)
+				effect_name = "dam_red"
+			if(WHITE_DAMAGE)
+				effect_name = "dam_white"
+			if(BLACK_DAMAGE)
+				effect_name = "dam_black"
+			if(PALE_DAMAGE)
+				effect_name = "dam_pale"
+			if(FIRE)
+				effect_name = "dam_burn"
+			if(TOX)
+				effect_name = "dam_tox"
+		if(!effect_name)
 			return null
+		else
+			effect_name += "[rand(1,2)]"
+	var/image/dam_effect = image('ModularLobotomy/_Lobotomyicons/lc13_coloreffect.dmi', get_turf(src), effect_name, src.layer + 0.1)
+	dam_effect.pixel_x = rand(-12, 12)
+	dam_effect.pixel_y = rand(-9, 0)
+	dam_effect.plane = GAME_PLANE
+	dam_effect.appearance_flags = APPEARANCE_UI_IGNORE_ALPHA
+
 	if(damage_effect_scale != 1)
 		dam_effect.transform *= damage_effect_scale
 	if(length(projectile_blockers) > 0)
 		dam_effect.pixel_x += rand(-occupied_tiles_left_current * 32, occupied_tiles_right_current * 32)
 		dam_effect.pixel_y += rand(-occupied_tiles_down_current * 32, occupied_tiles_up_current * 32)
+	flick_overlay(dam_effect, GLOB.clients, 8)
 	return dam_effect
 
 /mob/living/simple_animal/hostile/adjustBruteLoss(amount, updating_health, forced)
@@ -515,6 +535,9 @@ GLOBAL_LIST_EMPTY(marked_players)
 //////////////HOSTILE MOB TARGETTING AND AGGRESSION////////////
 ///Gets a list of everything that can possibly be targeted
 /mob/living/simple_animal/hostile/proc/ListTargets(max_range = vision_range) //Step 1, find out what we can see
+	if(!can_act)
+		return list()
+
 	//The thorough mode, rarely used
 	if(search_objects)
 		. = oview(max_range, targets_from)
@@ -608,7 +631,7 @@ GLOBAL_LIST_EMPTY(marked_players)
 				return FALSE
 
 			if(mark_once_attacked)
-				if (the_target in glob_faction)
+				if (L.tag in glob_faction)
 					return TRUE
 
 			var/faction_check = faction_check_mob(L)
@@ -617,7 +640,7 @@ GLOBAL_LIST_EMPTY(marked_players)
 					return FALSE
 				if(L.stat > stat_attack)
 					return FALSE
-				if(L in friends)
+				if(AddIdentifier(L) in friends)
 					return FALSE
 			else
 				if((faction_check && !attack_same) || L.stat)
@@ -688,8 +711,11 @@ GLOBAL_LIST_EMPTY(marked_players)
 /mob/living/simple_animal/hostile/proc/RegisterAggroValue(atom/remembered_target, value, damage_type)
 	if(!remembered_target || !damage_type)
 		return FALSE
-	if(!isnum(target_memory[remembered_target]))
-		target_memory += remembered_target
+	var/trg_tag = AddIdentifier(remembered_target)
+	if(!trg_tag)
+		return FALSE
+	if(!isnum(target_memory[trg_tag]))
+		target_memory += trg_tag
 
 	//could potentially add aggro as a mob armor type to also apply aggro damage coeff
 	//also could potentially check for remembered_target's aggro modifiers here such as from armor or status effects
@@ -700,11 +726,11 @@ GLOBAL_LIST_EMPTY(marked_players)
 			value *= aggro_stat_modifier
 	else
 		value *= damage_coeff.getCoeff(damage_type)
-	target_memory[remembered_target] += value
+	target_memory[trg_tag] += value
 
-	if(!QDELETED(target) && remembered_target != target && target_memory[remembered_target] > target_memory[target] + target_switch_resistance && CanAttack(remembered_target))
+	if(!QDELETED(target) && remembered_target != target && target_memory[trg_tag] > target_memory[AddIdentifier(target)] + target_switch_resistance && CanAttack(remembered_target))
 		GiveTarget(remembered_target)
-		target_memory[remembered_target] += value
+		target_memory[trg_tag] += value
 	return TRUE
 
 /*-------------------\
@@ -719,8 +745,10 @@ GLOBAL_LIST_EMPTY(marked_players)
 |Damage dealt +0 to +25
 \-------------------*/
 /mob/living/simple_animal/hostile/proc/ValueTarget(atom/target_thing)
-	if(!target_thing)
-		return
+	var/target_tag = AddIdentifier(target_thing)
+	if(!target_thing || !target_tag)
+		return 0
+
 	//This is a safety net just in the case that no value is returned.
 	. = 0
 
@@ -744,15 +772,19 @@ GLOBAL_LIST_EMPTY(marked_players)
 		. -= 60
 
 	//up to 25 points for damage taken from target_thing
-	if(target_memory[target_thing])
-		var/fraction_hp_lost_to_thing = min(target_memory[target_thing] / maxHealth, 1)
-		. += fraction_hp_lost_to_thing * 25
+	if(target_tag in target_memory)
+		if(target_memory[target_tag])
+			var/fraction_hp_lost_to_thing = min(target_memory[target_tag] / maxHealth, 1)
+			. += fraction_hp_lost_to_thing * 25
 
 /mob/living/simple_animal/hostile/proc/GiveTarget(atom/new_target)
-	target_memory.Cut()
 	if(!QDELETED(new_target))
+		var/signal_return = SEND_SIGNAL(src, COMSIG_HOSTILE_GAINEDTARGET, new_target)
+		if(signal_return & COMPONENT_HOSTILE_REFUSE_AGGRO) // We can be told to cancel our re-targeting
+			return
+		target_memory.Cut()
 		target = new_target
-		target_memory[target] = 0
+		target_memory[AddIdentifier(target)] = 0
 		GainPatience()
 		Aggro()
 		Goto(target, move_to_delay, minimum_distance)
@@ -760,11 +792,12 @@ GLOBAL_LIST_EMPTY(marked_players)
 	LoseTarget()
 	return FALSE
 
-/mob/living/simple_animal/hostile/proc/LoseTarget()
+/mob/living/simple_animal/hostile/proc/LoseTarget(stop_movement = TRUE)
 	target = null
 	approaching_target = FALSE
 	in_melee = FALSE
-	walk(src, 0)
+	if(stop_movement)
+		walk(src, 0)
 	SEND_SIGNAL(src, COMSIG_HOSTILE_LOSTTARGET)
 	LoseAggro()
 
@@ -851,7 +884,7 @@ GLOBAL_LIST_EMPTY(marked_players)
 
 /mob/living/simple_animal/hostile/proc/ResetAttackCooldown(delay)
 	set waitfor = FALSE
-	SLEEP_CHECK_DEATH(delay)
+	SLEEP_CHECK_DEATH(delay + rand(0,5))
 	attack_is_on_cooldown = FALSE
 	TryAttack()
 
@@ -887,12 +920,6 @@ GLOBAL_LIST_EMPTY(marked_players)
 			LoseTarget()
 			return FALSE
 		var/target_distance = get_dist(targets_from,target)
-		var/in_range = melee_reach > 1 ? target.Adjacent(targets_from) || (get_dist(src, target) <= melee_reach && (target in view(src, melee_reach))) : target.Adjacent(targets_from)
-		if(ranged) //We ranged? Shoot at em
-			if(!in_range && ranged_cooldown <= world.time)
-				//But make sure they're not in range for a melee attack and our range attack is off cooldown
-				OpenFire(target)
-
 		//This is consideration for chargers. If you are not a charger you can skip this.
 		if(charger && (target_distance > minimum_distance) && (target_distance <= charge_distance))
 			//Attempt to close the distance with a charge.
@@ -919,7 +946,7 @@ GLOBAL_LIST_EMPTY(marked_players)
 		return FALSE
 
 	//Smashing code
-	if(environment_smash)
+	if(environment_smash && !isnull(target))
 		if(target.loc != null && get_dist(targets_from, target.loc) <= vision_range) //We can't see our target, but he's in our vision range still
 			if(ranged_ignores_vision && ranged_cooldown <= world.time) //we can't see our target... but we can fire at them!
 				OpenFire(target)
@@ -935,6 +962,8 @@ GLOBAL_LIST_EMPTY(marked_players)
 
 //Functionally this proc is a simplier version of the core code walk_to().
 /mob/living/simple_animal/hostile/proc/Goto(target, delay, minimum_distance)
+	if(!can_act)
+		return
 	if(target == src.target)
 		approaching_target = TRUE
 	else
@@ -947,13 +976,16 @@ GLOBAL_LIST_EMPTY(marked_players)
 	return TRUE
 
 /mob/living/simple_animal/hostile/proc/AttackingTarget(atom/attacked_target)
+	if(!can_act)
+		return
 	if(client)
 		if(target == src)
 			to_chat(src, span_warning("You almost attack yourself, but then decide against it."))
 			return
 		if(SSmaptype.maptype == "rcorp" && faction_check_mob(target, FALSE))
-			to_chat(src, span_warning("You almost attack your teammate, but then decide against it."))
-			return
+			if(!istype(src, /mob/living/simple_animal/hostile/rca_nosferatu_mob))
+				to_chat(src, span_warning("You almost attack your teammate, but then decide against it."))
+				return
 
 	if(!attacked_target)
 		attacked_target = target
@@ -987,7 +1019,37 @@ GLOBAL_LIST_EMPTY(marked_players)
 		OpenFire(A)
 	return
 
+/mob/living/simple_animal/hostile/proc/TakeAim(atom/shootem)
+	if(!shootem)
+		return FALSE
+	/*
+	* ranged cooldown has to be a minimum of 1 second because the npcpool
+	* only procs once per 2 seconds and this cooldown cannot cause it to
+	* proc twice between 2 seconds.
+	*/
+	var/stupidly_complicated_cooldown_calc = world.time - ranged_cooldown
+	if(stupidly_complicated_cooldown_calc > -SSnpcpool.wait)
+		//Our cooldown is less than the next check.
+		if(stupidly_complicated_cooldown_calc < 0 && !QDELETED(src))
+			// Try to call this before our next check in 2 SECONDS
+			addtimer(CALLBACK(src, PROC_REF(OpenFire), shootem), clamp(abs(stupidly_complicated_cooldown_calc) + rand(-1,5), 1, 1.99 SECONDS), TIMER_STOPPABLE)
+		else
+			// Just shootem now.
+			OpenFire(shootem)
+		return TRUE
+
+//This is called by a callback sometimes so check to make sure we have not violently died.
 /mob/living/simple_animal/hostile/proc/OpenFire(atom/A)
+	if(QDELETED(src))
+		return
+	if(stat == DEAD)
+		return
+	if(!target)
+		return
+	var/in_range = melee_reach > 1 ? target.Adjacent(targets_from) || (get_dist(src, A) <= melee_reach && (target in view(src, melee_reach))) : target.Adjacent(targets_from)
+	if(in_range)
+		return
+
 	if(CheckFriendlyFire(A))
 		return
 	if(!(simple_mob_flags & SILENCE_RANGED_MESSAGE))
@@ -1087,6 +1149,8 @@ GLOBAL_LIST_EMPTY(marked_players)
 
 // for use with megafauna destroying everything around them
 /mob/living/simple_animal/hostile/proc/DestroySurroundings()
+	if(!can_act)
+		return
 	if(environment_smash)
 		EscapeConfinement()
 		for(var/dir in GLOB.cardinals)
@@ -1094,6 +1158,8 @@ GLOBAL_LIST_EMPTY(marked_players)
 
 
 /mob/living/simple_animal/hostile/proc/EscapeConfinement()
+	if(docile_confinement) // Use this var to stop this behaviou
+		return
 	if(buckled)
 		buckled.attack_animal(src)
 	if(!isturf(targets_from.loc) && targets_from.loc != null)//Did someone put us in something?
@@ -1178,11 +1244,12 @@ GLOBAL_LIST_EMPTY(marked_players)
 	|UNCATAGORIZED PROCS|
 	\------------------*/
 
-/mob/living/simple_animal/hostile/tamed(whomst)
+/mob/living/simple_animal/hostile/tamed(mob/living/whomst)
 	. = ..()
-	if(isliving(whomst) && !locate(whomst) in friends)
+	var/tamed_tag = AddIdentifier(whomst)
+	if(isliving(whomst) && !(tamed_tag in friends))
 		var/mob/living/fren = whomst
-		friends += fren
+		LAZYOR(friends, tamed_tag)
 		faction = fren.faction.Copy()
 
 /mob/living/simple_animal/hostile/proc/summon_backup(distance, exact_faction_match)
@@ -1283,6 +1350,10 @@ GLOBAL_LIST_EMPTY(marked_players)
 
 ////// Patrol Code ///////
 /mob/living/simple_animal/hostile/proc/CanStartPatrol()
+	if(!can_act)
+		return FALSE
+	if(patrol_cooldown > world.time)
+		return FALSE
 	return AIStatus == AI_IDLE //if AI is idle, begin checking for patrol
 
 /mob/living/simple_animal/hostile/proc/patrol_to(turf/target_location = null)
@@ -1295,26 +1366,36 @@ GLOBAL_LIST_EMPTY(marked_players)
 	patrol_move(patrol_path[patrol_path.len])
 	return TRUE
 
-/mob/living/simple_animal/hostile/proc/patrol_select()
+/mob/living/simple_animal/hostile/proc/PatrolSelect()
 	//Mobs should stay unpatroled on maps where they're intended to be possessed.
 	if(SSmaptype.maptype in SSmaptype.autopossess)
-		return
+		return FALSE
+
+	var/turf/target_center = SelectPatrolLocation()
+	if(!isturf(target_center))
+		target_center = get_turf(target_center)
+	if(!target_center)
+		return FALSE
+
+	SEND_SIGNAL(src, COMSIG_PATROL_START, src, target_center)
+	SEND_GLOBAL_SIGNAL(src, COMSIG_GLOB_PATROL_START, src, target_center)
+	var/temp_patrol_path = get_path_to(src, target_center, TYPE_PROC_REF(/turf, Distance_cardinal), 0, 200)
+	patrol_path = temp_patrol_path
+	return temp_patrol_path
+
+/mob/living/simple_animal/hostile/proc/SelectPatrolLocation()
 	if(!LAZYLEN(GLOB.department_centers))
 		return
 
-	var/turf/target_center
 	var/list/potential_centers = list()
 	for(var/pos_targ in GLOB.department_centers)
 		var/possible_center_distance = get_dist(src, pos_targ)
 		if(possible_center_distance > 4 && possible_center_distance < 46)
 			potential_centers += pos_targ
 	if(LAZYLEN(potential_centers))
-		target_center = pick(potential_centers)
+		return pick(potential_centers)
 	else
-		target_center = pick(GLOB.department_centers)
-	SEND_SIGNAL(src, COMSIG_PATROL_START, src, target_center)
-	SEND_GLOBAL_SIGNAL(src, COMSIG_GLOB_PATROL_START, src, target_center)
-	patrol_path = get_path_to(src, target_center, TYPE_PROC_REF(/turf, Distance_cardinal), 0, 200)
+		return pick(GLOB.department_centers)
 
 /mob/living/simple_animal/hostile/proc/patrol_reset()
 	patrol_path = list()
@@ -1325,7 +1406,7 @@ GLOBAL_LIST_EMPTY(marked_players)
 	patrol_cooldown = world.time + patrol_cooldown_time
 
 /mob/living/simple_animal/hostile/proc/patrol_move(dest)
-	if(client || target || status_flags & GODMODE)
+	if(client || target || status_flags & GODMODE || AIStatus == AI_OFF)
 		patrol_reset()
 		return FALSE
 	if(!dest || !patrol_path || !patrol_path.len) //A-star failed or a path/destination was not set.

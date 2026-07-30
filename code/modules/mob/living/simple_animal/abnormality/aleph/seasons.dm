@@ -121,7 +121,6 @@
 	var/safe
 	var/work_timer
 	// Breach Vars
-	var/can_act = TRUE
 	var/slam_damage = 200
 	var/slam_cooldown
 	var/slam_cooldown_time = 20 SECONDS
@@ -327,6 +326,7 @@
 	EndWeather()
 	for(var/obj/effect/season_turf/newturf in spawned_turfs)
 		newturf.DoDelete()
+	spawned_turfs = null
 	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/seasons/BreachEffect(mob/living/carbon/human/user, breach_type)
@@ -448,7 +448,7 @@
 			if(L in hit_list || istype(L, type))
 				continue
 			hit_list += L
-			L.deal_damage(cone_attack_damage, melee_damage_type)
+			L.deal_damage(cone_attack_damage, melee_damage_type, src, attack_type = (ATTACK_TYPE_SPECIAL))
 			to_chat(L, span_userdanger("You have been hit by [src]'s breath attack!"))
 			if(ishuman(L))
 				Finisher(L)
@@ -475,7 +475,7 @@
 		for(var/mob/living/L in T)
 			if(faction_check_mob(L))
 				continue
-			L.deal_damage(slam_damage, melee_damage_type)
+			L.deal_damage(slam_damage, melee_damage_type, src, attack_type = (ATTACK_TYPE_SPECIAL))
 			if(ishuman(L))
 				Finisher(L)
 	SLEEP_CHECK_DEATH(3)
@@ -506,7 +506,7 @@
 	for(var/mob/living/L in T)
 		if(faction_check_mob(L))
 			continue
-		L.deal_damage(pulse_damage, melee_damage_type)
+		L.deal_damage(pulse_damage, melee_damage_type, src, attack_type = (ATTACK_TYPE_SPECIAL))
 
 /mob/living/simple_animal/hostile/abnormality/seasons/proc/Finisher(mob/living/carbon/human/H) //return TRUE to prevent attacking, as attacking causes runtimes if the target is gibbed.
 	if(current_season == "spring" && H.sanity_lost)
@@ -814,11 +814,11 @@
 		if(ishuman(L))
 			var/mob/living/carbon/human/H = L
 			if(current_season == "summer")
-				H.deal_damage(6, FIRE)
+				H.deal_damage(6, FIRE, attack_type = (ATTACK_TYPE_ENVIRONMENT))
 				H.apply_lc_burn(3)
 				dealt_damage = TRUE
 			else if(current_season == "spring")
-				H.apply_damage(10, WHITE_DAMAGE, null, H.run_armor_check(null, WHITE_DAMAGE), spread_damage = FALSE)
+				H.deal_damage(10, WHITE_DAMAGE, attack_type = (ATTACK_TYPE_ENVIRONMENT))
 	if(!dealt_damage)
 		damaging = FALSE
 		return

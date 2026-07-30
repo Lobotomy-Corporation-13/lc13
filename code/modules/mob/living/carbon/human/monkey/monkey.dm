@@ -22,6 +22,10 @@
 
 /mob/living/carbon/human/species/monkey/angry/Initialize()
 	. = ..()
+	return INITIALIZE_HINT_LATELOAD // Stop putting clothes on here.
+
+/mob/living/carbon/human/species/monkey/angry/LateInitialize()
+	. = ..()
 	if(prob(10))
 		var/obj/item/clothing/head/helmet/justice/escape/helmet = new(src)
 		equip_to_slot_or_del(helmet,ITEM_SLOT_HEAD)
@@ -54,8 +58,11 @@
 		if(name_to_use == "Furious George")
 			ai_controller = /datum/ai_controller/monkey/angry //hes always mad
 	. = ..()
-
 	fully_replace_character_name(real_name, name_to_use)
+	return INITIALIZE_HINT_LATELOAD
+
+/mob/living/carbon/human/species/monkey/punpun/LateInitialize()
+	. = ..()
 
 	//These have to be after the parent new to ensure that the monkey
 	//bodyparts are actually created before we try to equip things to

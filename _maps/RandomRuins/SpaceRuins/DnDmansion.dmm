@@ -642,7 +642,6 @@
 /area/ruin/has_grav/DnDmansion)
 "cm" = (
 /obj/machinery/light,
-/obj/machinery/portable_atmospherics/canister/air,
 /obj/structure/statue/diamond/ai2,
 /turf/open/floor/carpet,
 /area/ruin/has_grav/DnDmansion)

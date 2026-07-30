@@ -1,0 +1,9821 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"ab" = (
+/obj/effect/decal/cleanable/blood/footprints,
+/turf/open/floor/plating/asteroid/basalt,
+/area/city/outskirtsfactory)
+"ad" = (
+/obj/item/bodypart/head,
+/turf/open/floor/pod/light,
+/area/city/outskirtsfactory)
+"af" = (
+/obj/structure/sigsystem/connector/split{
+	happens_once = 1
+	},
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"ak" = (
+/obj/structure/railing/corner{
+	dir = 1
+	},
+/obj/effect/decal/cleanable/blood/splatter,
+/obj/effect/turf_decal/siding/red/corner,
+/obj/structure/sigsystem/connector{
+	dir = 4
+	},
+/turf/open/floor/facility/dark,
+/area/city/outskirtsfactory)
+"al" = (
+/obj/structure/sigsystem/connector{
+	dir = 1
+	},
+/turf/open/floor/mineral/plastitanium/red,
+/area/city/outskirtsfactory)
+"ar" = (
+/obj/structure/closet/crate,
+/turf/open/floor/facility/dark,
+/area/city/outskirtsfactory)
+"aB" = (
+/obj/structure/sigsystem/connector,
+/obj/effect/turf_decal/siding/red{
+	dir = 4
+	},
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"aI" = (
+/obj/structure/railing{
+	dir = 4
+	},
+/obj/structure/sigsystem/tower{
+	signal_code = 33;
+	dir = 1
+	},
+/turf/open/floor/facility/dark,
+/area/city/outskirtsfactory)
+"aQ" = (
+/obj/effect/decal/cleanable/blood/gibs/torso,
+/turf/open/floor/pod/light,
+/area/city/outskirtsfactory)
+"aR" = (
+/obj/machinery/door/poddoor/shutters/indestructible{
+	lockpickable = 0;
+	resistance_flags = 64
+	},
+/obj/structure/sigsystem/connector{
+	dir = 4
+	},
+/obj/structure/sigsystem/activator,
+/obj/machinery/conveyor/auto{
+	dir = 1;
+	resistance_flags = 64;
+	tamperproof = 1
+	},
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"aZ" = (
+/obj/effect/decal/cleanable/blood/footprints,
+/obj/structure/sigsystem/connector{
+	dir = 4
+	},
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"ba" = (
+/turf/open/floor/plating/ashplanet{
+	name = "asphalt"
+	},
+/area/city/outskirtsfactory)
+"bl" = (
+/obj/structure/sign/departments/security,
+/turf/closed/indestructible/syndicate,
+/area/city/outskirtsfactory)
+"bp" = (
+/obj/effect/decal/cleanable/blood/old,
+/obj/structure/sigsystem/tower/button{
+	pixel_y = 27;
+	signal_code = 15
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirtsfactory)
+"bv" = (
+/obj/structure/sign/warning/securearea{
+	pixel_y = 19;
+	pixel_x = 32
+	},
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"bw" = (
+/obj/machinery/light/small/red{
+	dir = 1
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirtsfactory)
+"bx" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/light_emitter{
+	light_power = 4;
+	light_range = 25;
+	set_cap = 3;
+	set_luminosity = 24
+	},
+/turf/open/floor/facility/dark,
+/area/city/outskirtsfactory)
+"bE" = (
+/obj/machinery/light/red{
+	dir = 8
+	},
+/turf/open/floor/pod/light,
+/area/city/outskirtsfactory)
+"bQ" = (
+/obj/structure/sigsystem/connector{
+	happens_once = 1
+	},
+/turf/open/floor/facility/dark,
+/area/city/outskirtsfactory)
+"bR" = (
+/obj/machinery/light/red{
+	dir = 1
+	},
+/turf/open/floor/pod/light,
+/area/city/outskirtsfactory)
+"bS" = (
+/obj/structure/sigsystem/connector{
+	dir = 1
+	},
+/turf/closed/indestructible/syndicate,
+/area/city/outskirtsfactory)
+"bZ" = (
+/obj/structure/table/reinforced,
+/obj/machinery/light{
+	dir = 1
+	},
+/obj/item/clothing/suit/armor/ego_gear/ordeal/painful_purpose{
+	pixel_x = 9;
+	pixel_y = 8
+	},
+/obj/item/ego_weapon/painprocess{
+	pixel_y = -5;
+	pixel_x = -6
+	},
+/turf/open/floor/facility/dark,
+/area/city/outskirtsfactory)
+"ca" = (
+/obj/machinery/light{
+	dir = 1
+	},
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"ce" = (
+/obj/machinery/door/poddoor/shutters/indestructible{
+	lockpickable = 0;
+	resistance_flags = 64
+	},
+/obj/structure/sigsystem/activator,
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirtsfactory)
+"cw" = (
+/obj/effect/turf_decal/siding/thinplating/light{
+	dir = 8
+	},
+/turf/open/floor/facility,
+/area/city/outskirtsfactory)
+"cz" = (
+/obj/structure/headpike,
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"cB" = (
+/obj/machinery/light/small/red{
+	dir = 8
+	},
+/obj/effect/turf_decal/siding/green{
+	dir = 8
+	},
+/mob/living/simple_animal/hostile/ordeal/green_bot_rocket,
+/turf/open/floor/pod/light,
+/area/city/outskirtsfactory)
+"cX" = (
+/obj/machinery/door/poddoor/shutters/indestructible{
+	resistance_flags = 64;
+	desc = "Heavy duty mechanical shutters with an atmospheric seal that keeps them airtight once closed. These ones seem less secure than the others..."
+	},
+/turf/open/floor/pod/light,
+/area/city/outskirtsfactory)
+"db" = (
+/obj/machinery/door/poddoor,
+/obj/machinery/door/poddoor{
+	resistance_flags = 64
+	},
+/obj/structure/sigsystem/connector,
+/obj/structure/sigsystem/activator,
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"dl" = (
+/obj/structure/sigsystem/pressure_plate{
+	dir = 1;
+	mobs_only = 1
+	},
+/turf/open/floor/mineral/plastitanium/red,
+/area/city/outskirtsfactory)
+"dn" = (
+/obj/machinery/light/small/red{
+	dir = 8
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/turf_decal/siding/green{
+	dir = 8
+	},
+/turf/open/floor/pod/light,
+/area/city/outskirtsfactory)
+"dt" = (
+/obj/machinery/light/small{
+	dir = 8
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirtsfactory)
+"dy" = (
+/mob/living/simple_animal/hostile/ordeal/green_bot_big,
+/turf/open/floor/plating,
+/area/city/outskirtsfactory)
+"dL" = (
+/obj/machinery/light/small/red{
+	dir = 4
+	},
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"dU" = (
+/turf/open/floor/circuit/red,
+/area/city/outskirtsfactory)
+"eb" = (
+/obj/effect/turf_decal/siding/green{
+	dir = 1
+	},
+/turf/open/floor/pod/light,
+/area/city/outskirtsfactory)
+"ef" = (
+/obj/structure/railing{
+	resistance_flags = 115;
+	name = "wing-grade railing";
+	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
+	mouse_opacity = 0;
+	dir = 4
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/decal/cleanable/oil/slippery,
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirtsfactory)
+"et" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"eA" = (
+/obj/effect/decal/cleanable/blood/gibs,
+/turf/open/floor/pod/light,
+/area/city/outskirtsfactory)
+"eB" = (
+/obj/machinery/door/poddoor/shutters/indestructible{
+	lockpickable = 0
+	},
+/obj/structure/sigsystem/activator,
+/turf/open/floor/facility/dark,
+/area/city/outskirtsfactory)
+"eH" = (
+/obj/machinery/door/poddoor/shutters/preopen{
+	resistance_flags = 64;
+	lockpickable = 0
+	},
+/obj/structure/sigsystem/activator,
+/turf/open/floor/facility/dark,
+/area/city/outskirtsfactory)
+"fx" = (
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 1
+	},
+/turf/open/floor/plating/asteroid/basalt,
+/area/city/outskirtsfactory)
+"fz" = (
+/obj/structure/sigsystem/connector{
+	dir = 8
+	},
+/turf/open/floor/mineral/plastitanium/red,
+/area/city/outskirtsfactory)
+"fA" = (
+/obj/effect/turf_decal/siding/thinplating/light,
+/turf/open/floor/facility,
+/area/city/outskirtsfactory)
+"fM" = (
+/obj/effect/decal/cleanable/blood/footprints,
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"fR" = (
+/obj/structure/fluff/big_chain{
+	resistance_flags = 3
+	},
+/turf/open/lava,
+/area/city/outskirtsfactory)
+"fT" = (
+/turf/open/floor/mineral/plastitanium/red,
+/area/city/outskirtsfactory)
+"gi" = (
+/obj/effect/decal/cleanable/blood/footprints{
+	dir = 4
+	},
+/turf/open/floor/plating/asteroid/basalt,
+/area/city/outskirtsfactory)
+"gl" = (
+/obj/machinery/conveyor/auto{
+	dir = 1;
+	resistance_flags = 64;
+	tamperproof = 1
+	},
+/obj/structure/plasticflaps/opaque{
+	resistance_flags = 64
+	},
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"gn" = (
+/obj/effect/turf_decal/trimline/red/filled/warning{
+	dir = 4
+	},
+/turf/open/floor/plating/ashplanet{
+	name = "asphalt"
+	},
+/area/city/outskirtsfactory)
+"gv" = (
+/mob/living/simple_animal/hostile/ordeal/green_bot,
+/turf/open/floor/pod/light,
+/area/city/outskirtsfactory)
+"gx" = (
+/obj/effect/turf_decal/trimline/red/filled/warning{
+	dir = 6
+	},
+/turf/open/floor/plating/ashplanet{
+	name = "asphalt"
+	},
+/area/city/outskirtsfactory)
+"gE" = (
+/obj/structure/railing{
+	resistance_flags = 115;
+	name = "wing-grade railing";
+	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
+	mouse_opacity = 0;
+	dir = 4
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirtsfactory)
+"gG" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/machinery/light/small/red,
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"gK" = (
+/obj/machinery/light/small/red{
+	dir = 8
+	},
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"gS" = (
+/obj/machinery/door/poddoor/shutters/preopen{
+	resistance_flags = 64;
+	lockpickable = 0
+	},
+/obj/structure/sigsystem/connector{
+	dir = 8
+	},
+/obj/structure/sigsystem/activator,
+/turf/open/floor/facility/dark,
+/area/city/outskirtsfactory)
+"gU" = (
+/obj/machinery/light/small{
+	dir = 4
+	},
+/obj/structure/sigsystem/tower/button{
+	pixel_x = 28;
+	signal_code = 09
+	},
+/obj/structure/sigsystem/tower{
+	signal_code = 09;
+	dir = 1
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirtsfactory)
+"gX" = (
+/obj/structure/sign/directions/engineering{
+	dir = 8
+	},
+/obj/structure/sigsystem/connector/split{
+	dir = 4
+	},
+/turf/closed/indestructible/syndicate,
+/area/city/outskirtsfactory)
+"hc" = (
+/obj/effect/turf_decal/siding/green{
+	dir = 8
+	},
+/turf/open/floor/pod/light,
+/area/city/outskirtsfactory)
+"hk" = (
+/obj/structure/sigsystem/tower{
+	dir = 1;
+	signal_code = 53
+	},
+/turf/closed/indestructible/rock,
+/area/city/outskirtsfactory)
+"ho" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/turf_decal/siding/green{
+	dir = 8
+	},
+/turf/open/floor/pod/light,
+/area/city/outskirtsfactory)
+"hH" = (
+/obj/effect/turf_decal/siding/thinplating/light{
+	dir = 1
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/facility,
+/area/city/outskirtsfactory)
+"hK" = (
+/obj/structure/sigsystem/connector{
+	delay_time = 100;
+	dir = 4
+	},
+/turf/closed/indestructible/syndicate,
+/area/city/outskirtsfactory)
+"hN" = (
+/obj/structure/railing{
+	dir = 6
+	},
+/turf/open/floor/facility/dark,
+/area/city/outskirtsfactory)
+"if" = (
+/obj/structure/railing{
+	dir = 4
+	},
+/obj/effect/decal/cleanable/blood/tracks,
+/turf/open/floor/facility/dark,
+/area/city/outskirtsfactory)
+"io" = (
+/turf/open/floor/plating/asteroid/basalt,
+/area/city/outskirtsfactory)
+"is" = (
+/obj/machinery/conveyor/auto{
+	dir = 8;
+	resistance_flags = 64;
+	tamperproof = 1
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirtsfactory)
+"iA" = (
+/obj/structure/railing{
+	resistance_flags = 115;
+	name = "wing-grade railing";
+	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
+	mouse_opacity = 0;
+	dir = 8
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/decal/cleanable/oil/slippery,
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirtsfactory)
+"iE" = (
+/obj/effect/turf_decal/siding/thinplating/light,
+/mob/living/simple_animal/hostile/ordeal/green_bot_big,
+/turf/open/floor/facility,
+/area/city/outskirtsfactory)
+"iZ" = (
+/obj/machinery/door/poddoor/shutters/indestructible{
+	lockpickable = 0;
+	resistance_flags = 64
+	},
+/obj/structure/sigsystem/activator,
+/obj/machinery/conveyor/auto{
+	dir = 1;
+	resistance_flags = 64;
+	tamperproof = 1
+	},
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"je" = (
+/obj/machinery/conveyor/auto{
+	dir = 8;
+	resistance_flags = 64;
+	tamperproof = 1
+	},
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"jf" = (
+/obj/structure/lootcrate/hana,
+/turf/open/floor/facility/dark,
+/area/city/outskirtsfactory)
+"ju" = (
+/obj/structure/railing/corner{
+	dir = 8
+	},
+/obj/effect/turf_decal/siding/red/corner{
+	dir = 4
+	},
+/turf/open/floor/facility/dark,
+/area/city/outskirtsfactory)
+"jx" = (
+/turf/open/floor/plating/ashplanet{
+	name = "asphalt";
+	density = 1
+	},
+/area/city/outskirtsfactory)
+"jH" = (
+/obj/structure/rack,
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirtsfactory)
+"jY" = (
+/obj/effect/decal/cleanable/blood/gibs/old,
+/obj/machinery/light/small/red{
+	dir = 4
+	},
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"kb" = (
+/obj/machinery/door/poddoor/shutters/window{
+	lockpickable = 0;
+	resistance_flags = 64
+	},
+/obj/structure/sigsystem/activator,
+/obj/effect/turf_decal/siding/red,
+/obj/effect/turf_decal/siding/red{
+	dir = 1
+	},
+/turf/open/floor/facility/dark,
+/area/city/outskirtsfactory)
+"kt" = (
+/obj/effect/mob_spawn/human/corpse/charredskeleton,
+/turf/open/lava,
+/area/city/outskirtsfactory)
+"ky" = (
+/obj/machinery/conveyor/auto{
+	dir = 1;
+	resistance_flags = 64;
+	tamperproof = 1
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirtsfactory)
+"kX" = (
+/obj/effect/decal/cleanable/blood/gibs/limb,
+/turf/open/floor/plating/asteroid/basalt,
+/area/city/outskirtsfactory)
+"la" = (
+/obj/structure/sigsystem/tower{
+	dir = 1;
+	signal_code = 01
+	},
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"le" = (
+/obj/structure/railing{
+	dir = 8
+	},
+/obj/effect/decal/cleanable/blood/footprints,
+/obj/structure/sigsystem/tower{
+	dir = 8;
+	signal_code = 44
+	},
+/turf/open/floor/facility/dark,
+/area/city/outskirtsfactory)
+"lp" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/turf_decal/siding/red{
+	dir = 1
+	},
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"lA" = (
+/obj/effect/turf_decal/trimline/white/filled/line{
+	pixel_y = 10
+	},
+/turf/open/floor/plating/ashplanet{
+	name = "asphalt"
+	},
+/area/city/outskirtsfactory)
+"lJ" = (
+/obj/structure/sigsystem/tower{
+	signal_code = 92
+	},
+/turf/open/floor/mineral/gold,
+/area/city/outskirtsfactory)
+"lP" = (
+/mob/living/simple_animal/hostile/ordeal/green_bot,
+/obj/machinery/light,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"lW" = (
+/obj/structure/plasticflaps/opaque{
+	resistance_flags = 64
+	},
+/obj/machinery/conveyor/auto{
+	dir = 1;
+	resistance_flags = 64;
+	tamperproof = 1
+	},
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"mm" = (
+/obj/structure/railing/corner,
+/obj/effect/decal/cleanable/blood/splatter,
+/obj/effect/turf_decal/siding/red/corner{
+	dir = 1
+	},
+/turf/open/floor/facility/dark,
+/area/city/outskirtsfactory)
+"mn" = (
+/obj/effect/turf_decal/siding/green,
+/turf/open/floor/pod/light,
+/area/city/outskirtsfactory)
+"mD" = (
+/mob/living/simple_animal/hostile/ordeal/grungeon_shielder,
+/turf/open/floor/pod/light,
+/area/city/outskirtsfactory)
+"mE" = (
+/mob/living/simple_animal/hostile/ordeal/green_bot/fast,
+/obj/effect/turf_decal/stripes/corner{
+	dir = 4
+	},
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"mL" = (
+/obj/effect/turf_decal/siding/red{
+	dir = 1
+	},
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"mV" = (
+/obj/machinery/light/small/red{
+	dir = 4
+	},
+/turf/open/floor/mineral/plastitanium/red,
+/area/city/outskirtsfactory)
+"no" = (
+/obj/machinery/door/poddoor/shutters/preopen{
+	resistance_flags = 64;
+	lockpickable = 0
+	},
+/obj/structure/sigsystem/connector,
+/obj/structure/sigsystem/activator,
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"nz" = (
+/obj/structure/sigsystem/announcer{
+	message_range = 5;
+	message = "Unauthorized access detected. Engaging temporary lockdown."
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirtsfactory)
+"nI" = (
+/obj/effect/decal/cleanable/oil/slippery,
+/turf/open/floor/facility,
+/area/city/outskirtsfactory)
+"nQ" = (
+/obj/machinery/light/small/red{
+	dir = 8
+	},
+/turf/open/floor/mineral/plastitanium/red,
+/area/city/outskirtsfactory)
+"ot" = (
+/obj/structure/sigsystem/connector{
+	dir = 1
+	},
+/turf/open/floor/circuit/red,
+/area/city/outskirtsfactory)
+"oy" = (
+/mob/living/simple_animal/hostile/ordeal/green_bot_rocket,
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"oS" = (
+/obj/machinery/door/poddoor/shutters/indestructible{
+	lockpickable = 0;
+	resistance_flags = 64;
+	id = "furnaceaccess"
+	},
+/obj/structure/sigsystem/activator,
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirtsfactory)
+"pe" = (
+/obj/effect/turf_decal/siding/thinplating/light{
+	dir = 8
+	},
+/turf/open/floor/circuit,
+/area/city/outskirtsfactory)
+"ps" = (
+/obj/structure/sigsystem/tower{
+	dir = 8;
+	signal_code = 07;
+	happens_once = 1
+	},
+/turf/closed/indestructible/syndicate,
+/area/city/outskirtsfactory)
+"pz" = (
+/obj/effect/turf_decal/siding/thinplating/light{
+	dir = 5
+	},
+/obj/machinery/mech_bay_recharge_port{
+	dir = 8;
+	resistance_flags = 64
+	},
+/turf/open/floor/facility,
+/area/city/outskirtsfactory)
+"pM" = (
+/obj/structure/sign/warning/fire{
+	desc = "A warning sign which reads 'DANGER: FIRE'. A small inscription beneath it says, 'Do not attempt to crawl under the flaps'.";
+	resistance_flags = 64
+	},
+/obj/structure/sigsystem/connector{
+	dir = 4
+	},
+/turf/closed/indestructible/syndicate,
+/area/city/outskirtsfactory)
+"pS" = (
+/obj/effect/turf_decal/siding/red,
+/obj/structure/sigsystem/connector/split{
+	dir = 1;
+	happens_once = 1
+	},
+/obj/machinery/light/small/red,
+/turf/open/floor/circuit/red,
+/area/city/outskirtsfactory)
+"pY" = (
+/obj/structure/sigsystem/connector{
+	dir = 8
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirtsfactory)
+"qg" = (
+/obj/effect/decal/cleanable/blood/footprints,
+/obj/machinery/door/poddoor/shutters/indestructible{
+	lockpickable = 0
+	},
+/obj/structure/sigsystem/activator,
+/obj/structure/sigsystem/connector,
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"qq" = (
+/obj/machinery/door/poddoor/shutters/preopen{
+	resistance_flags = 64;
+	lockpickable = 0
+	},
+/obj/structure/sigsystem/connector,
+/obj/structure/sigsystem/activator,
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirtsfactory)
+"qr" = (
+/obj/structure/sigsystem/tower{
+	signal_code = 92
+	},
+/obj/structure/sigsystem/tower{
+	signal_code = 92
+	},
+/obj/structure/sigsystem/tower{
+	signal_code = 55
+	},
+/turf/closed/indestructible/syndicate,
+/area/city/outskirtsfactory)
+"qu" = (
+/obj/effect/turf_decal/trimline/red/filled/warning{
+	dir = 9
+	},
+/turf/open/floor/plating/ashplanet{
+	name = "asphalt"
+	},
+/area/city/outskirtsfactory)
+"qw" = (
+/obj/structure/fence/end{
+	resistance_flags = 64
+	},
+/turf/open/floor/plating/asteroid/basalt,
+/area/city/outskirtsfactory)
+"qD" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/turf_decal/siding/red/corner{
+	dir = 4
+	},
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"qJ" = (
+/obj/effect/decal/cleanable/blood,
+/turf/open/floor/pod/light,
+/area/city/outskirtsfactory)
+"qM" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/sigsystem/connector{
+	dir = 4;
+	happens_once = 1
+	},
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"qO" = (
+/obj/structure/sigsystem/tower/button{
+	signal_code = 92;
+	signal_range = 3
+	},
+/turf/closed/indestructible/syndicate,
+/area/city/outskirtsfactory)
+"qP" = (
+/obj/structure/sigsystem/connector/split{
+	dir = 4
+	},
+/turf/closed/indestructible/rock,
+/area/city/outskirtsfactory)
+"qS" = (
+/obj/effect/turf_decal/trimline/red/filled/warning,
+/turf/open/floor/plating/ashplanet{
+	name = "asphalt"
+	},
+/area/city/outskirtsfactory)
+"rf" = (
+/obj/machinery/light/red,
+/turf/open/floor/pod/light,
+/area/city/outskirtsfactory)
+"rg" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/machinery/light/small/red{
+	dir = 4
+	},
+/mob/living/simple_animal/hostile/ordeal/grungeon_shielder,
+/turf/open/floor/facility/dark,
+/area/city/outskirtsfactory)
+"ro" = (
+/obj/structure/headpike,
+/turf/open/floor/plating/asteroid/basalt,
+/area/city/outskirtsfactory)
+"rr" = (
+/mob/living/simple_animal/hostile/ordeal/grungeon_boss,
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirtsfactory)
+"rN" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/turf_decal/siding/red,
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"sk" = (
+/obj/effect/turf_decal/trimline/red/filled/warning{
+	dir = 8
+	},
+/turf/open/floor/plating/ashplanet{
+	name = "asphalt"
+	},
+/area/city/outskirtsfactory)
+"sn" = (
+/obj/item/caution{
+	pixel_y = 7;
+	pixel_x = -3
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirtsfactory)
+"sp" = (
+/obj/machinery/computer/shuttle/mining{
+	dir = 1;
+	name = "bus console";
+	possible_destinations = "grungeon_floor";
+	shuttleId = "quest";
+	resistance_flags = 64
+	},
+/turf/open/floor/plating/asteroid/basalt,
+/area/city/outskirtsfactory)
+"sw" = (
+/obj/structure/sigsystem/connector{
+	dir = 4
+	},
+/turf/closed/indestructible/rock,
+/area/city/outskirtsfactory)
+"sB" = (
+/obj/effect/turf_decal/siding/thinplating/light{
+	dir = 4
+	},
+/obj/machinery/recharge_station{
+	resistance_flags = 64
+	},
+/turf/open/floor/facility,
+/area/city/outskirtsfactory)
+"sF" = (
+/obj/machinery/door/poddoor/shutters/indestructible{
+	lockpickable = 0;
+	resistance_flags = 64
+	},
+/obj/structure/sigsystem/activator,
+/obj/structure/sigsystem/connector/split,
+/turf/open/floor/facility/dark,
+/area/city/outskirtsfactory)
+"sI" = (
+/obj/structure/sigsystem/connector{
+	delay_time = 90;
+	dir = 1;
+	happens_once = 1
+	},
+/obj/effect/turf_decal/siding/red{
+	dir = 8
+	},
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"sJ" = (
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirtsfactory)
+"te" = (
+/obj/structure/sign/warning/fire{
+	desc = "A warning sign which reads 'DANGER: FIRE'. A small inscription beneath it says, 'Do not attempt to crawl under the flaps'.";
+	resistance_flags = 64
+	},
+/turf/closed/indestructible/syndicate,
+/area/city/outskirtsfactory)
+"tQ" = (
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"tV" = (
+/obj/machinery/light,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"uf" = (
+/obj/structure/railing{
+	dir = 9
+	},
+/obj/structure/sigsystem/connector{
+	dir = 4
+	},
+/turf/open/floor/facility/dark,
+/area/city/outskirtsfactory)
+"uM" = (
+/obj/structure/railing{
+	dir = 8
+	},
+/obj/structure/sigsystem/pressure_plate{
+	dir = 1;
+	mobs_only = 1
+	},
+/turf/open/floor/facility/dark,
+/area/city/outskirtsfactory)
+"uS" = (
+/obj/effect/turf_decal/trimline/white/filled/line{
+	pixel_y = 10
+	},
+/turf/open/floor/plating/ashplanet{
+	name = "asphalt";
+	density = 1
+	},
+/area/city/outskirtsfactory)
+"uW" = (
+/obj/structure/railing/corner{
+	dir = 4
+	},
+/obj/effect/decal/cleanable/blood/gibs,
+/obj/effect/turf_decal/siding/red/corner{
+	dir = 8
+	},
+/obj/structure/sigsystem/connector{
+	dir = 8
+	},
+/turf/open/floor/facility/dark,
+/area/city/outskirtsfactory)
+"uZ" = (
+/obj/machinery/light/red{
+	dir = 1
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/pod/light,
+/area/city/outskirtsfactory)
+"vb" = (
+/obj/effect/decal/cleanable/blood/gibs/limb,
+/turf/open/floor/pod/light,
+/area/city/outskirtsfactory)
+"vd" = (
+/obj/machinery/door/poddoor/shutters/indestructible{
+	lockpickable = 0;
+	resistance_flags = 64
+	},
+/obj/structure/sigsystem/connector{
+	dir = 4
+	},
+/obj/structure/sigsystem/activator,
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"vk" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/machinery/door/poddoor/shutters/preopen{
+	resistance_flags = 64;
+	lockpickable = 0
+	},
+/obj/structure/sigsystem/connector,
+/obj/structure/sigsystem/activator,
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"vp" = (
+/obj/machinery/door/poddoor/shutters/preopen{
+	resistance_flags = 64;
+	lockpickable = 0
+	},
+/obj/structure/sigsystem/activator,
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"vt" = (
+/obj/structure/sigsystem/connector{
+	dir = 4
+	},
+/obj/effect/turf_decal/siding/red/corner,
+/obj/effect/turf_decal/siding/red/corner{
+	dir = 4
+	},
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"wh" = (
+/obj/structure/railing{
+	resistance_flags = 115;
+	name = "wing-grade railing";
+	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
+	mouse_opacity = 0;
+	dir = 4
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirtsfactory)
+"wm" = (
+/obj/structure/railing{
+	resistance_flags = 115;
+	name = "wing-grade railing";
+	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
+	mouse_opacity = 0;
+	dir = 8
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirtsfactory)
+"ww" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/decal/cleanable/blood/drip,
+/turf/open/floor/pod/light,
+/area/city/outskirtsfactory)
+"wF" = (
+/obj/effect/turf_decal/siding/thinplating/light{
+	dir = 9
+	},
+/obj/machinery/mech_bay_recharge_port{
+	resistance_flags = 64
+	},
+/turf/open/floor/facility,
+/area/city/outskirtsfactory)
+"wR" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/turf_decal/siding/red/corner{
+	dir = 8
+	},
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"wY" = (
+/obj/machinery/light/red{
+	dir = 8
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/pod/light,
+/area/city/outskirtsfactory)
+"xs" = (
+/obj/machinery/light/small/red{
+	dir = 4
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/turf_decal/siding/green{
+	dir = 4
+	},
+/turf/open/floor/pod/light,
+/area/city/outskirtsfactory)
+"xy" = (
+/obj/effect/decal/cleanable/blood/gibs/up,
+/obj/effect/turf_decal/siding/green{
+	dir = 1
+	},
+/turf/open/floor/pod/light,
+/area/city/outskirtsfactory)
+"xE" = (
+/turf/closed/indestructible/syndicate,
+/area/city/outskirtsfactory)
+"xI" = (
+/obj/structure/sigsystem/connector{
+	dir = 4
+	},
+/turf/closed/indestructible/syndicate,
+/area/city/outskirtsfactory)
+"xR" = (
+/obj/structure/sign/directions/evac,
+/turf/closed/indestructible/syndicate,
+/area/city/outskirtsfactory)
+"ya" = (
+/obj/effect/turf_decal/trimline/red/filled/warning{
+	dir = 1
+	},
+/turf/open/floor/plating/ashplanet{
+	name = "asphalt"
+	},
+/area/city/outskirtsfactory)
+"yh" = (
+/obj/machinery/light/small/red,
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"yi" = (
+/obj/structure/sign/directions/evac{
+	resistance_flags = 64
+	},
+/turf/closed/indestructible/syndicate,
+/area/city/outskirtsfactory)
+"yj" = (
+/obj/structure/sign/directions/vault{
+	dir = 1
+	},
+/turf/closed/indestructible/syndicate,
+/area/city/outskirtsfactory)
+"yr" = (
+/obj/structure/sigsystem/connector{
+	dir = 4;
+	delay_time = 30
+	},
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"yt" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/sigsystem/connector{
+	delay_time = 90;
+	dir = 1;
+	happens_once = 1
+	},
+/obj/effect/turf_decal/siding/red{
+	dir = 4
+	},
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"yy" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/pod/light,
+/area/city/outskirtsfactory)
+"yE" = (
+/obj/structure/railing{
+	dir = 4
+	},
+/obj/structure/sigsystem/connector{
+	dir = 1;
+	delay_time = 250
+	},
+/turf/open/floor/facility/dark,
+/area/city/outskirtsfactory)
+"yM" = (
+/obj/structure/sigsystem/pressure_plate{
+	dir = 8;
+	mobs_only = 1
+	},
+/obj/structure/sigsystem/connector{
+	dir = 8
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirtsfactory)
+"zp" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/sigsystem/connector{
+	dir = 8
+	},
+/obj/effect/turf_decal/siding/red/corner{
+	dir = 1
+	},
+/obj/effect/turf_decal/siding/red/corner{
+	dir = 8
+	},
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"zz" = (
+/obj/structure/sigsystem/connector/split{
+	happens_once = 1
+	},
+/obj/structure/sigsystem/tower/button{
+	pixel_y = 27;
+	signal_code = 90
+	},
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"zF" = (
+/obj/structure/sigsystem/tower{
+	signal_code = 33
+	},
+/turf/open/floor/mineral/plastitanium/red,
+/area/city/outskirtsfactory)
+"zL" = (
+/obj/structure/sigsystem/connector{
+	delay_time = 450;
+	dir = 4
+	},
+/turf/closed/indestructible/rock,
+/area/city/outskirtsfactory)
+"zN" = (
+/obj/effect/turf_decal/trimline/yellow/filled/line{
+	pixel_y = 5
+	},
+/obj/effect/turf_decal/trimline/yellow/filled/line{
+	dir = 1;
+	pixel_y = -5
+	},
+/turf/open/floor/plating/ashplanet{
+	name = "asphalt"
+	},
+/area/city/outskirtsfactory)
+"zZ" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/sigsystem/tower{
+	dir = 8;
+	signal_code = 24
+	},
+/turf/open/floor/pod/light,
+/area/city/outskirtsfactory)
+"Ah" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/turf_decal/siding/red{
+	dir = 4
+	},
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"Ar" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/facility,
+/area/city/outskirtsfactory)
+"Av" = (
+/obj/machinery/light/red{
+	dir = 1
+	},
+/obj/effect/turf_decal/stripes{
+	dir = 1
+	},
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"AE" = (
+/obj/effect/turf_decal/stripes{
+	dir = 1
+	},
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"AX" = (
+/obj/structure/sigsystem/connector,
+/turf/closed/indestructible/rock,
+/area/city/outskirtsfactory)
+"AY" = (
+/obj/effect/turf_decal/trimline/red/filled/warning{
+	dir = 10
+	},
+/turf/open/floor/plating/ashplanet{
+	name = "asphalt"
+	},
+/area/city/outskirtsfactory)
+"Bh" = (
+/obj/structure/sigsystem/connector{
+	dir = 4
+	},
+/turf/open/floor/mineral/plastitanium/red,
+/area/city/outskirtsfactory)
+"BI" = (
+/obj/machinery/light/red{
+	dir = 4
+	},
+/turf/open/floor/pod/light,
+/area/city/outskirtsfactory)
+"BK" = (
+/obj/machinery/light/red{
+	dir = 4
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirtsfactory)
+"BL" = (
+/obj/structure/sigsystem/pressure_plate{
+	dir = 1;
+	mobs_only = 1
+	},
+/obj/structure/sigsystem/connector{
+	dir = 1
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirtsfactory)
+"BR" = (
+/mob/living/simple_animal/hostile/ordeal/green_bot,
+/turf/open/floor/plating/asteroid/basalt,
+/area/city/outskirtsfactory)
+"BT" = (
+/obj/structure/railing{
+	dir = 8
+	},
+/obj/effect/decal/cleanable/blood/footprints,
+/turf/open/floor/facility/dark,
+/area/city/outskirtsfactory)
+"BX" = (
+/obj/effect/turf_decal/siding/red{
+	dir = 1
+	},
+/obj/machinery/light/small/red{
+	dir = 1
+	},
+/turf/open/floor/circuit/red,
+/area/city/outskirtsfactory)
+"Cc" = (
+/obj/structure/railing{
+	dir = 10
+	},
+/turf/open/floor/facility/dark,
+/area/city/outskirtsfactory)
+"Ch" = (
+/obj/structure/sigsystem/tower/button{
+	signal_code = 07;
+	happens_once = 1
+	},
+/turf/closed/indestructible/syndicate,
+/area/city/outskirtsfactory)
+"Ci" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/lootcrate/money,
+/turf/open/floor/facility/dark,
+/area/city/outskirtsfactory)
+"Ck" = (
+/obj/effect/turf_decal/siding/green/corner{
+	dir = 1
+	},
+/turf/open/floor/pod/light,
+/area/city/outskirtsfactory)
+"Ct" = (
+/obj/structure/sigsystem/tower{
+	signal_code = 05;
+	dir = 4
+	},
+/obj/structure/sigsystem/tower/button{
+	signal_code = 92;
+	signal_range = 3
+	},
+/turf/closed/indestructible/syndicate,
+/area/city/outskirtsfactory)
+"Cz" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/turf_decal/siding/red{
+	dir = 8
+	},
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"CC" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/decal/cleanable/blood/old,
+/obj/effect/turf_decal/siding/green/corner,
+/turf/open/floor/pod/light,
+/area/city/outskirtsfactory)
+"CD" = (
+/obj/effect/light_emitter{
+	light_power = 4;
+	light_range = 25;
+	set_cap = 3;
+	set_luminosity = 24
+	},
+/turf/open/floor/plating/asteroid/basalt,
+/area/city/outskirtsfactory)
+"CE" = (
+/obj/machinery/light/red{
+	dir = 4
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/pod/light,
+/area/city/outskirtsfactory)
+"CN" = (
+/obj/machinery/light/small/red{
+	dir = 4
+	},
+/obj/effect/turf_decal/siding/green{
+	dir = 4
+	},
+/turf/open/floor/pod/light,
+/area/city/outskirtsfactory)
+"CZ" = (
+/obj/machinery/light/small/red,
+/turf/open/floor/mineral/plastitanium/red,
+/area/city/outskirtsfactory)
+"De" = (
+/obj/structure/sigsystem/connector/split{
+	dir = 1
+	},
+/turf/closed/indestructible/rock,
+/area/city/outskirtsfactory)
+"Dg" = (
+/obj/structure/fence{
+	resistance_flags = 64
+	},
+/turf/open/floor/plating/asteroid/basalt,
+/area/city/outskirtsfactory)
+"DA" = (
+/obj/machinery/light/red{
+	dir = 1
+	},
+/turf/open/floor/mineral/plastitanium/red,
+/area/city/outskirtsfactory)
+"DP" = (
+/obj/structure/sigsystem/connector{
+	dir = 8
+	},
+/turf/closed/indestructible/syndicate,
+/area/city/outskirtsfactory)
+"DU" = (
+/obj/effect/landmark/cratespawn,
+/turf/open/floor/facility/dark,
+/area/city/outskirtsfactory)
+"DV" = (
+/obj/machinery/conveyor/auto{
+	dir = 4;
+	resistance_flags = 64;
+	tamperproof = 1
+	},
+/turf/open/lava,
+/area/city/outskirtsfactory)
+"DW" = (
+/mob/living/simple_animal/hostile/ordeal/green_bot_big,
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"DY" = (
+/obj/structure/sigsystem/deployer{
+	atom_path = /mob/living/simple_animal/hostile/ordeal/grungeon_spawner
+	},
+/turf/open/floor/mineral/plastitanium/red,
+/area/city/outskirtsfactory)
+"Ed" = (
+/obj/structure/flora/rock/pile,
+/turf/open/floor/plating/asteroid/basalt,
+/area/city/outskirtsfactory)
+"Ei" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/turf_decal/siding/red/corner,
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"Em" = (
+/obj/effect/turf_decal/siding/red/corner{
+	dir = 1
+	},
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"Ew" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/decal/cleanable/blood/old,
+/obj/effect/turf_decal/siding/green{
+	dir = 4
+	},
+/turf/open/floor/pod/light,
+/area/city/outskirtsfactory)
+"EA" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/turf_decal/siding/green/corner{
+	dir = 8
+	},
+/turf/open/floor/pod/light,
+/area/city/outskirtsfactory)
+"EC" = (
+/obj/structure/sigsystem/connector/split,
+/turf/closed/indestructible/syndicate,
+/area/city/outskirtsfactory)
+"EO" = (
+/obj/effect/turf_decal/siding/green/corner{
+	dir = 8
+	},
+/turf/open/floor/pod/light,
+/area/city/outskirtsfactory)
+"EQ" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/machinery/light/small/red{
+	dir = 1
+	},
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"ER" = (
+/obj/effect/decal/cleanable/blood/footprints,
+/obj/structure/sigsystem/connector/split{
+	dir = 4
+	},
+/turf/open/floor/circuit/red,
+/area/city/outskirtsfactory)
+"Fh" = (
+/obj/structure/railing{
+	dir = 4
+	},
+/obj/structure/sigsystem/pressure_plate{
+	dir = 1;
+	mobs_only = 1
+	},
+/turf/open/floor/facility/dark,
+/area/city/outskirtsfactory)
+"Fm" = (
+/mob/living/simple_animal/hostile/ordeal/green_bot/fast,
+/turf/open/floor/pod/light,
+/area/city/outskirtsfactory)
+"Fn" = (
+/obj/effect/decal/cleanable/blood/old,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"Fx" = (
+/obj/effect/turf_decal/siding/thinplating/light{
+	dir = 4
+	},
+/obj/machinery/light{
+	dir = 4
+	},
+/obj/structure/table/reinforced,
+/obj/item/weldingtool/largetank{
+	pixel_x = 8;
+	pixel_y = -5
+	},
+/obj/item/stack/medical/suture{
+	pixel_y = 10;
+	pixel_x = -8
+	},
+/obj/item/stack/cable_coil{
+	amount = 30;
+	max_amount = 30;
+	pixel_x = -7;
+	pixel_y = -11
+	},
+/obj/effect/spawner/lootdrop/space/cashmoney{
+	pixel_x = -10;
+	pixel_y = 2
+	},
+/obj/effect/spawner/lootdrop/space/cashmoney{
+	pixel_x = 8;
+	pixel_y = 13
+	},
+/turf/open/floor/circuit,
+/area/city/outskirtsfactory)
+"FF" = (
+/obj/structure/destructible/cult/forge{
+	resistance_flags = 64;
+	desc = "A forge used in crafting various parts.";
+	name = "forge"
+	},
+/obj/machinery/light,
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirtsfactory)
+"FX" = (
+/obj/effect/decal/cleanable/blood/tracks{
+	dir = 4
+	},
+/turf/open/floor/pod/light,
+/area/city/outskirtsfactory)
+"Gf" = (
+/mob/living/simple_animal/hostile/ordeal/grungeon_shielder,
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/sigsystem/tower/button{
+	pixel_y = 27;
+	signal_code = 01
+	},
+/obj/effect/turf_decal/siding/red/end{
+	dir = 4
+	},
+/turf/open/floor/facility/dark,
+/area/city/outskirtsfactory)
+"Go" = (
+/obj/machinery/conveyor/auto{
+	dir = 8;
+	resistance_flags = 64;
+	tamperproof = 1
+	},
+/obj/structure/railing{
+	resistance_flags = 115;
+	name = "wing-grade railing";
+	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
+	mouse_opacity = 0;
+	dir = 1
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirtsfactory)
+"Gs" = (
+/obj/structure/sigsystem/tower/button{
+	signal_code = 24;
+	signal_range = 3
+	},
+/turf/closed/indestructible/syndicate,
+/area/city/outskirtsfactory)
+"Gu" = (
+/obj/structure/railing{
+	dir = 8
+	},
+/obj/effect/decal/cleanable/blood,
+/turf/open/floor/facility/dark,
+/area/city/outskirtsfactory)
+"GE" = (
+/obj/machinery/light/red{
+	dir = 1
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirtsfactory)
+"GJ" = (
+/mob/living/simple_animal/hostile/ordeal/green_bot/fast,
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirtsfactory)
+"GM" = (
+/obj/structure/railing{
+	dir = 8
+	},
+/obj/structure/sigsystem/connector/split{
+	dir = 1
+	},
+/turf/open/floor/facility/dark,
+/area/city/outskirtsfactory)
+"GV" = (
+/turf/open/floor/facility/dark,
+/area/city/outskirtsfactory)
+"Hf" = (
+/obj/machinery/conveyor/auto{
+	dir = 4;
+	resistance_flags = 64;
+	tamperproof = 1
+	},
+/obj/structure/plasticflaps/opaque{
+	resistance_flags = 64
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirtsfactory)
+"Hg" = (
+/obj/machinery/light/small/red{
+	dir = 4
+	},
+/obj/structure/sigsystem/connector{
+	dir = 1
+	},
+/turf/open/floor/mineral/plastitanium/red,
+/area/city/outskirtsfactory)
+"Hi" = (
+/turf/open/floor/mineral/gold,
+/area/city/outskirtsfactory)
+"Hm" = (
+/obj/machinery/door/poddoor/shutters/preopen{
+	resistance_flags = 64;
+	lockpickable = 0
+	},
+/obj/structure/sigsystem/connector/split{
+	dir = 4
+	},
+/obj/structure/sigsystem/activator,
+/turf/open/floor/facility/dark,
+/area/city/outskirtsfactory)
+"Hs" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/decal/cleanable/blood/gibs/limb,
+/obj/effect/turf_decal/siding/green{
+	dir = 4
+	},
+/turf/open/floor/pod/light,
+/area/city/outskirtsfactory)
+"Hy" = (
+/obj/structure/sign/departments/mait,
+/turf/closed/indestructible/syndicate,
+/area/city/outskirtsfactory)
+"HA" = (
+/obj/structure/railing{
+	dir = 4
+	},
+/turf/open/floor/facility/dark,
+/area/city/outskirtsfactory)
+"HH" = (
+/obj/effect/decal/cleanable/blood/gibs/limb,
+/obj/structure/headpike,
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"HN" = (
+/obj/effect/turf_decal/siding/thinplating/light{
+	dir = 10
+	},
+/obj/machinery/mech_bay_recharge_port{
+	resistance_flags = 64
+	},
+/turf/open/floor/facility,
+/area/city/outskirtsfactory)
+"Ia" = (
+/obj/machinery/light{
+	dir = 8
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/turf_decal/siding/red{
+	dir = 8
+	},
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"Ic" = (
+/obj/effect/landmark/cratespawn/corpo,
+/turf/open/floor/facility/dark,
+/area/city/outskirtsfactory)
+"Id" = (
+/obj/machinery/conveyor/auto{
+	dir = 1;
+	resistance_flags = 64;
+	tamperproof = 1
+	},
+/turf/open/lava,
+/area/city/outskirtsfactory)
+"Ih" = (
+/mob/living/simple_animal/hostile/ordeal/green_bot,
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"Iq" = (
+/obj/structure/sigsystem/tower{
+	dir = 8;
+	signal_code = 24
+	},
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"Is" = (
+/obj/effect/turf_decal/siding/thinplating/light,
+/obj/machinery/light,
+/turf/open/floor/facility,
+/area/city/outskirtsfactory)
+"It" = (
+/obj/structure/sigsystem/tower/button{
+	pixel_y = 27;
+	signal_code = 26
+	},
+/obj/structure/sigsystem/announcer{
+	message_range = 5;
+	message = "Unauthorized access detected. Door opening delayed."
+	},
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"IF" = (
+/obj/structure/sigsystem/tower{
+	signal_code = 55
+	},
+/turf/closed/indestructible/syndicate,
+/area/city/outskirtsfactory)
+"IU" = (
+/obj/structure/sigsystem/tower{
+	dir = 8;
+	signal_code = 82
+	},
+/turf/closed/indestructible/rock,
+/area/city/outskirtsfactory)
+"Jy" = (
+/obj/structure/sigsystem/pressure_plate{
+	dir = 1;
+	mobs_only = 1
+	},
+/obj/effect/turf_decal/siding/red{
+	dir = 8
+	},
+/turf/open/floor/circuit/red,
+/area/city/outskirtsfactory)
+"JD" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/sigsystem/tower{
+	dir = 1;
+	signal_code = 26
+	},
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"Ka" = (
+/obj/structure/sigsystem/connector,
+/turf/open/floor/mineral/plastitanium/red,
+/area/city/outskirtsfactory)
+"Kf" = (
+/obj/structure/sigsystem/connector{
+	dir = 8
+	},
+/obj/effect/turf_decal/siding/red{
+	dir = 4
+	},
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"Kj" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/lootcrate/syndicate,
+/turf/open/floor/facility/dark,
+/area/city/outskirtsfactory)
+"Kk" = (
+/obj/machinery/light/small/red{
+	dir = 8
+	},
+/turf/open/floor/pod/light,
+/area/city/outskirtsfactory)
+"Kl" = (
+/obj/machinery/light/red{
+	dir = 8
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirtsfactory)
+"Kq" = (
+/obj/structure/flora/rock,
+/turf/open/floor/plating/asteroid/basalt,
+/area/city/outskirtsfactory)
+"KA" = (
+/obj/structure/sigsystem/pressure_plate{
+	dir = 1;
+	mobs_only = 1
+	},
+/obj/effect/turf_decal/siding/red{
+	dir = 4
+	},
+/turf/open/floor/circuit/red,
+/area/city/outskirtsfactory)
+"KB" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/closed/indestructible/syndicate,
+/area/city/outskirtsfactory)
+"KG" = (
+/obj/effect/decal/cleanable/blood/old,
+/turf/open/floor/pod/light,
+/area/city/outskirtsfactory)
+"KH" = (
+/obj/effect/decal/cleanable/blood/old,
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"KJ" = (
+/obj/structure/lootcrate/tres,
+/turf/open/floor/facility/dark,
+/area/city/outskirtsfactory)
+"KP" = (
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 5
+	},
+/turf/open/floor/plating/asteroid/basalt,
+/area/city/outskirtsfactory)
+"KR" = (
+/mob/living/simple_animal/hostile/ordeal/green_bot_rocket,
+/turf/open/floor/plating,
+/area/city/outskirtsfactory)
+"KU" = (
+/obj/machinery/door/poddoor/shutters/indestructible{
+	lockpickable = 0;
+	resistance_flags = 64;
+	id = "furnaceaccess"
+	},
+/obj/structure/sigsystem/activator,
+/obj/structure/sigsystem/connector{
+	dir = 8
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirtsfactory)
+"KW" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/machinery/door/poddoor/shutters/indestructible{
+	lockpickable = 0
+	},
+/obj/structure/sigsystem/activator,
+/obj/structure/sigsystem/connector{
+	dir = 8
+	},
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"La" = (
+/mob/living/simple_animal/hostile/ordeal/green_bot_big,
+/obj/effect/decal/cleanable/blood/tracks{
+	dir = 4
+	},
+/turf/open/floor/pod/light,
+/area/city/outskirtsfactory)
+"Lb" = (
+/obj/machinery/conveyor/auto{
+	dir = 8;
+	resistance_flags = 64;
+	tamperproof = 1
+	},
+/obj/machinery/light/small,
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"Lj" = (
+/obj/structure/sigsystem/connector/split{
+	dir = 4;
+	happens_once = 1
+	},
+/turf/open/floor/mineral/plastitanium/red,
+/area/city/outskirtsfactory)
+"Lm" = (
+/obj/machinery/door/poddoor/shutters/indestructible{
+	id = "foundryaccess";
+	lockpickable = 0
+	},
+/obj/structure/sigsystem/connector/split{
+	dir = 4
+	},
+/obj/structure/sigsystem/activator,
+/turf/open/floor/pod/light,
+/area/city/outskirtsfactory)
+"Lq" = (
+/obj/effect/turf_decal/stripes/corner{
+	dir = 1
+	},
+/obj/effect/decal/cleanable/blood/old,
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"Ls" = (
+/obj/structure/railing{
+	dir = 8
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/facility/dark,
+/area/city/outskirtsfactory)
+"LQ" = (
+/obj/effect/turf_decal/siding/thinplating/light{
+	dir = 1
+	},
+/turf/open/floor/facility,
+/area/city/outskirtsfactory)
+"LR" = (
+/obj/structure/sigsystem/connector{
+	happens_once = 1
+	},
+/turf/open/floor/pod/light,
+/area/city/outskirtsfactory)
+"LZ" = (
+/obj/effect/light_emitter{
+	light_power = 4;
+	light_range = 25;
+	set_cap = 3;
+	set_luminosity = 24
+	},
+/turf/open/floor/plating/ashplanet{
+	name = "asphalt";
+	density = 1
+	},
+/area/city/outskirtsfactory)
+"Mx" = (
+/obj/machinery/conveyor/auto{
+	dir = 8;
+	resistance_flags = 64;
+	tamperproof = 1
+	},
+/turf/open/lava,
+/area/city/outskirtsfactory)
+"MG" = (
+/obj/effect/turf_decal/siding/red/corner{
+	dir = 8
+	},
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"MH" = (
+/obj/structure/sigsystem/tower{
+	dir = 1;
+	signal_code = 44
+	},
+/turf/open/floor/circuit/red,
+/area/city/outskirtsfactory)
+"MN" = (
+/obj/structure/sigsystem/tower{
+	dir = 8;
+	signal_code = 53
+	},
+/turf/closed/indestructible/rock,
+/area/city/outskirtsfactory)
+"Nh" = (
+/obj/structure/flora/stump,
+/turf/open/floor/plating/asteroid/basalt,
+/area/city/outskirtsfactory)
+"Nt" = (
+/obj/structure/closet/crate,
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirtsfactory)
+"Nx" = (
+/obj/machinery/door/poddoor/shutters/indestructible{
+	lockpickable = 0
+	},
+/obj/structure/sigsystem/activator,
+/obj/structure/sigsystem/connector{
+	dir = 8
+	},
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"NG" = (
+/obj/structure/sigsystem/announcer{
+	message_range = 6;
+	message = "Dance for us, organic!"
+	},
+/turf/closed/indestructible/syndicate,
+/area/city/outskirtsfactory)
+"NS" = (
+/obj/structure/lootcrate/money,
+/turf/open/floor/facility/dark,
+/area/city/outskirtsfactory)
+"Oh" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/sigsystem/connector{
+	happens_once = 1
+	},
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"Ol" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/sign/warning/securearea{
+	pixel_x = -32;
+	pixel_y = 19
+	},
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"Op" = (
+/obj/effect/turf_decal/trimline/red/filled/warning{
+	dir = 5
+	},
+/turf/open/floor/plating/ashplanet{
+	name = "asphalt"
+	},
+/area/city/outskirtsfactory)
+"Pb" = (
+/mob/living/simple_animal/hostile/ordeal/green_bot,
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirtsfactory)
+"Pf" = (
+/obj/machinery/conveyor/auto{
+	dir = 1;
+	resistance_flags = 64;
+	tamperproof = 1
+	},
+/obj/structure/railing{
+	resistance_flags = 115;
+	name = "wing-grade railing";
+	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
+	mouse_opacity = 0;
+	dir = 8
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirtsfactory)
+"Pi" = (
+/obj/structure/sigsystem/connector{
+	delay_time = 250;
+	dir = 1
+	},
+/turf/closed/indestructible/syndicate,
+/area/city/outskirtsfactory)
+"Pn" = (
+/turf/closed/indestructible/rock,
+/area/city/outskirtsfactory)
+"Pz" = (
+/obj/effect/decal/cleanable/oil/slippery,
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirtsfactory)
+"PC" = (
+/obj/effect/turf_decal/siding/green/corner{
+	dir = 4
+	},
+/mob/living/simple_animal/hostile/ordeal/green_bot_rocket,
+/turf/open/floor/pod/light,
+/area/city/outskirtsfactory)
+"PZ" = (
+/obj/machinery/door/poddoor/shutters/indestructible{
+	id = "foundryaccess";
+	lockpickable = 0
+	},
+/obj/structure/sigsystem/activator,
+/turf/open/floor/pod/light,
+/area/city/outskirtsfactory)
+"Qi" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/facility/dark,
+/area/city/outskirtsfactory)
+"Qt" = (
+/turf/open/chasm,
+/area/city/outskirtsfactory)
+"Qw" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/turf_decal/siding/green{
+	dir = 1
+	},
+/turf/open/floor/pod/light,
+/area/city/outskirtsfactory)
+"Qy" = (
+/obj/effect/decal/cleanable/blood/gibs/body,
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"QF" = (
+/obj/structure/closet/crate,
+/obj/item/tresmetal/copper,
+/obj/item/tresmetal/bloodiron,
+/obj/item/tresmetal,
+/obj/item/tresmetal,
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"Re" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/sigsystem/connector,
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"Rf" = (
+/obj/structure/sigsystem/connector{
+	dir = 8
+	},
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"Rk" = (
+/obj/structure/sigsystem/connector,
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"Ro" = (
+/obj/machinery/light/red,
+/turf/open/floor/facility/dark,
+/area/city/outskirtsfactory)
+"RH" = (
+/obj/machinery/light/small/red{
+	dir = 8
+	},
+/obj/structure/sigsystem/connector{
+	dir = 1
+	},
+/turf/open/floor/mineral/plastitanium/red,
+/area/city/outskirtsfactory)
+"RK" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirtsfactory)
+"RU" = (
+/obj/structure/sigsystem/deployer{
+	atom_path = "/mob/living/simple_animal/hostile/ordeal/grungeon_spawner"
+	},
+/turf/open/floor/mineral/plastitanium/red,
+/area/city/outskirtsfactory)
+"Sc" = (
+/obj/structure/sigsystem/tower{
+	dir = 8;
+	signal_code = 15
+	},
+/turf/closed/indestructible/rock,
+/area/city/outskirtsfactory)
+"Sh" = (
+/obj/machinery/light/red{
+	dir = 4
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/facility/dark,
+/area/city/outskirtsfactory)
+"Si" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/turf_decal/siding/green,
+/turf/open/floor/pod/light,
+/area/city/outskirtsfactory)
+"Sq" = (
+/obj/structure/lootcrate/k_corp,
+/turf/open/floor/facility/dark,
+/area/city/outskirtsfactory)
+"SA" = (
+/obj/effect/decal/cleanable/blood,
+/turf/open/floor/plating/asteroid/basalt,
+/area/city/outskirtsfactory)
+"SF" = (
+/obj/structure/sigsystem/announcer{
+	message_range = 5;
+	message = "Unauthorized access detected. Engaging temporary lockdown."
+	},
+/turf/closed/indestructible/syndicate,
+/area/city/outskirtsfactory)
+"SR" = (
+/obj/effect/decal/cleanable/blood/drip,
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"ST" = (
+/obj/effect/turf_decal/siding/thinplating/light{
+	dir = 1
+	},
+/obj/machinery/light{
+	dir = 1
+	},
+/mob/living/simple_animal/hostile/ordeal/green_bot/syringe,
+/turf/open/floor/facility,
+/area/city/outskirtsfactory)
+"SZ" = (
+/obj/machinery/door/poddoor/shutters/indestructible{
+	lockpickable = 0;
+	resistance_flags = 64
+	},
+/obj/structure/sigsystem/activator,
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"Tc" = (
+/obj/effect/turf_decal/siding/thinplating/light{
+	dir = 8
+	},
+/obj/effect/decal/cleanable/oil/slippery,
+/turf/open/floor/facility,
+/area/city/outskirtsfactory)
+"Tj" = (
+/obj/machinery/door/poddoor/shutters/preopen{
+	resistance_flags = 64;
+	lockpickable = 0
+	},
+/obj/structure/sigsystem/connector{
+	dir = 4
+	},
+/obj/structure/sigsystem/activator,
+/turf/open/floor/facility/dark,
+/area/city/outskirtsfactory)
+"Tm" = (
+/turf/open/floor/pod/light,
+/area/city/outskirtsfactory)
+"Tt" = (
+/obj/structure/rack,
+/obj/machinery/light{
+	dir = 1
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirtsfactory)
+"Tz" = (
+/obj/structure/sigsystem/announcer{
+	message_range = 5;
+	message = "Unauthorized access detected. Door opening delayed."
+	},
+/turf/closed/indestructible/syndicate,
+/area/city/outskirtsfactory)
+"TC" = (
+/obj/structure/railing{
+	dir = 8
+	},
+/obj/structure/sigsystem/tower{
+	dir = 8;
+	signal_code = 55
+	},
+/turf/open/floor/facility/dark,
+/area/city/outskirtsfactory)
+"TG" = (
+/obj/structure/railing{
+	dir = 5
+	},
+/obj/structure/sigsystem/connector{
+	dir = 8
+	},
+/turf/open/floor/facility/dark,
+/area/city/outskirtsfactory)
+"TH" = (
+/obj/effect/decal/cleanable/blood,
+/obj/structure/sigsystem/announcer{
+	message_range = 5;
+	message = "Intruders detected. All units, prepare for battle."
+	},
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"TI" = (
+/obj/effect/turf_decal/siding/red,
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"TL" = (
+/obj/effect/turf_decal/trimline/red/filled/warning,
+/obj/docking_port/stationary{
+	dwidth = 5;
+	height = 5;
+	id = "grungeon_floor";
+	name = "outskirts factory";
+	width = 10
+	},
+/turf/open/floor/plating/ashplanet{
+	name = "asphalt"
+	},
+/area/city/outskirtsfactory)
+"TT" = (
+/turf/open/lava,
+/area/city/outskirtsfactory)
+"TW" = (
+/obj/structure/sigsystem/pressure_plate{
+	dir = 4;
+	mobs_only = 1
+	},
+/obj/structure/sigsystem/connector{
+	dir = 4
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirtsfactory)
+"TX" = (
+/obj/machinery/conveyor/auto{
+	dir = 4;
+	resistance_flags = 64;
+	tamperproof = 1
+	},
+/obj/machinery/conveyor/auto{
+	dir = 4;
+	resistance_flags = 64;
+	tamperproof = 1
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirtsfactory)
+"Ua" = (
+/obj/structure/railing{
+	dir = 8
+	},
+/obj/effect/decal/cleanable/blood/gibs/limb,
+/turf/open/floor/facility/dark,
+/area/city/outskirtsfactory)
+"Uh" = (
+/obj/machinery/conveyor/auto{
+	dir = 1;
+	resistance_flags = 64;
+	tamperproof = 1
+	},
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"Uk" = (
+/obj/effect/mob_spawn/human/corpse/charredskeleton,
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirtsfactory)
+"Ul" = (
+/obj/machinery/door/poddoor/shutters/window{
+	lockpickable = 0;
+	resistance_flags = 64
+	},
+/obj/structure/sigsystem/activator,
+/obj/effect/turf_decal/siding/red{
+	dir = 1
+	},
+/obj/effect/turf_decal/siding/red,
+/turf/open/floor/facility/dark,
+/area/city/outskirtsfactory)
+"Uv" = (
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 4
+	},
+/turf/open/floor/plating/asteroid/basalt,
+/area/city/outskirtsfactory)
+"Uw" = (
+/obj/structure/sigsystem/connector/split{
+	dir = 4
+	},
+/obj/machinery/light/red{
+	dir = 8
+	},
+/obj/structure/closet/crate,
+/obj/item/tresmetal,
+/obj/item/tresmetal,
+/obj/item/tresmetal,
+/obj/item/tresmetal/copper,
+/obj/item/tresmetal/bloodiron,
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"UC" = (
+/obj/machinery/conveyor/auto{
+	dir = 4;
+	resistance_flags = 64;
+	tamperproof = 1
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirtsfactory)
+"UD" = (
+/obj/machinery/door/poddoor{
+	resistance_flags = 64
+	},
+/obj/structure/sigsystem/connector,
+/obj/structure/sigsystem/activator,
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"UH" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/turf_decal/siding/green/corner,
+/turf/open/floor/pod/light,
+/area/city/outskirtsfactory)
+"UL" = (
+/obj/machinery/door/poddoor/shutters/indestructible{
+	lockpickable = 0;
+	resistance_flags = 64
+	},
+/obj/structure/sigsystem/activator,
+/turf/open/floor/facility/dark,
+/area/city/outskirtsfactory)
+"UM" = (
+/obj/machinery/light/floor,
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirtsfactory)
+"UP" = (
+/obj/structure/fence,
+/obj/structure/fence{
+	resistance_flags = 64
+	},
+/turf/open/floor/plating/asteroid/basalt,
+/area/city/outskirtsfactory)
+"UY" = (
+/obj/effect/decal/cleanable/blood/innards,
+/obj/effect/turf_decal/siding/green,
+/turf/open/floor/pod/light,
+/area/city/outskirtsfactory)
+"Vf" = (
+/obj/structure/railing{
+	dir = 8
+	},
+/turf/open/floor/facility/dark,
+/area/city/outskirtsfactory)
+"Vn" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/turf_decal/siding/green/corner{
+	dir = 1
+	},
+/turf/open/floor/pod/light,
+/area/city/outskirtsfactory)
+"Vw" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/turf_decal/stripes{
+	dir = 1
+	},
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"VA" = (
+/obj/effect/turf_decal/trimline/yellow/filled/line{
+	pixel_y = 5
+	},
+/obj/effect/turf_decal/trimline/yellow/filled/line{
+	dir = 1;
+	pixel_y = -5
+	},
+/turf/open/floor/plating/ashplanet{
+	name = "asphalt";
+	density = 1
+	},
+/area/city/outskirtsfactory)
+"VL" = (
+/obj/machinery/door/poddoor/shutters/indestructible{
+	lockpickable = 0;
+	resistance_flags = 64
+	},
+/obj/structure/sigsystem/activator,
+/obj/structure/sigsystem/connector,
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirtsfactory)
+"Wb" = (
+/obj/machinery/light{
+	dir = 1
+	},
+/obj/structure/lootcrate/tres,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/facility/dark,
+/area/city/outskirtsfactory)
+"Wd" = (
+/obj/machinery/door/poddoor/shutters/preopen{
+	resistance_flags = 64;
+	lockpickable = 0
+	},
+/obj/structure/sigsystem/activator,
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirtsfactory)
+"Wt" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/sigsystem/tower{
+	dir = 1;
+	signal_code = 26
+	},
+/obj/effect/turf_decal/siding/red/corner{
+	dir = 1
+	},
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"Wy" = (
+/obj/effect/turf_decal/trimline/blue/filled/corner{
+	dir = 4
+	},
+/turf/open/floor/plating/asteroid/basalt,
+/area/city/outskirtsfactory)
+"WH" = (
+/obj/structure/destructible/cult/forge{
+	resistance_flags = 64;
+	desc = "A forge used in crafting various parts.";
+	name = "forge"
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirtsfactory)
+"WU" = (
+/obj/effect/turf_decal/siding/green{
+	dir = 4
+	},
+/turf/open/floor/pod/light,
+/area/city/outskirtsfactory)
+"Xg" = (
+/obj/item/bodypart/head,
+/turf/open/floor/plating/asteroid/basalt,
+/area/city/outskirtsfactory)
+"Xq" = (
+/obj/effect/decal/cleanable/blood/gibs,
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"Xw" = (
+/obj/machinery/conveyor/auto{
+	dir = 4;
+	resistance_flags = 64;
+	tamperproof = 1
+	},
+/obj/structure/railing{
+	resistance_flags = 115;
+	name = "wing-grade railing";
+	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
+	mouse_opacity = 0;
+	dir = 8
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirtsfactory)
+"XC" = (
+/obj/structure/sigsystem/connector{
+	dir = 4
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirtsfactory)
+"XW" = (
+/obj/structure/table/reinforced,
+/obj/structure/lootcrate/hana,
+/turf/open/floor/facility/dark,
+/area/city/outskirtsfactory)
+"Ya" = (
+/obj/effect/turf_decal/siding/green/corner{
+	dir = 4
+	},
+/turf/open/floor/pod/light,
+/area/city/outskirtsfactory)
+"Yn" = (
+/mob/living/simple_animal/hostile/ordeal/grungeon_shielder,
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/sigsystem/tower/button{
+	pixel_x = -24;
+	signal_code = 39
+	},
+/obj/effect/turf_decal/siding/red/end{
+	dir = 8
+	},
+/turf/open/floor/facility/dark,
+/area/city/outskirtsfactory)
+"Yo" = (
+/obj/structure/sigsystem/connector,
+/obj/effect/turf_decal/siding/red/corner,
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"Yt" = (
+/obj/structure/sigsystem/connector/split{
+	happens_once = 1
+	},
+/turf/closed/indestructible/rock,
+/area/city/outskirtsfactory)
+"YB" = (
+/obj/machinery/conveyor/auto{
+	dir = 8;
+	resistance_flags = 64;
+	tamperproof = 1
+	},
+/obj/structure/plasticflaps/opaque{
+	resistance_flags = 64
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirtsfactory)
+"YJ" = (
+/turf/open/floor/facility,
+/area/city/outskirtsfactory)
+"YL" = (
+/obj/structure/table/reinforced,
+/obj/structure/lootcrate/money,
+/turf/open/floor/facility/dark,
+/area/city/outskirtsfactory)
+"YM" = (
+/obj/effect/turf_decal/siding/red{
+	dir = 8
+	},
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"YV" = (
+/obj/structure/sigsystem/connector{
+	dir = 4
+	},
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"Za" = (
+/obj/structure/sigsystem/connector,
+/turf/closed/indestructible/syndicate,
+/area/city/outskirtsfactory)
+"Zb" = (
+/obj/structure/sign/departments/cargo{
+	resistance_flags = 64
+	},
+/turf/closed/indestructible/syndicate,
+/area/city/outskirtsfactory)
+"Zj" = (
+/turf/open/floor/circuit,
+/area/city/outskirtsfactory)
+"Zr" = (
+/obj/machinery/light/small/red{
+	dir = 1
+	},
+/obj/structure/sigsystem/tower{
+	dir = 8;
+	signal_code = 90;
+	happens_once = 1
+	},
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"Zt" = (
+/obj/effect/decal/cleanable/blood/splatter,
+/obj/effect/turf_decal/siding/green{
+	dir = 8
+	},
+/turf/open/floor/pod/light,
+/area/city/outskirtsfactory)
+"ZA" = (
+/obj/machinery/door/poddoor/shutters/window{
+	lockpickable = 0;
+	resistance_flags = 64
+	},
+/obj/structure/sigsystem/activator,
+/turf/open/floor/facility/dark,
+/area/city/outskirtsfactory)
+"ZD" = (
+/obj/machinery/door/poddoor/shutters/indestructible{
+	lockpickable = 0;
+	resistance_flags = 64
+	},
+/obj/structure/sigsystem/connector/split,
+/obj/structure/sigsystem/activator,
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"ZP" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/sigsystem/connector{
+	dir = 1;
+	happens_once = 1
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirtsfactory)
+"ZQ" = (
+/obj/effect/turf_decal/siding/thinplating/light{
+	dir = 6
+	},
+/obj/machinery/mech_bay_recharge_port{
+	dir = 8;
+	resistance_flags = 64
+	},
+/turf/open/floor/facility,
+/area/city/outskirtsfactory)
+"ZV" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/turf_decal/siding/green/corner,
+/turf/open/floor/pod/light,
+/area/city/outskirtsfactory)
+"ZZ" = (
+/obj/structure/sigsystem/tower{
+	dir = 1;
+	signal_code = 26
+	},
+/obj/effect/turf_decal/siding/red/corner{
+	dir = 4
+	},
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+
+(1,1,1) = {"
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+"}
+(2,1,1) = {"
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+"}
+(3,1,1) = {"
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+"}
+(4,1,1) = {"
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+"}
+(5,1,1) = {"
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+"}
+(6,1,1) = {"
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+"}
+(7,1,1) = {"
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+xE
+xE
+xE
+xE
+xE
+xE
+xE
+xE
+xE
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+"}
+(8,1,1) = {"
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+xE
+TX
+ky
+ky
+ky
+ky
+ky
+ky
+xE
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+"}
+(9,1,1) = {"
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+xE
+UC
+xE
+xE
+xE
+xE
+xE
+is
+xE
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+"}
+(10,1,1) = {"
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+xE
+UC
+xE
+Pn
+Pn
+Pn
+xE
+YB
+xE
+xE
+xE
+xE
+xE
+xE
+xE
+xE
+xE
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+"}
+(11,1,1) = {"
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+xE
+Hf
+xE
+Pn
+Pn
+Pn
+xE
+Mx
+TT
+fR
+TT
+TT
+TT
+TT
+TT
+TT
+xE
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+io
+io
+io
+io
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+"}
+(12,1,1) = {"
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+xE
+xE
+xE
+Hf
+xE
+xE
+Pn
+Pn
+xE
+Mx
+TT
+TT
+TT
+TT
+TT
+TT
+fR
+TT
+xE
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+io
+io
+io
+io
+io
+io
+io
+io
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+"}
+(13,1,1) = {"
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+xE
+Uk
+RK
+UC
+RK
+xE
+Pn
+Pn
+xE
+Mx
+TT
+TT
+TT
+TT
+TT
+TT
+TT
+TT
+xE
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+"}
+(14,1,1) = {"
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+xE
+RK
+WH
+UC
+FF
+xE
+xE
+xE
+xE
+Mx
+TT
+TT
+TT
+TT
+TT
+TT
+TT
+TT
+xE
+xE
+xE
+xE
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+"}
+(15,1,1) = {"
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+xE
+sJ
+GJ
+sJ
+Pb
+oS
+RK
+dt
+sn
+Go
+iA
+wm
+iA
+wm
+Xw
+Pf
+Pf
+Pf
+lW
+gl
+Uh
+xE
+xE
+xE
+xE
+Ct
+xE
+Tz
+xE
+xE
+xE
+Dg
+UP
+Dg
+Dg
+Dg
+Dg
+qw
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+"}
+(16,1,1) = {"
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+xE
+Tt
+sJ
+sJ
+RK
+KU
+sJ
+RK
+RK
+is
+sJ
+RK
+UM
+RK
+UC
+UM
+RK
+sJ
+xE
+xE
+je
+xE
+xE
+xE
+hK
+af
+Rk
+Uw
+DW
+QF
+xE
+Wb
+KJ
+GV
+bx
+GV
+Kj
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+Pn
+Pn
+Pn
+Pn
+Pn
+"}
+(17,1,1) = {"
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+xE
+jH
+Pz
+RK
+RK
+KU
+ZP
+gU
+RK
+Go
+wh
+ef
+wh
+wh
+UC
+wh
+wh
+gE
+xE
+xE
+je
+xE
+xE
+xE
+xI
+mE
+tQ
+yr
+tQ
+et
+cX
+GV
+Qi
+GV
+GV
+Qi
+GV
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+Pn
+Pn
+Pn
+Pn
+Pn
+"}
+(18,1,1) = {"
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+xE
+Nt
+RK
+sJ
+sJ
+te
+xE
+xE
+xE
+Mx
+TT
+kt
+TT
+TT
+DV
+TT
+TT
+TT
+xE
+xE
+je
+Uh
+gl
+gl
+aR
+AE
+et
+YV
+et
+tQ
+cX
+Qi
+ar
+NS
+Ci
+Qi
+Qi
+BR
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+Pn
+Pn
+Pn
+Pn
+Pn
+"}
+(19,1,1) = {"
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+xE
+xE
+sJ
+RK
+xE
+xE
+Pn
+Pn
+xE
+Mx
+Id
+Id
+Id
+Id
+Id
+TT
+fR
+TT
+xE
+xE
+Lb
+xE
+xE
+xE
+pM
+Av
+KH
+YV
+et
+yh
+xE
+Dg
+Dg
+Dg
+Dg
+Dg
+Dg
+qw
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+Pn
+Pn
+Pn
+Pn
+Pn
+"}
+(20,1,1) = {"
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+xE
+sJ
+sJ
+xE
+Pn
+Pn
+Pn
+xE
+TT
+TT
+fR
+TT
+TT
+kt
+TT
+TT
+TT
+xE
+xE
+je
+Uh
+gl
+gl
+iZ
+Vw
+et
+YV
+tQ
+xE
+xE
+xE
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+Pn
+Pn
+Pn
+Pn
+Pn
+"}
+(21,1,1) = {"
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+xE
+RK
+sJ
+xE
+Pn
+Pn
+Pn
+xE
+xE
+te
+xE
+xE
+xE
+te
+xE
+xE
+xE
+xE
+xE
+xE
+xE
+xE
+xE
+xE
+Lq
+tQ
+Rk
+Rk
+ZA
+rg
+xE
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+"}
+(22,1,1) = {"
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+AX
+AX
+AX
+Za
+qq
+Wd
+xE
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+IU
+Pi
+xE
+SZ
+ZD
+SZ
+xE
+xE
+xE
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+"}
+(23,1,1) = {"
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+MN
+zL
+Yt
+gX
+bw
+nz
+bS
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+qP
+bS
+zz
+Rf
+tQ
+xE
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+"}
+(24,1,1) = {"
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+hk
+Sc
+xI
+bp
+sJ
+DP
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+sw
+De
+SF
+Zr
+tQ
+gG
+xE
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+"}
+(25,1,1) = {"
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+xE
+xE
+xI
+EC
+VL
+ce
+DP
+xE
+xE
+xE
+xE
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+AX
+AX
+Za
+no
+vk
+vp
+xE
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+"}
+(26,1,1) = {"
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+xE
+et
+Re
+Yo
+aB
+aB
+Kf
+qD
+tQ
+et
+xE
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+IU
+Zb
+tQ
+tQ
+tQ
+xE
+io
+io
+io
+io
+io
+io
+Kq
+io
+CD
+io
+io
+io
+io
+io
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+"}
+(27,1,1) = {"
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+xE
+tQ
+tQ
+TI
+xE
+xE
+xE
+mL
+et
+tQ
+xE
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+xE
+EQ
+KH
+gG
+xE
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+"}
+(28,1,1) = {"
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+xE
+ca
+et
+rN
+xE
+Yn
+xE
+lp
+KH
+tV
+xE
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+xE
+xE
+xE
+xE
+xE
+xE
+tQ
+tQ
+tQ
+xE
+xE
+xE
+xE
+xE
+xE
+io
+io
+io
+io
+io
+Nh
+io
+io
+io
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+"}
+(29,1,1) = {"
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+xE
+et
+tQ
+TI
+xE
+kb
+xE
+mL
+tQ
+tQ
+xE
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+xE
+Tm
+Tm
+KG
+bE
+Tm
+Tm
+Tm
+Tm
+Tm
+wY
+Tm
+Tm
+yy
+xE
+io
+io
+io
+io
+io
+io
+io
+Ed
+io
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+"}
+(30,1,1) = {"
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+xE
+tQ
+tQ
+wR
+YM
+zp
+sI
+Wt
+et
+tQ
+xE
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+xE
+Tm
+CC
+WU
+WU
+Ya
+yy
+Tm
+Tm
+ZV
+Hs
+Ew
+Ya
+yy
+xE
+io
+io
+io
+Kq
+io
+io
+io
+io
+io
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+"}
+(31,1,1) = {"
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+xE
+et
+et
+tQ
+et
+Fn
+tQ
+et
+et
+tQ
+xE
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+xE
+uZ
+Si
+xE
+xE
+eb
+yy
+yy
+Tm
+UY
+xE
+xE
+eb
+Fm
+xE
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+"}
+(32,1,1) = {"
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+xE
+tQ
+et
+tQ
+tQ
+et
+tQ
+tQ
+tQ
+tQ
+xE
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+xE
+Tm
+Si
+xE
+xE
+eb
+gv
+Tm
+Tm
+mn
+xE
+xE
+eb
+rf
+xE
+xE
+xE
+xE
+xE
+xE
+Dg
+Dg
+Dg
+Dg
+Dg
+qw
+io
+io
+io
+io
+Pn
+Pn
+Pn
+Pn
+Pn
+"}
+(33,1,1) = {"
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+xE
+xE
+xE
+xE
+xE
+xE
+xE
+xE
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+xE
+ca
+tQ
+et
+tV
+xE
+It
+JD
+et
+tV
+xE
+xE
+xE
+xE
+KB
+xE
+xE
+xE
+xE
+xE
+xE
+xE
+xE
+Tm
+EO
+Zt
+cB
+Ck
+Tm
+Tm
+ww
+EO
+dn
+hc
+Vn
+qJ
+xE
+xE
+HH
+Ol
+gK
+tQ
+io
+ro
+io
+io
+io
+io
+ro
+io
+kX
+io
+io
+io
+Pn
+Pn
+Pn
+"}
+(34,1,1) = {"
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+xE
+xE
+xE
+DY
+RH
+al
+al
+RH
+al
+bS
+bS
+bS
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+xE
+et
+et
+tQ
+tQ
+tQ
+et
+tQ
+KH
+Oh
+vd
+et
+et
+tQ
+tQ
+et
+tQ
+Tm
+Tm
+Kk
+Tm
+yy
+PZ
+Tm
+Tm
+Tm
+yy
+Tm
+yy
+Tm
+Tm
+eA
+Tm
+Tm
+yy
+yy
+qg
+aZ
+et
+Xq
+fM
+tQ
+io
+io
+io
+Xg
+io
+io
+io
+io
+io
+io
+io
+io
+io
+Pn
+Pn
+"}
+(35,1,1) = {"
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+xE
+xE
+fT
+fT
+fT
+sJ
+sJ
+sJ
+sJ
+fT
+fT
+fT
+DP
+xE
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+xE
+tQ
+et
+Ei
+Ah
+vt
+yt
+ZZ
+et
+Iq
+vd
+tQ
+et
+tQ
+et
+tQ
+et
+yy
+Tm
+yy
+yy
+LR
+Lm
+Tm
+Tm
+yy
+yy
+yy
+Tm
+mD
+Tm
+Tm
+yy
+qJ
+yy
+Tm
+KW
+TH
+fM
+fM
+Qy
+tQ
+io
+io
+io
+io
+io
+io
+ab
+io
+SA
+io
+io
+io
+io
+Pn
+Pn
+"}
+(36,1,1) = {"
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+xE
+xE
+nQ
+fT
+sJ
+sJ
+sJ
+xE
+xE
+sJ
+sJ
+sJ
+fT
+fz
+xE
+xE
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+xE
+Ih
+et
+rN
+xE
+Ul
+xE
+lp
+oy
+tQ
+SZ
+tQ
+tQ
+et
+et
+dL
+tQ
+Tm
+Tm
+Tm
+yy
+zZ
+PZ
+Tm
+Tm
+Tm
+Tm
+Tm
+Tm
+aQ
+yy
+ad
+Tm
+Tm
+Tm
+Tm
+Nx
+et
+Xq
+et
+tQ
+tQ
+io
+io
+io
+io
+io
+ab
+io
+io
+io
+io
+io
+io
+io
+Pn
+Pn
+"}
+(37,1,1) = {"
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+xE
+xE
+fT
+fT
+sJ
+sJ
+fT
+fT
+xE
+xE
+fT
+fT
+sJ
+sJ
+fz
+fT
+xE
+Za
+Za
+Za
+Za
+Za
+Za
+Za
+Za
+Za
+Za
+Za
+Za
+xI
+xE
+tQ
+tQ
+TI
+xE
+Gf
+xE
+lp
+et
+tQ
+xR
+xE
+xE
+xE
+xE
+xE
+xE
+xE
+xE
+yi
+xE
+Gs
+xE
+Fm
+UH
+WU
+CN
+PC
+Tm
+Tm
+vb
+ZV
+xs
+WU
+Ya
+Tm
+ps
+Ch
+cz
+bv
+jY
+tQ
+kX
+ro
+io
+io
+io
+io
+ro
+gi
+io
+io
+CD
+io
+io
+Pn
+Pn
+"}
+(38,1,1) = {"
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+xE
+fT
+fT
+sJ
+sJ
+fT
+fT
+sJ
+Kl
+sJ
+sJ
+fT
+fT
+sJ
+pY
+fT
+CZ
+DP
+Qt
+Qt
+KR
+Qt
+dy
+Qt
+KR
+Qt
+dy
+Qt
+Qt
+xI
+xE
+ca
+et
+rN
+xE
+xE
+xE
+mL
+tQ
+lP
+xE
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+xE
+yy
+Si
+xE
+xE
+xy
+Tm
+FX
+Tm
+mn
+xE
+xE
+eb
+yy
+xE
+xE
+xE
+xE
+xE
+xE
+Dg
+Dg
+Dg
+Dg
+Dg
+qw
+io
+io
+io
+io
+io
+io
+io
+Pn
+Pn
+"}
+(39,1,1) = {"
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+xE
+fT
+sJ
+sJ
+fT
+fT
+sJ
+sJ
+fT
+fT
+sJ
+sJ
+fT
+fT
+pY
+sJ
+Ka
+DP
+Qt
+Qt
+Qt
+Qt
+Qt
+Qt
+Qt
+Qt
+Qt
+Qt
+Qt
+xI
+xE
+tQ
+et
+MG
+YM
+Ia
+Cz
+Em
+et
+et
+xE
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+xE
+bR
+mn
+xE
+xE
+eb
+yy
+Tm
+La
+mn
+xE
+xE
+Qw
+rf
+xE
+io
+io
+io
+io
+io
+io
+io
+io
+Ed
+Pn
+io
+io
+io
+io
+SA
+io
+io
+io
+Pn
+Pn
+"}
+(40,1,1) = {"
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+xE
+DA
+sJ
+fT
+fT
+sJ
+sJ
+fT
+fT
+fT
+fT
+xE
+xE
+fT
+fz
+sJ
+fz
+qr
+UD
+UD
+UD
+UD
+UD
+UD
+UD
+UD
+UD
+UD
+UD
+xI
+xE
+et
+Ih
+et
+tQ
+DW
+tQ
+et
+tQ
+et
+xE
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+xE
+Tm
+EA
+hc
+ho
+Ck
+Tm
+yy
+FX
+EO
+hc
+ho
+Ck
+Tm
+xE
+io
+io
+io
+io
+io
+io
+Kq
+io
+io
+Pn
+Pn
+Uv
+Uv
+Uv
+Uv
+Uv
+Wy
+io
+Pn
+Pn
+"}
+(41,1,1) = {"
+Pn
+Pn
+Pn
+xE
+xE
+xE
+xE
+xE
+xE
+fT
+sJ
+fT
+sJ
+sJ
+fT
+fT
+sJ
+sJ
+fT
+fT
+xE
+GE
+fz
+sJ
+fz
+bS
+Qt
+Qt
+Qt
+Qt
+Qt
+Qt
+Qt
+Qt
+Qt
+Qt
+Qt
+xI
+xE
+et
+et
+tQ
+tQ
+qM
+la
+tQ
+et
+tQ
+xE
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+xE
+yy
+yy
+Tm
+CE
+Tm
+Tm
+FX
+Tm
+yy
+BI
+Tm
+Tm
+yy
+xE
+io
+io
+io
+io
+io
+io
+io
+io
+io
+Pn
+Pn
+qu
+ba
+sk
+zN
+AY
+fx
+io
+Pn
+Pn
+"}
+(42,1,1) = {"
+Pn
+Pn
+Pn
+xE
+XW
+jf
+GV
+Sq
+xE
+fT
+sJ
+fT
+sJ
+fT
+fT
+sJ
+sJ
+sJ
+sJ
+fT
+fT
+sJ
+fz
+TW
+dl
+DP
+Qt
+Qt
+Qt
+Qt
+uf
+uM
+Cc
+Qt
+Qt
+Qt
+Qt
+xI
+xE
+xE
+xE
+yj
+UL
+sF
+UL
+xE
+xE
+xE
+xE
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+xE
+xE
+xE
+xE
+xE
+xE
+Tm
+FX
+Tm
+xE
+xE
+xE
+xE
+xE
+xE
+io
+io
+io
+Ed
+io
+io
+io
+Nh
+io
+Pn
+Pn
+ba
+ba
+ba
+zN
+ba
+fx
+io
+Pn
+Pn
+"}
+(43,1,1) = {"
+Pn
+Pn
+Pn
+xE
+XW
+Hi
+Hi
+NS
+xE
+fT
+sJ
+fT
+sJ
+fT
+sJ
+sJ
+dU
+dU
+sJ
+sJ
+fT
+sJ
+fz
+TW
+fT
+gS
+BT
+le
+GM
+TC
+ak
+KA
+ju
+Gu
+Vf
+Ua
+Ls
+Tj
+Qi
+GV
+GV
+Qi
+GV
+GV
+Qi
+xE
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+xE
+SR
+tQ
+tQ
+xE
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+Pn
+Pn
+ya
+ba
+lA
+zN
+qS
+fx
+io
+Pn
+Pn
+"}
+(44,1,1) = {"
+Pn
+Pn
+Pn
+xE
+bZ
+Hi
+lJ
+bQ
+eB
+fT
+rr
+fT
+sJ
+fT
+sJ
+dU
+sJ
+sJ
+dU
+sJ
+fT
+sJ
+Lj
+BL
+zF
+Hm
+MH
+dU
+ER
+ot
+pS
+NG
+BX
+dU
+dU
+dU
+dU
+Tj
+Qi
+GV
+Qi
+GV
+Qi
+GV
+Ro
+xE
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+xE
+tQ
+SR
+tQ
+xE
+io
+io
+io
+io
+io
+io
+io
+io
+io
+CD
+io
+io
+io
+io
+Pn
+Pn
+ba
+ba
+ba
+zN
+ba
+fx
+io
+Pn
+Pn
+"}
+(45,1,1) = {"
+Pn
+Pn
+Pn
+xE
+YL
+Hi
+Hi
+Ic
+qO
+fT
+sJ
+fT
+sJ
+fT
+sJ
+sJ
+dU
+dU
+sJ
+sJ
+fT
+sJ
+Bh
+yM
+fT
+eH
+HA
+aI
+yE
+HA
+uW
+Jy
+mm
+HA
+HA
+if
+if
+Tj
+GV
+Qi
+Sh
+Qi
+GV
+GV
+xE
+xE
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Hy
+tQ
+tQ
+tQ
+Hy
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+Pn
+Pn
+ya
+ba
+ba
+zN
+TL
+fx
+io
+Pn
+Pn
+"}
+(46,1,1) = {"
+Pn
+Pn
+Pn
+xE
+YL
+NS
+Ic
+DU
+xE
+fT
+sJ
+fT
+sJ
+fT
+fT
+sJ
+sJ
+sJ
+sJ
+fT
+fT
+sJ
+Bh
+yM
+dl
+xE
+Qt
+Qt
+Qt
+Qt
+TG
+Fh
+hN
+Qt
+Qt
+Qt
+Qt
+xE
+xE
+bl
+xE
+xE
+xE
+xE
+xE
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+xE
+tQ
+SR
+tQ
+xE
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+Pn
+Pn
+ba
+lA
+ba
+zN
+ba
+fx
+io
+Pn
+Pn
+"}
+(47,1,1) = {"
+Pn
+Pn
+Pn
+xE
+xE
+xE
+xE
+xE
+xE
+fT
+sJ
+fT
+sJ
+sJ
+fT
+fT
+sJ
+sJ
+fT
+fT
+xE
+GE
+Bh
+sJ
+fT
+xE
+Qt
+Qt
+Qt
+Qt
+Qt
+Qt
+Qt
+Qt
+Qt
+Qt
+Qt
+xE
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+xE
+xE
+xE
+tQ
+tQ
+tQ
+xE
+xE
+xE
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+Pn
+Pn
+ya
+ba
+ba
+zN
+qS
+fx
+io
+Pn
+Pn
+"}
+(48,1,1) = {"
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+xE
+DA
+sJ
+fT
+fT
+sJ
+sJ
+fT
+fT
+fT
+fT
+xE
+xE
+fT
+Bh
+sJ
+fT
+IF
+UD
+UD
+UD
+UD
+UD
+UD
+UD
+db
+UD
+UD
+UD
+xE
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+xE
+wF
+cw
+Tc
+pe
+cw
+cw
+HN
+xE
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+Pn
+Pn
+ba
+ba
+ba
+zN
+ba
+fx
+io
+Pn
+Pn
+"}
+(49,1,1) = {"
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+xE
+fT
+sJ
+sJ
+fT
+fT
+sJ
+sJ
+fT
+fT
+sJ
+sJ
+fT
+fT
+XC
+sJ
+fT
+xE
+Qt
+Qt
+Qt
+Qt
+Qt
+Qt
+Qt
+Qt
+Qt
+Qt
+Qt
+xE
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+xE
+hH
+YJ
+YJ
+Ar
+YJ
+nI
+fA
+xE
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+Pn
+Pn
+Op
+ba
+gn
+zN
+gx
+KP
+Wy
+Pn
+Pn
+"}
+(50,1,1) = {"
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+xE
+fT
+fT
+sJ
+sJ
+fT
+fT
+sJ
+BK
+sJ
+sJ
+fT
+fT
+sJ
+XC
+fT
+CZ
+xE
+Qt
+Qt
+dy
+Qt
+KR
+Qt
+dy
+Qt
+KR
+Qt
+Qt
+xE
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+xE
+ST
+Zj
+YJ
+Zj
+Ar
+Zj
+Is
+xE
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+Pn
+Pn
+Pn
+jx
+jx
+jx
+VA
+jx
+jx
+fx
+sp
+Pn
+"}
+(51,1,1) = {"
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+xE
+xE
+fT
+fT
+sJ
+sJ
+fT
+fT
+xE
+xE
+fT
+fT
+sJ
+sJ
+Bh
+fT
+xE
+xE
+xE
+xE
+xE
+xE
+xE
+xE
+xE
+xE
+xE
+xE
+xE
+xE
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+xE
+LQ
+Ar
+YJ
+nI
+YJ
+YJ
+iE
+xE
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+io
+Pn
+Pn
+Pn
+jx
+jx
+jx
+VA
+jx
+jx
+KP
+Pn
+Pn
+"}
+(52,1,1) = {"
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+xE
+xE
+mV
+fT
+sJ
+sJ
+sJ
+xE
+xE
+sJ
+sJ
+sJ
+fT
+Bh
+xE
+xE
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+xE
+pz
+sB
+sB
+Fx
+sB
+sB
+ZQ
+xE
+io
+CD
+io
+io
+io
+io
+io
+io
+io
+io
+Pn
+Pn
+Pn
+Pn
+jx
+jx
+jx
+VA
+jx
+jx
+jx
+Pn
+Pn
+"}
+(53,1,1) = {"
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+xE
+xE
+fT
+fT
+fT
+sJ
+sJ
+sJ
+sJ
+fT
+fT
+fT
+xI
+xE
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+xE
+xE
+xE
+xE
+xE
+xE
+xE
+xE
+xE
+io
+io
+io
+io
+io
+io
+io
+io
+io
+Pn
+Pn
+Pn
+Pn
+Pn
+jx
+uS
+jx
+VA
+LZ
+uS
+jx
+Pn
+Pn
+"}
+(54,1,1) = {"
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+xE
+xE
+xE
+RU
+Hg
+al
+al
+Hg
+al
+bS
+bS
+bS
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+jx
+jx
+jx
+VA
+jx
+jx
+jx
+Pn
+Pn
+"}
+(55,1,1) = {"
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+xE
+xE
+xE
+xE
+xE
+xE
+xE
+xE
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+jx
+jx
+jx
+VA
+jx
+jx
+jx
+Pn
+Pn
+"}
+(56,1,1) = {"
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+jx
+jx
+uS
+VA
+uS
+jx
+jx
+Pn
+Pn
+"}
+(57,1,1) = {"
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+jx
+jx
+jx
+VA
+jx
+jx
+jx
+Pn
+Pn
+"}
+(58,1,1) = {"
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+jx
+jx
+jx
+VA
+jx
+jx
+jx
+Pn
+Pn
+"}
+(59,1,1) = {"
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+jx
+uS
+jx
+VA
+jx
+uS
+jx
+Pn
+Pn
+"}
+(60,1,1) = {"
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+jx
+jx
+jx
+VA
+jx
+jx
+jx
+Pn
+Pn
+"}
+(61,1,1) = {"
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+jx
+jx
+jx
+VA
+jx
+jx
+jx
+Pn
+Pn
+"}
+(62,1,1) = {"
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+jx
+jx
+uS
+VA
+uS
+jx
+jx
+Pn
+Pn
+"}
+(63,1,1) = {"
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+jx
+jx
+jx
+VA
+jx
+jx
+jx
+Pn
+Pn
+"}
+(64,1,1) = {"
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+jx
+jx
+jx
+VA
+jx
+jx
+jx
+Pn
+Pn
+"}
+(65,1,1) = {"
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+jx
+uS
+jx
+VA
+jx
+uS
+jx
+Pn
+Pn
+"}
+(66,1,1) = {"
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+jx
+jx
+jx
+VA
+jx
+jx
+jx
+Pn
+Pn
+"}
+(67,1,1) = {"
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+jx
+jx
+jx
+VA
+jx
+jx
+jx
+Pn
+Pn
+"}
+(68,1,1) = {"
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+jx
+jx
+uS
+VA
+uS
+jx
+jx
+Pn
+Pn
+"}
+(69,1,1) = {"
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+jx
+jx
+jx
+VA
+jx
+jx
+jx
+Pn
+Pn
+"}
+(70,1,1) = {"
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+jx
+jx
+jx
+VA
+jx
+jx
+jx
+Pn
+Pn
+"}
+(71,1,1) = {"
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+jx
+uS
+jx
+VA
+jx
+uS
+jx
+Pn
+Pn
+"}
+(72,1,1) = {"
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+jx
+jx
+jx
+VA
+jx
+jx
+jx
+Pn
+Pn
+"}
+(73,1,1) = {"
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+jx
+jx
+jx
+VA
+jx
+jx
+jx
+Pn
+Pn
+"}
+(74,1,1) = {"
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+Pn
+"}

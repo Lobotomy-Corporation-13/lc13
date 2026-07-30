@@ -69,7 +69,7 @@
 		for(var/mob/living/L in T.contents)
 			if(L in beenHit)
 				continue
-			L.apply_damage(140, BLACK_DAMAGE, null, L.run_armor_check(null, BLACK_DAMAGE), spread_damage = TRUE)
+			L.deal_damage(140, BLACK_DAMAGE, attack_type = (ATTACK_TYPE_RANGED | ATTACK_TYPE_SPECIAL))
 			L.apply_dark_flame(14)
 			beenHit |= L
 			visible_message("<span class='boldwarning'>[src] pierces through [L]!</span>")
@@ -77,7 +77,7 @@
 		for(var/mob/living/L in nearMiss)
 			if(L in beenHit)
 				continue
-			L.apply_damage(70, BLACK_DAMAGE, null, L.run_armor_check(null, BLACK_DAMAGE), spread_damage = TRUE)
+			L.deal_damage(70, BLACK_DAMAGE, attack_type = (ATTACK_TYPE_RANGED | ATTACK_TYPE_SPECIAL))
 			L.apply_dark_flame(6)
 			beenHit |= L
 			visible_message("<span class='warning'>[src] just barely brushes past [L]!</span>")
@@ -258,6 +258,7 @@
 /obj/effect/sled/proc/FadeOut()
 	animate(src, alpha = 0, time = 5)
 	QDEL_IN(src, 5)
+
 /obj/effect/titania_aura
 	name = "titania"
 	desc = "A gargantuan fairy."
@@ -281,3 +282,67 @@
 	layer = POINT_LAYER
 	alpha = 150
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+
+/*
+* Turf Fire
+* subtypes used by Ardor Moth and Liu
+* Commonly used as a attack effect.
+*/
+/obj/effect/turf_fire
+	gender = PLURAL
+	name = "fire"
+	desc = "a burning pyre."
+	icon = 'icons/effects/effects.dmi'
+	icon_state = "turf_fire"
+	anchored = TRUE
+	layer = TURF_LAYER
+	plane = FLOOR_PLANE
+	base_icon_state = "turf_fire"
+	var/damaging = FALSE
+	//Lifespan of the fire effect.
+	var/burn_time = 30 SECONDS
+	//Fire check timer and how long until we check again.
+	var/fire_turf_check_timer
+	var/fire_turf_check_time = 4
+	//Total health only used in reaction to getting extinguished
+	var/fire_health = 4
+	//The Fire Damage
+	var/fire_damage = 2
+
+/obj/effect/turf_fire/Initialize()
+	. = ..()
+	QDEL_IN(src, burn_time)
+	Burn()
+
+//Red and not burn, burn is a special damage type.
+/obj/effect/turf_fire/Crossed(atom/movable/AM)
+	. = ..()
+	if(isliving(AM))
+		Burn()
+
+/obj/effect/turf_fire/proc/Burn()
+	//return is the number of burnt mobs
+	var/burned_entities = 0
+	for(var/mob/living/H in get_turf(src))
+		if(!H)
+			continue
+		//arbitrary max fire damage so corpses still get burned
+		if(H.getFireLoss() < 1000 && H.stat != DEAD)
+			if(DoDamage(H))
+				. += 1
+	//If burned entities present and the timer no longer exists, check again.
+	if(burned_entities >= 1 && !TIMER_COOLDOWN_CHECK(src, fire_turf_check_timer))
+		//Im not sure if this will lag.
+		fire_turf_check_timer = addtimer(CALLBACK(src, PROC_REF(DoDamage)), fire_turf_check_time)
+
+//If this doesnt return true then the entity will not be counted towards the next check for burning.
+/obj/effect/turf_fire/proc/DoDamage(mob/living/fuel)
+	fuel.adjust_fire_stacks(fire_damage)
+	fuel.IgniteMob()
+	return TRUE
+
+//Overridable proc for special inextinguishable fires.
+/obj/effect/turf_fire/proc/WaterReact()
+	fire_health -= 1
+	if(fire_health <= 0)
+		qdel(src)

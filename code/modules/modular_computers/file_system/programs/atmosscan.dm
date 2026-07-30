@@ -1,4 +1,4 @@
-/datum/computer_file/program/atmosscan
+/* /datum/computer_file/program/atmosscan
 	filename = "atmosscan"
 	filedesc = "AtmoZphere"
 	program_icon_state = "air"
@@ -43,3 +43,4 @@
 	. = ..()
 	if(.)
 		return
+ */

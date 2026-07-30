@@ -38,7 +38,7 @@
 	var/modified_damage = (ranged_damage*force_multiplier)
 	for(var/turf/open/T in range(target_turf, 1))
 		new /obj/effect/temp_visual/paradise_attack(T)
-		for(var/mob/living/L in user.HurtInTurf(T, list(), modified_damage, PALE_DAMAGE, hurt_mechs = TRUE))
+		for(var/mob/living/L in user.HurtInTurf(T, list(), modified_damage, PALE_DAMAGE, hurt_mechs = TRUE, attack_type = (ATTACK_TYPE_SPECIAL)))
 			if((L.stat < DEAD) && !(L.status_flags & GODMODE))
 				damage_dealt += modified_damage
 	if(damage_dealt > 0)
@@ -94,7 +94,7 @@
 			user.changeNext_move(CLICK_CD_MELEE * 1.2)
 			var/turf/T = get_turf(M)
 			new /obj/effect/temp_visual/justitia_effect(T)
-			user.HurtInTurf(T, list(), 50, PALE_DAMAGE)
+			user.HurtInTurf(T, list(), 50, PALE_DAMAGE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 		else
 			hitsound = 'sound/weapons/ego/justitia1.ogg'
 			user.changeNext_move(CLICK_CD_MELEE * 0.4)
@@ -105,13 +105,24 @@
 /obj/item/ego_weapon/justitia/get_clamped_volume()
 	return 40
 
+
+/// This scythe attacks quickly for a good amount of WHITE damage with a 3-hit combo.
+/// It has a special ability that summons three musical notes around you - landing the combo finisher in one will deal a lot of damage in an AoE,
+/// and buff the weapon by increasing its "Movement", from the first movement up until the fourth.
+// The intended gameplay loop with this weapon is to "space out" the music note detonations to prolong Movement for as long as possible. That is to say,
+// you should perform some normal combos on an enemy rather than spending all the finishers on musical notes.
+#define DA_CAPO_MUSICNOTE_DEFAULT "default"
 /obj/item/ego_weapon/da_capo
 	name = "da capo"
 	desc = "A scythe that swings silently and with discipline like a conductor's gestures and baton. \
 	If there were a score for this song, it would be one that sings of the apocalypse."
-	special = "This weapon has a combo system, but only on a single enemy."
+	special = "This weapon has a 3-hit combo, but only against the same target. <b>Use it in-hand</b> to spawn 3 musical notes around yourself.\
+	\nLanding your combo's finisher on one of these musical notes will <b>detonate it</b>, dealing 1.2x of the resulting damage in an AoE.\
+	\nDetonating a musical note will also advance your <b>Movement</b>. You begin at the First Movement, and can reach up to the Fourth. \
+	Each Movement increases your weapon's damage further. <b>Reaching the Fourth Movement unlocks Finale</b>, a 6-hit combo with a powerful AoE finisher.\
+	\nYour Movement will <b>expire after 7 seconds</b> if it is not replaced by the next. You will begin anew from the First Movement if you progress past the Fourth."
 	icon_state = "da_capo"
-	force = 40 // It attacks very fast
+	force = 37 // It attacks very fast
 	attack_speed = 0.5
 	swingstyle = WEAPONSWING_LARGESWEEP
 	damtype = WHITE_DAMAGE
@@ -124,35 +135,447 @@
 							TEMPERANCE_ATTRIBUTE = 80,
 							JUSTICE_ATTRIBUTE = 80
 							)
-	crit_multiplier = 0	//No crits for you, you have the combo system.
+	crit_multiplier = 0	// No crits for you, you have the combo system.
 
 	var/combo = 0 // I am copy-pasting justitia "combo" system and nobody can stop me
+	/// The time at which your combo will reset.
 	var/combo_time
-	var/combo_wait = 14
-	var/waltz_partner
-	//I'm making Da Capo a waltzing weapon, It should play like a rhythm game. - Kirie.
+	/// How large your window to continue your combo is, in deciseconds.
+	var/combo_timeout_duration = 16
+
+	/// Damage multiplier for the third hit in the basic combo.
+	var/combo_3hit_finisher_coeff = 1.5
+	/// Damage multiplier for the sixth hit in the final "Finale" combo.
+	var/combo_6hit_finisher_coeff = 3
+
+	var/waltz_partner // I'm making Da Capo a waltzing weapon, it should play like a rhythm game - Kirie
+
+	/// Current movement. Think of it as a power level. This should always be a number between 1 and 4.
+	var/current_movement = 1
+	/// We use current_movement as the index for this list. The corresponding value is added to force before each hit.
+	var/list/movement_force_bonuses = list(0, 6, 10, 14)
+	/// Holds a timer datum for our current Movement's expiration.
+	var/movement_timer
+	/// How long our movement lasts before expiring.
+	var/movement_timer_duration = 7 SECONDS
+
+	/// This is a ring VFX around the user. Non functional, purely aesthetic.
+	var/obj/effect/temp_visual/da_capo_ring/music_notes_ring
+
+	/// List which holds a reference to all active music notes for this weapon.
+	var/list/music_notes_list = list()
+	/// Are we ready to summon more music notes?
+	var/music_notes_ready = TRUE
+	/// Holds a timer datum for refreshing our ability to summon notes.
+	var/music_notes_summon_timer
+	/// How long is the cooldown on summoning notes?
+	var/music_notes_summon_timer_duration = 40 SECONDS
+	/// How many notes should be summoned on each use? This should probably always be 3. I mean, that's how I balanced it, at least.
+	var/music_notes_summon_amount = 3
+	/// Range for the AoE when a music note is blown up.
+	var/music_notes_detonation_range = 5
+	/// Coefficient for the damage dealt by music notes, this is applied on top of force and justice.
+	var/music_notes_damage_coeff = 1.2
+	/// How long it takes for each music note to complete 1 revolution around the user.
+	var/music_notes_aesthetic_rotation_time = 4 SECONDS
+
+	/// Any organic mob killed by a Soundwave() which has a maximum health higher than this value will be headbombed, which is purely aesthetic.
+	// The reason for this is because I don't want to headbomb swarms of weak enemies like Amber Dawns.
+	var/headbomb_hp_requirement = 150
 
 /obj/item/ego_weapon/da_capo/attack(mob/living/M, mob/living/user)
 	if(!CanUseEgo(user))
 		return
+
+	// If the mob we hit was a note, save it in the following var. Otherwise keep it as null
+	var/mob/da_capo_musicnote/hit_note
+	if(istype(M, /mob/da_capo_musicnote))
+		hit_note = M
+
+	var/finished_combo = FALSE // This var will be set to TRUE if we land a hit with the final hit of the 3hit combo or 6hit combo.
+
+	force = initial(force) + movement_force_bonuses[current_movement] // Pick the correct force bonus to add depending on what Movement we're on.
+	attack_speed = initial(attack_speed)
+
+	// Your combo cancels if you took too long to hit the enemy, or if you didn't hit your "partner".
 	if(world.time > combo_time)
 		combo = 0
-	if(!waltz_partner || waltz_partner != M)
-		waltz_partner = M
+	if((!hit_note) && ((!waltz_partner) || (waltz_partner != M)))
 		combo = 0
-	combo_time = world.time + combo_wait
-	switch(combo)
-		if(1)
-			hitsound = 'sound/weapons/ego/da_capo2.ogg'
-		if(2)
-			hitsound = 'sound/weapons/ego/da_capo3.ogg'
-			force *= 1.5
-			combo = -1
-		else
-			hitsound = 'sound/weapons/ego/da_capo1.ogg'
-	..()
+		waltz_partner = M
+
+	combo_time = world.time + combo_timeout_duration
+
+	if(current_movement < 4)
+		// The code for the 3-hit combo.
+		switch(combo)
+			if(1)
+				hitsound = 'sound/weapons/ego/da_capo2.ogg'
+			if(2)
+				hitsound = 'sound/weapons/ego/da_capo3.ogg'
+				force *= combo_3hit_finisher_coeff
+				combo = -1
+				finished_combo = TRUE
+			else
+				combo = 0 // Trust me. This is due to how the 6hit combo can be at like, hit 4, then wear off mid-combo. This works just fine. Trust me.
+				hitsound = 'sound/weapons/ego/da_capo1.ogg'
+	else
+		// The code for the 6-hit combo: on the Fourth Movement.
+		switch(combo)
+			if(0, 2, 4)
+				hitsound = 'sound/weapons/ego/da_capo1.ogg'
+				attack_speed -= 0.2
+			if(1, 3)
+				hitsound = 'sound/weapons/ego/da_capo2.ogg'
+				attack_speed -= 0.3
+			if(5)
+				hitsound = 'sound/weapons/ego/da_capo3.ogg'
+				force *= combo_6hit_finisher_coeff
+				// Call an AOE, but exclude our main target from it
+				Soundwave(music_notes_damage_coeff, music_notes_detonation_range, user, M)
+				// Big slice VFX
+				var/obj/effect/temp_visual/slice/temp = new (get_turf(M))
+				temp.transform = temp.transform * 2.5
+				if(music_notes_ring)
+					music_notes_ring.Finale()
+				// SFX
+				playsound(src, 'sound/weapons/ego/da_capo_finale.ogg', 75, FALSE, 5)
+				addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(playsound), src, 'sound/weapons/ego/da_capo_finale_claps.ogg', 80, FALSE, 5), 1 SECONDS)
+				// We're done here
+				combo = -1
+				finished_combo = TRUE
+				NextMovement(user) // This should throw us back to 1st Movement
+			else
+				hitsound = 'sound/weapons/ego/da_capo1.ogg'
+
+	if(hit_note)
+		playsound(src, hitsound, get_clamped_volume(), TRUE) // We aren't hitting anything, but I'd like to have the hitsound anyway, you know? Feedback and stuff
+		if(finished_combo) // Finisher: detonate the note, and progress to the next movement.
+			user.visible_message(span_danger("[user] confidently swings [src] at thin air, causing a melodic blast!"), span_danger("You expertly slice through a musical note with [src], causing a melodic blast!"))
+			NoteDetonation(hit_note, user)
+			NextMovement(user)
+
+		else // You hit a note, but not with a finisher. The note is destroyed with no extra effect. Yikes.
+			hit_note.Consume()
+			user.visible_message(span_danger("[user] confidently swings [src] at thin air...?!"), span_danger("You slice through a musical note with [src], but lack the momentum to cause a melodic blast!"))
+
+		user.changeNext_move((CLICK_CD_MELEE * attack_speed) * (finished_combo ? 1.4 : 1)) // We need to apply click delay ourselves here, since we're not hitting
+		combo += 1
+		force = initial(force)
+		return TRUE // We don't actually "hit" anything here. This is so we don't do the attack anim towards the root of the 64x64 icon (looks janky AF)
+
+	..() // The actual hit.
+
+	if(finished_combo)
+		user.changeNext_move(CLICK_CD_MELEE * attack_speed * 1.4)
+
 	combo += 1
 	force = initial(force)
+
+/// Cleanup in case this weapon gets destroyed. Will get rid of the ring and any notes.
+/obj/item/ego_weapon/da_capo/Destroy(force)
+	RingCleanup()
+	for(var/mob/da_capo_musicnote/note in music_notes_list)
+		qdel(note)
+	return ..()
+
+/// Use in-hand to summon the Musical Notes. Has a cooldown.
+/obj/item/ego_weapon/da_capo/attack_self(mob/living/carbon/human/user)
+	. = ..()
+	if(CanUseEgo(user) && music_notes_ready)
+		music_notes_ready = FALSE
+		INVOKE_ASYNC(src, PROC_REF(SummonNotes), user)
+		addtimer(CALLBACK(src, PROC_REF(ReadyNotes), user), music_notes_summon_timer_duration)
+
+/// Proc that is called by a timer after the cooldown for summoning notes ends. It readies the weapon to summon them again, and alerts the player.
+/obj/item/ego_weapon/da_capo/proc/ReadyNotes(mob/living/user)
+	music_notes_ready = TRUE
+	var/sound/sfx = sound('sound/abnormalities/armyinblack/black_heartbeat.ogg')
+	var/sfx_delay = 0.8 SECONDS
+	ReadyNotesWarning(user, sfx)
+	addtimer(CALLBACK(src, PROC_REF(ReadyNotesWarning), user, sfx), sfx_delay)
+	addtimer(CALLBACK(src, PROC_REF(ReadyNotesWarning), user, sfx), sfx_delay * 2)
+	to_chat(user, span_nicegreen("You are ready to begin the performance anew - [src] is ready to manifest more notes."))
+	balloon_alert(user, "You are ready to begin the performance anew - [src] is ready to manifest more notes.")
+
+/// This proc sends a specified sound to the user, directly, and flashes their screen with a colour.
+/obj/item/ego_weapon/da_capo/proc/ReadyNotesWarning(mob/living/user, sound/sfx)
+	SEND_SOUND(user, sfx)
+	flash_color(user, flash_color = COLOR_PALE_BLUE_GRAY, flash_time = 1 SECONDS)
+
+/// Summons musical notes around the player.
+/obj/item/ego_weapon/da_capo/proc/SummonNotes(mob/living/carbon/human/subject)
+	if(music_notes_summon_amount <= 0)
+		return FALSE
+
+	RingCleanup(music_notes_ring) // This shouldn't ever happen, but get rid of an existing ring if it's still around.
+	music_notes_ring = new(get_turf(subject))
+	RegisterSignal(music_notes_ring, COMSIG_PARENT_QDELETING, PROC_REF(RingCleanup)) // Register a signal to remove its reference if it deletes itself.
+	music_notes_ring.orbit(subject, 0, TRUE, 0, 0, pre_rotation = FALSE)
+	music_notes_ring.BecomeVisibleToUser(subject)
+
+	to_chat(subject, span_notice("You resonate with [src], manifesting musical notes around yourself."))
+	balloon_alert(subject, "You resonate with [src], manifesting musical notes around yourself.")
+	playsound(src, 'sound/magic/summonitems_generic.ogg', 65, FALSE, -5)
+
+	// Spawn the notes!
+	for(var/i in 1 to music_notes_summon_amount)
+		var/mob/da_capo_musicnote/new_note = new(get_turf(subject))
+		music_notes_list += new_note
+		new_note.BindTo(subject, music_notes_list) // Important: this is what makes them actually visible to the user
+		RegisterSignal(new_note, COMSIG_PARENT_QDELETING, PROC_REF(NoteDestructionCleanup))
+		new_note.orbit(subject, 2, TRUE, music_notes_aesthetic_rotation_time, pre_rotation = FALSE)
+
+		sleep((music_notes_aesthetic_rotation_time / music_notes_summon_amount)) // This makes them look spread out in a circle.
+
+/// Called when a note is destroyed, we remove the note reference from our list and if there are none left, we also call RingCleanup().
+/obj/item/ego_weapon/da_capo/proc/NoteDestructionCleanup(mob/da_capo_musicnote/obliterated)
+	SIGNAL_HANDLER
+	music_notes_list -= obliterated
+	if(length(music_notes_list) <= 0)
+		if(music_notes_ring)
+			music_notes_ring.has_notes_remaining = FALSE
+			INVOKE_ASYNC(src, PROC_REF(RingCleanup), music_notes_ring)
+
+/// Proc used to clean-up the ring.
+/obj/item/ego_weapon/da_capo/proc/RingCleanup(obj/effect/temp_visual/da_capo_ring/garbage)
+	SIGNAL_HANDLER
+	if(garbage)
+		UnregisterSignal(garbage, COMSIG_PARENT_QDELETING)
+		if((!(garbage.has_notes_remaining)) && (current_movement != 4))
+			QDEL_IN(garbage, 2.5 SECONDS)
+			animate(garbage, 2 SECONDS, alpha = 0)
+
+/// Blows up a note. Will also call NoteDetonationSpecial(), for whoever wants to implement the Al Coda we've discussed.
+// (context: we've talked about Al Coda buffing this weapon to have new types of notes with special effects and/or buffs)
+/obj/item/ego_weapon/da_capo/proc/NoteDetonation(mob/da_capo_musicnote/hit_note, mob/living/carbon/human/user)
+	playsound(loc, 'sound/weapons/ego/da_capo_note_detonation.ogg', (65 + (current_movement * 3)), TRUE, frequency = 1 + (current_movement * 0.1))
+	new /obj/effect/temp_visual/screech(get_turf(user))
+	Soundwave(music_notes_damage_coeff, music_notes_detonation_range, user)
+
+	INVOKE_ASYNC(src, PROC_REF(NoteDetonationSpecial), hit_note.special_type, user) // Special effects for Al Coda. Unimplemented as of 2025/09/02
+	INVOKE_ASYNC(hit_note, TYPE_PROC_REF(/mob/da_capo_musicnote, Consume)) // Plays an animation and deletes the note
+
+/// Called when detonating a note, to apply effects depending on what the note's special type was. (Al Coda stuff).
+/// Shouldn't rely on the note anymore, it could be deleted by now.
+/obj/item/ego_weapon/da_capo/proc/NoteDetonationSpecial(note_special_type, mob/living/carbon/human/user)
+	return TRUE // Implement some switch case or something with the note_special_type.
+
+/// Handles creating an AoE for our 6hit combo finisher and for detonating the musical notes. Warning: this has no visuals of its own.
+/obj/item/ego_weapon/da_capo/proc/Soundwave(damage_coeff, wave_range, mob/living/carbon/human/user, mob/living/target)
+	var/final_damage = force
+	var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
+	var/justicemod = 1 + userjust/100
+	final_damage*=justicemod
+	final_damage*=force_multiplier
+	final_damage*=damage_coeff
+
+	for(var/mob/living/L in view(wave_range, user))
+		// First conditional for this check: faction check. Second conditional: to exclude our main target, if we receive one. Third: don't hit dead things.
+		if(!(user.faction_check_mob(L, TRUE)) && !(target && target == L) && (L.stat < DEAD))
+			// I have to save these four vars in case our attack qdels the enemy
+			var/turf/hit_turf = get_turf(L)
+			var/victim_name = L.name
+			var/victim_maxhp = L.maxHealth
+			var/victim_biotypes = L.mob_biotypes
+
+			to_chat(L, span_userdanger("The music of the apocalypse pierces through you!"))
+			balloon_alert(L, "The music of the apocalypse pierces through you!")
+			L.deal_damage(final_damage, damtype, user, attack_type = (ATTACK_TYPE_SPECIAL))
+			// If we're hitting a target with enough max hp, who is an organic mob, and was either deleted or killed by the attack, we headbomb them.
+			// This is purely aesthetic.
+			if((victim_maxhp >= headbomb_hp_requirement) && (victim_biotypes & MOB_ORGANIC) && (!L || L.stat >= DEAD))
+				hit_turf.visible_message(span_danger("\The [victim_name]'s head explodes!"))
+				playsound(hit_turf, 'sound/weapons/ego/da_capo_headbomb.ogg', 75, TRUE)
+				new /obj/effect/gibspawner/generic/trash_disposal(hit_turf) // This type spawns less gibs than usual.
+
+			new /obj/effect/temp_visual/sparkles(hit_turf)
+
+/// Advance to the next Movement, increasing weapon damage and giving it some visual flair.
+/obj/item/ego_weapon/da_capo/proc/NextMovement(mob/living/carbon/human/user)
+	filters = null
+	var/rgb_color_values = 135 // We intensify this white colour as the movements progress
+	var/movement_progress_chat_alert_string = "Da capo - you begin anew at the First Movement."
+	if(current_movement >= 4) // If you've reached the last movement, begin again. That's in theme, right?
+		current_movement = 1
+		deltimer(movement_timer)
+	else
+		current_movement++
+		StartMovementTimeoutCountdown(user)
+		switch(current_movement)
+			if(2)
+				movement_progress_chat_alert_string = "Sostenuto - you advance to the Second Movement."
+			if(3)
+				movement_progress_chat_alert_string = "Accelerando e Crescendo - you advance to the Third Movement."
+			if(4)
+				movement_progress_chat_alert_string = "Stringendo - you advance to the Fourth Movement."
+		rgb_color_values += current_movement * 30
+		filters += filter(type="drop_shadow", x=0, y=0, size=current_movement - 1, offset = 1, color=rgb(rgb_color_values, rgb_color_values, rgb_color_values))
+	to_chat(user, span_nicegreen(movement_progress_chat_alert_string))
+	balloon_alert(user, movement_progress_chat_alert_string)
+
+/// Sets a timer for your Movement to expire if you don't refresh it in time. Unrelated to the basic 3hit combo.
+/obj/item/ego_weapon/da_capo/proc/StartMovementTimeoutCountdown(mob/living/carbon/human/user)
+	deltimer(movement_timer)
+	movement_timer = addtimer(CALLBACK(src, PROC_REF(MovementTimeout), user), movement_timer_duration, TIMER_STOPPABLE)
+
+/// Returns the weapon to 1st Movement and removes ongoing timers and visuals. Unrelated to the basic 3hit combo.
+/obj/item/ego_weapon/da_capo/proc/MovementTimeout(mob/living/carbon/human/user)
+	filters = null
+	current_movement = 1
+	to_chat(user, span_nicegreen("Da capo - the scythe's power wanes and its influence recedes. You begin anew at the First Movement.")) // Why nicegreen? All the other Movement messages use it, so it's easier to track in chat.
+	balloon_alert(user, "Da capo - the scythe's power wanes and its influence recedes. You begin anew at the First Movement.")
+	deltimer(movement_timer)
+	if(music_notes_ring && !(music_notes_ring.has_notes_remaining))
+		RingCleanup(music_notes_ring)
+
+/// This proc controls the actual volume for the weapon's hitsound.
+// for the longest time i thought it had something to do with like, physical volume, as in, size
+/obj/item/ego_weapon/da_capo/get_clamped_volume()
+	return 35 + (current_movement * 2)
+
+/// VFX - a ring that encircles the player, in the music notes spin around.
+/// We delete this manually when the weapon runs out of notes.
+// Uses some code to be only visible to the user, stolen right out of Star Luminary.
+/obj/effect/temp_visual/da_capo_ring
+	name = "unending performance"
+	desc = "And again!"
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_effects64x64.dmi'
+	icon_state = ""
+	var/visible_icon_state = "da_capo_ring"
+	var/image/visible_image
+	layer = BELOW_MOB_LAYER
+	alpha = 150
+	duration = 35 SECONDS
+	base_pixel_x = -16
+	pixel_x = -16
+	base_pixel_y = -16
+	pixel_y = -16
+	var/client/user_client
+	var/has_notes_remaining = TRUE
+
+// Logic for these three procs was basically ripped out of Star Luminary, thank you Eidos. Makes it so only the user can see them.
+/obj/effect/temp_visual/da_capo_ring/Initialize(mapload)
+	. = ..()
+	visible_image = image(icon, src, visible_icon_state, layer)
+	visible_image.override = TRUE
+
+/obj/effect/temp_visual/da_capo_ring/Destroy(force)
+	BecomeInvisibleToUser()
+	QDEL_NULL(visible_image)
+	user_client = null
+	return ..()
+
+/obj/effect/temp_visual/da_capo_ring/proc/Finale()
+	icon_state = "da_capo_ring"
+	QDEL_IN(src, 2 SECONDS)
+	animate(src, 1.5 SECONDS, easing = EASE_IN | QUAD_EASING, transform = transform*4.5)
+	animate(src, 1.5 SECONDS, alpha = 0)
+
+/obj/effect/temp_visual/da_capo_ring/proc/BecomeVisibleToUser(mob/living/carbon/human/user)
+	if(!user.client)
+		return
+	user_client = user.client
+	if(user_client)
+		user_client.images |= visible_image
+
+/obj/effect/temp_visual/da_capo_ring/proc/BecomeInvisibleToUser()
+	if(!user_client)
+		return
+	user_client.images -= visible_image
+
+/// This is a dummy mob for Da Capo's ability. It isn't an actual AI controlled thing.
+// Uses some code to be only visible to the user, stolen right out of Star Luminary.
+/mob/da_capo_musicnote
+	name = "musical note"
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_effects64x64.dmi'
+	icon_state = ""
+	var/visible_icon_state = "da_capo_note"
+	var/image/visible_image
+	layer = ABOVE_ALL_MOB_LAYER
+	density = FALSE
+	throwforce = 0
+	move_resist = INFINITY
+	status_flags = GODMODE
+	base_pixel_x = -16
+	pixel_x = -16
+	base_pixel_y = -16
+	pixel_y = -16
+	var/mob/living/carbon/human/bound_to
+	var/client/user_client
+	/// How long it lasts before vanishing.
+	var/duration = 27 SECONDS
+	/// This var holds a string that tells the weapon what to do when this note is detonated. Behaviour for each type should be implemented in the weapon.
+	var/special_type = DA_CAPO_MUSICNOTE_DEFAULT
+
+/mob/da_capo_musicnote/Initialize(mapload)
+	. = ..()
+	// This part makes it actually visible, but only by the person who used the ability
+	visible_image = image(icon, src, visible_icon_state, layer)
+	visible_image.override = TRUE
+	visible_image.filters += filter(type="drop_shadow", x=0, y=0, size = 1, offset = 1, color=rgb(240, 240, 240)) // Players were struggling to find them over darker enemies
+	RegisterSignal(src, COMSIG_MOVABLE_PRE_THROW, PROC_REF(DenyThrow))
+	QDEL_IN(src, duration) // It's a temporary thing.
+
+/mob/da_capo_musicnote/attackby(obj/item/W, mob/user, params)
+	if(..())
+		return TRUE
+	if(istype(W, /obj/item/ego_weapon/da_capo))
+		return W.attack(src, user)
+
+/// Stops Sirocco from stealing the damn thing
+/mob/da_capo_musicnote/proc/DenyThrow()
+	SIGNAL_HANDLER
+	return COMPONENT_CANCEL_THROW
+
+/mob/da_capo_musicnote/Destroy(force)
+	Cleanup(TRUE) // We call this with TRUE so it doesn't try to qdel itself again, we're already destroying it
+	UnregisterSignal(src, COMSIG_MOVABLE_PRE_THROW)
+	return ..()
+
+/// We call this proc when a note is hit by Da Capo.
+/mob/da_capo_musicnote/proc/Consume()
+	if(visible_image)
+		visible_image.filters = null
+		visible_image.icon_state = "da_capo_note_destroyed" // Death animation
+	QDEL_IN(src, 1.5 SECONDS)
+
+// The following two procs are for the "only the user can see this" stuff. Taken from Star Luminary, slightly modified (user's client is stored as a type var)
+/mob/da_capo_musicnote/proc/BecomeVisibleToUser(mob/living/carbon/human/user)
+	if(!user.client)
+		return
+	user_client = user.client
+	if(user_client)
+		user_client.images |= visible_image
+
+/mob/da_capo_musicnote/proc/BecomeInvisibleToUser()
+	if(!user_client)
+		return
+	user_client.images -= visible_image
+
+/// Proc called by Da Capo on each note once it is created. Importantly, it will let the user see the notes which are normally invisible.
+/mob/da_capo_musicnote/proc/BindTo(mob/living/carbon/human/subject)
+	if(subject)
+		bound_to = subject
+		BecomeVisibleToUser(bound_to)
+		RegisterSignal(bound_to, COMSIG_PARENT_QDELETING, PROC_REF(Cleanup))
+		RegisterSignal(bound_to, COMSIG_LIVING_DEATH, PROC_REF(Cleanup))
+
+/// Cleans up the mob, removing references and unregistering signals.
+/// Called when destroyed, with TRUE as a parameter, or called by the signals set in BindTo() without any parameters (so called_by_destroy = FALSE)
+/mob/da_capo_musicnote/proc/Cleanup(called_by_destroy = FALSE)
+	SIGNAL_HANDLER
+	BecomeInvisibleToUser()
+	visible_image.filters = null
+	QDEL_NULL(visible_image)
+	if(bound_to)
+		UnregisterSignal(bound_to, COMSIG_PARENT_QDELETING)
+		UnregisterSignal(bound_to, COMSIG_LIVING_DEATH)
+		bound_to = null
+	if(!called_by_destroy)
+		qdel(src)
+
+#undef DA_CAPO_MUSICNOTE_DEFAULT
 
 /obj/item/ego_weapon/da_capo/get_clamped_volume()
 	return 40
@@ -262,6 +685,7 @@
 		target.visible_message(span_danger("[user] rears up and slams into [target]!"), \
 						span_userdanger("[user] punches you with everything you got!!"), vision_distance = COMBAT_MESSAGE_RANGE, ignored_mobs = user)
 		to_chat(user, span_danger("You throw your entire body into this punch!"))
+		balloon_alert(user, "You throw your entire body into this punch!")
 		goldrush_damage = force
 		//I gotta regrab  justice here
 		var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
@@ -272,12 +696,13 @@
 		if(ishuman(target))
 			goldrush_damage = 50
 
-		target.apply_damage(goldrush_damage, RED_DAMAGE, null, target.run_armor_check(null, RED_DAMAGE), spread_damage = TRUE)		//MASSIVE fuckoff punch
+		target.deal_damage(goldrush_damage, RED_DAMAGE, user, attack_type = (ATTACK_TYPE_MELEE))		//MASSIVE fuckoff punch
 
 		playsound(src, 'sound/weapons/fixer/generic/gen2.ogg', 50, TRUE)
 		goldrush_damage = initial(goldrush_damage)
 	else
 		to_chat(user, "<span class='spider'><b>Your attack was interrupted!</b></span>")
+		balloon_alert(user, "Your attack was interrupted!")
 		return
 
 /obj/item/ego_weapon/goldrush/attackby(obj/item/I, mob/living/user, params)
@@ -286,6 +711,7 @@
 		return
 	new /obj/item/ego_weapon/goldrush/nihil(get_turf(src))
 	to_chat(user,span_warning("The [I] seems to drain all of the light away as it is absorbed into [src]!"))
+	balloon_alert(user, "The [I] seems to drain all of the light away as it was abosrbed into [src]!")
 	playsound(user, 'sound/abnormalities/nihil/filter.ogg', 15, FALSE, -3)
 	qdel(I)
 	qdel(src)
@@ -293,9 +719,9 @@
 /obj/item/ego_weapon/smile
 	name = "smile"
 	desc = "The monstrous mouth opens wide to devour the target, its hunger insatiable."
-	special = "This weapon instantly kills targets below 10% health"	//To make it more unique, if it's too strong
+	special = "This weapon instantly kills targets below 10% health." // To make it more unique, if it's too strong
 	icon_state = "smile"
-	force = 110 //Slightly less damage, has an ability
+	force = 110 // Slightly less damage, has an ability
 	attack_speed = 1.6
 	damtype = BLACK_DAMAGE
 	attack_verb_continuous = list("slams", "attacks")
@@ -317,7 +743,8 @@
 	. = ..()
 	if((target.health <= target.maxHealth * 0.1 || target.stat == DEAD) && !(target.status_flags & GODMODE))	//Makes up for the lack of damage by automatically killing things under 10% HP
 		target.gib()
-		user.adjustBruteLoss(-user.maxHealth * 0.15)	//Heal 15% HP. Moved here from the armor, because that's a nightmare to code
+		if(QDELETED(target)) // Added to stop infinite healing cheese on Apostles, Hermit etc.
+			user.adjustBruteLoss(-user.maxHealth * 0.15) // Heal 15% HP. Moved here from the armor, because that's a nightmare to code
 
 /obj/item/ego_weapon/smile/get_clamped_volume()
 	return 50
@@ -362,6 +789,7 @@
 			force = 80
 			icon_state = "rosered"
 	to_chat(user, span_notice("[src] will now deal [force] [damtype] damage."))
+	balloon_alert(user, "[src] will now deal [force] [damtype] damage.")
 	playsound(src, 'sound/items/screwdriver2.ogg', 50, TRUE)
 
 /obj/item/ego_weapon/censored
@@ -397,9 +825,11 @@
 		return
 	special_attack = !special_attack
 	if(special_attack)
-		to_chat(user, span_notice("You prepare special attack."))
+		to_chat(user, span_notice("You prepare a special attack."))
+		balloon_alert(user, "You prepare a special attack.")
 	else
-		to_chat(user, span_notice("You decide to not use special attack."))
+		to_chat(user, span_notice("You decide to not use the special attack."))
+		balloon_alert(user, "You decide to not use the special attakc.")
 
 /obj/item/ego_weapon/censored/afterattack(atom/A, mob/living/user, proximity_flag, params)
 	if(!CanUseEgo(user))
@@ -434,7 +864,7 @@
 						continue
 				else
 					continue
-			L.apply_damage(modified_damage, BLACK_DAMAGE, null, L.run_armor_check(null, BLACK_DAMAGE), spread_damage = TRUE)
+			L.deal_damage(modified_damage, BLACK_DAMAGE, user, attack_type = (ATTACK_TYPE_SPECIAL))
 			new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(L), pick(GLOB.alldirs))
 
 /obj/item/ego_weapon/censored/get_clamped_volume()
@@ -554,7 +984,7 @@
 	desc = "It hails from realms whose mere existence stuns the brain and numbs us with the black extra-cosmic gulfs it throws open before our frenzied eyes."
 	special = "Use this weapon in hand to dash. Attack after a dash for an AOE."
 	icon_state = "space"
-	force = 50	//Half white, half black.
+	force = 35	//Half white, half black.
 	damtype = WHITE_DAMAGE
 	swingstyle = WEAPONSWING_LARGESWEEP
 	attack_verb_continuous = list("cuts", "attacks", "slashes")
@@ -568,6 +998,7 @@
 							JUSTICE_ATTRIBUTE = 80
 							)
 	var/canaoe
+	var/dash_stamina_drain = 40
 
 /obj/item/ego_weapon/space/Initialize()
 	. = ..()
@@ -593,7 +1024,7 @@
 	icon_state = "space_aoe"
 	update_icon_state()
 	user.density = FALSE
-	user.adjustStaminaLoss(15, TRUE, TRUE)
+	user.adjustStaminaLoss(dash_stamina_drain, TRUE, TRUE)
 	user.throw_at(dodgelanding, 3, 2, spin = FALSE) // This still collides with people, by the way.
 	canaoe = TRUE
 	sleep(3)
@@ -606,7 +1037,7 @@
 	var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
 	var/justicemod = 1 + userjust/100
 	var/damage = force * justicemod * force_multiplier
-	target.apply_damage(damage, BLACK_DAMAGE, null, target.run_armor_check(null, BLACK_DAMAGE), spread_damage = TRUE)
+	target.deal_damage(damage, BLACK_DAMAGE, user, attack_type = (ATTACK_TYPE_MELEE))
 
 	if(!canaoe)
 		return
@@ -621,8 +1052,8 @@
 			aoe*=force_multiplier
 			if(L == user || ishuman(L))
 				continue
-			L.apply_damage(aoe, BLACK_DAMAGE, null, L.run_armor_check(null, BLACK_DAMAGE), spread_damage = TRUE)
-			L.apply_damage(aoe, WHITE_DAMAGE, null, L.run_armor_check(null, WHITE_DAMAGE), spread_damage = TRUE)
+			L.deal_damage(aoe, BLACK_DAMAGE, user, attack_type = (ATTACK_TYPE_SPECIAL))
+			L.deal_damage(aoe, WHITE_DAMAGE, user, attack_type = (ATTACK_TYPE_SPECIAL))
 	icon_state = "space"
 	update_icon_state()
 	canaoe = FALSE
@@ -682,11 +1113,13 @@
 	..()
 	if(transforming)
 		to_chat(user,span_warning("[src] will no longer transform to match the seasons."))
+		balloon_alert(user, "[src] will no longer transform to match the seasons.")
 		transforming = FALSE
 		special = "This E.G.O. will not transform to match the seasons."
 		return
 	if(!transforming)
 		to_chat(user,span_warning("[src] will now transform to match the seasons."))
+		balloon_alert(user, "[src] will now transform to match the seasons.")
 		transforming = TRUE
 		special = "This E.G.O. will transform to match the seasons."
 		return
@@ -711,6 +1144,7 @@
 	update_icon_state()
 	if(current_holder)
 		to_chat(current_holder,span_notice("[src] suddenly transforms!"))
+		balloon_alert(current_holder, "[src] suddenly transforms!")
 		current_holder.update_inv_hands()
 		playsound(current_holder, "sound/abnormalities/seasons/[current_season]_change.ogg", 50, FALSE)
 	force = season_list[current_season][1]
@@ -778,6 +1212,7 @@
 	. = ..()
 	if(user.get_inactive_held_item())
 		to_chat(user, span_notice("You cannot use [src] with only one hand!"))
+		balloon_alert(user, "You cannot use the [src] with only one hand!")
 		return FALSE
 
 /obj/item/ego_weapon/shield/distortion/AnnounceBlock(mob/living/carbon/human/source, damage, damagetype, def_zone)
@@ -832,6 +1267,7 @@
 		user.adjustBruteLoss(-10)
 		user.adjustSanityLoss(-15)
 		to_chat(user, span_notice("You reap the fruits of your labor!"))
+		balloon_alert(user, "You reap the fruits of your labor!")
 		..()
 		return
 	..()
@@ -842,9 +1278,11 @@
 		return
 	if(ability_cooldown > world.time)
 		to_chat(user, span_warning("You have used this ability too recently!"))
+		balloon_alert(user, "You have used this ability too recently!")
 		return
 	playsound(src, 'sound/effects/ordeals/white/white_reflect.ogg', 50, TRUE)
 	to_chat(user, "You cultivate seeds of desires.")
+	balloon_alert(user, "You cultivate seeds of desires.")
 	ability_cooldown = world.time + ability_cooldown_time
 	spawn_plant(user, EAST, NORTH)
 	spawn_plant(user, WEST, NORTH)
@@ -886,10 +1324,12 @@
 		return
 	if(ability_cooldown > world.time)
 		to_chat(user, span_warning("You have used this ability too recently!"))
+		balloon_alert(user, "You have used this ability too recently!")
 		return
 	if(do_after(user, 20, src))
 		playsound(src, 'sound/weapons/ego/spicebush_special.ogg', 50, FALSE)
 		to_chat(user, "You plant some flower buds.")
+		balloon_alert(user, "You plant some flower buds.")
 		spawn_plant(user, EAST, NORTH)//spawns one spicebush plant 2 tiles away in each corner
 		spawn_plant(user, WEST, NORTH)
 		spawn_plant(user, EAST, SOUTH)
@@ -949,7 +1389,7 @@
 		for(var/turf/open/T in range(target_turf, 1))
 			new /obj/effect/temp_visual/spicebloom(T)
 			for(var/mob/living/L in T.contents)
-				L.apply_damage(modified_damage, WHITE_DAMAGE, null, L.run_armor_check(null, WHITE_DAMAGE), spread_damage = TRUE)
+				L.deal_damage(modified_damage, WHITE_DAMAGE, user, attack_type = (ATTACK_TYPE_SPECIAL))
 				if((L.stat < DEAD) && !(L.status_flags & GODMODE))
 					damage_dealt += modified_damage
 
@@ -957,26 +1397,6 @@
 	icon = 'ModularLobotomy/_Lobotomyicons/tegu_effects.dmi'
 	icon_state = "spicebush"
 	duration = 10
-
-
-//temporary
-/obj/item/ego_weapon/willing
-	name = "the flesh is willing"
-	desc = "And really nothing will stop it."
-	icon_state = "willing"
-	force = 105	//Still lower DPS
-	attack_speed = 1.4
-	damtype = RED_DAMAGE
-	knockback = KNOCKBACK_LIGHT
-	attack_verb_continuous = list("bashes", "clubs")
-	attack_verb_simple = list("bashes", "clubs")
-	hitsound = 'sound/weapons/fixer/generic/club1.ogg'
-	attribute_requirements = list(
-							FORTITUDE_ATTRIBUTE = 100,
-							PRUDENCE_ATTRIBUTE = 80,
-							TEMPERANCE_ATTRIBUTE = 80,
-							JUSTICE_ATTRIBUTE = 80
-							)
 
 /obj/item/ego_weapon/mockery
 	name = "mockery"
@@ -1046,7 +1466,7 @@
 		aoe*=justicemod
 		if(user.faction_check_mob(L))
 			continue
-		L.apply_damage(aoe, BLACK_DAMAGE, null, L.run_armor_check(null, BLACK_DAMAGE), spread_damage = TRUE)
+		L.deal_damage(aoe, BLACK_DAMAGE, user, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 		new /obj/effect/temp_visual/small_smoke/halfsecond(get_turf(L))
 
 /obj/item/ego_weapon/mockery/get_clamped_volume()
@@ -1081,6 +1501,7 @@
 	update_icon_state()
 	if(current_holder)
 		to_chat(current_holder,span_notice("[src] suddenly transforms!"))
+		balloon_alert(current_holder, "[src] suddenly transforms!")
 		current_holder.update_inv_hands()
 		current_holder.playsound_local(current_holder, 'sound/effects/blobattack.ogg', 75, FALSE)
 	force = weapon_list[form][1]
@@ -1186,7 +1607,7 @@
 		if("sword")
 			var/red = force
 			red*=justicemod
-			target.apply_damage(red * force_multiplier, RED_DAMAGE, null, target.run_armor_check(null, RED_DAMAGE), spread_damage = TRUE)
+			target.deal_damage(red * force_multiplier, RED_DAMAGE, user, attack_type = (ATTACK_TYPE_MELEE))
 
 		if("whip")
 			var/multihit = force
@@ -1205,7 +1626,7 @@
 				aoe*=justicemod
 				if(user.faction_check_mob(L))
 					continue
-				L.apply_damage(aoe * force_multiplier, BLACK_DAMAGE, null, L.run_armor_check(null, BLACK_DAMAGE), spread_damage = TRUE)
+				L.deal_damage(aoe * force_multiplier, BLACK_DAMAGE, user, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 				new /obj/effect/temp_visual/small_smoke/halfsecond(get_turf(L))
 				if(!ishuman(L))
 					if(!L.has_status_effect(/datum/status_effect/rend_black))
@@ -1224,6 +1645,7 @@
 					user.changeNext_move(CLICK_CD_MELEE * 4)
 					if(!smashing)
 						to_chat(user,span_warning("The whip starts to thrash around uncontrollably!"))
+						balloon_alert(user, "The whip starts to trash around uncontrollably!")
 						Smash(user, target)
 				else
 					build_up -= (0.1/3)//sortof silly but its a way to fix each whip hit from increasing build up 3 times as it should.
@@ -1244,7 +1666,7 @@
 			for(var/mob/living/L in T)
 				if(user.faction_check_mob(L))
 					continue
-				L.apply_damage(smash_damage * force_multiplier, BLACK_DAMAGE, null, L.run_armor_check(null, BLACK_DAMAGE), spread_damage = TRUE)
+				L.deal_damage(smash_damage * force_multiplier, BLACK_DAMAGE, user, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 		playsound(user, 'sound/abnormalities/fairy_longlegs/attack.ogg', 75, 0, 3)
 		sleep(0.5 SECONDS)
 	smashing = FALSE
@@ -1302,6 +1724,7 @@
 	update_icon_state()
 	if(current_holder)
 		to_chat(current_holder,span_notice("[src] suddenly transforms!"))
+		balloon_alert(current_holder, "[src] suddenly transforms!")
 		current_holder.update_inv_hands()
 		current_holder.playsound_local(current_holder, 'sound/effects/blobattack.ogg', 75, FALSE)
 	force = weapon_list[form][1]
@@ -1383,7 +1806,7 @@
 		aoe*=force_multiplier
 		if(L == user || ishuman(L))
 			continue
-		L.apply_damage(aoe, PALE_DAMAGE, null, L.run_armor_check(null, PALE_DAMAGE), spread_damage = TRUE)
+		L.deal_damage(aoe, PALE_DAMAGE, user, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 		new /obj/effect/temp_visual/small_smoke/halfsecond(get_turf(L))
 
 /obj/item/ego_weapon/shield/gasharpoon/afterattack(atom/target, mob/living/user, proximity_flag, clickparams)
@@ -1446,7 +1869,7 @@
 	for(var/mob/living/L in view(1, user))
 		if(L == user || ishuman(L))
 			continue
-		L.apply_damage(aoe, PALE_DAMAGE, null, L.run_armor_check(null, PALE_DAMAGE), spread_damage = TRUE)
+		L.deal_damage(aoe, PALE_DAMAGE, user, attack_type = (ATTACK_TYPE_COUNTER | ATTACK_TYPE_SPECIAL))
 		var/datum/status_effect/stacking/pallid_noise/P = L.has_status_effect(/datum/status_effect/stacking/pallid_noise)
 		if(!P)
 			L.apply_status_effect(STATUS_EFFECT_PALLIDNOISE)
@@ -1489,6 +1912,7 @@
 	reach = weapon_list[form][3]
 	hitsound = weapon_list[form][4]
 	to_chat(current_holder, span_notice(weapon_list[form][5]))
+	balloon_alert(current_holder, weapon_list[form][5])
 
 /obj/item/ego_weapon/shield/gasharpoon/proc/Revert()
 	if(!form)//is it not transformed?
@@ -1502,6 +1926,7 @@
 	hitsound = initial(hitsound)
 	if(current_holder)
 		to_chat(current_holder,span_notice("[src] returns to its original shape."))
+		balloon_alert(current_holder, "[src] returns to it's original shape.")
 		current_holder.update_inv_hands()
 		current_holder.playsound_local(current_holder, 'sound/weapons/ego/gasharpoon_transform.ogg', 75, FALSE)
 
@@ -1528,6 +1953,7 @@
 	if(!istype(P, matching_armor))
 		Revert()
 		to_chat(current_holder,span_notice("[src] appears unable to release its full potential."))
+		balloon_alert(current_holder, "[src] appears unable to release it's full potential.")
 		return FALSE
 	return TRUE
 
@@ -1592,6 +2018,7 @@
 		return
 	if(dash_cooldown > world.time)
 		to_chat(user, "<span class='warning'>Your dash is still recharging!")
+		balloon_alert(user, "Your dash is still recharging!")
 		return
 	if((get_dist(user, A) < 2) || (!(can_see(user, A, dash_range))))
 		return
@@ -1603,6 +2030,7 @@
 		A.attackby(src,user)
 	playsound(src, 'sound/abnormalities/clownsmiling/jumpscare.ogg', 50, FALSE, 9)
 	to_chat(user, "<span class='warning'>You dash to [A]!")
+	balloon_alert(user, "You dash to [A]!")
 
 /obj/item/ego_weapon/faith
 	name = "starbound faith"
@@ -1693,14 +2121,17 @@
 	var/mob/living/carbon/human/wielder = user
 	if(!(wielder.has_status_effect(/datum/status_effect/starcultist)))
 		to_chat(wielder, span_warning("The staff refuses to answer your calling. Reject not the truth of the Stars."))
+		balloon_alert(wielder, "The staff refuses to answer your calling. Reject not the truth of the Stars.")
 		return
 	if(ritual_active || ritual_ongoing)
 		return
 	var/cultist_in_ritual = cultist_check(wielder)
 	if(cultist_in_ritual < 1)
 		to_chat(wielder, span_warning("The staff shines briefly then fizzles out, unable to reach fellow followers of the Star."))
+		balloon_alert(wielder, "The staff shines briefly then fizzles out, unable to reach fellow followers of the Star.")
 		return
 	to_chat(wielder, span_warning("The staff vibrates in your hands, trying to reach towards all followers of the Star."))
+	balloon_alert(wielder, "The staff vibrates in your hands, trying to reach towardsa ll followers of the Star.")
 	playsound(user, 'sound/weapons/plasma_cutter.ogg', 100, TRUE)
 	start_ritual(wielder)
 
@@ -1721,6 +2152,7 @@
 	ritual_synchronization = TRUE
 	ritual_ongoing = TRUE
 	to_chat(user, span_notice("You feel that a ritual is already underway nearby, and your staff attunes to it."))
+	balloon_alert(user, "You feel that a ritual is already underway nearby, and your staff attunes to it")
 	for(var/i = 1 to 12)
 		if(!user)
 			reset()
@@ -1733,9 +2165,11 @@
 	ritual_ongoing = FALSE
 	if(ritual_active)
 		to_chat(user, span_nicegreen("Your staff thrums with energy."))
+		balloon_alert(user, "Your staff thrums with energy.")
 	else
 		playsound(user, 'sound/effects/zzzt.ogg', 60, TRUE)
 		to_chat(user, span_warning("The light in your staff fizzles out, something must have gone wrong."))
+		balloon_alert(user, "The light in your staff fizzles out, something must have gone wrong.")
 /obj/item/ego_weapon/faith/proc/start_ritual(mob/living/user)
 	ritual_master = TRUE
 	ritual_ongoing = TRUE
@@ -1749,6 +2183,7 @@
 			return
 		if(!do_after(user, 2 SECONDS))
 			to_chat(user, span_danger("You lose your focus, and the ritual is cut short!"))
+			balloon_alert(user, "You lose your focus, and the ritual is cut short!")
 			break
 		playsound(user, 'sound/effects/curse5.ogg', 60, TRUE)
 		if((cultist_check(user) < 1 + i))
@@ -1778,13 +2213,16 @@
 	switch(ritual_level)
 		if(1)
 			to_chat(user, span_nicegreen("Your staff slightly loosens its grasp on the holy marble and you feel a surge of courage coursing through you."))
+			balloon_alert(user, "Your staff slightly loosens it's grasp on the holy marble and you feel a surge of courage coursing through you.")
 			healing = TRUE
 		if(2)
 			to_chat(user, span_nicegreen("Your staff loosens its grasp on the holy marble and its light invigorates your every swing."))
+			balloon_alert(user, "Your staff loosens it's grasp on the holy marble and it's light invigorates your every swing.")
 			healing = TRUE
 			force += 25
 		if(3)
 			to_chat(user, span_nicegreen("The Star is unbound if only for a moment, illuminating your path with its majestic light and empowering your attacks with otherwordly energy."))
+			balloon_alert(user, "The Star is unbound if only for a moment, illuminating your path with it's majestic light and empowering your attacks with otherworldy energy.")
 			icon_state = "awakened_faith"
 			healing = TRUE
 			force += 45
@@ -1813,3 +2251,1536 @@
 	damage = 85
 	damage_type = WHITE_DAMAGE
 	icon_state = "star"
+
+/// An ALEPH E.G.O. weapon related to Faelantern (Midwinter Nightmare). Does not come from the abno itself - only sources are Wishing Well and Eldtree realization assimilation.
+/// It has subpar DPS by default, but becomes very strong when the user is being targeted by multiple enemies.
+/// It deals WHITE damage with its melee, and has an Ebony Stem-like AoE ranged attack that deals RED damage, but has a windup.
+/// Can be wielded to gain knockback (and changes the special attack to single target that pulls the enemy to you and deals extra aggro damage)
+// Due to its special attack triggering at range but having a windup and applying click delay, it's harder to hit and run with this weapon (you can still do it by using sweeps correctly and not mashing).
+// When wearing the corresponding armour, unwielded hits mark enemies, and wielded hits consume the mark to heal HP (melee) or SP (ranged). The amount healed is increased with aggro'd enemy amount.
+/obj/item/ego_weapon/wield/eldtree
+	name = "eldtree"
+	desc = "A large warhammer, its head fashioned primarily out of wooden branches and tipped with metal. On closer inspection, a myriad of malevolent eyes can be sighted inside. \n\
+	It serves as a good reminder that the true essence of things is always hidden within. Never trust the facades presented to you."
+	icon_state = "lce_lantern"
+	inhand_icon_state = "lce_lantern"
+	worn_icon = 'icons/obj/clothing/belt_overlays.dmi'
+	worn_icon_state = "lce_lantern"
+	force = 78
+	wielded_force = 105
+	swingstyle = WEAPONSWING_LARGESWEEP
+	swingcolor = "#5c4322"
+	damtype = WHITE_DAMAGE
+	attack_speed = 1.4
+	wielded_attack_speed = 1.7
+	attack_verb_continuous = list("slams", "bashes", "crushes", "pulverizes", "obliterates", "wallops", "bonks", "tenderizes")
+	attack_verb_simple = list("slam", "bash", "crush", "pulverize", "obliterate", "wallop", "bonk", "tenderize")
+	hitsound = 'sound/weapons/ego/lce_lantern_hit.ogg'
+	attribute_requirements = list(
+							FORTITUDE_ATTRIBUTE = 80,
+							PRUDENCE_ATTRIBUTE = 100,
+							TEMPERANCE_ATTRIBUTE = 100,
+							JUSTICE_ATTRIBUTE = 80
+							)
+	special = "This weapon <b>gains 5 force</b> for each enemy targeting its user, up to a <b>maximum of 35 extra force</b>. This force gain and its maximum are <b>boosted by 1.25x while wielding the weapon</b>.\n\
+	This weapon gains knockback while wielded. \n\
+	This weapon has access to a justice-scaling <b>ranged RED damage special attack</b> when attacking <b>non-adjacent</b> targets. While using the weapon one-handed, the special attack is weaker but <b>strikes in an area</b>. When wielding the weapon, the special attack is stronger, single-targeted and <b>pulls the struck enemy towards the user</b> while also making them <b>likelier to target the user</b>."
+	/// How much force does the weapon gain per enemy targeting you in sight?
+	var/aggro_force_per_enemy = 5
+	/// How much force can the weapon gain from enemies targeting you, as a maximum?
+	var/aggro_extra_force_cap = 35
+	/// Coefficient for force gained while wielded (that is to say, you will gain more force from aggro when wielding). This modifies aggro_force_per_enemy and aggro_extra_force_cap
+	var/aggro_extra_force_wielded_coeff = 1.25
+	/// How much force do we currently have from enemy aggro?
+	var/aggro_currently_gained_aggro_force
+
+	/// How strong is the weapon's melee knockback when wielding it?
+	var/wielded_knockback_strength = KNOCKBACK_MEDIUM
+	/// How strong is the spike attack's pull when wielding it?
+	var/wielded_pull_strength = 5
+
+	// Spike attack vars. The spike attack is similar to Ebony Queen's Apple or Paradise Lost with the major caveat that it has a windup.
+	// The unwielded version deals less damage but has an AoE, whereas the wielded version deals damage that is competitive with regular melee DPS of the weapon and pulls the enemy towards you.
+	// You get the luxury of picking RED or WHITE damage and being able to AoE, but you will be dealing with pulling enemies if you want max single target DPS, and attacking moving enemies with the spike can be tricky.
+	/// Type of damage dealt by the spike attack.
+	var/spike_damage_type = RED_DAMAGE
+	// I'm sorry the key here is a string, in a perfect world we could just have FALSE/TRUE as keys and pass 'wielded' when accessing these lists, but BYOND won't let me
+	var/list/spike_windup = list("unwielded" = 0.3 SECONDS, "wielded" = 0.4 SECONDS) // Length of the windup for the spike attack
+	var/list/spike_radius = list("unwielded" = 1, "wielded" = 0) // Radius of the spike attack's AOE
+	var/list/spike_damage_coeff = list("unwielded" = 0.6, "wielded" = 1.35) // Damage coefficients applied to the weapon's usual damage when using the spike attack
+
+	// While wearing the realization, unwielded attacks will mark the target, and wielded attacks will restore health (melee) or sanity (ranged). The mark lasts 5 seconds and otherwise does nothing else.
+	// Amount healed increases with how much aggro you have on you.
+	var/realization_mark_base_heal = 5
+	var/realization_mark_heal_aggroforce_bonus_coeff = 0.4
+	var/realization_mark_heal_sanity_bonus_coeff = 1.5 // You heal more sanity than HP with this since it's harder to land
+
+/obj/item/ego_weapon/wield/eldtree/get_clamped_volume()
+	return 75
+
+/obj/item/ego_weapon/wield/eldtree/examine(mob/user)
+	. = ..()
+	SetAggroForce(user) // This has no consequences but we want to give up-to-date info to the player
+	if(aggro_currently_gained_aggro_force > 0)
+		. += span_danger("This weapon is currently <b>gaining [aggro_currently_gained_aggro_force] force</b> from nearby enemies targeting its wielder on top of its base [wielded ? initial(wielded_force) : initial(force)] force.")
+	var/mob/living/carbon/human/wielder = user
+	if(!istype(wielder))
+		return
+	var/obj/item/clothing/suit/armor/ego_gear/realization/eldtree/eldtree_armour = wielder.get_item_by_slot(ITEM_SLOT_OCLOTHING)
+	if(istype(eldtree_armour))
+		. += span_nicegreen("Due to wearing the matching E.G.O. armour, you have unlocked this weapon's full potential. Striking enemies with <b>unwielded</b> melee or ranged attacks will mark them.")
+		. += span_nicegreen("Striking a marked enemy with a wielded melee attack will <b>restore your health</b>, and hitting an enemy with a wielded ranged attack will <b>restore your sanity</b>.")
+		. += span_nicegreen("The amount of restored health or sanity <b>scales with the amount of enemies targeting you.</b>")
+
+/obj/item/ego_weapon/wield/eldtree/attack(mob/living/target, mob/living/user)
+	if(wielded)
+		knockback = KNOCKBACK_MEDIUM
+	else
+		knockback = FALSE
+	SetAggroForce(user) // Gain force depending on how many mobs in sight are targeting the user
+
+	// These two vars are a bit jank, they exist so we can retrieve the name and healing amount in case we detonate a mark but the target gets qdel'd by the damage.
+	var/should_send_mark_message
+	var/to_heal
+
+	var/mob/living/carbon/human/wielder = user
+	if(istype(wielder)) // I have to indent this code block because I want to heal off marks before targets potentially get qdel'd by our attack.
+		var/obj/item/clothing/suit/armor/ego_gear/realization/eldtree/eldtree_armour = wielder.get_item_by_slot(ITEM_SLOT_OCLOTHING)
+		if(istype(eldtree_armour))
+			if(istype(target) && target.stat < DEAD && !(target.status_flags & GODMODE)) // Ignore corpses and contained abnos
+				var/datum/status_effect/eldtree_mark/mark = target.has_status_effect(/datum/status_effect/eldtree_mark)
+				if(mark && wielded) // If we're hitting a marked target while the weapon is being 2handed, consume the mark to heal.
+					to_heal = realization_mark_base_heal + (realization_mark_heal_aggroforce_bonus_coeff * aggro_currently_gained_aggro_force)
+					wielder.adjustBruteLoss(-to_heal)
+					should_send_mark_message = target.name
+					qdel(mark)
+
+				else if(!wielded) // If we're hitting a target while the weapon is being 1handed, apply/reapply the mark.
+					target.apply_status_effect(/datum/status_effect/eldtree_mark)
+
+	. = ..()
+
+	if(should_send_mark_message)
+		to_chat(wielder, span_nicegreen("Your E.G.O. absorbs nutrients from [should_send_mark_message] to heal you for [to_heal] health!")) // We put it here so it shows up after the attack message
+		new /obj/effect/temp_visual/healing(get_turf(wielder))
+	// All of this is literally just extra VFX on hit and is of no consequence
+	if(!istype(target))
+		return
+	var/hit_size = 0.8
+	var/hit_displacement_x = rand(-8, 8)
+	var/hit_displacement_y = rand(-10, 6) // Weighted towards the bottom of the turf to account for tiny enemies like Amber/Crimson Dawn
+	if(!wielded) // Smaller vfx and more displaced around the target
+		hit_size -= 0.2
+		hit_displacement_x = floor(hit_displacement_x * 1.2)
+		hit_displacement_y = floor(hit_displacement_y * 1.2)
+	var/obj/effect/temp_visual/smash_effect/hit_vfx = new /obj/effect/temp_visual/smash_effect(get_turf(target))
+	hit_vfx.color = "#5c4322"
+	hit_vfx.transform *= hit_size
+	hit_vfx.pixel_x = hit_displacement_x
+	hit_vfx.pixel_y = hit_displacement_y
+	hit_vfx.layer = ABOVE_MOB_LAYER
+	QDEL_IN(hit_vfx, 0.4 SECONDS)
+
+/// Gain force based on nearby enemies targeting the user.
+/obj/item/ego_weapon/wield/eldtree/proc/SetAggroForce(mob/living/user)
+	if(wielded)
+		force = initial(wielded_force)
+	else
+		force = initial(force)
+
+	var/viewer_amount = 0
+	for(var/mob/living/simple_animal/hostile/menacing_creature in viewers(8, user))
+		if(menacing_creature.target == user)
+			viewer_amount++
+
+	var/force_gain_per_viewer = aggro_force_per_enemy
+	var/force_gain_limit = aggro_extra_force_cap
+	if(wielded) // Gain more force up to a higher limit while wielding. This is to keep the wielded mode competitive with the unwielded one since it attacks slower. (Of course, unwielded is ultimately higher DPS since we want slower weapons to be weaker due to their lesser risk in usage)
+		force_gain_per_viewer *= aggro_extra_force_wielded_coeff
+		force_gain_limit *= aggro_extra_force_wielded_coeff
+
+	var/gained_force = min((viewer_amount * force_gain_per_viewer), (force_gain_limit)) // Will never gain more force than the limit. gained_force can be 0 if we have 0 viewers targeting us.
+	aggro_currently_gained_aggro_force = gained_force
+	force += gained_force
+
+/// This is how we trigger our special ranged attack.
+/obj/item/ego_weapon/wield/eldtree/afterattack(atom/A, mob/living/user, proximity_flag, params)
+	if(!CanUseEgo(user)) // I hate clerks
+		return
+	if(istype(A, /obj/machinery/door)) // If you click on a door you can ignore the open turf/view requirements, so we handle that here
+		to_chat(user, span_warning("Your roots can't burrow through that."))
+		return
+	var/turf/open/target_turf = get_turf(A) // Only allow targeting open turfs
+	var/turf/user_turf = get_turf(user)
+	if(!istype(target_turf))
+		to_chat(user, span_warning("Your roots can't burrow through that."))
+		return
+	if((get_dist(user, target_turf) < 2) || !(target_turf in view(10, user))) // Don't allow targeting adjacent turfs for this, or turfs we can't see
+		return
+
+	user.changeNext_move(CLICK_CD_MELEE * attack_speed) // Prevents telegraph spam. Side effect of making hit-n-runs where you mash attack on the enemy before reaching them a lot more difficult. Still doable if you lock in honestly
+
+	// I hate this so much but BYOND isn't letting me use TRUE and FALSE as keys for a list. So I can't just do spike_windup[wielded], I have to use a string or something. Guh
+	var/are_we_wielded = "unwielded"
+	if(wielded)
+		are_we_wielded = "wielded"
+
+	var/atom/telegraph = new /obj/effect/temp_visual/eldtree_root(target_turf)
+	telegraph.color = "#352819"
+	playsound(user_turf, 'sound/weapons/ego/lce_lantern_spike_prep.ogg', 80, FALSE, 4)
+	QDEL_IN(telegraph, spike_windup[are_we_wielded])
+
+	if(!do_after(user, spike_windup[are_we_wielded], src, interaction_key = "eldtree", max_interact_count = 1))
+		qdel(telegraph) // Get rid of the telegraph early if we cancel the windup
+		return
+
+	..()
+
+	playsound(target_turf, 'sound/weapons/ego/lce_lantern_spike_hit.ogg', 75, TRUE, 6)
+	INVOKE_ASYNC(src, PROC_REF(SpikeAttack), target_turf, user, are_we_wielded) // This proc sleeps so we async it
+	user.changeNext_move(CLICK_CD_MELEE * attack_speed) // Counts as your attack, so here's your cooldown
+
+// Hits the target turf with our spikes. It's a weaker AoE if unwielded, stronger single target with extra aggro and pull effect if wielded. Can be hard to land on enemies.
+/obj/item/ego_weapon/wield/eldtree/proc/SpikeAttack(turf/target_turf, mob/living/user, are_we_wielded = FALSE)
+	if(!target_turf || !user)
+		return
+	var/turf/user_turf = get_turf(user)
+	var/correct_direction = get_dir(get_turf(user), target_turf) // For setting effect visual dir
+	var/turf/in_front_of_user_turf = get_step(user_turf, correct_direction) // So we don't slam enemies directly into us when pulling them
+	var/should_pull = wielded
+
+	var/wearing_eldtree = FALSE
+	var/mob/living/carbon/human/wielder = user
+	if(istype(wielder))
+		var/obj/item/clothing/suit/armor/ego_gear/realization/eldtree/eldtree_armour = wielder.get_item_by_slot(ITEM_SLOT_OCLOTHING)
+		if(istype(eldtree_armour))
+			wearing_eldtree = TRUE
+
+	SetAggroForce(user)
+	var/final_damage = force
+	var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
+	var/justicemod = 1 + userjust/100
+
+	final_damage *= justicemod
+	final_damage *= force_multiplier // %dmg buff from Faith & Promise/EO Upgrader/Broken Crown
+	final_damage *= spike_damage_coeff[are_we_wielded]
+
+	var/list/turf/already_hit_turfs = list()
+	var/list/mob_hitlist = list()
+	for(var/i in 1 to (spike_radius[are_we_wielded] + 1)) // Hits the initial turf first, then the ones around it, then the ones around those... etc, while never repeating hit turfs.
+		var/spike_size = max(1 - ((i - 1) * 0.3), 0.25) // First spike looks bigger than the second set, etc
+
+		for(var/turf/open/T in range(i - 1, target_turf)) // Only hits open turfs
+			// Only hit each turf once
+			if(T in already_hit_turfs)
+				continue
+			already_hit_turfs |= T
+
+			// Spike visual
+			var/obj/effect/temp_visual/faespike/fast/R = new(T)
+			R.transform *= spike_size
+			R.dir = correct_direction
+			if(correct_direction & EAST)
+				R.pixel_x += 16
+			else if(correct_direction & WEST)
+				R.pixel_x -= 16
+
+			// Hit all non-faction members in that turf
+			for(var/mob/living/victim in T)
+				if(user.faction_check_mob(victim, FALSE))
+					continue
+				if(victim in mob_hitlist)
+					continue
+				if(victim.stat >= DEAD)
+					continue
+				mob_hitlist |= victim
+
+				// These 2 vars exist so we can retrieve healing amount and the name of the victim if our attack qdels them, so we can still consume the mark
+				var/should_send_mark_message
+				var/to_heal
+				if(wearing_eldtree && !(victim.status_flags & GODMODE) && victim.stat < DEAD) // Have to place this code block earlier because damage might qdel our target
+					var/datum/status_effect/eldtree_mark/mark = victim.has_status_effect(/datum/status_effect/eldtree_mark)
+					if(mark && should_pull) // If we're hitting a marked target with a 2handed ranged attack, consume the mark to heal sanity
+						to_heal = realization_mark_base_heal + (realization_mark_heal_aggroforce_bonus_coeff * aggro_currently_gained_aggro_force)
+						to_heal *= realization_mark_heal_sanity_bonus_coeff
+						wielder.adjustSanityLoss(-to_heal)
+						should_send_mark_message = victim.name
+						qdel(mark)
+					else if(!should_pull) // If we're hitting a target with a 1handed ranged attack, apply/reapply the mark
+						victim.apply_status_effect(/datum/status_effect/eldtree_mark)
+
+				victim.deal_damage(final_damage, spike_damage_type, source = user, attack_type = (ATTACK_TYPE_SPECIAL))
+				victim.visible_message(span_danger("[victim] is pierced by a burrowing root!"), span_userdanger("You're pierced by a burrowing root!"))
+				if(should_send_mark_message)
+					to_chat(wielder, span_nicegreen("Your E.G.O. absorbs nutrients from [should_send_mark_message] to restore your sanity by [to_heal] points!"))
+				// Hit VFX
+				var/obj/effect/temp_visual/dir_setting/slash/temp = new (T)
+				temp.dir = pick(NORTHWEST, NORTHEAST, EAST, WEST)
+				temp.color = "#dfb440"
+				temp.transform *= 1.9
+				temp.layer = POINT_LAYER + 1
+
+				if(!victim)
+					continue
+				if(should_pull) // On ranged 2handed hits, deal extra aggro damage (enemy is likelier to swap targets to you) and pull them towards us. Won't work on anything with MOVE_RESIST_OVERPOWERING like Red Fixer, White Night, etc.
+					victim.deal_damage(final_damage * 0.75, AGGRO_DAMAGE, source = user, flags = (DAMAGE_FORCED)) // This aggro damage is multiplied by a coeff based on Fort and Prud, about 2.3 at 130/130 so this is like 3 limbillion aggro damage
+					victim.safe_throw_at(in_front_of_user_turf, wielded_pull_strength, wielded_pull_strength, user, TRUE, force = MOVE_FORCE_OVERPOWERING, gentle = TRUE)
+
+		sleep(0.1 SECONDS) // This kinda makes it possible for enemies to dodge it like players can dodge a WN pulse but, you know, lock in?
+
+
+/datum/status_effect/eldtree_mark
+	id = "eldtree mark"
+	status_type = STATUS_EFFECT_REFRESH
+	duration = 5 SECONDS
+	tick_interval = -1 // We don't need to tick
+	alert_type = null
+
+/obj/effect/temp_visual/eldtree_root
+	name = "eldtree root"
+	desc = "Shifting roots. Maybe don't stand on them."
+	icon = 'ModularLobotomy/_Lobotomyicons/tegu_effects.dmi'
+	icon_state = "vines"
+	duration = 2 SECONDS
+	layer = POINT_LAYER
+
+/obj/effect/temp_visual/faespike/fast
+	name = "eldtree spike"
+	icon_state = "faelantern_spike_fast"
+
+#define STATUS_EFFECT_GAZE /datum/status_effect/stacking/perversion_weapon_gaze
+#define STATUS_EFFECT_CONTEMPT /datum/status_effect/display/perversion_weapon_contempt
+#define COLOR_PERVERSION_LANCE "#e2a91a"
+#define COLOR_PERVERSION_KATANA "#c50e0e"
+/obj/item/ego_weapon/perversion
+	name = "perversion"
+	desc = "A twisting, ornate polearm. There's a blood-red blade sheathed within it. \n\
+	'Be awed, or be awe-struck.'"
+	special = "This weapon has two forms, each with differing special attacks. In its Lance form, it inflicts Gaze on targets, and in its Katana form, it deals additional damage to targets with Gaze. \n\
+	Switching the weapon from Lance to Katana form has a cooldown, and performs a special attack."
+	icon_state = "perversion_lance"
+	icon = 'icons/obj/ego_weapons.dmi'
+	lefthand_file = 'icons/mob/inhands/64x64_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/64x64_righthand.dmi'
+	inhand_x_dimension = 64
+	inhand_y_dimension = 64
+	force = 89 // Change lance_force too
+	swingstyle = WEAPONSWING_THRUST
+	swingcolor = null
+	forced_swingcolor = TRUE
+	custom_thrust_state = "pvthrust"
+	custom_sweep_state = "pvswipe_"
+	damtype = BLACK_DAMAGE
+	attack_speed = 1.6 // Change lance_attack_speed too
+	attack_verb_continuous = list("pierces", "skewers", "perforates", "impales", "gores")
+	attack_verb_simple = list("pierce", "skewer", "perforate", "impale", "gore")
+	hitsound = 'sound/weapons/ego/perversion_lance_1.ogg'
+	hitsound_vary = FALSE
+	attribute_requirements = list(
+							FORTITUDE_ATTRIBUTE = 100,
+							PRUDENCE_ATTRIBUTE = 80,
+							TEMPERANCE_ATTRIBUTE = 100,
+							JUSTICE_ATTRIBUTE = 80
+							)
+
+	/// Empty this out and use it to avoid multihitting stuff on each AoE
+	var/list/shared_hitlist
+
+	/// Combo hit counter!
+	var/combo = 0
+	var/combo_timeout_timer
+	var/combo_timeout_duration = 3 SECONDS
+
+	/// Keeps track of your last hit mob. Combo requires you to focus on one, like Da Capo (this is actually a buff as it lets you reset)
+	var/last_target_hit
+
+	/// List of cooldowns for balloon alerts... To avoid spamming the user. Duration for all is 0.5s
+	var/list/balloon_text_cooldowns = list("unsheathe_cd", "combo_timeout", "lance_lunge" = 0, "katana_dash" = 0, "katana_no_gaze" = 0)
+	// You may unsheathe the weapon to turn it from a lance into a katana, the process of unsheathing also does a very strong AOE that gets EXTREMELY powerful on opponents with Gaze stacks.
+	var/sheathed = TRUE
+	var/unsheathe_cooldown
+	var/unsheathe_cooldown_duration = 30 SECONDS
+	var/unsheathe_windup = 0.7 SECONDS
+	var/sheathe_sound = 'sound/weapons/ego/perversion_sheathe.ogg'
+	var/unsheathe_sound = 'sound/weapons/ego/perversion_unsheathe.ogg'
+
+	// Cascading Gaze of Awe Underneath Contempt is the attack automatically performed when unsheathing the katana
+
+	var/cascading_gaze_active = FALSE
+	/// Var used exclusively for insane edge cases of the weapon being deleted mid-draw attack to avoid irreversible effects. Can happen with Broken Crown, I think.
+	var/mob/living/carbon/human/cascading_gaze_last_used_by
+	/// Timer until we forcefully revert changes from Cascading Gaze
+	var/cascading_gaze_active_timer
+	/// Radius in tiles.
+	var/cascading_gaze_radius = 3
+	/// Holds all the turfs that will be hit by Cascading Gaze
+	var/list/cascading_gaze_affected_turfs = list()
+	/// We compare our user's location against this turf to determine whether they have moved during the attack or not (Records core?), if they have, we recalculate the turfs
+	var/turf/cascading_gaze_epicenter
+	/// Holds things that should be deleted after ending Cascading Gaze.
+	var/list/cascading_gaze_residual_datums = list()
+	var/cascading_gaze_hit_sounds_list = list('sound/weapons/ego/perversion_katana_1.ogg', 'sound/weapons/ego/perversion_katana_2.ogg')
+	var/cascading_gaze_finisher_sound = 'sound/weapons/ego/perversion_draw_finisher.ogg'
+
+	/// Multiplies katana force by this much before Justice for the Finisher
+	var/cascading_gaze_base_damage_coeff = 1.25
+	/// How much damage each tick of being inside the damaging AoE deals. Modified by Justice
+	var/cascading_gaze_periodic_damage = 30
+	/// How often the damaging AoE ticks
+	var/cascading_gaze_periodic_tick_rate = 0.6 SECONDS
+	/// You'll be locked in place and the projectile deleting area will linger for this many ticks (duration of each determined by previous var).
+	var/cascading_gaze_tick_amount = 4
+	/// Add to the previous coefficient per gaze stacks on the target we're hitting
+	var/cascading_gaze_additive_damage_coeff_per_gaze = 0.4
+	/// You'll take [this var]x as much damage while channeling the ability.
+	var/cascading_gaze_physiology_coeff = 0.5
+	/// These projectile types will create shrapnel.
+	var/cascading_gaze_shrapnel_sources = list(/obj/projectile/ego_bullet/special_fellbullet, /obj/projectile/ego_bullet/ego_fellbullet)
+	/// Shrapnel from the Fell Bullet interaction applies this much Gaze per hit...
+	var/cascading_gaze_shrapnel_gaze_application = 1
+	/// The Fell Bullet interaction will generate [pellets] pieces of shrapnel [repeat] times.
+	var/list/cascading_gaze_shrapnel_amount = list("repeat" = 3, "pellets" = 5)
+
+	/* ------------ LANCE VARS ------------ */
+	// Lance template vars. Used to update the weapon's attributes when sheathing the weapon
+
+	// Icon vars
+	var/lance_icon = 'icons/obj/ego_weapons.dmi'
+	var/lance_icon_state = "perversion_lance"
+	var/lance_inhands_list = list("left" = 'icons/mob/inhands/64x64_lefthand.dmi', "right" = 'icons/mob/inhands/64x64_righthand.dmi')
+	var/lance_swingcolor = COLOR_PERVERSION_LANCE
+
+	// Text vars
+	var/lance_desc = "A twisting, ornate polearm. There's a blood-red blade sheathed within it. \n\
+	'Be awed, or be awe-struck.'"
+	var/lance_attack_verb_continuous = list("pierces", "skewers", "perforates", "impales", "gores")
+	var/lance_attack_verb_simple = list("pierce", "skewer", "perforate", "impale", "gore")
+
+	// Sound vars
+	var/lance_basic_hitsound = 'sound/weapons/ego/perversion_lance_1.ogg'
+	var/lance_followup_hitsound = 'sound/weapons/ego/perversion_lance_2.ogg'
+
+	// Combat vars
+	var/lance_force = 89
+	var/lance_attack_speed = 1.6
+	/// The weapon applies this many Gaze stacks per hit in lance form.
+	var/base_gaze_application = 1
+
+	// Lance dash. Similar to Dark Carnival/Crow's Eye View/Thumb East opener. This lets you dash at a faraway target, dealing extra damage and applying more Gaze.
+	var/lance_dash_range = 4
+	var/lance_dash_cooldown
+	var/lance_dash_cooldown_duration = 5 SECONDS
+	var/lance_dash_extra_gaze_stacks = 1
+
+	// Immediately after a dash, your next attack will do an AoE thrust through your enemy, dealing damage and applying more Gaze. Also hits the main target.
+	var/lance_followup_range = 2
+	var/lance_followup_damage_coeff = 0.5
+	var/lance_followup_extra_gaze_stacks = 2
+
+	/* ------------ KATANA VARS ------------ */
+	// Katana template vars. Used to update the weapon's attributes when drawing the weapon
+
+	// Icon vars
+	var/katana_icon = 'icons/obj/ego_weapons.dmi'
+	var/katana_icon_state = "perversion_katana"
+	var/katana_inhands_list = list("left" = 'icons/mob/inhands/64x64_lefthand.dmi', "right" = 'icons/mob/inhands/64x64_righthand.dmi')
+	var/katana_swingcolor = COLOR_PERVERSION_KATANA
+
+	// Text vars
+	var/katana_desc = "A blood-red sword, removed from its gilded armour. \n\
+	The brittle pride will be gradually chipped away when bereft of the disdain that shielded it, so it would be best to sheathe this once your bloody labours are finished."
+	var/list/katana_attack_verb_continuous = list("slashes", "slices", "cleaves", "sunders", "carves", "disembowels", "eviscerates", "bisects", "splits", "rends", "rips", "anatomizes", "styles on")
+	var/list/katana_attack_verb_simple = list("slash", "slice", "cleave", "sunder", "carve", "disembowel", "eviscerate", "bisect", "split", "rend", "anatomize", "style on")
+
+	// Sound vars
+	var/katana_basic_hitsound = 'sound/weapons/ego/perversion_katana_1.ogg'
+	var/katana_cleave_hitsound = 'sound/weapons/ego/perversion_katana_2.ogg'
+	var/katana_finisher_hitsound = 'sound/weapons/ego/perversion_katana_4.ogg'
+
+	// Combat vars
+	// Katana should have less base DPS than the lance. Sheathe it you aurafarmer
+	var/katana_force = 65
+	var/katana_attack_speed = 1.4
+	var/katana_base_damage_coeff = 1
+	var/katana_additive_damage_coeff_per_gaze = 0.15 // 0: 1x, 1: 1.15x, 2: 1.3x, 3: 1.45x, 4: 1.6x, 5: 1.75x, 6: 1.9x, Contempt: 2.05x
+
+	var/katana_dash_range = 6
+	var/katana_dash_cooldown
+	var/katana_dash_cooldown_duration = 2.5 SECONDS
+
+	var/katana_cleave_range = 3
+	var/katana_cleave_degrees = 90
+
+	var/katana_finisher_damage_coeff = 1.6
+
+
+/obj/item/ego_weapon/perversion/Destroy(force)
+	if(cascading_gaze_active)
+		DrawAttackEnd(cascading_gaze_last_used_by)
+	for(var/anything in cascading_gaze_residual_datums) // I really really hope you didn't put anything weird here.
+		qdel(anything)
+	return ..()
+
+/obj/item/ego_weapon/perversion/GetSwingColor()
+	return null
+
+/obj/item/ego_weapon/perversion/examine(mob/user)
+	. = ..()
+	. += span_notice("<a href='?src=[REF(src)];action=full_examine'>\[View Expanded Description]</a>")
+
+/obj/item/ego_weapon/perversion/Topic(href, list/href_list)
+	. = ..()
+	if(.)
+		return
+	if(href_list["action"] != "full_examine")
+		return
+	var/mob/user = usr
+	if(!QDELETED(user) && istype(user))
+		on_examine(user, user)
+
+/obj/item/ego_weapon/perversion/proc/on_examine(mob/user)
+	if(QDELETED(user) || !istype(user))
+		return
+	. = list()
+	. += span_info("While sheathed, this weapon inflicts [base_gaze_application] stacks of Gaze on enemies each hit.")
+	. += span_info("<b>Lance Dash</b>: Initiate by attacking at range. Applies [lance_dash_extra_gaze_stacks] additional Gaze stacks, has a range of [lance_dash_range] tiles, cooldown of [lance_dash_cooldown_duration * 0.1] seconds.")
+	. += span_info("<b>Lance Followup</b>: Deals [lance_followup_damage_coeff]x of original damage in a [lance_followup_range] tile long AoE, also applying [lance_followup_extra_gaze_stacks] additional Gaze stacks. Includes the original target.")
+	. += span_info("")
+	. += span_info("While unsheathed, this weapon loses [lance_force - katana_force] force, but deals (1 + [katana_additive_damage_coeff_per_gaze] * gaze stacks)x damage to enemies. Contempt counts as 7 Gaze stacks.")
+	. += span_info("All Katana special attacks require Gaze/Contempt on your target to work.")
+	. += span_info("<b>Katana Dash</b>: Initiate by attacking at range. Has a range of [katana_dash_range] tiles, cooldown of [katana_dash_cooldown_duration * 0.1] seconds.")
+	. += span_info("<b>Katana Cleave</b>: Deals its damage in a [katana_cleave_degrees] degree wide, [katana_cleave_range] tile long slash. Original target will not take additional damage.")
+	. += span_info("<b>Katana Finisher</b>: Clears Gaze/Contempt and deals [katana_finisher_damage_coeff]x damage before Justice, Force Multiplier and Gaze calculations.")
+	. += span_info("")
+	. += span_info("The weapon may be drawn once every [unsheathe_cooldown_duration * 0.1] seconds.")
+	. += span_info("The draw attack will consist of [cascading_gaze_tick_amount - 1] hits dealing [cascading_gaze_periodic_damage] damage, and a finisher hit dealing [katana_force * cascading_gaze_base_damage_coeff] damage. These values are pre-Justice and pre-Gaze scaling.")
+	for(var/line in .)
+		to_chat(user, line)
+
+	/* ------------------------ SHEATHING AND UNSHEATHING ------------------------ */
+
+/obj/item/ego_weapon/perversion/attack_self(mob/living/user)
+	if(!CanUseEgo(user))
+		return FALSE
+	if(cascading_gaze_active)
+		return FALSE
+	// Currently in Lance form. Try to unsheathe.
+	if(sheathed)
+		// On CD. Bounce the attempt and alert the user.
+		if(unsheathe_cooldown > world.time)
+			var/timeleft = (unsheathe_cooldown - world.time) * 0.1
+			to_chat(user, span_danger("You're not ready to draw [src] yet. [timeleft] seconds left."))
+			if(balloon_text_cooldowns["unsheathe_cd"] <= world.time)
+				balloon_alert(user, "Not ready. Current CD: [timeleft] seconds.")
+				balloon_text_cooldowns["unsheathe_cd"] = world.time + 0.5 SECONDS
+			return FALSE
+
+		playsound(get_turf(user), unsheathe_sound, 100, vary = FALSE, extrarange = 7)
+		// Not on CD. Try to draw the blade.
+		if(do_after(user, unsheathe_windup, timed_action_flags = IGNORE_USER_LOC_CHANGE, interaction_key = "perversion_unsheathe", max_interact_count = 1))
+			// Set the cooldown and timer for an alert when it refreshes.
+			unsheathe_cooldown = world.time + unsheathe_cooldown_duration
+			addtimer(CALLBACK(src, PROC_REF(UnsheatheRefreshAlert), user), unsheathe_cooldown_duration + 1)
+
+			// Katana stats.
+			Unsheathe(user)
+
+			// Cascading Gaze of Awe Underneath Contempt
+			DrawAttackStart(user)
+		return
+
+	// Currently in Katana form. Sheathe.
+	else
+		playsound(get_turf(user), sheathe_sound, 100, vary = FALSE)
+
+		// Lance stats.
+		Sheathe(user)
+
+		return
+
+/obj/item/ego_weapon/perversion/proc/Sheathe(mob/living/user)
+	if(QDELETED(user))
+		return
+	to_chat(user, span_danger("You sheathe [src]."))
+	sheathed = TRUE
+
+	// Combat vars
+	force = lance_force
+	attack_speed = lance_attack_speed
+	swingstyle = WEAPONSWING_THRUST
+
+	// Appearance
+	icon = lance_icon
+	icon_state = lance_icon_state
+	lefthand_file = lance_inhands_list["left"]
+	righthand_file = lance_inhands_list["right"]
+	user.regenerate_icons()
+
+	// Text
+	desc = lance_desc
+	attack_verb_simple = lance_attack_verb_simple
+	attack_verb_continuous = lance_attack_verb_continuous
+
+	// Sounds
+	hitsound = lance_basic_hitsound
+
+/obj/item/ego_weapon/perversion/proc/Unsheathe(mob/living/user)
+	if(QDELETED(user))
+		return
+	to_chat(user, span_danger("You draw [src]."))
+	sheathed = FALSE
+
+	// Combat vars
+	force = katana_force
+	attack_speed = katana_attack_speed
+	swingstyle = WEAPONSWING_LARGESWEEP
+
+	// Appearance
+	icon = katana_icon
+	icon_state = katana_icon_state
+	lefthand_file = katana_inhands_list["left"]
+	righthand_file = katana_inhands_list["right"]
+	user.regenerate_icons()
+
+	// Text
+	desc = katana_desc
+	attack_verb_simple = katana_attack_verb_simple
+	attack_verb_continuous = katana_attack_verb_continuous
+
+	// Sounds
+	hitsound = katana_basic_hitsound
+
+/obj/item/ego_weapon/perversion/proc/UnsheatheRefreshAlert(mob/living/user)
+	if(!user)
+		return
+	flash_color(user, COLOR_MOSTLY_PURE_RED, 1 SECONDS)
+	SEND_SOUND(user, sound(('sound/abnormalities/armyinblack/black_heartbeat.ogg')) )
+	to_chat(user, span_nicegreen("You're ready to draw [src] again."))
+
+/* ------------------------ CASCADING GAZE OF AWE UNDERNEATH CONTEMPT (DRAW ATTACK) ------------------------ */
+// Initiating the draw attack.
+/obj/item/ego_weapon/perversion/proc/DrawAttackStart(mob/living/carbon/human/user)
+	if(QDELETED(user) || !istype(user) || user.stat >= DEAD || user.get_active_held_item() != src)
+		return
+	cascading_gaze_active = TRUE
+	cascading_gaze_last_used_by = user
+	cascading_gaze_epicenter = null
+
+	// Ensure we're working with reasonable values here
+	cascading_gaze_tick_amount = clamp(cascading_gaze_tick_amount, 1, 59)
+	cascading_gaze_periodic_tick_rate = clamp(cascading_gaze_periodic_tick_rate, 0.1 SECONDS, 2 SECONDS)
+
+	// This is how long our attack's gonna last... roughly.
+	var/final_duration = cascading_gaze_tick_amount * cascading_gaze_periodic_tick_rate
+
+	// We need to apply pacify, immobilize, push resistance, etc onto the user. In case something goes wrong and we can't finish, we'll add a timer to end manually.
+	SetDrawAttackTraits(user)
+	cascading_gaze_active_timer = addtimer(CALLBACK(src, PROC_REF(DrawAttackEnd), user), final_duration + 5, TIMER_STOPPABLE)
+
+	DrawAttackRootContempt(user)
+
+	// Enter the draw attack loop.
+	DrawAttackLoop(user, 1)
+
+// Root any nearby enemies with Contempt in sight. We'll store their status effects in a list so we can delete them later.
+/obj/item/ego_weapon/perversion/proc/DrawAttackRootContempt(mob/living/carbon/human/user)
+	for(var/mob/living/L in viewers(cascading_gaze_radius, user))
+		if(!(L.has_status_effect(STATUS_EFFECT_CONTEMPT)) || L.status_flags & GODMODE)
+			continue
+		if(user.faction_check_mob(L))
+			continue
+		cascading_gaze_residual_datums |= L.apply_status_effect(/datum/status_effect/perversion_weapon_root, src)
+
+// Rooting status effect. Duration irrelevant, should be cleared manually by DrawAttackEnd.
+/datum/status_effect/perversion_weapon_root
+	id = "perversion_weapon_root"
+	status_type = STATUS_EFFECT_UNIQUE
+	alert_type = /atom/movable/screen/alert/status_effect/perversion_weapon_root
+	duration = 10 SECONDS
+	var/obj/item/ego_weapon/perversion/origin_weapon
+	var/obj/effect/perversion_weapon_root_vfx/attached_vfx
+
+/datum/status_effect/perversion_weapon_root/on_creation(mob/living/new_owner, obj/item/ego_weapon/perversion/katana)
+	if(!istype(katana) || !istype(new_owner) || new_owner.stat >= DEAD)
+		qdel(src)
+		return FALSE
+	origin_weapon = katana
+	. = ..()
+
+/// Don't let our victim move.
+/datum/status_effect/perversion_weapon_root/proc/TrapVictim()
+	var/mob/living/simple_animal/animal_owner = owner
+	if(istype(animal_owner))
+		animal_owner.toggle_ai(AI_OFF)
+		walk(animal_owner, 0)
+
+	owner.Immobilize(10 SECONDS, TRUE)
+
+/// Let them go now.
+/datum/status_effect/perversion_weapon_root/proc/FreeVictim()
+	var/mob/living/simple_animal/animal_owner = owner
+	if(istype(animal_owner))
+		animal_owner.toggle_ai(AI_ON)
+		walk(animal_owner, 0)
+
+	owner.remove_status_effect(STATUS_EFFECT_IMMOBILIZED)
+
+/datum/status_effect/perversion_weapon_root/on_apply()
+	. = ..()
+	TrapVictim()
+	attached_vfx = new(get_turf(owner))
+	// We buckle to stop mobs from running away like rats because their AI gets toggled on randomly for whatever reason. It also stops them from getting knocked out of our reach.
+	attached_vfx.buckle_mob(owner, force = TRUE, check_loc = FALSE)
+	// Animating them being lifted up
+	animate(owner, 0.3 SECONDS, pixel_y = owner.pixel_y + 16)
+
+/datum/status_effect/perversion_weapon_root/on_remove()
+	. = ..()
+	FreeVictim()
+	animate(owner, 0.2 SECONDS, pixel_y = owner.base_pixel_y)
+
+/datum/status_effect/perversion_weapon_root/Destroy(force)
+	// These things must be here and not on_remove because on_remove is not called if the owner is qdeleted on death
+	attached_vfx.unbuckle_all_mobs(force = TRUE)
+	if(owner && !ishuman(owner))
+		owner.set_glide_size() // ... Buckling, unbuckling mobs changes their glide size.
+	QDEL_NULL(attached_vfx)
+	return ..()
+
+/obj/effect/perversion_weapon_root_vfx
+	name = "clasping hands"
+	desc = "You shall be shunned."
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
+	icon_state = "spiral_grip"
+	layer = ABOVE_MOB_LAYER
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+	anchored = TRUE
+	pixel_x = -16
+	base_pixel_x = -16
+	pixel_y = -16
+	base_pixel_y = -16
+
+/atom/movable/screen/alert/status_effect/perversion_weapon_root
+	name = "Contempt of the Gaze of Contempt \[Perversion\]"
+	icon_state = "default"
+	desc = "You're being restrained by a pair of giant hands!"
+
+// We run this to figure out what turfs need to be affected by our draw attack. Should only be run once per draw attack unless the user somehow gets moved during it (Records?), in which case
+// it gets called again.
+/obj/item/ego_weapon/perversion/proc/DrawAttackCalculateAffectedTurfs(mob/living/carbon/human/user, blocker_duration = 2.5 SECONDS)
+	// Clear these lists
+	cascading_gaze_affected_turfs = list()
+
+	// Establish the new epicenter (used to check for position changes)
+	cascading_gaze_epicenter = get_turf(user)
+
+	// These are the turfs we're gonna be working with.
+	for(var/turf/T in view(cascading_gaze_radius, user))
+		cascading_gaze_affected_turfs |= T
+		cascading_gaze_residual_datums |= new /obj/effect/perversion_draw_attack_projectile_destroyer(T, blocker_duration, src, user)
+
+// This is the core loop that gets run over and over for our draw attack. It recursively calls itself until we've run through all our ticks, or something happens to cancel the attack.
+// The hit happens instantly when this is called - the delay is actually at the end of this proc, to see whether or not we call the next one.
+/obj/item/ego_weapon/perversion/proc/DrawAttackLoop(mob/living/carbon/human/user, iteration = 1)
+	if(QDELETED(src) || QDELETED(user) || user.stat >= DEAD || user.get_active_held_item() != src)
+		DrawAttackEnd(user)
+		return
+
+	if(cascading_gaze_epicenter != get_turf(user))
+		DrawAttackCalculateAffectedTurfs(user, ((cascading_gaze_tick_amount * cascading_gaze_periodic_tick_rate) - (cascading_gaze_periodic_tick_rate * (iteration - 1))))
+
+	// Clear the hitlist for every iteration.
+	shared_hitlist = list()
+
+	// If this iteration should be the last, set to TRUE.
+	var/should_end = (iteration >= cascading_gaze_tick_amount)
+
+	// Slash VFX will be bigger if we're on the last iteration
+	var/matrix/vfx_matrix = matrix()
+	if(should_end)
+		vfx_matrix *= 1.8
+
+	// Determine the base damage for this iteration. For the small hits it's the periodic damage, for the finisher it's the katana's force * a certain coeff.
+	// This base damage will be multiplied according to the user's Justice and the weapon's Force Multiplier.
+	// Once we have this base damage; when dealing damage to an enemy, we will also further multiply it for that enemy, based on stacks of Gaze/Contempt they might have.
+	var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
+	var/justicemod = 1 + userjust/100
+	var/base_damage = should_end ? (force * cascading_gaze_base_damage_coeff * justicemod * force_multiplier) : (cascading_gaze_periodic_damage * justicemod * force_multiplier)
+
+	playsound(get_turf(user), (should_end ? cascading_gaze_finisher_sound : pick(cascading_gaze_hit_sounds_list)), 70, vary = !should_end, extrarange = 7)
+
+	for(var/turf/T in cascading_gaze_affected_turfs)
+		var/sent_visual = FALSE
+		for(var/mob/living/L in T)
+			if((L in shared_hitlist) || (user.faction_check_mob(L)) || (L.stat >= DEAD) || (L.status_flags & GODMODE))
+				continue
+
+			shared_hitlist |= L
+
+			// Calculating damage based on gaze or contempt
+			var/datum/status_effect/stacking/perversion_weapon_gaze/gazing = L.has_status_effect(STATUS_EFFECT_GAZE)
+			var/datum/status_effect/display/perversion_weapon_contempt/contempting = L.has_status_effect(STATUS_EFFECT_CONTEMPT)
+			var/extra_coeff = 1
+			if(contempting)
+				extra_coeff += (cascading_gaze_additive_damage_coeff_per_gaze * 7)
+				contempting.refresh()
+			else if(gazing)
+				extra_coeff += (cascading_gaze_additive_damage_coeff_per_gaze * (gazing.stacks))
+				gazing.refresh()
+
+			// Blood VFX / Gibs on finisher. This has to be done before the damage to avoid issues with qdel'ing mobs.
+			var/obj/effect/temp_visual/dir_setting/bloodsplatter/blood_vfx = new (T, pick(GLOB.alldirs))
+			blood_vfx.transform = vfx_matrix
+			var/victim_is_robotic = (L.mob_biotypes & MOB_ROBOTIC)
+			if(victim_is_robotic)
+				blood_vfx.color = COLOR_ALMOST_BLACK
+			if(should_end)
+				if(victim_is_robotic)
+					new /obj/effect/gibspawner/scrap_metal(T)
+				else
+					new /obj/effect/gibspawner/generic/trash_disposal(T)
+
+			// Deal the damage
+			var/final_damage = base_damage * extra_coeff
+			L.deal_damage(final_damage, damtype, source = user, flags = (should_end ? null : DAMAGE_FORCED), attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
+
+			if(!sent_visual)
+				SendSlashDecoyVisual(T, user, TRUE, should_end)
+			sent_visual = TRUE
+
+	// We're done with this iteration. If this wasn't the finisher and we haven't gone over an arbitrary safety limit of iterations, do a do_after. If it succeeds, move to the next iteration.
+	if(!should_end && iteration < 60 && do_after(user, cascading_gaze_periodic_tick_rate, timed_action_flags = (IGNORE_USER_LOC_CHANGE)))
+		INVOKE_ASYNC(src, PROC_REF(DrawAttackLoop), user, iteration + 1)
+	else
+		DrawAttackEnd(user)
+	return
+
+// Clean up residual stuff from our draw attack.
+/obj/item/ego_weapon/perversion/proc/DrawAttackEnd(mob/living/carbon/human/user)
+	// Don't double dip on this or we might nuke people's coeffs permanently
+	if(!cascading_gaze_active)
+		return
+	cascading_gaze_active = FALSE
+	cascading_gaze_last_used_by = null
+	deltimer(cascading_gaze_active_timer)
+
+	for(var/datum/any in cascading_gaze_residual_datums) // I hope you haven't been putting weird stuff in this list
+		qdel(any)
+	cascading_gaze_residual_datums = list()
+
+	RemoveDrawAttackTraits(user)
+
+// Used during the draw attack for the attack visuals. Sends an afterimage to the target.
+/obj/item/ego_weapon/perversion/proc/SendSlashDecoyVisual(turf/T, mob/living/carbon/human/owner, should_do_slash_visual = TRUE, finisher = FALSE)
+	if(!T || !owner)
+		return
+	var/dir_towards = get_dir(owner, T)
+
+	var/list/turfs_between = getline(owner, T)
+	if(length(turfs_between))
+		for(var/i in 1 to length(turfs_between))
+			var/obj/effect/temp_visual/decoy/D = new /obj/effect/temp_visual/decoy(turfs_between[i], owner)
+			D.dir = dir_towards
+			D.alpha = min(50 + i*30, 160)
+			animate(D, alpha = 0, time = 3 + i*2)
+
+	if(should_do_slash_visual)
+		var/obj/effect/temp_visual/slice/temp = new(T)
+		temp.color = COLOR_PERVERSION_KATANA
+		temp.transform *= (finisher ? 2.2 : 1.6)
+
+// Called when some projectile gets intercepted by a projectile blocking effect, or when a projectile somehow hits the user during the attack.
+/obj/item/ego_weapon/perversion/proc/DrawAttackProjectileReaction(obj/projectile/gotcha, turf/place_of_intercept, mob/living/carbon/human/owner)
+	if(!istype(gotcha) || !place_of_intercept || !istype(owner))
+		return
+
+	// It's important to store these vars before we delete the projectile.
+	var/original_proj_damage
+	var/original_proj_damtype
+	var/original_proj_name = gotcha.name
+
+	// If the projectile we're intercepting is a fell bullet / fell slug, we need to save some data here.
+	var/mob/living/carbon/human/fraud
+	if(gotcha.type in cascading_gaze_shrapnel_sources)
+		fraud = gotcha.firer
+		original_proj_damage = gotcha.damage
+		original_proj_damtype = gotcha.damage_type
+
+	// Destroy the projectile.
+	gotcha.on_hit(place_of_intercept) // Give certain things a chance to set off AoEs...
+	qdel(gotcha)
+	playsound(place_of_intercept, 'sound/weapons/ego/clash1.ogg', 75, TRUE, 8)
+
+	// VFX
+	SendSlashDecoyVisual(place_of_intercept, owner, FALSE, FALSE)
+	var/obj/effect/temp_visual/dir_setting/slash/temp = new(place_of_intercept, pick(SOUTH, NORTH))
+	temp.color = COLOR_PERVERSION_KATANA
+	temp.transform *= 2
+	do_sparks(3, FALSE, place_of_intercept)
+
+	// If we destroyed a fell bullet / fell slug, start a shrapnel spray. I hope I don't have to add a cooldown for this...? I mean, what kind of maniacs would set up a fell bullet firing squad just to abuse this weapon...
+	if(istype(fraud))
+		INVOKE_ASYNC(src, PROC_REF(CreateShrapnelSpray), get_turf(owner), owner, fraud, original_proj_damage, original_proj_damtype)
+		owner.visible_message(span_danger("[owner] expertly tears the [original_proj_name] to shreds, deflecting the shrapnel towards nearby enemies!"))
+		return
+	else
+		owner.visible_message(span_danger("[owner] slices the [original_proj_name] in half!"))
+	return
+
+// Called when we intercept a fell bullet/fell slug. Sends out some waves of shrapnel towards nearby enemies.
+/obj/item/ego_weapon/perversion/proc/CreateShrapnelSpray(turf/T, mob/living/carbon/human/owner, mob/living/carbon/human/fraud, intended_damage = 25, intended_damtype = RED_DAMAGE)
+	// We'll do this a total of X times...
+	for(var/i in 1 to cascading_gaze_shrapnel_amount["repeat"])
+		playsound(T, 'sound/weapons/ego/perversion_shrapnel_scatter.ogg', 100, TRUE, 8)
+		var/list/new_pellets = list()
+		var/list/targets_list = list()
+
+		// Gather valid targets into the targets_list for each iteration. This means each enemy can only be targeted once per 'wave' of shrapnel, but multiple times per call of this proc.
+		for(var/mob/living/L in viewers(9, T))
+			if(owner.faction_check_mob(L))
+				continue
+			if(L.stat >= DEAD)
+				continue
+			targets_list |= L
+
+		// Create Y pellets... their stats will be based on the fell bullet user's. So, if they fire a 2x portal empowered, 20% projectile damage modifier, MOBA ranged bullet, the shrapnel will have accordingly busted damage.
+		for(var/j in 1 to cascading_gaze_shrapnel_amount["pellets"])
+			new_pellets |= new /obj/projectile/ego_bullet/fell_shrapnel(T, fraud, owner, intended_damtype, intended_damage * 0.5, cascading_gaze_shrapnel_gaze_application)
+
+		// For every pellet we created, try to target an enemy with it. If there are no valid enemies left to target, just fire the pellet in a random direction.
+		for(var/obj/projectile/ego_bullet/fell_shrapnel/P in new_pellets)
+			var/atom/target
+			if(!length(targets_list))
+				target = get_ranged_target_turf(T, pick(GLOB.alldirs), 9)
+			else
+				target = pick_n_take(targets_list)
+			P.starting = T
+			P.firer = fraud
+			P.fired_from = T
+			P.yo = target.y - T.y
+			P.xo = target.x - T.x
+			P.original = target
+			P.preparePixelProjectile(target, T)
+			P.fire()
+
+		// Small delay between waves of shrapnel.
+		sleep(0.3 SECONDS)
+
+// Stolen and adapted from Elogio Bianco, you'll deflect any projectiles that manage to SOMEHOW slip past your field during the draw attack
+/obj/item/ego_weapon/perversion/hit_reaction(mob/living/carbon/human/owner, atom/movable/hitby, attack_text = "the attack", final_block_chance = 0, damage = 0, attack_type = MELEE_ATTACK)
+	SEND_SIGNAL(src, COMSIG_ITEM_HIT_REACT, args)
+	if((cascading_gaze_active) && (attack_type == PROJECTILE_ATTACK))
+		DrawAttackProjectileReaction(hitby, get_turf(src), owner)
+		return TRUE
+	return FALSE
+
+// Called when successfully starting Cascading Gaze of Awe Underneath Contempt.
+/obj/item/ego_weapon/perversion/proc/SetDrawAttackTraits(mob/living/carbon/human/user)
+	if(QDELETED(user) || !istype(user))
+		return
+
+	ADD_TRAIT(user, TRAIT_PACIFISM, "perversion_draw_attack") // Can't hit enemies normally while using this attack.
+	ADD_TRAIT(user, TRAIT_IMMOBILIZED, "perversion_draw_attack") // Can't move.
+	ADD_TRAIT(user, TRAIT_STUNIMMUNE, "perversion_draw_attack") // Immune to stuns.
+	ADD_TRAIT(user, TRAIT_PUSHIMMUNE, "perversion_draw_attack") // Immune to pushing (I don't think it works on carbon shoves, though).
+	user.move_resist = MOVE_FORCE_OVERPOWERING // Immune to a different kind of pushing.
+	RegisterSignal(user, COMSIG_MOVABLE_PRE_THROW, PROC_REF(HaltThrows)) // Immune to knockback effects or throws.
+
+	// Gain damage resistance.
+	if(ishuman(user))
+		var/mob/living/carbon/human/john_perversion = user
+		john_perversion.physiology.red_mod *= cascading_gaze_physiology_coeff
+		john_perversion.physiology.white_mod *= cascading_gaze_physiology_coeff
+		john_perversion.physiology.black_mod *= cascading_gaze_physiology_coeff
+		john_perversion.physiology.pale_mod *= cascading_gaze_physiology_coeff
+
+// Called when ending Cascading Gaze of Awe Underneath Contempt for any reason.
+/obj/item/ego_weapon/perversion/proc/RemoveDrawAttackTraits(mob/living/carbon/human/user)
+	if(QDELETED(user) || !istype(user))
+		return
+
+	REMOVE_TRAIT(user, TRAIT_PACIFISM, "perversion_draw_attack")
+	REMOVE_TRAIT(user, TRAIT_IMMOBILIZED, "perversion_draw_attack")
+	REMOVE_TRAIT(user, TRAIT_STUNIMMUNE, "perversion_draw_attack")
+	REMOVE_TRAIT(user, TRAIT_PUSHIMMUNE, "perversion_draw_attack")
+	user.move_resist = MOVE_FORCE_DEFAULT // I'm making an ASSUMPTION here that you have this as your default move resist, because why would a human NOT have it, right? I can store the original and put it back here if needed...
+	UnregisterSignal(user, COMSIG_MOVABLE_PRE_THROW)
+	if(ishuman(user))
+		var/mob/living/carbon/human/john_perversion = user
+		john_perversion.physiology.red_mod /= cascading_gaze_physiology_coeff
+		john_perversion.physiology.white_mod /= cascading_gaze_physiology_coeff
+		john_perversion.physiology.black_mod /= cascading_gaze_physiology_coeff
+		john_perversion.physiology.pale_mod /= cascading_gaze_physiology_coeff
+
+// Signal handler that stops you from getting knocked back during the draw attack.
+/obj/item/ego_weapon/perversion/proc/HaltThrows()
+	SIGNAL_HANDLER
+	return COMPONENT_CANCEL_THROW
+
+// This is an invisible effect that intercepts projectiles and calls the weapon's DrawAttackProjectileReaction() on them.
+/obj/effect/perversion_draw_attack_projectile_destroyer
+	name = "bleeding space"
+	desc = "A hateful blade is cleaving through this space."
+	alpha = 95
+	icon_state = "zorowarning"
+	color = COLOR_PERVERSION_KATANA
+	layer = POINT_LAYER
+	anchored = TRUE
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+	var/duration
+	var/timerid
+	var/obj/item/ego_weapon/perversion/linked_weapon
+	var/mob/living/carbon/human/user
+
+// Pass necessary arguments to it on Initialize
+/obj/effect/perversion_draw_attack_projectile_destroyer/Initialize(mapload, final_duration = 2.4 SECONDS, obj/item/ego_weapon/perversion/katana, mob/living/carbon/human/owner)
+	. = ..()
+	if(!istype(katana) || !istype(owner))
+		qdel(src)
+		return
+	duration = final_duration
+	user = owner
+	linked_weapon = katana
+	timerid = QDEL_IN(src, duration)
+
+// Prevent projectiles from moving through us. Inform the weapon about the event.
+/obj/effect/perversion_draw_attack_projectile_destroyer/CanAllowThrough(atom/movable/mover, turf/target)
+	. = ..()
+	if(istype(mover, /obj/projectile))
+		if(QDELETED(linked_weapon) || istype(mover, /obj/projectile/ego_bullet/fell_shrapnel))
+			return .
+		linked_weapon.DrawAttackProjectileReaction(mover, get_turf(src), user)
+		return FALSE
+
+// The only projectile able to bypass the draw attack's protective field. Fired by CreateShrapnelSpray.
+// Is passed stats on creation - depends on a few vars from Perversion and some stats from the original projectile.
+/obj/projectile/ego_bullet/fell_shrapnel
+	name = "fell shrapnel"
+	icon_state = "bonebullet_long"
+	color = COLOR_MOSTLY_PURE_PINK
+	damage = 25
+	speed = 0.4
+	damage_type = RED_DAMAGE
+	nodamage = TRUE
+	projectile_piercing = PASSMOB
+	var/mob/living/carbon/human/john_fellbullet
+	var/mob/living/carbon/human/jane_perversion
+	var/damage_dealt = FALSE // Used to avoid accidental multihits since this has piercing, but that piercing is only intended for IFF.
+	var/gaze_application = 1
+	var/gaze_coeff = 0.15
+
+/obj/projectile/ego_bullet/fell_shrapnel/Initialize(mapload, mob/living/carbon/human/marksman, mob/living/carbon/human/bladesman, intended_damage_type = RED_DAMAGE, intended_damage = 25, intended_gaze_application = 1, intended_gaze_coeff = 0.15)
+	. = ..()
+	if((!istype(marksman)) || (!istype(bladesman)))
+		qdel(src)
+		return
+	john_fellbullet = marksman
+	jane_perversion = bladesman
+	damage_type = intended_damage_type
+	damage = intended_damage
+	gaze_application = intended_gaze_application
+	gaze_coeff = intended_gaze_coeff
+
+/obj/projectile/ego_bullet/fell_shrapnel/on_hit(atom/target, blocked = FALSE)
+	// Delete the bullet if it's already dealt its damage once.
+	if(damage_dealt)
+		qdel(src)
+		return
+
+	// Only hit targets hostile to the original firer.
+	var/should_impact = isliving(target) && (!john_fellbullet.faction_check_mob(target))
+	if(should_impact)
+		nodamage = FALSE
+		damage_dealt = TRUE
+		// Apply extra damage based on Gaze/Contempt on target. Also add/refresh Gaze/Contempt.
+		var/final_damage_coeff = 1
+		var/mob/living/artwork = target
+		var/datum/status_effect/stacking/perversion_weapon_gaze/lets_take_a_gaze = artwork.has_status_effect(STATUS_EFFECT_GAZE)
+		var/datum/status_effect/display/perversion_weapon_contempt/uh_oh = artwork.has_status_effect(STATUS_EFFECT_CONTEMPT)
+		if(uh_oh)
+			uh_oh.refresh()
+			final_damage_coeff += (gaze_coeff * 7)
+		else if(lets_take_a_gaze)
+			final_damage_coeff += (gaze_coeff * lets_take_a_gaze.stacks)
+			lets_take_a_gaze.add_stacks(gaze_application)
+		else
+			artwork.apply_status_effect(STATUS_EFFECT_GAZE, gaze_application)
+
+		damage *= final_damage_coeff
+	else
+		return
+	..()
+	if(should_impact)
+		qdel(src)
+
+/* ------------------------ COMBAT ------------------------ */
+// Basic proc used to apply this weapon's version of Gaze. Will not apply Gaze if they already have Contempt.
+/obj/item/ego_weapon/perversion/proc/ApplyGaze(mob/living/target, stacks_to_apply)
+	if(!target || !isliving(target) || target.status_flags & GODMODE)
+		return
+	var/datum/status_effect/stacking/perversion_weapon_gaze/gazing = target.has_status_effect(STATUS_EFFECT_GAZE)
+	var/datum/status_effect/display/perversion_weapon_contempt/contempting = target.has_status_effect(STATUS_EFFECT_CONTEMPT)
+	if(contempting)
+		contempting.refresh()
+		return
+	else if(gazing)
+		gazing.add_stacks(stacks_to_apply)
+	else
+		target.apply_status_effect(STATUS_EFFECT_GAZE, stacks_to_apply)
+
+// Proc used to set combo state, last hit victim, and a timeout timer.
+/obj/item/ego_weapon/perversion/proc/SetComboState(number, mob/living/victim, mob/living/carbon/human/user)
+	deltimer(combo_timeout_timer)
+
+	combo = number
+	if(!QDELETED(victim))
+		last_target_hit = victim
+	else
+		last_target_hit = null
+
+	combo_timeout_timer = addtimer(CALLBACK(src, PROC_REF(ComboTimeout), user), combo_timeout_duration, TIMER_STOPPABLE)
+
+/obj/item/ego_weapon/perversion/proc/ComboTimeout(mob/living/carbon/human/user)
+	deltimer(combo_timeout_timer)
+	if(!user)
+		return
+
+	last_target_hit = null
+	if(combo != 0)
+		to_chat(user, span_danger("The momentum from your attacks fade. Combo reset."))
+		if(balloon_text_cooldowns["combo_timeout"] <= world.time)
+			balloon_alert(user, "The momentum from your attacks fades.")
+			balloon_text_cooldowns["combo_timeout"] = world.time + 0.5 SECONDS
+	combo = 0
+
+/obj/item/ego_weapon/perversion/proc/SetForceFromTargetGaze(mob/living/target)
+	if(sheathed)
+		force = lance_force
+		return
+	else
+		force = katana_force
+		if(!istype(target))
+			return
+
+		var/datum/status_effect/stacking/perversion_weapon_gaze/gazing = target.has_status_effect(STATUS_EFFECT_GAZE)
+		var/datum/status_effect/display/perversion_weapon_contempt/contempting = target.has_status_effect(STATUS_EFFECT_CONTEMPT)
+		var/extra_coeff = 1
+
+		if(contempting)
+			extra_coeff += (katana_additive_damage_coeff_per_gaze * 7)
+		else if(gazing)
+			extra_coeff += (katana_additive_damage_coeff_per_gaze * (gazing.stacks))
+
+		force *= extra_coeff
+		return
+
+/obj/item/ego_weapon/perversion/melee_attack_chain(mob/user, atom/target, params)
+	if(HAS_TRAIT(user, TRAIT_PACIFISM)) // For some god forsaken reason I have to manually check this here.
+		return FALSE
+	. = ..()
+
+
+/obj/item/ego_weapon/perversion/attack(mob/living/target, mob/living/user)
+	// Setting the correct hitsound before attacking...
+	hitsound_vary = FALSE
+	if(sheathed)
+		if(combo == 2 && last_target_hit == target)
+			hitsound = lance_followup_hitsound
+		else
+			hitsound_vary = TRUE
+			hitsound = lance_basic_hitsound
+	else
+		if(combo == 1 && target == last_target_hit)
+			hitsound = katana_cleave_hitsound
+		else if(combo == 2 && target == last_target_hit)
+			hitsound = katana_finisher_hitsound
+		else
+			hitsound_vary = TRUE
+			hitsound = katana_basic_hitsound
+
+	// Adjust force based on Gaze/Contempt if the weapon's unsheathed. Logic handled in the below proc.
+	SetForceFromTargetGaze(target)
+	// Katana finisher will absolutely nuke someone.
+	if(!sheathed && combo >= 2 && last_target_hit == target)
+		force *= katana_finisher_damage_coeff
+
+	// Save this in case we send whatever we're gonna hit to Sovngarde (nullspace)
+	var/turf/target_turf_before_possibly_obliterated = get_turf(target)
+
+	. = ..() // Attack
+
+	// Post-attack
+	sheathed ? (force = lance_force) : (force = katana_force) // Reset force to be accurate if we examine the weapon
+
+	if(!.)
+		return
+
+	shared_hitlist = list(user)
+
+	if(!istype(target))
+		SetComboState(0, null, user)
+		return
+	if(last_target_hit && (target != last_target_hit))
+		SetComboState(0, target, user)
+
+	// Attacking in Lance form.
+	if(sheathed)
+		if(target.stat < DEAD)
+			ApplyGaze(target, base_gaze_application)
+
+		switch(combo)
+			if(1) // This is our lunge's attack.
+				SetComboState(2, target, user)
+				if(target.stat < DEAD)
+					ApplyGaze(target, lance_dash_extra_gaze_stacks)
+				return
+			if(2) // This is an attack made on the same target after a lunge. Do the followup thrust AoE.
+				SetComboState(0, target, user)
+				LanceFollowupThrust(target_turf_before_possibly_obliterated, user)
+				return
+			else
+				SetComboState(0, target, user)
+				return
+
+	// Attacking in Katana form.
+	else
+		if(!target.has_status_effect(STATUS_EFFECT_CONTEMPT) && !target.has_status_effect(STATUS_EFFECT_GAZE))
+			SetComboState(0, target, user)
+			return
+		switch(combo)
+			if(0) // First hit; either point blank or our dash.
+				SetComboState(1, target, user)
+				return
+			if(1) // Second hit. This should have a cleave on it.
+				SetComboState(2, target, user)
+				shared_hitlist |= target
+				KatanaCleave(target_turf_before_possibly_obliterated, user)
+				return
+			if(2) // Finisher. Remove our statuses from the target.
+				if(!QDELETED(target))
+					target.remove_status_effect(STATUS_EFFECT_CONTEMPT)
+					target.remove_status_effect(STATUS_EFFECT_GAZE)
+					var/obj/effect/temp_visual/slice/temp = new(target_turf_before_possibly_obliterated)
+					temp.color = COLOR_PERVERSION_KATANA
+					temp.transform *= 2
+					temp.layer = POINT_LAYER
+				SetComboState(0, target, user)
+				return
+			else
+				SetComboState(0, target, user)
+				return
+
+// Lance Lunge / Katana Dash. Activates only on the first strike against each opponent (Da Capo combo logic: after you trigger it once on a target, you'll need to break the combo to use it again)
+/obj/item/ego_weapon/perversion/afterattack(atom/A, mob/living/user, proximity_flag, params)
+	if(!CanUseEgo(user))
+		return
+	if(!isliving(A))
+		return
+	if(HAS_TRAIT(user, TRAIT_PACIFISM)) // For some god forsaken reason I have to manually check this here.
+		return
+	var/mob/living/victim = A
+	if(victim.stat >= DEAD)
+		return
+
+	// Only trigger if we're swapping to a new target or if this is the very first strike in our combo chain
+	if(combo == 0 || last_target_hit != victim)
+		var/distance = get_dist(user, victim)
+
+		// We are currently in Lance form.
+		if(sheathed)
+			if(lance_dash_cooldown > world.time)
+				to_chat(user, span_danger("You haven't recovered from your last lunge yet!"))
+				if(balloon_text_cooldowns["lance_lunge"] <= world.time)
+					balloon_alert(user, "Lunge on cooldown. CD: [(lance_dash_cooldown - world.time) * 0.1]s.")
+					balloon_text_cooldowns["lance_lunge"] = world.time + 0.5 SECONDS
+				return
+			if(distance > lance_dash_range)
+				to_chat(user, span_danger("You can't reach your target with your lunge!"))
+				return
+			if((distance < 2) || (!(can_see(user, victim, lance_dash_range)))) // If this is too janky we can change it for checktoolreach()
+				return
+
+			lance_dash_cooldown = world.time + lance_dash_cooldown_duration
+			playsound(get_turf(src), 'sound/weapons/fixer/generic/dodge2.ogg', 100, FALSE, 5)
+
+			// Actual dash.
+			for(var/i in 2 to distance)
+				// Afterimage VFX
+				var/obj/effect/temp_visual/decoy/D = new /obj/effect/temp_visual/decoy(get_turf(user), user)
+				D.alpha = min(100 + i*25, 200)
+				animate(D, alpha = 0, time = 2 + i*2)
+
+				// Movement
+				step_towards(user, victim)
+
+			user.visible_message(span_danger("[user] lunges at [victim] with [src]!"))
+			SetComboState(1, victim, user)
+
+			if((get_dist(user, victim) < 2))
+				victim.attackby(src, user)
+				get_thrust_turfs(victim, user) // To get the VFX
+
+		// We are currently in Katana form.
+		else
+			// Only allow us to dash to targets with Gaze/Contempt.
+			if(!victim.has_status_effect(STATUS_EFFECT_GAZE) && !victim.has_status_effect(STATUS_EFFECT_CONTEMPT))
+				to_chat(user, span_danger("Your target has no Gaze or Contempt!"))
+				if(balloon_text_cooldowns["katana_no_gaze"] <= world.time)
+					balloon_alert(user, "Target has no Gaze/Contempt.")
+					balloon_text_cooldowns["katana_no_gaze"] = world.time + 0.5 SECONDS
+				return
+			if(katana_dash_cooldown > world.time)
+				to_chat(user, span_danger("You haven't recovered from your last dash yet!"))
+				if(balloon_text_cooldowns["katana_dash"] <= world.time)
+					balloon_alert(user, "Dash on cooldown. CD: [(katana_dash_cooldown - world.time) * 0.1]s.")
+					balloon_text_cooldowns["katana_dash"] = world.time + 0.5 SECONDS
+				return
+			if(distance > katana_dash_range)
+				to_chat(user, span_danger("You can't reach your target with your dash!"))
+				return
+			if((distance < 2) || (!(can_see(user, victim, katana_dash_range)))) // If this is too janky we can change it for checktoolreach()
+				return
+
+			katana_dash_cooldown = world.time + katana_dash_cooldown_duration
+			playsound(get_turf(src), 'sound/weapons/fixer/generic/dodge2.ogg', 100, FALSE, 5)
+
+			// Actual dash
+			for(var/i in 2 to distance)
+				// Afterimage VFX
+				var/obj/effect/temp_visual/decoy/D = new /obj/effect/temp_visual/decoy(get_turf(user), user)
+				D.alpha = min(100 + i*25, 200)
+				animate(D, alpha = 0, time = 2 + i*2)
+
+				// Movement
+				step_towards(user, victim)
+
+			user.visible_message(span_danger("[user] dashes towards [victim] with [src]!"))
+			if((get_dist(user, victim) < 2))
+				victim.attackby(src, user)
+				get_sweep_turfs(victim, user) // To get the VFX
+
+			SetComboState(1, victim, user)
+
+// This is an additional AoE caused when we strike the same target we previously hit with a lance lunge. It will hit in an AoE, including the main target, too. Deals damage and inflicts extra Gaze.
+/obj/item/ego_weapon/perversion/proc/LanceFollowupThrust(turf/target, mob/living/carbon/human/user)
+	if(!target || !user)
+		return
+
+	// Assemble turfs to be hit
+	var/turf/endpoint = get_ranged_target_turf_direct(user, target, lance_followup_range)
+	if(!endpoint)
+		return
+	var/list/line = getline(get_step_towards(user, endpoint), endpoint)
+	for(var/turf/T in line)
+		for(var/turf/T2 in view(1, T))
+			if(get_dist(T2, user) <= lance_followup_range)
+				line |= T2
+
+	line -= get_turf(user)
+
+	// Damage calc
+	var/final_damage = force * force_multiplier
+	var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
+	var/justicemod = 1 + userjust/100
+	final_damage*=justicemod
+	final_damage*=lance_followup_damage_coeff
+
+	for(var/turf/T3 in line)
+		new /obj/effect/temp_visual/perversion_thrust_visual(T3)
+
+		for(var/mob/living/L in T3)
+			if(L in shared_hitlist)
+				continue
+			if(user.faction_check_mob(L))
+				continue
+			if(L.stat >= DEAD)
+				continue
+			if(L.status_flags & GODMODE)
+				continue
+			shared_hitlist |= L
+
+			var/atom/bloodsplatter_vfx = new /obj/effect/temp_visual/dir_setting/bloodsplatter(T3, pick(GLOB.alldirs))
+			bloodsplatter_vfx.transform *= 1.4
+
+			L.deal_damage(final_damage, damtype, source = user, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
+			if(L && L.health > 0)
+				ApplyGaze(L, lance_followup_extra_gaze_stacks)
+
+/obj/effect/temp_visual/perversion_thrust_visual
+	name = "pierced space"
+	desc = "This space is being pierced by a gilded lance!"
+	icon_state = "kick"
+	layer = POINT_LAYER
+	color = COLOR_PERVERSION_LANCE
+	duration = 5
+
+// This is an AoE caused as part of our second hit on the same target during Katana form. Only able to be triggered on targets with Gaze/Contempt. It won't hit the main target again.
+// Uses altered Megafauna-Claw Wide Slash code.
+/obj/item/ego_weapon/perversion/proc/KatanaCleave(turf/target, mob/living/carbon/human/user)
+	if(!target || !user)
+		return
+
+	// Assemble turfs to be hit
+	var/turf/endpoint = get_ranged_target_turf_direct(user, target, lance_followup_range)
+	if(!endpoint)
+		return
+
+	user.face_atom(target)
+
+	var/turf/T = get_turf(user)
+	shared_hitlist |= T
+
+	// Actual damage and VFX happens in KatanaCleaveHit(). This proc just calls that proc on the turfs determined by katana_cleave_degrees.
+	var/angle_to_target = Get_Angle(T, target)
+	var/angle = angle_to_target + katana_cleave_degrees * -0.5
+	if(angle > 360)
+		angle -= 360
+	else if(angle < 0)
+		angle += 360
+
+	var/turf/T2 = get_turf_in_angle(angle, T, katana_cleave_range)
+	var/list/line = getline(T, T2)
+	INVOKE_ASYNC(src, PROC_REF(KatanaCleaveHit), line, user)
+	for(var/i = 1 to 20)
+		angle += ((katana_cleave_degrees / 20))
+		if(angle > 360)
+			angle -= 360
+		else if(angle < 0)
+			angle += 360
+		T2 = get_turf_in_angle(angle, T, katana_cleave_range)
+		line = getline(T, T2)
+		addtimer(CALLBACK(src, PROC_REF(KatanaCleaveHit), line, user), i * 0.04)
+
+// Receives a line of turfs to hit with a slash. It will add both turfs and mobs into the hitlist to avoid repeating slashes.
+/obj/item/ego_weapon/perversion/proc/KatanaCleaveHit(list/turf_line, mob/living/carbon/human/user)
+	if(!islist(turf_line) || !user)
+		return
+
+	// Damage calc
+	var/base_damage = force * force_multiplier
+	var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
+	var/justicemod = 1 + userjust/100
+	base_damage*=justicemod
+
+	for(var/turf/T in turf_line)
+		if(T in shared_hitlist)
+			continue
+		if(!isturf(T))
+			continue
+
+		shared_hitlist |= T
+		var/obj/vfx = new /obj/effect/temp_visual/slice(T)
+		vfx.color = COLOR_PERVERSION_KATANA
+
+		for(var/mob/living/L in T)
+			if(L in shared_hitlist)
+				continue
+			if(user.faction_check_mob(L))
+				continue
+			if(L.stat >= DEAD)
+				continue
+			if(L.status_flags & GODMODE)
+				continue
+
+			shared_hitlist |= L
+			new /obj/effect/temp_visual/dir_setting/bloodsplatter(T, pick(GLOB.alldirs))
+
+			// We want to deal more damage if the enemy has Gaze or Contempt (7 stacks of Gaze).
+			var/final_damage = base_damage
+			var/datum/status_effect/display/perversion_weapon_contempt/contempting = L.has_status_effect(STATUS_EFFECT_CONTEMPT)
+			if(contempting)
+				final_damage *= (1 + (katana_additive_damage_coeff_per_gaze * 7))
+			else
+				var/datum/status_effect/stacking/perversion_weapon_gaze/gazing = L.has_status_effect(STATUS_EFFECT_GAZE)
+				if(gazing)
+					final_damage *= (1 + (katana_additive_damage_coeff_per_gaze * gazing.stacks))
+
+			L.deal_damage(final_damage, damtype, source = user, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
+
+/// Gaze stacking status effect: does nothing, the weapon is the one that applies the bonuses. You start with 1 stack, and go up to 6. If you go to 7? Turns into Contempt.
+/datum/status_effect/stacking/perversion_weapon_gaze
+	id = "perversion_weapon_gaze"
+	alert_type = /atom/movable/screen/alert/status_effect/perversion_weapon_gaze
+	stacks = 0
+	max_stacks = 7
+	stack_decay = 0
+	duration = 30 SECONDS
+	stack_threshold = 7
+	consumed_on_threshold = TRUE
+	/// We wanna display an overlaid 10x10 icon on the target, status_effect/display has the framework for this but we're in the /stacking subtype...
+	/// ...thus, we're making a dummy status effect just to display the overlay.
+	var/datum/status_effect/display/attached_visual_status
+
+/datum/status_effect/stacking/perversion_weapon_gaze/threshold_cross_effect()
+	owner.apply_status_effect(STATUS_EFFECT_CONTEMPT)
+	. = ..()
+
+/datum/status_effect/stacking/perversion_weapon_gaze/on_creation(mob/living/new_owner, stacks_to_apply)
+	if(owner && owner.has_status_effect(STATUS_EFFECT_CONTEMPT))
+		qdel(src)
+		return
+	if(istype(new_owner))
+		RegisterSignal(new_owner, COMSIG_LIVING_DEATH, PROC_REF(VanishIntoTheEther))
+	. = ..()
+
+/datum/status_effect/stacking/perversion_weapon_gaze/proc/VanishIntoTheEther()
+	qdel(src)
+
+/datum/status_effect/stacking/perversion_weapon_gaze/add_stacks(stacks_added)
+	if(owner && owner.has_status_effect(STATUS_EFFECT_CONTEMPT))
+		qdel(src)
+		return
+	refresh()
+	. = ..()
+	GenerateAttachedVisualStatus()
+
+/datum/status_effect/stacking/perversion_weapon_gaze/on_remove()
+	. = ..()
+	QDEL_NULL(attached_visual_status)
+
+/datum/status_effect/stacking/perversion_weapon_gaze/tick()
+	if(!can_have_status())
+		qdel(src)
+
+/// Creates a dummy status effect to display our little gaze icon
+/datum/status_effect/stacking/perversion_weapon_gaze/proc/GenerateAttachedVisualStatus()
+	QDEL_NULL(attached_visual_status)
+	if(owner)
+		attached_visual_status = owner.apply_status_effect(/datum/status_effect/display/gaze_display/perversion, stacks)
+
+// Dummy status effect with icon overlay
+/datum/status_effect/display/gaze_display/perversion
+	id = "gaze_display_perversion"
+
+// Alert
+/atom/movable/screen/alert/status_effect/perversion_weapon_gaze
+	name = "Gaze \[Perversion\]"
+	icon_state = "gaze"
+	desc = "You're entranced by the blood-red blade."
+
+/// Contempt status effect.
+/datum/status_effect/display/perversion_weapon_contempt
+	id = "perversion_weapon_contempt"
+	display_icon = 'ModularLobotomy/_Lobotomyicons/status_icons_10x10.dmi'
+	display_name = "contempt"
+	alert_type = /atom/movable/screen/alert/status_effect/perversion_weapon_contempt
+	duration = 20 SECONDS
+
+/datum/status_effect/display/perversion_weapon_contempt/on_creation(mob/living/new_owner, ...)
+	. = ..()
+	if(istype(new_owner))
+		RegisterSignal(new_owner, COMSIG_LIVING_DEATH, PROC_REF(VanishIntoTheEther))
+
+// There has to be a better way to do this?
+/datum/status_effect/display/perversion_weapon_contempt/proc/VanishIntoTheEther()
+	qdel(src)
+
+/atom/movable/screen/alert/status_effect/perversion_weapon_contempt
+	name = "Contempt \[Perversion\]"
+	icon_state = "weaken"
+	desc = "You're nothing."
+
+#undef STATUS_EFFECT_GAZE
+#undef STATUS_EFFECT_CONTEMPT
+#undef COLOR_PERVERSION_LANCE
+#undef COLOR_PERVERSION_KATANA

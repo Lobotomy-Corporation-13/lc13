@@ -25,6 +25,19 @@ GLOBAL_LIST_EMPTY(geresearched_abnos)
 	return ..()
 
 /obj/item/disc_researcher/proc/Scan(atom/A, mob/living/user)
+	if(istype(A, /obj/machinery/computer/abnormality))
+		var/obj/machinery/computer/abnormality/console = A
+		if(console.datum_reference.stupid)	//We NEED to alert people. But just the Disc team.
+			var/mob/living/simple_animal/breacher = console.datum_reference.current
+			var/lob_amount = round(rand(0,2),0.1)
+			Radio.set_frequency(FREQ_DISCIPLINE)
+			Radio.talk_into(src, "PRIORITY ALERT: User [user.name] is attempting to perform breach research on [breacher.name]. Reward: A sense of pride and accomplishment.", FREQ_DISCIPLINE)
+
+			if(do_after(user, 50, src))
+				Radio.set_frequency(FREQ_DISCIPLINE)
+				Radio.talk_into(src, "PRIORITY ALERT: User [user.name] Has successfully breached [breacher.name]. Time to breach: 15 Seconds.", FREQ_DISCIPLINE)
+				addtimer(CALLBACK(src, PROC_REF(BreachStupid), breacher, lob_amount, console), 15 SECONDS)
+			return TRUE
 	if(!isabnormalitymob(A))
 		return FALSE
 
@@ -61,6 +74,12 @@ GLOBAL_LIST_EMPTY(geresearched_abnos)
 		GLOB.geresearched_abnos += breacher.type
 
 	return TRUE
+
+/obj/item/disc_researcher/proc/BreachStupid(mob/living/simple_animal/hostile/abnormality/breacher, lob_amount, obj/machinery/computer/abnormality/console)
+	SSlobotomy_corp.lob_points += lob_amount
+	var/turf/T = pick(GLOB.xeno_spawn)
+	breacher.forceMove(T)
+	console.datum_reference.qliphoth_change(-99)
 
 //DESTROY BERRY
 /obj/item/disc_researcher/proc/BreachBerry(mob/living/simple_animal/hostile/abnormality/breacher, lob_amount)

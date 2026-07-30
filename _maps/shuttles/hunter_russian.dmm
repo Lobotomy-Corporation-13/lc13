@@ -21,7 +21,6 @@
 /turf/open/floor/plating/airless,
 /area/shuttle/hunter)
 "e" = (
-/obj/machinery/portable_atmospherics/scrubber/huge,
 /turf/open/floor/plating,
 /area/shuttle/hunter)
 "f" = (
@@ -183,7 +182,6 @@
 /turf/open/floor/plating,
 /area/shuttle/hunter)
 "J" = (
-/obj/machinery/portable_atmospherics/canister/oxygen,
 /turf/open/floor/mineral/plastitanium,
 /area/shuttle/hunter)
 "K" = (

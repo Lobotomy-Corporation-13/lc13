@@ -1,4 +1,4 @@
-/datum/round_event_control/mice_migration
+/* /datum/round_event_control/mice_migration
 	name = "Mice Migration"
 	typepath = /datum/round_event/mice_migration
 	weight = 10
@@ -24,4 +24,4 @@
 		'sound/effects/mousesqueek.ogg')
 
 /datum/round_event/mice_migration/start()
-	SSminor_mapping.trigger_migration(rand(minimum_mice, maximum_mice))
+	SSminor_mapping.trigger_migration(rand(minimum_mice, maximum_mice)) */

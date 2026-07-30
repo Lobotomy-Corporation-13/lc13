@@ -37,7 +37,7 @@ GLOBAL_VAR_INIT(observer_default_invisibility, INVISIBILITY_OBSERVER)
 	var/data_huds_on = 0 //Are data HUDs currently enabled?
 	var/health_scan = FALSE //Are health scans currently enabled?
 	var/chem_scan = FALSE //Are chem scans currently enabled?
-	var/gas_scan = FALSE //Are gas scans currently enabled?
+	// var/gas_scan = FALSE //Are gas scans currently enabled?
 	var/list/datahuds = list(DATA_HUD_SECURITY_ADVANCED, DATA_HUD_MEDICAL_ADVANCED, DATA_HUD_DIAGNOSTIC_ADVANCED) //list of data HUDs shown to ghosts.
 	var/ghost_orbit = GHOST_ORBIT_CIRCLE
 
@@ -826,7 +826,7 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 		to_chat(src, span_notice("Chem scan enabled."))
 		chem_scan = TRUE
 
-/mob/dead/observer/verb/toggle_gas_scan()
+/* /mob/dead/observer/verb/toggle_gas_scan()
 	set name = "Toggle Gas Scan"
 	set desc = "Toggles whether you analyze gas contents on click"
 	set category = "Ghost"
@@ -836,7 +836,7 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 		gas_scan = FALSE
 	else
 		to_chat(src, span_notice("Gas scan enabled."))
-		gas_scan = TRUE
+		gas_scan = TRUE */
 
 /mob/dead/observer/verb/restore_ghost_appearance()
 	set name = "Restore Ghost Character"

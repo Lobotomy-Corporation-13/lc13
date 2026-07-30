@@ -31,10 +31,6 @@
 	icon_gib = null
 	wander = 0
 	harm_intent_damage = 5
-	minbodytemp = 0
-	maxbodytemp = 500
-	atmos_requirements = list("min_oxy" = 0, "max_oxy" = 0, "min_tox" = 0, "max_tox" = 0, "min_co2" = 0, "max_co2" = 0, "min_n2" = 0, "max_n2" = 0)
-	unsuitable_atmos_damage = 0
 	melee_damage_lower = 30
 	melee_damage_upper = 30
 	melee_damage_type = STAMINA
@@ -77,7 +73,8 @@
 /mob/living/simple_animal/hostile/swarmer/Initialize()
 	. = ..()
 	remove_verb(src, /mob/living/verb/pulled)
-	for(var/datum/atom_hud/data/diagnostic/diag_hud in GLOB.huds)
+	for(var/hud in GLOB.huds)
+		var/datum/atom_hud/data/diagnostic/diag_hud = GLOB.huds[hud]
 		diag_hud.add_to_hud(src)
 
 /mob/living/simple_animal/hostile/swarmer/Move()

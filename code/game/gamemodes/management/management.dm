@@ -16,7 +16,7 @@
 		ABNORMALITY_ORIGIN_LIMBUS,
 		ABNORMALITY_ORIGIN_ORIGINAL
 		)
-	var/list/gamemode_abnos = list(ZAYIN_LEVEL = list(), TETH_LEVEL = list(), HE_LEVEL = list(), WAW_LEVEL = list(), ALEPH_LEVEL = list())
+	var/list/gamemode_abnos = alist(ZAYIN_LEVEL = list(), TETH_LEVEL = list(), HE_LEVEL = list(), WAW_LEVEL = list(), ALEPH_LEVEL = list())
 
 /datum/game_mode/management/pre_setup()
 	create_portrait_paths()
@@ -34,6 +34,9 @@
 				continue
 			gamemode_abnos[initial(abno.threat_level)] += abno
 			var/rate = (all_abnos[i] * -1) + highest * 2	//Weight counts for half of the abno chance, the other half is guaranteed.
+			if(abno.being_tested) // Abnormalities that are being tested will be nearly guaranteed to spawn
+				SSpersistence.tested_abno_old_rates[abno.type] = all_abnos[i]
+				rate *= 6
 			gamemode_abnos[initial(abno.threat_level)][abno] = rate
 
 	SSabnormality_queue.possible_abnormalities = list()
@@ -125,6 +128,7 @@
 		ABNORMALITY_ORIGIN_LIMBUS,
 		ABNORMALITY_ORIGIN_ORIGINAL,
 		ABNORMALITY_ORIGIN_JOKE,
+		ABNORMALITY_ORIGIN_SS13MINING,
 		)
 
 /datum/game_mode/management/community
@@ -145,3 +149,13 @@
 		ABNORMALITY_ORIGIN_COMMUNITY
 		)
 
+/datum/game_mode/management/branch12
+	name = "Branch 12"
+	config_tag = "branch12"
+	votable = 1
+
+	announce_span = "notice"
+	announce_text = "Manage a group of Unique Branch 12 Abnormalities!"
+	abno_types = list(
+		ABNORMALITY_ORIGIN_BRANCH12
+		)

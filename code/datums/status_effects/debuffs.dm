@@ -473,8 +473,8 @@
 	effect_sprite = "emark4"
 
 /datum/status_effect/eldritch/void/on_effect()
-	var/turf/open/turfie = get_turf(owner)
-	turfie.TakeTemperature(-40)
+	// var/turf/open/turfie = get_turf(owner)
+	// turfie.TakeTemperature(-40)
 	owner.adjust_bodytemperature(-20)
 	return ..()
 
@@ -1005,7 +1005,6 @@
 	owner.cut_overlay(statuseffectvisual)
 	return ..()
 
-
 #define MOB_HALFSPEEDDEFENSE /datum/movespeed_modifier/qliphothshred
 /datum/status_effect/qliphothshred
 	id = "qliphoth intervention field +"
@@ -1023,6 +1022,20 @@
 	if(isanimal(owner))
 		var/mob/living/simple_animal/M = owner
 		M.RemoveModifier(/datum/dc_change/qliphothshred)
+	return ..()
+
+/datum/status_effect/slowdowngreen
+	id = "green_slowdown"
+	duration = 4 SECONDS
+	alert_type = null
+	status_type = STATUS_EFFECT_REFRESH
+
+/datum/status_effect/slowdowngreen/on_apply()
+	. = ..()
+	owner.add_movespeed_modifier(/datum/movespeed_modifier/qliphothoverload)
+
+/datum/status_effect/slowdowngreen/on_remove()
+	owner.remove_movespeed_modifier(/datum/movespeed_modifier/qliphothoverload)
 	return ..()
 
 #define MOB_QUARTERSPEED /datum/movespeed_modifier/bloodhold
@@ -1048,6 +1061,61 @@
 
 	owner.cut_overlay(statuseffectvisual)
 	return ..()
+
+/datum/status_effect/mental_detonate
+	id = "mental_detonate"
+	duration = 5 SECONDS
+	alert_type = null
+	status_type = STATUS_EFFECT_REFRESH
+	var/statuseffectvisual
+
+/datum/status_effect/mental_detonate/on_apply()
+	. = ..()
+	to_chat(owner, "<span class='warning'>You are marked for a mental detonation!</span>")
+	var/mutable_appearance/effectvisual = mutable_appearance('icons/obj/clockwork_objects.dmi', "judicial")
+	effectvisual.pixel_x = -owner.pixel_x
+	effectvisual.pixel_y = -owner.pixel_y
+	statuseffectvisual = effectvisual
+	owner.add_overlay(statuseffectvisual)
+
+/datum/status_effect/mental_detonate/proc/shatter()
+	playsound(owner, 'sound/weapons/ego/shattering_window.ogg', 35, 0, 20)
+	new /obj/effect/temp_visual/revenant(get_turf(owner))
+	var/datum/status_effect/stacking/lc_mental_decay/D = owner.has_status_effect(/datum/status_effect/stacking/lc_mental_decay)
+	if(D)
+		if(!ishuman(owner))
+			owner.deal_damage(D.stacks * 4, WHITE_DAMAGE, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_STATUS | ATTACK_TYPE_SPECIAL))
+		else
+			var/mob/living/carbon/human/status_holder = owner
+			status_holder.adjustSanityLoss(D.stacks)
+		if(D.stacks >= 2)
+			D.stacks -= 2
+	qdel(src)
+
+/datum/status_effect/mental_detonate/on_remove()
+	owner.cut_overlay(statuseffectvisual)
+	return ..()
+
+#define MOB_FADING /datum/status_effect/fade_away
+/datum/status_effect/fade_away
+	id = "fade_away"
+	duration = 90 SECONDS
+	alert_type = /atom/movable/screen/alert/status_effect/fade_away
+	status_type = STATUS_EFFECT_UNIQUE
+
+/atom/movable/screen/alert/status_effect/fade_away
+	name = "Fade away..."
+	desc = "You are fading away..."
+	icon = 'icons/mob/actions/actions_spells.dmi'
+	icon_state = "skeleton"
+
+/datum/status_effect/fade_away/tick()
+	to_chat(owner, "<span class='warning'>You feel yourself fading...</span>")
+	if(owner.alpha > 50)
+		owner.alpha = (owner.alpha-3)
+
+/datum/status_effect/fade_away/on_remove()
+	owner.dust()
 
 //update_stamina() is move_to_delay = (initial(move_to_delay) + (staminaloss * 0.06))
 // 100 stamina damage equals 6 additional move_to_delay. So 167*0.06 = 10.02
@@ -1132,12 +1200,18 @@
 	consumed_on_threshold = FALSE
 	var/new_stack = FALSE
 	var/safety = TRUE
+	var/extinguishable = TRUE
 
 /atom/movable/screen/alert/status_effect/lc_burn
 	name = "Burning"
 	desc = "You're on fire!"
 	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "lc_burn"
+
+/datum/status_effect/stacking/lc_burn/on_apply()
+	. = ..()
+	if(extinguishable)
+		RegisterSignal(owner, COMSIG_LIVING_EXTINGUISHED, PROC_REF(Extinguished))
 
 /datum/status_effect/stacking/lc_burn/can_have_status()
 	return (owner.stat != DEAD || !(owner.status_flags & GODMODE))
@@ -1156,15 +1230,21 @@
 
 	//Deletes itself after 2 tick if no new burn stack was given
 	if(safety)
-		if(new_stack)
-			stacks = round(stacks/2)
+		if(new_stack || (undecaying_stacks > 0)) // If you put any amount of undecaying stacks on, it will keep burning until they're gone - only the regular stacks will decay.
+			stacks = round((stacks - undecaying_stacks)/2 + undecaying_stacks)
 			new_stack = FALSE
 			Update_Burn_Overlay(owner)
 		else
 			qdel(src)
 
+//Being extinguished with a fire extinguisher removes 3 stacks.
+/datum/status_effect/stacking/lc_burn/proc/Extinguished()
+	SIGNAL_HANDLER
+
+	stacks -= 3
+
 /datum/status_effect/stacking/lc_burn/proc/DealDamage()
-	owner.apply_damage(stacks, FIRE, null, owner.run_armor_check(null, FIRE))
+	owner.deal_damage(stacks, FIRE, attack_type = (ATTACK_TYPE_STATUS))
 
 //Update burn appearance
 /datum/status_effect/stacking/lc_burn/proc/Update_Burn_Overlay(mob/living/owner)
@@ -1185,17 +1265,109 @@
 	..()
 
 //Mob Proc
-/mob/living/proc/apply_lc_burn(stacks)
+/mob/living/proc/apply_lc_burn(stacks, undecaying_stacks)
 	var/datum/status_effect/stacking/lc_burn/B = src.has_status_effect(/datum/status_effect/stacking/lc_burn)
 	if(!B)
-		src.apply_status_effect(/datum/status_effect/stacking/lc_burn, stacks)
+		B = src.apply_status_effect(/datum/status_effect/stacking/lc_burn, stacks)
+		B.add_undecaying_stacks(undecaying_stacks)
 	else
+		B.add_undecaying_stacks(undecaying_stacks)
+		B.add_stacks(stacks)
+
+/* Vengeance Mark - Stacking debuff applied by Middle weapons
+	Stacks up to 20, decays after 2.5 minutes if no new stacks are added
+	Middle weapons deal bonus damage based on stack count */
+#define STATUS_EFFECT_VENGEANCEMARK /datum/status_effect/stacking/vengeance_mark
+/datum/status_effect/stacking/vengeance_mark
+	id = "vengeance_mark"
+	alert_type = /atom/movable/screen/alert/status_effect/vengeance_mark
+	max_stacks = 20
+	tick_interval = 150 SECONDS // 2.5 minutes
+	consumed_on_threshold = FALSE
+	var/new_stack = FALSE
+
+/atom/movable/screen/alert/status_effect/vengeance_mark
+	name = "Vengeance Mark"
+	desc = "You've been marked for vengeance by the Middle. Their attacks deal increased damage to you."
+	icon_state = "wounded_soldier"
+
+/datum/status_effect/stacking/vengeance_mark/can_have_status()
+	return (owner.stat != DEAD)
+
+/datum/status_effect/stacking/vengeance_mark/add_stacks(stacks_added)
+	..()
+	new_stack = TRUE
+
+/datum/status_effect/stacking/vengeance_mark/tick()
+	if(!can_have_status())
+		qdel(src)
+		return
+
+	// Remove effect if no new stacks were added since last tick
+	if(new_stack)
+		new_stack = FALSE
+	else
+		qdel(src)
+
+#define STATUS_EFFECT_LCOVERHEAT /datum/status_effect/stacking/lc_overheat // Deals true damage every 5 sec, can't be applied to godmode (contained abos)
+/datum/status_effect/stacking/lc_overheat
+	id = "lc_overheat"
+	alert_type = /atom/movable/screen/alert/status_effect/overheat
+	stacking_display_name = "flame"
+	max_stacks = 50
+	tick_interval = 5 SECONDS
+	consumed_on_threshold = FALSE
+	var/new_stack = FALSE
+	var/safety = TRUE
+
+/atom/movable/screen/alert/status_effect/overheat
+	name = "Overheated"
+	desc = "You're burning up from your augment!!"
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
+	icon_state = "lc_burn"
+
+/datum/status_effect/stacking/lc_overheat/can_have_status()
+	return (owner.stat != DEAD || !(owner.status_flags & GODMODE))
+
+/datum/status_effect/stacking/lc_overheat/add_stacks(stacks_added)
+	..()
+	new_stack = TRUE
+
+//Deals true damage
+/datum/status_effect/stacking/lc_overheat/tick()
+	if(!can_have_status())
+		qdel(src)
+	to_chat(owner, "<span class='warning'>The heat consumes you!!</span>")
+	owner.playsound_local(owner, 'sound/effects/burn.ogg', 50, TRUE)
+	if(ishuman(owner))
+		owner.deal_damage(stacks, FIRE, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_STATUS))
+	else
+		owner.deal_damage(stacks*4, FIRE, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_STATUS)) // x4 on non humans (Average burn stack is 20. 80/5 sec, extra 16 pure dps)
+
+	//Deletes itself after 2 tick if no new burn stack was given
+	if(safety)
+		if(new_stack || (undecaying_stacks > 0))
+			stacks = round((stacks - undecaying_stacks)/2 + undecaying_stacks) // If you put any amount of undecaying stacks on, it will keep burning until they're gone - only the regular stacks will decay.
+			new_stack = FALSE
+			update_stacking_number()
+		else
+			qdel(src)
+
+//Mob Proc
+/mob/living/proc/apply_lc_overheat(stacks, undecaying_stacks)
+	var/datum/status_effect/stacking/lc_overheat/B = src.has_status_effect(/datum/status_effect/stacking/lc_overheat)
+	if(!B)
+		B = src.apply_status_effect(/datum/status_effect/stacking/lc_overheat, stacks)
+		B.add_undecaying_stacks(undecaying_stacks)
+	else
+		B.add_undecaying_stacks(undecaying_stacks)
 		B.add_stacks(stacks)
 
 #define STATUS_EFFECT_LCBLEED /datum/status_effect/stacking/lc_bleed // Deals true damage every 5 sec, can't be applied to godmode (contained abos)
 /datum/status_effect/stacking/lc_bleed
 	id = "lc_bleed"
 	alert_type = /atom/movable/screen/alert/status_effect/lc_bleed
+	stacking_display_name = "bleed"
 	max_stacks = 50
 	tick_interval = 5 SECONDS
 	consumed_on_threshold = FALSE
@@ -1206,7 +1378,7 @@
 
 /atom/movable/screen/alert/status_effect/lc_bleed
 	name = "Bleeding"
-	desc = "You're currently bleeding!!"
+	desc = "You're currently bleeding! Walk in order to prevent your wounds from reopening."
 	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "lc_bleed"
 
@@ -1219,6 +1391,8 @@
 //Deals true damage
 /datum/status_effect/stacking/lc_bleed/proc/Moved(mob/user, atom/new_location)
 	SIGNAL_HANDLER
+	if(owner.m_intent == MOVE_INTENT_WALK)
+		return
 	if (world.time - bleed_time < bleed_cooldown)
 		return
 	bleed_time = world.time
@@ -1235,8 +1409,12 @@
 		owner.adjustBruteLoss(max(0, stacks))
 	else
 		owner.adjustBruteLoss(stacks*4) // x4 on non humans
+	for(var/mob/living/L in view(5, owner))
+		SEND_SIGNAL(L, COMSIG_STATUS_BLEED_DAMAGE, owner, stacks)
 	new /obj/effect/temp_visual/damage_effect/bleed(get_turf(owner))
-	stacks = round(stacks/2)
+	stacks = round((stacks - undecaying_stacks)/2 + undecaying_stacks)
+	new_stack = TRUE
+	update_stacking_number()
 	if(stacks == 0)
 		qdel(src)
 
@@ -1255,18 +1433,94 @@
 // The Stack Decaying
 /datum/status_effect/stacking/lc_bleed/tick()
 	if(safety)
-		if(new_stack)
+		if(new_stack || (undecaying_stacks > 0))
 			new_stack = FALSE
 		else
 			qdel(src)
 
 //Mob Proc
-/mob/living/proc/apply_lc_bleed(stacks)
+/mob/living/proc/apply_lc_bleed(stacks, undecaying_stacks)
 	var/datum/status_effect/stacking/lc_bleed/B = src.has_status_effect(/datum/status_effect/stacking/lc_bleed)
 	if(!B)
-		src.apply_status_effect(/datum/status_effect/stacking/lc_bleed, stacks)
+		B = src.apply_status_effect(/datum/status_effect/stacking/lc_bleed, stacks)
+		B.add_undecaying_stacks(undecaying_stacks)
 	else
+		B.add_undecaying_stacks(undecaying_stacks)
 		B.add_stacks(stacks)
+
+/mob/living/proc/apply_vengeance_mark(stacks)
+	var/datum/status_effect/stacking/vengeance_mark/VM = src.has_status_effect(/datum/status_effect/stacking/vengeance_mark)
+	if(!VM)
+		src.apply_status_effect(/datum/status_effect/stacking/vengeance_mark, stacks)
+	else
+		VM.add_stacks(stacks)
+
+#define STATUS_EFFECT_LCMETALDECAY /datum/status_effect/stacking/lc_mental_decay // Deals white damage every 5 sec, can't be applied to godmode (contained abos)
+/datum/status_effect/stacking/lc_mental_decay
+	id = "lc_md"
+	alert_type = /atom/movable/screen/alert/status_effect/lc_mental_decay
+	max_stacks = 50
+	tick_interval = 5 SECONDS
+	consumed_on_threshold = FALSE
+	stacking_display_name = "mental_decay"
+	var/new_stack = FALSE
+	var/safety = TRUE
+
+/atom/movable/screen/alert/status_effect/lc_mental_decay
+	name = "Metal Decay"
+	desc = "Your mind is decaying!!"
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
+	icon_state = "lacerate"
+
+/datum/status_effect/stacking/lc_mental_decay/can_have_status()
+	return (owner.stat != DEAD || !(owner.status_flags & GODMODE))
+
+/datum/status_effect/stacking/lc_mental_decay/add_stacks(stacks_added)
+	..()
+	new_stack = TRUE
+
+//Ticks for passive decay.
+/datum/status_effect/stacking/lc_mental_decay/tick()
+	if(!can_have_status())
+		qdel(src)
+
+	statues_damage()
+
+//Proc for dealing damage, lets it be actived from other sources.
+/datum/status_effect/stacking/lc_mental_decay/proc/statues_damage(passive_decay = TRUE)
+	to_chat(owner, "<span class='warning'>Your mind deteriorates!!</span>")
+	owner.playsound_local(owner, 'sound/items/haunted/ghostitemattack.ogg', 40, FALSE)
+	if(!ishuman(owner))
+		owner.deal_damage(stacks * 4, WHITE_DAMAGE, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_STATUS | ATTACK_TYPE_SPECIAL))
+	else
+		var/mob/living/carbon/human/status_holder = owner
+		status_holder.adjustSanityLoss(stacks)
+	statues_decay(passive_decay)
+
+/datum/status_effect/stacking/lc_mental_decay/proc/statues_decay(passive_decay = TRUE)
+	if(passive_decay)
+		if(safety)
+			if(new_stack || (undecaying_stacks > 0))
+				stacks = round((stacks - undecaying_stacks)/2 + undecaying_stacks)
+				new_stack = FALSE
+			else
+				qdel(src)
+	else
+		stacks = round(stacks/2)
+
+//Mob Proc
+//TODO: Make it so when you inflict Metal Decay someone with 40+ stacks, you inflict Metal Detonation and when Metal is applied to someone with max stacks, cause a Shatter if they have Metal Detonation.
+/mob/living/proc/apply_lc_mental_decay(stacks, undecaying_stacks)
+	new /obj/effect/temp_visual/damage_effect/mental_decay(get_turf(src))
+	var/datum/status_effect/stacking/lc_mental_decay/B = src.has_status_effect(/datum/status_effect/stacking/lc_mental_decay)
+	if(!B)
+		B = src.apply_status_effect(/datum/status_effect/stacking/lc_mental_decay, stacks)
+		B.add_undecaying_stacks(undecaying_stacks)
+	else
+		B.add_undecaying_stacks(undecaying_stacks)
+		B.add_stacks(stacks)
+		if(B.stacks >= 40)
+			src.apply_status_effect(/datum/status_effect/mental_detonate)
 
 /datum/status_effect/display/dyscrasone_withdrawl
 	id = "dyscrasone_withdrawl"
@@ -1310,7 +1564,7 @@
 
 /datum/status_effect/stacking/pallid_noise/tick()//TODO:change this to golden apple's life tick for less lag
 	if(!ishuman(owner))
-		owner.apply_damage(stacks * 5, WHITE_DAMAGE, null, owner.run_armor_check(null, WHITE_DAMAGE))
+		owner.deal_damage(stacks * 5, WHITE_DAMAGE, attack_type = (ATTACK_TYPE_STATUS))
 		return
 	var/mob/living/carbon/human/status_holder = owner
 	status_holder.adjustSanityLoss(stacks * stacks)//sanity damage is the # of stacks squared
@@ -1338,6 +1592,7 @@
 /datum/status_effect/stacking/lc_tremor
 	id = "lc_tremor"
 	alert_type = /atom/movable/screen/alert/status_effect/lc_tremor
+	stacking_display_name = "tremor"
 	max_stacks = 50
 	tick_interval = 10 SECONDS
 	consumed_on_threshold = FALSE
@@ -1352,18 +1607,23 @@
 //Slowdown on stack, prepares tremor burst
 /datum/status_effect/stacking/lc_tremor/on_apply()
 	. = ..()
-	owner.add_or_update_variable_movespeed_modifier(/datum/movespeed_modifier/tremor, multiplicative_slowdown = stacks * 0.4)
+	owner.add_or_update_variable_movespeed_modifier(/datum/movespeed_modifier/tremor, multiplicative_slowdown = stacks * 0.1)
 
 /datum/status_effect/stacking/lc_tremor/on_remove()
 	owner.remove_movespeed_modifier(/datum/movespeed_modifier/tremor)
 	return ..()
 
-/datum/status_effect/stacking/lc_tremor/add_stacks(stacks)
+/datum/status_effect/stacking/lc_tremor/add_stacks(stacks_added)
 	. = ..()
-	owner.add_or_update_variable_movespeed_modifier(/datum/movespeed_modifier/tremor, multiplicative_slowdown = stacks * 0.4)
+	owner.add_or_update_variable_movespeed_modifier(/datum/movespeed_modifier/tremor, multiplicative_slowdown = stacks * 0.1)
 
 /datum/status_effect/stacking/lc_tremor/can_have_status()
 	return (owner.stat != DEAD || !(owner.status_flags & GODMODE))
+
+// NOTE: As of 2026/04/30 I'm trying to implement 'undecaying_stacks', but working them into tremor is hard without significantly altering how it works already
+// My first thought was to prevent the qdel if you have any, and set the stack amount to that; but then new_stack remains FALSE and any tremor added afterwards will reset faster...
+// If we set new_stack to TRUE there then it becomes possible to stack a biblical amount of tremor really easily?
+// Let's talk about it in the code review, I guess. No changes for now
 
 // The Stack Decaying
 /datum/status_effect/stacking/lc_tremor/tick()
@@ -1407,6 +1667,7 @@
 /datum/status_effect/stacking/lc_burn/dark_flame
 	id = "dark_flame"
 	alert_type = /atom/movable/screen/alert/status_effect/dark_flame
+	extinguishable = FALSE
 
 /atom/movable/screen/alert/status_effect/dark_flame
 	name = "Dark Flame"
@@ -1415,8 +1676,8 @@
 	icon_state = "dark_flame"
 
 /datum/status_effect/stacking/lc_burn/dark_flame/DealDamage()
-	owner.apply_damage(stacks, FIRE, null, owner.run_armor_check(null, BLACK_DAMAGE))
-	owner.apply_damage(stacks, WHITE_DAMAGE, null, owner.run_armor_check(null, BLACK_DAMAGE))
+	owner.deal_damage(stacks, FIRE, attack_type = (ATTACK_TYPE_STATUS), blocked = owner.run_armor_check(null, BLACK_DAMAGE))
+	owner.deal_damage(stacks, WHITE_DAMAGE, attack_type = (ATTACK_TYPE_STATUS), blocked = owner.run_armor_check(null, BLACK_DAMAGE))
 
 //Update burn appearance
 /datum/status_effect/stacking/lc_burn/dark_flame/Update_Burn_Overlay(mob/living/owner)
@@ -1443,3 +1704,545 @@
 		src.apply_status_effect(/datum/status_effect/stacking/lc_burn/dark_flame, stacks)
 	else
 		B.add_stacks(stacks)
+
+//Fragile status effects
+/datum/status_effect/stacking/protection/fragile
+	id = "fragile"
+	alert_type = /atom/movable/screen/alert/status_effect/fragile
+	protection = -1
+	protection_mod = /datum/dc_change/fragility
+	stacking_display_name = "fragile"
+
+/atom/movable/screen/alert/status_effect/fragile
+	name = "Fragility"
+	desc = "You are Fragile! All damage taken will be increased by "
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
+	icon_state = "fragile"
+
+//Mob Proc
+/mob/living/proc/apply_lc_fragile(stacks)
+	var/datum/status_effect/stacking/protection/fragile/F = src.has_status_effect(/datum/status_effect/stacking/protection/fragile)
+	if(!F)
+		src.apply_status_effect(/datum/status_effect/stacking/protection/fragile, stacks)
+		return
+
+	if(F.stacks < stacks)
+		qdel(F)
+		src.apply_status_effect(/datum/status_effect/stacking/protection/fragile, stacks)
+		return
+
+//Damage Type Fragile Varients
+/datum/status_effect/stacking/damtype_protection/fragile
+	id = "red_fragile"
+	alert_type = /atom/movable/screen/alert/status_effect/damtype_protection/fragile
+	protection = -1
+	protection_mod = /datum/dc_change/red_fragility
+	stacking_display_name = "fragile_red"
+
+/atom/movable/screen/alert/status_effect/damtype_protection/fragile
+	name = "Red Fragility"
+	desc = "You are fragile! Red damage taken will be increased by "
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
+	icon_state = "red_fragile"
+
+//Mob Proc
+/mob/living/proc/apply_lc_red_fragile(stacks)
+	var/datum/status_effect/stacking/damtype_protection/fragile/F = src.has_status_effect(/datum/status_effect/stacking/damtype_protection/fragile)
+	if(!F)
+		src.apply_status_effect(/datum/status_effect/stacking/damtype_protection/fragile, stacks)
+		return
+
+	if(F.stacks < stacks)
+		qdel(F)
+		src.apply_status_effect(/datum/status_effect/stacking/damtype_protection/fragile, stacks)
+		return
+
+/datum/status_effect/stacking/damtype_protection/white/fragile
+	id = "white_fragile"
+	alert_type = /atom/movable/screen/alert/status_effect/damtype_protection/white/fragile
+	protection = -1
+	protection_mod = /datum/dc_change/white_fragility
+	stacking_display_name = "fragile_white"
+
+/atom/movable/screen/alert/status_effect/damtype_protection/white/fragile
+	name = "White Fragility"
+	desc = "You are fragile! White damage taken will be increased by "
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
+	icon_state = "white_fragile"
+
+//Mob Proc
+/mob/living/proc/apply_lc_white_fragile(stacks)
+	var/datum/status_effect/stacking/damtype_protection/white/fragile/F = src.has_status_effect(/datum/status_effect/stacking/damtype_protection/white/fragile)
+	if(!F)
+		src.apply_status_effect(/datum/status_effect/stacking/damtype_protection/white/fragile, stacks)
+		return
+
+	if(F.stacks < stacks)
+		qdel(F)
+		src.apply_status_effect(/datum/status_effect/stacking/damtype_protection/white/fragile, stacks)
+		return
+
+/datum/status_effect/stacking/damtype_protection/black/fragile
+	id = "black_fragile"
+	alert_type = /atom/movable/screen/alert/status_effect/damtype_protection/black/fragile
+	protection = -1
+	protection_mod = /datum/dc_change/black_fragility
+	stacking_display_name = "fragile_black"
+
+/atom/movable/screen/alert/status_effect/damtype_protection/black/fragile
+	name = "Black Fragility"
+	desc = "You are fragile! Black damage taken will be increased by "
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
+	icon_state = "black_fragile"
+
+//Mob Proc
+/mob/living/proc/apply_lc_black_fragile(stacks)
+	var/datum/status_effect/stacking/damtype_protection/black/fragile/F = src.has_status_effect(/datum/status_effect/stacking/damtype_protection/black/fragile)
+	if(!F)
+		src.apply_status_effect(/datum/status_effect/stacking/damtype_protection/black/fragile, stacks)
+		return
+
+	if(F.stacks < stacks)
+		qdel(F)
+		src.apply_status_effect(/datum/status_effect/stacking/damtype_protection/black/fragile, stacks)
+		return
+
+/datum/status_effect/stacking/damtype_protection/pale/fragile
+	id = "pale_fragile"
+	alert_type = /atom/movable/screen/alert/status_effect/damtype_protection/pale/fragile
+	protection = -1
+	protection_mod = /datum/dc_change/pale_fragility
+	stacking_display_name = "fragile_pale"
+
+/atom/movable/screen/alert/status_effect/damtype_protection/pale/fragile
+	name = "Pale Fragility"
+	desc = "You are fragile! Pale damage taken will be increased by "
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
+	icon_state = "pale_fragile"
+
+//Mob Proc
+/mob/living/proc/apply_lc_pale_fragile(stacks)
+	var/datum/status_effect/stacking/damtype_protection/pale/fragile/F = src.has_status_effect(/datum/status_effect/stacking/damtype_protection/pale/fragile)
+	if(!F)
+		src.apply_status_effect(/datum/status_effect/stacking/damtype_protection/pale/fragile, stacks)
+		return
+
+	if(F.stacks < stacks)
+		qdel(F)
+		src.apply_status_effect(/datum/status_effect/stacking/damtype_protection/pale/fragile, stacks)
+		return
+
+//Defense Level Down - Diminishing returns vulnerability: (stacks / (stacks + 25)) * 100
+/datum/status_effect/stacking/defense_level_up/defense_level_down
+	id = "defense_level_down"
+	protection = -1
+	protection_mod = /datum/dc_change/defense_level_down
+	stacking_display_name = "DLD"
+
+/atom/movable/screen/alert/status_effect/defense_level_down
+	name = "Defense Level Down"
+	desc = "Your defense is weakened! All damage taken will be increased by "
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
+	icon_state = "fragile"
+
+//Mob Proc
+/mob/living/proc/apply_lc_defense_level_down(stacks, undecaying_stacks)
+	var/datum/status_effect/stacking/defense_level_up/defense_level_down/F = src.has_status_effect(/datum/status_effect/stacking/defense_level_up/defense_level_down)
+	if(!F)
+		F = src.apply_status_effect(/datum/status_effect/stacking/defense_level_up/defense_level_down, stacks)
+		F.add_undecaying_stacks(undecaying_stacks)
+		return
+	F.add_undecaying_stacks(undecaying_stacks)
+	F.add_stacks(stacks)
+
+//Global Damage Down
+/datum/status_effect/stacking/damage_up/down
+	id = "damage_down"
+	alert_type = /atom/movable/screen/alert/status_effect/damage_up/down
+	damage_mode = -1
+	stacking_display_name = "damage_down"
+
+/atom/movable/screen/alert/status_effect/damage_up/down
+	name = "Damage Down"
+	desc = "You are weakend! Your melee damage is decreased by "
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
+	icon_state = "feeble"
+
+//Mob Proc
+/mob/living/proc/apply_lc_feeble(stacks)
+	var/datum/status_effect/stacking/damage_up/down/F = src.has_status_effect(/datum/status_effect/stacking/damage_up/down)
+	if(!F)
+		src.apply_status_effect(/datum/status_effect/stacking/damage_up/down, stacks)
+		return
+
+	if(F.stacks < stacks)
+		qdel(F)
+		src.apply_status_effect(/datum/status_effect/stacking/damage_up/down, stacks)
+		return
+
+//Specific Damage Down
+/datum/status_effect/stacking/damtype_damage_up/down
+	id = "red_damage_down"
+	alert_type = /atom/movable/screen/alert/status_effect/red_damage_up/down
+	damage_mode = -1
+	stacking_display_name = "damage_down_red"
+
+/atom/movable/screen/alert/status_effect/red_damage_up/down
+	name = "Red Damage Down"
+	desc = "You are weakend! Your RED melee damage is decreased by "
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
+	icon_state = "red_feeble"
+
+/mob/living/proc/apply_lc_red_feeble(stacks)
+	var/datum/status_effect/stacking/damtype_damage_up/down/F = src.has_status_effect(/datum/status_effect/stacking/damtype_damage_up/down)
+	if(!F)
+		src.apply_status_effect(/datum/status_effect/stacking/damtype_damage_up/down, stacks)
+		return
+
+	if(F.stacks < stacks)
+		qdel(F)
+		src.apply_status_effect(/datum/status_effect/stacking/damtype_damage_up/down, stacks)
+		return
+
+/datum/status_effect/stacking/damtype_damage_up/white/down
+	id = "white_damage_down"
+	alert_type = /atom/movable/screen/alert/status_effect/white_damage_up/down
+	damage_mode = -1
+	stacking_display_name = "damage_down_white"
+
+/atom/movable/screen/alert/status_effect/white_damage_up/down
+	name = "White Damage Down"
+	desc = "You are weakend! Your WHITE melee damage is reduced by "
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
+	icon_state = "white_feeble"
+
+/mob/living/proc/apply_lc_white_feeble(stacks)
+	var/datum/status_effect/stacking/damtype_damage_up/white/down/F = src.has_status_effect(/datum/status_effect/stacking/damtype_damage_up/white/down)
+	if(!F)
+		src.apply_status_effect(/datum/status_effect/stacking/damtype_damage_up/white/down, stacks)
+		return
+
+	if(F.stacks < stacks)
+		qdel(F)
+		src.apply_status_effect(/datum/status_effect/stacking/damtype_damage_up/white/down, stacks)
+		return
+
+/datum/status_effect/stacking/damtype_damage_up/black/down
+	id = "black_damage_down"
+	alert_type = /atom/movable/screen/alert/status_effect/black_damage_up/down
+	damage_mode = -1
+	stacking_display_name = "damage_down_black"
+
+/atom/movable/screen/alert/status_effect/black_damage_up/down
+	name = "Black Damage Down"
+	desc = "You are weakend! Your BLACK melee damage is reduced by "
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
+	icon_state = "black_feeble"
+
+/mob/living/proc/apply_lc_black_feeble(stacks)
+	var/datum/status_effect/stacking/damtype_damage_up/black/down/F = src.has_status_effect(/datum/status_effect/stacking/damtype_damage_up/black/down)
+	if(!F)
+		src.apply_status_effect(/datum/status_effect/stacking/damtype_damage_up/black/down, stacks)
+		return
+
+	if(F.stacks < stacks)
+		qdel(F)
+		src.apply_status_effect(/datum/status_effect/stacking/damtype_damage_up/black/down, stacks)
+		return
+
+/datum/status_effect/stacking/damtype_damage_up/pale/down
+	id = "pale_damage_down"
+	alert_type = /atom/movable/screen/alert/status_effect/pale_damage_up/down
+	damage_mode = -1
+	stacking_display_name = "damage_down_pale"
+
+/atom/movable/screen/alert/status_effect/pale_damage_up/down
+	name = "Pale Damage Down"
+	desc = "You are weakend! Your PALE melee damage is reduced by "
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
+	icon_state = "pale_feeble"
+
+/mob/living/proc/apply_lc_pale_feeble(stacks)
+	var/datum/status_effect/stacking/damtype_damage_up/pale/down/F = src.has_status_effect(/datum/status_effect/stacking/damtype_damage_up/pale/down)
+	if(!F)
+		src.apply_status_effect(/datum/status_effect/stacking/damtype_damage_up/pale/down, stacks)
+		return
+
+	if(F.stacks < stacks)
+		qdel(F)
+		src.apply_status_effect(/datum/status_effect/stacking/damtype_damage_up/pale/down, stacks)
+		return
+
+//Offense Level Down - Diminishing returns damage reduction: (stacks / (stacks + 25)) * 100
+/datum/status_effect/stacking/offense_level_up/offense_level_down
+	id = "offense_level_down"
+	damage_mode = -1
+	stacking_display_name = "OLD"
+
+/atom/movable/screen/alert/status_effect/offense_level_down
+	name = "Offense Level Down"
+	desc = "Your offense is weakened! Your melee damage is decreased by "
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
+	icon_state = "feeble"
+
+//Mob Proc
+/mob/living/proc/apply_lc_offense_level_down(stacks, undecaying_stacks)
+	var/datum/status_effect/stacking/offense_level_up/offense_level_down/F = src.has_status_effect(/datum/status_effect/stacking/offense_level_up/offense_level_down)
+	if(!F)
+		F = src.apply_status_effect(/datum/status_effect/stacking/offense_level_up/offense_level_down, stacks)
+		F.add_undecaying_stacks(undecaying_stacks)
+		return
+	F.add_undecaying_stacks(undecaying_stacks)
+	F.add_stacks(stacks)
+
+//Sinking - Delayed WHITE/PALE damage trigger
+//  Stacks up to 50, inactive for first 5 seconds after application
+//  Once activated, when owner takes WHITE or PALE damage: deal SANITY damage = stacks, halve stacks
+//  On simple mobs: deal WHITE damage * 4 instead of sanity damage
+/datum/status_effect/stacking/sinking
+	id = "sinking"
+	status_type = STATUS_EFFECT_MULTIPLE
+	duration = -1
+	tick_interval = 5 SECONDS
+	stack_decay = 0
+	max_stacks = 50
+	stacks = 0
+	consumed_on_threshold = FALSE
+	alert_type = /atom/movable/screen/alert/status_effect/sinking
+	stacking_display_name = "sinking_inactive"
+	/// Whether the sinking effect is active (FALSE for first 5 seconds)
+	var/activated = FALSE
+	/// World time at which the effect activates
+	var/activate_at
+	/// Prevents re-entry when sinking damage triggers another damage signal
+	var/triggering = FALSE
+	/// Tracks whether new stacks were added or effect triggered since last decay check
+	var/had_activity = TRUE
+
+/atom/movable/screen/alert/status_effect/sinking
+	name = "Sinking"
+	desc = "A sinking feeling weighs on your mind... Stacks: "
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
+	icon_state = "sinking"
+
+/datum/status_effect/stacking/sinking/on_apply()
+	. = ..()
+	if(!owner)
+		return
+	// Start inactive, activate after 5 seconds
+	activate_at = world.time + 5 SECONDS
+
+/datum/status_effect/stacking/sinking/on_remove()
+	if(activated)
+		UnregisterSignal(owner, COMSIG_MOB_APPLY_DAMGE)
+	return ..()
+
+/datum/status_effect/stacking/sinking/add_stacks(stacks_added)
+	. = ..()
+	if(!owner)
+		return
+	if(stacks_added > 0)
+		had_activity = TRUE
+	linked_alert.desc = initial(linked_alert.desc) + "[stacks]"
+
+/datum/status_effect/stacking/sinking/tick()
+	if(!activated && world.time >= activate_at)
+		activate()
+	if(!can_have_status())
+		qdel(src)
+		return
+	if(!had_activity)
+		if(undecaying_stacks > 0)
+			stacks = undecaying_stacks
+		else
+			qdel(src)
+		return
+	had_activity = FALSE
+
+/// Called after 5 seconds to activate the sinking effect
+/datum/status_effect/stacking/sinking/proc/activate()
+	activated = TRUE
+	if(!owner)
+		return
+	RegisterSignal(owner, COMSIG_MOB_APPLY_DAMGE, PROC_REF(on_damage_taken))
+	stacking_display_name = "sinking"
+	if(display_icon)
+		display_icon.icon_state = "sinking"
+	else
+		trigger_display_refresh()
+
+/// When taking WHITE or PALE damage while activated, deal sanity/white damage and halve stacks
+/datum/status_effect/stacking/sinking/proc/on_damage_taken(datum/source, damage, damage_type, def_zone, attacker, flags, attack_type)
+	SIGNAL_HANDLER
+
+	if(!activated || stacks <= 0 || triggering)
+		return
+	if(damage_type != WHITE_DAMAGE && damage_type != PALE_DAMAGE)
+		return
+	if(flags & DAMAGE_NO_SINKING)
+		return
+
+	INVOKE_ASYNC(src, PROC_REF(trigger_sinking))
+
+/// Deals sinking damage and halves stacks
+/datum/status_effect/stacking/sinking/proc/trigger_sinking()
+	if(QDELETED(owner) || stacks <= 0)
+		return
+
+	had_activity = TRUE
+	triggering = TRUE
+	to_chat(owner, span_warning("The sinking feeling overwhelms you!"))
+	new /obj/effect/temp_visual/damage_effect/sinking(get_turf(owner))
+
+	if(!ishuman(owner))
+		// Simple mobs: deal WHITE damage * 4
+		owner.deal_damage(stacks * 4, WHITE_DAMAGE, attack_type = ATTACK_TYPE_STATUS)
+	else
+		// Humans: deal sanity damage equal to stacks
+		var/mob/living/carbon/human/H = owner
+		H.adjustSanityLoss(stacks)
+
+	triggering = FALSE
+
+	// Halve stacks
+	stacks = max(0, round((stacks - undecaying_stacks) / 2 + undecaying_stacks))
+	if(stacks <= 0)
+		qdel(src)
+		return
+	update_stacking_number()
+	linked_alert.desc = initial(linked_alert.desc) + "[stacks]"
+
+//Mob Proc
+/mob/living/proc/apply_lc_sinking(stacks, undecaying_stacks)
+	var/datum/status_effect/stacking/sinking/S = src.has_status_effect(/datum/status_effect/stacking/sinking)
+	if(!S)
+		S = src.apply_status_effect(/datum/status_effect/stacking/sinking, stacks)
+		S.add_undecaying_stacks(undecaying_stacks)
+		return
+	S.add_undecaying_stacks(undecaying_stacks)
+	S.add_stacks(stacks)
+
+//Rupture - Delayed RED/BLACK damage trigger
+//  Stacks up to 50, inactive for first 5 seconds after application
+//  Once activated, when owner takes RED or BLACK damage: deal BRUTE damage = stacks, halve stacks
+//  On simple mobs: deal BRUTE damage * 4
+/datum/status_effect/stacking/rupture
+	id = "rupture"
+	status_type = STATUS_EFFECT_MULTIPLE
+	duration = -1
+	tick_interval = 5 SECONDS
+	stack_decay = 0
+	max_stacks = 50
+	stacks = 0
+	consumed_on_threshold = FALSE
+	alert_type = /atom/movable/screen/alert/status_effect/rupture
+	stacking_display_name = "rupture_inactive"
+	/// Whether the rupture effect is active (FALSE for first 5 seconds)
+	var/activated = FALSE
+	/// World time at which the effect activates
+	var/activate_at
+	/// Prevents re-entry when rupture damage triggers another damage signal
+	var/triggering = FALSE
+	/// Tracks whether new stacks were added or effect triggered since last decay check
+	var/had_activity = TRUE
+
+/atom/movable/screen/alert/status_effect/rupture
+	name = "Rupture"
+	desc = "Your body is on the verge of rupturing... Stacks: "
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
+	icon_state = "rupture"
+
+/datum/status_effect/stacking/rupture/on_apply()
+	. = ..()
+	if(!owner)
+		return
+	// Start inactive, activate after 5 seconds
+	activate_at = world.time + 5 SECONDS
+
+/datum/status_effect/stacking/rupture/on_remove()
+	if(activated)
+		UnregisterSignal(owner, COMSIG_MOB_APPLY_DAMGE)
+	return ..()
+
+/datum/status_effect/stacking/rupture/add_stacks(stacks_added)
+	. = ..()
+	if(!owner)
+		return
+	if(stacks_added > 0)
+		had_activity = TRUE
+	linked_alert.desc = initial(linked_alert.desc) + "[stacks]"
+
+/datum/status_effect/stacking/rupture/tick()
+	if(!activated && world.time >= activate_at)
+		activate()
+	if(!can_have_status())
+		qdel(src)
+		return
+	if(!had_activity)
+		if(undecaying_stacks > 0)
+			stacks = undecaying_stacks
+		else
+			qdel(src)
+		return
+	had_activity = FALSE
+
+/// Called after 5 seconds to activate the rupture effect
+/datum/status_effect/stacking/rupture/proc/activate()
+	activated = TRUE
+	if(!owner)
+		return
+	RegisterSignal(owner, COMSIG_MOB_APPLY_DAMGE, PROC_REF(on_damage_taken))
+	stacking_display_name = "rupture"
+	if(display_icon)
+		display_icon.icon_state = "rupture"
+	else
+		trigger_display_refresh()
+
+/// When taking RED or BLACK damage while activated, deal BRUTE damage and halve stacks
+/datum/status_effect/stacking/rupture/proc/on_damage_taken(datum/source, damage, damage_type, def_zone, attacker, flags, attack_type)
+	SIGNAL_HANDLER
+
+	if(!activated || stacks <= 0 || triggering)
+		return
+	if(damage_type != RED_DAMAGE && damage_type != BLACK_DAMAGE)
+		return
+
+	INVOKE_ASYNC(src, PROC_REF(trigger_rupture))
+
+/// Deals rupture damage and halves stacks
+/datum/status_effect/stacking/rupture/proc/trigger_rupture()
+	if(QDELETED(owner) || stacks <= 0)
+		return
+
+	had_activity = TRUE
+	SEND_SIGNAL(owner, COMSIG_RUPTURE_TRIGGERED, stacks)
+	triggering = TRUE
+	to_chat(owner, span_userdanger("Your wounds rupture open!"))
+	new /obj/effect/temp_visual/damage_effect/rupture(get_turf(owner))
+
+	if(!ishuman(owner))
+		// Simple mobs: deal BRUTE damage * 4
+		owner.deal_damage(stacks * 4, BRUTE, flags = DAMAGE_FORCED, attack_type = ATTACK_TYPE_STATUS)
+	else
+		// Humans: deal BRUTE damage equal to stacks
+		owner.deal_damage(stacks, BRUTE, flags = DAMAGE_FORCED, attack_type = ATTACK_TYPE_STATUS)
+
+	triggering = FALSE
+
+	// Halve stacks
+	stacks = max(0, round((stacks - undecaying_stacks) / 2 + undecaying_stacks))
+	if(stacks <= 0)
+		qdel(src)
+		return
+	update_stacking_number()
+	linked_alert.desc = initial(linked_alert.desc) + "[stacks]"
+
+//Mob Proc
+/mob/living/proc/apply_lc_rupture(stacks, undecaying_stacks)
+	var/datum/status_effect/stacking/rupture/R = src.has_status_effect(/datum/status_effect/stacking/rupture)
+	if(!R)
+		R = src.apply_status_effect(/datum/status_effect/stacking/rupture, stacks)
+		R.add_undecaying_stacks(undecaying_stacks)
+		return
+	R.add_undecaying_stacks(undecaying_stacks)
+	R.add_stacks(stacks)

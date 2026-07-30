@@ -54,7 +54,6 @@
 			You're not ready to build the future."),
 	)
 
-	var/can_act = TRUE
 	var/ability_damage = 150
 	var/ability_cooldown
 	var/ability_cooldown_time = 10 SECONDS
@@ -158,7 +157,7 @@
 	SLEEP_CHECK_DEATH(3)
 	new /obj/effect/temp_visual/censored(get_turf(src))
 	for(var/i = 1 to 3)
-		new /obj/effect/gibspawner/generic/silent(get_turf(src))
+		new /obj/effect/bloodspawner/silent(get_turf(src))
 		SLEEP_CHECK_DEATH(5.5)
 	var/mob/living/simple_animal/hostile/mini_censored/C = new(get_turf(src))
 	if(!QDELETED(H))
@@ -198,7 +197,7 @@
 	Beam(T, "censored", time = 10)
 	playsound(src, 'sound/weapons/ego/censored3.ogg', 75, FALSE, 5)
 	for(var/turf/TT in turf_list)
-		for(var/mob/living/L in HurtInTurf(TT, list(), ability_damage, BLACK_DAMAGE, null, TRUE, FALSE, TRUE, hurt_structure = TRUE))
+		for(var/mob/living/L in HurtInTurf(TT, list(), ability_damage, BLACK_DAMAGE, null, TRUE, FALSE, TRUE, hurt_structure = TRUE, attack_type = (ATTACK_TYPE_RANGED | ATTACK_TYPE_SPECIAL)))
 			new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(L), pick(GLOB.alldirs))
 			L.apply_status_effect(STATUS_EFFECT_OVERWHELMING_FEAR)
 	can_act = TRUE
@@ -227,13 +226,15 @@
 			datum_reference.qliphoth_change(1)
 			user.death()
 			for(var/i = 1 to 3)
-				new /obj/effect/gibspawner/generic/silent(get_turf(src))
+				new /obj/effect/bloodspawner/silent(get_turf(src))
 				sleep(5.4)
 			QDEL_NULL(user)
 		else
 			user.AdjustStun(-999) //run for your life
 		datum_reference.working = FALSE
 		return null
+	if(work_type == ABNORMALITY_WORK_INSIGHT && (get_attribute_level(user, PRUDENCE_ATTRIBUTE)<40))
+		user.client?.give_award(/datum/award/achievement/abno/censored, user)
 	return TRUE
 
 /mob/living/simple_animal/hostile/abnormality/censored/PostWorkEffect(mob/living/carbon/human/user, work_type, pe, work_time)
@@ -308,11 +309,11 @@
 // Applies fear damage to everyone in range, copied from abnormalities
 /mob/living/simple_animal/hostile/mini_censored/proc/FearEffect()
 	for(var/mob/living/carbon/human/H in view(7, src))
-		if(H in breach_affected)
+		if(H.tag in breach_affected)
 			continue
 		if(HAS_TRAIT(H, TRAIT_COMBATFEAR_IMMUNE))
 			continue
-		breach_affected += H
+		breach_affected += H.tag
 		H.adjustSanityLoss(20)
 		if(H.sanity_lost)
 			continue

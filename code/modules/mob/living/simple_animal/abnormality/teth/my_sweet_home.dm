@@ -7,7 +7,6 @@
 	icon_living = "sweet_home"
 	icon_dead = "sweet_home_death"
 	portrait = "my_sweet_home"
-	var/can_act = TRUE
 	threat_level = TETH_LEVEL
 	can_breach = TRUE
 	del_on_death = FALSE
@@ -107,7 +106,7 @@
 	var/turf/target_turf = get_turf(src)
 	for(var/turf/open/T in view(target_turf, 3))
 		hit_turfs |= T
-		for(var/mob/living/L in HurtInTurf(T, list(), ranged_damage, RED_DAMAGE, hurt_mechs = TRUE))
+		for(var/mob/living/L in HurtInTurf(T, list(), ranged_damage, RED_DAMAGE, hurt_mechs = TRUE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)))
 			if((L.stat < DEAD) && !(L.status_flags & GODMODE))
 				damage_dealt += ranged_damage
 	if(damage_dealt > 0)

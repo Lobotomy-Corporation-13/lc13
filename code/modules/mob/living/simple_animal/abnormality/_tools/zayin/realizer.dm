@@ -13,6 +13,7 @@
 		/obj/item/clothing/suit/armor/ego_gear/zayin/soda			= /obj/item/clothing/suit/armor/ego_gear/realization/wellcheers,
 		/obj/item/clothing/suit/armor/ego_gear/zayin/doze			= /obj/item/clothing/suit/armor/ego_gear/realization/comatose,
 		/obj/item/clothing/suit/armor/ego_gear/tools/bucket			= /obj/item/clothing/suit/armor/ego_gear/realization/brokencrown,
+		/obj/item/clothing/suit/armor/ego_gear/zayin/change			= /obj/item/clothing/suit/armor/ego_gear/realization/energyconversion,
 		// TETH
 		/obj/item/clothing/suit/armor/ego_gear/teth/beak 			= /obj/item/clothing/suit/armor/ego_gear/realization/mouth,
 		/obj/item/clothing/suit/armor/ego_gear/teth/fragment 		= /obj/item/clothing/suit/armor/ego_gear/realization/universe,
@@ -22,6 +23,7 @@
 		/obj/item/clothing/suit/armor/ego_gear/teth/match 			= /obj/item/clothing/suit/armor/ego_gear/realization/ember_matchlight,
 		/obj/item/clothing/suit/armor/ego_gear/teth/blossoms 		= /obj/item/clothing/suit/armor/ego_gear/realization/sakura_bloom,
 		/obj/item/clothing/suit/armor/ego_gear/teth/sloshing		= /obj/item/clothing/suit/armor/ego_gear/realization/stupor,
+		/obj/item/clothing/suit/armor/ego_gear/teth/faelantern		= /obj/item/clothing/suit/armor/ego_gear/realization/eldtree,
 		// HE
 		/obj/item/clothing/suit/armor/ego_gear/he/grinder 			= /obj/item/clothing/suit/armor/ego_gear/realization/grinder,
 		/obj/item/clothing/suit/armor/ego_gear/he/magicbullet		= /obj/item/clothing/suit/armor/ego_gear/realization/bigiron,
@@ -33,6 +35,9 @@
 		/obj/item/clothing/suit/armor/ego_gear/he/courage           = /obj/item/clothing/suit/armor/ego_gear/realization/valor,
 		/obj/item/clothing/suit/armor/ego_gear/he/homing_instinct   = /obj/item/clothing/suit/armor/ego_gear/realization/home,
 		/obj/item/clothing/suit/armor/ego_gear/he/warp   			= /obj/item/clothing/suit/armor/ego_gear/realization/dimension_ripper,
+		/obj/item/clothing/suit/armor/ego_gear/he/aedd				= /obj/item/clothing/suit/armor/ego_gear/realization/experimentation,
+		/obj/item/clothing/suit/armor/ego_gear/he/prank				= /obj/item/clothing/suit/armor/ego_gear/realization/gift,
+		/obj/item/clothing/suit/armor/ego_gear/he/harmony			= /obj/item/clothing/suit/armor/ego_gear/realization/rhythm,
 		// WAW
 		/obj/item/clothing/suit/armor/ego_gear/waw/goldrush 		= /obj/item/clothing/suit/armor/ego_gear/realization/goldexperience,
 		/obj/item/clothing/suit/armor/ego_gear/waw/despair 			= /obj/item/clothing/suit/armor/ego_gear/realization/quenchedblood,
@@ -47,6 +52,8 @@
 		/obj/item/clothing/suit/armor/ego_gear/waw/discord			= /obj/item/clothing/suit/armor/ego_gear/realization/duality_yin,
 		/obj/item/clothing/suit/armor/ego_gear/waw/heart			= /obj/item/clothing/suit/armor/ego_gear/realization/repentance,
 		/obj/item/clothing/suit/armor/ego_gear/waw/exuviae			= /obj/item/clothing/suit/armor/ego_gear/realization/nest,
+		/obj/item/clothing/suit/armor/ego_gear/waw/contempt			= /obj/item/clothing/suit/armor/ego_gear/realization/awe,
+		/obj/item/clothing/suit/armor/ego_gear/waw/heaven			= /obj/item/clothing/suit/armor/ego_gear/realization/sole_focus,
 		// ALEPH
 		/obj/item/clothing/suit/armor/ego_gear/aleph/da_capo 		= /obj/item/clothing/suit/armor/ego_gear/realization/alcoda,
 		/obj/item/clothing/suit/armor/ego_gear/aleph/justitia 		= /obj/item/clothing/suit/armor/ego_gear/realization/head,
@@ -86,6 +93,8 @@
 
 /obj/structure/toolabnormality/realization/Destroy()
 	qdel(bough)
+	QDEL_NULL(f1)
+	QDEL_NULL(f2)
 	return ..()
 
 /obj/structure/toolabnormality/realization/proc/FilterLoop(loop_stage) //Takes a numeric argument for advancing the loop's stage in a cycle (1 > 2 > 3 > 1 > ...)

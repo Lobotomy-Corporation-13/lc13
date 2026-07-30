@@ -50,7 +50,6 @@
 	)
 
 	//teleport
-	var/can_act = TRUE
 	var/teleport_cooldown
 	var/teleport_cooldown_time = 30 SECONDS
 	//attack
@@ -65,11 +64,10 @@
 	datum_reference.qliphoth_change(1)
 	return
 
-/mob/living/simple_animal/hostile/abnormality/pale_horse/Worktick(mob/living/carbon/human/user)
-	if(user.health < (user.maxHealth * 0.5))
-		return
-	else
-		user.deal_damage(4, PALE_DAMAGE)
+/mob/living/simple_animal/hostile/abnormality/pale_horse/Worktick(mob/living/carbon/human/user, bubble_type = ABNO_BALLOON_GENERIC | ABNO_BALLOON_SPECIFIC, work_type)
+	if(user.health >= (user.maxHealth * 0.5))
+		user.deal_damage(4, PALE_DAMAGE, flags = (DAMAGE_FORCED))
+	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/pale_horse/Initialize()
 	. = ..()
@@ -126,7 +124,7 @@
 		for(var/mob/living/H in T)
 			if(faction_check_mob(H))
 				continue
-			H.deal_damage(fog_damage, PALE_DAMAGE)
+			H.deal_damage(fog_damage, PALE_DAMAGE, src, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_ENVIRONMENT))
 
 
 /mob/living/simple_animal/hostile/abnormality/pale_horse/Moved() //more damaging fog when moving
@@ -171,7 +169,7 @@
 		for(var/mob/living/H in F)
 			if(faction_check_mob(H))
 				continue
-			H.deal_damage(ash_damage, PALE_DAMAGE)
+			H.deal_damage(ash_damage, PALE_DAMAGE, src, attack_type = (ATTACK_TYPE_SPECIAL))
 			if(H.health < 0 && ishuman(H))
 				H.dust()
 	T.dust()
@@ -189,7 +187,7 @@
 	return ..()
 
 //Copied MOSB corpse-seeking behavior
-/mob/living/simple_animal/hostile/abnormality/pale_horse/patrol_select()
+/mob/living/simple_animal/hostile/abnormality/pale_horse/SelectPatrolLocation()
 	var/list/low_priority_turfs = list() // Oh, you're wounded, how nice.
 	var/list/medium_priority_turfs = list() // You're about to die and you are close? Splendid.
 	var/list/high_priority_turfs = list() // IS THAT A DEAD BODY?
@@ -219,8 +217,7 @@
 		target_turf = get_closest_atom(/turf/open, low_priority_turfs, src)
 
 	if(istype(target_turf))
-		patrol_path = get_path_to(src, target_turf, TYPE_PROC_REF(/turf, Distance_cardinal), 0, 200)
-		return
+		return target_turf
 	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/pale_horse/Goto(target, delay, minimum_distance)
@@ -292,7 +289,7 @@
 	icon_state = "mortis"
 
 /datum/status_effect/mortis/tick()
-	owner.deal_damage(damage, PALE_DAMAGE)
+	owner.deal_damage(damage, PALE_DAMAGE, attack_type = (ATTACK_TYPE_STATUS))
 	if(owner.health < 0 && ishuman(owner))
 		owner.dust()
 

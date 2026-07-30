@@ -117,6 +117,10 @@
 		if ("callShuttle")
 			if (!authenticated(usr))
 				return
+			// Block shuttle calling on rcorp_factory map
+			if (SSmaptype.maptype == "rcorp_factory")
+				to_chat(usr, "<span class='warning'>Emergency protocols are controlled by R-Corp HQ on this installation.</span>")
+				return
 			var/reason = trim(params["reason"], MAX_MESSAGE_LEN)
 			if (length(reason) < CALL_SHUTTLE_REASON_LENGTH)
 				return
@@ -124,6 +128,10 @@
 			post_status("shuttle")
 		if ("changeSecurityLevel")
 			if (!authenticated_as_silicon_or_captain(usr))
+				return
+			// Block security level changes on rcorp_factory map
+			if (SSmaptype.maptype == "rcorp_factory")
+				to_chat(usr, "<span class='warning'>Security protocols are controlled by R-Corp HQ on this installation.</span>")
 				return
 
 			// Check if they have
@@ -217,6 +225,10 @@
 		if ("recallShuttle")
 			// AIs cannot recall the shuttle
 			if (!authenticated(usr) || issilicon(usr))
+				return
+			// Block shuttle recall on rcorp_factory map
+			if (SSmaptype.maptype == "rcorp_factory")
+				to_chat(usr, "<span class='warning'>Emergency protocols are controlled by R-Corp HQ on this installation.</span>")
 				return
 			SSshuttle.cancelEvac(usr)
 		if ("requestNukeCodes")
@@ -364,7 +376,8 @@
 				data["canBuyShuttles"] = can_buy_shuttles(user)
 				data["canMakeAnnouncement"] = FALSE
 				data["canMessageAssociates"] = FALSE
-				data["canRecallShuttles"] = !issilicon(user)
+				// Disable shuttle recall on rcorp_factory map
+				data["canRecallShuttles"] = (SSmaptype.maptype != "rcorp_factory") && !issilicon(user)
 				data["canRequestNuke"] = FALSE
 				data["canSendToSectors"] = FALSE
 				data["canSetAlertLevel"] = FALSE
@@ -376,7 +389,11 @@
 				data["alertLevel"] = get_security_level()
 				data["authorizeName"] = authorize_name
 				data["canLogOut"] = !issilicon(user)
-				data["shuttleCanEvacOrFailReason"] = SSshuttle.canEvac(user)
+				// Disable shuttle calling on rcorp_factory map
+				if (SSmaptype.maptype == "rcorp_factory")
+					data["shuttleCanEvacOrFailReason"] = "Emergency protocols are controlled by R-Corp HQ on this installation."
+				else
+					data["shuttleCanEvacOrFailReason"] = SSshuttle.canEvac(user)
 
 				if (authenticated_as_non_silicon_captain(user))
 					data["canMessageAssociates"] = TRUE
@@ -401,7 +418,11 @@
 
 					data["alertLevelTick"] = alert_level_tick
 					data["canMakeAnnouncement"] = TRUE
-					data["canSetAlertLevel"] = issilicon(user) ? "NO_SWIPE_NEEDED" : "SWIPE_NEEDED"
+					// Disable alert level changes on rcorp_factory map
+					if (SSmaptype.maptype == "rcorp_factory")
+						data["canSetAlertLevel"] = FALSE
+					else
+						data["canSetAlertLevel"] = issilicon(user) ? "NO_SWIPE_NEEDED" : "SWIPE_NEEDED"
 
 				if (SSshuttle.emergency.mode != SHUTTLE_IDLE && SSshuttle.emergency.mode != SHUTTLE_RECALL)
 					data["shuttleCalled"] = TRUE

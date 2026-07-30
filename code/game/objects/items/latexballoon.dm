@@ -11,9 +11,9 @@
 	var/state
 	var/datum/gas_mixture/air_contents = null
 
-/obj/item/latexballon/ComponentInitialize()
+/* /obj/item/latexballon/ComponentInitialize()
 	. = ..()
-	AddElement(/datum/element/atmos_sensitive)
+	AddElement(/datum/element/atmos_sensitive) */
 
 /obj/item/latexballon/proc/blow(obj/item/tank/tank, mob/user)
 	if (icon_state == "latexballon_bursted")
@@ -22,16 +22,16 @@
 	inhand_icon_state = "latexballon"
 	user.update_inv_hands()
 	to_chat(user, span_notice("You blow up [src] with [tank]."))
-	air_contents = tank.remove_air_volume(3)
+/* 	air_contents = tank.remove_air_volume(3) */
 
-/obj/item/latexballon/should_atmos_process(datum/gas_mixture/air, exposed_temperature)
-	return (exposed_temperature > T0C+100)
+/* /obj/item/latexballon/should_atmos_process(datum/gas_mixture/air, exposed_temperature)
+	return (exposed_temperature > T0C+100) */
 
-/obj/item/latexballon/atmos_expose(datum/gas_mixture/air, exposed_temperature)
-	burst()
+/* /obj/item/latexballon/atmos_expose(datum/gas_mixture/air, exposed_temperature)
+	burst() */
 
 /obj/item/latexballon/proc/burst()
-	if (!air_contents || icon_state != "latexballon_blow")
+	if (icon_state != "latexballon_blow")
 		return
 	playsound(src, 'sound/weapons/gun/pistol/shot.ogg', 100, TRUE)
 	icon_state = "latexballon_bursted"
@@ -39,7 +39,7 @@
 	if(isliving(loc))
 		var/mob/living/user = src.loc
 		user.update_inv_hands()
-	loc.assume_air(air_contents)
+	// loc.assume_air(air_contents)
 
 /obj/item/latexballon/ex_act(severity, target)
 	burst()

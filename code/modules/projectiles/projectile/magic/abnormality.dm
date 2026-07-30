@@ -129,6 +129,15 @@
 			return Bump(L)
 	..()
 
+//LCL mountain spit variant.
+/obj/projectile/mountain_spit/limbus
+	var/mob/living/simple_animal/hostile/limbus_abno/mountain/mountain_user
+
+/obj/projectile/mountain_spit/limbus/Range()
+	for(var/mob/living/L in range(1, get_turf(src)))
+		if(L.stat != DEAD && L != mountain_user && !mountain_user.IsFriend(L))
+			return Bump(L)
+
 /obj/projectile/clown_throw
 	name = "blade"
 	desc = "A blade thrown maliciously"

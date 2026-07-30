@@ -135,7 +135,7 @@
 	playsound(target_turf, 'sound/weapons/pulse.ogg', 50, TRUE)
 	for(var/turf/open/T in range(target_turf, 0))
 		new /obj/effect/temp_visual/smash1(T)
-		user.HurtInTurf(T, list(), force, BLACK_DAMAGE)
+		user.HurtInTurf(T, list(), force, BLACK_DAMAGE, attack_type = (ATTACK_TYPE_SPECIAL))
 
 /obj/item/ego_weapon/city/reindeer/captain
 	name = "R-corp reindeer captain staff"
@@ -201,6 +201,7 @@
 /obj/item/gun/energy/e_gun/rabbit/captain
 	name = "R-Corporation R-4000 'Mark 3'"
 	desc = "An energy gun produced especially for the rabbit captain. This weapon can be fired with one hand."
+	icon = 'ModularLobotomy/_Lobotomyicons/rcorp_weapons.dmi'
 	icon_state = "rabbitcaptain"
 	inhand_icon_state = "rabbith1"
 	weapon_weight = WEAPON_LIGHT
@@ -220,6 +221,7 @@
 /obj/item/gun/energy/e_gun/rabbit/minigun
 	name = "R-Corporation X-15 Minigun"
 	desc = "An energy machinegun that is extremely heavy, and fires bullets extremely quickly."
+	icon = 'ModularLobotomy/_Lobotomyicons/rcorp_weapons.dmi'
 	icon_state = "rabbitmachinegun"
 	ammo_type = list(
 		/obj/item/ammo_casing/energy/laser/red,
@@ -238,7 +240,8 @@
 /obj/item/gun/energy/e_gun/rabbit/minigun/tricolor
 	name = "R-Corporation R-3500 Minigun"
 	desc = "An energy machinegun that is extremely heavy, and fires bullets extremely quickly."
-	icon_state = "rabbitmachinegun"
+	icon = 'ModularLobotomy/_Lobotomyicons/rcorp_weapons.dmi'
+	icon_state = "trimachinegun"
 	projectile_damage_multiplier = 0.7
 	ammo_type = list(
 		/obj/item/ammo_casing/energy/laser/red/iff,
@@ -250,6 +253,7 @@
 	name = "rush dagger"
 	desc = "A high-frequency combat blade made for use against abnormalities and other threats in Lobotomy Corporation and the outskirts. This only has one mode"
 	special = "Use in hand to activate teleport mode. Click on a target in teleport mode to do a teleport attack."
+	icon = 'ModularLobotomy/_Lobotomyicons/rcorp_weapons.dmi'
 	icon_state = "rabbitdash"
 	inhand_icon_state = "rabbit_katana"
 	lefthand_file = 'icons/mob/inhands/weapons/swords_lefthand.dmi'
@@ -318,7 +322,7 @@
 
 	var/targetfound
 	playsound(target_turf, 'sound/weapons/rapierhit.ogg', 100, TRUE)
-	if(LAZYLEN(user.HurtInTurf(target_turf, list(), force*2, PALE_DAMAGE)))
+	if(LAZYLEN(user.HurtInTurf(target_turf, list(), force*2, PALE_DAMAGE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))))
 		targetfound = TRUE
 	//So you can't fucking teleport into a place where you are immune to all damage
 	if(!targetfound)
@@ -340,3 +344,39 @@
 
 	//set all to 0
 	teleporting = FALSE
+
+/obj/item/ego_weapon/city/rookpick //Warpick made for when Rooks spawn in RCE so they don't use fucking base SS13 ones
+	name = "R-4P R-Corp Warpick"
+	desc = "A small excavation tool used by R-corp which doubles as a melee weapon in a pinch. \
+	Discontinued quickly in the 4th Pack, but favored by other, more self-reliant packs due to its easy production."
+	icon_state = "rookpick"
+	icon = 'ModularLobotomy/_Lobotomyicons/rcorp_weapons.dmi'
+	force = 25
+	attack_speed = 1
+	damtype = RED_DAMAGE
+	swingstyle = WEAPONSWING_LARGESWEEP
+	tool_behaviour = TOOL_MINING
+
+	attack_verb_continuous = list("bashes", "smacks")
+	attack_verb_simple = list("bash", "smack")
+
+	hitsound = 'sound/weapons/genhit1.ogg'
+
+// ========================================
+// IFF (No Friendly Fire) Gun Variants
+// These are the versions crafted by RCE factories
+// ========================================
+
+/obj/item/gun/energy/e_gun/rabbit/nopin/iff
+	name = "R-Corporation R-2800 'Mark 1' (IFF)"
+	desc = "An energy gun produced specifically to suppress threats with a variety of damage types. This model has IFF targeting to prevent friendly fire."
+	ammo_type = list(
+		/obj/item/ammo_casing/energy/laser/red/iff,
+		/obj/item/ammo_casing/energy/laser/white/iff,
+		/obj/item/ammo_casing/energy/laser/black/iff
+		)
+
+/obj/item/gun/energy/e_gun/rabbit/minigun/iff
+	name = "R-Corporation X-15 Minigun (IFF)"
+	desc = "An energy machinegun that is extremely heavy, and fires bullets extremely quickly. This model has IFF targeting to prevent friendly fire."
+	ammo_type = list(/obj/item/ammo_casing/energy/laser/red/iff)

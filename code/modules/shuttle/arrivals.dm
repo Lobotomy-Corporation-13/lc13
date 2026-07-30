@@ -14,7 +14,7 @@
 	movement_force = list("KNOCKDOWN" = 3, "THROW" = 0)
 
 	var/sound_played
-	var/damaged	//too damaged to undock?
+	var/damaged = FALSE	//too damaged to undock?
 	var/list/areas	//areas in our shuttle
 	var/list/queued_announces	//people coming in that we have to announce
 	var/obj/machinery/requests_console/console
@@ -66,16 +66,16 @@
 			SendToStation()
 		return
 
-	if(damaged)
+/* 	if(damaged)
 		if(!CheckTurfsPressure())
 			damaged = FALSE
 			if(console)
 				console.say("Repairs complete, launching soon.")
-		return
+		return */
 
 //If this proc is high on the profiler add a cooldown to the stuff after this line
 
-	else if(CheckTurfsPressure())
+/* 	else if(CheckTurfsPressure())
 		damaged = TRUE
 		if(console)
 			console.say("Alert, hull breach detected!")
@@ -88,7 +88,7 @@
 			mode = SHUTTLE_IDLE
 		else
 			SendToStation()
-		return
+		return */
 
 	var/found_awake = PersonCheck() || NukeDiskCheck()
 	if(mode == SHUTTLE_CALL)
@@ -104,7 +104,7 @@
 	else if(!found_awake)
 		Launch(FALSE)
 
-/obj/docking_port/mobile/arrivals/proc/CheckTurfsPressure()
+/* /obj/docking_port/mobile/arrivals/proc/CheckTurfsPressure()
 	for(var/I in SSjob.latejoin_trackers)
 		var/turf/open/T = get_turf(I)
 		if(!istype(T))
@@ -113,7 +113,7 @@
 		var/pressure = T.air.return_pressure()
 		if(pressure < HAZARD_LOW_PRESSURE || pressure > HAZARD_HIGH_PRESSURE)	//simple safety check
 			return TRUE
-	return FALSE
+	return FALSE */
 
 /obj/docking_port/mobile/arrivals/proc/PersonCheck()
 	for(var/V in GLOB.player_list)

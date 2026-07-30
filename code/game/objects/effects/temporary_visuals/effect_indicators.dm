@@ -46,6 +46,9 @@
 /obj/effect/temp_visual/damage_effect/tox
 	icon_state = "dam_tox"
 
+/obj/effect/temp_visual/damage_effect/mental_decay
+	icon_state = "stat_md"
+
 /obj/effect/temp_visual/damage_effect/bleed
 	icon_state = "dam_bleed"
 
@@ -57,6 +60,15 @@
 
 /obj/effect/temp_visual/damage_effect/rupture
 	icon_state = "rupture"
+
+/obj/effect/temp_visual/damage_effect/poise
+	icon_state = "poise"
+
+/obj/effect/temp_visual/damage_effect/concentration
+	icon_state = "concentration"
+
+/obj/effect/temp_visual/damage_effect/nervous_impairment
+	icon_state = "nervous_impairment"
 
 //Stuntime visual for when you're stunned by your weapon, so you know what happened.
 /obj/effect/temp_visual/weapon_stun

@@ -1,6 +1,12 @@
 /// depending on the species, it will run the corresponding apply_damage code there
-/mob/living/carbon/human/apply_damage(damage = 0,damagetype = BRUTE, def_zone = null, blocked = FALSE, forced = FALSE, spread_damage = FALSE, wound_bonus = 0, bare_wound_bonus = 0, sharpness = SHARP_NONE, white_healable = FALSE)
-	return dna.species.apply_damage(damage, damagetype, def_zone, blocked, src, forced, spread_damage, wound_bonus, bare_wound_bonus, sharpness, white_healable)
+/mob/living/carbon/human/deal_damage(damage_amount, damage_type, source = null, flags = null, attack_type = null, blocked = null, def_zone = null, wound_bonus = 0, bare_wound_bonus = 0, sharpness = SHARP_NONE)
+	if(!(flags & DAMAGE_FORCED) && (!PreDamageReaction(damage_amount, damage_type, source))) // If our forced argument isn't TRUE, then we expect to receive a TRUE from PreDamageReaction to continue the proc
+		return FALSE
+
+	. = dna.species.apply_damage(src, damage_amount, damage_type, source, flags, attack_type, blocked, def_zone, wound_bonus, bare_wound_bonus, sharpness)
+
+	PostDamageReaction(., damage_type, flags & DAMAGE_UNTRACKABLE ? null : source)
+	return TRUE
 
 
 
@@ -79,7 +85,7 @@
 		sanity_lost = TRUE
 		apply_status_effect(/datum/status_effect/panicked)
 		var/highest_atr = PRUDENCE_ATTRIBUTE
-		if(LAZYLEN(attributes))
+		if(!(SSmaptype.maptype in SSmaptype.citymaps) && LAZYLEN(attributes))
 			var/highest_level = -1
 			for(var/i in shuffle(attributes))
 				var/datum/attribute/atr = attributes[i]

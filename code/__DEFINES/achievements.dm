@@ -34,7 +34,6 @@
 #define MEDAL_HOT_DAMN "Hot Damn!"
 
 //LC13 Achievements
-#define MEDAL_SCORPWORLD "Scorp World"
 #define MEDAL_LCORPWORLD "Lcorp World"
 #define MEDAL_TWILIGHT "Twilight"
 #define BOSS_MEDAL_WHITENIGHT "White Night"
@@ -57,6 +56,20 @@
 #define MEDAL_DIE_TO_PBIRD "Small Beak Big Pain"
 #define MEDAL_ACTIVATE_HAMMER "Divine Intervention"
 #define MEDAL_DAMAGE_PBIRD "Dont Poke the Bird"
+
+// Temple Quest Achievements
+#define MEDAL_TEMPLE_GUARDIAN "Temple Guardian"
+#define MEDAL_ELLIOT_SACRIFICE "Elliot Sacrifice"
+#define MEDAL_SOLE_SURVIVOR "Sole Survivor"
+#define MEDAL_TEMPLE_TREASURE "Temple Treasure"
+#define MEDAL_STATUE_WHISPERER "Statue Whisperer"
+#define MEDAL_RIDDLER "Riddler"
+#define MEDAL_KEY_DETECTIVE "Key Detective"
+#define MEDAL_HERETIC_HUNTER "Heretic Hunter"
+#define MEDAL_TEMPLE_EXPLORER "Temple Explorer"
+#define MEDAL_MEET_GUIDE "Meet Guide"
+#define MEDAL_PERFECT_PROTECTOR "Perfect Protector"
+#define MEDAL_CHEMICAL_HARVESTER "Chemical Harvester"
 
 // Collection/Farming Achievements
 #define MEDAL_SILK_COLLECTOR "Silk Collector"
@@ -98,6 +111,30 @@
 #define MEDAL_SOLEMN "Solemn Lament for the Living"
 #define MEDAL_GALAXY_PEBBLE "Friends with the Galaxy"
 #define MEDAL_GALAXY_SHATTER "Make Him Cry"
+#define MEDAL_CHERRY_DEATH "Wilted Blossoms"
+#define MEDAL_CHESHIRE "Cheshire Grin"
+#define MEDAL_CENSORED "I don't get it"
+#define MEDAL_TRAIN_LAST "Crazy Train"
+#define MEDAL_SCORPWORLD "Scorp World"
+#define MEDAL_OCEAN_JCORP "Cross-Company Cooperation"
+#define MEDAL_ORACLE_SCRY "See the Future"
+#define MEDAL_ORACLE_EMERCENCY "Emercency Call"
+#define MEDAL_ORACLE_CHANGE "Change the Future"
+#define MEDAL_SUNSET_BUTTERFLIES "Into the Sunset"
+#define MEDAL_SLEEPING_UNBUCKLED "Too Sleepy...."
+#define MEDAL_SLEEPING_UNBUCKLE "Wakeup Call"
+#define MEDAL_RABBIT_UNWISE "Reprimand from Human Resources"
+#define MEDAL_BLUESTAR "Blue Core"
+#define MEDAL_BEANSTALK_SUCCESS "Cloud Pilfering"
+#define MEDAL_BEANSTALK_TREASURE "Giant Thief"
+#define MEDAL_BEAUTY_BEAST "A Monster"
+#define MEDAL_BLOODBATH_HANDS "Bathtub Party"
+#define MEDAL_CLAYMAN_REFORM "Clay Molder"
+#define MEDAL_CRUMBLING_GOD "Living God"
+#define MEDAL_CRUMBLING_MEGALOVANIA "DETERMINATION"
+#define MEDAL_DEALER_GAMBLER "The Fatalist"
+#define MEDAL_LONGLEGS_RAINING "Shelter from the Rain"
+
 
 
 

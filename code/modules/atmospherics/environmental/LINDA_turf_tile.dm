@@ -1,4 +1,4 @@
-/turf
+/* /turf
 	//used for temperature calculations
 	var/thermal_conductivity = 0.05
 	var/heat_capacity = INFINITY //This should be opt in rather then opt out
@@ -645,3 +645,4 @@ Then we space some of our heat, and think about if we should stop conducting.
 
 		temperature -= heat/heat_capacity //The higher your own heat cap the less heat you get from this arrangement
 		sharer.temperature += heat/sharer.heat_capacity
+ */

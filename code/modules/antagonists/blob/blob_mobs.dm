@@ -10,9 +10,6 @@
 	faction = list(ROLE_BLOB)
 	bubble_icon = "blob"
 	speak_emote = null //so we use verb_yell/verb_say/etc
-	atmos_requirements = list("min_oxy" = 0, "max_oxy" = 0, "min_tox" = 0, "max_tox" = 0, "min_co2" = 0, "max_co2" = 0, "min_n2" = 0, "max_n2" = 0)
-	minbodytemp = 0
-	maxbodytemp = INFINITY
 	unique_name = 1
 	a_intent = INTENT_HARM
 	see_in_dark = 8
@@ -267,7 +264,7 @@
 	verb_exclaim = "roars"
 	verb_yell = "bellows"
 	force_threshold = 10
-	pressure_resistance = 50
+	// pressure_resistance = 50
 	mob_size = MOB_SIZE_LARGE
 	hud_type = /datum/hud/blobbernaut
 

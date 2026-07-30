@@ -191,8 +191,8 @@
 	cost = CARGO_CRATE_VALUE * 3
 	contains = list(/obj/item/clothing/under/plasmaman,
 					/obj/item/clothing/under/plasmaman,
-					/obj/item/tank/internals/plasmaman/belt/full,
-					/obj/item/tank/internals/plasmaman/belt/full,
+					/obj/item/tank/internals/plasmaman/belt,
+					/obj/item/tank/internals/plasmaman/belt,
 					/obj/item/clothing/head/helmet/space/plasmaman,
 					/obj/item/clothing/head/helmet/space/plasmaman,
 					/obj/item/clothing/gloves/color/plasmaman,
@@ -779,7 +779,7 @@
 	cost = CARGO_CRATE_VALUE * 5
 	crate_name = "toolbox crate"
 
-/datum/supply_pack/engineering/portapump
+/* /datum/supply_pack/engineering/portapump
 	name = "Portable Air Pump Crate"
 	desc = "Did someone let the air out of the shuttle again? We've got you covered. Contains two portable air pumps."
 	cost = CARGO_CRATE_VALUE * 4.5
@@ -804,7 +804,7 @@
 	access_view = ACCESS_ATMOSPHERICS
 	contains = list(/obj/machinery/portable_atmospherics/scrubber/huge/movable/cargo)
 	crate_name = "huge portable scrubber crate"
-	crate_type = /obj/structure/closet/crate/large
+	crate_type = /obj/structure/closet/crate/large */
 
 /datum/supply_pack/engineering/bsa
 	name = "Bluespace Artillery Parts"
@@ -1045,7 +1045,7 @@
 	contains = list(/obj/item/stack/sheet/mineral/wood/fifty)
 	crate_name = "wood planks crate"
 
-/datum/supply_pack/materials/bz
+/* /datum/supply_pack/materials/bz
 	name = "BZ Canister Crate"
 	desc = "Contains a canister of BZ. Requires Toxins access to open."
 	cost = CARGO_CRATE_VALUE * 16
@@ -1062,7 +1062,7 @@
 	access_view = ACCESS_ATMOSPHERICS
 	contains = list(/obj/machinery/portable_atmospherics/canister/carbon_dioxide)
 	crate_name = "carbon dioxide canister crate"
-	crate_type = /obj/structure/closet/crate/large
+	crate_type = /obj/structure/closet/crate/large */
 
 /datum/supply_pack/materials/foamtank
 	name = "Firefighting Foam Tank Crate"
@@ -1097,7 +1097,7 @@
 	crate_name = "high-capacity fuel tank crate"
 	crate_type = /obj/structure/closet/crate/large
 
-/datum/supply_pack/materials/nitrogen
+/* /datum/supply_pack/materials/nitrogen
 	name = "Nitrogen Canister"
 	desc = "Contains a canister of Nitrogen."
 	cost = CARGO_CRATE_VALUE * 4
@@ -1121,7 +1121,7 @@
 	cost = CARGO_CRATE_VALUE * 3
 	contains = list(/obj/machinery/portable_atmospherics/canister/oxygen)
 	crate_name = "oxygen canister crate"
-	crate_type = /obj/structure/closet/crate/large
+	crate_type = /obj/structure/closet/crate/large */
 
 /datum/supply_pack/materials/watertank
 	name = "Water Tank Crate"
@@ -1131,13 +1131,13 @@
 	crate_name = "water tank crate"
 	crate_type = /obj/structure/closet/crate/large
 
-/datum/supply_pack/materials/water_vapor
+/* /datum/supply_pack/materials/water_vapor
 	name = "Water Vapor Canister"
 	desc = "Contains a canister of Water Vapor. I swear to god if you open this in the halls..."
 	cost = CARGO_CRATE_VALUE * 4
 	contains = list(/obj/machinery/portable_atmospherics/canister/water_vapor)
 	crate_name = "water vapor canister crate"
-	crate_type = /obj/structure/closet/crate/large
+	crate_type = /obj/structure/closet/crate/large */
 
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////// Medical /////////////////////////////////////////

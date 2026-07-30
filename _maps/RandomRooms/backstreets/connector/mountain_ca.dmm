@@ -469,13 +469,11 @@
 /turf/open/floor/plating/dirt/jungle/dark,
 /area/city/backstreets_room)
 "Qf" = (
-/mob/living/simple_animal/hostile/ordeal/indigo_noon{
-	dir = 4
-	},
 /obj/effect/decal/cleanable/blood/drip{
 	pixel_x = 18;
 	pixel_y = -6
 	},
+/mob/living/simple_animal/hostile/ordeal/indigo_noon/chunky,
 /turf/open/floor/plating/dirt/jungle/dark,
 /area/city/backstreets_room)
 "Qq" = (

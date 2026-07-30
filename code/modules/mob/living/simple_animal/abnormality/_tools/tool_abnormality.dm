@@ -9,6 +9,8 @@
 
 	/// List of ego equipment datums
 	var/list/ego_list = list()
+	// Reusable list for entities who have used this item.
+	var/list/operators = list()
 
 GLOBAL_LIST_INIT(unspawned_tools, list(
 	/obj/structure/toolabnormality/attribute_giver/snake_oil,
@@ -30,6 +32,24 @@ GLOBAL_LIST_INIT(unspawned_tools, list(
 //	/obj/structure/toolabnormality/wishwell,
 //	/obj/structure/toolabnormality/realization,
 ))
+
+/obj/structure/toolabnormality/Destroy()
+	UnegisterOperatorAll()
+	return ..()
+
+/obj/structure/toolabnormality/proc/RegisterOperator(mob/living/user)
+	operators += user
+	RegisterSignal(user, COMSIG_PARENT_QDELETING, PROC_REF(UnegisterOperator))
+
+/obj/structure/toolabnormality/proc/UnegisterOperator(mob/living/user)
+	SIGNAL_HANDLER
+
+	operators -= user
+	UnregisterSignal(user, COMSIG_PARENT_QDELETING)
+
+/obj/structure/toolabnormality/proc/UnegisterOperatorAll()
+	for(var/mob/living/interactor in operators)
+		UnegisterOperator(interactor)
 
 /obj/effect/landmark/toolspawn
 	name = "tool spawner"

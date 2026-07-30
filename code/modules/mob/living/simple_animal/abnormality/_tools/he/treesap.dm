@@ -6,7 +6,6 @@
 	icon_state = "treesap"
 	anchored = FALSE
 	drag_slowdown = 1.5
-	var/list/used = list()
 
 	ego_list = list(
 		/datum/ego_datum/weapon/giant_tree_branch,
@@ -19,7 +18,7 @@
 
 /obj/structure/toolabnormality/treesap/proc/reset()
 	addtimer(CALLBACK(src, PROC_REF(reset)), 20 MINUTES)
-	used = list()
+	operators = list()
 
 	for(var/mob/living/carbon/human/L in GLOB.player_list)
 		if(L.stat >= HARD_CRIT || L.sanity_lost || z != L.z) // Dead or in hard crit, insane, or on a different Z level.
@@ -32,7 +31,7 @@
 		return
 	to_chat(user, span_danger("You sip of the sap."))
 
-	if(user in used)
+	if(user.tag in operators)
 		var/boom_chance = 20
 		for(var/upgradecheck in GLOB.jcorp_upgrades)
 			if(upgradecheck == "Tool Gacha")
@@ -42,7 +41,7 @@
 		else
 			user.apply_status_effect(STATUS_EFFECT_TREESAP)
 	else
-		used+=user
+		operators += user.tag
 		user.apply_status_effect(STATUS_EFFECT_TREESAP)
 
 
@@ -73,7 +72,7 @@
 	. = ..()
 	owner.gib()
 	for(var/mob/living/carbon/human/L in urange(10, src))
-		L.deal_damage(60, WHITE_DAMAGE)
+		L.deal_damage(60, WHITE_DAMAGE, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_SPECIAL))
 		to_chat(L, span_danger("Oh god, what the fuck was that!?"))
 
 #undef STATUS_EFFECT_TREESAP

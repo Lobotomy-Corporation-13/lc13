@@ -53,11 +53,15 @@
 	abno_type = /mob/living/simple_animal/hostile/abnormality/dingledangle
 	abno_code = "T-04-111"
 	abno_info = list(
-		"When the work result was Bad, the employee was immediately consumed by Dingle-Dangle with a normal probability.",
-		"When employees with Prudence Level 3 or higher completed their work, they were consumed by Dingle-Dangle unless their Fortitude was Level 4 or higher.",
-		"When employees with Prudence Level 2 or lower completed their work with Dingle-Dangle, the Qliphoth Counter decreased.",
-		"These employees reported a sense of confusion as well heightened combat capabilities.",
-		"When the Qliphoth Counter reached 0, everyone in the facility was afflicted with delirium.")
+		"T-04-111 was capable of holding both Fragility and Strength 'stacks', that it would release over time.",
+		"When the work result was Bad, T-04-111 gained many 'stacks' of fragility.",
+		"When work was completed, T-04-111 gains a few 'stacks' of strength.",
+		"When employees with Prudence Level 3 or higher completed their work, they were consumed by T-04-111 unless their Fortitude was Level 4 or higher.",
+		"The above action generates many 'stacks' of Strength.",
+		"When employees with Prudence Level 1 completed their work with T-04-111, the Qliphoth Counter decreased.",
+		"The above action generates 'stacks' of Strength.",
+		"These employees reported a sense of confusion.",
+		"When the Qliphoth Counter reached 0, everyone in the facility was afflicted with delirium, and T-04-111 gained 'stacks' of Fragility.")
 
 //Beauty and the Beast
 /obj/item/paper/fluff/info/teth/beauty
@@ -201,9 +205,13 @@
 	abno_type = /mob/living/simple_animal/hostile/abnormality/beanstalk
 	abno_code = "F-03-16"
 	abno_info = list(
-		"When an Agent with Level 1 Temperance and Prudence completed the work, they climbed up the beanstalk and were never seen again.",
+		"Agents with Temperance Level 2 or higher will resist the beanstalk's allure.",
+		"Agents with Fortitude Level 2 or higher are more susceptible to the beanstalk's allure.",
+		"Prudent Agents will snap out of their stupor during a climb.",
 		"Upon attempting an Instinct work with level 4 Fortitude or above, the Agent climbed up the beanstalk willingly.",
 		"Agent Yum Yum perished and fell off the beanstalk after being forced to endure extreme BLACK damage when climbing.",
+		"It is said that there are treasures scattered about on the beanstalk, only an Agent who can resist it's allure may scavenge those treasures.",
+		"An Agent may feel the urge to climb the beanstalk upon touching it.",
 		"No agent has ever returned from the top of the beanstalk, if it even has the concept of a top.")
 
 //My Sweet Home
@@ -243,6 +251,7 @@
 		"When Insight work was performed, the Qliphoth Counter increased by 2. The chains seemed to tighten, keeping the memories locked away.",
 		"When any work other than Insight or Repression was performed, the Qliphoth Counter decreased by 1.",
 		"When the work result was Bad on any work except Repression, there was a 70% chance the employee would be pulled through the door into a realm of sealed regrets.",
+		"Each time a human panicked within the facility, Qliphoth Counter decreased by 1. It appeared to be trying to reach out to those humans...",
 		"Employees who passed through the door reported being trapped in a liminal space filled with forgotten memories and unspoken regrets, each one sealed behind its own chained door.",
 		"When Repression work was performed, any employees lost in the realm of regrets were pulled back through the door to reality.",
 		"When the Qliphoth Counter reached 0, the chains burst open momentarily and 1-3 random facility personnel were dragged through the door into that forsaken realm."
@@ -427,16 +436,19 @@
 	abno_code = "F-01-191"
 	abno_info = list(
 		"Tangle had a bad reaction when working on a random EMPLOYEE, and their Qliphoth Counter lowered.",
-		"Working large amounts of instinct works on tangle ended in it's Qliphoth Counter being lowered.",)
+		"Working large amounts of instinct works on tangle ended in it's Qliphoth Counter being lowered.",
+		"When assaulted by an employee with Instict of 2 or lower, F-01-191 could overpower them.",)
 
 //Generic Brand Modelling Clay
 /obj/item/paper/fluff/info/teth/clayman
 	abno_type = /mob/living/simple_animal/hostile/abnormality/clayman
 	abno_code = "O-04-204"
 	abno_info = list(
-		"Employees who worked on O-04-204 reported no meaningful difference between work types.",
+		"No meaningful difference between work types could be noticed on the first work.",
 		"During work and breaches, the damage type dealt seemed to vary from hit to hit.",
-		"When the work result was Bad, the Qliphoth Counter lowered."
+		"However, each work increased the chances of a successful work on the revelant work by an estimated 10%, with other work being reduced by 5%",
+		"However, should any work type's base success rate reach 100%, O-04-204 would proceed to fall apart, putting all work rates at an equal but very low percentage.",
+		"When the work result was Bad and O-04-204 wasn't falling apart, the Qliphoth Counter lowered."
 	)
 
 //Sirocco
@@ -446,7 +458,7 @@
 	abno_info = list(
 		"Once the Qliphoth Counter reaches 0, Sirocco leaves her containment cell to play.",
 		"Every two minutes, the Qliphoth Counter lowered by one.",
-		"When the work result was Normal, the Qliphoth Counter raised.",
+		"When the work result was Good the Qliphoth Counter raised. It raised by 2 when the work result was Neutral.",
 		"When the work result was Good, Sirocco was quicker to return to her cell in a later breach."
 	)
 
@@ -473,6 +485,20 @@
 		"When the work result was Normal, the Qliphoth Counter lowered with a normal probability.",
 		"When the work result was Bad, the Qliphoth Counter lowered.")
 
+// Lunar Physician
+/obj/item/paper/fluff/info/teth/portrait_certain
+	abno_type = /mob/living/simple_animal/hostile/abnormality/portrait_certain
+	abno_code = "O-02-209"
+	abno_info = list(
+		"O-02-209 will manifest a portrait with a frame resembling one of the four work types after each work.",
+		"If the work type does not correspond to its portrait from the prior work, the entity will reduce work success rate by half.",
+		"In simple terms, if the portrait is currently purple, the work after yours should be purple.",
+		"O-02-209 will occasionally surround itself with 5 portraits and gain resistance to all damage.",
+		"If the masters portrait is not found and destroyed before 6 seconds each of the undestroyed portraits will explode into white damage.",
+		"Testing shows that the blast from 3+ portraits is enough to insane a level 1 agent.",
+		"Each time O-02-209 loses 10% of its health it marks a nearby human as a interloper.",
+		"O-02-209 is more aggressive towards interlopers and deals greater damage to them.",
+	)
 
 // Lunar Physician
 /obj/item/paper/fluff/info/teth/lunar_rabbit
@@ -486,4 +512,19 @@
 		"One senior researcher believes that M-02-207 breaches possibly off the phases of the Moon. It is unknown how it assess this.",
 		"A second researcher believes that M-02-207 breaches based off the alignment of the planets.",
 		"A third researcher believes that M-02-207 can only breach when Mercury is in retrograde.",
+	)
+
+// Drenched Gossypium
+/obj/item/paper/fluff/info/teth/gossypium
+	abno_type = /mob/living/simple_animal/hostile/abnormality/gossypium
+	abno_code = "O-04-201"
+	abno_info = list(
+		"After completing a work on the abnormality without its EGO gift, the Qliphoth Counter lowered at a high probability.",
+		"When the work result was Neutral, the Qliphoth Counter lowered at a normal probability.",
+		"When the work result was Bad, the Qliphoth Counter lowered.",
+		"When the employee performed Approach work on the abnormality, they recieved its EGO gift.",
+		"When performing work on the abnormality while wearing the EGO gift, the Qliphoth Counter increased by 1 at a low probability.",
+		"When the abnormality breached, it began drinking the blood on the floor and the blood spilled from its attacks.",
+		"When the abnormality drank enough blood, it drove into a frenzy and started attacking faster in melee.",
+		"All of the abnormality's attacks inflicted wounds harsh enough to cause bleeding.",
 	)

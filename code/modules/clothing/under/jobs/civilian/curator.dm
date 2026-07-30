@@ -39,8 +39,8 @@
 	permeability_coefficient = 0.02
 	body_parts_covered = CHEST|GROIN|LEGS|FEET|ARMS|HANDS
 	cold_protection = CHEST | GROIN | LEGS | ARMS //Needs gloves and shoes with cold protection to be fully protected.
-	min_cold_protection_temperature = SPACE_SUIT_MIN_TEMP_PROTECT
+	min_cold_protection_temperature = TRUE
 	heat_protection = CHEST|GROIN|LEGS|FEET|ARMS|HANDS
-	max_heat_protection_temperature = SPACE_SUIT_MAX_TEMP_PROTECT
+	max_heat_protection_temperature = TRUE
 	can_adjust = FALSE
 	resistance_flags = NONE

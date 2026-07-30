@@ -44,6 +44,8 @@
 	var/projectile_timer
 	var/parry_timer
 	var/aggro_on_block
+	//Am i blocking?
+	var/active_block = FALSE
 
 /obj/item/ego_weapon/shield/Initialize()
 	. = ..()
@@ -91,6 +93,7 @@
 				to_chat(shield_user,span_notice("You cannot defend yourself from responsibility!"))
 				return FALSE
 		block = TRUE
+		active_block = TRUE
 		block_success = FALSE
 		shield_user.physiology.armor = shield_user.physiology.armor.modifyRating(bomb = 1) //bomb defense must be over 0
 		shield_user.physiology.red_mod *= max(0.001, (1 - ((reductions[1]) / 100)))
@@ -111,6 +114,7 @@
 
 //Ends the block, causes you to take more damage for as long as debuff_duration if you did not block any damage
 /obj/item/ego_weapon/shield/proc/DisableBlock(mob/living/carbon/human/user)
+	active_block = FALSE
 	user.physiology.armor = user.physiology.armor.modifyRating(bomb = -1)
 	user.physiology.red_mod /= max(0.001, (1 - ((reductions[1]) / 100)))
 	user.physiology.white_mod /= max(0.001, (1 - ((reductions[2]) / 100)))
@@ -206,3 +210,59 @@
 		readout += "</span>"
 
 		to_chat(usr, "[readout.Join()]")
+
+/obj/item/ego_weapon/shield/proc/armor_to_protection_class(armor_value)
+	armor_value = round(armor_value,10) / 10
+	switch (armor_value)
+		if (-INFINITY to -10)
+			. = "-X"
+		if (-9)
+			. = "-IX"
+		if (-8)
+			. = "-VIII"
+		if (-7)
+			. = "-VII"
+		if (-6)
+			. = "-VI"
+		if (-5)
+			. = "-V"
+		if (-4)
+			. = "-IV"
+		if (-3)
+			. = "-III"
+		if (-2)
+			. = "-II"
+		if (-1)
+			. = "-I"
+		if (1)
+			. = "I"
+		if (2)
+			. = "II"
+		if (3)
+			. = "III"
+		if (4)
+			. = "IV"
+		if (5)
+			. = "V"
+		if (6)
+			. = "VI"
+		if (7)
+			. = "VII"
+		if (8)
+			. = "VIII"
+		if (9)
+			. = "IX"
+		if (10 to INFINITY)
+			. = "X"
+	return .
+
+//Parry Weapons. When you get attacked, you automatically respond with an attack of your own
+/obj/item/ego_weapon/shield/parry/hit_reaction(mob/living/carbon/human/owner, atom/movable/hitby, attack_text = "the attack", final_block_chance = 0, damage = 0, attack_type = MELEE_ATTACK)
+	if(attack_type == MELEE_ATTACK && active_block)
+		for(var/mob/living/L in range(1, owner))
+			if(L == owner)
+				continue
+			if(owner.stat == CONSCIOUS)
+				attack(L, owner)
+				sleep(2)
+	return ..()

@@ -26,6 +26,7 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 	var/tmp/old_be_special = 0 //Bitflag version of be_special, used to update old savefiles and nothing more
 										//If it's 0, that's good, if it's anything but 0, the owner of this prefs file's antag choices were,
 										//autocorrected this round, not that you'd need to check that.
+	var/list/lcl_abno_pref = list() //A list of all available limbus specimen.
 
 	var/UI_style = null
 	var/buttons_locked = FALSE
@@ -39,6 +40,11 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 	var/see_chat_non_mob = TRUE
 	///Whether emotes will be displayed on runechat. Requires chat_on_map to have effect. Boolean.
 	var/see_rc_emotes = TRUE
+	/// Status display mode: 0 = Disabled, 1 = Only Effects, 2 = Enabled
+	var/show_status_display = 2
+
+	/// On-Mob Backpack Visibility default
+	var/backpack_visibility = TRUE
 
 	// Custom Keybindings
 	var/list/key_bindings = list()
@@ -73,6 +79,9 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 	var/socks = "Nude"					//socks type
 	var/backpack = DBACKPACK				//backpack type
 	var/jumpsuit_style = PREF_SUIT		//suit/skirt
+	var/beret_enabled = TRUE // Spawns with a Beret on roles which have it available
+	var/sunglasses_enabled = TRUE // Spawns with Sunglasses on roles which have them available
+	var/work_notepad_type = WORK_NOTEPAD_PREFERENCE_CLIPBOARD // Determines which type, if any, of abno work notepad this character spawns with as an agent.
 	var/hairstyle = "Bald"				//Hair type
 	var/hair_color = "000"				//Hair color
 	var/gradient_color = "000"			//Hair gradient color
@@ -166,14 +175,22 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 	var/broadcast_login_logout = TRUE
 	///Selected achievement to display as specialization
 	var/chosen_achievement = null
+	///Lazily-created TGUI menu for picking the achievement specialization
+	var/datum/achievement_spec_menu/achievement_spec_menu
 	///What outfit typepaths we've favorited in the SelectEquipment menu
 	var/list/favorite_outfits = list()
 	///Language that will be used for some of the strings
 	var/client_language = CLIENT_LANGUAGE_ENGLISH
 
 	// Lore Stuff - Currently unused...
-	///What does the player think of TerraGov.
+	///I don't wanna gigafuck the Prefs file.
 	var/terragov_relation = RELATION_NEUTRAL
+
+	//What District do you come from?
+	var/district_origin = WING_UNKNOWN
+
+	//And which Zone did you come from?
+	var/zone_origin = WING_UNKNOWN
 
 	/// Preference about the user's prefered auxiliary console TGUI
 	var/auxiliary_console_tgui = TRUE
@@ -205,6 +222,10 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 	save_character() //let's save this new random character so it doesn't keep generating new ones.
 	menuoptions = list()
 	return
+
+/datum/preferences/Destroy(force, ...)
+	QDEL_NULL(achievement_spec_menu)
+	return ..()
 
 #define APPEARANCE_CATEGORY_COLUMN "<td valign='top' width='14%'>"
 #define MAX_MUTANT_ROWS 4
@@ -327,7 +348,8 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 			dat += "<br>"
 
 			dat += "<h2>Background Information:</h2>"
-			dat += "<a href='byond://?_src_=prefs;preference=govrelation;task=input'><b>Government Relation:</b> [terragov_relation]</a><BR></td>"
+			dat += "<a href='byond://?_src_=prefs;preference=wingselect;task=input'><b>District Origin:</b> [district_origin]</a><BR>"
+			dat += "<a href='byond://?_src_=prefs;preference=zoneselect;task=input'><b>Zone Origin:</b> [zone_origin]</a><BR></td>"
 
 			dat += "</tr></table>"
 
@@ -358,6 +380,12 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 
 			dat += "<br><b>Jumpsuit Style:</b><BR><a href ='byond://?_src_=prefs;preference=suit;task=input'>[jumpsuit_style]</a>"
 			dat += "<a href='byond://?_src_=prefs;preference=toggle_random;random_type=[RANDOM_JUMPSUIT_STYLE]'>[(randomise[RANDOM_JUMPSUIT_STYLE]) ? "Lock" : "Unlock"]</A>"
+
+			dat += "<br><b>Abnormality Work Tool (For Agents; Optional):</b><BR><a href ='byond://?_src_=prefs;preference=work_notepad_type;task=input'>[(work_notepad_type)]</a>"
+
+			dat += "<br><b>Beret (On Applicable Jobs):</b><BR><a href ='byond://?_src_=prefs;preference=beret_enabled;task=input'>[(beret_enabled ? "Yes" : "No")]</a>"
+
+			dat += "<br><b>Sunglasses (On Applicable Jobs):</b><BR><a href ='byond://?_src_=prefs;preference=sunglasses_enabled;task=input'>[(sunglasses_enabled ? "Yes" : "No")]</a>"
 
 			dat += "<br><b>Backpack:</b><BR><a href ='byond://?_src_=prefs;preference=bag;task=input'>[backpack]</a>"
 			dat += "<a href='byond://?_src_=prefs;preference=toggle_random;random_type=[RANDOM_BACKPACK]'>[(randomise[RANDOM_BACKPACK]) ? "Lock" : "Unlock"]</A>"
@@ -641,12 +669,19 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 			dat += "<b>Runechat message char limit:</b> <a href='byond://?_src_=prefs;preference=max_chat_length;task=input'>[max_chat_length]</a><br>"
 			dat += "<b>See Runechat for non-mobs:</b> <a href='byond://?_src_=prefs;preference=see_chat_non_mob'>[see_chat_non_mob ? TeguTranslate("Enabled", src) : TeguTranslate("Disabled", src)]</a><br>"
 			dat += "<b>See Runechat emotes:</b> <a href='byond://?_src_=prefs;preference=see_rc_emotes'>[see_rc_emotes ? TeguTranslate("Enabled", src) : TeguTranslate("Disabled", src)]</a><br>"
+			var/status_display_text
+			switch(show_status_display)
+				if(0) status_display_text = "Disabled"
+				if(1) status_display_text = "Only Effects"
+				if(2) status_display_text = "Enabled"
+			dat += "<b>Show Status Display Icons:</b> <a href='byond://?_src_=prefs;preference=show_status_display'>[TeguTranslate(status_display_text, src)]</a><br>"
 			dat += "<br>"
 			dat += "<b>Action Buttons:</b> <a href='byond://?_src_=prefs;preference=action_buttons'>[(buttons_locked) ? "Locked In Place" : "Unlocked"]</a><br>"
 			dat += "<b>Hotkey mode:</b> <a href='byond://?_src_=prefs;preference=hotkeys'>[(hotkeys) ? "Hotkeys" : "Default"]</a><br>"
 			dat += "<br>"
 			dat += "<b>PDA Color:</b> <span style='border:1px solid #161616; background-color: [pda_color];'>&nbsp;&nbsp;&nbsp;</span> <a href='byond://?_src_=prefs;preference=pda_color;task=input'>Change</a><BR>"
 			dat += "<b>PDA Style:</b> <a href='byond://?_src_=prefs;task=input;preference=pda_style'>[pda_style]</a><br>"
+			dat += "<b>[TeguTranslate("On-Mob Backpack Visibility", src)]:</b> <a href='byond://?_src_=prefs;task=input;preference=backpack_visibility'>[(backpack_visibility) ? TeguTranslate("Enabled", src): TeguTranslate("Disabled", src)]</a><br>"
 			dat += "<br>"
 			dat += "<b>Ghost Ears:</b> <a href='byond://?_src_=prefs;preference=ghost_ears'>[(chat_toggles & CHAT_GHOSTEARS) ? "All Speech" : "Nearest Creatures"]</a><br>"
 			dat += "<b>Ghost Radio:</b> <a href='byond://?_src_=prefs;preference=ghost_radio'>[(chat_toggles & CHAT_GHOSTRADIO) ? "All Messages":"No Messages"]</a><br>"
@@ -764,6 +799,7 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 						dat += "<b>Be [capitalize(special_role)]:</b> <a href='byond://?_src_=prefs;preference=be_special;be_special_type=[special_role]'>[(special_role in be_special) ? TeguTranslate("Enabled", src) : TeguTranslate("Disabled", src)]</a><br>"
 			dat += "<br>"
 			dat += "<b>Midround Antagonist:</b> <a href='byond://?_src_=prefs;preference=allow_midround_antag'>[(toggles & MIDROUND_ANTAG) ? TeguTranslate("Enabled", src) : TeguTranslate("Disabled", src)]</a><br>"
+			dat += "<b>[TeguTranslate("LCL Specimen Preferences", src)]:</b> <a href='byond://?_src_=prefs;task=input;preference=lcl_abno'>LCL ABNO LIST</a><br>"
 			dat += "</td></tr></table>"
 		if(2) //OOC Preferences
 			dat += "<table><tr><td width='340px' height='300px' valign='top'>"
@@ -1340,6 +1376,12 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 					backpack = pick(GLOB.backpacklist)
 				if("suit")
 					jumpsuit_style = pick(GLOB.jumpsuitlist)
+				if("work_notepad_type")
+					work_notepad_type = pick(WORK_NOTEPAD_PREFERENCE_TABLET, WORK_NOTEPAD_PREFERENCE_CLIPBOARD, WORK_NOTEPAD_PREFERENCE_NONE)
+				if("beret_enabled")
+					beret_enabled = !beret_enabled
+				if("sunglasses_enabled")
+					sunglasses_enabled = !sunglasses_enabled
 				if("all")
 					random_character(gender)
 
@@ -1664,6 +1706,17 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 					else
 						jumpsuit_style = PREF_SUIT
 
+				if("work_notepad_type")
+					var/new_type = input(user, "Choose which kind of optional work tool your agent will spawn with:", "Abnormality Work Tool") as null|anything in list(WORK_NOTEPAD_PREFERENCE_CLIPBOARD, WORK_NOTEPAD_PREFERENCE_TABLET, WORK_NOTEPAD_PREFERENCE_NONE)
+					if(new_type)
+						work_notepad_type = new_type
+
+				if("beret_enabled")
+					beret_enabled = !beret_enabled
+
+				if("sunglasses_enabled")
+					sunglasses_enabled = !sunglasses_enabled
+
 				if("uplink_loc")
 					var/new_loc = input(user, "Choose your character's traitor uplink spawn location:", "Character Preference") as null|anything in GLOB.uplink_spawn_loc_list
 					if(new_loc)
@@ -1707,26 +1760,9 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 						to_chat(user, "<span class='warning'>You have no unlocked achievements!</span>")
 						return
 
-					var/list/choices = list("None")
-					var/list/achievement_map = list()
-
-					for(var/achievement_type in unlocked)
-						var/datum/award/achievement/A = SSachievements.achievements[achievement_type]
-						if(!A || !A.name)
-							continue
-						var/color = A.get_difficulty_color()
-						var/display_name = "<font color='[color]'>[A.name] ([A.difficulty])</font>"
-						choices += display_name
-						achievement_map[display_name] = achievement_type
-
-					var/choice = input(user, "Choose your achievement specialization:", "Achievement Specialization") as null|anything in choices
-					if(!choice)
-						return
-
-					if(choice == "None")
-						chosen_achievement = null
-					else
-						chosen_achievement = achievement_map[choice]
+					if(!achievement_spec_menu)
+						achievement_spec_menu = new(src)
+					achievement_spec_menu.ui_interact(user)
 
 				// The lore stuff
 				if("govrelation")
@@ -1734,6 +1770,21 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 					if(!new_relation)
 						return
 					terragov_relation = new_relation
+
+
+				// District Origin
+				if("wingselect")
+					var/new_district = input(user, "Which district do you come from?", "District Selection") as null|anything in GLOB.district_prefs
+					if(!new_district)
+						return
+					district_origin = new_district
+
+				// Zone Origin
+				if("zoneselect")
+					var/new_zone = input(user, "Do you come from the Backstreets or Nest?", "Zone Selection") as null|anything in GLOB.wing_section_prefs
+					if(!new_zone)
+						return
+					zone_origin = new_zone
 
 				if ("preferred_map")
 					var/maplist = list()
@@ -1789,6 +1840,29 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 						new_lang = CLIENT_LANGUAGE_ENGLISH
 					client_language = new_lang
 
+				if("lcl_abno") //Awful snowflake code that probably has a better solution, but I'm tired. Automatically makes a list of available LCL abnos to disable or enable.
+					var/list/abno_list = GLOB.low_security.Copy() + GLOB.high_security.Copy()
+					var/list/abno_names = list()
+					var/fill_pref_list = FALSE
+					if(LAZYLEN(lcl_abno_pref) != LAZYLEN(abno_list))
+						fill_pref_list = TRUE
+					for(var/abno in abno_list)
+						if(fill_pref_list && isnull(LAZYACCESS(lcl_abno_pref, abno)))
+							LAZYSET(lcl_abno_pref, abno, TRUE)
+						var/mob/living/simple_animal/hostile/limbus_abno/picked_abno = abno
+						var/enabled_string = "Disabled"
+						if(LAZYACCESS(lcl_abno_pref, abno))
+							enabled_string = "Enabled"
+						LAZYSET(abno_names, "[picked_abno.true_name] ([enabled_string])", abno)
+					var/input_abno = input(user, "Add or remove an abnormality you want to play.", "Character Preference", lcl_abno_pref)  as null|anything in sortList(abno_names)
+					input_abno = LAZYACCESS(abno_names, input_abno)
+					LAZYSET(lcl_abno_pref, input_abno, !LAZYACCESS(lcl_abno_pref, input_abno))
+
+				if("backpack_visibility")
+					backpack_visibility = !backpack_visibility
+					if(ishuman(user) && user.client)
+						var/mob/living/carbon/human/i_guess_we_can_hot_update_this = user
+						i_guess_we_can_hot_update_this.update_inv_back()
 		else
 			switch(href_list["preference"])
 				if("publicity")
@@ -1887,6 +1961,10 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 					see_chat_non_mob = !see_chat_non_mob
 				if("see_rc_emotes")
 					see_rc_emotes = !see_rc_emotes
+				if("show_status_display")
+					show_status_display = (show_status_display + 1) % 3
+					if(parent?.mob)
+						parent.mob.refresh_status_display_images()
 
 				if("action_buttons")
 					buttons_locked = !buttons_locked
@@ -2134,6 +2212,9 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 	character.backpack = backpack
 
 	character.jumpsuit_style = jumpsuit_style
+	character.beret_enabled = beret_enabled
+	character.sunglasses_enabled = sunglasses_enabled
+	character.work_notepad_type = work_notepad_type
 
 	character.flavor_text = features["flavor_text"] //Let's update their flavor_text at least initially
 

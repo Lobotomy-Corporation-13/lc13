@@ -1,4 +1,4 @@
-
+/*
 GLOBAL_LIST_INIT(ventcrawl_machinery, typecacheof(list(
 	/obj/machinery/atmospherics/components/unary/vent_pump,
 	/obj/machinery/atmospherics/components/unary/vent_scrubber)))
@@ -115,3 +115,4 @@ GLOBAL_LIST_INIT(ventcrawl_machinery, typecacheof(list(
 		. = new_loc
 	remove_ventcrawl()
 	add_ventcrawl(.)
+ */

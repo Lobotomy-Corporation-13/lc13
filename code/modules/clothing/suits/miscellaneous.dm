@@ -92,7 +92,7 @@
 	icon_state = "death"
 	inhand_icon_state = "death"
 	flags_1 = CONDUCT_1
-	fire_resist = T0C+5200
+	fire_resist = TRUE
 	flags_inv = HIDEGLOVES|HIDESHOES|HIDEJUMPSUIT
 
 
@@ -276,7 +276,7 @@
 	inhand_icon_state = "labcoat"
 	body_parts_covered = CHEST|GROIN|ARMS
 	cold_protection = CHEST|GROIN|ARMS
-	min_cold_protection_temperature = FIRE_SUIT_MIN_TEMP_PROTECT	//Space carp like space, so you should too
+	min_cold_protection_temperature = TRUE
 	allowed = list(/obj/item/tank/internals/emergency_oxygen, /obj/item/tank/internals/plasmaman, /obj/item/gun/ballistic/rifle/boltaction/harpoon)
 	hoodtype = /obj/item/clothing/head/hooded/carp_hood
 
@@ -286,7 +286,7 @@
 	icon_state = "carp_casual"
 	body_parts_covered = HEAD
 	cold_protection = HEAD
-	min_cold_protection_temperature = FIRE_SUIT_MIN_TEMP_PROTECT
+	min_cold_protection_temperature = TRUE
 	flags_inv = HIDEHAIR|HIDEEARS
 
 /obj/item/clothing/head/hooded/carp_hood/equipped(mob/living/carbon/human/user, slot)
@@ -306,7 +306,7 @@
 	inhand_icon_state = "labcoat"
 	body_parts_covered = CHEST|GROIN|ARMS
 	//cold_protection = CHEST|GROIN|ARMS
-	//min_cold_protection_temperature = FIRE_SUIT_MIN_TEMP_PROTECT
+	//min_cold_protection_temperature = TRUE
 	allowed = list()
 	hoodtype = /obj/item/clothing/head/hooded/ian_hood
 	dog_fashion = /datum/dog_fashion/back
@@ -317,7 +317,7 @@
 	icon_state = "ian"
 	body_parts_covered = HEAD
 	//cold_protection = HEAD
-	//min_cold_protection_temperature = FIRE_SUIT_MIN_TEMP_PROTECT
+	//min_cold_protection_temperature = TRUE
 	flags_inv = HIDEHAIR|HIDEEARS
 
 /obj/item/clothing/suit/hooded/bee_costume // It's Hip!
@@ -423,7 +423,7 @@
 	allowed = list(/obj/item/flashlight, /obj/item/tank/internals/emergency_oxygen, /obj/item/tank/internals/plasmaman, /obj/item/toy, /obj/item/storage/fancy/cigarettes, /obj/item/lighter, /obj/item/radio)
 	body_parts_covered = CHEST|GROIN|ARMS
 	cold_protection = CHEST|GROIN|ARMS
-	min_cold_protection_temperature = FIRE_SUIT_MIN_TEMP_PROTECT
+	min_cold_protection_temperature = TRUE
 	species_exception = list(/datum/species/golem)
 
 /obj/item/clothing/suit/jacket/leather
@@ -432,7 +432,7 @@
 	icon_state = "leatherjacket"
 	inhand_icon_state = "hostrench"
 	resistance_flags = NONE
-	max_heat_protection_temperature = ARMOR_MAX_TEMP_PROTECT
+	max_heat_protection_temperature = TRUE
 	allowed = list(/obj/item/flashlight, /obj/item/tank/internals/emergency_oxygen, /obj/item/tank/internals/plasmaman, /obj/item/toy, /obj/item/storage/fancy/cigarettes, /obj/item/lighter, /obj/item/gun/ballistic/automatic/pistol, /obj/item/gun/ballistic/revolver, /obj/item/gun/ballistic/revolver/detective, /obj/item/radio)
 	species_exception = list(/datum/species/golem/bone) //bad to the bone
 
@@ -583,7 +583,7 @@
 	inhand_icon_state = "coatwinter"
 	body_parts_covered = CHEST|GROIN|ARMS
 	cold_protection = CHEST|GROIN|ARMS
-	min_cold_protection_temperature = FIRE_SUIT_MIN_TEMP_PROTECT
+	min_cold_protection_temperature = TRUE
 	armor = list(MELEE = 0, BULLET = 0, LASER = 0,ENERGY = 0, BOMB = 0, BIO = 10, RAD = 0, FIRE = 0, ACID = 0)
 	allowed = list(/obj/item/flashlight, /obj/item/tank/internals/emergency_oxygen, /obj/item/tank/internals/plasmaman, /obj/item/toy, /obj/item/storage/fancy/cigarettes, /obj/item/lighter)
 
@@ -593,7 +593,7 @@
 	icon_state = "winterhood"
 	body_parts_covered = HEAD
 	cold_protection = HEAD
-	min_cold_protection_temperature = FIRE_SUIT_MIN_TEMP_PROTECT
+	min_cold_protection_temperature = TRUE
 	flags_inv = HIDEHAIR|HIDEEARS
 	armor = list(MELEE = 0, BULLET = 0, LASER = 0,ENERGY = 0, BOMB = 0, BIO = 10, RAD = 0, FIRE = 0, ACID = 0)
 
@@ -657,7 +657,7 @@
 	icon_state = "coatengineer"
 	inhand_icon_state = "coatengineer"
 	armor = list(MELEE = 0, BULLET = 0, LASER = 0, ENERGY = 0, BOMB = 0, BIO = 0, RAD = 20, FIRE = 30, ACID = 45)
-	allowed = list(/obj/item/flashlight, /obj/item/tank/internals/emergency_oxygen, /obj/item/tank/internals/plasmaman, /obj/item/t_scanner, /obj/item/construction/rcd, /obj/item/pipe_dispenser, /obj/item/toy, /obj/item/storage/fancy/cigarettes, /obj/item/lighter)
+	allowed = list(/obj/item/flashlight, /obj/item/tank/internals/emergency_oxygen, /obj/item/tank/internals/plasmaman, /obj/item/t_scanner, /obj/item/construction/rcd, /obj/item/toy, /obj/item/storage/fancy/cigarettes, /obj/item/lighter)
 	hoodtype = /obj/item/clothing/head/hooded/winterhood/engineering
 	species_exception = list(/datum/species/golem/uranium)
 

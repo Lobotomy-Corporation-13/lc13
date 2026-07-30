@@ -55,7 +55,6 @@
 			The fairy walks away, stumbling along the way."),
 	)
 
-	var/can_act = TRUE
 	var/jump_cooldown = 0
 	var/jump_cooldown_time = 8 SECONDS
 	var/jump_damage = 30
@@ -226,7 +225,7 @@
 						jump_damage = 0
 					else
 						jump_damage = initial(jump_damage)
-				L.deal_damage(jump_damage, BLACK_DAMAGE)
+				L.deal_damage(jump_damage, BLACK_DAMAGE, src, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 				if(L.health < 0)
 					L.gib()
 			for(var/obj/vehicle/sealed/mecha/V in T)

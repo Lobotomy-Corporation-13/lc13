@@ -1,4 +1,4 @@
-/obj/machinery/atmospherics/components/unary/outlet_injector
+/* /obj/machinery/atmospherics/components/unary/outlet_injector
 	icon_state = "inje_map-3"
 
 	name = "air injector"
@@ -292,3 +292,4 @@
 /obj/machinery/atmospherics/components/unary/outlet_injector/atmos/toxins_mixing_input
 	name = "toxins mixing input injector"
 	id = ATMOS_GAS_MONITOR_INPUT_TOXINS_LAB
+ */

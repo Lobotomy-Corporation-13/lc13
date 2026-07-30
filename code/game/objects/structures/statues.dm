@@ -6,7 +6,7 @@
 	density = TRUE
 	anchored = FALSE
 	max_integrity = 100
-	CanAtmosPass = ATMOS_PASS_DENSITY
+	// CanAtmosPass = ATMOS_PASS_DENSITY
 	material_modifier = 0.5
 	material_flags = MATERIAL_AFFECT_STATISTICS
 	/// Beauty component mood modifier
@@ -91,9 +91,9 @@
 	name = "statue of a scientist"
 	icon_state = "sci"
 
-/obj/structure/statue/plasma/ComponentInitialize()
+/* /obj/structure/statue/plasma/ComponentInitialize()
 	. = ..()
-	AddElement(/datum/element/atmos_sensitive)
+	AddElement(/datum/element/atmos_sensitive) */
 
 /obj/structure/statue/plasma/bullet_act(obj/projectile/Proj)
 	var/burn = FALSE
@@ -107,35 +107,34 @@
 		else
 			message_admins("Plasma statue ignited by [Proj]. No known firer, in [ADMIN_VERBOSEJMP(T)]")
 			log_game("Plasma statue ignited by [Proj] in [AREACOORD(T)]. No known firer.")
-		PlasmaBurn(2500)
+		PlasmaBurn()
 	. = ..()
 
 /obj/structure/statue/plasma/attackby(obj/item/W, mob/user, params)
-	if(W.get_temperature() > 300 && !QDELETED(src))//If the temperature of the object is over 300, then ignite
+	if(W.get_temperature() && !QDELETED(src))//If the temperature of the object is over 300, then ignite
 		var/turf/T = get_turf(src)
 		message_admins("Plasma statue ignited by [ADMIN_LOOKUPFLW(user)] in [ADMIN_VERBOSEJMP(T)]")
 		log_game("Plasma statue ignited by [key_name(user)] in [AREACOORD(T)]")
-		ignite(W.get_temperature())
+		PlasmaBurn()
 	else
 		return ..()
 
-/obj/structure/statue/plasma/should_atmos_process(datum/gas_mixture/air, exposed_temperature)
+/* /obj/structure/statue/plasma/should_atmos_process(datum/gas_mixture/air, exposed_temperature)
 	return exposed_temperature > 300
 
 /obj/structure/statue/plasma/atmos_expose(datum/gas_mixture/air, exposed_temperature)
-	PlasmaBurn(exposed_temperature)
+	PlasmaBurn(exposed_temperature) */
 
-/obj/structure/statue/plasma/proc/PlasmaBurn(temperature)
+/obj/structure/statue/plasma/proc/PlasmaBurn()
 	if(QDELETED(src))
 		return
-	if(custom_materials[/datum/material/plasma])
-		var/plasma_amount = round(custom_materials[/datum/material/plasma]/MINERAL_MATERIAL_AMOUNT)
-		atmos_spawn_air("plasma=[plasma_amount*10];TEMP=[temperature]")
+	var/turf/here = get_turf(src)
+	explosion(here, 0, 0, 5, 8, flame_range = 3)
 	deconstruct(FALSE)
 
-/obj/structure/statue/plasma/proc/ignite(exposed_temperature)
+/* /obj/structure/statue/plasma/proc/ignite(exposed_temperature)
 	if(exposed_temperature > 300)
-		PlasmaBurn(exposed_temperature)
+		PlasmaBurn(exposed_temperature) */
 
 //////////////////////gold///////////////////////////////////////
 

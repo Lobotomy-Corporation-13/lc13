@@ -159,8 +159,6 @@
 
 /mob/living/simple_animal/hostile/abnormality/mountain/death()
 	//Make sure we didn't get cheesed
-	if(health > 0)
-		return
 	if(StageChange(FALSE)) // We go down by one stage
 		return
 	animate(src, alpha = 0, time = 10 SECONDS)
@@ -277,7 +275,7 @@
 	playsound(get_turf(src), 'sound/abnormalities/mountain/scream.ogg', 75, 1, 5)
 	var/list/been_hit = list()
 	for(var/turf/T in view(7, src))
-		HurtInTurf(T, been_hit, scream_damage, BLACK_DAMAGE, null, TRUE, FALSE, TRUE, hurt_hidden = TRUE)
+		HurtInTurf(T, been_hit, scream_damage, BLACK_DAMAGE, null, TRUE, FALSE, TRUE, hurt_hidden = TRUE, attack_type = (ATTACK_TYPE_SPECIAL))
 
 /mob/living/simple_animal/hostile/abnormality/mountain/proc/Slam(range)
 	if(slam_cooldown > world.time)
@@ -288,7 +286,7 @@
 	var/list/been_hit = list()
 	for(var/turf/open/T in view(2, src))
 		new /obj/effect/temp_visual/small_smoke/halfsecond(T)
-		HurtInTurf(T, been_hit, slam_damage, BLACK_DAMAGE, null, TRUE, FALSE, TRUE, hurt_hidden = FALSE, hurt_structure = TRUE, break_not_destroy = TRUE)
+		HurtInTurf(T, been_hit, slam_damage, BLACK_DAMAGE, null, TRUE, FALSE, TRUE, hurt_hidden = FALSE, hurt_structure = TRUE, break_not_destroy = TRUE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 
 /mob/living/simple_animal/hostile/abnormality/mountain/proc/Spit(atom/target)
 	if(spit_cooldown > world.time)
@@ -317,14 +315,14 @@
 
 /mob/living/simple_animal/hostile/abnormality/mountain/CanStartPatrol()
 	if(phase <= 1) // Still phase one, we need corpses and can't really fight
-		return !(status_flags & GODMODE)
+		return (AIStatus != AI_OFF && !(status_flags & GODMODE))
 	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/mountain/patrol_reset()
 	. = ..()
 	FindTarget() // Start eating corpses IMMEDIATELLY
 
-/mob/living/simple_animal/hostile/abnormality/mountain/patrol_select()
+/mob/living/simple_animal/hostile/abnormality/mountain/SelectPatrolLocation()
 	if(phase >= 3) // Ignore dead stuff from now on
 		return ..()
 
@@ -352,15 +350,15 @@
 	if(LAZYLEN(high_priority_turfs))
 		target_turf = get_closest_atom(/turf/open, high_priority_turfs, src)
 		if(phase <= 1)
-			target = null
+			LoseTarget(FALSE)
 	else if(LAZYLEN(medium_priority_turfs))
 		target_turf = get_closest_atom(/turf/open, medium_priority_turfs, src)
 	else if(LAZYLEN(low_priority_turfs))
 		target_turf = get_closest_atom(/turf/open, low_priority_turfs, src)
 
 	if(istype(target_turf))
-		patrol_path = get_path_to(src, target_turf, TYPE_PROC_REF(/turf, Distance_cardinal), 0, 200)
-		return
+		return target_turf
+
 	return ..()
 
 /* Abnormality work */

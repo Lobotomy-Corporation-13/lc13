@@ -31,8 +31,12 @@
 	if(ispath(SSabnormality_queue.queued_abnormality))
 		var/mob/living/simple_animal/hostile/abnormality/queued_abno = SSabnormality_queue.queued_abnormality
 		data["current"] = "[initial(queued_abno.name)]"
-		data["colorcurrent"] = "[THREAT_TO_CSS_COLOR[initial(queued_abno.threat_level)]]"
-		data["threatcurrent"] = "[THREAT_TO_NAME[initial(queued_abno.threat_level)]]"
+		if(queued_abno.threat_level)
+			data["colorcurrent"] = "[THREAT_TO_CSS_COLOR[initial(queued_abno.threat_level)]]"
+			data["threatcurrent"] = "[THREAT_TO_NAME[initial(queued_abno.threat_level)]]"
+		else
+			data["colorcurrent"] = "crimson"
+			data["threatcurrent"] = "? ? ?"
 
 	if(LAZYLEN(SSabnormality_queue.picking_abnormalities))
 		var/list/choices = list()
@@ -45,6 +49,14 @@
 			data["threat[initial(abno.name)]"] = "[THREAT_TO_NAME[initial(abno.threat_level)]]"
 
 		data["choices"] = choices
+
+	var/is_admin
+	if(user.client.holder)
+		is_admin = TRUE
+	else
+		is_admin = FALSE
+
+	data["is_admin"] = is_admin // used to determine if we unlock special admin-only options
 
 	return data
 
@@ -86,10 +98,20 @@
 				UpdateAnomaly(target_type, "hardcore fucked it and rolled", TRUE)
 			else
 				message_admins("[usr] has managed to send a TGUI signal to hardcore fuck it and roll despite the option being disabled. This is indicative of hacking.")
+		if("super_fuck_it_lets_roll")
+			if (SSabnormality_queue.hardcore_roll_enabled)
+				if (!prob(SSabnormality_queue.stupid_chance))
+					var/mob/living/simple_animal/hostile/abnormality/target_type = pick(typesof(/mob/living/simple_animal/hostile/abnormality))
+					UpdateAnomaly(target_type, "super fucked it and rolled", TRUE)
+				else
+					var/mob/living/simple_animal/target_type = pick(typesof(/mob/living/simple_animal) - typesof(/mob/living/simple_animal/hostile/abnormality))
+					UpdateAnomaly(target_type, "super fucked it and rolled a rare mob", TRUE, TRUE)
+			else
+				message_admins("[usr] has managed to send a TGUI signal to super fuck it and roll despite the option being disabled. This is indicative of hacking.")
 
 	update_icon()
 
-/obj/machinery/computer/abnormality_queue/proc/UpdateAnomaly(mob/living/simple_animal/hostile/abnormality/target_type, logstring, lock_after)
+/obj/machinery/computer/abnormality_queue/proc/UpdateAnomaly(mob/living/simple_animal/hostile/abnormality/target_type, logstring, lock_after, stupid = FALSE)
 	SSabnormality_queue.queued_abnormality = target_type
 	to_chat(usr, span_boldnotice("[initial(target_type.name)] has been selected."))
 	playsound(get_turf(src), 'sound/machines/terminal_prompt_confirm.ogg', 50, TRUE)
@@ -106,6 +128,8 @@
 		var/datum/tgui/ui = new(usr, src, "AbnormalityQueue")
 		ui.open()
 		SStgui.try_update_ui(usr, src, ui)
+	if(stupid)
+		SSabnormality_queue.queued_abnormality_stupid = stupid
 
 	return
 

@@ -121,7 +121,9 @@
 		"After work was completed, O-04-181 dispensed a soda can.",
 		"Soda cans dispensed by O-05-181 usually contained chemicals with anomalous properties.",
 		"The chances of recieving a soda with healing properties increased the better the work result.",
-		"When the work result was bad, soda cans were violently ejected at nearby employees.")
+		"When the work result was bad, soda cans were violently ejected at nearby employees.",
+		"This machine also has the ability to dispense EGO gifts, however it lowers the employee's potential.",
+	)
 
 //Sunset Traveller
 /obj/item/paper/fluff/info/zayin/sunset_traveller
@@ -140,3 +142,16 @@
 		"After working on O-06-200 with insight work, EMPLOYEE fell asleep.",
 		"While asleep after Insight work, EMPLOYEE heard many strange things, seeming to divine the future.",
 		"However, O-06-200 had a strong influence on any and all sleeping personnel in the facility. They seemed to get information they would otherwise not get.")
+
+// Message Of the Future
+/obj/item/paper/fluff/info/zayin/message
+	abno_type = /mob/living/simple_animal/hostile/abnormality/report
+	abno_code = "M-05-207"
+	abno_info = list(
+		"M-05-207 is inert until worked upon.",
+		"When worked, M-05-207 would tell tidings of things to come.",
+		"If the current tidings is of health, all employees healed HP very slowly.",
+		"If the current tidings is of love, all employees healed SP very slowly.",
+		"If the current tidings is of decay, all employees lost SP very slowly.",
+		"If the current tidings is of chaos, rats would invade the facility.",
+	)

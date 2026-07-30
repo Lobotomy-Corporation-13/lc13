@@ -70,7 +70,7 @@
 /datum/antagonist/gang/on_gain()
 	if(starter_gangster)
 		equip_gangster_in_inventory()
-	owner.current.playsound_local(get_turf(owner.current), 'sound/ambience/antag/thatshowfamiliesworks.ogg', 100, FALSE, pressure_affected = FALSE, use_reverb = FALSE)
+	owner.current.playsound_local(get_turf(owner.current), 'sound/ambience/antag/thatshowfamiliesworks.ogg', 100, FALSE, use_reverb = FALSE)
 	..()
 
 /datum/antagonist/gang/on_removal()

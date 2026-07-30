@@ -65,15 +65,15 @@
 			target_floor.burn_tile()
 		if(isfloorturf(target_floor))
 			for(var/turf/nearby_turf in range(1, target_floor))
-				if(!locate(/obj/effect/hotspot) in nearby_turf)
-					new /obj/effect/hotspot(nearby_turf)
+				if(!locate(/obj/effect/turf_fire) in nearby_turf)
+					new /obj/effect/turf_fire(nearby_turf)
 
 /datum/reagent/clf3/expose_mob(mob/living/exposed_mob, methods=TOUCH, reac_volume)
 	. = ..()
 	exposed_mob.adjust_fire_stacks(min(reac_volume/5, 10))
 	exposed_mob.IgniteMob()
-	if(!locate(/obj/effect/hotspot) in exposed_mob.loc)
-		new /obj/effect/hotspot(exposed_mob.loc)
+	if(!locate(/obj/effect/turf_fire) in exposed_mob.loc)
+		new /obj/effect/turf_fire(exposed_mob.loc)
 
 /datum/reagent/sorium
 	name = "Sorium"
@@ -306,13 +306,14 @@
 		else if(istype(foam))
 			foam.lifetime = initial(foam.lifetime) //reduce object churn a little bit when using smoke by keeping existing foam alive a bit longer
 
-	var/obj/effect/hotspot/hotspot = (locate(/obj/effect/hotspot) in exposed_turf)
-	if(hotspot && !isspaceturf(exposed_turf) && exposed_turf.air)
-		var/datum/gas_mixture/air = exposed_turf.air
+	var/obj/effect/turf_fire/flames = (locate(/obj/effect/turf_fire) in exposed_turf)
+	if(flames)
+		qdel(flames)
+	// if(hotspot && !isspaceturf(exposed_turf) && exposed_turf.air)
+/* 		var/datum/gas_mixture/air = exposed_turf.air
 		if(air.temperature > T20C)
 			air.temperature = max(air.temperature/2,T20C)
-		air.react(src)
-		qdel(hotspot)
+		air.react(src) */
 
 /datum/reagent/firefighting_foam/expose_obj(obj/exposed_obj, reac_volume)
 	. = ..()

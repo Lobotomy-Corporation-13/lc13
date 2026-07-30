@@ -2,7 +2,7 @@
 	name = "resin door"
 	icon = 'ModularLobotomy/_Lobotomyicons/xenodoors.dmi'
 	icon_state = "resin"
-	CanAtmosPass = ATMOS_PASS_NO
+	// CanAtmosPass = ATMOS_PASS_NO
 	openSound = 'ModularLobotomy/_Lobotomysounds/alien_resin_move1.ogg'
 	closeSound = 'ModularLobotomy/_Lobotomysounds/alien_resin_move1.ogg'
 	close_delay = 5 SECONDS

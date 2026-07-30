@@ -8,7 +8,7 @@
 	var/paint_color = "grey"
 
 	custom_materials = list(/datum/material/iron=5000, /datum/material/glass=2000)
-
+/*
 /obj/item/pipe_painter/afterattack(atom/A, mob/user, proximity_flag)
 	. = ..()
 	//Make sure we only paint adjacent items
@@ -28,4 +28,4 @@
 
 /obj/item/pipe_painter/examine(mob/user)
 	. = ..()
-	. += span_notice("It is set to [paint_color].")
+	. += span_notice("It is set to [paint_color].") */

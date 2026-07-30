@@ -26,6 +26,14 @@
 	},
 /turf/open/floor/plasteel,
 /area/city/backstreets_room)
+"v" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/item/quest_ticket/grungeon{
+	pixel_x = 3;
+	pixel_y = 9
+	},
+/turf/open/floor/plasteel,
+/area/city/backstreets_room)
 "w" = (
 /obj/structure/fluff/broken_flooring,
 /obj/effect/decal/cleanable/dirt/dust,
@@ -170,7 +178,7 @@ N
 Z
 W
 f
-P
+v
 a
 Y
 Y

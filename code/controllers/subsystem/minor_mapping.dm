@@ -5,7 +5,7 @@ SUBSYSTEM_DEF(minor_mapping)
 	init_order = INIT_ORDER_MINOR_MAPPING
 	flags = SS_NO_FIRE
 
-/datum/controller/subsystem/minor_mapping/Initialize(timeofday)
+/* /datum/controller/subsystem/minor_mapping/Initialize(timeofday)
 	trigger_migration(CONFIG_GET(number/mice_roundstart))
 	place_satchels()
 	return ..()
@@ -27,7 +27,7 @@ SUBSYSTEM_DEF(minor_mapping)
 			mouse = new /mob/living/simple_animal/hostile/regalrat/controlled(proposed_turf)
 		if(mouse.environment_air_is_safe())
 			num_mice -= 1
-			mouse = null
+			mouse = null */
 
 //Subsystem that puts drugs under our floors - IP
 /datum/controller/subsystem/minor_mapping/proc/place_satchels(amount=10)

@@ -81,7 +81,6 @@
 /turf/open/floor/plating/airless,
 /area/ruin/space/abandoned_tele)
 "s" = (
-/obj/machinery/portable_atmospherics/canister/air,
 /turf/open/floor/plating/airless,
 /area/ruin/space/abandoned_tele)
 "u" = (

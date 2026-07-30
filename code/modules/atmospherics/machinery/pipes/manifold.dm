@@ -1,4 +1,4 @@
-//3-Way Manifold
+/* //3-Way Manifold
 
 /obj/machinery/atmospherics/pipe/manifold
 	icon = 'icons/obj/atmospherics/pipes/manifold.dmi'
@@ -43,3 +43,4 @@
 			add_overlay( getpipeimage(icon, "pipe-[piping_layer]", get_dir(src, nodes[i])) )
 
 	update_layer()
+ */

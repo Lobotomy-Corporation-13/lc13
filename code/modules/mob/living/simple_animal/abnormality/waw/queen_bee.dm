@@ -119,6 +119,8 @@
 	attack_verb_simple = "bite"
 	attack_sound = 'sound/weapons/bite.ogg'
 	speak_emote = list("buzzes")
+	var/created_bee_type = /mob/living/simple_animal/hostile/worker_bee
+	var/obj/item/organ/brain/original_brain //Pretty much only used by LCL Qbee, remembers who the original brain was before being turned into a bee, if any.
 
 /mob/living/simple_animal/hostile/worker_bee/Initialize()
 	. = ..()
@@ -138,4 +140,4 @@
 		visible_message(span_danger("[src] bites hard on \the [H] as another bee appears!"))
 		H.emote("scream")
 		H.gib()
-		new /mob/living/simple_animal/hostile/worker_bee(T)
+		new created_bee_type(T)

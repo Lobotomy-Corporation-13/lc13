@@ -575,7 +575,9 @@
  * Used to not even attempt to Bump() or fail to Cross() anything we already hit.
  */
 /obj/projectile/CanPassThrough(atom/blocker, turf/target, blocker_opinion)
-	return impacted[blocker]? TRUE : ..()
+	if(!(blocker in impacted))
+		return ..()
+	return impacted[blocker] ? TRUE : ..()
 
 /**
  * Projectile moved:
@@ -879,54 +881,63 @@
 	trajectory_ignore_forcemove = FALSE
 	starting = get_turf(source)
 	original = target
-	if(targloc || !params)
-		yo = targloc.y - curloc.y
-		xo = targloc.x - curloc.x
-		set_angle(Get_Angle(src, targloc) + spread)
 
 	if(isliving(source) && params)
-		var/list/calculated = calculate_projectile_angle_and_pixel_offsets(source, params)
+		var/list/modifiers = params2list(params)
+		var/list/calculated = calculate_projectile_angle_and_pixel_offsets(source, target, modifiers)
 		p_x = calculated[2]
 		p_y = calculated[3]
 
 		set_angle(calculated[1] + spread)
+		return
+
 	else if(targloc)
 		yo = targloc.y - curloc.y
 		xo = targloc.x - curloc.x
 		set_angle(Get_Angle(src, targloc) + spread)
+
 	else
 		stack_trace("WARNING: Projectile [type] fired without either mouse parameters, or a target atom to aim at!")
 		qdel(src)
 
-/proc/calculate_projectile_angle_and_pixel_offsets(mob/user, params)
-	var/list/modifiers = params2list(params)
-	var/p_x = 0
-	var/p_y = 0
+// PORTED FROM TGSTATION. There is no individual PR to point to; however the latest one to modify this proc was commit bbb7a41 ('Guncode Agony 4').
+/proc/calculate_projectile_angle_and_pixel_offsets(atom/source, atom/target, list/modifiers)
 	var/angle = 0
-	if(LAZYACCESS(modifiers, ICON_X))
-		p_x = text2num(LAZYACCESS(modifiers, ICON_X))
-	if(LAZYACCESS(modifiers, ICON_Y))
-		p_y = text2num(LAZYACCESS(modifiers, ICON_Y))
-	if(LAZYACCESS(modifiers, SCREEN_LOC))
-		//Split screen-loc up into X+Pixel_X and Y+Pixel_Y
-		var/list/screen_loc_params = splittext(LAZYACCESS(modifiers, SCREEN_LOC), ",")
+	var/p_x = LAZYACCESS(modifiers, ICON_X) ? text2num(LAZYACCESS(modifiers, ICON_X)) : 32 / 2 // ICON_(X|Y) are measured from the bottom left corner of the icon.
+	var/p_y = LAZYACCESS(modifiers, ICON_Y) ? text2num(LAZYACCESS(modifiers, ICON_Y)) : 32 / 2 // This centers the target if params aren't passed.
 
-		//Split X+Pixel_X up into list(X, Pixel_X)
-		var/list/screen_loc_X = splittext(screen_loc_params[1],":")
+	if(target)
+		var/turf/source_loc = get_turf(source)
+		var/turf/target_loc = get_turf(target)
+		var/dx = ((target_loc.x - source_loc.x) * 32) + (target.pixel_x - source.pixel_x) + (p_x - (32 / 2))
+		var/dy = ((target_loc.y - source_loc.y) * 32) + (target.pixel_y - source.pixel_y) + (p_y - (32 / 2))
 
-		//Split Y+Pixel_Y up into list(Y, Pixel_Y)
-		var/list/screen_loc_Y = splittext(screen_loc_params[2],":")
-		var/x = text2num(screen_loc_X[1]) * 32 + text2num(screen_loc_X[2]) - 32
-		var/y = text2num(screen_loc_Y[1]) * 32 + text2num(screen_loc_Y[2]) - 32
+		angle = ATAN2(dy, dx)
+		return list(angle, p_x, p_y)
 
-		//Calculate the "resolution" of screen based on client's view and world's icon size. This will work if the user can view more tiles than average.
-		var/list/screenview = getviewsize(user.client.view)
-		var/screenviewX = screenview[1] * world.icon_size
-		var/screenviewY = screenview[2] * world.icon_size
+	if(!ismob(source) || !LAZYACCESS(modifiers, SCREEN_LOC))
+		CRASH("Can't make trajectory calculations without a target or click params and a client.")
 
-		var/ox = round(screenviewX/2) - user.client.pixel_x //"origin" x
-		var/oy = round(screenviewY/2) - user.client.pixel_y //"origin" y
-		angle = ATAN2(y - oy, x - ox)
+	var/mob/user = source
+	if(!user.client)
+		CRASH("Can't make trajectory calculations without a target or click params and a client.")
+
+	//Split screen-loc up into X+Pixel_X and Y+Pixel_Y
+	var/list/screen_loc_params = splittext(LAZYACCESS(modifiers, SCREEN_LOC), ",")
+	//Split X+Pixel_X up into list(X, Pixel_X)
+	var/list/screen_loc_X = splittext(screen_loc_params[1],":")
+	//Split Y+Pixel_Y up into list(Y, Pixel_Y)
+	var/list/screen_loc_Y = splittext(screen_loc_params[2],":")
+
+	var/tx = (text2num(screen_loc_X[1]) - 1) * 32 + text2num(screen_loc_X[2])
+	var/ty = (text2num(screen_loc_Y[1]) - 1) * 32 + text2num(screen_loc_Y[2])
+
+	//Calculate the "resolution" of screen based on client's view and world's icon size. This will work if the user can view more tiles than average.
+	var/list/screenview = view_to_pixels(user.client.view)
+
+	var/ox = round(screenview[1] * 0.5) - user.client.pixel_x //"origin" x
+	var/oy = round(screenview[2] * 0.5) - user.client.pixel_y //"origin" y
+	angle = ATAN2(tx - oy, ty - ox)
 	return list(angle, p_x, p_y)
 
 /obj/projectile/Destroy()
@@ -984,8 +995,8 @@
 	if(cleanup)
 		cleanup_beam_segments()
 
-/obj/projectile/experience_pressure_difference()
-	return
+/* /obj/projectile/experience_pressure_difference()
+	return */
 
 ///Like [/obj/item/proc/updateEmbedding] but for projectiles instead, call this when you want to add embedding or update the stats on the embedding element
 /obj/projectile/proc/updateEmbedding()

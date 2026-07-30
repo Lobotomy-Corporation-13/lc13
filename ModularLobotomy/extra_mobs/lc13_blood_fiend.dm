@@ -9,8 +9,8 @@
 	icon_living = "test_meifiend"
 	icon_dead = "test_meifiend_dead"
 	damage_coeff = list(BRUTE = 1, RED_DAMAGE = 1.2, WHITE_DAMAGE = 0.8, BLACK_DAMAGE = 0.6, PALE_DAMAGE = 1.3)
-	melee_damage_lower = 8
-	melee_damage_upper = 10
+	melee_damage_lower = 22
+	melee_damage_upper = 24
 	melee_damage_type = RED_DAMAGE
 	attack_sound = 'sound/abnormalities/nosferatu/attack.ogg'
 	attack_verb_continuous = "slices"
@@ -24,28 +24,45 @@
 	var/leap_sound = 'sound/abnormalities/nosferatu/attack_special.ogg'
 	var/blood_feast = 450
 	var/max_blood_feast = 500
-	var/can_act = TRUE
 	var/leap_damage = 50
 	var/slash_damage = 25
-	var/drain_cooldown = 0
-	var/drain_cooldown_time = 50
 	var/bleed_stacks = 2
 	var/leap_bleed_stacks = 5
 	var/drop_outfit = TRUE
+	var/dash_charges = 0
+	var/obj/effect/proc_holder/ability/aimed/dash/ourdash
+	// Blood cap reduced from 500 to 150 since bloodfeast component gains ~3x more blood per pool
+	var/blood_cap = 150
 
 /mob/living/simple_animal/hostile/humanoid/blood/fiend/Initialize()
 	. = ..()
 	if(SSmaptype.maptype == "wcorp")
 		drop_outfit = FALSE
+	grantAbilities()
+
+/mob/living/simple_animal/hostile/humanoid/blood/fiend/proc/grantAbilities()
+	ourdash = new /obj/effect/proc_holder/ability/aimed/dash/bloodfiend
 
 /mob/living/simple_animal/hostile/humanoid/blood/fiend/proc/AdjustBloodFeast(amount)
-	if(stat != DEAD)
-		adjustBruteLoss(-amount/4)
-		blood_feast += amount
-		if (blood_feast > max_blood_feast)
-			blood_feast = max_blood_feast
-	else
+	if(stat == DEAD)
 		return
+	var/datum/component/bloodfeast/bloodfeast = GetComponent(/datum/component/bloodfeast)
+	if(!bloodfeast)
+		return
+	adjustBruteLoss(-amount/4)
+	bloodfeast.AdjustBlood(amount)
+
+/mob/living/simple_animal/hostile/humanoid/blood/fiend/proc/GetBloodFeast()
+	var/datum/component/bloodfeast/bloodfeast = GetComponent(/datum/component/bloodfeast)
+	if(!bloodfeast)
+		return 0
+	return bloodfeast.blood_amount
+
+/mob/living/simple_animal/hostile/humanoid/blood/fiend/proc/IsBloodFull()
+	var/datum/component/bloodfeast/bloodfeast = GetComponent(/datum/component/bloodfeast)
+	if(!bloodfeast)
+		return FALSE
+	return bloodfeast.blood_amount >= bloodfeast.blood_cap
 
 /mob/living/simple_animal/hostile/humanoid/blood/fiend/death(gibbed)
 	if(drop_outfit)
@@ -68,36 +85,16 @@
 						AdjustBloodFeast(max((B.bloodiness**2)/800,1))
 				qdel(B)
 
-/mob/living/simple_animal/hostile/humanoid/blood/fiend/proc/Dash(target_turf)
-	target_turf = get_turf(target)
-	var/list/hit_mob = list()
-	do_shaky_animation(1)
-	if(do_after(src, 0.5 SECONDS, target = src))
-		var/turf/wallcheck = get_turf(src)
-		var/enemy_direction = get_dir(src, target_turf)
-		for(var/i = 0 to 4)
-			if(get_turf(src) != wallcheck || stat == DEAD)
-				break
-			wallcheck = get_step(src, enemy_direction)
-			if(!ClearSky(wallcheck))
-				break
-			sleep(0.25)//without this the attack happens instantly
-			forceMove(wallcheck)
-			playsound(wallcheck, 'sound/abnormalities/doomsdaycalendar/Lor_Slash_Generic.ogg', 20, 0, 4)
-			for(var/turf/T in orange(get_turf(src), 1))
-				if(isclosedturf(T))
-					continue
-				var/obj/effect/temp_visual/slice/blood = new(T)
-				blood.color = "#b52e19"
-				hit_mob = HurtInTurf(T, hit_mob, slash_damage, RED_DAMAGE, null, TRUE, FALSE, TRUE, hurt_structure = TRUE)
-
 /obj/effect/temp_visual/warning3x3/bloodfiend
 	duration = 1.5 SECONDS
 
 /mob/living/simple_animal/hostile/humanoid/blood/fiend/proc/Leap(mob/living/target)
 	if(!isliving(target) && !ismecha(target) || !can_act)
 		return
-	blood_feast = 0
+	// Reset blood to 0 when leaping
+	var/datum/component/bloodfeast/bloodfeast = GetComponent(/datum/component/bloodfeast)
+	if(bloodfeast)
+		bloodfeast.blood_amount = 0
 	can_act = FALSE
 	SLEEP_CHECK_DEATH(0.25 SECONDS)
 	animate(src, alpha = 1,pixel_x = 16, pixel_z = 0, time = 0.1 SECONDS)
@@ -120,14 +117,14 @@
 			if(faction_check_mob(L))
 				continue
 			L.apply_lc_bleed(leap_bleed_stacks)
-			L.deal_damage(leap_damage, RED_DAMAGE)
+			L.deal_damage(leap_damage, RED_DAMAGE, src, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 		for(var/obj/vehicle/sealed/mecha/V in T)
 			V.take_damage(leap_damage, RED_DAMAGE)
 	SLEEP_CHECK_DEATH(0.5 SECONDS)
 	say("No... I NEED MORE!!!")
 	SLEEP_CHECK_DEATH(1.5 SECONDS)
-	Dash(target_turf)
-	Dash(target_turf)
+	ourdash.AlterCharge(2)
+	dash_charges += 2
 	can_act = TRUE
 
 /mob/living/simple_animal/hostile/humanoid/blood/fiend/ClearSky(turf/T)
@@ -140,17 +137,14 @@
 
 /mob/living/simple_animal/hostile/humanoid/blood/fiend/Life()
 	. = ..()
-	if(drain_cooldown > world.time)
-		return FALSE
 	if(stat == DEAD)
 		return FALSE
-	drain_cooldown = world.time + drain_cooldown_time
-	Drain()
+	// Bloodfeast component handles blood absorption automatically via process()
 
 /mob/living/simple_animal/hostile/humanoid/blood/fiend/AttackingTarget()
 	if(!can_act)
 		return
-	if(blood_feast == max_blood_feast && !client)
+	if(IsBloodFull() && !client)
 		Leap(target)
 		return
 	. = ..()
@@ -161,6 +155,9 @@
 /mob/living/simple_animal/hostile/humanoid/blood/fiend/OpenFire()
 	if(!can_act)
 		return FALSE
+	if(dash_charges > 0 && target)
+		ourdash.Perform(target,src)
+		dash_charges--
 	if(max_blood_feast == blood_feast)
 		Leap(target)
 		return
@@ -170,7 +167,7 @@
 		return FALSE
 	if(stat != DEAD)
 		Drain()
-	..()
+	return ..()
 
 /mob/living/simple_animal/hostile/humanoid/blood/fiend/boss
 	name = "royal bloodfiend"
@@ -183,8 +180,8 @@
 	var/hardblood_state = "b_boss_hardblood"
 	var/exhausted_state = "b_boss_exhausted"
 	damage_coeff = list(BRUTE = 1, RED_DAMAGE = 1, WHITE_DAMAGE = 0.6, BLACK_DAMAGE = 0.4, PALE_DAMAGE = 1.5)
-	melee_damage_lower = 7
-	melee_damage_upper = 8
+	melee_damage_lower = 30
+	melee_damage_upper = 34
 	melee_damage_type = RED_DAMAGE
 	attack_sound = 'sound/abnormalities/nosferatu/attack.ogg'
 	attack_verb_continuous = "slices"
@@ -194,10 +191,9 @@
 	ranged = TRUE
 	guaranteed_butcher_results = list(/obj/item/food/meat/slab/crimson = 5, /obj/item/stack/spacecash/c1000 = 1)
 	silk_results = list(/obj/item/stack/sheet/silk/crimson_simple = 4, /obj/item/stack/sheet/silk/crimson_advanced = 2, /obj/item/stack/sheet/silk/crimson_elegant = 1)
-	slash_damage = 50
+	slash_damage = 100
 	blood_feast = 700
 	max_blood_feast = 750
-	var/cutter_bleed_stacks = 15
 	var/readyToSpawn75 = TRUE
 	var/timeToSpawn75
 	var/readyToSpawn25 = TRUE
@@ -206,23 +202,30 @@
 	var/cutter_hit = FALSE
 	var/stun_duration = 3 SECONDS
 	var/mob/living/blood_target
-	var/summon_cost = 25
+	var/summon_cost = 8
 	var/slashing = FALSE
+
+/mob/living/simple_animal/hostile/humanoid/blood/fiend/boss/grantAbilities()
+	ourdash = new /obj/effect/proc_holder/ability/aimed/dash/bloodboss
 
 /mob/living/simple_animal/hostile/humanoid/blood/fiend/boss/AdjustBloodFeast(amount)
 	. = ..()
 	if (slashing)
 		return
 
-	if (blood_feast > max_blood_feast * 0.5)
+	var/datum/component/bloodfeast/bloodfeast = GetComponent(/datum/component/bloodfeast)
+	if(!bloodfeast)
+		return
+
+	if (bloodfeast.blood_amount > bloodfeast.blood_cap * 0.5)
 		icon_state = hardblood_state
-		melee_damage_lower = 10
-		melee_damage_upper = 12
+		melee_damage_lower = 40
+		melee_damage_upper = 45
 		melee_damage_type = BLACK_DAMAGE
 	else
 		icon_state = normal_state
-		melee_damage_lower = 7
-		melee_damage_upper = 8
+		melee_damage_lower = 30
+		melee_damage_upper = 34
 		melee_damage_type = RED_DAMAGE
 
 /mob/living/simple_animal/hostile/humanoid/blood/fiend/boss/Leap(mob/living/target)
@@ -293,7 +296,7 @@
 			say("Just...")
 		if (i == 3)
 			say("ROT AWAY!!!")
-		Dash(blood_target)
+		ourdash.Perform(blood_target,src)
 		sleep(0.25 SECONDS)
 	blood_target.faction -= "hostile"
 	if (!cutter_hit)
@@ -305,56 +308,14 @@
 		sleep(stun_duration)
 		manual_emote("rises back up...")
 		cut_overlays()
-	blood_feast = 0
+	// Reset blood to 0 after leap
+	var/datum/component/bloodfeast/bloodfeast = GetComponent(/datum/component/bloodfeast)
+	if(bloodfeast)
+		bloodfeast.blood_amount = 0
 	icon_state = normal_state
 	ChangeResistances(list(RED_DAMAGE = 1, WHITE_DAMAGE = 0.6, BLACK_DAMAGE = 0.4, PALE_DAMAGE = 1.5))
 	slashing = FALSE
 	can_act = TRUE
-
-/mob/living/simple_animal/hostile/humanoid/blood/fiend/boss/Dash(target_turf)
-	target_turf = get_turf(blood_target)
-
-	do_shaky_animation(1)
-	var/dx = src.x - blood_target.x
-	var/dy = src.y - blood_target.y
-	var/turf/safe_turf = locate(blood_target.x - dx, blood_target.y - dy, blood_target.z)
-	if (safe_turf.density)
-		safe_turf = locate(blood_target.x, blood_target.y, blood_target.z)
-	var/list/warning_overlays = list()
-	var/list/warning_turfs = list()
-	for(var/turf/T in view(target_turf, 2))
-		if (T == safe_turf)
-			var/image/S = image(icon='icons/effects/eldritch.dmi',icon_state="cloud_swirl")
-			T.add_overlay(S)
-			warning_overlays.Add(S)
-			warning_turfs.Add(T)
-			continue;
-		var/image/O = image(icon='icons/effects/eldritch.dmi',icon_state="blood_cloud_swirl")
-		T.add_overlay(O)
-		warning_overlays.Add(O)
-		warning_turfs.Add(T)
-
-
-	sleep(15)
-	for (var/i in 1 to warning_turfs.len)
-		var/turf/T = warning_turfs[i]
-		T.cut_overlay(warning_overlays[i])
-
-	if (stat == DEAD)
-		return
-	playsound(blood_target, 'sound/abnormalities/doomsdaycalendar/Lor_Slash_Generic.ogg', 20, 0, 4)
-	var/list/hit_list = list()
-	for(var/turf/T in range(target_turf, 2))
-		if (T == safe_turf)
-			continue;
-		var/obj/effect/temp_visual/slice/blood = new(T)
-		blood.color = "#b52e19"
-		hit_list = HurtInTurf(T, hit_list, slash_damage, RED_DAMAGE, null, TRUE, TRUE, TRUE, hurt_structure = TRUE)
-	for (var/hit in hit_list)
-		if (istype(hit, /mob/living))
-			var/mob/living/L = hit
-			cutter_hit = TRUE
-			L.apply_lc_bleed(cutter_bleed_stacks)
 
 /mob/living/simple_animal/hostile/humanoid/blood/fiend/boss/adjustHealth(amount, updating_health = TRUE, forced = FALSE)
 	if (health/maxHealth > 0.75)
@@ -387,8 +348,10 @@
 /mob/living/simple_animal/hostile/humanoid/blood/fiend/boss/proc/spawnbags()
 	say("Rise... Bloodbags...")
 	var/list/turfs = shuffle(orange(1, src))
+	var/datum/component/bloodfeast/bloodfeast = GetComponent(/datum/component/bloodfeast)
 	for(var/i in 1 to 2)
-		blood_feast -= summon_cost
+		if(bloodfeast)
+			bloodfeast.AdjustBlood(-summon_cost)
 		new /obj/effect/sweeperspawn/bagspawn(turfs[i])
 
 /obj/effect/sweeperspawn/bagspawn
@@ -405,8 +368,8 @@
 	icon_living = "bloodbag"
 	icon_dead = "bloodbag_dead"
 	damage_coeff = list(BRUTE = 1, RED_DAMAGE = 1.4, WHITE_DAMAGE = 1, BLACK_DAMAGE = 0.8, PALE_DAMAGE = 1.5)
-	melee_damage_lower = 2
-	melee_damage_upper = 3
+	melee_damage_lower = 4
+	melee_damage_upper = 5
 	rapid_melee = 3
 	melee_damage_type = RED_DAMAGE
 	attack_sound = 'sound/effects/ordeals/brown/flea_attack.ogg'
@@ -464,12 +427,12 @@
 		if(prob(10))
 			new /obj/item/clothing/suit/armor/ego_gear/city/masquerade_cloak/masquerade_coat (get_turf(src))
 	QDEL_IN(src, 15)
-	..()
+	return ..()
 
 /mob/living/simple_animal/hostile/humanoid/blood/bag/proc/DeathExplosion()
 	playsound(loc, 'sound/effects/ordeals/crimson/dusk_dead.ogg', 60, TRUE)
 	for(var/mob/living/L in view(1, src))
-		L.deal_damage(explosion_damage, RED_DAMAGE)
+		L.deal_damage(explosion_damage, RED_DAMAGE, attack_type = (ATTACK_TYPE_SPECIAL))
 		L.apply_lc_bleed(explosion_bleed)
 	var/turf/origin = get_turf(src)
 	var/list/all_turfs = RANGE_TURFS(1, origin)

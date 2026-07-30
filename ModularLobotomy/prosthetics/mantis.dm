@@ -33,7 +33,7 @@
 		transform = matrix(-1, 0, 0, 0, 1, 0)
 	//little bit of stam loss
 	var/mob/living/carbon/human/H = user
-	H.adjustStaminaLoss(H.maxHealth*0.5, TRUE, TRUE)
+	H.adjustStaminaLoss(H.maxHealth*0.3, TRUE, TRUE)
 
 
 /obj/item/organ/cyberimp/arm/mantis/black

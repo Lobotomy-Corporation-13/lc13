@@ -256,23 +256,17 @@
 	addtimer(CALLBACK(src, PROC_REF(FluffSpeak), "I am merely in love, I am merely wanting salvation."), 5 SECONDS)
 	addtimer(CALLBACK(src, PROC_REF(FluffSpeak), "You can breath underwater right?"), 30 SECONDS)
 	// here, we murder them whilst we are talking
-	petter.Stun(2 MINUTES)
+	petter.Stun(41 SECONDS)
 	petter.move_resist = MOVE_FORCE_VERY_STRONG
 	petter.pull_force = MOVE_FORCE_VERY_STRONG
-	var/time_strangled = 0
-	while(petter.stat != DEAD)
-		if(time_strangled > 2 MINUTES) // if they live for 2 minutes, make sure they are not alive and reset them
-			petter.losebreath += 500
-			petter.move_resist = MOVE_RESIST_DEFAULT
-			petter.pull_force = PULL_FORCE_DEFAULT
-			break
+	for(var/times_strangled in 1 to 10)
 		if(petter.stat == DEAD)
-			petter.move_resist = MOVE_RESIST_DEFAULT
-			petter.pull_force = PULL_FORCE_DEFAULT
 			break
-		petter.adjustOxyLoss(3, updating_health=TRUE, forced=TRUE)
-		time_strangled++
-		SLEEP_CHECK_DEATH(1 SECONDS)
+		petter.losebreath += (HUMAN_MEDIUM_OXYLOSS_RATE * times_strangled) // 440 oxydamage total.
+		times_strangled++
+		SLEEP_CHECK_DEATH(4 SECONDS)
+	petter.move_resist = MOVE_RESIST_DEFAULT
+	petter.pull_force = PULL_FORCE_DEFAULT
 
 //This is a dating sim now fuck you
 /mob/living/simple_animal/hostile/abnormality/pisc_mermaid/funpet(mob/living/carbon/human/current_petter)
@@ -339,9 +333,11 @@
 
 /obj/item/clothing/head/unrequited_crown/process()
 	if((love_cooldown < world.time) && loved && mermaid.workingflag != TRUE)
-		mermaid.datum_reference.qliphoth_change(-1)
-		new /obj/effect/temp_visual/heart(get_turf(loved))
-		to_chat(loved, span_warning("You feel as though you're forgetting someone..."))
+		var/obj/item/clothing/suit/armor/ego_gear/realization/forever/Z = loved.get_item_by_slot(ITEM_SLOT_OCLOTHING)
+		if(!istype(Z))
+			mermaid.datum_reference.qliphoth_change(-1)
+			new /obj/effect/temp_visual/heart(get_turf(loved))
+			to_chat(loved, span_warning("You feel as though you're forgetting someone..."))
 		love_cooldown = world.time + love_cooldown_time
 
 /obj/item/clothing/head/unrequited_crown/Destroy()
@@ -357,6 +353,7 @@
 	icon_state = "mermaid_water"
 	layer = BELOW_OBJ_LAYER
 	anchored = TRUE
+	var/belongs_to_mermaid = FALSE //IF the water belongs to the abno mermaid or not (instead of something used for a map)
 
 /obj/effect/mermaid_water/unbuckle_mob(mob/living/carbon/human/buckled_mob, force)
 	if(buckled_mob.stat == DEAD || buckled_mob.losebreath <= 0) //you can only unbuckle yourself if you somehow survive the oxyloss long enough, or you're dead

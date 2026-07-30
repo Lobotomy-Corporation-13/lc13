@@ -6,9 +6,9 @@
 	lefthand_file = 'icons/mob/inhands/equipment/jetpacks_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/equipment/jetpacks_righthand.dmi'
 	w_class = WEIGHT_CLASS_BULKY
-	distribute_pressure = ONE_ATMOSPHERE * O2STANDARD
+	// distribute_pressure = ONE_ATMOSPHERE * O2STANDARD
 	actions_types = list(/datum/action/item_action/set_internals, /datum/action/item_action/toggle_jetpack, /datum/action/item_action/jetpack_stabilization)
-	var/gas_type = /datum/gas/oxygen
+	// var/gas_type = /datum/gas/oxygen
 	var/on = FALSE
 	var/stabilizers = FALSE
 	var/full_speed = TRUE // If the jetpack will have a speedboost in space/nograv or not
@@ -20,10 +20,10 @@
 	ion_trail.auto_process = FALSE
 	ion_trail.set_up(src)
 
-/obj/item/tank/jetpack/populate_gas()
+/* /obj/item/tank/jetpack/populate_gas()
 	if(gas_type)
 		air_contents.assert_gas(gas_type)
-		air_contents.gases[gas_type][MOLES] = ((6 * ONE_ATMOSPHERE) * volume / (R_IDEAL_GAS_EQUATION * T20C))
+		air_contents.gases[gas_type][MOLES] = ((6 * ONE_ATMOSPHERE) * volume / (R_IDEAL_GAS_EQUATION * T20C)) */
 
 /obj/item/tank/jetpack/ui_action_click(mob/user, action)
 	if(istype(action, /datum/action/item_action/toggle_jetpack))
@@ -91,7 +91,7 @@
 	ion_trail.oldposition = get_turf(src)
 
 /obj/item/tank/jetpack/proc/allow_thrust(num, mob/living/user)
-	if((num < 0.005 || air_contents.total_moles() < num))
+/* 	if((num < 0.005 || air_contents.total_moles() < num))
 		turn_off(user)
 		return
 
@@ -101,7 +101,7 @@
 		return
 
 	var/turf/T = get_turf(user)
-	T.assume_air(removed)
+	T.assume_air(removed) */
 	ion_trail.generate_effect()
 
 	return TRUE
@@ -123,7 +123,7 @@
 	worn_icon = null
 	worn_icon_state = "jetpack-improvised"
 	volume = 20 //normal jetpacks have 70 volume
-	gas_type = null //it starts empty
+	// gas_type = null //it starts empty
 	full_speed = FALSE //moves at hardsuit jetpack speeds
 
 /obj/item/tank/jetpack/improvised/allow_thrust(num, mob/living/user)
@@ -176,8 +176,8 @@
 	desc = "A tank of compressed carbon dioxide for use as propulsion in zero-gravity areas. Painted black to indicate that it should not be used as a source for internals."
 	icon_state = "jetpack-black"
 	inhand_icon_state =  "jetpack-black"
-	distribute_pressure = 0
-	gas_type = /datum/gas/carbon_dioxide
+	// distribute_pressure = 0
+	// gas_type = /datum/gas/carbon_dioxide
 
 
 /obj/item/tank/jetpack/suit
@@ -189,16 +189,16 @@
 	actions_types = list(/datum/action/item_action/toggle_jetpack, /datum/action/item_action/jetpack_stabilization)
 	volume = 1
 	slot_flags = null
-	gas_type = null
+	// gas_type = null
 	full_speed = FALSE
-	var/datum/gas_mixture/temp_air_contents
-	var/obj/item/tank/internals/tank = null
+/* 	var/datum/gas_mixture/temp_air_contents
+	var/obj/item/tank/internals/tank = null */
 	var/mob/living/carbon/human/cur_user
 
 /obj/item/tank/jetpack/suit/Initialize()
 	. = ..()
 	STOP_PROCESSING(SSobj, src)
-	temp_air_contents = air_contents
+	// temp_air_contents = air_contents
 
 /obj/item/tank/jetpack/suit/attack_self()
 	return
@@ -208,25 +208,25 @@
 		to_chat(user, span_warning("\The [src] must be connected to a hardsuit!"))
 		return
 
-	var/mob/living/carbon/human/H = user
+/* 	var/mob/living/carbon/human/H = user
 	if(!istype(H.s_store, /obj/item/tank/internals))
 		to_chat(user, span_warning("You need a tank in your suit storage!"))
-		return
+		return */
 	..()
 
 /obj/item/tank/jetpack/suit/turn_on(mob/user)
 	if(!istype(loc, /obj/item/clothing/suit/space/hardsuit) || !ishuman(loc.loc) || loc.loc != user)
 		return
-	var/mob/living/carbon/human/H = user
+/*	var/mob/living/carbon/human/H = user
 	tank = H.s_store
-	air_contents = tank.air_contents
+	air_contents = tank.air_contents */
 	START_PROCESSING(SSobj, src)
 	cur_user = user
 	..()
 
 /obj/item/tank/jetpack/suit/turn_off(mob/user)
-	tank = null
-	air_contents = temp_air_contents
+/* 	tank = null
+	air_contents = temp_air_contents */
 	STOP_PROCESSING(SSobj, src)
 	cur_user = null
 	..()
@@ -235,10 +235,10 @@
 	if(!istype(loc, /obj/item/clothing/suit/space/hardsuit) || !ishuman(loc.loc))
 		turn_off(cur_user)
 		return
-	var/mob/living/carbon/human/H = loc.loc
+/* 	var/mob/living/carbon/human/H = loc.loc
 	if(!tank || tank != H.s_store)
 		turn_off(cur_user)
-		return
+		return */
 	..()
 
 

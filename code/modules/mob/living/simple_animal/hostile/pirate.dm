@@ -20,8 +20,6 @@
 	attack_verb_simple = "punch"
 	attack_sound = 'sound/weapons/punch1.ogg'
 	a_intent = INTENT_HARM
-	atmos_requirements = list("min_oxy" = 5, "max_oxy" = 0, "min_tox" = 0, "max_tox" = 1, "min_co2" = 0, "max_co2" = 5, "min_n2" = 0, "max_n2" = 0)
-	unsuitable_atmos_damage = 15
 	speak_emote = list("yarrs")
 	loot = list(/obj/effect/mob_spawn/human/corpse/pirate,
 			/obj/item/melee/transforming/energy/sword/pirate)
@@ -49,8 +47,6 @@
 	icon_state = "piratespace"
 	icon_living = "piratespace"
 	icon_dead = "piratespace_dead"
-	atmos_requirements = list("min_oxy" = 0, "max_oxy" = 0, "min_tox" = 0, "max_tox" = 0, "min_co2" = 0, "max_co2" = 0, "min_n2" = 0, "max_n2" = 0)
-	minbodytemp = 0
 	speed = 1
 
 /mob/living/simple_animal/hostile/pirate/melee/space/Initialize()
@@ -88,8 +84,6 @@
 	icon_state = "piratespaceranged"
 	icon_living = "piratespaceranged"
 	icon_dead = "piratespaceranged_dead"
-	atmos_requirements = list("min_oxy" = 0, "max_oxy" = 0, "min_tox" = 0, "max_tox" = 0, "min_co2" = 0, "max_co2" = 0, "min_n2" = 0, "max_n2" = 0)
-	minbodytemp = 0
 	speed = 1
 
 /mob/living/simple_animal/hostile/pirate/ranged/space/Initialize()

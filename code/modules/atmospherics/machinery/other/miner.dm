@@ -1,4 +1,4 @@
-
+/*
 #define GASMINER_POWER_NONE 0
 #define GASMINER_POWER_STATIC 1
 #define GASMINER_POWER_MOLES 2	//Scaled from here on down.
@@ -247,3 +247,4 @@
 	name = "\improper Antinoblium Gas Miner"
 	overlay_color = "#022e00"
 	spawn_id = /datum/gas/antinoblium
+ */

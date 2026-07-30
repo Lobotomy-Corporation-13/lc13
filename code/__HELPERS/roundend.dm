@@ -189,8 +189,8 @@
 
 	if(human_mob.mind)
 		var/datum/mind/M = human_mob.mind
-		if(M.get_skill_level(/datum/skill/fishing) >= 6)
-			player_client.give_award(/datum/award/achievement/lc13/scorpworld, human_mob)
+		//if(M.get_skill_level(/datum/skill/fishing) >= 6)
+		//	player_client.give_award(/datum/award/achievement/lc13/scorpworld, human_mob)
 		if(istype(human_mob.ego_gift_list["Right Back Slot"], /datum/ego_gifts/twilight))
 			player_client.give_award(/datum/award/achievement/lc13/twilight, human_mob)
 		//If you join not from roundstart you do not apply for these achivements.
@@ -241,6 +241,12 @@
 	to_chat(world, "<BR><BR><BR><span class='big bold'>The round has ended.</span>")
 	log_game("The round has ended.")
 
+
+	// Note: I commented out a bunch of gamemode-vote related stuff because we DON'T USE GAMEMODES HERE!!! We must always be on Classic anyway.
+	if(GLOB.master_mode != "classic")
+		SSticker.save_mode("classic")
+
+	/*
 	var/rounds_since_vote = trim(file2text("data/rounds_since_vote.txt"))
 	rounds_since_vote = text2num(rounds_since_vote)
 	rounds_since_vote += 1
@@ -254,6 +260,7 @@
 	var/file_contents = num2text(rounds_since_vote)
 	fdel(F)
 	WRITE_FILE(F, file_contents)
+	*/
 
 	for(var/I in round_end_events)
 		var/datum/callback/cb = I
@@ -284,7 +291,8 @@
 	CHECK_TICK
 
 	// Add AntagHUD to everyone, see who was really evil the whole time!
-	for(var/datum/atom_hud/antag/H in GLOB.huds)
+	for(var/hud in GLOB.huds)
+		var/datum/atom_hud/antag/H = GLOB.huds[hud]
 		for(var/m in GLOB.player_list)
 			var/mob/M = m
 			H.add_hud_to(M)
@@ -461,7 +469,7 @@
 	return parts.Join("<br>")
 
 /datum/controller/subsystem/ticker/proc/abnormality_report()
-	var/list/parts = list()
+	var/list/parts = alist()
 	var/datum/abnormality/highest_abno = null
 	var/highest_work_count = 0
 	var/full_abno_count = 0

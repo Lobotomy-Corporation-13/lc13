@@ -156,15 +156,9 @@
 	},
 /area/ruin/has_grav/teg)
 "uY" = (
-/obj/machinery/atmospherics/pipe/simple/general/visible{
-	dir = 6
-	},
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/teg)
 "vd" = (
-/obj/machinery/atmospherics/pipe/simple/general/visible{
-	dir = 8
-	},
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/plating/airless,
 /area/ruin/has_grav/teg)
@@ -174,11 +168,9 @@
 	},
 /area/ruin/has_grav/teg)
 "vM" = (
-/obj/machinery/atmospherics/pipe/manifold/general/visible,
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/teg)
 "vV" = (
-/obj/machinery/atmospherics/pipe/simple/general/visible,
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/teg)
 "wg" = (
@@ -194,25 +186,19 @@
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/teg)
 "za" = (
-/obj/machinery/atmospherics/components/binary/circulator/cold{
-	dir = 8
-	},
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/teg)
 "zR" = (
-/obj/machinery/atmospherics/components/unary/thermomachine/freezer,
 /turf/open/floor/plating/airless{
 	icon_state = "platingdmg1"
 	},
 /area/ruin/has_grav/teg)
 "Cc" = (
-/obj/machinery/atmospherics/pipe/simple/general/visible,
 /turf/open/floor/plasteel/airless{
 	icon_state = "floorscorched2"
 	},
 /area/ruin/has_grav/teg)
 "Cv" = (
-/obj/machinery/atmospherics/pipe/simple/general/visible,
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/teg)
@@ -222,15 +208,11 @@
 /turf/open/space/basic,
 /area/ruin/has_grav/teg)
 "DF" = (
-/obj/machinery/atmospherics/pipe/manifold/general/visible{
-	dir = 8
-	},
 /turf/open/floor/plasteel/airless{
 	icon_state = "floorscorched1"
 	},
 /area/ruin/has_grav/teg)
 "DL" = (
-/obj/machinery/atmospherics/components/unary/thermomachine/heater,
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/teg)
 "DW" = (
@@ -239,18 +221,12 @@
 /turf/open/floor/plating/airless,
 /area/ruin/has_grav/teg)
 "Ev" = (
-/obj/machinery/atmospherics/pipe/simple/general/visible{
-	dir = 8
-	},
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/teg)
 "EP" = (
 /turf/open/floor/plating/airless,
 /area/ruin/has_grav/teg/storage)
 "Fv" = (
-/obj/machinery/atmospherics/pipe/simple/general/visible{
-	dir = 9
-	},
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/decal/cleanable/blood/drip,
 /turf/open/floor/plasteel/airless,
@@ -259,9 +235,6 @@
 /turf/closed/wall,
 /area/ruin/has_grav/teg)
 "FP" = (
-/obj/machinery/atmospherics/pipe/simple/general/visible{
-	dir = 5
-	},
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/teg)
 "FW" = (
@@ -269,9 +242,6 @@
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/teg/eva)
 "Gk" = (
-/obj/machinery/atmospherics/pipe/simple/general/visible{
-	dir = 4
-	},
 /turf/open/floor/plasteel/airless{
 	icon_state = "damaged2"
 	},
@@ -291,9 +261,6 @@
 	},
 /area/ruin/has_grav/teg)
 "GM" = (
-/obj/machinery/atmospherics/pipe/simple/general/visible{
-	dir = 6
-	},
 /turf/open/floor/plasteel/airless{
 	icon_state = "damaged5"
 	},
@@ -382,9 +349,6 @@
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/teg/eva)
 "Sz" = (
-/obj/machinery/atmospherics/pipe/simple/general/visible{
-	dir = 8
-	},
 /mob/living/simple_animal/hostile/hivebot/mechanic,
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/teg)
@@ -446,7 +410,6 @@
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/teg/storage)
 "Zj" = (
-/obj/item/circuitboard/machine/circulator,
 /obj/structure/closet/crate/engineering{
 	icon_state = "engi_crateopen";
 	opened = 1

@@ -4,7 +4,7 @@
 	desc = "Deep Water."
 	icon = 'icons/turf/floors/water.dmi'
 	icon_state = "water_turf1"
-	initial_gas_mix = OPENTURF_DEFAULT_ATMOS
+	// initial_gas_mix = OPENTURF_DEFAULT_ATMOS
 	//This is mostly for AI. CanAllowThrough still makes it passable.
 	density = TRUE
 	bullet_sizzle = TRUE
@@ -47,6 +47,10 @@
 	))
 
 	var/safe = FALSE
+
+/turf/open/water/deep/Destroy()
+	target_turf = null
+	return ..()
 
 /turf/open/water/deep/Initialize()
 	. = ..()
@@ -162,7 +166,7 @@
 				continue
 			if(L)
 				MobSink(L)
-				WarpSunkStuff(L)
+				//No longer teleport - drowning effect handles the danger
 				return FALSE
 
 /turf/open/water/deep/proc/ObjSink(atom/movable/sinkin_thing)
@@ -171,12 +175,18 @@
 
 	//Overridable Mob Reaction
 /turf/open/water/deep/proc/MobSink(mob/living/drowner)
-	//50 brute damage to living mobs. If they are human add 50 oxygen damage to them. May change this later on.
-	drowner.adjustBruteLoss(50)
-	if(ishuman(drowner))
-		var/mob/living/carbon/human/H = drowner
-		H.Paralyze(30)
-		H.adjustOxyLoss(50)
+	//Deal light initial damage - the drowning effect will be the main threat
+	if(drowner.stat != DEAD)
+		if(!(drowner.flags_1 & INITIALIZED_1))
+			return
+		if(ishuman(drowner))
+			var/mob/living/carbon/human/H = drowner
+			H.adjustOxyLoss(5)
+		else
+			drowner.adjustBruteLoss(25)
+
+	//Apply drowning status effect
+	drowner.apply_status_effect(/datum/status_effect/drowning)
 
 /* Currently water warps things to a random department but for other non Lobotomy Corp maps
 	It would be more helpful if the items were kept at sea for a few moments before teleporting
@@ -387,3 +397,82 @@
 
 /turf/open/water/deep/obsessing_water/IsSafe()
 	return TRUE
+
+//Drowning status effect - applied when mobs enter deep water
+/datum/status_effect/drowning
+	id = "drowning"
+	duration = -1 //Infinite until mob leaves water
+	tick_interval = 20 //2 seconds
+	status_type = STATUS_EFFECT_UNIQUE
+
+/// Applies the drowning effect - changes color and registers movement tracking
+/datum/status_effect/drowning/on_apply()
+	if(!owner)
+		return FALSE
+
+	//Make the mob's color blue to simulate sinking
+	owner.color = LIGHT_COLOR_DARK_BLUE
+
+	//Apply slowdown modifier - drowning slows movement by 1.5
+	owner.add_or_update_variable_movespeed_modifier(/datum/movespeed_modifier/drowning)
+
+	//Register signal to detect when the mob moves
+	RegisterSignal(owner, COMSIG_MOVABLE_MOVED, PROC_REF(on_mob_move))
+
+	//Inform the player
+	to_chat(owner, span_userdanger("You're drowning! The water pulls you down!"))
+
+	return TRUE
+
+/// Called every 2 seconds - deals oxygen damage
+/datum/status_effect/drowning/tick()
+	if(!owner)
+		return
+
+	//Deal 6 oxygen damage per tick
+	owner.adjustOxyLoss(6)
+
+	//Random drowning messages for immersion
+	if(prob(65))
+		to_chat(owner, pick(
+			span_danger("Water fills your lungs!"),
+			span_danger("You can't breathe!"),
+			span_danger("You're sinking deeper!")))
+
+/// Called when the mob moves - checks if they're still in deep water
+/datum/status_effect/drowning/proc/on_mob_move(mob/source, atom/oldloc, direction)
+	SIGNAL_HANDLER
+
+	if(!owner)
+		return
+
+	//Deal oxygen damage from struggling to move
+	owner.adjustOxyLoss(4)
+
+	//Check if the mob is still in deep water
+	var/turf/current_turf = get_turf(owner)
+	if(!current_turf)
+		return
+
+	//If not in deep water (or subtype), remove the effect
+	if(!istype(current_turf, /turf/open/water/deep))
+		to_chat(owner, span_notice("You escape the water!"))
+		qdel(src)
+
+/// Cleanup when effect is removed - orginal color
+/datum/status_effect/drowning/on_remove()
+	if(!owner)
+		return
+
+	//Restore the mob's orginal color
+	owner.color = null
+
+	//Remove slowdown modifier
+	owner.remove_movespeed_modifier(/datum/movespeed_modifier/drowning)
+
+	//Unregister the movement signal
+	UnregisterSignal(owner, COMSIG_MOVABLE_MOVED)
+
+/datum/movespeed_modifier/drowning
+	multiplicative_slowdown = 1.5
+	variable = TRUE

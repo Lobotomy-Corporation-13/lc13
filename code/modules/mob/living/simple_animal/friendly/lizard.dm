@@ -51,9 +51,6 @@
 	desc = "A cute tiny lizard with a tiny space helmet."
 	icon_state = "lizard_space"
 	icon_living = "lizard_space"
-	unsuitable_atmos_damage = 0
-	minbodytemp = TCMB
-	maxbodytemp = T0C + 40
 
 /mob/living/simple_animal/hostile/lizard/wags_his_tail
 	name = "Wags-His-Tail"

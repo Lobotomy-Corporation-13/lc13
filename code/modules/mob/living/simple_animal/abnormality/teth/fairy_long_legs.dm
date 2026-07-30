@@ -113,6 +113,7 @@
 		to_chat(user, span_danger("You decide to take cover under the fairy's clover."))
 		work_count = 0
 		raining = FALSE
+		user.client?.give_award(/datum/award/achievement/abno/longlegs_raining, user)
 		Execute(user)
 		return FALSE
 	if((work_type != "Take cover") && raining)
@@ -151,7 +152,7 @@
 	user.visible_message(span_warning("You feel a stinging pain in your chest, is that...blood?!"))
 	icon_state = "fairy_longlegs_healing"
 	playsound(get_turf(src), 'sound/abnormalities/fairy_longlegs/heal.ogg', 50, 1)
-	user.deal_damage(100, RED_DAMAGE)
+	user.deal_damage(100, RED_DAMAGE, flags = (DAMAGE_FORCED))
 	for(var/obj/effect/rainy_effect/rain in range(3, src))
 		rain.End(FALSE)
 	sleep(1.5 SECONDS)

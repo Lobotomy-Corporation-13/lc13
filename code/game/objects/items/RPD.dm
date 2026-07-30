@@ -12,7 +12,7 @@ RPD
 #define DESTROY_MODE (1<<2)
 #define PAINT_MODE (1<<3)
 
-
+/*
 GLOBAL_LIST_INIT(atmos_pipe_recipes, list(
 	"Pipes" = list(
 		new /datum/pipe_info/pipe("Pipe",				/obj/machinery/atmospherics/pipe/simple, TRUE),
@@ -47,7 +47,7 @@ GLOBAL_LIST_INIT(atmos_pipe_recipes, list(
 		new /datum/pipe_info/pipe("Heat Exchanger",		/obj/machinery/atmospherics/components/unary/heat_exchanger, FALSE),
 	)
 ))
-
+*/
 GLOBAL_LIST_INIT(disposal_pipe_recipes, list(
 	"Disposal Pipes" = list(
 		new /datum/pipe_info/disposal("Pipe",			/obj/structure/disposalpipe/segment, PIPE_BENDABLE),
@@ -90,7 +90,7 @@ GLOBAL_LIST_INIT(transit_tube_recipes, list(
 	// Stationary pipe dispensers don't allow you to pre-select pipe directions.
 	// This makes it impossble to spawn bent versions of bendable pipes.
 	// We add a "Bent" pipe type with a preset diagonal direction to work around it.
-	if(istype(dispenser, /obj/machinery/pipedispenser) && (dirtype == PIPE_BENDABLE || dirtype == /obj/item/pipe/binary/bendable))
+	if(istype(dispenser, /obj/machinery/pipedispenser) && (dirtype == PIPE_BENDABLE))
 		dat += "<li><a href='byond://?src=[REF(dispenser)]&[Params()]&dir=[NORTHEAST]'>Bent [name]</a></li>"
 
 	return dat
@@ -137,7 +137,7 @@ GLOBAL_LIST_INIT(transit_tube_recipes, list(
 
 	return rows
 
-/datum/pipe_info/pipe/New(label, obj/machinery/atmospherics/path, use_five_layers)
+/* /datum/pipe_info/pipe/New(label, obj/machinery/atmospherics/path, use_five_layers)
 	name = label
 	id = path
 	all_layers = use_five_layers
@@ -156,7 +156,7 @@ GLOBAL_LIST_INIT(transit_tube_recipes, list(
 	name = label
 
 /datum/pipe_info/meter/Params()
-	return "makemeter=[id]&type=[dirtype]"
+	return "makemeter=[id]&type=[dirtype]" */
 
 /datum/pipe_info/disposal/New(label, obj/path, dt=PIPE_UNARY)
 	name = label
@@ -178,7 +178,7 @@ GLOBAL_LIST_INIT(transit_tube_recipes, list(
 	icon_state = initial(path.icon_state)
 	if(dt == PIPE_UNARY_FLIPPABLE)
 		icon_state = "[icon_state]_preview"
-
+/*
 /obj/item/pipe_dispenser
 	name = "Rapid Pipe Dispenser (RPD)"
 	desc = "A device used to rapidly pipe things."
@@ -563,3 +563,4 @@ GLOBAL_LIST_INIT(transit_tube_recipes, list(
 /obj/item/rpd_upgrade/unwrench
 	desc = "Adds reverse wrench mode to the RPD. Attention, due to budget cuts, the mode is hard linked to the destroy mode control button."
 	upgrade_flags = RPD_UPGRADE_UNWRENCH
+ */

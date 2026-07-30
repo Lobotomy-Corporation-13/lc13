@@ -14,7 +14,7 @@
 		return FALSE
 
 	for(var/mob/living/carbon/human/fuel in view(range, get_turf(src)))
-		if(locate(/obj/structure/turf_fireliu) in fuel.loc)
+		if(locate(/obj/effect/turf_fire/liu) in fuel.loc)
 			//this stuff is important for what youre about to do
 			if (fuel == owner)
 				continue

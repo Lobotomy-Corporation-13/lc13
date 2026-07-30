@@ -76,7 +76,7 @@
 
 /obj/vehicle/sealed/mecha/working/ripley/mk2/generate_actions()
 	initialize_passenger_action_type(/datum/action/vehicle/sealed/mecha/mech_eject)
-	initialize_passenger_action_type(/datum/action/vehicle/sealed/mecha/mech_toggle_internals)
+	// initialize_passenger_action_type(/datum/action/vehicle/sealed/mecha/mech_toggle_internals)
 	initialize_passenger_action_type(/datum/action/vehicle/sealed/mecha/mech_cycle_equip)
 	initialize_passenger_action_type(/datum/action/vehicle/sealed/mecha/mech_toggle_lights)
 	initialize_passenger_action_type(/datum/action/vehicle/sealed/mecha/mech_view_stats)
@@ -196,14 +196,14 @@
  * Checks for Lavaland pressure, if that works out the mech's speed is equal to fast_pressure_step_in and the cooldown for the mecha drill is halved. If not it uses slow_pressure_step_in and drill cooldown is normal.
  */
 /obj/vehicle/sealed/mecha/working/ripley/proc/update_pressure()
-	var/turf/T = get_turf(loc)
+/* 	var/turf/T = get_turf(loc)
 
-	if(lavaland_equipment_pressure_check(T))
-		movedelay = fast_pressure_step_in
-		for(var/obj/item/mecha_parts/mecha_equipment/drill/drill in equipment)
-			drill.equip_cooldown = initial(drill.equip_cooldown) * 0.5
+	if(lavaland_equipment_pressure_check(T)) */
+	movedelay = fast_pressure_step_in
+	for(var/obj/item/mecha_parts/mecha_equipment/drill/drill in equipment)
+		drill.equip_cooldown = initial(drill.equip_cooldown) * 0.5
 
-	else
+/* 	else
 		movedelay = slow_pressure_step_in
 		for(var/obj/item/mecha_parts/mecha_equipment/drill/drill in equipment)
-			drill.equip_cooldown = initial(drill.equip_cooldown)
+			drill.equip_cooldown = initial(drill.equip_cooldown) */

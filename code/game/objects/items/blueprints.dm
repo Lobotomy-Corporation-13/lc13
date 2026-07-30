@@ -1,4 +1,4 @@
-#define AREA_ERRNONE 0
+/* #define AREA_ERRNONE 0
 #define AREA_STATION 1
 #define AREA_SPACE 2
 #define AREA_SPECIAL 3
@@ -42,15 +42,16 @@
 		create_area(usr)
 		in_use = FALSE
 	updateUsrDialog()
-
+*/
 //Station blueprints!!!
 /obj/item/areaeditor/blueprints
 	name = "station blueprints"
 	desc = "Blueprints of the station. There is a \"Classified\" stamp and several coffee stains on it."
 	icon = 'icons/obj/items_and_weapons.dmi'
 	icon_state = "blueprints"
-	fluffnotice = "Property of Nanotrasen. For heads of staff only. Store in high-secure storage."
+	// fluffnotice = "Property of Nanotrasen. For heads of staff only. Store in high-secure storage."
 	resistance_flags = INDESTRUCTIBLE | LAVA_PROOF | FIRE_PROOF | ACID_PROOF
+/*
 	var/list/image/showing = list()
 	var/client/viewing
 	var/legend = FALSE	//Viewing the wire legend
@@ -203,13 +204,13 @@
 	return TRUE
 
 //Blueprint Subtypes
-
+*/
 /obj/item/areaeditor/blueprints/cyborg
 	name = "station schematics"
 	desc = "A digital copy of the station blueprints stored in your memory."
 	icon = 'icons/obj/items_and_weapons.dmi'
 	icon_state = "blueprints"
-	fluffnotice = "Intellectual Property of Nanotrasen. For use in engineering cyborgs only. Wipe from memory upon departure from the station."
+	// fluffnotice = "Intellectual Property of Nanotrasen. For use in engineering cyborgs only. Wipe from memory upon departure from the station."
 
 /proc/rename_area(a, new_name)
 	var/area/A = get_area(a)
@@ -231,10 +232,10 @@
 		M.name = replacetext(M.name,oldtitle,title)
 	for(var/obj/machinery/power/apc/M in A)
 		M.name = replacetext(M.name,oldtitle,title)
-	for(var/obj/machinery/atmospherics/components/unary/vent_scrubber/M in A)
+/* 	for(var/obj/machinery/atmospherics/components/unary/vent_scrubber/M in A)
 		M.name = replacetext(M.name,oldtitle,title)
 	for(var/obj/machinery/atmospherics/components/unary/vent_pump/M in A)
 		M.name = replacetext(M.name,oldtitle,title)
 	for(var/obj/machinery/door/M in A)
-		M.name = replacetext(M.name,oldtitle,title)
+		M.name = replacetext(M.name,oldtitle,title) */
 	//TODO: much much more. Unnamed airlocks, cameras, etc.

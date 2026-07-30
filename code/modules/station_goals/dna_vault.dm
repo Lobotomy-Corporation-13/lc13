@@ -252,10 +252,6 @@
 	switch(upgrade_type)
 		if(VAULT_TOXIN)
 			to_chat(H, span_notice("You feel resistant to airborne toxins."))
-			if(locate(/obj/item/organ/lungs) in H.internal_organs)
-				var/obj/item/organ/lungs/L = H.internal_organs_slot[ORGAN_SLOT_LUNGS]
-				L.tox_breath_dam_min = 0
-				L.tox_breath_dam_max = 0
 			ADD_TRAIT(H, TRAIT_VIRUSIMMUNE, "dna_vault")
 		if(VAULT_NOBREATH)
 			to_chat(H, span_notice("Your lungs feel great."))

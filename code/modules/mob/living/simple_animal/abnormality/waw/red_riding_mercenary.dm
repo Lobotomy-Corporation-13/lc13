@@ -93,7 +93,7 @@ It has now been over four months. Now we get her for real. -Coxswain
 	var/target_priority = 0 // Goes up to 4; 1 for Blue Smocked Shepherd, 2 for the requested target, 3 for Buddy, 4 for Wolf.
 	var/mob/living/priority_target // Stores current request target.
 	var/fuzzy_tracking_cooldown = 10 SECONDS // How often red re-checks the closest landmark to the target.
-	var/list/tiered_request_costs = list(
+	var/list/tiered_request_costs = alist(
 		ZAYIN_LEVEL = 100,
 		TETH_LEVEL = 200,
 		HE_LEVEL = 300,
@@ -219,12 +219,15 @@ It has now been over four months. Now we get her for real. -Coxswain
 	addtimer(CALLBACK(src, PROC_REF(EndEvade)), 20)
 	return
 
-/mob/living/simple_animal/hostile/abnormality/red_hood/apply_damage(damage = 0,damagetype = RED_DAMAGE, def_zone = null, blocked = FALSE, forced = FALSE, spread_damage = FALSE, wound_bonus = 0, bare_wound_bonus = 0, sharpness = SHARP_NONE, white_healable = FALSE)
+/mob/living/simple_animal/hostile/abnormality/red_hood/PreDamageReaction(damage_amount, damage_type, source, attack_type)
 	if(evading_attack)
 		evading_attack = FALSE
 		EndEvade()
 		return FALSE
-	..()
+	return TRUE
+
+/mob/living/simple_animal/hostile/abnormality/red_hood/PostDamageReaction(damage_amount, damage_type, source, attack_type)
+	. = ..()
 	if(health > (maxHealth * 0.8) || !priority_target)
 		return
 	if(red_rage < 1 && target_priority > 2)
@@ -609,14 +612,11 @@ It has now been over four months. Now we get her for real. -Coxswain
 		ContractComplete()
 		return
 
-/mob/living/simple_animal/hostile/abnormality/red_hood/patrol_select() //Path right to our target
+/mob/living/simple_animal/hostile/abnormality/red_hood/SelectPatrolLocation() //Path right to our target
 	if(out_on_request || priority_target)
 		if(!priority_target) //For some reason we never got one
 			return ..()
-		SEND_SIGNAL(src, COMSIG_PATROL_START, src, get_turf(priority_target))
-		SEND_GLOBAL_SIGNAL(src, COMSIG_GLOB_PATROL_START, src, get_turf(priority_target))
-		patrol_path = get_path_to(src, get_turf(priority_target), TYPE_PROC_REF(/turf, Distance_cardinal), 0, 200)
-		return
+		return get_turf(priority_target)
 	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/red_hood/proc/ContractComplete()

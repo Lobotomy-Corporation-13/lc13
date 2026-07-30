@@ -53,7 +53,6 @@
 			The creature notices you, and prepares an attack. <br>It is impossible to evade, and you are torn to shreds."),
 	)
 
-	var/can_act = TRUE
 	var/jump_cooldown = 0
 	var/jump_cooldown_time = 8 SECONDS
 	var/jump_damage = 50
@@ -115,7 +114,7 @@
 			for(var/mob/living/L in T)
 				if(faction_check_mob(L))
 					continue
-				L.deal_damage(jump_damage, BLACK_DAMAGE)
+				L.deal_damage(jump_damage, BLACK_DAMAGE, src, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 				if(L.health < 0)
 					L.gib()
 			for(var/obj/vehicle/sealed/mecha/V in T)
@@ -175,7 +174,7 @@
 					continue
 				already_hit += L
 				var/truedamage = ishuman(L) ? beam_damage : beam_damage/2 //half damage dealt to nonhumans
-				L.deal_damage(truedamage, BLACK_DAMAGE)
+				L.deal_damage(truedamage, BLACK_DAMAGE, src, attack_type = (ATTACK_TYPE_RANGED | ATTACK_TYPE_SPECIAL))
 			for(var/obj/vehicle/sealed/mecha/V in turfs_to_check)
 				if(V in already_hit)
 					continue

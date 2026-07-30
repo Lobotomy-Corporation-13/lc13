@@ -1,6 +1,5 @@
 //MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
 "a" = (
-/obj/machinery/atmospherics/components/unary/thermomachine/freezer,
 /obj/effect/turf_decal/weather/snow/corner{
 	dir = 10
 	},

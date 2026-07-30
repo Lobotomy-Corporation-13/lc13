@@ -1,0 +1,26 @@
+{
+	"version": 1,
+	"map_name": "Branch 12",
+	"map_path": "map_files/Branch12",
+	"map_file": [
+		"Alpha12.dmm",
+		"Proto12.dmm"
+	],
+	"pick_one": 1,
+	"submap_names": {
+		"Alpha12.dmm": "Alpha-12",
+		"Proto12.dmm": "Proto-12"
+	},
+	"traits": [
+		{
+			"Baseturf": "/turf/open/floor/plating/asteroid"
+		}
+	],
+	"space_ruin_levels": 0,
+	"space_empty_levels": 0,
+	"minetype": "none",
+	"maptype": "branch12"
+}
+
+
+

@@ -1,4 +1,4 @@
-/obj/machinery/atmospherics/components/binary/pressure_valve
+/* /obj/machinery/atmospherics/components/binary/pressure_valve
 	icon_state = "pvalve_map-3"
 	name = "pressure valve"
 	desc = "An activable one way valve that let gas pass through if the pressure on the input side is higher than the set pressure."
@@ -175,3 +175,4 @@
 /obj/machinery/atmospherics/components/binary/pressure_valve/on/layer4
 	piping_layer = 4
 	icon_state= "pvalve_on_map-4"
+ */

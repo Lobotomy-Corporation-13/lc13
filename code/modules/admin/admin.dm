@@ -912,8 +912,8 @@
 
 /datum/admins/proc/create_or_modify_area()
 	set category = "Debug"
-	set name = "Create or modify area"
-	create_area(usr)
+	set name = "Create or modify area (Disabled due to Atmos Purge)"
+	// create_area(usr)
 
 //
 //

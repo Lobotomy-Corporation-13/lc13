@@ -79,7 +79,7 @@
 		owner.icon_state = "scorched_breach"
 		active = 0
 
-/mob/living/simple_animal/hostile/abnormality/scorched_girl/patrol_select()
+/mob/living/simple_animal/hostile/abnormality/scorched_girl/SelectPatrolLocation()
 	var/turf/target_center
 	var/highestcount = 0
 	for(var/turf/T in GLOB.department_centers)
@@ -90,10 +90,9 @@
 		if(targets_at_tile > highestcount)
 			target_center = T
 			highestcount = targets_at_tile
-	if(!target_center)
-		..()
-	else
-		patrol_path = get_path_to(src, target_center, TYPE_PROC_REF(/turf, Distance_cardinal), 0, 200)
+	if(target_center)
+		return target_center
+	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/scorched_girl/OpenFire()
 	if(client)
@@ -146,8 +145,8 @@
 	// Ka-boom
 	playsound(get_turf(src), 'sound/abnormalities/scorchedgirl/explosion.ogg', 125, 0, 8)
 	for(var/mob/living/carbon/human/H in view(7, src))
-		H.deal_damage(boom_damage, RED_DAMAGE)
-		H.deal_damage(boom_damage * 0.5, FIRE)
+		H.deal_damage(boom_damage, RED_DAMAGE, src, attack_type = (ATTACK_TYPE_SPECIAL))
+		H.deal_damage(boom_damage * 0.5, FIRE, src, attack_type = (ATTACK_TYPE_SPECIAL))
 		if(H.health < 0)
 			H.gib()
 	if(SSmaptype.maptype == "limbus_labs")

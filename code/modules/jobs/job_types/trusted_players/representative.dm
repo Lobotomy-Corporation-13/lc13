@@ -13,7 +13,8 @@
 	access = list(ACCESS_PHARMACY, ACCESS_COMMAND) // I want to use the number 69.
 	minimal_access = list(ACCESS_PHARMACY, ACCESS_COMMAND)
 	departments = DEPARTMENT_COMMAND
-	mapexclude = list("wonderlabs", "mini", "enkephalin_rush")
+	paycheck = 700
+	mapexclude = list("wonderlabs", "mini", "enkephalin_rush", "branch12")
 
 	job_abbreviation = "REP"
 

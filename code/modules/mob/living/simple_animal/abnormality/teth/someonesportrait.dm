@@ -52,9 +52,11 @@
 	if (!(user.sanity_lost))
 		PanicUser(user, TRUE)
 
-/mob/living/simple_animal/hostile/abnormality/someones_portrait/Worktick(mob/living/carbon/human/user) //We apply hallucination every worktick due to varying work time
+//We apply hallucination every worktick due to varying work time
+/mob/living/simple_animal/hostile/abnormality/someones_portrait/Worktick(mob/living/carbon/human/user, bubble_type = ABNO_BALLOON_GENERIC | ABNO_BALLOON_SPECIFIC, work_type)
 	if(!user.hallucination)
 		user.hallucination += 3 //Attempt to get them to cancel work out of paranoia.
+	return ..()
 
 //Procs
 /mob/living/simple_animal/hostile/abnormality/someones_portrait/proc/DestroyLights()

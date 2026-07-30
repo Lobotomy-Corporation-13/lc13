@@ -53,8 +53,8 @@
 		var/mob/M = location
 		if(M.is_holding(src))
 			location = M.loc
-	if(isturf(location)) //start a fire if possible
-		igniter.flamethrower_process(location)
+/* 	if(isturf(location)) //start a fire if possible
+		igniter.flamethrower_process(location) */
 
 
 /obj/item/flamethrower/update_icon_state()
@@ -136,11 +136,11 @@
 	else
 		return ..()
 
-/obj/item/flamethrower/return_analyzable_air()
+/* /obj/item/flamethrower/return_analyzable_air()
 	if(ptank)
 		return ptank.return_analyzable_air()
 	else
-		return null
+		return null */
 
 /obj/item/flamethrower/attack_self(mob/user)
 	toggle_igniter(user)
@@ -196,13 +196,14 @@
 	for(var/turf/T in turflist)
 		if(T == previousturf)
 			continue	//so we don't burn the tile we be standin on
-		var/list/turfs_sharing_with_prev = previousturf.GetAtmosAdjacentTurfs(alldir=1)
+		var/list/turfs_sharing_with_prev = previousturf.reachableAdjacentTurfs()
 		if(!(T in turfs_sharing_with_prev))
 			break
-		if(igniter)
+/* 		if(igniter)
 			igniter.ignite_turf(src,T)
 		else
-			default_ignite(T)
+			default_ignite(T) */
+		new /obj/effect/turf_fire(T)
 		sleep(1)
 		previousturf = T
 	operating = FALSE
@@ -211,7 +212,7 @@
 			attack_self(M)
 
 
-/obj/item/flamethrower/proc/default_ignite(turf/target, release_amount = 0.05)
+/* /obj/item/flamethrower/proc/default_ignite(turf/target, release_amount = 0.05)
 	//TODO: DEFERRED Consider checking to make sure tank pressure is high enough before doing this...
 	//Transfer 5% of current tank air contents to turf
 	var/datum/gas_mixture/air_transfer = ptank.air_contents.remove_ratio(release_amount)
@@ -221,7 +222,7 @@
 	//Burn it based on transfered gas
 	target.hotspot_expose((ptank.air_contents.temperature*2) + 380,500)
 	//location.hotspot_expose(1000,500,1)
-	SSair.add_to_active(target)
+	SSair.add_to_active(target) */
 
 /obj/item/flamethrower/Initialize(mapload)
 	. = ..()
@@ -234,7 +235,7 @@
 		igniter.secured = FALSE
 		status = TRUE
 		if(create_with_tank)
-			ptank = new /obj/item/tank/internals/plasma/full(src)
+			ptank = new /obj/item/tank/internals/plasma(src)
 		update_icon()
 	RegisterSignal(src, COMSIG_ITEM_RECHARGED, PROC_REF(instant_refill))
 
@@ -250,21 +251,21 @@
 		owner.visible_message("<span class='danger'>\The [attack_text] hits the fuel tank on [owner]'s [name], rupturing it! What a shot!</span>")
 		var/turf/target_turf = get_turf(owner)
 		log_game("A projectile ([hitby]) detonated a flamethrower tank held by [key_name(owner)] at [COORD(target_turf)]")
-		igniter.ignite_turf(src,target_turf, release_amount = 100)
+		explosion(target_turf, 0, 0, 5, 8, flame_range = 2)
 		qdel(ptank)
 		return 1 //It hit the flamethrower, not them
 
 
-/obj/item/assembly/igniter/proc/flamethrower_process(turf/open/location)
-	location.hotspot_expose(heat,2)
+/* /obj/item/assembly/igniter/proc/flamethrower_process(turf/open/location)
+	location.hotspot_expose(heat,2) */
 
-/obj/item/assembly/igniter/proc/ignite_turf(obj/item/flamethrower/F,turf/open/location,release_amount = 0.05)
-	F.default_ignite(location,release_amount)
+/* /obj/item/assembly/igniter/proc/ignite_turf(obj/item/flamethrower/F,turf/open/location,release_amount = 0.05)
+	F.default_ignite(location,release_amount) */
 
 /obj/item/flamethrower/proc/instant_refill()
-	if(ptank)
-		ptank.air_contents.assert_gas(/datum/gas/plasma)
+	if(!ptank)
+/* 		ptank.air_contents.assert_gas(/datum/gas/plasma)
 		ptank.air_contents.gases[/datum/gas/plasma][MOLES] = (10*ONE_ATMOSPHERE)*ptank.volume/(R_IDEAL_GAS_EQUATION*T20C)
-	else
-		ptank = new /obj/item/tank/internals/plasma/full(src)
+	else */
+		ptank = new /obj/item/tank/internals/plasma(src)
 	update_icon()

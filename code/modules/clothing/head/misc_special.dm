@@ -66,8 +66,8 @@
 		if(M.is_holding(src) || M.head == src)
 			location = M.loc
 
-	if(isturf(location))
-		location.hotspot_expose(700, 1)
+	// if(isturf(location))
+	// 	location.hotspot_expose(700, 1)
 
 /obj/item/clothing/head/hardhat/cakehat/turn_on(mob/living/user)
 	..()
@@ -123,7 +123,7 @@
 	flags_inv = HIDEEARS|HIDEHAIR
 	var/earflaps = TRUE
 	cold_protection = HEAD
-	min_cold_protection_temperature = FIRE_HELM_MIN_TEMP_PROTECT
+	min_cold_protection_temperature = TRUE
 
 	dog_fashion = /datum/dog_fashion/head/ushanka
 

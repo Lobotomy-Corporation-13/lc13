@@ -36,10 +36,10 @@ Backstreets Butcher
 /datum/outfit/job/butcher
 	name = "Backstreets Butcher"
 	jobtype = /datum/job/butcher
-	uniform = /obj/item/clothing/under/rank/civilian/chef
+	uniform = /obj/item/clothing/under/suit/lobotomy/pierre
 	belt = /obj/item/gun/magic/hook
-	suit = /obj/item/clothing/suit/apron/chef
 	l_pocket = /obj/item/restraints/handcuffs
+	shoes = /obj/item/clothing/shoes/pierre
 	ears = null
 
 	backpack_contents = list(

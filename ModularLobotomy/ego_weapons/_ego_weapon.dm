@@ -26,6 +26,12 @@
 	crit_multiplier = 1
 	var/crit_info
 
+	//Used in CoL, to prevent weapons from being easily removed from the round
+	var/sellable = FALSE
+
+	/// Extra damage flags OR'd into the flags argument when this weapon deals damage (e.g. DAMAGE_NO_SINKING)
+	var/extra_damage_flags = 0
+
 /obj/item/ego_weapon/Initialize()
 	. = ..()
 	if(swingstyle == WEAPONSWING_SMALLSWEEP && reach > 1)

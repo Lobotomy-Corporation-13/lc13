@@ -1,4 +1,4 @@
-///The machine pumps from the internal source to the turf
+/* ///The machine pumps from the internal source to the turf
 #define PUMP_OUT "out"
 ///The machine pumps from the turf to the internal tank
 #define PUMP_IN "in"
@@ -164,3 +164,4 @@
 				replace_tank(usr, FALSE)
 				. = TRUE
 	update_icon()
+ */

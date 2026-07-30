@@ -24,7 +24,7 @@ SUBSYSTEM_DEF(abnormality_queue)
 	/// The subsystem will pick abnormalities of these threat levels.
 	var/list/available_levels = list(ZAYIN_LEVEL)
 	/// An associative list of potential abnormalities.
-	var/list/possible_abnormalities = list(ZAYIN_LEVEL = list(), TETH_LEVEL = list(), HE_LEVEL = list(), WAW_LEVEL = list(), ALEPH_LEVEL = list())
+	var/list/possible_abnormalities = alist(ZAYIN_LEVEL = list(), TETH_LEVEL = list(), HE_LEVEL = list(), WAW_LEVEL = list(), ALEPH_LEVEL = list())
 	/// Amount of abnormality room spawners at the round-start.
 	var/rooms_start = 0
 	/// Amount of times PostSpawn() proc has been called. Kept separate from times_fired because admins love to call fire() manually
@@ -40,6 +40,9 @@ SUBSYSTEM_DEF(abnormality_queue)
 	var/fucked_it_lets_rolled = FALSE
 	/// Due to Managers not passing the Litmus Test, divine approval is now necessary for red roll
 	var/hardcore_roll_enabled = FALSE
+	/// Is the current abnormality not an abnormality?
+	var/queued_abnormality_stupid = FALSE
+	var/stupid_chance = 1
 
 	/// Contains all suppression agents, clears itself of agents that are without a body.
 	var/list/active_suppression_agents = list()
@@ -53,9 +56,6 @@ SUBSYSTEM_DEF(abnormality_queue)
 	if(!rooms_start)
 		flags |= SS_NO_FIRE
 		return ..() // Sleepy time
-
-	if(SSmaptype.chosen_trait == FACILITY_TRAIT_ABNO_BLITZ)
-		next_abno_spawn_time/=2
 
 	RegisterSignal(SSdcs, COMSIG_GLOB_ORDEAL_END, PROC_REF(OnOrdealEnd))
 	next_abno_spawn_time -= min(2, rooms_start * 0.05) MINUTES // 20 rooms will decrease wait time by 1 Minute
@@ -84,11 +84,18 @@ SUBSYSTEM_DEF(abnormality_queue)
 
 	SelectAvailableLevels()
 
+	if(queued_abnormality_stupid)
+		queued_abnormality_stupid = FALSE
+
 // Abno level selection
 /datum/controller/subsystem/abnormality_queue/proc/SelectAvailableLevels()
+	if(queued_abnormality_stupid)
+		available_levels = list(ZAYIN_LEVEL, TETH_LEVEL, HE_LEVEL, WAW_LEVEL, ALEPH_LEVEL)
+		PickAbno()
+		return
 
 	//For the blitz gamemode, only pick Waw and Aleph enemies. There should only be 80+ agents here
-	if(SSmaptype.chosen_trait == FACILITY_TRAIT_ABNO_BLITZ)
+	if(SSlobotomy_corp.BlitzActive())
 		if(spawned_abnos >= rooms_start * 0.5)
 			available_levels = list(WAW_LEVEL, ALEPH_LEVEL)
 		else
@@ -136,9 +143,10 @@ SUBSYSTEM_DEF(abnormality_queue)
 	if(!queued_abnormality)
 		return
 
-	if(possible_abnormalities[initial(queued_abnormality.threat_level)][queued_abnormality] <= 0)
-		stack_trace("Queued abnormality had no weight!?")
-	possible_abnormalities[initial(queued_abnormality.threat_level)] -= queued_abnormality
+	if(!queued_abnormality_stupid)
+		if(possible_abnormalities[initial(queued_abnormality.threat_level)][queued_abnormality] <= 0)
+			stack_trace("Queued abnormality had no weight!?")
+		possible_abnormalities[initial(queued_abnormality.threat_level)] -= queued_abnormality
 	for(var/obj/machinery/computer/abnormality_queue/Q in GLOB.lobotomy_devices)
 		Q.audible_message("<span class='announce'>[initial(queued_abnormality.name)] has arrived at the facility!</span>")
 		playsound(get_turf(Q), 'sound/machines/dun_don_alert.ogg', 50, TRUE)

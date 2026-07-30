@@ -11,15 +11,15 @@
 	del_on_death = TRUE
 	pixel_x = -16
 	base_pixel_x = -16
-	maxHealth = 1200
-	health = 1200
+	maxHealth = 1000
+	health = 1000
 	blood_volume = 0
 	density = FALSE
-	damage_coeff = list(RED_DAMAGE = 0, WHITE_DAMAGE = 0, BLACK_DAMAGE = 0, PALE_DAMAGE = 0)
+	damage_coeff = list(RED_DAMAGE = 0, WHITE_DAMAGE = 0.7, BLACK_DAMAGE = 1, PALE_DAMAGE = 2)
 	stat_attack = HARD_CRIT
 	can_breach = TRUE
 	threat_level = TETH_LEVEL
-	start_qliphoth = 5
+	start_qliphoth = 4
 	del_on_death = FALSE
 	move_to_delay = 6
 
@@ -110,6 +110,15 @@
 /mob/living/simple_animal/hostile/abnormality/sirocco/PickTarget(list/Targets)
 	return
 
+/mob/living/simple_animal/hostile/abnormality/sirocco/FindTarget(list/possible_targets, HasTargetsList)
+	return
+
+/mob/living/simple_animal/hostile/abnormality/sirocco/RegisterAttackAggro(damage_amount, damage_type, source)
+	return
+
+/mob/living/simple_animal/hostile/abnormality/sirocco/ListTargets()
+	return list()
+
 /* Qliphoth/Breach effects */
 /mob/living/simple_animal/hostile/abnormality/sirocco/BreachEffect(mob/living/carbon/human/user, breach_type)
 	. = ..()
@@ -135,10 +144,11 @@
 /mob/living/simple_animal/hostile/abnormality/sirocco/SuccessEffect(mob/living/carbon/human/user, work_type, pe, canceled)
 	. = ..()
 	breached_time = lowered_breached_time // We don't breach as long
+	datum_reference.qliphoth_change(1)
 
 /mob/living/simple_animal/hostile/abnormality/sirocco/NeutralEffect(mob/living/carbon/human/user, work_type, pe, work_time, canceled)
 	. = ..()
-	datum_reference.qliphoth_change(1)
+	datum_reference.qliphoth_change(2)
 
 /mob/living/simple_animal/hostile/abnormality/sirocco/FailureEffect(mob/living/carbon/human/user, work_type, pe)
 	. = ..()

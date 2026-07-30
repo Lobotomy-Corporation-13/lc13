@@ -57,10 +57,10 @@
 /mob/living/simple_animal/hostile/abnormality/luna/CanAttack(atom/the_target)
 	return FALSE
 
-/mob/living/simple_animal/hostile/abnormality/luna/death(gibbed)
+/mob/living/simple_animal/hostile/abnormality/luna/Destroy()
 	if(breached_monster)
 		qdel(breached_monster)
-	..()
+	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/luna/NeutralEffect(mob/living/carbon/human/user, work_type, pe)
 	. = ..()
@@ -107,8 +107,8 @@
 
 /mob/living/simple_animal/hostile/abnormality/luna/Worktick(mob/living/carbon/human/user, work_type)
 	if(performance)
-		user.deal_damage(work_damage_amount*0.60, BLACK_DAMAGE)	//take work damage
-
+		user.deal_damage(work_damage_amount*0.60, BLACK_DAMAGE, flags = (DAMAGE_FORCED))	//take work damage
+	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/luna/AttemptWork(mob/living/carbon/human/user, work_type)
 	if(work_type == "Performance")
@@ -198,7 +198,7 @@
 /mob/living/simple_animal/hostile/luna/proc/AOE()
 	for(var/turf/T in view(aoerange, src))
 		new /obj/effect/temp_visual/revenant(T)
-		HurtInTurf(T, list(), aoedamage, BLACK_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE)
+		HurtInTurf(T, list(), aoedamage, BLACK_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, attack_type = (ATTACK_TYPE_SPECIAL))
 	aoeactive = FALSE
 
 /mob/living/simple_animal/hostile/luna/proc/Reset()

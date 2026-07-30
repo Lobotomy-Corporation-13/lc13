@@ -281,8 +281,8 @@
 	for(var/turf/T in turfs)
 		if(istype(T, /turf/closed))
 			break
-		new /obj/effect/hotspot(T)
-		T.hotspot_expose(DRAKE_FIRE_TEMP,DRAKE_FIRE_EXPOSURE,1)
+		new /obj/effect/turf_fire(T)
+		// T.hotspot_expose(DRAKE_FIRE_TEMP,DRAKE_FIRE_EXPOSURE,1)
 		for(var/mob/living/L in T.contents)
 			if(L in hit_list || istype(L, source.type))
 				continue
@@ -302,7 +302,7 @@
 	if(stat || swooping)
 		return
 	if(manual_target)
-		target = manual_target
+		FindTarget(list(manual_target), TRUE)
 	if(!target)
 		return
 	stop_automated_movement = TRUE
@@ -465,7 +465,7 @@
 	anchored = TRUE
 	opacity = FALSE
 	density = TRUE
-	CanAtmosPass = ATMOS_PASS_DENSITY
+	// CanAtmosPass = ATMOS_PASS_DENSITY
 	duration = 82
 	color = COLOR_DARK_ORANGE
 
@@ -557,8 +557,8 @@
 		var/turf/closed/mineral/M = T
 		M.gets_drilled()
 	playsound(T, "explosion", 80, TRUE)
-	new /obj/effect/hotspot(T)
-	T.hotspot_expose(DRAKE_FIRE_TEMP, DRAKE_FIRE_EXPOSURE, 1)
+	new /obj/effect/turf_fire(T)
+	// T.hotspot_expose(DRAKE_FIRE_TEMP, DRAKE_FIRE_EXPOSURE, 1)
 	for(var/mob/living/L in T.contents)
 		if(istype(L, /mob/living/simple_animal/hostile/megafauna/dragon))
 			continue

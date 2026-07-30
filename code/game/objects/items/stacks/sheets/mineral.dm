@@ -62,9 +62,12 @@ GLOBAL_LIST_INIT(sandstone_recipes, list ( \
 	novariants = TRUE
 	bypassmode = TRUE
 	merge_type = /obj/item/stack/sheet/mineral/sandbags
+	w_class = WEIGHT_CLASS_BULKY
 
 GLOBAL_LIST_INIT(sandbag_recipes, list ( \
-	new/datum/stack_recipe("sandbags", /obj/structure/barricade/sandbags, 1, time = 8, one_per_turf = 1, on_floor = 1), \
+	new/datum/stack_recipe("sandbags", /obj/structure/barricade/sandbags, 1, time = 8, one_per_turf = TRUE, on_floor = TRUE), \
+	new/datum/stack_recipe("concrete barrier", /obj/structure/barricade/sandbags/grey, 3, time = 8, one_per_turf = TRUE, on_floor = TRUE), \
+	new/datum/stack_recipe("concrete tunnel", /obj/structure/barricade/sandbags/grey/hole, 2, time = 12, one_per_turf = TRUE, on_floor = TRUE) \
 	))
 
 /obj/item/stack/sheet/mineral/sandbags/ten
@@ -189,7 +192,8 @@ GLOBAL_LIST_INIT(plasma_recipes, list ( \
 		return ..()
 
 /obj/item/stack/sheet/mineral/plasma/fire_act(exposed_temperature, exposed_volume)
-	atmos_spawn_air("plasma=[amount*10];TEMP=[exposed_temperature]")
+	var/turf/here = get_turf(src)
+	explosion(here, 0, 0, 5, 8, flame_range = 2)
 	qdel(src)
 
 /*
@@ -466,7 +470,8 @@ GLOBAL_LIST_INIT(abductor_recipes, list ( \
 		return ..()
 
 /obj/item/stack/sheet/mineral/coal/fire_act(exposed_temperature, exposed_volume)
-	atmos_spawn_air("co2=[amount*10];TEMP=[exposed_temperature]")
+	var/turf/here = get_turf(src)
+	explosion(here, 0, 0, 5, 8, flame_range = 1)
 	qdel(src)
 
 /obj/item/stack/sheet/mineral/coal/five

@@ -1,5 +1,5 @@
 /mob/living/simple_animal/hostile/megafauna/apocalypse_bird
-	name = "Apocalypse bird"
+	name = "Apocalypse Bird"
 	desc = "A terrifying giant beast that lives in the black forest. It's constantly looking for a monster \
 	that terrorizes the forest, without realizing that it is looking for itself."
 	health = 600000
@@ -172,7 +172,7 @@
 	for(var/mob/living/L in livinginview(8, src))
 		if(faction_check_mob(L))
 			continue
-		L.apply_damage(slam_damage, BLACK_DAMAGE, null, L.run_armor_check(null, BLACK_DAMAGE), spread_damage = TRUE)
+		L.deal_damage(slam_damage, BLACK_DAMAGE, src, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 	SLEEP_CHECK_DEATH(2 SECONDS)
 	slam_cooldown = world.time + slam_cooldown_time
 	attacking = FALSE
@@ -263,7 +263,7 @@
 	var/list/been_hit = list()
 	for(var/turf/TF in area_of_effect)
 		new /obj/effect/temp_visual/beakbite(TF)
-		var/list/new_hits = HurtInTurf(TF, been_hit, bite_damage, RED_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE) - been_hit
+		var/list/new_hits = HurtInTurf(TF, been_hit, bite_damage, RED_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)) - been_hit
 		been_hit += new_hits
 		for(var/mob/living/L in new_hits)
 			if(L.health < 0)
@@ -291,7 +291,7 @@
 		if(L.stat == DEAD)
 			continue
 		new /obj/effect/temp_visual/judgement(get_turf(L))
-		L.apply_damage(judge_damage, PALE_DAMAGE, null, L.run_armor_check(null, PALE_DAMAGE), spread_damage = TRUE)
+		L.deal_damage(judge_damage, PALE_DAMAGE, src, attack_type = (ATTACK_TYPE_SPECIAL))
 	SLEEP_CHECK_DEATH(1 SECONDS)
 	icon_state = icon_living
 	SLEEP_CHECK_DEATH(1 SECONDS)
@@ -511,6 +511,7 @@
 		/mob/living/simple_animal/hostile/abnormality/judgement_bird
 		)
 	var/force_bird_time
+	var/last_summoned_bird
 	/// I wanna guarantee we get all Blurbs spaced and also a little prep delay so...
 	COOLDOWN_DECLARE(speak_bird)
 	COOLDOWN_DECLARE(summon_bird)
@@ -528,7 +529,7 @@
 			flash_color(M, flash_color = "#CCBBBB", flash_time = 50)
 	addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(show_global_blurb), 5 SECONDS, "A long time ago, in a warm and dense forest lived three happy birds.", 25))
 	COOLDOWN_START(src, speak_bird, 10 SECONDS)
-	COOLDOWN_START(src, summon_bird, 30 SECONDS)
+	COOLDOWN_START(src, summon_bird, 10 SECONDS)
 	force_bird_time = world.time + 3 MINUTES
 
 /mob/living/simple_animal/forest_portal/Life()
@@ -550,7 +551,7 @@
 		SpeakBird()
 	if(COOLDOWN_FINISHED(src, summon_bird))
 		SummonBird()
-		COOLDOWN_START(src, summon_bird, 30 SECONDS) // So they keep trying to move towards the portal, even if temporarily blocked.
+		COOLDOWN_START(src, summon_bird, 7 SECONDS) // So they keep trying to move towards the portal, even if temporarily blocked. Also birds are summoned one by one so keep this CD low
 
 /mob/living/simple_animal/forest_portal/Bumped(atom/movable/AM)
 	if(!isliving(AM))
@@ -636,13 +637,30 @@
 	return TRUE
 
 /mob/living/simple_animal/forest_portal/proc/SummonBird()
-	var/birds = SSlobotomy_events.AB_breached
+	var/list/birds = SSlobotomy_events.AB_breached
 	birds -= stored_birds["spoken"]
 	birds -= stored_birds["unspoken"]
 	for(var/mob/living/simple_animal/hostile/abnormality/bird in birds)
 		if(!(bird.type in bird_types))
 			continue
+		if(bird == last_summoned_bird)
+			continue
+		// Inelegant way to set the 'omw_to_apoc' var, sue me this superboss has been broken for ages
+		var/mob/living/simple_animal/hostile/abnormality/big_bird/chonker = bird
+		var/mob/living/simple_animal/hostile/abnormality/judgement_bird/blind = bird
+		var/mob/living/simple_animal/hostile/abnormality/punishing_bird/annoying = bird
+		if(istype(chonker))
+			chonker.omw_to_apoc = TRUE
+		else if (istype(blind))
+			blind.omw_to_apoc = TRUE
+		else if (istype(annoying))
+			annoying.omw_to_apoc = TRUE
+
+		if(bird.AIStatus != AI_ON)
+			bird.toggle_ai(AI_ON)
 		bird.patrol_to(get_turf(src))
+		last_summoned_bird = bird
+		return // This makes it so birds are summoned one by one.
 	return
 
 /datum/ai_controller/insane/enchanted

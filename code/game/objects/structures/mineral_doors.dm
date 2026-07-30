@@ -12,7 +12,7 @@
 	icon_state = "metal"
 	max_integrity = 200
 	armor = list(MELEE = 10, BULLET = 0, LASER = 0, ENERGY = 100, BOMB = 10, BIO = 100, RAD = 100, FIRE = 50, ACID = 50)
-	CanAtmosPass = ATMOS_PASS_DENSITY
+	// CanAtmosPass = ATMOS_PASS_DENSITY
 	flags_1 = RAD_PROTECT_CONTENTS_1 | RAD_NO_CONTAMINATE_1
 	rad_insulation = RAD_MEDIUM_INSULATION
 
@@ -26,7 +26,7 @@
 	var/sheetType = /obj/item/stack/sheet/metal //what we're made of
 	var/sheetAmount = 7 //how much we drop when deconstructed
 
-/obj/structure/mineral_door/Initialize()
+/* /obj/structure/mineral_door/Initialize()
 	. = ..()
 	air_update_turf(TRUE, TRUE)
 
@@ -39,7 +39,7 @@
 	var/turf/T = loc
 	. = ..()
 	if(!door_opened)
-		move_update_air(T)
+		move_update_air(T) */
 
 /obj/structure/mineral_door/Bumped(atom/movable/AM)
 	..()
@@ -99,7 +99,7 @@
 	density = FALSE
 	door_opened = TRUE
 	layer = OPEN_DOOR_LAYER
-	air_update_turf(TRUE, FALSE)
+	// air_update_turf(TRUE, FALSE)
 	update_icon()
 	isSwitchingStates = FALSE
 
@@ -120,7 +120,7 @@
 	set_opacity(TRUE)
 	door_opened = FALSE
 	layer = initial(layer)
-	air_update_turf(TRUE, TRUE)
+	// air_update_turf(TRUE, TRUE)
 	update_icon()
 	isSwitchingStates = FALSE
 
@@ -138,7 +138,7 @@
 /obj/structure/mineral_door/set_anchored(anchorvalue) //called in default_unfasten_wrench() chain
 	. = ..()
 	set_opacity(anchored ? !door_opened : FALSE)
-	air_update_turf(TRUE, anchorvalue)
+	// air_update_turf(TRUE, anchorvalue)
 
 /obj/structure/mineral_door/wrench_act(mob/living/user, obj/item/I)
 	..()
@@ -248,9 +248,9 @@
 	icon_state = "plasma"
 	sheetType = /obj/item/stack/sheet/mineral/plasma
 
-/obj/structure/mineral_door/transparent/plasma/ComponentInitialize()
+/* /obj/structure/mineral_door/transparent/plasma/ComponentInitialize()
 	. = ..()
-	AddElement(/datum/element/atmos_sensitive)
+	AddElement(/datum/element/atmos_sensitive) */
 
 /obj/structure/mineral_door/transparent/plasma/welder_act(mob/living/user, obj/item/I)
 	return
@@ -260,11 +260,12 @@
 		var/turf/T = get_turf(src)
 		message_admins("Plasma mineral door ignited by [ADMIN_LOOKUPFLW(user)] in [ADMIN_VERBOSEJMP(T)]")
 		log_game("Plasma mineral door ignited by [key_name(user)] in [AREACOORD(T)]")
-		TemperatureAct()
+		explosion(T, 0, 0, 5, 8, flame_range = 2)
+		deconstruct(FALSE)
 	else
 		return ..()
 
-/obj/structure/mineral_door/transparent/plasma/should_atmos_process(datum/gas_mixture/air, exposed_temperature)
+/* /obj/structure/mineral_door/transparent/plasma/should_atmos_process(datum/gas_mixture/air, exposed_temperature)
 	return exposed_temperature > 300
 
 /obj/structure/mineral_door/transparent/plasma/atmos_expose(datum/gas_mixture/air, exposed_temperature)
@@ -272,7 +273,7 @@
 
 /obj/structure/mineral_door/transparent/plasma/proc/TemperatureAct()
 	atmos_spawn_air("plasma=500;TEMP=1000")
-	deconstruct(FALSE)
+	deconstruct(FALSE) */
 
 /obj/structure/mineral_door/transparent/diamond
 	name = "diamond door"

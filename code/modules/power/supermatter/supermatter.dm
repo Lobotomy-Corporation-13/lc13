@@ -1,4 +1,4 @@
-//Ported from /vg/station13, which was in turn forked from baystation12;
+/* //Ported from /vg/station13, which was in turn forked from baystation12;
 //Please do not bother them with bugs from this port, however, as it has been modified quite a bit.
 //Modifications include removing the world-ending full supermatter variation, and leaving only the shard.
 
@@ -100,7 +100,7 @@
 #define SLIGHTLY_CHARGED_ZAP_ICON_STATE "sm_arc_supercharged"
 #define OVER_9000_ZAP_ICON_STATE "sm_arc_dbz_referance" //Witty I know
 
-#define MAX_SPACE_EXPOSURE_DAMAGE 2
+#define MAX_SPACE_EXPOSURE_DAMAGE 2 */
 
 GLOBAL_DATUM(main_supermatter_engine, /obj/machinery/power/supermatter_crystal)
 
@@ -117,7 +117,7 @@ GLOBAL_DATUM(main_supermatter_engine, /obj/machinery/power/supermatter_crystal)
 	critical_machine = TRUE
 	base_icon_state = "darkmatter"
 
-	///The id of our supermatter
+/* 	///The id of our supermatter
 	var/uid = 1
 	///The amount of supermatters that have been created this round
 	var/static/gl_uid = 1
@@ -298,7 +298,6 @@ GLOBAL_DATUM(main_supermatter_engine, /obj/machinery/power/supermatter_crystal)
 	var/psy_overlay = FALSE
 	///A pinkish overlay used to denote the presance of a psycologist. We fade in and out of this depending on the amount of time they've spent near the crystal
 	var/obj/overlay/psy/psyOverlay = /obj/overlay/psy
-
 	//For making hugbox supermatters
 	///Disables all methods of taking damage
 	var/takes_damage = TRUE
@@ -860,7 +859,7 @@ GLOBAL_DATUM(main_supermatter_engine, /obj/machinery/power/supermatter_crystal)
 			"<span class='hear'>You hear a loud crack as you are washed with a wave of heat.</span>")
 			Consume(B)
 
-
+*/
 /obj/machinery/power/supermatter_crystal/attack_tk(mob/user)
 	if(!iscarbon(user))
 		return
@@ -872,7 +871,6 @@ GLOBAL_DATUM(main_supermatter_engine, /obj/machinery/power/supermatter_crystal)
 		rip_u.Remove(jedi)
 		qdel(rip_u)
 	return COMPONENT_CANCEL_ATTACK_CHAIN
-
 
 /obj/machinery/power/supermatter_crystal/attack_paw(mob/user)
 	dust_mob(user, cause = "monkey attack")
@@ -958,7 +956,7 @@ GLOBAL_DATUM(main_supermatter_engine, /obj/machinery/power/supermatter_crystal)
 			if (scalpel.usesLeft)
 				to_chat(user, "<span class='danger'>You extract a sliver from \the [src]. \The [src] begins to react violently!</span>")
 				new /obj/item/nuke_core/supermatter_sliver(drop_location())
-				matter_power += 800
+				// matter_power += 800
 				scalpel.usesLeft--
 				if (!scalpel.usesLeft)
 					to_chat(user, "<span class='notice'>A tiny piece of \the [W] falls off, rendering it useless!</span>")
@@ -981,8 +979,8 @@ GLOBAL_DATUM(main_supermatter_engine, /obj/machinery/power/supermatter_crystal)
 
 /obj/machinery/power/supermatter_crystal/wrench_act(mob/user, obj/item/tool)
 	..()
-	if (moveable)
-		default_unfasten_wrench(user, tool, time = 20)
+	// if (moveable)
+	default_unfasten_wrench(user, tool, time = 20)
 	return TRUE
 
 /obj/machinery/power/supermatter_crystal/Bumped(atom/movable/AM)
@@ -1012,8 +1010,8 @@ GLOBAL_DATUM(main_supermatter_engine, /obj/machinery/power/supermatter_crystal)
 		message_admins("[src] has consumed [key_name_admin(user)] [ADMIN_JMP(src)].")
 		investigate_log("has consumed [key_name(user)].", INVESTIGATE_SUPERMATTER)
 		user.dust(force = TRUE)
-		if(power_changes)
-			matter_power += 200
+/* 		if(power_changes)
+			matter_power += 200 */
 	else if(AM.flags_1 & SUPERMATTER_IGNORES_1)
 		return
 	else if(isobj(AM))
@@ -1024,8 +1022,8 @@ GLOBAL_DATUM(main_supermatter_engine, /obj/machinery/power/supermatter_crystal)
 				message_admins("[src] has consumed [AM], [suspicion] [ADMIN_JMP(src)].")
 			investigate_log("has consumed [AM] - [suspicion].", INVESTIGATE_SUPERMATTER)
 		qdel(AM)
-	if(!iseffect(AM) && power_changes)
-		matter_power += 200
+/* 	if(!iseffect(AM) && power_changes)
+		matter_power += 200 */
 
 	//Some poor sod got eaten, go ahead and irradiate people nearby.
 	radiation_pulse(src, 3000, 2, TRUE)
@@ -1041,7 +1039,7 @@ GLOBAL_DATUM(main_supermatter_engine, /obj/machinery/power/supermatter_crystal)
 	return
 
 /obj/machinery/power/supermatter_crystal/engine
-	is_main_engine = TRUE
+	// is_main_engine = TRUE
 
 /obj/machinery/power/supermatter_crystal/shard
 	name = "supermatter shard"
@@ -1049,28 +1047,28 @@ GLOBAL_DATUM(main_supermatter_engine, /obj/machinery/power/supermatter_crystal)
 	base_icon_state = "darkmatter_shard"
 	icon_state = "darkmatter_shard"
 	anchored = FALSE
-	gasefficency = 0.125
-	explosion_power = 12
+/* 	gasefficency = 0.125
+	explosion_power = 12 */
 	layer = ABOVE_MOB_LAYER
-	moveable = TRUE
-	psyOverlay = /obj/overlay/psy/shard
+	// moveable = TRUE
+	// psyOverlay = /obj/overlay/psy/shard
 
 /obj/machinery/power/supermatter_crystal/shard/engine
 	name = "anchored supermatter shard"
-	is_main_engine = TRUE
+	// is_main_engine = TRUE
 	anchored = TRUE
-	moveable = FALSE
+	// moveable = FALSE
 
 // When you wanna make a supermatter shard for the dramatic effect, but
 // don't want it exploding suddenly
 /obj/machinery/power/supermatter_crystal/shard/hugbox
 	name = "anchored supermatter shard"
-	takes_damage = FALSE
+/* 	takes_damage = FALSE
 	produces_gas = FALSE
 	power_changes = FALSE
 	processes = FALSE //SHUT IT DOWN
 	moveable = FALSE
-	anchored = TRUE
+	anchored = TRUE */
 
 /obj/machinery/power/supermatter_crystal/shard/hugbox/fakecrystal //Hugbox shard with crystal visuals, used in the Supermatter/Hyperfractal shuttle
 	name = "supermatter crystal"
@@ -1091,7 +1089,7 @@ GLOBAL_DATUM(main_supermatter_engine, /obj/machinery/power/supermatter_crystal)
 				continue //You can't pull someone nailed to the deck
 		step_towards(P,center)
 
-/obj/machinery/power/supermatter_crystal/proc/supermatter_anomaly_gen(turf/anomalycenter, type = FLUX_ANOMALY, anomalyrange = 5)
+/* /obj/machinery/power/supermatter_crystal/proc/supermatter_anomaly_gen(turf/anomalycenter, type = FLUX_ANOMALY, anomalyrange = 5)
 	var/turf/L = pick(orange(anomalyrange, anomalycenter))
 	if(L)
 		switch(type)
@@ -1226,8 +1224,8 @@ GLOBAL_DATUM(main_supermatter_engine, /obj/machinery/power/supermatter_crystal)
 		//This gotdamn variable is a boomer and keeps giving me problems
 		var/turf/T = get_turf(target)
 		var/pressure = 1
-		if(T?.return_air())
-			pressure = max(1,T.return_air().return_pressure())
+		// if(T?.return_air())
+		// 	pressure = max(1,T.return_air().return_pressure())
 		//We get our range with the strength of the zap and the pressure, the higher the former and the lower the latter the better
 		var/new_range = clamp(zap_str / pressure * 10, 2, 7)
 		var/zap_count = 1
@@ -1237,7 +1235,7 @@ GLOBAL_DATUM(main_supermatter_engine, /obj/machinery/power/supermatter_crystal)
 		for(var/j in 1 to zap_count)
 			if(zap_count > 1)
 				targets_hit = targets_hit.Copy() //Pass by ref begone
-			supermatter_zap(target, new_range, zap_str, zap_flags, targets_hit)
+			supermatter_zap(target, new_range, zap_str, zap_flags, targets_hit) */
 
 /obj/machinery/power/supermatter_crystal/proc/destabilize(portal_numbers)
 	var/turf/turf_loc = get_turf(src)
@@ -1254,6 +1252,7 @@ GLOBAL_DATUM(main_supermatter_engine, /obj/machinery/power/supermatter_crystal)
 
 /obj/overlay/psy/shard
 	icon_state = "psy_shard"
+/*
 #undef HALLUCINATION_RANGE
 #undef GRAVITATIONAL_ANOMALY
 #undef FLUX_ANOMALY
@@ -1265,3 +1264,4 @@ GLOBAL_DATUM(main_supermatter_engine, /obj/machinery/power/supermatter_crystal)
 #undef MACHINERY
 #undef OBJECT
 #undef LOWEST
+ */

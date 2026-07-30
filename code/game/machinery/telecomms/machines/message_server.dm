@@ -191,6 +191,9 @@
 	for (var/obj/item/pda/P in GLOB.PDAs)
 		if ("[P.owner] ([P.ownjob])" in data["targets"])
 			P.receive_message(src)
+	// Seven Association signal interceptor hook
+	for(var/obj/item/seven_pda_interceptor/I in GLOB.seven_pda_interceptors)
+		I.intercept_message(src)
 
 // Request Console signal datum
 /datum/signal/subspace/messaging/rc/broadcast()

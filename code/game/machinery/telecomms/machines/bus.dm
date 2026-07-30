@@ -68,8 +68,8 @@
 /obj/machinery/telecomms/bus/preset_four
 	id = "Bus 4"
 	network = "tcommsat"
-	freq_listening = list(FREQ_ARCHITECTURE)
-	autolinkers = list("processor4", "architecture", "common", "messaging")
+	freq_listening = list(FREQ_RECORDS, FREQ_EXTRACTION, FREQ_ARCHITECTURE)
+	autolinkers = list("processor4", "records", "extraction", "architecture", "common", "messaging")
 
 /obj/machinery/telecomms/bus/preset_four/Initialize()
 	. = ..()

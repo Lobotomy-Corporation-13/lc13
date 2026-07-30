@@ -1,0 +1,15 @@
+{
+	"version": 1,
+	"map_name": "Facility I-575 BOTANICAL",
+	"map_path": "map_files/LC13/India-Botanical",
+	"map_file": [
+		"india.dmm"
+	],
+	"space_ruin_levels": 0,
+	"space_empty_levels": 0,
+	"shuttles": {
+		"emergency": "emergency_alpha"
+	},
+	"minetype": "none",
+	"maptype": "standard"
+}

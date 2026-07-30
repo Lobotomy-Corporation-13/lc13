@@ -1,11 +1,11 @@
-/// Turns Target Into A Book
+/// Turns Target Into MEATPASTE
 /datum/smite/claw_execute
 	name = "Claw Execute"
 
 /datum/smite/claw_execute/effect(client/user, mob/living/target)
 	. = ..()
 	var/turf/origin = get_turf(target)
-	var/list/all_turfs = origin.GetAtmosAdjacentTurfs(1)
+	var/list/all_turfs = origin.reachableAdjacentTurfs()
 	for(var/turf/T in all_turfs)
 		if(T == origin)
 			continue

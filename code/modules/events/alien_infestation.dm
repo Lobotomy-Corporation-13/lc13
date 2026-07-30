@@ -41,7 +41,7 @@
 
 
 /datum/round_event/ghost_role/alien_infestation/spawn_role()
-	var/list/vents = list()
+/* 	var/list/vents = list()
 	for(var/obj/machinery/atmospherics/components/unary/vent_pump/temp_vent in GLOB.machines)
 		if(QDELETED(temp_vent))
 			continue
@@ -56,18 +56,18 @@
 
 	if(!vents.len)
 		message_admins("An event attempted to spawn an alien but no suitable vents were found. Shutting down.")
-		return MAP_ERROR
-
+		return MAP_ERROR */
+	var/xeno_spawn_cache = GLOB.xeno_spawn.Copy()
 	var/list/candidates = get_candidates(ROLE_ALIEN, null, ROLE_ALIEN)
 
-	if(!candidates.len)
+	if(!length(candidates))
 		return NOT_ENOUGH_PLAYERS
 
-	while(spawncount > 0 && vents.len && candidates.len)
-		var/obj/vent = pick_n_take(vents)
+	while(spawncount > 0 && length(xeno_spawn_cache) && length(candidates))
+		var/turf/spawnpoint = pick_n_take(xeno_spawn_cache)
 		var/client/C = pick_n_take(candidates)
 
-		var/mob/living/carbon/alien/larva/new_xeno = new(vent.loc)
+		var/mob/living/carbon/alien/larva/new_xeno = new(spawnpoint)
 		new_xeno.key = C.key
 
 		spawncount--

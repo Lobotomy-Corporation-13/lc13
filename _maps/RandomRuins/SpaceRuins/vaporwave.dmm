@@ -119,15 +119,11 @@
 "A" = (
 /obj/effect/turf_decal/sand,
 /obj/effect/turf_decal/sand/plating,
-/turf/open/floor/plating{
-	initial_gas_mix = "TEMP=2.7"
-	},
+/turf/open/floor/plating,
 /area/ruin/unpowered/no_grav)
 "B" = (
 /obj/effect/turf_decal/sand/plating,
-/turf/open/floor/plating{
-	initial_gas_mix = "TEMP=2.7"
-	},
+/turf/open/floor/plating,
 /area/ruin/unpowered/no_grav)
 "C" = (
 /obj/structure/statue/sandstone/venus{
@@ -136,9 +132,7 @@
 	dir = 8
 	},
 /obj/effect/turf_decal/sand/plating,
-/turf/open/floor/plating{
-	initial_gas_mix = "TEMP=2.7"
-	},
+/turf/open/floor/plating,
 /area/ruin/unpowered/no_grav)
 "D" = (
 /obj/effect/turf_decal/sand,
@@ -156,16 +150,12 @@
 	dir = 4
 	},
 /obj/effect/turf_decal/sand/plating,
-/turf/open/floor/plating{
-	initial_gas_mix = "TEMP=2.7"
-	},
+/turf/open/floor/plating,
 /area/ruin/unpowered/no_grav)
 "G" = (
 /obj/effect/turf_decal/stripes/asteroid/line,
 /obj/effect/turf_decal/sand/plating,
-/turf/open/floor/plating{
-	initial_gas_mix = "TEMP=2.7"
-	},
+/turf/open/floor/plating,
 /area/ruin/unpowered/no_grav)
 "H" = (
 /obj/effect/overlay/palmtree_l,
@@ -221,9 +211,7 @@
 	dir = 1
 	},
 /obj/effect/turf_decal/sand/plating,
-/turf/open/floor/plating{
-	initial_gas_mix = "TEMP=2.7"
-	},
+/turf/open/floor/plating,
 /area/ruin/unpowered/no_grav)
 
 (1,1,1) = {"

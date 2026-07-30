@@ -151,9 +151,6 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 	var/sound/attack_sound = 'sound/weapons/punch1.ogg'
 	var/sound/miss_sound = 'sound/weapons/punchmiss.ogg'
 
-	///What gas does this species breathe? Used by suffocation screen alerts, most of actual gas breathing is handled by mutantlungs. See [life.dm][code/modules/mob/living/carbon/human/life.dm]
-	var/breathid = "o2"
-
 	///What anim to use for dusting
 	var/dust_anim = "dust-h"
 	///What anim to use for gibbing
@@ -1010,15 +1007,7 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 		if(BODY_FRONT_LAYER)
 			return "FRONT"
 
-
 /datum/species/proc/spec_life(mob/living/carbon/human/H)
-	if(HAS_TRAIT(H, TRAIT_NOBREATH))
-		H.setOxyLoss(0)
-		H.losebreath = 0
-
-		var/takes_crit_damage = (!HAS_TRAIT(H, TRAIT_NOCRITDAMAGE))
-		if((H.health < H.crit_threshold) && takes_crit_damage)
-			H.adjustBruteLoss(1)
 	if(flying_species)
 		HandleFlight(H)
 
@@ -1029,7 +1018,7 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 	// handles the equipping of species-specific gear
 	return
 
-/datum/species/proc/can_equip(obj/item/I, slot, disable_warning, mob/living/carbon/human/H, bypass_equip_delay_self = FALSE)
+/datum/species/proc/can_equip(obj/item/I, slot, disable_warning, mob/living/carbon/human/H)
 	if(slot in no_equip)
 		if(!I.species_exception || !is_type_in_list(src, I.species_exception))
 			return FALSE
@@ -1058,17 +1047,17 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 		if(ITEM_SLOT_MASK)
 			if(!H.get_bodypart(BODY_ZONE_HEAD))
 				return FALSE
-			return equip_delay_self_check(I, H, bypass_equip_delay_self)
+			return TRUE
 		if(ITEM_SLOT_NECK)
 			return TRUE
 		if(ITEM_SLOT_BACK)
-			return equip_delay_self_check(I, H, bypass_equip_delay_self)
+			return TRUE
 		if(ITEM_SLOT_OCLOTHING)
-			return equip_delay_self_check(I, H, bypass_equip_delay_self)
+			return TRUE
 		if(ITEM_SLOT_GLOVES)
 			if(H.num_hands < 2)
 				return FALSE
-			return equip_delay_self_check(I, H, bypass_equip_delay_self)
+			return TRUE
 		if(ITEM_SLOT_FEET)
 			if(H.num_legs < 2)
 				return FALSE
@@ -1076,7 +1065,7 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 				if(!disable_warning)
 					to_chat(H, span_warning("The footwear around here isn't compatible with your feet!"))
 				return FALSE
-			return equip_delay_self_check(I, H, bypass_equip_delay_self)
+			return TRUE
 		if(ITEM_SLOT_BELT)
 			var/obj/item/bodypart/O = H.get_bodypart(BODY_ZONE_CHEST)
 
@@ -1084,31 +1073,31 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 				if(!disable_warning)
 					to_chat(H, span_warning("You need a jumpsuit before you can attach this [I.name]!"))
 				return FALSE
-			return equip_delay_self_check(I, H, bypass_equip_delay_self)
+			return TRUE
 		if(ITEM_SLOT_EYES)
 			if(!H.get_bodypart(BODY_ZONE_HEAD))
 				return FALSE
 			var/obj/item/organ/eyes/E = H.getorganslot(ORGAN_SLOT_EYES)
 			if(E?.no_glasses)
 				return FALSE
-			return equip_delay_self_check(I, H, bypass_equip_delay_self)
+			return TRUE
 		if(ITEM_SLOT_HEAD)
 			if(!H.get_bodypart(BODY_ZONE_HEAD))
 				return FALSE
-			return equip_delay_self_check(I, H, bypass_equip_delay_self)
+			return TRUE
 		if(ITEM_SLOT_EARS)
 			if(!H.get_bodypart(BODY_ZONE_HEAD))
 				return FALSE
-			return equip_delay_self_check(I, H, bypass_equip_delay_self)
+			return TRUE
 		if(ITEM_SLOT_ICLOTHING)
-			return equip_delay_self_check(I, H, bypass_equip_delay_self)
+			return TRUE
 		if(ITEM_SLOT_ID)
 			var/obj/item/bodypart/O = H.get_bodypart(BODY_ZONE_CHEST)
 			if(!H.w_uniform && !nojumpsuit && (!O || O.status != BODYPART_ROBOTIC))
 				if(!disable_warning)
 					to_chat(H, span_warning("You need a jumpsuit before you can attach this [I.name]!"))
 				return FALSE
-			return equip_delay_self_check(I, H, bypass_equip_delay_self)
+			return TRUE
 		if(ITEM_SLOT_LPOCKET)
 			if(HAS_TRAIT(I, TRAIT_NODROP)) //Pockets aren't visible, so you can't move TRAIT_NODROP items into them.
 				return FALSE
@@ -1170,12 +1159,6 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 				return TRUE
 			return FALSE
 	return FALSE //Unsupported slot
-
-/datum/species/proc/equip_delay_self_check(obj/item/I, mob/living/carbon/human/H, bypass_equip_delay_self)
-	if(!I.equip_delay_self || bypass_equip_delay_self)
-		return TRUE
-	H.visible_message(span_notice("[H] start putting on [I]..."), span_notice("You start putting on [I]..."))
-	return do_after(H, I.equip_delay_self, target = H)
 
 /datum/species/proc/before_equip_job(datum/job/J, mob/living/carbon/human/H)
 	return
@@ -1412,8 +1395,6 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 			log_combat(user, target, "attempted to punch")
 			return FALSE
 
-		var/armor_block = target.run_armor_check(affecting, RED_DAMAGE)
-
 		playsound(target.loc, user.dna.species.attack_sound, 25, TRUE, -1)
 
 		target.visible_message(span_danger("[user] [atk_verb]ed [target]!"), \
@@ -1428,10 +1409,10 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 			target.dismembering_strike(user, affecting.body_zone)
 
 		if(atk_effect == ATTACK_EFFECT_KICK)//kicks deal 1.5x raw damage
-			target.apply_damage(damage*1.5, user.dna.species.attack_type, affecting, armor_block)
+			target.deal_damage(damage*1.5, user.dna.species.attack_type, source = user, attack_type = (ATTACK_TYPE_MELEE), def_zone = affecting)
 			log_combat(user, target, "kicked")
 		else//other attacks deal full raw damage
-			target.apply_damage(damage, user.dna.species.attack_type, affecting, armor_block)
+			target.deal_damage(damage, user.dna.species.attack_type, source = user, attack_type = (ATTACK_TYPE_MELEE), def_zone = affecting)
 			log_combat(user, target, "punched")
 
 /datum/species/proc/spec_unarmedattacked(mob/living/carbon/human/user, mob/living/carbon/human/target)
@@ -1504,6 +1485,7 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 	hit_area = affecting.name
 	var/def_zone = affecting.body_zone
 
+	// We run an armour check here for legacy reasons (it's used in a switch case to apply knockdowns or concussions for brute damage further below), but the armour calculation will happen inside the actual damage proc so it can account for the damage type shuffler.
 	var/armor_block
 	switch(I.damtype)
 		if(RED_DAMAGE, WHITE_DAMAGE, BLACK_DAMAGE, PALE_DAMAGE, MELEE, BULLET, LASER, ENERGY, BOMB, BIO, RAD, FIRE, ACID)
@@ -1524,10 +1506,12 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 	var/damage = I.force
 	if(!(SSmaptype.maptype in SSmaptype.citymaps))
 		damage *= justice_mod
+	var/extra_flags = 0
 	if(istype(I, /obj/item/ego_weapon))
 		var/obj/item/ego_weapon/theweapon = I
 		damage *= theweapon.force_multiplier
-	apply_damage((damage * weakness), I.damtype, def_zone, armor_block, H, wound_bonus = Iwound_bonus, bare_wound_bonus = I.bare_wound_bonus, sharpness = I.get_sharpness(), white_healable = TRUE)
+		extra_flags = theweapon.extra_damage_flags
+	apply_damage(H, (damage * weakness), I.damtype, source = user, flags = (DAMAGE_WHITE_HEALABLE | extra_flags), attack_type = (ATTACK_TYPE_MELEE), def_zone = def_zone, wound_bonus = Iwound_bonus, bare_wound_bonus = I.bare_wound_bonus, sharpness = I.get_sharpness())
 	if(!I.force)
 		return FALSE //item force is zero
 
@@ -1591,26 +1575,34 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 
 	return TRUE
 
-/datum/species/proc/apply_damage(damage, damagetype = BRUTE, def_zone = null, blocked, mob/living/carbon/human/H, forced = FALSE, spread_damage = FALSE, wound_bonus = 0, bare_wound_bonus = 0, sharpness = SHARP_NONE, white_healable = FALSE)
-	if(GLOB.damage_type_shuffler?.is_enabled && IsColorDamageType(damagetype))
+// Due to belonging to a different type (datum/species), we can't pull functionality from mob/living's deal_damage. This is duplicate code with some additions for factoring in wounds and sharpness.
+/datum/species/proc/apply_damage(mob/living/carbon/human/H, damage_amount, damage_type, source = null, flags = null, attack_type = null, blocked = null, def_zone = null, wound_bonus = 0, bare_wound_bonus = 0, sharpness = SHARP_NONE)
+	if(!damage_amount) // There are some extremely rare instances of 0 damage pre-armour reduction, for example King of Greed does a 0 damage HurtInTurf to fill up a hitlist to attack later.
+		return FALSE
+
+	if(GLOB.damage_type_shuffler?.is_enabled && IsColorDamageType(damage_type)) // Yes I have to do yet another shuffler check here because god damn it we're handling human damage in the species datum
 		var/datum/damage_type_shuffler/shuffler = GLOB.damage_type_shuffler
-		var new_damage_type = shuffler.mapping_offense[damagetype]
-		if(new_damage_type == PALE_DAMAGE && damagetype != PALE_DAMAGE)
-			damage *= shuffler.pale_debuff
-		else if(new_damage_type != PALE_DAMAGE && damagetype == PALE_DAMAGE)
-			damage /= shuffler.pale_debuff
-		damagetype = new_damage_type
-	var/signal_return = SEND_SIGNAL(H, COMSIG_MOB_APPLY_DAMGE, damage, damagetype, def_zone, wound_bonus, bare_wound_bonus, sharpness)
+		damage_type = shuffler.mapping_offense[damage_type]
+
+	// We will now send a signal that gives listeners the opportunity to cancel the damage being dealt. For some reason, in the original apply_damage, this happens before a "final damage" calculation, so I have chosen to preserve that behaviour.
+	// Some examples of the listeners that may return COMPONENT_MOB_DENY_DAMAGE are manager shields, the Welfare Core reward, or Sweeper Persistence.
+	var/signal_return = SEND_SIGNAL(H, COMSIG_MOB_APPLY_DAMGE, damage_amount, damage_type, def_zone, source, flags, attack_type)
 	if(signal_return & COMPONENT_MOB_DENY_DAMAGE)
 		return FALSE
 
+	// Automatically run an armour check for the provided damage type if we weren't already provided with a blocked value, and if we aren't taking BRUTE damage.
+	if((isnull(blocked)) && (damage_type != BRUTE))
+		blocked = H.run_armor_check(def_zone, damage_type)
+
 	var/hit_percent = (100-(blocked+armor))/100
 	hit_percent = (hit_percent * (100-H.physiology.damage_resistance))/100
-	if(!damage || (!forced && hit_percent <= 0))
-		return 0
 
+	if(hit_percent <= 0)
+		return FALSE
+
+	// This snippet handles choosing a body part to apply the damage on, if we didn't choose to spread_damage.
 	var/obj/item/bodypart/BP = null
-	if(!spread_damage)
+	if((flags & DAMAGE_NO_SPREAD)) // If we've been set to NOT spread damage, choose a body part to hit based on def_zone (we'll get one regardless if we have no def_zone)
 		if(isbodypart(def_zone))
 			BP = def_zone
 		else
@@ -1619,57 +1611,68 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 			BP = H.get_bodypart(check_zone(def_zone))
 			if(!BP)
 				BP = H.bodyparts[1]
-	switch(damagetype)
+
+	var/final_damage = damage_amount
+
+	var/piercing = flags & DAMAGE_PIERCING
+
+	switch(damage_type)
 		if(BRUTE, MELEE, BULLET, BOMB, ACID)
 			H.damageoverlaytemp = 20
-			var/damage_amount = forced ? damage : damage * hit_percent * brutemod * H.physiology.brute_mod
+			final_damage = piercing ? damage_amount : damage_amount * hit_percent * brutemod * H.physiology.brute_mod
 			if(BP)
-				if(BP.receive_damage(damage_amount, 0, wound_bonus = wound_bonus, bare_wound_bonus = bare_wound_bonus, sharpness = sharpness))
+				if(BP.receive_damage(final_damage, 0, wound_bonus = wound_bonus, bare_wound_bonus = bare_wound_bonus, sharpness = sharpness))
 					H.update_damage_overlays()
 				new /obj/effect/temp_visual/damage_effect/red(get_turf(H)) // Since bodypart damage bypasses bruteloss, we just make vfx here.
 			else//no bodypart, we deal damage with a more general method.
-				H.adjustBruteLoss(damage_amount)
-		if(FIRE, FIRE, LASER, ENERGY, RAD)
+				H.adjustBruteLoss(final_damage)
+		if(FIRE, LASER, ENERGY, RAD)
 			H.damageoverlaytemp = 20
-			var/damage_amount = forced ? damage : damage * hit_percent * burnmod * H.physiology.burn_mod
+			final_damage = piercing ? damage_amount : damage_amount * hit_percent * burnmod * H.physiology.burn_mod
 			if(BP)
-				if(BP.receive_damage(0, damage_amount, wound_bonus = wound_bonus, bare_wound_bonus = bare_wound_bonus, sharpness = sharpness))
+				if(BP.receive_damage(0, final_damage, wound_bonus = wound_bonus, bare_wound_bonus = bare_wound_bonus, sharpness = sharpness))
 					H.update_damage_overlays()
 				new /obj/effect/temp_visual/damage_effect/burn(get_turf(H))
 			else
-				H.adjustFireLoss(damage_amount)
+				H.adjustFireLoss(final_damage)
 		if(TOX, BIO)
-			var/damage_amount = forced ? damage : damage * hit_percent * H.physiology.tox_mod
-			H.adjustToxLoss(damage_amount)
+			final_damage = piercing ? damage_amount : damage_amount * hit_percent * H.physiology.tox_mod
+			H.adjustToxLoss(final_damage)
 		if(OXY)
-			var/damage_amount = forced ? damage : damage * hit_percent * H.physiology.oxy_mod
-			H.adjustOxyLoss(damage_amount)
+			final_damage = piercing ? damage_amount : damage_amount * hit_percent * H.physiology.oxy_mod
+			H.adjustOxyLoss(final_damage)
 		if(CLONE)
-			var/damage_amount = forced ? damage : damage * hit_percent * H.physiology.clone_mod
-			H.adjustCloneLoss(damage_amount)
+			final_damage = piercing ? damage_amount : damage_amount * hit_percent * H.physiology.clone_mod
+			H.adjustCloneLoss(final_damage)
 		if(STAMINA)
-			var/damage_amount = forced ? damage : damage * hit_percent * H.physiology.stamina_mod
+			final_damage = piercing ? damage_amount : damage_amount * hit_percent * H.physiology.stamina_mod
 			if(BP)
-				if(BP.receive_damage(0, 0, damage_amount))
+				if(BP.receive_damage(0, 0, final_damage))
 					H.update_stamina()
 			else
-				H.adjustStaminaLoss(damage_amount)
+				H.adjustStaminaLoss(final_damage)
 		if(BRAIN)
-			var/damage_amount = forced ? damage : damage * hit_percent * H.physiology.brain_mod
-			H.adjustOrganLoss(ORGAN_SLOT_BRAIN, damage_amount)
+			final_damage = piercing ? damage_amount : damage_amount * hit_percent * H.physiology.brain_mod
+			H.adjustOrganLoss(ORGAN_SLOT_BRAIN, final_damage)
 		if(RED_DAMAGE)
-			var/damage_amount = forced ? damage : damage * hit_percent * redmod * H.physiology.red_mod
-			H.adjustRedLoss(damage_amount, forced = forced)
+			final_damage = piercing ? damage_amount : damage_amount * hit_percent * redmod * H.physiology.red_mod
+			H.adjustRedLoss(final_damage, forced = piercing)
 		if(WHITE_DAMAGE)
-			var/damage_amount = forced ? damage : damage * hit_percent * whitemod * H.physiology.white_mod
-			H.adjustWhiteLoss(damage_amount, forced = forced, white_healable = white_healable)
+			final_damage = piercing ? damage_amount : damage_amount * hit_percent * whitemod * H.physiology.white_mod
+			H.adjustWhiteLoss(final_damage, forced = piercing, white_healable = flags & (DAMAGE_WHITE_HEALABLE))
 		if(BLACK_DAMAGE)
-			var/damage_amount = forced ? damage : damage * hit_percent * blackmod * H.physiology.black_mod
-			H.adjustBlackLoss(damage_amount, forced = forced, white_healable = white_healable)
+			final_damage = piercing ? damage_amount : damage_amount * hit_percent * blackmod * H.physiology.black_mod
+			H.adjustBlackLoss(final_damage, forced = piercing, white_healable = flags & (DAMAGE_WHITE_HEALABLE))
 		if(PALE_DAMAGE)
-			var/damage_amount = forced ? damage : damage * hit_percent * palemod * H.physiology.pale_mod
-			H.adjustPaleLoss(damage_amount, forced = forced)
-	return 1
+			final_damage = piercing ? damage_amount : damage_amount * hit_percent * palemod * H.physiology.pale_mod
+			H.adjustPaleLoss(final_damage, forced = piercing)
+
+	SEND_SIGNAL(H, COMSIG_MOB_AFTER_APPLY_DAMGE, final_damage, damage_type, def_zone, wound_bonus, bare_wound_bonus, sharpness, source, flags, attack_type)
+
+	if(flags & DAMAGE_UNTRACKABLE)
+		source = null
+
+	return final_damage
 
 /datum/species/proc/on_hit(obj/projectile/P, mob/living/carbon/human/H)
 	// called when hit by a projectile
@@ -1685,28 +1688,6 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 	// called before a projectile hit
 	return 0
 
-/////////////
-//BREATHING//
-/////////////
-
-/datum/species/proc/breathe(mob/living/carbon/human/H)
-	if(HAS_TRAIT(H, TRAIT_NOBREATH))
-		return TRUE
-
-//////////////////////////
-// ENVIRONMENT HANDLERS //
-//////////////////////////
-
-/**
- * Environment handler for species
- *
- * vars:
- * * environment (required) The environment gas mix
- * * humi (required)(type: /mob/living/carbon/human) The mob we will target
- */
-/datum/species/proc/handle_environment(datum/gas_mixture/environment, mob/living/carbon/human/humi)
-	handle_environment_pressure(environment, humi)
-
 /**
  * Body temperature handler for species
  *
@@ -1716,16 +1697,15 @@ GLOBAL_LIST_EMPTY(roundstart_races)
  * * humi (required)(type: /mob/living/carbon/human) The mob we will target
  */
 /datum/species/proc/handle_body_temperature(mob/living/carbon/human/humi)
-	//when in a cryo unit we suspend all natural body regulation
+/* 	//when in a cryo unit we suspend all natural body regulation
 	if(istype(humi.loc, /obj/machinery/atmospherics/components/unary/cryo_cell))
-		return
+		return */
 
 	//Only stabilise core temp when alive and not in statis
 	if(humi.stat < DEAD && !IS_IN_STASIS(humi))
 		body_temperature_core(humi)
 
 	//These do run in statis
-	body_temperature_skin(humi)
 	body_temperature_alerts(humi)
 
 	//Do not cause more damage in statis
@@ -1742,68 +1722,6 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 /datum/species/proc/body_temperature_core(mob/living/carbon/human/humi)
 	var/natural_change = get_temp_change_amount(humi.get_body_temp_normal() - humi.coretemperature, 0.12)
 	humi.adjust_coretemperature(humi.metabolism_efficiency * natural_change)
-
-/**
- * Used to normalize the skin temperature on living mobs
- *
- * The core temp effects the skin, then the enviroment effects the skin, then we refect that back to the core.
- * This happens even when dead so bodies revert to room temp over time.
- * vars:
- * * humi (required) The mob we will targeting
- */
-/datum/species/proc/body_temperature_skin(mob/living/carbon/human/humi)
-
-	// change the core based on the skin temp
-	var/skin_core_diff = humi.bodytemperature - humi.coretemperature
-	// change rate of 0.08 to be slightly below area to skin change rate and still have a solid curve
-	var/skin_core_change = get_temp_change_amount(skin_core_diff, 0.08)
-
-	humi.adjust_coretemperature(skin_core_change)
-
-	// get the enviroment details of where the mob is standing
-	var/datum/gas_mixture/environment = humi.loc.return_air()
-	if(!environment) // if there is no environment (nullspace) drop out here.
-		return
-
-	// Get the temperature of the environment for area
-	var/area_temp = humi.get_temperature(environment)
-
-	// Get the insulation value based on the area's temp
-	var/thermal_protection = humi.get_insulation_protection(area_temp)
-
-	// Changes to the skin temperature based on the area
-	var/area_skin_diff = area_temp - humi.bodytemperature
-	if(!humi.on_fire || area_skin_diff > 0)
-		// change rate of 0.1 as area temp has large impact on the surface
-		var/area_skin_change = get_temp_change_amount(area_skin_diff, 0.1)
-
-		// We need to apply the thermal protection of the clothing when applying area to surface change
-		// If the core bodytemp goes over the normal body temp you are overheating and becom sweaty
-		// This will cause the insulation value of any clothing to reduced in effect (70% normal rating)
-		// we add 10 degree over normal body temp before triggering as thick insulation raises body temp
-		if(humi.get_body_temp_normal(apply_change=FALSE) + 10 < humi.coretemperature)
-			// we are overheating and sweaty insulation is not as good reducing thermal protection
-			area_skin_change = (1 - (thermal_protection * 0.7)) * area_skin_change
-		else
-			area_skin_change = (1 - thermal_protection) * area_skin_change
-
-		humi.adjust_bodytemperature(area_skin_change)
-
-	// Core to skin temp transfer, when not on fire
-	if(!humi.on_fire)
-		// Get the changes to the skin from the core temp
-		var/core_skin_diff = humi.coretemperature - humi.bodytemperature
-		// change rate of 0.09 to reflect temp back to the skin at the slight higher rate then core to skin
-		var/core_skin_change = (1 + thermal_protection) * get_temp_change_amount(core_skin_diff, 0.09)
-
-		// We do not want to over shoot after using protection
-		if(core_skin_diff > 0)
-			core_skin_change = min(core_skin_change, core_skin_diff)
-		else
-			core_skin_change = max(core_skin_change, core_skin_diff)
-
-		humi.adjust_bodytemperature(core_skin_change)
-
 
 /**
  * Used to set alerts and debuffs based on body temperature
@@ -1879,7 +1797,7 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 			humi.emote("scream")
 
 		// Apply the damage to all body parts
-		humi.apply_damage(burn_damage, FIRE, spread_damage = TRUE)
+		humi.deal_damage(burn_damage, FIRE, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_ENVIRONMENT))
 
 	// Apply some burn / brute damage to the body (Dependent if the person is hulk or not)
 	var/is_hulk = HAS_TRAIT(humi, TRAIT_HULK)
@@ -1891,11 +1809,11 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 		var/damage_mod = coldmod * humi.physiology.cold_mod * (is_hulk ? HULK_COLD_DAMAGE_MOD : 1)
 		switch(humi.coretemperature)
 			if(-INFINITY to 119)
-				humi.apply_damage(COLD_DAMAGE_LEVEL_3 * damage_mod, damage_type)
+				humi.deal_damage(COLD_DAMAGE_LEVEL_3 * damage_mod, damage_type, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_ENVIRONMENT))
 			if(120 to 200)
-				humi.apply_damage(COLD_DAMAGE_LEVEL_2 * damage_mod, damage_type)
+				humi.deal_damage(COLD_DAMAGE_LEVEL_2 * damage_mod, damage_type, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_ENVIRONMENT))
 			else
-				humi.apply_damage(COLD_DAMAGE_LEVEL_1 * damage_mod, damage_type)
+				humi.deal_damage(COLD_DAMAGE_LEVEL_1 * damage_mod, damage_type, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_ENVIRONMENT))
 
 
 /**
@@ -1938,50 +1856,7 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 	if(humi.bodytemperature > BODYTEMP_HEAT_WOUND_LIMIT + 2800)
 		burn_damage = HEAT_DAMAGE_LEVEL_3
 
-	humi.apply_damage(burn_damage, FIRE, bodypart)
-
-/// Handle the air pressure of the environment
-/datum/species/proc/handle_environment_pressure(datum/gas_mixture/environment, mob/living/carbon/human/H)
-	var/pressure = environment.return_pressure()
-	var/adjusted_pressure = H.calculate_affecting_pressure(pressure)
-
-	// Set alerts and apply damage based on the amount of pressure
-	switch(adjusted_pressure)
-
-		// Very high pressure, show an alert and take damage
-		if(HAZARD_HIGH_PRESSURE to INFINITY)
-			if(!HAS_TRAIT(H, TRAIT_RESISTHIGHPRESSURE))
-				H.adjustBruteLoss(min(((adjusted_pressure / HAZARD_HIGH_PRESSURE) -1 ) * \
-					PRESSURE_DAMAGE_COEFFICIENT, MAX_HIGH_PRESSURE_DAMAGE) * H.physiology.pressure_mod)
-				H.throw_alert("pressure", /atom/movable/screen/alert/highpressure, 2)
-			else
-				H.clear_alert("pressure")
-
-		// High pressure, show an alert
-		if(WARNING_HIGH_PRESSURE to HAZARD_HIGH_PRESSURE)
-			H.throw_alert("pressure", /atom/movable/screen/alert/highpressure, 1)
-
-		// No pressure issues here clear pressure alerts
-		if(WARNING_LOW_PRESSURE to WARNING_HIGH_PRESSURE)
-			H.clear_alert("pressure")
-
-		// Low pressure here, show an alert
-		if(HAZARD_LOW_PRESSURE to WARNING_LOW_PRESSURE)
-			// We have low pressure resit trait, clear alerts
-			if(HAS_TRAIT(H, TRAIT_RESISTLOWPRESSURE))
-				H.clear_alert("pressure")
-			else
-				H.throw_alert("pressure", /atom/movable/screen/alert/lowpressure, 1)
-
-		// Very low pressure, show an alert and take damage
-		else
-			// We have low pressure resit trait, clear alerts
-			if(HAS_TRAIT(H, TRAIT_RESISTLOWPRESSURE))
-				H.clear_alert("pressure")
-			else
-				H.adjustBruteLoss(LOW_PRESSURE_DAMAGE * H.physiology.pressure_mod)
-				H.throw_alert("pressure", /atom/movable/screen/alert/lowpressure, 2)
-
+	humi.deal_damage(burn_damage, FIRE, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_ENVIRONMENT), def_zone = bodypart)
 
 //////////
 // FIRE //
@@ -2046,17 +1921,11 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 */
 		var/thermal_protection = H.get_thermal_protection()
 
-		if(thermal_protection >= FIRE_IMMUNITY_MAX_TEMP_PROTECT && !no_protection)
+		if(thermal_protection >= TRUE && !no_protection)
 			return
-	////////////////////////////////////////
-	//Fire raising temperature is disabled//
-	////////////////////////////////////////
-/*
-		if(thermal_protection >= FIRE_SUIT_MAX_TEMP_PROTECT && !no_protection)
-			H.adjust_bodytemperature(11)
-		else
-			H.adjust_bodytemperature(BODYTEMP_HEATING_MAX + (H.fire_stacks * 12))
-*/
+
+		if(thermal_protection <= TRUE || no_protection)
+			H.deal_damage(4, FIRE, flags = (DAMAGE_FORCED))
 
 /datum/species/proc/CanIgniteMob(mob/living/carbon/human/H)
 	if(HAS_TRAIT(H, TRAIT_NOFIRE))
@@ -2140,12 +2009,14 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 	if(!T)
 		return FALSE
 
+/* For now, flying beings can fly in vacuum. Enjoy it.
+
 	var/datum/gas_mixture/environment = T.return_air()
 	if(environment && !(environment.return_pressure() > 30))
 		to_chat(H, span_warning("The atmosphere is too thin for you to fly!"))
 		return FALSE
-	else
-		return TRUE
+*/
+	return TRUE
 
 /datum/species/proc/flyslip(mob/living/carbon/human/H)
 	var/obj/buckled_obj

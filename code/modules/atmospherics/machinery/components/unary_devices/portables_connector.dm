@@ -1,4 +1,4 @@
-/obj/machinery/atmospherics/components/unary/portables_connector
+/* /obj/machinery/atmospherics/components/unary/portables_connector
 	icon_state = "connector_map-3"
 
 	name = "connector port"
@@ -62,3 +62,4 @@
 /obj/machinery/atmospherics/components/unary/portables_connector/visible/layer4
 	piping_layer = 4
 	icon_state = "connector_map-4"
+ */

@@ -70,6 +70,7 @@
 /mob/living/simple_animal/hostile/senior_shrimp/Initialize()
 	. = ..()
 	if(SSmaptype.maptype in SSmaptype.citymaps)
+		attack_cooldown = 100
 		del_on_death = FALSE
 
 /mob/living/simple_animal/hostile/senior_shrimp/ComponentInitialize()
@@ -292,7 +293,7 @@
 	color = COLOR_PURPLE
 
 // Modified patrolling
-/mob/living/simple_animal/hostile/ordeal/salmon_dusk/black/patrol_select()
+/mob/living/simple_animal/hostile/ordeal/salmon_dusk/black/SelectPatrolLocation()
 	fast_mode = TRUE
 	var/list/target_turfs = list()
 	for(var/mob/living/carbon/human/H in GLOB.human_list)
@@ -304,8 +305,7 @@
 
 	var/turf/target_turf = get_closest_atom(/turf/open, target_turfs, src)
 	if(istype(target_turf))
-		patrol_path = get_path_to(src, target_turf, /turf/proc/Distance_cardinal, 0, 200)
-		return
+		return target_turf
 	return ..()
 
 /mob/living/simple_animal/hostile/ordeal/salmon_dusk/black/MoveToTarget(list/possible_targets)

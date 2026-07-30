@@ -47,7 +47,7 @@
 /datum/chemical_reaction/hot_ice_melt
 	results = list(/datum/reagent/toxin/plasma = 12) //One sheet of hot ice makes 200m of plasma
 	required_reagents = list(/datum/reagent/toxin/hot_ice = 1)
-	required_temp = T0C + 30 //Don't burst into flames when you melt
+	required_temp = 273.15 + 30 //Don't burst into flames when you melt
 
 /datum/chemical_reaction/chloralhydrate
 	results = list(/datum/reagent/toxin/chloralhydrate = 1)

@@ -157,9 +157,9 @@ GLOBAL_LIST_INIT(xeno_recipes, list ( \
 	. = ..()
 	AddElement(/datum/element/dryable, /obj/item/stack/sheet/leather)
 
-/obj/item/stack/sheet/wethide/ComponentInitialize()
+/* /obj/item/stack/sheet/wethide/ComponentInitialize()
 	. = ..()
-	AddElement(/datum/element/atmos_sensitive)
+	AddElement(/datum/element/atmos_sensitive) */
 
 /*
  * Leather SHeet
@@ -266,7 +266,7 @@ GLOBAL_LIST_INIT(sinew_recipes, list ( \
 //Step two - washing..... it's actually in washing machine code.
 
 //Step three - drying
-/obj/item/stack/sheet/wethide/should_atmos_process(datum/gas_mixture/air, exposed_temperature)
+/* /obj/item/stack/sheet/wethide/should_atmos_process(datum/gas_mixture/air, exposed_temperature)
 	return (exposed_temperature > drying_threshold_temperature)
 
 /obj/item/stack/sheet/wethide/atmos_expose(datum/gas_mixture/air, exposed_temperature)
@@ -274,7 +274,7 @@ GLOBAL_LIST_INIT(sinew_recipes, list ( \
 	if(wetness == 0)
 		new /obj/item/stack/sheet/leather(drop_location(), 1)
 		wetness = initial(wetness)
-		use(1)
+		use(1) */
 
 /obj/item/stack/sheet/wethide/microwave_act(obj/machinery/microwave/MW)
 	..()

@@ -1,4 +1,4 @@
-//node2, air2, network2 correspond to input
+/* //node2, air2, network2 correspond to input
 //node1, air1, network1 correspond to output
 #define CIRCULATOR_HOT 0
 #define CIRCULATOR_COLD 1
@@ -185,3 +185,4 @@
 	flipped = !flipped
 	to_chat(usr, "<span class='notice'>You flip [src].</span>")
 	update_icon()
+ */

@@ -219,8 +219,8 @@
 		/obj/vehicle/ridden = TRUE,
 
 		// Things that we don't want to shock.
-		/obj/machinery/atmospherics = FALSE,
-		/obj/machinery/portable_atmospherics = FALSE,
+/* 		/obj/machinery/atmospherics = FALSE,
+		/obj/machinery/portable_atmospherics = FALSE, */
 		/obj/machinery/power/emitter = FALSE,
 		/obj/machinery/field/generator = FALSE,
 		/obj/machinery/field/containment = FALSE,

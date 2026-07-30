@@ -183,7 +183,8 @@
 	abno_type = /mob/living/simple_animal/hostile/abnormality/alriune
 	abno_code = "T-04-53"
 	abno_info = list(
-		"When the work result was Good, the Qliphoth Counter lowered with a normal probability.",
+		"When the work result was Good, the Qliphoth Counter lowered with a High probability.",
+		"However, this chance was reduced with each Normal work achieved.",
 		"When the work result was Bad, the Qliphoth Counter lowered.",
 		"Any employee who panicked from Alriune’s attacks died insantly.")
 	abno_breach_damage_type = "White"
@@ -342,6 +343,7 @@
 		"When the work result was Bad, the employee was forcibly drained of a moderate amount of blood.",
 		"When repression work was succesfully performed, the level of thirst increased but blood was not drawn.",
 		"If the same employee was drained of blood 3 times in a row, they were forcibly drained of a lethal amount of blood.",
+		"Feeding a bloodpack to Nosferatu seems to \"wash away\" the taste of the previous employee, restarting the counter for a lethal draining of blood.",
 		"When given far too much blood, the abnormality breached containment in a frenzy.",
 		"While Nosferatu is escaping, it will show sensitive reactions to blood. Suppression becomes difficult if blood is readily accessible to this abnormality.")
 	abno_breach_damage_type = "Red/Black"
@@ -584,3 +586,46 @@
 	abno_breach_damage_type = "Black"
 	abno_breach_damage_count = "High"
 
+
+//Burrowing Heaven
+/obj/item/paper/fluff/info/waw/heaven
+	abno_type = /mob/living/simple_animal/hostile/abnormality/burrowing_heaven
+	abno_code = "O-04-72"
+	abno_info = list(
+		"When the work result was Normal, the Qliphoth Counter lowered with a low probability.",
+		"When the work result was Bad, the Qliphoth Counter lowered with a high probability.",
+		"Work on O-04-72 must be done with a second person in the room looking at it, otherwise the Employee will take extra damage.")
+
+// Spiral of Contempt
+/obj/item/paper/fluff/info/waw/spiral
+	abno_type = /mob/living/simple_animal/hostile/abnormality/spiral
+	abno_code = "T-03-20-04"
+	abno_info = list(
+		"When the work result was Neutral, the Qliphoth Counter lowered with a normal probability. Note: This Abnormality has a short temper and requires higher than usual PE results to avoid Bad works.",
+		"When the work result was Bad, the Qliphoth counter lowered.",
+		"Repression work was observed to occassionally raise the Qliphoth Counter when performed. A higher Temperance increases the probability of this outcome, as Agents with this virtue are able to resist the urge to gaze at T-03-20-04.",
+		"Agent Rogun grew fascinated with T-03-20-04 after completing a work. This phenomenon is referred to as 'Awe'. His next work assignment with the Abnormality had significantly improved performance metrics, including a higher success rate, total Enkephalin generation and faster work, but the Agent received significantly more damage. This phenomenon intensified as the Agent was assigned more works with the Abnormality.",
+		"When Agent Mei, who had been affected by Awe, was assigned to work on an Abnormality that wasn't T-03-20-04, Awe's effects vanished and the Qliphoth Counter lowered.",
+		"The Awe phenomenon does not commence or intensify when Repression work is performed, but its effects still apply.",
+		"During the incident on ███████████, throughout the suppression of T-03-20-04, attacks were shown to be nearly ineffective. When Agent Mirabelle struck the Abnormality while intending to target its hands, her attacks seemed to become more effective, but T-03-20-04's own attacks also became more lethal against her.",
+		"During suppression of T-03-20-04, the Abnormality is known to restrain threats that draw too much of its ire by attacking its hands - the threshold for this behaviour seems to be 7 hits. It accomplishes this using sub-entities named 'Clasping Hands'. If an Agent is restrained in such a way, it is imperative to destroy these sub-entities immediately. After the 'Clasping Hands' are destroyed, T-03-20-04 is rendered vulnerable for a few seconds."
+		)
+	abno_breach_damage_type = "RED / BLACK"
+	abno_breach_damage_count = "High"
+	abno_work_rates = list(
+		"Instinct" = "Low | Low | Low | Common | High",
+		"Insight" = "Low | Low | Common | High | High",
+		"Attachment" = "Very Low",
+		"Repression" = "Low | Low | Low | Common | Common"
+	)
+
+//400 Roses
+/obj/item/paper/fluff/info/waw/four_hundred_roses
+	abno_type = /mob/living/simple_animal/hostile/abnormality/roses_waw
+	abno_code = "F-04-203"
+	abno_info = list(
+		"Every 25 bad work ticks, the Qliphoth counter lowered..",
+		"When the Qliphoth counter was 0, F-04-203 spawned roses around the facility, that would feed it.",
+		"When F-04-203 was fed enough by it's roses, it would cause Red Fragility and Bleed to all employees.")
+	abno_breach_damage_type = "Bleed"
+	abno_breach_damage_count = "High"

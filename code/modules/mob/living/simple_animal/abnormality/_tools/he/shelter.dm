@@ -10,6 +10,10 @@
 		/datum/ego_datum/armor/isolation,
 	)
 
+/obj/structure/toolabnormality/shelter/Destroy()
+	linked_structure = null
+	return ..()
+
 /obj/structure/toolabnormality/shelter/proc/travel(mob/living/carbon/human/user)
 	if(!linked_structure)	//Here we do nothing, just set it up for the substypes
 		return
@@ -132,8 +136,8 @@
 	desc = "Extremely sturdy."
 	icon_state = "engine"
 	holodeck_compatible = TRUE
-	thermal_conductivity = 0.025
-	heat_capacity = INFINITY
+	// thermal_conductivity = 0.025
+	// heat_capacity = INFINITY
 	floor_tile = /obj/item/stack/rods
 	footstep = FOOTSTEP_PLATING
 	barefootstep = FOOTSTEP_HARD_BAREFOOT

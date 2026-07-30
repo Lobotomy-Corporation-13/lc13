@@ -83,7 +83,7 @@ GLOBAL_LIST_EMPTY(PDAs)
 	var/overlays_x_offset = 0	//x offset to use for certain overlays
 
 	var/underline_flag = TRUE //flag for underline
-	
+
 	// Livestream variables
 	var/obj/item/ego_weapon/city/cinqwest_selfiestick/watching_stream = null
 	var/mob/pre_stream_perspective = null
@@ -312,8 +312,8 @@ GLOBAL_LIST_EMPTY(PDAs)
 						dat += "<li><a href='byond://?src=[REF(src)];choice=Reagent Scan'>[PDAIMG(reagent)][scanmode == 3 ? "Disable" : "Enable"] Reagent Scanner</a></li>"
 					if (cartridge.access & CART_ENGINE)
 						dat += "<li><a href='byond://?src=[REF(src)];choice=Halogen Counter'>[PDAIMG(reagent)][scanmode == 4 ? "Disable" : "Enable"] Halogen Counter</a></li>"
-					if (cartridge.access & CART_ATMOS)
-						dat += "<li><a href='byond://?src=[REF(src)];choice=Gas Scan'>[PDAIMG(reagent)][scanmode == 5 ? "Disable" : "Enable"] Gas Scanner</a></li>"
+					// if (cartridge.access & CART_ATMOS)
+					// 	dat += "<li><a href='byond://?src=[REF(src)];choice=Gas Scan'>[PDAIMG(reagent)][scanmode == 5 ? "Disable" : "Enable"] Gas Scanner</a></li>"
 					if (cartridge.access & CART_REMOTE_DOOR)
 						dat += "<li><a href='byond://?src=[REF(src)];choice=Toggle Door'>[PDAIMG(rdoor)]Toggle Remote Door</a></li>"
 					if (cartridge.access & CART_DRONEPHONE)
@@ -398,7 +398,7 @@ GLOBAL_LIST_EMPTY(PDAs)
 			if(7) // Livestream viewer
 				dat += "<h4>Livestream Settings</h4>"
 				dat += "Stream Nickname: <a href='byond://?src=[REF(src)];choice=set_nickname'>[stream_nickname ? stream_nickname : owner]</a><br><br>"
-				
+
 				dat += "<h4>Available Livestreams</h4>"
 				if(!GLOB.active_selfie_sticks || !GLOB.active_selfie_sticks.len)
 					dat += "No active livestreams found.<br>"
@@ -410,7 +410,7 @@ GLOBAL_LIST_EMPTY(PDAs)
 							dat += "<li><a href='byond://?src=[REF(src)];choice=watch_stream;stream=[REF(S)]'>"
 							dat += "[S.streamer.name]'s stream</a> ([viewer_count] viewers)</li>"
 					dat += "</ul>"
-				
+
 				if(watching_stream)
 					dat += "<br><b>Currently watching: [watching_stream.streamer ? watching_stream.streamer.name : "Unknown"]</b>"
 					dat += "<br><a href='byond://?src=[REF(src)];choice=stop_watching'>Stop Watching</a>"
@@ -427,10 +427,10 @@ GLOBAL_LIST_EMPTY(PDAs)
 			if (3)
 				dat += "<h4>[PDAIMG(atmos)] Atmospheric Readings</h4>"
 
-				var/turf/T = user.loc
-				if (isnull(T))
-					dat += "Unable to obtain a reading.<br>"
-				else
+/* 				var/turf/T = user.loc
+				if (isnull(T)) */
+				dat += "Unable to obtain a reading.<br>"
+/* 				else
 					var/datum/gas_mixture/environment = T.return_air()
 					var/list/env_gases = environment.gases
 
@@ -445,7 +445,7 @@ GLOBAL_LIST_EMPTY(PDAs)
 							if(gas_level > 0)
 								dat += "[env_gases[id][GAS_META][META_GAS_NAME]]: [round(gas_level*100, 0.01)]%<br>"
 
-					dat += "Temperature: [round(environment.temperature-T0C)]&deg;C<br>"
+					dat += "Temperature: [round(environment.temperature-T0C)]&deg;C<br>" */
 				dat += "<br>"
 			if(9)
 				dat += "<h4>[PDAIMG(notes)] Gift Exchange</h4>"
@@ -706,15 +706,15 @@ GLOBAL_LIST_EMPTY(PDAs)
 						to_chat(U, span_notice("Stream nickname set to: [stream_nickname]"))
 					else
 						to_chat(U, span_warning("Nickname must be 3-20 characters!"))
-			
+
 			if("watch_stream")
 				var/obj/item/ego_weapon/city/cinqwest_selfiestick/S = locate(href_list["stream"])
 				if(S && (S in GLOB.active_selfie_sticks))
 					start_watching(S, U)
-			
+
 			if("stop_watching")
 				stop_watching()
-			
+
 			if("open_chat")
 				if(watching_stream)
 					watching_stream.show_chat_window(U)
@@ -1153,9 +1153,9 @@ GLOBAL_LIST_EMPTY(PDAs)
 					to_chat(user, "<span class='notice'>No active chemical agents found in [A].</span>")
 			else
 				to_chat(user, "<span class='notice'>No significant chemical agents found in [A].</span>")
-
+/*
 		if(PDA_SCANNER_GAS)
-			A.analyzer_act(user, src)
+			A.analyzer_act(user, src) */
 
 	if (!scanmode && istype(A, /obj/item/paper) && owner)
 		var/obj/item/paper/PP = A
@@ -1182,7 +1182,7 @@ GLOBAL_LIST_EMPTY(PDAs)
 		visible_message("<span class='danger'>[src] explodes!</span>", "<span class='warning'>You hear a loud *pop*!</span>")
 
 	if(T)
-		T.hotspot_expose(700,125)
+		// T.hotspot_expose(700,125)
 		if(istype(cartridge, /obj/item/cartridge/virus/syndicate))
 			explosion(T, -1, 1, 3, 4)
 		else
@@ -1308,20 +1308,20 @@ GLOBAL_LIST_EMPTY(PDAs)
 /obj/item/pda/proc/start_watching(obj/item/ego_weapon/city/cinqwest_selfiestick/stream, mob/user)
 	if(watching_stream)
 		stop_watching()
-	
+
 	watching_stream = stream
 	stream.viewers += src
 	pre_stream_perspective = user.client.eye
 	user.reset_perspective(stream)
 	to_chat(user, span_notice("You start watching [stream.streamer.name]'s livestream."))
-	
+
 	// Auto-open chat window
 	stream.show_chat_window(user)
-	
+
 	// Announce viewer joined
 	var/nickname = stream_nickname ? stream_nickname : owner
 	stream.receive_chat(user, "System", "[nickname] joined the stream!", 0)
-	
+
 	// Notify viewer about audio relay
 	to_chat(user, span_notice("You can now hear everything happening near the stream!"))
 	to_chat(user, span_notice("Speech from the stream will be marked with \[STREAM\]."))
@@ -1329,20 +1329,20 @@ GLOBAL_LIST_EMPTY(PDAs)
 /obj/item/pda/proc/stop_watching(mob/override_user = null)
 	if(!watching_stream)
 		return
-	
+
 	// Use the override_user if provided (e.g., from dropped()), otherwise try to get from loc
 	var/mob/user = override_user || (ismob(loc) ? loc : null)
 	if(user && user.client)
 		user.reset_perspective(pre_stream_perspective)
 		to_chat(user, span_notice("You stop watching the livestream."))
-		
+
 		// Close chat window
 		user << browse(null, "window=[watching_stream.chat_window_id]")
-		
+
 		// Announce viewer left
 		var/nickname = stream_nickname ? stream_nickname : owner
 		watching_stream.receive_chat(user, "System", "[nickname] left the stream!", 0)
-	
+
 	watching_stream.viewers -= src
 	watching_stream = null
 	pre_stream_perspective = null

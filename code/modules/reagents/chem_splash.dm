@@ -48,10 +48,15 @@
 			for(var/turf/T in turflist)
 				if(accessible[T])
 					continue
-				for(var/thing in T.GetAtmosAdjacentTurfs(alldir = TRUE))
+				for(var/thing in T.reachableAdjacentTurfs())
 					var/turf/NT = thing
-					if(!(NT in accessible))
+
+					// Note: I have no idea what the original intention behind this code was. This code was originally if(!(NT in accessible)) which I interpret as "if the next turf isn't accessible, move to the next adjacent turf"
+					// BUT, LIKE, NOTHING BEFORE THIS CODE ADDS ANYTHING BUT THE EPICENTER INTO ACCESSIBLE
+					// I was half tempted to just port TG's new chem_splash but ultimately this works just fine. I guess.
+					if((NT in accessible))
 						continue
+
 					if(!(get_dir(T,NT) in GLOB.cardinals))
 						continue
 					accessible[T] = 1
@@ -63,7 +68,7 @@
 					continue
 				reactable |= A
 			if(extra_heat >= 300)
-				T.hotspot_expose(extra_heat*2, 5)
+				new /obj/effect/turf_fire(T)
 		if(!reactable.len) //Nothing to react with. Probably means we're in nullspace.
 			return
 		for(var/thing in reactable)

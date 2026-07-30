@@ -29,7 +29,7 @@
 	ego_list = list(
 		/datum/ego_datum/weapon/exuviae,
 		/datum/ego_datum/armor/exuviae,
-		/datum/ego_datum/exuviae,
+		/datum/ego_datum/auxiliary/exuviae,
 	)
 	gift_type =  /datum/ego_gifts/exuviae
 	gift_message = "You manage to shave off a patch of scales."
@@ -179,15 +179,14 @@
 	mouse_opacity = MOUSE_OPACITY_OPAQUE //Clicking anywhere on the turf is good enough
 	del_on_death = 1
 	vision_range = 18 //two screens away
-	minbodytemp = INHOSPITABLE_FOR_NESTING
 	var/panic_timer = 0
-	var/mob/living/simple_animal/hostile/abnormality/naked_nest/origin_nest
+	var/origin_nest
 
 /mob/living/simple_animal/hostile/naked_nest_serpent/Initialize()
 	. = ..()
-	var/home_naked_nest = locate(/mob/living/simple_animal/hostile/abnormality/naked_nest) in loc
+	var/mob/living/home_naked_nest = locate(/mob/living/simple_animal/hostile/abnormality/naked_nest) in loc
 	if(home_naked_nest)
-		origin_nest = home_naked_nest
+		origin_nest = home_naked_nest.tag
 	AddComponent(/datum/component/swarming)
 
 /mob/living/simple_animal/hostile/naked_nest_serpent/AttackingTarget(atom/attacked_target)
@@ -276,7 +275,6 @@
 	stat_attack = CONSCIOUS //When you are put into crit the nested will continue to transform into a nest. I thought about having the nested infest you if your in crit but that seemed a bit too cruel.
 	damage_coeff = list(RED_DAMAGE = 0.6, WHITE_DAMAGE = 0.8, BLACK_DAMAGE = 1.2, PALE_DAMAGE = 1.5)
 	mob_size = MOB_SIZE_HUMAN
-	minbodytemp = INHOSPITABLE_FOR_NESTING
 	guaranteed_butcher_results = list(/obj/item/food/meatball/human = 1) //considered having it spawn a single worm on butcher but that seemed cruel.
 	var/nesting_time = 40 SECONDS
 	var/nestingtimer
@@ -401,7 +399,7 @@
 /obj/item/organ/naked_nest/proc/TransformOverride(mob/living/carbon/human/H)
 	if(H && H.has_status_effect(/datum/status_effect/display/melting_love_blessing))
 		to_chat(H, span_warning("Something in your head writhes as pink slime starts to pour out of your mouth."))
-		H.deal_damage(800, BLACK_DAMAGE)
+		H.deal_damage(800, BLACK_DAMAGE, flags = (DAMAGE_FORCED))
 		H.remove_status_effect(/datum/status_effect/display/melting_love_blessing)
 		if(!H || H.stat == DEAD)
 			return TRUE
@@ -448,7 +446,7 @@
 		// Award achievement for curing Naked Nest infection with cure
 		if(ishuman(target))
 			var/mob/living/carbon/human/H = target
-			H.client?.give_award(/datum/award/achievement/lc13/naked_nest_cure_with, H)
+			H.client?.give_award(/datum/award/achievement/abno/naked_nest_cure_with, H)
 		C.Remove(target)
 
 #undef NAKED_NESTED

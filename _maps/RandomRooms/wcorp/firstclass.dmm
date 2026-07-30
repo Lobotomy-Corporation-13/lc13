@@ -3,7 +3,6 @@
 /obj/effect/turf_decal/trimline/blue/filled/warning{
 	dir = 9
 	},
-/obj/machinery/atmospherics/components/unary/thermomachine,
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirts)
 "cD" = (
@@ -26,7 +25,6 @@
 /obj/effect/turf_decal/trimline/blue/filled/warning{
 	dir = 1
 	},
-/obj/machinery/atmospherics/components/unary/thermomachine,
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirts)
 "kR" = (
@@ -56,14 +54,12 @@
 /obj/effect/turf_decal/trimline/blue/filled/warning{
 	dir = 5
 	},
-/obj/machinery/atmospherics/components/unary/thermomachine,
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirts)
 "of" = (
 /obj/effect/turf_decal/trimline/blue/filled/warning{
 	dir = 10
 	},
-/obj/machinery/atmospherics/components/unary/thermomachine,
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirts)
 "rH" = (
@@ -154,7 +150,6 @@
 /area/city/outskirts)
 "Pg" = (
 /obj/effect/turf_decal/trimline/blue/filled/warning,
-/obj/machinery/atmospherics/components/unary/thermomachine,
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirts)
 "RJ" = (
@@ -171,7 +166,6 @@
 "SY" = (
 /obj/effect/decal/cleanable/glass,
 /obj/effect/turf_decal/trimline/blue/filled/warning,
-/obj/machinery/atmospherics/components/unary/thermomachine,
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirts)
 "Te" = (
@@ -237,7 +231,6 @@
 /obj/effect/turf_decal/trimline/blue/filled/warning{
 	dir = 6
 	},
-/obj/machinery/atmospherics/components/unary/thermomachine,
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirts)
 "Ym" = (

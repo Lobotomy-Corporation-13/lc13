@@ -7,9 +7,9 @@
 	cosmeticchance = 25
 	lootlist =	list(
 		/obj/item/ego_weapon/mini/hayong,
-		/obj/item/ego_weapon/shield/walpurgisnacht,
+		/obj/item/ego_weapon/shield/parry/walpurgisnacht,
 		/obj/item/ego_weapon/lance/suenoimpossible,
-		/obj/item/ego_weapon/shield/sangria,
+		/obj/item/ego_weapon/shield/parry/sangria,
 		/obj/item/ego_weapon/mini/soleil,
 		/obj/item/ego_weapon/mini/crow,
 		/obj/item/ego_weapon/taixuhuanjing,
@@ -22,6 +22,14 @@
 		/obj/item/ego_weapon/ungezifer,
 		/obj/item/clothing/suit/armor/ego_gear/limbus/limbus_coat,
 		/obj/item/clothing/suit/armor/ego_gear/limbus/limbus_coat_short,
+		/obj/item/clothing/suit/armor/ego_gear/limbus_labs,
+		/obj/item/ego_weapon/ranged/city/limbuspistol,
+		/obj/item/ego_weapon/ranged/city/limbusautopistol,
+		/obj/item/ego_weapon/ranged/city/limbusmagnum,
+		/obj/item/ego_weapon/ranged/city/limbussmg,
+		/obj/item/ego_weapon/ranged/city/limbusshottie,
+		/obj/item/ego_weapon/shield/lccb,
+		/obj/item/ego_weapon/city/lccb_bat,
 	)
 
 	rareloot =	list(
@@ -43,6 +51,7 @@
 	desc = "You think there's ahn in here. Open with a Crowbar."
 	icon_state = "crate_money"
 	rarechance = 30
+	jcorp_banned = TRUE
 	lootlist =	list(
 		/obj/item/stack/spacecash/c50,
 		/obj/item/stack/spacecash/c100,

@@ -60,7 +60,7 @@ SUBSYSTEM_DEF(mapping)
 #endif
 
 /datum/controller/subsystem/mapping/Initialize(timeofday)
-	HACK_LoadMapConfig()
+	config = GLOB.map_config_global
 	if(initialized)
 		return
 	if(config.defaulted)
@@ -133,6 +133,7 @@ SUBSYSTEM_DEF(mapping)
 	SSmapping.LoadGroup(errorList, "Manager", "map_files/generic", "Manager.dmm", default_traits = ZTRAITS_CENTCOM)
 	SSmapping.LoadGroup(errorList, "Abnormality", "map_files/generic", "Abnormality_Z.dmm", default_traits = ZTRAITS_CENTCOM)
 	SSmapping.LoadGroup(errorList, "Test Range", "map_files/generic", "Test_Range.dmm", default_traits = ZTRAITS_CENTCOM)
+	SSmapping.LoadGroup(errorList, "Tinkerer's Factory", "map_files/generic", "Tinkerer_Factory.dmm", default_traits = ZTRAITS_CENTCOM)
 
 #endif
 	// Add the transit level
@@ -401,6 +402,12 @@ GLOBAL_LIST_EMPTY(the_station_areas)
 		return
 
 	next_map_config = VM
+
+	// If this map has submaps and no specific one was selected, initiate a submap vote
+	if(VM.has_submaps && VM.available_submaps.len > 1 && islist(VM.map_file))
+		addtimer(CALLBACK(SSvote, /datum/controller/subsystem/vote/proc/initiate_vote, "submap", "automatic submap selection"), 5 SECONDS)
+		to_chat(world, span_boldannounce("The selected map has multiple variants. A vote will start shortly to choose which one to play!"))
+
 	return TRUE
 
 /datum/controller/subsystem/mapping/proc/preloadTemplates(path = "_maps/templates/") //see master controller setup

@@ -1,4 +1,4 @@
-//All defines used in reactions are located in ..\__DEFINES\reactions.dm
+/* //All defines used in reactions are located in ..\__DEFINES\reactions.dm
 /*priority so far, check this list to see what are the numbers used. Please use a different priority for each reaction(higher number are done first)
 miaster = -10 (this should always be under all other fires)
 freonfire = -5
@@ -170,13 +170,13 @@ nobiliumsuppression = INFINITY
 
 		energy_released += (FIRE_HYDROGEN_ENERGY_WEAK * burned_fuel)
 		cached_results["fire"] += burned_fuel
-		
+
 	else
 		burned_fuel = cached_gases[/datum/gas/tritium][MOLES]
 
 		cached_gases[/datum/gas/tritium][MOLES] -= burned_fuel / TRITIUM_BURN_TRIT_FACTOR
 		cached_gases[/datum/gas/oxygen][MOLES] -= burned_fuel
-		
+
 		ASSERT_GAS(/datum/gas/water_vapor, air) //oxygen+more-or-less hydrogen=H2O
 		cached_gases[/datum/gas/water_vapor][MOLES] += burned_fuel / TRITIUM_BURN_TRIT_FACTOR
 
@@ -1018,3 +1018,4 @@ nobiliumsuppression = INFINITY
 		if(new_heat_capacity > MINIMUM_HEAT_CAPACITY)
 			air.temperature = max((temperature * old_heat_capacity + energy_released) / new_heat_capacity, TCMB)
 	return REACTING
+ */

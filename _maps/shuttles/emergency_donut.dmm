@@ -342,7 +342,6 @@
 /area/shuttle/escape)
 "bi" = (
 /obj/machinery/light,
-/obj/machinery/portable_atmospherics/canister/oxygen,
 /obj/effect/turf_decal/bot,
 /turf/open/floor/plasteel,
 /area/shuttle/escape)

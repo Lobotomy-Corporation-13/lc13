@@ -1,4 +1,4 @@
-
+/*
 
 /atom/proc/temperature_expose(datum/gas_mixture/air, exposed_temperature, exposed_volume)
 	return null
@@ -228,3 +228,4 @@
 	light_range = LIGHT_RANGE_FIRE
 
 #undef INSUFFICIENT
+ */

@@ -3,7 +3,6 @@
 	name = "heart of aspiration"
 	desc = "A giant red heart."
 	icon_state = "heart"
-	var/list/active_users = list()
 
 	ego_list = list(
 		/datum/ego_datum/weapon/aspiration,
@@ -14,12 +13,10 @@
 	. = ..()
 	if(!do_after(user, 6))
 		return
-	if(user in active_users)
-		active_users -= user
+	if(user.has_status_effect(STATUS_EFFECT_ASPIRATION))
 		user.remove_status_effect(STATUS_EFFECT_ASPIRATION)
 		to_chat(user, span_notice("You feel your heart slow again."))
 	else
-		active_users += user
 		user.apply_status_effect(STATUS_EFFECT_ASPIRATION)
 		to_chat(user, span_userdanger("You feel your blood pumping faster."))
 
@@ -51,7 +48,7 @@
 	var/mob/living/carbon/human/H = owner
 	HealthCheck()
 	if(ferventbeats && rage_safe_time < world.time)
-		H.deal_damage(H.maxHealth * (1/100), BRUTE) // Roughly standard regenerator healing
+		H.deal_damage(H.maxHealth * (1/100), BRUTE, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_STATUS)) // Roughly standard regenerator healing
 	if(!raging)
 		return
 
@@ -59,7 +56,7 @@
 		to_chat(H, span_userdanger("You feel as if your heart barelly holds onto life!"))
 		return
 
-	H.deal_damage(H.maxHealth * (2/100), BRUTE) // You are most likely going to die, and very soon.
+	H.deal_damage(H.maxHealth * (2/100), BRUTE, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_STATUS)) // You are most likely going to die, and very soon.
 
 /datum/status_effect/display/aspiration/proc/HealthCheck()
 	var/mob/living/carbon/human/H = owner
@@ -83,7 +80,7 @@
 		return
 
 	H.visible_message(span_danger("[H]'s heart explodes!"))
-	new /obj/effect/gibspawner/generic(get_turf(H))
+	new /obj/effect/bloodspawner(get_turf(H))
 	H.remove_status_effect(src)
 
 /datum/status_effect/display/aspiration/proc/RageEnable()

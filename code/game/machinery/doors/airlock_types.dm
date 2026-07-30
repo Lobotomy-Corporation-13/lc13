@@ -1,6 +1,21 @@
 /*
 	Station Airlocks Regular
 */
+//RnD toxins burn chamber
+#define INCINERATOR_TOXMIX_AIRLOCK_CONTROLLER	"toxmix_airlock_controller"
+#define INCINERATOR_TOXMIX_AIRLOCK_INTERIOR		"toxmix_airlock_interior"
+#define INCINERATOR_TOXMIX_AIRLOCK_EXTERIOR		"toxmix_airlock_exterior"
+
+//Atmospherics/maintenance incinerator
+#define INCINERATOR_ATMOS_AIRLOCK_CONTROLLER	"atmos_incinerator_airlock_controller"
+#define INCINERATOR_ATMOS_AIRLOCK_INTERIOR		"atmos_incinerator_airlock_interior"
+#define INCINERATOR_ATMOS_AIRLOCK_EXTERIOR		"atmos_incinerator_airlock_exterior"
+
+//Syndicate lavaland base incinerator (lavaland_surface_syndicate_base1.dmm)
+#define INCINERATOR_SYNDICATELAVA_AIRLOCK_CONTROLLER 	"syndicatelava_airlock_controller"
+#define INCINERATOR_SYNDICATELAVA_AIRLOCK_INTERIOR 		"syndicatelava_airlock_interior"
+#define INCINERATOR_SYNDICATELAVA_AIRLOCK_EXTERIOR	 	"syndicatelava_airlock_exterior"
+
 
 /obj/machinery/door/airlock/command
 	icon = 'icons/obj/doors/airlocks/station/command.dmi'
@@ -210,37 +225,12 @@
 	icon = 'icons/obj/doors/airlocks/station/plasma.dmi'
 	assemblytype = /obj/structure/door_assembly/door_assembly_plasma
 
-/obj/machinery/door/airlock/plasma/ComponentInitialize()
-	. = ..()
-	AddElement(/datum/element/atmos_sensitive)
-
 /obj/machinery/door/airlock/plasma/proc/ignite(exposed_temperature)
-	if(exposed_temperature > 300)
-		PlasmaBurn(exposed_temperature)
-
-/obj/machinery/door/airlock/plasma/should_atmos_process(datum/gas_mixture/air, exposed_temperature)
-	return (exposed_temperature > 300)
-
-/obj/machinery/door/airlock/plasma/atmos_expose(datum/gas_mixture/air, exposed_temperature)
-	PlasmaBurn()
-
-/obj/machinery/door/airlock/plasma/proc/PlasmaBurn()
-	atmos_spawn_air("plasma=500;TEMP=1000")
-	var/obj/structure/door_assembly/DA
-	DA = new /obj/structure/door_assembly(loc)
-	if(glass)
-		DA.glass = TRUE
-	if(heat_proof)
-		DA.heat_proof_finished = TRUE
-	DA.update_icon()
-	DA.update_name()
+	explosion(src, 0, 0, 5, 8, flame_range = 2)
 	qdel(src)
 
-/obj/machinery/door/airlock/plasma/BlockSuperconductivity() //we don't stop the heat~
-	return 0
-
 /obj/machinery/door/airlock/plasma/attackby(obj/item/C, mob/user, params)
-	if(C.get_temperature() > 300)//If the temperature of the object is over 300, then ignite
+	if(C.get_temperature())
 		message_admins("Plasma airlock ignited by [ADMIN_LOOKUPFLW(user)] in [ADMIN_VERBOSEJMP(src)]")
 		log_game("Plasma airlock ignited by [key_name(user)] in [AREACOORD(src)]")
 		ignite(C.get_temperature())
@@ -324,11 +314,11 @@
 
 /obj/machinery/door/airlock/public/glass/incinerator/atmos_interior
 	name = "Turbine Interior Airlock"
-	id_tag = INCINERATOR_ATMOS_AIRLOCK_INTERIOR
+	// id_tag = INCINERATOR_ATMOS_AIRLOCK_INTERIOR
 
 /obj/machinery/door/airlock/public/glass/incinerator/atmos_exterior
 	name = "Turbine Exterior Airlock"
-	id_tag = INCINERATOR_ATMOS_AIRLOCK_EXTERIOR
+	// id_tag = INCINERATOR_ATMOS_AIRLOCK_EXTERIOR
 
 //////////////////////////////////
 /*

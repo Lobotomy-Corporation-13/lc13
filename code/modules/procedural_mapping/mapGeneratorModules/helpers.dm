@@ -2,7 +2,7 @@
 
 
 // Helper to repressurize the area in case it was run in space
-/datum/map_generator_module/bottom_layer/repressurize
+/* /datum/map_generator_module/bottom_layer/repressurize
 	spawnableAtoms = list()
 	spawnableTurfs = list()
 
@@ -15,7 +15,7 @@
 	for(var/turf/open/T in map)
 		if(T.air)
 			T.air.copy_from_turf(T)
-		SSair.add_to_active(T, TRUE)
+		SSair.add_to_active(T, TRUE) */
 
 /datum/map_generator_module/bottom_layer/massdelete
 	spawnableAtoms = list()
@@ -63,9 +63,9 @@
 		return 1
 	return 0
 
-/datum/map_generator/repressurize
+/* /datum/map_generator/repressurize
 	modules = list(/datum/map_generator_module/bottom_layer/repressurize)
-	buildmode_name = "Block: Restore Roundstart Air Contents"
+	buildmode_name = "Block: Restore Roundstart Air Contents" */
 
 /datum/map_generator/massdelete
 	modules = list(/datum/map_generator_module/bottom_layer/massdelete)

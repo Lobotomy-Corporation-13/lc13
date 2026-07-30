@@ -1,4 +1,4 @@
-/obj/machinery/atmospherics/components/trinary/filter
+/* /obj/machinery/atmospherics/components/trinary/filter
 	icon_state = "filter_off-0"
 	density = FALSE
 
@@ -361,3 +361,4 @@
 
 /obj/machinery/atmospherics/components/trinary/filter/flipped/critical
 	critical_machine = TRUE
+ */

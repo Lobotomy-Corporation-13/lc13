@@ -8,7 +8,7 @@
 	slot_flags = ITEM_SLOT_BACK
 	worn_icon = 'icons/mob/clothing/back.dmi' //since these can also get thrown into suit storage slots. if something goes on the belt, set this to null.
 	hitsound = 'sound/weapons/smash.ogg'
-	pressure_resistance = ONE_ATMOSPHERE * 5
+	// pressure_resistance = ONE_ATMOSPHERE * 5
 	force = 5
 	throwforce = 10
 	throw_speed = 1
@@ -16,8 +16,8 @@
 	custom_materials = list(/datum/material/iron = 500)
 	actions_types = list(/datum/action/item_action/set_internals)
 	armor = list(MELEE = 0, BULLET = 0, LASER = 0, ENERGY = 0, BOMB = 10, BIO = 0, RAD = 0, FIRE = 80, ACID = 30)
-	var/datum/gas_mixture/air_contents = null
-	var/distribute_pressure = ONE_ATMOSPHERE
+	// var/datum/gas_mixture/air_contents = null
+	// var/distribute_pressure = ONE_ATMOSPHERE
 	var/integrity = 3
 	var/volume = 70
 	/// Icon state when in a tank holder. Null makes it incompatible with tank holder.
@@ -59,10 +59,10 @@
 /obj/item/tank/Initialize()
 	. = ..()
 
-	air_contents = new(volume) //liters
+/* 	air_contents = new(volume) //liters
 	air_contents.temperature = T20C
 
-	populate_gas()
+	populate_gas() */
 
 	START_PROCESSING(SSobj, src)
 
@@ -70,8 +70,8 @@
 	return
 
 /obj/item/tank/Destroy()
-	if(air_contents)
-		QDEL_NULL(air_contents)
+/* 	if(air_contents)
+		QDEL_NULL(air_contents) */
 
 	STOP_PROCESSING(SSobj, src)
 	. = ..()
@@ -80,7 +80,7 @@
 	. = ..()
 	if(tank_holder_icon_state)
 		AddComponent(/datum/component/container_item/tank_holder, tank_holder_icon_state)
-
+/*
 /obj/item/tank/examine(mob/user)
 	var/obj/icon = src
 	. = ..()
@@ -109,7 +109,7 @@
 	else
 		descriptive = "furiously hot"
 
-	. += "<span class='notice'>It feels [descriptive].</span>"
+	. += "<span class='notice'>It feels [descriptive].</span>" */
 
 /obj/item/tank/blob_act(obj/structure/blob/B)
 	if(B && B.loc == loc)
@@ -117,40 +117,40 @@
 		if(!location)
 			qdel(src)
 
-		if(air_contents)
-			location.assume_air(air_contents)
+/* 		if(air_contents)
+			location.assume_air(air_contents) */
 
 		qdel(src)
 
 /obj/item/tank/deconstruct(disassembled = TRUE)
-	if(!disassembled)
+/* 	if(!disassembled)
 		var/turf/T = get_turf(src)
 		if(T)
 			T.assume_air(air_contents)
-			air_update_turf(FALSE, FALSE)
-		playsound(src.loc, 'sound/effects/spray.ogg', 10, TRUE, -3)
+			air_update_turf(FALSE, FALSE)  */
+	playsound(src.loc, 'sound/effects/spray.ogg', 10, TRUE, -3)
 	qdel(src)
 
 /obj/item/tank/suicide_act(mob/user)
 	var/mob/living/carbon/human/H = user
 	user.visible_message("<span class='suicide'>[user] is putting [src]'s valve to [user.p_their()] lips! It looks like [user.p_theyre()] trying to commit suicide!</span>")
 	playsound(loc, 'sound/effects/spray.ogg', 10, TRUE, -3)
-	if(!QDELETED(H) && air_contents && air_contents.return_pressure() >= 1000)
-		ADD_TRAIT(H, TRAIT_DISFIGURED, TRAIT_GENERIC)
-		H.inflate_gib()
-		return MANUAL_SUICIDE
-	else
+	// if(!QDELETED(H) && air_contents && air_contents.return_pressure() >= 1000)
+	ADD_TRAIT(H, TRAIT_DISFIGURED, TRAIT_GENERIC)
+	H.inflate_gib()
+	return MANUAL_SUICIDE
+/* 	else
 		to_chat(user, "<span class='warning'>There isn't enough pressure in [src] to commit suicide with...</span>")
-	return SHAME
+	return SHAME */
 
 /obj/item/tank/attackby(obj/item/W, mob/user, params)
 	add_fingerprint(user)
-	if(istype(W, /obj/item/assembly_holder))
+/* 	if(istype(W, /obj/item/assembly_holder))
 		bomb_assemble(W,user)
-	else
-		. = ..()
+	else */
+	. = ..()
 
-/obj/item/tank/ui_state(mob/user)
+/* /obj/item/tank/ui_state(mob/user)
 	return GLOB.hands_state
 
 /obj/item/tank/ui_interact(mob/user, datum/tgui/ui)
@@ -305,3 +305,4 @@
 
 	if(gas_change)
 		air_contents.garbage_collect()
+ */

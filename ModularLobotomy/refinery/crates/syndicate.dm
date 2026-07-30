@@ -5,18 +5,27 @@
 	icon_state = "crate_syndicate"
 	rarechance = 30
 	veryrarechance = 5
+	cosmeticchance = 20
 	lootlist =	list(
 		/obj/item/clothing/suit/armor/ego_gear/city/blade_lineage_salsu,
 		/obj/item/clothing/suit/armor/ego_gear/city/index,
+		/obj/item/ego_weapon/shield/middle_chain,
+		/obj/item/clothing/suit/armor/ego_gear/city/middle,
+		/obj/item/clothing/suit/armor/ego_gear/city/middle/little_sister,
+		/obj/item/clothing/suit/armor/ego_gear/city/middle/tank_top,
+		/obj/item/storage/book/middle,
 	)
 
 	rareloot =	list(
 		/obj/item/clothing/suit/armor/ego_gear/city/blade_lineage_cutthroat,
-		/obj/item/clothing/suit/armor/ego_gear/adjustable/index_proxy,
+		/obj/item/clothing/suit/armor/ego_gear/index_proxy,
 		/obj/item/ego_weapon/city/index,
 		/obj/item/ego_weapon/city/awl,
 		/obj/item/ego_weapon/city/kurokumo,
 		/obj/item/ego_weapon/city/bladelineage,
+		/obj/item/ego_weapon/shield/middle_chain/younger,
+		/obj/item/clothing/suit/armor/ego_gear/city/middle_younger,
+		/obj/item/clothing/suit/armor/ego_gear/city/middle_younger/younger_sister
 	)
 
 	veryrareloot =	list(
@@ -25,8 +34,14 @@
 		/obj/item/ego_weapon/city/index/proxy,
 		/obj/item/ego_weapon/city/index/proxy/spear,
 		/obj/item/ego_weapon/city/index/yan,
+		/obj/item/ego_weapon/shield/middle_chain/big,
+		/obj/item/clothing/suit/armor/ego_gear/city/middle_big,
+		/obj/item/clothing/suit/armor/ego_gear/city/middle_big/big_sister,
 	)
 
+	cosmeticloot = list(
+		/obj/item/clothing/glasses/middle_sunglasses,
+	)
 
 //Backstreets stuff, mostly cheap and also quite good. Mostly non-fingers related villain stuff.
 /obj/structure/lootcrate/backstreets
@@ -49,12 +64,16 @@
 		/obj/item/ego_weapon/city/axegang/leader,
 		/obj/item/ego_weapon/city/district23,
 		/obj/item/ego_weapon/city/district23/pierre,
+		/obj/item/clothing/suit/armor/ego_gear/city/masquerade_cloak/masquerade_coat,
+		/obj/item/clothing/suit/armor/ego_gear/city/carnival_robes,
 	)
 
 	veryrareloot =	list(
 		/obj/item/ego_weapon/city/sweeper/hooksword,
 		/obj/item/ego_weapon/city/sweeper/sickle,
 		/obj/item/ego_weapon/city/sweeper/claw,
+		/obj/item/ego_weapon/city/carnival_spear,
+		/obj/item/clothing/suit/armor/ego_gear/city/masquerade_cloak
 	)
 
 //J-corp syndicate stuff, normally priced and most weapons are very gimmicky to use. Good for early game, bad for late. Has 1 more armor over weapons.

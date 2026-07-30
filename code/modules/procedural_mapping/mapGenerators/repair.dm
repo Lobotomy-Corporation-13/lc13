@@ -30,7 +30,7 @@
 		bounds = parsed?.bounds
 		z_offset += bounds[MAP_MAXZ] - bounds[MAP_MINZ] + 1
 
-	var/list/obj/machinery/atmospherics/atmos_machines = list()
+	// var/list/obj/machinery/atmospherics/atmos_machines = list()
 	var/list/obj/structure/cable/cables = list()
 	var/list/atom/atoms = list()
 
@@ -46,28 +46,28 @@
 			if(istype(A,/obj/structure/cable))
 				cables += A
 				continue
-			if(istype(A,/obj/machinery/atmospherics))
-				atmos_machines += A
+			// if(istype(A,/obj/machinery/atmospherics))
+			// 	atmos_machines += A
 
 	SSatoms.InitializeAtoms(atoms)
 	SSmachines.setup_template_powernets(cables)
-	SSair.setup_template_machinery(atmos_machines)
+	// SSair.setup_template_machinery(atmos_machines)
 	GLOB.reloading_map = FALSE
 
 /datum/map_generator/repair
-	modules = list(/datum/map_generator_module/bottom_layer/repair_floor_plasteel,
-	/datum/map_generator_module/bottom_layer/repressurize)
+	modules = list(/datum/map_generator_module/bottom_layer/repair_floor_plasteel)
+	// /datum/map_generator_module/bottom_layer/repressurize)
 	buildmode_name = "Repair: Floor"
 
 /datum/map_generator/repair/delete_walls
-	modules = list(/datum/map_generator_module/bottom_layer/repair_floor_plasteel/flatten,
-	/datum/map_generator_module/bottom_layer/repressurize)
+	modules = list(/datum/map_generator_module/bottom_layer/repair_floor_plasteel/flatten)
+	// /datum/map_generator_module/bottom_layer/repressurize)
 	buildmode_name = "Repair: Floor: Flatten Walls"
 
 /datum/map_generator/repair/enclose_room
 	modules = list(/datum/map_generator_module/bottom_layer/repair_floor_plasteel/flatten,
-	/datum/map_generator_module/border/normal_walls,
-	/datum/map_generator_module/bottom_layer/repressurize)
+	/datum/map_generator_module/border/normal_walls)
+	// /datum/map_generator_module/bottom_layer/repressurize)
 	buildmode_name = "Repair: Generate Aired Room"
 
 /datum/map_generator/repair/reload_station_map

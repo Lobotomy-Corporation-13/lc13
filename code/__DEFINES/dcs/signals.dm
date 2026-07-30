@@ -402,10 +402,14 @@
 ///from base of mob/create_mob_hud(): ()
 #define COMSIG_MOB_HUD_CREATED "mob_hud_created"
 
-///from base of /mob/living/proc/apply_damage(): (damage, damagetype, def_zone)
+///from base of /mob/living/proc/apply_damage(): (damage, damagetype, def_zone, source, flags, attack_type)
 #define COMSIG_MOB_APPLY_DAMGE	"mob_apply_damage"
+///from base of /mob/living/proc/apply_damage(), happens after the mob has taken damage: (damage, damagetype, def_zone)
+#define COMSIG_MOB_AFTER_APPLY_DAMGE "mob_after_apply_damage"
 /// Blocks the damage from being taken if this is returned in a signal handler
 #define COMPONENT_MOB_DENY_DAMAGE (1<<0)
+///from /datum/status_effect/stacking/rupture/trigger_rupture(): (stacks_before_halving)
+#define COMSIG_RUPTURE_TRIGGERED "rupture_triggered"
 ///from base of /mob/throw_item(): (atom/target)
 #define COMSIG_MOB_THROW "mob_throw"
 ///from base of /mob/verb/examinate(): (atom/target)
@@ -436,6 +440,9 @@
 ///from base of mob/swap_hand(): (obj/item)
 #define COMSIG_MOB_SWAP_HANDS "mob_swap_hands"
 	#define COMPONENT_BLOCK_SWAP (1<<0)
+
+///from base of /mob/verb/pointed: (atom/A)
+#define COMSIG_MOB_POINTED "mob_pointed"
 #define COMSIG_MOB_EMOTED(emote_key) "mob_emoted_[emote_key]"
 ///from client/keyDown(): (key)
 #define COMSIG_MOB_KEYDOWN "mob_keydown"
@@ -480,6 +487,14 @@
 #define COMSIG_PROCESS_BORGCHARGER_OCCUPANT "living_charge"
 ///sent from borg mobs to itself, for tools to catch an upcoming destroy() due to safe decon (rather than detonation)
 #define COMSIG_BORG_SAFE_DECONSTRUCT "borg_safe_decon"
+
+///from base of /atom/movable/keyLoop(), before client movement: (new_loc, direct)
+#define COMSIG_MOB_CLIENT_PRE_LIVING_MOVE "mob_client_pre_living_move"
+	#define COMSIG_MOB_CLIENT_BLOCK_PRE_LIVING_MOVE (1<<0)
+
+///from base of /mob/living/CanAllowThrough(): (atom/movable/mover, border_dir)
+#define COMSIG_LIVING_CAN_ALLOW_THROUGH "living_can_allow_through"
+	#define COMPONENT_LIVING_PASSABLE (1<<0)
 
 ///sent when a mob/login() finishes: (client)
 #define COMSIG_MOB_CLIENT_LOGIN "comsig_mob_client_login"
@@ -572,6 +587,9 @@
 #define COMSIG_HOSTILE_ATTACKINGTARGET "hostile_attackingtarget"
 #define COMSIG_HOSTILE_LOSTTARGET "hostile_losttarget"
 	#define COMPONENT_HOSTILE_NO_ATTACK (1<<0)
+#define COMSIG_HOSTILE_GAINEDTARGET "hostile_gainedtarget" // (mob/living/simple_animal/hostile/source, atom/new_target)
+	#define COMPONENT_HOSTILE_REFUSE_AGGRO (1<<0)
+
 /// a hostile has started their patrol (datum/source, mob/living/simple_animal/hostile/mover, turf/target_location)
 #define COMSIG_GLOB_PATROL_START "!patrol_start"
 #define COMSIG_PATROL_START "patrol_start"
@@ -1075,6 +1093,13 @@
 #define COMSIG_AQUARIUM_FLUID_CHANGED "aquarium_fluid_changed"
 */
 
+//Status signals
+#define COMSIG_STATUS_BLEED_DAMAGE "bleed_damage"
+/// Sent to the attacker when a Poise crit triggers: (mob/living/target, damage_dealt)
+#define COMSIG_POISE_CRIT_ATTACKER "poise_crit_attacker"
+/// Sent to the target when hit by a Poise crit: (mob/living/target, damage_dealt)
+#define COMSIG_POISE_CRIT_TARGET "poise_crit_target"
+
 /// generally called before temporary non-parallel animate()s on the atom (animation_duration)
 #define COMSIG_ATOM_TEMPORARY_ANIMATION_START "atom_temp_animate_start" // LC13 addition: MODULE ID: FISHING
 
@@ -1096,6 +1121,15 @@
 // Ordeal signals
 // When the ordeal ends; (/datum/ordeal)
 #define COMSIG_GLOB_ORDEAL_END "!ordeal_end"
+
+// RCE signals
+// When the first resource well is activated
+#define COMSIG_GLOB_RCE_FIRST_WELL_ACTIVATED "!rce_first_well_activated"
+// Bloodfiend boss death signals
+#define COMSIG_GLOB_BLOODFIEND_BARBER_DIED "!bloodfiend_barber_died"
+#define COMSIG_GLOB_BLOODFIEND_PRIEST_DIED "!bloodfiend_priest_died"
+#define COMSIG_GLOB_BLOODFIEND_DULCINEA_DIED "!bloodfiend_dulcinea_died"
+#define COMSIG_GLOB_BLOODFIEND_DONQUIXOTE_DIED "!bloodfiend_donquixote_died"
 
 
 // Crate signals

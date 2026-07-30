@@ -51,6 +51,8 @@
 			return TRUE
 		return FALSE
 
+/obj/structure/barricade/CanAStarPass(ID, dir, requester)
+	return TRUE
 
 
 /////BARRICADE TYPES///////
@@ -115,6 +117,17 @@
 /obj/structure/barricade/sandbags/make_debris()
 	new /obj/item/stack/sheet/mineral/sandbags(get_turf(src), 1)
 
+/obj/structure/barricade/sandbags/field
+	name = "field sandbags"
+	desc = "Quick-deploy field sandbags. Easier to climb over than standard sandbags."
+	color = "#568cff"
+
+/obj/structure/barricade/sandbags/field/Initialize()
+	. = ..()
+	// Remove default climbable, add fast version
+	RemoveElement(/datum/element/climbable)
+	AddElement(/datum/element/climbable, climb_time = 5, climb_stun = 1)
+
 /obj/structure/barricade/sandbags/update_overlays()
 	. = ..()
 	if(obj_integrity < max_integrity)
@@ -128,7 +141,31 @@
 			if(71 to 90)
 				fill_text = 75
 		if(fill_text)
-			. += mutable_appearance('ModularLobotomy/_Lobotomyicons/sandbag_damage.dmi', "[base_icon_state][fill_text]")
+			. += mutable_appearance('ModularLobotomy/_Lobotomyicons/sandbag_damage.dmi', "sandbags[fill_text]")
+
+//Upgrades sandbag
+/obj/structure/barricade/sandbags/grey
+	name = "concrete barrier"
+	desc = "A concrete barrier made with a quick mixing solution. Use a crowbar to deconstruct the pile."
+	icon_state = "strongbags-0"
+	base_icon_state = "strongbags"
+	color = COLOR_GRAY
+	max_integrity = 700
+	proj_pass_rate = 10
+
+/obj/structure/barricade/sandbags/grey/hole
+	name = "concrete tunnel"
+	desc = "Weaponized playground equipment. In exchange for 3/5 of the health of sandbags it allows items to freely pass through it. Use a crowbar to deconstruct the pile."
+	icon_state = "strongbags-0"
+	base_icon_state = "strongbags"
+	color = COLOR_SILVER
+	max_integrity = 300
+	proj_pass_rate = 20
+
+/obj/structure/barricade/sandbags/grey/hole/CanAllowThrough(atom/movable/mover, turf/target)
+	if(isitem(mover))
+		return TRUE
+	return ..()
 
 /obj/structure/barricade/security
 	name = "security barrier"

@@ -97,10 +97,10 @@
 		if(!inserted_core)
 			to_chat(user, "<span class='warning'>There is no core inserted in [src]. What would be the point of detonating an implosion without a core?</span>")
 			return
-		var/obj/item/transfer_valve/valve = I
+/* 		var/obj/item/transfer_valve/valve = I
 		if(!valve.ready())
 			to_chat(user, "<span class='warning'>[valve] is incomplete.</span>")
-			return
+			return */
 		if(!user.transferItemToLoc(I, src))
 			to_chat(user, "<span class='warning'>[I] is stuck to your hand.</span>")
 			return
@@ -112,7 +112,7 @@
  * The ""explosion"" proc.
  */
 /obj/machinery/research/explosive_compressor/proc/do_implosion()
-	var/required_radius = get_required_radius(inserted_core.anomaly_type)
+/* 	var/required_radius = get_required_radius(inserted_core.anomaly_type)
 	// By now, we should be sure that we have a core, a TTV, and that the TTV has both tanks in place.
 	var/datum/gas_mixture/mix1 = inserted_bomb.tank_one.air_contents
 	var/datum/gas_mixture/mix2 = inserted_bomb.tank_two.air_contents
@@ -135,11 +135,12 @@
 	if(range < required_radius)
 		inserted_bomb.forceMove(src)
 		say("Resultant detonation failed to produce enough implosive power to compress [inserted_core]. Core ejected.")
-		return
+		return */
 	QDEL_NULL(inserted_bomb)	// bomb goes poof
 	inserted_core.create_core(drop_location(), TRUE, TRUE)
 	inserted_core = null
-	say("Success. Resultant detonation has theoretical range of [range]. Required radius was [required_radius]. Core production complete.")
+	say("Success. Core production complete.")
+	// say("Success. Resultant detonation has theoretical range of [range]. Required radius was [required_radius]. Core production complete.")
 
 #undef MAX_RADIUS_REQUIRED
 #undef MIN_RADIUS_REQUIRED

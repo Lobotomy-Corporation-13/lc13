@@ -966,7 +966,6 @@
 /turf/open/floor/plasteel,
 /area/awaymission/spacebattle/cruiser)
 "ej" = (
-/obj/machinery/portable_atmospherics/canister/oxygen,
 /obj/effect/turf_decal/stripes/line{
 	dir = 6
 	},
@@ -1936,7 +1935,6 @@
 /turf/open/floor/plasteel,
 /area/awaymission/spacebattle/cruiser)
 "hr" = (
-/obj/machinery/portable_atmospherics/canister/oxygen,
 /obj/effect/turf_decal/stripes/line{
 	dir = 5
 	},

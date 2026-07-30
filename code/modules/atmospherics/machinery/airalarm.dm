@@ -1,4 +1,4 @@
-/datum/tlv
+/* /datum/tlv
 	var/min2
 	var/min1
 	var/max1
@@ -32,7 +32,7 @@
 	min1 = -1
 	max1 = 0.2
 	max2 = 0.5
-
+*/
 /obj/item/electronics/airalarm
 	name = "air alarm electronics"
 	icon_state = "airalarm_electronics"
@@ -43,7 +43,7 @@
 	icon = 'icons/obj/monitors.dmi'
 	icon_state = "alarm_bitem"
 	result_path = /obj/machinery/airalarm
-
+/*
 #define AALARM_MODE_SCRUBBING 1
 #define AALARM_MODE_VENTING 2 //makes draught
 #define AALARM_MODE_PANIC 3 //like siphon, but stronger (enables widenet)
@@ -55,12 +55,13 @@
 #define AALARM_MODE_REFILL 9 //just like normal, but with triple the air output
 
 #define AALARM_REPORT_TIMEOUT 100
-
+*/
 /obj/machinery/airalarm
 	name = "air alarm"
 	desc = "A machine that monitors atmosphere levels. Goes off if the area is dangerous."
 	icon = 'icons/obj/monitors.dmi'
 	icon_state = "alarm0"
+/*
 	use_power = IDLE_POWER_USE
 	idle_power_usage = 4
 	active_power_usage = 8
@@ -108,8 +109,9 @@
 		/datum/gas/antinoblium		= new/datum/tlv/dangerous,
 		/datum/gas/halon			= new/datum/tlv/dangerous
 	)
-
+*/
 /obj/machinery/airalarm/server // No checks here.
+/*
 	TLV = list(
 		"pressure"					= new/datum/tlv/no_checks,
 		"temperature"				= new/datum/tlv/no_checks,
@@ -135,8 +137,9 @@
 		/datum/gas/antinoblium		= new/datum/tlv/dangerous,
 		/datum/gas/halon			= new/datum/tlv/dangerous
 	)
-
+*/
 /obj/machinery/airalarm/kitchen_cold_room // Kitchen cold rooms start off at -14°C or 259.15°K.
+/*
 	TLV = list(
 		"pressure"					= new/datum/tlv(ONE_ATMOSPHERE * 0.8, ONE_ATMOSPHERE *  0.9, ONE_ATMOSPHERE * 1.1, ONE_ATMOSPHERE * 1.2), // kPa
 		"temperature"				= new/datum/tlv(COLD_ROOM_TEMP-40, COLD_ROOM_TEMP-20, COLD_ROOM_TEMP+20, COLD_ROOM_TEMP+40),
@@ -162,34 +165,34 @@
 		/datum/gas/antinoblium		= new/datum/tlv/dangerous,
 		/datum/gas/halon			= new/datum/tlv/dangerous
 	)
-
+*/
 /obj/machinery/airalarm/unlocked
-	locked = FALSE
+	// locked = FALSE
 
 /obj/machinery/airalarm/engine
 	name = "engine air alarm"
-	locked = FALSE
+/* 	locked = FALSE
 	req_access = null
-	req_one_access = list(ACCESS_ATMOSPHERICS, ACCESS_ENGINE)
+	req_one_access = list(ACCESS_ATMOSPHERICS, ACCESS_ENGINE) */
 
 /obj/machinery/airalarm/mixingchamber
 	name = "chamber air alarm"
-	locked = FALSE
+/* 	locked = FALSE
 	req_access = null
-	req_one_access = list(ACCESS_ATMOSPHERICS, ACCESS_TOXINS)
+	req_one_access = list(ACCESS_ATMOSPHERICS, ACCESS_TOXINS) */
 
 /obj/machinery/airalarm/all_access
 	name = "all-access air alarm"
 	desc = "This particular atmos control unit appears to have no access restrictions."
-	locked = FALSE
+/* 	locked = FALSE
 	req_access = null
-	req_one_access = null
+	req_one_access = null */
 
 /obj/machinery/airalarm/syndicate //general syndicate access
-	req_access = list(ACCESS_SYNDICATE)
+	// req_access = list(ACCESS_SYNDICATE)
 
 /obj/machinery/airalarm/away //general away mission access
-	req_access = list(ACCESS_AWAY_GENERAL)
+	// req_access = list(ACCESS_AWAY_GENERAL)
 
 /obj/machinery/airalarm/directional/north //Pixel offsets get overwritten on New()
 	dir = SOUTH
@@ -206,7 +209,7 @@
 /obj/machinery/airalarm/directional/west
 	dir = EAST
 	pixel_x = -24
-
+/*
 //all air alarms in area are connected via magic
 /area
 	var/list/air_vent_info = list()
@@ -878,3 +881,4 @@
 #undef AALARM_MODE_CONTAMINATED
 #undef AALARM_MODE_REFILL
 #undef AALARM_REPORT_TIMEOUT
+ */

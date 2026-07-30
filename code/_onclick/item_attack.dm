@@ -149,7 +149,7 @@
 /obj/item/proc/get_sweep_turfs(atom/target, mob/user)
 	var/target_turf = get_step_towards(user, target)
 	// Icon Setup
-	var/swipe_icon = "swipe_"
+	var/swipe_icon = custom_sweep_state
 	if(user.active_hand_index % 2 == 0)
 		swipe_icon += "r"
 	else
@@ -195,14 +195,20 @@
 	else
 		. = list(target_turf)
 
-	new /obj/effect/temp_visual/swipe(get_step(user, SOUTHWEST), get_dir(user, target), swingcolor ? swingcolor : COLOR_GRAY, swipe_icon)
+	// We'll use gray as a colour fallback if we don't have a swingcolour set and we don't have forced_swingcolor enabled.
+	var/color_to_use = (forced_swingcolor || swingcolor) ? swingcolor : COLOR_GRAY
+	new /obj/effect/temp_visual/swipe(get_step(user, SOUTHWEST), custom_sweep_icon, get_dir(user, target), color_to_use, swipe_icon)
 
 	return
 
 /obj/item/proc/get_thrust_turfs(atom/target, mob/user)
 	. = getline(get_step_towards(user, target), target)
+
+	// We'll use gray as a colour fallback if we don't have a swingcolour set and we don't have forced_swingcolor enabled.
+	var/color_to_use = (forced_swingcolor || swingcolor) ? swingcolor : COLOR_GRAY
+
 	for(var/turf/T in .)
-		var/obj/effect/temp_visual/thrust/TT = new(T, swingcolor ? swingcolor : COLOR_GRAY)
+		var/obj/effect/temp_visual/thrust/TT = new(T, color_to_use, custom_thrust_icon, custom_thrust_state)
 		var/matrix/M = matrix(TT.transform)
 		M.Turn(Get_Angle(user, target)-90)
 		TT.transform = M
@@ -222,13 +228,16 @@
 	if(signal_return & COMPONENT_SKIP_ATTACK)
 		return
 
-	SEND_SIGNAL(user, COMSIG_MOB_ITEM_ATTACK, M, user)
+	SEND_SIGNAL(user, COMSIG_MOB_ITEM_ATTACK, M, user, src)
 
 	if(item_flags & NOBLUDGEON)
 		return
 
 	if(force && HAS_TRAIT(user, TRAIT_PACIFISM))
-		to_chat(user, "<span class='warning'>You don't want to harm other living beings!</span>")
+		var/message = "<span class='warning'>You don't want to harm other living beings!</span>"
+		if(HAS_TRAIT_FROM(user, TRAIT_PACIFISM, "Singularity J - Lock"))
+			message = span_warning("You try to attack, but the concept of violence has been sealed away from you!")
+		to_chat(user, message)
 		return
 
 	if(item_flags & EYE_STAB && user.zone_selected == BODY_ZONE_PRECISE_EYES)
@@ -239,7 +248,7 @@
 	if(!force)
 		playsound(loc, 'sound/weapons/tap.ogg', get_clamped_volume(), TRUE, -1)
 	else if(hitsound)
-		playsound(loc, hitsound, get_clamped_volume(), TRUE, extrarange = stealthy_audio ? SILENCED_SOUND_EXTRARANGE : -1, falloff_distance = 0)
+		playsound(loc, hitsound, get_clamped_volume(), hitsound_vary, extrarange = stealthy_audio ? SILENCED_SOUND_EXTRARANGE : -1, falloff_distance = 0)
 
 	M.lastattacker = user.real_name
 	M.lastattackerckey = user.ckey
@@ -252,6 +261,7 @@
 
 	log_combat(user, M, "attacked", src.name, "(INTENT: [uppertext(user.a_intent)]) (DAMTYPE: [uppertext(damtype)])")
 	add_fingerprint(user)
+	SEND_SIGNAL(user, COMSIG_MOB_ITEM_AFTERATTACK, M, user, TRUE, src)
 
 
 /// The equivalent of the standard version of [/obj/item/proc/attack] but for object targets.
@@ -298,7 +308,7 @@
 			var/obj/item/ego_weapon/theweapon = I
 			damage *= theweapon.force_multiplier
 
-		apply_damage(damage, I.damtype, white_healable = TRUE)
+		deal_damage(damage, I.damtype, source = user, flags = (DAMAGE_WHITE_HEALABLE), attack_type = (ATTACK_TYPE_MELEE))
 		if(I.damtype in list(RED_DAMAGE, BLACK_DAMAGE, PALE_DAMAGE))
 			if(prob(33))
 				I.add_mob_blood(src)
@@ -335,7 +345,7 @@
  */
 /obj/item/proc/afterattack(atom/target, mob/user, proximity_flag, click_parameters)
 	SEND_SIGNAL(src, COMSIG_ITEM_AFTERATTACK, target, user, proximity_flag, click_parameters)
-	SEND_SIGNAL(user, COMSIG_MOB_ITEM_AFTERATTACK, target, user, proximity_flag, click_parameters)
+	SEND_SIGNAL(user, COMSIG_MOB_ITEM_AFTERATTACK, target, user, proximity_flag, src)
 
 /// Called if the target gets deleted by our attack
 /obj/item/proc/attack_qdeleted(atom/target, mob/user, proximity_flag, click_parameters)
@@ -371,27 +381,34 @@
 	return 1
 
 /obj/effect/temp_visual/swipe
-	icon = 'ModularLobotomy/_Lobotomyicons/96x96.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/weaponanim_96x96.dmi'
 	duration = 4
 	randomdir = FALSE
 	alpha = 200
 
-/obj/effect/temp_visual/swipe/New(loc, ...)
+/obj/effect/temp_visual/swipe/New(loc, custom_sweep_icon, ...)
 	. = ..()
-	setDir(args[2])
-	if(args[3])
-		color = args[3]
-	flick(args[4], src) // if this isn't used, it synchronizes all swipe animations.
+	if(custom_sweep_icon)
+		icon = custom_sweep_icon
+	setDir(args[3])
+	if(args[4])
+		color = args[4]
+	flick(args[5], src) // if this isn't used, it synchronizes all swipe animations.
 
 /obj/effect/temp_visual/thrust
-	icon = 'ModularLobotomy/_Lobotomyicons/64x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/weaponanim_64x32.dmi'
 	duration = 4
 	randomdir = FALSE
 	pixel_x = -16
 	alpha = 200
 
-/obj/effect/temp_visual/thrust/New(loc, ...)
+/obj/effect/temp_visual/thrust/New(loc, swingcolor, custom_thrust_icon, custom_thrust_state, ...)
 	. = ..()
+	var/flick_state = "thrust"
 	if(args[2])
 		color = args[2]
-	flick("thrust", src)
+	if(custom_thrust_icon)
+		icon = custom_thrust_icon
+	if(custom_thrust_state)
+		flick_state = custom_thrust_state
+	flick(flick_state, src)

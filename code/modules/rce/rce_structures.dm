@@ -1,0 +1,626 @@
+/obj/structure/den/rce
+	name = "Greed Attack Pylon"
+	desc = "Best destroy this!"
+	icon_state = "powerpylon"
+	icon = 'icons/obj/hand_of_god_structures.dmi'
+	color = "#FF5522"
+	light_color = "#FF5522"
+	light_range = 3
+	light_power = 1
+	max_integrity = 500
+	moblist = list(
+		/mob/living/simple_animal/hostile/greed = 4,
+		/mob/living/simple_animal/hostile/greed/scout = 2,
+	)
+	var/announce = FALSE
+	var/id
+	var/assault_type = SEND_ONLY_DEFEATED
+	var/max_mobs = 18
+	var/generate_new_mob_time = NONE
+	var/raider = FALSE
+	/// Area number for this den (1, 2, or 3). Dens won't spawn if boss of previous area is alive.
+	var/area_num = 0
+
+/obj/structure/den/rce/announcer
+	light_range = 5
+	max_mobs = 40
+	moblist = list(
+		/mob/living/simple_animal/hostile/greed = 2,
+		/mob/living/simple_animal/hostile/greed/scout = 3,
+		/mob/living/simple_animal/hostile/greed/sapper = 3,
+		/mob/living/simple_animal/hostile/greed/tank = 2,
+		/mob/living/simple_animal/hostile/greed/dps = 2,
+	)
+	generate_new_mob_time = 50 SECONDS
+	raider = TRUE
+	announce = TRUE
+
+/obj/structure/den/rce/mid
+	light_range = 4
+	max_mobs = 10
+	moblist = list(
+		/mob/living/simple_animal/hostile/greed = 2,
+		/mob/living/simple_animal/hostile/greed/dps = 1,
+		/mob/living/simple_animal/hostile/greed/tank = 1,
+		/mob/living/simple_animal/hostile/greed/scout = 1,
+	)
+	generate_new_mob_time = 22 SECONDS
+
+/obj/structure/den/rce/high
+	light_range = 7
+	max_mobs = 12
+	moblist = list(
+		/mob/living/simple_animal/hostile/greed/scout = 2,
+		/mob/living/simple_animal/hostile/greed/sapper = 2,
+		/mob/living/simple_animal/hostile/greed/dps = 2,
+		/mob/living/simple_animal/hostile/greed/tank = 3,
+	)
+	generate_new_mob_time = 15 SECONDS
+
+/obj/structure/den/rce/raider
+	light_range = 5
+	max_mobs = 30
+	moblist = list(
+		/mob/living/simple_animal/hostile/greed = 2,
+		/mob/living/simple_animal/hostile/greed/scout = 3,
+		/mob/living/simple_animal/hostile/greed/sapper = 1,
+		/mob/living/simple_animal/hostile/greed/tank = 2,
+		/mob/living/simple_animal/hostile/greed/dps = 2,
+	)
+	assault_type = SEND_TILL_MAX
+	generate_new_mob_time = 30 SECONDS
+	raider = TRUE
+
+/obj/structure/den/rce/Initialize(mapload)
+	. = ..()
+	if(id)
+		target = SSgamedirector.GetTargetById(id)
+	else
+		target = SSgamedirector.GetRandomRaiderTarget()
+	AddComponent(/datum/component/monwave_spawner, attack_target = target, max_mobs = max_mobs, assault_type = assault_type, new_wave_order = moblist, try_for_announcer = announce, new_wave_cooldown_time = generate_new_mob_time, raider = raider, register = TRUE)
+
+/// Checks if this den can spawn mobs based on area progression (previous area's boss must be dead)
+/obj/structure/den/rce/proc/CanSpawnInArea()
+	if(area_num <= 1)
+		return TRUE  // Area 1 dens (or dens with no area) always spawn
+	// Check if the boss of the previous area is dead
+	switch(area_num)
+		if(2)
+			return SSgamedirector.bloodfiend_barber_dead
+		if(3)
+			return SSgamedirector.bloodfiend_priest_dead
+	return TRUE
+
+/obj/structure/den/rce/blood
+	name = "Blood Attack Pylon Area 1"
+	desc = "A corrupted structure pulsing with crimson energy. Best destroy this!"
+	icon = 'ModularLobotomy/_Lobotomyicons/teguobjects.dmi'
+	icon_state = "vassalrack"
+	color = null
+	light_color = "#FF0000"
+	light_range = 4
+	light_power = 2
+	max_integrity = 500
+	area_num = 1
+	moblist = list(
+		/mob/living/simple_animal/hostile/bloodbag/fashionista = 4,
+		/mob/living/simple_animal/hostile/bloodfiend_mook/fashionista = 2,
+	)
+
+/obj/structure/den/rce/blood/Initialize(mapload)
+	. = ..()
+	AddRedGlow()
+
+/obj/structure/den/rce/blood/proc/AddRedGlow()
+	add_filter("blood_glow", 2, list("type" = "outline", "color" = "#ff000030", "size" = 2))
+	addtimer(CALLBACK(src, PROC_REF(GlowLoop)), rand(1, 19))
+
+/obj/structure/den/rce/blood/proc/GlowLoop()
+	var/filter = get_filter("blood_glow")
+	if(filter)
+		animate(filter, alpha = 110, time = 15, loop = -1)
+		animate(alpha = 40, time = 25)
+
+/obj/structure/den/rce/blood/Destroy()
+	remove_filter("blood_glow")
+	return ..()
+
+/obj/structure/den/rce/blood/area2
+	name = "Blood Attack Pylon Area 2"
+	area_num = 2
+	moblist = list(
+		/mob/living/simple_animal/hostile/bloodbag/priest = 3,
+		/mob/living/simple_animal/hostile/bloodbag/priest_alt = 3,
+		/mob/living/simple_animal/hostile/bloodfiend_mook/priest = 1,
+	)
+
+/obj/structure/den/rce/blood/area3
+	name = "Blood Attack Pylon Area 3"
+	area_num = 3
+	moblist = list(
+		/mob/living/simple_animal/hostile/bloodbag/parade = 4,
+		/mob/living/simple_animal/hostile/bloodfiend_mook/parade = 2,
+		/mob/living/simple_animal/hostile/bloodfiend_mook/parade_alt = 2,
+	)
+
+/obj/structure/den/rce_defender
+	name = "Greed Defense Pylon"
+	desc = "Best destroy this!"
+	icon_state = "defensepylon"
+	icon = 'icons/obj/hand_of_god_structures.dmi'
+	color = "#FF0000"
+	max_integrity = 1000
+	light_color = "#aa1100"
+	light_range = 5
+	light_power = 2
+	moblist = list(
+		/mob/living/simple_animal/hostile/greed = 4,
+		/mob/living/simple_animal/hostile/greed/tank = 4,
+		/mob/living/simple_animal/hostile/greed/heart = 3,
+		/mob/living/simple_animal/hostile/greed/heart/ranged = 2,
+		/mob/living/simple_animal/hostile/greed/heart/dps = 1,
+	)
+	var/announce = FALSE
+	var/id
+	var/assault_type = SEND_TILL_MAX
+	var/max_mobs = 30
+	var/generate_new_mob_time = NONE
+	var/raider = FALSE
+
+/obj/structure/den/rce_defender/Initialize(mapload)
+	. = ..()
+	if(id)
+		target = SSgamedirector.GetTargetById(id)
+	if(!target)
+		target = get_turf(src)
+	AddComponent(/datum/component/monwave_spawner, attack_target = target, max_mobs = max_mobs, assault_type = assault_type, new_wave_order = moblist, try_for_announcer = announce, new_wave_cooldown_time = generate_new_mob_time, raider = raider, register = TRUE)
+
+/obj/structure/rce_heart
+	name = "Heart of Greed"
+	desc = "Best destroy this!"
+	icon_state = "nexus"
+	icon = 'icons/obj/hand_of_god_structures.dmi'
+	color = "#FF0000"
+	max_integrity = 1
+
+/obj/structure/rce_heart/Initialize()
+	. = ..()
+	AddElement(/datum/element/point_of_interest)
+
+/obj/structure/rce_heart/Destroy()
+	SSgamedirector.AnnounceVictory()
+	. = ..()
+
+/obj/structure/rce_portal
+	name = "Raid Portal"
+	desc = span_danger("Click me to register to fight the heart")
+	icon = 'icons/obj/hand_of_god_structures.dmi'
+	icon_state = "fountain"
+	maptext = "<b><span style='color: red;'>EXAMINE ME</span></b>"
+	maptext_height = 32
+	maptext_width = 64
+	maptext_x = -16
+	maptext_y = 8
+	density = TRUE
+	resistance_flags = INDESTRUCTIBLE
+
+/obj/structure/rce_portal/Initialize()
+	. = ..()
+	SSgamedirector.RegisterPortal(src)
+
+/obj/structure/rce_portal/attack_hand(mob/living/user)
+	if(tgui_alert(user, "Do you want to register to fight the Heart of Greed?", "Go die?", list("Yes", "No"), timeout = 30 SECONDS) == "Yes")
+		SSgamedirector.RegisterCombatant(user)
+
+/obj/structure/player_blocker
+	name = "forcefield"
+	desc = "Impassable to some."
+	icon = 'icons/effects/cult_effects.dmi'
+	icon_state = "cultshield"
+	light_color = "#aa0000"
+	light_range = 3
+	light_power = 1
+	alpha = 200
+	anchored = TRUE
+	density = FALSE
+	resistance_flags = INDESTRUCTIBLE
+	pass_flags_self = 0
+
+/obj/structure/player_blocker/invisible
+	light_color = null
+	light_range = 0
+	light_power = 0
+	alpha = 0
+
+/obj/structure/player_blocker/CanAllowThrough(atom/movable/A, turf/T)
+	. = ..()
+
+	if(!isliving(A))
+		return FALSE
+	if(istype(A, /mob/living/simple_animal))
+		return TRUE
+	return FALSE
+
+/obj/structure/player_blocker/CanAStarPass(ID, to_dir, requester)
+	return TRUE
+
+// ============================================
+// AREA BLOCKERS - Destroyed when corresponding boss dies
+// ============================================
+
+/obj/structure/area_blocker
+	name = "Area 1 Blocker"
+	desc = "A barrier that blocks passage until the area guardian is defeated."
+	icon = 'icons/obj/hand_of_god_structures.dmi'
+	icon_state = "trap"
+	color = "#FF0000"
+	light_color = "#FF0000"
+	light_range = 3
+	light_power = 1
+	alpha = 200
+	anchored = TRUE
+	density = FALSE
+	resistance_flags = INDESTRUCTIBLE
+	pass_flags_self = 0
+	/// Signal to listen for boss death
+	var/boss_death_signal = COMSIG_GLOB_BLOODFIEND_BARBER_DIED
+
+/obj/structure/area_blocker/Initialize()
+	. = ..()
+	if(boss_death_signal)
+		RegisterSignal(SSdcs, boss_death_signal, PROC_REF(OnBossDeath))
+
+/obj/structure/area_blocker/Destroy()
+	if(boss_death_signal)
+		UnregisterSignal(SSdcs, boss_death_signal)
+	return ..()
+
+/obj/structure/area_blocker/proc/OnBossDeath()
+	SIGNAL_HANDLER
+	// Visual effect before destruction
+	playsound(loc, 'sound/effects/ordeals/white/pale_teleport_out.ogg', 50, TRUE)
+	new /obj/effect/temp_visual/beam_out(get_turf(src))
+	qdel(src)
+
+/obj/structure/area_blocker/CanAllowThrough(atom/movable/A, turf/T)
+	. = ..()
+	if(!isliving(A))
+		return FALSE
+	if(istype(A, /mob/living/simple_animal))
+		return TRUE
+	return FALSE
+
+/obj/structure/area_blocker/CanAStarPass(ID, to_dir, requester)
+	return TRUE
+
+/obj/structure/area_blocker/area2
+	name = "Area 2 Blocker"
+	color = "#888888"
+	light_color = "#888888"
+	boss_death_signal = COMSIG_GLOB_BLOODFIEND_PRIEST_DIED
+
+/obj/structure/area_blocker/area3
+	name = "Area 3 Blocker"
+	color = "#AA00AA"
+	light_color = "#AA00AA"
+	boss_death_signal = COMSIG_GLOB_BLOODFIEND_DULCINEA_DIED
+
+// ============================================
+// DEN-BASED AREA BLOCKERS - Destroyed when all dens in an area are destroyed
+// ============================================
+
+/obj/structure/area_blocker/den
+	name = "Den Barrier"
+	desc = "A barrier that blocks passage until all dens in this area are destroyed."
+	boss_death_signal = null  // We don't use boss signals, we track dens
+	/// Area number this blocker is associated with
+	var/blocker_area = 1
+	/// List of dens we're tracking
+	var/list/tracked_dens = list()
+
+/obj/structure/area_blocker/den/Initialize()
+	. = ..()
+	// Find and track all dens in our area after a short delay (to let dens initialize first)
+	addtimer(CALLBACK(src, PROC_REF(FindDens)), 1 SECONDS)
+
+/obj/structure/area_blocker/den/Destroy()
+	// Unregister from all tracked dens
+	for(var/obj/structure/den/rce/D in tracked_dens)
+		UnregisterSignal(D, COMSIG_PARENT_QDELETING)
+	tracked_dens.Cut()
+	return ..()
+
+/// Finds all dens with matching area_num and registers for their destruction
+/obj/structure/area_blocker/den/proc/FindDens()
+	// Use the spawners list from gamedirector to find dens
+	for(var/datum/component/monwave_spawner/spawner in SSgamedirector.spawners)
+		if(!spawner.parent || !istype(spawner.parent, /obj/structure/den/rce))
+			continue
+		var/obj/structure/den/rce/den = spawner.parent
+		if(den.area_num == blocker_area)
+			tracked_dens += den
+			RegisterSignal(den, COMSIG_PARENT_QDELETING, PROC_REF(OnDenDestroyed))
+	// If no dens found or all already destroyed, remove blocker
+	if(!length(tracked_dens))
+		OnAllDensDestroyed()
+
+/// Called when a tracked den is destroyed
+/obj/structure/area_blocker/den/proc/OnDenDestroyed(datum/source)
+	SIGNAL_HANDLER
+	tracked_dens -= source
+	if(!length(tracked_dens))
+		INVOKE_ASYNC(src, PROC_REF(OnAllDensDestroyed))
+
+/// Called when all tracked dens have been destroyed
+/obj/structure/area_blocker/den/proc/OnAllDensDestroyed()
+	playsound(loc, 'sound/effects/ordeals/white/pale_teleport_out.ogg', 50, TRUE)
+	new /obj/effect/temp_visual/beam_out(get_turf(src))
+	qdel(src)
+
+/obj/structure/area_blocker/den/area1
+	name = "Area 1 Den Barrier"
+	blocker_area = 1
+	color = "#FF0000"
+	light_color = "#FF0000"
+
+/obj/structure/area_blocker/den/area2
+	name = "Area 2 Den Barrier"
+	blocker_area = 2
+	color = "#888888"
+	light_color = "#888888"
+
+/obj/structure/area_blocker/den/area3
+	name = "Area 3 Den Barrier"
+	blocker_area = 3
+	color = "#AA00AA"
+	light_color = "#AA00AA"
+
+// Resource Gate - blocks players until they have at least one active resource well
+// Re-activates during final wave to block players again
+/obj/structure/resource_gate
+	name = "resource barrier"
+	desc = "A barrier that requires active resource extraction to pass through."
+	icon = 'icons/effects/cult_effects.dmi'
+	icon_state = "cultshield"
+	light_color = "#aa0000"
+	light_range = 3
+	light_power = 1
+	alpha = 200
+	anchored = TRUE
+	density = FALSE
+	resistance_flags = INDESTRUCTIBLE
+	pass_flags_self = 0
+	var/active = TRUE // Whether the barrier is currently blocking
+	var/deactivation_delay = 1 MINUTES // Delay before deactivating after first well
+
+/obj/structure/resource_gate/Initialize()
+	. = ..()
+	// Register for first well activation signal
+	RegisterSignal(SSdcs, COMSIG_GLOB_RCE_FIRST_WELL_ACTIVATED, PROC_REF(OnFirstWellActivated))
+
+/obj/structure/resource_gate/Destroy()
+	UnregisterSignal(SSdcs, COMSIG_GLOB_RCE_FIRST_WELL_ACTIVATED)
+	return ..()
+
+/obj/structure/resource_gate/proc/OnFirstWellActivated()
+	SIGNAL_HANDLER
+	// Schedule deactivation after 1 minute
+	addtimer(CALLBACK(src, PROC_REF(DelayedDeactivate)), deactivation_delay)
+
+/obj/structure/resource_gate/proc/DelayedDeactivate()
+	// Only deactivate if not during final wave
+	if(!SSgamedirector.last_wave_started)
+		Deactivate()
+
+/obj/structure/resource_gate/invisible
+	light_color = null
+	light_range = 0
+	light_power = 0
+	alpha = 0
+
+/obj/structure/resource_gate/CanAllowThrough(atom/movable/A, turf/T)
+	. = ..()
+
+	// Always let non-living things through
+	if(!isliving(A))
+		return TRUE
+
+	// Always let simple animals through
+	if(istype(A, /mob/living/simple_animal))
+		return TRUE
+
+	// During final wave, block all players
+	if(SSgamedirector.last_wave_started)
+		if(!active)
+			Activate()
+		return FALSE
+
+	// If gate is deactivated, allow through
+	if(!active)
+		return TRUE
+
+	// Gate is still active, block players
+	return FALSE
+
+/obj/structure/resource_gate/CanAStarPass(ID, to_dir, requester)
+	return TRUE
+
+/obj/structure/resource_gate/proc/Activate()
+	active = TRUE
+	alpha = initial(alpha)
+	mouse_opacity = initial(mouse_opacity)
+	light_range = initial(light_range)
+	light_power = initial(light_power)
+	light_color = "#aa0000" // Red when blocking during final wave
+	update_light()
+
+/obj/structure/resource_gate/proc/Deactivate()
+	active = FALSE
+	alpha = 0
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+	light_range = 0
+	light_power = 0
+	update_light()
+
+// Greed Gateway - spawns Greed-Touched Clan mobs during last wave
+/obj/effect/greed_gateway
+	name = "Greed Gateway"
+	desc = "A swirling vortex of avarice that continuously spawns corrupted beings."
+	icon = 'icons/effects/96x96.dmi'
+	icon_state = "singularity_s3"
+	pixel_x = -32
+	pixel_y = -32
+	light_range = 6
+	light_power = 3
+	light_color = "#FF0000"
+	anchored = TRUE
+	var/list/spawned_mobs = list()
+	var/max_spawned_mobs = 50
+	var/spawn_cooldown = 0
+	var/spawn_cooldown_time = 10 SECONDS
+	var/min_spawn_count = 8
+	var/max_spawn_count = 12
+	var/obj/effect/landmark/fob_escape_shuttle/target_shuttle
+	var/list/assault_path = list()
+	var/list/active_waves = list()	// Track wave commanders
+	var/cleanup_cooldown = 0
+	var/cleanup_cooldown_time = 1.5 MINUTES
+	var/list/mob_spawn_weights = list(
+		// X-Corp Greed mobs
+		/mob/living/simple_animal/hostile/greed = 20,
+		/mob/living/simple_animal/hostile/greed/scout = 15,
+		/mob/living/simple_animal/hostile/greed/dps = 12,
+		/mob/living/simple_animal/hostile/greed/tank = 8,
+		/mob/living/simple_animal/hostile/greed/sapper = 6,
+		/mob/living/simple_animal/hostile/greed/heart = 4,
+		/mob/living/simple_animal/hostile/greed/heart/dps = 3,
+		/mob/living/simple_animal/hostile/greed/heart/ranged = 2,
+		// Greed-Touched Clan mobs
+		/mob/living/simple_animal/hostile/clan/scout/greed = 15,
+		/mob/living/simple_animal/hostile/clan/ranged/gunner/greed = 12,
+		/mob/living/simple_animal/hostile/clan/ranged/rapid/greed = 10,
+		/mob/living/simple_animal/hostile/clan/defender/greed = 6,
+		/mob/living/simple_animal/hostile/clan/ranged/sniper/greed = 5,
+		/mob/living/simple_animal/hostile/clan/drone/greed = 4,
+		/mob/living/simple_animal/hostile/clan/ranged/harpooner/greed = 3,
+		/mob/living/simple_animal/hostile/clan/assassin/greed = 2,
+		/mob/living/simple_animal/hostile/clan/demolisher/greed = 2,
+		/mob/living/simple_animal/hostile/clan/ranged/warper/greed = 1,
+	)
+
+/obj/effect/greed_gateway/Initialize()
+	. = ..()
+	if(length(SSgamedirector.fob_escape_shuttle))
+		target_shuttle = pick(SSgamedirector.fob_escape_shuttle)
+	// If no pre-calculated path was passed, schedule calculation for later (fallback)
+	if(!length(assault_path) && target_shuttle)
+		addtimer(CALLBACK(src, PROC_REF(CalculateFallbackPath)), 1)
+	START_PROCESSING(SSobj, src)
+	spawn_cooldown = world.time + 3 SECONDS // Initial delay
+
+/obj/effect/greed_gateway/proc/CalculateFallbackPath()
+	if(!target_shuttle)
+		return
+	assault_path = get_path_to(src, target_shuttle, /turf/proc/Distance_cardinal, 0, 400)
+	if(!length(assault_path))
+		log_game("WARNING: Greed Gateway at [x],[y],[z] could not find path to FoB escape shuttle")
+
+/obj/effect/greed_gateway/Destroy()
+	STOP_PROCESSING(SSobj, src)
+	for(var/mob/living/simple_animal/hostile/M in spawned_mobs)
+		if(!QDELETED(M))
+			spawned_mobs -= M
+	for(var/obj/effect/wave_commander/commander in active_waves)
+		if(!QDELETED(commander))
+			qdel(commander)
+	return ..()
+
+/obj/effect/greed_gateway/process()
+	// Clean up dead/deleted mobs from tracking
+	for(var/mob/living/simple_animal/hostile/M in spawned_mobs)
+		if(QDELETED(M) || M.stat == DEAD)
+			spawned_mobs -= M
+
+	// Check for idle mobs without targets every 1.5 minutes
+	if(world.time >= cleanup_cooldown)
+		CleanupIdleMobs()
+		cleanup_cooldown = world.time + cleanup_cooldown_time
+
+	// Check if we can spawn more mobs
+	if(world.time < spawn_cooldown)
+		return
+
+	if(length(spawned_mobs) >= max_spawned_mobs)
+		return
+
+	// Spawn new wave of mobs
+	SpawnWave()
+	spawn_cooldown = world.time + spawn_cooldown_time
+
+/obj/effect/greed_gateway/proc/CleanupIdleMobs()
+	for(var/mob/living/simple_animal/hostile/M in spawned_mobs)
+		if(QDELETED(M) || M.stat == DEAD)
+			spawned_mobs -= M
+			continue
+		// Check if mob has no target
+		if(!M.target)
+			// Teleport away effect and delete
+			playsound(M, 'sound/effects/ordeals/white/pale_teleport_out.ogg', 25, TRUE)
+			new /obj/effect/temp_visual/beam_out(get_turf(M))
+			spawned_mobs -= M
+			qdel(M)
+
+/obj/effect/greed_gateway/proc/SpawnWave()
+	var/spawn_count = rand(min_spawn_count, max_spawn_count)
+	var/remaining_slots = max_spawned_mobs - length(spawned_mobs)
+	spawn_count = min(spawn_count, remaining_slots)
+
+	if(spawn_count <= 0)
+		return
+
+	var/list/spawn_turfs = list()
+	// Get 3x3 area around gateway for spawning
+	for(var/turf/T in range(1, src))
+		if(!T.density)
+			spawn_turfs += T
+
+	if(!length(spawn_turfs))
+		spawn_turfs += get_turf(src) // Fallback to gateway location
+
+	// Create wave commander for this wave
+	var/obj/effect/wave_commander/commander = new(get_turf(src))
+	active_waves += commander
+	RegisterSignal(commander, COMSIG_PARENT_QDELETING, PROC_REF(OnCommanderDeleted))
+
+	var/list/current_wave = list()
+
+	for(var/i in 1 to spawn_count)
+		var/mob_type = pickweight(mob_spawn_weights)
+		var/turf/spawn_turf = pick(spawn_turfs)
+
+		var/mob/living/simple_animal/hostile/spawned = new mob_type(spawn_turf)
+		spawned_mobs += spawned
+		current_wave += spawned
+		RegisterSignal(spawned, COMSIG_LIVING_DEATH, PROC_REF(OnMobDeath))
+
+		// Make mob follow the wave commander
+		walk_to(spawned, commander, rand(0,2), spawned.move_to_delay)
+
+		// Visual effect for spawning
+		new /obj/effect/temp_visual/dir_setting/bloodsplatter(spawn_turf, pick(GLOB.alldirs))
+
+	// Send the commander on its path if we have one
+	if(length(assault_path))
+		commander.DoPath(assault_path.Copy())
+	else if(target_shuttle)
+		// Fallback: if no path, at least try to move toward target
+		var/list/simple_path = list(get_turf(target_shuttle))
+		commander.DoPath(simple_path)
+
+/obj/effect/greed_gateway/proc/OnMobDeath(mob/living/simple_animal/hostile/M)
+	SIGNAL_HANDLER
+	spawned_mobs -= M
+
+/obj/effect/greed_gateway/proc/OnCommanderDeleted(obj/effect/wave_commander/commander)
+	SIGNAL_HANDLER
+	active_waves -= commander

@@ -3,9 +3,7 @@
 /turf/template_noop,
 /area/template_noop)
 "b" = (
-/turf/open/floor/engine/cult{
-	initial_gas_mix = "LAVALAND_ATMOS"
-	},
+/turf/open/floor/engine/cult,
 /area/ruin/unpowered/cultaltar)
 "c" = (
 /turf/open/lava/smooth/lava_land_surface,
@@ -23,37 +21,27 @@
 /area/ruin/unpowered/cultaltar)
 "g" = (
 /obj/effect/decal/cleanable/blood/old,
-/turf/open/floor/engine/cult{
-	initial_gas_mix = "LAVALAND_ATMOS"
-	},
+/turf/open/floor/engine/cult,
 /area/ruin/unpowered/cultaltar)
 "i" = (
 /obj/effect/decal/remains/human,
 /obj/effect/decal/cleanable/blood/old,
-/turf/open/floor/engine/cult{
-	initial_gas_mix = "LAVALAND_ATMOS"
-	},
+/turf/open/floor/engine/cult,
 /area/ruin/unpowered/cultaltar)
 "k" = (
 /obj/effect/decal/remains/human,
 /obj/item/melee/cultblade,
-/turf/open/floor/engine/cult{
-	initial_gas_mix = "LAVALAND_ATMOS"
-	},
+/turf/open/floor/engine/cult,
 /area/ruin/unpowered/cultaltar)
 "l" = (
 /obj/effect/decal/remains/human,
 /obj/item/clothing/shoes/cult,
 /obj/item/clothing/suit/hooded/cultrobes,
-/turf/open/floor/engine/cult{
-	initial_gas_mix = "LAVALAND_ATMOS"
-	},
+/turf/open/floor/engine/cult,
 /area/ruin/unpowered/cultaltar)
 "m" = (
 /obj/effect/decal/remains/human,
-/turf/open/floor/engine/cult{
-	initial_gas_mix = "LAVALAND_ATMOS"
-	},
+/turf/open/floor/engine/cult,
 /area/ruin/unpowered/cultaltar)
 "o" = (
 /obj/effect/rune/narsie{
@@ -73,18 +61,14 @@
 	message = "<span class='cult italic'><b><span class='big'>You've made a grave mistake, haven't you?</span></b></span>";
 	name = "ohfuck"
 	},
-/turf/open/floor/engine/cult{
-	initial_gas_mix = "LAVALAND_ATMOS"
-	},
+/turf/open/floor/engine/cult,
 /area/ruin/unpowered/cultaltar)
 "q" = (
 /obj/effect/decal/remains/human,
 /obj/item/clothing/shoes/cult,
 /obj/item/clothing/suit/hooded/cultrobes,
 /obj/effect/decal/cleanable/blood/old,
-/turf/open/floor/engine/cult{
-	initial_gas_mix = "LAVALAND_ATMOS"
-	},
+/turf/open/floor/engine/cult,
 /area/ruin/unpowered/cultaltar)
 "s" = (
 /turf/open/floor/plating/asteroid/basalt/lava_land_surface,

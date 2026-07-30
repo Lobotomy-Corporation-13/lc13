@@ -33,6 +33,12 @@
 		"Leave" = list(FALSE, "The man clearly needs help, you rush to find a medic."),
 	)
 
+	grouped_abnos = list(
+		/mob/living/simple_animal/hostile/abnormality/roses_waw = 1.5,
+		/mob/living/simple_animal/hostile/abnormality/little_prince = 1.5,
+		/mob/living/simple_animal/hostile/abnormality/parasite_tree = 1.5,
+	)
+
 	var/seed_list = list(
 		/obj/item/seeds/grass/fairy,
 		/obj/item/seeds/apple/gold,
@@ -444,7 +450,7 @@
 			return ..()
 		damage_mod = LV.toxLethality * 100
 	metabolization_rate = max(volume * REAGENTS_METABOLISM, REAGENTS_METABOLISM)
-	M.deal_damage((volume * REAGENTS_METABOLISM * damage_mod), RED_DAMAGE)
+	M.deal_damage((volume * REAGENTS_METABOLISM * damage_mod), RED_DAMAGE, attack_type = (ATTACK_TYPE_STATUS))
 	if(ishuman(M))
 		if(DT_PROB(3, 6))
 			var/mob/living/carbon/human/H = M

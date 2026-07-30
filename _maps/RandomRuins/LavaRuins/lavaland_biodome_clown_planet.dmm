@@ -1014,9 +1014,7 @@
 /area/ruin/powered/clownplanet)
 "eX" = (
 /obj/effect/mapping_helpers/no_lava,
-/turf/open/floor/noslip{
-	initial_gas_mix = "LAVALAND_ATMOS"
-	},
+/turf/open/floor/noslip,
 /area/ruin/powered/clownplanet)
 "gX" = (
 /obj/effect/mapping_helpers/no_lava,
@@ -1040,9 +1038,7 @@
 /obj/item/paper/crumpled/bloody/ruins/lavaland/clown_planet/hope,
 /obj/effect/decal/cleanable/blood/old,
 /obj/effect/mapping_helpers/no_lava,
-/turf/open/floor/noslip{
-	initial_gas_mix = "LAVALAND_ATMOS"
-	},
+/turf/open/floor/noslip,
 /area/ruin/powered/clownplanet)
 "Hj" = (
 /obj/effect/decal/cleanable/food/pie_smudge,
@@ -1074,9 +1070,7 @@
 	},
 /obj/structure/disposalpipe/trunk,
 /obj/effect/mapping_helpers/no_lava,
-/turf/open/floor/noslip{
-	initial_gas_mix = "LAVALAND_ATMOS"
-	},
+/turf/open/floor/noslip,
 /area/ruin/powered/clownplanet)
 "Mv" = (
 /obj/effect/mapping_helpers/no_lava,
@@ -1093,9 +1087,7 @@
 "RW" = (
 /obj/effect/mapping_helpers/no_lava,
 /mob/living/simple_animal/hostile/retaliate/clown,
-/turf/open/floor/noslip{
-	initial_gas_mix = "LAVALAND_ATMOS"
-	},
+/turf/open/floor/noslip,
 /area/ruin/powered/clownplanet)
 "TD" = (
 /obj/structure/disposalpipe/trunk,
@@ -1103,16 +1095,12 @@
 	dir = 1
 	},
 /obj/effect/mapping_helpers/no_lava,
-/turf/open/floor/noslip{
-	initial_gas_mix = "LAVALAND_ATMOS"
-	},
+/turf/open/floor/noslip,
 /area/ruin/powered/clownplanet)
 "Xm" = (
 /obj/item/clothing/head/cone,
 /obj/effect/mapping_helpers/no_lava,
-/turf/open/floor/noslip{
-	initial_gas_mix = "LAVALAND_ATMOS"
-	},
+/turf/open/floor/noslip,
 /area/ruin/powered/clownplanet)
 "XO" = (
 /obj/effect/mapping_helpers/no_lava,
@@ -1129,9 +1117,7 @@
 /obj/machinery/light/small,
 /obj/effect/mapping_helpers/no_lava,
 /mob/living/simple_animal/hostile/retaliate/clown,
-/turf/open/floor/noslip{
-	initial_gas_mix = "LAVALAND_ATMOS"
-	},
+/turf/open/floor/noslip,
 /area/ruin/powered/clownplanet)
 
 (1,1,1) = {"

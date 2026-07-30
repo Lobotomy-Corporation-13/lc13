@@ -65,7 +65,6 @@
 	)
 
 //breach related
-	var/can_act = TRUE
 	var/transformed = FALSE
 	pet_bonus = "meows" //saves a few lines of code by allowing funpet() to be called by attack_hand()
 
@@ -169,7 +168,7 @@
 		icon_state = IsContained() ? initial(icon_state) : icon_aggro
 		return
 	user.visible_message(span_warning("[src] mutilates [user]!"), span_userdanger("[src] mutilates you!"))
-	user.deal_damage(3000, RED_DAMAGE)
+	user.deal_damage(3000, RED_DAMAGE, flags = (DAMAGE_FORCED))
 	playsound(user, 'sound/abnormalities/helper/attack.ogg', 100, FALSE, 4)
 	attack_sound = initial(attack_sound)
 	if(user.stat == DEAD)

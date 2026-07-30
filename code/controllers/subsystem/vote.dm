@@ -13,7 +13,7 @@ SUBSYSTEM_DEF(vote)
 	var/initiator
 	var/mode
 	var/question
-	var/started_time
+	var/list/last_vote_time_per_votetype = list()
 	var/time_remaining
 	var/list/voted = list()
 	var/list/voting = list()
@@ -22,6 +22,7 @@ SUBSYSTEM_DEF(vote)
 /datum/controller/subsystem/vote/fire()
 	if(!mode)
 		return
+	var/started_time = last_vote_time_per_votetype[mode] || 0
 	time_remaining = round((started_time + CONFIG_GET(number/vote_period) - world.time)/10)
 	if(time_remaining < 0)
 		result()
@@ -63,15 +64,16 @@ SUBSYSTEM_DEF(vote)
 				choices["Continue Playing"] += non_voters.len
 				if(choices["Continue Playing"] >= greatest_votes)
 					greatest_votes = choices["Continue Playing"]
+
+			/* Gamemodes don't EXIST
 			else if(mode == "gamemode")
-				/*
 				var/random_gamemode = pick(choices)
 				choices[random_gamemode] += non_voters.len
 				if(choices[random_gamemode] >= greatest_votes)
 					greatest_votes = choices[random_gamemode]
-				*/
-				// Nothing happens! Absolutely nothing.
 				non_voters = list() // Clear out that list.
+			*/
+
 			else if(mode == "map")
 				for (var/non_voter_ckey in non_voters)
 					var/client/C = non_voters[non_voter_ckey]
@@ -86,6 +88,10 @@ SUBSYSTEM_DEF(vote)
 				choices["Continue Playing"] += non_voters.len
 				if(choices["Continue Playing"] >= greatest_votes)
 					greatest_votes = choices["Continue Playing"]
+			else if(mode == "submap")
+				// For submap votes, non-voters don't affect the result
+				// The first option will be selected if it's a tie
+				non_voters = list()
 
 			// Non voters will automatically count as votes for default gamespeed.
 			else if(mode == "gamespeed")
@@ -98,7 +104,6 @@ SUBSYSTEM_DEF(vote)
 					choices[default.player_facing_name] += length(non_voters)
 					if(choices[default.player_facing_name] >= greatest_votes)
 						greatest_votes = choices[default.player_facing_name]
-				
 
 	. = list()
 	if(greatest_votes)
@@ -144,15 +149,26 @@ SUBSYSTEM_DEF(vote)
 			if("restart")
 				if(. == "Restart Round")
 					restart = TRUE
+
+			/* We don't do that gamemode stuff here.........
 			if("gamemode")
 				var/chosen_mode = choice_tags[choices.Find(.)]
 				if(GLOB.master_mode != chosen_mode)
 					SSticker.save_mode(chosen_mode)
 					if(!SSticker.HasRoundStarted())
 						GLOB.master_mode = chosen_mode
+			*/
 			if("map")
 				SSmapping.changemap(global.config.maplist[.])
 				SSmapping.map_voted = TRUE
+			if("submap")
+				var/selected_file = choice_tags[choices.Find(.)]
+				if(SSmapping.next_map_config && SSmapping.next_map_config.SetSelectedSubmap(selected_file))
+					to_chat(world, span_boldannounce("Map variant selected: [.]"))
+					// Save the updated config
+					SSmapping.next_map_config.MakeNextMap()
+				else
+					to_chat(world, span_warning("Failed to set map variant!"))
 			if("transfer")
 				if(. == "Initiate Crew Transfer")
 					SSshuttle.emergency.request(noannounce = TRUE)
@@ -174,9 +190,7 @@ SUBSYSTEM_DEF(vote)
 					if((. == setting.player_facing_name) && (SSlobotomy_corp.gamespeed.player_facing_name != .))
 						// Adjust the gamespeed to the new one and announce it.
 						SSlobotomy_corp.AdjustGamespeed(setting)
-						priority_announce("Personnel must be advised: As a result of changes in internal Enkephalin filtering procedures, Ordeal events for this shift will occur within fewer meltdowns than is the norm. \
-						To compensate for this, Extraction has agreed to speed up Abnormality delivery accordingly.",\
-						"Ordeal Frequency Notice", 'sound/machines/dun_don_alert.ogg')
+
 	if(restart)
 		var/active_admins = FALSE
 		for(var/client/C in GLOB.admins + GLOB.deadmins)
@@ -222,95 +236,119 @@ SUBSYSTEM_DEF(vote)
 	if(GLOB.admin_datums[ckey])
 		lower_admin = TRUE
 
-	if(!mode)
-		if(started_time)
-			var/next_allowed_time = (started_time + CONFIG_GET(number/vote_delay))
-			if(mode)
-				to_chat(usr, span_warning("There is already a vote in progress! please wait for it to finish."))
-				return FALSE
-			if(next_allowed_time > world.time && !lower_admin)
-				to_chat(usr, span_warning("A vote was initiated recently, you must wait [DisplayTimeText(next_allowed_time-world.time)] before a new vote can be started!"))
-				return FALSE
+	if(mode)
+		to_chat(usr, span_warning("There is already a vote in progress! Please wait for it to finish."))
+		return FALSE
 
-		reset()
-		switch(vote_type)
-			if("restart")
-				choices.Add("Restart Round","Continue Playing")
-			if("gamemode")
-				choice_tags.Add(config.votable_modes)
-				choices.Add(config.votable_mode_names)
-			if("map")
-				if(!lower_admin && SSmapping.map_voted)
-					to_chat(usr, span_warning("The next map has already been selected."))
-					return FALSE
-				// Randomizes the list so it isn't always METASTATION
-				var/list/maps = list()
-				for(var/map in global.config.maplist)
-					var/datum/map_config/VM = config.maplist[map]
-					if(!VM.votable)
-						continue
-					var/player_count = GLOB.clients.len
-					if(VM.config_max_users > 0 && player_count >= VM.config_max_users)
-						continue
-					if(VM.config_min_users > 0 && player_count <= VM.config_min_users)
-						continue
-					maps += VM.map_name
-					shuffle_inplace(maps)
-				for(var/valid_map in maps)
-					choices.Add(valid_map)
-			if("transfer")
-				var/list/ignore_vote = list(
-					SHUTTLE_IGNITING,
-					SHUTTLE_CALL,
-					SHUTTLE_ENDGAME,
-					SHUTTLE_ESCAPE,
-					SHUTTLE_DOCKED,
-					SHUTTLE_PREARRIVAL
-				)
-				if(SSshuttle.emergency.mode in ignore_vote)
-					return FALSE
-				choices.Add("Initiate Crew Transfer", "Continue Playing")
+	var/last_started_time = last_vote_time_per_votetype[vote_type] || 0
+	var/next_allowed_time = last_started_time ? (last_started_time + CONFIG_GET(number/vote_delay)) : 0
+	if(next_allowed_time > world.time && !lower_admin)
+		to_chat(usr, span_warning("This type of vote was held recently, you must wait [DisplayTimeText(next_allowed_time-world.time)] before a new [vote_type] vote can be started!"))
+		return FALSE
 
-			if("gamespeed")
-				question = "Change Game Speed?"
-				// Pull the available gamespeeds from the lobcorp subsystem, but only add the enabled ones to the vote.
-				for(var/datum/gamespeed_setting/speed_setting in SSlobotomy_corp.available_gamespeeds)
-					if(speed_setting.available_setting)
-						choices.Add(speed_setting.player_facing_name)
+	reset()
 
-			if("custom")
-				question = stripped_input(usr,"What is the vote for?")
-				if(!question)
-					return FALSE
-				for(var/i=1,i<=10,i++)
-					var/option = capitalize(stripped_input(usr,"Please enter an option or hit cancel to finish"))
-					if(!option || mode || !usr.client)
-						break
-					choices.Add(option)
-			else
+	switch(vote_type)
+		if("restart")
+			choices.Add("Restart Round","Continue Playing")
+
+		/* Commented out 'cause we don't use gamemodes in LC13!!!
+		if("gamemode")
+			choice_tags.Add(config.votable_modes)
+			choices.Add(config.votable_mode_names)*/
+
+		if("map")
+			if(!lower_admin && SSmapping.map_voted)
+				to_chat(usr, span_warning("The next map has already been selected."))
 				return FALSE
-		mode = vote_type
-		initiator = initiator_key
-		started_time = world.time
-		var/text = "[capitalize(mode)] vote started by [initiator ? initiator : "CentCom"]."
-		if(mode == "custom")
-			text += "\n[question]"
-		log_vote(text)
-		var/vp = CONFIG_GET(number/vote_period)
-		to_chat(world, "\n<span class='userdanger'><font color='purple'><b>[text]</b>\nType <b>vote</b> or click <a href='byond://winset?command=vote'>here</a> to place your votes.\nYou have [DisplayTimeText(vp)] to vote.</font></span>")
-		time_remaining = round(vp/10)
-		for(var/c in GLOB.clients)
-			var/client/C = c
-			var/datum/action/vote/V = new
-			if(question)
-				V.name = "Vote: [question]"
-			C.player_details.player_actions += V
-			V.Grant(C.mob)
-			generated_actions += V
-			if(C.prefs.toggles & SOUND_ANNOUNCEMENTS)
-				SEND_SOUND(C, sound('sound/misc/bloop.ogg'))
-		return TRUE
-	return FALSE
+			// Randomizes the list so it isn't always METASTATION
+			var/list/maps = list()
+			for(var/map in global.config.maplist)
+				var/datum/map_config/VM = config.maplist[map]
+				if(!VM.votable)
+					continue
+				var/player_count = GLOB.clients.len
+				if(VM.config_max_users > 0 && player_count >= VM.config_max_users)
+					continue
+				if(VM.config_min_users > 0 && player_count <= VM.config_min_users)
+					continue
+				maps += VM.map_name
+				shuffle_inplace(maps)
+			for(var/valid_map in maps)
+				choices.Add(valid_map)
+
+		if("transfer")
+			var/list/ignore_vote = list(
+				SHUTTLE_IGNITING,
+				SHUTTLE_CALL,
+				SHUTTLE_ENDGAME,
+				SHUTTLE_ESCAPE,
+				SHUTTLE_DOCKED,
+				SHUTTLE_PREARRIVAL
+			)
+			if(SSticker.current_state != GAME_STATE_PLAYING || (SSshuttle.emergency.mode in ignore_vote))
+				to_chat(usr, span_warning("You can't call a transfer vote right now. The shift's either not started, already ended, or the shuttle is unavailable."))
+				return FALSE
+			choices.Add("Initiate Crew Transfer", "Continue Playing")
+
+		if("gamespeed")
+			question = "Change Game Speed?"
+			// Pull the available gamespeeds from the lobcorp subsystem, but only add the enabled ones to the vote.
+			for(var/datum/gamespeed_setting/speed_setting in SSlobotomy_corp.available_gamespeeds)
+				if(speed_setting.available_setting)
+					choices.Add(speed_setting.player_facing_name)
+
+		if("submap")
+			if(!SSmapping.next_map_config || !SSmapping.next_map_config.has_submaps)
+				return FALSE
+			question = "Select a variant for [SSmapping.next_map_config.map_name]:"
+			for(var/submap in SSmapping.next_map_config.available_submaps)
+				var/display_name
+				// Check if we have a custom display name
+				if(submap in SSmapping.next_map_config.submap_display_names)
+					display_name = SSmapping.next_map_config.submap_display_names[submap]
+				else
+					// Fall back to cleaned up filename
+					display_name = replacetext(submap, ".dmm", "")
+					display_name = replacetext(display_name, "_", " ")
+					display_name = capitalize(display_name)
+				choices.Add(display_name)
+				choice_tags.Add(submap) // Store actual filename
+
+		if("custom")
+			question = stripped_input(usr,"What is the vote for?")
+			if(!question)
+				return FALSE
+			for(var/i=1,i<=10,i++)
+				var/option = capitalize(stripped_input(usr,"Please enter an option or hit cancel to finish"))
+				if(!option || mode || !usr.client)
+					break
+				choices.Add(option)
+		else
+			return FALSE
+
+	mode = vote_type
+	initiator = initiator_key
+	last_vote_time_per_votetype[vote_type] = world.time
+	var/text = "[capitalize(mode)] vote started by [initiator ? initiator : "CentCom"]."
+	if(mode == "custom")
+		text += "\n[question]"
+	log_vote(text)
+	var/vp = CONFIG_GET(number/vote_period)
+	to_chat(world, "\n<span class='userdanger'><font color='purple'><b>[text]</b>\nType <b>vote</b> or click <a href='byond://winset?command=vote'>here</a> to place your votes.\nYou have [DisplayTimeText(vp)] to vote.</font></span>")
+	time_remaining = round(vp/10)
+	for(var/c in GLOB.clients)
+		var/client/C = c
+		var/datum/action/vote/V = new
+		if(question)
+			V.name = "Vote: [question]"
+		C.player_details.player_actions += V
+		V.Grant(C.mob)
+		generated_actions += V
+		if(C.prefs.toggles & SOUND_ANNOUNCEMENTS)
+			SEND_SOUND(C, sound('sound/misc/bloop.ogg'))
+
+	return TRUE
 
 /mob/verb/vote()
 	set category = "OOC"
@@ -332,7 +370,7 @@ SUBSYSTEM_DEF(vote)
 /datum/controller/subsystem/vote/ui_data(mob/user)
 	var/list/data = list(
 		"allow_vote_map" = CONFIG_GET(flag/allow_vote_map),
-		"allow_vote_mode" = CONFIG_GET(flag/allow_vote_mode),
+		//"allow_vote_mode" = CONFIG_GET(flag/allow_vote_mode),
 		"allow_vote_transfer" = CONFIG_GET(flag/allow_vote_transfer),
 		"allow_vote_restart" = CONFIG_GET(flag/allow_vote_restart),
 		"choices" = list(),
@@ -378,9 +416,12 @@ SUBSYSTEM_DEF(vote)
 		if("toggle_restart")
 			if(usr.client.holder && upper_admin)
 				CONFIG_SET(flag/allow_vote_restart, !CONFIG_GET(flag/allow_vote_restart))
+		/* Commented out 'cause we don't use gamemode in LC13!!!!
 		if("toggle_gamemode")
 			if(usr.client.holder && upper_admin)
 				CONFIG_SET(flag/allow_vote_mode, !CONFIG_GET(flag/allow_vote_mode))
+		*/
+
 		if("toggle_map")
 			if(usr.client.holder && upper_admin)
 				CONFIG_SET(flag/allow_vote_map, !CONFIG_GET(flag/allow_vote_map))
@@ -390,9 +431,12 @@ SUBSYSTEM_DEF(vote)
 		if("restart")
 			if(CONFIG_GET(flag/allow_vote_restart) || usr.client.holder)
 				initiate_vote("restart",usr.key)
+		/* Commented out 'cause we don't use gamemode in LC13!!!!!
 		if("gamemode")
 			if(CONFIG_GET(flag/allow_vote_mode) || usr.client.holder)
 				initiate_vote("gamemode",usr.key)
+		*/
+
 		if("map")
 			if(CONFIG_GET(flag/allow_vote_map) || usr.client.holder)
 				initiate_vote("map",usr.key)

@@ -1,4 +1,5 @@
 /obj/item/food/cake
+	name = "cake"
 	icon = 'icons/obj/food/piecake.dmi'
 	bite_consumption = 3
 	max_volume = 80
@@ -11,6 +12,7 @@
 	AddComponent(/datum/component/food_storage)
 
 /obj/item/food/cakeslice
+	name = "cake slice"
 	icon = 'icons/obj/food/piecake.dmi'
 	trash_type = /obj/item/trash/plate
 	food_reagents = list(/datum/reagent/consumable/nutriment = 4, /datum/reagent/consumable/nutriment/vitamin = 1)
@@ -202,7 +204,7 @@
 
 /obj/item/food/cake/birthday/energy/proc/energy_bite(mob/living/user)
 	to_chat(user, "<font color='red' size='5'>As you eat the cake, you accidentally hurt yourself on the embedded energy sword!</font>")
-	user.apply_damage(30,BRUTE,BODY_ZONE_HEAD)
+	user.deal_damage(30, BRUTE, flags = (DAMAGE_FORCED), def_zone = BODY_ZONE_HEAD)
 	playsound(user, 'sound/weapons/blade1.ogg', 5, TRUE)
 
 /obj/item/food/cake/birthday/energy/attack(mob/living/M, mob/living/user)
@@ -226,7 +228,7 @@
 
 /obj/item/food/cakeslice/birthday/energy/proc/energy_bite(mob/living/user)
 	to_chat(user, "<font color='red' size='5'>As you eat the cake slice, you accidentally hurt yourself on the embedded energy dagger!</font>")
-	user.apply_damage(18,BRUTE,BODY_ZONE_HEAD)
+	user.deal_damage(18, BRUTE, flags = (DAMAGE_FORCED), def_zone = BODY_ZONE_HEAD)
 	playsound(user, 'sound/weapons/blade1.ogg', 5, TRUE)
 
 /obj/item/food/cakeslice/birthday/energy/attack(mob/living/M, mob/living/user)

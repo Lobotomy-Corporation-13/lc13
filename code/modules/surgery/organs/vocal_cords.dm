@@ -70,7 +70,7 @@
 	var/obj/item/organ/vocal_cords/colossus/cords = null
 
 /datum/action/item_action/organ_action/colossus/New()
-	..()
+	. = ..()
 	cords = target
 
 /datum/action/item_action/organ_action/colossus/IsAvailable()
@@ -304,7 +304,7 @@
 		cooldown = COOLDOWN_DAMAGE
 		for(var/V in listeners)
 			var/mob/living/L = V
-			L.apply_damage(15 * power_multiplier, def_zone = BODY_ZONE_CHEST, wound_bonus=CANT_WOUND)
+			L.deal_damage(15 * power_multiplier, source = user, attack_type = (ATTACK_TYPE_SPECIAL), def_zone = BODY_ZONE_CHEST, wound_bonus=CANT_WOUND)
 
 	//BLEED
 	else if((findtext(message, bleed_words)))

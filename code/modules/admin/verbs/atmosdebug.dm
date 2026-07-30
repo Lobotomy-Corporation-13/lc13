@@ -1,4 +1,4 @@
-/client/proc/atmosscan()
+/* /client/proc/atmosscan()
 	set category = "Mapping"
 	set name = "Check Plumbing"
 	if(!src.holder)
@@ -19,7 +19,7 @@
 	//Pipes
 	for(var/obj/machinery/atmospherics/pipe/simple/pipe in GLOB.machines)
 		if(pipe.z && (!pipe.nodes || !pipe.nodes.len || (null in pipe.nodes)))
-			to_chat(usr, "Unconnected [pipe.name] located at [ADMIN_VERBOSEJMP(pipe)]", confidential = TRUE)
+			to_chat(usr, "Unconnected [pipe.name] located at [ADMIN_VERBOSEJMP(pipe)]", confidential = TRUE) */
 
 /client/proc/powerdebug()
 	set category = "Mapping"

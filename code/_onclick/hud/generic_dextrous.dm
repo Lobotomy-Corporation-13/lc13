@@ -49,12 +49,12 @@
 	zone_select.hud = src
 	zone_select.update_icon()
 	static_inventory += zone_select
-
+/*
 	using = new /atom/movable/screen/area_creator
 	using.icon = ui_style
 	using.hud = src
 	static_inventory += using
-
+ */
 	mymob.client.screen = list()
 
 	for(var/atom/movable/screen/inventory/inv in (static_inventory + toggleable_inventory))

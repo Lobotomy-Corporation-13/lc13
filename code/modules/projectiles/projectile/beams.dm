@@ -351,7 +351,7 @@
 	. = ..()
 	if(iscarbon(target))
 		var/mob/living/carbon/M = target
-		M.apply_damage(15, RED_DAMAGE, null, M.run_armor_check(null, RED_DAMAGE), spread_damage = TRUE)
+		M.deal_damage(15, RED_DAMAGE, firer, attack_type = (ATTACK_TYPE_RANGED))
 
 /obj/projectile/beam/nobody_friendly
 	name = "whip"
@@ -399,4 +399,31 @@
 	damage_type = PALE_DAMAGE
 	light_color = COLOR_PALE_BLUE_GRAY
 	icon_state = "omnilaser"
+	impact_effect_type = /obj/effect/temp_visual/impact_effect/blue_laser
+
+// Heavy IFF projectiles
+/obj/projectile/beam/laser/iff/heavy
+	damage = 100
+	icon_state = "heavylaser"
+	tracer_type = /obj/effect/projectile/tracer/heavy_laser
+	muzzle_type = /obj/effect/projectile/muzzle/heavy_laser
+	impact_type = /obj/effect/projectile/impact/heavy_laser
+
+/obj/projectile/beam/laser/iff/heavy/white
+	damage_type = WHITE_DAMAGE
+	light_color = COLOR_WHITE
+	icon_state = "whiteheavylaser"
+	impact_effect_type = /obj/effect/temp_visual/impact_effect/white_laser
+
+/obj/projectile/beam/laser/iff/heavy/black
+	damage_type = BLACK_DAMAGE
+	light_color = COLOR_PURPLE
+	icon_state = "purpleheavylaser"
+	impact_effect_type = /obj/effect/temp_visual/impact_effect/purple_laser
+
+/obj/projectile/beam/laser/iff/heavy/pale
+	damage = 35
+	damage_type = PALE_DAMAGE
+	light_color = COLOR_PALE_BLUE_GRAY
+	icon_state = "blueheavylaser"
 	impact_effect_type = /obj/effect/temp_visual/impact_effect/blue_laser

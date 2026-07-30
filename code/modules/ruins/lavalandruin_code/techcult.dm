@@ -58,9 +58,9 @@
 	allowed = list(/obj/item/flashlight, /obj/item/tank/internals, /obj/item/pickaxe, /obj/item/organ/regenerative_core/legion, /obj/item/kitchen/knife/combat/bone, /obj/item/kitchen/knife/combat/survival, /obj/item/gun/energy)
 	armor = list("melee" = 30, "bullet" = 10, "laser" = 20, "energy" = 30, "bomb" = 30, "bio" = 60, "rad" = 30, "fire" = 60, "acid" = 60)
 	hoodtype = /obj/item/clothing/head/hooded/techpriest/armor/plate
-	min_cold_protection_temperature = FIRE_SUIT_MIN_TEMP_PROTECT
+	min_cold_protection_temperature = TRUE
 	cold_protection = CHEST|GROIN|LEGS|ARMS
-	max_heat_protection_temperature = FIRE_SUIT_MAX_TEMP_PROTECT
+	max_heat_protection_temperature = TRUE
 	heat_protection = CHEST|GROIN|LEGS|ARMS
 	resistance_flags = FIRE_PROOF
 
@@ -72,8 +72,8 @@
 	name = "armored techpriest's hood"
 	desc = "An armored version of hood worn by followers of the machine god."
 	armor = list("melee" = 30, "bullet" = 10, "laser" = 20, "energy" = 30, "bomb" = 30, "bio" = 60, "rad" = 30, "fire" = 60, "acid" = 60)
-	min_cold_protection_temperature = FIRE_HELM_MIN_TEMP_PROTECT
-	max_heat_protection_temperature = FIRE_HELM_MAX_TEMP_PROTECT
+	min_cold_protection_temperature = TRUE
+	max_heat_protection_temperature = TRUE
 
 /obj/item/clothing/head/hooded/techpriest/armor/plate/Initialize()
 	. = ..()
@@ -87,10 +87,10 @@
 	armor = list("melee" = 75, "bullet" = 40, "laser" = 40, "energy" = 40, "bomb" = 50, "bio" = 100, "rad" = 40, "fire" = 100, "acid" = 100)
 	hoodtype = /obj/item/clothing/head/hooded/techpriest/armor/lead
 	cold_protection = CHEST|GROIN|LEGS|ARMS
-	min_cold_protection_temperature = FIRE_SUIT_MIN_TEMP_PROTECT
+	min_cold_protection_temperature = TRUE
 	heat_protection = CHEST|GROIN|LEGS|FEET|ARMS|HANDS
 	body_parts_covered = CHEST|GROIN|LEGS|FEET|ARMS|HANDS
-	max_heat_protection_temperature = FIRE_IMMUNITY_MAX_TEMP_PROTECT
+	max_heat_protection_temperature = TRUE
 	resistance_flags = FIRE_PROOF | ACID_PROOF
 	transparent_protection = HIDEGLOVES|HIDESUITSTORAGE|HIDEJUMPSUIT|HIDESHOES
 	var/suit_faction = "Mechanicus"
@@ -104,8 +104,8 @@
 	desc = "From the weakness of the mind, Omnissiah set us free."
 	armor = list("melee" = 75, "bullet" = 40, "laser" = 40, "energy" = 40, "bomb" = 50, "bio" = 100, "rad" = 40, "fire" = 100, "acid" = 100)
 	heat_protection = HEAD
-	min_cold_protection_temperature = FIRE_HELM_MIN_TEMP_PROTECT
-	max_heat_protection_temperature = FIRE_IMMUNITY_MAX_TEMP_PROTECT
+	min_cold_protection_temperature = TRUE
+	max_heat_protection_temperature = TRUE
 	resistance_flags = FIRE_PROOF | ACID_PROOF
 	transparent_protection = HIDEMASK
 
@@ -443,20 +443,10 @@
 	name = "quadro-cybernetic lungs"
 	desc = "Advanced set of cybernetic lungs capable of filtering high amounts of toxins, cold and heat in the air. This one is capable of working with as low as 6KPa of oxygen. Supplies the body with salbutamol, should the user enter critical condition."
 	icon_state = "lungs-c-u2"
-	safe_toxins_max = 50
-	safe_co2_max = 50
-	safe_oxygen_min = 6
 	maxHealth = 3 * STANDARD_ORGAN_THRESHOLD
 	emp_vulnerability = 5
 
 	var/dose_available = TRUE
-
-	cold_level_1_threshold = 140
-	cold_level_2_threshold = 80
-	cold_level_3_threshold = 30
-	heat_level_1_threshold = 800
-	heat_level_2_threshold = 1600
-	heat_level_3_threshold = 2400
 
 /obj/item/organ/lungs/cybernetic/tier4/on_life()
 	. = ..()

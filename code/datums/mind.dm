@@ -44,6 +44,7 @@
 	var/list/datum/objective/objectives = list()
 
 	var/list/spell_list = list() // Wizard mode & "Give Spell" badmin button.
+	var/list/bound_action_list = list() // LC13 addition: For skills or actions that you'd like to bind to this mind. Intended primarily for Association Fixer skills and similar. These should be learned skills like martial techniques tied to the IC character.
 
 	var/datum/martial_art/martial_art
 	var/static/default_martial_art = new/datum/martial_art
@@ -758,6 +759,26 @@
 	for(var/obj/effect/proc_holder/S in spell_list)
 		RemoveSpell(S)
 
+// LC13 addition: Mostly copypasted Spell add/remove code. Intended for actions like Associate Fixer skills, that should be bound to one mind regardless of how many bodies it hops.
+/datum/mind/proc/AddBoundAction(datum/action/incoming_bound_action)
+	if(!current || !isliving(current) || !istype(incoming_bound_action))
+		return
+	bound_action_list += incoming_bound_action
+	incoming_bound_action.Grant(current)
+
+/datum/mind/proc/RemoveBoundAction(datum/action/action_to_remove)
+	if(!current || !isliving(current) || !action_to_remove)
+		return
+	for(var/X in bound_action_list)
+		var/datum/action/A = X
+		if(istype(A, action_to_remove))
+			bound_action_list -= A
+			qdel(A)
+
+/datum/mind/proc/RemoveAllBoundActions()
+	for(var/datum/action/A in bound_action_list)
+		RemoveBoundAction(A)
+
 /datum/mind/proc/transfer_martial_arts(mob/living/new_character)
 	if(!ishuman(new_character))
 		return
@@ -771,6 +792,8 @@
 	if(current?.actions)
 		for(var/datum/action/A in current.actions)
 			A.Grant(new_character)
+	for(var/datum/action/bound_action in bound_action_list)
+		bound_action.Grant(new_character)
 	transfer_mindbound_actions(new_character)
 
 /datum/mind/proc/transfer_mindbound_actions(mob/living/new_character)

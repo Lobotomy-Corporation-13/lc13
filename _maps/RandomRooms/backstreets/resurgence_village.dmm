@@ -444,7 +444,7 @@
 	icon_state = "wishwell";
 	name = "well";
 	density = 1;
-	icon = 'ModularTegustation/Teguicons/toolabnormalities.dmi';
+	icon = 'ModularLobotomy/_Lobotomyicons/toolabnormalities.dmi';
 	pixel_y = -3
 	},
 /turf/open/floor/plating/dirt/jungle/wasteland,
@@ -475,6 +475,7 @@
 /obj/effect/turf_decal/weather/dirt{
 	dir = 1
 	},
+/obj/item/quest_ticket/temple_motus,
 /turf/open/floor/plating/ironsand,
 /area/city/backstreets_room/resurgence_village)
 "BZ" = (
@@ -681,7 +682,7 @@
 	icon_state = "wishwell";
 	name = "well";
 	density = 1;
-	icon = 'ModularTegustation/Teguicons/toolabnormalities.dmi';
+	icon = 'ModularLobotomy/_Lobotomyicons/toolabnormalities.dmi';
 	pixel_y = -3
 	},
 /turf/open/floor/plating/ironsand,

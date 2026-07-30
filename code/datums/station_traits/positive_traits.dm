@@ -100,7 +100,7 @@
 	SIGNAL_HANDLER
 	var/scarf_type = pick(scarves)
 
-	living_mob.equip_to_slot_or_del(new scarf_type(living_mob), ITEM_SLOT_NECK, initial = FALSE)
+	INVOKE_ASYNC(living_mob, TYPE_PROC_REF(/mob/living, equip_to_slot_or_del), new scarf_type(living_mob), ITEM_SLOT_NECK, FALSE)
 
 /datum/station_trait/filled_maint
 	name = "Filled up maintenance"

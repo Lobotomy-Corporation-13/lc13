@@ -82,9 +82,6 @@
 /turf/open/indestructible/white,
 /area/city/backstreets_room)
 "U" = (
-/obj/machinery/atmospherics/components/unary/cryo_cell{
-	plane = 0
-	},
 /mob/living/carbon/human{
 	anchored = 1;
 	pixel_y = 24

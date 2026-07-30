@@ -43,7 +43,7 @@ new /datum/disease_ability/symptom/powerful/heal/chem,
 new /datum/disease_ability/symptom/powerful/heal/metabolism,
 new /datum/disease_ability/symptom/powerful/heal/dark,
 new /datum/disease_ability/symptom/powerful/heal/water,
-new /datum/disease_ability/symptom/powerful/heal/plasma,
+// new /datum/disease_ability/symptom/powerful/heal/plasma,
 new /datum/disease_ability/symptom/powerful/heal/radiation,
 new /datum/disease_ability/symptom/powerful/heal/coma,
 new /datum/disease_ability/symptom/powerful/youth
@@ -222,7 +222,7 @@ new /datum/disease_ability/symptom/powerful/youth
 		var/datum/disease/advance/sentient_disease/SD = D.hosts[L]
 
 		for(var/mob/living/M in oview(4, SD.affected_mob))
-			if(is_A_facing_B(SD.affected_mob, M) && disease_air_spread_walk(get_turf(SD.affected_mob), get_turf(M)))
+			if(is_A_facing_B(SD.affected_mob, M))
 				M.AirborneContractDisease(SD, TRUE)
 
 	StartCooldown()
@@ -445,8 +445,8 @@ new /datum/disease_ability/symptom/powerful/youth
 /datum/disease_ability/symptom/powerful/heal/water
 	symptoms = list(/datum/symptom/heal/water)
 
-/datum/disease_ability/symptom/powerful/heal/plasma
-	symptoms = list(/datum/symptom/heal/plasma)
+/* /datum/disease_ability/symptom/powerful/heal/plasma
+	symptoms = list(/datum/symptom/heal/plasma) */
 
 /datum/disease_ability/symptom/powerful/heal/radiation
 	symptoms = list(/datum/symptom/heal/radiation)

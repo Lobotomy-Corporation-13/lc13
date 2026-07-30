@@ -61,7 +61,7 @@
 	SSlobotomy_corp.completed_challenges += akward_record_formatting
 	SSlobotomy_corp.completed_challenges[akward_record_formatting] = level
 
-	if(SSmaptype.chosen_trait != FACILITY_TRAIT_ABNO_BLITZ)
+	if(!SSlobotomy_corp.BlitzActive())
 		SSlobotomy_corp.ordeal_stats += 5
 	for(var/mob/living/carbon/human/person as anything in SSabnormality_queue.active_suppression_agents)
 		if(!istype(person) || QDELETED(person)) // gibbed or cryo'd, we no longer care about them
@@ -97,6 +97,9 @@
 	if(level == 4 && start_time <= (CONFIG_GET(number/suppression_time_limit) + (GetFacilityUpgradeValue(UPGRADE_MELTDOWN_INCREASE) * 20 MINUTES)))
 		// Extra cores, and announced!
 		addtimer(CALLBACK(SSlobotomy_corp, TYPE_PROC_REF(/datum/controller/subsystem/lobotomy_corp, PickPotentialSuppressions), TRUE, TRUE), 15 SECONDS)
+		// Check to see if we have a Manager at this point, 'cause if we don't, we should at least allow the Agents to try an Extra on their own if they want.
+		// A check for this is also done by ticker.dm a while after roundstart, but a Manager could've died/cryo'd since then.
+		addtimer(CALLBACK(SSlobotomy_corp, TYPE_PROC_REF(/datum/controller/subsystem/lobotomy_corp, LiftCoreSelectionRestriction)), 20 SECONDS)
 	/// If it was a dusk - we end running core suppression
 	else if(level == 3 && istype(SSlobotomy_corp.core_suppression))
 		addtimer(CALLBACK(SSlobotomy_corp.core_suppression, TYPE_PROC_REF(/datum/suppression, End)), 5 SECONDS)
@@ -126,6 +129,9 @@
 
 /// Can be overridden for event ordeals
 /datum/ordeal/proc/AbleToRun()
+	if(SSmaptype.maptype in SSmaptype.unique_ordeals)
+		can_run = FALSE
+		return FALSE
 	return can_run
 
 //Global special blurb

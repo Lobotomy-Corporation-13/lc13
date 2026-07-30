@@ -1,4 +1,4 @@
-/obj/machinery/atmospherics/components/binary
+/* /obj/machinery/atmospherics/components/binary
 	icon = 'icons/obj/atmospherics/components/binary_devices.dmi'
 	dir = SOUTH
 	initialize_directions = SOUTH|NORTH
@@ -23,3 +23,4 @@
 			return 1
 		if(2, 4)
 			return 2
+ */

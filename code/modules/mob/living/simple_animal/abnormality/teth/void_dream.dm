@@ -16,7 +16,6 @@
 
 	attack_verb_continuous = "nuzzles"
 	attack_verb_simple = "nuzzles"
-	faction = list("neutral", "hostile")
 	can_breach = TRUE
 	threat_level = TETH_LEVEL
 	start_qliphoth = 2
@@ -111,8 +110,6 @@
 /mob/living/simple_animal/hostile/abnormality/voiddream/proc/SleepyDart()
 	var/list/possibletargets = list()
 	for(var/mob/living/carbon/human/H in view(10, src))
-		if(faction_check(src.faction, H.faction))
-			continue
 		if(H.IsSleeping())
 			continue
 		if(H.stat >= SOFT_CRIT)
@@ -137,7 +134,7 @@
 			L.SetSleeping(0)
 			L.adjustSanityLoss(1000) //Die.
 			continue
-		L.deal_damage(pulse_damage, WHITE_DAMAGE)
+		L.deal_damage(pulse_damage, WHITE_DAMAGE, src, attack_type = (ATTACK_TYPE_SPECIAL))
 	for(var/i = 1 to 5)
 		var/obj/effect/temp_visual/screech/S = new(get_turf(src))
 		S.pixel_y = 16

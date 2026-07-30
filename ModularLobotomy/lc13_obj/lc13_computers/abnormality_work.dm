@@ -33,16 +33,27 @@
 		"abnochem" = 0,
 		"workrate" = 0,
 		"meltdown" = 0,
+		"radio" = 0,
+		"vitals" = 0,
+		"free work" = 0,
 		)
+
+	/// Gotta give this thing a radio for an upgrade
+	var/obj/item/radio/Radio
 
 /obj/machinery/computer/abnormality/Initialize()
 	. = ..()
 	GLOB.lobotomy_devices += src
 	flags_1 |= NODECONSTRUCT_1
+	Radio = new /obj/item/radio(src)
+	Radio.listening = 0
 
 /obj/machinery/computer/abnormality/Destroy()
 	GLOB.lobotomy_devices -= src
-	..()
+	EOTool = null
+	linked_panel = null
+	datum_reference = null
+	return ..()
 
 /obj/machinery/computer/abnormality/update_overlays()
 	. = ..()
@@ -83,9 +94,9 @@
 		upgrade_list += "[i]|"
 	. += upgrade_list
 
-/obj/machinery/computer/abnormality/ui_interact(mob/user)
+/obj/machinery/computer/abnormality/ui_interact(mob/user, via_notepad = FALSE)
 	. = ..()
-	if(isliving(user))
+	if(isliving(user) && !via_notepad)
 		playsound(src, 'sound/machines/terminal_prompt_confirm.ogg', 50, FALSE)
 	if(!istype(datum_reference))
 		to_chat(user, span_boldannounce("The console has no information stored!"))
@@ -135,6 +146,13 @@
 	popup.open()
 	return
 
+/// We'll let people holding abnormality_work_notepad bypass the adjacency check if they're within 2 tiles and in LOS.
+/obj/machinery/computer/abnormality/adjacency_check(mob/living/user)
+	. = ..()
+	if(istype(user.get_active_held_item(), /obj/item/abnormality_work_notepad))
+		if(can_see(user, src, 1))
+			return TRUE
+
 /obj/machinery/computer/abnormality/Topic(href, href_list)
 	. = ..()
 	if(.)
@@ -148,13 +166,17 @@
 			if(datum_reference.working)
 				to_chat(usr, span_warning("The console is currently being operated!"))
 				return
-			if(!istype(datum_reference.current) || (datum_reference.current.stat == DEAD))
+			if((!istype(datum_reference.current) && !datum_reference.stupid) || (datum_reference.current.stat == DEAD))
 				to_chat(usr, span_warning("The Abnormality is currently in the process of revival!"))
 				return
 			if(!(datum_reference.current.status_flags & GODMODE))
 				to_chat(usr, span_warning("The Abnormality has breached containment!"))
 				return
-			var/work_attempt = datum_reference.current.AttemptWork(usr, href_list["do_work"])
+			var/work_attempt
+			if(!datum_reference.stupid)
+				work_attempt = datum_reference.current.AttemptWork(usr, href_list["do_work"])
+			else
+				work_attempt = TRUE
 			if(!work_attempt)
 				if(work_attempt == FALSE)
 					to_chat(usr, span_warning("This operation is currently unavailable."))
@@ -173,13 +195,20 @@
 			if(!(datum_reference.current.status_flags & GODMODE))
 				to_chat(usr, span_warning("The Abnormality has breached containment!"))
 				return
+			if(datum_reference.stupid)
+				to_chat(usr, span_warning("You should not even be able to attempt this!"))
+				return
 			datum_reference.current.FinalObservation(usr)
 
 	add_fingerprint(usr)
 	updateUsrDialog()
 
 /obj/machinery/computer/abnormality/proc/start_work(mob/living/carbon/human/user, work_type)
-	var/sanity_result = round(datum_reference.current.fear_level - get_user_level(user))
+	var/sanity_result
+	if(!datum_reference.stupid)
+		sanity_result = round(datum_reference.current.fear_level - get_user_level(user))
+	else
+		sanity_result = round(rand(1, 5) - get_user_level(user))
 	var/sanity_damage = 0
 	switch(sanity_result)
 		if(1)
@@ -198,6 +227,10 @@
 		SEND_GLOBAL_SIGNAL(COMSIG_GLOB_WORK_STARTED, datum_reference, user, work_type)
 	if(linked_panel)
 		linked_panel.console_working()
+	if(!user.Adjacent(src))
+		var/obj/item/card/id/idcard = user.get_idcard()
+		var/title = idcard?.assignment ? idcard.assignment + " " : null
+		say("Work commenced by [title][user].")
 	if(!HAS_TRAIT(user, TRAIT_WORKFEAR_IMMUNE))
 		user.adjustSanityLoss(sanity_damage)
 	if(user.stat == DEAD || user.sanity_lost)
@@ -252,25 +285,47 @@
 	while(total_boxes < work_time)
 		if(!CheckStatus(user))
 			break
-		work_speed = datum_reference.current.SpeedWorktickOverride(user, work_speed, init_work_speed, work_type)
+		if(!datum_reference.stupid)
+			work_speed = datum_reference.current.SpeedWorktickOverride(user, work_speed, init_work_speed, work_type)
 		if(do_after(user, work_speed, src, IGNORE_HELD_ITEM))
 			if(!CheckStatus(user))
 				break
 			for(var/shield_type in typesof(/datum/status_effect/interventionshield))
 				user.remove_status_effect(shield_type)
-			work_chance = datum_reference.current.ChanceWorktickOverride(user, work_chance, init_work_chance, work_type)
+			if(!datum_reference.stupid)
+				work_chance = datum_reference.current.ChanceWorktickOverride(user, work_chance, init_work_chance, work_type)
 			if(do_work(work_chance))
 				success_boxes++
-				datum_reference.current.WorktickSuccess(user)
+				if(!datum_reference.stupid)
+					datum_reference.current.WorktickSuccess(user)
 			else
-				datum_reference.current.WorktickFailure(user)
+				if(!datum_reference.stupid)
+					datum_reference.current.WorktickFailure(user)
+				else
+					user.deal_split_damage(datum_reference.work_damage_amount_dummy, datum_reference.work_damage_type_dummy, flags = (DAMAGE_FORCED))
+					var/turf/target_turf = get_ranged_target_turf(datum_reference.current, SOUTHWEST, 1)
+					var/obj/effect/temp_visual/roomdamage/damage = new(target_turf)
+					damage.icon_state = "[datum_reference.work_damage_type_dummy]"
+					var/damage_type = damage.icon_state
+					if(GLOB.damage_type_shuffler?.is_enabled && IsColorDamageType(damage_type))
+						damage.icon_state = GLOB.damage_type_shuffler.mapping_offense[damage_type]
 			total_boxes++
-			datum_reference.current.Worktick(user)
+			if(!datum_reference.stupid)
+				datum_reference.current.Worktick(user, work_type = work_type)
 		else
 			if(!CheckStatus(user)) // No punishment if the thing is already breached or any other issue is prevelant.
 				break
 			for(var/i = 0 to round((work_time - total_boxes)*(1-((work_chance*0.5)/100)), 1)) // Take double of what you'd fail on average as NE box damage.
-				datum_reference.current.WorktickFailure(user)
+				if(!datum_reference.stupid)
+					datum_reference.current.WorktickFailure(user)
+				else
+					user.deal_split_damage(datum_reference.work_damage_amount_dummy, datum_reference.work_damage_type_dummy, flags = (DAMAGE_FORCED))
+					var/turf/target_turf = get_ranged_target_turf(datum_reference.current, SOUTHWEST, 1)
+					var/obj/effect/temp_visual/roomdamage/damage = new(target_turf)
+					damage.icon_state = "[datum_reference.work_damage_type_dummy]"
+					var/damage_type = damage.icon_state
+					if(GLOB.damage_type_shuffler?.is_enabled && IsColorDamageType(damage_type))
+						damage.icon_state = GLOB.damage_type_shuffler.mapping_offense[damage_type]
 			playsound(src, 'sound/machines/synth_no.ogg', 75, FALSE, -4)
 			to_chat(user, span_warning("The Abnormality grows frustrated as you cut your work short!"))
 			success_boxes = 0
@@ -285,18 +340,31 @@
 
 /obj/machinery/computer/abnormality/proc/CheckStatus(mob/living/carbon/human/user)
 	if(user.sanity_lost)
+		if(mechanical_upgrades["vitals"])
+			Radio.set_frequency(FREQ_COMMON)
+			Radio.talk_into(src, "WARNING: [user.name] has gone insane during work with [datum_reference.GetName()].", FREQ_COMMON)
 		return FALSE // Lost sanity
+
+	//If for some reason our goober cannot die
+	if(!HAS_TRAIT(user, TRAIT_NOSOFTCRIT))
+		if(user.health < 0)
+			return FALSE // Dying
+
 	if(user.health < 0)
+		if(mechanical_upgrades["vitals"])
+			Radio.set_frequency(FREQ_COMMON)
+			Radio.talk_into(src, "WARNING: [user.name] has gone into critical condition during work with [datum_reference.GetName()].", FREQ_COMMON)
 		return FALSE // Dying
+
 	if(!(datum_reference.current.status_flags & GODMODE))
 		return FALSE // Somehow it escaped
 	return TRUE
 
 /obj/machinery/computer/abnormality/proc/do_work(chance)
 	if(prob(chance))
-		playsound(src, 'sound/machines/synth_yes.ogg', 25, FALSE, -4)
+		playsound(src, 'sound/machines/synth_yes.ogg', 25, FALSE, -2)
 		return TRUE
-	playsound(src, 'sound/machines/synth_no.ogg', 25, FALSE, -4)
+	playsound(src, 'sound/machines/synth_no.ogg', 25, FALSE, -2)
 	return FALSE
 
 /obj/machinery/computer/abnormality/proc/finish_work(mob/living/carbon/human/user, work_type, pe = 0, work_speed = 2 SECONDS, was_melting, canceled = FALSE)
@@ -319,9 +387,13 @@
 		else
 			audible_message(span_notice("Work Result: Bad"),\
 				span_notice("Work Result: Bad"))
+
+	if(mechanical_upgrades["radio"])
+		Radio.set_frequency(FREQ_COMMON)
+		Radio.talk_into(src, "[user.name] completed work on [datum_reference.GetName()] is completed. Result: [pe] PE generated.", FREQ_COMMON)
 	if(istype(user))
 		datum_reference.work_complete(user, work_type, pe, work_speed*datum_reference.max_boxes, was_melting, canceled)
-		if(recorded) //neither rabbit nor tutorial calls this
+		if(recorded && !mechanical_upgrades["free work"]) //neither rabbit nor tutorial calls this
 			SSlobotomy_corp.WorkComplete(pe, (meltdown_time <= 0))
 	chem_charges ++
 	meltdown_time = 0
@@ -339,7 +411,8 @@
 	meltdown_time = rand(min_time, max_time) + (GetFacilityUpgradeValue(UPGRADE_ABNO_MELT_TIME) * \
 					(GetCoreSuppression(/datum/suppression/command) ? 0.5 : 1))
 	meltdown = melt_type
-	datum_reference.current.MeltdownStart()
+	if(!datum_reference.stupid)
+		datum_reference.current.MeltdownStart()
 	update_icon()
 	if(linked_panel && mechanical_upgrades["meltdown"])
 		linked_panel.console_meltdown()

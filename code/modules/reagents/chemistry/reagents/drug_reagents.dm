@@ -236,8 +236,7 @@
 	M.adjustStaminaLoss(-18, 0)
 	M.adjustToxLoss(0.5, 0)
 	if(prob(50))
-		M.losebreath++
-		M.adjustOxyLoss(1, 0)
+		M.losebreath += (HUMAN_LOW_OXYLOSS_RATE/TICKS_PER_BREATH)
 	..()
 	. = 1
 
@@ -306,7 +305,7 @@
 	if(prob(5))
 		to_chat(M, "<span class='notice'>[pick("Go! Go! GO!", "You feel ready...", "You feel invincible...")]</span>")
 	if(prob(15))
-		M.losebreath++
+		M.losebreath += (HUMAN_LOW_OXYLOSS_RATE/TICKS_PER_BREATH)
 		M.adjustToxLoss(2, 0)
 	..()
 	. = 1
@@ -321,7 +320,7 @@
 	if(prob(15))
 		M.emote(pick("twitch","drool"))
 	if(prob(20))
-		M.losebreath++
+		M.losebreath += (HUMAN_LOW_OXYLOSS_RATE/TICKS_PER_BREATH)
 		M.adjustStaminaLoss(4, 0)
 	if(prob(15))
 		M.adjustToxLoss(2, 0)

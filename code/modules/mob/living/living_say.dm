@@ -15,6 +15,8 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 	RADIO_KEY_COMMAND = RADIO_CHANNEL_COMMAND,
 	RADIO_KEY_WELFARE = RADIO_CHANNEL_WELFARE,
 	RADIO_KEY_DISCIPLINE = RADIO_CHANNEL_DISCIPLINE,
+	RADIO_KEY_RECORDS = RADIO_CHANNEL_RECORDS,
+	RADIO_KEY_EXTRACTION = RADIO_CHANNEL_EXTRACTION,
 	RADIO_KEY_ARCHITECTURE = RADIO_CHANNEL_ARCHITECTURE,
 
 	// Faction
@@ -46,6 +48,8 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 	"с" = RADIO_CHANNEL_COMMAND,
 	"ц" = RADIO_CHANNEL_WELFARE,
 	"в" = RADIO_CHANNEL_DISCIPLINE,
+	// I'm sorry but I'm completely unfamiliar with Cyrillic and whatnot, adding Records & Extraction channels, but I don't really know what keys to put here for them.
+	// If you have this keyboard layout please do me a favour and add the association entries for Records and Architecture
 	"ф" = RADIO_CHANNEL_ARCHITECTURE,
 
 	// Faction
@@ -223,16 +227,6 @@ GLOBAL_LIST_INIT(message_modes_stat_limits, list(
 	if(radio_return & NOPASS)
 		return 1
 
-	//No screams in space, unless you're next to someone.
-	var/turf/T = get_turf(src)
-	var/datum/gas_mixture/environment = T.return_air()
-	var/pressure = (environment)? environment.return_pressure() : 0
-	if(pressure < SOUND_MINIMUM_PRESSURE)
-		message_range = 1
-
-	if(pressure < ONE_ATMOSPHERE*0.4) //Thin air, let's italicise the message
-		spans |= SPAN_ITALICS
-
 	send_speech(message, message_range, src, bubble_type, spans, language, message_mods)
 
 	if(succumbed)
@@ -355,7 +349,7 @@ GLOBAL_LIST_INIT(message_modes_stat_limits, list(
 			speech_bubble_recipients.Add(M.client)
 	var/image/I = image('icons/mob/talk.dmi', src, "[bubble_type][say_test(message)]", FLY_LAYER)
 	I.appearance_flags = APPEARANCE_UI_IGNORE_ALPHA
-	INVOKE_ASYNC(GLOBAL_PROC, GLOBAL_PROC_REF(flick_overlay), I, speech_bubble_recipients, 30)
+	INVOKE_ASYNC(GLOBAL_PROC, GLOBAL_PROC_REF(animate_speechbubble), I, speech_bubble_recipients, 30)
 
 /mob/proc/binarycheck()
 	return FALSE

@@ -28,23 +28,23 @@
 
 
 /turf/open/floor/plasteel/airless
-	initial_gas_mix = AIRLESS_ATMOS
+	// initial_gas_mix = AIRLESS_ATMOS
 
 /turf/open/floor/plasteel/telecomms
-	initial_gas_mix = TCOMMS_ATMOS
+	// initial_gas_mix = TCOMMS_ATMOS
 
 /turf/open/floor/plasteel/icemoon
-	initial_gas_mix = ICEMOON_DEFAULT_ATMOS
+	// initial_gas_mix = ICEMOON_DEFAULT_ATMOS
 
 /turf/open/floor/plasteel/dark
 	icon_state = "darkfull"
 	base_icon_state = "darkfull"
 
 /turf/open/floor/plasteel/dark/airless
-	initial_gas_mix = AIRLESS_ATMOS
+	// initial_gas_mix = AIRLESS_ATMOS
 
 /turf/open/floor/plasteel/dark/telecomms
-	initial_gas_mix = TCOMMS_ATMOS
+	// initial_gas_mix = TCOMMS_ATMOS
 
 /turf/open/floor/plasteel/airless/dark
 	icon_state = "darkfull"
@@ -88,7 +88,7 @@
 	base_icon_state = "whitecorner"
 
 /turf/open/floor/plasteel/white/telecomms
-	initial_gas_mix = TCOMMS_ATMOS
+	// initial_gas_mix = TCOMMS_ATMOS
 
 /turf/open/floor/plasteel/airless/showroomfloor
 	icon_state = "showroomfloor"
@@ -136,14 +136,14 @@
 	base_icon_state = "freezerfloor"
 
 /turf/open/floor/plasteel/freezer/airless
-	initial_gas_mix = AIRLESS_ATMOS
+	// initial_gas_mix = AIRLESS_ATMOS
 
 
 /turf/open/floor/plasteel/kitchen_coldroom
 	name = "cold room floor"
 
 /turf/open/floor/plasteel/kitchen_coldroom/Initialize()
-	initial_gas_mix = KITCHEN_COLDROOM_ATMOS
+	// initial_gas_mix = KITCHEN_COLDROOM_ATMOS
 	. = ..()
 
 /turf/open/floor/plasteel/kitchen_coldroom/freezerfloor
@@ -185,7 +185,7 @@
 	return
 
 /turf/open/floor/plasteel/cult/airless
-	initial_gas_mix = AIRLESS_ATMOS
+	// initial_gas_mix = AIRLESS_ATMOS
 
 
 /turf/open/floor/plasteel/stairs

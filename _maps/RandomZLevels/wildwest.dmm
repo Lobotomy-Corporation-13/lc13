@@ -51,9 +51,7 @@
 /turf/open/floor/circuit/off,
 /area/awaymission/wildwest/vault)
 "an" = (
-/turf/open/floor/plasteel/cult{
-	initial_gas_mix = "TEMP=2.7"
-	},
+/turf/open/floor/plasteel/cult,
 /area/awaymission/wildwest/vault)
 "ao" = (
 /turf/open/floor/circuit/green/off,
@@ -130,9 +128,7 @@
 /area/awaymission/wildwest/vault)
 "aL" = (
 /obj/item/paper/fluff/awaymissions/wildwest/grinder,
-/turf/open/floor/plasteel/cult{
-	initial_gas_mix = "TEMP=2.7"
-	},
+/turf/open/floor/plasteel/cult,
 /area/awaymission/wildwest/vault)
 "aM" = (
 /turf/closed/mineral/silver,
@@ -142,9 +138,7 @@
 /area/awaymission/wildwest/mines)
 "aO" = (
 /obj/effect/mob_spawn/human/corpse/syndicatecommando,
-/turf/open/floor/plasteel/cult{
-	initial_gas_mix = "TEMP=2.7"
-	},
+/turf/open/floor/plasteel/cult,
 /area/awaymission/wildwest/vault)
 "aP" = (
 /obj/effect/decal/cleanable/blood/splatter,
@@ -579,7 +573,7 @@
 /turf/open/floor/wood,
 /area/awaymission/wildwest/mines)
 "cB" = (
-/obj/effect/mine/gas/plasma,
+/obj/effect/mine/stun,
 /obj/item/ammo_box/c10mm,
 /turf/open/floor/plating/ironsand,
 /area/awaymission/wildwest/mines)
@@ -855,7 +849,7 @@
 /turf/open/floor/wood,
 /area/awaymission/wildwest/mines)
 "dv" = (
-/obj/effect/mine/gas/plasma,
+/obj/effect/mine/stun,
 /obj/item/ammo_box/c10mm,
 /turf/open/floor/wood,
 /area/awaymission/wildwest/mines)
@@ -1088,7 +1082,7 @@
 /turf/open/floor/plating/ironsand,
 /area/awaymission/wildwest/mines)
 "ek" = (
-/obj/effect/mine/gas/plasma,
+/obj/effect/mine/stun,
 /turf/open/floor/plasteel/cafeteria{
 	dir = 5
 	},
@@ -1257,7 +1251,7 @@
 /turf/open/floor/plasteel,
 /area/awaymission/wildwest/refine)
 "eS" = (
-/obj/effect/mine/gas/plasma,
+/obj/effect/mine/stun,
 /turf/open/floor/wood,
 /area/awaymission/wildwest/mines)
 "eT" = (
@@ -1501,7 +1495,7 @@
 /turf/open/floor/plasteel,
 /area/awaymission/wildwest/refine)
 "fB" = (
-/obj/effect/mine/gas/plasma,
+/obj/effect/mine/stun,
 /turf/open/floor/plating/ironsand,
 /area/awaymission/wildwest/mines)
 "fC" = (

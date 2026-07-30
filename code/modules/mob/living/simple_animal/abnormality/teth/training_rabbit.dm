@@ -46,6 +46,8 @@
 		"Nothing" = list(FALSE, "Your imagination must be going haywire due to the stress. <br>There's no way such an out-of-place thing could be there!"),
 	)
 
+	area_index = MOB_SIMPLEANIMAL_INDEX // It's been setting off regenerator threat detection for years oh my god
+
 /mob/living/simple_animal/hostile/abnormality/training_rabbit/BreachEffect(mob/living/carbon/human/user, breach_type)
 	. = ..()
 	GiveTarget(user)
@@ -60,6 +62,8 @@
 	..()
 	if(work_type == ABNORMALITY_WORK_REPRESSION)
 		datum_reference.qliphoth_change(-1)
+	if(secret_abnormality)
+		user.client?.give_award(/datum/award/achievement/abno/rabbit_thick_work, user)
 	return
 
 /mob/living/simple_animal/hostile/abnormality/training_rabbit/proc/kill_dummy()

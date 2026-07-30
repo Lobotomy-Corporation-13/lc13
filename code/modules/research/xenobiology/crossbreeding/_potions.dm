@@ -121,14 +121,14 @@ Slimecrossing Potions
 	if(istype(C, /obj/item/clothing/suit/space))
 		to_chat(user, "<span class='warning'>The [C] is already pressure-resistant!</span>")
 		return ..()
-	if(C.min_cold_protection_temperature == SPACE_SUIT_MIN_TEMP_PROTECT && C.clothing_flags & STOPSPRESSUREDAMAGE)
+	if(C.min_cold_protection_temperature == TRUE && C.clothing_flags & STOPSPRESSUREDAMAGE)
 		to_chat(user, "<span class='warning'>The [C] is already pressure-resistant!</span>")
 		return ..()
 	to_chat(user, "<span class='notice'>You slather the blue gunk over the [C], making it airtight.</span>")
 	C.name = "pressure-resistant [C.name]"
 	C.remove_atom_colour(WASHABLE_COLOUR_PRIORITY)
 	C.add_atom_colour("#000080", FIXED_COLOUR_PRIORITY)
-	C.min_cold_protection_temperature = SPACE_SUIT_MIN_TEMP_PROTECT
+	C.min_cold_protection_temperature = TRUE
 	C.cold_protection = C.body_parts_covered
 	C.clothing_flags |= STOPSPRESSUREDAMAGE
 	uses--

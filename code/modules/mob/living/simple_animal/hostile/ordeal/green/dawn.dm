@@ -68,12 +68,13 @@
 				SLEEP_CHECK_DEATH(3)
 				TH.attack_animal(src)
 				for(var/mob/living/carbon/human/H in view(7, get_turf(src)))
-					H.apply_damage(7, WHITE_DAMAGE, null, H.run_armor_check(null, WHITE_DAMAGE), spread_damage = TRUE)
+					H.deal_damage(7, WHITE_DAMAGE, src, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_SPECIAL))
 			if(!targets_from.Adjacent(TH) || QDELETED(TH) || TH.health > 0)
 				finishing = FALSE
 				return
 			playsound(get_turf(src), 'sound/effects/ordeals/green/final_stab.ogg', 50, 1)
-			TH.gib()
+			if(SSmaptype.maptype != "rcorp_factory")
+				TH.gib()
 			finishing = FALSE
 
 /mob/living/simple_animal/hostile/ordeal/green_bot/spawn_gibs()
@@ -114,14 +115,13 @@
 		if(!istype(attacked_target, /mob/living/carbon/human))
 			return
 		var/mob/living/carbon/human/H = attacked_target
-		H.add_movespeed_modifier(/datum/movespeed_modifier/grab_slowdown/aggressive)
-		addtimer(CALLBACK(H, TYPE_PROC_REF(/mob, remove_movespeed_modifier), /datum/movespeed_modifier/grab_slowdown/aggressive), 4 SECONDS, TIMER_UNIQUE | TIMER_OVERRIDE)
+		H.apply_status_effect(/datum/status_effect/slowdowngreen)
 
 /mob/living/simple_animal/hostile/ordeal/green_bot/syringe/factory/death(gibbed)
 	density = FALSE
 	animate(src, alpha = 0, time = 5 SECONDS)
 	QDEL_IN(src, 5 SECONDS)
-	..()
+	return ..()
 
 /mob/living/simple_animal/hostile/ordeal/green_bot/fast
 	name = "doubt gamma"

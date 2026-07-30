@@ -109,8 +109,8 @@
 
 /obj/machinery/telecomms/server/presets/common
 	id = "Common Server"
-	freq_listening = list(FREQ_ARCHITECTURE)
-	autolinkers = list("common", "architecture")
+	freq_listening = list(FREQ_RECORDS, FREQ_EXTRACTION, FREQ_ARCHITECTURE)
+	autolinkers = list("common", "records", "extraction", "architecture")
 
 //Common and other radio frequencies for people to freely use
 /obj/machinery/telecomms/server/presets/common/Initialize()

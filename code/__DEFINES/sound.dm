@@ -10,6 +10,12 @@
 #define CHANNEL_SIREN 1016 //used to stop siren from blaring music while turned off
 #define CHANNEL_MFE 1015 //used for My Form Empties
 #define CHANNEL_MUMBLE 1014
+#define CHANNEL_PIANIST 1013
+#define CHANNEL_BARBER 1012
+#define CHANNEL_PRIEST 1011
+#define CHANNEL_DULCINEA 1010
+#define CHANNEL_BLOODFIEND_TRIO 1009
+#define CHANNEL_LUNA 1008
 
 ///Default range of a sound.
 #define SOUND_RANGE 17
@@ -25,7 +31,7 @@
 //THIS SHOULD ALWAYS BE THE LOWEST ONE!
 //KEEP IT UPDATED
 
-#define CHANNEL_HIGHEST_AVAILABLE 1015
+#define CHANNEL_HIGHEST_AVAILABLE 1009
 
 #define MAX_INSTRUMENT_CHANNELS (128 * 6)
 

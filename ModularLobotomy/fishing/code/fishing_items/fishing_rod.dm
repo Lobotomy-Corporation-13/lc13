@@ -44,6 +44,15 @@
 	//do we override the default fishing speed? (should be used if you want to debug something or make a rod with unique speed)
 	var/speed_override = FALSE
 
+/obj/item/fishing_rod/Destroy()
+	if(hook)
+		QDEL_NULL(hook)
+	if(line)
+		QDEL_NULL(line)
+	StopFishing()
+	current_fishing_visuals = null
+	return ..()
+
 /obj/item/fishing_rod/examine(mob/living/user)
 	. = ..()
 	. += span_notice("This rod has a modifier of +[ReturnRodPower(user)].")

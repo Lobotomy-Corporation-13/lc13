@@ -68,7 +68,6 @@
 			(The wolf seems unhappy)"),
 	)
 
-	var/can_act = TRUE
 	//For when the wolf becomes incorporal and flees.
 	var/last_reached_health = 75
 	//For some reason wolf's AI just turns off when there is if(fleeing_now)
@@ -77,6 +76,8 @@
 	var/hp_check_cooldown = 0
 	var/howl_cooldown = 0
 	var/howl_cooldown_time = BIGWOLF_COOLDOWN_HOWL
+
+	var/obj/effect/proc_holder/ability/aimed/dash/big_wolf/ourdash
 
 //Obligatory ability buttons for the dreaded player.
 /datum/action/innate/abnormality_attack/toggle/wolf_dash_toggle
@@ -109,10 +110,13 @@
 	StartCooldown()
 	return TRUE
 
+/mob/living/simple_animal/hostile/abnormality/big_wolf/Initialize()
+	.  = ..()
+	ourdash = new()
+
 /mob/living/simple_animal/hostile/abnormality/big_wolf/SuccessEffect(mob/living/carbon/human/user, work_type, pe)
 	. = ..()
 	if(work_type == ABNORMALITY_WORK_INSTINCT && user.stat != DEAD && locate(/mob/living) in contents)
-		flick("wolf_sad", src)
 		SpewStomach()
 	return ..()
 
@@ -120,7 +124,6 @@
 	. = ..()
 	datum_reference.qliphoth_change(-1)
 	EatWorker(user)
-	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/big_wolf/BreachEffect(mob/living/carbon/human/user, breach_type)
 	. = ..()
@@ -152,12 +155,12 @@
 	for(var/mob/living/carbon/human/saved in saved_humans)
 		if(nearby_red)
 			// Award achievement for being saved by Red Hood
-			saved.client?.give_award(/datum/award/achievement/lc13/red_hood_saved, saved)
+			saved.client?.give_award(/datum/award/achievement/abno/red_hood_saved, saved)
 
 		// Award achievement to nearby humans who helped kill the wolf
 		for(var/mob/living/carbon/human/potential_savior in view(5, src))
 			if(potential_savior != saved && potential_savior.stat != DEAD && potential_savior.client)
-				potential_savior.client?.give_award(/datum/award/achievement/lc13/wolf_savior, potential_savior)
+				potential_savior.client?.give_award(/datum/award/achievement/abno/wolf_savior, potential_savior)
 
 	density = FALSE
 	animate(src, alpha = 0, time = 10 SECONDS)
@@ -244,7 +247,7 @@
 	playsound(get_turf(src), 'sound/abnormalities/big_wolf/Wolf_FogChange.ogg', 75, 1)
 	ADD_TRAIT(src, TRAIT_MOVE_PHASING, "fleeing")
 	AIStatus = AI_OFF
-	target = null
+	LoseTarget(FALSE)
 	walk_to(src, 0)
 	TemporarySpeedChange(-2, 3 SECONDS)
 	fleeing_now = TRUE
@@ -288,6 +291,7 @@
 	ADD_TRAIT(L, TRAIT_IMMOBILIZED, type)
 	ADD_TRAIT(L, TRAIT_HANDS_BLOCKED, type)
 	L.forceMove(src)
+	icon_state = "wolf_full"
 	return TRUE
 
 /* Spew Stomach procs when the wolf dies. Since people who ghost are essentially dead we do not drop
@@ -310,47 +314,17 @@
 			REMOVE_TRAIT(L, TRAIT_IMMOBILIZED, type)
 			REMOVE_TRAIT(L, TRAIT_HANDS_BLOCKED, type)
 		i.forceMove(spew_turf)
+	if(IsContained())
+		sleep(1 SECONDS)
+		icon_state = "wolf_sad"
+		sleep(3 SECONDS)
+		update_icon_state()
 
 //Combat Skills
 // Simple dash attack that deals 50 damage to all those nearby. This is optimized for AI rather than players.
 /mob/living/simple_animal/hostile/abnormality/big_wolf/proc/ScratchDash(dash_target)
 	ranged_cooldown = world.time + ranged_cooldown_time
-	can_act = FALSE
-	if(IsContained())
-		return
-	var/turf/target_turf = get_turf(dash_target)
-	var/list/hit_mob = list()
-	do_shaky_animation(2)
-	if(do_after(src, 1 SECONDS, target = src))
-		var/turf/wallcheck = get_turf(src)
-		var/enemy_direction = get_dir(src, target_turf)
-		for(var/i = 0 to 7)
-			if(get_turf(src) != wallcheck || stat == DEAD || IsContained())
-				break
-			wallcheck = get_step(src, enemy_direction)
-			if(!ClearSky(wallcheck))
-				break
-			//without this the attack happens instantly
-			sleep(1)
-			forceMove(wallcheck)
-			playsound(wallcheck, 'sound/abnormalities/doomsdaycalendar/Lor_Slash_Generic.ogg', 20, 0, 4)
-			for(var/turf/T in orange(get_turf(src), 1))
-				if(isclosedturf(T))
-					continue
-				new /obj/effect/temp_visual/slice(T)
-				hit_mob = HurtInTurf(T, hit_mob, 50, RED_DAMAGE, null, TRUE, FALSE, TRUE, hurt_structure = TRUE)
-				for(var/mob/living/simple_animal/hostile/abnormality/red_hood/mercenary in hit_mob)
-					mercenary.deal_damage(100, RED_DAMAGE) //triple damge to red
-	can_act = TRUE
-
-//Used in Steel noons for if they are allowed to fly through something.
-/mob/living/simple_animal/hostile/abnormality/big_wolf/ClearSky(turf/T)
-	. = ..()
-	if(.)
-		if(locate(/obj/structure/table) in T.contents)
-			return FALSE
-		if(locate(/obj/structure/railing) in T.contents)
-			return FALSE
+	ourdash.Perform(dash_target, src)
 
 // Very simple ranged howl that applies white damage.
 /mob/living/simple_animal/hostile/abnormality/big_wolf/proc/Howl()
@@ -379,13 +353,13 @@
 				if(mercenary.IsContained())
 					mercenary.BreachEffect()
 				mercenary.priority_target = src
-				mercenary.deal_damage(150, WHITE_DAMAGE) //She takes triple damage from the wolf, becauser her resistances are high
+				mercenary.deal_damage(150, WHITE_DAMAGE, src, attack_type = (ATTACK_TYPE_SPECIAL)) //She takes triple damage from the wolf, becauser her resistances are high
 				mercenary.RageUpdate(2)
 			if(faction_check_mob(L, FALSE))
 				continue
 			if(L.stat == DEAD)
 				continue
-			L.deal_damage(50, WHITE_DAMAGE)
+			L.deal_damage(50, WHITE_DAMAGE, src, attack_type = (ATTACK_TYPE_SPECIAL))
 		for(var/obj/vehicle/V in turfs_to_check)
 			V.take_damage(50, WHITE_DAMAGE)
 		playsound(get_turf(src), 'sound/abnormalities/big_wolf/Wolf_Howl.ogg', 30, 0, 4)
@@ -396,7 +370,7 @@
 	if(istype(attacked_target, /mob/living/simple_animal/hostile/abnormality/red_hood)) //Red takes triple damage from the wolf, becauser her resistances are high
 		var/mob/living/simple_animal/hostile/abnormality/red_hood/mercenary = attacked_target
 		var/bonus_damage_dealt = 2 * (rand(melee_damage_lower,melee_damage_upper))
-		mercenary.deal_damage(bonus_damage_dealt, RED_DAMAGE)
+		mercenary.deal_damage(bonus_damage_dealt, RED_DAMAGE, src, attack_type = (ATTACK_TYPE_MELEE))
 	return ..()
 
 #undef BIGWOLF_COOLDOWN_HOWL

@@ -479,3 +479,79 @@
 		for(var/mob/living/M in rangers)
 			if(prob(5+(allowed(M)*4)) && (M.mobility_flags & MOBILITY_MOVE))
 				dance(M)
+
+//Middle Jukebox - Unbreakable, not anchored, plays only Middle theme
+/obj/machinery/jukebox/middle
+	name = "Middle jukebox"
+	desc = "A jukebox used by the Middle. Plays their theme on repeat."
+	anchored = FALSE
+	req_access = null
+	resistance_flags = INDESTRUCTIBLE | LAVA_PROOF | FIRE_PROOF | UNACIDABLE | ACID_PROOF
+	custom_price = 10000
+	var/endless_loop = TRUE  // Controls whether the track loops endlessly
+
+/obj/machinery/jukebox/middle/Initialize()
+	. = ..()
+	// Clear any songs loaded from file system
+	songs = list()
+	// Add the single Middle track
+	var/datum/track/T = new("Middle Finger Theme", 'sound/effects/lc13_environment/middle_finger_toujou.ogg', 420, 5)
+	songs += T
+	selection = T
+
+/obj/machinery/jukebox/middle/ui_status(mob/user)
+	// Skip anchor check since this jukebox doesn't need to be anchored
+	if(!songs.len && !isobserver(user))
+		to_chat(user, span_warning("Error: No music tracks available."))
+		user.playsound_local(src, 'sound/misc/compiler-failure.ogg', 25, TRUE)
+		return UI_CLOSE
+	return ..()
+
+/obj/machinery/jukebox/middle/attackby(obj/item/O, mob/user, params)
+	if(!(flags_1 & NODECONSTRUCT_1))
+		if(O.tool_behaviour == TOOL_WRENCH)
+			if(!anchored && !isinspace())
+				to_chat(user,span_notice("You secure [src] to the floor."))
+				set_anchored(TRUE)
+			else if(anchored)
+				to_chat(user,span_notice("You unsecure and disconnect [src]."))
+				set_anchored(FALSE)
+			playsound(src, 'sound/items/deconstruct.ogg', 50, TRUE)
+			return
+	return ..()
+
+/obj/machinery/jukebox/middle/process()
+	if(world.time < stop && active)
+		var/sound/song_played = sound(selection.song_path)
+
+		for(var/mob/M in view(10,src))
+			if(!M.client || !(M.client.prefs.toggles & SOUND_INSTRUMENTS))
+				continue
+			if(!(M in rangers))
+				rangers[M] = TRUE
+				M.playsound_local(get_turf(M), null, volume*0.5, channel = CHANNEL_JUKEBOX, S = song_played, use_reverb = FALSE)
+		for(var/mob/M in rangers)
+			if(get_dist(src,M) > 10)
+				rangers -= M
+				if(!M || !M.client)
+					continue
+				M.stop_sound_channel(CHANNEL_JUKEBOX)
+	else if(active)
+		// If endless_loop is enabled and track finished, restart it immediately
+		if(endless_loop)
+			// Reset the stop time to play the track again
+			stop = world.time + selection.song_length
+			// Continue playing for all current listeners
+			var/sound/song_played = sound(selection.song_path)
+			for(var/mob/M in rangers)
+				if(!M || !M.client)
+					continue
+				M.playsound_local(get_turf(M), null, volume*0.5, channel = CHANNEL_JUKEBOX, S = song_played, use_reverb = FALSE)
+		else
+			// Normal stop behavior if not looping
+			active = FALSE
+			STOP_PROCESSING(SSobj, src)
+			dance_over()
+			playsound(src,'sound/machines/terminal_off.ogg',50,TRUE)
+			update_icon()
+			stop = world.time + 100

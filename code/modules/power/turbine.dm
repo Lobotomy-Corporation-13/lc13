@@ -29,10 +29,10 @@
 	icon_state = "compressor"
 	density = TRUE
 	resistance_flags = FIRE_PROOF
-	CanAtmosPass = ATMOS_PASS_DENSITY
+	// CanAtmosPass = ATMOS_PASS_DENSITY
 	circuit = /obj/item/circuitboard/machine/power_compressor
 	var/obj/machinery/power/turbine/turbine
-	var/datum/gas_mixture/gas_contained
+	// var/datum/gas_mixture/gas_contained
 	var/turf/inturf
 	var/starter = 0
 	var/rpm = 0
@@ -54,7 +54,7 @@
 	icon_state = "turbine"
 	density = TRUE
 	resistance_flags = FIRE_PROOF
-	CanAtmosPass = ATMOS_PASS_DENSITY
+	// CanAtmosPass = ATMOS_PASS_DENSITY
 	circuit = /obj/item/circuitboard/machine/power_turbine
 	var/opened = 0
 	var/obj/machinery/power/compressor/compressor
@@ -73,7 +73,7 @@
 /obj/machinery/power/compressor/Initialize()
 	. = ..()
 	// The inlet of the compressor is the direction it faces
-	gas_contained = new
+	// gas_contained = new
 	inturf = get_step(src, dir)
 	locate_machinery()
 	if(!turbine)
@@ -128,13 +128,13 @@
 	cut_overlays()
 
 	rpm = 0.9* rpm + 0.1 * rpmtarget
-	var/datum/gas_mixture/environment = inturf.return_air()
+/* 	var/datum/gas_mixture/environment = inturf.return_air()
 
 	// It's a simplified version taking only 1/10 of the moles from the turf nearby. It should be later changed into a better version
 
 	var/transfer_moles = environment.total_moles()/10
 	var/datum/gas_mixture/removed = inturf.remove_air(transfer_moles)
-	gas_contained.merge(removed)
+	gas_contained.merge(removed) */
 
 // RPM function to include compression friction - be advised that too low/high of a compfriction value can make things screwy
 
@@ -212,7 +212,7 @@
 
 	// Weird function but it works. Should be something else...
 
-	var/newrpm = ((compressor.gas_contained.temperature) * compressor.gas_contained.total_moles())/4
+/* 	var/newrpm = ((compressor.gas_contained.temperature) * compressor.gas_contained.total_moles())/4
 
 	newrpm = max(0, newrpm)
 
@@ -222,7 +222,7 @@
 	if(compressor.gas_contained.total_moles()>0)
 		var/oamount = min(compressor.gas_contained.total_moles(), (compressor.rpm+100)/35000*compressor.capacity)
 		var/datum/gas_mixture/removed = compressor.gas_contained.remove(oamount)
-		outturf.assume_air(removed)
+		outturf.assume_air(removed) */
 
 // If it works, put an overlay that it works!
 
@@ -262,7 +262,7 @@
 	data["online"] = compressor?.starter
 	data["power"] = DisplayPower(compressor?.turbine?.lastgen)
 	data["rpm"] = compressor?.rpm
-	data["temp"] = compressor?.gas_contained.temperature
+	// data["temp"] = compressor?.gas_contained.temperature
 	return data
 
 /obj/machinery/power/turbine/ui_act(action, params)
@@ -324,7 +324,7 @@
 	data["online"] = compressor?.starter
 	data["power"] = DisplayPower(compressor?.turbine?.lastgen)
 	data["rpm"] = compressor?.rpm
-	data["temp"] = compressor?.gas_contained.temperature
+	// data["temp"] = compressor?.gas_contained.temperature
 	return data
 
 /obj/machinery/computer/turbine_computer/ui_act(action, params)

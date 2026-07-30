@@ -3,7 +3,6 @@
 	name = "theonite slab"
 	desc = "A slab, made out of a seamless mixture of stone and metal. It's covered in runes, and bloody spikes erupt from the centerpiece."
 	icon_state = "slab"
-	var/list/users = list()
 
 	max_boost = 50
 	given_attribute = JUSTICE_ATTRIBUTE
@@ -23,7 +22,7 @@
 
 	flick(icon_state, src)
 
-	if(used_by[user] == 1) // Lets start effects AFTER their first use
+	if(used_by[user.tag] == 1) // Lets start effects AFTER their first use
 		return
 
 	user.physiology.pale_mod *= 1.06
@@ -147,13 +146,13 @@
 		new /obj/effect/temp_visual/smash_effect(T)
 		for(var/mob/living/M in T)
 			if(!ishuman(M))
-				M.deal_damage(damage, PALE_DAMAGE)
+				M.deal_damage(damage, PALE_DAMAGE, attack_type = (ATTACK_TYPE_SPECIAL))
 				continue
 			var/mob/living/carbon/human/H = M //deals damage to non-humans, and humans - but only humans with the status effect.
 			var/datum/status_effect/stacking/slab/S = H.has_status_effect(/datum/status_effect/stacking/slab)
 			if(!S)
 				continue
-			M.deal_damage(damage, PALE_DAMAGE)
+			M.deal_damage(damage, PALE_DAMAGE, attack_type = (ATTACK_TYPE_SPECIAL))
 			if(M.health < 0)
 				S.PunishDeath(M)
 

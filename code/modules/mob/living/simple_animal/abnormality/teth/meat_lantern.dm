@@ -45,7 +45,6 @@
 		"Call for security" = list(FALSE, "Something so beautiful had no right to exist in the City. You called for security and left in a hurry back to your grey workplace."),
 	)
 
-	var/can_act = TRUE
 	var/detect_range = 1
 	var/chop_cooldown
 	var/chop_cooldown_time = 4 SECONDS
@@ -103,7 +102,7 @@
 	for(var/mob/living/L in oview(1, src))
 		if(faction_check_mob(L))
 			continue
-		L.deal_damage(chop_damage, RED_DAMAGE)
+		L.deal_damage(chop_damage, RED_DAMAGE, src, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 		if(L.health < 0)
 			L.gib(FALSE,FALSE,TRUE)
 	SLEEP_CHECK_DEATH(2.5)

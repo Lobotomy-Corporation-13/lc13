@@ -51,7 +51,6 @@
 	var/explosion_timer = 2 SECONDS
 	var/explosion_state = 3
 	var/explosion_damage = 100
-	var/can_act = TRUE
 	var/negative_range = 10
 
 //She can't move or attack.
@@ -114,12 +113,12 @@
 			continue
 		new /obj/effect/temp_visual/revenant(T)
 		for(var/mob/living/carbon/human/L in T)
-			L.deal_damage(explosion_damage, BLACK_DAMAGE)
+			L.deal_damage(explosion_damage, BLACK_DAMAGE, src, attack_type = (ATTACK_TYPE_SPECIAL))
 	SLEEP_CHECK_DEATH(10)	//I kinda want it to be a bit of a delay but not too much
 
 	//White Hole effect
 	for(var/mob/living/carbon/human/L in view(14, src))
-		L.deal_damage(explosion_damage, WHITE_DAMAGE)
+		L.deal_damage(explosion_damage, WHITE_DAMAGE, src, attack_type = (ATTACK_TYPE_SPECIAL))
 	goonchem_vortex(get_turf(src), 1, 13)
 	can_act = TRUE
 	Teleport()
@@ -273,7 +272,7 @@
 			continue
 		new /obj/effect/temp_visual/revenant(T)
 		for(var/mob/living/carbon/human/L in T)
-			L.deal_damage(100, WHITE_DAMAGE)
+			L.deal_damage(100, WHITE_DAMAGE, source = firer, attack_type = (ATTACK_TYPE_SPECIAL | ATTACK_TYPE_RANGED))
 
 
 /obj/projectile/black_hole
@@ -292,7 +291,7 @@
 			continue
 		new /obj/effect/temp_visual/revenant(T)
 		for(var/mob/living/carbon/human/L in T)
-			L.deal_damage(100, BLACK_DAMAGE)
+			L.deal_damage(100, BLACK_DAMAGE, source = firer, attack_type = (ATTACK_TYPE_SPECIAL | ATTACK_TYPE_RANGED))
 
 /obj/projectile/loos_bullet
 	name = "white beam"

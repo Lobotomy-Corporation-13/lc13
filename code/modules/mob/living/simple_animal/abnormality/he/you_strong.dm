@@ -69,6 +69,11 @@
 	var/summon_cooldown_time = 120 SECONDS
 	var/summon_count = 0
 
+/mob/living/simple_animal/hostile/abnormality/you_strong/Destroy()
+	if(soundloop)
+		QDEL_NULL(soundloop)
+	return ..()
+
 /mob/living/simple_animal/hostile/abnormality/you_strong/Initialize(mapload)
 	. = ..()
 	soundloop = new(list(src), FALSE)
@@ -238,7 +243,7 @@
 	prosthetic.replace_limb(M)
 	manual_emote("makes a grinding noise.")
 	M.emote("scream")
-	M.deal_damage(50, BRUTE) // Bro your [X] just got chopped off, no armor's gonna resist that.
+	M.deal_damage(50, BRUTE, flags = (DAMAGE_FORCED)) // Bro your [X] just got chopped off, no armor's gonna resist that.
 	to_chat(M, span_notice("Your [old_part.name] has been replaced!"))
 	qdel(old_part)
 	M.regenerate_icons()
@@ -279,9 +284,12 @@
 	var/gear_cooldown = 1 MINUTES
 	//tracks speed change even if altered by other speed modifiers.
 	var/gear_speed = 0
+	var/spinning
 
 /mob/living/simple_animal/hostile/grown_strong/Move(atom/newloc, dir, step_x, step_y)
 	if(status_flags & GODMODE)
+		return FALSE
+	if(spinning)
 		return FALSE
 	return ..()
 
@@ -302,13 +310,59 @@
 	ChangeMoveToDelayBy(-gear_speed)
 	rapid_melee = gear > 7 ? 2 : 1
 
+//Attacks
+/mob/living/simple_animal/hostile/grown_strong/AttackingTarget()
+	. = ..()
+	if(prob(10))
+		SpinAttack()	//Give them some love
+
+/mob/living/simple_animal/hostile/grown_strong/proc/SpinAttack()
+	spinning = TRUE
+	playsound(get_turf(src), 'sound/weapons/ego/strong_charged1.ogg', 40)
+	manual_emote("makes a whirring sound...")
+	SLEEP_CHECK_DEATH(15)
+
+	//Do the thing!
+	spin(15, 2)
+
+	//Should just make it move forwards 5 times.
+	var/go_sauce = dir
+	var/turf/next_turf = get_step(src, go_sauce)
+	for(var/i = 1 to 5)
+		next_turf = get_step(src, go_sauce)
+		if(!next_turf)
+			break
+		if(next_turf.density)
+			break
+		forceMove(next_turf)
+		ymbs_aoe(1)
+		SLEEP_CHECK_DEATH(3)
+
+	SLEEP_CHECK_DEATH(10)
+	spinning = FALSE
+
+//Generic AOE code. We use this twice
+/mob/living/simple_animal/hostile/grown_strong/proc/ymbs_aoe(aoe_range)
+	playsound(get_turf(src), 'sound/abnormalities/mountain/slam.ogg', 40, 1)
+	for(var/turf/T in range(aoe_range, src))
+		new /obj/effect/temp_visual/small_smoke/halfsecond(T)
+		for(var/mob/living/L in T)
+			if(L==src)
+				continue
+			var/throw_dir = get_dir(src, L)
+			if(!throw_dir)
+				throw_dir = pick(NORTH, SOUTH, EAST, WEST) // random dir if on same tile
+			var/throw_target = get_edge_target_turf(L, throw_dir)
+			L.throw_at(throw_target, 4, 2)
+			L.deal_damage(melee_damage_upper, RED_DAMAGE)
+
 /mob/living/simple_animal/hostile/grown_strong/Life()
 	. = ..()
 	if(!COOLDOWN_FINISHED(src, gear_shift) || (status_flags & GODMODE))
 		return
 	gear = clamp(gear + rand(-1, 3), 1, 10)
 	UpdateGear()
-	src.apply_damage(150, BRUTE, null, 0, spread_damage = TRUE)// OOF OUCH MY BONES
+	src.deal_damage(150, BRUTE, flags = (DAMAGE_FORCED))// OOF OUCH MY BONES
 	COOLDOWN_START(src, gear_shift, gear_cooldown)
 
 /mob/living/simple_animal/hostile/grown_strong/death(gibbed)
@@ -322,6 +376,7 @@
 
 /mob/living/simple_animal/hostile/grown_strong/proc/Undie()
 	manual_emote("shudders to a hault, insides whirling...")
+	playsound(src, 'sound/weapons/ego/strong_uncharged.ogg', 20)
 	src.maxHealth = max(maxHealth - 100, 200)
 	src.adjustBruteLoss(-9999)
 	status_flags |= GODMODE
@@ -330,6 +385,8 @@
 	src.adjustBruteLoss(-9999)
 	gear = clamp(gear + 2, 1, 10)
 	manual_emote("shudders back to life!")
+	//People love to bodyblock you, throw them away.
+	ymbs_aoe(2)
 	UpdateGear()
 
 ////// Parts! //////

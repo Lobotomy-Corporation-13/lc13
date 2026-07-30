@@ -43,7 +43,7 @@
 	projectile_path = /obj/projectile/ego_bullet/ego_beakmagnum
 	fire_delay = 10
 	shotsleft = 7
-	reloadtime = 2.1 SECONDS
+	reloadtime = 2.4 SECONDS		//It's very powerful.
 	fire_sound = 'sound/weapons/gun/revolver/shot_alt.ogg'
 	vary_fire_sound = FALSE
 	fire_sound_volume = 70
@@ -62,8 +62,22 @@
 	variance = 20
 	fire_delay = 10
 	shotsleft = 8
-	reloadtime = 1.6 SECONDS
+	reloadtime = 0.5 SECONDS
 	fire_sound = 'sound/weapons/gun/shotgun/shot_auto.ogg'
+	roundsreload = TRUE
+
+	alternate_fire_name = "Callsign"
+	alternate_pellets = 1
+	alternate_info = "This weapon fires a heavy slug."
+	alternate_reload_type = RANGEDEGO_ALTERNATEFIRE_RELOADTYPE_EMPTY_MAG
+	alternate_projectile_path = /obj/projectile/ego_bullet/ego_noiseslug
+	alternate_fire_sound = 'sound/weapons/gun/shotgun/shot_auto.ogg'
+	alternate_fire_sound_volume = 70
+	alternate_toggle_sound = 'sound/machines/click.ogg'
+	alternate_toggle_sound_volume = 65
+	alternate_toggle_enabled_message = span_notice("You switch to slug rounds.")
+	alternate_toggle_disabled_message = span_notice("You switch to buckshot rounds.")
+
 
 /obj/item/ego_weapon/ranged/pistol/solitude
 	name = "solitude"
@@ -73,12 +87,13 @@
 	force = 8
 	damtype = WHITE_DAMAGE
 	projectile_path = /obj/projectile/ego_bullet/ego_solitude
-	fire_delay = 10
+	fire_delay = 14
 	shotsleft = 5
-	reloadtime = 2 SECONDS
+	reloadtime = 1 SECONDS
 	fire_sound = 'sound/weapons/gun/revolver/shot_light.ogg'
 	vary_fire_sound = FALSE
 	fire_sound_volume = 70
+	roundsreload = TRUE
 
 /obj/item/ego_weapon/ranged/pistol/shy
 	name = "todays expression"
@@ -193,8 +208,9 @@
 	weapon_weight = WEAPON_HEAVY
 	fire_delay = 12
 	shotsleft = 8
-	reloadtime = 1.4 SECONDS
+	reloadtime = 0.5 SECONDS
 	fire_sound = 'sound/weapons/gun/shotgun/shot.ogg'
+	roundsreload = TRUE
 
 /obj/item/ego_weapon/ranged/luckdraw
 	name = "luck of the draw"

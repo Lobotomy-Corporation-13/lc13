@@ -52,7 +52,7 @@ Bonus
 		to_chat(M, span_warning("[pick("You feel hot.", "You feel like you're burning.")]"))
 	else
 		to_chat(M, span_userdanger("[pick("You feel too hot.", "You feel like your blood is boiling.")]"))
-	set_body_temp(A.affected_mob, A)
+	// set_body_temp(A.affected_mob, A)
 
 /**
  * set_body_temp Sets the body temp change
@@ -62,6 +62,7 @@ Bonus
  * * mob/living/M The mob to apply changes to
  * * datum/disease/advance/A The disease applying the symptom
  */
+
 /datum/symptom/fever/proc/set_body_temp(mob/living/M, datum/disease/advance/A)
 	// Get the max amount of change allowed before going over heat damage limit, 5 under the heat damage limit
 	var/change_limit = (BODYTEMP_HEAT_DAMAGE_LIMIT - 5) - M.get_body_temp_normal(apply_change=FALSE)

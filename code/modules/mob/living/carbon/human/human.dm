@@ -98,7 +98,7 @@
 		for(var/stat in atr.affected_stats)
 			.["stats"] += stat
 			.[stat + "name"] = stat
-			.[stat + "base"] = atr.get_printed_level_bonus() + atr.get_level_buff()
+			.[stat + "base"] = atr.get_printed_level_bonus()
 			.[stat + "bonus"] = round(atr.get_stat_bonus())
 
 /mob/living/carbon/human/ui_interact(mob/user, datum/tgui/ui)
@@ -200,6 +200,13 @@
 /mob/living/carbon/human/Destroy()
 	QDEL_NULL(physiology)
 	GLOB.human_list -= src
+	wear_suit = null
+	w_uniform = null
+	belt = null
+	wear_id = null
+	r_store = null
+	l_store = null
+	s_store = null
 	return ..()
 
 /mob/living/carbon/human/ZImpactDamage(turf/T, levels)
@@ -224,16 +231,17 @@
 
 /mob/living/carbon/human/get_status_tab_items()
 	. = ..()
+	. += ""
 	. += "Intent: [a_intent]"
 	. += "Move Mode: [m_intent]"
 	if (internal)
-		if (!internal.air_contents)
-			qdel(internal)
-		else
+		// if (!internal.air_contents)
+		qdel(internal)
+/* 		else
 			. += ""
 			. += "Internal Atmosphere Info: [internal.name]"
 			. += "Tank Pressure: [internal.air_contents.return_pressure()]"
-			. += "Distribution Pressure: [internal.distribute_pressure]"
+			. += "Distribution Pressure: [internal.distribute_pressure]" */
 	if(istype(wear_suit, /obj/item/clothing/suit/space))
 		var/obj/item/clothing/suit/space/S = wear_suit
 		. += "Thermal Regulator: [S.thermal_on ? "on" : "off"]"
@@ -1317,7 +1325,7 @@
 /mob/living/carbon/human/updatehealth()
 	if(LAZYLEN(attributes))
 		maxHealth = max(1, get_attribute_printed_level_bonus(src, FORTITUDE_ATTRIBUTE) + round(get_stat_bonus(src, FORTITUDE_ATTRIBUTE, no_neg = FALSE)))
-		maxSanity = max(1, get_attribute_printed_level_bonus(src, PRUDENCE_ATTRIBUTE) + get_stat_bonus(src, PRUDENCE_ATTRIBUTE, no_neg = FALSE))
+		maxSanity = max(1, get_attribute_printed_level_bonus(src, PRUDENCE_ATTRIBUTE) + round(get_stat_bonus(src, PRUDENCE_ATTRIBUTE, no_neg = FALSE)))
 	. = ..()
 	dna?.species.spec_updatehealth(src)
 	sanityhealth = maxSanity - sanityloss
@@ -1357,14 +1365,14 @@
 	return ..()
 
 /mob/living/carbon/human/proc/SpreadPanic(death = TRUE)
-	var/list/result_text_list = list(
+	var/list/result_text_list = alist(
 		1 = list("Damn it all, someone died", "Comrade down! Comrade down!", "And they're gone forever..."),
 		2 = list("[real_name] is really dead...", "I can't let them kill me too.", "Is [real_name] really dead? Is it my turn?"),
 		3 = list("My god...", "If even [real_name]'s dead, then...", "I won't last... Even [real_name]'s died now..."),
 		4 = list("It's over for me.", "I can't believe [real_name] died... How...", "WE'RE ALL GOING TO DIE!!!!")
 		)
 	if(!death) // Insane text
-		result_text_list = list(
+		result_text_list = alist(
 			1 = list("We've got someone panicking!", "Someone's just hit the maximum mental corruption level!", "I don't want to hear those screams of pain anymore..."),
 			2 = list("Even the seniors can go insane just the same...", "Please don’t give up on your mind.", "Oh [real_name]... Please come back to your senses..."),
 			3 = list("The high rankers go crazy, too...", "Just how long will I endure this madness?", "[real_name]... They hit the maximum mental corruption level... Oh God..."),
@@ -1571,6 +1579,9 @@
 
 /mob/living/carbon/human/species/synth/military
 	race = /datum/species/synth/military
+
+/mob/living/carbon/human/species/synth/carnival
+	race = /datum/species/synth/carnival
 
 /mob/living/carbon/human/species/vampire
 	race = /datum/species/vampire

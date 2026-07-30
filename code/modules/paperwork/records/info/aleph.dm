@@ -20,11 +20,13 @@
 	abno_type = /mob/living/simple_animal/hostile/abnormality/bluestar
 	abno_code = "O-03-93"
 	abno_info = list(
-		"Agents with Temperance Level 3 or lower immediately threw themselves into Blue Star upon working with the Abnormality.",
+		"Agents with Temperance Level 3 or lower immediately threw themselves into O-03-93 upon working with the Abnormality.",
 		"When an Agent with Prudence Level 4 or lower completed their work, the Qliphoth Counter lowered.",
-		"When more than 40 seconds of work time had taken place, the Qliphoth Counter lowered by 1, and the Agent who was working with Blue Star threw themself in.",
-		"While Blue Star is outside of its containment, all sounds will be reduced to silence, with a low pitched tone emerging. The pitch will accompany a visually disruptive effect.",
-		"While Blue Star is outside of its containment, all panicking employees in the facility will be sucked into the center of the Abnormality and vanish.")
+		"When more than 40 seconds of work time had taken place, the Qliphoth Counter lowered by 1, and the Agent who was working with O-03-93 threw themself in.",
+		"While O-03-93 is outside of its containment, all sounds will be reduced to silence, with a low pitched tone emerging. The pitch will accompany a visually disruptive effect.",
+		"The white damage O-03-93 emits increases as time goes on.",
+		"While O-03-93 is outside of its containment, all panicking employees in the facility will be sucked into the center of the Abnormality and vanish.",
+		"O-03-93's Work damage and breach damage can both be decreased by offering it a Core of a Star.")
 	abno_breach_damage_type = "White"
 	abno_breach_damage_count = "Very High"
 
@@ -73,9 +75,10 @@
 	abno_type = /mob/living/simple_animal/hostile/abnormality/staining_rose
 	abno_code = "F-04-116"
 	abno_info = list(
-		"The first employee who works on Staining Rose will resonate with it and become the Chosen.",
-		"If anyone other than the Chosen worked on Staining Rose, they became more vulnerable to damage until Staining Rose wilted.",
+		"The first employee who works Repression on Staining Rose will resonate with it and become the Chosen.",
+		"If anyone other than the Chosen worked Repression on Staining Rose, they became more vulnerable to damage, and gained more damage until Staining Rose wilted.",
 		"When an employee with Justice 4 or lower finished their work, Staining Rose seemed to reset its satisfaction. The employee became more vulnerable to damage until Staining Rose wilted.",
+		"However, this increased the time between breaches, and when the effects wore off, the employee seemed to be stronger.",
 		"Every 15 minutes, the Qliphoth Counter lowered unless Staining Rose was worked on within the time period.",
 		"When the Qliphoth Counter reached 0, Staining Rose shed its petals, and everyone in the facility became more vulnerable to damage.")
 
@@ -251,10 +254,10 @@
 // Star Luminary (WIP)
 /obj/item/paper/fluff/info/aleph/luminary
 	abno_type = /mob/living/simple_animal/hostile/abnormality/star_luminary
-	abno_code = "O-??-???"
+	abno_code = "O-01-930"
 	abno_info = list(
 		"The abnormality enthralled any employee who performed non-Repression work with it. After this, the Qliphoth Counter increased by one.",
-		"Enthralled employees experienced a significant boost to their Temperance and a very significant boost to the quality of non-Instinct work performed with the abnormality, yet their mental corruption levels began to increase continously.",
+		"Enthralled employees experienced a significant boost to their Justice and a very significant boost to the quality of non-Instinct work performed with the abnormality, yet their mental corruption levels began to increase continously.",
 		"The abnormality requires constant attention, as the Qliphoth Counter dropped after a period of not being worked with. The abnormality requires more frequent works as the number of enthralled employees raises.",
 		"After a non-enthralled employee performed Repression work with the abnormality, the Qliphoth Counter decreased by one. Afterwards, all enthralled employees experienced a significant reduction in both their immediate mental corruption and in the constant build-up of mental corruption. This effect seems to increase in intensity with the amount of enthralled employees.",
 		"If an enthralled employee died, all other enthralled employees experienced a significant increase in mental corruption, this effect significantly increased in potency with the amount of enthralled employees.",

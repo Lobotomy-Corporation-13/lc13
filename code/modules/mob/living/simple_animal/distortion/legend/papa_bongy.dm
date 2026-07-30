@@ -38,7 +38,6 @@
 	monolith_abnormality = /mob/living/simple_animal/hostile/abnormality/basilisoup
 	loot = list(/obj/item/documents/ncorporation)
 
-	var/can_act = TRUE
 	var/ding_delay = 1.5 SECONDS
 	var/throw_delay = 2 SECONDS
 	var/unit_list = list()
@@ -163,7 +162,7 @@
 		do_attack_animation(target_turf)
 		for(var/turf/T in range(i, target_turf))
 			new /obj/effect/temp_visual/smash_effect(T)
-			been_hit = HurtInTurf(T, been_hit, melee_damage_lower, WHITE_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, mech_damage = 15)
+			been_hit = HurtInTurf(T, been_hit, melee_damage_lower, WHITE_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, mech_damage = 15, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 			if(i == 3)
 				for(var/mob/living/carbon/human/H in T)
 					H.Knockdown(20)

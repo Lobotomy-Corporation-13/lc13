@@ -10,8 +10,6 @@
 	a_intent = INTENT_HARM
 	del_on_death = TRUE
 	damage_coeff = list(RED_DAMAGE = 1, WHITE_DAMAGE = 1, BLACK_DAMAGE = 1, PALE_DAMAGE = 1)
-	atmos_requirements = list("min_oxy" = 0, "max_oxy" = 0, "min_tox" = 0, "max_tox" = 0, "min_co2" = 0, "max_co2" = 0, "min_n2" = 0, "max_n2" = 0)
-	minbodytemp = 0
 	see_in_dark = 7
 	vision_range = 12
 	aggro_vision_range = 20
@@ -82,11 +80,11 @@
 	if(fear_level <= 0)
 		return
 	for(var/mob/living/carbon/human/H in view(7, src))
-		if(H in breach_affected)
+		if(H.tag in breach_affected)
 			continue
 		if(H.stat == DEAD)
 			continue
-		breach_affected += H
+		breach_affected += H.tag
 		if(HAS_TRAIT(H, TRAIT_COMBATFEAR_IMMUNE))
 			to_chat(H, "<span class='notice'>This again...?")
 			H.apply_status_effect(/datum/status_effect/panicked_lvl_0)
@@ -183,31 +181,20 @@
 			if(suit_slot_item)
 				qdel(suit_slot_item)
 			var/obj/item/clothing/suit/armor/ego_gear/equippable_gear = new gear(get_turf(src))
-			equippable_gear.equip_slowdown = 0
+			equippable_gear.equip_delay_self = 0
 			egoist.equip_to_slot(equippable_gear,ITEM_SLOT_OCLOTHING, TRUE)
-			equippable_gear.equip_slowdown = 3
+			equippable_gear.equip_delay_self = initial(equippable_gear.equip_delay_self)
 		else
 			egoist.put_in_hands(new gear(egoist))
-
 	PostUnmanifest(egoist)
-	PollGhosts(egoist)
+	if(key && (!new_egoist || mind)) //A player unmanifested somehow
+		egoist.key = key
+		mind.transfer_to(egoist)
+	else
+		INVOKE_ASYNC(GLOBAL_PROC, GLOBAL_PROC_REF(offer_control), egoist, "Civilian")
 	egoist.forceMove(get_turf(src))
 	qdel(src)
 	return
-
-/mob/living/simple_animal/hostile/distortion/proc/PollGhosts(mob/living/carbon/human/egoist)
-	if(!new_egoist || mind) //A player unmanifested somehow
-		egoist.key = key
-		mind.transfer_to(egoist)
-		return
-	var/list/mob/dead/observer/candidates = pollCandidatesForMob("Do you want to play as [egoist.real_name]?", ROLE_PAI, null, FALSE, 100, egoist)
-	if(LAZYLEN(candidates))
-		var/mob/dead/observer/C = pick(candidates)
-		egoist.key = C.key
-		if(C.mind)
-			C.mind.transfer_to(egoist)
-			egoist.mind.assigned_role = "Civilian"
-			return
 
 /mob/living/simple_animal/hostile/distortion/proc/PostUnmanifest(mob/living/carbon/human/egoist)
 	return

@@ -4,6 +4,8 @@
 #define FILE_PE_QUOTA "data/PEQuota.json"
 #define FILE_ABNO_PICKS "data/abno_rates/[mode].json"
 #define FILE_CORE_SUPPRESSIONS "data/ClearedCores.json"
+#define FILE_RCE_EXPEDITION "data/RCEExpedition.json"
+#define FILE_RCE_LEADERBOARD "data/RCELeaderboard.json"
 #define ROUNDCOUNT_BUTTON_PRESSED 0
 
 #define KEEP_ROUNDS_MAP 3
@@ -30,10 +32,14 @@ SUBSYSTEM_DEF(persistence)
 	var/list/obj/structure/sign/painting/painting_frames = list()
 	var/list/paintings = list()
 	var/list/abno_rates = list()
+	/// Stores old rates of abnormalities undergoing testing. We set their rates to 9999 temporarily then return them to their old rates before saving them again.
+	var/list/tested_abno_old_rates = list()
 	/// List of ckeys with list of core suppression names that they have cleared before
 	var/list/cleared_core_suppressions = list()
 	/// LOBOTOMYCORPORATION ADDITION: Button counter
 	var/rounds_since_button_pressed = 0
+	/// RCE Expedition counter
+	var/rce_expedition_number = 0
 	/// Door to Nowhere tape archive
 	var/list/door_to_nowhere_tapes = list()
 	var/list/obj/machinery/tape_archive/tape_archive_machines = list()
@@ -52,6 +58,8 @@ SUBSYSTEM_DEF(persistence)
 		LoadPEStatus()
 	LoadClearedCores()
 	Load_button_counter() // LOBOTOMYCORPORATION ADDITION: Button counter
+	LoadRCEExpedition()
+	LoadRCELeaderboard()
 	LoadRandomizedRecipes()
 	LoadPaintings()
 	load_custom_outfits()
@@ -247,6 +255,7 @@ SUBSYSTEM_DEF(persistence)
 		SaveAbnoPicks()
 	CollectAgentReputation()
 	Save_button_counter() // LOBOTOMYCORPORATION ADDITION: Button counter
+	SaveRCELeaderboard()
 	SaveRandomizedRecipes()
 	SavePaintings()
 	SaveScars()
@@ -427,7 +436,10 @@ SUBSYSTEM_DEF(persistence)
 
 /datum/controller/subsystem/persistence/proc/SaveAbnoPicks()
 	for(var/datum/abnormality/abno_ref in SSlobotomy_corp.all_abnormality_datums)
-		abno_rates[abno_ref.abno_path] = text2num(abno_rates[abno_ref.abno_path]) + 1
+		if(tested_abno_old_rates[abno_ref.abno_path]) // If the Abnormality was being tested and thus had a higher spawn rate, we save their actual rate and not their weight boosted one
+			abno_rates[abno_ref.abno_path] = text2num(tested_abno_old_rates[abno_ref.abno_path])
+		else
+			abno_rates[abno_ref.abno_path] = text2num(abno_rates[abno_ref.abno_path]) + 1
 	var/mode = ""
 	if(SSticker.mode)
 		var/datum/game_mode/gm = SSticker.mode
@@ -461,6 +473,45 @@ SUBSYSTEM_DEF(persistence)
 
 	fdel(FILE_CORE_SUPPRESSIONS)
 	text2file(json_encode(cleared_core_suppressions), FILE_CORE_SUPPRESSIONS)
+
+/datum/controller/subsystem/persistence/proc/LoadRCEExpedition()
+	var/json_file = file(FILE_RCE_EXPEDITION)
+	if(fexists(json_file))
+		var/list/data = json_decode(file2text(json_file))
+		if(data && data["expedition_number"])
+			rce_expedition_number = data["expedition_number"]
+
+	// Increment the expedition number if we're on rcorp_factory map
+	if(SSmaptype.maptype == "rcorp_factory")
+		rce_expedition_number++
+		SaveRCEExpedition()
+
+/datum/controller/subsystem/persistence/proc/SaveRCEExpedition()
+	var/list/data = list("expedition_number" = rce_expedition_number)
+	fdel(FILE_RCE_EXPEDITION)
+	text2file(json_encode(data), FILE_RCE_EXPEDITION)
+
+/datum/controller/subsystem/persistence/proc/LoadRCELeaderboard()
+	if(SSmaptype.maptype != "rcorp_factory")
+		return
+	if(!SSgamedirector.rce_leaderboard)
+		return
+	SSgamedirector.rce_leaderboard.LoadFromFile()
+
+/datum/controller/subsystem/persistence/proc/SaveRCELeaderboard()
+	if(SSmaptype.maptype != "rcorp_factory")
+		return
+	if(!SSgamedirector.rce_leaderboard)
+		return
+	SSgamedirector.rce_leaderboard.SaveToFile()
+
+/datum/controller/subsystem/persistence/proc/ShowExpeditionNumber(mob/M)
+	if(!M || !M.client)
+		return
+	if(SSmaptype.maptype != "rcorp_factory")
+		return
+	var/message = "R-CORP 6TH PACK - EXPEDITION #[rce_expedition_number]"
+	show_blurb(M.client, 80, message, 10, 5, "#FFD700", "#8B0000", "center", "LEFT+0,TOP-2", FALSE, 2)
 
 /datum/controller/subsystem/persistence/proc/LoadRandomizedRecipes()
 	var/json_file = file("data/RandomizedChemRecipes.json")

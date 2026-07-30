@@ -32,7 +32,11 @@
 	reward_percent = 0.15
 	spawn_places = 6
 	spawn_amount = 1
-	spawn_type = /mob/living/simple_animal/hostile/ordeal/green_bot_big
+	spawn_type = list(
+		/mob/living/simple_animal/hostile/ordeal/green_bot_big,
+		/mob/living/simple_animal/hostile/ordeal/green_bot_rocket,
+		/mob/living/simple_animal/hostile/ordeal/green_bot_big/flamer,
+		)
 	place_player_multiplicator = 0.08
 	spawn_player_multiplicator = 0
 	color = COLOR_DARK_LIME

@@ -55,3 +55,27 @@
 	desc = "Red tinted glass and some wires that hook the work console to the door panel."
 	upgrade_slot = "meltdown"
 	color = COLOR_RED
+
+/obj/item/work_console_upgrade/radio
+	name = "work console radio upgrade"
+	desc = "Blue tinted glass and some wires that hook the work console to the radio system for when work is completed."
+	upgrade_slot = "radio"
+	color = COLOR_BLUE
+
+/obj/item/work_console_upgrade/vitals
+	name = "agent vitals upgrade"
+	desc = "An upgrade so that a console can tell if an agent has passed away or gone insane."
+	upgrade_slot = "vitals"
+	color = COLOR_YELLOW
+
+/obj/item/work_console_upgrade/zayin_freework
+	name = "zayin free work upgrade"
+	desc = "An upgrade that allows works on zayin-class abnormalities to be free. Note: agents will not get stats for working on this abnormality"
+	upgrade_slot = "free work"
+	color = COLOR_GREEN
+
+/obj/item/work_console_upgrade/zayin_freework/UpgradeReq(obj/machinery/computer/abnormality/A, mob/living/installer)
+	. = ..()
+	if(A.datum_reference.GetRiskLevel() != ZAYIN_LEVEL)
+		to_chat(installer, span_notice("This abnormality is incompatible with this upgrade."))
+		return FALSE

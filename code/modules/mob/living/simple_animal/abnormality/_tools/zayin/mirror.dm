@@ -2,12 +2,12 @@
 	name = "mirror of adjustment"
 	desc = "A black mirror. Best not to look too long into it."
 	icon_state = "mirror"
-	var/list/gazers = list()
 
 	ego_list = list(
 		/datum/ego_datum/weapon/mirror,
 		/datum/ego_datum/armor/mirror,
 	)
+	var/list/gazer = list()
 
 /obj/structure/toolabnormality/mirror/attack_hand(mob/living/carbon/human/user)
 	. = ..()
@@ -23,7 +23,7 @@
 	var/total_addition // Just for the message upon using it
 	for(var/attribute in user.attributes)
 		var/addition = rand(-20, 20)
-		if(user in gazers) // Why are you rerolling your stats twice!?
+		if(user.tag in gazer) // Why are you rerolling your stats twice!?
 			addition -= 10
 		for(var/upgradecheck in GLOB.jcorp_upgrades)
 			if(upgradecheck == "Tool Gacha")
@@ -31,5 +31,5 @@
 		user.adjust_attribute_level(attribute, addition)
 		total_addition += addition
 
-	gazers |= user
+	LAZYOR(gazer,user.tag)
 	to_chat(user, span_userdanger("You gaze into the mirror and feel [total_addition > 0 ? "stronger!" : "weaker..."]"))

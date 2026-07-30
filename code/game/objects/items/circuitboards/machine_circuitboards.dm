@@ -153,11 +153,11 @@
 	req_components = list(/obj/item/stock_parts/capacitor = 1)
 	needs_anchored = FALSE
 
-/obj/item/circuitboard/machine/circulator
+/* /obj/item/circuitboard/machine/circulator
 	name = "Circulator/Heat Exchanger (Machine Board)"
 	icon_state = "engineering"
 	build_path = /obj/machinery/atmospherics/components/binary/circulator
-	req_components = list()
+	req_components = list() */
 
 /obj/item/circuitboard/machine/emitter
 	name = "Emitter (Machine Board)"
@@ -271,7 +271,7 @@
 	name = "\improper Departmental Techfab (Machine Board) - Engineering"
 	build_path = /obj/machinery/rnd/production/techfab/department/engineering
 
-/obj/item/circuitboard/machine/thermomachine
+/* /obj/item/circuitboard/machine/thermomachine
 	name = "Thermomachine (Machine Board)"
 	icon_state = "engineering"
 	build_path = /obj/machinery/atmospherics/components/unary/thermomachine/freezer
@@ -336,7 +336,7 @@
 	req_components = list(
 		/obj/item/stack/cable_coil = 10,
 		/obj/item/stack/sheet/glass = 10,
-		/obj/item/stack/sheet/plasteel = 5)
+		/obj/item/stack/sheet/plasteel = 5) */
 
 //Generic
 
@@ -466,7 +466,7 @@
 		/obj/item/stack/cable_coil = 3)
 	needs_anchored = FALSE
 
-/obj/item/circuitboard/machine/electrolyzer
+/* /obj/item/circuitboard/machine/electrolyzer
 	name = "Electrolyzer (Machine Board)"
 	icon_state = "generic"
 	build_path = /obj/machinery/electrolyzer
@@ -476,7 +476,7 @@
 		/obj/item/stack/cable_coil = 5,
 		/obj/item/stack/sheet/glass = 1)
 
-	needs_anchored = FALSE
+	needs_anchored = FALSE */
 
 
 /obj/item/circuitboard/machine/techfab
@@ -657,14 +657,14 @@
 	else
 		return ..()
 
-/obj/item/circuitboard/machine/cryo_tube
+/* /obj/item/circuitboard/machine/cryo_tube
 	name = "Cryotube (Machine Board)"
 	icon_state = "medical"
 	build_path = /obj/machinery/atmospherics/components/unary/cryo_cell
 	req_components = list(
 		/obj/item/stock_parts/matter_bin = 1,
 		/obj/item/stack/cable_coil = 1,
-		/obj/item/stack/sheet/glass = 4)
+		/obj/item/stack/sheet/glass = 4) */
 
 /obj/item/circuitboard/machine/fat_sucker
 	name = "Lipid Extractor (Machine Board)"

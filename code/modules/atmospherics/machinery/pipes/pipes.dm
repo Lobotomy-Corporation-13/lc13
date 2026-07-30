@@ -1,4 +1,4 @@
-/obj/machinery/atmospherics/pipe
+/* /obj/machinery/atmospherics/pipe
 	damage_deflection = 12
 	var/datum/gas_mixture/air_temporary //used when reconstructing a pipeline that broke
 	var/volume = 0
@@ -105,3 +105,4 @@
 		pipe_color = paint_color
 		update_node_icon()
 	return paintable
+ */

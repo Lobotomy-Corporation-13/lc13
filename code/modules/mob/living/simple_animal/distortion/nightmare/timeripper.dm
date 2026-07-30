@@ -40,7 +40,6 @@
 	egoist_attributes = 100
 	loot = list(/obj/item/documents/ncorporation, /obj/item/documents/ncorporation) //Placeholder, we need more loot items
 
-	var/can_act = TRUE
 	var/current_stage = 1 //changes behaviour slightly on phase 2
 	var/stage_threshold = 3000 // enters stage 2 at or below this threshold
 	var/countering = FALSE //are we
@@ -147,7 +146,7 @@
 		QDEL_NULL(head)
 		H.regenerate_icons()
 		visible_message(span_danger("\The [src] takes [H]'s head off into his collection!"))
-		new /obj/effect/gibspawner/generic/silent(get_turf(H))
+		new /obj/effect/bloodspawner/silent(get_turf(H))
 		playsound(get_turf(src), 'sound/weapons/bladeslice.ogg', 250, TRUE)
 		finishing = FALSE
 		if(current_stage == 1)

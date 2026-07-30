@@ -160,7 +160,7 @@
 "LV" = (
 /obj/structure/statue/sandstone/venus{
 	desc = "To know and manipulate all the secrets of the world; that is the privilege of the Head, the Eye, and the Claws. It is their honor and absolute power.";
-	icon = 'ModularTegustation/Teguicons/tegumobs.dmi';
+	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi';
 	icon_state = "fixer_p";
 	name = "statue of a tax collector";
 	pixel_y = null

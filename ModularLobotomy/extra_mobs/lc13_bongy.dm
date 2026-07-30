@@ -17,8 +17,8 @@
 	inhand_icon_state = "bongy_dead"
 	stat = DEAD
 
-/obj/item/clothing/mask/facehugger/bongy/atmos_expose(datum/gas_mixture/air, exposed_temperature)
-	return
+/* /obj/item/clothing/mask/facehugger/bongy/atmos_expose(datum/gas_mixture/air, exposed_temperature)
+	return */
 
 /obj/item/clothing/mask/facehugger/bongy/Attach(mob/living/M)
 	if(!valid_to_attach(M))

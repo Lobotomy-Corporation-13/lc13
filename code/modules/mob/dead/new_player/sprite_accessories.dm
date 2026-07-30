@@ -795,6 +795,58 @@
 	name = "Wisp"
 	icon_state = "hair_wisp"
 
+/datum/sprite_accessory/hair/cielmmz
+	name = "Name's sake system creator"
+	icon_state = "hair_cielmmz"
+
+/datum/sprite_accessory/hair/ventmmzx
+	name = "Biometallic M Protag"
+	icon_state = "hair_ventmmzx"
+
+/datum/sprite_accessory/hair/wily
+	name = "Crazed Roboticist"
+	icon_state = "hair_wilymm"
+
+/datum/sprite_accessory/hair/futuretrunks
+	name = "Future Traveller"
+	icon_state = "hair_futuretrunksdbz"
+
+/datum/sprite_accessory/hair/saga
+	name = "Gemini Saint"
+	icon_state = "hair_sagacdz"
+
+/datum/sprite_accessory/hair/seiya
+	name = "Pegasus saint"
+	icon_state = "hair_seiyacdz"
+
+/datum/sprite_accessory/hair/shun
+	name = "Andromeda Saint"
+	icon_state = "hair_shuncdz"
+
+/datum/sprite_accessory/hair/hyoga
+	name = "Cignus Saint"
+	icon_state = "hair_hyogacdz"
+
+/datum/sprite_accessory/hair/toplan
+	name = "Clone Hairdoo 1"
+	icon_state = "hair_pridefull1"
+
+/datum/sprite_accessory/hair/geburah
+	name = "Language Floor Patron"
+	icon_state = "hair_librarygeburah"
+
+/datum/sprite_accessory/hair/chesed
+	name = "Soc. Sciences Floor Patron"
+	icon_state = "hair_librarychesed"
+
+/datum/sprite_accessory/hair/mario
+	name = "Plumber Bro 1"
+	icon_state = "hair_plumberbro"
+
+/datum/sprite_accessory/hair/terry
+	name = "LoneWolf"
+	icon_state = "hair_terrybodgard"
+
 /*
 /////////////////////////////////////
 /  =---------------------------=    /

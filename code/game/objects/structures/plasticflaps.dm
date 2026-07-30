@@ -7,7 +7,7 @@
 	armor = list(MELEE = 100, BULLET = 80, LASER = 80, ENERGY = 100, BOMB = 50, BIO = 100, RAD = 100, FIRE = 50, ACID = 50)
 	density = FALSE
 	anchored = TRUE
-	CanAtmosPass = ATMOS_PASS_NO
+	// CanAtmosPass = ATMOS_PASS_NO
 
 /obj/structure/plasticflaps/opaque
 	opacity = TRUE
@@ -100,7 +100,7 @@
 		new /obj/item/stack/sheet/plastic/five(loc)
 	qdel(src)
 
-/obj/structure/plasticflaps/Initialize()
+/* /obj/structure/plasticflaps/Initialize()
 	. = ..()
 	air_update_turf(TRUE, TRUE)
 
@@ -108,4 +108,4 @@
 	var/atom/oldloc = loc
 	. = ..()
 	if (oldloc)
-		oldloc.air_update_turf(TRUE, FALSE)
+		oldloc.air_update_turf(TRUE, FALSE) */

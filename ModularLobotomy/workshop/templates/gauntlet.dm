@@ -18,6 +18,7 @@
 		to_chat(user, "<span class='spider'><b>Your attack was interrupted!</b></span>")
 		return
 
+	SEND_SIGNAL(user, COMSIG_MOB_ITEM_ATTACK, target, user, src)
 	to_chat(target, span_userdanger("[user] punches you with everything they got!!"))
 	to_chat(user, span_danger("You throw your entire body into this punch!"))
 
@@ -35,7 +36,7 @@
 	if(target.stat != DEAD)
 		weapon_xp++
 
-	target.deal_damage(force, damtype) //MASSIVE fuckoff punch
+	target.deal_damage(force, damtype, user, attack_type = (ATTACK_TYPE_MELEE)) //MASSIVE fuckoff punch
 
 	playsound(src, 'sound/weapons/resonator_blast.ogg', 50, TRUE)
 	var/atom/throw_target = get_edge_target_turf(target, user.dir)
@@ -43,3 +44,4 @@
 		target.throw_at(throw_target, 2, 4, user) //Bigass knockback.
 
 	force = true_force
+	SEND_SIGNAL(user, COMSIG_MOB_ITEM_AFTERATTACK, target, user, TRUE, src)

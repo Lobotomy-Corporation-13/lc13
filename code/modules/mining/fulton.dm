@@ -194,3 +194,154 @@ GLOBAL_LIST_EMPTY(total_extraction_beacons)
 
 /obj/effect/extraction_holder/singularity_pull()
 	return
+
+// Emergency Extraction Implant - Automatically extracts you when you die
+/obj/item/emergency_extraction_implant
+	name = "emergency extraction implant"
+	desc = "A one-use implant that automatically extracts you to a linked beacon when you would die. Use in hand to link to a beacon and implant."
+	icon = 'icons/obj/fulton.dmi'
+	icon_state = "extraction_pack"
+	color = "#ff4444"
+	w_class = WEIGHT_CLASS_SMALL
+	var/obj/structure/extraction_point/beacon
+	var/list/beacon_networks = list("station")
+	var/mob/living/implanted_mob
+
+/obj/item/emergency_extraction_implant/attack_self(mob/living/user)
+	if(!isliving(user))
+		return
+
+	// Check if user already has an implant (excluding this one)
+	for(var/obj/item/emergency_extraction_implant/existing in user)
+		if(existing != src)
+			to_chat(user, span_warning("You already have an emergency extraction implant!"))
+			return
+
+	// Get available beacons
+	var/list/possible_beacons = list()
+	for(var/B in GLOB.total_extraction_beacons)
+		var/obj/structure/extraction_point/EP = B
+		if(EP.beacon_network in beacon_networks)
+			possible_beacons += EP
+
+	if(!possible_beacons.len)
+		to_chat(user, span_warning("There are no extraction beacons in existence!"))
+		return
+
+	var/obj/structure/extraction_point/selected = input(user, "Select a beacon to link to", "Emergency Extraction Implant") as null|anything in sortNames(possible_beacons)
+	if(!selected)
+		return
+
+	beacon = selected
+	to_chat(user, span_notice("You begin implanting the emergency extraction device..."))
+
+	if(!do_after(user, 5 SECONDS, target = user))
+		to_chat(user, span_warning("Implantation interrupted!"))
+		return
+
+	// Check beacon still exists
+	if(!(beacon in GLOB.total_extraction_beacons))
+		to_chat(user, span_warning("The selected beacon no longer exists!"))
+		beacon = null
+		return
+
+	// Implant into user
+	implanted_mob = user
+	forceMove(user)
+	to_chat(user, span_notice("You implant the emergency extraction device. It will activate if you die."))
+	playsound(user, 'sound/items/ratchet.ogg', 50, TRUE)
+
+	// Register death signal
+	RegisterSignal(user, COMSIG_LIVING_DEATH, PROC_REF(on_death))
+
+/obj/item/emergency_extraction_implant/proc/on_death(mob/living/source, gibbed)
+	SIGNAL_HANDLER
+
+	// Can't extract if gibbed
+	if(gibbed)
+		to_chat(source, span_warning("The emergency extraction implant was destroyed!"))
+		qdel(src)
+		return
+
+	// Check beacon still exists
+	if(!beacon || !(beacon in GLOB.total_extraction_beacons))
+		to_chat(source, span_warning("The emergency extraction beacon no longer exists!"))
+		qdel(src)
+		return
+
+	// Trigger extraction - need to use INVOKE_ASYNC since we're in a signal handler
+	INVOKE_ASYNC(src, PROC_REF(perform_extraction), source)
+
+/obj/item/emergency_extraction_implant/proc/perform_extraction(mob/living/target)
+	to_chat(target, span_notice("The emergency extraction implant activates!"))
+
+	var/turf/start_turf = get_turf(target)
+
+	// Create holder and balloon effects
+	var/obj/effect/extraction_holder/holder_obj = new(start_turf)
+	holder_obj.appearance = target.appearance
+	target.forceMove(holder_obj)
+
+	var/mutable_appearance/balloon = mutable_appearance('icons/obj/fulton_balloon.dmi', "fulton_expand")
+	balloon.pixel_y = 10
+	balloon.appearance_flags = RESET_COLOR | RESET_ALPHA | RESET_TRANSFORM
+	holder_obj.add_overlay(balloon)
+
+	sleep(4)
+
+	var/mutable_appearance/balloon2 = mutable_appearance('icons/obj/fulton_balloon.dmi', "fulton_balloon")
+	balloon2.pixel_y = 10
+	balloon2.appearance_flags = RESET_COLOR | RESET_ALPHA | RESET_TRANSFORM
+	holder_obj.cut_overlay(balloon)
+	holder_obj.add_overlay(balloon2)
+
+	playsound(holder_obj.loc, 'sound/items/fultext_deploy.ogg', 50, TRUE, -3)
+	animate(holder_obj, pixel_z = 10, time = 20)
+	sleep(20)
+	animate(holder_obj, pixel_z = 15, time = 10)
+	sleep(10)
+	animate(holder_obj, pixel_z = 10, time = 10)
+	sleep(10)
+
+	playsound(holder_obj.loc, 'sound/items/fultext_launch.ogg', 50, TRUE, -3)
+	animate(holder_obj, pixel_z = 1000, time = 30)
+	sleep(30)
+
+	// Move to beacon
+	var/list/flooring_near_beacon = list()
+	for(var/turf/open/floor in orange(1, beacon))
+		flooring_near_beacon += floor
+	if(!flooring_near_beacon.len)
+		flooring_near_beacon += get_turf(beacon)
+
+	holder_obj.forceMove(pick(flooring_near_beacon))
+	animate(holder_obj, pixel_z = 10, time = 50)
+	sleep(50)
+	animate(holder_obj, pixel_z = 15, time = 10)
+	sleep(10)
+	animate(holder_obj, pixel_z = 10, time = 10)
+	sleep(10)
+
+	var/mutable_appearance/balloon3 = mutable_appearance('icons/obj/fulton_balloon.dmi', "fulton_retract")
+	balloon3.pixel_y = 10
+	balloon3.appearance_flags = RESET_COLOR | RESET_ALPHA | RESET_TRANSFORM
+	holder_obj.cut_overlay(balloon2)
+	holder_obj.add_overlay(balloon3)
+	sleep(4)
+	holder_obj.cut_overlay(balloon3)
+
+	animate(holder_obj, pixel_z = 0, time = 5)
+	sleep(5)
+
+	target.forceMove(holder_obj.loc)
+	qdel(holder_obj)
+
+	to_chat(target, span_notice("The emergency extraction is complete. The implant has been expended."))
+	qdel(src)
+
+/obj/item/emergency_extraction_implant/Destroy()
+	if(implanted_mob)
+		UnregisterSignal(implanted_mob, COMSIG_LIVING_DEATH)
+		implanted_mob = null
+	beacon = null
+	return ..()

@@ -20,7 +20,7 @@
 	maxHealth = 1000
 	health = 1000
 	rapid_melee = 2
-	move_to_delay = 7
+	move_to_delay = 5.2
 	damage_coeff = list( RED_DAMAGE = 0.9, WHITE_DAMAGE = 1.5, BLACK_DAMAGE = 0.5, PALE_DAMAGE = 1.5 )
 	melee_damage_lower = 5
 	melee_damage_upper = 15 // Idea taken from the old PR, have a large damage range to immitate its fucked rolls and crit chance.
@@ -155,12 +155,22 @@
 			move_to_delay = clamp(move_to_delay - 1, 3, 7) //Speed up
 			UpdateSpeed()
 
+/mob/living/simple_animal/hostile/abnormality/drifting_fox/AttackingTarget(atom/attacked_target)
+	..()
+	if(prob(10))
+		Dodge()
+
+/mob/living/simple_animal/hostile/abnormality/drifting_fox/attacked_by(obj/item/I, mob/living/user)
+	..()
+	if(prob(30))
+		Dodge()
+
 /mob/living/simple_animal/hostile/abnormality/drifting_fox/proc/UmbrellaLoop()
 	listclearnulls(spawned_mobs)
 	for(var/mob/living/L in spawned_mobs)
 		if(L.stat == DEAD)
 			spawned_mobs -= L
-	if(length(spawned_mobs) >= umbrella_spawn_limit)
+	if(length(spawned_mobs) > umbrella_spawn_limit)
 		return
 	var/mob/living/simple_animal/hostile/umbrella/newmob = new(get_turf(src))
 	newmob.faction = faction
@@ -170,6 +180,44 @@
 	newmob.ranged_cooldown_time = rand(20,80)
 	move_to_delay = clamp(move_to_delay - 1, 3, 7) //Speed up
 	addtimer(CALLBACK(src, PROC_REF(UmbrellaLoop)), umbrella_spawn_time)
+
+//Here's the dodge code. It's a fox so it's skittish, It's gonna dodge back and drop an umbrella at it's feet.
+// It dodges upon getting melee hit *sometimes* and *sometimes* on attack
+/mob/living/simple_animal/hostile/abnormality/drifting_fox/proc/Dodge()
+	//Spawn an umbrella here
+	if(length(spawned_mobs) < umbrella_spawn_limit)
+		var/mob/living/simple_animal/hostile/umbrella/newmob = new(get_turf(src))
+		newmob.faction = faction
+		spawned_mobs+=newmob
+		newmob.friend = src
+		newmob.GoToFox()
+		newmob.ranged_cooldown_time = rand(20,80)
+
+	if (stat == DEAD)
+		return FALSE
+
+	//Grab the direction we face away from,
+	var/dash_dir = turn(dir, 180)
+
+	var/turf/next_turf = get_step(src, dash_dir)
+	if(next_turf.density)	//Here's the deal, we check if there's a wall directly behind us
+		//Set our density false
+		density = FALSE
+		//And dash forwards
+		dash_dir = dir
+
+
+	for(var/i = 1 to 5)
+		next_turf = get_step(src, dash_dir)
+		if(!next_turf)
+			break
+		if(next_turf.density)
+			break
+		forceMove(next_turf)
+		SLEEP_CHECK_DEATH(1)
+
+	density = TRUE
+
 
 //Summons
 /mob/living/simple_animal/hostile/umbrella
@@ -196,7 +244,7 @@
 /mob/living/simple_animal/hostile/umbrella/death(gibbed)
 	visible_message(span_notice("[src] falls to the ground as the umbrella closes in on itself!"))
 	if(friend)
-		friend.deal_damage(100, BLACK_DAMAGE)
+		friend.deal_damage(100, BLACK_DAMAGE, flags = (DAMAGE_FORCED | DAMAGE_UNTRACKABLE), attack_type = (ATTACK_TYPE_SPECIAL))
 		friend.move_to_delay = clamp(move_to_delay + 1, 3, 7) //Slowdown
 	animate(src, alpha = 0, time = 10 SECONDS)
 	QDEL_IN(src, 10 SECONDS)
@@ -235,7 +283,7 @@
 	SLEEP_CHECK_DEATH(6)
 	for(var/turf/T in view(1, target_turf))
 		new /obj/effect/temp_visual/small_smoke/halfsecond(T)
-		for(var/mob/living/carbon/human/H in HurtInTurf(T, list(), 15, BLACK_DAMAGE, null, TRUE, FALSE, TRUE, FALSE, TRUE, TRUE))
+		for(var/mob/living/carbon/human/H in HurtInTurf(T, list(), 15, BLACK_DAMAGE, null, TRUE, FALSE, TRUE, FALSE, TRUE, TRUE, attack_type = (ATTACK_TYPE_SPECIAL)))
 			H.apply_status_effect(STATUS_EFFECT_FALSEKIND)
 	playsound(target_turf, 'sound/abnormalities/drifting_fox/fox_umbrella.ogg', 25, TRUE, 4)
 	ranged_cooldown = world.time + ranged_cooldown_time

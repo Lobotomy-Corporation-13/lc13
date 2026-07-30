@@ -215,6 +215,13 @@
 	if(!canSuicide())
 		return
 	if(confirm == "Yes")
+		// On Facility mode, stop people from suiciding if they possess a mob that's part of an Ordeal, during an Ordeal. Just ghost them.
+		if(SSmaptype.maptype in SSmaptype.lc_maps)
+			for(var/datum/ordeal/ord as anything in SSlobotomy_corp.current_ordeals)
+				if(src in ord.ordeal_mobs)
+					ghostize(FALSE)
+					toggle_ai(AI_ON)
+					return FALSE
 		set_suicide(TRUE)
 		visible_message("<span class='danger'>[src] begins to fall down. It looks like [p_theyve()] lost the will to live.</span>", \
 						"<span class='userdanger'>[src] begins to fall down. It looks like [p_theyve()] lost the will to live.</span>")

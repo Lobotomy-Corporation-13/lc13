@@ -31,6 +31,8 @@
 	var/cosmeticchance = 0 //These do not count on the total odds of a crate
 	var/repmodifier = 0
 	var/crate_multiplier = 2
+	/// Set this var to TRUE to make it impossible for this crate's contents to show up in J Corp lootboxes.
+	var/jcorp_banned = FALSE
 
 /obj/structure/lootcrate/Initialize()
 	. = ..()
@@ -81,5 +83,14 @@
 		SEND_GLOBAL_SIGNAL(COMSIG_CRATE_LOOTING_ENDED, user, src)
 
 	new loot(get_turf(src))
+
+	if(istype(loot, /obj/item/clothing/suit/armor/ego_gear))
+		var/obj/item/clothing/suit/armor/ego_gear/armor = loot
+		armor.sellable = TRUE
+
+	if(istype(loot, /obj/item/ego_weapon))
+		var/obj/item/ego_weapon/weapon = loot
+		weapon.sellable = TRUE
+
 	qdel(src)
 

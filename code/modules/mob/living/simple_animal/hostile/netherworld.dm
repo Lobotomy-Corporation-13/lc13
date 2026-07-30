@@ -15,8 +15,6 @@
 	faction = list("nether")
 	speak_emote = list("screams")
 	gold_core_spawnable = HOSTILE_SPAWN
-	atmos_requirements = list("min_oxy" = 0, "max_oxy" = 0, "min_tox" = 0, "max_tox" = 0, "min_co2" = 0, "max_co2" = 0, "min_n2" = 0, "max_n2" = 0)
-	minbodytemp = 0
 	lighting_alpha = LIGHTING_PLANE_ALPHA_MOSTLY_INVISIBLE
 	var/phaser = TRUE
 	var/datum/action/innate/creature/teleport/teleport
@@ -91,8 +89,8 @@
 	name = "mi-go"
 	desc = "A pinkish, fungoid crustacean-like creature with numerous pairs of clawed appendages and a head covered with waving antennae."
 	speak_emote = list("screams", "clicks", "chitters", "barks", "moans", "growls", "meows", "reverberates", "roars", "squeaks", "rattles", "exclaims", "yells", "remarks", "mumbles", "jabbers", "stutters", "seethes")
-	health = 250
-	maxHealth = 250
+	health = 300
+	maxHealth = 300
 	icon_state = "mi-go"
 	icon_living = "mi-go"
 	icon_dead = "mi-go-dead"
@@ -101,7 +99,7 @@
 	speed = -0.5
 	rapid_melee = 4
 	melee_damage_type = WHITE_DAMAGE
-	melee_damage_lower = 1
+	melee_damage_lower = 3
 	melee_damage_upper = 3
 	damage_coeff = list(RED_DAMAGE = 1, WHITE_DAMAGE = 1.5, BLACK_DAMAGE = 1, PALE_DAMAGE = 1)
 	butcher_results = list(/obj/item/food/meat/slab/fruit = 1)
@@ -122,7 +120,7 @@
 	if(ishuman(attacked_target))
 		var/mob/living/carbon/human/L = attacked_target
 		if(L.sanity_lost && L.stat != DEAD)
-			L.apply_damage(scream_damage, PALE_DAMAGE, null, L.run_armor_check(null, PALE_DAMAGE))
+			L.deal_damage(scream_damage, PALE_DAMAGE, src, attack_type = (ATTACK_TYPE_MELEE))
 	return ..()
 
 /mob/living/simple_animal/hostile/netherworld/migo/say(message, bubble_type, list/spans = list(), sanitize = TRUE, datum/language/language = null, ignore_spam = FALSE, forced = null)
@@ -134,7 +132,7 @@
 	manual_emote("twitches unnaturally...")
 	for(var/mob/living/L in view(7, src))
 		if(!faction_check_mob(L))
-			L.apply_damage(scream_damage, WHITE_DAMAGE, null, L.run_armor_check(null, WHITE_DAMAGE))
+			L.deal_damage(scream_damage, WHITE_DAMAGE, src, attack_type = (ATTACK_TYPE_SPECIAL))
 
 /mob/living/simple_animal/hostile/netherworld/migo/Life()
 	..()
@@ -146,7 +144,7 @@
 		manual_emote("twitches unnaturally...")
 		for(var/mob/living/L in view(7, src))
 			if(!faction_check_mob(L))
-				L.apply_damage(scream_damage, WHITE_DAMAGE, null, L.run_armor_check(null, WHITE_DAMAGE))
+				L.deal_damage(scream_damage, WHITE_DAMAGE, src, attack_type = (ATTACK_TYPE_SPECIAL))
 
 /mob/living/simple_animal/hostile/netherworld/blankbody
 	name = "blank body"

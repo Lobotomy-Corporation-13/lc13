@@ -46,7 +46,6 @@
 /turf/open/floor/mineral/titanium/white,
 /area/ruin/space/has_grav/whiteship/box)
 "in" = (
-/obj/machinery/portable_atmospherics/scrubber,
 /turf/open/floor/mineral/titanium/white,
 /area/ruin/space/has_grav/whiteship/box)
 "iK" = (
@@ -85,7 +84,6 @@
 /turf/open/floor/mineral/titanium/purple,
 /area/ruin/space/has_grav/whiteship/box)
 "mR" = (
-/obj/machinery/portable_atmospherics/canister/oxygen,
 /turf/open/floor/mineral/titanium/white,
 /area/ruin/space/has_grav/whiteship/box)
 "nd" = (

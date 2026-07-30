@@ -6,11 +6,26 @@
 	var/firing_effect_type = null //the visual effect appearing when the ammo is fired.
 
 /obj/item/ego_weapon/ranged/proc/fire_projectile(atom/target, mob/living/user, params, distro, quiet, zone_override, spread, atom/fired_from, temporary_damage_multiplier)
-	var/obj/projectile/projectile = new projectile_path(src, src)
+	var/final_projectile_path = alternate_selected ? alternate_projectile_path : projectile_path
+	var/final_pellets = alternate_selected ? alternate_pellets : pellets
+	var/obj/projectile/projectile = new final_projectile_path(src, src)
 	projectile.original = target
 	projectile.firer = user
 	projectile.fired_from = fired_from
-	distro += variance
+	if(alternate_selected)
+		distro += alternate_variance
+	else
+		distro += variance
+	if(projectile.icon_state == "bullet")
+		switch(projectile.damage_type)
+			if(RED_DAMAGE)
+				projectile.icon_state = "red_bullet"
+			if(WHITE_DAMAGE)
+				projectile.icon_state = "white_bullet"
+			if(BLACK_DAMAGE)
+				projectile.icon_state = "black_bullet"
+			if(PALE_DAMAGE)
+				projectile.icon_state = "pale_bullet"
 
 	var/targloc = get_turf(target)
 
@@ -31,7 +46,9 @@
 	last_projectile_damage = projectile.damage
 	last_projectile_type = projectile.damage_type
 
-	if(pellets == 1)
+	projectile = ProjectileAdjustment(projectile, targloc, target, user)
+
+	if(final_pellets == 1)
 		if(distro) //We have to spread a pixel-precision bullet. throw_proj was called before so angles should exist by now...
 			if(random_spread)
 				spread = round((rand() - 0.5) * distro)
@@ -43,11 +60,11 @@
 		if(isnull(projectile))
 			return FALSE
 		var/obj/item/ammo_casing/caseless/casing = new(src)
-		casing.pellets = pellets
+		casing.pellets = final_pellets
 		casing.variance = variance
-		casing.projectile_type = projectile_path
+		casing.projectile_type = final_projectile_path
 		casing.BB = projectile
-		casing.AddComponent(/datum/component/pellet_cloud, projectile_path, pellets)
+		casing.AddComponent(/datum/component/pellet_cloud, final_projectile_path, final_pellets)
 		SEND_SIGNAL(casing, COMSIG_PELLET_CLOUD_INIT, target, user, fired_from, random_spread, spread, zone_override, params, distro)
 		qdel(casing) // don't worry, the component protects the casing from deleting until its done doing its job
 
@@ -56,6 +73,8 @@
 	else
 		user.changeNext_move(CLICK_CD_RANGE)
 	user.newtonian_move(get_dir(target, user))
+
+	return projectile
 
 /obj/item/ego_weapon/ranged/proc/throw_proj(atom/target, turf/targloc, mob/living/user, params, spread, obj/projectile/projectile)
 	var/turf/curloc = get_turf(user)
@@ -76,3 +95,7 @@
 		projectile.preparePixelProjectile(target, user, params, spread)
 	projectile.fire(null, direct_target)
 	return TRUE
+
+/// This proc gives us a chance to adjust stuff on the projectile we're firing before we actually throw it anywhere. Just remember to return the projectile once we're done.
+/obj/item/ego_weapon/ranged/proc/ProjectileAdjustment(obj/projectile/proj, turf/targloc, atom/target, mob/living/user)
+	return proj

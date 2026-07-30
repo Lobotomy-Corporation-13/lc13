@@ -252,7 +252,7 @@
 	else
 		return BULLET_ACT_HIT
 
-/obj/structure/chrono_field/assume_air()
+/* /obj/structure/chrono_field/assume_air()
 	return 0
 
 /obj/structure/chrono_field/return_air() //we always have nominal air and temperature
@@ -261,7 +261,7 @@
 	GM.gases[/datum/gas/oxygen][MOLES] = MOLES_O2STANDARD
 	GM.gases[/datum/gas/nitrogen][MOLES] = MOLES_N2STANDARD
 	GM.temperature = T20C
-	return GM
+	return GM */
 
 /obj/structure/chrono_field/singularity_act()
 	return

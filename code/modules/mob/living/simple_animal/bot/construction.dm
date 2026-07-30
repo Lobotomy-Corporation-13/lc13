@@ -431,7 +431,7 @@
 					new /obj/item/melee/transforming/energy/sword/saber(Tsec)
 
 
-//Firebot Assembly
+/* //Firebot Assembly
 /obj/item/bot_assembly/firebot
 	name = "incomplete firebot assembly"
 	desc = "A fire extinguisher with an arm attached to it."
@@ -460,7 +460,7 @@
 				F.name = created_name
 				qdel(I)
 				qdel(src)
-
+ */
 //Get cleaned
 /obj/item/bot_assembly/hygienebot
 	name = "incomplete hygienebot assembly"

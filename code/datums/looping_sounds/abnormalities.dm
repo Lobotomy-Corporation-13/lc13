@@ -137,6 +137,13 @@
 	extra_range = 40
 	channel = CHANNEL_MFE
 
+/datum/looping_sound/pianist
+	mid_sounds = 'sound/distortions/pianist_theme.ogg'
+	mid_length = 275 SECONDS
+	volume = 50
+	extra_range = 40
+	channel = CHANNEL_PIANIST
+
 // Ordeals
 /datum/looping_sound/amberdusk
 	mid_sounds = 'sound/effects/ordeals/amber/dusk_ambience.ogg'
@@ -159,3 +166,39 @@
 	mid_length = 0.4 SECONDS
 	volume = 35
 	extra_range = 128
+
+// Bloodfiend Boss Themes
+/datum/looping_sound/bloodfiend_barber
+	mid_sounds = 'sound/distortions/bloodfiend_themes/barber_boss_theme.ogg'
+	mid_length = 197 SECONDS // 3:17
+	volume = 50
+	extra_range = 40
+	channel = CHANNEL_BARBER
+
+/datum/looping_sound/bloodfiend_priest
+	mid_sounds = 'sound/distortions/bloodfiend_themes/priest_boss_theme.ogg'
+	mid_length = 97 SECONDS // 1:37
+	volume = 50
+	extra_range = 40
+	channel = CHANNEL_PRIEST
+
+/datum/looping_sound/bloodfiend_dulcinea
+	mid_sounds = 'sound/distortions/bloodfiend_themes/dulcinea_boss_theme.ogg'
+	mid_length = 199 SECONDS // 3:19
+	volume = 50
+	extra_range = 40
+	channel = CHANNEL_DULCINEA
+
+/datum/looping_sound/bloodfiend_trio
+	mid_sounds = 'sound/distortions/bloodfiend_themes/trio_boss_theme.ogg'
+	mid_length = 189 SECONDS // 3:09
+	volume = 50
+	extra_range = 40
+	channel = CHANNEL_BLOODFIEND_TRIO
+
+/datum/looping_sound/laluna
+	mid_sounds = 'sound/abnormalities/luna/mvmt3.ogg'
+	mid_length = 400 SECONDS //Duration 4 seconds shorter than it actually is to avoid the silence
+	volume = 180 //Thats what the playsound on the abno file was if you think its louder than usual, its a banger anyways
+	extra_range = 28
+	channel = CHANNEL_LUNA

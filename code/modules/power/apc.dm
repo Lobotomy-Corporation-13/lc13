@@ -256,7 +256,7 @@
 
 	addtimer(CALLBACK(src, PROC_REF(update)), 5)
 
-/obj/machinery/power/apc/ComponentInitialize()
+/* /obj/machinery/power/apc/ComponentInitialize()
 	. = ..()
 	AddElement(/datum/element/atmos_sensitive)
 
@@ -264,7 +264,7 @@
 	return (exposed_temperature > 2000)
 
 /obj/machinery/power/apc/atmos_expose(datum/gas_mixture/air, exposed_temperature)
-	take_damage(min(exposed_temperature/100, 10), FIRE)
+	take_damage(min(exposed_temperature/100, 10), FIRE) */
 
 /obj/machinery/power/apc/examine(mob/user)
 	. = ..()

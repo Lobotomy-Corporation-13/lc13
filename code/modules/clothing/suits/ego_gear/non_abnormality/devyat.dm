@@ -5,6 +5,7 @@
 	worn_icon = 'icons/obj/clothing/ego_gear/devyat_armor.dmi'
 	icon_state = "devyat"
 	slowdown = -0.15
+	cold_protection = CHEST|GROIN|ARMS
 	hat = /obj/item/clothing/head/ego_hat/devyat_goggles
 	armor = list(RED_DAMAGE = 40, WHITE_DAMAGE = 10, BLACK_DAMAGE = 50, PALE_DAMAGE = 20)
 	attribute_requirements = list(
@@ -27,8 +28,9 @@
 							)
 
 /obj/item/clothing/head/ego_hat/devyat_goggles
-	icon = 'icons/obj/clothing/ego_gear/devyat_icon.dmi'
-	worn_icon = 'icons/obj/clothing/ego_gear/devyat_armor.dmi'
 	name = "devyat goggles"
 	desc = "Simple goggles that the devyat wear during their jobs."
+	icon = 'icons/obj/clothing/ego_gear/devyat_icon.dmi'
+	worn_icon = 'icons/obj/clothing/ego_gear/devyat_armor.dmi'
 	icon_state = "9goggles"
+	cold_protection = HEAD

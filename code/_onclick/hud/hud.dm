@@ -7,6 +7,7 @@
 // The default UI style is the first one in the list
 GLOBAL_LIST_INIT(available_ui_styles, list(
 	"Lobotomite" = 'icons/hud/screen_lobotomy.dmi',
+	"Carmen" = 'icons/hud/screen_lobotomycarmen.dmi',
 	"Limboid (Gloom)" = 'icons/hud/screen_limboid.dmi',
 	"Limboid (Envy)" = 'icons/hud/screen_limboidenvy.dmi',
 	"Midnight" = 'icons/hud/screen_midnight.dmi',

@@ -23,7 +23,6 @@
 	move_to_delay = 8
 	var/jump_cooldown_time = 10 SECONDS
 	var/jump_cooldown
-	var/can_act = TRUE
 	var/jump_range = 7
 	var/jump_aoe = 1
 	var/jump_damage = 20
@@ -80,7 +79,7 @@
 			for(var/mob/living/L in T)
 				if(faction_check_mob(L))
 					continue
-				L.deal_damage(jump_damage, RED_DAMAGE)
+				L.deal_damage(jump_damage, RED_DAMAGE, src, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 				if(L.health < 0)
 					L.gib()
 					continue
@@ -129,7 +128,7 @@
 				devour(L)
 				return
 			new /obj/effect/temp_visual/damage_effect/rupture(get_turf(L))
-			L.deal_damage(rupture_damage, BRUTE)
+			L.deal_damage(rupture_damage, BRUTE, src, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_MELEE))
 		else
 			devour(L)
 
@@ -149,7 +148,7 @@
 		if(part.dismemberable && prob(dismember_probability) && part.body_part != CHEST && C.stat == DEAD)
 			part.dismember()
 			QDEL_NULL(part)
-			new /obj/effect/gibspawner/generic/silent(get_turf(C))
+			new /obj/effect/bloodspawner/silent(get_turf(C))
 		if(length(C.bodyparts) <= 1)
 			C.gib()
 			return
@@ -183,7 +182,6 @@
 	minimum_distance = 2 // Don't move all the way to melee
 	projectiletype = /obj/projectile/beam/water_jet
 	projectilesound = 'sound/effects/ordeals/brown/flea_attack.ogg'
-	var/can_act = TRUE
 	var/sinking_damage = 10
 
 /mob/living/simple_animal/hostile/ordeal/sin_gloom/Move()
@@ -218,13 +216,13 @@
 		for(var/mob/living/L in T)
 			if(faction_check_mob(L))
 				continue
-			L.deal_damage(damage_dealt, melee_damage_type)
+			L.deal_damage(damage_dealt, melee_damage_type, src)
 			new /obj/effect/temp_visual/damage_effect/sinking(get_turf(L))
 			if(ishuman(L))
 				var/mob/living/carbon/human/H = L
 				H.adjustSanityLoss(sinking_damage)
 			else
-				L.deal_damage(sinking_damage, WHITE_DAMAGE)
+				L.deal_damage(sinking_damage, WHITE_DAMAGE, src, attack_type = (ATTACK_TYPE_SPECIAL))
 		for(var/obj/vehicle/sealed/mecha/V in T)
 			V.take_damage(damage_dealt, melee_damage_type)
 	SLEEP_CHECK_DEATH(8)
@@ -344,15 +342,15 @@
 	for(var/mob/living/L in range(dash_range, T))//damage applied to targets in range
 		if(faction_check_mob(L))
 			continue
-		if(L in been_hit)
+		if(L.tag in been_hit)
 			continue
 		if(L.z != z)
 			continue
 		L.visible_message(span_warning("[src] shreds [L] as it passes by!"), span_boldwarning("[src] shreds you!"))
 		var/turf/LT = get_turf(L)
 		new /obj/effect/temp_visual/kinetic_blast(LT)
-		L.apply_damage(dash_damage, BLACK_DAMAGE, null, L.run_armor_check(null, BLACK_DAMAGE), spread_damage = TRUE)
-		been_hit += L
+		L.deal_damage(dash_damage, BLACK_DAMAGE, src, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
+		been_hit += L.tag
 		playsound(L, 'sound/weapons/fixer/generic/sword4.ogg', 75, 1)
 		if(!ishuman(L))
 			continue
@@ -388,7 +386,6 @@
 	guaranteed_butcher_results = list(/obj/item/food/meat/slab/sinnew = 1)
 	ranged = TRUE
 	var/block_chance = 10
-	var/can_act = TRUE
 	var/ability_damage = 25
 	var/ability_cooldown
 	var/ability_cooldown_time = 6 SECONDS
@@ -404,7 +401,8 @@
 	if(prob(25))
 		visible_message(span_userdanger("[P] is blocked by [src]!"))
 		P.Destroy()
-	return ..()
+		return
+	..()
 
 /mob/living/simple_animal/hostile/ordeal/sin_lust/attacked_by(obj/item/I, mob/living/user)
 	var/checkdir = check_target_facings(user, src)
@@ -463,7 +461,7 @@
 	Beam(T, "tentacle", time = 10)
 	playsound(src, 'sound/weapons/ego/censored1.ogg', 75, FALSE, 5)
 	for(var/turf/TT in turf_list)
-		for(var/mob/living/L in HurtInTurf(TT, list(), ability_damage, RED_DAMAGE, null, TRUE, FALSE, TRUE, hurt_structure = TRUE))
+		for(var/mob/living/L in HurtInTurf(TT, list(), ability_damage, RED_DAMAGE, null, TRUE, FALSE, TRUE, hurt_structure = TRUE, attack_type = (ATTACK_TYPE_RANGED | ATTACK_TYPE_SPECIAL)))
 			new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(L), pick(GLOB.alldirs))
 			L.apply_lc_bleed(15)
 	can_act = TRUE
@@ -579,7 +577,7 @@
 				if(ishuman(L))
 					var/mob/living/carbon/human/H = L
 					H.apply_lc_burn(burn_stacks)
-				L.deal_damage(charge_damage, RED_DAMAGE)
+				L.deal_damage(charge_damage, RED_DAMAGE, src, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 				if(L.health < 0)
 					L.gib()
 					playsound(src, 'sound/effects/ordeals/brown/tentacle_explode.ogg', 75, 1)

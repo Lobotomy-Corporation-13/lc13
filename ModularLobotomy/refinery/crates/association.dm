@@ -29,6 +29,9 @@
 		/obj/item/clothing/suit/armor/ego_gear/city/cinq,
 		/obj/item/ego_weapon/city/cinq,
 		/obj/item/clothing/suit/armor/ego_gear/city/devyat_suit/weak,
+		/obj/item/ego_weapon/city/cinq/section4,
+		/obj/item/ego_weapon/city/cinq/section4/west,
+		/obj/item/ego_weapon/city/dieci,
 	)
 
 	rareloot =	list(
@@ -102,6 +105,8 @@
 		/obj/item/tresmetal,
 	)
 
+	jcorp_banned = TRUE
+
 	rareloot =	list(
 		/obj/item/workshop_mod/regular/red,
 		/obj/item/workshop_mod/regular/white,
@@ -155,22 +160,29 @@
 	name = "Shi Association Crate"
 	desc = "A crate recieved from the shi association. Open with a Crowbar."
 	icon_state = "crate_shi"
-	lootlist =	list(
+	veryrarechance = 15
+	lootlist = list(
 		/obj/item/ego_weapon/city/shi_assassin,
 		/obj/item/ego_weapon/city/shi_knife,
 		/obj/item/clothing/suit/armor/ego_gear/city/shi,
 		/obj/item/clothing/suit/armor/ego_gear/city/shilimbus,
+		/obj/item/clothing/suit/armor/ego_gear/city/shi_east,
+		/obj/item/ego_weapon/city/shi_assassin/yokai,
 	)
 
-	rareloot =	list(
-		/obj/item/ego_weapon/city/shi_assassin/yokai,
+	rareloot = list(
 		/obj/item/ego_weapon/city/shi_assassin/sakura,
 		/obj/item/ego_weapon/city/shi_assassin/serpent,
 		/obj/item/ego_weapon/city/shi_assassin/vet,
-		/obj/item/ego_weapon/city/shi_assassin/director,
 		/obj/item/clothing/suit/armor/ego_gear/city/shi/vet,
-		/obj/item/clothing/suit/armor/ego_gear/city/shi/director,
 		/obj/item/clothing/suit/armor/ego_gear/city/shilimbus/vet,
+
+	)
+
+	veryrareloot = list(
+		/obj/item/ego_weapon/city/shi_assassin/director,
+		/obj/item/storage/box/shi_east_kit/facility,
+		/obj/item/clothing/suit/armor/ego_gear/city/shi/director,
 		/obj/item/clothing/suit/armor/ego_gear/city/shilimbus/director,
 	)
 
@@ -180,22 +192,16 @@
 	desc = "A crate recieved from the cinq association. Open with a Crowbar."
 	icon_state = "crate_cinq"
 	lootlist =	list(
-		/obj/item/ego_weapon/city/shi_assassin,
-		/obj/item/ego_weapon/city/shi_knife,
-		/obj/item/clothing/suit/armor/ego_gear/city/shi,
-		/obj/item/clothing/suit/armor/ego_gear/city/shilimbus,
+		/obj/item/ego_weapon/city/cinq,
+		/obj/item/ego_weapon/city/cinq/section4,
+		/obj/item/clothing/suit/armor/ego_gear/city/cinq,
+		/obj/item/clothing/suit/armor/ego_gear/city/cinqwest,
+		/obj/item/ego_weapon/city/cinq/section4/west,
 	)
 
 	rareloot =	list(
-		/obj/item/ego_weapon/city/shi_assassin/yokai,
-		/obj/item/ego_weapon/city/shi_assassin/sakura,
-		/obj/item/ego_weapon/city/shi_assassin/serpent,
-		/obj/item/ego_weapon/city/shi_assassin/vet,
-		/obj/item/ego_weapon/city/shi_assassin/director,
-		/obj/item/clothing/suit/armor/ego_gear/city/shi/vet,
-		/obj/item/clothing/suit/armor/ego_gear/city/shi/director,
-		/obj/item/clothing/suit/armor/ego_gear/city/shilimbus/vet,
-		/obj/item/clothing/suit/armor/ego_gear/city/shilimbus/director,
+		/obj/item/ego_weapon/city/cinq/section5,
+		/obj/item/ego_weapon/city/cinq/section4/director,
 	)
 
 //Liu - Liu Association

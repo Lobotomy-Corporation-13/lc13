@@ -35,7 +35,6 @@
 	var/hammer_cooldown
 	var/hammer_cooldown_time = 6 SECONDS
 	var/hammer_damage = 200
-	var/list/been_hit = list()
 
 /mob/living/simple_animal/hostile/ordeal/black_fixer/Initialize()
 	. = ..()
@@ -87,7 +86,7 @@
 			if(faction_check_mob(L))
 				continue
 			new /obj/effect/temp_visual/revenant(get_turf(L))
-			L.apply_damage(pulse_damage, BLACK_DAMAGE, null, L.run_armor_check(null, BLACK_DAMAGE), spread_damage = TRUE)
+			L.deal_damage(pulse_damage, BLACK_DAMAGE, src, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_SPECIAL))
 		SLEEP_CHECK_DEATH(5.6) // In total we wait for 2.8 seconds
 	playsound(src, 'sound/effects/ordeals/white/black_ability_end.ogg', 100, FALSE, 30)
 	for(var/obj/machinery/computer/abnormality/A in urange(current_pulse_range, src))
@@ -103,7 +102,6 @@
 		return
 	hammer_cooldown = world.time + hammer_cooldown_time
 	busy = TRUE
-	been_hit = list()
 	visible_message(span_warning("[src] raises their hammer high above the ground!"))
 	var/turf/target_turf = get_ranged_target_turf_direct(src, target, 14, rand(-15,15))
 	var/list/turfs_to_hit = getline(src, target_turf)
@@ -120,7 +118,7 @@
 			break
 		for(var/turf/open/TT in RANGE_TURFS(1, T))
 			new /obj/effect/temp_visual/small_smoke/halfsecond(TT)
-			been_hit = HurtInTurf(TT, been_hit, hammer_damage, BLACK_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, hurt_structure = TRUE)
+			HurtInTurf(TT, null, hammer_damage, BLACK_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, hurt_structure = TRUE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 		sleep(1)
 	SLEEP_CHECK_DEATH(4)
 	busy = FALSE
@@ -154,7 +152,6 @@
 	del_on_death = TRUE
 	can_patrol = TRUE
 
-	var/can_act = TRUE
 	/// When this reaches 480 - begins reflecting damage
 	var/damage_taken = 0
 	var/damage_reflection = FALSE
@@ -164,7 +161,6 @@
 	var/beam_direct_damage = 250
 	/// White damage dealt every 0.5 seconds to those standing in the beam's smoke
 	var/beam_overtime_damage = 30
-	var/list/been_hit = list()
 	var/circle_cooldown
 	var/circle_cooldown_time = 30 SECONDS
 	var/circle_radius = 24
@@ -178,7 +174,6 @@
 
 /mob/living/simple_animal/hostile/ordeal/white_fixer/Destroy()
 	QDEL_NULL(RVP)
-	been_hit.Cut()
 	return ..()
 
 /mob/living/simple_animal/hostile/ordeal/white_fixer/Life()
@@ -211,13 +206,6 @@
 		return
 	return ..()
 
-/mob/living/simple_animal/hostile/ordeal/white_fixer/adjustHealth(amount, updating_health = TRUE, forced = FALSE)
-	. = ..()
-	if(. > 0)
-		damage_taken += .
-	if(damage_taken >= 480 && !damage_reflection)
-		StartReflecting()
-
 /mob/living/simple_animal/hostile/ordeal/white_fixer/proc/LongBeam(target)
 	if(beam_cooldown > world.time)
 		return
@@ -232,7 +220,6 @@
 		RVP.NewCultSparks(T) // Prepare yourselves
 	SLEEP_CHECK_DEATH(13)
 	playsound(src, 'sound/effects/ordeals/white/white_beam.ogg', 75, FALSE, 32)
-	been_hit = list()
 	var/i = 1
 	for(var/turf/T in turfs_to_hit)
 		addtimer(CALLBACK(src, PROC_REF(LongBeamTurf), T), i*0.3)
@@ -255,7 +242,7 @@
 		affected_turfs += TT
 		var/obj/effect/reusable_visual/RV = RVP.NewSmoke(TT, 5 SECONDS)
 		RV.name = "mental smoke"
-		been_hit = HurtInTurf(TT, been_hit, beam_direct_damage, WHITE_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE)
+		HurtInTurf(TT, null, beam_direct_damage, WHITE_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_RANGED | ATTACK_TYPE_SPECIAL))
 
 	for(var/turf/TT in affected_turfs) // Remaining damage effect
 		BeamTurfEffect(TT, beam_overtime_damage)
@@ -263,7 +250,7 @@
 /mob/living/simple_animal/hostile/ordeal/white_fixer/proc/BeamTurfEffect(turf/T, damage = 10)
 	set waitfor = FALSE
 	for(var/i = 1 to 5)
-		HurtInTurf(T, list(), damage, WHITE_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE)
+		HurtInTurf(T, list(), damage, WHITE_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_RANGED | ATTACK_TYPE_SPECIAL))
 		sleep(5)
 
 /mob/living/simple_animal/hostile/ordeal/white_fixer/proc/CircleBeam()
@@ -294,21 +281,21 @@
 		can_act = TRUE
 
 /mob/living/simple_animal/hostile/ordeal/white_fixer/proc/StartReflecting()
-	can_act = FALSE
 	damage_reflection = TRUE
+	can_act = FALSE
 	damage_taken = 0
 	playsound(src, 'sound/effects/ordeals/white/white_reflect.ogg', 50, TRUE, 7)
 	visible_message("<span class='warning>[src] starts praying!</span>")
 	icon_state = "fixer_w_pray"
-	ChangeResistances(list(RED_DAMAGE = 0, WHITE_DAMAGE = 0, BLACK_DAMAGE = 0, PALE_DAMAGE = 0))
+	RegisterSignal(src, COMSIG_MOB_APPLY_DAMGE, PROC_REF(DenyDamage))
 	SLEEP_CHECK_DEATH(10 SECONDS)
 	icon_state = icon_living
-	ChangeResistances(list(RED_DAMAGE = 0.5, WHITE_DAMAGE = 0, BLACK_DAMAGE = 0.5, PALE_DAMAGE = 1))
+	UnregisterSignal(src, COMSIG_MOB_APPLY_DAMGE)
 	damage_reflection = FALSE
 	can_act = TRUE
 
 // All damage reflection stuff is down here
-/mob/living/simple_animal/hostile/ordeal/white_fixer/proc/ReflectDamage(mob/living/attacker, attack_type = RED_DAMAGE, damage)
+/mob/living/simple_animal/hostile/ordeal/white_fixer/proc/ReflectDamage(mob/living/attacker, damage_type = RED_DAMAGE, damage)
 	if(QDELETED(src) || stat == DEAD)
 		return
 	if(damage < 1)
@@ -318,43 +305,28 @@
 	for(var/turf/T in RANGE_TURFS(1, src))
 		RVP.NewSparkles(T)
 	playsound(src, 'sound/effects/ordeals/white/white_reflect.ogg', min(15 + damage, 100), TRUE, 4)
-	attacker.apply_damage(damage, attack_type, null, attacker.getarmor(null, attack_type))
+	attacker.deal_damage(damage, damage_type, src, attack_type = (ATTACK_TYPE_COUNTER))
 	RVP.NewSparkles(get_turf(attacker), color = COLOR_VIOLET)
 
-/mob/living/simple_animal/hostile/ordeal/white_fixer/attack_hand(mob/living/carbon/human/M)
+/mob/living/simple_animal/hostile/ordeal/white_fixer/proc/DenyDamage()
+	SIGNAL_HANDLER
+	return COMPONENT_MOB_DENY_DAMAGE
+
+/// Reflects damage when reflection is active and we're given a living source. There is no need to return FALSE to prevent the damage here, because we already are using the DenyDamage() signal handler for that.
+/mob/living/simple_animal/hostile/ordeal/white_fixer/PreDamageReaction(damage_amount, damage_type, source, attack_type)
 	. = ..()
-	if(!.)
+	if(damage_reflection && isliving(source) && !(attack_type & ATTACK_TYPE_STATUS)) // However, we will have mercy on people who applied long status effects like Adoration DoT
+		ReflectDamage(source, damage_type, damage_amount)
+
+/mob/living/simple_animal/hostile/ordeal/white_fixer/PostDamageReaction(damage_amount, damage_type, source, attack_type)
+	. = ..()
+	if(. > 0)
+		damage_taken += .
+	if(damage_taken >= 480 && !damage_reflection)
+		damage_reflection = TRUE
+		INVOKE_ASYNC(src, PROC_REF(StartReflecting))
 		return
-	if(damage_reflection && M.a_intent == INTENT_HARM)
-		ReflectDamage(M, M?.dna?.species?.attack_type, M?.dna?.species?.punchdamagehigh)
 
-/mob/living/simple_animal/hostile/ordeal/white_fixer/attack_paw(mob/living/carbon/human/M)
-	. = ..()
-	if(damage_reflection && M.a_intent != INTENT_HELP)
-		ReflectDamage(M, M?.dna?.species?.attack_type, 5)
-
-/mob/living/simple_animal/hostile/ordeal/white_fixer/attack_animal(mob/living/simple_animal/M)
-	. = ..()
-	if(!damage_reflection)
-		return
-	if(.)
-		var/damage = rand(M.melee_damage_lower, M.melee_damage_upper)
-		if(damage > 0)
-			ReflectDamage(M, M.melee_damage_type, damage)
-
-/mob/living/simple_animal/hostile/ordeal/white_fixer/bullet_act(obj/projectile/Proj, def_zone, piercing_hit = FALSE)
-	. = ..()
-	if(damage_reflection && Proj.firer)
-		ReflectDamage(Proj.firer, Proj.damage_type, Proj.damage)
-
-/mob/living/simple_animal/hostile/ordeal/white_fixer/attackby(obj/item/I, mob/living/user, params)
-	. = ..()
-	if(!damage_reflection)
-		return
-	var/damage = I.force
-	if(ishuman(user))
-		damage *= 1 + (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE) / 100)
-	ReflectDamage(user, I.damtype, damage)
 
 // Black Fixer
 /mob/living/simple_animal/hostile/ordeal/red_fixer
@@ -443,7 +415,7 @@
 	SLEEP_CHECK_DEATH(4)
 	forceMove(slash_end)
 	for(var/turf/T in hitline)
-		for(var/mob/living/L in HurtInTurf(T, list(), multislash_damage, RED_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, hurt_structure = TRUE))
+		for(var/mob/living/L in HurtInTurf(T, list(), multislash_damage, RED_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, hurt_structure = TRUE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)))
 			to_chat(L, span_userdanger("[src] slashes you at a high speed!"))
 	var/datum/beam/B1 = slash_start.Beam(slash_end, "volt_ray", time=3)
 	B1.visuals.color = COLOR_YELLOW
@@ -451,7 +423,7 @@
 	SLEEP_CHECK_DEATH(3)
 	forceMove(slash_start)
 	for(var/turf/T in hitline)
-		for(var/mob/living/L in HurtInTurf(T, list(), multislash_damage, RED_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, hurt_structure = TRUE))
+		for(var/mob/living/L in HurtInTurf(T, list(), multislash_damage, RED_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, hurt_structure = TRUE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)))
 			to_chat(L, span_userdanger("[src] slashes you at a high speed!"))
 	var/datum/beam/B2 = slash_start.Beam(slash_end, "volt_ray", time=6)
 	B2.visuals.color = COLOR_RED
@@ -483,7 +455,7 @@
 			if(faction_check_mob(L))
 				continue
 			to_chat(L, span_userdanger("A red laser passes right through you!"))
-			L.apply_damage(beam_damage, RED_DAMAGE, null, L.run_armor_check(null, RED_DAMAGE))
+			L.deal_damage(beam_damage, RED_DAMAGE, src, attack_type = (ATTACK_TYPE_RANGED | ATTACK_TYPE_SPECIAL))
 			been_hit |= L
 			new /obj/effect/temp_visual/cult/sparks(get_turf(L))
 	playsound(src, 'sound/effects/ordeals/white/red_beam_fire.ogg', 100, FALSE, 32)
@@ -521,7 +493,6 @@
 	attack_sound = 'sound/effects/ordeals/white/pale_knife.ogg'
 	del_on_death = TRUE
 
-	var/can_act = TRUE
 	var/multislash_cooldown
 	var/multislash_cooldown_time = 5 SECONDS
 	/// Amount of pale damage per slash
@@ -616,7 +587,7 @@
 			S.pixel_x = rand(-8, 8)
 			S.pixel_y = rand(-8, 8)
 			animate(S, alpha = 0, time = 1.5)
-			for(var/mob/living/L in HurtInTurf(T, list(), multislash_damage, PALE_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, hurt_structure = TRUE))
+			for(var/mob/living/L in HurtInTurf(T, list(), multislash_damage, PALE_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, hurt_structure = TRUE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)))
 				to_chat(L, span_userdanger("[src] stabs you!"))
 				new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(L), dir_to_target)
 		playsound(src, attack_sound, 50, TRUE, 3)
@@ -663,7 +634,7 @@
 	B.visuals.transform = M
 	var/list/been_hit = list()
 	for(var/turf/T in hitline)
-		var/list/new_hits = HurtInTurf(T, been_hit, tentacle_damage, PALE_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, hurt_structure = TRUE) - been_hit
+		var/list/new_hits = HurtInTurf(T, been_hit, tentacle_damage, PALE_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, hurt_structure = TRUE, attack_type = (ATTACK_TYPE_SPECIAL)) - been_hit
 		been_hit += new_hits
 		for(var/mob/living/L in new_hits)
 			to_chat(L, span_userdanger("A pale beam passes right through you!"))

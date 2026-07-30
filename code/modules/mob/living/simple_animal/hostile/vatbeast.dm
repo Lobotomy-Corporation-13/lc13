@@ -11,7 +11,6 @@
 	gender = NEUTER
 	environment_smash = ENVIRONMENT_SMASH_STRUCTURES
 	speak_emote = list("roars")
-	atmos_requirements = list("min_oxy" = 0, "max_oxy" = 0, "min_tox" = 0, "max_tox" = 0, "min_co2" = 0, "max_co2" = 0, "min_n2" = 0, "max_n2" = 0)
 	health = 250
 	maxHealth = 250
 	damage_coeff = list(BRUTE = 0.7, FIRE = 0.7, TOX = 1, CLONE = 2, STAMINA = 0, OXY = 1)
@@ -95,7 +94,7 @@
 	playsound(owner, 'sound/effects/assslap.ogg', 90)
 	var/atom/throw_target = get_edge_target_turf(target, ranged_ability_user.dir)
 	living_target.throw_at(throw_target, 6, 4, owner)
-	living_target.apply_damage(30)
+	living_target.deal_damage(30, source = owner, attack_type = (ATTACK_TYPE_MELEE))
 	current_cooldown = world.time + cooldown
 	remove_ranged_ability()
 	return TRUE

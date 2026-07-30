@@ -2,7 +2,7 @@
 "ap" = (
 /obj/machinery/smartfridge/extraction_storage/ego_weapon,
 /turf/open/floor/facility,
-/area/test_range)
+/area/test_range_lobby)
 "au" = (
 /obj/machinery/computer/camera_advanced{
 	dir = 4
@@ -94,14 +94,18 @@
 /area/facility_hallway/human)
 "ck" = (
 /obj/structure/filingcabinet/zayininfo{
-	pixel_x = -10
+	pixel_x = -10;
+	resistance_flags = 243
 	},
-/obj/structure/filingcabinet/tethinfo,
+/obj/structure/filingcabinet/tethinfo{
+	resistance_flags = 243
+	},
 /obj/structure/filingcabinet/heinfo{
-	pixel_x = 10
+	pixel_x = 10;
+	resistance_flags = 243
 	},
 /turf/open/floor/facility,
-/area/test_range)
+/area/test_range_lobby)
 "cl" = (
 /obj/structure/table/wood,
 /obj/item/paper/guides/jobs/teth{
@@ -116,7 +120,7 @@
 /obj/structure/fluff/arc{
 	desc = "An angelic creature wearing white and golden armor with a cannon-like weapon.";
 	dir = 8;
-	icon = 'ModularTegustation/Teguicons/32x48.dmi';
+	icon = 'ModularLobotomy/_Lobotomyicons/32x48.dmi';
 	icon_state = "fixer_w";
 	name = "White Fixer statue"
 	},
@@ -149,7 +153,7 @@
 "dx" = (
 /obj/machinery/smartfridge/extraction_storage/ego_armor,
 /turf/open/floor/facility,
-/area/test_range)
+/area/test_range_lobby)
 "dA" = (
 /obj/effect/portal/permanent/one_way{
 	id = "tutorial2"
@@ -172,7 +176,7 @@
 /area/facility_hallway/human)
 "eg" = (
 /turf/open/floor/facility,
-/area/test_range)
+/area/test_range_lobby)
 "eo" = (
 /obj/structure/sign/departments/human{
 	pixel_x = -32
@@ -267,11 +271,11 @@
 "hp" = (
 /obj/structure/toolabnormality/bracelet,
 /turf/open/floor/facility,
-/area/test_range)
+/area/test_range_lobby)
 "hw" = (
 /obj/machinery/computer/testrangespawner,
 /turf/open/floor/facility,
-/area/test_range)
+/area/test_range_lobby)
 "hD" = (
 /obj/structure/table/reinforced,
 /obj/item/megaphone,
@@ -295,7 +299,7 @@
 /obj/effect/spawner/lootdrop/three_course_meal,
 /obj/effect/spawner/lootdrop/three_course_meal,
 /turf/open/floor/facility,
-/area/test_range)
+/area/test_range_lobby)
 "ih" = (
 /obj/machinery/shower{
 	pixel_y = 15
@@ -310,7 +314,7 @@
 	set_luminosity = 24
 	},
 /turf/open/floor/facility,
-/area/test_range)
+/area/test_range_lobby)
 "iO" = (
 /obj/structure/chair/wood{
 	dir = 4
@@ -344,7 +348,7 @@
 /obj/structure/fluff/arc{
 	desc = "A humanoid creature wearing metallic armor. It has bloodied hooks in its hands.";
 	dir = 4;
-	icon = 'ModularTegustation/Teguicons/tegumobs.dmi';
+	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi';
 	icon_state = "sweeper_1";
 	name = "sweeper statue";
 	pixel_x = -3
@@ -415,7 +419,7 @@
 "mO" = (
 /obj/effect/mob_spawn/human/testrange,
 /turf/open/floor/facility,
-/area/test_range)
+/area/test_range_lobby)
 "mQ" = (
 /obj/structure/sign/warning/firingrange,
 /turf/closed/indestructible/reinforced,
@@ -441,7 +445,7 @@
 /area/facility_hallway/human)
 "nf" = (
 /turf/closed/indestructible/reinforced,
-/area/test_range)
+/area/test_range_lobby)
 "nm" = (
 /obj/item/paper/fluff/info/tutorial/cube{
 	anchored = 1
@@ -461,14 +465,18 @@
 /area/department_main/human)
 "oe" = (
 /obj/structure/filingcabinet/wawinfo{
-	pixel_x = -10
+	pixel_x = -10;
+	resistance_flags = 243
 	},
-/obj/structure/filingcabinet/alephinfo,
+/obj/structure/filingcabinet/alephinfo{
+	resistance_flags = 243
+	},
 /obj/structure/filingcabinet/toolinfo{
-	pixel_x = 10
+	pixel_x = 10;
+	resistance_flags = 243
 	},
 /turf/open/floor/facility,
-/area/test_range)
+/area/test_range_lobby)
 "or" = (
 /obj/structure/plasticflaps/opaque,
 /obj/machinery/scanner_gate/tutorialscanner{
@@ -556,11 +564,11 @@
 "rZ" = (
 /obj/structure/toolabnormality/dr_jekyll,
 /turf/open/floor/facility,
-/area/test_range)
+/area/test_range_lobby)
 "sc" = (
 /obj/machinery/regenerator/safety,
 /turf/open/floor/facility,
-/area/test_range)
+/area/test_range_lobby)
 "sn" = (
 /obj/structure/rack,
 /obj/item/clothing/suit/armor/ego_gear/freshman,
@@ -695,13 +703,13 @@
 "vX" = (
 /obj/machinery/quantumpad/warp{
 	map_pad_id = "test_range_lobby";
-	map_pad_link_id = "test_range_arena";
+	map_pad_link_id = "test_range_arena_classic";
 	resistance_flags = 64;
 	teleport_cooldown = 40;
 	teleport_speed = 20
 	},
 /turf/open/floor/facility,
-/area/test_range)
+/area/test_range_lobby)
 "wb" = (
 /obj/structure/table/wood,
 /obj/machinery/light/small{
@@ -724,7 +732,7 @@
 "wn" = (
 /obj/machinery/ego_printer,
 /turf/open/floor/facility,
-/area/test_range)
+/area/test_range_lobby)
 "wy" = (
 /obj/effect/portal/permanent/one_way{
 	id = "tutorial2"
@@ -793,11 +801,17 @@
 /area/department_main/human)
 "zg" = (
 /obj/structure/table,
-/obj/item/scrying,
-/obj/item/scrying,
-/obj/item/scrying,
+/obj/item/scrying{
+	resistance_flags = 243
+	},
+/obj/item/scrying{
+	resistance_flags = 243
+	},
+/obj/item/scrying{
+	resistance_flags = 243
+	},
 /turf/open/floor/facility,
-/area/test_range)
+/area/test_range_lobby)
 "zy" = (
 /obj/machinery/door/airlock/highsecurity{
 	name = "Human Resources Department"
@@ -918,7 +932,7 @@
 /obj/structure/fluff/arc{
 	desc = "A round purple creature. It is constantly leaking mind-damaging gas.";
 	dir = 4;
-	icon = 'ModularTegustation/Teguicons/48x32.dmi';
+	icon = 'ModularLobotomy/_Lobotomyicons/48x32.dmi';
 	icon_state = "violet_fruit";
 	name = "fruit of understanding statue";
 	pixel_x = -8
@@ -933,10 +947,14 @@
 /area/department_main/human)
 "Dh" = (
 /obj/structure/table,
-/obj/item/lc_debug/attribute_injector,
-/obj/item/lc_debug/attribute_injector,
+/obj/item/lc_debug/attribute_injector{
+	resistance_flags = 243
+	},
+/obj/item/lc_debug/attribute_injector{
+	resistance_flags = 243
+	},
 /turf/open/floor/facility,
-/area/test_range)
+/area/test_range_lobby)
 "Di" = (
 /obj/structure/sign/poster/lobotomycorp/egoinfo{
 	pixel_y = 32
@@ -992,7 +1010,7 @@
 "Ex" = (
 /obj/structure/toolabnormality/you_happy,
 /turf/open/floor/facility,
-/area/test_range)
+/area/test_range_lobby)
 "FC" = (
 /obj/machinery/holopad/tutorial{
 	proximity_cooldown_time = 1200
@@ -1148,6 +1166,12 @@
 	},
 /turf/open/floor/wood,
 /area/department_main/human)
+"IZ" = (
+/obj/machinery/augment_fabricator/debug{
+	resistance_flags = 64
+	},
+/turf/open/floor/facility,
+/area/test_range_lobby)
 "Jr" = (
 /turf/open/floor/wood,
 /turf/open/floor/wood,
@@ -1156,7 +1180,7 @@
 /obj/structure/fluff/arc{
 	desc = "A tiny worm-like creature with tough chitin and a pair of sharp claws.";
 	dir = 4;
-	icon = 'ModularTegustation/Teguicons/tegumobs.dmi';
+	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi';
 	icon_state = "amber_bug";
 	name = "complete food statue"
 	},
@@ -1290,7 +1314,7 @@
 "MH" = (
 /obj/structure/fluff/arc{
 	desc = "A tiny humanoid creature in jester's attire.";
-	icon = 'ModularTegustation/Teguicons/tegumobs.dmi';
+	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi';
 	icon_state = "crimson_clown";
 	name = "cheers for the start statue"
 	},
@@ -1317,7 +1341,7 @@
 "NI" = (
 /obj/structure/toolabnormality/aspiration,
 /turf/open/floor/facility,
-/area/test_range)
+/area/test_range_lobby)
 "NP" = (
 /obj/machinery/holopad/tutorial,
 /obj/item/disk/holodisk/tutorial/works,
@@ -1326,7 +1350,7 @@
 "Om" = (
 /obj/structure/toolabnormality/behavior,
 /turf/open/floor/facility,
-/area/test_range)
+/area/test_range_lobby)
 "Oz" = (
 /obj/machinery/regenerator/tutorial,
 /turf/open/floor/carpet/cyan,
@@ -1334,6 +1358,13 @@
 "OU" = (
 /turf/open/space/basic,
 /area/department_main/human)
+"OY" = (
+/obj/machinery/augment_catalogue{
+	pixel_y = -32;
+	resistance_flags = 64
+	},
+/turf/open/floor/facility,
+/area/test_range_lobby)
 "Pc" = (
 /obj/machinery/bookbinder,
 /turf/open/floor/wood,
@@ -1348,7 +1379,7 @@
 "Pp" = (
 /obj/structure/fluff/arc{
 	desc = "A slim robot with a spear in place of its hand.";
-	icon = 'ModularTegustation/Teguicons/32x48.dmi';
+	icon = 'ModularLobotomy/_Lobotomyicons/32x48.dmi';
 	icon_state = "green_bot";
 	name = "doubt statue"
 	},
@@ -1389,7 +1420,7 @@
 "Qi" = (
 /obj/structure/toolabnormality/fateloom,
 /turf/open/floor/facility,
-/area/test_range)
+/area/test_range_lobby)
 "Ql" = (
 /turf/open/floor/carpet/cyan,
 /area/department_main/human)
@@ -1465,9 +1496,11 @@
 /turf/open/floor/wood,
 /area/department_main/human)
 "SV" = (
-/obj/structure/mirror/magic/lesser,
+/obj/structure/mirror/magic/lesser{
+	resistance_flags = 243
+	},
 /turf/closed/indestructible/reinforced,
-/area/test_range)
+/area/test_range_lobby)
 "Tu" = (
 /obj/machinery/light{
 	dir = 1
@@ -1593,10 +1626,11 @@
 /area/department_main/human)
 "WR" = (
 /obj/machinery/cryopod{
-	dir = 1
+	dir = 1;
+	resistance_flags = 243
 	},
 /turf/open/floor/facility,
-/area/test_range)
+/area/test_range_lobby)
 "WU" = (
 /obj/structure/railing{
 	dir = 1
@@ -1625,6 +1659,13 @@
 	},
 /turf/open/floor/wood,
 /area/department_main/human)
+"XK" = (
+/obj/machinery/button/indestructible/test_range_cleanup{
+	pixel_x = 0;
+	pixel_y = 28
+	},
+/turf/open/floor/facility,
+/area/test_range_lobby)
 "XL" = (
 /turf/open/space/basic,
 /area/space)
@@ -7332,13 +7373,13 @@ XL
 XL
 XL
 nf
+XK
 eg
 eg
 eg
 eg
 eg
-eg
-eg
+IZ
 nf
 XL
 XL
@@ -7440,7 +7481,7 @@ eg
 eg
 eg
 eg
-eg
+OY
 nf
 XL
 XL

@@ -13,98 +13,123 @@ Format:
 	votable (is this map votable)
 endmap
 
-For most use cases, I will be disabling a lot of the larger maps.
-Only Alpha, Psi, Zeta and Eta will be available.
-If you have over 10 players, you can enable beta and gamma, and above 20 players you can enable delta, epsilon and theta.
 
-map alphacorp
+	-LC13 Maps-
+map alpha
 	votable
 	maxplayers 15
 endmap
 
-#map betacorp
+map bravo
 	votable
 	minplayers 10
+	maxplayers 40
+endmap
+
+map charlie
+	votable
+	minplayers 10
+	maxplayers 40
+endmap
+
+map delta
+	votable
+	maxplayers 20
+endmap
+
+map echo
+	votable
+	maxplayers 20
+endmap
+
+map india
+	votable
+	minplayers 10
+endmap
+
+map kilo
+	votable
+	maxplayers 20
+endmap
+
+map lima
+	votable
 	maxplayers 25
 endmap
 
-#map gammacorp
-	votable
-	minplayers 10
-	maxplayers 25
-endmap
-
-#map deltacorp
-	votable
-	minplayers 20
-endmap
-
-#map epsiloncorp
-	votable
-	minplayers 25
-endmap
-
-map zetacorp
-	votable
-	maxplayers 15
-endmap
-
-map etacorp
-	votable
-	maxplayers 15
-endmap
-
-#map thetacorp
-	votable
-	minplayers 20
-endmap
-
-map psicorp
+map whiskey
 	votable
 	maxplayers 10
 endmap
 
+
+
+
+
+	-City Maps-
 map cityfixers
+	minplayers 20
 endmap
 
-#Need testing
-map iotacorp
+map office
+	maxplayers 10
+endmap
+
+map city
+	votable
+	minplayers 30
 endmap
 
 
-map kappacorp
-endmap
-
-map lambdacorp
-endmap
 
 
+
+
+	-RCorp Maps-
 map rcorp_test
+	votable
+	minplayers 30
+endmap
+
+map rcorp_factory
+	votable
+	minplayers 30
+endmap
+
+
+
+
+
+	-Other Active Modes-
+map lclabs
+	votable
+	minplayers 30
+endmap
+
+
+
+
+
+
+	-Deprecated Modes-
+map district_4
+	minplayers 10
+	maxplayers 60
 endmap
 
 map wcorp
-endmap
-
-map limbus
-endmap
-
-map lclabs
-endmap
-
-map district_4
-	voteable
-	minplayers 10
-	maxplayers 60
+	votable
+	minplayers 25
 endmap
 
 map skeld
 endmap
 
+	-Test Maps-
 map facilitytest
 endmap
 
 map runtimestation
 endmap
 
-map city
-endmap
+

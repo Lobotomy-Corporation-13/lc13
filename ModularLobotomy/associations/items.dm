@@ -85,13 +85,10 @@
 		//Adjust by an extra attribute under level 2
 		if(get_attribute_level(user, TEMPERANCE_ATTRIBUTE)<=40)
 			total_adjust += amount
+			total_adjust += amount
 
 		//And one more under level 3
 		if(get_attribute_level(user, TEMPERANCE_ATTRIBUTE)<=60)
-			total_adjust += amount
-
-		//And one last one before L4
-		if(get_attribute_level(user, TEMPERANCE_ATTRIBUTE)<=80)
 			total_adjust += amount
 
 		if(get_attribute_level(user, TEMPERANCE_ATTRIBUTE) < 40 && get_attribute_level(user, TEMPERANCE_ATTRIBUTE) + total_adjust >= 40)
@@ -120,3 +117,85 @@
 		to_chat(user, "<span class='nicegreen'>You gained [total_adjust] potential!</span>")
 		adjusting = FALSE
 		qdel(src)
+
+/obj/item/paramedic_cloak
+	name = "Paramedic Ruins Cloaking Device"
+	desc = "A device that can be used by Paramedics to hide from the dangers of the ruins."
+	icon = 'ModularLobotomy/_Lobotomyicons/velvetfu.dmi'
+	icon_state = "velvet"
+	slot_flags = ITEM_SLOT_BELT | ITEM_SLOT_POCKETS
+	w_class = WEIGHT_CLASS_SMALL
+	var/cloak_active = FALSE
+	var/cloak_cooldown = 0
+	var/cloak_cooldown_time = 15 SECONDS
+	var/cloak_alpha = 150
+	var/public_use = FALSE
+
+/obj/item/paramedic_cloak/attack_self(mob/user)
+	. = ..()
+	ToggleCloak(user)
+
+/obj/item/paramedic_cloak/proc/ToggleCloak(mob/living/user)
+	if(!ishuman(user))
+		return
+
+	var/mob/living/carbon/human/H = user
+	if(!public_use)
+		if(!H.mind || H.mind.assigned_role != "Paramedic")
+			to_chat(user, span_warning("This tool's systems do not recognize you."))
+			return
+
+	if(!cloak_active)
+		if(world.time < cloak_cooldown)
+			var/remaining = round((cloak_cooldown - world.time) / 10)
+			to_chat(user, span_warning("Cloaking systems recharging. Ready in [remaining] seconds."))
+			return
+		ActivateCloak(user)
+	else
+		DeactivateCloak(user)
+
+/obj/item/paramedic_cloak/proc/ActivateCloak(mob/living/user)
+	cloak_active = TRUE
+	to_chat(user, span_notice("You activate the cloaking field."))
+	playsound(user, 'sound/effects/stealthoff.ogg', 30, TRUE)
+	animate(user, alpha = cloak_alpha, time = 5 SECONDS)
+	addtimer(CALLBACK(src, PROC_REF(FullCloak), user), 5 SECONDS)
+
+/obj/item/paramedic_cloak/proc/FullCloak(mob/living/user)
+	if(!cloak_active)
+		return
+	user.density = FALSE
+	user.invisibility = 0
+	to_chat(user, span_notice("You are now fully cloaked."))
+
+/obj/item/paramedic_cloak/proc/DeactivateCloak(mob/living/user)
+	cloak_active = FALSE
+	cloak_cooldown = world.time + cloak_cooldown_time
+	to_chat(user, span_warning("Your cloaking field deactivates!"))
+	playsound(user, 'sound/effects/stealthoff.ogg', 30, TRUE)
+	user.density = TRUE
+	user.invisibility = initial(user.invisibility)
+	animate(user, alpha = 255, time = 2 SECONDS)
+
+/obj/item/paramedic_cloak/equipped(mob/living/user, slot)
+	. = ..()
+	RegisterSignal(user, COMSIG_MOB_ITEM_ATTACK, PROC_REF(OnAttack))
+	RegisterSignal(user, COMSIG_MOB_APPLY_DAMGE, PROC_REF(OnDamage))
+
+/obj/item/paramedic_cloak/dropped(mob/living/user)
+	. = ..()
+	UnregisterSignal(user, COMSIG_MOB_ITEM_ATTACK)
+	UnregisterSignal(user, COMSIG_MOB_APPLY_DAMGE)
+	if(cloak_active)
+		DeactivateCloak(user)
+
+/obj/item/paramedic_cloak/proc/OnAttack(mob/living/user)
+	SIGNAL_HANDLER
+	if(cloak_active)
+		DeactivateCloak(user)
+
+/obj/item/paramedic_cloak/proc/OnDamage(mob/living/user, damage, damagetype, def_zone)
+	SIGNAL_HANDLER
+	if(cloak_active && damage > 0)
+		to_chat(user, span_warning("Your cloak flickers and fails as you take damage!"))
+		DeactivateCloak(user)

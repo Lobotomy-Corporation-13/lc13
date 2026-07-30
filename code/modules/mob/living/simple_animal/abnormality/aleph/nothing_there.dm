@@ -63,9 +63,8 @@
 	)
 
 	var/shelled
-	var/mob/living/disguise_ref
+	var/datum/weakref/disguise_weak
 	var/saved_appearance
-	var/can_act = TRUE
 	var/current_stage = 1
 	var/next_transform = null
 
@@ -90,7 +89,7 @@
 	var/heard_words = list()
 	var/listen_chance = 10 // 20 for testing, 10 for base
 	var/utterance = 5 // 10 for testing, 5 for base
-	var/worker = null
+	var/datum/weakref/worker_memory
 
 	//PLAYABLES ATTACKS
 	attack_action_types = list(
@@ -213,6 +212,7 @@
 			speak_list = heard_words[speak_list]
 			say(pick(speak_list))
 		return
+	var/mob/living/disguise_ref = disguise_weak ? disguise_weak.resolve() : null
 	if(.)
 		if((shelled) && LAZYLEN(heard_words[disguise_ref]) && prob(utterance*2))
 			speak_list = heard_words[disguise_ref]
@@ -250,6 +250,7 @@
 
 /mob/living/simple_animal/hostile/abnormality/nothing_there/Hear(message, atom/movable/speaker, datum/language/message_language, raw_message, radio_freq, list/spans, list/message_mods)
 	. = ..()
+	var/mob/living/worker = worker_memory ? worker_memory.resolve() : null
 	if(speaker == worker) // More likely to pick things up from those working on it
 		listen_chance *= 2
 	if(prob(listen_chance) && istype(speaker, /mob/living/carbon/human))
@@ -259,9 +260,9 @@
 			heard_words[speaker] += raw_message
 	listen_chance = initial(listen_chance)
 
-/mob/living/simple_animal/hostile/abnormality/nothing_there/apply_damage(damage, damagetype, def_zone, blocked, forced, spread_damage, wound_bonus, bare_wound_bonus, sharpness, white_healable)
+/mob/living/simple_animal/hostile/abnormality/nothing_there/PostDamageReaction(damage_amount, damage_type, source, attack_type)
 	. = ..()
-	if(damagetype == RED_DAMAGE || damage < 10)
+	if(. < 10)
 		return
 	last_heal_time = world.time + 10 SECONDS // Heal delayed when taking damage; Doubled because it was a little too quick.
 
@@ -278,7 +279,7 @@
 	to_chat(M, span_userdanger("Oh no..."))
 	shelled = TRUE
 	CopyHumanAppearance(M) // This is the same proc used by Nobody Is for stealing skin. Should be less buggy than copying appearance var.
-	disguise_ref = M // We keep a reference to the "shell" for utterances and the like, but it's not absolutely necessary in case they gib somehow
+	disguise_weak = WEAKREF(M) // We keep a reference to the "shell" for utterances and the like, but it's not absolutely necessary in case they gib somehow
 	M.death()
 	M.forceMove(src) // Hide them
 	disguiseloop.start()
@@ -287,6 +288,7 @@
 /mob/living/simple_animal/hostile/abnormality/nothing_there/proc/drop_disguise()
 	if(!shelled)
 		return
+	var/mob/living/disguise_ref = disguise_weak ? disguise_weak.resolve() : null
 	next_transform = world.time + rand(30 SECONDS, 40 SECONDS)
 	ChangeMoveToDelayBy(1.5)
 	appearance = saved_appearance
@@ -354,7 +356,7 @@
 			if(TF.density)
 				continue
 			new /obj/effect/temp_visual/smash_effect(TF)
-			been_hit = HurtInTurf(TF, been_hit, hello_damage, RED_DAMAGE, null, TRUE, FALSE, TRUE, hurt_structure = TRUE)
+			been_hit = HurtInTurf(TF, been_hit, hello_damage, RED_DAMAGE, null, TRUE, FALSE, TRUE, hurt_structure = TRUE, attack_type = (ATTACK_TYPE_RANGED | ATTACK_TYPE_SPECIAL))
 	for(var/mob/living/L in been_hit)
 		if(L.health < 0)
 			L.gib()
@@ -373,7 +375,7 @@
 	SLEEP_CHECK_DEATH(8)
 	for(var/turf/T in view(2, src))
 		new /obj/effect/temp_visual/nt_goodbye(T)
-		for(var/mob/living/L in HurtInTurf(T, list(), goodbye_damage, RED_DAMAGE, null, TRUE, FALSE, TRUE, hurt_hidden = TRUE, hurt_structure = TRUE))
+		for(var/mob/living/L in HurtInTurf(T, list(), goodbye_damage, RED_DAMAGE, null, TRUE, FALSE, TRUE, hurt_hidden = TRUE, hurt_structure = TRUE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)))
 			if(L.health < 0)
 				L.gib()
 	playsound(get_turf(src), 'sound/abnormalities/nothingthere/goodbye_attack.ogg', 75, 0, 7)
@@ -384,7 +386,7 @@
 /mob/living/simple_animal/hostile/abnormality/nothing_there/AttemptWork(mob/living/carbon/human/user, work_type)
 	if(shelled)
 		return FALSE
-	worker = user
+	worker_memory = WEAKREF(user)
 	var/growl_prob = (work_type in list(ABNORMALITY_WORK_REPRESSION, ABNORMALITY_WORK_INSIGHT)) ? 100 : 25
 	if(prob(growl_prob)) // Spooky
 		playsound(get_turf(src), 'sound/abnormalities/nothingthere/growl.ogg', 25, 0)
@@ -398,10 +400,10 @@
 	return adjusted_chance
 
 /mob/living/simple_animal/hostile/abnormality/nothing_there/PostWorkEffect(mob/living/carbon/human/user, work_type, pe, work_time)
-	worker = null
+	worker_memory = null
 	// Award achievement for surviving non-instinct/attachment work
 	if(work_type != ABNORMALITY_WORK_INSTINCT && work_type != ABNORMALITY_WORK_ATTACHMENT && user.stat != DEAD)
-		user.client?.give_award(/datum/award/achievement/lc13/nothing_survivor, user)
+		user.client?.give_award(/datum/award/achievement/abno/nothing_survivor, user)
 	if(get_attribute_level(user, JUSTICE_ATTRIBUTE) < 80)
 		if(!shelled) // Not work failure
 			datum_reference.qliphoth_change(-1)

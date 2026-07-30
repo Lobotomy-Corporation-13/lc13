@@ -1,4 +1,4 @@
-// Quick overview:
+/* // Quick overview:
 //
 // Pipes combine to form pipelines
 // Pipelines and other atmospheric objects combine to form pipe_networks
@@ -503,3 +503,4 @@
  */
 /obj/machinery/atmospherics/proc/paint(paint_color)
 	return FALSE
+ */

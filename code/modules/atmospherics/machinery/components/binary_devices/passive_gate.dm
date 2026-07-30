@@ -1,4 +1,4 @@
-/*
+/* /*
 
 Passive gate is similar to the regular pump except:
 * It doesn't require power
@@ -163,3 +163,4 @@ Passive gate is similar to the regular pump except:
 /obj/machinery/atmospherics/components/binary/passive_gate/layer4
 	piping_layer = 4
 	icon_state = "passgate_map-4"
+ */

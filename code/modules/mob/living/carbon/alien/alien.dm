@@ -48,27 +48,6 @@
 /mob/living/carbon/alien/assess_threat(judgement_criteria, lasercolor = "", datum/callback/weaponcheck=null) // beepsky won't hunt aliums
 	return -10
 
-/mob/living/carbon/alien/handle_environment(datum/gas_mixture/environment)
-	// Run base mob body temperature proc before taking damage
-	// this balances body temp to the environment and natural stabilization
-	. = ..()
-
-	if(bodytemperature > BODYTEMP_HEAT_DAMAGE_LIMIT)
-		//Body temperature is too hot.
-		throw_alert("alien_fire", /atom/movable/screen/alert/alien_fire)
-		switch(bodytemperature)
-			if(360 to 400)
-				apply_damage(HEAT_DAMAGE_LEVEL_1, FIRE)
-			if(400 to 460)
-				apply_damage(HEAT_DAMAGE_LEVEL_2, FIRE)
-			if(460 to INFINITY)
-				if(on_fire)
-					apply_damage(HEAT_DAMAGE_LEVEL_3, FIRE)
-				else
-					apply_damage(HEAT_DAMAGE_LEVEL_2, FIRE)
-	else
-		clear_alert("alien_fire")
-
 /mob/living/carbon/alien/reagent_check(datum/reagent/R) //can metabolize all reagents
 	return 0
 

@@ -1,4 +1,4 @@
-// So much of atmospherics.dm was used solely by components, so separating this makes things all a lot cleaner.
+/* // So much of atmospherics.dm was used solely by components, so separating this makes things all a lot cleaner.
 // On top of that, now people can add component-speciic procs/vars if they want!
 
 /obj/machinery/atmospherics/components
@@ -195,3 +195,4 @@
 
 /obj/machinery/atmospherics/components/return_analyzable_air()
 	return airs
+ */

@@ -8,13 +8,13 @@
 	hud_possible = list(HEALTH_HUD,STATUS_HUD,ID_HUD,WANTED_HUD,IMPLOYAL_HUD,IMPCHEM_HUD,IMPTRACK_HUD, NANITE_HUD, DIAG_NANITE_FULL_HUD,ANTAG_HUD,GLAND_HUD,SENTIENT_DISEASE_HUD,FAN_HUD,SANITY_HUD)
 	hud_type = /datum/hud/human
 	possible_a_intents = list(INTENT_HELP, INTENT_DISARM, INTENT_GRAB, INTENT_HARM)
-	pressure_resistance = 25
+	// pressure_resistance = 25
 	can_buckle = TRUE
 	buckle_lying = 0
 	mob_biotypes = MOB_ORGANIC|MOB_HUMANOID
 	blocks_emissive = EMISSIVE_BLOCK_UNIQUE
 	can_be_shoved_into = TRUE
-
+	area_index = MOB_HUMAN_INDEX
 	///Hair colour
 	var/hair_color = "000"
 	///Hair style
@@ -47,6 +47,9 @@
 	var/socks = "Nude" //Which socks the player wants
 	var/backpack = DBACKPACK		//Which backpack type the player has chosen.
 	var/jumpsuit_style = PREF_SUIT		//suit/skirt
+	var/beret_enabled = TRUE // Should this character start with a beret, if available for their job?
+	var/sunglasses_enabled = TRUE // Should this character start with sunglasses, if available for their job?
+	var/work_notepad_type = WORK_NOTEPAD_PREFERENCE_CLIPBOARD // Type of work notepad they should spawn with, as an Agent. Wish I didn't have to staple this onto the human type but the order of operations at roundstart necessitates it
 
 	//Equipment slots
 	var/obj/item/clothing/wear_suit = null

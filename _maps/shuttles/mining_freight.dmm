@@ -56,25 +56,16 @@
 /obj/effect/turf_decal/stripes/line{
 	dir = 10
 	},
-/obj/machinery/atmospherics/components/unary/vent_pump/on{
-	dir = 4
-	},
 /turf/open/floor/mineral/titanium/yellow,
 /area/shuttle/mining)
 "k" = (
 /obj/effect/turf_decal/stripes/line,
-/obj/machinery/atmospherics/pipe/simple/general/visible{
-	dir = 4
-	},
 /turf/open/floor/mineral/titanium/yellow,
 /area/shuttle/mining)
 "l" = (
 /obj/effect/turf_decal/stripes/line,
 /obj/effect/turf_decal/stripes/corner{
 	dir = 4
-	},
-/obj/machinery/atmospherics/components/binary/valve{
-	dir = 8
 	},
 /turf/open/floor/mineral/titanium/yellow,
 /area/shuttle/mining)
@@ -90,9 +81,6 @@
 	name = "lavaland shuttle";
 	port_direction = 4;
 	width = 7
-	},
-/obj/machinery/atmospherics/pipe/simple/general/visible{
-	dir = 4
 	},
 /turf/open/floor/plating,
 /area/shuttle/mining)

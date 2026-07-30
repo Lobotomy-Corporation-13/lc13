@@ -32,7 +32,7 @@ no power level overlay is currently in the overlays list.
 	density = TRUE
 	use_power = NO_POWER_USE
 	max_integrity = 500
-	CanAtmosPass = ATMOS_PASS_YES
+	// CanAtmosPass = ATMOS_PASS_YES
 	//100% immune to lasers and energy projectiles since it absorbs their energy.
 	armor = list(MELEE = 25, BULLET = 10, LASER = 100, ENERGY = 100, BOMB = 0, BIO = 0, RAD = 0, FIRE = 50, ACID = 70)
 	var/power_level = 0
@@ -187,8 +187,8 @@ no power level overlay is currently in the overlays list.
 
 /obj/machinery/field/generator/proc/turn_off()
 	active = FG_OFFLINE
-	CanAtmosPass = ATMOS_PASS_YES
-	air_update_turf(TRUE, FALSE)
+	// CanAtmosPass = ATMOS_PASS_YES
+	// air_update_turf(TRUE, FALSE)
 	INVOKE_ASYNC(src, PROC_REF(cleanup))
 	addtimer(CALLBACK(src, PROC_REF(cool_down)), 50)
 
@@ -265,8 +265,8 @@ no power level overlay is currently in the overlays list.
 		turn_off()
 		return
 	move_resist = INFINITY
-	CanAtmosPass = ATMOS_PASS_NO
-	air_update_turf(TRUE, TRUE)
+	// CanAtmosPass = ATMOS_PASS_NO
+	// air_update_turf(TRUE, TRUE)
 	addtimer(CALLBACK(src, PROC_REF(setup_field), 1), 1)
 	addtimer(CALLBACK(src, PROC_REF(setup_field), 2), 2)
 	addtimer(CALLBACK(src, PROC_REF(setup_field), 4), 3)
@@ -344,10 +344,9 @@ no power level overlay is currently in the overlays list.
 	move_resist = initial(move_resist)
 
 /obj/machinery/field/generator/proc/shield_floor(create)
-	if(connected_gens.len < 2)
+	if(length(connected_gens) < 2)
 		return
-	var/CGcounter
-	for(CGcounter = 1; CGcounter < connected_gens.len, CGcounter++)
+	for(var/CGcounter in 1 to (length(connected_gens) - 1))
 
 		var/list/CGList = ((connected_gens[CGcounter].connected_gens & connected_gens[CGcounter+1].connected_gens)^src)
 		if(!CGList.len)

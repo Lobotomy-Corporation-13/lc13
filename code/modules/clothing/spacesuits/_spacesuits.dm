@@ -14,9 +14,9 @@
 	dynamic_hair_suffix = ""
 	dynamic_fhair_suffix = ""
 	cold_protection = HEAD
-	min_cold_protection_temperature = SPACE_HELM_MIN_TEMP_PROTECT
+	min_cold_protection_temperature = TRUE
 	heat_protection = HEAD
-	max_heat_protection_temperature = SPACE_HELM_MAX_TEMP_PROTECT
+	max_heat_protection_temperature = TRUE
 	flash_protect = FLASH_PROTECTION_WELDER
 	strip_delay = 50
 	equip_delay_other = 50
@@ -39,14 +39,14 @@
 	armor = list(MELEE = 0, BULLET = 0, LASER = 0,ENERGY = 0, BOMB = 0, BIO = 100, RAD = 50, FIRE = 80, ACID = 70)
 	flags_inv = HIDEGLOVES|HIDESHOES|HIDEJUMPSUIT
 	cold_protection = CHEST | GROIN | LEGS | FEET | ARMS | HANDS
-	min_cold_protection_temperature = SPACE_SUIT_MIN_TEMP_PROTECT_OFF
+	min_cold_protection_temperature = TRUE
 	heat_protection = CHEST|GROIN|LEGS|FEET|ARMS|HANDS
-	max_heat_protection_temperature = SPACE_SUIT_MAX_TEMP_PROTECT
+	max_heat_protection_temperature = TRUE
 	strip_delay = 80
 	equip_delay_other = 80
 	resistance_flags = NONE
 	actions_types = list(/datum/action/item_action/toggle_spacesuit)
-	var/temperature_setting = BODYTEMP_NORMAL /// The default temperature setting
+	// var/temperature_setting = BODYTEMP_NORMAL /// The default temperature setting
 	var/obj/item/stock_parts/cell/cell = /obj/item/stock_parts/cell/high /// If this is a path, this gets created as an object in Initialize.
 	var/cell_cover_open = FALSE /// Status of the cell cover on the suit
 	var/thermal_on = FALSE /// Status of the thermal regulator
@@ -97,7 +97,7 @@
 
 	// If we got here, it means thermals are on, the cell is in and the cell has
 	// just had enough charge subtracted from it to power the thermal regulator
-	user.adjust_bodytemperature(get_temp_change_amount((temperature_setting - user.bodytemperature), 0.16))
+	// user.adjust_bodytemperature(get_temp_change_amount((temperature_setting - user.bodytemperature), 0.16))
 	update_hud_icon(user)
 
 // Clean up the cell on destroy
@@ -114,7 +114,7 @@
 /obj/item/clothing/suit/space/handle_atom_del(atom/A)
 	if(A == cell)
 		cell = null
-		thermal_on = FALSE
+		// thermal_on = FALSE
 	return ..()
 
 // support for items that interact with the cell
@@ -125,9 +125,9 @@
 /obj/item/clothing/suit/space/examine(mob/user)
 	. = ..()
 	if(in_range(src, user) || isobserver(user))
-		. += "The thermal regulator is [thermal_on ? "on" : "off"] and the temperature is set to \
+/* 		. += "The thermal regulator is [thermal_on ? "on" : "off"] and the temperature is set to \
 			[round(temperature_setting-T0C,0.1)] &deg;C ([round(temperature_setting*1.8-459.67,0.1)] &deg;F)"
-		. += "The power meter shows [cell ? "[round(cell.percent(), 0.1)]%" : "!invalid!"] charge remaining."
+		. += "The power meter shows [cell ? "[round(cell.percent(), 0.1)]%" : "!invalid!"] charge remaining." */
 		if(cell_cover_open)
 			. += "The cell cover is open exposing the cell and setting knobs."
 			if(!cell)
@@ -140,7 +140,7 @@
 	if(I.tool_behaviour == TOOL_CROWBAR)
 		toggle_spacesuit_cell(user)
 		return
-	else if(cell_cover_open && I.tool_behaviour == TOOL_SCREWDRIVER)
+/* 	else if(cell_cover_open && I.tool_behaviour == TOOL_SCREWDRIVER)
 		var/range_low = 20 // Default min temp c
 		var/range_high = 45 // default max temp c
 		if(obj_flags & EMAGGED)
@@ -152,7 +152,7 @@
 		if(deg_c && deg_c >= range_low && deg_c <= range_high)
 			temperature_setting = round(T0C + deg_c, 0.1)
 			to_chat(user, span_notice("You see the readout change to [deg_c] c."))
-		return
+		return */
 	else if(cell_cover_open && istype(I, /obj/item/stock_parts/cell))
 		if(cell)
 			to_chat(user, span_warning("[src] already has a cell installed."))
@@ -206,7 +206,7 @@
 		return
 
 	thermal_on = !thermal_on
-	min_cold_protection_temperature = thermal_on ? SPACE_SUIT_MIN_TEMP_PROTECT : SPACE_SUIT_MIN_TEMP_PROTECT_OFF
+	min_cold_protection_temperature = TRUE
 	if(user)
 		to_chat(user, span_notice("You turn [thermal_on ? "on" : "off"] \the [src]'s thermal regulator."))
 	SEND_SIGNAL(src, COMSIG_SUIT_SPACE_TOGGLE)

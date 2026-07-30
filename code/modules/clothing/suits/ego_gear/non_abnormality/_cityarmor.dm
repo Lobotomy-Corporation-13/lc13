@@ -2,6 +2,14 @@
 	icon = 'icons/obj/clothing/ego_gear/lc13_armor.dmi'
 	worn_icon = 'icons/mob/clothing/ego_gear/lc13_armor.dmi'
 
+/obj/item/clothing/suit/armor/ego_gear/city/Initialize()
+	. = ..()
+	return INITIALIZE_HINT_LATELOAD
+
+/obj/item/clothing/suit/armor/ego_gear/city/LateInitialize()
+	if(SSmaptype.maptype in SSmaptype.citymaps)
+		equip_delay_self = 3 SECONDS
+	return ..()
 
 //City armor have extremely high requirements. These people will be able to use them a little earlier.
 /obj/item/clothing/suit/armor/ego_gear/city/examine(mob/user)

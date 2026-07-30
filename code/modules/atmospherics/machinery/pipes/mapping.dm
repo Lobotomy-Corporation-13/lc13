@@ -1,4 +1,4 @@
-//Colored pipes, use these for mapping
+/* //Colored pipes, use these for mapping
 
 #define HELPER_PARTIAL(Fulltype, Iconbase, Color) \
 	##Fulltype {						\
@@ -94,3 +94,4 @@ HELPER_NAMED(supplymain, "main air supply pipe", rgb(130, 43, 255))
 /obj/machinery/atmospherics/pipe/multiz/layer5
 	piping_layer = 5
 	icon_state = "adapter-5"
+ */

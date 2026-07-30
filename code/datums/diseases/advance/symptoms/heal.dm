@@ -371,8 +371,8 @@
 	if(M.getBruteLoss() || M.getFireLoss())
 		return TRUE
 	return FALSE
-
-/datum/symptom/heal/plasma
+// Deleted in Atmos purge, self explanatory.
+/* /datum/symptom/heal/plasma
 	name = "Plasma Fixation"
 	desc = "The virus draws plasma from the atmosphere and from inside the body to heal and stabilize body temperature."
 	stealth = 0
@@ -437,7 +437,7 @@
 		if(L.heal_damage(heal_amt/parts.len, heal_amt/parts.len, null, BODYPART_ORGANIC))
 			M.update_damage_overlays()
 	return 1
-
+ */
 
 /datum/symptom/heal/radiation
 	name = "Radioactive Resonance"

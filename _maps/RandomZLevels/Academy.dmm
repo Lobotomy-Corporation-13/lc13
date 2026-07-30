@@ -505,7 +505,6 @@
 /turf/open/floor/plasteel/dark,
 /area/awaymission/academy/headmaster)
 "cg" = (
-/obj/machinery/portable_atmospherics/canister/toxins,
 /turf/open/floor/plasteel/showroomfloor,
 /area/awaymission/academy/headmaster)
 "ch" = (
@@ -542,7 +541,6 @@
 /turf/open/floor/plasteel/dark,
 /area/awaymission/academy/headmaster)
 "co" = (
-/obj/machinery/portable_atmospherics/scrubber/huge,
 /turf/open/floor/plating,
 /area/awaymission/academy/headmaster)
 "cp" = (
@@ -685,7 +683,6 @@
 /obj/machinery/light{
 	dir = 8
 	},
-/obj/machinery/portable_atmospherics/pump,
 /obj/effect/turf_decal/tile/neutral{
 	dir = 1
 	},
@@ -949,7 +946,7 @@
 /turf/open/floor/plasteel/white,
 /area/awaymission/academy/classrooms)
 "ea" = (
-/obj/machinery/igniter/on,
+/obj/machinery/igniter,
 /turf/open/floor/plating,
 /area/awaymission/academy/classrooms)
 "eb" = (
@@ -2490,7 +2487,7 @@
 /turf/open/space,
 /area/space/nearstation)
 "jC" = (
-/obj/machinery/igniter/on,
+/obj/machinery/igniter,
 /turf/open/floor/plating,
 /area/awaymission/academy/academyaft)
 "jD" = (

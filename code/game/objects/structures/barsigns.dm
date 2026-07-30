@@ -30,8 +30,8 @@
 	if(sign.desc)
 		desc = sign.desc
 
-	if(sign.rename_area && sign.name)
-		rename_area(src, sign.name)
+	// if(sign.rename_area && sign.name)
+	// 	rename_area(src, sign.name)
 
 	return sign
 

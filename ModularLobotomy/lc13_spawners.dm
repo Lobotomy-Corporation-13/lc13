@@ -44,6 +44,16 @@
 		/obj/item/reagent_containers/glass/beaker/jar/syrup_random = 1,
 		)
 
+/obj/effect/spawner/lootdrop/mortar_emplacement
+	name = "mortar emplacement"
+	lootcount = 5
+	lootdoubles = FALSE
+	loot = list(
+		/obj/machinery/mortar = 1,
+		/obj/item/rangefinder = 1,
+		/obj/item/mshell = 1,
+		)
+
 /obj/effect/spawner/lootdrop/medical_random
 	name = "medical random"
 	lootcount = 3
@@ -188,7 +198,11 @@
 /obj/effect/spawner/mobspawner/indigo_noon
 	name = "sweeper pack spawn"
 	max_spawns = 5
-	mobspawn_table = list(/mob/living/simple_animal/hostile/ordeal/indigo_noon = 1)
+	mobspawn_table = list(
+		/mob/living/simple_animal/hostile/ordeal/indigo_noon = 8,
+		/mob/living/simple_animal/hostile/ordeal/indigo_noon/lanky = 2,
+		/mob/living/simple_animal/hostile/ordeal/indigo_noon/chunky = 1,
+		)
 
 	//Steel Roaches
 /obj/effect/spawner/mobspawner/steel_dawn

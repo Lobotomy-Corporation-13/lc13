@@ -1,13 +1,13 @@
 ////////////////////////////////////////
 //////////////MISC Boards///////////////
 ////////////////////////////////////////
-/datum/design/board/electrolyzer
+/* /datum/design/board/electrolyzer
 	name = "Machine Design (Electrolyzer Board)"
 	desc = "The circuit board for an electrolyzer."
 	id = "electrolyzer"
 	build_path = /obj/item/circuitboard/machine/electrolyzer
 	category = list ("Engineering Machinery")
-	departmental_flags = DEPARTMENTAL_FLAG_ENGINEERING
+	departmental_flags = DEPARTMENTAL_FLAG_ENGINEERING */
 
 /datum/design/board/smes
 	name = "Machine Design (SMES Board)"
@@ -57,13 +57,13 @@
 	category = list ("Engineering Machinery")
 	departmental_flags = DEPARTMENTAL_FLAG_ENGINEERING | DEPARTMENTAL_FLAG_SCIENCE
 
-/datum/design/board/thermomachine
+/* /datum/design/board/thermomachine
 	name = "Machine Design (Freezer/Heater Board)"
 	desc = "The circuit board for a freezer/heater."
 	id = "thermomachine"
 	build_path = /obj/item/circuitboard/machine/thermomachine
 	category = list ("Engineering Machinery")
-	departmental_flags = DEPARTMENTAL_FLAG_ENGINEERING | DEPARTMENTAL_FLAG_SCIENCE
+	departmental_flags = DEPARTMENTAL_FLAG_ENGINEERING | DEPARTMENTAL_FLAG_SCIENCE */
 
 /datum/design/board/space_heater
 	name = "Machine Design (Space Heater Board)"
@@ -121,13 +121,13 @@
 	category = list("Teleportation Machinery")
 	departmental_flags = DEPARTMENTAL_FLAG_ENGINEERING | DEPARTMENTAL_FLAG_SCIENCE
 
-/datum/design/board/cryotube
+/* /datum/design/board/cryotube
 	name = "Machine Design (Cryotube Board)"
 	desc = "The circuit board for a cryotube."
 	id = "cryotube"
 	build_path = /obj/item/circuitboard/machine/cryo_tube
 	departmental_flags = DEPARTMENTAL_FLAG_ENGINEERING | DEPARTMENTAL_FLAG_MEDICAL
-	category = list ("Medical Machinery")
+	category = list ("Medical Machinery") */
 
 /datum/design/board/chem_dispenser
 	name = "Machine Design (Portable Chem Dispenser Board)"
@@ -647,7 +647,7 @@
 	build_path = /obj/item/circuitboard/machine/accounting
 	category = list ("Misc. Machinery")
 
-//Hypertorus fusion reactor designs
+/* //Hypertorus fusion reactor designs
 
 /datum/design/board/HFR_core
 	name = "Machine Design (HFR Core)"
@@ -696,3 +696,4 @@
 	build_path = /obj/item/circuitboard/machine/HFR_interface
 	category = list ("Engineering Machinery")
 	departmental_flags = DEPARTMENTAL_FLAG_ENGINEERING
+ */

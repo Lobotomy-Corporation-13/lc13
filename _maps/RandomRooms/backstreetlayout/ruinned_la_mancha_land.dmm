@@ -1695,9 +1695,6 @@
 /turf/open/floor/material,
 /area/city/backstreets_alley)
 "Sd" = (
-/obj/machinery/atmospherics/components/unary/cryo_cell{
-	plane = 0
-	},
 /mob/living/carbon/human{
 	anchored = 1;
 	pixel_y = 24

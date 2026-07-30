@@ -30,18 +30,41 @@
 		/datum/ego_datum/weapon/rapunzel,
 		/datum/ego_datum/armor/rapunzel,
 	)
-//	gift_type =  /datum/ego_gifts/rapunzel
+	gift_type =  /datum/ego_gifts/rapunzel
 	abnormality_origin = ABNORMALITY_ORIGIN_WONDERLAB
 
 	var/chosen
 	var/instinct_count
-	var/list/hair_list = list()
 
 /mob/living/simple_animal/hostile/abnormality/tangle/Move()
 	return FALSE
 
 /mob/living/simple_animal/hostile/abnormality/tangle/CanAttack(atom/the_target)
 	return FALSE
+
+/mob/living/simple_animal/hostile/abnormality/tangle/Life()
+	. = ..()
+	if(!.)
+		return
+	if(IsContained())
+		return
+
+	//This is here because the sprite is bugged and I have NO fucking clue why.
+	//It works perfectly fine in a local test but fucks up on the server.
+	//Fuck you. Fuck you. Fuck you.
+	//I am forcing you to have your correct icon, and you will LIKE it.
+	if(icon_state != "tangle" || icon!= 'ModularLobotomy/_Lobotomyicons/32x64.dmi')
+		icon_state = "tangle"
+		icon = 'ModularLobotomy/_Lobotomyicons/32x64.dmi'
+
+	for(var/mob/living/carbon/human/H in GLOB.mob_list)
+		if(locate(/obj/structure/spreading/tangle_hair) in range(0, H))
+			H.deal_damage(3, WHITE_DAMAGE, attack_type = (ATTACK_TYPE_ENVIRONMENT), blocked = H.run_armor_check(null, WHITE_DAMAGE))
+			if(H in view(3, src))
+				if(prob(30) && get_attribute_level(H, FORTITUDE_ATTRIBUTE) < 60)
+					H.Knockdown(1)
+					to_chat(H, span_warning("You get overwhelmed in the hair!"))
+
 
 //Grab a list of all agents and picks one
 /mob/living/simple_animal/hostile/abnormality/tangle/Initialize()
@@ -52,17 +75,15 @@
 			continue
 		if(HAS_TRAIT(usr, TRAIT_WORK_FORBIDDEN)) //Don't get non agents
 			continue
-		potentialmarked += L
+		potentialmarked += L.tag
 
 	if(length(potentialmarked) <= 1) //If there's only one or none of you, then don't do it. I'm not that evil.
 		return
 	chosen = pick(potentialmarked)
 
-
-
 /mob/living/simple_animal/hostile/abnormality/tangle/PostWorkEffect(mob/living/carbon/human/user, work_type, pe, work_time)
 	// If your'e the chosen, lower
-	if(user == chosen)
+	if(user.tag == chosen)
 		datum_reference.qliphoth_change(-1)
 		icon_state = "tangleawake"
 		return
@@ -74,18 +95,11 @@
 			icon_state = "tangleawake"
 
 /mob/living/simple_animal/hostile/abnormality/tangle/BreachEffect()
-	..()
+	. = ..()
 	icon_state = "tangle"
 	icon = 'ModularLobotomy/_Lobotomyicons/32x64.dmi'
-	new /obj/structure/spreading/tangle_hair (src)
-
-
-/mob/living/simple_animal/hostile/abnormality/tangle/death()
-	for(var/V in hair_list)
-		qdel(V)
-		hair_list-=V
-	..()
-
+	var/obj/structure/spreading/tangle_hair/hair = new(src)
+	hair.RegisterMob(src)
 
 // Hair turf
 /obj/structure/spreading/tangle_hair
@@ -100,30 +114,58 @@
 	plane = FLOOR_PLANE
 	max_integrity = 20
 	base_icon_state = "tanglehair"
+	var/rapid_growth_charges = 4
 	var/mob/living/simple_animal/hostile/abnormality/tangle/connected_abno
+
+/obj/structure/spreading/tangle_hair/Destroy()
+	UnregisterMob()
+	return ..()
 
 /obj/structure/spreading/tangle_hair/Initialize()
 	. = ..()
-
-	//Stolen from Snow White's. Thanks Para!
-	if(!connected_abno)
-		connected_abno = locate(/mob/living/simple_animal/hostile/abnormality/tangle) in GLOB.abnormality_mob_list
-	if(connected_abno)
-		connected_abno.hair_list += src
-	expand()
-
+	addtimer(CALLBACK(src, PROC_REF(expand)), 5 SECONDS)
 
 /obj/structure/spreading/tangle_hair/expand()
-	addtimer(CALLBACK(src, PROC_REF(expand)), 5 SECONDS)
+	//It gets really fast for a few moments before slowing down
+	var/spread_offset = (5 SECONDS) + rand(1,10) - ((1 SECONDS) * rapid_growth_charges)
+	rapid_growth_charges--
+	addtimer(CALLBACK(src, PROC_REF(expand)), spread_offset)
 //	if(connected_abno.hair_list.len>=150)
 // 		return
-	..()
+	return ..()
 
 /obj/structure/spreading/tangle_hair/Crossed(atom/movable/AM)
 	. = ..()
 	if(ishuman(AM))
 		var/mob/living/carbon/human/H = AM
-		H.apply_damage(1, WHITE_DAMAGE, null, H.run_armor_check(null, RED_DAMAGE), spread_damage = TRUE)
+		H.deal_damage(1, WHITE_DAMAGE, attack_type = (ATTACK_TYPE_ENVIRONMENT), blocked = H.run_armor_check(null, WHITE_DAMAGE))
 		if(prob(10))
 			H.Immobilize(5)
 			to_chat(H, span_warning("You get caught in the hair!"))
+
+/obj/structure/spreading/tangle_hair/PlaceStructure(turf/T)
+	. = ..()
+	if(!. || !istype(. , type))
+		return
+	var/obj/structure/spreading/tangle_hair/A = .
+	if(connected_abno)
+		A.RegisterMob(connected_abno)
+
+/obj/structure/spreading/tangle_hair/play_attack_sound(damage_amount, damage_type = BRUTE)
+	playsound(loc, 'sound/creatures/venus_trap_hit.ogg', 60, TRUE)
+
+//Signal Stuff
+/obj/structure/spreading/tangle_hair/proc/RegisterMob(mob/living/L)
+	if(!L)
+		return
+	if(!istype(L, /mob/living/simple_animal/hostile/abnormality/tangle))
+		return
+	connected_abno = L
+	RegisterSignal(connected_abno, list(COMSIG_PARENT_QDELETING), PROC_REF(UnregisterMob))
+
+/obj/structure/spreading/tangle_hair/proc/UnregisterMob()
+	if(!connected_abno)
+		return
+	UnregisterSignal(connected_abno, list(COMSIG_PARENT_QDELETING))
+	connected_abno = null
+	SelfDestruct()

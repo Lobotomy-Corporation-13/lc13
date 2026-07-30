@@ -7,22 +7,24 @@ Buildable meters
 //update those defines ANY TIME an atmos path is changed...
 //...otherwise construction will stop working
 
+// Gutted in the Atmos purge.
 /obj/item/pipe
 	name = "pipe"
 	desc = "A pipe."
-	var/pipe_type
-	var/pipename
+	// var/pipe_type
+	// var/pipename
 	force = 7
 	throwforce = 7
 	icon = 'icons/obj/atmospherics/pipes/pipe_item.dmi'
 	icon_state = "simple"
 	inhand_icon_state = "buildpipe"
 	w_class = WEIGHT_CLASS_NORMAL
-	var/piping_layer = PIPING_LAYER_DEFAULT
-	var/RPD_type
-	/// Whether it can be painted
-	var/paintable = FALSE
+	// var/piping_layer = PIPING_LAYER_DEFAULT
+	// var/RPD_type
+	//Whether it can be painted
+	// var/paintable = FALSE
 
+/*
 /obj/item/pipe/directional
 	RPD_type = PIPE_UNARY
 /obj/item/pipe/binary
@@ -41,12 +43,12 @@ Buildable meters
 	//Flipping handled manually due to custom handling for trinary pipes
 	AddComponent(/datum/component/simple_rotation, ROTATION_ALTCLICK | ROTATION_CLOCKWISE)
 
-/obj/item/pipe/Initialize(mapload, _pipe_type, _dir, obj/machinery/atmospherics/make_from)
-	if(make_from)
-		make_from_existing(make_from)
-	else
-		pipe_type = _pipe_type
-		setDir(_dir)
+/obj/item/pipe/Initialize(mapload, _pipe_type, _dir)
+	// if(make_from)
+	// 	make_from_existing(make_from)
+	// else
+	pipe_type = _pipe_type
+	setDir(_dir)
 
 	update()
 	pixel_x += rand(-5, 5)
@@ -175,9 +177,9 @@ Buildable meters
 
 /obj/item/pipe/trinary/flippable/build_pipe(obj/machinery/atmospherics/components/trinary/T)
 	..()
-	T.flipped = flipped
+	T.flipped = flipped */
 
-/obj/item/pipe/directional/suicide_act(mob/user)
+/obj/item/pipe/suicide_act(mob/user)
 	user.visible_message("<span class='suicide'>[user] shoves [src] in [user.p_their()] mouth and turns it on! It looks like [user.p_theyre()] trying to commit suicide!</span>")
 	if(iscarbon(user))
 		var/mob/living/carbon/C = user
@@ -188,7 +190,7 @@ Buildable meters
 			sleep(5)
 		C.blood_volume = 0
 	return(OXYLOSS|BRUTELOSS)
-
+/*
 /obj/item/pipe_meter
 	name = "meter"
 	desc = "A meter that can be wrenched on pipes, or attached to the floor with screws."
@@ -235,3 +237,4 @@ Buildable meters
 /obj/item/pipe_meter/proc/setAttachLayer(new_layer = PIPING_LAYER_DEFAULT)
 	piping_layer = new_layer
 	PIPING_LAYER_DOUBLE_SHIFT(src, piping_layer)
+ */

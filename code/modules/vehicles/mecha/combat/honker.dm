@@ -19,10 +19,10 @@
 /obj/vehicle/sealed/mecha/combat/honker/get_stats_part(mob/user)
 	var/integrity = obj_integrity/max_integrity*100
 	var/cell_charge = get_charge()
-	var/datum/gas_mixture/int_tank_air = internal_tank.return_air()
+/* 	var/datum/gas_mixture/int_tank_air = internal_tank.return_air()
 	var/tank_pressure = internal_tank ? round(int_tank_air.return_pressure(),0.01) : "None"
 	var/tank_temperature = internal_tank ? int_tank_air.temperature : "Unknown"
-	var/cabin_pressure = round(return_pressure(),0.01)
+	var/cabin_pressure = round(return_pressure(),0.01) */
 	var/output = {"[report_internal_damage()]
 						[integrity<30?"<font color='red'><b>DAMAGE LEVEL CRITICAL</b></font><br>":null]
 						[internal_damage&MECHA_INT_TEMP_CONTROL?"<font color='red'><b>CLOWN SUPPORT SYSTEM MALFUNCTION</b></font><br>":null]
@@ -30,11 +30,7 @@
 						[internal_damage&MECHA_INT_CONTROL_LOST?"<font color='red'><b>HONK-A-DOODLE</b></font> - <a href='byond://?src=[REF(src)];repair_int_control_lost=1'>Recalibrate</a><br>":null]
 						<b>IntegriHONK: </b> [integrity]%<br>
 						<b>PowerHONK charge: </b>[isnull(cell_charge)?"No power cell installed":"[cell.percent()]%"]<br>
-						<b>Air source: </b>[use_internal_tank?"Internal Airtank":"Environment"]<br>
-						<b>AirHONK pressure: </b>[tank_pressure]kPa<br>
-						<b>AirHONK temperature: </b>[tank_temperature]&deg;K|[tank_temperature - T0C]&deg;C<br>
-						<b>HONK pressure: </b>[cabin_pressure>WARNING_HIGH_PRESSURE ? "<font color='red'>[cabin_pressure]</font>": cabin_pressure]kPa<br>
-						<b>HONK temperature: </b> [return_temperature()]&deg;K|[return_temperature() - T0C]&deg;C<br>
+						<b>HONK temperature: </b> [return_temperature()]&deg;K|[return_temperature() - 273.15]&deg;C<br>
 						<b>Lights: </b>[(mecha_flags & LIGHTS_ON)?"on":"off"]<br>
 						[dna_lock?"<b>DNA-locked:</b><br> <span style='font-size:10px;letter-spacing:-1px;'>[dna_lock]</span> \[<a href='byond://?src=[REF(src)];reset_dna=1'>Reset</a>\]<br>":null]
 					"}

@@ -61,6 +61,13 @@
 /obj/item/toy/beach_ball/holoball/dodgeball,
 /turf/open/floor/plating/dirt/jungle/dark,
 /area/city/backstreets_room)
+"u" = (
+/obj/effect/turf_decal/trimline/white/filled/line{
+	dir = 3
+	},
+/mob/living/simple_animal/hostile/ordeal/indigo_noon/lanky,
+/turf/open/floor/plating/dirt/jungle/dark,
+/area/city/backstreets_room)
 "v" = (
 /obj/item/toy/beach_ball/holoball/dodgeball,
 /turf/open/floor/plating/dirt/jungle/dark,
@@ -186,7 +193,7 @@ N
 (3,1,1) = {"
 N
 Y
-D
+u
 Y
 s
 Y

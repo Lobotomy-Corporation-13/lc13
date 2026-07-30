@@ -99,13 +99,13 @@
 	if(in_range(user, src) || isobserver(user))
 		. += "<span class='notice'>The status display reads: Malfunction probability reduced by <b>[badThingCoeff]%</b>.<br>Cooldown interval between experiments at <b>[resetTime*0.1]</b> seconds.</span>"
 
-/obj/machinery/rnd/experimentor/proc/checkCircumstances(obj/item/O)
+/* /obj/machinery/rnd/experimentor/proc/checkCircumstances(obj/item/O)
 	//snowflake check to only take "made" bombs
 	if(istype(O, /obj/item/transfer_valve))
 		var/obj/item/transfer_valve/T = O
 		if(!T.tank_one || !T.tank_two || !T.attached_device)
 			return FALSE
-	return TRUE
+	return TRUE */
 
 /obj/machinery/rnd/experimentor/Insert_Item(obj/item/O, mob/user)
 	if(user.a_intent != INTENT_HARM)
@@ -248,7 +248,7 @@
 		else if(prob(EFFECT_PROB_VERYLOW-badThingCoeff))
 			visible_message("<span class='danger'>[src] malfunctions and destroys [exp_on], lashing its arms out at nearby people!</span>")
 			for(var/mob/living/m in oview(1, src))
-				m.apply_damage(15, BRUTE, pick(BODY_ZONE_HEAD,BODY_ZONE_CHEST,BODY_ZONE_PRECISE_GROIN))
+				m.deal_damage(15, BRUTE, flags = (DAMAGE_FORCED | DAMAGE_NO_SPREAD), def_zone = pick(BODY_ZONE_HEAD,BODY_ZONE_CHEST,BODY_ZONE_PRECISE_GROIN))
 				investigate_log("Experimentor dealt minor brute to [m].", INVESTIGATE_EXPERIMENTOR)
 			ejectItem(TRUE)
 		else if(prob(EFFECT_PROB_LOW-badThingCoeff))
@@ -364,7 +364,7 @@
 			ejectItem(TRUE)
 		else if(prob(EFFECT_PROB_MEDIUM-badThingCoeff))
 			visible_message("<span class='warning'>[src] malfunctions, melting [exp_on] and leaking hot air!</span>")
-			var/datum/gas_mixture/env = loc.return_air()
+/* 			var/datum/gas_mixture/env = loc.return_air()
 			var/transfer_moles = 0.25 * env.total_moles()
 			var/datum/gas_mixture/removed = env.remove(transfer_moles)
 			if(removed)
@@ -373,14 +373,17 @@
 					heat_capacity = 1
 				removed.temperature = min((removed.temperature*heat_capacity + 100000)/heat_capacity, 1000)
 			env.merge(removed)
-			air_update_turf(FALSE, FALSE)
+			air_update_turf(FALSE, FALSE) */
+			for(var/turf/turf in range(5,get_turf(src)))
+				if(!locate(/obj/effect/turf_fire) in turf)
+					new /obj/effect/turf_fire(turf)
 			investigate_log("Experimentor has released hot air.", INVESTIGATE_EXPERIMENTOR)
 			ejectItem(TRUE)
 		else if(prob(EFFECT_PROB_MEDIUM-badThingCoeff))
 			visible_message("<span class='warning'>[src] malfunctions, activating its emergency coolant systems!</span>")
 			throwSmoke(loc)
 			for(var/mob/living/m in oview(1, src))
-				m.apply_damage(5, FIRE, pick(BODY_ZONE_HEAD,BODY_ZONE_CHEST,BODY_ZONE_PRECISE_GROIN))
+				m.deal_damage(5, FIRE, flags = (DAMAGE_FORCED | DAMAGE_NO_SPREAD), def_zone = pick(BODY_ZONE_HEAD,BODY_ZONE_CHEST,BODY_ZONE_PRECISE_GROIN))
 				investigate_log("Experimentor has dealt minor burn damage to [key_name(m)]", INVESTIGATE_EXPERIMENTOR)
 			ejectItem()
 	////////////////////////////////////////////////////////////////////////////////////////////////
@@ -410,7 +413,7 @@
 			ejectItem(TRUE)
 		else if(prob(EFFECT_PROB_LOW-badThingCoeff))
 			visible_message("<span class='warning'>[src] malfunctions, shattering [exp_on] and leaking cold air!</span>")
-			var/datum/gas_mixture/env = loc.return_air()
+/* 			var/datum/gas_mixture/env = loc.return_air()
 			var/transfer_moles = 0.25 * env.total_moles()
 			var/datum/gas_mixture/removed = env.remove(transfer_moles)
 			if(removed)
@@ -419,7 +422,10 @@
 					heat_capacity = 1
 				removed.temperature = (removed.temperature*heat_capacity - 75000)/heat_capacity
 			env.merge(removed)
-			air_update_turf(FALSE, FALSE)
+			air_update_turf(FALSE, FALSE) */
+			var/turf/T = get_turf(src)
+			for(var/turf/antiflames in range(2, T))
+				new /obj/effect/particle_effect/foam/firefighting(antiflames)
 			investigate_log("Experimentor has released cold air.", INVESTIGATE_EXPERIMENTOR)
 			ejectItem(TRUE)
 		else if(prob(EFFECT_PROB_MEDIUM-badThingCoeff))
@@ -493,7 +499,7 @@
 			visible_message("<span class='warning'>Experimentor draws the life essence of those nearby!</span>")
 			for(var/mob/living/m in view(4,src))
 				to_chat(m, "<span class='danger'>You feel your flesh being torn from you, mists of blood drifting to [src]!</span>")
-				m.apply_damage(50, BRUTE, BODY_ZONE_CHEST)
+				m.deal_damage(50, BRUTE, flags = (DAMAGE_FORCED), def_zone = BODY_ZONE_CHEST)
 				investigate_log("Experimentor has taken 50 brute a blood sacrifice from [m]", INVESTIGATE_EXPERIMENTOR)
 		if(globalMalf > 51 && globalMalf < 75)
 			visible_message("<span class='warning'>[src] encounters a run-time error!</span>")

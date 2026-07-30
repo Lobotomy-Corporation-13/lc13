@@ -59,9 +59,9 @@
 	name = "firefighter helmet"
 	clothing_flags = STOPSPRESSUREDAMAGE
 	heat_protection = HEAD
-	max_heat_protection_temperature = FIRE_HELM_MAX_TEMP_PROTECT
+	max_heat_protection_temperature = TRUE
 	cold_protection = HEAD
-	min_cold_protection_temperature = FIRE_HELM_MIN_TEMP_PROTECT
+	min_cold_protection_temperature = TRUE
 
 /obj/item/clothing/head/hardhat/red/upgraded
 	name = "workplace-ready firefighter helmet"
@@ -79,9 +79,9 @@
 	hat_type = "white"
 	clothing_flags = STOPSPRESSUREDAMAGE
 	heat_protection = HEAD
-	max_heat_protection_temperature = FIRE_HELM_MAX_TEMP_PROTECT
+	max_heat_protection_temperature = TRUE
 	cold_protection = HEAD
-	min_cold_protection_temperature = FIRE_HELM_MIN_TEMP_PROTECT
+	min_cold_protection_temperature = TRUE
 	dog_fashion = /datum/dog_fashion/head
 
 /obj/item/clothing/head/hardhat/dblue
@@ -100,9 +100,9 @@
 	clothing_flags = STOPSPRESSUREDAMAGE | THICKMATERIAL | BLOCK_GAS_SMOKE_EFFECT
 	flags_inv = HIDEMASK|HIDEEARS|HIDEEYES|HIDEFACE|HIDEHAIR|HIDEFACIALHAIR|HIDESNOUT
 	heat_protection = HEAD
-	max_heat_protection_temperature = FIRE_IMMUNITY_MAX_TEMP_PROTECT
+	max_heat_protection_temperature = TRUE
 	cold_protection = HEAD
-	min_cold_protection_temperature = FIRE_HELM_MIN_TEMP_PROTECT
+	min_cold_protection_temperature = TRUE
 	flags_cover = HEADCOVERSEYES | HEADCOVERSMOUTH | PEPPERPROOF
 
 /obj/item/clothing/head/hardhat/weldhat
@@ -160,9 +160,9 @@
 	hat_type = "white"
 	clothing_flags = STOPSPRESSUREDAMAGE
 	heat_protection = HEAD
-	max_heat_protection_temperature = FIRE_HELM_MAX_TEMP_PROTECT
+	max_heat_protection_temperature = TRUE
 	cold_protection = HEAD
-	min_cold_protection_temperature = FIRE_HELM_MIN_TEMP_PROTECT
+	min_cold_protection_temperature = TRUE
 
 /obj/item/clothing/head/hardhat/weldhat/dblue
 	icon_state = "hardhat0_dblue"

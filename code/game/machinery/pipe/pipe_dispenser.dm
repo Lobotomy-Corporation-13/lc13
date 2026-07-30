@@ -2,16 +2,18 @@
 	name = "pipe dispenser"
 	icon = 'icons/obj/stationobjs.dmi'
 	icon_state = "pipe_d"
-	desc = "Dispenses countless types of pipes. Very useful if you need pipes."
+	desc = "Dispenses countless pipes. Very useful if you need pipes."
 	density = TRUE
 	interaction_flags_machine = INTERACT_MACHINE_ALLOW_SILICON | INTERACT_MACHINE_OPEN_SILICON | INTERACT_MACHINE_OFFLINE
+	interaction_flags_atom = INTERACT_ATOM_ATTACK_HAND
+	use_power = NO_POWER_USE
 	var/wait = 0
-	var/piping_layer = PIPING_LAYER_DEFAULT
+	// var/piping_layer = PIPING_LAYER_DEFAULT
 
 /obj/machinery/pipedispenser/attack_paw(mob/user)
 	return attack_hand(user)
 
-/obj/machinery/pipedispenser/ui_interact(mob/user)
+/* /obj/machinery/pipedispenser/ui_interact(mob/user)
 	. = ..()
 	var/dat = "PIPING LAYER: <A href='byond://?src=[REF(src)];layer_down=1'>--</A><b>[piping_layer]</b><A href='byond://?src=[REF(src)];layer_up=1'>++</A><BR>"
 
@@ -58,11 +60,15 @@
 		piping_layer = clamp(++piping_layer, PIPING_LAYER_MIN, PIPING_LAYER_MAX)
 	if(href_list["layer_down"])
 		piping_layer = clamp(--piping_layer, PIPING_LAYER_MIN, PIPING_LAYER_MAX)
-	return
+	return */
+/obj/machinery/pipedispenser/interact(mob/user)
+	. = ..()
+	new /obj/item/pipe(get_turf(user))
+	to_chat(user, span_notice("A pipe pops out of the machine. Rejoice!"))
 
 /obj/machinery/pipedispenser/attackby(obj/item/W, mob/user, params)
 	add_fingerprint(user)
-	if (istype(W, /obj/item/pipe) || istype(W, /obj/item/pipe_meter))
+	if (istype(W, /obj/item/pipe))
 		to_chat(usr, span_notice("You put [W] back into [src]."))
 		qdel(W)
 		return

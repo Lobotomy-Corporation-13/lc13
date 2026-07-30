@@ -310,7 +310,6 @@
 	mob_size = MOB_SIZE_SMALL
 	tame = TRUE
 	buffed = 0
-	var/can_act = TRUE
 
 /mob/living/simple_animal/hostile/smallchuckles/examine(mob/user)
 	. = ..()
@@ -362,7 +361,7 @@
 	visible_message(span_danger("[src] suddenly explodes!"))
 	for(var/mob/living/L in view(5, src))
 		if(!faction_check_mob(L))
-			L.apply_damage(35, RED_DAMAGE, null, L.run_armor_check(null, RED_DAMAGE))
+			L.deal_damage(35, RED_DAMAGE, attack_type = (ATTACK_TYPE_SPECIAL))
 	gib()
 
 // bigBirdEye
@@ -430,7 +429,6 @@
 	search_objects = 1
 	del_on_death = TRUE
 
-	var/can_act = TRUE //If flashing, turns FALSE so we don't attack/move
 	var/flash_cooldown
 	var/flash_cooldown_time = 10 SECONDS
 	var/flash_range = 5 //Range that the flash hits
@@ -537,7 +535,7 @@ Mobs that mostly focus on dealing RED damage, they are all a bit more frail than
 	if(mob_spawn_amount > 0)
 		animate(src, transform = matrix()*1.2, color = "#FF0000", time = 5)
 		addtimer(CALLBACK(src, PROC_REF(SpawnSuicidal)), 5)
-	..()
+	return ..()
 
 //Love Town Suicidal - Weak, screams around itself occasionally, spawned by other enemies on death.
 /mob/living/simple_animal/hostile/lovetown/suicidal
@@ -552,7 +550,6 @@ Mobs that mostly focus on dealing RED damage, they are all a bit more frail than
 	mob_spawn_amount = 0 //so we dont recursively spawn more
 	silk_results = list(/obj/item/stack/sheet/silk/human_simple = 1)
 
-	var/can_act = TRUE
 	var/scream_cooldown
 	var/scream_cooldown_time = 6 SECONDS
 
@@ -579,7 +576,7 @@ Mobs that mostly focus on dealing RED damage, they are all a bit more frail than
 		SLEEP_CHECK_DEATH(6)
 	for(var/mob/living/L in view(3, src))
 		if(!faction_check_mob(L))
-			L.apply_damage(5, WHITE_DAMAGE, null, L.run_armor_check(null, WHITE_DAMAGE))
+			L.deal_damage(5, WHITE_DAMAGE, src, flags = (DAMAGE_FORCED))
 	can_act = TRUE
 
 //Love Town Slasher - TETH goons, not much of a threat
@@ -653,7 +650,6 @@ Mobs that mostly focus on dealing RED damage, they are all a bit more frail than
 
 	var/scream_cooldown
 	var/scream_cooldown_time = 7 SECONDS
-	var/can_act = TRUE
 
 /mob/living/simple_animal/hostile/lovetown/shambler/AttackingTarget()
 	return OpenFire()
@@ -678,7 +674,7 @@ Mobs that mostly focus on dealing RED damage, they are all a bit more frail than
 		SLEEP_CHECK_DEATH(6)
 	for(var/mob/living/L in view(4, src))
 		if(!faction_check_mob(L))
-			L.apply_damage(33, WHITE_DAMAGE, null, L.run_armor_check(null, WHITE_DAMAGE))
+			L.deal_damage(33, WHITE_DAMAGE, src, attack_type = (ATTACK_TYPE_SPECIAL))
 	can_act = TRUE
 
 // Love Town Slumberer - HE threat,, quite damaging and can grab you, stuns you for some time.
@@ -791,7 +787,6 @@ Mobs that mostly focus on dealing RED damage, they are all a bit more frail than
 	mob_spawn_amount = 2 //:(
 	spawn_prob = 0 //100%, always spawn them
 
-	var/can_act = TRUE
 	var/current_stage = 1 //changes behaviour slightly on phase 2
 	var/stage_threshold = 3000 // enters stage 2 at or below this threshold
 	var/attack_delay = 0.5 SECONDS //0.5 seconds at stage 1, 1 second at stage 2
@@ -833,7 +828,7 @@ Mobs that mostly focus on dealing RED damage, they are all a bit more frail than
 	SLEEP_CHECK_DEATH(attack_delay) //takes longer to slam on phase 2
 	for(var/turf/T in view(current_stage, src))//scales with stage, at stage 2 hits 2 tiles around
 		new /obj/effect/temp_visual/lovetown_shapes(T)
-		HurtInTurf(T, list(), (rand(melee_damage_lower, melee_damage_upper)/2), RED_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE) //30~40 damage
+		HurtInTurf(T, list(), (rand(melee_damage_lower, melee_damage_upper)/2), RED_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)) //30~40 damage
 	switch(current_stage)
 		if(1)
 			icon_state = "lovetown_abomination_slam"
@@ -981,7 +976,7 @@ Mobs that mostly focus on dealing RED damage, they are all a bit more frail than
 		return
 	for(var/turf/T in area_of_effect)
 		new /obj/effect/temp_visual/lovetown_whip(T)
-		HurtInTurf(T, list(), lovewhip_damage, RED_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE)
+		HurtInTurf(T, list(), lovewhip_damage, RED_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, attack_type = (ATTACK_TYPE_RANGED | ATTACK_TYPE_SPECIAL))
 		for(var/mob/living/L in T)
 			var/atom/throw_target = get_edge_target_turf(L, get_dir(L, src))
 			L.throw_at(throw_target, 200, 4)
@@ -1015,7 +1010,7 @@ Mobs that mostly focus on dealing RED damage, they are all a bit more frail than
 			can_act = TRUE
 			return
 		for(var/mob/living/carbon/human/H in view(7, get_turf(src)))
-			H.apply_damage(50, WHITE_DAMAGE, null, H.run_armor_check(null, WHITE_DAMAGE), spread_damage = TRUE)
+			H.deal_damage(50, WHITE_DAMAGE, src, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_SPECIAL))
 		new /obj/effect/temp_visual/lovetown_shapes(get_turf(TH))
 		TH.gib()
 //		animate(TH, pixel_y = pixel_y_before, time = 10, , easing = BACK_EASING | EASE_OUT, flags = ANIMATION_END_NOW) //animate the shape back when you add it Mel
@@ -1082,3 +1077,140 @@ Mobs that mostly focus on dealing RED damage, they are all a bit more frail than
 		damage_taken = 0
 	if((health <= stage_threshold) && (current_stage == 1))
 		StageTransition()
+
+//Violet Pet - An eldritch organ turret that shoots friendly black damage projectiles
+/datum/crafting_recipe/violet_pet
+	name = "Pulsating Organ"
+	result = /mob/living/simple_animal/hostile/violet_pet
+	reqs = list(/obj/item/food/meat/slab/fruit = 4, /datum/reagent/water = 10)
+	time = 50
+	category = CAT_ROBOT
+
+/mob/living/simple_animal/hostile/violet_pet
+	name = "pulsating organ"
+	desc = "A squishy, violet-hued organ that pulses with a gentle rhythm. It makes soft cooing sounds and seems to enjoy being held. Its eye tracks nearby threats."
+	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
+	icon_state = "violet_pet"
+	icon_living = "violet_pet"
+	icon_dead = "violet_pet"
+	faction = list("neutral", "violet_ordeal")
+	response_help_continuous = "pets"
+	response_help_simple = "pet"
+	response_disarm_continuous = "gently pushes aside"
+	response_disarm_simple = "gently push aside"
+	friendly_verb_continuous = "nuzzles against"
+	friendly_verb_simple = "nuzzle against"
+	speak_emote = list("coos softly", "pulses happily", "hums contentedly")
+	emote_hear = list("makes a happy squelching sound.", "throbs gently.", "burbles affectionately.")
+	mob_biotypes = MOB_ORGANIC
+	speak_chance = 3
+	environment_smash = FALSE
+	density = FALSE
+	maxHealth = 80
+	health = 80
+	melee_damage_lower = 0
+	melee_damage_upper = 0
+	mob_size = MOB_SIZE_SMALL
+	damage_coeff = list(BRUTE = 1, RED_DAMAGE = 1.2, WHITE_DAMAGE = 0.8, BLACK_DAMAGE = 1.5, PALE_DAMAGE = 1)
+	butcher_results = list(/obj/item/food/meat/slab/fruit = 1)
+	guaranteed_butcher_results = list(/obj/item/food/meat/slab/fruit = 1)
+	stop_automated_movement_when_pulled = TRUE
+	tame = TRUE
+	death_message = "lets out a sad little squeak as the violet glow fades from within."
+	// Turret functionality
+	ranged = TRUE
+	retreat_distance = 0
+	minimum_distance = 0
+	ranged_cooldown_time = 2 SECONDS
+	projectiletype = /obj/projectile/beam/violet_pet
+	projectilesound = 'sound/effects/ordeals/violet/fruit_suicide.ogg'
+	// Ridable functionality
+	can_buckle = TRUE
+	buckle_lying = 0
+
+/mob/living/simple_animal/hostile/violet_pet/Initialize(mapload)
+	. = ..()
+	AddElement(/datum/element/ridable, /datum/component/riding/creature/no_monsteroffset)
+	if(prob(2))
+		icon_state = "sus_pet"
+		icon_living = "sus_pet"
+		name = "peculiar organ"
+		desc = "A squishy little organ that looks a bit... off. Its eye darts around nervously, but it still wants pets."
+
+/mob/living/simple_animal/hostile/violet_pet/examine(mob/user)
+	. = ..()
+	. += span_notice("[src] will shoot at hostile creatures, but its projectiles pass harmlessly through humans.")
+	. += span_notice("You can drag yourself onto [src] to ride it, allowing it to move.")
+
+/mob/living/simple_animal/hostile/violet_pet/Login()
+	. = ..()
+	if(!. || !client)
+		return FALSE
+	to_chat(src, "<b>The world is strange, but a gentle touch makes it all worthwhile...</b>")
+
+// Cannot move unless ridden
+/mob/living/simple_animal/hostile/violet_pet/Move()
+	if(!has_buckled_mobs())
+		return FALSE
+	return ..()
+
+// Override CanAttack to not target humans
+/mob/living/simple_animal/hostile/violet_pet/CanAttack(atom/the_target)
+	if(ishuman(the_target))
+		return FALSE
+	return ..()
+
+/mob/living/simple_animal/hostile/violet_pet/attack_hand(mob/living/carbon/M)
+	if(!stat && M.a_intent == INTENT_HELP)
+		visible_message(span_notice("[M] pets [src], and it pulses happily!"))
+		playsound(get_turf(src), 'sound/effects/ordeals/violet/fruit_suicide.ogg', 30, TRUE)
+		to_chat(M, span_notice("[src] coos affectionately at your touch."))
+		return
+	return ..()
+
+// Violet pet projectile - passes through humans harmlessly, explodes on hit
+/obj/projectile/beam/violet_pet
+	name = "violet beam"
+	icon_state = "dvoid_dart"
+	damage = 20
+	damage_type = BLACK_DAMAGE
+	light_color = COLOR_PURPLE
+	impact_effect_type = /obj/effect/temp_visual/impact_effect/purple_laser
+	/// AoE range on hit
+	var/aoe_range = 1
+
+/obj/projectile/beam/violet_pet/prehit_pierce(atom/A)
+	if(ishuman(A))
+		return PROJECTILE_PIERCE_PHASE
+	return ..()
+
+/obj/projectile/beam/violet_pet/on_hit(atom/target, blocked = FALSE, pierce_hit)
+	. = ..()
+	var/turf/T = get_turf(target)
+	if(!T)
+		return
+
+	// Calculate damage multiplier based on rider's prudence
+	var/damage_mult = 1
+	if(firer && istype(firer, /mob/living/simple_animal/hostile/violet_pet))
+		var/mob/living/simple_animal/hostile/violet_pet/pet = firer
+		for(var/mob/living/carbon/human/rider in pet.buckled_mobs)
+			var/prudence = get_modified_attribute_level(rider, PRUDENCE_ATTRIBUTE)
+			damage_mult = 1 + (prudence * 0.02) // 2% more damage per prudence
+			break // Only use first rider
+
+	var/aoe_damage = damage * damage_mult
+
+	// Visual effect
+	playsound(T, 'sound/effects/ordeals/violet/fruit_suicide.ogg', 50, TRUE)
+	new /obj/effect/temp_visual/revenant(T)
+
+	// Deal AoE damage
+	for(var/turf/aoe_turf in range(aoe_range, T))
+		new /obj/effect/temp_visual/small_smoke/halfsecond(aoe_turf)
+		for(var/mob/living/L in aoe_turf)
+			if(ishuman(L)) // Don't hurt humans
+				continue
+			if(L == target) // Already hit by direct damage
+				continue
+			L.deal_damage(aoe_damage, BLACK_DAMAGE)

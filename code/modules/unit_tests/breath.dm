@@ -1,7 +1,7 @@
 /// Tests to make sure humans can breath in normal situations
 /// Built to prevent regression on an issue surrounding QUANTIZE() and BREATH_VOLUME
 /// See the comment on BREATH_VOLUME for more details
-/datum/unit_test/breath_sanity
+/* /datum/unit_test/breath_sanity
 
 /datum/unit_test/breath_sanity/Run()
 	var/mob/living/carbon/human/lab_rat = allocate(/mob/living/carbon/human)
@@ -33,3 +33,4 @@
 	TEST_ASSERT(!lab_rat.has_alert("not_enough_oxy"), "Humans can't get a full breath from the standard initial_gas_mix on a turf")
 
 
+ */

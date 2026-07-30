@@ -7,9 +7,8 @@
 	layer = LARGE_MOB_LAYER
 	a_intent = INTENT_HARM
 	del_on_death = TRUE
+	area_index = MOB_ABNORMALITY_INDEX
 	damage_coeff = list(RED_DAMAGE = 1, WHITE_DAMAGE = 1, BLACK_DAMAGE = 1, PALE_DAMAGE = 1)
-	atmos_requirements = list("min_oxy" = 0, "max_oxy" = 0, "min_tox" = 0, "max_tox" = 0, "min_co2" = 0, "max_co2" = 0, "min_n2" = 0, "max_n2" = 0)
-	minbodytemp = 0
 	see_in_dark = 7
 	vision_range = 12
 	aggro_vision_range = 20
@@ -32,7 +31,11 @@
 	var/start_qliphoth = 0
 	/// Can it breach? If TRUE - ZeroQliphoth() calls BreachEffect()
 	var/can_breach = FALSE
-	/// List of humans that witnessed the abnormality breaching
+	/// The % chance for it to drop Q on each result.
+	var/good_droprate = 0
+	var/neutral_droprate = 0
+	var/bad_droprate = 0
+	/// List of humans that witnessed the abnormality breaching, uses tags
 	var/list/breach_affected = list()
 	/// Copy-pasted from megafauna.dm: This allows player controlled mobs to use abilities
 	var/chosen_attack = 1
@@ -136,6 +139,26 @@
 	// rcorp stuff
 	var/rcorp_team
 
+	/// Bubbles and their speech
+	// Generic bubbles by agent level.
+	var/alist/generic_bubbles = alist(
+		1 = list("%PERSON looks nervously at %ABNO...", "%PERSON tries to stay focused."),
+		2 = list("%PERSON focuses on the task at hand.", "%PERSON follows the directions as trained."),
+		3 = list("%PERSON keeps an eye on %ABNO.", "%PERSON considers what they'll eat next."),
+		4 = list("%PERSON performs their work as if its second nature.", "%PERSON off-handedly mumbles excerpts from %ABNO's documentation."),
+		5 = list("%PERSON non-chalantly operates the work console.", "%PERSON says 'check this out' and closes their eyes while they work.", "%PERSON laughs at %ABNO."),
+	)
+	// Work Type Bubbles - Assoc List is planned, for the time being random list instead.
+	var/list/work_bubbles = list(
+		ABNORMALITY_WORK_INSTINCT = list("%PERSON feeds %ABNO some food."),
+		ABNORMALITY_WORK_INSIGHT = list("%PERSON cleans up some unknown fluid from %ABNO'sS containment."),
+		ABNORMALITY_WORK_ATTACHMENT = list("%PERSON talks to %ABNO for a while."),
+		ABNORMALITY_WORK_REPRESSION = list("%PERSON holds what %ABNO desires, just out of reach..."),
+	)
+
+	/// If TRUE, this Abnormality's odds of spawning go up dramatically. Enable for Abnormalities which are in need of testing, or have E.G.O. which is in need of testing.
+	var/being_tested = FALSE
+
 /mob/living/simple_animal/hostile/abnormality/Login()
 	. = ..()
 	if(!. || !client)
@@ -179,9 +202,9 @@
 	if(secret_chance && (prob(1) || SSmaptype.chosen_trait == FACILITY_TRAIT_JOKE_ABNOS))
 		InitializeSecretIcon()
 
-	//Abnormalities have no name here. And we don't want nonsentient ones to breach
+	//regular abnormalities shouldn't spawn on the limbus map, but we'll give them a very different name from limbus abnos to avoid confusion.
 	if(SSmaptype.maptype == "limbus_labs")
-		name = "Limbus Company Specimen"
+		name = "Anomaly"
 		faction = list("neutral")
 
 /mob/living/simple_animal/hostile/abnormality/proc/InitializeSecretIcon()
@@ -208,6 +231,8 @@
 
 /mob/living/simple_animal/hostile/abnormality/Destroy()
 	SHOULD_CALL_PARENT(TRUE)
+	breach_affected = null
+	attack_action_types = null
 	if(istype(datum_reference)) // Respawn the mob on death
 		datum_reference.current = null
 		addtimer(CALLBACK (datum_reference, TYPE_PROC_REF(/datum/abnormality, RespawnAbno)), 30 SECONDS)
@@ -274,14 +299,14 @@
 	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/proc/HarvestChem(obj/item/reagent_containers/C, mob/user)
-	visible_message(HarvestMessageProcess(harvest_phrase_third, user, C), HarvestMessageProcess(harvest_phrase, user, C))
+	visible_message(AbnoMessageProcess(harvest_phrase_third, user, C), AbnoMessageProcess(harvest_phrase, user, C))
 	if(chem_type)
 		C.reagents.add_reagent(chem_type, chem_yield)
 	else
 		C.reagents.add_reagent(pick(dummy_chems), chem_yield)
 	chem_cooldown_timer = world.time + chem_cooldown
 
-/mob/living/simple_animal/hostile/abnormality/proc/HarvestMessageProcess(str, user, vessel) // Jacked from announcement_system.dm
+/mob/living/simple_animal/hostile/abnormality/proc/AbnoMessageProcess(str, user, vessel) // Jacked from announcement_system.dm
 	str = replacetext(str, "%PERSON", "[user]")
 	str = replacetext(str, "%VESSEL", "[vessel]")
 	str = replacetext(str, "%ABNO", "[src]")
@@ -293,11 +318,11 @@
 	if(fear_level <= 0)
 		return
 	for(var/mob/living/carbon/human/H in ohearers(7, src))
-		if(H in breach_affected)
+		if(H.tag in breach_affected)
 			continue
 		if(H.stat == DEAD)
 			continue
-		breach_affected += H
+		breach_affected += H.tag
 		if(HAS_TRAIT(H, TRAIT_COMBATFEAR_IMMUNE))
 			to_chat(H, span_notice("This again...?"))
 			H.apply_status_effect(/datum/status_effect/panicked_lvl_0)
@@ -413,16 +438,22 @@ The variable's key needs to be non-numerical.*/
 // Additional effects on good work result, if any
 /mob/living/simple_animal/hostile/abnormality/proc/SuccessEffect(mob/living/carbon/human/user, work_type, pe, work_time, canceled)
 	WorkCompleteEffect("good")
+	if(prob(good_droprate))
+		datum_reference.qliphoth_change(-1)
 	return
 
 // Additional effects on neutral work result, if any
 /mob/living/simple_animal/hostile/abnormality/proc/NeutralEffect(mob/living/carbon/human/user, work_type, pe, work_time, canceled)
 	WorkCompleteEffect("normal")
+	if(prob(neutral_droprate))
+		datum_reference.qliphoth_change(-1)
 	return
 
 // Additional effects on work failure
 /mob/living/simple_animal/hostile/abnormality/proc/FailureEffect(mob/living/carbon/human/user, work_type, pe, work_time, canceled)
 	WorkCompleteEffect("bad")
+	if(prob(bad_droprate))
+		datum_reference.qliphoth_change(-1)
 	return
 
 // Visual effect for work completion
@@ -452,8 +483,40 @@ The variable's key needs to be non-numerical.*/
 	return TRUE
 
 // Additional effect on each work tick, whether successful or not
-/mob/living/simple_animal/hostile/abnormality/proc/Worktick(mob/living/carbon/human/user)
+/mob/living/simple_animal/hostile/abnormality/proc/Worktick(mob/living/carbon/human/user, bubble_type = ABNO_BALLOON_GENERIC | ABNO_BALLOON_SPECIFIC, work_type)
+	SHOULD_CALL_PARENT(TRUE)
+	if(!user || !datum_reference)
+		return
+	if(!datum_reference.console)
+		stack_trace("[src] tried to work without a console? user = [user]")
+		return
+	if(bubble_type & ABNO_BALLOON_OFF)
+		return
+	if(prob(20-(3*(threat_level-1))))
+		var/list/output_string_list = GetBubbleText(get_user_level(user), bubble_type, work_type)
+		if(!LAZYLEN(output_string_list))
+			stack_trace("[src] tried to pick a work text-bubble but had nothing to pick from. user = [user] | work type = [work_type]")
+			return
+		var/output_string = AbnoMessageProcess(pick(output_string_list), user.first_name())
+		for(var/mob/potential_viewer in GLOB.player_list)
+			datum_reference.console.balloon_alert(potential_viewer, output_string)
 	return
+
+/**
+ * Returns a list of potential bubble-text outputs
+ * Made as a proc for overwrites.
+ *
+ * user_level - the level of the working user, for /list/generic_bubbles
+ * bubble_type - bitflags of available bubble types. If ABNO_BALLOON_OFF is passed this proc should not be reached.
+ * work_type - ABNORMALITY_X_WORK, and is used for pulling from /list/work_bubbles
+ */
+/mob/living/simple_animal/hostile/abnormality/proc/GetBubbleText(user_level, bubble_type, work_type)
+	var/list/potential_output = list()
+	if(bubble_type & ABNO_BALLOON_WORK && !isnull(work_type))
+		potential_output += work_bubbles[work_type]
+	if(bubble_type & ABNO_BALLOON_GENERIC)
+		potential_output += generic_bubbles[user_level]
+	. = potential_output
 
 // Additional effect on each individual work tick success
 /mob/living/simple_animal/hostile/abnormality/proc/WorktickSuccess(mob/living/carbon/human/user)
@@ -461,7 +524,7 @@ The variable's key needs to be non-numerical.*/
 
 // Additional effect on each individual work tick failure
 /mob/living/simple_animal/hostile/abnormality/proc/WorktickFailure(mob/living/carbon/human/user)
-	user.deal_damage(work_damage_amount, work_damage_type)
+	user.deal_split_damage(work_damage_amount, work_damage_type, source = src, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_OTHER))
 	WorkDamageEffect()
 	return
 
@@ -610,6 +673,7 @@ The variable's key needs to be non-numerical.*/
 /mob/living/simple_animal/hostile/abnormality/spawn_gibs()
 	if(blood_volume <= 0)
 		return
+	//Abnormalities dont explode on mass most of the time so they can keep gibs.
 	return new /obj/effect/gibspawner/generic(drop_location(), src, get_static_viruses())
 
 // Actions

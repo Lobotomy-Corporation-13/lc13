@@ -6,7 +6,7 @@
 	icon_state = "gadget2"
 	default_icon = "gadget2" //roundabout way of making update item easily changed. Used in updateicon proc.
 	batterycost = 40 // 1 minute
-	var/on = 0
+	var/on = FALSE
 	//Stuff related to detection.
 	var/entitydistance
 	var/nearestentity
@@ -35,6 +35,8 @@
 
 /obj/item/powered_gadget/detector_gadget/Destroy()
 	STOP_PROCESSING(SSobj, src)
+	nearestentity = null
+	their_loc = null
 	return ..()
 
 /obj/item/powered_gadget/detector_gadget/process(delta_time)

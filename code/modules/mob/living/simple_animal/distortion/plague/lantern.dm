@@ -19,8 +19,6 @@
 	attack_verb_continuous = "bashes"
 	attack_verb_simple = "bash"
 
-	var/can_act = TRUE
-
 //Variables important for distortions
 	//The EGO worn by the egoist
 	ego_list = list(

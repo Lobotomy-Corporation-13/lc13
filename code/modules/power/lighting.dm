@@ -253,6 +253,9 @@
 	var/bulb_emergency_pow_mul = 0.75	// the multiplier for determining the light's power in emergency mode
 	var/bulb_emergency_pow_min = 0.5	// the minimum value for the light's power in emergency mode
 
+	/// If TRUE, lights have a chance to break in LateInitialize. Higher chance for bulbs than tubes.
+	var/can_break_on_init = TRUE
+
 /obj/machinery/light/broken
 	status = LIGHT_BROKEN
 	icon_state = "tube-broken"
@@ -361,19 +364,16 @@
 /obj/machinery/light/LateInitialize()
 	. = ..()
 	switch(fitting)
+		// LC13 Note: Commented out lateinit setting brightness so mappers can customize it
 		if("tube")
-			brightness = 8
-			if(prob(2))
+			//brightness = 8
+			if(can_break_on_init && prob(2))
 				break_light_tube(1)
 		if("bulb")
-			brightness = 4
-			if(prob(5))
+			//brightness = 4
+			if(can_break_on_init && prob(5))
 				break_light_tube(1)
 	addtimer(CALLBACK(src, PROC_REF(update), 0), 1)
-
-/obj/machinery/light/ComponentInitialize()
-	. = ..()
-	AddElement(/datum/element/atmos_sensitive)
 
 /obj/machinery/light/Destroy()
 	var/area/A = get_area(src)
@@ -823,15 +823,6 @@
 	var/area/A = get_area(src)
 	seton(A.lightswitch && A.power_light)
 
-// called when heated
-
-/obj/machinery/light/should_atmos_process(datum/gas_mixture/air, exposed_temperature)
-	return exposed_temperature > 673
-
-/obj/machinery/light/atmos_expose(datum/gas_mixture/air, exposed_temperature)
-	if(prob(max(0, exposed_temperature - 673)))   //0% at <400C, 100% at >500C
-		break_light_tube()
-
 // explode the light
 
 /obj/machinery/light/proc/explode()
@@ -972,8 +963,6 @@
 		status = LIGHT_BROKEN
 		force = 5
 		playsound(src.loc, 'sound/effects/glasshit.ogg', 75, TRUE)
-		if(rigged)
-			atmos_spawn_air("plasma=5") //5u of plasma are required to rig a light bulb/tube
 		update()
 
 

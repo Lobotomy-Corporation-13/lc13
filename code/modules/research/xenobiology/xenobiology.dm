@@ -236,10 +236,10 @@
 			return 150
 
 		if(SLIME_ACTIVATE_MAJOR)
-			var/turf/open/T = get_turf(user)
-			if(istype(T))
-				T.atmos_spawn_air("plasma=20")
-			to_chat(user, "<span class='warning'>You activate [src], and a cloud of plasma bursts out of your skin!</span>")
+			var/turf/T = get_turf(user)
+			for(var/turf/flames in range(2, T))
+				new /obj/effect/turf_fire(flames)
+			to_chat(user, "<span class='warning'>You activate [src], and flames burst out of your skin!</span>")
 			return 900
 
 /obj/item/slime_extract/orange
@@ -347,9 +347,9 @@
 			return 100
 
 		if(SLIME_ACTIVATE_MAJOR)
-			var/turf/open/T = get_turf(user)
-			if(istype(T))
-				T.atmos_spawn_air("nitrogen=40;TEMP=2.7")
+			var/turf/T = get_turf(user)
+			for(var/turf/antiflames in range(2, T))
+				new /obj/effect/particle_effect/foam/firefighting(antiflames)
 			to_chat(user, "<span class='warning'>You activate [src], and icy air bursts out of your skin!</span>")
 			return 900
 
@@ -588,11 +588,13 @@
 			return 150
 
 		if(SLIME_ACTIVATE_MAJOR)
-			var/turf/open/T = get_turf(user)
+			user.reagents.add_reagent(/datum/reagent/medicine/salbutamol, 30)
+			to_chat(user, "<span class='notice'>You feel like you don't need to breathe!</span>")
+/* 			var/turf/open/T = get_turf(user)
 			if(istype(T))
 				T.atmos_spawn_air("o2=11;n2=41;TEMP=293.15")
-				to_chat(user, "<span class='warning'>You activate [src], and fresh air bursts out of your skin!</span>")
-				return 600
+				to_chat(user, "<span class='warning'>You activate [src], and fresh air bursts out of your skin!</span>") */
+			return 600
 
 /obj/item/slime_extract/sepia
 	name = "sepia slime extract"
@@ -930,14 +932,14 @@
 	if(!istype(C))
 		to_chat(user, "<span class='warning'>The potion can only be used on clothing!</span>")
 		return
-	if(C.max_heat_protection_temperature >= FIRE_IMMUNITY_MAX_TEMP_PROTECT)
+	if(C.max_heat_protection_temperature >= TRUE)
 		to_chat(user, "<span class='warning'>The [C] is already fireproof!</span>")
 		return
 	to_chat(user, "<span class='notice'>You slather the blue gunk over the [C], fireproofing it.</span>")
 	C.name = "fireproofed [C.name]"
 	C.remove_atom_colour(WASHABLE_COLOUR_PRIORITY)
 	C.add_atom_colour("#000080", FIXED_COLOUR_PRIORITY)
-	C.max_heat_protection_temperature = FIRE_IMMUNITY_MAX_TEMP_PROTECT
+	C.max_heat_protection_temperature = TRUE
 	C.heat_protection = C.body_parts_covered
 	C.resistance_flags |= FIRE_PROOF
 	uses --
@@ -1059,16 +1061,16 @@
 	turf_type = /turf/open/floor/sepia
 	merge_type = /obj/item/stack/tile/sepia
 
-/obj/item/areaeditor/blueprints/slime
+/* /obj/item/areaeditor/blueprints/slime
 	name = "cerulean prints"
 	desc = "A one use yet of blueprints made of jelly like organic material. Extends the reach of the management console."
-	color = "#2956B2"
+	color = "#2956B2" */
 
-/obj/item/areaeditor/blueprints/slime/edit_area()
+/* /obj/item/areaeditor/blueprints/slime/edit_area()
 	..()
 	var/area/A = get_area(src)
 	for(var/turf/T in A)
 		T.remove_atom_colour(WASHABLE_COLOUR_PRIORITY)
 		T.add_atom_colour("#2956B2", FIXED_COLOUR_PRIORITY)
 	A.area_flags |= XENOBIOLOGY_COMPATIBLE
-	qdel(src)
+	qdel(src) */

@@ -4,7 +4,6 @@
 	icon_state = "wishwell"
 	can_buckle = TRUE
 	max_buckled_mobs = 1
-	var/list/bastards = list()
 
 	ego_list = list(
 		/datum/ego_datum/weapon/bucket,
@@ -188,19 +187,21 @@
 	//Sorts them into their lists
 	for(var/path in subtypesof(/datum/ego_datum))
 		var/datum/ego_datum/ego = path
-		switch(initial(ego.cost))
-			if(200 to INFINITY)
-				superEGO += initial(ego.item_path)
-			if(100 to 200)
-				alephitem += initial(ego.item_path)
-			if(50 to 100)
-				wawitem += initial(ego.item_path)
-			if(35 to 50)
-				heitem += initial(ego.item_path)
-			if(20 to 35)
-				tethitem += initial(ego.item_path)
-			if(0 to 20)
-				zayinitem += initial(ego.item_path)
+
+		if(ego.well_enabled)
+			switch(initial(ego.cost))
+				if(200 to INFINITY)
+					superEGO += initial(ego.item_path)
+				if(100 to 200)
+					alephitem += initial(ego.item_path)
+				if(50 to 100)
+					wawitem += initial(ego.item_path)
+				if(35 to 50)
+					heitem += initial(ego.item_path)
+				if(20 to 35)
+					tethitem += initial(ego.item_path)
+				if(0 to 20)
+					zayinitem += initial(ego.item_path)
 
 //End of loot lists
 /obj/structure/toolabnormality/wishwell/attackby(obj/item/I, mob/living/carbon/human/user)
@@ -393,10 +394,10 @@
 
 	qdel(M)
 	playsound(src, 'sound/voice/human/wilhelm_scream.ogg', 50, TRUE, -3)
-	if((M.ckey in bastards)) //prevents respawn abuse
+	if((M.ckey in operators)) //prevents respawn abuse
 		deathgift = pick(trash)
 
-	bastards += M.ckey
+	operators += M.ckey
 	sleep(1 SECONDS)
 	Dispense(deathgift)
 	..()

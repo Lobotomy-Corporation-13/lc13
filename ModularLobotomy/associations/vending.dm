@@ -30,6 +30,7 @@
 		/obj/item/structurecapsule/fixer/recon = 1,
 		/obj/item/structurecapsule/fixer/peacekeeper = 1,
 		/obj/item/structurecapsule/fixer/contract = 1,
+		/obj/item/structurecapsule/fixer/bank = 1,
 
 		//Boxes cost you an extra 700
 		/obj/item/storage/box/fixer/wedge = 1,
@@ -78,7 +79,7 @@
 	icon_deny = null
 	products = list(
 		/obj/item/book/granter/crafting_recipe/carnival/weaving_armor = 10,
-		/obj/item/clothing/mask/carnival_mask = 25,
+		//obj/item/clothing/mask/carnival_mask = 25, //If you wear the mask its stuck to your face, best not let players run around with this
 		/obj/item/silkknife = 10,
 		/obj/item/storage/bag/silk = 10,
 	)
@@ -115,6 +116,46 @@
 //cityvending
 /obj/machinery/vending/fixer
 	name = "\improper Fixer Equipment vending"
+	desc = "A machine used by fixers to get equipment"
+	resistance_flags = INDESTRUCTIBLE | LAVA_PROOF | FIRE_PROOF | UNACIDABLE | ACID_PROOF | FREEZE_PROOF
+	product_slogans = "What's a fixer without gear?"
+	product_ads = "You need it!"
+	icon_state = "robotics"
+	icon_deny = null
+	products = list(
+		/obj/item/flashlight/seclite = 100,
+		/obj/item/attribute_increase/fixer = 1500,
+		/obj/item/attribute_increase/fixer/office = 1500,
+		/obj/item/radio/headset = 200,
+		/obj/item/crowbar = 100,
+		/obj/item/clothing/suit/armor/ego_gear/city/misc/lone = 100,
+		/obj/item/ego_weapon/city/fixerblade = 20,
+		/obj/item/ego_weapon/city/fixergreatsword = 20,
+		/obj/item/ego_weapon/city/fixerhammer = 20,
+		/obj/item/ego_weapon/city/zweibaton/protection = 20,
+		/obj/item/storage/box/fishing = 20,
+		/obj/item/kitchen/knife/combat/survival = 100,
+		/obj/item/weldingtool/mini = 100,
+		/obj/item/reagent_containers/hypospray/medipen/l_health = 100,
+		/obj/item/reagent_containers/hypospray/medipen/l_sanity = 100,
+		/obj/item/gps/fixer = 100,
+		/obj/item/pinpointer/coordinate = 20,
+
+		//Imported Body modification batteries
+		/obj/item/body_modification_battery/imported = 100,
+		/obj/item/body_modification_battery/tier2/imported = 100,
+		/obj/item/body_modification_battery/tier3/imported = 100,
+		/obj/item/body_modification_battery/tier4/imported = 100,
+
+	)
+
+	default_price = 300
+	extra_price = 1000
+	input_display_header = "Fixer Equipment"
+
+//This is just incase something breaks with the modifications, we can give the people their books back.
+/obj/machinery/vending/old_fixer
+	name = "\improper OLd Fixer Equipment vending"
 	desc = "A machine used by fixers to get equipment"
 	resistance_flags = INDESTRUCTIBLE | LAVA_PROOF | FIRE_PROOF | UNACIDABLE | ACID_PROOF | FREEZE_PROOF
 	product_slogans = "What's a fixer without gear?"
@@ -183,8 +224,6 @@
 	extra_price = 1000
 	input_display_header = "Fixer Equipment"
 
-
-
 //cityvending
 /obj/machinery/vending/city
 	name = "\improper City Equipment vending"
@@ -229,7 +268,7 @@
 
 		//Regular shit
 		/obj/item/bodypart/head/robot = 100,
-		//obj/item/bodypart/chest/robot = 100,	//currently broken
+		/obj/item/bodypart/chest/robot = 100,	//testing shows that robot limbs do not make you damage immune, they just redistribute your damage to other limbs, so I'll reenable them
 		/obj/item/bodypart/l_arm/robot = 100,
 		/obj/item/bodypart/r_arm/robot = 100,
 		/obj/item/bodypart/l_leg/robot = 100,
@@ -240,8 +279,19 @@
 		/obj/item/organ/liver/cybernetic/tier2 = 100,
 		/obj/item/organ/eyes/robotic/glow = 100,
 		/obj/item/organ/ears/cybernetic = 100,
+		/obj/item/organ/tongue/robot = 100,
 		/obj/item/organ/cyberimp/arm/zippy = 100,
 		/obj/item/organ/cyberimp/arm/fixertools = 100,
+
+		//Body modification batteries
+		/obj/item/body_modification_battery = 100,
+		/obj/item/body_modification_battery/tier2 = 100,
+		/obj/item/body_modification_battery/tier3 = 100,
+		/obj/item/body_modification_battery/tier4 = 100,
+
+		//Body modification tools
+		/obj/item/body_modification_tester = 100,
+		/obj/item/body_modification_remover = 100,
 	)
 
 	premium = list(
@@ -256,7 +306,13 @@
 		/obj/item/organ/cyberimp/arm/briefcase = 100,
 		/obj/item/organ/cyberimp/arm/surgery = 100,
 		/obj/item/organ/cyberimp/arm/overdrive = 100,
+		/obj/item/organ/stomach/cybernetic/tier3 = 100,
+		/obj/item/organ/heart/cybernetic/tier3 = 100,
+		/obj/item/organ/lungs/cybernetic/tier3 = 100,
+		/obj/item/organ/liver/cybernetic/tier3 = 100,
+		/obj/item/organ/eyes/robotic/nightvision = 100,
 		/obj/item/organ/eyes/robotic/infofixer = 100,
+		/obj/item/organ/ears/cybernetic/upgraded/bangproof = 100,
 		/obj/item/extra_arm = 100,
 		/obj/item/extra_arm/double = 100,
 	)
@@ -276,6 +332,8 @@
 	icon_state = "generic"
 	products = list(
 		/obj/item/storage/box/thumb_east_ammo/scorch = 100,
+		/obj/item/storage/box/thumb_east_ammo/quake = 50,
+		/obj/item/storage/box/thumb_east_ammo/inferno = 50,
 	)
 	premium = list(
 		/obj/item/storage/box/thumb_east_ammo/tigermark = 50,
@@ -298,13 +356,19 @@
 	var/thumb_goodboypoints = 0
 	// How much we're currently discounting from prices. Should never be higher than our maximum price.
 	var/currently_discounting_scorch = 0
+	var/currently_discounting_quake = 0
+	var/currently_discounting_inferno = 0
 	var/currently_discounting_tigermark = 0
 	// I hate vending machine code. I am putting the intended base prices for the ammo boxes here. This is probably not good practice.
 	var/scorch_box_price = 900
+	var/quake_box_price = 1100
+	var/inferno_box_price = 1100
 	var/tigermark_box_price = 1500
 	// I also need a way to somehow detect what item we sold last to determine how many thumb_goodboypoints to remove from storage...
 	// This'd be a lot easier if original vending code was a little more modular, but I reaaaally don't want to override the whole damn thing, so hacky workaround it is.
 	var/last_known_scorch_amount = 100
+	var/last_known_quake_amount = 50
+	var/last_known_inferno_amount = 50
 	var/last_known_tigermark_amount = 50
 
 /// This proc is how we recycle the spent ammo. We have to shove our code before the parent proc call because of how it's structured.
@@ -335,6 +399,10 @@
 	for(var/datum/data/vending_product/the_goods in all_records)
 		if(the_goods.product_path == /obj/item/storage/box/thumb_east_ammo/scorch)
 			the_goods.custom_price = scorch_box_price
+		if(the_goods.product_path == /obj/item/storage/box/thumb_east_ammo/quake)
+			the_goods.custom_price = quake_box_price
+		if(the_goods.product_path == /obj/item/storage/box/thumb_east_ammo/inferno)
+			the_goods.custom_price = inferno_box_price
 		if(the_goods.product_path == /obj/item/storage/box/thumb_east_ammo/tigermark)
 			the_goods.custom_premium_price = tigermark_box_price
 
@@ -350,38 +418,58 @@
 /obj/machinery/vending/thumb_east_ammo/proc/HandleCreditSubtraction()
 	var/current_scorch_amount
 	var/current_tigermark_amount
+	var/current_quake_amount
+	var/current_inferno_amount
+
 	var/list/all_records = product_records + coin_records
 	for(var/datum/data/vending_product/the_goods in all_records)
 		if(the_goods.product_path == /obj/item/storage/box/thumb_east_ammo/scorch)
 			current_scorch_amount = the_goods.amount
+		if(the_goods.product_path == /obj/item/storage/box/thumb_east_ammo/quake)
+			current_quake_amount = the_goods.amount
+		if(the_goods.product_path == /obj/item/storage/box/thumb_east_ammo/inferno)
+			current_inferno_amount = the_goods.amount
 		if(the_goods.product_path == /obj/item/storage/box/thumb_east_ammo/tigermark)
 			current_tigermark_amount = the_goods.amount
 
 	// Is this conditional true? Means we vended a scorch box. Remove the discount that we got on them from our credit pool
 	if(last_known_scorch_amount > current_scorch_amount)
-		thumb_goodboypoints -= currently_discounting_scorch
+		thumb_goodboypoints = max(thumb_goodboypoints - currently_discounting_scorch, 0)
 		last_known_scorch_amount = current_scorch_amount
+
+	if(last_known_quake_amount > current_quake_amount)
+		thumb_goodboypoints = max(thumb_goodboypoints - currently_discounting_quake, 0)
+		last_known_quake_amount = current_quake_amount
+
+	if(last_known_inferno_amount > current_inferno_amount)
+		thumb_goodboypoints = max(thumb_goodboypoints - currently_discounting_inferno, 0)
+		last_known_inferno_amount = current_inferno_amount
 
 	// Same here but for tigermark. Only one of these should ever trigger at any given time, I think
 	if(last_known_tigermark_amount > current_tigermark_amount)
-		thumb_goodboypoints -= currently_discounting_tigermark
+		thumb_goodboypoints = max(thumb_goodboypoints - currently_discounting_tigermark, 0)
 		last_known_tigermark_amount = current_tigermark_amount
 
 	HandleDiscounting()
 
 /// Updates the prices on the vending product datums, lowering them according to how many credits we've saved by recycling
+// Unwieldy solution but I really can't be bothered to care, I really hate working on vending machine code
 /obj/machinery/vending/thumb_east_ammo/proc/HandleDiscounting()
-	// Unwieldy solution but I really can't be bothered to care, I really hate working on vending machine code
+	currently_discounting_scorch = 0
+	currently_discounting_quake = 0
+	currently_discounting_inferno = 0
+	currently_discounting_tigermark = 0
+
 	var/list/all_records = product_records + coin_records
 	for(var/datum/data/vending_product/the_goods in all_records)
-
+		// Processing Scorch
 		if(the_goods.product_path == /obj/item/storage/box/thumb_east_ammo/scorch)
 			if(thumb_goodboypoints > 0)
 				currently_discounting_scorch = min(scorch_box_price, thumb_goodboypoints)
 				the_goods.custom_price = max((scorch_box_price - currently_discounting_scorch), 0)
 			else
 				the_goods.custom_price = scorch_box_price
-
+		// Processing Tigermark
 		else if(the_goods.product_path == /obj/item/storage/box/thumb_east_ammo/tigermark)
 			if(thumb_goodboypoints > 0)
 				currently_discounting_tigermark = min(tigermark_box_price, thumb_goodboypoints)
@@ -390,5 +478,38 @@
 			else
 				the_goods.custom_price = tigermark_box_price
 				the_goods.custom_premium_price = tigermark_box_price
-
+		// Processing Quake
+		else if(the_goods.product_path == /obj/item/storage/box/thumb_east_ammo/quake)
+			if(thumb_goodboypoints > 0)
+				currently_discounting_quake = min(quake_box_price, thumb_goodboypoints)
+				the_goods.custom_price =  max((quake_box_price - currently_discounting_quake), 0)
+				the_goods.custom_premium_price = max((quake_box_price - currently_discounting_quake), 0)
+			else
+				the_goods.custom_price = quake_box_price
+				the_goods.custom_premium_price = quake_box_price
+		// Processing Inferno
+		else if(the_goods.product_path == /obj/item/storage/box/thumb_east_ammo/inferno)
+			if(thumb_goodboypoints > 0)
+				currently_discounting_inferno = min(inferno_box_price, thumb_goodboypoints)
+				the_goods.custom_price =  max((inferno_box_price - currently_discounting_inferno), 0)
+				the_goods.custom_premium_price = max((inferno_box_price - currently_discounting_inferno), 0)
+			else
+				the_goods.custom_price = inferno_box_price
+				the_goods.custom_premium_price = inferno_box_price
 	update_static_data_for_all_viewers()
+
+//Middle Jukebox Vending Machine
+/obj/machinery/vending/middle_jukebox
+	name = "\improper Middle Jukebox Vendor"
+	desc = "A vending machine that sells the Middle's signature jukebox. Plays their theme on repeat."
+	resistance_flags = INDESTRUCTIBLE | LAVA_PROOF | FIRE_PROOF | UNACIDABLE | ACID_PROOF | FREEZE_PROOF
+	product_slogans = "Represent the Middle with style!;Let everyone know who runs these streets!;Music to make money by!"
+	product_ads = "The perfect addition to your office!;Show your pride!;Nothing says 'Middle' like this!"
+	icon_state = "generic"
+	icon_deny = null
+	products = list(
+		/obj/machinery/jukebox/middle = 50,
+	)
+
+	default_price = 10000
+	input_display_header = "Middle Jukebox Vendor"

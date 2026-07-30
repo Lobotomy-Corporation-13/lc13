@@ -82,7 +82,7 @@
 			if(faction_check_mob(L))
 				continue
 			var/dealt_damage = max(6, symphony_damage - round(get_dist(src, L) * 0.1))
-			L.deal_damage(dealt_damage, WHITE_DAMAGE)
+			L.deal_damage(dealt_damage, WHITE_DAMAGE, src, flags = (DAMAGE_FORCED | DAMAGE_UNTRACKABLE))
 
 	if(world.time >= next_movement_time) // Next movement
 		var/movement_volume = 50
@@ -120,7 +120,7 @@
 				// Award achievement to all humans who heard the full performance
 				for(var/mob/living/carbon/human/listener in GLOB.player_list)
 					if(listener.z == z && listener.stat != DEAD && get_dist(listener, src) <= symphony_range)
-						listener.client?.give_award(/datum/award/achievement/lc13/orchestra_listener, listener)
+						listener.client?.give_award(/datum/award/achievement/abno/orchestra_listener, listener)
 
 				for(var/mob/living/carbon/human/H in livinginrange(symphony_range, get_turf(src)))
 					if(H.sanity_lost || (H.sanityhealth < H.maxSanity * 0.5))
@@ -131,7 +131,7 @@
 						QDEL_NULL(head)
 						H.regenerate_icons()
 						H.visible_message(span_danger("[H]'s head explodes!"))
-						new /obj/effect/gibspawner/generic/silent(get_turf(H))
+						new /obj/effect/bloodspawner/silent(get_turf(H))
 						playsound(get_turf(H), 'sound/abnormalities/silentorchestra/headbomb.ogg', 50, 1)
 				SLEEP_CHECK_DEATH(4 SECONDS)
 				animate(src, alpha = 0, time = 2 SECONDS)

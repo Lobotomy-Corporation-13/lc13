@@ -119,6 +119,12 @@
 	else
 		user.visible_message(msg, blind_message = "<span class='emote'>You hear how <b>[user]</b> [msg]</span>", visible_message_flags = EMOTE_MESSAGE)
 
+	// Seven recorder emote capture hook
+	for(var/owner_key in GLOB.seven_active_recorders)
+		for(var/obj/item/seven_recorder/R in GLOB.seven_active_recorders[owner_key])
+			if(R.recording && get_dist(get_turf(R), user_turf) <= DEFAULT_MESSAGE_RANGE)
+				R.record_emote(user, msg)
+
 	SEND_SIGNAL(user, COMSIG_MOB_EMOTED(key))
 
 /**

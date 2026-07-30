@@ -9,5 +9,5 @@
 /obj/item/organ/cyberimp/arm/fixertools/Extend(obj/item/item)
 	..()
 	//little bit of stam loss
-	owner.adjustStaminaLoss(owner.maxHealth*0.3, TRUE, TRUE)
+	owner.adjustStaminaLoss(owner.maxHealth*0.1, TRUE, TRUE)
 

@@ -118,55 +118,10 @@
 
 	AIproc = 0
 
+/*
 /mob/living/simple_animal/slime/handle_environment(datum/gas_mixture/environment)
-	var/loc_temp = get_temperature(environment)
-	var/divisor = 10 /// The divisor controls how fast body temperature changes, lower causes faster changes
-
-	if(abs(loc_temp - bodytemperature) > 50) // If the difference is great, reduce the divisor for faster stabilization
-		divisor = 5
-
-	if(loc_temp < bodytemperature) // It is cold here
-		if(!on_fire) // Do not reduce body temp when on fire
-			adjust_bodytemperature((loc_temp - bodytemperature) / divisor)
-	else // This is a hot place
-		adjust_bodytemperature((loc_temp - bodytemperature) / divisor)
-
-	if (!(transformeffects & SLIME_EFFECT_ADAMANTINE)) // Tegustation Xenobiology Black Crossbreeds
-		if(bodytemperature < (T0C + 5)) // start calculating temperature damage etc
-			if(bodytemperature <= (T0C - 40)) // stun temperature
-				ADD_TRAIT(src, TRAIT_IMMOBILIZED, SLIME_COLD)
-			else
-				REMOVE_TRAIT(src, TRAIT_IMMOBILIZED, SLIME_COLD)
-
-			if(bodytemperature <= (T0C - 50)) // hurt temperature
-				if(bodytemperature <= 50) // sqrting negative numbers is bad
-					adjustBruteLoss(200)
-				else
-					adjustBruteLoss(round(sqrt(bodytemperature)) * 2)
-		else
-			REMOVE_TRAIT(src, TRAIT_IMMOBILIZED, SLIME_COLD)
-
-	if(stat != DEAD)
-		var/bz_percentage =0
-		if(environment.gases[/datum/gas/bz])
-			bz_percentage = environment.gases[/datum/gas/bz][MOLES] / environment.total_moles()
-		var/stasis = (bz_percentage >= 0.05 && bodytemperature < (T0C + 100)) || force_stasis
-
-		switch(stat)
-			if(CONSCIOUS)
-				if(stasis)
-					to_chat(src, span_danger("Nerve gas in the air has put you in stasis!"))
-					set_stat(UNCONSCIOUS)
-					powerlevel = 0
-					rabid = FALSE
-					regenerate_icons()
-			if(UNCONSCIOUS, HARD_CRIT)
-				if(!stasis)
-					to_chat(src, span_notice("You wake up from the stasis."))
-					set_stat(CONSCIOUS)
-					regenerate_icons()
-
-	updatehealth()
+	Temperature interactions with slimes have been shot dead in the great atmos purge, please feel free to re-add functionality if you desire.
+*/
 
 
 /mob/living/simple_animal/slime/handle_status_effects()
@@ -569,12 +524,12 @@
 				phrases += "Purr..."
 			if (attacked)
 				phrases += "Grrr..."
-			if (bodytemperature < T0C)
+			if (bodytemperature < 273.15)
 				phrases += "Cold..."
-			if (bodytemperature < T0C - 30)
+			if (bodytemperature < 273.15 - 30)
 				phrases += "So... cold..."
 				phrases += "Very... cold..."
-			if (bodytemperature < T0C - 50)
+			if (bodytemperature < 273.15 - 50)
 				phrases += "..."
 				phrases += "C... c..."
 			if (buckled)

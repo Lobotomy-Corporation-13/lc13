@@ -18,6 +18,7 @@ GLOBAL_LIST_EMPTY(conveyors_by_id)
 	var/movedir			// the actual direction to move stuff in
 	var/id = ""			// the control ID	- must match controller ID
 	var/verted = 1		// Inverts the direction the conveyor belt moves.
+	var/tamperproof = FALSE
 	var/conveying = FALSE
 
 /obj/machinery/conveyor/centcom_auto
@@ -164,12 +165,18 @@ GLOBAL_LIST_EMPTY(conveyors_by_id)
 			var/mob/living/zoommob = movable_thing
 			if((zoommob.movement_type & FLYING) && !zoommob.stat)
 				continue
+			if(zoommob.mob_size > MOB_SIZE_HUMAN)
+				continue
 		if(!movable_thing.anchored && movable_thing.has_gravity())
 			step(movable_thing, movedir)
 	conveying = FALSE
 
 // attack with item, place item on conveyor
 /obj/machinery/conveyor/attackby(obj/item/I, mob/user, params)
+	if(tamperproof)
+		to_chat(user, span_notice("This conveyor seems to be stuck to the floor in only one configuration."))
+		return //No cheese for people who packed a crowbar :)
+
 	if(I.tool_behaviour == TOOL_CROWBAR)
 		user.visible_message("<span class='notice'>[user] struggles to pry up \the [src] with \the [I].</span>", \
 		"<span class='notice'>You struggle to pry up \the [src] with \the [I].</span>")
@@ -440,6 +447,9 @@ GLOBAL_LIST_EMPTY(conveyors_by_id)
 	var/obj/machinery/conveyor/C = new/obj/machinery/conveyor(A, cdir, id)
 	transfer_fingerprints_to(C)
 	use(1)
+	// Track conveyor belt placement for RCE leaderboard
+	if(SSgamedirector.rce_leaderboard)
+		SSgamedirector.rce_leaderboard.RecordConveyorPlaced()
 
 /obj/item/stack/conveyor/attackby(obj/item/I, mob/user, params)
 	..()

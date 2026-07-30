@@ -114,6 +114,7 @@
 				CAEG.datum_reference = datum_reference
 				user.Apply_Gift(CAEG)
 				to_chat(user, span_userdanger("DETERMINATION."))
+				user.client?.give_award(/datum/award/achievement/abno/crumbling_megalovania, user)
 				return
 			if(istype(user.ego_gift_list[HAT], /datum/ego_gifts/phase4)) // You can progress no further down this fool-hardy path
 				return
@@ -144,6 +145,7 @@
 				CAEG.datum_reference = datum_reference
 				user.Apply_Gift(CAEG)
 				to_chat(user, span_userdanger("You are a God among men!"))
+				user.client?.give_award(/datum/award/achievement/abno/crumbling_god, user)
 				return
 			if(istype(user.ego_gift_list[HAT], /datum/ego_gifts/foolish)) // You can progress no further down this fool-hardy path
 				return
@@ -224,7 +226,7 @@
 	if(!istype(holders_head))
 		return FALSE
 	playsound(get_turf(status_holder), 'sound/abnormalities/crumbling/attack.ogg', 50, FALSE)
-	status_holder.deal_damage(punishment_damage, PALE_DAMAGE)
+	status_holder.deal_damage(punishment_damage, PALE_DAMAGE, flags = (DAMAGE_FORCED))
 	if(status_holder.health < 0)
 		holders_head.dismember()
 	new /obj/effect/temp_visual/slice(get_turf(status_holder))

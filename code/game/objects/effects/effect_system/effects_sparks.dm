@@ -32,12 +32,12 @@
 /obj/effect/particle_effect/sparks/LateInitialize()
 	flick(icon_state, src)
 	playsound(src, "sparks", 100, TRUE, SHORT_RANGE_SOUND_EXTRARANGE)
-	var/turf/T = loc
+/*	var/turf/T = loc
 	if(isturf(T))
-		T.hotspot_expose(1000,100)
+		T.hotspot_expose(1000,100) */
 	QDEL_IN(src, 20)
 
-/obj/effect/particle_effect/sparks/Destroy()
+/* /obj/effect/particle_effect/sparks/Destroy()
 	var/turf/T = loc
 	if(isturf(T))
 		T.hotspot_expose(1000,100)
@@ -47,7 +47,7 @@
 	..()
 	var/turf/T = loc
 	if(isturf(T))
-		T.hotspot_expose(1000,100)
+		T.hotspot_expose(1000,100) */
 
 /datum/effect_system/spark_spread
 	effect_type = /obj/effect/particle_effect/sparks

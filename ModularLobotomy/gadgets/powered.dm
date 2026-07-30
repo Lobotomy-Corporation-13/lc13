@@ -20,6 +20,11 @@
 	//unique overlays for powered state. This is so that a overlay can be put on instead of changing the entire sprite.
 	var/powered_overlay = null
 
+/obj/item/powered_gadget/Destroy()
+	if(cell)
+		QDEL_NULL(cell)
+	return ..()
+
 /obj/item/powered_gadget/Initialize()
 	. = ..()
 	if(!cell && cell_type)
@@ -128,7 +133,7 @@
 			if(istype(target, /mob/living/simple_animal/hostile/ordeal))
 				return TRUE
 		if(3)
-			if(isabnormalitymob(target))
+			if(isabnormalitymob(target)  || isrcabnormalitymob(target))
 				return TRUE
 	return FALSE
 
@@ -177,6 +182,7 @@
 	icon_state = "teleporter"
 	batterycost = 500 //20 uses before requires recharge
 	var/inuse
+	var/winduptime = 100
 	default_icon = "teleporter"
 
 /obj/item/powered_gadget/teleporter/update_icon_state()
@@ -273,7 +279,7 @@
 		user.visible_message(hit_message)
 		T.apply_status_effect(/datum/status_effect/qliphothoverload)
 		return
-	if (!cell || cell.charge < batterycost || isabnormalitymob(T))
+	if (!cell || cell.charge < batterycost || isabnormalitymob(T) || isrcabnormalitymob(T))
 		to_chat(user, span_notice("The Gadget buzzes. Battery charge too low."))
 		return
 	if (batterycost == batterycost_stun)

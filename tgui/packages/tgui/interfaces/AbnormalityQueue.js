@@ -16,7 +16,7 @@ export const AbnormalityQueue = (props, context) => {
     <Window
       title="Abnormality Queue Console"
       width={360}
-      height={400}>
+      height={500}>
       <Window.Content>
         <Flex direction="column" mb={1}>
           <Section
@@ -57,7 +57,7 @@ export const AbnormalityQueue = (props, context) => {
               <Box
                 bold>
                 Lobotomy Corporation is not responsible for any lynching or
-                Manager death as a result of using of the below buttons.
+                Manager death as a result of using the below buttons.
               </Box>
             </Flex.Item>
             <Flex.Item grow={1} mb={0.3}>
@@ -87,6 +87,34 @@ export const AbnormalityQueue = (props, context) => {
                   content={"Hardcore Fuck It Lets Roll"}
                   color="red"
                   onClick={() => act("hardcore_fuck_it_lets_roll")} />
+              </Flex.Item>
+            )}
+            {!!data.enablehardcore && (
+              <Flex.Item grow={1} mb={0.3}>
+                <Box
+                  bold>
+                  Using the button below will most likely get you and everyone
+                  else violently killed. We hope you enjoy.
+                </Box>
+                <Box
+                  bold
+                  italic
+                  color="red">
+                  OOC NOTE - If you click this button and shit breaks because
+                  you summon Nihil or trigger a secret, staff won&apos;t
+                  unfuck it. :3
+                </Box>
+              </Flex.Item>
+            )}
+            {!!data.enablehardcore && (
+              <Flex.Item grow={1} mb={0.3}>
+                <Button
+                  icon="skull"
+                  fluid
+                  bold
+                  content={"Skull Roll"}
+                  color="black"
+                  onClick={() => act("super_fuck_it_lets_roll")} />
               </Flex.Item>
             )}
           </Flex>

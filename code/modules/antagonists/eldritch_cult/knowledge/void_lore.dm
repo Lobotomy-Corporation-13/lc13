@@ -9,11 +9,11 @@
 	cost = 1
 	route = PATH_VOID
 
-/datum/eldritch_knowledge/base_void/recipe_snowflake_check(list/atoms, loc)
+/* /datum/eldritch_knowledge/base_void/recipe_snowflake_check(list/atoms, loc)
 	. = ..()
 	var/turf/open/turfie = loc
-	if(turfie.GetTemperature() > T0C)
-		return FALSE
+	if(turfie.GetTemperature())
+		return FALSE */
 
 /datum/eldritch_knowledge/void_grasp
 	name = "Grasp of Void"
@@ -28,8 +28,8 @@
 	if(!iscarbon(target))
 		return
 	var/mob/living/carbon/carbon_target = target
-	var/turf/open/turfie = get_turf(carbon_target)
-	turfie.TakeTemperature(-20)
+/* 	var/turf/open/turfie = get_turf(carbon_target)
+	turfie.TakeTemperature(-20) */
 	carbon_target.adjust_bodytemperature(-40)
 	carbon_target.silent += 4
 	return TRUE
@@ -192,8 +192,8 @@
 	var/turf/turfie = get_turf(user)
 	if(!isopenturf(turfie))
 		return
-	var/turf/open/open_turfie = turfie
-	open_turfie.TakeTemperature(-20)
+/* 	var/turf/open/open_turfie = turfie
+	open_turfie.TakeTemperature(-20) */
 
 	var/area/user_area = get_area(user)
 	var/turf/user_turf = get_turf(user)

@@ -218,6 +218,9 @@
 /datum/config_entry/string/wikiurl
 	config_entry_value = "http://www.tgstation13.org/wiki"
 
+/datum/config_entry/string/lc13_wikiurl
+	config_entry_value = "https://wiki.lc13.net"
+
 /datum/config_entry/string/forumurl
 	config_entry_value = "http://tgstation13.org/phpBB/index.php"
 
@@ -528,6 +531,19 @@
 	integer = FALSE
 	min_val = 0.0
 	max_val = 1.0
+
+/datum/config_entry/flag/high_pop_ping_enabled
+	config_entry_value = FALSE
+
+/datum/config_entry/string/high_pop_ping_roleid
+	config_entry_value = null
+
+/datum/config_entry/number/high_pop_ping_threshold
+	config_entry_value = 7
+	integer = TRUE
+
+/datum/config_entry/number/high_pop_queue_weight
+	config_entry_value = 1
 
 // If midnight has started by this time - upon finishing it, the core suppression will be available
 // In 1/10 of a second

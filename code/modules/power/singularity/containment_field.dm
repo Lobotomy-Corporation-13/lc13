@@ -11,7 +11,7 @@
 	use_power = NO_POWER_USE
 	interaction_flags_atom = NONE
 	interaction_flags_machine = NONE
-	CanAtmosPass = ATMOS_PASS_NO
+	// CanAtmosPass = ATMOS_PASS_NO
 	light_range = 4
 	layer = ABOVE_OBJ_LAYER
 	var/obj/machinery/field/generator/FG1 = null
@@ -19,14 +19,14 @@
 
 /obj/machinery/field/containment/Initialize()
 	. = ..()
-	air_update_turf(TRUE, TRUE)
+	// air_update_turf(TRUE, TRUE)
 	RegisterSignal(src, COMSIG_ATOM_SINGULARITY_TRY_MOVE, PROC_REF(block_singularity))
 
 /obj/machinery/field/containment/Destroy()
 	FG1.fields -= src
 	FG2.fields -= src
-	CanAtmosPass = ATMOS_PASS_YES
-	air_update_turf(TRUE, FALSE)
+	// CanAtmosPass = ATMOS_PASS_YES
+	// air_update_turf(TRUE, FALSE)
 	return ..()
 
 //ATTACK HAND IGNORING PARENT RETURN VALUE

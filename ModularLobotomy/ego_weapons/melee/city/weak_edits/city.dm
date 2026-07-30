@@ -14,19 +14,87 @@
 /obj/item/ego_weapon/city/fakeindex
 	name = "index recruit sword"
 	desc = "A sheathed sword used by index recruits."
+	special = "Hit the bodypart you're told to target to gain unlock stacks. At 3 stacks, this weapon switches to PALE damage. Missing the target bodypart removes 1 stack. Attacking insane targets always grants a stack and deals PALE damage."
 	icon_state = "index"
 	inhand_icon_state = "index"
 	force = 20
-	damtype = PALE_DAMAGE
+	damtype = WHITE_DAMAGE
 
 	attack_verb_continuous = list("smacks", "hammers", "beats")
 	attack_verb_simple = list("smack", "hammer", "beat")
+	var/target_bodypart
+	var/unlock_stacks = 0
 	attribute_requirements = list(
 		FORTITUDE_ATTRIBUTE = 60,
 		PRUDENCE_ATTRIBUTE = 60,
 		TEMPERANCE_ATTRIBUTE = 60,
 		JUSTICE_ATTRIBUTE = 60,
 	)
+
+/obj/item/ego_weapon/city/fakeindex/attack(mob/living/target, mob/living/user)
+	// Handle bodypart targeting mechanic for humans
+	if(ishuman(target))
+		var/mob/living/carbon/human/H = target
+
+		// Special handling for insane targets
+		if(H.sanity_lost)
+			// Always gain a stack when hitting insane targets
+			if(unlock_stacks < 3)
+				unlock_stacks++
+				to_chat(user, span_nicegreen("You strike the insane target! Unlock stacks: [unlock_stacks]/3"))
+			// Temporarily switch to PALE damage for this attack
+			var/original_damtype = damtype
+			damtype = PALE_DAMAGE
+			. = ..()
+			// Restore original damage type after attack
+			if(unlock_stacks < 3)
+				damtype = original_damtype
+			return
+
+		// Set correct damage type based on current unlock stacks BEFORE processing attack
+		if(unlock_stacks >= 3)
+			damtype = PALE_DAMAGE
+		else
+			damtype = WHITE_DAMAGE
+
+		// Determine which bodypart was actually hit
+		var/obj/item/bodypart/affecting = H.get_bodypart(ran_zone(user.zone_selected))
+
+		if(affecting)
+			var/hit_zone = affecting.body_zone
+
+			// Check if we have a target bodypart - mechanic continues even after unlocking
+			if(target_bodypart)
+				// Check if they hit the correct bodypart
+				if(hit_zone == target_bodypart)
+					// Correct hit! Gain a stack (up to 3 max)
+					if(unlock_stacks < 3)
+						unlock_stacks++
+						to_chat(user, span_nicegreen("You strike the [affecting.name] perfectly! Unlock stacks: [unlock_stacks]/3"))
+
+						// Check if we've reached 3 stacks
+						if(unlock_stacks >= 3)
+							to_chat(user, span_userdanger("Your weapon unlocks, now dealing PALE damage!"))
+					else
+						to_chat(user, span_nicegreen("You strike the [affecting.name] perfectly!"))
+				else
+					// Wrong bodypart! Lose 1 stack
+					if(unlock_stacks > 0)
+						unlock_stacks--
+						to_chat(user, span_danger("You missed the target bodypart! Lost 1 unlock stack. ([unlock_stacks]/3)"))
+						if(unlock_stacks < 3)
+							to_chat(user, span_warning("Your weapon has been locked back to WHITE damage!"))
+
+			// Always pick a new random target bodypart for the next attack
+			var/list/possible_zones = list(BODY_ZONE_HEAD, BODY_ZONE_CHEST, BODY_ZONE_L_ARM, BODY_ZONE_R_ARM, BODY_ZONE_L_LEG, BODY_ZONE_R_LEG)
+			target_bodypart = pick(possible_zones)
+
+			// Get the bodypart name for display
+			var/obj/item/bodypart/target_part = H.get_bodypart(target_bodypart)
+			if(target_part)
+				to_chat(user, span_warning("Target their [target_part.name] next!"))
+
+	return ..()
 
 //proxy randomizer
 /obj/effect/spawner/lootdrop/proxy

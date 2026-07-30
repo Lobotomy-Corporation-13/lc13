@@ -39,22 +39,68 @@
 			Your comrades were never here, the life passes from your body painlessly. <br> None of this is real."),
 	)
 
+	var/fragility_stacks
+	var/empower_stacks
+
+
+/mob/living/simple_animal/hostile/abnormality/dingledangle/Life()
+	..()
+	//~0.5% chance for each stack
+	if(prob(100 - (fragility_stacks+empower_stacks) *0.5 ))
+		return
+
+	var/list/targets = list()
+	for(var/mob/living/carbon/human/H in GLOB.player_list)
+		if(H.z!=z)
+			continue
+		targets+=H
+	
+	if(!length(targets))
+		return
+
+	if(fragility_stacks)
+		var/mob/living/carbon/human/Y = pick(targets)
+		Y.apply_lc_white_fragile(1)
+		Y.balloon_alert(Y, "You feel the tree calling out for your sorrows.")
+		fragility_stacks--
+
+	SLEEP_CHECK_DEATH(20)
+	//Force a 2 second break between them
+
+	if(empower_stacks)
+		var/mob/living/carbon/human/Y = pick(targets)
+		Y.apply_lc_white_strength(2)
+		Y.balloon_alert(Y, "You feel the tree whispering in your mind.")
+		empower_stacks--
+
+
 //Introduction to our hallucinations. This is a global hallucination, but it's all it really does.
 /mob/living/simple_animal/hostile/abnormality/dingledangle/ZeroQliphoth(mob/living/carbon/human/user)
 	for(var/mob/living/carbon/human/H in GLOB.player_list)
 		H.hallucination += 10
+
+	fragility_stacks+=3	//Get 3 Fragility Stacks to release later
 	datum_reference.qliphoth_change(3)
 
 /mob/living/simple_animal/hostile/abnormality/dingledangle/PostWorkEffect(mob/living/carbon/human/user, work_type, pe, work_time, canceled)
-	//if your prudence is low, give a short hallucination, apply the buff, and lower counter.
-	if(get_attribute_level(user, PRUDENCE_ATTRIBUTE) < 60) // below level 3
+	//give it some empowerment to use.
+	empower_stacks+=2
+
+	//if your prudence is low, give a short hallucination, apply empowerment and lower counter.
+	if(get_attribute_level(user, PRUDENCE_ATTRIBUTE) < 40) // below level 2
 		user.hallucination += 20
-		user.apply_status_effect(STATUS_EFFECT_DANGLE)
+		empower_stacks += 4
 		datum_reference.qliphoth_change(-1)
 		return ..()
 
 	if(get_attribute_level(user, FORTITUDE_ATTRIBUTE) >= 80) // fort 4 or higher
 		return ..()
+
+	if(get_attribute_level(user, PRUDENCE_ATTRIBUTE) < 60) // below level 3, don't dust.
+		return ..()
+
+	//If you dust, release a shitload of empowerment into the system
+	empower_stacks+=10
 
 	//I mean it does this in wonderlabs
 	//But here's the twist: You get a better ego.
@@ -67,33 +113,4 @@
 
 /mob/living/simple_animal/hostile/abnormality/dingledangle/FailureEffect(mob/living/carbon/human/user, work_type, pe)
 	. = ..()
-	if(prob(50))
-		//Yeah dust them too. No ego this time tho
-		user.dust()
-
-/atom/movable/screen/alert/status_effect/dangle
-	name = "That Woozy Feeling"
-	desc = "Your combat senses have sharpened even as you feel your mind dangling."
-	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
-	icon_state = "rest"
-
-//A simple 5 minute stat bonus increase
-/datum/status_effect/dangle
-	id = "dangle"
-	status_type = STATUS_EFFECT_UNIQUE
-	duration = 5 MINUTES
-	alert_type = /atom/movable/screen/alert/status_effect/dangle
-
-/datum/status_effect/dangle/on_apply()
-	. = ..()
-	if(!ishuman(owner))
-		return
-	var/mob/living/carbon/human/status_holder = owner
-	status_holder.adjust_attribute_bonus(JUSTICE_ATTRIBUTE, 15)
-
-/datum/status_effect/dangle/on_remove()
-	. = ..()
-	if(!ishuman(owner))
-		return
-	var/mob/living/carbon/human/status_holder = owner
-	status_holder.adjust_attribute_bonus(JUSTICE_ATTRIBUTE, -15)
+	fragility_stacks+=5	//Get 5 Fragility Stacks

@@ -1,4 +1,4 @@
-/datum/pipeline
+/*/datum/pipeline
 	var/datum/gas_mixture/air
 	var/list/datum/gas_mixture/other_airs
 
@@ -299,3 +299,4 @@
 		for(var/mixture in gas_mixture_list)
 			var/datum/gas_mixture/gas_mixture = mixture
 			gas_mixture.copy_from(total_gas_mixture, gas_mixture.volume / total_gas_mixture.volume)
+ */

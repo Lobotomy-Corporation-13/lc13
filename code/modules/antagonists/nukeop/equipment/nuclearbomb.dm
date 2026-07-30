@@ -567,7 +567,7 @@
 	foam.start()
 	disarm()
 
-/obj/machinery/nuclearbomb/beer/proc/stationwide_foam()
+/* /obj/machinery/nuclearbomb/beer/proc/stationwide_foam()
 	priority_announce("The scrubbers network is experiencing a backpressure surge. Some ejection of contents may occur.", "Atmospherics alert")
 
 	for (var/obj/machinery/atmospherics/components/unary/vent_scrubber/vent in GLOB.machines)
@@ -580,11 +580,11 @@
 		beer.add_reagent(/datum/reagent/consumable/ethanol/beer, 100)
 		beer.create_foam(/datum/effect_system/foam_spread, 200)
 
-		CHECK_TICK
+		CHECK_TICK */
 
 /obj/machinery/nuclearbomb/beer/really_actually_explode()
 	disarm()
-	stationwide_foam()
+	local_foam()
 
 /proc/KillEveryoneOnZLevel(z)
 	if(!z)

@@ -1,9 +1,9 @@
 #define STATUS_EFFECT_ACTOR /datum/status_effect/actor
 //Coded by Coxswain, Sprited by Quack
 /*
-Bit of a complicated abnormality, but to put to sum it up,
-it debuffs random players and then summons a murderer to kill them one at a time.
-Defeating the murderer also surpresses the abnormality.
+* Bit of a complicated abnormality, but to put to sum it up,
+* it debuffs random players and then summons a murderer to kill them one at a time.
+* Defeating the murderer also surpresses the abnormality.
 */
 /mob/living/simple_animal/hostile/abnormality/screenwriter
 	name = "Poor Screenwriter's Note"
@@ -52,7 +52,7 @@ Defeating the murderer also surpresses the abnormality.
 	)
 
 	pet_bonus = "shuffles" //saves a few lines of code by allowing funpet() to be called by attack_hand()
-	var/mob/living/simple_animal/hostile/actor/A
+	var/mob/living/simple_animal/hostile/actor/our_actor
 	var/happy = FALSE
 	var/melting
 	var/preferred_work_type
@@ -70,14 +70,14 @@ Defeating the murderer also surpresses the abnormality.
 	return FALSE
 
 /mob/living/simple_animal/hostile/abnormality/screenwriter/Destroy()
-	if(A)
-		A.death()
+	if(our_actor)
+		our_actor.death()
 	EndScenario()
 	return ..()
 
 //Work stuff
 /mob/living/simple_animal/hostile/abnormality/screenwriter/AttemptWork(mob/living/carbon/human/user, work_type)
-	if(A)
+	if(our_actor)
 		to_chat(user, span_warning("The abnormality ignores you!"))
 		return FALSE
 	if(work_type == preferred_work_type || !preferred_work_type)
@@ -122,9 +122,9 @@ Defeating the murderer also surpresses the abnormality.
 
 //Breach
 /mob/living/simple_animal/hostile/abnormality/screenwriter/ZeroQliphoth(mob/living/carbon/human/user)
-	if(QDELETED(A))
-		A = null
-	if(A)
+	if(QDELETED(our_actor))
+		our_actor = null
+	if(our_actor)
 		return
 	MeltdownEffect()
 	return
@@ -135,8 +135,8 @@ Defeating the murderer also surpresses the abnormality.
 
 /mob/living/simple_animal/hostile/abnormality/screenwriter/proc/MeltdownEffect()
 	var/turf/actor_location = pick(GLOB.department_centers) //Spawn the murderer
-	A = new (actor_location)
-	RegisterSignal(A, COMSIG_LIVING_DEATH, PROC_REF(EndScenario))
+	our_actor = new (actor_location)
+	RegisterSignal(our_actor, COMSIG_LIVING_DEATH, PROC_REF(EndScenario))
 	var/list/potentialmarked = list()
 	var/list/marked = list()
 	var/mob/living/carbon/human/Y
@@ -182,7 +182,8 @@ Defeating the murderer also surpresses the abnormality.
 		var/datum/status_effect/actor/S = L.has_status_effect(/datum/status_effect/actor)
 		if(S)
 			qdel(S)
-	UnregisterSignal(A, COMSIG_LIVING_DEATH)
+	if(our_actor)
+		UnregisterSignal(our_actor, COMSIG_LIVING_DEATH)
 
 //Overlays
 /mob/living/simple_animal/hostile/abnormality/screenwriter/proc/SpawnIcon()
@@ -296,7 +297,7 @@ Defeating the murderer also surpresses the abnormality.
 	add_overlay(mutable_appearance('icons/effects/32x64.dmi', "abandoned", -ABOVE_MOB_LAYER))
 
 // Patrol Code
-/mob/living/simple_animal/hostile/actor/patrol_select() //Hunt down the "victim"s
+/mob/living/simple_animal/hostile/actor/SelectPatrolLocation() //Hunt down the "victim"s
 	var/mob/living/carbon/human/potential_target
 	for(var/mob/living/carbon/human/L in GLOB.player_list)
 		if(faction_check_mob(L, FALSE) || L.stat >= HARD_CRIT || L.sanity_lost || z != L.z) // Dead or in hard crit, insane, or on a different Z level.
@@ -306,13 +307,11 @@ Defeating the murderer also surpresses the abnormality.
 			continue
 		potential_target = L
 		if(S.role == "victim") //We found 'em!
-			patrol_to(get_turf(L))
-			return
+			return get_turf(L)
 	if(potential_target)
 		var/datum/status_effect/actor/S = potential_target.has_status_effect(/datum/status_effect/actor)
 		S.ChangeToVictim()
-		patrol_to(get_turf(potential_target))
-		return
+		return get_turf(potential_target)
 	return ..()
 
 /mob/living/simple_animal/hostile/actor/PickTarget(list/Targets)
@@ -391,7 +390,7 @@ Defeating the murderer also surpresses the abnormality.
 		for(var/mob/living/carbon/human/H in view(7, human_pawn))
 			if(HAS_TRAIT(H, TRAIT_COMBATFEAR_IMMUNE))
 				continue
-			H.deal_damage(sanity_damage, WHITE_DAMAGE)
+			H.deal_damage(sanity_damage, WHITE_DAMAGE, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_SPECIAL))
 
 
 #undef STATUS_EFFECT_ACTOR

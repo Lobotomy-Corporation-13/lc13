@@ -26,7 +26,7 @@
 	return
 
 /mob/living/proc/spawn_gibs()
-	new /obj/effect/gibspawner/generic(drop_location(), src, get_static_viruses())
+	new /obj/effect/bloodspawner(drop_location(), src)
 
 /mob/living/proc/spill_organs()
 	return
@@ -91,6 +91,8 @@
 	stop_pulling()
 
 	set_ssd_indicator(FALSE) //LOBOTOMYCORPORATION ADDITION -- SSD INDICATOR
+
+	set_typing_indicator(FALSE)
 
 	SEND_SIGNAL(src, COMSIG_LIVING_DEATH, gibbed)
 	SEND_GLOBAL_SIGNAL(COMSIG_GLOB_MOB_DEATH, src, gibbed)

@@ -41,7 +41,7 @@
 		stack_trace("[name] template failed to initialize correctly!")
 		return
 
-	var/list/obj/machinery/atmospherics/atmos_machines = list()
+	// var/list/obj/machinery/atmospherics/atmos_machines = list()
 	var/list/obj/structure/cable/cables = list()
 	var/list/atom/atoms = list()
 	var/list/area/areas = list()
@@ -70,8 +70,8 @@
 			if(istype(A, /obj/structure/cable))
 				cables += A
 				continue
-			if(istype(A, /obj/machinery/atmospherics))
-				atmos_machines += A
+/* 			if(istype(A, /obj/machinery/atmospherics))
+				atmos_machines += A */
 
 	// Not sure if there is some importance here to make sure the area is in z
 	// first or not.  Its defined In Initialize yet its run first in templates
@@ -85,7 +85,7 @@
 	// NOTE, now that Initialize and LateInitialize run correctly, do we really
 	// need these two below?
 	SSmachines.setup_template_powernets(cables)
-	SSair.setup_template_machinery(atmos_machines)
+	// SSair.setup_template_machinery(atmos_machines)
 
 	//calculate all turfs inside the border
 	var/list/template_and_bordering_turfs = block(
@@ -102,7 +102,7 @@
 		)
 	for(var/t in template_and_bordering_turfs)
 		var/turf/affected_turf = t
-		affected_turf.air_update_turf(TRUE, TRUE)
+		// affected_turf.air_update_turf(TRUE, TRUE)
 		affected_turf.levelupdate()
 
 /datum/map_template/proc/load_new_z()
@@ -133,13 +133,13 @@
 		return
 	if(T.y+height > world.maxy)
 		return
-
+/*
 	var/list/border = block(locate(max(T.x-1, 1),			max(T.y-1, 1),			 T.z),
 							locate(min(T.x+width+1, world.maxx),	min(T.y+height+1, world.maxy), T.z))
 	for(var/L in border)
 		var/turf/turf_to_disable = L
 		SSair.remove_from_active(turf_to_disable) //stop processing turfs along the border to prevent runtimes, we return it in initTemplateBounds()
-		turf_to_disable.atmos_adjacent_turfs?.Cut()
+		turf_to_disable.atmos_adjacent_turfs?.Cut() */
 
 	// Accept cached maps, but don't save them automatically - we don't want
 	// ruins clogging up memory for the whole round.

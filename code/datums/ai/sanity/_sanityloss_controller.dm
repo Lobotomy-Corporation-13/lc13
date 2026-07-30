@@ -123,6 +123,7 @@
 	var/last_known_location = null
 	var/target_lost = FALSE
 	var/stat_attack = HARD_CRIT
+	var/list/blacklist = list()	//You DON'T want to attack these
 
 /datum/ai_controller/insane/murder/Destroy()
 	if(mech_attack_timer_id)
@@ -633,6 +634,8 @@
 			return FALSE
 		if(!isturf(living_thing.loc) && !ismecha(living_thing.loc))
 			return FALSE
+		if(living_thing.type in blacklist)
+			return FALSE
 		return TRUE
 	return FALSE
 
@@ -825,7 +828,7 @@
 		for(var/mob/living/carbon/human/H in view(7, human_pawn))
 			if(HAS_TRAIT(H, TRAIT_COMBATFEAR_IMMUNE))
 				continue
-			H.apply_damage(sanity_damage, WHITE_DAMAGE, null, H.run_armor_check(null, WHITE_DAMAGE))
+			H.deal_damage(sanity_damage, WHITE_DAMAGE, human_pawn, flags = (DAMAGE_FORCED))
 
 /datum/ai_controller/insane/wander
 	lines_type = /datum/ai_behavior/say_line/insanity_lines/insanity_wander

@@ -235,7 +235,7 @@
 			if(!L.client)
 				continue
 			if(L.client.prefs?.toggles & SOUND_RADIO_STATIC)
-				L.playsound_local(M, radio_sound, 50, TRUE, 0, SOUND_FALLOFF_EXPONENT, sound_channel, TRUE, S, 1, get_dist(L, M))
+				L.playsound_local(M, radio_sound, 50, TRUE, 0, SOUND_FALLOFF_EXPONENT, sound_channel, S, 1, get_dist(L, M))
 
 
 	if(use_command)

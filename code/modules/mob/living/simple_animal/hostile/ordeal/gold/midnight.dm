@@ -57,7 +57,7 @@
 			if(faction_check_mob(L))
 				continue
 			var/dealt_damage = max(6, symphony_damage - round(get_dist(src, L) * 0.1))
-			L.deal_damage(dealt_damage, WHITE_DAMAGE)
+			L.deal_damage(dealt_damage, WHITE_DAMAGE, src, flags = (DAMAGE_FORCED | DAMAGE_UNTRACKABLE), attack_type = (ATTACK_TYPE_SPECIAL))
 
 	if(world.time >= next_movement_time) // Next movement
 		var/movement_volume = 50
@@ -101,7 +101,7 @@
 						QDEL_NULL(head)
 						H.regenerate_icons()
 						H.visible_message(span_danger("[H]'s head explodes!"))
-						new /obj/effect/gibspawner/generic/silent(get_turf(H))
+						new /obj/effect/bloodspawner/silent(get_turf(H))
 						playsound(get_turf(H), 'sound/abnormalities/silentorchestra/headbomb.ogg', 50, 1)
 				ChangeResistances(list(RED_DAMAGE = 0.2, WHITE_DAMAGE = 0.2, BLACK_DAMAGE = 0.2, PALE_DAMAGE = 0.2))
 				SLEEP_CHECK_DEATH(60 SECONDS)

@@ -1,4 +1,4 @@
-/obj/machinery/atmospherics/pipe/heat_exchanging/simple
+/* /obj/machinery/atmospherics/pipe/heat_exchanging/simple
 	icon = 'icons/obj/atmospherics/pipes/he-simple.dmi'
 	icon_state = "pipe11-3"
 
@@ -35,3 +35,4 @@
 /obj/machinery/atmospherics/pipe/heat_exchanging/simple/layer4
 	piping_layer = 4
 	icon_state = "pipe11-4"
+ */

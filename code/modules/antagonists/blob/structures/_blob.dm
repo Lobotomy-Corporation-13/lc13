@@ -9,7 +9,7 @@
 	anchored = TRUE
 	layer = BELOW_MOB_LAYER
 	pass_flags_self = PASSBLOB
-	CanAtmosPass = ATMOS_PASS_PROC
+	// CanAtmosPass = ATMOS_PASS_PROC
 	/// How many points the blob gets back when it removes a blob of that type. If less than 0, blob cannot be removed.
 	var/point_return = 0
 	max_integrity = 30
@@ -27,7 +27,7 @@
 	/// Only used by the synchronous mesh strain. If set to true, these blobs won't share or receive damage taken with others.
 	var/ignore_syncmesh_share = 0
 	/// If the blob blocks atmos and heat spread
-	var/atmosblock = FALSE
+	// var/atmosblock = FALSE
 	var/mob/camera/blob/overmind
 
 
@@ -42,8 +42,8 @@
 	GLOB.blobs += src //Keep track of the blob in the normal list either way
 	setDir(pick(GLOB.cardinals))
 	update_icon()
-	if(atmosblock)
-		air_update_turf(TRUE, TRUE)
+/* 	if(atmosblock)
+		air_update_turf(TRUE, TRUE) */
 	ConsumeTile()
 	AddElement(/datum/element/swabable, CELL_LINE_TABLE_BLOB, CELL_VIRUS_TABLE_GENERIC, 2, 2)
 
@@ -51,9 +51,9 @@
 	return
 
 /obj/structure/blob/Destroy()
-	if(atmosblock)
+/* 	if(atmosblock)
 		atmosblock = FALSE
-		air_update_turf(TRUE, FALSE)
+		air_update_turf(TRUE, FALSE) */
 	if(overmind)
 		overmind.all_blobs -= src
 		overmind.blobs_legit -= src  //if it was in the legit blobs list, it isn't now
@@ -79,11 +79,11 @@
 						result++
 		. -= result - 1
 
-/obj/structure/blob/BlockSuperconductivity()
+/* /obj/structure/blob/BlockSuperconductivity()
 	return atmosblock
 
 /obj/structure/blob/CanAtmosPass(turf/T)
-	return !atmosblock
+	return !atmosblock */
 
 /obj/structure/blob/update_icon() //Updates color based on overmind color if we have an overmind.
 	if(overmind)

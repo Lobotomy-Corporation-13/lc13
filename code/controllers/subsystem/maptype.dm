@@ -12,10 +12,13 @@ SUBSYSTEM_DEF(maptype)
 	var/jobtype		//If a map RNGs which jobs are available, use this
 
 	//All the map tags that delete all jobs and replace them with others.
-	var/list/clearmaps = list("rcorp", "city", "wcorp", "limbus_labs", "fixers", "office")
+	var/list/clearmaps = list("rcorp", "city", "wcorp", "limbus_labs", "fixers", "rcorp_factory", "office")
 
 	//LC13 Maps, this enables Traits and cores
 	var/list/lc_maps = list("standard", "fishing")
+
+	//LC13 Maps with unique Ordeals
+	var/list/unique_ordeals = list("branch12")
 
 	//LC13 Gamemode Traits
 	var/list/lc_trait = list(
@@ -24,10 +27,12 @@ SUBSYSTEM_DEF(maptype)
 						FACILITY_TRAIT_CRITICAL_HITS = 10,		//EGO can Critical hit.
 						FACILITY_TRAIT_DEPARTMENTAL_BUFFS = 10,	//Departmental Agent Buffs
 						FACILITY_TRAIT_XP_MOD = 7,				//XP works differently on HP/SP
-						FACILITY_TRAIT_ABNO_BLITZ = 3,			//The game is significantly Faster, starts after noon.
-						FACILITY_TRAIT_DAMAGE_TYPE_SHUFFLE = 2, //Shuffles all lob corp color damage types randomly. Attack and armor damage types shuffled separately.
+						FACILITY_TRAIT_DARK_SOULS = 5,			//You get estus flasks and rolling
+						FACILITY_TRAIT_NO_EGO = 3,				//No EGO, works like our events with double the outputs and refineries
+						FACILITY_TRAIT_PROSTHETICS = 3,			//There's a new prosthetics vendor!
 
 						//Joke stuff is below, should all be low
+						FACILITY_TRAIT_DAMAGE_TYPE_SHUFFLE = 2, //Shuffles all lob corp color damage types randomly. Attack and armor damage types shuffled separately.
 						FACILITY_TRAIT_WORKING_CLERKS = 2,		//For the joke
 						FACILITY_TRAIT_CALLBACK = 2,			//Brings back 2 Classic bugs in Backpack EGO and wounds
 						FACILITY_TRAIT_JOKE_ABNOS = 1,			// Okay it's funny
@@ -42,13 +47,13 @@ SUBSYSTEM_DEF(maptype)
 	var/chosen_trait = "No Trait"
 
 	//All the map tags that are combat maps and need abnos to breach immediately
-	var/list/combatmaps = list("rcorp", "wcorp", "limbus_labs", "fixers", "office")
+	var/list/combatmaps = list("rcorp", "rcorp_factory", "wcorp", "limbus_labs", "fixers", "office")
 
 	//Ghosts should be possessbale at all times
 	var/list/autopossess = list("rcorp", "limbus_labs")
 
 	//These end after a certain number of minutes.
-	var/list/autoend = list("rcorp", "wcorp", "limbus_labs", "fixers", "office")
+	var/list/autoend = list("rcorp", "rcorp_factory", "wcorp", "limbus_labs", "fixers", "office")
 
 	//This map is city stuff
 	var/list/citymaps = list("wonderlabs", "city", "fixers", "office", "lcorp_city")
@@ -69,7 +74,9 @@ SUBSYSTEM_DEF(maptype)
 
 /datum/controller/subsystem/maptype/Initialize()
 	..()
-	if(SSmaptype.maptype in SSmaptype.lc_maps)
+	maptype = GLOB.map_config_global.maptype
+
+	if(maptype in SSmaptype.lc_maps)
 		if(!CONFIG_GET(flag/enabletraits))
 			message_admins("Notice! Station Traits are disabled!")
 			return
@@ -88,7 +95,7 @@ SUBSYSTEM_DEF(maptype)
 					SSlobotomy_corp.enable_possession = TRUE
 
 	//Badda Bing Badda Da. This makes the latejoin menu cleaner
-	switch(SSmaptype.maptype)
+	switch(maptype)
 		if("wonderlabs")
 			departments = list("Command", "Fixers", "Security", "Service")
 		if("city")

@@ -16,7 +16,6 @@
 		/obj/effect/projectile,
 		/obj/effect/portal,
 		/obj/effect/abstract,
-		/obj/effect/hotspot,
 		/obj/effect/landmark,
 		/obj/effect/temp_visual,
 		/obj/effect/light_emitter/tendril,
@@ -26,6 +25,10 @@
 		/obj/effect/mapping_helpers,
 		/obj/effect/wisp,
 	))
+
+/datum/component/chasm/Destroy()
+	target_turf = null
+	return ..()
 
 /datum/component/chasm/Initialize(turf/target)
 	RegisterSignal(parent, list(COMSIG_MOVABLE_CROSSED, COMSIG_ATOM_ENTERED), PROC_REF(Entered))

@@ -16,19 +16,22 @@
 	var/mob/living/carbon/human/H = user
 	if(ability_cooldown > world.time)
 		to_chat(H, span_warning("You have used this ability too recently!"))
+		balloon_alert(H, "You have used this ability too recently!")
 		return FALSE
 	var/obj/item/clothing/suit/armor/ego_gear/zayin/P = H.get_item_by_slot(ITEM_SLOT_OCLOTHING)
 	if(istype(P, matching_armor))
 		pulse_enabled = TRUE
 		ability_cooldown = world.time + ability_cooldown_time
 		to_chat(H, span_nicegreen("[use_message]"))
+		balloon_alert(H, "[use_message]")
 		H.playsound_local(get_turf(H), use_sound, 25, 0)
 		Pulse(user, 0)
 		return TRUE
 	else
 		if(pulse_enable_toggle)
 			pulse_enabled = FALSE
-		to_chat(H, span_warning("You must have the corrosponding armor equipped to use this ability!"))
+		to_chat(H, span_warning("You must have the corresponding armor equipped to use this ability!"))
+		to_chat(H, "You must have the corresponding armour armor equipped to use this ability!")
 		return FALSE
 
 /obj/item/ego_weapon/support/dropped(mob/user)
@@ -70,6 +73,7 @@
 			continue
 		L.adjustSanityLoss(pulse_healing)
 		to_chat(L, span_nicegreen("A pulse from [user] makes your mind feel a bit clearer."))
+		balloon_alert(L, "A pulser from [user] makes your mind feel a bit clearer.")
 
 /obj/item/ego_weapon/support/little_alice
 	name = "little alice"
@@ -94,6 +98,7 @@
 		if(L.nutrition > NUTRITION_LEVEL_WELL_FED)
 			continue
 		to_chat(L, span_warning("[user] gives you a snack!"))
+		balloon_alert(L, "[user] gives you a snack!")
 		var/gift = pick(foodoptions)
 		new gift(get_turf(L))
 
@@ -119,6 +124,7 @@
 			continue
 		L.adjustBruteLoss(pulse_healing)
 		to_chat(L, span_nicegreen("Fairies come from [user] to heal your wounds."))
+		balloon_alert(L, "Fairies come from [user] to heal your wounds.")
 
 /obj/item/ego_weapon/support/wingbeat/suicide_act(mob/living/carbon/user)
 	. = ..()
@@ -149,6 +155,7 @@
 	var/mob/living/carbon/human/HT = M
 	if(HT.is_working)
 		to_chat(user,span_notice("You cannot defend others from responsibility!"))
+		balloon_alert(user, "You cannot defend others from responsibility!")
 		return
 	playsound(get_turf(user), 'sound/abnormalities/change/change_end.ogg', 25, 0, -9)
 	HT.visible_message(span_nicegreen("[HT] is patched up with [src] by [user]!"))
@@ -186,6 +193,7 @@
 		L.adjustSanityLoss(pulse_healing)
 		L.adjustBruteLoss(pulse_healing)
 		to_chat(L, span_nicegreen("You feel warmth coming from [user]!"))
+		balloon_alert(L, "You feel warmth coming from [user]!")
 
 /obj/item/ego_weapon/support/evening
 	name = "evening twilight"
@@ -218,6 +226,7 @@
 		return
 	var/mob/living/carbon/human/H = owner
 	to_chat(H, span_nicegreen("A shield increases your resistance to pale damage!"))
+	H.balloon_alert("A shield increases your resistance to pale damage!")
 	H.physiology.pale_mod /= 1.1
 	return ..()
 
@@ -225,7 +234,8 @@
 	if(!ishuman(owner))
 		return
 	var/mob/living/carbon/human/H = owner
-	to_chat(H, span_warning("Your shield has warn off."))
+	to_chat(H, span_warning("Your shield has worn off."))
+	H.balloon_alert("Your shield has worn off.")
 	H.physiology.pale_mod *= 1.1
 	return ..()
 
@@ -252,6 +262,7 @@
 	var/mob/living/carbon/human/HT = M
 	if(HT.is_working)
 		to_chat(user,span_notice("You cannot defend others from responsibility!"))
+		balloon_alert(user, "You cannot defend others from responsibility!")
 		return
 	playsound(get_turf(user), 'sound/abnormalities/blubbering_toad/blurble3.ogg', 25, 0, -9) //change to blubber sfx when toad is merged
 	HT.visible_message(span_nicegreen("[HT] is healed by the resin on [src] by [user]!"))
@@ -282,6 +293,7 @@
 	if(!msg)
 		return
 	to_chat(M, span_warning("[user] has sent you a message!"))
+	balloon_alert(M, "[user] has sent you a message!")
 	var/obj/item/paper/P = new(get_turf(M))
 	P.setText(msg)
 	P.icon_state = "mail"
@@ -304,6 +316,7 @@
 			new /obj/item/mailpaper/attachment(get_turf(H), H)
 	QDEL_IN(P, 30 SECONDS)
 	to_chat(user, span_boldnotice("You transmit to [M]:</span> <span class='notice'>[msg]"))
+	balloon_alert(user, "You transmit to [M] a message!")
 	for(var/ded in GLOB.dead_mob_list)
 		if(!isobserver(ded))
 			continue
@@ -411,6 +424,7 @@
 	for(var/mob/living/carbon/human/H in view(6, get_turf(src)))
 		H.apply_status_effect(/datum/status_effect/display/glimpse_thermal)
 		to_chat(H, span_info("You glimpse into her dream."))
+		balloon_alert(H, "You glimpse into her dream.")
 	glimpse_cooldown = world.time + glimpse_cooldown_delay
 
 /obj/item/ego_weapon/prohibited

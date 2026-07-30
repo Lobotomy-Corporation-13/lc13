@@ -58,7 +58,7 @@ GLOBAL_VAR_INIT(hsboxspawn, TRUE)
 			"Spawn Airlock"						= "hsbairlock",
 
 			"Miscellaneous",
-			"Spawn Air Scrubber"				= "hsbscrubber",
+			// "Spawn Air Scrubber"				= "hsbscrubber",
 			"Spawn CentCom Technology Disk"		= "hsbspawn&path=[/obj/item/disk/tech_disk/debug]",
 			"Spawn Adminordrazine"				= "hsbspawn&path=[/obj/item/reagent_containers/pill/adminordrazine]",
 			"Spawn Water Tank"					= "hsbspawn&path=[/obj/structure/reagent_dispensers/watertank]",
@@ -68,9 +68,9 @@ GLOBAL_VAR_INIT(hsboxspawn, TRUE)
 			"Spawn Floorbot"					= "hsbspawn&path=[/mob/living/simple_animal/bot/floorbot]",
 			"Spawn Medbot"						= "hsbspawn&path=[/mob/living/simple_animal/bot/medbot]",
 
-			"Canisters",
+			/* "Canisters",
 			"Spawn O2 Canister" 				= "hsbspawn&path=[/obj/machinery/portable_atmospherics/canister/oxygen]",
-			"Spawn Air Canister"				= "hsbspawn&path=[/obj/machinery/portable_atmospherics/canister/air]")
+			"Spawn Air Canister"				= "hsbspawn&path=[/obj/machinery/portable_atmospherics/canister/air]" */ )
 
 
 	if(!hsbinfo)
@@ -79,14 +79,14 @@ GLOBAL_VAR_INIT(hsboxspawn, TRUE)
 			hsbinfo += "<b>Administration</b><br>"
 			hsbinfo += "- <a href='byond://?src=[REF(src)];hsb=hsbtobj'>Toggle Object Spawning</a><br>"
 			hsbinfo += "- <a href='byond://?src=[REF(src)];hsb=hsbtac'>Toggle Item Spawn Panel Auto-close</a><br>"
-			hsbinfo += "<b>Canister Spawning</b><br>"
-			hsbinfo += "- <a href='byond://?src=[REF(src)];hsb=hsbspawn&path=[/obj/machinery/portable_atmospherics/canister/toxins]'>Spawn Plasma Canister</a><br>"
-			hsbinfo += "- <a href='byond://?src=[REF(src)];hsb=hsbspawn&path=[/obj/machinery/portable_atmospherics/canister/carbon_dioxide]'>Spawn CO2 Canister</a><br>"
-			hsbinfo += "- <a href='byond://?src=[REF(src)];hsb=hsbspawn&path=[/obj/machinery/portable_atmospherics/canister/nitrogen]'>Spawn Nitrogen Canister</a><br>"
-			hsbinfo += "- <a href='byond://?src=[REF(src)];hsb=hsbspawn&path=[/obj/machinery/portable_atmospherics/canister/nitrous_oxide]'>Spawn N2O Canister</a><hr>"
+			// hsbinfo += "<b>Canister Spawning</b><br>"
+			// hsbinfo += "- <a href='byond://?src=[REF(src)];hsb=hsbspawn&path=[/obj/machinery/portable_atmospherics/canister/toxins]'>Spawn Plasma Canister</a><br>"
+			// hsbinfo += "- <a href='byond://?src=[REF(src)];hsb=hsbspawn&path=[/obj/machinery/portable_atmospherics/canister/carbon_dioxide]'>Spawn CO2 Canister</a><br>"
+			// hsbinfo += "- <a href='byond://?src=[REF(src)];hsb=hsbspawn&path=[/obj/machinery/portable_atmospherics/canister/nitrogen]'>Spawn Nitrogen Canister</a><br>"
+			// hsbinfo += "- <a href='byond://?src=[REF(src)];hsb=hsbspawn&path=[/obj/machinery/portable_atmospherics/canister/nitrous_oxide]'>Spawn N2O Canister</a><hr>"
 		else
 			hsbinfo += "<i>Some item spawning may be disabled by the administrators.</i><br>"
-			hsbinfo += "<i>Only administrators may spawn dangerous canisters.</i><br>"
+			// hsbinfo += "<i>Only administrators may spawn dangerous canisters.</i><br>"
 		for(var/T in hrefs)
 			var/href = hrefs[T]
 			if(href)
@@ -178,9 +178,9 @@ GLOBAL_VAR_INIT(hsboxspawn, TRUE)
 				P.internal = P.back
 				P.update_internals_hud_icon(1)
 
-			if("hsbscrubber") // This is beyond its normal capability but this is sandbox and you spawned one, I assume you need it
-				var/obj/hsb = new/obj/machinery/portable_atmospherics/scrubber{volume_rate=50*ONE_ATMOSPHERE;on=1}(usr.loc)
-				hsb.update_icon() // hackish but it wasn't meant to be spawned I guess?
+			// if("hsbscrubber") // This is beyond its normal capability but this is sandbox and you spawned one, I assume you need it
+			// 	var/obj/hsb = new/obj/machinery/portable_atmospherics/scrubber{volume_rate=50*ONE_ATMOSPHERE;on=1}(usr.loc)
+			// 	hsb.update_icon() // hackish but it wasn't meant to be spawned I guess?
 
 			//
 			// Stacked Materials

@@ -105,7 +105,7 @@
 		visible_message("<span class='danger'>[src] shatters into a million pieces!</span>")
 		qdel(src)
 
-
+/* //AtmosTocheck
 /obj/assume_air(datum/gas_mixture/giver)
 	if(loc)
 		return loc.assume_air(giver)
@@ -122,8 +122,9 @@
 	if(loc)
 		return loc.return_air()
 	else
-		return null
+		return null */
 
+/* //AtmosToCheck
 /obj/proc/handle_internal_lifeform(mob/lifeform_inside_me, breath_request)
 	//Return: (NONSTANDARD)
 	//		null if object handles breathing logic for lifeform
@@ -135,7 +136,7 @@
 		var/breath_percentage = BREATH_VOLUME / environment.return_volume()
 		return remove_air(environment.total_moles() * breath_percentage)
 	else
-		return null
+		return null */
 
 /obj/proc/updateUsrDialog()
 	if((obj_flags & IN_USE) && !(obj_flags & USES_TGUI))
@@ -363,10 +364,10 @@
 		return FALSE
 	return TRUE
 
-/obj/analyzer_act(mob/living/user, obj/item/I)
+/* /obj/analyzer_act(mob/living/user, obj/item/I)
 	if(atmosanalyzer_scan(user, src))
 		return TRUE
-	return ..()
+	return ..() */
 
 /obj/proc/plunger_act(obj/item/plunger/P, mob/living/user, reinforced)
 	return

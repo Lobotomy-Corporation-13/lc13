@@ -229,7 +229,7 @@
 			new /obj/item/stack/rods(loc, 1)
 		qdel(src)
 		return
-
+/*
 /obj/structure/bonfire/proc/CheckOxygen()
 	if(isopenturf(loc))
 		var/turf/open/O = loc
@@ -238,9 +238,9 @@
 			if(loc_gases[/datum/gas/oxygen] && loc_gases[/datum/gas/oxygen][MOLES] >= 5)
 				return TRUE
 	return FALSE
-
+ */
 /obj/structure/bonfire/proc/StartBurning()
-	if(!burning && CheckOxygen())
+	if(!burning)
 		icon_state = burn_icon
 		burning = TRUE
 		set_light(6)
@@ -257,7 +257,7 @@
 
 /obj/structure/bonfire/proc/Burn(delta_time = 2)
 	var/turf/current_location = get_turf(src)
-	current_location.hotspot_expose(1000, 250 * delta_time, 1)
+	// current_location.hotspot_expose(1000, 250 * delta_time, 1)
 	for(var/A in current_location)
 		if(A == src)
 			continue
@@ -283,9 +283,6 @@
 			SEND_SIGNAL(grilled_item, COMSIG_ITEM_GRILLED, src, delta_time) //Not a big fan, maybe make this use fire_act() in the future.
 
 /obj/structure/bonfire/process(delta_time)
-	if(!CheckOxygen())
-		extinguish()
-		return
 	if(!grill)
 		Burn(delta_time)
 	else

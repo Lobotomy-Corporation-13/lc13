@@ -101,7 +101,7 @@
 	healpulse()
 
 //Okay, but here's the patrolling stuff
-/mob/living/simple_animal/hostile/abnormality/eris/patrol_select()
+/mob/living/simple_animal/hostile/abnormality/eris/SelectPatrolLocation()
 	var/list/target_turfs = list() // Stolen from Punishing Bird
 	for(var/mob/living/carbon/human/H in GLOB.human_list)
 		if(H.z != z) // Not on our level
@@ -112,8 +112,7 @@
 
 	var/turf/target_turf = get_closest_atom(/turf/open, target_turfs, src)
 	if(istype(target_turf))
-		patrol_path = get_path_to(src, target_turf, TYPE_PROC_REF(/turf, Distance_cardinal), 0, 200)
-		return
+		return target_turf
 	return ..()
 
 
@@ -143,11 +142,11 @@
 			O.Remove(poorfuck)
 			O.forceMove(get_turf(poorfuck))
 	poorfuck.dust()
-	new /obj/effect/gibspawner/generic/silent(get_turf(poorfuck))
+	new /obj/effect/bloodspawner/silent(get_turf(poorfuck))
 
 	//Lose sanity
 	for(var/mob/living/carbon/human/H in view(10, get_turf(src)))
-		H.deal_damage(girlboss_level*10, WHITE_DAMAGE)
+		H.deal_damage(girlboss_level*10, WHITE_DAMAGE, src, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_SPECIAL))
 
 	SLEEP_CHECK_DEATH(10)
 	manual_emote("wipes her mouth with a hankerchief")
@@ -178,7 +177,7 @@
 	manual_emote("unhinges her jaw, revealing many rows of teeth!")
 
 	playsound(get_turf(src), 'sound/abnormalities/bigbird/bite.ogg', 50, 1, 2)
-	new /obj/effect/gibspawner/generic/silent(get_turf(current_petter))
+	new /obj/effect/bloodspawner/silent(get_turf(current_petter))
 	if(SSmaptype.maptype == "limbus_labs")
 		for(var/obj/item/organ/O in current_petter.getorganszone(BODY_ZONE_HEAD, TRUE))
 			O.Remove(current_petter)
@@ -203,20 +202,12 @@
 		new /obj/effect/temp_visual/heal(get_turf(H), "#FF4444")
 
 //Okay but here's the defensive options
-/mob/living/simple_animal/hostile/abnormality/eris/bullet_act(obj/projectile/Proj)
-	..()
-	if(!ishuman(Proj.firer))
+/mob/living/simple_animal/hostile/abnormality/eris/PostDamageReaction(damage_amount, damage_type, source, attack_type)
+	. = ..()
+	if(. <= 0 || !isliving(source) || (attack_type & (ATTACK_TYPE_COUNTER | ATTACK_TYPE_ENVIRONMENT | ATTACK_TYPE_STATUS)))
 		return
-	var/mob/living/carbon/human/H = Proj.firer
-	H.deal_damage(40*(TOUGHER_TIMES(girlboss_level)), WHITE_DAMAGE)
-
-
-/mob/living/simple_animal/hostile/abnormality/eris/attacked_by(obj/item/I, mob/living/user)
-	..()
-	if(!user)
-		return
-	user.deal_damage(40*(TOUGHER_TIMES(girlboss_level)), WHITE_DAMAGE)
-
+	var/mob/living/okay_but_heres_the_victim = source
+	okay_but_heres_the_victim.deal_damage(40*(TOUGHER_TIMES(girlboss_level)), WHITE_DAMAGE, source = src, attack_type = (ATTACK_TYPE_COUNTER))
 
 //Okay, but here's the work effects
 

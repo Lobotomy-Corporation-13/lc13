@@ -50,7 +50,7 @@
 					affected_mob.vomit(95)
 				affected_mob.emote("cough")
 				affected_mob.Paralyze(40)
-				affected_mob.losebreath += 4
+				affected_mob.losebreath += HUMAN_MAX_OXYLOSS_RATE
 			if(prob(3))
 				to_chat(affected_mob, "<span class='danger'>You feel very weak and dizzy...</span>")
 				affected_mob.add_confusion(8)

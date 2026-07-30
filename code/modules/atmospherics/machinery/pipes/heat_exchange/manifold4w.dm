@@ -1,4 +1,4 @@
-//4-Way Manifold
+/* //4-Way Manifold
 
 /obj/machinery/atmospherics/pipe/heat_exchanging/manifold4w
 	icon = 'icons/obj/atmospherics/pipes/he-manifold.dmi'
@@ -44,3 +44,4 @@
 /obj/machinery/atmospherics/pipe/heat_exchanging/manifold4w/layer4
 	piping_layer = 4
 	icon_state = "manifold4w-4"
+ */

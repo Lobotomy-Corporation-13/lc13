@@ -1953,6 +1953,8 @@
 /obj/machinery/button/door/indestructible{
 	id = "LSZ Containment Door #4"
 	},
+/obj/item/lcl_pacifiers,
+/obj/item/lcl_duel,
 /turf/open/floor/mineral/titanium/blue,
 /area/centcom)
 "iz" = (
@@ -2219,6 +2221,8 @@
 /obj/machinery/button/door/indestructible{
 	id = "LSZ Containment Door #5"
 	},
+/obj/item/lcl_pacifiers,
+/obj/item/lcl_duel,
 /turf/open/floor/mineral/titanium/blue,
 /area/centcom)
 "jM" = (
@@ -2896,6 +2900,8 @@
 	},
 /obj/item/clipboard,
 /obj/item/clipboard,
+/obj/item/lcl_pacifiers,
+/obj/item/lcl_duel,
 /turf/open/floor/mineral/titanium/white{
 	color = "#791500"
 	},
@@ -3573,18 +3579,6 @@
 	pixel_y = 19
 	},
 /turf/open/floor/mineral/titanium/tiled/blue,
-/area/centcom)
-"or" = (
-/obj/structure/lattice/catwalk,
-/obj/effect/landmark/abnospawn/highsec,
-/obj/machinery/camera/autoname{
-	alpha = 0;
-	mouse_opacity = 0;
-	name = "hidden security camera";
-	short_range = 13;
-	view_range = 13
-	},
-/turf/open/floor/plating,
 /area/centcom)
 "os" = (
 /obj/effect/turf_decal/arrows/white{
@@ -4560,6 +4554,8 @@
 /obj/machinery/button/door/indestructible{
 	id = "LSZ Containment Door #1"
 	},
+/obj/item/lcl_pacifiers,
+/obj/item/lcl_duel,
 /turf/open/floor/mineral/titanium/blue,
 /area/centcom)
 "sy" = (
@@ -5816,8 +5812,8 @@
 /area/centcom)
 "xR" = (
 /obj/structure/lattice/catwalk,
-/obj/effect/landmark/abnospawn/lowsec,
 /obj/machinery/camera/autoname,
+/obj/effect/landmark/start/limbus_abnospawn/lowsec,
 /turf/open/floor/plating,
 /area/centcom)
 "xS" = (
@@ -8602,7 +8598,7 @@
 	short_range = 13;
 	view_range = 13
 	},
-/obj/effect/landmark/abnospawn/highsec,
+/obj/effect/landmark/start/limbus_abnospawn/highsec,
 /turf/open/floor/plating,
 /area/centcom)
 "Jm" = (
@@ -9574,6 +9570,8 @@
 /obj/machinery/button/door/indestructible{
 	id = "LSZ Containment Door #3"
 	},
+/obj/item/lcl_pacifiers,
+/obj/item/lcl_duel,
 /turf/open/floor/mineral/titanium/blue,
 /area/centcom)
 "MK" = (
@@ -10791,6 +10789,8 @@
 	},
 /obj/item/clipboard,
 /obj/item/clipboard,
+/obj/item/lcl_pacifiers,
+/obj/item/lcl_duel,
 /turf/open/floor/mineral/titanium/white{
 	color = "#791500"
 	},
@@ -11019,6 +11019,8 @@
 /obj/machinery/button/door/indestructible{
 	id = "LSZ Containment Door #2"
 	},
+/obj/item/lcl_pacifiers,
+/obj/item/lcl_duel,
 /turf/open/floor/mineral/titanium/blue,
 /area/centcom)
 "SA" = (
@@ -12792,6 +12794,8 @@
 /obj/machinery/button/door/indestructible{
 	id = "LSZ Containment Door #6"
 	},
+/obj/item/lcl_pacifiers,
+/obj/item/lcl_duel,
 /turf/open/floor/mineral/titanium/blue,
 /area/centcom)
 "ZP" = (
@@ -38978,7 +38982,7 @@ ap
 pl
 TM
 nR
-or
+Jj
 nR
 Au
 iM

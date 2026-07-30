@@ -2,14 +2,14 @@
 	layer = CLOSED_TURF_LAYER
 	opacity = TRUE
 	density = TRUE
-	blocks_air = TRUE
+	// blocks_air = TRUE
 	flags_1 = RAD_PROTECT_CONTENTS_1 | RAD_NO_CONTAMINATE_1
 	rad_insulation = RAD_MEDIUM_INSULATION
 	pass_flags_self = PASSCLOSEDTURF
 
-/turf/closed/AfterChange()
+/* /turf/closed/AfterChange()
 	. = ..()
-	SSair.high_pressure_delta -= src
+	SSair.high_pressure_delta -= src */
 
 /turf/closed/get_smooth_underlay_icon(mutable_appearance/underlay_appearance, turf/asking_turf, adjacency_dir)
 	return FALSE
@@ -108,7 +108,7 @@
 
 //////This is absurd that i have to carry over wall code to a indestructable wall duplicate.
 
-/turf/closed/indestructible/reinforced/attackby(obj/item/W, mob/user, params)
+/turf/closed/indestructible/attackby(obj/item/W, mob/user, params)
 	//get the user's location
 	if(!isturf(user.loc))
 		return	//can't do this stuff whilst inside objects and such
@@ -121,7 +121,7 @@
 
 	return ..()
 
-/turf/closed/indestructible/reinforced/proc/try_wallmount(obj/item/W, mob/user, turf/T)
+/turf/closed/indestructible/proc/try_wallmount(obj/item/W, mob/user, turf/T)
 	//check for wall mounted frames
 	if(istype(W, /obj/item/wallframe))
 		var/obj/item/wallframe/F = W
@@ -135,7 +135,7 @@
 
 	return FALSE
 
-/turf/closed/indestructible/reinforced/proc/place_poster(obj/item/poster/P, mob/user)
+/turf/closed/indestructible/proc/place_poster(obj/item/poster/P, mob/user)
 	if(!P.poster_structure)
 		to_chat(user, "<span class='warning'>[P] has no poster... inside it? Inform a coder!</span>")
 		return
@@ -180,6 +180,36 @@
 
 /turf/closed/indestructible/reinforced/old
 	icon = 'icons/turf/walls/facility_old.dmi'
+
+// Cheap Colored Walls
+/turf/closed/indestructible/reinforced/cheap
+	icon = 'icons/turf/walls/cheap_wall.dmi'
+	icon_state = "icon-0"
+	base_icon_state = "icon"
+
+/turf/closed/indestructible/reinforced/cheap/blue
+	icon = 'icons/turf/walls/blue_wall.dmi'
+
+/turf/closed/indestructible/reinforced/cheap/brown
+	icon = 'icons/turf/walls/brown_wall.dmi'
+
+/turf/closed/indestructible/reinforced/cheap/cream
+	icon = 'icons/turf/walls/cream_wall.dmi'
+
+/turf/closed/indestructible/reinforced/cheap/green
+	icon = 'icons/turf/walls/green_wall.dmi'
+
+/turf/closed/indestructible/reinforced/cheap/purple
+	icon = 'icons/turf/walls/purple_wall.dmi'
+
+/turf/closed/indestructible/reinforced/cheap/red
+	icon = 'icons/turf/walls/red_wall.dmi'
+
+/turf/closed/indestructible/reinforced/cheap/fancy
+	icon = 'icons/turf/walls/fancy_wall.dmi'
+
+/turf/closed/indestructible/reinforced/cheap/yellow
+	icon = 'icons/turf/walls/yellow_wall.dmi'
 
 /turf/closed/indestructible/riveted
 	icon = 'icons/turf/walls/riveted.dmi'
@@ -343,7 +373,6 @@
 	smoothing_flags = SMOOTH_BITMASK
 	smoothing_groups = list(SMOOTH_GROUP_CLOSED_TURFS, SMOOTH_GROUP_WALLS, SMOOTH_GROUP_IRON_WALLS)
 	canSmoothWith = list(SMOOTH_GROUP_IRON_WALLS)
-	opacity = FALSE
 
 /turf/closed/indestructible/riveted/boss
 	name = "necropolis wall"
@@ -373,3 +402,11 @@
 	smoothing_flags = SMOOTH_CORNERS
 	smoothing_groups = list(SMOOTH_GROUP_HIERO_WALL)
 	canSmoothWith = list(SMOOTH_GROUP_HIERO_WALL)
+
+/turf/closed/indestructible/brick
+	icon = 'icons/turf/walls/brick_wall.dmi'
+	icon_state = "brick_wall-0"
+	base_icon_state = "brick_wall"
+	smoothing_flags = SMOOTH_BITMASK
+	smoothing_groups = list(SMOOTH_GROUP_CLOSED_TURFS, SMOOTH_GROUP_WALLS, SMOOTH_GROUP_BRICK_WALL)
+	canSmoothWith = list(SMOOTH_GROUP_BRICK_WALL)

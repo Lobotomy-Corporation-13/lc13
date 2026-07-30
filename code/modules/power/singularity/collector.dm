@@ -36,7 +36,7 @@
 /obj/machinery/power/rad_collector/process(delta_time)
 	if(!loaded_tank)
 		return
-	if(!loaded_tank.air_contents.gases[/datum/gas/plasma])
+/* 	if(!loaded_tank.air_contents.gases[/datum/gas/plasma])
 		investigate_log("<font color='red'>out of fuel</font>.", INVESTIGATE_SINGULO)
 		playsound(src, 'sound/machines/ding.ogg', 50, TRUE)
 		eject()
@@ -45,15 +45,15 @@
 		loaded_tank.air_contents.gases[/datum/gas/plasma][MOLES] -= gasdrained
 		loaded_tank.air_contents.assert_gas(/datum/gas/tritium)
 		loaded_tank.air_contents.gases[/datum/gas/tritium][MOLES] += gasdrained
-		loaded_tank.air_contents.garbage_collect()
+		loaded_tank.air_contents.garbage_collect() */
 
-		var/power_produced = RAD_COLLECTOR_OUTPUT
-		add_avail(power_produced)
-		stored_energy-=power_produced
+	var/power_produced = RAD_COLLECTOR_OUTPUT
+	add_avail(power_produced)
+	stored_energy-=power_produced
 
 /obj/machinery/power/rad_collector/interact(mob/user)
 	if(anchored)
-		if(!src.locked)
+/* 		if(!src.locked)
 			toggle_power()
 			user.visible_message("<span class='notice'>[user.name] turns the [src.name] [active? "on":"off"].</span>", \
 			"<span class='notice'>You turn the [src.name] [active? "on":"off"].</span>")
@@ -63,9 +63,9 @@
 			fuel = fuel ? fuel[MOLES] : 0
 			investigate_log("turned [active?"<font color='green'>on</font>":"<font color='red'>off</font>"] by [key_name(user)]. [loaded_tank?"Fuel: [round(fuel/0.29)]%":"<font color='red'>It is empty</font>"].", INVESTIGATE_SINGULO)
 			return
-		else
-			to_chat(user, "<span class='warning'>The controls are locked!</span>")
-			return
+		else */
+		to_chat(user, "<span class='warning'>The controls are locked!</span>")
+		return
 
 /obj/machinery/power/rad_collector/can_be_unfasten_wrench(mob/user, silent)
 	if(loaded_tank)
@@ -137,11 +137,11 @@
 	to_chat(user, "<span class='warning'>There isn't a tank loaded!</span>")
 	return TRUE
 
-/obj/machinery/power/rad_collector/return_analyzable_air()
+/* /obj/machinery/power/rad_collector/return_analyzable_air()
 	if(loaded_tank)
 		return loaded_tank.return_analyzable_air()
 	else
-		return null
+		return null */
 
 /obj/machinery/power/rad_collector/examine(mob/user)
 	. = ..()

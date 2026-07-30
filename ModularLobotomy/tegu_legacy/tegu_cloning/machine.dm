@@ -129,7 +129,7 @@
 		if(mob_occupant.stat != DEAD)
 			. += "Current clone cycle is [round(get_completion())]% complete."
 
-/obj/machinery/clonepod/return_air()
+/* /obj/machinery/clonepod/return_air()
 	// We want to simulate the clone not being in contact with
 	// the atmosphere, so we'll put them in a constant pressure
 	// nitrogen. They don't need to breathe while cloning anyway.
@@ -137,7 +137,7 @@
 	if(!GM)
 		GM = new
 	return GM
-
+ */
 /obj/machinery/clonepod/proc/get_completion()
 	. = FALSE
 	var/mob/living/mob_occupant = occupant

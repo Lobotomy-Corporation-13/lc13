@@ -86,7 +86,7 @@
 	desc = "Some kind of machine."
 	verb_say = "beeps"
 	verb_yell = "blares"
-	pressure_resistance = 15
+	// pressure_resistance = 15
 	pass_flags_self = PASSMACHINE
 	max_integrity = 200
 	layer = BELOW_OBJ_LAYER //keeps shit coming out of the machine from ending up underneath it.
@@ -355,10 +355,8 @@
 				to_chat(user, "<span class='warning'>This machine requires sight to use.</span>")
 				return FALSE
 
-		if(!Adjacent(user)) // Next make sure we are next to the machine unless we have telekinesis
-			var/mob/living/carbon/H = L
-			if(!(istype(H) && H.has_dna() && H.dna.check_mutation(TK)))
-				return FALSE
+		if(!adjacency_check(user)) // Next make sure we are next to the machine unless we have telekinesis
+			return FALSE
 
 		if(L.incapacitated()) // Finally make sure we aren't incapacitated
 			return FALSE
@@ -367,6 +365,17 @@
 		return FALSE
 
 	return TRUE // If we pass all these checks, woohoo! We can interact
+
+/// Added specifically so we can override it when we don't actually want an adjacency check/we want to do a weirder version of an adjacency check.
+/obj/machinery/proc/adjacency_check(mob/living/user)
+	if(!istype(user))
+		return FALSE
+	if(!Adjacent(user))
+		var/mob/living/carbon/H = user
+		if(!(istype(H) && H.has_dna() && H.dna.check_mutation(TK)))
+			return FALSE
+
+	return TRUE
 
 /obj/machinery/proc/check_nap_violations()
 	if(!SSeconomy.full_ancap)

@@ -58,7 +58,7 @@
 
 /obj/item/attribute_increase/fixer/office
 	name = "office n corp training accelerator"
-	desc = "A fluid used to increase the stats of a non-assocaition fixer. Use in hand to activate. Increases stats more the lower your potential. Effects eveyone a part of your office."
+	desc = "A fluid used to increase the stats of a non-association fixer. Use in hand to activate. Increases stats more the lower your potential. Effects eveyone a part of your office."
 	amount = 1
 	var/public_use = FALSE
 
@@ -92,6 +92,7 @@
 			//Adjust by an extra attribute under level 2
 			if(get_attribute_level(H, TEMPERANCE_ATTRIBUTE)<=40)
 				H.adjust_all_attribute_levels(amount)
+				H.adjust_all_attribute_levels(amount)
 				to_chat(H, "<span class='nicegreen'>You gain 1 potential!</span>")
 
 			//And one more under level 3
@@ -99,10 +100,6 @@
 				H.adjust_all_attribute_levels(amount)
 				to_chat(H, "<span class='nicegreen'>You gain 1 potential!</span>")
 
-			//And one last one before L4
-			if(get_attribute_level(H, TEMPERANCE_ATTRIBUTE)<=80)
-				H.adjust_all_attribute_levels(amount)
-				to_chat(H, "<span class='nicegreen'>You gain 1 potential!</span>")
 	. = ..()
 
 /obj/machinery/scanner_gate/officescanner

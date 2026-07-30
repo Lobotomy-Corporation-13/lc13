@@ -71,7 +71,7 @@
 	if(user.mind)
 		user.mind.fan_triggers++
 		if(user.mind.fan_triggers >= 5)
-			user.client?.give_award(/datum/award/achievement/lc13/fan_trigger, user)
+			user.client?.give_award(/datum/award/achievement/abno/fan_trigger, user)
 
 	if(user in danger)
 		if(safework)
@@ -190,7 +190,7 @@
 		return
 	if(stacks <= 10)
 		return
-	owner.deal_damage((stacks / 8), FIRE)
+	owner.deal_damage((stacks / 8), FIRE, attack_type = ATTACK_TYPE_STATUS)
 	owner.playsound_local(owner, 'sound/effects/burn.ogg', 25, TRUE)
 
 /datum/status_effect/stacking/fanhot/on_remove()

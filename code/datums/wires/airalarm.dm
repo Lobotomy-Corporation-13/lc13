@@ -1,4 +1,4 @@
-/datum/wires/airalarm
+/* /datum/wires/airalarm
 	holder_type = /obj/machinery/airalarm
 	proper_name = "Air Alarm"
 
@@ -72,3 +72,4 @@
 			if(AA.atmosalert(TRUE, holder))
 				A.post_alert(2)
 			A.update_icon()
+ */

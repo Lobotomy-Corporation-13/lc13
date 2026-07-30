@@ -1,4 +1,4 @@
-///Max amount of radiation that can be emitted per reaction cycle
+/* ///Max amount of radiation that can be emitted per reaction cycle
 #define FUSION_RAD_MAX						5000
 ///Maximum instability before the reaction goes endothermic
 #define FUSION_INSTABILITY_ENDOTHERMALITY   4
@@ -1391,3 +1391,4 @@
 #undef WARNING_TIME_DELAY
 #undef HYPERTORUS_ACCENT_SOUND_MIN_COOLDOWN
 #undef HYPERTORUS_COUNTDOWN_TIME
+ */

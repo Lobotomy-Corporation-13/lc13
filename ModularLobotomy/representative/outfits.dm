@@ -1,6 +1,6 @@
 // THE WCORP STUFF
 /obj/item/clothing/suit/armor/ego_gear/wcorp/ert
-	equip_slowdown = 0
+	equip_delay_self = 0
 	attribute_requirements = list()
 
 /obj/item/clothing/suit/armor/ego_gear/wcorp/ert/kill
@@ -58,11 +58,11 @@
 // KCORP BABEYYYY
 
 /obj/item/clothing/suit/armor/ego_gear/city/kcorp_l1/ert
-	equip_slowdown = 0
+	equip_delay_self = 0
 	attribute_requirements = list()
 
 /obj/item/clothing/suit/armor/ego_gear/city/kcorp_l3/ert
-	equip_slowdown = 0
+	equip_delay_self = 0
 	attribute_requirements = list()
 
 /datum/outfit/kcorp

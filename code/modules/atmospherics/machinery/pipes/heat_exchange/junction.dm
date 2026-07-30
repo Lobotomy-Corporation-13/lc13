@@ -1,4 +1,4 @@
-/obj/machinery/atmospherics/pipe/heat_exchanging/junction
+/* /obj/machinery/atmospherics/pipe/heat_exchanging/junction
 	icon = 'icons/obj/atmospherics/pipes/he-junction.dmi'
 	icon_state = "pipe11-3"
 
@@ -41,3 +41,4 @@
 /obj/machinery/atmospherics/pipe/heat_exchanging/junction/layer4
 	piping_layer = 4
 	icon_state = "pipe11-4"
+ */

@@ -115,7 +115,7 @@
 ///apply a bunch of fire immunity effect to clothing
 /datum/religion_rites/fireproof/proc/apply_fireproof(obj/item/clothing/fireproofed)
 	fireproofed.name = "unmelting [fireproofed.name]"
-	fireproofed.max_heat_protection_temperature = FIRE_IMMUNITY_MAX_TEMP_PROTECT
+	fireproofed.max_heat_protection_temperature = TRUE
 	fireproofed.heat_protection = chosen_clothing.body_parts_covered
 	fireproofed.resistance_flags |= FIRE_PROOF
 
@@ -133,7 +133,7 @@
 
 /datum/religion_rites/fireproof/perform_rite(mob/living/user, atom/religious_tool)
 	for(var/obj/item/clothing/apparel in get_turf(religious_tool))
-		if(apparel.max_heat_protection_temperature >= FIRE_IMMUNITY_MAX_TEMP_PROTECT)
+		if(apparel.max_heat_protection_temperature >= TRUE)
 			continue //we ignore anything that is already fireproof
 		chosen_clothing = apparel //the apparel has been chosen by our lord and savior
 		return ..()

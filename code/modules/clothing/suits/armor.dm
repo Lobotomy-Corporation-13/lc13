@@ -2,9 +2,9 @@
 	allowed = null
 	body_parts_covered = CHEST
 	cold_protection = CHEST|GROIN
-	min_cold_protection_temperature = ARMOR_MIN_TEMP_PROTECT
+	min_cold_protection_temperature = TRUE
 	heat_protection = CHEST|GROIN
-	max_heat_protection_temperature = ARMOR_MAX_TEMP_PROTECT
+	max_heat_protection_temperature = TRUE
 	strip_delay = 60
 	equip_delay_other = 40
 	max_integrity = 250
@@ -215,9 +215,9 @@
 	clothing_flags = THICKMATERIAL
 	flags_inv = HIDEGLOVES|HIDESHOES|HIDEJUMPSUIT
 	cold_protection = CHEST | GROIN | LEGS | FEET | ARMS | HANDS
-	min_cold_protection_temperature = SPACE_SUIT_MIN_TEMP_PROTECT
+	min_cold_protection_temperature = TRUE
 	heat_protection = CHEST|GROIN|LEGS|FEET|ARMS|HANDS
-	max_heat_protection_temperature = SPACE_SUIT_MAX_TEMP_PROTECT
+	max_heat_protection_temperature = TRUE
 	armor = list(MELEE = 80, BULLET = 80, LASER = 50, ENERGY = 50, BOMB = 100, BIO = 100, RAD = 100, FIRE = 90, ACID = 90)
 
 /obj/item/clothing/suit/armor/heavy
@@ -306,7 +306,7 @@
 	inhand_icon_state = "rus_coat"
 	body_parts_covered = CHEST|GROIN|LEGS|FEET|ARMS|HANDS
 	cold_protection = CHEST|GROIN|LEGS|FEET|ARMS|HANDS
-	min_cold_protection_temperature = SPACE_SUIT_MIN_TEMP_PROTECT
+	min_cold_protection_temperature = TRUE
 	armor = list(MELEE = 25, BULLET = 20, LASER = 20, ENERGY = 30, BOMB = 20, BIO = 50, RAD = 20, FIRE = -10, ACID = 50, WOUND = 10)
 
 /obj/item/clothing/suit/armor/elder_atmosian

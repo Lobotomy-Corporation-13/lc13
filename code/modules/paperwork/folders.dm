@@ -4,7 +4,7 @@
 	icon = 'icons/obj/bureaucracy.dmi'
 	icon_state = "folder"
 	w_class = WEIGHT_CLASS_SMALL
-	pressure_resistance = 2
+	// pressure_resistance = 2
 	resistance_flags = FLAMMABLE
 
 /obj/item/folder/suicide_act(mob/living/user)
@@ -37,7 +37,7 @@
 /obj/item/folder/attackby(obj/item/W, mob/user, params)
 	if(burn_paper_product_attackby_check(W, user))
 		return
-	if(istype(W, /obj/item/paper) || istype(W, /obj/item/photo) || istype(W, /obj/item/documents))
+	if(istype(W, /obj/item/paper) || istype(W, /obj/item/photo) || istype(W, /obj/item/documents) || istype(W, /obj/item/association_contract_paper))
 		if(!user.transferItemToLoc(W, src))
 			return
 		to_chat(user, "<span class='notice'>You put [W] into [src].</span>")

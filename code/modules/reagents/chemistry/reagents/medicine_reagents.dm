@@ -152,7 +152,7 @@
 
 /datum/reagent/medicine/cryoxadone/on_mob_life(mob/living/M)
 	var/power = -0.00003 * (M.bodytemperature ** 2) + 3
-	if(M.bodytemperature < T0C)
+	if(M.bodytemperature < 273.15)
 		M.adjustOxyLoss(-3 * power, 0)
 		M.adjustBruteLoss(-power, 0)
 		M.adjustFireLoss(-power, 0)
@@ -182,7 +182,7 @@
 	metabolization_rate = 1.5 * REAGENTS_METABOLISM
 
 /datum/reagent/medicine/clonexadone/on_mob_life(mob/living/M)
-	if(M.bodytemperature < T0C)
+	if(M.bodytemperature < 273.15)
 		M.adjustCloneLoss(0.00006 * (M.bodytemperature ** 2) - 6, 0)
 		REMOVE_TRAIT(M, TRAIT_DISFIGURED, TRAIT_GENERIC)
 		. = 1
@@ -475,8 +475,8 @@
 
 /datum/reagent/medicine/salbutamol/on_mob_life(mob/living/M)
 	M.adjustOxyLoss(-3*REM, 0)
-	if(M.losebreath >= 4)
-		M.losebreath -= 2
+	if(M.oxyloss)
+		M.losebreath -= (HUMAN_HIGH_OXYLOSS_RATE/TICKS_PER_BREATH)
 	..()
 	. = 1
 
@@ -523,7 +523,7 @@
 
 	if(prob(33))
 		M.adjustToxLoss(1*REM, 0)
-		M.losebreath++
+		M.losebreath += (HUMAN_MEDIUM_OXYLOSS_RATE/TICKS_PER_BREATH)
 		. = 1
 	return TRUE
 
@@ -648,8 +648,8 @@
 		M.adjustBruteLoss(-2*REM, 0)
 		M.adjustFireLoss(-2*REM, 0)
 		M.adjustOxyLoss(-5*REM, 0)
+		M.losebreath -= (HUMAN_HIGH_OXYLOSS_RATE/TICKS_PER_BREATH)
 		. = 1
-	M.losebreath = 0
 	if(prob(20))
 		M.Dizzy(5)
 		M.Jitter(5)
@@ -696,11 +696,9 @@
 		M.adjustBruteLoss(-0.5*REM, 0)
 		M.adjustFireLoss(-0.5*REM, 0)
 		M.adjustOxyLoss(-0.5*REM, 0)
-	if(M.losebreath >= 4)
-		M.losebreath -= 2
-	if(M.losebreath < 0)
-		M.losebreath = 0
-	M.adjustStaminaLoss(-0.5*REM, 0)
+	// Epinephrine losebreath offset is small, but it is unconditional (as long as you are not overdosing). Also it stops crit degradation.
+	if(!overdosed)
+		M.losebreath -= (HUMAN_MEDIUM_OXYLOSS_RATE/TICKS_PER_BREATH)
 	if(prob(20))
 		M.AdjustAllImmobility(-20)
 	..()
@@ -709,7 +707,6 @@
 	if(prob(33))
 		M.adjustStaminaLoss(2.5*REM, 0)
 		M.adjustToxLoss(1*REM, 0)
-		M.losebreath++
 		. = 1
 	..()
 
@@ -861,7 +858,7 @@
 	if(prob(33))
 		M.adjustStaminaLoss(2.5*REM, 0)
 		M.adjustToxLoss(1*REM, 0)
-		M.losebreath++
+		M.losebreath += (HUMAN_MEDIUM_OXYLOSS_RATE/TICKS_PER_BREATH)
 		. = 1
 	..()
 
@@ -887,8 +884,8 @@
 	color = "#A4D8D8"
 
 /datum/reagent/medicine/inaprovaline/on_mob_life(mob/living/M)
-	if(M.losebreath >= 5)
-		M.losebreath -= 5
+	// EXTREMELY good at stabilizing asphixiating people, but does not heal oxygen directly.
+	M.losebreath -= (HUMAN_HIGH_OXYLOSS_RATE/TICKS_PER_BREATH)
 	..()
 
 /datum/reagent/medicine/regen_jelly
@@ -1148,26 +1145,24 @@
 			M.stuttering = min(M.stuttering+1, 10)
 			M.Dizzy(5)
 			if(prob(50))
-				M.losebreath++
+				M.losebreath += (HUMAN_LOW_OXYLOSS_RATE/TICKS_PER_BREATH)
 		if(41 to 80)
-			M.adjustOxyLoss(0.1*REM, 0)
 			M.adjustStaminaLoss(0.1*REM, 0)
 			M.jitteriness = min(M.jitteriness+1, 20)
 			M.stuttering = min(M.stuttering+1, 20)
 			M.Dizzy(10)
 			if(prob(50))
-				M.losebreath++
+				M.losebreath += (HUMAN_MEDIUM_OXYLOSS_RATE/TICKS_PER_BREATH)
 			if(prob(20))
 				to_chat(M, "<span class='userdanger'>You have a sudden fit!</span>")
 				M.emote("moan")
 				M.Paralyze(20) // you should be in a bad spot at this point unless epipen has been used
 		if(81)
 			to_chat(M, "<span class='userdanger'>You feel too exhausted to continue!</span>") // at this point you will eventually die unless you get charcoal
-			M.adjustOxyLoss(0.1*REM, 0)
 			M.adjustStaminaLoss(0.1*REM, 0)
 		if(82 to INFINITY)
+			M.losebreath += (HUMAN_HIGH_OXYLOSS_RATE/TICKS_PER_BREATH) // As bad as just straight up getting the life choked out of you.
 			M.Sleeping(100)
-			M.adjustOxyLoss(1.5*REM, 0)
 			M.adjustStaminaLoss(1.5*REM, 0)
 	..()
 	return TRUE
@@ -1366,13 +1361,12 @@
 		return
 
 	if(prob(15))
-		M.losebreath += rand(2,4)
-		M.adjustOxyLoss(rand(1,3))
+		M.losebreath += (HUMAN_MEDIUM_OXYLOSS_RATE/TICKS_PER_BREATH)
 		if(prob(30))
 			to_chat(M, "<span class='danger'>You can feel your blood clotting up in your veins!</span>")
 		else if(prob(10))
 			to_chat(M, "<span class='userdanger'>You feel like your blood has stopped moving!</span>")
-			M.adjustOxyLoss(rand(3,4))
+			M.losebreath += (HUMAN_MAX_OXYLOSS_RATE/TICKS_PER_BREATH) // What the fuck do you mean your blood stopped moving man?
 
 		if(prob(50))
 			var/obj/item/organ/lungs/our_lungs = M.getorganslot(ORGAN_SLOT_LUNGS)

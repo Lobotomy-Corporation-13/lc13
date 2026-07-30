@@ -117,6 +117,7 @@
 		status_holder.death()
 	if(owner.stat != DEAD)
 		return
+	owner.client?.give_award(/datum/award/achievement/abno/cherry_die, owner)
 	for(var/mob/living/carbon/human/affected_human in GLOB.player_list)
 		if(affected_human.stat == DEAD)
 			continue

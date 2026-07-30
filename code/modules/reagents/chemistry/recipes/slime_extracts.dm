@@ -202,11 +202,11 @@
 	M.qdel_timer = addtimer(CALLBACK(src, PROC_REF(delete_extract), holder), 55, TIMER_STOPPABLE)
 
 /datum/chemical_reaction/slime/slimefreeze/proc/freeze(datum/reagents/holder)
-	if(holder?.my_atom)
+/* 	if(holder?.my_atom)
 		var/turf/open/T = get_turf(holder.my_atom)
 		if(istype(T))
 			var/datum/gas/gastype = /datum/gas/nitrogen
-			T.atmos_spawn_air("[initial(gastype.id)]=50;TEMP=2.7")
+			T.atmos_spawn_air("[initial(gastype.id)]=50;TEMP=2.7") */
 
 /datum/chemical_reaction/slime/slimefireproof
 	required_reagents = list(/datum/reagent/water = 1)
@@ -243,7 +243,7 @@
 	if(holder?.my_atom)
 		var/turf/open/T = get_turf(holder.my_atom)
 		if(istype(T))
-			T.atmos_spawn_air("plasma=50;TEMP=1000")
+			new /obj/effect/turf_fire(T)
 
 
 /datum/chemical_reaction/slime/slimesmoke
@@ -470,7 +470,8 @@
 	required_other = TRUE
 
 /datum/chemical_reaction/slime/slime_territory/on_reaction(datum/reagents/holder)
-	new /obj/item/areaeditor/blueprints/slime(get_turf(holder.my_atom))
+	new /obj/item/slimepotion/genderchange(get_turf(holder.my_atom))
+	// new /obj/item/areaeditor/blueprints/slime(get_turf(holder.my_atom))
 	..()
 
 //Sepia

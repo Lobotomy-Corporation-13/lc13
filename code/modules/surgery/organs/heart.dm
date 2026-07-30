@@ -29,7 +29,7 @@
 		icon_state = "[icon_base]-off"
 
 /obj/item/organ/heart/Remove(mob/living/carbon/M, special = 0)
-	..()
+	. = ..()
 	if(!special)
 		addtimer(CALLBACK(src, PROC_REF(stop_if_unowned)), 120)
 
@@ -38,7 +38,7 @@
 		Stop()
 
 /obj/item/organ/heart/attack_self(mob/user)
-	..()
+	. = ..()
 	if(!beating)
 		user.visible_message("<span class='notice'>[user] squeezes [src] to \
 			make it beat again!</span>","<span class='notice'>You squeeze [src] to make it beat again!</span>")
@@ -61,7 +61,7 @@
 	update_icon()
 
 /obj/item/organ/heart/on_life()
-	..()
+	. = ..()
 
 	// If the owner doesn't need a heart, we don't need to do anything with it.
 	if(!owner.needs_heart())
@@ -140,12 +140,12 @@
 			last_pump = world.time //lets be extra fair *sigh*
 
 /obj/item/organ/heart/cursed/Insert(mob/living/carbon/M, special = 0)
-	..()
+	. = ..()
 	if(owner)
 		to_chat(owner, "<span class='userdanger'>Your heart has been replaced with a cursed one, you have to pump this one manually otherwise you'll die!</span>")
 
 /obj/item/organ/heart/cursed/Remove(mob/living/carbon/M, special = 0)
-	..()
+	. = ..()
 	M.remove_client_colour(/datum/client_colour/cursed_heart_blood)
 
 /datum/action/item_action/organ_action/cursed_heart
@@ -219,14 +219,16 @@
 		return
 	if(!COOLDOWN_FINISHED(src, severe_cooldown)) //So we cant just spam emp to kill people.
 		owner.Dizzy(10)
-		owner.losebreath += 10
+		owner.adjustStaminaLoss(60) // Completely blasts someone's stamina, your heart got EMP'd for fucks sake
+		owner.losebreath += HUMAN_MAX_OXYLOSS_RATE
 		COOLDOWN_START(src, severe_cooldown, 20 SECONDS)
-	if(prob(emp_vulnerability/severity)) //Chance of permanent effects
-		organ_flags |= ORGAN_SYNTHETIC_EMP //Starts organ faliure - gonna need replacing soon.
-		Stop()
-		owner.visible_message("<span class='danger'>[owner] clutches at [owner.p_their()] chest as if [owner.p_their()] heart is stopping!</span>", \
-						"<span class='userdanger'>You feel a terrible pain in your chest, as if your heart has stopped!</span>")
-		addtimer(CALLBACK(src, PROC_REF(Restart)), 10 SECONDS)
+		if(prob(emp_vulnerability/severity)) //Chance of permanent effects
+			organ_flags |= ORGAN_SYNTHETIC_EMP //Starts organ faliure - gonna need replacing soon.
+			Stop()
+			owner.visible_message(span_danger("[owner] clutches at [owner.p_their()] chest as if [owner.p_their()] heart is stopping!"), span_danger("You feel a terrible pain in your chest, as if your heart has stopped!"))
+			addtimer(CALLBACK(src, PROC_REF(Restart)), 10 SECONDS)
+		else
+			to_chat(owner, span_danger("You feel your heart spasming uncontrollably for a moment!"))
 
 /obj/item/organ/heart/cybernetic/on_life()
 	. = ..()

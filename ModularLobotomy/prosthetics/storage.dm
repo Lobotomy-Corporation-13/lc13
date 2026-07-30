@@ -8,7 +8,7 @@
 /obj/item/organ/cyberimp/arm/briefcase/Extend(obj/item/item)
 	..()
 	//little bit of stam loss
-	owner.adjustStaminaLoss(owner.maxHealth*0.5, TRUE, TRUE)
+	owner.adjustStaminaLoss(owner.maxHealth*0.3, TRUE, TRUE)
 
 /obj/item/organ/cyberimp/arm/briefcase/l
 	zone = BODY_ZONE_L_ARM

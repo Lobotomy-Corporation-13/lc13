@@ -16,8 +16,9 @@
 	timerid = QDEL_IN(src, duration)
 
 /obj/effect/temp_visual/Destroy()
-	. = ..()
+	walk(src,0)
 	deltimer(timerid)
+	return ..()
 
 /obj/effect/temp_visual/singularity_act()
 	return
@@ -31,6 +32,6 @@
 /obj/effect/temp_visual/dir_setting/Initialize(mapload, set_dir)
 	if(set_dir)
 		setDir(set_dir)
-	. = ..()
+	return ..()
 
 

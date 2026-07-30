@@ -153,7 +153,7 @@ structure_check() searches for nearby cultist structures required for the invoca
 			if(invocation)
 				L.say(invocation, language = /datum/language/common, ignore_spam = TRUE, forced = "cult invocation")
 			if(invoke_damage)
-				L.apply_damage(invoke_damage, BRUTE)
+				L.deal_damage(invoke_damage, BRUTE, flags = (DAMAGE_FORCED))
 				to_chat(L, "<span class='cult italic'>[src] saps your strength!</span>")
 		else if(istype(M, /obj/item/toy/plush/narplush))
 			var/obj/item/toy/plush/narplush/P = M
@@ -633,7 +633,7 @@ structure_check() searches for nearby cultist structures required for the invoca
 	barrier.Toggle()
 	if(iscarbon(user))
 		var/mob/living/carbon/C = user
-		C.apply_damage(2, BRUTE, pick(BODY_ZONE_L_ARM, BODY_ZONE_R_ARM))
+		C.deal_damage(2, BRUTE, flags = (DAMAGE_FORCED), def_zone = pick(BODY_ZONE_L_ARM, BODY_ZONE_R_ARM))
 
 //Rite of Joined Souls: Summons a single cultist.
 /obj/effect/rune/summon
@@ -735,7 +735,7 @@ structure_check() searches for nearby cultist structures required for the invoca
 	if(QDELETED(src))
 		return
 	do_area_burn(T, 1.5)
-	new /obj/effect/hotspot(T)
+	new /obj/effect/turf_fire(T)
 	qdel(src)
 
 /obj/effect/rune/blood_boil/proc/do_area_burn(turf/T, multiplier)
@@ -819,7 +819,7 @@ structure_check() searches for nearby cultist structures required for the invoca
 		while(!QDELETED(src) && !QDELETED(user) && !QDELETED(new_human) && (user in T))
 			if(user.stat != CONSCIOUS || HAS_TRAIT(new_human, TRAIT_CRITICAL_CONDITION))
 				break
-			user.apply_damage(0.1, BRUTE)
+			user.deal_damage(0.1, BRUTE, flags = (DAMAGE_FORCED))
 			sleep(1)
 
 		qdel(N)
@@ -952,9 +952,9 @@ structure_check() searches for nearby cultist structures required for the invoca
 		switch(outcome)
 			if(1 to 10)
 				var/datum/round_event_control/disease_outbreak/D = new()
-				var/datum/round_event_control/mice_migration/M = new()
+				// var/datum/round_event_control/mice_migration/M = new()
 				D.runEvent()
-				M.runEvent()
+				// M.runEvent()
 			if(11 to 20)
 				var/datum/round_event_control/radiation_storm/RS = new()
 				RS.runEvent()

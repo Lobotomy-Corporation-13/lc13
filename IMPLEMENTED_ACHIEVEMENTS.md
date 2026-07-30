@@ -8,7 +8,7 @@ This file lists all achievements implemented in this session, with space to add 
 **Title:** the Legend of the Silksong
 
 ### Forge 50 weapons as a workshop attendant
-**File:** `ModularTegustation/tegu_items/workshop/_templates.dm`
+**File:** `ModularLobotomy/workshop/_templates.dm`
 **Name:** Respectable Workshop, Workshop Meister
 **Title:** a Workshop Meister
 
@@ -18,12 +18,12 @@ This file lists all achievements implemented in this session, with space to add 
 **Title:** a Plushie Chef
 
 ### Refine 100 PE boxes
-**File:** `ModularTegustation/tegu_items/refinery/refinery.dm`  
+**File:** `ModularLobotomy/refinery/refinery.dm`  
 **Name:** Don't forget to do your dailies
 **Title:** Refina-Junkie
 
 ### Max out a workshop weapon
-**File:** `ModularTegustation/tegu_items/workshop/_templates.dm`  
+**File:** `ModularLobotomy/workshop/_templates.dm`  
 **Name:** Weapon of mass Fixer-ation, S-Class Workshop Meister
 **Title:** an S-Class Workshop Meister
 
@@ -49,7 +49,7 @@ This file lists all achievements implemented in this session, with space to add 
 **Title:** being In Sheep's Clothing
 
 ### Use Fell Bullet's shotgun interaction
-**File:** `ModularTegustation/ego_weapons/ranged/waw.dm`  
+**File:** `ModularLobotomy/ego_weapons/ranged/waw.dm`  
 **Name:** "Bullet drenched with blood of ally.", FireIShallFire
 **Title:** Memory Burner
 
@@ -214,6 +214,6 @@ This file lists all achievements implemented in this session, with space to add 
 **Title:** being Egoism Incarnate
 
 ### Clerk using non-ZAYIN/TETH weapon
-**File:** `ModularTegustation/ego_weapons/_ego_weapon.dm`  
+**File:** `ModularLobotomy/ego_weapons/_ego_weapon.dm`  
 **Name:** Breaking the limits
 **Title:** a Limit Breaker

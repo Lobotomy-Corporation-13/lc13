@@ -59,8 +59,6 @@
 				left_part = softwareEncryptionKeys()
 			if("translator")
 				left_part = softwareTranslator()
-			if("atmosensor")
-				left_part = softwareAtmo()
 			if("securityhud")
 				left_part = facialRecognition()
 			if("medicalhud")
@@ -525,31 +523,7 @@
 			<a href='byond://?src=[REF(src)];software=hostscan;sub=0;toggle2=1'>Toggle Verbosity</a><br>
 			"}
 	return dat
-// Atmospheric Scanner
-/mob/living/silicon/pai/proc/softwareAtmo()
-	var/dat = "<h3>Atmospheric Sensor</h4>"
 
-	var/turf/T = get_turf(loc)
-	if (isnull(T))
-		dat += "Unable to obtain a reading.<br>"
-	else
-		var/datum/gas_mixture/environment = T.return_air()
-		var/list/env_gases = environment.gases
-
-		var/pressure = environment.return_pressure()
-		var/total_moles = environment.total_moles()
-
-		dat += "Air Pressure: [round(pressure,0.1)] kPa<br>"
-
-		if (total_moles)
-			for(var/id in env_gases)
-				var/gas_level = env_gases[id][MOLES]/total_moles
-				if(gas_level > 0.01)
-					dat += "[env_gases[id][GAS_META][META_GAS_NAME]]: [round(gas_level*100)]%<br>"
-		dat += "Temperature: [round(environment.temperature-T0C)]&deg;C<br>"
-	dat += "<a href='byond://?src=[REF(src)];software=atmosensor;sub=0'>Refresh Reading</a> <br>"
-	dat += "<br>"
-	return dat
 // Door Jack
 /mob/living/silicon/pai/proc/softwareDoor()
 	var/dat = "<h3>Airlock Jack</h3>"

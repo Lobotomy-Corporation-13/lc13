@@ -204,38 +204,38 @@
 
 /obj/machinery/button/door/incinerator_vent_toxmix
 	name = "combustion chamber vent control"
-	id = INCINERATOR_TOXMIX_VENT
-	req_access = list(ACCESS_TOXINS)
+	// id = INCINERATOR_TOXMIX_VENT
+	// req_access = list(ACCESS_TOXINS)
 
 /obj/machinery/button/door/incinerator_vent_atmos_main
 	name = "turbine vent control"
-	id = INCINERATOR_ATMOS_MAINVENT
-	req_one_access = list(ACCESS_ATMOSPHERICS, ACCESS_MAINT_TUNNELS)
+	// id = INCINERATOR_ATMOS_MAINVENT
+	// req_one_access = list(ACCESS_ATMOSPHERICS, ACCESS_MAINT_TUNNELS)
 
 /obj/machinery/button/door/incinerator_vent_atmos_aux
 	name = "combustion chamber vent control"
-	id = INCINERATOR_ATMOS_AUXVENT
-	req_one_access = list(ACCESS_ATMOSPHERICS, ACCESS_MAINT_TUNNELS)
+	// id = INCINERATOR_ATMOS_AUXVENT
+	// req_one_access = list(ACCESS_ATMOSPHERICS, ACCESS_MAINT_TUNNELS)
 
 /obj/machinery/button/door/atmos_test_room_mainvent_1
 	name = "test chamber 1 vent control"
-	id = TEST_ROOM_ATMOS_MAINVENT_1
-	req_one_access = list(ACCESS_ATMOSPHERICS)
+	// id = TEST_ROOM_ATMOS_MAINVENT_1
+	// req_one_access = list(ACCESS_ATMOSPHERICS)
 
 /obj/machinery/button/door/atmos_test_room_mainvent_2
 	name = "test chamber 2 vent control"
-	id = TEST_ROOM_ATMOS_MAINVENT_2
-	req_one_access = list(ACCESS_ATMOSPHERICS)
+	// id = TEST_ROOM_ATMOS_MAINVENT_2
+	// req_one_access = list(ACCESS_ATMOSPHERICS)
 
 /obj/machinery/button/door/incinerator_vent_syndicatelava_main
 	name = "turbine vent control"
-	id = INCINERATOR_SYNDICATELAVA_MAINVENT
-	req_access = list(ACCESS_SYNDICATE)
+	// id = INCINERATOR_SYNDICATELAVA_MAINVENT
+	// req_access = list(ACCESS_SYNDICATE)
 
 /obj/machinery/button/door/incinerator_vent_syndicatelava_aux
 	name = "combustion chamber vent control"
-	id = INCINERATOR_SYNDICATELAVA_AUXVENT
-	req_access = list(ACCESS_SYNDICATE)
+	// id = INCINERATOR_SYNDICATELAVA_AUXVENT
+	// req_access = list(ACCESS_SYNDICATE)
 
 /obj/machinery/button/massdriver
 	name = "mass driver button"
@@ -262,13 +262,13 @@
 	desc = "A remote control switch for the combustion chamber's igniter."
 
 /obj/machinery/button/ignition/incinerator/toxmix
-	id = INCINERATOR_TOXMIX_IGNITER
+	// id = INCINERATOR_TOXMIX_IGNITER
 
 /obj/machinery/button/ignition/incinerator/atmos
-	id = INCINERATOR_ATMOS_IGNITER
+	// id = INCINERATOR_ATMOS_IGNITER
 
 /obj/machinery/button/ignition/incinerator/syndicatelava
-	id = INCINERATOR_SYNDICATELAVA_IGNITER
+	// id = INCINERATOR_SYNDICATELAVA_IGNITER
 
 /obj/machinery/button/flasher
 	name = "flasher button"

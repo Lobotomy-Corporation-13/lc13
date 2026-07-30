@@ -105,7 +105,7 @@
 	if(isplasmaman(owner.current)) //Plasmamen equipment
 		InfilFit.uniform = /obj/item/clothing/under/plasmaman
 		InfilFit.gloves = /obj/item/clothing/gloves/color/plasmaman/black
-		InfilFit.l_pocket = /obj/item/tank/internals/plasmaman/belt/full
+		InfilFit.l_pocket = /obj/item/tank/internals/plasmaman/belt
 		InfilFit.backpack_contents = list(/obj/item/storage/box/survival=1, /obj/item/tank/jetpack/oxygen/harness=1, \
 		/obj/item/clothing/head/helmet/space/plasmaman=1)
 

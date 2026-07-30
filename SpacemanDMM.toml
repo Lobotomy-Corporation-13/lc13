@@ -3,6 +3,9 @@ environment = "lobotomy-corp13.dme"
 [langserver]
 dreamchecker = true
 
+[diagnostics]
+improper_index = "off"
+
 [code_standards]
 disallow_relative_type_definitions = true
 disallow_relative_proc_definitions = true

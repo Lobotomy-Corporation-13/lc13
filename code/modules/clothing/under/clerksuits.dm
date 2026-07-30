@@ -149,3 +149,8 @@
 	name = "j-corp officer uniform"
 	desc = "A business suit. Used by J-corp staff."
 	icon_state = "agent" //Placeholder until a sprite is made
+
+/obj/item/clothing/under/suit/lobotomy/pierre
+	name = "gourmand's coat"
+	desc = "A coat made for those with an acquired taste"
+	icon_state = "pierre"
