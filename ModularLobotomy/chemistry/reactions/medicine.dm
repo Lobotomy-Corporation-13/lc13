@@ -45,8 +45,3 @@
 	results = list(/datum/reagent/medicine/c2/synthflesh = 3)
 	required_reagents = list(/datum/reagent/antitoxin = 1, /datum/reagent/abnormality/healing_gel = 1,
 		/datum/reagent/abnormality/burn_salve = 1)
-
-
-
-
-
