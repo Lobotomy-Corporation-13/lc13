@@ -144,6 +144,12 @@
 	},
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirts)
+"yj" = (
+/obj/structure/wave_barrier{
+	controller_id = "storage"
+	},
+/turf/closed/wall/mineral/plastitanium,
+/area/city/outskirts)
 "zC" = (
 /obj/effect/decal/cleanable/blood/gibs{
 	icon_state = "xfloor3"
@@ -331,6 +337,15 @@
 "Xn" = (
 /turf/closed/wall/mineral/plastitanium,
 /area/city/outskirts)
+"Yf" = (
+/obj/effect/decal/cleanable/blood/gibs{
+	icon_state = "xfloor1"
+	},
+/obj/structure/wave_barrier{
+	controller_id = "storage"
+	},
+/turf/closed/wall/mineral/plastitanium,
+/area/city/outskirts)
 "Yn" = (
 /obj/structure/table/wood,
 /turf/open/floor/carpet/green,
@@ -507,14 +522,14 @@ Xn
 "}
 (13,1,1) = {"
 Xn
-Xn
-jZ
+yj
+Yf
 Dm
 Dm
 Dm
 Dm
 Dm
-Xn
-Xn
+yj
+yj
 Xn
 "}

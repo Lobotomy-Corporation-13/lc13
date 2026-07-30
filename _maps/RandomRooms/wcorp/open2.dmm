@@ -66,6 +66,12 @@
 "Xn" = (
 /turf/closed/wall/mineral/plastitanium,
 /area/city/outskirts)
+"Zg" = (
+/obj/structure/wave_barrier{
+	controller_id = "open2"
+	},
+/turf/closed/wall/mineral/plastitanium,
+/area/city/outskirts)
 "ZN" = (
 /turf/open/floor/carpet/blue,
 /area/city/outskirts)
@@ -228,14 +234,14 @@ Xn
 "}
 (13,1,1) = {"
 Xn
-Xn
-Xn
+Zg
+Zg
 QS
 QS
 QS
 QS
 QS
 Nc
-Xn
+Zg
 Xn
 "}

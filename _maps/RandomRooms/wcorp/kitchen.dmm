@@ -468,6 +468,12 @@
 	},
 /turf/open/floor/carpet/royalblack,
 /area/city/outskirts)
+"Ib" = (
+/obj/structure/wave_barrier{
+	controller_id = "kitchen"
+	},
+/turf/closed/wall/r_wall/syndicate,
+/area/city/outskirts)
 "Ij" = (
 /obj/effect/decal/cleanable/glass,
 /obj/effect/decal/cleanable/glass,
@@ -897,7 +903,7 @@ iU
 "}
 (13,1,1) = {"
 iU
-iU
+Ib
 vh
 AU
 AU
@@ -905,6 +911,6 @@ jG
 Ut
 Ut
 te
-iU
+Ib
 iU
 "}

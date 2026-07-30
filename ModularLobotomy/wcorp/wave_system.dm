@@ -3,7 +3,9 @@
 
 GLOBAL_LIST_EMPTY(wave_controllers)
 GLOBAL_LIST_EMPTY(wave_mob_sources) //Assoc list: mob -> spawner source
-GLOBAL_VAR_INIT(wave_controller_count, 0) //Tracks how many controllers have been created for scaling
+GLOBAL_VAR_INIT(wave_cars_activated, 0) //How many cars players have triggered so far - decides car numbering
+GLOBAL_VAR_INIT(wave_total_cars, 0) //How many normal cars exist this round, counted from the map's room spawners
+GLOBAL_VAR_INIT(wave_cars_loaded, 0) //How many normal cars actually registered a controller - verification only
 GLOBAL_VAR_INIT(wave_enemy_faction, "") //Which faction enemies come from this round
 
 /// Spawn delay before mob appears (in deciseconds)
@@ -14,6 +16,30 @@ GLOBAL_VAR_INIT(wave_enemy_faction, "") //Which faction enemies come from this r
 #define WAVE_MOBS_PER_PLAYER 1.75
 /// Minimum mobs for a wave (even with few players)
 #define WAVE_MIN_MOBS 8
+/// controller_id of the boss car, hardcoded into the main map rather than a random room
+#define WAVE_BOSS_CONTROLLER_ID "final_boss"
+/// Difficulty tier cutoffs, as a fraction of the way through the train (see GetDifficultyTier)
+#define WAVE_TIER2_CUTOFF 0.34
+#define WAVE_TIER3_CUTOFF 0.78
+#define WAVE_TIER4_CUTOFF 0.89
+
+/*
+ * Blurb screen positions.
+ *
+ * Every blurb is a separate overlay - show_blurb() never clears an existing one - so two
+ * blurbs sharing a screen_loc render on top of each other. Blurbs are 64px (2 tiles) tall,
+ * so these lanes have to stay at least 2 apart or they will clip.
+ *
+ * One lane per scope, because these can be on screen at the same time: clearing a car and
+ * walking straight into the next one puts the "CAR N CLEARED" line, the "CAR N+1" banner
+ * and that car's first "WAVE 1/X" line up together.
+ */
+/// Car finished - "CAR N CLEARED", "BOSS DEFEATED"
+#define WAVE_BLURB_CAR_STATUS "CENTER,BOTTOM+6"
+/// Car entered - "CAR N", "FINAL CAR - BOSS"
+#define WAVE_BLURB_CAR_ENTRY "CENTER,BOTTOM+4"
+/// Wave lines - "WAVE N/X - Y HOSTILES", "WAVE N CLEARED", "FINAL WAVE"
+#define WAVE_BLURB_WAVE "CENTER,BOTTOM+2"
 
 /*
  * Wave Controller Datum
@@ -24,17 +50,26 @@ GLOBAL_VAR_INIT(wave_enemy_faction, "") //Which faction enemies come from this r
  * 1. Population - more players = more mobs (base 1.0x + 0.3x per player)
  * 2. Wave count - reserves split across waves (1 wave = 1.0x, 2 waves = 0.6x each, 3 waves = 0.4x each)
  *
- * Enemy difficulty increases by car number (harder mobs spawn in later cars):
- * - Cars 1-3: Easy enemies, 1 wave
- * - Cars 4-7: Mix of easy/medium enemies, 2 waves
- * - Cars 8-9: Medium/hard enemies, 3 waves
- * - Car 10: Boss only
+ * Enemy difficulty increases with how deep into the train the car is, expressed as a
+ * tier from GetDifficultyTier() rather than an absolute car number, so the curve
+ * re-spreads automatically if the map gains or loses cars:
+ * - Tier 1 (first third): Easy enemies, 1 wave
+ * - Tier 2 (middle): Mix of easy/medium enemies, 2 waves
+ * - Tier 3 (second to last): Medium/hard enemies, 3 waves
+ * - Tier 4 (last car and boss car): Hardest enemies, 3 waves
+ *
+ * Car numbers are assigned when players trigger a car, NOT when the car loads - the
+ * random rooms finish loading in an arbitrary order, so creation order says nothing
+ * about where a car sits in the train. Barriers force strictly linear progress, so the
+ * order players trigger cars in is the order the cars are physically arranged.
  */
 /datum/wave_controller
 	/// Unique identifier to link landmarks together
 	var/id
-	/// Which controller number this is (1-10), used for scaling
-	var/controller_number = 1
+	/// Which car in the train this is (1 = first car players trigger). 0 until activated.
+	var/controller_number = 0
+	/// Whether this is the boss car, which always ends the round regardless of car number
+	var/is_boss_car = FALSE
 	/// List of spawn landmarks associated with this controller
 	var/list/wave_spawners = list()
 	/// List of barriers to unlock when complete (supports multiple barriers per controller)
@@ -59,8 +94,10 @@ GLOBAL_VAR_INIT(wave_enemy_faction, "") //Which faction enemies come from this r
 /datum/wave_controller/New(new_id)
 	. = ..()
 	id = new_id
-	GLOB.wave_controller_count++
-	controller_number = GLOB.wave_controller_count
+	is_boss_car = (id == WAVE_BOSS_CONTROLLER_ID)
+	//Counted for verification against GLOB.wave_total_cars - not used for any game logic
+	if(!is_boss_car)
+		GLOB.wave_cars_loaded++
 	GLOB.wave_controllers += src
 
 /datum/wave_controller/Destroy()
@@ -68,24 +105,31 @@ GLOBAL_VAR_INIT(wave_enemy_faction, "") //Which faction enemies come from this r
 	UnregisterSignal(SSdcs, COMSIG_GLOB_MOB_DEATH)
 	return ..()
 
-/// Returns the number of waves based on car number
-/// Cars 1-3: 1 wave, Cars 4-7: 2 waves, Cars 8-9: 3 waves, Car 10 (boss): 3 waves (last is boss)
+/// Returns the difficulty tier (1 = easiest, 4 = hardest) from how deep into the train this car is
+/// Expressed as a fraction of the total car count so the curve re-spreads by itself when
+/// cars are added to or removed from the map - nothing here should hardcode a car count
+/datum/wave_controller/proc/GetDifficultyTier()
+	if(is_boss_car)
+		return 4
+	var/progress = controller_number / max(GLOB.wave_total_cars, 1)
+	if(progress <= WAVE_TIER2_CUTOFF)
+		return 1
+	if(progress <= WAVE_TIER3_CUTOFF)
+		return 2
+	if(progress <= WAVE_TIER4_CUTOFF)
+		return 3
+	return 4
+
+/// Returns the number of waves for this car
+/// The wave thresholds line up exactly with the difficulty tiers, so tier 4 (last car and
+/// the boss car) caps at 3 waves - on the boss car that means 2 normal waves then the boss
 /datum/wave_controller/proc/GetWaveCount()
-	switch(controller_number)
-		if(1 to 3)
-			return 1
-		if(4 to 7)
-			return 2
-		if(8 to 9)
-			return 3
-		if(10)
-			return 3 //Boss car - 2 normal waves then boss
-	return 1
+	return min(GetDifficultyTier(), 3)
 
 /// Returns the target total mobs for a wave based on player count
 /// 20 players = 35 mobs, scales linearly (1.75 mobs per player, minimum 8)
 /datum/wave_controller/proc/GetTargetMobCount()
-	if(controller_number >= 10)
+	if(is_boss_car)
 		return WAVE_MIN_MOBS //Boss car uses minimum
 
 	//Count living W-Corp players
@@ -115,14 +159,27 @@ GLOBAL_VAR_INIT(wave_enemy_faction, "") //Which faction enemies come from this r
 	activated = TRUE
 	RegisterSignal(SSdcs, COMSIG_GLOB_MOB_DEATH, PROC_REF(OnMobDeath))
 
-	//Set wave count based on car number
+	//Claim our place in the train. Rooms load in a random order, so creation order is
+	//meaningless - but barriers force players through the cars one at a time, so the
+	//order cars get triggered in IS the order they are physically arranged.
+	if(!controller_number)
+		controller_number = ++GLOB.wave_cars_activated
+	log_game("W-Corp wave: car [id] activated as car [controller_number]/[GLOB.wave_total_cars] (tier [GetDifficultyTier()][is_boss_car ? ", boss" : ""])")
+
+	//Start the mission clock on the first car players trigger - time spent preparing in
+	//the staging area shouldn't count against the deadline. Only the first call arms it.
+	var/datum/game_mode/combat/combat_mode = SSticker.mode
+	if(istype(combat_mode))
+		combat_mode.StartWcorpTimer()
+
+	//Set wave count based on difficulty tier
 	max_waves = GetWaveCount()
 
 	//Announce car number with blurb
 	var/car_name = "CAR [controller_number]"
-	if(controller_number == 10)
+	if(is_boss_car)
 		car_name = "FINAL CAR - BOSS"
-	INVOKE_ASYNC(GLOBAL_PROC, GLOBAL_PROC_REF(show_global_blurb), 3 SECONDS, car_name, 1 SECONDS, 5, "#1b7ced", "black", "left", "CENTER,BOTTOM+4")
+	INVOKE_ASYNC(GLOBAL_PROC, GLOBAL_PROC_REF(show_global_blurb), 3 SECONDS, car_name, 1 SECONDS, 5, "#1b7ced", "black", "left", WAVE_BLURB_CAR_ENTRY)
 
 	//Small delay before first wave
 	sleep(1 SECONDS)
@@ -136,7 +193,7 @@ GLOBAL_VAR_INIT(wave_enemy_faction, "") //Which faction enemies come from this r
 		return
 
 	//Boss car final wave - spawn boss instead of normal mobs
-	if(controller_number == 10 && current_wave == max_waves)
+	if(is_boss_car && current_wave == max_waves)
 		SpawnBossWave()
 		return
 
@@ -151,7 +208,7 @@ GLOBAL_VAR_INIT(wave_enemy_faction, "") //Which faction enemies come from this r
 
 	//Announce wave start with blurb
 	var/wave_text = "WAVE [current_wave]/[max_waves] - [wave_reserve_remaining] HOSTILES"
-	INVOKE_ASYNC(GLOBAL_PROC, GLOBAL_PROC_REF(show_global_blurb), 2 SECONDS, wave_text, 0.5 SECONDS, 5, "#1b7ced", "black", "left", "CENTER,BOTTOM+2")
+	INVOKE_ASYNC(GLOBAL_PROC, GLOBAL_PROC_REF(show_global_blurb), 2 SECONDS, wave_text, 0.5 SECONDS, 5, "#1b7ced", "black", "left", WAVE_BLURB_WAVE)
 
 	//Initial spawn from all spawners for this wave (pulls from shared pool)
 	for(var/obj/effect/landmark/wave_spawn/spawner in wave_spawners)
@@ -168,7 +225,7 @@ GLOBAL_VAR_INIT(wave_enemy_faction, "") //Which faction enemies come from this r
 
 	//Announce boss wave
 	var/wave_text = "FINAL WAVE - BOSS INCOMING"
-	INVOKE_ASYNC(GLOBAL_PROC, GLOBAL_PROC_REF(show_global_blurb), 3 SECONDS, wave_text, 1 SECONDS, 5, "#ff0000", "black", "left", "CENTER,BOTTOM+2")
+	INVOKE_ASYNC(GLOBAL_PROC, GLOBAL_PROC_REF(show_global_blurb), 3 SECONDS, wave_text, 1 SECONDS, 5, "#ff0000", "black", "left", WAVE_BLURB_WAVE)
 
 	//Pick a random spawner location for the boss
 	var/list/valid_spawners = list()
@@ -219,7 +276,7 @@ GLOBAL_VAR_INIT(wave_enemy_faction, "") //Which faction enemies come from this r
 	var/clear_text = "WAVE [current_wave] CLEARED"
 	if(current_wave < max_waves)
 		clear_text += " - NEXT WAVE INCOMING"
-	INVOKE_ASYNC(GLOBAL_PROC, GLOBAL_PROC_REF(show_global_blurb), 3 SECONDS, clear_text, 0.5 SECONDS, 5, "#00ff00", "black", "left", "CENTER,BOTTOM+2")
+	INVOKE_ASYNC(GLOBAL_PROC, GLOBAL_PROC_REF(show_global_blurb), 3 SECONDS, clear_text, 0.5 SECONDS, 5, "#00ff00", "black", "left", WAVE_BLURB_WAVE)
 
 	//Heal all living humans for 50% of missing HP/SP
 	HealAllPlayers()
@@ -263,14 +320,14 @@ GLOBAL_VAR_INIT(wave_enemy_faction, "") //Which faction enemies come from this r
 
 	//Announce completion with blurb
 	var/complete_text
-	if(controller_number == 10)
+	if(is_boss_car)
 		complete_text = "BOSS DEFEATED - VICTORY!"
-		INVOKE_ASYNC(GLOBAL_PROC, GLOBAL_PROC_REF(show_global_blurb), 5 SECONDS, complete_text, 1 SECONDS, 5, "#ffd700", "black", "left", "CENTER,BOTTOM+2")
+		INVOKE_ASYNC(GLOBAL_PROC, GLOBAL_PROC_REF(show_global_blurb), 5 SECONDS, complete_text, 1 SECONDS, 5, "#ffd700", "black", "left", WAVE_BLURB_CAR_STATUS)
 		//End the round in victory after a short delay
 		addtimer(CALLBACK(src, PROC_REF(EndRoundVictory)), 10 SECONDS)
 	else
 		complete_text = "CAR [controller_number] CLEARED - PROCEED"
-		INVOKE_ASYNC(GLOBAL_PROC, GLOBAL_PROC_REF(show_global_blurb), 3 SECONDS, complete_text, 0.5 SECONDS, 5, "#00ff00", "black", "left", "CENTER,BOTTOM+2")
+		INVOKE_ASYNC(GLOBAL_PROC, GLOBAL_PROC_REF(show_global_blurb), 3 SECONDS, complete_text, 0.5 SECONDS, 5, "#00ff00", "black", "left", WAVE_BLURB_CAR_STATUS)
 
 	//Unlock all barriers
 	for(var/obj/structure/wave_barrier/B in barriers)
@@ -428,8 +485,8 @@ GLOBAL_VAR_INIT(wave_enemy_faction, "") //Which faction enemies come from this r
 			break
 		SpawnOneMob(wave_controller)
 
-/// Gets the appropriate mob type based on controller number and faction
-/obj/effect/landmark/wave_spawn/proc/GetSpawnType(controller_number)
+/// Gets the appropriate mob type based on difficulty tier and faction
+/obj/effect/landmark/wave_spawn/proc/GetSpawnType(tier)
 	//If we have manual spawn_types set, use those
 	if(LAZYLEN(spawn_types) && !use_dynamic_spawning)
 		return pick(spawn_types)
@@ -441,23 +498,23 @@ GLOBAL_VAR_INIT(wave_enemy_faction, "") //Which faction enemies come from this r
 		faction = pick("lovetown", "peccatulum")
 		GLOB.wave_enemy_faction = faction
 
-	//Select mob based on controller number (difficulty scaling)
+	//Select mob based on difficulty tier
 	switch(faction)
 		if("lovetown")
-			return GetLovetownMob(controller_number)
+			return GetLovetownMob(tier)
 		if("gcorp")
-			return GetGcorpMob(controller_number)
+			return GetGcorpMob(tier)
 		if("peccatulum")
-			return GetPeccatulumMob(controller_number)
+			return GetPeccatulumMob(tier)
 
 	//Fallback
 	return /mob/living/simple_animal/hostile/ordeal/steel_dawn
 
-/// Lovetown mob selection based on difficulty
-/obj/effect/landmark/wave_spawn/proc/GetLovetownMob(controller_number)
-	switch(controller_number)
-		//Cars 1-3: Easy - Suicidals, Slashers, Stabbers
-		if(1 to 3)
+/// Lovetown mob selection based on difficulty tier
+/obj/effect/landmark/wave_spawn/proc/GetLovetownMob(tier)
+	switch(tier)
+		//Tier 1: Easy - Suicidals, Slashers, Stabbers
+		if(1)
 			switch(rand(1, 100))
 				if(1 to 50)
 					return /mob/living/simple_animal/hostile/lovetown/suicidal
@@ -466,8 +523,8 @@ GLOBAL_VAR_INIT(wave_enemy_faction, "") //Which faction enemies come from this r
 				else
 					return /mob/living/simple_animal/hostile/lovetown/stabber
 
-		//Cars 4-7: Medium - Less suicidals, add Slammers
-		if(4 to 7)
+		//Tier 2: Medium - Less suicidals, add Slammers
+		if(2)
 			switch(rand(1, 100))
 				if(1 to 20)
 					return /mob/living/simple_animal/hostile/lovetown/suicidal
@@ -478,8 +535,8 @@ GLOBAL_VAR_INIT(wave_enemy_faction, "") //Which faction enemies come from this r
 				else
 					return /mob/living/simple_animal/hostile/lovetown/slammer
 
-		//Cars 8-9: Hard - Mix of all, with Shamblers and Slumberers
-		if(8 to 9)
+		//Tiers 3-4: Hard - Mix of all, with Shamblers and Slumberers
+		if(3 to 4)
 			switch(rand(1, 100))
 				if(1 to 10)
 					return /mob/living/simple_animal/hostile/lovetown/suicidal
@@ -496,17 +553,17 @@ GLOBAL_VAR_INIT(wave_enemy_faction, "") //Which faction enemies come from this r
 
 	return /mob/living/simple_animal/hostile/lovetown/suicidal
 
-/// G-Corp mob selection based on difficulty
-/obj/effect/landmark/wave_spawn/proc/GetGcorpMob(controller_number)
-	switch(controller_number)
-		//Cars 1-3: Easy - Mostly Dawn, some Noon
-		if(1 to 3)
+/// G-Corp mob selection based on difficulty tier
+/obj/effect/landmark/wave_spawn/proc/GetGcorpMob(tier)
+	switch(tier)
+		//Tier 1: Easy - Mostly Dawn, some Noon
+		if(1)
 			if(prob(85))
 				return /mob/living/simple_animal/hostile/ordeal/steel_dawn
 			return /mob/living/simple_animal/hostile/ordeal/steel_dawn/steel_noon
 
-		//Cars 4-7: Medium - Mix of Dawn/Noon, some Flying
-		if(4 to 7)
+		//Tier 2: Medium - Mix of Dawn/Noon, some Flying
+		if(2)
 			switch(rand(1, 100))
 				if(1 to 40)
 					return /mob/living/simple_animal/hostile/ordeal/steel_dawn
@@ -515,8 +572,8 @@ GLOBAL_VAR_INIT(wave_enemy_faction, "") //Which faction enemies come from this r
 				else
 					return /mob/living/simple_animal/hostile/ordeal/steel_dawn/steel_noon/flying
 
-		//Cars 8-9: Hard - Mix of all, with Dusk managers
-		if(8 to 9)
+		//Tiers 3-4: Hard - Mix of all, with Dusk managers
+		if(3 to 4)
 			switch(rand(1, 100))
 				if(1 to 15)
 					return /mob/living/simple_animal/hostile/ordeal/steel_dawn
@@ -529,17 +586,17 @@ GLOBAL_VAR_INIT(wave_enemy_faction, "") //Which faction enemies come from this r
 
 	return /mob/living/simple_animal/hostile/ordeal/steel_dawn
 
-/// Peccatulum mob selection based on difficulty (uses /wave variants that can't dash through barriers)
-/obj/effect/landmark/wave_spawn/proc/GetPeccatulumMob(controller_number)
-	switch(controller_number)
-		//Cars 1-3: Easy - Gluttony, Sloth
-		if(1 to 3)
+/// Peccatulum mob selection based on difficulty tier (uses /wave variants that can't dash through barriers)
+/obj/effect/landmark/wave_spawn/proc/GetPeccatulumMob(tier)
+	switch(tier)
+		//Tier 1: Easy - Gluttony, Sloth
+		if(1)
 			if(prob(70))
 				return /mob/living/simple_animal/hostile/ordeal/sin_gluttony/wave
 			return /mob/living/simple_animal/hostile/ordeal/sin_sloth/wave
 
-		//Cars 4-7: Medium - Add Gloom, some Noon variants (no Pride/Gloom noon)
-		if(4 to 7)
+		//Tier 2: Medium - Add Gloom, some Noon variants (no Pride/Gloom noon)
+		if(2)
 			switch(rand(1, 100))
 				if(1 to 25)
 					return /mob/living/simple_animal/hostile/ordeal/sin_gluttony/wave
@@ -552,8 +609,8 @@ GLOBAL_VAR_INIT(wave_enemy_faction, "") //Which faction enemies come from this r
 				else
 					return /mob/living/simple_animal/hostile/ordeal/sin_sloth/noon/wave
 
-		//Car 8: Hard - Noon variants but no Pride/Gloom noon yet, always chance for T1
-		if(8)
+		//Tier 3: Hard - Noon variants but no Pride/Gloom noon yet, always chance for T1
+		if(3)
 			switch(rand(1, 100))
 				if(1 to 15)
 					return /mob/living/simple_animal/hostile/ordeal/sin_gluttony/wave
@@ -570,8 +627,8 @@ GLOBAL_VAR_INIT(wave_enemy_faction, "") //Which faction enemies come from this r
 				else
 					return /mob/living/simple_animal/hostile/ordeal/sin_sloth/noon/wave
 
-		//Cars 9-10: Hardest - Pride/Gloom noon can spawn, always chance for T1
-		if(9 to 10)
+		//Tier 4: Hardest - Pride/Gloom noon can spawn, always chance for T1
+		if(4)
 			switch(rand(1, 100))
 				if(1 to 10)
 					return /mob/living/simple_animal/hostile/ordeal/sin_gluttony/wave
@@ -592,23 +649,23 @@ GLOBAL_VAR_INIT(wave_enemy_faction, "") //Which faction enemies come from this r
 
 	return /mob/living/simple_animal/hostile/ordeal/sin_gluttony/wave
 
-/// Bloodfiend mob selection based on difficulty (uses /wave variants that can't dash through barriers)
-/obj/effect/landmark/wave_spawn/proc/GetBloodfiendMob(controller_number)
-	switch(controller_number)
-		//Cars 1-3: Easy - Mostly bags, some fiends
-		if(1 to 3)
+/// Bloodfiend mob selection based on difficulty tier (uses /wave variants that can't dash through barriers)
+/obj/effect/landmark/wave_spawn/proc/GetBloodfiendMob(tier)
+	switch(tier)
+		//Tier 1: Easy - Mostly bags, some fiends
+		if(1)
 			if(prob(80))
 				return /mob/living/simple_animal/hostile/humanoid/blood/bag/wave
 			return /mob/living/simple_animal/hostile/humanoid/blood/fiend/wave
 
-		//Cars 4-7: Medium - Mix of bags and fiends
-		if(4 to 7)
+		//Tier 2: Medium - Mix of bags and fiends
+		if(2)
 			if(prob(50))
 				return /mob/living/simple_animal/hostile/humanoid/blood/bag/wave
 			return /mob/living/simple_animal/hostile/humanoid/blood/fiend/wave
 
-		//Cars 8-9: Hard - Mix of all, with bosses
-		if(8 to 9)
+		//Tiers 3-4: Hard - Mix of all, with bosses
+		if(3 to 4)
 			switch(rand(1, 100))
 				if(1 to 25)
 					return /mob/living/simple_animal/hostile/humanoid/blood/bag/wave
@@ -630,7 +687,7 @@ GLOBAL_VAR_INIT(wave_enemy_faction, "") //Which faction enemies come from this r
 	on_cooldown = TRUE
 	addtimer(CALLBACK(src, PROC_REF(EndCooldown)), WAVE_SPAWNER_COOLDOWN)
 
-	var/spawn_type = GetSpawnType(wave_controller.controller_number)
+	var/spawn_type = GetSpawnType(wave_controller.GetDifficultyTier())
 
 	//Track pending spawn before creating effect
 	wave_controller.AddPendingSpawn()

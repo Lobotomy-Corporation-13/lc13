@@ -27,6 +27,12 @@
 /obj/structure/barricade/security,
 /turf/open/floor/carpet/royalblue,
 /area/city/outskirts)
+"po" = (
+/obj/structure/wave_barrier{
+	controller_id = "open"
+	},
+/turf/closed/wall/mineral/plastitanium,
+/area/city/outskirts)
 "Dv" = (
 /obj/effect/landmark/wave_spawn/dynamic{
 	controller_id = "open"
@@ -208,14 +214,14 @@ Xn
 "}
 (13,1,1) = {"
 Xn
-Xn
-Xn
+po
+po
 gj
 gj
 gj
 gj
 gj
 gj
-Xn
+po
 Xn
 "}
