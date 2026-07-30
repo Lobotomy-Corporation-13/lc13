@@ -2616,12 +2616,12 @@
 	balloon_alert(user, "You dash to [A]!")
 
 
-/obj/item/ego_weapon/splatter
+/obj/item/ego_weapon/mini/splatter
 	name = "splatter"
 	desc = "It's probably covered in paint."
 	special = "Use this weapon in hand to lower sanity, and prepare a projectile."
 	icon_state = "splatter"
-	force = 19
+	force = 22
 	damtype = WHITE_DAMAGE
 	swingstyle = WEAPONSWING_LARGESWEEP
 
@@ -2633,7 +2633,7 @@
 	var/gun_cooldown
 	var/gun_cooldown_time = 1.2 SECONDS
 
-/obj/item/ego_weapon/splatter/afterattack(atom/target, mob/living/user, proximity_flag, clickparams)
+/obj/item/ego_weapon/mini/splatter/afterattack(atom/target, mob/living/user, proximity_flag, clickparams)
 	if(!CanUseEgo(user))
 		return
 	if(!active)
@@ -2642,7 +2642,7 @@
 		var/turf/proj_turf = user.loc
 		if(!isturf(proj_turf))
 			return
-		var/obj/projectile/ego_bullet/nobody/G = new /obj/projectile/ego_bullet/nobody(proj_turf)
+		var/obj/projectile/ego_bullet/splatter/G = new /obj/projectile/ego_bullet/splatter(proj_turf)
 		G.fired_from = src //for signal check
 		playsound(user, 'sound/effects/meatslap.ogg', 100, TRUE)
 		G.firer = user
@@ -2652,7 +2652,29 @@
 		active = FALSE
 		return
 
+/obj/item/ego_weapon/mini/splatter/attack_self(mob/living/carbon/human/user)
+	..()
+	if(!ishuman(user))
+		return
+	user.adjustSanityLoss(30)
+	active = TRUE
 
-/obj/item/ego_weapon/splatter/attack_self(mob/living/carbon/user)
-	user.adjustSanityLoss(20)
+/obj/projectile/ego_bullet/splatter
+	name = "splatter"
+	icon_state = "slime"
+	desc = "A glob of red paint."
+	damage = 0	//Deals 0 damage, but slows down
+	damage_type = BLACK_DAMAGE
+	hitsound = "sound/effects/footstep/slime1.ogg"
+	color = "#FF0000"
+	speed = 1.3
+
+/obj/projectile/ego_bullet/splatter/on_hit(target)
+	. = ..()
+	if(!ismob(target))
+		return
+	if(ishuman(target))
+		return
+	var/mob/living/L = target
+	L.apply_status_effect(/datum/status_effect/qliphothoverload)
 
