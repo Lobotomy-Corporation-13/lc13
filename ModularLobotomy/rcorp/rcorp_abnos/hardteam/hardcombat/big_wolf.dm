@@ -133,7 +133,7 @@
 
 /mob/living/simple_animal/hostile/rcorp_abno/hard/big_wolf/Life()
 	. = ..()
-	if(fleeing_now != TRUE && hp_check_cooldown <= world.time)
+	if(fleeing_now != TRUE && hp_check_cooldown <= world.time && client)
 		var/our_hp = WOLF_HP_PERCENT
 		if(our_hp <= last_reached_health)
 			FleeNow()
