@@ -31,6 +31,8 @@
 	var/obj/effect/proc_holder/ability/aimed/rca_dash/big_wolf/ourdash
 	var/mob/living/simple_animal/hostile/rcorp_abno/hard/red_hood/rival
 	var/hit_rival = 0 //I LOVE FIGHTING MY LONGLIFE LIFELONG RIVAL
+	//Dont get stuck in a wall for the love of god
+	var/turf/starting_location
 
 	attack_action_types = list(
 		/datum/action/innate/rca_abnormality_attack/toggle/wolf_dash_toggle,
@@ -46,6 +48,13 @@
 		|Roaring Wolf|: When pressing your 'Howl' ability you will begin to inhale. \
 		After a 2 second delay you will howl, affecting all hostiles within a 20 tile range of yourself. \
 		The howl will deal 50 WHITE damage to those affected and will go through walls. <br>\
+		<br>\
+		|Into the Dark|: When losing over 25% of your HP you will start skulking in the shadows for 3 seconds. \
+		Your speed will be greatly boosted and you will phase through all obstacles. \
+		You may not phase through certain map borders and team partitions. \
+		If this state ends while within a wall you will return to your original position. \
+		While in this state you may not perform any attacks or abilities. \
+		This has a cooldown of 10 seconds and may be repeated when you lose the required amount of HP again. <br>\
 		<br>\
 		|Destined to be the Big Bad Wolf|: The Abnormality 'Little Red Riding Hooded Mercenary' is always harmed by your AoE attacks. \
 		When 'Little Red Riding Hooded Mercenary' is caught in your attack all others hit by this same attack will take double the damage from it. </b>"
@@ -166,19 +175,28 @@
 /mob/living/simple_animal/hostile/rcorp_abno/hard/big_wolf/proc/FleeNow()
 	icon_state = "big_wolf_flee"
 	playsound(get_turf(src), 'sound/abnormalities/big_wolf/Wolf_FogChange.ogg', 75, 1)
-	ADD_TRAIT(src, TRAIT_MOVE_PHASING, "fleeing")
+	visible_message(span_danger("[src] retreats into the shadows!"))
+	starting_location = get_turf(src)
+	incorporeal_move = TRUE
 	LoseTarget(FALSE)
 	retreat_distance = 20
 	TemporarySpeedChange(-2, 3 SECONDS)
 	fleeing_now = TRUE
+	density = FALSE
 	addtimer(CALLBACK(src, PROC_REF(StopFleeing)), 3 SECONDS)
 
 /mob/living/simple_animal/hostile/rcorp_abno/hard/big_wolf/proc/StopFleeing()
+	var/turf/current_turf = get_turf(src)
+	if(current_turf && current_turf.density && starting_location)
+		forceMove(starting_location)
+		to_chat(src, span_danger("You were trapped in a wall and have been returned to your starting location!"))
 	playsound(get_turf(src), 'sound/magic/ethereal_exit.ogg', 75, 1)
+	visible_message(span_danger("[src] emerges from the shadows!"))
 	retreat_distance = null
 	fleeing_now = FALSE
 	color = initial(color)
-	REMOVE_TRAIT(src, TRAIT_MOVE_PHASING, "fleeing")
+	incorporeal_move = FALSE
+	density = TRUE
 	icon_state = icon_living
 
 //Combat Skills
