@@ -495,7 +495,7 @@ GLOBAL_VAR_INIT(wave_enemy_faction, "") //Which faction enemies come from this r
 	var/faction = GLOB.wave_enemy_faction
 	if(!faction)
 		//Pick a random faction if not set
-		faction = pick("lovetown", "peccatulum")
+		faction = pick("lovetown", "peccatulum", "gcorp")
 		GLOB.wave_enemy_faction = faction
 
 	//Select mob based on difficulty tier
