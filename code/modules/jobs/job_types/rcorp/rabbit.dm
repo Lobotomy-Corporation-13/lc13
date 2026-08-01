@@ -78,7 +78,6 @@
 	jobtype = /datum/job/rabbit
 
 	ears = /obj/item/radio/headset/headset_control
-	glasses = /obj/item/clothing/glasses/sunglasses
 	suit_store = /obj/item/gun/energy/e_gun/rabbit/nopin
 	uniform = /obj/item/clothing/under/suit/lobotomy/rabbit
 	belt = /obj/item/ego_weapon/city/rabbit_blade
@@ -89,6 +88,10 @@
 	suit = /obj/item/clothing/suit/armor/ego_gear/rabbit/grunts
 	l_pocket = /obj/item/flashlight/seclite
 	r_pocket = /obj/item/pinpointer/nuke/rcorp
+	backpack_contents = list(
+		/obj/item/grenade/r_corp,
+		/obj/item/grenade/r_corp/white,
+		/obj/item/grenade/r_corp/black,)
 
 /datum/outfit/job/rabbit/assault
 	name = "R-Corp Assault Rabbit"

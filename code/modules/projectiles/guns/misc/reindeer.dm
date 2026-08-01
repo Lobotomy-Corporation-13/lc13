@@ -89,6 +89,8 @@
 	if(!isliving(target))
 		return
 
+	user.Immobilize(2 SECONDS)
+	to_chat(user, span_warning("You fire your beam, holding you in place for a moment."))
 	current_target = target
 	active = TRUE
 	current_beam = user.Beam(current_target, icon_state="drainbeam", time = 10 MINUTES, maxdistance = max_range, beam_type = /obj/effect/ebeam/medical)
