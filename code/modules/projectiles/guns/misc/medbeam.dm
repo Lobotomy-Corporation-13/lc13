@@ -141,7 +141,7 @@
 
 					if(ishuman(target))
 						var/mob/living/carbon/human/H = target
-						to_chat(living_user, span_userdanger("You feel the power of two beams tearing your mind apart!"))
+						to_chat(H, span_userdanger("You feel the power of two beams tearing your mind apart!"))
 						H.adjustSanityLoss(999)
 
 					else

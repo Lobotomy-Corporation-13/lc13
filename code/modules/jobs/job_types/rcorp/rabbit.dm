@@ -106,7 +106,13 @@
 	/obj/item/gun/energy/e_gun/rabbitdash/sniper,
 	/obj/item/gun/energy/e_gun/rabbitdash/white,
 	/obj/item/gun/energy/e_gun/rabbitdash/black,
+	/obj/item/gun/energy/e_gun/rabbitdash/small/smg,
+	/obj/item/gun/energy/e_gun/rabbitdash/small/smg/white,
+	/obj/item/gun/energy/e_gun/rabbitdash/small/smg/black,
+	/obj/item/gun/energy/e_gun/rabbitdash/small/smg/pale,
 	/obj/item/gun/energy/e_gun/rabbitdash/shotgun,
+	/obj/item/gun/energy/e_gun/rabbitdash/shotgun/white,
+	/obj/item/gun/energy/e_gun/rabbitdash/shotgun/black,
 	)
 	H.equip_to_slot_or_del(new belt(H),ITEM_SLOT_BELT, TRUE)
 

@@ -11,8 +11,11 @@
 	/obj/item/reagent_containers/hypospray/medipen/mental,
 	/obj/item/stack/sheet/mineral/sandbags/ten,
 	/obj/item/flashlight/flare,
-	/obj/item/storage/belt/egopcorp,
-	/obj/item/storage/pcorp_pocket,
+
+	/obj/item/grenade/r_corp
+	/obj/item/grenade/r_corp/white,
+	/obj/item/grenade/r_corp/black,
+	/obj/item/grenade/r_corp/pale
 	)
 
 	var/list/possible_weapons = list(
@@ -21,7 +24,13 @@
 		/obj/item/gun/energy/e_gun/rabbitdash/sniper,
 		/obj/item/gun/energy/e_gun/rabbitdash/white,
 		/obj/item/gun/energy/e_gun/rabbitdash/black,
+		/obj/item/gun/energy/e_gun/rabbitdash/small/smg,
+		/obj/item/gun/energy/e_gun/rabbitdash/small/smg/white,
+		/obj/item/gun/energy/e_gun/rabbitdash/small/smg/black,
+		/obj/item/gun/energy/e_gun/rabbitdash/small/smg/pale,
 		/obj/item/gun/energy/e_gun/rabbitdash/shotgun,
+		/obj/item/gun/energy/e_gun/rabbitdash/shotgun/white,
+		/obj/item/gun/energy/e_gun/rabbitdash/shotgun/black,
 //		/obj/item/gun/energy/e_gun/rabbitdash/laser,
 		/obj/item/gun/energy/e_gun/rabbitdash/pale,
 		/obj/item/gun/energy/e_gun/rabbit/minigun,
