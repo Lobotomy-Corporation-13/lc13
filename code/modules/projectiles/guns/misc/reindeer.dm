@@ -89,7 +89,6 @@
 	if(!isliving(target))
 		return
 
-	user.Immobilize(1 SECONDS)
 	current_target = target
 	active = TRUE
 	current_beam = user.Beam(current_target, icon_state="drainbeam", time = 10 MINUTES, maxdistance = max_range, beam_type = /obj/effect/ebeam/medical)
