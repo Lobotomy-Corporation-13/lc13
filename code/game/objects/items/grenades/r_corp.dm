@@ -141,12 +141,9 @@
 /obj/item/grenade/lobotomy/all
 	name = "anti-abnormality stun grenade"
 	desc = "Grenades that apply both fragile and stun to everything in range."
-	var/explosion_damage_type = RED_DAMAGE
-	var/explosion_range = 2
 	icon_state = "r_corp"
 
-/obj/item/grenade/lobotomy/all/detonate(mob/living/lanced_by) //does not do dmg to humans, there's a lot of weird gimmick stuff that relates to taking dmg in facility
-	var/aThrower = thrower
+/obj/item/grenade/lobotomy/all/detonate(mob/living/lanced_by)
 	. = ..()
 	update_mob()
 	new /obj/effect/temp_visual/explosion(get_turf(src))
