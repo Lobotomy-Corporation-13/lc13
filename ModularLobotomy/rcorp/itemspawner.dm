@@ -12,10 +12,10 @@
 	/obj/item/stack/sheet/mineral/sandbags/ten,
 	/obj/item/flashlight/flare,
 
-	/obj/item/grenade/r_corp
+	/obj/item/grenade/r_corp,
 	/obj/item/grenade/r_corp/white,
 	/obj/item/grenade/r_corp/black,
-	/obj/item/grenade/r_corp/pale
+	/obj/item/grenade/r_corp/pale,
 	)
 
 	var/list/possible_weapons = list(
