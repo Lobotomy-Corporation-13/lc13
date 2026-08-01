@@ -152,7 +152,7 @@
 	new /obj/effect/temp_visual/explosion(get_turf(src))
 	playsound(loc, 'sound/effects/ordeals/steel/gcorp_boom.ogg', 75, TRUE)
 	for(var/mob/living/simple_animal/H in view(explosion_range, src))
-			H.apply_lc_fragile(5)
+		H.apply_lc_fragile(5)
 		H.apply_status_effect(/datum/status_effect/qliphothoverload)
 	qdel(src)
 
