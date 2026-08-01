@@ -139,18 +139,32 @@
 		for(var/obj/effect/ebeam/medical/B in turf)// Don't cross the str-beams!
 			if(B.owner.origin != current_beam.origin)
 				if(isliving(user))
-					var/mob/living/living_user = user
-					to_chat(living_user, span_userdanger("You feel the power of two beams tearing you apart!"))
-					living_user.gib()
+
+					if(ishuman(target))
+						var/mob/living/carbon/human/H = target
+						to_chat(living_user, span_userdanger("You feel the power of two beams tearing your mind apart!"))
+						H.adjustSanityLoss(999)
+
+					else
+						var/mob/living/living_user = user
+						to_chat(living_user, span_userdanger("You feel the power of two beams tearing you apart!"))
+						living_user.gib()
 				qdel(dummy)
 				return FALSE
 
 		for(var/obj/effect/ebeam/mindwhip/B in turf)// Don't cross the str-beams!
 			if(B.owner.origin != current_beam.origin)
 				if(isliving(user))
-					var/mob/living/living_user = user
-					to_chat(living_user, span_userdanger("You feel the power of two beams tearing you apart!"))
-					living_user.gib()
+
+					if(ishuman(target))
+						var/mob/living/carbon/human/H = target
+						to_chat(living_user, span_userdanger("You feel the power of two beams tearing your mind apart!"))
+						H.adjustSanityLoss(999)
+
+					else
+						var/mob/living/living_user = user
+						to_chat(living_user, span_userdanger("You feel the power of two beams tearing you apart!"))
+						living_user.gib()
 				qdel(dummy)
 				return FALSE
 	qdel(dummy)
