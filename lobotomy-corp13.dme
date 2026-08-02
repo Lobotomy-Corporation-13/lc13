@@ -4432,6 +4432,7 @@
 #include "ModularLobotomy\ego_weapons\melee\city\sweeper.dm"
 #include "ModularLobotomy\ego_weapons\melee\city\syndicate.dm"
 #include "ModularLobotomy\ego_weapons\melee\city\thumb.dm"
+#include "ModularLobotomy\ego_weapons\melee\city\udjat_limbus.dm"
 #include "ModularLobotomy\ego_weapons\melee\city\wcorp.dm"
 #include "ModularLobotomy\ego_weapons\melee\city\yun.dm"
 #include "ModularLobotomy\ego_weapons\melee\city\zwei.dm"
