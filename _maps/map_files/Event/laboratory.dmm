@@ -910,7 +910,7 @@
 "kj" = (
 /obj/machinery/door/airlock/medical/glass{
 	name = "pharmacy";
-	req_one_access_txt = "69;19"
+	req_one_access_txt = "5"
 	},
 /turf/open/floor/plasteel/white,
 /area/facility_hallway/central)
@@ -1518,9 +1518,9 @@
 /turf/open/floor/circuit/telecomms/mainframe,
 /area/facility_hallway/training)
 "qJ" = (
-/turf/closed/indestructible/reinforced,
-/turf/open/floor/facility/dark,
-/area/facility_hallway/north)
+/obj/effect/landmark/latejoin,
+/turf/open/floor/plasteel/freezer,
+/area/facility_hallway/central)
 "qM" = (
 /obj/item/binoculars,
 /obj/item/clipboard{
@@ -1810,6 +1810,14 @@
 	},
 /turf/open/floor/mineral/titanium/purple,
 /area/facility_hallway/north)
+"tz" = (
+/obj/machinery/door/airlock/maintenance_hatch{
+	name = "low-security maintenance hatch";
+	max_integrity = 3000;
+	integrity_failure = 0.01
+	},
+/turf/open/floor/facility/halls,
+/area/facility_hallway/west)
 "tO" = (
 /obj/structure/chair/comfy/shuttle{
 	name = "fancy chair";
@@ -3283,6 +3291,15 @@
 /obj/machinery/deepfryer,
 /turf/open/floor/plasteel/white,
 /area/facility_hallway/central)
+"Jl" = (
+/obj/structure/cable,
+/obj/machinery/door/airlock/maintenance_hatch{
+	name = "high-security maintenance hatch";
+	max_integrity = 3000;
+	integrity_failure = 0.01
+	},
+/turf/open/floor/facility/halls,
+/area/facility_hallway/south)
 "JD" = (
 /obj/machinery/door/poddoor/preopen{
 	armor = list("melee" = 20, "bullet" = 100, "laser" = 100, "energy" = 100, "bomb" = 50, "bio" = 100, "rad" = 100, "fire" = 100, "acid" = 70);
@@ -4004,6 +4021,11 @@
 	},
 /turf/open/floor/mineral/titanium/blue,
 /area/facility_hallway/west)
+"Rw" = (
+/obj/structure/table/wood,
+/obj/effect/landmark/observer_start,
+/turf/open/floor/grass,
+/area/facility_hallway/west)
 "RA" = (
 /obj/effect/turf_decal/tile/bar,
 /obj/effect/turf_decal/tile/bar{
@@ -4070,7 +4092,7 @@
 "RU" = (
 /obj/machinery/door/airlock/highsecurity{
 	name = "high-security checkpoint";
-	req_access_txt = "3";
+	req_access_txt = "1";
 	max_integrity = 3000;
 	integrity_failure = 0.01
 	},
@@ -4378,6 +4400,15 @@
 	},
 /turf/open/floor/mineral/plastitanium,
 /area/facility_hallway/north)
+"Ul" = (
+/obj/machinery/door/airlock/maintenance_hatch{
+	name = "high-security maintenance hatch";
+	max_integrity = 3000;
+	integrity_failure = 0.01
+	},
+/obj/structure/cable,
+/turf/open/floor/facility/halls,
+/area/facility_hallway/south)
 "Up" = (
 /obj/machinery/light{
 	pixel_x = -9;
@@ -4680,6 +4711,15 @@
 	},
 /turf/open/floor/mineral/titanium/tiled,
 /area/facility_hallway/north)
+"XX" = (
+/obj/structure/cable,
+/obj/machinery/door/airlock/maintenance_hatch{
+	name = "low-security maintenance hatch";
+	max_integrity = 3000;
+	integrity_failure = 0.01
+	},
+/turf/open/floor/facility/halls,
+/area/facility_hallway/west)
 "Yb" = (
 /obj/effect/turf_decal/bot,
 /obj/machinery/telecomms/relay/preset/telecomms,
@@ -28682,7 +28722,7 @@ MV
 MV
 MV
 ps
-PH
+XX
 ps
 ps
 zo
@@ -28912,7 +28952,7 @@ ps
 ps
 ps
 ps
-Ye
+tz
 vP
 MV
 YM
@@ -29445,7 +29485,7 @@ zo
 fM
 zo
 AS
-zr
+Rw
 zr
 Sj
 zo
@@ -31757,7 +31797,7 @@ Uf
 Uf
 Uf
 Uf
-wa
+Jl
 eP
 kf
 eE
@@ -32703,7 +32743,7 @@ MV
 MV
 MV
 MV
-PH
+XX
 MV
 MV
 MV
@@ -32964,7 +33004,7 @@ zm
 fL
 fL
 fL
-PH
+XX
 Ht
 Ht
 eL
@@ -33754,7 +33794,7 @@ eE
 YE
 Uf
 Vx
-wa
+Ul
 eP
 Nz
 eP
@@ -35529,7 +35569,7 @@ Qk
 Vx
 Vx
 Vx
-wa
+Jl
 eP
 kf
 eE
@@ -35768,7 +35808,7 @@ Ka
 Ka
 eE
 eE
-wa
+Ul
 eE
 yQ
 yQ
@@ -37244,8 +37284,8 @@ lR
 lR
 lR
 lR
-qJ
-qJ
+SH
+SH
 SH
 SH
 gn
@@ -37516,10 +37556,10 @@ ig
 ig
 kI
 rL
-rL
-rL
-rL
-rL
+qJ
+qJ
+qJ
+qJ
 DK
 Ka
 Ka
@@ -37768,10 +37808,10 @@ ig
 ig
 rL
 rL
-rL
-rL
-rL
-rL
+qJ
+qJ
+qJ
+qJ
 DK
 Ka
 Ka

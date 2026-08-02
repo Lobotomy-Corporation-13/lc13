@@ -12,8 +12,8 @@
 
 	outfit = /datum/outfit/job/lcb_nurse
 
-	access = list(ACCESS_MEDICAL)
-	minimal_access = list(ACCESS_MEDICAL)
+	access = list(ACCESS_MEDICAL, ACCESS_SECURITY)
+	minimal_access = list(ACCESS_MEDICAL, ACCESS_SECURITY)
 	departments = DEPARTMENT_MEDICAL
 
 	job_attribute_limit = 0

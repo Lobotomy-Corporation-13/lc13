@@ -17,10 +17,9 @@ Small comment Section on job numbers:
 Access numbers:
 ACCESS_MANAGER - Asset Protection and Manager
 ACCESS_COMMAND - Command Rooms
-ACCESS_SECURITY - LCA Udjat
+ACCESS_SECURITY - Containment Cell areas
+ACCESS_ARMORY - LCA Udjat
 ACCESS_MEDICAL - LCM Medical Staff
-ACCESS_BRIG - High Security
-ACCESS_ARMORY - LCE Equipment and Low-Security
 ACCESS_RND - LCE Research
 
 

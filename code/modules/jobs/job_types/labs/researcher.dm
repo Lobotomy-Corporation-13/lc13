@@ -8,8 +8,8 @@
 
 	outfit = /datum/outfit/job/researcher
 
-	access = list(ACCESS_RND)
-	minimal_access = list(ACCESS_RND)
+	access = list(ACCESS_RND, ACCESS_SECURITY)
+	minimal_access = list(ACCESS_RND, ACCESS_SECURITY)
 	departments = DEPARTMENT_SCIENCE
 
 	job_attribute_limit = 20
@@ -29,7 +29,7 @@
 
 
 /datum/outfit/job/researcher
-	name = "Researcher"
+	name = "LCE Researcher"
 	jobtype = /datum/job/researcher
 
 	belt = /obj/item/pda/toxins

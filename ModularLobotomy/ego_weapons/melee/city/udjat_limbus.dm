@@ -1,12 +1,12 @@
 //The Gun
 /obj/item/ego_weapon/ranged/city/udjat
-	name = "noise"
-	desc = "The noises take you back to the very moment of the day that everyone had forgotten."
+	name = "LCA Udjat Rifle"
+	desc = "A rifle used by the LCA Udjat staff."
 	icon_state = "udjat_gun"
 	inhand_icon_state = "udjat_gun"
 	force = 14
 	damtype = WHITE_DAMAGE
-	projectile_path = /obj/projectile/ego_bullet/ego_noise
+	projectile_path = /obj/projectile/ego_bullet/ego_noise/udjat
 	magazine_name = "Udjat Magazine"
 	weapon_weight = WEAPON_HEAVY
 	pellets = 5
@@ -22,6 +22,10 @@
 							TEMPERANCE_ATTRIBUTE = 60,
 							JUSTICE_ATTRIBUTE = 60
 							)
+
+
+/obj/projectile/ego_bullet/ego_noise/udjat
+	name = "udjat"
 
 /obj/item/udjat_mag
 	name = "udjat mag"
