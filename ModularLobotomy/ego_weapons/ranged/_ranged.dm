@@ -51,6 +51,11 @@
 	/// Does the gun load one bullet at a time?
 	var/roundsreload = FALSE
 
+	////Guns with Magazines
+	var/magazine_type
+	//The name is the actual name of the mag that shows.
+	var/magazine_name
+
 	/// Vars used for when you examine a gun
 	var/last_projectile_damage = 0
 	var/last_projectile_type = RED_DAMAGE
@@ -244,6 +249,9 @@
 			if(2.51 to INFINITY)
 				. += span_danger("This weapon has an extremely slow reload.")
 
+	if(magazine_type)
+		. += span_warning("This weapon requires a [magazine_name] to reload.")
+
 	if(roundsreload)
 		. += span_notice("This weapon reloads one round at a time.")
 
@@ -313,6 +321,9 @@
 	qdel(projectile)
 
 /obj/item/ego_weapon/ranged/attack_self(mob/user)
+	if(magazine_type)
+		to_chat(user,span_notice("This weapon has detachable magazines. Use [magazine_name] to reload."))
+		return
 	var/correct_reload_time = (alternate_selected && alternate_reload_type == RANGEDEGO_ALTERNATEFIRE_RELOADTYPE_INDIVIDUAL_RELOAD) ? alternate_reload_time : reloadtime
 	if(correct_reload_time && !is_reloading)
 		if(roundsreload)
@@ -731,6 +742,21 @@
 
 	return TRUE
 
+//If you have a magazine
+/obj/item/ego_weapon/ranged/attackby(obj/item/I, user, params)
+	if(!(istype(I, magazine_type)))
+		return
+
+	if(!do_after(user, reloadtime, src)) //gotta reload
+		to_chat(user, span_warning("You fumble your reload."))
+		return
+	playsound(src, reload_success_sound, 50, TRUE)
+	to_chat(user, span_nicegreen("You dump your magazine and load."))
+	shotsleft = initial(shotsleft)
+	qdel(I)
+
+
+
 /obj/item/ego_weapon/ranged/proc/handle_suicide(mob/living/carbon/human/user, mob/living/carbon/human/target, params, bypass_timer)
 	if(!ishuman(user) || !ishuman(target))
 		return
@@ -876,3 +902,4 @@
 		else if(knockback)
 			msg += span_notice("This weapon has [knockback >= 10 ? "neck-snapping": ""] enemy knockback.")
 	return msg
+
