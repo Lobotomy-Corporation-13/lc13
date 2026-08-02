@@ -1,3 +1,12 @@
+
+/obj/item/clothing/suit/armor/ego_gear/city/udjat_limbus
+	name = "LCA Udjat Armor"
+	desc = "It says Limbus Company on the tag. Used by limbus Udjat officers."
+	icon_state = "udjat"
+	armor = list(RED_DAMAGE = 40, WHITE_DAMAGE = 40, BLACK_DAMAGE = 40, PALE_DAMAGE = 20)
+
+
+///Old Stuff we shouldn't use anymore.
 /obj/item/clothing/suit/armor/ego_gear/limbus_labs
 	name = "limbus company low-security armor"
 	desc = "It says Limbus Company on the tag. Used by low-security officers."
