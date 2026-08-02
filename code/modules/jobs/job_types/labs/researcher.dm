@@ -21,6 +21,13 @@
 	job_important = "You are a Researcher. Your job is to interact with abnormalities, write down notes based on how they reacted, and report your findings to the Senior Researcher or the office workers."
 	job_abbreviation = "RES"
 
+	roundstart_attributes = list(
+								FORTITUDE_ATTRIBUTE = 40,
+								PRUDENCE_ATTRIBUTE = 40,
+								TEMPERANCE_ATTRIBUTE = 40,
+								JUSTICE_ATTRIBUTE = 40
+								)
+
 /datum/job/researcher/after_spawn(mob/living/carbon/human/H, mob/M, latejoin = FALSE)
 	..()
 	H.set_attribute_limit(20)
