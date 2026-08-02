@@ -38,7 +38,7 @@
 	name = "LCA Udjat Leader"
 	jobtype = /datum/job/udjatsgt
 
-	head = /obj/item/clothing/head/beret/sec/navywarden
+	head = /obj/item/clothing/head/hos/beret
 	belt = /obj/item/pda/security
 	ears = /obj/item/radio/headset/heads/headset_discipline
 	glasses = /obj/item/clothing/glasses/sunglasses
@@ -61,7 +61,7 @@
 	minimal_access = list(ACCESS_ARMORY, ACCESS_SECURITY, ACCESS_RND, ACCESS_MEDICAL, ACCESS_COMMAND)
 	departments = DEPARTMENT_SECURITY
 
-	outfit = /datum/outfit/job/udjatsgt
+	outfit = /datum/outfit/job/udjat
 	display_order = 4.1
 
 	job_important = "You are an LCA Udjat agent. Assist the researchers when necessary!"
