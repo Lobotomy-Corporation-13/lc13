@@ -12,7 +12,7 @@
 	required_reagents = list(/datum/reagent/radionex = 1, /datum/reagent/hyperlithium_oxide = 1, /datum/reagent/lithene = 1)
 
 /datum/chemical_reaction/mindkill
-	results = list(/datum/reagent/abnormality/blindsight = 2)
+	results = list(/datum/reagent/abnormality/mindkill = 2)
 	required_reagents = list(/datum/reagent/abnormality/sanity_gel = 1, /datum/reagent/purite = 1, /datum/reagent/ferroxan = 1)
 
 //This one is simple because it's like spacedrugs, man.
