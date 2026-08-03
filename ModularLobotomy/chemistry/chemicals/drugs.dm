@@ -49,7 +49,7 @@
 	name = "Mindkill"
 	description = "A drug that removes sanity but gives you visions."
 	color = "#6baf65"
-	sanity_restore = -2
+	sanity_restore = -1
 
 /datum/reagent/abnormality/mindkill/on_mob_life(mob/living/M)
 	..()
@@ -133,7 +133,3 @@
 	if(L.has_dna() && !HAS_TRAIT(L, TRAIT_GENELESS) && !HAS_TRAIT(L, TRAIT_BADDNA))
 		L.dna.remove_mutation(/datum/mutation/human/void)
 	..()
-
-/datum/reagent/voidcall/on_mob_life(mob/living/M)
-	if((M.hallucination < 15) && prob(10))
-		M.hallucination += 5
