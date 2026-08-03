@@ -131,7 +131,7 @@
 						QDEL_NULL(head)
 						H.regenerate_icons()
 						H.visible_message(span_danger("[H]'s head explodes!"))
-						new /obj/effect/gibspawner/generic/silent(get_turf(H))
+						new /obj/effect/bloodspawner/silent(get_turf(H))
 						playsound(get_turf(H), 'sound/abnormalities/silentorchestra/headbomb.ogg', 50, 1)
 				SLEEP_CHECK_DEATH(4 SECONDS)
 				animate(src, alpha = 0, time = 2 SECONDS)

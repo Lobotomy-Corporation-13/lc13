@@ -51,6 +51,7 @@
 	desc = "You think there's ahn in here. Open with a Crowbar."
 	icon_state = "crate_money"
 	rarechance = 30
+	jcorp_banned = TRUE
 	lootlist =	list(
 		/obj/item/stack/spacecash/c50,
 		/obj/item/stack/spacecash/c100,

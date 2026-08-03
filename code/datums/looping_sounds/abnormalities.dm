@@ -195,3 +195,10 @@
 	volume = 50
 	extra_range = 40
 	channel = CHANNEL_BLOODFIEND_TRIO
+
+/datum/looping_sound/laluna
+	mid_sounds = 'sound/abnormalities/luna/mvmt3.ogg'
+	mid_length = 400 SECONDS //Duration 4 seconds shorter than it actually is to avoid the silence
+	volume = 180 //Thats what the playsound on the abno file was if you think its louder than usual, its a banger anyways
+	extra_range = 28
+	channel = CHANNEL_LUNA

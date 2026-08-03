@@ -29,7 +29,7 @@
 	if(labelled)
 		return
 
-	name = "blood_pack[blood_type ? " - [blood_type]" : ""]"
+	name = "blood pack[blood_type ? " - [blood_type]" : ""]"
 
 /obj/item/reagent_containers/blood/random
 	icon_state = "random_bloodpack"

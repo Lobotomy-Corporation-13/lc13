@@ -50,13 +50,13 @@
 	neutral_droprate = 100
 	work_damage_amount = 6
 	work_damage_type = WHITE_DAMAGE
-	chem_type = /datum/reagent/abnormality/sin/sloth
+	chem_type = /datum/reagent/abnormality/sin/pride
 
 	ego_list = list(
-		/datum/ego_datum/weapon/dream,
-		/datum/ego_datum/armor/dream,
+		/datum/ego_datum/weapon/mining/frostbite,
+		/datum/ego_datum/armor/mining/frostbite,
 	)
-	gift_type =  /datum/ego_gifts/dream
+//	gift_type =  /datum/ego_gifts/dream
 	abnormality_origin = ABNORMALITY_ORIGIN_SS13MINING
 
 

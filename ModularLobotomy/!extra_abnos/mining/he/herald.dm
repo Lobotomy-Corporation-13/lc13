@@ -46,8 +46,8 @@
 
 	//Testing
 	ego_list = list(
-		/datum/ego_datum/weapon/galaxy,
-		/datum/ego_datum/armor/galaxy,
+		/datum/ego_datum/weapon/logging,
+		/datum/ego_datum/armor/logging,
 	)
 
 	var/mob/living/simple_animal/hostile/asteroid/elite/herald/mirror/my_mirror = null

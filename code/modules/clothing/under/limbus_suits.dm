@@ -31,6 +31,19 @@
 /obj/item/clothing/under/limbus/labs
 	icon = 'icons/mob/clothing/ego_gear/under.dmi'
 
+/obj/item/clothing/under/limbus/labs/commandsec
+	name = "Udjat uniform"
+	icon_state = "commandsec"
+	desc = "Worn by the LCA Udjat. Well-cleaned, and smells faintly of perfume."
+
+
+
+//Unused.
+/obj/item/clothing/under/limbus/labs/officer
+	name = "limbus officer uniform"
+	icon_state = "officer"
+	desc = "Worn by low security and high security commanders."
+
 /obj/item/clothing/under/limbus/labs/lowsec
 	name = "Low-security uniform"
 	icon_state = "lowsec"
@@ -40,13 +53,3 @@
 	name = "High-security uniform"
 	icon_state = "highsec"
 	desc = "Always worn by High security officers."
-
-/obj/item/clothing/under/limbus/labs/commandsec
-	name = "Command Security uniform"
-	icon_state = "commandsec"
-	desc = "Worn by damage mitigation and exasperation officers. Well-cleaned, and smells faintly of perfume."
-
-/obj/item/clothing/under/limbus/labs/officer
-	name = "limbus officer uniform"
-	icon_state = "officer"
-	desc = "Worn by low security and high security commanders."

@@ -29,15 +29,6 @@
 	var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
 	var/justicemod = 1 + userjust/100
 	force *= justicemod
-	force *= (1 + (user.extra_damage / 100))
-	if(src.damtype == RED_DAMAGE)
-		force *= (1 + (user.extra_damage_red / 100))
-	if(src.damtype == WHITE_DAMAGE)
-		force *= (1 + (user.extra_damage_white / 100))
-	if(src.damtype == BLACK_DAMAGE)
-		force *= (1 + (user.extra_damage_black / 100))
-	if(src.damtype == PALE_DAMAGE)
-		force *= (1 + (user.extra_damage_pale / 100))
 
 	if(ishuman(target))
 		force = min(force, 50)

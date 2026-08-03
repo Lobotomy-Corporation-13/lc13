@@ -26,6 +26,19 @@ sharpness - Irrelevant in most cases.
 		var/new_damage_type = shuffler.mapping_offense[damage_type]
 		damage_type = new_damage_type
 
+	if(source && isliving(source) && !(attack_type & (ATTACK_TYPE_ENVIRONMENT | ATTACK_TYPE_STATUS))) // Apply Extra Damage (Offense Level Up/Down) for non-status, non-environmental sourced damage.
+		var/mob/living/attacker = source
+		damage_amount *= (1 + (attacker.extra_damage / 100))
+		switch(damage_type)
+			if(RED_DAMAGE)
+				damage_amount *= (1 + (attacker.extra_damage_red / 100))
+			if(WHITE_DAMAGE)
+				damage_amount *= (1 + (attacker.extra_damage_white / 100))
+			if(BLACK_DAMAGE)
+				damage_amount *= (1 + (attacker.extra_damage_black / 100))
+			if(PALE_DAMAGE)
+				damage_amount *= (1 + (attacker.extra_damage_pale / 100))
+
 	if(alive && (!(flags & DAMAGE_FORCED)) && (!PreDamageReaction(damage_amount, damage_type, source, attack_type))) // If our forced argument isn't TRUE, then we expect to receive a TRUE from PreDamageReaction to continue the proc.
 		return FALSE
 

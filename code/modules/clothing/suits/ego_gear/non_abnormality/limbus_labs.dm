@@ -1,3 +1,12 @@
+
+/obj/item/clothing/suit/armor/ego_gear/city/udjat_limbus
+	name = "LCA Udjat Armor"
+	desc = "It says Limbus Company on the tag. Used by limbus Udjat officers."
+	icon_state = "udjat"
+	armor = list(RED_DAMAGE = 40, WHITE_DAMAGE = 40, BLACK_DAMAGE = 40, PALE_DAMAGE = 20)
+
+
+///Old Stuff we shouldn't use anymore.
 /obj/item/clothing/suit/armor/ego_gear/limbus_labs
 	name = "limbus company low-security armor"
 	desc = "It says Limbus Company on the tag. Used by low-security officers."
@@ -107,4 +116,15 @@
 	icon_state = "paperwork"
 	flags_inv = NONE
 	armor = list(RED_DAMAGE = 0, WHITE_DAMAGE = 0, BLACK_DAMAGE = 0, PALE_DAMAGE = 0)
+	equip_delay_self = 0
+
+
+//LCE Research issue - the brown longcoat. Subtypes /limbus rather than /limbus_labs because
+//that is the parent carrying limbus_suits.dmi / limbus_suit.dmi, where the sprite lives.
+/obj/item/clothing/suit/armor/ego_gear/limbus/lce_longcoat
+	name = "LCE longcoat"
+	desc = "A heavy brown longcoat with red piping at the lapel and cuff. Standard issue to Limbus Company Extraction research staff, and the only armour most of them will ever wear."
+	icon_state = "lce_longcoat"
+	flags_inv = NONE
+	armor = list(RED_DAMAGE = 20, WHITE_DAMAGE = 20, BLACK_DAMAGE = 20, PALE_DAMAGE = 0)
 	equip_delay_self = 0

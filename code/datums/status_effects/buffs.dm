@@ -956,15 +956,17 @@
 	if(!can_have_status())
 		qdel(src)
 		return
-	var/decay = max(1, round(stacks / 2))
+	var/decay = max(1, round((stacks - undecaying_stacks) / 2))
 	add_stacks(-decay)
 
 //Mob Proc
-/mob/living/proc/apply_lc_defense_level_up(stacks)
+/mob/living/proc/apply_lc_defense_level_up(stacks, undecaying_stacks)
 	var/datum/status_effect/stacking/defense_level_up/P = src.has_status_effect(/datum/status_effect/stacking/defense_level_up)
 	if(!P)
-		src.apply_status_effect(/datum/status_effect/stacking/defense_level_up, stacks)
+		P = src.apply_status_effect(/datum/status_effect/stacking/defense_level_up, stacks)
+		P.add_undecaying_stacks(undecaying_stacks)
 		return
+	P.add_undecaying_stacks(undecaying_stacks)
 	P.add_stacks(stacks)
 
 //Global Damage Up
@@ -1250,15 +1252,17 @@
 	if(!can_have_status())
 		qdel(src)
 		return
-	var/decay = max(1, round(stacks / 2))
+	var/decay = max(1, round((stacks - undecaying_stacks) / 2))
 	add_stacks(-decay)
 
 //Mob Proc
-/mob/living/proc/apply_lc_offense_level_up(stacks)
+/mob/living/proc/apply_lc_offense_level_up(stacks, undecaying_stacks)
 	var/datum/status_effect/stacking/offense_level_up/S = src.has_status_effect(/datum/status_effect/stacking/offense_level_up)
 	if(!S)
-		src.apply_status_effect(/datum/status_effect/stacking/offense_level_up, stacks)
+		S = src.apply_status_effect(/datum/status_effect/stacking/offense_level_up, stacks)
+		S.add_undecaying_stacks(undecaying_stacks)
 		return
+	S.add_undecaying_stacks(undecaying_stacks)
 	S.add_stacks(stacks)
 
 //Poise - Crit chance stacking buff

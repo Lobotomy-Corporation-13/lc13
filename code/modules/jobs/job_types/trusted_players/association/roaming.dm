@@ -26,28 +26,155 @@
 	job_important = "This is a role to assist existing offices in getting a foothold in the city. You are not to enter the ruins alone."
 	job_notice = "You are to assist the offices in their backstreet endeavors. Cryoing to re-roll your association is not allowed and will result in a de-trusting. \
 		You are a fixer that recently blew into town to assist the local offices in their endeavors."
-
-	var/list/associations = list("zwei","shi5", "liu5", "seven")
-	var/list/uncommon_associations = list("shi2", "cinq", "liu1", "zweiw", "devyat", "cinq4", "cinqwest", "dieci")
-	var/list/rare_associations = list("hana", "liu2")
+	/// Holds a list of players that should not be allowed to join as Roamers this round because they already spawned in as one! Staff no longer have to police this, woa
+	var/static/list/temporary_bans = list()
 
 /datum/job/associateroaming/after_spawn(mob/living/carbon/human/H, mob/M)
 	//Not fear immune you're basically some goober
 	ADD_TRAIT(H, TRAIT_WORK_FORBIDDEN, JOB_TRAIT)	//My guy you aren't even from this corporation
 	H.set_attribute_limit(100)
 	. = ..()
+	var/selector = new /obj/item/roamer_kit_selector(get_turf(H), src)
+	H.equip_to_slot_if_possible(selector, ITEM_SLOT_HANDS)
+	temporary_bans += H.ckey
 
-	//Weight it a little
-	var/chosen_asso = pick(associations)
-	if(prob(30))
-		chosen_asso = pick(uncommon_associations)
-	if(prob(10))
-		chosen_asso = pick(rare_associations)
+/datum/job/associateroaming/special_check_latejoin(client/C)
+	if(C.ckey in temporary_bans)
+		return FALSE
+	return TRUE
+
+/obj/item/roamer_kit_selector
+	name = "roaming associate uplink"
+	desc = "A communications device tuned to a certain Fixer Association's logistics department, ready to arrange delivery of some equipment. \
+	It is currently in a state of quantum superposition - it could be one of many Associations, you just don't quite know which yet. \n\
+	Use in-hand to receive equipment from one of two available Associations. These choices are set in stone, and cannot be re-rolled."
+	icon = 'icons/obj/device.dmi'
+	icon_state = "gangtool-green"
+	inhand_icon_state = "radio"
+	var/static/list/common_associations = list("zwei", "shi5", "liu5", "seven6")
+	var/static/list/uncommon_associations = list("zweiw", "shi2", "shieast", "cinq", "cinq4", "cinqwest", "liu1", "devyat", "dieci")
+	var/static/list/rare_associations = list("hana", "liu2")
+	var/static/forced_for_testing = null // Only ever one, it'll go in the guaranteed common slot
+
+	/// List matching the short little assoc names used previously to a full name that can be used on an ID/selection screen. I had to guess the sections for some of these since it's not included on the gear, went off the Limbus IDs
+	var/static/list/pretty_names = list(
+		"zwei" = "Zwei South Section 6 Fixer", // If local Assoc is Zwei and you need to find some justification for not being part of them despite being the same section... idk lol figure it out
+		"shi5" = "Shi South Section 5 Fixer",
+		"liu5" = "Liu South Section 5 Fixer",
+		"seven6" = "Seven South Section 6 Fixer",
+		"zweiw" = "Zwei West Section 3 Fixer",
+		"shi2" = "Shi South Section 2 Fixer",
+		"shieast" = "Shi East Section 3 Fixer",
+		"cinq" = "Cinq South Section 5 Fixer",
+		"cinq4" = "Cinq South Section 4 Fixer",
+		"cinqwest" = "Cinq West Section 3 Fixer",
+		"liu1" = "Liu South Section 1 Fixer",
+		"devyat" = "Devyat North Section 3 Fixer",
+		"dieci" = "Dieci South Section 4 Fixer",
+		"hana" = "Hana South Section 3 Fixer",
+		"liu2" = "Liu South Section 2 Fixer",
+		)
+	var/static/uncommon_chance = 30
+	var/static/rare_chance = 10
+	// These get set on Initialize for each individual instance of this item.
+	var/choice_slot_1 // Always Common!
+	var/choice_slot_2 // Common, Uncommon or Rare
+	/// Need this for adjusting positions if our options are refused.
+	var/datum/job/associateroaming/roamer_job_reference
+	var/already_used = FALSE
+
+// On Initialize, load our choice_slot_x vars with the Association choices we get from the common_associations, uncommon_associations and rare_associations lists, while avoiding duplicates.
+/obj/item/roamer_kit_selector/Initialize(mapload, datum/job/associateroaming/job_reference)
+	. = ..()
+	if(job_reference)
+		roamer_job_reference = job_reference
+	else
+		say("WARNING: Initialized without a reference to the Roamer job datum. Refusal of options will not free up a job slot.")
+
+	var/list/common_pool = common_associations.Copy()
+	common_pool -= forced_for_testing
+	var/list/uncommon_pool = uncommon_associations.Copy()
+	uncommon_pool -= forced_for_testing
+	var/list/rare_pool = rare_associations.Copy()
+	rare_pool -= forced_for_testing
+
+	// Choice Slot 1: Always a Common choice OR if there's a roamer being tested, it'll be that.
+	choice_slot_1 = (forced_for_testing) ? forced_for_testing : pick_n_take(common_pool)
+
+	// Choice Slot 2: Roll for Common; then roll to see if we replace with Uncommon; then roll to see if we replace with Rare.
+	choice_slot_2 = pick_n_take(common_pool)
+	if(prob(uncommon_chance))
+		choice_slot_2 = pick_n_take(uncommon_pool)
+	if(prob(rare_chance))
+		choice_slot_2 = pick_n_take(rare_pool)
+
+/obj/item/roamer_kit_selector/Destroy(force)
+	roamer_job_reference = null
+	return ..()
+
+/obj/item/roamer_kit_selector/attack_self(mob/user)
+	. = ..()
+	var/mob/living/carbon/human/probably_a_fixer = user
+	if(!istype(probably_a_fixer))
+		return
+	if(!probably_a_fixer.mind)
+		return
+	if(probably_a_fixer.mind.assigned_role != "Roaming Association Fixer")
+		to_chat(user, span_danger("WARNING: UNAUTHORIZED OPERATION DETECTED. CONTINUED ATTEMPTS TO INTERFACE WITH THIS UPLINK WILL BE PROSECUTED.")) // they will not be prosecuted
+		playsound(src, 'sound/machines/triple_beep.ogg', 50, FALSE)
+		return
+
+	var/list/dictionary = list(pretty_names[choice_slot_1] = choice_slot_1, pretty_names[choice_slot_2] = choice_slot_2, "Refuse (Return to Lobby)" = "uh_oh")
+	var/what_did_they_choose = alert(probably_a_fixer, "Choose one of the following roles to take. Note: Section does not necessarily correspond with power. P.S.: 'Refuse' will kill you and ban you from this role for the round. You can play some other role, though.",
+	"But Which Association Are You Really From?", pretty_names[choice_slot_1], pretty_names[choice_slot_2], "Refuse (Return to Lobby)")
+	var/chosen_asso = dictionary[what_did_they_choose]
+
+	if(!chosen_asso)
+		to_chat(probably_a_fixer, span_warning("Equipment delivery cancelled."))
+		playsound(src, 'sound/machines/terminal_prompt_deny.ogg', 50, FALSE)
+		return FALSE
+
+	// Claw kills you for tax evasion or something. There's no immersion-friendly way to do this unless you want me to script, like, a train ride coming for you and taking you elsewhere?
+	if(chosen_asso == "uh_oh")
+		if(!already_used)
+			// Do the visual
+			var/turf/origin = get_turf(probably_a_fixer)
+			var/list/all_turfs = origin.reachableAdjacentTurfs()
+			for(var/turf/T in all_turfs)
+				if(T == origin)
+					continue
+				new /obj/effect/temp_visual/dir_setting/claw_appears(T)
+				break
+			new /obj/effect/temp_visual/justitia_effect(origin)
+
+			// Remove this goofball from the datacore, so they don't clog up the crew manifest and whatnot.
+			var/datum/data/record/genrecord = find_record("fingerprint", md5(probably_a_fixer.dna.uni_identity), GLOB.data_core.general) // Why fingerprint? In the extremely rare case two people share a name. Theoretically their fingerprint can also be duped but let's get real
+			var/record_id
+			if(genrecord && genrecord.fields["rank"] == "Roaming Association Fixer") // let's just make sure
+				record_id = genrecord.fields["id"] // The same person's records will share an ID across the different datacore lists! We can use it to find the other 2 records reliably.
+				qdel(genrecord)
+			// If we got a record_id that means we successfully found and deleted a general record, do the same for sec and medical.
+			if(record_id)
+				var/datum/data/record/secrecord = find_record("id", record_id, GLOB.data_core.security)
+				var/datum/data/record/medrecord = find_record("id", record_id, GLOB.data_core.medical)
+				if(secrecord)
+					qdel(secrecord)
+				if(medrecord)
+					qdel(medrecord)
+
+			// Open up a job slot
+			roamer_job_reference.current_positions -= 1
+
+			// GOODBYE
+			qdel(probably_a_fixer)
+			qdel(src)
+
+		return FALSE
 
 	var/armor
 	var/weapon
 
-	//So these are big because I want there to be an even distribution between them
+	// We can probably change this a bit to be based on datums or something for more complex roamers in the future if we want? For now, this is mostly following the old implementation
 	switch(chosen_asso)
 		if("hana")
 			armor = /obj/item/clothing/suit/armor/ego_gear/city/hanacombat
@@ -69,6 +196,10 @@
 			armor = /obj/item/clothing/suit/armor/ego_gear/city/shilimbus
 			weapon = /obj/item/ego_weapon/city/shi_assassin
 
+		if("shieast")
+			armor = /obj/item/clothing/suit/armor/ego_gear/city/shi_east
+			weapon = /obj/item/storage/box/shi_east_kit // Bowblade, Quiver & Arrows
+
 		if("cinq")
 			armor = /obj/item/clothing/suit/armor/ego_gear/city/cinq
 			weapon = /obj/item/ego_weapon/city/cinq
@@ -85,7 +216,7 @@
 			armor = /obj/item/clothing/suit/armor/ego_gear/city/liu/section5
 			weapon = /obj/item/ego_weapon/city/liu/fist
 
-		if("seven")
+		if("seven6")
 			armor = /obj/item/clothing/suit/armor/ego_gear/city/seven
 			weapon = /obj/item/ego_weapon/city/seven
 
@@ -105,5 +236,66 @@
 			armor = /obj/item/clothing/suit/armor/ego_gear/city/dieci
 			weapon = /obj/item/ego_weapon/city/dieci
 
-	H.equip_to_slot_or_del(new armor(H),ITEM_SLOT_HANDS)
-	H.equip_to_slot_or_del(new weapon(H),ITEM_SLOT_HANDS)
+	var/turf/T = get_turf(probably_a_fixer)
+	if(!istype(T))
+		to_chat(probably_a_fixer, span_warning("Could not deliver equipment - you're not standing on a turf? Try again elsewhere."))
+		playsound(src, 'sound/machines/triple_beep.ogg', 50, FALSE)
+		return FALSE
+
+	if(!armor || !weapon)
+		to_chat(probably_a_fixer, span_warning("Failed to deliver equipment for the '[chosen_asso]' selection. Contact someone responsible for this."))
+		playsound(src, 'sound/machines/triple_beep.ogg', 50, FALSE)
+		return FALSE
+
+	if(already_used)
+		to_chat(probably_a_fixer, span_warning("This beacon is already used up. I hope you didn't think you could get more than a single kit."))
+		playsound(src, 'sound/machines/triple_beep.ogg', 50, FALSE)
+		return FALSE
+
+	// Disable further usage of this beacon instance.
+	already_used = TRUE
+	// If we successfully picked the roamer being tested, we can null it now (static var, so it nulls it for everyone.)
+	if(forced_for_testing == chosen_asso)
+		forced_for_testing = null
+
+	// Spawn and try to equip them with their gear. It'll fall on the floor if they have no room for it.
+	armor = new armor(T)
+	weapon = new weapon(T)
+	probably_a_fixer.equip_to_slot_if_possible(armor, ITEM_SLOT_OCLOTHING, qdel_on_fail = FALSE, disable_warning = FALSE, bypass_equip_delay_self = TRUE)
+	probably_a_fixer.equip_to_slot_if_possible(weapon, ITEM_SLOT_HANDS, qdel_on_fail = FALSE, disable_warning = FALSE, bypass_equip_delay_self = TRUE)
+
+	probably_a_fixer.mind.assigned_role = what_did_they_choose
+
+	// Update their ID and PDA to reflect their new role.
+	var/list/their_belongings = probably_a_fixer.get_all_gear()
+	var/found_id = FALSE
+	var/found_pda = FALSE
+	for(var/obj/item/possibly_identification_stuff in their_belongings)
+		if(istype(possibly_identification_stuff, /obj/item/card/id))
+			var/obj/item/card/id/can_i_see_some_id = possibly_identification_stuff
+			can_i_see_some_id.assignment = what_did_they_choose
+			can_i_see_some_id.update_label()
+			found_id = TRUE
+
+		else if(istype(possibly_identification_stuff, /obj/item/pda))
+			var/obj/item/pda/cool_pda_i_guess = possibly_identification_stuff
+			cool_pda_i_guess.ownjob = what_did_they_choose
+			cool_pda_i_guess.update_label()
+			found_pda = TRUE
+			if(!found_id && cool_pda_i_guess.id)
+				cool_pda_i_guess.id.assignment = what_did_they_choose
+				cool_pda_i_guess.id.update_label()
+				found_id = TRUE
+
+		if(found_id && found_pda)
+			break
+
+	// Update their crew manifest entry too
+	var/datum/data/record/our_persons_record = find_record("fingerprint", md5(probably_a_fixer.dna.uni_identity), GLOB.data_core.general)
+	if(our_persons_record && our_persons_record.fields["rank"] == "Roaming Association Fixer") // let's just make sure
+		our_persons_record.fields["rank"] = what_did_they_choose
+
+	to_chat(probably_a_fixer, span_nicegreen("Delivered equipment corresponding to a [what_did_they_choose]. Make us proud."))
+	playsound(src, 'sound/machines/terminal_success.ogg', 50, FALSE)
+	qdel(src)
+	return TRUE

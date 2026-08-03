@@ -78,6 +78,7 @@
 			chosen_memory = WEAKREF(user)
 			user.visible_message(span_warning("You are now Staining Rose's Chosen."))
 			icon_state = "rose_activated"
+		chosen = chosen_memory ? chosen_memory.resolve() : null
 
 		if (user != chosen)		//Your body starts to wilt.
 			user.visible_message(span_warning("Staining Rose already has a Chosen named [chosen]!"))
@@ -139,7 +140,7 @@
 	density = FALSE
 	animate(src, alpha = 0, time = 10 SECONDS)
 	QDEL_IN(src, 10 SECONDS)
-	..()
+	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/staining_rose/proc/RegisterMob(mob/living/L, list/record)
 	RegisterSignal(L, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING), PROC_REF(ForceUnregisterMob))

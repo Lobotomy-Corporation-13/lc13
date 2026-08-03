@@ -643,7 +643,7 @@ Traitors and the like can also be revived with the previous role mostly intact.
 	message_admins("[key_name_admin(usr)] has gibbed [key_name_admin(victim)]")
 
 	if(isobserver(victim))
-		new /obj/effect/gibspawner/generic(get_turf(victim))
+		new /obj/effect/bloodspawner/nogibs(get_turf(victim))
 		return
 
 	var/mob/living/living_victim = victim

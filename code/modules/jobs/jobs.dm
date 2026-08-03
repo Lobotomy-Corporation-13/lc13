@@ -92,9 +92,7 @@ GLOBAL_LIST_INIT(medical_positions, list(
 GLOBAL_LIST_INIT(science_positions, list(
 	// LCB Labs
 	"Lead Researcher",
-	"Senior Researcher",
-	"Research Archivist",
-	"Researcher",
+	"LCE Researcher",
 	"LCE Clerk",
 	))
 

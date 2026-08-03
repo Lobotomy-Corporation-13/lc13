@@ -8,8 +8,8 @@
 
 	outfit = /datum/outfit/job/researcher
 
-	access = list(ACCESS_RND)
-	minimal_access = list(ACCESS_RND)
+	access = list(ACCESS_RND, ACCESS_SECURITY)
+	minimal_access = list(ACCESS_RND, ACCESS_SECURITY)
 	departments = DEPARTMENT_SCIENCE
 
 	job_attribute_limit = 20
@@ -21,6 +21,13 @@
 	job_important = "You are a Researcher. Your job is to interact with abnormalities, write down notes based on how they reacted, and report your findings to the Senior Researcher or the office workers."
 	job_abbreviation = "RES"
 
+	roundstart_attributes = list(
+								FORTITUDE_ATTRIBUTE = 40,
+								PRUDENCE_ATTRIBUTE = 40,
+								TEMPERANCE_ATTRIBUTE = 40,
+								JUSTICE_ATTRIBUTE = 40
+								)
+
 /datum/job/researcher/after_spawn(mob/living/carbon/human/H, mob/M, latejoin = FALSE)
 	..()
 	H.set_attribute_limit(20)
@@ -29,12 +36,13 @@
 
 
 /datum/outfit/job/researcher
-	name = "Researcher"
+	name = "LCE Researcher"
 	jobtype = /datum/job/researcher
 
 	belt = /obj/item/pda/toxins
 	ears = /obj/item/radio/headset/headset_information
-	uniform = /obj/item/clothing/under/suit/lobotomy/plain
+	uniform = /obj/item/clothing/under/suit/lce
+	accessory = /obj/item/clothing/accessory/armband/lobotomy/extraction/lce
 	shoes = /obj/item/clothing/shoes/sneakers/white
-	suit = /obj/item/clothing/suit/armor/ego_gear/limbus_labs/research
+	suit = /obj/item/clothing/suit/armor/ego_gear/limbus/lce_longcoat
 	l_pocket = /obj/item/radio

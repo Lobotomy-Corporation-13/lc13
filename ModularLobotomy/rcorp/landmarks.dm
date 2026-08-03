@@ -1,76 +1,79 @@
 GLOBAL_LIST_INIT(easycombat, list(
-	/mob/living/simple_animal/hostile/abnormality/blue_shepherd,
-	/mob/living/simple_animal/hostile/abnormality/helper,
-	/mob/living/simple_animal/hostile/abnormality/smile,
-	/mob/living/simple_animal/hostile/abnormality/pinocchio,
-	/mob/living/simple_animal/hostile/abnormality/fragment,
-	/mob/living/simple_animal/hostile/abnormality/fairy_gentleman,
-	/mob/living/simple_animal/hostile/abnormality/drifting_fox,
-	/mob/living/simple_animal/hostile/abnormality/headless_ichthys,
-	/mob/living/simple_animal/hostile/abnormality/puss_in_boots,
-	/mob/living/simple_animal/hostile/abnormality/woodsman,
+	/mob/living/simple_animal/hostile/rcorp_abno/easy/blue_shepherd,
+	/mob/living/simple_animal/hostile/rcorp_abno/easy/helper,
+	/mob/living/simple_animal/hostile/rcorp_abno/easy/smile,
+	/mob/living/simple_animal/hostile/rcorp_abno/easy/pinocchio,
+	/mob/living/simple_animal/hostile/rcorp_abno/easy/fragment,
+	/mob/living/simple_animal/hostile/rcorp_abno/easy/fairy_gentleman,
+	/mob/living/simple_animal/hostile/rcorp_abno/easy/drifting_fox,
+	/mob/living/simple_animal/hostile/rcorp_abno/easy/headless_ichthys,
+	/mob/living/simple_animal/hostile/rcorp_abno/easy/puss_in_boots,
+	/mob/living/simple_animal/hostile/rcorp_abno/easy/woodsman,
 ))
 
 GLOBAL_LIST_INIT(easysupport, list(
-	/mob/living/simple_animal/hostile/abnormality/funeral,
-	/mob/living/simple_animal/hostile/abnormality/pisc_mermaid,
-	/mob/living/simple_animal/hostile/abnormality/redblooded,
-	/mob/living/simple_animal/hostile/abnormality/wayward,
-	/mob/living/simple_animal/hostile/abnormality/ppodae,
-	/mob/living/simple_animal/hostile/abnormality/apex_predator,
-	/mob/living/simple_animal/hostile/abnormality/cleaner,
-	/mob/living/simple_animal/hostile/abnormality/der_freischutz,
-	/mob/living/simple_animal/hostile/abnormality/better_memories,
-	/mob/living/simple_animal/hostile/abnormality/voiddream,
+	/mob/living/simple_animal/hostile/rcorp_abno/easy/funeral,
+	/mob/living/simple_animal/hostile/rcorp_abno/easy/pisc_mermaid,
+	/mob/living/simple_animal/hostile/rcorp_abno/easy/redblooded,
+	/mob/living/simple_animal/hostile/rcorp_abno/easy/wayward,
+	/mob/living/simple_animal/hostile/rcorp_abno/easy/ppodae,
+	/mob/living/simple_animal/hostile/rcorp_abno/easy/apex_predator,
+	/mob/living/simple_animal/hostile/rcorp_abno/easy/cleaner,
+	/mob/living/simple_animal/hostile/rcorp_abno/easy/der_freischutz,
+	/mob/living/simple_animal/hostile/rcorp_abno/easy/better_memories_minion,
+	/mob/living/simple_animal/hostile/rcorp_abno/easy/voiddream,
 ))
 
 GLOBAL_LIST_INIT(easytank, list(
-	/mob/living/simple_animal/hostile/abnormality/jangsan,
-	/mob/living/simple_animal/hostile/abnormality/scarecrow,
-	/mob/living/simple_animal/hostile/abnormality/kqe,
-	/mob/living/simple_animal/hostile/abnormality/warden,
-	/mob/living/simple_animal/hostile/abnormality/golden_apple,
-	/mob/living/simple_animal/hostile/abnormality/porccubus,
-	/mob/living/simple_animal/hostile/abnormality/black_swan,
+	/mob/living/simple_animal/hostile/rcorp_abno/easy/jangsan,
+	/mob/living/simple_animal/hostile/rcorp_abno/easy/scarecrow,
+	/mob/living/simple_animal/hostile/rcorp_abno/easy/kqe,
+	/mob/living/simple_animal/hostile/rcorp_abno/easy/warden,
+	/mob/living/simple_animal/hostile/rcorp_abno/easy/golden_apple,
+	/mob/living/simple_animal/hostile/rcorp_abno/easy/porccubus,
+	/mob/living/simple_animal/hostile/rcorp_abno/easy/black_swan,
 ))
 
 GLOBAL_LIST_INIT(hardcombat, list(
-	/mob/living/simple_animal/hostile/abnormality/clouded_monk,
-	/mob/living/simple_animal/hostile/abnormality/clown,
-	/mob/living/simple_animal/hostile/abnormality/nosferatu,
-	/mob/living/simple_animal/hostile/abnormality/big_wolf,
-	/mob/living/simple_animal/hostile/abnormality/luna,
-	/mob/living/simple_animal/hostile/abnormality/red_hood,
+	/mob/living/simple_animal/hostile/rcorp_abno/hard/clouded_monk,
+	/mob/living/simple_animal/hostile/rcorp_abno/hard/clown,
+	/mob/living/simple_animal/hostile/rcorp_abno/hard/nosferatu,
+	/mob/living/simple_animal/hostile/rcorp_abno/hard/big_wolf,
+	/mob/living/simple_animal/hostile/rcorp_abno/hard/luna,
+	/mob/living/simple_animal/hostile/rcorp_abno/hard/red_hood,
 ))
 
-GLOBAL_LIST_INIT(hardsupport, list(/mob/living/simple_animal/hostile/abnormality/sphinx,
-	/mob/living/simple_animal/hostile/abnormality/ebony_queen,
-	/mob/living/simple_animal/hostile/abnormality/thunder_bird,
-	/mob/living/simple_animal/hostile/abnormality/despair_knight,
-	/mob/living/simple_animal/hostile/abnormality/yin,
-	/mob/living/simple_animal/hostile/abnormality/pygmalion,
-	/mob/living/simple_animal/hostile/abnormality/big_bird,
+GLOBAL_LIST_INIT(hardsupport, list(
+	/mob/living/simple_animal/hostile/rcorp_abno/hard/sphinx,
+	/mob/living/simple_animal/hostile/rcorp_abno/hard/ebony_queen,
+	/mob/living/simple_animal/hostile/rcorp_abno/hard/thunder_bird,
+	/mob/living/simple_animal/hostile/rcorp_abno/hard/despair_knight,
+	/mob/living/simple_animal/hostile/rcorp_abno/hard/yin,
+	/mob/living/simple_animal/hostile/rcorp_abno/hard/pygmalion,
+	/mob/living/simple_animal/hostile/rcorp_abno/hard/big_bird,
 ))
 
-GLOBAL_LIST_INIT(hardtank, list(/mob/living/simple_animal/hostile/abnormality/melting_love,
-	/mob/living/simple_animal/hostile/abnormality/nothing_there,
-	/mob/living/simple_animal/hostile/abnormality/censored,
-	/mob/living/simple_animal/hostile/abnormality/titania,
-	/mob/living/simple_animal/hostile/abnormality/greed_king,
-	/mob/living/simple_animal/hostile/abnormality/eris,
-	/mob/living/simple_animal/hostile/abnormality/general_b,
+GLOBAL_LIST_INIT(hardtank, list(
+	/mob/living/simple_animal/hostile/rcorp_abno/hard/melting_love,
+	/mob/living/simple_animal/hostile/rcorp_abno/hard/nothing_there,
+	/mob/living/simple_animal/hostile/rcorp_abno/hard/censored,
+	/mob/living/simple_animal/hostile/rcorp_abno/hard/titania,
+	/mob/living/simple_animal/hostile/rcorp_abno/hard/greed_king,
+	/mob/living/simple_animal/hostile/rcorp_abno/hard/eris,
+	/mob/living/simple_animal/hostile/rcorp_abno/hard/general_b,
 ))
 
 GLOBAL_LIST_INIT(rhinobuster, list(,
-	/mob/living/simple_animal/hostile/abnormality/dimensional_refraction,
-	/mob/living/simple_animal/hostile/abnormality/rudolta,
-	/mob/living/simple_animal/hostile/abnormality/judgement_bird,
-	/mob/living/simple_animal/hostile/abnormality/alriune,
-	/mob/living/simple_animal/hostile/abnormality/fire_bird,
+	/mob/living/simple_animal/hostile/rcorp_abno/hard/dimensional_refraction,
+	/mob/living/simple_animal/hostile/rcorp_abno/hard/rudolta,
+	/mob/living/simple_animal/hostile/rcorp_abno/hard/judgement_bird,
+	/mob/living/simple_animal/hostile/rcorp_abno/hard/alriune,
+	/mob/living/simple_animal/hostile/rcorp_abno/hard/fire_bird,
 ))
 
 //Used for the specific raidboss mode
-GLOBAL_LIST_INIT(raidboss, list(/mob/living/simple_animal/hostile/distortion/shrimp_rambo/easy,
+GLOBAL_LIST_INIT(raidboss, list(
+	/mob/living/simple_animal/hostile/distortion/shrimp_rambo/easy,
 	/mob/living/simple_animal/hostile/abnormality/mountain,
 	/mob/living/simple_animal/hostile/ordeal/black_fixer,
 ))
@@ -86,7 +89,7 @@ GLOBAL_LIST_INIT(raidboss, list(/mob/living/simple_animal/hostile/distortion/shr
 /obj/effect/landmark/abnospawn/easycombat/Initialize()
 	..()
 	var/spawning = pick_n_take(GLOB.easycombat)
-	var/mob/living/simple_animal/hostile/abnormality/A = new spawning(get_turf(src))
+	var/mob/living/simple_animal/hostile/rcorp_abno/A = new spawning(get_turf(src))
 	A.rcorp_team = "easy"
 	return INITIALIZE_HINT_QDEL
 
@@ -99,7 +102,7 @@ GLOBAL_LIST_INIT(raidboss, list(/mob/living/simple_animal/hostile/distortion/shr
 /obj/effect/landmark/abnospawn/easysupport/Initialize()
 	..()
 	var/spawning = pick_n_take(GLOB.easysupport)
-	var/mob/living/simple_animal/hostile/abnormality/A = new spawning(get_turf(src))
+	var/mob/living/simple_animal/hostile/rcorp_abno/A = new spawning(get_turf(src))
 	A.rcorp_team = "easy"
 	return INITIALIZE_HINT_QDEL
 
@@ -112,7 +115,7 @@ GLOBAL_LIST_INIT(raidboss, list(/mob/living/simple_animal/hostile/distortion/shr
 /obj/effect/landmark/abnospawn/easytank/Initialize()
 	..()
 	var/spawning = pick_n_take(GLOB.easytank)
-	var/mob/living/simple_animal/hostile/abnormality/A = new spawning(get_turf(src))
+	var/mob/living/simple_animal/hostile/rcorp_abno/A = new spawning(get_turf(src))
 	A.rcorp_team = "easy"
 	return INITIALIZE_HINT_QDEL
 

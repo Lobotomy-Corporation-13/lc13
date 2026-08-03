@@ -105,7 +105,7 @@ SUBSYSTEM_DEF(maptype)
 		if("office")
 			departments = list("Command", "Fixers")
 		if("limbus_labs")
-			departments = list("Command", "Security", "Medical", "Science", "Engineering", "Service" )
+			departments = list("Command", "Security", "Medical", "Science")
 		if("rcorp")
 			departments = list("Command", "R Corp", "Medical")
 		if("wcorp")
@@ -125,8 +125,8 @@ SUBSYSTEM_DEF(maptype)
 	//All the maptype specific stuff
 	switch(maptype)
 		if("rcorp")	//For the gamemode stuff
-			if(prob(30))
-				jobtype = "rcorp_fifth"
+			//if(prob(30))
+			//	jobtype = "rcorp_fifth"
 
 			switch(rand(1,5))
 				if(1)	 //Find this var in the objectives folder

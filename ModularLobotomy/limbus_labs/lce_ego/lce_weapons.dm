@@ -15,7 +15,7 @@
 	/// Must match the paired armor's family for the buffs to apply.
 	var/attunement_family = ""
 	/// Bonus damage at 100% attunement (1 = +100% force).
-	var/max_damage_bonus = 1
+	var/max_damage_bonus = 0.5
 	/// Damage cut when the matching armor isn't worn (0.5 = -50%).
 	var/no_armor_penalty = 0.5
 

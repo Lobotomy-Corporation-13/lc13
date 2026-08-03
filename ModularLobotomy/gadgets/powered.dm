@@ -133,7 +133,7 @@
 			if(istype(target, /mob/living/simple_animal/hostile/ordeal))
 				return TRUE
 		if(3)
-			if(isabnormalitymob(target))
+			if(isabnormalitymob(target)  || isrcabnormalitymob(target))
 				return TRUE
 	return FALSE
 
@@ -279,7 +279,7 @@
 		user.visible_message(hit_message)
 		T.apply_status_effect(/datum/status_effect/qliphothoverload)
 		return
-	if (!cell || cell.charge < batterycost || isabnormalitymob(T))
+	if (!cell || cell.charge < batterycost || isabnormalitymob(T) || isrcabnormalitymob(T))
 		to_chat(user, span_notice("The Gadget buzzes. Battery charge too low."))
 		return
 	if (batterycost == batterycost_stun)
