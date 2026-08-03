@@ -188,6 +188,16 @@
 /obj/machinery/telecomms/server/presets/common,
 /turf/open/floor/circuit/telecomms/mainframe,
 /area/facility_hallway/training)
+"bE" = (
+/obj/structure/table/reinforced{
+	color = "49473B";
+	pixel_y = 1
+	},
+/obj/item/toy/cards/deck,
+/turf/open/floor/mineral/plastitanium{
+	color = "EDD956"
+	},
+/area/facility_hallway/north)
 "bI" = (
 /obj/structure/chair/office/light,
 /turf/open/floor/plasteel/dark,
@@ -2177,6 +2187,17 @@
 /obj/item/clothing/gloves/boxing/yellow,
 /turf/open/floor/plasteel/dark,
 /area/facility_hallway/north)
+"xT" = (
+/obj/structure/chair/comfy/shuttle{
+	dir = 4;
+	color = "#9cadc7";
+	name = "fancy chair";
+	desc = "A comfortable seat. Since its custom made, its quite expensive"
+	},
+/turf/open/floor/mineral/plastitanium{
+	color = "EDD956"
+	},
+/area/facility_hallway/north)
 "yb" = (
 /obj/machinery/door/poddoor,
 /obj/structure/sigsystem/connector{
@@ -2697,6 +2718,17 @@
 	},
 /turf/open/floor/grass,
 /area/facility_hallway/west)
+"Dq" = (
+/obj/structure/chair/comfy/shuttle{
+	dir = 8;
+	color = "#9cadc7";
+	name = "fancy chair";
+	desc = "A comfortable seat. Since its custom made, its quite expensive"
+	},
+/turf/open/floor/mineral/plastitanium{
+	color = "EDD956"
+	},
+/area/facility_hallway/north)
 "Dv" = (
 /obj/structure/sign/logo{
 	icon_state = "limbus_sign 0,0";
@@ -4467,6 +4499,18 @@
 	},
 /turf/open/floor/pod/light,
 /area/facility_hallway/south)
+"Vs" = (
+/obj/structure/table/reinforced{
+	color = "49473B";
+	pixel_y = 1
+	},
+/obj/machinery/stonkmarket{
+	pixel_y = 10
+	},
+/turf/open/floor/mineral/plastitanium{
+	color = "EDD956"
+	},
+/area/facility_hallway/north)
 "Vt" = (
 /obj/effect/turf_decal/trimline/red/filled/line{
 	dir = 1
@@ -38291,11 +38335,11 @@ yK
 Bv
 yK
 SH
-AD
+Vs
 yL
 yL
 yL
-yL
+xT
 DK
 kq
 Hb
@@ -38547,7 +38591,7 @@ BM
 Ox
 Qx
 Qx
-yL
+bE
 DK
 ae
 OS
@@ -38799,7 +38843,7 @@ AD
 Qx
 yK
 Qx
-yL
+Dq
 DK
 Gs
 OS
