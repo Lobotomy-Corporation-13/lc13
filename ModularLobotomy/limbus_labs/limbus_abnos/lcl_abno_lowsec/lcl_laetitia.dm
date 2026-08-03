@@ -100,7 +100,7 @@
 
 /mob/living/simple_animal/hostile/limbus_abno/laetitia/proc/GiveGlobalFriend()
 	to_chat(src, "<span class='span_warning'>Things are too boring around here, so you decide to shake things up!</span>")
-	for(var/mob/living/carbon/human/H in GLOB.player_list)
+	for(var/mob/living/carbon/human/H in view(10 , src))	//This used to be literally everyone. God fucking no.
 		if(H.z != z)
 			continue
 		if(H.stat == DEAD)

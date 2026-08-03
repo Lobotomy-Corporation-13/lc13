@@ -10,7 +10,7 @@
 	magazine_name = "Udjat Magazine"
 	weapon_weight = WEAPON_HEAVY
 	pellets = 5
-	variance = 20
+	variance = 15
 	fire_delay = 10
 	shotsleft = 16
 	reloadtime = 1 SECONDS
@@ -26,6 +26,7 @@
 
 /obj/projectile/ego_bullet/ego_noise/udjat
 	name = "udjat"
+	damage = 20
 
 /obj/item/udjat_mag
 	name = "udjat mag"
