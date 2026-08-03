@@ -93,10 +93,10 @@
 
 /datum/reagent/madness/on_mob_metabolize(mob/living/L)
 	..()
-	psychofist.teach(user)
+	psychofist.teach(L)
 
 /datum/reagent/madness/on_mob_end_metabolize(mob/living/L)
-	psychofist.remove(user)
+	psychofist.remove(L)
 	qdel(psychofist)
 	..()
 
@@ -124,12 +124,12 @@
 	description = "A compound that can pull you into the void."
 	color = "#60A584" // rgb: 96, 165, 132
 
-/datum/reagent/voidcall/on_mob_metabolize(mob/living/L)
+/datum/reagent/voidcall/on_mob_metabolize(mob/living/carbon/L)
 	..()
 	if(L.has_dna() && !HAS_TRAIT(L, TRAIT_GENELESS) && !HAS_TRAIT(L, TRAIT_BADDNA))
 		L.dna.add_mutation(/datum/mutation/human/void)
 
-/datum/reagent/voidcall/on_mob_end_metabolize(mob/living/L)
+/datum/reagent/voidcall/on_mob_end_metabolize(mob/living/carbon/L)
 	if(L.has_dna() && !HAS_TRAIT(L, TRAIT_GENELESS) && !HAS_TRAIT(L, TRAIT_BADDNA))
 		L.dna.remove_mutation(/datum/mutation/human/void)
 	..()
