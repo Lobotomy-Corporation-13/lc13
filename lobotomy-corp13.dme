@@ -4218,6 +4218,8 @@
 #include "ModularLobotomy\!extra_abnos\mining\teth\goliath.dm"
 #include "ModularLobotomy\!extra_abnos\mining\teth\hivelord.dm"
 #include "ModularLobotomy\!extra_abnos\mining\teth\ice_whelp.dm"
+#include "ModularLobotomy\!extra_abnos\mining\teth\mook.dm"
+#include "ModularLobotomy\!extra_abnos\mining\waw\leaper.dm"
 #include "ModularLobotomy\altjobtitles\altjobtitles.dm"
 #include "ModularLobotomy\altjobtitles\LC13.dm"
 #include "ModularLobotomy\altjobtitles\outfits.dm"
