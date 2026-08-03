@@ -23,7 +23,7 @@
 	var/swarm_width = 3
 
 	//PLAYABLES ATTACKS
-	attack_action_types = list(/datum/action/innate/abnormality_attack/toggle/funeral_butterfly_toggle)
+	attack_action_types = list(/datum/action/innate/rca_abnormality_attack/toggle/funeral_butterfly_toggle)
 
 	abno_additional_instructions = "<h1>You are Funeral of the Dead Butterflies, A Support Role Abnormality.</h1><br>\
 		<b>|Guiding Hand|: When clicking on a living being you will begin aiming with your finger. \
