@@ -53,7 +53,87 @@
 
 /datum/reagent/abnormality/mindkill/on_mob_life(mob/living/M)
 	..()
-	if(istype(M, /mob/living/carbon/human))
-		var/mob/living/carbon/human/H = M
-		M.hallucination += 1
+	M.hallucination += 1
 
+
+//Simple Drug for some fun.
+//Like Space Drugs but not in space.0
+/datum/reagent/junglejuice
+	name = "Jungle juice"
+	description = "An illegal chemical compound used as drug."
+	color = "#60A584" // rgb: 96, 165, 132
+	overdose_threshold = 30
+
+/datum/reagent/junglejuice/on_mob_life(mob/living/M)
+	M.set_drugginess(15)
+	if(isturf(M.loc) && !isspaceturf(M.loc))
+		if(!HAS_TRAIT(M, TRAIT_IMMOBILIZED))
+			if(prob(10))
+				step(M, pick(GLOB.cardinals))
+	if(prob(7))
+		M.emote(pick("twitch","drool","moan","giggle"))
+	..()
+
+/datum/reagent/junglejuice/overdose_start(mob/living/M)
+	to_chat(M, "<span class='userdanger'>You start tripping hard!</span>")
+
+/datum/reagent/junglejuice/overdose_process(mob/living/M)
+	if(M.hallucination < volume && prob(20))
+		M.hallucination += 5
+	..()
+
+
+//This one gives you the psychotic brawler
+/datum/reagent/madness
+	name = "Madness"
+	description = "An illegal chemical compound that causes one to go insane but also offers them some new... strange effects."
+	color = "#60A584" // rgb: 96, 165, 132
+	overdose_threshold = 30
+	var/datum/martial_art/psychotic_brawling/psychofist = new
+
+/datum/reagent/madness/on_mob_metabolize(mob/living/L)
+	..()
+	psychofist.teach(user)
+
+/datum/reagent/madness/on_mob_end_metabolize(mob/living/L)
+	psychofist.remove(user)
+	qdel(psychofist)
+	..()
+
+/datum/reagent/madness/on_mob_life(mob/living/M)
+	if((M.hallucination < 15) && prob(10))
+		M.hallucination += 5
+
+/datum/reagent/madness/overdose_start(mob/living/M)
+	to_chat(M, "<span class='userdanger'>You can't stop shaking, your heart beats faster and faster...</span>")
+
+/datum/reagent/madness/overdose_process(mob/living/M)
+	M.Jitter(5)
+	if(prob(5))
+		M.drop_all_held_items()
+	if(prob(15))
+		M.emote(pick("twitch","drool"))
+	if(prob(15))
+		M.adjustToxLoss(2, 0)
+	..()
+
+
+//Way to get the void skill. No clue where it will be useful.
+/datum/reagent/voidcall
+	name = "VoidCall"
+	description = "A compound that can pull you into the void."
+	color = "#60A584" // rgb: 96, 165, 132
+
+/datum/reagent/voidcall/on_mob_metabolize(mob/living/L)
+	..()
+	if(L.has_dna() && !HAS_TRAIT(L, TRAIT_GENELESS) && !HAS_TRAIT(L, TRAIT_BADDNA))
+		L.dna.add_mutation(/datum/mutation/human/void)
+
+/datum/reagent/voidcall/on_mob_end_metabolize(mob/living/L)
+	if(L.has_dna() && !HAS_TRAIT(L, TRAIT_GENELESS) && !HAS_TRAIT(L, TRAIT_BADDNA))
+		L.dna.remove_mutation(/datum/mutation/human/void)
+	..()
+
+/datum/reagent/voidcall/on_mob_life(mob/living/M)
+	if((M.hallucination < 15) && prob(10))
+		M.hallucination += 5
