@@ -43,6 +43,13 @@
 	can_adjust = TRUE
 	alt_covers_chest = TRUE
 
+/obj/item/clothing/under/suit/lce
+	name = "LCE uniform"
+	desc = "A cream dress shirt and dark slacks, cut to Limbus Company Extraction's pattern. Worn under the coat, and by the people who never get issued one."
+	icon_state = "lce_suit"
+	inhand_icon_state = "lce_suit"
+	can_adjust = FALSE
+
 /obj/item/clothing/under/suit/black/skirt
 	name = "black suitskirt"
 	desc = "A professional black suitskirt. Nanotrasen Investigation Bureau approved!"

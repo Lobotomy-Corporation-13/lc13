@@ -117,3 +117,14 @@
 	flags_inv = NONE
 	armor = list(RED_DAMAGE = 0, WHITE_DAMAGE = 0, BLACK_DAMAGE = 0, PALE_DAMAGE = 0)
 	equip_delay_self = 0
+
+
+//LCE Research issue - the brown longcoat. Subtypes /limbus rather than /limbus_labs because
+//that is the parent carrying limbus_suits.dmi / limbus_suit.dmi, where the sprite lives.
+/obj/item/clothing/suit/armor/ego_gear/limbus/lce_longcoat
+	name = "LCE longcoat"
+	desc = "A heavy brown longcoat with red piping at the lapel and cuff. Standard issue to Limbus Company Extraction research staff, and the only armour most of them will ever wear."
+	icon_state = "lce_longcoat"
+	flags_inv = NONE
+	armor = list(RED_DAMAGE = 20, WHITE_DAMAGE = 20, BLACK_DAMAGE = 20, PALE_DAMAGE = 0)
+	equip_delay_self = 0
