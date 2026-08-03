@@ -41,7 +41,7 @@
 	desc = "A Khopesh used by the LCA Udjat ."
 	special = "Use in hand to prepare a stun attack."
 	icon_state = "udjat_khopesh"
-	force = 40
+	force = 55
 	swingstyle = WEAPONSWING_LARGESWEEP
 	damtype = RED_DAMAGE
 	attack_verb_continuous = list("cleaves", "cuts")
