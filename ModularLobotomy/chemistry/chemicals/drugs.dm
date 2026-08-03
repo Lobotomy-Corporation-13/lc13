@@ -40,6 +40,20 @@
 	color = "#6baf65"
 	damage_mods = list(0.9, 0.9, 0.9, 0.9)
 
-/datum/reagent/abnormality/heavyblood/on_mob_life(mob/living/M)
+/datum/reagent/abnormality/blindsight/on_mob_life(mob/living/M)
 	M.adjustOrganLoss(ORGAN_SLOT_EYES,0.25*REM)
 	..()
+
+
+/datum/reagent/abnormality/mindkill
+	name = "Mindkill"
+	description = "A drug that removes sanity but gives you visions."
+	color = "#6baf65"
+	sanity_restore = -2
+
+/datum/reagent/abnormality/mindkill/on_mob_life(mob/living/M)
+	..()
+	if(istype(M, /mob/living/carbon/human))
+		var/mob/living/carbon/human/H = M
+		M.hallucination += 1
+
