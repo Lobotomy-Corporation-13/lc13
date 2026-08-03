@@ -164,6 +164,8 @@
 /mob/living/simple_animal/hostile/abnormality/alriune/proc/ConstantAttack()
 	for(var/i in 1 to 3)
 		for(var/mob/living/carbon/human/L in view(9, src))
+			if(L.stat == DEAD)
+				continue
 			var/turf/shoot_from = pick(range(1, src))
 			var/obj/projectile/alriune/P = new(shoot_from)
 			P.starting = shoot_from

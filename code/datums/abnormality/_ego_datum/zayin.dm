@@ -43,6 +43,7 @@
 /datum/ego_datum/armor/little_alice
 	item_path = /obj/item/clothing/suit/armor/ego_gear/zayin/little_alice
 	cost = 12
+	ego_tags = list(EGO_TAG_REALIZABLE)
 
 // We can change anything - Change
 /datum/ego_datum/weapon/change

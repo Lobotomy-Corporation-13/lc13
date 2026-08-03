@@ -22,13 +22,12 @@ SUBSYSTEM_DEF(maptype)
 
 	//LC13 Gamemode Traits
 	var/list/lc_trait = list(
-						//Actual traits						
+						//Actual traits
 						FACILITY_TRAIT_MOBA_AGENTS = 10, 		//Agents pick a MOBA class
 						FACILITY_TRAIT_CRITICAL_HITS = 10,		//EGO can Critical hit.
 						FACILITY_TRAIT_DEPARTMENTAL_BUFFS = 10,	//Departmental Agent Buffs
 						FACILITY_TRAIT_XP_MOD = 7,				//XP works differently on HP/SP
 						FACILITY_TRAIT_DARK_SOULS = 5,			//You get estus flasks and rolling
-						FACILITY_TRAIT_ABNO_BLITZ = 3,			//The game is significantly Faster, starts after noon.
 						FACILITY_TRAIT_NO_EGO = 3,				//No EGO, works like our events with double the outputs and refineries
 						FACILITY_TRAIT_PROSTHETICS = 3,			//There's a new prosthetics vendor!
 
@@ -126,8 +125,8 @@ SUBSYSTEM_DEF(maptype)
 	//All the maptype specific stuff
 	switch(maptype)
 		if("rcorp")	//For the gamemode stuff
-			if(prob(30))
-				jobtype = "rcorp_fifth"
+			//if(prob(30))
+			//	jobtype = "rcorp_fifth"
 
 			switch(rand(1,5))
 				if(1)	 //Find this var in the objectives folder

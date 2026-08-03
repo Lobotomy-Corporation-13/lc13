@@ -894,3 +894,50 @@
 	src.transform = M
 	animate(src.get_filter("motionblur"), y = 0, time = travel_time, flags = ANIMATION_PARALLEL)
 	animate(src, pixel_z = -1 * abs(sin(rotation))*4, pixel_x = (sin(rotation) * 20), time = travel_time, easing = LINEAR_EASING, flags = ANIMATION_PARALLEL)
+
+/obj/item/ego_weapon/ranged/pistol/tarnished
+	name = "Tears of the Tarnished Blood"
+	desc = "With contemplation, I shall darken the clear skies above; with my sacrifice, I shall exsanguinate my carnal blood upon this earth."
+	icon_state = "tarnished"
+	inhand_icon_state = "tarnished"
+	special = ""
+
+	force = 50
+	damtype = PALE_DAMAGE
+	attack_speed = 1.0
+	swingstyle = WEAPONSWING_LARGESWEEP
+	hitsound = "sound/effects/wounds/pierce1.ogg"
+
+	projectile_path = /obj/projectile/ego_bullet/tarnished
+	weapon_weight = WEAPON_MEDIUM
+	spread = 10
+
+	autofire = 0.10 SECONDS
+	shotsleft = 33
+	reloadtime = 0.9 SECONDS
+
+
+	fire_sound = 'sound/magic/blink.ogg'
+	vary_fire_sound = TRUE
+	fire_sound_volume = 25
+
+	alternate_fire_name = "Flower Burying Pin"
+	alternate_pellets = 1
+	alternate_shotsleft = 3
+	alternate_info = "This weapon fires a levinfall pin."
+	alternate_reload_type = RANGEDEGO_ALTERNATEFIRE_RELOADTYPE_SHARED_RELOAD
+	alternate_projectile_path = /obj/projectile/ego_bullet/tarnished_pin
+	alternate_fire_sound = 'sound/weapons/bowfire.ogg'
+	alternate_fire_sound_volume = 70
+	alternate_toggle_sound = 'sound/weapons/bowdraw.ogg'
+	alternate_toggle_sound_volume = 65
+	alternate_toggle_enabled_message = span_notice("You switch to levinfall pins.")
+	alternate_toggle_disabled_message = span_notice("You switch to standard rounds.")
+
+	attribute_requirements = list(
+							FORTITUDE_ATTRIBUTE = 80,
+							PRUDENCE_ATTRIBUTE = 100,
+							TEMPERANCE_ATTRIBUTE = 80,
+							JUSTICE_ATTRIBUTE = 80
+							)
+

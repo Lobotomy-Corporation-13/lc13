@@ -3,7 +3,6 @@
 #define FACILITY_TRAIT_MOBA_AGENTS "MOBA Agents"
 #define FACILITY_TRAIT_CRITICAL_HITS "Critical Hits"
 #define FACILITY_TRAIT_DEPARTMENTAL_BUFFS "Department Agents"
-#define FACILITY_TRAIT_ABNO_BLITZ "Abno Blitz"
 #define FACILITY_TRAIT_WORKING_CLERKS "Working Clerks"
 #define FACILITY_TRAIT_PLAYABLES "Playable Abnormalities"
 #define FACILITY_TRAIT_CALLBACK "Callback"

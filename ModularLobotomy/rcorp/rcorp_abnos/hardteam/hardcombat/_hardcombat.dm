@@ -1,0 +1,1 @@
+//Hardcombat, abnos whose main purpose is combat, too weak to be hardtanks, too strong to be easycombat

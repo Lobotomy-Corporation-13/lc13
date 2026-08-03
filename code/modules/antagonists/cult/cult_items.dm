@@ -833,7 +833,8 @@
 		return
 	var/C = user.client
 	if(ishuman(user) && C)
-		var/list/angle_vector = calculate_projectile_angle_and_pixel_offsets(user, params)
+		var/list/modifiers = params2list(params)
+		var/list/angle_vector = calculate_projectile_angle_and_pixel_offsets(user, A, modifiers)
 		angle = angle_vector[1]
 	else
 		qdel(src)

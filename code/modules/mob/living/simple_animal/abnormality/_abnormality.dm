@@ -141,7 +141,7 @@
 
 	/// Bubbles and their speech
 	// Generic bubbles by agent level.
-	var/list/generic_bubbles = alist(
+	var/alist/generic_bubbles = alist(
 		1 = list("%PERSON looks nervously at %ABNO...", "%PERSON tries to stay focused."),
 		2 = list("%PERSON focuses on the task at hand.", "%PERSON follows the directions as trained."),
 		3 = list("%PERSON keeps an eye on %ABNO.", "%PERSON considers what they'll eat next."),
@@ -673,6 +673,7 @@ The variable's key needs to be non-numerical.*/
 /mob/living/simple_animal/hostile/abnormality/spawn_gibs()
 	if(blood_volume <= 0)
 		return
+	//Abnormalities dont explode on mass most of the time so they can keep gibs.
 	return new /obj/effect/gibspawner/generic(drop_location(), src, get_static_viruses())
 
 // Actions

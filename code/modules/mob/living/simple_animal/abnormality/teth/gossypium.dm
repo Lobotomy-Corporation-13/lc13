@@ -15,7 +15,7 @@
 	ranged = TRUE
 	melee_damage_lower = 10
 	melee_damage_upper = 14
-	ranged_cooldown_time = 3
+	ranged_cooldown_time = 3 //wtf was Jackfrost thinking giving this thing 5 max
 	rapid_melee = 2.5
 	move_to_delay = 4.5
 	melee_damage_type = BLACK_DAMAGE
@@ -26,7 +26,7 @@
 	faction = list("hostile")
 	can_breach = TRUE
 	threat_level = TETH_LEVEL
-	start_qliphoth = 5
+	start_qliphoth = 3
 	work_chances = list(
 		ABNORMALITY_WORK_INSTINCT = 60,
 		ABNORMALITY_WORK_INSIGHT = 40,
@@ -85,14 +85,13 @@
 
 /mob/living/simple_animal/hostile/abnormality/gossypium/FailureEffect(mob/living/carbon/human/user, work_type, pe)
 	. = ..()
-	if(prob(60))
-		datum_reference.qliphoth_change(-1)
+	datum_reference.qliphoth_change(-1)
 
 /mob/living/simple_animal/hostile/abnormality/gossypium/PostWorkEffect(mob/living/carbon/human/user, work_type)
 	var/brooch = user.ego_gift_list[BROOCH]
 	if((work_type != "Approach")) //No dropping qlip on Approach
 		if(istype(brooch, /datum/ego_gifts/white_gossypium))
-			if(prob(20))
+			if(prob(10))
 				datum_reference.qliphoth_change(1)
 		else
 			if(prob(80))
@@ -183,7 +182,7 @@
 	var/turf/origin = get_turf(src)
 	playsound(origin, 'sound/abnormalities/ebonyqueen/strongcharge.ogg', 75, 0, 5)
 	playsound(origin, 'sound/creatures/venus_trap_hurt.ogg', 75, 0, 5)
-	SLEEP_CHECK_DEATH(6)
+	SLEEP_CHECK_DEATH(10)
 	for(var/turf/T in spiral_range_turfs(2, origin))
 		new /obj/effect/temp_visual/vine(T, src)
 	SLEEP_CHECK_DEATH(5)

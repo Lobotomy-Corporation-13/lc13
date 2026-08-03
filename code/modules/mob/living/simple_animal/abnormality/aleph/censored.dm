@@ -157,7 +157,7 @@
 	SLEEP_CHECK_DEATH(3)
 	new /obj/effect/temp_visual/censored(get_turf(src))
 	for(var/i = 1 to 3)
-		new /obj/effect/gibspawner/generic/silent(get_turf(src))
+		new /obj/effect/bloodspawner/silent(get_turf(src))
 		SLEEP_CHECK_DEATH(5.5)
 	var/mob/living/simple_animal/hostile/mini_censored/C = new(get_turf(src))
 	if(!QDELETED(H))
@@ -226,7 +226,7 @@
 			datum_reference.qliphoth_change(1)
 			user.death()
 			for(var/i = 1 to 3)
-				new /obj/effect/gibspawner/generic/silent(get_turf(src))
+				new /obj/effect/bloodspawner/silent(get_turf(src))
 				sleep(5.4)
 			QDEL_NULL(user)
 		else

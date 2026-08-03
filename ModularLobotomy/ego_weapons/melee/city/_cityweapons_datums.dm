@@ -106,6 +106,15 @@ Association gear is mostly HE for grunts, low WAW for veterans and high WAW for 
 	item_path = /obj/item/ego_weapon/city/shi_assassin/director
 	cost = 90
 
+// | Shi East |
+//
+// Bowblades (Bow's Glimmer)
+/// Shi East Bowblade
+/datum/ego_datum/weapon/city/shi_east_bowblade
+	item_path = /obj/item/ego_weapon/ranged/city/shi_east
+	cost = 75
+	ego_tags = list(EGO_TAG_VERSATILE_DAMAGE, EGO_TAG_HAZARDOUS, EGO_TAG_SPECIAL_RANGED, EGO_TAG_DOT, EGO_TAG_DEBUFFER)
+
 /* ------------------ 5 - Cinq ------------------*/
 // This one is a bit weirdly laid out because the type path naming scheme for Cinq is giving me ominous vibes. Sorry
 

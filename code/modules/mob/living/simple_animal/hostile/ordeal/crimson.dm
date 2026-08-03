@@ -131,11 +131,21 @@
 	damage_coeff = list(RED_DAMAGE = 0.6, WHITE_DAMAGE = 1.2, BLACK_DAMAGE = 1.2, PALE_DAMAGE = 1.5)
 	blood_volume = BLOOD_VOLUME_NORMAL
 	ordeal_remove_ondeath = FALSE
+	var/spawn_clowns = TRUE
 	var/clown_derivitive = /mob/living/simple_animal/hostile/ordeal/crimson_clown
 
 	/// How many mobs we spawn on death
 	var/mob_spawn_amount = 3
 	var/being_gibbed = FALSE
+
+/// Forbidden from attacking other Crimson Ordeals (or itself)
+/mob/living/simple_animal/hostile/ordeal/crimson_noon/AttackingTarget(atom/attacked_target)
+	if(ismob(attacked_target))
+		var/mob/victim = attacked_target
+		if(faction_check_mob(victim))
+			to_chat(src, span_warning("Attacking your fellow jesters simply isn't in your nature, no matter how funny it is."))
+			return FALSE
+	return ..()
 
 /mob/living/simple_animal/hostile/ordeal/crimson_noon/gib()
 	//Please dont spam the animation sir
@@ -158,7 +168,8 @@
 	if(QDELETED(src))
 		return
 	visible_message(span_danger("[src] suddenly explodes!"))
-	ReleaseTheClowns()
+	if(spawn_clowns)
+		ReleaseTheClowns()
 	if(ordeal_reference)
 		ordeal_reference.OnMobDeath(src)
 		ordeal_reference = null
@@ -521,6 +532,7 @@
 	health = 650
 	mob_spawn_amount = 1
 	clown_derivitive = /mob/living/simple_animal/hostile/ordeal/crimson_clown/spawned
+	spawn_clowns = FALSE
 	var/time_to_explode
 
 /mob/living/simple_animal/hostile/ordeal/crimson_noon/spawned/Initialize()
@@ -533,6 +545,7 @@
 	if(!.)
 		return
 	if(world.time >= time_to_explode)
+		spawn_clowns = TRUE
 		gib()
 
 // Dusk
@@ -541,6 +554,7 @@
 	maxHealth = 500
 	health = 500
 	clown_derivitive = /mob/living/simple_animal/hostile/ordeal/crimson_noon/spawned
+	spawn_clowns = FALSE
 	var/time_to_explode
 
 /mob/living/simple_animal/hostile/ordeal/crimson_noon/crimson_dusk/spawned/Initialize()
@@ -553,4 +567,5 @@
 	if(!.)
 		return
 	if(world.time >= time_to_explode)
+		spawn_clowns = TRUE
 		gib()

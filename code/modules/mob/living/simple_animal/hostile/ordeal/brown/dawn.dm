@@ -148,7 +148,7 @@
 		if(part.dismemberable && prob(dismember_probability) && part.body_part != CHEST && C.stat == DEAD)
 			part.dismember()
 			QDEL_NULL(part)
-			new /obj/effect/gibspawner/generic/silent(get_turf(C))
+			new /obj/effect/bloodspawner/silent(get_turf(C))
 		if(length(C.bodyparts) <= 1)
 			C.gib()
 			return

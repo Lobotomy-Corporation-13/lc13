@@ -146,7 +146,7 @@
 		QDEL_NULL(head)
 		H.regenerate_icons()
 		visible_message(span_danger("\The [src] bites [H]'s head off!"))
-		new /obj/effect/gibspawner/generic/silent(get_turf(H))
+		new /obj/effect/bloodspawner/nogibs/silent(get_turf(H))
 		playsound(get_turf(src), 'sound/abnormalities/bigbird/bite.ogg', 50, 1, 2)
 		flick("big_bird_chomp", src)
 		bite_cooldown = world.time + bite_cooldown_time

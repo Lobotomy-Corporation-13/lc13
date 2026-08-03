@@ -243,17 +243,16 @@
 	if(ishuman(attacked_target))
 		H = attacked_target
 	. = ..()
-	if(.)
-		if(!H)
-			return
-		if(!H.sanity_lost)
-			return
-		var/nirvana = FALSE
-		if(get_attribute_level(H, TEMPERANCE_ATTRIBUTE) < 60) //if they have under 60 temp they actually get all the stats from overdose, otherwise they just get fucked.
-			nirvana = TRUE
-		DrugOverdose(H, H.ckey, nirvana)
-		LoseTarget()
-		H.faction += "porccubus" //that guy's already fucked, even if they can kill porccubus safely now, porccubus has done its job of being a cunt
+	if(!H)
+		return
+	if(!H.sanity_lost)
+		return
+	var/nirvana = FALSE
+	if(get_attribute_level(H, TEMPERANCE_ATTRIBUTE) < 60) //if they have under 60 temp they actually get all the stats from overdose, otherwise they just get fucked.
+		nirvana = TRUE
+	DrugOverdose(H, H.ckey, nirvana)
+	LoseTarget()
+	H.faction += "porccubus" //that guy's already fucked, even if they can kill porccubus safely now, porccubus has done its job of being a cunt
 
 /mob/living/simple_animal/hostile/abnormality/porccubus/proc/AddCharge()
 	if(leap_charges < max_leap_charges)
@@ -387,7 +386,7 @@
 	playsound(addict, 'sound/abnormalities/porccubus/head_explode.ogg', 50, FALSE, 4)
 	var/turf/orgin = get_turf(addict)
 	var/list/all_turfs = RANGE_TURFS(2, orgin)
-	new /obj/effect/gibspawner/generic/silent(get_turf(addict))
+	new /obj/effect/bloodspawner/silent(get_turf(addict))
 	for(var/i = 1 to 3)
 		var/obj/item/porccubus_drug/drug = new(get_turf(addict)) //if you still want to try it out after seeing a man's head fucking explode
 		var/turf/open/Y = pick(all_turfs - orgin)

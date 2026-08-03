@@ -123,7 +123,7 @@
 	if(GLOB.lobotomy_damages)//Enkephalin Rush baby!
 		facility_full_percentage = 100 * (GLOB.lobotomy_repairs / GLOB.lobotomy_damages)
 
-	if(SSmaptype.chosen_trait == FACILITY_TRAIT_ABNO_BLITZ)	//blitz needs you with higher stats
+	if(SSlobotomy_corp.BlitzActive())	//blitz needs you with higher stats as a latejoiner
 		set_attribute *= 4
 
 	else
@@ -195,6 +195,14 @@
 		/obj/item/melee/classic_baton,
 		/obj/item/info_printer,
 	)
+
+/datum/outfit/job/agent/pre_equip(mob/living/carbon/human/H, visualsOnly)
+	. = ..()
+	var/worktool = H.work_notepad_type
+	if(worktool == WORK_NOTEPAD_PREFERENCE_CLIPBOARD)
+		backpack_contents += /obj/item/abnormality_work_notepad
+	else if(worktool == WORK_NOTEPAD_PREFERENCE_TABLET)
+		backpack_contents += /obj/item/abnormality_work_notepad/digital
 
 // Trainee, for new players
 /datum/job/agent/intern

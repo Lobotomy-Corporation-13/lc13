@@ -188,46 +188,46 @@
 	// A general "rule" she follows, is that she gets more frantic and quick in her movements and attacks as the fight progresses, and heals more, but deals less damage and is more vulnerable.
 
 	// Association list of key: phase to value: amount of health under which the next phase gets triggered.
-	var/list/phases_health_thresholds = list(1 = 5000, 2 = 2800, 3 = -INFINITY)
+	var/alist/phases_health_thresholds = alist(1 = 5000, 2 = 2800, 3 = -INFINITY)
 
 	// The icons she uses in each phase.
-	var/list/phases_icon_states = list(1 = "matriarch", 2 = "matriarch_slim", 3 = "matriarch_fast")
+	var/alist/phases_icon_states = alist(1 = "matriarch", 2 = "matriarch_slim", 3 = "matriarch_fast")
 
 	// Association lists that control different balancing values for each phase. The keys are the phase, the values are the corresponding intended value for that phase.
-	var/list/phases_move_delays = list(1 = 3, 2 = 2.6, 3 = 2.4)
-	var/list/phases_rapid_melee = list(1 = 2, 2 = 3, 3 = 4)
-	var/list/phases_melee_damage = list(1 = 55, 2 = 48, 3 = 40)
-	var/list/phases_resistance_lists = list(
+	var/alist/phases_move_delays = alist(1 = 3, 2 = 2.6, 3 = 2.4)
+	var/alist/phases_rapid_melee = alist(1 = 2, 2 = 3, 3 = 4)
+	var/alist/phases_melee_damage = alist(1 = 55, 2 = 48, 3 = 40)
+	var/alist/phases_resistance_lists = alist(
 	1 = list(RED_DAMAGE = 0.3, WHITE_DAMAGE = 0.4, BLACK_DAMAGE = 0.2, PALE_DAMAGE = 0.5),
 	2 = list(RED_DAMAGE = 0.4, WHITE_DAMAGE = 0.6, BLACK_DAMAGE = 0.25, PALE_DAMAGE = 0.8),
 	3 = list(RED_DAMAGE = 0.5, WHITE_DAMAGE = 0.8, BLACK_DAMAGE = 0.3, PALE_DAMAGE = 1),
 	)
 
 	// Slam phase scaling variables
-	var/list/phases_slam_windup = list(1 = 1.2 SECONDS, 2 = 0.9 SECONDS, 3 = 0.6 SECONDS)
-	var/list/phases_slam_damage = list(1 = 120, 2 = 110, 3 = 80)
-	var/list/phases_slam_range = list(1 = 3, 2 = 3, 3 = 2)
+	var/alist/phases_slam_windup = alist(1 = 1.2 SECONDS, 2 = 0.9 SECONDS, 3 = 0.6 SECONDS)
+	var/alist/phases_slam_damage = alist(1 = 120, 2 = 110, 3 = 80)
+	var/alist/phases_slam_range = alist(1 = 3, 2 = 3, 3 = 2)
 
 	// Slash phase scaling variables
-	var/list/phases_slash_damage = list(1 = 110, 2 = 100, 3 = 90)
-	var/list/phases_slash_healing = list(1 = 75, 2 = 100, 3 = 200)
+	var/alist/phases_slash_damage = alist(1 = 110, 2 = 100, 3 = 90)
+	var/alist/phases_slash_healing = alist(1 = 75, 2 = 100, 3 = 200)
 
 	// Dash phase scaling variables
-	var/list/phases_dash_windup = list(1 = 1.1 SECONDS, 2 = 0.9 SECONDS, 3 = 0.8 SECONDS)
-	var/list/phases_dash_damage = list(1 = 80, 2 = 70, 3 = 60)
-	var/list/phases_dash_healing = list(1 = 100, 2 = 150, 3 = 250)
+	var/alist/phases_dash_windup = alist(1 = 1.1 SECONDS, 2 = 0.9 SECONDS, 3 = 0.8 SECONDS)
+	var/alist/phases_dash_damage = alist(1 = 80, 2 = 70, 3 = 60)
+	var/alist/phases_dash_healing = alist(1 = 100, 2 = 150, 3 = 250)
 
 	// Parry & Riposte scaling variables
-	var/list/phases_riposte_damage = list(1 = 160, 2 = 150, 3 = 140)
-	var/list/phases_riposte_healing = list(1 = 200, 2 = 300, 3 = 500)
+	var/alist/phases_riposte_damage = alist(1 = 160, 2 = 150, 3 = 140)
+	var/alist/phases_riposte_healing = alist(1 = 200, 2 = 300, 3 = 500)
 
 	// Trash Disposal scaling variables
-	var/list/phases_disposal_damage = list(1 = 60, 2 = 50, 3 = 40)
-	var/list/phases_disposal_healing = list(1 = 75, 2 = 100, 3 = 150)
+	var/alist/phases_disposal_damage = alist(1 = 60, 2 = 50, 3 = 40)
+	var/alist/phases_disposal_healing = alist(1 = 75, 2 = 100, 3 = 150)
 
 	// Summon Sweepers scaling variables
-	var/list/phases_squad_size_grunts = list(1 = 6, 2 = 5, 3 = 4)
-	var/list/phases_squad_size_commanders = list(1 = 2, 2 = 1, 3 = 0)
+	var/alist/phases_squad_size_grunts = alist(1 = 6, 2 = 5, 3 = 4)
+	var/alist/phases_squad_size_commanders = alist(1 = 2, 2 = 1, 3 = 0)
 
 // Here be procs
 

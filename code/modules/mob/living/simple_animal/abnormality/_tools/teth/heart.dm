@@ -80,7 +80,7 @@
 		return
 
 	H.visible_message(span_danger("[H]'s heart explodes!"))
-	new /obj/effect/gibspawner/generic(get_turf(H))
+	new /obj/effect/bloodspawner(get_turf(H))
 	H.remove_status_effect(src)
 
 /datum/status_effect/display/aspiration/proc/RageEnable()

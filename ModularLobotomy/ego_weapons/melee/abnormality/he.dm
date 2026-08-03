@@ -1785,7 +1785,7 @@
 	return 40
 
 /obj/item/ego_weapon/lifestew
-	name = "lifetime stew"
+	name = "decamillennial cauldron"
 	desc = "Take a large stone, put it into a sufficient quantity of boiling water; properly season it with pepper and salt... \
 	When the soup is made the stone may be thrown away!"
 	special = "This weapon stores up to 3 projectiles and gains a new projectile on a successful hit."

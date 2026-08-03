@@ -402,7 +402,7 @@
 ///from base of mob/create_mob_hud(): ()
 #define COMSIG_MOB_HUD_CREATED "mob_hud_created"
 
-///from base of /mob/living/proc/apply_damage(): (damage, damagetype, def_zone)
+///from base of /mob/living/proc/apply_damage(): (damage, damagetype, def_zone, source, flags, attack_type)
 #define COMSIG_MOB_APPLY_DAMGE	"mob_apply_damage"
 ///from base of /mob/living/proc/apply_damage(), happens after the mob has taken damage: (damage, damagetype, def_zone)
 #define COMSIG_MOB_AFTER_APPLY_DAMGE "mob_after_apply_damage"

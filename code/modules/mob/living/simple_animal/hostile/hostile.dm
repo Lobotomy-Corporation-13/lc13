@@ -304,15 +304,6 @@ GLOBAL_LIST_EMPTY(marked_players)
 
 /mob/living/simple_animal/hostile/attack_animal(mob/living/simple_animal/M, damage)
 	damage = rand(M.melee_damage_lower, M.melee_damage_upper)
-	damage *= (1 + (M.extra_damage / 100))
-	if(M.melee_damage_type == RED_DAMAGE)
-		damage *= (1 + (M.extra_damage_red / 100))
-	if(M.melee_damage_type == WHITE_DAMAGE)
-		damage *= (1 + (M.extra_damage_white / 100))
-	if(M.melee_damage_type == BLACK_DAMAGE)
-		damage *= (1 + (M.extra_damage_black / 100))
-	if(M.melee_damage_type == PALE_DAMAGE)
-		damage *= (1 + (M.extra_damage_pale / 100))
 	. = ..()
 	if(. && stat == CONSCIOUS && AIStatus != AI_OFF && !client)
 		if(!target)
@@ -992,8 +983,9 @@ GLOBAL_LIST_EMPTY(marked_players)
 			to_chat(src, span_warning("You almost attack yourself, but then decide against it."))
 			return
 		if(SSmaptype.maptype == "rcorp" && faction_check_mob(target, FALSE))
-			to_chat(src, span_warning("You almost attack your teammate, but then decide against it."))
-			return
+			if(!istype(src, /mob/living/simple_animal/hostile/rca_nosferatu_mob))
+				to_chat(src, span_warning("You almost attack your teammate, but then decide against it."))
+				return
 
 	if(!attacked_target)
 		attacked_target = target

@@ -15,8 +15,8 @@ GLOBAL_LIST_EMPTY(estus_holders)	//list of people that have used an estus flask
 
 /obj/item/estus/attack_self(mob/living/carbon/human/user)
 	..()
-	if(user in GLOB.estus_holders)
-		to_chat(user, span_warning("You already have a class."))
+	if((user in GLOB.estus_holders) && !linked_user)
+		to_chat(user, span_warning("You already have a flask."))
 		return
 
 	if(!linked_user)
@@ -38,6 +38,7 @@ GLOBAL_LIST_EMPTY(estus_holders)	//list of people that have used an estus flask
 	to_chat(user, span_notice("You sip of the estus flask."))
 	user.adjustBruteLoss(-60)
 	user.adjustSanityLoss(-60)
+	user.adjustFireLoss(-10)
 	charges --
 
 /obj/item/estus/examine(mob/living/carbon/human/user)

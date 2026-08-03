@@ -445,7 +445,7 @@ GLOBAL_LIST_EMPTY(apostles)
 			if(L.stat == DEAD) // Total overkill
 				for(var/i = 1 to 5) // Alternative to gib()
 					new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(L), pick(GLOB.alldirs))
-				new /obj/effect/gibspawner/generic/silent(get_turf(L))
+				new /obj/effect/bloodspawner/silent(get_turf(L))
 				gibbed = TRUE
 	playsound(get_turf(src), (gibbed ? 'sound/abnormalities/whitenight/scythe_gib.ogg' : 'sound/abnormalities/whitenight/scythe_spell.ogg'), (gibbed ? 100 : 75), FALSE, (gibbed ? 12 : 5))
 	SLEEP_CHECK_DEATH(5)
