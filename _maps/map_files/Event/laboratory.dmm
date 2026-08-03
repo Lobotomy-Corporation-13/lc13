@@ -188,16 +188,6 @@
 /obj/machinery/telecomms/server/presets/common,
 /turf/open/floor/circuit/telecomms/mainframe,
 /area/facility_hallway/training)
-"bE" = (
-/obj/structure/table/reinforced{
-	color = "49473B";
-	pixel_y = 1
-	},
-/obj/item/toy/cards/deck,
-/turf/open/floor/mineral/plastitanium{
-	color = "EDD956"
-	},
-/area/facility_hallway/north)
 "bI" = (
 /obj/structure/chair/office/light,
 /turf/open/floor/plasteel/dark,
@@ -214,6 +204,12 @@
 	},
 /turf/open/floor/facility/dark,
 /area/facility_hallway/north)
+"bS" = (
+/obj/machinery/shower{
+	pixel_y = 19
+	},
+/turf/open/floor/noslip,
+/area/facility_hallway/central)
 "cb" = (
 /obj/structure/table/wood/fancy/green,
 /obj/item/clipboard{
@@ -358,6 +354,25 @@
 	color = "#791500"
 	},
 /area/facility_hallway/south)
+"cs" = (
+/obj/structure/chair/comfy/shuttle{
+	dir = 1;
+	color = "#9cadc7";
+	name = "fancy chair";
+	desc = "A comfortable seat. Since its custom made, its quite expensive"
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/facility_hallway/north)
+"cH" = (
+/obj/machinery/light{
+	dir = 8;
+	pixel_x = -9;
+	pixel_y = 4
+	},
+/obj/structure/table/reinforced,
+/obj/item/reagent_containers/glass/rag,
+/turf/open/floor/plasteel/white,
+/area/facility_hallway/central)
 "cW" = (
 /obj/structure/table/reinforced{
 	color = "#9cadc7"
@@ -390,6 +405,10 @@
 	},
 /turf/open/floor/plating,
 /area/facility_hallway/west)
+"dx" = (
+/obj/structure/flora/ausbushes/pointybush,
+/turf/open/floor/grass,
+/area/facility_hallway/central)
 "dE" = (
 /obj/machinery/door/airlock/glass_large{
 	color = "#9cadc7";
@@ -483,6 +502,10 @@
 	},
 /turf/open/floor/pod/dark,
 /area/facility_hallway/west)
+"eC" = (
+/obj/structure/rack,
+/turf/open/floor/plasteel,
+/area/facility_hallway/central)
 "eE" = (
 /turf/closed/indestructible/reinforced/cheap/brown,
 /area/facility_hallway/south)
@@ -510,16 +533,20 @@
 /obj/structure/cable,
 /turf/open/floor/plating,
 /area/facility_hallway/south)
+"eZ" = (
+/obj/machinery/cryopod,
+/obj/machinery/computer/cryopod{
+	pixel_y = 28
+	},
+/turf/open/floor/plasteel/freezer,
+/area/facility_hallway/central)
 "fi" = (
 /obj/effect/turf_decal/bot,
 /obj/machinery/telecomms/hub/preset,
 /turf/open/floor/circuit/telecomms/mainframe,
 /area/facility_hallway/training)
 "fp" = (
-/obj/machinery/computer/cryopod{
-	pixel_y = 28
-	},
-/turf/open/floor/plasteel/freezer,
+/turf/open/floor/wood,
 /area/facility_hallway/central)
 "fq" = (
 /obj/structure/reagent_dispensers/water_cooler,
@@ -568,6 +595,17 @@
 /obj/effect/landmark/start/limbus_abnospawn/highsec,
 /turf/open/floor/plating,
 /area/facility_hallway/south)
+"fZ" = (
+/obj/structure/chair/comfy/shuttle{
+	dir = 8;
+	color = "#9cadc7";
+	name = "fancy chair";
+	desc = "A comfortable seat. Since its custom made, its quite expensive"
+	},
+/turf/open/floor/mineral/plastitanium{
+	color = "EDD956"
+	},
+/area/facility_hallway/north)
 "gm" = (
 /obj/structure/bodycontainer/crematorium{
 	dir = 8;
@@ -645,6 +683,24 @@
 	dir = 4
 	},
 /turf/open/floor/plasteel/dark,
+/area/facility_hallway/north)
+"gY" = (
+/obj/structure/closet{
+	icon_state = "rd";
+	req_access_txt = "7;19";
+	name = "rd closet";
+	anchored = 1
+	},
+/obj/item/grenade/lobotomy,
+/obj/item/grenade/lobotomy,
+/obj/item/grenade/lobotomy/black,
+/obj/item/grenade/lobotomy/black,
+/obj/item/grenade/lobotomy/pale,
+/obj/item/grenade/lobotomy/pale,
+/obj/item/grenade/lobotomy/white,
+/obj/item/grenade/lobotomy/white,
+/obj/item/gun/grenadelauncher,
+/turf/open/floor/mineral/titanium/purple,
 /area/facility_hallway/north)
 "hc" = (
 /obj/effect/spawner/structure/window/reinforced{
@@ -785,6 +841,10 @@
 "ig" = (
 /turf/open/floor/plasteel,
 /area/facility_hallway/central)
+"il" = (
+/obj/item/flashlight/lamp/bananalamp,
+/turf/open/floor/wood,
+/area/facility_hallway/central)
 "is" = (
 /obj/machinery/door/airlock/highsecurity{
 	name = "Cell 5 and 6 observation room"
@@ -815,6 +875,12 @@
 	},
 /turf/open/floor/plasteel/white,
 /area/facility_hallway/west)
+"iY" = (
+/obj/structure/chair/comfy{
+	dir = 4
+	},
+/turf/open/floor/wood,
+/area/facility_hallway/central)
 "jh" = (
 /obj/structure/rack{
 	pixel_x = -1
@@ -863,6 +929,10 @@
 /obj/item/clothing/gloves/boxing/blue,
 /turf/open/floor/plasteel/dark,
 /area/facility_hallway/north)
+"jz" = (
+/obj/structure/flora/junglebush,
+/turf/open/floor/grass,
+/area/facility_hallway/central)
 "jG" = (
 /obj/structure/punching_bag,
 /turf/open/floor/mineral/plastitanium{
@@ -984,6 +1054,10 @@
 	},
 /turf/open/floor/mineral/plastitanium,
 /area/facility_hallway/north)
+"kG" = (
+/obj/structure/flora/tree/jungle,
+/turf/open/floor/grass,
+/area/facility_hallway/central)
 "kH" = (
 /obj/machinery/door/airlock/highsecurity{
 	name = "Cell 1 observation room"
@@ -1021,6 +1095,12 @@
 "kX" = (
 /turf/open/floor/plasteel/dark,
 /area/facility_hallway/south)
+"lc" = (
+/obj/structure/chair/comfy{
+	dir = 8
+	},
+/turf/open/floor/wood,
+/area/facility_hallway/central)
 "ln" = (
 /obj/item/binoculars,
 /obj/item/clipboard{
@@ -1135,6 +1215,10 @@
 	},
 /turf/open/floor/mineral/titanium/purple,
 /area/facility_hallway/north)
+"mr" = (
+/obj/machinery/computer/arcade/amputation,
+/turf/open/floor/plasteel,
+/area/facility_hallway/central)
 "mu" = (
 /obj/structure/fluff/hedge/opaque,
 /turf/open/floor/grass,
@@ -1303,6 +1387,15 @@
 	},
 /turf/open/floor/facility/halls,
 /area/facility_hallway/west)
+"nO" = (
+/obj/machinery/door/poddoor/preopen{
+	id = "rd2"
+	},
+/obj/effect/spawner/structure/window/reinforced{
+	max_integrity = 3000
+	},
+/turf/open/floor/facility/dark,
+/area/facility_hallway/west)
 "nQ" = (
 /obj/structure/table/wood/fancy/green,
 /obj/item/reagent_containers/food/drinks/bottle/whiskey{
@@ -1357,6 +1450,12 @@
 	},
 /turf/open/floor/carpet/purple,
 /area/facility_hallway/north)
+"ou" = (
+/obj/machinery/computer/arcade/battle{
+	dir = 4
+	},
+/turf/open/floor/plasteel,
+/area/facility_hallway/central)
 "ox" = (
 /obj/machinery/telecomms/server/presets/supply,
 /obj/effect/turf_decal/bot,
@@ -1366,6 +1465,12 @@
 /obj/structure/fluff/hedge/opaque,
 /turf/open/floor/grass,
 /area/facility_hallway/west)
+"oF" = (
+/obj/machinery/door/airlock/wood{
+	name = "bathroom"
+	},
+/turf/open/floor/plasteel/white,
+/area/facility_hallway/central)
 "oL" = (
 /obj/effect/turf_decal/tile/green{
 	color = "#006400"
@@ -1417,6 +1522,12 @@
 	},
 /turf/open/floor/mineral/plastitanium,
 /area/facility_hallway/south)
+"pg" = (
+/obj/machinery/door/airlock/wood{
+	name = "smoking lounge"
+	},
+/turf/open/floor/grass,
+/area/facility_hallway/central)
 "pi" = (
 /obj/structure/table/reinforced{
 	color = "#9cadc7"
@@ -1457,6 +1568,16 @@
 /obj/machinery/stasis,
 /turf/open/floor/mineral/titanium/blue,
 /area/facility_hallway/central)
+"pC" = (
+/obj/item/bedsheet/random,
+/obj/structure/bed,
+/obj/machinery/light{
+	dir = 8;
+	pixel_x = -9;
+	pixel_y = 4
+	},
+/turf/open/floor/wood,
+/area/facility_hallway/central)
 "pH" = (
 /obj/machinery/chem_master{
 	pixel_y = 6;
@@ -1481,6 +1602,10 @@
 	pixel_x = -9;
 	pixel_y = 4
 	},
+/obj/machinery/stonkmarket{
+	pixel_y = 10
+	},
+/obj/structure/table/wood/fancy/green,
 /turf/open/floor/mineral/plastitanium,
 /area/facility_hallway/north)
 "pX" = (
@@ -1531,6 +1656,9 @@
 /obj/effect/landmark/latejoin,
 /turf/open/floor/plasteel/freezer,
 /area/facility_hallway/central)
+"qK" = (
+/turf/open/floor/grass,
+/area/facility_hallway/central)
 "qM" = (
 /obj/item/binoculars,
 /obj/item/clipboard{
@@ -1565,6 +1693,10 @@
 	},
 /turf/open/floor/plasteel,
 /area/facility_hallway/west)
+"qY" = (
+/obj/machinery/camera/autoname,
+/turf/open/floor/plasteel/white,
+/area/facility_hallway/central)
 "rl" = (
 /obj/effect/turf_decal/siding/blue{
 	dir = 1
@@ -1661,6 +1793,10 @@
 "rU" = (
 /turf/open/floor/carpet/cyan,
 /area/facility_hallway/north)
+"se" = (
+/obj/structure/table/reinforced,
+/turf/open/floor/wood,
+/area/facility_hallway/central)
 "sj" = (
 /obj/structure/sign/departments/chemistry/pharmacy{
 	pixel_y = 32
@@ -1777,6 +1913,17 @@
 	},
 /turf/open/floor/facility/dark,
 /area/facility_hallway/north)
+"tq" = (
+/obj/machinery/shower{
+	pixel_y = 19
+	},
+/obj/machinery/light{
+	dir = 8;
+	pixel_x = -9;
+	pixel_y = 4
+	},
+/turf/open/floor/noslip,
+/area/facility_hallway/central)
 "ts" = (
 /obj/effect/turf_decal/trimline/blue/filled/line,
 /turf/open/floor/pod/dark,
@@ -1828,6 +1975,14 @@
 	},
 /turf/open/floor/facility/halls,
 /area/facility_hallway/west)
+"tG" = (
+/obj/structure/rack,
+/obj/item/storage/box/barrier,
+/obj/item/storage/box/barrier,
+/obj/item/storage/box/barrier,
+/obj/item/gun/grenadelauncher,
+/turf/open/floor/plasteel,
+/area/facility_hallway/central)
 "tO" = (
 /obj/structure/chair/comfy/shuttle{
 	name = "fancy chair";
@@ -1933,6 +2088,11 @@
 	},
 /obj/structure/table/reinforced,
 /turf/open/floor/plasteel/white,
+/area/facility_hallway/central)
+"uZ" = (
+/obj/item/bedsheet/random,
+/obj/structure/bed/maint,
+/turf/open/floor/wood,
 /area/facility_hallway/central)
 "va" = (
 /obj/machinery/camera{
@@ -2058,6 +2218,10 @@
 /obj/item/reagent_containers/glass/beaker/bluespace,
 /turf/open/floor/plasteel/white,
 /area/facility_hallway/central)
+"wk" = (
+/obj/machinery/washing_machine,
+/turf/open/floor/plasteel/white,
+/area/facility_hallway/central)
 "wm" = (
 /obj/effect/turf_decal/tile/green{
 	color = "#006400"
@@ -2106,6 +2270,10 @@
 	color = "#791500"
 	},
 /area/facility_hallway/south)
+"wF" = (
+/obj/structure/closet/cabinet,
+/turf/open/floor/wood,
+/area/facility_hallway/central)
 "wI" = (
 /obj/machinery/door/airlock/security/glass{
 	name = "udjat room";
@@ -2187,17 +2355,6 @@
 /obj/item/clothing/gloves/boxing/yellow,
 /turf/open/floor/plasteel/dark,
 /area/facility_hallway/north)
-"xT" = (
-/obj/structure/chair/comfy/shuttle{
-	dir = 4;
-	color = "#9cadc7";
-	name = "fancy chair";
-	desc = "A comfortable seat. Since its custom made, its quite expensive"
-	},
-/turf/open/floor/mineral/plastitanium{
-	color = "EDD956"
-	},
-/area/facility_hallway/north)
 "yb" = (
 /obj/machinery/door/poddoor,
 /obj/structure/sigsystem/connector{
@@ -2255,6 +2412,18 @@
 	},
 /turf/open/floor/grass,
 /area/facility_hallway/west)
+"yA" = (
+/obj/structure/toilet{
+	dir = 8;
+	pixel_y = 8
+	},
+/obj/machinery/light{
+	dir = 8;
+	pixel_x = -9;
+	pixel_y = 4
+	},
+/turf/open/floor/plasteel/white,
+/area/facility_hallway/central)
 "yI" = (
 /obj/machinery/door/poddoor/preopen,
 /obj/structure/sigsystem/activator,
@@ -2282,6 +2451,18 @@
 	},
 /turf/open/floor/facility/halls,
 /area/facility_hallway/south)
+"yY" = (
+/obj/structure/table/reinforced{
+	color = "49473B";
+	pixel_y = 1
+	},
+/obj/machinery/stonkmarket{
+	pixel_y = 10
+	},
+/turf/open/floor/mineral/plastitanium{
+	color = "EDD956"
+	},
+/area/facility_hallway/north)
 "zj" = (
 /obj/structure/table/reinforced{
 	color = "#ff7f7f"
@@ -2353,6 +2534,16 @@
 	},
 /turf/open/floor/plasteel/dark,
 /area/facility_hallway/central)
+"zY" = (
+/obj/structure/door_assembly/door_assembly_hatch,
+/obj/structure/barricade/wooden/crude,
+/obj/structure/barricade/wooden,
+/turf/open/floor/plasteel,
+/area/facility_hallway/central)
+"Ab" = (
+/obj/machinery/door/airlock/glass_large,
+/turf/open/floor/plasteel,
+/area/facility_hallway/central)
 "Ag" = (
 /obj/structure/chair,
 /obj/machinery/light{
@@ -2360,6 +2551,10 @@
 	pixel_y = 15
 	},
 /turf/open/floor/plasteel/white,
+/area/facility_hallway/central)
+"Aj" = (
+/obj/machinery/vending/drugs,
+/turf/open/floor/mineral/titanium/blue,
 /area/facility_hallway/central)
 "Ar" = (
 /obj/effect/turf_decal/tile/green{
@@ -2589,6 +2784,14 @@
 	color = "EDD956"
 	},
 /area/facility_hallway/north)
+"BQ" = (
+/obj/machinery/light{
+	dir = 4;
+	pixel_x = 9;
+	pixel_y = 4
+	},
+/turf/open/floor/wood,
+/area/facility_hallway/central)
 "Cf" = (
 /obj/effect/turf_decal/tile/bar,
 /obj/effect/turf_decal/tile/bar{
@@ -2635,6 +2838,10 @@
 	},
 /turf/open/floor/carpet/purple,
 /area/facility_hallway/north)
+"Cy" = (
+/obj/structure/table/reinforced,
+/turf/open/floor/plasteel/white,
+/area/facility_hallway/central)
 "CD" = (
 /obj/structure/chair/office/light{
 	pixel_x = 5
@@ -2718,17 +2925,6 @@
 	},
 /turf/open/floor/grass,
 /area/facility_hallway/west)
-"Dq" = (
-/obj/structure/chair/comfy/shuttle{
-	dir = 8;
-	color = "#9cadc7";
-	name = "fancy chair";
-	desc = "A comfortable seat. Since its custom made, its quite expensive"
-	},
-/turf/open/floor/mineral/plastitanium{
-	color = "EDD956"
-	},
-/area/facility_hallway/north)
 "Dv" = (
 /obj/structure/sign/logo{
 	icon_state = "limbus_sign 0,0";
@@ -2775,6 +2971,13 @@
 	color = "EDD956"
 	},
 /area/facility_hallway/north)
+"DJ" = (
+/obj/structure/table/wood,
+/obj/machinery/stonkmarket{
+	pixel_y = 10
+	},
+/turf/open/floor/carpet/blue,
+/area/facility_hallway/central)
 "DK" = (
 /turf/closed/indestructible/reinforced,
 /area/facility_hallway/central)
@@ -2800,6 +3003,15 @@
 	},
 /turf/open/floor/plasteel,
 /area/facility_hallway/west)
+"Eb" = (
+/obj/machinery/door/poddoor/preopen{
+	id = "rd2"
+	},
+/obj/effect/spawner/structure/window/reinforced{
+	max_integrity = 3000
+	},
+/turf/open/floor/facility/dark,
+/area/facility_hallway/central)
 "Ec" = (
 /obj/machinery/door/poddoor/preopen,
 /obj/structure/sigsystem/connector{
@@ -2878,6 +3090,15 @@
 	},
 /turf/open/floor/mineral/titanium/tiled,
 /area/facility_hallway/south)
+"EZ" = (
+/obj/machinery/cryopod{
+	dir = 1
+	},
+/obj/machinery/computer/cryopod{
+	pixel_y = 28
+	},
+/turf/open/floor/plasteel/freezer,
+/area/facility_hallway/central)
 "Fe" = (
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	dir = 1
@@ -2946,6 +3167,10 @@
 /obj/structure/flora/ausbushes/pointybush,
 /turf/open/floor/grass,
 /area/facility_hallway/west)
+"FN" = (
+/obj/structure/curtain,
+/turf/open/floor/noslip,
+/area/facility_hallway/central)
 "FR" = (
 /obj/effect/turf_decal/trimline/red/filled/corner{
 	dir = 1
@@ -3015,6 +3240,15 @@
 	},
 /turf/open/floor/plasteel/white,
 /area/facility_hallway/central)
+"Gk" = (
+/obj/machinery/camera/autoname,
+/obj/machinery/light{
+	dir = 8;
+	pixel_x = -9;
+	pixel_y = 4
+	},
+/turf/open/floor/plasteel/white,
+/area/facility_hallway/central)
 "Gs" = (
 /obj/effect/turf_decal/tile/bar,
 /obj/effect/turf_decal/tile/bar{
@@ -3046,6 +3280,10 @@
 	color = "EDD956"
 	},
 /area/facility_hallway/north)
+"Gz" = (
+/obj/machinery/vending/medical,
+/turf/open/floor/mineral/titanium/blue,
+/area/facility_hallway/central)
 "GG" = (
 /obj/effect/spawner/structure/window/reinforced{
 	max_integrity = 3000
@@ -3087,6 +3325,12 @@
 	dir = 4
 	},
 /turf/open/floor/plasteel/white,
+/area/facility_hallway/central)
+"Hf" = (
+/obj/structure/rack,
+/obj/item/stack/sheet/glass/fifty,
+/obj/item/lightreplacer,
+/turf/open/floor/plasteel,
 /area/facility_hallway/central)
 "Hi" = (
 /obj/effect/decal/cleanable/blood/old,
@@ -3200,10 +3444,10 @@
 /turf/open/floor/carpet/blue,
 /area/facility_hallway/central)
 "Ic" = (
-/obj/structure/table/wood,
-/obj/item/ego_weapon/ranged/city/limbuspistol,
-/obj/item/ego_weapon/ranged/city/limbuspistol,
-/turf/open/floor/carpet/blue,
+/obj/machinery/door/airlock/wood{
+	name = "bathroom"
+	},
+/turf/open/floor/wood,
 /area/facility_hallway/central)
 "Ik" = (
 /obj/machinery/door/airlock/medical/glass{
@@ -3349,11 +3593,15 @@
 /turf/open/floor/circuit/telecomms/mainframe,
 /area/facility_hallway/training)
 "JI" = (
-/obj/machinery/vending/boozeomat/all_access{
-	pixel_x = 30
+/obj/structure/table/reinforced{
+	color = "49473B";
+	pixel_y = 1
 	},
-/turf/open/floor/plasteel,
-/area/facility_hallway/central)
+/obj/item/toy/cards/deck,
+/turf/open/floor/mineral/plastitanium{
+	color = "EDD956"
+	},
+/area/facility_hallway/north)
 "JU" = (
 /obj/machinery/door/poddoor{
 	name = "LSZ Containment Door #3";
@@ -3388,6 +3636,13 @@
 /obj/item/reagent_containers/hypospray/medipen/l_burn,
 /turf/open/floor/plasteel/white,
 /area/facility_hallway/south)
+"Ks" = (
+/obj/machinery/door/airlock/medical/glass{
+	name = MedicalStorage;
+	req_access_txt = "5;19"
+	},
+/turf/open/floor/mineral/titanium/blue,
+/area/facility_hallway/central)
 "Kv" = (
 /obj/effect/turf_decal/tile/bar,
 /obj/effect/turf_decal/tile/bar{
@@ -3444,6 +3699,10 @@
 /obj/machinery/door/window,
 /turf/open/floor/facility/dark,
 /area/facility_hallway/north)
+"Ld" = (
+/obj/structure/flora/ausbushes/brflowers,
+/turf/open/floor/grass,
+/area/facility_hallway/central)
 "Lj" = (
 /obj/effect/turf_decal/delivery/white{
 	color = "#5269e9"
@@ -3737,6 +3996,14 @@
 /obj/machinery/telecomms/message_server/preset,
 /turf/open/floor/circuit/telecomms/mainframe,
 /area/facility_hallway/training)
+"OJ" = (
+/obj/effect/turf_decal/siding/green{
+	color = "#006400";
+	dir = 4
+	},
+/obj/structure/table/wood/fancy/green,
+/turf/open/floor/mineral/plastitanium,
+/area/facility_hallway/north)
 "OS" = (
 /obj/effect/turf_decal/tile/bar,
 /obj/effect/turf_decal/tile/bar{
@@ -3829,6 +4096,18 @@
 	},
 /turf/open/floor/facility/dark,
 /area/facility_hallway/south)
+"Pz" = (
+/obj/structure/sink{
+	dir = 4;
+	pixel_x = -14;
+	pixel_y = 2
+	},
+/obj/structure/mirror{
+	pixel_y = 2;
+	pixel_x = -30
+	},
+/turf/open/floor/plasteel/white,
+/area/facility_hallway/central)
 "PB" = (
 /obj/structure/chair/office/light{
 	dir = 1
@@ -4029,6 +4308,14 @@
 	},
 /turf/open/floor/plasteel,
 /area/facility_hallway/central)
+"Rj" = (
+/obj/machinery/door/airlock/glass{
+	icon = 'icons/obj/doors/airlocks/station/engineering.dmi';
+	name = "clerk room";
+	opacity = 1
+	},
+/turf/open/floor/plasteel,
+/area/facility_hallway/central)
 "Ro" = (
 /obj/effect/turf_decal/trimline/blue/filled/corner,
 /obj/effect/turf_decal/trimline/blue/filled/line{
@@ -4070,6 +4357,12 @@
 	dir = 4
 	},
 /turf/open/floor/plasteel/white,
+/area/facility_hallway/central)
+"RE" = (
+/obj/machinery/computer/arcade/orion_trail{
+	dir = 4
+	},
+/turf/open/floor/plasteel,
 /area/facility_hallway/central)
 "RJ" = (
 /obj/item/defibrillator/loaded{
@@ -4418,6 +4711,10 @@
 "Uf" = (
 /turf/open/floor/mineral/titanium/tiled,
 /area/facility_hallway/south)
+"Ui" = (
+/obj/machinery/vending/boozeomat/all_access,
+/turf/closed/indestructible/reinforced,
+/area/facility_hallway/central)
 "Uk" = (
 /obj/structure/sign/logo{
 	icon_state = "limbus_sign 2,0";
@@ -4460,6 +4757,38 @@
 	},
 /turf/open/floor/mineral/titanium/purple,
 /area/facility_hallway/north)
+"UO" = (
+/obj/structure/table,
+/obj/item/vending_refill/drugs,
+/obj/item/vending_refill/drugs,
+/obj/item/vending_refill/drugs,
+/obj/item/vending_refill/drugs,
+/obj/structure/extinguisher_cabinet{
+	pixel_y = 32
+	},
+/obj/item/storage/box/syringes/variety{
+	pixel_x = 10
+	},
+/obj/item/storage/box/syringes{
+	pixel_x = -10
+	},
+/obj/item/clothing/neck/stethoscope,
+/obj/machinery/light{
+	dir = 1
+	},
+/turf/open/floor/mineral/titanium/blue,
+/area/facility_hallway/central)
+"UR" = (
+/obj/structure/chair/comfy/shuttle{
+	dir = 4;
+	color = "#9cadc7";
+	name = "fancy chair";
+	desc = "A comfortable seat. Since its custom made, its quite expensive"
+	},
+/turf/open/floor/mineral/plastitanium{
+	color = "EDD956"
+	},
+/area/facility_hallway/north)
 "UY" = (
 /obj/item/kirbyplants{
 	icon_state = "plant-03";
@@ -4499,18 +4828,6 @@
 	},
 /turf/open/floor/pod/light,
 /area/facility_hallway/south)
-"Vs" = (
-/obj/structure/table/reinforced{
-	color = "49473B";
-	pixel_y = 1
-	},
-/obj/machinery/stonkmarket{
-	pixel_y = 10
-	},
-/turf/open/floor/mineral/plastitanium{
-	color = "EDD956"
-	},
-/area/facility_hallway/north)
 "Vt" = (
 /obj/effect/turf_decal/trimline/red/filled/line{
 	dir = 1
@@ -4536,6 +4853,11 @@
 "Vx" = (
 /turf/open/floor/mineral/plastitanium,
 /area/facility_hallway/south)
+"Vz" = (
+/obj/structure/table/reinforced,
+/obj/item/toy/cards/deck,
+/turf/open/floor/wood,
+/area/facility_hallway/central)
 "VD" = (
 /obj/effect/turf_decal/tile/green{
 	color = "#006400"
@@ -4562,6 +4884,12 @@
 	},
 /turf/open/floor/pod/light,
 /area/facility_hallway/south)
+"VS" = (
+/obj/machinery/door/airlock/wood{
+	name = "dormitory"
+	},
+/turf/open/floor/wood,
+/area/facility_hallway/central)
 "VV" = (
 /obj/structure/table/wood,
 /turf/open/floor/facility/dark,
@@ -4621,6 +4949,26 @@
 	},
 /turf/open/floor/plasteel/white,
 /area/facility_hallway/south)
+"WK" = (
+/obj/structure/table,
+/obj/item/organ/ears/cybernetic,
+/obj/item/organ/ears/cybernetic,
+/obj/item/organ/ears/cybernetic,
+/obj/item/organ/heart/cybernetic/tier2,
+/obj/item/organ/heart/cybernetic/tier2,
+/obj/item/organ/heart/cybernetic/tier2,
+/obj/item/organ/liver/cybernetic,
+/obj/item/organ/liver/cybernetic,
+/obj/item/organ/liver/cybernetic,
+/obj/item/organ/lungs/cybernetic/tier2,
+/obj/item/organ/lungs/cybernetic/tier2,
+/obj/item/organ/lungs/cybernetic/tier2,
+/obj/item/organ/stomach/cybernetic/tier2,
+/obj/item/organ/stomach/cybernetic/tier2,
+/obj/item/organ/stomach/cybernetic/tier2,
+/obj/machinery/light,
+/turf/open/floor/mineral/titanium/blue,
+/area/facility_hallway/central)
 "WM" = (
 /obj/machinery/telecomms/server/presets/security,
 /turf/open/floor/circuit/telecomms/mainframe,
@@ -4631,6 +4979,14 @@
 	},
 /turf/open/floor/plasteel,
 /area/facility_hallway/west)
+"WY" = (
+/obj/structure/table,
+/obj/item/reagent_containers/glass/bottle/mannitol,
+/obj/item/reagent_containers/glass/bottle/mannitol,
+/obj/item/reagent_containers/glass/bottle/mannitol,
+/obj/item/storage/pill_bottle/mannitol,
+/turf/open/floor/mineral/titanium/blue,
+/area/facility_hallway/central)
 "Xa" = (
 /obj/item/binoculars,
 /obj/item/clipboard{
@@ -4830,6 +5186,10 @@
 /obj/machinery/modular_computer/console/preset/research,
 /turf/open/floor/mineral/titanium/purple,
 /area/facility_hallway/north)
+"YX" = (
+/obj/machinery/camera/autoname,
+/turf/open/floor/noslip,
+/area/facility_hallway/central)
 "Zd" = (
 /obj/structure/chair/wood{
 	dir = 8
@@ -4884,6 +5244,10 @@
 	},
 /turf/open/floor/pod/dark,
 /area/facility_hallway/south)
+"ZE" = (
+/obj/structure/chair/stool/bar,
+/turf/open/floor/plasteel,
+/area/facility_hallway/central)
 "ZF" = (
 /obj/structure/lattice/catwalk,
 /obj/structure/lattice/catwalk,
@@ -33314,11 +33678,11 @@ Pc
 Pc
 ps
 ps
-Ka
-Ka
-Ka
-Ka
-Ka
+DK
+DK
+DK
+DK
+DK
 Ka
 Ka
 Ka
@@ -33565,19 +33929,19 @@ Pc
 Pc
 ps
 ps
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
+DK
+tq
+DK
+Gk
+Pz
+DK
+DK
+DK
+DK
+DK
+DK
+DK
+DK
 Ka
 Ka
 Ka
@@ -33817,19 +34181,19 @@ Pc
 Pc
 ps
 Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
+DK
+YX
+FN
+XI
+XI
+DK
+cH
+wk
+Cy
+DK
+pC
+wF
+DK
 Ka
 Ka
 Ka
@@ -34069,19 +34433,19 @@ Pc
 Pc
 ps
 Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
+DK
+bS
+DK
+XI
+XI
+Ic
+fp
+fp
+fp
+VS
+BQ
+fp
+DK
 Ka
 Ka
 Ka
@@ -34320,20 +34684,20 @@ ps
 Pc
 Pc
 ps
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
+DK
+DK
+DK
+DK
+oF
+DK
+DK
+iY
+fp
+fp
+DK
+DK
+DK
+DK
 Ka
 Ka
 Ka
@@ -34572,20 +34936,20 @@ ps
 Pc
 Pc
 ps
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
+DK
+mr
+ZE
+DK
+qY
+yA
+DK
+Vz
+fp
+fp
+DK
+pC
+wF
+DK
 Ka
 Ka
 Ka
@@ -34817,27 +35181,27 @@ SJ
 SC
 ec
 SH
-oV
+gY
 wW
 jh
 ps
 LX
 Pc
 ps
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
+DK
+DK
+zY
+DK
+DK
+DK
+DK
+lc
+fp
+fp
+VS
+BQ
+fp
+DK
 Ka
 Ka
 Ka
@@ -35075,21 +35439,21 @@ ec
 ps
 yJ
 Pc
-ps
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
+nO
+ou
+RE
+ig
+ig
+ig
+ig
+DK
+fp
+fp
+fp
+DK
+DK
+DK
+DK
 Ka
 Ka
 Ka
@@ -35327,21 +35691,21 @@ yr
 ps
 Pc
 Pc
-ps
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
+nO
+ZE
+ZE
+ig
+ig
+ig
+ig
+DK
+iY
+fp
+fp
+DK
+pC
+wF
+DK
 Ka
 Ka
 Ka
@@ -35579,21 +35943,21 @@ ec
 ps
 Pc
 Pc
-ps
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
+nO
+ig
+ig
+ig
+ig
+ig
+ig
+DK
+se
+fp
+fp
+VS
+BQ
+fp
+DK
 Ka
 Ka
 Ka
@@ -35831,21 +36195,21 @@ jh
 ps
 Pc
 Pc
-ps
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
+nO
+ig
+ig
+ig
+ig
+ig
+ig
+DK
+lc
+fp
+fp
+DK
+DK
+DK
+DK
 Ka
 Ka
 Ka
@@ -36085,19 +36449,19 @@ Pc
 Pc
 ps
 DK
+Rj
 DK
+ig
+ig
+eC
 DK
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
+fp
+fp
+fp
+DK
+pC
+wF
+DK
 Ka
 Ka
 Ka
@@ -36338,18 +36702,18 @@ ig
 zn
 TI
 ig
+Eb
+ig
+ig
+eC
 DK
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
+iY
+fp
+fp
+VS
+BQ
+fp
+DK
 Ka
 Ka
 Ka
@@ -36590,18 +36954,18 @@ ig
 ig
 ig
 ig
+Eb
+ig
+ig
+Hf
 DK
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
+se
+fp
+fp
+DK
+DK
+DK
+DK
 Ka
 Ka
 Ka
@@ -36842,18 +37206,18 @@ ig
 ig
 ig
 ig
+Eb
+ig
+ig
+tG
 DK
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
+lc
+fp
+fp
+DK
+uZ
+wF
+DK
 Ka
 Ka
 Ka
@@ -37099,13 +37463,13 @@ DK
 DK
 DK
 DK
+fp
+fp
+fp
+VS
+fp
+il
 DK
-DK
-Ka
-Ka
-Ka
-Ka
-Ka
 Ka
 Ka
 Ka
@@ -37348,18 +37712,18 @@ ig
 ig
 DK
 fp
-Dw
-vl
-Dw
-Dw
+fp
+fp
+fp
+fp
+fp
+fp
 DK
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
+DK
+DK
+DK
+DK
+DK
 Ka
 Ka
 eE
@@ -37598,20 +37962,20 @@ ig
 ig
 ig
 ig
-kI
-rL
-qJ
-qJ
-qJ
-qJ
+Ab
+fp
+fp
+fp
+fp
+fp
+fp
+fp
 DK
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
+EZ
+vl
+Dw
+Dw
+DK
 Ka
 Ka
 eE
@@ -37850,20 +38214,20 @@ ig
 ig
 ig
 ig
-rL
-rL
+ig
+fp
+fp
+fp
+fp
+fp
+fp
+fp
+kI
 qJ
 qJ
 qJ
 qJ
 DK
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
 Ka
 Ka
 eE
@@ -38096,7 +38460,7 @@ SH
 ZN
 ZN
 ZN
-JI
+ig
 ig
 ig
 ig
@@ -38104,18 +38468,18 @@ ig
 ig
 DK
 fp
-wX
-EH
-wX
-wX
+fp
+fp
+fp
+fp
+fp
+fp
+rL
+qJ
+qJ
+qJ
+qJ
 DK
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
 Ka
 Ka
 eE
@@ -38335,11 +38699,11 @@ yK
 Bv
 yK
 SH
-Vs
+yY
 yL
 yL
 yL
-xT
+UR
 DK
 kq
 Hb
@@ -38348,7 +38712,7 @@ DK
 Qz
 Fj
 Fj
-DK
+Ui
 ig
 ig
 ig
@@ -38357,17 +38721,17 @@ ig
 DK
 DK
 DK
+Eb
 DK
+fp
+fp
+fp
 DK
+eZ
+EH
+wX
+wX
 DK
-DK
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
 Ka
 Ka
 eE
@@ -38591,7 +38955,7 @@ BM
 Ox
 Qx
 Qx
-bE
+JI
 DK
 ae
 OS
@@ -38608,18 +38972,18 @@ ig
 ig
 DK
 Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
+DK
+qK
+DK
+Eb
+pg
+Eb
+DK
+DK
+DK
+DK
+DK
+DK
 Ka
 Ka
 eE
@@ -38843,7 +39207,7 @@ AD
 Qx
 yK
 Qx
-Dq
+fZ
 DK
 Gs
 OS
@@ -38860,13 +39224,13 @@ ig
 ig
 DK
 Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
+DK
+kG
+qK
+qK
+qK
+jz
+DK
 Ka
 Ka
 Ka
@@ -39112,13 +39476,13 @@ ig
 ig
 DK
 Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
+DK
+qK
+qK
+qK
+qK
+qK
+DK
 Ka
 Ka
 Ka
@@ -39366,10 +39730,10 @@ DK
 DK
 DK
 DK
-DK
-DK
-DK
-DK
+qK
+Ld
+qK
+dx
 DK
 Ka
 Ka
@@ -39618,10 +39982,10 @@ pA
 hy
 pA
 DK
-PO
-az
-az
-az
+DK
+DK
+DK
+DK
 DK
 Ka
 Ka
@@ -39870,10 +40234,10 @@ My
 My
 aQ
 DK
-az
-az
-qO
-az
+UO
+Aj
+Gz
+WK
 DK
 Ka
 Ka
@@ -40121,11 +40485,11 @@ My
 My
 My
 aQ
-Ik
-az
-rs
-QI
-Ib
+Ks
+aQ
+aQ
+aQ
+aQ
 DK
 Ka
 Ka
@@ -40374,10 +40738,10 @@ My
 My
 RJ
 DK
-Qp
-az
-Ic
-az
+aQ
+aQ
+aQ
+WY
 DK
 Ka
 Ka
@@ -40626,10 +40990,10 @@ My
 CD
 Nv
 DK
-az
-az
-az
-az
+DK
+Ik
+DK
+DK
 DK
 Ka
 Ka
@@ -40878,10 +41242,10 @@ My
 My
 Mc
 DK
-DK
-DK
-DK
-DK
+PO
+az
+az
+az
 DK
 Ka
 Ka
@@ -41101,7 +41465,7 @@ mT
 mT
 GO
 pU
-yK
+cs
 yK
 yK
 Dn
@@ -41130,11 +41494,11 @@ aQ
 aQ
 SE
 DK
-Ka
-Ka
-Ka
-Ka
-Ka
+az
+az
+qO
+az
+DK
 Ka
 Ka
 Ka
@@ -41352,7 +41716,7 @@ ay
 mT
 mT
 GO
-vA
+OJ
 vA
 Qq
 vA
@@ -41382,11 +41746,11 @@ MZ
 Tm
 DK
 DK
-Ka
-Ka
-Ka
-Ka
-Ka
+Qp
+rs
+QI
+Ib
+DK
 Ka
 Ka
 Ka
@@ -41634,11 +41998,11 @@ UZ
 UZ
 ki
 DK
-Ka
-Ka
-Ka
-Ka
-Ka
+az
+az
+DJ
+az
+DK
 Ka
 Ka
 Ka
@@ -41886,11 +42250,11 @@ UZ
 UZ
 db
 DK
-Ka
-Ka
-Ka
-Ka
-Ka
+DK
+DK
+DK
+DK
+DK
 Ka
 Ka
 Ka
@@ -42887,7 +43251,7 @@ Ka
 Ka
 Ka
 Ka
-Ka
+DK
 DK
 DK
 DK
