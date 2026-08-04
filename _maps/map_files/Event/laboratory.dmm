@@ -91,9 +91,13 @@
 /turf/open/floor/plasteel/dark,
 /area/facility_hallway/north)
 "aU" = (
-/obj/structure/bed/pod,
-/obj/item/bedsheet/hos,
-/obj/structure/curtain/cloth/fancy,
+/obj/structure/table/wood/fancy,
+/obj/item/paper_bin{
+	pixel_y = 6
+	},
+/obj/item/pen/fountain/captain{
+	pixel_y = 6
+	},
 /turf/open/floor/mineral/plastitanium,
 /area/facility_hallway/north)
 "aV" = (
@@ -450,6 +454,15 @@
 	},
 /turf/open/floor/plating,
 /area/facility_hallway/south)
+"eb" = (
+/obj/machinery/door/airlock/security/glass{
+	name = "Udjat Leader Office";
+	req_access_txt = "3;19"
+	},
+/turf/open/floor/mineral/plastitanium{
+	color = "EDD956"
+	},
+/area/facility_hallway/north)
 "ec" = (
 /turf/open/floor/mineral/titanium/purple,
 /area/facility_hallway/north)
@@ -494,6 +507,12 @@
 	pixel_y = 12
 	},
 /turf/open/floor/mineral/titanium/purple,
+/area/facility_hallway/north)
+"ey" = (
+/obj/structure/bed/pod,
+/obj/item/bedsheet/hos,
+/obj/structure/curtain/cloth/fancy,
+/turf/open/floor/mineral/plastitanium,
 /area/facility_hallway/north)
 "eA" = (
 /obj/effect/turf_decal/trimline/blue/filled/corner{
@@ -565,13 +584,6 @@
 /obj/structure/cable,
 /turf/open/floor/plating,
 /area/facility_hallway/south)
-"eV" = (
-/obj/structure/rack{
-	pixel_x = -1
-	},
-/obj/item/clothing/suit/armor/ego_gear/city/udjat_limbus,
-/turf/open/floor/mineral/plastitanium,
-/area/facility_hallway/north)
 "eZ" = (
 /obj/machinery/cryopod,
 /obj/machinery/computer/cryopod{
@@ -661,6 +673,24 @@
 	},
 /turf/open/floor/plasteel/white,
 /area/facility_hallway/central)
+"gf" = (
+/obj/structure/rack{
+	pixel_x = -1
+	},
+/obj/item/udjat_mag,
+/obj/item/udjat_mag,
+/obj/item/udjat_mag,
+/obj/item/udjat_mag,
+/obj/machinery/light{
+	dir = 4;
+	pixel_x = 9;
+	pixel_y = 4
+	},
+/obj/item/reagent_containers/food/drinks/bottle/whiskey{
+	pixel_y = 18
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/facility_hallway/north)
 "gm" = (
 /obj/structure/bodycontainer/crematorium{
 	dir = 8;
@@ -998,13 +1028,6 @@
 	color = "EDD956"
 	},
 /area/facility_hallway/north)
-"jL" = (
-/obj/structure/table/wood/fancy,
-/obj/machinery/photocopier{
-	pixel_y = 7
-	},
-/turf/open/floor/mineral/plastitanium,
-/area/facility_hallway/north)
 "jQ" = (
 /obj/structure/chair/comfy/shuttle{
 	dir = 4;
@@ -1221,6 +1244,13 @@
 	pixel_y = 4
 	},
 /turf/open/floor/carpet/executive,
+/area/facility_hallway/north)
+"le" = (
+/obj/structure/rack{
+	pixel_x = -1
+	},
+/obj/item/clothing/suit/armor/ego_gear/city/udjat_combat,
+/turf/open/floor/mineral/plastitanium,
 /area/facility_hallway/north)
 "ln" = (
 /obj/item/binoculars,
@@ -1571,6 +1601,13 @@
 	},
 /turf/open/floor/plasteel/white,
 /area/facility_hallway/central)
+"od" = (
+/obj/structure/table/wood/fancy,
+/obj/machinery/photocopier{
+	pixel_y = 7
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/facility_hallway/north)
 "ok" = (
 /turf/open/floor/plasteel,
 /area/facility_hallway/north)
@@ -1764,16 +1801,6 @@
 	},
 /turf/open/floor/wood,
 /area/facility_hallway/central)
-"pG" = (
-/obj/structure/table/wood/fancy,
-/obj/item/paper_bin{
-	pixel_y = 6
-	},
-/obj/item/pen/fountain/captain{
-	pixel_y = 6
-	},
-/turf/open/floor/mineral/plastitanium,
-/area/facility_hallway/north)
 "pH" = (
 /obj/machinery/chem_master{
 	pixel_y = 6;
@@ -2260,13 +2287,6 @@
 /obj/effect/turf_decal/tile/blue,
 /turf/open/floor/plasteel/white,
 /area/facility_hallway/central)
-"us" = (
-/obj/structure/rack{
-	pixel_x = -1
-	},
-/obj/item/clothing/suit/armor/ego_gear/city/udjat_combat,
-/turf/open/floor/mineral/plastitanium,
-/area/facility_hallway/north)
 "uy" = (
 /obj/machinery/door/airlock/highsecurity{
 	name = "asset protecitons bedroom";
@@ -3097,6 +3117,13 @@
 	},
 /turf/open/floor/wood,
 /area/facility_hallway/central)
+"BV" = (
+/obj/structure/rack{
+	pixel_x = -1
+	},
+/obj/item/clothing/suit/armor/ego_gear/city/udjat_limbus,
+/turf/open/floor/mineral/plastitanium,
+/area/facility_hallway/north)
 "Cf" = (
 /obj/effect/turf_decal/tile/bar,
 /obj/effect/turf_decal/tile/bar{
@@ -3410,15 +3437,6 @@
 	},
 /turf/open/floor/mineral/titanium/tiled,
 /area/facility_hallway/south)
-"ER" = (
-/obj/machinery/door/airlock/security/glass{
-	name = "Udjat Leader Office";
-	req_access_txt = "3;19"
-	},
-/turf/open/floor/mineral/plastitanium{
-	color = "EDD956"
-	},
-/area/facility_hallway/north)
 "ES" = (
 /obj/structure/closet/crate/bin,
 /turf/open/floor/plasteel,
@@ -3508,6 +3526,14 @@
 /obj/structure/flora/ausbushes/pointybush,
 /turf/open/floor/grass,
 /area/facility_hallway/west)
+"FL" = (
+/obj/structure/rack{
+	pixel_x = -1
+	},
+/obj/item/ego_weapon/ranged/city/udjat,
+/obj/item/ego_weapon/city/udjat_limbus,
+/turf/open/floor/mineral/plastitanium,
+/area/facility_hallway/north)
 "FN" = (
 /obj/structure/curtain,
 /turf/open/floor/noslip,
@@ -3937,18 +3963,6 @@
 	},
 /turf/open/floor/facility/halls,
 /area/facility_hallway/south)
-"Ju" = (
-/obj/structure/table/wood/fancy,
-/obj/machinery/stonkmarket{
-	pixel_y = 10
-	},
-/obj/machinery/light{
-	dir = 4;
-	pixel_x = 9;
-	pixel_y = 4
-	},
-/turf/open/floor/mineral/plastitanium,
-/area/facility_hallway/north)
 "Jw" = (
 /turf/open/space/basic,
 /area/facility_hallway/central)
@@ -4119,6 +4133,18 @@
 	pixel_y = 4
 	},
 /turf/open/floor/carpet/green,
+/area/facility_hallway/north)
+"LF" = (
+/obj/structure/table/wood/fancy,
+/obj/machinery/stonkmarket{
+	pixel_y = 10
+	},
+/obj/machinery/light{
+	dir = 4;
+	pixel_x = 9;
+	pixel_y = 4
+	},
+/turf/open/floor/mineral/plastitanium,
 /area/facility_hallway/north)
 "LN" = (
 /obj/machinery/camera{
@@ -4798,24 +4824,6 @@
 	},
 /turf/open/floor/mineral/titanium/blue,
 /area/facility_hallway/central)
-"RL" = (
-/obj/structure/rack{
-	pixel_x = -1
-	},
-/obj/item/udjat_mag,
-/obj/item/udjat_mag,
-/obj/item/udjat_mag,
-/obj/item/udjat_mag,
-/obj/machinery/light{
-	dir = 4;
-	pixel_x = 9;
-	pixel_y = 4
-	},
-/obj/item/reagent_containers/food/drinks/bottle/whiskey{
-	pixel_y = 18
-	},
-/turf/open/floor/mineral/plastitanium,
-/area/facility_hallway/north)
 "RO" = (
 /obj/structure/table/reinforced{
 	color = "#ff7f7f"
@@ -5024,14 +5032,6 @@
 	},
 /turf/open/floor/mineral/titanium/blue,
 /area/facility_hallway/west)
-"SR" = (
-/obj/structure/rack{
-	pixel_x = -1
-	},
-/obj/item/ego_weapon/ranged/city/udjat,
-/obj/item/ego_weapon/city/udjat_limbus,
-/turf/open/floor/mineral/plastitanium,
-/area/facility_hallway/north)
 "ST" = (
 /obj/machinery/light{
 	dir = 8;
@@ -41991,7 +41991,7 @@ SH
 SH
 SH
 SH
-ER
+eb
 SH
 SH
 DK
@@ -42242,10 +42242,10 @@ uI
 SH
 Ka
 SH
-aU
+ey
 yL
 su
-us
+le
 SH
 Ka
 Ka
@@ -42494,10 +42494,10 @@ rU
 SH
 Ka
 SH
-jL
+od
 yL
 yL
-eV
+BV
 SH
 Ka
 Ka
@@ -42746,10 +42746,10 @@ TZ
 SH
 Ka
 SH
-pG
+aU
 cr
 yL
-SR
+FL
 SH
 Ka
 Ka
@@ -42998,10 +42998,10 @@ SH
 SH
 Ka
 SH
-Ju
+LF
 yL
 yL
-RL
+gf
 SH
 Ka
 Ka
