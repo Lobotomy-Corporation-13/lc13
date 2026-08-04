@@ -37,6 +37,9 @@
 	. = ..()
 	ADD_TRAIT(src, TRAIT_IMMOBILIZED, TRAIT_STATUS_EFFECT("queen_bee_root"))
 
+/mob/living/simple_animal/hostile/limbus_abno/queen_bee/Move()
+	return FALSE
+
 ///More or less the same spores as the original queen bee, with the main difference that it creates the special controllable bees.
 /mob/living/simple_animal/hostile/limbus_abno/queen_bee/proc/EmitSpores(forced = FALSE)
 	var/turf/target_c = get_turf(src)
@@ -76,6 +79,8 @@
 /datum/action/cooldown/limbus_abno_action/emit_spores
 	name = "Emit Spores"
 	desc = "Emit spores, infecting many in the facility with your children. This can only be used on low mood.."
+	button_icon = 'ModularLobotomy/_Lobotomyicons/lcl_abno_actions.dmi'
+	background_icon_state = "bg_qbee"
 	icon_icon = 'icons/effects/effects.dmi'
 	button_icon_state = "mustard"
 	transparent_when_unavailable = TRUE
@@ -93,6 +98,8 @@
 /datum/action/cooldown/limbus_abno_action/bee_egg
 	name = "Birth Worker"
 	desc = "Make an egg that will eventually grow into a worker bee who will fight and search for food. Costs nearly all your hunger to use. Severely increases your mood."
+	button_icon = 'ModularLobotomy/_Lobotomyicons/lcl_abno_actions.dmi'
+	background_icon_state = "bg_qbee"
 	icon_icon = 'icons/obj/food/food.dmi'
 	button_icon_state = "egg-yellow"
 	transparent_when_unavailable = TRUE
@@ -157,6 +164,8 @@
 /datum/action/cooldown/bee_scavenge
 	name = "Scavenge for meat."
 	desc = "Scavenge meat for the queen."
+	button_icon = 'ModularLobotomy/_Lobotomyicons/lcl_abno_actions.dmi'
+	background_icon_state = "bg_qbee"
 	icon_icon = 'icons/obj/food/food.dmi'
 	button_icon_state = "meat"
 	cooldown_time = 1.5 MINUTES
@@ -175,6 +184,8 @@
 /datum/action/cooldown/bee_swap
 	name = "Worker Possession"
 	desc = "Lets you take direct control of a worker bee as long as they are not already aware. If used as a worker bee, puts you back into your queen body."
+	button_icon = 'ModularLobotomy/_Lobotomyicons/lcl_abno_actions.dmi'
+	background_icon_state = "bg_qbee"
 	icon_icon = 'icons/mob/actions/actions_animal.dmi'
 	button_icon_state = "expand"
 	cooldown_time = 1 MINUTES
@@ -204,6 +215,8 @@
 /datum/action/cooldown/bee_speech
 	name = "Hivemind Speech"
 	desc = "Lets you directly communicate with other bees."
+	button_icon = 'ModularLobotomy/_Lobotomyicons/lcl_abno_actions.dmi'
+	background_icon_state = "bg_qbee"
 	icon_icon = 'icons/mob/actions/actions_changeling.dmi'
 	button_icon_state = "hivemind_channel"
 	cooldown_time = 5 SECONDS
