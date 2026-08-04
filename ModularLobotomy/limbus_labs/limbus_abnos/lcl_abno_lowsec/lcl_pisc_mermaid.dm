@@ -439,7 +439,8 @@
 		icon_living = "pmermaid_standing"
 		icon_state = icon_living
 	REMOVE_TRAIT(src, TRAIT_IMMOBILIZED, TRAIT_STATUS_EFFECT("mermaid_choke"))
-	REMOVE_TRAIT(love_target, TRAIT_IMMOBILIZED, TRAIT_STATUS_EFFECT("mermaid_choke"))
+	if(!QDELETED(victim))
+		REMOVE_TRAIT(victim, TRAIT_IMMOBILIZED, TRAIT_STATUS_EFFECT("mermaid_choke"))
 	for(var/obj/effect/mermaid_water/water in water_list)
 		if(QDELETED(water))
 			continue
@@ -484,6 +485,8 @@
 		mermaid.AssignLover(user) //If someone else wears it, it will override the previous love target.
 	else if(slot != ITEM_SLOT_HEAD && worn)
 		STOP_PROCESSING(SSobj, src)
+		mermaid.AssignLover(null, FALSE)
+		to_chat(mermaid, span_userdanger("They took it off. The water closes over the place where they were."))
 		mermaid.AdjustCounter(-mermaid.max_counter)
 		mermaid.AdjustDesire(-mermaid.max_desire)
 		qdel(src)
