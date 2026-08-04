@@ -100,11 +100,14 @@ GLOBAL_LIST_EMPTY(lcl_specimen_card_cache)
 		return
 	switch(action)
 		if("set_priority")
-			var/lvl = clamp(text2num(params["level"]), 0, JP_HIGH)
-			if(lvl <= 0)
-				prefs.lcl_abno_pref -= path
-			else
-				LAZYSET(prefs.lcl_abno_pref, path, lvl)
+			var/lvl = text2num(params["level"])
+			if(isnull(lvl))	//Malformed packet - do not silently rewrite the preference.
+				return
+			//NEVER is stored explicitly as 0, NOT by removing the entry. An absent entry
+			//means "this player has never seen this abno", which reconcile_lcl_prefs()
+			//deliberately fills in as MEDIUM - so deleting the key on NEVER made the
+			//choice flip straight back to MEDIUM the next time prefs were reconciled.
+			LAZYSET(prefs.lcl_abno_pref, path, clamp(lvl, 0, JP_HIGH))
 			. = TRUE
 	if(.)
 		prefs.save_preferences()
