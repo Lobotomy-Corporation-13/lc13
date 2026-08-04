@@ -1,9 +1,17 @@
 
 /obj/item/clothing/suit/armor/ego_gear/city/udjat_limbus
-	name = "LCA Udjat Armor"
+	name = "LCA Udjat Scout Armor"
 	desc = "It says Limbus Company on the tag. Used by limbus Udjat officers."
 	icon_state = "udjat"
 	armor = list(RED_DAMAGE = 40, WHITE_DAMAGE = 40, BLACK_DAMAGE = 40, PALE_DAMAGE = 20)
+
+/obj/item/clothing/suit/armor/ego_gear/city/udjat_combat
+	name = "LCA Udjat Combat Armor"
+	desc = "LCA Udjat heavy armor. Quite heavy, and will slow your movement."
+	icon_state = "udjat_combat"
+	armor = list(RED_DAMAGE = 60, WHITE_DAMAGE = 60, BLACK_DAMAGE = 60, PALE_DAMAGE = 40)
+	slowdown = 0.2
+
 
 
 ///Old Stuff we shouldn't use anymore.
