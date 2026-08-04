@@ -197,6 +197,8 @@
 /datum/action/cooldown/limbus_abno_action/bodyblock
 	name = "Bodyblock"
 	desc = "You focus on blocking people's way, making them more likely to hurt you on accident. The effect will last until you reactivate this skill."
+	button_icon = 'ModularLobotomy/_Lobotomyicons/lcl_abno_actions.dmi'
+	background_icon_state = "bg_pbird"
 	icon_icon = 'ModularLobotomy/_Lobotomyicons/lc13icons.dmi'
 	button_icon_state = "Guard_this_wagie"
 	transparent_when_unavailable = TRUE
@@ -217,6 +219,8 @@
 /datum/action/cooldown/limbus_abno_action/blind_punishment
 	name = "Blind Punishment"
 	desc = "Someone needs to be punished, anyone will do. Lets you get one singular angry hit, regardless of their sins, but can only be used at very low desire."
+	button_icon = 'ModularLobotomy/_Lobotomyicons/lcl_abno_actions.dmi'
+	background_icon_state = "bg_pbird"
 	icon_icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	button_icon_state = "punishment_noBG"
 	transparent_when_unavailable = TRUE
@@ -239,8 +243,10 @@
 /datum/action/cooldown/limbus_abno_action/pecking_frenzy
 	name = "Pecking frenzy"
 	desc = "Your pecks will deal increasing sanity damage with each peck for 30 seconds on the same target, always leading to a violent insanity. Hitting another target ends the frenzy."
+	button_icon = 'ModularLobotomy/_Lobotomyicons/lcl_abno_actions.dmi'
+	background_icon_state = "bg_pbird"
 	icon_icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
-	button_icon_state = "musical_addiction"
+	button_icon_state = "musical_addiction_noBG"
 	transparent_when_unavailable = TRUE
 	cooldown_time = 1.5 MINUTES
 

@@ -13,12 +13,14 @@
 	attack_action_types = list(/datum/action/cooldown/limbus_abno_action/scream,
 	/datum/action/cooldown/limbus_abno_action/slam,
 	/datum/action/cooldown/limbus_abno_action/mountain_spit,
-	/datum/action/cooldown/limbus_abno_action/rot_gas)
+	/datum/action/cooldown/limbus_abno_action/rot_gas,
+	/datum/action/cooldown/limbus_abno_action/mosb_garble)
 
 	original_abno = /mob/living/simple_animal/hostile/abnormality/mountain
 	abno_additional_instructions = "You like repression and instinct. You are hungry, always hungry, never satisfied. \
 	Seeing blood in your cell makes you even hungrier. Eating humanoid corpses can sate you for longer, but it won't last. \
-	If left starving, you'll breach, growing bigger with each corpse consumed, but you'll need even more food than usual. Only overwhelming force will calm you down once you're in this state."
+	If left starving, you'll breach, growing bigger with each corpse consumed, but you'll need even more food than usual. Only overwhelming force will calm you down once you're in this state. \
+	Your words come apart as you speak them, worse the larger you get - use Flesh-Voice to hold them together when you need to be understood."
 	max_counter = 3
 	kickstart_timer = 20 MINUTES //More generous timer due to it being a handful once it starts going off.
 	//Gets hungry REALLY fast, but will eat nearly anything edible, even if it doesn't give a lot of hunger.
@@ -53,6 +55,12 @@
 	var/scream_damage = 40
 	var/slam_damage = 30
 	var/spit_amount = 16
+	///Whether speech is being mangled into its own broken voice. On by default - the
+	///instructions tell the player it can be switched off, so it is a choice rather than a trap.
+	var/garbling = TRUE
+	var/list/protected_words = list("clean", "cook", "fight")
+	var/list/growls_low = list("Grgh", "Ghhrg", "Krrgh")
+	var/list/growls_high = list("Krrrrh", "Grr… Ghrrrgh", "Ghrrr", "KHAAA")
 
 /mob/living/simple_animal/hostile/limbus_abno/mountain/funpet(mob/living/petter)
 	. = ..()
@@ -235,10 +243,74 @@
 	to_chat(src, span_notice("The frenzy drains away. You settle back down, whole and sated once more."))
 	RemoveBreachEffect()
 
+//Speech mangling. treat_message() is the engine's own hook for this - it is where stuttering,
+//slurring and derpspeech are applied - so it catches player speech and nothing else. Emotes,
+//system messages and the forced "YOU NEED TO EAT" line all bypass it, which is what we want.
+/mob/living/simple_animal/hostile/limbus_abno/mountain/treat_message(message)
+	if(garbling)
+		message = GarbleFlesh(message)
+	return ..()
+
+///TRUE if this word contains something another specimen is listening for, and so must not be
+///broken up. Matched case-insensitively, because findtext is.
+/mob/living/simple_animal/hostile/limbus_abno/mountain/proc/IsProtectedWord(word)
+	var/lower = lowertext(word)
+	for(var/protected in protected_words)
+		if(findtext(lower, protected))
+			return TRUE
+	return FALSE
+
+///Mangles a line into its own voice: words split mid-syllable, punctuation turned into
+///ellipses, a guttural thrown in front, and everything trailing off.
+
+///Strength scales with how far gone it is, so the toggle doubles as a status readout - the
+///facility can hear what phase it is in. Phase 2 is garbled HARDER than phase 3 on purpose:
+///it is the one stage with no coherent line to its name.
+/mob/living/simple_animal/hostile/limbus_abno/mountain/proc/GarbleFlesh(message)
+	if(!message)
+		return message
+	var/split_chance = 15
+	var/growl_chance = 20
+	var/list/growls = growls_low
+	if(breached)
+		growls = growls_high
+		switch(phase)
+			if(3)
+				split_chance = 50
+				growl_chance = 80
+			if(2)
+				split_chance = 60
+				growl_chance = 90
+			else
+				split_chance = 30
+				growl_chance = 50
+	var/list/out = list()
+	for(var/word in splittext(message, " "))
+		var/word_len = length_char(word)
+		if(word_len > 3 && prob(split_chance) && !IsProtectedWord(word))
+			var/at = rand(2, word_len - 1)
+			word = copytext_char(word, 1, at) + "…" + copytext_char(word, at)
+		out += word
+	message = jointext(out, " ")
+	message = replacetext(message, ".", "…")
+	message = replacetext(message, ",", "…")
+	message = replacetext(message, "!", "…!")
+	message = replacetext(message, "?", "…?")
+	if(prob(growl_chance))
+		message = "[pick(growls)]… [message]"
+	//Every line trails off. Skipped only where one is already sitting at the end, so a
+	//sentence never comes out with a doubled ellipsis.
+	var/last = copytext_char(message, -1)
+	if(last != "…" && last != "!" && last != "?")
+		message += "…"
+	return message
+
 ///An ability that makes everyone in area feel disgusted and puke. Cannot be used during a breach since the puke stun is kind of busted in combat.
 /datum/action/cooldown/limbus_abno_action/rot_gas
 	name = "Rot Gas"
 	desc = "Makes everyone puke in a wide area. Useful to show your discontent without screaming. Cannot be used during a breach."
+	button_icon = 'ModularLobotomy/_Lobotomyicons/lcl_abno_actions.dmi'
+	background_icon_state = "bg_mosb"
 	icon_icon = 'icons/effects/effects.dmi'
 	button_icon_state = "mustard"
 	transparent_when_unavailable = TRUE
@@ -324,12 +396,25 @@
 /datum/action/cooldown/limbus_abno_action/scream
 	name = "Scream"
 	desc = "Scream your heart right out. Only available when starving and your counter is below 3."
+	button_icon = 'ModularLobotomy/_Lobotomyicons/lcl_abno_actions.dmi'
+	background_icon_state = "bg_mosb"
 	icon_icon = 'icons/mob/actions/actions_ability.dmi'
 	button_icon_state = "screach0"
 	transparent_when_unavailable = TRUE
 	cooldown_time = 30 SECONDS
 	counter_req = 2
-	starving_req = TRUE
+	//Deliberately NOT starving_req. The base reads that flag as "unavailable WHILE starving"
+	//(lcl_abno.dm: `if(starving_req && abno_user.starving) return FALSE`), which is the exact
+	//opposite of this ability's own description and of what it is for - the hunger loop fires
+	//Scream by itself when patience runs out. The requirement is enforced below instead.
+
+/datum/action/cooldown/limbus_abno_action/scream/IsAvailable()
+	. = ..()
+	if(!.)
+		return FALSE
+	if(!abno_user.starving)
+		return FALSE
+	return TRUE
 
 /datum/action/cooldown/limbus_abno_action/scream/Trigger()
 	. = ..()
@@ -342,6 +427,8 @@
 /datum/action/cooldown/limbus_abno_action/slam
 	name = "Slam"
 	desc = "Deal damage in an area around you. Can only be used when breached in your second phase."
+	button_icon = 'ModularLobotomy/_Lobotomyicons/lcl_abno_actions.dmi'
+	background_icon_state = "bg_mosb"
 	icon_icon = 'icons/mob/actions/actions_spells.dmi'
 	button_icon_state = "repulse"
 	transparent_when_unavailable = TRUE
@@ -368,6 +455,8 @@
 /datum/action/cooldown/limbus_abno_action/mountain_spit
 	name = "Puke"
 	desc = "Puke out a vile bile. Only available on breach on your third phase."
+	button_icon = 'ModularLobotomy/_Lobotomyicons/lcl_abno_actions.dmi'
+	background_icon_state = "bg_mosb"
 	icon_icon = 'icons/effects/effects.dmi'
 	button_icon_state = "greenglow"
 	transparent_when_unavailable = TRUE
@@ -394,4 +483,28 @@
 	StartCooldown()
 	return TRUE
 
+///Toggles the speech mangling. This is the first LCL action to actually use a `_on` border -
+///every other abno sets background_icon_state once and never swaps it - so the frame itself
+///tells the player at a glance whether they are currently intelligible.
+/datum/action/cooldown/limbus_abno_action/mosb_garble
+	name = "Flesh-Voice"
+	desc = "Toggle whether your words come apart as you speak them. On by default. Turn it off when you actually need to be understood - asking for food, mostly."
+	button_icon = 'ModularLobotomy/_Lobotomyicons/lcl_abno_actions.dmi'
+	background_icon_state = "bg_mosb_on" //Matches garbling defaulting to TRUE.
+	icon_icon = 'icons/mob/actions/actions_changeling.dmi'
+	button_icon_state = "mimic_voice"
+	transparent_when_unavailable = TRUE
+	cooldown_time = 2 SECONDS
 
+/datum/action/cooldown/limbus_abno_action/mosb_garble/Trigger()
+	. = ..()
+	if(!.)
+		return FALSE
+	var/mob/living/simple_animal/hostile/limbus_abno/mountain/mosb = abno_user
+	mosb.garbling = !mosb.garbling
+	background_icon_state = mosb.garbling ? "bg_mosb_on" : "bg_mosb"
+	UpdateButtonIcon()
+	to_chat(mosb, mosb.garbling \
+		? span_warning("Your jaw slackens. The words come apart on the way out.") \
+		: span_notice("You gather the mouths together. You can make yourself understood, for now."))
+	StartCooldown()
