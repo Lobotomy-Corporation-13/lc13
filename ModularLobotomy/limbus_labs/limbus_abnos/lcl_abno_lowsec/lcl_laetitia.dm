@@ -165,8 +165,10 @@
 /datum/action/cooldown/limbus_abno_action/laetitia_surprise
 	name = "SURPRISE!"
 	desc = "Open every single gift that's inside people (not counting special deliveries)! But don't do it too early, or it will be boring! You need to be bored to use this."
-	icon_icon = 'icons/effects/blood.dmi'
-	button_icon_state = "floor5"
+	button_icon = 'ModularLobotomy/_Lobotomyicons/lcl_abno_actions.dmi'
+	background_icon_state = "bg_laetitia"
+	icon_icon = 'ModularLobotomy/_Lobotomyicons/lcl_abno_actions.dmi'
+	button_icon_state = "lae_surprise"
 	transparent_when_unavailable = TRUE
 	cooldown_time = 5 MINUTES
 	desire_req = 50
@@ -187,8 +189,10 @@
 /datum/action/cooldown/limbus_abno_action/laetitia_gifting
 	name = "Give gift"
 	desc = "The next person that you attack, that hits you, or pets you is going to get a nice gift! You need to be bored to use this."
-	icon_icon = 'ModularLobotomy/_Lobotomyicons/tegu_effects.dmi'
-	button_icon_state = "prank_gift"
+	button_icon = 'ModularLobotomy/_Lobotomyicons/lcl_abno_actions.dmi'
+	background_icon_state = "bg_laetitia"
+	icon_icon = 'ModularLobotomy/_Lobotomyicons/lcl_abno_actions.dmi'
+	button_icon_state = "lae_gift"
 	transparent_when_unavailable = TRUE
 	cooldown_time = 2 MINUTES
 	desire_req = 50
@@ -206,8 +210,10 @@
 /datum/action/cooldown/limbus_abno_action/special_delivery
 	name = "Special Delivery"
 	desc = "Create a 'normal' gift that has a 50% chance to explode, or to hold a few healing items. You can tell which it is once you've made one, but others can't."
-	icon_icon = 'icons/obj/storage.dmi'
-	button_icon_state = "giftdeliverypackage3"
+	button_icon = 'ModularLobotomy/_Lobotomyicons/lcl_abno_actions.dmi'
+	background_icon_state = "bg_laetitia"
+	icon_icon = 'ModularLobotomy/_Lobotomyicons/lcl_abno_actions.dmi'
+	button_icon_state = "lae_delivery"
 	transparent_when_unavailable = TRUE
 	cooldown_time = 2 MINUTES
 
@@ -224,8 +230,10 @@
 /datum/action/cooldown/limbus_abno_action/check_gifts
 	name = "Check gifts."
 	desc = "Check how many secret gifts inside people are ready to be unwrapped for maximum surprise."
-	icon_icon = 'icons/effects/effects.dmi'
-	button_icon_state = "info"
+	button_icon = 'ModularLobotomy/_Lobotomyicons/lcl_abno_actions.dmi'
+	background_icon_state = "bg_laetitia"
+	icon_icon = 'ModularLobotomy/_Lobotomyicons/lcl_abno_actions.dmi'
+	button_icon_state = "lae_check"
 	transparent_when_unavailable = TRUE
 	cooldown_time = 1 SECONDS
 
@@ -251,10 +259,11 @@
 /obj/item/laetitia_bomb_gift
 	name = "Laetitia's special gift."
 	desc = "No matter how much you shake the gift, you can't begin to guess what's inside."
-	icon = 'icons/obj/storage.dmi'
-	icon_state = "giftdeliverypackage3"
+	icon = 'ModularLobotomy/_Lobotomyicons/lcl_gifts.dmi'
+	icon_state = "gift_crimson"
 	inhand_icon_state = "gift"
 	resistance_flags = FLAMMABLE
+	var/list/wrappings = list("gift_crimson", "gift_wine", "gift_rose", "gift_plum", "gift_cream")
 
 	var/pranked = FALSE
 	var/good_item_spawned = 3 //High risk high reward.
@@ -263,6 +272,10 @@
 	/obj/item/reagent_containers/hypospray/medipen/salacid,
 	/obj/item/reagent_containers/hypospray/medipen/stimpack/traitor,
 	/obj/item/reagent_containers/hypospray/medipen/oxandrolone)
+
+/obj/item/laetitia_bomb_gift/Initialize(mapload)
+	. = ..()
+	icon_state = pick(wrappings)
 
 /obj/item/laetitia_bomb_gift/examine(mob/user)
 	. = ..()
