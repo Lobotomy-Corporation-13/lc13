@@ -88,11 +88,15 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 			LAZYADD(key_bindings["Ctrl"], "block_movement")
 
 	if(current_version < 39)
-		//lcl_abno_pref changed from typepath -> bool to typepath -> priority level
+		//lcl_abno_pref changed from typepath -> bool to typepath -> priority level.
+		//Old TRUE (willing) becomes MEDIUM; old FALSE becomes NEVER, written as an
+		//EXPLICIT 0 rather than by omitting the key. An absent entry means "never seen
+		//this abno" and reconcile_lcl_prefs() fills those in as MEDIUM, so dropping the
+		//old FALSE entries would have silently re-enabled every abno the player had
+		//turned off.
 		var/list/converted = list()
 		for(var/key in lcl_abno_pref)
-			if(lcl_abno_pref[key]) //old TRUE (willing) becomes MEDIUM; FALSE/absent becomes NEVER
-				converted[key] = JP_MEDIUM
+			converted[key] = lcl_abno_pref[key] ? JP_MEDIUM : 0
 		lcl_abno_pref = converted
 
 /datum/preferences/proc/update_character(current_version, savefile/S)
