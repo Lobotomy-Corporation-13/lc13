@@ -113,6 +113,9 @@
 	melee_damage_lower = initial(melee_damage_lower)
 	melee_damage_upper = initial(melee_damage_upper)
 	melee_damage_type = WHITE_DAMAGE
+	obj_damage = initial(obj_damage)
+	environment_smash = initial(environment_smash)
+	stat_attack = initial(stat_attack)
 	AdjustHunger(max_hunger)
 	AdjustDesire(max_desire)
 	adjustHealth(-maxHealth) // Full restoration
@@ -188,7 +191,7 @@
 	combo_target = null
 	if(!bird_angry)
 		melee_damage_lower = initial(melee_damage_lower)
-		melee_damage_lower = initial(melee_damage_upper)
+		melee_damage_upper = initial(melee_damage_upper)
 
 ///Extra way to be annoying for no reason. Also puts you in harm intent so that the block actually works even on people that are on help intent.
 /datum/action/cooldown/limbus_abno_action/bodyblock
