@@ -59,10 +59,15 @@
 	hunger_cooldown_time = 3 MINUTES
 	attunement_family = "love"
 	ego_list = list(/datum/ego_datum/armor/lce/love)
+	// A magical girl has hands, and reads what people leave for her.
+	dextrous = TRUE
+	held_items = list(null, null)
 	attack_action_types = list(
 		/datum/action/cooldown/limbus_abno_action/qoh_beam,
 		/datum/action/cooldown/limbus_abno_action/qoh_beats,
 		/datum/action/cooldown/limbus_abno_action/qoh_marker,
+		/datum/action/cooldown/limbus_abno_action/qoh_hope,
+		/datum/action/cooldown/limbus_abno_action/qoh_nihility,
 		/datum/action/cooldown/limbus_abno_action/qoh_resist,
 		/datum/action/cooldown/limbus_abno_action/qoh_villain,
 		/datum/action/cooldown/limbus_abno_action/qoh_hero,
@@ -74,7 +79,9 @@
 		and above all healing the WOUNDED with your wand - you can see who is hurt at a glance, \
 		and mending someone who was already fine earns you nothing. If it ever empties you fall \
 		into Hysteria, where you cannot move or fight and have three minutes to decide what you are. \
-		People talking to you buys you time. So does refusing to give in."
+		People talking to you buys you time. So does refusing to give in. You can also move the meter \
+		yourself: HOPE takes a large piece of it back, and NIHILITY throws a piece away. \
+		You have hands, and you can read."
 
 	// --- Villainy ---
 	var/max_villainy = 100
@@ -133,6 +140,9 @@
 	var/beam_startup = 2 SECONDS
 	var/beam_damage = 10
 	var/beam_maximum_ticks = 60
+	/// Hope pays villainy straight back; Nihility throws it away. Both are hers to press.
+	var/hope_villainy = 40
+	var/nihility_villainy = 30
 	var/beats_cooldown = 0
 	var/beats_cooldown_time = 15 SECONDS
 	/// Healed per target instead of damaged, when Beats catches someone she will not hurt.
@@ -327,11 +337,25 @@
 // is intentionally not wired here yet. When that hook exists, register it and call
 // AdjustVillainy(25) from the handler.
 
+/mob/living/simple_animal/hostile/limbus_abno/hatred_queen/is_literate()
+	return TRUE
+
 // Hooks UnarmedAttack, not AttackingTarget: the latter is the AI path and she is player-driven.
+// Hands work as the Lunar Physician's do - non-harm clicks route through attack_hand so items
+// are picked up and machine UIs open, and only harm intent still swings.
 /mob/living/simple_animal/hostile/limbus_abno/hatred_queen/UnarmedAttack(atom/A, proximity)
-	. = ..()
-	if(istype(A, /mob/living/simple_animal/hostile/limbus_abno) && A != src)
-		CreditHeroism(2, 2, "You strike a blow for justice!")
+	if(isliving(A))
+		. = ..()
+		if(istype(A, /mob/living/simple_animal/hostile/limbus_abno) && A != src)
+			CreditHeroism(2, 2, "You strike a blow for justice!")
+		return
+	if(dextrous && isitem(A) && a_intent != INTENT_HARM)
+		A.attack_hand(src)
+		update_inv_hands()
+		return
+	if(a_intent == INTENT_HARM)
+		return ..()
+	A.attack_hand(src) // Machines, consoles, doors: interact like a person.
 
 /mob/living/simple_animal/hostile/limbus_abno/hatred_queen/OpenFire(atom/A)
 	if(!can_act || breached) // The dragon has no ranged attack, and a frozen body cannot fire.
@@ -585,19 +609,18 @@
 		ClearSygils()
 		SetActable("beam", TRUE) // Do not strand the lock if she died during the windup.
 		return
+	// Walls do not stop it. It runs the full sixty tiles and burns whatever stands along the
+	// line, through however much facility is in the way.
 	var/turf/TT = get_ranged_target_turf_direct(my_turf, target_turf, 60)
 	var/list/hit_line = getline(my_turf, TT)
-	// The limbus map is a facility, not an open field - the beam stops at the first wall.
-	for(var/turf/TF in hit_line)
-		if(TF.density)
-			TT = TF
-			break
-	hit_line = getline(my_turf, TT)
 	current_beam = my_turf.Beam(TT, "qoh")
 	beamloop.start()
 	if(!breached)
 		addtimer(CALLBACK(src, TYPE_PROC_REF(/atom/movable, say), "ARCANA SLAVE!"))
-	icon_state = "hatredbeats"
+		// The dragon keeps its own sprite throughout. Its icon is a different sheet that has
+		// only "hatred" in it, so a cast pose here would blank it - and the restore below is
+		// already skipped while breached, which made that permanent.
+		icon_state = "hatredbeats"
 	// The dragon opens part-way up the ramp and climbs faster, exactly as the source's
 	// hostile branch does - the beam is the only real weapon it has left.
 	var/accumulated_beam_damage = breached ? 150 : 0
@@ -671,7 +694,8 @@
 	if(target_turf)
 		face_atom(target_turf)
 	SetActable("beats", FALSE)
-	icon_state = "hatredbeats"
+	if(!breached) // As with the beam: the dragon's sheet has no cast pose to switch to.
+		icon_state = "hatredbeats"
 	visible_message(span_danger("[src] prepares to mark the enemies of justice!"))
 	var/list/turfs_to_hit = getline(src, target_turf)
 	var/obj/effect/qoh_sygil/S = new(get_turf(src))
@@ -696,7 +720,8 @@
 		SetActable("beats", TRUE)
 		return
 	playsound(src, 'sound/abnormalities/hatredqueen/gun.ogg', 65, FALSE, 10)
-	icon_state = "hatredrecoil"
+	if(!breached)
+		icon_state = "hatredrecoil"
 	var/list/beats_hit = list()
 	var/i = 1
 	for(var/turf/T in turfs_to_hit)
@@ -787,6 +812,25 @@
 	addtimer(CALLBACK(src, PROC_REF(MarkerTeleport), destination), 3 SECONDS)
 	return TRUE
 
+// Backing out. The cooldown pays for arriving somewhere, so changing your mind costs nothing -
+// otherwise a misclick locks the ability out for two minutes.
+/mob/living/simple_animal/hostile/limbus_abno/hatred_queen/proc/CancelMarker()
+	if(!marker || recalling_marker)
+		return FALSE
+	RecallMarker(TRUE) // abort: the mind comes home and nothing teleports
+	RefundMarkerCooldown()
+	to_chat(src, span_notice("You let the marker go. Nothing was spent."))
+	return TRUE
+
+/mob/living/simple_animal/hostile/limbus_abno/hatred_queen/proc/RefundMarkerCooldown()
+	var/datum/action/cooldown/limbus_abno_action/qoh_marker/marker_action = locate() in actions
+	if(!marker_action)
+		return
+	marker_action.next_use_time = 0
+	if(marker_action.button)
+		marker_action.button.maptext = ""
+	marker_action.UpdateButtonIcon()
+
 /mob/living/simple_animal/hostile/limbus_abno/hatred_queen/proc/MarkerTeleport(turf/destination)
 	set waitfor = FALSE
 	if(QDELETED(src) || stat == DEAD || !destination)
@@ -855,6 +899,8 @@
 	body = _body
 	var/datum/action/innate/qoh_marker_return/R = new
 	R.Grant(src)
+	var/datum/action/innate/qoh_marker_cancel/X = new
+	X.Grant(src)
 
 /mob/camera/qoh_marker/Destroy()
 	if(client)
@@ -1042,6 +1088,85 @@
 	if(!istype(M) || !M.body || QDELETED(M.body))
 		return
 	M.body.RecallMarker()
+
+// The way out. Same recall, no travel, and the Arcane Marker cooldown is handed back.
+/datum/action/innate/qoh_marker_cancel
+	name = "Dismiss Marker"
+	desc = "Let the marker go and return to your body without travelling to it. Costs you nothing - \
+		the arcana is only spent on arriving somewhere."
+	button_icon = 'ModularLobotomy/_Lobotomyicons/lcl_abno_actions.dmi'
+	background_icon_state = "bg_qoh"
+	icon_icon = 'ModularLobotomy/_Lobotomyicons/lcl_abno_actions.dmi'
+	button_icon_state = "qoh_marker_cancel"
+
+/datum/action/innate/qoh_marker_cancel/Activate()
+	var/mob/camera/qoh_marker/M = owner
+	if(!istype(M) || !M.body || QDELETED(M.body))
+		return
+	M.body.CancelMarker()
+
+// Hope and Nihility. The two halves of the meter she can move herself.
+/datum/action/cooldown/limbus_abno_action/qoh_hope
+	name = "Hope"
+	desc = "Remember why you started. Gives you back a large piece of your Villainy. Five minutes to recharge."
+	button_icon = 'ModularLobotomy/_Lobotomyicons/lcl_abno_actions.dmi'
+	background_icon_state = "bg_qoh"
+	icon_icon = 'ModularLobotomy/_Lobotomyicons/lcl_abno_actions.dmi'
+	button_icon_state = "qoh_hope"
+	transparent_when_unavailable = TRUE
+	cooldown_time = 5 MINUTES
+
+// Deliberately still usable on her knees, the same as Resist - it is the one button that
+// matches what Hysteria is about.
+/datum/action/cooldown/limbus_abno_action/qoh_hope/IsAvailable()
+	. = ..()
+	if(!.)
+		return FALSE
+	var/mob/living/simple_animal/hostile/limbus_abno/hatred_queen/Q = abno_user
+	if(!istype(Q) || Q.breached)
+		return FALSE
+	return TRUE
+
+/datum/action/cooldown/limbus_abno_action/qoh_hope/Trigger()
+	. = ..()
+	if(!.)
+		return FALSE
+	var/mob/living/simple_animal/hostile/limbus_abno/hatred_queen/Q = abno_user
+	Q.AdjustVillainy(Q.hope_villainy, "Someone still needs a magical girl. It might as well be you.")
+	Q.manual_emote("straightens up, and the light comes back into her eyes.")
+	StartCooldown()
+
+/datum/action/cooldown/limbus_abno_action/qoh_nihility
+	name = "Nihility"
+	desc = "Let a piece of it go. Costs you Villainy, and brings Hysteria closer. Thirty seconds to recharge."
+	button_icon = 'ModularLobotomy/_Lobotomyicons/lcl_abno_actions.dmi'
+	background_icon_state = "bg_qoh"
+	icon_icon = 'ModularLobotomy/_Lobotomyicons/lcl_abno_actions.dmi'
+	button_icon_state = "qoh_nihility"
+	transparent_when_unavailable = TRUE
+	cooldown_time = 30 SECONDS
+
+// Locked out during Hysteria on purpose: AdjustVillainy breaches her outright if the bar hits
+// zero while she is already hysteric, so leaving it live would be a hidden instant-breach
+// button sitting next to the deliberate one.
+/datum/action/cooldown/limbus_abno_action/qoh_nihility/IsAvailable()
+	. = ..()
+	if(!.)
+		return FALSE
+	var/mob/living/simple_animal/hostile/limbus_abno/hatred_queen/Q = abno_user
+	if(!istype(Q) || Q.breached || Q.hysteric)
+		return FALSE
+	return TRUE
+
+/datum/action/cooldown/limbus_abno_action/qoh_nihility/Trigger()
+	. = ..()
+	if(!.)
+		return FALSE
+	var/mob/living/simple_animal/hostile/limbus_abno/hatred_queen/Q = abno_user
+	Q.AdjustVillainy(-Q.nihility_villainy)
+	to_chat(Q, span_warning("You let a piece of it go. It is quieter without it."))
+	Q.manual_emote("lets her shoulders drop.")
+	StartCooldown()
 
 /datum/action/cooldown/limbus_abno_action/qoh_resist
 	name = "Resist"
