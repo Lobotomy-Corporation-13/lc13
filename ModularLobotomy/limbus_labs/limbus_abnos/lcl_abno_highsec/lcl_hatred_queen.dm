@@ -235,6 +235,12 @@
 	var/obj/item/food/F = food
 	return (F.foodtypes & (SUGAR|FRUIT)) ? TRUE : FALSE
 
+/mob/living/simple_animal/hostile/limbus_abno/hatred_queen/attackby(obj/item/W, mob/user, params)
+	if(is_type_in_list(W, diet_list))
+		AbnoEat(W)
+		return TRUE
+	return ..()
+
 /mob/living/simple_animal/hostile/limbus_abno/hatred_queen/AbnoEat(atom/food)
 	// Read this BEFORE the parent runs - the base qdels the food once it has been eaten.
 	var/was_sweet = IsSweetFood(food)
