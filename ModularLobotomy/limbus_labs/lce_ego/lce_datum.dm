@@ -38,3 +38,11 @@
 //Hat Trick
 /datum/ego_datum/armor/lce/trick
 	item_path = /obj/item/clothing/suit/armor/ego_gear/lce/trick
+
+//Despair
+/datum/ego_datum/armor/lce/despair
+	item_path = /obj/item/clothing/suit/armor/ego_gear/lce/despair
+
+//Acupuncture
+/datum/ego_datum/armor/lce/acupuncture
+	item_path = /obj/item/clothing/suit/armor/ego_gear/lce/acupuncture
