@@ -7,8 +7,7 @@
 	spawn_positions = 2
 	exp_requirements = 180
 
-	department_head = list("Chief Medical Officer", "Surgeon")
-	supervisors = "the Chief Medical Officer and the Surgeon"
+	department_head = list("Chief Medical Officer")
 
 	outfit = /datum/outfit/job/lcb_nurse
 

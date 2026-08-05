@@ -390,7 +390,7 @@
 		"Robin Section Leader", "Robin Squad Sergeant", "Section A Robin", "Section B Robin", "Section C Robin", "R-Corp Rook",
 
 		//LC Labs
-		"Chief Medical Officer", "Surgeon", "Nurse Practitioner", "Pharmacist", "Emergency Medical Technician", "Lead Researcher", "Senior Researcher", "Information Systems Tech",
+		"Chief Medical Officer", "Surgeon", "Nurse Practitioner", "Pharmacist", "Emergency Medical Technician", "Research Lead", "Lead Researcher", "Senior Researcher", "Information Systems Tech",
 		"Researcher", "LC Staff", "District Manager", "LC Asset Protection", "High Security Commander", "Low Security Commander", "High Security Officer", "Low Security Officer",
 		"Damage Mitigation Officer", "Damage Exasperation Officer", "Containment Engineer", "LC Chef", "LC Janitor", "Research Archivist", "Internal Police", "LC Specimen",
 		)
