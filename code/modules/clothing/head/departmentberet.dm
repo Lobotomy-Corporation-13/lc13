@@ -46,9 +46,9 @@
 //Limbus Company Labs department heads. The only headwear either department issues, so it is
 //what marks the lead out from the staff wearing the same uniform.
 
-//LCE brown and gold for the Research Lead
+//LCE brown and gold for the LCE Lead Researcher
 /obj/item/clothing/head/beret/tegu/lce_research
-	name = "research lead beret"
+	name = "lead researcher's beret"
 	desc = "A brown beret in Limbus Company Extraction's own shade, pinned with the gold clasp \
 		from the LCE armband. Handed down rather than issued - the previous lead's initials are \
 		still inked inside the band."

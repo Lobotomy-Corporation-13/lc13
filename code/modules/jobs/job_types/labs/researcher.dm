@@ -1,12 +1,12 @@
 /datum/job/researcher
 	title = "LCE Researcher"
 	faction = "Station"
-	supervisors = "the Research Lead"
+	supervisors = "the LCE Lead Researcher"
 	total_positions = 3
 	spawn_positions = 3
 	selection_color = "#cd6fd9"
 
-	department_head = list("Research Lead")
+	department_head = list("LCE Lead Researcher")
 
 	outfit = /datum/outfit/job/researcher
 
@@ -20,7 +20,7 @@
 	display_order = 6
 	alt_titles = list()
 	maptype = "limbus_labs"
-	job_important = "You are an LCE Researcher. Your job is to interact with the specimens, write down notes based on how they reacted, and report your findings to the Research Lead."
+	job_important = "You are an LCE Researcher. Your job is to interact with the specimens, write down notes based on how they reacted, and report your findings to the LCE Lead Researcher."
 	job_abbreviation = "RES"
 
 	roundstart_attributes = list(

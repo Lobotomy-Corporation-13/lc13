@@ -2488,7 +2488,7 @@
 #include "code\modules\jobs\job_types\labs\manager.dm"
 #include "code\modules\jobs\job_types\labs\nurse.dm"
 #include "code\modules\jobs\job_types\labs\researcher.dm"
-#include "code\modules\jobs\job_types\labs\research_lead.dm"
+#include "code\modules\jobs\job_types\labs\lce_lead_researcher.dm"
 #include "code\modules\jobs\job_types\labs\udjat.dm"
 #include "code\modules\jobs\job_types\labs\lcl_abno\lcl_abno_role.dm"
 #include "code\modules\jobs\job_types\mentor\trainingofficer.dm"

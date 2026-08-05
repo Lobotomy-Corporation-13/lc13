@@ -1,5 +1,5 @@
-/datum/job/research_lead
-	title = "Research Lead"
+/datum/job/lce_lead_researcher
+	title = "LCE Lead Researcher"
 	faction = "Station"
 	supervisors = "the District Manager"
 	total_positions = 1
@@ -18,8 +18,8 @@
 	display_order = 5.5
 	alt_titles = list()
 	maptype = "limbus_labs"
-	job_important = "You are the Research Lead. You run the research arm: decide who covers which specimen, collect what your researchers find, and answer for it to the District Manager."
-	job_abbreviation = "RSL"
+	job_important = "You are the LCE Lead Researcher. You run the research arm: decide who covers which specimen, collect what your researchers find, and answer for it to the District Manager."
+	job_abbreviation = "LRES"
 
 	roundstart_attributes = list(
 								FORTITUDE_ATTRIBUTE = 40,
@@ -28,7 +28,7 @@
 								JUSTICE_ATTRIBUTE = 40
 								)
 
-/datum/job/research_lead/after_spawn(mob/living/carbon/human/H, mob/M, latejoin = FALSE)
+/datum/job/lce_lead_researcher/after_spawn(mob/living/carbon/human/H, mob/M, latejoin = FALSE)
 	..()
 	H.set_attribute_limit(20)
 	ADD_TRAIT(H, TRAIT_COMBATFEAR_IMMUNE, JOB_TRAIT)
@@ -37,8 +37,8 @@
 //Subtypes the researcher outfit so the lead always wears whatever the researchers wear. The
 //beret and the department-head headset are the only differences.
 /datum/outfit/job/researcher/lead
-	name = "Research Lead"
-	jobtype = /datum/job/research_lead
+	name = "LCE Lead Researcher"
+	jobtype = /datum/job/lce_lead_researcher
 
 	head = /obj/item/clothing/head/beret/tegu/lce_research
 	ears = /obj/item/radio/headset/heads/headset_information
