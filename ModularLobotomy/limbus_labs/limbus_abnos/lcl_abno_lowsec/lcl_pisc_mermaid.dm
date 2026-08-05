@@ -41,6 +41,9 @@
 	var/speak_count = 0
 	var/breached = FALSE
 	var/dashing = FALSE
+	///TRUE once the counter has bottomed out and the breach is being OFFERED. She does not
+	///breach on her own any more - the alert sits there flashing until she chooses to take it.
+	var/breach_ready = FALSE
 
 /mob/living/simple_animal/hostile/limbus_abno/pisc_mermaid/Initialize(mapload)
 	. = ..()
@@ -102,6 +105,8 @@
 
 /mob/living/simple_animal/hostile/limbus_abno/pisc_mermaid/death()
 	. = ..()
+	breach_ready = FALSE
+	clear_alert("mermaid_breach")
 	Unbreach()
 	if(crown)
 		qdel(crown)
@@ -164,9 +169,35 @@
 	if(breached)
 		return
 	..()
-	if(counter <= 0)
-		BreachState()
-		MermaidChokehold()
+	UpdateBreachOffer()
+
+///Hitting zero no longer breaches her by itself - it OFFERS the breach, and she takes it by
+///clicking the alert. The counter climbing back above zero withdraws the offer again, which
+///gives the facility a real window to talk her down after the fuse has already run out.
+/mob/living/simple_animal/hostile/limbus_abno/pisc_mermaid/proc/UpdateBreachOffer()
+	if(breached || counter > 0 || stat >= DEAD)
+		if(breach_ready)
+			breach_ready = FALSE
+			clear_alert("mermaid_breach")
+			to_chat(src, span_nicegreen("The water settles. You can wait a little longer."))
+		return
+	if(breach_ready)
+		return
+	breach_ready = TRUE
+	throw_alert("mermaid_breach", /atom/movable/screen/alert/mermaid_breach)
+	playsound(get_turf(src), 'sound/abnormalities/piscinemermaid/bigsplash.ogg', 50, 1)
+	to_chat(src, span_userdanger("You have waited long enough. The depths are open to you \
+		whenever you want them - click the warning on your screen to give in."))
+
+///Taking the offer. Everything from here is the old automatic behaviour, unchanged.
+/mob/living/simple_animal/hostile/limbus_abno/pisc_mermaid/proc/AcceptBreach()
+	if(breached || !breach_ready || stat >= DEAD)
+		return FALSE
+	breach_ready = FALSE
+	clear_alert("mermaid_breach")
+	BreachState()
+	MermaidChokehold()
+	return TRUE
 
 /mob/living/simple_animal/hostile/limbus_abno/pisc_mermaid/AdjustDesire(desire_amount)
 	. = ..()
@@ -220,6 +251,27 @@
 	AdjustCounter(max_counter)
 	AdjustHunger(max_hunger)
 	RemoveBreachEffect()
+
+///The breach offer. A flashing hazard triangle that sits on her HUD once her counter bottoms
+///out; shift-clicking it explains what it is, and clicking it takes the breach.
+/atom/movable/screen/alert/mermaid_breach
+	name = "The Depths Are Open"
+	desc = "You have met the condition to breach. Click this to give in - you will surface beside the one you love, \
+		and everything around you will start to drown. Nothing but a beating will bring you back."
+	icon = 'ModularLobotomy/_Lobotomyicons/abno_hud.dmi'
+	icon_state = "mermaid_breach"
+
+/atom/movable/screen/alert/mermaid_breach/Click(location, control, params)
+	. = ..() //The parent handles the shift-click "examine" path, which prints name + desc.
+	if(!usr || usr != owner)
+		return
+	var/list/modifiers = params2list(params)
+	if(LAZYACCESS(modifiers, SHIFT_CLICK))
+		return
+	var/mob/living/simple_animal/hostile/limbus_abno/pisc_mermaid/mermaid = owner
+	if(!istype(mermaid))
+		return
+	mermaid.AcceptBreach()
 
 ///Allows telepathy to the love target specifically. A telepathy skill already exists, but I'd rather use the limbus abno action for consistency and ease of use.
 /datum/action/cooldown/limbus_abno_action/mermaid_telepathy
@@ -387,7 +439,8 @@
 		icon_living = "pmermaid_standing"
 		icon_state = icon_living
 	REMOVE_TRAIT(src, TRAIT_IMMOBILIZED, TRAIT_STATUS_EFFECT("mermaid_choke"))
-	REMOVE_TRAIT(love_target, TRAIT_IMMOBILIZED, TRAIT_STATUS_EFFECT("mermaid_choke"))
+	if(!QDELETED(victim))
+		REMOVE_TRAIT(victim, TRAIT_IMMOBILIZED, TRAIT_STATUS_EFFECT("mermaid_choke"))
 	for(var/obj/effect/mermaid_water/water in water_list)
 		if(QDELETED(water))
 			continue
@@ -432,6 +485,8 @@
 		mermaid.AssignLover(user) //If someone else wears it, it will override the previous love target.
 	else if(slot != ITEM_SLOT_HEAD && worn)
 		STOP_PROCESSING(SSobj, src)
+		mermaid.AssignLover(null, FALSE)
+		to_chat(mermaid, span_userdanger("They took it off. The water closes over the place where they were."))
 		mermaid.AdjustCounter(-mermaid.max_counter)
 		mermaid.AdjustDesire(-mermaid.max_desire)
 		qdel(src)

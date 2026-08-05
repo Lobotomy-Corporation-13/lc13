@@ -63,9 +63,9 @@
 	RegisterSignal(src, COMSIG_LIVING_DEATH, PROC_REF(OnCommunionGone))
 	GrantCommunionActions()
 	if(communion_target)
-		to_chat(src, span_hypnophrase("<i>You slip behind [communion_target]'s eyes...</i>"))
+		to_chat(src, "<span class='revenboldnotice'><i>You slip behind [communion_target]'s eyes...</i></span>")
 	else
-		to_chat(src, span_hypnophrase("<i>You gaze out through your discarded EGO...</i>"))
+		to_chat(src, "<span class='revenboldnotice'><i>You gaze out through your discarded EGO...</i></span>")
 
 /mob/living/simple_animal/hostile/limbus_abno/proc/EndCommunion()
 	if(isnull(communion_view))
@@ -141,9 +141,15 @@
 	msg = trim(msg)
 	if(!msg)
 		return
-	to_chat(communion_target, span_hypnophrase("<i>[msg]</i>"))
-	to_chat(src, span_notice("You whisper to [communion_target]: \"[msg]\""))
 	log_directed_talk(src, communion_target, msg, LOG_SAY, "EGO communion")
+	to_chat(communion_target, "<span class='revenboldnotice'>A voice speaks through your EGO...</span> <span class='revennotice'>[msg]</span>")
+	to_chat(src, "<span class='revenboldnotice'>You whisper to [communion_target]:</span> <span class='revennotice'>[msg]</span>")
+	for(var/ded in GLOB.dead_mob_list)
+		if(!isobserver(ded))
+			continue
+		var/follow_abno = FOLLOW_LINK(ded, src)
+		var/follow_target = FOLLOW_LINK(ded, communion_target)
+		to_chat(ded, "[follow_abno] <span class='revenboldnotice'>[src] EGO Communion:</span> <span class='revennotice'>\"[msg]\" to</span> [follow_target] [span_name("[communion_target]")]")
 
 // ---- Compulsion (50%+ attunement) ----
 // Returns TRUE if a compulsion actually happened (so the caller starts the cooldown).
@@ -197,6 +203,8 @@
 	if(!.)
 		return FALSE
 	abno_user.CommunionWhisper()
+	if(QDELETED(src))
+		return FALSE
 	StartCooldown()
 
 /datum/action/cooldown/limbus_abno_action/communion_compel
@@ -221,6 +229,8 @@
 	if(!.)
 		return FALSE
 	if(abno_user.CommunionCompel())
+		if(QDELETED(src)) //Communion ended while the input boxes were open.
+			return FALSE
 		var/obj/item/clothing/suit/armor/ego_gear/lce/A = abno_user.communion_armor
 		var/att = A ? A.attunement : 50
 		// 40s at 50% attunement, shrinking to 10s at 100%.

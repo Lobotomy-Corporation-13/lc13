@@ -81,6 +81,8 @@
 	addtimer(CALLBACK(src, PROC_REF(FighterHealthCheck)), 1)
 
 /obj/item/lcl_duel/proc/FighterHealthCheck()
+	if(isnull(agent) || isnull(linked_abno)) //A hit queued a check, then the duel ended before it fired.
+		return
 	if(agent.stat > CONSCIOUS  || linked_abno.health < (linked_abno.getMaxHealth() * 0.4))
 		if(!duel_ending)
 			duel_ending = TRUE
@@ -96,11 +98,13 @@
 	UnregisterSignal(linked_abno, list(COMSIG_HOSTILE_ATTACKINGTARGET, COMSIG_ATOM_BULLET_ACT, COMSIG_PARENT_ATTACKBY))
 
 /obj/item/lcl_duel/proc/HealFighters(mob/living/carbon/human/H, mob/living/simple_animal/hostile/limbus_abno/LA)
-	if(agent.stat == DEAD)
-		agent.revive(full_heal = TRUE, admin_revive = TRUE) //This can probably be abused but who cares about powergaming in LCL of all things.
-	H.adjustBruteLoss(H.health - initial_agent_health)
-	H.adjustSanityLoss(H.sanityhealth - initial_agent_sanity)
-	LA.adjustBruteLoss(LA.health - initial_abno_health)
 	linked_abno = null
 	agent = null
 	duel_ending = FALSE
+	if(!QDELETED(H))
+		if(H.stat == DEAD)
+			H.revive(full_heal = TRUE, admin_revive = TRUE) //This can probably be abused but who cares about powergaming in LCL of all things.
+		H.adjustBruteLoss(H.health - initial_agent_health)
+		H.adjustSanityLoss(H.sanityhealth - initial_agent_sanity)
+	if(!QDELETED(LA))
+		LA.adjustBruteLoss(LA.health - initial_abno_health)

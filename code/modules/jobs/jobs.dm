@@ -62,6 +62,8 @@ GLOBAL_LIST_INIT(command_positions, list(
 	"District Manager",
 	"LC Asset Protection",
 	"LCA Udjat Leader",
+	"LCE Lead Researcher",
+	"Chief Medical Officer",
 	"Lead Researcher",
 
 	"Office Director",
@@ -75,6 +77,7 @@ GLOBAL_LIST_INIT(engineering_positions, list(
 
 GLOBAL_LIST_INIT(medical_positions, list(
 	// LCB Labs
+	"Chief Medical Officer",
 	"Nurse Practitioner",
 
 	// City
@@ -91,9 +94,10 @@ GLOBAL_LIST_INIT(medical_positions, list(
 
 GLOBAL_LIST_INIT(science_positions, list(
 	// LCB Labs
-	"Lead Researcher",
+	"LCE Lead Researcher",
 	"LCE Researcher",
 	"LCE Clerk",
+	"Lead Researcher",
 	))
 
 

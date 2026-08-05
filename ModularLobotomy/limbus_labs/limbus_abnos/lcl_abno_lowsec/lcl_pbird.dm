@@ -113,6 +113,9 @@
 	melee_damage_lower = initial(melee_damage_lower)
 	melee_damage_upper = initial(melee_damage_upper)
 	melee_damage_type = WHITE_DAMAGE
+	obj_damage = initial(obj_damage)
+	environment_smash = initial(environment_smash)
+	stat_attack = initial(stat_attack)
 	AdjustHunger(max_hunger)
 	AdjustDesire(max_desire)
 	adjustHealth(-maxHealth) // Full restoration
@@ -188,12 +191,14 @@
 	combo_target = null
 	if(!bird_angry)
 		melee_damage_lower = initial(melee_damage_lower)
-		melee_damage_lower = initial(melee_damage_upper)
+		melee_damage_upper = initial(melee_damage_upper)
 
 ///Extra way to be annoying for no reason. Also puts you in harm intent so that the block actually works even on people that are on help intent.
 /datum/action/cooldown/limbus_abno_action/bodyblock
 	name = "Bodyblock"
 	desc = "You focus on blocking people's way, making them more likely to hurt you on accident. The effect will last until you reactivate this skill."
+	button_icon = 'ModularLobotomy/_Lobotomyicons/lcl_abno_actions.dmi'
+	background_icon_state = "bg_pbird"
 	icon_icon = 'ModularLobotomy/_Lobotomyicons/lc13icons.dmi'
 	button_icon_state = "Guard_this_wagie"
 	transparent_when_unavailable = TRUE
@@ -214,6 +219,8 @@
 /datum/action/cooldown/limbus_abno_action/blind_punishment
 	name = "Blind Punishment"
 	desc = "Someone needs to be punished, anyone will do. Lets you get one singular angry hit, regardless of their sins, but can only be used at very low desire."
+	button_icon = 'ModularLobotomy/_Lobotomyicons/lcl_abno_actions.dmi'
+	background_icon_state = "bg_pbird"
 	icon_icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	button_icon_state = "punishment_noBG"
 	transparent_when_unavailable = TRUE
@@ -236,8 +243,10 @@
 /datum/action/cooldown/limbus_abno_action/pecking_frenzy
 	name = "Pecking frenzy"
 	desc = "Your pecks will deal increasing sanity damage with each peck for 30 seconds on the same target, always leading to a violent insanity. Hitting another target ends the frenzy."
+	button_icon = 'ModularLobotomy/_Lobotomyicons/lcl_abno_actions.dmi'
+	background_icon_state = "bg_pbird"
 	icon_icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
-	button_icon_state = "musical_addiction"
+	button_icon_state = "musical_addiction_noBG"
 	transparent_when_unavailable = TRUE
 	cooldown_time = 1.5 MINUTES
 

@@ -33,17 +33,27 @@
 	if(starving)
 		AdjustDesire(-10)
 
-//Scorched girl dislikes attachment work.
+//Scorched girl dislikes attachment work - petting her costs her desire AND sets the area
+//alight. The parent has to run: it is what applies desire_on_pet and credits the petter with
+//the attunement affinity every other specimen grants for being handled.
 /mob/living/simple_animal/hostile/limbus_abno/scorched_girl/funpet(mob/living/carbon/human/petter)
+	..()
 	BurnArea(TRUE)
 	playsound(src, 'sound/items/welder.ogg', 100, TRUE)
 
-/mob/living/simple_animal/hostile/limbus_abno/scorched_girl/AdjustDesire(desire_amount, pos_desire)
-	..()
-	if(desire_bar < 50 && !pos_desire)
+//Her counter tracks her mood: it falls while she is miserable and comes back while she is
+//content. The direction is read off the adjustment itself - the old second parameter was
+//never passed by anything, so it was always null, which made the drop fire on every desire
+//change below 50 (gains included) and left the recovery branch unreachable.
+/mob/living/simple_animal/hostile/limbus_abno/scorched_girl/AdjustDesire(desire_amount)
+	. = ..()
+	if(!.)
+		return .
+	if(desire_amount < 0 && desire_bar < 50)
 		AdjustCounter(-1)
-	else if(desire_bar > 50 && pos_desire)
+	else if(desire_amount > 0 && desire_bar > 50)
 		AdjustCounter(1)
+	return .
 
 /mob/living/simple_animal/hostile/limbus_abno/scorched_girl/AdjustCounter(counter_amount)
 	..()
@@ -95,6 +105,8 @@
 	playsound(get_turf(src), 'sound/abnormalities/scorchedgirl/pre_ability.ogg', 50, 0, 2)
 	if(!forced)
 		if(!do_after(src, 1.5 SECONDS, target = src))
+			blowing_up = FALSE
+			unstable = FALSE
 			return FALSE
 	else
 		to_chat(src, "<span class='userdanger'>The heat is becoming too much to bear.</span>")
@@ -109,12 +121,10 @@
 	for(var/mob/living/L in view(7, src))
 		if(L == src)
 			continue
-		if(!IsFriend(L) && !forced)
+		if(IsFriend(L) && !forced) //A deliberate blast spares her friends. A forced one cannot.
 			continue
 		L.deal_damage(150, RED_DAMAGE)
 		L.deal_damage(150 * 0.5, FIRE)
-		if(L.health < 0)
-			L.gib()
 	for(var/obj/structure/obstacle in view(5, src))
 		obstacle.take_damage(150, RED_DAMAGE)
 	new /obj/effect/temp_visual/explosion(get_turf(src))
@@ -136,7 +146,7 @@
 	for(var/turf/open/T in range(2, src))
 		new /obj/effect/temp_visual/fire/fast(T)
 		for(var/mob/living/carbon/human/H in T)
-			if(IsFriend() && !forced)
+			if(IsFriend(H) && !forced) //Was IsFriend() with no argument, so it never matched anyone.
 				continue
 			if(!forced)
 				AdjustDesire(20)

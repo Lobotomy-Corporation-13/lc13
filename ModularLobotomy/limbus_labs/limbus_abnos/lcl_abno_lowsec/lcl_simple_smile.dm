@@ -90,8 +90,10 @@
 /datum/action/cooldown/limbus_abno_action/smile_gobble
 	name = "Borrow"
 	desc = "Gives you the ability to eat the next few objects you attack. Nearly anything that isn't nailed down or alive can be absorbed. If they want it back, they'll have to beat it out of you."
-	icon_icon = 'icons/mob/actions/actions_animal.dmi'
-	button_icon_state = "coffer"
+	button_icon = 'ModularLobotomy/_Lobotomyicons/lcl_abno_actions.dmi'
+	background_icon_state = "bg_smile"
+	icon_icon = 'ModularLobotomy/_Lobotomyicons/lcl_abno_actions.dmi'
+	button_icon_state = "smile_borrow"
 	transparent_when_unavailable = TRUE
 	cooldown_time = 30 SECONDS
 	desire_req = 80
@@ -107,8 +109,10 @@
 /datum/action/cooldown/limbus_abno_action/smile_puke
 	name = "Let it out"
 	desc = "Pukes out all that you ate. Does not affect your hunger or desire bar."
-	icon_icon = 'icons/mob/actions/actions_xeno.dmi'
-	button_icon_state = "alien_barf"
+	button_icon = 'ModularLobotomy/_Lobotomyicons/lcl_abno_actions.dmi'
+	background_icon_state = "bg_smile"
+	icon_icon = 'ModularLobotomy/_Lobotomyicons/lcl_abno_actions.dmi'
+	button_icon_state = "smile_letout"
 	cooldown_time = 10 SECONDS
 
 /datum/action/cooldown/limbus_abno_action/smile_puke/IsAvailable()
@@ -131,8 +135,10 @@
 /datum/action/cooldown/limbus_abno_action/smile_hoard
 	name = "Hoard"
 	desc = "Teleports you and anything you're dragging back to your cell."
-	icon_icon = 'icons/mob/actions/actions_abnormality.dmi'
-	button_icon_state = "nos_teleport"
+	button_icon = 'ModularLobotomy/_Lobotomyicons/lcl_abno_actions.dmi'
+	background_icon_state = "bg_smile"
+	icon_icon = 'ModularLobotomy/_Lobotomyicons/lcl_abno_actions.dmi'
+	button_icon_state = "smile_hoard"
 	cooldown_time = 1 MINUTES
 
 /datum/action/cooldown/limbus_abno_action/smile_hoard/Trigger()
@@ -150,8 +156,10 @@
 /datum/action/cooldown/limbus_abno_action/smile_id_bump
 	name = "ID Bump"
 	desc = "Makes the next person you attack drop their ID."
-	icon_icon = 'icons/obj/card.dmi'
-	button_icon_state = "fixer_id"
+	button_icon = 'ModularLobotomy/_Lobotomyicons/lcl_abno_actions.dmi'
+	background_icon_state = "bg_smile"
+	icon_icon = 'ModularLobotomy/_Lobotomyicons/lcl_abno_actions.dmi'
+	button_icon_state = "smile_id"
 	cooldown_time = 30 SECONDS
 
 /datum/action/cooldown/limbus_abno_action/smile_id_bump/Trigger()
@@ -165,8 +173,10 @@
 /datum/action/cooldown/limbus_abno_action/smile_knockdown
 	name = "Knockdown"
 	desc = "Makes your next few attacks trip people, dropping any items they were holding."
-	icon_icon = 'icons/mob/actions/actions_abnormality.dmi'
-	button_icon_state = "generic_slam"
+	button_icon = 'ModularLobotomy/_Lobotomyicons/lcl_abno_actions.dmi'
+	background_icon_state = "bg_smile"
+	icon_icon = 'ModularLobotomy/_Lobotomyicons/lcl_abno_actions.dmi'
+	button_icon_state = "smile_knockdown"
 	cooldown_time = 45 SECONDS
 
 /datum/action/cooldown/limbus_abno_action/smile_knockdown/Trigger()

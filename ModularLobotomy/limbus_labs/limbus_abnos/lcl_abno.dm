@@ -74,6 +74,17 @@
 	var/ego_desire_gained = 3
 	var/required_ego_desire = 100
 	var/ego_desire_cooldown_time = 10 SECONDS
+	// --- Talking with people. Affinity is only paid for an actual exchange: they have to have
+	// --- heard us speak recently AND then speak themselves. Keyed by ckey rather than by mob
+	// --- ref so nothing here keeps a deleted player alive.
+	///ckey -> world.time of the last line of ours they were in earshot for.
+	var/list/heard_us_speak = list()
+	///ckey -> world.time before which they cannot earn conversation affinity again.
+	var/list/talk_affinity_cooldown = list()
+	///How long after we speak a reply still counts as a reply.
+	var/conversation_window = 30 SECONDS
+	///Per-person rate limit, so chat spam cannot farm affinity.
+	var/talk_affinity_cooldown_time = 60 SECONDS
 	var/ego_desire_cooldown
 	var/list/ego_list = list() //Unfortunately, I couldn't find any easy way of copying the ego list of the original abno, so you have to do it manually for now.
 	var/attunement_family = "" //LCE attunement family. Interacting with this abno builds a player's affinity for gear of this family.
@@ -280,10 +291,31 @@
 	..()
 
 //Maybe make it distance related later, but for now I'm just making most base desire on talk really low.
+//Anyone in earshot of a line of ours is now "in conversation" with us for a while.
+/mob/living/simple_animal/hostile/limbus_abno/say(message, bubble_type, list/spans = list(), sanitize = TRUE, datum/language/language = null, ignore_spam = FALSE, forced = null)
+	. = ..()
+	if(!message)
+		return
+	for(var/mob/living/carbon/human/H in get_hearers_in_view(7, src))
+		if(H.ckey && H != src)
+			heard_us_speak[H.ckey] = world.time
+
 /mob/living/simple_animal/hostile/limbus_abno/Hear(message, atom/movable/speaker, datum/language/message_language, raw_message, radio_freq, list/spans, list/message_mods)
 	..()
 	if(desire_on_talk != 0 && speaker != src)
 		AdjustDesire(desire_on_talk)
+	//...and if one of them then answers us, that is a conversation, and it is worth something.
+	if(!ishuman(speaker) || speaker == src)
+		return
+	var/mob/living/carbon/human/H = speaker
+	if(!H.ckey)
+		return
+	if(world.time - (heard_us_speak[H.ckey] || 0) > conversation_window)
+		return
+	if(world.time < (talk_affinity_cooldown[H.ckey] || 0))
+		return
+	talk_affinity_cooldown[H.ckey] = world.time + talk_affinity_cooldown_time
+	GainAffinity(H, 1)
 
 
 /mob/living/simple_animal/hostile/limbus_abno/funpet(mob/living/carbon/human/petter)

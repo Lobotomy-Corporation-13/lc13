@@ -2,7 +2,7 @@
 /datum/job/staff
 	title = "LCE Clerk"
 	faction = "Station"
-	supervisors = "Researchers"
+	supervisors = "the LCE Lead Researcher and the Researchers"
 	total_positions = -1
 	spawn_positions = -1
 	selection_color = "#bbbbbb"

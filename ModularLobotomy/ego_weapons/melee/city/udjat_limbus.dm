@@ -41,7 +41,7 @@
 	desc = "A Khopesh used by the LCA Udjat ."
 	special = "Use in hand to prepare a stun attack."
 	icon_state = "udjat_khopesh"
-	force = 40
+	force = 55
 	swingstyle = WEAPONSWING_LARGESWEEP
 	damtype = RED_DAMAGE
 	attack_verb_continuous = list("cleaves", "cuts")
@@ -69,3 +69,16 @@
 		charged = TRUE
 		to_chat(user,span_warning("Stun activated."))
 		balloon_alert(user, "Stun activated.")
+
+
+//Ever important weapon, the mask.
+/obj/item/clothing/head/udjat
+	name = "\improper Udjat mask"
+	desc = "A mask worn by The Udjat, a mysterious Grade 1 Fixer office."
+	icon_state = "udjat"
+	icon = 'icons/obj/clothing/ego_gear/head.dmi'
+	worn_icon = 'icons/mob/clothing/ego_gear/head.dmi'
+	flags_inv = HIDEFACIALHAIR | HIDEFACE | HIDEEYES | HIDEEARS | HIDESNOUT
+	visor_flags_inv = 0
+	dynamic_hair_suffix = ""
+
