@@ -54,6 +54,10 @@
 
 /datum/mind/proc/leave_all_antag_huds()
 	for(var/key in GLOB.huds)
+		//GLOB.huds holds the data huds too, and only antag huds have leave_hud(). A mob that
+		//was given a medical or security sensor is a hudusers entry on a non-antag hud.
 		var/datum/atom_hud/antag/hud = GLOB.huds[key]
+		if(!istype(hud))
+			continue
 		if(hud.hudusers[current])
 			hud.leave_hud(current)

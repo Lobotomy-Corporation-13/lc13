@@ -203,6 +203,8 @@
 	if(!.)
 		return FALSE
 	abno_user.CommunionWhisper()
+	if(QDELETED(src))
+		return FALSE
 	StartCooldown()
 
 /datum/action/cooldown/limbus_abno_action/communion_compel
@@ -227,6 +229,8 @@
 	if(!.)
 		return FALSE
 	if(abno_user.CommunionCompel())
+		if(QDELETED(src)) //Communion ended while the input boxes were open.
+			return FALSE
 		var/obj/item/clothing/suit/armor/ego_gear/lce/A = abno_user.communion_armor
 		var/att = A ? A.attunement : 50
 		// 40s at 50% attunement, shrinking to 10s at 100%.
