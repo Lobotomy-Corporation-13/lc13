@@ -339,3 +339,20 @@ GLOBAL_LIST_EMPTY(lce_attunement_affinity)
 	attunement_family = "trick"
 	paired_weapon = /obj/item/ego_weapon/lce/trick
 
+/obj/item/clothing/suit/armor/ego_gear/lce/despair
+	name = "LCE EGO: Despair"
+	desc = "A blue dress stitched from a knight's unspent devotion."
+	icon_state = "despair"
+	armor = list(RED_DAMAGE = 20, WHITE_DAMAGE = 30, BLACK_DAMAGE = 10, PALE_DAMAGE = 30)
+	attunement_family = "despair"
+	paired_weapon = /obj/item/ego_weapon/shield/vigil
+
+/obj/item/clothing/suit/armor/ego_gear/lce/acupuncture
+	name = "LCE EGO: Acupuncture"
+	desc = "Realize that this is good for you."
+	icon_state = "acupuncture"
+	armor = list(RED_DAMAGE = 0, WHITE_DAMAGE = 10, BLACK_DAMAGE = 20, PALE_DAMAGE = 10)
+	slowdown = -0.15
+	attunement_family = "acupuncture"
+	paired_weapon = /obj/item/ego_weapon/lce/acupuncture
+
