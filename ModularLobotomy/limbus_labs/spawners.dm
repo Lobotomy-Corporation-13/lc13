@@ -11,7 +11,8 @@ GLOBAL_LIST_INIT(low_security, list(
 GLOBAL_LIST_INIT(high_security, list(
 	/mob/living/simple_animal/hostile/limbus_abno/mountain,
 	/mob/living/simple_animal/hostile/limbus_abno/queen_bee,
-	/mob/living/simple_animal/hostile/limbus_abno/despair_knight
+	/mob/living/simple_animal/hostile/limbus_abno/despair_knight,
+	/mob/living/simple_animal/hostile/limbus_abno/hatred_queen
 ))
 
 //These are the lcl abnos that can actually be used. The ones above are those that show in the preference list.
@@ -29,7 +30,8 @@ GLOBAL_LIST_INIT(available_low_sec_abno, list(
 GLOBAL_LIST_INIT(available_high_sec_abno, list(
 	/mob/living/simple_animal/hostile/limbus_abno/mountain,
 	/mob/living/simple_animal/hostile/limbus_abno/queen_bee,
-	/mob/living/simple_animal/hostile/limbus_abno/despair_knight))
+	/mob/living/simple_animal/hostile/limbus_abno/despair_knight,
+	/mob/living/simple_animal/hostile/limbus_abno/hatred_queen))
 
 //This is to keep track of which lcl abno was already physically spawned.
 GLOBAL_LIST_EMPTY(lcl_spawned_abno)

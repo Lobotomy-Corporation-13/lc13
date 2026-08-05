@@ -267,6 +267,67 @@
 		: span_notice("The lance folds back down into a needle."))
 	..()
 
+// Love and Hate - the Queen of Hatred's set. A pair of gauntlets that read the wearer's mind
+// and change with it: steady and WHITE while they are holding together, BLACK and harder
+// when they are not.
+//
+// DPS is held at the high-sec LCE line rather than raised: 21 force / 0.6 attack_speed = 35,
+// which sits between hornet (34/1.0 = 34) and despair (30/0.8 = 37.5). The gloves are fast
+// and light, not strong - the 20% is what you get for being in a bad way, and it rides on
+// AttunedForce so it scales with attunement instead of being a flat bonus on top.
+/obj/item/ego_weapon/lce/love
+	name = "LCE EGO: Love and Hate"
+	desc = "A pair of slim gauntlets. They sit warm against the knuckles, and go cold when you do."
+	special = "While your Sanity is below half: Damage becomes BLACK and hits 20% harder."
+	icon_state = "lovehate_love"
+	force = 21
+	attack_speed = 0.6
+	damtype = WHITE_DAMAGE
+	hitsound = 'sound/weapons/fixer/generic/dodge3.ogg'
+	attack_verb_continuous = list("strikes", "punches", "jabs")
+	attack_verb_simple = list("strike", "punch", "jab")
+	attunement_family = "love"
+	/// Below this fraction of max Sanity the gloves flip to Hate.
+	var/hate_threshold = 0.5
+	/// Damage multiplier while in Hate. Applied inside AttunedForce so attunement still scales it.
+	var/hate_damage_mult = 1.2
+	/// Current state, so the swap only fires on an actual change.
+	var/hating = FALSE
+
+/obj/item/ego_weapon/lce/love/proc/UpdateMood(mob/living/carbon/human/H)
+	var/should_hate = FALSE
+	if(ishuman(H) && H.maxSanity)
+		should_hate = (H.sanityhealth / H.maxSanity) < hate_threshold
+	if(should_hate == hating)
+		return FALSE
+	hating = should_hate
+	damtype = hating ? BLACK_DAMAGE : WHITE_DAMAGE
+	icon_state = hating ? "lovehate_hate" : "lovehate_love"
+	update_icon()
+	if(ishuman(H))
+		H.update_inv_hands() // The inhand sprite follows icon_state, so it has to be refreshed too.
+		if(hating)
+			to_chat(H, span_warning("The gauntlets go cold in your hands. Whatever was holding you together isn't."))
+		else
+			to_chat(H, span_nicegreen("The gauntlets warm again. You have got yourself back."))
+	return TRUE
+
+// Read the wearer on pickup, so the gloves show the right face the moment they are held
+// rather than waiting for the first punch to correct themselves.
+/obj/item/ego_weapon/lce/love/equipped(mob/user, slot)
+	. = ..()
+	UpdateMood(user)
+
+/obj/item/ego_weapon/lce/love/attack(mob/living/target, mob/living/user)
+	UpdateMood(user)
+	return ..()
+
+/obj/item/ego_weapon/lce/love/AttunedForce(mob/user)
+	. = ..()
+	if(hating)
+		. = round(. * hate_damage_mult)
+	return .
+
 // ============================ SHIELD-BASED LCE ============================
 // Vigil - the Knight of Despair's set. A tower shield instead of her rapier: she does not
 // fight for herself, she stands in front of someone.
