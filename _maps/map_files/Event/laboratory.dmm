@@ -731,9 +731,6 @@
 "gD" = (
 /turf/open/floor/carpet/purple,
 /area/facility_hallway/north)
-"gF" = (
-/turf/closed/indestructible/reinforced,
-/area/facility_hallway/south)
 "gN" = (
 /obj/effect/turf_decal/trimline/blue/filled/corner{
 	dir = 4
@@ -27920,27 +27917,27 @@ Ka
 Ka
 Ka
 Ka
-eE
-eE
-eE
-eE
-eE
-eE
-eE
-eE
-eE
-eE
-eE
-eE
-eE
-eE
-eE
-eE
-eE
-eE
-eE
 Ka
 Ka
+eE
+eE
+eE
+eE
+eE
+eE
+eE
+eE
+eE
+eE
+eE
+eE
+eE
+eE
+eE
+eE
+eE
+eE
+eE
 Ka
 Ka
 Ka
@@ -28172,6 +28169,8 @@ Ka
 Ka
 Ka
 Ka
+Ka
+Ka
 eE
 Fn
 zB
@@ -28191,8 +28190,6 @@ zB
 zB
 hS
 eE
-Ka
-Ka
 Ka
 Ka
 Ka
@@ -28424,6 +28421,8 @@ Ka
 Ka
 Ka
 Ka
+Ka
+Ka
 eE
 kf
 VZ
@@ -28443,8 +28442,6 @@ eP
 VZ
 kf
 eE
-Ka
-Ka
 Ka
 Ka
 Ka
@@ -28676,6 +28673,8 @@ Ka
 Ka
 Ka
 Ka
+Ka
+Ka
 eE
 kf
 eP
@@ -28695,8 +28694,6 @@ eE
 eP
 kf
 eE
-Ka
-Ka
 Ka
 Ka
 Ka
@@ -28928,6 +28925,8 @@ Ka
 Ka
 Ka
 Ka
+Ka
+Ka
 eE
 kf
 eP
@@ -28947,8 +28946,6 @@ eE
 eP
 kf
 eE
-Ka
-Ka
 Ka
 Ka
 Ka
@@ -29180,6 +29177,8 @@ Ka
 Ka
 Ka
 Ka
+Ka
+Ka
 eE
 kf
 eP
@@ -29199,8 +29198,6 @@ eE
 eP
 kf
 eE
-Ka
-Ka
 Ka
 Ka
 Ka
@@ -29432,6 +29429,8 @@ Ka
 Ka
 Ka
 Ka
+Ka
+Ka
 eE
 kf
 eP
@@ -29451,8 +29450,6 @@ eE
 eP
 kf
 eE
-Ka
-Ka
 Ka
 Ka
 Ka
@@ -29684,6 +29681,8 @@ Ka
 Ka
 Ka
 Ka
+Ka
+Ka
 eE
 kf
 eP
@@ -29703,8 +29702,6 @@ eE
 OY
 kf
 eE
-Ka
-Ka
 Ka
 Ka
 Ka
@@ -29936,6 +29933,8 @@ Ka
 Ka
 Ka
 Ka
+Ka
+Ka
 eE
 kf
 eP
@@ -29955,8 +29954,6 @@ eE
 eP
 kf
 eE
-Ka
-Ka
 Ka
 Ka
 Ka
@@ -30188,6 +30185,8 @@ Ka
 Ka
 Ka
 Ka
+Ka
+Ka
 eE
 kf
 eP
@@ -30207,8 +30206,6 @@ eE
 eP
 kf
 eE
-Ka
-Ka
 Ka
 Ka
 Ka
@@ -30417,7 +30414,9 @@ zo
 zo
 zo
 ps
-gF
+ps
+Ka
+Ka
 eE
 eE
 eE
@@ -30459,8 +30458,6 @@ eE
 eP
 kf
 eE
-Ka
-Ka
 Ka
 Ka
 Ka
@@ -30668,7 +30665,9 @@ ep
 GG
 ps
 ps
-gF
+ps
+Ka
+Ka
 eE
 eE
 ia
@@ -30711,8 +30710,6 @@ eE
 eP
 kf
 eE
-Ka
-Ka
 Ka
 Ka
 Ka
@@ -30920,7 +30917,9 @@ Pc
 Pc
 ps
 ps
-gF
+Ka
+Ka
+Ka
 eE
 gO
 gO
@@ -30963,8 +30962,6 @@ eE
 eP
 kf
 eE
-Ka
-Ka
 Ka
 Ka
 Ka
@@ -31172,7 +31169,9 @@ Pc
 Pc
 Pc
 ps
-gF
+Ka
+Ka
+Ka
 eE
 gO
 gO
@@ -31215,8 +31214,6 @@ eE
 eP
 kf
 eE
-Ka
-Ka
 Ka
 Ka
 Ka
@@ -31424,7 +31421,9 @@ Pc
 Pc
 Pc
 ps
-gF
+eE
+eE
+eE
 eE
 RU
 eE
@@ -31467,8 +31466,6 @@ Jl
 eP
 kf
 eE
-Ka
-Ka
 Ka
 Ka
 Ka
@@ -31680,6 +31677,8 @@ Vx
 Vx
 Vx
 Vx
+Vx
+Vx
 au
 Wp
 mU
@@ -31719,8 +31718,6 @@ eE
 lp
 Yq
 eE
-Ka
-Ka
 Ka
 Ka
 Ka
@@ -31932,6 +31929,8 @@ Uf
 Uf
 Uf
 Uf
+Uf
+Uf
 Mm
 yb
 Hy
@@ -31971,8 +31970,6 @@ eE
 eE
 eE
 eE
-Ka
-Ka
 Ka
 Ka
 Ka
@@ -32181,6 +32178,8 @@ Pc
 Pc
 Pc
 Vx
+Vx
+Vx
 pd
 Vx
 Vx
@@ -32212,8 +32211,6 @@ Vx
 Uf
 Vx
 eE
-Ka
-Ka
 Ka
 Ka
 Ka
@@ -32432,7 +32429,9 @@ Pc
 Pc
 Pc
 ps
-gF
+eE
+eE
+eE
 eE
 eE
 eE
@@ -32464,8 +32463,6 @@ YE
 Uf
 Vx
 eE
-Ka
-Ka
 Ka
 Ka
 Ka
@@ -32690,6 +32687,8 @@ Ka
 Ka
 Ka
 Ka
+Ka
+Ka
 lM
 Ka
 Ka
@@ -32716,8 +32715,6 @@ Of
 Uf
 Of
 eE
-Ka
-Ka
 Ka
 Ka
 Ka
@@ -32952,6 +32949,8 @@ Ka
 Ka
 Ka
 Ka
+Ka
+Ka
 eE
 Vx
 Uf
@@ -32968,8 +32967,6 @@ Iu
 Uf
 Vx
 eE
-Ka
-Ka
 Ka
 Ka
 Ka
@@ -33204,6 +33201,8 @@ Ka
 Ka
 Ka
 Ka
+Ka
+Ka
 eE
 Vx
 Uf
@@ -33220,8 +33219,6 @@ Vx
 mv
 Vx
 eE
-Ka
-Ka
 Ka
 Ka
 Ka
@@ -33456,6 +33453,8 @@ Ka
 Ka
 Ka
 Ka
+Ka
+Ka
 eE
 YE
 Uf
@@ -33476,8 +33475,6 @@ eE
 eE
 eE
 eE
-Ka
-Ka
 Ka
 Ka
 Ka
@@ -33708,6 +33705,8 @@ Ka
 Ka
 Ka
 Ka
+Ka
+Ka
 eE
 NL
 Uf
@@ -33728,8 +33727,6 @@ XP
 Yl
 Kd
 eE
-Ka
-Ka
 Ka
 Ka
 Ka
@@ -33960,6 +33957,8 @@ Ka
 Ka
 Ka
 Ka
+Ka
+Ka
 eE
 Vx
 mv
@@ -33980,8 +33979,6 @@ Yl
 Yl
 lz
 eE
-Ka
-Ka
 Ka
 Ka
 Ka
@@ -34212,6 +34209,8 @@ Ka
 Ka
 Ka
 Ka
+Ka
+Ka
 eE
 Vx
 Uf
@@ -34232,8 +34231,6 @@ pQ
 Kz
 Nf
 eE
-Ka
-Ka
 Ka
 Ka
 Ka
@@ -34464,6 +34461,8 @@ Ka
 Ka
 Ka
 Ka
+Ka
+Ka
 eE
 Of
 Uf
@@ -34484,8 +34483,6 @@ eE
 eE
 eE
 eE
-Ka
-Ka
 Ka
 Ka
 Ka
@@ -34716,6 +34713,8 @@ Ka
 Ka
 Ka
 Ka
+Ka
+Ka
 eE
 Iu
 Uf
@@ -34736,8 +34735,6 @@ eE
 eE
 eE
 eE
-Ka
-Ka
 Ka
 Ka
 Ka
@@ -34968,6 +34965,8 @@ Ka
 Ka
 Ka
 Ka
+Ka
+Ka
 eE
 YE
 Uf
@@ -34987,8 +34986,6 @@ eE
 zB
 hS
 eE
-Ka
-Ka
 Ka
 Ka
 Ka
@@ -35220,6 +35217,8 @@ Ka
 Ka
 Ka
 Ka
+Ka
+Ka
 eE
 Vx
 Vx
@@ -35239,8 +35238,6 @@ Jl
 eP
 kf
 eE
-Ka
-Ka
 Ka
 Ka
 Ka
@@ -35472,6 +35469,8 @@ Ka
 Ka
 Ka
 Ka
+Ka
+Ka
 eE
 eE
 Ul
@@ -35491,8 +35490,6 @@ eE
 eP
 kf
 eE
-Ka
-Ka
 Ka
 Ka
 Ka
@@ -35724,6 +35721,8 @@ Ka
 Ka
 Ka
 Ka
+Ka
+Ka
 eE
 kf
 eP
@@ -35743,8 +35742,6 @@ eE
 OY
 kf
 eE
-Ka
-Ka
 Ka
 Ka
 Ka
@@ -35976,6 +35973,8 @@ Ka
 Ka
 Ka
 Ka
+Ka
+Ka
 eE
 kf
 eP
@@ -35995,8 +35994,6 @@ eE
 eP
 kf
 eE
-Ka
-Ka
 Ka
 Ka
 Ka
@@ -36228,6 +36225,8 @@ Ka
 Ka
 Ka
 Ka
+Ka
+Ka
 eE
 kf
 eP
@@ -36247,8 +36246,6 @@ eE
 eP
 kf
 eE
-Ka
-Ka
 Ka
 Ka
 Ka
@@ -36480,6 +36477,8 @@ Ka
 Ka
 Ka
 Ka
+Ka
+Ka
 eE
 kf
 eP
@@ -36499,8 +36498,6 @@ eE
 eP
 kf
 eE
-Ka
-Ka
 Ka
 Ka
 Ka
@@ -36732,6 +36729,8 @@ Ka
 Ka
 Ka
 Ka
+Ka
+Ka
 eE
 kf
 eP
@@ -36751,8 +36750,6 @@ eE
 eP
 kf
 eE
-Ka
-Ka
 Ka
 Ka
 Ka
@@ -36984,6 +36981,8 @@ DK
 DK
 Ka
 Ka
+Ka
+Ka
 eE
 kf
 eP
@@ -37003,8 +37002,6 @@ eE
 eP
 kf
 eE
-Ka
-Ka
 Ka
 Ka
 Ka
@@ -37236,6 +37233,8 @@ Dw
 DK
 Ka
 Ka
+Ka
+Ka
 eE
 kf
 eP
@@ -37255,8 +37254,6 @@ eE
 eP
 kf
 eE
-Ka
-Ka
 Ka
 Ka
 Ka
@@ -37488,6 +37485,8 @@ rL
 DK
 Ka
 Ka
+Ka
+Ka
 eE
 kf
 Zy
@@ -37507,8 +37506,6 @@ eE
 eP
 kf
 eE
-Ka
-Ka
 Ka
 Ka
 Ka
@@ -37740,6 +37737,8 @@ rL
 DK
 Ka
 Ka
+Ka
+Ka
 eE
 kf
 eP
@@ -37759,8 +37758,6 @@ eE
 eP
 kf
 eE
-Ka
-Ka
 Ka
 Ka
 Ka
@@ -37992,6 +37989,8 @@ wX
 DK
 Ka
 Ka
+Ka
+Ka
 eE
 kf
 eP
@@ -38011,8 +38010,6 @@ eP
 eP
 kf
 eE
-Ka
-Ka
 Ka
 Ka
 Ka
@@ -38244,6 +38241,8 @@ DK
 DK
 Ka
 Ka
+Ka
+Ka
 eE
 ug
 zB
@@ -38263,8 +38262,6 @@ zB
 zB
 Yq
 eE
-Ka
-Ka
 Ka
 Ka
 Ka
@@ -38496,27 +38493,27 @@ Ka
 Ka
 Ka
 Ka
-eE
-eE
-eE
-eE
-eE
-eE
-eE
-eE
-eE
-eE
-eE
-eE
-eE
-eE
-eE
-eE
-eE
-eE
-eE
 Ka
 Ka
+eE
+eE
+eE
+eE
+eE
+eE
+eE
+eE
+eE
+eE
+eE
+eE
+eE
+eE
+eE
+eE
+eE
+eE
+eE
 Ka
 Ka
 Ka
