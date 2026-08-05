@@ -125,8 +125,6 @@
 			continue
 		L.deal_damage(150, RED_DAMAGE)
 		L.deal_damage(150 * 0.5, FIRE)
-		if(L.health < 0)
-			L.gib()
 	for(var/obj/structure/obstacle in view(5, src))
 		obstacle.take_damage(150, RED_DAMAGE)
 	new /obj/effect/temp_visual/explosion(get_turf(src))
