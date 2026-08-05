@@ -290,11 +290,14 @@
 	// One state, deliberately: the cracked face is the best of the three and a shield that
 	// never changes needs no others. vigil / vigil_raised were dropped from the sheet.
 	icon_state = "vigil_cracked"
-	force = 45
+	force = 40
 	attack_speed = 3
 	damtype = WHITE_DAMAGE
 	hitsound = 'sound/weapons/ego/shield1.ogg'
-	reductions = list(30, 25, 25, 20) // 100 total, PALE held to 20 per the shield table's shape.
+	// 100 total, in tens like every other shield in the game. Red and White lead because those
+	// are what gets swung at whoever she is standing in front of; PALE held to 20 per the
+	// shield table's shape, and because she resists it herself anyway.
+	reductions = list(30, 30, 20, 20)
 	attribute_requirements = list(
 							FORTITUDE_ATTRIBUTE = 20,
 							PRUDENCE_ATTRIBUTE = 20,
@@ -317,7 +320,7 @@
 	var/min_max_charges = 3
 	var/max_max_charges = 7
 	/// Base PALE damage of a summoned rapier before attunement scaling.
-	var/rapier_damage = 25
+	var/rapier_damage = 30
 	/// How long a rapier takes to form before it flies.
 	var/rapier_delay = 0.5 SECONDS
 
