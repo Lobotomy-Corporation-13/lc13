@@ -348,6 +348,14 @@ GLOBAL_LIST_EMPTY(lce_attunement_affinity)
 	attunement_family = "trick"
 	paired_weapon = /obj/item/ego_weapon/lce/trick
 
+/obj/item/clothing/suit/armor/ego_gear/lce/love
+	name = "LCE EGO: In the Name of Love"
+	desc = "A magical one-piece dress. Wearing it stirs something insistent and bright."
+	icon_state = "love"
+	armor = list(RED_DAMAGE = 20, WHITE_DAMAGE = 10, BLACK_DAMAGE = 40, PALE_DAMAGE = 20)
+	attunement_family = "love"
+	paired_weapon = /obj/item/ego_weapon/lce/love
+
 /obj/item/clothing/suit/armor/ego_gear/lce/despair
 	name = "LCE EGO: Despair"
 	desc = "A blue dress stitched from a knight's unspent devotion."

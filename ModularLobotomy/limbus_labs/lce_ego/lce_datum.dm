@@ -39,6 +39,10 @@
 /datum/ego_datum/armor/lce/trick
 	item_path = /obj/item/clothing/suit/armor/ego_gear/lce/trick
 
+//In the Name of Love
+/datum/ego_datum/armor/lce/love
+	item_path = /obj/item/clothing/suit/armor/ego_gear/lce/love
+
 //Despair
 /datum/ego_datum/armor/lce/despair
 	item_path = /obj/item/clothing/suit/armor/ego_gear/lce/despair
