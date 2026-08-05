@@ -944,6 +944,7 @@
 /obj/item/ego_weapon/ranged/dreaming
 	name = "dreaming"
 	desc = "A longing to see the current."
+	special = "The bullets of this gun become stronger with the corresponding realization."
 	icon_state = "dreaming"
 	icon = 'icons/obj/ego_weapons.dmi'
 	lefthand_file = 'icons/mob/inhands/64x64_lefthand.dmi'
