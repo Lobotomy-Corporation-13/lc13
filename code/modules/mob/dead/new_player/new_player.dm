@@ -326,7 +326,9 @@
 	return JOB_AVAILABLE
 
 /mob/dead/new_player/proc/AttemptLateSpawn(rank)
-	var/error = IsJobUnavailable(rank)
+	//The job list is drawn with the latejoin checks on, so the spawn has to honour them too -
+	//otherwise a job that vanished from the list can still be joined through a stale window.
+	var/error = IsJobUnavailable(rank, TRUE)
 	if(error != JOB_AVAILABLE)
 		alert(src, get_job_unavailable_error_message(error, rank))
 		return FALSE
@@ -350,7 +352,12 @@
 	SSticker.queued_players -= src
 	SSticker.queue_delay = 4
 
-	SSjob.AssignRole(src, rank, 1)
+	//AssignRole runs the job's own checks again and can still turn the player down. Building a
+	//body anyway is how a refused specimen ended up standing in the facility as a naked human.
+	if(!SSjob.AssignRole(src, rank, 1))
+		alert(src, get_job_unavailable_error_message(JOB_UNAVAILABLE_GENERIC, rank))
+		new_player_panel()
+		return FALSE
 
 	var/mob/living/character = create_character(TRUE)	//creates the human and transfers vars and mind
 	var/equip = SSjob.EquipRank(character, rank, TRUE)

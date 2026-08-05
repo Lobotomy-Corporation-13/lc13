@@ -188,6 +188,10 @@
 	if(mob_target.stat <= HARD_CRIT)
 		return FALSE
 
+	if(istype(mob_target, /mob/living/simple_animal/hostile/limbus_abno))
+		to_chat(src, span_warning("You bite down and something bites back. Another specimen is not food."))
+		return FALSE
+
 	if(iscarbon(mob_target))
 		starving_patience = max_starving_patience
 		if(breached)
