@@ -962,6 +962,26 @@
 /obj/structure/table/wood/fancy/cyan,
 /turf/open/floor/carpet/executive,
 /area/facility_hallway/north)
+"iP" = (
+/obj/structure/rack,
+/obj/item/ego_weapon/ranged/clerk,
+/obj/item/ego_weapon/ranged/clerk,
+/obj/item/ego_weapon/ranged/clerk,
+/obj/item/ego_weapon/ranged/clerk,
+/obj/item/ego_weapon/ranged/clerk,
+/obj/item/ego_weapon/ranged/clerk,
+/obj/item/ego_weapon/ranged/clerk,
+/obj/item/ego_weapon/ranged/clerk,
+/obj/item/ego_weapon/ranged/clerk,
+/obj/item/ego_weapon/ranged/clerk,
+/obj/item/ego_weapon/ranged/clerk,
+/obj/machinery/light{
+	dir = 8;
+	pixel_x = -9;
+	pixel_y = 4
+	},
+/turf/open/floor/plasteel,
+/area/facility_hallway/central)
 "iY" = (
 /obj/structure/table/wood/fancy/cyan,
 /obj/machinery/stonkmarket,
@@ -1874,11 +1894,7 @@
 /area/facility_hallway/training)
 "qJ" = (
 /obj/structure/rack,
-/obj/item/ego_weapon/ranged/clerk,
-/obj/item/ego_weapon/ranged/clerk,
-/obj/item/ego_weapon/ranged/clerk,
-/obj/item/ego_weapon/ranged/clerk,
-/obj/item/ego_weapon/ranged/clerk,
+/obj/item/storage/box/monkeycubes,
 /turf/open/floor/plasteel,
 /area/facility_hallway/central)
 "qK" = (
@@ -2239,6 +2255,11 @@
 /obj/item/storage/box/barrier,
 /obj/item/storage/box/barrier,
 /obj/item/gun/grenadelauncher,
+/obj/machinery/light{
+	dir = 4;
+	pixel_x = 9;
+	pixel_y = 4
+	},
 /turf/open/floor/plasteel,
 /area/facility_hallway/central)
 "tO" = (
@@ -4609,6 +4630,10 @@
 	pixel_y = 15;
 	density = 0
 	},
+/obj/machinery/light{
+	dir = 1;
+	pixel_y = 15
+	},
 /turf/open/floor/carpet/blue,
 /area/facility_hallway/central)
 "PQ" = (
@@ -5071,6 +5096,10 @@
 	max_integrity = 3000
 	},
 /turf/open/floor/plasteel/white,
+/area/facility_hallway/central)
+"To" = (
+/obj/machinery/light,
+/turf/open/floor/carpet/blue,
 /area/facility_hallway/central)
 "Ts" = (
 /obj/structure/chair/wood,
@@ -34698,7 +34727,7 @@ Pc
 tY
 RE
 RE
-qJ
+iP
 qJ
 Ob
 DK
@@ -40500,7 +40529,7 @@ DK
 PO
 az
 az
-az
+To
 DK
 Ka
 Ka
@@ -41001,7 +41030,7 @@ MZ
 Tm
 DK
 DK
-Qp
+az
 rs
 QI
 Ib
@@ -41253,10 +41282,10 @@ UZ
 UZ
 ki
 DK
-az
+Qp
 az
 DJ
-az
+To
 DK
 Ka
 Ka
