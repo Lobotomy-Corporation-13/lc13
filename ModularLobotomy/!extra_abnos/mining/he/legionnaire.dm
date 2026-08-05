@@ -55,6 +55,13 @@
 	/// Whether or not the legionnaire is currently charging, used to deny movement input if he is
 	var/charging = FALSE
 
+/mob/living/simple_animal/hostile/abnormality/mining/legionnaire/Destroy()
+	if(myhead)
+		myhead.body = null
+		myhead = null
+	if(mypile)
+		qdel(mypile)
+	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/mining/legionnaire/NeutralEffect(mob/living/carbon/human/user, work_type, pe)
 	. = ..()
@@ -273,10 +280,11 @@
 	var/mob/living/simple_animal/hostile/abnormality/mining/legionnaire/body = null
 	core_enabled = FALSE
 
-/mob/living/simple_animal/hostile/abnormality/mining/legionnairehead/death()
-	. = ..()
+/mob/living/simple_animal/hostile/abnormality/mining/legionnairehead/Destroy()
 	if(body)
 		body.onHeadDeath()
+	body = null
+	return ..()
 
 //The visual effect which appears in front of legionnaire when he goes to charge.
 /obj/effect/temp_visual/dragon_swoop/legionnaire
@@ -315,4 +323,5 @@
 /obj/structure/legionnaire_bonfirelc13/Destroy()
 	if(myowner != null)
 		myowner.mypile = null
-	. = ..()
+	myowner = null
+	return ..()
