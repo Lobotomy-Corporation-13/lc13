@@ -53,8 +53,8 @@
 	chem_type = /datum/reagent/abnormality/sin/wrath
 
 	ego_list = list(
-		/datum/ego_datum/weapon/mining/goliath,
-		/datum/ego_datum/armor/mining/goliath,
+		/datum/ego_datum/weapon/sorrow,
+		/datum/ego_datum/armor/sorrow,
 	)
 //	gift_type =  /datum/ego_gifts/dream
 	abnormality_origin = ABNORMALITY_ORIGIN_SS13MINING
