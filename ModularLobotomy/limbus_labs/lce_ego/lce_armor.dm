@@ -109,7 +109,7 @@ GLOBAL_LIST_EMPTY(lce_attunement_affinity)
 	. = ..()
 	if(slot != ITEM_SLOT_OCLOTHING)
 		return
-	safe_limit = clamp(safe_limit_floor + round(GetAffinity(user) / attunement_points_per_percent), safe_limit_floor, 100)
+	safe_limit = SafeLimitFor(user)
 	RefreshAttunement(user)
 
 /obj/item/clothing/suit/armor/ego_gear/lce/dropped(mob/user)
@@ -117,6 +117,11 @@ GLOBAL_LIST_EMPTY(lce_attunement_affinity)
 	if(ishuman(user))
 		var/mob/living/carbon/human/H = user
 		H.remove_status_effect(/datum/status_effect/attunement_overload)
+
+// What this suit's safe ceiling would be for a given person. Used both on equip and by
+// examine, so anyone can check where they stand before putting it on.
+/obj/item/clothing/suit/armor/ego_gear/lce/proc/SafeLimitFor(mob/user)
+	return clamp(safe_limit_floor + round(GetAffinity(user) / attunement_points_per_percent), safe_limit_floor, 100)
 
 /obj/item/clothing/suit/armor/ego_gear/lce/proc/GetAffinity(mob/user)
 	if(!user?.ckey || !attunement_family)
@@ -238,8 +243,12 @@ GLOBAL_LIST_EMPTY(lce_attunement_affinity)
 /obj/item/clothing/suit/armor/ego_gear/lce/examine(mob/user)
 	. = ..()
 	. += span_notice("Attunement: [attunement]% (adjust step: [attunement_step]%).")
-	if(ishuman(user) && user.get_item_by_slot(ITEM_SLOT_OCLOTHING) == src)
-		. += span_notice("Your safe attunement limit for this EGO is [safe_limit]%. Past it, your mind and body pay the price.")
+	if(ishuman(user))
+		var/yours = SafeLimitFor(user)
+		if(user.get_item_by_slot(ITEM_SLOT_OCLOTHING) == src)
+			. += span_notice("Your safe attunement limit for this EGO is [yours]%. Past it, your mind and body pay the price.")
+		else
+			. += span_notice("Were you to wear this, your safe attunement limit would be [yours]%. It rises with your bond to the source abnormality.")
 	else
 		. += span_notice("How high it can be safely attuned depends on the wearer's bond with the source abnormality.")
 

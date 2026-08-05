@@ -1,9 +1,7 @@
-//Knight of Despair: a high-sec LCL guardian. She blesses one human to watch over, manifests
-//beside them as a ghostly projection (her body crystallising while she does), defends them when
-//they are gravely hurt, and breaks into a hostile breached knight if her blessed one dies.
-//Based on the Knight of Despair abnormality, rebuilt on the LCL base.
+//Knight of Despair, on the LCL base. Blesses one human, manifests beside them as a camera mob
+//while her body crystallises, and breaches if that human dies or goes insane.
 
-//Reduced-damage rapier for the LCL breach (base is 40 PALE; -20% for 120-HP agents).
+//Breach rapier. Base is 40 PALE; -20% for 120-HP agents.
 /obj/projectile/despair_rapier/lcl
 	damage = 32
 
@@ -21,8 +19,7 @@
 	melee_damage_type = WHITE_DAMAGE
 	damage_coeff = list(RED_DAMAGE = 1.2, WHITE_DAMAGE = 1.0, BLACK_DAMAGE = 0.8, PALE_DAMAGE = 0.5)
 	attack_sound = 'sound/abnormalities/despairknight/attack.ogg'
-	//Work: favours Attachment + Insight; Instinct + Repression are weak.
-	desire_on_pet = 40
+	desire_on_pet = 20
 	insight_cooldown_time = 40 SECONDS
 	liked_objects_list = list(/obj/item/toy/plush, /obj/item/ego_weapon, /obj/item/clothing/suit/armor/ego_gear)
 	liked_objects_value = 5
@@ -31,7 +28,7 @@
 	diet_list = list(/obj/item/food/frozen_treats/despaired_delight)
 	rep_desire_gain = 3
 	hunger_cooldown_time = 3 MINUTES
-	max_counter = 3
+	max_counter = 0 //No counter: losing the blessed is the only breach trigger.
 	attunement_family = "despair"
 	ego_list = list(/datum/ego_datum/armor/lce/despair)
 	attack_action_types = list(
@@ -46,8 +43,11 @@
 	abno_additional_instructions = "You like attachment and insight. You are a knight who lives only to protect someone, anyone. \
 	Choose one human and bless them: whisper into their mind, and manifest at their side as a ghostly guardian only they can see. \
 	Only while manifested do you truly watch over them, hearing and seeing all that surrounds them. While you are manifested your \
-	true body hardens into crystal, near-untouchable but unable to act until you return. Your vow cannot be taken back once made. \
-	If they are gravely hurt you may rush to their side to defend them. You care little for food or for being roughed up, only devotion soothes you. \
+	true body hardens into crystal, near-untouchable but unable to act until you return. Your vow cannot be taken back while they live, \
+	but if they are taken from you, grief will break you - and once the vow is free you may swear it to someone new. \
+	If they are gravely hurt you may rush to their side to defend them. You care little for food or for being roughed up, only devotion soothes you - \
+	though anything the deep blue of your own tears is another matter, and you will take it from anyone - \
+	but if it turns out to be junk, raw, gross or toxic underneath, the colour was a lie and you are worse off for it. \
 	And should the one you swore to protect die or lose their mind, grief will shatter you, and you will turn your blades on everything."
 	///The human she currently watches over.
 	var/mob/living/carbon/human/blessed_human = null
@@ -61,8 +61,21 @@
 	var/defend_ready = FALSE
 	var/defend_window_end = 0
 	var/defend_cooldown = 0
-	///Affinity points a blessing grants (75 = +25% safe attunement limit, since safe = affinity/3).
+	///Affinity a blessing grants. Safe limit = affinity/3, so 75 is +25%.
 	var/bless_affinity = 75
+	// --- Dark blue food ---
+	///Extra Desire on top of desire_on_eat for food that reads as dark blue.
+	var/blue_food_desire = 20
+	///Minimum blue channel.
+	var/blue_min = 60
+	///Minimum lead blue must have over red and green.
+	var/blue_margin = 30
+	///Maximum luminance, so cyan and pastels are excluded.
+	var/blue_max_lum = 120
+	///Any of these flags voids the blue bonus.
+	var/foul_foodtypes = JUNKFOOD | RAW | GROSS | TOXIC
+	///Desire lost instead of gained when the food carries a foul flag.
+	var/foul_food_desire = 20
 
 /mob/living/simple_animal/hostile/limbus_abno/despair_knight/Initialize(mapload)
 	. = ..()
@@ -78,10 +91,79 @@
 	. += "Blessed: [blessed_human ? blessed_human.real_name : "no one"]"
 	. += "State: [breached ? "BREACHED" : (crystallized ? "manifested (crystal)" : "watchful")]"
 
-// Blessing - choose a human, watch/hear/whisper, and raise their attunement safe limit.
-/mob/living/simple_animal/hostile/limbus_abno/despair_knight/proc/BlessHuman()
-	if(breached)
+//A sprite's colour cannot be read at runtime, so food colour is taken from its reagent mix.
+///Volume-weighted reagent colour, or the item's own tint. list(r, g, b), or null.
+/mob/living/simple_animal/hostile/limbus_abno/despair_knight/proc/FoodColour(atom/food)
+	if(istext(food.color))
+		return ReadRGB(food.color)
+	if(!food.reagents || !length(food.reagents.reagent_list))
+		return null
+	var/r = 0
+	var/g = 0
+	var/b = 0
+	var/total = 0
+	for(var/datum/reagent/R in food.reagents.reagent_list)
+		var/list/c = ReadRGB(R.color)
+		if(!c || R.volume <= 0)
+			continue
+		r += c[1] * R.volume
+		g += c[2] * R.volume
+		b += c[3] * R.volume
+		total += R.volume
+	if(!total)
+		return null
+	return list(round(r / total), round(g / total), round(b / total))
+
+///TRUE if the food reads as dark blue. Thresholds calibrated against every reagent colour in
+///the game: 24 pass, purples and cyans do not.
+/mob/living/simple_animal/hostile/limbus_abno/despair_knight/proc/IsDarkBlue(atom/food)
+	var/list/c = FoodColour(food)
+	if(!c)
+		return FALSE
+	if(c[3] < blue_min)
+		return FALSE
+	if((c[3] - c[1]) < blue_margin || (c[3] - c[2]) < blue_margin)
+		return FALSE
+	//Without this red guard every purple passes.
+	if((c[1] * 2) > c[3])
+		return FALSE
+	//Dark only.
+	if((c[1] * 0.299 + c[2] * 0.587 + c[3] * 0.114) > blue_max_lum)
+		return FALSE
+	return TRUE
+
+///Foodtype flags, from the item or its edible component.
+/mob/living/simple_animal/hostile/limbus_abno/despair_knight/proc/FoodTypes(atom/food)
+	if(istype(food, /obj/item/food))
+		var/obj/item/food/F = food
+		return F.foodtypes
+	var/datum/component/edible/E = food.GetComponent(/datum/component/edible)
+	return E ? E.foodtypes : NONE
+
+//Dark blue food is edible on top of diet_list and pays blue_food_desire, or costs
+//foul_food_desire instead if it carries a foul flag.
+/mob/living/simple_animal/hostile/limbus_abno/despair_knight/AbnoEat(atom/food)
+	var/blue = IsDarkBlue(food)
+	var/foul = blue && (FoodTypes(food) & foul_foodtypes)
+	var/list/saved_diet = diet_list
+	if(blue && !is_type_in_list(food, diet_list))
+		//Swapped in for this call only, so diet_list does not grow. Foul food stays edible so
+		//the penalty can land.
+		diet_list = diet_list + list(food.type)
+	. = ..()
+	diet_list = saved_diet
+	if(!. || !blue)
 		return
+	if(foul)
+		AdjustDesire(-foul_food_desire)
+		to_chat(src, span_warning("The colour was right. What is inside it is not."))
+	else
+		AdjustDesire(blue_food_desire)
+		to_chat(src, span_nicegreen("It is the right colour. For a moment, that is almost a comfort."))
+
+// Blessing - choose a human, watch/hear/whisper, and raise their attunement safe limit.
+//Not gated on breached: the only block is someone already holding the blessing.
+/mob/living/simple_animal/hostile/limbus_abno/despair_knight/proc/BlessHuman()
 	if(blessed_human)
 		to_chat(src, span_warning("You have already given your blessing to [blessed_human]. Such a vow cannot be taken back."))
 		return
@@ -134,6 +216,7 @@
 	clear_alert("despair_danger")
 	update_action_buttons()
 
+//Only breach trigger. Breach() clears the blessing, freeing her to bless again.
 /mob/living/simple_animal/hostile/limbus_abno/despair_knight/proc/OnBlessedLost(datum/source)
 	SIGNAL_HANDLER
 	to_chat(src, span_userdanger("Your blessed one is lost to you. Grief takes hold."))
@@ -237,16 +320,6 @@
 	to_chat(src, span_nicegreen("You appear at [blessed_human]'s side to defend them."))
 
 // Breach - hostile state with the retuned attack kit.
-/mob/living/simple_animal/hostile/limbus_abno/despair_knight/AdjustDesire(desire_amount)
-	. = ..()
-	if(desire_bar <= 10 && desire_amount < 0 && !breached)
-		AdjustCounter(-1)
-
-/mob/living/simple_animal/hostile/limbus_abno/despair_knight/AdjustCounter(counter_amount)
-	. = ..()
-	if(!breached && counter <= 0)
-		Breach()
-
 /mob/living/simple_animal/hostile/limbus_abno/despair_knight/proc/Breach()
 	if(breached)
 		return
