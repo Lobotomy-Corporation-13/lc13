@@ -374,6 +374,10 @@
 	var/z_level_hunt_mode = FALSE
 	var/mob/living/carbon/human/hunt_target = null
 
+/mob/living/simple_animal/hostile/clan/assassin/Destroy()
+	UnregisterMob()
+	return ..()
+
 /mob/living/simple_animal/hostile/clan/assassin/Initialize()
 	. = ..()
 	AddComponent(/datum/component/footstep, FOOTSTEP_MOB_SHOE, 1, -6)
@@ -561,7 +565,7 @@
 	if(z_level_hunt_mode && hunt_target)
 		if(hunt_target.stat == DEAD || hunt_target.z != z)
 			z_level_hunt_mode = FALSE
-			hunt_target = null
+			UnregisterMob()
 			LoseTarget(FALSE)
 		else if(!target || target != hunt_target)
 			FindTarget(list(hunt_target), TRUE)
@@ -601,9 +605,20 @@
 			most_isolated = H
 
 	if(most_isolated)
-		hunt_target = most_isolated
+		RegisterMob(most_isolated)
 		FindTarget(list(hunt_target), TRUE)
 		visible_message(span_warning("[src]'s eyes glow as it locks onto a distant target!"))
+
+/mob/living/simple_animal/hostile/clan/assassin/proc/RegisterMob(mob/living/L)
+	if(!L)
+		return
+	RegisterSignal(L, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING), PROC_REF(UnregisterMob))
+	hunt_target = L
+
+/mob/living/simple_animal/hostile/clan/assassin/proc/UnregisterMob()
+	if(hunt_target)
+		UnregisterSignal(hunt_target, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING))
+	hunt_target = null
 
 // Movement speed modifier for stealth mode
 /datum/movespeed_modifier/assassin_stealth

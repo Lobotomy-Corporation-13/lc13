@@ -39,6 +39,7 @@
 	if(SSmaptype.maptype == "wcorp")
 		drop_outfit = FALSE
 	grantAbilities()
+	//Missing bloodfeast component?
 
 /mob/living/simple_animal/hostile/humanoid/blood/fiend/proc/grantAbilities()
 	ourdash = new /obj/effect/proc_holder/ability/aimed/dash/bloodfiend
@@ -68,7 +69,7 @@
 	if(drop_outfit)
 		if(prob(20))
 			new /obj/item/clothing/suit/armor/ego_gear/city/masquerade_cloak (get_turf(src))
-	. = ..()
+	return ..()
 
 /mob/living/simple_animal/hostile/humanoid/blood/fiend/proc/Drain()
 	var/turf/T = get_turf(src)
@@ -201,7 +202,6 @@
 	var/cooldownToSpawn = 30 SECONDS
 	var/cutter_hit = FALSE
 	var/stun_duration = 3 SECONDS
-	var/mob/living/blood_target
 	var/summon_cost = 8
 	var/slashing = FALSE
 
@@ -235,9 +235,9 @@
 	cutter_hit = FALSE
 	say("Hardblood Arts 5...")
 	ChangeResistances(list(RED_DAMAGE = 0.3, WHITE_DAMAGE = 0.3, BLACK_DAMAGE = 0.3, PALE_DAMAGE = 0.3))
-	blood_target = target
-	blood_target.apply_status_effect(/datum/status_effect/bloodhold)
-	blood_target.faction += "hostile"
+	var/mob/living/carbon/human/H = target
+	H.apply_status_effect(/datum/status_effect/bloodhold)
+	H.faction += "hostile"
 	can_act = FALSE
 	var/list/dirs_to_land = shuffle(list(NORTH, SOUTH, EAST, WEST, NORTHEAST, NORTHWEST, SOUTHEAST, SOUTHWEST))
 	var/list/dir_overlays = list()
@@ -270,23 +270,23 @@
 			x = -32
 			y = -32
 		var/image/O = image(icon='icons/effects/cult_effects.dmi',icon_state="bloodsparkles", pixel_x = x, pixel_y = y)
-		blood_target.add_overlay(O)
+		H.add_overlay(O)
 		dir_overlays.Add(O)
-		playsound(blood_target, 'ModularLobotomy/_Lobotomysounds/claw/eviscerate1.ogg', 100, 1)
+		playsound(H, 'ModularLobotomy/_Lobotomysounds/claw/eviscerate1.ogg', 100, 1)
 		if (stat != DEAD)
 			sleep(1 SECONDS)
 		else
 			break
 	say("Blood Snare!!!")
 	for (var/i in 1 to 3)
-		blood_target.cut_overlay(dir_overlays[i])
+		H.cut_overlay(dir_overlays[i])
 		if (stat == DEAD)
-			blood_target.faction -= "hostile"
+			H.faction -= "hostile"
 			continue
 		animate(src, alpha = 1,pixel_x = 16, pixel_z = 0, time = 0.1 SECONDS)
 		src.pixel_x = 16
 		playsound(src, 'sound/abnormalities/ichthys/jump.ogg', 50, FALSE, 4)
-		var/turf/target_turf = get_step(get_turf(blood_target), dirs_to_land[i])
+		var/turf/target_turf = get_step(get_turf(H), dirs_to_land[i])
 		if(target_turf)
 			forceMove(target_turf) //look out, someone is rushing you!
 		playsound(src, leap_sound, 50, FALSE, 4)
@@ -296,16 +296,20 @@
 			say("Just...")
 		if (i == 3)
 			say("ROT AWAY!!!")
-		ourdash.Perform(blood_target,src)
-		sleep(0.25 SECONDS)
-	blood_target.faction -= "hostile"
+		ourdash.Perform(H,src)
+		SLEEP_CHECK_DEATH(0.25 SECONDS)
+	if(!H)
+		slashing = FALSE
+		can_act = TRUE
+		return
+	H.faction -= "hostile"
 	if (!cutter_hit)
 		var/mutable_appearance/colored_overlay = mutable_appearance(icon, "small_stagger", layer + 0.1)
 		add_overlay(colored_overlay)
 		manual_emote("kneels on the floor...")
 		icon_state = exhausted_state
 		ChangeResistances(list(RED_DAMAGE = 2, WHITE_DAMAGE = 1.2, BLACK_DAMAGE = 1, PALE_DAMAGE = 3))
-		sleep(stun_duration)
+		SLEEP_CHECK_DEATH(stun_duration)
 		manual_emote("rises back up...")
 		cut_overlays()
 	// Reset blood to 0 after leap
@@ -331,7 +335,7 @@
 			timeToSpawn75 = world.time + cooldownToSpawn
 			can_act = FALSE
 			ChangeResistances(list(RED_DAMAGE = 0.3, WHITE_DAMAGE = 0.3, BLACK_DAMAGE = 0.3, PALE_DAMAGE = 0.3))
-			sleep(20)
+			SLEEP_CHECK_DEATH(20)
 			ChangeResistances(list(RED_DAMAGE = 1, WHITE_DAMAGE = 0.6, BLACK_DAMAGE = 0.4, PALE_DAMAGE = 1.5))
 			can_act = TRUE
 		if (health/maxHealth < 0.25 && readyToSpawn25 && world.time > timeToSpawn25)
@@ -341,7 +345,7 @@
 			timeToSpawn25 = world.time + cooldownToSpawn
 			can_act = FALSE
 			ChangeResistances(list(RED_DAMAGE = 0.3, WHITE_DAMAGE = 0.3, BLACK_DAMAGE = 0.3, PALE_DAMAGE = 0.3))
-			sleep(20)
+			SLEEP_CHECK_DEATH(20)
 			ChangeResistances(list(RED_DAMAGE = 1, WHITE_DAMAGE = 0.6, BLACK_DAMAGE = 0.4, PALE_DAMAGE = 1.5))
 			can_act = TRUE
 
