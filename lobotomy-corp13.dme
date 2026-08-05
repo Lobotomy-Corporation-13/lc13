@@ -4631,6 +4631,7 @@
 #include "ModularLobotomy\limbus_labs\lcl_tools\lcl_duel.dm"
 #include "ModularLobotomy\limbus_labs\limbus_abnos\lcl_abno.dm"
 #include "ModularLobotomy\limbus_labs\limbus_abnos\lcl_abno_highsec\lcl_despair_knight.dm"
+#include "ModularLobotomy\limbus_labs\limbus_abnos\lcl_abno_highsec\lcl_hatred_queen.dm"
 #include "ModularLobotomy\limbus_labs\limbus_abnos\lcl_abno_highsec\lcl_mountain.dm"
 #include "ModularLobotomy\limbus_labs\limbus_abnos\lcl_abno_highsec\lcl_queen_bee.dm"
 #include "ModularLobotomy\limbus_labs\limbus_abnos\lcl_abno_lowsec\lcl_helper.dm"
