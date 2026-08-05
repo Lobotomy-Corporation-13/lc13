@@ -107,6 +107,11 @@
 	},
 /turf/open/floor/pod/light,
 /area/facility_hallway/south)
+"aX" = (
+/obj/structure/reagent_dispensers/watertank/high,
+/obj/item/reagent_containers/spray/cleaner,
+/turf/open/floor/plasteel,
+/area/facility_hallway/central)
 "aZ" = (
 /obj/structure/chair/pew/left,
 /turf/open/floor/grass,
@@ -407,6 +412,10 @@
 /area/facility_hallway/west)
 "db" = (
 /obj/structure/closet/crate/freezer/surplus_limbs,
+/obj/item/stack/cable_coil,
+/obj/item/stack/cable_coil,
+/obj/item/clothing/glasses/welding,
+/obj/item/weldingtool,
 /turf/open/floor/plasteel/dark,
 /area/facility_hallway/central)
 "dc" = (
@@ -4365,7 +4374,7 @@
 /turf/open/floor/plasteel/white,
 /area/facility_hallway/central)
 "Ob" = (
-/obj/item/kirbyplants/random,
+/obj/structure/reagent_dispensers/fueltank/large,
 /turf/open/floor/plasteel,
 /area/facility_hallway/central)
 "Of" = (
@@ -35482,7 +35491,7 @@ Pc
 Pc
 tY
 ig
-ig
+aX
 tG
 Hf
 ZD
