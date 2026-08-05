@@ -1,15 +1,12 @@
-//Lunar Physician: a hands-having LCL "physician" that mixes chems into containers it holds,
-//eats carrots/puddings/mochi (Instinct), and is worked through Repression. Based on the
-//Lunar Rabbit abnormality but tankier and slower, and with none of its timed-breach code.
+//Lunar Physician, on the LCL base. Dextrous: mixes chems into a held container via a TGUI
+//window. Counter drifts on the hunger tick; at 0 she is offered a breach that lets her crawl
+//under doors.
 /mob/living/simple_animal/hostile/limbus_abno/lunar_rabbit
 	true_name = "Lunar Physician"
 	original_abno = /mob/living/simple_animal/hostile/abnormality/lunar_rabbit
 	maxHealth = 500
 	health = 500
-	//Lower is faster, and every other LCL specimen leaves this at the simple_animal default of
-	//1 - so this makes her the quickest thing in the wing by a clear margin. Matches the Red
-	//Riding Mercenary. She hands out a dose and is gone before anyone reads the label.
-	speed = 0.5
+	speed = 0.5 //Lower is faster. Every other LCL specimen leaves this at the default 1.
 	rapid_melee = 2
 	melee_damage_lower = 2
 	melee_damage_upper = 25
@@ -37,23 +34,20 @@
 	)
 	diet_value = 15
 	desire_on_eat = 10
-	//Repression work: she does NOT enjoy this. Every hit costs 0.8 desire per point of
-	//post-resistance damage, and once she is down to 100 health or less the base switches to
-	//the threshold branch and a single further hit empties the bar outright.
+	//-0.8 desire per point of post-resistance damage. At or below 100 health the base takes the
+	//threshold branch instead and any hit empties the bar.
 	rep_desire_gain = -0.8
 	rep_threshold = 100
 	rep_desire_loss_at_threshold = 100
-	//Attachment (disliked) - being pet make her lose desire. She is too busy cooking.
 	desire_on_pet = -5
-	//Insight: it likes plush toys, hates surveillance/barriers in view.
+	//Insight: likes chem equipment, hates surveillance and barriers.
 	insight_cooldown_time = 45 SECONDS
 	liked_objects_list = list(/obj/item/reagent_containers/glass/beaker, /obj/machinery/chem_master, /obj/machinery/chem_dispenser, /obj/item/reagent_containers/syringe)
 	liked_objects_value = 1
 	hated_objects_list = list(/obj/structure/barrier_tape, /obj/item/barrier_taperoll, /obj/machinery/camera, /obj/structure/barricade/security)
 	hated_objects_value = 8
 	hunger_cooldown_time = 3 MINUTES
-	//Counter drift is evaluated once per hunger tick rather than per desire change, so the
-	//fuse runs on her stomach clock and a single good or bad moment cannot swing it.
+	//Counter drift runs on the hunger tick, not on individual desire changes.
 	max_counter = 3
 	attack_action_types = list(/datum/action/cooldown/limbus_abno_action/lunar_dispensary)
 	attunement_family = "acupuncture"
@@ -66,7 +60,7 @@
 	You cannot stand being policed or watched either, so asset protection, barrier tape and cameras will all sour your mood - it is very hard to get away with anything with a camera in the room."
 	///Rate-limit for the proximity aversion below.
 	var/next_aversion_check = 0
-	///Jobs whose whole purpose is watching her. Being near any of them sours her.
+	///Roles whose presence costs her desire.
 	var/list/disliked_roles = list("LC Asset Protection", "LCA Udjat Leader", "LCA Udjat Agent")
 	///Lazily-created host for the Dispensary TGUI window.
 	var/datum/tgui_handler/lunar_dispensary/dispensary_ui = null
@@ -79,8 +73,7 @@
 	var/famine_hunger = 20
 	var/famine_desire_loss = 20
 	// --- Breach ---
-	///TRUE once the counter has bottomed out and the breach is being OFFERED. She never
-	///breaches on her own - the alert sits there until she decides to take it.
+	///TRUE while the breach alert is up. She never breaches on her own.
 	var/breach_ready = FALSE
 	var/breached = FALSE
 	///Dropping below this while breached ends it.
@@ -89,9 +82,7 @@
 	var/crawl_time = 3 SECONDS
 	var/crawling = FALSE
 
-//The base Initialize copies the sprite from original_abno (the 1-direction contained
-//"lunar_rabbit"). Override it to use Branch 12's breached Moon Rabbit form, which has a
-//proper 4-direction sheet.
+//original_abno's sprite is 1-direction; Branch 12's moon_rabbit has a 4-direction sheet.
 /mob/living/simple_animal/hostile/limbus_abno/lunar_rabbit/Initialize(mapload)
 	. = ..()
 	icon = 'ModularLobotomy/_Lobotomyicons/branch12/32x32.dmi'
@@ -102,7 +93,7 @@
 	QDEL_NULL(dispensary_ui)
 	return ..()
 
-//Rebirth re-copies the contained sprite from original_abno too, so re-apply the breach form.
+//Rebirth re-copies the contained sprite, so re-apply.
 /mob/living/simple_animal/hostile/limbus_abno/lunar_rabbit/Rebirth()
 	..()
 	icon = 'ModularLobotomy/_Lobotomyicons/branch12/32x32.dmi'
@@ -125,8 +116,7 @@
 			room_score -= hated_objects_value
 	InsightRoomResults(room_score, room_obj_list)
 
-//Mob-based aversion: loses desire while anyone whose job is watching her is in sight. The
-//object-based half of this (cameras, tape, barricades) is handled by InsightRoomCheck.
+//Loses desire while a disliked_roles human is in view. Objects are handled by InsightRoomCheck.
 /mob/living/simple_animal/hostile/limbus_abno/lunar_rabbit/Life()
 	. = ..()
 	if(world.time < next_aversion_check)
@@ -139,17 +129,15 @@
 			manual_emote("bristles at the [role] nearby.")
 			break
 
-//Everything on her fuse runs off the hunger clock, so it ticks once per hunger_cooldown_time
-//instead of reacting to every individual point of Desire.
+//Life() calls this once per hunger_cooldown_time, so the counter drift hangs off it.
 /mob/living/simple_animal/hostile/limbus_abno/lunar_rabbit/Hungrier(hungry_amount, bypass_check = TRUE)
 	. = ..()
-	//Mirror the base's own guard: if it did not actually tick, neither do we.
+	//Mirrors the base guard: skip if the base did not actually tick.
 	if(!hunger_active && !bypass_check)
 		return
 	if(stat >= DEAD)
 		return
-	//Starving costs Desire first, so a bad tick can carry her down into the counter-loss band
-	//in the same beat. Being hungry is supposed to compound.
+	//Applied before the counter check, so a famine tick can drop her into the losing band.
 	if(hunger_bar <= famine_hunger)
 		to_chat(src, span_warning("You are too hungry to enjoy any of this."))
 		AdjustDesire(-famine_desire_loss)
@@ -159,16 +147,14 @@
 	else if(desire_bar <= counter_loss_desire)
 		AdjustCounter(-1)
 
-//The counter is frozen while she is out, and any movement on it re-checks the offer.
+//Counter is frozen while breached; any change re-checks the offer.
 /mob/living/simple_animal/hostile/limbus_abno/lunar_rabbit/AdjustCounter(counter_amount)
 	if(breached)
 		return
 	. = ..()
 	UpdateBreachOffer()
 
-///Hitting zero does not breach her by itself - it OFFERS the breach, and she takes it by
-///clicking the alert. The counter climbing back withdraws the offer, so the facility has a
-///real window to feed her out of it after the fuse has already run out.
+///Counter 0 throws a clickable alert instead of breaching. The counter climbing back clears it.
 /mob/living/simple_animal/hostile/limbus_abno/lunar_rabbit/proc/UpdateBreachOffer()
 	if(breached || counter > 0 || stat >= DEAD)
 		if(breach_ready)
@@ -183,8 +169,7 @@
 	to_chat(src, span_userdanger("You have had quite enough of this room. The doors are only \
 		doors - click the warning on your screen when you want to leave."))
 
-///Taking the offer: she is whole again, unreachable by the pacifiers, and small enough to
-///go under a door.
+///Accepting: full heal, unstable, and the door crawl unlocks.
 /mob/living/simple_animal/hostile/limbus_abno/lunar_rabbit/proc/AcceptBreach()
 	if(breached || !breach_ready || stat >= DEAD)
 		return FALSE
@@ -200,8 +185,7 @@
 	playsound(get_turf(src), 'sound/abnormalities/cleave.ogg', 50, 1)
 	return TRUE
 
-///Beaten back into containment. Restores the counter too, so she is not immediately re-offered
-///the breach she just lost.
+///Ends the breach. Restores the counter so the offer is not thrown again immediately.
 /mob/living/simple_animal/hostile/limbus_abno/lunar_rabbit/proc/Unbreach()
 	if(!breached)
 		return
@@ -240,8 +224,7 @@
 		return
 	rabbit.AcceptBreach()
 
-//Breached only: attacking a door squeezes under it instead of hitting it. Same trick the
-//cuckoospawn parasite uses, but on a timer so it is a commitment rather than a free bypass.
+//Breached only: attacking a door crawls under it instead. Same forceMove as lc13_cuckoospawn.
 /mob/living/simple_animal/hostile/limbus_abno/lunar_rabbit/AttackingTarget(atom/attacked_target)
 	if(breached && istype(attacked_target, /obj/machinery/door))
 		CrawlUnder(attacked_target)
@@ -255,18 +238,15 @@
 	manual_emote("flattens out and starts working her way under [D]...")
 	balloon_alert(src, "squeezing under...")
 	if(do_after(src, crawl_time, D))
-		//Re-check on the way out: the door may have opened, moved or been destroyed, and she
-		//may have been dragged off it.
+		//Re-checked: the door or her position can change during the do_after.
 		if(!QDELETED(D) && breached && Adjacent(D))
 			forceMove(get_turf(D))
 			manual_emote("crawls under [D]!")
 			playsound(get_turf(src), 'sound/effects/slosh.ogg', 40, 1)
 	crawling = FALSE
 
-//Hands: a bare click picks items up (dextrous) but does NOT eat. Eating is done by
-//attacking yourself with a held diet food (see attackby below). Unlike a plain animal
-//(which only ever calls attack_animal), her clever hands let her operate machines and
-//consoles like a person: non-harm clicks route through attack_hand so machine UIs open.
+//Non-harm clicks route through attack_hand so machine UIs open; harm intent attacks instead.
+//Eating is done by attacking yourself with a held diet food, see attackby.
 /mob/living/simple_animal/hostile/limbus_abno/lunar_rabbit/UnarmedAttack(atom/A, proximity)
 	if(isliving(A))
 		var/mob/living/L = A
@@ -284,8 +264,7 @@
 		return
 	A.attack_hand(src) //Machines, consoles, etc: interact like a person.
 
-//Attack yourself with a diet food to eat it. RepressionWork still runs from the base
-//attackby for non-food hits; eating a diet food short-circuits that.
+//Diet food short-circuits the base attackby, so RepressionWork only runs for non-food hits.
 /mob/living/simple_animal/hostile/limbus_abno/lunar_rabbit/attackby(obj/item/W, mob/user, params)
 	if(is_type_in_list(W, diet_list))
 		AbnoEat(W)
@@ -471,7 +450,6 @@ GLOBAL_LIST_EMPTY(lunar_dispensary_chems)
 			if(actual <= 0)
 				to_chat(abno, span_warning("[held] is full."))
 				return
-			//Brewing is her actual work, so it feeds her mood and eats into her stomach.
 			//Checked before the reagent is added, so a refused dispense is never charged.
 			if(abno.hunger_bar < hunger_per_dispense)
 				to_chat(abno, span_warning("You are far too hungry to concentrate on mixing."))
