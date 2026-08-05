@@ -250,10 +250,14 @@
 //Speech mangling. treat_message() is the engine's own hook for this - it is where stuttering,
 //slurring and derpspeech are applied - so it catches player speech and nothing else. Emotes,
 //system messages and the forced "YOU NEED TO EAT" line all bypass it, which is what we want.
+//Garbling runs on the parent's OUTPUT, not before it. Reassigning the argument and then calling
+//a bare ..() sent the untouched line to the parent, so the mangling was thrown away and she
+//spoke normally. Doing it in this order also puts the garbling last, so capitalize() cannot
+//re-case a growl.
 /mob/living/simple_animal/hostile/limbus_abno/mountain/treat_message(message)
+	. = ..(message)
 	if(garbling)
-		message = GarbleFlesh(message)
-	return ..()
+		. = GarbleFlesh(.)
 
 ///TRUE if this word contains something another specimen is listening for, and so must not be
 ///broken up. Matched case-insensitively, because findtext is.
