@@ -17,12 +17,16 @@
 /area/lce/service/kitchen)
 "ad" = (
 /obj/effect/turf_decal/trimline/red/filled/corner{
-	dir = 1
+	dir = 1;
+	color = "#808080"
 	},
 /obj/effect/turf_decal/trimline/red/filled/line{
-	dir = 4
+	dir = 4;
+	color = "#808080"
 	},
-/obj/effect/turf_decal/stripes/red/line,
+/obj/effect/turf_decal/stripes/red/line{
+	color = "#808080"
+	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/one)
 "ae" = (
@@ -118,7 +122,7 @@
 	},
 /obj/item/binoculars,
 /obj/structure/table/reinforced{
-	color = "955C23"
+	color = "#955C23"
 	},
 /obj/machinery/light{
 	dir = 4;
@@ -126,7 +130,7 @@
 	pixel_y = 4
 	},
 /turf/open/floor/lce/plate/dark,
-/area/lce/containment/light/control_east)
+/area/lce/containment/light/three)
 "as" = (
 /obj/machinery/camera{
 	alpha = 0;
@@ -149,7 +153,8 @@
 /area/lce/security/checkpoint)
 "av" = (
 /obj/effect/turf_decal/trimline/red/filled/line{
-	dir = 8
+	dir = 8;
+	color = "#808080"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/one)
@@ -163,13 +168,15 @@
 	},
 /area/lce/medical/office)
 "aF" = (
-/obj/effect/turf_decal/trimline/red/filled/line,
+/obj/effect/turf_decal/trimline/red/filled/line{
+	color = "#808080"
+	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/two)
 "aG" = (
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	dir = 8;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/four)
@@ -208,18 +215,19 @@
 "aV" = (
 /obj/effect/decal/cleanable/blood/tracks,
 /obj/effect/turf_decal/trimline/red/filled/line{
-	dir = 6
+	dir = 6;
+	color = "#808080"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/two)
 "aX" = (
 /obj/effect/turf_decal/trimline/blue/filled/corner{
 	dir = 1;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	dir = 6;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/four)
@@ -229,7 +237,7 @@
 /area/lce/service/memorial)
 "bh" = (
 /obj/effect/turf_decal/stripes/white/line{
-	color = "FF8C00";
+	color = "#FF8C00";
 	dir = 4
 	},
 /turf/open/floor/plasteel/white,
@@ -243,10 +251,12 @@
 /area/lce/containment/light)
 "bm" = (
 /obj/effect/turf_decal/trimline/red/filled/line{
-	dir = 8
+	dir = 8;
+	color = "#808080"
 	},
 /obj/effect/turf_decal/stripes/red/line{
-	dir = 9
+	dir = 9;
+	color = "#808080"
 	},
 /obj/machinery/light{
 	dir = 4;
@@ -302,11 +312,11 @@
 "bq" = (
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	dir = 4;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /obj/effect/turf_decal/trimline/blue/filled/corner{
 	dir = 8;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/three)
@@ -324,6 +334,9 @@
 /area/lce/support/telecomms)
 "bI" = (
 /obj/structure/chair/office/light,
+/obj/effect/turf_decal/siding/red{
+	color = "#440000"
+	},
 /turf/open/floor/lce/plate,
 /area/lce/containment/heavy/control_one)
 "bN" = (
@@ -372,7 +385,8 @@
 "bX" = (
 /obj/effect/decal/cleanable/blood/old,
 /obj/effect/turf_decal/trimline/red/filled/line{
-	dir = 10
+	dir = 10;
+	color = "#808080"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/one)
@@ -390,6 +404,9 @@
 "ch" = (
 /obj/machinery/camera/autoname,
 /obj/structure/chair/office/light,
+/obj/effect/turf_decal/siding/blue{
+	color = "#955C23"
+	},
 /turf/open/floor/lce/plate/bright,
 /area/lce/containment/light/control_west)
 "cj" = (
@@ -436,10 +453,10 @@
 /obj/item/binoculars,
 /obj/item/binoculars,
 /turf/open/floor/lce/plate,
-/area/lce/containment/heavy/control_two)
+/area/lce/containment/heavy/two)
 "cr" = (
 /turf/open/floor/mineral/plastitanium{
-	color = "EDD956"
+	color = "#EDD956"
 	},
 /area/lce/security/udjat_quarters)
 "cs" = (
@@ -471,11 +488,7 @@
 /area/lce/service/laundry)
 "cW" = (
 /obj/structure/table/reinforced{
-	color = "955C23"
-	},
-/obj/effect/turf_decal/siding/blue{
-	dir = 1;
-	color = "955C23"
+	color = "#955C23"
 	},
 /obj/machinery/button/door/indestructible{
 	id = "LSZ Containment Door #3"
@@ -483,7 +496,7 @@
 /obj/item/lcl_pacifiers,
 /obj/item/lcl_duel,
 /turf/open/floor/lce/plate/dark,
-/area/lce/containment/light/control_west)
+/area/lce/containment/light/one)
 "db" = (
 /obj/machinery/door/airlock/hatch,
 /turf/open/floor/plasteel/white,
@@ -580,12 +593,12 @@
 	dir = 4
 	},
 /turf/open/floor/mineral/plastitanium{
-	color = "EDD956"
+	color = "#EDD956"
 	},
 /area/lce/security/udjat_armoury)
 "eb" = (
 /turf/open/floor/mineral/plastitanium{
-	color = "EDD956"
+	color = "#EDD956"
 	},
 /area/lce/security/udjat_armoury)
 "ec" = (
@@ -630,7 +643,7 @@
 /area/lce/outdoors)
 "es" = (
 /obj/effect/turf_decal/arrows/white{
-	color = "FF8C00";
+	color = "#FF8C00";
 	dir = 4
 	},
 /obj/effect/turf_decal/stripes/white/corner{
@@ -675,13 +688,14 @@
 "ey" = (
 /obj/effect/decal/cleanable/blood/tracks,
 /obj/effect/turf_decal/trimline/red/filled/line{
-	dir = 5
+	dir = 5;
+	color = "#808080"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/two)
 "ez" = (
 /obj/effect/turf_decal/trimline/blue/filled{
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /obj/structure/fans/tiny,
 /obj/machinery/light{
@@ -752,7 +766,7 @@
 /area/lce/medical/aid_light)
 "eN" = (
 /obj/effect/turf_decal/trimline/blue/filled{
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /obj/structure/fans/tiny,
 /obj/machinery/light{
@@ -782,18 +796,19 @@
 "fa" = (
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	dir = 8;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /obj/effect/turf_decal/trimline/blue/filled/corner{
 	dir = 4;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/four)
 "fe" = (
 /obj/effect/decal/cleanable/xenoblood/xgibs/larva,
 /obj/effect/turf_decal/trimline/red/filled/line{
-	dir = 9
+	dir = 9;
+	color = "#808080"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/one)
@@ -854,11 +869,11 @@
 "fO" = (
 /obj/effect/turf_decal/trimline/blue/filled/corner{
 	dir = 4;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	dir = 10;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /obj/machinery/light{
 	dir = 8;
@@ -870,7 +885,7 @@
 "fP" = (
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	dir = 1;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/three)
@@ -898,12 +913,12 @@
 /area/lce/service/dining)
 "fZ" = (
 /obj/structure/table/reinforced{
-	color = "49473B";
+	color = "#49473B";
 	pixel_y = 1
 	},
 /obj/item/toy/cards/deck,
 /turf/open/floor/mineral/plastitanium{
-	color = "EDD956"
+	color = "#EDD956"
 	},
 /area/lce/security/udjat_quarters)
 "ga" = (
@@ -917,7 +932,7 @@
 "gc" = (
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	dir = 1;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/two)
@@ -934,10 +949,19 @@
 	color = "#9cadc7"
 	},
 /area/lce/service/laundry)
+"gk" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 4
+	},
+/obj/effect/turf_decal/caution/stand_clear{
+	dir = 8
+	},
+/turf/open/floor/lce/plate/dark,
+/area/lce/containment/heavy/approach)
 "gm" = (
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	dir = 5;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/one)
@@ -961,6 +985,12 @@
 	},
 /turf/open/floor/mineral/titanium/tiled/white,
 /area/lce/hallway/north)
+"gq" = (
+/obj/effect/turf_decal/stripes/corner{
+	dir = 4
+	},
+/turf/open/floor/lce/plate/dark,
+/area/lce/containment/heavy/approach)
 "gt" = (
 /obj/machinery/computer/communications{
 	pixel_x = 16
@@ -969,16 +999,19 @@
 /area/lce/command/manager)
 "gv" = (
 /obj/effect/turf_decal/trimline/red/filled/line{
-	dir = 6
+	dir = 6;
+	color = "#808080"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/one)
 "gy" = (
 /obj/effect/turf_decal/trimline/red/filled/corner{
-	dir = 4
+	dir = 4;
+	color = "#808080"
 	},
 /obj/effect/turf_decal/stripes/red/line{
-	dir = 8
+	dir = 8;
+	color = "#808080"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/one)
@@ -998,11 +1031,11 @@
 "gN" = (
 /obj/effect/turf_decal/trimline/blue/filled/corner{
 	dir = 4;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	dir = 10;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /obj/machinery/light{
 	dir = 8;
@@ -1028,11 +1061,11 @@
 "gW" = (
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	dir = 8;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /obj/effect/turf_decal/trimline/blue/filled/corner{
 	dir = 4;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/one)
@@ -1055,7 +1088,7 @@
 	pixel_y = 15
 	},
 /turf/open/floor/mineral/plastitanium{
-	color = "EDD956"
+	color = "#EDD956"
 	},
 /area/lce/security/udjat_quarters)
 "hc" = (
@@ -1080,7 +1113,7 @@
 "hq" = (
 /obj/effect/turf_decal/trimline/blue/filled/end{
 	dir = 1;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/one)
@@ -1091,7 +1124,7 @@
 "ht" = (
 /obj/effect/turf_decal/trimline/blue/filled/end{
 	dir = 4;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/one)
@@ -1146,9 +1179,12 @@
 	},
 /area/lce/research)
 "hF" = (
-/obj/effect/turf_decal/trimline/red/filled/line,
+/obj/effect/turf_decal/trimline/red/filled/line{
+	color = "#808080"
+	},
 /obj/effect/turf_decal/stripes/red/line{
-	dir = 1
+	dir = 1;
+	color = "#808080"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/one)
@@ -1166,11 +1202,7 @@
 	},
 /obj/item/binoculars,
 /obj/structure/table/reinforced{
-	color = "955C23"
-	},
-/obj/effect/turf_decal/siding/blue{
-	dir = 1;
-	color = "955C23"
+	color = "#955C23"
 	},
 /obj/machinery/light{
 	dir = 8;
@@ -1178,7 +1210,7 @@
 	pixel_y = 4
 	},
 /turf/open/floor/lce/plate/dark,
-/area/lce/containment/light/control_east)
+/area/lce/containment/light/four)
 "hM" = (
 /obj/effect/turf_decal/bot,
 /obj/machinery/telecomms/receiver/preset_left,
@@ -1208,7 +1240,7 @@
 "hX" = (
 /obj/effect/turf_decal/trimline/blue/filled/end{
 	dir = 4;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/three)
@@ -1226,7 +1258,7 @@
 	req_access_txt = "3"
 	},
 /turf/open/floor/mineral/plastitanium{
-	color = "EDD956"
+	color = "#EDD956"
 	},
 /area/lce/security/udjat_armoury)
 "ig" = (
@@ -1409,18 +1441,18 @@
 "jn" = (
 /obj/effect/turf_decal/trimline/blue/filled/corner{
 	dir = 1;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	dir = 6;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/three)
 "js" = (
 /obj/structure/weightmachine/weightlifter,
 /turf/open/floor/mineral/plastitanium{
-	color = "EDD956"
+	color = "#EDD956"
 	},
 /area/lce/security/udjat_quarters)
 "jv" = (
@@ -1444,18 +1476,18 @@
 "jA" = (
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	dir = 5;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/four)
 "jB" = (
 /obj/effect/turf_decal/trimline/blue/filled/corner{
 	dir = 4;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	dir = 10;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /obj/machinery/light{
 	dir = 8;
@@ -1467,7 +1499,7 @@
 "jG" = (
 /obj/machinery/light,
 /turf/open/floor/mineral/plastitanium{
-	color = "EDD956"
+	color = "#EDD956"
 	},
 /area/lce/security/udjat_quarters)
 "jQ" = (
@@ -1515,11 +1547,11 @@
 "kd" = (
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	dir = 4;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /obj/effect/turf_decal/trimline/blue/filled/corner{
 	dir = 8;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/one)
@@ -1531,7 +1563,7 @@
 /area/lce/containment/heavy)
 "ki" = (
 /obj/effect/turf_decal/tile{
-	color = "FF8C00";
+	color = "#FF8C00";
 	alpha = 150
 	},
 /obj/effect/turf_decal/tile{
@@ -1543,7 +1575,7 @@
 /area/lce/research/reagent)
 "kj" = (
 /obj/effect/turf_decal/loading_area/white{
-	color = "FF8C00";
+	color = "#FF8C00";
 	dir = 8
 	},
 /turf/open/floor/plasteel/white,
@@ -1572,6 +1604,9 @@
 "kw" = (
 /obj/machinery/camera/autoname,
 /obj/structure/chair/office/light,
+/obj/effect/turf_decal/siding/blue{
+	color = "#955C23"
+	},
 /turf/open/floor/lce/plate/bright,
 /area/lce/containment/light/control_east)
 "kx" = (
@@ -1594,7 +1629,7 @@
 "kC" = (
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	dir = 10;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/four)
@@ -1617,7 +1652,7 @@
 /area/lce/research)
 "kF" = (
 /obj/effect/turf_decal/trimline/blue/filled{
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /obj/structure/fans/tiny,
 /obj/machinery/light{
@@ -1642,7 +1677,7 @@
 "kH" = (
 /obj/machinery/door/airlock/highsecurity{
 	name = "Cell 1 observation room";
-	color = "955C23"
+	color = "#955C23"
 	},
 /turf/open/floor/lce/tile/bright/grate,
 /area/lce/containment/heavy/control_one)
@@ -1674,10 +1709,6 @@
 /obj/structure/table/reinforced{
 	color = "#ff7f7f"
 	},
-/obj/effect/turf_decal/siding/red{
-	color = "#440000";
-	dir = 1
-	},
 /obj/machinery/button/door/indestructible{
 	id = "mosb_containment";
 	name = "cell 1 door button"
@@ -1688,7 +1719,7 @@
 	pixel_y = 9
 	},
 /turf/open/floor/lce/plate,
-/area/lce/containment/heavy/control_one)
+/area/lce/containment/heavy/one)
 "kX" = (
 /turf/open/floor/lce/plate,
 /area/lce/containment/heavy/control_one)
@@ -1766,11 +1797,11 @@
 "lK" = (
 /obj/effect/turf_decal/trimline/blue/filled/corner{
 	dir = 4;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	dir = 10;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /obj/machinery/light{
 	dir = 8;
@@ -1821,11 +1852,11 @@
 "lY" = (
 /obj/effect/turf_decal/trimline/blue/filled/corner{
 	dir = 1;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	dir = 6;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/two)
@@ -1845,10 +1876,12 @@
 /area/lce/research/records)
 "md" = (
 /obj/effect/turf_decal/trimline/red/filled/line{
-	dir = 1
+	dir = 1;
+	color = "#808080"
 	},
 /obj/effect/turf_decal/stripes/red/line{
-	dir = 5
+	dir = 5;
+	color = "#808080"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/two)
@@ -1858,7 +1891,7 @@
 	name = "low-security maintenance hatch";
 	max_integrity = 3000;
 	integrity_failure = 0.01;
-	color = "955C23"
+	color = "#955C23"
 	},
 /turf/open/floor/lce/tile,
 /area/lce/containment/light)
@@ -1866,7 +1899,7 @@
 /obj/machinery/door/poddoor{
 	id = "mosb_containment";
 	name = "HSZ Containment Door #1";
-	color = "955C23"
+	color = "#955C23"
 	},
 /turf/open/floor/lce/deck/dark/grate,
 /area/lce/containment/heavy/one)
@@ -1893,13 +1926,13 @@
 /obj/machinery/door/poddoor{
 	name = "LSZ Containment Door #6";
 	id = "LSZ Containment Door #6";
-	color = "955C23"
+	color = "#955C23"
 	},
 /turf/open/floor/lce/plate/dark,
 /area/lce/containment/light/three)
 "mz" = (
 /obj/structure/table/reinforced{
-	color = "955C23"
+	color = "#955C23"
 	},
 /obj/machinery/status_display,
 /turf/open/floor/lce/plate/dark,
@@ -1918,16 +1951,12 @@
 /turf/open/floor/carpet/purple,
 /area/lce/research/director)
 "mR" = (
-/obj/machinery/modular_computer/console/preset/research{
-	resistance_flags = 115;
-	dir = 1
-	},
-/obj/effect/turf_decal/siding/red{
-	color = "#440000";
-	dir = 1
+/obj/machinery/computer/camera_advanced/lce_claw{
+	dir = 1;
+	color = "#955C23"
 	},
 /turf/open/floor/lce/plate,
-/area/lce/containment/heavy/control_one)
+/area/lce/containment/heavy/one)
 "mT" = (
 /obj/structure/flora/ausbushes/ywflowers,
 /turf/open/floor/grass,
@@ -2080,18 +2109,18 @@
 "nk" = (
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	dir = 8;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /obj/effect/turf_decal/trimline/blue/filled/corner{
 	dir = 4;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/three)
 "np" = (
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	dir = 1;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/four)
@@ -2106,14 +2135,15 @@
 "nv" = (
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	dir = 5;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/two)
 "nx" = (
 /obj/effect/decal/cleanable/blood/tracks,
 /obj/effect/turf_decal/trimline/red/filled/line{
-	dir = 4
+	dir = 4;
+	color = "#808080"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/one)
@@ -2142,11 +2172,11 @@
 "nG" = (
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	dir = 8;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /obj/effect/turf_decal/trimline/blue/filled/corner{
 	dir = 4;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/two)
@@ -2169,7 +2199,7 @@
 	name = "low-security maintenance hatch";
 	max_integrity = 3000;
 	integrity_failure = 0.01;
-	color = "955C23"
+	color = "#955C23"
 	},
 /turf/open/floor/lce/plate/bright,
 /area/lce/containment/light/control_east)
@@ -2183,7 +2213,8 @@
 "nR" = (
 /obj/effect/decal/cleanable/blood/tracks,
 /obj/effect/turf_decal/trimline/red/filled/line{
-	dir = 6
+	dir = 6;
+	color = "#808080"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/one)
@@ -2198,7 +2229,9 @@
 /obj/effect/decal/cleanable/blood/tracks{
 	dir = 10
 	},
-/obj/effect/turf_decal/trimline/red/filled,
+/obj/effect/turf_decal/trimline/red/filled{
+	color = "#808080"
+	},
 /obj/structure/fans/tiny,
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/one)
@@ -2227,6 +2260,14 @@
 /area/lce/security/udjat_quarters)
 "oj" = (
 /obj/effect/turf_decal/stripes/red/corner,
+/obj/machinery/camera{
+	alpha = 0;
+	mouse_opacity = 0;
+	name = "hidden security camera";
+	short_range = 5;
+	view_range = 5;
+	dir = 8
+	},
 /turf/open/floor/lce/plate/dark,
 /area/lce/containment/heavy/approach)
 "ok" = (
@@ -2339,7 +2380,7 @@
 	},
 /obj/structure/chair/sofa/corp/left,
 /obj/effect/turf_decal/stripes/white/line{
-	color = "FF8C00";
+	color = "#FF8C00";
 	dir = 4
 	},
 /turf/open/floor/plasteel/white,
@@ -2378,7 +2419,7 @@
 /area/lce/command/lounge)
 "pi" = (
 /obj/structure/table/reinforced{
-	color = "955C23"
+	color = "#955C23"
 	},
 /turf/open/floor/lce/tile/bright,
 /area/lce/security/checkpoint)
@@ -2398,19 +2439,24 @@
 	},
 /obj/effect/spawner/structure/window/reinforced/lce,
 /turf/open/floor/lce/plate/dark,
-/area/lce/containment/heavy/control_two)
+/area/lce/containment/heavy/two)
 "pp" = (
 /obj/effect/decal/cleanable/blood/gibs/bubblegum,
-/obj/effect/turf_decal/trimline/red/filled/corner,
-/obj/effect/turf_decal/trimline/red/filled/corner,
+/obj/effect/turf_decal/trimline/red/filled/corner{
+	color = "#808080"
+	},
+/obj/effect/turf_decal/trimline/red/filled/corner{
+	color = "#808080"
+	},
 /obj/effect/turf_decal/stripes/red/line{
-	dir = 1
+	dir = 1;
+	color = "#808080"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/two)
 "pr" = (
 /obj/effect/turf_decal/trimline/blue/filled{
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /obj/structure/fans/tiny,
 /obj/machinery/light{
@@ -2507,14 +2553,15 @@
 "pX" = (
 /obj/effect/decal/cleanable/xenoblood/xgibs/larva,
 /obj/effect/turf_decal/trimline/red/filled/line{
-	dir = 9
+	dir = 9;
+	color = "#808080"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/two)
 "qk" = (
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	dir = 4;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/three)
@@ -2522,12 +2569,16 @@
 /obj/effect/decal/cleanable/blood/tracks{
 	dir = 8
 	},
-/obj/effect/turf_decal/trimline/red/filled,
+/obj/effect/turf_decal/trimline/red/filled{
+	color = "#808080"
+	},
 /obj/structure/fans/tiny,
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/one)
 "qy" = (
-/obj/effect/turf_decal/trimline/red/filled/line,
+/obj/effect/turf_decal/trimline/red/filled/line{
+	color = "#808080"
+	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/one)
 "qC" = (
@@ -2568,11 +2619,7 @@
 	},
 /obj/item/binoculars,
 /obj/structure/table/reinforced{
-	color = "955C23"
-	},
-/obj/effect/turf_decal/siding/blue{
-	dir = 1;
-	color = "955C23"
+	color = "#955C23"
 	},
 /obj/machinery/light{
 	dir = 4;
@@ -2580,7 +2627,7 @@
 	pixel_y = 4
 	},
 /turf/open/floor/lce/plate/dark,
-/area/lce/containment/light/control_west)
+/area/lce/containment/light/one)
 "qO" = (
 /obj/structure/filingcabinet{
 	pixel_x = 10;
@@ -2619,12 +2666,25 @@
 "qY" = (
 /turf/open/floor/plasteel/white,
 /area/lce/service/washroom)
-"rl" = (
-/obj/machinery/modular_computer/console/preset/research{
-	color = "955C23"
+"re" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 4
+	},
+/obj/effect/turf_decal/caution{
+	dir = 8
+	},
+/obj/effect/turf_decal/arrows,
+/obj/effect/turf_decal/arrows{
+	dir = 1
 	},
 /turf/open/floor/lce/plate/dark,
-/area/lce/containment/light/control_east)
+/area/lce/containment/heavy/approach)
+"rl" = (
+/obj/machinery/modular_computer/console/preset/research{
+	color = "#955C23"
+	},
+/turf/open/floor/lce/plate/dark,
+/area/lce/containment/light/three)
 "rs" = (
 /obj/machinery/door/airlock/medical/glass{
 	name = "Chief Medical Officer's Office";
@@ -2642,13 +2702,13 @@
 "rz" = (
 /obj/machinery/door/airlock/highsecurity{
 	name = "Cell 3 and 4 observation room";
-	color = "955C23"
+	color = "#955C23"
 	},
 /turf/open/floor/lce/plate/bright,
 /area/lce/containment/light/control_west)
 "rB" = (
 /obj/effect/turf_decal/trimline/blue/filled{
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /obj/structure/fans/tiny,
 /obj/machinery/light{
@@ -2661,7 +2721,7 @@
 "rD" = (
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	dir = 4;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/four)
@@ -2679,7 +2739,7 @@
 "rH" = (
 /obj/machinery/door/airlock/highsecurity{
 	name = "recovered tool room";
-	color = "955C23"
+	color = "#955C23"
 	},
 /turf/open/floor/lce/tile/bright/grate,
 /area/lce/containment/light)
@@ -2802,6 +2862,12 @@
 	},
 /turf/open/floor/plasteel/white,
 /area/lce/medical/bay)
+"sp" = (
+/obj/effect/turf_decal/siding/red{
+	color = "#440000"
+	},
+/turf/open/floor/lce/plate,
+/area/lce/containment/heavy/control_one)
 "sr" = (
 /obj/structure/sign/logo{
 	icon_state = "limbus_sign 3,0";
@@ -2830,7 +2896,7 @@
 "sw" = (
 /obj/machinery/door/airlock/highsecurity{
 	name = "Cell 2 observation room";
-	color = "955C23"
+	color = "#955C23"
 	},
 /turf/open/floor/lce/plate,
 /area/lce/containment/heavy/control_two)
@@ -2856,6 +2922,13 @@
 "sD" = (
 /turf/open/floor/mineral/silver,
 /area/lce/command/manager)
+"sL" = (
+/obj/machinery/modular_computer/console/preset/research{
+	resistance_flags = 115;
+	color = "#955C23"
+	},
+/turf/open/floor/lce/plate,
+/area/lce/containment/heavy/two)
 "sP" = (
 /obj/machinery/telecomms/server/presets/command{
 	name = "Command Server"
@@ -2868,7 +2941,7 @@
 	name = "low-security maintenance hatch";
 	max_integrity = 3000;
 	integrity_failure = 0.01;
-	color = "955C23"
+	color = "#955C23"
 	},
 /turf/open/floor/lce/tile,
 /area/lce/containment/light)
@@ -2913,7 +2986,7 @@
 /area/lce/containment/heavy/control_one)
 "ts" = (
 /obj/effect/turf_decal/trimline/blue/filled/line{
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/four)
@@ -2923,15 +2996,22 @@
 /area/lce/research)
 "tu" = (
 /obj/effect/decal/cleanable/blood/gibs/bubblegum,
-/obj/effect/turf_decal/trimline/red/filled/corner,
-/obj/effect/turf_decal/trimline/red/filled/corner,
+/obj/effect/turf_decal/trimline/red/filled/corner{
+	color = "#808080"
+	},
+/obj/effect/turf_decal/trimline/red/filled/corner{
+	color = "#808080"
+	},
 /obj/effect/turf_decal/stripes/red/line{
-	dir = 1
+	dir = 1;
+	color = "#808080"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/one)
 "tw" = (
-/obj/effect/turf_decal/stripes/red/line,
+/obj/effect/turf_decal/stripes/red/line{
+	color = "#808080"
+	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/two)
 "tx" = (
@@ -3004,11 +3084,11 @@
 "tX" = (
 /obj/effect/turf_decal/trimline/blue/filled/corner{
 	dir = 1;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	dir = 6;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/one)
@@ -3089,7 +3169,8 @@
 /area/lce/service/dining)
 "uA" = (
 /obj/effect/turf_decal/trimline/red/filled/line{
-	dir = 8
+	dir = 8;
+	color = "#808080"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/two)
@@ -3127,30 +3208,30 @@
 /turf/open/floor/mineral/titanium/tiled/blue,
 /area/lce/medical/surgery)
 "uI" = (
-/obj/effect/turf_decal/trimline/red/filled/corner,
+/obj/effect/turf_decal/trimline/red/filled/corner{
+	color = "#808080"
+	},
 /obj/effect/turf_decal/trimline/red/filled/line{
-	dir = 8
+	dir = 8;
+	color = "#808080"
 	},
 /obj/effect/turf_decal/stripes/red/line{
-	dir = 1
+	dir = 1;
+	color = "#808080"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/one)
 "uM" = (
 /obj/structure/filingcabinet/chestdrawer{
 	pixel_x = -8;
-	color = "955C23"
+	color = "#955C23"
 	},
 /obj/structure/filingcabinet/chestdrawer{
 	pixel_x = 8;
-	color = "955C23"
-	},
-/obj/effect/turf_decal/siding/red{
-	color = "#440000";
-	dir = 1
+	color = "#955C23"
 	},
 /turf/open/floor/lce/plate,
-/area/lce/containment/heavy/control_one)
+/area/lce/containment/heavy/one)
 "uN" = (
 /turf/open/floor/mineral/titanium/tiled/white,
 /turf/closed/indestructible/reinforced{
@@ -3223,10 +3304,12 @@
 /area/lce/service/memorial)
 "vf" = (
 /obj/effect/turf_decal/trimline/red/filled/corner{
-	dir = 1
+	dir = 1;
+	color = "#808080"
 	},
 /obj/effect/turf_decal/stripes/red/line{
-	dir = 4
+	dir = 4;
+	color = "#808080"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/two)
@@ -3255,17 +3338,14 @@
 "vo" = (
 /obj/machinery/modular_computer/console/preset/research{
 	dir = 1;
-	color = "955C23"
-	},
-/obj/effect/turf_decal/siding/blue{
-	dir = 1;
-	color = "955C23"
+	color = "#955C23"
 	},
 /turf/open/floor/lce/plate/dark,
-/area/lce/containment/light/control_east)
+/area/lce/containment/light/four)
 "vp" = (
 /obj/effect/turf_decal/trimline/red/filled/line{
-	dir = 10
+	dir = 10;
+	color = "#808080"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/one)
@@ -3275,7 +3355,7 @@
 	name = "high-security maintenance hatch";
 	max_integrity = 3000;
 	integrity_failure = 0.01;
-	color = "955C23"
+	color = "#955C23"
 	},
 /turf/open/floor/lce/tile/bright/grate,
 /area/lce/containment/heavy)
@@ -3304,14 +3384,15 @@
 	dir = 8
 	},
 /obj/effect/turf_decal/trimline/red/filled/line{
-	dir = 1
+	dir = 1;
+	color = "#808080"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/two)
 "vG" = (
 /obj/effect/turf_decal/trimline/blue/filled/end{
 	dir = 4;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/four)
@@ -3337,7 +3418,7 @@
 	name = "low-security maintenance hatch";
 	max_integrity = 3000;
 	integrity_failure = 0.01;
-	color = "955C23"
+	color = "#955C23"
 	},
 /turf/open/floor/lce/tile,
 /area/lce/containment/light)
@@ -3391,7 +3472,7 @@
 	name = "high-security maintenance hatch";
 	max_integrity = 3000;
 	integrity_failure = 0.01;
-	color = "955C23"
+	color = "#955C23"
 	},
 /obj/structure/cable,
 /turf/open/floor/facility/halls,
@@ -3408,13 +3489,13 @@
 "we" = (
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	dir = 8;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/one)
 "wg" = (
 /obj/effect/turf_decal/tile{
-	color = "FF8C00";
+	color = "#FF8C00";
 	alpha = 150
 	},
 /obj/effect/turf_decal/tile{
@@ -3440,7 +3521,8 @@
 	dir = 8
 	},
 /obj/effect/turf_decal/trimline/red/filled/line{
-	dir = 9
+	dir = 9;
+	color = "#808080"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/one)
@@ -3465,48 +3547,44 @@
 /area/lce/hallway/west)
 "wq" = (
 /obj/effect/turf_decal/stripes/red/line{
-	dir = 8
+	dir = 8;
+	color = "#808080"
 	},
 /obj/effect/turf_decal/caution/stand_clear/red{
-	dir = 4
+	dir = 4;
+	color = "#808080"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/two)
 "ws" = (
 /obj/effect/turf_decal/stripes/red/line{
-	dir = 4
+	dir = 4;
+	color = "#808080"
 	},
 /obj/effect/turf_decal/caution/stand_clear/red{
-	dir = 8
+	dir = 8;
+	color = "#808080"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/one)
 "wu" = (
 /obj/machinery/modular_computer/console/preset/research{
 	dir = 1;
-	color = "955C23"
-	},
-/obj/effect/turf_decal/siding/blue{
-	dir = 1;
-	color = "955C23"
+	color = "#955C23"
 	},
 /turf/open/floor/lce/plate/dark,
-/area/lce/containment/light/control_west)
+/area/lce/containment/light/one)
 "wy" = (
 /obj/structure/filingcabinet/chestdrawer{
 	pixel_x = 8;
-	color = "955C23"
+	color = "#955C23"
 	},
 /obj/structure/filingcabinet/chestdrawer{
 	pixel_x = -8;
-	color = "955C23"
-	},
-/obj/effect/turf_decal/siding/red{
-	color = "#440000";
-	dir = 1
+	color = "#955C23"
 	},
 /turf/open/floor/lce/plate,
-/area/lce/containment/heavy/control_one)
+/area/lce/containment/heavy/one)
 "wA" = (
 /obj/machinery/door/airlock/wood{
 	name = "J-Corporation Sponsored Gambling Hall"
@@ -3538,19 +3616,26 @@
 /turf/open/floor/lce/plate/dark,
 /area/lce/containment/heavy/approach)
 "wI" = (
-/obj/effect/turf_decal/trimline/red/filled/line,
+/obj/effect/turf_decal/trimline/red/filled/line{
+	color = "#808080"
+	},
 /obj/effect/turf_decal/stripes/red/line{
-	dir = 1
+	dir = 1;
+	color = "#808080"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/two)
 "wJ" = (
 /obj/effect/turf_decal/trimline/red/filled/corner{
-	dir = 4
+	dir = 4;
+	color = "#808080"
 	},
-/obj/effect/turf_decal/trimline/red/filled/line,
+/obj/effect/turf_decal/trimline/red/filled/line{
+	color = "#808080"
+	},
 /obj/effect/turf_decal/stripes/red/line{
-	dir = 8
+	dir = 8;
+	color = "#808080"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/one)
@@ -3561,19 +3646,24 @@
 /obj/effect/decal/cleanable/blood/tracks{
 	dir = 8
 	},
-/obj/effect/turf_decal/trimline/red/filled,
+/obj/effect/turf_decal/trimline/red/filled{
+	color = "#808080"
+	},
 /obj/structure/fans/tiny,
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/two)
 "wO" = (
 /obj/effect/turf_decal/trimline/red/filled/line{
-	dir = 1
+	dir = 1;
+	color = "#808080"
 	},
 /obj/effect/turf_decal/trimline/red/filled/corner{
-	dir = 8
+	dir = 8;
+	color = "#808080"
 	},
 /obj/effect/turf_decal/stripes/red/line{
-	dir = 4
+	dir = 4;
+	color = "#808080"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/two)
@@ -3671,7 +3761,7 @@
 "xw" = (
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	dir = 4;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/one)
@@ -3707,6 +3797,9 @@
 	},
 /turf/open/floor/carpet/royalblue,
 /area/lce/medical/office)
+"xG" = (
+/turf/closed/indestructible/reinforced/cheap/lce/dark,
+/area/lce/containment/heavy/two)
 "xS" = (
 /obj/structure/table/glass,
 /obj/item/reagent_containers/glass/bucket/melting,
@@ -3730,15 +3823,15 @@
 "xV" = (
 /obj/effect/turf_decal/trimline/blue/filled/corner{
 	dir = 8;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	dir = 5;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /obj/effect/turf_decal/trimline/blue/filled/corner{
 	dir = 4;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /obj/machinery/light{
 	dir = 4;
@@ -3780,7 +3873,7 @@
 /area/lce/containment/heavy/approach)
 "yf" = (
 /obj/effect/turf_decal/trimline/blue/filled{
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /obj/structure/fans/tiny,
 /turf/open/floor/pod/dark/lce/dark,
@@ -3894,7 +3987,7 @@
 /obj/machinery/door/poddoor{
 	id = "hsz2_containment";
 	name = "HSZ Containment Door #2";
-	color = "955C23"
+	color = "#955C23"
 	},
 /turf/open/floor/lce/deck/dark/grate,
 /area/lce/containment/heavy/two)
@@ -3916,11 +4009,20 @@
 /area/lce/command/lounge)
 "yW" = (
 /obj/effect/turf_decal/trimline/red/filled/line{
-	dir = 1
+	dir = 1;
+	color = "#808080"
 	},
-/obj/effect/turf_decal/stripes/red/line,
+/obj/effect/turf_decal/stripes/red/line{
+	color = "#808080"
+	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/two)
+"yX" = (
+/obj/machinery/computer/camera_advanced/lce_claw{
+	color = "#955C23"
+	},
+/turf/open/floor/lce/plate/dark,
+/area/lce/containment/light/three)
 "yY" = (
 /turf/open/floor/wood,
 /area/lce/service/laundry)
@@ -3944,15 +4046,11 @@
 /obj/structure/table/reinforced{
 	color = "#ff7f7f"
 	},
-/obj/effect/turf_decal/siding/red{
-	color = "#440000";
-	dir = 1
-	},
 /obj/item/storage/box/monkeycubes,
 /obj/item/storage/box/monkeycubes,
 /obj/item/storage/box/monkeycubes,
 /turf/open/floor/lce/plate,
-/area/lce/containment/heavy/control_one)
+/area/lce/containment/heavy/one)
 "zm" = (
 /obj/structure/cable,
 /obj/machinery/light/small{
@@ -3973,12 +4071,15 @@
 /turf/open/floor/grass,
 /area/lce/service/memorial)
 "zs" = (
+/obj/effect/turf_decal/siding/blue{
+	color = "#955C23"
+	},
 /turf/open/floor/lce/plate/bright,
 /area/lce/containment/light/control_east)
 "zv" = (
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	dir = 10;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/one)
@@ -3992,7 +4093,7 @@
 /area/lce/command/lounge)
 "zz" = (
 /obj/effect/turf_decal/trimline/blue/filled{
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /obj/structure/fans/tiny,
 /obj/machinery/light{
@@ -4017,7 +4118,7 @@
 "zF" = (
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	dir = 5;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/three)
@@ -4076,7 +4177,7 @@
 "Ak" = (
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	dir = 1;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/one)
@@ -4122,30 +4223,26 @@
 "Au" = (
 /obj/structure/punching_bag,
 /turf/open/floor/mineral/plastitanium{
-	color = "EDD956"
+	color = "#EDD956"
 	},
 /area/lce/security/udjat_quarters)
 "Av" = (
 /obj/effect/turf_decal/siding/blue{
 	dir = 1;
-	color = "955C23"
+	color = "#955C23"
 	},
 /turf/open/floor/lce/plate/bright,
 /area/lce/containment/light/control_west)
 "Aw" = (
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	dir = 10;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/two)
 "Az" = (
 /obj/structure/table/reinforced{
-	color = "955C23"
-	},
-/obj/effect/turf_decal/siding/blue{
-	dir = 1;
-	color = "955C23"
+	color = "#955C23"
 	},
 /obj/machinery/button/door/indestructible{
 	id = "LSZ Containment Door #5"
@@ -4153,7 +4250,7 @@
 /obj/item/lcl_pacifiers,
 /obj/item/lcl_duel,
 /turf/open/floor/lce/plate/dark,
-/area/lce/containment/light/control_east)
+/area/lce/containment/light/four)
 "AB" = (
 /obj/effect/turf_decal/tile/blue{
 	color = "#5269e9"
@@ -4166,7 +4263,7 @@
 "AD" = (
 /obj/machinery/computer/camera_advanced,
 /turf/open/floor/mineral/plastitanium{
-	color = "EDD956"
+	color = "#EDD956"
 	},
 /area/lce/security/udjat_quarters)
 "AE" = (
@@ -4182,33 +4279,38 @@
 	pixel_y = 15
 	},
 /turf/open/floor/mineral/plastitanium{
-	color = "EDD956"
+	color = "#EDD956"
 	},
 /area/lce/security/udjat_quarters)
 "AG" = (
 /obj/effect/decal/cleanable/xenoblood/xsplatter,
-/obj/effect/turf_decal/trimline/red/filled,
+/obj/effect/turf_decal/trimline/red/filled{
+	color = "#808080"
+	},
 /obj/structure/fans/tiny,
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/two)
 "AK" = (
 /obj/effect/turf_decal/trimline/red/filled/corner{
-	dir = 4
+	dir = 4;
+	color = "#808080"
 	},
 /obj/effect/turf_decal/stripes/red/line{
-	dir = 8
+	dir = 8;
+	color = "#808080"
 	},
 /obj/effect/turf_decal/caution/red{
-	dir = 4
+	dir = 4;
+	color = "#808080"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/two)
 "AO" = (
 /obj/machinery/modular_computer/console/preset/research{
-	color = "955C23"
+	color = "#955C23"
 	},
 /turf/open/floor/lce/plate/dark,
-/area/lce/containment/light/control_west)
+/area/lce/containment/light/two)
 "AR" = (
 /obj/item/kirbyplants{
 	icon_state = "plant-12";
@@ -4225,16 +4327,12 @@
 /obj/structure/table/reinforced{
 	color = "#ff7f7f"
 	},
-/obj/effect/turf_decal/siding/red{
-	color = "#440000";
-	dir = 1
-	},
 /obj/item/clipboard,
 /obj/item/clipboard,
 /obj/item/lcl_pacifiers,
 /obj/item/lcl_duel,
 /turf/open/floor/lce/plate,
-/area/lce/containment/heavy/control_one)
+/area/lce/containment/heavy/one)
 "AZ" = (
 /obj/structure/table/reinforced{
 	max_integrity = 25
@@ -4253,7 +4351,8 @@
 	dir = 8
 	},
 /obj/effect/turf_decal/trimline/red/filled/line{
-	dir = 5
+	dir = 5;
+	color = "#808080"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/one)
@@ -4272,6 +4371,13 @@
 /obj/effect/turf_decal/tile/blue,
 /turf/open/floor/plasteel/white,
 /area/lce/medical/bay)
+"Bf" = (
+/obj/machinery/computer/camera_advanced/lce_claw{
+	dir = 1;
+	color = "#955C23"
+	},
+/turf/open/floor/lce/plate/dark,
+/area/lce/containment/light/four)
 "Bg" = (
 /obj/effect/turf_decal/stripes/white/line{
 	color = "#5269e9";
@@ -4282,7 +4388,7 @@
 "Bj" = (
 /obj/effect/turf_decal/trimline/blue/filled/end{
 	dir = 8;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/three)
@@ -4370,17 +4476,17 @@
 "BE" = (
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	dir = 1;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /obj/effect/turf_decal/trimline/blue/filled/corner{
 	dir = 8;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/two)
 "BG" = (
 /obj/effect/turf_decal/trimline/blue/filled{
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /obj/structure/fans/tiny,
 /turf/open/floor/pod/dark/lce/dark,
@@ -4388,7 +4494,7 @@
 "BH" = (
 /obj/machinery/door/airlock/medical{
 	name = "triage";
-	color = "955C23"
+	color = "#955C23"
 	},
 /turf/open/floor/lce/tile/bright,
 /area/lce/medical/aid_light)
@@ -4417,14 +4523,14 @@
 /area/lce/service/kitchen)
 "BM" = (
 /obj/structure/table/reinforced{
-	color = "49473B";
+	color = "#49473B";
 	pixel_y = 1
 	},
 /obj/machinery/stonkmarket{
 	pixel_y = 10
 	},
 /turf/open/floor/mineral/plastitanium{
-	color = "EDD956"
+	color = "#EDD956"
 	},
 /area/lce/security/udjat_quarters)
 "BQ" = (
@@ -4454,23 +4560,27 @@
 /area/lce/security/udjat_quarters)
 "Cd" = (
 /obj/effect/turf_decal/arrows/white{
-	color = "FF8C00";
+	color = "#FF8C00";
 	dir = 4
 	},
 /obj/effect/turf_decal/stripes/white/corner{
 	dir = 4;
-	color = "FF8C00"
+	color = "#FF8C00"
 	},
 /turf/open/floor/plasteel/white,
 /area/lce/medical/bay)
 "Ce" = (
 /obj/effect/turf_decal/trimline/red/filled/corner{
-	dir = 1
+	dir = 1;
+	color = "#808080"
 	},
 /obj/effect/turf_decal/trimline/red/filled/line{
-	dir = 4
+	dir = 4;
+	color = "#808080"
 	},
-/obj/effect/turf_decal/stripes/red/line,
+/obj/effect/turf_decal/stripes/red/line{
+	color = "#808080"
+	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/two)
 "Cf" = (
@@ -4526,7 +4636,7 @@
 "Cz" = (
 /obj/effect/turf_decal/trimline/blue/filled/end{
 	dir = 8;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/four)
@@ -4536,7 +4646,7 @@
 "CM" = (
 /obj/effect/turf_decal/trimline/blue/filled/end{
 	dir = 8;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/one)
@@ -4551,7 +4661,7 @@
 "CQ" = (
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	dir = 8;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/two)
@@ -4589,13 +4699,15 @@
 /turf/open/floor/noslip,
 /area/lce/command/lounge)
 "CY" = (
-/obj/effect/turf_decal/stripes/red/line,
+/obj/effect/turf_decal/stripes/red/line{
+	color = "#808080"
+	},
 /obj/machinery/light,
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/one)
 "CZ" = (
 /obj/effect/turf_decal/trimline/blue/filled{
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /obj/structure/fans/tiny,
 /obj/machinery/light{
@@ -4616,17 +4728,19 @@
 "Df" = (
 /obj/effect/decal/cleanable/blood/gibs/old,
 /obj/effect/decal/cleanable/blood/gibs/limb,
-/obj/effect/turf_decal/trimline/red/filled,
+/obj/effect/turf_decal/trimline/red/filled{
+	color = "#808080"
+	},
 /obj/structure/fans/tiny,
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/one)
 "Dh" = (
 /obj/effect/turf_decal/trimline/blue/filled/line{
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /obj/effect/turf_decal/trimline/blue/filled/corner{
 	dir = 4;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/three)
@@ -4683,13 +4797,16 @@
 /area/lce/service/kitchen)
 "Dz" = (
 /obj/effect/turf_decal/trimline/red/filled/line{
-	dir = 1
+	dir = 1;
+	color = "#808080"
 	},
 /obj/effect/turf_decal/trimline/red/filled/corner{
-	dir = 8
+	dir = 8;
+	color = "#808080"
 	},
 /obj/effect/turf_decal/stripes/red/line{
-	dir = 4
+	dir = 4;
+	color = "#808080"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/one)
@@ -4711,7 +4828,7 @@
 	desc = "A comfortable seat. Since its custom made, its quite expensive"
 	},
 /turf/open/floor/mineral/plastitanium{
-	color = "EDD956"
+	color = "#EDD956"
 	},
 /area/lce/security/udjat_quarters)
 "DJ" = (
@@ -4732,7 +4849,7 @@
 	name = "high-security maintenance hatch";
 	max_integrity = 3000;
 	integrity_failure = 0.01;
-	color = "955C23"
+	color = "#955C23"
 	},
 /obj/structure/cable,
 /turf/open/floor/lce/deck,
@@ -4778,13 +4895,13 @@
 /area/lce/security/checkpoint)
 "Ed" = (
 /obj/effect/turf_decal/trimline/blue/filled/end{
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/three)
 "Ee" = (
 /obj/effect/turf_decal/trimline/blue/filled/line{
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/one)
@@ -4832,21 +4949,21 @@
 	dir = 4
 	},
 /turf/open/floor/mineral/plastitanium{
-	color = "EDD956"
+	color = "#EDD956"
 	},
 /area/lce/security/udjat_quarters)
 "Er" = (
 /obj/effect/turf_decal/trimline/blue/filled/corner{
 	dir = 8;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	dir = 5;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /obj/effect/turf_decal/trimline/blue/filled/corner{
 	dir = 4;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /obj/machinery/light{
 	dir = 4;
@@ -4905,7 +5022,7 @@
 	},
 /obj/item/binoculars,
 /obj/structure/table/reinforced{
-	color = "955C23"
+	color = "#955C23"
 	},
 /obj/machinery/light{
 	dir = 8;
@@ -4913,7 +5030,7 @@
 	pixel_y = 4
 	},
 /turf/open/floor/lce/plate/dark,
-/area/lce/containment/light/control_west)
+/area/lce/containment/light/two)
 "EO" = (
 /obj/machinery/computer/slot_machine,
 /turf/open/floor/wood,
@@ -4925,6 +5042,14 @@
 	},
 /turf/open/floor/lce/tile/bright/grate,
 /area/lce/security/checkpoint)
+"EQ" = (
+/obj/machinery/modular_computer/console/preset/research{
+	resistance_flags = 115;
+	dir = 1;
+	color = "#955C23"
+	},
+/turf/open/floor/lce/plate,
+/area/lce/containment/heavy/one)
 "ES" = (
 /obj/machinery/light{
 	dir = 4;
@@ -4936,7 +5061,7 @@
 "EY" = (
 /obj/machinery/door/airlock/highsecurity{
 	name = "Cell 5 and 6 observation room";
-	color = "955C23"
+	color = "#955C23"
 	},
 /turf/open/floor/lce/plate/bright,
 /area/lce/containment/light/control_east)
@@ -4951,31 +5076,33 @@
 /area/lce/service/cryo)
 "Fa" = (
 /obj/effect/turf_decal/trimline/blue/filled/corner{
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	dir = 9;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/four)
 "Fb" = (
 /obj/effect/turf_decal/trimline/red/filled/line{
-	dir = 4
+	dir = 4;
+	color = "#808080"
 	},
 /obj/effect/turf_decal/stripes/red/line{
-	dir = 8
+	dir = 8;
+	color = "#808080"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/two)
 "Fe" = (
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	dir = 1;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /obj/effect/turf_decal/trimline/blue/filled/corner{
 	dir = 8;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/one)
@@ -5018,7 +5145,7 @@
 	req_access_txt = "1";
 	max_integrity = 3000;
 	integrity_failure = 0.01;
-	color = "955C23"
+	color = "#955C23"
 	},
 /turf/open/floor/lce/tile/bright,
 /area/lce/security/checkpoint)
@@ -5039,12 +5166,12 @@
 /obj/structure/filingcabinet/chestdrawer{
 	pixel_x = 8;
 	pixel_y = 4;
-	color = "955C23"
+	color = "#955C23"
 	},
 /obj/structure/filingcabinet/chestdrawer{
 	pixel_x = -8;
 	pixel_y = 4;
-	color = "955C23"
+	color = "#955C23"
 	},
 /obj/machinery/light{
 	dir = 4;
@@ -5052,7 +5179,7 @@
 	pixel_y = 4
 	},
 /turf/open/floor/lce/plate/dark,
-/area/lce/containment/light/control_west)
+/area/lce/containment/light/two)
 "FA" = (
 /obj/machinery/roulette,
 /turf/open/floor/wood,
@@ -5076,6 +5203,19 @@
 	},
 /turf/open/floor/mineral/titanium/tiled/purple,
 /area/lce/research)
+"FI" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 8
+	},
+/obj/effect/turf_decal/caution{
+	dir = 4
+	},
+/obj/effect/turf_decal/arrows{
+	dir = 1
+	},
+/obj/effect/turf_decal/arrows,
+/turf/open/floor/lce/plate/dark,
+/area/lce/containment/heavy/approach)
 "FJ" = (
 /obj/structure/flora/ausbushes/pointybush,
 /turf/open/floor/grass,
@@ -5101,13 +5241,16 @@
 /area/lce/medical/surgery)
 "FR" = (
 /obj/effect/turf_decal/trimline/red/filled/corner{
-	dir = 1
+	dir = 1;
+	color = "#808080"
 	},
 /obj/effect/turf_decal/stripes/red/line{
-	dir = 4
+	dir = 4;
+	color = "#808080"
 	},
 /obj/effect/turf_decal/caution/red{
-	dir = 8
+	dir = 8;
+	color = "#808080"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/one)
@@ -5139,7 +5282,8 @@
 /area/lce/containment/heavy/control_one)
 "Ge" = (
 /obj/effect/turf_decal/stripes/red/line{
-	dir = 1
+	dir = 1;
+	color = "#808080"
 	},
 /obj/machinery/light{
 	dir = 1;
@@ -5153,7 +5297,7 @@
 /area/lce/containment/heavy/two)
 "Gf" = (
 /obj/effect/turf_decal/tile{
-	color = "FF8C00";
+	color = "#FF8C00";
 	alpha = 150
 	},
 /obj/effect/turf_decal/tile{
@@ -5187,14 +5331,15 @@
 "Go" = (
 /obj/effect/turf_decal/trimline/blue/filled/end{
 	dir = 1;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/three)
 "Gp" = (
 /obj/effect/decal/cleanable/blood/tracks,
 /obj/effect/turf_decal/trimline/red/filled/line{
-	dir = 4
+	dir = 4;
+	color = "#808080"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/two)
@@ -5269,7 +5414,7 @@
 "GQ" = (
 /obj/structure/closet/crate/bin,
 /turf/open/floor/mineral/plastitanium{
-	color = "EDD956"
+	color = "#EDD956"
 	},
 /area/lce/security/udjat_quarters)
 "GR" = (
@@ -5286,7 +5431,9 @@
 "GY" = (
 /obj/effect/decal/cleanable/blood/gibs/old,
 /obj/effect/decal/cleanable/blood/gibs/limb,
-/obj/effect/turf_decal/trimline/red/filled,
+/obj/effect/turf_decal/trimline/red/filled{
+	color = "#808080"
+	},
 /obj/structure/fans/tiny,
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/two)
@@ -5306,9 +5453,12 @@
 /area/lce/service/lounge)
 "Hi" = (
 /obj/effect/decal/cleanable/blood/old,
-/obj/effect/turf_decal/trimline/red/filled/line,
+/obj/effect/turf_decal/trimline/red/filled/line{
+	color = "#808080"
+	},
 /obj/effect/turf_decal/stripes/red/line{
-	dir = 10
+	dir = 10;
+	color = "#808080"
 	},
 /obj/machinery/light{
 	dir = 1;
@@ -5325,9 +5475,12 @@
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/two)
+"Hk" = (
+/turf/closed/indestructible/reinforced/cheap/lce/dark,
+/area/lce/containment/heavy/one)
 "Hm" = (
 /obj/effect/turf_decal/trimline/blue/filled{
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /obj/structure/fans/tiny,
 /obj/machinery/light{
@@ -5348,7 +5501,7 @@
 /obj/machinery/door/poddoor{
 	name = "LSZ Containment Door #4";
 	id = "LSZ Containment Door #4";
-	color = "955C23"
+	color = "#955C23"
 	},
 /turf/open/floor/lce/plate/dark,
 /area/lce/containment/light/two)
@@ -5366,7 +5519,7 @@
 "Hx" = (
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	dir = 4;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/two)
@@ -5386,7 +5539,7 @@
 	network_id = 52
 	},
 /obj/structure/table/reinforced{
-	color = "955C23"
+	color = "#955C23"
 	},
 /turf/open/floor/lce/tile/bright,
 /area/lce/security/checkpoint)
@@ -5405,13 +5558,16 @@
 "HR" = (
 /obj/effect/decal/cleanable/blood/old,
 /obj/effect/turf_decal/trimline/red/filled/corner{
-	dir = 8
+	dir = 8;
+	color = "#808080"
 	},
 /obj/effect/turf_decal/stripes/red/line{
-	dir = 4
+	dir = 4;
+	color = "#808080"
 	},
 /obj/effect/turf_decal/caution/red{
-	dir = 8
+	dir = 8;
+	color = "#808080"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/one)
@@ -5433,7 +5589,8 @@
 /area/lce/service/washroom)
 "Id" = (
 /obj/effect/turf_decal/trimline/red/filled/line{
-	dir = 6
+	dir = 6;
+	color = "#808080"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/two)
@@ -5448,16 +5605,23 @@
 /obj/machinery/biogenerator,
 /turf/open/floor/plasteel/white,
 /area/lce/service/kitchen)
+"Ih" = (
+/obj/machinery/computer/camera_advanced/lce_claw{
+	dir = 1;
+	color = "#955C23"
+	},
+/turf/open/floor/lce/plate/dark,
+/area/lce/containment/light/one)
 "Ij" = (
 /obj/structure/filingcabinet/chestdrawer{
 	pixel_x = 8;
 	pixel_y = 4;
-	color = "955C23"
+	color = "#955C23"
 	},
 /obj/structure/filingcabinet/chestdrawer{
 	pixel_x = -8;
 	pixel_y = 4;
-	color = "955C23"
+	color = "#955C23"
 	},
 /obj/machinery/light{
 	dir = 8;
@@ -5465,7 +5629,7 @@
 	pixel_y = 4
 	},
 /turf/open/floor/lce/plate/dark,
-/area/lce/containment/light/control_east)
+/area/lce/containment/light/three)
 "Ik" = (
 /turf/closed/indestructible/reinforced{
 	color = "#9cadc7"
@@ -5473,18 +5637,24 @@
 /area/lce/medical)
 "Im" = (
 /obj/effect/decal/cleanable/blood/old,
-/obj/effect/turf_decal/trimline/red/filled/line,
+/obj/effect/turf_decal/trimline/red/filled/line{
+	color = "#808080"
+	},
 /obj/effect/turf_decal/stripes/red/line{
-	dir = 10
+	dir = 10;
+	color = "#808080"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/one)
 "Is" = (
 /obj/effect/decal/cleanable/blood/old,
 /obj/effect/turf_decal/trimline/red/filled/corner{
-	dir = 4
+	dir = 4;
+	color = "#808080"
 	},
-/obj/effect/turf_decal/stripes/red/line,
+/obj/effect/turf_decal/stripes/red/line{
+	color = "#808080"
+	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/one)
 "Iu" = (
@@ -5525,7 +5695,8 @@
 	dir = 8
 	},
 /obj/effect/turf_decal/trimline/red/filled/line{
-	dir = 1
+	dir = 1;
+	color = "#808080"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/one)
@@ -5563,7 +5734,8 @@
 "IQ" = (
 /obj/effect/decal/cleanable/blood/old,
 /obj/effect/turf_decal/trimline/red/filled/line{
-	dir = 10
+	dir = 10;
+	color = "#808080"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/two)
@@ -5586,9 +5758,12 @@
 /area/lce/service/washroom)
 "IW" = (
 /obj/effect/decal/cleanable/blood/old,
-/obj/effect/turf_decal/trimline/red/filled/corner,
+/obj/effect/turf_decal/trimline/red/filled/corner{
+	color = "#808080"
+	},
 /obj/effect/turf_decal/stripes/red/line{
-	dir = 8
+	dir = 8;
+	color = "#808080"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/one)
@@ -5620,7 +5795,7 @@
 	name = "high-security maintenance hatch";
 	max_integrity = 3000;
 	integrity_failure = 0.01;
-	color = "955C23"
+	color = "#955C23"
 	},
 /turf/open/floor/facility/halls,
 /area/lce/containment/heavy)
@@ -5654,27 +5829,31 @@
 	name = "high-security maintenance hatch";
 	max_integrity = 3000;
 	integrity_failure = 0.01;
-	color = "955C23"
+	color = "#955C23"
 	},
 /obj/structure/cable,
 /turf/open/floor/facility/halls,
 /area/lce/containment/heavy)
+"Jv" = (
+/obj/effect/turf_decal/stripes/corner,
+/turf/open/floor/lce/plate/dark,
+/area/lce/containment/heavy)
 "Jw" = (
 /obj/structure/chair/comfy/shuttle{
-	color = "49473B";
+	color = "#49473B";
 	name = "fancy chair";
 	desc = "A comfortable seat. Since its custom made, its quite expensive";
 	dir = 1;
 	pixel_y = 2
 	},
 /turf/open/floor/mineral/plastitanium{
-	color = "EDD956"
+	color = "#EDD956"
 	},
 /area/lce/security/udjat_quarters)
 "Jx" = (
 /obj/effect/turf_decal/siding/blue{
 	dir = 1;
-	color = "955C23"
+	color = "#955C23"
 	},
 /turf/open/floor/lce/plate/bright,
 /area/lce/containment/light/control_east)
@@ -5689,7 +5868,7 @@
 "JF" = (
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	dir = 8;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/three)
@@ -5707,7 +5886,7 @@
 	desc = "A comfortable seat. Since its custom made, its quite expensive"
 	},
 /turf/open/floor/mineral/plastitanium{
-	color = "EDD956"
+	color = "#EDD956"
 	},
 /area/lce/security/udjat_quarters)
 "JQ" = (
@@ -5734,13 +5913,14 @@
 /obj/machinery/door/poddoor{
 	name = "LSZ Containment Door #3";
 	id = "LSZ Containment Door #3";
-	color = "955C23"
+	color = "#955C23"
 	},
 /turf/open/floor/lce/plate/dark,
 /area/lce/containment/light/one)
 "JY" = (
 /obj/effect/turf_decal/stripes/red/line{
-	dir = 8
+	dir = 8;
+	color = "#808080"
 	},
 /obj/machinery/light{
 	dir = 8;
@@ -5828,24 +6008,27 @@
 "KR" = (
 /obj/effect/decal/cleanable/blood/old,
 /obj/effect/turf_decal/trimline/red/filled/corner{
-	dir = 4
+	dir = 4;
+	color = "#808080"
 	},
-/obj/effect/turf_decal/stripes/red/line,
+/obj/effect/turf_decal/stripes/red/line{
+	color = "#808080"
+	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/two)
 "KS" = (
 /obj/structure/filingcabinet/chestdrawer{
 	pixel_x = -8;
 	pixel_y = 4;
-	color = "955C23"
+	color = "#955C23"
 	},
 /obj/structure/filingcabinet/chestdrawer{
 	pixel_x = 8;
 	pixel_y = 4;
-	color = "955C23"
+	color = "#955C23"
 	},
 /turf/open/floor/lce/plate,
-/area/lce/containment/heavy/control_two)
+/area/lce/containment/heavy/two)
 "KV" = (
 /obj/structure/chair/office/light{
 	dir = 4;
@@ -5898,11 +6081,11 @@
 /turf/open/floor/mineral/titanium/tiled/white,
 /area/lce/hallway/west)
 "Ly" = (
-/obj/machinery/modular_computer/console/preset/research{
-	resistance_flags = 115
+/obj/machinery/computer/camera_advanced/lce_claw{
+	color = "#955C23"
 	},
 /turf/open/floor/lce/plate,
-/area/lce/containment/heavy/control_two)
+/area/lce/containment/heavy/two)
 "Lz" = (
 /obj/machinery/light{
 	dir = 4;
@@ -5977,7 +6160,9 @@
 /area/lce/research)
 "Mg" = (
 /obj/effect/decal/cleanable/xenoblood/xsplatter,
-/obj/effect/turf_decal/trimline/red/filled,
+/obj/effect/turf_decal/trimline/red/filled{
+	color = "#808080"
+	},
 /obj/structure/fans/tiny,
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/one)
@@ -5993,13 +6178,20 @@
 	},
 /turf/closed/indestructible/reinforced/cheap/lce/dark,
 /area/lce/security/checkpoint)
+"Mv" = (
+/obj/effect/turf_decal/stripes/corner{
+	dir = 8
+	},
+/obj/structure/barricade/security,
+/turf/open/floor/lce/plate/dark,
+/area/lce/containment/heavy/approach)
 "Mw" = (
 /obj/machinery/door/airlock/maintenance_hatch{
 	req_access_txt = "1";
 	name = "low-security maintenance hatch";
 	max_integrity = 3000;
 	integrity_failure = 0.01;
-	color = "955C23"
+	color = "#955C23"
 	},
 /obj/structure/cable,
 /turf/open/floor/lce/plate/bright,
@@ -6026,7 +6218,7 @@
 /area/lce/command/briefing)
 "MD" = (
 /obj/effect/turf_decal/tile{
-	color = "FF8C00";
+	color = "#FF8C00";
 	alpha = 150;
 	dir = 1
 	},
@@ -6081,11 +6273,11 @@
 /area/lce/medical/surgery)
 "Nb" = (
 /obj/effect/turf_decal/trimline/blue/filled/corner{
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	dir = 9;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/three)
@@ -6109,7 +6301,7 @@
 	req_access_txt = "3;19"
 	},
 /turf/open/floor/mineral/plastitanium{
-	color = "EDD956"
+	color = "#EDD956"
 	},
 /area/lce/security/udjat_armoury)
 "Nm" = (
@@ -6129,24 +6321,25 @@
 /area/lce/service/kitchen)
 "Nn" = (
 /obj/effect/turf_decal/stripes/red/line{
-	dir = 1
+	dir = 1;
+	color = "#808080"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/one)
 "No" = (
 /obj/effect/turf_decal/trimline/blue/filled{
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /obj/structure/fans/tiny,
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/four)
 "Nq" = (
 /obj/effect/turf_decal/trimline/blue/filled/line{
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /obj/effect/turf_decal/trimline/blue/filled/corner{
 	dir = 4;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/one)
@@ -6154,7 +6347,9 @@
 /obj/effect/decal/cleanable/blood/tracks{
 	dir = 10
 	},
-/obj/effect/turf_decal/trimline/red/filled,
+/obj/effect/turf_decal/trimline/red/filled{
+	color = "#808080"
+	},
 /obj/structure/fans/tiny,
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/two)
@@ -6174,22 +6369,22 @@
 	name = "low-security maintenance hatch";
 	max_integrity = 3000;
 	integrity_failure = 0.01;
-	color = "955C23"
+	color = "#955C23"
 	},
 /turf/open/floor/facility/halls,
 /area/lce/medical/aid_light)
 "Nx" = (
 /obj/effect/turf_decal/trimline/blue/filled/corner{
 	dir = 8;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	dir = 5;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /obj/effect/turf_decal/trimline/blue/filled/corner{
 	dir = 4;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /obj/machinery/light{
 	dir = 1;
@@ -6227,11 +6422,15 @@
 /area/lce/research)
 "NG" = (
 /obj/effect/turf_decal/trimline/red/filled/corner{
-	dir = 4
+	dir = 4;
+	color = "#808080"
 	},
-/obj/effect/turf_decal/trimline/red/filled/line,
+/obj/effect/turf_decal/trimline/red/filled/line{
+	color = "#808080"
+	},
 /obj/effect/turf_decal/stripes/red/line{
-	dir = 8
+	dir = 8;
+	color = "#808080"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/two)
@@ -6320,17 +6519,19 @@
 /area/lce/security/udjat_quarters)
 "Om" = (
 /obj/effect/turf_decal/trimline/red/filled/line{
-	dir = 8
+	dir = 8;
+	color = "#808080"
 	},
 /obj/effect/turf_decal/stripes/red/line{
-	dir = 9
+	dir = 9;
+	color = "#808080"
 	},
 /obj/machinery/light,
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/one)
 "On" = (
 /obj/structure/table/reinforced{
-	color = "955C23"
+	color = "#955C23"
 	},
 /turf/open/floor/lce/plate/dark,
 /area/lce/command/briefing)
@@ -6435,14 +6636,17 @@
 /area/lce/service/dining)
 "OV" = (
 /obj/effect/turf_decal/trimline/red/filled/corner{
-	dir = 1
+	dir = 1;
+	color = "#808080"
 	},
-/obj/effect/turf_decal/stripes/red/line,
+/obj/effect/turf_decal/stripes/red/line{
+	color = "#808080"
+	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/one)
 "OW" = (
 /obj/effect/turf_decal/trimline/blue/filled/end{
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/one)
@@ -6468,10 +6672,12 @@
 "Pd" = (
 /obj/effect/decal/cleanable/blood/old,
 /obj/effect/turf_decal/trimline/red/filled/corner{
-	dir = 8
+	dir = 8;
+	color = "#808080"
 	},
 /obj/effect/turf_decal/stripes/red/line{
-	dir = 4
+	dir = 4;
+	color = "#808080"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/two)
@@ -6485,10 +6691,12 @@
 /area/lce/medical)
 "Pf" = (
 /obj/effect/turf_decal/trimline/red/filled/corner{
-	dir = 8
+	dir = 8;
+	color = "#808080"
 	},
 /obj/effect/turf_decal/stripes/red/line{
-	dir = 1
+	dir = 1;
+	color = "#808080"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/one)
@@ -6544,7 +6752,7 @@
 	},
 /obj/effect/spawner/structure/window/reinforced/lce,
 /turf/open/floor/lce/plate/dark,
-/area/lce/containment/heavy/control_one)
+/area/lce/containment/heavy/one)
 "Pz" = (
 /obj/structure/sink{
 	dir = 4;
@@ -6559,7 +6767,7 @@
 /area/lce/service/washroom)
 "PB" = (
 /obj/structure/table/reinforced{
-	color = "955C23"
+	color = "#955C23"
 	},
 /obj/machinery/button/door/indestructible{
 	id = "LSZ Containment Door #6"
@@ -6567,14 +6775,14 @@
 /obj/item/lcl_pacifiers,
 /obj/item/lcl_duel,
 /turf/open/floor/lce/plate/dark,
-/area/lce/containment/light/control_east)
+/area/lce/containment/light/three)
 "PD" = (
 /obj/structure/chair/office/light{
 	dir = 1
 	},
 /obj/effect/turf_decal/siding/blue{
 	dir = 1;
-	color = "955C23"
+	color = "#955C23"
 	},
 /turf/open/floor/lce/plate/bright,
 /area/lce/containment/light/control_east)
@@ -6589,7 +6797,7 @@
 /area/lce/command/briefing)
 "PH" = (
 /obj/effect/turf_decal/trimline/blue/filled/end{
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/four)
@@ -6599,11 +6807,11 @@
 /area/lce/outdoors)
 "PM" = (
 /obj/structure/table/reinforced{
-	color = "49473B";
+	color = "#49473B";
 	pixel_y = 1
 	},
 /turf/open/floor/mineral/plastitanium{
-	color = "EDD956"
+	color = "#EDD956"
 	},
 /area/lce/security/udjat_quarters)
 "PO" = (
@@ -6677,11 +6885,11 @@
 /area/lce/command/manager)
 "Qt" = (
 /obj/effect/turf_decal/trimline/blue/filled/line{
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /obj/effect/turf_decal/trimline/blue/filled/corner{
 	dir = 4;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/two)
@@ -6715,10 +6923,12 @@
 	dir = 8
 	},
 /obj/effect/turf_decal/trimline/red/filled/line{
-	dir = 8
+	dir = 8;
+	color = "#808080"
 	},
 /obj/effect/turf_decal/stripes/red/line{
-	dir = 4
+	dir = 4;
+	color = "#808080"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/one)
@@ -6750,7 +6960,7 @@
 /area/lce/service/kitchen)
 "QP" = (
 /obj/effect/turf_decal/trimline/blue/filled{
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /obj/structure/fans/tiny,
 /turf/open/floor/pod/dark/lce/dark,
@@ -6796,32 +7006,29 @@
 	dir = 8
 	},
 /obj/effect/turf_decal/trimline/red/filled/line{
-	dir = 5
+	dir = 5;
+	color = "#808080"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/two)
 "Ro" = (
 /obj/effect/turf_decal/trimline/blue/filled/corner{
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	dir = 9;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/one)
 "Rq" = (
 /obj/structure/filingcabinet/chestdrawer{
 	pixel_x = -8;
-	color = "955C23"
+	color = "#955C23"
 	},
 /obj/structure/filingcabinet/chestdrawer{
 	pixel_x = 8;
-	color = "955C23"
-	},
-/obj/effect/turf_decal/siding/blue{
-	dir = 1;
-	color = "955C23"
+	color = "#955C23"
 	},
 /obj/machinery/light{
 	dir = 8;
@@ -6829,7 +7036,7 @@
 	pixel_y = 4
 	},
 /turf/open/floor/lce/plate/dark,
-/area/lce/containment/light/control_west)
+/area/lce/containment/light/one)
 "Rv" = (
 /obj/machinery/light{
 	dir = 1;
@@ -6844,7 +7051,7 @@
 /area/lce/service/memorial)
 "RA" = (
 /obj/effect/turf_decal/arrows/white{
-	color = "FF8C00"
+	color = "#FF8C00"
 	},
 /turf/open/floor/plasteel/white,
 /area/lce/medical/bay)
@@ -6860,7 +7067,7 @@
 "RK" = (
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	dir = 10;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/three)
@@ -6886,7 +7093,7 @@
 	name = "cell 2 door button"
 	},
 /turf/open/floor/lce/plate,
-/area/lce/containment/heavy/control_two)
+/area/lce/containment/heavy/two)
 "RQ" = (
 /obj/structure/filingcabinet/chestdrawer{
 	pixel_x = -8;
@@ -6903,11 +7110,11 @@
 "RS" = (
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	dir = 1;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /obj/effect/turf_decal/trimline/blue/filled/corner{
 	dir = 8;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/three)
@@ -6917,7 +7124,7 @@
 	req_access_txt = "1";
 	max_integrity = 3000;
 	integrity_failure = 0.01;
-	color = "955C23"
+	color = "#955C23"
 	},
 /turf/open/floor/mineral/titanium/tiled,
 /area/lce/security/checkpoint)
@@ -7000,7 +7207,7 @@
 /obj/item/storage/box/monkeycubes,
 /obj/item/storage/box/monkeycubes,
 /turf/open/floor/lce/plate,
-/area/lce/containment/heavy/control_two)
+/area/lce/containment/heavy/two)
 "Sr" = (
 /obj/structure/railing{
 	dir = 6
@@ -7020,7 +7227,7 @@
 	dir = 4
 	},
 /obj/effect/turf_decal/tile{
-	color = "FF8C00";
+	color = "#FF8C00";
 	alpha = 150;
 	dir = 1
 	},
@@ -7083,15 +7290,11 @@
 "SN" = (
 /obj/structure/filingcabinet/chestdrawer{
 	pixel_x = -8;
-	color = "955C23"
+	color = "#955C23"
 	},
 /obj/structure/filingcabinet/chestdrawer{
 	pixel_x = 8;
-	color = "955C23"
-	},
-/obj/effect/turf_decal/siding/blue{
-	dir = 1;
-	color = "955C23"
+	color = "#955C23"
 	},
 /obj/machinery/light{
 	dir = 4;
@@ -7099,14 +7302,14 @@
 	pixel_y = 4
 	},
 /turf/open/floor/lce/plate/dark,
-/area/lce/containment/light/control_east)
+/area/lce/containment/light/four)
 "SS" = (
 /obj/effect/turf_decal/trimline/blue/filled/line{
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /obj/effect/turf_decal/trimline/blue/filled/corner{
 	dir = 4;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/four)
@@ -7133,13 +7336,14 @@
 	pixel_x = -5
 	},
 /obj/structure/table/reinforced{
-	color = "955C23"
+	color = "#955C23"
 	},
 /turf/open/floor/lce/tile/bright,
 /area/lce/medical/aid_light)
 "SZ" = (
 /obj/effect/turf_decal/stripes/red/line{
-	dir = 4
+	dir = 4;
+	color = "#808080"
 	},
 /obj/machinery/light{
 	dir = 4;
@@ -7162,7 +7366,7 @@
 /area/lce/research)
 "Tg" = (
 /obj/structure/table/reinforced{
-	color = "955C23"
+	color = "#955C23"
 	},
 /obj/machinery/button/door/indestructible{
 	id = "LSZ Containment Door #4"
@@ -7170,12 +7374,15 @@
 /obj/item/lcl_pacifiers,
 /obj/item/lcl_duel,
 /turf/open/floor/lce/plate/dark,
-/area/lce/containment/light/control_west)
+/area/lce/containment/light/two)
 "Tk" = (
 /obj/effect/turf_decal/trimline/red/filled/line{
-	dir = 1
+	dir = 1;
+	color = "#808080"
 	},
-/obj/effect/turf_decal/stripes/red/line,
+/obj/effect/turf_decal/stripes/red/line{
+	color = "#808080"
+	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/one)
 "Tm" = (
@@ -7218,11 +7425,11 @@
 "Tr" = (
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	dir = 1;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /obj/effect/turf_decal/trimline/blue/filled/corner{
 	dir = 8;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/four)
@@ -7253,14 +7460,14 @@
 "Tz" = (
 /obj/effect/turf_decal/trimline/blue/filled/end{
 	dir = 1;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/four)
 "TB" = (
 /obj/machinery/door/airlock/medical{
 	name = "triage";
-	color = "955C23"
+	color = "#955C23"
 	},
 /turf/open/floor/lce/tile/bright,
 /area/lce/medical/aid_heavy)
@@ -7270,12 +7477,16 @@
 /area/lce/medical/morgue)
 "TH" = (
 /obj/effect/decal/cleanable/blood/old,
-/obj/effect/turf_decal/trimline/red/filled/corner,
+/obj/effect/turf_decal/trimline/red/filled/corner{
+	color = "#808080"
+	},
 /obj/effect/turf_decal/stripes/red/line{
-	dir = 8
+	dir = 8;
+	color = "#808080"
 	},
 /obj/effect/turf_decal/caution/red{
-	dir = 4
+	dir = 4;
+	color = "#808080"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/two)
@@ -7285,11 +7496,20 @@
 	},
 /turf/open/floor/lce/tile/bright,
 /area/lce/containment/light/approach)
+"TJ" = (
+/obj/machinery/computer/camera_advanced/lce_claw{
+	color = "#955C23"
+	},
+/turf/open/floor/lce/plate/dark,
+/area/lce/containment/light/two)
 "TL" = (
 /obj/effect/turf_decal/trimline/red/filled/corner{
-	dir = 1
+	dir = 1;
+	color = "#808080"
 	},
-/obj/effect/turf_decal/stripes/red/line,
+/obj/effect/turf_decal/stripes/red/line{
+	color = "#808080"
+	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/two)
 "TP" = (
@@ -7298,11 +7518,11 @@
 "TU" = (
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	dir = 4;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /obj/effect/turf_decal/trimline/blue/filled/corner{
 	dir = 8;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/four)
@@ -7321,22 +7541,20 @@
 /obj/structure/table/reinforced{
 	color = "#ff7f7f"
 	},
-/obj/effect/turf_decal/siding/red{
-	color = "#440000";
-	dir = 1
-	},
 /obj/item/taperecorder,
 /obj/item/taperecorder,
 /obj/item/binoculars,
 /obj/item/binoculars,
 /turf/open/floor/lce/plate,
-/area/lce/containment/heavy/control_one)
+/area/lce/containment/heavy/one)
 "Ue" = (
 /obj/effect/turf_decal/trimline/red/filled/line{
-	dir = 4
+	dir = 4;
+	color = "#808080"
 	},
 /obj/effect/turf_decal/stripes/red/line{
-	dir = 6
+	dir = 6;
+	color = "#808080"
 	},
 /obj/machinery/light{
 	dir = 1;
@@ -7352,6 +7570,9 @@
 /turf/open/floor/lce/tile/bright/grate,
 /area/lce/containment/heavy)
 "Ui" = (
+/obj/effect/turf_decal/siding/blue{
+	color = "#955C23"
+	},
 /turf/open/floor/lce/plate/bright,
 /area/lce/containment/light/control_west)
 "Uk" = (
@@ -7366,7 +7587,7 @@
 	name = "high-security maintenance hatch";
 	max_integrity = 3000;
 	integrity_failure = 0.01;
-	color = "955C23"
+	color = "#955C23"
 	},
 /obj/structure/cable,
 /turf/open/floor/lce/deck,
@@ -7421,7 +7642,7 @@
 /area/lce/security/udjat_quarters)
 "UW" = (
 /obj/effect/turf_decal/trimline/blue/filled/line{
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/three)
@@ -7461,7 +7682,7 @@
 "Vd" = (
 /obj/effect/turf_decal/trimline/blue/filled/end{
 	dir = 4;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/two)
@@ -7496,7 +7717,8 @@
 "Vr" = (
 /obj/effect/decal/cleanable/blood/tracks,
 /obj/effect/turf_decal/trimline/red/filled/line{
-	dir = 5
+	dir = 5;
+	color = "#808080"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/one)
@@ -7506,10 +7728,12 @@
 /area/lce/hallway/west)
 "Vt" = (
 /obj/effect/turf_decal/trimline/red/filled/line{
-	dir = 1
+	dir = 1;
+	color = "#808080"
 	},
 /obj/effect/turf_decal/stripes/red/line{
-	dir = 5
+	dir = 5;
+	color = "#808080"
 	},
 /obj/machinery/light,
 /obj/machinery/light{
@@ -7566,7 +7790,8 @@
 	dir = 8
 	},
 /obj/effect/turf_decal/trimline/red/filled/line{
-	dir = 9
+	dir = 9;
+	color = "#808080"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/two)
@@ -7591,7 +7816,7 @@
 	req_access_txt = "3"
 	},
 /turf/open/floor/mineral/plastitanium{
-	color = "EDD956"
+	color = "#EDD956"
 	},
 /area/lce/security/udjat_quarters)
 "We" = (
@@ -7607,10 +7832,12 @@
 /area/lce/security/checkpoint)
 "Wg" = (
 /obj/effect/turf_decal/trimline/red/filled/line{
-	dir = 4
+	dir = 4;
+	color = "#808080"
 	},
 /obj/effect/turf_decal/stripes/red/line{
-	dir = 6
+	dir = 6;
+	color = "#808080"
 	},
 /obj/machinery/light{
 	dir = 8;
@@ -7652,6 +7879,15 @@
 /obj/structure/sigsystem/activator,
 /turf/open/floor/lce/plate/dark/grate,
 /area/lce/security/checkpoint)
+"Wr" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 8
+	},
+/obj/effect/turf_decal/caution/stand_clear{
+	dir = 4
+	},
+/turf/open/floor/lce/plate/dark,
+/area/lce/containment/heavy/approach)
 "Wu" = (
 /obj/effect/turf_decal/tile/bar,
 /obj/effect/turf_decal/tile/bar{
@@ -7664,14 +7900,13 @@
 /turf/open/floor/plasteel/white,
 /area/lce/service/dining)
 "Wz" = (
-/obj/effect/spawner/structure/window/reinforced{
-	max_integrity = 3000
-	},
+/obj/effect/spawner/structure/window/reinforced/lce,
 /turf/open/floor/lce/tile/bright,
 /area/lce/medical/aid_heavy)
 "WI" = (
 /obj/effect/turf_decal/trimline/red/filled/line{
-	dir = 10
+	dir = 10;
+	color = "#808080"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/two)
@@ -7714,7 +7949,7 @@
 /area/lce/containment/light)
 "WT" = (
 /obj/structure/chair/comfy/shuttle{
-	color = "49473B";
+	color = "#49473B";
 	name = "fancy chair";
 	desc = "A comfortable seat. Since its custom made, its quite expensive";
 	dir = 1;
@@ -7725,15 +7960,15 @@
 "WV" = (
 /obj/effect/turf_decal/trimline/blue/filled/corner{
 	dir = 8;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	dir = 5;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /obj/effect/turf_decal/trimline/blue/filled/corner{
 	dir = 4;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /obj/machinery/light{
 	dir = 1;
@@ -7849,7 +8084,7 @@
 /area/lce/research/reagent)
 "Xl" = (
 /obj/effect/turf_decal/trimline/blue/filled/line{
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/two)
@@ -7859,17 +8094,17 @@
 	},
 /obj/effect/turf_decal/siding/blue{
 	dir = 1;
-	color = "955C23"
+	color = "#955C23"
 	},
 /turf/open/floor/lce/plate/bright,
 /area/lce/containment/light/control_west)
 "Xp" = (
 /obj/effect/turf_decal/trimline/blue/filled/corner{
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	dir = 9;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/two)
@@ -7890,6 +8125,9 @@
 	name = "hidden security camera";
 	short_range = 13;
 	view_range = 13
+	},
+/obj/effect/turf_decal/siding/red{
+	color = "#440000"
 	},
 /turf/open/floor/lce/plate,
 /area/lce/containment/heavy/control_one)
@@ -7988,7 +8226,7 @@
 "XW" = (
 /obj/effect/turf_decal/trimline/blue/filled/end{
 	dir = 8;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/two)
@@ -8022,10 +8260,12 @@
 /area/lce/containment/light/approach)
 "Yh" = (
 /obj/effect/turf_decal/trimline/red/filled/line{
-	dir = 4
+	dir = 4;
+	color = "#808080"
 	},
 /obj/effect/turf_decal/stripes/red/line{
-	dir = 8
+	dir = 8;
+	color = "#808080"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/one)
@@ -8064,7 +8304,7 @@
 	dir = 4
 	},
 /obj/effect/turf_decal/tile{
-	color = "FF8C00";
+	color = "#FF8C00";
 	alpha = 150;
 	dir = 1
 	},
@@ -8099,7 +8339,7 @@
 /area/lce/containment/heavy/two)
 "YQ" = (
 /obj/effect/turf_decal/trimline/blue/filled/end{
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/two)
@@ -8144,10 +8384,12 @@
 	dir = 8
 	},
 /obj/effect/turf_decal/trimline/red/filled/line{
-	dir = 8
+	dir = 8;
+	color = "#808080"
 	},
 /obj/effect/turf_decal/stripes/red/line{
-	dir = 4
+	dir = 4;
+	color = "#808080"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/two)
@@ -8175,10 +8417,12 @@
 /area/lce/containment/light/approach)
 "Zo" = (
 /obj/effect/turf_decal/trimline/red/filled/corner{
-	dir = 8
+	dir = 8;
+	color = "#808080"
 	},
 /obj/effect/turf_decal/stripes/red/line{
-	dir = 1
+	dir = 1;
+	color = "#808080"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/two)
@@ -8212,12 +8456,16 @@
 /turf/open/floor/lce/deck,
 /area/lce/containment/heavy)
 "ZA" = (
-/obj/effect/turf_decal/trimline/red/filled/corner,
+/obj/effect/turf_decal/trimline/red/filled/corner{
+	color = "#808080"
+	},
 /obj/effect/turf_decal/trimline/red/filled/line{
-	dir = 8
+	dir = 8;
+	color = "#808080"
 	},
 /obj/effect/turf_decal/stripes/red/line{
-	dir = 1
+	dir = 1;
+	color = "#808080"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/two)
@@ -8261,12 +8509,12 @@
 /obj/item/lcl_pacifiers,
 /obj/item/lcl_duel,
 /turf/open/floor/lce/plate,
-/area/lce/containment/heavy/control_two)
+/area/lce/containment/heavy/two)
 "ZK" = (
 /obj/machinery/door/poddoor{
 	name = "LSZ Containment Door #5";
 	id = "LSZ Containment Door #5";
-	color = "955C23"
+	color = "#955C23"
 	},
 /turf/open/floor/lce/plate/dark,
 /area/lce/containment/light/four)
@@ -8280,18 +8528,18 @@
 "ZQ" = (
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	dir = 4;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /obj/effect/turf_decal/trimline/blue/filled/corner{
 	dir = 8;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/two)
 "ZR" = (
 /obj/effect/turf_decal/trimline/blue/filled/end{
 	dir = 1;
-	color = "955C23"
+	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/two)
@@ -30867,10 +31115,10 @@ eA
 eA
 eA
 eA
-nL
+eA
 nL
 Mw
-nL
+wm
 wm
 wm
 wm
@@ -31427,7 +31675,7 @@ eP
 eE
 XE
 bI
-mR
+EQ
 Px
 Wg
 Yh
@@ -31678,7 +31926,7 @@ kf
 eP
 eE
 tr
-kX
+sp
 uM
 Px
 uI
@@ -31875,10 +32123,10 @@ ZR
 lY
 nv
 tk
-AO
+TJ
 Av
 Ui
-wu
+Ih
 JD
 Nq
 yf
@@ -31930,7 +32178,7 @@ kf
 eP
 eE
 kX
-kX
+sp
 zj
 Px
 Pf
@@ -32379,10 +32627,10 @@ Hr
 Hr
 eA
 eA
-nL
+eA
 nL
 rz
-nL
+wm
 wm
 wm
 JU
@@ -32434,7 +32682,7 @@ kf
 eP
 eE
 XE
-kX
+sp
 Ub
 Px
 tu
@@ -32686,7 +32934,7 @@ kf
 eP
 eE
 kX
-kX
+sp
 wy
 Px
 hF
@@ -33190,9 +33438,9 @@ kf
 eP
 eE
 XE
-kX
+sp
 kT
-Gc
+Hk
 mj
 mj
 mj
@@ -33387,10 +33635,10 @@ mw
 mw
 YM
 YM
-XX
+YM
 XX
 EY
-XX
+MV
 MV
 MV
 ZK
@@ -33443,8 +33691,8 @@ Zy
 eE
 Gc
 kH
-Gc
-Gc
+Hk
+Hk
 mj
 mj
 mj
@@ -33696,14 +33944,14 @@ eE
 tH
 Af
 yc
-oX
-CD
-CD
-CD
-CD
-CD
-CD
-CD
+Mv
+FI
+Wr
+Wr
+Wr
+Wr
+Wr
+FI
 eE
 eP
 kf
@@ -34395,10 +34643,10 @@ Go
 jn
 zF
 IP
-rl
+yX
 Jx
 zs
-vo
+Bf
 Aj
 SS
 No
@@ -34899,10 +35147,10 @@ YM
 YM
 YM
 YM
-XX
+YM
 XX
 nP
-XX
+MV
 MV
 MV
 MV
@@ -37716,15 +37964,15 @@ Ka
 eE
 Vx
 Vx
-Vx
-CD
-CD
-CD
-CD
-CD
-CD
-CD
-QI
+Jv
+re
+gk
+gk
+gk
+gk
+gk
+re
+gq
 oj
 Re
 wH
@@ -37976,8 +38224,8 @@ yQ
 yQ
 yQ
 yQ
-QY
-QY
+xG
+xG
 sw
 QY
 eE
@@ -38228,7 +38476,7 @@ yQ
 yQ
 yQ
 yQ
-QY
+xG
 RO
 EE
 zZ
@@ -39993,7 +40241,7 @@ Pd
 Zh
 bm
 pn
-Ly
+sL
 ZV
 zZ
 eE

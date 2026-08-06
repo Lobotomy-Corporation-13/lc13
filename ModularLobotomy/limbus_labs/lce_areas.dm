@@ -1,15 +1,21 @@
 // Areas for the LCE labs, replacing the five facility_hallway areas laboratory.dmm used.
-// Subtypes facility_hallway so the Big Bird light suppression and the abnormality alert in
-// RefreshLights() still apply.
+//
+// parent_type rather than a /area/facility_hallway/lce path, because the map already carries 966
+// references to /area/lce/*. This is what actually inherits the facility behaviour: requires_power
+// = FALSE, forced dynamic lighting, the Big Bird light suppression, and the abnormality alert in
+// RefreshLights().
 
 /area/lce
+	parent_type = /area/facility_hallway
 	name = "Limbus Company Extraction"
 	icon_state = "lce_hall_central"
 
 /*			CONTAINMENT			*/
 
-// get_safe_random_station_turf() only picks turfs in areas with VALID_TERRITORY, so dropping the
-// flag here keeps random arrivals, cult summons, ninjas and dragon rifts out of the cells.
+// Now that /area/lce inherits from facility_hallway, every area here is in subtypesof() and so in
+// GLOB.allowed_random_drop_areas. get_safe_random_station_turf() only picks turfs in areas with
+// VALID_TERRITORY, so dropping the flag here is what keeps random arrivals - and cult summons,
+// ninjas and dragon rifts - out of the cells. Do not put it back.
 /area/lce/containment
 	name = "Containment"
 	icon_state = "lce_light_block"

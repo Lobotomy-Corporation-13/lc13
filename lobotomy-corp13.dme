@@ -4623,6 +4623,7 @@
 #include "ModularLobotomy\lc13_obj\lc13_computers\abnormality_work.dm"
 #include "ModularLobotomy\limbus_labs\!other_overwrites.dm"
 #include "ModularLobotomy\limbus_labs\lce_areas.dm"
+#include "ModularLobotomy\limbus_labs\lce_claw.dm"
 #include "ModularLobotomy\limbus_labs\lce_turfs.dm"
 #include "ModularLobotomy\limbus_labs\lce_windows.dm"
 #include "ModularLobotomy\limbus_labs\lcl_specimen_prefs_ui.dm"
