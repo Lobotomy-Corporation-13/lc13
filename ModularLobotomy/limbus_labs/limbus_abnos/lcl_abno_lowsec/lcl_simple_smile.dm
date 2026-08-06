@@ -48,7 +48,12 @@
 		var/obj/item/card/id/id_card = victim.get_idcard()
 		if(id_card)
 			AdjustDesire(30)
-			id_card.forceMove(get_turf(victim))
+			var/obj/item/holder = id_card.loc
+			if(istype(holder))
+				holder.RemoveID()
+				id_card.forceMove(get_turf(victim))
+			else
+				victim.dropItemToGround(id_card)
 			id_bump = FALSE
 
 	if(knockdown_count < max_knockdown)
@@ -68,10 +73,17 @@
 	. = ..()
 	if(!.)
 		return FALSE
-	gobbled_things += object
 	object.forceMove(src) //This cat just ate my fucking ID.
+	gobbled_things += object //Listed after the move, so Exited() cannot wipe the entry we just made.
 	if(gobbled_things.len >= max_gobble)
 		gobble = FALSE
+
+//Whatever leaves the stomach stops counting, however it left - deleted, teleported, or pulled
+//back out by its owner. A stale entry would otherwise keep the count full with nothing inside,
+//and Borrow would never work again.
+/mob/living/simple_animal/hostile/limbus_abno/simple_smile/Exited(atom/movable/AM, atom/newLoc)
+	. = ..()
+	gobbled_things -= AM
 
 /mob/living/simple_animal/hostile/limbus_abno/simple_smile/updatehealth()
 	..()
@@ -80,11 +92,11 @@
 
 /mob/living/simple_animal/hostile/limbus_abno/simple_smile/proc/PukeOut()
 	var/turf/T = get_turf(src)
-	for(var/obj/item/I in contents)
-		if(gobbled_things.Find(I))
-			playsound(get_turf(src), 'sound/effects/splat.ogg', 50, TRUE)
-			gobbled_things -= I
-			I.forceMove(T)
+	var/list/coughed_up = gobbled_things
+	gobbled_things = list() //Emptied up front: forceMove trips Exited(), which edits this list.
+	for(var/obj/item/I in coughed_up)
+		playsound(T, 'sound/effects/splat.ogg', 50, TRUE)
+		I.forceMove(T)
 
 ///The ability to eat things outright. Can't do it by default and needs to activate this ability first, giving them a limited amount of things to eat before the ability runs out.
 /datum/action/cooldown/limbus_abno_action/smile_gobble

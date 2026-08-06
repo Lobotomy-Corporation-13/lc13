@@ -431,6 +431,7 @@
 		return
 	var/key = "[user.ckey]-[attunement_family]"
 	GLOB.lce_attunement_affinity[key] = min(300, (GLOB.lce_attunement_affinity[key] || 0) + amt)
+	RefreshLCEAttunement(user, attunement_family) //A suit already on their back follows the new bond.
 
 /mob/living/simple_animal/hostile/limbus_abno/examine_more(mob/user)
 	if(user == src) //The player sees exact numbers; onlookers only get the vague description.

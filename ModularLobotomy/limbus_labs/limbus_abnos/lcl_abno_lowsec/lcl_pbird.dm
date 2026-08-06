@@ -13,7 +13,8 @@
 	abno_additional_instructions = "The world is full of sinners, and they must be punished, so that they know not to do it again. \
 	When taking damage, you will be able to dish out one singular extremely powerful strike. \
 	Otherwise, pecking people with your beak is enough to rise your mood, and also restore the sanity of your target, if they have not sinned, of course.\
-	If someone hurts you more than once, it is only fair that you strike them back as many times as they did, but if your target cannot be found, you will wait patiently in a more mercifull form"
+	If someone hurts you more than once, it is only fair that you strike them back as many times as they did, but if your target cannot be found, you will wait patiently in a more mercifull form. \
+	Settling back into that form mends you whole again, but the beak will not come back out for a minute afterwards."
 	original_abno = /mob/living/simple_animal/hostile/abnormality/punishing_bird
 
 	diet_list = list(/obj/item/seeds, /obj/item/food/breadslice, /obj/item/food/bread)
@@ -41,22 +42,34 @@
 	var/active_combo_timer_id
 	var/combo_active = FALSE
 	var/combo_counter = 1
+	//Calming down mends the bird whole, so the beak has to stay in for a while afterwards -
+	//otherwise every wound could be undone on demand by turning and turning back.
+	var/enrage_cooldown_time = 1 MINUTES
+	var/enrage_ready_at = 0
 
 //Being hit multiple times might add the same person more than one time in the sinner's list. That's on purpose as pbird gets a free angry hit on someone for everytime they hurt it.
+//Only something that could actually wound the bird is a sin - being prodded with a clipboard,
+//a repression device or any other harmless thing is not worth the beak.
 /mob/living/simple_animal/hostile/limbus_abno/pbird/attackby(obj/item/W, mob/user, params)
 	. = ..()
+	if(W.force <= 0)
+		return
 	if(HealthCheck())
 		Retaliate()
 		sinners += user
 
 /mob/living/simple_animal/hostile/limbus_abno/pbird/attack_animal(mob/living/simple_animal/M)
 	. = ..()
+	if(M.melee_damage_upper <= 0) //A nuzzle, not an attack. The parent turns these away too.
+		return
 	if(HealthCheck())
 		Retaliate()
 		sinners += M
 
 /mob/living/simple_animal/hostile/limbus_abno/pbird/bullet_act(obj/projectile/P)
 	. = ..()
+	if(P.damage <= 0 || !P.firer) //A sin needs a sinner, and an unfindable one is never struck off.
+		return
 	if(HealthCheck())
 		Retaliate()
 		sinners += P.firer
@@ -74,8 +87,37 @@
 		return FALSE
 	return TRUE
 
-/mob/living/simple_animal/hostile/limbus_abno/pbird/proc/Retaliate(mob/living/user)
+///TRUE if there is anyone home to take the lesson. A corpse cannot learn anything, and neither
+///can someone already driven out of their mind - which the bird does to people itself, so
+///pecking its own victims for mood would be farming.
+/mob/living/simple_animal/hostile/limbus_abno/pbird/proc/CanLearnLesson(atom/pecked)
+	if(!isliving(pecked))
+		return FALSE
+	var/mob/living/L = pecked
+	if(L.stat == DEAD)
+		return FALSE
+	if(ishuman(L))
+		var/mob/living/carbon/human/H = L
+		if(H.sanity_lost)
+			return FALSE
+	return TRUE
+
+///FALSE while the bird is still shaking off its last rampage.
+/mob/living/simple_animal/hostile/limbus_abno/pbird/proc/CanEnrage()
+	return world.time >= enrage_ready_at
+
+//Adds the bird's own state to the numeric readout it gets from examining itself.
+/mob/living/simple_animal/hostile/limbus_abno/pbird/SelfStatusReadout()
+	. = ..()
 	if(bird_angry)
+		. += "Enraged: YES ([sinners.len] sin\s left to answer for)"
+	else if(!CanEnrage())
+		. += "Enraged: no (the beak stays in for another [round((enrage_ready_at - world.time) / 10, 0.1)] second\s)"
+	else
+		. += "Enraged: no"
+
+/mob/living/simple_animal/hostile/limbus_abno/pbird/proc/Retaliate(mob/living/user)
+	if(bird_angry || !CanEnrage())
 		return
 	visible_message(span_danger("\The [src] turns its insides out as a giant bloody beak appears!"))
 	flick("pbird_transition", src)
@@ -121,6 +163,8 @@
 	adjustHealth(-maxHealth) // Full restoration
 	ChangeResistances(list(RED_DAMAGE = 2, WHITE_DAMAGE = 2, BLACK_DAMAGE = 2, PALE_DAMAGE = 2))
 	bird_angry = FALSE
+	enrage_ready_at = world.time + enrage_cooldown_time
+	to_chat(src, span_warning("Your beak is spent. It will not come out again for [enrage_cooldown_time / 10] seconds."))
 	update_icon()
 
 /mob/living/simple_animal/hostile/limbus_abno/pbird/AttackingTarget(atom/attacked_target)
@@ -129,7 +173,7 @@
 		return
 
 	if(!bird_angry)
-		if(target != src && isliving(target))
+		if(attacked_target != src && CanLearnLesson(attacked_target))
 			AdjustDesire(10)
 		if(!ishuman(attacked_target))
 			return ..()
@@ -234,6 +278,9 @@
 	var/mob/living/simple_animal/hostile/limbus_abno/pbird/bird = abno_user
 	if(bird.blind_punishment)
 		return FALSE //Don't start a CD if they still have a punishment charged up
+	if(!bird.bird_angry && !bird.CanEnrage())
+		to_chat(bird, span_warning("You are still shaking off your last rampage. The beak will not come out yet."))
+		return FALSE //Charging a punishment it cannot act on would waste the whole cooldown.
 	bird.blind_punishment = TRUE
 	bird.Retaliate()
 	StartCooldown()
