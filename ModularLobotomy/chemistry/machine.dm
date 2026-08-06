@@ -16,6 +16,7 @@
 		/datum/reagent/verdite,
 		/datum/reagent/ionovium,
 	)
+	circuit = null
 
 /obj/machinery/chem_dispenser/lc13/Initialize()
 	. = ..()
