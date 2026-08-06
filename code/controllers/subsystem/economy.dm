@@ -44,6 +44,9 @@ SUBSYSTEM_DEF(economy)
 /datum/controller/subsystem/economy/Initialize(timeofday)
 	var/budget_to_hand_out = round(budget_pool / department_accounts.len)
 	for(var/A in department_accounts)
+		if(A == ACCOUNT_CAR && SSmaptype.maptype == "limbus_labs")
+			new /datum/bank_account/department(A, LCE_STARTING_CARGO_BUDGET)
+			continue
 		new /datum/bank_account/department(A, budget_to_hand_out)
 	return ..()
 

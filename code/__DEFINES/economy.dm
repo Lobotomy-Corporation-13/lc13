@@ -14,6 +14,7 @@
 #define STATION_TARGET_BUFFER 40
 
 #define MAX_GRANT_DPT 500
+#define LCE_STARTING_CARGO_BUDGET 500
 
 //What should vending machines charge when you buy something in-department.
 #define VENDING_DISCOUNT 0.2

@@ -96,6 +96,25 @@
 		found += AM
 	return found
 
+//Deliveries arrive the same way exports leave: the pad flashes and the goods are simply there.
+//No pod, no crate - nothing drops out of the ceiling onto whoever is standing on the tile.
+/obj/machinery/lce_export_pad/proc/Deliver(datum/supply_pack/pack)
+	var/turf/here = get_turf(src)
+	if(!here || !pack)
+		return FALSE
+	PlayShipAnimation()
+	var/spawned = 0
+	for(var/item_path in pack.contains)
+		//`contains` may be flat or associative. The stock fill() only ever reads the keys, so a
+		//`= 8` would silently deliver one light tube; reading the value here makes the count real.
+		var/count = pack.contains[item_path] || 1
+		for(var/i in 1 to count)
+			new item_path(here)
+			spawned++
+			CHECK_TICK
+	visible_message(span_notice("[src] flares, and [spawned] item\s settle onto it."))
+	return TRUE
+
 /obj/machinery/lce_export_pad/proc/Export(mob/user)
 	if(busy || world.time < next_export)
 		to_chat(user, span_warning("The pad is still cycling."))
@@ -339,7 +358,6 @@
 	circuit = null
 	///Where deliveries land. Resolved to the nearest pad if not set on the map.
 	var/obj/machinery/lce_export_pad/pad
-	var/podType = /obj/structure/closet/supplypod
 
 /obj/machinery/computer/lce_cargo/Initialize(mapload)
 	. = ..()
@@ -436,9 +454,8 @@
 		say("Insufficient funds. [pack.name] costs [cost] Ahn.")
 		playsound(src, 'sound/machines/buzz-sigh.ogg', 40, FALSE)
 		return FALSE
-	var/datum/supply_order/order = new(pack, user?.real_name, user?.job, user?.ckey, "LCE requisition", account)
-	new /obj/effect/pod_landingzone(get_turf(landing), podType, order)
-	say("[pack.name] inbound. [account.account_balance] Ahn remaining.")
+	landing.Deliver(pack)
+	say("[pack.name] delivered. [account.account_balance] Ahn remaining.")
 	playsound(src, 'sound/machines/terminal_prompt_confirm.ogg', 50, FALSE)
 	return TRUE
 
