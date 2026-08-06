@@ -43,6 +43,9 @@
 	var/combo_wait = 50
 	/// Whether a multi-hit finisher sequence is in progress
 	var/in_sequence = FALSE
+	/// When FALSE, attack() does a plain hit - no chain, finisher, empower or
+	/// per-hit Sinking. For AI wielders that would mash combos by accident.
+	var/combos_enabled = TRUE
 
 /obj/item/ego_weapon/city/dieci/examine(mob/user)
 	. = ..()
@@ -104,6 +107,9 @@
 /obj/item/ego_weapon/city/dieci/attack(mob/living/target, mob/living/user)
 	if(!CanUseEgo(user))
 		return
+	// Combos disabled (AI wielders): just swing plainly, no chain or Sinking.
+	if(!combos_enabled)
+		return ..()
 	// During multi-hit finisher sequences, just do base damage
 	if(in_sequence)
 		. = ..()
@@ -179,6 +185,11 @@
 		damtype = initial(damtype)
 		extra_damage_flags = initial(extra_damage_flags)
 	hitsound = initial(hitsound)
+
+// Combo-less variant for AI wielders (the Envy's Dieci skin): plain swings,
+// no chain finishers, empowerment, or per-hit Sinking.
+/obj/item/ego_weapon/city/dieci/understudy
+	combos_enabled = FALSE
 
 // ============================================================
 // Combo Finishers

@@ -32,7 +32,7 @@
 	datum_reference.qliphoth_change(-1)
 
 /mob/living/simple_animal/hostile/abnormality/branch12/extermination/Initialize()
-	..()
+	. = ..()
 	addtimer(CALLBACK(src, PROC_REF(UpQliphoth)), 3 MINUTES)
 
 /mob/living/simple_animal/hostile/abnormality/branch12/extermination/proc/UpQliphoth()

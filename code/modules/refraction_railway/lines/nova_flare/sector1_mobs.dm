@@ -1,0 +1,452 @@
+/*
+ * Nova Flare — Sector 1 encounters.
+ * Node 1 the Mi-Go pack, Node 2 the mutant-clown family
+ * (Son/Father/Sister/Mother), Node 3 the refracted "Grandfather" boss
+ * with its four hearts. Refracted subtypes of base-game mobs tuned for
+ * the Nova Flare line.
+ */
+
+// ---------- Mi-Go (Node 1: "The Gap") ----------
+/mob/living/simple_animal/hostile/netherworld/migo/refracted
+	name = "drifting thing"
+	desc = "Something the line let through. It does not belong in any of the directions you can point."
+	maxHealth = 140
+	health = 140
+	scream_damage = 5
+
+// ---------- Mutant Clowns (Node 2: "The Family") ----------
+/mob/living/simple_animal/hostile/mutant_clown/refracted
+	name = "'Son'"
+	desc = "A survivor the blast did not finish. It still wears the face it had."
+	maxHealth = 400
+	health = 400
+	melee_damage_lower = 8
+	melee_damage_upper = 12
+	scream_damage = 12
+	scream_cooldown_time = 6 SECONDS
+	move_to_delay = 16
+	move_speed_maskbreak = 7
+	retreat_distance = 6
+	minimum_distance = 6
+	loot = list()
+	/// RED Fragile stacks applied to each human caught in a Scream.
+	var/scream_fragile_stacks = 2
+	/// Mask breaks once health drops to this fraction of maxHealth.
+	var/maskbreak_threshold = 0.5
+
+/mob/living/simple_animal/hostile/mutant_clown/refracted/Initialize(mapload)
+	. = ..()
+	if(type == /mob/living/simple_animal/hostile/mutant_clown/refracted)
+		name = pick("'Son'", "'Father'")
+
+/mob/living/simple_animal/hostile/mutant_clown/refracted/Scream()
+	..()
+	for(var/mob/living/carbon/human/H in view(7, src))
+		if(!faction_check_mob(H))
+			H.apply_lc_red_fragile(scream_fragile_stacks)
+
+// Drive BreakMask() at maskbreak_threshold instead of the parent's 50%.
+/mob/living/simple_animal/hostile/mutant_clown/refracted/adjustHealth(amount, updating_health = TRUE, forced = FALSE)
+	. = ..()
+	if(current_stage == 1 && health <= (maxHealth * maskbreak_threshold))
+		BreakMask()
+
+// Inlined parent BreakMask() minus the gibspawner.
+/mob/living/simple_animal/hostile/mutant_clown/refracted/BreakMask()
+	if(current_stage != 1)
+		return
+	if(health > (maxHealth * maskbreak_threshold))
+		return
+	can_act = FALSE
+	icon_living = icon_state + "_unmasked"
+	icon_state = icon_living
+	desc += "Now with their mask broken... You can see their mutated face."
+	current_stage = 2
+	retreat_distance = 0
+	minimum_distance = 0
+	say(maskbreak_say_1)
+	move_to_delay = move_speed_maskbreak
+	UpdateSpeed()
+	playsound(get_turf(src), 'sound/creatures/lc13/lovetown/scream.ogg', 50, TRUE, 3)
+	ChangeResistances(list(RED_DAMAGE = 0.2, WHITE_DAMAGE = 0.2, BLACK_DAMAGE = 0.2, PALE_DAMAGE = 0.2))
+	SLEEP_CHECK_DEATH(25)
+	ChangeResistances(list(BRUTE = 1, RED_DAMAGE = 1.6, WHITE_DAMAGE = 0.6, BLACK_DAMAGE = 0.8, PALE_DAMAGE = 2))
+	say(maskbreak_say_2)
+	can_act = TRUE
+
+/mob/living/simple_animal/hostile/mutant_clown/refracted/sister
+	name = "'Sister'"
+	desc = "Lighter than the others. It keeps its distance and screams instead."
+	icon_state = "pie spewer"
+	icon_living = "pie spewer"
+	maxHealth = 190
+	health = 190
+	melee_damage_lower = 6
+	melee_damage_upper = 9
+	move_to_delay = 14
+	retreat_distance = 8
+	minimum_distance = 8
+	scream_fragile_stacks = 5
+	maskbreak_threshold = 0.25
+
+/mob/living/simple_animal/hostile/mutant_clown/refracted/mother
+	name = "'Mother?'"
+	desc = "Too large to have survived intact. It does not retreat."
+	icon_state = "glutton"
+	icon_living = "glutton"
+	base_pixel_x = -16
+	pixel_x = -16
+	maxHealth = 575
+	health = 575
+	melee_damage_lower = 11
+	melee_damage_upper = 17
+	move_to_delay = 22
+	move_speed_maskbreak = 10
+	scream_damage = 17
+	scream_cooldown_time = 7 SECONDS
+	retreat_distance = 0
+	minimum_distance = 0
+	maskbreak_threshold = 0.75
+
+// ---------- Node 3 boss: the refracted "Grandfather" (nova_s1n3) ----------
+
+// Targeting reticle marking each tile a Grief Stomp will hit.
+/obj/effect/temp_visual/grief_stomp_warning
+	name = "danger"
+	icon = 'icons/mob/actions/actions_items.dmi'
+	icon_state = "sniper_zoom"
+	layer = BELOW_MOB_LAYER
+	light_range = 2
+	duration = 8
+
+// Meat Drop / Meat Barrage marker that adds landing and detonation sounds.
+// 25% under the base nuke-clown meat warning's damage (40 → 30) to tune
+// the Grandfather encounter for railway-level loadouts.
+/obj/effect/temp_visual/meat_warning/refracted
+	damage = 30
+
+/obj/effect/temp_visual/meat_warning/refracted/Initialize(mapload, new_caster)
+	. = ..()
+	playsound(get_turf(src), 'sound/effects/meatslap.ogg', 35, TRUE, 3)
+
+/obj/effect/temp_visual/meat_warning/refracted/explode()
+	if(caster && !QDELETED(caster) && caster.stat != DEAD)
+		playsound(get_turf(src), 'sound/effects/splat.ogg', 45, TRUE, 4)
+		// Fail "untouched by flesh" for every human about to be hit.
+		// Mirrors base explode()'s view(1, src) damage scan + faction
+		// filter — anyone HurtInTurf would damage we mark as "hit by meat."
+		var/mob/living/simple_animal/hostile/mutant_clown/boss/refracted/G = caster
+		if(istype(G) && G.refraction_run_ref)
+			for(var/mob/living/carbon/human/H in view(1, src))
+				if(QDELETED(H) || H.stat == DEAD || !H.ckey)
+					continue
+				if(G.faction_check_mob(H))
+					continue
+				G.refraction_run_ref.FailAchievement(H.ckey, "grandfather_no_meat_hit")
+	return ..()
+
+// ---------- Refracted heart ----------
+
+/mob/living/simple_animal/hostile/mutant_heart/refracted
+	name = "refracted heart"
+	desc = "A swollen, mistuned heart wired into the Grandfather. Strike it \
+		and it lashes back."
+	/// Incoming ranged damage is multiplied by this.
+	var/projectile_resist = 0.5
+	var/pulse_cooldown = 0
+	var/pulse_cooldown_time = 1 SECONDS
+	var/pulse_range = 2
+	var/defense_down_stacks = 3
+
+// On taking damage, weaken nearby mobs. Hooks deal_damage (not adjustHealth)
+// so the pulse still fires on the killing blow.
+/mob/living/simple_animal/hostile/mutant_heart/refracted/deal_damage(damage_amount, damage_type, source = null, flags = null, attack_type = null, blocked = null, def_zone = null, wound_bonus = 0, bare_wound_bonus = 0, sharpness = SHARP_NONE)
+	if(attack_type & ATTACK_TYPE_RANGED)
+		damage_amount *= projectile_resist
+	. = ..()
+	if(. <= 0)
+		return
+	if(world.time < pulse_cooldown)
+		return
+	pulse_cooldown = world.time + pulse_cooldown_time
+	playsound(get_turf(src), 'sound/effects/wounds/pierce2.ogg', 45, TRUE, 4)
+	new /obj/effect/temp_visual/screech(get_turf(src))
+	for(var/mob/living/L in range(pulse_range, src))
+		if(L == src)
+			continue
+		L.apply_lc_defense_level_down(defense_down_stacks)
+
+// ---------- Refracted Grandfather ----------
+
+/mob/living/simple_animal/hostile/mutant_clown/boss/refracted
+	desc = "The family's head. It will not fall while the hearts still beat \
+		for it."
+	loot = list()
+	give_boss_achievement = FALSE
+	maxHealth = 1250
+	health = 1250
+	melee_damage_lower = 26
+	melee_damage_upper = 38
+	scream_damage = 15
+	scream_cooldown_time = 15 SECONDS
+	/// RED Fragile stacks applied by the wail.
+	var/scream_fragile_stacks = 2
+	/// Cooldown for the phase-2 (hearts destroyed) Meat Barrage.
+	var/meat_barrage_cooldown_time = 18 SECONDS
+	/// Hard cap on how many distinct humans MeatDrop / Meat Barrage will
+	/// target per cycle. Does NOT scale with lobby size on purpose — extra
+	/// players make this attack easier to dodge, not harder.
+	var/meat_target_cap = 2
+	/// One-shot guard: hearts spawn once, after wave HP-scaling has applied.
+	var/hearts_spawned = FALSE
+	/// Square radius (tiles) the 4 hearts spawn at around the boss.
+	var/heart_offset = 3
+	/// Each heart's maxHealth as a fraction of the boss's scaled maxHealth.
+	var/heart_hp_fraction = 0.5
+	var/grief_stomp_cooldown = 0
+	var/grief_stomp_cooldown_time = 10 SECONDS
+	var/grief_stomp_range = 2
+	var/grief_stomp_damage = 75
+	var/grief_stomp_def_stacks = 10
+	/// Reinforcement pool — mostly Son/Father, rare Sister/Mother.
+	var/list/reinforcement_weights = list(
+		/mob/living/simple_animal/hostile/mutant_clown/refracted = 70,
+		/mob/living/simple_animal/hostile/mutant_clown/refracted/sister = 20,
+		/mob/living/simple_animal/hostile/mutant_clown/refracted/mother = 10,
+	)
+	/// Hard cap on the number of reinforcement clowns alive at any one
+	/// time. SpawnReinforcements skips the spawn if the count is at the
+	/// cap, regardless of the Scream cycle firing.
+	var/max_alive_reinforcements = 3
+	/// Live reinforcement refs tracked since last prune. Pruned at the
+	/// top of each SpawnReinforcements call.
+	var/list/alive_reinforcements = list()
+	/// Back-ref to the refraction run, used for achievement event hooks.
+	var/datum/refraction_run/refraction_run_ref
+	/// Reinforcements summoned so far this fight (lifetime). The
+	/// `grandfather_calm` achievement fails on the 4th onward — kept
+	/// separate from `alive_reinforcements` so killing a clown and
+	/// spawning a replacement still fails the achievement.
+	var/reinforcement_count = 0
+
+/mob/living/simple_animal/hostile/mutant_clown/boss/refracted/Initialize(mapload)
+	. = ..()
+	refraction_run_ref = FindRefractionRunForZ(z)
+	if(refraction_run_ref)
+		refraction_run_ref.InitAchievementsForMob(src)
+
+/mob/living/simple_animal/hostile/mutant_clown/boss/refracted/Life()
+	. = ..()
+	if(!.)
+		return
+	if(stat == DEAD)
+		return
+	// Spawn hearts one tick after spawn, once wave HP-scaling has applied.
+	if(!hearts_spawned)
+		hearts_spawned = TRUE
+		SpawnHearts()
+		return
+	if(LAZYLEN(spawned_hearts))
+		if(scream_cooldown <= world.time)
+			INVOKE_ASYNC(src, PROC_REF(Scream))
+		return
+	if(current_stage >= 2 && can_act && target && grief_stomp_cooldown <= world.time)
+		INVOKE_ASYNC(src, PROC_REF(GriefStomp))
+
+/mob/living/simple_animal/hostile/mutant_clown/boss/refracted/Scream()
+	..()
+	for(var/mob/living/carbon/human/H in view(7, src))
+		if(!faction_check_mob(H))
+			H.apply_lc_red_fragile(scream_fragile_stacks)
+	if(LAZYLEN(spawned_hearts))
+		SpawnReinforcements()
+
+/mob/living/simple_animal/hostile/mutant_clown/boss/refracted/proc/SpawnHearts()
+	var/turf/center = get_turf(src)
+	if(!center)
+		return
+	var/datum/refraction_wave_controller/C = GLOB.refraction_wave_mob_owners[src]
+	var/list/offsets = list(
+		list(heart_offset, heart_offset),
+		list(heart_offset, -heart_offset),
+		list(-heart_offset, heart_offset),
+		list(-heart_offset, -heart_offset),
+	)
+	for(var/list/off in offsets)
+		var/turf/T = locate(center.x + off[1], center.y + off[2], center.z)
+		// If the corner is blocked, search outward for an open turf.
+		if(!T || T.density)
+			T = null
+			for(var/turf/open/candidate in range(2, locate(center.x + off[1], center.y + off[2], center.z) || center))
+				if(!candidate.density)
+					T = candidate
+					break
+			if(!T)
+				T = center
+		var/mob/living/simple_animal/hostile/mutant_heart/refracted/Hh = new(T)
+		Hh.maxHealth = round(maxHealth * heart_hp_fraction)
+		Hh.health = Hh.maxHealth
+		Hh.del_on_death = TRUE
+		Hh.butcher_results = null
+		Hh.guaranteed_butcher_results = null
+		if(C)
+			C.RegisterSpawnedMob(Hh)
+		// Replace the base auto-bind with an explicit boss-anchored beam.
+		if(Hh.current_connection)
+			qdel(Hh.current_connection)
+			Hh.current_connection = null
+		Hh.connected_mob = src
+		if(!(Hh in spawned_hearts))
+			spawned_hearts += Hh
+		Hh.current_connection = Beam(Hh, icon_state = "blood", time = INFINITY, maxdistance = heart_offset * 4, beam_type = /obj/effect/ebeam/blood_connection)
+
+/mob/living/simple_animal/hostile/mutant_clown/boss/refracted/proc/SpawnReinforcements()
+	var/datum/refraction_wave_controller/C = GLOB.refraction_wave_mob_owners[src]
+	// Prune dead / qdel'd refs from the tracked alive list, then bail
+	// if we're already at the concurrent cap.
+	for(var/i in length(alive_reinforcements) to 1 step -1)
+		var/mob/living/M = alive_reinforcements[i]
+		if(QDELETED(M) || M.stat == DEAD)
+			alive_reinforcements.Cut(i, i + 1)
+	if(length(alive_reinforcements) >= max_alive_reinforcements)
+		return
+	// Fixed reinforcement count per Scream regardless of lobby size —
+	// the `grandfather_calm` achievement depends on the 4-spawn
+	// threshold staying meaningful, and scaling here would push solo
+	// and quad runs onto different sides of that bar.
+	var/count = 1
+	var/turf/center = get_turf(src)
+	if(!center)
+		return
+	for(var/i in 1 to count)
+		if(length(alive_reinforcements) >= max_alive_reinforcements)
+			break
+		var/spawn_path = pickweight(reinforcement_weights)
+		var/list/open = list()
+		for(var/turf/open/T in range(2, center))
+			if(!T.density)
+				open += T
+		var/turf/dest = length(open) ? pick(open) : center
+		var/mob/living/simple_animal/hostile/mutant_clown/M = new spawn_path(dest)
+		M.del_on_death = TRUE
+		M.butcher_results = null
+		M.guaranteed_butcher_results = null
+		if(C)
+			C.RegisterSpawnedMob(M)
+		alive_reinforcements += M
+		reinforcement_count++
+		// Fight-wide achievement: the 4th lifetime spawn onward fails
+		// for every live member ckey (one player can't cap a teammate's
+		// scream timing).
+		if(reinforcement_count >= 4 && refraction_run_ref)
+			for(var/mob/Mem as anything in refraction_run_ref.members)
+				if(Mem?.ckey)
+					refraction_run_ref.FailAchievement(Mem.ckey, "grandfather_calm")
+
+// Hearts alive: one bomb on up to `meat_target_cap` nearby humans.
+// Hearts dead: Meat Barrage rains bombs on up to the same number of
+// locked targets for 4 seconds. The cap intentionally doesn't scale
+// with lobby size — extra players make the fight easier on this attack.
+/mob/living/simple_animal/hostile/mutant_clown/boss/refracted/MeatDrop()
+	if(LAZYLEN(spawned_hearts))
+		meat_cooldown = world.time + meat_cooldown_time
+		playsound(get_turf(src), 'sound/magic/arbiter/repulse.ogg', 25, FALSE, 5)
+		var/list/eligible = list()
+		for(var/mob/living/carbon/human/H in view(7, src))
+			if(faction_check_mob(H))
+				continue
+			eligible += H
+		// Cap targets at meat_target_cap, picked at random when more
+		// humans are in range than the cap allows.
+		while(length(eligible) > meat_target_cap)
+			eligible -= pick(eligible)
+		for(var/mob/living/carbon/human/H as anything in eligible)
+			var/turf/T = get_turf(H)
+			if(!T)
+				continue
+			new /obj/effect/temp_visual/meat_warning/refracted(T, src)
+		return
+	meat_cooldown = world.time + meat_barrage_cooldown_time
+	if(!target)
+		return
+	var/target_count = meat_target_cap
+	var/list/candidates = list()
+	if(ishuman(target) && !faction_check_mob(target))
+		candidates += target
+	for(var/mob/living/carbon/human/H in view(7, src))
+		if(H in candidates)
+			continue
+		if(!faction_check_mob(H))
+			candidates += H
+	if(!length(candidates))
+		return
+	var/list/locked = list()
+	for(var/i in 1 to min(target_count, length(candidates)))
+		var/mob/living/carbon/human/L = pick(candidates)
+		candidates -= L
+		locked += L
+	playsound(get_turf(src), 'sound/magic/arbiter/repulse.ogg', 35, FALSE, 6)
+	for(var/i in 0 to 7)
+		addtimer(CALLBACK(src, PROC_REF(MeatBarrageTick), locked), i * (0.5 SECONDS))
+
+/mob/living/simple_animal/hostile/mutant_clown/boss/refracted/proc/MeatBarrageTick(list/locked)
+	if(stat == DEAD)
+		return
+	for(var/mob/living/carbon/human/H in locked)
+		if(QDELETED(H) || H.stat == DEAD)
+			continue
+		var/turf/T = get_turf(H)
+		if(!T)
+			continue
+		new /obj/effect/temp_visual/meat_warning/refracted(T, src)
+
+// Inlined parent BreakMask (minus the gibspawner) plus a Grief Stomp.
+/mob/living/simple_animal/hostile/mutant_clown/boss/refracted/BreakMask()
+	can_act = FALSE
+	icon_living = icon_state + "_unmasked"
+	icon_state = icon_living
+	desc += "Now with their mask broken... You can see their mutated face."
+	current_stage = 2
+	retreat_distance = 0
+	minimum_distance = 0
+	say(maskbreak_say_1)
+	move_to_delay = move_speed_maskbreak
+	UpdateSpeed()
+	playsound(get_turf(src), 'sound/creatures/lc13/lovetown/scream.ogg', 50, TRUE, 3)
+	ChangeResistances(list(RED_DAMAGE = 0.2, WHITE_DAMAGE = 0.2, BLACK_DAMAGE = 0.2, PALE_DAMAGE = 0.2))
+	INVOKE_ASYNC(src, PROC_REF(GriefStomp))
+	SLEEP_CHECK_DEATH(25)
+	ChangeResistances(list(BRUTE = 1, RED_DAMAGE = 1.6, WHITE_DAMAGE = 0.6, BLACK_DAMAGE = 0.8, PALE_DAMAGE = 2))
+	say(maskbreak_say_2)
+	can_act = TRUE
+
+/mob/living/simple_animal/hostile/mutant_clown/boss/refracted/proc/GriefStomp()
+	if(stat == DEAD || !can_act)
+		return
+	grief_stomp_cooldown = world.time + grief_stomp_cooldown_time
+	can_act = FALSE
+	if(target)
+		face_atom(target)
+	for(var/turf/T in view(grief_stomp_range, src))
+		new /obj/effect/temp_visual/grief_stomp_warning(T)
+	playsound(get_turf(src), 'sound/abnormalities/mountain/slam.ogg', 70, FALSE, 5)
+	SLEEP_CHECK_DEATH(7)
+	var/list/been_hit = list()
+	for(var/turf/T in view(grief_stomp_range, src))
+		new /obj/effect/temp_visual/smash_effect(T)
+		been_hit = HurtInTurf(T, been_hit, grief_stomp_damage, RED_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
+	for(var/mob/living/L in range(grief_stomp_range, src))
+		if(!faction_check_mob(L))
+			L.apply_lc_defense_level_down(grief_stomp_def_stacks)
+	SLEEP_CHECK_DEATH(4)
+	can_act = TRUE
+
+// On death, drag the whole family down with him.
+/mob/living/simple_animal/hostile/mutant_clown/boss/refracted/death(gibbed)
+	for(var/mob/living/simple_animal/hostile/mutant_clown/Clown in range(12, src))
+		if(Clown == src)
+			continue
+		Clown.death()
+	for(var/mob/living/simple_animal/hostile/mutant_heart/Hh in spawned_hearts.Copy())
+		qdel(Hh)
+	. = ..()

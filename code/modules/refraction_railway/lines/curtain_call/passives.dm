@@ -1,0 +1,1117 @@
+/*
+ * Curtain Call mob passives, returned by GetMobPassives().
+ * Each entry: list("title", "severity", "text").
+ * severity: info / low / medium / high. See AUTHORING.md Step 5b.
+ *
+ * Same card-writing rules as Nova Flare's passives.dm header.
+ */
+/datum/refraction_line/curtain_call/GetMobPassives()
+	return list(
+
+		// ---------- zeal_s1n1: The Capo and Their Rat ----------
+
+		/mob/living/simple_animal/hostile/thumb_east_capo/refracted = list(
+			list(
+				"title"    = "Tiantui Ammunition",
+				"severity" = "info",
+				"text"     = "Carries 8 rounds; specials cost ammo (**Lunge** 1, \
+					**Sweep** 1, **Leap Finisher** 2, **Flurry** 6). Rounds are \
+					spent at cast, so missed specials still burn rounds.",
+			),
+			list(
+				"title"    = "Out of Ammo",
+				"severity" = "medium",
+				"text"     = "With no rounds left, can only basic-melee until \
+					reloaded.",
+			),
+			list(
+				"title"    = "Star's Blade Footwork",
+				"severity" = "info",
+				"text"     = "**Lunge**, **Sweep** and **Leap Finisher** snapshot \
+					the target's tile at cast — step off the marked tiles before \
+					they resolve to dodge. **Flurry** re-snapshots between hits.",
+			),
+			list(
+				"title"    = "Heat From the Magazine",
+				"severity" = "medium",
+				"text"     = "Every strike applies Tremor. While the Capo still \
+					has rounds in the magazine, every strike also applies \
+					Overheat — so emptying the magazine cools the pressure.",
+			),
+			list(
+				"title"    = "Tremor Burst",
+				"severity" = "high",
+				"text"     = "Only **Sweep**, **Leap Finisher**, and the **Flurry** \
+					finisher detonate Tremor (burst threshold 25). Every other \
+					strike stacks Tremor without bursting.",
+			),
+			list(
+				"title"    = "Tiantui Star",
+				"severity" = "high",
+				"text"     = "Below 60% HP: its specials deal more damage the \
+					lower its HP — scaling with missing HP up to +25% ability \
+					damage near death (e.g. +10% at 40% missing) — and while it \
+					has ammo every Overheat infliction is +1. Below 40% HP this \
+					becomes Shin - Tiantui Star: the cap rises to +50% ability \
+					damage, and every infliction gains +2 Tremor and +2 \
+					Overheat. The damage bonus applies only to its specials, \
+					never its basic melee.",
+			),
+		),
+
+		/mob/living/simple_animal/hostile/rat/capo_rat/refracted = list(
+			list(
+				"title"    = "Pet of the Family",
+				"severity" = "info",
+				"text"     = "Every melee bite applies 3 Defense Level Down.",
+			),
+			list(
+				"title"    = "Reload Run",
+				"severity" = "medium",
+				"text"     = "When the **Thumb East Capo** is out of ammo, the \
+					rat stops fighting, runs to its reload point, picks up a \
+					package, and runs the package back — reaching the Capo \
+					refills its magazine. Killing the rat mid-run leaves the \
+					Capo dry.",
+			),
+			list(
+				"title"    = "Hauling",
+				"severity" = "low",
+				"text"     = "Moves at **double pace** while running its \
+					reload package — both on the way to its reload point \
+					and on the way back to the Capo. Slows to normal once \
+					the magazine is delivered, or if it's downed or killed.",
+			),
+			list(
+				"title"    = "Plays Dead",
+				"severity" = "high",
+				"text"     = "At 1 HP it falls down, takes no damage, and gets \
+					back up after 10 seconds at full HP. If the **Thumb East \
+					Capo** runs dry while it is down, it springs up early at \
+					half HP to run a reload.",
+			),
+		),
+
+		// ---------- zeal_s1n2: Azarus, the House ----------
+
+		/mob/living/simple_animal/hostile/distortion/azarus/refracted = list(
+			list(
+				"title"    = "The Table",
+				"severity" = "info",
+				"text"     = "On encounter start and ~15s after each **Wager** \
+					resolves: scatters oversized dice across the floor \
+					(**5 in Phase 1, 9 in Phase 2**), each starting on 1. \
+					Shoot or strike one to make it spin ~3 seconds and land \
+					on a random face. A die that lands slams the floor for \
+					BLACK in a small area, bigger on a high roll.",
+			),
+			list(
+				"title"    = "Lock on a Six",
+				"severity" = "medium",
+				"text"     = "A die that lands on 6 locks and can't be re-rolled. \
+					Other dice can be hit again to gamble higher - but Azarus's \
+					own blasts knock any die showing 4 or more loose for a fresh \
+					spin, so a good table isn't safe.",
+			),
+			list(
+				"title"    = "The Wager",
+				"severity" = "high",
+				"text"     = "On a timer (the red number over its head), Azarus \
+					calls an unavoidable, room-wide PALE hit. Its damage drops \
+					with the table total (the gold number); reach the bust \
+					threshold (**24 in Phase 1, 36 in Phase 2**) and the House \
+					**busts** — the Wager whiffs and Azarus is rooted in \
+					place for **5 seconds**, during which every RED / WHITE / \
+					BLACK / PALE coeff jumps from **0.5 → 2.0 (4x damage \
+					taken)**.",
+			),
+			list(
+				"title"    = "Stalling the Bet",
+				"severity" = "medium",
+				"text"     = "Every die that lands pushes the Wager's countdown \
+					back **3 seconds** (it can't be held more than ~20 \
+					seconds out), while hitting Azarus rushes it. After a \
+					Wager resolves the whole table is swept away for ~15 \
+					seconds before fresh dice are dealt.",
+			),
+			list(
+				"title"    = "Raising the Stakes",
+				"severity" = "high",
+				"text"     = "At or below 50% HP Azarus forces any pending Wager \
+					off at once, then doubles down: **dice count rises 5 → \
+					9**, a higher bust threshold (**24 → 36**), a faster \
+					Wager, and **two stationary mirror-doubles** (kept 3 \
+					tiles apart). Each mirror has a quarter of the House's \
+					HP and echoes its attacks; shatter them to cut the \
+					extra pressure.",
+			),
+		),
+
+		// ---------- zeal_s2n1: The Envy of Humanity ----------
+
+		/mob/living/simple_animal/hostile/distortion/understudy = list(
+			list(
+				"title"    = "Wears a Face",
+				"severity" = "info",
+				"text"     = "On spawn: dons a random form from the city roster \
+					(Ronin, Butcher, Scavenger, Kurokumo Captain, Big Brother, \
+					Grosshammer, Messenger, Dieci, Zwei, Shi, Liu, Seven, \
+					Devyat) and fights through it. Has no basic melee of its \
+					own; the worn form does the attacking.",
+			),
+			list(
+				"title"    = "Untouchable While Worn",
+				"severity" = "medium",
+				"text"     = "While wearing a form: cannot be targeted, hit, or \
+					moved. All damage and crowd-control land on the worn form \
+					instead. The worn form keeps its gear locked in-hand, takes \
+					~250 HP to break (~375 for the phase-2 faces), and is \
+					immune to stun, knockback, and sleep.",
+			),
+			list(
+				"title"    = "Stripped Bare",
+				"severity" = "high",
+				"text"     = "On the worn form's death: emerges on its tile, \
+					takes 300 BRUTE chip, stays visible and damageable for \
+					~5 seconds, then dons a new face.",
+			),
+			list(
+				"title"    = "Threadbare",
+				"severity" = "high",
+				"text"     = "Each Stripped Bare worsens its resistances by one \
+					tier (cap 5). RED / WHITE / BLACK / PALE: \
+					0.6/0.6/0.4/0.8 → 0.8/0.8/0.6/1.0 → 1.0/1.0/0.8/1.2 → \
+					1.25/1.25/1.0/1.5 → 1.5/1.5/1.25/2.0.",
+			),
+			list(
+				"title"    = "Carry-Over HP",
+				"severity" = "info",
+				"text"     = "On a form rotation (not death): the new form \
+					spawns at full HP, then takes BRUTE equal to the previous \
+					form's missing HP (capped to leave at least 1 HP). Faces \
+					after the first don't reset the boss's effective HP.",
+			),
+			list(
+				"title"    = "Phase 2: Final Faces",
+				"severity" = "high",
+				"text"     = "Below 25% HP: HP cannot drop further until phase 2 \
+					triggers. The attack that would cross the floor caps damage \
+					there and swaps the form pool from city skins to three \
+					hostile cabals (**Red Mist**, **Black Silence**, **Blue \
+					Reverberation**). Each phase-2 face stays for a fixed \
+					number of abilities before rotating: Red Mist and Blue \
+					Reverberation 5, Black Silence 10.",
+			),
+			list(
+				"title"    = "Phase 2: Hardened Hide",
+				"severity" = "high",
+				"text"     = "All three phase-2 faces wear armor with **70% \
+					RED/WHITE/BLACK reduction and 90% PALE reduction**. \
+					PALE weapons in particular are barely scratching them — \
+					bring mixed damage if you want the force-switch \
+					threshold to actually trip.",
+			),
+			// ---------- Phase-2 form passives ----------
+			list(
+				"title"    = "Red Mist — The Strongest",
+				"severity" = "low",
+				"text"     = "While worn: moves at roughly 4x the city-skin pace.",
+			),
+			list(
+				"title"    = "Black Silence — Honed Edge",
+				"severity" = "medium",
+				"text"     = "After each ability resolves: gains 8 Offense Level Up.",
+			),
+			list(
+				"title"    = "Black Silence — Weapon Rotation",
+				"severity" = "medium",
+				"text"     = "Cycles 9 workshop weapons + Furioso in fixed order: \
+					Zelkova → Ranga → Old Boys → Allas → Mook → Logic → \
+					Durandal → Crystal → Wheels → **Furioso**. The held weapon \
+					icon visibly swaps each slot.",
+			),
+			list(
+				"title"    = "Black Silence — Spent After Furioso",
+				"severity" = "high",
+				"text"     = "On the resolve of **Furioso**: force-morphs to a \
+					new face regardless of damage taken.",
+			),
+			list(
+				"title"    = "Blue Reverberation — Resonant Hum",
+				"severity" = "medium",
+				"text"     = "Every 8 seconds: applies 1 Vibration to every enemy \
+					within 5 tiles.",
+			),
+		),
+
+		// ---------- zeal_s2n2: The Greed Touched Clone ----------
+
+		/mob/living/simple_animal/hostile/greed_touched_eric/refracted = list(
+			list(
+				"title"    = "Greed Touched",
+				"severity" = "info",
+				"text"     = "Doesn't strike on his own. Spawns waves of \
+					followers — **greed-touched X-Corp workers in phase \
+					1** (DPS, Scout, Sapper, Tank), **greed-touched clan \
+					units in phase 2** (Scout, Drone, Defender, Gunner) \
+					— **3 per wave every 12s**, **capped at 6 \
+					alive**. **Every player past the first adds +2 to \
+					both the wave size and the field cap** (2 humans → \
+					5 per wave / 8 cap, 3 humans → 7 per wave / 10 \
+					cap). Each kill beams blood back to him: \
+					**+(maxHealth ÷ 3) bloodfeast** per kill. If **20s \
+					pass with no minion death**, the next wave size \
+					**doubles**.",
+			),
+			list(
+				"title"    = "Spilt Blood, Stolen Vigor",
+				"severity" = "info",
+				"text"     = "On a summoned follower's death: every live \
+					human within **2 tiles** of the corpse is healed for \
+					**+5 brute and +5 sanity** in Phase 1, **doubled to \
+					+10 / +10** in Phase 2 (the greed-touched clan \
+					flock).",
+			),
+			list(
+				"title"    = "Unholy Presence",
+				"severity" = "info",
+				"text"     = "In phases 1 and 2 he creeps toward whoever \
+					he's locked onto at **~1.6 seconds per tile** and tries \
+					to settle **1 tile away (adjacent)**. He never swings — \
+					being adjacent is just where he channels his ranged \
+					feast from.",
+			),
+			list(
+				"title"    = "Bloodfeast Shield",
+				"severity" = "high",
+				"text"     = "**Subtracts raw damage** from every hit equal to \
+					**(blood_cap - blood_amount) / 4** — the *missing* \
+					quarter of his pool. Empty pool → peak shield \
+					(**175 P1 / 125 P2**); full pool → 0. The pool only \
+					grows when his summons die, so killing followers \
+					actively *weakens* the shield. **Greed Burst** drains \
+					the pool to 0, slamming the shield back to max.",
+			),
+			list(
+				"title"    = "Heart's Panic",
+				"severity" = "medium",
+				"text"     = "When the shield blocks a hit: triggers a panic \
+					summon on a **1.5s cooldown**. **Spawns up to 3 \
+					followers per trigger**, but **never past a field \
+					cap of 5 alive** (0 alive → 3 spawn, 3 alive → 2 \
+					spawn, 5+ alive → nothing). Independent of the \
+					normal **Greed Touched** wave size and the party \
+					scaling.",
+			),
+			list(
+				"title"    = "Greed Burst",
+				"severity" = "high",
+				"text"     = "When his pool fills (**700 in P1, 500 in \
+					P2**): **2s telegraph**, then a **pool of 200 RED** \
+					split evenly across every live mob in view 5 — \
+					players AND Eric's own followers each take a share, \
+					humans bleed for 2. **In a full swarm the followers \
+					soak most of it; alone, the entire pool lands on \
+					you.** On top of that, every live follower **bursts \
+					in place for 50 RED + 2 Bleed in a 3×3** around them \
+					(avoidable by spacing). After the burst his shield \
+					drops for **6s** — the window to push damage.",
+			),
+			list(
+				"title"    = "The Famine",
+				"severity" = "high",
+				"text"     = "Below 50% HP: the greed-touched X-Corp \
+					workers give way to the **greed-touched clan** \
+					(defender, gunner, drone, scout). His **bloodfeast \
+					cap drops from 700 to 500**, so bursts come \
+					noticeably faster. Wave cadence and vulnerable \
+					window length are unchanged.",
+			),
+			list(
+				"title"    = "The Heart Drinks",
+				"severity" = "medium",
+				"text"     = "While he tears open his chest for **Hardblood \
+					Greed** (~3-second cutscene at 25% HP): his \
+					**damage_coeff is forced to 0 across all four damage \
+					types**, so he cannot be hurt during the transition. \
+					Resistances restore to normal (RED/WHITE/BLACK 1.0, \
+					PALE 1.2) the instant the cutscene resolves.",
+			),
+			list(
+				"title"    = "Hardblood Greed",
+				"severity" = "high",
+				"text"     = "Below 25% HP: **summons stop entirely** and \
+					his shield **permanently collapses** (blood_resistance \
+					forced to 0). Pool starts the phase at **50% of \
+					blood_cap** (~250) and is the only fuel he has left. \
+					On a **10s cycle** he slows the target to **1/4 \
+					speed** (Bloodhold, 8s) and floats **3 sparkles** \
+					above their head — one pulse per sparkle. Before \
+					every pulse he **teleports to a tile adjacent to \
+					the target** so the safe tile (the diagonal \
+					opposite of where he just landed) jumps each \
+					strike, and at the end of the attack he **retreats \
+					4-6 tiles away** even on a miss. After a ~1.5s \
+					telegraph, each unsafe tile lands **45 RED + 3 \
+					Bleed**. Alternates with **Sanguine Rush** (15s \
+					cooldown), a three-dash bloody charge along a 3x3 \
+					strip.",
+			),
+			list(
+				"title"    = "Heart's Tribute",
+				"severity" = "medium",
+				"text"     = "Every P3 action draws from the pool: \
+					**HardbloodStrike 60, SanguineRush 40, each \
+					teleport 10**. When the pool runs dry he **tears \
+					the cost out of his own HP at half rate** (forced \
+					damage, bypasses shields). With no summons left to \
+					refill the pool in P3, every special he throws \
+					eventually bleeds him for the rest of the cost — \
+					stall his cycles and he kills himself.",
+			),
+			list(
+				"title"    = "Glutted",
+				"severity" = "medium",
+				"text"     = "If **two Greed Bursts** fire without him \
+					taking any HP damage in the windows between them, the \
+					**next burst's pool doubles (200 → 400 total RED)** \
+					before it's split across the crowd. Resets the moment \
+					he takes damage during a window.",
+			),
+		),
+
+		// ---------- zeal_s3n1: The One That Got Out ----------
+
+		/mob/living/simple_animal/hostile/mirror_shattered_reaper/refracted = list(
+			list(
+				"title"    = "Mirror Variants",
+				"severity" = "medium",
+				"text"     = "On **Refraction Sweep** or **Crossing Over** \
+					cast: spawns Mirror Variants. Each Variant comes out \
+					at **1.5% of the Reaper's current Max HP** (~150 \
+					each at base); she pays that HP cost per Variant. \
+					**3 per cast in Phase 1 (~4.5% Max HP), 6 per cast \
+					in Phase 2 (~9% Max HP).** Hard cap of **3 alive \
+					Variants in P1, 6 in P2** — extra slots don't spawn \
+					and cost nothing.",
+			),
+			list(
+				"title"    = "Reabsorption",
+				"severity" = "medium",
+				"text"     = "On the next **Refraction Sweep** or \
+					**Crossing Over** cast: every Variant standing \
+					inside the AoE damage area is absorbed back into \
+					her. Each refunds its full ~150 HP and grants \
+					**+1 Reverberation Charge** (cap 15). Variants \
+					outside the AoE remain on the field.",
+			),
+			list(
+				"title"    = "Shatter Cost",
+				"severity" = "high",
+				"text"     = "On a Variant killed before absorb: its HP \
+					cost goes unrefunded AND the Reaper takes an extra \
+					~150 HP self-damage (its summon cost again), plus \
+					loses **1 stack of Resolute Glass**.",
+			),
+			list(
+				"title"    = "Empty Glass",
+				"severity" = "high",
+				"text"     = "At 0 stacks of **Resolute Glass**: the \
+					**Shatter Cost** self-damage is multiplied \
+					**×2.5** (~375 per Variant kill from there on).",
+			),
+			list(
+				"title"    = "Gathering Echoes",
+				"severity" = "low",
+				"text"     = "Every 4 absorbed Variants: spawns a \
+					translucent purple afterimage of the Reaper that \
+					trails one tile behind her until **Reverberation** \
+					fires (cap 3 afterimages, matching the 15-Charge \
+					cap).",
+			),
+			list(
+				"title"    = "Resolute Glass",
+				"severity" = "high",
+				"text"     = "Carries **8 stacks of Resolute Glass** at \
+					phase entry — a flat **10% damage reduction per \
+					stack** (**80% at full ladder, 0% at empty**). \
+					**Loses 1 stack per Mirror Variant killed** \
+					(permanent within the phase, no regen). The **only \
+					way she gains stacks is by entering a new phase** — \
+					she starts P1 with 8, and Phase 2 entry refreshes \
+					her back to 8. **Every Variant killed is worth 10% \
+					of her total damage taken from there on.**",
+			),
+			list(
+				"title"    = "Phase 2: Hood Torn Back",
+				"severity" = "high",
+				"text"     = "At **50% HP**: her hood tears open and the \
+					stitched-composite face underneath comes out. \
+					**Variants per summon doubles to 6** (the alive-cap \
+					rises with it to 6). **Resolute Glass refreshes** \
+					back to 8 stacks. If **Reverberation Charge ≥ 5** at \
+					the transition, she immediately fires Reverberation; \
+					otherwise the next window opens about 20s later.",
+			),
+		),
+
+		// ---------- zeal_s4n1: A Sermon Without a Mouth ----------
+
+		/mob/living/simple_animal/hostile/distortion/blade_priest/refracted = list(
+			list(
+				"title"    = "Possessed Blades",
+				"severity" = "info",
+				"text"     = "On spawn: **4 blades** enter orbit around \
+					the priest. Every **25% HP lost** (**75%, 50%, 25%**): \
+					**+2 blades** join the orbit (**cap 10**). Each order \
+					launches half the currently-orbiting blades into the \
+					active state (floor 2).",
+			),
+			list(
+				"title"    = "Blade Aegis",
+				"severity" = "high",
+				"text"     = "While taking damage: **-10% damage taken per \
+					currently-orbiting blade** (cap **-90%**). Blades \
+					loosed onto the field by any order no longer shield \
+					him — emptying the orbit is what makes him fragile.",
+			),
+			list(
+				"title"    = "Issuing an Order",
+				"severity" = "high",
+				"text"     = "On any blade ability cast: rooted in place \
+					and the body sprite re-colours by attack — **red** for \
+					**Scatter**, **blue** for **Sermon Volley**, **purple** \
+					for **Inversion**. The lock holds for **4 / 5 / 6 \
+					seconds** respectively, persisting after the blade(s) \
+					have left orbit.",
+			),
+			list(
+				"title"    = "Disconnect Cadence",
+				"severity" = "medium",
+				"text"     = "After a blade lands its final chain dash and \
+					returns to orbit, it sits idle **6 seconds** before \
+					becoming eligible for another order. **Scatter**, \
+					**Sermon Volley**, and **Inversion** all skip blades \
+					still inside this reuse window.",
+			),
+		),
+
+		// ---------- zeal_s4n2: The Apotheosis ----------
+
+		/mob/living/simple_animal/hostile/achiyalabopa/refracted = list(
+			list(
+				"title"    = "Untouchable Apotheosis",
+				"severity" = "high",
+				"text"     = "She **cannot be wounded while she stands \
+					as a god**. Her divine pose holds for **up to 90 \
+					seconds** before she descends on her own, enraged. \
+					Composure can break earlier — see **Composure \
+					Cracks**. She chases and casts AoEs the whole time \
+					her pose holds.",
+			),
+			list(
+				"title"    = "Pressure of Apotheosis (Awe Struck)",
+				"severity" = "high",
+				"text"     = "Every ~3 seconds she re-applies **Awe \
+					Struck** to every human in her sight. Awe Struck \
+					itself inflicts no stacks — it's a marker. While \
+					awe-struck, **every attack she lands deals 50% \
+					more damage**: melee, Divine Judgment, Thunder \
+					Whip, and Divine Thunderbolt all multiply on \
+					awe-struck targets. **Hope** and **Will of \
+					Humanity** both dispel the marker and grant \
+					immunity for their duration. Only one player can \
+					carry the Coreflame at a time. The bearer can use \
+					the **Hope Aura** action to spread Hope to nearby \
+					teammates.",
+			),
+			list(
+				"title"    = "Fallen Faith",
+				"severity" = "medium",
+				"text"     = "Every Reaper removed from the field grants \
+					Fallen Faith stacks (accumulated in both phases; \
+					only active in Phase 2): **+4 on a burn-up (Will \
+					of Humanity contact)**, **+4 on an Achiya-AoE \
+					consumption (Divine Judgment, Thunder Whip, Divine \
+					Thunderbolt)**, **+1 on any other Reaper death**. \
+					Phase 2 only: every full **20 stacks** adds **+0.1 \
+					to every damage-type resistance coeff** — both her \
+					**baseline (0.2/0.2/0.2/0.4)** and **vulnerable \
+					(1.5/1.5/1.5/3.0)** dicts climb in step, so she \
+					takes progressively more damage from RED, WHITE, \
+					BLACK, and PALE. Outgoing damage is untouched. \
+					The stack count replaces the Phase 1 countdown \
+					maptext above her head once Phase 2 begins. \
+					Persists across the enraged ↔ weakened flip. **At \
+					50% HP it all burns away once** — counter snaps to \
+					0, resistances fall back to the bare baseline, and \
+					she barks a recognition line.",
+			),
+			list(
+				"title"    = "Composure Cracks",
+				"severity" = "high",
+				"text"     = "**Mirage Reapers drip from the storm** \
+					around her every ~8 seconds (cap **6 alive**). \
+					**Killing them with your own weapons does nothing.** \
+					Every Reaper struck down by Divine Judgment, Thunder \
+					Whip, or Divine Thunderbolt is **instantly unmade** \
+					and **brings her enrage 5 seconds closer**.",
+			),
+			list(
+				"title"    = "Phase 2: Enraged",
+				"severity" = "high",
+				"text"     = "When her composure finally breaks — by \
+					timer or by enough flock-kills — she descends, \
+					enraged. Her defenses settle to **80% DR (60% to \
+					PALE)**. From this point on, **a Coreflame blooms \
+					near her every ~20 seconds** (cap 2 on the ground at \
+					once). **Walking onto a Coreflame picks it up \
+					automatically — no use action.** Holding it grants \
+					**Will of Humanity** — a \
+					**Piercing Strike** spell that calls a divine spear \
+					down on a target tile after a **1.5-second delay** \
+					(aim where she'll be, not where she is). On a hit \
+					she's impaled for an **8-second vulnerability window** \
+					(1.5× from RED/WHITE/BLACK, 3× from PALE), the \
+					Coreflame burns out, and the bearer gets **15 \
+					seconds of Hope** — awe immunity and time to grab \
+					the next Coreflame. On a miss, the Coreflame stays \
+					— you can try again after the spell cooldown.",
+			),
+			list(
+				"title"    = "Impaled Lockout",
+				"severity" = "medium",
+				"text"     = "While the divine spear is in her: **cannot \
+					move**, **cannot basic-melee**, and **cannot start a \
+					new Divine Judgment or Thunder Whip**. Any in-flight \
+					Judgment or Whip cast **stops on its next tick** — \
+					the remaining waves are dropped. **Divine \
+					Thunderbolt** is passive and keeps dripping. Once \
+					the spear pops out, she gains a **10-second \
+					purple-outline grace** — every Piercing Strike that \
+					would land in that window is rejected outright. \
+					Wait for the violet glow to fade before re-engaging \
+					with another Coreflame.",
+			),
+		),
+
+		/mob/living/simple_animal/hostile/mirage_reaper = list(
+			list(
+				"title"    = "Sacrifice the Flock",
+				"severity" = "high",
+				"text"     = "**Killing a Mirage Reaper with player damage \
+					does nothing.** Any AoE from Achiyalabopa (Divine \
+					Judgment, Thunder Whip, Divine Thunderbolt) that \
+					touches a Reaper **instantly unmakes it**, no damage \
+					roll. **Each Reaper unmade this way cracks her \
+					composure and brings her enrage 5 seconds closer**.",
+			),
+			list(
+				"title"    = "Burst on Hope",
+				"severity" = "medium",
+				"text"     = "On contact with a **Will of Humanity** \
+					holder: burns to nothing instantly. Counts as a \
+					player kill — does not crack her composure. **The \
+					burst also heals every living human within 5 tiles \
+					of the bearer (the bearer included) for 10 HP.** \
+					Burn-up takes priority — a target carrying both \
+					**Hope** and **Will of Humanity** still triggers \
+					the burn instead of the Hope skip.",
+			),
+			list(
+				"title"    = "Refuses the Hopeful",
+				"severity" = "info",
+				"text"     = "Reapers will not basic-melee any human \
+					carrying ONLY the **Hope** status — they close, \
+					register the marker, and break off without \
+					striking. Adding Will of Humanity on top overrides \
+					this and routes the contact through **Burst on \
+					Hope** instead.",
+			),
+		),
+
+		// ---------- Mirage Reaper v2 (Phase 2 storm-hardened variant) ----------
+
+		/mob/living/simple_animal/hostile/mirage_reaper/v2 = list(
+			list(
+				"title"    = "Storm-Hardened",
+				"severity" = "medium",
+				"text"     = "Phase 2 variant. Carries **350 HP (+200 over \
+					the base mirage)** and pursues at a **slower cadence** \
+					(move_to_delay 6 vs. 4). Resistances, melee damage, \
+					and faction wiring match the base mirage.",
+			),
+			list(
+				"title"    = "Sacrifice the Flock",
+				"severity" = "high",
+				"text"     = "**Killing a Mirage Reaper with player damage \
+					does nothing.** Any AoE from Achiyalabopa (Divine \
+					Judgment, Thunder Whip, Divine Thunderbolt) that \
+					touches a Reaper **instantly unmakes it**, no damage \
+					roll. **Each Reaper unmade this way cracks her \
+					composure and brings her enrage 5 seconds closer**.",
+			),
+			list(
+				"title"    = "Burst on Hope",
+				"severity" = "medium",
+				"text"     = "On contact with a **Will of Humanity** \
+					holder: burns to nothing instantly. Counts as a \
+					player kill — does not crack her composure. **The \
+					burst also heals every living human within 5 tiles \
+					of the bearer (the bearer included) for 10 HP.** \
+					Burn-up takes priority — a target carrying both \
+					**Hope** and **Will of Humanity** still triggers \
+					the burn instead of the Hope skip.",
+			),
+			list(
+				"title"    = "Refuses the Hopeful",
+				"severity" = "info",
+				"text"     = "Reapers will not basic-melee any human \
+					carrying ONLY the **Hope** status — they close, \
+					register the marker, and break off without \
+					striking. Adding Will of Humanity on top overrides \
+					this and routes the contact through **Burst on \
+					Hope** instead.",
+			),
+		),
+
+		// ---------- serio_zeal_w1: The Writer Enters (Phase 1) ----------
+
+		/mob/living/simple_animal/hostile/young_star = list(
+				list(
+					"title"    = "Stage Nerves",
+					"severity" = "high",
+					"text"     = "Star cannot die from HP. A 0-100 Pressure meter \
+						is the only exit from this phase; on Pressure 100 the \
+						Crack ends the phase. Pressure ticks: +1 per 5% \
+						maxHealth chunk of incoming damage, +1 per attack \
+						that hits zero players, +1 per wave with a misfire \
+						(dedup'd per wave), +25 per **The Show Goes On** trigger.",
+				),
+				list(
+					"title"    = "The Show Goes On",
+					"severity" = "medium",
+					"text"     = "At lethal HP: refills to full HP, +25 \
+						Pressure, **Blocking the Bug** thresholds reset to 85%.",
+				),
+				list(
+					"title"    = "Stage Nerves Tiers",
+					"severity" = "medium",
+					"text"     = "Tier 1 (0-33 Pressure): 5s afterimage cooldown, \
+						1 cast per wave. Tier 2 (34-66): 4s cooldown, 1-2 \
+						concurrent casts. Tier 3 (67-100): 3s cooldown, 2-3 \
+						concurrent casts. Higher tiers also widen the panic-line \
+						pool on misfires.",
+				),
+				list(
+					"title"    = "Blocking the Bug",
+					"severity" = "medium",
+					"text"     = "On Star crossing 85% / 70% / 55% / ... HP \
+						(15% step): quick-teleports to a random nearby tile. \
+						Thresholds reset to 85% on every **The Show Goes On**.",
+				),
+				list(
+					"title"    = "Borrowed-Act Roster",
+					"severity" = "info",
+					"text"     = "Afterimage attacks pull from a fixed roster: \
+						Capo Sweep, Azarus Dice, Reaper Refraction, Understudy \
+						Costume Dash, Eric Sanguine Marker, Snow Cabin Bone Stab, \
+						Blade Priest Volley, Achiya Thunderbolt. Each cast picks \
+						from the roster.",
+				),
+				list(
+					"title"    = "The Performer Holds",
+					"severity" = "medium",
+					"text"     = "While a wave's longest afterimage cast is still \
+						resolving: Star is rooted and tinted light blue.",
+				),
+		),
+
+		// ---------- serio_zeal_w2 (Phase 2): the Overseer ----------
+
+		/mob/living/simple_animal/hostile/serio_overseer = list(
+				list(
+					"title"    = "The Voice Persists",
+					"severity" = "info",
+					"text"     = "On HP reaching 0 outside Phase 2: enters a \
+						knockdown window. Heals back up and resumes patrol. \
+						Cannot be killed by HP.",
+				),
+				list(
+					"title"    = "Bleeds Back to the Wings",
+					"severity" = "info",
+					"text"     = "Every **5% maxHealth** chunk of incoming \
+						damage taken: pulses a heal across every live \
+						human within **10 tiles** for **+25 brute and +25 \
+						sanity**. Damage carries over between pulses, so \
+						a single overkill swing can fire multiple pulses \
+						at once. Healing is paid back in real time as the \
+						HP bar drops.",
+				),
+				list(
+					"title"    = "Hand on the Crystal",
+					"severity" = "high",
+					"text"     = "Every 20 seconds: 1s channel cue, then the \
+						Crystal flips Red for 7 seconds while one of 8 memory \
+						attacks runs. Memory pool: **Errant Drafts**, **Chase \
+						the Bug**, **Burnout Bill**, **Closed Circle**, **Storm \
+						Approach**, **Void Pull**, **Echo of Her**, **Light \
+						Wind**.",
+				),
+				list(
+					"title"    = "The Seal Strains",
+					"severity" = "low",
+					"hidden_until" = "overseer_phase_2",
+					"text"     = "On the Crystal hitting 0 HP: Phase 2 \
+						begins. Teleports to a fixed tile 3 west of the \
+						Crystal, faces east, becomes rooted. Resistances drop \
+						to 0 across all damage types. No longer patrols or \
+						runs **Hand on the Crystal**.",
+				),
+				list(
+					"title"    = "The Case Stands",
+					"severity" = "medium",
+					"hidden_until" = "overseer_phase_2",
+					"text"     = "Phase 2 only. On taking damage: spawns a \
+						dark-purple ward visual at the Overseer's tile for \
+						1s and reflects 15% of the attempted damage back at \
+						the attacker as BLACK.",
+				),
+				list(
+					"title"    = "Echo Line",
+					"severity" = "info",
+					"hidden_until" = "overseer_phase_2",
+					"text"     = "Phase 2 only. A vertical 1x5 column of \
+						pulsing violet tiles sits 5 tiles west of the \
+						Crystal. Every **Sealing Lance**, **Sealing Volley**, \
+						**Crawling Argument**, and **Closing Argument** \
+						spawns from a tile in this column.",
+				),
+				list(
+					"title"    = "Walking the Case",
+					"severity" = "medium",
+					"hidden_until" = "overseer_phase_2",
+					"text"     = "Phase 2 only. Crystal bracket gates the \
+						attack tick rate. B1: 6s tick → **Sealing Lance**. \
+						B2: 10s tick → **Sealing Volley**. B3: 4s tick → \
+						60% **Crawling Argument** / 40% **Closing \
+						Argument**.",
+				),
+				list(
+					"title"    = "Closing Storm",
+					"severity" = "high",
+					"hidden_until" = "overseer_phase_2",
+					"text"     = "Phase 2, Bracket 3 only. The moment the \
+						Knight's second slash lands and B3 begins, an \
+						arena-wide snow overlay drapes the floor and stays \
+						up until the third slash. Every **15 seconds** \
+						underneath the overlay, **1 crystal-adjacent figure** \
+						and **1 player-seek figure** drift in from the \
+						perimeter walking at **0.7s per tile** (matching \
+						the slowed Echo of Her tuning) — same 110 BLACK + 6 \
+						mental decay + mental detonate contact rules as the \
+						active version, but layered passively on top of the \
+						bracket's anti-Knight rotation. Storm clears the \
+						instant Slash 3 fires.",
+				),
+		),
+
+		// ---------- serio_zeal_w2 support: Sealing Crystal ----------
+
+		/mob/living/simple_animal/hostile/serio_crystal = list(
+				list(
+					"title"    = "The Sealed Crystal",
+					"severity" = "info",
+					"text"     = "Immobile. On HP 0: triggers the **The Seal \
+						Strains** transition.",
+				),
+				list(
+					"title"    = "Cracking, Sealing",
+					"severity" = "medium",
+					"text"     = "Blue: damage_coeff 0.1 across all damage \
+						types. Red: damage_coeff 1.0. The Crystal is Blue at \
+						rest; the Overseer's **Hand on the Crystal** flips \
+						it Red for the cast duration.",
+				),
+				list(
+					"title"    = "Three-Step Indictment",
+					"severity" = "medium",
+					"text"     = "At 75% HP: advances to Bracket 2. At 25% HP: \
+						advances to Bracket 3. Each bracket re-tunes the \
+						Overseer's memory cooldown and attack intensity.",
+				),
+				list(
+					"title"    = "Held Closed",
+					"severity" = "info",
+					"hidden_until" = "overseer_phase_2",
+					"text"     = "Overseer's Phase 2 only. Becomes \
+						invulnerable to player damage. Only the Knight's \
+						**Three-Slash Verdict** reduces HP — snapped to 75% / \
+						25% / 0% per slash.",
+				),
+		),
+
+		// ---------- serio_zeal_w2 support: the Knight ----------
+
+		/mob/living/simple_animal/hostile/serio_knight = list(
+				list(
+					"title"    = "Holds the Line",
+					"severity" = "info",
+					"hidden_until" = "overseer_phase_2",
+					"text"     = "Overseer's Phase 2 only. Immobile, no \
+						player-targeted attacks. Drives the encounter via \
+						**Gathering the Strike** + **Three-Slash Verdict**.",
+				),
+				list(
+					"title"    = "Gathering the Strike",
+					"severity" = "high",
+					"hidden_until" = "overseer_phase_2",
+					"text"     = "Overseer's Phase 2 only. **+2.075% per \
+						0.5s tick** (24s base time to 100%, +25% over the \
+						old 30s baseline). Display rendered as maptext \
+						above the Knight. On 100%: **Three-Slash Verdict** \
+						fires.",
+				),
+				list(
+					"title"    = "Drowned by the Chorus",
+					"severity" = "high",
+					"hidden_until" = "overseer_phase_2",
+					"text"     = "Each Murmur with a **Reinforcing Voice** beam \
+						to the Knight multiplies **Gathering the Strike** \
+						ticks: 0 beams: 1.0x. 1: 0.75x. 2: 0.5x. 3: 0.25x. 4: \
+						0x (stalled). 5: -0.1x. 6+: -0.25x (drains).",
+				),
+				list(
+					"title"    = "The Knight Falters",
+					"severity" = "low",
+					"hidden_until" = "overseer_phase_2",
+					"text"     = "On HP dropping at or below 30%: enters a 3s \
+						stagger. **Gathering the Strike** resets to 0% and \
+						pauses, then HP heals back to 80% and the stagger \
+						clears.",
+				),
+		),
+
+		// ---------- serio_zeal_w2 support: the Sage ----------
+
+		/mob/living/simple_animal/hostile/serio_sage = list(
+				list(
+					"title"    = "The Friend Who Stays",
+					"severity" = "info",
+					"hidden_until" = "overseer_phase_2",
+					"text"     = "**Sealing Lance** phases through the Sage \
+						without applying damage. Has no melee attack.",
+				),
+				list(
+					"title"    = "Speaks On Schedule",
+					"severity" = "medium",
+					"hidden_until" = "overseer_phase_2",
+					"text"     = "Every 20 seconds: picks **Counter-Argument** \
+						or **A Chair in the Room** by branch. If any human in \
+						view 7 has 15+ mental decay stacks → cleanse. \
+						Otherwise → heal.",
+				),
+				list(
+					"title"    = "Held Across the Brackets",
+					"severity" = "medium",
+					"hidden_until" = "overseer_phase_2",
+					"text"     = "**Stays Anyway** charge count by current \
+						bracket: B1: 1 hit. B2: 2 hits. B3: 3 hits.",
+				),
+		),
+
+		// ---------- serio_zeal_w2 support: Murmurs ----------
+
+		/mob/living/simple_animal/hostile/serio_murmur = list(
+				list(
+					"title"    = "Reinforcing Voice",
+					"severity" = "high",
+					"hidden_until" = "overseer_phase_2",
+					"text"     = "On spawn: draws a violet beam to the Knight \
+						that scales his charge tick (see the Knight's **Drowned \
+						by the Chorus**). Removed on death.",
+				),
+				list(
+					"title"    = "The Chorus Swells",
+					"severity" = "medium",
+					"hidden_until" = "overseer_phase_2",
+					"text"     = "Overseer's Phase 2 only. Overseer spawns \
+						Murmurs on a 20s cycle. **Per-tick count is a \
+						flat 1** regardless of bracket, +1 if the choir \
+						is empty. Cap alive: 2 / 3 / 4 by bracket. Spawn \
+						tiles: within view 8 of the Crystal, at least 3 \
+						tiles from Knight and Sage.",
+				),
+				list(
+					"title"    = "Anchored Voice",
+					"severity" = "info",
+					"hidden_until" = "overseer_phase_2",
+					"text"     = "Stationary. No melee attack. Ranged attacks \
+						fire on a 5-second cooldown — 50/50 between \
+						**Whispered Glance** and **Whispered Cold Word**.",
+				),
+				list(
+					"title"    = "Made of Murmur",
+					"severity" = "info",
+					"hidden_until" = "overseer_phase_2",
+					"text"     = "**Sealing Lance** phases through Murmurs \
+						without applying damage. Other projectiles impact \
+						normally.",
+				),
+				list(
+					"title"    = "Spite of the Silenced",
+					"severity" = "medium",
+					"hidden_until" = "overseer_phase_2",
+					"text"     = "On taking damage from a non-faction-mate: \
+						applies 3 BLACK fragile to the attacker.",
+				),
+				list(
+					"title"    = "The Voice Quiets",
+					"severity" = "info",
+					"hidden_until" = "overseer_phase_2",
+					"text"     = "On death: heals every live human in view 7 \
+						for +10 brute / +10 fire / +10 sanity, **adds \
+						+5% to the Knight's charge bar** (one voice \
+						silenced, one step closer to the swing), then \
+						qdels immediately.",
+				),
+		),
+
+		// ---------- zeal_s3n2: The Snow Cabin ----------
+
+		/mob/living/simple_animal/hostile/snow_cabin/refracted = list(
+			list(
+				"title"    = "Untouchable Cabin",
+				"severity" = "high",
+				"text"     = "All direct damage to the cabin does nothing \
+					— melee, items, projectiles, and area effects. Its HP \
+					moves only via weakpoint deaths (see **HP / Damage \
+					Funnel**).",
+			),
+			list(
+				"title"    = "Frozen By Numbers",
+				"severity" = "info",
+				"text"     = "AoE damage (**Bone Stab Line**, **Bladed \
+					Teeth**, **Ice Spike**, **Ice Shard Spray**) drops \
+					by **15% per extra player past the first**, derived \
+					from the cabin's HP scale (1.0× HP = solo, 1.5× HP \
+					= duo, 2.0× HP = trio, 2.5× HP = quad). Solo: 100%. \
+					Duo: 85%. Trio: 70%. Quad: 55%. Floored at 25%.",
+			),
+			list(
+				"title"    = "HP / Damage Funnel",
+				"severity" = "high",
+				"text"     = "On an **Eye** or **Mouth** death: the cabin \
+					takes BRUTE damage equal to the killed weakpoint's max \
+					HP.",
+			),
+			list(
+				"title"    = "Weakpoint Spawning",
+				"severity" = "medium",
+				"text"     = "Every ~1s: refills weakpoints toward a \
+					target count on random floor tiles (skipping tiles \
+					that already host a weakpoint or hatching event). \
+					**Phase 1: 6 Eyes + 4 Mouths. Phase 2: 12 Eyes + 10 \
+					Mouths.**",
+			),
+			list(
+				"title"    = "Phase 2 (below 50% HP)",
+				"severity" = "high",
+				"text"     = "Below 50% HP: weakpoint targets shift to \
+					the Phase 2 row of **Weakpoint Spawning**. Begins \
+					spawning **Meatpods** and **Ice Prisons**. Adds \
+					**Ice Shard Spray** to the attack rotation. See each \
+					attack card for its Phase 2 variant.",
+			),
+			list(
+				"title"    = "Meatpod",
+				"severity" = "medium",
+				"text"     = "Phase 2, every 12s: spawns a pulsing fleshy \
+					pod on a random floor tile. Cannot be attacked. 4s \
+					after spawn it bursts, spawning one **Meatling**. \
+					Caps: 3 pre-burst pods, **2 alive Meatlings** \
+					(spawning halts when full).",
+			),
+			list(
+				"title"    = "Ice Prison",
+				"severity" = "medium",
+				"text"     = "Phase 2, every 14s: a small block of ice \
+					grows on a random floor tile. Cannot be attacked. \
+					Cycles through three growth stages over ~12s, then \
+					cracks and spawns one **Yagaslave**. Caps: 2 \
+					pre-hatch prisons, **1 alive Yagaslave** (spawning \
+					halts when full).",
+			),
+		),
+
+		/mob/living/simple_animal/hostile/snow_cabin_eye = list(
+			list(
+				"title"    = "Stationary Watcher",
+				"severity" = "info",
+				"text"     = "Cannot move. Every 1s: rotates to face the \
+					nearest living player.",
+			),
+			list(
+				"title"    = "Cabin Weakpoint",
+				"severity" = "medium",
+				"text"     = "On its death: deals BRUTE damage to the \
+					cabin equal to its own max HP.",
+			),
+		),
+
+		/mob/living/simple_animal/hostile/snow_cabin_mouth = list(
+			list(
+				"title"    = "Four-Stage Cycle",
+				"severity" = "medium",
+				"text"     = "Cycles **closed → opening → open → closing → \
+					closed**, repeating. Closed: 4s. Opening: 1.1s. Open: \
+					3s. Closing: 1.1s. **Bite** can only fire during the \
+					open stage.",
+			),
+			list(
+				"title"    = "Bite",
+				"severity" = "high",
+				"text"     = "Open stage only: bites adjacent humans via \
+					the standard hostile AI tick. The chomp sprite \
+					flashes for 0.6s on each connect. Attempted bites in \
+					the closed, opening, or closing stages are silently \
+					rejected.",
+			),
+			list(
+				"title"    = "Cabin Weakpoint",
+				"severity" = "medium",
+				"text"     = "On its death: deals BRUTE damage to the \
+					cabin equal to its own max HP.",
+			),
+		),
+
+		/mob/living/simple_animal/hostile/cabin_meatling = list(
+			list(
+				"title"    = "Summoned by Meatpods",
+				"severity" = "info",
+				"text"     = "Spawned by a **Meatpod** bursting. Its \
+					death does not damage the cabin.",
+			),
+			list(
+				"title"    = "Spilt Cabin",
+				"severity" = "info",
+				"text"     = "On its death: the human credited with the \
+					killing blow heals **+25 brute**.",
+			),
+		),
+
+		/mob/living/simple_animal/hostile/cabin_yagaslave = list(
+			list(
+				"title"    = "Summoned by Ice Prisons",
+				"severity" = "info",
+				"text"     = "Spawned by an **Ice Prison** cracking open. \
+					Its death does not damage the cabin.",
+			),
+			list(
+				"title"    = "Spilt Cabin",
+				"severity" = "info",
+				"text"     = "On its death: the human credited with the \
+					killing blow heals **+25 brute**.",
+			),
+		),
+	)

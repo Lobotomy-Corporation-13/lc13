@@ -9,4 +9,4 @@
 
 /datum/attribute/prudence/on_update(mob/living/carbon/human/user)
 	. = ..()
-	initial_stat_value = SSmaptype.chosen_trait == FACILITY_TRAIT_XP_MOD ? DEFAULT_HUMAN_MAX_SANITY_XP : DEFAULT_HUMAN_MAX_SANITY
+	initial_stat_value = SSmaptype.trait_active_for(user, FACILITY_TRAIT_XP_MOD) ? DEFAULT_HUMAN_MAX_SANITY_XP : DEFAULT_HUMAN_MAX_SANITY

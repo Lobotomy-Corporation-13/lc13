@@ -23,6 +23,7 @@
 		/datum/ego_datum/weapon/branch12/needing,
 		/datum/ego_datum/armor/branch12/needing,
 	)
+	//Ckeys
 	var/list/nerds = list()
 
 /mob/living/simple_animal/hostile/abnormality/branch12/need_you/AttemptWork(mob/living/carbon/human/user, work_type)

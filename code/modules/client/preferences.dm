@@ -112,6 +112,14 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 		)
 	var/list/randomise = list(RANDOM_UNDERWEAR = TRUE, RANDOM_UNDERWEAR_COLOR = TRUE, RANDOM_UNDERSHIRT = TRUE, RANDOM_SOCKS = TRUE, RANDOM_BACKPACK = TRUE, RANDOM_JUMPSUIT_STYLE = TRUE, RANDOM_HAIRSTYLE = TRUE, RANDOM_HAIR_COLOR = TRUE, RANDOM_FACIAL_HAIRSTYLE = TRUE, RANDOM_FACIAL_HAIR_COLOR = TRUE, RANDOM_SKIN_TONE = TRUE, RANDOM_EYE_COLOR = TRUE)
 	var/phobia = "spiders"
+	var/pet_rat_color = "#888888"
+	/// Gacha ID-card skin id (string, e.g. "nf_silver") or null for default.
+	/// Picked via the prefs window; cross-checked against the persistence
+	/// ledger so a stale save can't equip an unowned skin.
+	var/equipped_id_skin = null
+	/// Lazily-built TGUI host for the ID skin picker. Constructed
+	/// the first time the player opens the picker from prefs.
+	var/datum/id_skin_picker/id_skin_picker
 
 	var/list/alt_titles_preferences = list() // Tegu
 
@@ -638,6 +646,21 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 				dat += "<h3>Phobia</h3>"
 
 				dat += "<a href='byond://?_src_=prefs;preference=phobia;task=input'>[phobia]</a><BR>"
+
+			if("Tagalong Rat" in all_quirks)
+				dat += "<h3>Pet Rat Color</h3>"
+				dat += "<a href='byond://?_src_=prefs;preference=pet_rat_color;task=input'><span style='background-color:[pet_rat_color]'>&nbsp;&nbsp;&nbsp;[pet_rat_color]&nbsp;&nbsp;&nbsp;</span></a><BR>"
+
+			// ID Card Skin picker — gacha-unlocked cosmetic. Always shown;
+			// the picker pop is gated server-side so a stale save can't
+			// equip an unowned skin.
+			dat += "<h3>ID Card Skin</h3>"
+			var/skin_display = "Default"
+			if(equipped_id_skin && SSrefraction_railway)
+				var/datum/id_skin/EQ = SSrefraction_railway.id_skins[equipped_id_skin]
+				if(istype(EQ))
+					skin_display = EQ.name
+			dat += "<a href='byond://?_src_=prefs;preference=equipped_id_skin;task=input'>[skin_display]</a><BR>"
 
 			if(CONFIG_GET(flag/join_with_mutant_humans))
 
@@ -1198,7 +1221,7 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 			if(initial(T.value) != 0)
 				font_color = initial(T.value) > 0 ? "#AAFFAA" : "#FFAAAA"
 			if(quirk_conflict)
-				dat += "<font color='[font_color]'>[quirk_name]</font> - [initial(T.desc)] \
+				dat += "<s><font color='[font_color]'>[quirk_name]</font> - [initial(T.desc)]</s> \
 				<font color='red'><b>LOCKED: [lock_reason]</b></font><br>"
 			else
 				if(has_quirk)
@@ -1853,6 +1876,23 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 					var/phobiaType = input(user, "What are you scared of?", "Character Preference", phobia) as null|anything in SStraumas.phobia_types
 					if(phobiaType)
 						phobia = phobiaType
+
+				if("pet_rat_color")
+					var/picked = input(user, "Choose your pet rat's color.", "Character Preference", pet_rat_color) as color|null
+					if(picked)
+						pet_rat_color = picked
+
+				if("equipped_id_skin")
+					if(!SSrefraction_railway)
+						to_chat(user, span_warning("ID skin registry not loaded yet — try again in a moment."))
+					else
+						// Open the visual catalogue. The picker datum is
+						// lazily attached to prefs so the user can re-open
+						// it cheaply, and it mutates equipped_id_skin
+						// directly on confirm.
+						if(!id_skin_picker)
+							id_skin_picker = new(src)
+						id_skin_picker.ui_interact(user)
 
 				if ("max_chat_length")
 					var/desiredlength = input(user, "Choose the max character length of shown Runechat messages. Valid range is 1 to [CHAT_MESSAGE_MAX_LENGTH] (default: [initial(max_chat_length)]))", "Character Preference", max_chat_length)  as null|num

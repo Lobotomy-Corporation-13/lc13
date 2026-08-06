@@ -1580,7 +1580,7 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 	if(!damage_amount) // There are some extremely rare instances of 0 damage pre-armour reduction, for example King of Greed does a 0 damage HurtInTurf to fill up a hitlist to attack later.
 		return FALSE
 
-	if(GLOB.damage_type_shuffler?.is_enabled && IsColorDamageType(damage_type)) // Yes I have to do yet another shuffler check here because god damn it we're handling human damage in the species datum
+	if(SSmaptype.shuffler_active_for(H) && IsColorDamageType(damage_type))
 		var/datum/damage_type_shuffler/shuffler = GLOB.damage_type_shuffler
 		damage_type = shuffler.mapping_offense[damage_type]
 

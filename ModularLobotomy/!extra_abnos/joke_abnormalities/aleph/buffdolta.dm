@@ -54,6 +54,7 @@
 	var/onrush_min_delay = 3
 	var/onrush_max_delay = 6
 	var/onrush_double_hit = FALSE
+	//Uses tags
 	var/list/onrush_hit = list()
 	var/list/onrush_sounds = list(
 		'sound/abnormalities/rudolta_buff/onrush1.ogg',
@@ -76,6 +77,10 @@
 	button_icon_state = "generic_slam"
 	chosen_attack_num = 2
 	chosen_message = span_colossus("You will now slam the sleigh against the target area.")
+
+/mob/living/simple_animal/hostile/abnormality/rudolta_buff/Destroy()
+	onrush_hit = null
+	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/rudolta_buff/Move()
 	if(!can_act)
@@ -158,7 +163,7 @@
 	playsound(src, pick(onrush_sounds), rand(50, 100), TRUE, 7)
 	to_chat(target, span_userdanger("[src] punches you hard!"))
 	if(!onrush_double_hit)
-		onrush_hit |= target
+		onrush_hit |= target.tag
 	var/turf/thrownat = get_ranged_target_turf_direct(src, target, 15, rand(-30, 30))
 	target.throw_at(thrownat, 8, 2, src, TRUE, force = MOVE_FORCE_OVERPOWERING, gentle = FALSE)
 	target.deal_damage(onrush_damage, RED_DAMAGE, src, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
@@ -177,7 +182,7 @@
 			continue
 		if(faction_check_mob(L))
 			continue
-		if((L in onrush_hit) && !onrush_double_hit)
+		if((L.tag in onrush_hit) && !onrush_double_hit)
 			continue
 		if(L == target)
 			continue
