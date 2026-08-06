@@ -9,6 +9,12 @@
 #define LCE_CLAW_REACH_TIME 4      // Deciseconds for the claw to reach the floor, and to come back.
 #define LCE_CLAW_SPRAY_COST 10     // Water spent per spray.
 #define LCE_CLAW_SPRAY_STREAMS 5   // Particles per spray, as the extinguisher does it.
+#define LCE_SCAN_STAGES 5          // do_afters in a full scan. Each one that lands is one box.
+#define LCE_SCAN_STAGE_TIME 3 SECONDS
+#define LCE_SCAN_DRAIN_MIN 5
+#define LCE_SCAN_DRAIN_MAX 8
+///Hunger and desire are never taken below this by a scan. See the comment on ScanSpecimen.
+#define LCE_SCAN_FLOOR 10
 
 /*			CONSOLE			*/
 
@@ -34,6 +40,7 @@
 	var/datum/action/innate/lce_claw/lower/lower_action
 	var/datum/action/innate/lce_claw/unload/unload_action
 	var/datum/action/innate/lce_claw/spray/spray_action
+	var/datum/action/innate/lce_claw/scan/scan_action
 
 /obj/machinery/computer/camera_advanced/lce_claw/Initialize(mapload)
 	. = ..()
@@ -55,6 +62,7 @@
 	lower_action = new
 	unload_action = new
 	spray_action = new
+	scan_action = new
 
 /obj/machinery/computer/camera_advanced/lce_claw/Destroy()
 	for(var/obj/item/I in contents)
@@ -64,6 +72,7 @@
 	QDEL_NULL(lower_action)
 	QDEL_NULL(unload_action)
 	QDEL_NULL(spray_action)
+	QDEL_NULL(scan_action)
 	return ..()
 
 /obj/machinery/computer/camera_advanced/lce_claw/examine(mob/user)
@@ -120,7 +129,7 @@
 
 /obj/machinery/computer/camera_advanced/lce_claw/GrantActions(mob/living/user)
 	..()
-	for(var/datum/action/innate/lce_claw/A in list(grab_action, lower_action, unload_action, spray_action))
+	for(var/datum/action/innate/lce_claw/A in list(grab_action, lower_action, unload_action, spray_action, scan_action))
 		A.target = src
 		A.Grant(user)
 		actions += A
@@ -407,6 +416,32 @@
 	SEND_SIGNAL(S, COMSIG_TRY_STORAGE_QUICK_EMPTY, get_turf(S))
 	visible_message(span_notice("[src] tips [S] out."))
 
+/datum/action/innate/lce_claw/scan
+	name = "Scan Specimen"
+	desc = "Run a five-stage extraction on whatever is under the claw. It costs the specimen \
+		hunger and mood, and it will not finish if they walk away."
+	button_icon_state = "claw_scan"
+
+/datum/action/innate/lce_claw/scan/Activate()
+	if(!CheckClaw())
+		return
+	var/list/subjects = list()
+	for(var/mob/living/simple_animal/hostile/limbus_abno/A in get_turf(claw))
+		if(A.stat >= DEAD)
+			continue
+		subjects += A
+	if(!length(subjects))
+		to_chat(owner, span_warning("There is no specimen under the claw."))
+		return
+	var/mob/living/simple_animal/hostile/limbus_abno/chosen = length(subjects) == 1 ? subjects[1] \
+		: tgui_input_list(owner, "Scan which specimen?", "Manipulator", subjects)
+	if(!chosen || QDELETED(chosen) || chosen.loc != get_turf(claw))
+		return
+	if(chosen.desire_bar < LCE_SCAN_FLOOR || chosen.hunger_bar < LCE_SCAN_FLOOR)
+		to_chat(owner, span_warning("[chosen] is too depleted to scan."))
+		return
+	claw.ScanSpecimen(chosen, owner)
+
 /datum/action/innate/lce_claw/spray
 	name = "Rinse"
 	desc = "Spend ten units of water hosing down the floor under the claw."
@@ -467,6 +502,134 @@
 		return
 	ClearBusy()
 
+/*			SCAN			*/
+
+//The scanline. Lives in the specimen's vis_contents so it tracks them, and is clipped to their
+//silhouette by an alpha mask fed from their own render output - render_source rather than an
+//icon() mask because LCL specimens are frequently 48x48 or 64x64 (an icon() mask only covers
+//32x32) and because several of them swap sprite mid-round.
+/obj/effect/lce_scanline
+	icon = 'icons/effects/effects.dmi'
+	icon_state = "transform_effect"
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+	vis_flags = VIS_INHERIT_ID
+	plane = FLOAT_PLANE
+	layer = FLOAT_LAYER
+	appearance_flags = KEEP_TOGETHER
+	anchored = TRUE
+
+/obj/machinery/lce_claw/proc/StartScanVisual(mob/living/subject)
+	if(QDELETED(subject))
+		return null
+	var/obj/effect/lce_scanline/line = new(subject)
+	//No leading asterisk: with one, BYOND stops drawing the subject normally and only uses it as
+	//a render source, which would make the specimen invisible for the whole scan.
+	if(!subject.render_target)
+		subject.render_target = "lce_scan_[REF(subject)]"
+	line.filters += filter(type = "alpha", render_source = subject.render_target)
+	subject.vis_contents += line
+	return line
+
+/obj/machinery/lce_claw/proc/SweepScanVisual(obj/effect/lce_scanline/line)
+	if(QDELETED(line))
+		return
+	line.pixel_y = 16
+	animate(line, pixel_y = -16, time = LCE_SCAN_STAGE_TIME)
+
+/obj/machinery/lce_claw/proc/EndScanVisual(obj/effect/lce_scanline/line, mob/living/subject)
+	if(!QDELETED(subject))
+		subject.vis_contents -= line
+		subject.render_target = null
+	if(!QDELETED(line))
+		qdel(line)
+
+///How full the specimen was when we started. Sampled ONCE, before any draining, so a scan cannot
+///erode its own payout and the number the operator sees is the number they get.
+/obj/machinery/lce_claw/proc/ScanQuality(mob/living/simple_animal/hostile/limbus_abno/subject)
+	var/list/fractions = list()
+	if(subject.max_desire > 0)
+		fractions += subject.desire_bar / subject.max_desire
+	if(subject.max_hunger > 0)
+		fractions += subject.hunger_bar / subject.max_hunger
+	//7 of the 11 specimens have no counter at all, so it only counts when there is one.
+	if(subject.max_counter > 0)
+		fractions += subject.counter / subject.max_counter
+	if(!length(fractions))
+		return 0.5
+	var/total = 0
+	for(var/frac in fractions)
+		total += frac
+	return clamp(total / length(fractions), 0, 1)
+
+///TRUE while the claw is still over the specimen and still ours.
+/obj/machinery/lce_claw/proc/ScanStillValid(mob/living/subject)
+	return !QDELETED(src) && !QDELETED(subject) && console && console.claw == src \
+		&& subject.loc == get_turf(src)
+
+//Five stages, one do_after each. The drain is CLAMPED so hunger and desire can never be taken
+//below LCE_SCAN_FLOOR: almost every specimen overrides AdjustDesire/AdjustHunger into breach
+//logic - Mountain breaches at counter 0, Queen Bee vents spores at desire 0, Scorched Girl
+//detonates at counter 0 and desire 0 ignoring her own cooldown - so a scan must never be the
+//thing that empties a bar. It can leave a specimen vulnerable; it cannot pull the trigger.
+/obj/machinery/lce_claw/proc/ScanSpecimen(mob/living/simple_animal/hostile/limbus_abno/subject, mob/living/pilot)
+	set waitfor = FALSE
+	if(busy || QDELETED(subject) || !console)
+		return
+	var/quality = ScanQuality(subject)
+	var/stages_done = 0
+	//Pins the claw for the whole sequence - busy also gates the eye's movement.
+	SetBusy(LCE_SCAN_STAGES * LCE_SCAN_STAGE_TIME)
+	var/obj/effect/lce_scanline/line = StartScanVisual(subject)
+	to_chat(subject, span_warning("Something cold passes over you, and keeps passing."))
+
+	for(var/stage in 1 to LCE_SCAN_STAGES)
+		if(!ScanStillValid(subject))
+			break
+		//Re-checked every stage, not just at the start: five stages of drain from a bar that was
+		//only just above the floor would otherwise walk it straight through.
+		var/desire_room = subject.desire_bar - LCE_SCAN_FLOOR
+		var/hunger_room = subject.hunger_bar - LCE_SCAN_FLOOR
+		if(desire_room <= 0 || hunger_room <= 0)
+			to_chat(pilot, span_warning("The reading flattens out. There is nothing left to draw on."))
+			break
+		SweepScanVisual(line)
+		//The specimen is the do_after target, which is what makes walking away cancel it - the
+		//helper snapshots target.loc and breaks the moment it changes.
+		if(!do_after(pilot, LCE_SCAN_STAGE_TIME, subject, IGNORE_HELD_ITEM, TRUE, \
+			CALLBACK(src, PROC_REF(ScanStillValid), subject)))
+			to_chat(pilot, span_warning("The scan breaks off."))
+			break
+		subject.AdjustDesire(-min(rand(LCE_SCAN_DRAIN_MIN, LCE_SCAN_DRAIN_MAX), desire_room))
+		subject.AdjustHunger(-min(rand(LCE_SCAN_DRAIN_MIN, LCE_SCAN_DRAIN_MAX), hunger_room))
+		stages_done++
+		playsound(src, 'sound/machines/terminal_prompt.ogg', 30, TRUE)
+
+	EndScanVisual(line, subject)
+	ClearBusy()
+	if(!stages_done)
+		to_chat(pilot, span_warning("Nothing was drawn out."))
+		return
+	YieldEnkephalin(stages_done, quality, pilot)
+
+/obj/machinery/lce_claw/proc/YieldEnkephalin(count, quality, mob/living/pilot)
+	var/turf/here = get_turf(src)
+	var/stored = 0
+	for(var/i in 1 to count)
+		var/obj/item/unstable_enkephalin/box = new(here, quality)
+		//Straight into the console if there is room, since that is where the claw puts everything
+		//else; the floor is the fallback.
+		if(console && length(console.contents) < console.max_stored)
+			box.forceMove(console)
+			stored++
+	to_chat(pilot, span_notice("[count] canister\s of unstable enkephalin, around \
+		[round(quality * 100)]% charge[stored < count ? " - [count - stored] would not fit and are on the floor" : ""]."))
+	playsound(src, 'sound/machines/terminal_prompt_confirm.ogg', 40, TRUE)
+
 #undef LCE_CLAW_REACH_TIME
 #undef LCE_CLAW_SPRAY_COST
 #undef LCE_CLAW_SPRAY_STREAMS
+#undef LCE_SCAN_STAGES
+#undef LCE_SCAN_STAGE_TIME
+#undef LCE_SCAN_DRAIN_MIN
+#undef LCE_SCAN_DRAIN_MAX
+#undef LCE_SCAN_FLOOR
