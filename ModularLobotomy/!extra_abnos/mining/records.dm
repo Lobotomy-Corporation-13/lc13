@@ -53,6 +53,16 @@
 	)
 
 
+//Lobstrosity
+/obj/item/paper/fluff/info/mining/lobstrosity
+	abno_type = /mob/living/simple_animal/hostile/abnormality/mining/lobstrosity
+	abno_code = "S-01-13-17"
+	abno_info = list(
+		"When the work result was Normal, the Qliphoth Counter lowered at a low rate.",
+		"When the work result was Bad, the Qliphoth Counter lowered.",
+	)
+
+
 //	-------------HE-------------
 // Herald
 /obj/item/paper/fluff/info/mining/herald

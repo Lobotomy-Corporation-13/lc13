@@ -1,5 +1,5 @@
 
-/mob/living/simple_animal/hostile/asteroid/lobstrosity
+/mob/living/simple_animal/hostile/abnormality/mining/lobstrosity
 	name = "lobstrosity"
 	desc = "A marvel of evolution gone wrong, the frosty ice produces underground lakes where these ill tempered seafood gather. Beware its charge."
 	icon = 'icons/mob/icemoon/icemoon_monsters.dmi'
@@ -41,11 +41,11 @@
 		ABNORMALITY_WORK_ATTACHMENT = 60,
 		ABNORMALITY_WORK_REPRESSION = 0,
 	)
-	good_droprate = 20
+	good_droprate = 40
 	bad_droprate = 100
-	work_damage_amount = 7
-	work_damage_type = BLACK_DAMAGE
-	chem_type = /datum/reagent/abnormality/sin/envy
+	work_damage_amount = 5
+	work_damage_type = RED_DAMAGE
+	chem_type = /datum/reagent/abnormality/sin/gloom
 
 	ego_list = list(
 		/datum/ego_datum/weapon/mining/ethereal,
@@ -55,7 +55,7 @@
 	abnormality_origin = ABNORMALITY_ORIGIN_SS13MINING
 
 
-/mob/living/simple_animal/hostile/asteroid/lobstrosity/Initialize()
+/mob/living/simple_animal/hostile/abnormality/mining/lobstrosity/Initialize()
 	if(prob(50))
 		name = "lobstrosity"
 		desc = "A marvel of evolution gone wrong, the sulfur lakes of lavaland have given them a vibrant, red hued shell. Beware its charge."
