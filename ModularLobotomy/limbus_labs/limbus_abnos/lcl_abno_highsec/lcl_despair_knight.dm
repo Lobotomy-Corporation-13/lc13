@@ -185,18 +185,12 @@
 	//+25% attunement safe limit for her EGO family.
 	var/key = "[chosen.ckey]-[attunement_family]"
 	GLOB.lce_attunement_affinity[key] = min(300, (GLOB.lce_attunement_affinity[key] || 0) + bless_affinity)
-	RefreshBlessedArmor(chosen)
+	RefreshLCEAttunement(chosen, attunement_family)
 	chosen.add_overlay(mutable_appearance('ModularLobotomy/_Lobotomyicons/tegu_effects.dmi', "despair", -MUTATIONS_LAYER))
 	playsound(get_turf(chosen), 'sound/abnormalities/despairknight/gift.ogg', 50, FALSE, 2)
 	to_chat(chosen, span_nicegreen("You feel protected. A distant knight watches over you."))
 	to_chat(src, span_hypnophrase("<i>You take [chosen] under your protection.</i>"))
 	update_action_buttons()
-
-//Recompute the blessed's safe attunement limit if they wear this family's LCE armor.
-/mob/living/simple_animal/hostile/limbus_abno/despair_knight/proc/RefreshBlessedArmor(mob/living/carbon/human/H)
-	var/obj/item/clothing/suit/armor/ego_gear/lce/A = H.get_item_by_slot(ITEM_SLOT_OCLOTHING)
-	if(istype(A) && A.attunement_family == attunement_family)
-		A.equipped(H, ITEM_SLOT_OCLOTHING)
 
 //Tears down the whole bond: view, manifest, relay, overlay, affinity boost.
 /mob/living/simple_animal/hostile/limbus_abno/despair_knight/proc/ClearBlessing()
@@ -209,7 +203,7 @@
 	H.cut_overlay(mutable_appearance('ModularLobotomy/_Lobotomyicons/tegu_effects.dmi', "despair", -MUTATIONS_LAYER))
 	var/key = "[H.ckey]-[attunement_family]"
 	GLOB.lce_attunement_affinity[key] = max(0, (GLOB.lce_attunement_affinity[key] || 0) - bless_affinity)
-	RefreshBlessedArmor(H)
+	RefreshLCEAttunement(H, attunement_family)
 	to_chat(H, span_warning("The protection over you fades away."))
 	blessed_human = null
 	defend_ready = FALSE
