@@ -3836,6 +3836,11 @@
 	short_range = 13;
 	view_range = 13
 	},
+/obj/machinery/reagentgrinder{
+	desc = "Used to grind things up into raw materials and liquids.";
+	pixel_y = 14;
+	pixel_x = 2
+	},
 /turf/open/floor/plasteel/white,
 /area/lce/research/reagent)
 "xT" = (
@@ -5595,12 +5600,6 @@
 /obj/structure/closet/crate/bin,
 /turf/open/floor/mineral/titanium/tiled/white,
 /area/lce/hallway/central)
-"HY" = (
-/obj/machinery/computer/lce_cargo{
-	dir = 8
-	},
-/turf/open/floor/mineral/titanium/tiled/white,
-/area/lce/service/lounge)
 "Ib" = (
 /turf/open/floor/carpet/blue,
 /area/lce/medical/office)
@@ -7143,10 +7142,6 @@
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/three)
-"RU" = (
-/obj/machinery/lce_export_pad,
-/turf/open/floor/mineral/titanium/tiled/white,
-/area/lce/service/lounge)
 "RY" = (
 /obj/effect/turf_decal/bot,
 /obj/effect/decal/cleanable/dirt,
@@ -37977,7 +37972,7 @@ ig
 ig
 ig
 ig
-RU
+ig
 bS
 se
 Dv
@@ -38229,7 +38224,7 @@ ig
 ZD
 tG
 Hf
-HY
+ig
 bS
 pj
 Dv
