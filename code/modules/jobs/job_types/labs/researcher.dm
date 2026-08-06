@@ -47,4 +47,3 @@
 	accessory = /obj/item/clothing/accessory/armband/lobotomy/extraction/lce
 	shoes = /obj/item/clothing/shoes/sneakers/white
 	suit = /obj/item/clothing/suit/armor/ego_gear/limbus/lce_longcoat
-	l_pocket = /obj/item/radio
