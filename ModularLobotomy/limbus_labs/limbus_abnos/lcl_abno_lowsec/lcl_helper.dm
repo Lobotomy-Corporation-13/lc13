@@ -54,7 +54,12 @@
 	clean_spray = new(src) //We spawn the spray inside helper because it saves us a little bit of copypaste code.
 	clean_spray.stream_mode = TRUE
 	clean_spray.volume = 1000
-	clean_spray.list_reagents = list(/datum/reagent/space_cleaner = 1000) //No way they'd ever run out, right?
+	clean_spray.list_reagents = list(/datum/reagent/space_cleaner = 1000)
+	//No way they'd ever run out, right?
+
+/*------------------\
+|ABNO LIMBUS ACTIONS|
+\------------------*/
 
 /datum/action/cooldown/limbus_abno_action/helper_fight
 	name = "FIGHT MODE"

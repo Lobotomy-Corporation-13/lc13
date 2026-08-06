@@ -1,3 +1,9 @@
+#define CASKET_TIMER 20 SECONDS
+#define FUNERAL_IDLE 1
+#define FUNERAL_CASKET 2
+#define FUNERAL_CASKET_A 3
+#define FUNERAL_GUN 4
+
 /mob/living/simple_animal/hostile/abnormality/funeral
 	name = "Funeral of the Dead Butterflies"
 	desc = "An towering abnormality possessing a white butterfly for a head and a coffin on its back."
@@ -62,16 +68,16 @@
 			A kaledioscope of butterflies follows you as you leave the containment unit."),
 	)
 
+	var/behavior_mode = FUNERAL_IDLE
+
 	var/gun_cooldown
 	var/gun_cooldown_time = 4 SECONDS
 	var/gun_damage = 60
 	var/swarm_cooldown
-	var/swarm_cooldown_time = 20 SECONDS
-	var/swarm_damage = 13 // 10 seconds, 13 damage 40 times = 520 total
-	var/swarm_length = 24
-	var/swarm_width = 3
-	var/list/swarm_killed = list()
+	var/swarm_cooldown_time = CASKET_TIMER
 	var/gives_achievement = FALSE
+
+	var/obj/effect/proc_holder/ability/aimed/casket_swarm/casket
 
 	//PLAYABLES ATTACKS
 	attack_action_types = list(/datum/action/innate/abnormality_attack/toggle/funeral_butterfly_toggle)
@@ -85,6 +91,10 @@
 	toggle_attack_num = 1
 	toggle_message = span_colossus("You will now fire butterflies from your hands.")
 	button_icon_toggle_deactivated = "funeral_toggle0"
+
+/mob/living/simple_animal/hostile/abnormality/funeral/Initialize()
+	.  = ..()
+	casket = new()
 
 /mob/living/simple_animal/hostile/abnormality/funeral/AttackingTarget(atom/attacked_target)
 	if(!target)
@@ -107,6 +117,56 @@
 		ButterflySwarm(target)
 	return
 
+/mob/living/simple_animal/hostile/abnormality/funeral/Move()
+	if(!can_act)
+		return FALSE
+	return ..()
+//he walk
+
+/mob/living/simple_animal/hostile/abnormality/funeral/death(gibbed)
+	density = FALSE
+	var/matrix/M = matrix()
+	M.Turn(-90) //horizontal coffin
+	src.transform = M
+	pixel_y -= 32
+	pixel_x -= 16
+	animate(src, alpha = 0, time = 10 SECONDS)
+	QDEL_IN(src, 10 SECONDS)
+	//You need to kill him in 8 seconds
+	if(gives_achievement)
+		for(var/mob/living/carbon/human/H in range(5, src))
+			H.client?.give_award(/datum/award/achievement/abno/solemn, H)
+
+	return ..()
+//he die
+
+/mob/living/simple_animal/hostile/abnormality/funeral/update_icon_state()
+	. = ..()
+	if(stat == DEAD)
+		return
+	switch(behavior_mode)
+		if(FUNERAL_IDLE)
+			icon_state = "funeral"
+		if(FUNERAL_CASKET)
+			icon_state = "funeral_coffin_butterfly_less"
+		if(FUNERAL_CASKET_A)
+			icon_state = "funeral_coffin"
+		if(FUNERAL_GUN)
+			icon_state = "funeral_gun"
+
+/mob/living/simple_animal/hostile/abnormality/funeral/FailureEffect(mob/living/carbon/human/user, work_type, pe)
+	. = ..()
+	if(prob(80))
+		datum_reference.qliphoth_change(-1)
+	return
+
+/mob/living/simple_animal/hostile/abnormality/funeral/PostWorkEffect(mob/living/carbon/human/user, work_type, pe, work_time)
+	if(get_attribute_level(user, FORTITUDE_ATTRIBUTE) >= 80)
+		datum_reference.qliphoth_change(-1)
+	if(get_attribute_level(user, JUSTICE_ATTRIBUTE) < 60)
+		datum_reference.qliphoth_change(-1)
+	return
+
 /mob/living/simple_animal/hostile/abnormality/funeral/proc/DensityCheck(turf/T) //TRUE if dense or airlocks closed
 	if(T.density)
 		return TRUE
@@ -122,16 +182,17 @@
 	if(cooler_target.stat == DEAD)
 		return
 	can_act = FALSE
-	icon_state = "funeral_gun"
+	ChangeBehavior(FUNERAL_GUN)
 	visible_message(span_danger("[src] levels one of its arms at [cooler_target]!"))
 	cooler_target.apply_status_effect(/datum/status_effect/spirit_gun_target) // Re-used for visual indicator
 	dir = get_cardinal_dir(src, target)
+	gun_cooldown = world.time + gun_cooldown_time
 	SLEEP_CHECK_DEATH(1.5 SECONDS)
 	playsound(get_turf(src), 'sound/abnormalities/funeral/spiritgun.ogg', 75, 1, 3)
 	cooler_target.remove_status_effect(/datum/status_effect/spirit_gun_target)
 	can_act = TRUE
-	gun_cooldown = world.time + gun_cooldown_time
-	icon_state = icon_living
+	ChangeBehavior()
+
 	var/line_of_sight = getline(get_turf(src), get_turf(target)) //better simulates a projectile attack
 	for(var/turf/T in line_of_sight)
 		if(DensityCheck(T))
@@ -155,107 +216,70 @@
 	var/turf/adjacent_turf = get_step(src,dir_to_target)
 	if(adjacent_turf.density)
 		return
-	var/list/middle_line = list()
-	var/turf/source_turf = get_turf(src)
-	middle_line = getline(source_turf, get_ranged_target_turf(source_turf, dir_to_target, swarm_length))
-	for(var/i = 1, i<=middle_line.len, i++) //middle turf must be clear for swarm to "flow"
-		if(isturf(middle_line[i]))
-			var/turf/T = middle_line[i]
-			if(T.density)
-				middle_line.Cut(i)
-				break
-	if(!LAZYLEN(middle_line))
-		return
-	can_act = FALSE
 	dir = dir_to_target
 	visible_message(span_danger("[src] prepares to open its coffin!"))
-	icon_state = "funeral_coffin_butterfly_less"
+
+	ChangeBehavior(FUNERAL_CASKET)
 	SLEEP_CHECK_DEATH(1.75 SECONDS)
-	icon_state = "funeral_coffin"
+	ChangeBehavior(FUNERAL_CASKET_A)
 	playsound(get_turf(src), 'sound/abnormalities/funeral/coffin.ogg', 40, extrarange = 10, ignore_walls = TRUE) // bwiiiiiiinng >flapping
-	var/i = 0
-	for(var/turf/T in middle_line)
-		addtimer(CALLBACK(src, PROC_REF(SwarmTurf), T, dir_to_target), i*1.4) //swarm travel speed
-		i++
-	SLEEP_CHECK_DEATH(10 SECONDS)
-	icon_state = icon_living
-	can_act = TRUE
+	casket.Perform(target, src)
+
+	ChangeBehavior(FUNERAL_IDLE)
 	swarm_cooldown = world.time + swarm_cooldown_time
 
-/mob/living/simple_animal/hostile/abnormality/funeral/proc/SwarmTurf(turf/T, direction)
-	var/turf/hit_turfs = list()
-	switch(direction)
-		if(EAST)
-			if(!T.density) //lets middle line to go through airlocks
-				hit_turfs |= T
-			for(var/turf/Y in getline(T, get_ranged_target_turf(T, NORTH, swarm_width)))
-				if(DensityCheck(Y)) //prevents swarm width from going through airlocks
-					break
-				hit_turfs |= Y
-			for(var/turf/U in getline(T, get_ranged_target_turf(T, SOUTH, swarm_width)))
-				if(DensityCheck(U))
-					break
-				hit_turfs |= U
-		if(WEST)
-			if(!T.density)
-				hit_turfs |= T
-			for(var/turf/Y in getline(T, get_ranged_target_turf(T, NORTH, swarm_width)))
-				if(DensityCheck(Y))
-					break
-				hit_turfs |= Y
-			for(var/turf/U in getline(T, get_ranged_target_turf(T, SOUTH, swarm_width)))
-				if(DensityCheck(U))
-					break
-				hit_turfs |= U
-		if(SOUTH)
-			if(!T.density)
-				hit_turfs |= T
-			for(var/turf/Y in getline(T, get_ranged_target_turf(T, EAST, swarm_width)))
-				if(DensityCheck(Y))
-					break
-				hit_turfs |= Y
-			for(var/turf/U in getline(T, get_ranged_target_turf(T, WEST, swarm_width)))
-				if(DensityCheck(U))
-					break
-				hit_turfs |= U
-		if(NORTH)
-			if(!T.density)
-				hit_turfs |= T
-			for(var/turf/Y in getline(T, get_ranged_target_turf(T, EAST, swarm_width)))
-				if(DensityCheck(Y))
-					break
-				hit_turfs |= Y
-			for(var/turf/U in getline(T, get_ranged_target_turf(T, WEST, swarm_width)))
-				if(DensityCheck(U))
-					break
-				hit_turfs |= U
-		else
-			return
-	for(var/turf/TT in hit_turfs)
-		if(locate(/obj/effect/temp_visual/funeral_swarm) in TT)
-			continue
-		new /obj/effect/temp_visual/funeral_swarm(TT)
-		addtimer(CALLBACK(src, PROC_REF(SwarmTurfLinger), TT))
-
-/mob/living/simple_animal/hostile/abnormality/funeral/proc/SwarmTurfLinger(turf/T)
-	for(var/i = 1 to 40) //40 times
-		if(SSmaptype.maptype == "limbus_labs")
-			for(var/mob/living/carbon/human/H in HurtInTurf(T, list(), swarm_damage, WHITE_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, hurt_structure = TRUE, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_SPECIAL)))
-				if(H.stat == DEAD)
-					continue
-				if(H.sanity_lost)
-					H.death()
-					KillAnimation(H)
-		else
-			for(var/mob/living/carbon/human/H in HurtInTurf(T, list(), swarm_damage, WHITE_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_SPECIAL)))
-				if(H.stat == DEAD)
-					continue
-				if(H.sanity_lost)
-					H.death()
-					KillAnimation(H)
-		SLEEP_CHECK_DEATH(0.25 SECONDS) //10 seconds
-
 /mob/living/simple_animal/hostile/abnormality/funeral/proc/KillAnimation(mob/living/carbon/human/killed)
+	killed.apply_status_effect(/datum/status_effect/butterfly_death_anim)
+
+/mob/living/simple_animal/hostile/abnormality/funeral/proc/SpecialReset()
+	ChangeBehavior(behav = FUNERAL_IDLE)
+
+/mob/living/simple_animal/hostile/abnormality/funeral/proc/ChangeBehavior(behav = FUNERAL_IDLE)
+	behavior_mode = behav
+	update_icon()
+
+/*-----------\
+|Achievements|
+\-----------*/
+/mob/living/simple_animal/hostile/abnormality/funeral/BreachEffect()
+	. = ..()
+	addtimer(CALLBACK(src, PROC_REF(AchievementOff)), 8 SECONDS)
+	gives_achievement = TRUE
+
+/mob/living/simple_animal/hostile/abnormality/funeral/proc/AchievementOff()
+	gives_achievement = FALSE
+
+/*-------------\
+|STATUS EFFECTS|
+\-------------*/
+
+/datum/status_effect/spirit_gun_target
+	id = "butterfly_target"
+	status_type = STATUS_EFFECT_UNIQUE
+	alert_type = null
+	duration = 2 SECONDS
+
+/datum/status_effect/spirit_gun_target/on_apply()
+	. = ..()
+	owner.add_overlay(mutable_appearance('ModularLobotomy/_Lobotomyicons/32x32.dmi', "funeral_swarm", -MUTATIONS_LAYER))
+
+/datum/status_effect/spirit_gun_target/on_remove()
+	. = ..()
+	owner.cut_overlay(mutable_appearance('ModularLobotomy/_Lobotomyicons/32x32.dmi', "funeral_swarm", -MUTATIONS_LAYER))
+
+//Functions as a remote way to apply a death animation
+/datum/status_effect/butterfly_death_anim
+	id = "butterfly_death"
+	status_type = STATUS_EFFECT_UNIQUE
+	alert_type = null
+	duration = 4.5 SECONDS
+
+/datum/status_effect/butterfly_death_anim/on_apply()
+	. = ..()
+	if(!ishuman(owner))
+		qdel(src)
+		return
+	var/mob/living/carbon/human/killed = owner
 	var/pixel_y_before = killed.pixel_y
 	animate(killed, pixel_y = 10, time = 10, easing = BACK_EASING | EASE_OUT)
 	sleep(10)
@@ -274,56 +298,6 @@
 	animate(funeral_overlay, alpha = 255, time = 3 SECONDS)
 	killed.vis_contents += funeral_overlay
 
-/mob/living/simple_animal/hostile/abnormality/funeral/Move()
-	if(!can_act)
-		return FALSE
-	return ..()
-//he walk
-
-/mob/living/simple_animal/hostile/abnormality/funeral/death(gibbed)
-	density = FALSE
-	var/matrix/M = matrix()
-	M.Turn(-90) //horizontal coffin
-	src.transform = M
-	pixel_y -= 32
-	pixel_x -= 16
-	animate(src, alpha = 0, time = 10 SECONDS)
-	QDEL_IN(src, 10 SECONDS)
-	//You need to kill him in 8 seconds
-	if(gives_achievement)
-		for(var/mob/living/carbon/human/H in range(5, src))
-			H.client?.give_award(/datum/award/achievement/abno/solemn, H)
-
-	..()
-//he die
-
-/mob/living/simple_animal/hostile/abnormality/funeral/FailureEffect(mob/living/carbon/human/user, work_type, pe)
-	. = ..()
-	if(prob(80))
-		datum_reference.qliphoth_change(-1)
-	return
-
-/mob/living/simple_animal/hostile/abnormality/funeral/PostWorkEffect(mob/living/carbon/human/user, work_type, pe, work_time)
-	if(get_attribute_level(user, FORTITUDE_ATTRIBUTE) >= 80)
-		datum_reference.qliphoth_change(-1)
-	if(get_attribute_level(user, JUSTICE_ATTRIBUTE) < 60)
-		datum_reference.qliphoth_change(-1)
-	return
-
-/datum/status_effect/spirit_gun_target
-	id = "butterfly_target"
-	status_type = STATUS_EFFECT_UNIQUE
-	alert_type = null
-	duration = 2 SECONDS
-
-/datum/status_effect/spirit_gun_target/on_apply()
-	. = ..()
-	owner.add_overlay(mutable_appearance('ModularLobotomy/_Lobotomyicons/32x32.dmi', "funeral_swarm", -MUTATIONS_LAYER))
-
-/datum/status_effect/spirit_gun_target/on_remove()
-	. = ..()
-	owner.cut_overlay(mutable_appearance('ModularLobotomy/_Lobotomyicons/32x32.dmi', "funeral_swarm", -MUTATIONS_LAYER))
-
 /obj/effect/temp_visual/funeral_swarm
 	name = "funeral swarm"
 	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
@@ -331,11 +305,106 @@
 	layer = BELOW_MOB_LAYER
 	duration = 10 SECONDS
 
-//Achievement stuff
-/mob/living/simple_animal/hostile/abnormality/funeral/BreachEffect()
-	..()
-	addtimer(CALLBACK(src, PROC_REF(AchievementOff)), 8 SECONDS)
-	gives_achievement = TRUE
+/*--------\
+|Abilities|
+\--------*/
 
-/mob/living/simple_animal/hostile/abnormality/funeral/proc/AchievementOff()
-	gives_achievement = FALSE
+/obj/effect/proc_holder/ability/aimed/casket_swarm
+	name = "Casket Swarm"
+	desc = "Release a swarm of butterflies in a cardinal direction."
+	action_icon_state = "helper_dash0"
+	base_icon_state = "helper_dash"
+	cooldown_time = CASKET_TIMER
+	var/swarm_damage = 13 // 10 seconds, 13 damage 40 times = 520 total
+	var/swarm_length = 24
+	var/swarm_width = 7
+
+/obj/effect/proc_holder/ability/aimed/casket_swarm/can_cast(mob/user = usr)
+	if(isabnormalitymob(user))
+		var/mob/living/simple_animal/hostile/abnormality/abno = usr
+		if(abno.IsContained())
+			return FALSE
+	return ..()
+
+/obj/effect/proc_holder/ability/aimed/casket_swarm/AbnoInteraction(mob/living/user)
+	if(!istype(user, /mob/living/simple_animal/hostile/abnormality/funeral))
+		return
+	var/mob/living/simple_animal/hostile/abnormality/funeral/abno = user
+	ToggleAct(abno,TRUE)
+	abno.SpecialReset()
+
+/obj/effect/proc_holder/ability/aimed/casket_swarm/Perform(target, mob/living/user, enraged = 0)
+	. = ..()
+	//reset the emergency stop so we are not forever stuck.
+	if(!user || !target)
+		AbnoInteraction(user)
+		return
+	ToggleAct(user,FALSE)
+
+	var/dir_to_target = get_cardinal_dir(get_turf(user), get_turf(target))
+	var/our_x = user.x
+	var/our_y = user.y
+	var/our_z = user.z
+	var/list/total_turfs_swarmed = list()
+	for(var/i = 1 to swarm_length)
+		if(!do_after(user, 4, target = user) || QDELETED(user))
+			break
+		if(user.stat == DEAD)
+			break
+		var/list/step_list = SwarmStep(our_x, our_y, our_z, user, dir_to_target)
+		total_turfs_swarmed += step_list
+		SwarmAllTurfs(user, total_turfs_swarmed)
+		if(length(step_list))
+			//I used XYZ coord manipulation too much -IP
+			switch(dir_to_target)
+				if(EAST)
+					our_x++
+				if(WEST)
+					our_x--
+				if(SOUTH)
+					our_y--
+				if(NORTH)
+					our_y++
+
+	AbnoInteraction(user)
+	ToggleAct(user,TRUE)
+
+/obj/effect/proc_holder/ability/aimed/casket_swarm/proc/SwarmStep(x_offset = 0, y_offset = 0, z_offset = 0, mob/living/user, enemy_cardinal_dir)
+	var/angle_movement = "1x[swarm_width]"
+	if(enemy_cardinal_dir == NORTH || enemy_cardinal_dir == SOUTH)
+		angle_movement = "[swarm_width]x1"
+	var/turf/step_area = locate(x_offset,y_offset,z_offset)
+	if(step_area.density)
+		return list()
+	return range(angle_movement, step_area)
+
+/obj/effect/proc_holder/ability/aimed/casket_swarm/proc/SwarmAllTurfs(mob/living/user, trg_list = list())
+	if(!user || !trg_list)
+		return
+	for(var/turf/T in trg_list)
+		if(T.density)
+			continue
+		EffectTiles(T, user)
+
+/obj/effect/proc_holder/ability/aimed/casket_swarm/proc/EffectTiles(turf/tile, mob/living/user)
+	var/damage_structures = FALSE
+	if(SSmaptype.maptype == "limbus_labs")
+		damage_structures = TRUE
+
+	new /obj/effect/temp_visual/funeral_swarm(tile)
+
+	for(var/mob/living/carbon/human/H in user.HurtInTurf(tile, list(), swarm_damage, WHITE_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, hurt_structure = damage_structures, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_SPECIAL)))
+		if(H.stat == DEAD)
+			continue
+		if(H.sanity_lost)
+			H.death()
+			KillAnimation(H)
+
+/obj/effect/proc_holder/ability/aimed/casket_swarm/proc/KillAnimation(mob/living/carbon/human/killed)
+	killed.apply_status_effect(/datum/status_effect/butterfly_death_anim)
+
+#undef CASKET_TIMER
+#undef FUNERAL_IDLE
+#undef FUNERAL_CASKET
+#undef FUNERAL_CASKET_A
+#undef FUNERAL_GUN

@@ -41,6 +41,8 @@
 	ego_desire_gained = 2
 	attunement_family = "smile"
 	ego_list = list(/datum/ego_datum/armor/lce/smile)
+
+	can_breach = TRUE
 	var/phase_one_health = 2000
 	var/phase_two_health = 3000
 	var/phase_three_health = 4000
@@ -49,7 +51,6 @@
 	var/max_starving_patience = 4
 	var/starving_patience = 4
 	var/body_count = 0 //Only starts to add body counts on breach. Contributes to phase changes.
-	var/breached = FALSE
 	var/spit_ready = FALSE //If the next open_fire attack will be a spit.
 	var/spitting = FALSE
 	var/scream_damage = 40
@@ -94,10 +95,10 @@
 			Unbreach()
 		else
 			ChangePhase(FALSE)
-	..()
+	return ..()
 
 /mob/living/simple_animal/hostile/limbus_abno/mountain/OpenFire(atom/A)
-	..()
+	. = ..()
 	if(phase <= 2)
 		spit_ready = FALSE
 		return FALSE
@@ -140,8 +141,8 @@
 
 ///Whenever mountain gets hungrier during starvation, it loses patience, until it severely loses out on desire.
 /mob/living/simple_animal/hostile/limbus_abno/mountain/AdjustHunger(feeding_amount)
-	..()
-	if(starving && !IsPositive(feeding_amount))
+	. = ..()
+	if(starving && 1 > feeding_amount)
 		starving_patience--
 		AdjustDesire(-5)
 		if(starving_patience == 2)
@@ -160,16 +161,9 @@
 				Slam(TRUE)
 
 /mob/living/simple_animal/hostile/limbus_abno/mountain/AdjustDesire(desire_amount)
-	..()
-	if(desire_bar <= 10 && !IsPositive(desire_amount))
+	. = ..()
+	if(desire_bar <= 10 && 1 > desire_amount)
 		AdjustCounter(-1)
-
-/mob/living/simple_animal/hostile/limbus_abno/mountain/AdjustCounter()
-	..()
-	if(breached)
-		return
-	if(counter <= 0)
-		Breach()
 
 /mob/living/simple_animal/hostile/limbus_abno/mountain/AbnoEat(atom/food)
 	if(istype(food, /obj/item/bodypart/head))
@@ -221,7 +215,10 @@
 	satiated = FALSE
 
 //When breached, become incapable of being satiated. Gets hungry even faster, and will start losing health when starving for too long.
-/mob/living/simple_animal/hostile/limbus_abno/mountain/proc/Breach()
+/mob/living/simple_animal/hostile/limbus_abno/mountain/Breach()
+	. = ..()
+	if(!.)
+		return
 	melee_damage_lower = 30
 	melee_damage_upper = 25
 	hunger_cooldown_time = 5 SECONDS
@@ -229,10 +226,9 @@
 	breached = TRUE
 	satiated = FALSE
 	unstable = TRUE
-	AddBreachEffect()
 	to_chat(src, span_userdanger("You breach! You can no longer be sated the usual way. Devour humanoid corpses to grow larger and mend your wounds, but starving now tears at your health. Only overwhelming force will calm you."))
 
-/mob/living/simple_animal/hostile/limbus_abno/mountain/proc/Unbreach()
+/mob/living/simple_animal/hostile/limbus_abno/mountain/Unbreach()
 	melee_damage_lower = 5
 	melee_damage_upper = 10
 	breached = FALSE
@@ -245,7 +241,7 @@
 	RegularHunger()
 	manual_emote("calms down.")
 	to_chat(src, span_notice("The frenzy drains away. You settle back down, whole and sated once more."))
-	RemoveBreachEffect()
+	return ..()
 
 //Speech mangling. treat_message() is the engine's own hook for this - it is where stuttering,
 //slurring and derpspeech are applied - so it catches player speech and nothing else. Emotes,
@@ -313,6 +309,9 @@
 		message += "…"
 	return message
 
+/*------------------\
+|ABNO LIMBUS ACTIONS|
+\------------------*/
 ///An ability that makes everyone in area feel disgusted and puke. Cannot be used during a breach since the puke stun is kind of busted in combat.
 /datum/action/cooldown/limbus_abno_action/rot_gas
 	name = "Rot Gas"

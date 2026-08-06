@@ -59,8 +59,6 @@
 	var/mob/camera/despair_manifest/manifest = null
 	///TRUE while her body is crystallised (manifested).
 	var/crystallized = FALSE
-	///Breach state.
-	var/breached = FALSE
 	///Defend window bookkeeping.
 	var/defend_ready = FALSE
 	var/defend_window_end = 0
@@ -346,8 +344,8 @@
 	to_chat(src, span_nicegreen("You appear at [blessed_human]'s side to defend them."))
 
 // Breach - hostile state with the retuned attack kit.
-/mob/living/simple_animal/hostile/limbus_abno/despair_knight/proc/Breach()
-	if(breached)
+/mob/living/simple_animal/hostile/limbus_abno/despair_knight/Breach()
+	if(!IsContained())
 		return
 	ClearBlessing()
 	breached = TRUE

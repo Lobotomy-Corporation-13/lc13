@@ -75,7 +75,6 @@
 	// --- Breach ---
 	///TRUE while the breach alert is up. She never breaches on her own.
 	var/breach_ready = FALSE
-	var/breached = FALSE
 	///Dropping below this while breached ends it.
 	var/breach_break_health = 100
 	///Breached only: how long squeezing under a door takes.
@@ -175,10 +174,8 @@
 		return FALSE
 	breach_ready = FALSE
 	clear_alert("lunar_breach")
-	breached = TRUE
-	unstable = TRUE
+	Breach()
 	adjustHealth(-maxHealth) //Full restoration, same idiom the Punishing Bird uses.
-	AddBreachEffect()
 	manual_emote("shakes herself off and drops onto all fours.")
 	to_chat(src, span_userdanger("You feel completely well again. Attack a door and you can \
 		squeeze under it - it takes a few seconds, so pick your moment."))
@@ -186,20 +183,18 @@
 	return TRUE
 
 ///Ends the breach. Restores the counter so the offer is not thrown again immediately.
-/mob/living/simple_animal/hostile/limbus_abno/lunar_rabbit/proc/Unbreach()
-	if(!breached)
+/mob/living/simple_animal/hostile/limbus_abno/lunar_rabbit/Unbreach()
+	if(IsContained())
 		return
-	breached = FALSE
-	unstable = FALSE
 	crawling = FALSE
-	RemoveBreachEffect()
 	manual_emote("stops, and picks herself up off the floor.")
 	to_chat(src, span_userdanger("That is enough of that. You are in no state to keep running."))
 	AdjustCounter(max_counter)
+	return ..()
 
 /mob/living/simple_animal/hostile/limbus_abno/lunar_rabbit/updatehealth()
-	..()
-	if(breached && health < breach_break_health)
+	. = ..()
+	if(!IsContained() && health < breach_break_health)
 		Unbreach()
 
 /mob/living/simple_animal/hostile/limbus_abno/lunar_rabbit/death()
