@@ -35,8 +35,8 @@
 	start_qliphoth = 3
 	work_chances = list(
 		ABNORMALITY_WORK_INSTINCT = list(80, 60, 45, 30, 30),
-		ABNORMALITY_WORK_INSIGHT = 30,
-		ABNORMALITY_WORK_ATTACHMENT = 40,
+		ABNORMALITY_WORK_INSIGHT = list(20, 40, 45, 50, 60),
+		ABNORMALITY_WORK_ATTACHMENT = 20,
 		ABNORMALITY_WORK_REPRESSION = 20,
 	)
 
@@ -45,6 +45,11 @@
 	can_patrol = FALSE
 	wander = FALSE
 	vision_range = 0
+
+	ego_list = list(
+		/datum/ego_datum/weapon/branch12/barostem,
+		/datum/ego_datum/armor/branch12/barostem,
+	)
 
 	abnormality_origin = ABNORMALITY_ORIGIN_BRANCH12
 	var/active = FALSE

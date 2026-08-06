@@ -223,6 +223,16 @@
 	attack_verb_continuous = list("slams", "strikes", "smashes")
 	attack_verb_simple = list("slam", "strike", "smash")
 
+//Barostem
+/obj/item/ego_weapon/branch12/barostem
+	name = "barostem"
+	desc = "The baroputians despise those that decorate themselves \
+		as much as any non-baroputian. This one is safer in your care then theirs."
+	icon_state = "barostem"
+	force = 14
+	damtype = RED_DAMAGE
+	attack_verb_continuous = list("slams", "strikes", "smashes")
+	attack_verb_simple = list("slam", "strike", "smash")
 
 //Relic of Virtue
 /obj/item/ego_weapon/branch12/mini/virtue
