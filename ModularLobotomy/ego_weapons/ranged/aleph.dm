@@ -941,3 +941,37 @@
 							JUSTICE_ATTRIBUTE = 80
 							)
 
+/obj/item/ego_weapon/ranged/dreaming
+	name = "dreaming"
+	desc = "A longing to see the current."
+	special = "The bullets of this gun become stronger with the corresponding realization."
+	icon_state = "dreaming"
+	icon = 'icons/obj/ego_weapons.dmi'
+	lefthand_file = 'icons/mob/inhands/64x64_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/64x64_righthand.dmi'
+	inhand_icon_state = "dreaming"
+	inhand_x_dimension = 64
+	inhand_y_dimension = 64
+	force = 58
+	damtype = WHITE_DAMAGE
+	projectile_path = /obj/projectile/ego_bullet/ego_ecstasy
+	weapon_weight = WEAPON_MEDIUM
+	spread = 40
+	fire_sound = 'sound/weapons/ego/ecstasy.ogg'
+	autofire = 0.08 SECONDS
+	shotsleft = 80
+	reloadtime = 1.4 SECONDS
+	attribute_requirements = list(
+							FORTITUDE_ATTRIBUTE = 80,
+							PRUDENCE_ATTRIBUTE = 100,
+							TEMPERANCE_ATTRIBUTE = 80,
+							JUSTICE_ATTRIBUTE = 80
+							)
+
+/obj/item/ego_weapon/ranged/dreaming/ProjectileAdjustment(obj/projectile/proj, turf/targloc, atom/target, mob/living/user)
+	. = ..()
+	var/obj/item/clothing/suit/armor/ego_gear/realization/dreaming/our_suit = user.get_item_by_slot(ITEM_SLOT_OCLOTHING)
+	if(istype(our_suit))
+		proj.damage = (proj.damage * 2.0)
+	return
+
