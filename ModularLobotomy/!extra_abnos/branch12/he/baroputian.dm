@@ -10,8 +10,8 @@
 * They are also agressive to Baroputians of other colors.
 * Rarely a Baroputian that has decorated themselves with red
 * leaves will appear called a \"Flower\". Flowers tend to be
-* hunted down and violently killed by their kin for some unknown
-* reason.
+* hunted down and violently killed by their kin for being
+* different.
 */
 /mob/living/simple_animal/hostile/abnormality/branch12/lillibag
 	name = "Baromez"
