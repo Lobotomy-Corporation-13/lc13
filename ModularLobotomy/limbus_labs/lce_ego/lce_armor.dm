@@ -32,8 +32,8 @@ GLOBAL_LIST_EMPTY(lce_attunement_affinity)
 
 // ---- Base LCE armor: attunement state + behavior ----
 /obj/item/clothing/suit/armor/ego_gear/lce
-	icon = 'icons/obj/clothing/ego_gear/limbus_labs.dmi'
-	worn_icon = 'icons/mob/clothing/ego_gear/limbus_labs.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/lce_armor.dmi'
+	worn_icon = 'ModularLobotomy/_Lobotomyicons/lce_armor_worn.dmi'
 	attribute_requirements = list(
 							FORTITUDE_ATTRIBUTE = 20,
 							PRUDENCE_ATTRIBUTE = 20,

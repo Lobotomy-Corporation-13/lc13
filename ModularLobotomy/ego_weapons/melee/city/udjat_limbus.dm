@@ -75,8 +75,8 @@
 	name = "\improper Udjat mask"
 	desc = "A mask worn by The Udjat, a mysterious Grade 1 Fixer office."
 	icon_state = "udjat"
-	icon = 'icons/obj/clothing/ego_gear/head.dmi'
-	worn_icon = 'icons/mob/clothing/ego_gear/head.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/lce_clothing.dmi'
+	worn_icon = 'ModularLobotomy/_Lobotomyicons/lce_clothing_worn.dmi'
 	flags_inv = HIDEFACIALHAIR | HIDEFACE | HIDEEYES | HIDEEARS | HIDESNOUT
 	visor_flags_inv = 0
 	dynamic_hair_suffix = ""

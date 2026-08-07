@@ -22,7 +22,7 @@
 	name = "unstable enkephalin"
 	desc = "A canister of enkephalin drawn straight out of something that did not offer it. \
 		It has not been refined, and it will not keep."
-	icon = 'ModularLobotomy/_Lobotomyicons/lce_map/lce_ebox.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/lce_map/lce_map_obj.dmi'
 	icon_state = "lce_ebox_3"
 	w_class = WEIGHT_CLASS_BULKY
 	///0 to 1. Set at extraction from how close the specimen's bars were to full. Drives both the

@@ -127,11 +127,12 @@
 	equip_delay_self = 0
 
 
-//LCE Research issue - the brown longcoat. Subtypes /limbus rather than /limbus_labs because
-//that is the parent carrying limbus_suits.dmi / limbus_suit.dmi, where the sprite lives.
+//LCE Research issue - the brown longcoat.
 /obj/item/clothing/suit/armor/ego_gear/limbus/lce_longcoat
 	name = "LCE longcoat"
 	desc = "A heavy brown longcoat with red piping at the lapel and cuff. Standard issue to Limbus Company Extraction research staff, and the only armour most of them will ever wear."
+	icon = 'ModularLobotomy/_Lobotomyicons/lce_armor.dmi'
+	worn_icon = 'ModularLobotomy/_Lobotomyicons/lce_armor_worn.dmi'
 	icon_state = "lce_longcoat"
 	flags_inv = NONE
 	armor = list(RED_DAMAGE = 10, WHITE_DAMAGE = 10, BLACK_DAMAGE = 10, PALE_DAMAGE = 0)
