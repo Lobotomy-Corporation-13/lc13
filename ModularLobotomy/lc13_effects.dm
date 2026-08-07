@@ -363,4 +363,3 @@
 /obj/effect/bloodspawner/nogibs/silent
 	sound_to_play = null
 	sound_vol = 0
-	
