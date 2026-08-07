@@ -329,7 +329,7 @@
 /datum/action/innate/lce_claw
 	//The buttons are the claw's own head, cropped out of its sprite, so the control and the thing
 	//it drives are the same piece of art.
-	icon_icon = 'ModularLobotomy/_Lobotomyicons/lce_map/lce_claw_actions.dmi'
+	icon_icon = 'ModularLobotomy/_Lobotomyicons/lce_map/lce_map_obj.dmi'
 	button_icon_state = "claw_take"
 	///Set in Activate() by CheckClaw().
 	var/obj/machinery/computer/camera_advanced/lce_claw/console

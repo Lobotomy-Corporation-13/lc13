@@ -8,6 +8,10 @@
 /area/lce
 	parent_type = /area/facility_hallway
 	name = "Limbus Company Extraction"
+	// Every LCE area state lives on its own sheet rather than in the shared areas.dmi, so
+	// upstream can repaint the station's areas without a binary conflict here. Set once on the
+	// parent - all 46 states below inherit it.
+	icon = 'ModularLobotomy/_Lobotomyicons/lce_areas.dmi'
 	icon_state = "lce_hall_central"
 
 /*			CONTAINMENT			*/

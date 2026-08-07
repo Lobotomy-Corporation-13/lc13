@@ -5,7 +5,7 @@
 
 // ============================ MELEE BASE ============================
 /obj/item/ego_weapon/lce
-	icon = 'icons/obj/lce_egoweapons.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/lce_egoweapons.dmi'
 	attribute_requirements = list(
 							FORTITUDE_ATTRIBUTE = 20,
 							PRUDENCE_ATTRIBUTE = 20,
@@ -347,7 +347,7 @@
 		to call a rapier out of the air: it takes half a second to form, then flies at wherever its \
 		quarry is standing by then. No cooldown beyond the charges themselves. Attunement raises both \
 		the rapiers' damage and how many charges you can hold (3 to 7)."
-	icon = 'icons/obj/lce_egoweapons.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/lce_egoweapons.dmi'
 	// One state, deliberately: the cracked face is the best of the three and a shield that
 	// never changes needs no others. vigil / vigil_raised were dropped from the sheet.
 	icon_state = "vigil_cracked"
@@ -507,7 +507,7 @@
 // Scales its bullets' damage with the worn matching armor's attunement. Future LCE guns
 // subtype this and just set their projectile/ammo stats.
 /obj/item/ego_weapon/ranged/lce
-	icon = 'icons/obj/lce_egoweapons.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/lce_egoweapons.dmi'
 	attribute_requirements = list(
 							FORTITUDE_ATTRIBUTE = 20,
 							PRUDENCE_ATTRIBUTE = 20,
