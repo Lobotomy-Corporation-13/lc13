@@ -10,6 +10,7 @@
 
 #define LCE_BOX_BASE_VALUE 150    // A full-quality box. A perfect 5-stage scan is worth 5 of these.
 #define LCE_EGO_EXPORT_VALUE 400  // A complete LCE set: armour and its paired weapon together.
+#define LCE_CRATE_EXPORT_VALUE 50 // The crate itself. HQ wants its shipping containers back.
 #define LCE_EBOX_TIERS 5
 
 /*			UNSTABLE ENKEPHALIN			*/
@@ -124,8 +125,10 @@
 		to_chat(user, span_warning("No cargo account is responding."))
 		return FALSE
 
+	var/turf/here = get_turf(src)
 	var/list/goods = GoodsOnPad()
 	var/list/shipping = list()
+	var/list/crates = list()
 	var/earned = 0
 	var/refused = 0
 
@@ -147,6 +150,26 @@
 			shipping += suit
 			shipping += weapon
 			earned += LCE_EGO_EXPORT_VALUE
+			continue
+		if(istype(AM, /obj/structure/closet/crate))
+			crates += AM
+			earned += LCE_CRATE_EXPORT_VALUE
+
+	//Crates go last, and anything inside them that HQ will not buy is tipped onto the pad first.
+	//A closet's Destroy() would dump its contents anyway, but doing it here means the spill is a
+	//deliberate, visible outcome rather than a side effect - and the operator gets their food back
+	//instead of watching it vanish with the box.
+	var/spilled = 0
+	for(var/obj/structure/closet/crate/box in crates)
+		//Copy(): forceMove pulls the item out of box.contents, and DM's for-in walks the live
+		//list by index - mutating it mid-loop would skip every second item and leave half the
+		//crate inside when it ships.
+		for(var/atom/movable/inside in box.contents.Copy())
+			if(inside in shipping)
+				continue
+			inside.forceMove(here)
+			spilled++
+	shipping += crates
 
 	if(!length(shipping))
 		to_chat(user, span_warning(refused \
@@ -165,6 +188,8 @@
 	account.adjust_money(earned)
 	busy = FALSE
 	visible_message(span_notice("[src] discharges. Manifest accepted: [earned] Ahn."))
+	if(spilled)
+		to_chat(user, span_notice("[spilled] item\s HQ had no use for [spilled == 1 ? "was" : "were"] left on the pad."))
 	if(refused)
 		to_chat(user, span_warning("[refused] EGO piece\s stayed behind - HQ will not take a half set."))
 	return TRUE
@@ -174,27 +199,34 @@
 //Curated for this mode. SSshuttle registers every /datum/supply_pack subtype automatically, so
 //`special` keeps these out of the stock cargo console's catalogue on other maps; our console lists
 //subtypesof(/datum/supply_pack/lce) directly and ignores the flag.
+//
+//Each category is an abstract parent carrying the `group`, which is what the console tabs on.
+//Parents have no `contains`, so both SSshuttle and our own Catalogue() skip them.
 /datum/supply_pack/lce
 	group = "LCE"
 	special = TRUE
 	crate_type = /obj/structure/closet/crate
 
-// -- Repair. The reason this feature exists: none of this is mapped into the facility.
-/datum/supply_pack/lce/cable
+/*  Repair - the reason this feature exists: none of this is mapped into the facility.  */
+
+/datum/supply_pack/lce/repair
+	group = "Repair"
+
+/datum/supply_pack/lce/repair/cable
 	name = "Cable Coil Crate"
 	desc = "Three coils. Enough to repair prosthetics, or to stop a specimen eating the lights."
 	cost = 300
 	contains = list(/obj/item/stack/cable_coil = 3)
 	crate_name = "cable crate"
 
-/datum/supply_pack/lce/metal
+/datum/supply_pack/lce/repair/metal
 	name = "Metal Sheets"
 	desc = "Fifty sheets."
 	cost = 400
 	contains = list(/obj/item/stack/sheet/metal/fifty)
 	crate_name = "metal crate"
 
-/datum/supply_pack/lce/rods
+/datum/supply_pack/lce/repair/rods
 	name = "Metal Rods"
 	desc = "A bundle of rods, without the detour through mutated mushrooms."
 	cost = 250
@@ -207,39 +239,42 @@
 /obj/item/stack/sheet/glass/lce_ration
 	amount = 20
 
-/datum/supply_pack/lce/glass
+/datum/supply_pack/lce/repair/glass
 	name = "Glass Sheets"
 	desc = "Twenty sheets. HQ does not send more than this at a time, and has its reasons."
 	cost = 350
 	contains = list(/obj/item/stack/sheet/glass/lce_ration)
 	crate_name = "glass crate"
 
-/datum/supply_pack/lce/lights
+/datum/supply_pack/lce/repair/lights
 	name = "Light Tube Crate"
 	desc = "Replacement tubes. The fixtures themselves cannot be replaced, so mind them."
 	cost = 250
 	contains = list(/obj/item/light/tube = 8, /obj/item/light/bulb = 4)
 	crate_name = "lighting crate"
 
-/datum/supply_pack/lce/tools
+/datum/supply_pack/lce/repair/tools
 	name = "Tool Kit"
 	desc = "A full belt of hand tools."
 	cost = 400
-	contains = list(/obj/item/storage/belt/utility/full)
+	contains = list(/obj/item/storage/belt/utility/full/lce)
 	crate_name = "tool crate"
 
-/datum/supply_pack/lce/welding
+/datum/supply_pack/lce/repair/welding
 	name = "Welding Supplies"
 	desc = "A fuel tank, a welder and a pair of goggles."
 	cost = 350
-	contains = list(/obj/structure/reagent_dispensers/fueltank,
-					/obj/item/weldingtool/largetank,
+	contains = list(/obj/item/weldingtool/largetank,
 					/obj/item/clothing/glasses/welding)
 	crate_name = "welding crate"
 
-// -- Specimen food. Priced under what a scan on a well-fed specimen returns, so feeding to extract
-// is thinly profitable rather than a printing press.
-/datum/supply_pack/lce/food_assorted
+/*  Food - priced under what a scan on a well-fed specimen returns, so feeding to extract is
+    thinly profitable rather than a printing press.  */
+
+/datum/supply_pack/lce/food
+	group = "Food"
+
+/datum/supply_pack/lce/food/assorted
 	name = "Assorted Specimen Diet"
 	desc = "A mixed crate covering most of what the cells will eat."
 	cost = 200
@@ -249,7 +284,7 @@
 					/obj/item/food/grown/apple = 4)
 	crate_name = "ration crate"
 
-/datum/supply_pack/lce/food_sweet
+/datum/supply_pack/lce/food/sweet
 	name = "Confectionery Crate"
 	desc = "Cake, pie, donuts and chocolate. Somebody in a cell is very particular about sweets."
 	cost = 250
@@ -259,7 +294,7 @@
 					/obj/item/food/chocolatebar = 4)
 	crate_name = "confectionery crate"
 
-/datum/supply_pack/lce/food_produce
+/datum/supply_pack/lce/food/produce
 	name = "Produce Crate"
 	desc = "Carrots and greens, for the cells that want them."
 	cost = 200
@@ -268,15 +303,19 @@
 					/obj/item/food/grown/berries = 4)
 	crate_name = "produce crate"
 
-/datum/supply_pack/lce/food_meat
+/datum/supply_pack/lce/food/meat
 	name = "Butchery Crate"
 	desc = "Raw meat in quantity. You will know if you need this."
 	cost = 300
 	contains = list(/obj/item/food/meat/slab = 8)
 	crate_name = "butchery crate"
 
-// -- Enrichment. Straight from the request: things to keep the cells occupied.
-/datum/supply_pack/lce/plushies
+/*  Enrichment - things to keep the cells occupied.  */
+
+/datum/supply_pack/lce/enrichment
+	group = "Enrichment"
+
+/datum/supply_pack/lce/enrichment/plushies
 	name = "Plush Crate"
 	desc = "Assorted plush toys. Cheaper than a breach."
 	cost = 200
@@ -286,55 +325,195 @@
 					/obj/item/toy/plush/carpplushie)
 	crate_name = "plush crate"
 
-/datum/supply_pack/lce/ducks
+/datum/supply_pack/lce/enrichment/ducks
 	name = "Rubber Ducks"
-	desc = "Fifty rubber ducks. No, HQ did not ask why either."
+	desc = "ten rubber ducks. No, HQ did not ask why either."
 	cost = 300
-	contains = list(/obj/item/bikehorn/rubberducky = 50)
+	contains = list(/obj/item/bikehorn/rubberducky = 10)
 	crate_name = "duck crate"
 
-/datum/supply_pack/lce/toys
+/datum/supply_pack/lce/enrichment/toys
 	name = "Toy Crate"
 	desc = "Foam blades and figurines. Safe to hand through a hatch."
 	cost = 200
 	contains = list(/obj/item/toy/foamblade = 4, /obj/item/toy/figure/clown = 2)
 	crate_name = "toy crate"
 
-// -- Medical.
+/*  Medical.  */
+
 /datum/supply_pack/lce/medical
+	group = "Medical"
+
+/datum/supply_pack/lce/medical/supplies
 	name = "Medical Supplies"
 	desc = "Sutures, mesh and medipens."
-	cost = 350
+	cost = 250
 	contains = list(/obj/item/stack/medical/suture = 3,
 					/obj/item/stack/medical/mesh = 3,
 					/obj/item/reagent_containers/hypospray/medipen = 4)
 	crate_name = "medical crate"
 
-/datum/supply_pack/lce/surgery
+/datum/supply_pack/lce/medical/surgery
 	name = "Surgical Kit"
 	desc = "A full duffel. Medical has three people and two of them are usually elsewhere."
 	cost = 500
 	contains = list(/obj/item/storage/backpack/duffelbag/med/surgery)
 	crate_name = "surgical crate"
 
-/datum/supply_pack/lce/defib_cell
-	name = "Defibrillator Cell"
-	desc = "A charged cell. Two defibrillators exist for the whole facility."
+/datum/supply_pack/lce/medical/defib_cell
+	name = "High-Capacity Cell"
+	desc = "A charged cell. Used to power up small machines."
 	cost = 300
 	contains = list(/obj/item/stock_parts/cell/high = 2)
 	crate_name = "cell crate"
 
-// -- Costume. Ordered more often than anything else on this list, probably.
-/datum/supply_pack/lce/clown
-	name = "Clown Costume"
-	desc = "HQ has stopped asking what these are for."
-	cost = 200
-	contains = list(/obj/item/clothing/under/rank/civilian/clown,
-					/obj/item/clothing/shoes/clown_shoes,
-					/obj/item/clothing/mask/gas/clown_hat)
-	crate_name = "costume crate"
+/*  Security - Udjat ammunition. Three magazines a box, and priced so that spending the
+    facility's whole income on specialist rounds is a real decision.  */
 
-/datum/supply_pack/lce/formal
+/datum/supply_pack/lce/security
+	group = "Security"
+
+/datum/supply_pack/lce/security/udjat_standard
+	name = "Udjat Magazines"
+	desc = "Three standard magazines for the Udjat rifle."
+	cost = 1500
+	contains = list(/obj/item/udjat_mag = 3)
+	crate_name = "ammunition crate"
+
+/datum/supply_pack/lce/security/udjat_birdshot
+	name = "Udjat Birdshot Magazines"
+	desc = "Three magazines of birdshot. The spread catches things that are not properly there."
+	cost = 2500
+	contains = list(/obj/item/udjat_mag/birdshot = 3)
+	crate_name = "ammunition crate"
+
+/datum/supply_pack/lce/security/udjat_fracture
+	name = "Udjat Fracture Magazines"
+	desc = "Three magazines of fracture rounds. They stack a break that only closes if the \
+		shooting stops."
+	cost = 2500
+	contains = list(/obj/item/udjat_mag/fracture = 3)
+	crate_name = "ammunition crate"
+
+/*  Specimen Care - one package per specimen, built from what each one actually eats and reacts
+    to rather than from generic food. These are the difference between a researcher improvising
+    and a researcher arriving prepared.  */
+
+/datum/supply_pack/lce/care
+	group = "Specimen Care"
+
+/datum/supply_pack/lce/care/scorched
+	name = "Scorched Girl Package"
+	desc = "Lighters, matches, twenty planks for a bonfire, and food cooked well past edible."
+	cost = 350
+	contains = list(/obj/item/lighter = 4,
+					/obj/item/storage/box/matches = 2,
+					/obj/item/stack/sheet/mineral/wood = 20,
+					/obj/item/food/badrecipe = 3,
+					/obj/item/food/burger/fivealarm = 2,
+					/obj/item/food/bearsteak = 2)
+	crate_name = "scorched girl package"
+
+/datum/supply_pack/lce/care/pbird
+	name = "Punishing Bird Package"
+	desc = "Bread, and wheat seeds for whoever would rather grow it than order it again."
+	cost = 200
+	contains = list(/obj/item/food/bread = 3,
+					/obj/item/food/breadslice = 8,
+					/obj/item/seeds/wheat = 4)
+	crate_name = "punishing bird package"
+
+/datum/supply_pack/lce/care/mermaid
+	name = "Piscine Mermaid Package"
+	desc = "Fresh fish, cake, and two salt shakers - spilled salt is something she likes, not just \
+		something she eats."
+	cost = 300
+	contains = list(/obj/item/food/freshfish = 6,
+					/obj/item/reagent_containers/food/condiment/saltshaker = 2,
+					/obj/item/food/cake = 1,
+					/obj/item/food/chocolatebar = 3)
+	crate_name = "piscine mermaid package"
+
+/datum/supply_pack/lce/care/laetitia
+	name = "Laetitia Package"
+	desc = "Cake, sweets and a plush. She eats well and she is easy to please."
+	cost = 300
+	contains = list(/obj/item/food/cake = 2,
+					/obj/item/food/cakeslice = 4,
+					/obj/item/food/candy = 6,
+					/obj/item/food/chocolatebar = 4,
+					/obj/item/toy/plush/lizardplushie = 1)
+	crate_name = "laetitia package"
+
+/datum/supply_pack/lce/care/lunar
+	name = "Lunar Physician Package"
+	desc = "Carrots, mochi and puddings, plus the glassware she likes having around."
+	cost = 350
+	contains = list(/obj/item/food/grown/carrot = 6,
+					/obj/item/food/carrotfries = 3,
+					/obj/item/food/mochi = 4,
+					/obj/item/food/mumupudding = 2,
+					/obj/item/reagent_containers/glass/beaker = 4,
+					/obj/item/reagent_containers/syringe = 4)
+	crate_name = "lunar physician package"
+
+/datum/supply_pack/lce/care/helper
+	name = "All-Around Helper Package"
+	desc = "Six power cells. This is the whole of its diet, and the reason it stops eating the lights."
+	cost = 400
+	contains = list(/obj/item/stock_parts/cell/high = 6)
+	crate_name = "all-around helper package"
+
+/datum/supply_pack/lce/care/queen_bee
+	name = "Queen Bee Package"
+	desc = "Raw meat, which is both her diet and the only object she cares about."
+	cost = 300
+	contains = list(/obj/item/food/meat/slab = 10)
+	crate_name = "queen bee package"
+
+/datum/supply_pack/lce/care/mountain
+	name = "Mountain Package"
+	desc = "Meat and spare organs, in bulk. It is always hungry, and it is not fussy about the source."
+	cost = 450
+	contains = list(/obj/item/food/meat/slab = 10,
+					/obj/item/organ/heart = 2,
+					/obj/item/organ/lungs = 2)
+	crate_name = "mountain package"
+
+/datum/supply_pack/lce/care/hatred_queen
+	name = "Queen of Hatred Package"
+	desc = "Plushes, figurines and foam blades. Do not send books; she has opinions about books."
+	cost = 300
+	contains = list(/obj/item/toy/plush/lizardplushie = 2,
+					/obj/item/toy/figure/clown = 2,
+					/obj/item/toy/foamblade = 3,
+					/obj/item/food/icecreamsandwich = 3)
+	crate_name = "queen of hatred package"
+
+/datum/supply_pack/lce/care/despair_knight
+	name = "Knight of Despair Package"
+	desc = "Despaired Delight, the only thing she will accept, and something soft to keep in the cell."
+	cost = 350
+	contains = list(/obj/item/food/frozen_treats/despaired_delight = 5,
+					/obj/item/toy/plush/lizardplushie = 2)
+	crate_name = "knight of despair package"
+
+/datum/supply_pack/lce/care/simple_smile
+	name = "Gone with a Simple Smile Package"
+	desc = "A box of assorted nothing. It eats anything, so the cheapest thing that fits is correct."
+	cost = 200
+	contains = list(/obj/item/toy/figure/clown = 3,
+					/obj/item/toy/foamblade = 3,
+					/obj/item/food/breadslice = 6,
+					/obj/item/reagent_containers/glass/beaker = 4)
+	crate_name = "assorted feed package"
+
+/*  Costume - ordered more often than anything else on this list, probably.  */
+
+/datum/supply_pack/lce/costume
+	group = "Costume"
+
+/datum/supply_pack/lce/costume/formal
 	name = "Formal Wear"
 	desc = "Suits and dresses, for the shifts that go well enough to warrant them."
 	cost = 250
@@ -461,4 +640,5 @@
 
 #undef LCE_BOX_BASE_VALUE
 #undef LCE_EGO_EXPORT_VALUE
+#undef LCE_CRATE_EXPORT_VALUE
 #undef LCE_EBOX_TIERS

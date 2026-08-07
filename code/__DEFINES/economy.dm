@@ -15,6 +15,7 @@
 
 #define MAX_GRANT_DPT 500
 #define LCE_STARTING_CARGO_BUDGET 500
+#define LCE_GRANT_DPT 100
 
 //What should vending machines charge when you buy something in-department.
 #define VENDING_DISCOUNT 0.2

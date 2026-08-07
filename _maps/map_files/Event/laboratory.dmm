@@ -620,6 +620,10 @@
 	color = "#EDD956"
 	},
 /area/lce/security/udjat_armoury)
+"ea" = (
+/obj/structure/window/reinforced/spawner,
+/turf/open/floor/mineral/titanium/tiled/white,
+/area/lce/hallway/north)
 "eb" = (
 /turf/open/floor/mineral/plastitanium{
 	color = "#EDD956"
@@ -2703,6 +2707,12 @@
 "qY" = (
 /turf/open/floor/plasteel/white,
 /area/lce/service/washroom)
+"rf" = (
+/obj/machinery/computer/lce_cargo{
+	dir = 8
+	},
+/turf/open/floor/mineral/titanium/tiled/white,
+/area/lce/service/lounge)
 "rl" = (
 /obj/machinery/modular_computer/console/preset/research{
 	color = "#955C23"
@@ -4319,6 +4329,10 @@
 /obj/structure/fans/tiny,
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/two)
+"AJ" = (
+/obj/machinery/lce_export_pad,
+/turf/open/floor/mineral/titanium/tiled/white,
+/area/lce/service/lounge)
 "AK" = (
 /obj/effect/turf_decal/trimline/red/filled/corner{
 	dir = 4;
@@ -4427,6 +4441,14 @@
 	},
 /turf/open/floor/mineral/titanium/purple,
 /area/lce/research)
+"Bq" = (
+/obj/effect/turf_decal/tile/bar,
+/obj/effect/turf_decal/tile/bar{
+	dir = 8
+	},
+/obj/structure/window/reinforced/spawner,
+/turf/open/floor/plasteel/white,
+/area/lce/service/dining)
 "Bs" = (
 /obj/effect/turf_decal/bot,
 /obj/machinery/telecomms/receiver/preset_right,
@@ -5990,10 +6012,10 @@
 /turf/open/floor/wood,
 /area/lce/command/lounge)
 "Kv" = (
-/obj/effect/turf_decal/tile/bar{
-	dir = 4
-	},
 /obj/effect/turf_decal/tile/bar,
+/obj/effect/turf_decal/tile/bar{
+	dir = 1
+	},
 /obj/machinery/vending/snack{
 	density = 0;
 	pixel_y = 19
@@ -7140,6 +7162,16 @@
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/three)
+"RU" = (
+/obj/effect/turf_decal/tile/bar{
+	dir = 4
+	},
+/obj/effect/turf_decal/tile/bar,
+/obj/structure/window/reinforced/spawner{
+	dir = 4
+	},
+/turf/open/floor/plasteel/white,
+/area/lce/service/dining)
 "RY" = (
 /obj/effect/turf_decal/bot,
 /obj/effect/decal/cleanable/dirt,
@@ -37970,7 +38002,7 @@ ig
 ig
 ig
 ig
-ig
+AJ
 bS
 se
 Dv
@@ -38222,7 +38254,7 @@ ig
 ZD
 tG
 Hf
-ig
+rf
 bS
 pj
 Dv
@@ -38718,7 +38750,7 @@ Sn
 hz
 jR
 UQ
-sl
+Bq
 Ha
 di
 eC
@@ -39474,7 +39506,7 @@ Wu
 Ej
 Ej
 UQ
-Aq
+sl
 Ha
 di
 di
@@ -39723,10 +39755,10 @@ uN
 SH
 SH
 Kv
-WW
-WW
-fY
-uz
+UQ
+UQ
+UQ
+Aq
 Ha
 di
 di
@@ -39973,12 +40005,12 @@ rw
 ok
 ok
 Up
-ok
-di
-di
-di
-di
-di
+ea
+RU
+WW
+WW
+fY
+uz
 Ha
 Ha
 Ha
