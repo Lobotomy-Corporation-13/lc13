@@ -373,6 +373,14 @@
 /datum/supply_pack/lce/security
 	group = "Security"
 
+/datum/supply_pack/lce/security/lasso
+	name = "Deterrence Lassos"
+	desc = "Two qliphoth deterrence lassos. Halves what a specimen can do, and keeps the corridor \
+		lights from going red while it is walked back."
+	cost = 800
+	contains = list(/obj/item/qliphoth_lasso = 2)
+	crate_name = "deterrence crate"
+
 /datum/supply_pack/lce/security/udjat_standard
 	name = "Udjat Magazines"
 	desc = "Three standard magazines for the Udjat rifle."
