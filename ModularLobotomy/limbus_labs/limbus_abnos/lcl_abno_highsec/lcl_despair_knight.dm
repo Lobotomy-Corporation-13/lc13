@@ -29,6 +29,9 @@
 	rep_desire_gain = 3
 	hunger_cooldown_time = 3 MINUTES
 	max_counter = 0 //No counter: losing the blessed is the only breach trigger.
+	// A knight has hands, same as her sister.
+	dextrous = TRUE
+	held_items = list(null, null)
 	attunement_family = "despair"
 	ego_list = list(/datum/ego_datum/armor/lce/despair)
 	attack_action_types = list(
@@ -48,7 +51,8 @@
 	If they are gravely hurt you may rush to their side to defend them. You care little for food or for being roughed up, only devotion soothes you - \
 	though anything the deep blue of your own tears is another matter, and you will take it from anyone - \
 	but if it turns out to be junk, raw, gross or toxic underneath, the colour was a lie and you are worse off for it. \
-	And should the one you swore to protect die or lose their mind, grief will shatter you, and you will turn your blades on everything."
+	And should the one you swore to protect die or lose their mind, grief will shatter you, and you will turn your blades on everything. \
+	You have hands, and you can read."
 	///The human she currently watches over.
 	var/mob/living/carbon/human/blessed_human = null
 	///The ghostly projection, while manifested.
@@ -76,6 +80,9 @@
 	var/foul_foodtypes = JUNKFOOD | RAW | GROSS | TOXIC
 	///Desire lost instead of gained when the food carries a foul flag.
 	var/foul_food_desire = 20
+
+/mob/living/simple_animal/hostile/limbus_abno/despair_knight/is_literate()
+	return TRUE
 
 /mob/living/simple_animal/hostile/limbus_abno/despair_knight/Initialize(mapload)
 	. = ..()

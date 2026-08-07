@@ -13,6 +13,14 @@
 	var/mob/living/communion_target
 	var/atom/communion_view
 	var/list/communion_subactions
+	// Reaching into someone through their EGO is a bond like any other, and used to pay nothing
+	// at all - an abno could whisper to one person all shift and leave them on the floor limit.
+	///ckey -> world.time before which whispering at them earns no more affinity.
+	var/list/commune_affinity_cooldown = list()
+	///Affinity paid per whisper.
+	var/commune_affinity = 3
+	///Per-person rate limit, so a wall of whispers is worth no more than a conversation.
+	var/commune_affinity_cooldown_time = 10 SECONDS
 
 // ---- Opening the menu + choosing a target ----
 /mob/living/simple_animal/hostile/limbus_abno/proc/CommuneMenu()
@@ -142,6 +150,9 @@
 	if(!msg)
 		return
 	log_directed_talk(src, communion_target, msg, LOG_SAY, "EGO communion")
+	if(communion_target.ckey && world.time >= (commune_affinity_cooldown[communion_target.ckey] || 0))
+		commune_affinity_cooldown[communion_target.ckey] = world.time + commune_affinity_cooldown_time
+		GainAffinity(communion_target, commune_affinity)
 	to_chat(communion_target, "<span class='revenboldnotice'>A voice speaks through your EGO...</span> <span class='revennotice'>[msg]</span>")
 	to_chat(src, "<span class='revenboldnotice'>You whisper to [communion_target]:</span> <span class='revennotice'>[msg]</span>")
 	for(var/ded in GLOB.dead_mob_list)

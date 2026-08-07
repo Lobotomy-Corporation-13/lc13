@@ -101,8 +101,10 @@
 	if(!QDELETED(H))
 		qdel(H)
 
-//Assigns the highest-priority available specimen. Walks tiers HIGH -> MEDIUM -> LOW,
-//lowsec before highsec within a tier. First-come-first-served between players.
+//Assigns the highest-priority available specimen. Walks tiers HIGH -> MEDIUM -> LOW, picking at
+//random within a tier. Fixed order meant everyone who left their preferences alone sat at the
+//same MEDIUM tier and the first player assigned always drew whichever specimen happened to be
+//first in the list, round after round.
 /datum/job/limbus_specimen/proc/attribute_abno(client/C, occupation_divide = FALSE)
 	var/found_abno = LAZYACCESS(GLOB.attributed_lcl_abno, C)
 	if(LAZYFIND(GLOB.lcl_spawned_abno, found_abno)) //Their abno already spawned, not allowed to try again.
@@ -110,7 +112,7 @@
 	if(LAZYFIND(GLOB.attributed_lcl_abno, C))
 		return TRUE //Already assigned but not spawned; skip selection.
 	C.prefs.reconcile_lcl_prefs()
-	var/list/canonical = GLOB.low_security + GLOB.high_security //lowsec first
+	var/list/canonical = shuffle(GLOB.low_security + GLOB.high_security)
 	for(var/level in list(JP_HIGH, JP_MEDIUM, JP_LOW))
 		for(var/path in canonical)
 			if(LAZYACCESS(C.prefs.lcl_abno_pref, path) != level)
