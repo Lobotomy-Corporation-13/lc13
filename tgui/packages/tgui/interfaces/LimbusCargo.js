@@ -4,10 +4,12 @@ import { AnimatedNumber, Box, Button, Flex, NoticeBox, Section, Table, Tabs } fr
 import { formatMoney } from '../format';
 import { Window } from '../layouts';
 
-// Deliberately self-contained rather than reusing CargoCatalog from Cargo.js. That component
-// hardcodes ' cr', renders cart controls this console does not have, and dispatches act('add')
-// into a shopping list that only exists when there is a supply shuttle. Limbus Labs has no
-// shuttle - orders are charged and podded immediately - so the two consoles genuinely differ.
+// Deliberately self-contained rather than reusing CargoCatalog from
+// Cargo.js. That component hardcodes ' cr', renders cart controls this
+// console does not have, and dispatches act('add') into a shopping list that
+// only exists when there is a supply shuttle. Limbus Labs has no shuttle -
+// orders are charged and podded immediately - so the two consoles genuinely
+// differ.
 
 export const LimbusCargo = (props, context) => {
   return (
