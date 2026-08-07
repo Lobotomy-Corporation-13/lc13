@@ -518,15 +518,11 @@
 	appearance_flags = KEEP_TOGETHER
 	anchored = TRUE
 
-/obj/machinery/lce_claw/proc/StartScanVisual(mob/living/subject)
+/obj/machinery/lce_claw/proc/StartScanVisual(mob/living/simple_animal/hostile/limbus_abno/subject)
 	if(QDELETED(subject))
 		return null
 	var/obj/effect/lce_scanline/line = new(subject)
-	//No leading asterisk: with one, BYOND stops drawing the subject normally and only uses it as
-	//a render source, which would make the specimen invisible for the whole scan.
-	if(!subject.render_target)
-		subject.render_target = "lce_scan_[REF(subject)]"
-	line.filters += filter(type = "alpha", render_source = subject.render_target)
+	line.filters += filter(type = "alpha", render_source = subject.ClaimRenderTarget())
 	subject.vis_contents += line
 	return line
 
@@ -536,10 +532,10 @@
 	line.pixel_y = 16
 	animate(line, pixel_y = -16, time = LCE_SCAN_STAGE_TIME)
 
-/obj/machinery/lce_claw/proc/EndScanVisual(obj/effect/lce_scanline/line, mob/living/subject)
+/obj/machinery/lce_claw/proc/EndScanVisual(obj/effect/lce_scanline/line, mob/living/simple_animal/hostile/limbus_abno/subject)
 	if(!QDELETED(subject))
 		subject.vis_contents -= line
-		subject.render_target = null
+		subject.ReleaseRenderTarget()
 	if(!QDELETED(line))
 		qdel(line)
 

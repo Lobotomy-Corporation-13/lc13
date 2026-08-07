@@ -285,3 +285,81 @@
 /area/lce/hallway/service
 	name = "Service Corridor"
 	icon_state = "lce_hall_service"
+
+
+/*			LOOSE SPECIMEN ALARM			*/
+
+// The facility gamemode turns the lights red when an abnormality is out of its cell. That never
+// fired here: /area/facility_hallway/RefreshLights() searches for /abnormality mobs, and LCL
+// specimens are a separate type tree, so it never matched one. This is that alarm, rebuilt for
+// limbus_abno. The specimen-side half - what counts, and where - is in lcl_abno.dm.
+
+/area/lce
+	///How many unrestrained, living specimens are standing in this area.
+	var/loose_specimens = 0
+	///TRUE while this area itself holds one. Neighbours read this rather than the count, so the
+	///alarm spreads exactly one room and does not chain across the whole floor.
+	var/specimen_alarm = FALSE
+	///Bordering LCE areas, built the first time an alarm needs them.
+	var/list/lce_neighbours
+
+///Cells and their block count as contained. Note this covers control booths and approach
+///corridors too, since both are subtypes - change this one proc if a specimen in the booth
+///should raise the alarm.
+/area/lce/proc/IsContainment()
+	return istype(src, /area/lce/containment/light) || istype(src, /area/lce/containment/heavy)
+
+///Symmetric by construction: if our turf borders theirs, theirs borders ours, so both lists agree
+///without either being built from the other. The engine's own adjacent_areas is no use here - it
+///reads /turf/open only, and update_areasize() skips outdoors areas entirely, so the gardens would
+///neither spread the alarm nor receive it.
+/area/lce/proc/LceNeighbours()
+	if(!isnull(lce_neighbours))
+		return lce_neighbours
+	lce_neighbours = list()
+	for(var/turf/T in src)
+		for(var/direction in GLOB.cardinals)
+			var/turf/bordering = get_step(T, direction)
+			if(!bordering)
+				continue
+			var/area/lce/found = get_area(bordering)
+			if(!istype(found) || found == src)
+				continue
+			lce_neighbours |= found
+	return lce_neighbours
+
+/area/lce/proc/AdjustLooseSpecimens(delta)
+	loose_specimens = max(0, loose_specimens + delta)
+	var/mine = loose_specimens > 0 && !IsContainment()
+	if(mine == specimen_alarm)
+		return
+	specimen_alarm = mine
+	RefreshAlarmLights()
+	//One room out as well, so a corridor with something loose in it reddens what it opens onto.
+	for(var/area/lce/A in LceNeighbours())
+		A.RefreshAlarmLights()
+
+///TRUE if this area or anything bordering it is holding a loose specimen.
+/area/lce/proc/ShouldAlarm()
+	if(specimen_alarm)
+		return TRUE
+	for(var/area/lce/A in LceNeighbours())
+		if(A.specimen_alarm)
+			return TRUE
+	return FALSE
+
+/area/lce/proc/RefreshAlarmLights()
+	var/wanted = ShouldAlarm()
+	if(wanted == fire)
+		return
+	fire = wanted
+	for(var/obj/machinery/light/L in src)
+		//update(FALSE): the trigger branch rolls a burnout chance every call, and a specimen
+		//pacing a corridor would otherwise blow the lights out one by one.
+		L.update(FALSE)
+
+//The parent recomputes fire from the /abnormality mobs in the area, which LCL never has, so every
+//facility-wide sweep - a security level change, Big Bird - used to clear the alarm behind us.
+/area/lce/RefreshLights()
+	. = ..()
+	RefreshAlarmLights()

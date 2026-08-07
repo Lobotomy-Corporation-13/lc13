@@ -740,3 +740,60 @@
 	else if(current == 2)
 		col = "#d3d023" //Yellow, getting close.
 	maptext = MAPTEXT("<span style='color: [col]'><b>[current]/[maximum]</b></span>")
+
+
+/*			LOOSE SPECIMEN ALARM			*/
+
+// The specimen's half of the corridor alarm. The area half - the per-area count and the light
+// switching - is in lce_areas.dm, and the lasso that clears trips_alarm is in lce_lasso.dm.
+//
+// This exists because /area/facility_hallway/RefreshLights() searches for /abnormality mobs and
+// LCL specimens are a separate type tree, so the stock alarm never matched one of us.
+
+/mob/living/simple_animal/hostile/limbus_abno
+	///Cleared while a lasso is attached - a tethered specimen does not trip the alarm.
+	var/trips_alarm = TRUE
+	///The area we are currently counted in, so the count can be moved rather than rebuilt.
+	var/area/lce/counted_area
+	///Refcount for render_target. The scan overlay and the lasso glow both want to mask against
+	///this mob, and whichever finished first used to clear it out from under the other.
+	var/render_target_users = 0
+
+/mob/living/simple_animal/hostile/limbus_abno/proc/ClaimRenderTarget()
+	if(!render_target)
+		render_target = "lce_[REF(src)]"
+	render_target_users++
+	return render_target
+
+/mob/living/simple_animal/hostile/limbus_abno/proc/ReleaseRenderTarget()
+	render_target_users = max(0, render_target_users - 1)
+	if(!render_target_users)
+		render_target = null
+
+/mob/living/simple_animal/hostile/limbus_abno/proc/RefreshAlarmPresence()
+	var/area/lce/here = null
+	if(trips_alarm && stat < DEAD && !QDELETED(src))
+		var/area/current = get_area(src)
+		if(istype(current, /area/lce))
+			here = current
+	if(here == counted_area)
+		return
+	if(counted_area)
+		counted_area.AdjustLooseSpecimens(-1)
+	counted_area = here
+	if(here)
+		here.AdjustLooseSpecimens(1)
+
+/mob/living/simple_animal/hostile/limbus_abno/Moved(atom/OldLoc, Dir)
+	. = ..()
+	RefreshAlarmPresence()
+
+/mob/living/simple_animal/hostile/limbus_abno/death(gibbed)
+	. = ..()
+	RefreshAlarmPresence()
+
+/mob/living/simple_animal/hostile/limbus_abno/Destroy()
+	if(counted_area)
+		counted_area.AdjustLooseSpecimens(-1)
+		counted_area = null
+	return ..()
