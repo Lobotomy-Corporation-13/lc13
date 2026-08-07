@@ -14,7 +14,7 @@
 	max_integrity = 3000
 
 /obj/structure/window/reinforced/lce/fulltile
-	icon = 'ModularLobotomy/_Lobotomyicons/lce_map/lce_window.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/lce_map/lce_map_turfs.dmi'
 	icon_state = "lce_window-0"
 	base_icon_state = "lce_window"
 	fulltile = TRUE
@@ -33,7 +33,7 @@
 	opacity = TRUE
 
 /obj/structure/window/reinforced/lce/tinted/fulltile
-	icon = 'ModularLobotomy/_Lobotomyicons/lce_map/lce_window_tinted.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/lce_map/lce_map_turfs.dmi'
 	icon_state = "lce_window_tinted-0"
 	base_icon_state = "lce_window_tinted"
 	fulltile = TRUE
@@ -52,7 +52,7 @@
 	opacity = TRUE
 
 /obj/structure/window/reinforced/lce/frosted/fulltile
-	icon = 'ModularLobotomy/_Lobotomyicons/lce_map/lce_window_frosted.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/lce_map/lce_map_turfs.dmi'
 	icon_state = "lce_window_frosted-0"
 	base_icon_state = "lce_window_frosted"
 	fulltile = TRUE

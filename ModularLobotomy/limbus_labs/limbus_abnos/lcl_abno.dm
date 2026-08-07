@@ -20,6 +20,8 @@
 	var/mob/living/simple_animal/hostile/abnormality/original_abno = null//The original abno type this is based on. If defined, it'll automatically add the name, description and sprite of that abno.
 
 	var/awakened = FALSE //If someone possessed them, we consider them permanently awakened, even after the player logs out.
+	///ckeys that have already woken up in this body, so a reconnect is not a second awakening.
+	var/list/awakened_ckeys = list()
 	var/limbus_map = FALSE //If we're in the LCL gamemode.
 	var/attack_friend = FALSE //If they can hit their friends with unarmed attacks.
 	var/list/friend_list = list() //Similar to a faction list, but handpicked by the player abno itself.
@@ -84,7 +86,8 @@
 	///How long after we speak a reply still counts as a reply.
 	var/conversation_window = 30 SECONDS
 	///Per-person rate limit, so chat spam cannot farm affinity.
-	var/talk_affinity_cooldown_time = 60 SECONDS
+	var/talk_affinity_cooldown_time = 10 SECONDS
+	var/talk_affinity = 3
 	var/ego_desire_cooldown
 	var/list/ego_list = list() //Unfortunately, I couldn't find any easy way of copying the ego list of the original abno, so you have to do it manually for now.
 	var/attunement_family = "" //LCE attunement family. Interacting with this abno builds a player's affinity for gear of this family.
@@ -98,6 +101,17 @@
 
 	var/special_desc = "" //The description used when 'examine more' is done.
 	var/unstable = FALSE //Can't be affected by pacifiers and some other tools.
+
+	//Death and rebirth.
+	///How long the shell takes to split back open.
+	var/rebirth_time = 5 MINUTES
+	///world.time the current shell hatches at. Only meaningful while dead.
+	var/rebirth_at = 0
+	///Sprite offsets from before death, handed back on rebirth.
+	var/living_pixel_x
+	var/living_pixel_y
+	var/living_base_pixel_x
+	var/living_base_pixel_y
 
 /mob/living/simple_animal/hostile/limbus_abno/Initialize(mapload)
 	. = ..()
@@ -118,7 +132,7 @@
 	if(!isnull(original_abno)) //Any changes specific to limbus should be added after their initialize (For example if you want to add a unique death icon.)
 		icon = original_abno.icon
 		icon_state = original_abno.icon_state
-		icon_living = original_abno.icon_living
+		icon_living = OriginalLivingState() //Never left blank, see the proc.
 		icon_dead = original_abno.icon_dead
 		true_name = original_abno.name
 		desc = original_abno.desc
@@ -144,7 +158,11 @@
 	if(!. || !client)
 		return FALSE
 
-	manual_emote("awakens...")
+	//Once per person. Reconnecting is not a fresh awakening, and emoting it every time told
+	//the whole room the player had just dropped out.
+	if(!(ckey in awakened_ckeys))
+		awakened_ckeys += ckey
+		manual_emote("awakens...")
 	if(awakened)
 		return //We don't want to flood them with notes if they get repossessed multiple times.
 	RegisterSignal(src, COMSIG_MOB_CTRLSHIFTCLICKON, PROC_REF(OnCtrlShiftClick), TRUE)
@@ -170,6 +188,11 @@
 
 /mob/living/simple_animal/hostile/limbus_abno/ghost()
 	..()
+	//Told on the way out as well as on death, since dying and immediately ghosting is the
+	//normal way to leave a shell and the death line would go to a body nobody is in.
+	var/left = RebirthCountdown()
+	if(left)
+		to_chat(get_ghost(TRUE, TRUE), span_notice("Your shell will split open in [left]. Return to it then."))
 	mind = null //We make it repossessable again so the abno at least has the opportunity of being played if someone gets bored of it. Doesn't include logout.
 
 ///Due to how repression works in LCL, we need to account for most source of damage inflicted by players, but abnos beating each other up shouldn't count by default.
@@ -283,12 +306,44 @@
 
 //Abnos will revive after 5 minutes of timeout. Using NT egg as placeholder.
 /mob/living/simple_animal/hostile/limbus_abno/death()
+	living_pixel_x = pixel_x
+	living_pixel_y = pixel_y
+	living_base_pixel_x = base_pixel_x
+	living_base_pixel_y = base_pixel_y
 	icon = 'ModularLobotomy/_Lobotomyicons/48x48.dmi'
 	icon_state = "nothing_egg"
 	icon_dead = "nothing_egg"
-	addtimer(CALLBACK(src, PROC_REF(Rebirth)), 5 MINUTES)
-	to_chat(src,span_userdanger("Your shell burst apart at the seams, but you remain. 5 minutes before your return."))
+	//The egg is one 48x48 sprite whatever the specimen was, so a big form's offsets would sit
+	//the shell off the side of its own tile.
+	pixel_x = -8
+	base_pixel_x = -8
+	pixel_y = 0
+	base_pixel_y = 0
+	//A shell is deadweight, not a specimen. Let people carry it back to its cell.
+	move_resist = MOVE_FORCE_DEFAULT
+	pull_force = MOVE_FORCE_DEFAULT
+	rebirth_at = world.time + rebirth_time
+	addtimer(CALLBACK(src, PROC_REF(Rebirth)), rebirth_time)
+	to_chat(src, span_userdanger("Your shell burst apart at the seams, but you remain. [DisplayTimeText(rebirth_time)] before your return."))
 	..()
+
+///How long is left before the shell splits open, or null while alive.
+/mob/living/simple_animal/hostile/limbus_abno/proc/RebirthCountdown()
+	if(stat != DEAD || rebirth_at <= world.time)
+		return null
+	return DisplayTimeText(rebirth_at - world.time)
+
+//Examining your own shell tells you how long you have left in it. Onlookers only ever see the
+//egg, so the countdown is for the specimen and for ghosts watching it.
+/mob/living/simple_animal/hostile/limbus_abno/examine(mob/user)
+	. = ..()
+	var/left = RebirthCountdown()
+	if(!left)
+		return
+	if(user == src)
+		. += span_notice("Your shell will split open in [left].")
+	else if(isobserver(user))
+		. += span_notice("The shell will split open in [left].")
 
 //Maybe make it distance related later, but for now I'm just making most base desire on talk really low.
 //Anyone in earshot of a line of ours is now "in conversation" with us for a while.
@@ -315,7 +370,7 @@
 	if(world.time < (talk_affinity_cooldown[H.ckey] || 0))
 		return
 	talk_affinity_cooldown[H.ckey] = world.time + talk_affinity_cooldown_time
-	GainAffinity(H, 1)
+	GainAffinity(H, talk_affinity)
 
 
 /mob/living/simple_animal/hostile/limbus_abno/funpet(mob/living/carbon/human/petter)
@@ -356,7 +411,7 @@
 			if(desire_on_eat > 0 && desire_on_eat_threshold < hunger_bar)
 				AdjustDesire(desire_on_eat)
 			playsound(src, 'sound/items/eatfood.ogg', 100, TRUE)
-			manual_emote("eats the [food]")
+			manual_emote("eats [food]") //DM articles the item itself, so no "the" of our own.
 			if(delete_food)
 				qdel(food)
 			return TRUE
@@ -528,13 +583,28 @@
 /mob/living/simple_animal/hostile/limbus_abno/proc/Rebirth()
 	grab_ghost()
 	icon = original_abno.icon
-	icon_state = original_abno.icon_state
-	icon_living = original_abno.icon_living
+	icon_state = OriginalLivingState()
+	icon_living = icon_state
 	icon_dead = original_abno.icon_dead
+	pixel_x = living_pixel_x
+	pixel_y = living_pixel_y
+	base_pixel_x = living_base_pixel_x
+	base_pixel_y = living_base_pixel_y
+	move_resist = initial(move_resist)
+	pull_force = initial(pull_force)
+	rebirth_at = 0
 	revive(full_heal = TRUE, admin_revive = TRUE)
 	AdjustCounter(max_counter)
 	AdjustHunger(max_hunger)
 	AdjustDesire(max_desire)
+
+///The sprite the original abnormality wears while alive. Plenty of them never set icon_living
+///at all - it defaults to "" - and revive() copies it straight onto icon_state, which is what
+///left Laetitia standing there as nothing at all after her first death.
+/mob/living/simple_animal/hostile/limbus_abno/proc/OriginalLivingState()
+	if(isnull(original_abno))
+		return icon_living || icon_state
+	return original_abno.icon_living || original_abno.icon_state
 
 ///Checks if the user is a limbus abno, and removes it if not.
 /datum/action/cooldown/limbus_abno_action/Grant(mob/M)
@@ -670,3 +740,60 @@
 	else if(current == 2)
 		col = "#d3d023" //Yellow, getting close.
 	maptext = MAPTEXT("<span style='color: [col]'><b>[current]/[maximum]</b></span>")
+
+
+/*			LOOSE SPECIMEN ALARM			*/
+
+// The specimen's half of the corridor alarm. The area half - the per-area count and the light
+// switching - is in lce_areas.dm, and the lasso that clears trips_alarm is in lce_lasso.dm.
+//
+// This exists because /area/facility_hallway/RefreshLights() searches for /abnormality mobs and
+// LCL specimens are a separate type tree, so the stock alarm never matched one of us.
+
+/mob/living/simple_animal/hostile/limbus_abno
+	///Cleared while a lasso is attached - a tethered specimen does not trip the alarm.
+	var/trips_alarm = TRUE
+	///The area we are currently counted in, so the count can be moved rather than rebuilt.
+	var/area/lce/counted_area
+	///Refcount for render_target. The scan overlay and the lasso glow both want to mask against
+	///this mob, and whichever finished first used to clear it out from under the other.
+	var/render_target_users = 0
+
+/mob/living/simple_animal/hostile/limbus_abno/proc/ClaimRenderTarget()
+	if(!render_target)
+		render_target = "lce_[REF(src)]"
+	render_target_users++
+	return render_target
+
+/mob/living/simple_animal/hostile/limbus_abno/proc/ReleaseRenderTarget()
+	render_target_users = max(0, render_target_users - 1)
+	if(!render_target_users)
+		render_target = null
+
+/mob/living/simple_animal/hostile/limbus_abno/proc/RefreshAlarmPresence()
+	var/area/lce/here = null
+	if(trips_alarm && stat < DEAD && !QDELETED(src))
+		var/area/current = get_area(src)
+		if(istype(current, /area/lce))
+			here = current
+	if(here == counted_area)
+		return
+	if(counted_area)
+		counted_area.AdjustLooseSpecimens(-1)
+	counted_area = here
+	if(here)
+		here.AdjustLooseSpecimens(1)
+
+/mob/living/simple_animal/hostile/limbus_abno/Moved(atom/OldLoc, Dir)
+	. = ..()
+	RefreshAlarmPresence()
+
+/mob/living/simple_animal/hostile/limbus_abno/death(gibbed)
+	. = ..()
+	RefreshAlarmPresence()
+
+/mob/living/simple_animal/hostile/limbus_abno/Destroy()
+	if(counted_area)
+		counted_area.AdjustLooseSpecimens(-1)
+		counted_area = null
+	return ..()

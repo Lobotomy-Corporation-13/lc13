@@ -98,6 +98,14 @@
 	new /obj/item/multitool(src)
 	new /obj/item/stack/cable_coil(src)
 
+/obj/item/storage/belt/utility/full/lce/PopulateContents()
+	new /obj/item/screwdriver(src)
+	new /obj/item/wrench(src)
+	new /obj/item/weldingtool(src)
+	new /obj/item/crowbar(src)
+	new /obj/item/wirecutters(src)
+	new /obj/item/stack/cable_coil(src)
+
 /obj/item/storage/belt/utility/full/engi/PopulateContents()
 	new /obj/item/screwdriver(src)
 	new /obj/item/wrench(src)

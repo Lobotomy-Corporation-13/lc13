@@ -4,44 +4,51 @@
 
 /*			WALLS			*/
 
-// Corridor wall. Uses the cheap wall's own icon-N state names, so only the icon changes.
+// Corridor wall. Every LCE turf shares one sheet, so each variant needs its own state prefix
+// rather than leaning on the cheap wall's generic icon-N names.
 /turf/closed/indestructible/reinforced/cheap/lce
 	name = "LCE corridor wall"
 	desc = "A heavy panelled wall in Limbus Company house brown. The recessed plate is thick \
 		enough to hide the conduit runs behind it."
-	icon = 'ModularLobotomy/_Lobotomyicons/lce_map/lce_wall.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/lce_map/lce_map_turfs.dmi'
+	icon_state = "lce_wall-0"
+	base_icon_state = "lce_wall"
 
 /turf/closed/indestructible/reinforced/cheap/lce/dark
 	name = "unlit LCE corridor wall"
-	icon = 'ModularLobotomy/_Lobotomyicons/lce_map/lce_wall_dark.dmi'
+	icon_state = "lce_wall_dark-0"
+	base_icon_state = "lce_wall_dark"
 
 /turf/closed/indestructible/reinforced/cheap/lce/bright
 	name = "lit LCE corridor wall"
-	icon = 'ModularLobotomy/_Lobotomyicons/lce_map/lce_wall_bright.dmi'
+	icon_state = "lce_wall_bright-0"
+	base_icon_state = "lce_wall_bright"
 
 // Same wall with the trim painted red. For containment approaches and restricted wings.
 /turf/closed/indestructible/reinforced/cheap/lce/alarm
 	name = "restricted LCE corridor wall"
 	desc = "A heavy panelled wall. The trim is painted the red that means do not pass this point."
-	icon = 'ModularLobotomy/_Lobotomyicons/lce_map/lce_wall_alarm.dmi'
+	icon_state = "lce_wall_alarm-0"
+	base_icon_state = "lce_wall_alarm"
 
 // Lab wall. Flatter and cleaner than the corridor wall - offices, labs, behind observation glass.
 /turf/closed/indestructible/reinforced/lce_panel
 	name = "LCE panel wall"
 	desc = "A flat inset panel wall, the kind used where the rooms have to be kept clean."
-	icon = 'ModularLobotomy/_Lobotomyicons/lce_map/lce_wall_panel.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/lce_map/lce_map_turfs.dmi'
 	icon_state = "lce_panel-0"
 	base_icon_state = "lce_panel"
 
 /turf/closed/indestructible/reinforced/lce_panel/dark
 	name = "unlit LCE panel wall"
-	icon = 'ModularLobotomy/_Lobotomyicons/lce_map/lce_wall_panel_dark.dmi'
+	icon_state = "lce_panel_dark-0"
+	base_icon_state = "lce_panel_dark"
 
 // Service wall. Bare rivet grid, no panelling - maintenance runs and back-of-house.
 /turf/closed/indestructible/reinforced/lce_service
 	name = "LCE service wall"
 	desc = "Riveted structural plate, left bare. Nobody was expected to see this side of it."
-	icon = 'ModularLobotomy/_Lobotomyicons/lce_map/lce_wall_rivet.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/lce_map/lce_map_turfs.dmi'
 	icon_state = "lce_rivet-0"
 	base_icon_state = "lce_rivet"
 
@@ -50,7 +57,7 @@
 /turf/open/floor/lce
 	name = "LCE floor"
 	desc = "Heavy plate flooring, laid in a wide grid."
-	icon = 'ModularLobotomy/_Lobotomyicons/lce_map/lce_floors.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/lce_map/lce_map_turfs.dmi'
 	icon_state = "lce_plate_mid"
 	base_icon_state = "lce_plate_mid"
 	tiled_dirt = FALSE
@@ -175,7 +182,7 @@
 /turf/open/floor/pod/dark/lce
 	name = "LCE panel flooring"
 	desc = "Bolted panel flooring. Each pad lifts out on its own for access to the runs beneath."
-	icon = 'ModularLobotomy/_Lobotomyicons/lce_map/lce_floors.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/lce_map/lce_map_turfs.dmi'
 	icon_state = "lce_pad_mid"
 	base_icon_state = "lce_pad_mid"
 	tiled_dirt = FALSE

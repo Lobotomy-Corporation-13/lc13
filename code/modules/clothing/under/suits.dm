@@ -46,6 +46,8 @@
 /obj/item/clothing/under/suit/lce
 	name = "LCE uniform"
 	desc = "A cream dress shirt and dark slacks, cut to Limbus Company Extraction's pattern. Worn under the coat, and by the people who never get issued one."
+	icon = 'ModularLobotomy/_Lobotomyicons/lce_clothing.dmi'
+	worn_icon = 'ModularLobotomy/_Lobotomyicons/lce_clothing_worn.dmi'
 	icon_state = "lce_suit"
 	inhand_icon_state = "lce_suit"
 	can_adjust = FALSE

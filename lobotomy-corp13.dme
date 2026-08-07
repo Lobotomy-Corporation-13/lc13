@@ -4625,6 +4625,7 @@
 #include "ModularLobotomy\limbus_labs\lce_areas.dm"
 #include "ModularLobotomy\limbus_labs\lce_cargo.dm"
 #include "ModularLobotomy\limbus_labs\lce_claw.dm"
+#include "ModularLobotomy\limbus_labs\lce_lasso.dm"
 #include "ModularLobotomy\limbus_labs\lce_turfs.dm"
 #include "ModularLobotomy\limbus_labs\lce_windows.dm"
 #include "ModularLobotomy\limbus_labs\lcl_specimen_prefs_ui.dm"
