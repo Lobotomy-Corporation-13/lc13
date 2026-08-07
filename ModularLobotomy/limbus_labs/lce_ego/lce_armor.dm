@@ -22,6 +22,14 @@ GLOBAL_LIST_EMPTY(lce_attunement_affinity)
 		return A
 	return null
 
+// Call after anything changes a person's bond with an abno family. The bond is earned and lost
+// mid-round, so a suit already being worn has to follow it - it used to keep whatever ceiling
+// it was equipped with until the wearer took it off and put it back on.
+/proc/RefreshLCEAttunement(mob/user, family)
+	var/obj/item/clothing/suit/armor/ego_gear/lce/A = GetWornLCEArmor(user, family)
+	if(A)
+		A.UpdateSafeLimit(user)
+
 // ---- Base LCE armor: attunement state + behavior ----
 /obj/item/clothing/suit/armor/ego_gear/lce
 	icon = 'icons/obj/clothing/ego_gear/limbus_labs.dmi'
@@ -111,6 +119,19 @@ GLOBAL_LIST_EMPTY(lce_attunement_affinity)
 		return
 	safe_limit = SafeLimitFor(user)
 	RefreshAttunement(user)
+
+// Recomputes the wearer's safe ceiling from their current bond and reconciles the overload
+// with it, so a limit earned while the suit is on takes effect where the player stands.
+/obj/item/clothing/suit/armor/ego_gear/lce/proc/UpdateSafeLimit(mob/living/carbon/human/user)
+	if(!istype(user))
+		return
+	var/new_limit = SafeLimitFor(user)
+	if(new_limit == safe_limit)
+		return
+	var/rising = new_limit > safe_limit
+	safe_limit = new_limit
+	RefreshAttunement(user)
+	to_chat(user, span_notice("Your bond with [src] [rising ? "deepens" : "thins"]. Your safe attunement limit is now [safe_limit]%."))
 
 /obj/item/clothing/suit/armor/ego_gear/lce/dropped(mob/user)
 	. = ..()

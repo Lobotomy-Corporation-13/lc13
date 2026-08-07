@@ -36,6 +36,5 @@
 	uniform = /obj/item/clothing/under/suit/lobotomy
 	suit = /obj/item/clothing/suit/toggle/labcoat
 	shoes = /obj/item/clothing/shoes/laceup
-	l_pocket = /obj/item/radio
 
 

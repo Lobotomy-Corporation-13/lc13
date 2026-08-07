@@ -167,6 +167,19 @@
 	color = "#9cadc7"
 	},
 /area/lce/medical/office)
+"aE" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 4
+	},
+/obj/effect/turf_decal/caution{
+	dir = 8
+	},
+/obj/effect/turf_decal/arrows,
+/obj/effect/turf_decal/arrows{
+	dir = 1
+	},
+/turf/open/floor/lce/plate/dark,
+/area/lce/containment/heavy/approach)
 "aF" = (
 /obj/effect/turf_decal/trimline/red/filled/line{
 	color = "#808080"
@@ -332,6 +345,19 @@
 /obj/machinery/telecomms/server/presets/common,
 /turf/open/floor/circuit/telecomms/mainframe,
 /area/lce/support/telecomms)
+"bH" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 8
+	},
+/obj/effect/turf_decal/caution{
+	dir = 4
+	},
+/obj/effect/turf_decal/arrows{
+	dir = 1
+	},
+/obj/effect/turf_decal/arrows,
+/turf/open/floor/lce/plate/dark,
+/area/lce/containment/heavy/approach)
 "bI" = (
 /obj/structure/chair/office/light,
 /obj/effect/turf_decal/siding/red{
@@ -426,10 +452,8 @@
 /area/lce/medical/bay)
 "cl" = (
 /obj/effect/turf_decal/trimline/red/filled/warning,
-/obj/machinery/chem_dispenser/fullupgrade{
-	pixel_y = 14;
-	emagged_reagents = list();
-	dispensable_reagents = list(/datum/reagent/aluminium,/datum/reagent/bromine,/datum/reagent/carbon,/datum/reagent/chlorine,/datum/reagent/copper,/datum/reagent/consumable/ethanol,/datum/reagent/fluorine,/datum/reagent/hydrogen,/datum/reagent/iodine,/datum/reagent/iron,/datum/reagent/lithium,/datum/reagent/mercury,/datum/reagent/nitrogen,/datum/reagent/oxygen,/datum/reagent/phosphorus,/datum/reagent/potassium,/datum/reagent/uranium/radium,/datum/reagent/silicon,/datum/reagent/sodium,/datum/reagent/silver,/datum/reagent/stable_plasma,/datum/reagent/consumable/sugar,/datum/reagent/sulfur,/datum/reagent/toxin/acid,/datum/reagent/water,/datum/reagent/fuel,/datum/reagent/drug/enkephalin)
+/obj/machinery/chem_dispenser/lc13{
+	pixel_y = 14
 	},
 /turf/open/floor/noslip,
 /area/lce/research/reagent)
@@ -539,7 +563,7 @@
 	req_access_txt = "1";
 	opacity = 0
 	},
-/turf/open/floor/mineral/titanium/tiled,
+/turf/open/floor/lce/tile/bright/grate,
 /area/lce/containment/light)
 "dE" = (
 /obj/machinery/door/airlock/glass_large{
@@ -949,15 +973,6 @@
 	color = "#9cadc7"
 	},
 /area/lce/service/laundry)
-"gk" = (
-/obj/effect/turf_decal/stripes/line{
-	dir = 4
-	},
-/obj/effect/turf_decal/caution/stand_clear{
-	dir = 8
-	},
-/turf/open/floor/lce/plate/dark,
-/area/lce/containment/heavy/approach)
 "gm" = (
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	dir = 5;
@@ -985,12 +1000,6 @@
 	},
 /turf/open/floor/mineral/titanium/tiled/white,
 /area/lce/hallway/north)
-"gq" = (
-/obj/effect/turf_decal/stripes/corner{
-	dir = 4
-	},
-/turf/open/floor/lce/plate/dark,
-/area/lce/containment/heavy/approach)
 "gt" = (
 /obj/machinery/computer/communications{
 	pixel_x = 16
@@ -1502,6 +1511,12 @@
 	color = "#EDD956"
 	},
 /area/lce/security/udjat_quarters)
+"jK" = (
+/obj/effect/turf_decal/siding/red{
+	color = "#440000"
+	},
+/turf/open/floor/lce/plate,
+/area/lce/containment/heavy/control_one)
 "jQ" = (
 /turf/open/floor/carpet/executive,
 /area/lce/command/lounge)
@@ -1723,6 +1738,18 @@
 "kX" = (
 /turf/open/floor/lce/plate,
 /area/lce/containment/heavy/control_one)
+"lb" = (
+/obj/machinery/stasis,
+/obj/machinery/defibrillator_mount{
+	pixel_x = -30
+	},
+/obj/machinery/light{
+	dir = 8;
+	pixel_x = -9;
+	pixel_y = 4
+	},
+/turf/open/floor/mineral/titanium/blue,
+/area/lce/medical/surgery)
 "lc" = (
 /obj/machinery/jukebox{
 	pixel_y = 15;
@@ -2479,6 +2506,7 @@
 /area/lce/service/memorial)
 "pu" = (
 /obj/structure/table/glass,
+/obj/item/storage/bag/chemistry,
 /turf/open/floor/plasteel/white,
 /area/lce/research/reagent)
 "pA" = (
@@ -2581,6 +2609,10 @@
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/one)
+"qB" = (
+/obj/effect/turf_decal/stripes/corner,
+/turf/open/floor/lce/plate/dark,
+/area/lce/containment/heavy)
 "qC" = (
 /obj/effect/turf_decal/delivery/white{
 	color = "#5269e9"
@@ -2604,7 +2636,12 @@
 "qJ" = (
 /obj/structure/rack,
 /obj/item/storage/box/monkeycubes,
-/turf/open/floor/plasteel,
+/obj/machinery/light{
+	dir = 8;
+	pixel_x = -9;
+	pixel_y = 4
+	},
+/turf/open/floor/mineral/titanium/tiled/white,
 /area/lce/service/lounge)
 "qK" = (
 /turf/open/floor/grass,
@@ -2666,25 +2703,18 @@
 "qY" = (
 /turf/open/floor/plasteel/white,
 /area/lce/service/washroom)
-"re" = (
-/obj/effect/turf_decal/stripes/line{
-	dir = 4
-	},
-/obj/effect/turf_decal/caution{
-	dir = 8
-	},
-/obj/effect/turf_decal/arrows,
-/obj/effect/turf_decal/arrows{
-	dir = 1
-	},
-/turf/open/floor/lce/plate/dark,
-/area/lce/containment/heavy/approach)
 "rl" = (
 /obj/machinery/modular_computer/console/preset/research{
 	color = "#955C23"
 	},
 /turf/open/floor/lce/plate/dark,
 /area/lce/containment/light/three)
+"rn" = (
+/obj/effect/turf_decal/stripes/corner{
+	dir = 4
+	},
+/turf/open/floor/lce/plate/dark,
+/area/lce/containment/heavy/approach)
 "rs" = (
 /obj/machinery/door/airlock/medical/glass{
 	name = "Chief Medical Officer's Office";
@@ -2862,12 +2892,6 @@
 	},
 /turf/open/floor/plasteel/white,
 /area/lce/medical/bay)
-"sp" = (
-/obj/effect/turf_decal/siding/red{
-	color = "#440000"
-	},
-/turf/open/floor/lce/plate,
-/area/lce/containment/heavy/control_one)
 "sr" = (
 /obj/structure/sign/logo{
 	icon_state = "limbus_sign 3,0";
@@ -3809,6 +3833,11 @@
 	name = "hidden security camera";
 	short_range = 13;
 	view_range = 13
+	},
+/obj/machinery/reagentgrinder{
+	desc = "Used to grind things up into raw materials and liquids.";
+	pixel_y = 14;
+	pixel_x = 2
 	},
 /turf/open/floor/plasteel/white,
 /area/lce/research/reagent)
@@ -4920,6 +4949,10 @@
 	req_access = null;
 	pixel_y = 14
 	},
+/obj/item/reagent_containers/glass/beaker/bluespace,
+/obj/item/reagent_containers/glass/beaker/bluespace,
+/obj/item/reagent_containers/glass/beaker/bluespace,
+/obj/item/reagent_containers/glass/beaker/bluespace,
 /turf/open/floor/noslip,
 /area/lce/research/reagent)
 "Ej" = (
@@ -5203,19 +5236,6 @@
 	},
 /turf/open/floor/mineral/titanium/tiled/purple,
 /area/lce/research)
-"FI" = (
-/obj/effect/turf_decal/stripes/line{
-	dir = 8
-	},
-/obj/effect/turf_decal/caution{
-	dir = 4
-	},
-/obj/effect/turf_decal/arrows{
-	dir = 1
-	},
-/obj/effect/turf_decal/arrows,
-/turf/open/floor/lce/plate/dark,
-/area/lce/containment/heavy/approach)
 "FJ" = (
 /obj/structure/flora/ausbushes/pointybush,
 /turf/open/floor/grass,
@@ -5834,10 +5854,6 @@
 /obj/structure/cable,
 /turf/open/floor/facility/halls,
 /area/lce/containment/heavy)
-"Jv" = (
-/obj/effect/turf_decal/stripes/corner,
-/turf/open/floor/lce/plate/dark,
-/area/lce/containment/heavy)
 "Jw" = (
 /obj/structure/chair/comfy/shuttle{
 	color = "#49473B";
@@ -6118,6 +6134,15 @@
 	},
 /turf/open/floor/lce/plate/dark,
 /area/lce/security/udjat_quarters)
+"LM" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 4
+	},
+/obj/effect/turf_decal/caution/stand_clear{
+	dir = 8
+	},
+/turf/open/floor/lce/plate/dark,
+/area/lce/containment/heavy/approach)
 "LN" = (
 /obj/machinery/camera{
 	alpha = 0;
@@ -6178,13 +6203,6 @@
 	},
 /turf/closed/indestructible/reinforced/cheap/lce/dark,
 /area/lce/security/checkpoint)
-"Mv" = (
-/obj/effect/turf_decal/stripes/corner{
-	dir = 8
-	},
-/obj/structure/barricade/security,
-/turf/open/floor/lce/plate/dark,
-/area/lce/containment/heavy/approach)
 "Mw" = (
 /obj/machinery/door/airlock/maintenance_hatch{
 	req_access_txt = "1";
@@ -6269,6 +6287,10 @@
 /area/lce/medical/morgue)
 "MZ" = (
 /obj/machinery/fat_sucker,
+/obj/machinery/light{
+	dir = 1;
+	pixel_y = 15
+	},
 /turf/open/floor/mineral/titanium/blue,
 /area/lce/medical/surgery)
 "Nb" = (
@@ -7118,16 +7140,6 @@
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/three)
-"RU" = (
-/obj/machinery/door/airlock/highsecurity{
-	name = "high-security checkpoint";
-	req_access_txt = "1";
-	max_integrity = 3000;
-	integrity_failure = 0.01;
-	color = "#955C23"
-	},
-/turf/open/floor/mineral/titanium/tiled,
-/area/lce/security/checkpoint)
 "RY" = (
 /obj/effect/turf_decal/bot,
 /obj/effect/decal/cleanable/dirt,
@@ -7768,6 +7780,15 @@
 /obj/structure/closet/crate/bin,
 /turf/open/floor/wood,
 /area/lce/hallway/south)
+"VA" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 8
+	},
+/obj/effect/turf_decal/caution/stand_clear{
+	dir = 4
+	},
+/turf/open/floor/lce/plate/dark,
+/area/lce/containment/heavy/approach)
 "VD" = (
 /obj/machinery/smartfridge/food,
 /turf/open/floor/mineral/titanium/tiled/white,
@@ -7879,15 +7900,6 @@
 /obj/structure/sigsystem/activator,
 /turf/open/floor/lce/plate/dark/grate,
 /area/lce/security/checkpoint)
-"Wr" = (
-/obj/effect/turf_decal/stripes/line{
-	dir = 8
-	},
-/obj/effect/turf_decal/caution/stand_clear{
-	dir = 4
-	},
-/turf/open/floor/lce/plate/dark,
-/area/lce/containment/heavy/approach)
 "Wu" = (
 /obj/effect/turf_decal/tile/bar,
 /obj/effect/turf_decal/tile/bar{
@@ -7903,6 +7915,13 @@
 /obj/effect/spawner/structure/window/reinforced/lce,
 /turf/open/floor/lce/tile/bright,
 /area/lce/medical/aid_heavy)
+"WG" = (
+/obj/effect/turf_decal/stripes/corner{
+	dir = 8
+	},
+/obj/structure/barricade/security,
+/turf/open/floor/lce/plate/dark,
+/area/lce/containment/heavy/approach)
 "WI" = (
 /obj/effect/turf_decal/trimline/red/filled/line{
 	dir = 10;
@@ -8152,6 +8171,11 @@
 /obj/item/reagent_containers/syringe,
 /obj/item/reagent_containers/syringe,
 /obj/item/reagent_containers/syringe,
+/obj/machinery/light{
+	dir = 8;
+	pixel_x = -9;
+	pixel_y = 4
+	},
 /turf/open/floor/plasteel/dark,
 /area/lce/medical/morgue)
 "XI" = (
@@ -31926,7 +31950,7 @@ kf
 eP
 eE
 tr
-sp
+jK
 uM
 Px
 uI
@@ -32178,7 +32202,7 @@ kf
 eP
 eE
 kX
-sp
+jK
 zj
 Px
 Pf
@@ -32682,7 +32706,7 @@ kf
 eP
 eE
 XE
-sp
+jK
 Ub
 Px
 tu
@@ -32934,7 +32958,7 @@ kf
 eP
 eE
 kX
-sp
+jK
 wy
 Px
 hF
@@ -33438,7 +33462,7 @@ kf
 eP
 eE
 XE
-sp
+jK
 kT
 Hk
 mj
@@ -33944,14 +33968,14 @@ eE
 tH
 Af
 yc
-Mv
-FI
-Wr
-Wr
-Wr
-Wr
-Wr
-FI
+WG
+bH
+VA
+VA
+VA
+VA
+VA
+bH
 eE
 eP
 kf
@@ -34175,7 +34199,7 @@ hc
 hc
 hc
 su
-RU
+Fo
 su
 Vx
 Vx
@@ -37964,15 +37988,15 @@ Ka
 eE
 Vx
 Vx
-Jv
-re
-gk
-gk
-gk
-gk
-gk
-re
-gq
+qB
+aE
+LM
+LM
+LM
+LM
+LM
+aE
+rn
 oj
 Re
 wH
@@ -38195,10 +38219,10 @@ Pc
 uy
 tY
 ig
-ig
+ZD
 tG
 Hf
-ZD
+ig
 bS
 pj
 Dv
@@ -42229,7 +42253,7 @@ OX
 pA
 hr
 Kh
-aQ
+lb
 Kh
 aQ
 Ik
