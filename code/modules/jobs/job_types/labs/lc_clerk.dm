@@ -33,4 +33,3 @@
 	uniform = /obj/item/clothing/under/suit/lce
 	accessory = /obj/item/clothing/accessory/armband/lobotomy/extraction/lce
 	shoes = /obj/item/clothing/shoes/sneakers/white
-	l_pocket = /obj/item/radio
