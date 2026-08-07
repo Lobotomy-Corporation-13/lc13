@@ -113,24 +113,17 @@
 /turf/open/floor/mineral/plastitanium,
 /area/lce/command/briefing)
 "ao" = (
-/obj/item/binoculars,
-/obj/item/clipboard{
-	pixel_x = 3
-	},
-/obj/item/taperecorder{
-	pixel_x = -5
-	},
-/obj/item/binoculars,
-/obj/structure/table/reinforced{
-	color = "#955C23"
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 10;
+	color = "#FFFFFF"
 	},
 /obj/machinery/light{
 	dir = 4;
 	pixel_x = 9;
 	pixel_y = 4
 	},
-/turf/open/floor/lce/plate/dark,
-/area/lce/containment/light/three)
+/turf/open/floor/pod/dark/lce/dark,
+/area/lce/containment/light/one)
 "as" = (
 /obj/machinery/camera{
 	alpha = 0;
@@ -234,20 +227,26 @@
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/two)
 "aX" = (
-/obj/effect/turf_decal/trimline/blue/filled/corner{
-	dir = 1;
-	color = "#FFFFFF"
-	},
-/obj/effect/turf_decal/trimline/blue/filled/line{
-	dir = 6;
-	color = "#FFFFFF"
+/obj/machinery/door/poddoor{
+	id = "mosb_containment";
+	name = "HSZ Containment Door #1";
+	color = "#955C23"
 	},
 /turf/open/floor/pod/dark/lce/dark,
-/area/lce/containment/light/four)
+/area/lce/containment/light/one)
 "aZ" = (
 /obj/structure/chair/pew/left,
 /turf/open/floor/grass,
 /area/lce/service/memorial)
+"bd" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 8
+	},
+/obj/effect/turf_decal/caution/stand_clear{
+	dir = 4
+	},
+/turf/open/floor/lce/plate/bright,
+/area/lce/containment/light/control_west)
 "bh" = (
 /obj/effect/turf_decal/stripes/white/line{
 	color = "#FF8C00";
@@ -256,12 +255,16 @@
 /turf/open/floor/plasteel/white,
 /area/lce/medical/bay)
 "bj" = (
-/obj/structure/cable,
-/obj/machinery/light/small{
-	dir = 4
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 5;
+	color = "#FFFFFF"
 	},
-/turf/open/floor/lce/deck,
-/area/lce/containment/light)
+/obj/effect/turf_decal/trimline/blue/filled/corner{
+	dir = 8;
+	color = "#FFFFFF"
+	},
+/turf/open/floor/pod/dark/lce/dark,
+/area/lce/containment/light/four)
 "bm" = (
 /obj/effect/turf_decal/trimline/red/filled/line{
 	dir = 8;
@@ -323,16 +326,13 @@
 /turf/open/floor/mineral/titanium/tiled/purple,
 /area/lce/research)
 "bq" = (
-/obj/effect/turf_decal/trimline/blue/filled/line{
-	dir = 4;
-	color = "#FFFFFF"
+/obj/machinery/chem_master/condimaster,
+/obj/effect/turf_decal/tile/yellow{
+	dir = 1
 	},
-/obj/effect/turf_decal/trimline/blue/filled/corner{
-	dir = 8;
-	color = "#FFFFFF"
-	},
-/turf/open/floor/pod/dark/lce/dark,
-/area/lce/containment/light/three)
+/obj/effect/turf_decal/tile/yellow,
+/turf/open/floor/plasteel/white,
+/area/lce/service/kitchen)
 "bt" = (
 /obj/structure/chair/stool/bar,
 /obj/machinery/light{
@@ -341,6 +341,16 @@
 	},
 /turf/open/floor/wood,
 /area/lce/service/lounge)
+"bu" = (
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 9;
+	color = "#FFFFFF"
+	},
+/obj/effect/turf_decal/trimline/blue/filled/corner{
+	color = "#FFFFFF"
+	},
+/turf/open/floor/pod/dark/lce/dark,
+/area/lce/containment/light/three)
 "bB" = (
 /obj/machinery/telecomms/server/presets/common,
 /turf/open/floor/circuit/telecomms/mainframe,
@@ -428,13 +438,16 @@
 /turf/open/floor/mineral/plastitanium,
 /area/lce/command/manager)
 "ch" = (
-/obj/machinery/camera/autoname,
-/obj/structure/chair/office/light,
+/obj/machinery/computer/camera_advanced/lce_claw{
+	dir = 4;
+	color = "#955C23"
+	},
 /obj/effect/turf_decal/siding/blue{
+	dir = 8;
 	color = "#955C23"
 	},
 /turf/open/floor/lce/plate/bright,
-/area/lce/containment/light/control_west)
+/area/lce/containment/light/three)
 "cj" = (
 /obj/effect/turf_decal/tile/blue,
 /obj/effect/turf_decal/tile/blue{
@@ -458,19 +471,16 @@
 /turf/open/floor/noslip,
 /area/lce/research/reagent)
 "co" = (
-/obj/structure/sink/kitchen{
-	dir = 1;
-	pixel_y = -10
+/obj/machinery/door/airlock/maintenance_hatch{
+	req_access_txt = "1";
+	name = "low-security maintenance hatch";
+	max_integrity = 3000;
+	integrity_failure = 0.01;
+	color = "#955C23"
 	},
-/obj/effect/turf_decal/tile/yellow{
-	dir = 1
-	},
-/obj/effect/turf_decal/tile/yellow,
-/obj/machinery/light{
-	pixel_y = -19
-	},
-/turf/open/floor/plasteel/white,
-/area/lce/service/kitchen)
+/obj/structure/cable,
+/turf/open/floor/lce/deck,
+/area/lce/medical/aid_light)
 "cq" = (
 /obj/structure/table/reinforced{
 	color = "#ff7f7f"
@@ -499,10 +509,28 @@
 	},
 /turf/open/floor/plasteel/white,
 /area/lce/medical/bay)
+"cw" = (
+/obj/effect/spawner/lootdrop/garbage_spawner,
+/obj/effect/decal/cleanable/blood/gibs/old,
+/turf/open/floor/lce/deck,
+/area/lce/containment/light)
 "cB" = (
 /obj/machinery/light,
 /turf/open/floor/mineral/titanium/tiled/white,
 /area/lce/hallway/central)
+"cD" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 8
+	},
+/obj/effect/turf_decal/caution{
+	dir = 4
+	},
+/obj/effect/turf_decal/arrows{
+	dir = 1
+	},
+/obj/effect/turf_decal/arrows,
+/turf/open/floor/lce/plate/bright,
+/area/lce/containment/light/control_west)
 "cH" = (
 /obj/machinery/light{
 	dir = 8;
@@ -517,13 +545,25 @@
 /obj/structure/table/reinforced{
 	color = "#955C23"
 	},
-/obj/machinery/button/door/indestructible{
-	id = "LSZ Containment Door #3"
-	},
 /obj/item/lcl_pacifiers,
 /obj/item/lcl_duel,
-/turf/open/floor/lce/plate/dark,
-/area/lce/containment/light/one)
+/obj/machinery/light{
+	dir = 8;
+	pixel_y = 4
+	},
+/obj/structure/sigsystem/tower/button{
+	pixel_x = -24;
+	signal_code = 76;
+	signal_range = 9
+	},
+/obj/effect/turf_decal/siding/blue{
+	dir = 8;
+	color = "#955C23"
+	},
+/obj/item/qliphoth_lasso,
+/obj/item/qliphoth_lasso,
+/turf/open/floor/lce/plate/bright,
+/area/lce/containment/light/control_west)
 "db" = (
 /obj/machinery/door/airlock/hatch,
 /turf/open/floor/plasteel/white,
@@ -547,6 +587,11 @@
 	},
 /turf/open/floor/mineral/titanium/tiled/white,
 /area/lce/hallway/central)
+"dh" = (
+/obj/structure/barricade/wooden/crude,
+/obj/structure/barricade/wooden,
+/turf/open/floor/lce/deck,
+/area/lce/containment/light)
 "di" = (
 /turf/open/floor/mineral/titanium/tiled/white,
 /area/lce/hallway/central)
@@ -556,6 +601,13 @@
 	},
 /turf/open/floor/lce/deck/grate,
 /area/lce/containment/light)
+"dm" = (
+/obj/structure/disposalpipe/segment{
+	dir = 1
+	},
+/obj/effect/spawner/lootdrop/garbage_spawner,
+/turf/open/floor/lce/deck/dark/grate,
+/area/lce/containment/heavy)
 "dw" = (
 /obj/machinery/sleeper/syndie,
 /turf/open/floor/mineral/titanium/blue,
@@ -566,7 +618,7 @@
 	req_access_txt = "1";
 	opacity = 0
 	},
-/turf/open/floor/lce/tile/bright/grate,
+/turf/open/floor/mineral/titanium/tiled,
 /area/lce/containment/light)
 "dE" = (
 /obj/machinery/door/airlock/glass_large{
@@ -608,6 +660,7 @@
 /obj/machinery/light/small{
 	dir = 8
 	},
+/obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/lce/deck,
 /area/lce/containment/heavy)
 "dY" = (
@@ -633,6 +686,18 @@
 	color = "#4a4845"
 	},
 /area/lce/research)
+"eg" = (
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 5;
+	color = "#FFFFFF"
+	},
+/obj/machinery/light{
+	dir = 8;
+	pixel_x = -9;
+	pixel_y = 4
+	},
+/turf/open/floor/pod/dark/lce/dark,
+/area/lce/containment/light/four)
 "ej" = (
 /obj/machinery/door/airlock{
 	icon = 'icons/obj/doors/airlocks/station/science.dmi';
@@ -680,25 +745,13 @@
 /turf/open/floor/plasteel/white,
 /area/lce/medical/bay)
 "ev" = (
-/obj/structure/table/reinforced,
-/obj/item/choice_beacon/ingredient,
-/obj/item/choice_beacon/ingredient,
-/obj/item/choice_beacon/ingredient,
-/obj/item/choice_beacon/ingredient,
-/obj/item/choice_beacon/ingredient,
-/obj/item/reagent_containers/food/drinks/shaker{
-	pixel_x = -7
+/obj/structure/cable,
+/obj/machinery/light/small{
+	dir = 4
 	},
-/obj/item/reagent_containers/glass/rag{
-	pixel_x = 5;
-	pixel_y = 2
-	},
-/obj/effect/turf_decal/tile/yellow{
-	dir = 1
-	},
-/obj/effect/turf_decal/tile/yellow,
-/turf/open/floor/plasteel/white,
-/area/lce/service/kitchen)
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/lce/deck,
+/area/lce/containment/light)
 "ew" = (
 /obj/item/flashlight/lamp{
 	pixel_y = 12
@@ -721,17 +774,10 @@
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/two)
 "ez" = (
-/obj/effect/turf_decal/trimline/blue/filled{
-	color = "#FFFFFF"
-	},
-/obj/structure/fans/tiny,
-/obj/machinery/light{
-	dir = 8;
-	pixel_x = -9;
-	pixel_y = 4
-	},
-/turf/open/floor/pod/dark/lce/dark,
-/area/lce/containment/light/four)
+/obj/structure/cable,
+/obj/effect/spawner/lootdrop/garbage_spawner,
+/turf/open/floor/lce/deck,
+/area/lce/containment/light)
 "eA" = (
 /turf/closed/indestructible/reinforced/cheap/lce/bright,
 /area/lce/containment/light/two)
@@ -791,18 +837,35 @@
 /obj/item/reagent_containers/hypospray/medipen/l_burn,
 /turf/open/floor/lce/tile/bright,
 /area/lce/medical/aid_light)
+"eM" = (
+/obj/structure/table/reinforced,
+/obj/item/choice_beacon/ingredient,
+/obj/item/choice_beacon/ingredient,
+/obj/item/choice_beacon/ingredient,
+/obj/item/choice_beacon/ingredient,
+/obj/item/choice_beacon/ingredient,
+/obj/item/reagent_containers/food/drinks/shaker{
+	pixel_x = -7
+	},
+/obj/item/reagent_containers/glass/rag{
+	pixel_x = 5;
+	pixel_y = 2
+	},
+/obj/effect/turf_decal/tile/yellow{
+	dir = 1
+	},
+/obj/effect/turf_decal/tile/yellow,
+/obj/item/toy/plush/pierre,
+/obj/item/reagent_containers/glass/bowl,
+/obj/item/reagent_containers/glass/bowl,
+/obj/item/reagent_containers/glass/bowl,
+/turf/open/floor/plasteel/white,
+/area/lce/service/kitchen)
 "eN" = (
-/obj/effect/turf_decal/trimline/blue/filled{
-	color = "#FFFFFF"
+/turf/closed/indestructible/reinforced{
+	color = "#9cadc7"
 	},
-/obj/structure/fans/tiny,
-/obj/machinery/light{
-	dir = 4;
-	pixel_x = 9;
-	pixel_y = 4
-	},
-/turf/open/floor/pod/dark/lce/dark,
-/area/lce/containment/light/three)
+/area/lce/security/checkpoint)
 "eP" = (
 /obj/structure/cable,
 /turf/open/floor/lce/deck,
@@ -844,6 +907,17 @@
 /obj/machinery/telecomms/hub/preset,
 /turf/open/floor/circuit/telecomms/mainframe,
 /area/lce/support/telecomms)
+"fj" = (
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 4;
+	color = "#FFFFFF"
+	},
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 8;
+	color = "#FFFFFF"
+	},
+/turf/open/floor/pod/dark/lce/dark,
+/area/lce/containment/light/one)
 "fm" = (
 /obj/machinery/light{
 	pixel_y = -19
@@ -864,6 +938,12 @@
 	},
 /turf/open/floor/mineral/titanium/tiled/purple,
 /area/lce/research)
+"fu" = (
+/obj/structure/table/reinforced{
+	color = "#9cadc7"
+	},
+/turf/open/floor/mineral/titanium,
+/area/lce/security/checkpoint)
 "fx" = (
 /obj/structure/table/wood/fancy/cyan,
 /obj/machinery/photocopier{
@@ -900,21 +980,12 @@
 /turf/open/floor/grass,
 /area/lce/outdoors)
 "fO" = (
-/obj/effect/turf_decal/trimline/blue/filled/corner{
-	dir = 4;
-	color = "#FFFFFF"
+/obj/machinery/door/airlock/highsecurity{
+	name = "Cell 3 and 4 observation room";
+	color = "#955C23"
 	},
-/obj/effect/turf_decal/trimline/blue/filled/line{
-	dir = 10;
-	color = "#FFFFFF"
-	},
-/obj/machinery/light{
-	dir = 8;
-	pixel_x = -9;
-	pixel_y = 4
-	},
-/turf/open/floor/pod/dark/lce/dark,
-/area/lce/containment/light/two)
+/turf/open/floor/lce/plate/bright,
+/area/lce/containment/light/control_east)
 "fP" = (
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	dir = 1;
@@ -933,6 +1004,11 @@
 /obj/effect/landmark/start/limbus_abnospawn/highsec,
 /turf/open/floor/lce/deck/dark/grate,
 /area/lce/containment/heavy/two)
+"fX" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/spawner/lootdrop/garbage_spawner,
+/turf/open/floor/lce/deck,
+/area/lce/containment/light)
 "fY" = (
 /obj/effect/turf_decal/tile/bar{
 	dir = 4
@@ -1056,25 +1132,33 @@
 "gD" = (
 /turf/open/floor/carpet/purple,
 /area/lce/research/director)
-"gN" = (
-/obj/effect/turf_decal/trimline/blue/filled/corner{
-	dir = 4;
-	color = "#FFFFFF"
+"gE" = (
+/obj/structure/sigsystem/tower{
+	signal_code = 98
 	},
+/turf/open/space/basic,
+/area/space)
+"gN" = (
+/obj/effect/turf_decal/stripes/white{
+	dir = 8
+	},
+/turf/open/floor/mineral/titanium/tiled/white,
+/area/lce/security/checkpoint)
+"gO" = (
+/turf/open/floor/lce/tile/bright,
+/area/lce/security/checkpoint)
+"gP" = (
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	dir = 10;
 	color = "#FFFFFF"
 	},
 /obj/machinery/light{
-	dir = 8;
-	pixel_x = -9;
+	dir = 4;
+	pixel_x = 9;
 	pixel_y = 4
 	},
 /turf/open/floor/pod/dark/lce/dark,
-/area/lce/containment/light/four)
-"gO" = (
-/turf/open/floor/lce/tile/bright,
-/area/lce/security/checkpoint)
+/area/lce/containment/light/two)
 "gS" = (
 /turf/closed/indestructible/reinforced{
 	color = "#9cadc7"
@@ -1087,16 +1171,18 @@
 /turf/open/floor/facility/dark,
 /area/lce/command/lounge)
 "gW" = (
-/obj/effect/turf_decal/trimline/blue/filled/line{
-	dir = 8;
-	color = "#FFFFFF"
+/obj/effect/turf_decal/stripes/line{
+	dir = 4
 	},
-/obj/effect/turf_decal/trimline/blue/filled/corner{
-	dir = 4;
-	color = "#FFFFFF"
+/obj/effect/turf_decal/caution{
+	dir = 8
 	},
-/turf/open/floor/pod/dark/lce/dark,
-/area/lce/containment/light/one)
+/obj/effect/turf_decal/arrows{
+	dir = 1
+	},
+/obj/effect/turf_decal/arrows,
+/turf/open/floor/lce/plate/bright,
+/area/lce/containment/light/control_east)
 "gX" = (
 /turf/closed/indestructible/reinforced{
 	color = "#9cadc7"
@@ -1170,6 +1256,10 @@
 	},
 /turf/open/floor/plasteel/white,
 /area/lce/service/kitchen)
+"hw" = (
+/obj/effect/spawner/lootdrop/garbage_spawner,
+/turf/open/floor/lce/deck,
+/area/lce/containment/light)
 "hy" = (
 /obj/structure/sign/departments/medbay/alt,
 /turf/closed/indestructible/reinforced{
@@ -1221,41 +1311,19 @@
 /turf/open/floor/grass,
 /area/lce/outdoors)
 "hK" = (
-/obj/item/binoculars,
-/obj/item/clipboard{
-	pixel_x = 3
-	},
-/obj/item/taperecorder{
-	pixel_x = -5
-	},
-/obj/item/binoculars,
-/obj/structure/table/reinforced{
-	color = "#955C23"
-	},
-/obj/machinery/light{
-	dir = 8;
-	pixel_x = -9;
-	pixel_y = 4
-	},
-/turf/open/floor/lce/plate/dark,
-/area/lce/containment/light/four)
+/turf/open/floor/mineral/titanium/tiled,
+/area/lce/security/checkpoint)
 "hM" = (
 /obj/effect/turf_decal/bot,
 /obj/machinery/telecomms/receiver/preset_left,
 /turf/open/floor/circuit/telecomms/mainframe,
 /area/lce/support/telecomms)
 "hP" = (
-/obj/machinery/chem_master/condimaster,
-/obj/effect/turf_decal/tile/yellow{
-	dir = 1
+/obj/structure/sigsystem/tower{
+	signal_code = 21
 	},
-/obj/effect/turf_decal/tile/yellow,
-/obj/machinery/light{
-	dir = 1;
-	pixel_y = 15
-	},
-/turf/open/floor/plasteel/white,
-/area/lce/service/kitchen)
+/turf/closed/indestructible/reinforced/cheap/lce/bright,
+/area/lce/containment/light)
 "hS" = (
 /obj/structure/disposalpipe/segment{
 	dir = 5
@@ -1301,18 +1369,11 @@
 /turf/open/floor/wood,
 /area/lce/service/dorms)
 "is" = (
-/obj/effect/turf_decal/stripes/line{
+/obj/effect/turf_decal/stripes/white{
 	dir = 4
 	},
-/obj/effect/turf_decal/caution{
-	dir = 8
-	},
-/obj/effect/turf_decal/arrows,
-/obj/effect/turf_decal/arrows{
-	dir = 1
-	},
-/turf/open/floor/lce/plate/bright,
-/area/lce/containment/light/approach)
+/turf/open/floor/mineral/titanium/tiled/white,
+/area/lce/security/checkpoint)
 "iy" = (
 /obj/structure/window/reinforced/spawner{
 	dir = 4
@@ -1343,6 +1404,11 @@
 /obj/structure/cable,
 /turf/closed/indestructible/reinforced/cheap/lce/bright,
 /area/lce/containment/light)
+"iE" = (
+/obj/structure/cable,
+/obj/effect/spawner/lootdrop/garbage_spawner,
+/turf/open/floor/lce/deck,
+/area/lce/containment/heavy)
 "iF" = (
 /obj/structure/table/optable,
 /obj/machinery/camera{
@@ -1404,6 +1470,14 @@
 	},
 /turf/open/floor/mineral/titanium/blue,
 /area/lce/medical/surgery)
+"iV" = (
+/obj/structure/closet/crate/bin{
+	pixel_y = 6;
+	density = 0;
+	pixel_x = -12
+	},
+/turf/open/floor/mineral/titanium,
+/area/lce/security/checkpoint)
 "iW" = (
 /obj/structure/chair/comfy/shuttle{
 	dir = 8;
@@ -1447,6 +1521,17 @@
 	},
 /turf/open/floor/lce/plate/dark,
 /area/lce/security/udjat_quarters)
+"jg" = (
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 4;
+	color = "#FFFFFF"
+	},
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 8;
+	color = "#FFFFFF"
+	},
+/turf/open/floor/pod/dark/lce/dark,
+/area/lce/containment/light/three)
 "jh" = (
 /obj/structure/rack{
 	pixel_x = -1
@@ -1485,22 +1570,29 @@
 /turf/open/floor/mineral/titanium/tiled/purple,
 /area/lce/research)
 "jn" = (
-/obj/effect/turf_decal/trimline/blue/filled/corner{
-	dir = 1;
-	color = "#FFFFFF"
-	},
-/obj/effect/turf_decal/trimline/blue/filled/line{
-	dir = 6;
-	color = "#FFFFFF"
+/obj/machinery/door/poddoor{
+	id = "hsz2_containment";
+	name = "HSZ Containment Door #2";
+	color = "#955C23"
 	},
 /turf/open/floor/pod/dark/lce/dark,
-/area/lce/containment/light/three)
+/area/lce/containment/light/two)
 "js" = (
 /obj/structure/weightmachine/weightlifter,
 /turf/open/floor/mineral/plastitanium{
 	color = "#EDD956"
 	},
 /area/lce/security/udjat_quarters)
+"ju" = (
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	color = "#FFFFFF"
+	},
+/obj/machinery/light{
+	dir = 1;
+	pixel_y = 15
+	},
+/turf/open/floor/pod/dark/lce/dark,
+/area/lce/containment/light/two)
 "jv" = (
 /obj/structure/cable,
 /obj/structure/cable,
@@ -1527,21 +1619,11 @@
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/four)
 "jB" = (
-/obj/effect/turf_decal/trimline/blue/filled/corner{
-	dir = 4;
+/obj/effect/turf_decal/trimline/blue/filled{
 	color = "#FFFFFF"
-	},
-/obj/effect/turf_decal/trimline/blue/filled/line{
-	dir = 10;
-	color = "#FFFFFF"
-	},
-/obj/machinery/light{
-	dir = 8;
-	pixel_x = -9;
-	pixel_y = 4
 	},
 /turf/open/floor/pod/dark/lce/dark,
-/area/lce/containment/light/one)
+/area/lce/containment/light/four)
 "jG" = (
 /obj/machinery/light,
 /turf/open/floor/mineral/plastitanium{
@@ -1597,16 +1679,12 @@
 /turf/open/floor/plasteel/white,
 /area/lce/service/kitchen)
 "kd" = (
-/obj/effect/turf_decal/trimline/blue/filled/line{
-	dir = 4;
-	color = "#FFFFFF"
+/obj/structure/disposalpipe/segment{
+	dir = 10
 	},
-/obj/effect/turf_decal/trimline/blue/filled/corner{
-	dir = 8;
-	color = "#FFFFFF"
-	},
-/turf/open/floor/pod/dark/lce/dark,
-/area/lce/containment/light/one)
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/lce/deck/grate,
+/area/lce/containment/light)
 "kf" = (
 /obj/structure/disposalpipe/segment{
 	dir = 4
@@ -1654,13 +1732,12 @@
 /turf/open/floor/plasteel/showroomfloor,
 /area/lce/medical)
 "kw" = (
-/obj/machinery/camera/autoname,
-/obj/structure/chair/office/light,
-/obj/effect/turf_decal/siding/blue{
-	color = "#955C23"
+/obj/machinery/modular_computer/console/preset/research{
+	color = "#955C23";
+	dir = 8
 	},
 /turf/open/floor/lce/plate/bright,
-/area/lce/containment/light/control_east)
+/area/lce/containment/light/two)
 "kx" = (
 /obj/machinery/light{
 	dir = 1;
@@ -1703,25 +1780,13 @@
 /turf/open/floor/mineral/titanium/tiled,
 /area/lce/research)
 "kF" = (
-/obj/effect/turf_decal/trimline/blue/filled{
-	color = "#FFFFFF"
+/obj/machinery/door/airlock/highsecurity{
+	name = "abnormality containment";
+	req_access_txt = "1";
+	opacity = 0
 	},
-/obj/structure/fans/tiny,
-/obj/machinery/light{
-	dir = 8;
-	pixel_x = -9;
-	pixel_y = 4
-	},
-/obj/machinery/light{
-	dir = 1;
-	pixel_y = 19
-	},
-/obj/machinery/light{
-	dir = 1;
-	pixel_y = 15
-	},
-/turf/open/floor/pod/dark/lce/dark,
-/area/lce/containment/light/three)
+/turf/open/floor/mineral/titanium,
+/area/lce/security/checkpoint)
 "kG" = (
 /obj/structure/flora/tree/jungle,
 /turf/open/floor/grass,
@@ -1757,6 +1822,22 @@
 	opacity = 0
 	},
 /area/lce/research/reagent)
+"kS" = (
+/obj/effect/turf_decal/trimline/blue/filled/corner{
+	dir = 8;
+	color = "#FFFFFF"
+	},
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 4;
+	color = "#FFFFFF"
+	},
+/obj/machinery/light{
+	dir = 8;
+	pixel_x = -9;
+	pixel_y = 4
+	},
+/turf/open/floor/pod/dark/lce/dark,
+/area/lce/containment/light/four)
 "kT" = (
 /obj/structure/table/reinforced{
 	color = "#ff7f7f"
@@ -1814,6 +1895,42 @@
 	},
 /turf/open/floor/lce/plate/dark,
 /area/lce/containment/heavy)
+"lf" = (
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 8;
+	color = "#FFFFFF"
+	},
+/obj/machinery/camera{
+	alpha = 0;
+	mouse_opacity = 0;
+	name = "hidden security camera";
+	short_range = 5;
+	view_range = 5;
+	dir = 8
+	},
+/turf/open/floor/pod/dark/lce/dark,
+/area/lce/containment/light/one)
+"lg" = (
+/obj/effect/turf_decal/stripes/white{
+	dir = 8
+	},
+/turf/open/floor/mineral/titanium/tiled,
+/area/lce/security/checkpoint)
+"lm" = (
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 4;
+	color = "#FFFFFF"
+	},
+/obj/machinery/camera{
+	alpha = 0;
+	mouse_opacity = 0;
+	name = "hidden security camera";
+	short_range = 5;
+	view_range = 5;
+	dir = 4
+	},
+/turf/open/floor/pod/dark/lce/dark,
+/area/lce/containment/light/four)
 "ln" = (
 /obj/effect/spawner/structure/window/reinforced{
 	max_integrity = 3000
@@ -1859,25 +1976,20 @@
 /turf/open/floor/plasteel/white,
 /area/lce/research/reagent)
 "lK" = (
-/obj/effect/turf_decal/trimline/blue/filled/corner{
-	dir = 4;
-	color = "#FFFFFF"
+/obj/machinery/camera{
+	alpha = 0;
+	mouse_opacity = 0;
+	name = "hidden security camera";
+	short_range = 13;
+	view_range = 13
 	},
-/obj/effect/turf_decal/trimline/blue/filled/line{
-	dir = 10;
-	color = "#FFFFFF"
-	},
-/obj/machinery/light{
-	dir = 8;
-	pixel_x = -9;
-	pixel_y = 4
-	},
-/turf/open/floor/pod/dark/lce/dark,
-/area/lce/containment/light/three)
+/turf/open/floor/mineral/titanium/tiled/white,
+/area/lce/hallway/west)
 "lM" = (
 /obj/structure/sigsystem/tower{
 	dir = 8;
-	network_id = 59
+	network_id = 59;
+	signal_code = 22
 	},
 /turf/open/space/basic,
 /area/space)
@@ -1918,16 +2030,12 @@
 /turf/open/floor/plasteel/dark,
 /area/lce/medical/morgue)
 "lY" = (
-/obj/effect/turf_decal/trimline/blue/filled/corner{
-	dir = 1;
-	color = "#FFFFFF"
+/obj/structure/disposalpipe/segment{
+	dir = 1
 	},
-/obj/effect/turf_decal/trimline/blue/filled/line{
-	dir = 6;
-	color = "#FFFFFF"
-	},
-/turf/open/floor/pod/dark/lce/dark,
-/area/lce/containment/light/two)
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/lce/deck/dark/grate,
+/area/lce/containment/heavy)
 "lZ" = (
 /obj/structure/window/reinforced/spawner,
 /obj/item/paper_bin,
@@ -1954,14 +2062,13 @@
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/two)
 "mh" = (
-/obj/structure/cable,
 /obj/machinery/door/airlock/maintenance_hatch{
 	name = "low-security maintenance hatch";
 	max_integrity = 3000;
 	integrity_failure = 0.01;
 	color = "#955C23"
 	},
-/turf/open/floor/lce/tile,
+/turf/open/floor/lce/deck,
 /area/lce/containment/light)
 "mj" = (
 /obj/machinery/door/poddoor{
@@ -1991,12 +2098,15 @@
 /turf/open/floor/lce/tile/bright/grate,
 /area/lce/containment/heavy/approach)
 "mw" = (
-/obj/machinery/door/poddoor{
-	name = "LSZ Containment Door #6";
-	id = "LSZ Containment Door #6";
-	color = "#955C23"
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 10;
+	color = "#FFFFFF"
 	},
-/turf/open/floor/lce/plate/dark,
+/obj/effect/turf_decal/trimline/blue/filled/corner{
+	dir = 4;
+	color = "#FFFFFF"
+	},
+/turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/three)
 "mz" = (
 /obj/structure/table/reinforced{
@@ -2043,110 +2153,30 @@
 /turf/open/floor/facility/dark,
 /area/lce/command/lounge)
 "na" = (
-/obj/structure/closet/secure_closet/freezer/fridge/open{
-	anchored = 1;
-	name = "Meat Storage Refrigerator";
-	storage_capacity = 1000
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 9;
+	color = "#FFFFFF"
 	},
-/obj/item/food/meat/slab,
-/obj/item/food/meat/slab,
-/obj/item/food/meat/slab,
-/obj/item/food/meat/slab,
-/obj/item/food/meat/slab,
-/obj/item/food/meat/slab,
-/obj/item/food/meat/slab,
-/obj/item/food/meat/slab,
-/obj/item/food/meat/slab,
-/obj/item/food/meat/slab,
-/obj/item/food/meat/slab,
-/obj/item/food/meat/slab,
-/obj/item/food/meat/slab,
-/obj/item/food/meat/slab,
-/obj/item/food/meat/slab,
-/obj/item/food/meat/slab,
-/obj/item/food/meat/slab,
-/obj/item/food/meat/slab,
-/obj/item/food/meat/slab/bear,
-/obj/item/food/meat/slab/bear,
-/obj/item/food/meat/slab/bear,
-/obj/item/food/meat/slab/bear,
-/obj/item/food/meat/slab/bear,
-/obj/item/food/meat/slab/bear,
-/obj/item/food/meat/slab/bear,
-/obj/item/food/meat/slab/bear,
-/obj/item/food/meat/slab/bear,
-/obj/item/food/meat/slab/bear,
-/obj/item/food/meat/slab/bear,
-/obj/item/food/meat/slab/bear,
-/obj/item/food/meat/slab/bear,
-/obj/item/food/meat/slab/bear,
-/obj/item/food/meat/slab/bear,
-/obj/item/food/meat/slab/chicken,
-/obj/item/food/meat/slab/chicken,
-/obj/item/food/meat/slab/chicken,
-/obj/item/food/meat/slab/chicken,
-/obj/item/food/meat/slab/chicken,
-/obj/item/food/meat/slab/chicken,
-/obj/item/food/meat/slab/chicken,
-/obj/item/food/meat/slab/chicken,
-/obj/item/food/meat/slab/chicken,
-/obj/item/food/meat/slab/chicken,
-/obj/item/food/meat/slab/chicken,
-/obj/item/food/meat/slab/chicken,
-/obj/item/food/meat/slab/chicken,
-/obj/item/food/meat/slab/chicken,
-/obj/item/food/meat/slab/chicken,
-/obj/item/food/meat/slab/spider,
-/obj/item/food/meat/slab/spider,
-/obj/item/food/meat/slab/spider,
-/obj/item/food/meat/slab/spider,
-/obj/item/food/meat/slab/spider,
-/obj/item/food/meat/slab/spider,
-/obj/item/food/meat/slab/spider,
-/obj/item/food/meat/slab/spider,
-/obj/item/food/meat/slab/spider,
-/obj/item/food/meat/slab/spider,
-/obj/item/food/meat/slab/spider,
-/obj/item/food/meat/slab/spider,
-/obj/item/food/meat/slab/spider,
-/obj/item/food/meat/slab/spider,
-/obj/item/food/meat/slab/spider,
-/obj/item/food/meat/slab/spider,
-/obj/item/food/meat/slab/spider,
-/obj/item/food/meat/slab/spider,
-/obj/item/food/carpmeat,
-/obj/item/food/carpmeat,
-/obj/item/food/carpmeat,
-/obj/item/food/carpmeat,
-/obj/item/food/carpmeat,
-/obj/item/food/carpmeat,
-/obj/item/food/carpmeat,
-/obj/item/food/carpmeat,
-/obj/item/food/carpmeat,
-/obj/item/food/carpmeat,
-/obj/item/food/carpmeat,
-/obj/item/food/carpmeat,
-/obj/item/food/carpmeat,
-/obj/item/food/carpmeat,
-/obj/item/food/carpmeat,
-/obj/effect/turf_decal/tile/yellow{
-	dir = 1
+/obj/effect/turf_decal/trimline/blue/filled/corner{
+	color = "#FFFFFF"
 	},
-/obj/effect/turf_decal/tile/yellow,
-/turf/open/floor/plasteel/white,
-/area/lce/service/kitchen)
+/turf/open/floor/pod/dark/lce/dark,
+/area/lce/containment/light/four)
 "nb" = (
-/obj/structure/table/reinforced,
-/obj/item/reagent_containers/glass/bowl,
-/obj/item/reagent_containers/glass/bowl,
-/obj/item/reagent_containers/glass/bowl,
-/obj/item/toy/plush/pierre,
-/obj/effect/turf_decal/tile/yellow{
-	dir = 1
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 4;
+	color = "#FFFFFF"
 	},
-/obj/effect/turf_decal/tile/yellow,
-/turf/open/floor/plasteel/white,
-/area/lce/service/kitchen)
+/obj/machinery/camera{
+	alpha = 0;
+	mouse_opacity = 0;
+	name = "hidden security camera";
+	short_range = 5;
+	view_range = 5;
+	dir = 4
+	},
+/turf/open/floor/pod/dark/lce/dark,
+/area/lce/containment/light/three)
 "ng" = (
 /obj/structure/chair/comfy/shuttle{
 	dir = 8;
@@ -2238,19 +2268,23 @@
 /turf/open/floor/carpet/purple,
 /area/lce/research/director)
 "nG" = (
+/obj/structure/disposalpipe/segment{
+	dir = 4
+	},
+/obj/effect/spawner/lootdrop/garbage_spawner,
+/turf/open/floor/lce/deck/dark/grate,
+/area/lce/containment/heavy)
+"nL" = (
 /obj/effect/turf_decal/trimline/blue/filled/line{
-	dir = 8;
+	dir = 6;
 	color = "#FFFFFF"
 	},
 /obj/effect/turf_decal/trimline/blue/filled/corner{
-	dir = 4;
+	dir = 1;
 	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
-/area/lce/containment/light/two)
-"nL" = (
-/turf/closed/indestructible/reinforced/cheap/lce/bright,
-/area/lce/containment/light/control_west)
+/area/lce/containment/light/three)
 "nO" = (
 /obj/structure/sign/poster/official/no_erp{
 	pixel_y = 30
@@ -2261,16 +2295,16 @@
 /turf/open/floor/plasteel/white,
 /area/lce/service/washroom)
 "nP" = (
-/obj/structure/cable,
-/obj/machinery/door/airlock/maintenance_hatch{
-	req_access_txt = "1";
-	name = "low-security maintenance hatch";
-	max_integrity = 3000;
-	integrity_failure = 0.01;
-	color = "#955C23"
+/obj/effect/turf_decal/trimline/blue/filled/corner{
+	dir = 8;
+	color = "#FFFFFF"
 	},
-/turf/open/floor/lce/plate/bright,
-/area/lce/containment/light/control_east)
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 1;
+	color = "#FFFFFF"
+	},
+/turf/open/floor/pod/dark/lce/dark,
+/area/lce/containment/light/two)
 "nQ" = (
 /obj/effect/turf_decal/siding/green{
 	color = "#006400";
@@ -2320,6 +2354,21 @@
 	color = "#9cadc7"
 	},
 /area/lce/research/reagent)
+"oc" = (
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 8;
+	color = "#FFFFFF"
+	},
+/obj/machinery/camera{
+	alpha = 0;
+	mouse_opacity = 0;
+	name = "hidden security camera";
+	short_range = 5;
+	view_range = 5;
+	dir = 8
+	},
+/turf/open/floor/pod/dark/lce/dark,
+/area/lce/containment/light/two)
 "od" = (
 /obj/structure/bed/pod,
 /obj/item/bedsheet/hos,
@@ -2523,17 +2572,11 @@
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/two)
 "pr" = (
-/obj/effect/turf_decal/trimline/blue/filled{
-	color = "#FFFFFF"
+/obj/structure/sigsystem/tower{
+	signal_code = 33
 	},
-/obj/structure/fans/tiny,
-/obj/machinery/light{
-	dir = 8;
-	pixel_x = -9;
-	pixel_y = 4
-	},
-/turf/open/floor/pod/dark/lce/dark,
-/area/lce/containment/light/one)
+/turf/closed/indestructible/reinforced/cheap/lce/bright,
+/area/lce/containment/light/four)
 "ps" = (
 /turf/closed/indestructible/reinforced{
 	color = "#9cadc7"
@@ -2550,6 +2593,16 @@
 /obj/item/storage/bag/chemistry,
 /turf/open/floor/plasteel/white,
 /area/lce/research/reagent)
+"px" = (
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 9;
+	color = "#FFFFFF"
+	},
+/obj/effect/turf_decal/trimline/blue/filled/corner{
+	color = "#FFFFFF"
+	},
+/turf/open/floor/pod/dark/lce/dark,
+/area/lce/containment/light/two)
 "pA" = (
 /turf/closed/indestructible/reinforced{
 	color = "#9cadc7"
@@ -2688,24 +2741,15 @@
 /turf/open/floor/grass,
 /area/lce/service/memorial)
 "qM" = (
-/obj/item/binoculars,
-/obj/item/clipboard{
-	pixel_x = 3
-	},
-/obj/item/taperecorder{
-	pixel_x = -5
-	},
-/obj/item/binoculars,
-/obj/structure/table/reinforced{
-	color = "#955C23"
-	},
-/obj/machinery/light{
-	dir = 4;
-	pixel_x = 9;
-	pixel_y = 4
-	},
-/turf/open/floor/lce/plate/dark,
-/area/lce/containment/light/one)
+/obj/structure/disposalpipe/segment,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/lce/deck/dark/grate,
+/area/lce/containment/heavy)
+"qN" = (
+/obj/structure/bed/maint,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/lce/deck,
+/area/lce/containment/light)
 "qO" = (
 /obj/structure/filingcabinet{
 	pixel_x = 10;
@@ -2745,11 +2789,13 @@
 /turf/open/floor/plasteel/white,
 /area/lce/service/washroom)
 "rl" = (
-/obj/machinery/modular_computer/console/preset/research{
-	color = "#955C23"
+/obj/structure/disposalpipe/segment{
+	dir = 4
 	},
-/turf/open/floor/lce/plate/dark,
-/area/lce/containment/light/three)
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/spawner/lootdrop/garbage_spawner,
+/turf/open/floor/lce/deck/grate,
+/area/lce/containment/light)
 "rn" = (
 /obj/effect/turf_decal/stripes/corner{
 	dir = 4
@@ -2763,6 +2809,17 @@
 	},
 /turf/open/floor/carpet/blue,
 /area/lce/medical/office)
+"rv" = (
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 10;
+	color = "#FFFFFF"
+	},
+/obj/effect/turf_decal/trimline/blue/filled/corner{
+	dir = 4;
+	color = "#FFFFFF"
+	},
+/turf/open/floor/pod/dark/lce/dark,
+/area/lce/containment/light/four)
 "rw" = (
 /turf/open/floor/mineral/titanium/tiled,
 /area/lce/hallway/north)
@@ -2778,17 +2835,11 @@
 /turf/open/floor/lce/plate/bright,
 /area/lce/containment/light/control_west)
 "rB" = (
-/obj/effect/turf_decal/trimline/blue/filled{
-	color = "#FFFFFF"
+/obj/structure/sigsystem/connector,
+/turf/closed/indestructible/reinforced{
+	color = "#9cadc7"
 	},
-/obj/structure/fans/tiny,
-/obj/machinery/light{
-	dir = 4;
-	pixel_x = 9;
-	pixel_y = 4
-	},
-/turf/open/floor/pod/dark/lce/dark,
-/area/lce/containment/light/one)
+/area/lce/security/checkpoint)
 "rD" = (
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	dir = 4;
@@ -2980,10 +3031,12 @@
 /turf/open/floor/wood,
 /area/lce/service/lounge)
 "sC" = (
-/obj/machinery/camera/autoname,
-/obj/effect/landmark/start/limbus_abnospawn/lowsec,
-/turf/open/floor/lce/plate/grate,
-/area/lce/containment/light/three)
+/obj/structure/disposalpipe/segment{
+	dir = 9
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/lce/deck/grate,
+/area/lce/containment/light)
 "sD" = (
 /turf/open/floor/mineral/silver,
 /area/lce/command/manager)
@@ -2994,6 +3047,12 @@
 	},
 /turf/open/floor/lce/plate,
 /area/lce/containment/heavy/two)
+"sN" = (
+/obj/effect/turf_decal/stripes/white{
+	dir = 4
+	},
+/turf/open/floor/mineral/titanium/tiled,
+/area/lce/security/checkpoint)
 "sP" = (
 /obj/machinery/telecomms/server/presets/command{
 	name = "Command Server"
@@ -3007,6 +3066,13 @@
 	},
 /turf/open/floor/mineral/titanium/tiled/white,
 /area/lce/hallway/central)
+"tb" = (
+/obj/structure/cable,
+/obj/machinery/light/small,
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/spawner/lootdrop/garbage_spawner,
+/turf/open/floor/lce/deck,
+/area/lce/containment/heavy)
 "tc" = (
 /obj/structure/closet/crate/bin,
 /obj/machinery/light{
@@ -3017,22 +3083,25 @@
 /turf/open/floor/wood,
 /area/lce/hallway/south)
 "ti" = (
-/obj/machinery/door/airlock/maintenance_hatch{
-	name = "low-security maintenance hatch";
-	max_integrity = 3000;
-	integrity_failure = 0.01;
-	color = "#955C23"
-	},
-/turf/open/floor/lce/tile,
-/area/lce/containment/light)
-"tk" = (
+/obj/effect/spawner/structure/window/reinforced/lce,
 /obj/machinery/door/poddoor/preopen{
 	armor = list("melee" = 20, "bullet" = 100, "laser" = 100, "energy" = 100, "bomb" = 50, "bio" = 100, "rad" = 100, "fire" = 100, "acid" = 70);
 	max_integrity = 1800
 	},
-/obj/effect/spawner/structure/window/reinforced/lce,
-/turf/open/floor/lce/plate/dark,
-/area/lce/containment/light/two)
+/obj/structure/sigsystem/activator,
+/obj/structure/sigsystem/connector{
+	dir = 4
+	},
+/turf/open/floor/pod/dark/lce/dark,
+/area/lce/containment/light)
+"tk" = (
+/obj/machinery/light{
+	dir = 4;
+	pixel_x = 9;
+	pixel_y = 4
+	},
+/turf/open/floor/lce/plate/bright,
+/area/lce/containment/light/control_west)
 "tl" = (
 /obj/machinery/camera{
 	alpha = 0;
@@ -3162,16 +3231,8 @@
 /turf/open/floor/carpet/green,
 /area/lce/command/manager)
 "tX" = (
-/obj/effect/turf_decal/trimline/blue/filled/corner{
-	dir = 1;
-	color = "#FFFFFF"
-	},
-/obj/effect/turf_decal/trimline/blue/filled/line{
-	dir = 6;
-	color = "#FFFFFF"
-	},
-/turf/open/floor/pod/dark/lce/dark,
-/area/lce/containment/light/one)
+/turf/open/floor/lce/plate/bright,
+/area/lce/containment/light/control_west)
 "tY" = (
 /obj/effect/spawner/structure/window/reinforced{
 	max_integrity = 3000
@@ -3204,6 +3265,11 @@
 "ur" = (
 /turf/open/floor/plasteel/white,
 /area/lce/medical/bay)
+"us" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/spawner/lootdrop/garbage_spawner,
+/turf/open/floor/plating,
+/area/lce/security/checkpoint)
 "ut" = (
 /turf/closed/indestructible/reinforced{
 	color = "#9cadc7"
@@ -3393,6 +3459,15 @@
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/two)
+"vi" = (
+/obj/effect/turf_decal/caution/stand_clear{
+	dir = 8
+	},
+/obj/effect/turf_decal/stripes/line{
+	dir = 4
+	},
+/turf/open/floor/lce/plate/bright,
+/area/lce/containment/light/control_east)
 "vl" = (
 /obj/machinery/cryopod{
 	dir = 1
@@ -3416,12 +3491,12 @@
 /turf/closed/indestructible/reinforced/cheap/lce/bright,
 /area/lce/containment/light)
 "vo" = (
-/obj/machinery/modular_computer/console/preset/research{
-	dir = 1;
-	color = "#955C23"
+/obj/structure/chair/office/light{
+	dir = 4;
+	pixel_y = 2
 	},
-/turf/open/floor/lce/plate/dark,
-/area/lce/containment/light/four)
+/turf/open/floor/lce/plate/bright,
+/area/lce/containment/light/control_east)
 "vp" = (
 /obj/effect/turf_decal/trimline/red/filled/line{
 	dir = 10;
@@ -3648,12 +3723,11 @@
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/one)
 "wu" = (
-/obj/machinery/modular_computer/console/preset/research{
-	dir = 1;
-	color = "#955C23"
+/obj/machinery/light{
+	pixel_y = -19
 	},
-/turf/open/floor/lce/plate/dark,
-/area/lce/containment/light/one)
+/turf/open/floor/mineral/titanium,
+/area/lce/security/checkpoint)
 "wy" = (
 /obj/structure/filingcabinet/chestdrawer{
 	pixel_x = 8;
@@ -3807,6 +3881,13 @@
 /obj/effect/turf_decal/bot,
 /turf/open/floor/circuit/telecomms/mainframe,
 /area/lce/support/telecomms)
+"xi" = (
+/obj/effect/turf_decal/siding/blue{
+	dir = 8;
+	color = "#955C23"
+	},
+/turf/open/floor/lce/plate/bright,
+/area/lce/containment/light/four)
 "xl" = (
 /obj/effect/turf_decal/stripes/white/line{
 	color = "#5269e9";
@@ -3845,6 +3926,16 @@
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/one)
+"xx" = (
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	color = "#FFFFFF"
+	},
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 1;
+	color = "#FFFFFF"
+	},
+/turf/open/floor/pod/dark/lce/dark,
+/area/lce/containment/light/two)
 "xz" = (
 /obj/machinery/camera{
 	alpha = 0;
@@ -3880,6 +3971,13 @@
 "xG" = (
 /turf/closed/indestructible/reinforced/cheap/lce/dark,
 /area/lce/containment/heavy/two)
+"xN" = (
+/obj/machinery/door/poddoor/preopen,
+/obj/structure/lattice/catwalk,
+/obj/structure/sigsystem/connector,
+/obj/structure/sigsystem/activator,
+/turf/open/floor/mineral/titanium/tiled,
+/area/lce/security/checkpoint)
 "xS" = (
 /obj/structure/table/glass,
 /obj/item/reagent_containers/glass/bucket/melting,
@@ -3906,25 +4004,9 @@
 /turf/open/floor/carpet/executive,
 /area/lce/command/lounge)
 "xV" = (
-/obj/effect/turf_decal/trimline/blue/filled/corner{
-	dir = 8;
-	color = "#FFFFFF"
-	},
-/obj/effect/turf_decal/trimline/blue/filled/line{
-	dir = 5;
-	color = "#FFFFFF"
-	},
-/obj/effect/turf_decal/trimline/blue/filled/corner{
-	dir = 4;
-	color = "#FFFFFF"
-	},
-/obj/machinery/light{
-	dir = 4;
-	pixel_x = 9;
-	pixel_y = 4
-	},
-/turf/open/floor/pod/dark/lce/dark,
-/area/lce/containment/light/four)
+/obj/machinery/computer/camera_advanced,
+/turf/open/floor/mineral/titanium,
+/area/lce/security/checkpoint)
 "xY" = (
 /obj/machinery/door/airlock/highsecurity{
 	name = "district manager's bedroom";
@@ -3957,12 +4039,19 @@
 /turf/open/floor/lce/plate/dark,
 /area/lce/containment/heavy/approach)
 "yf" = (
-/obj/effect/turf_decal/trimline/blue/filled{
-	color = "#FFFFFF"
+/obj/structure/sigsystem/activator,
+/obj/machinery/door/poddoor{
+	name = "LSZ Containment Door #4";
+	id = "LSZ Containment Door #4"
 	},
-/obj/structure/fans/tiny,
+/obj/structure/sigsystem/connector,
+/obj/machinery/door/poddoor{
+	name = "LSZ Containment Door #4";
+	id = "LSZ Containment Door #4";
+	color = "#955C23"
+	},
 /turf/open/floor/pod/dark/lce/dark,
-/area/lce/containment/light/one)
+/area/lce/containment/light/four)
 "yk" = (
 /obj/structure/window/reinforced/spawner,
 /turf/open/floor/mineral/titanium/tiled/white,
@@ -4107,11 +4196,9 @@
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/two)
 "yX" = (
-/obj/machinery/computer/camera_advanced/lce_claw{
-	color = "#955C23"
-	},
-/turf/open/floor/lce/plate/dark,
-/area/lce/containment/light/three)
+/obj/effect/spawner/structure/window/reinforced/lce,
+/turf/open/floor/pod/dark/lce/dark,
+/area/lce/containment/light/two)
 "yY" = (
 /turf/open/floor/wood,
 /area/lce/service/laundry)
@@ -4124,13 +4211,27 @@
 	},
 /turf/open/floor/carpet/executive,
 /area/lce/command/lounge)
-"zi" = (
-/obj/structure/disposalpipe/segment{
-	dir = 1
+"zh" = (
+/obj/effect/landmark/start/limbus_abnospawn/lowsec,
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 9;
+	color = "#FFFFFF"
 	},
-/obj/effect/landmark/xeno_spawn,
-/turf/open/floor/lce/deck/grate,
-/area/lce/containment/light)
+/obj/effect/turf_decal/trimline/blue/filled/corner{
+	color = "#FFFFFF"
+	},
+/turf/open/floor/pod/dark/lce/dark,
+/area/lce/containment/light/four)
+"zi" = (
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	color = "#FFFFFF"
+	},
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 1;
+	color = "#FFFFFF"
+	},
+/turf/open/floor/pod/dark/lce/dark,
+/area/lce/containment/light/one)
 "zj" = (
 /obj/structure/table/reinforced{
 	color = "#ff7f7f"
@@ -4141,12 +4242,16 @@
 /turf/open/floor/lce/plate,
 /area/lce/containment/heavy/one)
 "zm" = (
-/obj/structure/cable,
-/obj/machinery/light/small{
-	dir = 8
+/obj/effect/landmark/start/limbus_abnospawn/lowsec,
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 9;
+	color = "#FFFFFF"
 	},
-/turf/open/floor/lce/deck,
-/area/lce/containment/light)
+/obj/effect/turf_decal/trimline/blue/filled/corner{
+	color = "#FFFFFF"
+	},
+/turf/open/floor/pod/dark/lce/dark,
+/area/lce/containment/light/one)
 "zn" = (
 /obj/structure/table/wood/fancy/cyan,
 /obj/machinery/stonkmarket,
@@ -4160,11 +4265,23 @@
 /turf/open/floor/grass,
 /area/lce/service/memorial)
 "zs" = (
-/obj/effect/turf_decal/siding/blue{
-	color = "#955C23"
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 10;
+	color = "#FFFFFF"
 	},
-/turf/open/floor/lce/plate/bright,
-/area/lce/containment/light/control_east)
+/obj/effect/turf_decal/trimline/blue/filled/corner{
+	dir = 4;
+	color = "#FFFFFF"
+	},
+/turf/open/floor/pod/dark/lce/dark,
+/area/lce/containment/light/two)
+"zu" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/machinery/light{
+	pixel_y = -19
+	},
+/turf/open/floor/mineral/titanium,
+/area/lce/security/checkpoint)
 "zv" = (
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	dir = 10;
@@ -4181,17 +4298,16 @@
 /turf/open/floor/wood,
 /area/lce/command/lounge)
 "zz" = (
-/obj/effect/turf_decal/trimline/blue/filled{
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 10;
 	color = "#FFFFFF"
 	},
-/obj/structure/fans/tiny,
-/obj/machinery/light{
+/obj/effect/turf_decal/trimline/blue/filled/corner{
 	dir = 4;
-	pixel_x = 9;
-	pixel_y = 4
+	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
-/area/lce/containment/light/four)
+/area/lce/containment/light/one)
 "zB" = (
 /obj/structure/disposalpipe/segment{
 	dir = 1
@@ -4229,6 +4345,22 @@
 	},
 /turf/open/floor/wood,
 /area/lce/hallway/south)
+"zV" = (
+/obj/effect/turf_decal/trimline/blue/filled/corner{
+	dir = 8;
+	color = "#FFFFFF"
+	},
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 4;
+	color = "#FFFFFF"
+	},
+/obj/machinery/light{
+	dir = 8;
+	pixel_x = -9;
+	pixel_y = 4
+	},
+/turf/open/floor/pod/dark/lce/dark,
+/area/lce/containment/light/three)
 "zY" = (
 /obj/structure/door_assembly/door_assembly_hatch,
 /obj/structure/barricade/wooden/crude,
@@ -4242,6 +4374,16 @@
 /obj/machinery/door/airlock/glass_large,
 /turf/open/floor/mineral/titanium/tiled,
 /area/lce/hallway/south)
+"Ad" = (
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	color = "#FFFFFF"
+	},
+/obj/machinery/light{
+	dir = 1;
+	pixel_y = 15
+	},
+/turf/open/floor/pod/dark/lce/dark,
+/area/lce/containment/light/three)
 "Af" = (
 /obj/effect/turf_decal/stripes/red/line{
 	dir = 8
@@ -4256,13 +4398,11 @@
 /turf/open/floor/plasteel/white,
 /area/lce/medical/bay)
 "Aj" = (
-/obj/machinery/door/poddoor/preopen{
-	armor = list("melee" = 20, "bullet" = 100, "laser" = 100, "energy" = 100, "bomb" = 50, "bio" = 100, "rad" = 100, "fire" = 100, "acid" = 70);
-	max_integrity = 1800
+/obj/effect/turf_decal/trimline/blue/filled{
+	color = "#FFFFFF"
 	},
-/obj/effect/spawner/structure/window/reinforced/lce,
-/turf/open/floor/lce/plate/dark,
-/area/lce/containment/light/four)
+/turf/open/floor/pod/dark/lce/dark,
+/area/lce/containment/light/one)
 "Ak" = (
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	dir = 1;
@@ -4284,6 +4424,22 @@
 	color = "#4a4845"
 	},
 /area/lce/research)
+"Ap" = (
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 8;
+	color = "#FFFFFF"
+	},
+/obj/effect/turf_decal/trimline/blue/filled/corner{
+	dir = 4;
+	color = "#FFFFFF"
+	},
+/obj/machinery/light{
+	dir = 4;
+	pixel_x = 9;
+	pixel_y = 4
+	},
+/turf/open/floor/pod/dark/lce/dark,
+/area/lce/containment/light/one)
 "Aq" = (
 /obj/effect/turf_decal/tile/bar,
 /obj/effect/turf_decal/tile/bar{
@@ -4316,12 +4472,12 @@
 	},
 /area/lce/security/udjat_quarters)
 "Av" = (
-/obj/effect/turf_decal/siding/blue{
+/obj/machinery/light{
 	dir = 1;
-	color = "#955C23"
+	pixel_y = 15
 	},
-/turf/open/floor/lce/plate/bright,
-/area/lce/containment/light/control_west)
+/turf/open/floor/mineral/titanium/tiled/white,
+/area/lce/security/checkpoint)
 "Aw" = (
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	dir = 10;
@@ -4333,13 +4489,20 @@
 /obj/structure/table/reinforced{
 	color = "#955C23"
 	},
-/obj/machinery/button/door/indestructible{
-	id = "LSZ Containment Door #5"
-	},
 /obj/item/lcl_pacifiers,
 /obj/item/lcl_duel,
-/turf/open/floor/lce/plate/dark,
-/area/lce/containment/light/four)
+/obj/machinery/light{
+	dir = 4
+	},
+/obj/structure/sigsystem/tower/button{
+	pixel_x = 24;
+	signal_code = 76;
+	signal_range = 9
+	},
+/obj/item/qliphoth_lasso,
+/obj/item/qliphoth_lasso,
+/turf/open/floor/lce/plate/bright,
+/area/lce/containment/light/control_east)
 "AB" = (
 /obj/effect/turf_decal/tile/blue{
 	color = "#5269e9"
@@ -4395,11 +4558,9 @@
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/two)
 "AO" = (
-/obj/machinery/modular_computer/console/preset/research{
-	color = "#955C23"
-	},
-/turf/open/floor/lce/plate/dark,
-/area/lce/containment/light/two)
+/obj/effect/spawner/structure/window/reinforced/lce,
+/turf/open/floor/pod/dark/lce/dark,
+/area/lce/containment/light/three)
 "AR" = (
 /obj/item/kirbyplants{
 	icon_state = "plant-12";
@@ -4412,6 +4573,14 @@
 /obj/structure/chair/pew/right,
 /turf/open/floor/grass,
 /area/lce/service/memorial)
+"AU" = (
+/obj/structure/disposalpipe/segment{
+	dir = 4
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/spawner/lootdrop/garbage_spawner,
+/turf/open/floor/lce/deck/dark/grate,
+/area/lce/containment/heavy)
 "AV" = (
 /obj/structure/table/reinforced{
 	color = "#ff7f7f"
@@ -4420,6 +4589,7 @@
 /obj/item/clipboard,
 /obj/item/lcl_pacifiers,
 /obj/item/lcl_duel,
+/obj/item/qliphoth_lasso,
 /turf/open/floor/lce/plate,
 /area/lce/containment/heavy/one)
 "AZ" = (
@@ -4461,12 +4631,20 @@
 /turf/open/floor/plasteel/white,
 /area/lce/medical/bay)
 "Bf" = (
-/obj/machinery/computer/camera_advanced/lce_claw{
-	dir = 1;
-	color = "#955C23"
+/obj/effect/turf_decal/stripes/white/corner{
+	color = "#5269e9";
+	dir = 8
 	},
-/turf/open/floor/lce/plate/dark,
-/area/lce/containment/light/four)
+/obj/machinery/camera{
+	alpha = 0;
+	mouse_opacity = 0;
+	name = "hidden security camera";
+	short_range = 5;
+	view_range = 5;
+	dir = 4
+	},
+/turf/open/floor/lce/tile/bright,
+/area/lce/containment/light/approach)
 "Bg" = (
 /obj/effect/turf_decal/stripes/white/line{
 	color = "#5269e9";
@@ -4563,23 +4741,29 @@
 /turf/open/floor/lce/plate/dark,
 /area/lce/security/checkpoint)
 "BE" = (
+/obj/machinery/door/poddoor{
+	name = "LSZ Containment Door #3";
+	id = "LSZ Containment Door #3"
+	},
+/obj/structure/sigsystem/activator,
+/obj/machinery/door/poddoor{
+	name = "LSZ Containment Door #3";
+	id = "LSZ Containment Door #3";
+	color = "#955C23"
+	},
+/turf/open/floor/pod/dark/lce/dark,
+/area/lce/containment/light/three)
+"BG" = (
 /obj/effect/turf_decal/trimline/blue/filled/line{
-	dir = 1;
+	dir = 6;
 	color = "#FFFFFF"
 	},
 /obj/effect/turf_decal/trimline/blue/filled/corner{
-	dir = 8;
+	dir = 1;
 	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
-/area/lce/containment/light/two)
-"BG" = (
-/obj/effect/turf_decal/trimline/blue/filled{
-	color = "#FFFFFF"
-	},
-/obj/structure/fans/tiny,
-/turf/open/floor/pod/dark/lce/dark,
-/area/lce/containment/light/three)
+/area/lce/containment/light/four)
 "BH" = (
 /obj/machinery/door/airlock/medical{
 	name = "triage";
@@ -4640,6 +4824,17 @@
 	},
 /turf/open/floor/carpet/royalblue,
 /area/lce/medical/office)
+"BT" = (
+/obj/effect/landmark/start/limbus_abnospawn/lowsec,
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 9;
+	color = "#FFFFFF"
+	},
+/obj/effect/turf_decal/trimline/blue/filled/corner{
+	color = "#FFFFFF"
+	},
+/turf/open/floor/pod/dark/lce/dark,
+/area/lce/containment/light/three)
 "BV" = (
 /obj/structure/rack{
 	pixel_x = -1
@@ -4683,10 +4878,13 @@
 /turf/open/floor/plasteel/white,
 /area/lce/service/kitchen)
 "Ch" = (
-/obj/machinery/camera/autoname,
-/obj/effect/landmark/start/limbus_abnospawn/lowsec,
-/turf/open/floor/lce/plate/grate,
-/area/lce/containment/light/two)
+/obj/effect/turf_decal/tile/yellow{
+	dir = 1
+	},
+/obj/effect/turf_decal/tile/yellow,
+/obj/machinery/icecream_vat,
+/turf/open/floor/plasteel/white,
+/area/lce/service/kitchen)
 "Ci" = (
 /obj/structure/table/wood/fancy/cyan,
 /obj/item/paper_bin{
@@ -4718,13 +4916,8 @@
 /turf/open/floor/carpet/purple,
 /area/lce/research/director)
 "Cy" = (
-/obj/item/kirbyplants{
-	icon_state = "plant-12";
-	pixel_x = -8;
-	anchored = 1
-	},
 /turf/open/floor/mineral/titanium/tiled/white,
-/area/lce/hallway/west)
+/area/lce/security/checkpoint)
 "Cz" = (
 /obj/effect/turf_decal/trimline/blue/filled/end{
 	dir = 8;
@@ -4735,6 +4928,17 @@
 "CD" = (
 /turf/open/floor/lce/plate/dark,
 /area/lce/containment/heavy/approach)
+"CL" = (
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 6;
+	color = "#FFFFFF"
+	},
+/obj/effect/turf_decal/trimline/blue/filled/corner{
+	dir = 1;
+	color = "#FFFFFF"
+	},
+/turf/open/floor/pod/dark/lce/dark,
+/area/lce/containment/light/two)
 "CM" = (
 /obj/effect/turf_decal/trimline/blue/filled/end{
 	dir = 8;
@@ -4774,17 +4978,11 @@
 /turf/open/floor/plasteel/white,
 /area/lce/research/reagent)
 "CV" = (
-/obj/machinery/deepfryer,
-/obj/effect/turf_decal/tile/yellow{
-	dir = 1
+/obj/effect/spawner/structure/window/reinforced{
+	max_integrity = 3000
 	},
-/obj/effect/turf_decal/tile/yellow,
-/obj/machinery/light{
-	dir = 1;
-	pixel_y = 15
-	},
-/turf/open/floor/plasteel/white,
-/area/lce/service/kitchen)
+/turf/open/floor/mineral/titanium,
+/area/lce/security/checkpoint)
 "CX" = (
 /obj/machinery/shower{
 	pixel_y = 17
@@ -4802,25 +5000,10 @@
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/one)
 "CZ" = (
-/obj/effect/turf_decal/trimline/blue/filled{
-	color = "#FFFFFF"
-	},
-/obj/structure/fans/tiny,
-/obj/machinery/light{
-	dir = 8;
-	pixel_x = -9;
-	pixel_y = 4
-	},
-/obj/machinery/light{
-	dir = 1;
-	pixel_y = 19
-	},
-/obj/machinery/light{
-	dir = 1;
-	pixel_y = 15
-	},
-/turf/open/floor/pod/dark/lce/dark,
-/area/lce/containment/light/two)
+/obj/structure/cable,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/lce/deck,
+/area/lce/containment/heavy)
 "Df" = (
 /obj/effect/decal/cleanable/blood/gibs/old,
 /obj/effect/decal/cleanable/blood/gibs/limb,
@@ -4871,6 +5054,25 @@
 	},
 /turf/open/floor/grass,
 /area/lce/service/memorial)
+"Dp" = (
+/obj/structure/disposalpipe/segment{
+	dir = 1
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/spawner/lootdrop/garbage_spawner,
+/turf/open/floor/lce/deck/dark/grate,
+/area/lce/containment/heavy)
+"Dt" = (
+/obj/effect/turf_decal/trimline/blue/filled/corner{
+	dir = 8;
+	color = "#FFFFFF"
+	},
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 4;
+	color = "#FFFFFF"
+	},
+/turf/open/floor/pod/dark/lce/dark,
+/area/lce/containment/light/one)
 "Dv" = (
 /turf/open/floor/wood,
 /area/lce/service/dorms)
@@ -4966,10 +5168,6 @@
 	short_range = 5;
 	view_range = 5
 	},
-/obj/machinery/light{
-	dir = 1;
-	pixel_y = 15
-	},
 /turf/open/floor/mineral/titanium/tiled/white,
 /area/lce/hallway/west)
 "Ea" = (
@@ -5053,25 +5251,24 @@
 	},
 /area/lce/security/udjat_quarters)
 "Er" = (
-/obj/effect/turf_decal/trimline/blue/filled/corner{
-	dir = 8;
+/obj/machinery/deepfryer,
+/obj/effect/turf_decal/tile/yellow{
+	dir = 1
+	},
+/obj/effect/turf_decal/tile/yellow,
+/turf/open/floor/plasteel/white,
+/area/lce/service/kitchen)
+"Et" = (
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 4;
 	color = "#FFFFFF"
 	},
 /obj/effect/turf_decal/trimline/blue/filled/line{
-	dir = 5;
+	dir = 8;
 	color = "#FFFFFF"
-	},
-/obj/effect/turf_decal/trimline/blue/filled/corner{
-	dir = 4;
-	color = "#FFFFFF"
-	},
-/obj/machinery/light{
-	dir = 4;
-	pixel_x = 9;
-	pixel_y = 4
 	},
 /turf/open/floor/pod/dark/lce/dark,
-/area/lce/containment/light/one)
+/area/lce/containment/light/four)
 "Ez" = (
 /obj/machinery/light{
 	dir = 4;
@@ -5113,24 +5310,10 @@
 /turf/open/floor/carpet/blue,
 /area/lce/medical/office)
 "EN" = (
-/obj/item/binoculars,
-/obj/item/clipboard{
-	pixel_x = 3
-	},
-/obj/item/taperecorder{
-	pixel_x = -5
-	},
-/obj/item/binoculars,
-/obj/structure/table/reinforced{
-	color = "#955C23"
-	},
-/obj/machinery/light{
-	dir = 8;
-	pixel_x = -9;
-	pixel_y = 4
-	},
-/turf/open/floor/lce/plate/dark,
-/area/lce/containment/light/two)
+/obj/effect/spawner/lootdrop/garbage_spawner,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/lce/deck,
+/area/lce/containment/light)
 "EO" = (
 /obj/machinery/computer/slot_machine,
 /turf/open/floor/wood,
@@ -5165,12 +5348,11 @@
 /turf/open/floor/grass,
 /area/lce/service/memorial)
 "EY" = (
-/obj/machinery/door/airlock/highsecurity{
-	name = "Cell 5 and 6 observation room";
-	color = "#955C23"
-	},
-/turf/open/floor/lce/plate/bright,
-/area/lce/containment/light/control_east)
+/obj/machinery/door/poddoor/preopen,
+/obj/structure/lattice/catwalk,
+/obj/structure/sigsystem/activator,
+/turf/open/floor/mineral/titanium/tiled/white,
+/area/lce/security/checkpoint)
 "EZ" = (
 /obj/machinery/cryopod{
 	dir = 1
@@ -5181,15 +5363,16 @@
 /turf/open/floor/plasteel/freezer,
 /area/lce/service/cryo)
 "Fa" = (
-/obj/effect/turf_decal/trimline/blue/filled/corner{
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 5;
 	color = "#FFFFFF"
 	},
-/obj/effect/turf_decal/trimline/blue/filled/line{
-	dir = 9;
+/obj/effect/turf_decal/trimline/blue/filled/corner{
+	dir = 8;
 	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
-/area/lce/containment/light/four)
+/area/lce/containment/light/two)
 "Fb" = (
 /obj/effect/turf_decal/trimline/red/filled/line{
 	dir = 4;
@@ -5202,16 +5385,18 @@
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/two)
 "Fe" = (
-/obj/effect/turf_decal/trimline/blue/filled/line{
-	dir = 1;
-	color = "#FFFFFF"
+/obj/machinery/door/poddoor{
+	name = "LSZ Containment Door #4";
+	id = "LSZ Containment Door #4"
 	},
-/obj/effect/turf_decal/trimline/blue/filled/corner{
-	dir = 8;
-	color = "#FFFFFF"
+/obj/structure/sigsystem/activator,
+/obj/machinery/door/poddoor{
+	name = "LSZ Containment Door #4";
+	id = "LSZ Containment Door #4";
+	color = "#955C23"
 	},
 /turf/open/floor/pod/dark/lce/dark,
-/area/lce/containment/light/one)
+/area/lce/containment/light/four)
 "Fg" = (
 /obj/machinery/camera{
 	alpha = 0;
@@ -5228,16 +5413,11 @@
 /turf/open/floor/mineral/titanium/tiled/white,
 /area/lce/hallway/west)
 "Fj" = (
-/obj/effect/turf_decal/tile/blue{
-	color = "#5269e9"
-	},
-/obj/effect/turf_decal/tile/blue{
-	color = "#5269e9";
-	dir = 1
-	},
-/obj/structure/chair/stool/bar,
-/turf/open/floor/plasteel/white,
-/area/lce/service/dining)
+/obj/structure/cable,
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/spawner/lootdrop/garbage_spawner,
+/turf/open/floor/lce/deck,
+/area/lce/containment/light)
 "Fn" = (
 /obj/structure/disposalpipe/segment{
 	dir = 6
@@ -5269,23 +5449,12 @@
 /turf/open/floor/mineral/titanium/purple,
 /area/lce/research)
 "Fw" = (
-/obj/structure/filingcabinet/chestdrawer{
-	pixel_x = 8;
-	pixel_y = 4;
-	color = "#955C23"
-	},
-/obj/structure/filingcabinet/chestdrawer{
-	pixel_x = -8;
-	pixel_y = 4;
-	color = "#955C23"
-	},
-/obj/machinery/light{
-	dir = 4;
-	pixel_x = 9;
-	pixel_y = 4
-	},
-/turf/open/floor/lce/plate/dark,
-/area/lce/containment/light/two)
+/obj/machinery/door/poddoor,
+/obj/structure/sigsystem/connector,
+/obj/structure/lattice/catwalk,
+/obj/structure/sigsystem/activator,
+/turf/open/floor/mineral/titanium/tiled,
+/area/lce/security/checkpoint)
 "FA" = (
 /obj/machinery/roulette,
 /turf/open/floor/wood,
@@ -5436,6 +5605,16 @@
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/two)
+"Gr" = (
+/obj/machinery/door/airlock/highsecurity{
+	name = "high-security checkpoint";
+	req_access_txt = "1";
+	max_integrity = 3000;
+	integrity_failure = 0.01;
+	color = "#955C23"
+	},
+/turf/open/floor/mineral/titanium/tiled,
+/area/lce/security/checkpoint)
 "Gs" = (
 /obj/machinery/reagentgrinder{
 	desc = "Used to grind things up into raw materials and liquids.";
@@ -5515,6 +5694,18 @@
 /obj/machinery/telecomms/processor/preset_two,
 /turf/open/floor/circuit/telecomms/mainframe,
 /area/lce/support/telecomms)
+"GU" = (
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 5;
+	color = "#FFFFFF"
+	},
+/obj/machinery/light{
+	dir = 8;
+	pixel_x = -9;
+	pixel_y = 4
+	},
+/turf/open/floor/pod/dark/lce/dark,
+/area/lce/containment/light/three)
 "GX" = (
 /obj/structure/disposalpipe/segment{
 	dir = 4
@@ -5572,17 +5763,23 @@
 /turf/closed/indestructible/reinforced/cheap/lce/dark,
 /area/lce/containment/heavy/one)
 "Hm" = (
-/obj/effect/turf_decal/trimline/blue/filled{
+/obj/structure/disposalpipe/segment{
+	dir = 5
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/spawner/lootdrop/garbage_spawner,
+/turf/open/floor/lce/deck/dark/grate,
+/area/lce/containment/heavy)
+"Hn" = (
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 1;
 	color = "#FFFFFF"
 	},
-/obj/structure/fans/tiny,
 /obj/machinery/light{
-	dir = 4;
-	pixel_x = 9;
-	pixel_y = 4
+	pixel_y = -15
 	},
 /turf/open/floor/pod/dark/lce/dark,
-/area/lce/containment/light/two)
+/area/lce/containment/light/one)
 "Ho" = (
 /obj/machinery/vending/cigarette{
 	density = 0;
@@ -5591,13 +5788,12 @@
 /turf/open/floor/mineral/titanium/purple,
 /area/lce/research)
 "Hr" = (
-/obj/machinery/door/poddoor{
-	name = "LSZ Containment Door #4";
-	id = "LSZ Containment Door #4";
-	color = "#955C23"
+/obj/structure/disposalpipe/segment{
+	dir = 1
 	},
-/turf/open/floor/lce/plate/dark,
-/area/lce/containment/light/two)
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/lce/deck/grate,
+/area/lce/containment/light)
 "Ht" = (
 /turf/open/floor/lce/tile/bright,
 /area/lce/medical/aid_light)
@@ -5626,10 +5822,21 @@
 	},
 /turf/open/floor/lce/tile/bright/grate,
 /area/lce/security/checkpoint)
+"HA" = (
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	color = "#FFFFFF"
+	},
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 1;
+	color = "#FFFFFF"
+	},
+/turf/open/floor/pod/dark/lce/dark,
+/area/lce/containment/light/three)
 "HG" = (
 /obj/structure/sigsystem/tower/button{
 	pixel_x = 5;
-	network_id = 52
+	network_id = 52;
+	signal_code = 22
 	},
 /obj/structure/table/reinforced{
 	color = "#955C23"
@@ -5671,6 +5878,17 @@
 /obj/structure/closet/crate/bin,
 /turf/open/floor/mineral/titanium/tiled/white,
 /area/lce/hallway/central)
+"Ia" = (
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 8;
+	color = "#FFFFFF"
+	},
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 4;
+	color = "#FFFFFF"
+	},
+/turf/open/floor/pod/dark/lce/dark,
+/area/lce/containment/light/four)
 "Ib" = (
 /turf/open/floor/carpet/blue,
 /area/lce/medical/office)
@@ -5699,30 +5917,14 @@
 /turf/open/floor/plasteel/white,
 /area/lce/service/kitchen)
 "Ih" = (
-/obj/machinery/computer/camera_advanced/lce_claw{
-	dir = 1;
-	color = "#955C23"
+/obj/structure/chair/office/light{
+	dir = 8
 	},
-/turf/open/floor/lce/plate/dark,
-/area/lce/containment/light/one)
+/turf/open/floor/lce/plate/bright,
+/area/lce/containment/light/control_west)
 "Ij" = (
-/obj/structure/filingcabinet/chestdrawer{
-	pixel_x = 8;
-	pixel_y = 4;
-	color = "#955C23"
-	},
-/obj/structure/filingcabinet/chestdrawer{
-	pixel_x = -8;
-	pixel_y = 4;
-	color = "#955C23"
-	},
-/obj/machinery/light{
-	dir = 8;
-	pixel_x = -9;
-	pixel_y = 4
-	},
-/turf/open/floor/lce/plate/dark,
-/area/lce/containment/light/three)
+/turf/open/floor/lce/plate/bright,
+/area/lce/containment/light/control_east)
 "Ik" = (
 /turf/closed/indestructible/reinforced{
 	color = "#9cadc7"
@@ -5817,13 +6019,19 @@
 /turf/open/floor/circuit/telecomms/mainframe,
 /area/lce/support/telecomms)
 "IP" = (
-/obj/machinery/door/poddoor/preopen{
-	armor = list("melee" = 20, "bullet" = 100, "laser" = 100, "energy" = 100, "bomb" = 50, "bio" = 100, "rad" = 100, "fire" = 100, "acid" = 70);
-	max_integrity = 1800
+/obj/effect/turf_decal/stripes/corner{
+	dir = 4
 	},
-/obj/effect/spawner/structure/window/reinforced/lce,
-/turf/open/floor/lce/plate/dark,
-/area/lce/containment/light/three)
+/obj/machinery/camera{
+	alpha = 0;
+	mouse_opacity = 0;
+	name = "hidden security camera";
+	short_range = 5;
+	view_range = 5;
+	dir = 8
+	},
+/turf/open/floor/lce/plate/bright,
+/area/lce/containment/light/control_east)
 "IQ" = (
 /obj/effect/decal/cleanable/blood/old,
 /obj/effect/turf_decal/trimline/red/filled/line{
@@ -5907,16 +6115,15 @@
 /turf/open/floor/mineral/titanium/tiled/purple,
 /area/lce/research)
 "Jq" = (
-/obj/machinery/camera{
-	alpha = 0;
-	mouse_opacity = 0;
-	name = "hidden security camera";
-	short_range = 5;
-	view_range = 5;
-	dir = 4
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 9;
+	color = "#FFFFFF"
 	},
-/turf/open/floor/lce/tile/bright,
-/area/lce/containment/light/approach)
+/obj/effect/turf_decal/trimline/blue/filled/corner{
+	color = "#FFFFFF"
+	},
+/turf/open/floor/pod/dark/lce/dark,
+/area/lce/containment/light/one)
 "Jt" = (
 /obj/machinery/door/airlock/maintenance_hatch{
 	name = "high-security maintenance hatch";
@@ -5940,20 +6147,27 @@
 	},
 /area/lce/security/udjat_quarters)
 "Jx" = (
+/obj/effect/turf_decal/trimline/blue/filled/corner{
+	dir = 8;
+	color = "#FFFFFF"
+	},
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 4;
+	color = "#FFFFFF"
+	},
+/turf/open/floor/pod/dark/lce/dark,
+/area/lce/containment/light/two)
+"JD" = (
+/obj/machinery/computer/camera_advanced/lce_claw{
+	dir = 4;
+	color = "#955C23"
+	},
 /obj/effect/turf_decal/siding/blue{
-	dir = 1;
+	dir = 8;
 	color = "#955C23"
 	},
 /turf/open/floor/lce/plate/bright,
-/area/lce/containment/light/control_east)
-"JD" = (
-/obj/machinery/door/poddoor/preopen{
-	armor = list("melee" = 20, "bullet" = 100, "laser" = 100, "energy" = 100, "bomb" = 50, "bio" = 100, "rad" = 100, "fire" = 100, "acid" = 70);
-	max_integrity = 1800
-	},
-/obj/effect/spawner/structure/window/reinforced/lce,
-/turf/open/floor/lce/plate/dark,
-/area/lce/containment/light/one)
+/area/lce/containment/light/four)
 "JF" = (
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	dir = 8;
@@ -5998,14 +6212,40 @@
 	},
 /turf/open/floor/plasteel/white,
 /area/lce/service/kitchen)
-"JU" = (
-/obj/machinery/door/poddoor{
-	name = "LSZ Containment Door #3";
-	id = "LSZ Containment Door #3";
-	color = "#955C23"
+"JS" = (
+/obj/machinery/camera{
+	alpha = 0;
+	mouse_opacity = 0;
+	name = "hidden security camera";
+	short_range = 13;
+	view_range = 13
 	},
-/turf/open/floor/lce/plate/dark,
-/area/lce/containment/light/one)
+/obj/effect/turf_decal/stripes/white{
+	dir = 4
+	},
+/obj/effect/turf_decal/stripes/white{
+	dir = 8
+	},
+/turf/open/floor/mineral/titanium/tiled/white,
+/area/lce/security/checkpoint)
+"JU" = (
+/obj/structure/table/reinforced{
+	color = "#9cadc7"
+	},
+/obj/structure/sigsystem/tower/button{
+	network_id = 52;
+	signal_code = 98;
+	pixel_y = 5
+	},
+/obj/machinery/camera{
+	alpha = 0;
+	mouse_opacity = 0;
+	name = "hidden security camera";
+	short_range = 13;
+	view_range = 13
+	},
+/turf/open/floor/mineral/titanium,
+/area/lce/security/checkpoint)
 "JY" = (
 /obj/effect/turf_decal/stripes/red/line{
 	dir = 8;
@@ -6049,14 +6289,12 @@
 /turf/open/floor/mineral/titanium/blue,
 /area/lce/medical/surgery)
 "Kj" = (
-/obj/effect/turf_decal/stripes/line{
+/obj/structure/disposalpipe/segment{
 	dir = 4
 	},
-/obj/effect/turf_decal/caution/stand_clear{
-	dir = 8
-	},
-/turf/open/floor/lce/plate/bright,
-/area/lce/containment/light/approach)
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/lce/deck/grate,
+/area/lce/containment/light)
 "Ks" = (
 /obj/structure/table/wood/fancy/cyan,
 /obj/item/flashlight/lamp/green,
@@ -6086,6 +6324,13 @@
 	color = "#4a4845"
 	},
 /area/lce/research)
+"KJ" = (
+/obj/structure/cable,
+/obj/machinery/light/small{
+	dir = 1
+	},
+/turf/open/floor/lce/deck,
+/area/lce/containment/light)
 "KL" = (
 /obj/effect/turf_decal/tile/bar,
 /obj/effect/turf_decal/tile/bar{
@@ -6134,10 +6379,25 @@
 	color = "#4a4845"
 	},
 /area/lce/research/records)
+"Lb" = (
+/obj/structure/sigsystem/connector/split{
+	dir = 4
+	},
+/turf/closed/indestructible/reinforced{
+	color = "#9cadc7"
+	},
+/area/lce/security/checkpoint)
 "Ld" = (
 /obj/structure/flora/ausbushes/brflowers,
 /turf/open/floor/grass,
 /area/lce/service/memorial)
+"Le" = (
+/obj/structure/disposalpipe/segment{
+	dir = 9
+	},
+/obj/effect/landmark/xeno_spawn,
+/turf/open/floor/lce/deck/grate,
+/area/lce/containment/light)
 "Lj" = (
 /turf/closed/indestructible/reinforced{
 	color = "#9cadc7"
@@ -6213,6 +6473,17 @@
 	},
 /turf/open/floor/lce/plate/dark,
 /area/lce/security/udjat_quarters)
+"LG" = (
+/obj/structure/sink/kitchen{
+	dir = 1;
+	pixel_y = -10
+	},
+/obj/effect/turf_decal/tile/yellow{
+	dir = 1
+	},
+/obj/effect/turf_decal/tile/yellow,
+/turf/open/floor/plasteel/white,
+/area/lce/service/kitchen)
 "LM" = (
 /obj/effect/turf_decal/stripes/line{
 	dir = 4
@@ -6252,9 +6523,13 @@
 /turf/open/floor/lce/tile/bright,
 /area/lce/containment/light)
 "LY" = (
-/obj/effect/turf_decal/stripes/corner,
-/turf/open/floor/lce/tile/bright,
-/area/lce/containment/light/approach)
+/obj/structure/disposalpipe/segment{
+	dir = 9
+	},
+/obj/effect/landmark/xeno_spawn,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/lce/deck/dark/grate,
+/area/lce/containment/heavy)
 "Mc" = (
 /obj/effect/turf_decal/arrows/white{
 	color = "#bf48b1";
@@ -6276,6 +6551,14 @@
 	},
 /turf/open/floor/lce/tile/bright/grate,
 /area/lce/security/checkpoint)
+"Mn" = (
+/obj/structure/cable,
+/obj/machinery/light/small{
+	dir = 1
+	},
+/obj/effect/spawner/lootdrop/garbage_spawner,
+/turf/open/floor/lce/deck,
+/area/lce/containment/heavy)
 "Mr" = (
 /obj/structure/sigsystem/connector{
 	dir = 8
@@ -6283,16 +6566,11 @@
 /turf/closed/indestructible/reinforced/cheap/lce/dark,
 /area/lce/security/checkpoint)
 "Mw" = (
-/obj/machinery/door/airlock/maintenance_hatch{
-	req_access_txt = "1";
-	name = "low-security maintenance hatch";
-	max_integrity = 3000;
-	integrity_failure = 0.01;
-	color = "#955C23"
+/obj/structure/chair/office/light{
+	dir = 1
 	},
-/obj/structure/cable,
-/turf/open/floor/lce/plate/bright,
-/area/lce/containment/light/control_west)
+/turf/open/floor/mineral/titanium,
+/area/lce/security/checkpoint)
 "My" = (
 /obj/effect/turf_decal/siding/blue{
 	dir = 10
@@ -6326,6 +6604,39 @@
 	},
 /turf/open/floor/plasteel/white,
 /area/lce/research/reagent)
+"MK" = (
+/obj/effect/turf_decal/trimline/blue/filled/corner{
+	dir = 8;
+	color = "#FFFFFF"
+	},
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 1;
+	color = "#FFFFFF"
+	},
+/turf/open/floor/pod/dark/lce/dark,
+/area/lce/containment/light/four)
+"ML" = (
+/obj/structure/sigsystem/tower/button{
+	pixel_x = -24;
+	signal_code = 21
+	},
+/obj/effect/turf_decal/siding/blue{
+	dir = 8;
+	color = "#955C23"
+	},
+/obj/effect/turf_decal/stripes/corner{
+	dir = 1
+	},
+/obj/machinery/camera{
+	alpha = 0;
+	mouse_opacity = 0;
+	name = "hidden security camera";
+	short_range = 5;
+	view_range = 5;
+	dir = 4
+	},
+/turf/open/floor/lce/plate/bright,
+/area/lce/containment/light/control_west)
 "MM" = (
 /turf/open/floor/lce/tile/bright,
 /area/lce/containment/light/approach)
@@ -6351,8 +6662,17 @@
 /turf/open/floor/mineral/titanium/tiled,
 /area/lce/hallway/west)
 "MV" = (
-/turf/closed/indestructible/reinforced/cheap/lce/bright,
-/area/lce/containment/light/four)
+/obj/effect/spawner/structure/window/reinforced/lce,
+/obj/machinery/door/poddoor/preopen{
+	armor = list("melee" = 20, "bullet" = 100, "laser" = 100, "energy" = 100, "bomb" = 50, "bio" = 100, "rad" = 100, "fire" = 100, "acid" = 70);
+	max_integrity = 1800
+	},
+/obj/structure/sigsystem/activator,
+/obj/structure/sigsystem/connector{
+	dir = 8
+	},
+/turf/open/floor/pod/dark/lce/dark,
+/area/lce/containment/light)
 "MW" = (
 /obj/effect/turf_decal/delivery/white{
 	color = "#5269e9"
@@ -6373,15 +6693,16 @@
 /turf/open/floor/mineral/titanium/blue,
 /area/lce/medical/surgery)
 "Nb" = (
-/obj/effect/turf_decal/trimline/blue/filled/corner{
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 4;
 	color = "#FFFFFF"
 	},
 /obj/effect/turf_decal/trimline/blue/filled/line{
-	dir = 9;
+	dir = 8;
 	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
-/area/lce/containment/light/three)
+/area/lce/containment/light/two)
 "Nc" = (
 /turf/open/floor/lce/deck/dark/grate,
 /area/lce/containment/heavy/one)
@@ -6428,12 +6749,9 @@
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/one)
 "No" = (
-/obj/effect/turf_decal/trimline/blue/filled{
-	color = "#FFFFFF"
-	},
-/obj/structure/fans/tiny,
+/obj/effect/spawner/structure/window/reinforced/lce,
 /turf/open/floor/pod/dark/lce/dark,
-/area/lce/containment/light/four)
+/area/lce/containment/light/one)
 "Nq" = (
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	color = "#FFFFFF"
@@ -6466,47 +6784,20 @@
 /area/lce/service/memorial)
 "Nv" = (
 /obj/structure/cable,
-/obj/machinery/door/airlock/maintenance_hatch{
-	name = "low-security maintenance hatch";
-	max_integrity = 3000;
-	integrity_failure = 0.01;
-	color = "#955C23"
-	},
-/turf/open/floor/facility/halls,
-/area/lce/medical/aid_light)
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/spawner/lootdrop/garbage_spawner,
+/turf/open/floor/lce/deck,
+/area/lce/containment/heavy)
 "Nx" = (
-/obj/effect/turf_decal/trimline/blue/filled/corner{
-	dir = 8;
-	color = "#FFFFFF"
-	},
-/obj/effect/turf_decal/trimline/blue/filled/line{
-	dir = 5;
-	color = "#FFFFFF"
-	},
-/obj/effect/turf_decal/trimline/blue/filled/corner{
-	dir = 4;
-	color = "#FFFFFF"
-	},
-/obj/machinery/light{
-	dir = 1;
-	pixel_y = 19
-	},
-/obj/machinery/light{
-	dir = 4;
-	pixel_x = 9;
-	pixel_y = 4
-	},
-/obj/machinery/light{
-	dir = 1;
-	pixel_y = 15
-	},
-/turf/open/floor/pod/dark/lce/dark,
-/area/lce/containment/light/three)
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/lce/deck,
+/area/lce/containment/light)
 "Nz" = (
 /obj/structure/cable,
 /obj/machinery/light/small{
 	dir = 4
 	},
+/obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/lce/deck,
 /area/lce/containment/heavy)
 "NA" = (
@@ -6549,18 +6840,15 @@
 /turf/open/floor/lce/plate/dark,
 /area/lce/containment/heavy)
 "NM" = (
-/obj/effect/turf_decal/stripes/line{
-	dir = 8
-	},
-/obj/effect/turf_decal/caution{
-	dir = 4
-	},
-/obj/effect/turf_decal/arrows{
-	dir = 1
-	},
-/obj/effect/turf_decal/arrows,
-/turf/open/floor/lce/plate/bright,
-/area/lce/containment/light/approach)
+/obj/item/reagent_containers/food/drinks/bottle/hooch,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/mineral/titanium,
+/area/lce/security/checkpoint)
+"NR" = (
+/obj/structure/bed/maint,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/plating,
+/area/lce/security/checkpoint)
 "NT" = (
 /obj/structure/chair/office/light{
 	pixel_x = 5
@@ -6636,6 +6924,13 @@
 	},
 /turf/open/floor/lce/plate/dark,
 /area/lce/command/briefing)
+"Oo" = (
+/obj/machinery/door/poddoor,
+/obj/structure/sigsystem/connector,
+/obj/structure/lattice/catwalk,
+/obj/structure/sigsystem/activator,
+/turf/open/floor/mineral/titanium/tiled/white,
+/area/lce/security/checkpoint)
 "Ot" = (
 /obj/structure/window/reinforced/spawner{
 	dir = 4
@@ -6705,6 +7000,22 @@
 /obj/item/ego_weapon/ranged/city/limbusautopistol,
 /turf/open/floor/carpet/royalblue,
 /area/lce/medical/office)
+"OR" = (
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 8;
+	color = "#FFFFFF"
+	},
+/obj/effect/turf_decal/trimline/blue/filled/corner{
+	dir = 4;
+	color = "#FFFFFF"
+	},
+/obj/machinery/light{
+	dir = 4;
+	pixel_x = 9;
+	pixel_y = 4
+	},
+/turf/open/floor/pod/dark/lce/dark,
+/area/lce/containment/light/two)
 "OS" = (
 /obj/structure/table/reinforced{
 	max_integrity = 25
@@ -6764,6 +7075,11 @@
 	},
 /turf/open/floor/lce/deck,
 /area/lce/containment/heavy)
+"Pa" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/spawner/lootdrop/garbage_spawner,
+/turf/open/floor/mineral/titanium,
+/area/lce/security/checkpoint)
 "Pb" = (
 /turf/open/floor/lce/tile/bright/grate,
 /area/lce/containment/heavy/approach)
@@ -6812,12 +7128,23 @@
 	},
 /turf/open/floor/plasteel/white,
 /area/lce/research/reagent)
+"Pk" = (
+/obj/machinery/camera{
+	alpha = 0;
+	mouse_opacity = 0;
+	name = "hidden security camera";
+	short_range = 13;
+	view_range = 13
+	},
+/turf/open/floor/mineral/titanium/tiled/white,
+/area/lce/security/checkpoint)
 "Po" = (
-/obj/effect/turf_decal/stripes/corner{
+/obj/structure/disposalpipe/segment{
 	dir = 4
 	},
-/turf/open/floor/lce/tile/bright,
-/area/lce/containment/light/approach)
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/lce/deck/dark/grate,
+/area/lce/containment/heavy)
 "Pp" = (
 /turf/closed/indestructible/reinforced{
 	color = "#9cadc7"
@@ -6867,22 +7194,22 @@
 /turf/open/floor/plasteel/white,
 /area/lce/service/washroom)
 "PB" = (
-/obj/structure/table/reinforced{
+/obj/structure/sigsystem/tower{
+	dir = 4;
+	signal_code = 76;
+	signal_range = 9
+	},
+/turf/closed/indestructible/reinforced/cheap/lce/bright,
+/area/lce/containment/light)
+"PD" = (
+/obj/structure/filingcabinet/chestdrawer{
+	pixel_x = 8;
+	pixel_y = 4;
 	color = "#955C23"
 	},
-/obj/machinery/button/door/indestructible{
-	id = "LSZ Containment Door #6"
-	},
-/obj/item/lcl_pacifiers,
-/obj/item/lcl_duel,
-/turf/open/floor/lce/plate/dark,
-/area/lce/containment/light/three)
-"PD" = (
-/obj/structure/chair/office/light{
-	dir = 1
-	},
-/obj/effect/turf_decal/siding/blue{
-	dir = 1;
+/obj/structure/filingcabinet/chestdrawer{
+	pixel_x = -8;
+	pixel_y = 4;
 	color = "#955C23"
 	},
 /turf/open/floor/lce/plate/bright,
@@ -6924,6 +7251,11 @@
 	color = "#EDD956"
 	},
 /area/lce/security/udjat_quarters)
+"PN" = (
+/obj/structure/cable,
+/obj/machinery/light/small,
+/turf/open/floor/lce/deck,
+/area/lce/containment/light)
 "PO" = (
 /obj/machinery/computer/crew{
 	dir = 1;
@@ -7018,6 +7350,7 @@
 /obj/structure/disposalpipe/segment{
 	dir = 9
 	},
+/obj/effect/spawner/lootdrop/garbage_spawner,
 /turf/open/floor/lce/deck/dark/grate,
 /area/lce/containment/heavy)
 "QD" = (
@@ -7069,12 +7402,19 @@
 /turf/open/floor/plasteel/white,
 /area/lce/service/kitchen)
 "QP" = (
-/obj/effect/turf_decal/trimline/blue/filled{
-	color = "#FFFFFF"
+/obj/machinery/door/poddoor{
+	name = "LSZ Containment Door #3";
+	id = "LSZ Containment Door #3"
 	},
-/obj/structure/fans/tiny,
+/obj/structure/sigsystem/activator,
+/obj/structure/sigsystem/connector,
+/obj/machinery/door/poddoor{
+	name = "LSZ Containment Door #3";
+	id = "LSZ Containment Door #3";
+	color = "#955C23"
+	},
 /turf/open/floor/pod/dark/lce/dark,
-/area/lce/containment/light/two)
+/area/lce/containment/light/three)
 "QU" = (
 /obj/machinery/door/airlock/command/glass{
 	req_access_txt = "19";
@@ -7122,31 +7462,18 @@
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/two)
 "Ro" = (
-/obj/effect/turf_decal/trimline/blue/filled/corner{
-	color = "#FFFFFF"
-	},
-/obj/effect/turf_decal/trimline/blue/filled/line{
-	dir = 9;
-	color = "#FFFFFF"
-	},
+/obj/effect/spawner/structure/window/reinforced/lce,
 /turf/open/floor/pod/dark/lce/dark,
-/area/lce/containment/light/one)
+/area/lce/containment/light/four)
 "Rq" = (
-/obj/structure/filingcabinet/chestdrawer{
-	pixel_x = -8;
-	color = "#955C23"
+/obj/effect/spawner/structure/window/reinforced/lce,
+/obj/machinery/door/poddoor/preopen{
+	armor = list("melee" = 20, "bullet" = 100, "laser" = 100, "energy" = 100, "bomb" = 50, "bio" = 100, "rad" = 100, "fire" = 100, "acid" = 70);
+	max_integrity = 1800
 	},
-/obj/structure/filingcabinet/chestdrawer{
-	pixel_x = 8;
-	color = "#955C23"
-	},
-/obj/machinery/light{
-	dir = 8;
-	pixel_x = -9;
-	pixel_y = 4
-	},
-/turf/open/floor/lce/plate/dark,
-/area/lce/containment/light/one)
+/obj/structure/sigsystem/activator,
+/turf/open/floor/pod/dark/lce/dark,
+/area/lce/containment/light)
 "Rv" = (
 /obj/machinery/light{
 	dir = 1;
@@ -7219,7 +7546,7 @@
 /area/lce/research/records)
 "RS" = (
 /obj/effect/turf_decal/trimline/blue/filled/line{
-	dir = 1;
+	dir = 5;
 	color = "#FFFFFF"
 	},
 /obj/effect/turf_decal/trimline/blue/filled/corner{
@@ -7227,7 +7554,7 @@
 	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
-/area/lce/containment/light/three)
+/area/lce/containment/light/one)
 "RU" = (
 /obj/structure/flora/junglebush,
 /obj/machinery/light{
@@ -7324,10 +7651,27 @@
 /turf/open/floor/plasteel/dark,
 /area/lce/security/udjat_quarters)
 "Sx" = (
-/obj/machinery/camera/autoname,
-/obj/effect/landmark/start/limbus_abnospawn/lowsec,
-/turf/open/floor/lce/plate/grate,
-/area/lce/containment/light/one)
+/obj/structure/sigsystem/tower/button{
+	pixel_x = -24;
+	signal_code = 33
+	},
+/obj/effect/turf_decal/siding/blue{
+	dir = 8;
+	color = "#955C23"
+	},
+/obj/effect/turf_decal/stripes/corner{
+	dir = 8
+	},
+/obj/machinery/camera{
+	alpha = 0;
+	mouse_opacity = 0;
+	name = "hidden security camera";
+	short_range = 5;
+	view_range = 5;
+	dir = 4
+	},
+/turf/open/floor/lce/plate/bright,
+/area/lce/containment/light/control_west)
 "Sz" = (
 /obj/effect/turf_decal/tile{
 	color = "#ffb964";
@@ -7380,6 +7724,17 @@
 	},
 /turf/open/floor/mineral/silver,
 /area/lce/command/manager)
+"SG" = (
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 8;
+	color = "#FFFFFF"
+	},
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 4;
+	color = "#FFFFFF"
+	},
+/turf/open/floor/pod/dark/lce/dark,
+/area/lce/containment/light/three)
 "SH" = (
 /turf/closed/indestructible/reinforced{
 	color = "#9cadc7"
@@ -7396,21 +7751,11 @@
 /turf/open/floor/mineral/titanium/tiled/purple,
 /area/lce/research)
 "SN" = (
-/obj/structure/filingcabinet/chestdrawer{
-	pixel_x = -8;
-	color = "#955C23"
-	},
-/obj/structure/filingcabinet/chestdrawer{
-	pixel_x = 8;
-	color = "#955C23"
-	},
-/obj/machinery/light{
-	dir = 4;
-	pixel_x = 9;
-	pixel_y = 4
-	},
-/turf/open/floor/lce/plate/dark,
-/area/lce/containment/light/four)
+/obj/structure/cable,
+/obj/structure/cable,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/lce/deck,
+/area/lce/containment/heavy)
 "SS" = (
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	color = "#FFFFFF"
@@ -7473,16 +7818,12 @@
 	},
 /area/lce/research)
 "Tg" = (
-/obj/structure/table/reinforced{
+/obj/effect/turf_decal/siding/blue{
+	dir = 8;
 	color = "#955C23"
 	},
-/obj/machinery/button/door/indestructible{
-	id = "LSZ Containment Door #4"
-	},
-/obj/item/lcl_pacifiers,
-/obj/item/lcl_duel,
-/turf/open/floor/lce/plate/dark,
-/area/lce/containment/light/two)
+/turf/open/floor/lce/plate/bright,
+/area/lce/containment/light/three)
 "Tk" = (
 /obj/effect/turf_decal/trimline/red/filled/line{
 	dir = 1;
@@ -7531,16 +7872,13 @@
 /turf/open/floor/lce/tile/bright/grate,
 /area/lce/containment/light/approach)
 "Tr" = (
-/obj/effect/turf_decal/trimline/blue/filled/line{
-	dir = 1;
-	color = "#FFFFFF"
+/obj/structure/disposalpipe/segment{
+	dir = 1
 	},
-/obj/effect/turf_decal/trimline/blue/filled/corner{
-	dir = 8;
-	color = "#FFFFFF"
-	},
-/turf/open/floor/pod/dark/lce/dark,
-/area/lce/containment/light/four)
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/spawner/lootdrop/garbage_spawner,
+/turf/open/floor/lce/deck/grate,
+/area/lce/containment/light)
 "Ts" = (
 /obj/structure/chair/wood,
 /turf/open/floor/mineral/titanium/purple,
@@ -7599,17 +7937,14 @@
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/two)
 "TI" = (
-/obj/effect/turf_decal/stripes/corner{
-	dir = 8
-	},
-/turf/open/floor/lce/tile/bright,
-/area/lce/containment/light/approach)
+/obj/machinery/door/poddoor,
+/obj/structure/lattice/catwalk,
+/obj/structure/sigsystem/activator,
+/turf/open/floor/mineral/titanium/tiled/white,
+/area/lce/security/checkpoint)
 "TJ" = (
-/obj/machinery/computer/camera_advanced/lce_claw{
-	color = "#955C23"
-	},
-/turf/open/floor/lce/plate/dark,
-/area/lce/containment/light/two)
+/turf/open/floor/mineral/titanium,
+/area/lce/security/checkpoint)
 "TL" = (
 /obj/effect/turf_decal/trimline/red/filled/corner{
 	dir = 1;
@@ -7623,17 +7958,31 @@
 "TP" = (
 /turf/open/floor/mineral/titanium/tiled,
 /area/lce/research)
-"TU" = (
-/obj/effect/turf_decal/trimline/blue/filled/line{
-	dir = 4;
-	color = "#FFFFFF"
+"TQ" = (
+/obj/effect/turf_decal/stripes/white{
+	dir = 4
 	},
+/obj/effect/turf_decal/stripes/white{
+	dir = 8
+	},
+/turf/open/floor/mineral/titanium/tiled/white,
+/area/lce/security/checkpoint)
+"TS" = (
 /obj/effect/turf_decal/trimline/blue/filled/corner{
 	dir = 8;
 	color = "#FFFFFF"
 	},
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 1;
+	color = "#FFFFFF"
+	},
 /turf/open/floor/pod/dark/lce/dark,
-/area/lce/containment/light/four)
+/area/lce/containment/light/three)
+"TU" = (
+/obj/structure/disposalpipe/segment,
+/obj/effect/spawner/lootdrop/garbage_spawner,
+/turf/open/floor/lce/deck/dark/grate,
+/area/lce/containment/heavy)
 "TY" = (
 /obj/machinery/light{
 	dir = 1;
@@ -7655,6 +8004,14 @@
 /obj/item/binoculars,
 /turf/open/floor/lce/plate,
 /area/lce/containment/heavy/one)
+"Ud" = (
+/obj/structure/disposalpipe/segment{
+	dir = 1
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/lce/deck/dark/grate,
+/area/lce/containment/heavy)
 "Ue" = (
 /obj/effect/turf_decal/trimline/red/filled/line{
 	dir = 4;
@@ -7678,11 +8035,11 @@
 /turf/open/floor/lce/tile/bright/grate,
 /area/lce/containment/heavy)
 "Ui" = (
-/obj/effect/turf_decal/siding/blue{
-	color = "#955C23"
+/obj/effect/turf_decal/trimline/blue/filled{
+	color = "#FFFFFF"
 	},
-/turf/open/floor/lce/plate/bright,
-/area/lce/containment/light/control_west)
+/turf/open/floor/pod/dark/lce/dark,
+/area/lce/containment/light/three)
 "Uk" = (
 /obj/structure/sign/logo{
 	icon_state = "limbus_sign 1,0";
@@ -7704,6 +8061,27 @@
 /obj/structure/closet/crate/bin,
 /turf/open/floor/plasteel/showroomfloor,
 /area/lce/medical)
+"Un" = (
+/obj/structure/barricade/wooden,
+/obj/structure/barricade/wooden/crude,
+/obj/structure/barricade/wooden/crude,
+/obj/structure/barricade/wooden/crude,
+/obj/structure/barricade/wooden/crude,
+/obj/structure/barricade/wooden/crude,
+/obj/structure/barricade/wooden/crude,
+/obj/structure/barricade/wooden/crude,
+/obj/structure/barricade/wooden/crude,
+/obj/structure/barricade/wooden/crude,
+/obj/structure/barricade/wooden/crude,
+/obj/structure/barricade/wooden/crude,
+/obj/structure/barricade/wooden/crude,
+/obj/structure/barricade/wooden/crude,
+/obj/machinery/door/airlock/security/glass{
+	name = "Udjat Checkpoint 'office'";
+	req_access_txt = "3;19"
+	},
+/turf/open/floor/mineral/titanium,
+/area/lce/security/checkpoint)
 "Up" = (
 /obj/machinery/light{
 	pixel_x = -9;
@@ -7758,6 +8136,102 @@
 /obj/effect/spawner/structure/window/plasma/reinforced,
 /turf/open/floor/mineral/titanium/tiled/white,
 /area/lce/security/udjat_quarters)
+"US" = (
+/obj/structure/closet/secure_closet/freezer/fridge/open{
+	anchored = 1;
+	name = "Meat Storage Refrigerator";
+	storage_capacity = 1000
+	},
+/obj/item/food/meat/slab,
+/obj/item/food/meat/slab,
+/obj/item/food/meat/slab,
+/obj/item/food/meat/slab,
+/obj/item/food/meat/slab,
+/obj/item/food/meat/slab,
+/obj/item/food/meat/slab,
+/obj/item/food/meat/slab,
+/obj/item/food/meat/slab,
+/obj/item/food/meat/slab,
+/obj/item/food/meat/slab,
+/obj/item/food/meat/slab,
+/obj/item/food/meat/slab,
+/obj/item/food/meat/slab,
+/obj/item/food/meat/slab,
+/obj/item/food/meat/slab,
+/obj/item/food/meat/slab,
+/obj/item/food/meat/slab,
+/obj/item/food/meat/slab/bear,
+/obj/item/food/meat/slab/bear,
+/obj/item/food/meat/slab/bear,
+/obj/item/food/meat/slab/bear,
+/obj/item/food/meat/slab/bear,
+/obj/item/food/meat/slab/bear,
+/obj/item/food/meat/slab/bear,
+/obj/item/food/meat/slab/bear,
+/obj/item/food/meat/slab/bear,
+/obj/item/food/meat/slab/bear,
+/obj/item/food/meat/slab/bear,
+/obj/item/food/meat/slab/bear,
+/obj/item/food/meat/slab/bear,
+/obj/item/food/meat/slab/bear,
+/obj/item/food/meat/slab/bear,
+/obj/item/food/meat/slab/chicken,
+/obj/item/food/meat/slab/chicken,
+/obj/item/food/meat/slab/chicken,
+/obj/item/food/meat/slab/chicken,
+/obj/item/food/meat/slab/chicken,
+/obj/item/food/meat/slab/chicken,
+/obj/item/food/meat/slab/chicken,
+/obj/item/food/meat/slab/chicken,
+/obj/item/food/meat/slab/chicken,
+/obj/item/food/meat/slab/chicken,
+/obj/item/food/meat/slab/chicken,
+/obj/item/food/meat/slab/chicken,
+/obj/item/food/meat/slab/chicken,
+/obj/item/food/meat/slab/chicken,
+/obj/item/food/meat/slab/chicken,
+/obj/item/food/meat/slab/spider,
+/obj/item/food/meat/slab/spider,
+/obj/item/food/meat/slab/spider,
+/obj/item/food/meat/slab/spider,
+/obj/item/food/meat/slab/spider,
+/obj/item/food/meat/slab/spider,
+/obj/item/food/meat/slab/spider,
+/obj/item/food/meat/slab/spider,
+/obj/item/food/meat/slab/spider,
+/obj/item/food/meat/slab/spider,
+/obj/item/food/meat/slab/spider,
+/obj/item/food/meat/slab/spider,
+/obj/item/food/meat/slab/spider,
+/obj/item/food/meat/slab/spider,
+/obj/item/food/meat/slab/spider,
+/obj/item/food/meat/slab/spider,
+/obj/item/food/meat/slab/spider,
+/obj/item/food/meat/slab/spider,
+/obj/item/food/carpmeat,
+/obj/item/food/carpmeat,
+/obj/item/food/carpmeat,
+/obj/item/food/carpmeat,
+/obj/item/food/carpmeat,
+/obj/item/food/carpmeat,
+/obj/item/food/carpmeat,
+/obj/item/food/carpmeat,
+/obj/item/food/carpmeat,
+/obj/item/food/carpmeat,
+/obj/item/food/carpmeat,
+/obj/item/food/carpmeat,
+/obj/item/food/carpmeat,
+/obj/item/food/carpmeat,
+/obj/item/food/carpmeat,
+/obj/effect/turf_decal/tile/yellow{
+	dir = 1
+	},
+/obj/effect/turf_decal/tile/yellow,
+/obj/machinery/light{
+	pixel_y = -19
+	},
+/turf/open/floor/plasteel/white,
+/area/lce/service/kitchen)
 "UW" = (
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	color = "#FFFFFF"
@@ -7790,6 +8264,16 @@
 /obj/machinery/limbgrower,
 /turf/open/floor/plasteel/dark,
 /area/lce/medical/morgue)
+"Vb" = (
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 1;
+	color = "#FFFFFF"
+	},
+/obj/machinery/light{
+	pixel_y = -15
+	},
+/turf/open/floor/pod/dark/lce/dark,
+/area/lce/containment/light/four)
 "Vc" = (
 /obj/machinery/door/airlock/medical/glass{
 	name = "MedicalStorage";
@@ -7823,6 +8307,15 @@
 	color = "#4a4845"
 	},
 /area/lce/research/records)
+"Vk" = (
+/obj/effect/turf_decal/stripes/white{
+	dir = 4
+	},
+/obj/effect/turf_decal/stripes/white{
+	dir = 8
+	},
+/turf/open/floor/mineral/titanium/tiled,
+/area/lce/security/checkpoint)
 "Vl" = (
 /obj/structure/chair/comfy/shuttle{
 	color = "#9cadc7";
@@ -7912,6 +8405,16 @@
 	},
 /turf/open/floor/mineral/plastitanium,
 /area/lce/command/briefing)
+"VM" = (
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	color = "#FFFFFF"
+	},
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 1;
+	color = "#FFFFFF"
+	},
+/turf/open/floor/pod/dark/lce/dark,
+/area/lce/containment/light/four)
 "VP" = (
 /obj/effect/decal/cleanable/blood/tracks{
 	dir = 8
@@ -7932,9 +8435,16 @@
 /obj/structure/table/wood,
 /turf/open/floor/mineral/titanium/purple,
 /area/lce/research)
+"VX" = (
+/obj/structure/disposalpipe/segment{
+	dir = 6
+	},
+/turf/open/floor/lce/deck/grate,
+/area/lce/containment/light)
 "VZ" = (
 /obj/structure/cable,
 /obj/structure/cable,
+/obj/effect/spawner/lootdrop/garbage_spawner,
 /turf/open/floor/lce/deck,
 /area/lce/containment/heavy)
 "Wb" = (
@@ -7990,6 +8500,17 @@
 	},
 /turf/open/floor/carpet/executive,
 /area/lce/command/lounge)
+"Wj" = (
+/obj/effect/turf_decal/trimline/blue/filled/corner{
+	dir = 8;
+	color = "#FFFFFF"
+	},
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 1;
+	color = "#FFFFFF"
+	},
+/turf/open/floor/pod/dark/lce/dark,
+/area/lce/containment/light/one)
 "Wl" = (
 /obj/machinery/light{
 	dir = 4;
@@ -7998,6 +8519,11 @@
 	},
 /turf/open/floor/lce/tile/bright,
 /area/lce/containment/light/approach)
+"Wn" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/decal/cleanable/blood/old,
+/turf/open/floor/lce/deck,
+/area/lce/containment/light)
 "Wo" = (
 /turf/open/floor/lce/tile/bright,
 /area/lce/containment/light)
@@ -8025,6 +8551,26 @@
 /obj/effect/spawner/structure/window/reinforced/lce,
 /turf/open/floor/lce/tile/bright,
 /area/lce/medical/aid_heavy)
+"WE" = (
+/obj/effect/landmark/start/limbus_abnospawn/lowsec,
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 9;
+	color = "#FFFFFF"
+	},
+/obj/effect/turf_decal/trimline/blue/filled/corner{
+	color = "#FFFFFF"
+	},
+/turf/open/floor/pod/dark/lce/dark,
+/area/lce/containment/light/two)
+"WF" = (
+/obj/structure/sigsystem/tower{
+	dir = 8;
+	network_id = 59;
+	signal_range = 9;
+	signal_code = 68
+	},
+/turf/closed/indestructible/reinforced/cheap/lce/bright,
+/area/lce/containment/light)
 "WG" = (
 /obj/effect/turf_decal/stripes/corner{
 	dir = 8
@@ -8087,33 +8633,12 @@
 /turf/open/floor/plasteel/dark,
 /area/lce/security/udjat_quarters)
 "WV" = (
-/obj/effect/turf_decal/trimline/blue/filled/corner{
-	dir = 8;
-	color = "#FFFFFF"
+/obj/structure/disposalpipe/segment{
+	dir = 1
 	},
-/obj/effect/turf_decal/trimline/blue/filled/line{
-	dir = 5;
-	color = "#FFFFFF"
-	},
-/obj/effect/turf_decal/trimline/blue/filled/corner{
-	dir = 4;
-	color = "#FFFFFF"
-	},
-/obj/machinery/light{
-	dir = 1;
-	pixel_y = 19
-	},
-/obj/machinery/light{
-	dir = 4;
-	pixel_x = 9;
-	pixel_y = 4
-	},
-/obj/machinery/light{
-	dir = 1;
-	pixel_y = 15
-	},
-/turf/open/floor/pod/dark/lce/dark,
-/area/lce/containment/light/two)
+/obj/effect/spawner/lootdrop/garbage_spawner,
+/turf/open/floor/lce/deck/grate,
+/area/lce/containment/light)
 "WW" = (
 /obj/effect/turf_decal/tile/bar{
 	dir = 4
@@ -8189,10 +8714,17 @@
 /turf/open/floor/plasteel/showroomfloor,
 /area/lce/medical)
 "Xa" = (
-/obj/machinery/camera/autoname,
-/obj/effect/landmark/start/limbus_abnospawn/lowsec,
-/turf/open/floor/lce/plate/grate,
-/area/lce/containment/light/four)
+/obj/effect/turf_decal/stripes/corner,
+/obj/machinery/camera{
+	alpha = 0;
+	mouse_opacity = 0;
+	name = "hidden security camera";
+	short_range = 5;
+	view_range = 5;
+	dir = 8
+	},
+/turf/open/floor/lce/plate/bright,
+/area/lce/containment/light/control_east)
 "Xf" = (
 /obj/structure/bed/pod,
 /obj/item/bedsheet/hos,
@@ -8218,25 +8750,27 @@
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/two)
 "Xn" = (
-/obj/structure/chair/office/light{
-	dir = 1
+/obj/structure/filingcabinet/chestdrawer{
+	pixel_x = 8;
+	pixel_y = 4;
+	color = "#955C23"
+	},
+/obj/structure/filingcabinet/chestdrawer{
+	pixel_x = -8;
+	pixel_y = 4;
+	color = "#955C23"
 	},
 /obj/effect/turf_decal/siding/blue{
-	dir = 1;
+	dir = 8;
 	color = "#955C23"
 	},
 /turf/open/floor/lce/plate/bright,
-/area/lce/containment/light/control_west)
+/area/lce/containment/light/three)
 "Xp" = (
-/obj/effect/turf_decal/trimline/blue/filled/corner{
-	color = "#FFFFFF"
-	},
-/obj/effect/turf_decal/trimline/blue/filled/line{
-	dir = 9;
-	color = "#FFFFFF"
-	},
-/turf/open/floor/pod/dark/lce/dark,
-/area/lce/containment/light/two)
+/obj/structure/cable,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/lce/deck,
+/area/lce/containment/light)
 "Xw" = (
 /turf/closed/indestructible/reinforced{
 	color = "#9cadc7"
@@ -8249,6 +8783,13 @@
 	},
 /turf/open/floor/grass,
 /area/lce/service/memorial)
+"Xy" = (
+/obj/machinery/modular_computer/console/preset/research{
+	color = "#955C23";
+	dir = 8
+	},
+/turf/open/floor/lce/plate/bright,
+/area/lce/containment/light/one)
 "XD" = (
 /obj/structure/chair/comfy/shuttle{
 	color = "#D381C9";
@@ -8325,6 +8866,17 @@
 	},
 /turf/open/floor/mineral/silver,
 /area/lce/command/lounge)
+"XM" = (
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 8;
+	color = "#FFFFFF"
+	},
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 4;
+	color = "#FFFFFF"
+	},
+/turf/open/floor/pod/dark/lce/dark,
+/area/lce/containment/light/one)
 "XP" = (
 /obj/structure/closet/crate/bin{
 	pixel_y = 6;
@@ -8372,8 +8924,11 @@
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/two)
 "XX" = (
-/turf/closed/indestructible/reinforced/cheap/lce/bright,
-/area/lce/containment/light/control_east)
+/obj/effect/turf_decal/trimline/blue/filled{
+	color = "#FFFFFF"
+	},
+/turf/open/floor/pod/dark/lce/dark,
+/area/lce/containment/light/two)
 "Ya" = (
 /obj/effect/turf_decal/tile/purple,
 /obj/effect/turf_decal/tile/purple{
@@ -8394,11 +8949,16 @@
 /turf/open/floor/circuit/telecomms/mainframe,
 /area/lce/support/telecomms)
 "Ye" = (
-/obj/effect/turf_decal/stripes/corner{
+/obj/effect/turf_decal/tile/blue{
+	color = "#5269e9"
+	},
+/obj/effect/turf_decal/tile/blue{
+	color = "#5269e9";
 	dir = 1
 	},
-/turf/open/floor/lce/tile/bright,
-/area/lce/containment/light/approach)
+/obj/structure/chair/stool/bar,
+/turf/open/floor/plasteel/white,
+/area/lce/hallway/central)
 "Yh" = (
 /obj/effect/turf_decal/trimline/red/filled/line{
 	dir = 4;
@@ -8410,6 +8970,24 @@
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/one)
+"Yk" = (
+/obj/item/binoculars,
+/obj/item/clipboard{
+	pixel_x = 3
+	},
+/obj/item/taperecorder{
+	pixel_x = -5
+	},
+/obj/item/binoculars,
+/obj/structure/table/reinforced{
+	color = "#955C23"
+	},
+/obj/effect/turf_decal/siding/blue{
+	dir = 8;
+	color = "#955C23"
+	},
+/turf/open/floor/lce/plate/bright,
+/area/lce/containment/light/four)
 "Yl" = (
 /turf/open/floor/lce/tile/bright,
 /area/lce/medical/aid_heavy)
@@ -8422,6 +9000,12 @@
 	color = "#9cadc7"
 	},
 /area/lce/security/udjat_quarters)
+"Yo" = (
+/obj/structure/disposalpipe/segment{
+	dir = 5
+	},
+/turf/open/floor/lce/deck/grate,
+/area/lce/containment/light)
 "Yq" = (
 /obj/structure/disposalpipe/segment{
 	dir = 9
@@ -8429,6 +9013,17 @@
 /obj/effect/landmark/xeno_spawn,
 /turf/open/floor/lce/deck/dark/grate,
 /area/lce/containment/heavy)
+"Yu" = (
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 8;
+	color = "#FFFFFF"
+	},
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 4;
+	color = "#FFFFFF"
+	},
+/turf/open/floor/pod/dark/lce/dark,
+/area/lce/containment/light/two)
 "Yz" = (
 /obj/structure/closet/secure_closet/personal/cabinet,
 /obj/machinery/light{
@@ -8548,14 +9143,12 @@
 /turf/open/floor/plasteel/white,
 /area/lce/research/reagent)
 "Zj" = (
-/obj/effect/turf_decal/stripes/line{
-	dir = 8
-	},
-/obj/effect/turf_decal/caution/stand_clear{
-	dir = 4
-	},
-/turf/open/floor/lce/plate/bright,
-/area/lce/containment/light/approach)
+/obj/structure/sigsystem/connector,
+/obj/machinery/door/poddoor/preopen,
+/obj/structure/lattice/catwalk,
+/obj/structure/sigsystem/activator,
+/turf/open/floor/mineral/titanium/tiled/white,
+/area/lce/security/checkpoint)
 "Zo" = (
 /obj/effect/turf_decal/trimline/red/filled/corner{
 	dir = 8;
@@ -8649,26 +9242,37 @@
 /obj/item/clipboard,
 /obj/item/lcl_pacifiers,
 /obj/item/lcl_duel,
+/obj/item/qliphoth_lasso,
 /turf/open/floor/lce/plate,
 /area/lce/containment/heavy/two)
 "ZK" = (
-/obj/machinery/door/poddoor{
-	name = "LSZ Containment Door #5";
-	id = "LSZ Containment Door #5";
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 6;
+	color = "#FFFFFF"
+	},
+/obj/effect/turf_decal/trimline/blue/filled/corner{
+	dir = 1;
+	color = "#FFFFFF"
+	},
+/turf/open/floor/pod/dark/lce/dark,
+/area/lce/containment/light/one)
+"ZN" = (
+/obj/item/binoculars,
+/obj/item/clipboard{
+	pixel_x = 3
+	},
+/obj/item/taperecorder{
+	pixel_x = -5
+	},
+/obj/item/binoculars,
+/obj/structure/table/reinforced{
 	color = "#955C23"
 	},
-/turf/open/floor/lce/plate/dark,
-/area/lce/containment/light/four)
-"ZN" = (
-/obj/effect/turf_decal/stripes/white/corner{
-	color = "#5269e9";
-	dir = 8
-	},
-/turf/open/floor/lce/tile/bright,
-/area/lce/containment/light/approach)
+/turf/open/floor/lce/plate/bright,
+/area/lce/containment/light/control_east)
 "ZQ" = (
 /obj/effect/turf_decal/trimline/blue/filled/line{
-	dir = 4;
+	dir = 5;
 	color = "#FFFFFF"
 	},
 /obj/effect/turf_decal/trimline/blue/filled/corner{
@@ -8676,7 +9280,7 @@
 	color = "#FFFFFF"
 	},
 /turf/open/floor/pod/dark/lce/dark,
-/area/lce/containment/light/two)
+/area/lce/containment/light/three)
 "ZR" = (
 /obj/effect/turf_decal/trimline/blue/filled/end{
 	dir = 1;
@@ -8704,6 +9308,7 @@
 	dir = 10
 	},
 /obj/effect/landmark/xeno_spawn,
+/obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/lce/deck/grate,
 /area/lce/containment/light)
 "ZZ" = (
@@ -28482,12 +29087,12 @@ Ka
 Ka
 Ka
 Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
+vn
+vn
+vn
+vn
+vn
+vn
 Ka
 Ka
 Ka
@@ -28734,12 +29339,12 @@ Ka
 Ka
 Ka
 Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
+vn
+qN
+hw
+Nx
+EN
+vn
 Ka
 Ka
 Ka
@@ -28986,12 +29591,12 @@ Ka
 Ka
 Ka
 Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
+vn
+cw
+Wn
+Jd
+EN
+vn
 Ka
 Ka
 Ka
@@ -29002,7 +29607,7 @@ Ka
 Ka
 Ka
 oz
-zo
+oz
 zo
 zo
 zo
@@ -29233,28 +29838,28 @@ Ka
 Ka
 Ka
 Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
+vn
+vn
+vn
+vn
+vn
+vn
+vn
+vn
+dh
+vn
+vn
+vn
+vn
+vn
+vn
+vn
+vn
+vn
+vn
+vn
+vn
 oz
-zo
 zo
 zo
 zo
@@ -29485,28 +30090,28 @@ Ka
 Ka
 Ka
 Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
+vn
+HK
+Hr
+Hr
+dk
+Hr
+dk
+Hr
+dk
+dk
+Tr
+Hr
+dk
+dk
+dk
+Hr
+dk
+Hr
+dk
+Gw
+vn
 oz
-zo
 zo
 zo
 er
@@ -29737,28 +30342,28 @@ Ka
 Ka
 Ka
 Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
+vn
+GX
+jv
+Xp
+fL
+fL
+Fj
+ev
+Xp
+fL
+Xp
+fL
+jv
+Xp
+Xp
+ev
+ez
+fL
+jv
+Kj
+vn
 oz
-zo
 zo
 zo
 zo
@@ -29989,28 +30594,28 @@ Ka
 Ka
 Ka
 Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
+vn
+Kj
+fL
+vn
+vn
+vn
+vn
+vn
+vn
+vn
+PB
+vn
+vn
+vn
+vn
+vn
+vn
+vn
+Xp
+Kj
+vn
 oz
-zo
 zo
 zo
 zo
@@ -30241,27 +30846,27 @@ Ka
 Ka
 Ka
 Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-oz
+vn
+Kj
+Fj
+vn
+Ui
+GU
+nb
+qk
+zV
+mw
+ti
+jB
+eg
+rD
+lm
+kS
+rv
+vn
+fL
+Kj
+vn
 Oy
 Oy
 Oy
@@ -30489,30 +31094,30 @@ Ka
 Ka
 Ka
 Ka
+Ka
+Ka
+Ka
+Ka
 vn
+GX
+PN
 vn
+RK
+bu
+jg
+Ed
+Ui
+TS
+ti
+kC
+na
+Et
+PH
+jB
+MK
 vn
-vn
-vn
-vn
-vn
-vn
-vn
-vn
-vn
-vn
-vn
-vn
-vn
-vn
-vn
-vn
-vn
-vn
-vn
-vn
-vn
-vn
+KJ
+GX
 vn
 vn
 LT
@@ -30742,30 +31347,30 @@ Ka
 Ka
 Ka
 vn
-HK
-dk
-dk
-dk
-dk
-dk
-dk
-dk
-dk
-dk
-dk
-dk
-dk
-dk
-dk
-dk
-dk
-dk
-dk
-dk
-dk
-dk
-dk
-Gw
+vn
+vn
+vn
+vn
+GX
+Xp
+vn
+UW
+HA
+BT
+mw
+Bj
+fP
+ti
+ts
+VM
+zh
+rv
+Cz
+np
+vn
+Xp
+rl
+vn
 vn
 LT
 qK
@@ -30775,7 +31380,7 @@ kG
 qK
 qK
 ZF
-EU
+qK
 LT
 LT
 Ka
@@ -30994,30 +31599,30 @@ Ka
 Ka
 Ka
 vn
-GX
-Jd
-jv
-fL
-fL
+VX
+Hr
+dk
+dk
+sC
+Xp
+vn
+Ad
+hX
+ZQ
+nL
+HA
+fP
+ti
+ts
+vG
 bj
+BG
+VM
+Vb
+vn
 fL
-fL
-fL
-fL
-fL
-fL
-fL
-fL
-fL
-fL
-bj
-fL
-fL
-fL
-fL
-fL
-fL
-GX
+Kj
+vn
 vn
 qK
 qK
@@ -31028,7 +31633,7 @@ Ld
 qK
 qK
 qK
-qK
+EU
 LT
 Ka
 Ka
@@ -31057,19 +31662,19 @@ Ka
 eE
 Fn
 zB
+lY
+lY
+lY
 zB
 zB
+lY
 zB
+lY
+lY
+Ud
 zB
-zB
-zB
-zB
-zB
-zB
-zB
-zB
-zB
-zB
+Dp
+dm
 zB
 hS
 eE
@@ -31246,28 +31851,28 @@ Ka
 Ka
 Ka
 vn
-GX
+Kj
+Jd
+Nx
+Nx
 Jd
 fL
-eA
-eA
-eA
-eA
-eA
-eA
-eA
-eA
-nL
-Mw
-wm
-wm
-wm
-wm
-wm
-wm
-wm
-wm
 vn
+Dh
+Ui
+Go
+SG
+nL
+zF
+ti
+SS
+jB
+Tz
+Ia
+BG
+jA
+vn
+iB
 mh
 vn
 vn
@@ -31308,22 +31913,22 @@ Ka
 Ka
 eE
 kf
-VZ
+SN
 eP
 eP
-eP
-eP
-eP
+CZ
+iE
+CZ
 Nz
+Nv
 eP
 eP
+CZ
 eP
 eP
-eP
-eP
-eP
-VZ
-kf
+Nv
+SN
+Po
 eE
 Ka
 Ka
@@ -31498,29 +32103,29 @@ Ka
 Ka
 Ka
 vn
+Kj
+Jd
+Fj
+fL
+fL
+Xp
 vn
-ti
-iB
-eA
-CZ
-nv
-Hx
 ZQ
-fO
-tk
-EN
-Av
+nk
+JF
+JF
+RK
 Ui
 Rq
-JD
-pr
-gm
-xw
-kd
+bj
+fa
+aG
+aG
+kC
 jB
-wm
+vn
 IX
-WR
+Wo
 Wo
 GG
 qK
@@ -31559,7 +32164,7 @@ Ka
 Ka
 Ka
 eE
-kf
+nG
 eP
 eE
 DR
@@ -31750,27 +32355,27 @@ vn
 vn
 vn
 vn
-Wo
-WR
-Wo
-eA
-Aw
+vn
+mh
+iB
+vn
+Jd
 Xp
-YQ
+hP
 QP
 BE
-tk
+YM
 AO
-Av
-Ui
-wu
-JD
-zv
+AO
+AO
+vn
 Ro
-OW
+Ro
+Ro
+pr
 yf
 Fe
-wm
+vn
 Wo
 WR
 Wo
@@ -31826,8 +32431,8 @@ IW
 wJ
 Vt
 eE
-eP
-kf
+Nv
+Po
 eE
 Ka
 Ka
@@ -32005,24 +32610,24 @@ vn
 Wo
 WR
 Wo
-eA
-Xl
-Vd
-Ch
-XW
-gc
-tk
+vn
+hw
+fL
+vn
+cD
+bd
+ML
 Tg
 Xn
 ch
 cW
 JD
-Ee
-ht
+Yk
+xi
 Sx
-CM
-Ak
-wm
+bd
+cD
+vn
 Wo
 WR
 Wo
@@ -32063,7 +32668,7 @@ Ka
 Ka
 Ka
 eE
-kf
+Po
 eP
 eE
 tr
@@ -32078,7 +32683,7 @@ nR
 nW
 Tk
 eE
-eP
+CZ
 kf
 eE
 Ka
@@ -32257,24 +32862,24 @@ rH
 WR
 WR
 Wo
-eA
-Qt
-QP
-ZR
-lY
-nv
-tk
-TJ
-Av
-Ui
-Ih
-JD
-Nq
-yf
-hq
+vn
+Nx
+fL
+mh
 tX
-gm
-wm
+tX
+tX
+tX
+tX
+tX
+Ih
+tX
+tX
+tX
+tX
+tX
+tX
+vn
 kx
 WR
 Wo
@@ -32330,7 +32935,7 @@ Nc
 wi
 OV
 eE
-eP
+CZ
 kf
 eE
 Ka
@@ -32509,24 +33114,24 @@ vn
 bN
 WR
 Wo
-eA
-WV
-nG
-CQ
-Aw
-Hm
+vn
+vn
+iB
+vn
+vn
+tX
 tk
-Fw
-Av
-Ui
-qM
-JD
-Er
-gW
-we
-zv
-rB
-wm
+tX
+tX
+tX
+tX
+tX
+tX
+tX
+tk
+tX
+vn
+vn
 Wo
 WR
 Wo
@@ -32568,7 +33173,7 @@ Ka
 Ka
 eE
 kf
-eP
+CZ
 eE
 kX
 XD
@@ -32583,7 +33188,7 @@ Iy
 CY
 eE
 OY
-kf
+Po
 eE
 Ka
 Ka
@@ -32761,24 +33366,24 @@ vn
 Wo
 WR
 Wo
-eA
-eA
-Hr
-Hr
-Hr
-eA
-eA
-eA
-nL
+vn
+vn
+vn
+vn
+vn
+vn
+vn
+vn
+vn
+vn
 rz
-wm
-wm
-wm
-JU
-JU
-JU
-wm
-wm
+vn
+vn
+vn
+vn
+vn
+vn
+vn
 Pq
 WR
 Wo
@@ -32819,8 +33424,8 @@ Ka
 Ka
 Ka
 eE
-kf
-eP
+Po
+Nv
 eE
 XE
 jK
@@ -32834,7 +33439,7 @@ Nc
 Ba
 Is
 eE
-eP
+CZ
 kf
 eE
 Ka
@@ -33014,22 +33619,22 @@ Pq
 WR
 Wo
 MM
-TI
-NM
-Zj
-NM
-Ye
 MM
 MM
-ZN
+MM
+MM
+MM
+MM
+MM
+MM
+Bf
 Tq
-Jq
 MM
-TI
-NM
-Zj
-NM
-Ye
+MM
+MM
+MM
+MM
+MM
 MM
 Wo
 WR
@@ -33044,7 +33649,7 @@ qK
 qK
 FJ
 qK
-qK
+EU
 LT
 Ka
 Ka
@@ -33072,7 +33677,7 @@ Ka
 Ka
 eE
 kf
-eP
+CZ
 eE
 kX
 jK
@@ -33086,8 +33691,8 @@ vp
 qr
 ad
 eE
-eP
-kf
+CZ
+Po
 eE
 Ka
 Ka
@@ -33295,7 +33900,7 @@ qK
 qK
 qK
 qK
-EU
+qK
 LT
 LT
 Ka
@@ -33323,7 +33928,7 @@ Ka
 Ka
 Ka
 eE
-kf
+AU
 eP
 eE
 kX
@@ -33339,7 +33944,7 @@ QH
 Om
 eE
 eP
-kf
+nG
 eE
 Ka
 Ka
@@ -33518,22 +34123,22 @@ Wo
 WR
 Wo
 Zd
-LY
-is
-Kj
-is
-Po
+MM
+MM
+MM
+MM
+MM
 Wl
+MM
 MM
 jx
 xl
-MM
 Wl
-LY
-is
-Kj
-is
-Po
+MM
+MM
+MM
+MM
+MM
 MM
 Wo
 WR
@@ -33575,7 +34180,7 @@ Ka
 Ka
 Ka
 eE
-kf
+Po
 eP
 eE
 XE
@@ -33590,7 +34195,7 @@ mj
 mj
 mj
 eE
-eP
+CZ
 kf
 eE
 Ka
@@ -33769,24 +34374,24 @@ vn
 Wo
 WR
 Wo
-YM
-YM
-mw
-mw
-mw
-YM
-YM
-YM
-XX
-EY
-MV
-MV
-MV
-ZK
-ZK
-ZK
-MV
-MV
+vn
+vn
+vn
+vn
+vn
+vn
+vn
+vn
+vn
+vn
+fO
+vn
+vn
+vn
+vn
+vn
+vn
+vn
 kx
 WR
 Wo
@@ -33827,8 +34432,8 @@ Ka
 Ka
 Ka
 eE
-kf
-Zy
+Po
+tb
 eE
 Gc
 kH
@@ -33842,8 +34447,8 @@ mj
 mj
 mj
 eE
-eP
-kf
+iE
+Po
 eE
 Ka
 Ka
@@ -34021,24 +34626,24 @@ vn
 kx
 WR
 Wo
-YM
-kF
-zF
-qk
-bq
-lK
-IP
+vn
+vn
+iB
+vn
+vn
 Ij
-Jx
-zs
-hK
-Aj
-ez
-jA
-rD
-TU
-gN
-MV
+Ij
+Ij
+Ij
+Ij
+Ij
+Ij
+Ij
+Ij
+Ij
+Ij
+vn
+vn
 Wo
 UP
 Wo
@@ -34079,8 +34684,8 @@ Ka
 Ka
 Ka
 eE
-kf
-eP
+Po
+CZ
 eE
 tH
 Af
@@ -34094,8 +34699,8 @@ VA
 VA
 bH
 eE
-eP
-kf
+CZ
+Po
 eE
 Ka
 Ka
@@ -34273,24 +34878,24 @@ rH
 rI
 WR
 Wo
-YM
-RK
-Nb
-Ed
-BG
-RS
-IP
-rl
-Jx
-zs
+vn
+Nx
+Xp
+mh
+Ij
+Ij
+Ij
+Ij
+Ij
+Ij
 vo
-Aj
-kC
-Fa
-PH
-No
-Tr
-MV
+Ij
+Ij
+Ij
+Ij
+Ij
+Ij
+vn
 LX
 WR
 Wo
@@ -34316,7 +34921,7 @@ hc
 hc
 hc
 su
-Fo
+Gr
 su
 Vx
 Vx
@@ -34525,24 +35130,24 @@ vn
 Wo
 WR
 Wo
-YM
-UW
-hX
-sC
-Bj
-fP
+vn
+Jd
+fL
+vn
+gW
+vi
 IP
-PB
+Ij
 PD
 kw
 Az
-Aj
-ts
-vG
+Xy
+ZN
+Ij
 Xa
-Cz
-np
-MV
+vi
+gW
+vn
 Wo
 WR
 Wo
@@ -34583,8 +35188,8 @@ Ka
 Ka
 Ka
 eE
-kf
-eP
+Po
+CZ
 eE
 CD
 Pb
@@ -34598,7 +35203,7 @@ CD
 Ez
 CD
 eE
-lp
+qM
 QC
 eE
 Ka
@@ -34777,24 +35382,24 @@ vn
 Wo
 WR
 Wo
-YM
-Dh
-BG
-Go
+vn
+fX
+fL
+vn
 jn
-zF
-IP
+jn
+eA
 yX
-Jx
-zs
-Bf
-Aj
-SS
+yX
+yX
+vn
 No
-Tz
+No
+No
+wm
 aX
-jA
-MV
+aX
+vn
 Wo
 WR
 xn
@@ -34835,8 +35440,8 @@ Ka
 Ka
 Ka
 eE
-kf
-eP
+Po
+CZ
 eE
 Vx
 Uf
@@ -35029,24 +35634,24 @@ vn
 vn
 vP
 iB
-YM
+vn
 Nx
-nk
-JF
-RK
-eN
-IP
-ao
+Xp
+vn
+XX
+nv
+Hx
+Hx
 Jx
 zs
-SN
+Rq
 Aj
-xV
-fa
-aG
-kC
+gm
+xw
+xw
+Dt
 zz
-MV
+vn
 qX
 WR
 Wo
@@ -35087,7 +35692,7 @@ Ka
 Ka
 Ka
 eE
-kf
+nG
 eP
 wa
 Vx
@@ -35279,26 +35884,26 @@ Ka
 Ka
 vn
 GX
-Jd
+Nx
+Fj
+vn
+Nx
 fL
-YM
-YM
-YM
-YM
-YM
-YM
-YM
-YM
+vn
+Aw
+px
+Nb
+YQ
 XX
 nP
 MV
-MV
-MV
-MV
-MV
-MV
-MV
-MV
+zv
+Jq
+fj
+OW
+Aj
+Wj
+HV
 HV
 BH
 iI
@@ -35340,7 +35945,7 @@ Ka
 Ka
 eE
 kf
-eP
+CZ
 eE
 YE
 Uf
@@ -35530,32 +36135,32 @@ Ka
 Ka
 Ka
 vn
-GX
+Kj
 Jd
+ez
 fL
 fL
-fL
-fL
+Xp
+vn
+Xl
+xx
+WE
+zs
+XW
+gc
+MV
+Ee
+zi
 zm
-fL
-fL
-fL
-fL
-fL
-fL
-fL
-fL
-fL
-zm
-fL
-fL
-fL
-Nv
+zz
+CM
+Ak
+HV
 Ht
 Ht
 eL
 HV
-Ka
+vn
 Bv
 Ls
 uy
@@ -35591,7 +36196,7 @@ Ka
 Ka
 Ka
 eE
-kf
+Po
 eP
 eE
 Of
@@ -35785,42 +36390,42 @@ vn
 ZY
 dk
 dk
-dk
-dk
-dk
-dk
-dk
-dk
-dk
-dk
-dk
-dk
-dk
-dk
-dk
-dk
-dk
+Hr
+Yo
+Xp
+vn
+ju
+Vd
+Fa
+CL
+xx
+gc
+MV
+Ee
+ht
+RS
+ZK
 zi
-dk
+Hn
 HV
 Ht
 Ht
 Ht
 HV
-Ka
+vn
 Bv
 Bv
 wh
 uy
 Pc
 uy
-yA
-yA
-yA
-yA
-yA
-yA
-yA
+Bv
+Bv
+Ka
+Ka
+Ka
+Ka
+Ka
 Ka
 Ka
 Ka
@@ -35844,7 +36449,7 @@ eE
 eE
 eE
 kf
-eP
+CZ
 eE
 Iu
 Uf
@@ -36038,48 +36643,48 @@ vn
 vn
 vn
 vn
+Kj
+Xp
 vn
-vn
-vn
-vn
-vn
-vn
-vn
-vn
-vn
-vn
-vn
-vn
-vn
-vn
-vn
-vn
+Qt
+XX
+ZR
+Yu
+CL
+nv
+MV
+Nq
+Aj
+hq
+XM
+ZK
+gm
 HV
 SY
 Iv
 Ht
 HV
-Ka
-Ka
+vn
+vn
 Bv
 Bv
 uy
 Pc
-Lo
-yA
-sd
-yA
-oJ
-Pz
-IR
-yA
-gh
-gh
-gh
-Xw
-Xw
-Xw
-Xw
+uy
+Bv
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
 Ka
 Ka
 Ka
@@ -36091,11 +36696,11 @@ Vx
 Uf
 Vx
 eE
+qM
+TU
 lp
-lp
-lp
-lp
-Yq
+qM
+LY
 eP
 eE
 Vx
@@ -36289,49 +36894,49 @@ Ka
 Ka
 Ka
 Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
+vn
+GX
+fL
+vn
+Fa
+OR
+oc
+CQ
+gP
+XX
+MV
+RS
+Ap
+we
+lf
+ao
+Aj
 HV
 HV
 HV
+co
 HV
-HV
+vn
+vn
+vn
+eN
+Cy
+hK
+Cy
+eN
+eN
+eN
+eN
 Ka
 Ka
 Ka
-Bv
-uy
-Pc
-uy
-yA
-YX
-FN
-qY
-qY
-qY
-yA
-cH
-wk
-lq
-Xw
-uZ
-wF
-Xw
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
 Ka
 Ka
 Ka
@@ -36346,7 +36951,7 @@ Jt
 eP
 Nz
 eP
-eP
+CZ
 eP
 VZ
 eE
@@ -36541,49 +37146,49 @@ Ka
 Ka
 Ka
 Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Bv
-uy
-Pc
+vn
+GX
+Xp
+vn
+vn
+vn
+vn
+vn
+vn
+vn
+WF
+vn
+vn
+vn
+vn
+vn
+vn
+vn
+vn
+vn
+Xp
+GX
+vn
+vn
+vn
+eN
+Pk
+hK
 Cy
-yA
-ZG
-yA
-nO
-qY
-qY
-Ic
-yY
-yM
-yY
-VS
-BQ
-Dv
-Xw
+kF
+TJ
+TJ
+eN
+eN
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
 Ka
 Ka
 Ka
@@ -36591,7 +37196,7 @@ Ka
 Ka
 Ka
 eE
-NL
+Vx
 Uf
 Vx
 eE
@@ -36793,6 +37398,40 @@ Ka
 Ka
 Ka
 Ka
+vn
+GX
+Fj
+fL
+fL
+fL
+Xp
+Xp
+Xp
+fL
+ez
+Xp
+Xp
+fL
+fL
+Fj
+Xp
+fL
+Xp
+fL
+fL
+Kj
+vn
+vn
+vn
+eN
+Av
+hK
+Cy
+eN
+TJ
+TJ
+iV
+eN
 Ka
 Ka
 Ka
@@ -36802,40 +37441,6 @@ Ka
 Ka
 Ka
 Ka
-Ka
-Ka
-Ka
-Ka
-SH
-SH
-SH
-SH
-SH
-SH
-SH
-SH
-SH
-Ka
-Ka
-Ka
-Bv
-uy
-Pc
-uy
-yA
-yA
-yA
-yA
-oF
-yA
-yA
-uT
-Dv
-Dv
-Xw
-Xw
-Xw
-Xw
 Ka
 Ka
 Ka
@@ -37045,49 +37650,49 @@ Ka
 Ka
 Ka
 Ka
+vn
+kd
+dk
+dk
+Hr
+WV
+Hr
+dk
+Hr
+dk
+Hr
+Hr
+dk
+Hr
+dk
+dk
+dk
+dk
+Hr
+Hr
+WV
+Le
+vn
+vn
+vn
+eN
+is
+sN
+is
+CV
+fu
+TJ
+wu
+eN
+eN
+eN
+eN
 Ka
 Ka
 Ka
 Ka
 Ka
 Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-SH
-FH
-Jp
-jm
-jl
-FH
-bp
-Hv
-ps
-ps
-ps
-ps
-ps
-uy
-Pc
-Lo
-bS
-mr
-ZE
-yA
-qY
-kK
-yA
-pC
-Dv
-Dv
-Xw
-uZ
-wF
-Xw
 Ka
 Ka
 Ka
@@ -37297,49 +37902,49 @@ Ka
 Ka
 Ka
 Ka
+vn
+vn
+vn
+vn
+vn
+vn
+vn
+vn
+vn
+vn
+vn
+vn
+vn
+vn
+vn
+vn
+vn
+vn
+vn
+vn
+vn
+vn
+vn
+vn
+vn
+rB
+Oo
+Fw
+TI
+CV
+xV
+Mw
+TJ
+eN
+us
+Pa
+eN
 Ka
 Ka
 Ka
 Ka
 Ka
 Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-SH
-SJ
-SC
-kz
-gA
-SJ
-SC
-to
-ps
-oV
-wW
-jh
-ps
-Fg
-Pc
-uy
-bS
-bS
-zY
-yA
-yA
-yA
-yA
-pj
-Dv
-Dv
-VS
-BQ
-Dv
-Xw
 Ka
 Ka
 Ka
@@ -37558,40 +38163,40 @@ Ka
 Ka
 Ka
 Ka
-Eg
-Eg
-Eg
-Eg
-Eg
-ew
-wT
-fq
-DE
-ew
-wT
-NB
-ps
-tB
-SE
-tB
-ps
-yJ
-Pc
-uy
-tY
-RE
-RE
-iP
-qJ
-Ob
-bS
-Gk
-Dv
-Dv
-Xw
-Xw
-Xw
-Xw
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+gE
+Lb
+JS
+Vk
+TQ
+CV
+JU
+Mw
+TJ
+Un
+TJ
+zu
+eN
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
 Ka
 Ka
 Ka
@@ -37802,48 +38407,48 @@ Ka
 Ka
 Ka
 Ka
-gX
-gX
-gX
-gX
-gX
-gX
-SH
-SH
-Eg
-RQ
-RQ
-RQ
-lZ
-Sb
-kE
-kE
-kE
-kE
-kE
-kE
-ej
-Dm
-SE
-yr
-ps
-uy
-Pc
-uy
-tY
-ZE
-ZE
-ig
-ig
-ig
-bS
-uT
-Dv
-Dv
-Xw
-uZ
-wF
-Xw
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+rB
+Zj
+xN
+EY
+CV
+xV
+Mw
+TJ
+eN
+NM
+NR
+eN
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
 Ka
 Ka
 Ka
@@ -37867,7 +38472,7 @@ Pb
 CD
 eE
 zB
-hS
+Hm
 eE
 Ka
 Ka
@@ -38054,48 +38659,48 @@ Ka
 Ka
 Ka
 Ka
-gX
-Si
-gD
-gD
-Zs
-lR
-ST
-hD
-Eg
-uc
-We
-We
-yt
-to
-TP
-to
-to
-to
-TP
-fm
-ps
-fG
-SE
-tB
-ps
-uy
-Pc
-uy
-tY
-ig
-ig
-ig
-ig
-lT
-bS
-se
-Dv
-Dv
-VS
-BQ
-Dv
-Xw
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+eN
+gN
+lg
+gN
+CV
+fu
+TJ
+wu
+eN
+eN
+eN
+eN
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
 Ka
 Ka
 Ka
@@ -38103,7 +38708,7 @@ Ka
 Ka
 Ka
 eE
-Vx
+NL
 Vx
 qB
 aE
@@ -38119,7 +38724,7 @@ Re
 wH
 Jl
 eP
-kf
+Po
 eE
 Ka
 Ka
@@ -38306,48 +38911,48 @@ Ka
 Ka
 Ka
 Ka
-gX
-gD
-gD
-gD
-gD
-lR
-to
-Ta
-IE
-We
-We
-We
-KW
-to
-TP
-to
-Bo
-TP
-TP
-mm
-ps
-oV
-uQ
-jh
-ps
-uy
-Pc
-uy
-tY
-ig
-ZD
-tG
-Hf
-iZ
-bS
-pj
-Dv
-Dv
-Xw
-Xw
-Xw
-Xw
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+eN
+Av
+hK
+Cy
+eN
+TJ
+TJ
+TJ
+eN
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
 Ka
 Ka
 Ka
@@ -38370,8 +38975,8 @@ xG
 sw
 QY
 eE
-eP
-kf
+CZ
+Po
 eE
 Ka
 Ka
@@ -38558,48 +39163,48 @@ Ka
 Ka
 Ka
 Ka
-gX
-as
-Cu
-gD
-gD
-yw
-to
-KA
-Eg
-Vh
-bO
-Lq
-Eg
-UY
-TP
-Ts
-VV
-TP
-Ot
-UB
-ps
-ps
-ps
-ps
-ps
-iy
-Ha
-di
-bS
-Rj
-bS
-bS
-bS
-bS
-bS
-Dv
-Dv
-Dv
-Xw
-uZ
-wF
-Xw
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+eN
+Cy
+hK
+Cy
+kF
+TJ
+TJ
+eN
+eN
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
 Ka
 Ka
 Ka
@@ -38607,8 +39212,8 @@ Ka
 Ka
 Ka
 eE
-kf
-eP
+nG
+CZ
 eE
 yQ
 yQ
@@ -38622,7 +39227,7 @@ RO
 EE
 zZ
 eE
-OY
+Mn
 kf
 eE
 Ka
@@ -38810,48 +39415,48 @@ Ka
 Ka
 Ka
 Ka
-gX
-nz
-XU
-nC
-gD
-lR
-to
-ec
-SH
-Mc
-to
-to
-SH
-lB
-TP
-Ts
-VV
-ZZ
-FH
-ty
-SH
-Sn
-hz
-jR
-UQ
-iX
-Ha
-di
-eC
-di
-bS
-EO
-EO
-FA
-bS
-uT
-Dv
-Dv
-VS
-BQ
-Dv
-Xw
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+eN
+Cy
+hK
+Cy
+eN
+eN
+eN
+eN
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
 Ka
 Ka
 Ka
@@ -38859,7 +39464,7 @@ Ka
 Ka
 Ka
 eE
-kf
+Po
 eP
 eE
 Ue
@@ -38874,8 +39479,8 @@ Ly
 sx
 zZ
 eE
-eP
-kf
+CZ
+Po
 eE
 Ka
 Ka
@@ -39062,48 +39667,48 @@ Ka
 Ka
 Ka
 Ka
-gX
-op
-gD
-gD
-mA
-lR
-to
-ec
-nj
-vN
-tJ
-tJ
-dE
-hl
-TP
-to
-YN
-ZZ
-SJ
-SC
-SH
-KL
-OT
-rO
-Gj
-sl
-Ha
-di
-di
-sW
-bS
-bt
-sA
-sA
-bS
-Ov
-Dv
-Dv
-Xw
-Xw
-Xw
-Xw
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Bv
+lK
+Pc
+uy
+yA
+yA
+yA
+yA
+yA
+yA
+yA
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
 Ka
 Ka
 Ka
@@ -39112,7 +39717,7 @@ Ka
 Ka
 eE
 kf
-eP
+CZ
 eE
 ZA
 GY
@@ -39126,7 +39731,7 @@ KS
 EE
 zZ
 eE
-eP
+CZ
 kf
 eE
 Ka
@@ -39310,51 +39915,51 @@ Ka
 Ka
 Ka
 Ka
-mu
-mu
-mu
-mu
-gX
-gX
-gX
-gX
-gX
-gX
-Fu
-ec
-ec
-ec
-ec
-ec
-iY
-hl
-TP
-to
-to
-ZZ
-qD
-ec
-SH
-KL
-rO
-uV
-Gj
-sl
-Ha
-di
-di
-di
-bS
-TZ
-TZ
-TZ
-bS
-ou
-Dv
-Dv
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Bv
+uy
+Pc
+uy
+yA
+sd
+yA
+oJ
+Pz
+IR
+yA
+gh
+gh
+gh
 Xw
-Pr
-wF
+Xw
+Xw
 Xw
 Ka
 Ka
@@ -39364,7 +39969,7 @@ Ka
 Ka
 eE
 kf
-eP
+Nv
 eE
 Zo
 IQ
@@ -39379,7 +39984,7 @@ EE
 zZ
 eE
 eP
-kf
+AU
 eE
 Ka
 Ka
@@ -39562,51 +40167,51 @@ Ka
 Ka
 Ka
 Ka
-mu
-zn
-Ci
-Ks
-mu
 Ka
 Ka
 Ka
 Ka
-SH
-tt
-to
-to
-to
-to
-to
-SH
-Ho
-TP
-Bu
-TP
-FD
-Am
-ec
-SH
-Wu
-Ej
-Ej
-UQ
-sl
-Ha
-di
-di
-di
-bS
-tY
-wA
-tY
-bS
-Dv
-Dv
-Dv
-VS
-Dv
-il
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Bv
+uy
+Pc
+uy
+yA
+YX
+FN
+qY
+qY
+qY
+yA
+cH
+wk
+lq
+Xw
+uZ
+wF
 Xw
 Ka
 Ka
@@ -39615,8 +40220,8 @@ Ka
 Ka
 Ka
 eE
-kf
-eP
+Po
+iE
 eE
 Ge
 aF
@@ -39630,7 +40235,7 @@ ZJ
 Ty
 zZ
 eE
-eP
+Nv
 kf
 eE
 Ka
@@ -39814,61 +40419,61 @@ Ka
 Ka
 Ka
 Ka
-mu
-yT
-iW
-eJ
-eY
 Ka
 Ka
 Ka
 Ka
-SH
-SH
-yb
-yb
-yb
-yb
-yb
-SH
-SH
-SH
-SH
-gn
-SH
-uN
-SH
-SH
-Kv
-UQ
-UQ
-UQ
-Aq
-Ha
-di
-di
-di
-ut
-fp
-fp
-fp
-fp
-fp
-fp
-Vz
-DK
-DK
-DK
-DK
-DK
-DK
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Bv
+yJ
+Pc
+uy
+yA
+ZG
+yA
+nO
+qY
+qY
+Ic
+yY
+yM
+yY
+VS
+BQ
+Dv
+Xw
+Ka
+Ka
 Ka
 Ka
 Ka
 Ka
 eE
-kf
-eP
+Po
+CZ
 eE
 pp
 Id
@@ -40065,62 +40670,62 @@ Ka
 Ka
 Ka
 Ka
-mu
-mu
-mu
-eJ
-eJ
-mu
-mu
-mu
-mu
-mu
-mu
-mu
-Ek
-ok
-ok
-ok
-ok
-ok
-Up
-ok
-ok
-rw
-ok
-ok
-Up
-yk
-UI
-WW
-WW
-fY
-uz
-Ha
-Ha
-Ha
-Ha
-Ab
-fp
-fp
-tq
-fp
-fp
-tq
-fp
-DK
-EZ
-vl
-Dw
-Dw
-DK
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+SH
+SH
+SH
+SH
+SH
+SH
+SH
+SH
+SH
+Ka
+Ka
+Ka
+Bv
+uy
+Pc
+uy
+yA
+yA
+yA
+yA
+oF
+yA
+yA
+uT
+Dv
+Dv
+Xw
+Xw
+Xw
+Xw
+Ka
+Ka
 Ka
 Ka
 Ka
 Ka
 eE
-kf
-eP
+nG
+CZ
 eE
 wI
 AG
@@ -40134,8 +40739,8 @@ KS
 EE
 zZ
 eE
-eP
-kf
+CZ
+Po
 eE
 Ka
 Ka
@@ -40317,55 +40922,55 @@ Ka
 Ka
 Ka
 Ka
-mu
-Yz
-Ym
-eJ
-eJ
-hW
-ld
-jQ
-jQ
-jQ
-xT
-mu
-rw
-rw
-rw
-aO
-rw
-rw
-rw
-rw
-rw
-rw
-rw
-rw
-rw
-rw
-Ha
-Ha
-Ha
-Ha
-Ha
-Ha
-Ha
-Ha
-Ha
-jZ
-fp
-fp
-fp
-fp
-fp
-fp
-fp
-kI
-rL
-rL
-rL
-rL
-DK
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+SH
+FH
+Jp
+jm
+jl
+FH
+bp
+Hv
+ps
+ps
+ps
+ps
+ps
+uy
+Pc
+Lo
+bS
+mr
+ZE
+yA
+qY
+kK
+yA
+pC
+Dv
+Dv
+Xw
+uZ
+wF
+Xw
+Ka
+Ka
 Ka
 Ka
 Ka
@@ -40386,8 +40991,8 @@ sL
 ZV
 zZ
 eE
-eP
-kf
+Nv
+nG
 eE
 Ka
 Ka
@@ -40569,62 +41174,62 @@ Ka
 Ka
 Ka
 Ka
-mu
-Xf
-Ym
-zy
-eJ
-mu
-dc
-jQ
-iM
-ze
-fx
-mu
-rw
-vU
-rw
-go
-ok
-ok
-rw
-ok
-ok
-ok
-ok
-ok
-ok
-ok
-di
-di
-di
-di
-di
-Ha
-di
-di
-di
-ut
-tc
-zU
-fp
-pU
-tq
-fp
-fp
-rL
-rL
-rL
-rL
-rL
-DK
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+SH
+SJ
+SC
+kz
+gA
+SJ
+SC
+to
+ps
+oV
+wW
+jh
+ps
+Fg
+Pc
+uy
+bS
+bS
+zY
+yA
+yA
+yA
+yA
+pj
+Dv
+Dv
+VS
+BQ
+Dv
+Xw
+Ka
+Ka
 Ka
 Ka
 Ka
 Ka
 eE
-kf
-eP
+Po
+Nv
 eE
 eE
 eE
@@ -40639,7 +41244,7 @@ eE
 wa
 eE
 eP
-kf
+Po
 eE
 Ka
 Ka
@@ -40821,76 +41426,76 @@ Ka
 Ka
 Ka
 Ka
-mu
-mu
-mu
-mu
-gV
-mu
-dc
-jQ
-Eb
-Wi
-Eb
-PS
-QU
-PS
-QU
-PS
-UR
-UR
-Wb
-UR
-UR
-Hb
-Hb
-Hb
-Hb
-Hb
-Fj
-Fj
-Fj
-di
-di
-Ha
-di
-di
-di
-Gy
-Gy
-LT
-pt
-LT
-fp
-fp
-fp
-DK
-eZ
-EH
-wX
-wX
-DK
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Eg
+Eg
+Eg
+Eg
+Eg
+ew
+wT
+fq
+DE
+ew
+wT
+NB
+ps
+tB
+SE
+tB
+ps
+yJ
+Pc
+uy
+tY
+RE
+RE
+iP
+qJ
+Ob
+bS
+Gk
+Dv
+Dv
+Xw
+Xw
+Xw
+Xw
+Ka
+Ka
 Ka
 Ka
 Ka
 Ka
 eE
 kf
+CZ
+CZ
+CZ
+eP
+CZ
+Nv
 eP
 eP
-eP
-eP
-eP
-eP
-eP
-eP
-eP
+CZ
 eP
 dW
+CZ
 eP
-eP
-eP
-eP
+Nv
+CZ
 kf
 eE
 Ka
@@ -41074,54 +41679,54 @@ Ka
 Ka
 Ka
 Ka
-CR
-mu
-XL
-FC
-gV
-mW
-jQ
-jQ
-jQ
-jQ
-PS
-jT
-pT
-jT
-PS
-BM
-cr
-cr
-cr
-JI
-Hb
-ae
-OS
-AZ
-Hb
-JQ
-JQ
-JQ
-ym
-LN
-Ha
-di
-di
-cB
-Gy
 Ka
-LT
-qK
-LT
-pt
-pg
-pt
-DK
-DK
-DK
-DK
-DK
-DK
+Ka
+Ka
+Ka
+gX
+gX
+gX
+gX
+gX
+gX
+SH
+SH
+Eg
+RQ
+RQ
+RQ
+lZ
+Sb
+kE
+kE
+kE
+kE
+kE
+kE
+ej
+Dm
+SE
+yr
+ps
+uy
+Pc
+uy
+tY
+ZE
+ZE
+ig
+ig
+ig
+bS
+uT
+Dv
+Dv
+Xw
+uZ
+wF
+Xw
+Ka
+Ka
 Ka
 Ka
 Ka
@@ -41131,18 +41736,18 @@ ug
 zB
 zB
 zB
+Dp
+zB
+lY
+zB
+lY
+lY
+dm
 zB
 zB
+lY
 zB
-zB
-zB
-zB
-zB
-zB
-zB
-zB
-zB
-zB
+lY
 Yq
 eE
 Ka
@@ -41326,52 +41931,52 @@ Ka
 Ka
 Ka
 Ka
-CR
-mu
-ph
-FC
-mu
-ga
-jQ
-jQ
-jQ
-hi
-PS
-jT
-jT
-jT
-PS
-AD
-WT
-Ox
-Ox
-fZ
-Hb
-Gs
-Cf
-Cf
-vZ
-wZ
-wZ
-wZ
-Hb
-di
-Ha
-di
-di
-di
-Gy
-Ka
-LT
-kG
-qK
-qK
-qK
-jz
-LT
 Ka
 Ka
 Ka
+Ka
+gX
+Si
+gD
+gD
+Zs
+lR
+ST
+hD
+Eg
+uc
+We
+We
+yt
+to
+TP
+to
+to
+to
+TP
+fm
+ps
+fG
+SE
+tB
+ps
+uy
+Pc
+uy
+tY
+ig
+ig
+ig
+ig
+lT
+bS
+se
+Dv
+Dv
+VS
+BQ
+Dv
+Xw
 Ka
 Ka
 Ka
@@ -41578,52 +42183,52 @@ Ka
 Ka
 Ka
 Ka
-CR
-mu
-CX
-LA
-mu
-mu
-PS
-PS
-eo
-PS
-PS
-QU
-PS
-QU
-PS
-PM
-Ox
-tz
-Ox
-DI
-Hb
-hP
-Cf
-Cf
-Ga
-Cf
-Cf
-Cf
-Zg
-Ha
-Ha
-di
-di
-di
-Gy
-Ka
-LT
-qK
-qK
-WN
-wc
-qK
-LT
 Ka
 Ka
 Ka
+Ka
+gX
+gD
+gD
+gD
+gD
+lR
+to
+Ta
+IE
+We
+We
+We
+KW
+to
+TP
+to
+Bo
+TP
+TP
+mm
+ps
+oV
+uQ
+jh
+ps
+uy
+Pc
+uy
+tY
+ig
+ZD
+tG
+Hf
+iZ
+bS
+pj
+Dv
+Dv
+Xw
+Xw
+Xw
+Xw
 Ka
 Ka
 Ka
@@ -41830,52 +42435,52 @@ Ka
 Ka
 Ka
 Ka
-CR
-mu
-mu
-mu
-mu
-mu
-PS
-Qj
-jT
-jT
-jT
-jT
-Qj
-jT
-PS
-gY
-WT
-tz
-Ox
-jG
-Hb
-Jj
-Cf
-lu
-BI
-ev
-Cf
-iA
-Hb
-Ha
+Ka
+Ka
+Ka
+Ka
+gX
+as
+Cu
+gD
+gD
+yw
+to
+KA
+Eg
+Vh
+bO
+Lq
+Eg
+UY
+TP
+Ts
+VV
+TP
+Ot
+UB
+ps
+ps
+ps
+ps
+ps
+iy
 Ha
 di
-de
-HW
-Gy
-Ka
-LT
-qK
-rY
-Ld
-rY
-FJ
-LT
-Ka
-Ka
-Ka
+bS
+Rj
+bS
+bS
+bS
+bS
+bS
+Dv
+Dv
+Dv
+Xw
+uZ
+wF
+Xw
 Ka
 Ka
 Ka
@@ -42081,53 +42686,53 @@ Ka
 Ka
 Ka
 Ka
-oz
-oz
-oz
-oz
-oz
-oz
-oz
-PS
-VI
-Vg
-Vl
-XT
-XT
-PF
-jT
-PS
-GQ
-Ox
-tz
-Ox
-Au
-Hb
-Jj
-Cf
-eq
-rV
-nb
-Cf
-co
-Hb
-Qz
-Qz
-Pp
-Pp
-hy
-pA
-pA
-pA
-pA
-pA
-Ik
-Ik
-Ik
-Ik
-Ik
-Ik
 Ka
+Ka
+Ka
+Ka
+Ka
+gX
+nz
+XU
+nC
+gD
+lR
+to
+ec
+SH
+Mc
+to
+to
+SH
+lB
+TP
+Ts
+VV
+ZZ
+FH
+ty
+SH
+Sn
+hz
+jR
+UQ
+iX
+Ha
+di
+eC
+di
+bS
+EO
+EO
+FA
+bS
+uT
+Dv
+Dv
+VS
+BQ
+Dv
+Xw
 Ka
 Ka
 Ka
@@ -42333,6 +42938,3282 @@ Ka
 Ka
 Ka
 Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+gX
+op
+gD
+gD
+mA
+lR
+to
+ec
+nj
+vN
+tJ
+tJ
+dE
+hl
+TP
+to
+YN
+ZZ
+SJ
+SC
+SH
+KL
+OT
+rO
+Gj
+sl
+Ha
+di
+di
+sW
+bS
+bt
+sA
+sA
+bS
+Ov
+Dv
+Dv
+Xw
+Xw
+Xw
+Xw
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+"}
+(135,1,1) = {"
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+mu
+mu
+mu
+mu
+gX
+gX
+gX
+gX
+gX
+gX
+Fu
+ec
+ec
+ec
+ec
+ec
+iY
+hl
+TP
+to
+to
+ZZ
+qD
+ec
+SH
+KL
+rO
+uV
+Gj
+sl
+Ha
+di
+di
+di
+bS
+TZ
+TZ
+TZ
+bS
+ou
+Dv
+Dv
+Xw
+Pr
+wF
+Xw
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+"}
+(136,1,1) = {"
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+mu
+zn
+Ci
+Ks
+mu
+Ka
+Ka
+Ka
+Ka
+SH
+tt
+to
+to
+to
+to
+to
+SH
+Ho
+TP
+Bu
+TP
+FD
+Am
+ec
+SH
+Wu
+Ej
+Ej
+UQ
+sl
+Ha
+di
+di
+di
+bS
+tY
+wA
+tY
+bS
+Dv
+Dv
+Dv
+VS
+Dv
+il
+Xw
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+"}
+(137,1,1) = {"
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+mu
+yT
+iW
+eJ
+eY
+Ka
+Ka
+Ka
+Ka
+SH
+SH
+yb
+yb
+yb
+yb
+yb
+SH
+SH
+SH
+SH
+gn
+SH
+uN
+SH
+SH
+Kv
+UQ
+UQ
+UQ
+Aq
+Ha
+di
+di
+di
+ut
+fp
+fp
+fp
+fp
+fp
+fp
+Vz
+DK
+DK
+DK
+DK
+DK
+DK
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+"}
+(138,1,1) = {"
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+mu
+mu
+mu
+eJ
+eJ
+mu
+mu
+mu
+mu
+mu
+mu
+mu
+Ek
+ok
+ok
+ok
+ok
+ok
+Up
+ok
+ok
+rw
+ok
+ok
+Up
+yk
+UI
+WW
+WW
+fY
+uz
+Ha
+Ha
+Ha
+Ha
+Ab
+fp
+fp
+tq
+fp
+fp
+tq
+fp
+DK
+EZ
+vl
+Dw
+Dw
+DK
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+"}
+(139,1,1) = {"
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+mu
+Yz
+Ym
+eJ
+eJ
+hW
+ld
+jQ
+jQ
+jQ
+xT
+mu
+rw
+rw
+rw
+aO
+rw
+rw
+rw
+rw
+rw
+rw
+rw
+rw
+rw
+rw
+Ha
+Ha
+Ha
+Ha
+Ha
+Ha
+Ha
+Ha
+Ha
+jZ
+fp
+fp
+fp
+fp
+fp
+fp
+fp
+kI
+rL
+rL
+rL
+rL
+DK
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+"}
+(140,1,1) = {"
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+mu
+Xf
+Ym
+zy
+eJ
+mu
+dc
+jQ
+iM
+ze
+fx
+mu
+rw
+vU
+rw
+go
+ok
+ok
+rw
+ok
+ok
+ok
+ok
+ok
+ok
+ok
+di
+di
+di
+di
+di
+Ha
+di
+di
+di
+ut
+tc
+zU
+fp
+pU
+tq
+fp
+fp
+rL
+rL
+rL
+rL
+rL
+DK
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+"}
+(141,1,1) = {"
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+mu
+mu
+mu
+mu
+gV
+mu
+dc
+jQ
+Eb
+Wi
+Eb
+PS
+QU
+PS
+QU
+PS
+UR
+UR
+Wb
+UR
+UR
+Hb
+Hb
+Hb
+Hb
+Hb
+Ye
+Ye
+Ye
+di
+di
+Ha
+di
+di
+di
+Gy
+Gy
+LT
+pt
+LT
+fp
+fp
+fp
+DK
+eZ
+EH
+wX
+wX
+DK
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+"}
+(142,1,1) = {"
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+CR
+mu
+XL
+FC
+gV
+mW
+jQ
+jQ
+jQ
+jQ
+PS
+jT
+pT
+jT
+PS
+BM
+cr
+cr
+cr
+JI
+Hb
+ae
+OS
+AZ
+Hb
+JQ
+JQ
+JQ
+ym
+LN
+Ha
+di
+di
+cB
+Gy
+Ka
+LT
+qK
+LT
+pt
+pg
+pt
+DK
+DK
+DK
+DK
+DK
+DK
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+"}
+(143,1,1) = {"
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+CR
+mu
+ph
+FC
+mu
+ga
+jQ
+jQ
+jQ
+hi
+PS
+jT
+jT
+jT
+PS
+AD
+WT
+Ox
+Ox
+fZ
+Hb
+Gs
+Cf
+Cf
+vZ
+wZ
+wZ
+wZ
+Hb
+di
+Ha
+di
+di
+di
+Gy
+Ka
+LT
+kG
+qK
+qK
+qK
+jz
+LT
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+"}
+(144,1,1) = {"
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+CR
+mu
+CX
+LA
+mu
+mu
+PS
+PS
+eo
+PS
+PS
+QU
+PS
+QU
+PS
+PM
+Ox
+tz
+Ox
+DI
+Hb
+bq
+Cf
+Cf
+Ga
+Cf
+Cf
+Cf
+Zg
+Ha
+Ha
+di
+di
+di
+Gy
+Ka
+LT
+qK
+qK
+WN
+wc
+qK
+LT
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+"}
+(145,1,1) = {"
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+CR
+mu
+mu
+mu
+mu
+mu
+PS
+Qj
+jT
+jT
+jT
+jT
+Qj
+jT
+PS
+gY
+WT
+tz
+Ox
+jG
+Hb
+Jj
+Cf
+lu
+BI
+eM
+Cf
+iA
+Hb
+Ha
+Ha
+di
+de
+HW
+Gy
+Ka
+LT
+qK
+rY
+Ld
+rY
+FJ
+LT
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+"}
+(146,1,1) = {"
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+oz
+oz
+oz
+oz
+oz
+oz
+oz
+PS
+VI
+Vg
+Vl
+XT
+XT
+PF
+jT
+PS
+GQ
+Ox
+tz
+Ox
+Au
+Hb
+Jj
+Cf
+eq
+rV
+Ch
+Cf
+LG
+Hb
+Qz
+Qz
+Pp
+Pp
+hy
+pA
+pA
+pA
+pA
+pA
+Ik
+Ik
+Ik
+Ik
+Ik
+Ik
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+"}
+(147,1,1) = {"
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
+Ka
 oz
 af
 af
@@ -42355,13 +46236,13 @@ Ox
 Ox
 cr
 Hb
-CV
+Er
 Cf
 jW
 Cf
 Cf
 Cf
-na
+US
 Hb
 ur
 ur
@@ -42479,7 +46360,7 @@ Ka
 Ka
 Ka
 "}
-(135,1,1) = {"
+(148,1,1) = {"
 Ka
 Ka
 Ka
@@ -42731,7 +46612,7 @@ Ka
 Ka
 Ka
 "}
-(136,1,1) = {"
+(149,1,1) = {"
 Ka
 Ka
 Ka
@@ -42983,7 +46864,7 @@ Ka
 Ka
 Ka
 "}
-(137,1,1) = {"
+(150,1,1) = {"
 Ka
 Ka
 Ka
@@ -43235,7 +47116,7 @@ Ka
 Ka
 Ka
 "}
-(138,1,1) = {"
+(151,1,1) = {"
 Ka
 Ka
 Ka
@@ -43487,7 +47368,7 @@ Ka
 Ka
 Ka
 "}
-(139,1,1) = {"
+(152,1,1) = {"
 Ka
 Ka
 Ka
@@ -43739,7 +47620,7 @@ Ka
 Ka
 Ka
 "}
-(140,1,1) = {"
+(153,1,1) = {"
 Ka
 Ka
 Ka
@@ -43991,7 +47872,7 @@ Ka
 Ka
 Ka
 "}
-(141,1,1) = {"
+(154,1,1) = {"
 Ka
 Ka
 Ka
@@ -44243,7 +48124,7 @@ Ka
 Ka
 Ka
 "}
-(142,1,1) = {"
+(155,1,1) = {"
 Ka
 Ka
 Ka
@@ -44495,7 +48376,7 @@ Ka
 Ka
 Ka
 "}
-(143,1,1) = {"
+(156,1,1) = {"
 Ka
 Ka
 Ka
@@ -44747,7 +48628,7 @@ Ka
 Ka
 Ka
 "}
-(144,1,1) = {"
+(157,1,1) = {"
 Ka
 Ka
 Ka
@@ -44999,7 +48880,7 @@ Ka
 Ka
 Ka
 "}
-(145,1,1) = {"
+(158,1,1) = {"
 Ka
 Ka
 Ka
@@ -45251,7 +49132,7 @@ Ka
 Ka
 Ka
 "}
-(146,1,1) = {"
+(159,1,1) = {"
 Ka
 Ka
 Ka
@@ -45503,7 +49384,7 @@ Ka
 Ka
 Ka
 "}
-(147,1,1) = {"
+(160,1,1) = {"
 Ka
 Ka
 Ka
@@ -45755,7 +49636,7 @@ Ka
 Ka
 Ka
 "}
-(148,1,1) = {"
+(161,1,1) = {"
 Ka
 Ka
 Ka
@@ -46007,7 +49888,7 @@ Ka
 Ka
 Ka
 "}
-(149,1,1) = {"
+(162,1,1) = {"
 Ka
 Ka
 Ka
@@ -46259,7 +50140,7 @@ Ka
 Ka
 Ka
 "}
-(150,1,1) = {"
+(163,1,1) = {"
 Ka
 Ka
 Ka
@@ -46511,3282 +50392,6 @@ Ka
 Ka
 Ka
 "}
-(151,1,1) = {"
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-oz
-oz
-oz
-oz
-oz
-oz
-oz
-oz
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-"}
-(152,1,1) = {"
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-"}
-(153,1,1) = {"
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-"}
-(154,1,1) = {"
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-"}
-(155,1,1) = {"
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-"}
-(156,1,1) = {"
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-"}
-(157,1,1) = {"
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-"}
-(158,1,1) = {"
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-"}
-(159,1,1) = {"
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-"}
-(160,1,1) = {"
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-"}
-(161,1,1) = {"
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-"}
-(162,1,1) = {"
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-"}
-(163,1,1) = {"
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-"}
 (164,1,1) = {"
 Ka
 Ka
@@ -49893,14 +50498,14 @@ Ka
 Ka
 Ka
 Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Ka
+oz
+oz
+oz
+oz
+oz
+oz
+oz
+oz
 Ka
 Ka
 Ka
