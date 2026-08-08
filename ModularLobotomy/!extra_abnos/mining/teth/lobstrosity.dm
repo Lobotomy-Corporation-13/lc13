@@ -41,7 +41,7 @@
 		ABNORMALITY_WORK_ATTACHMENT = 60,
 		ABNORMALITY_WORK_REPRESSION = 0,
 	)
-	good_droprate = 40
+	neutral_droprate = 40
 	bad_droprate = 100
 	work_damage_amount = 5
 	work_damage_type = RED_DAMAGE
@@ -57,8 +57,10 @@
 
 /mob/living/simple_animal/hostile/abnormality/mining/lobstrosity/Initialize()
 	if(prob(50))
-		name = "lobstrosity"
+		name = "tropical lobstrosity"
 		desc = "A marvel of evolution gone wrong, the sulfur lakes of lavaland have given them a vibrant, red hued shell. Beware its charge."
 		icon_state = "lobstrosity"
 		icon_living = "lobstrosity"
 		icon_dead = "lobstrosity_dead"
+	else
+		name = "arctic lobstrosity"

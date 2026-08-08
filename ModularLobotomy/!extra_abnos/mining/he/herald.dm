@@ -8,8 +8,8 @@
 	icon_gib = "syndicate_gib"
 	health_doll_icon = "herald"
 	faction = list("boss")
-	maxHealth = 1200
-	health = 1200
+	maxHealth = 900
+	health = 900
 	ranged = TRUE
 	damage_coeff = list(RED_DAMAGE = 1.2, WHITE_DAMAGE = 0.8, BLACK_DAMAGE = 0.6, PALE_DAMAGE = 2)
 	melee_damage_type = RED_DAMAGE
@@ -238,7 +238,7 @@
 /obj/projectile/heraldlc13
 	name ="death bolt"
 	icon_state= "chronobolt"
-	damage = 30
+	damage = 17
 	speed = 2
 	eyeblur = 0
 	damage_type = BLACK_DAMAGE

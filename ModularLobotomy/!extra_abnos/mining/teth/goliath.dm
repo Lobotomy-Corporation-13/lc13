@@ -31,8 +31,8 @@
 	footstep_type = FOOTSTEP_MOB_HEAVY
 
 
-	maxHealth = 1200
-	health = 1200
+	maxHealth = 900
+	health = 900
 	rapid_melee = 2
 	melee_damage_type = RED_DAMAGE
 	move_to_delay = 6
@@ -62,8 +62,8 @@
 //	gift_type =  /datum/ego_gifts/dream
 	abnormality_origin = ABNORMALITY_ORIGIN_SS13MINING
 
-/mob/living/simple_animal/hostile/abnormality/mining/goliath/Intitialize()
-	..()
+/mob/living/simple_animal/hostile/abnormality/mining/goliath/Initialize()
+	. = ..()
 	if(prob(50))
 		//Who the fuck named these sprites?
 		icon_state = "goliath"

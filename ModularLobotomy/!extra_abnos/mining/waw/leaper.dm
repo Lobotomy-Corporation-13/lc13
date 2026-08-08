@@ -41,7 +41,7 @@
 	)
 	neutral_droprate = 100
 	bad_droprate = 50
-	work_damage_amount = 8
+	work_damage_amount = 10
 	work_damage_type = BLACK_DAMAGE
 	chem_type = /datum/reagent/abnormality/sin/gloom
 
