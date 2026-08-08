@@ -30,7 +30,7 @@
 	casingtype = /obj/item/ammo_casing/caseless/citrine_noon
 	projectilesound = 'sound/effects/sparks4.ogg'
 
-	faith_per_lifetick = 2
+	faith_per_lifetick = 2.4
 	faith_line = "He is risen! Our prayers were answered!"
 	var/can_say
 	var/can_fire = TRUE
@@ -328,7 +328,7 @@
 	SLEEP_CHECK_DEATH(30)
 	if(ordeal_reference)
 		var/datum/ordeal/simplespawn/citrine/C = ordeal_reference
-		C.current_faith += 5	//Get 5 Faith for praying.
+		C.current_faith += 10	//Get 10 Faith for praying.
 	can_act = TRUE
 
 
