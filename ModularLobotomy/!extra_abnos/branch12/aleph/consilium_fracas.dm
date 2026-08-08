@@ -36,6 +36,11 @@
 
 	var/list/fire_list = list()
 
+/mob/living/simple_animal/hostile/abnormality/branch12/consilium_fracas/Destroy()
+	for(var/obj/structure/spreading/fracas_fire/F in fire_list)
+		F.UnregisterFire()
+		qdel(F)
+	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/branch12/consilium_fracas/Move()
 	..()
@@ -51,7 +56,6 @@
 /mob/living/simple_animal/hostile/abnormality/branch12/consilium_fracas/CanAttack(atom/the_target)
 	return FALSE
 
-
 /mob/living/simple_animal/hostile/abnormality/branch12/consilium_fracas/AttemptWork(mob/living/carbon/human/user, work_type)
 	..()
 	//Dust, idiot
@@ -65,12 +69,6 @@
 	icon = 'ModularLobotomy/_Lobotomyicons/branch12/32x48.dmi'
 	pixel_x = 0
 	base_pixel_x = 0
-
-/mob/living/simple_animal/hostile/abnormality/branch12/consilium_fracas/death()
-	for(var/V in fire_list)
-		fire_list-=V
-		qdel(V)
-	..()
 
 // Sandstorm effect
 /obj/structure/spreading/fracas_fire
@@ -96,15 +94,18 @@
 /obj/structure/spreading/fracas_fire/Initialize()
 	. = ..()
 	if(!connected_abno)
-		connected_abno = locate(/mob/living/simple_animal/hostile/abnormality/branch12/consilium_fracas) in GLOB.abnormality_mob_list
-	if(connected_abno)
-		connected_abno.fire_list += src
-	expand()
+		RegisterFire(locate(/mob/living/simple_animal/hostile/abnormality/branch12/consilium_fracas) in GLOB.abnormality_mob_list)
+	addtimer(CALLBACK(src, PROC_REF(expand)), 5 SECONDS)
 
+/obj/structure/spreading/fracas_fire/Destroy()
+	UnregisterFire()
+	return ..()
 
 /obj/structure/spreading/fracas_fire/expand()
+	if(QDELETED(src))
+		return
 	addtimer(CALLBACK(src, PROC_REF(expand)), 10 SECONDS)
-	..()
+	return ..()
 
 /obj/structure/spreading/fracas_fire/Crossed(atom/movable/AM)
 	. = ..()
@@ -112,3 +113,15 @@
 		var/mob/living/carbon/human/H = AM
 		H.deal_damage(3, FIRE, source = connected_abno, flags = (DAMAGE_UNTRACKABLE), attack_type = (ATTACK_TYPE_ENVIRONMENT), blocked = H.run_armor_check(null, RED_DAMAGE))
 
+/obj/structure/spreading/fracas_fire/proc/RegisterFire(new_link)
+	if(!new_link)
+		return
+	connected_abno = new_link
+	RegisterSignal(new_link, list(COMSIG_PARENT_QDELETING), PROC_REF(UnregisterFire))
+	connected_abno.fire_list += src
+
+/obj/structure/spreading/fracas_fire/proc/UnregisterFire()
+	if(connected_abno)
+		UnregisterSignal(connected_abno, list(COMSIG_PARENT_QDELETING))
+		connected_abno.fire_list -= src
+	connected_abno = null

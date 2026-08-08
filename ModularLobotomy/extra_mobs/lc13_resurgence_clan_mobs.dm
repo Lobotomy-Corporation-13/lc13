@@ -302,6 +302,14 @@
 
 	. =  ..()
 
+// Catches any qdel path that bypasses death() — admin /vv kill, wave
+// controller cleanup, lane release. Without this, locked_tiles_list
+// fields and `/datum/status_effect/locked` on affected mobs leak.
+/mob/living/simple_animal/hostile/clan/defender/Destroy()
+	if(stunned == TRUE)
+		Unlock()
+	return ..()
+
 
 /mob/living/simple_animal/hostile/clan/defender/proc/ApplyLock(mob/living/L)
 	if(!can_protect)

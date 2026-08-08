@@ -478,3 +478,26 @@
 		if(!guaranteed_spawn && prob(75))
 			return
 		owner.BatSpawn(target)
+
+/obj/projectile/flowerpin
+	name = "flower pin"
+	icon_state = "greyscale_bolt"
+	color = "RED"
+	damage_type = RED_DAMAGE
+	damage = 20
+
+/obj/projectile/flowerpin/slow
+	mouse_opacity = MOUSE_OPACITY_OPAQUE //Clicking anywhere on the turf is good enough
+	speed = 10
+	spread = 0
+
+/obj/projectile/flowerpin/slow/attackby(obj/item/I, mob/living/user, params)
+	firer = user
+	fire(WRAP(Angle - 180, 0 ,360)) //180 turn around
+	return ..()
+
+/obj/projectile/flowerpin/slow/on_hit(atom/target, blocked = FALSE)
+	if(istype(firer, /mob/living/simple_animal/hostile/abnormality/yinglong) && !QDELETED(firer))
+		var/mob/living/simple_animal/hostile/abnormality/yinglong/dragon = firer
+		dragon.flower_pins++
+	return ..()

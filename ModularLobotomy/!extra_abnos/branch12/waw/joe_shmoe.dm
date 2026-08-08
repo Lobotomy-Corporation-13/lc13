@@ -28,6 +28,11 @@
 	var/list/joelist = list()
 	var/mob/living/carbon/human/marked
 
+/mob/living/simple_animal/hostile/abnormality/branch12/joe_shmoe/Destroy()
+	JoegiveAndShmoeget()
+	MassJoestinction()
+	return ..()
+
 /mob/living/simple_animal/hostile/abnormality/branch12/joe_shmoe/Initialize()
 	. = ..()
 	if(prob(10))
@@ -51,23 +56,49 @@
 /mob/living/simple_animal/hostile/abnormality/branch12/joe_shmoe/Life()
 	. = ..()
 	if(marked && marked.sanity_lost)
-		var/mob/living/simple_animal/hostile/subjoe/S = new (get_turf(marked))
-		S.masterjoe = src
-		joelist+=S
-		marked.gib()
+		AndThenThereWasJoe(get_turf(marked))
+		var/mob/living/im_going_to_explode_you = marked
 		marked = null
+		im_going_to_explode_you.gib()
 
 	if(length(joelist) == 0)
-		marked = null
+		JoegiveAndShmoeget()
 
 /mob/living/simple_animal/hostile/abnormality/branch12/joe_shmoe/ZeroQliphoth(mob/living/carbon/human/user, work_type, pe, work_time)
 	..()
 	for(var/i = 1 to 6)
 		var/turf/W = pick(GLOB.xeno_spawn)
-		var/mob/living/simple_animal/hostile/subjoe/S = new (get_turf(W))
-		S.masterjoe = src
-		joelist+=S
+		AndThenThereWasJoe(get_turf(W))
 
+/mob/living/simple_animal/hostile/abnormality/branch12/joe_shmoe/proc/WoahDude(mob/living/unjoe)
+	if(marked)
+		JoegiveAndShmoeget()
+	marked = unjoe
+	RegisterSignal(unjoe, COMSIG_PARENT_QDELETING, PROC_REF(JoegiveAndShmoeget))
+
+/mob/living/simple_animal/hostile/abnormality/branch12/joe_shmoe/proc/JoegiveAndShmoeget()
+	if(!marked)
+		return
+	UnregisterSignal(marked, COMSIG_PARENT_QDELETING)
+	marked = null
+
+/mob/living/simple_animal/hostile/abnormality/branch12/joe_shmoe/proc/Shmoed(mob/living/simple_animal/hostile/subjoe/joelet)
+	UnregisterSignal(joelet, COMSIG_PARENT_QDELETING)
+	joelet.masterjoe = null
+	joelist -= joelet
+
+/mob/living/simple_animal/hostile/abnormality/branch12/joe_shmoe/proc/AndThenThereWasJoe(turf/drop_point)
+	var/mob/living/simple_animal/hostile/subjoe/S = new (get_turf(drop_point))
+	S.masterjoe = src
+	joelist+=S
+	RegisterSignal(S, COMSIG_PARENT_QDELETING, PROC_REF(Shmoed))
+
+//The Joes lose their connection to the ur-Joe. Now they are truely lost.
+/mob/living/simple_animal/hostile/abnormality/branch12/joe_shmoe/proc/MassJoestinction()
+	for(var/mob/living/simple_animal/hostile/subjoe/lil_joe in joelist)
+		Shmoed(lil_joe)
+	//Redundant but failsafe
+	joelist.Cut()
 
 //Most of the meat is in the simples
 /mob/living/simple_animal/hostile/subjoe
@@ -99,8 +130,15 @@
 
 	var/mob/living/simple_animal/hostile/abnormality/branch12/joe_shmoe/masterjoe
 
+
+/mob/living/simple_animal/hostile/subjoe/Destroy()
+	if(masterjoe)
+		masterjoe.Shmoed(src)
+	masterjoe = null
+	return ..()
+
 //Random sprite
-/mob/living/simple_animal/hostile/abnormality/branch12/joe_shmoe/Initialize()
+/mob/living/simple_animal/hostile/subjoe/Initialize()
 	. = ..()
 	if(prob(10))
 		icon_state = "joe_[rand(1,12)]"
@@ -110,47 +148,55 @@
 /mob/living/simple_animal/hostile/subjoe/Life()
 	. = ..()
 	for(var/mob/living/carbon/human/H in view(3, src))
-		if(masterjoe.marked)
-			H.deal_damage(2, WHITE_DAMAGE, source = src, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_SPECIAL))
+		if(masterjoe)
+			if(masterjoe.marked)
+				H.deal_damage(2, WHITE_DAMAGE, source = src, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_SPECIAL))
 		H.deal_damage(10, WHITE_DAMAGE, source = src, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_SPECIAL))
 
 	//don't move or attack if there's no marked.
 /mob/living/simple_animal/hostile/subjoe/Move()
-	if(!masterjoe.marked)
-		return FALSE
-	. = ..()
+	if(masterjoe)
+		if(!masterjoe.marked)
+			return FALSE
+	return ..()
 
 /mob/living/simple_animal/hostile/subjoe/CanAttack(atom/the_target)
-	if(the_target != masterjoe.marked)
-		return FALSE
-	. = ..()
+	if(masterjoe)
+		if(the_target != masterjoe.marked)
+			return FALSE
+	return ..()
 
 //Turn anyone that attacks one into an enemy of all
 /mob/living/simple_animal/hostile/subjoe/bullet_act(obj/projectile/Proj)
-	..()
-
 	if(!ishuman(Proj.firer))
 		return
-	masterjoe.marked = Proj.firer
+	if(masterjoe)
+		masterjoe.WoahDude(Proj.firer)
+	return ..()
 
 /mob/living/simple_animal/hostile/subjoe/attacked_by(obj/item/I, mob/living/user)
 	..()
 	if(!user)
 		return
-	masterjoe.marked = user
+	if(masterjoe)
+		masterjoe.WoahDude(user)
 
 /mob/living/simple_animal/hostile/subjoe/PickTarget(list/Targets) // Only patrol to the marked
-	if(masterjoe.marked)
-		return masterjoe.marked
-
-
+	if(masterjoe)
+		if(masterjoe.marked)
+			return masterjoe.marked
 
 /mob/living/simple_animal/hostile/subjoe/patrol_reset()
 	. = ..()
-	if(masterjoe.marked)
-		FindTarget() // KILL HIM, KILL HIM NOW
+	if(masterjoe)
+		if(masterjoe.marked)
+			FindTarget() // KILL HIM, KILL HIM NOW
+
 
 /mob/living/simple_animal/hostile/subjoe/SelectPatrolLocation()
+	if(!masterjoe)
+		return
+
 	if(!masterjoe.marked)
 		return
 

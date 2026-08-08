@@ -14,6 +14,7 @@
 	P.original = target_shoot
 	P.preparePixelProjectile(target_shoot, T)
 	addtimer(CALLBACK (P, TYPE_PROC_REF(/obj/projectile, fire)), projectile_telegraph_delay)
+	return P
 
 /*
 * This Proc converts armor values into

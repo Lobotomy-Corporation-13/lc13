@@ -384,6 +384,18 @@
 		if(H.age)
 			C.registered_age = H.age
 		C.update_label()
+		// Gacha skin override — cosmetic only, after the rest of the
+		// ID setup is settled. Reads the equipped skin from the
+		// Starlight ledger and slams its icon_state onto the card.
+		// Falls through silently if the player has no equipped skin
+		// or the skin id is stale.
+		if(H.ckey)
+			var/equipped_skin = SSrefraction_railway.GetEquippedIdSkin(H.ckey)
+			if(equipped_skin)
+				var/datum/id_skin/S = SSrefraction_railway.id_skins[equipped_skin]
+				if(istype(S))
+					C.icon_state = S.icon_state
+					C.update_icon()
 		var/datum/bank_account/B = SSeconomy.bank_accounts_by_id["[H.account_id]"]
 		if(B && B.account_id == H.account_id)
 			C.registered_account = B

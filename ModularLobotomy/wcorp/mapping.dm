@@ -5,6 +5,33 @@
 	room_height = 11
 	room_type = "wcorp" // Used so we can place landmarks in ruins and such.
 
+/*
+ * Every one of these tiles on the main map is one car of the train, so counting them
+ * tells the wave system how long the train is. This runs at mapload, well before any
+ * room has actually loaded, so GLOB.wave_total_cars is settled before the round starts.
+ *
+ * Counting the loaded rooms instead would be a trap - they load on random timers, so the
+ * count would still be climbing while players were already moving through the train.
+ *
+ * To run a longer or shorter train, add or remove these spawner tiles (and enough room
+ * templates to fill them). The difficulty curve re-spreads itself, no code change needed.
+ */
+/obj/effect/spawner/room/wcorp/Initialize()
+	. = ..()
+	// Parent nulls template and qdels itself when there is no room left to claim
+	if(template)
+		GLOB.wave_total_cars++
+
+/obj/effect/spawner/room/wcorp/LateSpawn()
+	// Duplicates the parent so we can see whether the load actually succeeded - a room
+	// that silently fails to load would leave wave_total_cars overcounted, which skews
+	// the difficulty tier of every car after it
+	var/turf/spawn_turf = get_turf(src)
+	if(!template.load(spawn_turf, centered = template.centerspawner))
+		GLOB.wave_total_cars--
+		stack_trace("W-Corp room template [template.name] failed to load at [AREACOORD(spawn_turf)]")
+	qdel(src)
+
 
 /datum/map_template/random_room/wcorp
 	centerspawner = FALSE

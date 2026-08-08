@@ -187,7 +187,7 @@
 		gender = pick(MALE,FEMALE)
 	if(!real_name)
 		real_name = name
-	if(!loc)
+	if(!loc && !GLOB.refraction_extracting_mob_stats)
 		stack_trace("Simple animal being instantiated in nullspace")
 	update_simplemob_varspeed()
 	if(dextrous)

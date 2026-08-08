@@ -19,6 +19,14 @@
 	item_path = /obj/item/clothing/suit/armor/ego_gear/branch12/signal
 	cost = 10
 
+// Barostem - Baroputian
+/datum/ego_datum/weapon/branch12/barostem
+	item_path = /obj/item/ego_weapon/branch12/barostem
+	cost = 10
+
+/datum/ego_datum/armor/branch12/barostem
+	item_path = /obj/item/clothing/suit/armor/ego_gear/branch12/barostem
+	cost = 10
 
 // Statue Of Forgiveness - Serenity
 /datum/ego_datum/weapon/branch12/serenity

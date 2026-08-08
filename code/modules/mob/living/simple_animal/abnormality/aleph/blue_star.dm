@@ -89,7 +89,7 @@
 	QDEL_NULL(soundloop)
 	animate(src, alpha = 0, time = 5 SECONDS)
 	QDEL_IN(src, 5 SECONDS)
-	..()
+	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/bluestar/Move()
 	return FALSE

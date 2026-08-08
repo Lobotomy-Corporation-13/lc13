@@ -171,6 +171,7 @@
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	pass_flags = PASSTABLE | PASSGLASS | PASSGRILLE
 	movement_type = FLYING
+	var/max_hits = 1
 	var/speed = 1 SECONDS
 	var/steps = 20
 	var/damage = 60
@@ -189,35 +190,24 @@
 	*/
 	var/list/move_pattern = list()
 
-/obj/effect/ambient_danger/Initialize(mapload, list/ally_factions = list(), list/ordered_pattern = list())
+/obj/effect/ambient_danger/Initialize(mapload, list/ally_factions = list(), list/ordered_pattern = list(), move_on_init = TRUE)
 	if(length(ally_factions))
 		ignore_faction = ally_factions.Copy()
 	if(length(ordered_pattern))
 		move_pattern = ordered_pattern.Copy()
 	. = ..()
-	StartMovement()
+	if(move_on_init)
+		StartMovement()
 
 /obj/effect/ambient_danger/Move()
 	. = ..()
 	steps--
 	if(steps < 1)
+		DestroyTimer()
 		qdel(src)
+		return
 	if(!QDELETED(src) && isturf(loc))
-		var/attack_tries = 5
-		/*
-		* Im apprehensive about this.
-		* If there is 12 mobs on one
-		* tile then only 5 of them will be checked.
-		* -IP
-		*/
-		for(var/mob/living/pain_mobs in loc)
-			if(QDELETED(src))
-				break
-			attack_tries--
-			if(attack_tries < 1)
-				break
-			if(Suffer(pain_mobs))
-				break
+		MovementEffect()
 
 /obj/effect/ambient_danger/Crossed(atom/movable/AM)
 	. = ..()
@@ -232,9 +222,7 @@
 	Suffer(AM)
 
 /obj/effect/ambient_danger/Destroy()
-	if(move_cycle)
-		deltimer(move_cycle)
-		move_cycle = null
+	DestroyTimer()
 	return ..()
 
 /obj/effect/ambient_danger/proc/StartMovement()
@@ -244,27 +232,52 @@
 /obj/effect/ambient_danger/proc/MovePattern()
 	if(QDELETED(src))
 		return
-	if(move_cycle)
-		deltimer(move_cycle)
-		move_cycle = null
+	DestroyTimer()
 	var/our_turf_tag = "[x],[y]"
 	if(length(move_pattern))
 		if(our_turf_tag in move_pattern)
 			if(step(src,move_pattern[our_turf_tag],speed) && !move_cycle)
+				//A runtime occurs where a timer is being called by a qdeleted object despite DestroyTimer.
+				if(QDELETED(src))
+					return
 				move_cycle = addtimer(CALLBACK(src, PROC_REF(MovePattern)), speed, TIMER_STOPPABLE)
 				return
 	//We lost the pattern, go nuts.
 	walk_rand(src,speed,speed)
+
+/obj/effect/ambient_danger/proc/MovementEffect()
+	var/attack_tries = 5
+	/*
+	* Im apprehensive about this.
+	* If there is 12 mobs on one
+	* tile then only 5 of them will be checked.
+	* -IP
+	*/
+	for(var/mob/living/pain_mobs in loc)
+		if(QDELETED(src))
+			break
+		attack_tries--
+		if(attack_tries < 1)
+			break
+		if(Suffer(pain_mobs))
+			break
 
 /obj/effect/ambient_danger/proc/Suffer(atom/A)
 	if(isliving(A))
 		var/mob/living/L = A
 		if(faction_check(L.faction, ignore_faction, FALSE) || !L.density)
 			return
+		max_hits--
 		L.deal_damage(damage, damage_type, src, attack_type = (ATTACK_TYPE_SPECIAL))
-		qdel(src)
+		if(max_hits < 1)
+			steps = 0
 		return TRUE
 	return FALSE
+
+/obj/effect/ambient_danger/proc/DestroyTimer()
+	if(move_cycle)
+		deltimer(move_cycle)
+		move_cycle = null
 
 /*-------------\
 |Blood Splatter|

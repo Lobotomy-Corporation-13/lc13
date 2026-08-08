@@ -101,3 +101,7 @@
 
 	/// Are you a part of an office?
 	var/assigned_office = null
+
+	/// How good are you at beating the shit out of people?
+	var/fisticuffs_bonus
+

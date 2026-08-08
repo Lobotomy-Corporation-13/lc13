@@ -240,6 +240,21 @@
 		BLACK_DAMAGE = "Resistant/Immune/Immune",
 		PALE_DAMAGE = "Weak/Normal/Endured")
 
+// Yinglong (WIP)
+/obj/item/paper/fluff/info/aleph/yinglong
+	abno_type = /mob/living/simple_animal/hostile/abnormality/yinglong
+	abno_code = "F-02-14-23"
+	abno_info = list(
+		"When F-02-14-23 breaches they will produce 4 dragon vortexes in random hallways around the facility every 10 seconds as long as they remain uncontained and without a target.",
+		"When engaged in combat F-02-14-23 will use certain abilities in a recognizable order.",
+		"F-02-14-23 will attack 3 times with a volley of pins, each pin volley has one that is slower than the others.",
+		"When this slow pin is hit with a ego it will be reflected and harm F-02-14-23, this will also weaken the intensity of future attacks.",
+		"F-02-14-23 will appear to have electricity arcing around its body before summoning 4 dragon vortexes around it. \
+		These vortexes deal damage to anyone who comes into contact with them before tossing them in a random direction.",
+		"F-02-14-23 will summon lighting that applies RUPTURE in a checkerboard pattern around it.",
+		"F-02-14-23 will then fire pins in a circular pattern around itself before restarting its attack pattern.",)
+	abno_breach_damage_type = "Red/White"
+
 // Black Sun
 /obj/item/paper/fluff/info/aleph/blacksun
 	abno_type = /mob/living/simple_animal/hostile/abnormality/black_sun

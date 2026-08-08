@@ -7,6 +7,9 @@ SUBSYSTEM_DEF(testrange)
 	var/static/list/ego_datums = list()
 	/// List of all EGO datum paths, only used for the old EGO printer interface. Better to cache it than compute it every time, I think?
 	var/static/list/ego_datum_paths = list()
+	/// Path -> /datum/ego_datum index built alongside ego_datums for O(1)
+	/// lookups by item_path. Used by the refraction loadout console.
+	var/static/list/ego_datums_by_path = list()
 	/// Cache of EGO preview images (base64 strings).
 	var/static/list/ego_preview_icons_cache = list()
 	/// Cache of Threat preview images (base64 strings).
@@ -71,6 +74,7 @@ SUBSYSTEM_DEF(testrange)
 			if(!(ED.testrange_blacklisted) && (ED.item_path)) // Condition 1 eliminates evil datums like Sorrow and condition 2 eliminates templates that don't have a path (like /ego_datum/weapon/)
 				ego_datums |= ED
 				ego_datum_paths |= ED.item_path
+				ego_datums_by_path[ED.item_path] = ED
 				GenerateEgoPreviewIcon(ED.item_path)
 			else
 				qdel(ED)

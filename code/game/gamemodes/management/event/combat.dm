@@ -1,6 +1,9 @@
 GLOBAL_VAR_INIT(combat_counter, 0)
 GLOBAL_VAR_INIT(wcorp_enemy_faction, "") //decides which faction WCorp will be up against, so all spawners stay consistent
 
+/// How long W-Corp gets to clear the train, counted from the moment they trigger the first car
+#define WCORP_TIME_LIMIT (20 MINUTES)
+
 //This should ONLY be used for events.
 /datum/game_mode/combat
 	name = "Combat Mode"
@@ -11,6 +14,11 @@ GLOBAL_VAR_INIT(wcorp_enemy_faction, "") //decides which faction WCorp will be u
 
 	announce_span = "danger"
 	announce_text = "Abnormalities are automatically breached."
+
+	/// Set during setup on the W-Corp map - the mission clock exists but is not counting yet
+	var/wcorp_timer_armed = FALSE
+	/// Set once players trigger the first train car and the clock actually starts
+	var/wcorp_timer_started = FALSE
 
 /datum/game_mode/combat/post_setup()
 	..()
@@ -90,9 +98,12 @@ GLOBAL_VAR_INIT(wcorp_enemy_faction, "") //decides which faction WCorp will be u
 
 			//W-Corp stuff
 			if("wcorp")
-				addtimer(CALLBACK(src, PROC_REF(winround)), 20 MINUTES)
+				//The clock does not start here - it starts when players trigger the first
+				//train car, so time spent preparing in the staging area is free. See
+				//StartWcorpTimer(), called from the wave controller.
+				wcorp_timer_armed = TRUE
 				addtimer(CALLBACK(src, PROC_REF(counterincrease)), 3 MINUTES)
-				to_chat(world, span_userdanger("Players will be victorius 20 minutes."))
+				to_chat(world, span_userdanger("Once you enter the first train car, you have [WCORP_TIME_LIMIT / (1 MINUTES)] minutes to clear the train!"))
 
 				switch(rand(1,5))
 					if(1)
@@ -126,6 +137,16 @@ GLOBAL_VAR_INIT(wcorp_enemy_faction, "") //decides which faction WCorp will be u
 		to_chat(world, span_userdanger("Every player has perished. Abnormalities have won."))
 
 //Win cons
+/// Starts the W-Corp mission clock. Called by the wave controller when players trigger
+/// their first train car, so preparation time in the staging area doesn't eat the deadline.
+/// Safe to call repeatedly - only the first call arms the timer.
+/datum/game_mode/combat/proc/StartWcorpTimer()
+	if(!wcorp_timer_armed || wcorp_timer_started)
+		return
+	wcorp_timer_started = TRUE
+	addtimer(CALLBACK(src, PROC_REF(loseround)), WCORP_TIME_LIMIT)
+	to_chat(world, span_userdanger("The operation has begun! [WCORP_TIME_LIMIT / (1 MINUTES)] minutes to clear the train."))
+
 /datum/game_mode/combat/proc/loseround()
 	SSticker.force_ending = TRUE
 	to_chat(world, span_userdanger("Players have taken too long! Round automatically ending."))

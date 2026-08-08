@@ -1,0 +1,521 @@
+/*
+ * Checkpoint-room consoles: wall-mounted briefing display and the
+ * "Begin Sector" advance console. Read run state from /datum/refraction_run.
+ */
+
+// Briefing display
+
+/obj/structure/refraction_briefing
+	name = "refraction sector briefing"
+	desc = "A wall-mounted display showing the upcoming sector's hostile composition."
+	icon = 'ModularLobotomy/_Lobotomyicons/teaser_mobs.dmi'
+	icon_state = "departmentdrone"
+	density = TRUE
+	anchored = TRUE
+	resistance_flags = INDESTRUCTIBLE
+	/// Mappers flip this on to swap the briefing to its framed look —
+	/// "departmentdrone_base" sprite + two color-tintable frame overlays.
+	var/custom_frame = FALSE
+	/// Color tints applied to the inner and outer frame overlays when
+	/// custom_frame is enabled. Hex strings ("#ffffff" leaves the sprite
+	/// at its authored color).
+	var/inner_frame_color = "#ffffff"
+	var/outer_frame_color = "#ffffff"
+
+/obj/structure/refraction_briefing/Initialize(mapload)
+	. = ..()
+	if(custom_frame)
+		icon_state = "departmentdrone_base"
+		var/mutable_appearance/inner = mutable_appearance(icon, "departmentdrone_inner_frame")
+		inner.color = inner_frame_color
+		add_overlay(inner)
+		var/mutable_appearance/outer = mutable_appearance(icon, "departmentdrone_outer_frame")
+		outer.color = outer_frame_color
+		add_overlay(outer)
+
+// Placeholder shell — the Starlight terminal sits in the hub for a
+// future feature that will repurpose Starlight currency. Keeps the
+// custom-frame authoring vars so mappers don't have to re-place it
+// when the new interaction lands. attack_hand is a tease-message
+// stub; no TGUI is bound right now.
+
+/obj/structure/refraction_starlight_shop
+	name = "starlight terminal"
+	desc = "A glittering panel. It hums quietly. Whatever it was meant for hasn't arrived yet."
+	icon = 'ModularLobotomy/_Lobotomyicons/teaser_mobs.dmi'
+	icon_state = "departmentdrone"
+	density = TRUE
+	anchored = TRUE
+	resistance_flags = INDESTRUCTIBLE
+	var/custom_frame = FALSE
+	var/inner_frame_color = "#ffffff"
+	var/outer_frame_color = "#ffffff"
+	/// Per-ckey one-shot stash of the most recent PullGacha result list.
+	/// Surfaces in ui_data as `pending_pull`; cleared when the UI fires
+	/// the "ack_pull" action after it's done animating the reveal.
+	var/list/last_pulls
+
+/obj/structure/refraction_starlight_shop/Initialize(mapload)
+	. = ..()
+	if(custom_frame)
+		icon_state = "departmentdrone_base"
+		var/mutable_appearance/inner = mutable_appearance(icon, "departmentdrone_inner_frame")
+		inner.color = inner_frame_color
+		add_overlay(inner)
+		var/mutable_appearance/outer = mutable_appearance(icon, "departmentdrone_outer_frame")
+		outer.color = outer_frame_color
+		add_overlay(outer)
+
+/obj/structure/refraction_starlight_shop/attack_hand(mob/user)
+	. = ..()
+	if(.)
+		return
+	ui_interact(user)
+
+/obj/structure/refraction_starlight_shop/ui_interact(mob/user, datum/tgui/ui)
+	if(!user?.ckey)
+		return
+	var/refunded = SSrefraction_railway?.RefundRetiredIdSkins(user.ckey)
+	if(refunded)
+		to_chat(user, span_notice("Retired ID skins pruned from your collection: refunded [refunded * 500] Starlight ([refunded] card[refunded == 1 ? "" : "s"]).") )
+	ui = SStgui.try_update_ui(user, src, ui)
+	if(!ui)
+		ui = new(user, src, "RefractionGachaShop", "Starlight Extraction")
+		ui.open()
+
+/obj/structure/refraction_starlight_shop/ui_data(mob/user)
+	var/list/data = list()
+	data["balance"] = SSrefraction_railway.GetStarlight(user.ckey)
+	data["pull_costs"] = list("single" = 50, "ten" = 500)
+	data["rates"] = list("rate_0" = 83.0, "rate_00" = 12.8, "rate_000" = 2.9)
+	data["equipped"] = SSrefraction_railway.GetEquippedIdSkin(user.ckey)
+	var/list/owned = SSrefraction_railway.GetUnlockedIdSkins(user.ckey)
+	data["unlocked"] = owned
+	// Build the banner payload — one entry per registered banner with
+	// its highlight skins (rate-up). Every banner can roll every skin
+	// in the game at the base rates; only the highlights are shown
+	// here because they're what the player is "gambling for" by
+	// picking that banner.
+	var/list/banners = list()
+	for(var/banner_id in SSrefraction_railway.gacha_banners)
+		var/datum/gacha_banner/B = SSrefraction_railway.gacha_banners[banner_id]
+		var/list/preview = list()
+		for(var/skin_id in B.highlight_skin_ids)
+			var/datum/id_skin/S = SSrefraction_railway.id_skins[skin_id]
+			if(!istype(S))
+				continue
+			preview += list(list(
+				"id" = S.id,
+				"name" = S.name,
+				"rarity" = S.rarity,
+				"icon_state" = S.icon_state,
+				"icon_data" = S.icon_data,
+				"owned" = !isnull(owned[S.id]),
+				"copies" = owned[S.id] || 0,
+			))
+		banners += list(list(
+			"id" = B.id,
+			"name" = B.name,
+			"color" = B.display_color,
+			"skins" = preview,
+		))
+	data["banners"] = banners
+	// Per-banner pity counters for the active player + the shared
+	// claim threshold. The UI compares them to surface a "Claim a
+	// highlight" button once a banner hits the cap.
+	var/list/pity_map = list()
+	for(var/banner_id in SSrefraction_railway.gacha_banners)
+		pity_map[banner_id] = SSrefraction_railway.GetGachaPity(user.ckey, banner_id)
+	data["pity"] = pity_map
+	data["pity_threshold"] = SSrefraction_railway.gacha_pity_threshold
+	// Rarity-tinted fracture sprites for the burst stage. Baked once
+	// at boot; shipped raw here so the UI doesn't need to know the
+	// bucket → sprite mapping itself.
+	data["fracture_icons"] = SSrefraction_railway.gacha_fracture_icons
+	// One-shot pull payload for the animation. The UI fires "ack_pull"
+	// to clear it once the reveal sequence is complete.
+	data["pending_pull"] = LAZYACCESS(last_pulls, user.ckey)
+	return data
+
+/obj/structure/refraction_starlight_shop/ui_act(action, list/params)
+	. = ..()
+	if(.)
+		return
+	switch(action)
+		if("pull")
+			var/banner_id = params["banner_id"]
+			var/count = text2num(params["count"])
+			if(!(count in list(1, 10)))
+				return
+			var/list/results = SSrefraction_railway.PullGacha(usr, banner_id, count)
+			if(!islist(results))
+				to_chat(usr, span_warning("The terminal rejects your pull."))
+				return
+			// Push the resolved results back into ui_data so the UI can
+			// animate through them. We stash them onto the console as
+			// a per-user one-shot.
+			LAZYSET(last_pulls, usr.ckey, results)
+			SStgui.update_uis(src)
+		if("redeem_pity")
+			// Free pick from a banner's highlights once pity caps out.
+			// Stashes the result as a single-card pull payload so the
+			// existing results screen can render it without a custom
+			// celebration path.
+			var/banner_id = params["banner_id"]
+			var/skin_id = params["skin_id"]
+			var/list/result = SSrefraction_railway.RedeemGachaPity(usr, banner_id, skin_id)
+			if(islist(result))
+				LAZYSET(last_pulls, usr.ckey, list(result))
+				SStgui.update_uis(src)
+			else
+				to_chat(usr, span_warning("You can't claim that — pity not full or invalid skin."))
+		if("ack_pull")
+			// UI signals it has consumed the last_pulls payload — clear
+			// it so the next ui_data push doesn't replay the animation.
+			if(usr.ckey && LAZYACCESS(last_pulls, usr.ckey))
+				LAZYREMOVE(last_pulls, usr.ckey)
+				SStgui.update_uis(src)
+		if("equip_skin")
+			var/skin_id = params["skin_id"]
+			if(skin_id == "null" || skin_id == "")
+				skin_id = null
+			if(SSrefraction_railway.SetEquippedIdSkin(usr.ckey, skin_id))
+				usr.client?.prefs?.equipped_id_skin = skin_id
+				usr.client?.prefs?.save_preferences()
+				SStgui.update_uis(src)
+			else
+				to_chat(usr, span_warning("You don't own that skin yet."))
+		if("play_sound")
+			// Whitelisted UI sound effects fired by the gacha animation.
+			// Sent only to the acting client so other players nearby
+			// don't get bombarded by every chain pull.
+			var/static/list/gacha_sounds = list(
+				"start"         = "sound/effects/gatcha/gatcha_start.ogg",
+				"coreBoom"      = "sound/effects/gatcha/gatcha_coreBoom.ogg",
+				"coreClick"     = "sound/effects/gatcha/gatcha_coreClick.ogg",
+				"makeFracture"  = "sound/effects/gatcha/gatcha_makeFracture.ogg",
+				"chainPullback" = "sound/effects/gatcha/gatcha_chainPullback.ogg",
+				"got_000"       = "sound/effects/gatcha/gatcha_got_000.ogg",
+				"idResult"      = "sound/effects/gatcha/gatcha_idResult.ogg",
+			)
+			var/path = gacha_sounds[params["name"]]
+			if(path && usr.client)
+				var/vol = text2num(params["volume"])
+				if(isnull(vol))
+					vol = 50
+				SEND_SOUND(usr.client, sound(path, volume = vol))
+
+/obj/structure/refraction_briefing/attack_hand(mob/user)
+	. = ..()
+	if(.)
+		return
+	ui_interact(user)
+
+/obj/structure/refraction_briefing/ui_interact(mob/user, datum/tgui/ui)
+	var/datum/refraction_run/R = SSrefraction_railway.GetRunForCkey(user.ckey)
+	if(!R)
+		to_chat(user, span_warning("You aren't part of an active refraction run."))
+		return
+	ui = SStgui.try_update_ui(user, src, ui)
+	if(!ui)
+		ui = new(user, src, "RefractionBriefing", "Sector Briefing")
+		ui.open()
+
+/obj/structure/refraction_briefing/ui_data(mob/user)
+	var/list/data = list()
+	var/datum/refraction_run/R = SSrefraction_railway.GetRunForCkey(user.ckey)
+	if(!R)
+		return data
+	var/idx = R.current_section + 1
+	if(idx > length(R.line.sector_briefings))
+		data["finished"] = TRUE
+		return data
+	var/list/sector = R.line.sector_briefings[idx]
+	data["sector"] = list(
+		"name"        = sector["name"],
+		"description" = sector["description"],
+	)
+	data["sector_index"] = idx
+	data["nodes"] = BuildNodesPayload(user, sector, R)
+	data["status_glossary"] = RefractionStatusGlossary()
+	return data
+
+/obj/structure/refraction_briefing/proc/BuildNodesPayload(mob/user, list/sector, datum/refraction_run/R)
+	var/list/out = list()
+	if(!islist(sector["node_ids"]))
+		return out
+	for(var/node_id in sector["node_ids"])
+		var/datum/refraction_node/N = R.line.combat_nodes[node_id]
+		if(!istype(N))
+			continue
+		if(N.locked)
+			out += list(list(
+				"id"          = N.id,
+				"name"        = "Restricted",
+				"description" = "Encounter not yet authored.",
+				"is_boss"     = N.is_boss,
+				"mobs"        = list(),
+				"locked"      = TRUE,
+			))
+			continue
+		var/list/mob_payloads = list()
+		for(var/mob_path in N.mob_stock)
+			if(IsMobBriefingHidden(user.ckey, mob_path))
+				continue
+			var/list/payload = SSrefraction_railway.BuildMobCardPayload(user.ckey, mob_path)
+			payload["count"] = N.mob_stock[mob_path]
+			mob_payloads += list(payload)
+		for(var/mob_path in N.extra_preview_mobs)
+			if(mob_path in N.mob_stock)
+				continue
+			if(IsMobBriefingHidden(user.ckey, mob_path))
+				continue
+			var/list/payload = SSrefraction_railway.BuildMobCardPayload(user.ckey, mob_path)
+			payload["count"] = null
+			mob_payloads += list(payload)
+		out += list(list(
+			"id"           = N.id,
+			"name"         = N.name,
+			"description"  = N.description,
+			"is_boss"      = N.is_boss,
+			"mobs"         = mob_payloads,
+			"locked"       = FALSE,
+			"achievements" = BuildNodeAchievementsPayload(N, R.line.id, user.ckey),
+		))
+	return out
+
+/// TRUE when `mob_path` is fully hidden from the briefing — its
+/// silhouette gate is registered AND the gating event has not been
+/// unlocked for this ckey yet. Hidden mobs are omitted from the
+/// payload entirely so the card doesn't render at all (no name, no
+/// silhouette, no weakness label) — as if it were never authored.
+/obj/structure/refraction_briefing/proc/IsMobBriefingHidden(ckey, mob_path)
+	if(!ckey)
+		return FALSE
+	if(SSrefraction_railway.debug_reveal_all)
+		return FALSE
+	var/gate_event = SSrefraction_railway.GetMobSilhouetteGate(mob_path)
+	if(!gate_event)
+		return FALSE
+	return !SSrefraction_railway.IsEventUnlocked(ckey, gate_event)
+
+/// One assoc-list per achievement bound to any of this node's stocked
+/// mob paths. Returns empty list if the ckey hasn't completed the line
+/// yet — achievements stay hidden until a veteran clear unlocks them.
+/obj/structure/refraction_briefing/proc/BuildNodeAchievementsPayload(datum/refraction_node/N, line_id, ckey)
+	var/list/out = list()
+	if(!N || !line_id || !ckey)
+		return out
+	if(!SSrefraction_railway.HasCompletedLine(ckey, line_id))
+		return out
+	var/list/seen = list()
+	for(var/mob_path in N.mob_stock)
+		var/list/achs = SSrefraction_railway.mob_achievements[mob_path]
+		if(!islist(achs))
+			continue
+		for(var/list/ach as anything in achs)
+			if(!islist(ach))
+				continue
+			var/aid = ach["id"]
+			if(!aid || seen[aid])
+				continue
+			seen[aid] = TRUE
+			out += list(list(
+				"id"     = aid,
+				"name"   = ach["name"],
+				"desc"   = ach["desc"],
+				"reward" = ach["reward"],
+				"kind"   = ach["default_state"] ? "avoid" : "earn",
+			))
+	return out
+
+// Advance ("Begin Sector") console
+
+/obj/machinery/computer/refraction_advance
+	name = "refraction advance console"
+	desc = "Coordinates the team's readiness for the upcoming sector. Lobby \
+		owner triggers the actual sector start."
+	icon_screen = "teleport"
+	icon_keyboard = "rd_key"
+	circuit = null
+	resistance_flags = INDESTRUCTIBLE
+
+/obj/machinery/computer/refraction_advance/attack_hand(mob/user)
+	. = ..()
+	if(.)
+		return
+	ui_interact(user)
+
+/obj/machinery/computer/refraction_advance/ui_interact(mob/user, datum/tgui/ui)
+	var/datum/refraction_run/R = SSrefraction_railway.GetRunForCkey(user.ckey)
+	// Warn only with no run; wrong-state bails silently (TGUI re-invokes
+	// ui_interact during state transitions).
+	if(!R)
+		to_chat(user, span_warning("You aren't currently part of a refraction run."))
+		return
+	if(R.lobby_state != LOBBY_RUNNING && R.lobby_state != LOBBY_FINISHED)
+		return
+	if(R.lobby_state == LOBBY_RUNNING && !R.in_checkpoint)
+		return
+	ui = SStgui.try_update_ui(user, src, ui)
+	if(!ui)
+		ui = new(user, src, "RefractionAdvance", "Begin Sector")
+		// Autoupdate so state transitions propagate without a click.
+		ui.set_autoupdate(TRUE)
+		ui.open()
+
+/obj/machinery/computer/refraction_advance/ui_data(mob/user)
+	var/list/data = list()
+	var/datum/refraction_run/R = SSrefraction_railway.GetRunForCkey(user.ckey)
+	if(!R)
+		return data
+	var/all_ready = TRUE
+	var/list/members_payload = list()
+	for(var/mob/M as anything in R.members)
+		var/ready = R.ready_states[M.ckey]
+		if(M.stat != DEAD && !ready)
+			all_ready = FALSE
+		members_payload += list(BuildMemberPayload(M, R, ready))
+	data["members"] = members_payload
+	data["is_lobby_owner"] = R.lobby_owner == user.ckey
+	data["is_owner_active"] = R.IsOwnerActive()
+	data["my_ckey"] = user.ckey
+	data["my_loadout_set"] = (R.loadouts[user.ckey] && length(R.loadouts[user.ckey]) >= 3) ? TRUE : FALSE
+	data["current_sector"] = R.current_section
+	data["next_sector_index"] = R.current_section + 1
+	data["section_count"] = R.line.section_count
+	data["next_sector_name"] = GetNextSectorName(R)
+	data["all_ready"] = all_ready && length(members_payload) > 0
+	data["leaderboard"] = SSrefraction_railway.BuildLeaderboardPayload(R.line.id)
+	data["line_id"] = R.line.id
+	// Last completed sector's elapsed time in deciseconds, 0 if none.
+	data["last_sector_time_ds"] = GetLastSectorTimeDs(R)
+	data["lobby_state"] = R.lobby_state
+	// Theme music panel: only surfaced when at least one node in the
+	// upcoming sector declares theme_music. We intentionally do NOT
+	// ship the track name or path to the client — preserves the
+	// surprise of whatever theme the encounter is about to spin up.
+	data["theme_music_available"] = NextSectorHasThemeMusic(R)
+	data["theme_music_volume"] = R.GetMusicVolume(user.ckey)
+	if(R.lobby_state == LOBBY_FINISHED)
+		data["results"] = BuildResultsPayload(R)
+	return data
+
+/obj/machinery/computer/refraction_advance/proc/NextSectorHasThemeMusic(datum/refraction_run/R)
+	if(!R || !R.line)
+		return FALSE
+	var/next_idx = R.current_section + 1
+	if(!islist(R.line.sector_briefings))
+		return FALSE
+	if(next_idx < 1 || next_idx > length(R.line.sector_briefings))
+		return FALSE
+	var/list/sector = R.line.sector_briefings[next_idx]
+	if(!islist(sector) || !islist(sector["node_ids"]))
+		return FALSE
+	for(var/node_id in sector["node_ids"])
+		var/datum/refraction_node/N = R.line.combat_nodes[node_id]
+		if(istype(N) && N.theme_music)
+			return TRUE
+	return FALSE
+
+/obj/machinery/computer/refraction_advance/proc/GetLastSectorTimeDs(datum/refraction_run/R)
+	var/list/finishes = R.sector_finish_times
+	if(!islist(finishes) || !length(finishes))
+		return 0
+	var/end_t = finishes[length(finishes)]
+	var/start_t = (length(finishes) >= 2) ? finishes[length(finishes) - 1] : 0
+	return max(0, end_t - start_t)
+
+/obj/machinery/computer/refraction_advance/proc/BuildResultsPayload(datum/refraction_run/R)
+	var/list/sectors = list()
+	var/list/finishes = R.sector_finish_times
+	for(var/i in 1 to length(finishes))
+		var/end_t = finishes[i]
+		var/start_t = (i > 1) ? finishes[i - 1] : 0
+		var/list/per_player = list()
+		if(islist(R.sector_loadouts) && i <= length(R.sector_loadouts))
+			var/list/snap = R.sector_loadouts[i]
+			if(islist(snap))
+				for(var/list/entry as anything in snap)
+					var/list/loadout = entry["loadout"]
+					var/list/icons = list(null, null, null)
+					if(islist(loadout))
+						for(var/j in 1 to min(3, length(loadout)))
+							icons[j] = SStestrange.GenerateEgoPreviewIcon(loadout[j])
+					per_player += list(list(
+						"ckey"          = entry["ckey"],
+						"name"          = entry["name"],
+						"loadout_icons" = icons,
+					))
+		var/list/sector_briefing = (islist(R.line.sector_briefings) && i <= length(R.line.sector_briefings)) ? R.line.sector_briefings[i] : null
+		sectors += list(list(
+			"index"   = i,
+			"name"    = sector_briefing ? sector_briefing["name"] : "Sector [i]",
+			"time_ds" = end_t - start_t,
+			"players" = per_player,
+			"rooms"   = R.BuildRoomTimesForSector(i),
+		))
+	return list(
+		"line_name" = R.line.name,
+		"total_ds"  = R.ElapsedDeciseconds(),
+		"sectors"   = sectors,
+	)
+
+/obj/machinery/computer/refraction_advance/proc/BuildMemberPayload(mob/M, datum/refraction_run/R, ready)
+	var/list/loadout = R.loadouts[M.ckey]
+	var/list/icons = list(null, null, null)
+	if(islist(loadout) && length(loadout) >= 3)
+		icons[1] = SStestrange.GenerateEgoPreviewIcon(loadout[1])
+		icons[2] = SStestrange.GenerateEgoPreviewIcon(loadout[2])
+		icons[3] = SStestrange.GenerateEgoPreviewIcon(loadout[3])
+	return list(
+		"ckey"          = M.ckey,
+		"name"          = M.real_name || M.name,
+		"ready"         = ready ? TRUE : FALSE,
+		"loadout_icons" = icons,
+		"is_owner"      = R.lobby_owner == M.ckey,
+		"is_alive"      = M.stat != DEAD,
+	)
+
+/obj/machinery/computer/refraction_advance/proc/GetNextSectorName(datum/refraction_run/R)
+	var/idx = R.current_section + 1
+	if(!islist(R.line.sector_briefings))
+		return ""
+	if(idx < 1 || idx > length(R.line.sector_briefings))
+		return ""
+	var/list/sector = R.line.sector_briefings[idx]
+	return sector["name"]
+
+/obj/machinery/computer/refraction_advance/ui_act(action, list/params)
+	. = ..()
+	if(.)
+		return
+	var/datum/refraction_run/R = SSrefraction_railway.GetRunForCkey(usr.ckey)
+	if(!R)
+		return
+	switch(action)
+		if("toggle_ready")
+			if(!R.loadouts[usr.ckey])
+				to_chat(usr, span_warning("You must confirm a loadout before readying up."))
+				return
+			R.ready_states[usr.ckey] = !R.ready_states[usr.ckey]
+		if("begin_sector")
+			if(R.BeginSector(usr.ckey))
+				SStgui.close_uis(src)
+		if("force_begin_sector")
+			// Owner-only AFK escape hatch; BeginSector enforces owner.
+			if(R.BeginSector(usr.ckey, TRUE))
+				SStgui.close_uis(src)
+		if("return_to_lobby")
+			if(R.lobby_state == LOBBY_FINISHED)
+				R.ReturnToLobby()
+		if("abandon_run")
+			// Owner-only; two-click confirm is enforced UI-side.
+			R.AbandonRun(usr.ckey)
+		if("end_run_early")
+			// Owner-only; two-click confirm is enforced UI-side.
+			R.EndRunEarly(usr.ckey)
+		if("set_theme_music_volume")
+			R.SetMusicVolume(usr.ckey, params["volume"])
+		if("test_theme_music")
+			R.PlayMusicTestSound(usr.ckey)

@@ -10,6 +10,9 @@
 	dir = 1
 	},
 /obj/effect/decal/cleanable/cobweb,
+/obj/effect/landmark/wave_trigger{
+	controller_id = "passenger"
+	},
 /turf/open/floor/plasteel/dark,
 /area/city/outskirts)
 "eo" = (
@@ -24,8 +27,9 @@
 /turf/open/floor/plasteel/dark,
 /area/city/outskirts)
 "fV" = (
-/obj/structure/railing{
-	dir = 2
+/obj/structure/railing,
+/obj/effect/landmark/wave_spawn/dynamic{
+	controller_id = "passenger"
 	},
 /turf/open/floor/plasteel/dark,
 /area/city/outskirts)
@@ -34,6 +38,9 @@
 	dir = 1
 	},
 /obj/effect/decal/cleanable/cobweb/cobweb2,
+/obj/structure/wave_barrier{
+	controller_id = "passenger"
+	},
 /turf/open/floor/plasteel/dark,
 /area/city/outskirts)
 "hQ" = (
@@ -49,6 +56,21 @@
 "iO" = (
 /turf/open/floor/carpet/royalblue,
 /area/city/outskirts)
+"jr" = (
+/obj/effect/decal/cleanable/blood/footprints{
+	dir = 4
+	},
+/obj/effect/decal/cleanable/blood/footprints{
+	dir = 4
+	},
+/obj/effect/decal/cleanable/blood/tracks{
+	dir = 8
+	},
+/obj/effect/landmark/wave_trigger{
+	controller_id = "passenger"
+	},
+/turf/open/floor/carpet/royalblue,
+/area/city/outskirts)
 "kt" = (
 /obj/structure/barricade/wooden,
 /obj/structure/barricade/wooden/crude,
@@ -56,15 +78,36 @@
 	dir = 1
 	},
 /area/city/outskirts)
+"lj" = (
+/obj/effect/decal/cleanable/blood/drip,
+/obj/effect/landmark/wave_trigger{
+	controller_id = "passenger"
+	},
+/turf/open/floor/plasteel/dark/side,
+/area/city/outskirts)
 "lu" = (
 /obj/effect/decal/cleanable/blood/gibs/bubblegum,
 /turf/open/floor/plasteel/dark,
 /area/city/outskirts)
 "lz" = (
-/obj/structure/railing{
-	dir = 2
-	},
+/obj/structure/railing,
 /turf/open/floor/plasteel/dark/side,
+/area/city/outskirts)
+"lC" = (
+/obj/structure/wave_barrier{
+	controller_id = "passenger"
+	},
+/turf/open/floor/carpet/royalblue,
+/area/city/outskirts)
+"mF" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/decal/cleanable/blood/tracks{
+	dir = 8
+	},
+/obj/structure/wave_barrier{
+	controller_id = "passenger"
+	},
+/turf/open/floor/carpet/royalblue,
 /area/city/outskirts)
 "mH" = (
 /obj/effect/decal/cleanable/blood/drip,
@@ -82,9 +125,7 @@
 /turf/open/floor/plasteel/dark,
 /area/city/outskirts)
 "nz" = (
-/obj/machinery/light{
-	dir = 2
-	},
+/obj/machinery/light,
 /obj/effect/decal/cleanable/blood/gibs/old,
 /turf/open/floor/plasteel/dark,
 /area/city/outskirts)
@@ -130,11 +171,30 @@
 /area/city/outskirts)
 "tV" = (
 /obj/effect/decal/cleanable/xenoblood/xgibs,
+/obj/effect/landmark/wave_trigger{
+	controller_id = "passenger"
+	},
 /turf/open/floor/carpet/royalblue,
+/area/city/outskirts)
+"ue" = (
+/obj/structure/wave_barrier{
+	controller_id = "passenger"
+	},
+/turf/open/floor/plasteel/dark/side{
+	dir = 1
+	},
 /area/city/outskirts)
 "vr" = (
 /obj/effect/decal/cleanable/blood/drip,
 /turf/open/floor/plasteel/dark/side,
+/area/city/outskirts)
+"wZ" = (
+/obj/effect/landmark/wave_trigger{
+	controller_id = "passenger"
+	},
+/turf/open/floor/plasteel/dark/side{
+	dir = 1
+	},
 /area/city/outskirts)
 "xn" = (
 /obj/effect/decal/cleanable/blood/drip,
@@ -163,6 +223,13 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/plasteel/dark,
 /area/city/outskirts)
+"AE" = (
+/obj/machinery/light,
+/obj/structure/wave_barrier{
+	controller_id = "passenger"
+	},
+/turf/open/floor/plasteel/dark,
+/area/city/outskirts)
 "Bz" = (
 /obj/effect/decal/cleanable/blood/tracks{
 	dir = 9
@@ -173,6 +240,16 @@
 /obj/structure/barricade/wooden,
 /obj/structure/barricade/wooden/crude,
 /turf/open/floor/carpet/royalblue,
+/area/city/outskirts)
+"Cq" = (
+/obj/structure/chair/comfy/shuttle{
+	dir = 4
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/landmark/wave_spawn/dynamic{
+	controller_id = "passenger"
+	},
+/turf/open/floor/plasteel/dark,
 /area/city/outskirts)
 "Cr" = (
 /obj/effect/decal/cleanable/blood/footprints{
@@ -186,12 +263,22 @@
 "Cx" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/landmark/wave_trigger{
+	controller_id = "passenger"
+	},
 /turf/open/floor/carpet/royalblue,
 /area/city/outskirts)
 "CV" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/decal/cleanable/blood,
 /turf/open/floor/carpet/royalblue,
+/area/city/outskirts)
+"Em" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/landmark/wave_trigger{
+	controller_id = "passenger"
+	},
+/turf/open/floor/plasteel/dark,
 /area/city/outskirts)
 "Eu" = (
 /obj/structure/chair/comfy/shuttle{
@@ -203,6 +290,16 @@
 "Fv" = (
 /obj/structure/displaycase/trophy,
 /obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/plasteel/dark,
+/area/city/outskirts)
+"HD" = (
+/obj/effect/landmark/wave_trigger{
+	controller_id = "passenger"
+	},
+/turf/open/floor/plasteel/dark,
+/area/city/outskirts)
+"Jl" = (
+/obj/machinery/light,
 /turf/open/floor/plasteel/dark,
 /area/city/outskirts)
 "JY" = (
@@ -230,8 +327,9 @@
 /turf/open/floor/plasteel/dark/side,
 /area/city/outskirts)
 "OE" = (
-/obj/machinery/light{
-	dir = 2
+/obj/machinery/light,
+/obj/effect/landmark/wave_trigger{
+	controller_id = "passenger"
 	},
 /turf/open/floor/plasteel/dark,
 /area/city/outskirts)
@@ -252,13 +350,28 @@
 /obj/structure/railing{
 	dir = 1
 	},
+/obj/effect/landmark/wave_spawn/dynamic{
+	controller_id = "passenger"
+	},
 /turf/open/floor/plasteel/dark,
 /area/city/outskirts)
 "SZ" = (
 /turf/open/floor/plasteel/dark,
 /area/city/outskirts)
+"TG" = (
+/obj/structure/wave_barrier{
+	controller_id = "passenger"
+	},
+/turf/open/floor/plasteel/dark/side,
+/area/city/outskirts)
 "Ui" = (
 /obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/plasteel/dark,
+/area/city/outskirts)
+"VC" = (
+/obj/structure/wave_barrier{
+	controller_id = "passenger"
+	},
 /turf/open/floor/plasteel/dark,
 /area/city/outskirts)
 "Xh" = (
@@ -276,17 +389,26 @@
 /obj/structure/displaycase/trophy,
 /turf/open/floor/plasteel/dark,
 /area/city/outskirts)
+"Zt" = (
+/obj/structure/chair/comfy/shuttle{
+	dir = 4
+	},
+/obj/effect/landmark/wave_spawn/dynamic{
+	controller_id = "passenger"
+	},
+/turf/open/floor/plasteel/dark,
+/area/city/outskirts)
 
 (1,1,1) = {"
 nX
 cn
-Ui
-yw
+Em
+wZ
 tV
-rQ
+jr
 Cx
-vr
-SZ
+lj
+HD
 OE
 nX
 "}
@@ -318,7 +440,7 @@ nX
 "}
 (4,1,1) = {"
 nX
-Eu
+Cq
 Xh
 yw
 xn
@@ -326,7 +448,7 @@ hQ
 iO
 NN
 xF
-Xh
+Zt
 nX
 "}
 (5,1,1) = {"
@@ -391,12 +513,12 @@ iO
 CV
 qh
 SZ
-OE
+Jl
 nX
 "}
 (10,1,1) = {"
 nX
-Eu
+Cq
 Xh
 yw
 iO
@@ -404,7 +526,7 @@ Bz
 KM
 qh
 Xh
-Xh
+Zt
 nX
 "}
 (11,1,1) = {"
@@ -436,13 +558,13 @@ nX
 (13,1,1) = {"
 nX
 hN
-SZ
-yw
-eo
-iO
-iO
-qh
-SZ
-OE
+VC
+ue
+mF
+lC
+lC
+TG
+VC
+AE
 nX
 "}

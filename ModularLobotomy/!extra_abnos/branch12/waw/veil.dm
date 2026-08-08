@@ -40,9 +40,12 @@
 	abnormality_origin = ABNORMALITY_ORIGIN_BRANCH12
 	var/list/spawnables = list()
 
+/mob/living/simple_animal/hostile/abnormality/branch12/veil/Destroy()
+	spawnables = null
+	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/branch12/veil/Initialize()
-	..()
+	. = ..()
 	//We need a list of all abnormalities that are TETH to Waw level and Can breach.
 	var/list/queue = subtypesof(/mob/living/simple_animal/hostile/abnormality)
 	for(var/i in queue)
@@ -51,7 +54,7 @@
 			continue
 
 		if((initial(abno.threat_level)) <= WAW_LEVEL)
-			spawnables += abno
+			spawnables |= abno.type
 
 /mob/living/simple_animal/hostile/abnormality/branch12/veil/PostWorkEffect(mob/living/carbon/human/user, work_type, pe, work_time)
 	if(get_attribute_level(user, FORTITUDE_ATTRIBUTE) <80)

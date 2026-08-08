@@ -249,6 +249,16 @@
 	cost = 100
 	ego_tags = list(EGO_TAG_RANKBUMP)
 
+// Yinglong - tarnished
+/datum/ego_datum/weapon/tarnished
+	item_path = /obj/item/ego_weapon/ranged/pistol/tarnished
+	cost = 100
+	ego_tags = list(EGO_TAG_RANKBUMP)
+
+/datum/ego_datum/armor/tarnished
+	item_path = /obj/item/clothing/suit/armor/ego_gear/aleph/tarnished
+	cost = 100
+
 // The Adult Who Tells Lies - False Throne
 /datum/ego_datum/armor/throne
 	item_path = /obj/item/clothing/suit/armor/ego_gear/aleph/throne

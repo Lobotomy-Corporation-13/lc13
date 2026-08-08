@@ -556,3 +556,11 @@
 	// Apply the conversion locked status effect if they don't already have it
 	if(!H.has_status_effect(/datum/status_effect/conversion_locked))
 		H.apply_status_effect(/datum/status_effect/conversion_locked)
+
+/area/refraction
+	name = "Refraction Railway"
+	icon_state = "blue"
+	requires_power = FALSE
+	has_gravity = STANDARD_GRAVITY
+	sound_environment = SOUND_ENVIRONMENT_CAVE
+	dynamic_lighting = DYNAMIC_LIGHTING_FORCED

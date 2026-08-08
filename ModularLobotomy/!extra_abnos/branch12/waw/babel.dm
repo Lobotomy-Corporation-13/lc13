@@ -35,8 +35,14 @@
 
 /mob/living/simple_animal/hostile/abnormality/branch12/babel/SuccessEffect(mob/living/carbon/human/user, work_type, pe)
 	. = ..()
-	user.apply_status_effect(STATUS_EFFECT_RUMOR)
+	var/datum/status_effect/display/rumor/S = user.apply_status_effect(STATUS_EFFECT_RUMOR)
+	if(S)
+		S.RegisterSoul(src)
 	return
+
+/mob/living/simple_animal/hostile/abnormality/branch12/babel/Destroy()
+	QDEL_LIST(rumors)
+	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/branch12/babel/Life()
 	. = ..()
@@ -61,10 +67,11 @@
 	ADD_TRAIT(M, TRAIT_IMMOBILIZED, type)
 	ADD_TRAIT(M, TRAIT_HANDS_BLOCKED, type)
 	M.forceMove(evil)
-	for(var/mob/living/H in rumors)
-		H.remove_status_effect(STATUS_EFFECT_RUMOR)
+	for(var/datum/status_effect/display/rumor/i in rumors)
+		i.UnregisterSoul()
+		qdel(i)
 
-
+//This should be fine since a person exploding would result in the status effect being removed.
 // Rumor Effect
 /datum/status_effect/display/rumor
 	id = "rumor"
@@ -72,6 +79,7 @@
 	duration = -1
 	alert_type = null
 	display_name = "rumor"
+	on_remove_on_mob_delete = TRUE
 	var/heal_amount = 2
 	var/mob/living/simple_animal/hostile/abnormality/branch12/babel/connected_abno
 
@@ -79,10 +87,6 @@
 	. = ..()
 	if(ishuman(owner))
 		to_chat(owner, span_nicegreen("You have heard the rumor, and it must be spread"))
-		var/mob/living/carbon/human/H = owner
-		connected_abno = locate(/mob/living/simple_animal/hostile/abnormality/branch12/babel) in GLOB.abnormality_mob_list
-		connected_abno.rumors |= H
-
 
 /datum/status_effect/display/rumor/tick()
 	. = ..()
@@ -102,10 +106,20 @@
 
 /datum/status_effect/display/rumor/on_remove()
 	. = ..()
-	if(ishuman(owner))
-		var/mob/living/carbon/human/H = owner
-		connected_abno.rumors -= H
+	UnregisterSoul()
 
+/datum/status_effect/display/rumor/proc/RegisterSoul(new_link)
+	if(!new_link)
+		return
+	connected_abno = new_link
+	connected_abno.rumors += src
+	RegisterSignal(new_link, list(COMSIG_PARENT_QDELETING), PROC_REF(UnregisterSoul))
+
+/datum/status_effect/display/rumor/proc/UnregisterSoul()
+	if(connected_abno)
+		connected_abno.rumors -= src
+		UnregisterSignal(connected_abno, list(COMSIG_PARENT_QDELETING))
+	connected_abno = null
 
 //Her friend
 /mob/living/simple_animal/hostile/rumor
@@ -149,7 +163,7 @@
 	density = FALSE
 	animate(src, alpha = 0, time = 10 SECONDS)
 	QDEL_IN(src, 10 SECONDS)
-	..()
+	return ..()
 
 /mob/living/simple_animal/hostile/rumor/proc/FreeCursed()
 	var/spew_turf = pick(get_adjacent_open_turfs(src))
