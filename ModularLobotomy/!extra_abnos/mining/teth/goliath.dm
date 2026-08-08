@@ -36,7 +36,7 @@
 	rapid_melee = 2
 	melee_damage_type = RED_DAMAGE
 	move_to_delay = 6
-	damage_coeff = list(RED_DAMAGE = 0.6, WHITE_DAMAGE = 1.2, BLACK_DAMAGE = 1, PALE_DAMAGE = 2)
+	damage_coeff = list(RED_DAMAGE = 0.5, WHITE_DAMAGE = 1.2, BLACK_DAMAGE = 1, PALE_DAMAGE = 2)
 	patrol_cooldown_time = 5 SECONDS // Zooming around the place
 	melee_damage_lower = 20
 	melee_damage_upper = 30
