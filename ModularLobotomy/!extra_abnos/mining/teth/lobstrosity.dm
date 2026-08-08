@@ -56,6 +56,7 @@
 
 
 /mob/living/simple_animal/hostile/abnormality/mining/lobstrosity/Initialize()
+	..()
 	if(prob(50))
 		name = "tropical lobstrosity"
 		desc = "A marvel of evolution gone wrong, the sulfur lakes of lavaland have given them a vibrant, red hued shell. Beware its charge."
