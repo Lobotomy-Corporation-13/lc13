@@ -1,10 +1,12 @@
 GLOBAL_LIST_INIT(unspawned_sales, list(
-	/obj/structure/pe_sales/l_corp,
-	/obj/structure/pe_sales/w_corp,
-	/obj/structure/pe_sales/r_corp,
+	/obj/structure/pe_sales/h_corp,
+	/obj/structure/pe_sales/jcorp,
 	/obj/structure/pe_sales/k_corp,
+	/obj/structure/pe_sales/l_corp,
+	/obj/structure/pe_sales/r_corp,
 	/obj/structure/pe_sales/s_corp,
 	/obj/structure/pe_sales/n_corp,
+	/obj/structure/pe_sales/w_corp,
 	/obj/structure/pe_sales/limbus,
 	/obj/structure/pe_sales/hana,
 	/obj/structure/pe_sales/zwei,
@@ -17,9 +19,8 @@ GLOBAL_LIST_INIT(unspawned_sales, list(
 	/obj/structure/pe_sales/rosespanner,
 	/obj/structure/pe_sales/syndicate,
 	/obj/structure/pe_sales/backstreet,
-	/obj/structure/pe_sales/jcorp,
 	/obj/structure/pe_sales/thumb,
-))
+))d
 
 /obj/effect/landmark/salesspawn
 	name = "sales machine spawner"
@@ -34,4 +35,3 @@ GLOBAL_LIST_INIT(unspawned_sales, list(
 	var/obj/structure/pe_sales/spawning = pick_n_take(GLOB.unspawned_sales)
 	new spawning(get_turf(src))
 	return INITIALIZE_HINT_QDEL
-

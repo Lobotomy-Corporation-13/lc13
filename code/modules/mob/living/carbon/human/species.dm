@@ -1376,7 +1376,7 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 				return FALSE
 		user.do_attack_animation(target, atk_effect)
 
-		var/damage = rand(user.dna.species.punchdamagelow, user.dna.species.punchdamagehigh) * (1 + (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE) + get_attribute_level(user, FORTITUDE_ATTRIBUTE)) / 100)
+		var/damage = rand(user.dna.species.punchdamagelow, user.dna.species.punchdamagehigh) * (1 + (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE) + get_attribute_level(user, FORTITUDE_ATTRIBUTE)) / 100) + user.fisticuffs_bonus
 
 		var/obj/item/bodypart/affecting = target.get_bodypart(ran_zone(user.zone_selected))
 
