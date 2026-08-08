@@ -36,7 +36,7 @@
 	spawn_amount = 3
 	spawn_type = list(
 		/mob/living/simple_animal/hostile/ordeal/citrine/knight,
-		/mob/living/simple_animal/hostile/ordeal/citrine/archer,
+		/mob/living/simple_animal/hostile/ordeal/citrine/archer/noon,
 		/mob/living/simple_animal/hostile/ordeal/citrine/priest,
 		)
 
