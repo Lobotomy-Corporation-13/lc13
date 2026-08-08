@@ -3,6 +3,9 @@
 /obj/effect/turf_decal/trimline/blue/filled/warning{
 	dir = 9
 	},
+/obj/effect/landmark/wave_trigger{
+	controller_id = "firstclass"
+	},
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirts)
 "cD" = (
@@ -30,6 +33,9 @@
 "kR" = (
 /obj/effect/decal/cleanable/glass,
 /obj/effect/decal/cleanable/blood/gibs/down,
+/obj/effect/landmark/wave_trigger{
+	controller_id = "firstclass"
+	},
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirts)
 "lO" = (
@@ -54,11 +60,17 @@
 /obj/effect/turf_decal/trimline/blue/filled/warning{
 	dir = 5
 	},
+/obj/structure/wave_barrier{
+	controller_id = "firstclass"
+	},
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirts)
 "of" = (
 /obj/effect/turf_decal/trimline/blue/filled/warning{
 	dir = 10
+	},
+/obj/effect/landmark/wave_trigger{
+	controller_id = "firstclass"
 	},
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirts)
@@ -66,6 +78,18 @@
 /obj/machinery/door/poddoor/shutters/window/preopen,
 /obj/effect/decal/cleanable/blood/tracks,
 /turf/open/floor/circuit/red,
+/area/city/outskirts)
+"rZ" = (
+/obj/effect/landmark/wave_trigger{
+	controller_id = "firstclass"
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirts)
+"sL" = (
+/obj/effect/landmark/wave_trigger{
+	controller_id = "firstclass"
+	},
+/turf/open/floor/circuit,
 /area/city/outskirts)
 "sX" = (
 /obj/machinery/light{
@@ -77,6 +101,12 @@
 /obj/structure/window/shuttle/survival_pod,
 /turf/open/floor/circuit/red,
 /area/city/outskirts)
+"uB" = (
+/obj/structure/wave_barrier{
+	controller_id = "firstclass"
+	},
+/turf/open/floor/circuit,
+/area/city/outskirts)
 "wH" = (
 /obj/effect/decal/cleanable/blood,
 /turf/open/floor/circuit/red,
@@ -85,10 +115,6 @@
 /obj/effect/decal/cleanable/blood/drip,
 /obj/effect/decal/cleanable/blood,
 /turf/open/floor/circuit/red,
-/area/city/outskirts)
-"Bp" = (
-/obj/machinery/door/poddoor/shutters/window,
-/turf/open/floor/circuit,
 /area/city/outskirts)
 "Bu" = (
 /obj/effect/decal/cleanable/glass,
@@ -127,8 +153,9 @@
 /turf/open/floor/carpet/blue,
 /area/city/outskirts)
 "FV" = (
-/obj/machinery/clonepod{
-	pixel_y = 0
+/obj/machinery/clonepod,
+/obj/effect/landmark/wave_spawn/dynamic{
+	controller_id = "firstclass"
 	},
 /turf/open/floor/plating,
 /area/city/outskirts)
@@ -138,15 +165,17 @@
 /obj/effect/decal/cleanable/blood/gibs/up,
 /turf/open/floor/circuit/red,
 /area/city/outskirts)
-"GJ" = (
-/obj/machinery/clonepod,
-/turf/open/floor/plating,
-/area/city/outskirts)
 "Oa" = (
 /obj/effect/decal/cleanable/blood/tracks{
 	dir = 6
 	},
 /turf/open/floor/carpet/blue,
+/area/city/outskirts)
+"Ot" = (
+/obj/structure/wave_barrier{
+	controller_id = "firstclass"
+	},
+/turf/open/floor/mineral/plastitanium,
 /area/city/outskirts)
 "Pg" = (
 /obj/effect/turf_decal/trimline/blue/filled/warning,
@@ -176,13 +205,6 @@
 "Tt" = (
 /obj/effect/decal/cleanable/blood/tracks{
 	dir = 9
-	},
-/turf/open/floor/carpet/blue,
-/area/city/outskirts)
-"Uw" = (
-/obj/effect/decal/cleanable/glass,
-/obj/machinery/light{
-	dir = 2
 	},
 /turf/open/floor/carpet/blue,
 /area/city/outskirts)
@@ -231,21 +253,15 @@
 /obj/effect/turf_decal/trimline/blue/filled/warning{
 	dir = 6
 	},
+/obj/structure/wave_barrier{
+	controller_id = "firstclass"
+	},
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirts)
 "Ym" = (
 /obj/effect/decal/cleanable/blood/gibs,
 /obj/effect/decal/cleanable/blood/tracks,
 /turf/open/floor/circuit/red,
-/area/city/outskirts)
-"Yz" = (
-/obj/structure/window/shuttle/survival_pod,
-/turf/open/floor/circuit,
-/area/city/outskirts)
-"YR" = (
-/obj/structure/window/shuttle/survival_pod,
-/obj/effect/decal/cleanable/glass,
-/turf/open/floor/circuit,
 /area/city/outskirts)
 "Zm" = (
 /obj/effect/decal/cleanable/blood/gibs/torso,
@@ -260,13 +276,13 @@
 (1,1,1) = {"
 iU
 bV
-VY
+rZ
 kR
-UG
-UG
-UG
-VY
-VY
+sL
+sL
+sL
+rZ
+rZ
 of
 iU
 "}
@@ -280,19 +296,19 @@ Fc
 WZ
 eU
 iU
-Yz
+Te
 iU
 "}
 (3,1,1) = {"
 iU
-GJ
+FV
 rH
 Oa
 Ew
 lW
 RJ
 FB
-Bp
+rH
 FV
 iU
 "}
@@ -306,7 +322,7 @@ um
 ZX
 eU
 iU
-Yz
+um
 iU
 "}
 (5,1,1) = {"
@@ -324,9 +340,9 @@ iU
 "}
 (6,1,1) = {"
 iU
-Yz
+um
 iU
-Uw
+lO
 iU
 um
 wH
@@ -337,20 +353,20 @@ iU
 "}
 (7,1,1) = {"
 iU
-GJ
-Bp
+FV
+rH
 FB
 EN
 Gi
 XK
 Tt
 rH
-GJ
+FV
 iU
 "}
 (8,1,1) = {"
 iU
-Yz
+um
 iU
 FB
 xk
@@ -376,7 +392,7 @@ iU
 "}
 (10,1,1) = {"
 iU
-Yz
+um
 iU
 sX
 wH
@@ -384,25 +400,25 @@ um
 iU
 Yc
 iU
-YR
+Te
 iU
 "}
 (11,1,1) = {"
 iU
-GJ
-Bp
+FV
+rH
 FB
 Cn
 Zm
 Ym
 Oa
-Bp
-GJ
+rH
+FV
 iU
 "}
 (12,1,1) = {"
 iU
-Yz
+um
 iU
 Du
 Zm
@@ -410,19 +426,19 @@ Sx
 iU
 lO
 iU
-Yz
+um
 iU
 "}
 (13,1,1) = {"
 iU
 ns
-VY
-VY
-UG
-UG
-UG
-VY
-VY
+Ot
+Ot
+uB
+uB
+uB
+Ot
+Ot
 Ye
 iU
 "}

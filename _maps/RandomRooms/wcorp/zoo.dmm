@@ -53,6 +53,9 @@
 	dir = 4
 	},
 /obj/effect/turf_decal/trimline/green/filled/corner,
+/obj/effect/landmark/wave_trigger{
+	controller_id = "zoo"
+	},
 /turf/open/floor/plasteel/dark,
 /area/city/outskirts)
 "h" = (
@@ -110,6 +113,9 @@
 /area/city/outskirts)
 "p" = (
 /obj/structure/flora/ausbushes/ywflowers,
+/obj/effect/landmark/wave_spawn/dynamic{
+	controller_id = "zoo"
+	},
 /turf/open/floor/holofloor/grass,
 /area/city/outskirts)
 "q" = (
@@ -121,6 +127,9 @@
 	},
 /obj/effect/turf_decal/trimline/green/filled/corner{
 	dir = 1
+	},
+/obj/structure/wave_barrier{
+	controller_id = "zoo"
 	},
 /turf/open/floor/plasteel/dark,
 /area/city/outskirts)
@@ -179,6 +188,9 @@
 /obj/effect/turf_decal/trimline/green/filled/line{
 	dir = 4
 	},
+/obj/effect/landmark/wave_trigger{
+	controller_id = "zoo"
+	},
 /turf/open/floor/plasteel/dark,
 /area/city/outskirts)
 "y" = (
@@ -207,16 +219,34 @@
 	},
 /turf/open/floor/holofloor/grass,
 /area/city/outskirts)
+"C" = (
+/obj/effect/turf_decal/trimline/green/filled/line{
+	dir = 4
+	},
+/obj/effect/turf_decal/trimline/green/filled/line{
+	dir = 8
+	},
+/obj/structure/wave_barrier{
+	controller_id = "zoo"
+	},
+/turf/open/floor/plasteel/dark,
+/area/city/outskirts)
 "D" = (
 /obj/effect/turf_decal/trimline/green/filled/line{
 	dir = 9
 	},
 /obj/effect/turf_decal/trimline/green/filled/corner,
+/obj/effect/landmark/wave_trigger{
+	controller_id = "zoo"
+	},
 /turf/open/floor/plasteel/dark,
 /area/city/outskirts)
 "E" = (
 /obj/structure/flora/ausbushes,
 /mob/living/simple_animal/chicken,
+/obj/effect/landmark/wave_spawn/dynamic{
+	controller_id = "zoo"
+	},
 /turf/open/floor/holofloor/grass,
 /area/city/outskirts)
 "F" = (
@@ -262,6 +292,13 @@
 /obj/effect/decal/cleanable/blood/tracks,
 /turf/open/floor/holofloor/grass,
 /area/city/outskirts)
+"K" = (
+/obj/structure/flora/ausbushes/leafybush,
+/obj/effect/landmark/wave_spawn/dynamic{
+	controller_id = "zoo"
+	},
+/turf/open/floor/holofloor/grass,
+/area/city/outskirts)
 "L" = (
 /obj/structure/railing{
 	dir = 1
@@ -294,6 +331,9 @@
 	},
 /obj/effect/turf_decal/trimline/green/filled/corner{
 	dir = 8
+	},
+/obj/structure/wave_barrier{
+	controller_id = "zoo"
 	},
 /turf/open/floor/plasteel/dark,
 /area/city/outskirts)
@@ -333,6 +373,20 @@
 /obj/effect/decal/cleanable/blood/tracks,
 /turf/open/floor/plasteel/dark,
 /area/city/outskirts)
+"S" = (
+/obj/structure/flora/ausbushes/fullgrass,
+/obj/effect/landmark/wave_spawn/dynamic{
+	controller_id = "zoo"
+	},
+/turf/open/floor/holofloor/grass,
+/area/city/outskirts)
+"T" = (
+/obj/structure/flora/ausbushes,
+/obj/effect/landmark/wave_spawn/dynamic{
+	controller_id = "zoo"
+	},
+/turf/open/floor/holofloor/grass,
+/area/city/outskirts)
 "U" = (
 /obj/effect/turf_decal/trimline/green/filled/line{
 	dir = 10
@@ -341,6 +395,9 @@
 	dir = 4
 	},
 /obj/effect/decal/cleanable/blood/splatter,
+/obj/effect/landmark/wave_trigger{
+	controller_id = "zoo"
+	},
 /turf/open/floor/plasteel/dark,
 /area/city/outskirts)
 "V" = (
@@ -368,6 +425,9 @@
 /obj/effect/turf_decal/trimline/green/filled/corner{
 	dir = 1
 	},
+/obj/structure/wave_barrier{
+	controller_id = "zoo"
+	},
 /turf/open/floor/plasteel/dark,
 /area/city/outskirts)
 "Y" = (
@@ -380,6 +440,9 @@
 /obj/effect/decal/cleanable/blood/gibs/up,
 /obj/effect/decal/cleanable/blood/tracks{
 	pixel_y = -11
+	},
+/obj/effect/landmark/wave_spawn/dynamic{
+	controller_id = "zoo"
 	},
 /turf/open/floor/holofloor/grass,
 /area/city/outskirts)
@@ -418,7 +481,7 @@ E
 m
 h
 m
-z
+S
 m
 h
 a
@@ -466,7 +529,7 @@ a
 a
 h
 L
-r
+K
 m
 F
 z
@@ -518,7 +581,7 @@ a
 a
 h
 m
-i
+T
 H
 h
 L
@@ -543,13 +606,13 @@ a
 (13,1,1) = {"
 a
 O
-j
-j
-j
+C
+C
+C
 q
-j
-j
-j
+C
+C
+C
 X
 a
 "}

@@ -12,6 +12,34 @@
 	},
 /turf/open/floor/carpet/blue,
 /area/city/outskirts)
+"h" = (
+/obj/effect/decal/cleanable/blood/gibs/core,
+/obj/effect/landmark/wave_spawn/dynamic{
+	controller_id = "carriage2"
+	},
+/turf/open/floor/plasteel/bluespace,
+/area/city/outskirts)
+"i" = (
+/obj/effect/landmark/wave_spawn/dynamic{
+	controller_id = "carriage2"
+	},
+/turf/open/floor/plasteel/bluespace,
+/area/city/outskirts)
+"m" = (
+/obj/effect/landmark/wave_trigger{
+	controller_id = "carriage2"
+	},
+/turf/open/floor/carpet/red,
+/area/city/outskirts)
+"n" = (
+/obj/structure/window/reinforced{
+	dir = 8
+	},
+/obj/effect/landmark/wave_spawn/dynamic{
+	controller_id = "carriage2"
+	},
+/turf/open/floor/plasteel/bluespace,
+/area/city/outskirts)
 "p" = (
 /obj/effect/decal/cleanable/blood/gibs/core,
 /obj/structure/window/reinforced{
@@ -35,7 +63,6 @@
 	set_cap = 3;
 	set_luminosity = 24
 	},
-/obj/effect/landmark/department_center,
 /turf/open/floor/plasteel/bluespace,
 /area/city/outskirts)
 "C" = (
@@ -47,10 +74,6 @@
 	},
 /turf/open/floor/plasteel/bluespace,
 /area/city/outskirts)
-"F" = (
-/obj/effect/landmark/department_center,
-/turf/open/floor/plasteel/bluespace,
-/area/city/outskirts)
 "G" = (
 /obj/effect/decal/cleanable/blood/gibs/bubblegum,
 /obj/effect/decal/cleanable/blood/gibs/bubblegum,
@@ -59,6 +82,19 @@
 "H" = (
 /obj/effect/decal/cleanable/blood/gibs/core,
 /turf/open/floor/plasteel/bluespace,
+/area/city/outskirts)
+"J" = (
+/obj/effect/decal/cleanable/blood/gibs/bubblegum,
+/obj/effect/landmark/wave_trigger{
+	controller_id = "carriage2"
+	},
+/turf/open/floor/plasteel/bluespace,
+/area/city/outskirts)
+"K" = (
+/obj/structure/wave_barrier{
+	controller_id = "carriage2"
+	},
+/turf/open/floor/carpet/blue,
 /area/city/outskirts)
 "L" = (
 /obj/structure/chair/comfy/shuttle{
@@ -70,11 +106,36 @@
 "M" = (
 /turf/open/floor/carpet/blue,
 /area/city/outskirts)
+"N" = (
+/obj/effect/landmark/wave_trigger{
+	controller_id = "carriage2"
+	},
+/turf/open/floor/plasteel/bluespace,
+/area/city/outskirts)
+"P" = (
+/obj/effect/landmark/wave_spawn/dynamic{
+	controller_id = "carriage2"
+	},
+/turf/open/floor/carpet/blue,
+/area/city/outskirts)
 "T" = (
 /obj/effect/decal/cleanable/blood/gibs/bubblegum,
 /turf/open/floor/plasteel/bluespace,
 /area/city/outskirts)
+"U" = (
+/obj/structure/wave_barrier{
+	controller_id = "carriage2"
+	},
+/turf/open/floor/plasteel/bluespace,
+/area/city/outskirts)
 "V" = (
+/turf/open/floor/plasteel/bluespace,
+/area/city/outskirts)
+"W" = (
+/obj/effect/decal/cleanable/blood/gibs/core,
+/obj/effect/landmark/wave_trigger{
+	controller_id = "carriage2"
+	},
 /turf/open/floor/plasteel/bluespace,
 /area/city/outskirts)
 "X" = (
@@ -106,13 +167,13 @@
 (1,1,1) = {"
 a
 c
-q
-T
-V
-H
-V
-H
-H
+m
+J
+N
+W
+N
+W
+W
 C
 a
 "}
@@ -157,15 +218,15 @@ a
 "}
 (5,1,1) = {"
 a
-V
-V
-T
-V
-V
-V
+i
 V
 T
 V
+V
+V
+V
+T
+i
 a
 "}
 (6,1,1) = {"
@@ -196,7 +257,7 @@ a
 "}
 (8,1,1) = {"
 a
-V
+i
 T
 T
 V
@@ -204,7 +265,7 @@ V
 V
 V
 V
-H
+h
 a
 "}
 (9,1,1) = {"
@@ -235,15 +296,15 @@ a
 "}
 (11,1,1) = {"
 a
-D
-F
+n
+V
 M
 V
 M
 M
 V
-F
-M
+V
+P
 a
 "}
 (12,1,1) = {"
@@ -261,14 +322,14 @@ a
 "}
 (13,1,1) = {"
 a
-M
-V
-M
-V
-V
-M
-M
-V
-M
+K
+U
+K
+U
+U
+K
+K
+U
+K
 a
 "}
