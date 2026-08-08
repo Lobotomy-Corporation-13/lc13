@@ -1,0 +1,5 @@
+author: "Kitsunemitsu"
+delete-after: True
+changes:
+  - bugfix: "Citrine noon uses the correct mobs"
+  - balance: "Citrine Priests and Knights create more faith"
