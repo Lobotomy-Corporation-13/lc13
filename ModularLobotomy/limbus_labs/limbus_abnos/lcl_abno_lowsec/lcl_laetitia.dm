@@ -267,6 +267,10 @@
 
 	var/pranked = FALSE
 	var/good_item_spawned = 3 //High risk high reward.
+	///RED damage to whoever unwraps it. Everyone else caught in it takes half.
+	var/gift_damage = 80
+	///Tiles out from the gift the surprise reaches. 1 is the 3x3 around it.
+	var/gift_range = 1
 	var/list/good_items = list(
 	/obj/item/reagent_containers/hypospray/medipen/mental,
 	/obj/item/reagent_containers/hypospray/medipen/salacid,
@@ -288,10 +292,37 @@
 /obj/item/laetitia_bomb_gift/attack_self(mob/user)
 	var/turf/gift_turf = get_turf(src)
 	if(pranked)
-		explosion(gift_turf, 0, 0, 2, 3, 0, TRUE, FALSE, 0, TRUE) //It hurts like hell and will probably take off limbs, but it's supposed to be a risky gamble.
-		playsound(get_turf(src), 'sound/effects/explosion1.ogg', 30, 1) //We call the sound manually to not make them deal with the annoying deafening effect.
+		Detonate(gift_turf, user)
 	else
 		for(var/i = 1 to good_item_spawned)
 			var/item_type = pick(good_items)
 			new item_type (gift_turf)
 	qdel(src)
+
+/obj/item/laetitia_bomb_gift/proc/Detonate(turf/epicentre, mob/user)
+	playsound(epicentre, 'sound/effects/explosion1.ogg', 30, 1) //Manually, so nobody gets the deafening.
+	new /obj/effect/temp_visual/explosion(epicentre)
+	for(var/mob/living/L in range(gift_range, epicentre))
+		var/dealt = L.deal_damage(L == user ? gift_damage : gift_damage * 0.5, RED_DAMAGE, src, attack_type = ATTACK_TYPE_SPECIAL)
+		if(dealt > 0 && prob(dealt))
+			Delimb(L)
+
+///Takes an arm or a leg, if there is one left to take. Heads and chests are left alone.
+/obj/item/laetitia_bomb_gift/proc/Delimb(mob/living/victim)
+	if(!iscarbon(victim))
+		return
+	var/mob/living/carbon/C = victim
+	var/list/parts = list()
+	for(var/obj/item/bodypart/BP in C.bodyparts)
+		if(BP.body_part == HEAD || BP.body_part == CHEST)
+			continue
+		if(BP.dismemberable)
+			parts += BP
+	if(!length(parts))
+		return
+	var/obj/item/bodypart/lost = pick(parts)
+	var/lost_name = lost.name
+	if(!lost.dismember())
+		return
+	C.visible_message(span_danger("[C]'s [lost_name] comes away with the wrapping paper!"), \
+		span_userdanger("Your [lost_name] comes away with the wrapping paper!"))

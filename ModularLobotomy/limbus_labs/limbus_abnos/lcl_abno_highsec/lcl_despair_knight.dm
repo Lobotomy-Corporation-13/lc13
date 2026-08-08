@@ -93,6 +93,14 @@
 	ClearBlessing()
 	return ..()
 
+/mob/living/simple_animal/hostile/limbus_abno/despair_knight/Login()
+	. = ..()
+	if(!. || !client)
+		return FALSE
+	if(crystallized && !manifest)
+		Crystallize(FALSE)
+		to_chat(src, span_notice("The crystal sloughs off you. You can move again."))
+
 /mob/living/simple_animal/hostile/limbus_abno/despair_knight/SelfStatusReadout()
 	. = ..()
 	. += "Blessed: [blessed_human ? blessed_human.real_name : "no one"]"
@@ -187,7 +195,9 @@
 	blessed_human = chosen
 	//She only perceives their surroundings while directly observing (manifested beside them),
 	//so there is no passive hear/see relay to spam her while she sits in her body.
-	RegisterSignal(chosen, list(COMSIG_LIVING_DEATH, COMSIG_HUMAN_INSANE), PROC_REF(OnBlessedLost))
+	//QDELETING matters as much as death: cryo deletes the ward's mob outright, and without this
+	//the vow was left pointing at a corpse-less ghost of a reference.
+	RegisterSignal(chosen, list(COMSIG_LIVING_DEATH, COMSIG_HUMAN_INSANE, COMSIG_PARENT_QDELETING), PROC_REF(OnBlessedLost))
 	RegisterSignal(chosen, COMSIG_MOB_AFTER_APPLY_DAMGE, PROC_REF(OnBlessedHurt))
 	//+25% attunement safe limit for her EGO family.
 	var/key = "[chosen.ckey]-[attunement_family]"
@@ -206,22 +216,28 @@
 	if(!blessed_human)
 		return
 	var/mob/living/carbon/human/H = blessed_human
-	UnregisterSignal(H, list(COMSIG_LIVING_DEATH, COMSIG_HUMAN_INSANE, COMSIG_MOB_AFTER_APPLY_DAMGE))
-	H.cut_overlay(mutable_appearance('ModularLobotomy/_Lobotomyicons/tegu_effects.dmi', "despair", -MUTATIONS_LAYER))
-	var/key = "[H.ckey]-[attunement_family]"
-	GLOB.lce_attunement_affinity[key] = max(0, (GLOB.lce_attunement_affinity[key] || 0) - bless_affinity)
-	RefreshLCEAttunement(H, attunement_family)
-	to_chat(H, span_warning("The protection over you fades away."))
+	//Dropped first, so anything this proc goes on to touch cannot re-enter through a stale vow.
 	blessed_human = null
 	defend_ready = FALSE
 	clear_alert("despair_danger")
+	//Keyed by ckey rather than by mob, so it is still worth undoing when the mob has gone.
+	if(H.ckey)
+		var/key = "[H.ckey]-[attunement_family]"
+		GLOB.lce_attunement_affinity[key] = max(0, (GLOB.lce_attunement_affinity[key] || 0) - bless_affinity)
+	//Everything below reaches into the ward itself, and this often runs because the ward is being
+	//deleted - cryo does exactly that. Touching a mob mid-Destroy is how the vow used to break.
+	if(!QDELETED(H))
+		UnregisterSignal(H, list(COMSIG_LIVING_DEATH, COMSIG_HUMAN_INSANE, COMSIG_MOB_AFTER_APPLY_DAMGE, COMSIG_PARENT_QDELETING))
+		H.cut_overlay(mutable_appearance('ModularLobotomy/_Lobotomyicons/tegu_effects.dmi', "despair", -MUTATIONS_LAYER))
+		RefreshLCEAttunement(H, attunement_family)
+		to_chat(H, span_warning("The protection over you fades away."))
 	update_action_buttons()
 
 //Only breach trigger. Breach() clears the blessing, freeing her to bless again.
 /mob/living/simple_animal/hostile/limbus_abno/despair_knight/proc/OnBlessedLost(datum/source)
 	SIGNAL_HANDLER
 	to_chat(src, span_userdanger("Your blessed one is lost to you. Grief takes hold."))
-	Breach()
+	INVOKE_ASYNC(src, PROC_REF(Breach))
 
 /mob/living/simple_animal/hostile/limbus_abno/despair_knight/proc/DespairWhisper()
 	if(!blessed_human)
@@ -242,7 +258,7 @@
 	if(communion_view)
 		to_chat(src, span_warning("You cannot manifest while communing through your EGO."))
 		return
-	if(!blessed_human || manifest || crystallized || breached || !mind)
+	if(QDELETED(blessed_human) || manifest || crystallized || breached || !mind)
 		return
 	Crystallize(TRUE)
 	manifest = new /mob/camera/despair_manifest(get_turf(blessed_human), src, blessed_human)
@@ -258,6 +274,10 @@
 /mob/living/simple_animal/hostile/limbus_abno/despair_knight/proc/ReturnToBody()
 	if(!manifest)
 		return
+	//Dropped BEFORE the mind moves. client.images belongs to the client, not the mob, so once the
+	//mind has left the projection its Destroy() finds no client to clean up and the image is
+	//stranded in the player's client pointing at a deleted mob.
+	manifest.ClearImage()
 	if(manifest.mind)
 		manifest.mind.transfer_to(src)
 	QDEL_NULL(manifest)
@@ -284,7 +304,7 @@
 // Defend - alert + a timed teleport when the blessed is gravely hurt.
 /mob/living/simple_animal/hostile/limbus_abno/despair_knight/proc/OnBlessedHurt(datum/source, damage, damagetype)
 	SIGNAL_HANDLER
-	if(!blessed_human || world.time < defend_cooldown)
+	if(QDELETED(blessed_human) || world.time < defend_cooldown)
 		return
 	var/hp_frac = blessed_human.health / blessed_human.maxHealth
 	var/sp_frac = 1
@@ -307,11 +327,14 @@
 	update_action_buttons()
 
 /mob/living/simple_animal/hostile/limbus_abno/despair_knight/proc/DefendTeleport()
-	if(!defend_ready || !blessed_human || crystallized)
+	if(!defend_ready || QDELETED(blessed_human) || crystallized)
 		return
-	var/turf/dest = get_step(get_turf(blessed_human), pick(GLOB.cardinals))
+	var/turf/ward_turf = get_turf(blessed_human)
+	if(!ward_turf) //Nowhere to rush to; forceMove(null) would put her in nullspace.
+		return
+	var/turf/dest = get_step(ward_turf, pick(GLOB.cardinals))
 	if(!dest || dest.density)
-		dest = get_turf(blessed_human)
+		dest = ward_turf
 	if(manifest)
 		ReturnToBody()
 	new /obj/effect/temp_visual/guardian/phase(get_turf(src))
@@ -462,23 +485,37 @@
 	R.Grant(src)
 
 /mob/camera/despair_manifest/Destroy()
-	if(blessed?.client)
-		blessed.client.images.Remove(current_image)
-	if(client)
-		client.images.Remove(current_image)
+	ClearImage()
 	body = null
 	blessed = null
 	return ..()
 
+///Takes the projection's image back off every client that could be holding it. The body is in
+///that list because ReturnToBody() hands the mind over before this mob dies, so by then the
+///viewer is the knight, not the projection.
+/mob/camera/despair_manifest/proc/ClearImage()
+	if(!current_image)
+		return
+	for(var/client/C in list(client, blessed?.client, body?.client))
+		C.images -= current_image
+	current_image = null
+
 /mob/camera/despair_manifest/proc/OnBlessedGone(datum/source)
 	SIGNAL_HANDLER
+	//Deferred: this fires from inside the ward's Destroy(), and the recall moves a player's mind.
 	if(body)
-		body.ReturnToBody()
+		INVOKE_ASYNC(body, TYPE_PROC_REF(/mob/living/simple_animal/hostile/limbus_abno/despair_knight, ReturnToBody))
 
 /mob/camera/despair_manifest/Login()
 	. = ..()
 	if(!. || !client)
 		return FALSE
+	//A projection that outlived its ward is a dead end - there is nothing to watch, nothing to
+	//move towards, and the body is still crystallised. Never leave anyone logged into one.
+	if(QDELETED(blessed))
+		to_chat(src, span_warning("The one you watched over is gone. You are drawn back into your body."))
+		body?.ReturnToBody()
+		return
 	to_chat(src, span_notice("<b>You manifest beside [blessed].</b> Only they can see or hear you. Stay close to them."))
 	Show()
 
@@ -501,7 +538,7 @@
 /mob/camera/despair_manifest/Move(atom/newloc, direction)
 	if(world.time < move_delay)
 		return FALSE
-	if(!blessed || get_dist(newloc, blessed) > 9)
+	if(QDELETED(blessed) || get_dist(newloc, blessed) > 9)
 		to_chat(src, span_warning("You cannot drift so far from the one you watch over."))
 		recall()
 		return FALSE
@@ -514,8 +551,13 @@
 	Show()
 
 /mob/camera/despair_manifest/proc/recall()
-	if(blessed)
-		forceMove(get_turf(blessed))
+	var/turf/home = QDELETED(blessed) ? null : get_turf(blessed)
+	//No ward left to snap back to. forceMove(null) here would leave the player's client sitting in
+	//a nullspace camera with nothing to look at and no way back out of it.
+	if(!home)
+		body?.ReturnToBody()
+		return
+	forceMove(home)
 
 //Speech only reaches the blessed (and the manifest itself).
 /mob/camera/despair_manifest/say(message, bubble_type, list/spans = list(), sanitize = TRUE, datum/language/language = null, ignore_spam = FALSE, forced = null)
