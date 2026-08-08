@@ -698,3 +698,41 @@
 	name = "apocalypse bird plushie"
 	desc = "A large plushie that resembles the beast of the black forest."
 	icon_state = "apocbird"
+
+
+// APR
+/obj/item/toy/plush/benjamingay
+	name = "benjamin plushie"
+	desc = "A plushie depicting a researcher that resembles Hokma a bit too much."
+	icon_state = "benjamingay"
+	gender = MALE
+	unique_pet = "You pet the benjamin plushie. Gay rights!"
+
+/obj/item/toy/plush/bongtrans
+	name = "bongbong plushie"
+	desc = "A plushie depicting the Lobotomy Corporation"
+	icon_state = "bongtrans"
+	unique_pet = "Trans rights, Bong!"
+
+/obj/item/toy/plush/ayinfluid
+	name = "ayin plushie"
+	desc = "A plushie depicting a researcher that did <b>nothing wrong</b>." // it's true, you know...
+	icon_state = "ayinfluid"
+	gender = MALE
+	unique_pet = "You pet the ayin plushie. Genderfluid rights!"
+
+/obj/item/toy/plush/angelaroace
+	name = "angela plushie"
+	desc = "A plushie depicting Lobotomy Corporation's AI."
+	icon_state = "angelaroace"
+	gender = FEMALE
+	unique_pet = "You pet the angela plushie. Aroace rights!"
+
+/obj/item/toy/plush/myolesbian
+	name = "myo plushie"
+	desc = "A plushie depicting a mercenary captain."
+	icon_state = "myolesbian"
+	gender = FEMALE
+	squeak_override = list('sound/effects/yem.ogg'=1)
+	unique_pet = "You pet the myo plushie, yem. Lesbian rights!"
+
