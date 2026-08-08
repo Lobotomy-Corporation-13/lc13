@@ -1504,11 +1504,11 @@
 	},
 /area/lce/research)
 "iZ" = (
-/obj/machinery/computer/lce_cargo{
-	dir = 8
+/obj/effect/spawner/structure/window/reinforced{
+	max_integrity = 3000
 	},
-/turf/open/floor/mineral/titanium/tiled/white,
-/area/lce/service/lounge)
+/turf/open/floor/facility/dark,
+/area/lce/hallway/west)
 "je" = (
 /obj/structure/table/wood/fancy,
 /obj/machinery/stonkmarket{
@@ -2013,9 +2013,10 @@
 /turf/open/floor/facility/dark,
 /area/lce/research/director)
 "lT" = (
-/obj/machinery/lce_export_pad,
-/turf/open/floor/mineral/titanium/tiled/white,
-/area/lce/service/lounge)
+/obj/structure/rack,
+/obj/item/stack/sheet/glass/fifty,
+/turf/open/floor/mineral/titanium/tiled,
+/area/lce/hallway/west)
 "lW" = (
 /obj/machinery/button/crematorium{
 	pixel_x = 25
@@ -2729,7 +2730,6 @@
 /area/lce/support/telecomms)
 "qJ" = (
 /obj/structure/rack,
-/obj/item/storage/box/monkeycubes,
 /obj/machinery/light{
 	dir = 8;
 	pixel_x = -9;
@@ -3195,10 +3195,6 @@
 /area/lce/security/armoury)
 "tG" = (
 /obj/structure/rack,
-/obj/item/storage/box/barrier,
-/obj/item/storage/box/barrier,
-/obj/item/storage/box/barrier,
-/obj/item/gun/grenadelauncher,
 /turf/open/floor/mineral/titanium/tiled/white,
 /area/lce/service/lounge)
 "tH" = (
@@ -5170,6 +5166,18 @@
 	},
 /turf/open/floor/mineral/titanium/tiled/white,
 /area/lce/hallway/west)
+"DX" = (
+/obj/structure/rack,
+/obj/item/storage/box/barrier,
+/obj/item/storage/box/barrier,
+/obj/item/storage/box/barrier,
+/obj/item/gun/grenadelauncher,
+/obj/machinery/light{
+	dir = 1;
+	pixel_y = 15
+	},
+/turf/open/floor/mineral/titanium/tiled,
+/area/lce/hallway/west)
 "Ea" = (
 /obj/structure/bed/pod,
 /obj/item/bedsheet/hop,
@@ -5731,8 +5739,7 @@
 /area/lce/service/kitchen)
 "Hf" = (
 /obj/structure/rack,
-/obj/item/stack/sheet/glass/fifty,
-/obj/item/lightreplacer,
+/obj/item/storage/box/monkeycubes,
 /turf/open/floor/mineral/titanium/tiled/white,
 /area/lce/service/lounge)
 "Hi" = (
@@ -6379,6 +6386,10 @@
 	color = "#4a4845"
 	},
 /area/lce/research/records)
+"La" = (
+/obj/structure/rack,
+/turf/open/floor/mineral/titanium/tiled,
+/area/lce/hallway/west)
 "Lb" = (
 /obj/structure/sigsystem/connector/split{
 	dir = 4
@@ -6435,6 +6446,10 @@
 	},
 /turf/open/floor/mineral/titanium/tiled/white,
 /area/lce/hallway/west)
+"Lv" = (
+/obj/machinery/lce_export_pad,
+/turf/open/floor/mineral/titanium/tiled,
+/area/lce/hallway/west)
 "Ly" = (
 /obj/machinery/computer/camera_advanced/lce_claw{
 	color = "#955C23"
@@ -6484,6 +6499,11 @@
 /obj/effect/turf_decal/tile/yellow,
 /turf/open/floor/plasteel/white,
 /area/lce/service/kitchen)
+"LK" = (
+/obj/structure/rack,
+/obj/item/lightreplacer,
+/turf/open/floor/mineral/titanium/tiled,
+/area/lce/hallway/west)
 "LM" = (
 /obj/effect/turf_decal/stripes/line{
 	dir = 4
@@ -6545,6 +6565,14 @@
 /obj/structure/fans/tiny,
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/one)
+"Mj" = (
+/obj/machinery/door/airlock/glass{
+	icon = 'icons/obj/doors/airlocks/station/engineering.dmi';
+	name = "clerk room";
+	opacity = 1
+	},
+/turf/open/floor/mineral/titanium/tiled/white,
+/area/lce/hallway/west)
 "Mm" = (
 /obj/effect/turf_decal/stripes/white/line{
 	color = "#EFB341"
@@ -7492,6 +7520,14 @@
 	},
 /turf/open/floor/plasteel/white,
 /area/lce/medical/bay)
+"RC" = (
+/obj/machinery/computer/lce_cargo,
+/obj/machinery/light{
+	dir = 1;
+	pixel_y = 15
+	},
+/turf/open/floor/mineral/titanium/tiled,
+/area/lce/hallway/west)
 "RE" = (
 /obj/machinery/computer/arcade/orion_trail{
 	dir = 4
@@ -8375,6 +8411,10 @@
 "Vx" = (
 /turf/open/floor/lce/plate/dark,
 /area/lce/containment/heavy)
+"Vy" = (
+/obj/structure/chair/stool,
+/turf/open/floor/mineral/titanium/tiled/white,
+/area/lce/hallway/west)
 "Vz" = (
 /obj/structure/closet/crate/bin,
 /turf/open/floor/wood,
@@ -39435,10 +39475,10 @@ Ka
 Ka
 Ka
 Ka
-Ka
-Ka
-Ka
-Ka
+Bv
+Bv
+Bv
+Bv
 eN
 Cy
 hK
@@ -39687,10 +39727,10 @@ Ka
 Ka
 Ka
 Ka
-Ka
-Ka
-Ka
-Ka
+Bv
+DX
+lT
+LK
 Bv
 lK
 Pc
@@ -39939,11 +39979,11 @@ Ka
 Ka
 Ka
 Ka
-Ka
-Ka
-Ka
-Ka
 Bv
+La
+uy
+uy
+Mj
 uy
 Pc
 uy
@@ -40191,11 +40231,11 @@ Ka
 Ka
 Ka
 Ka
-Ka
-Ka
-Ka
-Ka
 Bv
+La
+uy
+uy
+iZ
 uy
 Pc
 uy
@@ -40443,12 +40483,12 @@ Ka
 Ka
 Ka
 Ka
-Ka
-Ka
-Ka
-Ka
 Bv
-yJ
+Lv
+uy
+uy
+iZ
+uy
 Pc
 uy
 yA
@@ -40696,11 +40736,11 @@ SH
 SH
 SH
 SH
-Ka
-Ka
-Ka
-Bv
+RC
+Vy
 uy
+Bv
+yJ
 Pc
 uy
 yA
@@ -41968,7 +42008,7 @@ ig
 ig
 ig
 ig
-lT
+ig
 bS
 se
 Dv
@@ -42217,10 +42257,10 @@ Pc
 uy
 tY
 ig
-ZD
+ig
 tG
 Hf
-iZ
+ZD
 bS
 pj
 Dv

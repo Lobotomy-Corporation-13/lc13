@@ -22,7 +22,6 @@
 							TEMPERANCE_ATTRIBUTE = 60,
 							JUSTICE_ATTRIBUTE = 60
 							)
-	var/loaded_round_name = "standard"
 
 
 /obj/projectile/ego_bullet/ego_noise/udjat
@@ -82,6 +81,9 @@
 	dynamic_hair_suffix = ""
 
 
+//The below is discontinued until a magazine refactor is completed.
+
+/*
 // ============================ SPECIALIST AMMUNITION ============================
 // The rifle reloads by being hit with a magazine, and the stock reload does not care which one -
 // it just refills the counter. These magazines carry the round they are loaded with, and the
@@ -90,6 +92,9 @@
 /*			MAGAZINES			*/
 
 /obj/item/udjat_mag
+	name = "udjat birdshot mag"
+	desc = "Loaded with birdshot. The spread is wide enough to catch things that are not \
+		properly there."
 	///The round this magazine is loaded with. Read off by the rifle on a successful reload.
 	var/loaded_projectile = /obj/projectile/ego_bullet/ego_noise/udjat
 	///Shown to whoever reloads, so they know what they just chambered.
@@ -226,3 +231,4 @@
 /datum/movespeed_modifier/sheut_fracture
 	multiplicative_slowdown = 0
 	variable = TRUE
+*/

@@ -383,24 +383,9 @@
 
 /datum/supply_pack/lce/security/udjat_standard
 	name = "Udjat Magazines"
-	desc = "Three standard magazines for the Udjat rifle."
+	desc = "Two standard magazines for the Udjat rifle."
 	cost = 1500
-	contains = list(/obj/item/udjat_mag = 3)
-	crate_name = "ammunition crate"
-
-/datum/supply_pack/lce/security/udjat_birdshot
-	name = "Udjat Birdshot Magazines"
-	desc = "Three magazines of birdshot. The spread catches things that are not properly there."
-	cost = 2500
-	contains = list(/obj/item/udjat_mag/birdshot = 3)
-	crate_name = "ammunition crate"
-
-/datum/supply_pack/lce/security/udjat_fracture
-	name = "Udjat Fracture Magazines"
-	desc = "Three magazines of fracture rounds. They stack a break that only closes if the \
-		shooting stops."
-	cost = 2500
-	contains = list(/obj/item/udjat_mag/fracture = 3)
+	contains = list(/obj/item/udjat_mag = 2)
 	crate_name = "ammunition crate"
 
 /*  Specimen Care - one package per specimen, built from what each one actually eats and reacts
