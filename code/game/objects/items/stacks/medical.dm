@@ -231,7 +231,7 @@
 	return
 
 /obj/item/stack/medical/suture/abno/attack(mob/living/M, mob/user)
-	if (istype(M, /mob/living/simple_animal/hostile/abnormality))
+	if (istype(M, /mob/living/simple_animal/hostile/abnormality)) || (istype(M, /mob/living/simple_animal/hostile/limbus_abno))
 		try_heal(M, user)
 	else
 		to_chat(user, span_warning("You can't use [src] on [M]!"))
