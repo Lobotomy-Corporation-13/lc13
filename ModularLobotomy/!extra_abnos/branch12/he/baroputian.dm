@@ -13,7 +13,7 @@
 * hunted down and violently killed by their kin for being
 * different.
 */
-/mob/living/simple_animal/hostile/abnormality/branch12/lillibag
+/mob/living/simple_animal/hostile/abnormality/branch12/baromez
 	name = "Baromez"
 	desc = "A red leafed plant that has a strange underdeveloped fruit."
 	icon = 'ModularLobotomy/_Lobotomyicons/baroputian.dmi'
@@ -32,12 +32,12 @@
 
 	can_breach = TRUE
 	threat_level = HE_LEVEL
-	start_qliphoth = 3
+	start_qliphoth = 1
 	work_chances = list(
 		ABNORMALITY_WORK_INSTINCT = list(80, 60, 45, 30, 30),
 		ABNORMALITY_WORK_INSIGHT = list(20, 40, 45, 50, 60),
 		ABNORMALITY_WORK_ATTACHMENT = 20,
-		ABNORMALITY_WORK_REPRESSION = 20,
+		ABNORMALITY_WORK_REPRESSION = -10,
 	)
 
 	work_damage_amount = 8
@@ -45,6 +45,10 @@
 	can_patrol = FALSE
 	wander = FALSE
 	vision_range = 0
+
+	//Generally mundane breach
+	neutral_droprate = 30
+	bad_droprate = 70
 
 	ego_list = list(
 		/datum/ego_datum/weapon/branch12/barostem,
@@ -65,7 +69,11 @@
 	var/attempts = 1000
 	var/list/flow_map = list()
 
-/mob/living/simple_animal/hostile/abnormality/branch12/lillibag/ZeroQliphoth()
+/mob/living/simple_animal/hostile/abnormality/branch12/baromez/Initialize()
+	. = ..()
+	addtimer(CALLBACK(src, PROC_REF(NaturalStart)), 1 SECONDS)
+
+/mob/living/simple_animal/hostile/abnormality/branch12/baromez/ZeroQliphoth()
 	invisibility = INVISIBILITY_MAXIMUM
 	if(length(GLOB.department_centers) && !active)
 		var/turf/W = pick(GLOB.department_centers)
@@ -75,13 +83,13 @@
 	invisibility = initial(invisibility)
 	update_icon()
 
-/mob/living/simple_animal/hostile/abnormality/branch12/lillibag/Move()
+/mob/living/simple_animal/hostile/abnormality/branch12/baromez/Move()
 	return FALSE
 
-/mob/living/simple_animal/hostile/abnormality/branch12/lillibag/FindTarget()
+/mob/living/simple_animal/hostile/abnormality/branch12/baromez/FindTarget()
 	return FALSE
 
-/mob/living/simple_animal/hostile/abnormality/branch12/lillibag/update_icon_state()
+/mob/living/simple_animal/hostile/abnormality/branch12/baromez/update_icon_state()
 	. = ..()
 	if(IsContained())
 		name = "Baromez"
@@ -93,7 +101,7 @@
 		icon_state = "bag[size]"
 	icon_living = icon_state
 
-/mob/living/simple_animal/hostile/abnormality/branch12/lillibag/Life()
+/mob/living/simple_animal/hostile/abnormality/branch12/baromez/Life()
 	. = ..()
 	if(!.) // Dead
 		return
@@ -123,24 +131,24 @@
 		if(!where_is_everyone)
 			QDEL_IN(src, 2)
 
-/mob/living/simple_animal/hostile/abnormality/branch12/lillibag/attackby(obj/item/C, mob/user)
+/mob/living/simple_animal/hostile/abnormality/branch12/baromez/attackby(obj/item/C, mob/user)
 	. = ..()
 	if(!istype(user, /mob/living/simple_animal/hostile/baroputian))
 		EnrageAll(user)
 
 //Explode into consumed loot on death.
-/mob/living/simple_animal/hostile/abnormality/branch12/lillibag/death(gibbed)
+/mob/living/simple_animal/hostile/abnormality/branch12/baromez/death(gibbed)
 	var/spew_turf = pick(get_adjacent_open_turfs(src))
 	for(var/atom/movable/i in contents)
 		i.forceMove(spew_turf)
 	return ..()
 
-/mob/living/simple_animal/hostile/abnormality/branch12/lillibag/Destroy()
+/mob/living/simple_animal/hostile/abnormality/branch12/baromez/Destroy()
 	UnregisterAll()
 	return ..()
 
 //Put item in bag and calculate resource gain.
-/mob/living/simple_animal/hostile/abnormality/branch12/lillibag/proc/RecieveItem(atom/movable/thing)
+/mob/living/simple_animal/hostile/abnormality/branch12/baromez/proc/RecieveItem(atom/movable/thing)
 	thing.forceMove(src)
 	if(isliving(thing))
 		resources += 10
@@ -153,13 +161,19 @@
 		size = 3
 	update_icon()
 
-/mob/living/simple_animal/hostile/abnormality/branch12/lillibag/proc/ShareMap()
+
+/mob/living/simple_animal/hostile/abnormality/branch12/baromez/proc/NaturalStart()
+	if(IsContained())
+		return
+	Start()
+
+/mob/living/simple_animal/hostile/abnormality/branch12/baromez/proc/ShareMap()
 	for(var/L in followers)
 		if(istype(L, /mob/living/simple_animal/hostile/baroputian))
 			var/mob/living/simple_animal/hostile/baroputian/I = L
 			I.world_map = flow_map.Copy()
 
-/mob/living/simple_animal/hostile/abnormality/branch12/lillibag/proc/EnrageAll(mob/living/offender)
+/mob/living/simple_animal/hostile/abnormality/branch12/baromez/proc/EnrageAll(mob/living/offender)
 	for(var/L in followers)
 		if(istype(L, /mob/living/simple_animal/hostile/baroputian))
 			var/mob/living/simple_animal/hostile/baroputian/I = L
@@ -171,16 +185,17 @@
 |Mob Registration|
 \---------------*/
 
-/mob/living/simple_animal/hostile/abnormality/branch12/lillibag/proc/RegisterMob(mob/living/L)
+/mob/living/simple_animal/hostile/abnormality/branch12/baromez/proc/RegisterMob(mob/living/L)
 	RegisterSignal(L, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING), PROC_REF(UnregisterMob))
 	if(istype(L, /mob/living/simple_animal/hostile/baroputian))
 		var/mob/living/simple_animal/hostile/baroputian/entity = L
 		entity.home = tag
+		entity.faction = faction.Copy()
 		if(length(flow_map))
 			entity.world_map = flow_map.Copy()
 		followers += L
 
-/mob/living/simple_animal/hostile/abnormality/branch12/lillibag/proc/UnregisterMob(mob/living/L)
+/mob/living/simple_animal/hostile/abnormality/branch12/baromez/proc/UnregisterMob(mob/living/L)
 	UnregisterSignal(L, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING))
 	if(istype(L, /mob/living/simple_animal/hostile/baroputian))
 		var/mob/living/simple_animal/hostile/baroputian/entity = L
@@ -188,7 +203,7 @@
 		entity.behavior_mode = LILI_BEHAVIOR_MODE_ATTACK
 		followers -= L
 
-/mob/living/simple_animal/hostile/abnormality/branch12/lillibag/proc/UnregisterAll()
+/mob/living/simple_animal/hostile/abnormality/branch12/baromez/proc/UnregisterAll()
 	for(var/mob/living/L in followers)
 		UnregisterMob(L)
 	followers.Cut()
@@ -196,8 +211,18 @@
 /*------------------------\
 |Experimental Flow Mapping|
 \------------------------*/
-
-/mob/living/simple_animal/hostile/abnormality/branch12/lillibag/proc/Start()
+/*
+* Since the Baromez is integrel to the functions of
+* the Baroputians a map to the Baromez must be made.
+* Upon calling Start() we scan all the tiles around it
+* and make a coordnate map that is stifled by a sleep
+* for every 10 loops. At the end of this proc we then
+* have a list of coords and directions that point towards
+* the Baromez. This world map is then given to Baroputians
+* so that when they are out of sight of the Baromez they
+* always have a direction to follow back.
+*/
+/mob/living/simple_animal/hostile/abnormality/branch12/baromez/proc/Start()
 	flow_map = list()
 	var/max_cycles = attempts
 	var/turf/start = get_turf(src)
@@ -219,7 +244,6 @@
 		var/list/temp_list = ReturnAdjacentTurfs(focus_turf)
 		var/list/total_list = openf + closed_turfs
 		for(var/turf/T in temp_list)
-			new /obj/effect/temp_visual/cult/sparks(T)
 			var/new_dir = get_dir(T,focus_turf)
 			//Replace dir if new check is made.
 			if(T in dir_list)
@@ -264,8 +288,10 @@
 					closed_turfs += focus_turf
 					closed_turfs[focus_turf] = 1000
 
+	/* Only good for seeing how far the scanning is going.
 		var/image/effect_flick = image('icons/effects/cult_effects.dmi',focus_turf,"bloodsparkles",CLOSED_FIREDOOR_LAYER)
-		flick_overlay_view(effect_flick, focus_turf, 3)
+		flick_overlay_view(effect_flick, focus_turf, 1)
+		*/
 
 		//Add checked focus_turfs to closed_turfs list.
 		closed_turfs += focus_turf
@@ -288,7 +314,7 @@
 	update_icon()
 	return
 
-/mob/living/simple_animal/hostile/abnormality/branch12/lillibag/proc/FormatDirections(list/dir_list = list())
+/mob/living/simple_animal/hostile/abnormality/branch12/baromez/proc/FormatDirections(list/dir_list = list())
 	. = list()
 	if(!length(dir_list))
 		stack_trace("FormatDirections:NoDirList:[type]")
@@ -306,7 +332,7 @@
 	return return_list
 
 //Remove later
-/mob/living/simple_animal/hostile/abnormality/branch12/lillibag/proc/UnpackCoords(turf_tag)
+/mob/living/simple_animal/hostile/abnormality/branch12/baromez/proc/UnpackCoords(turf_tag)
 	if(isnum(turf_tag))
 		stack_trace("UnpackCoordsFail")
 		return FALSE
@@ -320,7 +346,7 @@
 
 	return alist("x" = turfx, "y" = turfy)
 
-/mob/living/simple_animal/hostile/abnormality/branch12/lillibag/proc/AppraiseTurf(turf/T, turf/start)
+/mob/living/simple_animal/hostile/abnormality/branch12/baromez/proc/AppraiseTurf(turf/T, turf/start)
 	. = 0
 	if(T.density || !istype(T, /turf/open))
 		return 10000
@@ -513,7 +539,7 @@
 
 	if(home)
 		if(IsHome(target))
-			var/mob/living/simple_animal/hostile/abnormality/branch12/lillibag/bag = target
+			var/mob/living/simple_animal/hostile/abnormality/branch12/baromez/bag = target
 			if(isliving(pulling) && pulling != bag && pulling != src)
 				var/mob/living/H = pulling
 				bag.RecieveItem(H)
@@ -652,8 +678,8 @@
 |Misc|
 \---*/
 /mob/living/simple_animal/hostile/baroputian/proc/IsHome(mob/living/L)
-	if(istype(L, /mob/living/simple_animal/hostile/abnormality/branch12/lillibag))
-		var/mob/living/simple_animal/hostile/abnormality/branch12/lillibag/bag = L
+	if(istype(L, /mob/living/simple_animal/hostile/abnormality/branch12/baromez))
+		var/mob/living/simple_animal/hostile/abnormality/branch12/baromez/bag = L
 		if(bag.tag == home)
 			return TRUE
 
