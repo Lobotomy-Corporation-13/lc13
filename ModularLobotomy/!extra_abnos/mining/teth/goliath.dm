@@ -42,14 +42,14 @@
 	melee_damage_upper = 30
 	can_breach = TRUE
 	threat_level = TETH_LEVEL
-	start_qliphoth = 1
+	start_qliphoth = 2
 	work_chances = list(
 		ABNORMALITY_WORK_INSTINCT = 60,
 		ABNORMALITY_WORK_INSIGHT = 10,
 		ABNORMALITY_WORK_ATTACHMENT = 50,
 		ABNORMALITY_WORK_REPRESSION = 30,
 	)
-	neutral_droprate = 60
+	good_droprate = 20
 	bad_droprate = 100
 	work_damage_amount = 6
 	work_damage_type = RED_DAMAGE
@@ -62,12 +62,23 @@
 //	gift_type =  /datum/ego_gifts/dream
 	abnormality_origin = ABNORMALITY_ORIGIN_SS13MINING
 
+/mob/living/simple_animal/hostile/abnormality/mining/goliath/Intitialize()
+	..()
+	if(prob(50))
+		//Who the fuck named these sprites?
+		icon_state = "goliath"
+		icon_living = "goliath"
+		icon_dead = "goliath_dead"
+		pre_attack_icon = "goliath2"
+
 
 /mob/living/simple_animal/hostile/abnormality/mining/goliath/Life()
 	. = ..()
 	handle_preattack()
 
 /mob/living/simple_animal/hostile/abnormality/mining/goliath/proc/handle_preattack()
+	if(status_flags & GODMODE)
+		return
 	if(ranged_cooldown <= world.time + ranged_cooldown_time*0.25 && !pre_attack)
 		pre_attack++
 	if(!pre_attack || stat || AIStatus == AI_IDLE)
@@ -96,7 +107,7 @@
 		visible_message(span_warning("[src] digs its tentacles under [target]!"))
 		new /obj/effect/temp_visual/goliath_tentacle/original(tturf, src)
 		ranged_cooldown = world.time + ranged_cooldown_time
-		icon_state = "Goliath_alert"
+		icon_state = icon_living
 		pre_attack = 0
 
 /mob/living/simple_animal/hostile/abnormality/mining/goliath/adjustHealth(amount, updating_health = TRUE, forced = FALSE)
