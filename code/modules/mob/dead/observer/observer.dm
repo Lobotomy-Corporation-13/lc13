@@ -646,6 +646,8 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 
 	var/list/possessible = list()
 	for(var/mob/living/L in GLOB.alive_mob_list)
+		if(!is_centcom_level(L.z))
+			continue
 		// LOBOTOMYCORPORATION ADDITION START
 		if(isabnormalitymob(L))
 			var/mob/living/simple_animal/hostile/abnormality/abnormality = L
