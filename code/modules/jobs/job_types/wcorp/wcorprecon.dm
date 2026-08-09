@@ -49,11 +49,39 @@ GLOBAL_LIST_INIT(l2asquads, list("Axe", "Buckler", "Cleaver"))
 	implants = list(/obj/item/organ/cyberimp/eyes/hud/security)
 	head = /obj/item/clothing/head/ego_hat/wcorp
 	suit = /obj/item/clothing/suit/armor/ego_gear/wcorp/noreq
-	l_pocket = /obj/item/commandprojector
-	r_pocket = /obj/item/storage/packet
+	l_pocket = /obj/item/storage/rcorp_grenade/wcorp
+	r_pocket = /obj/item/storage/First_aid_l2
 
 	backpack_contents = list(
 		/obj/item/storage/box/pcorp,
 		/obj/item/binoculars,
 		/obj/item/announcementmaker/wcorp,
+		/obj/item/commandprojector,
 	)
+
+
+//L2-LT stuff
+
+/obj/item/storage/rcorp_grenade/wcorp
+	name = "W-Corp Grenade pouch"
+	desc = "Put onto your pocket to hold up to 5 grenades. Filled with Black Fragility Grenades"
+
+/obj/item/storage/rcorp_grenade/wcorp/PopulateContents()
+	new /obj/item/grenade/r_corp/black(src)
+	new /obj/item/grenade/r_corp/black(src)
+	new /obj/item/grenade/r_corp/black(src)
+	new /obj/item/grenade/r_corp/black(src)
+	new /obj/item/grenade/r_corp/black(src)
+
+//having all the squads was SO weird.
+/obj/item/radio/headset/wcorp_lieutenant
+	name = "\proper the lieutenant's headset"
+	desc = "A headset used by agents in wcorp who support the squads."
+	icon_state = "com_headset"
+	keyslot = new /obj/item/encryptionkey/wcorp_lieutenant
+
+/obj/item/encryptionkey/wcorp_lieutenant
+	name = "\proper the agent captain's encryption key"
+	icon_state = "cap_cypherkey"
+	channels = list(RADIO_CHANNEL_SAFETY = 1, RADIO_CHANNEL_WELFARE = 1, RADIO_CHANNEL_DISCIPLINE = 1)
+
