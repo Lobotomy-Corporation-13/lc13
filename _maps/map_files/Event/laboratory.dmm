@@ -228,10 +228,11 @@
 /area/lce/containment/heavy/two)
 "aX" = (
 /obj/machinery/door/poddoor{
-	id = "mosb_containment";
-	name = "HSZ Containment Door #1";
+	id = "lsz1_containment";
+	name = "LSZ Containment Door #1";
 	color = "#955C23"
 	},
+/obj/structure/sigsystem/activator,
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/one)
 "aZ" = (
@@ -1364,6 +1365,21 @@
 "ig" = (
 /turf/open/floor/mineral/titanium/tiled/white,
 /area/lce/service/lounge)
+"ii" = (
+/obj/effect/turf_decal/tile/green{
+	color = "#006400"
+	},
+/obj/effect/turf_decal/tile/green{
+	color = "#006400";
+	dir = 1
+	},
+/obj/machinery/smartfridge/drying_rack{
+	pixel_x = -15;
+	pixel_y = 2;
+	density = 0
+	},
+/turf/open/floor/plasteel/white,
+/area/lce/service/kitchen)
 "il" = (
 /obj/item/flashlight/lamp/bananalamp,
 /turf/open/floor/wood,
@@ -1504,11 +1520,11 @@
 	},
 /area/lce/research)
 "iZ" = (
-/obj/effect/spawner/structure/window/reinforced{
-	max_integrity = 3000
+/obj/machinery/computer/lce_cargo{
+	dir = 8
 	},
-/turf/open/floor/facility/dark,
-/area/lce/hallway/west)
+/turf/open/floor/mineral/titanium/tiled/white,
+/area/lce/service/lounge)
 "je" = (
 /obj/structure/table/wood/fancy,
 /obj/machinery/stonkmarket{
@@ -1571,10 +1587,12 @@
 /area/lce/research)
 "jn" = (
 /obj/machinery/door/poddoor{
-	id = "hsz2_containment";
-	name = "HSZ Containment Door #2";
+	id = "lsz2_containment";
+	name = "LSZ Containment Door #2";
 	color = "#955C23"
 	},
+/obj/structure/sigsystem/connector,
+/obj/structure/sigsystem/activator,
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/two)
 "js" = (
@@ -2013,10 +2031,9 @@
 /turf/open/floor/facility/dark,
 /area/lce/research/director)
 "lT" = (
-/obj/structure/rack,
-/obj/item/stack/sheet/glass/fifty,
-/turf/open/floor/mineral/titanium/tiled,
-/area/lce/hallway/west)
+/obj/machinery/lce_export_pad,
+/turf/open/floor/mineral/titanium/tiled/white,
+/area/lce/service/lounge)
 "lW" = (
 /obj/machinery/button/crematorium{
 	pixel_x = 25
@@ -2728,8 +2745,13 @@
 /obj/machinery/telecomms/bus/preset_two,
 /turf/open/floor/circuit/telecomms/mainframe,
 /area/lce/support/telecomms)
+"qI" = (
+/obj/item/kirbyplants/random,
+/turf/open/floor/mineral/titanium/tiled/white,
+/area/lce/hallway/west)
 "qJ" = (
 /obj/structure/rack,
+/obj/item/storage/box/monkeycubes,
 /obj/machinery/light{
 	dir = 8;
 	pixel_x = -9;
@@ -3066,6 +3088,13 @@
 	},
 /turf/open/floor/mineral/titanium/tiled/white,
 /area/lce/hallway/central)
+"sX" = (
+/obj/machinery/light{
+	pixel_y = -19
+	},
+/obj/item/kirbyplants/random,
+/turf/open/floor/mineral/titanium/tiled/white,
+/area/lce/hallway/west)
 "tb" = (
 /obj/structure/cable,
 /obj/machinery/light/small,
@@ -3195,6 +3224,10 @@
 /area/lce/security/armoury)
 "tG" = (
 /obj/structure/rack,
+/obj/item/storage/box/barrier,
+/obj/item/storage/box/barrier,
+/obj/item/storage/box/barrier,
+/obj/item/gun/grenadelauncher,
 /turf/open/floor/mineral/titanium/tiled/white,
 /area/lce/service/lounge)
 "tH" = (
@@ -3690,6 +3723,9 @@
 /turf/open/floor/plasteel/white,
 /area/lce/service/laundry)
 "wm" = (
+/obj/structure/sigsystem/tower{
+	signal_code = 35
+	},
 /turf/closed/indestructible/reinforced/cheap/lce/bright,
 /area/lce/containment/light/one)
 "wo" = (
@@ -4323,6 +4359,16 @@
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/three)
+"zK" = (
+/obj/machinery/door/poddoor{
+	id = "lsz1_containment";
+	name = "LSZ Containment Door #1";
+	color = "#955C23"
+	},
+/obj/structure/sigsystem/connector,
+/obj/structure/sigsystem/activator,
+/turf/open/floor/pod/dark/lce/dark,
+/area/lce/containment/light/one)
 "zO" = (
 /obj/machinery/door/airlock/medical{
 	name = "Chief Medical Officer's Quarters";
@@ -4492,7 +4538,7 @@
 	},
 /obj/structure/sigsystem/tower/button{
 	pixel_x = 24;
-	signal_code = 76;
+	signal_code = 68;
 	signal_range = 9
 	},
 /obj/item/qliphoth_lasso,
@@ -4557,6 +4603,15 @@
 /obj/effect/spawner/structure/window/reinforced/lce,
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/three)
+"AP" = (
+/obj/machinery/door/poddoor{
+	id = "lsz2_containment";
+	name = "LSZ Containment Door #2";
+	color = "#955C23"
+	},
+/obj/structure/sigsystem/activator,
+/turf/open/floor/pod/dark/lce/dark,
+/area/lce/containment/light/two)
 "AR" = (
 /obj/item/kirbyplants{
 	icon_state = "plant-12";
@@ -5166,18 +5221,6 @@
 	},
 /turf/open/floor/mineral/titanium/tiled/white,
 /area/lce/hallway/west)
-"DX" = (
-/obj/structure/rack,
-/obj/item/storage/box/barrier,
-/obj/item/storage/box/barrier,
-/obj/item/storage/box/barrier,
-/obj/item/gun/grenadelauncher,
-/obj/machinery/light{
-	dir = 1;
-	pixel_y = 15
-	},
-/turf/open/floor/mineral/titanium/tiled,
-/area/lce/hallway/west)
 "Ea" = (
 /obj/structure/bed/pod,
 /obj/item/bedsheet/hop,
@@ -5535,6 +5578,12 @@
 /obj/effect/turf_decal/tile/yellow,
 /turf/open/floor/plasteel/white,
 /area/lce/service/kitchen)
+"FY" = (
+/obj/structure/sigsystem/tower{
+	signal_code = 46
+	},
+/turf/closed/indestructible/reinforced/cheap/lce/bright,
+/area/lce/containment/light)
 "Ga" = (
 /obj/effect/decal/cleanable/oil/slippery,
 /obj/effect/turf_decal/tile/yellow,
@@ -5739,7 +5788,8 @@
 /area/lce/service/kitchen)
 "Hf" = (
 /obj/structure/rack,
-/obj/item/storage/box/monkeycubes,
+/obj/item/stack/sheet/glass/fifty,
+/obj/item/lightreplacer,
 /turf/open/floor/mineral/titanium/tiled/white,
 /area/lce/service/lounge)
 "Hi" = (
@@ -6036,6 +6086,10 @@
 	short_range = 5;
 	view_range = 5;
 	dir = 8
+	},
+/obj/structure/sigsystem/tower/button{
+	pixel_x = 24;
+	signal_code = 46
 	},
 /turf/open/floor/lce/plate/bright,
 /area/lce/containment/light/control_east)
@@ -6386,10 +6440,6 @@
 	color = "#4a4845"
 	},
 /area/lce/research/records)
-"La" = (
-/obj/structure/rack,
-/turf/open/floor/mineral/titanium/tiled,
-/area/lce/hallway/west)
 "Lb" = (
 /obj/structure/sigsystem/connector/split{
 	dir = 4
@@ -6446,10 +6496,6 @@
 	},
 /turf/open/floor/mineral/titanium/tiled/white,
 /area/lce/hallway/west)
-"Lv" = (
-/obj/machinery/lce_export_pad,
-/turf/open/floor/mineral/titanium/tiled,
-/area/lce/hallway/west)
 "Ly" = (
 /obj/machinery/computer/camera_advanced/lce_claw{
 	color = "#955C23"
@@ -6499,11 +6545,6 @@
 /obj/effect/turf_decal/tile/yellow,
 /turf/open/floor/plasteel/white,
 /area/lce/service/kitchen)
-"LK" = (
-/obj/structure/rack,
-/obj/item/lightreplacer,
-/turf/open/floor/mineral/titanium/tiled,
-/area/lce/hallway/west)
 "LM" = (
 /obj/effect/turf_decal/stripes/line{
 	dir = 4
@@ -6565,14 +6606,6 @@
 /obj/structure/fans/tiny,
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/one)
-"Mj" = (
-/obj/machinery/door/airlock/glass{
-	icon = 'icons/obj/doors/airlocks/station/engineering.dmi';
-	name = "clerk room";
-	opacity = 1
-	},
-/turf/open/floor/mineral/titanium/tiled/white,
-/area/lce/hallway/west)
 "Mm" = (
 /obj/effect/turf_decal/stripes/white/line{
 	color = "#EFB341"
@@ -7520,20 +7553,20 @@
 	},
 /turf/open/floor/plasteel/white,
 /area/lce/medical/bay)
-"RC" = (
-/obj/machinery/computer/lce_cargo,
-/obj/machinery/light{
-	dir = 1;
-	pixel_y = 15
-	},
-/turf/open/floor/mineral/titanium/tiled,
-/area/lce/hallway/west)
 "RE" = (
 /obj/machinery/computer/arcade/orion_trail{
 	dir = 4
 	},
 /turf/open/floor/mineral/titanium/tiled/white,
 /area/lce/service/lounge)
+"RI" = (
+/obj/machinery/light{
+	dir = 8;
+	pixel_x = -9;
+	pixel_y = 4
+	},
+/turf/open/floor/lce/plate/bright,
+/area/lce/containment/light/control_east)
 "RJ" = (
 /turf/open/floor/mineral/titanium/tiled/blue,
 /area/lce/medical/surgery)
@@ -8411,10 +8444,6 @@
 "Vx" = (
 /turf/open/floor/lce/plate/dark,
 /area/lce/containment/heavy)
-"Vy" = (
-/obj/structure/chair/stool,
-/turf/open/floor/mineral/titanium/tiled/white,
-/area/lce/hallway/west)
 "Vz" = (
 /obj/structure/closet/crate/bin,
 /turf/open/floor/wood,
@@ -8763,6 +8792,10 @@
 	view_range = 5;
 	dir = 8
 	},
+/obj/structure/sigsystem/tower/button{
+	pixel_x = 24;
+	signal_code = 35
+	},
 /turf/open/floor/lce/plate/bright,
 /area/lce/containment/light/control_east)
 "Xf" = (
@@ -8778,8 +8811,7 @@
 	dir = 8
 	},
 /obj/machinery/door/window/brigdoor{
-	dir = 4;
-	req_access_txt = "69"
+	dir = 4
 	},
 /turf/open/floor/facility/dark,
 /area/lce/research/reagent)
@@ -34672,12 +34704,12 @@ iB
 vn
 vn
 Ij
+RI
 Ij
 Ij
 Ij
 Ij
-Ij
-Ij
+RI
 Ij
 Ij
 Ij
@@ -34690,12 +34722,12 @@ Wo
 vn
 Bv
 Bv
-uy
+qI
 uy
 Pc
 Pc
 uy
-Lo
+sX
 Bv
 Ka
 Ka
@@ -35425,9 +35457,9 @@ Wo
 vn
 fX
 fL
-vn
+FY
 jn
-jn
+AP
 eA
 yX
 yX
@@ -35437,7 +35469,7 @@ No
 No
 No
 wm
-aX
+zK
 aX
 vn
 Wo
@@ -39475,10 +39507,10 @@ Ka
 Ka
 Ka
 Ka
-Bv
-Bv
-Bv
-Bv
+Ka
+Ka
+Ka
+Ka
 eN
 Cy
 hK
@@ -39727,10 +39759,10 @@ Ka
 Ka
 Ka
 Ka
-Bv
-DX
-lT
-LK
+Ka
+Ka
+Ka
+Ka
 Bv
 lK
 Pc
@@ -39979,11 +40011,11 @@ Ka
 Ka
 Ka
 Ka
+Ka
+Ka
+Ka
+Ka
 Bv
-La
-uy
-uy
-Mj
 uy
 Pc
 uy
@@ -40231,11 +40263,11 @@ Ka
 Ka
 Ka
 Ka
+Ka
+Ka
+Ka
+Ka
 Bv
-La
-uy
-uy
-iZ
 uy
 Pc
 uy
@@ -40483,12 +40515,12 @@ Ka
 Ka
 Ka
 Ka
+Ka
+Ka
+Ka
+Ka
 Bv
-Lv
-uy
-uy
-iZ
-uy
+yJ
 Pc
 uy
 yA
@@ -40736,11 +40768,11 @@ SH
 SH
 SH
 SH
-RC
-Vy
-uy
+Ka
+Ka
+Ka
 Bv
-yJ
+uy
 Pc
 uy
 yA
@@ -42008,7 +42040,7 @@ ig
 ig
 ig
 ig
-ig
+lT
 bS
 se
 Dv
@@ -42257,10 +42289,10 @@ Pc
 uy
 tY
 ig
-ig
+ZD
 tG
 Hf
-ZD
+iZ
 bS
 pj
 Dv
@@ -47034,7 +47066,7 @@ cr
 Hb
 QO
 lO
-lO
+ii
 lO
 hv
 Dy
