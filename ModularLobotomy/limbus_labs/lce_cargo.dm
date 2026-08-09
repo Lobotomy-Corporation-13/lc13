@@ -401,7 +401,21 @@
 	name = "Udjat Magazines"
 	desc = "Two standard magazines for the Udjat rifle."
 	cost = 1500
-	contains = list(/obj/item/udjat_mag = 2)
+	contains = list(/obj/item/ego_mag/udjat = 2)
+	crate_name = "ammunition crate"
+
+/datum/supply_pack/lce/security/udjat_hiacc
+	name = "Udjat HIACC Magazines"
+	desc = "Two high accuracy magazines for the Udjat rifle."
+	cost = 1800
+	contains = list(/obj/item/ego_mag/udjat/highacc = 2)
+	crate_name = "ammunition crate"
+
+/datum/supply_pack/lce/security/udjat_frac
+	name = "Udjat FRAC Magazines"
+	desc = "Two fracture magazines for the Udjat rifle."
+	cost = 2300
+	contains = list(/obj/item/ego_mag/udjat/fracture = 2)
 	crate_name = "ammunition crate"
 
 /*  Specimen Care - one package per specimen, built from what each one actually eats and reacts

@@ -5,6 +5,7 @@
 	icon_state = "crate_lcb"
 	rarechance = 15
 	cosmeticchance = 25
+	ammochance = 25
 	lootlist =	list(
 		/obj/item/ego_weapon/mini/hayong,
 		/obj/item/ego_weapon/shield/parry/walpurgisnacht,
@@ -46,6 +47,11 @@
 		/obj/item/clothing/under/limbus/prison,
 		/obj/item/clothing/neck/limbus_tie,
 	)
+
+	ammoloot =	list(
+		/obj/item/ego_mag/udjat,
+	)
+
 
 /obj/structure/lootcrate/money
 	name = "Money Crate"

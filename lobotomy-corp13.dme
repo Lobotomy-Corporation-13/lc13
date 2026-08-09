@@ -4473,6 +4473,7 @@
 #include "ModularLobotomy\ego_weapons\melee\subtype\shield.dm"
 #include "ModularLobotomy\ego_weapons\melee\subtype\wielded.dm"
 #include "ModularLobotomy\ego_weapons\ranged\_autofire_hooks.dm"
+#include "ModularLobotomy\ego_weapons\ranged\_magazine.dm"
 #include "ModularLobotomy\ego_weapons\ranged\_ranged.dm"
 #include "ModularLobotomy\ego_weapons\ranged\_ranged_projectile.dm"
 #include "ModularLobotomy\ego_weapons\ranged\aleph.dm"

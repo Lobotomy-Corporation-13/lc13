@@ -7,7 +7,9 @@
 	force = 14
 	damtype = WHITE_DAMAGE
 	projectile_path = /obj/projectile/ego_bullet/ego_noise/udjat
+	magazine_type = /obj/item/ego_mag/udjat
 	magazine_name = "Udjat Magazine"
+	ammo_name = "Udjat FMJ"
 	weapon_weight = WEAPON_HEAVY
 	pellets = 5
 	variance = 15
@@ -15,7 +17,6 @@
 	shotsleft = 16
 	reloadtime = 1 SECONDS
 	fire_sound = 'sound/weapons/gun/shotgun/shot_auto.ogg'
-	magazine_type = /obj/item/udjat_mag
 	attribute_requirements = list(
 							FORTITUDE_ATTRIBUTE = 60,
 							PRUDENCE_ATTRIBUTE = 60,
@@ -28,7 +29,7 @@
 	name = "lca udjat round"
 	damage = 20
 
-/obj/item/udjat_mag
+/obj/item/ego_mag/udjat
 	name = "udjat mag"
 	desc = "load into an Udjat Gun."
 	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons.dmi'
@@ -80,77 +81,34 @@
 	visor_flags_inv = 0
 	dynamic_hair_suffix = ""
 
+//Special Ammo types
 
-//The below is discontinued until a magazine refactor is completed.
-
-/*
-// ============================ SPECIALIST AMMUNITION ============================
-// The rifle reloads by being hit with a magazine, and the stock reload does not care which one -
-// it just refills the counter. These magazines carry the round they are loaded with, and the
-// rifle's attackby swaps its projectile to match, so which box you brought actually matters.
-
-/*			MAGAZINES			*/
-
-/obj/item/udjat_mag
-	name = "udjat birdshot mag"
-	desc = "Loaded with birdshot. The spread is wide enough to catch things that are not \
-		properly there."
-	///The round this magazine is loaded with. Read off by the rifle on a successful reload.
-	var/loaded_projectile = /obj/projectile/ego_bullet/ego_noise/udjat
-	///Shown to whoever reloads, so they know what they just chambered.
-	var/round_name = "standard"
-
-/obj/item/udjat_mag/examine(mob/user)
-	. = ..()
-	. += span_notice("Loaded with [round_name] rounds.")
-
-/obj/item/udjat_mag/birdshot
-	name = "udjat birdshot mag"
-	desc = "Loaded with birdshot. The spread is wide enough to catch things that are not \
-		properly there."
+/obj/item/ego_mag/udjat/highacc
+	name = "udjat high-acc mag"
+	desc = "Loaded with High-Accuracy bullets. \
+		These bullets don't actually reduce the spread of the gun, but they have an easier time killing non-dense targets."
 	icon = 'ModularLobotomy/_Lobotomyicons/lce_udjat_ammo.dmi'
 	icon_state = "udjat_mag_birdshot"
-	loaded_projectile = /obj/projectile/ego_bullet/ego_noise/udjat/birdshot
-	round_name = "birdshot"
+	ammo_type = /obj/projectile/ego_bullet/ego_noise/udjat/highacc
+	ammo_name = "Udjat HIACC"
 
-/obj/item/udjat_mag/fracture
+//non-dense mob. hit_nondense_targets is the engine's own switch for that - see can_hit_target().
+/obj/projectile/ego_bullet/ego_noise/udjat/highacc
+	name = "lca high accuracy"
+	damage = 14
+	hit_nondense_targets = TRUE
+
+
+
+
+/obj/item/ego_mag/udjat/fracture
 	name = "udjat fracture mag"
 	desc = "Loaded with fracture rounds. Each one leaves a hairline break that does not close \
 		on its own while the shooting continues."
 	icon = 'ModularLobotomy/_Lobotomyicons/lce_udjat_ammo.dmi'
 	icon_state = "udjat_mag_fracture"
-	loaded_projectile = /obj/projectile/ego_bullet/ego_noise/udjat/fracture
-	round_name = "fracture"
-
-/obj/item/ego_weapon/ranged/city/udjat/examine(mob/user)
-	. = ..()
-	. += span_notice("Chambered: [loaded_round_name] rounds.")
-
-//The stock attackby refills the counter and qdels the magazine, but never touches the projectile.
-//Everything here is read BEFORE ..(), because after it the magazine is gone.
-/obj/item/ego_weapon/ranged/city/udjat/attackby(obj/item/I, mob/user, params)
-	if(!istype(I, /obj/item/udjat_mag))
-		return ..()
-	var/obj/item/udjat_mag/mag = I
-	var/new_projectile = mag.loaded_projectile
-	var/new_name = mag.round_name
-	. = ..()
-	//The parent returns nothing useful and bails silently on a fumbled reload, so a deleted
-	//magazine is the only reliable signal that the reload actually happened.
-	if(!QDELETED(mag))
-		return
-	projectile_path = new_projectile
-	loaded_round_name = new_name
-	to_chat(user, span_notice("[src] is now firing [new_name] rounds."))
-
-/*			ROUNDS			*/
-
-//Punishing Bird spends most of its time non-dense, and a normal bullet sails straight past a
-//non-dense mob. hit_nondense_targets is the engine's own switch for that - see can_hit_target().
-/obj/projectile/ego_bullet/ego_noise/udjat/birdshot
-	name = "lca birdshot round"
-	damage = 14
-	hit_nondense_targets = TRUE
+	ammo_type = /obj/projectile/ego_bullet/ego_noise/udjat/fracture
+	ammo_name = "Udjat FRAC"
 
 /obj/projectile/ego_bullet/ego_noise/udjat/fracture
 	name = "lca fracture round"
@@ -231,4 +189,4 @@
 /datum/movespeed_modifier/sheut_fracture
 	multiplicative_slowdown = 0
 	variable = TRUE
-*/
+

@@ -55,6 +55,8 @@
 	var/magazine_type
 	//The name is the actual name of the mag that shows.
 	var/magazine_name
+	//The name of the ammo in the gun
+	var/ammo_name
 
 	/// Vars used for when you examine a gun
 	var/last_projectile_damage = 0
@@ -251,6 +253,7 @@
 
 	if(magazine_type)
 		. += span_warning("This weapon requires a [magazine_name] to reload.")
+		. += span_notice("Currently Loaded: [ammo_name]")
 
 	if(roundsreload)
 		. += span_notice("This weapon reloads one round at a time.")
@@ -729,7 +732,7 @@
 
 /obj/item/ego_weapon/ranged/proc/reset_semicd()
 	semicd = FALSE
-
+ammo_pellets
 /obj/item/ego_weapon/ranged/attack(mob/M as mob, mob/user)
 	if(!CanUseEgo(user))
 		return FALSE
@@ -750,6 +753,27 @@
 	if(!do_after(user, reloadtime, src)) //gotta reload
 		to_chat(user, span_warning("You fumble your reload."))
 		return
+
+	var/obj/item/ego_mag/mag = I
+
+	if(mag.ammo_type)
+		projectile_path = mag.ammo_type
+	else
+		projectile_path = initial(projectile_path)
+
+
+	if(mag.ammo_pellets)
+		pellets = mag.ammo_pellets
+	else
+		pellets = initial(pellets)
+
+
+	if(mag.ammo_name)
+		ammo_name = mag.ammo_name
+	else
+		ammo_name = initial(ammo_name)
+
+
 	playsound(src, reload_success_sound, 50, TRUE)
 	to_chat(user, span_nicegreen("You dump your magazine and load."))
 	shotsleft = initial(shotsleft)
