@@ -1761,9 +1761,9 @@
 /turf/open/floor/plasteel/showroomfloor,
 /area/lce/medical)
 "kw" = (
-/obj/machinery/modular_computer/console/preset/research{
-	color = "#955C23";
-	dir = 8
+/obj/machinery/computer/camera_advanced/lce_claw{
+	dir = 8;
+	color = "#955C23"
 	},
 /turf/open/floor/lce/plate/bright,
 /area/lce/containment/light/two)
@@ -8898,9 +8898,9 @@
 /turf/open/floor/grass,
 /area/lce/service/memorial)
 "Xy" = (
-/obj/machinery/modular_computer/console/preset/research{
-	color = "#955C23";
-	dir = 8
+/obj/machinery/computer/camera_advanced/lce_claw{
+	dir = 8;
+	color = "#955C23"
 	},
 /turf/open/floor/lce/plate/bright,
 /area/lce/containment/light/one)
