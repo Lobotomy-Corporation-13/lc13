@@ -656,12 +656,6 @@
 /obj/structure/table/wood/fancy/green,
 /turf/open/floor/mineral/plastitanium,
 /area/lce/command/manager)
-"dV" = (
-/obj/structure/rack,
-/obj/item/stack/sheet/glass/fifty,
-/obj/item/lightreplacer,
-/turf/open/floor/pod,
-/area/lce/service)
 "dW" = (
 /obj/structure/cable,
 /obj/machinery/light/small{
@@ -1267,14 +1261,6 @@
 /obj/effect/spawner/lootdrop/garbage_spawner,
 /turf/open/floor/lce/deck,
 /area/lce/containment/light)
-"hx" = (
-/obj/structure/rack,
-/obj/item/storage/box/barrier,
-/obj/item/storage/box/barrier,
-/obj/item/storage/box/barrier,
-/obj/item/gun/grenadelauncher,
-/turf/open/floor/pod,
-/area/lce/service)
 "hy" = (
 /obj/structure/sign/departments/medbay/alt,
 /turf/closed/indestructible/reinforced{
@@ -1534,7 +1520,10 @@
 	},
 /area/lce/research)
 "iZ" = (
-/turf/open/floor/pod/light,
+/obj/structure/rack,
+/obj/item/stack/sheet/glass/fifty,
+/obj/item/lightreplacer,
+/turf/open/floor/pod,
 /area/lce/service)
 "je" = (
 /obj/structure/table/wood/fancy,
@@ -1653,6 +1642,16 @@
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/four)
+"jF" = (
+/obj/item/storage/box/monkeycubes,
+/obj/structure/rack,
+/obj/machinery/light{
+	dir = 8;
+	pixel_x = -9;
+	pixel_y = 4
+	},
+/turf/open/floor/pod,
+/area/lce/service)
 "jG" = (
 /obj/machinery/light,
 /turf/open/floor/mineral/plastitanium{
@@ -2042,7 +2041,9 @@
 /turf/open/floor/facility/dark,
 /area/lce/research/director)
 "lT" = (
-/turf/open/floor/pod,
+/turf/closed/indestructible/reinforced{
+	color = "#9cadc7"
+	},
 /area/lce/service)
 "lW" = (
 /obj/machinery/button/crematorium{
@@ -2878,6 +2879,22 @@
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/four)
+"rE" = (
+/obj/structure/rack,
+/obj/item/storage/box/barrier,
+/obj/item/storage/box/barrier,
+/obj/item/storage/box/barrier,
+/obj/item/gun/grenadelauncher,
+/turf/open/floor/pod,
+/area/lce/service)
+"rF" = (
+/obj/machinery/light{
+	dir = 4;
+	pixel_x = 9;
+	pixel_y = 4
+	},
+/turf/open/floor/pod,
+/area/lce/service)
 "rG" = (
 /obj/effect/turf_decal/tile/green{
 	color = "#006400"
@@ -3232,7 +3249,10 @@
 /turf/open/floor/mineral/titanium/purple,
 /area/lce/security/armoury)
 "tG" = (
-/obj/machinery/computer/lce_cargo,
+/obj/machinery/light{
+	dir = 1;
+	pixel_y = 15
+	},
 /turf/open/floor/pod,
 /area/lce/service)
 "tH" = (
@@ -4364,11 +4384,6 @@
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/three)
-"zH" = (
-/obj/item/storage/box/monkeycubes,
-/obj/structure/rack,
-/turf/open/floor/pod,
-/area/lce/service)
 "zK" = (
 /obj/machinery/door/poddoor{
 	id = "lsz1_containment";
@@ -4609,6 +4624,10 @@
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/two)
+"AN" = (
+/obj/machinery/computer/lce_cargo,
+/turf/open/floor/pod,
+/area/lce/service)
 "AO" = (
 /obj/effect/spawner/structure/window/reinforced/lce,
 /turf/open/floor/pod/dark/lce/dark,
@@ -6226,6 +6245,9 @@
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/two)
+"Jz" = (
+/turf/open/floor/pod/light,
+/area/lce/service)
 "JD" = (
 /obj/machinery/computer/camera_advanced/lce_claw{
 	dir = 4;
@@ -6380,6 +6402,9 @@
 	},
 /turf/open/floor/plasteel/white,
 /area/lce/service/dining)
+"Kw" = (
+/turf/open/floor/pod,
+/area/lce/service)
 "Kz" = (
 /obj/structure/table/optable,
 /turf/open/floor/lce/tile/bright,
@@ -6408,6 +6433,10 @@
 /obj/structure/chair/comfy,
 /turf/open/floor/plasteel/white,
 /area/lce/service/dining)
+"KP" = (
+/obj/machinery/lce_export_pad,
+/turf/open/floor/pod,
+/area/lce/service)
 "KR" = (
 /obj/effect/decal/cleanable/blood/old,
 /obj/effect/turf_decal/trimline/red/filled/corner{
@@ -6504,14 +6533,6 @@
 	},
 /turf/open/floor/mineral/titanium/tiled/white,
 /area/lce/hallway/west)
-"Lt" = (
-/obj/machinery/door/airlock/glass{
-	icon = 'icons/obj/doors/airlocks/station/engineering.dmi';
-	name = "Cargo";
-	opacity = 1
-	},
-/turf/open/floor/pod,
-/area/lce/service)
 "Ly" = (
 /obj/machinery/computer/camera_advanced/lce_claw{
 	color = "#955C23"
@@ -6889,6 +6910,14 @@
 	},
 /turf/open/floor/mineral/titanium/purple,
 /area/lce/research)
+"NE" = (
+/obj/machinery/door/airlock/glass{
+	icon = 'icons/obj/doors/airlocks/station/engineering.dmi';
+	name = "Cargo";
+	opacity = 1
+	},
+/turf/open/floor/pod,
+/area/lce/service)
 "NG" = (
 /obj/effect/turf_decal/trimline/red/filled/corner{
 	dir = 4;
@@ -7919,11 +7948,6 @@
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/one)
-"Tl" = (
-/turf/closed/indestructible/reinforced{
-	color = "#9cadc7"
-	},
-/area/lce/service)
 "Tm" = (
 /obj/effect/turf_decal/siding/blue,
 /turf/open/floor/mineral/titanium/blue,
@@ -8201,10 +8225,6 @@
 	},
 /turf/open/floor/plasteel/white,
 /area/lce/service/dining)
-"UM" = (
-/obj/machinery/lce_export_pad,
-/turf/open/floor/pod,
-/area/lce/service)
 "UO" = (
 /obj/effect/turf_decal/stripes/white/corner{
 	dir = 1;
@@ -39027,11 +39047,11 @@ Ka
 Ka
 Ka
 Ka
-Tl
-Tl
-Tl
-Tl
-Tl
+lT
+lT
+lT
+lT
+lT
 eN
 Av
 hK
@@ -39279,11 +39299,11 @@ Ka
 Ka
 Ka
 Ka
-Tl
-hx
-dV
-zH
 lT
+rE
+iZ
+jF
+Kw
 eN
 Cy
 hK
@@ -39531,11 +39551,11 @@ Ka
 Ka
 Ka
 Ka
-Tl
 lT
-iZ
-iZ
-lT
+Kw
+Jz
+Jz
+Kw
 eN
 Cy
 hK
@@ -39783,11 +39803,11 @@ Ka
 Ka
 Ka
 Ka
-Tl
 lT
-iZ
-iZ
-lT
+tG
+Jz
+Jz
+Kw
 Bv
 lK
 Pc
@@ -40035,12 +40055,12 @@ Ka
 Ka
 Ka
 Ka
-Tl
-UM
-iZ
-iZ
 lT
-Lt
+KP
+Jz
+Jz
+Kw
+NE
 uy
 Pc
 uy
@@ -40287,11 +40307,11 @@ Ka
 Ka
 Ka
 Ka
-Tl
-tG
 lT
-lT
-lT
+AN
+Kw
+rF
+Kw
 Bv
 uy
 Pc
@@ -40539,11 +40559,11 @@ Ka
 Ka
 Ka
 Ka
-Tl
-Tl
-Tl
-Tl
-Tl
+lT
+lT
+lT
+lT
+lT
 Bv
 yJ
 Pc
@@ -40793,9 +40813,9 @@ SH
 SH
 SH
 SH
-Tl
-Tl
-Tl
+lT
+lT
+lT
 Bv
 uy
 Pc
