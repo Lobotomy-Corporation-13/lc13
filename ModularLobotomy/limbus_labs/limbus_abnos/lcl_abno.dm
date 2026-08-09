@@ -20,6 +20,10 @@
 	var/mob/living/simple_animal/hostile/abnormality/original_abno = null//The original abno type this is based on. If defined, it'll automatically add the name, description and sprite of that abno.
 
 	var/awakened = FALSE //If someone possessed them, we consider them permanently awakened, even after the player logs out.
+	///TRUE while the player is out of this body but still owns it - riding a worker bee, scouting
+	///through a marker, manifested beside a ward. The body has no ckey during that, which is all
+	///try_take_abnormality() used to check, so a ghost could walk in and take it out from under them.
+	var/possession_locked = FALSE
 	///ckeys that have already woken up in this body, so a reconnect is not a second awakening.
 	var/list/awakened_ckeys = list()
 	var/limbus_map = FALSE //If we're in the LCL gamemode.

@@ -367,6 +367,22 @@
 	contains = list(/obj/item/stock_parts/cell/high = 2)
 	crate_name = "cell crate"
 
+/datum/supply_pack/lce/medical/synthflesh
+	name = "Synthflesh Beaker"
+	desc = "A full beaker of synthflesh. Closes burns and brute faster than sutures ever will."
+	cost = 400
+	contains = list(/obj/item/reagent_containers/glass/beaker/synthflesh)
+	crate_name = "synthflesh crate"
+
+/datum/supply_pack/lce/medical/krevive
+	name = "K-Corp Revival Kit"
+	desc = "Two doses, bought in from K Corp at their price rather than ours. The single most \
+		expensive thing requisition will sell you, and worth it exactly once."
+	cost = 6000
+	contains = list(/obj/item/krevive = 2)
+	crate_name = "k-corp crate"
+	crate_type = /obj/structure/closet/crate/secure
+
 /*  Security - Udjat ammunition. Three magazines a box, and priced so that spending the
     facility's whole income on specialist rounds is a real decision.  */
 
@@ -502,6 +518,96 @@
 	crate_name = "assorted feed package"
 
 /*  Costume - ordered more often than anything else on this list, probably.  */
+
+/*  Sanitation - abnormality containment is a messy business, and the facility ships with a mop
+    and very little else. Three tiers: hand tools, the cart, and the backpack tank.  */
+
+/datum/supply_pack/lce/sanitation
+	group = "Sanitation"
+
+/datum/supply_pack/lce/sanitation/basic
+	name = "Cleaning Kit"
+	desc = "A mop, a broom, buckets and rags. The bare minimum for getting blood off a cell floor."
+	cost = 150
+	contains = list(/obj/item/mop,
+					/obj/item/pushbroom,
+					/obj/item/reagent_containers/glass/bucket = 2,
+					/obj/item/reagent_containers/glass/rag = 2,
+					/obj/item/storage/bag/trash,
+					/obj/item/clothing/suit/caution = 2)
+	crate_name = "cleaning crate"
+
+/datum/supply_pack/lce/sanitation/cart
+	name = "Janitorial Cart"
+	desc = "Cart, galoshes and spray cleaner. Everything in one place, and you stop slipping in it."
+	cost = 400
+	contains = list(/obj/structure/janitorialcart,
+					/obj/item/clothing/shoes/galoshes,
+					/obj/item/reagent_containers/spray/cleaner = 2)
+	crate_name = "janitorial cart crate"
+	crate_type = /obj/structure/closet/crate/large
+
+/datum/supply_pack/lce/sanitation/watertank
+	name = "Janitorial Backpack Tank"
+	desc = "Five hundred units of cleaner worn on the back, plus grenades for the rooms nobody \
+		wants to walk into twice."
+	cost = 700
+	contains = list(/obj/item/watertank/janitor,
+					/obj/item/grenade/chem_grenade/cleaner = 3)
+	crate_name = "sanitation crate"
+
+/*  Clerical - the paperwork the facility runs on.  */
+
+/datum/supply_pack/lce/clerical
+	group = "Clerical"
+
+/datum/supply_pack/lce/clerical/paperwork
+	name = "Paperwork Supplies"
+	desc = "Bins of paper, pens in three colours, folders and a clipboard. Records will not file \
+		themselves, though several researchers have tried."
+	cost = 150
+	contains = list(/obj/item/paper_bin = 2,
+					/obj/item/pen = 2,
+					/obj/item/pen/red,
+					/obj/item/pen/blue,
+					/obj/item/folder = 3,
+					/obj/item/clipboard = 2)
+	crate_name = "clerical crate"
+
+/datum/supply_pack/lce/clerical/stamps
+	name = "Stamp Set"
+	desc = "Approval, denial, and the departmental seals. Nothing here is worth anything without \
+		the ink on it."
+	cost = 200
+	contains = list(/obj/item/stamp,
+					/obj/item/stamp/denied,
+					/obj/item/stamp/rd,
+					/obj/item/stamp/cmo,
+					/obj/item/stamp/hop,
+					/obj/item/hand_labeler)
+	crate_name = "stamp crate"
+
+/*  Artistic - the same tools the station's cargo carries, because a specimen with nothing to
+    look at is a specimen with ideas.  */
+
+/datum/supply_pack/lce/artistic
+	group = "Artistic"
+
+/datum/supply_pack/lce/artistic/supplies
+	name = "Art Supplies"
+	desc = "Crayons, canvases and a charcoal pen. Cheap, and it keeps people out of the cells."
+	cost = 200
+	contains = list(/obj/item/storage/crayons = 2,
+					/obj/item/canvas = 3,
+					/obj/item/pen/charcoal)
+	crate_name = "art crate"
+
+/datum/supply_pack/lce/artistic/spraycan
+	name = "Requisition Spraycan"
+	desc = "A spraycan that does not run out. Whether that is a good idea is not requisition's problem."
+	cost = 500
+	contains = list(/obj/item/toy/crayon/spraycan/infinite)
+	crate_name = "paint crate"
 
 /datum/supply_pack/lce/costume
 	group = "Costume"

@@ -791,6 +791,7 @@
 		return FALSE
 	marker = new /mob/camera/qoh_marker(get_turf(src), src)
 	SetActable("marker", FALSE)
+	possession_locked = TRUE //Her body sits empty while she scouts; it is still hers.
 	mind.transfer_to(marker)
 	to_chat(marker, span_notice("<b>You cast your sight out ahead of you.</b> Press again to return - your body will follow three seconds later."))
 	return TRUE
@@ -811,6 +812,7 @@
 			marker.mind.transfer_to(src)
 	QDEL_NULL(marker)
 	SetActable("marker", TRUE)
+	possession_locked = FALSE
 	recalling_marker = FALSE
 	if(abort || QDELETED(src) || stat == DEAD)
 		return FALSE
@@ -840,6 +842,9 @@
 /mob/living/simple_animal/hostile/limbus_abno/hatred_queen/proc/MarkerTeleport(turf/destination)
 	set waitfor = FALSE
 	if(QDELETED(src) || stat == DEAD || !destination)
+		return
+	if(!QoHCanOccupy(destination))
+		to_chat(src, span_warning("There is nothing out there to arrive at. You stay where you are."))
 		return
 	SetActable("teleport", FALSE)
 	animate(src, alpha = 0, time = 4)
@@ -930,8 +935,18 @@
 	if(client)
 		client.images |= current_image
 
+/proc/QoHCanOccupy(atom/destination)
+	var/turf/T = get_turf(destination)
+	if(!T || isspaceturf(T))
+		return FALSE
+	return !istype(get_area(T), /area/space)
+
 /mob/camera/qoh_marker/Move(atom/newloc, direction)
 	if(world.time < move_delay)
+		return FALSE
+	if(!QoHCanOccupy(newloc))
+		to_chat(src, span_warning("Your sight will not carry out into the dark. There is nothing out there to arrive at."))
+		move_delay = world.time + 1
 		return FALSE
 	forceMove(newloc)
 	move_delay = world.time + 1

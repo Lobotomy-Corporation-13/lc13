@@ -262,6 +262,7 @@
 		return
 	Crystallize(TRUE)
 	manifest = new /mob/camera/despair_manifest(get_turf(blessed_human), src, blessed_human)
+	possession_locked = TRUE //The crystal is not vacant, whatever a ghost sees.
 	mind.transfer_to(manifest)
 
 //Cannot commune through EGO while manifested (and vice versa - manifest is blocked above).
@@ -281,6 +282,7 @@
 	if(manifest.mind)
 		manifest.mind.transfer_to(src)
 	QDEL_NULL(manifest)
+	possession_locked = FALSE
 	Crystallize(FALSE)
 
 //Crystal state: massively reduced damage, and cannot move/attack/fire while it lasts.

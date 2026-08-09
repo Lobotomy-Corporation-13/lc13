@@ -158,7 +158,12 @@
 
 /mob/living/simple_animal/hostile/worker_bee/lcl_bee/death()
 	if(queen)
-		mind.transfer_to(queen)
+		//Swatted while she was riding it. Unlock first, or the body she is being sent back to
+		//stays flagged as occupied-elsewhere for the rest of the round.
+		queen.possession_locked = FALSE
+		if(mind)
+			mind.transfer_to(queen)
+		queen = null
 	..()
 
 /datum/action/cooldown/bee_scavenge
@@ -198,6 +203,7 @@
 	if(istype(owner, /mob/living/simple_animal/hostile/worker_bee/lcl_bee))
 		user_bee = owner
 		if(user_bee.queen)
+			user_bee.queen.possession_locked = FALSE //She is home; the hive body is hers again.
 			user_bee.queen.ckey = user_bee.ckey
 			user_bee.mind = null
 			user_bee.queen = null
@@ -206,6 +212,10 @@
 
 	for(var/mob/living/simple_animal/hostile/worker_bee/lcl_bee/bee in GLOB.alive_mob_list)
 		if(!bee.mind && !bee.ckey)
+			var/mob/living/simple_animal/hostile/limbus_abno/queen_bee/queen = owner
+			//Held before the ckey moves. Her body is about to look unoccupied to every ghost.
+			if(istype(queen))
+				queen.possession_locked = TRUE
 			bee.ckey = owner.ckey //We don't use transfer_to because it creates possession issues.
 			var/datum/action/cooldown/bee_swap/bs = new /datum/action/cooldown/bee_swap()
 			bs.Grant(bee)
