@@ -40,7 +40,7 @@ GLOBAL_LIST_INIT(l2asquads, list("Axe", "Buckler", "Cleaver"))
 	name = "W-Corp L2 Type A Lieutenant"
 	jobtype = /datum/job/wcorpl2support
 
-	ears = /obj/item/radio/headset/agent_lieutenant
+	ears = /obj/item/radio/headset/wcorp_lieutenant
 	glasses = /obj/item/clothing/glasses/sunglasses
 	uniform = /obj/item/clothing/under/suit/lobotomy/wsenior
 	belt = /obj/item/ego_weapon/city/wcorp/cleanup
@@ -57,6 +57,7 @@ GLOBAL_LIST_INIT(l2asquads, list("Axe", "Buckler", "Cleaver"))
 		/obj/item/binoculars,
 		/obj/item/announcementmaker/wcorp,
 		/obj/item/commandprojector,
+		/obj/item/roller,
 	)
 
 
@@ -73,7 +74,7 @@ GLOBAL_LIST_INIT(l2asquads, list("Axe", "Buckler", "Cleaver"))
 	new /obj/item/grenade/r_corp/black(src)
 	new /obj/item/grenade/r_corp/black(src)
 
-//having all the squads was SO weird.
+//having all the channels with no one on it was SO weird.
 /obj/item/radio/headset/wcorp_lieutenant
 	name = "\proper the lieutenant's headset"
 	desc = "A headset used by agents in wcorp who support the squads."
