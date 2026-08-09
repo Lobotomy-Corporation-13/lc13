@@ -656,6 +656,12 @@
 /obj/structure/table/wood/fancy/green,
 /turf/open/floor/mineral/plastitanium,
 /area/lce/command/manager)
+"dV" = (
+/obj/structure/rack,
+/obj/item/stack/sheet/glass/fifty,
+/obj/item/lightreplacer,
+/turf/open/floor/pod,
+/area/lce/service)
 "dW" = (
 /obj/structure/cable,
 /obj/machinery/light/small{
@@ -1261,6 +1267,14 @@
 /obj/effect/spawner/lootdrop/garbage_spawner,
 /turf/open/floor/lce/deck,
 /area/lce/containment/light)
+"hx" = (
+/obj/structure/rack,
+/obj/item/storage/box/barrier,
+/obj/item/storage/box/barrier,
+/obj/item/storage/box/barrier,
+/obj/item/gun/grenadelauncher,
+/turf/open/floor/pod,
+/area/lce/service)
 "hy" = (
 /obj/structure/sign/departments/medbay/alt,
 /turf/closed/indestructible/reinforced{
@@ -1520,11 +1534,8 @@
 	},
 /area/lce/research)
 "iZ" = (
-/obj/machinery/computer/lce_cargo{
-	dir = 8
-	},
-/turf/open/floor/mineral/titanium/tiled/white,
-/area/lce/service/lounge)
+/turf/open/floor/pod/light,
+/area/lce/service)
 "je" = (
 /obj/structure/table/wood/fancy,
 /obj/machinery/stonkmarket{
@@ -2031,9 +2042,8 @@
 /turf/open/floor/facility/dark,
 /area/lce/research/director)
 "lT" = (
-/obj/machinery/lce_export_pad,
-/turf/open/floor/mineral/titanium/tiled/white,
-/area/lce/service/lounge)
+/turf/open/floor/pod,
+/area/lce/service)
 "lW" = (
 /obj/machinery/button/crematorium{
 	pixel_x = 25
@@ -2751,7 +2761,6 @@
 /area/lce/hallway/west)
 "qJ" = (
 /obj/structure/rack,
-/obj/item/storage/box/monkeycubes,
 /obj/machinery/light{
 	dir = 8;
 	pixel_x = -9;
@@ -3223,13 +3232,9 @@
 /turf/open/floor/mineral/titanium/purple,
 /area/lce/security/armoury)
 "tG" = (
-/obj/structure/rack,
-/obj/item/storage/box/barrier,
-/obj/item/storage/box/barrier,
-/obj/item/storage/box/barrier,
-/obj/item/gun/grenadelauncher,
-/turf/open/floor/mineral/titanium/tiled/white,
-/area/lce/service/lounge)
+/obj/machinery/computer/lce_cargo,
+/turf/open/floor/pod,
+/area/lce/service)
 "tH" = (
 /obj/effect/turf_decal/stripes/red/corner{
 	dir = 8
@@ -4359,6 +4364,11 @@
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/three)
+"zH" = (
+/obj/item/storage/box/monkeycubes,
+/obj/structure/rack,
+/turf/open/floor/pod,
+/area/lce/service)
 "zK" = (
 /obj/machinery/door/poddoor{
 	id = "lsz1_containment";
@@ -5788,8 +5798,6 @@
 /area/lce/service/kitchen)
 "Hf" = (
 /obj/structure/rack,
-/obj/item/stack/sheet/glass/fifty,
-/obj/item/lightreplacer,
 /turf/open/floor/mineral/titanium/tiled/white,
 /area/lce/service/lounge)
 "Hi" = (
@@ -6496,6 +6504,14 @@
 	},
 /turf/open/floor/mineral/titanium/tiled/white,
 /area/lce/hallway/west)
+"Lt" = (
+/obj/machinery/door/airlock/glass{
+	icon = 'icons/obj/doors/airlocks/station/engineering.dmi';
+	name = "Cargo";
+	opacity = 1
+	},
+/turf/open/floor/pod,
+/area/lce/service)
 "Ly" = (
 /obj/machinery/computer/camera_advanced/lce_claw{
 	color = "#955C23"
@@ -7903,6 +7919,11 @@
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/one)
+"Tl" = (
+/turf/closed/indestructible/reinforced{
+	color = "#9cadc7"
+	},
+/area/lce/service)
 "Tm" = (
 /obj/effect/turf_decal/siding/blue,
 /turf/open/floor/mineral/titanium/blue,
@@ -8180,6 +8201,10 @@
 	},
 /turf/open/floor/plasteel/white,
 /area/lce/service/dining)
+"UM" = (
+/obj/machinery/lce_export_pad,
+/turf/open/floor/pod,
+/area/lce/service)
 "UO" = (
 /obj/effect/turf_decal/stripes/white/corner{
 	dir = 1;
@@ -39002,11 +39027,11 @@ Ka
 Ka
 Ka
 Ka
-Ka
-Ka
-Ka
-Ka
-Ka
+Tl
+Tl
+Tl
+Tl
+Tl
 eN
 Av
 hK
@@ -39254,11 +39279,11 @@ Ka
 Ka
 Ka
 Ka
-Ka
-Ka
-Ka
-Ka
-Ka
+Tl
+hx
+dV
+zH
+lT
 eN
 Cy
 hK
@@ -39506,11 +39531,11 @@ Ka
 Ka
 Ka
 Ka
-Ka
-Ka
-Ka
-Ka
-Ka
+Tl
+lT
+iZ
+iZ
+lT
 eN
 Cy
 hK
@@ -39758,11 +39783,11 @@ Ka
 Ka
 Ka
 Ka
-Ka
-Ka
-Ka
-Ka
-Ka
+Tl
+lT
+iZ
+iZ
+lT
 Bv
 lK
 Pc
@@ -40010,12 +40035,12 @@ Ka
 Ka
 Ka
 Ka
-Ka
-Ka
-Ka
-Ka
-Ka
-Bv
+Tl
+UM
+iZ
+iZ
+lT
+Lt
 uy
 Pc
 uy
@@ -40262,11 +40287,11 @@ Ka
 Ka
 Ka
 Ka
-Ka
-Ka
-Ka
-Ka
-Ka
+Tl
+tG
+lT
+lT
+lT
 Bv
 uy
 Pc
@@ -40514,11 +40539,11 @@ Ka
 Ka
 Ka
 Ka
-Ka
-Ka
-Ka
-Ka
-Ka
+Tl
+Tl
+Tl
+Tl
+Tl
 Bv
 yJ
 Pc
@@ -40768,9 +40793,9 @@ SH
 SH
 SH
 SH
-Ka
-Ka
-Ka
+Tl
+Tl
+Tl
 Bv
 uy
 Pc
@@ -42040,7 +42065,7 @@ ig
 ig
 ig
 ig
-lT
+ig
 bS
 se
 Dv
@@ -42290,9 +42315,9 @@ uy
 tY
 ig
 ZD
-tG
 Hf
-iZ
+Hf
+Ob
 bS
 pj
 Dv
