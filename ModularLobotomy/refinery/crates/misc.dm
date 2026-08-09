@@ -39,6 +39,11 @@
 		/obj/item/clothing/suit/armor/ego_gear/limbus/ego/minos,
 		/obj/item/clothing/suit/armor/ego_gear/limbus/ego/cast,
 		/obj/item/clothing/suit/armor/ego_gear/limbus/ego/branch,
+		/obj/item/ego_weapon/city/udjat_limbus,
+		/obj/item/ego_weapon/ranged/city/udjat,
+		/obj/item/clothing/suit/armor/ego_gear/city/udjat_limbus,
+		/obj/item/clothing/suit/armor/ego_gear/city/udjat_combat,
+
 	)
 
 	cosmeticloot = list(
