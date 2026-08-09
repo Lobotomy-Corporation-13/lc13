@@ -1314,9 +1314,6 @@
 "hK" = (
 /turf/open/floor/mineral/titanium/tiled,
 /area/lce/security/checkpoint)
-"hL" = (
-/turf/open/floor/pod,
-/area/lce/service)
 "hM" = (
 /obj/effect/turf_decal/bot,
 /obj/machinery/telecomms/receiver/preset_left,
@@ -1970,6 +1967,12 @@
 	},
 /turf/open/floor/plasteel/white,
 /area/lce/service/laundry)
+"ls" = (
+/obj/machinery/computer/arcade{
+	dir = 4
+	},
+/turf/open/floor/mineral/titanium/tiled/white,
+/area/lce/service/lounge)
 "lu" = (
 /obj/machinery/gibber,
 /obj/effect/turf_decal/tile/yellow{
@@ -2033,7 +2036,6 @@
 /turf/open/floor/facility/dark,
 /area/lce/research/director)
 "lT" = (
-/obj/machinery/computer/lce_cargo,
 /turf/open/floor/pod,
 /area/lce/service)
 "lW" = (
@@ -2148,10 +2150,6 @@
 	},
 /turf/open/floor/carpet/purple,
 /area/lce/research/director)
-"mD" = (
-/obj/machinery/lce_export_pad,
-/turf/open/floor/pod,
-/area/lce/service)
 "mR" = (
 /obj/machinery/computer/camera_advanced/lce_claw{
 	dir = 1;
@@ -2239,16 +2237,6 @@
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/three)
-"nn" = (
-/obj/item/storage/box/monkeycubes,
-/obj/structure/rack,
-/obj/machinery/light{
-	dir = 8;
-	pixel_x = -9;
-	pixel_y = 4
-	},
-/turf/open/floor/pod,
-/area/lce/service)
 "np" = (
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	dir = 1;
@@ -2605,6 +2593,12 @@
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/two)
+"pq" = (
+/obj/structure/rack,
+/obj/item/stack/sheet/glass/fifty,
+/obj/item/lightreplacer,
+/turf/open/floor/pod,
+/area/lce/service)
 "pr" = (
 /obj/structure/sigsystem/tower{
 	signal_code = 33
@@ -2771,6 +2765,7 @@
 	pixel_x = -9;
 	pixel_y = 4
 	},
+/obj/machinery/vending/coffee,
 /turf/open/floor/mineral/titanium/tiled/white,
 /area/lce/service/lounge)
 "qK" = (
@@ -2993,12 +2988,6 @@
 	},
 /turf/open/floor/wood,
 /area/lce/service/dorms)
-"sf" = (
-/obj/structure/rack,
-/obj/item/stack/sheet/glass/fifty,
-/obj/item/lightreplacer,
-/turf/open/floor/pod,
-/area/lce/service)
 "sj" = (
 /obj/structure/chair/sofa/corp,
 /turf/open/floor/plasteel/white,
@@ -3243,11 +3232,8 @@
 /turf/open/floor/mineral/titanium/purple,
 /area/lce/security/armoury)
 "tG" = (
-/obj/machinery/computer/arcade{
-	dir = 4
-	},
-/turf/open/floor/mineral/titanium/tiled/white,
-/area/lce/service/lounge)
+/turf/open/floor/pod/light,
+/area/lce/service)
 "tH" = (
 /obj/effect/turf_decal/stripes/red/corner{
 	dir = 8
@@ -4168,6 +4154,13 @@
 	color = "#9cadc7"
 	},
 /area/lce/service/washroom)
+"yE" = (
+/obj/machinery/light{
+	dir = 1;
+	pixel_y = 15
+	},
+/turf/open/floor/pod,
+/area/lce/service)
 "yI" = (
 /obj/machinery/door/poddoor/preopen,
 /obj/structure/sigsystem/activator,
@@ -4421,6 +4414,10 @@
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/three)
+"zW" = (
+/obj/machinery/lce_export_pad,
+/turf/open/floor/pod,
+/area/lce/service)
 "zY" = (
 /obj/structure/door_assembly/door_assembly_hatch,
 /obj/structure/barricade/wooden/crude,
@@ -4602,6 +4599,14 @@
 /obj/structure/fans/tiny,
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/heavy/two)
+"AI" = (
+/obj/structure/rack,
+/obj/item/storage/box/barrier,
+/obj/item/storage/box/barrier,
+/obj/item/storage/box/barrier,
+/obj/item/gun/grenadelauncher,
+/turf/open/floor/pod,
+/area/lce/service)
 "AK" = (
 /obj/effect/turf_decal/trimline/red/filled/corner{
 	dir = 4;
@@ -4661,14 +4666,6 @@
 /obj/item/qliphoth_lasso,
 /turf/open/floor/lce/plate,
 /area/lce/containment/heavy/one)
-"AY" = (
-/obj/structure/rack,
-/obj/item/storage/box/barrier,
-/obj/item/storage/box/barrier,
-/obj/item/storage/box/barrier,
-/obj/item/gun/grenadelauncher,
-/turf/open/floor/pod,
-/area/lce/service)
 "AZ" = (
 /obj/structure/table/reinforced{
 	max_integrity = 25
@@ -5813,9 +5810,12 @@
 	},
 /area/lce/service/kitchen)
 "Hf" = (
+/obj/item/storage/box/monkeycubes,
+/obj/structure/rack,
 /obj/machinery/light{
-	dir = 1;
-	pixel_y = 15
+	dir = 8;
+	pixel_x = -9;
+	pixel_y = 4
 	},
 /turf/open/floor/pod,
 /area/lce/service)
@@ -6280,6 +6280,10 @@
 	color = "#EDD956"
 	},
 /area/lce/security/udjat_quarters)
+"JP" = (
+/obj/machinery/computer/lce_cargo,
+/turf/open/floor/pod,
+/area/lce/service)
 "JQ" = (
 /obj/structure/table/reinforced,
 /obj/item/reagent_containers/food/condiment/peppermill{
@@ -7562,9 +7566,6 @@
 /obj/structure/sigsystem/activator,
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light)
-"Ru" = (
-/turf/open/floor/pod/light,
-/area/lce/service)
 "Rv" = (
 /obj/machinery/light{
 	dir = 1;
@@ -8200,11 +8201,11 @@
 	},
 /turf/open/floor/mineral/titanium/purple,
 /area/lce/research)
-"UE" = (
-/obj/machinery/door/airlock/glass{
-	icon = 'icons/obj/doors/airlocks/station/engineering.dmi';
-	name = "Cargo";
-	opacity = 1
+"UG" = (
+/obj/machinery/light{
+	dir = 4;
+	pixel_x = 9;
+	pixel_y = 4
 	},
 /turf/open/floor/pod,
 /area/lce/service)
@@ -8538,6 +8539,14 @@
 	},
 /turf/open/floor/wood,
 /area/lce/service/dorms)
+"VT" = (
+/obj/machinery/door/airlock/glass{
+	icon = 'icons/obj/doors/airlocks/station/engineering.dmi';
+	name = "Cargo";
+	opacity = 1
+	},
+/turf/open/floor/pod,
+/area/lce/service)
 "VV" = (
 /obj/structure/table/wood,
 /turf/open/floor/mineral/titanium/purple,
@@ -9398,14 +9407,6 @@
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/two)
-"ZT" = (
-/obj/machinery/light{
-	dir = 4;
-	pixel_x = 9;
-	pixel_y = 4
-	},
-/turf/open/floor/pod,
-/area/lce/service)
 "ZV" = (
 /obj/structure/chair/office/light{
 	dir = 1
@@ -39301,10 +39302,10 @@ Ka
 Ka
 Ka
 iZ
-AY
-sf
-nn
-hL
+AI
+pq
+Hf
+lT
 eN
 Cy
 hK
@@ -39553,10 +39554,10 @@ Ka
 Ka
 Ka
 iZ
-hL
-Ru
-Ru
-hL
+lT
+tG
+tG
+lT
 eN
 Cy
 hK
@@ -39805,10 +39806,10 @@ Ka
 Ka
 Ka
 iZ
-Hf
-Ru
-Ru
-hL
+yE
+tG
+tG
+lT
 Bv
 lK
 Pc
@@ -40057,11 +40058,11 @@ Ka
 Ka
 Ka
 iZ
-mD
-Ru
-Ru
-hL
-UE
+zW
+tG
+tG
+lT
+VT
 uy
 Pc
 uy
@@ -40309,10 +40310,10 @@ Ka
 Ka
 Ka
 iZ
+JP
 lT
-hL
-ZT
-hL
+UG
+lT
 Bv
 uy
 Pc
@@ -41579,7 +41580,7 @@ Pc
 uy
 tY
 RE
-tG
+ls
 RE
 qJ
 Ob
