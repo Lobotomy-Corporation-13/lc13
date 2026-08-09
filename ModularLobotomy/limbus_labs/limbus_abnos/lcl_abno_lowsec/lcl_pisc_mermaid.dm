@@ -105,12 +105,14 @@
 		Unbreach()
 
 /mob/living/simple_animal/hostile/limbus_abno/pisc_mermaid/death()
-	. = ..()
 	breach_ready = FALSE
 	clear_alert("mermaid_breach")
+	//Ahead of the parent, not after it. Unbreach() puts her standing sprite back on, which would
+	//paint straight over the shell the base death() leaves behind.
 	Unbreach()
 	if(crown)
 		qdel(crown)
+	return ..()
 
 /mob/living/simple_animal/hostile/limbus_abno/pisc_mermaid/funpet(mob/living/carbon/human/petter)
 	..()
