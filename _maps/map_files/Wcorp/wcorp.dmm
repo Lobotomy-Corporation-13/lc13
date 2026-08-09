@@ -125,8 +125,7 @@
 /turf/open/floor/carpet/royalblue,
 /area/city/outskirts)
 "sy" = (
-/obj/structure/rack,
-/obj/item/storage/box/pcorp,
+/obj/machinery/sleeper/syndie,
 /turf/open/floor/plasteel/bluespace,
 /area/city/outskirts)
 "tb" = (
@@ -229,10 +228,6 @@
 /area/city/outskirts)
 "FS" = (
 /turf/open/floor/carpet/royalblue,
-/area/city/outskirts)
-"FY" = (
-/obj/machinery/regenerator/safety,
-/turf/open/indestructible/hotelwood,
 /area/city/outskirts)
 "Ga" = (
 /turf/open/floor/mineral/plastitanium/red,
@@ -54648,7 +54643,7 @@ pt
 pt
 pt
 iP
-FY
+UV
 UV
 UV
 OE
