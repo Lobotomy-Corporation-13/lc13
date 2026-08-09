@@ -228,10 +228,11 @@
 /area/lce/containment/heavy/two)
 "aX" = (
 /obj/machinery/door/poddoor{
-	id = "mosb_containment";
-	name = "HSZ Containment Door #1";
+	id = "lsz1_containment";
+	name = "LSZ Containment Door #1";
 	color = "#955C23"
 	},
+/obj/structure/sigsystem/activator,
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/one)
 "aZ" = (
@@ -1571,10 +1572,12 @@
 /area/lce/research)
 "jn" = (
 /obj/machinery/door/poddoor{
-	id = "hsz2_containment";
-	name = "HSZ Containment Door #2";
+	id = "lsz2_containment";
+	name = "LSZ Containment Door #2";
 	color = "#955C23"
 	},
+/obj/structure/sigsystem/connector,
+/obj/structure/sigsystem/activator,
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/two)
 "js" = (
@@ -3694,6 +3697,9 @@
 /turf/open/floor/plasteel/white,
 /area/lce/service/laundry)
 "wm" = (
+/obj/structure/sigsystem/tower{
+	signal_code = 35
+	},
 /turf/closed/indestructible/reinforced/cheap/lce/bright,
 /area/lce/containment/light/one)
 "wo" = (
@@ -4327,6 +4333,16 @@
 	},
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/three)
+"zK" = (
+/obj/machinery/door/poddoor{
+	id = "lsz1_containment";
+	name = "LSZ Containment Door #1";
+	color = "#955C23"
+	},
+/obj/structure/sigsystem/connector,
+/obj/structure/sigsystem/activator,
+/turf/open/floor/pod/dark/lce/dark,
+/area/lce/containment/light/one)
 "zO" = (
 /obj/machinery/door/airlock/medical{
 	name = "Chief Medical Officer's Quarters";
@@ -4496,7 +4512,7 @@
 	},
 /obj/structure/sigsystem/tower/button{
 	pixel_x = 24;
-	signal_code = 76;
+	signal_code = 68;
 	signal_range = 9
 	},
 /obj/item/qliphoth_lasso,
@@ -4561,6 +4577,15 @@
 /obj/effect/spawner/structure/window/reinforced/lce,
 /turf/open/floor/pod/dark/lce/dark,
 /area/lce/containment/light/three)
+"AP" = (
+/obj/machinery/door/poddoor{
+	id = "lsz2_containment";
+	name = "LSZ Containment Door #2";
+	color = "#955C23"
+	},
+/obj/structure/sigsystem/activator,
+/turf/open/floor/pod/dark/lce/dark,
+/area/lce/containment/light/two)
 "AR" = (
 /obj/item/kirbyplants{
 	icon_state = "plant-12";
@@ -5527,6 +5552,12 @@
 /obj/effect/turf_decal/tile/yellow,
 /turf/open/floor/plasteel/white,
 /area/lce/service/kitchen)
+"FY" = (
+/obj/structure/sigsystem/tower{
+	signal_code = 46
+	},
+/turf/closed/indestructible/reinforced/cheap/lce/bright,
+/area/lce/containment/light)
 "Ga" = (
 /obj/effect/decal/cleanable/oil/slippery,
 /obj/effect/turf_decal/tile/yellow,
@@ -6029,6 +6060,10 @@
 	short_range = 5;
 	view_range = 5;
 	dir = 8
+	},
+/obj/structure/sigsystem/tower/button{
+	pixel_x = 24;
+	signal_code = 46
 	},
 /turf/open/floor/lce/plate/bright,
 /area/lce/containment/light/control_east)
@@ -7498,6 +7533,14 @@
 	},
 /turf/open/floor/mineral/titanium/tiled/white,
 /area/lce/service/lounge)
+"RI" = (
+/obj/machinery/light{
+	dir = 8;
+	pixel_x = -9;
+	pixel_y = 4
+	},
+/turf/open/floor/lce/plate/bright,
+/area/lce/containment/light/control_east)
 "RJ" = (
 /turf/open/floor/mineral/titanium/tiled/blue,
 /area/lce/medical/surgery)
@@ -8723,6 +8766,10 @@
 	view_range = 5;
 	dir = 8
 	},
+/obj/structure/sigsystem/tower/button{
+	pixel_x = 24;
+	signal_code = 35
+	},
 /turf/open/floor/lce/plate/bright,
 /area/lce/containment/light/control_east)
 "Xf" = (
@@ -8738,8 +8785,7 @@
 	dir = 8
 	},
 /obj/machinery/door/window/brigdoor{
-	dir = 4;
-	req_access_txt = "69"
+	dir = 4
 	},
 /turf/open/floor/facility/dark,
 /area/lce/research/reagent)
@@ -34632,12 +34678,12 @@ iB
 vn
 vn
 Ij
+RI
 Ij
 Ij
 Ij
 Ij
-Ij
-Ij
+RI
 Ij
 Ij
 Ij
@@ -35385,9 +35431,9 @@ Wo
 vn
 fX
 fL
-vn
+FY
 jn
-jn
+AP
 eA
 yX
 yX
@@ -35397,7 +35443,7 @@ No
 No
 No
 wm
-aX
+zK
 aX
 vn
 Wo
