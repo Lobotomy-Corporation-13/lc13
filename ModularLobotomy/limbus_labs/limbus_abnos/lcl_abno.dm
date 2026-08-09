@@ -107,6 +107,10 @@
 	var/unstable = FALSE //Can't be affected by pacifiers and some other tools.
 
 	//Death and rebirth.
+	///The shell a dead specimen leaves behind. One 64x64 sheet for all of them.
+	var/egg_icon = 'ModularLobotomy/_Lobotomyicons/lce_abno_eggs.dmi'
+	///This specimen's own shell. Left blank means it has not been given one yet.
+	var/egg_icon_state = ""
 	///How long the shell takes to split back open.
 	var/rebirth_time = 5 MINUTES
 	///world.time the current shell hatches at. Only meaningful while dead.
@@ -314,13 +318,22 @@
 	living_pixel_y = pixel_y
 	living_base_pixel_x = base_pixel_x
 	living_base_pixel_y = base_pixel_y
-	icon = 'ModularLobotomy/_Lobotomyicons/48x48.dmi'
-	icon_state = "nothing_egg"
-	icon_dead = "nothing_egg"
-	//The egg is one 48x48 sprite whatever the specimen was, so a big form's offsets would sit
-	//the shell off the side of its own tile.
-	pixel_x = -8
-	base_pixel_x = -8
+	//Each specimen has its own shell. Anything that has not been given one yet falls back to the
+	//old blank egg rather than turning invisible.
+	if(egg_icon_state)
+		icon = egg_icon
+		icon_state = egg_icon_state
+		icon_dead = egg_icon_state
+		//The egg sheet is 64x64 whatever the specimen's own sprite was, so a big form's offsets
+		//would otherwise sit the shell off the side of its own tile.
+		pixel_x = -16
+		base_pixel_x = -16
+	else
+		icon = 'ModularLobotomy/_Lobotomyicons/48x48.dmi'
+		icon_state = "nothing_egg"
+		icon_dead = "nothing_egg"
+		pixel_x = -8
+		base_pixel_x = -8
 	pixel_y = 0
 	base_pixel_y = 0
 	//A shell is deadweight, not a specimen. Let people carry it back to its cell.

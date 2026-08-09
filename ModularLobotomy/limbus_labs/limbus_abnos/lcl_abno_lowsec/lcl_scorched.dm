@@ -1,5 +1,6 @@
 /mob/living/simple_animal/hostile/limbus_abno/scorched_girl
 	true_name = "Scorched Girl"
+	egg_icon_state = "scorch_egg"
 	maxHealth = 400
 	health = 400
 	damage_coeff = list(RED_DAMAGE = 0.5, WHITE_DAMAGE = 2, BLACK_DAMAGE = 1, PALE_DAMAGE = 2)

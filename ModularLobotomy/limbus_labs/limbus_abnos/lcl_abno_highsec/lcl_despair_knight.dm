@@ -7,6 +7,7 @@
 
 /mob/living/simple_animal/hostile/limbus_abno/despair_knight
 	true_name = "Knight of Despair"
+	egg_icon_state = "despair_egg"
 	original_abno = /mob/living/simple_animal/hostile/abnormality/despair_knight
 	maxHealth = 2000
 	health = 2000
