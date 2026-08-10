@@ -43,5 +43,10 @@
 
 /datum/chemical_reaction/lc13_synthflesh
 	results = list(/datum/reagent/medicine/c2/synthflesh = 3)
-	required_reagents = list(/datum/reagent/antitoxin = 1, /datum/reagent/abnormality/healing_gel = 1,
+	required_reagents = list(/datum/reagent/zephyrium_chloride = 1, /datum/reagent/abnormality/healing_gel = 1,
 		/datum/reagent/abnormality/burn_salve = 1)
+
+/datum/chemical_reaction/oxyheal
+	results = list(/datum/reagent/oxyheal = 2)
+	required_reagents = list(/datum/reagent/radionex = 1, /datum/reagent/hydrene = 1)
+	required_temp = 350
