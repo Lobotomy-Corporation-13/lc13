@@ -11,19 +11,16 @@
 		/obj/item/workshop_mod/fast/red = 99,
 		/obj/item/workshop_mod/slow/red = 99,
 		/obj/item/workshop_mod/throwforce/red = 99,
-		/obj/item/workshop_mod/aoe/red = 99,
 		//White
 		/obj/item/workshop_mod/regular/white = 99,
 		/obj/item/workshop_mod/fast/white = 99,
 		/obj/item/workshop_mod/slow/white = 99,
 		/obj/item/workshop_mod/throwforce/white = 99,
-		/obj/item/workshop_mod/aoe/white = 99,
 		//Black
 		/obj/item/workshop_mod/regular/black = 99,
 		/obj/item/workshop_mod/fast/black = 99,
 		/obj/item/workshop_mod/slow/black = 99,
 		/obj/item/workshop_mod/throwforce/black = 99,
-		/obj/item/workshop_mod/aoe/black = 99,
 		//GACHA BABY
 		/obj/structure/lootcrate/tres = 99,
 	)
@@ -34,7 +31,6 @@
 		/obj/item/workshop_mod/fast/pale = 5,
 		/obj/item/workshop_mod/slow/pale = 5,
 		/obj/item/workshop_mod/throwforce/pale = 5,
-		/obj/item/workshop_mod/aoe/pale = 5,
 
 		//And the healing stuff
 		/obj/item/workshop_mod/healing/red = 5,
@@ -48,9 +44,6 @@
 		/obj/item/workshop_mod/curing/black = 5,
 
 		//Combat
-		/obj/item/workshop_mod/aoe/large/red = 5,
-		/obj/item/workshop_mod/aoe/large/white = 5,
-		/obj/item/workshop_mod/aoe/large/black = 5,
 		/obj/item/workshop_mod/sharp/red = 5,
 		/obj/item/workshop_mod/sharp/white = 5,
 		/obj/item/workshop_mod/sharp/black = 5,
