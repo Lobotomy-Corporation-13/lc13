@@ -120,9 +120,6 @@
 		/obj/item/workshop_mod/throwforce/red,
 		/obj/item/workshop_mod/throwforce/white,
 		/obj/item/workshop_mod/throwforce/black,
-		/obj/item/workshop_mod/aoe/red,
-		/obj/item/workshop_mod/aoe/white,
-		/obj/item/workshop_mod/aoe/black,
 	)
 
 	veryrareloot =	list(
@@ -130,7 +127,6 @@
 		/obj/item/workshop_mod/fast/pale,
 		/obj/item/workshop_mod/slow/pale,
 		/obj/item/workshop_mod/throwforce/pale,
-		/obj/item/workshop_mod/aoe/pale,
 		/obj/item/workshop_mod/healing/red,
 		/obj/item/workshop_mod/healing/white,
 		/obj/item/workshop_mod/healing/black,
@@ -143,10 +139,6 @@
 		/obj/item/workshop_mod/sapping/white,
 		/obj/item/workshop_mod/sapping/black,
 		/obj/item/workshop_mod/sapping/pale,
-		/obj/item/workshop_mod/aoe/large/red,
-		/obj/item/workshop_mod/aoe/large/white,
-		/obj/item/workshop_mod/aoe/large/black,
-		/obj/item/workshop_mod/aoe/large/pale,
 		/obj/item/workshop_mod/sharp/red,
 		/obj/item/workshop_mod/sharp/white,
 		/obj/item/workshop_mod/sharp/black,
