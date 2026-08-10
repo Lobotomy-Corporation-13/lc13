@@ -175,8 +175,8 @@
 	icon_state = "greenshatter"
 	layer = ABOVE_ALL_MOB_LAYER
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
-	var/poison_damage = 2	//Can't be terribly evil.
-	var/black_damage = 35
+	var/poison_damage = 6	//Can't be terribly evil.
+	var/black_damage = 50
 
 /obj/effect/pearl_poison/Initialize(mapload, set_dir)
 	. = ..()
