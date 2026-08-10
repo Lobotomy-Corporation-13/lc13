@@ -50,3 +50,4 @@
 	results = list(/datum/reagent/oxyheal = 2)
 	required_reagents = list(/datum/reagent/radionex = 1, /datum/reagent/hydrene = 1)
 	required_temp = 350
+
