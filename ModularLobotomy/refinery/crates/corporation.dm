@@ -5,6 +5,7 @@
 	icon_state = "crate_lc"
 	rarechance = 25
 	veryrarechance = 10
+	ammochance = 20
 	lootlist =	list(
 		/obj/item/powered_gadget/detector_gadget/abnormality,
 		/obj/item/powered_gadget/slowingtrapmk1,
@@ -15,14 +16,22 @@
 		/obj/item/clothing/glasses/meson,
 		/obj/item/powered_gadget/vitals_projector,
 		/obj/item/powered_gadget/enkephalin_injector,
-	)
-
-	//Stuff that LC stocks, but isn't made by LC. Like the R corp Ordeal finder and W-Corp hand tele.
-	//Lore reasons tm
-	rareloot =	list(
 		/obj/item/powered_gadget/detector_gadget/ordeal,
 		/obj/item/managerbullet,
 		/obj/item/powered_gadget/teleporter,
+	)
+
+	//This is for Unique trait stuff.
+	rareloot =	list(
+		/obj/item/department_chip/control,
+		/obj/item/department_chip/command,
+		/obj/item/department_chip/info,
+		/obj/item/department_chip/safety,
+		/obj/item/department_chip/welfare,
+		/obj/item/department_chip/extraction,
+		/obj/item/department_chip/records,
+		/obj/item/department_chip/discipline,
+		/obj/item/department_chip,
 	)
 
 	//Injectors and rare extractors, quite desireable as they are quite expensive.
@@ -32,6 +41,10 @@
 		/obj/item/trait_injector/officer_upgrade_injector,
 		/obj/item/ego_gift_extractor,
 		/obj/item/plushie_extractor,
+	)
+
+	ammoloot =	list(
+		/obj/item/storage/box/lobotomygrenades,
 	)
 
 //K Corporation
@@ -83,6 +96,7 @@
 
 	rareloot =	list(
 		/obj/item/ego_weapon/city/ncorp_nail,
+		/obj/item/ego_weapon/city/ncorp_nail/thrown,
 		/obj/item/ego_weapon/city/ncorp_nail/big,
 		/obj/item/ego_weapon/city/ncorp_brassnail,
 		/obj/item/ego_weapon/city/ncorp_brassnail/big,
@@ -219,29 +233,27 @@
 	name = "H-Corporation Bolus Crate"
 	desc = "A crate recieved from H-Corporation. Open with a Crowbar."
 	icon_state = "crate_hcorp"
-	rarechance = 40
-	veryrarechance = 10
+	rarechance = 30
+	cosmeticchance = 100
 	lootlist =	list(
-		/obj/item/storage/box/hcorpfire,
-		/obj/item/storage/box/hcorpwater,
-		/obj/item/storage/box/hcorpearth,
-		/obj/item/storage/box/hcorpmetal,
-		/obj/item/storage/box/hcorpwood,
+		/obj/item/bolus/simple,
 	)
 
 		//This should serve you well most of the time
 	rareloot =	list(
-		/obj/item/bolus/simple,
-	)
-
-		//Gave them a few mid-tier ones.
-	veryrareloot = list(
 		/obj/item/bolus/charred,
 		/obj/item/bolus/mossy,
 		/obj/item/bolus/soaked,
 		/obj/item/bolus/rust,
 		/obj/item/bolus/clay,
-		/obj/item/bolus/armor,
-		/obj/item/bolus/flower,
 	)
 
+	//They Guaranteed get 1 bolus and a box of essences
+	cosmeticloot = list(
+		/obj/item/storage/box/hcorpfire,
+		/obj/item/storage/box/hcorpwater,
+		/obj/item/storage/box/hcorpearth,
+		/obj/item/storage/box/hcorpmetal,
+		/obj/item/storage/box/hcorpwood,
+		/obj/item/storage/box/hcorpvariety,
+	)

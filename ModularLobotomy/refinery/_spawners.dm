@@ -8,6 +8,8 @@ GLOBAL_LIST_INIT(unspawned_sales, list(
 	/obj/structure/pe_sales/n_corp,
 	/obj/structure/pe_sales/w_corp,
 	/obj/structure/pe_sales/limbus,
+	/obj/structure/pe_sales/limbus_c,
+	/obj/structure/pe_sales/limbus_e,
 	/obj/structure/pe_sales/hana,
 	/obj/structure/pe_sales/zwei,
 	/obj/structure/pe_sales/shi,
@@ -20,7 +22,7 @@ GLOBAL_LIST_INIT(unspawned_sales, list(
 	/obj/structure/pe_sales/syndicate,
 	/obj/structure/pe_sales/backstreet,
 	/obj/structure/pe_sales/thumb,
-))d
+))
 
 /obj/effect/landmark/salesspawn
 	name = "sales machine spawner"
