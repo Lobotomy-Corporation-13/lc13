@@ -28,6 +28,20 @@
 	. = ..()
 
 
+/obj/item/clothing/suit/armor/ego_gear/wcorp/recon
+	name = "w corp recon vest"
+	desc = "A light armor vest worn by W corp. Used by recon units. It's light as a feather."
+	icon_state = "wcorp_recon"
+	armor = list(RED_DAMAGE = 10, WHITE_DAMAGE = 10, BLACK_DAMAGE = 10, PALE_DAMAGE = 10)
+	slowdown = -0.4
+
+/obj/item/clothing/suit/armor/ego_gear/wcorp/heavy
+	name = "w corp heavy armor"
+	desc = "Heavy armor vest worn by W corp. Used by defensive units. Despite being 'Heavy', this armor is still surprisingly light."
+	icon_state = "wcorp_heavy"
+	armor = list(RED_DAMAGE = 50, WHITE_DAMAGE = 50, BLACK_DAMAGE = 50, PALE_DAMAGE = 50)
+	slowdown = 0.1
+
 /obj/item/clothing/head/ego_hat/wcorp
 	name = "w-corp cap"
 	desc = "A ball cap worn by w-corp."
@@ -35,5 +49,14 @@
 	perma = TRUE
 
 /obj/item/clothing/suit/armor/ego_gear/wcorp/noreq
+	attribute_requirements = list()
+	equip_delay_self = 0
+
+/obj/item/clothing/suit/armor/ego_gear/wcorp/recon/noreq
+	attribute_requirements = list()
+	equip_delay_self = 0
+
+
+/obj/item/clothing/suit/armor/ego_gear/wcorp/heavy/noreq
 	attribute_requirements = list()
 	equip_delay_self = 0

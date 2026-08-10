@@ -2517,6 +2517,7 @@
 #include "code\modules\jobs\job_types\trusted_players\association\col_association.dm"
 #include "code\modules\jobs\job_types\trusted_players\association\mixedmap_association.dm"
 #include "code\modules\jobs\job_types\trusted_players\association\roaming.dm"
+#include "code\modules\jobs\job_types\wcorp\wcorpheavy.dm"
 #include "code\modules\jobs\job_types\wcorp\wcorpl1.dm"
 #include "code\modules\jobs\job_types\wcorp\wcorpl2.dm"
 #include "code\modules\jobs\job_types\wcorp\wcorpl3.dm"

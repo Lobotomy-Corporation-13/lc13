@@ -14,7 +14,7 @@ GLOBAL_LIST_INIT(l2dsquads, list("Axe", "Buckler", "Cleaver"))
 	maptype = "wcorp"
 
 	outfit = /datum/outfit/job/wcorpl2spear
-	display_order = 4.9
+	display_order = 4.8
 
 	access = list() //add accesses as necessary
 	minimal_access = list()
