@@ -263,3 +263,278 @@
 	user.apply_status_effect(STATUS_EFFECT_PRUDENCE_FOCUS)
 	qdel(src)
 
+
+
+
+//Scrolls
+/obj/item/ncorp_scroll
+	name = "Blank N-Corp Scroll"
+	desc = "A blank N-Corporation Scroll."
+	icon = 'ModularLobotomy/_Lobotomyicons/ncorp_scrolls.dmi'
+	var/special = "Nothing. It's a blank Scroll."
+	icon_state = "ncorp_blank"
+	slot_flags = ITEM_SLOT_POCKETS
+	w_class = WEIGHT_CLASS_BULKY
+	var/in_use
+	var/ticks_left = 5
+	var/tick_speed = 2 SECONDS
+	var/infinite_use = FALSE	//You can make stronger scrolls
+	var/list/say_lines = list("AAAAAAAAAAAAAAAA")
+	var/say_chance = 10			//Some offensive scrolls, you REALLY want to know when someone is saying it.
+
+/obj/item/ncorp_scroll/examine(mob/living/carbon/human/user)
+	. = ..()
+	if(infinite_use)
+		. += span_notice("This scroll has infinite use, and takes [ticks_left] to finish.")
+	else
+		. += span_notice("Charges left: [ticks_left]/[initial(ticks_left)].")
+
+	. += span_notice("[special]")
+	. += span_notice("Bulky, but fits in your pocket!")
+
+
+/obj/item/ncorp_scroll/attack_self(mob/living/carbon/human/user)
+	..()
+	if(in_use)
+		return
+	in_use = TRUE
+	UseLoop(user)
+
+/obj/item/ncorp_scroll/proc/UseLoop(mob/living/carbon/human/user)
+	if(ticks_left <= 0)
+		if(say_chance == 100)
+			user.say(pick(say_lines))		//So you can't just game it
+
+		in_use = FALSE
+		EndLoop(user)
+		if(!infinite_use)
+			qdel(src)
+		return
+
+	if(prob(say_chance))
+		user.say(pick(say_lines))
+
+	//Okay, the charges don't regenerate unless it's infinite.
+	if(!do_after(user, tick_speed, src))
+		in_use = FALSE
+		if(infinite_use)
+			ticks_left = initial(ticks_left)
+		return
+
+	ticks_left--
+	TickAbility(user)
+	UseLoop(user)
+
+//Some Scrolls activate every tick.
+/obj/item/ncorp_scroll/proc/TickAbility(mob/living/carbon/human/user)
+	return
+
+//Some scrolls have a stronger effect if they are used infinitely.
+/obj/item/ncorp_scroll/proc/EndLoop(mob/living/carbon/human/user)
+	return
+
+
+/obj/item/ncorp_scroll/sp
+	name = "N-Corp Sanity Scroll"
+	desc = "A scroll sold by N-Corp"
+	special = "This Scroll heals your SP when read."
+	icon_state = "ncorp_sp"
+	ticks_left = 10
+	say_lines = list("A prayer... for better days...", "A moment of peace...", "I wish to be better...")
+
+/obj/item/ncorp_scroll/sp/TickAbility(mob/living/carbon/human/user)
+	user.adjustSanityLoss(-5)
+
+/obj/item/ncorp_scroll/sp/EndLoop(mob/living/carbon/human/user)
+	user.adjustSanityLoss(-20)	//Little bonus. As a treat
+
+
+/obj/item/ncorp_scroll/spwide
+	name = "N-Corp Sermon Scroll"
+	desc = "A scroll sold by N-Corp"
+	special = "This Scroll heals your SP when read."
+	icon_state = "ncorp_spaoe"
+	ticks_left = 3
+	tick_speed = 5 SECONDS
+	say_lines = list("Let us pray....","A prayer... for better days...", "A moment of peace...", "I wish to be better...")
+
+/obj/item/ncorp_scroll/spwide/TickAbility(mob/living/carbon/human/user)
+	for(var/mob/living/carbon/human/H in view(5, user))
+		if(H == user)
+			continue
+		H.adjustSanityLoss(-10)
+
+/obj/item/ncorp_scroll/spwide/EndLoop(mob/living/carbon/human/user)
+	for(var/mob/living/carbon/human/H in view(5, user))
+		if(H == user)
+			continue
+		H.adjustSanityLoss(-20)
+
+
+/obj/item/ncorp_scroll/strength
+	name = "N-Corp Strength Scroll"
+	desc = "A scroll sold by N-Corp"
+	special = "This Scroll gives Strength when read. when finishing, gives a stronger strength bonus."
+	icon_state = "ncorp_strength"
+	ticks_left = 5
+	say_lines = list("Grant me fury...", "Death to my enemies...")
+
+/obj/item/ncorp_scroll/strength/TickAbility(mob/living/carbon/human/user)
+	user.apply_lc_strength(1)
+
+/obj/item/ncorp_scroll/strength/EndLoop(mob/living/carbon/human/user)
+	user.apply_lc_strength(3)
+
+/obj/item/ncorp_scroll/strengthwide
+	name = "N-Corp Area Strength Scroll"
+	desc = "A scroll sold by N-Corp"
+	special = "This Scroll gives Strength to all allies when read. when finishing, gives a stronger strength bonus."
+	icon_state = "ncorp_strengthaoe"
+	tick_speed = 5 SECONDS
+	ticks_left = 3
+	say_lines = list("Grant us fury...", "Death to our enemies...")
+
+/obj/item/ncorp_scroll/strengthwide/TickAbility(mob/living/carbon/human/user)
+	for(var/mob/living/carbon/human/H in view(5, user))
+		if(H == user)
+			continue
+		H.apply_lc_strength(1)
+
+/obj/item/ncorp_scroll/strengthwide/EndLoop(mob/living/carbon/human/user)
+	for(var/mob/living/carbon/human/H in view(5, user))
+		if(H == user)
+			continue
+	user.apply_lc_strength(3)
+
+
+/obj/item/ncorp_scroll/protection
+	name = "N-Corp Protection Scroll"
+	desc = "A scroll sold by N-Corp"
+	special = "This Scroll gives Protection when read. when finishing, gives a stronger protection bonus."
+	icon_state = "ncorp_protection"
+	ticks_left = 5
+	say_lines = list("Protect my body.....", "Keep me safe...")
+
+/obj/item/ncorp_scroll/protection/TickAbility(mob/living/carbon/human/user)
+	user.apply_lc_protection(1)
+
+/obj/item/ncorp_scroll/protection/EndLoop(mob/living/carbon/human/user)
+	user.apply_lc_protection(3)
+
+
+/obj/item/ncorp_scroll/combat
+	name = "N-Corp Combat Scroll"
+	desc = "A scroll sold by N-Corp"
+	special = "This Scroll gives Protection and Strength when read."
+	icon_state = "ncorp_combat"
+	ticks_left = 5
+	tick_speed = 5 SECONDS
+	say_lines = list("DEATH TO MY ENEMIES!!")
+
+/obj/item/ncorp_scroll/combat/TickAbility(mob/living/carbon/human/user)
+	user.apply_lc_protection(1)
+	user.apply_lc_strength(1)
+
+
+/obj/item/ncorp_scroll/cleanse
+	name = "N-Corp Cleansing Scroll"
+	desc = "A scroll sold by N-Corp"
+	special = "This scroll cleansess burn and toxins when read."
+	icon_state = "ncorp_cleanse"
+	ticks_left = 5
+	say_lines = list("My body please....", "Cleanse my soul...")
+
+/obj/item/ncorp_scroll/cleanse/TickAbility(mob/living/carbon/human/user)
+	user.adjustFireLoss(-5)
+	user.adjustToxLoss(-5)
+
+/obj/item/ncorp_scroll/cleanse/EndLoop(mob/living/carbon/human/user)
+	user.adjustFireLoss(-10)
+	user.adjustToxLoss(-10)
+
+
+/obj/item/ncorp_scroll/randomstr
+	name = "N-Corp Volatile Strength Scroll"
+	desc = "A scroll sold by N-Corp."
+	special = "This scroll gives the user a random strength type."
+	icon_state = "ncorp_randomstr"
+	ticks_left = 5
+	say_lines = list("Grant us fury...", "Death to our enemies...")
+
+/obj/item/ncorp_scroll/randomstr/TickAbility(mob/living/carbon/human/user)
+	var/str = pick("red", "white", "black", "pale")
+	switch(str)
+		if("red")
+			user.apply_lc_red_strength(3)
+		if("white")
+			user.apply_lc_white_strength(3)
+		if("black")
+			user.apply_lc_black_strength(3)
+		if("pale")
+			user.apply_lc_pale_strength(3)
+
+/obj/item/ncorp_scroll/randomstr
+	name = "N-Corp Volatile Protection Scroll"
+	desc = "A scroll sold by N-Corp."
+	special = "This scroll gives the user a random protection type."
+	icon_state = "ncorp_randomprot"
+	ticks_left = 5
+	say_lines = list("Protect my body.....", "Keep me safe...")
+
+/obj/item/ncorp_scroll/randomstr/TickAbility(mob/living/carbon/human/user)
+	var/str = pick("red", "white", "black", "pale")
+	switch(str)
+		if("red")
+			user.apply_lc_red_protection(3)
+		if("white")
+			user.apply_lc_white_protection(3)
+		if("black")
+			user.apply_lc_black_protection(3)
+		if("pale")
+			user.apply_lc_pale_protection(3)
+
+
+//PVP Scrolls below
+/obj/item/ncorp_scroll/flame
+	name = "N-Corp Flame Scroll"
+	desc = "A scroll sold by N-Corp"
+	special = "This scroll lights all nearby humans on fire when read."
+	icon_state = "ncorp_fire"
+	ticks_left = 1
+	tick_speed = 4 SECONDS
+	say_lines = list("BURN HERETIC!", "FIRE AND BRIMSTONE!")
+	say_chance = 100
+
+/obj/item/ncorp_scroll/flame/TickAbility(mob/living/carbon/human/user)
+	for(var/mob/living/carbon/human/H in view(5, user))
+		//Light the user on fire too. Fuck 'em
+		H.adjust_fire_stacks(1)
+		H.IgniteMob()
+
+
+/obj/item/ncorp_scroll/death
+	name = "N-Corp Death Scroll"
+	desc = "A scroll sold by N-Corp"
+	special = "When this scroll is fully read, the user explodes"
+	icon_state = "ncorp_explode"
+	ticks_left = 3
+	tick_speed = 4 SECONDS
+	say_lines = list("My body is sacrifice...")
+	say_chance = 100
+	var/boom_damage = 100
+
+//No tick ability.
+/obj/item/ncorp_scroll/death/EndLoop(mob/living/carbon/human/user)
+	user.gib()
+	for(var/mob/living/carbon/human/H in view(3, user))
+		H.deal_damage(boom_damage, RED_DAMAGE, src, attack_type = (ATTACK_TYPE_SPECIAL))
+		H.deal_damage(boom_damage * 0.5, FIRE, src, attack_type = (ATTACK_TYPE_SPECIAL))
+		if(H.health < 0)
+			H.gib()
+	new /obj/effect/temp_visual/explosion(get_turf(src))
+	var/datum/effect_system/smoke_spread/S = new
+	S.set_up(3, get_turf(src))
+	S.start()
+
+
+
