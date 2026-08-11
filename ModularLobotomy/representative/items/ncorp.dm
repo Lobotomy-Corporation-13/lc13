@@ -352,7 +352,7 @@
 /obj/item/ncorp_scroll/spwide
 	name = "N-Corp Sermon Scroll"
 	desc = "A scroll sold by N-Corp"
-	special = "This Scroll heals your SP when read."
+	special = "This Scroll heals the SP of allies when read."
 	icon_state = "ncorp_spaoe"
 	ticks_left = 3
 	tick_speed = 5 SECONDS
@@ -473,7 +473,7 @@
 		if("pale")
 			user.apply_lc_pale_strength(3)
 
-/obj/item/ncorp_scroll/randomstr
+/obj/item/ncorp_scroll/randomprot
 	name = "N-Corp Volatile Protection Scroll"
 	desc = "A scroll sold by N-Corp."
 	special = "This scroll gives the user a random protection type."
@@ -481,7 +481,7 @@
 	ticks_left = 5
 	say_lines = list("Protect my body.....", "Keep me safe...")
 
-/obj/item/ncorp_scroll/randomstr/TickAbility(mob/living/carbon/human/user)
+/obj/item/ncorp_scroll/randomprot/TickAbility(mob/living/carbon/human/user)
 	var/str = pick("red", "white", "black", "pale")
 	switch(str)
 		if("red")
