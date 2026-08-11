@@ -112,7 +112,7 @@
 	ItemUnlock(requester.order_list, "Focused Fading Fortitude Ampule",	/obj/item/attribute_temporary/fortitudebig, 750)
 	ItemUnlock(requester.order_list, "Focused Fading Temperance Ampule",	/obj/item/attribute_temporary/temperancebig, 750)
 	ItemUnlock(requester.order_list, "Focused Fading Prudence Ampule",	/obj/item/attribute_temporary/prudencebig, 750)
-	ItemUnlock(requester.order_list, "Focused Fading Justice Ampule",	/obj/item/attribute_temporary/justicebig, 7500)
+	ItemUnlock(requester.order_list, "Focused Fading Justice Ampule",	/obj/item/attribute_temporary/justicebig, 750)
 	..()
 
 
