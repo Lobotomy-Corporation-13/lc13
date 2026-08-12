@@ -1,4 +1,8 @@
 //MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"bh" = (
+/obj/machinery/sleeper/syndie,
+/turf/open/indestructible/hotelwood,
+/area/city/outskirts)
 "cI" = (
 /obj/structure/chair/comfy/shuttle{
 	dir = 8
@@ -54643,7 +54647,7 @@ pt
 pt
 pt
 iP
-UV
+bh
 UV
 UV
 OE
@@ -54945,7 +54949,7 @@ pt
 pt
 pt
 iP
-Eq
+bh
 GW
 UV
 UV
@@ -55247,7 +55251,7 @@ pt
 pt
 pt
 iP
-Eq
+bh
 UV
 GW
 UV
