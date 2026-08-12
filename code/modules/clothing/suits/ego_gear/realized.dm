@@ -110,7 +110,7 @@ No Ability	250
 	name = "energy conversion"
 	desc = "Just open up the machine, step inside, and press the button to make it shut. Now everything will be just fine."
 	icon_state = "energy_conversion"
-	armor = list(RED_DAMAGE = 90, WHITE_DAMAGE = 60, BLACK_DAMAGE = 50, PALE_DAMAGE = 50) //Lower red damage when it gets an ability probably
+	armor = list(RED_DAMAGE = 80, WHITE_DAMAGE = 60, BLACK_DAMAGE = 60, PALE_DAMAGE = 50)
 
 /* TETH Realizations */
 
