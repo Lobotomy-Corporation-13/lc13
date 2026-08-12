@@ -1,5 +1,6 @@
 /mob/living/simple_animal/hostile/limbus_abno/pisc_mermaid
 	true_name = "Piscine Mermaid"
+	egg_icon_state = "mermaid_egg"
 	maxHealth = 1000
 	health = 1000
 	damage_coeff = list(RED_DAMAGE = 1.5, WHITE_DAMAGE = 1.5, BLACK_DAMAGE = 0.5, PALE_DAMAGE = 2)
@@ -104,12 +105,14 @@
 		Unbreach()
 
 /mob/living/simple_animal/hostile/limbus_abno/pisc_mermaid/death()
-	. = ..()
 	breach_ready = FALSE
 	clear_alert("mermaid_breach")
+	//Ahead of the parent, not after it. Unbreach() puts her standing sprite back on, which would
+	//paint straight over the shell the base death() leaves behind.
 	Unbreach()
 	if(crown)
 		qdel(crown)
+	return ..()
 
 /mob/living/simple_animal/hostile/limbus_abno/pisc_mermaid/funpet(mob/living/carbon/human/petter)
 	..()

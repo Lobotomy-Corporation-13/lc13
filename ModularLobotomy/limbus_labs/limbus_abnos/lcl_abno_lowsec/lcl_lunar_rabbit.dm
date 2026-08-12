@@ -3,6 +3,7 @@
 //under doors.
 /mob/living/simple_animal/hostile/limbus_abno/lunar_rabbit
 	true_name = "Lunar Physician"
+	egg_icon_state = "lunar_egg"
 	original_abno = /mob/living/simple_animal/hostile/abnormality/lunar_rabbit
 	maxHealth = 500
 	health = 500

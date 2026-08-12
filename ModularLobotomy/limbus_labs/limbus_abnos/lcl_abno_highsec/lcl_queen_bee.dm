@@ -1,5 +1,6 @@
 /mob/living/simple_animal/hostile/limbus_abno/queen_bee
 	true_name = "Queen Bee"
+	egg_icon_state = "qbee_egg"
 	maxHealth = 3500
 	health = 3500 //A lot of HP due to not really being strong by itself, primarily relying on minions.
 	pixel_x = -8

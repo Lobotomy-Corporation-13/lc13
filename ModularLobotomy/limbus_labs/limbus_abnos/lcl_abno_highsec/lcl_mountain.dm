@@ -1,6 +1,7 @@
 //As an ALEPH, mountain should be really demanding. The goal is to stuff as much food in its cell as possible to keep it satiated, or use corpses to slow down its hunger.
 /mob/living/simple_animal/hostile/limbus_abno/mountain
 	true_name = "Mountain of Smiling Bodies"
+	egg_icon_state = "mountain_egg"
 	maxHealth = 2000
 	health = 2000
 	pixel_x = -16

@@ -19,6 +19,7 @@
 
 /mob/living/simple_animal/hostile/limbus_abno/hatred_queen
 	true_name = "Queen of Hatred"
+	egg_icon_state = "hatred_egg"
 	original_abno = /mob/living/simple_animal/hostile/abnormality/hatred_queen
 	maxHealth = 3500
 	health = 3500

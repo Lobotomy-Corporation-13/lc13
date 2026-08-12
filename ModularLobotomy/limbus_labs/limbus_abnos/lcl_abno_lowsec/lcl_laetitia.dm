@@ -1,5 +1,6 @@
 /mob/living/simple_animal/hostile/limbus_abno/laetitia
 	true_name = "Laetitia"
+	egg_icon_state = "laetitia_egg"
 	maxHealth = 1500
 	health = 1500
 	melee_damage_lower = 1

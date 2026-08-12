@@ -1,6 +1,7 @@
 ///More or less the same as the original, with some tweaks making it more of a menace, like the ability to trigger murderous insanity on combo beak hits.
 /mob/living/simple_animal/hostile/limbus_abno/pbird
 	true_name = "Punishing Bird"
+	egg_icon_state = "pbird_egg"
 	maxHealth = 600
 	health = 600
 	melee_damage_lower = 1
