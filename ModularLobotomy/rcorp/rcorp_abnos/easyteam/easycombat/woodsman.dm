@@ -67,7 +67,7 @@
 		var/mob/living/simple_animal/hostile/rcorp_abno/easy/woodsman/W = owner
 		if (W.chained_target)
 			return FALSE
-	. = ..()
+	return ..()
 
 /obj/effect/proc_holder/spell/pointed/rca_axe_throw
 	name = "Chain Axe throw"
@@ -108,10 +108,11 @@
 /obj/projectile/rca_chainedaxe/fire(setAngle)
 	if(firer)
 		chain = firer.Beam(src, icon_state = "chain")
-	..()
+	return ..()
 
 /obj/projectile/rca_chainedaxe/Destroy()
-	qdel(chain)
+	if(chain)
+		QDEL_NULL(chain)
 	return ..()
 
 /obj/projectile/rca_chainedaxe/on_hit(atom/target, blocked = FALSE)
@@ -146,11 +147,12 @@
 	AddSpell(AS)
 
 /mob/living/simple_animal/hostile/rcorp_abno/easy/woodsman/Destroy()
-	QDEL_NULL(soundloop)
+	if(soundloop)
+		QDEL_NULL(soundloop)
 	return ..()
 
-/mob/living/simple_animal/hostile/rcorp_abno/easy/woodsman/proc/begin_chain_pull(mob/living/carbon/human/target)
-	chained_target = target
+/mob/living/simple_animal/hostile/rcorp_abno/easy/woodsman/proc/begin_chain_pull(mob/living/carbon/human/trg)
+	chained_target = trg
 	chain_pull_count = 0
 	var/datum/status_effect/rca_chained/C = chained_target.has_status_effect(/datum/status_effect/rca_chained)
 	if(!C)
@@ -193,7 +195,7 @@
 
 
 /mob/living/simple_animal/hostile/rcorp_abno/easy/woodsman/proc/pull_target(distance)
-	if(!chained_target)
+	if(!chained_target || QDELETED(src))
 		return
 	if (chained_target.stat == DEAD)
 		release_target()
@@ -222,6 +224,7 @@
 
 /mob/living/simple_animal/hostile/rcorp_abno/easy/woodsman/proc/release_target()
 	if(!chained_target)
+		update_chain_visuals()
 		return
 
 	chained_target.remove_status_effect(/datum/status_effect/rca_chained)
@@ -251,7 +254,7 @@
 
 /datum/status_effect/rca_chained/on_remove()
 	UnregisterSignal(owner, COMSIG_MOVABLE_PRE_MOVE)
-	. = ..()
+	return ..()
 
 /datum/status_effect/rca_chained/proc/check_movement(mob/living/carbon/human/H, turf/NewLoc)
 	SIGNAL_HANDLER
@@ -374,21 +377,22 @@
 		return
 
 	if(flurry_cooldown <= world.time)
-		if(prob(75))
-			switch(rand(1,3))
-				if(1)
-					Woodsman_Flurry(target)
-				if(2)
-					begin_chain_pull(target)
-				if(3)
-					AxeThrow(target)
+		switch(rand(1,4))
+			if(1)
+				Woodsman_Flurry(target)
+			if(2)
+				begin_chain_pull(target)
+			if(3)
+				AxeThrow(target)
+			else
+				return
 
-/mob/living/simple_animal/hostile/rcorp_abno/easy/woodsman/proc/Woodsman_Flurry(target)
+/mob/living/simple_animal/hostile/rcorp_abno/easy/woodsman/proc/Woodsman_Flurry(trg)
 	if(flurry_cooldown > world.time)
 		return
-	if (get_dist(src, target) > 3)
+	if (get_dist(src, trg) > 3)
 		return
-	var/dir_to_target = get_cardinal_dir(get_turf(src), get_turf(target))
+	var/dir_to_target = get_cardinal_dir(get_turf(src), get_turf(trg))
 	var/turf/source_turf = get_turf(src)
 	var/turf/area_of_effect = list()
 	var/turf/middle_line = list()
