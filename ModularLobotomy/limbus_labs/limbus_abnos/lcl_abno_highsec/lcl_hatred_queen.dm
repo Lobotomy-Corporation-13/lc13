@@ -777,6 +777,10 @@
 		return TRUE
 	return (villainy >= marker_villainy_req) || (desire_bar >= marker_desire_req)
 
+// The marker holding her mind is itself proof the body is not free, flag or no flag.
+/mob/living/simple_animal/hostile/limbus_abno/hatred_queen/PossessionLocked()
+	return ..() || !QDELETED(marker)
+
 // First press projects the reticle, second recalls it and teleports her body to it.
 /mob/living/simple_animal/hostile/limbus_abno/hatred_queen/proc/ProjectMarker()
 	if(marker || hysteric || !mind || !can_act)
@@ -804,9 +808,9 @@
 	recalling_marker = TRUE
 	var/turf/destination = get_turf(marker)
 	if(marker.mind)
-		if(QDELETED(src))
-			// Called from Destroy(): the body is already going away, so pushing a player
-			// into it would strand them in a deleting mob. Ghost them out instead.
+		if(!CanReturnTo(src, marker))
+			if(!QDELETED(src))
+				to_chat(marker, span_userdanger("Something else is wearing your body. There is nothing to go back to."))
 			marker.ghostize(FALSE)
 		else
 			marker.mind.transfer_to(src)

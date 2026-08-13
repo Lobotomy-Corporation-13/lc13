@@ -39,6 +39,10 @@
 	var/tension_per_tile = 6
 	var/tension_blocked = 14
 	var/tension_decay = 9
+	///How long the tethered specimen has to haul on the line before it tears, and the in-progress
+	///flag that stops a second drag starting another attempt.
+	var/tug_time = 3 SECONDS
+	var/tugging = FALSE
 	///Half the flicker cycle; the pair of animate() calls loops as twice this.
 	var/flicker_time = 2 SECONDS
 	var/flicker_alpha = 255
@@ -63,6 +67,8 @@
 	. += span_notice("Tethered to [tethered].")
 	. += span_notice("Tension: [round(tension)]%. Distance and closed doors both raise it.")
 	. += span_warning("Past [break_range] tiles it tears loose outright.")
+	. += span_warning("[tethered] can tear it off from their end by hauling on the line for \
+		[DisplayTimeText(tug_time)] without moving.")
 
 ///Shared gate for both ways of getting the loop on: by hand and cast from range.
 /obj/item/qliphoth_lasso/proc/CanLasso(mob/living/simple_animal/hostile/limbus_abno/target, mob/user)
@@ -165,6 +171,11 @@
 	var/mob/holder = get(src, /mob)
 	return holder || src
 
+///TRUE when the spool has ended up inside the specimen it is earthed to - swallowed, most likely.
+///The beam hangs off whoever holds it, so from in there range and sight can never fail again.
+/obj/item/qliphoth_lasso/proc/HeldByTethered()
+	return tethered && (BeamOrigin() == tethered)
+
 /obj/item/qliphoth_lasso/proc/RefreshBeam()
 	if(QDELETED(tethered))
 		return
@@ -180,6 +191,9 @@
 //change hands.
 /obj/item/qliphoth_lasso/Moved(atom/OldLoc, Dir, Forced = FALSE)
 	. = ..()
+	if(HeldByTethered())
+		Snap()
+		return
 	RefreshBeam()
 
 /obj/item/qliphoth_lasso/proc/StartVisuals()
@@ -219,6 +233,9 @@
 /obj/item/qliphoth_lasso/process(delta_time)
 	if(QDELETED(tethered) || tethered.stat >= DEAD)
 		Release()
+		return
+	if(HeldByTethered()) //Backstop for any route in that does not go through Moved().
+		Snap()
 		return
 	var/turf/mine = get_turf(src)
 	var/turf/theirs = get_turf(tethered)
@@ -291,11 +308,29 @@
 		return
 	return ..()
 
-//...nor drag it around after itself.
+//...nor drag it around after itself. Hauling on the line is what that gets them instead.
 /obj/item/qliphoth_lasso/can_be_pulled(user, grab_state, force)
 	if(user == tethered)
+		INVOKE_ASYNC(src, PROC_REF(TugFree), tethered)
 		return FALSE
 	return ..()
+
+///The way out from the specimen's own end: haul on the line without moving for tug_time and the
+///cable tears. The lasso is the do_after target, so either end moving drops the attempt.
+/obj/item/qliphoth_lasso/proc/TugFree(mob/living/simple_animal/hostile/limbus_abno/puller)
+	if(tugging || tethered != puller)
+		return
+	tugging = TRUE
+	puller.visible_message(span_boldwarning("[puller] starts hauling against [src]!"), \
+		span_notice("You set yourself against the line and pull. Hold still and keep at it."))
+	if(do_after(puller, tug_time, src) && tethered == puller)
+		playsound(puller, 'sound/effects/snap.ogg', 70, TRUE)
+		puller.visible_message(span_boldwarning("[puller] tears [src] loose!"), \
+			span_nicegreen("The cable gives, and the weight comes back. You are yourself again."))
+		Release(silent = TRUE)
+	else
+		to_chat(puller, span_warning("The line goes slack, and settles again. It is still on you."))
+	tugging = FALSE
 
 /obj/effect/lce_lasso_glow
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT

@@ -69,8 +69,8 @@
 		balloon_alert(user, "Stun activated.")
 
 
-//Ever important weapon, the mask.
-/obj/item/clothing/head/udjat
+//Ever important weapon, the mask. On the mask slot, so it does not fight a helmet for the head.
+/obj/item/clothing/mask/udjat
 	name = "\improper Udjat mask"
 	desc = "A mask worn by The Udjat, a mysterious Grade 1 Fixer office."
 	icon_state = "udjat"

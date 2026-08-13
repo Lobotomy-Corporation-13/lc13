@@ -15,7 +15,8 @@
 	If you breach, the only thing that can bring you back to your senses is the immediate threat of death. Otherwise, your lover will sink into the depths with you."
 	original_abno = /mob/living/simple_animal/hostile/abnormality/pisc_mermaid
 	attack_action_types = list(/datum/action/cooldown/limbus_abno_action/mermaid_chokehold, /datum/action/cooldown/limbus_abno_action/mermaid_telepathy, /datum/action/cooldown/limbus_abno_action/dive_dash)
-	diet_list = list(/obj/item/food/freshfish, /obj/item/food/cake, /obj/item/food/cakeslice, /obj/item/food/chocolatebar) //Sweets and fish.
+	//Sweets and fish. carpmeat's subtypes are the carp fillet, the imitation and the fish fillet.
+	diet_list = list(/obj/item/food/freshfish, /obj/item/food/carpmeat, /obj/item/food/cake, /obj/item/food/cakeslice, /obj/item/food/chocolatebar)
 	hunger_cooldown_time =  2 MINUTES
 	diet_value = 50
 	kickstart_timer = 10 MINUTES //Same reason as mountain, she drops too fast early on and needs some time to get to know people.
@@ -49,7 +50,9 @@
 	. = ..()
 	if(!limbus_map)
 		return
-	for(var/turf/open/T in range(2, src)) // Fill her cell with safe water
+	for(var/turf/open/T in CellTurfs(2)) // Fill her cell with safe water, corner to corner
+		if(istype(T, /turf/open/water))
+			continue
 		T.TerraformTurf(/turf/open/water/deep/saltwater/safe, T)
 
 /mob/living/simple_animal/hostile/limbus_abno/pisc_mermaid/Life()

@@ -265,6 +265,10 @@
 	possession_locked = TRUE //The crystal is not vacant, whatever a ghost sees.
 	mind.transfer_to(manifest)
 
+//The crystal is never vacant while she is out in the manifest, flag or no flag.
+/mob/living/simple_animal/hostile/limbus_abno/despair_knight/PossessionLocked()
+	return ..() || !QDELETED(manifest) || crystallized
+
 //Cannot commune through EGO while manifested (and vice versa - manifest is blocked above).
 /mob/living/simple_animal/hostile/limbus_abno/despair_knight/CommuneMenu()
 	if(manifest || crystallized)
@@ -280,7 +284,11 @@
 	//stranded in the player's client pointing at a deleted mob.
 	manifest.ClearImage()
 	if(manifest.mind)
-		manifest.mind.transfer_to(src)
+		if(CanReturnTo(src, manifest))
+			manifest.mind.transfer_to(src)
+		else //Someone else got in. Moving a mind into an occupied mob drops their client.
+			to_chat(manifest, span_userdanger("Something else is wearing your body. There is nothing to go back to."))
+			manifest.ghostize(FALSE)
 	QDEL_NULL(manifest)
 	possession_locked = FALSE
 	Crystallize(FALSE)

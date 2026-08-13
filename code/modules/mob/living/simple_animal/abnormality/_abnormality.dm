@@ -95,8 +95,7 @@
 	var/core_icon = ""
 	var/core_enabled = TRUE
 
-	/// If an abnormality should not be possessed even if possessibles are enabled, mainly for admins.
-	var/do_not_possess = FALSE
+	//do_not_possess lives on /mob/living now, so the flag blacklists any mob a ghost can reach.
 
 	// secret skin variables ahead
 

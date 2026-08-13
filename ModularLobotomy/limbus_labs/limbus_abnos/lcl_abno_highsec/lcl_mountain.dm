@@ -61,6 +61,8 @@
 	var/list/protected_words = list("clean", "cook", "fight")
 	var/list/growls_low = list("Grgh", "Ghhrg", "Krrgh")
 	var/list/growls_high = list("Krrrrh", "Grr… Ghrrrgh", "Ghrrr", "KHAAA")
+	///Whether the one monkey it wakes up to has already been handed over this round.
+	var/first_meal_given = FALSE
 
 /mob/living/simple_animal/hostile/limbus_abno/mountain/funpet(mob/living/petter)
 	. = ..()
@@ -79,13 +81,14 @@
 
 /mob/living/simple_animal/hostile/limbus_abno/mountain/Login()
 	. = ..()
-	icon_living = "mosb_breach"
-	icon_state = icon_living
+	if(first_meal_given || stat >= DEAD)
+		return
+	first_meal_given = TRUE
 	new /mob/living/carbon/human/species/monkey(get_turf(src))
 
 //We don't really swap phases when mountain dies like the original, instead we make it change phases depending on its HP after updating health.
 /mob/living/simple_animal/hostile/limbus_abno/mountain/updatehealth()
-	if(!breached)
+	if(!breached || stat >= DEAD)
 		return ..()
 	var/phase_threshold = maxHealth * 0.3
 
@@ -104,6 +107,31 @@
 	if(spitting || !spit_ready)
 		return FALSE
 	Spit(target)
+
+/mob/living/simple_animal/hostile/limbus_abno/mountain/Rebirth()
+	breached = FALSE
+	unstable = FALSE
+	phase = 1
+	body_count = 0
+	spit_ready = FALSE
+	spitting = FALSE
+	ranged = FALSE
+	maxHealth = phase_one_health
+	melee_damage_lower = initial(melee_damage_lower)
+	melee_damage_upper = initial(melee_damage_upper)
+	max_starving_patience = initial(max_starving_patience)
+	starving_patience = max_starving_patience
+	satiated = FALSE //Set, not RegularHunger() - that narrates a meal the shell never had.
+	hunger_cooldown_time = initial(hunger_cooldown_time)
+	RemoveBreachEffect()
+	. = ..()
+	icon = original_abno.icon
+	icon_living = OriginalLivingState()
+	icon_state = icon_living
+	pixel_x = initial(pixel_x)
+	base_pixel_x = initial(base_pixel_x)
+	pixel_y = initial(pixel_y)
+	base_pixel_y = initial(base_pixel_y)
 
 ///If increase is TRUE, we move up a phase, if FALSE, go down.
 /mob/living/simple_animal/hostile/limbus_abno/mountain/proc/ChangePhase(increase = TRUE)
