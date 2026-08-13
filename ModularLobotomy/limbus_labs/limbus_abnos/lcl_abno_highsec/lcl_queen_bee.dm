@@ -148,6 +148,8 @@
 	var/mob/living/simple_animal/hostile/limbus_abno/queen_bee/queen
 	///Whose hive body is parked while this worker is being ridden. Only that player gets it back.
 	var/rider_ckey
+	///The way back into the hive, handed out for one ride and taken away when that ride ends.
+	var/datum/action/cooldown/bee_swap/ride_button
 
 /mob/living/simple_animal/hostile/worker_bee/lcl_bee/Initialize()
 	. = ..()
@@ -166,8 +168,12 @@
 //and a worker with one is invisible to both the next ghost and the queen's own swap.
 /mob/living/simple_animal/hostile/worker_bee/lcl_bee/ghost()
 	. = ..()
-	if(!rider_ckey) //She is out riding this one. Her return runs off the mind, so leave it alone.
-		mind = null
+	var/mob/living/simple_animal/hostile/limbus_abno/queen_bee/hive = queen
+	var/was_ridden = rider_ckey //ReturnRider clears it, and the client is already gone by now.
+	ReturnRider()
+	mind = null
+	if(was_ridden && !QDELETED(hive))
+		hive.mind = null
 
 /mob/living/simple_animal/hostile/worker_bee/lcl_bee/death()
 	ReturnRider()
@@ -192,6 +198,7 @@
 	var/riding_home = CanRideBack()
 	queen = null
 	rider_ckey = null
+	QDEL_NULL(ride_button) //However the ride ended, the button that started it does not outlive it.
 	if(QDELETED(hive))
 		return FALSE
 	hive.possession_locked = FALSE //Unlocked first, or it stays flagged for the rest of the round.
@@ -246,8 +253,7 @@
 	if(!user_bee.CanRideBack())
 		to_chat(user_bee, span_warning("The hive body is not yours. You are a worker, and only that."))
 		return FALSE
-	user_bee.ReturnRider()
-	qdel(src)
+	user_bee.ReturnRider() //Takes this button with it.
 	return TRUE
 
 ///Out of the hive body and into ONE worker that nobody is home in. The loop used to run to the
@@ -265,8 +271,8 @@
 		bee.queen = queen
 		bee.rider_ckey = rider
 		bee.ckey = rider //We don't use transfer_to because it creates possession issues.
-		var/datum/action/cooldown/bee_swap/bs = new()
-		bs.Grant(bee)
+		bee.ride_button = new /datum/action/cooldown/bee_swap()
+		bee.ride_button.Grant(bee)
 		StartCooldown()
 		return TRUE
 	to_chat(queen, span_warning("None of your workers are empty enough to slip into."))

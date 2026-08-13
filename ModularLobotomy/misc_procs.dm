@@ -88,6 +88,10 @@
 					continue
 				A.current.AbnoRadio()
 
+	if(!IsGhostPossessable(abnormality))
+		to_chat(possessing_player, span_userdanger("Something took hold of it before you could. You can't possess it!"))
+		return
+
 	abnormality.key = possessing_player.key
 	abnormality.client?.init_verbs()
 	qdel(possessing_player)
