@@ -648,24 +648,10 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 	for(var/mob/living/L in GLOB.alive_mob_list)
 		if(!is_centcom_level(L.z))
 			continue
-		// LOBOTOMYCORPORATION ADDITION START
-		if(isabnormalitymob(L))
-			var/mob/living/simple_animal/hostile/abnormality/abnormality = L
-			if(abnormality.do_not_possess)
-				continue
-		if(!get_turf(L))
+		// LOBOTOMYCORPORATION EDIT -- one shared gate, see ModularLobotomy/misc_procs.dm
+		if(!IsGhostPossessable(L))
 			continue
-		if(istype(L, /mob/living/carbon/human))
-			var/mob/living/carbon/human/H = L
-			if(istype(H, /mob/living/carbon/human/dummy) || H.sanity_lost) //Haha no.
-				continue
-
-		if(istype(L, /mob/living/simple_animal/hostile/der_freis_portal) || !get_turf(L)) //We don't want portals to be stolen...
-			continue
-		// LOBOTOMYCORPORATION ADDITION END
-
-		if(!(L in GLOB.player_list) && !L.mind)
-			possessible += L
+		possessible += L
 
 	var/mob/living/target = input("Your new life begins today!", "Possess Mob", null, null) as null|anything in sortNames(possessible)
 
@@ -731,11 +717,19 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 		to_chat(usr, span_userdanger("Abnormality possession is not enabled!"))
 		return ..()
 
-	if(isabnormalitymob(over))
-		var/mob/living/simple_animal/hostile/abnormality/abnormality = over
-		if(abnormality.do_not_possess)
-			to_chat(usr, span_userdanger("This abnormality is blacklisted from being possessed!"))
-			return ..()
+	var/mob/living/target = over
+
+	if(target.do_not_possess)
+		to_chat(usr, span_userdanger("This abnormality is blacklisted from being possessed!"))
+		return ..()
+
+	if(!target.CanGhostDragPossess()) // we want them to ONLY be able to possess abnormalities
+		to_chat(usr, span_userdanger("You can only possess abnormalities!"))
+		return ..()
+
+	if(!IsGhostPossessable(target)) // empty is not the same as free
+		to_chat(usr, span_userdanger("Something still occupies this one. You can't possess it!"))
+		return ..()
 
 	if(possession_cooldown >= world.time)
 		to_chat(src, span_userdanger("You are under a cooldown for possessing for [(possession_cooldown - world.time) / 10] more seconds!"))
@@ -745,11 +739,7 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 		to_chat(usr, span_userdanger("You dont exist, so you cant possess!"))
 		return ..()
 
-	if(!isabnormalitymob(over) && !SSmaptype.maptype == "limbus_labs") // we want them to ONLY be able to possess abnormalities
-		to_chat(usr, span_userdanger("You can only possess abnormalities!"))
-		return ..()
-
-	try_take_abnormality(src, over)
+	try_take_abnormality(src, target)
 	return ..()
 	//LOBOTOMYCORPORATION ADDITION END
 
