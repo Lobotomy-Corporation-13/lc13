@@ -162,6 +162,13 @@
 /mob/living/simple_animal/hostile/worker_bee/lcl_bee/CanGhostDragPossess()
 	return TRUE
 
+//A worker somebody got bored of goes back in the pool. Login() leaves a throwaway mind behind,
+//and a worker with one is invisible to both the next ghost and the queen's own swap.
+/mob/living/simple_animal/hostile/worker_bee/lcl_bee/ghost()
+	. = ..()
+	if(!rider_ckey) //She is out riding this one. Her return runs off the mind, so leave it alone.
+		mind = null
+
 /mob/living/simple_animal/hostile/worker_bee/lcl_bee/death()
 	ReturnRider()
 	..()
