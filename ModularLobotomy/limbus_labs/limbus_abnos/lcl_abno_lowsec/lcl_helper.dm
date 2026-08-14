@@ -288,6 +288,14 @@
 	if(clean_mode)
 		A.wash(CLEAN_WASH)
 
+/mob/living/simple_animal/hostile/limbus_abno/helper/death(gibbed)
+	StopCharge()
+	..()
+
+/mob/living/simple_animal/hostile/limbus_abno/helper/proc/StopCharge()
+	charging = FALSE
+	hit_targets = list()
+
 /mob/living/simple_animal/hostile/limbus_abno/helper/proc/SpinCharge(atom/target)
 	charging = TRUE
 	dir_to_target = get_dir(get_turf(src), get_turf(target))
@@ -300,10 +308,13 @@
 
 //I had to remove a lot of stuff that shouldn't be relevant in an LCL gamemode from the original helper dash. If you use an LCL mob outside LCL, I'm not responsible.
 /mob/living/simple_animal/hostile/limbus_abno/helper/proc/ActiveSpinCharge()
+	if(stat >= DEAD)
+		StopCharge()
+		return
 	var/stop_charge = FALSE
 	var/turf/T = get_step(get_turf(src), dir_to_target)
 	if(!T)
-		charging = FALSE
+		StopCharge()
 		return
 	if(T.density)
 		stop_charge = TRUE
@@ -319,9 +330,7 @@
 			INVOKE_ASYNC(D, TYPE_PROC_REF(/obj/machinery/door, open), 2)
 	if(stop_charge)
 		playsound(src, 'sound/abnormalities/helper/disable.ogg', 75, 1)
-		SLEEP_CHECK_DEATH(3 SECONDS)
-		charging = FALSE
-		hit_targets = list()
+		addtimer(CALLBACK(src, PROC_REF(StopCharge)), 3 SECONDS) //Timered, so dying while dazed still frees us.
 		return
 
 	forceMove(T)

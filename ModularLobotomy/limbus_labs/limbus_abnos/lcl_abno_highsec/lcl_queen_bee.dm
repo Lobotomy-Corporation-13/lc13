@@ -32,6 +32,8 @@
 
 	attunement_family = "hornet"
 	ego_list = list(/datum/ego_datum/armor/lce/hornet)
+	var/list/brood = list()
+	var/max_brood = 5
 
 /mob/living/simple_animal/hostile/limbus_abno/queen_bee/Initialize(mapload)
 	. = ..()
@@ -39,6 +41,22 @@
 
 /mob/living/simple_animal/hostile/limbus_abno/queen_bee/Move()
 	return FALSE
+
+//The brood points back at her to free its slots, so those references cannot outlive the hive.
+/mob/living/simple_animal/hostile/limbus_abno/queen_bee/Destroy()
+	for(var/atom/child in brood.Copy()) //LeaveBrood shortens the list we would be walking.
+		LeaveBrood(child)
+	return ..()
+
+///One egg or worker leaves the count, freeing a slot for the next one she lays.
+/mob/living/simple_animal/hostile/limbus_abno/queen_bee/proc/LeaveBrood(atom/child)
+	brood -= child
+	if(isliving(child))
+		var/mob/living/simple_animal/hostile/worker_bee/lcl_bee/worker = child
+		worker.mother = null
+		return
+	var/obj/item/food/bee_egg/egg = child
+	egg.mother = null
 
 ///More or less the same spores as the original queen bee, with the main difference that it creates the special controllable bees.
 /mob/living/simple_animal/hostile/limbus_abno/queen_bee/proc/EmitSpores(forced = FALSE)
@@ -97,7 +115,7 @@
 
 /datum/action/cooldown/limbus_abno_action/bee_egg
 	name = "Birth Worker"
-	desc = "Make an egg that will eventually grow into a worker bee who will fight and search for food. Costs nearly all your hunger to use. Severely increases your mood."
+	desc = "Make an egg that will eventually grow into a worker bee who will fight and search for food. Costs nearly all your hunger to use. Severely increases your mood. You can only keep five of your own workers at a time, eggs included."
 	button_icon = 'ModularLobotomy/_Lobotomyicons/lcl_abno_actions.dmi'
 	background_icon_state = "bg_qbee"
 	icon_icon = 'icons/obj/food/food.dmi'
@@ -111,14 +129,20 @@
 		return FALSE
 	if(abno_user.hunger_bar < 70)
 		return FALSE
+	var/mob/living/simple_animal/hostile/limbus_abno/queen_bee/queen = abno_user
+	if(length(queen.brood) >= queen.max_brood)
+		return FALSE
 	return TRUE
 
 /datum/action/cooldown/limbus_abno_action/bee_egg/Trigger()
 	. = ..()
 	if(!.)
 		return FALSE
-	var/turf/T = get_turf(abno_user)
-	new /obj/item/food/bee_egg(T)
+	var/mob/living/simple_animal/hostile/limbus_abno/queen_bee/queen = abno_user
+	var/turf/T = get_turf(queen)
+	var/obj/item/food/bee_egg/egg = new(T)
+	egg.mother = queen
+	queen.brood += egg
 	playsound(T, 'sound/effects/splat.ogg', 50, TRUE)
 	StartCooldown()
 	abno_user.AdjustHunger(-70) //Creating eggs like this is supposed to be very inefficient, living hosts are better.
@@ -133,19 +157,36 @@
 	microwaved_type = /obj/item/food/boiledegg //Don't think about it.
 	foodtypes = MEAT
 	w_class = WEIGHT_CLASS_TINY
+	///The queen who laid this, so the worker it becomes keeps taking up her slot.
+	var/mob/living/simple_animal/hostile/limbus_abno/queen_bee/mother
 
 /obj/item/food/bee_egg/Initialize()
 	. = ..()
 	addtimer(CALLBACK(src, PROC_REF(hatch_bee)), 2 MINUTES)
 
+//Eaten, microwaved, or squashed before it hatched. Either way she is short one heir.
+/obj/item/food/bee_egg/Destroy()
+	if(mother)
+		mother.LeaveBrood(src)
+	return ..()
+
 /obj/item/food/bee_egg/proc/hatch_bee()
-	new /mob/living/simple_animal/hostile/worker_bee/lcl_bee(get_turf(src))
-	qdel(src)
+	var/mob/living/simple_animal/hostile/worker_bee/lcl_bee/hatchling = new(get_turf(src))
+	if(mother)
+		hatchling.mother = mother
+		mother.brood += hatchling
+	qdel(src) //Hands the slot over to the worker rather than freeing it.
 
 /mob/living/simple_animal/hostile/worker_bee/lcl_bee
 	faction = list("neutral") //Their AI lobotomy should prevent friendly attack, but better safe than sorry.
 	created_bee_type = /mob/living/simple_animal/hostile/worker_bee/lcl_bee
 	var/mob/living/simple_animal/hostile/limbus_abno/queen_bee/queen
+	///Whose hive body is parked while this worker is being ridden. Only that player gets it back.
+	var/rider_ckey
+	///The way back into the hive, handed out for one ride and taken away when that ride ends.
+	var/datum/action/cooldown/bee_swap/ride_button
+	///The queen who laid the egg this hatched from, if any. Set only on her own brood.
+	var/mob/living/simple_animal/hostile/limbus_abno/queen_bee/mother
 
 /mob/living/simple_animal/hostile/worker_bee/lcl_bee/Initialize()
 	. = ..()
@@ -156,15 +197,55 @@
 	var/datum/action/cooldown/bee_scavenge/beenge = new() //I'm kinda pushing it with that one.
 	beenge.Grant(src)
 
+//Ghost-playable on purpose - that is what the spawn message is for. It is not a way into the hive.
+/mob/living/simple_animal/hostile/worker_bee/lcl_bee/CanGhostDragPossess()
+	return TRUE
+
+//A worker somebody got bored of goes back in the pool. Login() leaves a throwaway mind behind,
+//and a worker with one is invisible to both the next ghost and the queen's own swap.
+/mob/living/simple_animal/hostile/worker_bee/lcl_bee/ghost()
+	. = ..()
+	var/mob/living/simple_animal/hostile/limbus_abno/queen_bee/hive = queen
+	var/was_ridden = rider_ckey //ReturnRider clears it, and the client is already gone by now.
+	ReturnRider()
+	mind = null
+	if(was_ridden && !QDELETED(hive))
+		hive.mind = null
+
 /mob/living/simple_animal/hostile/worker_bee/lcl_bee/death()
-	if(queen)
-		//Swatted while she was riding it. Unlock first, or the body she is being sent back to
-		//stays flagged as occupied-elsewhere for the rest of the round.
-		queen.possession_locked = FALSE
-		if(mind)
-			mind.transfer_to(queen)
-		queen = null
+	ReturnRider()
 	..()
+
+/mob/living/simple_animal/hostile/worker_bee/lcl_bee/Destroy()
+	ReturnRider()
+	if(mother)
+		mother.LeaveBrood(src) //Her count is of living workers, so this one stops holding a slot.
+	return ..()
+
+///Whether the player in this worker is the queen who stepped out of the hive to ride it. Anybody
+///else in here is a passenger, and sending them home would throw her out of her own mob.
+/mob/living/simple_animal/hostile/worker_bee/lcl_bee/proc/CanRideBack()
+	if(!rider_ckey || ckey != rider_ckey)
+		return FALSE
+	return CanReturnTo(queen, src)
+
+///The ride is over: swatted, gibbed, or walked out of by hand. The hive unlocks whatever the
+///reason, and the player only moves if the hive is theirs to move into.
+/mob/living/simple_animal/hostile/worker_bee/lcl_bee/proc/ReturnRider()
+	var/mob/living/simple_animal/hostile/limbus_abno/queen_bee/hive = queen
+	var/returning = rider_ckey
+	var/riding_home = CanRideBack()
+	queen = null
+	rider_ckey = null
+	QDEL_NULL(ride_button) //However the ride ended, the button that started it does not outlive it.
+	if(QDELETED(hive))
+		return FALSE
+	hive.possession_locked = FALSE //Unlocked first, or it stays flagged for the rest of the round.
+	if(!riding_home)
+		return FALSE
+	mind = null //The throwaway mind Login() made here. Hers is still parked on the hive.
+	hive.ckey = returning
+	return TRUE
 
 /datum/action/cooldown/bee_scavenge
 	name = "Scavenge for meat."
@@ -199,28 +280,42 @@
 	. = ..()
 	if(!.)
 		return FALSE
-	var/mob/living/simple_animal/hostile/worker_bee/lcl_bee/user_bee
 	if(istype(owner, /mob/living/simple_animal/hostile/worker_bee/lcl_bee))
-		user_bee = owner
-		if(user_bee.queen)
-			user_bee.queen.possession_locked = FALSE //She is home; the hive body is hers again.
-			user_bee.queen.ckey = user_bee.ckey
-			user_bee.mind = null
-			user_bee.queen = null
-			qdel(src)
-			return
+		return ReturnToHive(owner)
+	return RideWorker()
 
+///Back out of a worker and into the hive body.
+/datum/action/cooldown/bee_swap/proc/ReturnToHive(mob/living/simple_animal/hostile/worker_bee/lcl_bee/user_bee)
+	if(QDELETED(user_bee.queen))
+		to_chat(user_bee, span_warning("There is no hive left to go back to."))
+		return FALSE
+	if(!user_bee.CanRideBack())
+		to_chat(user_bee, span_warning("The hive body is not yours. You are a worker, and only that."))
+		return FALSE
+	user_bee.ReturnRider() //Takes this button with it.
+	return TRUE
+
+///Out of the hive body and into ONE worker that nobody is home in. The loop used to run to the
+///end of the list, handing every free bee a button that led back into her body.
+/datum/action/cooldown/bee_swap/proc/RideWorker()
+	var/mob/living/simple_animal/hostile/limbus_abno/queen_bee/queen = owner
+	var/rider = queen.ckey
+	if(!rider)
+		return FALSE
 	for(var/mob/living/simple_animal/hostile/worker_bee/lcl_bee/bee in GLOB.alive_mob_list)
-		if(!bee.mind && !bee.ckey)
-			var/mob/living/simple_animal/hostile/limbus_abno/queen_bee/queen = owner
-			//Held before the ckey moves. Her body is about to look unoccupied to every ghost.
-			if(istype(queen))
-				queen.possession_locked = TRUE
-			bee.ckey = owner.ckey //We don't use transfer_to because it creates possession issues.
-			var/datum/action/cooldown/bee_swap/bs = new /datum/action/cooldown/bee_swap()
-			bs.Grant(bee)
-			bee.queen = owner
-			StartCooldown()
+		if(bee.mind || bee.ckey || bee.queen)
+			continue
+		//Held before the ckey moves. Her body is about to look unoccupied to every ghost.
+		queen.possession_locked = TRUE
+		bee.queen = queen
+		bee.rider_ckey = rider
+		bee.ckey = rider //We don't use transfer_to because it creates possession issues.
+		bee.ride_button = new /datum/action/cooldown/bee_swap()
+		bee.ride_button.Grant(bee)
+		StartCooldown()
+		return TRUE
+	to_chat(queen, span_warning("None of your workers are empty enough to slip into."))
+	return FALSE
 
 /datum/action/cooldown/bee_speech
 	name = "Hivemind Speech"

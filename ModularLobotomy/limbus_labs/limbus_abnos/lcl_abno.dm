@@ -128,7 +128,7 @@
 	breach_overlay.transform = matrix() * breach_overlay_scale
 	if(SSmaptype.maptype == "limbus_labs") //If for some reason they spawn outside the limbus map, we're not giving them a healspot since it's designed for their starting cell.
 		limbus_map = TRUE
-		for(var/turf/open/T in range(3, src)) // Covers most of the cell in healing spots for the abno.
+		for(var/turf/open/T in CellTurfs()) // Covers the cell in healing spots for the abno.
 			var/obj/effect/abno_heal_spot/heal_spot = new(T)
 			heal_spot.abno = src
 
@@ -200,6 +200,29 @@
 		to_chat(get_ghost(TRUE, TRUE), span_notice("Your shell will split open in [left]. Return to it then."))
 	mind = null //We make it repossessable again so the abno at least has the opportunity of being played if someone gets bored of it. Doesn't include logout.
 
+//A specimen is not an /abnormality mob, so the drag path's type check would refuse all of them.
+/mob/living/simple_animal/hostile/limbus_abno/CanGhostDragPossess()
+	return TRUE
+
+///Whether this body is spoken for. Subtypes that can step out of themselves also answer TRUE
+///off the projection itself, so a missed possession_locked can never leave the body open.
+/mob/living/simple_animal/hostile/limbus_abno/proc/PossessionLocked()
+	return possession_locked
+
+///The open turfs of the cell this specimen woke up in. Cells are areas of their own, so this
+///stays in step with a cell whatever size it is redrawn at; a square around the spawn does not.
+/mob/living/simple_animal/hostile/limbus_abno/proc/CellTurfs(fallback_range = 3)
+	var/list/turfs = list()
+	var/area/lce/containment/cell = get_area(src)
+	if(istype(cell) && cell.specimen_cell)
+		for(var/turf/open/T in cell)
+			turfs += T
+		return turfs
+	//Somewhere that is not a cell - an admin drop, a test room. Back to a square around us.
+	for(var/turf/open/T in range(fallback_range, src))
+		turfs += T
+	return turfs
+
 ///Due to how repression works in LCL, we need to account for most source of damage inflicted by players, but abnos beating each other up shouldn't count by default.
 ///Ideally, we want even abnos that like repression to get pissed off if they get too close to death, to not encourage accidental killing during repression work.
 ///This doesn't include stuff like special damage effects like non projectiles or attacks, but I'm too lazy to code it better and account for every edge case.
@@ -229,6 +252,8 @@
 
 /mob/living/simple_animal/hostile/limbus_abno/Life()
 	. = ..()
+	if(stat >= DEAD) //A shell has no needs, and draining them breached the corpse.
+		return
 	if(hunger_cooldown < world.time)
 		Hungrier(hunger_loss, FALSE)
 		hunger_cooldown = world.time + hunger_cooldown_time
@@ -690,11 +715,15 @@
 		abno_user.AdjustCounter(abno_user.max_counter)
 	StartCooldown()
 
-///Abno heal spot
+///Abno heal spot. Bookkeeping laid over a cell floor, so it gets a landmark's treatment: nothing
+///can examine it, drag it out of the cell or shut it in a crate.
 /obj/effect/abno_heal_spot
 	name = "Abno heal spot"
 	desc = "Where an abno can heal. You shouldn't be able to read this."
 	opacity = FALSE
+	anchored = TRUE
+	invisibility = INVISIBILITY_ABSTRACT
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	var/mob/living/simple_animal/hostile/limbus_abno/abno
 
 ///Desire (mood) HUD bar. One updating alert instead of five: the face (mood1..mood9) plus a red->green tint show how the abno feels at a glance.

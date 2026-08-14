@@ -1061,6 +1061,7 @@
 	},
 /obj/item/ego_weapon/ranged/city/udjat,
 /obj/item/ego_weapon/city/udjat_limbus,
+/obj/item/clothing/mask/udjat,
 /turf/open/floor/lce/plate/dark,
 /area/lce/security/udjat_quarters)
 "gh" = (
@@ -1798,7 +1799,7 @@
 /obj/item/ego_weapon/ranged/city/udjat,
 /obj/item/ego_weapon/city/udjat_limbus,
 /obj/item/clothing/suit/armor/ego_gear/city/udjat_limbus,
-/obj/item/clothing/head/udjat,
+/obj/item/clothing/mask/udjat,
 /turf/open/floor/lce/plate/dark,
 /area/lce/security/udjat_armoury)
 "kE" = (
