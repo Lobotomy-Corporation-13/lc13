@@ -38,6 +38,13 @@
 	ourdash = new()
 	icon_state = icon_living
 
+/mob/living/simple_animal/hostile/rcorp_abno/hard/fire_bird/Life()
+	. = ..()
+	if(!.) // Dead
+		return FALSE
+	if(pulse_cooldown < world.time)
+		crispynugget()
+
 //Attacks
 /mob/living/simple_animal/hostile/rcorp_abno/hard/fire_bird/proc/crispynugget()
 	pulse_cooldown = world.time + pulse_cooldown_time

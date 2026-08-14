@@ -49,6 +49,17 @@
 	mappath = "_maps/RandomRooms/backstreets/large_south/lab_lsa.dmm"
 	stock = 1
 
+/datum/map_template/random_room/backstreets/large_south/lab_lsb
+	name = "Lab - Large South B"
+	room_id = "lab_lsb"
+	mappath = "_maps/RandomRooms/backstreets/large_south/lab_lsb.dmm"
+	stock = 1
+
+/datum/map_template/random_room/backstreets/large_south/lab_lsc
+	name = "Lab - Large South C"
+	room_id = "lab_lsc"
+	mappath = "_maps/RandomRooms/backstreets/large_south/lab_lsc.dmm"
+
 /datum/map_template/random_room/backstreets/large_south/shotgun_exam
 	name = "ShotgunExam - Large South"
 	room_id = "shotgun_exam"

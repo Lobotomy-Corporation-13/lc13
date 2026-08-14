@@ -47,6 +47,7 @@
 		"No" = list(FALSE, "Come back after watching the fast and the furious 7 five more times."),
 	)
 
+	//uses ckeys
 	var/bald_users = list()
 	chem_type = /datum/reagent/abnormality/bald
 

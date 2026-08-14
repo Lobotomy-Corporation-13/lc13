@@ -115,7 +115,8 @@
 		active = 0
 
 /datum/action/cooldown/nosferatu_banquet/Trigger()
-	if(!..())
+	. = ..()
+	if(!.)
 		return FALSE
 	if(!istype(owner, /mob/living/simple_animal/hostile/abnormality/nosferatu))
 		return FALSE
@@ -135,7 +136,8 @@
 	cooldown_time = NOSFERATU_BANQUET_COOLDOWN //12 seconds
 
 /datum/action/cooldown/nosferatu_mistform/Trigger()
-	if(!..())
+	. = ..()
+	if(!.)
 		return FALSE
 	if(!istype(owner, /mob/living/simple_animal/hostile/abnormality/nosferatu))
 		return FALSE
@@ -152,7 +154,7 @@
 	AddComponent(/datum/component/bloodfeast, siphon = TRUE, range = 2, starting = 1000)
 
 /mob/living/simple_animal/hostile/abnormality/nosferatu/PostSpawn()
-	..()
+	. = ..()
 	if(!IsContained())
 		update_icon()
 	addtimer(CALLBACK(src, PROC_REF(GetThirstier)), 30 SECONDS)
@@ -271,7 +273,7 @@
 		else
 			to_chat(user, span_warning("Nosferatu is well-fed, and won't accept subpar blood like this. Wait for it to get thirstier before offering a bloodpack."))
 			return
-	. = ..()
+	return ..()
 
 
 // Breach
@@ -365,7 +367,7 @@
 /mob/living/simple_animal/hostile/abnormality/nosferatu/Move()
 	if(!can_act)
 		return FALSE
-	..()
+	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/nosferatu/AttackingTarget(atom/attacked_target)
 	if(mist_form)
@@ -614,6 +616,6 @@
 	var/datum/component/bloodfeast/bloodfeast = GetComponent(/datum/component/bloodfeast)
 	var/obj/effect/decal/cleanable/blood/B = new(get_turf(src))
 	B.bloodiness = (bloodfeast.blood_amount * 0.5) // drops half of its blood on death. This is potentially far more than what fits in a splatter.
-	..()
+	return ..()
 
 #undef NOSFERATU_BANQUET_COOLDOWN

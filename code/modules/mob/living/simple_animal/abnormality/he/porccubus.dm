@@ -56,7 +56,7 @@
 	)
 
 	//the agent that started work on porccubus
-	var/agent_ckey
+	var/agent_tag
 	var/teleport_cooldown_time = 5 MINUTES
 	var/teleport_cooldown
 	var/damage_taken = FALSE
@@ -95,12 +95,12 @@
 /mob/living/simple_animal/hostile/abnormality/porccubus/AttemptWork(mob/living/carbon/human/user, work_type)
 	. = ..()
 	if(.)
-		agent_ckey = user //just in case the agent goes insane midwork
+		agent_tag = user.tag //just in case the agent goes insane midwork
 
 /mob/living/simple_animal/hostile/abnormality/porccubus/PostWorkEffect(mob/living/carbon/human/user, work_type, pe, work_time)
 	if(user.sanity_lost) //if the person is driven insane mid work
-		DrugOverdose(user, agent_ckey)
-	agent_ckey = null
+		DrugOverdose(user, agent_tag)
+	agent_tag = null
 
 /mob/living/simple_animal/hostile/abnormality/porccubus/SuccessEffect(mob/living/carbon/human/user, work_type, pe)
 	datum_reference.qliphoth_change(1)
@@ -108,12 +108,12 @@
 
 	if(PA)
 		PA.IncreaseTolerance()
-	else if(get_attribute_level(user, TEMPERANCE_ATTRIBUTE) < 60 || work_type == "Touch")
-		if(LAZYFIND(datum_reference.transferable_var, agent_ckey )) //if they were already drugged before we basically drug them to death for trying to pull that shit again
-			DrugOverdose(user, agent_ckey)
+	else if(user && (get_attribute_level(user, TEMPERANCE_ATTRIBUTE) < 60 || work_type == "Touch"))
+		if(LAZYFIND(datum_reference.transferable_var, agent_tag)) //if they were already drugged before we basically drug them to death for trying to pull that shit again
+			DrugOverdose(user, agent_tag)
 			return ..()
 		user.apply_status_effect(STATUS_EFFECT_ADDICTION) //psst, you want some happiness?
-	..()
+	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/porccubus/FailureEffect(mob/living/carbon/human/user, work_type, pe)
 	. = ..()
@@ -130,12 +130,12 @@
 
 	if(!datum_reference)
 		return
-	if(LAZYFIND(datum_reference.transferable_var, ckey))
+	if(LAZYFIND(datum_reference.transferable_var, agent_tag))
 		previous_addict = TRUE
-	LAZYREMOVE(datum_reference.transferable_var, ckey) //otherwise they will just puke it out
+	LAZYREMOVE(datum_reference.transferable_var, agent_tag) //otherwise they will just puke it out
 	PA = addict.apply_status_effect(STATUS_EFFECT_ADDICTION)
 	if(previous_addict)
-		LAZYADD(datum_reference.transferable_var, ckey) //we take them out of the list after if they weren't already part of the list because it doesn't really "count" as a real drug dose
+		LAZYADD(datum_reference.transferable_var, agent_tag) //we take them out of the list after if they weren't already part of the list because it doesn't really "count" as a real drug dose
 	OverdoseEffect(PA,nirvana)
 
 /mob/living/simple_animal/hostile/abnormality/porccubus/proc/OverdoseEffect(datum/status_effect/porccubus_addiction/PA, nirvana)
@@ -302,7 +302,6 @@
 	var/sanity_gain = 60
 	var/attribute_gain = 30
 	var/previous_addict = FALSE
-	var/mob/living/carbon/human/addict
 
 /atom/movable/screen/alert/status_effect/porccubus_addiction
 	name = "Indescribable pleasure"
@@ -321,7 +320,7 @@
 		owner.remove_status_effect(src)
 		return
 
-	addict = owner
+	var/mob/living/carbon/human/addict = owner
 	if(!porc_datum || LAZYFIND(porc_datum?.transferable_var, addict.ckey) && !isnull(addict.ckey)) //we don't allow the same person to drug themselves again even after respawn
 		previous_addict = TRUE
 		addict.remove_status_effect(src)
@@ -336,6 +335,7 @@
 
 //wow this sure feels great I sure do hope there are no negative consequences for my hubris
 /datum/status_effect/porccubus_addiction/tick()
+	var/mob/living/carbon/human/addict = owner
 	if(withdrawal_cooldown < world.time)
 		addict.adjustSanityLoss(-sanity_gain)
 		addict.adjust_all_attribute_buffs(-1)
@@ -348,6 +348,7 @@
 
 //every time you take another hit the effects decrease
 /datum/status_effect/porccubus_addiction/proc/IncreaseTolerance(extra_attribute = TRUE, tolerance_amount = 0)
+	var/mob/living/carbon/human/addict = owner
 	for(var/i = 0 to tolerance_amount)
 		if(withdrawal_cooldown_time > 30 SECONDS)
 			withdrawal_cooldown_time -= 25 SECONDS //"I can stop whenever I want"
@@ -369,6 +370,7 @@
 	. = ..()
 	if(!ishuman(owner))
 		return
+	var/mob/living/carbon/human/addict = owner
 	if(previous_addict)
 		to_chat(addict, span_userdanger("Your body has a sudden allergic reaction to the substance!"))
 		addict.vomit()
@@ -397,6 +399,7 @@
 
 //we copy the head icon and apply it as a vis content. because while overlays can't be animated, visual objects that have overlays on them can
 /datum/status_effect/porccubus_addiction/proc/HeadExplode(obj/item/bodypart/head/head)
+	var/mob/living/carbon/human/addict = owner
 	var/obj/expanding_head = new()
 	expanding_head.layer = -BODY_FRONT_LAYER
 	expanding_head.plane = FLOAT_PLANE

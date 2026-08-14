@@ -165,16 +165,14 @@
 	galaxy_friends -= dead_friend
 	datum_reference.qliphoth_change(-4)
 	dead_friend.remove_status_effect(STATUS_EFFECT_FRIENDSHIP)
-	UnregisterSignal(dead_friend, COMSIG_LIVING_DEATH)
-	UnregisterSignal(dead_friend, COMSIG_PARENT_QDELETING)
+	UnregisterSignal(dead_friend, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING))
 	new /obj/effect/temp_visual/pebblecrack(get_turf(dead_friend))
 	playsound(dead_friend, "shatter", 50, TRUE)
 	to_chat(src, span_userdanger("You sense that one of your friends has perished and feel your heart ache."))
 
 /mob/living/simple_animal/hostile/abnormality/galaxy_child/proc/on_friend_deletion(mob/deleted_friend)
 	SIGNAL_HANDLER
-	UnregisterSignal(deleted_friend, COMSIG_LIVING_DEATH)
-	UnregisterSignal(deleted_friend, COMSIG_PARENT_QDELETING)
+	UnregisterSignal(deleted_friend, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING))
 	galaxy_friends -= deleted_friend
 
 /datum/action/cooldown/friend_gift

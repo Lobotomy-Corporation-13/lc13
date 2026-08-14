@@ -84,10 +84,10 @@
 	required_research = /datum/data/lc13research/nbuff1
 
 /datum/data/lc13research/ntemp1/ResearchEffect(obj/structure/representative_console/requester)
-	ItemUnlock(requester.order_list, "Fading Fortitude Ampule",	/obj/item/attribute_temporary/fortitudesmall, 500)
-	ItemUnlock(requester.order_list, "Fading Temperance Ampule",	/obj/item/attribute_temporary/temperancesmall, 500)
-	ItemUnlock(requester.order_list, "Fading Prudence Ampule",	/obj/item/attribute_temporary/prudencesmall, 500)
-	ItemUnlock(requester.order_list, "Fading Justice Ampule",	/obj/item/attribute_temporary/justicesmall, 500)
+	ItemUnlock(requester.order_list, "Fading Fortitude Ampule",	/obj/item/attribute_temporary/fortitudesmall, 250)
+	ItemUnlock(requester.order_list, "Fading Temperance Ampule",	/obj/item/attribute_temporary/temperancesmall, 250)
+	ItemUnlock(requester.order_list, "Fading Prudence Ampule",	/obj/item/attribute_temporary/prudencesmall, 250)
+	ItemUnlock(requester.order_list, "Fading Justice Ampule",	/obj/item/attribute_temporary/justicesmall, 250)
 	..()
 
 /datum/data/lc13research/ntemp2
@@ -98,7 +98,7 @@
 	required_research = /datum/data/lc13research/ntemp1
 
 /datum/data/lc13research/ntemp2/ResearchEffect(obj/structure/representative_console/requester)
-	ItemUnlock(requester.order_list, "Fading Attribute Ampule",	/obj/item/attribute_temporary/stattemporary, 1000)
+	ItemUnlock(requester.order_list, "Fading Attribute Ampule",	/obj/item/attribute_temporary/stattemporary, 500)
 	..()
 
 /datum/data/lc13research/ntemp3
@@ -109,10 +109,10 @@
 	required_research = /datum/data/lc13research/ntemp2
 
 /datum/data/lc13research/ntemp3/ResearchEffect(obj/structure/representative_console/requester)
-	ItemUnlock(requester.order_list, "Focused Fading Fortitude Ampule",	/obj/item/attribute_temporary/fortitudebig, 1500)
-	ItemUnlock(requester.order_list, "Focused Fading Temperance Ampule",	/obj/item/attribute_temporary/temperancebig, 1500)
-	ItemUnlock(requester.order_list, "Focused Fading Prudence Ampule",	/obj/item/attribute_temporary/prudencebig, 1500)
-	ItemUnlock(requester.order_list, "Focused Fading Justice Ampule",	/obj/item/attribute_temporary/justicebig, 1500)
+	ItemUnlock(requester.order_list, "Focused Fading Fortitude Ampule",	/obj/item/attribute_temporary/fortitudebig, 750)
+	ItemUnlock(requester.order_list, "Focused Fading Temperance Ampule",	/obj/item/attribute_temporary/temperancebig, 750)
+	ItemUnlock(requester.order_list, "Focused Fading Prudence Ampule",	/obj/item/attribute_temporary/prudencebig, 750)
+	ItemUnlock(requester.order_list, "Focused Fading Justice Ampule",	/obj/item/attribute_temporary/justicebig, 750)
 	..()
 
 

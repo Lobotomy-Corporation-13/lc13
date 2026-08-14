@@ -1,0 +1,136 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"c" = (
+/turf/open/floor/plating/rust,
+/area/city/backstreets_room)
+"f" = (
+/obj/item/stack/spacecash/c10,
+/turf/open/floor/material,
+/area/city/backstreets_room)
+"k" = (
+/mob/living/simple_animal/hostile/ordeal/citrine/archer,
+/turf/open/floor/plating/rust,
+/area/city/backstreets_room)
+"q" = (
+/obj/structure/frame/machine,
+/turf/open/floor/material,
+/area/city/backstreets_room)
+"r" = (
+/turf/open/floor/material{
+	icon_state = "damaged2"
+	},
+/area/city/backstreets_room)
+"t" = (
+/obj/item/stack/spacecash/c10,
+/turf/open/floor/plating/rust,
+/area/city/backstreets_room)
+"x" = (
+/turf/open/floor/material,
+/area/city/backstreets_room)
+"P" = (
+/obj/item/stack/spacecash/c10,
+/mob/living/simple_animal/hostile/ordeal/citrine/archer,
+/turf/open/floor/plating/rust,
+/area/city/backstreets_room)
+"Q" = (
+/turf/closed/indestructible/reinforced,
+/area/city/backstreets_room)
+"S" = (
+/mob/living/simple_animal/hostile/ordeal/citrine/archer,
+/turf/open/floor/material,
+/area/city/backstreets_room)
+"W" = (
+/turf/open/floor/material{
+	icon_state = "damaged3"
+	},
+/area/city/backstreets_room)
+"X" = (
+/obj/item/mecha_parts/mecha_equipment/repair_droid,
+/turf/open/floor/material{
+	icon_state = "damaged1"
+	},
+/area/city/backstreets_room)
+"Z" = (
+/obj/structure/mecha_wreckage/reticence,
+/turf/open/floor/plating/rust,
+/area/city/backstreets_room)
+
+(1,1,1) = {"
+Q
+Q
+Q
+Q
+Q
+Q
+"}
+(2,1,1) = {"
+c
+c
+W
+c
+x
+Q
+"}
+(3,1,1) = {"
+t
+c
+q
+X
+f
+Q
+"}
+(4,1,1) = {"
+c
+c
+c
+k
+x
+Q
+"}
+(5,1,1) = {"
+c
+t
+S
+Z
+S
+Q
+"}
+(6,1,1) = {"
+c
+c
+c
+P
+c
+Q
+"}
+(7,1,1) = {"
+c
+c
+c
+c
+f
+Q
+"}
+(8,1,1) = {"
+c
+c
+c
+r
+x
+Q
+"}
+(9,1,1) = {"
+c
+c
+x
+x
+x
+Q
+"}
+(10,1,1) = {"
+Q
+Q
+Q
+Q
+Q
+Q
+"}

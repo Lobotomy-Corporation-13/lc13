@@ -1,0 +1,4 @@
+author: "InsightfulParasite"
+delete-after: True
+changes:
+  - bugfix: "Several runtimes that im too tired to list, including the RCA faction check on objects error."

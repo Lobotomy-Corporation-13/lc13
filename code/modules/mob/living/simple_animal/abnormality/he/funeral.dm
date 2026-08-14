@@ -179,7 +179,6 @@
 		i++
 	SLEEP_CHECK_DEATH(10 SECONDS)
 	icon_state = icon_living
-	swarm_killed = list()
 	can_act = TRUE
 	swarm_cooldown = world.time + swarm_cooldown_time
 

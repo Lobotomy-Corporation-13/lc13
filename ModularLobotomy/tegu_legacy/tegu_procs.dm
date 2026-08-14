@@ -64,7 +64,7 @@ GLOBAL_VAR(roundend_music)
 			continue
 		if(ishuman(M) && M.stat != DEAD)
 			survivors++
-	var/survival_rate = survivors / players
+	var/survival_rate = survivors ? survivors / players : 0
 	if(GLOB.player_list.len >= 8) // Lowpop doesn't count for epic music
 		if(core_suppression_state == 3) // Claw/Arbiter/Red Mist killed during core suppression
 			switch(survival_rate)

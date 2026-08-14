@@ -1,0 +1,558 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"bd" = (
+/turf/closed/indestructible/reinforced,
+/area/city/backstreets_room)
+"cd" = (
+/obj/item/kirbyplants/random,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"cE" = (
+/obj/machinery/smartfridge/chemistry,
+/turf/closed/indestructible/reinforced,
+/area/city/backstreets_room)
+"dB" = (
+/obj/effect/turf_decal/tile/purple,
+/obj/effect/turf_decal/tile/purple{
+	color = "#bf48b1";
+	dir = 4
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/plasteel/white,
+/area/city/backstreets_room)
+"ix" = (
+/obj/machinery/door/window{
+	dir = 8
+	},
+/obj/machinery/door/window/brigdoor{
+	dir = 4
+	},
+/obj/structure/table/reinforced,
+/turf/open/floor/facility/dark,
+/area/city/backstreets_room)
+"jh" = (
+/obj/structure/table/glass,
+/obj/item/assembly/igniter/condenser{
+	pixel_x = 9;
+	pixel_y = -3
+	},
+/obj/item/assembly/igniter{
+	pixel_x = 9;
+	pixel_y = 9
+	},
+/turf/open/floor/plasteel/white,
+/area/city/backstreets_room)
+"jW" = (
+/obj/structure/table/glass,
+/obj/item/reagent_containers/glass/bucket/melting,
+/obj/machinery/camera{
+	alpha = 0;
+	mouse_opacity = 0;
+	name = "hidden security camera";
+	short_range = 13;
+	view_range = 13
+	},
+/obj/machinery/reagentgrinder{
+	desc = "Used to grind things up into raw materials and liquids.";
+	pixel_y = 14;
+	pixel_x = 2
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/plasteel/white,
+/area/city/backstreets_room)
+"kq" = (
+/obj/structure/chair/office/light{
+	dir = 1
+	},
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"kD" = (
+/obj/structure/window/shuttle{
+	name = "window"
+	},
+/obj/structure/grille/broken,
+/turf/open/floor/plating,
+/area/city/backstreets_room)
+"kI" = (
+/obj/effect/turf_decal/tile/blue{
+	color = "#5269e9";
+	dir = 1
+	},
+/obj/effect/turf_decal/tile/blue{
+	dir = 8
+	},
+/obj/machinery/light{
+	dir = 8
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/plasteel/white,
+/area/city/backstreets_room)
+"kK" = (
+/obj/structure/filingcabinet,
+/obj/structure/filingcabinet{
+	pixel_x = -9
+	},
+/obj/structure/filingcabinet{
+	pixel_x = 10
+	},
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"nj" = (
+/turf/closed/indestructible/rock,
+/area/city/backstreets_room)
+"oj" = (
+/obj/item/kirbyplants/random,
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"qo" = (
+/obj/structure/table/glass,
+/obj/item/kirbyplants/random{
+	pixel_y = 10
+	},
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"rP" = (
+/obj/structure/chair/sofa/corp/left{
+	dir = 8
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"rS" = (
+/obj/effect/turf_decal/tile{
+	color = "#ffb964";
+	alpha = 150;
+	dir = 4
+	},
+/obj/effect/turf_decal/tile{
+	color = "#FF8C00";
+	alpha = 150;
+	dir = 1
+	},
+/obj/effect/turf_decal/siding/yellow{
+	dir = 1
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/plasteel/white,
+/area/city/backstreets_room)
+"sM" = (
+/obj/effect/turf_decal/tile{
+	color = "#FF8C00";
+	alpha = 150;
+	dir = 1
+	},
+/obj/effect/turf_decal/tile{
+	color = "#ffb964";
+	alpha = 150;
+	dir = 8
+	},
+/turf/open/floor/plasteel/white,
+/area/city/backstreets_room)
+"ti" = (
+/obj/structure/table/glass,
+/obj/item/clipboard,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"tm" = (
+/obj/effect/turf_decal/tile/blue{
+	color = "#5269e9"
+	},
+/obj/effect/turf_decal/tile/blue{
+	color = "#5269e9";
+	dir = 1
+	},
+/obj/effect/turf_decal/tile/blue{
+	dir = 8
+	},
+/obj/structure/chair/office/light{
+	dir = 8
+	},
+/turf/open/floor/plasteel/white,
+/area/city/backstreets_room)
+"tN" = (
+/obj/machinery/door/airlock/medical/glass{
+	name = "pharmacy";
+	req_one_access_txt = "5"
+	},
+/turf/open/floor/plasteel/white,
+/area/city/backstreets_room)
+"uv" = (
+/obj/structure/chair/sofa/corp/right{
+	dir = 8
+	},
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"vG" = (
+/obj/effect/turf_decal/tile{
+	color = "#FF8C00";
+	alpha = 150
+	},
+/obj/effect/turf_decal/tile{
+	color = "#ffb964";
+	alpha = 150;
+	dir = 4
+	},
+/turf/open/floor/plasteel/white,
+/area/city/backstreets_room)
+"xd" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/closed/indestructible/reinforced,
+/area/city/backstreets_room)
+"xo" = (
+/obj/structure/table/glass,
+/obj/item/scalpel,
+/obj/item/hemostat,
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"yk" = (
+/obj/effect/turf_decal/tile{
+	color = "#FF8C00";
+	alpha = 150
+	},
+/obj/effect/turf_decal/tile{
+	color = "#ffb964";
+	alpha = 150;
+	dir = 4
+	},
+/obj/effect/turf_decal/tile{
+	color = "#ffb964";
+	alpha = 150;
+	dir = 8
+	},
+/turf/open/floor/plasteel/white,
+/area/city/backstreets_room)
+"zu" = (
+/obj/effect/turf_decal/tile{
+	color = "#ffb964";
+	alpha = 150;
+	dir = 4
+	},
+/obj/effect/turf_decal/tile{
+	color = "#FF8C00";
+	alpha = 150;
+	dir = 1
+	},
+/obj/effect/turf_decal/tile{
+	color = "#ffb964";
+	alpha = 150;
+	dir = 8
+	},
+/obj/effect/turf_decal/siding/yellow{
+	dir = 1
+	},
+/turf/open/floor/plasteel/white,
+/area/city/backstreets_room)
+"Cs" = (
+/obj/effect/turf_decal/trimline/red/filled/warning,
+/obj/machinery/light{
+	dir = 1;
+	pixel_y = 19
+	},
+/obj/item/storage/bag/chemistry,
+/obj/structure/closet/crate/medical{
+	name = "equipments crate"
+	},
+/obj/item/clothing/suit/armor/ego_gear/limbus_labs/chem,
+/obj/item/clothing/head/beret/tegu/chem,
+/turf/open/floor/noslip,
+/area/city/backstreets_room)
+"De" = (
+/obj/structure/bed/roller,
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"DH" = (
+/obj/effect/turf_decal/tile/blue{
+	color = "#5269e9"
+	},
+/obj/effect/turf_decal/tile/blue{
+	dir = 8
+	},
+/turf/open/floor/plasteel/white,
+/area/city/backstreets_room)
+"Fp" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"GI" = (
+/obj/effect/turf_decal/trimline/red/filled/warning,
+/obj/machinery/light{
+	dir = 1;
+	pixel_y = 19
+	},
+/obj/machinery/chem_master,
+/turf/open/floor/noslip,
+/area/city/backstreets_room)
+"Ho" = (
+/obj/effect/turf_decal/tile/purple{
+	color = "#bf48b1";
+	dir = 4
+	},
+/obj/effect/turf_decal/tile/purple{
+	dir = 1
+	},
+/obj/effect/turf_decal/siding/yellow{
+	dir = 1
+	},
+/turf/open/floor/plasteel/white,
+/area/city/backstreets_room)
+"HF" = (
+/obj/structure/bed/pod,
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"HR" = (
+/obj/effect/turf_decal/tile{
+	color = "#FF8C00";
+	alpha = 150
+	},
+/obj/effect/turf_decal/tile{
+	color = "#ffb964";
+	alpha = 150;
+	dir = 8
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/plasteel/white,
+/area/city/backstreets_room)
+"JD" = (
+/obj/effect/turf_decal/trimline/red/filled/warning,
+/obj/machinery/chem_dispenser/lc13{
+	recharge_amount = 0
+	},
+/turf/open/floor/noslip,
+/area/city/backstreets_room)
+"Kp" = (
+/obj/structure/table/glass,
+/obj/item/storage/box/syringes{
+	pixel_x = -9
+	},
+/obj/item/storage/box/beakers,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/plasteel/white,
+/area/city/backstreets_room)
+"Kq" = (
+/obj/structure/table/glass,
+/obj/item/folder/white{
+	desc = "Looks to be remnants of the old G-Corp.";
+	name = "Outdated G-Corp Folder"
+	},
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"La" = (
+/obj/effect/turf_decal/trimline/red/filled/warning,
+/obj/machinery/chem_heater,
+/turf/open/floor/noslip,
+/area/city/backstreets_room)
+"Oo" = (
+/obj/machinery/door/airlock/freezer{
+	name = "airlock"
+	},
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"PK" = (
+/obj/item/reagent_containers/blood,
+/obj/machinery/iv_drip,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"QB" = (
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"QF" = (
+/obj/structure/table/glass,
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"RD" = (
+/obj/structure/bed/pod,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"Ts" = (
+/obj/effect/turf_decal/tile/purple,
+/obj/effect/turf_decal/tile/purple{
+	color = "#bf48b1";
+	dir = 4
+	},
+/obj/effect/turf_decal/tile/purple{
+	dir = 1
+	},
+/obj/effect/turf_decal/siding/yellow{
+	dir = 1
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/plasteel/white,
+/area/city/backstreets_room)
+"WZ" = (
+/obj/machinery/modular_computer/console{
+	desc = "A corporate computer for private communications between persons of interest. This one appears to have its memory reset, however.";
+	name = "communications console"
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"Yr" = (
+/obj/structure/table/glass,
+/turf/open/floor/plasteel/white,
+/area/city/backstreets_room)
+
+(1,1,1) = {"
+bd
+bd
+bd
+bd
+bd
+bd
+bd
+bd
+"}
+(2,1,1) = {"
+kD
+De
+De
+kK
+kK
+qo
+Kq
+bd
+"}
+(3,1,1) = {"
+Oo
+QB
+QB
+QB
+Fp
+QF
+QB
+bd
+"}
+(4,1,1) = {"
+kD
+Fp
+QB
+Fp
+Fp
+ti
+kq
+bd
+"}
+(5,1,1) = {"
+kD
+QB
+Fp
+Fp
+QB
+WZ
+Fp
+bd
+"}
+(6,1,1) = {"
+kD
+uv
+rP
+Fp
+QB
+QB
+Fp
+bd
+"}
+(7,1,1) = {"
+bd
+bd
+bd
+Oo
+bd
+bd
+bd
+bd
+"}
+(8,1,1) = {"
+bd
+HF
+QB
+Fp
+xo
+RD
+QF
+bd
+"}
+(9,1,1) = {"
+bd
+PK
+QB
+QB
+Fp
+Fp
+Fp
+xd
+"}
+(10,1,1) = {"
+bd
+cd
+Fp
+Fp
+QB
+QB
+oj
+bd
+"}
+(11,1,1) = {"
+bd
+bd
+tN
+cE
+cE
+ix
+bd
+bd
+"}
+(12,1,1) = {"
+bd
+GI
+zu
+sM
+kI
+tm
+bd
+nj
+"}
+(13,1,1) = {"
+bd
+JD
+rS
+Kp
+jW
+DH
+bd
+nj
+"}
+(14,1,1) = {"
+bd
+La
+Ho
+Yr
+jh
+HR
+bd
+nj
+"}
+(15,1,1) = {"
+bd
+Cs
+Ts
+dB
+vG
+yk
+bd
+nj
+"}
+(16,1,1) = {"
+bd
+bd
+bd
+bd
+bd
+bd
+bd
+nj
+"}

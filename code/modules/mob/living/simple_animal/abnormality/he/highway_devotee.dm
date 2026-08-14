@@ -68,14 +68,12 @@
 		talk = TRUE
 		break
 
-/mob/living/simple_animal/hostile/abnormality/highway_devotee/death(gibbed)
-	for(var/obj/Y in structures)
-		qdel(Y)
-	..()
+/mob/living/simple_animal/hostile/abnormality/highway_devotee/Destroy()
+	QDEL_LIST(structures)
+	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/highway_devotee/proc/KillYourself()
-	for(var/obj/Y in structures)
-		qdel(Y)
+	QDEL_LIST(structures)
 	QDEL_NULL(src)
 
 /* Work effects */

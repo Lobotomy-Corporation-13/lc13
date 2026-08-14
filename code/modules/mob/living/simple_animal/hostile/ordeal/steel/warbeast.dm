@@ -33,6 +33,12 @@
 	. = ..()
 	ADD_TRAIT(src, TRAIT_STRONG_GRABBER, "initialize")
 
+/mob/living/simple_animal/hostile/ordeal/steel_dawn/steel_midnight/death(gibbed)
+	density = FALSE
+	animate(src, alpha = 0, time = 10 SECONDS)
+	QDEL_IN(src, 10 SECONDS)
+	return ..()
+
 /mob/living/simple_animal/hostile/ordeal/steel_dawn/steel_midnight/handle_automated_action()
 	. = ..()
 	if(stat == DEAD)

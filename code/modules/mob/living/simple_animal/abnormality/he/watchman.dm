@@ -93,6 +93,7 @@
 		"This darkness is not for you and you alone, monster!",
 	)
 	// Breached Abno tracker.
+	// Remembers enemies by their tag.
 	var/list/dangers = list()
 
 /mob/living/simple_animal/hostile/abnormality/watchman/FailureEffect(mob/living/carbon/human/user, work_type, pe)
@@ -143,32 +144,32 @@
 			say(pick(speak_attacked_monster))
 
 /mob/living/simple_animal/hostile/abnormality/watchman/proc/HandleSpeech()
+	// End cleaning up the list.
+	if(speak_chance)
+		GaspWhatWasThat()
+		if(prob(speak_chance))
+			if(length(dangers))
+				say(pick(speak_alert))
+			else
+				say(pick(speak_normal))
+
+/mob/living/simple_animal/hostile/abnormality/watchman/proc/GaspWhatWasThat()
+	//Havent seen them in a while
+	popleft(dangers)
 	// Add new threats.
 	for(var/mob/living/simple_animal/hostile/H in view(7, src))
 		if(H == src)
+			continue
+		if(H.stat == DEAD)
+			//Welp, rest in piss beast.
+			dangers -= H.tag
 			continue
 		if(istype(H, /mob/living/simple_animal/hostile/abnormality))
 			var/mob/living/simple_animal/hostile/abnormality/A = H
 			if(A.IsContained())
 				continue
-		dangers |= H
-	// Begin cleaning the list up.
-	var/prune_list = dangers.Copy()
-	for(var/mob/living/simple_animal/hostile/H in dangers)
-		if(QDELETED(H) || H.stat == DEAD || !istype(H))
-			prune_list -= H
-	for(var/mob/living/simple_animal/hostile/abnormality/A in dangers)
-		if(!A.IsContained())
-			continue
-		prune_list -= A
-	dangers = prune_list
-	// End cleaning up the list.
-	if(speak_chance)
-		if(prob(speak_chance))
-			if(dangers.len)
-				say(pick(speak_alert))
-			else
-				say(pick(speak_normal))
+		LAZYOR(dangers,H.tag)
+	return dangers
 
 /mob/living/simple_animal/hostile/abnormality/watchman/handle_automated_action()
 	. = ..()

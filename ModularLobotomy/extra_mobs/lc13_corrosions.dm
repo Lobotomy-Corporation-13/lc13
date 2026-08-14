@@ -406,14 +406,14 @@
 		if(prob(chance_to_dash))
 			PrepCharge(target)
 
-/mob/living/simple_animal/hostile/ordeal/dog_corrosion/proc/PrepCharge(target, forced)
+/mob/living/simple_animal/hostile/ordeal/dog_corrosion/proc/PrepCharge(enemy, forced)
 	if(charging || dash_cooldown > world.time && (!forced))
 		return
 	new /obj/effect/temp_visual/distortedform_shift(get_turf(src))
 	dash_cooldown = world.time + dash_cooldown_time
 	charging = TRUE
 	charge_ready = FALSE
-	ourdash.Perform(target,src)
+	ourdash.Perform(enemy,src)
 	playsound(src, charge_sound, 100, 1)
 
 /mob/living/simple_animal/hostile/ordeal/dog_corrosion/proc/endCharge()

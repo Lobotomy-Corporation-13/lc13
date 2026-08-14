@@ -2,6 +2,17 @@
 //W-Corp has movement technology, and upgraded weapons.
 //They're very much a jack of all trades.
 
+/datum/data/lc13research/w_corp_armor
+	research_name = "W Corp Extra Armor"
+	research_desc = "W Corp will let you purchase their extra armor types, at a pretty steep cost."
+	cost = AVERAGE_RESEARCH_PRICE
+	corp = W_CORP_REP
+
+/datum/data/lc13research/w_corp_armor/ResearchEffect(obj/structure/representative_console/requester)
+	ItemUnlock(requester.order_list, "W Corp Recon Armor", /obj/item/clothing/suit/armor/ego_gear/wcorp/recon, 500)
+	ItemUnlock(requester.order_list, "W Corp Heavy Armor", /obj/item/clothing/suit/armor/ego_gear/wcorp/heavy, 500)
+	..()
+
 /datum/data/lc13research/w_corp_typea
 	research_name = "W Corp Type A Weapons"
 	research_desc = "W Corp will let you purchase their Type-A weapons, at a pretty steep cost."

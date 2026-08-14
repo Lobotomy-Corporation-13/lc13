@@ -70,3 +70,17 @@
 	name = "Amber Cavern - Medium South A"
 	room_id = "ambercavern"
 	mappath = "_maps/RandomRooms/backstreets/medium_south/ambercavern.dmm"
+/datum/map_template/random_room/backstreets/medium_south/citrine_msa
+	name = "Citrine - Medium South A"
+	room_id = "citrinemsa"
+	mappath = "_maps/RandomRooms/backstreets/medium_south/citrine_msa.dmm"
+
+/datum/map_template/random_room/backstreets/medium_south/citrine_msb
+	name = "Citrine - Medium South B"
+	room_id = "citrinemsb"
+	mappath = "_maps/RandomRooms/backstreets/medium_south/citrine_msb.dmm"
+
+/datum/map_template/random_room/backstreets/medium_south/medstroage_msa
+	name = "Medical Storage - Medium South A"
+	room_id = "medstorage_msa"
+	mappath = "_maps/RandomRooms/backstreets/medium_south/medstorage_msa.dmm"

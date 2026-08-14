@@ -116,8 +116,7 @@
 		var/mob/living/simple_animal/hostile/abnormality/woodsman/W = owner
 		if (W.chained_target)
 			return FALSE
-	. = ..()
-
+	return ..()
 
 /obj/effect/proc_holder/spell/pointed/axe_throw
 	name = "Chain Axe throw"
@@ -158,18 +157,19 @@
 /obj/projectile/chainedaxe/fire(setAngle)
 	if(firer)
 		chain = firer.Beam(src, icon_state = "chain")
-	..()
-
-/obj/projectile/chainedaxe/Destroy()
-	qdel(chain)
 	return ..()
 
-/obj/projectile/chainedaxe/on_hit(atom/target, blocked = FALSE)
+/obj/projectile/chainedaxe/Destroy()
+	if(chain)
+		QDEL_NULL(chain)
+	return ..()
+
+/obj/projectile/chainedaxe/on_hit(atom/trg, blocked = FALSE)
 	. = ..()
-	if(istype(target, /mob/living/carbon/human))
-		var/mob/living/carbon/human/H = target
+	if(istype(trg, /mob/living/carbon/human))
+		var/mob/living/carbon/human/H = trg
 		var/mob/living/simple_animal/hostile/abnormality/woodsman/W = firer
-		if(istype(W) && get_dist(get_turf(target), get_turf(firer)) < 12)
+		if(istype(W) && get_dist(get_turf(trg), get_turf(firer)) < 12)
 			W.begin_chain_pull(H)
 
 /datum/action/innate/abnormality_attack/toggle/woodsman_flurry_toggle
@@ -197,11 +197,14 @@
 	AddSpell(AS)
 
 /mob/living/simple_animal/hostile/abnormality/woodsman/Destroy()
-	QDEL_NULL(soundloop)
+	if(soundloop)
+		QDEL_NULL(soundloop)
 	return ..()
 
-/mob/living/simple_animal/hostile/abnormality/woodsman/proc/begin_chain_pull(mob/living/carbon/human/target)
-	chained_target = target
+/mob/living/simple_animal/hostile/abnormality/woodsman/proc/begin_chain_pull(mob/living/carbon/human/trg)
+	if(!isliving(trg) || !trg)
+		return
+	chained_target = trg
 	chain_pull_count = 0
 	var/datum/status_effect/chained/C = chained_target.has_status_effect(/datum/status_effect/chained)
 	if(!C)
@@ -245,6 +248,7 @@
 
 /mob/living/simple_animal/hostile/abnormality/woodsman/proc/pull_target(distance)
 	if(!chained_target)
+		update_chain_visuals()
 		return
 	if (chained_target.stat == DEAD)
 		release_target()
@@ -273,6 +277,7 @@
 
 /mob/living/simple_animal/hostile/abnormality/woodsman/proc/release_target()
 	if(!chained_target)
+		update_chain_visuals()
 		return
 
 	chained_target.remove_status_effect(/datum/status_effect/chained)
@@ -427,22 +432,24 @@
 		return
 
 	if(flurry_cooldown <= world.time)
-		if(prob(75))
-			switch(rand(1,3))
-				if(1)
-					Woodsman_Flurry(target)
-				if(2)
-					begin_chain_pull(target)
-				if(3)
-					AxeThrow(target)
+		//1 in 4 chance to do nothing is essentially prob(75)
+		switch(rand(1,4))
+			if(1)
+				Woodsman_Flurry(target)
+			if(2)
+				begin_chain_pull(target)
+			if(3)
+				AxeThrow(target)
+			else
+				return
 
 
-/mob/living/simple_animal/hostile/abnormality/woodsman/proc/Woodsman_Flurry(target)
+/mob/living/simple_animal/hostile/abnormality/woodsman/proc/Woodsman_Flurry(trg)
 	if(flurry_cooldown > world.time)
 		return
-	if (get_dist(src, target) > 3)
+	if (get_dist(src, trg) > 3)
 		return
-	var/dir_to_target = get_cardinal_dir(get_turf(src), get_turf(target))
+	var/dir_to_target = get_cardinal_dir(get_turf(src), get_turf(trg))
 	var/turf/source_turf = get_turf(src)
 	var/turf/area_of_effect = list()
 	var/turf/middle_line = list()

@@ -86,6 +86,11 @@
 	chosen_message = span_colossus("You will now fire a blood cannon.")
 	chosen_attack_num = 2
 
+/mob/living/simple_animal/hostile/abnormality/headless_ichthys/Destroy()
+	if(current_beam)
+		QDEL_NULL(current_beam)
+	return ..()
+
 // Attacks
 /mob/living/simple_animal/hostile/abnormality/headless_ichthys/proc/IchthysJump(mob/living/target)
 	if(!isliving(target) && !ismecha(target) || !can_act)

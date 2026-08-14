@@ -1,0 +1,112 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"a" = (
+/obj/structure/table/glass,
+/obj/item/essence/metal,
+/obj/item/essence/metal,
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"o" = (
+/obj/item/clipboard,
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"t" = (
+/obj/structure/table/glass,
+/obj/item/bolus/simple,
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"x" = (
+/obj/effect/decal/remains/human,
+/obj/effect/decal/cleanable/blood/old,
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"M" = (
+/obj/structure/table/glass,
+/obj/item/flashlight/lamp,
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"N" = (
+/obj/structure/table/glass,
+/obj/item/paper_bin,
+/obj/item/pen,
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"P" = (
+/obj/machinery/door/airlock/wood,
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"R" = (
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"S" = (
+/obj/structure/chair/office/light,
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"U" = (
+/turf/closed/indestructible/reinforced,
+/area/city/backstreets_room)
+"X" = (
+/obj/structure/table/glass,
+/obj/item/essence/fire,
+/obj/item/essence/fire,
+/obj/item/essence/fire,
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"Y" = (
+/obj/structure/closet/crate{
+	anchorable = 0;
+	anchored = 1
+	},
+/obj/item/bolus/rust,
+/obj/item/storage/box/hcorpmetal,
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+
+(1,1,1) = {"
+U
+U
+U
+U
+U
+"}
+(2,1,1) = {"
+U
+M
+N
+t
+U
+"}
+(3,1,1) = {"
+U
+R
+S
+X
+U
+"}
+(4,1,1) = {"
+P
+R
+x
+a
+U
+"}
+(5,1,1) = {"
+U
+R
+R
+R
+U
+"}
+(6,1,1) = {"
+U
+Y
+o
+R
+U
+"}
+(7,1,1) = {"
+U
+U
+U
+U
+U
+"}

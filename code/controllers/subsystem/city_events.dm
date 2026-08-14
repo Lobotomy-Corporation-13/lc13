@@ -240,6 +240,10 @@ SUBSYSTEM_DEF(cityevents)
 //Daynight stuff
 /datum/controller/subsystem/cityevents/proc/Daynight()
 	for(var/obj/effect/light_emitter/L in lights)
+		var/turf/T = get_turf(L)
+		if(T)
+			if(!is_station_level(T.z))
+				continue
 		L.set_light(25, globalillumination)
 
 	if(globalillumination <= -0.2)	//Go back up

@@ -42,10 +42,14 @@
 	var/meltdown_tick = 60 SECONDS
 	var/meltdown_timer
 	var/lightscount = 0
-	var/list/tickets = list()
-	var/maxSegments = 5
+	var/max_segments = 5
 	var/list/segments = list()
 	var/list/damaged = list()
+
+/mob/living/simple_animal/hostile/abnormality/express_train/Destroy()
+	segments = null
+	damaged = null
+	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/express_train/Initialize()
 	meltdown_timer = world.time + meltdown_tick
@@ -68,27 +72,29 @@
 
 /mob/living/simple_animal/hostile/abnormality/express_train/AttemptWork(mob/living/carbon/human/user, work_type)
 	meltdown_timer += 100 SECONDS
-	switch(datum_reference.qliphoth_meter)
-		if(0)
-			for(var/mob/living/carbon/human/H in GLOB.mob_living_list)
-				H.adjustSanityLoss(-50)
-				H.adjustBruteLoss(-50)
-			tickets |= user
-		if(1)
-			for(var/mob/living/carbon/human/H in livinginrange(30))
-				H.adjustSanityLoss(-50)
-				H.adjustBruteLoss(-50)
-			tickets |= user
-		if(2)
-			user.adjustSanityLoss(-80)
-			user.adjustBruteLoss(-80)
-			tickets |= user
-		if(3)
-			user.adjustSanityLoss(-40)
-			user.adjustBruteLoss(-40)
-			tickets |= user
-		if(4)
-			say("No tickets available. Thank you for your interest.")
+	var/qliphoth_level = datum_reference.qliphoth_meter
+	var/san_loss = -50
+	var/bru_loss = -50
+	var/effected_list = list(user)
+	if(qliphoth_level >= 4)
+		say("No tickets available. Thank you for your interest.")
+		return ..()
+	if(qliphoth_level == 0)
+		effected_list = GLOB.mob_living_list
+	if(qliphoth_level == 1)
+		effected_list = livinginrange(30)
+	if(qliphoth_level == 2)
+		san_loss = -80
+		bru_loss = -80
+	if(qliphoth_level == 3)
+		san_loss = -40
+		bru_loss = -40
+
+	//Unsure if this is a redundant refactor on my part -IP
+	for(var/mob/living/carbon/human/H in effected_list)
+		H.adjustSanityLoss(san_loss)
+		H.adjustBruteLoss(bru_loss)
+
 	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/express_train/WorkChance(mob/living/carbon/human/user, chance)
@@ -129,7 +135,7 @@
 		spawnX = 214
 		xIncrement = 4
 	var/spawnPoint = locate(spawnX, aimpoint, aimZ)
-	for(var/i = 0, i < maxSegments * 2, i++)
+	for(var/i = 0, i < max_segments * 2, i++)
 		if(!(i % 2)) // True whenever i is even- this is the start of each segment
 			persX += xIncrement*0.75 // Makes persX (effectively) one smaller for this iteration
 		else
