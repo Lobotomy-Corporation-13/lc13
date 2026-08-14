@@ -1,0 +1,489 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"cp" = (
+/obj/effect/decal/cleanable/blood/gibs/old,
+/turf/open/floor/plasteel,
+/area/city/backstreets_room)
+"cw" = (
+/obj/effect/decal/cleanable/blood/tracks{
+	dir = 8
+	},
+/turf/open/floor/plating,
+/area/city/backstreets_room)
+"dc" = (
+/obj/structure/flora/rock/pile{
+	pixel_y = -4;
+	pixel_x = 5
+	},
+/turf/open/floor/plasteel,
+/area/city/backstreets_room)
+"dY" = (
+/mob/living/simple_animal/hostile/ordeal/amber_dusk,
+/turf/open/floor/plasteel,
+/area/city/backstreets_room)
+"ea" = (
+/turf/open/floor/plating,
+/area/city/backstreets_room)
+"eu" = (
+/obj/effect/decal/cleanable/blood/tracks,
+/turf/open/floor/plating,
+/area/city/backstreets_room)
+"gB" = (
+/obj/effect/decal/cleanable/blood/old,
+/turf/open/floor/plating,
+/area/city/backstreets_room)
+"id" = (
+/obj/structure/flora/rock,
+/turf/open/floor/plating,
+/area/city/backstreets_room)
+"kn" = (
+/turf/closed/indestructible/fakedoor{
+	name = "Buried Door";
+	desc = "Seems to be stuck shut due to the collapsed rock. Effectively impervious to conventional methods of destruction."
+	},
+/area/city/backstreets_room)
+"kv" = (
+/obj/effect/decal/cleanable/blood/old,
+/obj/item/food/meat/slab/human,
+/turf/open/floor/plasteel,
+/area/city/backstreets_room)
+"lg" = (
+/obj/structure/flora/rock/pile,
+/turf/open/floor/plating,
+/area/city/backstreets_room)
+"nq" = (
+/obj/machinery/door/airlock/highsecurity,
+/turf/open/floor/plating,
+/area/city/backstreets_room)
+"nO" = (
+/obj/item/shard{
+	pixel_y = 8;
+	pixel_x = -7
+	},
+/turf/open/floor/plating/asteroid/basalt,
+/area/city/backstreets_room)
+"nQ" = (
+/obj/effect/decal/cleanable/blood/old,
+/obj/machinery/light/broken{
+	dir = 1
+	},
+/obj/structure/table_frame,
+/turf/open/floor/plating,
+/area/city/backstreets_room)
+"oR" = (
+/obj/machinery/light/broken{
+	dir = 4
+	},
+/obj/item/stack/cable_coil/cut,
+/turf/open/floor/plasteel,
+/area/city/backstreets_room)
+"pf" = (
+/obj/structure/table_frame,
+/turf/open/floor/plasteel,
+/area/city/backstreets_room)
+"qt" = (
+/obj/effect/decal/cleanable/blood/tracks{
+	dir = 8
+	},
+/mob/living/simple_animal/hostile/ordeal/amber_bug{
+	dir = 1
+	},
+/turf/open/floor/plasteel,
+/area/city/backstreets_room)
+"ry" = (
+/obj/machinery/door/airlock/highsecurity,
+/turf/open/floor/plasteel,
+/area/city/backstreets_room)
+"rR" = (
+/obj/machinery/light/broken{
+	dir = 8
+	},
+/turf/open/floor/plasteel,
+/area/city/backstreets_room)
+"rU" = (
+/obj/item/stack/sheet/metal,
+/obj/item/shard,
+/turf/open/floor/plasteel,
+/area/city/backstreets_room)
+"tx" = (
+/mob/living/simple_animal/hostile/ordeal/amber_bug{
+	dir = 1
+	},
+/turf/open/floor/plasteel,
+/area/city/backstreets_room)
+"tB" = (
+/obj/effect/decal/cleanable/blood/tracks{
+	dir = 8
+	},
+/turf/open/floor/plasteel,
+/area/city/backstreets_room)
+"tK" = (
+/obj/structure/table,
+/obj/item/reagent_containers/glass/beaker,
+/turf/open/floor/plasteel,
+/area/city/backstreets_room)
+"vD" = (
+/obj/structure/table,
+/turf/open/floor/plating/asteroid/basalt,
+/area/city/backstreets_room)
+"vX" = (
+/obj/effect/decal/cleanable/blood/old,
+/obj/machinery/light/broken{
+	dir = 8
+	},
+/turf/open/floor/plasteel,
+/area/city/backstreets_room)
+"wt" = (
+/turf/open/floor/plasteel,
+/area/city/backstreets_room)
+"ww" = (
+/obj/structure/flora/rock/pile,
+/turf/open/floor/plasteel,
+/area/city/backstreets_room)
+"wx" = (
+/obj/effect/decal/cleanable/blood/gibs/old{
+	pixel_x = 19
+	},
+/obj/item/food/meat/slab/human{
+	pixel_y = -10;
+	pixel_x = 6
+	},
+/obj/item/food/meat/slab/human{
+	pixel_y = 7;
+	pixel_x = -6
+	},
+/turf/open/floor/plasteel,
+/area/city/backstreets_room)
+"wG" = (
+/mob/living/simple_animal/hostile/ordeal/amber_bug{
+	dir = 4
+	},
+/turf/open/floor/plating,
+/area/city/backstreets_room)
+"wR" = (
+/mob/living/simple_animal/hostile/ordeal/amber_noon,
+/turf/open/floor/plating,
+/area/city/backstreets_room)
+"yb" = (
+/obj/structure/lootcrate/seven,
+/turf/open/floor/plasteel,
+/area/city/backstreets_room)
+"yh" = (
+/obj/structure/table_frame,
+/obj/item/shard{
+	pixel_y = 8;
+	pixel_x = -7
+	},
+/obj/item/shard,
+/turf/open/floor/plating/asteroid/basalt,
+/area/city/backstreets_room)
+"ze" = (
+/mob/living/simple_animal/hostile/ordeal/amber_bug{
+	dir = 4
+	},
+/turf/open/floor/plasteel,
+/area/city/backstreets_room)
+"zy" = (
+/obj/structure/table/glass,
+/turf/open/floor/plasteel,
+/area/city/backstreets_room)
+"Ax" = (
+/mob/living/simple_animal/hostile/ordeal/amber_bug,
+/turf/open/floor/plating/asteroid/basalt,
+/area/city/backstreets_room)
+"AI" = (
+/obj/machinery/light/broken{
+	dir = 1
+	},
+/obj/item/stack/sheet/metal,
+/turf/open/floor/plasteel,
+/area/city/backstreets_room)
+"Co" = (
+/obj/machinery/light/broken,
+/obj/structure/lootcrate/seven,
+/turf/open/floor/plating/asteroid/basalt,
+/area/city/backstreets_room)
+"CY" = (
+/obj/structure/frame/computer,
+/obj/item/stack/cable_coil/cut{
+	pixel_x = -4;
+	pixel_y = -11
+	},
+/turf/open/floor/plating/asteroid/basalt,
+/area/city/backstreets_room)
+"Dr" = (
+/turf/open/floor/plating/asteroid/basalt,
+/area/city/backstreets_room)
+"Ec" = (
+/obj/effect/decal/cleanable/blood/splatter/over_window{
+	pixel_x = 32;
+	pixel_y = 9
+	},
+/mob/living/simple_animal/hostile/ordeal/amber_bug,
+/turf/open/floor/plating/asteroid/basalt,
+/area/city/backstreets_room)
+"EQ" = (
+/obj/effect/decal/cleanable/blood/tracks{
+	dir = 10
+	},
+/turf/open/floor/plasteel,
+/area/city/backstreets_room)
+"Hr" = (
+/obj/effect/decal/cleanable/blood/gibs/old{
+	pixel_x = 11
+	},
+/turf/open/floor/plating/asteroid/basalt,
+/area/city/backstreets_room)
+"HW" = (
+/obj/structure/frame/machine,
+/turf/open/floor/plating/asteroid/basalt,
+/area/city/backstreets_room)
+"Ja" = (
+/obj/machinery/door/airlock/grunge,
+/turf/open/floor/plating,
+/area/city/backstreets_room)
+"Jg" = (
+/obj/effect/decal/cleanable/blood/splatter/over_window{
+	pixel_x = -32;
+	pixel_y = 6
+	},
+/turf/open/floor/plasteel,
+/area/city/backstreets_room)
+"JE" = (
+/obj/structure/lootcrate/money,
+/turf/open/floor/plating,
+/area/city/backstreets_room)
+"Kg" = (
+/obj/effect/decal/cleanable/blood/splatter/over_window{
+	pixel_x = 8;
+	pixel_y = 32
+	},
+/obj/machinery/light/broken{
+	dir = 1
+	},
+/turf/open/floor/plating/asteroid/basalt,
+/area/city/backstreets_room)
+"LY" = (
+/turf/closed/indestructible/rock,
+/area/city/backstreets_room)
+"Nc" = (
+/obj/effect/decal/cleanable/blood/gibs/up,
+/turf/open/floor/plasteel,
+/area/city/backstreets_room)
+"Nz" = (
+/obj/effect/decal/cleanable/blood/old,
+/turf/open/floor/plasteel,
+/area/city/backstreets_room)
+"NH" = (
+/obj/structure/table_frame,
+/obj/item/shard{
+	pixel_y = -6;
+	pixel_x = 15
+	},
+/turf/open/floor/plating,
+/area/city/backstreets_room)
+"Po" = (
+/obj/effect/decal/cleanable/blood/old,
+/turf/open/floor/plating/asteroid/basalt,
+/area/city/backstreets_room)
+"Pr" = (
+/turf/closed/indestructible/reinforced{
+	color = "#CC6600"
+	},
+/area/city/backstreets_room)
+"Qv" = (
+/obj/effect/mob_spawn/human/corpse,
+/obj/item/ego_weapon/city/seven{
+	pixel_y = -16;
+	pixel_x = -10
+	},
+/turf/open/floor/plasteel,
+/area/city/backstreets_room)
+"Sx" = (
+/obj/item/stack/sheet/metal,
+/turf/open/floor/plasteel,
+/area/city/backstreets_room)
+"SB" = (
+/obj/effect/decal/cleanable/blood/old,
+/obj/item/stack/sheet/metal,
+/turf/open/floor/plating/asteroid/basalt,
+/area/city/backstreets_room)
+"Xa" = (
+/obj/effect/decal/cleanable/blood/gibs/old,
+/obj/machinery/light/built,
+/obj/item/light/tube/broken,
+/turf/open/floor/plating/asteroid/basalt,
+/area/city/backstreets_room)
+"Yo" = (
+/obj/effect/decal/cleanable/blood/old,
+/obj/structure/lootcrate/seven,
+/turf/open/floor/plasteel,
+/area/city/backstreets_room)
+"ZJ" = (
+/obj/structure/table_frame,
+/turf/open/floor/plating/asteroid/basalt,
+/area/city/backstreets_room)
+"ZY" = (
+/obj/machinery/light/broken,
+/turf/open/floor/plating,
+/area/city/backstreets_room)
+
+(1,1,1) = {"
+Pr
+Pr
+Pr
+Pr
+LY
+LY
+LY
+LY
+"}
+(2,1,1) = {"
+Pr
+Ax
+vX
+Jg
+id
+LY
+LY
+LY
+"}
+(3,1,1) = {"
+nq
+Dr
+wt
+wt
+Nz
+wt
+lg
+LY
+"}
+(4,1,1) = {"
+ry
+Nc
+eu
+eu
+EQ
+rU
+NH
+Pr
+"}
+(5,1,1) = {"
+Pr
+Nz
+wt
+cp
+qt
+zy
+wt
+kn
+"}
+(6,1,1) = {"
+Pr
+Kg
+ze
+gB
+cw
+yh
+Xa
+Pr
+"}
+(7,1,1) = {"
+Pr
+Ec
+Qv
+tx
+tB
+cp
+ea
+Pr
+"}
+(8,1,1) = {"
+Pr
+Pr
+Pr
+Pr
+Ja
+Pr
+Pr
+Pr
+"}
+(9,1,1) = {"
+Pr
+wR
+kv
+rR
+wt
+wt
+wt
+Pr
+"}
+(10,1,1) = {"
+Pr
+nQ
+ea
+ea
+Dr
+Po
+ZY
+Pr
+"}
+(11,1,1) = {"
+Pr
+CY
+Hr
+wt
+vD
+ZJ
+dc
+kn
+"}
+(12,1,1) = {"
+Pr
+tK
+nO
+Nz
+pf
+Sx
+wt
+LY
+"}
+(13,1,1) = {"
+Pr
+gB
+wt
+wt
+wG
+ww
+LY
+LY
+"}
+(14,1,1) = {"
+Pr
+AI
+Dr
+dY
+wx
+tx
+Co
+Pr
+"}
+(15,1,1) = {"
+Pr
+JE
+SB
+oR
+HW
+yb
+Yo
+Pr
+"}
+(16,1,1) = {"
+Pr
+Pr
+Pr
+Pr
+Pr
+Pr
+Pr
+Pr
+"}

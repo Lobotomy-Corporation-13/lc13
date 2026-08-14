@@ -77,3 +77,8 @@
 	room_id = "workshop_me"
 	mappath = "_maps/RandomRooms/backstreets/medium_east/workshop_me.dmm"
 	stock = 1 // Only one, but it's common
+
+/datum/map_template/random_room/backstreets/medium_east/citrine_church
+	name = "Citrine Church - Medium East"
+	room_id = "citrine_church"
+	mappath = "_maps/RandomRooms/backstreets/medium_east/citrine_church.dmm"

@@ -65,3 +65,8 @@
 	name = "Extra Appartment - Medium South A"
 	room_id = "apartmentmsa"
 	mappath = "_maps/RandomRooms/backstreets/medium_south/apartmentmsa.dmm"
+
+/datum/map_template/random_room/backstreets/medium_south/ambercavern
+	name = "Amber Cavern - Medium South A"
+	room_id = "ambercavern"
+	mappath = "_maps/RandomRooms/backstreets/medium_south/ambercavern.dmm"

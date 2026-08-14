@@ -64,3 +64,8 @@
 	room_id = "bongy"
 	mappath = "_maps/RandomRooms/backstreets/large_south/bongy.dmm"
 	stock = 1	//There can only be one papa bongy's chicken
+
+/datum/map_template/random_room/backstreets/large_south/infested_labs
+	name = "Infested Labs - Large South"
+	room_id = "infested_labs"
+	mappath = "_maps/RandomRooms/backstreets/large_south/infested_labs.dmm"
