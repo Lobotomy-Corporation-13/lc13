@@ -32,6 +32,8 @@
 
 	attunement_family = "hornet"
 	ego_list = list(/datum/ego_datum/armor/lce/hornet)
+	var/list/brood = list()
+	var/max_brood = 5
 
 /mob/living/simple_animal/hostile/limbus_abno/queen_bee/Initialize(mapload)
 	. = ..()
@@ -39,6 +41,22 @@
 
 /mob/living/simple_animal/hostile/limbus_abno/queen_bee/Move()
 	return FALSE
+
+//The brood points back at her to free its slots, so those references cannot outlive the hive.
+/mob/living/simple_animal/hostile/limbus_abno/queen_bee/Destroy()
+	for(var/atom/child in brood.Copy()) //LeaveBrood shortens the list we would be walking.
+		LeaveBrood(child)
+	return ..()
+
+///One egg or worker leaves the count, freeing a slot for the next one she lays.
+/mob/living/simple_animal/hostile/limbus_abno/queen_bee/proc/LeaveBrood(atom/child)
+	brood -= child
+	if(isliving(child))
+		var/mob/living/simple_animal/hostile/worker_bee/lcl_bee/worker = child
+		worker.mother = null
+		return
+	var/obj/item/food/bee_egg/egg = child
+	egg.mother = null
 
 ///More or less the same spores as the original queen bee, with the main difference that it creates the special controllable bees.
 /mob/living/simple_animal/hostile/limbus_abno/queen_bee/proc/EmitSpores(forced = FALSE)
@@ -97,7 +115,7 @@
 
 /datum/action/cooldown/limbus_abno_action/bee_egg
 	name = "Birth Worker"
-	desc = "Make an egg that will eventually grow into a worker bee who will fight and search for food. Costs nearly all your hunger to use. Severely increases your mood."
+	desc = "Make an egg that will eventually grow into a worker bee who will fight and search for food. Costs nearly all your hunger to use. Severely increases your mood. You can only keep five of your own workers at a time, eggs included."
 	button_icon = 'ModularLobotomy/_Lobotomyicons/lcl_abno_actions.dmi'
 	background_icon_state = "bg_qbee"
 	icon_icon = 'icons/obj/food/food.dmi'
@@ -111,14 +129,20 @@
 		return FALSE
 	if(abno_user.hunger_bar < 70)
 		return FALSE
+	var/mob/living/simple_animal/hostile/limbus_abno/queen_bee/queen = abno_user
+	if(length(queen.brood) >= queen.max_brood)
+		return FALSE
 	return TRUE
 
 /datum/action/cooldown/limbus_abno_action/bee_egg/Trigger()
 	. = ..()
 	if(!.)
 		return FALSE
-	var/turf/T = get_turf(abno_user)
-	new /obj/item/food/bee_egg(T)
+	var/mob/living/simple_animal/hostile/limbus_abno/queen_bee/queen = abno_user
+	var/turf/T = get_turf(queen)
+	var/obj/item/food/bee_egg/egg = new(T)
+	egg.mother = queen
+	queen.brood += egg
 	playsound(T, 'sound/effects/splat.ogg', 50, TRUE)
 	StartCooldown()
 	abno_user.AdjustHunger(-70) //Creating eggs like this is supposed to be very inefficient, living hosts are better.
@@ -133,14 +157,25 @@
 	microwaved_type = /obj/item/food/boiledegg //Don't think about it.
 	foodtypes = MEAT
 	w_class = WEIGHT_CLASS_TINY
+	///The queen who laid this, so the worker it becomes keeps taking up her slot.
+	var/mob/living/simple_animal/hostile/limbus_abno/queen_bee/mother
 
 /obj/item/food/bee_egg/Initialize()
 	. = ..()
 	addtimer(CALLBACK(src, PROC_REF(hatch_bee)), 2 MINUTES)
 
+//Eaten, microwaved, or squashed before it hatched. Either way she is short one heir.
+/obj/item/food/bee_egg/Destroy()
+	if(mother)
+		mother.LeaveBrood(src)
+	return ..()
+
 /obj/item/food/bee_egg/proc/hatch_bee()
-	new /mob/living/simple_animal/hostile/worker_bee/lcl_bee(get_turf(src))
-	qdel(src)
+	var/mob/living/simple_animal/hostile/worker_bee/lcl_bee/hatchling = new(get_turf(src))
+	if(mother)
+		hatchling.mother = mother
+		mother.brood += hatchling
+	qdel(src) //Hands the slot over to the worker rather than freeing it.
 
 /mob/living/simple_animal/hostile/worker_bee/lcl_bee
 	faction = list("neutral") //Their AI lobotomy should prevent friendly attack, but better safe than sorry.
@@ -150,6 +185,8 @@
 	var/rider_ckey
 	///The way back into the hive, handed out for one ride and taken away when that ride ends.
 	var/datum/action/cooldown/bee_swap/ride_button
+	///The queen who laid the egg this hatched from, if any. Set only on her own brood.
+	var/mob/living/simple_animal/hostile/limbus_abno/queen_bee/mother
 
 /mob/living/simple_animal/hostile/worker_bee/lcl_bee/Initialize()
 	. = ..()
@@ -181,6 +218,8 @@
 
 /mob/living/simple_animal/hostile/worker_bee/lcl_bee/Destroy()
 	ReturnRider()
+	if(mother)
+		mother.LeaveBrood(src) //Her count is of living workers, so this one stops holding a slot.
 	return ..()
 
 ///Whether the player in this worker is the queen who stepped out of the hive to ride it. Anybody
