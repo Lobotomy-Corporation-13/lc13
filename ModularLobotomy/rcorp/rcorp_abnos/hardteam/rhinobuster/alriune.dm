@@ -1,3 +1,4 @@
+#define PETALS_COOLDOWN 7 SECONDS
 //Placed here because the damage pierces rhinos, aside that its pretty weak
 /mob/living/simple_animal/hostile/rcorp_abno/hard/alriune
 	name = "Alriune"
@@ -13,24 +14,29 @@
 
 	/// Currently displayed petals. When value is at 3 - reset to 0 and perform attack
 	var/petals_current = 0
-	/// World time when petals_current will increase by 1
-	var/petals_next = 0
 	/// Delay used for petals_next
-	var/petals_next_time = 7 SECONDS
+	var/petals_next_time = PETALS_COOLDOWN
 	/// Amount of white damage done to everyone in view by the attack
 	var/pulse_damage = 100 //Lowered because rabbits thought they could facetank 180 WHITE
 	/// Attack_type
 	var/pulsing = FALSE
 	var/attacking = FALSE
 
+		//PLAYABLES ATTACKS
+	attack_action_types = list(
+		/datum/action/cooldown/rca_autumnpassing,
+		/datum/action/cooldown/rca_springgenesis,
+		/datum/action/cooldown/rca_fullbloom,
+	)
+
 	abno_additional_instructions = "<h1>You are Alriune, A Rhino Piercer Role Abnormality.</h1><br>\
 		<b>|Unwithering Flower|: You may not perform any melee attacks and instead rely on projectiles and AoE. \
-		You will automatically and randomly perform 3 separate attack variants.\
-		These attacks do not overlap and may only be performed one at a time. <br>\
+		You will may perform 3 separate attack variants, all your attacks possess IFF. \
+		These attacks do not overlap and may only be performed one at a time. \ <br>\
 		<br>\
 		|Autumns Passing|: For every human within a 9 tile sightline you will create a petal and fire it at them. \
 		There is no limit to the amount of petals created to match the amount of hostiles. \
-		This will be repeated 3 times before you cycle to another attack. \
+		This will be repeated 3 times before you may perform another attack. \
 		Each petal will deal 20 WHITE damage to those they hit. <br>\
 		<br>\
 		|Springs Genesis|: Create 10 petals in the tiles around you then fire them around. \<br>\
@@ -44,6 +50,71 @@
 		This attack will pierce rhino suits and directly attack their pilots instead. \
 		If this hits or drives a human insane they will be enveloped in flowers then die. </b>"
 
+/datum/action/cooldown/rca_autumnpassing
+	name = "Autumns Passing"
+	icon_icon = 'ModularLobotomy/_Lobotomyicons/abno_projectiles.dmi'
+	button_icon_state = "alriune"
+	check_flags = AB_CHECK_CONSCIOUS
+
+/datum/action/cooldown/rca_springgenesis
+	name = "Springs Genesis"
+	icon_icon = 'ModularLobotomy/_Lobotomyicons/abno_projectiles.dmi'
+	button_icon_state = "alriune_AOE"
+	check_flags = AB_CHECK_CONSCIOUS
+
+/datum/action/cooldown/rca_fullbloom
+	name = "Full Bloom"
+	icon_icon = 'icons/mob/actions/actions_ability.dmi'
+	button_icon_state = "petalblizzard0"
+	check_flags = AB_CHECK_CONSCIOUS
+	transparent_when_unavailable = TRUE
+	cooldown_time = PETALS_COOLDOWN * 4 //This cooldown is the duration of a fullpulse + the actual cooldown combined together
+
+/datum/action/cooldown/rca_autumnpassing/Trigger()
+	if(!..())
+		return FALSE
+	var/mob/living/simple_animal/hostile/rcorp_abno/hard/alriune/AL = owner
+	if(!istype(AL))
+		return FALSE
+	if(!AL.client || !AL.can_act)
+		return FALSE
+	if(AL.attacking || AL.pulsing)
+		to_chat(src, span_notice("You may not perform a attack until you are done with your current one."))
+		return
+	StartCooldown()
+	AL.ConstantAttack()
+	return TRUE
+
+/datum/action/cooldown/rca_springgenesis/Trigger()
+	if(!..())
+		return FALSE
+	var/mob/living/simple_animal/hostile/rcorp_abno/hard/alriune/AL = owner
+	if(!istype(AL))
+		return FALSE
+	if(!AL.client || !AL.can_act)
+		return FALSE
+	if(AL.attacking || AL.pulsing)
+		to_chat(src, span_notice("You may not perform a attack until you are done with your current one."))
+		return
+	StartCooldown()
+	AL.AlriuneAOE()
+	return TRUE
+
+/datum/action/cooldown/rca_fullbloom/Trigger()
+	if(!..())
+		return FALSE
+	var/mob/living/simple_animal/hostile/rcorp_abno/hard/alriune/AL = owner
+	if(!istype(AL))
+		return FALSE
+	if(!AL.client || !AL.can_act)
+		return FALSE
+	if(AL.attacking || AL.pulsing)
+		to_chat(src, span_notice("You may not perform a attack until you are done with your current one."))
+		return
+	StartCooldown()
+	AL.CheckAndPulse()
+	return TRUE
+
 /mob/living/simple_animal/hostile/rcorp_abno/hard/alriune/Initialize()
 	. = ..()
 	icon_state = "alriune_active"
@@ -54,26 +125,21 @@
 	if(!.) // Dead
 		return FALSE
 
-	//If you're working on a pulse, do it
-	if(pulsing)
-
-		CheckAndPulse()
+	if(client) // Possessed
 		return
 
-	if(attacking)
+	//Attacks are automatic so we let them finish before this happens
+	if(pulsing || attacking)
 		return
 
 	switch(rand(1,5))
 		if(1 to 2)
-			attacking = TRUE
 			ConstantAttack()
 
 		if(3 to 4)
-			attacking = TRUE
 			AlriuneAOE()
 
 		if(5)
-			pulsing = TRUE
 			CheckAndPulse()
 
 /mob/living/simple_animal/hostile/rcorp_abno/hard/alriune/CanAttack(atom/the_target)
@@ -81,48 +147,47 @@
 
 /// Check for petals_next and then perform actions
 /mob/living/simple_animal/hostile/rcorp_abno/hard/alriune/proc/CheckAndPulse()
-	if(world.time >= petals_next)
-		petals_next = world.time + petals_next_time
-		petals_current += 1
-		if(petals_current >= 3) // Attack
-			pulsing = FALSE
-			petals_current = 0
-			playsound(src, 'sound/abnormalities/alriune/damage.ogg', 75, TRUE, 12)
+	pulsing = TRUE
+	petals_current += 1
+	if(petals_current >= 3) // Attack
+		pulsing = FALSE
+		petals_current = 0
+		playsound(src, 'sound/abnormalities/alriune/damage.ogg', 75, TRUE, 12)
 
-			// Attack visual effect, so to speak
-			for(var/turf/T in view(7, get_turf(src)))
-				animate(T, color = COLOR_PINK, time = 2)
-				addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(SetColorOverTime), T, initial(T.color), (2 SECONDS)), 4)
+		// Attack visual effect, so to speak
+		for(var/turf/T in view(7, get_turf(src)))
+			animate(T, color = COLOR_PINK, time = 2)
+			addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(SetColorOverTime), T, initial(T.color), (2 SECONDS)), 4)
 
-			for(var/mob/living/L in livinginview(7, get_turf(src)))
-				if(faction_check_mob(L))
-					continue
-				if(L.stat == DEAD)
-					continue
-				L.deal_damage(pulse_damage, WHITE_DAMAGE, src, attack_type = (ATTACK_TYPE_SPECIAL))
-				new /obj/effect/temp_visual/alriune_attack(get_turf(L))
-				if(ishuman(L))
-					var/mob/living/carbon/human/H = L
-					if(H.sanity_lost)
-						new /obj/effect/temp_visual/alriune_curtain(get_turf(H))
-						addtimer(CALLBACK(H, TYPE_PROC_REF(/atom, add_overlay), \
-							icon('ModularLobotomy/_Lobotomyicons/tegu_effects.dmi', "alriune_kill")), 5)
-						playsound(H, 'sound/abnormalities/alriune/kill.ogg', 75, TRUE)
-						H.death()
-
-			petals_next = world.time + (petals_next_time * 2)
-		else
-			playsound(src, 'sound/abnormalities/alriune/timer.ogg', 50, FALSE, 12)
-		update_icon()
+		for(var/mob/living/L in livinginview(7, get_turf(src)))
+			if(faction_check_mob(L))
+				continue
+			if(L.stat == DEAD)
+				continue
+			L.deal_damage(pulse_damage, WHITE_DAMAGE, src, attack_type = (ATTACK_TYPE_SPECIAL))
+			new /obj/effect/temp_visual/alriune_attack(get_turf(L))
+			if(ishuman(L))
+				var/mob/living/carbon/human/H = L
+				if(H.sanity_lost)
+					new /obj/effect/temp_visual/alriune_curtain(get_turf(H))
+					addtimer(CALLBACK(H, TYPE_PROC_REF(/atom, add_overlay), \
+						icon('ModularLobotomy/_Lobotomyicons/tegu_effects.dmi', "alriune_kill")), 5)
+					playsound(H, 'sound/abnormalities/alriune/kill.ogg', 75, TRUE)
+					H.death()
+	else
+		addtimer(CALLBACK(src, PROC_REF(CheckAndPulse)), PETALS_COOLDOWN)
+		playsound(src, 'sound/abnormalities/alriune/timer.ogg', 50, FALSE, 12)
+	update_icon()
 
 //Other Attacks
 /mob/living/simple_animal/hostile/rcorp_abno/hard/alriune/proc/ConstantAttack()
+	attacking = TRUE
 	for(var/i in 1 to 3)
 		for(var/mob/living/carbon/human/L in view(9, src))
 			if(L.stat == DEAD)
 				continue
 			var/turf/shoot_from = pick(range(1, src))
-			var/obj/projectile/alriune/P = new(shoot_from)
+			var/obj/projectile/rca_alriune/P = new(shoot_from)
 			P.starting = shoot_from
 			P.firer = src
 			P.fired_from = src
@@ -138,11 +203,12 @@
 
 
 /mob/living/simple_animal/hostile/rcorp_abno/hard/alriune/proc/AlriuneAOE()
+	attacking = TRUE
 	var/turf/startloc = get_turf(targets_from)
 
 	var/turf/target_turf = locate(x, y+1, z)
 	for(var/i in 1 to 10)
-		var/obj/projectile/alriune/aoe/P = new(get_turf(src))
+		var/obj/projectile/rca_alriune/aoe/P = new(get_turf(src))
 		P.starting = startloc
 		P.firer = src
 		P.fired_from = src
@@ -161,7 +227,7 @@
 /* Overlays */
 /mob/living/simple_animal/hostile/rcorp_abno/hard/alriune/update_overlays()
 	. = ..()
-	if(petals_current <= 0 || stat == DEAD || status_flags & GODMODE)
+	if(petals_current <= 0 || stat == DEAD)
 		cut_overlays()
 		return
 
@@ -170,24 +236,31 @@
 
 //Bullets
 /obj/projectile/rca_alriune
-	name = "petals"
+	name = "petal"
 	icon_state = "alriune"
 	icon = 'ModularLobotomy/_Lobotomyicons/abno_projectiles.dmi'
 	desc = "a sharpened petal"
 	hitsound = "sound/weapons/throwtap.ogg"
 	speed = 4		//very slow bullets
-	damage = 20		//She fires a lot of them
+	damage = 0		//She fires a lot of them
 	damage_type = WHITE_DAMAGE
+	nodamage = TRUE
+	damage = 0
+	projectile_piercing = PASSMOB
 	white_healing = FALSE
 
 /obj/projectile/rca_alriune/on_hit(atom/target, blocked = FALSE)
+	if(ishuman(target) && !isrcabnormalitymob(target)) //Incase of pino
+		damage = 20
+		nodamage = FALSE
+		qdel(src)
 	if(isrcabnormalitymob(target))
-		to_chat(target, "The [src] flies right past you!")
+		to_chat(target, "[src] flies right past you!")
 		return
 	..()
 
-
 /obj/projectile/rca_alriune/aoe
+	name = "leaf"
 	icon_state = "alriune_AOE"
 	desc = "a sharpened leaf"
 	spread = 360	//Fires in a 360 Degree radius
@@ -199,13 +272,7 @@
 	ricochet_auto_aim_range = 10
 	ricochet_incidence_leeway = 0
 
-/obj/projectile/rca_alriune/aoe/on_hit(atom/target, blocked = FALSE)
-	if(isrcabnormalitymob(target))
-		to_chat(target, "The [src] flies right past you!")
-		return
-	..()
-
-/obj/projectile/alriune/aoe/check_ricochet_flag(atom/A)
+/obj/projectile/rca_alriune/aoe/check_ricochet_flag(atom/A)
 	if(istype(A, /turf/closed))
 		return TRUE
 	if(istype(A, /obj/structure/window))
@@ -214,3 +281,5 @@
 		return TRUE
 
 	return FALSE
+
+#undef PETALS_COOLDOWN
