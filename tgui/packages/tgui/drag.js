@@ -20,30 +20,44 @@ let resizeMatrix;
 let initialSize;
 let size;
 
+// BYOND reports window pos/size in physical pixels, while the browser reports
+// screen, window and mouse coordinates in CSS pixels. The two only agree at
+// 100% display scaling, so convert at every boundary between them.
+const pixelRatio = window.devicePixelRatio || 1;
+
+/** Converts a vector of CSS pixels into BYOND's physical pixels. */
+const toByondPixels = vec => vecScale(vec, pixelRatio);
+
 export const setWindowKey = key => {
   windowKey = key;
 };
 
-export const getWindowPosition = () => [
+export const getWindowPosition = () => toByondPixels([
   window.screenLeft,
   window.screenTop,
-];
+]);
 
-export const getWindowSize = () => [
+export const getWindowSize = () => toByondPixels([
   window.innerWidth,
   window.innerHeight,
-];
+]);
+
+/** Position of the mouse cursor in BYOND's physical pixels. */
+const getMousePosition = event => toByondPixels([
+  event.screenX,
+  event.screenY,
+]);
 
 export const setWindowPosition = vec => {
   const byondPos = vecAdd(vec, screenOffset);
   return Byond.winset(window.__windowId__, {
-    pos: byondPos[0] + ',' + byondPos[1],
+    pos: Math.round(byondPos[0]) + ',' + Math.round(byondPos[1]),
   });
 };
 
 export const setWindowSize = vec => {
   return Byond.winset(window.__windowId__, {
-    size: vec[0] + 'x' + vec[1],
+    size: Math.round(vec[0]) + 'x' + Math.round(vec[1]),
   });
 };
 
@@ -52,10 +66,10 @@ export const getScreenPosition = () => [
   0 - screenOffset[1],
 ];
 
-export const getScreenSize = () => [
+export const getScreenSize = () => toByondPixels([
   window.screen.availWidth,
   window.screen.availHeight,
-];
+]);
 
 /**
  * Moves an item to the top of the recents array, and keeps its length
@@ -110,10 +124,7 @@ export const recallWindowGeometry = async (options = {}) => {
   let size = options.size;
   // Wait until screen offset gets resolved
   await screenOffsetPromise;
-  const areaAvailable = [
-    window.screen.availWidth,
-    window.screen.availHeight,
-  ];
+  const areaAvailable = getScreenSize();
   // Set window size
   if (size) {
     // Constraint size to not exceed available screen area.
@@ -144,12 +155,21 @@ export const recallWindowGeometry = async (options = {}) => {
 export const setupDrag = async () => {
   // Calculate screen offset caused by the windows taskbar
   screenOffsetPromise = Byond.winget(window.__windowId__, 'pos')
-    .then(pos => [
-      pos.x - window.screenLeft,
-      pos.y - window.screenTop,
-    ]);
+    .then(pos => vecAdd(
+      [pos.x, pos.y],
+      vecInverse(getWindowPosition())));
   screenOffset = await screenOffsetPromise;
   logger.debug('screen offset', screenOffset);
+  // TEMPORARY PROBE: reports whether BYOND and the browser agree on pixel
+  // units. Remove once the DPI behaviour is confirmed.
+  const byondSize = await Byond.winget(window.__windowId__, 'size');
+  logger.info('geometry probe',
+    'devicePixelRatio=' + pixelRatio,
+    'byondSize=' + JSON.stringify(byondSize),
+    'browserSize=' + window.innerWidth + 'x' + window.innerHeight,
+    'screenAvail=' + window.screen.availWidth
+      + 'x' + window.screen.availHeight,
+    'screenOffset=' + screenOffset[0] + ',' + screenOffset[1]);
 };
 
 /**
@@ -179,10 +199,9 @@ const constraintPosition = (pos, size) => {
 export const dragStartHandler = event => {
   logger.log('drag start');
   dragging = true;
-  dragPointOffset = [
-    window.screenLeft - event.screenX,
-    window.screenTop - event.screenY,
-  ];
+  dragPointOffset = vecAdd(
+    getWindowPosition(),
+    vecInverse(getMousePosition(event)));
   // Focus click target
   event.target?.focus();
   document.addEventListener('mousemove', dragMoveHandler);
@@ -205,7 +224,7 @@ const dragMoveHandler = event => {
   }
   event.preventDefault();
   setWindowPosition(vecAdd(
-    [event.screenX, event.screenY],
+    getMousePosition(event),
     dragPointOffset));
 };
 
@@ -213,14 +232,10 @@ export const resizeStartHandler = (x, y) => event => {
   resizeMatrix = [x, y];
   logger.log('resize start', resizeMatrix);
   resizing = true;
-  dragPointOffset = [
-    window.screenLeft - event.screenX,
-    window.screenTop - event.screenY,
-  ];
-  initialSize = [
-    window.innerWidth,
-    window.innerHeight,
-  ];
+  dragPointOffset = vecAdd(
+    getWindowPosition(),
+    vecInverse(getMousePosition(event)));
+  initialSize = getWindowSize();
   // Focus click target
   event.target?.focus();
   document.addEventListener('mousemove', resizeMoveHandler);
@@ -243,8 +258,8 @@ const resizeMoveHandler = event => {
   }
   event.preventDefault();
   size = vecAdd(initialSize, vecMultiply(resizeMatrix, vecAdd(
-    [event.screenX, event.screenY],
-    vecInverse([window.screenLeft, window.screenTop]),
+    getMousePosition(event),
+    vecInverse(getWindowPosition()),
     dragPointOffset,
     [1, 1])));
   // Sane window size values
