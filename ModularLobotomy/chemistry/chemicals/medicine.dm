@@ -122,3 +122,18 @@
 			M.reagents.remove_reagent(R.type,2)
 	..()
 	. = 1
+
+//Oxyloss for revivals
+/datum/reagent/oxyheal
+	name = "Ozone-Oxy Catalyst"
+	description = "A medication that injects ozone into your body, and then converts it to O2."
+	metabolization_rate = REAGENTS_METABOLISM
+	color = "#b5e5e8"
+	overdose_threshold = 30
+
+/datum/reagent/oxyheal/on_mob_life(mob/living/M)
+	if(overdosed)
+		return
+	M.adjustOxyLoss(-5*REM, 0)
+	..()
+	return TRUE

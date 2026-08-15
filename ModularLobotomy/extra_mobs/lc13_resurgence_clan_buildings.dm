@@ -164,6 +164,11 @@
 	new /obj/effect/temp_visual/explosion(get_turf(src))
 	return ..()
 
+/mob/living/simple_animal/hostile/clan/ranged/turret/Destroy()
+	if(current_beam)
+		QDEL_NULL(current_beam)
+	return ..()
+
 // Turret projectile - slightly stronger than normal clan bullets
 /obj/projectile/clan_bullet/turret
 	name = "turret bolt"

@@ -434,6 +434,6 @@
 	var/datum/component/bloodfeast/bloodfeast = GetComponent(/datum/component/bloodfeast)
 	var/obj/effect/decal/cleanable/blood/B = new(get_turf(src))
 	B.bloodiness = (bloodfeast.blood_amount * 0.5) // drops half of its blood on death. This is potentially far more than what fits in a splatter.
-	..()
+	return ..()
 
 #undef NOSFERATU_BANQUET_COOLDOWN

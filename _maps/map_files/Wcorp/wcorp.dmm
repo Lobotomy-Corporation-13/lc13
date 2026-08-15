@@ -1,4 +1,8 @@
 //MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"bh" = (
+/obj/machinery/sleeper/syndie,
+/turf/open/indestructible/hotelwood,
+/area/city/outskirts)
 "cI" = (
 /obj/structure/chair/comfy/shuttle{
 	dir = 8
@@ -125,8 +129,7 @@
 /turf/open/floor/carpet/royalblue,
 /area/city/outskirts)
 "sy" = (
-/obj/structure/rack,
-/obj/item/storage/box/pcorp,
+/obj/machinery/sleeper/syndie,
 /turf/open/floor/plasteel/bluespace,
 /area/city/outskirts)
 "tb" = (
@@ -229,10 +232,6 @@
 /area/city/outskirts)
 "FS" = (
 /turf/open/floor/carpet/royalblue,
-/area/city/outskirts)
-"FY" = (
-/obj/machinery/regenerator/safety,
-/turf/open/indestructible/hotelwood,
 /area/city/outskirts)
 "Ga" = (
 /turf/open/floor/mineral/plastitanium/red,
@@ -54648,7 +54647,7 @@ pt
 pt
 pt
 iP
-FY
+bh
 UV
 UV
 OE
@@ -54950,7 +54949,7 @@ pt
 pt
 pt
 iP
-Eq
+bh
 GW
 UV
 UV
@@ -55252,7 +55251,7 @@ pt
 pt
 pt
 iP
-Eq
+bh
 UV
 GW
 UV

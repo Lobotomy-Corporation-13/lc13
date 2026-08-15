@@ -199,6 +199,7 @@
 		/obj/item/ego_weapon/city/wcorp/dagger,
 		/obj/item/ego_weapon/city/wcorp/hammer,
 		/obj/item/ego_weapon/city/wcorp/hatchet,
+		/obj/item/clothing/suit/armor/ego_gear/wcorp/recon,
 	)
 
 	veryrareloot = list(
@@ -206,11 +207,13 @@
 		/obj/item/ego_weapon/city/wcorp/shield/spear,
 		/obj/item/ego_weapon/city/wcorp/shield/club,
 		/obj/item/ego_weapon/city/wcorp/shield/axe,
+		/obj/item/clothing/suit/armor/ego_gear/wcorp/heavy,
 	)
 
 	cosmeticloot = list(
 		/obj/item/clothing/head/ego_hat/wcorp,
 		/obj/item/clothing/under/suit/lobotomy/wcorp,
+		/obj/item/clothing/under/suit/lobotomy/wsenior,
 		/obj/item/powered_gadget/teleporter,
 	)
 

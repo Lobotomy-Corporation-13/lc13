@@ -29,7 +29,7 @@
 	var/blowing_up = FALSE //To avoid her chaining multiple explosions at the same time.
 
 /mob/living/simple_animal/hostile/limbus_abno/scorched_girl/AdjustHunger()
-	..()
+	. = ..()
 	if(starving)
 		AdjustDesire(-10)
 

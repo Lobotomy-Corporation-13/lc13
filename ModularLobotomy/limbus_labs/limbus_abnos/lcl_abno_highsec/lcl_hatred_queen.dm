@@ -107,8 +107,6 @@
 	var/hysteria_damage_multiplier = 3
 	var/hysteria_speech_gain = 20
 	var/list/pre_hysteria_coeffs
-	// --- Breach ---
-	var/breached = FALSE
 	// --- Locks. Hysteria and the marker both freeze the body and can overlap, so they are
 	// tracked by reason - can_act only returns when EVERY reason has cleared.
 	var/list/act_blocks = list()
@@ -482,8 +480,8 @@
 
 // ============================ BREACH - THE DRAGON ============================
 
-/mob/living/simple_animal/hostile/limbus_abno/hatred_queen/proc/Breach()
-	if(breached)
+/mob/living/simple_animal/hostile/limbus_abno/hatred_queen/Breach()
+	if(!IsContained())
 		return
 	breached = TRUE
 	unstable = TRUE // Pacifier tools no longer work on her.

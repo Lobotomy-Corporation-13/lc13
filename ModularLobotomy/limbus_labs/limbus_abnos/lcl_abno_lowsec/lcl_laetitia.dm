@@ -40,6 +40,9 @@
 	var/list/victim_list = list()
 	var/list/possible_gifts = list(/obj/item/food/candy, /obj/item/food/chocolatebar, /obj/item/food/cake/birthday, /obj/item/food/pizza/margherita) //If the gifts are healing, spawns one of those items.
 
+/*-----\
+|Vitals|
+\-----*/
 /mob/living/simple_animal/hostile/limbus_abno/laetitia/AttackingTarget(atom/attacked_target)
 	if(!isliving(attacked_target))
 		return ..()
@@ -50,8 +53,11 @@
 	else
 		return ..()
 
+/*--\
+|Fun|
+\--*/
 /mob/living/simple_animal/hostile/limbus_abno/laetitia/funpet(mob/living/carbon/human/petter)
-	..()
+	. = ..()
 	petter.adjustWhiteLoss(-10) //This actually heals your sanity, but...
 	if(gifting)
 		GiveFriend(petter)
@@ -88,6 +94,9 @@
 	if(anticipation_start)
 		Surprise()
 
+/*----------\
+|Containment|
+\----------*/
 /mob/living/simple_animal/hostile/limbus_abno/laetitia/AdjustDesire(desire_amount)
 	..()
 	if(desire_bar > 0)
@@ -98,6 +107,9 @@
 		patience = 0
 		GiveGlobalFriend()
 
+/*---\
+|Misc|
+\---*/
 /mob/living/simple_animal/hostile/limbus_abno/laetitia/proc/GiveGlobalFriend()
 	to_chat(src, "<span class='span_warning'>Things are too boring around here, so you decide to shake things up!</span>")
 	for(var/mob/living/carbon/human/H in view(10 , src))	//This used to be literally everyone. God fucking no.
@@ -161,6 +173,9 @@
 	if(!pranked)
 		to_chat(src, "<span class='span_userdanger'>You feel like your prank isn't good enough, you decide to take away all their gifts without them noticing. Maybe next time?</span>")
 
+/*------------------\
+|ABNO LIMBUS ACTIONS|
+\------------------*/
 ///Surprise!!! Activate every single gift at once.
 /datum/action/cooldown/limbus_abno_action/laetitia_surprise
 	name = "SURPRISE!"
@@ -256,6 +271,9 @@
 		to_chat(prankster, "<span class='span_userdanger'>Do it! Do it now! It's fully ready! It'll be so fun! [pranked_amount] of your friends are going to have so much fun!</span>")
 	StartCooldown()
 
+/*---------\
+|Bomb Prank|
+\---------*/
 /obj/item/laetitia_bomb_gift
 	name = "Laetitia's special gift."
 	desc = "No matter how much you shake the gift, you can't begin to guess what's inside."

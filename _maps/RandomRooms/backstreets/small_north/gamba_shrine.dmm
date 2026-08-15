@@ -25,11 +25,15 @@
 /turf/open/floor/carpet/red,
 /area/city/backstreets_room)
 "H" = (
-/turf/closed/indestructible/riveted/plastinum,
+/turf/closed/indestructible/riveted/plastinum/nodiagonal,
 /area/city/backstreets_room)
 "L" = (
 /obj/structure/table/wood/poker,
 /obj/item/coin/iron,
+/turf/open/floor/carpet/red,
+/area/city/backstreets_room)
+"T" = (
+/mob/living/simple_animal/hostile/humanoid/rat,
 /turf/open/floor/carpet/red,
 /area/city/backstreets_room)
 
@@ -72,7 +76,7 @@ H
 H
 E
 E
-E
+T
 H
 "}
 (7,1,1) = {"

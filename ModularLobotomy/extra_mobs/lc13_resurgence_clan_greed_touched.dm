@@ -359,10 +359,11 @@
 /obj/projectile/clan_tentacle/fire(setAngle)
 	if(firer)
 		chain = firer.Beam(src, icon_state = "tentacle")
-	..()
+	return ..()
 
 /obj/projectile/clan_tentacle/Destroy()
-	qdel(chain)
+	if(chain)
+		QDEL_NULL(chain)
 	return ..()
 
 /obj/projectile/clan_tentacle/on_hit(atom/target, blocked = FALSE)

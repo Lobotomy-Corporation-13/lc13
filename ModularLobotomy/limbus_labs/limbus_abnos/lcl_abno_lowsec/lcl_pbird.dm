@@ -47,6 +47,9 @@
 	var/enrage_cooldown_time = 1 MINUTES
 	var/enrage_ready_at = 0
 
+/*-----\
+|Vitals|
+\-----*/
 //Being hit multiple times might add the same person more than one time in the sinner's list. That's on purpose as pbird gets a free angry hit on someone for everytime they hurt it.
 //Only something that could actually wound the bird is a sin - being prodded with a clipboard,
 //a repression device or any other harmless thing is not worth the beak.
@@ -138,6 +141,9 @@
 	bird_angry = TRUE
 	addtimer(CALLBACK(src, PROC_REF(CalmDown)), 2 MINUTES)
 
+/*----------\
+|Containment|
+\----------*/
 /mob/living/simple_animal/hostile/limbus_abno/pbird/proc/CalmDown()
 	if(!bird_angry)
 		return
@@ -237,6 +243,9 @@
 		melee_damage_lower = initial(melee_damage_lower)
 		melee_damage_upper = initial(melee_damage_upper)
 
+/*------------------\
+|ABNO LIMBUS ACTIONS|
+\------------------*/
 ///Extra way to be annoying for no reason. Also puts you in harm intent so that the block actually works even on people that are on help intent.
 /datum/action/cooldown/limbus_abno_action/bodyblock
 	name = "Bodyblock"

@@ -121,9 +121,7 @@
 	var/ego_cost = chosen_datum.cost * mult
 
 	// Reject the purchase if we're short on PE
-	if(abno_datum.stored_boxes < (ego_cost))
-		to_chat(user, span_warning("Not enough PE boxes stored for this operation."))
-		playsound(get_turf(src), 'sound/machines/terminal_prompt_deny.ogg', 50, TRUE)
+	if(!EnkephalinCheck(user, abno_datum, ego_cost))
 		return FALSE
 
 	// Stop if we're doing something weird by moving away from the console
@@ -171,6 +169,10 @@
 	if(!user.Adjacent(adjacency_check_turf))
 		return
 
+	// Uh oh, let's not let people print 5000000 EGOs by input stacking...
+	if(!EnkephalinCheck(user, abno_datum, ego_cost))
+		return
+
 	// DeliverEgo will handle logic for instant spawn/drop pod/conveyor belt arrival.
 	INVOKE_ASYNC(src, PROC_REF(DeliverEgo), ego_path, user, target)
 
@@ -193,6 +195,15 @@
 	updateUsrDialog()
 
 	SSlobotomy_corp.ego_purchase_logs += list(new_log)
+
+/obj/machinery/computer/ego_purchase/proc/EnkephalinCheck(mob/user, datum/abnormality/abno_datum, cost = 0)
+	if(!abno_datum)
+		return FALSE
+	if(abno_datum.stored_boxes < cost)
+		to_chat(user, span_warning("Not enough PE boxes stored for this operation."))
+		playsound(get_turf(src), 'sound/machines/terminal_prompt_deny.ogg', 50, TRUE)
+		return FALSE
+	return TRUE
 
 // Handles actually delivering purchased E.G.O. - EOs get it immediately, everyone else has to wait a while and then it'll use ShipOut to determine where it lands.
 /obj/machinery/computer/ego_purchase/proc/DeliverEgo(ego_path, mob/living/user, turf/delivery_target)

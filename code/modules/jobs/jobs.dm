@@ -170,6 +170,7 @@ GLOBAL_LIST_INIT(w_corp_positions, list(
 	"W-Corp L2 Type B Support Agent",
 	"W-Corp L2 Type C Weapon Specialist",
 	"W-Corp L2 Type D Spear Agent",
+	"W-Corp L2 Type E Heavy Armor Specialist",
 	"W-Corp L1 Cleanup Agent",
 ))
 

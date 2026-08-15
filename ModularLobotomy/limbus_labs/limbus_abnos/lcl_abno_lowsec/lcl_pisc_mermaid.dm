@@ -33,13 +33,13 @@
 	attunement_family = "unrequited"
 	ego_list = list(/datum/ego_datum/armor/lce/unrequited)
 	breach_overlay_z = 45
+
 	var/obj/item/clothing/head/unrequited_crown/crown
 	var/mob/living/carbon/human/love_target
 	var/mob/living/carbon/human/last_petter
 	var/pet_count = 0
 	var/mob/living/carbon/human/last_speaker
 	var/speak_count = 0
-	var/breached = FALSE
 	var/dashing = FALSE
 	///TRUE once the counter has bottomed out and the breach is being OFFERED. She does not
 	///breach on her own any more - the alert sits there flashing until she chooses to take it.
@@ -99,7 +99,7 @@
 		adjustBruteLoss(W.force * 1.5)
 
 /mob/living/simple_animal/hostile/limbus_abno/pisc_mermaid/updatehealth()
-	..()
+	. = ..()
 	if(breached && health < 400)
 		Unbreach()
 
@@ -112,7 +112,7 @@
 		qdel(crown)
 
 /mob/living/simple_animal/hostile/limbus_abno/pisc_mermaid/funpet(mob/living/carbon/human/petter)
-	..()
+	. = ..()
 	petter.adjustWhiteLoss(10)
 	if(last_petter == petter)
 		pet_count++
@@ -133,7 +133,7 @@
 
 //It can trigger from radiospeak, but that's kind of funny so I'll keep it. Online dating.
 /mob/living/simple_animal/hostile/limbus_abno/pisc_mermaid/Hear(message, atom/movable/speaker, datum/language/message_language, raw_message, radio_freq, list/spans, list/message_mods)
-	..()
+	. = ..()
 	if(!ishuman(speaker))
 		return
 	if(last_speaker == speaker)
@@ -155,20 +155,20 @@
 		AdjustDesire(25)
 
 /mob/living/simple_animal/hostile/limbus_abno/pisc_mermaid/InsightRoomResults(room_score, list/room_obj_list)
-	..()
+	. = ..()
 	if(room_obj_list.Find(crown))
 		to_chat(src, span_warning("Why is your gift still there? Why didn't they take it? Why. Why. Why."))
 		AdjustDesire(-20)
 
 /mob/living/simple_animal/hostile/limbus_abno/pisc_mermaid/AdjustHunger(feeding_amount)
-	..()
-	if(starving && !IsPositive(feeding_amount))
+	. = ..()
+	if(starving && feeding_amount)
 		AdjustDesire(15) //Ironically, letting her starve increases her mood due to liking repression work and disliking instinct.
 
 /mob/living/simple_animal/hostile/limbus_abno/pisc_mermaid/AdjustCounter(counter_amount)
-	if(breached)
+	if(!IsContained())
 		return
-	..()
+	. = ..()
 	UpdateBreachOffer()
 
 ///Hitting zero no longer breaches her by itself - it OFFERS the breach, and she takes it by
@@ -191,11 +191,11 @@
 
 ///Taking the offer. Everything from here is the old automatic behaviour, unchanged.
 /mob/living/simple_animal/hostile/limbus_abno/pisc_mermaid/proc/AcceptBreach()
-	if(breached || !breach_ready || stat >= DEAD)
+	if(!IsContained() || !breach_ready || stat >= DEAD)
 		return FALSE
 	breach_ready = FALSE
 	clear_alert("mermaid_breach")
-	BreachState()
+	Breach()
 	MermaidChokehold()
 	return TRUE
 
@@ -204,9 +204,9 @@
 	if(!.)
 		return FALSE
 
-	if(IsPositive(desire_amount) && desire_bar > 70)
+	if(0 < desire_amount && desire_bar > 70)
 		AdjustCounter(1)
-	else if(!IsPositive(desire_amount) && desire_bar < 35)
+	else if(0 > desire_amount && desire_bar < 35)
 		AdjustCounter(-1)
 	return TRUE
 
@@ -220,7 +220,10 @@
 	UpdateBars()
 
 ///Not a skill, only happens at counter 0 entirely outside the mermaid's control. Buffed skills, attacks, and generally a pain in the ass.
-/mob/living/simple_animal/hostile/limbus_abno/pisc_mermaid/proc/BreachState()
+/mob/living/simple_animal/hostile/limbus_abno/pisc_mermaid/Breach()
+	. = ..()
+	if(!.)
+		return
 	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	icon_state = "pmermaid_breach"
 	pixel_x = 0
@@ -232,9 +235,9 @@
 	melee_damage_upper = 30
 	melee_damage_type = BLACK_DAMAGE
 	unstable = TRUE
-	AddBreachEffect()
 
-/mob/living/simple_animal/hostile/limbus_abno/pisc_mermaid/proc/Unbreach()
+/mob/living/simple_animal/hostile/limbus_abno/pisc_mermaid/Unbreach()
+	. = ..()
 	manual_emote("calms down...")
 	icon = 'ModularLobotomy/_Lobotomyicons/48x32.dmi'
 	icon_state = "pmermaid_standing"
@@ -250,7 +253,6 @@
 	AdjustDesire(max_desire)
 	AdjustCounter(max_counter)
 	AdjustHunger(max_hunger)
-	RemoveBreachEffect()
 
 ///The breach offer. A flashing hazard triangle that sits on her HUD once her counter bottoms
 ///out; shift-clicking it explains what it is, and clicking it takes the breach.

@@ -88,6 +88,16 @@
 	else
 		linked_tinkerer.Retract()
 
+/mob/living/simple_animal/hostile/clan/tinkerer/Destroy()
+	for(var/mob/living/simple_animal/hostile/clan/unit in controlled_units)
+		unit.commander_died()
+	controlled_units = null
+	QDEL_LIST(owned_factories)
+	barricade_start_point = null
+	selection_start_point = null
+	selected_units = null
+	return ..()
+
 // Simplified retract proc
 /mob/living/simple_animal/hostile/clan/tinkerer/proc/Retract()
 	if(retracted_state)
@@ -498,14 +508,6 @@
 
 /mob/living/simple_animal/hostile/clan/tinkerer/AttackingTarget(atom/attacked_target)
 	return FALSE
-
-/mob/living/simple_animal/hostile/clan/tinkerer/death(gibbed)
-	// Destroy all factories and units
-	for(var/obj/structure/clan_factory/F in owned_factories)
-		F.Destroy()
-	for(var/mob/living/simple_animal/hostile/clan/unit in controlled_units)
-		unit.commander_died()
-	. = ..()
 
 //////////////
 // FACTORY STRUCTURE

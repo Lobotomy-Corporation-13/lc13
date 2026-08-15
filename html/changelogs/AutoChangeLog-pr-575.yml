@@ -1,4 +1,0 @@
-author: "Deadkung"
-delete-after: True
-changes:
-  - bugfix: "rosespanner/HandleCharge() to actually detect that the weapon is 'overcharged'"

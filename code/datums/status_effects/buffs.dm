@@ -511,6 +511,44 @@
 	owner.log_message("exited a blood frenzy", LOG_ATTACK)
 	QDEL_NULL(chainsaw)
 
+//LC13 Generic Work Effect
+/datum/status_effect/workspeed_buff
+	id = "workspeed_buff"
+	status_type = STATUS_EFFECT_UNIQUE
+	alert_type = /atom/movable/screen/alert/status_effect/workspeed_buff
+	duration = 5 SECONDS
+	var/buff_mod = 1.3
+
+/datum/status_effect/workspeed_buff/on_apply()
+	. = ..()
+	var/mob/living/carbon/human/user = owner
+	user.physiology.work_speed_mod *= buff_mod
+
+/datum/status_effect/workspeed_buff/on_remove()
+	. = ..()
+	var/mob/living/carbon/human/user = owner
+	user.physiology.work_speed_mod /= buff_mod
+
+/atom/movable/screen/alert/status_effect/workspeed_buff
+	name = "faster work speed"
+	desc = "Your work speed is faster due to unusual circumstances."
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
+	icon_state = "workspeed"
+
+/atom/movable/screen/alert/status_effect/workspeed_debuff
+	name = "slower work speed"
+	desc = "Your work speed is slower due to unusual circumstances."
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
+	icon_state = "workslow"
+
+//I know its redundant to have a debuff be the subtype of a buff. -IP
+/datum/status_effect/workspeed_buff/debuff
+	id = "workspeed_debuff"
+	status_type = STATUS_EFFECT_UNIQUE
+	alert_type = /atom/movable/screen/alert/status_effect/workspeed_debuff
+	duration = 5 SECONDS
+	buff_mod = 0.6
+
 //LC13 AI entity Buffs
 	//Buff Maroon Ordeal Soldiers, Feel free to cannibalize and rework to work for other creatures.
 

@@ -40,6 +40,9 @@
 /mob/living/simple_animal/hostile/limbus_abno/queen_bee/Move()
 	return FALSE
 
+/*-----\
+|Spores|
+\-----*/
 ///More or less the same spores as the original queen bee, with the main difference that it creates the special controllable bees.
 /mob/living/simple_animal/hostile/limbus_abno/queen_bee/proc/EmitSpores(forced = FALSE)
 	var/turf/target_c = get_turf(src)
@@ -57,8 +60,11 @@
 				C.ForceContractDisease(D, FALSE, TRUE)
 	AdjustDesire(100)
 
+/*----------\
+|Containment|
+\----------*/
 /mob/living/simple_animal/hostile/limbus_abno/queen_bee/AdjustDesire(desire_amount)
-	..()
+	. = ..()
 	if(desire_bar <= 0)
 		EmitSpores(TRUE)
 
@@ -72,10 +78,13 @@
 	C.ForceContractDisease(D, FALSE, TRUE)
 
 /mob/living/simple_animal/hostile/limbus_abno/queen_bee/AdjustHunger(hunger_amount)
-	..()
+	. = ..()
 	if(starving)
 		AdjustDesire(-30)
 
+/*------------------\
+|ABNO LIMBUS ACTIONS|
+\------------------*/
 /datum/action/cooldown/limbus_abno_action/emit_spores
 	name = "Emit Spores"
 	desc = "Emit spores, infecting many in the facility with your children. This can only be used on low mood.."
@@ -124,6 +133,9 @@
 	abno_user.AdjustHunger(-70) //Creating eggs like this is supposed to be very inefficient, living hosts are better.
 	abno_user.AdjustDesire(70)
 
+/*------\
+|Bee Egg|
+\------*/
 //We don't make this an egg subtype because it runs into some problems with the throwable code. Will make a controllable bee after some time.
 /obj/item/food/bee_egg
 	name = "Bee Egg"
@@ -142,6 +154,9 @@
 	new /mob/living/simple_animal/hostile/worker_bee/lcl_bee(get_turf(src))
 	qdel(src)
 
+/*--------\
+|Bee Spawn|
+\--------*/
 /mob/living/simple_animal/hostile/worker_bee/lcl_bee
 	faction = list("neutral") //Their AI lobotomy should prevent friendly attack, but better safe than sorry.
 	created_bee_type = /mob/living/simple_animal/hostile/worker_bee/lcl_bee
@@ -164,7 +179,11 @@
 		if(mind)
 			mind.transfer_to(queen)
 		queen = null
-	..()
+	return ..()
+
+/mob/living/simple_animal/hostile/worker_bee/lcl_bee/Destroy()
+	queen = null
+	return ..()
 
 /datum/action/cooldown/bee_scavenge
 	name = "Scavenge for meat."

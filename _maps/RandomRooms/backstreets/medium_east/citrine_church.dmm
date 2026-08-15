@@ -1,0 +1,220 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"a" = (
+/turf/closed/indestructible/riveted/plastinum{
+	color = "#4BBBBB"
+	},
+/area/city/backstreets_room)
+"b" = (
+/obj/structure/chair/pew/right{
+	dir = 1
+	},
+/obj/machinery/light/floor,
+/turf/open/floor/carpet/cyan,
+/area/city/backstreets_room)
+"e" = (
+/obj/structure/lootcrate/n_corp,
+/turf/open/floor/plasteel/freezer{
+	name = "tiles";
+	color = "#FFA620"
+	},
+/area/city/backstreets_room)
+"f" = (
+/mob/living/simple_animal/hostile/ordeal/citrine/archer,
+/turf/open/floor/plasteel/freezer{
+	name = "tiles"
+	},
+/area/city/backstreets_room)
+"g" = (
+/turf/open/floor/plasteel/freezer{
+	name = "tiles"
+	},
+/area/city/backstreets_room)
+"k" = (
+/obj/structure/fluff/divine/nexus{
+	pixel_x = -1;
+	color = "#49CCF8";
+	resistance_flags = 64
+	},
+/turf/open/floor/plasteel/freezer{
+	name = "tiles"
+	},
+/area/city/backstreets_room)
+"l" = (
+/obj/structure/fluff/divine/convertaltar{
+	pixel_y = 4
+	},
+/obj/structure/railing{
+	dir = 10;
+	pixel_y = -2
+	},
+/obj/machinery/light/floor,
+/turf/open/floor/plasteel/freezer{
+	name = "tiles";
+	color = "#49CCF8"
+	},
+/area/city/backstreets_room)
+"m" = (
+/obj/structure/railing/corner{
+	pixel_y = -2
+	},
+/turf/open/floor/facility/white{
+	color = "#49CCF8";
+	name = "cyan"
+	},
+/area/city/backstreets_room)
+"n" = (
+/mob/living/simple_animal/hostile/ordeal/citrine/priest,
+/obj/structure/railing/corner{
+	dir = 8;
+	pixel_y = -2
+	},
+/turf/open/floor/facility/white{
+	color = "#49CCF8";
+	name = "cyan"
+	},
+/area/city/backstreets_room)
+"o" = (
+/turf/open/floor/plasteel/freezer{
+	name = "tiles";
+	color = "#49CCF8"
+	},
+/area/city/backstreets_room)
+"y" = (
+/obj/structure/railing{
+	dir = 6;
+	pixel_y = -2
+	},
+/obj/structure/table/wood,
+/obj/item/storage/book/bible/omnissiah{
+	pixel_y = 4;
+	pixel_x = -3
+	},
+/obj/machinery/light/floor,
+/turf/open/floor/plasteel/freezer{
+	name = "tiles";
+	color = "#49CCF8"
+	},
+/area/city/backstreets_room)
+"z" = (
+/obj/structure/lootcrate/money{
+	name = "Tithe Crate"
+	},
+/turf/open/floor/plasteel/freezer{
+	name = "tiles";
+	color = "#FFA620"
+	},
+/area/city/backstreets_room)
+"B" = (
+/mob/living/simple_animal/hostile/ordeal/citrine/knight,
+/turf/open/floor/plasteel/freezer{
+	name = "tiles"
+	},
+/area/city/backstreets_room)
+"E" = (
+/obj/structure/mineral_door/silver,
+/turf/open/floor/plasteel/freezer,
+/area/city/backstreets_room)
+"G" = (
+/obj/structure/chair/pew/left{
+	dir = 1
+	},
+/obj/machinery/light/floor,
+/turf/open/floor/carpet/cyan,
+/area/city/backstreets_room)
+"M" = (
+/turf/open/floor/carpet/cyan,
+/area/city/backstreets_room)
+"O" = (
+/obj/structure/fluff/divine/nexus{
+	pixel_x = 1;
+	color = "#49CCF8";
+	resistance_flags = 64
+	},
+/turf/open/floor/plasteel/freezer{
+	name = "tiles"
+	},
+/area/city/backstreets_room)
+"Q" = (
+/turf/open/floor/plasteel/freezer{
+	name = "tiles";
+	color = "#FFA620"
+	},
+/area/city/backstreets_room)
+"X" = (
+/turf/closed/indestructible/riveted/plastinum/nodiagonal{
+	color = "#4BBBBB"
+	},
+/area/city/backstreets_room)
+
+(1,1,1) = {"
+X
+X
+X
+X
+X
+X
+E
+E
+X
+X
+"}
+(2,1,1) = {"
+X
+a
+Q
+o
+B
+g
+g
+g
+k
+X
+"}
+(3,1,1) = {"
+X
+z
+n
+l
+g
+G
+M
+G
+g
+X
+"}
+(4,1,1) = {"
+X
+z
+m
+y
+g
+b
+M
+b
+g
+X
+"}
+(5,1,1) = {"
+X
+a
+e
+o
+f
+g
+g
+g
+O
+X
+"}
+(6,1,1) = {"
+X
+X
+X
+X
+X
+X
+X
+X
+X
+X
+"}

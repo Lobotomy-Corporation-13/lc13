@@ -377,6 +377,8 @@
 
 /datum/quirk/bald/remove()
 	var/mob/living/carbon/human/H = quirk_holder
+	if(!H)
+		return
 	H.hairstyle = old_hair
 	H.update_hair()
 

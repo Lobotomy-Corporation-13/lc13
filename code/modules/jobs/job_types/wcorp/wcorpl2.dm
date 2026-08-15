@@ -1,12 +1,12 @@
-GLOBAL_LIST_INIT(l2csquads, list("Axe", "Buckler", "Cleaver", "Axe", "Buckler", "Cleaver"))	//There's two per squad
+GLOBAL_LIST_INIT(l2csquads, list("Axe", "Buckler", "Cleaver"))
 
 //These are proper agents for W-Corp, and not the chaff you're familiar with. - Angela
 /datum/job/wcorpl2
 	title = "W-Corp L2 Type C Weapon Specialist"
 	faction = "Station"
 	department_head = list("W-Corp L3 Cleanup Captain, W-Corp Representative")
-	total_positions = 6
-	spawn_positions = 6
+	total_positions = 3
+	spawn_positions = 3
 	supervisors = "Your assigned W-Corp L3 Agent and the W-Corp Representative"
 	selection_color = "#1b7ced"
 	exp_requirements = 120

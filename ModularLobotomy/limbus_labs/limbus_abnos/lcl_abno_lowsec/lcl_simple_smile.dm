@@ -34,6 +34,9 @@
 	var/knockdown_count = 3
 	var/max_knockdown = 3
 
+/*-----\
+|Vitals|
+\-----*/
 /mob/living/simple_animal/hostile/limbus_abno/simple_smile/Initialize()
 	. = ..()
 	treasure_turf = get_turf(src)
@@ -63,6 +66,14 @@
 		victim.dropItemToGround(held) //The classic.
 		knockdown_count++
 
+/mob/living/simple_animal/hostile/limbus_abno/simple_smile/updatehealth()
+	. = ..()
+	if(health <= 150 && gobbled_things.len)
+		PukeOut()
+
+/*-----\
+|Eating|
+\-----*/
 /mob/living/simple_animal/hostile/limbus_abno/simple_smile/AbnoEat(food)
 	var/obj/object = food
 	if(!gobble || istype(object, /obj/item/bodypart/head))
@@ -90,6 +101,9 @@
 	if(health <= 150 && gobbled_things.len)
 		PukeOut()
 
+/*---\
+|Misc|
+\---*/
 /mob/living/simple_animal/hostile/limbus_abno/simple_smile/proc/PukeOut()
 	var/turf/T = get_turf(src)
 	var/list/coughed_up = gobbled_things
@@ -98,6 +112,9 @@
 		playsound(T, 'sound/effects/splat.ogg', 50, TRUE)
 		I.forceMove(T)
 
+/*------------------\
+|ABNO LIMBUS ACTIONS|
+\------------------*/
 ///The ability to eat things outright. Can't do it by default and needs to activate this ability first, giving them a limited amount of things to eat before the ability runs out.
 /datum/action/cooldown/limbus_abno_action/smile_gobble
 	name = "Borrow"

@@ -329,7 +329,6 @@
 	armor = list(RED_DAMAGE = 0, WHITE_DAMAGE = 50, BLACK_DAMAGE = 30, PALE_DAMAGE = 0)
 	var/stage = 0
 	var/grow_interval = 5 SECONDS
-	var/list/protected_plants = list()
 
 /obj/structure/amurdad_bomb/Initialize()
 	. = ..()
@@ -338,12 +337,8 @@
 
 /obj/structure/amurdad_bomb/proc/ProtectPlants()
 	for(var/obj/structure/spreading/apple_vine/AV in view(2, src))
-		if(AV in protected_plants)
-			AV.obj_integrity += 50
-			continue
-		protected_plants += AV
 		AV.max_integrity = 300
-		AV.obj_integrity = 300
+		AV.obj_integrity = clamp(AV.obj_integrity + 30,0,300)
 
 /obj/structure/amurdad_bomb/proc/Grow()
 	stage = stage + 1 > 5 ? 5 : stage + 1

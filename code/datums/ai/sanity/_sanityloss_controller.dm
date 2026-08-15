@@ -432,6 +432,8 @@
 		return
 	// No one to fight!? Well we'll go find someone to fight!
 	var/list/possible_locs = list()
+	if(!length(total_locations))
+		return
 	for(var/turf/T in total_locations)
 		if(get_dist(pawn, T) < 5)
 			continue
@@ -440,18 +442,19 @@
 		if(T in locations_visited)
 			continue
 		possible_locs += T
-	var/turf/open/T = pick(possible_locs)
-	if(T)
-		if(timerid)
-			deltimer(timerid)
-			timerid = null
-		current_behaviors += GET_AI_BEHAVIOR(/datum/ai_behavior/insanity_wander/murder_wander)
-		blackboard[BB_INSANE_CURRENT_ATTACK_TARGET] = T
-		locations_visited |= T
-		if(locations_visited.len > (total_locations.len*0.75)) // Should encourage diversity
-			locations_visited.Cut(1, 2)
-	else
-		locations_visited.Cut(1, 2) // Maybe we're too limited somehow...
+	if(length(possible_locs))
+		var/turf/open/T = pick(possible_locs)
+		if(T)
+			if(timerid)
+				deltimer(timerid)
+				timerid = null
+			current_behaviors += GET_AI_BEHAVIOR(/datum/ai_behavior/insanity_wander/murder_wander)
+			blackboard[BB_INSANE_CURRENT_ATTACK_TARGET] = T
+			locations_visited |= T
+			if(locations_visited.len > (total_locations.len*0.75)) // Should encourage diversity
+				locations_visited.Cut(1, 2)
+		else
+			locations_visited.Cut(1, 2) // Maybe we're too limited somehow...
 
 /datum/ai_controller/insane/murder/ResistCheck()
 	var/mob/living/living_pawn = pawn

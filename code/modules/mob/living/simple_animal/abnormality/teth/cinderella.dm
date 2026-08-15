@@ -49,10 +49,16 @@
 
 	var/freshness = 0
 	//Breach stuff
-	var/maxSegments = 1
+	var/max_segments = 1
+	//Segments of the carriage
 	var/list/segments = list()
+	//Entities damaged by the carriage. Uses tags.
 	var/list/damaged = list()
 	var/already_breached
+
+/mob/living/simple_animal/hostile/abnormality/cinderella/Destroy()
+	segments = null
+	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/cinderella/examine(mob/user)
 	. = ..()
@@ -105,8 +111,7 @@
 	addtimer(CALLBACK(src, PROC_REF(death)), 45 SECONDS)
 
 /mob/living/simple_animal/hostile/abnormality/cinderella/proc/GoToTheBall()
-	for(var/mob/living/M in damaged)
-		damaged -= M
+	damaged.Cut()
 	var/turf/aimTurf = pick(GLOB.department_centers)
 	FireCarriage(aimTurf.y, pick(EAST, WEST), aimTurf.z)
 
@@ -146,9 +151,9 @@
 				coveredTurfs |= T
 		for(var/turf/T in coveredTurfs)
 			for(var/mob/living/M in T.contents)
-				if(M in src.damaged)
+				if(M.tag in damaged)
 					continue
-				src.damaged += M
+				damaged += M.tag
 				if(!seg.noise)
 					if(rand())
 						playsound(get_turf(seg), 'sound/abnormalities/cinderella/horse1.ogg', 100, 0, 40)

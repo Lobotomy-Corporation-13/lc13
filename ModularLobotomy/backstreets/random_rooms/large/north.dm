@@ -97,3 +97,7 @@
 	room_id = "blade_lineage_ln"
 	mappath = "_maps/RandomRooms/backstreets/large_north/blade_lineage_ln.dmm"
 
+/datum/map_template/random_room/backstreets/large_north/citrine_sacrifice
+	name = "Citrine Sacrifice - Large North"
+	room_id = "citrine_sacrifice"
+	mappath = "_maps/RandomRooms/backstreets/large_north/citrine_sacrifice.dmm"
