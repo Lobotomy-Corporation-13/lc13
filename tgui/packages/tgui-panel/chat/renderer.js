@@ -382,9 +382,11 @@ class ChatRenderer {
     }
   }
 
-  // Server-driven prune of the oldest N% of messages (used by Arayashiki's chat-erasure feature).
-  // The count is computed from the client's current message total, so the rate scales with how
-  // much chat history the player actually has - a sparse chat erodes slowly, a long one fast.
+  // Server-driven prune of the oldest N% of messages (used by
+  // Arayashiki's chat-erasure feature). The count is computed from the
+  // client's current message total, so the rate scales with how much
+  // chat history the player actually has - a sparse chat erodes
+  // slowly, a long one fast.
   pruneOldestPercent(percent) {
     if (!this.isReady() || !percent || percent <= 0) {
       return;
@@ -408,7 +410,8 @@ class ChatRenderer {
     this.messages = this.messages.filter(m => m.node !== 'pruned');
     const remainingDrop = count - visibleDrop;
     if (remainingDrop > 0 && this.messages.length > 0) {
-      this.messages = this.messages.slice(Math.min(remainingDrop, this.messages.length));
+      const dropCount = Math.min(remainingDrop, this.messages.length);
+      this.messages = this.messages.slice(dropCount);
     }
   }
 
