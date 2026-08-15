@@ -160,16 +160,6 @@ export const setupDrag = async () => {
       vecInverse(getWindowPosition())));
   screenOffset = await screenOffsetPromise;
   logger.debug('screen offset', screenOffset);
-  // TEMPORARY PROBE: reports whether BYOND and the browser agree on pixel
-  // units. Remove once the DPI behaviour is confirmed.
-  const byondSize = await Byond.winget(window.__windowId__, 'size');
-  logger.info('geometry probe',
-    'devicePixelRatio=' + pixelRatio,
-    'byondSize=' + JSON.stringify(byondSize),
-    'browserSize=' + window.innerWidth + 'x' + window.innerHeight,
-    'screenAvail=' + window.screen.availWidth
-      + 'x' + window.screen.availHeight,
-    'screenOffset=' + screenOffset[0] + ',' + screenOffset[1]);
 };
 
 /**
