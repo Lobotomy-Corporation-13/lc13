@@ -113,7 +113,7 @@ GLOBAL_LIST_INIT(sangria_finger_roles, list(
 	"index" = list("Oracle Proxy"),
 ))
 
-/obj/item/ego_weapon/shield/sangria/examine(mob/user)
+/obj/item/ego_weapon/shield/parry/sangria/examine(mob/user)
 	. = ..()
 	. += span_notice("The blade bears five seals:")
 	for(var/finger in seals_broken)
@@ -127,7 +127,7 @@ GLOBAL_LIST_INIT(sangria_finger_roles, list(
 		. += "<a href='byond://?src=[REF(src)];sangria_toggle_dash=1'>\[Toggle dash afterattack: [dash_enabled ? "ON" : "OFF"]\]</a>"
 		. += "<a href='byond://?src=[REF(src)];sangria_unsheathe=1'>\[Fully unsheathe the blade\]</a>"
 
-/obj/item/ego_weapon/shield/sangria/Topic(href, list/href_list)
+/obj/item/ego_weapon/shield/parry/sangria/Topic(href, list/href_list)
 	. = ..()
 	if(href_list["sangria_break_seal"])
 		var/finger = href_list["sangria_break_seal"]
@@ -154,7 +154,7 @@ GLOBAL_LIST_INIT(sangria_finger_roles, list(
 		UnsheatheToArayashiki(usr)
 		return
 
-/obj/item/ego_weapon/shield/sangria/proc/CheckAwaken()
+/obj/item/ego_weapon/shield/parry/sangria/proc/CheckAwaken()
 	if(awakened)
 		return
 	for(var/seal in seals_broken)
@@ -165,7 +165,7 @@ GLOBAL_LIST_INIT(sangria_finger_roles, list(
 	desc += " All five seals are broken; the blade hungers."
 	visible_message(span_userdanger("Sangria's seals are all broken. The blade hums with newfound hunger."))
 
-/obj/item/ego_weapon/shield/sangria/proc/UnsheatheToArayashiki(mob/user)
+/obj/item/ego_weapon/shield/parry/sangria/proc/UnsheatheToArayashiki(mob/user)
 	if(!user || !ismob(user))
 		return
 	var/turf/T = get_turf(user)
@@ -178,7 +178,7 @@ GLOBAL_LIST_INIT(sangria_finger_roles, list(
 	user.put_in_active_hand(A)
 	qdel(src)
 
-/obj/item/ego_weapon/shield/sangria/afterattack(atom/A, mob/living/user, proximity_flag, params)
+/obj/item/ego_weapon/shield/parry/sangria/afterattack(atom/A, mob/living/user, proximity_flag, params)
 	. = ..()
 	if(!awakened || !dash_enabled)
 		return
