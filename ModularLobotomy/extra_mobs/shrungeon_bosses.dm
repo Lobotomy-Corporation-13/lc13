@@ -26,15 +26,14 @@
 	retreat_distance = 2
 	minimum_distance = 1
 	var/datum/beam/current_beam = null
+	var/grenade_cooldown_time = 15 SECONDS
+	var/grenade_range = 7
 	var/grenade_cooldown
-	var/grenade_cd_duration = 15 SECONDS
-
+	var/targetAmount = 0
 
 /mob/living/simple_animal/hostile/shrimp_hos/OpenFire(atom/A) //We able to gas them? No? Bust out the shotty.
 	if(!can_act)
 		return
-	if(gas_grenade())
-		return FALSE
 	if(PrepareToFire(A))
 		return ..()
 	return FALSE
@@ -47,14 +46,28 @@
 	can_act = TRUE
 	return TRUE
 
-/mob/living/simple_animal/hostile/shrimp_hos/proc/gas_grenade()
-	if(grenade_cooldown>world.time)
+/mob/living/simple_animal/hostile/shrimp_hos/Life()
+	. = ..()
+	if(!.) // Dead
 		return FALSE
-	playsound(src, 'sound/weapons/throw.ogg', 200, TRUE, 2)
-	grenade_cooldown = (world.time+grenade_cd_duration)
-	SLEEP_CHECK_DEATH(12)
-	return TRUE
+	if((grenade_cooldown < world.time))
+		thrownade()
 
+/mob/living/simple_animal/hostile/shrimp_hos/proc/thrownade()
+	grenade_cooldown = world.time + grenade_cooldown_time
+	var/list/hit_turfs = list()
+	for(var/mob/living/carbon/human/L in range(grenade_range, src))
+		if(faction_check_mob(L, FALSE))
+			continue
+		var/turf_tag = "[L.x],[L.y]"
+		if(turf_tag in hit_turfs)
+			continue
+		if(targetAmount <= 2)
+			++targetAmount
+			var/obj/effect/shrimpgasnade/E = new(get_turf(L.loc))//do this for the # of targets + 1
+			E.creator = src
+			hit_turfs = turf_tag
+	targetAmount = 0
 
 
 /mob/living/simple_animal/hostile/shrimp_comms

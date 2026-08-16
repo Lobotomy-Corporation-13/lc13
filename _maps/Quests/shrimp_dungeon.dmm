@@ -159,6 +159,11 @@
 /obj/item/food/fish/salt_water,
 /turf/open/floor/mineral/titanium/white,
 /area/city/unregisteredportoutdoors)
+"fG" = (
+/turf/closed/indestructible/fakeglass{
+	baseturfs = /turf/open/water/deep/saltwater/extradeep
+	},
+/area/city/unregisteredportoutdoors)
 "fJ" = (
 /obj/item/ego_weapon/ranged/sodarifle{
 	pixel_y = 5;
@@ -1042,8 +1047,7 @@
 /area/city/unregisteredportoutdoors)
 "Aj" = (
 /turf/closed/indestructible/opshuttle{
-	color = "#bc7ad6";
-	name = "shipping container"
+	color = "#bc7ad6"
 	},
 /area/city/unregisteredportindoors)
 "Al" = (
@@ -5302,17 +5306,17 @@ dY
 dY
 dY
 dY
-dY
-dY
-dY
-dY
-dY
-dY
-dY
-dY
-dY
-dY
-dY
+fG
+fG
+fG
+fG
+fG
+fG
+fG
+fG
+fG
+fG
+fG
 dY
 dY
 Lk
@@ -5385,8 +5389,8 @@ dY
 dY
 dY
 dY
-dY
-dY
+fG
+fG
 Gc
 lK
 lK
@@ -5396,8 +5400,8 @@ lK
 lK
 lK
 ur
-dY
-dY
+fG
+fG
 dY
 Lk
 Lk
@@ -5468,8 +5472,8 @@ dY
 dY
 dY
 dY
-dY
-dY
+fG
+fG
 Gc
 wK
 hT
@@ -5481,8 +5485,8 @@ hT
 hT
 wV
 ur
-dY
-dY
+fG
+fG
 Lk
 Lk
 Lk
@@ -5551,8 +5555,8 @@ dY
 dY
 dY
 dY
-dY
-dY
+fG
+fG
 Gc
 wK
 hT
@@ -5566,7 +5570,7 @@ FI
 hT
 Ih
 ur
-dY
+fG
 ob
 ob
 ob
@@ -5635,7 +5639,7 @@ dY
 dY
 dY
 dY
-dY
+fG
 Gc
 wK
 hT
@@ -5719,7 +5723,7 @@ TX
 TX
 TX
 TX
-dY
+fG
 tf
 hT
 lm
@@ -6223,7 +6227,7 @@ TX
 TX
 TX
 TX
-dY
+fG
 tf
 hT
 lm
@@ -6307,7 +6311,7 @@ dY
 dY
 dY
 dY
-dY
+fG
 ZQ
 La
 hT
@@ -6391,8 +6395,8 @@ dY
 dY
 dY
 dY
-dY
-dY
+fG
+fG
 ZQ
 La
 hT
@@ -6406,8 +6410,8 @@ zH
 hT
 zl
 uJ
-dY
-dY
+fG
+Lk
 ob
 ob
 ob
@@ -6476,8 +6480,8 @@ dY
 dY
 dY
 dY
-dY
-dY
+fG
+fG
 ZQ
 La
 hT
@@ -6489,8 +6493,8 @@ hT
 hT
 Xq
 uJ
-dY
-dY
+fG
+fG
 dY
 dY
 Lk
@@ -6561,8 +6565,8 @@ dY
 dY
 dY
 dY
-dY
-dY
+fG
+fG
 ZQ
 Sz
 Sz
@@ -6572,8 +6576,8 @@ Sz
 Sz
 Sz
 uJ
-dY
-dY
+fG
+fG
 dY
 dY
 dY
@@ -6646,17 +6650,17 @@ dY
 dY
 dY
 dY
-dY
-dY
-dY
-dY
-dY
-dY
-dY
-dY
-dY
-dY
-dY
+fG
+fG
+fG
+fG
+fG
+fG
+fG
+fG
+fG
+fG
+fG
 dY
 dY
 dY
