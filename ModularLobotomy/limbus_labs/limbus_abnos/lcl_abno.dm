@@ -455,7 +455,7 @@
 			heard_us_speak[H.ckey] = world.time
 
 /mob/living/simple_animal/hostile/limbus_abno/Hear(message, atom/movable/speaker, datum/language/message_language, raw_message, radio_freq, list/spans, list/message_mods)
-	..()
+	. = ..()
 	if(desire_on_talk != 0 && speaker != src)
 		AdjustDesire(desire_on_talk)
 	//...and if one of them then answers us, that is a conversation, and it is worth something.
@@ -633,7 +633,7 @@
 	if(special_desc == "" || isnull(special_desc))
 		return ..()
 
-	. = list(special_desc)
+	return list(special_desc)
 
 ///A precise, numeric rundown of the abno's needs, shown only to the player controlling it.
 /mob/living/simple_animal/hostile/limbus_abno/proc/SelfStatusReadout()

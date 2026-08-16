@@ -327,7 +327,7 @@
 	return ..()
 
 /obj/effect/proc_holder/ability/aimed/casket_swarm/AbnoInteraction(mob/living/user)
-	if(!istype(user, /mob/living/simple_animal/hostile/abnormality/funeral))
+	if(!istype(user, /mob/living/simple_animal/hostile/abnormality/funeral) || !istype(user, /mob/living/simple_animal/hostile/limbus_abno/funeral))
 		return
 	var/mob/living/simple_animal/hostile/abnormality/funeral/abno = user
 	ToggleAct(abno,TRUE)
@@ -339,6 +339,7 @@
 	if(!user || !target)
 		AbnoInteraction(user)
 		return
+
 	ToggleAct(user,FALSE)
 
 	var/dir_to_target = get_cardinal_dir(get_turf(user), get_turf(target))
@@ -387,20 +388,42 @@
 		EffectTiles(T, user)
 
 /obj/effect/proc_holder/ability/aimed/casket_swarm/proc/EffectTiles(turf/tile, mob/living/user)
-	var/damage_structures = FALSE
-	if(SSmaptype.maptype == "limbus_labs")
-		damage_structures = TRUE
+	var/default_function = TRUE
+	if(istype(user, /mob/living/simple_animal/hostile/limbus_abno/funeral))
+		default_function = FALSE
 
 	new /obj/effect/temp_visual/funeral_swarm(tile)
 
-	for(var/mob/living/carbon/human/H in user.HurtInTurf(tile, list(), swarm_damage, WHITE_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, hurt_structure = damage_structures, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_SPECIAL)))
-		if(H.stat == DEAD)
+	//Deoptimizing this code in order to fit it into LCL -IP
+	for(var/mob/living/L in tile)
+		if(L == user)
 			continue
-		if(H.sanity_lost)
-			H.death()
-			KillAnimation(H)
+		if(L.status_flags & GODMODE)
+			continue
+		if(L.stat == DEAD)
+			continue
+		var/do_hit = default_function ? IsSameFaction(user, L) : IsLimbusFriend(user, L)
+		if(do_hit)
+			continue
+
+		DamageThing(L, swarm_damage, WHITE_DAMAGE, user, thing_flags = (DAMAGE_FORCED), thing_attack_type = (ATTACK_TYPE_SPECIAL))
+		if(istype(L, /mob/living/carbon/human))
+			var/mob/living/carbon/human/H = L
+			if(H.sanity_lost)
+				H.death()
+				KillAnimation(H)
+
+	if(default_function)
+		return
+
+	for(var/obj/O in tile)
+		if(O.resistance_flags & INDESTRUCTIBLE)
+			continue
+		DamageThing(O, swarm_damage, WHITE_DAMAGE, user)
 
 /obj/effect/proc_holder/ability/aimed/casket_swarm/proc/KillAnimation(mob/living/carbon/human/killed)
+	if(!killed)
+		return
 	killed.apply_status_effect(/datum/status_effect/butterfly_death_anim)
 
 #undef CASKET_TIMER

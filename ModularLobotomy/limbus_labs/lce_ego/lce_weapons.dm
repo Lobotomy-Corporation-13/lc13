@@ -113,7 +113,7 @@
 		revved = FALSE
 		to_chat(user, span_warning("You shut off Grinder MK4."))
 		balloon_alert(user, "You shut off Grinder MK4.")
-	..()
+	return ..()
 
 /obj/item/ego_weapon/lce/unrequited
 	name = "LCE EGO: Unrequited Love"

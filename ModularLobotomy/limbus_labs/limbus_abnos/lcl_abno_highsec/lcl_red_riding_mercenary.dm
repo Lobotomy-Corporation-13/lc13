@@ -3,6 +3,10 @@
 	health = 2400 // Since she was apparently too easy to suppress
 	rapid_melee = 2
 	speed = 0.5
+
+	melee_damage_lower = 10
+	melee_damage_upper = 20
+
 	damage_coeff = list(RED_DAMAGE = 0.6, WHITE_DAMAGE = 1.2, BLACK_DAMAGE = 0.6, PALE_DAMAGE = 1.5) // Fuck you, blue shepherd.
 	ranged = TRUE
 
@@ -61,7 +65,12 @@
 		/datum/action/cooldown/limbus_abno_action/swap_attack/knifethrow
 		)
 
+	attunement_family = "crimson"
+	ego_list = list(/datum/ego_datum/armor/lce/crimson)
+
 	var/monies = 100
+	//Determines what sprite she has
+	var/mode = 1
 
 /*-----\
 |Vitals|
@@ -94,6 +103,32 @@
 			return
 	return ..()
 
+/mob/living/simple_animal/hostile/limbus_abno/red_hood/update_icon_state()
+	if(stat == DEAD)
+		icon = egg_icon
+		icon_state = egg_sprite
+		icon_dead = egg_sprite
+		pixel_x = -8
+		base_pixel_x = -8
+		pixel_y = 0
+		base_pixel_y = 0
+		return
+
+	switch(mode)
+		if(2)
+			icon = 'ModularLobotomy/_Lobotomyicons/96x64.dmi'
+			icon_state = "redhood_shoot"
+			icon_living = "redhood_shoot"
+			pixel_x = -32
+			base_pixel_x = -32
+		else
+			icon = 'ModularLobotomy/_Lobotomyicons/48x64.dmi'
+			icon_state = "red_hood"
+			icon_living = "red_hood"
+			pixel_x = -8
+			base_pixel_x = -8
+	icon_living = icon_state
+
 /*----------\
 |Containment|
 \----------*/
@@ -116,8 +151,8 @@
 /mob/living/simple_animal/hostile/limbus_abno/red_hood/Unbreach()
 	breached = FALSE
 	unstable = FALSE
-	melee_damage_lower = 0
-	melee_damage_upper = 1
+	melee_damage_lower = 10
+	melee_damage_upper = 20
 	return ..()
 
 /mob/living/simple_animal/hostile/limbus_abno/red_hood/AdjustHunger(feeding_amount)
@@ -167,16 +202,11 @@
 		return FALSE
 	gun_timer = world.time + gun_cooldown
 	manual_emote("raises her gun.")
-	/*
-	* Im genuinely too tired to incorporate the SpecialReset into
-	* Abno abilities next to the default Red Hood.
-	*/
-	icon = 'ModularLobotomy/_Lobotomyicons/96x64.dmi'
-	icon_state = "redhood_shoot"
-	icon_living = "redhood_shoot"
-	pixel_x = -32
-	base_pixel_x = -32
+	mode = 2
+	update_icon()
 	hollowpoint_round.Perform(target, src)
+	mode = 1
+	update_icon()
 	AdjustMonies(-gun_cost)
 
 /*---\

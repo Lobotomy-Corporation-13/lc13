@@ -42,7 +42,6 @@
 		/obj/item/food/grown/harebell, /obj/item/stack/sheet/leather,
 		)
 	liked_objects_value = 5
-	max_counter = 2
 	diet_list = list(/obj/item/organ, /obj/item/food/meat, /obj/item/bodypart)
 	hunger_loss = 10
 	kickstart_timer = 5 MINUTES
@@ -51,9 +50,16 @@
 	desire_on_eat = 10
 	desire_on_pet = 5
 	rep_desire_gain = -5
+	max_counter = 2
+	counter = 2
 
 	egg_icon = 'ModularLobotomy/_Lobotomyicons/abno_cores/waw.dmi'
 	egg_sprite = "big_wolf"
+
+	can_breach = TRUE
+
+	attunement_family = "cobalt"
+	ego_list = list(/datum/ego_datum/armor/lce/cobalt)
 
 /*-----\
 |Vitals|
@@ -62,9 +68,20 @@
 	.  = ..()
 	if(prob(30))
 		fluffy = TRUE
+		update_icon()
 	attack_sound = 'sound/items/toysqueak1.ogg'
 
 /mob/living/simple_animal/hostile/limbus_abno/big_wolf/update_icon_state()
+	if(stat == DEAD)
+		icon = egg_icon
+		icon_state = egg_sprite
+		icon_dead = egg_sprite
+		pixel_x = -8
+		base_pixel_x = -8
+		pixel_y = 0
+		base_pixel_y = 0
+		return
+
 	var/alt_stuff = fluffy ? "_alt" : ""
 	if(IsContained())
 		icon = 'ModularLobotomy/_Lobotomyicons/abnormality/big_wolf64x64.dmi'
@@ -77,10 +94,7 @@
 		icon = 'ModularLobotomy/_Lobotomyicons/96x64.dmi'
 		pixel_x = -32
 		base_pixel_x = -32
-		if(stat == DEAD)
-			icon_state = icon_dead
-		else
-			icon_state = "big_wolf"
+		icon_state = "big_wolf"
 	icon_living = icon_state
 
 /mob/living/simple_animal/hostile/limbus_abno/big_wolf/death(gibbed)
@@ -93,6 +107,10 @@
 		if(W.force > 0)
 			SpewStomach()
 			return
+	if(fluffy && istype(W, /obj/item/razor))
+		fluffy = FALSE
+		update_icon()
+		return
 	return ..()
 
 /*--\
@@ -137,6 +155,12 @@
 	attack_sound = 'sound/items/toysqueak1.ogg'
 	return ..()
 
+/mob/living/simple_animal/hostile/limbus_abno/big_wolf/InsightRoomResults(room_score, list/room_obj_list)
+	if(starving && room_score > 0)
+		to_chat(src,span_notice("Your too hungry to care about your surroundings."))
+		return
+	return ..()
+
 /mob/living/simple_animal/hostile/limbus_abno/big_wolf/AdjustHunger(feeding_amount)
 	. = ..()
 	if(hunger_bar <= 10)
@@ -145,8 +169,11 @@
 		SpewStomach()
 
 /mob/living/simple_animal/hostile/limbus_abno/big_wolf/AdjustDesire(desire_amount)
-	. = ..()
-	if(desire_bar <= 10 && 1 > desire_amount)
+	var/mod_desire = desire_amount
+	if(starving)
+		mod_desire -= 10
+	. = ..(mod_desire)
+	if(desire_bar == 0 && 1 > desire_amount)
 		AdjustCounter(-1)
 
 /*-----\
@@ -157,21 +184,7 @@
 	if(istype(food, /obj/item/bodypart/head))
 		to_chat(src, span_warning("The electronic chip in this bodypart will upset your stomach."))
 		return FALSE
-	. = ..()
-	if(.) //They already ate whatever was there.
-		return .
-
-	var/mob/living/mob_target
-	if(isliving(food))
-		mob_target = food
-	else
-		return FALSE
-
-	if(mob_target.stat >= SOFT_CRIT)
-		return FALSE
-
-	if(iscarbon(mob_target))
-		EatWorker(mob_target)
+	return ..()
 
 /mob/living/simple_animal/hostile/limbus_abno/big_wolf/proc/EatWorker(mob/living/L)
 	if(!L || !isliving(L))
@@ -182,7 +195,11 @@
 	ADD_TRAIT(L, TRAIT_IMMOBILIZED, type)
 	ADD_TRAIT(L, TRAIT_HANDS_BLOCKED, type)
 	L.adjustBruteLoss(-maxHealth * 0.2)
-	L.forceMove(src)
+	if(!L.client)
+		dropHardClothing(L, get_turf(L))
+		qdel(L)
+	else
+		L.forceMove(src)
 	AdjustHunger(20)
 	update_icon()
 	return TRUE
@@ -190,7 +207,7 @@
 /mob/living/simple_animal/hostile/limbus_abno/big_wolf/proc/SpewStomach()
 	var/spew_turf = pick(get_adjacent_open_turfs(src))
 	playsound(get_turf(src), 'sound/abnormalities/big_wolf/Wolf_EatOut.ogg', 75, 1)
-	for(var/atom/movable/i in contents)
+	for(var/mob/living/i in contents)
 		if(isliving(i))
 			var/mob/living/L = i
 			L.Knockdown(10, FALSE)
@@ -203,8 +220,9 @@
 		i.forceMove(spew_turf)
 
 	if(IsContained())
+		fluffy = TRUE
 		sleep(1 SECONDS)
-		icon_state = "wolf_sad"
+		ShowEmotion("abno_cry")
 		sleep(3 SECONDS)
 		update_icon_state()
 
@@ -218,7 +236,7 @@
 	button_icon_state = "mood_happiness_bad"
 	transparent_when_unavailable = TRUE
 	hunger_req = 25
-	cooldown_time = 0.6 MINUTES
+	cooldown_time = 10 SECONDS
 
 /datum/action/cooldown/limbus_abno_action/eat_employee/IsAvailable()
 	. = ..()

@@ -3860,6 +3860,7 @@
 #include "code\modules\shuttle\white_ship.dm"
 #include "code\modules\spells\spell.dm"
 #include "code\modules\spells\ability_types\_ability.dm"
+#include "code\modules\spells\ability_types\abno_ability_helpers.dm"
 #include "code\modules\spells\ability_types\middle_abilities.dm"
 #include "code\modules\spells\ability_types\misc_ability.dm"
 #include "code\modules\spells\ability_types\realized.dm"

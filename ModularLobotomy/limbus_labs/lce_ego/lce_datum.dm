@@ -43,6 +43,14 @@
 /datum/ego_datum/armor/lce/love
 	item_path = /obj/item/clothing/suit/armor/ego_gear/lce/love
 
+//Cobalt
+/datum/ego_datum/armor/lce/cobalt
+	item_path = /obj/item/clothing/suit/armor/ego_gear/lce/cobalt
+
+//Crimson
+/datum/ego_datum/armor/lce/crimson
+	item_path = /obj/item/clothing/suit/armor/ego_gear/lce/crimson
+
 //Despair
 /datum/ego_datum/armor/lce/despair
 	item_path = /obj/item/clothing/suit/armor/ego_gear/lce/despair

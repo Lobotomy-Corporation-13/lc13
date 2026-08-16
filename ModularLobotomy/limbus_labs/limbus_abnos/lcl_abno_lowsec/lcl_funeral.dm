@@ -32,12 +32,13 @@
 		/obj/structure/chair/wood,
 		/obj/item/food/grown/harebell,
 		)
-	max_counter = 3
 	desire_loss = 15
 	desire_on_pet = 3
 	desire_on_talk = 1
 	rep_desire_gain = -5
 	delete_food = FALSE
+	diet_value = 0
+	diet_list = list()
 
 	can_breach = TRUE
 	attack_action_types = list(
@@ -46,6 +47,8 @@
 
 	egg_icon = 'ModularLobotomy/_Lobotomyicons/abno_cores/he.dmi'
 	egg_sprite = "funeral"
+
+	can_breach = TRUE
 
 /*-----\
 |Vitals|
