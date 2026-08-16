@@ -901,7 +901,7 @@
 /area/city)
 "kH" = (
 /obj/machinery/newscaster,
-/turf/closed/indestructible/reinforced,
+/turf/closed/indestructible/city/redbrick,
 /area/city/library)
 "kI" = (
 /obj/effect/spawner/randomsnackvend,
@@ -921,10 +921,12 @@
 /turf/open/floor/facility/dark,
 /area/city/alleyway_room)
 "kR" = (
-/obj/structure/flora/ausbushes/grassybush,
-/obj/machinery/city_map_display,
-/obj/item/city_map,
-/obj/item/city_map,
+/obj/effect/light_emitter{
+	light_power = 4;
+	light_range = 25;
+	set_cap = 3;
+	set_luminosity = 24
+	},
 /turf/open/floor/plating/grass,
 /area/city)
 "kT" = (
@@ -1164,6 +1166,9 @@
 "om" = (
 /obj/structure/table/wood/bar,
 /obj/machinery/chem_dispenser/drinks,
+/obj/machinery/light/small{
+	dir = 1
+	},
 /turf/open/floor/wood,
 /area/city/hhpp)
 "oC" = (
@@ -1361,8 +1366,12 @@
 /turf/open/floor/wood,
 /area/city/hhpp)
 "qS" = (
-/turf/closed/indestructible/reinforced,
-/area/city/library)
+/obj/machinery/vending/boozeomat{
+	density = 0;
+	pixel_x = 32
+	},
+/turf/open/floor/wood,
+/area/city/hhpp)
 "qU" = (
 /obj/structure/shipping_container/wcorp,
 /turf/open/floor/city/concrete,
@@ -3121,6 +3130,7 @@
 /area/city/bistro)
 "MS" = (
 /obj/machinery/vending/hydroseeds,
+/obj/machinery/light,
 /turf/open/indestructible/white,
 /area/city/hhpp)
 "MY" = (
@@ -3463,8 +3473,15 @@
 /obj/effect/spawner/randomsnackvend,
 /turf/open/floor/facility,
 /area/city/shop)
+"Sm" = (
+/obj/machinery/hydroponics,
+/obj/machinery/light{
+	dir = 1
+	},
+/turf/open/indestructible/white,
+/area/city/hhpp)
 "SH" = (
-/obj/machinery/vending/boozeomat,
+/obj/machinery/light/small,
 /turf/open/floor/wood,
 /area/city/hhpp)
 "SI" = (
@@ -3522,6 +3539,9 @@
 /area/city/clinic)
 "Tk" = (
 /obj/machinery/seed_extractor,
+/obj/machinery/light{
+	dir = 1
+	},
 /turf/open/indestructible/white,
 /area/city/hhpp)
 "To" = (
@@ -3600,7 +3620,7 @@
 	icon_state = "votebox_maint";
 	name = "mail box"
 	},
-/turf/closed/indestructible/reinforced,
+/turf/closed/indestructible/city/redbrick,
 /area/city/library)
 "TP" = (
 /obj/structure/chair/plastic,
@@ -3708,9 +3728,14 @@
 /turf/open/floor/plating/beach/sand,
 /area/city)
 "UP" = (
-/obj/machinery/city_map_display,
-/turf/open/floor/wood,
-/area/city/bar)
+/obj/effect/light_emitter{
+	light_power = 4;
+	light_range = 25;
+	set_cap = 3;
+	set_luminosity = 24
+	},
+/turf/open/floor/city/concrete,
+/area/city)
 "UR" = (
 /obj/structure/railing{
 	dir = 1
@@ -17966,11 +17991,11 @@ TW
 cZ
 fi
 bN
-hZ
+Sm
 nO
 nO
 nO
-hZ
+nJ
 bN
 MY
 Lr
@@ -18741,12 +18766,12 @@ hZ
 nO
 hZ
 nO
-nJ
+hZ
 bN
 Zs
 mn
 mn
-mn
+qS
 mn
 bN
 Gv
@@ -24417,7 +24442,7 @@ fi
 Uv
 gp
 ww
-ly
+kR
 gp
 gp
 gp
@@ -25187,7 +25212,7 @@ fi
 fi
 IW
 gp
-kR
+ww
 ly
 ly
 xE
@@ -29537,10 +29562,10 @@ he
 bg
 bg
 wF
-qS
-qS
-qS
-qS
+gH
+gH
+gH
+gH
 gH
 Gv
 IX
@@ -29794,7 +29819,7 @@ bg
 bg
 bg
 wF
-qS
+gH
 cR
 vX
 vX
@@ -30051,7 +30076,7 @@ TM
 Lj
 bg
 wF
-qS
+gH
 iB
 sr
 BF
@@ -30565,7 +30590,7 @@ Zv
 PG
 bg
 wF
-qS
+gH
 iB
 Dk
 BF
@@ -30822,7 +30847,7 @@ Zv
 PG
 Et
 Da
-qS
+gH
 BD
 xL
 xL
@@ -34143,7 +34168,7 @@ fi
 fi
 fi
 CD
-UP
+Ya
 Lg
 Ya
 aP
@@ -41123,7 +41148,7 @@ Uv
 AV
 AV
 AV
-AV
+UP
 AV
 AV
 AV
