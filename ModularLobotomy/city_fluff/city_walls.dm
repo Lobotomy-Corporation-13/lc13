@@ -1,7 +1,15 @@
+/// Every City wall closes up to doors and full-tile windows as well as to
+/// other walls, so a shopfront with an airlock in it does not leave the wall
+/// capped off either side of the frame. Set on the two parents rather than on
+/// forty materials. Only /obj/machinery/door/airlock carries a smoothing
+/// group, so firedoors and shutters still read as separate.
+/turf/closed/wall/city
+	canSmoothWith = list(SMOOTH_GROUP_WALLS, SMOOTH_GROUP_AIRLOCK, SMOOTH_GROUP_WINDOW_FULLTILE)
+
 /turf/closed/indestructible/city
 	smoothing_flags = SMOOTH_BITMASK
 	smoothing_groups = list(SMOOTH_GROUP_CLOSED_TURFS, SMOOTH_GROUP_WALLS)
-	canSmoothWith = list(SMOOTH_GROUP_WALLS)
+	canSmoothWith = list(SMOOTH_GROUP_WALLS, SMOOTH_GROUP_AIRLOCK, SMOOTH_GROUP_WINDOW_FULLTILE)
 
 // ------------------------------------------------------------------------
 // Standing City stock.
@@ -369,6 +377,7 @@
 	icon = 'icons/turf/walls/container.dmi'
 	icon_state = "container-0"
 	base_icon_state = "container"
+	canSmoothWith = list(SMOOTH_GROUP_WALLS, SMOOTH_GROUP_AIRLOCK, SMOOTH_GROUP_WINDOW_FULLTILE)
 	baseturfs = /turf/open/floor/city/container
 	sheet_type = /obj/item/stack/sheet/metal
 	sheet_amount = 4
@@ -384,3 +393,29 @@
 	smoothing_flags = SMOOTH_BITMASK
 	smoothing_groups = list(SMOOTH_GROUP_WALLS)
 	canSmoothWith = list(SMOOTH_GROUP_WALLS, SMOOTH_GROUP_WINDOW_FULLTILE, SMOOTH_GROUP_AIRLOCK)
+
+// ------------------------------------------------------------------------
+// Glazing. Carries SMOOTH_GROUP_WINDOW_FULLTILE, which is the group every City
+// wall already lists in canSmoothWith, so walls close up to it the same way
+// they close up to a door. Indestructible like the fakeglass it replaces.
+
+/turf/closed/indestructible/city/window
+	name = "window"
+	desc = "A tall pane in a steel frame, dark enough that you cannot make \
+		out what is behind it."
+	icon = 'icons/turf/walls/city_window_dark.dmi'
+	icon_state = "window-0"
+	base_icon_state = "window"
+	opacity = FALSE
+	smoothing_flags = SMOOTH_BITMASK
+	smoothing_groups = list(SMOOTH_GROUP_CLOSED_TURFS, SMOOTH_GROUP_WINDOW_FULLTILE)
+	canSmoothWith = list(SMOOTH_GROUP_WALLS, SMOOTH_GROUP_AIRLOCK, SMOOTH_GROUP_WINDOW_FULLTILE)
+
+/// The same glazing tinted the green the station's reinforced windows use.
+/turf/closed/indestructible/city/window/green
+	name = "window"
+	desc = "A tall pane in a steel frame, greened over with age and whatever \
+		the air in this district is carrying."
+	icon = 'icons/turf/walls/city_window.dmi'
+	icon_state = "window-0"
+	base_icon_state = "window"

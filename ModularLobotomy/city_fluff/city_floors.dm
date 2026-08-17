@@ -197,6 +197,11 @@
 
 // -------------------------------------------------------------- markings
 // Turf decals, so they lay over whatever surface is already there.
+//
+// Each one carries all four directions in a single icon_state, so a mapper
+// turns the decal itself rather than picking a pre-turned subtype. Facing is
+// literal: a kerb set to SOUTH puts its raised edge on the south side, and an
+// arrow set to SOUTH points south.
 
 /obj/effect/turf_decal/road
 	icon = 'icons/turf/city_decals.dmi'
@@ -233,13 +238,13 @@
 /obj/effect/turf_decal/road/kerb/corner
 	icon_state = "kerb_corner"
 
-MAPPING_DIRECTIONAL_HELPERS(/obj/effect/turf_decal/road/line_dash, 0)
-MAPPING_DIRECTIONAL_HELPERS(/obj/effect/turf_decal/road/line_solid, 0)
-MAPPING_DIRECTIONAL_HELPERS(/obj/effect/turf_decal/road/line_double, 0)
-MAPPING_DIRECTIONAL_HELPERS(/obj/effect/turf_decal/road/crosswalk, 0)
-MAPPING_DIRECTIONAL_HELPERS(/obj/effect/turf_decal/road/stop_bar, 0)
-MAPPING_DIRECTIONAL_HELPERS(/obj/effect/turf_decal/road/arrow, 0)
-MAPPING_DIRECTIONAL_HELPERS(/obj/effect/turf_decal/road/hatch, 0)
-MAPPING_DIRECTIONAL_HELPERS(/obj/effect/turf_decal/road/parking, 0)
-MAPPING_DIRECTIONAL_HELPERS(/obj/effect/turf_decal/road/kerb, 0)
-MAPPING_DIRECTIONAL_HELPERS(/obj/effect/turf_decal/road/kerb/corner, 0)
+/// Two straight runs meeting at a corner each stop at their own tile edge and
+/// leave the square between them bare. This plugs that square.
+///
+/// One block, one position, and identical in all four directions: it has no
+/// facing to turn, and turning it only ever moved it into a corner nobody
+/// asked for. Its lit face and shadow stay put too, so it reads as the same
+/// kerb as the runs beside it.
+/obj/effect/turf_decal/road/kerb/box
+	icon_state = "kerb_box"
+
