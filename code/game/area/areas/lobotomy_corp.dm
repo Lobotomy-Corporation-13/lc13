@@ -287,10 +287,12 @@
 
 /area/city/outskirts
 	name = "Outskirts"
+	outdoors = TRUE
 	in_city = FALSE
 
 /area/city/outskirts/rcorp_base
 	name = "R-Corp Base"
+	outdoors = FALSE
 	in_city = FALSE
 
 /area/city/fixers
@@ -301,81 +303,97 @@
 
 /area/city/hana
 	name = "Hana Office"
+	outdoors = FALSE
 	icon_state = "mainroom_records"
 	map_color = "#3355bb"
 
 /area/city/hhpp
 	name = "HamHamPangPang"
+	outdoors = FALSE
 	icon_state = "kitchen"
 	map_color = "#dd8833"
 
 /area/city/bar
 	name = "The Alibi"
+	outdoors = FALSE
 	icon_state = "bar"
 	map_color = "#bb7744"
 
 /area/city/bar
 	name = "The Alibi"
+	outdoors = FALSE
 	icon_state = "bar"
 	map_color = "#bb7744"
 
 /area/city/workshop
 	name = "Workshop"
+	outdoors = FALSE
 	icon_state = "quart"
 	map_color = "#44aaaa"
 
 /area/city/clinic
 	name = "Clinic"
+	outdoors = FALSE
 	icon_state = "medbay1"
 	map_color = "#cc5588"
 
 /area/city/carnival
 	name = "Carnival Base"
+	outdoors = FALSE
 	icon_state = "syndie-control"
 	map_color = "#cc4444"
 
 /area/city/antag_base
 	name = "Abandoned Hideout"
+	outdoors = FALSE
 	icon_state = "syndie-elite"
 	map_color = "#aa3344"
 
 /area/city/assoc_base
 	name = "Association Office"
+	outdoors = FALSE
 	icon_state = "security"
 	map_color = "#77aadd"
 
 /area/city/roaming_base
 	name = "Roaming Fixers Office"
+	outdoors = FALSE
 	icon_state = "investigate_office"
 	map_color = "#55bbaa"
 
 /area/city/bistro
 	name = "The Bistro"
+	outdoors = FALSE
 	icon_state = "cafeteria"
 	map_color = "#bb9955"
 
 /area/city/library
 	name = "Library"
+	outdoors = FALSE
 	icon_state = "library"
 	map_color = "#9966bb"
 
 /area/city/alleyways
 	name = "Alleyways"
+	outdoors = TRUE
 	icon_state = "abandoned_g_den"
 	map_color = "#777788"
 
 /area/city/alleyway_room
 	name = "Alleyway Room"
+	outdoors = FALSE
 	icon_state = "vacant_room"
 	map_color = "#888899"
 
 /area/city/lake
 	name = "Water"
+	outdoors = TRUE
 	icon_state = "awaycontent16"
 	map_color = "#1872cc"
 
 /area/city/bus_stop
 	name = "Bus Stop"
+	outdoors = TRUE
 	icon_state = "gateway"
 	map_color = "#cccc18"
 
@@ -383,10 +401,12 @@
 
 /area/city/backstreets_checkpoint
 	name = "Ruins Checkpoint"
+	outdoors = TRUE
 	map_color = "#999977"
 
 /area/city/backstreets_alley
 	name = "Ruins Alley"
+	outdoors = TRUE
 	icon_state = "hallA"
 	in_city = FALSE
 
@@ -398,6 +418,7 @@
 
 /area/city/backstreets_room/resurgence_village
 	name = "Resurgence Clan Village"
+	outdoors = TRUE
 	ambientsounds = list('sound/ambience/resurgence_village1.ogg')
 	in_city = FALSE
 
