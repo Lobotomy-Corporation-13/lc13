@@ -18,15 +18,11 @@
 	desc = "A powered door on a card reader."
 	icon = 'ModularLobotomy/_Lobotomyicons/city_doors.dmi'
 	icon_state = "door-1"
-	/// The sheet is 64x64 with the leaf drawn centred and eight pixels up, so
-	/// the sprite has to be pulled back onto the tile it stands on. One pair
-	/// of offsets covers every direction: the edge-on east and west faces were
-	/// dropped to match the flat ones when the sheet was built, rather than
-	/// the door re-offsetting itself every time it is turned.
 	pixel_x = -16
 	pixel_y = -8
 	opacity = TRUE
 	density = TRUE
+	smoothing_groups = list(SMOOTH_GROUP_AIRLOCK)
 	max_integrity = 300
 	autoclose = TRUE
 	glass = FALSE
