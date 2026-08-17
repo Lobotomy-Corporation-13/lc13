@@ -328,6 +328,28 @@
 		. = round(. * hate_damage_mult)
 	return .
 
+// Crimson Scar - A pair of Steel Knuckles paired with red bandages.
+// It has a counter that applies red fragility on attackers, that's it
+/obj/item/ego_weapon/lce/crimson
+	name = "LCE EGO: Crimson Scar"
+	desc = "A pair of steel knuckles, paired with crimson knuckle wraps. The bandages were something innocent before, but there's no trace of that past left."
+	icon_state = "crimson"
+	lefthand_file = 'ModularLobotomy/_Lobotomyicons/lce_egoweapons_lefthand.dmi' //these are temporary since these are, for now, the only LCE weapons to have unique inhands
+	righthand_file = 'ModularLobotomy/_Lobotomyicons/lce_egoweapons_righthand.dmi'
+	hitsound = 'sound/weapons/fixer/generic/fist1.ogg'
+	force = 20
+	attack_speed = 0.5
+	damtype = RED_DAMAGE
+	attunement_family = "crimson"
+
+/obj/item/ego_weapon/lce/crimson/attack_self(mob/living/user)
+	if(!CanUseEgo(user))
+		return
+	if(user.has_status_effect(/datum/status_effect/paranoia))
+		to_chat(user, span_notice("You already have your dodge ready!"))
+		return
+	to_chat(user, span_notice("Paranoia sets your senses on edge. You'll dodge the next attack to hit you."))
+	user.apply_status_effect(/datum/status_effect/paranoia)
 // ============================ SHIELD-BASED LCE ============================
 // Vigil - the Knight of Despair's set. A tower shield instead of her rapier: she does not
 // fight for herself, she stands in front of someone.
@@ -550,3 +572,40 @@
 	randomspread = 0
 	fire_sound = 'sound/weapons/gun/shotgun/shot.ogg'
 	attunement_family = "beak"
+
+// Cobalt Scar - A two-handed shotgun paired with Cobalt Scar armor.
+// No gimmick yet, could perhaps have an alternate ammo type that applies some debuff. - Croissant
+/obj/item/ego_weapon/ranged/lce/cobalt
+	name = "LCE EGO: Cobalt Scar"
+	desc = "A shotgun that wears the pelt of a wolf, it lets out a shrill howl with each shell"
+	icon_state = "cobalt"
+	inhand_icon_state = "cobalt"
+	lefthand_file = 'ModularLobotomy/_Lobotomyicons/lce_egoweapons_lefthand.dmi' //these are temporary since these are, for now, the only LCE weapons to have unique inhands
+	righthand_file = 'ModularLobotomy/_Lobotomyicons/lce_egoweapons_righthand.dmi'
+	force = 24
+	damtype = RED_DAMAGE
+	projectile_path = /obj/projectile/ego_bullet/lce_ego_cobalt
+	weapon_weight = WEAPON_HEAVY
+	fire_delay = 10
+	shotsleft = 5
+	reloadtime = 0.5 SECONDS
+	pellets = 3
+	variance = 15
+	randomspread = 0
+	fire_sound = 'sound/weapons/gun/shotgun/shot.ogg'
+	attunement_family = "cobalt"
+	roundsreload = TRUE
+
+	alternate_fire_name = "howling round"
+	alternate_shotsleft = 1
+	alternate_reload_time = 2 SECONDS
+	alternate_pellets = 1
+	alternate_info = "Cobalt Scar fires a howling round"
+	alternate_reload_type = RANGEDEGO_ALTERNATEFIRE_RELOADTYPE_INDIVIDUAL_RELOAD
+	alternate_projectile_path = /obj/projectile/ego_bullet/lce_ego_cobalt_alt
+	alternate_fire_sound = 'sound/weapons/gun/sniper/shot.ogg'
+	alternate_fire_sound_volume = 70
+	alternate_toggle_sound = 'sound/machines/click.ogg'
+	alternate_toggle_sound_volume = 65
+	alternate_toggle_enabled_message = span_notice("You prepare to fire your howling round.")
+	alternate_toggle_disabled_message = span_notice("You unprepare your howling round.")

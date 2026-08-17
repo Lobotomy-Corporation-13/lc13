@@ -1466,3 +1466,37 @@
 		return
 	C.add_stacks(stacks)
 	new /obj/effect/temp_visual/damage_effect/concentration(get_turf(src))
+
+// LCE Crimson Scar dodge status effect
+/datum/status_effect/paranoia
+	id = "paranoia"
+	duration = 100 // 10 second duration, can't have it last forever
+	status_type = STATUS_EFFECT_REFRESH
+
+
+/datum/status_effect/paranoia/on_apply()
+	. = ..()
+	if(!owner)
+		return
+	if(isliving(owner))
+		var/mob/living/carbon/human/L = owner
+		if(ishuman(owner))
+			L.adjustSanityLoss(10) //cost for activating the dodge
+			RegisterSignal(owner, COMSIG_MOB_APPLY_DAMGE, PROC_REF(on_damage_taken))
+
+/datum/status_effect/paranoia/proc/on_damage_taken(datum/source, damage, damagetype, def_zone, attack_source, flags, attack_type)
+	SIGNAL_HANDLER
+	if(!damage || damage <= 0)
+		return
+
+	var/is_evadable_attack = (attack_type & ATTACK_TYPE_MELEE) || (attack_type & ATTACK_TYPE_RANGED)
+
+	if(is_evadable_attack && owner.has_status_effect(/datum/status_effect/paranoia))
+		var/turf/T = get_step(owner, pick(GLOB.cardinals))
+		if(T && !T.density)
+			owner.forceMove(T)
+			playsound(owner, 'sound/weapons/black_silence/evasion.ogg', 50, TRUE)
+			owner.remove_status_effect(/datum/status_effect/paranoia)
+			return COMPONENT_MOB_DENY_DAMAGE
+
+

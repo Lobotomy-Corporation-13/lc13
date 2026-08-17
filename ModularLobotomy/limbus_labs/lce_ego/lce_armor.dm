@@ -394,3 +394,18 @@ GLOBAL_LIST_EMPTY(lce_attunement_affinity)
 	attunement_family = "acupuncture"
 	paired_weapon = /obj/item/ego_weapon/lce/acupuncture
 
+/obj/item/clothing/suit/armor/ego_gear/lce/cobalt
+	name = "LCE EGO: Cobalt Scar"
+	desc = "A soft grey suit. You can't bring yourself to unbutton it for some reason."
+	icon_state = "cobalt"
+	armor = list(RED_DAMAGE = 20, WHITE_DAMAGE = 30, BLACK_DAMAGE = 30, PALE_DAMAGE = 10)
+	attunement_family = "cobalt"
+	paired_weapon = /obj/item/ego_weapon/ranged/lce/cobalt
+
+/obj/item/clothing/suit/armor/ego_gear/lce/crimson
+	name = "LCE EGO: Crimson Scar"
+	desc = "A red cloak and white dress, the smell of the woods and pastries clings to it."
+	icon_state = "crimson"
+	armor = list(RED_DAMAGE = 40, WHITE_DAMAGE = 20, BLACK_DAMAGE = 20, PALE_DAMAGE = 10)
+	attunement_family = "crimson"
+	paired_weapon = /obj/item/ego_weapon/lce/crimson
