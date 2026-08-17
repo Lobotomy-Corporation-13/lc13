@@ -55,6 +55,7 @@
 
 /mob/living/simple_animal/hostile/shrimp_hos/proc/thrownade()
 	grenade_cooldown = world.time + grenade_cooldown_time
+	playsound(src,'
 	var/list/hit_turfs = list()
 	for(var/mob/living/carbon/human/L in range(grenade_range, src))
 		if(faction_check_mob(L, FALSE))
@@ -69,6 +70,39 @@
 			hit_turfs = turf_tag
 	targetAmount = 0
 
+/obj/effect/shrimpgasnade
+	name = "shrimp gas grenade"
+	desc = "LOOK OUT!"
+	icon = 'icons/effects/effects.dmi'
+	icon_state = "beetillery"
+	move_force = INFINITY
+	pull_force = INFINITY
+	generic_canpass = FALSE
+	movement_type = PHASING | FLYING
+	layer = POINT_LAYER	//Sprite should always be visible
+	var/duration = 3 SECONDS
+	var/range = 1
+	var/mob/living/creator
+
+/obj/effect/shrimpgasnade/Initialize()
+	. = ..()
+	addtimer(CALLBACK(src, PROC_REF(Explode)), duration)
+
+/obj/effect/shrimpgasnade/Destroy()
+	creator = null
+	return ..()
+
+/obj/effect/shrimpgasnade/proc/Explode()
+	playsound(get_turf(src), 'sound/abnormalities/thunderbird/tbird_bolt.ogg', 50, 0, 8)
+	for(var/turf/open/T in range(1, src))
+		if(locate(/obj/effect/turf_fire/ardor) in T)
+			for(var/obj/effect/turf_fire/ardor/floor_fire in T)
+				qdel(floor_fire)
+		new /obj/effect/turf_fire/ardor(T)
+	var/datum/effect_system/smoke_spread/S = new
+	S.set_up(0, get_turf(src))	//Smoke shouldn't really obstruct your vision
+	S.start()
+	qdel(src)
 
 /mob/living/simple_animal/hostile/shrimp_comms
 	name = "Wellcheers Communications Officer"
