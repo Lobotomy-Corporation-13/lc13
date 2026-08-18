@@ -1505,4 +1505,9 @@
 			owner.remove_status_effect(/datum/status_effect/paranoia)
 			return COMPONENT_MOB_DENY_DAMAGE
 
+/datum/status_effect/paranoia/on_remove()
+	. = ..()
+	if(!owner)
+		return
+	UnregisterSignal(owner, COMSIG_MOB_APPLY_DAMGE)
 
