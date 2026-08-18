@@ -1472,7 +1472,13 @@
 	id = "paranoia"
 	duration = 100 // 10 second duration, can't have it last forever
 	status_type = STATUS_EFFECT_REFRESH
+	alert_type = /atom/movable/screen/alert/status_effect/paranoia
 
+/atom/movable/screen/alert/status_effect/paranoia
+	name = "Paranoia"
+	desc = "Your nerves are on edge, you'll dodge the next attack to hit you while this is active"
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
+	icon_state = "overwhelming_fear"
 
 /datum/status_effect/paranoia/on_apply()
 	. = ..()

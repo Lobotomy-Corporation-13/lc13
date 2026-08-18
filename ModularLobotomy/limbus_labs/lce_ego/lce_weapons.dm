@@ -329,10 +329,11 @@
 	return .
 
 // Crimson Scar - A pair of Steel Knuckles paired with red bandages.
-// It has a counter that applies red fragility on attackers, that's it
+// It has a dodge that costs SP to activate
 /obj/item/ego_weapon/lce/crimson
 	name = "LCE EGO: Crimson Scar"
-	desc = "A pair of steel knuckles, paired with crimson knuckle wraps. The bandages were something innocent before, but there's no trace of that past left."
+	desc = "A pair of steel knuckles, paired with crimson knuckle wraps. \n\ The bandages were something innocent before, but there's no trace of that past left."
+	special = "You can use these in hand to activate a buff that lets you dodge the next attack, this costs some SP though."
 	icon_state = "crimson"
 	lefthand_file = 'ModularLobotomy/_Lobotomyicons/lce_egoweapons_lefthand.dmi' //these are temporary since these are, for now, the only LCE weapons to have unique inhands
 	righthand_file = 'ModularLobotomy/_Lobotomyicons/lce_egoweapons_righthand.dmi'
@@ -574,10 +575,11 @@
 	attunement_family = "beak"
 
 // Cobalt Scar - A two-handed shotgun paired with Cobalt Scar armor.
-// No gimmick yet, could perhaps have an alternate ammo type that applies some debuff. - Croissant
+// Has an alt fire that applies 2 White fragility on whatever it hits.
 /obj/item/ego_weapon/ranged/lce/cobalt
 	name = "LCE EGO: Cobalt Scar"
-	desc = "A shotgun that wears the pelt of a wolf, it lets out a shrill howl with each shell"
+	desc = "A shotgun that wears the pelt of a wolf, it lets out a shrill howl with each shell. \n\ Wolves could not cross the line when doing bad things. And wolves had to be punished."
+	special = "You can switch to an alternate firing mode that fires a medium powered slug that applies 2 White fragility."
 	icon_state = "cobalt"
 	inhand_icon_state = "cobalt"
 	lefthand_file = 'ModularLobotomy/_Lobotomyicons/lce_egoweapons_lefthand.dmi' //these are temporary since these are, for now, the only LCE weapons to have unique inhands
