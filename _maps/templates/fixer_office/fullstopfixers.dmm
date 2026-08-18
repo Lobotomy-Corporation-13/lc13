@@ -13,22 +13,47 @@
 /turf/open/floor/pod/dark,
 /area/city/fixers)
 "e" = (
-/obj/effect/turf_decal/stripes/white/line{
-	dir = 9
+/obj/structure/window/reinforced/spawner{
+	resistance_flags = 115;
+	dir = 1;
+	pixel_y = 4
 	},
-/obj/machinery/door/window{
-	layer = 5
-	},
-/turf/open/floor/mineral/plastitanium,
+/turf/open/floor/pod/light,
 /area/city/fixers)
 "f" = (
-/obj/machinery/light{
-	dir = 1;
-	pixel_y = 19
+/obj/structure/table/reinforced{
+	pixel_y = 1
 	},
-/obj/structure/chair/office{
+/obj/item/modular_computer/laptop/preset/fixer{
 	pixel_y = 2;
-	pixel_x = 4
+	pixel_x = -10
+	},
+/obj/item/paper_bin/carbon{
+	pixel_y = 2;
+	pixel_x = 8
+	},
+/obj/item/pen{
+	pixel_y = 3;
+	pixel_x = 8
+	},
+/obj/effect/turf_decal/siding/white{
+	dir = 1
+	},
+/turf/open/floor/carpet/black,
+/area/city/fixers)
+"g" = (
+/obj/structure/table/reinforced{
+	pixel_y = 1
+	},
+/obj/item/reagent_containers/food/drinks/coffee{
+	pixel_y = 9;
+	pixel_x = -9
+	},
+/obj/item/folder{
+	pixel_y = 6
+	},
+/obj/effect/turf_decal/siding/white{
+	dir = 1
 	},
 /turf/open/floor/carpet/black,
 /area/city/fixers)
@@ -42,32 +67,47 @@
 /turf/open/floor/pod/dark,
 /area/city/fixers)
 "m" = (
-/obj/machinery/door/window{
-	dir = 8
+/obj/machinery/light{
+	dir = 1;
+	pixel_y = 19
 	},
-/obj/effect/turf_decal/siding/white{
-	dir = 4
+/obj/structure/chair/office{
+	pixel_y = 2
 	},
-/turf/open/floor/pod/dark,
+/turf/open/floor/carpet/black,
+/area/city/fixers)
+"n" = (
+/turf/open/floor/mineral/plastitanium,
 /area/city/fixers)
 "p" = (
-/obj/structure/chair{
-	dir = 1;
-	pixel_y = 8;
-	pixel_x = -13
-	},
-/obj/structure/chair{
-	dir = 1;
-	pixel_y = 8;
-	pixel_x = 12
-	},
-/obj/effect/turf_decal/siding/white{
-	pixel_y = -4
+/obj/structure/window/reinforced/spawner{
+	dir = 8;
+	resistance_flags = 115;
+	layer = 5
 	},
 /turf/open/floor/pod/dark,
 /area/city/fixers)
 "s" = (
 /turf/open/floor/pod/light,
+/area/city/fixers)
+"t" = (
+/obj/machinery/door/window{
+	dir = 8
+	},
+/turf/open/floor/pod/dark,
+/area/city/fixers)
+"v" = (
+/obj/effect/turf_decal/stripes/white/line,
+/obj/structure/window/reinforced/spawner{
+	resistance_flags = 115;
+	layer = 5
+	},
+/obj/machinery/light{
+	dir = 8;
+	pixel_x = -9;
+	pixel_y = 4
+	},
+/turf/open/floor/mineral/plastitanium,
 /area/city/fixers)
 "w" = (
 /obj/effect/turf_decal/stripes/white/line{
@@ -88,6 +128,26 @@
 /obj/item/clothing/suit/armor/ego_gear/city/fullstopleader,
 /turf/open/floor/mineral/plastitanium,
 /area/city/fixers)
+"x" = (
+/obj/structure/window/reinforced/spawner{
+	resistance_flags = 115;
+	dir = 1;
+	pixel_y = 4
+	},
+/obj/structure/table/reinforced,
+/obj/item/food/donut/choco{
+	pixel_y = -3
+	},
+/obj/item/food/donut/berry{
+	pixel_y = 9;
+	pixel_x = -6
+	},
+/obj/item/reagent_containers/food/drinks/coffee{
+	pixel_y = 9;
+	pixel_x = 8
+	},
+/turf/open/floor/pod/light,
+/area/city/fixers)
 "y" = (
 /obj/item/kirbyplants{
 	icon_state = "plant-10";
@@ -103,41 +163,45 @@
 /turf/open/floor/carpet/black,
 /area/city/fixers)
 "B" = (
-/obj/structure/window/reinforced/spawner{
-	dir = 8;
-	resistance_flags = 115
+/obj/structure/table/glass{
+	pixel_x = 4;
+	pixel_y = -4
 	},
-/obj/effect/turf_decal/siding/white{
-	dir = 4
+/obj/item/food/chips{
+	pixel_x = 1;
+	pixel_y = 4
 	},
-/turf/open/floor/pod/dark,
+/turf/open/floor/pod/light,
 /area/city/fixers)
 "D" = (
+/obj/structure/closet/crate{
+	pixel_y = 20;
+	name = "Ammo Crate";
+	density = 0;
+	anchored = 1;
+	resistance_flags = 64
+	},
 /obj/structure/table/reinforced{
-	pixel_y = 1
+	pixel_y = 14;
+	density = 0
 	},
-/obj/item/modular_computer/laptop/preset/fixer{
-	pixel_y = 2;
-	pixel_x = -10
+/obj/item/ego_mag/fullstop,
+/obj/item/ego_mag/fullstop,
+/obj/item/ego_mag/fullstop,
+/obj/item/ego_mag/fullstop,
+/obj/item/ego_mag/fullstop,
+/turf/open/floor/mineral/plastitanium,
+/area/city/fixers)
+"E" = (
+/obj/item/kirbyplants/photosynthetic{
+	pixel_x = 4;
+	pixel_y = 4
 	},
-/obj/item/paper_bin/carbon{
-	pixel_y = 2;
-	pixel_x = 8
-	},
-/obj/item/pen{
-	pixel_y = 3;
-	pixel_x = 8
-	},
-/turf/open/floor/carpet/black,
+/turf/open/floor/pod/dark,
 /area/city/fixers)
 "F" = (
 /obj/structure/table/reinforced,
 /obj/effect/spawner/lootdrop/donkpockets,
-/obj/structure/window/reinforced/spawner{
-	resistance_flags = 115;
-	dir = 1;
-	pixel_y = 4
-	},
 /obj/item/reagent_containers/food/drinks/coffee{
 	pixel_y = 10;
 	pixel_x = -8
@@ -163,19 +227,14 @@
 /turf/open/floor/pod/light,
 /area/city/fixers)
 "H" = (
-/obj/machinery/light{
+/obj/structure/chair{
 	dir = 8;
-	pixel_x = -9;
-	pixel_y = 4
+	pixel_x = 3;
+	pixel_y = -2
 	},
-/turf/open/floor/mineral/plastitanium,
+/turf/open/floor/pod/light,
 /area/city/fixers)
 "L" = (
-/obj/structure/window/reinforced/spawner{
-	resistance_flags = 115;
-	dir = 1;
-	pixel_y = 4
-	},
 /obj/structure/chair/plastic{
 	dir = 8
 	},
@@ -186,6 +245,15 @@
 	dir = 1
 	},
 /turf/open/floor/pod/dark,
+/area/city/fixers)
+"N" = (
+/obj/structure/table/reinforced{
+	pixel_y = 1
+	},
+/obj/effect/turf_decal/siding/white{
+	dir = 1
+	},
+/turf/open/floor/carpet/black,
 /area/city/fixers)
 "P" = (
 /obj/structure/chair{
@@ -219,30 +287,21 @@
 	},
 /turf/open/floor/carpet/black,
 /area/city/fixers)
-"T" = (
+"S" = (
+/obj/machinery/door/window{
+	layer = 5
+	},
 /obj/effect/turf_decal/stripes/white/line,
+/turf/open/floor/mineral/plastitanium,
+/area/city/fixers)
+"T" = (
+/obj/effect/turf_decal/stripes/white/line{
+	dir = 9
+	},
 /obj/structure/window/reinforced/spawner{
 	resistance_flags = 115;
 	layer = 5
 	},
-/obj/structure/closet/crate{
-	pixel_y = 13;
-	name = "Ammo Crate";
-	density = 0;
-	anchored = 1;
-	resistance_flags = 64;
-	pixel_x = -16
-	},
-/obj/structure/table/reinforced{
-	pixel_y = 8;
-	density = 0;
-	pixel_x = -17
-	},
-/obj/item/ego_mag/fullstop,
-/obj/item/ego_mag/fullstop,
-/obj/item/ego_mag/fullstop,
-/obj/item/ego_mag/fullstop,
-/obj/item/ego_mag/fullstop,
 /turf/open/floor/mineral/plastitanium,
 /area/city/fixers)
 "U" = (
@@ -252,60 +311,95 @@
 	},
 /turf/open/floor/pod/light,
 /area/city/fixers)
-"X" = (
-/obj/structure/table/reinforced{
-	pixel_y = 1
-	},
-/obj/item/reagent_containers/food/drinks/coffee{
-	pixel_y = 9;
-	pixel_x = -9
-	},
-/obj/item/folder{
-	pixel_y = 6
-	},
-/turf/open/floor/carpet/black,
-/area/city/fixers)
-"Y" = (
+"W" = (
 /obj/structure/window/reinforced/spawner{
 	dir = 8;
 	resistance_flags = 115;
 	layer = 5
 	},
+/obj/effect/turf_decal/siding/white{
+	dir = 1
+	},
+/turf/open/floor/carpet/black,
+/area/city/fixers)
+"X" = (
+/obj/structure/chair{
+	dir = 1;
+	pixel_y = 8;
+	pixel_x = 12
+	},
+/turf/open/floor/pod/dark,
+/area/city/fixers)
+"Y" = (
+/obj/effect/turf_decal/siding/white{
+	dir = 4
+	},
+/turf/open/floor/pod/dark,
+/area/city/fixers)
+"Z" = (
 /turf/open/floor/carpet/black,
 /area/city/fixers)
 
 (1,1,1) = {"
-H
-T
+n
+v
 j
+j
+x
 F
 a
 "}
 (2,1,1) = {"
-w
-e
+D
+S
 M
+j
+e
 L
 s
 "}
 (3,1,1) = {"
-R
-Y
-h
-B
-m
+w
+T
+j
+j
+e
+s
+s
 "}
 (4,1,1) = {"
-f
-X
+R
+W
+j
+j
 p
+t
+p
+"}
+(5,1,1) = {"
+Z
+N
+X
+h
+Y
+Y
+Y
+"}
+(6,1,1) = {"
+m
+g
+X
+b
+B
 U
 P
 "}
-(5,1,1) = {"
+(7,1,1) = {"
 y
-D
+f
+E
 b
+H
 G
 s
 "}
