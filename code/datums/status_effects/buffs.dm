@@ -1473,6 +1473,7 @@
 	duration = 100 // 10 second duration, can't have it last forever
 	status_type = STATUS_EFFECT_REFRESH
 	alert_type = /atom/movable/screen/alert/status_effect/paranoia
+	on_remove_on_mob_delete = TRUE
 
 /atom/movable/screen/alert/status_effect/paranoia
 	name = "Paranoia"
