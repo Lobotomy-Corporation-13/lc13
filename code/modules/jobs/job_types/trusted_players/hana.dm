@@ -6,8 +6,8 @@
 	faction = "Station"
 	supervisors = "your association"
 	selection_color = "#ffffff"
-	total_positions = 2
-	spawn_positions = 2
+	total_positions = 0	//Disabled pending the city job rework
+	spawn_positions = 0
 	display_order = JOB_DISPLAY_ORDER_CAPTAIN
 	trusted_only = TRUE
 	access = list(ACCESS_NETWORK, ACCESS_COMMAND, ACCESS_MANAGER, ACCESS_CHANGE_IDS, ACCESS_SECURITY)
@@ -67,8 +67,8 @@
 /datum/job/hana/boss
 	title = "Hana Administrator"
 	outfit = /datum/outfit/job/hana/admin
-	total_positions = 1
-	spawn_positions = 1
+	total_positions = 0	//Disabled pending the city job rework
+	spawn_positions = 0
 	display_order = JOB_DISPLAY_ORDER_MANAGER
 	departments = DEPARTMENT_COMMAND | DEPARTMENT_HANA
 	paycheck = 0
@@ -94,8 +94,8 @@
 /datum/job/hana/intern
 	title = "Hana Intern"
 	outfit = /datum/outfit/job/hana/intern
-	total_positions = 2
-	spawn_positions = 2
+	total_positions = 0	//Disabled pending the city job rework
+	spawn_positions = 0
 	display_order = JOB_DISPLAY_ORDER_INTERN
 	paycheck = 1000
 	trusted_only = FALSE

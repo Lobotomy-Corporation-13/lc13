@@ -23,6 +23,7 @@
 /obj/item/structurecapsule/syndicate/thumb
 	name = "Thumb Capsule"
 	template_id = "thumbfinger_base"
+	custom_access = list("thumb_south")
 
 /obj/item/structurecapsule/syndicate/ncorp
 	name = "N-Corp Capsule"
@@ -39,6 +40,7 @@
 /obj/item/structurecapsule/syndicate/middle
 	name = "Middle Capsule"
 	template_id = "middle_base"
+	custom_access = list("middle")
 
 /obj/item/structurecapsule/syndicate/insurgence
 	name = "insurgence base capsule"

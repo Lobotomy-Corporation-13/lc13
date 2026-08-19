@@ -1,0 +1,20 @@
+// Members are not listed here. A job joins a faction by setting its `leader`.
+// The Clinic is always open, everything else is drawn for at roundstart.
+
+/datum/city_faction/clinic
+	name = "the Clinic"
+	category = CITY_FACTION_ALWAYS
+	leader_job = /datum/job/doctor
+	requires_leader = TRUE
+
+/datum/city_faction/thumb_south
+	name = "the Thumb South"
+	category = CITY_FACTION_MAJOR
+	leader_job = /datum/job/sottocapo
+	requires_leader = TRUE
+
+/datum/city_faction/middle
+	name = "the Middle"
+	category = CITY_FACTION_MAJOR
+	leader_job = /datum/job/big_brother
+	requires_leader = TRUE

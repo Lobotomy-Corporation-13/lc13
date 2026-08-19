@@ -9,8 +9,10 @@
 	total_positions = 0
 	spawn_positions = 0
 	display_order = JOB_DISPLAY_ORDER_SYNDICATEVET
-	access = list(ACCESS_SYNDICATE)
-	minimal_access = list(ACCESS_SYNDICATE)
+	access = list("middle")
+	minimal_access = list("middle")
+	radio_channel_name = "Middle"
+	radio_channel_color = "#5f1683"
 	departments = DEPARTMENT_CITY_ANTAGONIST
 	paycheck = 200
 	maptype = list("city")
@@ -38,7 +40,7 @@
 	jobtype = /datum/job/younger_brother
 
 	belt = /obj/item/pda/security
-	ears = /obj/item/radio/headset/syndicatecity/heads
+	ears = /obj/item/radio/headset/faction
 	uniform = /obj/item/clothing/under/suit/lobotomy/plain
 	glasses = /obj/item/clothing/glasses/middle_sunglasses
 	backpack_contents = list(/obj/item/choice_beacon/middle/younger)

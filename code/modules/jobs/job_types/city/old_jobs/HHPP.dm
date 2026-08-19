@@ -4,8 +4,8 @@ HHPP Employee
 /datum/job/chef
 	title = "HHPP Chef"
 	faction = "Station"
-	total_positions = 2
-	spawn_positions = 2
+	total_positions = 0	//Disabled pending the city job rework
+	spawn_positions = 0
 	supervisors = "no one but god."
 	selection_color = "#dddddd"
 	access = list(ACCESS_KITCHEN)

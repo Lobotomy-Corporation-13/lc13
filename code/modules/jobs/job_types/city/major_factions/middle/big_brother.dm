@@ -8,10 +8,14 @@
 	selection_color = "#856948"
 	total_positions = 0
 	spawn_positions = 0
+	leader = /datum/job/big_brother
+	faction_positions = 1
 	display_order = JOB_DISPLAY_ORDER_SYNDICATEHEAD
 	trusted_only = TRUE
-	access = list(ACCESS_SYNDICATE, ACCESS_SYNDICATE_LEADER)
-	minimal_access = list(ACCESS_SYNDICATE, ACCESS_SYNDICATE_LEADER)
+	access = list("middle", "middle_leader")
+	minimal_access = list("middle", "middle_leader")
+	radio_channel_name = "Middle"
+	radio_channel_color = "#5f1683"
 	departments = DEPARTMENT_COMMAND | DEPARTMENT_CITY_ANTAGONIST
 	paycheck = 700
 	maptype = list("city")
@@ -33,13 +37,6 @@
 /datum/job/big_brother/after_spawn(mob/living/carbon/human/H, mob/M)
 	ADD_TRAIT(H, TRAIT_COMBATFEAR_IMMUNE, JOB_TRAIT)
 	ADD_TRAIT(H, TRAIT_WORK_FORBIDDEN, JOB_TRAIT)
-	//Don't spawn these goobers without a director.
-	for(var/datum/job/processing in SSjob.occupations)
-		if(istype(processing, /datum/job/younger_brother))
-			processing.total_positions = 2
-
-		if(istype(processing, /datum/job/little_brother))
-			processing.total_positions = 4
 	. = ..()
 
 
@@ -48,7 +45,7 @@
 	jobtype = /datum/job/big_brother
 
 	belt = /obj/item/pda/security
-	ears = /obj/item/radio/headset/syndicatecity/heads
+	ears = /obj/item/radio/headset/faction/heads
 	uniform = /obj/item/clothing/under/suit/lobotomy/plain
 	glasses = /obj/item/clothing/glasses/middle_sunglasses
 	backpack_contents = list(/obj/item/structurecapsule/syndicate/middle, /obj/item/choice_beacon/middle/big)

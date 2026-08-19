@@ -382,11 +382,6 @@ SUBSYSTEM_DEF(ticker)
 		addtimer(CALLBACK(src, PROC_REF(DoGamespeedVote)), when_to_do_gamespeed_vote)
 
 		addtimer(CALLBACK(SSlobotomy_corp, TYPE_PROC_REF(/datum/controller/subsystem/lobotomy_corp, LiftCoreSelectionRestriction)), SSlobotomy_corp.core_selection_restriction_lift_timer)
-	else if((SSmaptype.maptype == "city")) // On City of Light specifically (not City Fixers or etc), add 2 Roamer slots at roundstart
-		for(var/datum/job/processing in SSjob.occupations)
-			if((istype(processing, /datum/job/associateroaming)))
-				processing.total_positions += 2
-				break
 
 //These callbacks will fire after roundstart key transfer
 /datum/controller/subsystem/ticker/proc/OnRoundstart(datum/callback/cb)

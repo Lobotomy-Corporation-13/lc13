@@ -8,9 +8,13 @@
 	selection_color = "#b0936f"
 	total_positions = 0
 	spawn_positions = 0
+	leader = /datum/job/sottocapo
+	faction_positions = 4
 	display_order = JOB_DISPLAY_ORDER_SYNDICATEGOON
-	access = list(ACCESS_SYNDICATE)
-	minimal_access = list(ACCESS_SYNDICATE)
+	access = list("thumb_south")
+	minimal_access = list("thumb_south")
+	radio_channel_name = "Thumb South"
+	radio_channel_color = "#8b0000"
 	departments = DEPARTMENT_CITY_ANTAGONIST
 	paycheck = 100
 	maptype = list("city")
@@ -35,7 +39,7 @@
 	jobtype = /datum/job/soldato
 
 	belt = /obj/item/pda/security
-	ears = /obj/item/radio/headset/syndicatecity
+	ears = /obj/item/radio/headset/faction
 	uniform = /obj/item/clothing/under/suit/lobotomy/plain
 	glasses = /obj/item/clothing/glasses/sunglasses
 	backpack_contents = list()

@@ -3,6 +3,8 @@
 	faction = "Station"
 	total_positions = 1
 	spawn_positions = 1
+	leader = /datum/job/doctor
+	faction_positions = 1
 	selection_color = "#aabbcc"
 
 	outfit = /datum/outfit/job/doctor
@@ -36,22 +38,6 @@
 	..()
 	ADD_TRAIT(H, TRAIT_WORK_FORBIDDEN, JOB_TRAIT)
 	ADD_TRAIT(H, TRAIT_COMBATFEAR_IMMUNE, JOB_TRAIT)
-	//Can't have assistants without a doctor.
-	for(var/datum/job/processing in SSjob.occupations)
-		if(SSmaptype.maptype == "lcorp_city")
-			if(istype(processing, /datum/job/doctor/nurse))
-				processing.total_positions = 1
-			return
-
-		if(istype(processing, /datum/job/doctor/nurse))
-			processing.total_positions = 2
-		if(SSmaptype.maptype == "fixers")
-			if(istype(processing, /datum/job/doctor/fixer))
-				processing.total_positions = 1
-
-		else
-			if(istype(processing, /datum/job/doctor/medic))
-				processing.total_positions = 1
 
 
 /datum/outfit/job/doctor
@@ -84,6 +70,7 @@
 
 	total_positions = 0
 	spawn_positions = 0
+	faction_positions = 2
 	exp_requirements = 180
 
 	display_order = JOB_DISPLAY_ORDER_MEDICALASSIST
@@ -109,6 +96,7 @@
 
 	total_positions = 0
 	spawn_positions = 0
+	faction_positions = 1
 	exp_requirements = 180
 
 	display_order = JOB_DISPLAY_ORDER_MEDICALASSIST
@@ -136,6 +124,7 @@
 
 	total_positions = 0
 	spawn_positions = 0
+	leader = null	//Not part of the Clinic faction, fixers map only
 	exp_requirements = 180
 
 	display_order = JOB_DISPLAY_ORDER_MEDICALASSIST
