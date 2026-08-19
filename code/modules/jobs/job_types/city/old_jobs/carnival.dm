@@ -1,8 +1,8 @@
 /datum/job/carnival
 	title = "Carnival"
 	faction = "Station"
-	total_positions = 2
-	spawn_positions = 2
+	total_positions = 0	//Disabled pending the city job rework
+	spawn_positions = 0
 	supervisors = "your self."
 	selection_color = "#555555"
 	access = list(ACCESS_CARGO)

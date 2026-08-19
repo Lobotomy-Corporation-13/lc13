@@ -8,6 +8,11 @@
 	var/datum/map_template/shelter/template
 	var/used = FALSE
 	var/delay_time = 50
+	/// Freeform accesses granted to every door in the scan rectangle on deploy.
+	var/list/custom_access
+	/// Size of the door scan rectangle, centred on the deploy turf.
+	var/access_scan_width = 23
+	var/access_scan_height = 13
 
 /obj/item/structurecapsule/proc/get_template()
 	if(template)
@@ -16,6 +21,23 @@
 	if(!template)
 		WARNING("Shelter template ([template_id]) not found!")
 		qdel(src)
+
+/// Adds custom_access to every door in the scan rectangle centred on `center`.
+/obj/item/structurecapsule/proc/GrantDoorAccess(turf/center)
+	if(!custom_access)
+		return
+	var/turf/corner = locate(center.x - round(access_scan_width / 2), center.y - round(access_scan_height / 2), center.z)
+	if(!corner)
+		return
+	var/turf/far = locate(corner.x + access_scan_width - 1, corner.y + access_scan_height - 1, corner.z)
+	for(var/turf/T in block(corner, far))
+		for(var/obj/machinery/door/D in T)
+			D.gen_access()
+			for(var/access_id in custom_access)
+				if(access_id in D.req_access)
+					continue
+				D.req_access_txt = "[D.req_access_txt];[access_id]"
+				D.req_access += access_id
 
 /obj/item/structurecapsule/Destroy()
 	template = null // without this, capsules would be one use. per round.
@@ -47,6 +69,7 @@
 			used = FALSE
 			return
 		playsound(src, 'sound/effects/phasein.ogg', 100, TRUE)
+		GrantDoorAccess(deploy_location)
 		template.load(deploy_location, centered = TRUE)
 		new /obj/effect/particle_effect/smoke(get_turf(src))
 		qdel(src)

@@ -13,8 +13,8 @@ GLOBAL_LIST_INIT(association_jobs, list(
 	faction = "Station"
 	supervisors = "your association"
 	selection_color = "#e09660"
-	total_positions = 1
-	spawn_positions = 1
+	total_positions = 0
+	spawn_positions = 0
 	display_order = JOB_DISPLAY_ORDER_DIRECTOR
 	trusted_only = TRUE
 	access = list(ACCESS_PHARMACY, ACCESS_NETWORK, ACCESS_RC_ANNOUNCE, ACCESS_SECURITY) // I want to use the number 69.
@@ -31,17 +31,6 @@ GLOBAL_LIST_INIT(association_jobs, list(
 		JUSTICE_ATTRIBUTE = 120,
 	)
 
-	var/list/antagroles = list(
-		// /datum/job/messenger,
-		// /datum/job/cutthroat,
-		/datum/job/sottocapo,
-		// /datum/job/grandinquis,
-		// /datum/job/kurocaptain,
-		/datum/job/east_capo,
-		/datum/job/big_brother,
-		// /datum/job/nightwatch_agent,
-	)
-	var/antag_chosen
 
 /datum/job/director/after_spawn(mob/living/carbon/human/outfit_owner, mob/M)
 	ADD_TRAIT(outfit_owner, TRAIT_COMBATFEAR_IMMUNE, JOB_TRAIT)
@@ -51,7 +40,6 @@ GLOBAL_LIST_INIT(association_jobs, list(
 	Do not fight unless in self defense. You are not a combat role; you take an administrative role. \
 	Do not assist L Corporation without significant payment."))
 	to_chat(M, span_danger("Avoid killing other players without a reason."))
-	var/antagspawn = pick(antagroles)
 	outfit_owner.set_attribute_limit(120)
 
 	//Don't spawn these goobers without a director.
@@ -61,11 +49,6 @@ GLOBAL_LIST_INIT(association_jobs, list(
 
 		if(istype(processing, /datum/job/veteran))
 			processing.total_positions = 1
-
-		if(!antag_chosen)
-			if(istype(processing, antagspawn))
-				processing.total_positions = 1
-				antag_chosen = TRUE
 
 	return ..()
 

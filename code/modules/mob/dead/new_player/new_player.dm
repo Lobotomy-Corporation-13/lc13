@@ -290,6 +290,8 @@
 			return "[TeguTranslate("Your account is not old enough for", src)] [jobtitle]."
 		if(JOB_UNAVAILABLE_SLOTFULL)
 			return "[jobtitle] [TeguTranslate("is already filled to capacity", src)]."
+		if(JOB_UNAVAILABLE_NO_LEADER)
+			return "[jobtitle] has no leader this round. You cannot join a leaderless faction."
 		if(JOB_NOT_TRUSTED)
 			return "You need to be trusted to join as [jobtitle]."
 		if(JOB_NOT_MENTOR)
@@ -300,6 +302,10 @@
 	var/datum/job/job = SSjob.GetJob(rank)
 	if(!job)
 		return JOB_UNAVAILABLE_GENERIC
+	//Before the slot check, since a leaderless faction sits at zero positions
+	//and would otherwise be reported as full and hidden from the menu.
+	if(job.city_faction && job.leader != job.type && !job.city_faction.MembersOpen())
+		return JOB_UNAVAILABLE_NO_LEADER
 	if((job.current_positions >= job.total_positions) && job.total_positions != -1)
 		if(job.title == "Assistant")
 			if(isnum(client.player_age) && client.player_age <= 14) //Newbies can always be assistants
@@ -330,6 +336,7 @@
 	//otherwise a job that vanished from the list can still be joined through a stale window.
 	var/error = IsJobUnavailable(rank, TRUE)
 	if(error != JOB_AVAILABLE)
+		to_chat(src, span_warning(get_job_unavailable_error_message(error, rank)))
 		alert(src, get_job_unavailable_error_message(error, rank))
 		return FALSE
 
@@ -454,17 +461,23 @@
 		var/list/dept_dat = list()
 		for(var/job in GLOB.position_categories[category]["jobs"])
 			var/datum/job/job_datum = SSjob.name_occupations[job]
-			if(job_datum && IsJobUnavailable(job_datum.title, TRUE) == JOB_AVAILABLE)
+			if(!job_datum)
+				continue
+			//Leaderless faction jobs stay listed so players can see the faction exists.
+			//Clicking one still lands on the refusal in AttemptLateSpawn().
+			var/availability = IsJobUnavailable(job_datum.title, TRUE)
+			if(availability == JOB_AVAILABLE || availability == JOB_UNAVAILABLE_NO_LEADER)
 				var/altjobline = "" //tegu edit - alt job titles
 				var/command_bold = ""
+				var/leaderless = availability == JOB_UNAVAILABLE_NO_LEADER ? " \[NO LEADER\]" : ""
 				if(client && client.prefs && client.prefs.alt_titles_preferences[job_datum.title])//tegu edit - alt job titles
 					altjobline = "(as [client.prefs.alt_titles_preferences[job_datum.title]])"//tegu edit - alt job titles
 				if(job in GLOB.command_positions)
 					command_bold = " command"
 				if(job_datum in SSjob.prioritized_jobs)
-					dept_dat += "<a class='job[command_bold]' href='byond://?src=[REF(src)];SelectedJob=[job_datum.title]'><span class='priority'>[job_datum.title] [altjobline] ([job_datum.current_positions])</span></a>"//tegu edit - alt job titles
+					dept_dat += "<a class='job[command_bold]' href='byond://?src=[REF(src)];SelectedJob=[job_datum.title]'><span class='priority'>[job_datum.title] [altjobline] ([job_datum.current_positions])[leaderless]</span></a>"//tegu edit - alt job titles
 				else
-					dept_dat += "<a class='job[command_bold]' href='byond://?src=[REF(src)];SelectedJob=[job_datum.title]'>[job_datum.title] [altjobline] ([job_datum.current_positions])</a>"//tegu edit - alt job titles
+					dept_dat += "<a class='job[command_bold]' href='byond://?src=[REF(src)];SelectedJob=[job_datum.title]'>[job_datum.title] [altjobline] ([job_datum.current_positions])[leaderless]</a>"//tegu edit - alt job titles
 		if(!dept_dat.len)
 			dept_dat += "<span class='nopositions'>No positions open.</span>"
 		dat += jointext(dept_dat, "")
