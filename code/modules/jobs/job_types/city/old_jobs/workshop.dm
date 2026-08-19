@@ -4,8 +4,8 @@ Workshop employee
 /datum/job/workshop
 	title = "Workshop Attendant"
 	faction = "Station"
-	total_positions = 2
-	spawn_positions = 2
+	total_positions = 0	//Disabled pending the city job rework
+	spawn_positions = 0
 	supervisors = "Hana Association"
 	selection_color = "#dddddd"
 	access = list(ACCESS_ENGINE, ACCESS_ENGINE_EQUIP)

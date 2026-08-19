@@ -4,8 +4,8 @@ Civilian
 /datum/job/civilian
 	title = "Civilian"
 	faction = "Station"
-	total_positions = -1
-	spawn_positions = -1
+	total_positions = 0	//Disabled pending the city job rework
+	spawn_positions = 0
 	supervisors = "yourself."
 	selection_color = "#dddddd"
 	access = list(ACCESS_LAWYER)

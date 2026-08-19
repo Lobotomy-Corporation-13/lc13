@@ -90,6 +90,9 @@ SUBSYSTEM_DEF(job)
 		name_occupations[job.title] = job
 		type_occupations[J] = job
 
+	//Job datums are rebuilt from scratch here, so the factions have to be re-stamped.
+	SScity_factions.ApplyToJobs()
+
 	return TRUE
 
 
@@ -325,6 +328,11 @@ SUBSYSTEM_DEF(job)
 	JobDebug("DO, Running AI Check")
 	FillAIPosition()
 	JobDebug("DO, AI Check end")
+
+	//City factions shut if nobody wanted to lead them, before members get handed out
+	JobDebug("DO, Running Faction Leader Check")
+	SScity_factions.FillFactionLeaders()
+	JobDebug("DO, Faction Leader Check end")
 
 	//Other jobs are now checked
 	JobDebug("DO, Running Standard Check")
