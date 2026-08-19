@@ -167,6 +167,38 @@
 		return TRUE
 	return ..()
 
+/obj/structure/barricade/sandbags/ramp
+	name = "concrete ramp"
+	desc = "Weaponized playground ramp. Walk onto it from one direction to easily move up onto nearby sandbags. Use a crowbar to deconstruct the pile. Alt-click to rotate."
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_structures.dmi'
+	icon_state = "ramp"
+	smoothing_flags = null
+	max_integrity = 300
+
+/obj/structure/barricade/sandbags/ramp/ComponentInitialize()
+	. = ..()
+	AddComponent(/datum/component/simple_rotation,ROTATION_ALTCLICK | ROTATION_CLOCKWISE, CALLBACK(src, PROC_REF(can_user_rotate)),CALLBACK(src, PROC_REF(can_be_rotated)),null)
+
+/obj/structure/barricade/sandbags/ramp/CanAllowThrough(atom/movable/mover, turf/target)
+	if(get_dir(loc, target) == dir)
+		return TRUE
+	return ..()
+
+/obj/structure/barricade/sandbags/ramp/proc/can_be_rotated(mob/user)
+	return TRUE
+
+/obj/structure/barricade/sandbags/ramp/proc/can_user_rotate(mob/user)
+	var/mob/living/L = user
+
+	if(istype(L))
+		if(!user.canUseTopic(src, BE_CLOSE, NO_DEXTERITY, FALSE, !iscyborg(user)))
+			return FALSE
+		else
+			return TRUE
+	else if(isobserver(user) && CONFIG_GET(flag/ghost_interaction))
+		return TRUE
+	return FALSE
+
 /obj/structure/barricade/security
 	name = "security barrier"
 	desc = "A deployable barrier. Provides good cover in fire fights."
