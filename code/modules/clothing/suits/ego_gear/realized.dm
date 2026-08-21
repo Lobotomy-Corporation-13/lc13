@@ -287,7 +287,7 @@ or until the damage cap on the debuff is hit. While Fairy Lure is active on your
 
 /obj/item/clothing/suit/armor/ego_gear/realization/dimension_ripper/examine(mob/user)
 	. = ..()
-	if(istype(user))
+	if(user == loc)
 		. += span_notice("The Realization of Dimension Shredder has given you the ability to Rip Space!")
 		. += span_notice("Rip Space allows you to hit up to 10 targets within range.")
 		. += span_notice("In addition, while you're using Rip Space, you're invulnerable.")
