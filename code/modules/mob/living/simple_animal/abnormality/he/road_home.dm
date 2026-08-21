@@ -113,8 +113,7 @@
 	to_chat(attacker, span_userdanger("[src] counter attacks!"))
 	if(attacker.has_status_effect(/datum/status_effect/stay_home) || !ishuman(attacker) || stat == DEAD)
 		return
-	attacker.apply_status_effect(/datum/status_effect/stay_home)
-	agent_friends += attacker
+	agent_friends += attacker.apply_status_effect(/datum/status_effect/stay_home)
 
 //She creates the road as she walks, the actual path is predetermined in advance, but the road has a bunch of effects.
 /mob/living/simple_animal/hostile/abnormality/road_home/proc/CreateRoad()
@@ -152,13 +151,13 @@
 		addtimer(CALLBACK(src, PROC_REF(FlipAttack)), 2 SECONDS)
 		return
 
-/mob/living/simple_animal/hostile/abnormality/road_home/Destroy(gibbed)
-	for(var/obj/effect/golden_road/GR in brick_list)
-		brick_list -= GR
-		qdel(GR)
-	qdel(house)
-	for(var/mob/living/carbon/human/H in agent_friends)
-		H.remove_status_effect(/datum/status_effect/stay_home)
+/mob/living/simple_animal/hostile/abnormality/road_home/Destroy()
+	move_timer_id = null
+	house_path = null
+	QDEL_LIST(brick_list)
+	if(house)
+		QDEL_NULL(house)
+	QDEL_LIST(agent_friends)
 	agent_friends = null
 	return ..()
 
@@ -171,8 +170,7 @@
 	for(var/mob/living/L in view(15, src))
 		if(!ishuman(L) || L.stat == DEAD || L.has_status_effect(/datum/status_effect/stay_home))
 			continue
-		L.apply_status_effect(/datum/status_effect/stay_home)
-		agent_friends += L
+		agent_friends += L.apply_status_effect(/datum/status_effect/stay_home)
 
 /mob/living/simple_animal/hostile/abnormality/road_home/Move(atom/newloc)
 	if(!voluntary_movement && !ckey)
@@ -269,7 +267,7 @@
 		house.forceMove(house_turf)
 	house.pixel_z = 128
 	house.alpha = 0
-	house.road_home_mob = src
+	house.RegisterMaster(src)
 
 	addtimer(CALLBACK(house, TYPE_PROC_REF(/obj/road_house, FallDown)), 3 SECONDS)
 	road_finished = FALSE
@@ -285,15 +283,8 @@
 
 //Bring everyone on the golden tiles back to road home. turn them insane if they aren't already. Also destroys all gold tiles if there are any.
 /mob/living/simple_animal/hostile/abnormality/road_home/proc/BringInsane()
-	for(var/mob/living/carbon/human/H in agent_friends)
-		H.adjustSanityLoss(1000)
-		if(H.sanity_lost)
-			QDEL_NULL(H.ai_controller)
-			H.forceMove(get_turf(src))
-			H.ai_controller = /datum/ai_controller/insane/road_home
-			H.InitializeAIController()
-			var/datum/ai_controller/insane/road_home/RHI = H.ai_controller
-			RHI.road_home_mob = src
+	for(var/datum/status_effect/stay_home/H in agent_friends)
+		H.WayBackHome(src)
 
 //The house that road home tries to go back to. It falls down like a purple noon and serves as a "goal" to the road home.
 /obj/road_house
@@ -311,11 +302,18 @@
 	var/fall_speed = 3 SECONDS
 	var/mob/living/simple_animal/hostile/abnormality/road_home/road_home_mob
 
+/obj/road_house/Destroy()
+	UnregisterMaster()
+	return ..()
+
 //Repurposed purple noon code, except it deals white damage in an AOE and red damage if you stand on the ONE TILE it's landing on.
 /obj/road_house/proc/FallDown()
 	animate(src, pixel_z = 0, alpha = 255, time = fall_speed)
 	playsound(src, 'sound/abnormalities/roadhome/Cartoon_Falling_Sound_Effect.ogg', 100, FALSE, 8, falloff_exponent = 1.25)
 	sleep(fall_speed)
+	if(!road_home_mob)
+		qdel(src)
+		return
 	if(fall_speed > 0.5 SECONDS) //it falls very slowly at first but it can get very fast if you let her reach home too many times.
 		fall_speed -= 0.5 SECONDS //home falls faster and faster
 
@@ -347,8 +345,20 @@
 				H.InitializeAIController()
 				var/datum/ai_controller/insane/road_home/RHI = H.ai_controller
 				RHI.road_home_mob = road_home_mob
-				L.apply_status_effect(/datum/status_effect/stay_home)
-				road_home_mob.agent_friends += H
+				road_home_mob.agent_friends += L.apply_status_effect(/datum/status_effect/stay_home)
+
+//Signals
+/obj/road_house/proc/RegisterMaster(atom/A)
+	if(!A || !ishuman(A))
+		return
+	RegisterSignal(A, list(COMSIG_PARENT_QDELETING), PROC_REF(UnregisterMaster))
+	road_home_mob = A
+
+/obj/road_house/proc/UnregisterMaster()
+	if(!road_home_mob)
+		return
+	UnregisterSignal(road_home_mob, list(COMSIG_PARENT_QDELETING))
+	road_home_mob = null
 
 //Not an actual floor, but an effect you put on top of it. The gold road is periodically being created by the road home.
 /obj/effect/golden_road
@@ -427,3 +437,17 @@
 /datum/status_effect/stay_home/on_remove()
 	UnregisterSignal(owner, COMSIG_MOVABLE_PRE_MOVE)
 	return ..()
+
+/datum/status_effect/stay_home/proc/WayBackHome(mob/living/invoker)
+	var/mob/living/carbon/human/H = owner
+	if(!owner)
+		qdel(src)
+		return
+	H.adjustSanityLoss(1000)
+	if(H.sanity_lost)
+		QDEL_NULL(H.ai_controller)
+		H.forceMove(get_turf(invoker))
+		H.ai_controller = /datum/ai_controller/insane/road_home
+		H.InitializeAIController()
+		var/datum/ai_controller/insane/road_home/RHI = H.ai_controller
+		RHI.road_home_mob = invoker

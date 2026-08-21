@@ -247,8 +247,7 @@
 				return
 			portal_cooldown = world.time + portal_cooldown_time
 			var/mob/living/simple_animal/hostile/der_freis_portal/P = new /mob/living/simple_animal/hostile/der_freis_portal(T)
-			portals.Add(P)
-			P.connected_abno = src
+			RegisterMob(P)
 			return
 		return
 	if (current_portal_index > 0)
@@ -353,9 +352,8 @@
 		var/turf/W = pick(portal_spawns)
 		LAZYREMOVE(portal_spawns, W)
 		new_portal = new /mob/living/simple_animal/hostile/der_freis_portal(get_turf(W))
-		new_portal.connected_abno = src
+		RegisterMob(new_portal)
 		new_portal.bullet_damage = bullet_damage
-		LAZYADD(portals, new_portal)
 	addtimer(CALLBACK(src, PROC_REF(PortalAssault)), 5 SECONDS)
 
 /mob/living/simple_animal/hostile/abnormality/der_freischutz/adjustHealth(amount, updating_health = TRUE, forced = FALSE)
@@ -433,7 +431,7 @@
 	var/firer = P.firer
 	if(firer == src || LAZYFIND(portals, firer))
 		return
-	. = ..()
+	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/der_freischutz/proc/ContainedFireBullet()
 	var/list/targets = list()
@@ -530,16 +528,35 @@
 	return
 
 /mob/living/simple_animal/hostile/abnormality/der_freischutz/death()
-	if(portal_assault_timer)
-		deltimer(portal_assault_timer)
-	for(var/mob/living/simple_animal/hostile/der_freis_portal/P in portals)
-		P.death(FALSE)
 	density = FALSE
 	animate(src, alpha = 0, time = 10 SECONDS)
 	QDEL_IN(src, 10 SECONDS)
-	..()
+	return ..()
 
+/mob/living/simple_animal/hostile/abnormality/der_freischutz/Destroy()
+	if(portal_assault_timer)
+		deltimer(portal_assault_timer)
+	QDEL_LIST(portals)
+	return ..()
 
+/mob/living/simple_animal/hostile/abnormality/der_freischutz/proc/RegisterMob(mob/living/L)
+	RegisterSignal(L, list(COMSIG_PARENT_QDELETING), PROC_REF(UnregisterMob))
+	var/mob/living/simple_animal/hostile/der_freis_portal/P = L
+	P.master_tag = tag
+	portals += P
+
+/mob/living/simple_animal/hostile/abnormality/der_freischutz/proc/UnregisterMob(mob/living/L)
+	UnregisterSignal(L, list(COMSIG_PARENT_QDELETING))
+	portals -= L
+
+/mob/living/simple_animal/hostile/abnormality/der_freischutz/proc/UnregisterAll()
+	for(var/mob/living/L in portals)
+		UnregisterMob(L)
+	portals.Cut()
+
+/*------\
+|Portals|
+\------*/
 /mob/living/simple_animal/hostile/der_freis_portal
 	name = "magic portal"
 	desc = "A strange blue portal... You feel like you are being watched though it."
@@ -567,8 +584,8 @@
 	var/bullet_max_range = 100
 	var/bullet_damage = 150
 	var/assault_timer = 0
-
-	var/mob/living/simple_animal/hostile/abnormality/der_freischutz/connected_abno
+	//Checks mob tag to see if its our master.
+	var/master_tag
 	var/datum/component/orbiter/self_orbiter
 
 /mob/living/simple_animal/hostile/der_freis_portal/Initialize()
@@ -576,20 +593,23 @@
 	animate(src, alpha = 255, time = 6)
 	playsound(get_turf(src), 'sound/abnormalities/freischutz/portal.ogg', 100, 0, 10)
 
-/mob/living/simple_animal/hostile/der_freis_portal/death()
+/mob/living/simple_animal/hostile/der_freis_portal/Destroy()
 	if(assault_timer)
 		deltimer(assault_timer)
-	connected_abno.RemovePortal(src)
-	..()
+	return ..()
 
 /mob/living/simple_animal/hostile/der_freis_portal/Move()
 	return FALSE
 
 /mob/living/simple_animal/hostile/der_freis_portal/bullet_act(obj/projectile/P)
 	var/firer = P.firer
-	if(firer == connected_abno || istype(firer, /mob/living/simple_animal/hostile/der_freis_portal))
+	if(istype(firer, /mob/living/simple_animal/hostile/der_freis_portal))
 		return
-	. = ..()
+	if(isliving(firer))
+		var/mob/living/shoota = firer
+		if(shoota.tag == master_tag)
+			return
+	return ..()
 
 /mob/living/simple_animal/hostile/der_freis_portal/AttackingTarget(atom/attacked_target)
 	return OpenFire(attacked_target)

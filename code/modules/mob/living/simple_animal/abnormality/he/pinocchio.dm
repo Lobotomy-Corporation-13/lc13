@@ -74,6 +74,12 @@
 		),
 	)
 
+/mob/living/simple_animal/hostile/abnormality/pinocchio/Destroy()
+	if(realboy)
+		realboy = null
+		UnregisterSignal(realboy, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING))
+	return ..()
+
 //Spawn
 /mob/living/simple_animal/hostile/abnormality/pinocchio/PostSpawn()
 	..()
@@ -133,7 +139,7 @@
 	animate(src, alpha = 0,pixel_x = 0, pixel_z = 16, time = 4 SECONDS)
 	SLEEP_CHECK_DEATH(1 SECONDS)
 	realboy = new (get_turf(src)) //Technically the breach version is a separate entity, requires a lot of tinkering but works.
-	RegisterSignal(realboy, COMSIG_LIVING_DEATH, PROC_REF(PuppetDeath))
+	RegisterSignal(realboy, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING), PROC_REF(PuppetDeath))
 	realboy.name = "Pinocchio the Liar"
 	realboy.real_name = "Pinocchio the Liar"
 	realboy.adjust_all_attribute_levels(100)
@@ -172,7 +178,7 @@
 	return TRUE
 
 /mob/living/simple_animal/hostile/abnormality/pinocchio/proc/PuppetDeath(gibbed) //we die when the puppet mob dies
-	UnregisterSignal(realboy, COMSIG_LIVING_DEATH)
+	UnregisterSignal(realboy, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING))
 	if(!QDELETED(realboy))
 		realboy.dropItemToGround(realboy.get_inactive_held_item())
 		realboy.dropItemToGround(realboy.get_active_held_item())

@@ -100,16 +100,15 @@
 	density = FALSE
 	playsound(src, 'sound/abnormalities/doomsdaycalendar/Doomsday_Dead.ogg', 100, 1)
 	icon = 'ModularLobotomy/_Lobotomyicons/abno_cores/he.dmi'
-	for(var/mob/living/simple_animal/hostile/doomsday_doll/D in spawned_dolls) //delete the dolls when suppressed
-		D.death()
-		QDEL_IN(D, rand(1,5) SECONDS)
-		spawned_dolls -= D
 	animate(src, alpha = 0, time = 10 SECONDS)
 	QDEL_IN(src, 10 SECONDS)
-	..()
+	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/doomsday_calendar/Destroy()
 	UnregisterSignal(SSdcs, COMSIG_GLOB_WORK_STARTED)
+	for(var/mob/living/simple_animal/hostile/doomsday_doll/D in spawned_dolls) //delete the dolls when suppressed
+		D.death()
+	UnregisterAll()
 	return ..()
 
 //*** Work Mechanics ***//
@@ -312,7 +311,7 @@
 			to_chat(user, span_warning("[src] rejects your offering!"))
 			return
 		if(istype(M ,/mob/living/simple_animal/hostile/doomsday_doll))
-			spawned_dolls -= M
+			UnregisterMob(M)
 		to_chat(user, span_nicegreen("[src] is sated by your offering!"))
 		M.gib()
 		is_fed = TRUE
@@ -320,6 +319,19 @@
 		pulse_damage -= 1
 		playsound(get_turf(src),'sound/effects/limbus_death.ogg', 50, 1)
 		AddModifier(/datum/dc_change/sacrificed)
+
+/mob/living/simple_animal/hostile/abnormality/doomsday_calendar/proc/RegisterMob(mob/living/L)
+	RegisterSignal(L, list(COMSIG_PARENT_QDELETING), PROC_REF(UnregisterMob))
+	spawned_dolls += L
+
+/mob/living/simple_animal/hostile/abnormality/doomsday_calendar/proc/UnregisterMob(mob/living/L)
+	UnregisterSignal(L, list(COMSIG_PARENT_QDELETING))
+	spawned_dolls -= L
+
+/mob/living/simple_animal/hostile/abnormality/doomsday_calendar/proc/UnregisterAll()
+	for(var/mob/living/L in spawned_dolls)
+		UnregisterMob(L)
+	spawned_dolls.Cut()
 
 //***Simple Mobs***//
 //clay dolls
@@ -362,4 +374,4 @@
 		return
 	for(var/i = doll_count, i < doll_count_maximum, i++)//This counts up
 		var /mob/living/simple_animal/hostile/doomsday_doll/D= new(get_turf(src))
-		spawned_dolls += D
+		RegisterMob(D)
