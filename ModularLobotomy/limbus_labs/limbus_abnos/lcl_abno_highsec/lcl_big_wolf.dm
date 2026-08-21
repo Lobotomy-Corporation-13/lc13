@@ -99,7 +99,7 @@
 |Fun|
 \--*/
 /mob/living/simple_animal/hostile/limbus_abno/big_wolf/ShowEmotion(emotion)
-	if(IsContained())
+	if(IsContained() && !length(contents))
 		var/alt_stuff = fluffy ? "_alt" : ""
 		switch(emotion)
 			if("abno_wave")
@@ -108,6 +108,7 @@
 				icon_state = "wolf_sad[alt_stuff]"
 			if("abno_loom")
 				flick("wolf_loom[alt_stuff]", src)
+				icon_state = "wolf_looming[alt_stuff]"
 		return ..()
 
 /*----------\
