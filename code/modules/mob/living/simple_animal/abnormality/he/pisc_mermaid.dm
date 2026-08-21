@@ -67,11 +67,23 @@
 	pet_bonus_emote = "smiles!"
 	var/suffocation_range = 10
 	var/workingflag = FALSE
+	//flavor petting effect
 	var/pet_count = 0
-	var/mob/living/carbon/human/petter
+	var/petter
 
+	//Special made coral crown for the person we love
 	var/obj/item/clothing/head/unrequited_crown/crown
+	//KILL
 	var/mob/living/carbon/human/love_target
+/*
+* Writing this so i can better understand
+* Mermaid makes the crown, the crown has our
+* love as a var. The crown checks if mermaid
+* perishes and removes itself as the mermaids crown
+* Signals:
+* Mermaid <-- crown --> Wearer
+* Mermaid --> Love Target
+*/
 
 	attack_action_types = list(
 		/datum/action/innate/change_icon_merm,
@@ -118,10 +130,10 @@
 	if(!crown)
 		GiveGift(user)
 		return
-	if(crown?.loved == user)
-		if(crown.loved)
-			datum_reference.qliphoth_change(2)
-			crown.love_cooldown = (world.time + crown.love_cooldown_time) //Reset the qliphoth reduction timer
+	var/mob/living/carbon/loved = crown.returnLoved()
+	if(loved)
+		datum_reference.qliphoth_change(2)
+		crown.love_cooldown = (world.time + crown.love_cooldown_time) //Reset the qliphoth reduction timer
 		return
 
 /mob/living/simple_animal/hostile/abnormality/pisc_mermaid/AttemptWork(mob/living/carbon/human/user, work_type)
@@ -148,11 +160,11 @@
 	icon_state = icon_living
 	pixel_y = -16
 	base_pixel_y = -16
-	if(!isnull(crown?.loved))
-		ChangeResistances(list(RED_DAMAGE = 0.3, WHITE_DAMAGE = 0.3, BLACK_DAMAGE = 0.3, PALE_DAMAGE = 0.3)) //others can still help but it's going to take a lot of damage
-		love_target = crown.loved
+	if(crown)
+		if(crown.loved)
+			RegisterLovedTrg(crown.loved)
 		qdel(crown)
-		love_target.add_or_update_variable_movespeed_modifier(/datum/movespeed_modifier/unrequited_slowdown)
+	if(love_target)
 		var/turf/orgin = get_turf(love_target)
 		var/list/all_turfs = RANGE_TURFS(1, orgin) //if the target is somehow surrounded by nothing but walls it might fuck up her teleport but you're still drowning
 		for(var/turf/T in all_turfs)
@@ -163,28 +175,32 @@
 			forceMove(T)
 			GiveTarget(love_target) //ANON YOU HAVEN'T REPLIED TO MY TEXTS IN THE PAST 15 MINUTES DON'T YOU LOVE ME ANYMORE?
 			playsound(get_turf(src), 'sound/abnormalities/piscinemermaid/waterjump.ogg', 50, 1)
-		to_chat(love_target, span_userdanger("You can't breath!"))
-	if(crown)
-		qdel(crown)
 
 /mob/living/simple_animal/hostile/abnormality/pisc_mermaid/death(gibbed)
 	if(love_target)
-		love_target.remove_movespeed_modifier(/datum/movespeed_modifier/unrequited_slowdown)
 		say("[love_target.name]... You promised we'd be...")
-		love_target = null
-	if(crown)
-		qdel(crown) //this shouldn't be possible for a crown to exist after her breach but we might as well
 	density = FALSE
 	animate(src, alpha = 0, time = 10 SECONDS)
 	QDEL_IN(src, 10 SECONDS)
-	..()
+	return ..()
+
+/mob/living/simple_animal/hostile/abnormality/pisc_mermaid/Destroy()
+	if(love_target)
+		love_target.remove_movespeed_modifier(/datum/movespeed_modifier/unrequited_slowdown)
+		UnregisterLovedTrg()
+	if(crown)
+		QDEL_NULL(crown) //this shouldn't be possible for a crown to exist after her breach but we might as well
+	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/pisc_mermaid/Life()
 	. = ..()
+	if(crown)
+		crown.PartOfMe(src)
 	if(status_flags & GODMODE)
 		return
 	if(!.)
 		return
+
 	if(!love_target)
 		for(var/mob/living/carbon/human/H in oview(src, suffocation_range))
 			if(IsCombatMap())
@@ -218,67 +234,75 @@
 
 /mob/living/simple_animal/hostile/abnormality/pisc_mermaid/bullet_act(obj/projectile/P)
 	. = ..()
-	if(!crown?.loved)
+	if(!love_target)
 		return
-	if(P.firer == crown.loved)
+	if(P.firer == love_target)
 		adjustHealth(P.damage * 1.25)
 
 //We adjust the crown wearer success mod according to the counter.
 /mob/living/simple_animal/hostile/abnormality/pisc_mermaid/OnQliphothChange(mob/living/carbon/human/user, amount)
-	..()
-	if(crown?.loved)
+	. = ..()
+	if(crown)
+		var/mob/living/carbon/human/lover = crown.returnLoved()
+		if(!lover)
+			return
 		var/crown_mod = crown.success_mod
-		crown.loved.physiology.work_success_mod /= crown_mod //We take the mod off temporarily so we don't accidentally add or take off too much.
+		lover.physiology.work_success_mod /= crown_mod //We take the mod off temporarily so we don't accidentally add or take off too much.
 		if(amount)
 			crown_mod += amount*0.05 // If it increases, amount should be positive, if it decreases it should be negative.
 		crown_mod = clamp(crown_mod, 1, 1.15)
 		crown.success_mod = crown_mod
-		crown.loved.physiology.work_success_mod *= crown_mod
+		lover.physiology.work_success_mod *= crown_mod
 
 //Gives a crown thing when you get good work on her. Anyone can wear the crown, even those that didn't work on her and there can only be one gift at a time.
 /mob/living/simple_animal/hostile/abnormality/pisc_mermaid/proc/GiveGift(mob/living/carbon/human/user)
 	FluffSpeak("Do you like it? You do right? I worked so hard on it...")
 	addtimer(CALLBACK(src, PROC_REF(FluffSpeak), "If you don't like it then can you find someone who does? Bring them to me please."), 3 SECONDS)
-	var/obj/item/clothing/head/unrequited_crown/UC = new(get_turf(src))
-	crown = UC
-	crown.throw_at(user, 4, 1, src, spin = FALSE, gentle = TRUE, quickstart = FALSE)
+	var/obj/item/clothing/head/unrequited_crown/UC = MakeCrown()
+	UC.throw_at(user, 4, 1, src, spin = FALSE, gentle = TRUE, quickstart = FALSE)
 	playsound(get_turf(src), 'sound/abnormalities/piscinemermaid/bigsplash.ogg', 50, 1)
-	UC.mermaid = src
+
+/mob/living/simple_animal/hostile/abnormality/pisc_mermaid/proc/MakeCrown()
+	var/obj/item/clothing/head/unrequited_crown/UC = new(get_turf(src))
+	UC.RegisterMermaid(src)
+	return UC
 
 //this is basically just teddy bear hugging but you're NOT buckled and the death is much much slower, you can technically survive it if a clerk is giving CPR... maybe
-/mob/living/simple_animal/hostile/abnormality/pisc_mermaid/proc/ExcessiveLove()
+/mob/living/simple_animal/hostile/abnormality/pisc_mermaid/proc/ExcessiveLove(mob/living/carbon/victem)
+	if(!victem)
+		return
 	if(!petter) // safety check
 		pet_count = 0
 		return
 	// here, we talk to them whilst they are dying, just a tiny bit
-	to_chat(petter, span_userdanger("Something is pulling you into the water!"))
+	to_chat(victem, span_userdanger("Something is pulling you into the water!"))
 	FluffSpeak("I'm really sorry, but it's fine, right? Isn't it wonderful to be loved?")
 	addtimer(CALLBACK(src, PROC_REF(FluffSpeak), "I am merely in love, I am merely wanting salvation."), 5 SECONDS)
 	addtimer(CALLBACK(src, PROC_REF(FluffSpeak), "You can breath underwater right?"), 30 SECONDS)
 	// here, we murder them whilst we are talking
-	petter.Stun(41 SECONDS)
-	petter.move_resist = MOVE_FORCE_VERY_STRONG
-	petter.pull_force = MOVE_FORCE_VERY_STRONG
+	victem.Stun(41 SECONDS)
+	victem.move_resist = MOVE_FORCE_VERY_STRONG
+	victem.pull_force = MOVE_FORCE_VERY_STRONG
 	for(var/times_strangled in 1 to 10)
-		if(petter.stat == DEAD)
+		if(victem.stat == DEAD)
 			break
-		petter.losebreath += (HUMAN_MEDIUM_OXYLOSS_RATE * times_strangled) // 440 oxydamage total.
+		victem.losebreath += (HUMAN_MEDIUM_OXYLOSS_RATE * times_strangled) // 440 oxydamage total.
 		times_strangled++
 		SLEEP_CHECK_DEATH(4 SECONDS)
-	petter.move_resist = MOVE_RESIST_DEFAULT
-	petter.pull_force = PULL_FORCE_DEFAULT
+	victem.move_resist = MOVE_RESIST_DEFAULT
+	victem.pull_force = PULL_FORCE_DEFAULT
 
 //This is a dating sim now fuck you
 /mob/living/simple_animal/hostile/abnormality/pisc_mermaid/funpet(mob/living/carbon/human/current_petter)
 	..()
 	if(!(status_flags & GODMODE))
 		return
-	if(current_petter != petter)
+	if(current_petter.tag != petter)
 		response_help_continuous = "pets"
 		response_help_simple = "pet"
 		pet_count = 0
 	pet_count++
-	petter = current_petter
+	petter = current_petter.tag
 	switch(pet_count)
 		if(5)
 			FluffSpeak("You won't leave right? You love me right?")
@@ -300,6 +324,27 @@
 	if(status_flags & GODMODE)
 		say(sentence)
 
+/mob/living/simple_animal/hostile/abnormality/pisc_mermaid/proc/Scorned(mob/living/carbon/human/H)
+	if(!love_target && H)
+		RegisterLovedTrg(H)
+	if(status_flags & GODMODE)
+		BreachEffect()
+
+/mob/living/simple_animal/hostile/abnormality/pisc_mermaid/proc/RegisterLovedTrg(mob/living/L)
+	if(!L || love_target)
+		return
+	RegisterSignal(L, list(COMSIG_PARENT_QDELETING, COMSIG_LIVING_DEATH), PROC_REF(UnregisterLovedTrg))
+	love_target = L
+	ChangeResistances(list(RED_DAMAGE = 0.3, WHITE_DAMAGE = 0.3, BLACK_DAMAGE = 0.3, PALE_DAMAGE = 0.3)) //others can still help but it's going to take a lot of damage
+	love_target.add_or_update_variable_movespeed_modifier(/datum/movespeed_modifier/unrequited_slowdown)
+	to_chat(love_target, span_userdanger("You can't breath!"))
+
+/mob/living/simple_animal/hostile/abnormality/pisc_mermaid/proc/UnregisterLovedTrg()
+	if(!love_target)
+		return
+	UnregisterSignal(love_target, list(COMSIG_PARENT_QDELETING, COMSIG_LIVING_DEATH))
+	love_target = null
+
 //The crown gives 15% bonus work chance but you need to babysit mermaid constantly, you'll also get absolutely fucked by their breach if it happens at a bad time.
 //The work chance is also affected by mermaid's counter, so +10% chance at 2 counter, +5% at 1.
 //The crown destroys itself whenever it's taken off the headslot and automatically triggers mermaid's breach
@@ -309,6 +354,8 @@
 	icon_state = "unrequited_gift"
 	icon = 'icons/obj/clothing/ego_gear/head.dmi'
 	worn_icon = 'icons/mob/clothing/ego_gear/head.dmi'
+	//To prevent calling the qdel or breach multiple times.
+	var/breach_triggered = FALSE
 	var/success_mod = 1.15
 	var/love_cooldown
 	var/love_cooldown_time = 3.3 MINUTES //It takes around 10 minutes for mermaid to breach if left unchecked
@@ -318,32 +365,78 @@
 /obj/item/clothing/head/unrequited_crown/equipped(mob/living/carbon/human/user, slot)
 	. = ..()
 	if(slot != ITEM_SLOT_HEAD)
-		if(loved)
-			STOP_PROCESSING(SSobj, src)
-			mermaid.datum_reference.qliphoth_change(-3)
-			mermaid.BreachEffect()
+		if(loved && mermaid && !breach_triggered)
+			mermaid.Scorned(loved)
+			breach_triggered = TRUE
 			qdel(src)
 		return
 	if(ishuman(user))
-		START_PROCESSING(SSobj, src)
 		mermaid.datum_reference.qliphoth_change(3)
 		user.physiology.work_success_mod *= success_mod
-		loved = user //Because, you know? You know? I'm doing it for you after all~
-		love_cooldown = world.time + love_cooldown_time
-
-/obj/item/clothing/head/unrequited_crown/process()
-	if((love_cooldown < world.time) && loved && mermaid.workingflag != TRUE)
-		var/obj/item/clothing/suit/armor/ego_gear/realization/forever/Z = loved.get_item_by_slot(ITEM_SLOT_OCLOTHING)
-		if(!istype(Z))
-			mermaid.datum_reference.qliphoth_change(-1)
-			new /obj/effect/temp_visual/heart(get_turf(loved))
-			to_chat(loved, span_warning("You feel as though you're forgetting someone..."))
+		RegisterWearer(user)
 		love_cooldown = world.time + love_cooldown_time
 
 /obj/item/clothing/head/unrequited_crown/Destroy()
 	if(loved)
 		loved.physiology.work_success_mod /= success_mod
+	UnregisterAll()
 	return ..()
+
+/obj/item/clothing/head/unrequited_crown/proc/RegisterMermaid(atom/A)
+	if(!A || mermaid)
+		return
+	RegisterSignal(A, list(COMSIG_PARENT_QDELETING), PROC_REF(UnregisterMermaid))
+	mermaid = A
+	mermaid.crown = src
+
+/obj/item/clothing/head/unrequited_crown/proc/UnregisterMermaid()
+	if(!mermaid)
+		return
+	UnregisterSignal(mermaid, list(COMSIG_PARENT_QDELETING))
+	mermaid.crown = null
+	mermaid = null
+	qdel(src)
+
+/obj/item/clothing/head/unrequited_crown/proc/RegisterWearer(atom/A)
+	if(loved || !A)
+		return
+	RegisterSignal(A, list(COMSIG_PARENT_QDELETING, COMSIG_LIVING_DEATH), PROC_REF(UnregisterWearer))
+	loved = A
+
+/obj/item/clothing/head/unrequited_crown/proc/UnregisterWearer()
+	if(!loved)
+		return
+	if(mermaid && !breach_triggered)
+		//If this occurs due to the wearer dying then breach normally
+		mermaid.datum_reference.qliphoth_change(-3)
+		if(mermaid)
+			mermaid.BreachEffect()
+		breach_triggered = TRUE
+	loved = null
+	qdel(src)
+
+/obj/item/clothing/head/unrequited_crown/proc/UnregisterAll()
+	if(loved)
+		UnregisterSignal(loved, list(COMSIG_PARENT_QDELETING, COMSIG_LIVING_DEATH))
+	if(mermaid)
+		UnregisterSignal(mermaid, list(COMSIG_PARENT_QDELETING))
+		mermaid.crown = null
+	loved = null
+	mermaid = null
+
+/obj/item/clothing/head/unrequited_crown/proc/returnLoved()
+	return loved
+
+//You need me as much as i need you
+/obj/item/clothing/head/unrequited_crown/proc/PartOfMe()
+	if((love_cooldown < world.time) && loved)
+		if(mermaid)
+			if(mermaid.workingflag == TRUE)
+				return
+			mermaid.datum_reference.qliphoth_change(-1)
+		new /obj/effect/temp_visual/heart(get_turf(src))
+		to_chat(loved, span_warning("You feel as though you're forgetting someone..."))
+		love_cooldown = world.time + love_cooldown_time
 
 //Mermaid bath water
 /obj/effect/mermaid_water

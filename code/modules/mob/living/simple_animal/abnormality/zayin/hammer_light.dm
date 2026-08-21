@@ -45,7 +45,7 @@
 	var/sealed = TRUE
 	var/hammer_present = TRUE
 	var/hammer_used = FALSE
-	var/list/spawned_mobs = list()
+	//Uses Ckeys
 	var/list/banned = list()
 	var/mob/living/carbon/human/current_user = null
 	var/obj/item/ego_weapon/chosen_arms = null
@@ -64,6 +64,10 @@
 		'sound/abnormalities/lighthammer/hammer_usable1.ogg',
 		'sound/abnormalities/lighthammer/hammer_usable2.ogg',
 	)
+
+/mob/living/simple_animal/hostile/abnormality/hammer_light/Destroy()
+	RecoverHammer()
+	return ..()
 
 // Work Mechanic
 /mob/living/simple_animal/hostile/abnormality/hammer_light/SuccessEffect(mob/living/carbon/human/user, work_type, pe)
@@ -200,8 +204,10 @@
 		RecoverHammer()
 
 /mob/living/simple_animal/hostile/abnormality/hammer_light/proc/RecoverHammer()
-	UnregisterSignal(current_user, COMSIG_LIVING_DEATH)
-	qdel(chosen_arms)
+	if(current_user)
+		UnregisterSignal(current_user, COMSIG_LIVING_DEATH)
+	if(chosen_arms)
+		qdel(chosen_arms)
 	chosen_arms = null
 	current_user = null
 	sealed = TRUE
@@ -210,9 +216,9 @@
 	update_icon()
 
 /mob/living/simple_animal/hostile/abnormality/hammer_light/proc/UserDeath(mob/living/carbon/human/user)
-	if(!QDELETED(current_user)) // in case they died without being dusted
-		current_user.dust()
 	RecoverHammer()
+	if(!QDELETED(user)) // in case they died without being dusted
+		user.dust()
 
 // Pink Midnight
 /mob/living/simple_animal/hostile/abnormality/hammer_light/BreachEffect(mob/living/carbon/human/user, breach_type = BREACH_NORMAL)
@@ -270,6 +276,10 @@
 	var/datum/action/spell_action/ability/item/A = AS.action
 	A.SetItem(src)
 
+/obj/item/ego_weapon/hammer_light/Destroy()
+	UnregisterAll()
+	return ..()
+
 /obj/item/ego_weapon/hammer_light/CanUseEgo(mob/living/carbon/human/user)
 	. = ..()
 	var/datum/status_effect/evening_twilight/E = user.has_status_effect(/datum/status_effect/evening_twilight)
@@ -289,23 +299,27 @@
 	ADD_TRAIT(src, TRAIT_NODROP, CURSED_ITEM_TRAIT)
 
 /obj/item/ego_weapon/hammer_light/attack_self(mob/user)
+	var/list/light_turfs = orange(1,get_turf(user))
+	var/list/our_mobs = spawned_mobs.Copy()
+	var/turf/T = pick_n_take(light_turfs)
 	if(!CanUseEgo(user))
 		return
 	if(spawn_cooldown >= world.time)
 		return
 	spawn_cooldown = world.time + spawn_cooldown_time
-	if(LAZYLEN(spawned_mobs))
-		for(var/mob/living/L in spawned_mobs)
-			qdel(L)
-	listclearnulls(spawned_mobs)
-	var/directions = GLOB.cardinals.Copy()
 	for(var/i=spawned_mob_max, i>=1, i--)	// This counts down.
-		var/turf/T = (get_step(user,pick_n_take(directions)))
-		var/mob/living/simple_animal/hostile/lighthammer/V = new(T)
+		T = pick_n_take(light_turfs)
+		if(LAZYLEN(our_mobs))
+			//Reduce Reuse and Recycling
+			var/mob/living/L = pop(our_mobs)
+			L.forceMove(T)
+		else
+			var/mob/living/simple_animal/hostile/lighthammer/V = new(T)
+			RegisterMob(V)
+			V.summoned = TRUE
+			V.faction = user.faction.Copy()
 		new /obj/effect/temp_visual/beam_in(T)
-		V.summoned = TRUE
-		spawned_mobs+=V
-		V.faction = user.faction.Copy()
+
 	playsound(user, 'sound/weapons/black_silence/snap.ogg', 50, FALSE)
 
 /obj/item/ego_weapon/hammer_light/attack(mob/living/target, mob/living/carbon/human/user)
@@ -324,12 +338,25 @@
 	if(faction_check(target))	 // Brute damage causes runtimes, and this thing does INSANE, unblockable damage. I dont want people getting unfairly killed
 		force = 5
 		to_chat(user, span_warning("The [src] rejects the attempted killing of [target] this way!"))
-	..()
+	. = ..()
 	force = initial(force)
 	damtype = initial(damtype)
 
 /obj/item/ego_weapon/hammer_light/get_clamped_volume()
 	return 40
+
+/obj/item/ego_weapon/hammer_light/proc/RegisterMob(mob/living/L)
+	RegisterSignal(L, list(COMSIG_PARENT_QDELETING), PROC_REF(UnregisterMob))
+	spawned_mobs += L
+
+/obj/item/ego_weapon/hammer_light/proc/UnregisterMob(mob/living/L)
+	UnregisterSignal(L, list(COMSIG_PARENT_QDELETING))
+	spawned_mobs -= L
+
+/obj/item/ego_weapon/hammer_light/proc/UnregisterAll()
+	for(var/mob/living/L in spawned_mobs)
+		UnregisterMob(L)
+	QDEL_LIST(spawned_mobs)
 
 // Item's teleport ability
 /obj/effect/proc_holder/ability/evening_twilight
@@ -352,8 +379,9 @@
 			continue
 		if(H.status_flags & GODMODE)
 			continue
-		if(user.faction_check_mob(H, FALSE))
-			continue
+		if(user)
+			if(user.faction_check_mob(H))
+				continue
 		if(H in view(7, user))
 			continue
 		var/t_dist = get_dist(user, H)
@@ -383,11 +411,11 @@
 	duration = 5 MINUTES // max duration
 	alert_type = null
 	var/attribute_bonus = 0
-	var/mob/living/simple_animal/hostile/abnormality/hammer_light/parent
+	var/datum/weakref/parent
 
 /datum/status_effect/evening_twilight/on_creation(mob/living/new_owner, hammer)
 	. = ..()
-	parent = hammer
+	parent = WEAKREF(hammer)
 
 /datum/status_effect/evening_twilight/on_apply()
 	if(!ishuman(owner))
@@ -409,7 +437,10 @@
 /datum/status_effect/evening_twilight/on_remove()
 	if(!ishuman(owner))
 		return
-	parent.RecoverHammer()
+
+	var/mob/living/simple_animal/hostile/abnormality/hammer_light/hammer = parent?.resolve()
+	if(hammer)
+		hammer.RecoverHammer()
 	var/mob/living/carbon/human/status_holder = owner
 	REMOVE_TRAIT(status_holder, TRAIT_COMBATFEAR_IMMUNE, "Abnormality")
 	REMOVE_TRAIT(status_holder, TRAIT_WORK_FORBIDDEN, "Abnormality")

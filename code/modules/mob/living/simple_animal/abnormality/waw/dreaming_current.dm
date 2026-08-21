@@ -53,7 +53,6 @@
 	)
 
 	var/list/movement_path = list()
-	var/list/been_hit = list()
 	var/charging = FALSE
 	var/dash_cooldown
 	var/dash_cooldown_time = 8 SECONDS
@@ -77,7 +76,9 @@
 	soundloop = new(list(src), TRUE)
 
 /mob/living/simple_animal/hostile/abnormality/dreaming_current/Destroy()
-	QDEL_NULL(soundloop)
+	if(soundloop)
+		QDEL_NULL(soundloop)
+	movement_path = null
 	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/dreaming_current/AttackingTarget(atom/attacked_target)
@@ -163,21 +164,21 @@
 	for(var/turf/T in movement_path) // Warning before charging
 		new /obj/effect/temp_visual/sparks/quantum(T)
 	SLEEP_CHECK_DEATH(18)
-	been_hit = list()
 	if(!secret_abnormality)
 		icon_state = "current_attack"
+	var/list/been_hit = list()
 	for(var/turf/T in movement_path)
 		if(QDELETED(T))
 			break
 		if(!Adjacent(T))
 			break
-		ChargeAt(T)
+		been_hit = ChargeAt(T, been_hit)
 		SLEEP_CHECK_DEATH(dash_speed)
 	charging = FALSE
 	icon_state = icon_living
 	dash_cooldown = world.time + dash_cooldown_time
 
-/mob/living/simple_animal/hostile/abnormality/dreaming_current/proc/ChargeAt(turf/T)
+/mob/living/simple_animal/hostile/abnormality/dreaming_current/proc/ChargeAt(turf/T, already_hit = list())
 	face_atom(T)
 	for(var/obj/structure/window/W in T.contents)
 		W.obj_destruction("teeth")
@@ -201,14 +202,15 @@
 			COLOR_PURPLE,
 		)
 		S.add_atom_colour(pick(potential_colors), FIXED_COLOUR_PRIORITY)
-		var/list/new_hits = HurtInTurf(TF, been_hit, dash_damage, RED_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)) - been_hit
-		been_hit += new_hits
+		var/list/new_hits = HurtInTurf(TF, already_hit, dash_damage, RED_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)) - already_hit
+		already_hit += new_hits
 		for(var/mob/living/L in new_hits)
 			visible_message(span_boldwarning("[src] bites [L]!"))
 			new /obj/effect/temp_visual/cleave(get_turf(L))
 			playsound(L, "sound/abnormalities/dreamingcurrent/bite.ogg", 50, TRUE)
 			if(L.health < 0)
-				L.gib()
+				L.gib(FALSE,FALSE,TRUE)
+	return already_hit
 
 /mob/living/simple_animal/hostile/abnormality/dreaming_current/PostWorkEffect(mob/living/carbon/human/user, work_type, pe, work_time)
 	if(user.sanity_lost)

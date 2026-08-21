@@ -53,18 +53,24 @@
 
 	abnormality_origin = ABNORMALITY_ORIGIN_LIMBUS
 
+	//tag
 	var/bearfriended //the one who can work on it safely
-	var/mob/living/carbon/human/hug_victim = null
+	//entity
+	var/datum/weakref/hug_memory
 	var/release_threshold = 100 //Total raw damage needed to break a player out of a grab (from any source)
 	var/release_damage = 0
 	var/hug_progress = 0
 	var/hug_damage = 8
 	var/crush_damage = 3
 
+/mob/living/simple_animal/hostile/abnormality/hurting_teddy/Destroy()
+	ReleaseHug()
+	return ..()
+
 //Work Mechanics
 
 /mob/living/simple_animal/hostile/abnormality/hurting_teddy/AttemptWork(mob/living/carbon/human/user, work_type)
-	if (user == bearfriended) //small reward to the bearfriend. it's a TETH, after all.
+	if (user.tag == bearfriended) //small reward to the bearfriend. it's a TETH, after all.
 		to_chat(user, span_nicegreen("Hurting Teddy Bear offers you an embrace!"))
 		user.adjustBruteLoss(-15)
 		user.adjustSanityLoss(-15)
@@ -73,14 +79,14 @@
 /mob/living/simple_animal/hostile/abnormality/hurting_teddy/PostWorkEffect(mob/living/carbon/human/user, work_type, pe)
 	. = ..()
 	if (bearfriended == null)
-		bearfriended = user
+		bearfriended = user.tag
 		to_chat(user, span_nicegreen("Hurting Teddy Bear becomes your friend!"))
 
-	if (user != bearfriended) //get punished.
+	if (user.tag != bearfriended) //get punished.
 		to_chat(user, span_warning("You feel something sharp being jabbed into you!"))
 		user.apply_status_effect(STATUS_EFFECT_NAILS)
 
-	if(work_type == ABNORMALITY_WORK_REPRESSION && user == bearfriended) //you can use this to swap the bearfriend if you're fine losing the counter on a bad or a neutral
+	if(work_type == ABNORMALITY_WORK_REPRESSION && user.tag == bearfriended) //you can use this to swap the bearfriend if you're fine losing the counter on a bad or a neutral
 		bearfriended = null
 		to_chat(user, span_warning("Hurting Teddy Bear isn't your friend anymore! You feel bad for betraying it..."))
 		user.apply_status_effect(STATUS_EFFECT_HEX)
@@ -99,7 +105,7 @@
 /mob/living/simple_animal/hostile/abnormality/hurting_teddy/WorkChance(mob/living/carbon/human/user, chance, work_type)
 	if (bearfriended == null)  //the first work should always have the high work rates. once a friend is made, anyone else who works on it suffers
 		return chance
-	if (user == bearfriended)
+	if (user.tag == bearfriended)
 		return chance + 10 //YAY!!! FRIEND!!! Might be unnecessary?
 	else
 		return chance - 20 //FUCK OFF YOU'RE NOT A FRIEND!!!
@@ -138,12 +144,14 @@
 /mob/living/simple_animal/hostile/abnormality/hurting_teddy/proc/HugAttack(mob/living/carbon/human/victim)
 	if(!istype(victim))
 		return
-	hug_victim = victim
+	hug_memory = WEAKREF(victim)
 	Strangle()
 	can_act = FALSE
 
 /mob/living/simple_animal/hostile/abnormality/hurting_teddy/proc/Strangle()
 	set waitfor = FALSE
+
+	var/mob/living/carbon/human/hug_victim = hug_memory?.resolve()
 	release_damage = 0
 	hug_victim.Immobilize(10)
 	if(hug_victim.sanity_lost)
@@ -154,6 +162,7 @@
 	StrangleHit(1)
 
 /mob/living/simple_animal/hostile/abnormality/hurting_teddy/proc/StrangleHit(count)
+	var/mob/living/carbon/human/hug_victim = hug_memory?.resolve()
 	if(!hug_victim)
 		ReleaseHug()
 		return
@@ -184,15 +193,15 @@
 	StrangleHit(count)
 
 /mob/living/simple_animal/hostile/abnormality/hurting_teddy/proc/ReleaseHug()
-	if(hug_victim)
-		hug_victim = null
+	if(hug_memory?.resolve())
+		hug_memory = null
 		can_act = TRUE
 
 /mob/living/simple_animal/hostile/abnormality/hurting_teddy/PostDamageReaction(damage_amount, damage_type, source, attack_type)
 	. = ..()
 	if(. <= 0)
 		return
-	if(hug_victim)
+	if(hug_memory?.resolve())
 		release_damage = clamp (release_damage + ., 0, release_threshold)
 	if(release_damage >= release_threshold)
 		ReleaseHug()

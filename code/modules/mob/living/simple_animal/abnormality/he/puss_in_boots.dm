@@ -79,16 +79,21 @@
 	toggle_message = span_colossus("You will not perform a finisher anymore.")
 	button_icon_toggle_deactivated = "puss_toggle0"
 
+/mob/living/simple_animal/hostile/abnormality/puss_in_boots/Destroy()
+	UnregisterAll()
+	return ..()
+
 //Init stuff
 /mob/living/simple_animal/hostile/abnormality/puss_in_boots/Initialize()
 	. = ..()
 	if(IsCombatMap())
 		friendly = FALSE
 		return  // There are no friends in war.
+	//I dont understannd the purpose of this check. -IP
 	for(var/mob/living/carbon/human/potential_user in GLOB.player_list)
 		if(!potential_user.has_status_effect(STATUS_EFFECT_CHOSEN))
 			continue
-		blessed_human = potential_user
+		Blessing(potential_user)
 		friendly = TRUE
 		return
 
@@ -100,33 +105,32 @@
 		if(get_user_level(user) >= 2)
 			say("I cannot teach you anything, human.")
 			return
-		blessed_human = user
 		Blessing(user)
 		playsound(get_turf(user), 'sound/abnormalities/pussinboots/gatoblessing.ogg', 50, 0, 2)
 		friendly = TRUE
 		say("At last, someone worthy!")
 
 /mob/living/simple_animal/hostile/abnormality/puss_in_boots/proc/Blessing(mob/living/carbon/human/user)
-	var/datum/status_effect/chosen/status_holder = blessed_human.has_status_effect(/datum/status_effect/chosen)
-	if(status_holder)
-		return
+	blessed_human = user
 	user.apply_status_effect(STATUS_EFFECT_CHOSEN)
-	RegisterSignal(user, COMSIG_LIVING_DEATH, PROC_REF(BlessedDeath))
-	RegisterSignal(user, COMSIG_HUMAN_INSANE, PROC_REF(BlessedDeath))
+	RegisterSignal(user, list(COMSIG_LIVING_DEATH,COMSIG_HUMAN_INSANE), PROC_REF(BlessedDeath))
 	RegisterSignal(user, COMSIG_WORK_STARTED, PROC_REF(OnWorkStart))
 	RegisterSignal(SSdcs, COMSIG_GLOB_ABNORMALITY_BREACH, PROC_REF(OnAbnoBreach))
 
 /mob/living/simple_animal/hostile/abnormality/puss_in_boots/proc/BlessedDeath(datum/source, gibbed)
 	SIGNAL_HANDLER
 	blessed_human.remove_status_effect(STATUS_EFFECT_CHOSEN)
-	UnregisterSignal(blessed_human, COMSIG_LIVING_DEATH)
-	UnregisterSignal(blessed_human, COMSIG_HUMAN_INSANE)
-	UnregisterSignal(blessed_human, COMSIG_WORK_STARTED)
+	UnregisterSignal(blessed_human, list(COMSIG_LIVING_DEATH,COMSIG_HUMAN_INSANE,COMSIG_WORK_STARTED))
 	friendly = FALSE
 	GoToFriend()
 	BreachEffect()
 	blessed_human = null
 	return TRUE
+
+/mob/living/simple_animal/hostile/abnormality/puss_in_boots/proc/UnregisterAll()
+	UnregisterSignal(SSdcs, COMSIG_GLOB_ABNORMALITY_BREACH)
+	UnregisterSignal(blessed_human, list(COMSIG_LIVING_DEATH,COMSIG_HUMAN_INSANE,COMSIG_WORK_STARTED))
+	blessed_human = null
 
 /mob/living/simple_animal/hostile/abnormality/puss_in_boots/proc/OnWorkStart(datum/source, datum/abnormality/abno_reference, mob/living/carbon/human/user, work_type)
 	SIGNAL_HANDLER
@@ -338,8 +342,7 @@
 	alert_type = null
 	var/attribute_bonus = 0
 	tick_interval = 600 //stats update every 60s
-	var/obj/item/ego_weapon/lance/chosen_arms = null
-
+	var/obj/item/ego_weapon/lance/famiglia/chosen_arms
 /datum/status_effect/chosen/on_apply()
 	if(!ishuman(owner))
 		return
@@ -351,7 +354,8 @@
 	user.physiology.white_mod *= 0.8
 	user.physiology.black_mod *= 0.8
 	user.physiology.pale_mod *= 0.8
-	chosen_arms = new /obj/item/ego_weapon/lance/famiglia(get_turf(user))
+	var/obj/item/ego_weapon/lance/famiglia/new_weapon = new(get_turf(user))
+	RegisterArms(new_weapon)
 	return ..()
 
 /datum/status_effect/chosen/on_remove()
@@ -365,7 +369,9 @@
 	user.physiology.pale_mod /= 0.8
 	for(var/attribute in user.attributes)
 		user.adjust_attribute_buff(attribute, -attribute_bonus)
-	QDEL_IN(chosen_arms, 30)
+	if(chosen_arms)
+		QDEL_IN(chosen_arms, 30)
+		UnregisterArms()
 	return ..()
 
 /datum/status_effect/chosen/tick()
@@ -405,5 +411,17 @@
 		user.adjust_attribute_buff(attribute, (new_bonus - attribute_bonus)) //should keep the bonus dynamically updated
 	attribute_bonus = new_bonus
 	return
+
+/datum/status_effect/chosen/proc/RegisterArms(atom/A)
+	if(!A)
+		return
+	RegisterSignal(A, list(COMSIG_PARENT_QDELETING), PROC_REF(UnregisterArms))
+	chosen_arms = A
+
+/datum/status_effect/chosen/proc/UnregisterArms()
+	if(!chosen_arms)
+		return
+	UnregisterSignal(chosen_arms, list(COMSIG_PARENT_QDELETING))
+	chosen_arms = null
 
 #undef STATUS_EFFECT_CHOSEN

@@ -83,7 +83,7 @@
 	var/datum/looping_sound/woodsman/soundloop
 
 	// chain stuff
-	var/mob/living/carbon/human/chained_target = null
+	var/datum/weakref/chained_memory
 	var/chain_pull_count = 0
 	var/active_pull_timer
 	var/NORMAL_PULL_DISTANCE = 1
@@ -114,7 +114,7 @@
 /datum/action/spell_action/spell/axe_throw/IsAvailable()
 	if (istype(owner, /mob/living/simple_animal/hostile/abnormality/woodsman))
 		var/mob/living/simple_animal/hostile/abnormality/woodsman/W = owner
-		if (W.chained_target)
+		if (W.ReturnChained())
 			return FALSE
 	return ..()
 
@@ -138,7 +138,7 @@
 
 	if (istype(user, /mob/living/simple_animal/hostile/abnormality/woodsman))
 		var/mob/living/simple_animal/hostile/abnormality/woodsman/W = user
-		if (W.chained_target)
+		if (W.ReturnChained())
 			return FALSE
 
 	var/obj/projectile/chainedaxe/P = new(get_turf(user))
@@ -199,6 +199,8 @@
 /mob/living/simple_animal/hostile/abnormality/woodsman/Destroy()
 	if(soundloop)
 		QDEL_NULL(soundloop)
+	if(chain_beam)
+		QDEL_NULL(chain_beam)
 	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/woodsman/proc/begin_chain_pull(mob/living/carbon/human/trg)
@@ -206,9 +208,9 @@
 		return
 	var/mob/living/chained_target = trg
 	chain_pull_count = 0
-	var/datum/status_effect/chained/C = chained_target.has_status_effect(/datum/status_effect/chained)
+	var/datum/status_effect/chained/C = target.has_status_effect(/datum/status_effect/chained)
 	if(!C)
-		C = chained_target.apply_status_effect(/datum/status_effect/chained)
+		C = target.apply_status_effect(/datum/status_effect/chained)
 		C.W = src
 
 	update_chain_visuals()
@@ -216,6 +218,7 @@
 
 
 /mob/living/simple_animal/hostile/abnormality/woodsman/proc/pull_loop()
+	var/mob/living/chained_target = ReturnChained()
 	if(!chained_target || !can_see(src, chained_target, 14))
 		release_target()
 		return
@@ -247,6 +250,7 @@
 
 
 /mob/living/simple_animal/hostile/abnormality/woodsman/proc/pull_target(distance)
+	var/mob/living/chained_target = ReturnChained()
 	if(!chained_target)
 		update_chain_visuals()
 		return
@@ -266,16 +270,20 @@
 	playsound(target_turf, 'sound/weapons/chainhit.ogg', 50, TRUE)
 
 /mob/living/simple_animal/hostile/abnormality/woodsman/proc/update_chain_visuals()
-	if(!chained_target)
+	if(!ReturnChained())
 		if(chain_beam)
 			QDEL_NULL(chain_beam)
 		return
 
 	if(!chain_beam)
-		chain_beam = Beam(chained_target, icon_state="chain")
+		chain_beam = Beam(ReturnChained(), icon_state="chain")
 	// Beam datum will handle updating the visuals automatically when either end moves
 
+/mob/living/simple_animal/hostile/abnormality/woodsman/proc/ReturnChained()
+	return chained_memory?.resolve()
+
 /mob/living/simple_animal/hostile/abnormality/woodsman/proc/release_target()
+	var/mob/living/chained_target = ReturnChained()
 	if(!chained_target)
 		update_chain_visuals()
 		return

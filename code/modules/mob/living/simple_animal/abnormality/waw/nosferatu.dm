@@ -57,6 +57,7 @@
 	)
 
 	// Work Stuff
+	//uses tags
 	var/last_drawn = null
 	var/last_drawn_check = 0
 	var/failed = FALSE
@@ -153,6 +154,10 @@
 	. = ..()
 	AddComponent(/datum/component/bloodfeast, siphon = TRUE, range = 2, starting = 1000)
 
+/mob/living/simple_animal/hostile/abnormality/nosferatu/Destroy()
+	UnregisterAll()
+	return ..()
+
 /mob/living/simple_animal/hostile/abnormality/nosferatu/PostSpawn()
 	. = ..()
 	if(!IsContained())
@@ -216,9 +221,9 @@
 		if(!failed)
 			to_chat(user, span_warning("[src] suddenly sucks your blood!"))
 	if(failed || datum_reference.qliphoth_meter < 3) // We sucked blood at least once, lets check the perp
-		if(last_drawn != user)
+		if(last_drawn != user.tag)
 			last_drawn_check = 0
-		last_drawn = user
+		last_drawn = user.tag
 		last_drawn_check += 1
 		if(last_drawn_check >= 3)
 			user.adjustBruteLoss(999)
@@ -401,17 +406,12 @@
 			return
 		target_atom = newturf
 	playsound(get_turf(target_atom), 'sound/abnormalities/nosferatu/batspawn.ogg', 50, 1)
-	//How many we have spawned
-	listclearnulls(spawned_bats)
-	for(var/mob/living/L in spawned_bats)
-		if(L.stat == DEAD)
-			spawned_bats -= L
 	if(length(spawned_bats) >= bat_spawn_limit)
 		return
 
 	//Actually spawning them
 	var/mob/living/simple_animal/hostile/nosferatu_mob/B = new(get_turf(target_atom))
-	spawned_bats+=B
+	RegisterMob(B)
 
 /mob/living/simple_animal/hostile/abnormality/nosferatu/proc/Banquet()//AOE attack
 	if(mist_form) // No attack abilities while in mist form
@@ -539,6 +539,21 @@
 		playsound(get_turf(src), 'sound/abnormalities/nosferatu/bloodcollect.ogg', 10, 1)
 	else
 		blood_transfer_target.LoseTarget()
+
+/mob/living/simple_animal/hostile/abnormality/nosferatu/proc/RegisterMob(mob/living/L)
+	RegisterSignal(L, list(COMSIG_PARENT_QDELETING), PROC_REF(UnregisterMob))
+	spawned_bats += L
+
+/mob/living/simple_animal/hostile/abnormality/nosferatu/proc/UnregisterMob(mob/living/L)
+	if(!L)
+		return
+	UnregisterSignal(L, list(COMSIG_PARENT_QDELETING))
+	spawned_bats -= L
+
+/mob/living/simple_animal/hostile/abnormality/nosferatu/proc/UnregisterAll()
+	for(var/mob/living/L in spawned_bats)
+		UnregisterMob(L)
+	spawned_bats.Cut()
 
 // Bat minion - A non-dense trash mob that automatically harvests blood on attacks and returns blood to nosferatu. Dangeorus.
 /mob/living/simple_animal/hostile/nosferatu_mob

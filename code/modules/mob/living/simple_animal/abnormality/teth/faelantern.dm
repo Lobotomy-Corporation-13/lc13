@@ -67,7 +67,11 @@
 	var/lure_damage = 20
 	var/stab_cooldown
 	var/stab_cooldown_time = 30
-	var/lured_list = list()
+	var/list/lured_list = list()
+
+/mob/living/simple_animal/hostile/abnormality/faelantern/Destroy()
+	UnregisterAll()
+	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/faelantern/AttackingTarget(atom/attacked_target)
 	if(!target)
@@ -199,7 +203,7 @@
 		if(get_attribute_level(victim, TEMPERANCE_ATTRIBUTE) >= 40)
 			continue
 		victim.apply_status_effect(STATUS_EFFECT_FAIRYLURE)
-		lured_list += victim
+		RegisterMob(victim)
 		victim.ai_controller = /datum/ai_controller/insane/faelantern
 		victim.InitializeAIController()
 		victim.add_overlay(mutable_appearance('ModularLobotomy/_Lobotomyicons/tegu_effects.dmi', "fairy_lure", -HALO_LAYER))
@@ -220,12 +224,25 @@
 
 /mob/living/simple_animal/hostile/abnormality/faelantern/proc/EndEnchant(mob/living/carbon/human/victim, stunned = FALSE)//cannibalized apocalypse bird handling
 	if(victim in lured_list)
-		lured_list -= victim
+		UnregisterMob(victim)
 		victim.cut_overlay(mutable_appearance('ModularLobotomy/_Lobotomyicons/tegu_effects.dmi', "fairy_lure", -HALO_LAYER))
 		if(istype(victim.ai_controller,/datum/ai_controller/insane/faelantern))
 			if(!stunned)
 				to_chat(victim, span_boldwarning("You snap out of your trance!"))
 			qdel(victim.ai_controller)
+
+/mob/living/simple_animal/hostile/abnormality/faelantern/proc/RegisterMob(mob/living/L)
+	RegisterSignal(L, list(COMSIG_PARENT_QDELETING), PROC_REF(UnregisterMob))
+	lured_list += L
+
+/mob/living/simple_animal/hostile/abnormality/faelantern/proc/UnregisterMob(mob/living/L)
+	UnregisterSignal(L, list(COMSIG_PARENT_QDELETING))
+	lured_list -= L
+
+/mob/living/simple_animal/hostile/abnormality/faelantern/proc/UnregisterAll()
+	for(var/mob/living/L in lured_list)
+		UnregisterMob(L)
+	lured_list.Cut()
 
 	//Effects
 /obj/effect/temp_visual/faespike

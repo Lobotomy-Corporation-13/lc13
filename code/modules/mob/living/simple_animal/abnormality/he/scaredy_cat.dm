@@ -71,8 +71,6 @@
 	var/wait_for_friend = FALSE
 	/// The abnormality scaredy cat follows on breach
 	var/mob/living/simple_animal/hostile/abnormality/friend
-	/// The abnormality cat will prioritize as a friend on breach
-	var/mob/living/simple_animal/hostile/abnormality/priority_friend
 	/// How much time needs to pass before scaredy cat check if his friend is in view
 	var/protect_cooldown_time = 5 SECONDS
 	var/protect_cooldown
@@ -102,19 +100,19 @@
 		datum_reference.qliphoth_change(-1)
 	return
 
-
 /mob/living/simple_animal/hostile/abnormality/scaredy_cat/BreachEffect(mob/living/carbon/human/user, breach_type)
 	protect_cooldown = world.time + protect_cooldown_time //to avoid him teleporting twice for no reason on breach
-	if(priority_friend) //if an oz abno escape they take absolute priority
-		ProtectFriend(priority_friend)
-		priority_friend = null
-		return ..()
 	var/list/breached_abno = list()
 	for(var/datum/abnormality/A in SSlobotomy_corp.all_abnormality_datums)
-		if(!A.current)
+		var/mob/living/simple_animal/hostile/abnormality/abno = A.GetCurrent()
+		if(!abno)
 			continue
-		if(!(A.current.status_flags & GODMODE) && A != datum_reference)
+		if(!(abno.status_flags & GODMODE) && abno != src)
 			breached_abno += A.current
+			//Just you and me.
+			if(LAZYFIND(prefered_abno_list, abno.type))
+				breached_abno = list(A)
+				break
 	if(LAZYLEN(breached_abno))
 		ProtectFriend(pick(breached_abno))
 	else
@@ -126,7 +124,11 @@
 	. = ..()
 	if(!friend || status_flags & GODMODE || stat == DEAD) //for some reason life() works on death ain't that something
 		return
-	if(QDELETED(friend) || friend.status_flags & GODMODE) //if the friend is deleted instead of dying first somehow (looking at you pbird)
+	if(friend)
+		if(friend.status_flags & GODMODE)
+			Courage(FALSE)
+			return
+	if(QDELETED(friend)) //if the friend is deleted instead of dying first somehow (looking at you pbird)
 		Courage(FALSE)
 		return
 	if(protect_cooldown < world.time)
@@ -135,10 +137,12 @@
 			GoToFriend()
 
 /mob/living/simple_animal/hostile/abnormality/scaredy_cat/proc/ProtectFriend(mob/living/simple_animal/hostile/abnormality/abno)
+	if(!abno)
+		return
 	wait_for_friend = FALSE
 	Courage(TRUE)
-	friend = abno //You are friend =D
-	faction = friend.faction
+	RegisterAlly(abno) //You are friend =D
+	faction = abno.faction
 	GoToFriend()
 
 /mob/living/simple_animal/hostile/abnormality/scaredy_cat/death()
@@ -150,11 +154,14 @@
 	else
 		animate(src, alpha = 0, time = 10 SECONDS)
 		QDEL_IN(src, 10 SECONDS)
-	..()
+	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/scaredy_cat/Destroy()
 	UnregisterSignal(SSdcs, COMSIG_GLOB_MOB_DEATH)
 	UnregisterSignal(SSdcs, COMSIG_GLOB_ABNORMALITY_BREACH)
+	if(stunned_effect)
+		QDEL_NULL(stunned_effect)
+	UnregisterAlly()
 	return ..()
 
 //if he still has a friend, revives
@@ -206,7 +213,7 @@
 		icon_living = "cat_courage"
 		icon_dead = "dead_courage"
 	else
-		friend = null //just to make sure it's actually empty
+		UnregisterAlly() //just to make sure it's actually empty
 		if(stat != DEAD)
 			wait_for_friend = TRUE //kill him fast before he finds another friend
 		faction = list("neutral")
@@ -228,6 +235,7 @@
 
 /mob/living/simple_animal/hostile/abnormality/scaredy_cat/proc/OnMobDeath(datum/source, mob/living/died, gibbed)
 	SIGNAL_HANDLER
+
 	if(status_flags & GODMODE)
 		if(istype(died, /mob/living/simple_animal/hostile/abnormality))
 			datum_reference.qliphoth_change(1) //counter increase if another abno dies
@@ -244,15 +252,28 @@
 		return
 	if(status_flags & GODMODE)
 		if(LAZYFIND(prefered_abno_list, abno.type))
-			priority_friend = abno
+			RegisterAlly(abno)
 			datum_reference.qliphoth_change(-3) //for all intents and purposes he instantly breach
 		else
 			datum_reference.qliphoth_change(-1)
 		return
+
 	if(LAZYFIND(prefered_abno_list, abno.type) && !LAZYFIND(prefered_abno_list, friend.type))
-		friend = abno //literally ditches his old friend if an oz abno gets out and he's not already friend with one
+		RegisterAlly(abno) //literally ditches his old friend if an oz abno gets out and he's not already friend with one
 	if(stat == DEAD || !wait_for_friend)
 		return
 	if(abno != src)
 		ProtectFriend(abno)
 		return
+
+/mob/living/simple_animal/hostile/abnormality/scaredy_cat/proc/RegisterAlly(mob/living/L)
+	if(friend)
+		UnregisterAlly()
+	RegisterSignal(L, list(COMSIG_PARENT_QDELETING), PROC_REF(UnregisterAlly))
+	friend = L
+
+/mob/living/simple_animal/hostile/abnormality/scaredy_cat/proc/UnregisterAlly()
+	if(!friend)
+		return
+	UnregisterSignal(friend, list(COMSIG_PARENT_QDELETING))
+	friend = null

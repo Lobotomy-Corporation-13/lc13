@@ -57,9 +57,15 @@ Finally, an abnormality that DOESN'T have to do any fancy movement shit. It's a 
 	var/playStatus = 0
 	var/playRange = 20
 	var/noiseFactor = 2
-	var/datum/looping_sound/singing_grinding/grindNoise
-	var/datum/looping_sound/singing_music/musicNoise
-	var/list/musicalAddicts = list()
+	var/datum/looping_sound/singing_grinding/grind_noise
+	var/datum/looping_sound/singing_music/music_noise
+	var/list/music_addicts = list()
+
+/mob/living/simple_animal/hostile/abnormality/singing_machine/Destroy()
+	QDEL_NULL(grind_noise)
+	QDEL_NULL(music_noise)
+	UnregisterAll()
+	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/singing_machine/Life()
 	if(playStatus > 0) // If playstatus isn't 0, deal some damage in range.
@@ -67,7 +73,7 @@ Finally, an abnormality that DOESN'T have to do any fancy movement shit. It's a 
 			if(faction_check_mob(H))
 				continue
 			H.deal_damage(rand(playStatus * noiseFactor, playStatus * noiseFactor * 2), WHITE_DAMAGE, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_SPECIAL))
-			if(H in musicalAddicts)
+			if(H in music_addicts)
 				H.deal_damage(rand(playStatus * noiseFactor, playStatus * noiseFactor * 2), WHITE_DAMAGE, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_SPECIAL))
 				to_chat(H, span_warning("You can hear it again... it needs more..."))
 			else
@@ -106,7 +112,7 @@ Finally, an abnormality that DOESN'T have to do any fancy movement shit. It's a 
 				if(faction_check_mob(H))
 					continue
 				H.adjustSanityLoss(rand(-1,-2))
-			for(var/mob/living/carbon/human/H in musicalAddicts)
+			for(var/mob/living/carbon/human/H in music_addicts)
 				H.adjustSanityLoss(rand(-1,-2))
 	return ..()
 
@@ -117,10 +123,8 @@ Finally, an abnormality that DOESN'T have to do any fancy movement shit. It's a 
 		pe = 0
 	if(work_type == ABNORMALITY_WORK_INSTINCT && datum_reference.qliphoth_meter > 0) // At the end of an instinct work that wasn't trying to raise its counter...
 		to_chat(user, span_nicegreen("There's something about that sound..."))
-		musicalAddicts |= user
-		user.apply_status_effect(STATUS_EFFECT_MUSIC) // Time to addict them.
+		RegisterMob(user)
 		SEND_SOUND(user, 'sound/abnormalities/singingmachine/addiction.ogg')
-		addtimer(CALLBACK(src, PROC_REF(removeAddict), user), 5 MINUTES)
 	return
 
 /mob/living/simple_animal/hostile/abnormality/singing_machine/SuccessEffect(mob/living/carbon/human/user, work_type, pe)
@@ -148,12 +152,13 @@ Finally, an abnormality that DOESN'T have to do any fancy movement shit. It's a 
 		eatBody(user) // If it is, you die.
 	return ..()
 
-/mob/living/simple_animal/hostile/abnormality/singing_machine/ZeroQliphoth(mob/living/carbon/human/user) // WARNING: Don't call this on its own. Several zero-qliphoth behaviors rely on its qliphoth actually being 0.
+/mob/living/simple_animal/hostile/abnormality/singing_machine/ZeroQliphoth(mob/living/carbon/human/user)
+	// WARNING: Don't call this on its own. Several zero-qliphoth behaviors rely on its qliphoth actually being 0.
 	icon_state = "singingmachine_open_[cleanliness]" // Machine opens and starts making horrible empty grinding noises.
 	icon_living = icon_state
 	update_icon()
 	playsound(src, 'sound/abnormalities/singingmachine/open.ogg', 200, 0, playRange)
-	grindNoise = new(list(src), TRUE)
+	grind_noise = new(list(src), TRUE)
 	playStatus = 1
 	return
 
@@ -161,15 +166,30 @@ Finally, an abnormality that DOESN'T have to do any fancy movement shit. It's a 
 	if(breach_type == BREACH_MINING)
 		ZeroQliphoth()
 
-/mob/living/simple_animal/hostile/abnormality/singing_machine/proc/removeAddict(mob/living/carbon/human/addict)
-	if(addict)
-		musicalAddicts -= addict // Your five minutes are over, you're free.
+/mob/living/simple_animal/hostile/abnormality/singing_machine/proc/RegisterMob(mob/living/L)
+	if(!L)
+		return
+	RegisterSignal(L, list(COMSIG_PARENT_QDELETING), PROC_REF(UnregisterMob))
+	L.apply_status_effect(STATUS_EFFECT_MUSIC)
+	music_addicts += L
+
+/mob/living/simple_animal/hostile/abnormality/singing_machine/proc/UnregisterMob(mob/living/L)
+	if(!L)
+		return
+	UnregisterSignal(L, list(COMSIG_PARENT_QDELETING))
+	L.remove_status_effect(STATUS_EFFECT_MUSIC)
+	music_addicts -= L
+
+/mob/living/simple_animal/hostile/abnormality/singing_machine/proc/UnregisterAll()
+	for(var/mob/living/L in music_addicts)
+		UnregisterMob(L)
+	music_addicts.Cut()
 
 /mob/living/simple_animal/hostile/abnormality/singing_machine/proc/stopPlaying()
-	if(grindNoise)
-		QDEL_NULL(grindNoise)
-	if(musicNoise)
-		QDEL_NULL(musicNoise)
+	if(grind_noise)
+		QDEL_NULL(grind_noise)
+	if(music_noise)
+		QDEL_NULL(music_noise)
 	playStatus = 0 // This exists solely because I needed to call it via a callback.
 
 /mob/living/simple_animal/hostile/abnormality/singing_machine/proc/eatBody(mob/living/carbon/human/user)
@@ -180,11 +200,11 @@ Finally, an abnormality that DOESN'T have to do any fancy movement shit. It's a 
 	icon_state = "singingmachine_closed_[cleanliness]"
 	icon_living = icon_state
 	update_icon()
-	driveInsane(musicalAddicts)
+	driveInsane(music_addicts)
 	playStatus = 2
 	datum_reference.qliphoth_change(2)
-	grindNoise = new(list(src), TRUE)
-	musicNoise = new(list(src), TRUE)
+	grind_noise = new(list(src), TRUE)
+	music_noise = new(list(src), TRUE)
 	addtimer(CALLBACK(src, PROC_REF(stopPlaying)), playLength) // This is the callback from earlier.
 
 /mob/living/simple_animal/hostile/abnormality/singing_machine/proc/driveInsane(list/addicts)
@@ -215,6 +235,7 @@ Finally, an abnormality that DOESN'T have to do any fancy movement shit. It's a 
 	duration = 5 MINUTES // Just like WCCA
 	alert_type = /atom/movable/screen/alert/status_effect/singing_machine
 	display_name = "musical_addiction"
+	on_remove_on_mob_delete = TRUE
 	var/addictionTick = 10 SECONDS
 	var/addictionTimer = 0
 	var/addictionSanityMin = 2

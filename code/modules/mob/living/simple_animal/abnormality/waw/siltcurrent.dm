@@ -105,10 +105,13 @@
 	toggle_message = span_colossus("You will now dive while you attack.")
 	button_icon_toggle_deactivated = "_WAW"
 
-/mob/living/simple_animal/hostile/abnormality/siltcurrent/Life()
-	. = ..()
-	if(!.) // Dead
-		return FALSE
+/mob/living/simple_animal/hostile/abnormality/siltcurrent/Destroy()
+	for(var/obj/effect/obsessing_water_effect/W in water)
+		QDEL_IN(W, rand(5) SECONDS)
+		water -= W
+	UnregisterAll()
+	water.Cut()
+	return ..()
 
 //Checks if it's stunned or doing the dive attack to prevent it from attacking or moving while in those 2 states since it would be silly.
 /mob/living/simple_animal/hostile/abnormality/siltcurrent/Move()
@@ -151,11 +154,77 @@
 	if(!IsContained())//Prevents you from just refilling your oxygen during work. Go heal dibshit.
 		Refill(user)
 
-
 /mob/living/simple_animal/hostile/abnormality/siltcurrent/bullet_act(obj/projectile/P)
 	. = ..()
 	if(!IsContained())
 		Refill(P.firer)
+
+/mob/living/simple_animal/hostile/abnormality/dreaming_current/PostWorkEffect(mob/living/carbon/human/user, work_type, pe, work_time)
+	if(get_attribute_level(user, FORTITUDE_ATTRIBUTE) < 60)
+		datum_reference.qliphoth_change(-1)
+	return
+
+/mob/living/simple_animal/hostile/abnormality/siltcurrent/Worktick(mob/living/carbon/human/user, bubble_type = ABNO_BALLOON_GENERIC | ABNO_BALLOON_SPECIFIC, work_type)
+	user.adjustOxyLoss(1.5, updating_health=TRUE, forced=TRUE)//haha drown.
+	return ..()
+
+/mob/living/simple_animal/hostile/abnormality/siltcurrent/FailureEffect(mob/living/carbon/human/user, work_type, pe)
+	datum_reference.qliphoth_change(-1)
+	if(user.oxyloss >= 50)//POWER GRINDER SPOTTED! MUST MAUL THE FUCK!
+		datum_reference.qliphoth_change(-1)
+		GiveTarget(user)
+		SiltDive(get_turf(user),TRUE)
+	return
+
+/mob/living/simple_animal/hostile/abnormality/siltcurrent/BreachEffect(mob/living/carbon/human/user)
+	. = ..()
+	icon_living = "current_breach"
+	//icon_state = icon_living
+	addtimer(CALLBACK(src, PROC_REF(OxygenLoss)), 5 SECONDS, TIMER_LOOP)
+	for(var/mob/living/L in GLOB.player_list)//Spawns Flotsams in the halls and notifies people that it's out.
+		if(L.z != z || L.stat >= HARD_CRIT)
+			continue
+		to_chat(L, span_userdanger("You feel water is entering the facility!"))
+	var/list/spawn_turfs = GLOB.xeno_spawn.Copy()
+	for(var/i = 1 to (tube_spawn_amount))
+		if(!LAZYLEN(spawn_turfs)) //if list empty, recopy xeno spawns
+			spawn_turfs = GLOB.xeno_spawn.Copy()
+		var/X = pick_n_take(spawn_turfs)
+		var/turf/T = get_turf(X)
+		var/list/deployment_area = list()
+		var/turf/deploy_spot = T //spot you are being deployed
+		if(LAZYLEN(deployment_area)) //if deployment zone is empty just spawn at xeno spawn
+			deploy_spot = pick_n_take(deployment_area)
+		var/obj/structure/flotsam/F = new get_turf(deploy_spot)
+		RegisterFloat(F)
+
+/mob/living/simple_animal/hostile/abnormality/siltcurrent/death()
+	icon = 'ModularLobotomy/_Lobotomyicons/abno_cores/waw.dmi'
+	pixel_x = -16
+	base_pixel_x = -16
+	density = FALSE
+	animate(src, alpha = 0, time = 10 SECONDS)
+	QDEL_IN(src, 10 SECONDS)
+	return ..()
+
+/mob/living/simple_animal/hostile/abnormality/siltcurrent/PostSpawn()
+	. = ..()
+	for(var/turf/open/T in range(1, src)) // fill its cell with water
+		T.TerraformTurf(/turf/open/water/deep/obsessing_water, flags = CHANGETURF_INHERIT_AIR)
+
+/mob/living/simple_animal/hostile/abnormality/siltcurrent/proc/Stunned()
+	set waitfor = FALSE
+	stunned = TRUE
+	ChangeResistances(list(RED_DAMAGE = 1.5, WHITE_DAMAGE = 1.5, BLACK_DAMAGE = 1.5, PALE_DAMAGE = 1.5))//You did it nows your chance to beat the shit out of it!
+	SLEEP_CHECK_DEATH(12 SECONDS)
+	stunned = FALSE
+	ChangeResistances(list(RED_DAMAGE = 0.5, WHITE_DAMAGE = 0.5, BLACK_DAMAGE = 0.5, PALE_DAMAGE = 0.5))
+
+/mob/living/simple_animal/hostile/abnormality/siltcurrent/proc/OxygenLoss()//While its alive all humans around it will lose oxygen.
+	for(var/mob/living/carbon/human/H in oview(src, 20))//Used to be global but this should prevent it from being asinine when other abormalities are out
+		playsound(H, "sound/effects/bubbles.ogg", 50, TRUE, 7)
+		new /obj/effect/temp_visual/mermaid_drowning(get_turf(H))
+		H.adjustOxyLoss(4, updating_health=TRUE, forced=TRUE)
 
 //Less effective than attacking the flotsam but its another option in higher pop maps where flotsams are more farther away from each other.
 /mob/living/simple_animal/hostile/abnormality/siltcurrent/proc/Refill(mob/living/attacker)
@@ -203,79 +272,24 @@
 		SLEEP_CHECK_DEATH(0.5 SECONDS)
 		diving = FALSE
 
-/mob/living/simple_animal/hostile/abnormality/siltcurrent/proc/Stunned()
-	set waitfor = FALSE
-	stunned = TRUE
-	ChangeResistances(list(RED_DAMAGE = 1.5, WHITE_DAMAGE = 1.5, BLACK_DAMAGE = 1.5, PALE_DAMAGE = 1.5))//You did it nows your chance to beat the shit out of it!
-	SLEEP_CHECK_DEATH(12 SECONDS)
-	stunned = FALSE
-	ChangeResistances(list(RED_DAMAGE = 0.5, WHITE_DAMAGE = 0.5, BLACK_DAMAGE = 0.5, PALE_DAMAGE = 0.5))
+/mob/living/simple_animal/hostile/abnormality/siltcurrent/proc/RegisterFloat(atom/A)
+	if(!A || !istype(A,/obj/structure/flotsam))
+		return
+	var/obj/structure/flotsam/F = A
+	RegisterSignal(F, list(COMSIG_PARENT_QDELETING), PROC_REF(UnregisterFloat))
+	spawned_flotsams += F
 
-/mob/living/simple_animal/hostile/abnormality/dreaming_current/PostWorkEffect(mob/living/carbon/human/user, work_type, pe, work_time)
-	if(get_attribute_level(user, FORTITUDE_ATTRIBUTE) < 60)
-		datum_reference.qliphoth_change(-1)
-	return
+/mob/living/simple_animal/hostile/abnormality/siltcurrent/proc/UnregisterFloat(obj/structure/flotsam/A)
+	UnregisterSignal(A, list(COMSIG_PARENT_QDELETING))
+	spawned_flotsams -= A
 
-/mob/living/simple_animal/hostile/abnormality/siltcurrent/Worktick(mob/living/carbon/human/user, bubble_type = ABNO_BALLOON_GENERIC | ABNO_BALLOON_SPECIFIC, work_type)
-	user.adjustOxyLoss(1.5, updating_health=TRUE, forced=TRUE)//haha drown.
-	return ..()
-
-/mob/living/simple_animal/hostile/abnormality/siltcurrent/FailureEffect(mob/living/carbon/human/user, work_type, pe)
-	datum_reference.qliphoth_change(-1)
-	if(user.oxyloss >= 50)//POWER GRINDER SPOTTED! MUST MAUL THE FUCK!
-		datum_reference.qliphoth_change(-1)
-		GiveTarget(user)
-		SiltDive(get_turf(user),TRUE)
-	return
-
-/mob/living/simple_animal/hostile/abnormality/siltcurrent/BreachEffect(mob/living/carbon/human/user)
-	. = ..()
-	icon_living = "current_breach"
-	//icon_state = icon_living
-	addtimer(CALLBACK(src, PROC_REF(OxygenLoss)), 5 SECONDS, TIMER_LOOP)
-	for(var/mob/living/L in GLOB.player_list)//Spawns Flotsams in the halls and notifies people that it's out.
-		if(L.z != z || L.stat >= HARD_CRIT)
+/mob/living/simple_animal/hostile/abnormality/siltcurrent/proc/UnregisterAll()
+	for(var/obj/O in spawned_flotsams)
+		if(!O)
 			continue
-		to_chat(L, span_userdanger("You feel water is entering the facility!"))
-	var/list/spawn_turfs = GLOB.xeno_spawn.Copy()
-	for(var/i = 1 to (tube_spawn_amount))
-		if(!LAZYLEN(spawn_turfs)) //if list empty, recopy xeno spawns
-			spawn_turfs = GLOB.xeno_spawn.Copy()
-		var/X = pick_n_take(spawn_turfs)
-		var/turf/T = get_turf(X)
-		var/list/deployment_area = list()
-		var/turf/deploy_spot = T //spot you are being deployed
-		if(LAZYLEN(deployment_area)) //if deployment zone is empty just spawn at xeno spawn
-			deploy_spot = pick_n_take(deployment_area)
-		var/obj/structure/flotsam/F = new get_turf(deploy_spot)
-		spawned_flotsams += F
-		F.silt = src
-
-/mob/living/simple_animal/hostile/abnormality/siltcurrent/proc/OxygenLoss()//While its alive all humans around it will lose oxygen.
-	for(var/mob/living/carbon/human/H in oview(src, 20))//Used to be global but this should prevent it from being asinine when other abormalities are out
-		playsound(H, "sound/effects/bubbles.ogg", 50, TRUE, 7)
-		new /obj/effect/temp_visual/mermaid_drowning(get_turf(H))
-		H.adjustOxyLoss(4, updating_health=TRUE, forced=TRUE)
-
-/mob/living/simple_animal/hostile/abnormality/siltcurrent/death()
-	icon = 'ModularLobotomy/_Lobotomyicons/abno_cores/waw.dmi'
-	pixel_x = -16
-	base_pixel_x = -16
-	density = FALSE
-	animate(src, alpha = 0, time = 10 SECONDS)
-	QDEL_IN(src, 10 SECONDS)
-	for(var/obj/structure/flotsam/F in spawned_flotsams)
-		QDEL_IN(F, rand(5) SECONDS)
-		spawned_flotsams -= F
-	for(var/obj/effect/obsessing_water_effect/W in water)
-		QDEL_IN(W, rand(5) SECONDS)
-		water -= W
-	..()
-
-/mob/living/simple_animal/hostile/abnormality/siltcurrent/PostSpawn()
-	..()
-	for(var/turf/open/T in range(1, src)) // fill its cell with water
-		T.TerraformTurf(/turf/open/water/deep/obsessing_water, flags = CHANGETURF_INHERIT_AIR)
+		UnregisterFloat(O)
+		qdel(O)
+	spawned_flotsams.Cut()
 
 /obj/structure/flotsam
 	name = "Flotsam"
@@ -291,7 +305,13 @@
 	light_color = COLOR_TEAL
 	light_range = 4
 	light_power = 5
+	//Should be fine since floatsam is destroyed when silt is destroyed so they shouldnt hard del.
 	var/mob/living/simple_animal/hostile/abnormality/siltcurrent/silt
+
+/obj/structure/flotsam/Destroy()
+	if(silt)
+		silt = null
+	return ..()
 
 /obj/structure/flotsam/attackby(obj/item/W, mob/user, params)
 	. = ..()
@@ -314,6 +334,8 @@
 
 /obj/structure/flotsam/proc/Refill(mob/living/attacker)
 	attacker.adjustOxyLoss(-100, updating_health=TRUE, forced=TRUE)
+	if(!silt)
+		return
 	if(!silt.target && !(silt.diving || silt.stunned))
 		silt.dive_cooldown = 0
 		to_chat(attacker, span_userdanger("Something is approaching  you!"))

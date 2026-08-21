@@ -81,7 +81,7 @@
 	var/hired = FALSE
 	var/lie_chance = 30 // % chance to lie
 	var/datum/abnormality/buddy //the red buddy datum linked to this shepherd
-	var/mob/living/simple_animal/hostile/abnormality/red_buddy/awakened_buddy //the red buddy shepherd is currently fighting with
+	var/mob/living/simple_animal/hostile/abnormality/red_buddy/awakened_buddy
 	var/awakened = FALSE //if shepherd has seen red buddy or not
 	var/list/people_list = list() //list of people shepperd can mention
 	var/buddy_hit = FALSE
@@ -305,6 +305,7 @@
 	UnregisterSignal(SSdcs, COMSIG_GLOB_MOB_DEATH)
 	UnregisterSignal(SSdcs, COMSIG_GLOB_CREWMEMBER_JOINED)
 	UnregisterSignal(SSdcs, COMSIG_GLOB_ABNORMALITY_SPAWN)
+	UnregisterBuddy()
 	LAZYCLEARLIST(people_list)
 	return ..()
 
@@ -322,7 +323,7 @@
 /mob/living/simple_animal/hostile/abnormality/blue_shepherd/PostWorkEffect(mob/living/carbon/human/user, work_type, pe, work_time)
 	var/mob/living/simple_animal/hostile/abnormality/red_buddy/buddy_abno = buddy?.current
 	if(buddy_abno?.suffering >= 40)
-		user.Apply_Gift(new gift_type) //you get a free gift if you somehow made the dog suffer that much
+		user.Apply_Gift(new gift_type) //you get a free gift if you somehow made the awakened_buddy suffer that much
 		datum_reference.qliphoth_change(-1)
 	if(work_type == ABNORMALITY_WORK_REPRESSION)
 		datum_reference.qliphoth_change(1)
@@ -370,6 +371,7 @@
 	if(slash_current == 0)
 		slash_current = slash_cooldown
 		slashing = TRUE
+
 		switch(rand(1,3))
 			if(1)
 				say(pick(combat_lines))
@@ -409,27 +411,13 @@
 
 /mob/living/simple_animal/hostile/abnormality/blue_shepherd/Life()
 	. = ..()
-	if(status_flags & GODMODE)
+	if(status_flags & GODMODE || awakened)
 		return
-	var/mob/living/buddy_abno = buddy?.current
+	var/mob/living/buddy_abno = buddy.GetCurrent()
 	if(!buddy_abno)
 		return
-
-	if(!awakened && can_see(src, buddy_abno, 10))
-		awakened_buddy = buddy_abno
-		awakened = TRUE //ho god ho fuck
-		slash_cooldown = 3
-		slash_damage = 50
-		melee_damage_lower = 30
-		melee_damage_upper = 40
-		ChangeMoveToDelayBy(-0.5)
-		maxHealth = maxHealth * 4 //5000 health, will get hurt by buddy's howl to make up for the high health
-		set_health(health * 4)
-		med_hud_set_health()
-		med_hud_set_status()
-		update_health_hud() //I have to do this shit manually because adjustHealth is just fucked when changing max HP
-	if(!awakened_buddy)
-		return
+	if(can_see(src, buddy_abno, 10))
+		RegisterBuddy(buddy_abno)
 
 /mob/living/simple_animal/hostile/abnormality/blue_shepherd/Move()
 	if(slashing)
@@ -452,9 +440,27 @@
 		return FALSE
 	return ..()
 
+/mob/living/simple_animal/hostile/abnormality/blue_shepherd/PatrolSelect()
+	. = ..()
+	if(awakened && awakened_buddy)
+		if(!awakened_buddy.target && pulling != awakened_buddy)
+			walk_to(awakened_buddy, src, 1, awakened_buddy.move_to_delay)
+
+/mob/living/simple_animal/hostile/abnormality/blue_shepherd/SelectPatrolLocation()
+	var/mob/living/simple_animal/hostile/abnormality/doggo
+	if(!awakened && buddy)
+		doggo = buddy.GetCurrent()
+		if(doggo)
+			var/turf/target_turf = get_turf(doggo)
+			if(istype(target_turf) && !(doggo.status_flags & GODMODE))
+				if(target_turf.z == z)
+					return target_turf
+	return ..()
+
 /mob/living/simple_animal/hostile/abnormality/blue_shepherd/proc/slash()
-	if(buddy?.current?.status_flags & GODMODE)
-		buddy.qliphoth_change(-1) //buddy can hear it fight
+	if(!awakened)
+		if(buddy)
+			buddy.qliphoth_change(-1) //buddy can hear it fight
 	var/turf/orgin = get_turf(src)
 	var/list/all_turfs = RANGE_TURFS(range, orgin)
 	playsound(src, 'sound/weapons/slice.ogg', 75, FALSE, 4)
@@ -558,6 +564,7 @@
 		return FALSE
 	if(!ishuman(died))
 		return FALSE
+	people_list -= died
 	if(!died.ckey)
 		return FALSE
 	if(died.z != z)
@@ -651,3 +658,32 @@
 			A.Trigger()
 	if(!triggered)
 		slashing = FALSE
+
+/mob/living/simple_animal/hostile/abnormality/blue_shepherd/proc/RegisterBuddy(mob/living/simple_animal/hostile/abnormality/red_buddy/bud)
+	if(!bud || awakened)
+		return
+	RegisterSignal(bud, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING), PROC_REF(UnregisterBuddy))
+	awakened_buddy = bud
+	awakened = TRUE //ho god ho fuck
+	slash_cooldown = 3
+	slash_damage = 50
+	melee_damage_lower = 30
+	melee_damage_upper = 40
+	ChangeMoveToDelayBy(-0.5)
+	maxHealth = maxHealth * 4 //5000 health, will get hurt by buddy's howl to make up for the high health
+	set_health(health * 4)
+	med_hud_set_health()
+	med_hud_set_status()
+	update_health_hud() //I have to do this shit manually because adjustHealth is just fucked when changing max HP
+	awakened_buddy.Awaken(src)
+
+/mob/living/simple_animal/hostile/abnormality/blue_shepherd/proc/UnregisterBuddy()
+	if(!awakened_buddy)
+		return
+	UnregisterSignal(awakened_buddy, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING))
+	melee_damage_lower = 10
+	melee_damage_upper = 15
+	slash_damage = 20
+	ChangeMoveToDelayBy(-0.8) //we severely nerf shepherd's damage but make him way faster on buddy's death, it's last one tango.
+	say("A wolf. A wolf. Why won't you believe me? it's right there. IT WAS RIGHT THERE!")
+	awakened_buddy = null

@@ -53,8 +53,10 @@
 			Blossoms of flowers sprawled on the ground substitute its screams."),
 	)
 
+	//Is removed by work rose structures.
 	var/list/work_roses = list()
 	var/list/work_damages = list()
+	//Actual entities
 	var/list/summoned_roses = list()
 	var/rose_type = /mob/living/simple_animal/hostile/rose_summoned
 	var/rose_max = 4
@@ -62,6 +64,13 @@
 	var/rose_cooldown_time = 160 SECONDS
 	var/vine_cooldown
 	var/vine_cooldown_time = 45 SECONDS
+
+
+/mob/living/simple_animal/hostile/abnormality/rose_sign/Destroy()
+	for(var/mob/living/R in summoned_roses)
+		summoned_roses -= R
+		R.death()
+	return ..()
 
 //*** Basic Simple mob procs***//
 /mob/living/simple_animal/hostile/abnormality/rose_sign/Move()
@@ -83,13 +92,11 @@
 		return
 
 /mob/living/simple_animal/hostile/abnormality/rose_sign/death()
-	for(var/mob/living/R in summoned_roses)
-		R.death()
 	icon = 'ModularLobotomy/_Lobotomyicons/abno_cores/waw.dmi'
 	density = FALSE
 	animate(src, alpha = 0, time = 10 SECONDS)
 	QDEL_IN(src, 10 SECONDS)
-	..()
+	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/rose_sign/WorkChance(mob/living/carbon/human/user, chance, work_type)//set the new work chances
 	. = chance // Set default return to chance
@@ -229,7 +236,7 @@
 		delay += 5
 
 /mob/living/simple_animal/hostile/abnormality/rose_sign/proc/RoseSounds(delay)
-	sleep(delay)
+	SLEEP_CHECK_DEATH(delay)
 	sound_to_playing_players_on_level("sound/abnormalities/rosesign/rose_summon.ogg", 100, zlevel = z)
 
 /mob/living/simple_animal/hostile/abnormality/rose_sign/proc/SpawnBreachRose(mob/living/carbon/human/target, turf/T)
@@ -239,9 +246,7 @@
 		T = get_ranged_target_turf(T, pick(GLOB.alldirs), 1)//This will move the target's turf to an adjacent one, preventing stacking and visual clutter to some degree.
 	var/list/flower_damtype = list()
 	var/damtype
-	var/mob/living/simple_animal/hostile/rose_summoned/R
-	R = new rose_type(T)//Spawns the rose
-	summoned_roses += R
+	var/mob/living/simple_animal/hostile/rose_summoned/R = new rose_type(T)//Spawns the rose
 	for(var/obj/item/W in target.held_items + target.get_equipped_items())//Searches the human for any E.G.O and adds them to a list.
 		if(is_ego_melee_weapon(W)) //FIXME!!!! The above line doesn't actually check suit storage slots, could be more efficient too
 			flower_damtype += W.damtype
@@ -253,12 +258,10 @@
 	else
 		damtype = pick(RED_DAMAGE, WHITE_DAMAGE, BLACK_DAMAGE, PALE_DAMAGE)
 	R.PickColor(damtype)
-	R.master = src
-	R.status_target = target
+	R.RegisterMstrNTrg(src, target)
 	target.apply_status_effect(STATUS_EFFECT_THORNS)
 	var/datum/status_effect/stacking/crownthorns/C = target.has_status_effect(/datum/status_effect/stacking/crownthorns)
-	C.status_applicant = R
-	C.master = src
+	C.RegisterSignals(src,R)
 	to_chat(target, span_userdanger("You feel a terrifying pain coming from [get_area(T)]."))
 
 /mob/living/simple_animal/hostile/abnormality/rose_sign/OpenFire()
@@ -305,19 +308,9 @@
 	pull_force = INFINITY
 	generic_canpass = FALSE
 	movement_type = PHASING | FLYING
+	layer = POINT_LAYER//Sprite should always be visible
 	var/boom_damage = 45
 	var/grabbed
-	layer = POINT_LAYER//Sprite should always be visible
-
-/obj/effect/temp_visual/rose_vine
-	name = "garden of infinity"
-	icon = 'ModularLobotomy/_Lobotomyicons/96x96.dmi'
-	icon_state = "rose_vines"
-	pixel_x = -32
-	base_pixel_x = -32
-	duration = 6 SECONDS
-	randomdir = 0
-	pixel_y = 0
 
 /obj/effect/rose_target/Initialize()
 	. = ..()
@@ -338,6 +331,16 @@
 		sleep(10 SECONDS)
 	qdel(src)
 
+/obj/effect/temp_visual/rose_vine
+	name = "garden of infinity"
+	icon = 'ModularLobotomy/_Lobotomyicons/96x96.dmi'
+	icon_state = "rose_vines"
+	pixel_x = -32
+	base_pixel_x = -32
+	duration = 6 SECONDS
+	randomdir = 0
+	pixel_y = 0
+
 /obj/effect/roseRoot
 	name = "root"
 	desc = "A target warning you of incoming pain"
@@ -348,8 +351,8 @@
 	generic_canpass = FALSE
 	movement_type = PHASING | FLYING
 	damtype = BLACK_DAMAGE
-	var/root_damage = 30 //Black Damage
 	layer = POINT_LAYER//should always be visible.
+	var/root_damage = 30 //Black Damage
 
 /obj/effect/roseRoot/Initialize()
 	. = ..()
@@ -395,9 +398,15 @@
 	damage_coeff = list(RED_DAMAGE = 0.5, WHITE_DAMAGE = 0.5, BLACK_DAMAGE = 0.5, PALE_DAMAGE = 0.5)
 	del_on_death = TRUE
 	var/flower_damage_type
-	var/mob/living/simple_animal/hostile/abnormality/rose_sign/master
-	var/mob/living/status_target
 	var/killed = TRUE
+	var/mob/living/simple_animal/hostile/abnormality/rose_sign/master
+	var/mob/living/carbon/status_target
+
+/mob/living/simple_animal/hostile/rose_summoned/Move()
+	return FALSE
+
+/mob/living/simple_animal/hostile/rose_summoned/CanAttack(atom/the_target)
+	return FALSE
 
 /mob/living/simple_animal/hostile/rose_summoned/proc/PickColor(picked_color)
 	icon_state = "rose_" + picked_color
@@ -414,21 +423,37 @@
 			name = "rose of death"
 	ChangeResistance(picked_color, 2, update = TRUE)
 
-/mob/living/simple_animal/hostile/rose_summoned/Move()
-	return FALSE
-
-/mob/living/simple_animal/hostile/rose_summoned/CanAttack(atom/the_target)
-	return FALSE
-
 /mob/living/simple_animal/hostile/rose_summoned/Destroy()
-	if(!killed || !status_target)
-		return ..()
-	if(flower_damage_type && master)
-		master.summoned_roses -= src
-		master.ChangeResistance(flower_damage_type, (master.damage_coeff.getCoeff(flower_damage_type) + 0.3), update = TRUE)
-	if(status_target.has_status_effect(/datum/status_effect/stacking/crownthorns))
-		status_target.remove_status_effect(STATUS_EFFECT_THORNS)
+	if(killed && status_target)
+		if(flower_damage_type && master)
+			master.ChangeResistance(flower_damage_type, (master.damage_coeff.getCoeff(flower_damage_type) + 0.3), update = TRUE)
+		if(status_target.has_status_effect(/datum/status_effect/stacking/crownthorns))
+			status_target.remove_status_effect(STATUS_EFFECT_THORNS)
+	UnregisterMaster()
+	UnregisterStatus()
 	return ..()
+
+/mob/living/simple_animal/hostile/rose_summoned/proc/RegisterMstrNTrg(mob/living/simple_animal/hostile/abnormality/rose_sign/R, mob/living/L)
+	if(!R || !L)
+		return
+	master = R
+	master.summoned_roses += src
+	RegisterSignal(R, list(COMSIG_PARENT_QDELETING), PROC_REF(UnregisterMaster))
+	status_target = L
+	RegisterSignal(L, list(COMSIG_PARENT_QDELETING), PROC_REF(UnregisterStatus))
+
+/mob/living/simple_animal/hostile/rose_summoned/proc/UnregisterMaster()
+	if(!master)
+		return
+	master.summoned_roses -= src
+	UnregisterSignal(master, list(COMSIG_PARENT_QDELETING))
+	master = null
+
+/mob/living/simple_animal/hostile/rose_summoned/proc/UnregisterStatus()
+	if(!status_target)
+		return
+	UnregisterSignal(status_target, list(COMSIG_PARENT_QDELETING))
+	status_target = null
 
 /mob/living/simple_animal/hostile/rose_summoned/combat//mining breach variant
 	maxHealth = 1000
@@ -580,6 +605,8 @@
 	var/mob/living/carbon/human/status_holder = owner
 	status_holder.adjust_attribute_bonus(FORTITUDE_ATTRIBUTE, attribute_penalty)
 	status_holder.adjustBruteLoss(-attribute_penalty)
+	UnregistermMaster()
+	UnregisterApplicant()
 	return ..()
 
 /datum/status_effect/stacking/crownthorns/proc/PointToFlower()
@@ -593,6 +620,24 @@
 		new /obj/effect/temp_visual/cult/sparks(T)
 		i++
 		sleep(1)
+
+/datum/status_effect/stacking/crownthorns/proc/RegisterSignals(mob/living/abno_master, mob/living/applicant)
+	RegisterSignal(abno_master, list(COMSIG_PARENT_QDELETING), PROC_REF(UnregistermMaster))
+	RegisterSignal(applicant, list(COMSIG_PARENT_QDELETING), PROC_REF(UnregisterApplicant))
+	master = abno_master
+	status_applicant = applicant
+
+/datum/status_effect/stacking/crownthorns/proc/UnregistermMaster()
+	if(!master)
+		return
+	UnregisterSignal(master, list(COMSIG_PARENT_QDELETING))
+	master = null
+
+/datum/status_effect/stacking/crownthorns/proc/UnregisterApplicant()
+	if(!status_applicant)
+		return
+	UnregisterSignal(status_applicant, list(COMSIG_PARENT_QDELETING))
+	status_applicant = null
 
 //On-kill visual effect
 /obj/structure/rose_crucifix

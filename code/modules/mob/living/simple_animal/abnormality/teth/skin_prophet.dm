@@ -57,6 +57,10 @@
 	var/list/breach_candles = list()
 	var/breaching = FALSE
 
+/mob/living/simple_animal/hostile/abnormality/skin_prophet/Destroy()
+	UnregisterAll()
+	return ..()
+
 /mob/living/simple_animal/hostile/abnormality/skin_prophet/WorkChance(mob/living/carbon/human/user, chance)
 	//work damage starts at 7, + candles stuffed
 	work_damage_amount = initial(work_damage_amount) + candles
@@ -71,7 +75,7 @@
 /mob/living/simple_animal/hostile/abnormality/skin_prophet/WorktickFailure(mob/living/carbon/human/user)
 	if(prob(30))
 		say(pick(speak_list))
-	..()
+	return ..()
 
 //If you success on temperance or repression, clear all your temperance/justice buffs and then add to your max stats.
 //You're on the hook for any changes in your attribute
@@ -144,10 +148,11 @@
 		var/obj/structure/prophet_candle/C = new()
 		C.forceMove(pick(GLOB.xeno_spawn))
 		C.transform = matrix(3, MATRIX_SCALE)
-		C.prophet_reference = src
+		RegisterSignal(C, list(COMSIG_PARENT_QDELETING), PROC_REF(CandleDestroyed))
 		breach_candles += C
 
 /mob/living/simple_animal/hostile/abnormality/skin_prophet/proc/CandleDestroyed(obj/structure/prophet_candle/C)
+	UnregisterSignal(C, list(COMSIG_PARENT_QDELETING))
 	breach_candles -= C
 	if(!LAZYLEN(breach_candles) && breaching)
 		// All candles destroyed, kill the prophet
@@ -157,6 +162,14 @@
 			qdel(F)
 		breaching = FALSE
 		death()
+
+/mob/living/simple_animal/hostile/abnormality/skin_prophet/proc/UnregisterAll()
+	for(var/obj/structure/S in breach_candles)
+		if(!S)
+			return
+		UnregisterSignal(S, list(COMSIG_PARENT_QDELETING))
+		breach_candles -= S
+		qdel(S)
 
 // Prophet's special fire effect
 /obj/effect/prophet_fire
@@ -204,7 +217,6 @@
 	anchored = TRUE
 	max_integrity = 50
 	integrity_failure = 0
-	var/mob/living/simple_animal/hostile/abnormality/skin_prophet/prophet_reference
 
 /obj/structure/prophet_candle/Initialize()
 	. = ..()
@@ -225,7 +237,4 @@
 
 /obj/structure/prophet_candle/Destroy()
 	remove_filter("prophet_glow")
-	if(prophet_reference)
-		prophet_reference.CandleDestroyed(src)
 	return ..()
-

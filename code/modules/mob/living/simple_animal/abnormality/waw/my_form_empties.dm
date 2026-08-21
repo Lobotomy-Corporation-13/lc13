@@ -86,21 +86,20 @@
 
 /mob/living/simple_animal/hostile/abnormality/my_form_empties/Destroy()
 	QDEL_NULL(soundloop)
+	if(staff)
+		QDEL_NULL(staff)
+		return ..()
 	for(var/mob/living/L in current_minions)
 		QDEL_IN(L, rand(3) SECONDS)
-		current_minions -= L
-	if(!staff)
-		return ..()
-	qdel(staff)
+	UnregisterAll()
 	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/my_form_empties/death(gibbed)
 	RemoveKarma()
 	icon = 'ModularLobotomy/_Lobotomyicons/abno_cores/waw.dmi'
-	QDEL_NULL(soundloop)
 	animate(src, alpha = 0, time = 5 SECONDS)
 	QDEL_IN(src, 5 SECONDS)
-	..()
+	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/my_form_empties/Move()
 	return FALSE
@@ -183,14 +182,7 @@
 	if(breach_type != BREACH_MINING)
 		forceMove(T)
 	for(var/i = 1, i <= minion_amount ,i++)
-		var/karma_vis = new /obj/effect/karma_halo
-		var/picked = pick(pick(possible_minion_list))
-		var/mob/living/minion = new picked(get_turf(src))
-		minion.name = "Lured " + "[minion.name]"
-		minion.maxHealth = 2000
-		minion.faction = faction
-		minion.vis_contents += karma_vis
-		current_minions += minion
+		SpawnThrall()
 	if(!staff)
 		T = get_ranged_target_turf(T, EAST, 1)
 		staff = new(T)
@@ -199,7 +191,6 @@
 	if(!(died in current_minions))
 		return
 	died.gib()
-	current_minions -= died
 
 /mob/living/simple_animal/hostile/abnormality/my_form_empties/AttemptWork(mob/living/carbon/human/user, work_type)
 	if(praying)
@@ -285,6 +276,31 @@
 		var/datum/status_effect/actor/S = L.has_status_effect(/datum/status_effect/stacking/karma)
 		if(S)
 			qdel(S)
+
+/mob/living/simple_animal/hostile/abnormality/my_form_empties/proc/SpawnThrall()
+	var/karma_vis = new /obj/effect/karma_halo
+	var/picked = pick(pick(possible_minion_list))
+	var/mob/living/minion = new picked(get_turf(src))
+	minion.name = "Lured " + "[minion.name]"
+	minion.maxHealth = 2000
+	minion.faction = faction
+	minion.vis_contents += karma_vis
+	RegisterMob(minion)
+
+/mob/living/simple_animal/hostile/abnormality/my_form_empties/proc/RegisterMob(mob/living/L)
+	RegisterSignal(L, list(COMSIG_PARENT_QDELETING), PROC_REF(UnregisterMob))
+	current_minions += L
+
+/mob/living/simple_animal/hostile/abnormality/my_form_empties/proc/UnregisterMob(mob/living/L)
+	if(!L)
+		return
+	UnregisterSignal(L, list(COMSIG_PARENT_QDELETING))
+	current_minions -= L
+
+/mob/living/simple_animal/hostile/abnormality/my_form_empties/proc/UnregisterAll()
+	for(var/mob/living/L in current_minions)
+		UnregisterMob(L)
+	current_minions.Cut()
 
 //***Buff Definitions***
 //For now, just a notification. If we ever want to do anything with it, it's here.

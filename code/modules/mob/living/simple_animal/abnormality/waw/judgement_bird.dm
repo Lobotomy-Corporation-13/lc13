@@ -74,6 +74,15 @@
 	chosen_message = span_colossus("You will now damage all enemies around you.")
 	chosen_attack_num = 1
 
+
+/mob/living/simple_animal/hostile/abnormality/judgement_bird/Destroy()
+	//Kill all Burds
+	for(var/mob/living/V in birdlist)
+		birdlist -= V
+		V.death()
+	UnregisterAll()
+	return ..()
+
 /mob/living/simple_animal/hostile/abnormality/judgement_bird/Move()
 	if(judging)
 		return FALSE
@@ -133,10 +142,9 @@
 					N.buckle_mob(L)
 					playsound(get_turf(L), 'sound/abnormalities/judgementbird/kill.ogg', 75, 0, 7)
 					playsound(get_turf(L), 'sound/abnormalities/judgementbird/hang.ogg', 100, 0, 7)
-					var/mob/living/simple_animal/hostile/runawaybird/V = new(get_turf(L))
-					birdlist+=V
-					V = new(get_turf(L))
-					birdlist+=V
+					for(var/cycle = 1 to 2)
+						var/mob/living/simple_animal/hostile/runawaybird/V = new(get_turf(L))
+						RegisterMob(V)
 
 	for(var/obj/vehicle/V in urange(judgement_range, src))
 		for(var/mob/living/occupant in V.occupants)
@@ -172,18 +180,12 @@
 		judgement_damage = 65
 		return
 
-	var/mob/living/simple_animal/hostile/runawaybird/V = new(get_turf(src))
-	birdlist+=V
-	V = new(get_turf(src))
-	birdlist+=V
-	V = new(get_turf(src))
-	birdlist+=V
+	for(var/cycle = 1 to 3)
+		var/mob/living/simple_animal/hostile/runawaybird/V = new(get_turf(src))
+		RegisterMob(V)
 
-//Kill all burds
 //Burd down
 /mob/living/simple_animal/hostile/abnormality/judgement_bird/death(gibbed)
-	for(var/mob/living/V in birdlist)
-		V.death()
 	animate(src, alpha = 0, time = 10 SECONDS)
 	QDEL_IN(src, 10 SECONDS)
 	..()
@@ -205,6 +207,20 @@
 		return
 	. = ..()
 
+/mob/living/simple_animal/hostile/abnormality/judgement_bird/proc/RegisterMob(mob/living/L)
+	RegisterSignal(L, list(COMSIG_PARENT_QDELETING), PROC_REF(UnregisterMob))
+	birdlist += L
+
+/mob/living/simple_animal/hostile/abnormality/judgement_bird/proc/UnregisterMob(mob/living/L)
+	if(!L)
+		return
+	UnregisterSignal(L, list(COMSIG_PARENT_QDELETING))
+	birdlist -= L
+
+/mob/living/simple_animal/hostile/abnormality/judgement_bird/proc/UnregisterAll()
+	for(var/mob/living/L in birdlist)
+		UnregisterMob(L)
+	birdlist.Cut()
 
 //Runaway birds - Mini Simple Smile, 2 spawned after Jbird kills a player, and 2 on spawn.
 /mob/living/simple_animal/hostile/runawaybird

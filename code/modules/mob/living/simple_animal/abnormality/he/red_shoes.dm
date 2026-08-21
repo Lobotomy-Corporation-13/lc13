@@ -50,7 +50,7 @@
 	)
 
 	var/mutable_appearance/breach_icon
-	var/mob/living/possessee
+	var/mob/living/carbon/human/possessee
 	var/list/death_lines = list(
 		"Give them back to me!",
 		"Don't take them away from me...",
@@ -84,24 +84,25 @@
 	if(possessee)
 		death_message = FALSE
 		del_on_death = TRUE
-	density = FALSE
-	for(var/obj/O in src)
-		O.forceMove(loc)
-	if(possessee)//hopefully this refers to the specific individual
-		var/mob/living/carbon/human/H = possessee
-		possessee.status_flags &= ~GODMODE
-		possessee.forceMove(loc)
-		possessee = null
-		H.adjustBruteLoss(500)//the host dies
-	for(var/mob/living/carbon/human/H in GLOB.mob_living_list)//stops possessing people, prevents runtimes. Panicked players are ghosted so use mob_living_list
-		UnPossess(H)
+
 	say(pick(death_lines))
 	alpha = 255
+	density = FALSE
 	QDEL_IN(src, 10 SECONDS)
-	QDEL_NULL(soundloop)
 	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/red_shoes/Destroy()
+	var/turf/dumpsite = get_turf(src)
+	for(var/obj/O in src)
+		O.forceMove(dumpsite)
+	if(possessee)//hopefully this refers to the specific individual
+		var/mob/living/carbon/human/H = possessee
+		possessee.status_flags &= ~GODMODE
+		possessee.forceMove(dumpsite)
+		UnregisterPossessed()
+		H.adjustBruteLoss(500)//the host dies
+	for(var/mob/living/carbon/human/H in GLOB.mob_living_list)//stops possessing people, prevents runtimes. Panicked players are ghosted so use mob_living_list
+		UnPossess(H)
 	if(soundloop)
 		QDEL_NULL(soundloop)
 	return ..()
@@ -172,7 +173,7 @@
 		return
 	if(possessee)
 		return
-	possessee = user
+	RegisterPossessed(user)
 	var/mob/living/carbon/human/H = user
 	if(ishuman(H) && (H.sanity_lost))
 		var/obj/item/clothing/suit/armor/ego_gear/EQ = H.get_item_by_slot(ITEM_SLOT_OCLOTHING)//copies all resistances from worn E.G.O
@@ -240,6 +241,19 @@
 	playsound(src, 'sound/abnormalities/redshoes/RedShoes_Kill.ogg', 100, 1)
 	l_foot?.dismember()
 	r_foot?.dismember()
+
+//Signals
+/mob/living/simple_animal/hostile/abnormality/red_shoes/proc/RegisterPossessed(atom/A)
+	if(!A || !ishuman(A))
+		return
+	RegisterSignal(A, list(COMSIG_PARENT_QDELETING), PROC_REF(UnregisterPossessed))
+	possessee = A
+
+/mob/living/simple_animal/hostile/abnormality/red_shoes/proc/UnregisterPossessed()
+	if(!possessee)
+		return
+	UnregisterSignal(possessee, list(COMSIG_PARENT_QDELETING))
+	possessee = null
 
 //***Debuff Definition***/
 //Possession

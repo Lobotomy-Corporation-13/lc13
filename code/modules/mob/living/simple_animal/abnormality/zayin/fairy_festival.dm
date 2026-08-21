@@ -33,11 +33,6 @@
 	gift_type =  /datum/ego_gifts/wingbeat
 	gift_message = "Fairy Dust covers your hands..."
 
-	var/heal_duration = 120 SECONDS
-	var/heal_amount = 0.05
-	var/heal_cooldown = 2 SECONDS
-	var/heal_cooldown_base = 2 SECONDS
-	var/list/mob/living/carbon/human/protected_people = list()
 	var/summon_count = 0
 	var/summon_type = /mob/living/simple_animal/hostile/mini_fairy
 	var/summon_cooldown
@@ -67,27 +62,13 @@
 			You retreat from the cell and the fairies' hungry gazes. <br>You've always known the true meaning of The Fairies' Care."),
 	)
 
-/mob/living/simple_animal/hostile/abnormality/fairy_festival/proc/FairyHeal()
-	for(var/mob/living/carbon/human/P in protected_people)
-		if(heal_cooldown <= world.time)
-			P.adjustBruteLoss(-heal_amount*P.getMaxHealth())
-			P.adjustFireLoss(-heal_amount*P.getMaxHealth())
-	heal_cooldown = (world.time + heal_cooldown_base)
-	return
-
 /mob/living/simple_animal/hostile/abnormality/fairy_festival/SuccessEffect(mob/living/carbon/human/user, work_type, pe)
 	. = ..()
 	if(user.stat != DEAD && istype(user))
-		if(user in protected_people)
+		if(user.has_status_effect(/datum/status_effect/fairy_care))
 			return
 		flick("fairy_blessing",src)
-		protected_people += user
-		RegisterSignal(user, COMSIG_WORK_STARTED, PROC_REF(FairyPause))
-		RegisterSignal(user, COMSIG_WORK_COMPLETED, PROC_REF(FairyRestart))
-		to_chat(user, span_nicegreen("You feel at peace under the fairies' care."))
-		playsound(get_turf(user), 'sound/abnormalities/fairyfestival/fairylaugh.ogg', 50, 0, 2)
-		user.add_overlay(mutable_appearance('ModularLobotomy/_Lobotomyicons/tegu_effects.dmi', "fairy_heal", -MUTATIONS_LAYER))
-		addtimer(CALLBACK(src, PROC_REF(FairyEnd), user), heal_duration)
+		user.apply_status_effect(/datum/status_effect/fairy_care)
 	return
 
 /mob/living/simple_animal/hostile/abnormality/fairy_festival/NeutralEffect(mob/living/carbon/human/user, work_type, pe)
@@ -96,43 +77,10 @@
 
 /mob/living/simple_animal/hostile/abnormality/fairy_festival/Life()
 	. = ..()
-	if(protected_people.len)
-		FairyHeal()
 	if(summon_count >= summon_maximum)
 		return
 	if((summon_cooldown < world.time) && !(status_flags & GODMODE))
 		SummonGuys(summon_type)
-
-/mob/living/simple_animal/hostile/abnormality/fairy_festival/proc/FairyEnd(mob/living/carbon/human/user)
-	protected_people.Remove(user)
-	user.cut_overlay(mutable_appearance('ModularLobotomy/_Lobotomyicons/tegu_effects.dmi', "fairy_heal", -MUTATIONS_LAYER))
-	to_chat(user, span_notice("The fairies giggle before returning to their queen."))
-	UnregisterSignal(user, COMSIG_WORK_STARTED)
-	UnregisterSignal(user, COMSIG_WORK_COMPLETED)
-	return
-
-/mob/living/simple_animal/hostile/abnormality/fairy_festival/proc/FairyPause(datum/source, datum/abnormality/datum_sent, mob/living/carbon/human/user, work_type)
-	SIGNAL_HANDLER
-	to_chat(user, span_notice("The fairies suddenly go eerily quiet."))
-	protected_people.Remove(user)
-
-/mob/living/simple_animal/hostile/abnormality/fairy_festival/proc/FairyRestart(datum/source, datum/abnormality/datum_sent, mob/living/carbon/human/user, work_type)
-	SIGNAL_HANDLER
-	to_chat(user, span_nicegreen("The fairies start giggling and playing once more."))
-	protected_people |= user
-	playsound(get_turf(user), 'sound/abnormalities/fairyfestival/fairylaugh.ogg', 50, 0, 2)
-
-//not called by anything anymore, left here if somebody wants to readd it later for any reason.
-/mob/living/simple_animal/hostile/abnormality/fairy_festival/proc/FairyGib(datum/source, datum/abnormality/datum_sent, mob/living/carbon/human/user, work_type)
-	SIGNAL_HANDLER
-	if(((user in protected_people) && datum_sent != datum_reference) && !(GODMODE in user.status_flags))
-		to_chat(user, span_userdanger("With a beat of their wings, the fairies pounce on you and ravenously consume your body!"))
-		playsound(get_turf(user), 'sound/magic/demon_consume.ogg', 75, 0)
-		UnregisterSignal(user, COMSIG_WORK_STARTED)
-		UnregisterSignal(user, COMSIG_WORK_COMPLETED)
-		protected_people.Remove(user)
-		user.gib()
-	return
 
 /mob/living/simple_animal/hostile/abnormality/fairy_festival/BreachEffect(mob/living/carbon/human/user, breach_type)
 	if(breach_type == BREACH_PINK)
@@ -160,7 +108,7 @@
 	if(istype(attacked_target, /mob/living/simple_animal/hostile/fairy_mass))
 		var/mob/living/L = attacked_target
 		if(L.health > 0)//fairies have to be alive; scarred meat isn't tasty
-			L.gib()
+			L.gib(TRUE,TRUE,TRUE)
 			ProcessKill()
 			playsound(get_turf(src), "sound/abnormalities/fairyfestival/fairyqueen_growl.ogg", 100, FALSE)
 			return
@@ -171,7 +119,7 @@
 			playsound(get_turf(src), "sound/abnormalities/fairyfestival/fairyqueen_growl.ogg", 100, FALSE)
 			if(ishuman(L))
 				ProcessKill()
-			L.gib()
+			L.gib(TRUE,TRUE,TRUE)
 
 //Cannibalism
 /mob/living/simple_animal/hostile/abnormality/fairy_festival/adjustHealth(amount, updating_health = TRUE, forced = FALSE)
@@ -212,6 +160,95 @@
 	playsound(get_turf(src), "sound/abnormalities/fairyfestival/fairyqueen_growl.ogg", 100, FALSE)
 	if(move_to_delay>1)
 		ChangeMoveToDelayBy(-1)
+
+/*------------\
+|Status Effect|
+\------------*/
+/datum/status_effect/fairy_care
+	id = "fairy care"
+	status_type = STATUS_EFFECT_UNIQUE
+	duration = 120 SECONDS
+	tick_interval = 2 SECONDS
+	alert_type = null
+	on_remove_on_mob_delete = TRUE
+	var/heal_amount = 0.05
+	var/leftover_duration
+	var/healing = TRUE
+	var/image/fairy_overlay
+
+/datum/status_effect/fairy_care/on_apply()
+	. = ..()
+	if(!ishuman(owner))
+		return
+	var/mob/living/carbon/human/status_holder = owner
+	ApplyFairyOverlay()
+	RegisterSignal(status_holder, COMSIG_WORK_STARTED, PROC_REF(FairyPause))
+	RegisterSignal(status_holder, COMSIG_WORK_COMPLETED, PROC_REF(FairyRestart))
+	to_chat(status_holder, span_nicegreen("You feel at peace under the fairies' care."))
+	playsound(get_turf(status_holder), 'sound/abnormalities/fairyfestival/fairylaugh.ogg', 50, 0, 2)
+
+/datum/status_effect/fairy_care/tick()
+	if(owner.stat != DEAD)
+		if(healing)
+			var/mob/living/L = owner
+			var/our_max_health = L.getMaxHealth()
+			L.adjustBruteLoss(-heal_amount*our_max_health)
+			L.adjustFireLoss(-heal_amount*our_max_health)
+			return
+		var/list/ominous_warnings = list("Some light green fluid drips onto your shoulder.",
+			"Out of the corner of your vision you see a fairy staring at you with its mouth hanging open.",
+			"You occasionally hear the fluttering of fairy wings as they reposition themselves on your shoulder.",
+			"Very faintly you hear a gurgle.",
+			"Some of the fairies follow close to the back of your ankles while you work.",
+			"You stumble and for a moment the beating of fairy wings grows louder.",
+			"")
+		if(prob(15))
+			to_chat(owner, span_notice("[pick(ominous_warnings)]"))
+	return ..()
+
+/datum/status_effect/fairy_care/on_remove()
+	. = ..()
+	if(!ishuman(owner))
+		return
+	var/mob/living/carbon/human/status_holder = owner
+	RemoveFairyOverlay()
+	to_chat(status_holder, span_notice("The fairies giggle before returning to their queen."))
+	UnregisterSignal(status_holder, COMSIG_WORK_STARTED)
+	UnregisterSignal(status_holder, COMSIG_WORK_COMPLETED)
+
+/datum/status_effect/fairy_care/proc/ApplyFairyOverlay()
+	fairy_overlay = mutable_appearance('ModularLobotomy/_Lobotomyicons/tegu_effects.dmi',"fairy_heal", -HALO_LAYER)
+	var/mob/living/L = owner
+	L.add_overlay(fairy_overlay)
+
+/datum/status_effect/fairy_care/proc/RemoveFairyOverlay()
+	var/mob/living/L = owner
+	L.cut_overlay(fairy_overlay)
+	fairy_overlay = null
+
+/datum/status_effect/fairy_care/proc/FairyPause(datum/source, datum/abnormality/datum_sent, mob/living/carbon/human/user, work_type)
+	SIGNAL_HANDLER
+	//sloppy i know -IP
+	healing = FALSE
+	leftover_duration = duration - world.time
+	duration = world.time + 5 MINUTES
+	to_chat(user, span_notice("The fairies suddenly go eerily quiet."))
+
+/datum/status_effect/fairy_care/proc/FairyRestart(datum/source, datum/abnormality/datum_sent, mob/living/carbon/human/user, work_type)
+	SIGNAL_HANDLER
+	healing = TRUE
+	to_chat(user, span_nicegreen("The fairies start giggling and playing once more."))
+	playsound(get_turf(user), 'sound/abnormalities/fairyfestival/fairylaugh.ogg', 50, 0, 2)
+	duration = world.time + leftover_duration
+
+/* not called by anything anymore, left here if somebody wants to readd it later for any reason.
+/datum/status_effect/fairy_care/proc/FairyGib(datum/source, datum/abnormality/datum_sent, mob/living/carbon/human/user, work_type)
+	SIGNAL_HANDLER
+	if(!(GODMODE in user.status_flags))
+		to_chat(user, span_userdanger("With a beat of their wings, the fairies pounce on you and ravenously consume your body!"))
+		playsound(get_turf(user), 'sound/magic/demon_consume.ogg', 75, 0)
+		user.gib(TRUE,TRUE,TRUE)
+*/
 
 /datum/reagent/abnormality/fairy_festival
 	name = "Nectar of an Unknown Flower"

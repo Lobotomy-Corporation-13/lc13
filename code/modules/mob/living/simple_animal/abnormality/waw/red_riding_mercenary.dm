@@ -95,7 +95,8 @@ It has now been over four months. Now we get her for real. -Coxswain
 
 	var/red_rage = 0 // Goes up to 3; 1 for "weak rage" (against buddy and blue), 2 for "strong rage" (against wolf), 3 for "aimless rage" (denied wolf kill)
 	var/target_priority = 0 // Goes up to 4; 1 for Blue Smocked Shepherd, 2 for the requested target, 3 for Buddy, 4 for Wolf.
-	var/mob/living/priority_target // Stores current request target.
+	var/mob/living/priority_trg // Stores current request target.
+	var/priority_tag
 	var/fuzzy_tracking_cooldown = 10 SECONDS // How often red re-checks the closest landmark to the target.
 	var/list/tiered_request_costs = alist(
 		ZAYIN_LEVEL = 100,
@@ -180,7 +181,7 @@ It has now been over four months. Now we get her for real. -Coxswain
 	to_chat(A, chosen_message)
 
 /mob/living/simple_animal/hostile/abnormality/red_hood/proc/PlayerTargetFind()
-	HunterTracking(priority_target) // basically a redirect, ability code is weird
+	HunterTracking(priority_trg) // basically a redirect, ability code is weird
 
 /datum/action/innate/abnormality_attack/catch_breath // AI-controlled Red technically doesn't use this one EITHER.
 	name = "Evade"
@@ -229,7 +230,7 @@ It has now been over four months. Now we get her for real. -Coxswain
 
 /mob/living/simple_animal/hostile/abnormality/red_hood/PostDamageReaction(damage_amount, damage_type, source, attack_type)
 	. = ..()
-	if(health > (maxHealth * 0.8) || !priority_target)
+	if(health > (maxHealth * 0.8) || !priority_tag)
 		return
 	if(red_rage < 1 && target_priority > 2)
 		RageUpdate(1)
@@ -386,7 +387,7 @@ It has now been over four months. Now we get her for real. -Coxswain
 			say("Changed your mind? Tch. Call me when you need me.")
 		return FALSE
 
-	priority_target = hunted
+	GivePriorityTarget(hunted)
 	out_on_request = TRUE
 	fear_level = TETH_LEVEL
 	var/current_cost = default_request_cost //We start out at 100 and then start adding additional fees
@@ -407,9 +408,9 @@ It has now been over four months. Now we get her for real. -Coxswain
 	SSlobotomy_corp.available_box -= current_cost //Subtract the total from station PE
 
 	if(client)
-		to_chat(src, span_notice("You've been contracted to hunt [priority_target.name]."))
+		to_chat(src, span_notice("You've been contracted to hunt [hunted]."))
 	else
-		if(istype(priority_target, /mob/living/simple_animal/hostile/abnormality/big_wolf))
+		if(istype(hunted, /mob/living/simple_animal/hostile/abnormality/big_wolf))
 			manual_emote("'s grip on her weapon tightens.")
 			SLEEP_CHECK_DEATH(10)
 			say("Is he really here? You don't know how long I have been waiting for this.")
@@ -424,7 +425,7 @@ It has now been over four months. Now we get her for real. -Coxswain
 			BreachEffect()
 			RageUpdate(2) //She enrages instantly to go wolf hunting
 			return
-		if(istype(priority_target, /mob/living/simple_animal/hostile/abnormality/red_buddy))
+		if(istype(hunted, /mob/living/simple_animal/hostile/abnormality/red_buddy))
 			manual_emote("'s eye widens slightly.")
 			SLEEP_CHECK_DEATH(10)
 			say("Hm. A wolf? Not MY wolf, but a wolf nonetheless...")
@@ -434,7 +435,7 @@ It has now been over four months. Now we get her for real. -Coxswain
 			target_priority = 3
 			BreachEffect()
 			return
-		if(istype(priority_target, /mob/living/simple_animal/hostile/abnormality/blue_shepherd))
+		if(istype(hunted, /mob/living/simple_animal/hostile/abnormality/blue_shepherd))
 			manual_emote("'s eye narrows.")
 			SLEEP_CHECK_DEATH(10)
 			say("That idiot? You're sure?")
@@ -510,16 +511,17 @@ It has now been over four months. Now we get her for real. -Coxswain
 	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/red_hood/ValueTarget(atom/target_thing) //Naturally value priority targets over others
-	..()
-	if(target_thing == priority_target)
-		. += 60
+	. = ..()
+	if(isliving(target_thing))
+		var/mob/living/L = target_thing
+		if(L.tag == priority_tag)
+			. += 60
 
 /mob/living/simple_animal/hostile/abnormality/red_hood/proc/UpdatePriority(target_id = 0, mob/living/new_priority)
 	if(target_id > target_priority)
 		if(client)
 			to_chat(src, span_notice("You've found a higher priority target! Go after [new_priority]!"))
-		priority_target = new_priority
-		target_priority = target_id
+		GivePriorityTarget(new_priority)
 	return
 
 /mob/living/simple_animal/hostile/abnormality/red_hood/Move()
@@ -566,21 +568,22 @@ It has now been over four months. Now we get her for real. -Coxswain
 		return FALSE
 	if(!out_on_request && target_priority != 4) //Didn't get hired and not fighting the wolf
 		return
-	if(!priority_target) //For some reason we never got one
+	if(!priority_tag) //For some reason we never got one
 		ContractComplete()
 		return
-	if(QDELETED(priority_target) || priority_target.stat == DEAD || priority_target.z != z) //Target is dead or vanished or off-z
+	if(QDELETED(priority_trg) || priority_trg.stat == DEAD || priority_trg.z != z) //Target is dead or vanished or off-z
 		ContractComplete()
 		return
 
 /mob/living/simple_animal/hostile/abnormality/red_hood/SelectPatrolLocation() //Path right to our target
-	if(out_on_request || priority_target)
-		if(!priority_target) //For some reason we never got one
+	if(out_on_request || priority_tag)
+		if(!priority_tag || !priority_trg) //For some reason we never got one
 			return ..()
-		return get_turf(priority_target)
+		return get_turf(priority_trg)
 	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/red_hood/proc/ContractComplete()
+	GivePriorityTarget()
 	if(leaving)
 		return
 	leaving = TRUE
@@ -609,6 +612,23 @@ It has now been over four months. Now we get her for real. -Coxswain
 	AIStatus = AI_OFF
 	animate(src, alpha = 0, time = 10)
 	QDEL_IN(src,10)
+
+/mob/living/simple_animal/hostile/abnormality/red_hood/proc/GivePriorityTarget(mob/living/p_target)
+	if(!p_target)
+		UnregisterTrg()
+		return
+	if(priority_trg)
+		UnregisterTrg()
+	RegisterSignal(p_target, list(COMSIG_PARENT_QDELETING, COMSIG_LIVING_DEATH), PROC_REF(UnregisterTrg))
+	priority_tag = p_target.tag
+	priority_trg = p_target
+
+/mob/living/simple_animal/hostile/abnormality/red_hood/proc/UnregisterTrg()
+	if(!priority_trg)
+		return
+	UnregisterSignal(priority_trg, list(COMSIG_PARENT_QDELETING, COMSIG_LIVING_DEATH))
+	priority_tag = null
+	priority_trg = null
 
 /*--------\
 |Abilities|
