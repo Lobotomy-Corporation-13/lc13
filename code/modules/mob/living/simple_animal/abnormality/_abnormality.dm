@@ -677,6 +677,10 @@ The variable's key needs to be non-numerical.*/
 	//Abnormalities dont explode on mass most of the time so they can keep gibs.
 	return new /obj/effect/gibspawner/generic(drop_location(), src, get_static_viruses())
 
+//Used for abnormality abilities in order to reset sprites or special states.
+/mob/living/simple_animal/hostile/abnormality/proc/SpecialReset()
+	return
+
 // Actions
 /datum/action/innate/abnormality_attack
 	name = "Abnormality Attack"
