@@ -285,6 +285,14 @@ or until the damage cap on the debuff is hit. While Fairy Lure is active on your
 	armor = list(RED_DAMAGE = 70, WHITE_DAMAGE = 50, BLACK_DAMAGE = 60, PALE_DAMAGE = 50)		//Melee
 	realized_ability = /obj/effect/proc_holder/ability/rip_space
 
+/obj/item/clothing/suit/armor/ego_gear/realization/dimension_ripper/examine(mob/user)
+	. = ..()
+	if(istype(user))
+		. += span_notice("The Realization of Dimension Shredder has given you the ability to Rip Space!")
+		. += span_notice("Rip Space allows you to hit up to 10 targets within range.")
+		. += span_notice("In addition, while you're using Rip Space, you're invulnerable.")
+		. += span_notice("Rip Space also takes into consideration your currently held weapon.")
+
 /obj/item/clothing/suit/armor/ego_gear/realization/gift
 	name = "gift"
 	desc = "Play with me! Join my friends and laugh with us."
