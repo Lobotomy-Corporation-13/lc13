@@ -69,6 +69,10 @@
 	if(unfocused_talent_cooldown <= world.time)
 		UnfocusedTalent()
 
+/mob/living/simple_animal/hostile/abnormality/pygmalion/Destroy()
+	SculptorDeathOrInsane()
+	return ..()
+
 /mob/living/simple_animal/hostile/abnormality/pygmalion/CanAllowThrough(atom/movable/mover, turf/target)
 	if(sculptor && ishuman(mover))
 		return TRUE

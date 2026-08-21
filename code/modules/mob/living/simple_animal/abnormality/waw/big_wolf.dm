@@ -373,7 +373,7 @@
 				var/mob/living/simple_animal/hostile/abnormality/red_hood/mercenary = L
 				if(mercenary.IsContained())
 					mercenary.BreachEffect()
-				mercenary.priority_target = src
+				mercenary.GivePriorityTarget(src)
 				mercenary.deal_damage(150, WHITE_DAMAGE, src, attack_type = (ATTACK_TYPE_SPECIAL)) //She takes triple damage from the wolf, becauser her resistances are high
 				mercenary.RageUpdate(2)
 			if(faction_check_mob(L, FALSE))

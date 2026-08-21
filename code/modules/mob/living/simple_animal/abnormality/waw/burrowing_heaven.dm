@@ -37,6 +37,11 @@
 	var/seen
 	var/list/spawn_list = list()
 
+/mob/living/simple_animal/hostile/abnormality/burrowing_heaven/Destroy()
+	UnregisterAll()
+	QDEL_LIST(spawn_list)
+	return ..()
+
 //Sight Check
 /mob/living/simple_animal/hostile/abnormality/burrowing_heaven/Life()
 	. = ..()
@@ -51,11 +56,6 @@
 		seen = FALSE
 	else	//any amount of people that's not 1.
 		seen = TRUE
-
-/mob/living/simple_animal/hostile/abnormality/burrowing_heaven/death()
-	..()
-	for(var/mob/living/simple_animal/A in spawn_list)
-		qdel(A)
 
 //You can't traditionally move nor can you attack
 /mob/living/simple_animal/hostile/abnormality/burrowing_heaven/Move()
@@ -91,7 +91,6 @@
 	addtimer(CALLBACK(src, PROC_REF(TryTeleport)), 15 SECONDS)
 
 /mob/living/simple_animal/hostile/abnormality/burrowing_heaven/proc/TryTeleport()
-	spawn_list = list()
 	if(prob(10))	//The most rare one
 		Spawn_Babies()
 		return
@@ -163,7 +162,7 @@
 	playsound(src, 'sound/abnormalities/kog/GreedHit1.ogg',  75, 1)
 	for(var/turf/T in all_turfs)
 		for(var/mob/living/carbon/human/H in T.contents)
-			H.gib()
+			H.gib(FALSE,FALSE,TRUE)
 
 /obj/effect/temp_visual/burrowing_warning
 	duration = 20
@@ -177,8 +176,6 @@
 	plane = FLOOR_PLANE
 	base_icon_state = "shield-cult"
 
-
-
 //The Ruina Breach
 /mob/living/simple_animal/hostile/abnormality/burrowing_heaven/proc/Spawn_Babies()
 	addtimer(CALLBACK(src, PROC_REF(CheckAOE)), 40 SECONDS)	//40 seconds before the global AOE
@@ -188,20 +185,28 @@
 	var/turf/T = pick(GLOB.department_centers)
 	SLEEP_CHECK_DEATH(20)
 
-	forceMove(T)
+	forceMove(get_turf(T))
 	animate(src, alpha = 255, time = 5)
 	var/turf/orgin = get_turf(src)
+	//Reduce Reuse and Recycle
+	var/list/living_guys = spawn_list.Copy()
 	var/list/all_turfs = RANGE_TURFS(3, orgin)
 	for(var/i in 1 to 3)
 		var/turf/spawn_spot = pick(all_turfs)
+		if(length(living_guys))
+			var/mob/living/guy = pop(living_guys)
+			if(guy)
+				guy.forceMove(get_turf(spawn_spot))
+				continue
 		var/mob/living/simple_animal/hostile/burrowing_spawn/BS = new get_turf(spawn_spot)
-		spawn_list += BS
+		RegisterMob(BS)
 
 /mob/living/simple_animal/hostile/abnormality/burrowing_heaven/proc/CheckAOE()
 	var/aoe = 0
 	for(var/mob/living/simple_animal/A in spawn_list)
 		if(A && A.stat != DEAD)    //If any of them are alive, fuck them
 			aoe ++
+		UnregisterMob(A)
 		qdel(A)
 	if(aoe)
 		SpawnAOE(aoe)
@@ -216,6 +221,21 @@
 
 	addtimer(CALLBACK(src, PROC_REF(TryTeleport)), 5 SECONDS)
 
+/mob/living/simple_animal/hostile/abnormality/burrowing_heaven/proc/RegisterMob(mob/living/L)
+	RegisterSignal(L, list(COMSIG_PARENT_QDELETING), PROC_REF(UnregisterMob))
+	spawn_list += L
+
+/mob/living/simple_animal/hostile/abnormality/burrowing_heaven/proc/UnregisterMob(mob/living/L)
+	if(!L)
+		return
+	UnregisterSignal(L, list(COMSIG_PARENT_QDELETING))
+	spawn_list -= L
+
+/mob/living/simple_animal/hostile/abnormality/burrowing_heaven/proc/UnregisterAll()
+	if(length(spawn_list))
+		return
+	for(var/mob/living/L in spawn_list)
+		UnregisterMob(L)
 
 /* Burrowing Spawn */
 /mob/living/simple_animal/hostile/burrowing_spawn
@@ -232,10 +252,8 @@
 	stat_attack = HARD_CRIT
 	del_on_death = TRUE
 
-
 /mob/living/simple_animal/hostile/burrowing_spawn/Move()
 	return FALSE
 
 /mob/living/simple_animal/hostile/burrowing_spawn/AttackingTarget()
 	return FALSE
-

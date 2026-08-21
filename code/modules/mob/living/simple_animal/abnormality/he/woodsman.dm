@@ -204,7 +204,7 @@
 /mob/living/simple_animal/hostile/abnormality/woodsman/proc/begin_chain_pull(mob/living/carbon/human/trg)
 	if(!isliving(trg) || !trg)
 		return
-	chained_target = trg
+	var/mob/living/chained_target = trg
 	chain_pull_count = 0
 	var/datum/status_effect/chained/C = chained_target.has_status_effect(/datum/status_effect/chained)
 	if(!C)

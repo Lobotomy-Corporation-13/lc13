@@ -188,6 +188,12 @@
 	projectilesound = 'sound/machines/clockcult/steam_whoosh.ogg'
 	var/mob/living/simple_animal/hostile/abnormality/parasite_tree/connected_abno
 
+/mob/living/simple_animal/hostile/parasite_tree_sapling/Destroy()
+	if(connected_abno)
+		connected_abno.minions -= src
+	connected_abno = null
+	return ..()
+
 /mob/living/simple_animal/hostile/parasite_tree_sapling/Initialize()
 	. = ..()
 	icon_living = "sapling[pick(1,2)]"
@@ -202,7 +208,7 @@
 		connected_abno.endBreach()
 	for(var/atom/movable/AM in src)
 		AM.forceMove(get_turf(src))
-	..()
+	return ..()
 
 /mob/living/simple_animal/hostile/parasite_tree_sapling/CanAttack(mob/living/carbon/human/the_target) //Your target has to be human and not have the tree curse.
 	if(isturf(the_target) || !the_target || the_target.type == /atom/movable/lighting_object) // bail out on invalids
@@ -322,6 +328,7 @@
 	connected_abno.blessed -= src
 	if(status_holder.stat == DEAD)
 		connected_abno.datum_reference.qliphoth_change(1)
+	connected_abno = null
 	return ..()
 
 /datum/status_effect/display/parasite_tree_blessing/proc/facadeFalls()
@@ -373,6 +380,7 @@
 		nested_items(new_mob, status_holder.get_item_by_slot(ITEM_SLOT_BACK))
 		nested_items(new_mob, status_holder.get_item_by_slot(ITEM_SLOT_OCLOTHING))
 		QDEL_IN(owner, 5) //rabbit sanity implant explodes at 5
+	connected_abno = null
 	return ..()
 
 /datum/status_effect/display/parasite_tree_curse/TweakDisplayIcon()

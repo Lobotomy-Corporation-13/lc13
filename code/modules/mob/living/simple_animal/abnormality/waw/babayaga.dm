@@ -51,6 +51,10 @@
 	var/jump_cooldown_time = 35 SECONDS
 	var/list/spawned_mobs = list()
 
+/mob/living/simple_animal/hostile/abnormality/babayaga/Destroy()
+	UnregisterAll()
+	return ..()
+
 //Work Procs
 // any work performed with level <4 Fort and Temperance lowers qliphoth
 /mob/living/simple_animal/hostile/abnormality/babayaga/PostWorkEffect(mob/living/carbon/human/user, work_type, pe, work_time)
@@ -100,7 +104,7 @@
 /mob/living/simple_animal/hostile/abnormality/babayaga/death(gibbed)
 	for(var/mob/living/A in spawned_mobs)
 		A.death()
-	..()
+	return ..()
 
 //Attack procs
 /mob/living/simple_animal/hostile/abnormality/babayaga/proc/TryJump(atom/target)
@@ -178,8 +182,21 @@
 		new /obj/effect/temp_visual/dir_setting/cult/phase
 		if(prob(30))
 			var/mob/living/simple_animal/hostile/yagaslave/Y = new(T)
-			spawned_mobs+=Y
+			RegisterMob(Y)
 	return
+
+/mob/living/simple_animal/hostile/abnormality/babayaga/proc/RegisterMob(mob/living/L)
+	RegisterSignal(L, list(COMSIG_PARENT_QDELETING), PROC_REF(UnregisterMob))
+	spawned_mobs += L
+
+/mob/living/simple_animal/hostile/abnormality/babayaga/proc/UnregisterMob(mob/living/L)
+	UnregisterSignal(L, list(COMSIG_PARENT_QDELETING))
+	spawned_mobs -= L
+
+/mob/living/simple_animal/hostile/abnormality/babayaga/proc/UnregisterAll()
+	for(var/mob/living/L in spawned_mobs)
+		UnregisterMob(L)
+	spawned_mobs.Cut()
 
 // Misc Objects and effects
 /mob/living/simple_animal/hostile/yagaslave
