@@ -200,6 +200,28 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 	var/stagger_unstagger_time = 100
 	var/list/stagger_resistances = list(RED_DAMAGE = 1.5, WHITE_DAMAGE = 1.6, BLACK_DAMAGE = 1.5, PALE_DAMAGE = 2) // WHITE and PALE are slightly higher to keep them as more effective during stagger than just 6 gaze stacks
 
+/mob/living/simple_animal/hostile/abnormality/spiral/Destroy()
+	deltimer(teleport_timer)
+	// Add up the lists that hold all people affected by our status effects, cleanse everyone in those lists and empty them out.
+	var/list/affected_by_stuff = list()
+	affected_by_stuff |= awed_workers
+	affected_by_stuff |= gazed_fighters
+	affected_by_stuff |= contempted_fighters
+	for(var/mob/living/survivor in affected_by_stuff)
+		survivor.remove_status_effect(STATUS_EFFECT_AWE)
+		survivor.remove_status_effect(STATUS_EFFECT_GAZE)
+		survivor.remove_status_effect(STATUS_EFFECT_CONTEMPT)
+	awed_workers = list()
+	gazed_fighters = list()
+	contempted_fighters = list()
+	// Cleanup any Shun mobs that may be left over.
+	for(var/mob/living/simple_animal/spiral_shun/possible_shunners in shun_mobs)
+		shun_mobs -= possible_shunners
+		qdel(possible_shunners)
+
+	shun_mobs = list()
+	return ..()
+
 /mob/living/simple_animal/hostile/abnormality/spiral/say(message, bubble_type, list/spans, sanitize, datum/language/language, ignore_spam, forced)
 	. = ..()
 	playsound(get_turf(src), 'sound/magic/clockwork/invoke_general.ogg', 40, TRUE)
@@ -287,26 +309,6 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 
 // Cleanup on death.
 /mob/living/simple_animal/hostile/abnormality/spiral/death(gibbed)
-	deltimer(teleport_timer)
-	// Add up the lists that hold all people affected by our status effects, cleanse everyone in those lists and empty them out.
-	var/list/affected_by_stuff = list()
-	affected_by_stuff |= awed_workers
-	affected_by_stuff |= gazed_fighters
-	affected_by_stuff |= contempted_fighters
-	for(var/mob/living/survivor in affected_by_stuff)
-		survivor.remove_status_effect(STATUS_EFFECT_AWE)
-		survivor.remove_status_effect(STATUS_EFFECT_GAZE)
-		survivor.remove_status_effect(STATUS_EFFECT_CONTEMPT)
-	awed_workers = list()
-	gazed_fighters = list()
-	contempted_fighters = list()
-	// Cleanup any Shun mobs that may be left over.
-	for(var/mob/living/simple_animal/spiral_shun/possible_shunners in shun_mobs)
-		qdel(possible_shunners)
-		shun_mobs -= possible_shunners
-
-	shun_mobs = list()
-
 	playsound(loc, 'sound/effects/ordeals/crimson/dusk_dead.ogg', 50, 1)
 	for(var/i in 1 to 5)
 		var/atom/temp = new /obj/effect/temp_visual/dir_setting/bloodsplatter(loc, pick(GLOB.alldirs))
@@ -573,6 +575,13 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 	var/mob/living/simple_animal/hostile/abnormality/spiral/caster
 	var/image/cool_animation
 
+/obj/effect/temp_visual/spiral_grip/Destroy()
+	affected_turfs = null
+	cool_animation = null
+	QDEL_LIST(telegraph_vfx)
+	UnregisterCaster()
+	return ..()
+
 /obj/effect/temp_visual/spiral_grip/Initialize(mapload, radius = 1, windup = 1.2 SECONDS, mob/living/simple_animal/hostile/abnormality/spiral/spiral_ref)
 	. = ..()
 	if(!istype(spiral_ref))
@@ -581,7 +590,7 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 	transform *= 0.8
 	final_radius = radius
 	final_windup = windup
-	caster = spiral_ref
+	RegisterCaster(spiral_ref)
 	Telegraph()
 
 /// Warns players about the danger tiles, sets a timer to perform the attack based on windup.
@@ -604,9 +613,7 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 /// Causes the damage and fades out the effect.
 /obj/effect/temp_visual/spiral_grip/proc/Resolve()
 	// Cleanup telegraphs
-	for(var/atom/effect in telegraph_vfx)
-		qdel(effect)
-	QDEL_NULL(telegraph_vfx)
+	QDEL_LIST(telegraph_vfx)
 
 	playsound(get_turf(src), 'sound/abnormalities/so_that_no_cry/attack.ogg', 75)
 
@@ -626,13 +633,24 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 
 	// Cleanup
 	deltimer(timerid)
-	caster = null
 	affected_turfs = null
 	// Fade out
 	animate(cool_animation, time = fadeout_time * 0.5, alpha = 255)
 	animate(time = fadeout_time * 0.5, alpha = 0 )
 	QDEL_IN(src, fadeout_time + 1)
 	QDEL_IN(cool_animation, fadeout_time + 1)
+
+/obj/effect/temp_visual/spiral_grip/proc/RegisterCaster(mob/living/L)
+	if(!L)
+		return
+	RegisterSignal(L, list(COMSIG_PARENT_QDELETING), PROC_REF(UnregisterCaster))
+	caster = L
+
+/obj/effect/temp_visual/spiral_grip/proc/UnregisterCaster()
+	if(!caster)
+		return
+	UnregisterSignal(caster, list(COMSIG_PARENT_QDELETING))
+	caster = null
 
 // Telegraph sparkles with a customizable duration
 /obj/effect/temp_visual/sparkles/spiral
@@ -811,6 +829,7 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 		return
 	spiral_ref.gazed_fighters -= owner
 	spiral_ref = null
+	attached_visual_status = null
 
 /datum/status_effect/stacking/spiral_gaze/threshold_cross_effect()
 	owner.apply_status_effect(STATUS_EFFECT_CONTEMPT, spiral_ref, spiral_ref.shun_windup, spiral_ref.shun_hands_hp, spiral_ref.shun_hands_resistances, spiral_ref.shun_radius)
@@ -1006,6 +1025,9 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 	unbuckle_all_mobs(force = TRUE)
 	QDEL_NULL(contempt_status)
 	victim = null
+	affected_turfs = null
+	telegraph_vfx = null
+	QDEL_NULL(cool_animation)
 	return ..()
 
 /mob/living/simple_animal/spiral_shun/death(gibbed)
