@@ -143,8 +143,10 @@
 	initial_flurry_delay = flurry_delay
 	initial_flurry_pause = flurry_pause
 	initial_move_to_delay = move_to_delay
+	/*
 	var/obj/effect/proc_holder/spell/pointed/axe_throw/AS = new /obj/effect/proc_holder/spell/pointed/axe_throw(src)
 	AddSpell(AS)
+	*/
 
 /mob/living/simple_animal/hostile/rcorp_abno/easy/woodsman/Destroy()
 	if(soundloop)

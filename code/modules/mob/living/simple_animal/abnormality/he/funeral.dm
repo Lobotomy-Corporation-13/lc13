@@ -231,7 +231,7 @@
 /mob/living/simple_animal/hostile/abnormality/funeral/proc/KillAnimation(mob/living/carbon/human/killed)
 	killed.apply_status_effect(/datum/status_effect/butterfly_death_anim)
 
-/mob/living/simple_animal/hostile/abnormality/funeral/proc/SpecialReset()
+/mob/living/simple_animal/hostile/abnormality/funeral/SpecialReset()
 	ChangeBehavior(behav = FUNERAL_IDLE)
 
 /mob/living/simple_animal/hostile/abnormality/funeral/proc/ChangeBehavior(behav = FUNERAL_IDLE)

@@ -298,7 +298,7 @@
 /datum/status_effect/pacify/on_creation(mob/living/new_owner, set_duration)
 	if(isnum(set_duration))
 		duration = set_duration
-	. = ..()
+	return ..()
 
 /datum/status_effect/pacify/on_apply()
 	ADD_TRAIT(owner, TRAIT_PACIFISM, "status_effect")

@@ -2,6 +2,7 @@
 #define HEAVY_PULL_DISTANCE 2
 #define NORMAL_PULL_DELAY 10
 #define HEAVY_PULL_DELAY 15
+#define CHAINAXE_COOLDOWN 7 SECONDS
 
 /mob/living/simple_animal/hostile/abnormality/woodsman
 	name = "Warm-Hearted Woodsman"
@@ -92,8 +93,6 @@
 	var/chain_pull_count = 0
 	var/active_pull_timer
 
-
-
 	var/obj/effect/proc_holder/ability/aimed/chainaxe_throw/axe_throw
 
 	//PLAYABLES ATTACKS
@@ -113,11 +112,6 @@
 		Your flurry attack is a 3x2 AoE in front of you, which deals RED damage, which will repeat 7 times in a row before end with a extra strong final hit.<br>\
 		You are able to toggle your flurry attack on and off with your ability.")
 
-/mob/living/simple_animal/hostile/abnormality/woodsman/Initialize()
-	. = ..()
-	axe_throw = new()
-	src.AddSpell(axe_throw)
-
 /datum/action/innate/abnormality_attack/toggle/woodsman_flurry_toggle
 	name = "Toggle Deforestation"
 	desc = "Toggle your ability to perform a multi-hitting attack that hits a wide area in front of you."
@@ -132,21 +126,12 @@
 /mob/living/simple_animal/hostile/abnormality/woodsman/Initialize()
 	. = ..()
 	soundloop = new(list(src), FALSE)
-	if(IsCombatMap())
-		combat_map = TRUE
-		initial_melee_damage_lower = melee_damage_lower
-		initial_melee_damage_upper = melee_damage_upper
-		initial_flurry_delay = flurry_delay
-		initial_flurry_pause = flurry_pause
-		initial_move_to_delay = move_to_delay
-	var/obj/effect/proc_holder/spell/pointed/axe_throw/AS = new /obj/effect/proc_holder/spell/pointed/axe_throw(src)
-	AddSpell(AS)
+	axe_throw = new()
+	src.AddSpell(axe_throw)
 
 /mob/living/simple_animal/hostile/abnormality/woodsman/Destroy()
 	if(soundloop)
 		QDEL_NULL(soundloop)
-	if(chain_beam)
-		QDEL_NULL(chain_beam)
 	if(axe_throw)
 		QDEL_NULL(axe_throw)
 	return ..()
@@ -157,9 +142,13 @@
 /datum/status_effect/chained
 	id = "chained"
 	status_type = STATUS_EFFECT_UNIQUE
+	duration = CHAINAXE_COOLDOWN
 	alert_type = /atom/movable/screen/alert/status_effect/chained
+	on_remove_on_mob_delete = TRUE
 	var/mob/living/simple_animal/hostile/abnormality/woodsman/core_abno
 	var/view_range = 7
+	var/chain_pull_count = 0
+	var/active_pull_timer = null
 	// Chain beam
 	var/datum/beam/chain_beam
 
@@ -168,11 +157,14 @@
 	desc = "You've been caught by the woodsman's chain!"
 	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "locked"
-	on_remove_on_mob_delete = TRUE
 
 /datum/status_effect/chained/on_creation(mob/living/new_owner, mob/living/puller)
+	owner = new_owner
 	if(puller)
 		RegisterMob(puller)
+		new_owner.say("[puller] registered")
+	if(!owner)
+		return
 	return ..()
 
 // Movement restriction for chained targets
@@ -184,6 +176,7 @@
 /datum/status_effect/chained/on_remove()
 	UnregisterSignal(owner, COMSIG_MOVABLE_PRE_MOVE)
 	UnregisterMob()
+	ReleaseTarget()
 	return ..()
 
 /datum/status_effect/chained/proc/CheckMovement(mob/living/carbon/human/H, turf/NewLoc)
@@ -207,23 +200,29 @@
 	if(!isliving(trg) || !trg)
 		return
 
-	update_chain_visuals()
+	UpdateChainVisuals(TRUE)
 	PullLoop()
 
 /datum/status_effect/chained/proc/PullLoop()
 	var/mob/living/chained_target = owner
-	if(!chained_target || !can_see(core_abno, chained_target, 14))
-		release_target()
+
+	if(!core_abno)
+		ReleaseTarget(TRUE)
 		return
 
-	if(IsKnockdown(chained_target))
-		release_target()
+	UpdateChainVisuals()
+
+	if(!chained_target || !can_see(core_abno, chained_target, 14))
+		ReleaseTarget(TRUE)
+		return
+
+	if(core_abno.IsKnockdown(chained_target))
+		ReleaseTarget(TRUE)
+		return
 
 	var/current_dist = get_dist(get_turf(chained_target), get_turf(core_abno))
-	if (current_dist < 2)
-		if(client)
-			chained_target.Knockdown(3 SECONDS)
-		release_target()
+	if (current_dist < 2 || current_dist > 14)
+		ReleaseTarget(TRUE)
 		return
 
 	chain_pull_count++
@@ -236,19 +235,19 @@
 	if (chain_pull_count % 3 == 2)
 		delay = HEAVY_PULL_DELAY
 
-	pull_target(pull_distance)
-	update_chain_visuals()
+	PullTarget(pull_distance)
 
-	active_pull_timer = addtimer(CALLBACK(core_abno, PROC_REF(PullLoop)), delay, TIMER_STOPPABLE)
+	active_pull_timer = addtimer(CALLBACK(src, PROC_REF(PullLoop)), delay, TIMER_STOPPABLE)
 
 
-/datum/status_effect/chained/proc/pull_target(distance)
+/datum/status_effect/chained/proc/PullTarget(distance)
 	var/mob/living/chained_target = owner
 	if(!chained_target)
-		update_chain_visuals()
+		UpdateChainVisuals()
 		return
-	if (chained_target.stat == DEAD)
-		release_target()
+	if(chained_target.stat == DEAD)
+		ReleaseTarget(TRUE)
+		return
 
 	var/turf/T = get_turf(core_abno)
 	var/turf/target_turf = get_turf(chained_target)
@@ -262,26 +261,26 @@
 	chained_target.throw_at(T, distance, throw_speed, core_abno)
 	playsound(target_turf, 'sound/weapons/chainhit.ogg', 50, TRUE)
 
-/datum/status_effect/chained/proc/update_chain_visuals()
+/datum/status_effect/chained/proc/UpdateChainVisuals(full_remove = FALSE)
+	var/mob/living/chained_target = owner
 	if(chain_beam)
 		QDEL_NULL(chain_beam)
+
+	if(full_remove)
 		return
 
-	if(!chain_beam)
-		chain_beam = Beam(ReturnChained(), icon_state="chain")
+	if(core_abno)
+		chain_beam = chained_target.Beam(core_abno, icon_state="chain")
 	// Beam datum will handle updating the visuals automatically when either end moves
 
-/datum/status_effect/chained/proc/release_target()
+/datum/status_effect/chained/proc/ReleaseTarget(deleting = FALSE)
 	var/mob/living/chained_target = owner
-	if(!chained_target)
-		update_chain_visuals()
-		return
+	chained_target.say("oughhhh")
 
-	chained_target.remove_status_effect(/datum/status_effect/chained)
-	chained_target = null
-	chain_pull_count = 0
-	update_chain_visuals()
+	UpdateChainVisuals(TRUE)
 	deltimer(active_pull_timer)
+	if(deleting)
+		qdel(src)
 
 /datum/status_effect/chained/proc/RegisterMob(mob/living/L)
 	RegisterSignal(L, list(COMSIG_PARENT_QDELETING), PROC_REF(UnregisterMob))
@@ -406,7 +405,7 @@
 			if(1)
 				Woodsman_Flurry(target)
 			if(2)
-				BeginPull(target)
+				axe_throw.Perform(target, src)
 			if(3)
 				AxeThrow(target)
 			else
@@ -616,13 +615,15 @@
 	desc = "Throw a chained axe at the next thing you click."
 	action_icon_state = "helper_dash0"
 	base_icon_state = "helper_dash"
-	cooldown_time = 1
+	cooldown_time = (CHAINAXE_COOLDOWN) + 10
+	var/obj/projectile/shootems = /obj/projectile/chainedaxe
 
 /obj/effect/proc_holder/ability/aimed/chainaxe_throw/can_cast(mob/user = usr)
 	if(isabnormalitymob(user))
 		var/mob/living/simple_animal/hostile/abnormality/abno = usr
-		if(abno.IsContained())
-			return FALSE
+		if(abno)
+			if(abno.IsContained())
+				return FALSE
 	return ..()
 
 /obj/effect/proc_holder/ability/aimed/chainaxe_throw/AbnoInteraction(mob/living/user)
@@ -632,26 +633,29 @@
 	ToggleAct(abno,TRUE)
 	abno.SpecialReset()
 
-/obj/effect/proc_holder/ability/aimed/chainaxe_throw/Perform(target, mob/living/user, enraged = FALSE)
-	. = ..()
+/obj/effect/proc_holder/ability/aimed/chainaxe_throw/Perform(target, mob/living/user)
 	if(!user || !target)
 		AbnoInteraction(user)
 		return
 	ToggleAct(user,FALSE)
 
-	if(istype(user, /mob/living/simple_animal/hostile/abnormality/woodsman))
-		var/mob/living/simple_animal/hostile/abnormality/woodsman/W = user
-		W.playsound(get_turf(W), 'sound/abnormalities/woodsman/woodsman_prepare.ogg', 75, 0, 5)
-		W.icon_state = "woodsman_prepare"
+	Telegraph(user)
 
-	sleep(15)
 	AxeThrow(target, user)
 
 	AbnoInteraction(user)
 	ToggleAct(user,TRUE)
 
-/obj/effect/proc_holder/ability/aimed/chainaxe_throw/AxeThrow(trg, mob/living/user)
-	var/obj/projectile/normalaxe/P = new(get_turf(user))
+/obj/effect/proc_holder/ability/aimed/chainaxe_throw/proc/Telegraph(mob/living/user)
+	if(istype(user, /mob/living/simple_animal/hostile/abnormality/woodsman))
+		var/mob/living/simple_animal/hostile/abnormality/woodsman/W = user
+		playsound(get_turf(W), 'sound/abnormalities/woodsman/woodsman_prepare.ogg', 75, 0, 5)
+		W.icon_state = "woodsman_prepare"
+
+	sleep(15)
+
+/obj/effect/proc_holder/ability/aimed/chainaxe_throw/proc/AxeThrow(trg, mob/living/user)
+	var/obj/projectile/P = new shootems(get_turf(user))
 	P.firer = user
 	P.preparePixelProjectile(trg, user)
 	P.fire()
@@ -679,7 +683,7 @@
 
 /obj/projectile/chainedaxe/on_hit(atom/trg, blocked = FALSE)
 	. = ..()
-	if(istype(trg, /mob/living/carbon/human))
+	if(istype(trg, /mob/living/carbon/human) && firer)
 		var/mob/living/carbon/human/H = trg
 		var/mob/living/simple_animal/hostile/abnormality/woodsman/W = firer
 		if(istype(W) && get_dist(get_turf(trg), get_turf(firer)) < 12)

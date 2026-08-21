@@ -324,7 +324,7 @@ It has now been over four months. Now we get her for real. -Coxswain
 	say(pick(weapon_throw_lines))
 	blade_throw.Perform(target, src, red_rage)
 
-/mob/living/simple_animal/hostile/abnormality/red_hood/proc/SpecialReset()
+/mob/living/simple_animal/hostile/abnormality/red_hood/SpecialReset()
 	special_attacking = FALSE
 	icon = initial(icon)
 	icon_state = initial(icon_state)
