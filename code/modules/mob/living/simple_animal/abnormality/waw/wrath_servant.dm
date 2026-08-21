@@ -134,6 +134,10 @@
 	StartCooldown()
 	return TRUE
 
+/mob/living/simple_animal/hostile/abnormality/wrath_servant/Destroy()
+	UnregisterAll()
+	return ..()
+
 /mob/living/simple_animal/hostile/abnormality/wrath_servant/Initialize(mapload)
 	. = ..()
 	RegisterSignal(SSdcs, COMSIG_GLOB_MOB_DEATH, PROC_REF(OnMobDeath))
@@ -291,7 +295,7 @@
 					"\"Friend\" is not a word in the book of law...",
 					"I can be a friend that you deserve.",
 				))
-				friend_ship += user
+				RegisterMob(user)
 				AdjustInstability(8) // Was 5
 				return
 		if(ABNORMALITY_WORK_REPRESSION)
@@ -540,7 +544,7 @@
 	ADD_TRAIT(src, TRAIT_MOVE_FLYING, ROUNDSTART_TRAIT)
 	animate(src, alpha = 255, time = 5)
 	new /obj/effect/temp_visual/guardian/phase/out(get_turf(src))
-	friend_ship = list()
+	UnregisterAll()
 	breach_affected = list()
 	src.datum_reference.qliphoth_change(5)
 	density = TRUE
@@ -660,6 +664,19 @@
 	new /obj/effect/temp_visual/guardian/phase/out(teleport_target)
 	forceMove(teleport_target)
 
+/mob/living/simple_animal/hostile/abnormality/wrath_servant/proc/RegisterMob(mob/living/L)
+	RegisterSignal(L, list(COMSIG_PARENT_QDELETING), PROC_REF(UnregisterMob))
+	friend_ship += L
+
+/mob/living/simple_animal/hostile/abnormality/wrath_servant/proc/UnregisterMob(mob/living/L)
+	UnregisterSignal(L, list(COMSIG_PARENT_QDELETING))
+	friend_ship -= L
+
+/mob/living/simple_animal/hostile/abnormality/wrath_servant/proc/UnregisterAll()
+	for(var/mob/living/L in friend_ship)
+		UnregisterMob(L)
+	friend_ship.Cut()
+
 //Rival's code
 /mob/living/simple_animal/hostile/azure_hermit
 	name = "Hermit of the Azure Forest"
@@ -769,7 +786,7 @@
 			var/mob/living/simple_animal/hostile/azure_stave/AS = new(TT)
 			staves += AS
 			AS = new(TT)
-			staves += AS
+			RegisterMob(AS)
 			return
 	return ..()
 
@@ -795,7 +812,7 @@
 	playsound(src, 'sound/abnormalities/wrath_servant/hermit_magic.ogg', 60, FALSE, 10)
 	for(var/i = 0 to min(rand(1, 3), valid_turfs.len))
 		var/mob/living/simple_animal/hostile/azure_stave/AS = new(pick(valid_turfs))
-		staves += AS
+		RegisterMob(AS)
 	COOLDOWN_START(src, conjure, conjure_cooldown)
 	return
 
@@ -828,6 +845,10 @@
 	adjustBruteLoss(-maxHealth, forced = TRUE)
 	density = TRUE
 
+/mob/living/simple_animal/hostile/azure_hermit/Destroy()
+	UnregisterAll()
+	return ..()
+
 /mob/living/simple_animal/hostile/azure_hermit/death()
 	INVOKE_ASYNC(src, PROC_REF(Downed))
 
@@ -840,12 +861,24 @@
 	icon_state = icon_dead
 	density = FALSE
 	status_flags |= GODMODE
-	for(var/mob/living/L in staves)
-		L.visible_message(span_notice("[L] crumbles before you!"))
-		qdel(L)
 	animate(src, alpha = 0, time = (15 SECONDS))
 	QDEL_IN(src, 15 SECONDS)
 	return
+
+/mob/living/simple_animal/hostile/azure_hermit/proc/RegisterMob(mob/living/L)
+	RegisterSignal(L, list(COMSIG_PARENT_QDELETING), PROC_REF(UnregisterMob))
+	staves += L
+
+/mob/living/simple_animal/hostile/azure_hermit/proc/UnregisterMob(mob/living/L)
+	UnregisterSignal(L, list(COMSIG_PARENT_QDELETING))
+	staves -= L
+
+/mob/living/simple_animal/hostile/azure_hermit/proc/UnregisterAll()
+	for(var/mob/living/L in staves)
+		UnregisterMob(L)
+		L.visible_message(span_notice("[L] crumbles before you!"))
+		qdel(L)
+	staves.Cut()
 
 /mob/living/simple_animal/hostile/azure_stave
 	name = "Hermit's Staff"
@@ -874,7 +907,7 @@
 
 	del_on_death = TRUE
 
-/obj/effect/decal/cleanable/wrath_acid/
+/obj/effect/decal/cleanable/wrath_acid
 	name = "Not-so Acidic Goo"
 	desc = "Ah, that kinda stings..."
 	icon = 'ModularLobotomy/_Lobotomyicons/tegu_effects.dmi'
@@ -928,7 +961,7 @@
 	var/mob/living/L = AM
 	L.apply_status_effect(STATUS_EFFECT_ACIDIC_GOO)
 
-/obj/effect/decal/cleanable/wrath_acid/bad/
+/obj/effect/decal/cleanable/wrath_acid/bad
 	name = "Acidic Goo"
 	desc = "It seems to burn whatever it touches, best to stay away!"
 
