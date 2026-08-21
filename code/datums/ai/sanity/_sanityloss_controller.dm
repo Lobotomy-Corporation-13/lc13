@@ -909,8 +909,10 @@
 			continue
 		if(!AC.datum_reference)
 			continue
-		if(!(AC.datum_reference.current.status_flags & GODMODE))
-			continue
+		var/mob/living/simple_animal/hostile/abnormality/abno = AC.datum_reference.GetCurrent()
+		if(abno)
+			if(!(abno.status_flags & GODMODE))
+				continue
 		if(blackboard[BB_INSANE_BLACKLISTITEMS][AC] > world.time)
 			continue
 		if((AC.datum_reference.qliphoth_meter_max > 0) && (AC.datum_reference.qliphoth_meter > 0))

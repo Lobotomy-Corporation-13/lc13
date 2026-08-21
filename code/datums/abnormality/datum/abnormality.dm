@@ -431,6 +431,13 @@
 		return current.GetPortrait()
 	return portrait
 
+//Return the current iteration of this Abnormality
+//Im sorry im building dependence on abno datums.
+/datum/abnormality/proc/GetCurrent()
+	if(current)
+		return current
+	return
+
 /// Swaps the cells with target abnormality datum
 /datum/abnormality/proc/SwapPlaceWith(datum/abnormality/target = null)
 	if(!istype(target))
