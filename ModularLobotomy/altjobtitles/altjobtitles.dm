@@ -49,11 +49,8 @@
 	senior_title = "Surgeon-General"
 
 /datum/job/doctor
-	alt_titles = list("Nurse", "Surgeon")
+	alt_titles = list("Surgeon")
 	senior_title = "Physician"
-
-/datum/job/paramedic
-	alt_titles = list("Corpsman")
 
 /datum/job/chemist
 	alt_titles = list("Pharmacist", "Pharmacologist")

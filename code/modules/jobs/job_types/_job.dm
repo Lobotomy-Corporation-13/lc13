@@ -122,10 +122,17 @@
 	var/leader
 	/// Slots this job opens with once its leader is in place.
 	var/faction_positions = 0
+	/// What players are told this job is called. Defaults to `title`, and a
+	/// city faction variant overwrites it so the same job can read as its
+	/// specialisation without `title` moving. `title` keys name_occupations,
+	/// the lobby preference menu and every assigned_role check, so it cannot.
+	var/display_title
 
 
 /datum/job/New()
 	. = ..()
+	if(!display_title)
+		display_title = title
 	if(radio_channel_name)
 		RegisterJobRadioChannel(radio_channel_name, radio_channel_color)
 	var/list/jobs_changes = GetMapChanges()
@@ -316,6 +323,14 @@
 
 	return job_changes[endpart]
 
+/// What to call this job in front of a player. A title the player chose wins,
+/// then one a faction variant set, then the job's own.
+/datum/job/proc/GetDisplayTitle(client/preference_source)
+	var/chosen = preference_source?.prefs?.alt_titles_preferences[title]
+	if(chosen)
+		return chosen
+	return display_title || title
+
 /datum/job/proc/radio_help_message(mob/M)
 	if(radio_channel_name)
 		to_chat(M, "<b>Prefix your message with :j to speak on the [radio_channel_name] radio. To see other prefixes, look closely at your headset.</b>")
@@ -396,10 +411,7 @@
 		shuffle_inplace(C.access) // Shuffle access list to make NTNet passkeys less predictable
 		C.registered_name = H.real_name
 		// Tegu edit - Alt job titles
-		if(preference_source && preference_source.prefs && preference_source.prefs.alt_titles_preferences[J.title])
-			C.assignment = preference_source.prefs.alt_titles_preferences[J.title]
-		else
-			C.assignment = J.title
+		C.assignment = J.GetDisplayTitle(preference_source)
 		// Tegu end
 		if(H.age)
 			C.registered_age = H.age
@@ -442,10 +454,7 @@
 					GLOB.PDAs -= could_this_be_our_echo_from_a_past_life
 
 		// Tegu edit - Alt job titles
-		if(preference_source && preference_source.prefs && preference_source.prefs.alt_titles_preferences[J.title])
-			PDA.ownjob = preference_source.prefs.alt_titles_preferences[J.title]
-		else
-			PDA.ownjob = J.title
+		PDA.ownjob = J.GetDisplayTitle(preference_source)
 		// Tegu end
 		PDA.update_label()
 

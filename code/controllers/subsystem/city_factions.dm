@@ -18,6 +18,7 @@ SUBSYSTEM_DEF(city_factions)
 	var/list/minors = list()
 	for(var/faction_type in subtypesof(/datum/city_faction))
 		var/datum/city_faction/faction = new faction_type()
+		faction.BuildVariants()
 		all_factions += faction
 		switch(faction.category)
 			if(CITY_FACTION_ALWAYS)
@@ -53,19 +54,40 @@ SUBSYSTEM_DEF(city_factions)
 /// faction nobody wanted to lead is shut before its members can be handed out.
 /datum/controller/subsystem/city_factions/proc/FillFactionLeaders()
 	for(var/datum/city_faction/faction in active_factions)
-		if(!faction.requires_leader)
-			continue
-		var/datum/job/leader = SSjob.GetJobType(faction.leader_job)
+		var/datum/job/leader = faction.requires_leader ? SSjob.GetJobType(faction.leader_job) : null
 		if(!leader)
+			//No leader gate, or no leader job. Nobody is going to pick, so the
+			//variant falls to the random branch rather than being skipped.
+			ChooseVariant(faction, null)
 			continue
 		var/filled = FALSE
 		for(var/level in SSjob.level_order)
 			var/list/candidates = SSjob.FindOccupationCandidates(leader, level)
 			if(!candidates.len)
 				continue
-			if(SSjob.AssignRole(pick(candidates), leader.title))
+			var/mob/dead/new_player/chosen = pick(candidates)
+			if(SSjob.AssignRole(chosen, leader.title))
 				faction.OpenMembers()
+				//The leader's own job preference is the faction's choice. Read
+				//here rather than on spawn because this runs before the standard
+				//job loop, so members are dressed for it before they are dealt.
+				ChooseVariant(faction, chosen)
 				filled = TRUE
 				break
 		if(!filled)
 			faction.CloseMembers()
+		//Even a faction nobody led still needs a variant, or its base has no
+		//identity to deploy with and its jobs read as unbranded on latejoin.
+		ChooseVariant(faction, null)
+
+/// Settle a faction's variant from its leader's chosen alt title, falling back
+/// to the faction's default. Does nothing to a faction that has already chosen.
+/datum/controller/subsystem/city_factions/proc/ChooseVariant(datum/city_faction/faction, mob/dead/new_player/leader_mob)
+	if(faction.active_variant || !faction.variant_pool.len)
+		return
+	var/datum/job/leader = SSjob.GetJobType(faction.leader_job)
+	var/chosen = leader_mob?.client?.prefs?.alt_titles_preferences[leader?.title]
+	var/datum/city_faction_variant/V = faction.VariantForTitle(chosen)
+	if(!V)
+		V = faction.DefaultVariant()
+	faction.SetVariant(V)
