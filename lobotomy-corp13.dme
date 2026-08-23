@@ -169,6 +169,7 @@
 #include "code\__DEFINES\~lobotomy_defines\grid_crafting.dm"
 #include "code\__DEFINES\~lobotomy_defines\is_helpers.dm"
 #include "code\__DEFINES\~lobotomy_defines\jobs.dm"
+#include "code\__DEFINES\~lobotomy_defines\nursefathers.dm"
 #include "code\__DEFINES\~lobotomy_defines\signals.dm"
 #include "code\__DEFINES\~lobotomy_defines\traits.dm"
 #include "code\__DEFINES\~lobotomy_defines\weapon.dm"

@@ -6,7 +6,7 @@ GLOBAL_LIST_EMPTY(arayashiki_blades)
 
 /obj/item/ego_weapon/city/arayashiki
 	name = "Tiansha Star's Blade - Arayashiki \u963F\u983C\u8036\u8B58"
-	desc = "The heavens themselves are not spared—heaven, earth, man, and the self. This star rises only for the one who perceives all existence and time as a single whole to sever them all."
+	desc = "The heavens themselves are not spared-heaven, earth, man, and the self. This star rises only for the one who perceives all existence and time as a single whole to sever them all."
 	special = "On hit, applies <b>Sever the Thread \u5207\u7D72</b>. At 10 stacks, the next strike severs a limb \
 	(or an eye / tongue if it lands on the head) and leaves a permanent <b>Bladewound</b>. \
 	Each swing fills you with <b>Muga \u7121\u6211</b>; perception erodes as it grows."
@@ -35,28 +35,46 @@ GLOBAL_LIST_EMPTY(arayashiki_blades)
 	STOP_PROCESSING(SSobj, src)
 	if(current_wielder)
 		current_wielder.remove_status_effect(/datum/status_effect/muga)
-		current_wielder = null
+		ClearWielder()
 	GLOB.arayashiki_blades -= src
 	return ..()
 
 /obj/item/ego_weapon/city/arayashiki/equipped(mob/user, slot)
 	. = ..()
 	if(ishuman(user) && (slot == ITEM_SLOT_HANDS))
-		current_wielder = user
+		SetWielder(user)
 		passive_muga_next = world.time + 5 SECONDS
 		START_PROCESSING(SSobj, src)
+
+/// Remembers who holds the blade, following them if they are deleted
+/obj/item/ego_weapon/city/arayashiki/proc/SetWielder(mob/living/carbon/human/user)
+	ClearWielder()
+	current_wielder = user
+	RegisterSignal(current_wielder, COMSIG_PARENT_QDELETING, PROC_REF(on_wielder_deleted))
+
+/obj/item/ego_weapon/city/arayashiki/proc/ClearWielder()
+	if(!current_wielder)
+		return
+	UnregisterSignal(current_wielder, COMSIG_PARENT_QDELETING)
+	current_wielder = null
+
+/obj/item/ego_weapon/city/arayashiki/proc/on_wielder_deleted(datum/source)
+	SIGNAL_HANDLER
+	current_wielder = null
+	STOP_PROCESSING(SSobj, src)
+	passive_muga_amount = initial(passive_muga_amount)
 
 /obj/item/ego_weapon/city/arayashiki/dropped(mob/user)
 	. = ..()
 	if(current_wielder == user)
-		current_wielder = null
+		ClearWielder()
 		STOP_PROCESSING(SSobj, src)
 		passive_muga_amount = initial(passive_muga_amount)
 
 /// Passive: every 5 seconds while wielded, grants Muga to the wielder. Per-tick amount starts
 /// at 3 and grows by +2 each tick. Resets when the wielder drops the blade or dies.
 /obj/item/ego_weapon/city/arayashiki/process()
-	if(QDELETED(current_wielder) || current_wielder.stat == DEAD)
+	if(!current_wielder || current_wielder.stat == DEAD)
 		STOP_PROCESSING(SSobj, src)
 		passive_muga_amount = initial(passive_muga_amount)
 		return
@@ -76,9 +94,7 @@ GLOBAL_LIST_EMPTY(arayashiki_blades)
 		to_chat(user, span_warning("Arayashiki refuses your hand. The blade cannot turn upon its wielder."))
 		return FALSE
 
-	// Damage floor (pre-strike): the blade can never reduce a living target below 5% maxHealth.
-	// We must clamp BEFORE the parent attack runs - a post-damage heal can't undo the death
-	// once the strike actually overkills the target.
+	// Clamp before the parent attack: a post-damage heal cannot undo an overkill
 	var/original_force = force
 	var/clamped_for_floor = FALSE
 	if(M && isliving(M) && M.maxHealth > 0 && !QDELETED(M) && M.stat != DEAD)
@@ -104,9 +120,7 @@ GLOBAL_LIST_EMPTY(arayashiki_blades)
 		TryAttachBladewound(M)
 		S.armed = FALSE
 
-	// 支離滅裂 passive: each swing applies 1 Sever the Thread + 1 more per 10 Muga (max 4 bonus).
-	// Computed off the wielder's CURRENT Muga (before this swing's increment), so a fresh wielder
-	// applies just 1 stack per hit until Muga builds.
+	// Bonus stacks come off the wielder's Muga before this swing's increment
 	var/bonus_stacks = 0
 	var/datum/status_effect/muga/CurMuga = ishuman(user) ? user.has_status_effect(/datum/status_effect/muga) : null
 	if(CurMuga)
@@ -216,9 +230,7 @@ GLOBAL_LIST_EMPTY(arayashiki_blades)
 		span_userdanger("\"Erasing Me, Erasing You.\" Arayashiki severs your existence from the world."))
 	playsound(target, 'sound/weapons/ego/justitia1.ogg', 100, TRUE)
 
-	// Lock both wielder and target in place. Use Immobilize only (NOT Stun) - Stun in this codebase
-	// causes mobs to drop their held items, which would make the wielder drop the blade at cutscene
-	// start. Immobilize blocks movement input without dropping items.
+	// Immobilize, not Stun: Stun makes mobs drop the blade at cutscene start
 	target.Immobilize(6 SECONDS, ignore_canstun = TRUE)
 	user.Immobilize(6 SECONDS, ignore_canstun = TRUE)
 
@@ -270,17 +282,13 @@ GLOBAL_LIST_EMPTY(arayashiki_blades)
 	if(QDELETED(target))
 		return
 
-	// Release the wielder fully. For the target, drop the Stun (so they can speak/emote)
-	// but keep them Immobilized for the duration of the white + fade phases (~7s).
-	// Immobilize blocks movement only, not speech.
+	// Target keeps Immobilize through the white + fade phases, but can still speak
 	target.SetStun(0)
 	target.Immobilize(7 SECONDS, ignore_canstun = TRUE)
 	user.SetStun(0)
 	user.SetImmobilized(0)
 
-	// White phase: target turns completely white for 2 seconds.
-	// Use a color matrix that ignores input RGB and outputs (1,1,1) — pure white silhouette.
-	// (color = "#ffffff" would be a multiplicative no-op since white * anything = anything.)
+	// A matrix, not "#ffffff": colour multiplication would leave the target unchanged
 	target.color = list(0,0,0, 0,0,0, 0,0,0, 1,1,1)
 	sleep(2 SECONDS)
 

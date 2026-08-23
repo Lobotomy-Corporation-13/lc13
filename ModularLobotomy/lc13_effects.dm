@@ -364,7 +364,7 @@
 	sound_to_play = null
 	sound_vol = 0
 
-// Middle Nursefather combat effects — 48x48 (directional, centered on user for wide attacks)
+// Middle Nursefather combat effects - 48x48 (directional, centered on user for wide attacks)
 /obj/effect/temp_visual/dir_setting/middle_basic_slash
 	name = "middle slash"
 	icon = 'icons/effects/BDragon1727_effects/48x48.dmi'
@@ -385,8 +385,8 @@
 	layer = ABOVE_MOB_LAYER
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 
-// Middle Nursefather combat effects — 64x64
-/// Ground slam AoE — non-directional purple particle burst, centered on impact
+// Middle Nursefather combat effects - 64x64
+/// Ground slam AoE - non-directional purple particle burst, centered on impact
 /obj/effect/temp_visual/middle_slam
 	name = "middle slam"
 	icon = 'icons/effects/BDragon1727_effects/64x64.dmi'
@@ -397,7 +397,7 @@
 	layer = ABOVE_MOB_LAYER
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 
-/// Smoke trail on tiles crossed during dash — directional, faces dash direction
+/// Smoke trail on tiles crossed during dash - directional, faces dash direction
 /obj/effect/temp_visual/dir_setting/smoke_dash
 	name = "smoke dash"
 	icon = 'icons/effects/BDragon1727_effects/64x64.dmi'
@@ -408,7 +408,7 @@
 	layer = ABOVE_MOB_LAYER
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 
-/// Smoke cloud at dash origin — directional, faces dash direction
+/// Smoke cloud at dash origin - directional, faces dash direction
 /obj/effect/temp_visual/dir_setting/smoke_afterdash
 	name = "smoke afterdash"
 	icon = 'icons/effects/BDragon1727_effects/64x64.dmi'
@@ -419,7 +419,7 @@
 	layer = ABOVE_MOB_LAYER
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 
-/// Small purple directional pierce/stab line — for precise stabs
+/// Small purple directional pierce/stab line - for precise stabs
 /obj/effect/temp_visual/dir_setting/middle_slash
 	name = "middle slash"
 	icon = 'icons/effects/BDragon1727_effects/64x64.dmi'
@@ -430,7 +430,7 @@
 	layer = ABOVE_MOB_LAYER
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 
-/// Small orange/red directional pierce/stab line — for Laevateinn stabs
+/// Small orange/red directional pierce/stab line - for Laevateinn stabs
 /obj/effect/temp_visual/dir_setting/laevateinn_stab
 	name = "laevateinn stab"
 	icon = 'icons/effects/BDragon1727_effects/64x64.dmi'
@@ -441,7 +441,7 @@
 	layer = ABOVE_MOB_LAYER
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 
-/// Purple energy burst — used when punching/inflicting Weakened. Picks a random dir for visual variety.
+/// Purple energy burst - used when punching/inflicting Weakened. Picks a random dir for visual variety.
 /obj/effect/temp_visual/dir_setting/middle_blast
 	name = "middle blast"
 	icon = 'icons/effects/BDragon1727_effects/64x64.dmi'
@@ -455,7 +455,7 @@
 /obj/effect/temp_visual/dir_setting/middle_blast/Initialize(mapload, set_dir)
 	return ..(mapload, pick(GLOB.cardinals))
 
-/// Orange/red energy burst — used when grabbing a target. Picks a random dir for visual variety.
+/// Orange/red energy burst - used when grabbing a target. Picks a random dir for visual variety.
 /obj/effect/temp_visual/dir_setting/laevateinn_blast
 	name = "laevateinn blast"
 	icon = 'icons/effects/BDragon1727_effects/64x64.dmi'

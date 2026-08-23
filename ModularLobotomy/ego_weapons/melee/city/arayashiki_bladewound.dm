@@ -1,12 +1,12 @@
-// Tiansha Star's Bladewound \u5929\u6BBA\u661F\u50B7 — permanent component on a carbon scarred by Arayashiki \u963F\u983C\u8036\u8B58.
+// Tiansha Star's Bladewound \u5929\u6BBA\u661F\u50B7 - permanent component on a carbon scarred by Arayashiki \u963F\u983C\u8036\u8B58.
 // If they ever receive a replacement bodypart and walk within 3 tiles of any Arayashiki or its
-// wielder, the wound reopens — each step deals 5 BRUTE.
+// wielder, the wound reopens - each step deals 5 BRUTE.
 
 /datum/component/tiansha_bladewound
 	dupe_mode = COMPONENT_DUPE_HIGHLANDER
 	can_transfer = FALSE
 	/// List of body_zones present at the time of attachment; used to detect a "new" limb later.
-	var/list/baseline_zones
+	var/list/baseline_zones = list()
 	/// Latches TRUE the first time a non-baseline limb is attached.
 	var/regrew = FALSE
 	/// Range in tiles for the Arayashiki / wielder proximity check.
@@ -16,7 +16,6 @@
 	if(!iscarbon(parent))
 		return COMPONENT_INCOMPATIBLE
 	var/mob/living/carbon/C = parent
-	baseline_zones = list()
 	for(var/obj/item/bodypart/BP in C.bodyparts)
 		baseline_zones += BP.body_zone
 	RegisterSignal(C, COMSIG_CARBON_ATTACH_LIMB, PROC_REF(OnLimbAttach))
