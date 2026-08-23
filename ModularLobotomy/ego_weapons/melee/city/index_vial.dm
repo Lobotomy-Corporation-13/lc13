@@ -71,7 +71,7 @@
 	if(defense_active && slot != ITEM_SLOT_HANDS)
 		to_chat(M, span_warning("The vial is shifting too wildly to store!"))
 		return FALSE
-	. = ..()
+	return ..()
 
 /obj/item/ego_weapon/index_vial/equipped(mob/user, slot)
 	. = ..()
