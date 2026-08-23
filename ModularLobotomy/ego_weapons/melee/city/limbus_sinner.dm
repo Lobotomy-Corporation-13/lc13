@@ -103,7 +103,7 @@
 	var/lines_needed = 25
 
 // Five-Seal system: each Finger role can break their corresponding seal. Once all 5 are broken,
-// the blade awakens — gains a chat-consuming ranged dash-afterattack and two examine buttons
+// the blade awakens - gains a chat-consuming ranged dash-afterattack and two examine buttons
 // (toggle the dash, fully unsheathe into Arayashiki).
 GLOBAL_LIST_INIT(sangria_finger_roles, list(
 	"pinky" = list("Dihui Star"),

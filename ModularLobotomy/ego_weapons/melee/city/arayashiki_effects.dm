@@ -249,16 +249,14 @@
 	/// world.time of the last attack that bumped stacks; out-of-combat decay starts after 30s.
 	var/last_attack_world_time = 0
 	/// Cached HUD originals so we can restore screen_loc / alpha on remove.
-	var/list/saved_screen_loc
-	var/list/saved_alpha
+	var/list/saved_screen_loc = list()
+	var/list/saved_alpha = list()
 	/// Whether the chat hook is currently registered.
 	var/chat_hook_registered = FALSE
 
 /datum/status_effect/muga/on_apply()
 	if(!ishuman(owner))
 		return FALSE
-	saved_screen_loc = list()
-	saved_alpha = list()
 	last_attack_world_time = world.time
 	return ..()
 
@@ -323,8 +321,7 @@
 		var/atom/movable/screen/elem = pick(screen)
 		if(!elem)
 			continue
-		// Skip fullscreen elements - they use stretched screen_loc and we'd break them.
-		// (Block overlays are now images in client.images, not screens, so no special skip needed.)
+		// Fullscreen elements use stretched screen_loc; offsetting them breaks the display
 		if(istype(elem, /atom/movable/screen/fullscreen))
 			continue
 		var/key = "\ref[elem]"
@@ -338,8 +335,8 @@
 
 /datum/status_effect/muga/proc/RestoreHud()
 	if(!owner || !owner.client)
-		saved_screen_loc = list()
-		saved_alpha = list()
+		saved_screen_loc.Cut()
+		saved_alpha.Cut()
 		return
 	for(var/atom/movable/screen/elem in owner.client.screen)
 		var/key = "\ref[elem]"
@@ -347,8 +344,8 @@
 			elem.screen_loc = saved_screen_loc[key]
 		if(saved_alpha[key])
 			elem.alpha = saved_alpha[key]
-	saved_screen_loc = list()
-	saved_alpha = list()
+	saved_screen_loc.Cut()
+	saved_alpha.Cut()
 
 /datum/status_effect/muga/tick()
 	if(world.time - last_attack_world_time >= 30 SECONDS && muga > 0)
@@ -358,9 +355,7 @@
 			qdel(src)
 			return
 	UpdateVisuals()
-	// Erase the oldest chat messages from the wielder's TGUI chat box. The percentage scales
-	// with severity: sev 1 = 10%, sev 5 = 50% per second. The blade consumes their memory of
-	// the world relative to how much they have, so a long history erodes faster than a short one.
+	// Erases a severity-scaled share of the wielder's chat, so a long history erodes faster
 	var/sev = Severity()
 	if(sev > 0 && owner && owner.client)
 		arayashiki_prune_chat(owner.client, sev * 10)

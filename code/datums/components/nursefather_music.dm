@@ -1,16 +1,3 @@
-#define NURSEFATHER_MUSIC_RANGE 10
-#define NURSEFATHER_MUSIC_VOLUME 50
-
-#define NURSEFATHER_FINGER_INDEX "index"
-#define NURSEFATHER_FINGER_MIDDLE "middle"
-#define NURSEFATHER_FINGER_RING "ring"
-#define NURSEFATHER_FINGER_THUMB "thumb"
-#define NURSEFATHER_FINGER_PINKY "pinky"
-
-#define NURSEFATHER_MODE_OFF "off"
-#define NURSEFATHER_MODE_PASSIVE "passive"
-#define NURSEFATHER_MODE_COMBAT "combat"
-
 GLOBAL_LIST_EMPTY(nursefather_music_active)
 
 /datum/component/nursefather_music
@@ -88,7 +75,7 @@ GLOBAL_LIST_EMPTY(nursefather_music_active)
 	for(var/mob/M in listeners)
 		if(M?.client)
 			M.stop_sound_channel(CHANNEL_NURSEFATHER)
-	listeners = list()
+	listeners.Cut()
 
 /datum/component/nursefather_music/proc/is_oldest_source_for(mob/listener)
 	for(var/datum/component/nursefather_music/other in GLOB.nursefather_music_active)

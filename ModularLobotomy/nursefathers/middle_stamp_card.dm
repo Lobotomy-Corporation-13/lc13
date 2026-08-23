@@ -1,1 +1,1 @@
-// Middle Nursefather — Stamp Card & Party System
+// Middle Nursefather - Stamp Card & Party System

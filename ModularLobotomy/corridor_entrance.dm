@@ -1,4 +1,4 @@
-// Corridor Entrance — a door whose twin (matched by string corridor_id) is conceptually the same door.
+// Corridor Entrance - a door whose twin (matched by string corridor_id) is conceptually the same door.
 // Open one, the other opens. Walk through, you're teleported to the other side.
 // While open, a "showcase" reveals the destination tile through the doorway.
 // Always opaque to lighting (the door tile blocks light propagation even when open).
