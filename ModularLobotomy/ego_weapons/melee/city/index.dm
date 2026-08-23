@@ -193,7 +193,8 @@
 			ui_interact(usr)
 
 /obj/item/clothing/accessory/index_pager/Destroy()
-	QDEL_NULL(soundloop)
+	if(soundloop)
+		QDEL_NULL(soundloop)
 	return ..()
 
 /obj/item/clothing/accessory/index_pager/attack_ghost(mob/user)
