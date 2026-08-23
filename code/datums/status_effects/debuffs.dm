@@ -2250,7 +2250,6 @@
 	R.add_undecaying_stacks(undecaying_stacks)
 	R.add_stacks(stacks)
 
-////////////////////////////////////////////////////////////
 // THE DUEL ESCALATES - Palermitan Style apprentice debuff
 // Stacks on the target as the apprentice hits them repeatedly.
 // Grants the apprentice scaling bonuses against targets with this effect.
@@ -2303,7 +2302,6 @@
 	D.duelist = duelist
 	D.add_stacks(stacks)
 
-////////////////////////////////////////////////////////////
 // SEVERED TENDON - Palermitan Style debuff (from skill tree tier 1a)
 // Reduces the target's melee damage via Offense Level Down application.
 // Decays 1 stack per tick.

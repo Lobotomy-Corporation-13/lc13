@@ -124,7 +124,6 @@
 		/obj/item/stack/thumb_east_ammo/spent/tigermark/savage,
 		))
 
-////////////////////////////////////////////////////////////
 // THUMB SPIDER ARMOR SECTION.
 /obj/item/clothing/suit/armor/ego_gear/city/thumb_spider
 	icon = 'icons/obj/spider_house/thumb/thumb_spider_icon.dmi'

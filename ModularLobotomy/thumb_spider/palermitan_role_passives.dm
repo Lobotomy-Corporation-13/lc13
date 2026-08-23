@@ -3,7 +3,7 @@
 // Tiers unlock at 1, 3, 5 duels against that role.
 // All passives use only vars + world.time checks, no timers.
 
-/// Base role passive component — all role passives inherit from this
+/// Base role passive component - all role passives inherit from this
 /datum/component/palermitan_role_passive
 	/// Reference to the human parent
 	var/mob/living/carbon/human/human_parent
@@ -39,8 +39,7 @@
 /datum/component/palermitan_role_passive/proc/set_tier(new_tier)
 	tier = clamp(new_tier, 1, 3)
 
-////////////////////////////////////////////////////////////
-// BUTCHER — "Predator's Instinct"
+// BUTCHER - "Predator's Instinct"
 // On Hit vs <50% HP: +5/10/15% bonus damage. T3: also heal 3 HP
 /datum/component/palermitan_role_passive/butcher
 
@@ -68,8 +67,7 @@
 	if(!QDELETED(weapon))
 		weapon.force -= bonus
 
-////////////////////////////////////////////////////////////
-// BLADE LINEAGE — "Resolve of the Salsu"
+// BLADE LINEAGE - "Resolve of the Salsu"
 // Below 30% HP: +10/15/20% damage. T3: attacks cannot be dodged
 /datum/component/palermitan_role_passive/blade_lineage
 
@@ -95,8 +93,7 @@
 	if(!QDELETED(weapon))
 		weapon.force -= bonus
 
-////////////////////////////////////////////////////////////
-// THUMB — "Soldato's Discipline"
+// THUMB - "Soldato's Discipline"
 // On taking RED damage: +2/3/3 DLU. T3: also +1 OLU
 /datum/component/palermitan_role_passive/thumb
 
@@ -124,8 +121,7 @@
 	else
 		user.apply_lc_defense_level_up(2)
 
-////////////////////////////////////////////////////////////
-// KUROKUMO — "Way of the Drawn Blade"
+// KUROKUMO - "Way of the Drawn Blade"
 // On Hit: +1 Poise. T2: crits +5% damage. T3: +10% crit damage + crits inflict 2 Tremor
 /datum/component/palermitan_role_passive/kurokumo
 
@@ -159,8 +155,7 @@
 			target.deal_damage(extra, RED_DAMAGE, source = parent, attack_type = ATTACK_TYPE_MELEE)
 		target.apply_lc_tremor(2, INFINITY)
 
-////////////////////////////////////////////////////////////
-// INDEX — "Prescript Discipline"
+// INDEX - "Prescript Discipline"
 // On Hit: 1 OLD. T2: +1 DLD. T3: 2 OLD +1 DLD
 /datum/component/palermitan_role_passive/index
 
@@ -176,8 +171,7 @@
 	else
 		target.apply_lc_offense_level_down(1)
 
-////////////////////////////////////////////////////////////
-// INSURGENCE — "Nightwatch Tremors"
+// INSURGENCE - "Nightwatch Tremors"
 // On Hit: 15/20/25% chance for 1/1/2 Tremor (no burst). T3: +5% dmg vs 10+ Tremor
 /datum/component/palermitan_role_passive/insurgence
 
@@ -194,8 +188,7 @@
 	if(prob(chance))
 		target.apply_lc_tremor(tremor_amount, INFINITY)
 
-////////////////////////////////////////////////////////////
-// MIDDLE — "Vengeance Mark"
+// MIDDLE - "Vengeance Mark"
 // On taking melee damage: +3/5/8% damage next attack. T3: counter inflicts 1 DE
 /datum/component/palermitan_role_passive/middle
 	var/buffed_next_hit = FALSE
@@ -238,8 +231,7 @@
 	if(!QDELETED(weapon))
 		weapon.force -= bonus
 
-////////////////////////////////////////////////////////////
-// N-CORP — "Methodical Strikes"
+// N-CORP - "Methodical Strikes"
 // On Hit: 1/1/2 DLD + 1/2/2 Overheat
 /datum/component/palermitan_role_passive/ncorp
 
@@ -256,8 +248,7 @@
 		target.apply_lc_defense_level_down(1)
 		target.apply_lc_overheat(1)
 
-////////////////////////////////////////////////////////////
-// RAT — "Scavenger's Luck"
+// RAT - "Scavenger's Luck"
 // On Hit: 5/8/10% chance +50% bonus damage. T3: lucky strikes +2 Tremor
 /datum/component/palermitan_role_passive/rat
 
@@ -283,8 +274,7 @@
 	if(!QDELETED(weapon))
 		weapon.force -= bonus
 
-////////////////////////////////////////////////////////////
-// CARNIVAL — "Silk Hunter's Patience"
+// CARNIVAL - "Silk Hunter's Patience"
 // After 3+ sec without attacking: next hit +10/20/30% damage. T3: +2 Overheat
 /datum/component/palermitan_role_passive/carnival
 	var/last_attack_time = 0
@@ -313,8 +303,7 @@
 	if(!QDELETED(weapon))
 		weapon.force -= bonus
 
-////////////////////////////////////////////////////////////
-// ZWEI — "Guardian's Resilience"
+// ZWEI - "Guardian's Resilience"
 // On taking damage: +2/3/3 DLU. T3: +1 OLD on attacker
 /datum/component/palermitan_role_passive/zwei
 
@@ -344,8 +333,7 @@
 	else
 		user.apply_lc_defense_level_up(2)
 
-////////////////////////////////////////////////////////////
-// SEVEN — "Analyst's Eye"
+// SEVEN - "Analyst's Eye"
 // On Hit vs debuffed target: +1/2/2 OLU. T3: +1 DE
 /datum/component/palermitan_role_passive/seven
 
@@ -377,8 +365,7 @@
 	if(tier >= 3)
 		target.apply_duel_escalates(1, user)
 
-////////////////////////////////////////////////////////////
-// DIECI — "Scholar's Insight"
+// DIECI - "Scholar's Insight"
 // On Hit: +3/5/7% damage per distinct debuff type on target (max 4 types)
 /datum/component/palermitan_role_passive/dieci
 
@@ -412,8 +399,7 @@
 	if(!QDELETED(weapon))
 		weapon.force -= bonus
 
-////////////////////////////////////////////////////////////
-// CINQ — "Duelist's Finesse" (roaming fixer only)
+// CINQ - "Duelist's Finesse" (roaming fixer only)
 // On Hit: +2/3/3 Poise. T3: halving crit +1 Concentration
 /datum/component/palermitan_role_passive/cinq
 	var/poise_before_crit = 0
@@ -448,8 +434,7 @@
 	if(poise_before_crit > 0 && poise_after < poise_before_crit * 0.75)
 		user.apply_lc_concentration(1)
 
-////////////////////////////////////////////////////////////
-// SHI — "Assassin's Sacrifice"
+// SHI - "Assassin's Sacrifice"
 // On Hit vs <30% HP (3s CD): +3/4/5 OLU, lose 3% max HP. T3: +2 Fragile
 /datum/component/palermitan_role_passive/shi
 	var/last_proc_time = 0
@@ -474,8 +459,7 @@
 	if(self_damage > 0)
 		user.adjustBruteLoss(self_damage)
 
-////////////////////////////////////////////////////////////
-// LIU — "Burning Fist"
+// LIU - "Burning Fist"
 // On Hit: +1 Overheat. T2: every 4th hit +2 extra. T3: every 3rd hit +3 extra
 /datum/component/palermitan_role_passive/liu
 	var/hit_count = 0
@@ -492,8 +476,7 @@
 		target.apply_lc_overheat(2)
 		hit_count = 0
 
-////////////////////////////////////////////////////////////
-// DEVYAT — "Berserker's Escalation"
+// DEVYAT - "Berserker's Escalation"
 // On Hit (3s CD): +2/3/3 OLU, lose 2% max HP. T3: below 50% HP also +2 DLU
 /datum/component/palermitan_role_passive/devyat
 	var/last_proc_time = 0
@@ -518,8 +501,7 @@
 		if(H.health < H.maxHealth * 0.5)
 			user.apply_lc_defense_level_up(2)
 
-////////////////////////////////////////////////////////////
-// HANA — "Adaptive Form"
+// HANA - "Adaptive Form"
 // On attacking with different weapon than last (5s CD): +2/2+2/3+2 OLU(+DLU)
 /datum/component/palermitan_role_passive/hana
 	var/obj/item/last_weapon_used
@@ -539,4 +521,16 @@
 				user.apply_lc_defense_level_up(2)
 			else
 				user.apply_lc_offense_level_up(2)
+	SetLastWeapon(weapon)
+
+/// Remembers the weapon this attack used, following its deletion
+/datum/component/palermitan_role_passive/hana/proc/SetLastWeapon(obj/item/weapon)
+	if(last_weapon_used)
+		UnregisterSignal(last_weapon_used, COMSIG_PARENT_QDELETING)
 	last_weapon_used = weapon
+	if(last_weapon_used)
+		RegisterSignal(last_weapon_used, COMSIG_PARENT_QDELETING, PROC_REF(on_weapon_deleted))
+
+/datum/component/palermitan_role_passive/hana/proc/on_weapon_deleted(datum/source)
+	SIGNAL_HANDLER
+	last_weapon_used = null

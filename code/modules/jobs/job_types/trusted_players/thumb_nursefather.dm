@@ -1,11 +1,9 @@
-////////////////////////////////////////////////////////////
 // EX THUMB SOTTOCAPO
 //
 // A trusted player role for a former Sottocapo of the Thumb's spider house
 // who dual-wields a rapier and katana with acceleration propellant ammunition.
 // They have 150 Fortitude and come equipped with their weapons, armor, ammo,
 // Eye of Odin, and a suspicious phone for ordering additional ammo supplies.
-////////////////////////////////////////////////////////////
 
 /datum/job/ex_thumb_sottocapo
 	title = "Ex Thumb Sottocapo"
@@ -76,12 +74,10 @@
 	r_pocket = /obj/item/nursefather_phone
 	l_pocket = /obj/item/apprentice_recruitment/thumb_nursefather
 
-////////////////////////////////////////////////////////////
 // NURSEFATHER PHONE - Ammo requisition device
 //
 // A suspicious phone that lets the Ex Thumb Sottocapo order additional
 // boxes of acceleration propellant ammunition for 1500 ahn.
-////////////////////////////////////////////////////////////
 
 /obj/item/nursefather_phone
 	name = "suspicious phone"
@@ -134,7 +130,6 @@
 	. = ..()
 	. += span_notice("Use in-hand to order a box of acceleration propellant ammunition for <b>1500 ahn</b>.")
 
-////////////////////////////////////////////////////////////
 // THUMB APPRENTICE RECRUITMENT SCROLL
 /obj/item/apprentice_recruitment/thumb_nursefather
 	name = "thumb apprenticeship scroll"
@@ -222,7 +217,6 @@
 	to_chat(H, span_boldnotice("Review your role rules by clicking the 'View Thumb Rules' action button."))
 	to_chat(H, span_boldwarning("Follow the orders of your mentor. Act in the Thumb's interest."))
 
-////////////////////////////////////////////////////////////
 // ROLE RULES ACTIONS
 
 /datum/action/innate/view_role_rules/thumb_nursefather
@@ -370,7 +364,6 @@
 	</div>
 	"}
 
-////////////////////////////////////////////////////////////
 // DEBUG TRANSFORM ITEM
 // Use in hand to become the Ex Thumb Sottocapo with full loadout.
 
@@ -447,7 +440,6 @@
 	// Consume the debug item
 	qdel(src)
 
-////////////////////////////////////////////////////////////
 // GHOST POLL SPAWN ITEM
 // Use in hand to poll trusted ghosts, then spawn the selected one as Ex Thumb Sottocapo.
 

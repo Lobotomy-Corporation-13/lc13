@@ -1,4 +1,3 @@
-////////////////////////////////////////////////////////////
 // EYE OF ODIN
 //
 // A cybernetic eye organ for Thumbfathers. Grants precognitive melee evasion.
@@ -19,7 +18,6 @@
 // - Each melee hit deals 5% of incoming damage as clone damage
 // - Eye color changes from bright red to dark red
 // After 30 seconds, stacks fully restore to 30 and eye returns to bright red.
-////////////////////////////////////////////////////////////
 
 /obj/item/organ/eyes/robotic/odin_eye
 	name = "Eye of Odin"

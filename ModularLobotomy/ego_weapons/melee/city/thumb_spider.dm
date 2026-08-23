@@ -2,7 +2,6 @@
 // Thumbfather weapons are subtypes of /obj/item/ego_weapon/city (NOT thumb_east)
 // Thumbapprentice weapons are basic city ego weapons
 //
-////////////////////////////////////////////////////////////
 // THUMB NURSEFATHER WEAPON SYSTEM
 //
 // The Thumbfather Rapier and Katana are a dual-wield pair designed around the Poise/Concentration system.
@@ -58,7 +57,6 @@
 // - Detonation (on every ammo spend): weapon's detonation_sound
 // - Combo stages use lunge/sweep/finisher sounds from the Thumb East weapon set.
 // - Reload uses rifle reload start/load/end/fail sounds.
-////////////////////////////////////////////////////////////
 
 // Combo stages
 #define NURSEFATHER_COMBO_NONE 0
@@ -66,7 +64,6 @@
 #define NURSEFATHER_COMBO_ATTACK2 2
 #define NURSEFATHER_COMBO_FINISHER 3
 
-////////////////////////////////////////////////////////////
 // THUMBFATHER SHARED PROCS
 
 /// Helper proc to find the partner thumbfather weapon in the user's other hand
@@ -133,7 +130,7 @@
 	to_chat(user, span_userdanger("\The [weapon] recognizes you as an inferior. It begins to beep ominously!"))
 	user.visible_message(span_warning("\The [weapon] in [user]'s hand starts beeping loudly!"))
 
-	// Three warning beeps over ~2 seconds — dropping the weapon cancels the discipline.
+	// Three warning beeps over ~2 seconds - dropping the weapon cancels the discipline.
 	for(var/i in 1 to 3)
 		if(QDELETED(weapon) || QDELETED(user) || !user.is_holding(weapon))
 			thumbfather_clear_defense_active(weapon)
@@ -438,7 +435,6 @@
 		var/obj/item/ego_weapon/city/thumbfather_katana/K = weapon
 		K.busy = FALSE
 
-////////////////////////////////////////////////////////////
 // THUMBFATHER RAPIER
 /obj/item/ego_weapon/city/thumbfather_rapier
 	name = "thumbfather rapier"
@@ -760,7 +756,6 @@
 		. = span_danger("[user] fires their [src.name], using the exhaust to nonchalantly light [A]. They don't even flinch from the recoil.")
 		playsound(src, 'sound/weapons/ego/thumb_east_rifle_detonation.ogg', 90, FALSE, 10)
 
-////////////////////////////////////////////////////////////
 // THUMBFATHER KATANA
 /obj/item/ego_weapon/city/thumbfather_katana
 	name = "thumbfather katana"
@@ -1082,10 +1077,9 @@
 		. = span_danger("[user] fires their [src.name], using the exhaust to nonchalantly light [A]. They don't even flinch from the recoil.")
 		playsound(src, 'sound/weapons/ego/thumb_east_rifle_detonation.ogg', 90, FALSE, 10)
 
-////////////////////////////////////////////////////////////
 // THUMBAPPRENTICE WEAPONS
 // Both weapons have 4 evolution tiers. Attack speed is fixed; only force changes.
-// Katana: attack_speed = 1.0 | Greatsword: attack_speed = 1.5
+// Katana: attack_speed = 1 | Greatsword: attack_speed = 1.5
 // DPS targets per tier: 22, 32, 44, 65
 
 /// Helper proc to find the partner apprentice weapon in the user's other hand
@@ -1267,7 +1261,6 @@
 			attribute_requirements = list(FORTITUDE_ATTRIBUTE = 100, PRUDENCE_ATTRIBUTE = 100, TEMPERANCE_ATTRIBUTE = 100, JUSTICE_ATTRIBUTE = 100)
 			swing_threshold = 1
 
-////////////////////////////////////////////////////////////
 // ACCELERATION ROUNDS - Unique ammo for thumbfather weapons
 /obj/item/stack/thumb_east_ammo/acceleration
 	name = "acceleration propellant ammunition"
@@ -1304,7 +1297,7 @@
 	max_amount = 12
 	merge_type = /obj/item/stack/thumb_east_ammo/spent/acceleration
 
-// ================== THUMBFATHER EGO DATUMS ==================
+// THUMBFATHER EGO DATUMS
 // Placed here rather than in _cityweapons_datums.dm / _cityarmor_datums.dm
 // to prevent DM merge conflicts with other sub-PRs that modify those shared files.
 

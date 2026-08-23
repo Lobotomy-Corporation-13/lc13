@@ -17,7 +17,7 @@
 	var/last_drink_exp_time = 0
 	/// world.time of last glass bottle EXP grant (30 sec cooldown)
 	var/last_glass_exp_time = 0
-	/// Tremor burst threshold — INFINITY by default (no bursting). Set by Terremoto T2 skills.
+	/// Tremor burst threshold - INFINITY by default (no bursting). Set by Terremoto T2 skills.
 	var/tremor_burst_threshold = INFINITY
 	/// world.time of last food offering EXP grant (2 min cooldown)
 	var/last_food_exp_time = 0
@@ -31,6 +31,17 @@
 		return COMPONENT_INCOMPATIBLE
 	if(_nursefather)
 		nursefather_ref = _nursefather
+		RegisterSignal(nursefather_ref, COMSIG_PARENT_QDELETING, PROC_REF(on_nursefather_deleted))
+
+/datum/component/palermitan_apprentice/Destroy()
+	if(nursefather_ref)
+		UnregisterSignal(nursefather_ref, COMSIG_PARENT_QDELETING)
+		nursefather_ref = null
+	return ..()
+
+/datum/component/palermitan_apprentice/proc/on_nursefather_deleted(datum/source)
+	SIGNAL_HANDLER
+	nursefather_ref = null
 
 /datum/component/palermitan_apprentice/RegisterWithParent()
 	RegisterSignal(parent, COMSIG_MOB_ITEM_ATTACK, PROC_REF(on_attack))
@@ -48,10 +59,9 @@
 		COMSIG_MOB_EMOTE,
 	))
 
-////////////////////////////////////////////////////////////
 // DUELLO + PALERMITAN STYLE (base passives)
 
-/// Core attack handler — applies Duello and Palermitan Style passives + food offering check
+/// Core attack handler - applies Duello and Palermitan Style passives + food offering check
 /datum/component/palermitan_apprentice/proc/on_attack(datum/source, mob/living/target, mob/living/user, obj/item/weapon)
 	SIGNAL_HANDLER
 	if(!isliving(target) || target == user)
@@ -94,7 +104,6 @@
 	if(!QDELETED(weapon))
 		weapon.force -= bonus
 
-////////////////////////////////////////////////////////////
 // EXP FROM EMOTES AND TRAINING
 
 /// Showing Respect: Bow emote near higher-ranked players grants EXP
@@ -134,7 +143,6 @@
 			to_chat(apprentice, span_notice("You show respect to your betters. (+3 EXP)"))
 			return
 
-////////////////////////////////////////////////////////////
 // NURSEFATHER INTERACTIONS
 
 /// Helper to check if a mob is the nursefather
@@ -146,7 +154,7 @@
 		return TRUE
 	return FALSE
 
-/// Thrown item impact — check for glass bottle from nursefather
+/// Thrown item impact - check for glass bottle from nursefather
 /datum/component/palermitan_apprentice/proc/on_hitby(datum/source, atom/movable/AM, skipcatch, hitpush, blocked, datum/thrownthing/throwingdatum)
 	SIGNAL_HANDLER
 	if(!istype(AM, /obj/item/reagent_containers/food/drinks))
@@ -167,7 +175,7 @@
 		exp_comp.modify_exp(3)
 	to_chat(apprentice, span_notice("The glass shattering against you sharpens your resolve. (+3 EXP)"))
 
-/// Melee attack on the apprentice — check for nursefather unarmed correction OR glass bottle hit
+/// Melee attack on the apprentice - check for nursefather unarmed correction OR glass bottle hit
 /datum/component/palermitan_apprentice/proc/on_attackby(datum/source, obj/item/W, mob/living/user, params)
 	SIGNAL_HANDLER
 	// Check for glass bottle melee hit from nursefather
@@ -181,7 +189,7 @@
 				if(exp_comp)
 					exp_comp.modify_exp(3)
 				to_chat(apprentice, span_notice("The bottle impact sharpens your resolve. (+3 EXP)"))
-	// Daily Training: nursefather hits apprentice with a weapon — grants EXP
+	// Daily Training: nursefather hits apprentice with a weapon - grants EXP
 	if(W && is_nursefather(user))
 		if(world.time >= last_training_exp_time + 3 MINUTES)
 			last_training_exp_time = world.time
@@ -191,7 +199,7 @@
 				exp_comp.modify_exp(2)
 			to_chat(apprentice, span_notice("Your mentor's training strike sharpens your resolve. (+2 EXP)"))
 
-/// Unarmed attack on the apprentice — nursefather harm-intent hand triggers correction.
+/// Unarmed attack on the apprentice - nursefather harm-intent hand triggers correction.
 /// COMSIG_PARENT_ATTACKBY only fires for item attacks, so unarmed punches need this signal instead.
 /datum/component/palermitan_apprentice/proc/on_attack_hand(datum/source, mob/living/user)
 	SIGNAL_HANDLER
@@ -219,7 +227,6 @@
 	to_chat(apprentice, span_notice("Offering a drink to your mentor strengthens your bond. (+5 EXP)"))
 	return TRUE
 
-////////////////////////////////////////////////////////////
 // POST-DUEL CORRECTION
 
 /// Performs the nursefather correction animation and grants rewards

@@ -1,4 +1,4 @@
-/// Palermitan Debug Kit — spawnable item for testing the apprentice system.
+/// Palermitan Debug Kit - spawnable item for testing the apprentice system.
 /// Spawn from object spawner by searching "palermitan debug".
 /// Use in-hand OR alt-click from pocket/belt/backpack to open the menu.
 /obj/item/palermitan_debug_kit

@@ -279,7 +279,7 @@
 		var/datum/component/palermitan_role_passive/P = locate(passive_type) in viewer.GetComponents(/datum/component/palermitan_role_passive)
 		if(P)
 			current_tier = P.tier
-		// Get duel count — check various possible key names
+		// Get duel count - check various possible key names
 		var/duels = 0
 		if(exp_comp)
 			// Check exact match first, then partial matches
@@ -340,7 +340,6 @@
 		return "Adaptive Form (Hana)"
 	return "Unknown Passive"
 
-////////////////////////////////////////////////////////////
 // SKILL TREE ACTION BUTTON
 
 /datum/action/innate/palermitan_tree
@@ -355,15 +354,14 @@
 	var/datum/palermitan_skill_tree/tree = new(user)
 	tree.ui_interact(user)
 
-////////////////////////////////////////////////////////////
-// GLOBAL SKILL DEFINITIONS — 4 SCHOOLS
+// GLOBAL SKILL DEFINITIONS - 4 SCHOOLS
 
 GLOBAL_LIST_INIT(palermitan_skill_definitions, init_palermitan_skill_definitions())
 
 /proc/init_palermitan_skill_definitions()
 	var/list/defs = list()
 
-	// ========== TERREMOTO (Tremor) ==========
+	// TERREMOTO (Tremor)
 	defs["terremoto"] = list(
 		"tier1" = list(
 			"a" = list(
@@ -403,7 +401,7 @@ GLOBAL_LIST_INIT(palermitan_skill_definitions, init_palermitan_skill_definitions
 		)
 	)
 
-	// ========== INCENDIO (Overheat) ==========
+	// INCENDIO (Overheat)
 	defs["incendio"] = list(
 		"tier1" = list(
 			"a" = list(
@@ -443,7 +441,7 @@ GLOBAL_LIST_INIT(palermitan_skill_definitions, init_palermitan_skill_definitions
 		)
 	)
 
-	// ========== ELEGANZA (Poise/Concentration) ==========
+	// ELEGANZA (Poise/Concentration)
 	defs["eleganza"] = list(
 		"tier1" = list(
 			"a" = list(
@@ -483,7 +481,7 @@ GLOBAL_LIST_INIT(palermitan_skill_definitions, init_palermitan_skill_definitions
 		)
 	)
 
-	// ========== FONDAMENTI (General) ==========
+	// FONDAMENTI (General)
 	defs["fondamenti"] = list(
 		"tier1" = list(
 			"a" = list(

@@ -1,8 +1,6 @@
-////////////////////////////////////////////////////////////
 // PALERMITAN DUEL SYSTEM
 // PvP duel system for Thumb Apprentice progression.
 // Creates an arena ring, detects win/loss, grants rewards.
-////////////////////////////////////////////////////////////
 
 /// Tracks total Fortitude gained from dueling, keyed by ckey. Caps at 20.
 GLOBAL_LIST_INIT(duel_fort_rewards, list())
@@ -25,7 +23,6 @@ GLOBAL_LIST_INIT(duel_fort_rewards, list())
 	/// Fake attributes for reward calculation (simple_animals don't have real attributes)
 	var/fake_attributes = 100
 
-////////////////////////////////////////////////////////////
 // DUEL DATUM
 /datum/thumb_duel
 	/// The player who initiated the duel (usually the apprentice)
@@ -81,6 +78,8 @@ GLOBAL_LIST_INIT(duel_fort_rewards, list())
 	// Register signals for win/loss detection
 	RegisterSignal(challenger, COMSIG_MOB_STATCHANGE, PROC_REF(on_challenger_stat_change))
 	RegisterSignal(opponent, COMSIG_MOB_STATCHANGE, PROC_REF(on_opponent_stat_change))
+	RegisterSignal(challenger, COMSIG_PARENT_QDELETING, PROC_REF(on_challenger_deleted))
+	RegisterSignal(opponent, COMSIG_PARENT_QDELETING, PROC_REF(on_opponent_deleted))
 
 	// Spawn arena walls and start check loop
 	spawn_arena_walls()
@@ -106,7 +105,7 @@ GLOBAL_LIST_INIT(duel_fort_rewards, list())
 			wall.duel_ref = src
 			arena_walls += wall
 
-/// Periodic check loop — refreshes walls (they're temp_visuals and expire)
+/// Periodic check loop - refreshes walls (they're temp_visuals and expire)
 /datum/thumb_duel/proc/arena_check_loop()
 	if(!active)
 		return
@@ -125,6 +124,18 @@ GLOBAL_LIST_INIT(duel_fort_rewards, list())
 	if(new_stat >= SOFT_CRIT)
 		INVOKE_ASYNC(src, PROC_REF(end_duel), challenger, opponent, "was defeated")
 
+/// Signal handler: challenger was deleted, so the opponent takes the win
+/datum/thumb_duel/proc/on_challenger_deleted(datum/source)
+	SIGNAL_HANDLER
+	challenger = null
+	INVOKE_ASYNC(src, PROC_REF(end_duel), opponent, null, "vanished")
+
+/// Signal handler: opponent was deleted, so the challenger takes the win
+/datum/thumb_duel/proc/on_opponent_deleted(datum/source)
+	SIGNAL_HANDLER
+	opponent = null
+	INVOKE_ASYNC(src, PROC_REF(end_duel), challenger, null, "vanished")
+
 /// Called by duel_wall when a participant steps on the barrier
 /datum/thumb_duel/proc/on_barrier_crossed(mob/living/crosser)
 	if(!active)
@@ -142,7 +153,7 @@ GLOBAL_LIST_INIT(duel_fort_rewards, list())
 
 	// Announce result
 	if(winner && !QDELETED(winner))
-		to_chat(winner, span_boldnotice("You won the duel! [loser] [reason]."))
+		to_chat(winner, span_boldnotice("You won the duel! [loser ? "[loser]" : "Your opponent"] [reason]."))
 	if(loser && !QDELETED(loser))
 		to_chat(loser, span_boldwarning("You lost the duel."))
 
@@ -165,17 +176,16 @@ GLOBAL_LIST_INIT(duel_fort_rewards, list())
 
 /// Cleans up signals, timers, and arena walls
 /datum/thumb_duel/proc/cleanup()
-	if(challenger && !QDELETED(challenger))
-		UnregisterSignal(challenger, COMSIG_MOB_STATCHANGE)
-	if(opponent && !QDELETED(opponent))
-		UnregisterSignal(opponent, COMSIG_MOB_STATCHANGE)
+	if(challenger)
+		UnregisterSignal(challenger, list(COMSIG_MOB_STATCHANGE, COMSIG_PARENT_QDELETING))
+	if(opponent)
+		UnregisterSignal(opponent, list(COMSIG_MOB_STATCHANGE, COMSIG_PARENT_QDELETING))
 	deltimer(check_timer)
 	for(var/obj/effect/temp_visual/duel_wall/W in arena_walls)
 		if(!QDELETED(W))
 			qdel(W)
 	arena_walls.Cut()
 
-////////////////////////////////////////////////////////////
 // DUEL REWARDS (Step 6)
 
 /// Grants attribute growth, EXP, and role tracking after a duel
@@ -234,16 +244,13 @@ GLOBAL_LIST_INIT(duel_fort_rewards, list())
 		apprentice_avg = total_app / count_app
 
 	// Calculate ratio and modifiers
-	var/ratio = 1.0
+	var/ratio = 1
 	if(apprentice_avg > 0)
 		ratio = clamp(opponent_avg / apprentice_avg, 0.5, 2.5)
-	// Losses still give a meaningful chunk — early apprentices are expected to
-	// lose, so half-rewards keep progression flowing instead of stalling.
-	var/win_modifier = player_won ? 1.0 : 0.5
-	// Underleveled catch-up multiplier: stays active all the way to the 200
-	// cap so late stages still feel rewarding. 1.75x at 40 attrs, scales
-	// linearly down to 1.0x at 200 attrs.
-	var/underleveled_mult = clamp(1 + (200 - apprentice_avg) / 80, 1.0, 1.75)
+	// Half-rewards on a loss keep early progression from stalling
+	var/win_modifier = player_won ? 1 : 0.5
+	// Catch-up multiplier: 1.75x at 40 attrs, scaling to 1x at the 200 cap
+	var/underleveled_mult = clamp(1 + (200 - apprentice_avg) / 80, 1, 1.75)
 
 	// Dueling the nursefather gives severely reduced rewards (training, not real combat)
 	var/is_nursefather_duel = FALSE
@@ -341,7 +348,7 @@ GLOBAL_LIST_INIT(duel_fort_rewards, list())
 			if(current_total < 20)
 				fort_gain = min(fort_gain, 20 - current_total)
 				if(fort_gain > 0)
-					// Check if opponent is a civilian — if so, boost all 4 attributes
+					// Check if opponent is a civilian - if so, boost all 4 attributes
 					var/is_civilian = FALSE
 					if(opp.mind?.assigned_role && findtext(opp.mind.assigned_role, "Civilian"))
 						is_civilian = TRUE
@@ -360,7 +367,7 @@ GLOBAL_LIST_INIT(duel_fort_rewards, list())
 						to_chat(opp, span_boldnotice("The duel toughened you up! (+[fort_gain] Fortitude)"))
 					GLOB.duel_fort_rewards[opp_ckey] += fort_gain
 
-		// Association EXP reward — mirrors apprentice's EXP gain
+		// Association EXP reward - mirrors apprentice's EXP gain
 		var/datum/component/association_exp/asso_exp = opp.GetComponent(/datum/component/association_exp)
 		if(asso_exp && exp_gained > 0)
 			asso_exp.modify_exp(exp_gained)
@@ -422,7 +429,6 @@ GLOBAL_LIST_INIT(duel_fort_rewards, list())
 				to_chat(apprentice, span_boldnotice("Your armor has evolved to tier [new_tier]!"))
 				armor_announced = TRUE
 
-////////////////////////////////////////////////////////////
 // ROLE PASSIVE GRANTING
 
 /// Maps role names to passive component type paths
@@ -490,10 +496,9 @@ GLOBAL_LIST_INIT(duel_fort_rewards, list())
 	apprentice.AddComponent(passive_type, new_tier)
 	to_chat(apprentice, span_boldnotice("Role passive unlocked/upgraded! (Tier [new_tier])"))
 
-////////////////////////////////////////////////////////////
 // DUEL WALL EFFECT
 
-/// Visual barrier for the duel arena border — NOT dense, ends duel on contact
+/// Visual barrier for the duel arena border - NOT dense, ends duel on contact
 /obj/effect/temp_visual/duel_wall
 	name = "duel barrier"
 	desc = "A shimmering barrier marking the edge of a duel."
@@ -536,7 +541,6 @@ GLOBAL_LIST_INIT(duel_fort_rewards, list())
 	if(crosser == duel_ref.challenger || crosser == duel_ref.opponent)
 		duel_ref.on_barrier_crossed(crosser)
 
-////////////////////////////////////////////////////////////
 // DUEL CHALLENGE ACTION
 
 /// Action button granted to Thumb Apprentices to challenge players/dummies to duels

@@ -1,4 +1,4 @@
-/// Palermitan EXP Component — tracks EXP, skill points, and role duel counts for the apprentice.
+/// Palermitan EXP Component - tracks EXP, skill points, and role duel counts for the apprentice.
 /datum/component/palermitan_exp
 	/// Total accumulated EXP (never decreases)
 	var/exp = 0

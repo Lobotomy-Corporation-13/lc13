@@ -1,8 +1,7 @@
-// Palermitan Skill Components — 4 Schools
+// Palermitan Skill Components - 4 Schools
 // All skills inherit from /datum/component/palermitan_skill base.
 // Pattern mirrors /datum/component/ring_skill from the Ring system.
 
-////////////////////////////////////////////////////////////
 // BASE SKILL COMPONENT
 /datum/component/palermitan_skill
 	/// Reference to the human parent
@@ -62,13 +61,11 @@
 /datum/component/palermitan_skill/proc/apply_tremor(mob/living/target, stacks)
 	target.apply_lc_tremor(stacks, get_burst_threshold())
 
-////////////////////////////////////////////////////////////
 //
 // SCHOOL 1: TERREMOTO (Tremor)
 //
-////////////////////////////////////////////////////////////
 
-// T1a: Il Cacciatore — On Hit: 2 Tremor (no burst). Vs DE: +1 OLU
+// T1a: Il Cacciatore - On Hit: 2 Tremor (no burst). Vs DE: +1 OLU
 /datum/component/palermitan_skill/terremoto/il_cacciatore
 
 /datum/component/palermitan_skill/terremoto/il_cacciatore/on_attack(datum/source, mob/living/target, mob/living/user, obj/item/weapon)
@@ -78,7 +75,7 @@
 	if(get_duel_stacks(target) >= 3)
 		user.apply_lc_offense_level_up(1)
 
-// T1b: Destabilizing Strikes — 1/2/3 Tremor scaling with DE
+// T1b: Destabilizing Strikes - 1/2/3 Tremor scaling with DE
 /datum/component/palermitan_skill/terremoto/destabilizing_strikes
 
 /datum/component/palermitan_skill/terremoto/destabilizing_strikes/on_attack(datum/source, mob/living/target, mob/living/user, obj/item/weapon)
@@ -92,9 +89,9 @@
 	else
 		apply_tremor(target, 1)
 
-// T2a: Palermitan Rapier — Unlocks burst at 15. On burst: +5 OLU +2 Poise
+// T2a: Palermitan Rapier - Unlocks burst at 15. On burst: +5 OLU +2 Poise
 // This skill modifies the burst threshold used by the apprentice's tremor applications.
-// It also needs to detect tremor bursts — done by checking stacks before/after.
+// It also needs to detect tremor bursts - done by checking stacks before/after.
 /datum/component/palermitan_skill/terremoto/palermitan_rapier
 	/// The burst threshold this skill sets
 	var/burst_threshold = 15
@@ -131,7 +128,7 @@
 		user.apply_lc_poise(5)
 		to_chat(user, span_nicegreen("Tremor Burst! Your Palermitan Rapier grants power!"))
 
-// T2b: Aftershock — Unlocks burst at 25. OLD on high tremor targets
+// T2b: Aftershock - Unlocks burst at 25. OLD on high tremor targets
 /datum/component/palermitan_skill/terremoto/aftershock
 	var/burst_threshold = 25
 
@@ -156,7 +153,7 @@
 	else if(tremor >= 10)
 		target.apply_lc_offense_level_down(2)
 
-// T3a: Sezionatura di Cervo — Activated ability (60s CD)
+// T3a: Sezionatura di Cervo - Activated ability (60s CD)
 // Force Tremor Burst + 4 Tremor + 4 Overheat + bonus RED = DE*5, consume 50% DE
 /datum/component/palermitan_skill/terremoto/sezionatura
 	/// Whether the next hit should trigger the finisher
@@ -220,7 +217,7 @@
 	skill_ref.primed = TRUE
 	to_chat(owner, span_danger("Your next attack will unleash Sezionatura di Cervo!"))
 
-// T3b: Tectonic Collapse — On Tremor Burst: 3 Fragile + 3 DLD + 2 Overheat
+// T3b: Tectonic Collapse - On Tremor Burst: 3 Fragile + 3 DLD + 2 Overheat
 /datum/component/palermitan_skill/terremoto/tectonic_collapse
 
 /datum/component/palermitan_skill/terremoto/tectonic_collapse/on_attack(datum/source, mob/living/target, mob/living/user, obj/item/weapon)
@@ -240,13 +237,11 @@
 		target.apply_lc_overheat(2)
 		to_chat(user, span_nicegreen("Tectonic Collapse! The burst devastates your target!"))
 
-////////////////////////////////////////////////////////////
 //
 // SCHOOL 2: INCENDIO (Overheat)
 //
-////////////////////////////////////////////////////////////
 
-// T1a: Colpi Sottani — On Hit: 2 Overheat. Vs DE: 3 instead
+// T1a: Colpi Sottani - On Hit: 2 Overheat. Vs DE: 3 instead
 /datum/component/palermitan_skill/incendio/colpi_sottani
 
 /datum/component/palermitan_skill/incendio/colpi_sottani/on_attack(datum/source, mob/living/target, mob/living/user, obj/item/weapon)
@@ -257,7 +252,7 @@
 	else
 		target.apply_lc_overheat(2)
 
-// T1b: Scorching Pursuit — 1 Overheat (2 at 5+ DE). Vs Overheat target: +1 OLU
+// T1b: Scorching Pursuit - 1 Overheat (2 at 5+ DE). Vs Overheat target: +1 OLU
 /datum/component/palermitan_skill/incendio/scorching_pursuit
 
 /datum/component/palermitan_skill/incendio/scorching_pursuit/on_attack(datum/source, mob/living/target, mob/living/user, obj/item/weapon)
@@ -271,7 +266,7 @@
 	if(get_overheat_stacks(target) > 0)
 		user.apply_lc_offense_level_up(1)
 
-// T2a: Firestorm — On Hit vs 10+ Overheat: +3 OLU +1 Poise +1 Fragile
+// T2a: Firestorm - On Hit vs 10+ Overheat: +3 OLU +1 Poise +1 Fragile
 /datum/component/palermitan_skill/incendio/firestorm
 
 /datum/component/palermitan_skill/incendio/firestorm/on_attack(datum/source, mob/living/target, mob/living/user, obj/item/weapon)
@@ -281,7 +276,7 @@
 		user.apply_lc_offense_level_up(3)
 		user.apply_lc_poise(3)
 
-// T2b: Smoldering Wounds — 1 DLD per 5 Overheat (max 3)
+// T2b: Smoldering Wounds - 1 DLD per 5 Overheat (max 3)
 /datum/component/palermitan_skill/incendio/smoldering_wounds
 
 /datum/component/palermitan_skill/incendio/smoldering_wounds/on_attack(datum/source, mob/living/target, mob/living/user, obj/item/weapon)
@@ -293,7 +288,7 @@
 		if(dld > 0)
 			target.apply_lc_defense_level_down(dld)
 
-// T3a: La Spada di Palermo — On Hit vs 10+ DE (30s CD): +5 OLU +3 Damage Up, consume 5 DE, inflict 3 Tremor
+// T3a: La Spada di Palermo - On Hit vs 10+ DE (30s CD): +5 OLU +3 Damage Up, consume 5 DE, inflict 3 Tremor
 /datum/component/palermitan_skill/incendio/la_spada
 	var/last_proc_time = 0
 
@@ -315,7 +310,7 @@
 		D.add_stacks(-5)
 	to_chat(user, span_nicegreen("La Spada di Palermo! Power surges through you!"))
 
-// T3b: Conflagration — On Hit vs 15+ Overheat (10s CD): bonus RED = stacks, reduce by 5, +2 Tremor
+// T3b: Conflagration - On Hit vs 15+ Overheat (10s CD): bonus RED = stacks, reduce by 5, +2 Tremor
 /datum/component/palermitan_skill/incendio/conflagration
 	var/last_proc_time = 0
 
@@ -337,11 +332,9 @@
 	apply_tremor(target, 2)
 	to_chat(user, span_nicegreen("Conflagration! [overheat] bonus RED damage!"))
 
-////////////////////////////////////////////////////////////
 //
 // SCHOOL 3: ELEGANZA (Poise/Concentration)
 //
-////////////////////////////////////////////////////////////
 
 // T1a: Relentless Pursuit
 // Under 5 DE: +2 Poise. 5+ DE: +5 Poise instead
@@ -533,13 +526,11 @@
 		target.apply_lc_fragile(3)
 		target.apply_lc_defense_level_down(3)
 
-////////////////////////////////////////////////////////////
 //
 // SCHOOL 4: FONDAMENTI (General)
 //
-////////////////////////////////////////////////////////////
 
-// T1a: Iron Constitution — On taking damage: +2 DLU
+// T1a: Iron Constitution - On taking damage: +2 DLU
 /datum/component/palermitan_skill/fondamenti/iron_constitution
 
 /datum/component/palermitan_skill/fondamenti/iron_constitution/RegisterWithParent()
@@ -560,7 +551,7 @@
 	var/mob/living/user = parent
 	user.apply_lc_defense_level_up(2)
 
-// T1b: Aggressive Footwork — On Hit: +1 OLU. On taking melee damage: +1 OLU
+// T1b: Aggressive Footwork - On Hit: +1 OLU. On taking melee damage: +1 OLU
 /datum/component/palermitan_skill/fondamenti/aggressive_footwork
 
 /datum/component/palermitan_skill/fondamenti/aggressive_footwork/RegisterWithParent()
@@ -583,7 +574,7 @@
 	var/mob/living/user = parent
 	user.apply_lc_offense_level_up(1)
 
-// T2a: Predator's Instinct — On Hit vs <50% HP: 2 Fragile +2 Poise. <25%: +5 OLU +2 Poise
+// T2a: Predator's Instinct - On Hit vs <50% HP: 2 Fragile +2 Poise. <25%: +5 OLU +2 Poise
 /datum/component/palermitan_skill/fondamenti/predators_instinct
 
 /datum/component/palermitan_skill/fondamenti/predators_instinct/on_attack(datum/source, mob/living/target, mob/living/user, obj/item/weapon)
@@ -599,7 +590,7 @@
 		target.apply_lc_fragile(2)
 		user.apply_lc_poise(2)
 
-// T2b: Enduring Spirit — On Hit vs 3+ DE: heal 1 HP/stack (max 5). On taking damage near DE target: +1 DLU
+// T2b: Enduring Spirit - On Hit vs 3+ DE: heal 1 HP/stack (max 5). On taking damage near DE target: +1 DLU
 /datum/component/palermitan_skill/fondamenti/enduring_spirit
 
 /datum/component/palermitan_skill/fondamenti/enduring_spirit/RegisterWithParent()
@@ -635,7 +626,7 @@
 			user.apply_lc_defense_level_up(1)
 			return
 
-// T3a: Coup de Grace — On Hit vs <20% HP with 5+ DE: bonus RED = DE*3, consume 50%
+// T3a: Coup de Grace - On Hit vs <20% HP with 5+ DE: bonus RED = DE*3, consume 50%
 /datum/component/palermitan_skill/fondamenti/coup_de_grace
 
 /datum/component/palermitan_skill/fondamenti/coup_de_grace/on_attack(datum/source, mob/living/target, mob/living/user, obj/item/weapon)
@@ -657,7 +648,7 @@
 			D.add_stacks(-consume)
 	to_chat(user, span_nicegreen("Coup de Gr\u00e2ce! [bonus] bonus RED damage!"))
 
-// T3b: Unbreakable Will — On entering soft crit (60s CD): +5 DLU +3 Protection +heal 10% max HP
+// T3b: Unbreakable Will - On entering soft crit (60s CD): +5 DLU +3 Protection +heal 10% max HP
 /datum/component/palermitan_skill/fondamenti/unbreakable_will
 	var/last_proc_time = 0
 
