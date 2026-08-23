@@ -67,8 +67,8 @@
 /datum/city_faction_variant/clinic/mirae
 	name = "Mirae"
 	leader_alt_title = "Mirae Clinic Director"
-	staff_title = "Mirae Claims Physician"
-	field_title = "Mirae Recovery Agent"
+	staff_title = "Mirae Physician"
+	field_title = "Mirae Insurer"
 	staff_outfit = /datum/outfit/job/city_clinic/staff/mirae
 	field_outfit = /datum/outfit/job/city_clinic/field/mirae
 	//Stated here rather than left to the job's defaults, even though Mirae is
