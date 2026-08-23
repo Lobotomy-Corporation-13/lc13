@@ -63,7 +63,7 @@ const NewReagentEntry = (props, context) => {
       minWidth={"100%"}
       maxWidth={"100%"}
       options={reagentList}
-      onSelected={value => { newReagent(value); }}/>
+      onSelected={value => { newReagent(value); }} />
   );
 };
 
@@ -77,15 +77,15 @@ const ReagentEntry = (props, context) => {
         {subject.type}
       </TableCell>
       <TableCell style={{ border: '2px solid rgb(8, 8, 8)' }} textAlign="center" nowrap>
-        <NumberInput unit="u" value={subject.amount || 0} onChange={(e, value) => addReagent(subject, value)} minValue={0}/>
+        <NumberInput unit="u" value={subject.amount || 0} onChange={(e, value) => addReagent(subject, value)} minValue={0} />
       </TableCell>
       <TableCell style={{ border: '2px solid rgb(8, 8, 8)' }} textAlign="center">
-        <Button mx={1} icon="trash" color="red" onClick={() => removeReagent(subject)}/>
+        <Button mx={1} icon="trash" color="red" onClick={() => removeReagent(subject)} />
       </TableCell>
     </TableRow>
 
-    );
-  };
+  );
+};
 
 // Consists of the current reagent stack for this container section, and NewReagentEntry to add more.
 const ReagentStack = (props, context) => {
@@ -142,15 +142,15 @@ const ReagentStack = (props, context) => {
   return (
     <Section fill minWidth={'100%'} title={`Reagents`}>
       <Table backgroundColor="#131212">
-        {reagents_to_display.map(r => <ReagentEntry subject={r} addReagent={addReagent}
-          removeReagent={removeReagent} />)}
+        {(reagents_to_display.map(r => <ReagentEntry key={r.type} subject={r} addReagent={addReagent}
+          removeReagent={removeReagent} />))}
       </Table>
       <Divider />
       <NewReagentEntry addReagent={addReagent} reagentList={filtered_reagents}
         reagent_name_to_type_map={reagent_name_to_type_map} />
     </Section>
-    );
-  };
+  );
+};
 
 // A large functional component containing all the info and buttons to manage containers and reagents in this interface.
 const ContainerSection = (props, context) => {
@@ -188,17 +188,18 @@ const ContainerSection = (props, context) => {
           minWidth={"100%"}
           maxWidth={"100%"}
           options={filtered_containers}
-          onSelected={value => { setNewContainer(value); }}/>
+          onSelected={value => { setNewContainer(value); }} />
         <Flex.Item my={1}>
-          Temperature: <NumberInput onChange={(e, value) => temperatureSetter(value)} value={currentTemperature} minValue={1} maxValue={10000} unit="K"/>
+          Temperature: <NumberInput onChange={(e, value) => temperatureSetter(value)} value={currentTemperature} minValue={1} maxValue={10000} unit="K" />
         </Flex.Item>
         <ReagentStack reagents={reagents} filter={reagentFilter} reagent_names={reagent_names}
-          reagentStackCallback={reagentStackCallback} currentReagents={currentReagents} reagent_name_to_type_map={reagent_name_to_type_map} />
+          reagentStackCallback={reagentStackCallback} currentReagents={currentReagents}
+          reagent_name_to_type_map={reagent_name_to_type_map} />
         <SpawnButton container={currentContainer} reagents={currentReagents} currentTemperature={currentTemperature} />
       </Flex>
     </Section>
-    );
-  };
+  );
+};
 
 
 // The actual interface, the main component, our export.
@@ -243,7 +244,7 @@ export const BeakerPanel = (props, context) => {
   // There are other functions in the other components.
   // This one simply assembles the correct spawn_info for grenades.
   const GenerateGrenadeSpawnInfo = () => {
-     if (!chosenContainerOne || !chosenContainerTwo) {
+    if (!chosenContainerOne || !chosenContainerTwo) {
       return null;
     }
     let spawn_info = [];
@@ -288,15 +289,15 @@ export const BeakerPanel = (props, context) => {
       width={800}
       height={600}>
       <Window.Content scrollable>
-        <Flex minWidth="100%" direction='column'>
+        <Flex minWidth="100%" direction="column">
           <Flex.Item>
             uwah~ you need to select reagent containers dante... and then add reagents to them!
           </Flex.Item>
           <Flex.Item my={1}>
             <Divider />
           </Flex.Item>
-          <Flex.Item grow align='center' minWidth={"100%"}>
-            <Section title="Filters" align='center' >
+          <Flex.Item grow align="center" minWidth={"100%"}>
+            <Section title="Filters" align="center" >
               <Stack vertical>
                 <Stack.Item>
                   Container Path:
@@ -307,7 +308,7 @@ export const BeakerPanel = (props, context) => {
                     onInput={(_, value) => { setContainerFilter(value); }}
                   />
                   <Button icon="trash" color="red" content="Clear"
-                      onClick={() => { setContainerFilter(""); }} />
+                    onClick={() => { setContainerFilter(""); }} />
                 </Stack.Item>
                 <Stack.Item>
                   Reagent Name:
@@ -318,7 +319,7 @@ export const BeakerPanel = (props, context) => {
                     onInput={(_, value) => { setReagentFilter(value); }}
                   />
                   <Button icon="trash" color="red" content="Clear"
-                      onClick={() => { setReagentFilter(""); }} />
+                    onClick={() => { setReagentFilter(""); }} />
                 </Stack.Item>
               </Stack>
             </Section>
@@ -334,7 +335,8 @@ export const BeakerPanel = (props, context) => {
                   currentContainer={chosenContainerOne} containers={containers} reagents={reagents}
                   currentTemperature={containerOneTemp} temperatureSetter={setContainerOneTemp}
                   filter={containerFilter} reagentFilter={reagentFilter}
-                  setterFunction={setChosenContainerOne} reagentStackCallback={setReagentStackOne} currentReagents={reagentStackOne}
+                  setterFunction={setChosenContainerOne}
+                  reagentStackCallback={setReagentStackOne} currentReagents={reagentStackOne}
                   reagent_name_to_type_map={reagent_name_to_type_map}
                   reagent_names={reagent_names} container_paths={container_paths} />
               </Flex.Item>
@@ -346,40 +348,41 @@ export const BeakerPanel = (props, context) => {
                   currentContainer={chosenContainerTwo} containers={containers} reagents={reagents}
                   currentTemperature={containerTwoTemp} temperatureSetter={setContainerTwoTemp}
                   filter={containerFilter} reagentFilter={reagentFilter}
-                  setterFunction={setChosenContainerTwo} reagentStackCallback={setReagentStackTwo} currentReagents={reagentStackTwo}
+                  setterFunction={setChosenContainerTwo}
+                  reagentStackCallback={setReagentStackTwo} currentReagents={reagentStackTwo}
                   reagent_name_to_type_map={reagent_name_to_type_map}
                   reagent_names={reagent_names} container_paths={container_paths} />
               </Flex.Item>
 
             </Flex>
           </Flex.Item>
-        <Flex.Item>
-          <Section title='"Hilarious" content'>
-            <Flex direction="column">
-              <Flex.Item mb={1}>
-                <Button
-                  color="red"
-                  content="Spawn Grenade*"
-                  tooltip="Seriously it won't work if you don't use beakers."
-                  tooltipPosition="right"
-                  onClick={() => act("spawngrenade", {
-                    spawn_info: GenerateGrenadeSpawnInfo(),
-                    grenade_info: {
-                      detonation_type: "normal",
-                      detonation_timer: grenadeTimer,
-                    },
-                  })}
-                />
-              </Flex.Item>
-              <Flex.Item>
-                Detonation Timer: <NumberInput unit="s" value={grenadeTimer} onChange={(e, value) => setGrenadeTimer(value)} minValue={0} />
-              </Flex.Item>
-              <Flex.Item my={3}>
-                * Requires two beaker-type containers. Spawns unprimed!
-              </Flex.Item>
-            </Flex>
-          </Section>
-        </Flex.Item>
+          <Flex.Item>
+            <Section title='"Hilarious" content'>
+              <Flex direction="column">
+                <Flex.Item mb={1}>
+                  <Button
+                    color="red"
+                    content="Spawn Grenade*"
+                    tooltip="Seriously it won't work if you don't use beakers."
+                    tooltipPosition="right"
+                    onClick={() => act("spawngrenade", {
+                      spawn_info: GenerateGrenadeSpawnInfo(),
+                      grenade_info: {
+                        detonation_type: "normal",
+                        detonation_timer: grenadeTimer,
+                      },
+                    })}
+                  />
+                </Flex.Item>
+                <Flex.Item>
+                  Detonation Timer: <NumberInput unit="s" value={grenadeTimer} onChange={(e, value) => setGrenadeTimer(value)} minValue={0} />
+                </Flex.Item>
+                <Flex.Item my={3}>
+                  * Requires two beaker-type containers. Spawns unprimed!
+                </Flex.Item>
+              </Flex>
+            </Section>
+          </Flex.Item>
         </Flex>
       </Window.Content>
     </Window>
