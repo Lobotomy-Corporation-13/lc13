@@ -36,7 +36,7 @@
 	H.AddComponent(/datum/component/nursefather_music, NURSEFATHER_FINGER_INDEX)
 	var/datum/action/innate/view_role_rules/index_oracle/rules_action = new
 	rules_action.Grant(H)
-	. = ..()
+	return ..()
 
 /datum/outfit/job/oracles_proxy
 	name = "Oracle Proxy"
