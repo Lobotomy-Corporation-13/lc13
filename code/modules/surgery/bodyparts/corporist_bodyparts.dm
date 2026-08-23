@@ -9,10 +9,8 @@
 #define CORPORIST_MEDIUM_BURN_MSG "charred"
 #define CORPORIST_HEAVY_BURN_MSG "smoldering"
 
-// ============================================
 // CORPORIST MAESTRO BODYPARTS
 // Sleek metallic prosthetics with gaps, glass panes, sharp claws
-// ============================================
 
 /obj/item/bodypart/head/corporist_maestro
 	name = "corporist maestro head"
@@ -129,10 +127,8 @@
 /obj/item/bodypart/r_leg/corporist_maestro/is_organic_limb()
 	return TRUE
 
-// ============================================
 // CORPORIST APPRENTICE BODYPARTS
 // Iron maiden style - white/yellow/gold, knightly appearance
-// ============================================
 
 /obj/item/bodypart/head/corporist_apprentice
 	name = "corporist apprentice head"

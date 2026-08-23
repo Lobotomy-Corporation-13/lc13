@@ -1,7 +1,7 @@
 // Pointillist School Skills
 // Theme: Random status effect application, SP recovery, scaling power.
 
-// ========== TIER 1 ==========
+// TIER 1
 
 // Hematic Coloring: Apply 3 stacks of random effect. If target has it, +10% damage instead.
 /datum/component/ring_skill/pointillist/hematic_coloring
@@ -95,7 +95,7 @@
 		human_parent.adjustSanityLoss(-sp_healed)
 		to_chat(human_parent, span_nicegreen("Sanguine Pointillism: New colors soothe your mind! (+[sp_healed] SP)"))
 
-// ========== TIER 2 ==========
+// TIER 2
 
 // Assignment Evaluation: Heal 5 SP when hitting targets, +3 SP per status effect on them
 /datum/component/ring_skill/pointillist/assignment_evaluation
@@ -150,7 +150,7 @@
 	..()
 
 
-// ========== TIER 3 ==========
+// TIER 3
 
 // Paint Over: Random effects apply 2x stacks; 10% chance for all four
 /datum/component/ring_skill/pointillist/paint_over

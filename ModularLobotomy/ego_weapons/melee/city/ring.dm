@@ -395,7 +395,7 @@
 	attribute_requirements = list()
 	actions_types = list(/datum/action/item_action/fascia_heartbeat_surge)
 	special = "Phase 1 (Defensive). Summoned from the Iron Maiden armor. Inflicts 3 bleed on hit. \
-		Use in hand to activate Iron Curtain (5s, 25s CD) — massively boosts armor reflect but slows movement. \
+		Use in hand to activate Iron Curtain (5s, 25s CD) - massively boosts armor reflect but slows movement. \
 		Heartbeat Surge: plant blade, dash up to 5 tiles, perform an 8-hit combo on the first target hit (15s CD). \
 		A ghost can possess this weapon for Empower Strike (+30 RED) and Compel Dash (forced 5-tile dash) abilities. \
 		The spirit has a hunger system that scales weapon damage from -25% (starving) to +10% (gorged)."
@@ -437,8 +437,23 @@
 		bound_spirit = null
 	if(linked_armor)
 		linked_armor.phase1_weapon = null
-		linked_armor = null
+	ClearArmor()
 	return ..()
+
+/// Stores the armor that summoned us and follows it if it is deleted
+/obj/item/ego_weapon/city/ring/fascia/proc/LinkArmor(obj/item/clothing/suit/armor/ego_gear/city/ring_apprentice/armor)
+	linked_armor = armor
+	RegisterSignal(armor, COMSIG_PARENT_QDELETING, PROC_REF(on_armor_deleted))
+
+/obj/item/ego_weapon/city/ring/fascia/proc/ClearArmor()
+	if(!linked_armor)
+		return
+	UnregisterSignal(linked_armor, COMSIG_PARENT_QDELETING)
+	linked_armor = null
+
+/obj/item/ego_weapon/city/ring/fascia/proc/on_armor_deleted(datum/source)
+	SIGNAL_HANDLER
+	linked_armor = null
 
 /obj/item/ego_weapon/city/ring/fascia/relaymove(mob/living/user, direction)
 	return //stops buckled message spam for the spirit
@@ -702,8 +717,23 @@
 		deltimer(leap_slowdown_timer_id)
 	if(linked_armor)
 		linked_armor.phase2_weapon = null
-		linked_armor = null
+	ClearArmor()
 	return ..()
+
+/// Stores the armor that summoned us and follows it if it is deleted
+/obj/item/ego_weapon/city/ring/fascia_unleashed/proc/LinkArmor(obj/item/clothing/suit/armor/ego_gear/city/ring_apprentice/armor)
+	linked_armor = armor
+	RegisterSignal(armor, COMSIG_PARENT_QDELETING, PROC_REF(on_armor_deleted))
+
+/obj/item/ego_weapon/city/ring/fascia_unleashed/proc/ClearArmor()
+	if(!linked_armor)
+		return
+	UnregisterSignal(linked_armor, COMSIG_PARENT_QDELETING)
+	linked_armor = null
+
+/obj/item/ego_weapon/city/ring/fascia_unleashed/proc/on_armor_deleted(datum/source)
+	SIGNAL_HANDLER
+	linked_armor = null
 
 /obj/item/ego_weapon/city/ring/fascia_unleashed/relaymove(mob/living/user, direction)
 	return //stops buckled message spam for the spirit
@@ -864,7 +894,7 @@
 	if(user && !QDELETED(user))
 		user.remove_movespeed_modifier(/datum/movespeed_modifier/fascia_leap_miss)
 
-// ========== FASCIA SPIRIT ==========
+// FASCIA SPIRIT
 // Ghost mob that lives inside the Fascia weapon. Speaks privately to the wielder.
 
 /mob/living/simple_animal/fascia_spirit
@@ -985,7 +1015,7 @@
 		armor.possessed = FALSE
 	return ..()
 
-// ========== FASCIA SPIRIT ACTIONS ==========
+// FASCIA SPIRIT ACTIONS
 
 // Empower Strike - empowers the next weapon attack within 1.5 seconds
 /datum/action/cooldown/fascia_empower_strike
@@ -1130,7 +1160,7 @@
 	weapon_ref = null
 	return ..()
 
-// ========== HEARTBEAT SURGE ==========
+// HEARTBEAT SURGE
 // Action that lets the wielder plant their blade, dash forward, and claw at the first living target hit.
 // Available on both Fascia phases.
 
@@ -1186,7 +1216,7 @@
 		else
 			to_chat(owner, span_notice("You lower your stance."))
 
-// ========== HEARTBEAT SURGE PROCS (Phase 1) ==========
+// HEARTBEAT SURGE PROCS (Phase 1)
 
 /// Performs the full Heartbeat Surge sequence for Phase 1 Fascia
 /obj/item/ego_weapon/city/ring/fascia/proc/perform_heartbeat_surge(mob/living/user, dash_dir)
@@ -1270,7 +1300,7 @@
 	if(victim && !QDELETED(victim) && victim.stat != DEAD)
 		perform_claw_combo(user, victim, sword_turf, saved_inhand, saved_lefthand, saved_righthand, dash_dir)
 	else
-		// No target hit — walk back to sword
+		// No target hit - walk back to sword
 		return_to_sword(user, sword_turf)
 		cleanup_surge(user, sword_turf, saved_inhand, saved_lefthand, saved_righthand)
 
@@ -1385,7 +1415,7 @@
 		QDEL_NULL(planted_visual)
 	is_surging = FALSE
 
-// ========== HEARTBEAT SURGE PROCS (Phase 2) ==========
+// HEARTBEAT SURGE PROCS (Phase 2)
 
 /// Performs the full Heartbeat Surge sequence for Phase 2 Fascia
 /obj/item/ego_weapon/city/ring/fascia_unleashed/proc/perform_heartbeat_surge(mob/living/user, dash_dir)
@@ -1411,7 +1441,7 @@
 
 	playsound(user, 'sound/abnormalities/ichthys/jump.ogg', 50, FALSE, -1)
 
-	// Backflip — lift higher and spin 360 degrees
+	// Backflip - lift higher and spin 360 degrees
 	var/lift_amount = 20
 	var/mutable_appearance/shadow_overlay = mutable_appearance('icons/obj/spider_house/ring/ring_icons.dmi', "shadow")
 	shadow_overlay.pixel_y = -lift_amount
@@ -1464,7 +1494,7 @@
 	if(victim && !QDELETED(victim) && victim.stat != DEAD)
 		perform_claw_combo(user, victim, sword_turf, saved_inhand, saved_lefthand, saved_righthand, dash_dir)
 	else
-		// No target hit — walk back to sword
+		// No target hit - walk back to sword
 		return_to_sword(user, sword_turf)
 		cleanup_surge(user, sword_turf, saved_inhand, saved_lefthand, saved_righthand)
 
@@ -1579,7 +1609,7 @@
 		QDEL_NULL(planted_visual)
 	is_surging = FALSE
 
-// ================== RING EGO DATUMS ==================
+// RING EGO DATUMS
 // Placed here rather than in _cityweapons_datums.dm / _cityarmor_datums.dm
 // to prevent DM merge conflicts with other sub-PRs that modify those shared files.
 
@@ -1589,7 +1619,7 @@
 	cost = 100
 	ego_tags = list(EGO_TAG_REACH, EGO_TAG_SPECIAL_RANGED, EGO_TAG_AOE_RADIAL, EGO_TAG_AOE_PIERCING, EGO_TAG_DOT)
 
-/// Fascia (Apprentice Weapon — reads stats from weapon, dispenses Iron Maiden armor)
+/// Fascia (Apprentice Weapon - reads stats from weapon, dispenses Iron Maiden armor)
 /datum/ego_datum/weapon/city/ring_fascia
 	item_path = /obj/item/ego_weapon/city/ring/fascia
 	dispense_path = /obj/item/clothing/suit/armor/ego_gear/city/ring_apprentice
@@ -1601,7 +1631,7 @@
 	item_path = /obj/item/clothing/suit/armor/ego_gear/city/ring_maestro
 	cost = 100
 
-/// Fascia Unleashed (Phase 2 — also dispenses Iron Maiden armor)
+/// Fascia Unleashed (Phase 2 - also dispenses Iron Maiden armor)
 /datum/ego_datum/weapon/city/ring_fascia_unleashed
 	item_path = /obj/item/ego_weapon/city/ring/fascia_unleashed
 	dispense_path = /obj/item/clothing/suit/armor/ego_gear/city/ring_apprentice

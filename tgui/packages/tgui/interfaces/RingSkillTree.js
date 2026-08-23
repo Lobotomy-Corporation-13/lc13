@@ -220,13 +220,16 @@ const TierDisplay = (props, context) => {
 
   const tierLocked = tier.choices.some(c => c.locked);
   const tierCompleted = tier.choices.some(c => c.selected);
+  const tierBorder = tierCompleted
+    ? schoolColor
+    : tierLocked ? '#444' : '#666';
 
   return (
     <Box
       mb={2}
       p={1}
       style={{
-        border: `1px solid ${tierCompleted ? schoolColor : tierLocked ? '#444' : '#666'}`,
+        border: `1px solid ${tierBorder}`,
         borderRadius: '4px',
         backgroundColor: tierLocked ? 'rgba(0,0,0,0.3)' : 'transparent',
       }}
@@ -354,7 +357,9 @@ const SkillChoice = (props, context) => {
           </Flex.Item>
         )}
       </Flex>
-      <Box color={choice.locked || choice.excluded ? 'gray' : 'label'} fontSize="0.85em">
+      <Box
+        color={choice.locked || choice.excluded ? 'gray' : 'label'}
+        fontSize="0.85em">
         {choice.desc}
       </Box>
       {canSelect && (

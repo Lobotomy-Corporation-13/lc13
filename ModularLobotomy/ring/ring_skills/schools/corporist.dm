@@ -3,7 +3,7 @@
 // When both occur simultaneously, trigger Artistic Synergy bonuses.
 // "Those who utilize the interaction between human bones and muscles, the contraction and elongation thereof."
 
-// ========== TIER 1 ==========
+// TIER 1
 
 // Butcher - Ribs: On hit, apply 2 bleed to target and gain 1 Protection.
 // Artistic Synergy: Heal 5% max SP. If at max SP, gain 1 Damage Up instead.
@@ -85,7 +85,7 @@
 		human_parent.adjustSanityLoss(-sp_heal)
 		to_chat(human_parent, span_nicegreen("Rotator Crush: Your creative tension soothes your mind. (+[sp_heal] SP)"))
 
-// ========== TIER 2 ==========
+// TIER 2
 
 // Repressed Flesh: When you have a positive effect and hit a bleeding target,
 // heal 5 HP and apply 2 extra bleed. If target has 10+ bleed, also gain 1 extra Protection. (5s CD)
@@ -166,7 +166,7 @@
 	target.deal_damage(total_damage, RED_DAMAGE)
 	playsound(target, 'sound/effects/splat.ogg', 40, TRUE)
 
-// ========== TIER 3 ==========
+// TIER 3
 
 // Anatomize: When you have both Protection and Damage Up and hit a bleeding target
 // below 25% HP, consume all bleed stacks to deal 5 RED damage per stack. Also fully restore SP. (30s CD)

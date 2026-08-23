@@ -1,7 +1,7 @@
 // Corporist Maestro Actions
 // Actions for the Maestro and Apprentice roles
 
-// ================== SCULPT CORPSE ==================
+// SCULPT CORPSE
 // Primary action to create artwork from a corpse
 
 /datum/action/cooldown/sculpt_corpse
@@ -63,7 +63,7 @@
 	StartCooldown()
 	return TRUE
 
-// ================== DEMONSTRATE ARTISTRY ==================
+// DEMONSTRATE ARTISTRY
 // Special action to inspire others
 
 /datum/action/cooldown/demonstrate_artistry
@@ -150,7 +150,7 @@
 	StartCooldown()
 	return TRUE
 
-// ================== JUDGE ARTWORK ==================
+// JUDGE ARTWORK
 // Maestro-only action to assign final grades
 
 /datum/action/cooldown/judge_artwork
@@ -259,7 +259,7 @@
 	StartCooldown()
 	return TRUE
 
-// ================== DESCRIBE ARTWORK ==================
+// DESCRIBE ARTWORK
 // Action to set custom description on artwork
 
 /datum/action/cooldown/describe_artwork
@@ -326,7 +326,7 @@
 	StartCooldown()
 	return TRUE
 
-// ================== RING SKILL TREE ==================
+// RING SKILL TREE
 // Action to open the Ring Skill Tree TGUI
 
 /datum/action/innate/ring_skill_tree
@@ -360,7 +360,7 @@
 		QDEL_NULL(skill_tree_datum)
 	. = ..()
 
-// ================== RESET ARTISTRY ==================
+// RESET ARTISTRY
 // Maestro-only action to respec a student's skill tree
 
 /datum/action/cooldown/reset_artistry
@@ -417,7 +417,7 @@
 	StartCooldown()
 	return TRUE
 
-// ================== VIEW RING RULES ==================
+// VIEW RING RULES
 // Action to view Ring rules and tenants (uses general view_role_rules base)
 
 /datum/action/innate/view_role_rules/ring_artist
@@ -441,7 +441,7 @@
 	var/html = artist.get_rules_html()
 	H << browse(html, "window=ring_rules;size=600x500")
 
-// ================== FASCIA SPIRIT ACTIONS ==================
+// FASCIA SPIRIT ACTIONS
 
 // View Fascia Rules - explains the spirit's goals (uses general view_role_rules base)
 /datum/action/innate/view_role_rules/fascia

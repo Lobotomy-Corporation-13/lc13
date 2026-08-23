@@ -110,7 +110,7 @@
 
 	return result.Join("<br>")
 
-// ===================== MAESTRO =====================
+// MAESTRO
 
 /datum/antagonist/ring_artist/maestro
 	name = "Ring Maestro"
@@ -220,7 +220,7 @@
 		<p>You cannot judge your own artwork. A true artist seeks the judgment of others.</p>
 	</body></html>"}
 
-// ===================== APPRENTICE =====================
+// APPRENTICE
 
 /datum/antagonist/ring_artist/apprentice
 	name = "Ring Apprentice"
@@ -285,7 +285,7 @@
 		<p>You have given up everything to pursue the arts. Make it worth the sacrifice.</p>
 	</body></html>"}
 
-// ===================== STUDENT =====================
+// STUDENT
 
 /datum/antagonist/ring_artist/student
 	name = "Ring Student"

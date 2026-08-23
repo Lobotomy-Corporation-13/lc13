@@ -228,7 +228,7 @@ GLOBAL_LIST_INIT(ring_skill_definitions, init_ring_skill_definitions())
 /proc/init_ring_skill_definitions()
 	var/list/defs = list()
 
-	// ========== FAUVISTS ==========
+	// FAUVISTS
 	defs["fauvist"] = list(
 		"tier1" = list(
 			"a" = list(
@@ -268,7 +268,7 @@ GLOBAL_LIST_INIT(ring_skill_definitions, init_ring_skill_definitions())
 		)
 	)
 
-	// ========== POINTILLISTS ==========
+	// POINTILLISTS
 	defs["pointillist"] = list(
 		"tier1" = list(
 			"a" = list(
@@ -308,7 +308,7 @@ GLOBAL_LIST_INIT(ring_skill_definitions, init_ring_skill_definitions())
 		)
 	)
 
-	// ========== CUBISTS ==========
+	// CUBISTS
 	defs["cubist"] = list(
 		"tier1" = list(
 			"a" = list(
@@ -348,7 +348,7 @@ GLOBAL_LIST_INIT(ring_skill_definitions, init_ring_skill_definitions())
 		)
 	)
 
-	// ========== CORPORISTS ==========
+	// CORPORISTS
 	defs["corporist"] = list(
 		"tier1" = list(
 			"a" = list(

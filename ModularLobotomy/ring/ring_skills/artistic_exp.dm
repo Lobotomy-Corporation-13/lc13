@@ -171,7 +171,7 @@
 /datum/component/artistic_exp/proc/refund_all_points()
 	skill_points += skill_points_spent
 	skill_points_spent = 0
-	schools_invested = list()
+	schools_invested.Cut()
 	return TRUE
 
 /// Check if player can invest in a school

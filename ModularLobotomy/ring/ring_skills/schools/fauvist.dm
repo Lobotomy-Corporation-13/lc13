@@ -1,7 +1,7 @@
 // Fauvist School Skills
 // Theme: Predatory aggression, WHITE/SP damage focus. The beast tears at both body and mind.
 
-// ========== TIER 1 ==========
+// TIER 1
 
 // Predator's Scent: +15% damage vs bleeding targets
 /datum/component/ring_skill/fauvist/predators_scent
@@ -48,7 +48,7 @@
 	..()
 
 
-// ========== TIER 2 ==========
+// TIER 2
 
 // Rending Claws: Attacks apply 2 bleed stacks
 /datum/component/ring_skill/fauvist/rending_claws
@@ -116,7 +116,7 @@
 		human_parent.extra_damage -= damage_buff
 	. = ..()
 
-// ========== TIER 3 ==========
+// TIER 3
 
 // Spreading Wounds: When hitting bleeding target, adjacent enemies gain 3 bleed
 /datum/component/ring_skill/fauvist/spreading_wounds

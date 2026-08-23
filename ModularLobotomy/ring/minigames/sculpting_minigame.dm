@@ -76,7 +76,7 @@
 
 /// Generate sweet spots for the current round
 /datum/sculpting_minigame/proc/generate_sweet_spots()
-	sweet_spots = list()
+	sweet_spots.Cut()
 
 	// Number of sweet spots decreases in later rounds
 	var/num_spots = 3

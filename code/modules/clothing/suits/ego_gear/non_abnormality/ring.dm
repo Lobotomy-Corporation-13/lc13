@@ -74,12 +74,34 @@
 	var/datum/action/spell_action/ability/item/A = AS.action
 	A.SetItem(src)
 
+/obj/item/clothing/suit/armor/ego_gear/city/ring_apprentice/Destroy()
+	remove_phase1_weapon()
+	remove_phase2_weapon()
+	remove_reforge_action()
+	if(iron_curtain)
+		deactivate_iron_curtain()
+	bound_spirit = null
+	ClearWearer()
+	return ..()
+
 /obj/item/clothing/suit/armor/ego_gear/city/ring_apprentice/equipped(mob/user, slot)
 	. = ..()
 	if(slot == ITEM_SLOT_OCLOTHING && ishuman(user))
 		armor_wearer = user
 		RegisterSignal(user, COMSIG_MOB_APPLY_DAMGE, PROC_REF(on_damage_reflect))
 		RegisterSignal(user, COMSIG_MOB_AFTER_APPLY_DAMGE, PROC_REF(on_wearer_damaged))
+		RegisterSignal(user, COMSIG_PARENT_QDELETING, PROC_REF(on_wearer_deleted))
+
+/// Drops the wearer reference along with the signals that depend on it
+/obj/item/clothing/suit/armor/ego_gear/city/ring_apprentice/proc/ClearWearer()
+	if(!armor_wearer)
+		return
+	UnregisterSignal(armor_wearer, list(COMSIG_MOB_APPLY_DAMGE, COMSIG_MOB_AFTER_APPLY_DAMGE, COMSIG_PARENT_QDELETING))
+	armor_wearer = null
+
+/obj/item/clothing/suit/armor/ego_gear/city/ring_apprentice/proc/on_wearer_deleted(datum/source)
+	SIGNAL_HANDLER
+	ClearWearer()
 
 /obj/item/clothing/suit/armor/ego_gear/city/ring_apprentice/relaymove(mob/living/user, direction)
 	return //stops buckled message spam for the spirit
@@ -87,7 +109,6 @@
 /obj/item/clothing/suit/armor/ego_gear/city/ring_apprentice/dropped(mob/user)
 	. = ..()
 	if(armor_wearer)
-		UnregisterSignal(armor_wearer, list(COMSIG_MOB_APPLY_DAMGE, COMSIG_MOB_AFTER_APPLY_DAMGE))
 		remove_phase1_weapon()
 		remove_phase2_weapon()
 		if(iron_curtain)
@@ -95,10 +116,10 @@
 		if(phase == 2)
 			armor_wearer.remove_movespeed_modifier(/datum/movespeed_modifier/iron_maiden_fractured)
 		remove_reforge_action()
-		// Spirit is already sheltered by remove_phase1/2_weapon — keep it safe in the armor
+		// Spirit is already sheltered by remove_phase1/2_weapon - keep it safe in the armor
 		if(bound_spirit)
 			to_chat(bound_spirit, span_notice("The armor is removed. You remain sheltered within, waiting..."))
-		armor_wearer = null
+		ClearWearer()
 		// Reset to phase 1
 		phase = 1
 		icon_state = "ring_apprentice"
@@ -168,7 +189,7 @@
 	remove_phase1_weapon()
 	if(armor_wearer && !phase2_weapon)
 		phase2_weapon = new /obj/item/ego_weapon/city/ring/fascia_unleashed
-		phase2_weapon.linked_armor = src
+		phase2_weapon.LinkArmor(src)
 		if(!armor_wearer.put_in_hands(phase2_weapon))
 			QDEL_NULL(phase2_weapon)
 			to_chat(armor_wearer, span_warning("You need a free hand for the transformation!"))
@@ -195,7 +216,7 @@
 
 	if(phase == 2)
 		phase2_weapon = new /obj/item/ego_weapon/city/ring/fascia_unleashed
-		phase2_weapon.linked_armor = src
+		phase2_weapon.LinkArmor(src)
 		if(!user.put_in_hands(phase2_weapon))
 			QDEL_NULL(phase2_weapon)
 			to_chat(user, span_warning("You need a free hand to summon the weapon!"))
@@ -205,7 +226,7 @@
 			grant_spirit_to_weapon(phase2_weapon)
 	else
 		phase1_weapon = new /obj/item/ego_weapon/city/ring/fascia
-		phase1_weapon.linked_armor = src
+		phase1_weapon.LinkArmor(src)
 		if(!user.put_in_hands(phase1_weapon))
 			QDEL_NULL(phase1_weapon)
 			to_chat(user, span_warning("You need a free hand to summon the weapon!"))
@@ -371,7 +392,7 @@
 	remove_phase2_weapon()
 	if(armor_wearer && !phase1_weapon)
 		phase1_weapon = new /obj/item/ego_weapon/city/ring/fascia
-		phase1_weapon.linked_armor = src
+		phase1_weapon.LinkArmor(src)
 		if(!armor_wearer.put_in_hands(phase1_weapon))
 			QDEL_NULL(phase1_weapon)
 			to_chat(armor_wearer, span_warning("You need a free hand to reform the weapon!"))

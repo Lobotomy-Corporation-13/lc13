@@ -1,7 +1,7 @@
 // Corporist Artwork System
 // Artworks created by The Ring's Corporist school from flesh and bone
 
-// ================== ARTIST'S TOOLKIT ==================
+// ARTIST'S TOOLKIT
 
 /obj/item/storage/box/corporist_toolkit
 	name = "artist's toolkit"
@@ -521,7 +521,7 @@
 
 	exp_comp.modify_exp(exp_change)
 
-// ================== CUSTOM ARTWORK ==================
+// CUSTOM ARTWORK
 // Player-composed artwork using a 48x48 grid editor
 // Standalone structure (not a subtype of corporist_artwork)
 
@@ -1187,7 +1187,7 @@ GLOBAL_LIST_EMPTY(bodypart_icon_cache)
 		return TRUE
 	return FALSE
 
-// ================== CUSTOM ARTWORK EDITOR ==================
+// CUSTOM ARTWORK EDITOR
 
 /datum/custom_artwork_editor
 	/// The artwork being edited
@@ -1409,7 +1409,7 @@ GLOBAL_LIST_EMPTY(bodypart_icon_cache)
 		if("clear_veins")
 			if(!length(artwork.vein_pixels))
 				return
-			artwork.vein_pixels = list()
+			artwork.vein_pixels.Cut()
 			. = TRUE
 
 		if("toggle_veins_layer")
@@ -1463,7 +1463,7 @@ GLOBAL_LIST_EMPTY(bodypart_icon_cache)
 	if(exp_comp)
 		exp_comp.add_activity_exp("arrange_part")
 
-// ================== CARVED PIECE ITEM ==================
+// CARVED PIECE ITEM
 
 /obj/item/carved_piece
 	name = "carved flesh piece"
@@ -1538,7 +1538,7 @@ GLOBAL_LIST_EMPTY(bodypart_icon_cache)
 	carved_base64 = icon2base64(carved_icon)
 	src.icon = carved_icon
 
-// ================== CARVE BODY EDITOR ==================
+// CARVE BODY EDITOR
 
 /datum/carve_body_editor
 	/// The target dead mob
@@ -1553,11 +1553,11 @@ GLOBAL_LIST_EMPTY(bodypart_icon_cache)
 	/// Base64 of the source icon for TGUI
 	var/source_base64
 	/// List of opaque pixel coords (top-down, 0-indexed)
-	var/list/opaque_pixels
+	var/list/opaque_pixels = list()
 	/// Set of opaque pixel keys for fast lookup
-	var/list/opaque_set
+	var/list/opaque_set = list()
 	/// Selected pixels: "x,y" -> TRUE
-	var/list/selected_pixels
+	var/list/selected_pixels = list()
 	/// Whether using the living sprite (TRUE) or dead (FALSE)
 	var/using_living = FALSE
 	/// Living sprite icon
@@ -1574,7 +1574,6 @@ GLOBAL_LIST_EMPTY(bodypart_icon_cache)
 /datum/carve_body_editor/New(mob/living/simple_animal/target, mob/living/carbon/human/user)
 	target_mob = target
 	artist = user
-	selected_pixels = list()
 
 	// Build both living and dead icons
 	var/dead_state = target.icon_dead || target.icon_state
@@ -1595,8 +1594,8 @@ GLOBAL_LIST_EMPTY(bodypart_icon_cache)
 	source_height = I.Height()
 	source_base64 = base64
 
-	opaque_pixels = list()
-	opaque_set = list()
+	opaque_pixels.Cut()
+	opaque_set.Cut()
 	for(var/by in 1 to source_height)
 		for(var/bx in 1 to source_width)
 			if(I.GetPixel(bx, by))
@@ -1673,12 +1672,12 @@ GLOBAL_LIST_EMPTY(bodypart_icon_cache)
 			. = TRUE
 
 		if("clear_selection")
-			selected_pixels = list()
+			selected_pixels.Cut()
 			. = TRUE
 
 		if("switch_sprite")
 			using_living = !using_living
-			selected_pixels = list()
+			selected_pixels.Cut()
 			if(using_living)
 				set_source_icon(living_icon, living_base64)
 			else

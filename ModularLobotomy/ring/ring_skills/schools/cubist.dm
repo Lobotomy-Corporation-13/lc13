@@ -1,7 +1,7 @@
 // Cubist School Skills
 // Theme: Area control, spatial manipulation. Command the battlefield through bleeding zones.
 
-// ========== TIER 1 ==========
+// TIER 1
 
 // Fractured Reflection: Attackers gain 3 bleed when hitting you
 /datum/component/ring_skill/cubist/fractured_reflection
@@ -57,7 +57,7 @@
 	..()
 
 
-// ========== TIER 2 ==========
+// TIER 2
 
 // Abstract Suffering: Attacks against bleeding targets deal bonus WHITE damage
 /datum/component/ring_skill/cubist/abstract_suffering
@@ -111,7 +111,7 @@
 /datum/movespeed_modifier/warped_space
 	multiplicative_slowdown = 0.2
 
-// ========== TIER 3 ==========
+// TIER 3
 
 // Spatial Anchor: Enemies within 6 tiles can't have bleed reduced below 5
 /datum/component/ring_skill/cubist/spatial_anchor
