@@ -143,7 +143,8 @@ const ReagentStack = (props, context) => {
     <Section fill minWidth={'100%'} title={`Reagents`}>
       <Table backgroundColor="#131212">
         {(reagents_to_display.map(r => <ReagentEntry key={r.type} subject={r} addReagent={addReagent}
-          removeReagent={removeReagent} />))}
+          removeReagent={removeReagent} />))
+        }
       </Table>
       <Divider />
       <NewReagentEntry addReagent={addReagent} reagentList={filtered_reagents}
