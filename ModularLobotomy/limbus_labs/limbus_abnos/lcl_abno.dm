@@ -526,13 +526,13 @@
 	return desire_amount
 
 /mob/living/simple_animal/hostile/limbus_abno/proc/AdjustCounter(counter_amount)
-	if(counter_amount == 0)
-		if(can_breach)
-			Breach()
-		return FALSE
 	var/original_counter = counter
 	var/pos_counter = 0 < counter_amount ? TRUE : FALSE
 	counter = clamp(counter + counter_amount, 0, max_counter)
+	if(counter == 0)
+		if(can_breach)
+			Breach()
+		return FALSE
 	UpdateBars()
 	update_action_buttons()
 
