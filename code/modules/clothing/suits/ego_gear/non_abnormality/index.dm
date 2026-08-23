@@ -43,6 +43,132 @@
 			equip_bonus = 0
 	. = ..()
 
+/obj/item/clothing/suit/armor/ego_gear/index_proxy/apprentice
+	name = "index proxy apprentice armor"
+	desc = "Armor worn by index proxy apprentices. Grants an ability to summon chains."
+	icon = 'icons/obj/clothing/ego_gear/lc13_armor.dmi'
+	worn_icon = 'icons/mob/clothing/ego_gear/lc13_armor.dmi'
+	icon_state = "index_apprentice"
+
+	var/obj/item/ego_weapon/city/index_apprentice_chains/chains_weapon
+	var/obj/item/ego_weapon/city/index_procuration/procuration_weapon
+	var/mob/living/carbon/human/armor_wearer
+	/// Prescript completions stored on armor (persists until armor removed)
+	var/prescript_completions = 0
+
+/obj/item/clothing/suit/armor/ego_gear/index_proxy/apprentice/Initialize()
+	. = ..()
+	var/obj/effect/proc_holder/ability/AS = new /obj/effect/proc_holder/ability/apprentice_chains
+	var/datum/action/spell_action/ability/item/A = AS.action
+	A.SetItem(src)
+
+/obj/item/clothing/suit/armor/ego_gear/index_proxy/apprentice/Destroy()
+	remove_chains()
+	remove_procuration()
+	ClearWearer()
+	return ..()
+
+/obj/item/clothing/suit/armor/ego_gear/index_proxy/apprentice/equipped(mob/user, slot)
+	. = ..()
+	if(slot == ITEM_SLOT_OCLOTHING && ishuman(user))
+		armor_wearer = user
+		// override lets a re-equip replace the old registration silently
+		RegisterSignal(user, COMSIG_MOB_AFTER_APPLY_DAMGE, PROC_REF(on_wearer_damaged), override = TRUE)
+		RegisterSignal(user, COMSIG_PARENT_QDELETING, PROC_REF(on_wearer_deleted), override = TRUE)
+
+/obj/item/clothing/suit/armor/ego_gear/index_proxy/apprentice/dropped(mob/user)
+	. = ..()
+	if(armor_wearer)
+		remove_chains()
+		remove_procuration()
+		ClearWearer()
+
+/// Drops the wearer reference along with the signals that depend on it
+/obj/item/clothing/suit/armor/ego_gear/index_proxy/apprentice/proc/ClearWearer()
+	if(!armor_wearer)
+		return
+	UnregisterSignal(armor_wearer, list(COMSIG_MOB_AFTER_APPLY_DAMGE, COMSIG_PARENT_QDELETING))
+	armor_wearer = null
+
+/obj/item/clothing/suit/armor/ego_gear/index_proxy/apprentice/proc/on_wearer_deleted(datum/source)
+	SIGNAL_HANDLER
+	ClearWearer()
+
+/obj/item/clothing/suit/armor/ego_gear/index_proxy/apprentice/proc/on_chains_deleted(datum/source)
+	SIGNAL_HANDLER
+	chains_weapon = null
+
+/obj/item/clothing/suit/armor/ego_gear/index_proxy/apprentice/proc/on_procuration_deleted(datum/source)
+	SIGNAL_HANDLER
+	procuration_weapon = null
+
+/obj/item/clothing/suit/armor/ego_gear/index_proxy/apprentice/proc/on_wearer_damaged(datum/source)
+	SIGNAL_HANDLER
+	if(!armor_wearer || !chains_weapon)
+		return
+	if(armor_wearer.health <= (armor_wearer.maxHealth * 0.5))
+		INVOKE_ASYNC(src, PROC_REF(transform_to_procuration), armor_wearer)
+
+/obj/item/clothing/suit/armor/ego_gear/index_proxy/apprentice/proc/grant_chains(mob/living/carbon/human/user)
+	if(chains_weapon || procuration_weapon)
+		return FALSE
+
+	// If already unlocked, grant Procuration directly
+	if(prescript_completions >= 3)
+		transform_to_procuration(user)
+		return TRUE
+
+	chains_weapon = new /obj/item/ego_weapon/city/index_apprentice_chains
+	chains_weapon.LinkArmor(src)
+	RegisterSignal(chains_weapon, COMSIG_PARENT_QDELETING, PROC_REF(on_chains_deleted))
+
+	if(!user.put_in_hands(chains_weapon))
+		QDEL_NULL(chains_weapon)
+		to_chat(user, span_warning("You need a free hand to summon the chains!"))
+		return FALSE
+
+	to_chat(user, span_userdanger("Chains manifest in your hands!"))
+	playsound(get_turf(user), 'sound/abnormalities/onesin/bless.ogg', 50, 0, 4)
+	return TRUE
+
+/obj/item/clothing/suit/armor/ego_gear/index_proxy/apprentice/proc/remove_chains(reset_progress = FALSE)
+	if(chains_weapon)
+		REMOVE_TRAIT(chains_weapon, TRAIT_NODROP, "index_chains")
+		var/mob/living/holder = chains_weapon.loc
+		if(istype(holder))
+			holder.dropItemToGround(chains_weapon, force = TRUE, silent = TRUE)
+		QDEL_NULL(chains_weapon)
+	if(reset_progress)
+		prescript_completions = 0
+
+/obj/item/clothing/suit/armor/ego_gear/index_proxy/apprentice/proc/transform_to_procuration(mob/living/carbon/human/user)
+	remove_chains()
+
+	if(procuration_weapon)
+		return
+
+	procuration_weapon = new /obj/item/ego_weapon/city/index_procuration
+	procuration_weapon.LinkArmor(src)
+	RegisterSignal(procuration_weapon, COMSIG_PARENT_QDELETING, PROC_REF(on_procuration_deleted))
+
+	if(!user.put_in_hands(procuration_weapon))
+		QDEL_NULL(procuration_weapon)
+		to_chat(user, span_warning("You need a free hand for the transformation!"))
+		return
+
+	to_chat(user, span_userdanger("Your chains transform into Effloresced E.G.O :: Procuration!"))
+	playsound(get_turf(user), 'sound/items/index_beeper_prescript.ogg', 50, 0, 4)
+	new /obj/effect/temp_visual/onesin_blessing(get_turf(user))
+
+/obj/item/clothing/suit/armor/ego_gear/index_proxy/apprentice/proc/remove_procuration(reset_progress = FALSE)
+	if(procuration_weapon)
+		REMOVE_TRAIT(procuration_weapon, TRAIT_NODROP, "index_procuration")
+		var/mob/living/holder = procuration_weapon.loc
+		if(istype(holder))
+			holder.dropItemToGround(procuration_weapon, force = TRUE, silent = TRUE)
+		QDEL_NULL(procuration_weapon)
+	if(reset_progress)
+		prescript_completions = 0
 
 /obj/item/clothing/suit/armor/ego_gear/city/index_mess
 	name = "index messenger armor"
@@ -55,3 +181,28 @@
 							TEMPERANCE_ATTRIBUTE = 100,
 							JUSTICE_ATTRIBUTE = 100
 							)
+
+/obj/item/clothing/suit/armor/ego_gear/city/index_proxy_wanderer
+	name = "wandering index proxy armor"
+	desc = "Armor worn by a wandering index proxy."
+	icon_state = "index_proxy_wanderer"
+	mask = /obj/item/clothing/mask/ego_mask/index_proxy
+	armor = list(RED_DAMAGE = 60, WHITE_DAMAGE = 40, BLACK_DAMAGE = 50, PALE_DAMAGE = 60)
+	attribute_requirements = list(
+							FORTITUDE_ATTRIBUTE = 100,
+							PRUDENCE_ATTRIBUTE = 100,
+							TEMPERANCE_ATTRIBUTE = 100,
+							JUSTICE_ATTRIBUTE = 100
+							)
+
+/obj/item/clothing/mask/ego_mask/index_proxy
+	name = "proxy mask"
+	desc = "I keep it covered because it hurts to even look at."
+	icon_state = "index_proxy_mask"
+	flags_inv = HIDEFACE|HIDESNOUT
+
+/obj/item/clothing/mask/ego_mask/index_proxy_alt
+	name = "indulgence in prescripts"
+	desc = "The acceptance of the Prescripts is apparent in his execution of them; yet, on the other side of the mask, one may glimpse a hint of resentment for them."
+	icon_state = "index_proxy_mask_alt"
+	flags_inv = HIDEFACE|HIDESNOUT
