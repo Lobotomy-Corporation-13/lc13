@@ -172,7 +172,7 @@
 	w_class = initial(w_class)
 	icon_state = "index_vial_inactive"
 	inhand_icon_state = "index_vial_inactive"
-	unlocked_list = list()
+	unlocked_list.Cut()
 	unlocked = FALSE
 	swing_count = 0
 	furioso_active = FALSE

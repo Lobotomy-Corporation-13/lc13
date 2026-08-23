@@ -123,7 +123,7 @@
 	to_chat(H, span_boldwarning("Avoid killing other players without a reason. \
 		Killing a player for stopping your prescripts is a valid reason."))
 
-// ================== INDEX ORACLE PROXY RULES ==================
+// Index Oracle Proxy rules
 
 /datum/action/innate/view_role_rules/index_oracle
 	name = "View Index Rules"
@@ -185,7 +185,7 @@
 	</div>
 	"}
 
-// ================== INDEX PROXY APPRENTICE RULES ==================
+// Index Proxy Apprentice rules
 
 /datum/action/innate/view_role_rules/index_apprentice
 	name = "View Index Rules"

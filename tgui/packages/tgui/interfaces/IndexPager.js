@@ -577,7 +577,7 @@ const HumanCompletedTab = (props, context) => {
               fontSize: '10px',
               marginTop: '4px',
             }}>
-            ✓ Completed
+            Completed
           </div>
         </div>
       ))}

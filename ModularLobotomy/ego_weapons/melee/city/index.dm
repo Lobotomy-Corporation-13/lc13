@@ -205,7 +205,7 @@
 
 /obj/item/clothing/accessory/index_pager/equipped(mob/user, slot)
 	. = ..()
-	// Runtime fix: equipped() and on_uniform_equip() both register this signal, causing "atom_examine overridden" when re-equipping
+	// override: the pager registers this from both equipped() and on_uniform_equip()
 	RegisterSignal(user, COMSIG_PARENT_EXAMINE, PROC_REF(on_carrier_examined), override = TRUE)
 
 /obj/item/clothing/accessory/index_pager/dropped(mob/user)
@@ -214,7 +214,7 @@
 
 /obj/item/clothing/accessory/index_pager/on_uniform_equip(obj/item/clothing/under/U, mob/living/user)
 	. = ..()
-	// Runtime fix: equipped() and on_uniform_equip() both register this signal, causing "atom_examine overridden" when re-equipping
+	// override: the pager registers this from both equipped() and on_uniform_equip()
 	RegisterSignal(user, COMSIG_PARENT_EXAMINE, PROC_REF(on_carrier_examined), override = TRUE)
 	playsound(src, 'sound/items/index_beeper_closing.ogg', 50, FALSE)
 
