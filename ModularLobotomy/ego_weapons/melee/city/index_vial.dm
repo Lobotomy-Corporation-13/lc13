@@ -65,7 +65,7 @@
 	if(defense_active)
 		to_chat(M, span_warning("The vial is shifting too wildly to store!"))
 		return FALSE
-	. = ..()
+	return ..()
 
 /obj/item/ego_weapon/index_vial/mob_can_equip(mob/living/M, mob/living/equipper, slot, disable_warning = FALSE, bypass_equip_delay_self = FALSE)
 	if(defense_active && slot != ITEM_SLOT_HANDS)
