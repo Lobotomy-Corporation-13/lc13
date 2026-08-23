@@ -3,19 +3,12 @@
 // and continues climbing to 100 to fuel chat / HUD distortion on client-bearing victims.
 // Muga \u7121\u6211 is the wielder-side accumulator with the same distortion mechanics.
 
-//////////////////////////////////
-// Shared block-censor visuals  //
-//////////////////////////////////
+// Shared block-censor visuals
 
-// IMPORTANT: We use /image objects added to client.images, NOT screen objects.
-// /atom/movable/screen has APPEARANCE_UI baked in and is rendered through the HUD
-// pipeline, which sits above world atoms regardless of plane/layer. Images placed
-// at world turfs (via loc) are real world atoms for rendering purposes and respect
-// plane/layer z-ordering against mobs.
-//
-// Each image is anchored to a turf at random offsets from the wielder. plane=GAME_PLANE
-// and layer=MOB_LAYER-0.01 places the image above turfs/items but below mobs and
-// runechat. Adding to client.images shows it only to the wielder.
+// These are /image objects in client.images, not screen objects: /atom/movable/screen
+// carries APPEARANCE_UI and always renders above world atoms, while a turf-anchored
+// image respects plane/layer, so GAME_PLANE at MOB_LAYER-0.01 sits above turfs and
+// items but below mobs and runechat, visible only to the wielder.
 
 /// Rebuilds the random-scatter white-block overlay images for this status effect.
 /// Severity 0 clears, severity N places (N*N*4) blocks at random world tiles in view.
@@ -78,9 +71,7 @@
 /datum/status_effect
 	var/list/active_blocks
 
-/////////////////////////////////
-// Shared chat-garble hearing  //
-/////////////////////////////////
+// Shared chat-garble hearing
 
 /// Best-effort dark/light glyph picker. Defaults to \u25A0.
 /proc/get_garble_glyph(mob/M)
@@ -106,9 +97,7 @@
 			chars[i] = glyph
 	hearing_args[HEARING_RAW_MESSAGE] = chars.Join("")
 
-//////////////////////////////////////////////////
-// to_chat distortion (Muga + Sever the Thread) //
-//////////////////////////////////////////////////
+// to_chat distortion (Muga + Sever the Thread)
 
 /// Walks an HTML string and replaces non-tag, non-whitespace chars with the garble glyph.
 /// Tag content (anything inside <...>) is copied verbatim so spans/links survive.
@@ -171,9 +160,7 @@
 		out["text"] = arayashiki_mangle_chat_text(out["text"], sev)
 	return out
 
-/////////////////////////////////////
-// Sever the Thread \u5207\u7D72 (victim) //
-/////////////////////////////////////
+// Sever the Thread \u5207\u7D72 (victim)
 
 /atom/movable/screen/alert/status_effect/sever_the_thread
 	name = "Sever the Thread \u5207\u7D72"
@@ -235,9 +222,7 @@
 /datum/status_effect/stacking/sever_the_thread/SeverityForGarble()
 	return clamp(round(stacks / 10), 0, 10)
 
-/////////////////////////////
-// Muga \u7121\u6211 (wielder)    //
-/////////////////////////////
+// Muga \u7121\u6211 (wielder)
 
 /datum/status_effect/muga
 	id = "muga"

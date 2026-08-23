@@ -34,26 +34,40 @@ GLOBAL_LIST_EMPTY(corridor_entrances)
 
 /obj/structure/corridor_entrance/Destroy()
 	GLOB.corridor_entrances -= src
-	if(linked && !QDELETED(linked))
-		linked.linked = null
-		if(linked.door_opened)
-			linked.force_close()
-	linked = null
+	if(linked)
+		var/obj/structure/corridor_entrance/twin = linked
+		twin.ClearLinked()
+		if(twin.door_opened)
+			twin.force_close()
+	ClearLinked()
 	QDEL_NULL(showcase)
 	return ..()
 
-/obj/structure/corridor_entrance/proc/find_linked()
-	if(linked && !QDELETED(linked))
-		return linked
+/// Pairs this door with its twin, dropping the pairing if the twin is deleted
+/obj/structure/corridor_entrance/proc/SetLinked(obj/structure/corridor_entrance/twin)
+	ClearLinked()
+	linked = twin
+	RegisterSignal(linked, COMSIG_PARENT_QDELETING, PROC_REF(on_linked_deleted))
+
+/obj/structure/corridor_entrance/proc/ClearLinked()
+	if(!linked)
+		return
+	UnregisterSignal(linked, COMSIG_PARENT_QDELETING)
 	linked = null
+
+/obj/structure/corridor_entrance/proc/on_linked_deleted(datum/source)
+	SIGNAL_HANDLER
+	linked = null
+
+/obj/structure/corridor_entrance/proc/find_linked()
+	if(linked)
+		return linked
 	if(!corridor_id)
 		return null
 	for(var/obj/structure/corridor_entrance/C in GLOB.corridor_entrances - src)
-		if(QDELETED(C))
-			continue
 		if(C.corridor_id == corridor_id)
-			linked = C
-			C.linked = src
+			SetLinked(C)
+			C.SetLinked(src)
 			return linked
 	return null
 
