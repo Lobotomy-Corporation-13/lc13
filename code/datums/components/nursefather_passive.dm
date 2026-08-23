@@ -76,7 +76,15 @@
 	if(!istype(H))
 		return
 
-	if(!istype(attack_source, /mob/living/simple_animal))
-		var/clone_damage = damage * 0.025
-		if(clone_damage > 0)
-			INVOKE_ASYNC(src, PROC_REF(apply_clone_damage), clone_damage)
+	// Clone damage only applies to the Ex-Great Brother
+	if(H.mind?.assigned_role == "Ex Great Brother")
+		if(!istype(attack_source, /mob/living/simple_animal))
+			var/clone_damage = damage * 0.025
+			if(clone_damage > 0)
+				INVOKE_ASYNC(src, PROC_REF(apply_clone_damage), clone_damage)
+
+	// Check seal healthgates - only from melee or ranged attacks
+	if(attack_type & (ATTACK_TYPE_MELEE | ATTACK_TYPE_RANGED))
+		var/datum/component/laevateinn_seal/seal = H.GetComponent(/datum/component/laevateinn_seal)
+		if(seal)
+			seal.CheckHealthgate(damage)

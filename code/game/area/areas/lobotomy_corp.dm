@@ -302,61 +302,73 @@
 /area/city/hana
 	name = "Hana Office"
 	icon_state = "mainroom_records"
+	outdoors = FALSE
 	map_color = "#3355bb"
 
 /area/city/hhpp
 	name = "HamHamPangPang"
 	icon_state = "kitchen"
+	outdoors = FALSE
 	map_color = "#dd8833"
 
 /area/city/bar
 	name = "The Alibi"
 	icon_state = "bar"
+	outdoors = FALSE
 	map_color = "#bb7744"
 
 /area/city/bar
 	name = "The Alibi"
 	icon_state = "bar"
+	outdoors = FALSE
 	map_color = "#bb7744"
 
 /area/city/workshop
 	name = "Workshop"
 	icon_state = "quart"
+	outdoors = FALSE
 	map_color = "#44aaaa"
 
 /area/city/clinic
 	name = "Clinic"
 	icon_state = "medbay1"
+	outdoors = FALSE
 	map_color = "#cc5588"
 
 /area/city/carnival
 	name = "Carnival Base"
 	icon_state = "syndie-control"
+	outdoors = FALSE
 	map_color = "#cc4444"
 
 /area/city/antag_base
 	name = "Abandoned Hideout"
 	icon_state = "syndie-elite"
+	outdoors = FALSE
 	map_color = "#aa3344"
 
 /area/city/assoc_base
 	name = "Association Office"
 	icon_state = "security"
+	outdoors = FALSE
 	map_color = "#77aadd"
 
 /area/city/roaming_base
 	name = "Roaming Fixers Office"
 	icon_state = "investigate_office"
+	outdoors = FALSE
 	map_color = "#55bbaa"
 
 /area/city/bistro
 	name = "The Bistro"
 	icon_state = "cafeteria"
+	outdoors = FALSE
 	map_color = "#bb9955"
 
 /area/city/library
 	name = "Library"
 	icon_state = "library"
+	outdoors = FALSE
 	map_color = "#9966bb"
 
 /area/city/alleyways
@@ -367,6 +379,7 @@
 /area/city/alleyway_room
 	name = "Alleyway Room"
 	icon_state = "vacant_room"
+	outdoors = FALSE
 	map_color = "#888899"
 
 /area/city/lake
@@ -377,6 +390,7 @@
 /area/city/bus_stop
 	name = "Bus Stop"
 	icon_state = "gateway"
+	outdoors = FALSE
 	map_color = "#cccc18"
 
 //Areas for ruins

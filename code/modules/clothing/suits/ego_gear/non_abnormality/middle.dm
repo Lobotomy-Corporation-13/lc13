@@ -182,3 +182,144 @@
 	desc = "A sacred text of the Middle, its pages filled with records of grudges and retribution. The Big Brothers have mastered its teachings."
 	worn_icon_state = "big_book"
 	icon_state = "big_book"
+
+////////////////////////////////////////////////////////////
+// MIDDLE NURSEFATHER (EX-GREAT BROTHER) GEAR
+
+/obj/item/clothing/suit/armor/ego_gear/city/middle_nursefather
+	name = "ex-great brother's coat"
+	desc = "A massive coat bearing the colors and pattern of the Middle, worn over the shoulders. Its former owner was stripped of his rank but not his pride."
+	icon = 'icons/obj/spider_house/middle/middle_spider_icon.dmi'
+	worn_icon = 'icons/obj/spider_house/middle/middle_spider_worn.dmi'
+	icon_state = "middlefather_outfit"
+	neck = /obj/item/clothing/neck/ego_neck/middle_cape/nursefather
+	flags_inv = HIDEJUMPSUIT
+	equip_delay_self = 0
+	armor = list(RED_DAMAGE = 70, WHITE_DAMAGE = 60, BLACK_DAMAGE = 60, PALE_DAMAGE = 60)
+	attribute_requirements = list(
+		FORTITUDE_ATTRIBUTE = 100,
+		PRUDENCE_ATTRIBUTE = 100,
+		TEMPERANCE_ATTRIBUTE = 100,
+		JUSTICE_ATTRIBUTE = 100
+	)
+
+/obj/item/clothing/suit/armor/ego_gear/city/middle_nursefather/CanUseEgo(mob/living/carbon/human/user)
+	if(user?.mind?.assigned_role == "Ex Great Brother")
+		return TRUE
+	return ..()
+
+/obj/item/clothing/neck/ego_neck/middle_cape/nursefather
+	name = "ex-great brother's cloak"
+	desc = "A heavy cloak worn by a former Great Brother of the Middle."
+	icon = 'icons/obj/spider_house/middle/middle_spider_icon.dmi'
+	worn_icon = 'icons/obj/spider_house/middle/middle_spider_worn.dmi'
+	icon_state = "middlefather_cloak"
+
+/obj/item/clothing/neck/ego_neck/middle_cape/nursefather/equipped(mob/user, slot)
+	. = ..()
+	if(slot == ITEM_SLOT_NECK && ishuman(user))
+		UpdateLaevateinnWorn(user)
+
+/obj/item/clothing/neck/ego_neck/middle_cape/nursefather/dropped(mob/user)
+	. = ..()
+	if(ishuman(user))
+		UpdateLaevateinnWorn(user)
+
+/obj/item/clothing/neck/ego_neck/middle_cape/nursefather/proc/UpdateLaevateinnWorn(mob/user)
+	var/mob/living/carbon/human/H = user
+	var/obj/item/sword = H.get_item_by_slot(ITEM_SLOT_SUITSTORE)
+	if(!istype(sword, /obj/item/ego_weapon/city/laevateinn))
+		sword = H.get_item_by_slot(ITEM_SLOT_BELT)
+	if(istype(sword, /obj/item/ego_weapon/city/laevateinn))
+		var/obj/item/ego_weapon/city/laevateinn/L = sword
+		L.UpdateSealVisuals()
+
+/obj/item/clothing/glasses/middle_sunglasses/nursefather
+	name = "gold-bridge sunglasses"
+	desc = "Thick sunglasses with a gold bridge between the lenses. A signature accessory of the Middle's former Great Brother."
+	icon = 'icons/obj/spider_house/middle/middle_spider_icon.dmi'
+	worn_icon = 'icons/obj/spider_house/middle/middle_spider_worn.dmi'
+	icon_state = "middlefather_sunglasses"
+
+/obj/item/storage/book/middle/nursefather
+	name = "the great book of vengeance"
+	desc = "A sacred text of the Middle, its pages filled with a lifetime of grudges and retribution. This one belongs to a former Great Brother - its pages are extensive."
+	icon = 'icons/obj/spider_house/middle/middle_spider_icon.dmi'
+	worn_icon = 'icons/obj/spider_house/middle/middle_spider_worn.dmi'
+	icon_state = "middlefather_vengeance"
+	worn_icon_state = "middlefather_vengeance"
+	vengeance_mark_stacks = 3
+
+////////////////////////////////////////////////////////////
+// MIDDLE APPRENTICE (KIRA) GEAR
+
+/obj/item/clothing/suit/armor/ego_gear/city/middle_apprentice
+	name = "apprentice's coat"
+	desc = "A coat bearing the colors and pattern of the Middle, tailored for a young apprentice. Warmth and protection for the newest sibling."
+	icon = 'icons/obj/spider_house/middle/middle_spider_icon.dmi'
+	worn_icon = 'icons/obj/spider_house/middle/middle_spider_worn.dmi'
+	icon_state = "kira"
+	hat = /obj/item/clothing/head/ego_hat/middle_apprentice_hood
+	equip_delay_self = 0
+	armor = list(RED_DAMAGE = 40, WHITE_DAMAGE = 30, BLACK_DAMAGE = 30, PALE_DAMAGE = 30)
+	attribute_requirements = list(
+		FORTITUDE_ATTRIBUTE = 80,
+		PRUDENCE_ATTRIBUTE = 80,
+		TEMPERANCE_ATTRIBUTE = 80,
+		JUSTICE_ATTRIBUTE = 80
+	)
+	/// Whether the hood should show hair (persists across hat toggles)
+	var/hood_show_hair = FALSE
+
+/obj/item/clothing/suit/armor/ego_gear/city/middle_apprentice/CanUseEgo(mob/living/carbon/human/user)
+	if(user?.mind?.assigned_role == "Middle Apprentice")
+		return TRUE
+	return ..()
+
+/obj/item/clothing/head/ego_hat/middle_apprentice_hood
+	name = "apprentice's hood"
+	desc = "A hood worn by the Middle's newest apprentice. Alt-click to toggle hair visibility."
+	icon = 'icons/obj/spider_house/middle/middle_spider_icon.dmi'
+	worn_icon = 'icons/obj/spider_house/middle/middle_spider_worn.dmi'
+	icon_state = "kirahood"
+	flags_inv = HIDEMASK|HIDEHAIR
+
+/obj/item/clothing/head/ego_hat/middle_apprentice_hood/equipped(mob/user, slot)
+	. = ..()
+	if(slot != ITEM_SLOT_HEAD || !ishuman(user))
+		return
+	var/mob/living/carbon/human/H = user
+	var/obj/item/clothing/suit/armor/ego_gear/city/middle_apprentice/coat = H.wear_suit
+	if(istype(coat) && coat.hood_show_hair)
+		flags_inv &= ~HIDEHAIR
+
+/obj/item/clothing/head/ego_hat/middle_apprentice_hood/AltClick(mob/user)
+	. = ..()
+	if(!ishuman(user))
+		return
+	var/mob/living/carbon/human/H = user
+	if(H.head != src)
+		return
+	if(flags_inv & HIDEHAIR)
+		flags_inv &= ~HIDEHAIR
+		to_chat(H, span_notice("You adjust the hood to show your hair."))
+	else
+		flags_inv |= HIDEHAIR
+		to_chat(H, span_notice("You pull the hood over your hair."))
+	// Save preference to the suit so it persists across hat toggles
+	var/obj/item/clothing/suit/armor/ego_gear/city/middle_apprentice/coat = H.wear_suit
+	if(istype(coat))
+		coat.hood_show_hair = !(flags_inv & HIDEHAIR)
+	H.regenerate_icons()
+
+////////////////////////////////////////////////////////////
+// EGO DATUMS - Middle Nursefather & Apprentice Armor
+
+/// Ex-Great Brother's Coat - Middle Nursefather armor
+/datum/ego_datum/armor/city/middle_nursefather
+	item_path = /obj/item/clothing/suit/armor/ego_gear/city/middle_nursefather
+	cost = 100
+/// Apprentice's Coat - Middle Apprentice armor
+/datum/ego_datum/armor/city/middle_nursefather/apprentice
+	item_path = /obj/item/clothing/suit/armor/ego_gear/city/middle_apprentice
+	cost = 40

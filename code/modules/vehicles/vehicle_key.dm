@@ -64,6 +64,11 @@
 		user.adjustOxyLoss(200)
 		user.death(0)
 
+/obj/item/key/middle_car
+	name = "the Middle's car key"
+	desc = "A worn key with a small tag reading \"Family Vehicle\"."
+	color = "#9b30ff"
+
 /obj/item/key/lasso
 	name = "bone lasso"
 	desc = "Perfect for taming all kinds of supernatural beasts! (Warning: only perfect for taming one kind of supernatural beast.)"
