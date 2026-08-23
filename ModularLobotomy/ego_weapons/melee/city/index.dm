@@ -737,8 +737,7 @@
 			playsound(src, 'sound/abnormalities/onesin/bless.ogg', 50, FALSE)
 			new /obj/effect/temp_visual/onesin_blessing(get_turf(holder))
 		if("buff")
-			// Apply Justice buff via component (+50 Justice for 5 minutes)
-			holder.AddComponent(/datum/component/index_justice_buff)
+			holder.apply_status_effect(/datum/status_effect/index_judgment/blessing)
 			to_chat(holder, span_userdanger("The Oracle has blessed you with power for completing your prescript!"))
 			playsound(src, 'sound/items/index_beeper_prescript.ogg', 50, FALSE)
 
@@ -757,91 +756,52 @@
 			to_chat(holder, span_userdanger("The Oracle is displeased with your execution of the prescript!"))
 			playsound(src, 'sound/effects/sanity_damage.ogg', 50, FALSE)
 		if("debuff")
-			// Apply stat debuff via component
-			holder.AddComponent(/datum/component/index_stat_debuff)
+			holder.apply_status_effect(/datum/status_effect/index_judgment/curse)
 			to_chat(holder, span_userdanger("The Oracle has weakened you for your poor execution of the prescript!"))
 			playsound(src, 'sound/effects/sanity_damage.ogg', 50, FALSE)
 
 	return TRUE
 
-/// Component for temporary Justice buff from Oracle reward
-/datum/component/index_justice_buff
-	dupe_mode = COMPONENT_DUPE_UNIQUE
-	/// Whether the buff has already been removed (to prevent double-restore)
-	var/buff_removed = FALSE
-	/// Timer ID for removal (so we can cancel and reset it)
-	var/timer_id
+/// Oracle judgment: a timed Justice shift handed out by a prescript's outcome.
+/datum/status_effect/index_judgment
+	id = "index_judgment"
+	status_type = STATUS_EFFECT_REFRESH
+	alert_type = null
+	tick_interval = -1
+	/// How much the owner's Justice is shifted while this is active
+	var/justice_mod = 0
+	/// Shown to the owner when an identical judgment resets the duration
+	var/refresh_message = ""
+	/// Shown to the owner when the judgment runs out
+	var/end_message = ""
 
-/datum/component/index_justice_buff/Initialize()
-	if(!ishuman(parent))
-		return COMPONENT_INCOMPATIBLE
-	var/mob/living/carbon/human/H = parent
-	H.adjust_attribute_buff(JUSTICE_ATTRIBUTE, 50)
-	timer_id = addtimer(CALLBACK(src, PROC_REF(remove_buff)), 5 MINUTES, TIMER_STOPPABLE)
-
-/datum/component/index_justice_buff/InheritComponent(datum/component/C)
-	// Reset the timer duration when receiving a duplicate
-	if(timer_id)
-		deltimer(timer_id)
-	timer_id = addtimer(CALLBACK(src, PROC_REF(remove_buff)), 5 MINUTES, TIMER_STOPPABLE)
-	if(!QDELETED(parent))
-		to_chat(parent, span_notice("The Oracle's blessing duration has been refreshed."))
-
-/datum/component/index_justice_buff/proc/remove_buff()
-	if(QDELETED(parent) || buff_removed)
-		qdel(src)
-		return
-	buff_removed = TRUE
-	var/mob/living/carbon/human/H = parent
-	H.adjust_attribute_buff(JUSTICE_ATTRIBUTE, -50)
-	to_chat(H, span_notice("The Oracle's blessing of power has faded."))
-	qdel(src)
-
-/datum/component/index_justice_buff/Destroy()
-	if(timer_id)
-		deltimer(timer_id)
-	if(!buff_removed && !QDELETED(parent) && ishuman(parent))
-		var/mob/living/carbon/human/H = parent
-		H.adjust_attribute_buff(JUSTICE_ATTRIBUTE, -50)
+/datum/status_effect/index_judgment/on_apply()
+	if(!ishuman(owner))
+		return FALSE
+	var/mob/living/carbon/human/H = owner
+	H.adjust_attribute_buff(JUSTICE_ATTRIBUTE, justice_mod)
 	return ..()
 
-/// Component for temporary Justice debuff from Oracle punishment
-/datum/component/index_stat_debuff
-	dupe_mode = COMPONENT_DUPE_UNIQUE
-	/// Whether the debuff has already been removed (to prevent double-restore)
-	var/debuff_removed = FALSE
-	/// Timer ID for removal (so we can cancel and reset it)
-	var/timer_id
-
-/datum/component/index_stat_debuff/Initialize()
-	if(!ishuman(parent))
-		return COMPONENT_INCOMPATIBLE
-	var/mob/living/carbon/human/H = parent
-	H.adjust_attribute_buff(JUSTICE_ATTRIBUTE, -50)
-	timer_id = addtimer(CALLBACK(src, PROC_REF(remove_debuff)), 2 MINUTES, TIMER_STOPPABLE)
-
-/datum/component/index_stat_debuff/InheritComponent(datum/component/C)
-	// Reset the timer duration when receiving a duplicate
-	if(timer_id)
-		deltimer(timer_id)
-	timer_id = addtimer(CALLBACK(src, PROC_REF(remove_debuff)), 2 MINUTES, TIMER_STOPPABLE)
-	if(!QDELETED(parent))
-		to_chat(parent, span_warning("The Oracle's curse duration has been refreshed."))
-
-/datum/component/index_stat_debuff/proc/remove_debuff()
-	if(QDELETED(parent) || debuff_removed)
-		qdel(src)
-		return
-	debuff_removed = TRUE
-	var/mob/living/carbon/human/H = parent
-	H.adjust_attribute_buff(JUSTICE_ATTRIBUTE, 50)
-	to_chat(H, span_notice("The Oracle's curse has lifted."))
-	qdel(src)
-
-/datum/component/index_stat_debuff/Destroy()
-	if(timer_id)
-		deltimer(timer_id)
-	if(!debuff_removed && !QDELETED(parent) && ishuman(parent))
-		var/mob/living/carbon/human/H = parent
-		H.adjust_attribute_buff(JUSTICE_ATTRIBUTE, 50)
+/datum/status_effect/index_judgment/on_remove()
+	var/mob/living/carbon/human/H = owner
+	H.adjust_attribute_buff(JUSTICE_ATTRIBUTE, -justice_mod)
+	to_chat(owner, span_notice(end_message))
 	return ..()
+
+/datum/status_effect/index_judgment/refresh()
+	. = ..()
+	to_chat(owner, span_notice(refresh_message))
+
+/datum/status_effect/index_judgment/blessing
+	id = "index_blessing"
+	duration = 5 MINUTES
+	justice_mod = 50
+	refresh_message = "The Oracle's blessing duration has been refreshed."
+	end_message = "The Oracle's blessing of power has faded."
+
+/datum/status_effect/index_judgment/curse
+	id = "index_curse"
+	duration = 2 MINUTES
+	justice_mod = -50
+	refresh_message = "The Oracle's curse duration has been refreshed."
+	end_message = "The Oracle's curse has lifted."
