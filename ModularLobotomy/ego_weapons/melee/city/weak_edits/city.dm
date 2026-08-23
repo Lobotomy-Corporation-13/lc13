@@ -301,7 +301,7 @@
 /obj/item/ego_weapon/city/index_apprentice_chains
 	name = "index apprentice chains"
 	desc = "Chains granted by the index proxy apprentice armor."
-	special = "Fulfill your prescript by slaying your target 3 times to transform. Use in hand to receive a prescript. Click at range to leap to a tile — landing creates a 3x3 shockwave that grants prescript progress if it hits someone. Hit the correct bodypart on humans to gain progress. Reaching half health also triggers the transformation."
+	special = "Fulfill your prescript by slaying your target 3 times to transform. Use in hand to receive a prescript. Click at range to leap to a tile - landing creates a 3x3 shockwave that grants prescript progress if it hits someone. Hit the correct bodypart on humans to gain progress. Reaching half health also triggers the transformation."
 	icon = 'icons/obj/spider_house/index/index_sora_base.dmi'
 	icon_state = "apprentice_chains"
 	lefthand_file = 'icons/obj/spider_house/index/index_sora_worn.dmi'
@@ -333,10 +333,40 @@
 	ADD_TRAIT(src, TRAIT_NODROP, "index_chains")
 
 /obj/item/ego_weapon/city/index_apprentice_chains/Destroy()
-	if(linked_armor)
-		linked_armor.chains_weapon = null
-		linked_armor = null
+	ClearArmor()
+	ClearPrescriptTarget()
 	return ..()
+
+/// Stores the armor that summoned us and follows it if it is deleted
+/obj/item/ego_weapon/city/index_apprentice_chains/proc/LinkArmor(obj/item/clothing/suit/armor/ego_gear/index_proxy/apprentice/armor)
+	linked_armor = armor
+	RegisterSignal(armor, COMSIG_PARENT_QDELETING, PROC_REF(on_armor_deleted))
+
+/obj/item/ego_weapon/city/index_apprentice_chains/proc/ClearArmor()
+	if(!linked_armor)
+		return
+	UnregisterSignal(linked_armor, COMSIG_PARENT_QDELETING)
+	linked_armor = null
+
+/obj/item/ego_weapon/city/index_apprentice_chains/proc/on_armor_deleted(datum/source)
+	SIGNAL_HANDLER
+	linked_armor = null
+
+/// Points the prescript at a breached abnormality, dropping any previous one
+/obj/item/ego_weapon/city/index_apprentice_chains/proc/SetPrescriptTarget(mob/living/simple_animal/hostile/abnormality/target)
+	ClearPrescriptTarget()
+	prescript_target = target
+	RegisterSignal(target, COMSIG_PARENT_QDELETING, PROC_REF(on_target_deleted))
+
+/obj/item/ego_weapon/city/index_apprentice_chains/proc/ClearPrescriptTarget()
+	if(!prescript_target)
+		return
+	UnregisterSignal(prescript_target, COMSIG_PARENT_QDELETING)
+	prescript_target = null
+
+/obj/item/ego_weapon/city/index_apprentice_chains/proc/on_target_deleted(datum/source)
+	SIGNAL_HANDLER
+	prescript_target = null
 
 /obj/item/ego_weapon/city/index_apprentice_chains/AllowDrop()
 	return FALSE
@@ -369,7 +399,7 @@
 	// Check if we have a prescript target
 	if(prescript_target)
 		if(prescript_target.stat == DEAD)
-			prescript_target = null
+			ClearPrescriptTarget()
 			to_chat(user, span_notice("Your prescript has died. Use it in hand again to receive a new prescript."))
 		else
 			to_chat(user, span_notice("Your prescript target is [prescript_target]. Slay them with this weapon!"))
@@ -381,7 +411,7 @@
 		if(!(B.status_flags & GODMODE) && (B.stat != DEAD))
 			breached += B
 	if(LAZYLEN(breached))
-		prescript_target = pick(breached)
+		SetPrescriptTarget(pick(breached))
 		to_chat(user, span_userdanger("Your prescript target is [prescript_target]. Slay them with this weapon!"))
 	else
 		to_chat(user, span_notice("There are no prescripts available."))
@@ -431,7 +461,7 @@
 		prescript_complete(user)
 
 /obj/item/ego_weapon/city/index_apprentice_chains/proc/prescript_complete(mob/living/user)
-	prescript_target = null
+	ClearPrescriptTarget()
 	if(linked_armor)
 		linked_armor.prescript_completions++
 		to_chat(user, span_userdanger("You have completed your prescript! ([linked_armor.prescript_completions]/3)"))
@@ -464,7 +494,7 @@
 	// Set cooldown
 	leap_cooldown = world.time + leap_cooldown_time
 
-	// Jump arc animation — afterimage at origin, arc upward
+	// Jump arc animation - afterimage at origin, arc upward
 	playsound(src, 'sound/abnormalities/ichthys/jump.ogg', 50, FALSE, -1)
 	new /obj/effect/temp_visual/decoy/fading/halfsecond(get_turf(user), user)
 	animate(user, alpha = 128, pixel_z = 16, time = 0.2 SECONDS)
@@ -499,7 +529,7 @@
 /obj/item/ego_weapon/city/index_procuration
 	name = "Effloresced E.G.O :: Procuration"
 	desc = "H-having such an unshakable conviction about what's good and evil is nothing short of amazing, he said..."
-	special = "Click at range to dash attack. Every 3 melee hits restores a dash charge. Use in hand to charge up — after a 2 second slowdown, your next dash is empowered, unleashing a 3-wide wave of claws from your origin to your destination."
+	special = "Click at range to dash attack. Every 3 melee hits restores a dash charge. Use in hand to charge up - after a 2 second slowdown, your next dash is empowered, unleashing a 3-wide wave of claws from your origin to your destination."
 	icon = 'icons/obj/spider_house/index/index_sora_ego_base.dmi'
 	icon_state = "procuration"
 	lefthand_file = 'icons/obj/spider_house/index/index_sora_ego_worn.dmi'
@@ -549,10 +579,23 @@
 		deltimer(slowdown_timer_id)
 	if(recharge_timer_id)
 		deltimer(recharge_timer_id)
-	if(linked_armor)
-		linked_armor.procuration_weapon = null
-		linked_armor = null
+	ClearArmor()
 	return ..()
+
+/// Stores the armor that summoned us and follows it if it is deleted
+/obj/item/ego_weapon/city/index_procuration/proc/LinkArmor(obj/item/clothing/suit/armor/ego_gear/index_proxy/apprentice/armor)
+	linked_armor = armor
+	RegisterSignal(armor, COMSIG_PARENT_QDELETING, PROC_REF(on_armor_deleted))
+
+/obj/item/ego_weapon/city/index_procuration/proc/ClearArmor()
+	if(!linked_armor)
+		return
+	UnregisterSignal(linked_armor, COMSIG_PARENT_QDELETING)
+	linked_armor = null
+
+/obj/item/ego_weapon/city/index_procuration/proc/on_armor_deleted(datum/source)
+	SIGNAL_HANDLER
+	linked_armor = null
 
 /obj/item/ego_weapon/city/index_procuration/examine(mob/user)
 	. = ..()
@@ -579,7 +622,7 @@
 /obj/item/ego_weapon/city/index_procuration/canStrip(mob/who)
 	return FALSE
 
-// Melee attack — every 3 hits regains a dash charge
+// Melee attack - every 3 hits regains a dash charge
 /obj/item/ego_weapon/city/index_procuration/attack(mob/living/target, mob/living/user)
 	. = ..()
 	if(target.stat == DEAD)
@@ -611,7 +654,7 @@
 	user.add_movespeed_modifier(/datum/movespeed_modifier/procuration_empower)
 	addtimer(CALLBACK(src, PROC_REF(finish_empower), user), 2 SECONDS)
 
-/// Called after 2 second charge-up — removes slowdown and empowers next dash
+/// Called after 2 second charge-up - removes slowdown and empowers next dash
 /obj/item/ego_weapon/city/index_procuration/proc/finish_empower(mob/living/user)
 	charging_empower = FALSE
 	if(QDELETED(src) || QDELETED(user))
@@ -723,7 +766,7 @@
 		if(dash_charges < max_dash_charges)
 			recharge_timer_id = addtimer(CALLBACK(src, PROC_REF(recharge_dash)), dash_recharge_time, TIMER_STOPPABLE)
 
-/// Traveling claw wave — spawns after empowered dash with 1 second delay
+/// Traveling claw wave - spawns after empowered dash with 1 second delay
 /// Wave is 3 tiles wide perpendicular to the dash direction
 /obj/item/ego_weapon/city/index_procuration/proc/claw_wave(mob/living/user, turf/origin, turf/destination)
 	sleep(1 SECONDS)
@@ -740,11 +783,11 @@
 	var/perp_dir1
 	var/perp_dir2
 	if(abs(dx) >= abs(dy))
-		// Primarily horizontal dash — expand vertically
+		// Primarily horizontal dash - expand vertically
 		perp_dir1 = NORTH
 		perp_dir2 = SOUTH
 	else
-		// Primarily vertical dash — expand horizontally
+		// Primarily vertical dash - expand horizontally
 		perp_dir1 = EAST
 		perp_dir2 = WEST
 
@@ -761,7 +804,7 @@
 		if(side2)
 			strip_turfs += side2
 
-		// Visual effects — dark claw marks across the strip
+		// Visual effects - dark claw marks across the strip
 		for(var/turf/AT in strip_turfs)
 			var/obj/effect/temp_visual/cleave/claw = new(AT)
 			claw.color = "#3a3a3a"

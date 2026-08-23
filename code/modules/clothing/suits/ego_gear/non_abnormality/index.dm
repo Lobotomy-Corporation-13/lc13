@@ -62,20 +62,45 @@
 	var/datum/action/spell_action/ability/item/A = AS.action
 	A.SetItem(src)
 
+/obj/item/clothing/suit/armor/ego_gear/index_proxy/apprentice/Destroy()
+	remove_chains()
+	remove_procuration()
+	ClearWearer()
+	return ..()
+
 /obj/item/clothing/suit/armor/ego_gear/index_proxy/apprentice/equipped(mob/user, slot)
 	. = ..()
 	if(slot == ITEM_SLOT_OCLOTHING && ishuman(user))
 		armor_wearer = user
-		// Runtime fix: use override = TRUE to prevent "mob_after_apply_damge overridden" warning on re-equip
+		// override lets a re-equip replace the old registration silently
 		RegisterSignal(user, COMSIG_MOB_AFTER_APPLY_DAMGE, PROC_REF(on_wearer_damaged), override = TRUE)
+		RegisterSignal(user, COMSIG_PARENT_QDELETING, PROC_REF(on_wearer_deleted), override = TRUE)
 
 /obj/item/clothing/suit/armor/ego_gear/index_proxy/apprentice/dropped(mob/user)
 	. = ..()
 	if(armor_wearer)
-		UnregisterSignal(armor_wearer, COMSIG_MOB_AFTER_APPLY_DAMGE)
 		remove_chains()
 		remove_procuration()
-		armor_wearer = null
+		ClearWearer()
+
+/// Drops the wearer reference along with the signals that depend on it
+/obj/item/clothing/suit/armor/ego_gear/index_proxy/apprentice/proc/ClearWearer()
+	if(!armor_wearer)
+		return
+	UnregisterSignal(armor_wearer, list(COMSIG_MOB_AFTER_APPLY_DAMGE, COMSIG_PARENT_QDELETING))
+	armor_wearer = null
+
+/obj/item/clothing/suit/armor/ego_gear/index_proxy/apprentice/proc/on_wearer_deleted(datum/source)
+	SIGNAL_HANDLER
+	ClearWearer()
+
+/obj/item/clothing/suit/armor/ego_gear/index_proxy/apprentice/proc/on_chains_deleted(datum/source)
+	SIGNAL_HANDLER
+	chains_weapon = null
+
+/obj/item/clothing/suit/armor/ego_gear/index_proxy/apprentice/proc/on_procuration_deleted(datum/source)
+	SIGNAL_HANDLER
+	procuration_weapon = null
 
 /obj/item/clothing/suit/armor/ego_gear/index_proxy/apprentice/proc/on_wearer_damaged(datum/source)
 	SIGNAL_HANDLER
@@ -94,7 +119,8 @@
 		return TRUE
 
 	chains_weapon = new /obj/item/ego_weapon/city/index_apprentice_chains
-	chains_weapon.linked_armor = src
+	chains_weapon.LinkArmor(src)
+	RegisterSignal(chains_weapon, COMSIG_PARENT_QDELETING, PROC_REF(on_chains_deleted))
 
 	if(!user.put_in_hands(chains_weapon))
 		QDEL_NULL(chains_weapon)
@@ -122,7 +148,8 @@
 		return
 
 	procuration_weapon = new /obj/item/ego_weapon/city/index_procuration
-	procuration_weapon.linked_armor = src
+	procuration_weapon.LinkArmor(src)
+	RegisterSignal(procuration_weapon, COMSIG_PARENT_QDELETING, PROC_REF(on_procuration_deleted))
 
 	if(!user.put_in_hands(procuration_weapon))
 		QDEL_NULL(procuration_weapon)

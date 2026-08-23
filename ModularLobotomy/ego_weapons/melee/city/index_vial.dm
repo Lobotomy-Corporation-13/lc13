@@ -34,7 +34,7 @@
 	var/furioso_active = FALSE
 	/// Whether the defense system is currently active against unauthorized users
 	var/defense_active = FALSE
-	/// Tracks how many times each mob has triggered the defense system (mob ref → count)
+	/// Tracks how many times each mob has triggered the defense system (mob ref -> count)
 	var/list/defense_strikes = list()
 	/// Mapping of form names to subtypes
 	var/static/list/weapon_types = list(
@@ -125,7 +125,7 @@
 	strikes++
 	defense_strikes[user_ref] = strikes
 
-	// 3rd offense — skip the cycling and immediately attack
+	// 3rd offense - skip the cycling and immediately attack
 	if(strikes >= 3)
 		to_chat(user, span_userdanger("The vial has had enough of you!"))
 		playsound(get_turf(src), 'sound/weapons/black_vial/vial_swap.ogg', 50, TRUE)
@@ -151,7 +151,7 @@
 		playsound(get_turf(src), 'sound/weapons/black_vial/vial_swap.ogg', 25, TRUE)
 		sleep(delay)
 
-	// Still holding after ~5 seconds — attack with scythe
+	// Still holding after ~5 seconds - attack with scythe
 	if(!QDELETED(src) && !QDELETED(user) && user.is_holding(src))
 		defense_scythe_attack(user)
 	stop_defense_system()
@@ -212,6 +212,12 @@
 		return FALSE
 	return ..()
 
+/// Hands the replacement vial to the user, deleting this one last
+/obj/item/ego_weapon/index_vial/proc/HandOver(mob/user, obj/item/ego_weapon/index_vial/new_weapon)
+	user.temporarilyRemoveItemFromInventory(src, TRUE)
+	user.put_in_hands(new_weapon)
+	qdel(src)
+
 /obj/item/ego_weapon/index_vial/attack_self(mob/user)
 	if(!CanUseEgo(user))
 		return
@@ -248,8 +254,7 @@
 		new_weapon.next_swap_time = new_swap_time
 		playsound(user, 'sound/weapons/black_vial/vial_swap.ogg', 25, TRUE)
 		to_chat(user, span_userdanger("The vial warps into... a fpoon?!"))
-		qdel(src)
-		user.put_in_hands(new_weapon)
+		HandOver(user, new_weapon)
 		return
 
 	// Pick random available form
@@ -268,13 +273,12 @@
 	new_weapon.next_swap_time = new_swap_time
 	playsound(user, 'sound/weapons/black_vial/vial_swap.ogg', 25, TRUE)
 
-	qdel(src)
-	user.put_in_hands(new_weapon)
-
 	// Check if furioso should unlock
 	if(new_weapon.unlocked_list.len >= 9 && !new_weapon.unlocked)
 		new_weapon.unlocked = TRUE
 		to_chat(user, span_userdanger("You've mastered all weapon forms! Furioso is now available!"))
+
+	HandOver(user, new_weapon)
 
 /obj/item/ego_weapon/index_vial/AltClick(mob/user)
 	. = ..()
@@ -292,8 +296,7 @@
 	var/obj/item/ego_weapon/index_vial/new_vial = new /obj/item/ego_weapon/index_vial(user.drop_location())
 	playsound(user, 'sound/weapons/black_vial/vial_swap.ogg', 25, TRUE)
 	to_chat(user, span_notice("You return the vial to its inactive state, resetting your progress."))
-	qdel(src)
-	user.put_in_hands(new_vial)
+	HandOver(user, new_vial)
 
 /obj/item/ego_weapon/index_vial/attack(mob/living/M, mob/living/user)
 	. = ..()
@@ -327,8 +330,7 @@
 		new_weapon.next_swap_time = new_swap_time
 		playsound(user, 'sound/weapons/black_vial/vial_swap.ogg', 25, TRUE)
 		to_chat(user, span_userdanger("The vial warps into... a fpoon?!"))
-		qdel(src)
-		user.put_in_hands(new_weapon)
+		HandOver(user, new_weapon)
 		return
 
 	// Pick random available form
@@ -348,13 +350,12 @@
 	playsound(user, 'sound/weapons/black_vial/vial_swap.ogg', 25, TRUE)
 	to_chat(user, span_warning("The vial shifts, forcing you to change weapons!"))
 
-	qdel(src)
-	user.put_in_hands(new_weapon)
-
 	// Check if furioso should unlock
 	if(new_weapon.unlocked_list.len >= 9 && !new_weapon.unlocked)
 		new_weapon.unlocked = TRUE
 		to_chat(user, span_userdanger("You've mastered all weapon forms! Furioso is now available!"))
+
+	HandOver(user, new_weapon)
 
 /obj/item/ego_weapon/index_vial/proc/try_furioso(mob/living/user, atom/target)
 	SIGNAL_HANDLER
@@ -698,12 +699,9 @@
 	var/obj/item/ego_weapon/index_vial/new_vial = new /obj/item/ego_weapon/index_vial(user)
 	new_vial.defense_strikes = defense_strikes.Copy()
 	to_chat(user, span_notice("Furioso-Replica complete. The vial returns to its inactive state."))
-	user.put_in_hands(new_vial)
-	qdel(src)
+	HandOver(user, new_vial)
 
-// ============================================
 // HATCHET - Small, fast weapon with protection on hit
-// ============================================
 /obj/item/ego_weapon/index_vial/hatchet
 	name = "caduceus - hatchet"
 	desc = "When hacking through the ribs with a hatchet... This is barely a weapon, but it's better than a fork."
@@ -728,9 +726,7 @@
 	// On hit, gain protection (simulates Poise)
 	user.apply_lc_protection(2)
 
-// ============================================
 // STILETTO - Quick stabbing with mental decay DOT
-// ============================================
 /obj/item/ego_weapon/index_vial/stiletto
 	name = "caduceus - stiletto"
 	desc = "When penetrating the lungs with a stiletto... I couldn't help but feel a dreadful chill run down my back whenever I'm given this weapon."
@@ -757,9 +753,7 @@
 	// On hit, apply mental decay (simulates Sinking)
 	M.apply_lc_mental_decay(2)
 
-// ============================================
 // BASTARD SWORD - Balanced with damage buff on hit
-// ============================================
 /obj/item/ego_weapon/index_vial/bsword
 	name = "caduceus - bastard sword"
 	desc = "When cleaving through the shoulder and the skull with a bastard sword... This sword is passable, but that quality leaves a lot to be desired."
@@ -787,9 +781,7 @@
 	if(isliving(M))
 		M.apply_lc_overheat(5)
 
-// ============================================
 // RAPIER - Precise thrusts with defense debuff
-// ============================================
 /obj/item/ego_weapon/index_vial/rapier
 	name = "caduceus - rapier"
 	desc = "When punching 10 or more holes in the torso with a rapier... A weapon longer and sharper than the stiletto. I enjoy the rapier as well."
@@ -816,9 +808,7 @@
 	// On hit, inflict white fragility (simulates Defense Level Down)
 	M.apply_lc_white_fragile(2)
 
-// ============================================
 // HAMMER - Heavy strikes with stamina damage
-// ============================================
 /obj/item/ego_weapon/index_vial/hammer
 	name = "caduceus - hammer"
 	desc = "When caving in the back of the skull with a hammer... Simple, but final. It will crush whatever it hits."
@@ -845,9 +835,7 @@
 	// On hit, deal stamina damage (simulates raising Stagger Threshold)
 	M.adjustStaminaLoss(40)
 
-// ============================================
 // GREATSWORD - Heavy two-hander with RED vulnerability
-// ============================================
 /obj/item/ego_weapon/index_vial/gsword
 	name = "caduceus - greatsword"
 	desc = "When rending the body with a greatsword... It is important to find your center of gravity and take advantage of its sheer mass."
@@ -874,9 +862,7 @@
 	// On hit, inflict red fragility (simulates Slash Fragility)
 	M.apply_lc_red_fragile(2)
 
-// ============================================
 // LANCE - Long reach with WHITE vulnerability
-// ============================================
 /obj/item/ego_weapon/index_vial/lance
 	name = "caduceus - lance"
 	desc = "When boring a 20-inch hole with a lance... I'd consider this weapon a jackpot. This lance has a self-propelling property."
@@ -905,9 +891,7 @@
 	// On hit, inflict white fragility (simulates Pierce Fragility)
 	M.apply_lc_white_fragile(2)
 
-// ============================================
 // WHIP - Flexible weapon with BLACK vulnerability
-// ============================================
 /obj/item/ego_weapon/index_vial/whip
 	name = "caduceus - whip"
 	desc = "When ripping the flesh to ten thousand strips with a whip... I am quite fond of it. It tears a strip off the target's flesh, and with it their resolve."
@@ -936,9 +920,7 @@
 	// On hit, inflict black fragility (simulates Blunt Fragility)
 	M.apply_lc_black_fragile(2)
 
-// ============================================
 // SCYTHE - Death's instrument with high damage
-// ============================================
 /obj/item/ego_weapon/index_vial/scythe
 	name = "caduceus - scythe"
 	desc = "When lacerating through space itself with a scythe, like a certain someone... This weapon became my favorite, most familiar, and sharpest weapon."
@@ -958,9 +940,7 @@
 	attack_verb_continuous = list("lacerates", "reaps", "scythes")
 	attack_verb_simple = list("lacerate", "reap", "scythe")
 
-// ============================================
 // FPOON - Rare joke weapon (5% chance on swap)
-// ============================================
 /obj/item/ego_weapon/index_vial/fpoon
 	name = "caduceus - fpoon"
 	desc = "A fpoon. It's a spoon with fork tines. Why did the vial turn into this?"
@@ -997,11 +977,11 @@
 	if(isliving(M))
 		M.apply_lc_bleed(5)
 
-// ================== INDEX EGO DATUMS ==================
+// INDEX EGO DATUMS
 // Placed here rather than in _cityweapons_datums.dm / _cityarmor_datums.dm
 // to prevent DM merge conflicts with other sub-PRs that modify those shared files.
 
-/* --- Index Caduceus (Maestro Weapon) --- */
+// Index Caduceus (Maestro Weapon)
 
 /// Caduceus (Base/Inactive)
 /datum/ego_datum/weapon/city/index_vial
@@ -1069,7 +1049,7 @@
 	cost = 5
 	ego_tags = list(EGO_TAG_HAZARDOUS, EGO_TAG_DOT)
 
-/* --- Index Apprentice (Chains/Procuration — dispense armor) --- */
+// Index Apprentice (Chains/Procuration - dispense armor)
 
 /// Index Apprentice Chains (dispenses apprentice armor)
 /datum/ego_datum/weapon/city/index_chains
@@ -1085,7 +1065,7 @@
 	cost = 70
 	ego_tags = list(EGO_TAG_MOBILITY)
 
-/* --- Index Armor --- */
+// Index Armor
 
 /// Index Proxy Apprentice Armor
 /datum/ego_datum/armor/city/index_apprentice
