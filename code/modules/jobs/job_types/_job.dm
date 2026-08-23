@@ -122,6 +122,10 @@
 	var/leader
 	/// Slots this job opens with once its leader is in place.
 	var/faction_positions = 0
+	/// TRUE hides the plain `title` from the alt title picker, leaving only the
+	/// alt titles. For a job that is always one faction or another, offering
+	/// the bare title implies an unaffiliated version exists that does not.
+	var/alt_titles_only = FALSE
 	/// What players are told this job is called. Defaults to `title`, and a
 	/// city faction variant overwrites it so the same job can read as its
 	/// specialisation without `title` moving. `title` keys name_occupations,

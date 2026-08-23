@@ -12,10 +12,12 @@
 // matching variant onto all five jobs, which is early enough that everyone
 // spawns already dressed. See FACTIONS.md.
 //
-// Every display_title below is Mirae's, because Mirae is the faction's default
-// variant and there is no such thing as an unbranded clinic round. The generic
-// titles still exist, but only as lookup keys - a player who sees one in the
-// lobby would reasonably think a plain clinic was on offer, and it is not.
+// Only the Director carries a company name before the round starts, because the
+// Director is the one who chooses it. Staff and Field Agent keep their plain
+// titles in the lobby on purpose: at that point nobody has picked yet, and
+// advertising them as Mirae would be a promise a K-Corp round breaks. The
+// variant renames them the moment it is settled, which is still before anyone
+// spawns.
 
 /datum/job/city_clinic
 	title = "Clinic Director"
@@ -29,6 +31,10 @@
 	spawn_positions = 0
 	leader = /datum/job/city_clinic
 	faction_positions = 1
+	//No plain "Clinic Director" in the picker. Every clinic belongs to someone,
+	//and offering the bare title would advertise a neutral one that cannot be
+	//played. Choosing nothing still lands on Mirae.
+	alt_titles_only = TRUE
 	alt_titles = list(
 		"Mirae Clinic Director",
 		"K-Corp Clinic Director",
@@ -42,7 +48,10 @@
 	paycheck = PAYCHECK_MEDIUM
 	paycheck_department = ACCOUNT_MED
 	exp_requirements = 600
-	job_attribute_limit = 40
+	//Matched to the gear this role is issued. job_attribute_limit caps
+	//training, so leaving it under the coat's requirement would hand the
+	//Director an overcoat they can never put on.
+	job_attribute_limit = 100
 	liver_traits = list(TRAIT_MEDICAL_METABOLISM)
 	maptype = list("city")
 	job_important = "You run the clinic. Your parent company is whichever one \
@@ -51,10 +60,10 @@
 		are Mirae. Charge for your services."
 
 	roundstart_attributes = list(
-								FORTITUDE_ATTRIBUTE = 40,
-								PRUDENCE_ATTRIBUTE = 40,
-								TEMPERANCE_ATTRIBUTE = 40,
-								JUSTICE_ATTRIBUTE = 40
+								FORTITUDE_ATTRIBUTE = 100,
+								PRUDENCE_ATTRIBUTE = 100,
+								TEMPERANCE_ATTRIBUTE = 100,
+								JUSTICE_ATTRIBUTE = 100
 								)
 
 /datum/job/city_clinic/after_spawn(mob/living/carbon/human/H, mob/M, latejoin = FALSE)
@@ -82,7 +91,15 @@
 // Inside the clinic. These are the ones who actually heal people.
 /datum/job/city_clinic/staff
 	title = "Clinic Staff"
-	display_title = "Mirae Claims Physician"
+	//Also inherited from the Director, who does hide their plain title. These
+	//two have no alt titles at all, so leaving it set would build an empty
+	//picker with nothing in it to choose.
+	alt_titles_only = FALSE
+	//Cleared, not inherited. Both sub-roles are subtypes of the Director, so
+	//without this they pick up "Mirae Clinic Director" as their display name
+	//and all three read identically in the lobby. Null lets New() fall back to
+	//this job's own title, which is what a player signing up should see.
+	display_title = null
 	outfit = /datum/outfit/job/city_clinic/staff
 	department_head = list("Clinic Director")
 	supervisors = "the clinic director"
@@ -97,6 +114,15 @@
 	departments = DEPARTMENT_MEDICAL
 	display_order = JOB_DISPLAY_ORDER_MEDICALASSIST
 	exp_requirements = 180
+	//Left where the old clinic sat. The ward coat asks for 20, so this is
+	//already more than enough, and Staff are not meant to be a fighting role.
+	job_attribute_limit = 40
+	roundstart_attributes = list(
+								FORTITUDE_ATTRIBUTE = 40,
+								PRUDENCE_ATTRIBUTE = 40,
+								TEMPERANCE_ATTRIBUTE = 40,
+								JUSTICE_ATTRIBUTE = 40
+								)
 	job_important = "You work the clinic floor. Treat whoever walks in, and \
 		make them pay for it."
 
@@ -113,7 +139,15 @@
 // is why it is split off Staff rather than being more of them.
 /datum/job/city_clinic/field
 	title = "Clinic Field Agent"
-	display_title = "Mirae Recovery Agent"
+	//Also inherited from the Director, who does hide their plain title. These
+	//two have no alt titles at all, so leaving it set would build an empty
+	//picker with nothing in it to choose.
+	alt_titles_only = FALSE
+	//Cleared, not inherited. Both sub-roles are subtypes of the Director, so
+	//without this they pick up "Mirae Clinic Director" as their display name
+	//and all three read identically in the lobby. Null lets New() fall back to
+	//this job's own title, which is what a player signing up should see.
+	display_title = null
 	outfit = /datum/outfit/job/city_clinic/field
 	department_head = list("Clinic Director")
 	supervisors = "the clinic director"
@@ -128,6 +162,13 @@
 	departments = DEPARTMENT_MEDICAL
 	display_order = JOB_DISPLAY_ORDER_MEDICALASSIST
 	exp_requirements = 180
+	job_attribute_limit = 80
+	roundstart_attributes = list(
+								FORTITUDE_ATTRIBUTE = 80,
+								PRUDENCE_ATTRIBUTE = 80,
+								TEMPERANCE_ATTRIBUTE = 80,
+								JUSTICE_ATTRIBUTE = 80
+								)
 	job_important = "You work the street rather than the ward. What that means \
 		depends on who owns your clinic."
 

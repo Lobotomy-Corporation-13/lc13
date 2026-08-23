@@ -1323,8 +1323,14 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 				if(istype(SSjob.GetJob(job_title), /datum/job/limbus_specimen))
 					open_lcl_specimen_ui(user) //LC Specimen uses the specimen selector, not alt titles.
 					return 1
-				var/titles_list = list(job_title)
 				var/datum/job/J = SSjob.GetJob(job_title)
+				//A job flagged alt_titles_only never offers its plain title, so
+				//nothing in the menu suggests an unaffiliated version of it.
+				//alt_titles_only hides the plain title, but only when there is
+				//something else to pick. Without that check a job that sets the
+				//flag and declares no alt titles opens an empty dialog.
+				var/hide_plain = J && J.alt_titles_only && length(J.alt_titles)
+				var/titles_list = hide_plain ? list() : list(job_title)
 				var/sen_timelock = CONFIG_GET(number/senior_timelock)
 				var/ulsen_timelock = CONFIG_GET(number/ultra_senior_timelock)
 				if(user.client.prefs.exp[job_title] >= sen_timelock) //If they have more than 50 hours (300 Minutes) past the required time needed for the job, give them access to the senior title
