@@ -1,8 +1,6 @@
-// Middle Nursefather — Stamp Card & Party System
+// Middle Nursefather - Stamp Card & Party System
 
-// ============================================================
 // Party Location Datums
-// ============================================================
 
 /datum/party_location
 	/// Display name
@@ -82,7 +80,7 @@
 /datum/party_location/carnival
 	name = "Carnival Base"
 	area_type = /area/city/carnival
-	flavor = "Already festive — just needs a host."
+	flavor = "Already festive - just needs a host."
 	buff_type = /datum/status_effect/party_buff/showtime
 	buff_name = "Showtime"
 	buff_desc = "+15 Justice, movement speed boost."
@@ -151,9 +149,7 @@
 	tier = 3
 	buff_type = /datum/status_effect/party_buff/hideout_hustle
 
-// ============================================================
 // Party Item Datums
-// ============================================================
 
 /datum/party_item
 	var/name = "Item"
@@ -164,7 +160,7 @@
 /datum/party_item/proc/spawn_items(turf/T)
 	return
 
-// ----- Drinks -----
+// Drinks
 /datum/party_item/beer_keg
 	name = "Beer Keg"
 	cost = 300
@@ -231,7 +227,7 @@
 	for(var/i in 1 to 2)
 		new /obj/item/reagent_containers/food/drinks/bottle/sake(T)
 
-// ----- Food -----
+// Food
 /datum/party_item/pizza
 	name = "Pizza Delivery"
 	cost = 150
@@ -332,7 +328,7 @@
 /datum/party_item/hotdogs
 	name = "Hotdog Stand"
 	cost = 100
-	desc = "4 hotdogs — classic street food."
+	desc = "4 hotdogs - classic street food."
 	category = "Food"
 
 /datum/party_item/hotdogs/spawn_items(turf/T)
@@ -359,7 +355,7 @@
 	for(var/i in 1 to 4)
 		new /obj/item/food/icecreamsandwich(T)
 
-// ----- Drinks (continued) -----
+// Drinks (continued)
 /datum/party_item/absinthe
 	name = "Absinthe"
 	cost = 250
@@ -379,11 +375,11 @@
 	for(var/i in 1 to 6)
 		new /obj/item/reagent_containers/food/drinks/colocup(T)
 
-// ----- Substances -----
+// Substances
 /datum/party_item/happy_pills
 	name = "Happy Pills"
 	cost = 200
-	desc = "5 happy pills — pure ecstasy."
+	desc = "5 happy pills - pure ecstasy."
 	category = "Substances"
 
 /datum/party_item/happy_pills/spawn_items(turf/T)
@@ -393,14 +389,14 @@
 /datum/party_item/sunshine_pills
 	name = "Sunshine Pills"
 	cost = 250
-	desc = "3 sunshine pills — a wild trip."
+	desc = "3 sunshine pills - a wild trip."
 	category = "Substances"
 
 /datum/party_item/sunshine_pills/spawn_items(turf/T)
 	for(var/i in 1 to 3)
 		new /obj/item/reagent_containers/pill/lsd(T)
 
-// ----- Entertainment -----
+// Entertainment
 /datum/party_item/disco_ball
 	name = "Disco Ball"
 	cost = 500
@@ -413,7 +409,7 @@
 /datum/party_item/jukebox
 	name = "Jukebox"
 	cost = 400
-	desc = "A jukebox — no access needed."
+	desc = "A jukebox - no access needed."
 	category = "Entertainment"
 
 /datum/party_item/jukebox/spawn_items(turf/T)
@@ -439,7 +435,7 @@
 /datum/party_item/wrench/spawn_items(turf/T)
 	new /obj/item/wrench(T)
 
-// ----- Arcade Machines -----
+// Arcade Machines
 // Arcade party items track their spawned machine. Buying again teleports it instead of duplicating.
 /datum/party_item/arcade
 	category = "Arcade"
@@ -449,16 +445,21 @@
 	var/obj/machinery/computer/arcade/spawned_machine
 
 /datum/party_item/arcade/spawn_items(turf/T)
-	if(spawned_machine && !QDELETED(spawned_machine))
+	if(spawned_machine)
 		spawned_machine.forceMove(T)
 		return
 	var/obj/machinery/computer/arcade/machine = new arcade_type(T)
+	RegisterSignal(machine, COMSIG_PARENT_QDELETING, PROC_REF(on_machine_deleted))
 	machine.name = "Middle's [machine.name]"
 	machine.density = FALSE
 	machine.color = "#9b30ff"
 	machine.resistance_flags = INDESTRUCTIBLE | LAVA_PROOF | FIRE_PROOF | UNACIDABLE | ACID_PROOF
 	machine.flags_1 |= NODECONSTRUCT_1
 	spawned_machine = machine
+
+/datum/party_item/arcade/proc/on_machine_deleted(datum/source)
+	SIGNAL_HANDLER
+	spawned_machine = null
 
 /datum/party_item/arcade/cardgame
 	name = "Card Game Arcade"
@@ -516,7 +517,7 @@
 /datum/party_item/cards
 	name = "Card Deck"
 	cost = 75
-	desc = "Playing cards — poker night."
+	desc = "Playing cards - poker night."
 	category = "Entertainment"
 
 /datum/party_item/cards/spawn_items(turf/T)
@@ -525,7 +526,7 @@
 /datum/party_item/dice
 	name = "Dice Set"
 	cost = 75
-	desc = "Assorted dice — gambling time."
+	desc = "Assorted dice - gambling time."
 	category = "Entertainment"
 
 /datum/party_item/dice/spawn_items(turf/T)
@@ -634,14 +635,14 @@
 /datum/party_item/beach_balls
 	name = "Beach Balls"
 	cost = 50
-	desc = "2 beach balls — toss them around."
+	desc = "2 beach balls - toss them around."
 	category = "Entertainment"
 
 /datum/party_item/beach_balls/spawn_items(turf/T)
 	for(var/i in 1 to 2)
 		new /obj/item/toy/beach_ball(T)
 
-// ----- Atmosphere -----
+// Atmosphere
 /datum/party_item/cigars
 	name = "Cigar Box"
 	cost = 100
@@ -681,16 +682,14 @@
 /datum/party_item/snap_pops
 	name = "Snap Pops"
 	cost = 25
-	desc = "5 snap pops — pop on impact."
+	desc = "5 snap pops - pop on impact."
 	category = "Atmosphere"
 
 /datum/party_item/snap_pops/spawn_items(turf/T)
 	for(var/i in 1 to 5)
 		new /obj/item/toy/snappop(T)
 
-// ============================================================
 // Global Party Data
-// ============================================================
 
 GLOBAL_LIST_INIT(party_locations, init_party_locations())
 GLOBAL_LIST_INIT(party_items, init_party_items())
@@ -707,9 +706,7 @@ GLOBAL_LIST_INIT(party_items, init_party_items())
 		L += new path
 	return L
 
-// ============================================================
 // Stamp Card Item
-// ============================================================
 
 /obj/item/middle_stamp_card
 	name = "stamp card"
@@ -834,9 +831,7 @@ GLOBAL_LIST_INIT(party_items, init_party_items())
 			end_party(user)
 			return TRUE
 
-// ============================================================
 // Party Flow
-// ============================================================
 
 /obj/item/middle_stamp_card/proc/start_party(mob/living/carbon/human/user, area_type)
 	if(party_active)
@@ -879,6 +874,7 @@ GLOBAL_LIST_INIT(party_items, init_party_items())
 	host_warnings = 0
 	current_location = target_loc
 	host = user
+	RegisterSignal(host, COMSIG_PARENT_QDELETING, PROC_REF(on_host_deleted))
 
 	// Announce
 	for(var/mob/living/M in user_area)
@@ -888,8 +884,19 @@ GLOBAL_LIST_INIT(party_items, init_party_items())
 	// Start host presence checks every 30 seconds
 	host_check_timer = addtimer(CALLBACK(src, PROC_REF(check_host_presence)), 30 SECONDS, TIMER_LOOP | TIMER_STOPPABLE)
 
+/// Drops the host reference along with the deletion signal that goes with it
+/obj/item/middle_stamp_card/proc/ClearHost()
+	if(!host)
+		return
+	UnregisterSignal(host, COMSIG_PARENT_QDELETING)
+	host = null
+
+/obj/item/middle_stamp_card/proc/on_host_deleted(datum/source)
+	SIGNAL_HANDLER
+	host = null
+
 /obj/item/middle_stamp_card/proc/check_host_presence()
-	if(!party_active || !host || QDELETED(host))
+	if(!party_active || !host)
 		cancel_party("The party's host has vanished!")
 		return
 
@@ -963,7 +970,7 @@ GLOBAL_LIST_INIT(party_items, init_party_items())
 	party_start_time = 0
 	host_warnings = 0
 	current_location = null
-	host = null
+	ClearHost()
 	if(host_check_timer)
 		deltimer(host_check_timer)
 		host_check_timer = null
@@ -991,7 +998,7 @@ GLOBAL_LIST_INIT(party_items, init_party_items())
 
 	// Arcade machines teleport for free if already spawned
 	var/datum/party_item/arcade/arcade_item = target_item
-	if(istype(arcade_item) && arcade_item.spawned_machine && !QDELETED(arcade_item.spawned_machine))
+	if(istype(arcade_item) && arcade_item.spawned_machine)
 		arcade_item.spawn_items(get_turf(user))
 		to_chat(user, span_notice("[target_item.name] teleported to you!"))
 		return

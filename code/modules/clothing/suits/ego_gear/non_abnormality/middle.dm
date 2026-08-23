@@ -243,7 +243,7 @@
 
 /obj/item/storage/book/middle/nursefather
 	name = "the great book of vengeance"
-	desc = "A sacred text of the Middle, its pages filled with a lifetime of grudges and retribution. This one belongs to a former Great Brother — its pages are extensive."
+	desc = "A sacred text of the Middle, its pages filled with a lifetime of grudges and retribution. This one belongs to a former Great Brother - its pages are extensive."
 	icon = 'icons/obj/spider_house/middle/middle_spider_icon.dmi'
 	worn_icon = 'icons/obj/spider_house/middle/middle_spider_worn.dmi'
 	icon_state = "middlefather_vengeance"
@@ -313,13 +313,13 @@
 	H.regenerate_icons()
 
 ////////////////////////////////////////////////////////////
-// EGO DATUMS — Middle Nursefather & Apprentice Armor
+// EGO DATUMS - Middle Nursefather & Apprentice Armor
 
-/// Ex-Great Brother's Coat — Middle Nursefather armor
+/// Ex-Great Brother's Coat - Middle Nursefather armor
 /datum/ego_datum/armor/city/middle_nursefather
 	item_path = /obj/item/clothing/suit/armor/ego_gear/city/middle_nursefather
 	cost = 100
-/// Apprentice's Coat — Middle Apprentice armor
+/// Apprentice's Coat - Middle Apprentice armor
 /datum/ego_datum/armor/city/middle_nursefather/apprentice
 	item_path = /obj/item/clothing/suit/armor/ego_gear/city/middle_apprentice
 	cost = 40

@@ -17,9 +17,7 @@ import {
   releaseHotKey,
 } from '../hotkeys';
 
-// =========================================
 // Constants
-// =========================================
 
 const SCREEN_W = 320;
 const SCREEN_H = 200;
@@ -79,9 +77,7 @@ const STATE_LEVEL_COMPLETE = 3;
 const STATE_WIN = 4;
 const STATE_NAMEENTRY = 5;
 
-// =========================================
 // Procedural Texture Generator
-// =========================================
 
 const makeTexture = (size, drawFn) => {
   const data = new Uint8ClampedArray(size * size * 4);
@@ -314,9 +310,7 @@ const generateTextures = () => {
   return textures;
 };
 
-// =========================================
 // Map
-// =========================================
 
 class GameMap {
   constructor(mapData) {
@@ -476,9 +470,7 @@ class GameMap {
   }
 }
 
-// =========================================
 // Entity (enemies + pickups)
-// =========================================
 
 class Entity {
   constructor(type, x, y) {
@@ -954,9 +946,7 @@ class Entity {
   }
 }
 
-// =========================================
 // Player
-// =========================================
 
 class Player {
   constructor(startData) {
@@ -987,9 +977,7 @@ class Player {
   }
 }
 
-// =========================================
 // Renderer (DDA Raycaster)
-// =========================================
 
 class Renderer {
   constructor(canvas) {
@@ -1151,7 +1139,7 @@ class Renderer {
       const cellCeilH = hasHeights
         ? map.getCeilH(mapX, mapY) : 1;
 
-      // Get floor height — use slope
+      // Get floor height - use slope
       // interpolation at ray hit point
       const hitWX = player.x + perpDist * cosA;
       const hitWY = player.y + perpDist * sinA;
@@ -2007,9 +1995,7 @@ class Renderer {
   }
 }
 
-// =========================================
 // Game Engine
-// =========================================
 
 class GameEngine {
   constructor(canvas, act) {
@@ -2191,7 +2177,7 @@ class GameEngine {
       p.y += my;
     }
 
-    // Check for holes — drop to layer below
+    // Check for holes - drop to layer below
     if (this.map.numLayers > 1
       && this.map.currentLayer > 0) {
       const hx = Math.floor(p.x);
@@ -2844,9 +2830,7 @@ class GameEngine {
   }
 }
 
-// =========================================
 // TGUI Component
-// =========================================
 
 const ACQUIRED_KEYS = [
   KEY_W, KEY_A, KEY_S, KEY_D,

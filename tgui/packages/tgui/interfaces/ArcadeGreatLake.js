@@ -17,9 +17,7 @@ import {
   releaseHotKey,
 } from '../hotkeys';
 
-// =========================================
 // Constants
-// =========================================
 
 const CW = 480;
 const CH = 420;
@@ -212,9 +210,7 @@ const C_REEF = '#3a7a6a';
 const C_BOAT = '#dddddd';
 const C_AHN = '#ffcc44';
 
-// =========================================
 // Game Engine
-// =========================================
 
 class GreatLakeEngine {
   constructor(canvas, act) {
@@ -399,9 +395,7 @@ class GreatLakeEngine {
     );
   }
 
-  // ==================
   // UPDATE
-  // ==================
 
   update(dt) {
     if (this.state !== GS_PLAY
@@ -566,9 +560,7 @@ class GreatLakeEngine {
     }
   }
 
-  // ==================
   // FISHING
-  // ==================
 
   nearSpot() {
     for (let i = 0;
@@ -652,9 +644,7 @@ class GreatLakeEngine {
     }
   }
 
-  // ==================
   // CARGO
-  // ==================
 
   startPlacement(def) {
     this.piece = def;
@@ -739,9 +729,7 @@ class GreatLakeEngine {
     this.msgTimer = 1;
   }
 
-  // ==================
   // PORT
-  // ==================
 
   nearPort() {
     const gx = Math.floor(this.bx / TL);
@@ -820,9 +808,7 @@ class GreatLakeEngine {
     this.msgTimer = 1.5;
   }
 
-  // ==================
   // RENDER
-  // ==================
 
   render() {
     const ctx = this.ctx;
@@ -1534,9 +1520,7 @@ class GreatLakeEngine {
     );
   }
 
-  // ==================
   // INPUT
-  // ==================
 
   handleKeyDown(code) {
     this.keys[code] = true;
@@ -1678,9 +1662,7 @@ class GreatLakeEngine {
   }
 }
 
-// =========================================
 // TGUI Component
-// =========================================
 
 const ACQUIRED_KEYS = [
   KEY_W, KEY_A, KEY_S, KEY_D,

@@ -83,7 +83,7 @@
 			if(clone_damage > 0)
 				INVOKE_ASYNC(src, PROC_REF(apply_clone_damage), clone_damage)
 
-	// Check seal healthgates — only from melee or ranged attacks
+	// Check seal healthgates - only from melee or ranged attacks
 	if(attack_type & (ATTACK_TYPE_MELEE | ATTACK_TYPE_RANGED))
 		var/datum/component/laevateinn_seal/seal = H.GetComponent(/datum/component/laevateinn_seal)
 		if(seal)

@@ -47,9 +47,7 @@ const KEY_3 = 51;
 const KEY_4 = 52;
 const KEY_SPACE = 32;
 
-// ==============================
 // Character class definitions
-// ==============================
 const CHARACTERS = {
   thumb: {
     name: 'Thumb Enforcer',
@@ -458,9 +456,7 @@ const CHARACTERS = {
   },
 };
 
-// ==============================
 // Enemy definitions
-// ==============================
 const ENEMIES = {
   // --- Easy tier (Dawn ordeals) ---
   amber_bug: {
@@ -688,9 +684,7 @@ const ENEMIES = {
   },
 };
 
-// ==============================
 // Curio definitions
-// ==============================
 const CURIOS = {
   broken_terminal: {
     title: 'Broken Terminal',
@@ -719,9 +713,7 @@ const CURIOS = {
   },
 };
 
-// ==============================
 // DungeonEngine class
-// ==============================
 class DungeonEngine {
   constructor(canvas, act) {
     this.canvas = canvas;
@@ -893,9 +885,7 @@ class DungeonEngine {
     this.selectedChars[slotIdx] = pool[next];
   }
 
-  // ==================
   // MAP SYSTEM
-  // ==================
 
   findRoom(x, y) {
     for (let i = 0; i < this.rooms.length;
@@ -1096,9 +1086,7 @@ class DungeonEngine {
       && bossDone;
   }
 
-  // ==================
   // COMBAT ENGINE
-  // ==================
 
   startCombat(room) {
     const fd = room.enemies;
@@ -2114,9 +2102,7 @@ class DungeonEngine {
     }
   }
 
-  // ==================
   // ANIMATION
-  // ==================
 
   startAttackAnim(aType, ai, ti, cb) {
     this.animState = {
@@ -2197,9 +2183,7 @@ class DungeonEngine {
     }
   }
 
-  // ==================
   // RENDER
-  // ==================
 
   start() {
     this.lastTime = performance.now();
@@ -3868,9 +3852,7 @@ class DungeonEngine {
     );
   }
 
-  // ==================
   // INPUT
-  // ==================
 
   handleClick(mx, my) {
     this.mx = mx;
@@ -4173,9 +4155,7 @@ class DungeonEngine {
   }
 }
 
-// =========================================
 // TGUI Component
-// =========================================
 
 const ACQUIRED_KEYS = [
   KEY_R, KEY_ESC, KEY_D,

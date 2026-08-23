@@ -16,9 +16,7 @@ import {
   releaseHotKey,
 } from '../hotkeys';
 
-// =========================================
 // Constants
-// =========================================
 
 const CW = 780;
 const CH = 500;
@@ -85,9 +83,7 @@ const EYE_COLORS = {
   amber: '#cc8833',
 };
 
-// =========================================
 // Game Engine
-// =========================================
 
 class CheckpointEngine {
   constructor(canvas, act) {
@@ -1297,9 +1293,7 @@ class CheckpointEngine {
   }
 }
 
-// =========================================
 // TGUI Component
-// =========================================
 
 const ACQUIRED_KEYS = [
   KEY_1, KEY_2, KEY_3, KEY_4, KEY_5,

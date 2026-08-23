@@ -15,11 +15,11 @@ import {
   releaseHotKey,
 } from '../hotkeys';
 
-// ========== CANVAS CONSTANTS ==========
+// CANVAS CONSTANTS
 const CW = 800;
 const CH = 600;
 
-// ========== KEY CODES ==========
+// KEY CODES
 const KEY_ENTER = 13;
 const KEY_ESC = 27;
 const KEY_TAB = 9;
@@ -37,7 +37,7 @@ const KEY_R = 82;
 const KEY_E = 69;
 const KEY_1 = 49;
 
-// ========== GAME STATES ==========
+// GAME STATES
 const GS_TITLE = 0;
 const GS_CREATE_STATS = 1;
 const GS_CREATE_WEAPON = 2;
@@ -65,7 +65,7 @@ const TILE = 32;
 const GRID_X = 20;
 const GRID_Y = 50;
 
-// ========== COLOR PALETTE ==========
+// COLOR PALETTE
 const COL = {
   bg: '#0a0a14',
   panelBg: '#14142a',
@@ -104,7 +104,7 @@ const COL = {
   skillEvdText: '#ffecc0',
 };
 
-// ========== STATUS METADATA ==========
+// STATUS METADATA
 const STATUS_DISPLAY = {
   burn: { short: 'Bn', color: '#ff6644',
     name: 'Burn' },
@@ -189,13 +189,13 @@ function skillColors(type) {
   };
 }
 
-// ========== CREATE STEP NAMES ==========
+// CREATE STEP NAMES
 const CREATE_STEPS = [
   'Stats', 'Weapon', 'Outfit',
   'Augment', 'Skills', 'Review',
 ];
 
-// ========== STAT DEFINITIONS ==========
+// STAT DEFINITIONS
 const STAT_DEFS = [
   {
     key: 'fortitude', name: 'Fortitude',
@@ -229,14 +229,14 @@ const STAT_DEFS = [
   },
 ];
 
-// ========== DAMAGE TYPE DEFS ==========
+// DAMAGE TYPE DEFS
 const DMG_TYPES = [
   { key: 'slash', name: 'Slash', color: COL.slash },
   { key: 'pierce', name: 'Pierce', color: COL.pierce },
   { key: 'blunt', name: 'Blunt', color: COL.blunt },
 ];
 
-// ========== WEAPON FORM DEFS ==========
+// WEAPON FORM DEFS
 const MELEE_FORMS = [
   {
     key: 'small', name: 'Small',
@@ -279,7 +279,7 @@ const RANGED_FORMS = [
   },
 ];
 
-// ========== WEAPON HAND DEFS ==========
+// WEAPON HAND DEFS
 const MELEE_HANDS = [
   {
     key: 'off_1h', name: 'Offensive 1H',
@@ -318,7 +318,7 @@ const RANGED_HANDS = [
   },
 ];
 
-// ========== OUTFIT PROPERTY DEFS ==========
+// OUTFIT PROPERTY DEFS
 const OUTFIT_PROPS = [
   {
     key: 'armored', name: 'Armored',
@@ -340,7 +340,7 @@ const OUTFIT_PROPS = [
   },
 ];
 
-// ========== RESISTANCE LEVELS ==========
+// RESISTANCE LEVELS
 const RESIST_LEVELS = [
   { key: 'fatal', name: 'Fatal', mult: 2.0,
     color: '#ff2222' },
@@ -356,7 +356,7 @@ const RESIST_LEVELS = [
     color: '#ffffff' },
 ];
 
-// ========== SKILL TYPE DEFS ==========
+// SKILL TYPE DEFS
 const SKILL_TYPES = [
   {
     key: 'attack', name: 'Attack',
@@ -372,7 +372,7 @@ const SKILL_TYPES = [
   },
 ];
 
-// ========== EFFECT DATA TABLES ==========
+// EFFECT DATA TABLES
 // Each effect: { name, desc, cost (per N),
 //   maxAmt, procType, procOptions, canNeg,
 //   restrictions }
@@ -612,7 +612,7 @@ const SKILL_EFFECTS = {
   },
 };
 
-// ========== EFFECT HANDLER REGISTRY ==========
+// EFFECT HANDLER REGISTRY
 // Each handler has optional lifecycle hooks.
 // ctx = { self, target, dice, opponentDice,
 //   isOffensive, wasAttacking, dmgResist,
@@ -878,7 +878,7 @@ const EFFECT_HANDLERS = {
   },
 };
 
-// ========== DERIVED ATTRIBUTE CALC ==========
+// DERIVED ATTRIBUTE CALC
 function calcDerived(stats, rank) {
   const r = rank || 1;
   return {
@@ -978,7 +978,7 @@ function trimEffectsToFit(effects, table,
   return removed;
 }
 
-// ========== SUMMARY GENERATORS ==========
+// SUMMARY GENERATORS
 // Build a natural-language sentence from an
 // effect instance + its definition.
 function effectSentence(e, def) {
@@ -1128,7 +1128,7 @@ function summarizeSkill(s) {
   return lines;
 }
 
-// ========== DEBUG TEST BUILDERS ==========
+// DEBUG TEST BUILDERS
 function buildTestCharacter() {
   return {
     stats: {
@@ -1325,7 +1325,7 @@ const RANK1_RESIST_TOTAL = 9;
 // At Rank 1, max resistance is Endured (idx 3)
 const RANK1_RESIST_MAX_IDX = 3;
 
-// ========== PMTTRPG ENGINE ==========
+// PMTTRPG ENGINE
 class PMTTRPGEngine {
   constructor(canvas, act) {
     this.canvas = canvas;
@@ -1442,7 +1442,7 @@ class PMTTRPGEngine {
     );
   }
 
-  // ========== RENDER DISPATCH ==========
+  // RENDER DISPATCH
   render() {
     const ctx = this.ctx;
     ctx.fillStyle = COL.bg;
@@ -1486,7 +1486,7 @@ class PMTTRPGEngine {
     }
   }
 
-  // ========== TITLE SCREEN ==========
+  // TITLE SCREEN
   renderTitle() {
     const ctx = this.ctx;
     // Border
@@ -1571,7 +1571,7 @@ class PMTTRPGEngine {
     );
   }
 
-  // ========== CREATE CHROME ==========
+  // CREATE CHROME
   renderCreateChrome() {
     const ctx = this.ctx;
     // Step tabs
@@ -1704,7 +1704,7 @@ class PMTTRPGEngine {
     }
   }
 
-  // ========== STEP 1: STATS ==========
+  // STEP 1: STATS
   renderStats() {
     const ctx = this.ctx;
     ctx.fillStyle = COL.text;
@@ -1762,7 +1762,7 @@ class PMTTRPGEngine {
     }
   }
 
-  // ========== STEP 2: WEAPON ==========
+  // STEP 2: WEAPON
   renderWeapon() {
     const ctx = this.ctx;
     const w = this.cc.weapon;
@@ -1958,7 +1958,7 @@ class PMTTRPGEngine {
     );
   }
 
-  // ========== STEP 3: OUTFIT ==========
+  // STEP 3: OUTFIT
   renderOutfit() {
     const ctx = this.ctx;
     const o = this.cc.outfit;
@@ -2096,7 +2096,7 @@ class PMTTRPGEngine {
     this.renderOutfitPreview();
   }
 
-  // ========== STEP 4: AUGMENT ==========
+  // STEP 4: AUGMENT
   renderAugment() {
     const ctx = this.ctx;
     const a = this.cc.augment;
@@ -2133,7 +2133,7 @@ class PMTTRPGEngine {
     this.renderAugmentPreview();
   }
 
-  // ========== STEP 5: SKILLS ==========
+  // STEP 5: SKILLS
   renderSkills() {
     const ctx = this.ctx;
     let y = 55;
@@ -2212,7 +2212,7 @@ class PMTTRPGEngine {
     this.renderSkillPreview();
   }
 
-  // ========== STEP 6: REVIEW ==========
+  // STEP 6: REVIEW
   renderReview() {
     const ctx = this.ctx;
     const cc = this.cc;
@@ -2238,7 +2238,7 @@ class PMTTRPGEngine {
     const row1Y = 75;
     const row2Y = 230;
     const row3Y = 385;
-    // ----- Stats panel (col1, row1) -----
+    // Stats panel (col1, row1)
     this.drawPanel(col1X, row1Y, colW, rowH);
     ctx.fillStyle = COL.textGold;
     ctx.font = '11px monospace';
@@ -2284,7 +2284,7 @@ class PMTTRPGEngine {
         + '  Reactions: ' + d.reactions,
       col1X + 12, row1Y + 132
     );
-    // ----- Weapon panel (col2, row1) -----
+    // Weapon panel (col2, row1)
     const w = cc.weapon;
     this.drawPanel(col2X, row1Y, colW, rowH);
     ctx.fillStyle = COL.textGold;
@@ -2302,7 +2302,7 @@ class PMTTRPGEngine {
       col2X + 4, row1Y + 38, colW - 8,
       summarizeWeapon(w), COL.text
     );
-    // ----- Outfit panel (col1, row2) -----
+    // Outfit panel (col1, row2)
     const o = cc.outfit;
     this.drawPanel(col1X, row2Y, colW, rowH);
     ctx.fillStyle = COL.textGold;
@@ -2320,7 +2320,7 @@ class PMTTRPGEngine {
       col1X + 4, row2Y + 38, colW - 8,
       summarizeOutfit(o), COL.text
     );
-    // ----- Augment panel (col2, row2) -----
+    // Augment panel (col2, row2)
     this.drawPanel(col2X, row2Y, colW, rowH);
     ctx.fillStyle = COL.textGold;
     ctx.font = '11px monospace';
@@ -2331,7 +2331,7 @@ class PMTTRPGEngine {
       summarizeAugment(cc.augment),
       COL.text
     );
-    // ----- Skill 1 (col1, row3) COLORED -----
+    // Skill 1 (col1, row3) COLORED
     const s1 = cc.skills[0];
     const s1Cols = skillColors(s1.type);
     this.drawColoredPanel(
@@ -2351,7 +2351,7 @@ class PMTTRPGEngine {
       col1X + 4, row3Y + 38, colW - 8,
       summarizeSkill(s1), s1Cols.text
     );
-    // ----- Skill 2 (col2, row3) COLORED -----
+    // Skill 2 (col2, row3) COLORED
     const s2 = cc.skills[1];
     const s2Cols = skillColors(s2.type);
     this.drawColoredPanel(
@@ -2373,7 +2373,7 @@ class PMTTRPGEngine {
     );
   }
 
-  // ========== CREATED SCREEN ==========
+  // CREATED SCREEN
   renderCreated() {
     this.drawTextC('Character Created!',
       COL.textGreen, 20, CH / 2 - 20);
@@ -2383,7 +2383,7 @@ class PMTTRPGEngine {
     );
   }
 
-  // ========== SHARED: EFFECT LIST ==========
+  // SHARED: EFFECT LIST
   renderEffects(effects, table, budget, spent,
     y, category) {
     const ctx = this.ctx;
@@ -2445,7 +2445,7 @@ class PMTTRPGEngine {
     this._effectsSpent = spent;
   }
 
-  // ========== EFFECT PICKER OVERLAY ==========
+  // EFFECT PICKER OVERLAY
   renderEffectPickerOverlay() {
     const ctx = this.ctx;
     const ep = this.effectPicker;
@@ -2728,7 +2728,7 @@ class PMTTRPGEngine {
       COL.btnNorm);
   }
 
-  // ========== DRAWING HELPERS ==========
+  // DRAWING HELPERS
   drawTextC(text, color, size, y) {
     const ctx = this.ctx;
     ctx.fillStyle = color;
@@ -2837,7 +2837,7 @@ class PMTTRPGEngine {
     return lines;
   }
 
-  // ========== INPUT HANDLING ==========
+  // INPUT HANDLING
   handleKeyDown(code) {
     // Effect picker takes priority
     if (this.effectPicker) {
@@ -3048,7 +3048,7 @@ class PMTTRPGEngine {
     }
   }
 
-  // ========== CLICK HANDLING ==========
+  // CLICK HANDLING
   handleClick(x, y) {
     // Effect picker overlay
     if (this.effectPicker) {
@@ -3416,7 +3416,7 @@ class PMTTRPGEngine {
     this.focusedField = null;
   }
 
-  // ========== EFFECT PICKER HELPERS ==========
+  // EFFECT PICKER HELPERS
   openEffectPicker(cat, effects, table,
     budget) {
     const spent = calcEPSpent(effects, table);
@@ -3690,7 +3690,7 @@ class PMTTRPGEngine {
     }
   }
 
-  // ========== SUBMIT CHARACTER ==========
+  // SUBMIT CHARACTER
   submitCharacter() {
     const cc = this.cc;
     const mapEffect = e => ({
@@ -3737,7 +3737,7 @@ class PMTTRPGEngine {
     this.act('sfx', { s: 'confirm' });
   }
 
-  // ========== HIT TEST ==========
+  // HIT TEST
   hitTest(mx, my, x, y, w, h) {
     return mx >= x && mx <= x + w
       && my >= y && my <= y + h;
@@ -3751,7 +3751,7 @@ class PMTTRPGEngine {
     }
   }
 
-  // ========== COMBAT: INIT ==========
+  // COMBAT: INIT
   startDebugCombat() {
     const cc = buildTestCharacter();
     this.cc = cc;
@@ -3849,7 +3849,7 @@ class PMTTRPGEngine {
     }
   }
 
-  // ========== COMBAT: HELPERS ==========
+  // COMBAT: HELPERS
   rollDice(num, max) {
     let total = 0;
     for (let i = 0; i < num; i++) {
@@ -4167,7 +4167,7 @@ class PMTTRPGEngine {
     return this.calcEvadeDiceFor(c, null);
   }
 
-  // ========== EFFECT PROC DISPATCHERS ==========
+  // EFFECT PROC DISPATCHERS
   procAlwaysActive(effects, table, ctx) {
     for (let i = 0; i < effects.length; i++) {
       const eff = effects[i];
@@ -4338,7 +4338,7 @@ class PMTTRPGEngine {
     return c.dmgType;
   }
 
-  // ========== COMBAT: TURN CYCLE ==========
+  // COMBAT: TURN CYCLE
   startTurn() {
     const c = this.combat;
     const id = c.turnOrder[c.turnIdx];
@@ -4517,7 +4517,7 @@ class PMTTRPGEngine {
     }
   }
 
-  // ========== COMBAT: DAMAGE ==========
+  // COMBAT: DAMAGE
   calcDamage(roll, dmgType, defender) {
     const resistMap = {
       fatal: 2.0, weak: 1.5, normal: 1.0,
@@ -4672,7 +4672,7 @@ class PMTTRPGEngine {
     }
   }
 
-  // ========== COMBAT: ATTACKS ==========
+  // COMBAT: ATTACKS
   resolveOneSidedAttack(atk, def) {
     const dice = this.getEffectiveAtkDice(atk);
     const roll = this.rollDice(
@@ -5029,7 +5029,7 @@ class PMTTRPGEngine {
     }
   }
 
-  // ========== COMBAT: ENEMY AI ==========
+  // COMBAT: ENEMY AI
   runEnemyTurn(enemy) {
     const player = this.combat
       .combatants.player;
@@ -5102,7 +5102,7 @@ class PMTTRPGEngine {
     return 'evade';
   }
 
-  // ========== COMBAT: PLAYER ACTIONS ==========
+  // COMBAT: PLAYER ACTIONS
   startPlayerMove() {
     if (this.combat.phase !== CP_IDLE) return;
     const me = this.combat.combatants.player;
@@ -5306,7 +5306,7 @@ class PMTTRPGEngine {
     }
   }
 
-  // ========== COMBAT: RENDER ==========
+  // COMBAT: RENDER
   renderCombat() {
     const ctx = this.ctx;
     if (!this.combat) return;
@@ -6377,7 +6377,7 @@ class PMTTRPGEngine {
     }
   }
 
-  // ========== COMBAT: INPUT ==========
+  // COMBAT: INPUT
   handleCombatKey(code) {
     const c = this.combat;
     if (!c) return;
@@ -6606,7 +6606,7 @@ class PMTTRPGEngine {
   }
 }
 
-// ========== ACQUIRED KEYS ==========
+// ACQUIRED KEYS
 // Acquire every key the player might press so
 // that BYOND hotkeys (chat 'T', etc.) do not
 // fire while the arcade window is focused.
@@ -6630,7 +6630,7 @@ const ACQUIRED_KEYS = (() => {
   return keys;
 })();
 
-// ========== INFERNO COMPONENT ==========
+// INFERNO COMPONENT
 class ArcadePMTTRPGComp extends Component {
   constructor(props) {
     super(props);
@@ -6717,7 +6717,7 @@ class ArcadePMTTRPGComp extends Component {
   }
 }
 
-// ========== EXPORT ==========
+// EXPORT
 export const ArcadePMTTRPG = (
   props, context
 ) => {

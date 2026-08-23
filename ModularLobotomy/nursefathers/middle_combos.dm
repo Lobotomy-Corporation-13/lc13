@@ -1,7 +1,7 @@
 /// Middle Nursefather combo system.
 /// Combos are triggered by dashing to a target (afterattack at range on Laevateinn).
 /// Without Tattoos: Combo 1 (default). With Tattoos: powered combo based on seal stage.
-/// Seal 0 + Tattoos → Combo 2, Seal 1 → Combo 3, Seal 2 → Combo 4, Seal 3 → Combo 5.
+/// Seal 0 + Tattoos -> Combo 2, Seal 1 -> Combo 3, Seal 2 -> Combo 4, Seal 3 -> Combo 5.
 /// All combos lock both user and target, with cutscene_duel preventing outside damage.
 /// All damage has justice scaling + 2x multiplier vs simple mobs (converted to BRUTE).
 /// FIRE damage pierces armor on humans, converted to BRUTE for simple mobs.
@@ -48,7 +48,7 @@ GLOBAL_VAR(middle_combo_impale_target)
 		var/userjust = get_modified_attribute_level(user, JUSTICE_ATTRIBUTE)
 		var/justicemod = 1 + userjust / 100
 		final_damage = damage * justicemod * 2
-		// Convert all damage to BRUTE for simple mobs — bypasses damage_coeff, always hits weakness
+		// Convert all damage to BRUTE for simple mobs - bypasses damage_coeff, always hits weakness
 		final_type = BRUTE
 	if(final_type == FIRE)
 		target.deal_damage(final_damage, FIRE, source = user, flags = DAMAGE_PIERCING)
@@ -84,9 +84,9 @@ GLOBAL_VAR(middle_combo_impale_target)
 		if(overheat_stacks > 0)
 			L.apply_lc_overheat(overheat_stacks)
 
-/// Combo 1 — "Don't Let Somethin' Like This Break Ya!"
-/// Default combo — triggered by dashing to a target without Tattoos active.
-/// Seize → punch → two wide Laevateinn slashes → knockback finisher (5 tiles, wall-breaking).
+/// Combo 1 - "Don't Let Somethin' Like This Break Ya!"
+/// Default combo - triggered by dashing to a target without Tattoos active.
+/// Seize -> punch -> two wide Laevateinn slashes -> knockback finisher (5 tiles, wall-breaking).
 /// Base damage: ~150 RED
 /proc/middle_combo_chain_grapple(mob/living/target, mob/living/carbon/human/user, tattoo_tier)
 	set waitfor = FALSE
@@ -118,7 +118,7 @@ GLOBAL_VAR(middle_combo_impale_target)
 	if(MIDDLE_COMBO_CHECK(target, user))
 		return
 
-	// Step 3: Punch — 25 RED
+	// Step 3: Punch - 25 RED
 	animate(user, pixel_x = user.base_pixel_x + (get_dir(user, target) & EAST ? 8 : -8), time = 0.1 SECONDS, easing = QUAD_EASING)
 	user.do_attack_animation(target, no_effect = TRUE)
 	middle_combo_damage(target, user, 25, RED_DAMAGE)
@@ -132,7 +132,7 @@ GLOBAL_VAR(middle_combo_impale_target)
 	if(MIDDLE_COMBO_CHECK(target, user))
 		return
 
-	// Step 4: Wide slash — 30 RED + bleed
+	// Step 4: Wide slash - 30 RED + bleed
 	animate(user, transform = matrix(45, MATRIX_ROTATE), time = 0.15 SECONDS, easing = QUAD_EASING)
 	animate(transform = null, time = 0.15 SECONDS, easing = QUAD_EASING)
 	user.do_attack_animation(target, no_effect = TRUE)
@@ -147,7 +147,7 @@ GLOBAL_VAR(middle_combo_impale_target)
 	if(MIDDLE_COMBO_CHECK(target, user))
 		return
 
-	// Step 5: Reverse slash — 35 RED
+	// Step 5: Reverse slash - 35 RED
 	animate(user, transform = matrix(-60, MATRIX_ROTATE), time = 0.15 SECONDS, easing = QUAD_EASING)
 	animate(transform = null, time = 0.15 SECONDS, easing = QUAD_EASING)
 	user.do_attack_animation(target, no_effect = TRUE)
@@ -161,7 +161,7 @@ GLOBAL_VAR(middle_combo_impale_target)
 	if(MIDDLE_COMBO_CHECK(target, user))
 		return
 
-	// Step 6: Finisher — 40 + grudge RED, knockback
+	// Step 6: Finisher - 40 + grudge RED, knockback
 	user.SpinAnimation(3, 1)
 	sleep(0.2 SECONDS)
 	if(MIDDLE_COMBO_CHECK(target, user))
@@ -177,9 +177,9 @@ GLOBAL_VAR(middle_combo_impale_target)
 	animate(user, pixel_x = user.base_pixel_x, pixel_y = user.base_pixel_y, transform = null, time = 0.1 SECONDS)
 	user.SetImmobilized(0)
 
-/// Combo 2 — "Stomping!"
+/// Combo 2 - "Stomping!"
 /// Powered combo at seal stage 0 (full seal) with Tattoos active.
-/// Rapid stomps with AoE shockwave → knockback finisher (3 tiles, wall-breaking). Applies Bleed.
+/// Rapid stomps with AoE shockwave -> knockback finisher (3 tiles, wall-breaking). Applies Bleed.
 /// Base damage: ~155 RED | Max w/ 20 grudge: ~235 RED (extra stomps + bonus)
 /proc/middle_combo_stomping(mob/living/target, mob/living/carbon/human/user, tattoo_tier)
 	set waitfor = FALSE
@@ -199,11 +199,11 @@ GLOBAL_VAR(middle_combo_impale_target)
 	if(!stomp_dir)
 		stomp_dir = user.dir
 
-	// Grab and shove target down — user moves onto target's tile
+	// Grab and shove target down - user moves onto target's tile
 	user.visible_message(span_danger("[user] seizes [target] and slams them to the ground!"))
 	playsound(user, 'sound/weapons/middle_nursefather/middlefather_blunt.ogg', 50, TRUE)
 	user.forceMove(get_turf(target))
-	// Target visually pinned below user — shifted down and tilted
+	// Target visually pinned below user - shifted down and tilted
 	animate(target, pixel_y = target.base_pixel_y - 8, transform = matrix(25, MATRIX_ROTATE), time = 0.2 SECONDS, easing = BOUNCE_EASING)
 	// User stands over them
 	animate(user, pixel_y = user.base_pixel_y + 6, time = 0.15 SECONDS, easing = QUAD_EASING)
@@ -212,7 +212,7 @@ GLOBAL_VAR(middle_combo_impale_target)
 	if(MIDDLE_COMBO_CHECK(target, user))
 		return
 
-	// 5 base stomps — 20 RED each = 100
+	// 5 base stomps - 20 RED each = 100
 	// User stomps while shifting weight side to side, target jolts with each hit
 	var/total_stomps = 5 + extra_stomps
 	for(var/i in 1 to total_stomps)
@@ -232,7 +232,7 @@ GLOBAL_VAR(middle_combo_impale_target)
 		shake_camera(target, 2, 2)
 		playsound(target, 'sound/weapons/middle_nursefather/middlefather_blunt.ogg', 55, TRUE)
 
-		// AoE shockwave on 3rd stomp — 10 RED to nearby
+		// AoE shockwave on 3rd stomp - 10 RED to nearby
 		if(i == 3)
 			new /obj/effect/temp_visual/middle_slam(get_turf(user))
 			for(var/mob/living/L in orange(1, user))
@@ -255,7 +255,7 @@ GLOBAL_VAR(middle_combo_impale_target)
 	if(MIDDLE_COMBO_CHECK(target, user))
 		return
 
-	// Final stomp — 25 + grudge RED + bleed — big jump onto target
+	// Final stomp - 25 + grudge RED + bleed - big jump onto target
 	animate(user, pixel_y = user.base_pixel_y + 20, time = 0.2 SECONDS, easing = QUAD_EASING)
 	sleep(0.2 SECONDS)
 	if(MIDDLE_COMBO_CHECK(target, user))
@@ -275,9 +275,9 @@ GLOBAL_VAR(middle_combo_impale_target)
 	animate(user, pixel_x = user.base_pixel_x, pixel_y = user.base_pixel_y, transform = null, time = 0.1 SECONDS)
 	user.SetImmobilized(0)
 
-/// Combo 3 — "I'll Gut Ya Like a Fish"
+/// Combo 3 - "I'll Gut Ya Like a Fish"
 /// Powered combo at seal stage 1 (1 seal removed) with Tattoos active.
-/// Rapid punches → burning Laevateinn slashes → fire explosion finisher with AoE.
+/// Rapid punches -> burning Laevateinn slashes -> fire explosion finisher with AoE.
 /// Knockback (4 tiles, wall-breaking). Applies Overheat.
 /// Base damage: ~145 RED + 20 FIRE | Max w/ 20 grudge: ~185 RED + 20 FIRE
 /proc/middle_combo_gut_fish(mob/living/target, mob/living/carbon/human/user, tattoo_tier)
@@ -298,7 +298,7 @@ GLOBAL_VAR(middle_combo_impale_target)
 	if(MIDDLE_COMBO_CHECK(target, user))
 		return
 
-	// 3 rapid punches — 15 RED each = 45
+	// 3 rapid punches - 15 RED each = 45
 	for(var/i in 1 to 3)
 		var/punch_offset = (i % 2 == 1) ? 6 : -6
 		animate(user, pixel_x = user.base_pixel_x + punch_offset, time = 0.08 SECONDS, easing = QUAD_EASING)
@@ -322,7 +322,7 @@ GLOBAL_VAR(middle_combo_impale_target)
 	if(MIDDLE_COMBO_CHECK(target, user))
 		return
 
-	// 4 burning slashes — 20 RED + 5 FIRE each = 80 RED + 20 FIRE
+	// 4 burning slashes - 20 RED + 5 FIRE each = 80 RED + 20 FIRE
 	for(var/i in 1 to 4)
 		var/rotation = (i % 2 == 1) ? 45 + (i * 10) : -(45 + (i * 10))
 		animate(user, transform = matrix(rotation, MATRIX_ROTATE), time = 0.1 SECONDS, easing = QUAD_EASING)
@@ -341,7 +341,7 @@ GLOBAL_VAR(middle_combo_impale_target)
 		if(MIDDLE_COMBO_CHECK(target, user))
 			return
 
-	// Fire cleave finisher — 20 + grudge RED
+	// Fire cleave finisher - 20 + grudge RED
 	animate(user, pixel_y = user.base_pixel_y + 20, time = 0.2 SECONDS, easing = QUAD_EASING)
 	sleep(0.2 SECONDS)
 	if(MIDDLE_COMBO_CHECK(target, user))
@@ -368,9 +368,9 @@ GLOBAL_VAR(middle_combo_impale_target)
 	animate(user, pixel_x = user.base_pixel_x, pixel_y = user.base_pixel_y, transform = null, time = 0.1 SECONDS)
 	user.SetImmobilized(0)
 
-/// Combo 4 — "Gut Stab [Laevateinn]"
+/// Combo 4 - "Gut Stab [Laevateinn]"
 /// Powered combo at seal stage 2 (2 seals removed) with Tattoos active.
-/// Positions user to the left, impales target with repeated stabs → burning rip-out with AoE.
+/// Positions user to the left, impales target with repeated stabs -> burning rip-out with AoE.
 /// Knockback (6 tiles, wall-breaking). Heavy Overheat stacking.
 /// Base damage: ~150 RED + 28 FIRE | Max w/ 20 grudge: ~230 RED + 28 FIRE
 /proc/middle_combo_gut_stab(mob/living/target, mob/living/carbon/human/user, tattoo_tier)
@@ -390,7 +390,7 @@ GLOBAL_VAR(middle_combo_impale_target)
 		user.forceMove(left_turf)
 	user.setDir(EAST)
 
-	// Impale — 20 RED, pixel shift user toward target
+	// Impale - 20 RED, pixel shift user toward target
 	animate(user, pixel_x = user.base_pixel_x + 6, time = 0.15 SECONDS, easing = QUAD_EASING)
 	user.do_attack_animation(target, no_effect = TRUE)
 	user.visible_message(span_danger("[user] drives Laevateinn through [target]'s gut!"))
@@ -408,7 +408,7 @@ GLOBAL_VAR(middle_combo_impale_target)
 	if(MIDDLE_COMBO_CHECK(target, user))
 		return
 
-	// 8 stabs — 10 RED + 3 FIRE each = 80 RED + 24 FIRE
+	// 8 stabs - 10 RED + 3 FIRE each = 80 RED + 24 FIRE
 	for(var/i in 1 to 8)
 		var/twist_angle = 10 + (i * 3)
 		animate(user, transform = matrix(twist_angle, MATRIX_ROTATE), time = 0.08 SECONDS, easing = QUAD_EASING)
@@ -435,7 +435,7 @@ GLOBAL_VAR(middle_combo_impale_target)
 		if(MIDDLE_COMBO_CHECK(target, user))
 			return
 
-	// Final twist — 30 + grudge RED + 4 FIRE
+	// Final twist - 30 + grudge RED + 4 FIRE
 	user.SpinAnimation(3, 1)
 	sleep(0.2 SECONDS)
 	if(MIDDLE_COMBO_CHECK(target, user))
@@ -466,10 +466,10 @@ GLOBAL_VAR(middle_combo_impale_target)
 	animate(target, pixel_x = target.base_pixel_x, pixel_y = target.base_pixel_y, transform = null, time = 0.1 SECONDS)
 	user.SetImmobilized(0)
 
-/// Combo 5 — "Complete and Total Extermination [Laevateinn]"
+/// Combo 5 - "Complete and Total Extermination [Laevateinn]"
 /// Ultimate combo at seal stage 3 (fully unsealed) with Tattoos active.
-/// Throw Laevateinn → dash + slam → fire dome (AoE) → sword sweep → rapid slashes →
-/// impale → kick → final stab (AoE) → massive knockback (8 tiles, wall-breaking).
+/// Throw Laevateinn -> dash + slam -> fire dome (AoE) -> sword sweep -> rapid slashes ->
+/// impale -> kick -> final stab (AoE) -> massive knockback (8 tiles, wall-breaking).
 /// Massive Overheat + FIRE AoE damage to all nearby mobs.
 /// Base damage: ~320 RED + 30 FIRE | Max w/ 20 grudge: ~420 RED + 30 FIRE
 /proc/middle_combo_total_extermination(mob/living/target, mob/living/carbon/human/user, tattoo_tier)
@@ -483,9 +483,9 @@ GLOBAL_VAR(middle_combo_impale_target)
 	user.Immobilize(15 SECONDS)
 	middle_combo_lock_target(target, 15 SECONDS)
 
-	// Step 1: Throw Laevateinn at target — 30 RED + 5 FIRE
+	// Step 1: Throw Laevateinn at target - 30 RED + 5 FIRE
 	user.visible_message(span_userdanger("[user] hurls Laevateinn at [target]!"))
-	// Weapon throw visual — beam from user to target
+	// Weapon throw visual - beam from user to target
 	var/turf/throw_origin = get_turf(user)
 	var/datum/beam/sword_beam = throw_origin.Beam(target, "1-full", time = 5)
 	if(sword_beam)
@@ -521,7 +521,7 @@ GLOBAL_VAR(middle_combo_impale_target)
 	if(MIDDLE_COMBO_CHECK(target, user))
 		return
 
-	// Step 2: Dash + slam — 30 RED
+	// Step 2: Dash + slam - 30 RED
 	var/turf/dash_origin = get_turf(user)
 	var/dash_dir = get_dir(user, target)
 	var/obj/effect/temp_visual/dir_setting/smoke_afterdash/aftersmoke = new(dash_origin, dash_dir)
@@ -552,7 +552,7 @@ GLOBAL_VAR(middle_combo_impale_target)
 	if(MIDDLE_COMBO_CHECK(target, user))
 		return
 
-	// Step 3: Fire dome — 25 RED + 5 FIRE + AoE fire
+	// Step 3: Fire dome - 25 RED + 5 FIRE + AoE fire
 	middle_combo_damage(target, user, 25, RED_DAMAGE)
 	middle_combo_damage(target, user, 5, FIRE)
 	target.apply_lc_overheat(5)
@@ -572,7 +572,7 @@ GLOBAL_VAR(middle_combo_impale_target)
 	if(MIDDLE_COMBO_CHECK(target, user))
 		return
 
-	// Step 4: Sword sweep — 25 RED + 5 FIRE, launch again
+	// Step 4: Sword sweep - 25 RED + 5 FIRE, launch again
 	animate(user, transform = matrix(90, MATRIX_ROTATE), time = 0.1 SECONDS, easing = QUAD_EASING)
 	animate(transform = null, time = 0.15 SECONDS, easing = QUAD_EASING)
 	user.do_attack_animation(target, no_effect = TRUE)
@@ -609,7 +609,7 @@ GLOBAL_VAR(middle_combo_impale_target)
 	if(MIDDLE_COMBO_CHECK(target, user))
 		return
 
-	// Step 6: 4 rapid slashes — 15 RED + 2 FIRE each = 60 RED + 8 FIRE
+	// Step 6: 4 rapid slashes - 15 RED + 2 FIRE each = 60 RED + 8 FIRE
 	// User circles around the target, slashing from alternating sides
 	var/list/circle_offsets = list(list(-10, 0), list(0, 8), list(10, 0), list(0, -8))
 	for(var/i in 1 to 4)
@@ -635,7 +635,7 @@ GLOBAL_VAR(middle_combo_impale_target)
 	// Reset user position after circling
 	animate(user, pixel_x = user.base_pixel_x, pixel_y = user.base_pixel_y, time = 0.1 SECONDS, easing = QUAD_EASING)
 
-	// Step 7: Impale — 30 RED + 2 FIRE
+	// Step 7: Impale - 30 RED + 2 FIRE
 	// User lunges forward into the target
 	var/lunge_dir_x = (get_dir(user, target) & EAST) ? 10 : ((get_dir(user, target) & WEST) ? -10 : 0)
 	animate(user, pixel_x = user.base_pixel_x + lunge_dir_x, pixel_y = user.base_pixel_y - 2, time = 0.1 SECONDS, easing = QUAD_EASING)
@@ -662,7 +662,7 @@ GLOBAL_VAR(middle_combo_impale_target)
 	if(MIDDLE_COMBO_CHECK(target, user))
 		return
 
-	// Step 8: Kick while impaled — 25 RED
+	// Step 8: Kick while impaled - 25 RED
 	// User lifts and drives a knee/kick into the impaled target
 	animate(user, pixel_y = user.base_pixel_y + 6, pixel_x = user.base_pixel_x, time = 0.08 SECONDS, easing = QUAD_EASING)
 	animate(pixel_y = user.base_pixel_y - 2, time = 0.08 SECONDS, easing = BOUNCE_EASING)
@@ -679,7 +679,7 @@ GLOBAL_VAR(middle_combo_impale_target)
 	if(MIDDLE_COMBO_CHECK(target, user))
 		return
 
-	// Step 9: Final stab — 40 + grudge RED + 3 FIRE
+	// Step 9: Final stab - 40 + grudge RED + 3 FIRE
 	// User winds up with a big lunge, then drives the blade through
 	animate(user, pixel_x = user.base_pixel_x - 8, pixel_y = user.base_pixel_y + 4, transform = matrix(15, MATRIX_ROTATE), time = 0.15 SECONDS, easing = QUAD_EASING)
 	animate(pixel_x = user.base_pixel_x + 6, pixel_y = user.base_pixel_y, transform = null, time = 0.12 SECONDS, easing = QUAD_EASING)
@@ -687,7 +687,7 @@ GLOBAL_VAR(middle_combo_impale_target)
 	middle_combo_damage(target, user, 40 + tattoo_bonus, RED_DAMAGE)
 	middle_combo_damage(target, user, 3, FIRE)
 	target.apply_lc_overheat(10)
-	// Target convulses from the final stab — reset their tilt
+	// Target convulses from the final stab - reset their tilt
 	animate(target, pixel_x = target.base_pixel_x + 6, transform = null, time = 0.03 SECONDS)
 	animate(pixel_x = target.base_pixel_x - 6, time = 0.03 SECONDS)
 	animate(pixel_x = target.base_pixel_x + 5, time = 0.03 SECONDS)
@@ -707,7 +707,7 @@ GLOBAL_VAR(middle_combo_impale_target)
 	if(MIDDLE_COMBO_CHECK(target, user))
 		return
 
-	// Step 10: Rip blade + step back + knockback — 30 RED
+	// Step 10: Rip blade + step back + knockback - 30 RED
 	// Remove impale overlay first
 	if(impale_overlay)
 		target.cut_overlay(impale_overlay)
@@ -737,3 +737,5 @@ GLOBAL_VAR(middle_combo_impale_target)
 
 	animate(user, pixel_x = user.base_pixel_x, pixel_y = user.base_pixel_y, transform = null, time = 0.1 SECONDS)
 	user.SetImmobilized(0)
+
+#undef MIDDLE_COMBO_CHECK

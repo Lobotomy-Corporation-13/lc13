@@ -161,7 +161,7 @@
 	qdel(T)
 	return consumed_tier
 
-/// Combo protection — reduces all incoming damage to 1 during combo animations.
+/// Combo protection - reduces all incoming damage to 1 during combo animations.
 /// Does NOT deny damage (mobs keep aggro). Auto-removes after duration.
 /datum/status_effect/middle_combo_protection
 	id = "middle_combo_protection"
@@ -186,7 +186,7 @@
 	. = ..()
 
 /// Component that reduces outside damage to 1 during combos.
-/// Uses the Dieci shield pattern — denies original damage, deals 1 as forced.
+/// Uses the Dieci shield pattern - denies original damage, deals 1 as forced.
 /datum/component/middle_combo_shield
 	dupe_mode = COMPONENT_DUPE_UNIQUE
 
@@ -206,12 +206,12 @@
 		return
 	if(!damage || damage <= 1)
 		return
-	// Reduce to 1 damage — deal it as forced so we don't recurse
+	// Reduce to 1 damage - deal it as forced so we don't recurse
 	var/mob/living/owner = parent
 	INVOKE_ASYNC(owner, TYPE_PROC_REF(/mob/living, deal_damage), 1, damagetype, damage_source, DAMAGE_FORCED, null, null, def_zone)
 	return COMPONENT_MOB_DENY_DAMAGE
 
-// ==================== MIRROR WEAKENED ====================
+// MIRROR WEAKENED
 
 /// Applied to both the mirror shard user and their grab target.
 /// Both are pinned (immobilized) and flash RED. After 3s, damage to either breaks the pin and the effect.
@@ -238,6 +238,22 @@
 	RegisterSignal(owner, COMSIG_MOB_APPLY_DAMGE, PROC_REF(OnWeakenedDamage))
 	INVOKE_ASYNC(src, PROC_REF(PulseRed))
 
+/// Cross-links the two halves of a mirror grab and follows the partner's deletion
+/datum/status_effect/mirror_weakened/proc/SetPartner(mob/living/new_partner)
+	ClearPartner()
+	partner = new_partner
+	RegisterSignal(partner, COMSIG_PARENT_QDELETING, PROC_REF(OnPartnerDeleted))
+
+/datum/status_effect/mirror_weakened/proc/ClearPartner()
+	if(!partner)
+		return
+	UnregisterSignal(partner, COMSIG_PARENT_QDELETING)
+	partner = null
+
+/datum/status_effect/mirror_weakened/proc/OnPartnerDeleted(datum/source)
+	SIGNAL_HANDLER
+	partner = null
+
 /datum/status_effect/mirror_weakened/on_remove()
 	UnregisterSignal(owner, COMSIG_MOB_APPLY_DAMGE)
 	if(owner && !QDELETED(owner))
@@ -250,11 +266,11 @@
 		if(partner_effect)
 			partner_effect.removing_partner = TRUE
 			qdel(partner_effect)
-	partner = null
+	ClearPartner()
 	. = ..()
 
 /datum/status_effect/mirror_weakened/Destroy()
-	partner = null
+	ClearPartner()
 	return ..()
 
 /// Damage breaks the effect once the immobilize ends.

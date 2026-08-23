@@ -52,7 +52,7 @@
 
 		if(next.density)
 			if(istype(next, /turf/closed))
-				// Check the turf AFTER this wall — if it's indestructible rock, don't break
+				// Check the turf AFTER this wall - if it's indestructible rock, don't break
 				var/turf/behind = get_step(next, direction)
 				if(behind && istype(behind, /turf/closed/indestructible/rock))
 					target.deal_damage(20, RED_DAMAGE)

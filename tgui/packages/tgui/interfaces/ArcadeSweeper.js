@@ -17,9 +17,7 @@ import {
   releaseHotKey,
 } from '../hotkeys';
 
-// =========================================
 // Constants
-// =========================================
 
 const SCREEN_W = 384;
 const SCREEN_H = 384;
@@ -77,9 +75,7 @@ const C_PLAYER = '#44aaff';
 const C_AHN = '#ffdd00';
 const C_SWEEPER = '#cc2222';
 
-// =========================================
 // Game Engine
-// =========================================
 
 class SweeperEngine {
   constructor(canvas, act) {
@@ -1077,9 +1073,7 @@ class SweeperEngine {
   }
 }
 
-// =========================================
 // TGUI Component
-// =========================================
 
 const ACQUIRED_KEYS = [
   KEY_W, KEY_A, KEY_S, KEY_D,

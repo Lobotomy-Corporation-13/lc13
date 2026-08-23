@@ -1,10 +1,10 @@
-// Middle Nursefather — Party Buff Status Effects
+// Middle Nursefather - Party Buff Status Effects
 // Applied to all attendees when a party concludes. Each area grants a unique buff.
 
 /datum/movespeed_modifier/party_showtime
 	multiplicative_slowdown = -0.3
 
-/// Base party buff — 25 minutes, passive sanity heal, purple glow.
+/// Base party buff - 25 minutes, passive sanity heal, purple glow.
 /datum/status_effect/party_buff
 	id = "party_buff"
 	duration = 15000
@@ -67,9 +67,9 @@
 	owner.set_light(0)
 	return ..()
 
-// ==================== TIER 1 — Safe Locations ====================
+// TIER 1 - Safe Locations
 
-/// Employee Housing — "Home Comfort": +10 Prudence, 10% less WHITE damage
+/// Employee Housing - "Home Comfort": +10 Prudence, 10% less WHITE damage
 /datum/status_effect/party_buff/home_comfort
 	id = "party_buff_home_comfort"
 	prud_buff = 10
@@ -89,7 +89,7 @@
 		H.physiology.white_mod /= 0.9
 	return ..()
 
-/// The Alibi — "Liquid Courage": +15 Fortitude, 10% more RED damage on hit
+/// The Alibi - "Liquid Courage": +15 Fortitude, 10% more RED damage on hit
 /datum/status_effect/party_buff/liquid_courage
 	id = "party_buff_liquid_courage"
 	fort_buff = 15
@@ -114,7 +114,7 @@
 	var/bonus = 3
 	target.deal_damage(bonus, RED_DAMAGE)
 
-/// Shop — "Retail Therapy": +10 Fortitude, +10 Prudence
+/// Shop - "Retail Therapy": +10 Fortitude, +10 Prudence
 /datum/status_effect/party_buff/retail_therapy
 	id = "party_buff_retail_therapy"
 	fort_buff = 10
@@ -122,7 +122,7 @@
 	buff_name = "Retail Therapy"
 	buff_desc = "+10 Fortitude, +10 Prudence. Passive sanity healing."
 
-/// Library — "Studied Mind": +10 Prudence, +10 Justice, 10% less BLACK damage
+/// Library - "Studied Mind": +10 Prudence, +10 Justice, 10% less BLACK damage
 /datum/status_effect/party_buff/studied_mind
 	id = "party_buff_studied_mind"
 	prud_buff = 10
@@ -143,7 +143,7 @@
 		H.physiology.black_mod /= 0.9
 	return ..()
 
-/// The Bistro — "Well Fed": +10 Fortitude, +10 Prudence, passive HP regen
+/// The Bistro - "Well Fed": +10 Fortitude, +10 Prudence, passive HP regen
 /datum/status_effect/party_buff/well_fed
 	id = "party_buff_well_fed"
 	fort_buff = 10
@@ -158,7 +158,7 @@
 	owner.adjustBruteLoss(-1)
 	owner.adjustFireLoss(-1)
 
-/// Carnival Base — "Showtime": +15 Justice, movement speed boost
+/// Carnival Base - "Showtime": +15 Justice, movement speed boost
 /datum/status_effect/party_buff/showtime
 	id = "party_buff_showtime"
 	just_buff = 15
@@ -175,7 +175,7 @@
 	owner.remove_movespeed_modifier(/datum/movespeed_modifier/party_showtime)
 	return ..()
 
-/// Clinic — "Patched Up": +10 Prudence, enhanced sanity heal, 10% less PALE damage
+/// Clinic - "Patched Up": +10 Prudence, enhanced sanity heal, 10% less PALE damage
 /datum/status_effect/party_buff/patched_up
 	id = "party_buff_patched_up"
 	prud_buff = 10
@@ -196,9 +196,9 @@
 		H.physiology.pale_mod /= 0.9
 	return ..()
 
-// ==================== TIER 2 — Moderate Risk ====================
+// TIER 2 - Moderate Risk
 
-/// HamHamPangPang — "Masterwork Cooking": +15 Fortitude, +10 Justice, inflict 2 Bleed on hit (10s cooldown)
+/// HamHamPangPang - "Masterwork Cooking": +15 Fortitude, +10 Justice, inflict 2 Bleed on hit (10s cooldown)
 /datum/status_effect/party_buff/masterwork_cooking
 	id = "party_buff_masterwork_cooking"
 	fort_buff = 15
@@ -226,7 +226,7 @@
 	COOLDOWN_START(src, bleed_cd, 10 SECONDS)
 	target.apply_lc_bleed(2)
 
-/// Fixer Office — "Professional Edge": +15 Justice, +10 Fortitude, 10% more BLACK damage on hit
+/// Fixer Office - "Professional Edge": +15 Justice, +10 Fortitude, 10% more BLACK damage on hit
 /datum/status_effect/party_buff/professional_edge
 	id = "party_buff_professional_edge"
 	just_buff = 15
@@ -251,7 +251,7 @@
 	var/bonus = 3
 	target.deal_damage(bonus, BLACK_DAMAGE)
 
-/// Roaming Fixers Office — "Freelancer's Grit": +15 Fortitude, +15 Justice, 15% less RED damage
+/// Roaming Fixers Office - "Freelancer's Grit": +15 Fortitude, +15 Justice, 15% less RED damage
 /datum/status_effect/party_buff/freelancers_grit
 	id = "party_buff_freelancers_grit"
 	fort_buff = 15
@@ -272,9 +272,9 @@
 		H.physiology.red_mod /= 0.85
 	return ..()
 
-// ==================== TIER 3 — High Risk ====================
+// TIER 3 - High Risk
 
-/// Hana Office — "Corporate Raid": +10 Fort/Prud/Just, 5% lifesteal on hit
+/// Hana Office - "Corporate Raid": +10 Fort/Prud/Just, 5% lifesteal on hit
 /datum/status_effect/party_buff/corporate_raid
 	id = "party_buff_corporate_raid"
 	fort_buff = 10
@@ -300,7 +300,7 @@
 	var/damage_dealt = 5
 	owner.adjustBruteLoss(-max(1, round(damage_dealt * 0.05)))
 
-/// Association Office — "Syndicate Bonds": +10 Fort/Prud/Just, inflict 2 Overheat on hit (10s cooldown)
+/// Association Office - "Syndicate Bonds": +10 Fort/Prud/Just, inflict 2 Overheat on hit (10s cooldown)
 /datum/status_effect/party_buff/syndicate_bonds
 	id = "party_buff_syndicate_bonds"
 	fort_buff = 10
@@ -329,7 +329,7 @@
 	COOLDOWN_START(src, overheat_cd, 10 SECONDS)
 	target.apply_lc_overheat(2)
 
-/// Abandoned Hideout — "Hideout Hustle": +20 Fortitude, +20 Justice, 15% more RED on hit, 10% less all 4 core
+/// Abandoned Hideout - "Hideout Hustle": +20 Fortitude, +20 Justice, 15% more RED on hit, 10% less all 4 core
 /datum/status_effect/party_buff/hideout_hustle
 	id = "party_buff_hideout_hustle"
 	fort_buff = 20

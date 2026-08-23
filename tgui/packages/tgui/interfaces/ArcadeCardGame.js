@@ -16,9 +16,7 @@ import {
   releaseHotKey,
 } from '../hotkeys';
 
-// =========================================
 // Constants
-// =========================================
 
 const CW = 520;
 const CH = 480;
@@ -783,9 +781,7 @@ const CLR_ATK = '#cc3333';
 const CLR_BLK = '#3366cc';
 const CLR_SKL = '#33aa55';
 
-// =========================================
 // Game Engine
-// =========================================
 
 class CardEngine {
   constructor(canvas, act) {
@@ -893,9 +889,7 @@ class CardEngine {
     this.mapData = sd.map || [];
   }
 
-  // ==================
   // RUN MANAGEMENT
-  // ==================
 
   selectChar(key) {
     this.charKey = key;
@@ -1067,9 +1061,7 @@ class CardEngine {
     this.act('sfx', { s: 'card' });
   }
 
-  // ==================
   // CARD PLAY
-  // ==================
 
   playCard(ci, ti) {
     const key = this.hand[ci];
@@ -1604,9 +1596,7 @@ class CardEngine {
       * spacing / 2 + idx * spacing;
   }
 
-  // ==================
   // ANIMATIONS
-  // ==================
 
   addAnim(type, x, y, val, clr) {
     this.anims.push({
@@ -1653,9 +1643,7 @@ class CardEngine {
     }
   }
 
-  // ==================
   // RENDER
-  // ==================
 
   start() {
     this.lastTime = performance.now();
@@ -3703,9 +3691,7 @@ class CardEngine {
     );
   }
 
-  // ==================
   // INPUT
-  // ==================
 
   handleMouseDown(mx, my) {
     // Start drag if clicking a card
@@ -4251,9 +4237,7 @@ class CardEngine {
   }
 }
 
-// =========================================
 // TGUI Component
-// =========================================
 
 const ACQUIRED_KEYS = [
   KEY_R, KEY_ESC, KEY_D,

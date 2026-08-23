@@ -75,7 +75,7 @@
 // MIDDLE NURSEFATHER SPEEDWAGON
 /obj/vehicle/ridden/speedwagon/middle
 	name = "the Middle's ride"
-	desc = "A vehicle claimed by the Middle. Seats four — perfect for a family outing with your siblings."
+	desc = "A vehicle claimed by the Middle. Seats four - perfect for a family outing with your siblings."
 	icon_state = "middle_car"
 	key_type = /obj/item/key/middle_car
 	/// Per-target bump cooldown tracking (mob ref -> world.time when cooldown expires)
@@ -262,7 +262,7 @@
 		L.throw_at(throw_target, 3, 2)
 		visible_message("<span class='danger'>[L] is knocked back by [car]'s arrival!</span>")
 
-/// Call in a favor — request ahn from siblings via the phone.
+/// Call in a favor - request ahn from siblings via the phone.
 /obj/item/middle_car_phone/proc/call_favor(mob/living/user)
 	if(!COOLDOWN_FINISHED(src, favor_cooldown))
 		var/time_left = DisplayTimeText(COOLDOWN_TIMELEFT(src, favor_cooldown))

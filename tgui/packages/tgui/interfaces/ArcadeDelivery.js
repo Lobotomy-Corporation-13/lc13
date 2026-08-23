@@ -17,9 +17,7 @@ import {
   releaseHotKey,
 } from '../hotkeys';
 
-// =========================================
 // Constants
-// =========================================
 
 const TILE = 24;
 const MAP_W = 25;
@@ -64,9 +62,7 @@ const C_PICKUP = '#ffcc00';
 const C_DELIVER = '#44ff44';
 const C_THUG = '#cc4444';
 
-// =========================================
 // Game Engine
-// =========================================
 
 class DeliveryEngine {
   constructor(canvas, act) {
@@ -1077,9 +1073,7 @@ class DeliveryEngine {
   }
 }
 
-// =========================================
 // TGUI Component
-// =========================================
 
 const ACQUIRED_KEYS = [
   KEY_W, KEY_A, KEY_S, KEY_D,

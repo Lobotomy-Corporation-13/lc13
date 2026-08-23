@@ -1,4 +1,4 @@
-/// Laevateinn — the sealed relic sword of the Middle Nursefather.
+/// Laevateinn - the sealed relic sword of the Middle Nursefather.
 /// Starts weak, gains power as the wielder loses HP (unseal at 75%, 50%, 25%).
 /// attack_self() consumes Grudge into Tattoos (self-buff).
 /// afterattack() at range dashes to target and triggers a combo.
@@ -43,14 +43,14 @@ At 10+ Grudge, you gain a purple outline that grows with stacks.
 At max Grudge, a line is declared: a summary execution is in order.
 
 <b>Enhancement Tattoos</b>: Use the sword in-hand with 5+ Grudge to consume ALL Grudge into a Tattoo buff.
-Tier scales with Grudge consumed — Tier 1 (5-9), Tier 2 (10-14), Tier 3 (15-19), Tier 4 (20).
+Tier scales with Grudge consumed - Tier 1 (5-9), Tier 2 (10-14), Tier 3 (15-19), Tier 4 (20).
 Tattoos grant +5/10/15/20 passive bonus damage per hit for 30 seconds, and empower your next dash combo.
 
 <b>Dash Combo</b>: Click a living target 3-7 tiles away to dash to them (costs 10 Grudge, 10s cooldown).
 The dash triggers a combo attack. Without Tattoos, a basic combo is performed.
 With Tattoos active, the combo is empowered based on your current seal stage:
-  Full Seal → Stomping | 1 Seal Removed → I'll Gut Ya Like a Fish
-  2 Seals Removed → Gut Stab | Fully Unsealed → Complete and Total Extermination
+  Full Seal -> Stomping | 1 Seal Removed -> I'll Gut Ya Like a Fish
+  2 Seals Removed -> Gut Stab | Fully Unsealed -> Complete and Total Extermination
 Empowered combos consume the Tattoo buff. All combos have wall-breaking knockback.
 During combos, the target is shielded from outside damage, and damage to you is reduced to 1. Grudge gain is paused.
 
@@ -108,9 +108,9 @@ During combos, the target is shielded from outside damage, and damage to you is 
 		if(!IsRightfulWielder(H))
 			BurnUnworthyWielder(H)
 			return
-		// The Ex-Great Brother is not the rightful owner of Laevateinn — it resists, but he forces it
+		// The Ex-Great Brother is not the rightful owner of Laevateinn - it resists, but he forces it
 		H.deal_damage(5, FIRE, flags = DAMAGE_PIERCING)
-		to_chat(H, span_warning("Laevateinn burns in your grip — you are not its rightful owner. But you force it to obey."))
+		to_chat(H, span_warning("Laevateinn burns in your grip - you are not its rightful owner. But you force it to obey."))
 
 	// Grant weapon-related components
 	if(!H.GetComponent(/datum/component/middle_grudge_gain))
@@ -161,7 +161,7 @@ During combos, the target is shielded from outside damage, and damage to you is 
 /obj/item/ego_weapon/city/laevateinn/examine(mob/user)
 	. = ..()
 	if(seal_stage > 0 && ishuman(user))
-		. += span_notice("<a href='?src=[REF(src)];reseal=1'>Reseal Laevateinn</a> — restore all chain seals.")
+		. += span_notice("<a href='?src=[REF(src)];reseal=1'>Reseal Laevateinn</a> - restore all chain seals.")
 
 /obj/item/ego_weapon/city/laevateinn/Topic(href, href_list)
 	. = ..()
@@ -266,7 +266,7 @@ During combos, the target is shielded from outside damage, and damage to you is 
 			return 32
 	return 0
 
-/// Normal attack — build Grudge, apply FIRE bypass and Tattoo bonus damage.
+/// Normal attack - build Grudge, apply FIRE bypass and Tattoo bonus damage.
 /obj/item/ego_weapon/city/laevateinn/attack(mob/living/target, mob/living/user)
 	if(!ishuman(user) || combo_in_progress)
 		return ..()
@@ -300,7 +300,7 @@ During combos, the target is shielded from outside damage, and damage to you is 
 		if(tattoo_bonus > 0)
 			middle_combo_damage(target, H, tattoo_bonus, RED_DAMAGE)
 
-/// attack_self — Activate Tattoos: consume Grudge into a self-buff.
+/// attack_self - Activate Tattoos: consume Grudge into a self-buff.
 /obj/item/ego_weapon/city/laevateinn/attack_self(mob/user)
 	if(!ishuman(user))
 		return ..()
@@ -317,7 +317,7 @@ During combos, the target is shielded from outside damage, and damage to you is 
 		to_chat(H, span_warning("Not enough Grudge! ([H.GetGrudge()]/5)"))
 		return
 
-	// Consume Grudge → determine tier
+	// Consume Grudge -> determine tier
 	var/grudge_consumed = H.ConsumeAllGrudge()
 	var/tattoo_tier
 	switch(grudge_consumed)
@@ -341,7 +341,7 @@ During combos, the target is shielded from outside damage, and damage to you is 
 	H.visible_message(span_danger("[H]'s enhancement tattoos flare with power!"))
 	to_chat(H, span_notice("Tattoos activated (Tier [tattoo_tier])!"))
 
-/// pre_attack — door forcing intercepts the attack chain before attackby/Sweep.
+/// pre_attack - door forcing intercepts the attack chain before attackby/Sweep.
 /obj/item/ego_weapon/city/laevateinn/pre_attack(atom/A, mob/living/user, params)
 	if(!combo_in_progress && ishuman(user) && istype(A, /obj/machinery/door/airlock))
 		var/obj/machinery/door/airlock/door = A
@@ -366,7 +366,7 @@ During combos, the target is shielded from outside damage, and damage to you is 
 			return TRUE
 	return ..()
 
-/// afterattack — range dash and mirror execution.
+/// afterattack - range dash and mirror execution.
 /obj/item/ego_weapon/city/laevateinn/afterattack(atom/target, mob/user, proximity_flag, click_parameters)
 	. = ..()
 	if(combo_in_progress)
@@ -381,7 +381,7 @@ During combos, the target is shielded from outside damage, and damage to you is 
 	if(L.stat == DEAD || L == H)
 		return
 
-	// Mirror shard execution — free dash to mirror_weakened targets at any range
+	// Mirror shard execution - free dash to mirror_weakened targets at any range
 	var/datum/status_effect/mirror_weakened/weakened = L.has_status_effect(/datum/status_effect/mirror_weakened)
 	if(weakened)
 		INVOKE_ASYNC(src, PROC_REF(MirrorExecution), L, H, weakened)
@@ -409,7 +409,7 @@ During combos, the target is shielded from outside damage, and damage to you is 
 	COOLDOWN_START(src, dash_cd, 10 SECONDS)
 	combo_in_progress = TRUE
 
-	// Dash animation — direct line from origin to target
+	// Dash animation - direct line from origin to target
 	var/turf/origin = get_turf(user)
 	var/turf/dest = get_turf(target)
 	var/dash_dir = get_dir(user, target)
@@ -437,7 +437,7 @@ During combos, the target is shielded from outside damage, and damage to you is 
 	TriggerCombo(target, user)
 
 /// Determines which combo to trigger based on seal stage and tattoo presence.
-/// Reduces incoming damage to 1 during combo (doesn't deny — mobs keep aggro).
+/// Reduces incoming damage to 1 during combo (doesn't deny - mobs keep aggro).
 /obj/item/ego_weapon/city/laevateinn/proc/TriggerCombo(mob/living/target, mob/living/carbon/human/user)
 	var/tattoo_tier = user.GetMiddleTattooTier()
 	var/has_tattoos = (tattoo_tier > 0)
@@ -480,7 +480,7 @@ During combos, the target is shielded from outside damage, and damage to you is 
 		var/mob/living/user = loc.loc
 		user.remove_status_effect(/datum/status_effect/middle_combo_protection)
 
-/// Mirror Shard execution — free dash to a mirror_weakened target, then gib the relic user
+/// Mirror Shard execution - free dash to a mirror_weakened target, then gib the relic user
 /// and deal 200 RED to the held target. No grudge cost, ignores cooldown.
 /// Works regardless of whether the clicked target is the relic user or the pinned victim.
 /obj/item/ego_weapon/city/laevateinn/proc/MirrorExecution(mob/living/clicked, mob/living/carbon/human/user, datum/status_effect/mirror_weakened/weakened)
@@ -502,7 +502,7 @@ During combos, the target is shielded from outside damage, and damage to you is 
 	if(pinned_target && !QDELETED(pinned_target))
 		ADD_TRAIT(pinned_target, TRAIT_IMMOBILIZED, "mirror_execution")
 
-	// Dash animation — dash to whichever was clicked
+	// Dash animation - dash to whichever was clicked
 	var/turf/origin = get_turf(user)
 	var/turf/dest = get_turf(clicked)
 	var/dash_dir = get_dir(user, clicked)
@@ -531,7 +531,7 @@ During combos, the target is shielded from outside damage, and damage to you is 
 	user.say("Good [gendered_word]...")
 	playsound(user, 'sound/weapons/middle_nursefather/middlefather_slash.ogg', 50, TRUE)
 
-	// Build tension — camera shake and blade charge
+	// Build tension - camera shake and blade charge
 	sleep(1 SECONDS)
 	if(relic_user && !QDELETED(relic_user))
 		shake_camera(relic_user, 2, 2)
@@ -542,7 +542,7 @@ During combos, the target is shielded from outside damage, and damage to you is 
 
 	sleep(1 SECONDS)
 
-	// Execute — gib the relic user, devastate the pinned target
+	// Execute - gib the relic user, devastate the pinned target
 	var/turf/execution_turf = get_turf(user)
 	if(relic_user && !QDELETED(relic_user))
 		relic_user.visible_message(span_userdanger("[user] cleaves through [relic_user] and [pinned_target] in a single, devastating arc!"))
@@ -564,7 +564,7 @@ During combos, the target is shielded from outside damage, and damage to you is 
 	combo_in_progress = FALSE
 
 ////////////////////////////////////////////////////////////
-// MIDDLE APPRENTICE — THERMAL BLADES
+// MIDDLE APPRENTICE - THERMAL BLADES
 // Dual-wield pair. Attacking with one triggers a follow-up hit from the other.
 // Default: 2 Bleed per hit. With Tattoos active: 2 Overheat instead.
 // attack_self: consume 5+ Grudge into Tattoos (capped at Tier 2).
@@ -578,7 +578,7 @@ During combos, the target is shielded from outside damage, and damage to you is 
 	icon_state = "thermalblade_1"
 	force = 22
 	damtype = RED_DAMAGE
-	attack_speed = 1.0
+	attack_speed = 1
 	w_class = WEIGHT_CLASS_NORMAL
 	attribute_requirements = list(
 		FORTITUDE_ATTRIBUTE = 80,
@@ -632,7 +632,7 @@ During combos, the target is shielded from outside damage, and damage to you is 
 		if(!H.GetComponent(/datum/component/nursefather_passive))
 			H.AddComponent(/datum/component/nursefather_passive)
 
-/// Removes weapon-related components when dropped — only if no other thermal blade is held.
+/// Removes weapon-related components when dropped - only if no other thermal blade is held.
 /obj/item/ego_weapon/city/thermal_blade/dropped(mob/user)
 	. = ..()
 	if(!ishuman(user))
@@ -711,7 +711,7 @@ During combos, the target is shielded from outside damage, and damage to you is 
 
 	other_blade.following_up = FALSE
 
-/// attack_self — consume 5+ Grudge into Tattoos (capped at Tier 2 for apprentice).
+/// attack_self - consume 5+ Grudge into Tattoos (capped at Tier 2 for apprentice).
 /obj/item/ego_weapon/city/thermal_blade/attack_self(mob/user)
 	if(!ishuman(user))
 		return ..()
@@ -746,7 +746,7 @@ During combos, the target is shielded from outside damage, and damage to you is 
 	H.visible_message(span_danger("[H]'s enhancement tattoos flare with power!"))
 	to_chat(H, span_notice("Tattoos activated (Tier [tattoo_tier])!"))
 
-/// afterattack — click a target at range (3-7 tiles) while Tattoos active to dash through them.
+/// afterattack - click a target at range (3-7 tiles) while Tattoos active to dash through them.
 /obj/item/ego_weapon/city/thermal_blade/afterattack(atom/target, mob/user, proximity_flag, click_parameters)
 	. = ..()
 	if(proximity_flag)
@@ -842,7 +842,7 @@ During combos, the target is shielded from outside damage, and damage to you is 
 	icon_state = "thermalblade_2"
 	base_icon_state = "thermalblade_2"
 
-/// Combined thermal blade — a single larger weapon formed from two thermal blades.
+/// Combined thermal blade - a single larger weapon formed from two thermal blades.
 /// Alt-click while holding to split back into two blades (other hand must be free).
 /obj/item/ego_weapon/city/thermal_blade/combined
 	name = "combined thermal blade"
@@ -904,14 +904,14 @@ During combos, the target is shielded from outside damage, and damage to you is 
 	qdel(src)
 
 ////////////////////////////////////////////////////////////
-// EGO DATUMS — Middle Nursefather & Apprentice Weapons
+// EGO DATUMS - Middle Nursefather & Apprentice Weapons
 
-/// Laevateinn — Middle Nursefather sealed relic sword
+/// Laevateinn - Middle Nursefather sealed relic sword
 /datum/ego_datum/weapon/city/middle_nursefather
 	item_path = /obj/item/ego_weapon/city/laevateinn
 	cost = 100
 	ego_tags = list(EGO_TAG_COMBO, EGO_TAG_KNOCKBACK, EGO_TAG_MOBILITY, EGO_TAG_SPLIT_DAMAGE, EGO_TAG_DOT, EGO_TAG_HAZARDOUS)
-/// Thermal Blade — Middle Apprentice dual-wield blade
+/// Thermal Blade - Middle Apprentice dual-wield blade
 /datum/ego_datum/weapon/city/middle_nursefather/thermal_blade
 	item_path = /obj/item/ego_weapon/city/thermal_blade
 	cost = 40
@@ -921,7 +921,7 @@ During combos, the target is shielded from outside damage, and damage to you is 
 	item_path = /obj/item/ego_weapon/city/thermal_blade/offhand
 	cost = 40
 	ego_tags = list(EGO_TAG_MULTIHIT, EGO_TAG_MOBILITY, EGO_TAG_DOT)
-/// Combined Thermal Blade — merged form of dual thermal blades
+/// Combined Thermal Blade - merged form of dual thermal blades
 /datum/ego_datum/weapon/city/middle_nursefather/thermal_blade_combined
 	item_path = /obj/item/ego_weapon/city/thermal_blade/combined
 	cost = 60

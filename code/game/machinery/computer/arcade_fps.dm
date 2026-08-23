@@ -102,7 +102,7 @@
 ///   0 = open/empty (no floor here)
 ///   1-4 = wall, 5 = exit, 6 = floor tile
 /// Rules:
-///   - Floor tiles on story N get floorH = N * 1.0
+///   - Floor tiles on story N get floorH = N
 ///   - Ceiling comes from the next solid floor above
 ///   - No roof on the top floor (ceilH = stories + 1)
 ///   - Walls are full-height solid columns
@@ -142,7 +142,7 @@
 
 			for(var/fi in 1 to num_floors)
 				var/ch = floor_chars[fi]
-				var/story_h = (fi - 1) * 1.0
+				var/story_h = fi - 1
 				switch(ch)
 					if("1","2","3","4")
 						is_wall = TRUE
@@ -160,22 +160,22 @@
 					if("S")
 						if(lowest_floor < 0)
 							lowest_floor = story_h
-						slope_data = list("dir" = 0, "rise" = 1.0)
+						slope_data = list("dir" = 0, "rise" = 1)
 						has_slopes = TRUE
 					if("T")
 						if(lowest_floor < 0)
 							lowest_floor = story_h
-						slope_data = list("dir" = 1, "rise" = 1.0)
+						slope_data = list("dir" = 1, "rise" = 1)
 						has_slopes = TRUE
 					if("V")
 						if(lowest_floor < 0)
 							lowest_floor = story_h
-						slope_data = list("dir" = 2, "rise" = 1.0)
+						slope_data = list("dir" = 2, "rise" = 1)
 						has_slopes = TRUE
 					if("W")
 						if(lowest_floor < 0)
 							lowest_floor = story_h
-						slope_data = list("dir" = 3, "rise" = 1.0)
+						slope_data = list("dir" = 3, "rise" = 1)
 						has_slopes = TRUE
 					// "0" = empty, skip
 
@@ -223,13 +223,13 @@
 ///   J = slope left-facing (-x, rise 0.3)
 ///   K = slope down-facing (-y, rise 0.3)
 ///   R = slope right-facing (+x, rise 0.3)
-///   F = second floor (floorH 1.0, ceilH 2.0)
-///   G = ground under upper (floorH 0, ceilH 1.0)
-///   O = open atrium (floorH 0, ceilH 2.0)
-///   S = ramp up (+y, rise 1.0, full story)
-///   T = ramp right (+x, rise 1.0, full story)
-///   V = ramp down (-y, rise 1.0, full story)
-///   W = ramp left (-x, rise 1.0, full story)
+///   F = second floor (floorH 1, ceilH 2)
+///   G = ground under upper (floorH 0, ceilH 1)
+///   O = open atrium (floorH 0, ceilH 2)
+///   S = ramp up (+y, rise 1, full story)
+///   T = ramp right (+x, rise 1, full story)
+///   V = ramp down (-y, rise 1, full story)
+///   W = ramp left (-x, rise 1, full story)
 /obj/machinery/computer/arcade/fps/proc/parse_map_string(list/rows)
 	var/list/data = list()
 	var/w = length(rows[1])
@@ -250,32 +250,32 @@
 				if("0")
 					cells += 0
 					floorH += 0
-					ceilH += 1.0
+					ceilH += 1
 					slopes += 0
 				if("1", "2", "3", "4")
 					cells += text2num(ch)
 					floorH += 0
-					ceilH += 1.0
+					ceilH += 1
 					slopes += 0
 				if("5")
 					cells += 5
 					floorH += 0
-					ceilH += 1.0
+					ceilH += 1
 					slopes += 0
 				if("P")
 					cells += 0
 					floorH += 0.3
-					ceilH += 1.0
+					ceilH += 1
 					slopes += 0
 				if("U")
 					cells += 0
 					floorH += 0.5
-					ceilH += 1.0
+					ceilH += 1
 					slopes += 0
 				if("D")
 					cells += 0
 					floorH += -0.3
-					ceilH += 1.0
+					ceilH += 1
 					slopes += 0
 				if("L")
 					cells += 0
@@ -285,87 +285,87 @@
 				if("H")
 					cells += 0
 					floorH += 0
-					ceilH += 1.0
+					ceilH += 1
 					slopes += 0
 					holes += length(cells)
 				if("I")
 					// Slope up-facing: rises toward +y
 					cells += 0
 					floorH += 0
-					ceilH += 1.0
+					ceilH += 1
 					slopes += list(list("dir" = 0, "rise" = 0.3))
 					has_slopes = TRUE
 				if("J")
 					// Slope left-facing: rises toward -x
 					cells += 0
 					floorH += 0
-					ceilH += 1.0
+					ceilH += 1
 					slopes += list(list("dir" = 3, "rise" = 0.3))
 					has_slopes = TRUE
 				if("K")
 					// Slope down-facing: rises toward -y
 					cells += 0
 					floorH += 0
-					ceilH += 1.0
+					ceilH += 1
 					slopes += list(list("dir" = 2, "rise" = 0.3))
 					has_slopes = TRUE
 				if("R")
 					// Slope right-facing: rises toward +x
 					cells += 0
 					floorH += 0
-					ceilH += 1.0
+					ceilH += 1
 					slopes += list(list("dir" = 1, "rise" = 0.3))
 					has_slopes = TRUE
 				if("F")
 					// Second floor
 					cells += 0
-					floorH += 1.0
-					ceilH += 2.0
+					floorH += 1
+					ceilH += 2
 					slopes += 0
 				if("G")
 					// Ground under upper floor
 					cells += 0
 					floorH += 0
-					ceilH += 1.0
+					ceilH += 1
 					slopes += 0
 				if("O")
 					// Open atrium (double height)
 					cells += 0
 					floorH += 0
-					ceilH += 2.0
+					ceilH += 2
 					slopes += 0
 				if("S")
 					// Full story ramp up (+y)
 					cells += 0
 					floorH += 0
-					ceilH += 2.0
-					slopes += list(list("dir" = 0, "rise" = 1.0))
+					ceilH += 2
+					slopes += list(list("dir" = 0, "rise" = 1))
 					has_slopes = TRUE
 				if("T")
 					// Full story ramp right (+x)
 					cells += 0
 					floorH += 0
-					ceilH += 2.0
-					slopes += list(list("dir" = 1, "rise" = 1.0))
+					ceilH += 2
+					slopes += list(list("dir" = 1, "rise" = 1))
 					has_slopes = TRUE
 				if("V")
 					// Full story ramp down (-y)
 					cells += 0
 					floorH += 0
-					ceilH += 2.0
-					slopes += list(list("dir" = 2, "rise" = 1.0))
+					ceilH += 2
+					slopes += list(list("dir" = 2, "rise" = 1))
 					has_slopes = TRUE
 				if("W")
 					// Full story ramp left (-x)
 					cells += 0
 					floorH += 0
-					ceilH += 2.0
-					slopes += list(list("dir" = 3, "rise" = 1.0))
+					ceilH += 2
+					slopes += list(list("dir" = 3, "rise" = 1))
 					has_slopes = TRUE
 				else
 					cells += 0
 					floorH += 0
-					ceilH += 1.0
+					ceilH += 1
 					slopes += 0
 
 	data["cells"] = cells
@@ -910,12 +910,10 @@
 	icon_state = "generic"
 	build_path = /obj/machinery/computer/arcade/fps
 
-// ==========================================
 // Station Map Variant
 // Reads the live station map around the
 // arcade machine and converts it to an
 // FPS-playable grid.
-// ==========================================
 
 #define STATION_FPS_CHUNK 48
 
@@ -923,14 +921,14 @@
 	name = "R Corp Hatchery (Local Scan)"
 	desc = "Scans the local facility for training. These halls look familiar..."
 	/// Cached floor tile positions for entity placement
-	var/list/floor_tiles
+	var/list/floor_tiles = list()
 
 /obj/machinery/computer/arcade/fps/station/generate_map(level)
 	var/list/data = list()
 	data["width"] = STATION_FPS_CHUNK
 	data["height"] = STATION_FPS_CHUNK
 	var/list/cells = list()
-	floor_tiles = list()
+	floor_tiles.Cut()
 
 	var/half = STATION_FPS_CHUNK / 2
 	var/origin_x = src.x - half
@@ -1020,7 +1018,7 @@
 
 /obj/machinery/computer/arcade/fps/station/generate_entities(level)
 	var/list/ents = list()
-	if(!floor_tiles || !length(floor_tiles))
+	if(!length(floor_tiles))
 		return ents
 
 	var/half = STATION_FPS_CHUNK / 2

@@ -3,7 +3,7 @@
 
 GLOBAL_LIST_INIT(pmttrpg_saves, list())
 
-// ========== EFFECT VALIDATION TABLES ==========
+// EFFECT VALIDATION TABLES
 // Parallel to JS effect tables. Only key, max amount, and cost per N needed for validation.
 // Format: "effect_key" = list("cost" = X, "max" = Y, "flat" = TRUE/FALSE)
 // flat = TRUE means cost is flat (not multiplied by N), max is ignored
@@ -86,7 +86,7 @@ GLOBAL_LIST_INIT(pmttrpg_valid_skill_types, list("attack", "block", "evade"))
 GLOBAL_LIST_INIT(pmttrpg_valid_stats, list("fortitude", "prudence", "justice", "charm", "insight", "temperance"))
 GLOBAL_LIST_INIT(pmttrpg_valid_resist_levels, list("fatal", "weak", "normal", "endured", "ineffective", "immune"))
 
-// ========== MACHINE DEFINITION ==========
+// MACHINE DEFINITION
 
 /obj/machinery/computer/arcade/pmttrpg
 	name = "The City - A Fixer's Chronicle"
@@ -99,7 +99,7 @@ GLOBAL_LIST_INIT(pmttrpg_valid_resist_levels, list("fatal", "weak", "normal", "e
 	var/list/leaderboard = list()
 	var/last_sfx_time = 0
 
-// ========== SAVE/LOAD SYSTEM ==========
+// SAVE/LOAD SYSTEM
 
 /obj/machinery/computer/arcade/pmttrpg/proc/get_save_path(ckey)
 	return "data/player_saves/[ckey[1]]/[ckey]/pmttrpg.sav"
@@ -143,7 +143,7 @@ GLOBAL_LIST_INIT(pmttrpg_valid_resist_levels, list("fatal", "weak", "normal", "e
 	if(fexists(path))
 		fdel(path)
 
-// ========== TGUI INTERFACE ==========
+// TGUI INTERFACE
 
 /obj/machinery/computer/arcade/pmttrpg/ui_interact(mob/user, datum/tgui/ui)
 	ui = SStgui.try_update_ui(user, src, ui)
@@ -230,7 +230,7 @@ GLOBAL_LIST_INIT(pmttrpg_valid_resist_levels, list("fatal", "weak", "normal", "e
 			playsound(loc, 'sound/arcade/win.ogg', 50, TRUE)
 			. = TRUE
 
-// ========== VALIDATION PROCS ==========
+// VALIDATION PROCS
 
 /obj/machinery/computer/arcade/pmttrpg/proc/validate_character(list/char_data)
 	// Validate stats
@@ -403,3 +403,6 @@ GLOBAL_LIST_INIT(pmttrpg_valid_resist_levels, list("fatal", "weak", "normal", "e
 	return TRUE
 
 // Circuit board is defined in code/game/objects/items/circuitboards/computer_circuitboards.dm
+
+#undef PMTTRPG_RANK1_RESIST_TOTAL
+#undef PMTTRPG_RANK1_RESIST_MAX_IDX

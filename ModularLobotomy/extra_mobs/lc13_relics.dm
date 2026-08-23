@@ -3004,16 +3004,16 @@
 /obj/item/ruin_relic/strange_box/proc/ResetCooldown()
 	on_cooldown = FALSE
 
-// ==================== MIRROR SHARD ====================
+// MIRROR SHARD
 
-/// Mirror Shard — a dark glass shard that resonates with isolation.
+/// Mirror Shard - a dark glass shard that resonates with isolation.
 /// Attunes only when the holder is alone (no living humans within 7 tiles).
 /// Active: cloak for 10 seconds (doesn't break on damage). First attack on a carbon target
 /// pins them both down (3s immobilize), then applies mirror_weakened (RED flash, breakable by damage).
 /// Laevateinn can trigger a free execution dash on weakened targets.
 /obj/item/ruin_relic/mirror_shard
 	name = "???"
-	desc = "A shard of dark glass, cold to the touch. Your reflection stares back — but a half-beat too late, as though it were watching you first."
+	desc = "A shard of dark glass, cold to the touch. Your reflection stares back - but a half-beat too late, as though it were watching you first."
 	icon_state = "oddity8"
 	rarity = 3
 	attunement_fail_damage = 10
@@ -3035,13 +3035,13 @@
 			continue
 		nearby += H
 	if(nearby.len > 0)
-		to_chat(user, span_warning("The shard goes cold. Your reflection looks past you — at the others."))
+		to_chat(user, span_warning("The shard goes cold. Your reflection looks past you - at the others."))
 		return FALSE
 	return TRUE
 
 /obj/item/ruin_relic/mirror_shard/OnAttuneSuccess(mob/living/carbon/human/user)
 	. = ..()
-	to_chat(user, span_notice("The glass warms in your hands. For a moment, your reflection smiles — like it's glad someone finally noticed."))
+	to_chat(user, span_notice("The glass warms in your hands. For a moment, your reflection smiles - like it's glad someone finally noticed."))
 	name = "mirror shard"
 
 /obj/item/ruin_relic/mirror_shard/equipped(mob/user, slot, initial)
@@ -3067,7 +3067,7 @@
 		return
 	INVOKE_ASYNC(src, PROC_REF(ActivateCloak), user)
 
-/// Activates the mirror cloak — fades the user to invisibility over 1 second.
+/// Activates the mirror cloak - fades the user to invisibility over 1 second.
 /obj/item/ruin_relic/mirror_shard/proc/ActivateCloak(mob/living/carbon/human/user)
 	cloaked = TRUE
 	cloak_user = user
@@ -3122,9 +3122,9 @@
 	var/datum/status_effect/mirror_weakened/user_effect = user.apply_status_effect(/datum/status_effect/mirror_weakened)
 	var/datum/status_effect/mirror_weakened/target_effect = target.apply_status_effect(/datum/status_effect/mirror_weakened)
 	if(user_effect && target_effect)
-		user_effect.partner = target
+		user_effect.SetPartner(target)
 		user_effect.is_relic_user = TRUE
-		target_effect.partner = user
+		target_effect.SetPartner(user)
 
 	// Visual feedback
 	user.visible_message(span_danger("[user] lunges from thin air and pins [target] to the ground!"))

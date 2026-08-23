@@ -17,9 +17,7 @@ import {
   releaseHotKey,
 } from '../hotkeys';
 
-// =========================================
 // Constants
-// =========================================
 
 const CW = 520;
 const CH = 400;
@@ -51,15 +49,13 @@ const CAMS = [
 ];
 
 // Abnormality room paths
-// Index into CAMS: left path 0→1→3→DOOR
-// right path 2→1→5→DOOR
+// Index into CAMS: left path 0->1->3->DOOR
+// right path 2->1->5->DOOR
 const LEFT_PATH = [0, 1, 3, -1];
 const RIGHT_PATH = [2, 1, 5, -1];
 // -1 = at your door
 
-// =========================================
 // Game Engine
-// =========================================
 
 class OvertimeEngine {
   constructor(canvas, act) {
@@ -128,9 +124,7 @@ class OvertimeEngine {
     }
   }
 
-  // ==================
   // GAME FLOW
-  // ==================
 
   startGame() {
     this.night = 0;
@@ -251,9 +245,7 @@ class OvertimeEngine {
       ? 'AM' : 'AM';
   }
 
-  // ==================
   // UPDATE
-  // ==================
 
   start() {
     this.lastTime = performance.now();
@@ -536,9 +528,7 @@ class OvertimeEngine {
     return null;
   }
 
-  // ==================
   // RENDER
-  // ==================
 
   render() {
     const ctx = this.ctx;
@@ -970,7 +960,7 @@ class OvertimeEngine {
     // Draw connections (lines between rooms)
     ctx.strokeStyle = '#2a2a3a';
     ctx.lineWidth = 1;
-    // Left path: CA→MH→LC→OFFICE
+    // Left path: CA->MH->LC->OFFICE
     const conns = [
       [0, 1], [1, 2], [0, 3], [2, 5],
       [3, 7], [5, 7], [1, 4],
@@ -1544,9 +1534,7 @@ class OvertimeEngine {
     );
   }
 
-  // ==================
   // INPUT
-  // ==================
 
   handleClick(mx, my) {
     this.mx = mx;
@@ -1689,9 +1677,7 @@ class OvertimeEngine {
   }
 }
 
-// =========================================
 // TGUI Component
-// =========================================
 
 const ACQUIRED_KEYS = [KEY_R];
 

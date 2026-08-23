@@ -1,4 +1,4 @@
-/// Laevateinn Seal System — manages HP healthgates and unseal progression.
+/// Laevateinn Seal System - manages HP healthgates and unseal progression.
 /// Attached to the Middle Nursefather. Monitors HP thresholds at 75%, 50%, 25%.
 /// Uses COMSIG_MOB_APPLY_DAMGE to check HP after each hit.
 /datum/component/laevateinn_seal
@@ -22,6 +22,11 @@
 	if(!ishuman(parent))
 		return COMPONENT_INCOMPATIBLE
 	weapon = _weapon
+	RegisterSignal(weapon, COMSIG_PARENT_QDELETING, PROC_REF(on_weapon_deleted))
+
+/datum/component/laevateinn_seal/proc/on_weapon_deleted(datum/source)
+	SIGNAL_HANDLER
+	weapon = null
 
 /datum/component/laevateinn_seal/RegisterWithParent()
 	return
@@ -32,10 +37,12 @@
 /datum/component/laevateinn_seal/Destroy()
 	if(overheat_aura_active)
 		STOP_PROCESSING(SSobj, src)
-	weapon = null
+	if(weapon)
+		UnregisterSignal(weapon, COMSIG_PARENT_QDELETING)
+		weapon = null
 	return ..()
 
-/// Overheat aura — ticks every 3 seconds. Stage 2: 2 overheat to nearby, 1 to self. Stage 3: 5 to nearby, 2 to self.
+/// Overheat aura - ticks every 3 seconds. Stage 2: 2 overheat to nearby, 1 to self. Stage 3: 5 to nearby, 2 to self.
 /datum/component/laevateinn_seal/process(delta_time)
 	if(!overheat_aura_active || QDELETED(parent))
 		STOP_PROCESSING(SSobj, src)
