@@ -181,7 +181,7 @@
 /obj/item/reagent_containers/hypospray/emais/syndi
 	reagent_ids = list(/datum/reagent/toxin/mutetoxin,/datum/reagent/toxin/chloralhydrate,/datum/reagent/consumable/wellcheers_purple)
 
-/obj/item/reagent_containers/hypospray/emais/sydni/ChooseReagent(mob/user)
+/obj/item/reagent_containers/hypospray/emais/syndi/ChooseReagent(mob/user)
 	var/list/temp_reag = list()
 	/// These don't just use the name of the drug via a string in the case that we change their name at any point.
 	var/datum/reagent/medicine/M = /datum/reagent/consumable/wellcheers_purple
