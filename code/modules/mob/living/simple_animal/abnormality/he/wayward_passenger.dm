@@ -39,7 +39,6 @@
 	max_boxes = 16
 	base_pixel_x = -8
 	pixel_x = -8
-	being_tested = TRUE
 
 	ego_list = list(
 		/datum/ego_datum/weapon/warp,
