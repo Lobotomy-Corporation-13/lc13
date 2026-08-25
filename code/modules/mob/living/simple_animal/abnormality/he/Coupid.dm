@@ -31,7 +31,6 @@
 	)
 	gift_type = /datum/ego_gifts/allergen
 	abnormality_origin = ABNORMALITY_ORIGIN_ORIGINAL
-	)
 
 	observation_prompt = "There's a field of wheat ahead of you. It's a beautiful sunset, But you're feeling ill."
 	observation_choices = list(
@@ -73,6 +72,8 @@
 	//it lasts until...
 /mob/living/simple_animal/hostile/abnormality/cupid/Destroy()
 	EndWeather()
+/mob/living/simple_animal/hostile/abnormality/cupid/proc/EndWeather()
+	SSweather.end_weather()
 
 /datum/weather/pollen/weather_act(mob/living/carbon/human/L)
 	if(ishuman(L))

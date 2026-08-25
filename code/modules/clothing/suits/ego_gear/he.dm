@@ -518,7 +518,7 @@ Any attempt to code risk class armor will result in a 10 day Github ban.*/
 							PRUDENCE_ATTRIBUTE = 40
 							)
 
-/obj/item/clothing/suit/armor/ego_gear/teth/allergen
+/obj/item/clothing/suit/armor/ego_gear/he/allergen
 	name = "allergen"
 	desc = "A coat made of many petals of a flower. It's itchy inside."
 	icon_state = "allergen"

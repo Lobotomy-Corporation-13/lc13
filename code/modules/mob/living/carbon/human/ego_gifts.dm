@@ -1696,3 +1696,10 @@
 	justice_bonus = 8
 	temperance_bonus = -2 //smoking kills
 	slot = LEFTBACK
+
+/datum/ego_gifts/allergen
+	name = "Allergen"
+	icon_state = "allergen"
+	fortitude_bonus = -1
+	prudence_bonus = 2
+	slot = HAT
