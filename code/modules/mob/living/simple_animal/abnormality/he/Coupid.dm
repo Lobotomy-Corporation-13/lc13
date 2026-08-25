@@ -3,8 +3,6 @@
 	desc = "The tiniest rabbit with a flower on its head. It makes you itch looking at it."
 	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "coupid"
-	icon_living = "coupid"
-	portrait = "coupid"
 	var/breach_icon = "coupid_breach"
 	core_icon = "coupid_core"
 	del_on_death = TRUE
