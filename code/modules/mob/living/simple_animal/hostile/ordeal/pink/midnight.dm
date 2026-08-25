@@ -200,8 +200,7 @@
 //Scream at the start to give you a few goobers
 /mob/living/simple_animal/hostile/ordeal/pink_midnight/Initialize(gibbed)
 	. = ..()
-	Scream()
-	addtimer(CALLBACK(src, PROC_REF(Scream)), 30 SECONDS)
+	addtimer(CALLBACK(src, PROC_REF(Scream)), 10 SECONDS)
 
 //The Scream is on a loop. These don't necessarily breach
 /mob/living/simple_animal/hostile/ordeal/pink_midnight/proc/Scream()
