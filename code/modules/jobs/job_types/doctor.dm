@@ -1,10 +1,13 @@
+// The old town doctor. No longer a City job - the City runs /datum/job/city_clinic
+// instead - but still the doctor on wonderlabs, fixers, lcorp_city and
+// enkephalin_rush, which is why this is not in old_jobs. Do not re-add "city"
+// to these maptypes without deleting the clinic faction first; both would open
+// at once.
 /datum/job/doctor
 	title = "Doctor"
 	faction = "Station"
 	total_positions = 1
 	spawn_positions = 1
-	leader = /datum/job/doctor
-	faction_positions = 1
 	selection_color = "#aabbcc"
 
 	outfit = /datum/outfit/job/doctor
@@ -30,8 +33,8 @@
 	exp_requirements = 600
 
 	display_order = JOB_DISPLAY_ORDER_MEDICAL
-	alt_titles = list("Surgeon")
-	maptype = list("wonderlabs", "city", "fixers", "lcorp_city", "enkephalin_rush")
+	//alt_titles for this job live in ModularLobotomy/altjobtitles/altjobtitles.dm
+	maptype = list("wonderlabs", "fixers", "lcorp_city", "enkephalin_rush")
 	job_important = "You are the town doctor, visit your clinic to the east of town and start healing peopl who come in. You must charge money for your services."
 
 /datum/job/doctor/after_spawn(mob/living/carbon/human/H, mob/M, latejoin = FALSE)
@@ -68,13 +71,14 @@
 
 	outfit = /datum/outfit/job/doctor/nurse
 
-	total_positions = 0
-	spawn_positions = 0
-	faction_positions = 2
+	//Authored slots, not faction slots. The Clinic faction used to open this
+	//and no longer owns it, so nothing else will.
+	total_positions = 2
+	spawn_positions = 2
 	exp_requirements = 180
 
 	display_order = JOB_DISPLAY_ORDER_MEDICALASSIST
-	maptype = list("wonderlabs", "city", "fixers", "lcorp_city")
+	maptype = list("wonderlabs", "fixers", "lcorp_city")
 	job_important = "You are an assistant to the town doctor, visit your clinic to the east of town and start healing people who come in. You must charge money for your services."
 
 /datum/outfit/job/doctor/nurse
@@ -85,34 +89,6 @@
 	head = /obj/item/clothing/head/beret/tegu/med
 	suit =  null
 
-//Paramed
-/datum/job/doctor/medic
-	title = "Paramedic"
-	selection_color = "#ccddee"
-	department_head = list("Doctor")
-	supervisors = "the doctor"
-
-	outfit = /datum/outfit/job/doctor/medic
-
-	total_positions = 0
-	spawn_positions = 0
-	faction_positions = 1
-	exp_requirements = 180
-
-	display_order = JOB_DISPLAY_ORDER_MEDICALASSIST
-	maptype = list("city")
-	job_important = "You are an assistant to the town doctor, visit your clinic to the east of town and assist the doctor by bringing bodies in."
-
-
-/datum/outfit/job/doctor/medic
-	name = "Paramedic"
-	jobtype = /datum/job/doctor/medic
-
-	uniform = /obj/item/clothing/under/rank/medical/paramedic
-	head = /obj/item/clothing/head/soft/paramedic
-	suit =  /obj/item/clothing/suit/toggle/labcoat/paramedic
-	backpack_contents = list(/obj/item/pinpointer/crew = 1, /obj/item/paramedic_cloak = 1)
-
 //Paramedic but with a gun
 /datum/job/doctor/fixer
 	title = "Medical Fixer Assistant"
@@ -120,22 +96,21 @@
 	department_head = list("Doctor")
 	supervisors = "the doctor"
 
-	outfit = /datum/outfit/job/doctor/medic
+	outfit = /datum/outfit/job/doctor/fixer
 
-	total_positions = 0
-	spawn_positions = 0
-	leader = null	//Not part of the Clinic faction, fixers map only
+	total_positions = 1
+	spawn_positions = 1
 	exp_requirements = 180
 
 	display_order = JOB_DISPLAY_ORDER_MEDICALASSIST
 	departments = DEPARTMENT_MEDICAL | DEPARTMENT_FIXERS
-	maptype = list("wonderlabs", "city", "fixers")
+	maptype = list("wonderlabs", "fixers")
 	job_important = "You are an a medical fixer. Your job is to explore the backstreets to grab dead fixers to bring back to the clinic."
 
 
 /datum/outfit/job/doctor/fixer
 	name = "Medical Fixer Assistant"
-	jobtype = /datum/job/doctor/medic
+	jobtype = /datum/job/doctor/fixer
 
 	uniform = /obj/item/clothing/under/rank/medical/paramedic
 	head = /obj/item/clothing/head/soft/paramedic

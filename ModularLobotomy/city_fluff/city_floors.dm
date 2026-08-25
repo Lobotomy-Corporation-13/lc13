@@ -195,6 +195,77 @@
 	barefootstep = FOOTSTEP_WOOD_BAREFOOT
 	clawfootstep = FOOTSTEP_WOOD_CLAW
 
+// interiors
+// Stock LC13 floors, dirtied to sit in the City's brightness band. A room laid
+// with these still reads as the carpet or hotel tile a player knows, only
+// nobody has cleaned it since it was laid. Sprites come from grime.py, which
+// reads the stock DMIs at build time.
+//
+// Variant 1 of each is the least dirty on purpose. If every variant is equally
+// filthy the eye has nothing clean to measure the dirt against and the floor
+// reads as noise.
+
+/turf/open/floor/city/interior
+	name = "floor"
+	icon_state = "whitetile1"
+	base_state = "whitetile"
+	footstep = FOOTSTEP_FLOOR
+	barefootstep = FOOTSTEP_HARD_BAREFOOT
+	clawfootstep = FOOTSTEP_HARD_CLAW
+
+/turf/open/floor/city/interior/whitetile
+	name = "scuffed tiling"
+	desc = "White tile gone grey at the joins. It was a selling point once."
+	icon_state = "whitetile1"
+	base_state = "whitetile"
+
+/turf/open/floor/city/interior/clinictile
+	name = "clinic tiling"
+	desc = "Seamless hygienic sheet, greyed and marked. Mops have stopped \
+		making a difference to it."
+	icon_state = "clinictile1"
+	base_state = "clinictile"
+
+/turf/open/floor/city/interior/hoteltile
+	name = "lobby tiling"
+	desc = "Polished stone tile from a better decade, dulled to a flat grey."
+	icon_state = "hoteltile1"
+	base_state = "hoteltile"
+
+/turf/open/floor/city/interior/vaporwave
+	name = "chequer tiling"
+	desc = "Pink and black chequer, chipped at every corner. A diner floor \
+		that has outlived its diner."
+	icon_state = "vaporwave1"
+	base_state = "vaporwave"
+
+/turf/open/floor/city/interior/boards
+	name = "floorboards"
+	desc = "Varnished board, worn pale down the middle and black at the walls."
+	icon_state = "boards1"
+	base_state = "boards"
+	floor_tile = /obj/item/stack/tile/wood
+	footstep = FOOTSTEP_WOOD
+	barefootstep = FOOTSTEP_WOOD_BAREFOOT
+	clawfootstep = FOOTSTEP_WOOD_CLAW
+
+/turf/open/floor/city/interior/carpet
+	name = "worn carpet"
+	desc = "Red pile flattened to felt, with stains nobody will admit to."
+	icon_state = "carpet1"
+	base_state = "carpet"
+	floor_tile = /obj/item/stack/tile/carpet
+	footstep = FOOTSTEP_CARPET
+	barefootstep = FOOTSTEP_CARPET_BAREFOOT
+	clawfootstep = FOOTSTEP_CARPET
+
+/turf/open/floor/city/interior/carpet/black
+	name = "worn black carpet"
+	desc = "Black pile, greasy where the traffic goes. It hides a great deal."
+	icon_state = "carpet_black1"
+	base_state = "carpet_black"
+	floor_tile = /obj/item/stack/tile/carpet/black
+
 // -------------------------------------------------------------- markings
 // Turf decals, so they lay over whatever surface is already there.
 //

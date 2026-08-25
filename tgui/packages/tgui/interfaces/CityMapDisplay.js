@@ -62,7 +62,14 @@ export const CityMapDisplay = (
     gridWidth = 0,
     gridHeight = 0,
     map_legend = [],
+    pings = [],
   } = data;
+  // Looked up by name rather than held as an object, so the panel follows the
+  // client as their position and health are pushed rather than freezing on
+  // whatever they looked like when they were clicked.
+  const selected = pings.filter(
+    p => p.name === selPing,
+  )[0];
   const [selColor, setSelColor]
     = useSharedState(
       context, 'selColor', '',
@@ -78,6 +85,10 @@ export const CityMapDisplay = (
   const [focusY, setFocusY]
     = useSharedState(
       context, 'focusY', -1,
+    );
+  const [selPing, setSelPing]
+    = useSharedState(
+      context, 'selPing', '',
     );
   const toggleColor = color => {
     setSelColor(
@@ -147,6 +158,8 @@ export const CityMapDisplay = (
                 focusX={focusX}
                 focusY={focusY}
                 onSetFocus={setFocus}
+                selectedPing={selPing}
+                onSelectPing={setSelPing}
               />
               <Box
                 mt={0.5}
@@ -175,6 +188,10 @@ export const CityMapDisplay = (
                 flexShrink: 0,
                 minWidth: '130px',
               }}>
+              <PingDetails
+                ping={selected}
+                onClose={() => setSelPing('')}
+              />
               <MapLegend
                 legend={map_legend}
                 selectedColor={selColor}
@@ -198,6 +215,7 @@ class CityMapCanvas extends Component {
     this._cellPx = 1;
     this._startX = 0;
     this._startY = 0;
+    this._pingHits = [];
   }
 
   componentDidMount() {
@@ -218,7 +236,7 @@ class CityMapCanvas extends Component {
       = event.clientX - rect.left;
     const cy
       = event.clientY - rect.top;
-    const { data } = this.props;
+    const { data, onSelectPing } = this.props;
     const {
       mapGrid,
       gridWidth = 0,
@@ -226,6 +244,23 @@ class CityMapCanvas extends Component {
     } = data;
     if (!mapGrid || !gridWidth) {
       return;
+    }
+    // Dots are checked first and swallow the click. Otherwise picking a
+    // client would also retint the map and move the focus point under them.
+    const hits = this._pingHits || [];
+    for (let i = 0; i < hits.length; i++) {
+      const h = hits[i];
+      const dx = cx - h.x;
+      const dy = cy - h.y;
+      if (dx * dx + dy * dy <= h.r * h.r) {
+        if (onSelectPing) {
+          onSelectPing(h.ping.name);
+        }
+        return;
+      }
+    }
+    if (onSelectPing) {
+      onSelectPing('');
     }
     const gx = Math.floor(
       cx / this._cellPx,
@@ -279,6 +314,7 @@ class CityMapCanvas extends Component {
       zoomLevel = 1,
       focusX = -1,
       focusY = -1,
+      selectedPing = '',
     } = this.props;
     const {
       mapGrid,
@@ -288,6 +324,7 @@ class CityMapCanvas extends Component {
       offsetY = 0,
       player_x = 0,
       player_y = 0,
+      pings = [],
     } = data;
     if (
       !mapGrid
@@ -539,6 +576,100 @@ class CityMapCanvas extends Component {
         ctx.shadowBlur = 0;
       }
     }
+    const hits = [];
+    // Insured clients and debtors. Drawn after the player marker and
+    // deliberately outside the holoTint pass above, which desaturates
+    // everything it touches - a ping that reports health by colour cannot
+    // afford to have its colour washed out.
+    for (let i = 0; i < pings.length; i++) {
+      const ping = pings[i];
+      const pgx = ping.x - offsetX;
+      const pgy = ping.y - offsetY;
+      const pplx = pgx - 1;
+      const pply = gridHeight - pgy;
+      if (
+        pplx < sX
+        || pplx >= sX + visW
+        || pply < sY
+        || pply >= sY + visH
+      ) {
+        continue;
+      }
+      const ppx
+        = (pplx - sX + 0.5)
+        * cellPx;
+      const ppy
+        = (pply - sY + 0.5)
+        * cellPx;
+      const pr = Math.max(
+        PLAYER_RADIUS - 1,
+        cellPx * 0.8,
+      );
+      const colour = ping.color;
+      ctx.shadowColor = colour;
+      ctx.shadowBlur = 6;
+      ctx.strokeStyle = colour;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(
+        ppx, ppy, pr,
+        0, Math.PI * 2,
+      );
+      ctx.stroke();
+      // Debtors are hollow, clients are filled. Two populations that overlap
+      // need to differ in shape, not only in colour.
+      if (ping.kind !== 'debtor') {
+        ctx.fillStyle = colour;
+        ctx.beginPath();
+        ctx.arc(
+          ppx, ppy, pr * 0.45,
+          0, Math.PI * 2,
+        );
+        ctx.fill();
+      }
+      if (ping.name === selectedPing) {
+        ctx.strokeStyle = FOCUS_COLOR;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.arc(ppx, ppy, pr + 4, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+      ctx.shadowBlur = 0;
+      // Where this dot ended up, so a click can find it again without
+      // repeating the projection maths and drifting out of step with it.
+      hits.push({
+        x: ppx,
+        y: ppy,
+        r: pr + 2,
+        ping: ping,
+      });
+      // Who the dot is, written above it. This is the only place a tracked
+      // person is named: a label floating over their head in the world would
+      // read the company's client list out to whoever is standing next to
+      // them.
+      //
+      // First name only. A dial with a dozen clients on it turns full names
+      // and roles into one unreadable band of text; the rest is a click away.
+      if (ping.name) {
+        const isSel = ping.name === selectedPing;
+        const label = isSel
+          ? ping.name + ' - ' + ping.role
+          : ping.name.split(' ')[0];
+        const ly = ppy - pr - 3;
+        ctx.font = '10px Consolas, monospace';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'bottom';
+        // Outlined, because the map under it is a busy green and thin text on
+        // that is unreadable at any single fill colour.
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = 'rgba(0, 0, 0, 0.85)';
+        ctx.strokeText(label, ppx, ly);
+        ctx.fillStyle = colour;
+        ctx.fillText(label, ppx, ly);
+        ctx.lineWidth = 2;
+      }
+    }
+    this._pingHits = hits;
   }
 
   render() {
@@ -559,6 +690,53 @@ class CityMapCanvas extends Component {
     );
   }
 }
+
+// Everything the company knows about one dot. Only rendered once a dot has
+// been clicked, so the dial stays a map until it is asked to be a file.
+const PingDetails = props => {
+  const { ping, onClose } = props;
+  if (!ping) {
+    return null;
+  }
+  const rows = [
+    ['Role', ping.role],
+    ['Cover', ping.cover],
+    ['Owed', ping.debt + ' ahn'],
+    ['Condition', ping.dead
+      ? 'DECEASED'
+      : ping.health + '%'],
+  ];
+  return (
+    <Section title={ping.name}>
+      {rows.map(row => (
+        <Box
+          key={row[0]}
+          fontSize="11px"
+          mb={0.5}>
+          <Box
+            inline
+            color="label"
+            style={{ minWidth: '58px' }}>
+            {row[0]}
+          </Box>
+          <Box
+            inline
+            color={row[0] === 'Owed' && ping.debt > 0
+              ? 'bad'
+              : null}>
+            {row[1]}
+          </Box>
+        </Box>
+      ))}
+      <Button
+        mt={0.5}
+        icon="times"
+        onClick={onClose}>
+        Close
+      </Button>
+    </Section>
+  );
+};
 
 const MapLegend = props => {
   const {
