@@ -18,6 +18,9 @@
 /obj/structure/chair/sofa/left{
 	dir = 4
 	},
+/obj/machinery/light{
+	dir = 8
+	},
 /turf/open/space/basic,
 /turf/open/floor/mineral/titanium/purple,
 /turf/open/floor/carpet/purple,
@@ -39,6 +42,17 @@
 /turf/open/space/basic,
 /turf/open/floor/mineral/titanium/purple,
 /turf/open/floor/carpet/purple,
+/area/city/backstreets_room)
+"fl" = (
+/obj/machinery/light{
+	dir = 4
+	},
+/obj/machinery/light{
+	dir = 8
+	},
+/turf/closed/indestructible/reinforced{
+	color = "purple"
+	},
 /area/city/backstreets_room)
 "gZ" = (
 /obj/structure/chair/sofa{
@@ -64,6 +78,9 @@
 "jB" = (
 /obj/structure/chair/comfy/black{
 	dir = 4
+	},
+/obj/machinery/light{
+	dir = 8
 	},
 /turf/open/floor/mineral/titanium/purple,
 /area/city/backstreets_room)
@@ -151,6 +168,20 @@
 /obj/structure/closet/crate,
 /turf/open/floor/carpet/purple,
 /area/city/backstreets_room)
+"Ci" = (
+/obj/machinery/light{
+	dir = 4;
+	pixel_x = 3;
+	pixel_y = 3;
+	nightshift_brightness = 10;
+	nightshift_enabled = 1;
+	nightshift_light_color = "#EE6644";
+	nightshift_light_power = 0.8
+	},
+/turf/open/space/basic,
+/turf/open/floor/mineral/titanium/purple,
+/turf/open/floor/carpet/purple,
+/area/city/backstreets_room)
 "Cm" = (
 /turf/open/floor/mineral/titanium/tiled/purple,
 /area/city/backstreets_room)
@@ -231,12 +262,18 @@
 /obj/structure/closet/cabinet,
 /obj/item/documents/ncorporation,
 /obj/item/shears,
+/obj/machinery/light{
+	dir = 8;
+	pixel_x = 0;
+	pixel_y = 0
+	},
 /turf/open/floor/mineral/titanium/purple,
 /area/city/backstreets_room)
 "Wq" = (
 /obj/structure/chair/sofa/right{
 	dir = 1
 	},
+/obj/machinery/light,
 /turf/open/space/basic,
 /turf/open/floor/mineral/titanium/purple,
 /turf/open/floor/carpet/purple,
@@ -309,13 +346,13 @@ jA
 "}
 (6,1,1) = {"
 wh
-wh
+fl
 wh
 wh
 Fx
 KI
 Fx
-Hz
+Ci
 Hz
 Hz
 eg
