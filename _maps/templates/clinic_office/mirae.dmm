@@ -1,0 +1,1538 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"aa" = (
+/obj/machinery/door/city/clinic/glass,
+/turf/open/floor/plasteel/white{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"ab" = (
+/obj/structure/bodycontainer/morgue{
+	dir = 2
+	},
+/turf/open/floor/plasteel/showroomfloor{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"ac" = (
+/turf/open/floor/plasteel/white{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"ad" = (
+/obj/machinery/computer/operating/mirae{
+	dir = 8
+	},
+/turf/open/floor/plasteel/white{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"af" = (
+/obj/item/clothing/suit/apron/surgical,
+/obj/item/surgical_drapes,
+/obj/item/clothing/mask/surgical,
+/obj/machinery/light{
+	dir = 1
+	},
+/obj/item/storage/backpack/duffelbag/med/upgradedsurgery,
+/obj/structure/table/greyscale{
+	color = "#D381C9"
+	},
+/turf/open/floor/plasteel/white{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"ag" = (
+/obj/machinery/vending/coffee,
+/turf/open/floor/plasteel/white{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"ai" = (
+/turf/closed/indestructible/city/corrugated,
+/area/city/clinic)
+"ak" = (
+/obj/machinery/light,
+/obj/machinery/sleeper/mirae,
+/turf/open/floor/plasteel/white{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"aM" = (
+/obj/item/storage/box/bodybags,
+/obj/structure/table/glass{
+	color = "#D381C9"
+	},
+/turf/open/floor/plasteel/showroomfloor{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"aX" = (
+/obj/structure/chair/plastic,
+/turf/open/floor/plasteel/white{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"bd" = (
+/turf/open/floor/wood,
+/area/city/clinic)
+"ce" = (
+/obj/machinery/light{
+	dir = 1
+	},
+/turf/open/floor/plasteel/white{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"ci" = (
+/obj/machinery/light{
+	dir = 8
+	},
+/obj/item/kirbyplants/random,
+/turf/open/floor/plasteel/white{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"cv" = (
+/obj/machinery/door/city/clinic{
+	name = "Director's Office";
+	req_access_txt = "5"
+	},
+/turf/open/floor/wood,
+/area/city/clinic)
+"dm" = (
+/turf/open/floor/plasteel/showroomfloor{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"dD" = (
+/turf/closed/indestructible/rock,
+/area/city/clinic)
+"dJ" = (
+/obj/machinery/mirae_terminal,
+/turf/open/floor/plasteel/white{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"ek" = (
+/obj/machinery/door/city/clinic{
+	max_integrity = 1e+009;
+	name = "Secure medical room";
+	req_access_txt = "5";
+	dir = 4
+	},
+/turf/open/floor/plasteel/showroomfloor{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"em" = (
+/obj/machinery/door/city/clinic{
+	max_integrity = 1e+009;
+	name = "Secure medical room";
+	req_access_txt = "5";
+	dir = 4
+	},
+/turf/open/floor/plasteel/white{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"eA" = (
+/obj/structure/table/wood,
+/obj/item/clothing/suit/armor/ego_gear/city/mirae_director_coat,
+/turf/open/floor/carpet/purple,
+/area/city/clinic)
+"eT" = (
+/obj/machinery/vending/wardrobe/medi_wardrobe,
+/obj/machinery/light{
+	dir = 4
+	},
+/turf/open/floor/carpet/purple,
+/area/city/clinic)
+"fd" = (
+/obj/machinery/door/city/clinic{
+	name = "Triage Room";
+	req_access_txt = "5"
+	},
+/turf/open/floor/plasteel/white{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"ff" = (
+/obj/effect/turf_decal/tile/purple{
+	dir = 8
+	},
+/obj/effect/turf_decal/tile/purple,
+/obj/effect/turf_decal/tile/purple{
+	dir = 4
+	},
+/obj/effect/turf_decal/tile/purple{
+	dir = 1
+	},
+/obj/effect/turf_decal/siding/thinplating/light/corner{
+	dir = 1;
+	color = "#D381C9"
+	},
+/obj/effect/turf_decal/siding/thinplating/light/corner{
+	dir = 4;
+	color = "#D381C9"
+	},
+/obj/effect/turf_decal/siding/thinplating/light/corner{
+	dir = 8;
+	color = "#D381C9"
+	},
+/obj/effect/turf_decal/siding/thinplating/light/corner{
+	color = "#D381C9"
+	},
+/turf/open/floor/plasteel/white{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"fl" = (
+/obj/structure/table/wood,
+/obj/item/folder{
+	pixel_x = -3;
+	pixel_y = 6
+	},
+/obj/item/folder/blue{
+	pixel_x = -3;
+	pixel_y = 2
+	},
+/obj/item/folder/red{
+	pixel_x = -3;
+	pixel_y = -2
+	},
+/obj/item/pen/fountain{
+	pixel_x = 2;
+	pixel_y = 2
+	},
+/obj/item/stack/spacecash/c10000,
+/turf/open/floor/carpet/purple,
+/area/city/clinic)
+"fI" = (
+/obj/structure/bed/roller,
+/turf/open/floor/city/sidewalk,
+/area/city/clinic)
+"gg" = (
+/turf/open/floor/carpet/purple,
+/area/city/clinic)
+"go" = (
+/obj/structure/table/glass{
+	color = "#D381C9"
+	},
+/obj/item/reagent_containers/glass/bottle/formaldehyde,
+/obj/item/reagent_containers/syringe/epinephrine{
+	pixel_x = 6;
+	pixel_y = 4
+	},
+/obj/item/reagent_containers/glass/bottle/epinephrine{
+	pixel_x = 6;
+	pixel_y = 4
+	},
+/obj/machinery/light{
+	dir = 1
+	},
+/turf/open/floor/plasteel/white{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"gK" = (
+/obj/machinery/door/city/clinic{
+	name = "Emergency Room";
+	req_access_txt = "5";
+	unres_sides = 1
+	},
+/obj/effect/mapping_helpers/airlock/unres{
+	dir = 1
+	},
+/turf/open/floor/plasteel/white{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"hp" = (
+/obj/structure/chair/comfy/black,
+/turf/open/floor/carpet/purple,
+/area/city/clinic)
+"hu" = (
+/obj/machinery/light{
+	dir = 1
+	},
+/obj/structure/table/glass{
+	color = "#D381C9"
+	},
+/obj/item/clothing/suit/armor/ego_gear/city/mirae_insurer_coat,
+/obj/item/clothing/suit/armor/ego_gear/city/mirae_insurer_coat,
+/turf/open/floor/plasteel/white{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"hN" = (
+/obj/item/clothing/suit/apron/surgical,
+/obj/item/surgical_drapes,
+/obj/item/clothing/mask/surgical,
+/obj/machinery/light,
+/obj/structure/table/greyscale{
+	color = "#D381C9"
+	},
+/turf/open/floor/plasteel/white{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"jM" = (
+/obj/structure/table{
+	color = "#D381C9"
+	},
+/obj/item/defibrillator/mirae,
+/obj/machinery/cell_charger,
+/obj/item/screwdriver,
+/obj/machinery/light{
+	dir = 1
+	},
+/obj/item/defibrillator/mirae,
+/turf/open/floor/carpet/purple,
+/area/city/clinic)
+"jN" = (
+/obj/effect/turf_decal/tile/purple{
+	dir = 8
+	},
+/obj/effect/turf_decal/tile/purple,
+/obj/effect/turf_decal/tile/purple{
+	dir = 4
+	},
+/obj/effect/turf_decal/tile/purple{
+	dir = 1
+	},
+/obj/structure/curtain{
+	color = "#D381C9"
+	},
+/obj/effect/turf_decal/siding/thinplating/light/end{
+	dir = 1;
+	color = "#D381C9"
+	},
+/turf/open/floor/plasteel/white{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"ko" = (
+/obj/structure/bed/pod,
+/obj/item/bedsheet/medical{
+	color = "#D381C9"
+	},
+/obj/machinery/light,
+/turf/open/floor/plasteel/white{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"kv" = (
+/obj/structure/chair/sofa/corp/right,
+/turf/open/floor/carpet/purple,
+/area/city/clinic)
+"lG" = (
+/obj/effect/spawner/randomsnackvend,
+/turf/open/floor/carpet/purple,
+/area/city/clinic)
+"lH" = (
+/obj/structure/table{
+	color = "#D381C9"
+	},
+/obj/item/reagent_containers/glass/bottle/mannitol,
+/obj/item/reagent_containers/glass/bottle/mannitol,
+/obj/item/reagent_containers/glass/bottle/mannitol,
+/obj/item/storage/pill_bottle/mannitol,
+/turf/open/floor/plasteel/showroomfloor{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"mg" = (
+/obj/structure/fluff/street_light,
+/turf/closed/indestructible/city/corrugated,
+/area/city/clinic)
+"nD" = (
+/obj/machinery/door/city/clinic{
+	name = "Operating Room";
+	req_access_txt = "5"
+	},
+/obj/effect/mapping_helpers/airlock/unres{
+	dir = 1
+	},
+/turf/open/floor/plasteel/white{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"nF" = (
+/obj/machinery/door/city/clinic{
+	name = "Triage Room";
+	req_access_txt = "5";
+	dir = 4
+	},
+/turf/open/floor/plasteel/white{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"oe" = (
+/turf/closed/indestructible/city/concrete,
+/area/city/clinic)
+"ou" = (
+/obj/machinery/light{
+	dir = 4
+	},
+/obj/item/kirbyplants/random,
+/turf/open/floor/plasteel/white{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"oz" = (
+/obj/structure/table{
+	color = "#D381C9"
+	},
+/obj/item/vending_refill/drugs,
+/obj/item/vending_refill/drugs,
+/obj/item/vending_refill/drugs,
+/obj/item/vending_refill/drugs,
+/obj/structure/extinguisher_cabinet{
+	pixel_y = 32
+	},
+/obj/item/storage/box/syringes/variety{
+	pixel_x = 10
+	},
+/obj/item/storage/box/syringes{
+	pixel_x = -10
+	},
+/obj/item/clothing/neck/stethoscope,
+/obj/machinery/light{
+	dir = 1
+	},
+/turf/open/floor/plasteel/showroomfloor{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"pe" = (
+/obj/structure/table{
+	color = "#D381C9"
+	},
+/obj/item/organ/ears/cybernetic,
+/obj/item/organ/ears/cybernetic,
+/obj/item/organ/ears/cybernetic,
+/obj/item/organ/heart/cybernetic/tier2,
+/obj/item/organ/heart/cybernetic/tier2,
+/obj/item/organ/heart/cybernetic/tier2,
+/obj/item/organ/liver/cybernetic,
+/obj/item/organ/liver/cybernetic,
+/obj/item/organ/liver/cybernetic,
+/obj/item/organ/lungs/cybernetic/tier2,
+/obj/item/organ/lungs/cybernetic/tier2,
+/obj/item/organ/lungs/cybernetic/tier2,
+/obj/item/organ/stomach/cybernetic/tier2,
+/obj/item/organ/stomach/cybernetic/tier2,
+/obj/item/organ/stomach/cybernetic/tier2,
+/obj/machinery/light{
+	dir = 1
+	},
+/turf/open/floor/plasteel/showroomfloor{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"pz" = (
+/obj/structure/chair/plastic{
+	dir = 4
+	},
+/turf/open/floor/plasteel/white{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"pE" = (
+/turf/open/floor/city/sidewalk,
+/area/city/clinic)
+"rL" = (
+/obj/structure/table/greyscale{
+	color = "#D381C9"
+	},
+/obj/item/storage/backpack/duffelbag/med/upgradedsurgery,
+/obj/machinery/light,
+/turf/open/floor/plasteel/white{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"sn" = (
+/obj/machinery/door/city/clinic{
+	max_integrity = 1e+009;
+	name = "Secure medical room";
+	req_access_txt = "5"
+	},
+/turf/open/floor/plasteel/showroomfloor{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"sF" = (
+/obj/machinery/door/city/clinic{
+	name = "Emergency Room";
+	req_access_txt = "5"
+	},
+/turf/open/floor/plasteel/white{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"sW" = (
+/obj/machinery/vending/medical,
+/turf/open/floor/plasteel/showroomfloor{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"tq" = (
+/obj/structure/table/optable/mirae,
+/turf/open/floor/plasteel/white{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"tu" = (
+/obj/effect/turf_decal/tile/purple{
+	dir = 8
+	},
+/obj/effect/turf_decal/tile/purple,
+/obj/effect/turf_decal/tile/purple{
+	dir = 4
+	},
+/obj/effect/turf_decal/tile/purple{
+	dir = 1
+	},
+/obj/effect/turf_decal/siding/thinplating/light/end{
+	color = "#D381C9"
+	},
+/turf/open/floor/plasteel/white{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"tN" = (
+/obj/machinery/sleeper/mirae,
+/turf/open/floor/plasteel/white{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"uf" = (
+/obj/structure/table/glass{
+	color = "#D381C9"
+	},
+/obj/item/kirbyplants/random{
+	pixel_y = 10
+	},
+/obj/effect/turf_decal/tile/purple,
+/obj/effect/turf_decal/tile/purple{
+	dir = 4
+	},
+/turf/open/floor/plasteel/white{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"xs" = (
+/obj/machinery/light,
+/obj/machinery/mirae_regenerator,
+/turf/open/floor/plasteel/white{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"xN" = (
+/obj/structure/table/wood,
+/obj/machinery/light{
+	dir = 1
+	},
+/obj/item/clothing/accessory/medal/ribbon/cmo{
+	color = "#D381C9"
+	},
+/obj/item/clothing/accessory/medal/ribbon/cmo{
+	color = "#D381C9"
+	},
+/obj/item/clothing/accessory/medal/ribbon/cmo{
+	color = "#D381C9"
+	},
+/obj/item/clothing/accessory/medal/ribbon/cmo{
+	color = "#D381C9"
+	},
+/turf/open/floor/carpet/purple,
+/area/city/clinic)
+"yR" = (
+/obj/structure/curtain{
+	color = "#D381C9"
+	},
+/turf/open/floor/plasteel/white{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"yZ" = (
+/obj/structure/table/glass{
+	color = "#D381C9"
+	},
+/obj/item/reagent_containers/glass/bottle/formaldehyde,
+/obj/item/reagent_containers/syringe/epinephrine{
+	pixel_x = 6;
+	pixel_y = 4
+	},
+/obj/item/reagent_containers/glass/bottle/epinephrine{
+	pixel_x = 6;
+	pixel_y = 4
+	},
+/obj/item/clothing/suit/armor/ego_gear/city/mirae_staff_coat,
+/obj/item/clothing/suit/armor/ego_gear/city/mirae_staff_coat,
+/turf/open/floor/plasteel/white{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"zc" = (
+/obj/effect/turf_decal/tile/purple{
+	dir = 8
+	},
+/obj/effect/turf_decal/tile/purple,
+/obj/effect/turf_decal/tile/purple{
+	dir = 4
+	},
+/obj/effect/turf_decal/tile/purple{
+	dir = 1
+	},
+/obj/effect/turf_decal/siding/thinplating/light/end{
+	dir = 8;
+	color = "#D381C9"
+	},
+/turf/open/floor/plasteel/white{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"zN" = (
+/obj/structure/table/wood,
+/obj/item/paper_bin,
+/obj/item/pen,
+/turf/open/floor/carpet/purple,
+/area/city/clinic)
+"Al" = (
+/obj/structure/chair/plastic{
+	dir = 8
+	},
+/turf/open/floor/plasteel/white{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"At" = (
+/turf/closed/indestructible/city/window,
+/area/city/clinic)
+"AC" = (
+/obj/structure/chair/plastic,
+/mob/living/simple_animal/hostile/ui_npc/eric_t,
+/turf/open/floor/plasteel/white{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"BI" = (
+/obj/structure/bed/roller,
+/turf/open/floor/plasteel/white{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"Dp" = (
+/obj/machinery/computer/med_data{
+	dir = 4
+	},
+/turf/open/floor/plasteel/white{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"DC" = (
+/obj/structure/closet/secure_closet/medical2/city,
+/turf/open/floor/plasteel/white{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"Ec" = (
+/obj/structure/bed/pod,
+/obj/item/bedsheet/medical{
+	color = "#D381C9"
+	},
+/turf/open/floor/plasteel/white{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"Em" = (
+/obj/machinery/light{
+	dir = 1
+	},
+/obj/machinery/computer/operating/mirae{
+	dir = 4
+	},
+/turf/open/floor/plasteel/white{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"Ey" = (
+/obj/structure/filingcabinet{
+	pixel_x = 11
+	},
+/obj/structure/filingcabinet{
+	pixel_x = 1
+	},
+/obj/structure/filingcabinet{
+	pixel_x = -9
+	},
+/turf/open/floor/carpet/purple,
+/area/city/clinic)
+"EJ" = (
+/obj/machinery/door/city/clinic{
+	name = "Break Room";
+	req_access_txt = "5";
+	dir = 4
+	},
+/turf/open/floor/carpet/purple,
+/area/city/clinic)
+"FA" = (
+/obj/machinery/photocopier,
+/turf/open/floor/carpet/purple,
+/area/city/clinic)
+"FD" = (
+/obj/structure/table/wood,
+/obj/machinery/light{
+	dir = 1
+	},
+/turf/open/floor/carpet/purple,
+/area/city/clinic)
+"Ga" = (
+/obj/machinery/status_display,
+/turf/closed/indestructible/city/corrugated,
+/area/city/clinic)
+"Hr" = (
+/obj/structure/chair/plastic{
+	dir = 1
+	},
+/obj/machinery/city_map_display{
+	dir = 1
+	},
+/turf/open/floor/plasteel/white{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"Ig" = (
+/obj/machinery/door/city/clinic{
+	max_integrity = 1e+009;
+	name = "Morgue";
+	req_access_txt = "5"
+	},
+/turf/open/floor/plasteel/showroomfloor{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"IU" = (
+/obj/structure/table/glass{
+	color = "#D381C9"
+	},
+/obj/item/reagent_containers/glass/bottle/formaldehyde,
+/obj/item/reagent_containers/syringe/epinephrine{
+	pixel_x = 6;
+	pixel_y = 4
+	},
+/obj/item/reagent_containers/glass/bottle/epinephrine{
+	pixel_x = 6;
+	pixel_y = 4
+	},
+/turf/open/floor/plasteel/white{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"Jb" = (
+/obj/machinery/door/city/clinic{
+	max_integrity = 1e+009;
+	name = "Morgue";
+	req_access_txt = "5";
+	dir = 4
+	},
+/turf/open/floor/plasteel/showroomfloor{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"Kz" = (
+/obj/machinery/scanner_gate/mirae,
+/turf/open/floor/plasteel/white{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"KP" = (
+/obj/structure/chair/sofa/corp/left,
+/turf/open/floor/carpet/purple,
+/area/city/clinic)
+"KY" = (
+/obj/machinery/door/city/clinic{
+	name = "Revival Room";
+	req_access_txt = "5"
+	},
+/obj/effect/mapping_helpers/airlock/unres{
+	dir = 1
+	},
+/turf/open/floor/plasteel/white{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"Li" = (
+/obj/structure/chair/plastic,
+/obj/effect/turf_decal/tile/purple,
+/obj/effect/turf_decal/tile/purple{
+	dir = 4
+	},
+/turf/open/floor/plasteel/white{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"Qa" = (
+/obj/structure/table/greyscale{
+	color = "#D381C9"
+	},
+/obj/item/storage/backpack/duffelbag/med/upgradedsurgery,
+/turf/open/floor/plasteel/white{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"Qp" = (
+/obj/structure/chair/plastic{
+	dir = 1
+	},
+/turf/open/floor/plasteel/white{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"Qr" = (
+/obj/machinery/door/city/clinic{
+	name = "Medical Services";
+	req_access_txt = "5"
+	},
+/turf/open/floor/plasteel/white{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"Qz" = (
+/obj/structure/chair/comfy/black{
+	dir = 1
+	},
+/turf/open/floor/carpet/purple,
+/area/city/clinic)
+"QQ" = (
+/obj/machinery/stasis/mirae,
+/turf/open/floor/plasteel/white{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"Rl" = (
+/obj/machinery/smartfridge/organ{
+	color = "#D381C9"
+	},
+/turf/closed/indestructible/city/corrugated,
+/area/city/clinic)
+"RW" = (
+/obj/effect/turf_decal/tile/purple,
+/obj/effect/turf_decal/tile/purple{
+	dir = 4
+	},
+/turf/open/floor/plasteel/white{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"TV" = (
+/obj/machinery/computer/operating/mirae{
+	dir = 4
+	},
+/turf/open/floor/plasteel/white{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"Ua" = (
+/obj/structure/table/glass{
+	color = "#D381C9"
+	},
+/obj/item/storage/box/medipens,
+/obj/item/storage/box/medipens,
+/obj/item/storage/box/medipens,
+/obj/item/storage/firstaid/emergency,
+/turf/open/floor/plasteel/white{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"UM" = (
+/obj/effect/turf_decal/tile/purple{
+	dir = 8
+	},
+/obj/effect/turf_decal/tile/purple,
+/obj/effect/turf_decal/tile/purple{
+	dir = 4
+	},
+/obj/effect/turf_decal/tile/purple{
+	dir = 1
+	},
+/obj/effect/turf_decal/siding/thinplating/light/end{
+	dir = 1;
+	color = "#D381C9"
+	},
+/obj/structure/table/glass{
+	color = "#D381C9"
+	},
+/obj/item/paper_bin{
+	pixel_x = -6;
+	pixel_y = 4
+	},
+/obj/item/folder/white{
+	desc = "A white folder with a medical insignia.";
+	name = "medical folder";
+	pixel_x = 5
+	},
+/turf/open/floor/plasteel/white{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"Wi" = (
+/obj/structure/bodycontainer/morgue{
+	dir = 2
+	},
+/obj/machinery/light{
+	dir = 1
+	},
+/turf/open/floor/plasteel/showroomfloor{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"Wj" = (
+/obj/effect/turf_decal/tile/purple{
+	dir = 8
+	},
+/obj/effect/turf_decal/tile/purple,
+/obj/effect/turf_decal/tile/purple{
+	dir = 4
+	},
+/obj/effect/turf_decal/tile/purple{
+	dir = 1
+	},
+/obj/effect/turf_decal/siding/thinplating/light/end{
+	dir = 4;
+	color = "#D381C9"
+	},
+/turf/open/floor/plasteel/white{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"XB" = (
+/obj/structure/delivery_door{
+	density = 1;
+	desc = "A mailbox for this house.";
+	icon = 'icons/obj/votebox.dmi';
+	icon_state = "votebox_maint";
+	name = "mail box"
+	},
+/turf/closed/indestructible/city/corrugated,
+/area/city/clinic)
+"XH" = (
+/obj/structure/table/glass{
+	color = "#D381C9"
+	},
+/obj/item/flashlight/lamp{
+	pixel_x = -5;
+	pixel_y = 15
+	},
+/obj/item/clipboard,
+/obj/item/pen/fountain,
+/obj/item/pen/fourcolor{
+	pixel_x = 6
+	},
+/turf/open/floor/plasteel/white{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"YE" = (
+/obj/structure/bodycontainer/crematorium{
+	id = "trainingfurnace"
+	},
+/obj/machinery/button/crematorium{
+	id = "trainingfurnace";
+	pixel_x = 31
+	},
+/obj/machinery/light{
+	dir = 1
+	},
+/turf/open/floor/plasteel/showroomfloor{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"YH" = (
+/obj/structure/table/wood,
+/obj/item/stamp{
+	pixel_x = -4
+	},
+/obj/item/stamp/denied{
+	pixel_x = 4
+	},
+/obj/item/stamp/cmo,
+/turf/open/floor/carpet/purple,
+/area/city/clinic)
+"Zm" = (
+/obj/structure/closet/crate/freezer/surplus_limbs{
+	color = "#D381C9"
+	},
+/obj/item/krevive,
+/obj/item/krevive,
+/obj/item/krevive,
+/obj/machinery/light,
+/turf/open/floor/carpet/purple,
+/area/city/clinic)
+"Zt" = (
+/obj/machinery/light{
+	dir = 1
+	},
+/obj/machinery/stasis/mirae,
+/turf/open/floor/plasteel/white{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+"ZF" = (
+/obj/machinery/vending/drugs,
+/turf/open/floor/plasteel/showroomfloor{
+	color = "#998b6e"
+	},
+/area/city/clinic)
+
+(1,1,1) = {"
+oe
+dD
+dD
+dD
+dD
+dD
+dD
+dD
+dD
+ai
+ai
+ai
+ai
+ai
+dD
+dD
+dD
+dD
+dD
+oe
+"}
+(2,1,1) = {"
+oe
+dD
+dD
+dD
+dD
+dD
+dD
+dD
+dD
+ai
+jM
+gg
+Zm
+ai
+dD
+dD
+dD
+dD
+dD
+oe
+"}
+(3,1,1) = {"
+oe
+dD
+dD
+dD
+dD
+dD
+dD
+dD
+dD
+ai
+kv
+gg
+lG
+ai
+dD
+dD
+dD
+dD
+dD
+oe
+"}
+(4,1,1) = {"
+ai
+ai
+ai
+ai
+ai
+ai
+ai
+dD
+dD
+ai
+KP
+gg
+eT
+ai
+dD
+dD
+dD
+dD
+dD
+oe
+"}
+(5,1,1) = {"
+ai
+FD
+gg
+gg
+bd
+bd
+ai
+ai
+ai
+ai
+ai
+EJ
+ai
+ai
+ai
+ai
+ai
+ai
+ai
+ai
+"}
+(6,1,1) = {"
+ai
+fl
+gg
+zN
+gg
+bd
+ai
+ci
+ac
+ac
+ac
+ac
+ci
+ai
+AC
+ac
+ac
+ac
+BI
+ai
+"}
+(7,1,1) = {"
+ai
+FA
+hp
+eA
+Qz
+bd
+cv
+ac
+ac
+ac
+ac
+ac
+ac
+Qr
+ac
+ac
+ac
+ac
+BI
+ai
+"}
+(8,1,1) = {"
+ai
+Ey
+gg
+YH
+gg
+bd
+ai
+ou
+ac
+ac
+ag
+ac
+ou
+ai
+aX
+ac
+ac
+ac
+BI
+ai
+"}
+(9,1,1) = {"
+ai
+xN
+gg
+gg
+bd
+bd
+ai
+ai
+ek
+ai
+ai
+ai
+ai
+ai
+Li
+RW
+RW
+RW
+uf
+mg
+"}
+(10,1,1) = {"
+ai
+ai
+ai
+ai
+ai
+ai
+ai
+pe
+dm
+ai
+Em
+tq
+Qa
+ai
+aX
+ac
+pz
+pz
+pz
+At
+"}
+(11,1,1) = {"
+oe
+dD
+dD
+dD
+dD
+dD
+ai
+lH
+dm
+sn
+ac
+ac
+ac
+nD
+ac
+ac
+ac
+ac
+ac
+At
+"}
+(12,1,1) = {"
+oe
+dD
+dD
+dD
+dD
+dD
+ai
+sW
+dm
+ai
+DC
+ac
+hN
+ai
+ac
+ac
+ac
+ac
+Qp
+At
+"}
+(13,1,1) = {"
+oe
+dD
+dD
+dD
+dD
+dD
+ai
+ZF
+dm
+ai
+Rl
+em
+ai
+ai
+Dp
+Ua
+zc
+ac
+Qp
+XB
+"}
+(14,1,1) = {"
+oe
+dD
+dD
+dD
+dD
+dD
+ai
+oz
+dm
+Ig
+ac
+ac
+ak
+Ga
+ac
+UM
+ff
+tu
+Kz
+aa
+"}
+(15,1,1) = {"
+oe
+dD
+dD
+dD
+dD
+dD
+ai
+ai
+ai
+ai
+ac
+ac
+tN
+ai
+ac
+XH
+Wj
+ac
+Hr
+ai
+"}
+(16,1,1) = {"
+oe
+dD
+dD
+dD
+dD
+dD
+ai
+Zt
+ac
+yR
+zc
+ac
+ac
+KY
+ac
+ac
+ac
+ac
+Qp
+At
+"}
+(17,1,1) = {"
+oe
+dD
+dD
+dD
+dD
+dD
+ai
+yZ
+ac
+jN
+ff
+tu
+Ec
+ai
+ac
+ac
+ac
+ac
+ac
+At
+"}
+(18,1,1) = {"
+oe
+dD
+dD
+dD
+dD
+dD
+ai
+QQ
+ac
+yR
+Wj
+ac
+Ec
+ai
+dJ
+ac
+Al
+Al
+Al
+At
+"}
+(19,1,1) = {"
+oe
+dD
+dD
+dD
+dD
+dD
+ai
+go
+ac
+yR
+ac
+ac
+ko
+ai
+ai
+sF
+ai
+ai
+ai
+mg
+"}
+(20,1,1) = {"
+oe
+dD
+dD
+dD
+dD
+ai
+ai
+ai
+Jb
+ai
+nF
+ai
+ai
+ai
+ai
+ce
+QQ
+IU
+At
+fI
+"}
+(21,1,1) = {"
+oe
+dD
+dD
+dD
+dD
+ai
+Wi
+dm
+dm
+ai
+ce
+TV
+tq
+rL
+ai
+ac
+ac
+ac
+At
+fI
+"}
+(22,1,1) = {"
+oe
+dD
+dD
+dD
+dD
+ai
+ab
+dm
+dm
+Ig
+ac
+ac
+ac
+ac
+fd
+ac
+ac
+Kz
+gK
+pE
+"}
+(23,1,1) = {"
+oe
+dD
+dD
+dD
+dD
+ai
+ab
+dm
+dm
+ai
+hu
+DC
+ac
+xs
+ai
+af
+tq
+ad
+At
+fI
+"}
+(24,1,1) = {"
+oe
+dD
+dD
+dD
+dD
+ai
+YE
+dm
+aM
+ai
+ai
+ai
+ai
+ai
+ai
+ai
+ai
+ai
+ai
+ai
+"}
+(25,1,1) = {"
+oe
+dD
+dD
+dD
+dD
+ai
+ai
+ai
+ai
+ai
+dD
+dD
+dD
+dD
+dD
+dD
+dD
+dD
+dD
+oe
+"}

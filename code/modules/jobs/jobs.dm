@@ -12,6 +12,7 @@ GLOBAL_LIST_INIT(command_positions, list(
 
 	// City heads
 	"Doctor",
+	"Clinic Director",
 	"Hana Administrator",
 	"Association Section Director",
 	"Association Assistant Director",
@@ -81,9 +82,11 @@ GLOBAL_LIST_INIT(medical_positions, list(
 	"Nurse Practitioner",
 
 	// City
+	"Clinic Director",
+	"Clinic Staff",
+	"Clinic Field Agent",
 	"Doctor",
 	"Nurse",
-	"Paramedic",
 	"Medical Fixer Assistant",
 	"Prosthetics Surgeon",
 
