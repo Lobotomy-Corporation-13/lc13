@@ -22,7 +22,7 @@
 	ranged = 1
 	ranged_cooldown_time = 40
 
-	damage_coeff = list(RED_DAMAGE = 1, WHITE_DAMAGE = 1, BLACK_DAMAGE = 1, PALE_DAMAGE = 1)
+	damage_coeff = list(RED_DAMAGE = 0.8, WHITE_DAMAGE = 0.3, BLACK_DAMAGE = 1.2, PALE_DAMAGE = 0.3)
 
 	var/list/blacklist = list(
 				/mob/living/simple_animal/hostile/abnormality/melting_love,
