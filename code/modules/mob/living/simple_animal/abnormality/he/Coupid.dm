@@ -3,11 +3,10 @@
 	desc = "The tiniest rabbit with a flower on its head. It makes you itch looking at it."
 	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "coupid"
-	var/breach_icon = "coupid_breach"
 	core_icon = "coupid_core"
 	del_on_death = TRUE
-	maxHealth = 1500
-	health = 1500
+	maxHealth = 1000
+	health = 1000
 	damage_coeff = list(RED_DAMAGE = 0.5, WHITE_DAMAGE = 2, BLACK_DAMAGE = 0, PALE_DAMAGE = 1) //0 is like no damage, 2 is high damage? right???
 	melee_damage_type = BLACK_DAMAGE
 	can_breach = TRUE
@@ -49,6 +48,26 @@
 /mob/living/simple_animal/hostile/abnormality/cupid/PostWorkEffect(mob/living/carbon/human/user, work_type, pe, work_time)
 	user.reagents.add_reagent(/datum/reagent/toxin/histamine, 5)
 	visible_message(span_notice("You find yourself sniffling after work. Should probably be careful breathing near it."))
+//breach stuff time
+
+/mob/living/simple_animal/hostile/abnormality/cupid/ZeroQliphoth(mob/living/carbon/human/user)
+	SSweather.run_weather(/datum/weather/pollen)
+
+/mob/living/simple_animal/hostile/abnormality/cupid/BreachEffect()
+	. = ..()
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
+	icon_living = "coupid_breach"
+	GiveTarget(user)
+
+//egg
+/mob/living/simple_animal/hostile/abnormality/coupid/death(gibbed)
+	icon = 'ModularLobotomy/_Lobotomyicons/abno_cores/he.dmi'
+	pixel_x = -16
+	pixel_y = 0
+	density = FALSE
+	QDEL_IN(src, 10 SECONDS)
+	return ..()
+
 
 	//FANCY TIME
 /datum/weather/pollen
@@ -70,12 +89,12 @@
 	//it lasts until...
 /mob/living/simple_animal/hostile/abnormality/cupid/Destroy()
 	EndWeather()
-/mob/living/simple_animal/hostile/abnormality/cupid/proc/EndWeather()
+/mob/living/simple_animal/hostile/abnormality/cupid/proc/EndWeather() //end weather means END WEATHER
 	SSweather.end_weather()
 
 /datum/weather/pollen/weather_act(mob/living/carbon/human/L)
 	if(ishuman(L))
-		L.deal_damage(5, BLACK_DAMAGE, attack_type = (ATTACK_TYPE_ENVIRONMENT)) //okay i felt histans was too mean
+		L.deal_damage(1, BLACK_DAMAGE, attack_type = (ATTACK_TYPE_ENVIRONMENT)) //okay i felt histans was too mean
 		return
 //	if(prob(1))
 //	user.reagents.add_reagent(/datum/reagent/toxin/histamine, 2) //DON'T RISK KILLING PEOPLE. we want a pest not a murderer.
