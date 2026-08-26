@@ -1,6 +1,0 @@
-author: "Deadkung"
-delete-after: True
-changes:
-  - balance: "dimension ripper now takes damage and damage type from the user's held weapon"
-  - balance: "dimension ripper now significantly increases charge gain on the dimension shredder weapons"
-  - rscadd: "sound/weapons/ego/lce_dimension_leap.ogg"
