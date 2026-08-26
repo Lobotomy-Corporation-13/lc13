@@ -2632,7 +2632,7 @@
 	attack_verb_simple = list("jab", "cleave")
 	hitsound = 'sound/abnormalities/goldenapple/Legerdemain.ogg'
 	attribute_requirements = list(
-							INSIGHT_ATTRIBUTE = 40
+							PRUDENCE_ATTRIBUTE = 40
 							)
 
 /obj/item/ego_weapon/allergen/attack(mob/living/target, mob/living/carbon/human/user) //first is target, other is user
