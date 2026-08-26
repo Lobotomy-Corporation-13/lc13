@@ -2100,7 +2100,10 @@
 	else
 		// Humans: deal sanity damage equal to stacks
 		var/mob/living/carbon/human/H = owner
-		H.adjustSanityLoss(stacks)
+		if(!HAS_TRAIT(H, TRAIT_BRUTESANITY))
+			H.adjustSanityLoss(stacks)
+		else
+			H.adjustBruteLoss(stacks)
 
 	triggering = FALSE
 
@@ -2246,3 +2249,103 @@
 		return
 	R.add_undecaying_stacks(undecaying_stacks)
 	R.add_stacks(stacks)
+
+// THE DUEL ESCALATES - Palermitan Style apprentice debuff
+// Stacks on the target as the apprentice hits them repeatedly.
+// Grants the apprentice scaling bonuses against targets with this effect.
+// Expires if no new stacks are added within the tick interval.
+/datum/status_effect/stacking/duel_escalates
+	id = "duel_escalates"
+	alert_type = /atom/movable/screen/alert/status_effect/duel_escalates
+	stacking_display_name = "duel escalates"
+	max_stacks = 20
+	tick_interval = 10 SECONDS
+	consumed_on_threshold = FALSE
+	/// Which mob inflicted this (the apprentice)
+	var/mob/living/duelist
+	/// Whether new stacks were added this tick period
+	var/new_stack = TRUE
+
+/atom/movable/screen/alert/status_effect/duel_escalates
+	name = "The Duel Escalates"
+	desc = "Your opponent grows stronger against you with each exchange! Stacks: "
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
+	icon_state = "tremor"
+
+/datum/status_effect/stacking/duel_escalates/on_apply()
+	. = ..()
+
+/datum/status_effect/stacking/duel_escalates/add_stacks(stacks_added)
+	. = ..()
+	if(stacks_added > 0)
+		new_stack = TRUE
+	if(owner)
+		linked_alert.desc = initial(linked_alert.desc) + "[stacks]"
+
+/datum/status_effect/stacking/duel_escalates/can_have_status()
+	return (owner.stat != DEAD || !(owner.status_flags & GODMODE))
+
+/datum/status_effect/stacking/duel_escalates/tick()
+	if(new_stack)
+		new_stack = FALSE
+	else
+		qdel(src)
+
+/// Mob proc to apply Duel Escalates stacks. Pass the duelist (apprentice) who is inflicting it.
+/mob/living/proc/apply_duel_escalates(stacks, mob/living/duelist)
+	var/datum/status_effect/stacking/duel_escalates/D = src.has_status_effect(/datum/status_effect/stacking/duel_escalates)
+	if(!D)
+		var/datum/status_effect/stacking/duel_escalates/new_D = src.apply_status_effect(/datum/status_effect/stacking/duel_escalates, stacks)
+		if(new_D)
+			new_D.duelist = duelist
+		return
+	D.duelist = duelist
+	D.add_stacks(stacks)
+
+// SEVERED TENDON - Palermitan Style debuff (from skill tree tier 1a)
+// Reduces the target's melee damage via Offense Level Down application.
+// Decays 1 stack per tick.
+/datum/status_effect/stacking/severed_tendon
+	id = "severed_tendon"
+	alert_type = /atom/movable/screen/alert/status_effect/severed_tendon
+	stacking_display_name = "severed tendon"
+	max_stacks = 3
+	tick_interval = 10 SECONDS
+	consumed_on_threshold = FALSE
+
+/atom/movable/screen/alert/status_effect/severed_tendon
+	name = "Severed Tendon"
+	desc = "Your tendons have been cut, weakening your attacks! Stacks: "
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
+	icon_state = "feeble"
+
+/datum/status_effect/stacking/severed_tendon/on_apply()
+	. = ..()
+	if(owner)
+		owner.apply_lc_offense_level_down(stacks * 5)
+
+/datum/status_effect/stacking/severed_tendon/add_stacks(stacks_added)
+	var/old_stacks = stacks
+	. = ..()
+	if(owner)
+		var/diff = stacks - old_stacks
+		if(diff > 0)
+			owner.apply_lc_offense_level_down(diff * 5)
+		linked_alert.desc = initial(linked_alert.desc) + "[stacks]"
+
+/datum/status_effect/stacking/severed_tendon/can_have_status()
+	return (owner.stat != DEAD || !(owner.status_flags & GODMODE))
+
+/// Decay 1 stack per tick
+/datum/status_effect/stacking/severed_tendon/tick()
+	add_stacks(-1)
+	if(stacks <= 0)
+		qdel(src)
+
+/// Mob proc to apply Severed Tendon stacks
+/mob/living/proc/apply_severed_tendon(stacks)
+	var/datum/status_effect/stacking/severed_tendon/S = src.has_status_effect(/datum/status_effect/stacking/severed_tendon)
+	if(!S)
+		src.apply_status_effect(/datum/status_effect/stacking/severed_tendon, stacks)
+		return
+	S.add_stacks(stacks)
