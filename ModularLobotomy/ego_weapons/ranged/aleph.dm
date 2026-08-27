@@ -895,6 +895,8 @@
 	animate(src.get_filter("motionblur"), y = 0, time = travel_time, flags = ANIMATION_PARALLEL)
 	animate(src, pixel_z = -1 * abs(sin(rotation))*4, pixel_x = (sin(rotation) * 20), time = travel_time, easing = LINEAR_EASING, flags = ANIMATION_PARALLEL)
 
+
+
 /obj/item/ego_weapon/ranged/pistol/tarnished
 	name = "Tears of the Tarnished Blood"
 	desc = "With contemplation, I shall darken the clear skies above; with my sacrifice, I shall exsanguinate my carnal blood upon this earth."
@@ -902,7 +904,7 @@
 	inhand_icon_state = "tarnished"
 	special = ""
 
-	force = 50
+	force = 40
 	damtype = PALE_DAMAGE
 	attack_speed = 1.0
 	swingstyle = WEAPONSWING_LARGESWEEP
@@ -924,7 +926,7 @@
 	alternate_fire_name = "Flower Burying Pin"
 	alternate_pellets = 1
 	alternate_shotsleft = 3
-	alternate_info = "This weapon fires a levinfall pin."
+	alternate_info = "This weapon fires a levinfall pin. Hitting a target will cause Red damage to the firer."
 	alternate_reload_type = RANGEDEGO_ALTERNATEFIRE_RELOADTYPE_SHARED_RELOAD
 	alternate_projectile_path = /obj/projectile/ego_bullet/tarnished_pin
 	alternate_fire_sound = 'sound/weapons/bowfire.ogg'

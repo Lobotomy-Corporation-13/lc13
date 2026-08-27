@@ -343,9 +343,13 @@
 	speed = 1.3
 	damage_type = WHITE_DAMAGE
 	var/lightning_damage = 50
+	var/user_damage = 15
 
 /obj/projectile/ego_bullet/tarnished_pin/on_hit(atom/target, blocked, pierce_hit)
 	..()
+	if(isliving(firer))
+		firer.deal_damage(user, RED_DAMAGE, firer, attack_type = (ATTACK_TYPE_SPECIAL))
+		new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(firer), pick(GLOB.alldirs))
 	sleep(10)
 	if(!isliving(target))
 		return
