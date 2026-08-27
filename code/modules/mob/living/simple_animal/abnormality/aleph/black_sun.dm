@@ -58,6 +58,8 @@
 
 	//Thank you Branch 12
 	for(var/mob/living/carbon/human/H in GLOB.player_list)
+		if(H.z != z)
+			continue
 		if(!H.sanity_lost)
 			H.adjustSanityLoss(500)
 		QDEL_NULL(H.ai_controller)
