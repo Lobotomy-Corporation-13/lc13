@@ -346,10 +346,10 @@
 	var/user_damage = 15
 
 /obj/projectile/ego_bullet/tarnished_pin/on_hit(atom/target, blocked, pierce_hit)
-	..()
 	if(isliving(firer))
-		firer.deal_damage(user, RED_DAMAGE, firer, attack_type = (ATTACK_TYPE_SPECIAL))
-		new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(firer), pick(GLOB.alldirs))
+		var/mob/living/L = firer
+		L.deal_damage(L, RED_DAMAGE, firer, attack_type = (ATTACK_TYPE_SPECIAL))
+		new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(L), pick(GLOB.alldirs))
 	sleep(10)
 	if(!isliving(target))
 		return
@@ -357,4 +357,5 @@
 	new /obj/effect/temp_visual/tbirdlightning (get_turf(L))
 	L.deal_damage(lightning_damage, WHITE_DAMAGE, firer, attack_type = (ATTACK_TYPE_SPECIAL))
 	playsound(src, 'sound/effects/impact_thunder.ogg', 50, FALSE, 40, falloff_distance = 10)
+	..()
 

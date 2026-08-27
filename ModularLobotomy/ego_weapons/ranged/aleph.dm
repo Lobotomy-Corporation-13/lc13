@@ -292,7 +292,7 @@
 		return ..()
 
 	var/mob/living/carbon/human/H = user
-	if(user.health < user.maxHealth * 0.5)
+	if(H.health < H.maxHealth * 0.5)
 		temporary_damage_multiplier = 1.5 // HP below half will increase damage by 1.5x
 	return ..()
 
@@ -936,7 +936,7 @@
 
 	alternate_fire_name = "Flower Burying Pin"
 	alternate_pellets = 1
-	alternate_shotsleft = 3
+	alternate_shotsleft = 5
 	alternate_info = "This weapon fires a levinfall pin. Hitting a target will cause Red damage to the firer."
 	alternate_reload_type = RANGEDEGO_ALTERNATEFIRE_RELOADTYPE_SHARED_RELOAD
 	alternate_projectile_path = /obj/projectile/ego_bullet/tarnished_pin
