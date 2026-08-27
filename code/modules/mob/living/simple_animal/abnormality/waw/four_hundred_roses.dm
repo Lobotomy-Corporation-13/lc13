@@ -108,6 +108,8 @@
 	attack_verb_simple = "bops"
 	attack_sound = 'sound/weapons/bite.ogg'
 	var/mob/living/simple_animal/hostile/abnormality/roses_waw/boss
+	var/list/vines = list()
+	var/blood_range = 5
 
 
 /mob/living/simple_animal/hostile/mini_roses/Move()
@@ -118,21 +120,106 @@
 
 /mob/living/simple_animal/hostile/mini_roses/Destroy()
 	boss = null
+	for(var/obj/structure/spreading/apple_vine/A in vines)
+		qdel(A)
+
+	vines = list()
 	..()
 
 /mob/living/simple_animal/hostile/mini_roses/Life()
 	. = ..()
+	if(prob(30))
+		switch(rand(1,3))
+			if(1)
+				BloodAOE()
+			if(2)
+				SpreadVines()
+			if(3)
+				BloodFire()
+
+	adjustBruteLoss(-5)
+
 	if(!boss)
 		return
 	boss.bloodfeast++
-	adjustBruteLoss(-5)
 
-//Meleeing the Roses gives you bleed
-/mob/living/simple_animal/hostile/mini_roses/attacked_by(obj/item/I, mob/living/user)
-	. = ..()
 
-	if(!user)
+/mob/living/simple_animal/hostile/mini_roses/proc/BloodAOE()
+	for(var/i = 1 to 4)
+		for(var/turf/T in range(i, src))
+			if(T in range(i - 1, src))
+				continue
+			new /obj/effect/temp_visual/cult/sparks(T)
+			for(var/mob/living/L in T)
+				L.apply_lc_bleed(3)
+		SLEEP_CHECK_DEATH(2)
+
+
+/mob/living/simple_animal/hostile/mini_roses/proc/SpreadVines()
+	for(var/turf/T in view(10, get_turf(src)))
+		if(prob(90))
+			continue	//Only spread a bit of vines
+		if(!isturf(T) || isspaceturf(T))
+			continue
+		if(locate(/obj/structure/spreading/apple_vine) in T)
+			continue
+		var/obj/structure/spreading/apple_vine/A = new(T)
+		vines += A
+
+//Blood Line attack
+/mob/living/simple_animal/hostile/mini_roses/proc/BloodFire()
+	var/list/blood_targets = list()
+	for(var/mob/living/H in view(8, src))
+		blood_targets += H
+	if(!length(blood_targets))
 		return
-	//It's waw level, fuck it.
-	user.apply_lc_bleed(3)
 
+	var/mob/living/L = pick(blood_targets)
+	var/turf/T = get_ranged_target_turf_direct(src, L, blood_range)
+	var/list/blood_turfs = getline(src, T) - get_turf(src)
+	BloodLine(src, blood_turfs, 15)
+
+/mob/living/simple_animal/hostile/mini_roses/proc/BloodLine(atom/source, list/turfs, damage)
+	can_act = FALSE
+	for(var/turf/T in turfs)
+		if(istype(T, /turf/closed))
+			break
+		new /obj/effect/roses_bleed(T)
+		SLEEP_CHECK_DEATH(1.5)
+		playsound(T, 'sound/effects/meatslap.ogg', 75, FALSE, 4)
+	can_act = TRUE
+
+
+//Ranged Counter
+/mob/living/simple_animal/hostile/mini_roses/bullet_act(obj/projectile/Proj)
+	..()
+	if(!ishuman(Proj.firer))
+		return
+	var/mob/living/carbon/human/H = Proj.firer
+	new /obj/effect/roses_bleed (get_turf(H))
+
+
+//Blood fall
+/obj/effect/roses_bleed
+	name = "rose warning"
+	desc = "A target warning you of incoming pain"
+	icon = 'icons/effects/blood.dmi'
+	icon_state = "itemblood"
+	move_force = INFINITY
+	pull_force = INFINITY
+	generic_canpass = FALSE
+	movement_type = PHASING | FLYING
+	var/lifetime = 1 SECONDS
+	layer = POINT_LAYER
+
+/obj/effect/roses_bleed/Initialize()
+	. = ..()
+	addtimer(CALLBACK(src, PROC_REF(explode)), lifetime)
+
+/obj/effect/roses_bleed/proc/explode()
+	playsound(get_turf(src), 'sound/magic/blind.ogg', 50, 0, 8)
+	new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(src), pick(GLOB.alldirs))
+	for(var/mob/living/L in get_turf(src))
+		L.apply_lc_bleed(8)
+		L.deal_damage(30, RED_DAMAGE, flags = (DAMAGE_FORCED))
+	qdel(src)
