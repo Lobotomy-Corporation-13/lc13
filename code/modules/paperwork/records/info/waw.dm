@@ -629,3 +629,15 @@
 		"When F-04-203 was fed enough by it's roses, it would cause Red Fragility and Bleed to all employees.")
 	abno_breach_damage_type = "Bleed"
 	abno_breach_damage_count = "High"
+
+//Ambling Pearl
+/obj/item/paper/fluff/info/waw/ambling_pearl
+	abno_type = /mob/living/simple_animal/hostile/abnormality/ambling_pearl
+	abno_code = "O-02-205"
+	abno_info = list(
+		"WARNING: O-02-205 excretes chemicals that are considered harmful to the human biologu.",
+		"Should these toxins build up in the body, L-Corporation offers you Anti-toxin at the cost of a handful of PE boxes.",
+		"When the work result was Normal, the Qliphoth Counter lowered at a low rate.",
+		"When the work result was Bad, the Qliphoth Counter lowered.")
+	abno_breach_damage_type = "Black/Poison"
+	abno_breach_damage_count = "Average/Low"
