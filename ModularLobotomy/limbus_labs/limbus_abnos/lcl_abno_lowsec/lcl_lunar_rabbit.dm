@@ -6,6 +6,7 @@
 	original_abno = /mob/living/simple_animal/hostile/abnormality/lunar_rabbit
 	maxHealth = 500
 	health = 500
+	gender = FEMALE
 	speed = 0.5 //Lower is faster. Every other LCL specimen leaves this at the default 1.
 	rapid_melee = 2
 	melee_damage_lower = 2

@@ -8,6 +8,7 @@
 	portrait = "der_freischutz"
 	maxHealth = 900
 	health = 900
+	gender = MALE
 	ranged = TRUE
 	minimum_distance = 10
 	retreat_distance = 2

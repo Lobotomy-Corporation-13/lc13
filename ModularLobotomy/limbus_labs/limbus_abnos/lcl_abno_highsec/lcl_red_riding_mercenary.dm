@@ -1,6 +1,7 @@
 /mob/living/simple_animal/hostile/limbus_abno/red_hood
 	maxHealth = 2400 // More health than standard
 	health = 2400 // Since she was apparently too easy to suppress
+	gender = FEMALE
 	rapid_melee = 2
 	speed = 0.5
 

@@ -10,6 +10,7 @@
 	original_abno = /mob/living/simple_animal/hostile/abnormality/despair_knight
 	maxHealth = 2000
 	health = 2000
+	gender = FEMALE
 	pixel_x = -8
 	base_pixel_x = -8
 	ranged = TRUE

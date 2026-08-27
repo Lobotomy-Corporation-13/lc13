@@ -22,6 +22,7 @@
 	original_abno = /mob/living/simple_animal/hostile/abnormality/hatred_queen
 	maxHealth = 3500
 	health = 3500
+	gender = FEMALE
 	damage_coeff = list(RED_DAMAGE = 0.7, WHITE_DAMAGE = 1.2, BLACK_DAMAGE = 0.3, PALE_DAMAGE = 1.5)
 	melee_damage_lower = 5 // The passive form barely melees. The dragon retunes this.
 	melee_damage_upper = 10

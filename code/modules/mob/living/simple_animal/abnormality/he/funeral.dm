@@ -15,6 +15,7 @@
 	del_on_death = FALSE
 	maxHealth = 1350 //I am a menace to society.
 	health = 1350
+	gender = MALE
 	blood_volume = 0
 
 	ranged = TRUE

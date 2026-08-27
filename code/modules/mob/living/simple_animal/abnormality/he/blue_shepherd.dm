@@ -17,6 +17,7 @@
 	base_pixel_x = -8
 	maxHealth = 1200
 	health = 1200
+	gender = MALE
 	rapid_melee = 2
 	move_force = MOVE_FORCE_NORMAL + 1 //I couldn't make it the same as the normal move_force_strong without shepherd pushing tables which looked weird
 	threat_level = HE_LEVEL

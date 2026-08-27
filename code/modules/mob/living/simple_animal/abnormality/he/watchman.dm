@@ -8,6 +8,7 @@
 	del_on_death = TRUE
 	maxHealth = 1200
 	health = 1200
+	gender = MALE
 	rapid_melee = 2
 	move_to_delay = 6
 	damage_coeff = list(RED_DAMAGE = 1, WHITE_DAMAGE = 1.2, BLACK_DAMAGE = 0.5, PALE_DAMAGE = 2)

@@ -13,6 +13,7 @@
 	speak_emote = list("honks")
 	maxHealth = 1800
 	health = 1800
+	gender = MALE
 	rapid_melee = 4
 	melee_queue_distance = 4
 	damage_coeff = list(BRUTE = 1.0, RED_DAMAGE = 1.0, WHITE_DAMAGE = 1.0, BLACK_DAMAGE = 1.3, PALE_DAMAGE = 1.5)

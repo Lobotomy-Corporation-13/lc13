@@ -15,6 +15,7 @@
 	minimum_distance = 2
 	maxHealth = 2000
 	health = 2000
+	gender = FEMALE
 	damage_coeff = list(RED_DAMAGE = 1.2, WHITE_DAMAGE = 1.0, BLACK_DAMAGE = 0.8, PALE_DAMAGE = 0.5)
 	stat_attack = HARD_CRIT
 	del_on_death = FALSE
