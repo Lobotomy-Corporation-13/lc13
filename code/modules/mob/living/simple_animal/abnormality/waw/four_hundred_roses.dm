@@ -169,7 +169,7 @@
 //Blood Line attack
 /mob/living/simple_animal/hostile/mini_roses/proc/BloodFire()
 	var/list/blood_targets = list()
-	for(var/mob/living/H in view(8, src))
+	for(var/mob/living/carbon/human/H in view(8, src))
 		blood_targets += H
 	if(!length(blood_targets))
 		return
