@@ -61,7 +61,7 @@
 
 //Here's the shell stamina mechanics.
 /mob/living/simple_animal/hostile/abnormality/ambling_pearl/bullet_act(obj/projectile/Proj)
-	..()
+	. = ..()
 	if(shell_stamina)
 		shell_stamina --
 	else
@@ -80,7 +80,7 @@
 /mob/living/simple_animal/hostile/abnormality/ambling_pearl/Move()
 	if(shell_opened)
 		return FALSE
-	..()
+	return ..()
 
 
 /mob/living/simple_animal/hostile/abnormality/ambling_pearl/proc/OpenShell()
@@ -115,7 +115,7 @@
 			PoisonAOE()
 		Vomit(target)
 		return
-	..()
+	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/ambling_pearl/OpenFire()
 	if(shell_opened)
