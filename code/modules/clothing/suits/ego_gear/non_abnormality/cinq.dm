@@ -26,7 +26,7 @@
 	icon_state = "cinq"
 
 /obj/item/clothing/neck/ego_neck/cinq
-	neck = "cinq association cape"
+	name = "cinq association cape"
 	desc = "A cape worn by fixers of the cinq association."
 	icon_state = "cinq"
 
