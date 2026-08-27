@@ -10,6 +10,7 @@
 	portrait = "white_lake"
 	maxHealth = 600
 	health = 600
+	gender = FEMALE
 	threat_level = HE_LEVEL
 	work_chances = list(
 		ABNORMALITY_WORK_INSTINCT = 0,

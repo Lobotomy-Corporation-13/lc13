@@ -8,6 +8,7 @@
 	portrait = "eris"
 	maxHealth = 1100
 	health = 1100
+	gender = FEMALE
 	ranged = TRUE
 	attack_verb_continuous = "claws"
 	attack_verb_simple = "claw"
