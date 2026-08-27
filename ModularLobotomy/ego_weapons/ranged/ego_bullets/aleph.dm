@@ -343,7 +343,6 @@
 	speed = 1.3
 	damage_type = WHITE_DAMAGE
 	projectile_piercing = PASSMOB
-	projectile_phasing = (ALL & (~PASSMOB) & (~PASSCLOSEDTURF))
 	var/lightning_damage = 50
 	var/user_damage = 15
 
