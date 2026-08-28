@@ -335,13 +335,13 @@
 	for(var/mob/living/carbon/human/H in GLOB.mob_list)
 		if(H.z != z)
 			continue
+		to_chat(H, span_userdanger("All that is shall become all that isn't."))
 		var/damage = H.health
-		H.adjustBruteLoss(-H.maxHealth+40)
-		H.adjustBruteLoss(damage+40)
+		H.adjustBruteLoss(-H.maxHealth)
+		H.adjustBruteLoss(damage)
 		damage = H.sanityhealth
 		H.adjustSanityLoss(-H.maxSanity)
 		H.adjustSanityLoss(damage)
-		to_chat(H, span_userdanger("All that is shall become all that isn't."))
 
 
 /mob/living/simple_animal/hostile/abnormality/yin/proc/MoveDragon(obj/effect/yinyang_dragon/DP, list/path = list())
