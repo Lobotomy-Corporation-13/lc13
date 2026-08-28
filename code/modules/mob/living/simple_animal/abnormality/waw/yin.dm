@@ -332,7 +332,7 @@
 
 
 /mob/living/simple_animal/hostile/abnormality/yin/proc/DragonDamage()
-	for(var/mob/living/carbon/human/H in GLOB.mob_list)
+	for(var/mob/living/carbon/human/H as anything in GLOB.human_list)
 		if(H.z != z)
 			continue
 		to_chat(H, span_userdanger("All that is shall become all that isn't."))
