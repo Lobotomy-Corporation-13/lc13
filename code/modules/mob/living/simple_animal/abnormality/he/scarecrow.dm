@@ -91,7 +91,7 @@
 		blitz--
 		return
 
-	if(prob(90))
+	if(prob(70))
 		return
 	for(var/i in 1 to 3)
 		new /obj/effect/hedge_warning(get_turf(target))
@@ -99,7 +99,7 @@
 
 /mob/living/simple_animal/hostile/abnormality/scarecrow/proc/BlitzBuff()
 	health *= 0.8
-	var/duration = 3 SECONDS
+	var/duration = 10 SECONDS
 	TemporarySpeedChange(-1.4, duration)
 
 /mob/living/simple_animal/hostile/abnormality/scarecrow/AttackingTarget(atom/attacked_target)
@@ -186,6 +186,10 @@
 
 /obj/effect/hedge_warning/proc/explode()
 	playsound(get_turf(src), 'sound/creatures/venus_trap_hit.ogg', 50, 0, 8)
+	if(locate/obj/structure/fluff/hedge/opaque/scarecrow) in get_turf(src))
+		for(var/obj/structure/fluff/hedge/opaque/scarecrow/existing in get_turf(src))
+			qdel(existing)
+
 	new /obj/structure/fluff/hedge/opaque/scarecrow(get_turf(src))
 	for(var/mob/living/H in get_turf(src))
 		H.deal_damage(boom_damage, BLACK_DAMAGE, src, flags = (DAMAGE_FORCED | DAMAGE_UNTRACKABLE), attack_type = (ATTACK_TYPE_SPECIAL))
