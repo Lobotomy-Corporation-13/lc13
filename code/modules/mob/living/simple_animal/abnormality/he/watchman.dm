@@ -125,7 +125,7 @@
 /mob/living/simple_animal/hostile/abnormality/watchman/Life()
 	. = ..()
 	if(beneficial)
-		for(var/mob/living/carbon/human/H in view(8, get_turf(src))
+		for(var/mob/living/carbon/human/H in view(8, get_turf(src)))
 			H.apply_lc_black_strength(4)
 			H.adjustSanityLoss(-2)
 
@@ -141,7 +141,7 @@
 /// ======================SPEECH CODE======================
 /mob/living/simple_animal/hostile/abnormality/watchman/attacked_by(obj/item/I, mob/living/user)
 	. = ..()
-	if(is_human(user))
+	if(ishuman(user))
 		beneficial = FALSE
 	user.apply_lc_fragile(3)
 	if(speak_chance)
