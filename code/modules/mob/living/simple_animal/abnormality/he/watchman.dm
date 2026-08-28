@@ -24,9 +24,9 @@
 	threat_level = HE_LEVEL
 	start_qliphoth = 3
 	work_chances = list(
-		ABNORMALITY_WORK_INSTINCT = 40,
+		ABNORMALITY_WORK_INSTINCT = 45,
 		ABNORMALITY_WORK_INSIGHT = 60,
-		ABNORMALITY_WORK_ATTACHMENT = 40,
+		ABNORMALITY_WORK_ATTACHMENT = 45,
 		ABNORMALITY_WORK_REPRESSION = 10,
 	)
 	work_damage_amount = 7
@@ -93,6 +93,9 @@
 		"Never should have come here!",
 		"This darkness is not for you and you alone, monster!",
 	)
+
+	var/beneficial = TRUE
+
 	// Breached Abno tracker.
 	// Remembers enemies by their tag.
 	var/list/dangers = list()
@@ -123,9 +126,29 @@
 	set_light(30)	//Makes everything around it really dark, That's all it does lol
 
 
+
+//Applies buffs if he's breached and you're near him
+/mob/living/simple_animal/hostile/abnormality/watchman/Life()
+	. = ..()
+	if(beneficial)
+		for(var/mob/living/carbon/human/H in view(8, get_turf(src))
+			H.apply_lc_black_strength(4)
+			H.adjustSanityLoss(-2)
+
+
+
+/mob/living/simple_animal/hostile/abnormality/watchman/bullet_act(obj/projectile/Proj)
+	..()
+	if(!ishuman(Proj.firer))
+		return
+	beneficial = FALSE
+
+
 /// ======================SPEECH CODE======================
 /mob/living/simple_animal/hostile/abnormality/watchman/attacked_by(obj/item/I, mob/living/user)
 	. = ..()
+	if(is_human(user))
+		beneficial = FALSE
 	user.apply_lc_fragile(3)
 	if(speak_chance)
 		if(prob(speak_chance*2))
