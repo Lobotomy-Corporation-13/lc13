@@ -313,7 +313,7 @@
 			continue
 		to_chat(H, span_userdanger("The Laws of the Universe are in Chaos!"))		//Exdeath's Grand Cross text.
 
-	for(var/mob/living/simple_animal/hostile/abnormality/A in GLOB.abnormality_mob_list)
+	for(var/mob/living/simple_animal/hostile/abnormality/A as anything in GLOB.abnormality_mob_list)
 		if(!A.datum_reference.current)
 			continue
 		var/qlip = A.datum_reference.qliphoth_meter
