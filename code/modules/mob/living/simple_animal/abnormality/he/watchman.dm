@@ -24,9 +24,9 @@
 	threat_level = HE_LEVEL
 	start_qliphoth = 3
 	work_chances = list(
-		ABNORMALITY_WORK_INSTINCT = 45,
-		ABNORMALITY_WORK_INSIGHT = 60,
-		ABNORMALITY_WORK_ATTACHMENT = 45,
+		ABNORMALITY_WORK_INSTINCT = 35,
+		ABNORMALITY_WORK_INSIGHT = 50,
+		ABNORMALITY_WORK_ATTACHMENT = 35,
 		ABNORMALITY_WORK_REPRESSION = 10,
 	)
 	work_damage_amount = 7
@@ -110,12 +110,6 @@
 	if(prob(30))
 		datum_reference.qliphoth_change(-1)
 	return
-
-/mob/living/simple_animal/hostile/abnormality/watchman/WorkChance(mob/living/carbon/human/user, chance)
-	if(get_attribute_level(user, TEMPERANCE_ATTRIBUTE) >= 60)
-		var/newchance = chance - 20 //You suck, die. I hate you
-		return newchance
-	return chance
 
 /mob/living/simple_animal/hostile/abnormality/watchman/PostWorkEffect(mob/living/carbon/human/user, work_type, pe, work_time)
 	user.hallucination += 20	//You're gonna be hallucinating for a while
