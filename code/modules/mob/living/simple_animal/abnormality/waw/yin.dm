@@ -311,7 +311,7 @@
 	for(var/mob/living/carbon/human/H in GLOB.mob_list)
 		if(H.z != z)
 			continue
-		H.to_chat(span_userdanger("The Laws of the Universe are in Chaos!"))	//Exdeath's Grand Cross text.
+		to_chat(H, span_userdanger("The Laws of the Universe are in Chaos!"))		//Exdeath's Grand Cross text.
 
 	for(var/mob/living/simple_animal/hostile/abnormality/A in GLOB.abnormality_mob_list)
 		if(!A.datum_reference.current)
@@ -335,13 +335,13 @@
 	for(var/mob/living/carbon/human/H in GLOB.mob_list)
 		if(H.z != z)
 			continue
-		var/damage = L.health
-		H.adjustBruteLoss(-L.maxHealth+40)
+		var/damage = H.health
+		H.adjustBruteLoss(-H.maxHealth+40)
 		H.adjustBruteLoss(damage+40)
 		damage = H.sanityhealth
 		H.adjustSanityLoss(-H.maxSanity)
 		H.adjustSanityLoss(damage)
-		to_chat(L, span_userdanger("All that is shall become all that isn't."))
+		to_chat(H, span_userdanger("All that is shall become all that isn't."))
 
 
 /mob/living/simple_animal/hostile/abnormality/yin/proc/MoveDragon(obj/effect/yinyang_dragon/DP, list/path = list())
