@@ -156,7 +156,7 @@
 	for(var/turf/T in view(10, get_turf(src)))
 		if(prob(90))
 			continue	//Only spread a bit of vines
-		if(!isturf(T) || isspaceturf(T))
+		if(isspaceturf(T))
 			continue
 		if(locate(/obj/structure/spreading/apple_vine) in T)
 			continue
