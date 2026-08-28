@@ -186,7 +186,7 @@
 
 /obj/effect/hedge_warning/proc/explode()
 	playsound(get_turf(src), 'sound/creatures/venus_trap_hit.ogg', 50, 0, 8)
-	if(locate/obj/structure/fluff/hedge/opaque/scarecrow) in get_turf(src))
+	if(locate(/obj/structure/fluff/hedge/opaque/scarecrow) in get_turf(src))
 		for(var/obj/structure/fluff/hedge/opaque/scarecrow/existing in get_turf(src))
 			qdel(existing)
 
