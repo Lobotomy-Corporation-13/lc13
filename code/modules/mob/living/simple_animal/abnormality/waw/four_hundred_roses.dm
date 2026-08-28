@@ -120,10 +120,7 @@
 
 /mob/living/simple_animal/hostile/mini_roses/Destroy()
 	boss = null
-	for(var/obj/structure/spreading/apple_vine/A in vines)
-		qdel(A)
-
-	vines = list()
+	QDEL_LIST(vines)
 	..()
 
 /mob/living/simple_animal/hostile/mini_roses/Life()
