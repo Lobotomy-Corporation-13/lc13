@@ -29,11 +29,11 @@
 	observation_prompt = "This here's ma turf. Here folks play by ma rules, or else!<br>\
 	Lets play rock, paper, scissors!<br> I'll go fer scissors. how 'bout you?"
 	observation_choices = list(
-		"Play rock" = list(FALSE, "You felt like you ought to win here... The abnormality stared up at your balled up fist.<br>You Lose."
+		"Play rock" = list(FALSE, "You felt like you ought to win here... The abnormality stared up at your balled up fist.<br>You Lose."),
 		"Play paper" = list(TRUE, "The abnormality stares into your open palm and goes sulky...<br> You win. Scissors are only useful when cloth's around.<br>\
-		Here. a prize dolly made wiv scissors and cloth."
+		Here. a prize dolly made wiv scissors and cloth."),
 		"Play scissors" = list(FALSE, "Looking at your matching shaped hands the abnormality grew upset...<br> A draw? did you think I wouldnt play scissors?<br>\
-		I dont play with folks who dont trust me."
+		I dont play with folks who dont trust me."),
 	)
 	var/janken = 0			//0 for scissors, 1 for Rock, 2 for paper
 	var/player = 0			//0 for scissors, 1 for Rock, 2 for paper

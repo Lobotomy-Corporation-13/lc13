@@ -43,7 +43,7 @@
 
 	observation_prompt = "You struggle through the containment chamber, a thick opressing pale haze obstructs every sense, you reach the source of the haze lighter in hand."
 	observation_choices = list(
-	"Light the candles" = list(TRUE, "You light the scented candles around the abnormality, the fog in the room parts revealing the caterpillar asleep...<br>The room smells like flowers..."
+	"Light the candles" = list(TRUE, "You light the scented candles around the abnormality, the fog in the room parts revealing the caterpillar asleep...<br>The room smells like flowers..."),
 	)
 
 	var/darts_smoked	//how many times you didnt' work repression

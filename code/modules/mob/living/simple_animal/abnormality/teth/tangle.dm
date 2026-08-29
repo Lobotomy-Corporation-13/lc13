@@ -33,10 +33,12 @@
 	gift_type =  /datum/ego_gifts/rapunzel
 	abnormality_origin = ABNORMALITY_ORIGIN_WONDERLAB
 
-	observation_prompt = "As you enter the chamber, knotted golden hair grows constantly around you constricting your movement. A colourful hairbrush is hanging from the wall... <br> In the distance, you hear a faint voice counting.. <br>/
+	observation_prompt = "As you enter the chamber, knotted golden hair grows constantly around you constricting your movement. A colourful hairbrush is hanging from the wall... <br>\
+	 In the distance, you hear a faint voice counting.. <br>"
 	observation_choices = list(
-	"Cut the hair constricting you" = list(TRUE, "You sever the knots of hair constricting you as you continue forward to the work console. <br> On one of the cut locks of hair you find a bow. </br>")
-	"Use the brush to untangle the hair" = list(FALSE, "As you reach for the brush the abnormality grabs you, dragging you in to the mass of hair before continuing to count.. <br> 4985... 4986...")
+	"Cut the hair constricting you" = list(TRUE, "You sever the knots of hair constricting you as you continue forward to the work console. <br>\
+	 On one of the cut locks of hair you find a bow."),
+	"Use the brush to untangle the hair" = list(FALSE, "As you reach for the brush the abnormality grabs you, dragging you in to the mass of hair before continuing to count.. <br> 4985... 4986..."),
 		)
 	var/chosen
 	var/instinct_count

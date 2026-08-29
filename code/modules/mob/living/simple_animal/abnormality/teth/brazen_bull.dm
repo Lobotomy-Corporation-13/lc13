@@ -47,12 +47,12 @@
 	Please! I need water! Wont anyone give me water to drink?"
 	observation_choices = list(
 	"Give Water" = list(TRUE, "You pour some water into the mouth, only for it to immediately burst into steam<br>\
-	Its scorching body wont allow a single drop in..."
+	Its scorching body wont allow a single drop in..."),
 	"Don't give water" = list(TRUE, "Unable to even lift its body, the bull lets out a great bellow.<br>\
-	It is a sorrowful wail that brings a tear to your eye..."
+	It is a sorrowful wail that brings a tear to your eye..."),
 	"Drink water" = list(FALSE, "It seems a bit pointless to pour water in there.<br>\
 	You drink the water, giving you a respite from the sweltering heat. The bull roars in despair<br>\
-	Before you finish your thought, the bull begins to charge in your direction."
+	Before you finish your thought, the bull begins to charge in your direction."),
 	)
 	abnormality_origin = ABNORMALITY_ORIGIN_LIMBUS
 
