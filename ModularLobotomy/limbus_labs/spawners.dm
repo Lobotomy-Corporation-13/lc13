@@ -30,8 +30,6 @@ GLOBAL_LIST_INIT(available_low_sec_abno, list(
 	//mob/living/simple_animal/hostile/limbus_abno/pbird,
 		//Caused SIGNIFICANT issues during multiple rounds. Keeping it in prefrences in case we fix it. - Kitsunemitsu
 	//mob/living/simple_animal/hostile/limbus_abno/lunar_rabbit,
-		//This Abno is fucked, and until it's chem list gets changed, and doesn't require either admin intervention, or cooperation of the player, It is disabled.
-		//A handful of things it can do: EMP, Explosions, Uncurable toxins and infinite mutations - Kitsunemitsu
 ))
 
 GLOBAL_LIST_INIT(available_high_sec_abno, list(
