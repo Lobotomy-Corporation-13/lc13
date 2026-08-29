@@ -35,7 +35,7 @@
 		)
 	diet_list = list(
 		/obj/item/food/grown/poppy,
-		/obj/item/food/grown/sunflower,
+		/obj/item/grown/sunflower,
 		/obj/item/food/grown/harebell) //flowers because butterfly and funeral.
 	diet_value = 20 //i don't think this matters but letting the players fill their bars is good for visual satisfaction
 	desire_loss = 15

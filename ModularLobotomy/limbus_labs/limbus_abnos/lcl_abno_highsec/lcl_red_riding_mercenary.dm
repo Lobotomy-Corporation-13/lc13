@@ -50,14 +50,14 @@
 		/obj/item/food/donut,
 		/obj/item/food/muffin,
 		/obj/item/food/cookie,
-		/obj/item/food/cake //past here references the grimm brothers version specifically
-		/obj/item/food/cakeslice
+		/obj/item/food/cake, //past here references the grimm brothers version specifically
+		/obj/item/food/cakeslice,
 		/obj/item/reagent_containers/food/drinks/bottle/wine //I don't know how attainable this actually is
 		) //finish this
 	liked_objects_list = list( //taking away the chair since there's only 4 on the map and you can't make more
 		/obj/item/food/grown/harebell, //flowers since in the original tale she picked a bouqette for grandma
 		/obj/item/food/grown/poppy,
-		/obj/item/food/grown/sunflower,
+		/obj/item/grown/sunflower,
 		/obj/item/stack/sheet/leather)
 	liked_objects_value = 0.5 //hopefully this is small enough to prevent her from being ignorable
 	desire_active = TRUE
@@ -67,7 +67,7 @@
 	desire_on_talk = 1
 	desire_on_pet = -30 //do not the Little Red
 	rep_desire_gain = 0.2 //relatively ineffective but there is some amount of success rate
-	rep_threshold = ((maxHealth * 3) / 4) // if it goes beyond sparring (75% health) you'll piss her off
+	rep_threshold = 1800 // if it goes beyond sparring (around 75% health) you'll piss her off
 	rep_desire_loss_at_threshold = 20
 
 
