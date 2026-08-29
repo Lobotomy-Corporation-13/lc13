@@ -88,7 +88,8 @@
 		icon_state = "big_wolf[alt_stuff]"
 		pixel_x = initial(pixel_x)
 		base_pixel_x = initial(base_pixel_x)
-		if(length(contents))
+		var/L = locate(/mob/living/carbon/human) in contents
+		if(L)
 			icon_state = "wolf_full[alt_stuff]"
 	else
 		icon = 'ModularLobotomy/_Lobotomyicons/96x64.dmi'
@@ -117,7 +118,8 @@
 |Fun|
 \--*/
 /mob/living/simple_animal/hostile/limbus_abno/big_wolf/ShowEmotion(emotion)
-	if(IsContained() && !length(contents))
+	var/L = locate(/mob/living/carbon/human) in contents
+	if(IsContained() && !L)
 		var/alt_stuff = fluffy ? "_alt" : ""
 		switch(emotion)
 			if("abno_wave")
@@ -195,11 +197,12 @@
 	ADD_TRAIT(L, TRAIT_IMMOBILIZED, type)
 	ADD_TRAIT(L, TRAIT_HANDS_BLOCKED, type)
 	L.adjustBruteLoss(-maxHealth * 0.2)
-	if(!L.client)
-		dropHardClothing(L, get_turf(L))
-		qdel(L)
-	else
-		L.forceMove(src)
+	// if(!L.client)
+	// 	dropHardClothing(L, get_turf(L))
+	// 	qdel(L)
+	// else
+	// 	L.forceMove(src)
+	L.forceMove(src)
 	AdjustHunger(20)
 	update_icon()
 	return TRUE
@@ -267,6 +270,7 @@
 	cooldown_time = 5 SECONDS
 
 /datum/action/cooldown/limbus_abno_action/vomit_employee/IsAvailable()
+	var/L = locate(/mob/living/carbon/human) in abno_user.contents
 	. = ..()
 	if(!.)
 		return .
@@ -276,11 +280,14 @@
 		return FALSE
 	if(length(abno_user.contents) < 1 || length(abno_user.contents) >= 3)
 		return FALSE
+	if(!L)
+		return FALSE
 
 /datum/action/cooldown/limbus_abno_action/vomit_employee/Trigger()
 	. = ..()
 	if(!.)
 		return .
 	var/mob/living/simple_animal/hostile/limbus_abno/big_wolf/B = abno_user
-	B.SpewStomach()
 	StartCooldown()
+	B.SpewStomach()
+
