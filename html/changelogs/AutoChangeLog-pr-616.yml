@@ -1,0 +1,5 @@
+author: "neadsy"
+delete-after: True
+changes:
+  - rscadd: "Final Observations for Abnos missing them"
+  - rscadd: "Abnochem \"Wrath\" for brazen bull"
