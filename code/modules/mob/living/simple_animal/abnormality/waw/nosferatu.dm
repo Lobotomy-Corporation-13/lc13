@@ -10,6 +10,7 @@
 	portrait = "nosferatu"
 	maxHealth = 2000
 	health = 2000
+	gender = MALE
 	move_to_delay = 6
 	rapid_melee = 1
 	threat_level = WAW_LEVEL
