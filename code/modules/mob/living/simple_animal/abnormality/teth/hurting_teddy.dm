@@ -53,13 +53,13 @@
 
 	abnormality_origin = ABNORMALITY_ORIGIN_LIMBUS
 
-	observation_prompt = "A teddy bear suffers from having nails lodged into its body.<br>The bloodstains decorating it are a telling sign of all the time it spent in pain.<br>\
-		The holes where its eyes should be are empty. Nothing but dry red marks remain inside.<br>\
-		In spite of that, it stands with its arms wide, endeavoring to fulfill its duty of giving hugs."
+	observation_prompt = "A teddy bear suffers from having nails lodged into its body.<br>Blood is soaked into the exposed cotton.<br>\
+		Its hollow eyes stare back at you, lined with red stained fur.<br>\
+		In spite of that, its arms are open wide preparing to give you an embrace."
 	observation_choices = list(
-		"Remove the nails" = list(TRUE, "You removed the nails from the teddy bear, blood pours out from its wounds.<br>\
-			Once the plush finished its copious exudation, all that remained inside...<br> was an empty void."),
-		"Bandage its wounds" = list(TRUE, "You applied the bandages to all the holes in its chest.<br>Blood leaks out and saturates them within seconds as they begin to peel off..."),
+		"Accept the embrace" = list(TRUE, "The abnormality embraces you coldly, it's blood stained nails digging into your skin. the soaked cotton staining your uniform..."),
+		"Bandage its wounds" = list(FALSE, "The dressings on the abnormality saturate before falling off.<br>\
+		It stands with its arms wide open blood tinged cotton growing a darker and darker shade of crimson"),
 	)
 	var/bearfriended //the one who can work on it safely
 	var/mob/living/carbon/human/hug_victim = null
