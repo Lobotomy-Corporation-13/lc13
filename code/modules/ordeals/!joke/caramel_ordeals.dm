@@ -1,9 +1,9 @@
 // Dawn
 /datum/ordeal/simplespawn/caramel_noon
 	name = "The Noon of Caramel"
-	flavor_name = "500 Feral Hogs"
-	announce_text = "The Reception of 500 Feral Hogs"
-	end_announce_text = "Holy shit that's a lot of hogs."
+	flavor_name = "Ordeal of 500 Feral Hogs"
+	announce_text = "Holy shit that's a lot of hogs."
+	end_announce_text = "Charlie here, 500 feral hogs been slain. Over and out."
 	level = 2
 	reward_percent = 0.15
 	announce_sound = 'sound/effects/ordeals/amber_start.ogg'

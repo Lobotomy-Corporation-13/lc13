@@ -1,6 +1,5 @@
 // Holidays
 
-
 // April Fools
 /datum/ordeal/simplespawn/salmon_dawn
 	name = "The Dawn of Salmon"

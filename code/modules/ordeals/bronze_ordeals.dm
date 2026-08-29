@@ -7,8 +7,8 @@
 	end_announce_text = "These reflections are merely twisted forms of the soul dreamt by those who are nothing."
 	level = 1
 	reward_percent = 0.1
-	announce_sound = 'sound/effects/ordeals/bronze_start.ogg'
-	end_sound = 'sound/effects/ordeals/bronze_end.ogg'
+	announce_sound = 'sound/effects/ordeals/brown_start.ogg'
+	end_sound = 'sound/effects/ordeals/brown_end.ogg'
 	color = "#CD7F32"
 	var/spawn_places = 6
 	var/spawn_amount = 2
@@ -61,8 +61,8 @@
 	end_announce_text = "It is pointless to waste your time on those whose path has ended."
 	level = 2
 	reward_percent = 0.15
-	announce_sound = 'sound/effects/ordeals/bronze_start.ogg'
-	end_sound = 'sound/effects/ordeals/bronze_end.ogg'
+	announce_sound = 'sound/effects/ordeals/brown_start.ogg'
+	end_sound = 'sound/effects/ordeals/brown_end.ogg'
 	color = "#CD7F32"
 	potential_types = list(
 		/mob/living/simple_animal/hostile/ordeal/sin_gluttony/noon,
