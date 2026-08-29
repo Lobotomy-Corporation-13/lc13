@@ -60,7 +60,7 @@
 	"Remove the nails" = list(TRUE, "You removed the nails from the teddy bear, blood pours out from its wounds.<br>\
 	Once the plush finished its copious exudation, all that remained inside...<br> was an empty void."
 	"Bandage its wounds" = list(TRUE, "You applied the bandages to all the holes in its chest.<br>Blood leaks out and saturates them within seconds as they begin to peel off..."
-
+	)
 	var/bearfriended //the one who can work on it safely
 	var/mob/living/carbon/human/hug_victim = null
 	var/release_threshold = 100 //Total raw damage needed to break a player out of a grab (from any source)

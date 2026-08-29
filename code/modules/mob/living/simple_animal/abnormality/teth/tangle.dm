@@ -37,6 +37,7 @@
 	observation_choices = list(
 	"Cut the hair constricting you" = list(TRUE, "You sever the knots of hair constricting you as you continue forward to the work console. <br> On one of the cut locks of hair you find a bow. </br>")
 	"Use the brush to untangle the hair" = list(FALSE, "As you reach for the brush the abnormality grabs you, dragging you in to the mass of hair before continuing to count.. <br> 4985... 4986...")
+		)
 	var/chosen
 	var/instinct_count
 
