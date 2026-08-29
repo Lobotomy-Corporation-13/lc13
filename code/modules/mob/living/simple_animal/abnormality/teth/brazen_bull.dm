@@ -45,7 +45,7 @@
 	observation_prompt = "The containment chamber is swelteringly hot, sorrowful wails echo across the containment chamber.<br> Wont anyone give me water! Someone help me!"
 	observation_choices = list(
 		"Give Water" = list(TRUE, "As you pour the water in the mouth of the bull, it evaporates into steam instantly, the bull is still wailing for water...<br>\
-		But you know that'll never happen..."),
+		But you know that it will never get what it desires..."),
 	)
 	abnormality_origin = ABNORMALITY_ORIGIN_LIMBUS
 
