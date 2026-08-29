@@ -306,35 +306,24 @@
 // container's copy of the reagent is affected). Hosted by a lightweight handler datum
 // owned by the abno; the held container is read fresh each refresh.
 
-// The reagents the Dispensary can produce. Mirrors the standard chem dispenser's base
-// dispensable_reagents list (code/modules/reagents/chemistry/machinery/chem_dispenser.dm),
-// so she can only make what a normal chem dispenser can. Keep in sync if that list changes.
+// The reagents the Dispensary can produce.
+// Changed to LC13's chemicals to be less destructive.
 GLOBAL_LIST_INIT(lunar_dispensary_reagent_types, list(
-	/datum/reagent/aluminium,
-	/datum/reagent/bromine,
-	/datum/reagent/carbon,
-	/datum/reagent/chlorine,
-	/datum/reagent/copper,
-	/datum/reagent/consumable/ethanol,
-	/datum/reagent/fluorine,
-	/datum/reagent/hydrogen,
-	/datum/reagent/iodine,
-	/datum/reagent/iron,
-	/datum/reagent/lithium,
-	/datum/reagent/mercury,
-	/datum/reagent/nitrogen,
-	/datum/reagent/oxygen,
-	/datum/reagent/phosphorus,
-	/datum/reagent/potassium,
-	/datum/reagent/uranium/radium,
-	/datum/reagent/silicon,
-	/datum/reagent/sodium,
-	/datum/reagent/stable_plasma,
-	/datum/reagent/consumable/sugar,
-	/datum/reagent/sulfur,
-	/datum/reagent/toxin/acid,
-	/datum/reagent/water,
-	/datum/reagent/fuel,
+	/datum/reagent/oxalite,
+	/datum/reagent/hydrene,
+	/datum/reagent/xenotride,
+	/datum/reagent/lithene,
+	/datum/reagent/ferroxan,
+	/datum/reagent/virothane,
+	/datum/reagent/synthryl,
+	/datum/reagent/purite,
+	/datum/reagent/omnicarbide,
+	/datum/reagent/velocium,
+	/datum/reagent/cryostraline,
+	/datum/reagent/nexalite,
+	/datum/reagent/thermate,
+	/datum/reagent/verdite,
+	/datum/reagent/ionovium,
 	/datum/reagent/drug/enkephalin,
 ))
 
