@@ -41,7 +41,7 @@
 		/obj/item/food/meat, /obj/structure/chair/wood,
 		/obj/item/food/grown/harebell, /obj/item/stack/sheet/leather,
 		)
-	liked_objects_value = 5
+	liked_objects_value = 5 // I'm not going to touch this yet but it might need to be lowered.
 	diet_list = list(/obj/item/organ, /obj/item/food/meat, /obj/item/bodypart)
 	hunger_loss = 10
 	kickstart_timer = 5 MINUTES
@@ -49,7 +49,7 @@
 	diet_value  = 30
 	desire_on_eat = 10
 	desire_on_pet = 5
-	rep_desire_gain = -5
+	rep_desire_gain = -2 //repression desire gain/loss is per point of damage, -5 was enough for most researcher weapons to instantly tank desire
 	max_counter = 2
 	counter = 2
 
