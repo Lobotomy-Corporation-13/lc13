@@ -7,6 +7,7 @@
 	portrait = "galaxy_child"
 	maxHealth = 650
 	health = 650
+	gender = MALE
 	threat_level = HE_LEVEL
 	start_qliphoth = 5
 	work_chances = list(

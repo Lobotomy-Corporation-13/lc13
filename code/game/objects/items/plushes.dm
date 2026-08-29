@@ -31,7 +31,7 @@
 /obj/item/toy/plush/handle_atom_del(atom/A)
 	if(A == grenade)
 		grenade = null
-	..()
+	return ..()
 
 /obj/item/toy/plush/attack_self(mob/user)
 	. = ..()
@@ -446,13 +446,9 @@
 	gender = FEMALE
 
 /obj/item/toy/plush/don/attack_self(mob/user)
-	..()
-	icon_state = "don_yahoo"
-	addtimer(CALLBACK(src, PROC_REF(sprite_return)), 3 SECONDS)
-
-//So you can make her yahoo again
-/obj/item/toy/plush/don/proc/sprite_return(mob/user)
-	icon_state = "don"
+	. = ..()
+	//Yahoo!
+	flick("don_yahoo", src)
 
 /obj/item/toy/plush/ryoshu
 	name = "ryoshu plushie"
@@ -585,7 +581,108 @@
 	name = "plushie blank"
 	desc = "A humanoid plush that had been freshly made or stripped down to its cloth. Despite its lack of identity, the mere aknowelegement of this plushie makes it unique."
 	icon_state = "blank"
+	var/list/additions = list(
+		"hair" = "none",
+		"hair_color" = 0,
+		"eyes" = "none",
+		"eye_color" = 0,
+		"suit" = "none",
+		"accessory1" = "none",
+		"accessory2" = "none")
+	var/list/stylish_fit = list()
+	var/customizable = TRUE
 
+	//Customization Options
+	//If the suit or accesory icon is mispelled a purple ? will show instead.
+	var/list/avaliable_eyes = list(
+		"stitch","full","squint","dot","closed")
+	var/list/avaliable_hair = list(
+		"none","yuri","samjo","yisang","faust","don",
+		"ryoshu","mersault","honglu","heithcliff","ishmael",
+		"rodion","sinclair","outis","gregor","angela",
+		"ponytail", "long", "agent_short", "librarian_short",
+		"fixer_short", "floofy")
+	var/list/avaliable_suit = list(
+		"none","yuri","samjo","yisang","faust","don",
+		"ryoshu","mersault","honglu","heithcliff","ishmael",
+		"rodion","sinclair","outis","gregor", "roland",
+		"agent","info","extraction","librarian","librarian2","argalia")
+	var/list/avaliable_accessory = list(
+		"none","bandage","scar","sapphire","glasses","blush",
+		"dante","cuckoo","rabbit","silence","beret","beard","lizard")
+	var/list/cover_face_accessory = list("dante","cuckoo","rabbit","lizard")
+
+/obj/item/toy/plush/blank/AltClick(mob/user)
+	. = ..()
+	if(!customizable)
+		return
+	if(user.canUseTopic(src, BE_CLOSE, NO_DEXTERITY))
+		additions["eyes"] = input(user,"","Choose eyes") as null|anything in avaliable_eyes
+		var/new_eye_color = input(user, "Choose your eye color", "Eye Color") as color|null
+		if(new_eye_color)
+			additions["eye_color"] = new_eye_color
+		additions["hair"] = input(user,"","Choose hair") as null|anything in avaliable_hair
+		var/new_hair_color = input(user, "Choose your hair color", "Hair Color") as color|null
+		if(new_hair_color)
+			additions["hair_color"] = new_hair_color
+		additions["suit"] = input(user,"","Choose suit") as null|anything in avaliable_suit
+		SetAccessory(1, input(user,"","Choose first accessory") as null|anything in avaliable_accessory)
+		if(!(additions["accessory1"] in cover_face_accessory))
+			SetAccessory(2, input(user,"","Choose second accessory") as null|anything in avaliable_accessory)
+
+		update_overlays()
+
+/obj/item/toy/plush/blank/update_overlays()
+	. = ..()
+	for(var/i in stylish_fit)
+		cut_overlay(i)
+	stylish_fit.Cut()
+
+	var/mutable_appearance/eyes_overlay = mutable_appearance('ModularLobotomy/_Lobotomyicons/custom_plush/parts.dmi',"eye_[additions["eyes"]]")
+	eyes_overlay.color = additions["eye_color"]
+
+	var/mutable_appearance/hair_overlay = mutable_appearance('ModularLobotomy/_Lobotomyicons/custom_plush/hair.dmi',"[additions["hair"]]")
+	hair_overlay.color = additions["hair_color"]
+
+	stylish_fit += eyes_overlay
+	stylish_fit += hair_overlay
+	stylish_fit += mutable_appearance('ModularLobotomy/_Lobotomyicons/custom_plush/parts.dmi',"s_[additions["suit"]]")
+	stylish_fit += mutable_appearance('ModularLobotomy/_Lobotomyicons/custom_plush/parts.dmi',"a_[additions["accessory1"]]")
+	stylish_fit += mutable_appearance('ModularLobotomy/_Lobotomyicons/custom_plush/parts.dmi',"a_[additions["accessory2"]]")
+
+	for(var/i in stylish_fit)
+		add_overlay(i)
+
+/obj/item/toy/plush/blank/Destroy()
+	additions = null
+	stylish_fit = null
+	return ..()
+
+/obj/item/toy/plush/blank/proc/SetAccessory(which = 1, thingchange)
+	var/accessory_type = "accessory[which]"
+	additions[accessory_type] = thingchange
+	if(additions[accessory_type] in cover_face_accessory)
+		additions["hair"] = "none"
+		additions["eyes"] = "none"
+
+/obj/item/toy/plush/blank/random
+	name = "mishap plush"
+	desc = "This humanoid plush was supposed to depict some important person but \
+		instead chose to carve their own path."
+	customizable = FALSE
+
+/obj/item/toy/plush/blank/random/Initialize()
+	. = ..()
+	additions["hair"] = pick(avaliable_hair)
+	additions["hair_color"] = randomColor()
+	additions["eyes"] = pick(avaliable_eyes)
+	additions["eye_color"] = randomColor()
+	additions["suit"] = pick(avaliable_suit)
+	if(prob(35))
+		SetAccessory(1,pick(avaliable_accessory))
+		if(prob(50) && !(additions["accessory1"] in cover_face_accessory))
+			SetAccessory(2,pick(avaliable_accessory))
+	update_overlays()
 
 // Abnormalities
 /obj/item/toy/plush/qoh

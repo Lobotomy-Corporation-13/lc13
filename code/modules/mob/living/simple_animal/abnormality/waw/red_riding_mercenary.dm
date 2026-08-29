@@ -19,6 +19,7 @@ It has now been over four months. Now we get her for real. -Coxswain
 	base_pixel_x = -8
 	maxHealth = 2400 // More health than standard
 	health = 2400 // Since she was apparently too easy to suppress
+	gender = FEMALE
 	rapid_melee = 2
 	speed = 0.5
 	threat_level = WAW_LEVEL

@@ -6,6 +6,7 @@
 	portrait = "lady_facing_the_wall"
 	maxHealth = 400
 	health = 400
+	gender = FEMALE
 	threat_level = TETH_LEVEL
 	work_chances = list(
 		ABNORMALITY_WORK_INSTINCT = list(55, 55, 55, 55, 55),
