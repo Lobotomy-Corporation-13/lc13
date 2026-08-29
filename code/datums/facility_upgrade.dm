@@ -265,7 +265,7 @@
 	cost = 3
 	value = 0
 	max_value = 1
-	info = " - This upgrade inceases the amount of <b>Works</b> needed for a Qliphoth Meltdown by 1 per upgrade.<br>
+	info = " - This upgrade inceases the amount of <b>Works</b> needed for a Qliphoth Meltdown by 1 per upgrade."
 
 /datum/facility_upgrade/meltdown_increase/Upgrade()
 	value = min(max_value, value + 1)
