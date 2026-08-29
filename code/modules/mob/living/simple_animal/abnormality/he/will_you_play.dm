@@ -31,7 +31,7 @@
 	observation_choices = list(
 		"Play rock" = list(FALSE, "As you ball up your hand, the abnormality lashes out at you with a large pair of scissors...<br>You lose."),
 		"Play paper" = list(TRUE, "The abnormality looks up at you before beginning to cry...<br> Scissors are useless without something to cut.<br>\
-		 Here take this gift I made wiv my scissors and cloth."),
+		Here take this gift I made wiv my scissors and cloth."),
 		"Play scissors" = list(FALSE, "Looking at your hand, the abnormality proclaims:<br>I dont play with people who dont trust me... Get out."),
 	)
 	var/janken = 0			//0 for scissors, 1 for Rock, 2 for paper
