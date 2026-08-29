@@ -171,6 +171,7 @@
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	pass_flags = PASSTABLE | PASSGLASS | PASSGRILLE
 	movement_type = FLYING
+	var/max_hits = 1
 	var/speed = 1 SECONDS
 	var/steps = 20
 	var/damage = 60
@@ -189,35 +190,24 @@
 	*/
 	var/list/move_pattern = list()
 
-/obj/effect/ambient_danger/Initialize(mapload, list/ally_factions = list(), list/ordered_pattern = list())
+/obj/effect/ambient_danger/Initialize(mapload, list/ally_factions = list(), list/ordered_pattern = list(), move_on_init = TRUE)
 	if(length(ally_factions))
 		ignore_faction = ally_factions.Copy()
 	if(length(ordered_pattern))
 		move_pattern = ordered_pattern.Copy()
 	. = ..()
-	StartMovement()
+	if(move_on_init)
+		StartMovement()
 
 /obj/effect/ambient_danger/Move()
 	. = ..()
 	steps--
 	if(steps < 1)
+		DestroyTimer()
 		qdel(src)
+		return
 	if(!QDELETED(src) && isturf(loc))
-		var/attack_tries = 5
-		/*
-		* Im apprehensive about this.
-		* If there is 12 mobs on one
-		* tile then only 5 of them will be checked.
-		* -IP
-		*/
-		for(var/mob/living/pain_mobs in loc)
-			if(QDELETED(src))
-				break
-			attack_tries--
-			if(attack_tries < 1)
-				break
-			if(Suffer(pain_mobs))
-				break
+		MovementEffect()
 
 /obj/effect/ambient_danger/Crossed(atom/movable/AM)
 	. = ..()
@@ -232,9 +222,7 @@
 	Suffer(AM)
 
 /obj/effect/ambient_danger/Destroy()
-	if(move_cycle)
-		deltimer(move_cycle)
-		move_cycle = null
+	DestroyTimer()
 	return ..()
 
 /obj/effect/ambient_danger/proc/StartMovement()
@@ -244,24 +232,134 @@
 /obj/effect/ambient_danger/proc/MovePattern()
 	if(QDELETED(src))
 		return
-	if(move_cycle)
-		deltimer(move_cycle)
-		move_cycle = null
+	DestroyTimer()
 	var/our_turf_tag = "[x],[y]"
 	if(length(move_pattern))
 		if(our_turf_tag in move_pattern)
 			if(step(src,move_pattern[our_turf_tag],speed) && !move_cycle)
+				//A runtime occurs where a timer is being called by a qdeleted object despite DestroyTimer.
+				if(QDELETED(src))
+					return
 				move_cycle = addtimer(CALLBACK(src, PROC_REF(MovePattern)), speed, TIMER_STOPPABLE)
 				return
 	//We lost the pattern, go nuts.
 	walk_rand(src,speed,speed)
+
+/obj/effect/ambient_danger/proc/MovementEffect()
+	var/attack_tries = 5
+	/*
+	* Im apprehensive about this.
+	* If there is 12 mobs on one
+	* tile then only 5 of them will be checked.
+	* -IP
+	*/
+	for(var/mob/living/pain_mobs in loc)
+		if(QDELETED(src))
+			break
+		attack_tries--
+		if(attack_tries < 1)
+			break
+		if(Suffer(pain_mobs))
+			break
 
 /obj/effect/ambient_danger/proc/Suffer(atom/A)
 	if(isliving(A))
 		var/mob/living/L = A
 		if(faction_check(L.faction, ignore_faction, FALSE) || !L.density)
 			return
+		max_hits--
 		L.deal_damage(damage, damage_type, src, attack_type = (ATTACK_TYPE_SPECIAL))
-		qdel(src)
+		if(max_hits < 1)
+			steps = 0
 		return TRUE
 	return FALSE
+
+/obj/effect/ambient_danger/proc/DestroyTimer()
+	if(move_cycle)
+		deltimer(move_cycle)
+		move_cycle = null
+
+/*-------------\
+|Blood Splatter|
+\-------------*/
+/obj/effect/bloodspawner
+	icon_state = "gibspawner"// For the map editor
+	var/gib_mob_type  //generate a fake mob to transfer DNA from if we weren't passed a mob.
+	var/sound_to_play = 'sound/effects/wounds/crackandbleed.ogg'
+	var/sound_vol = 60
+	//DNA on the Blood for flavor
+	var/list/dna_to_add
+	//If the blood hits all adjacent tiles
+	var/all_around_splatter = FALSE
+	var/core_gib_type = /obj/effect/decal/cleanable/blood/gibs/core
+
+/obj/effect/bloodspawner/Initialize(mapload, mob/living/source_mob)
+	. = ..()
+
+	if(sound_to_play && isnum(sound_vol))
+		playsound(src, sound_to_play, sound_vol, TRUE)
+
+	if(source_mob)
+		dna_to_add = source_mob.get_blood_dna_list() //ez pz
+	else
+		dna_to_add = list("Non-human DNA" = random_blood_type()) //else, generate a random bloodtype for it.
+	var/turf/our_turf = get_turf(src)
+	if(!our_turf)
+		return INITIALIZE_HINT_QDEL
+	var/list/all_turfs = RANGE_TURFS(1, our_turf) - our_turf
+	//Spawn Blood where we are.
+	SpawnEffect(our_turf, /obj/effect/decal/cleanable/blood, dna_to_add)
+	if(core_gib_type)
+		SpawnEffect(our_turf, core_gib_type, dna_to_add)
+	if(!all_around_splatter)
+		for(var/i = 1 to 5)
+			pick_n_take(all_turfs)
+
+	for(var/turf/T in all_turfs)
+		if(!T)
+			continue
+		var/splash_dir = get_dir(our_turf,T)
+		if(isclosedturf(T) || locate(/obj/structure/window) in T)
+			SplashOnWall(our_turf, splash_dir)
+		else
+			SpawnEffect(T, /obj/effect/decal/cleanable/blood)
+
+		if(T != our_turf && !T.density)
+			new /obj/effect/temp_visual/dir_setting/bloodsplatter(T, splash_dir)
+
+	return INITIALIZE_HINT_QDEL
+
+/obj/effect/bloodspawner/proc/SpawnEffect(location, effect_type)
+	if(!effect_type)
+		return
+	var/obj/effect/decal/cleanable/blood/blerd = new effect_type(location)
+	blerd.add_blood_DNA(dna_to_add)
+	return blerd
+
+//The reason posters do not show up on the other side of the wall is because they are technically offset spritewise
+/obj/effect/bloodspawner/proc/SplashOnWall(location, dir)
+	var/obj/effect/decal/cleanable/blood/splatter/over_window/splat = new(location)
+	splat.add_blood_DNA(dna_to_add)
+	var/offsetx = 0
+	var/offsety = 0
+	if(dir == NORTH || dir == NORTHWEST  || dir ==  NORTHEAST)
+		offsety = 32
+	if(dir == SOUTH  || dir ==  SOUTHWEST  || dir ==  SOUTHEAST)
+		offsety = -32
+	if(dir == EAST  || dir ==  NORTHEAST  || dir ==  SOUTHEAST)
+		offsetx = 32
+	if(dir == WEST  || dir ==  NORTHWEST  || dir ==  SOUTHWEST)
+		offsetx = -32
+	splat.pixel_x = offsetx
+	splat.pixel_y = offsety
+
+/obj/effect/bloodspawner/nogibs
+	core_gib_type = null
+
+/obj/effect/bloodspawner/silent
+	sound_to_play = null
+	sound_vol = 0
+
+/obj/effect/bloodspawner/nogibs/silent
+	sound_to_play = null
+	sound_vol = 0

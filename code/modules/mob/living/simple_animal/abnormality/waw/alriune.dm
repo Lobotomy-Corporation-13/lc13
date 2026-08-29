@@ -12,6 +12,7 @@
 
 	maxHealth = 2000
 	health = 2000
+	gender = FEMALE
 	damage_coeff = list(BRUTE = 1, RED_DAMAGE = 1.2, WHITE_DAMAGE = 0, BLACK_DAMAGE = 0.7, PALE_DAMAGE = 1.5)
 
 	threat_level = WAW_LEVEL
@@ -164,6 +165,8 @@
 /mob/living/simple_animal/hostile/abnormality/alriune/proc/ConstantAttack()
 	for(var/i in 1 to 3)
 		for(var/mob/living/carbon/human/L in view(9, src))
+			if(L.stat == DEAD)
+				continue
 			var/turf/shoot_from = pick(range(1, src))
 			var/obj/projectile/alriune/P = new(shoot_from)
 			P.starting = shoot_from

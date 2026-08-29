@@ -32,6 +32,11 @@
 	var/temperance_work
 	var/list/structures = list()
 
+/mob/living/simple_animal/hostile/abnormality/branch12/wave/Destroy()
+	QDEL_LIST(structures)
+	given_ability = null
+	return ..()
+
 /mob/living/simple_animal/hostile/abnormality/branch12/wave/PostWorkEffect(mob/living/carbon/human/user, work_type, pe, work_time)
 	if(work_type == ABNORMALITY_WORK_ATTACHMENT)
 		temperance_work++
@@ -58,12 +63,6 @@
 		for(var/mob/living/carbon/human/H in GLOB.mob_list)
 			if(H.z == z)
 				H.deal_damage(2, WHITE_DAMAGE, source = src, flags = (DAMAGE_FORCED | DAMAGE_UNTRACKABLE), attack_type = (ATTACK_TYPE_SPECIAL))
-
-
-/mob/living/simple_animal/hostile/abnormality/branch12/wave/death()
-	. = ..()
-	for(var/Y in structures)
-		qdel(Y)
 
 
 /mob/living/simple_animal/hostile/abnormality/branch12/wave/SuccessEffect(mob/living/carbon/human/user, work_type, pe)

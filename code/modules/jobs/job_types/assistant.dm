@@ -50,14 +50,16 @@ GLOBAL_LIST_EMPTY(spawned_clerks)
 	else	//Don't buff them if they can work jesus
 		outfit_owner.set_attribute_limit(130)
 
-	if(SSmaptype.chosen_trait == FACILITY_TRAIT_ABNO_BLITZ)
+	if(SSlobotomy_corp.BlitzActive())
 		outfit_owner.set_attribute_limit(40)
 		outfit_owner.adjust_all_attribute_levels(40)
 
+	if(SSmaptype.chosen_trait == FACILITY_TRAIT_DARK_SOULS)
+		outfit_owner.equip_to_slot_or_del(new /obj/item/estus(outfit_owner), ITEM_SLOT_HANDS, TRUE)
 
 	for(var/upgradecheck in GLOB.lcorp_upgrades)
 		if(upgradecheck == "Clerk Buff")
-			if(SSmaptype.chosen_trait == FACILITY_TRAIT_ABNO_BLITZ)
+			if(SSlobotomy_corp.BlitzActive())
 				outfit_owner.set_attribute_limit(60)
 				outfit_owner.adjust_all_attribute_levels(60)
 				return

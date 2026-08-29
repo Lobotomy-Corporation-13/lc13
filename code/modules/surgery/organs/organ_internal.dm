@@ -90,8 +90,10 @@
 
 /obj/item/organ/proc/on_death(delta_time = 2)	//runs decay when outside of a person
 	if(organ_flags & (ORGAN_SYNTHETIC | ORGAN_FROZEN))
+		STOP_PROCESSING(SSobj, src)
 		return
 	if(SSmaptype.maptype == "office" || SSmaptype.maptype == "city")
+		STOP_PROCESSING(SSobj, src)
 		return
 	applyOrganDamage(maxHealth * decay_factor * 0.5 * delta_time)
 

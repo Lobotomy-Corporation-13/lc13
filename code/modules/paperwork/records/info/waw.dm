@@ -343,6 +343,7 @@
 		"When the work result was Bad, the employee was forcibly drained of a moderate amount of blood.",
 		"When repression work was succesfully performed, the level of thirst increased but blood was not drawn.",
 		"If the same employee was drained of blood 3 times in a row, they were forcibly drained of a lethal amount of blood.",
+		"Feeding a bloodpack to Nosferatu seems to \"wash away\" the taste of the previous employee, restarting the counter for a lethal draining of blood.",
 		"When given far too much blood, the abnormality breached containment in a frenzy.",
 		"While Nosferatu is escaping, it will show sensitive reactions to blood. Suppression becomes difficult if blood is readily accessible to this abnormality.")
 	abno_breach_damage_type = "Red/Black"
@@ -617,3 +618,26 @@
 		"Attachment" = "Very Low",
 		"Repression" = "Low | Low | Low | Common | Common"
 	)
+
+//400 Roses
+/obj/item/paper/fluff/info/waw/four_hundred_roses
+	abno_type = /mob/living/simple_animal/hostile/abnormality/roses_waw
+	abno_code = "F-04-203"
+	abno_info = list(
+		"Every 25 bad work ticks, the Qliphoth counter lowered..",
+		"When the Qliphoth counter was 0, F-04-203 spawned roses around the facility, that would feed it.",
+		"When F-04-203 was fed enough by it's roses, it would cause Red Fragility and Bleed to all employees.")
+	abno_breach_damage_type = "Bleed"
+	abno_breach_damage_count = "High"
+
+//Ambling Pearl
+/obj/item/paper/fluff/info/waw/ambling_pearl
+	abno_type = /mob/living/simple_animal/hostile/abnormality/ambling_pearl
+	abno_code = "O-02-205"
+	abno_info = list(
+		"WARNING: O-02-205 excretes chemicals that are considered harmful to the human biologu.",
+		"Should these toxins build up in the body, L-Corporation offers you Anti-toxin at the cost of a handful of PE boxes.",
+		"When the work result was Normal, the Qliphoth Counter lowered at a low rate.",
+		"When the work result was Bad, the Qliphoth Counter lowered.")
+	abno_breach_damage_type = "Black/Poison"
+	abno_breach_damage_count = "Average/Low"

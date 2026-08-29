@@ -29,8 +29,12 @@
 	var/veryrarechance
 	var/cosmeticloot = list()
 	var/cosmeticchance = 0 //These do not count on the total odds of a crate
+	var/ammoloot = list()
+	var/ammochance = 0 //These do not count on the total odds of a crate
 	var/repmodifier = 0
 	var/crate_multiplier = 2
+	/// Set this var to TRUE to make it impossible for this crate's contents to show up in J Corp lootboxes.
+	var/jcorp_banned = FALSE
 
 /obj/structure/lootcrate/Initialize()
 	. = ..()
@@ -51,6 +55,7 @@
 	. = ..()
 	var/loot
 	var/cloot
+	var/aloot
 	if(I.tool_behaviour != TOOL_CROWBAR)
 		return
 
@@ -75,6 +80,10 @@
 	if(cosmeticchance && prob(cosmeticchance))
 		cloot = pick(cosmeticloot)
 		new cloot(get_turf(src))
+
+	if(ammochance && prob(ammochance))
+		aloot = pick(ammoloot)
+		new aloot(get_turf(src))
 
 	to_chat(user, span_notice("You open the crate!"))
 	if(SSmaptype.maptype in SSmaptype.citymaps)

@@ -101,6 +101,8 @@
 				PE_received += (datum_reference.threat_level * datum_reference.threat_level)
 				if(istype(src, /datum/ego_gifts/blossoming) || istype(src, /datum/ego_gifts/paradise)) // Why though
 					PE_received *= 2
+				if(istype(src, /datum/ego_gifts/white_gossypium)) //No free PE for you
+					PE_received = 0
 				if(ispath(datum_reference.abno_path, /mob/living/simple_animal/hostile/abnormality/crumbling_armor))
 					var/answer = tgui_alert(owner, "To think one would commit such a shameful act... what have ye, weaker body or mind?", "Cowardice", list("Body", "Mind"), 0)
 					if(QDELETED(src) || !ispath(src.datum_reference.abno_path, /mob/living/simple_animal/hostile/abnormality/crumbling_armor))
@@ -549,6 +551,7 @@
 	prudence_bonus = 2
 	temperance_bonus = -5
 	justice_bonus = 2
+	slot = BROOCH
 
 /datum/ego_gifts/capote
 	name = "Capote"

@@ -7,6 +7,7 @@
 	portrait = "will_you_play"
 	maxHealth = 600
 	health = 600
+	gender = FEMALE
 	threat_level = HE_LEVEL
 	work_chances = list(
 		"Rock" = 60,
@@ -34,7 +35,7 @@
 		janken = 0
 	else
 		janken = pick(1,2)
-	if(user == last_worked)
+	if(user.tag == last_worked)
 		say("You again? Fine. We'll play again.")
 	else
 		say("I'll go fer scissors. How 'bout you?")
@@ -113,7 +114,7 @@
 
 /mob/living/simple_animal/hostile/abnormality/willyouplay/proc/Lose(mob/living/carbon/human/user, work_type)
 	var/statgain
-	if(user == last_worked)
+	if(user.tag == last_worked)
 		statgain = -2
 
 	if(janken == 0)
@@ -137,4 +138,4 @@
 				user.adjust_attribute_level(A, 1)
 			continue
 		user.adjust_attribute_level(A, statgain)
-	last_worked = user
+	last_worked = user.tag

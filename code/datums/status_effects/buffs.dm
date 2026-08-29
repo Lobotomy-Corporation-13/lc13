@@ -511,6 +511,44 @@
 	owner.log_message("exited a blood frenzy", LOG_ATTACK)
 	QDEL_NULL(chainsaw)
 
+//LC13 Generic Work Effect
+/datum/status_effect/workspeed_buff
+	id = "workspeed_buff"
+	status_type = STATUS_EFFECT_UNIQUE
+	alert_type = /atom/movable/screen/alert/status_effect/workspeed_buff
+	duration = 5 SECONDS
+	var/buff_mod = 1.3
+
+/datum/status_effect/workspeed_buff/on_apply()
+	. = ..()
+	var/mob/living/carbon/human/user = owner
+	user.physiology.work_speed_mod *= buff_mod
+
+/datum/status_effect/workspeed_buff/on_remove()
+	. = ..()
+	var/mob/living/carbon/human/user = owner
+	user.physiology.work_speed_mod /= buff_mod
+
+/atom/movable/screen/alert/status_effect/workspeed_buff
+	name = "faster work speed"
+	desc = "Your work speed is faster due to unusual circumstances."
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
+	icon_state = "workspeed"
+
+/atom/movable/screen/alert/status_effect/workspeed_debuff
+	name = "slower work speed"
+	desc = "Your work speed is slower due to unusual circumstances."
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
+	icon_state = "workslow"
+
+//I know its redundant to have a debuff be the subtype of a buff. -IP
+/datum/status_effect/workspeed_buff/debuff
+	id = "workspeed_debuff"
+	status_type = STATUS_EFFECT_UNIQUE
+	alert_type = /atom/movable/screen/alert/status_effect/workspeed_debuff
+	duration = 5 SECONDS
+	buff_mod = 0.6
+
 //LC13 AI entity Buffs
 	//Buff Maroon Ordeal Soldiers, Feel free to cannibalize and rework to work for other creatures.
 
@@ -956,15 +994,17 @@
 	if(!can_have_status())
 		qdel(src)
 		return
-	var/decay = max(1, round(stacks / 2))
+	var/decay = max(1, round((stacks - undecaying_stacks) / 2))
 	add_stacks(-decay)
 
 //Mob Proc
-/mob/living/proc/apply_lc_defense_level_up(stacks)
+/mob/living/proc/apply_lc_defense_level_up(stacks, undecaying_stacks)
 	var/datum/status_effect/stacking/defense_level_up/P = src.has_status_effect(/datum/status_effect/stacking/defense_level_up)
 	if(!P)
-		src.apply_status_effect(/datum/status_effect/stacking/defense_level_up, stacks)
+		P = src.apply_status_effect(/datum/status_effect/stacking/defense_level_up, stacks)
+		P.add_undecaying_stacks(undecaying_stacks)
 		return
+	P.add_undecaying_stacks(undecaying_stacks)
 	P.add_stacks(stacks)
 
 //Global Damage Up
@@ -1250,15 +1290,17 @@
 	if(!can_have_status())
 		qdel(src)
 		return
-	var/decay = max(1, round(stacks / 2))
+	var/decay = max(1, round((stacks - undecaying_stacks) / 2))
 	add_stacks(-decay)
 
 //Mob Proc
-/mob/living/proc/apply_lc_offense_level_up(stacks)
+/mob/living/proc/apply_lc_offense_level_up(stacks, undecaying_stacks)
 	var/datum/status_effect/stacking/offense_level_up/S = src.has_status_effect(/datum/status_effect/stacking/offense_level_up)
 	if(!S)
-		src.apply_status_effect(/datum/status_effect/stacking/offense_level_up, stacks)
+		S = src.apply_status_effect(/datum/status_effect/stacking/offense_level_up, stacks)
+		S.add_undecaying_stacks(undecaying_stacks)
 		return
+	S.add_undecaying_stacks(undecaying_stacks)
 	S.add_stacks(stacks)
 
 //Poise - Crit chance stacking buff
@@ -1424,3 +1466,49 @@
 		return
 	C.add_stacks(stacks)
 	new /obj/effect/temp_visual/damage_effect/concentration(get_turf(src))
+
+// LCE Crimson Scar dodge status effect
+/datum/status_effect/paranoia
+	id = "paranoia"
+	duration = 100 // 10 second duration, can't have it last forever
+	status_type = STATUS_EFFECT_REFRESH
+	alert_type = /atom/movable/screen/alert/status_effect/paranoia
+	on_remove_on_mob_delete = TRUE
+
+/atom/movable/screen/alert/status_effect/paranoia
+	name = "Paranoia"
+	desc = "Your nerves are on edge, you'll dodge the next attack to hit you while this is active"
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
+	icon_state = "overwhelming_fear"
+
+/datum/status_effect/paranoia/on_apply()
+	. = ..()
+	if(!owner)
+		return
+	if(isliving(owner))
+		var/mob/living/carbon/human/L = owner
+		if(ishuman(owner))
+			L.adjustSanityLoss(10) //cost for activating the dodge
+			RegisterSignal(owner, COMSIG_MOB_APPLY_DAMGE, PROC_REF(on_damage_taken))
+
+/datum/status_effect/paranoia/proc/on_damage_taken(datum/source, damage, damagetype, def_zone, attack_source, flags, attack_type)
+	SIGNAL_HANDLER
+	if(!damage || damage <= 0)
+		return
+
+	var/is_evadable_attack = (attack_type & ATTACK_TYPE_MELEE) || (attack_type & ATTACK_TYPE_RANGED)
+
+	if(is_evadable_attack && owner.has_status_effect(/datum/status_effect/paranoia))
+		var/turf/T = get_step(owner, pick(GLOB.cardinals))
+		if(T && !T.density)
+			owner.forceMove(T)
+			playsound(owner, 'sound/weapons/black_silence/evasion.ogg', 50, TRUE)
+			owner.remove_status_effect(/datum/status_effect/paranoia)
+			return COMPONENT_MOB_DENY_DAMAGE
+
+/datum/status_effect/paranoia/on_remove()
+	. = ..()
+	if(!owner)
+		return
+	UnregisterSignal(owner, COMSIG_MOB_APPLY_DAMGE)
+

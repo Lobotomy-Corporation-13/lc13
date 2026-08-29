@@ -43,12 +43,11 @@
 	projectile_path = /obj/projectile/ego_bullet/ego_beakmagnum
 	fire_delay = 10
 	shotsleft = 7
-	reloadtime = 0.4 SECONDS
+	reloadtime = 2.4 SECONDS		//It's very powerful.
 	fire_sound = 'sound/weapons/gun/revolver/shot_alt.ogg'
 	vary_fire_sound = FALSE
 	fire_sound_volume = 70
 	dual_wield_spread = 0
-	roundsreload = TRUE
 
 /obj/item/ego_weapon/ranged/noise
 	name = "noise"

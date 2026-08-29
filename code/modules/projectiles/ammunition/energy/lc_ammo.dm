@@ -61,3 +61,29 @@
 
 /obj/item/ammo_casing/energy/laser/black/iff
 	projectile_type = /obj/projectile/beam/laser/iff/black
+
+/obj/item/ammo_casing/energy/laser/pale/iff
+	projectile_type = /obj/projectile/beam/laser/iff/pale
+
+// Shotgun IFF variants
+/obj/item/ammo_casing/energy/laser/red/shotgun/iff
+	projectile_type = /obj/projectile/beam/laser/iff
+
+/obj/item/ammo_casing/energy/laser/white/shotgun/iff
+	projectile_type = /obj/projectile/beam/laser/iff/white
+
+/obj/item/ammo_casing/energy/laser/black/shotgun/iff
+	projectile_type = /obj/projectile/beam/laser/iff/black
+
+// Heavy IFF variants
+/obj/item/ammo_casing/energy/laser/red/heavy/iff
+	projectile_type = /obj/projectile/beam/laser/iff/heavy
+
+/obj/item/ammo_casing/energy/laser/white/heavy/iff
+	projectile_type = /obj/projectile/beam/laser/iff/heavy/white
+
+/obj/item/ammo_casing/energy/laser/black/heavy/iff
+	projectile_type = /obj/projectile/beam/laser/iff/heavy/black
+
+/obj/item/ammo_casing/energy/laser/pale/heavy/iff
+	projectile_type = /obj/projectile/beam/laser/iff/heavy/pale

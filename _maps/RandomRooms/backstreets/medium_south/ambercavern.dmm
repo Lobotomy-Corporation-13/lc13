@@ -1,0 +1,225 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"a" = (
+/turf/closed/indestructible/rock,
+/area/city/backstreets_alley)
+"e" = (
+/mob/living/simple_animal/hostile/ordeal/amber_bug{
+	dir = 4
+	},
+/obj/item/ego_weapon/city/zweihander/knife,
+/turf/open/floor/grass/snow/basalt{
+	color = "#969696"
+	},
+/area/city/backstreets_alley)
+"f" = (
+/obj/effect/decal/cleanable/blood/splatter/over_window{
+	pixel_x = 32;
+	pixel_y = 9
+	},
+/turf/closed/indestructible/rock,
+/area/city/backstreets_alley)
+"g" = (
+/obj/effect/decal/cleanable/blood/gibs/up,
+/turf/open/floor/grass/snow/basalt{
+	color = "#969696"
+	},
+/area/city/backstreets_alley)
+"i" = (
+/obj/effect/decal/cleanable/blood/gibs/body{
+	dir = 4
+	},
+/obj/item/food/meat/slab/human,
+/turf/open/floor/grass/snow/basalt{
+	color = "#969696"
+	},
+/area/city/backstreets_alley)
+"l" = (
+/obj/structure/lootcrate/zwei,
+/turf/open/floor/grass/snow/basalt{
+	color = "#969696"
+	},
+/area/city/backstreets_alley)
+"m" = (
+/mob/living/simple_animal/hostile/ordeal/amber_noon{
+	dir = 4
+	},
+/obj/effect/decal/cleanable/blood/gibs/core,
+/obj/effect/decal/cleanable/blood/gibs/limb,
+/turf/open/floor/grass/snow/basalt{
+	color = "#969696"
+	},
+/area/city/backstreets_alley)
+"n" = (
+/obj/effect/decal/cleanable/blood/gibs{
+	pixel_y = 6;
+	pixel_x = -2
+	},
+/turf/open/floor/grass/snow/basalt{
+	color = "#969696"
+	},
+/area/city/backstreets_alley)
+"p" = (
+/turf/open/floor/grass/snow/basalt{
+	color = "#969696"
+	},
+/area/city/backstreets_alley)
+"y" = (
+/obj/effect/mob_spawn/human/corpse,
+/turf/open/floor/grass/snow/basalt{
+	color = "#969696"
+	},
+/area/city/backstreets_alley)
+"z" = (
+/obj/effect/spawner/lootdrop/space/cashmoney,
+/obj/effect/spawner/lootdrop/space/cashmoney,
+/obj/effect/spawner/lootdrop/space/cashmoney,
+/turf/open/floor/grass/snow/basalt{
+	color = "#969696"
+	},
+/area/city/backstreets_alley)
+"C" = (
+/obj/effect/decal/cleanable/blood/splatter/over_window{
+	pixel_x = 32
+	},
+/obj/effect/decal/cleanable/blood/splatter/over_window{
+	pixel_x = 8;
+	pixel_y = 32
+	},
+/turf/open/floor/grass/snow/basalt{
+	color = "#969696"
+	},
+/area/city/backstreets_alley)
+"D" = (
+/obj/effect/decal/cleanable/blood/gibs/limb{
+	dir = 8;
+	pixel_x = 13;
+	pixel_y = 17
+	},
+/obj/effect/decal/cleanable/blood/gibs/old,
+/turf/open/floor/grass/snow/basalt{
+	color = "#969696"
+	},
+/area/city/backstreets_alley)
+"H" = (
+/mob/living/simple_animal/hostile/ordeal/amber_bug{
+	dir = 1
+	},
+/turf/open/floor/grass/snow/basalt{
+	color = "#969696"
+	},
+/area/city/backstreets_alley)
+"M" = (
+/obj/effect/decal/cleanable/blood/gibs,
+/turf/open/floor/grass/snow/basalt{
+	color = "#969696"
+	},
+/area/city/backstreets_alley)
+"N" = (
+/obj/effect/decal/cleanable/blood/splatter/over_window{
+	pixel_x = -32;
+	pixel_y = 6
+	},
+/obj/item/reagent_containers/hypospray/medipen/l_health,
+/turf/open/floor/grass/snow/basalt{
+	color = "#969696"
+	},
+/area/city/backstreets_alley)
+"O" = (
+/obj/effect/decal/cleanable/blood,
+/turf/open/floor/grass/snow/basalt{
+	color = "#969696"
+	},
+/area/city/backstreets_alley)
+"P" = (
+/obj/effect/decal/cleanable/blood/gibs/down,
+/turf/open/floor/grass/snow/basalt{
+	color = "#969696"
+	},
+/area/city/backstreets_alley)
+"Q" = (
+/obj/item/food/meat/slab/human,
+/turf/open/floor/grass/snow/basalt{
+	color = "#969696"
+	},
+/area/city/backstreets_alley)
+
+(1,1,1) = {"
+a
+a
+a
+a
+a
+a
+"}
+(2,1,1) = {"
+a
+a
+a
+a
+z
+a
+"}
+(3,1,1) = {"
+a
+a
+i
+N
+D
+a
+"}
+(4,1,1) = {"
+a
+g
+O
+e
+Q
+a
+"}
+(5,1,1) = {"
+a
+m
+p
+y
+p
+a
+"}
+(6,1,1) = {"
+a
+p
+p
+p
+p
+a
+"}
+(7,1,1) = {"
+p
+p
+M
+O
+P
+a
+"}
+(8,1,1) = {"
+p
+n
+p
+p
+l
+a
+"}
+(9,1,1) = {"
+a
+C
+H
+l
+f
+a
+"}
+(10,1,1) = {"
+a
+a
+a
+a
+a
+a
+"}

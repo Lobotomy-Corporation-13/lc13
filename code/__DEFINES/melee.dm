@@ -9,3 +9,4 @@
 #define MARTIALART_CQC "CQC"
 #define MARTIALART_PLASMAFIST "plasma fist"
 #define MARTIALART_CUCKOOPUNCH "cuckoo punch"
+#define MARTIALART_NULLFIST "null fist"

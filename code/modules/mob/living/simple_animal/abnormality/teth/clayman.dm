@@ -58,6 +58,7 @@
 		if(work_chances[work] >= 100)
 			reforming = TRUE
 			work_chances[work] = 20 //For some reason setting it like this doesn't bug the work rate but setting the entire list at once does.
+			user.client?.give_award(/datum/award/achievement/abno/clayman_reform, user)
 			continue
 		else if(work_chances[work] >= 50)
 			reforming = FALSE

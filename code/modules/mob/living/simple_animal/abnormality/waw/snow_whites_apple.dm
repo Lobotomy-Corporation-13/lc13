@@ -528,11 +528,11 @@
 		if(ishuman(L))
 			var/mob/living/carbon/human/H = L
 			if(H.stat == DEAD)
-				var/obj/item/organ/eyes/B = H.getorganslot(ORGAN_SLOT_BRAIN)
+				var/obj/item/organ/brain/B = H.getorganslot(ORGAN_SLOT_BRAIN)
 				if(B)
 					new /obj/effect/temp_visual/vinespike(get_turf(H))
 					H.add_overlay(icon('ModularLobotomy/_Lobotomyicons/tegu_effects.dmi', "f0442_victem"))
-					B.Remove(H)
+					qdel(B)
 	else
 		new /obj/effect/temp_visual/vinespike(get_turf(hit_thing))
 

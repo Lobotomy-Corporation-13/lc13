@@ -24,13 +24,15 @@
 	var/list/spawned_mobs = list()
 	var/producing = FALSE
 
+/mob/living/simple_animal/hostile/ordeal/green_dusk/Destroy()
+	for(var/mob/living/L in spawned_mobs)
+		DelinkRobot(L)
+	return ..()
+
 /mob/living/simple_animal/hostile/ordeal/green_dusk/Initialize(mapload)
 	. = ..()
 	if(SSmaptype.maptype in SSmaptype.citymaps)
 		guaranteed_butcher_results += list(/obj/item/head_trophy/green_datachip = 1)
-
-/mob/living/simple_animal/hostile/ordeal/green_dusk/Initialize()
-	. = ..()
 	update_icon()
 
 /mob/living/simple_animal/hostile/ordeal/green_dusk/CanAttack(atom/the_target)
@@ -70,21 +72,7 @@
 	SLEEP_CHECK_DEATH(6)
 	visible_message(span_danger("\The [src] produces a new set of robots!"))
 	for(var/i = 1 to 3)
-		var/turf/T = get_step(get_turf(src), pick(0, EAST))
-		var/picked_mob = /mob/living/simple_animal/hostile/ordeal/green_bot_big/factory
-
-		// 50% for a little shitter
-		if(prob(50))
-			picked_mob = pick(
-				/mob/living/simple_animal/hostile/ordeal/green_bot/factory,
-				/mob/living/simple_animal/hostile/ordeal/green_bot/syringe/factory,
-				/mob/living/simple_animal/hostile/ordeal/green_bot/fast/factory,)
-
-		var/mob/living/simple_animal/hostile/ordeal/nb = new picked_mob(T)
-		spawned_mobs += nb
-		if(ordeal_reference)
-			nb.ordeal_reference = ordeal_reference
-			ordeal_reference.ordeal_mobs += nb
+		ProduceRobot()
 		SLEEP_CHECK_DEATH(1)
 	SLEEP_CHECK_DEATH(2)
 	icon = initial(icon)
@@ -129,6 +117,29 @@
 
 /mob/living/simple_animal/hostile/ordeal/green_dusk/spawn_dust()
 	return
+
+/mob/living/simple_animal/hostile/ordeal/green_dusk/proc/ProduceRobot()
+	var/turf/T = get_step(get_turf(src), pick(0, EAST))
+	var/picked_mob = /mob/living/simple_animal/hostile/ordeal/green_bot_big/factory
+
+	// 50% for a little shitter
+	if(prob(50))
+		picked_mob = pick(
+			/mob/living/simple_animal/hostile/ordeal/green_bot/factory,
+			/mob/living/simple_animal/hostile/ordeal/green_bot/syringe/factory,
+			/mob/living/simple_animal/hostile/ordeal/green_bot/fast/factory,)
+
+	var/mob/living/simple_animal/hostile/ordeal/nb = new picked_mob(T)
+	spawned_mobs += nb
+	if(ordeal_reference)
+		nb.ordeal_reference = ordeal_reference
+		ordeal_reference.ordeal_mobs += nb
+	RegisterSignal(nb, COMSIG_PARENT_QDELETING, PROC_REF(DelinkRobot))
+	return nb
+
+/mob/living/simple_animal/hostile/ordeal/green_dusk/proc/DelinkRobot(mob/living/robot)
+	UnregisterSignal(robot, COMSIG_PARENT_QDELETING)
+	spawned_mobs -= robot
 
 //Green noon factory spawn
 /mob/living/simple_animal/hostile/ordeal/green_bot_big/factory

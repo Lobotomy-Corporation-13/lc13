@@ -149,7 +149,7 @@
 
 // Shelter from the 27th of March - Isolation
 /datum/ego_datum/weapon/isolation
-	item_path = /obj/item/ego_weapon/shield/isolation
+	item_path = /obj/item/ego_weapon/shield/parry/isolation
 	cost = 35
 
 /datum/ego_datum/armor/isolation

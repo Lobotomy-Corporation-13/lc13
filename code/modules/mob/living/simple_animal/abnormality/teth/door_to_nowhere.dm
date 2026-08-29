@@ -245,6 +245,10 @@ GLOBAL_LIST_EMPTY(repentance_spawn_points)            // Valid spawn locations i
 	// Track who has received their first tape recorder
 	var/list/workers_with_recorders = list()
 
+/mob/living/simple_animal/hostile/abnormality/door_to_nowhere/Destroy()
+	workers_with_recorders = null
+	return ..()
+
 /mob/living/simple_animal/hostile/abnormality/door_to_nowhere/Initialize()
 	. = ..()
 	// Grant abilities
@@ -707,6 +711,7 @@ GLOBAL_LIST_EMPTY(repentance_spawn_points)            // Valid spawn locations i
 /obj/structure/regret_door/Destroy()
 	if(associated_spirit)
 		qdel(associated_spirit)
+	associated_spirit = null
 	return ..()
 
 /obj/structure/regret_door/custom
@@ -754,6 +759,11 @@ GLOBAL_LIST_EMPTY(repentance_spawn_points)            // Valid spawn locations i
 	death_message = "lets out a final, mournful wail before fading into nothingness..."
 	var/obj/structure/regret_door/associated_door
 	var/list/regret_phrases = list()
+
+
+/mob/living/simple_animal/hostile/regret_spirit/Destroy()
+	associated_door = null
+	return ..()
 
 /mob/living/simple_animal/hostile/regret_spirit/Initialize()
 	. = ..()
@@ -1081,6 +1091,7 @@ GLOBAL_LIST_EMPTY(repentance_spawn_points)            // Valid spawn locations i
 
 /datum/status_effect/regret_stacks/on_remove()
 	UnregisterSignal(owner, COMSIG_LIVING_DEATH)
+	source_door = null
 	to_chat(owner, span_notice("The weight of regret lifts from your soul."))
 
 /datum/status_effect/regret_stacks/tick()
@@ -1138,6 +1149,10 @@ GLOBAL_LIST_EMPTY(repentance_spawn_points)            // Valid spawn locations i
 	var/mob/living/simple_animal/hostile/abnormality/door_to_nowhere/source_door
 	del_on_death = TRUE
 
+/mob/living/simple_animal/hostile/regret_spirit/projection/Destroy()
+	source_door = null
+	return ..()
+
 /mob/living/simple_animal/hostile/regret_spirit/projection/death(gibbed)
 	if(source_door && !QDELETED(source_door))
 		source_door.recall_spirit(src, source_door)
@@ -1165,6 +1180,8 @@ GLOBAL_LIST_EMPTY(repentance_spawn_points)            // Valid spawn locations i
 
 /obj/machinery/tape_archive/Destroy()
 	LAZYREMOVE(SSpersistence.tape_archive_machines, src)
+	users_who_archived = null
+	stored_tapes = null
 	return ..()
 
 /obj/machinery/tape_archive/attackby(obj/item/I, mob/user, params)

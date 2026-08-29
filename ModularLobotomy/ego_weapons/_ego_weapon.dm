@@ -44,10 +44,17 @@
 /obj/item/ego_weapon/attack(mob/living/target, mob/living/user)
 	if(!CanUseEgo(user))
 		return FALSE
+
+	//Check if target is valid for charge BEFORE dealing damage (so one-hit kills still grant charge)
+	var/should_gain_charge = FALSE
+	if(charge && attack_charge_gain)
+		if(target && target.stat != DEAD && !(target.status_flags & GODMODE))
+			should_gain_charge = TRUE
+
 	. = ..()
 
-	if(charge && attack_charge_gain)
-		HandleCharge(1, target)
+	if(should_gain_charge)
+		HandleCharge(1, target, TRUE) //skip_validation since we checked before dealing damage
 
 	if(target.anchored || !knockback || QDELETED(target)) // lets not throw machines around
 		return TRUE

@@ -204,7 +204,7 @@
 	density = FALSE
 	animate(src, alpha = 0, time = 5 SECONDS)
 	QDEL_IN(src, 5 SECONDS)
-	..()
+	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/black_swan/Move()
 	if(!can_act)
@@ -219,7 +219,7 @@
 				ReflectProjectile(P)
 				return BULLET_ACT_FORCE_PIERCE
 			return BULLET_ACT_BLOCK
-	..()
+	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/black_swan/OpenFire()
 	if(!can_act)

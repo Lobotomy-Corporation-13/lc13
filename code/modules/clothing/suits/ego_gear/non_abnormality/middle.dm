@@ -126,6 +126,11 @@
 	slot_flags = ITEM_SLOT_BELT
 	w_class = WEIGHT_CLASS_NORMAL
 	var/vengeance_mark_stacks = 2
+	// You'll only be able to receive [vengeance_mark_stacks] from this item once every [mark_grace_period], and not due to attacks with a type listed in [mark_attack_blacklist_types].
+	// The cooldown for each assailant is recorded separately in this list.
+	var/list/mark_cooldowns = list()
+	var/mark_grace_period = 0.5 SECONDS
+	var/mark_attack_blacklist_types = (ATTACK_TYPE_STATUS | ATTACK_TYPE_ENVIRONMENT)
 
 /obj/item/storage/book/middle/ComponentInitialize()
 	. = ..()
@@ -136,34 +141,33 @@
 /obj/item/storage/book/middle/equipped(mob/living/carbon/human/user, slot)
 	. = ..()
 	if(slot == ITEM_SLOT_BELT)
-		RegisterSignal(user, COMSIG_PARENT_ATTACKBY, PROC_REF(MarkAttacker))
-		RegisterSignal(user, COMSIG_ATOM_ATTACK_HAND, PROC_REF(MarkAttacker))
-		RegisterSignal(user, COMSIG_ATOM_ATTACK_ANIMAL, PROC_REF(MarkAttacker))
+		RegisterSignal(user, COMSIG_MOB_APPLY_DAMGE, PROC_REF(MarkAttacker))
 
 /obj/item/storage/book/middle/dropped(mob/living/carbon/human/user)
 	. = ..()
-	UnregisterSignal(user, COMSIG_PARENT_ATTACKBY)
-	UnregisterSignal(user, COMSIG_ATOM_ATTACK_HAND)
-	UnregisterSignal(user, COMSIG_ATOM_ATTACK_ANIMAL)
+	UnregisterSignal(user, COMSIG_MOB_APPLY_DAMGE)
 
-/obj/item/storage/book/middle/proc/MarkAttacker(mob/living/carbon/human/victim, attacker, attacker_weapon)
+/obj/item/storage/book/middle/proc/MarkAttacker(mob/living/carbon/human/awesome_sibling, damage, damagetype, def_zone, mob/living/source_of_damage, flags, attack_type)
 	SIGNAL_HANDLER
-	var/mob/living/actual_attacker = null
+	// Basic sanity checks
+	if(!istype(awesome_sibling) || !istype(source_of_damage) || source_of_damage.stat >= DEAD || awesome_sibling == source_of_damage)
+		return
+	// Do not mark null damage/healing; do not mark blacklisted attack types; do not mark untrackable damage.
+	if(damage < 0 || attack_type & mark_attack_blacklist_types || flags & DAMAGE_UNTRACKABLE)
+		return
+	// Do not mark if they're in their grace period. This is to avoid marking shotgunners with 1 trillion marks, and similar issues.
+	if(mark_cooldowns[source_of_damage] && mark_cooldowns[source_of_damage] > world.time)
+		return
 
-	// COMSIG_PARENT_ATTACKBY passes: victim, weapon, attacker, params
-	// COMSIG_ATOM_ATTACK_HAND/ANIMAL passes: victim, attacker
-	if(istype(attacker, /obj/item))
-		// This is COMSIG_PARENT_ATTACKBY, attacker_weapon is actually the attacker
-		if(isliving(attacker_weapon))
-			actual_attacker = attacker_weapon
-	else if(isliving(attacker))
-		// This is COMSIG_ATOM_ATTACK_HAND or COMSIG_ATOM_ATTACK_ANIMAL
-		actual_attacker = attacker
+	mark_cooldowns[source_of_damage] = world.time + mark_grace_period
 
 	// Apply Vengeance Mark to the attacker
-	if(actual_attacker && actual_attacker != victim)
-		actual_attacker.apply_vengeance_mark(vengeance_mark_stacks)
-		to_chat(victim, span_danger("The Book of Vengeance marks [actual_attacker] for retribution!"))
+	source_of_damage.apply_vengeance_mark(vengeance_mark_stacks)
+	to_chat(awesome_sibling, span_danger("The Book of Vengeance marks [source_of_damage] for retribution!"))
+
+/obj/item/storage/book/middle/Destroy(force)
+	mark_cooldowns = null
+	return ..()
 
 //Younger Brother's Book of Vengeance
 /obj/item/storage/book/middle/younger

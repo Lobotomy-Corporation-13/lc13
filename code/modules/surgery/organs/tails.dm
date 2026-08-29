@@ -9,7 +9,7 @@
 	var/tail_type = "None"
 
 /obj/item/organ/tail/Remove(mob/living/carbon/human/H,  special = 0)
-	..()
+	. = ..()
 	if(H && H.dna && H.dna.species)
 		H.dna.species.stop_wagging_tail(H)
 
@@ -19,7 +19,7 @@
 	tail_type = "Cat"
 
 /obj/item/organ/tail/cat/Insert(mob/living/carbon/human/H, special = 0, drop_if_replaced = TRUE)
-	..()
+	. = ..()
 	if(istype(H))
 		var/default_part = H.dna.species.mutant_bodyparts["tail_human"]
 		if(!default_part || default_part == "None")
@@ -27,7 +27,7 @@
 			H.update_body()
 
 /obj/item/organ/tail/cat/Remove(mob/living/carbon/human/H,  special = 0)
-	..()
+	. = ..()
 	if(istype(H))
 		H.dna.features["tail_human"] = "None"
 		H.dna.species.mutant_bodyparts -= "tail_human"
@@ -46,7 +46,7 @@
 	color = "#"+ random_color()
 
 /obj/item/organ/tail/lizard/Insert(mob/living/carbon/human/H, special = 0, drop_if_replaced = TRUE)
-	..()
+	. = ..()
 	if(istype(H))
 		// Checks here are necessary so it wouldn't overwrite the tail of a lizard it spawned in
 		var/default_part = H.dna.species.mutant_bodyparts["tail_lizard"]
@@ -59,7 +59,7 @@
 		H.update_body()
 
 /obj/item/organ/tail/lizard/Remove(mob/living/carbon/human/H,  special = 0)
-	..()
+	. = ..()
 	if(istype(H))
 		H.dna.species.mutant_bodyparts -= "tail_lizard"
 		H.dna.species.mutant_bodyparts -= "spines"
@@ -85,7 +85,7 @@
 	icon_state = "severedmonkeytail"
 
 /obj/item/organ/tail/monkey/Insert(mob/living/carbon/human/H, special = 0, drop_if_replaced = TRUE)
-	..()
+	. = ..()
 	if(istype(H))
 		if(!("tail_monkey" in H.dna.species.mutant_bodyparts))
 			H.dna.species.mutant_bodyparts |= "tail_monkey"
@@ -93,7 +93,7 @@
 			H.update_body()
 
 /obj/item/organ/tail/monkey/Remove(mob/living/carbon/human/H,  special = 0)
-	..()
+	. = ..()
 	if(istype(H))
 		H.dna.features["tail_monkey"] = "None"
 		H.dna.species.mutant_bodyparts -= "tail_monkey"

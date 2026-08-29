@@ -1,0 +1,205 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"a" = (
+/obj/structure/table/glass,
+/obj/item/flashlight/lamp,
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"g" = (
+/mob/living/simple_animal/hostile/ordeal/bigbird_eye{
+	dir = 8
+	},
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"h" = (
+/obj/effect/decal/cleanable/blood,
+/obj/structure/table/glass,
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"o" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/closed/indestructible/reinforced,
+/area/city/backstreets_room)
+"u" = (
+/obj/machinery/door/airlock/freezer{
+	name = "storage"
+	},
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"w" = (
+/obj/machinery/door/airlock/wood,
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"y" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/rack,
+/obj/item/reagent_containers/hypospray/medipen/antitoxin,
+/obj/item/reagent_containers/hypospray/medipen/antitoxin,
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"z" = (
+/obj/effect/decal/cleanable/blood,
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/rack,
+/obj/item/reagent_containers/hypospray/medipen/l_health,
+/obj/item/reagent_containers/hypospray/medipen/l_health,
+/obj/item/reagent_containers/hypospray/medipen/l_health,
+/obj/item/reagent_containers/hypospray/medipen/l_health,
+/obj/item/reagent_containers/hypospray/medipen/l_health,
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"A" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/rack,
+/obj/item/reagent_containers/hypospray/medipen/l_burn,
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"B" = (
+/obj/structure/table/glass,
+/obj/item/paper_bin,
+/obj/item/pen,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"C" = (
+/obj/structure/rack,
+/obj/item/reagent_containers/hypospray/medipen/l_sanity,
+/obj/item/reagent_containers/hypospray/medipen/l_sanity,
+/obj/item/reagent_containers/hypospray/medipen/l_sanity,
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"E" = (
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"H" = (
+/obj/effect/decal/cleanable/blood,
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"K" = (
+/obj/structure/table/glass,
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"L" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"M" = (
+/obj/effect/decal/cleanable/cobweb/cobweb2{
+	layer = 5
+	},
+/obj/structure/rack,
+/obj/item/reagent_containers/hypospray/medipen/l_burn,
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"N" = (
+/mob/living/simple_animal/hostile/ordeal/bigbird_eye{
+	dir = 4
+	},
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"Q" = (
+/turf/closed/indestructible/reinforced,
+/area/city/backstreets_room)
+"V" = (
+/obj/effect/decal/cleanable/blood,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"W" = (
+/mob/living/simple_animal/hostile/ordeal/bigbird_eye{
+	dir = 1
+	},
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"X" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/rack,
+/obj/item/reagent_containers/hypospray/medipen/k_simple,
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"Y" = (
+/obj/structure/chair/office/light{
+	dir = 8
+	},
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+
+(1,1,1) = {"
+Q
+Q
+Q
+Q
+Q
+Q
+"}
+(2,1,1) = {"
+Q
+a
+B
+K
+h
+Q
+"}
+(3,1,1) = {"
+Q
+E
+Y
+L
+g
+Q
+"}
+(4,1,1) = {"
+w
+g
+V
+L
+L
+Q
+"}
+(5,1,1) = {"
+Q
+L
+L
+E
+L
+Q
+"}
+(6,1,1) = {"
+Q
+L
+W
+H
+N
+o
+"}
+(7,1,1) = {"
+Q
+Q
+u
+Q
+Q
+o
+"}
+(8,1,1) = {"
+Q
+y
+E
+H
+C
+Q
+"}
+(9,1,1) = {"
+Q
+M
+X
+A
+z
+Q
+"}
+(10,1,1) = {"
+Q
+Q
+Q
+Q
+Q
+Q
+"}

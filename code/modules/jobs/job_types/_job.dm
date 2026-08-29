@@ -384,6 +384,18 @@
 		if(H.age)
 			C.registered_age = H.age
 		C.update_label()
+		// Gacha skin override — cosmetic only, after the rest of the
+		// ID setup is settled. Reads the equipped skin from the
+		// Starlight ledger and slams its icon_state onto the card.
+		// Falls through silently if the player has no equipped skin
+		// or the skin id is stale.
+		if(H.ckey)
+			var/equipped_skin = SSrefraction_railway.GetEquippedIdSkin(H.ckey)
+			if(equipped_skin)
+				var/datum/id_skin/S = SSrefraction_railway.id_skins[equipped_skin]
+				if(istype(S))
+					C.icon_state = S.icon_state
+					C.update_icon()
 		var/datum/bank_account/B = SSeconomy.bank_accounts_by_id["[H.account_id]"]
 		if(B && B.account_id == H.account_id)
 			C.registered_account = B
@@ -393,6 +405,16 @@
 	var/obj/item/pda/PDA = H.get_item_by_slot(pda_slot)
 	if(istype(PDA))
 		PDA.owner = H.real_name
+
+		// When a person spawns in, if there already exist PDAs with their name on it, remove them from the global PDAs list to make them unavailable to reach via messenger.
+		// But only on facility mode! This is a very arcadey fix to the issue of duplicate entries in the messenger tab, and so it should remain on the most arcadey mode.
+		if((SSmaptype.maptype in SSmaptype.lc_maps) || SSmaptype.maptype == "mini")
+			for(var/obj/item/pda/could_this_be_our_echo_from_a_past_life in GLOB.PDAs)
+				if(could_this_be_our_echo_from_a_past_life == PDA)
+					continue
+				if(could_this_be_our_echo_from_a_past_life.owner == PDA.owner)
+					GLOB.PDAs -= could_this_be_our_echo_from_a_past_life
+
 		// Tegu edit - Alt job titles
 		if(preference_source && preference_source.prefs && preference_source.prefs.alt_titles_preferences[J.title])
 			PDA.ownjob = preference_source.prefs.alt_titles_preferences[J.title]

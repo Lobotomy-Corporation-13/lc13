@@ -23,17 +23,15 @@
 	desire_on_eat = 20
 	rep_desire_gain = 20
 	insight_cooldown_time = 1 MINUTES
-	liked_objects_list = (/obj/effect/decal/cleanable)
+	liked_objects_list = list(/obj/effect/decal/cleanable)
 	diet_list = list(/obj/item/stock_parts/cell)
 	liked_objects_value = 5
 	attack_action_types = list(/datum/action/cooldown/limbus_abno_action/helper_fight,
 	/datum/action/cooldown/limbus_abno_action/helper_clean,
 	/datum/action/cooldown/limbus_abno_action/helper_cook,
 	/datum/action/cooldown/limbus_abno_action/helper_craft)
-	ego_list = list(
-		/datum/ego_datum/weapon/grinder,
-		/datum/ego_datum/armor/grinder,
-	)
+	attunement_family = "grinder"
+	ego_list = list(/datum/ego_datum/armor/lce/grinder)
 	///These are the three functions mentioned in helper's main story. Bodyguard, cleaning and cooking. Of course, helper interpret those as mixed up.
 	var/cook_mode = FALSE
 	var/clean_mode = FALSE
@@ -56,11 +54,18 @@
 	clean_spray = new(src) //We spawn the spray inside helper because it saves us a little bit of copypaste code.
 	clean_spray.stream_mode = TRUE
 	clean_spray.volume = 1000
-	clean_spray.list_reagents = list(/datum/reagent/space_cleaner = 1000) //No way they'd ever run out, right?
+	clean_spray.list_reagents = list(/datum/reagent/space_cleaner = 1000)
+	//No way they'd ever run out, right?
+
+/*------------------\
+|ABNO LIMBUS ACTIONS|
+\------------------*/
 
 /datum/action/cooldown/limbus_abno_action/helper_fight
 	name = "FIGHT MODE"
 	desc = "Puts you into 'cleaning mode', letting you spin towards distant target. Can only be triggered on low mood or if you hear the word 'CLEAN'. Consume some energy to activate."
+	button_icon = 'ModularLobotomy/_Lobotomyicons/lcl_abno_actions.dmi'
+	background_icon_state = "bg_helper"
 	icon_icon = 'icons/mob/actions/actions_ability.dmi'
 	button_icon_state = "helper_dash0"
 	transparent_when_unavailable = TRUE
@@ -88,6 +93,8 @@
 /datum/action/cooldown/limbus_abno_action/helper_clean
 	name = "CLEAN MODE"
 	desc = "Puts you into 'cooking mode'. Can also be triggered if you hear the word 'COOK'. Consume some energy to activate."
+	button_icon = 'ModularLobotomy/_Lobotomyicons/lcl_abno_actions.dmi'
+	background_icon_state = "bg_helper"
 	icon_icon = 'icons/obj/janitor.dmi'
 	button_icon_state = "cleaner"
 	transparent_when_unavailable = TRUE
@@ -114,6 +121,8 @@
 /datum/action/cooldown/limbus_abno_action/helper_cook
 	name = "COOK MODE"
 	desc = "Puts you into 'fighting mode', allowing you to turn dough into finished meals, and deepfrying the rest. Can also be triggered if you hear the word 'FIGHT'. Consume some energy to activate."
+	button_icon = 'ModularLobotomy/_Lobotomyicons/lcl_abno_actions.dmi'
+	background_icon_state = "bg_helper"
 	icon_icon = 'icons/obj/food/food.dmi'
 	button_icon_state = "meat"
 	transparent_when_unavailable = TRUE
@@ -140,6 +149,8 @@
 /datum/action/cooldown/limbus_abno_action/helper_craft
 	name = "Craft Cells"
 	desc = "Lets you craft batteries from just one piece of metal and wire as long as it's under you. Necessary to keep yourself running."
+	button_icon = 'ModularLobotomy/_Lobotomyicons/lcl_abno_actions.dmi'
+	background_icon_state = "bg_helper"
 	icon_icon = 'icons/obj/power.dmi'
 	button_icon_state = "cell"
 	transparent_when_unavailable = TRUE

@@ -40,21 +40,13 @@
 	if(HAS_TRAIT(user, TRAIT_BETTER_GUNS))
 		projectile.damage += projectile.damage*get_attribute_level(user, JUSTICE_ATTRIBUTE)/130*0.50
 
-	projectile.damage *= (1 + (user.extra_damage / 100))
-	if(projectile.damage_type == RED_DAMAGE)
-		projectile.damage *= (1 + (user.extra_damage_red / 100))
-	if(projectile.damage_type == WHITE_DAMAGE)
-		projectile.damage *= (1 + (user.extra_damage_white / 100))
-	if(projectile.damage_type == BLACK_DAMAGE)
-		projectile.damage *= (1 + (user.extra_damage_black / 100))
-	if(projectile.damage_type == PALE_DAMAGE)
-		projectile.damage *= (1 + (user.extra_damage_pale / 100))
-
 	if(temporary_damage_multiplier)
 		projectile.damage *= temporary_damage_multiplier
 
 	last_projectile_damage = projectile.damage
 	last_projectile_type = projectile.damage_type
+
+	projectile = ProjectileAdjustment(projectile, targloc, target, user)
 
 	if(final_pellets == 1)
 		if(distro) //We have to spread a pixel-precision bullet. throw_proj was called before so angles should exist by now...
@@ -82,6 +74,8 @@
 		user.changeNext_move(CLICK_CD_RANGE)
 	user.newtonian_move(get_dir(target, user))
 
+	return projectile
+
 /obj/item/ego_weapon/ranged/proc/throw_proj(atom/target, turf/targloc, mob/living/user, params, spread, obj/projectile/projectile)
 	var/turf/curloc = get_turf(user)
 	if(!istype(targloc) || !istype(curloc))
@@ -101,3 +95,7 @@
 		projectile.preparePixelProjectile(target, user, params, spread)
 	projectile.fire(null, direct_target)
 	return TRUE
+
+/// This proc gives us a chance to adjust stuff on the projectile we're firing before we actually throw it anywhere. Just remember to return the projectile once we're done.
+/obj/item/ego_weapon/ranged/proc/ProjectileAdjustment(obj/projectile/proj, turf/targloc, atom/target, mob/living/user)
+	return proj

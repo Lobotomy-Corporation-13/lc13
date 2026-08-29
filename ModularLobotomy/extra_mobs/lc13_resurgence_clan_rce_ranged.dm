@@ -56,6 +56,11 @@
 	var/datum/beam/current_beam = null
 	var/aiming = FALSE
 
+/mob/living/simple_animal/hostile/clan/ranged/sniper/Destroy()
+	if(current_beam)
+		QDEL_NULL(current_beam)
+	return ..()
+
 /mob/living/simple_animal/hostile/clan/ranged/sniper/Move()
 	if(!can_act)
 		return FALSE
@@ -288,6 +293,13 @@
 	var/list/obj/effect/temp_visual/warper_area/area_markers = list()
 	var/obj/effect/clan_magic_circle/magic_circle
 
+/mob/living/simple_animal/hostile/clan/ranged/warper/Destroy()
+	area_markers = null
+	if(magic_circle)
+		QDEL_NULL(magic_circle)
+	CancelTeleport()
+	return ..()
+
 /mob/living/simple_animal/hostile/clan/ranged/warper/Move()
 	if(casting)
 		return FALSE
@@ -508,6 +520,12 @@
 	var/harpoon_cooldown_time = 20 SECONDS
 	var/final_damage = 50 // RED damage on drop
 
+/mob/living/simple_animal/hostile/clan/ranged/harpooner/Destroy()
+	UnregisterMob()
+	if(chain_beam)
+		QDEL_NULL(chain_beam)
+	return ..()
+
 /mob/living/simple_animal/hostile/clan/ranged/harpooner/OpenFire(atom/A)
 	if(chained_target)
 		return FALSE // Can't shoot while pulling someone
@@ -537,7 +555,7 @@
 	if(chained_target)
 		return
 
-	chained_target = target
+	RegisterMob(target)
 	chain_start_time = world.time
 
 	// Apply chained status
@@ -607,7 +625,7 @@
 		return
 
 	chained_target.remove_status_effect(/datum/status_effect/harpooner_chained)
-	chained_target = null
+	UnregisterMob()
 	UpdateChainVisuals()
 
 	if(chain_pull_timer)
@@ -622,6 +640,17 @@
 	ReleaseTarget()
 	return ..()
 
+/mob/living/simple_animal/hostile/clan/ranged/harpooner/proc/RegisterMob(mob/living/L)
+	if(!L)
+		return
+	RegisterSignal(L, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING), PROC_REF(UnregisterMob))
+	chained_target = L
+
+/mob/living/simple_animal/hostile/clan/ranged/harpooner/proc/UnregisterMob()
+	if(chained_target)
+		UnregisterSignal(chained_target, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING))
+	chained_target = null
+
 // Harpooner projectiles
 /obj/projectile/clan_bullet/harpoon
 	name = "chain harpoon"
@@ -634,7 +663,7 @@
 /obj/projectile/clan_bullet/harpoon/fire(setAngle)
 	if(firer)
 		chain = firer.Beam(src, icon_state = "chain")
-	..()
+	return ..()
 
 /obj/projectile/clan_bullet/harpoon/Destroy()
 	qdel(chain)
@@ -670,7 +699,7 @@
 /datum/status_effect/harpooner_chained/on_remove()
 	UnregisterSignal(owner, COMSIG_MOVABLE_PRE_MOVE)
 	to_chat(owner, span_notice("The harpoon releases you."))
-	. = ..()
+	return ..()
 
 /datum/status_effect/harpooner_chained/proc/check_movement(mob/living/carbon/human/H, turf/NewLoc)
 	SIGNAL_HANDLER

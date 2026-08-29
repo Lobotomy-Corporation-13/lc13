@@ -1,7 +1,7 @@
 /mob/living/carbon/human/getarmor(def_zone, type)
 	var/armorval = 0
 	var/organnum = 0
-	if(GLOB.damage_type_shuffler?.is_enabled && IsColorDamageType(type))
+	if(SSmaptype.shuffler_active_for(src) && IsColorDamageType(type))
 		var/datum/damage_type_shuffler/shuffler = GLOB.damage_type_shuffler
 		type = shuffler.mapping_defense[shuffler.mapping_offense[type]]
 
@@ -112,6 +112,12 @@
 		if(head.IsReflect(def_zone))
 			return TRUE
 	for(var/obj/item/I in held_items)
+		if(I.IsReflect(def_zone))
+			return TRUE
+	// Check other equipped items (pockets, suit storage, etc.)
+	for(var/obj/item/I in contents)
+		if(I == wear_suit || I == head || (I in held_items))
+			continue
 		if(I.IsReflect(def_zone))
 			return TRUE
 	return FALSE

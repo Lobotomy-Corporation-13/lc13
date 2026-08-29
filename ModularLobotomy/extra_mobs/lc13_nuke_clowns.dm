@@ -139,6 +139,9 @@
 	var/meat_cooldown
 	var/meat_cooldown_time = 2.5 SECONDS
 	var/list/spawned_hearts = list()
+	/// If FALSE, killing this boss does not grant the city achievement.
+	/// Set FALSE by the Refraction Railway's refracted copy.
+	var/give_boss_achievement = TRUE
 
 /mob/living/simple_animal/hostile/mutant_clown/boss/AttackingTarget()
 	if(current_stage == 1)
@@ -173,10 +176,11 @@
 
 /mob/living/simple_animal/hostile/mutant_clown/boss/death(gibbed)
 	// Award achievement to all nearby players
-	for(var/mob/living/L in view(7, src))
-		if(L.stat || !L.client)
-			continue
-		L.client.give_award(/datum/award/achievement/lc13/city/mutant_clown_boss, L)
+	if(give_boss_achievement)
+		for(var/mob/living/L in view(7, src))
+			if(L.stat || !L.client)
+				continue
+			L.client.give_award(/datum/award/achievement/lc13/city/mutant_clown_boss, L)
 	. = ..()
 
 /mob/living/simple_animal/hostile/mutant_clown/boss/Destroy()

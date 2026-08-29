@@ -299,8 +299,9 @@
 	user.visible_message(span_userdanger("[user] prepares to leap at [victim]!"))
 	playsound(src, 'sound/abnormalities/crumbling/warning.ogg', 50, FALSE, 5)
 	walk_towards(warning, victim, 0.1 SECONDS) // This makes our warning move from the commander to the target.
-	SLEEP_CHECK_DEATH(trash_disposal_windup_duration)
+	addtimer(CALLBACK(src, PROC_REF(TelegraphFinale), victim, src), trash_disposal_windup_duration)
 
+/mob/living/simple_animal/hostile/ordeal/indigo_dusk/red/proc/TelegraphFinale(mob/living/victim, mob/living/user = src)
 	can_move = TRUE
 	can_act = TRUE
 	move_resist = initial(move_resist)
@@ -424,7 +425,7 @@
 	toggle_ai(AI_ON)
 	can_move = TRUE
 	can_act = TRUE
-	. = ..()
+	return ..()
 
 /// Failsafe proc in case we miss our throw entirely.
 /mob/living/simple_animal/hostile/ordeal/indigo_dusk/red/proc/StopLunging()
@@ -439,7 +440,7 @@
 	icon = 'icons/mob/telegraphing/telegraph_holographic.dmi'
 	icon_state = "target_circle"
 	desc = "Uh oh."
-	duration = 2.2 SECONDS
+	duration = 2.21 SECONDS
 	randomdir = FALSE
 	movement_type = PHASING | FLYING
 	layer = POINT_LAYER

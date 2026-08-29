@@ -347,6 +347,10 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 	var/last_statue_cooldown_time = 0
 	var/self_damage_statue = 250
 
+/mob/living/simple_animal/hostile/humanoid/fixer/metal/Destroy()
+	DeregisterAll()
+	return ..()
+
 /mob/living/simple_animal/hostile/humanoid/fixer/metal/Aggro()
 	icon_state = icon_attacking
 	. = ..()
@@ -386,8 +390,9 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 		playsound(src, 'sound/weapons/fixer/generic/finisher2.ogg', 75, TRUE, 2)
 		new /obj/effect/temp_visual/slice(T)
 		for(var/mob/living/L in T)
-			if (istype(L, /mob/living/simple_animal/hostile/metal_fixer_statue))
+			if(istype(L, /mob/living/simple_animal/hostile/metal_fixer_statue))
 				var/mob/living/simple_animal/hostile/metal_fixer_statue/S = L
+				DeregisterStatue(S)
 				qdel(S)
 				hit_statue = TRUE
 		HurtInTurf(T, list(), aoe_damage, BLACK_DAMAGE, null, TRUE, FALSE, TRUE, TRUE, TRUE, TRUE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
@@ -427,8 +432,7 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 		if(available_turfs.len)
 			var/turf/statue_turf = pick(available_turfs)
 			var/mob/living/simple_animal/hostile/metal_fixer_statue/S = new statue_type(statue_turf)
-			statues += S
-			S.metal = src
+			RegisterStatue(S)
 			S.icon_state = "memory_statute_grow" // Set the initial icon state to the rising animation
 			flick("memory_statute_grow", S) // Play the rising animation
 			spawn(10) // Wait for the animation to finish
@@ -445,6 +449,21 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 	if(target)
 		P.original = target
 	P.fire(set_angle)
+
+/mob/living/simple_animal/hostile/humanoid/fixer/metal/proc/RegisterStatue(mob/living/simple_animal/hostile/metal_fixer_statue/marble)
+	RegisterSignal(marble, list(COMSIG_PARENT_QDELETING), PROC_REF(DeregisterStatue))
+	statues += marble
+	marble.metal = src
+
+/mob/living/simple_animal/hostile/humanoid/fixer/metal/proc/DeregisterStatue(mob/living/simple_animal/hostile/metal_fixer_statue/granite)
+	UnregisterSignal(granite, list(COMSIG_PARENT_QDELETING))
+	statues -= granite
+	granite.metal = null
+
+/mob/living/simple_animal/hostile/humanoid/fixer/metal/proc/DeregisterAll()
+	for(var/mob/living/grabbo in statues)
+		DeregisterStatue(grabbo)
+	statues.Cut()
 
 /mob/living/simple_animal/hostile/humanoid/fixer/metal/bullet_act(obj/projectile/P, def_zone, piercing_hit = FALSE)
 	if(!istype(P, /obj/projectile/metal_fixer))
@@ -523,6 +542,7 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 /mob/living/simple_animal/hostile/metal_fixer_statue/Destroy()
 	deltimer(heal_timer)
 	deltimer(self_destruct_timer)
+	metal = null
 	return ..()
 
 /mob/living/simple_animal/hostile/metal_fixer_statue/proc/self_destruct()

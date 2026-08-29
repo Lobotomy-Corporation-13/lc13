@@ -5,6 +5,7 @@
 	icon_state = "generalbee"
 	icon_living = "generalbee"
 	core_icon = "gbee_egg"
+	gender = FEMALE
 	speak_emote = list("buzzes")
 	pixel_x = -8
 	base_pixel_x = -8
@@ -70,8 +71,6 @@
 	var/combat_map = FALSE
 	var/datum/action/innate/toggle_artillery_sight/sight_ability
 
-	var/list/beespawn = list()
-
 	attack_action_types = list(
 		/datum/action/innate/change_icon_gbee,
 	)
@@ -112,10 +111,8 @@
 		combat_map = TRUE
 		sight_ability.new_sight = SEE_TURFS
 		if(SSmaptype.maptype == "limbus_labs")
-			var/mob/living/simple_animal/hostile/soldier_bee/V = new(get_turf(src))
-			beespawn+=V
-			V = new(get_turf(src))
-			beespawn+=V
+			new /mob/living/simple_animal/hostile/soldier_bee/(get_turf(src))
+			new /mob/living/simple_animal/hostile/soldier_bee/(get_turf(src))
 	else
 		sight_ability.new_sight = SEE_TURFS | SEE_THRU
 

@@ -42,6 +42,30 @@
 /mob/living/simple_animal/hostile/abnormality/tangle/CanAttack(atom/the_target)
 	return FALSE
 
+/mob/living/simple_animal/hostile/abnormality/tangle/Life()
+	. = ..()
+	if(!.)
+		return
+	if(IsContained())
+		return
+
+	//This is here because the sprite is bugged and I have NO fucking clue why.
+	//It works perfectly fine in a local test but fucks up on the server.
+	//Fuck you. Fuck you. Fuck you.
+	//I am forcing you to have your correct icon, and you will LIKE it.
+	if(icon_state != "tangle" || icon!= 'ModularLobotomy/_Lobotomyicons/32x64.dmi')
+		icon_state = "tangle"
+		icon = 'ModularLobotomy/_Lobotomyicons/32x64.dmi'
+
+	for(var/mob/living/carbon/human/H in GLOB.mob_list)
+		if(locate(/obj/structure/spreading/tangle_hair) in range(0, H))
+			H.deal_damage(3, WHITE_DAMAGE, attack_type = (ATTACK_TYPE_ENVIRONMENT), blocked = H.run_armor_check(null, WHITE_DAMAGE))
+			if(H in view(3, src))
+				if(prob(30) && get_attribute_level(H, FORTITUDE_ATTRIBUTE) < 60)
+					H.Knockdown(1)
+					to_chat(H, span_warning("You get overwhelmed in the hair!"))
+
+
 //Grab a list of all agents and picks one
 /mob/living/simple_animal/hostile/abnormality/tangle/Initialize()
 	. = ..()
@@ -114,7 +138,7 @@
 	. = ..()
 	if(ishuman(AM))
 		var/mob/living/carbon/human/H = AM
-		H.deal_damage(1, WHITE_DAMAGE, attack_type = (ATTACK_TYPE_ENVIRONMENT), blocked = H.run_armor_check(null, RED_DAMAGE))
+		H.deal_damage(1, WHITE_DAMAGE, attack_type = (ATTACK_TYPE_ENVIRONMENT), blocked = H.run_armor_check(null, WHITE_DAMAGE))
 		if(prob(10))
 			H.Immobilize(5)
 			to_chat(H, span_warning("You get caught in the hair!"))

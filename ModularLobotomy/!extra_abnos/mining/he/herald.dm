@@ -46,8 +46,8 @@
 
 	//Testing
 	ego_list = list(
-		/datum/ego_datum/weapon/galaxy,
-		/datum/ego_datum/armor/galaxy,
+		/datum/ego_datum/weapon/logging,
+		/datum/ego_datum/armor/logging,
 	)
 
 	var/mob/living/simple_animal/hostile/asteroid/elite/herald/mirror/my_mirror = null
@@ -65,13 +65,15 @@
 		datum_reference.qliphoth_change(-1)
 	return
 
+/mob/living/simple_animal/hostile/abnormality/mining/herald/Destroy()
+	if(my_mirror)
+		qdel(my_mirror)
+	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/mining/herald/death()
 	. = ..()
 	if(!is_mirror)
 		addtimer(CALLBACK(src, PROC_REF(become_ghost)), 8)
-	if(my_mirror != null)
-		qdel(my_mirror)
 
 /mob/living/simple_animal/hostile/abnormality/mining/herald/proc/become_ghost()
 	icon_state = "herald_ghost"
@@ -201,8 +203,7 @@
 	ranged_cooldown = world.time + 4 SECONDS
 	playsound(get_turf(src), 'sound/magic/clockwork/invoke_general.ogg', 20, TRUE)
 	if(my_mirror != null)
-		qdel(my_mirror)
-		my_mirror = null
+		QDEL_NULL(my_mirror)
 	var/mob/living/simple_animal/hostile/abnormality/mining/herald/mirror/new_mirror = new /mob/living/simple_animal/hostile/abnormality/mining/herald/mirror(loc)
 	my_mirror = new_mirror
 	my_mirror.my_master = src
@@ -233,7 +234,8 @@
 /mob/living/simple_animal/hostile/abnormality/mining/herald/mirror/Destroy()
 	if(my_master != null)
 		my_master.my_mirror = null
-	. = ..()
+	my_master = null
+	return ..()
 
 /obj/projectile/heraldlc13
 	name ="death bolt"

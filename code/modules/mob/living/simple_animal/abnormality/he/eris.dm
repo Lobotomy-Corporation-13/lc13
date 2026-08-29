@@ -8,6 +8,7 @@
 	portrait = "eris"
 	maxHealth = 1100
 	health = 1100
+	gender = FEMALE
 	ranged = TRUE
 	attack_verb_continuous = "claws"
 	attack_verb_simple = "claw"
@@ -101,7 +102,7 @@
 	healpulse()
 
 //Okay, but here's the patrolling stuff
-/mob/living/simple_animal/hostile/abnormality/eris/patrol_select()
+/mob/living/simple_animal/hostile/abnormality/eris/SelectPatrolLocation()
 	var/list/target_turfs = list() // Stolen from Punishing Bird
 	for(var/mob/living/carbon/human/H in GLOB.human_list)
 		if(H.z != z) // Not on our level
@@ -112,8 +113,7 @@
 
 	var/turf/target_turf = get_closest_atom(/turf/open, target_turfs, src)
 	if(istype(target_turf))
-		patrol_path = get_path_to(src, target_turf, TYPE_PROC_REF(/turf, Distance_cardinal), 0, 200)
-		return
+		return target_turf
 	return ..()
 
 
@@ -143,7 +143,7 @@
 			O.Remove(poorfuck)
 			O.forceMove(get_turf(poorfuck))
 	poorfuck.dust()
-	new /obj/effect/gibspawner/generic/silent(get_turf(poorfuck))
+	new /obj/effect/bloodspawner/silent(get_turf(poorfuck))
 
 	//Lose sanity
 	for(var/mob/living/carbon/human/H in view(10, get_turf(src)))
@@ -178,7 +178,7 @@
 	manual_emote("unhinges her jaw, revealing many rows of teeth!")
 
 	playsound(get_turf(src), 'sound/abnormalities/bigbird/bite.ogg', 50, 1, 2)
-	new /obj/effect/gibspawner/generic/silent(get_turf(current_petter))
+	new /obj/effect/bloodspawner/silent(get_turf(current_petter))
 	if(SSmaptype.maptype == "limbus_labs")
 		for(var/obj/item/organ/O in current_petter.getorganszone(BODY_ZONE_HEAD, TRUE))
 			O.Remove(current_petter)

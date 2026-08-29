@@ -10,6 +10,7 @@
 	portrait = "nosferatu"
 	maxHealth = 2000
 	health = 2000
+	gender = MALE
 	move_to_delay = 6
 	rapid_melee = 1
 	threat_level = WAW_LEVEL
@@ -60,6 +61,8 @@
 	var/last_drawn = null
 	var/last_drawn_check = 0
 	var/failed = FALSE
+	/// Bloodpacks offered to Nosferatu must have at least this volume of blood in them to be accepted.
+	var/bloodpack_min_volume = 120
 
 	// Breach stuff
 	var/bloodlust = 4
@@ -113,7 +116,8 @@
 		active = 0
 
 /datum/action/cooldown/nosferatu_banquet/Trigger()
-	if(!..())
+	. = ..()
+	if(!.)
 		return FALSE
 	if(!istype(owner, /mob/living/simple_animal/hostile/abnormality/nosferatu))
 		return FALSE
@@ -133,7 +137,8 @@
 	cooldown_time = NOSFERATU_BANQUET_COOLDOWN //12 seconds
 
 /datum/action/cooldown/nosferatu_mistform/Trigger()
-	if(!..())
+	. = ..()
+	if(!.)
 		return FALSE
 	if(!istype(owner, /mob/living/simple_animal/hostile/abnormality/nosferatu))
 		return FALSE
@@ -150,7 +155,7 @@
 	AddComponent(/datum/component/bloodfeast, siphon = TRUE, range = 2, starting = 1000)
 
 /mob/living/simple_animal/hostile/abnormality/nosferatu/PostSpawn()
-	..()
+	. = ..()
 	if(!IsContained())
 		update_icon()
 	addtimer(CALLBACK(src, PROC_REF(GetThirstier)), 30 SECONDS)
@@ -220,6 +225,7 @@
 			user.adjustBruteLoss(999)
 			AdjustThirst(user.blood_volume) // gain up to 2000 blood by draining this poor sod dry
 			user.Drain()
+	failed = FALSE
 
 /mob/living/simple_animal/hostile/abnormality/nosferatu/examine(mob/user)
 	. = ..()
@@ -234,6 +240,42 @@
 			if(3)
 				shown_value = span_nicegreen("Looks like it's had enough for now.")
 		. += shown_value
+
+/// You can feed a bloodpack to Nosferatu to reset its 'same-feeder-instakill' mechanic.
+/mob/living/simple_animal/hostile/abnormality/nosferatu/attackby(obj/O, mob/user, params)
+	// Throughout we avoid returning ..() for all the bloodpack behaviour since this proc is also used for abnochem. We only call ..() when we're sure we're not dealing with a bloodpack
+	if(IsContained() && istype(O, /obj/item/reagent_containers/blood))
+		var/obj/item/reagent_containers/blood/pack = O
+		var/datum/reagents/the_chems = pack.reagents
+		if(!the_chems)
+			return
+
+		var/datum/reagent/blood_datum = the_chems.has_reagent(/datum/reagent/blood, null)
+		var/how_much_blood = (blood_datum ? blood_datum.volume : 0)
+		if(!(how_much_blood >= bloodpack_min_volume))
+			to_chat(user, span_warning("There isn't enough blood in this pack ([how_much_blood]u offered / [bloodpack_min_volume]u required)! Nosferatu is likelier to go for your neck if you offer it..."))
+			return
+
+		// If Nosferatu is at Qlip 1 or 2, and you have >= 150u of blood, you feed it all the blood.
+		if(datum_reference.qliphoth_meter < 3)
+			AdjustThirst(how_much_blood * 0.5) // It just isn't the same.
+			// Resets this damn mechanic
+			last_drawn = null
+			last_drawn_check = 0
+
+			// Say goodbye to the blood
+			the_chems.remove_reagent(/datum/reagent/blood, 9999)
+
+			// Feedback
+			playsound(get_turf(src), 'sound/abnormalities/nosferatu/bloodcollect.ogg', 35, FALSE)
+			visible_message(span_warning("[src] accepts the offering of blood and drains it in an instant."))
+			to_chat(user, span_nicegreen("It won't be sated by this, but at least the taste of live blood has been washed away. [src] should be safe to work with once again."))
+			return
+		else
+			to_chat(user, span_warning("Nosferatu is well-fed, and won't accept subpar blood like this. Wait for it to get thirstier before offering a bloodpack."))
+			return
+	return ..()
+
 
 // Breach
 /mob/living/simple_animal/hostile/abnormality/nosferatu/BreachEffect(mob/living/carbon/human/user, breach_type)
@@ -326,7 +368,7 @@
 /mob/living/simple_animal/hostile/abnormality/nosferatu/Move()
 	if(!can_act)
 		return FALSE
-	..()
+	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/nosferatu/AttackingTarget(atom/attacked_target)
 	if(mist_form)
@@ -575,6 +617,6 @@
 	var/datum/component/bloodfeast/bloodfeast = GetComponent(/datum/component/bloodfeast)
 	var/obj/effect/decal/cleanable/blood/B = new(get_turf(src))
 	B.bloodiness = (bloodfeast.blood_amount * 0.5) // drops half of its blood on death. This is potentially far more than what fits in a splatter.
-	..()
+	return ..()
 
 #undef NOSFERATU_BANQUET_COOLDOWN

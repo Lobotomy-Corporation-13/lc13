@@ -8,7 +8,7 @@
 	living_flags = MOVES_ON_ITS_OWN
 	status_flags = CANPUSH
 	area_index = MOB_SIMPLEANIMAL_INDEX
-	
+
 	var/icon_living = ""
 	///Icon when the animal is dead. Don't use animated icons for this.
 	var/icon_dead = ""
@@ -187,7 +187,7 @@
 		gender = pick(MALE,FEMALE)
 	if(!real_name)
 		real_name = name
-	if(!loc)
+	if(!loc && !GLOB.refraction_extracting_mob_stats)
 		stack_trace("Simple animal being instantiated in nullspace")
 	update_simplemob_varspeed()
 	if(dextrous)
@@ -711,10 +711,12 @@
 		if (togglestatus > 0 && togglestatus < 5)
 			if (togglestatus == AI_Z_OFF || AIStatus == AI_Z_OFF)
 				var/turf/T = get_turf(src)
-				if (AIStatus == AI_Z_OFF)
-					SSidlenpcpool.idle_mobs_by_zlevel[T.z] -= src
-				else
-					SSidlenpcpool.idle_mobs_by_zlevel[T.z] += src
+				var/z_level = T ? T.z : null
+				if(z_level)
+					if (AIStatus == AI_Z_OFF)
+						SSidlenpcpool.idle_mobs_by_zlevel[z_level] -= src
+					else
+						SSidlenpcpool.idle_mobs_by_zlevel[z_level] += src
 			GLOB.simple_animals[AIStatus] -= src
 			GLOB.simple_animals[togglestatus] += src
 			AIStatus = togglestatus

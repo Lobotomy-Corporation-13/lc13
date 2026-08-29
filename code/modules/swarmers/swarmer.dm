@@ -73,7 +73,8 @@
 /mob/living/simple_animal/hostile/swarmer/Initialize()
 	. = ..()
 	remove_verb(src, /mob/living/verb/pulled)
-	for(var/datum/atom_hud/data/diagnostic/diag_hud in GLOB.huds)
+	for(var/hud in GLOB.huds)
+		var/datum/atom_hud/data/diagnostic/diag_hud = GLOB.huds[hud]
 		diag_hud.add_to_hud(src)
 
 /mob/living/simple_animal/hostile/swarmer/Move()

@@ -37,4 +37,5 @@
 #define UPGRADE_DISCIPLINARY_2 "Disciplinary Specialization  Level 2"
 #define UPGRADE_RECORDS_2 "Records Specialization  Level 2"
 #define UPGRADE_EXTRACTION_2 "Extraction Specialization  Level 2"
+	#define UPGRADE_EXTRACTION_2_PRICE_MULT 0.85 // Multiplier to E.G.O. prices applied by the above upgrade.
 #define UPGRADE_ARCHITECT_2 "Architect Specialization  Level 2"

@@ -33,12 +33,10 @@
 	charged = TRUE
 	qdel(I)
 
-/obj/item/ego_weapon/city/rosespanner/HandleCharge(added_charge, mob/target)
+/obj/item/ego_weapon/city/rosespanner/HandleCharge(added_charge, mob/target) // Came here for a bugfix, accidentally buffed it by letting the overcharge bypass charge consumption
 	. = ..()
-	if(!.)
-		return FALSE
 
-	if(charge_amount == charge_cap)
+	if(charge_amount >= charge_cap)
 		overcharged = TRUE
 		currently_charging = TRUE
 

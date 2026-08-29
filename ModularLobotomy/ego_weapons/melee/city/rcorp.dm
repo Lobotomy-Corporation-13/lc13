@@ -344,3 +344,39 @@
 
 	//set all to 0
 	teleporting = FALSE
+
+/obj/item/ego_weapon/city/rookpick //Warpick made for when Rooks spawn in RCE so they don't use fucking base SS13 ones
+	name = "R-4P R-Corp Warpick"
+	desc = "A small excavation tool used by R-corp which doubles as a melee weapon in a pinch. \
+	Discontinued quickly in the 4th Pack, but favored by other, more self-reliant packs due to its easy production."
+	icon_state = "rookpick"
+	icon = 'ModularLobotomy/_Lobotomyicons/rcorp_weapons.dmi'
+	force = 25
+	attack_speed = 1
+	damtype = RED_DAMAGE
+	swingstyle = WEAPONSWING_LARGESWEEP
+	tool_behaviour = TOOL_MINING
+
+	attack_verb_continuous = list("bashes", "smacks")
+	attack_verb_simple = list("bash", "smack")
+
+	hitsound = 'sound/weapons/genhit1.ogg'
+
+// ========================================
+// IFF (No Friendly Fire) Gun Variants
+// These are the versions crafted by RCE factories
+// ========================================
+
+/obj/item/gun/energy/e_gun/rabbit/nopin/iff
+	name = "R-Corporation R-2800 'Mark 1' (IFF)"
+	desc = "An energy gun produced specifically to suppress threats with a variety of damage types. This model has IFF targeting to prevent friendly fire."
+	ammo_type = list(
+		/obj/item/ammo_casing/energy/laser/red/iff,
+		/obj/item/ammo_casing/energy/laser/white/iff,
+		/obj/item/ammo_casing/energy/laser/black/iff
+		)
+
+/obj/item/gun/energy/e_gun/rabbit/minigun/iff
+	name = "R-Corporation X-15 Minigun (IFF)"
+	desc = "An energy machinegun that is extremely heavy, and fires bullets extremely quickly. This model has IFF targeting to prevent friendly fire."
+	ammo_type = list(/obj/item/ammo_casing/energy/laser/red/iff)

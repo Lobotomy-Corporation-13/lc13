@@ -2,6 +2,7 @@
 	true_name = "Laetitia"
 	maxHealth = 1500
 	health = 1500
+	gender = FEMALE
 	melee_damage_lower = 1
 	melee_damage_upper = 5
 	melee_damage_type = WHITE_DAMAGE
@@ -21,10 +22,8 @@
 	desire_on_pet = 40
 	desire_on_eat = 20
 	rep_desire_gain = -50
-	ego_list = list(
-		/datum/ego_datum/weapon/prank,
-		/datum/ego_datum/armor/prank,
-	)
+	attunement_family = "prank"
+	ego_list = list(/datum/ego_datum/armor/lce/prank)
 	desire_on_talk = 1
 	var/happy_duration_time = 20 MINUTES
 	var/happy_duration
@@ -42,6 +41,9 @@
 	var/list/victim_list = list()
 	var/list/possible_gifts = list(/obj/item/food/candy, /obj/item/food/chocolatebar, /obj/item/food/cake/birthday, /obj/item/food/pizza/margherita) //If the gifts are healing, spawns one of those items.
 
+/*-----\
+|Vitals|
+\-----*/
 /mob/living/simple_animal/hostile/limbus_abno/laetitia/AttackingTarget(atom/attacked_target)
 	if(!isliving(attacked_target))
 		return ..()
@@ -52,8 +54,11 @@
 	else
 		return ..()
 
+/*--\
+|Fun|
+\--*/
 /mob/living/simple_animal/hostile/limbus_abno/laetitia/funpet(mob/living/carbon/human/petter)
-	..()
+	. = ..()
 	petter.adjustWhiteLoss(-10) //This actually heals your sanity, but...
 	if(gifting)
 		GiveFriend(petter)
@@ -90,6 +95,9 @@
 	if(anticipation_start)
 		Surprise()
 
+/*----------\
+|Containment|
+\----------*/
 /mob/living/simple_animal/hostile/limbus_abno/laetitia/AdjustDesire(desire_amount)
 	..()
 	if(desire_bar > 0)
@@ -100,9 +108,12 @@
 		patience = 0
 		GiveGlobalFriend()
 
+/*---\
+|Misc|
+\---*/
 /mob/living/simple_animal/hostile/limbus_abno/laetitia/proc/GiveGlobalFriend()
 	to_chat(src, "<span class='span_warning'>Things are too boring around here, so you decide to shake things up!</span>")
-	for(var/mob/living/carbon/human/H in GLOB.player_list)
+	for(var/mob/living/carbon/human/H in view(10 , src))	//This used to be literally everyone. God fucking no.
 		if(H.z != z)
 			continue
 		if(H.stat == DEAD)
@@ -163,12 +174,17 @@
 	if(!pranked)
 		to_chat(src, "<span class='span_userdanger'>You feel like your prank isn't good enough, you decide to take away all their gifts without them noticing. Maybe next time?</span>")
 
+/*------------------\
+|ABNO LIMBUS ACTIONS|
+\------------------*/
 ///Surprise!!! Activate every single gift at once.
 /datum/action/cooldown/limbus_abno_action/laetitia_surprise
 	name = "SURPRISE!"
 	desc = "Open every single gift that's inside people (not counting special deliveries)! But don't do it too early, or it will be boring! You need to be bored to use this."
-	icon_icon = 'icons/effects/blood.dmi'
-	button_icon_state = "floor5"
+	button_icon = 'ModularLobotomy/_Lobotomyicons/lcl_abno_actions.dmi'
+	background_icon_state = "bg_laetitia"
+	icon_icon = 'ModularLobotomy/_Lobotomyicons/lcl_abno_actions.dmi'
+	button_icon_state = "lae_surprise"
 	transparent_when_unavailable = TRUE
 	cooldown_time = 5 MINUTES
 	desire_req = 50
@@ -189,8 +205,10 @@
 /datum/action/cooldown/limbus_abno_action/laetitia_gifting
 	name = "Give gift"
 	desc = "The next person that you attack, that hits you, or pets you is going to get a nice gift! You need to be bored to use this."
-	icon_icon = 'ModularLobotomy/_Lobotomyicons/tegu_effects.dmi'
-	button_icon_state = "prank_gift"
+	button_icon = 'ModularLobotomy/_Lobotomyicons/lcl_abno_actions.dmi'
+	background_icon_state = "bg_laetitia"
+	icon_icon = 'ModularLobotomy/_Lobotomyicons/lcl_abno_actions.dmi'
+	button_icon_state = "lae_gift"
 	transparent_when_unavailable = TRUE
 	cooldown_time = 2 MINUTES
 	desire_req = 50
@@ -208,8 +226,10 @@
 /datum/action/cooldown/limbus_abno_action/special_delivery
 	name = "Special Delivery"
 	desc = "Create a 'normal' gift that has a 50% chance to explode, or to hold a few healing items. You can tell which it is once you've made one, but others can't."
-	icon_icon = 'icons/obj/storage.dmi'
-	button_icon_state = "giftdeliverypackage3"
+	button_icon = 'ModularLobotomy/_Lobotomyicons/lcl_abno_actions.dmi'
+	background_icon_state = "bg_laetitia"
+	icon_icon = 'ModularLobotomy/_Lobotomyicons/lcl_abno_actions.dmi'
+	button_icon_state = "lae_delivery"
 	transparent_when_unavailable = TRUE
 	cooldown_time = 2 MINUTES
 
@@ -226,8 +246,10 @@
 /datum/action/cooldown/limbus_abno_action/check_gifts
 	name = "Check gifts."
 	desc = "Check how many secret gifts inside people are ready to be unwrapped for maximum surprise."
-	icon_icon = 'icons/effects/effects.dmi'
-	button_icon_state = "info"
+	button_icon = 'ModularLobotomy/_Lobotomyicons/lcl_abno_actions.dmi'
+	background_icon_state = "bg_laetitia"
+	icon_icon = 'ModularLobotomy/_Lobotomyicons/lcl_abno_actions.dmi'
+	button_icon_state = "lae_check"
 	transparent_when_unavailable = TRUE
 	cooldown_time = 1 SECONDS
 
@@ -250,21 +272,33 @@
 		to_chat(prankster, "<span class='span_userdanger'>Do it! Do it now! It's fully ready! It'll be so fun! [pranked_amount] of your friends are going to have so much fun!</span>")
 	StartCooldown()
 
+/*---------\
+|Bomb Prank|
+\---------*/
 /obj/item/laetitia_bomb_gift
 	name = "Laetitia's special gift."
 	desc = "No matter how much you shake the gift, you can't begin to guess what's inside."
-	icon = 'icons/obj/storage.dmi'
-	icon_state = "giftdeliverypackage3"
+	icon = 'ModularLobotomy/_Lobotomyicons/lcl_gifts.dmi'
+	icon_state = "gift_crimson"
 	inhand_icon_state = "gift"
 	resistance_flags = FLAMMABLE
+	var/list/wrappings = list("gift_crimson", "gift_wine", "gift_rose", "gift_plum", "gift_cream")
 
 	var/pranked = FALSE
 	var/good_item_spawned = 3 //High risk high reward.
+	///RED damage to whoever unwraps it. Everyone else caught in it takes half.
+	var/gift_damage = 80
+	///Tiles out from the gift the surprise reaches. 1 is the 3x3 around it.
+	var/gift_range = 1
 	var/list/good_items = list(
 	/obj/item/reagent_containers/hypospray/medipen/mental,
 	/obj/item/reagent_containers/hypospray/medipen/salacid,
 	/obj/item/reagent_containers/hypospray/medipen/stimpack/traitor,
 	/obj/item/reagent_containers/hypospray/medipen/oxandrolone)
+
+/obj/item/laetitia_bomb_gift/Initialize(mapload)
+	. = ..()
+	icon_state = pick(wrappings)
 
 /obj/item/laetitia_bomb_gift/examine(mob/user)
 	. = ..()
@@ -277,10 +311,37 @@
 /obj/item/laetitia_bomb_gift/attack_self(mob/user)
 	var/turf/gift_turf = get_turf(src)
 	if(pranked)
-		explosion(gift_turf, 0, 0, 2, 3, 0, TRUE, FALSE, 0, TRUE) //It hurts like hell and will probably take off limbs, but it's supposed to be a risky gamble.
-		playsound(get_turf(src), 'sound/effects/explosion1.ogg', 30, 1) //We call the sound manually to not make them deal with the annoying deafening effect.
+		Detonate(gift_turf, user)
 	else
 		for(var/i = 1 to good_item_spawned)
 			var/item_type = pick(good_items)
 			new item_type (gift_turf)
 	qdel(src)
+
+/obj/item/laetitia_bomb_gift/proc/Detonate(turf/epicentre, mob/user)
+	playsound(epicentre, 'sound/effects/explosion1.ogg', 30, 1) //Manually, so nobody gets the deafening.
+	new /obj/effect/temp_visual/explosion(epicentre)
+	for(var/mob/living/L in range(gift_range, epicentre))
+		var/dealt = L.deal_damage(L == user ? gift_damage : gift_damage * 0.5, RED_DAMAGE, src, attack_type = ATTACK_TYPE_SPECIAL)
+		if(dealt > 0 && prob(dealt))
+			Delimb(L)
+
+///Takes an arm or a leg, if there is one left to take. Heads and chests are left alone.
+/obj/item/laetitia_bomb_gift/proc/Delimb(mob/living/victim)
+	if(!iscarbon(victim))
+		return
+	var/mob/living/carbon/C = victim
+	var/list/parts = list()
+	for(var/obj/item/bodypart/BP in C.bodyparts)
+		if(BP.body_part == HEAD || BP.body_part == CHEST)
+			continue
+		if(BP.dismemberable)
+			parts += BP
+	if(!length(parts))
+		return
+	var/obj/item/bodypart/lost = pick(parts)
+	var/lost_name = lost.name
+	if(!lost.dismember())
+		return
+	C.visible_message(span_danger("[C]'s [lost_name] comes away with the wrapping paper!"), \
+		span_userdanger("Your [lost_name] comes away with the wrapping paper!"))

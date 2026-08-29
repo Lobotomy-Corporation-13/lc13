@@ -154,3 +154,9 @@
 	name = "gourmand's coat"
 	desc = "A coat made for those with an acquired taste"
 	icon_state = "pierre"
+
+/obj/item/clothing/under/suit/lobotomy/hcorp
+	name = "h-corp uniform"
+	desc = "A black suit and magenta tie worn by H-corp."
+	icon_state = "mcorp"
+

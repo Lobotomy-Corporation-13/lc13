@@ -91,6 +91,7 @@
 	for(var/upgradecheck in GLOB.jcorp_upgrades)
 		if(upgradecheck == "Abno Luck")
 			jcorp_modifier = 1
+			user.client?.give_award(/datum/award/achievement/abno/oceanic_boost, user)
 	switch(rand(1, 10)+jcorp_modifier)
 		if(1 to 2)
 			currentvend = pick(badsoders)
@@ -108,6 +109,7 @@
 	for(var/upgradecheck in GLOB.jcorp_upgrades)
 		if(upgradecheck == "Abno Luck")
 			jcorp_modifier = 2
+			user.client?.give_award(/datum/award/achievement/abno/oceanic_boost, user)
 	switch(rand(1, 10)+jcorp_modifier)
 		if(1 to 4)
 			currentvend = pick(badsoders)
@@ -125,6 +127,7 @@
 	for(var/upgradecheck in GLOB.jcorp_upgrades)
 		if(upgradecheck == "Abno Luck")
 			jcorp_modifier = 2
+			user.client?.give_award(/datum/award/achievement/abno/oceanic_boost, user)
 	switch(rand(1, 10)+jcorp_modifier)
 		if(1 to 6)
 			currentvend = pick(badsoders)

@@ -26,6 +26,9 @@
 	var/obj/effect/vfx = null
 	/// Extraction Officer Work bonus/penalty
 	var/work_bonus = 0
+	/// If mid work events occur
+	var/events_enabled = TRUE
+	var/list/event_list
 	/// Stored reference to Extraction Officer Tool
 	var/obj/item/extraction/key/EOTool = null
 	/// Console Upgrades
@@ -94,9 +97,9 @@
 		upgrade_list += "[i]|"
 	. += upgrade_list
 
-/obj/machinery/computer/abnormality/ui_interact(mob/user)
+/obj/machinery/computer/abnormality/ui_interact(mob/user, via_notepad = FALSE)
 	. = ..()
-	if(isliving(user))
+	if(isliving(user) && !via_notepad)
 		playsound(src, 'sound/machines/terminal_prompt_confirm.ogg', 50, FALSE)
 	if(!istype(datum_reference))
 		to_chat(user, span_boldannounce("The console has no information stored!"))
@@ -145,6 +148,13 @@
 	popup.set_content(dat)
 	popup.open()
 	return
+
+/// We'll let people holding abnormality_work_notepad bypass the adjacency check if they're within 2 tiles and in LOS.
+/obj/machinery/computer/abnormality/adjacency_check(mob/living/user)
+	. = ..()
+	if(istype(user.get_active_held_item(), /obj/item/abnormality_work_notepad))
+		if(can_see(user, src, 1))
+			return TRUE
 
 /obj/machinery/computer/abnormality/Topic(href, href_list)
 	. = ..()
@@ -197,6 +207,7 @@
 	updateUsrDialog()
 
 /obj/machinery/computer/abnormality/proc/start_work(mob/living/carbon/human/user, work_type)
+	//First Calculate if sanity is not going well
 	var/sanity_result
 	if(!datum_reference.stupid)
 		sanity_result = round(datum_reference.current.fear_level - get_user_level(user))
@@ -212,7 +223,7 @@
 			sanity_damage = user.maxSanity*0.6
 		if(4 to INFINITY)
 			sanity_damage = user.maxSanity
-	var/work_time = datum_reference.max_boxes
+
 	if(work_type in scramble_list)
 		work_type = scramble_list[work_type]
 	if(recorded)
@@ -220,6 +231,10 @@
 		SEND_GLOBAL_SIGNAL(COMSIG_GLOB_WORK_STARTED, datum_reference, user, work_type)
 	if(linked_panel)
 		linked_panel.console_working()
+	if(!user.Adjacent(src))
+		var/obj/item/card/id/idcard = user.get_idcard()
+		var/title = idcard?.assignment ? idcard.assignment + " " : null
+		say("Work commenced by [title][user].")
 	if(!HAS_TRAIT(user, TRAIT_WORKFEAR_IMMUNE))
 		user.adjustSanityLoss(sanity_damage)
 	if(user.stat == DEAD || user.sanity_lost)
@@ -236,19 +251,24 @@
 			to_chat(user, span_danger("Calm down... Calm down..."))
 		if(3 to INFINITY)
 			to_chat(user, span_userdanger("I'm not ready for this!"))
+
 	var/was_melting = meltdown //to remember if it was melting down before the work started
 	meltdown = FALSE // Reset meltdown
 	if(was_melting)
 		SEND_SIGNAL(src, COMSIG_MELTDOWN_FINISHED, datum_reference, TRUE)
 		SEND_GLOBAL_SIGNAL(COMSIG_GLOB_MELTDOWN_FINISHED, datum_reference, TRUE)
+
 	update_icon()
+	//Now we are offically working
 	datum_reference.working = TRUE
+
 	var/work_chance = datum_reference.get_work_chance(work_type, user)
 	if(was_melting == MELTDOWN_GRAY)
 		work_chance -= 10
 	if(was_melting == MELTDOWN_CYAN)
 		work_chance -= 20
 	var/work_speed = 2 SECONDS / (1 + ((get_modified_attribute_level(user, TEMPERANCE_ATTRIBUTE) + datum_reference.understanding) / 100))
+
 	switch(work_bonus)
 		if(EXTRACTION_KEY)
 			if (GetFacilityUpgradeValue(UPGRADE_EXTRACTION_1))
@@ -259,21 +279,31 @@
 			work_speed *= 1.2 //20% slower work
 			if (GetFacilityUpgradeValue(UPGRADE_EXTRACTION_1))
 				work_chance += 5 //but +5% work chance
-	work_speed /= user.physiology.work_speed_mod
-	var/success_boxes = 0
-	var/total_boxes = 0
-	var/canceled = FALSE
+
+	//User Alterations
 	ADD_TRAIT(user, TRAIT_STUNIMMUNE, src)
 	ADD_TRAIT(user, TRAIT_PUSHIMMUNE, src)
 	user.density = FALSE // If they can be walked through they can't be switched! I didn't wanna add chairs because if there WAS it'd nullify the ability to DODGE issues that appear.
 	user.set_anchored(TRUE)
 	user.is_working = TRUE
+
+	var/work_time = datum_reference.max_boxes
 	// Initial chance and speed values before work started, in case they get overriden by abnormality
 	var/init_work_chance = work_chance
 	var/init_work_speed = work_speed
+
+	var/success_boxes = 0
+	var/total_boxes = 0
+	var/canceled = FALSE
+
+	WorkEvent(user, work_type)
+
 	while(total_boxes < work_time)
 		if(!CheckStatus(user))
 			break
+		if(user.physiology)
+			//I dont know if its a bad idea to make the abno check the work_speed_mod every worktick -IP
+			work_speed = init_work_speed / user.physiology.work_speed_mod
 		if(!datum_reference.stupid)
 			work_speed = datum_reference.current.SpeedWorktickOverride(user, work_speed, init_work_speed, work_type)
 		if(do_after(user, work_speed, src, IGNORE_HELD_ITEM))
@@ -338,7 +368,7 @@
 	if(!HAS_TRAIT(user, TRAIT_NOSOFTCRIT))
 		if(user.health < 0)
 			return FALSE // Dying
-			
+
 	if(user.health < 0)
 		if(mechanical_upgrades["vitals"])
 			Radio.set_frequency(FREQ_COMMON)
@@ -351,9 +381,9 @@
 
 /obj/machinery/computer/abnormality/proc/do_work(chance)
 	if(prob(chance))
-		playsound(src, 'sound/machines/synth_yes.ogg', 25, FALSE, -4)
+		playsound(src, 'sound/machines/synth_yes.ogg', 25, FALSE, -2)
 		return TRUE
-	playsound(src, 'sound/machines/synth_no.ogg', 25, FALSE, -4)
+	playsound(src, 'sound/machines/synth_no.ogg', 25, FALSE, -2)
 	return FALSE
 
 /obj/machinery/computer/abnormality/proc/finish_work(mob/living/carbon/human/user, work_type, pe = 0, work_speed = 2 SECONDS, was_melting, canceled = FALSE)
@@ -480,6 +510,59 @@
 		return
 	upgrade_tech.forceMove(src)
 	mechanical_upgrades[upgrade_slot] = upgrade_tech
+
+//An event occurs during work.
+/obj/machinery/computer/abnormality/proc/WorkEvent(mob/living/carbon/user, type_of_work)
+	if(!event_list || !length(event_list))
+		MakeEvents()
+		if(!length(event_list))
+			return
+
+	//15% chance
+	if(prob(85))
+		return
+
+	var/new_event = GrabEvent(type_of_work)
+	if(!new_event)
+		return
+	var/datum/work_event/event_datum = new new_event
+	ADD_TRAIT(user, TRAIT_IMMOBILIZED, "work_event")
+	event_datum.returnEventInfo(user, src)
+	if(!user)
+		return
+	REMOVE_TRAIT(user, TRAIT_IMMOBILIZED, "work_event")
+
+/obj/machinery/computer/abnormality/proc/MakeEvents()
+	var/our_abnormality = datum_reference.abno_path
+	var/list/viable_events = list()
+	for(var/_event in subtypesof(/datum/work_event))
+		var/datum/work_event/A = _event
+		var/abno_typepath = initial(A.req_abno)
+		if(abno_typepath && abno_typepath != our_abnormality)
+			continue
+		viable_events += _event
+		viable_events[_event] = 10
+	event_list = viable_events
+
+/obj/machinery/computer/abnormality/proc/GrabEvent(worktype)
+	var/list/viable_events = event_list
+	var/list/default_worktypes = list(
+		ABNORMALITY_WORK_INSTINCT = 1,
+		ABNORMALITY_WORK_INSIGHT = 1,
+		ABNORMALITY_WORK_ATTACHMENT = 1,
+		ABNORMALITY_WORK_REPRESSION = 1,
+		)
+	if(worktype)
+		viable_events = list()
+		for(var/i in event_list)
+			var/datum/work_event/A = i
+			var/req_work = initial(A.evt_req_work)
+			if(req_work && req_work != worktype)
+				continue
+			if(!req_work && !default_worktypes[worktype])
+				continue
+			viable_events += i
+	return pickweight(viable_events)
 
 //special console just for training rabbit
 /obj/machinery/computer/abnormality/training_rabbit

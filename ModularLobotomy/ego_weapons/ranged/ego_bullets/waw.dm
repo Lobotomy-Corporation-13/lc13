@@ -573,3 +573,19 @@
 			bullet.damage *= damage_mult
 			bullet.fire(angle)
 	QDEL_IN(src, 1 SECONDS)
+
+/obj/projectile/ego_bullet/lce_ego_cobalt
+	name = "cobalt bullet"
+	damage = 25 // trying really hard not to step on Ujdat's toes here
+	damage_type = WHITE_DAMAGE
+
+/obj/projectile/ego_bullet/lce_ego_cobalt_alt
+	name = "howling round"
+	damage = 40 // higher damage since altfire ammo is lower and reloads for longer, meant to be debuffer, not main damage.
+	damage_type = WHITE_DAMAGE
+
+/obj/projectile/ego_bullet/lce_ego_cobalt_alt/on_hit(atom/target, blocked = FALSE)
+	if(istype(target, /mob/living))
+		var/mob/living/the_target = target
+		the_target.apply_lc_white_fragile(2)
+	.=..()

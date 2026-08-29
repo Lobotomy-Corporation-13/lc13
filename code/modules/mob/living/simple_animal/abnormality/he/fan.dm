@@ -39,6 +39,7 @@
 		"Set it to 2" = list(FALSE, "You can barely feel a breeze, you just need a little more..."),
 	)
 
+	//uses tags
 	var/list/safe = list()
 	var/list/warning = list()
 	var/list/danger = list()
@@ -73,7 +74,7 @@
 		if(user.mind.fan_triggers >= 5)
 			user.client?.give_award(/datum/award/achievement/abno/fan_trigger, user)
 
-	if(user in danger)
+	if(user.tag in danger)
 		if(safework)
 			to_chat(user, span_notice("You don't feel quite as tempted this time."))
 			safework = FALSE
@@ -84,16 +85,16 @@
 		playsound(loc, 'sound/machines/juicer.ogg', 100, TRUE)
 		user.gib()
 
-	else if(user in warning)
-		danger+=user
+	else if(user.tag in warning)
+		danger+=user.tag
 		to_chat(user, span_nicegreen("You feel elated."))
 
-	else if(user in safe)
-		warning+=user
+	else if(user.tag in safe)
+		warning+=user.tag
 		to_chat(user, span_nicegreen("You feel refreshed."))
 
 	else
-		safe+=user
+		safe+=user.tag
 		to_chat(user, span_nicegreen("You could use some more."))
 
 //Meltdown

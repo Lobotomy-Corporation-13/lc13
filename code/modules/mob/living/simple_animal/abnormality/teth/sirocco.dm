@@ -11,15 +11,15 @@
 	del_on_death = TRUE
 	pixel_x = -16
 	base_pixel_x = -16
-	maxHealth = 1200
-	health = 1200
+	maxHealth = 1000
+	health = 1000
 	blood_volume = 0
 	density = FALSE
-	damage_coeff = list(RED_DAMAGE = 0, WHITE_DAMAGE = 0, BLACK_DAMAGE = 0, PALE_DAMAGE = 0)
+	damage_coeff = list(RED_DAMAGE = 0, WHITE_DAMAGE = 0.7, BLACK_DAMAGE = 1, PALE_DAMAGE = 2)
 	stat_attack = HARD_CRIT
 	can_breach = TRUE
 	threat_level = TETH_LEVEL
-	start_qliphoth = 5
+	start_qliphoth = 4
 	del_on_death = FALSE
 	move_to_delay = 6
 
@@ -76,10 +76,16 @@
 	var/lowered_breached_time = 3 MINUTES
 	var/grab_range = 3
 
+	//They will only some of the time grab shit
+	var/gaming_on
+
 /mob/living/simple_animal/hostile/abnormality/sirocco/proc/Grabber()
 	if(stat == DEAD)
 		return
+
 	for(var/atom/movable/A in oview(grab_range, src)) // Grab anything in our range
+		if(!gaming_on)
+			continue
 		if(isliving(A) && faction_check_mob(A))
 			continue
 		if(A && !A.anchored && !isobserver(A) && A != src)
@@ -90,11 +96,14 @@
 /mob/living/simple_animal/hostile/abnormality/sirocco/proc/ThrowAround()
 	if(stat == DEAD)
 		return
+
 	var/turf/turf_underneath = get_turf(src)
 	for(var/atom/movable/A in turf_underneath)
 		if(A && !A.anchored && !isobserver(A) && A != src && !(A in grabbed_list))
 			if(isliving(A))
 				grabbed_list += A
+			if(!gaming_on)
+				continue
 			var/randomdir = rand(0, 10)
 			A.throw_at(get_edge_target_turf(src,randomdir), rand(4,7), 3, src, TRUE)
 
@@ -122,10 +131,11 @@
 /* Qliphoth/Breach effects */
 /mob/living/simple_animal/hostile/abnormality/sirocco/BreachEffect(mob/living/carbon/human/user, breach_type)
 	. = ..()
+	icon_state = breach_icon
 	addtimer(CALLBACK(src, PROC_REF(Grabber)), cooldown_time)
 	addtimer(CALLBACK(src, PROC_REF(EndStorm)), breached_time)
 	addtimer(CALLBACK(src, PROC_REF(RefreshList)), list_refresh_time)
-	icon_state = breach_icon
+	StormOn()
 	if(breach_type == BREACH_PINK)
 		move_to_delay = 2
 		ChangeResistances(list(RED_DAMAGE = 0, WHITE_DAMAGE = 0.4, BLACK_DAMAGE = 0.4, PALE_DAMAGE = 0.4))
@@ -133,6 +143,16 @@
 /mob/living/simple_animal/hostile/abnormality/sirocco/proc/EndStorm()
 	grabbed_list = list()
 	death()
+
+/mob/living/simple_animal/hostile/abnormality/sirocco/proc/StormOn()
+	icon_state = "sirocco_fired"
+	gaming_on = TRUE
+	addtimer(CALLBACK(src, PROC_REF(StormOff)), 20 SECONDS)
+
+/mob/living/simple_animal/hostile/abnormality/sirocco/proc/StormOff()
+	icon_state = "sirocco"
+	gaming_on = FALSE
+	addtimer(CALLBACK(src, PROC_REF(StormOn)), 10 SECONDS)
 
 /mob/living/simple_animal/hostile/abnormality/sirocco/death(gibbed)
 	icon_state = icon_dead
@@ -144,10 +164,11 @@
 /mob/living/simple_animal/hostile/abnormality/sirocco/SuccessEffect(mob/living/carbon/human/user, work_type, pe, canceled)
 	. = ..()
 	breached_time = lowered_breached_time // We don't breach as long
+	datum_reference.qliphoth_change(1)
 
 /mob/living/simple_animal/hostile/abnormality/sirocco/NeutralEffect(mob/living/carbon/human/user, work_type, pe, work_time, canceled)
 	. = ..()
-	datum_reference.qliphoth_change(1)
+	datum_reference.qliphoth_change(2)
 
 /mob/living/simple_animal/hostile/abnormality/sirocco/FailureEffect(mob/living/carbon/human/user, work_type, pe)
 	. = ..()
@@ -167,6 +188,8 @@
 /mob/living/simple_animal/hostile/abnormality/sirocco/Destroy()
 	grabbed_list = list()
 	. = ..()
+
+
 
 /datum/reagent/abnormality/sirocco
 	name = "Restless Sand"

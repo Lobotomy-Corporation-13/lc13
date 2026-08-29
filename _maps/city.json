@@ -1,7 +1,7 @@
 {
 	"version": 1,
 	"map_name": "City Of Light",
-	"map_path": "map_files/Event",
+	"map_path": "map_files/City",
 	"map_file": [
 		"city.dmm"
 	],

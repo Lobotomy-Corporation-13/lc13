@@ -111,6 +111,13 @@ Association gear is mostly HE for grunts, low WAW for veterans and high WAW for 
 	item_path = /obj/item/clothing/suit/armor/ego_gear/city/shilimbus/director
 	cost = 75
 
+// | Shi East |
+//
+/// Shi East Section 3 Jacket
+/datum/ego_datum/armor/city/shi_east
+	item_path = /obj/item/clothing/suit/armor/ego_gear/city/shi_east
+	cost = 40
+
 /* ------------------ 5 - Cinq ------------------*/
 
 // | Cinq South |
@@ -163,24 +170,41 @@ Association gear is mostly HE for grunts, low WAW for veterans and high WAW for 
 
 /* ------------------ 7 - Seven ------------------*/
 
-// | Seven South |
-/// Seven South Armour
-/datum/ego_datum/armor/city/seven_south
+// | Seven South Section 6: Old Gear|
+/// Seven South Section 6 Armour
+/datum/ego_datum/armor/city/seven_south_s6
 	item_path = /obj/item/clothing/suit/armor/ego_gear/city/seven
 	cost = 40
-/// Seven South Recon Armour
-/datum/ego_datum/armor/city/seven_south/recon
+/// Seven South Section 6 Recon Armour
+/datum/ego_datum/armor/city/seven_south_s6/recon
 	item_path = /obj/item/clothing/suit/armor/ego_gear/city/sevenrecon
-/// Seven South Veteran Armour
-/datum/ego_datum/armor/city/seven_south/vet
+/// Seven South Section 6 Veteran Armour
+/datum/ego_datum/armor/city/seven_south_s6/vet
 	item_path = /obj/item/clothing/suit/armor/ego_gear/city/sevenvet
 	cost = 60
-/// Seven South Intel Armour
-/datum/ego_datum/armor/city/seven_south/vet/intel
+/// Seven South Section 6 Intel Armour
+/datum/ego_datum/armor/city/seven_south_s6/vet/intel
 	item_path = /obj/item/clothing/suit/armor/ego_gear/city/sevenvet/intel
-/// Seven South Director Armour
-/datum/ego_datum/armor/city/seven_south/director
+/// Seven South Section 6 Director Armour
+/datum/ego_datum/armor/city/seven_south_s6/director
 	item_path = /obj/item/clothing/suit/armor/ego_gear/city/sevendirector
+	cost = 75
+
+// | Seven South Section 4: Reworked Gear|
+/// Seven South Section 4 Armour
+/datum/ego_datum/armor/city/seven_south_s4
+	item_path = /obj/item/clothing/suit/armor/ego_gear/city/seven_s4
+	cost = 40
+/// Seven South Section 4 Recon Armour
+/datum/ego_datum/armor/city/seven_south_s4/recon
+	item_path = /obj/item/clothing/suit/armor/ego_gear/city/seven_s4/recon
+/// Seven South Section 4 Veteran Armour
+/datum/ego_datum/armor/city/seven_south/vet
+	item_path = /obj/item/clothing/suit/armor/ego_gear/city/seven_s4/vet
+	cost = 60
+/// Seven South Section 4 Director Armour
+/datum/ego_datum/armor/city/seven_south/director
+	item_path = /obj/item/clothing/suit/armor/ego_gear/city/seven_s4/director
 	cost = 75
 
 /* ------------------ 9 - Devyat ------------------*/
@@ -196,10 +220,18 @@ Association gear is mostly HE for grunts, low WAW for veterans and high WAW for 
 
 /* ------------------ 10 - Dieci ------------------*/
 
-/// Dieci Veteran Gear
+/// Dieci Association Gear
 /datum/ego_datum/armor/city/dieci
 	item_path = /obj/item/clothing/suit/armor/ego_gear/city/dieci
+	cost = 40
+/// Dieci Association Veteran Gear
+/datum/ego_datum/armor/city/dieci/vet
+	item_path = /obj/item/clothing/suit/armor/ego_gear/city/dieci/vet
 	cost = 60
+/// Dieci Association Director Gear
+/datum/ego_datum/armor/city/dieci/director
+	item_path = /obj/item/clothing/suit/armor/ego_gear/city/dieci/director
+	cost = 75
 
 /*
 ------------------ Fixers & Workshops ------------------

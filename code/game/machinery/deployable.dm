@@ -117,6 +117,17 @@
 /obj/structure/barricade/sandbags/make_debris()
 	new /obj/item/stack/sheet/mineral/sandbags(get_turf(src), 1)
 
+/obj/structure/barricade/sandbags/field
+	name = "field sandbags"
+	desc = "Quick-deploy field sandbags. Easier to climb over than standard sandbags."
+	color = "#568cff"
+
+/obj/structure/barricade/sandbags/field/Initialize()
+	. = ..()
+	// Remove default climbable, add fast version
+	RemoveElement(/datum/element/climbable)
+	AddElement(/datum/element/climbable, climb_time = 5, climb_stun = 1)
+
 /obj/structure/barricade/sandbags/update_overlays()
 	. = ..()
 	if(obj_integrity < max_integrity)

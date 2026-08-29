@@ -8,7 +8,6 @@
 /area/city/outskirts)
 "aJ" = (
 /obj/structure/chair/sofa/corner{
-	dir = 2;
 	icon_state = "sofaend_left"
 	},
 /turf/open/floor/carpet/royalblue,
@@ -37,6 +36,20 @@
 "iU" = (
 /turf/closed/wall/r_wall/syndicate,
 /area/city/outskirts)
+"lJ" = (
+/obj/structure/wave_barrier{
+	controller_id = "lounge"
+	},
+/turf/open/floor/wood,
+/area/city/outskirts)
+"pe" = (
+/obj/structure/barricade/wooden,
+/obj/structure/barricade/wooden/crude,
+/obj/structure/wave_barrier{
+	controller_id = "lounge"
+	},
+/turf/open/floor/wood,
+/area/city/outskirts)
 "qR" = (
 /obj/structure/chair/sofa/corner{
 	dir = 8;
@@ -56,6 +69,21 @@
 /obj/structure/barricade/wooden,
 /turf/open/floor/wood,
 /area/city/outskirts)
+"zK" = (
+/obj/structure/barricade/wooden,
+/obj/structure/barricade/wooden/crude,
+/obj/effect/landmark/wave_spawn/dynamic{
+	controller_id = "lounge"
+	},
+/turf/open/floor/wood,
+/area/city/outskirts)
+"Am" = (
+/obj/structure/barricade/wooden,
+/obj/effect/landmark/wave_spawn/dynamic{
+	controller_id = "lounge"
+	},
+/turf/open/floor/wood,
+/area/city/outskirts)
 "DI" = (
 /obj/structure/chair/sofa/corner,
 /turf/open/floor/carpet/royalblue,
@@ -67,11 +95,20 @@
 /obj/structure/table/wood,
 /obj/structure/showcase/machinery/tv,
 /obj/structure/showcase/machinery/tv,
+/obj/effect/landmark/wave_spawn/dynamic{
+	controller_id = "lounge"
+	},
 /turf/open/floor/wood,
 /area/city/outskirts)
 "Hg" = (
 /obj/structure/barricade/wooden,
 /obj/structure/barricade/wooden/crude,
+/turf/open/floor/wood,
+/area/city/outskirts)
+"Jj" = (
+/obj/effect/landmark/wave_spawn/dynamic{
+	controller_id = "lounge"
+	},
 /turf/open/floor/wood,
 /area/city/outskirts)
 "Ms" = (
@@ -80,8 +117,17 @@
 	},
 /turf/open/floor/wood,
 /area/city/outskirts)
+"Oa" = (
+/obj/effect/landmark/wave_trigger{
+	controller_id = "lounge"
+	},
+/turf/open/floor/wood,
+/area/city/outskirts)
 "Og" = (
 /obj/structure/barricade/wooden,
+/obj/structure/wave_barrier{
+	controller_id = "lounge"
+	},
 /turf/closed/wall/r_wall/syndicate,
 /area/city/outskirts)
 "OC" = (
@@ -100,10 +146,20 @@
 "OH" = (
 /turf/open/floor/wood,
 /area/city/outskirts)
+"OX" = (
+/obj/structure/barricade/wooden,
+/obj/structure/wave_barrier{
+	controller_id = "lounge"
+	},
+/turf/open/floor/wood,
+/area/city/outskirts)
 "UK" = (
 /obj/structure/barricade/wooden,
 /obj/structure/barricade/wooden,
 /obj/structure/barricade/wooden/crude,
+/obj/structure/wave_barrier{
+	controller_id = "lounge"
+	},
 /turf/open/floor/wood,
 /area/city/outskirts)
 "VY" = (
@@ -123,13 +179,13 @@
 (1,1,1) = {"
 iU
 iU
-OH
-OH
-OH
-OH
-OH
-OH
-OH
+Oa
+Oa
+Oa
+Oa
+Oa
+Oa
+Oa
 iU
 iU
 "}
@@ -148,7 +204,7 @@ iU
 "}
 (3,1,1) = {"
 iU
-OH
+Jj
 OH
 OH
 Ew
@@ -156,7 +212,7 @@ Ew
 Ew
 OH
 OH
-OH
+Jj
 iU
 "}
 (4,1,1) = {"
@@ -208,7 +264,7 @@ gu
 gu
 Ew
 OH
-OH
+Jj
 iU
 "}
 (8,1,1) = {"
@@ -252,7 +308,7 @@ iU
 "}
 (11,1,1) = {"
 iU
-vh
+Am
 OH
 OH
 Ew
@@ -260,7 +316,7 @@ Ew
 Ew
 OH
 Ms
-Hg
+zK
 iU
 "}
 (12,1,1) = {"
@@ -279,13 +335,13 @@ iU
 (13,1,1) = {"
 iU
 Og
-vh
+OX
 UK
-vh
-OH
-OH
-OH
-Hg
+OX
+lJ
+lJ
+lJ
+pe
 Og
 iU
 "}

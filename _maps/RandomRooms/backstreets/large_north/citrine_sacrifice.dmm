@@ -1,0 +1,535 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"a" = (
+/turf/closed/indestructible/riveted/plastinum/nodiagonal{
+	color = "#4BBBBB"
+	},
+/area/city/backstreets_room)
+"b" = (
+/obj/structure/mineral_door/silver,
+/turf/open/floor/plasteel/freezer{
+	name = "tiles"
+	},
+/area/city/backstreets_room)
+"c" = (
+/obj/effect/decal/cleanable/blood/gibs/torso{
+	dir = 4
+	},
+/turf/open/floor/plasteel/freezer{
+	name = "tiles";
+	color = "#FFA620"
+	},
+/area/city/backstreets_room)
+"d" = (
+/obj/effect/decal/cleanable/blood/gibs/up,
+/turf/open/floor/plasteel/freezer{
+	name = "tiles";
+	color = "#FFA620"
+	},
+/area/city/backstreets_room)
+"f" = (
+/obj/structure/lootcrate/money{
+	name = "Tithe Crate"
+	},
+/turf/open/floor/plasteel/freezer{
+	name = "tiles";
+	color = "#49CCF8"
+	},
+/area/city/backstreets_room)
+"g" = (
+/obj/effect/decal/cleanable/blood/gibs/old,
+/mob/living/simple_animal/hostile/ordeal/citrine/archer/noon,
+/turf/open/floor/plasteel/freezer{
+	name = "tiles";
+	color = "#49CCF8"
+	},
+/area/city/backstreets_room)
+"h" = (
+/obj/structure/fluff/divine/nexus{
+	pixel_x = -1;
+	color = "#49CCF8";
+	resistance_flags = 64
+	},
+/obj/machinery/light/floor,
+/turf/open/floor/plasteel/freezer{
+	name = "tiles"
+	},
+/area/city/backstreets_room)
+"i" = (
+/obj/effect/decal/cleanable/blood/footprints{
+	dir = 8
+	},
+/turf/open/floor/plasteel/freezer{
+	name = "tiles";
+	color = "#49CCF8"
+	},
+/area/city/backstreets_room)
+"j" = (
+/obj/effect/decal/cleanable/blood/gibs{
+	pixel_y = 6;
+	pixel_x = -2
+	},
+/turf/open/floor/plasteel/freezer{
+	name = "tiles";
+	color = "#FFA620"
+	},
+/area/city/backstreets_room)
+"k" = (
+/obj/structure/chair/pew/left{
+	dir = 4
+	},
+/mob/living/simple_animal/hostile/ordeal/citrine/archer,
+/turf/open/floor/carpet/cyan,
+/area/city/backstreets_room)
+"l" = (
+/obj/effect/decal/cleanable/blood/old,
+/turf/open/floor/plasteel/freezer{
+	name = "tiles";
+	color = "#FFA620"
+	},
+/area/city/backstreets_room)
+"m" = (
+/obj/structure/fluff/divine/powerpylon{
+	color = "#FFA620";
+	resistance_flags = 64
+	},
+/obj/machinery/light/floor,
+/turf/open/floor/plasteel/freezer{
+	name = "tiles";
+	color = "#49CCF8"
+	},
+/area/city/backstreets_room)
+"n" = (
+/mob/living/simple_animal/hostile/ordeal/citrine/archer/noon,
+/turf/open/floor/facility/white{
+	color = "#49CCF8";
+	name = "cyan"
+	},
+/area/city/backstreets_room)
+"o" = (
+/obj/structure/lootcrate/n_corp,
+/obj/effect/decal/cleanable/blood/splatter/over_window{
+	pixel_x = 8;
+	pixel_y = 32
+	},
+/turf/open/floor/plasteel/freezer{
+	name = "tiles";
+	color = "#49CCF8"
+	},
+/area/city/backstreets_room)
+"p" = (
+/obj/structure/table/wood,
+/obj/item/organ/eyes{
+	pixel_x = -7;
+	pixel_y = -5
+	},
+/obj/item/ego_weapon/city/ncorp_hammer/big,
+/obj/item/clothing/suit/armor/ego_gear/city/ncorp/vet{
+	pixel_x = 6;
+	pixel_y = -6
+	},
+/obj/machinery/light/floor,
+/turf/open/floor/plasteel/freezer{
+	name = "tiles";
+	color = "#49CCF8"
+	},
+/area/city/backstreets_room)
+"q" = (
+/obj/structure/mineral_door/silver,
+/obj/effect/decal/cleanable/blood/drip,
+/turf/open/floor/plasteel/freezer{
+	name = "tiles";
+	color = "#49CCF8"
+	},
+/area/city/backstreets_room)
+"s" = (
+/obj/structure/table/wood,
+/obj/item/organ/ears,
+/obj/effect/decal/cleanable/blood/splatter/over_window{
+	pixel_x = 32
+	},
+/obj/item/ego_weapon/city/ncorp_nail/big,
+/turf/open/floor/plasteel/freezer{
+	name = "tiles";
+	color = "#49CCF8"
+	},
+/area/city/backstreets_room)
+"t" = (
+/obj/structure/lootcrate/money{
+	name = "Tithe Crate"
+	},
+/obj/effect/decal/cleanable/blood/splatter/over_window{
+	pixel_x = 32;
+	pixel_y = 9
+	},
+/turf/open/floor/plasteel/freezer{
+	name = "tiles";
+	color = "#49CCF8"
+	},
+/area/city/backstreets_room)
+"u" = (
+/obj/structure/fluff/divine/convertaltar{
+	pixel_y = 4
+	},
+/obj/effect/mob_spawn/human/corpse,
+/turf/open/floor/plasteel/freezer{
+	name = "tiles";
+	color = "#49CCF8"
+	},
+/area/city/backstreets_room)
+"v" = (
+/obj/structure/chair/pew/right{
+	dir = 4
+	},
+/obj/machinery/light/floor,
+/turf/open/floor/carpet/cyan,
+/area/city/backstreets_room)
+"w" = (
+/turf/open/floor/plasteel/freezer{
+	name = "tiles"
+	},
+/area/city/backstreets_room)
+"x" = (
+/mob/living/simple_animal/hostile/ordeal/citrine/priest,
+/turf/open/floor/facility/white{
+	color = "#49CCF8";
+	name = "cyan"
+	},
+/area/city/backstreets_room)
+"y" = (
+/obj/structure/lootcrate/n_corp,
+/obj/machinery/light/floor,
+/turf/open/floor/plasteel/freezer{
+	name = "tiles";
+	color = "#49CCF8"
+	},
+/area/city/backstreets_room)
+"z" = (
+/obj/structure/chair/pew{
+	dir = 4
+	},
+/turf/open/floor/carpet/cyan,
+/area/city/backstreets_room)
+"A" = (
+/obj/structure/chair/pew{
+	dir = 4
+	},
+/mob/living/simple_animal/hostile/ordeal/citrine/archer,
+/turf/open/floor/carpet/cyan,
+/area/city/backstreets_room)
+"B" = (
+/obj/structure/fluff/divine/convertaltar{
+	pixel_y = 4
+	},
+/obj/item/organ/heart,
+/turf/open/floor/plasteel/freezer{
+	name = "tiles";
+	color = "#49CCF8"
+	},
+/area/city/backstreets_room)
+"C" = (
+/obj/structure/fluff/divine/convertaltar{
+	pixel_y = 4
+	},
+/obj/structure/railing{
+	dir = 8
+	},
+/turf/open/floor/facility/white{
+	color = "#49CCF8";
+	name = "cyan"
+	},
+/area/city/backstreets_room)
+"E" = (
+/obj/effect/decal/cleanable/blood/innards,
+/obj/effect/decal/cleanable/blood,
+/mob/living/simple_animal/hostile/ordeal/citrine/knight,
+/turf/open/floor/plasteel/freezer{
+	name = "tiles";
+	color = "#49CCF8"
+	},
+/area/city/backstreets_room)
+"G" = (
+/obj/structure/chair/pew/right{
+	dir = 4
+	},
+/mob/living/simple_animal/hostile/ordeal/citrine/archer,
+/turf/open/floor/carpet/cyan,
+/area/city/backstreets_room)
+"H" = (
+/turf/open/floor/facility/white{
+	color = "#49CCF8";
+	name = "cyan"
+	},
+/area/city/backstreets_room)
+"J" = (
+/obj/structure/table/wood,
+/obj/item/storage/book/bible/omnissiah{
+	pixel_y = 4;
+	pixel_x = 3
+	},
+/obj/machinery/light/floor,
+/obj/structure/railing{
+	dir = 8
+	},
+/turf/open/floor/facility/white{
+	color = "#49CCF8";
+	name = "cyan"
+	},
+/area/city/backstreets_room)
+"K" = (
+/turf/open/floor/carpet/cyan,
+/area/city/backstreets_room)
+"M" = (
+/obj/effect/decal/cleanable/blood/gibs/old,
+/turf/open/floor/plasteel/freezer{
+	name = "tiles";
+	color = "#FFA620"
+	},
+/area/city/backstreets_room)
+"N" = (
+/obj/structure/railing{
+	dir = 10
+	},
+/obj/structure/table/wood,
+/obj/machinery/light/floor,
+/turf/open/floor/facility/white{
+	color = "#FFA620";
+	name = "orange"
+	},
+/area/city/backstreets_room)
+"O" = (
+/turf/open/floor/plasteel/freezer{
+	name = "tiles";
+	color = "#49CCF8"
+	},
+/area/city/backstreets_room)
+"P" = (
+/obj/structure/chair/pew/left{
+	dir = 4
+	},
+/obj/machinery/light/floor,
+/turf/open/floor/carpet/cyan,
+/area/city/backstreets_room)
+"Q" = (
+/turf/open/floor/plasteel/freezer{
+	name = "tiles";
+	color = "#FFA620"
+	},
+/area/city/backstreets_room)
+"R" = (
+/obj/structure/table/wood,
+/obj/item/kitchen/knife/butcher{
+	pixel_x = -3;
+	pixel_y = 1
+	},
+/turf/open/floor/plasteel/freezer{
+	name = "tiles";
+	color = "#49CCF8"
+	},
+/area/city/backstreets_room)
+"T" = (
+/obj/structure/lootcrate/n_corp,
+/turf/open/floor/plasteel/freezer{
+	name = "tiles";
+	color = "#49CCF8"
+	},
+/area/city/backstreets_room)
+"V" = (
+/obj/effect/decal/cleanable/blood,
+/obj/machinery/light/floor,
+/turf/open/floor/plasteel/freezer{
+	name = "tiles";
+	color = "#49CCF8"
+	},
+/area/city/backstreets_room)
+"Y" = (
+/obj/structure/railing{
+	dir = 9
+	},
+/obj/structure/table/wood,
+/obj/machinery/light/floor,
+/turf/open/floor/facility/white{
+	color = "#FFA620";
+	name = "orange"
+	},
+/area/city/backstreets_room)
+"Z" = (
+/obj/structure/table/wood,
+/obj/item/organ/appendix{
+	pixel_y = -8;
+	pixel_x = 8
+	},
+/obj/item/organ/brain{
+	pixel_x = 5;
+	pixel_y = 5
+	},
+/obj/item/ego_weapon/city/ncorp_mark/white{
+	pixel_x = -6;
+	pixel_y = 2
+	},
+/obj/machinery/light/floor,
+/turf/open/floor/plasteel/freezer{
+	name = "tiles";
+	color = "#49CCF8"
+	},
+/area/city/backstreets_room)
+
+(1,1,1) = {"
+a
+a
+a
+a
+a
+a
+a
+a
+"}
+(2,1,1) = {"
+a
+h
+w
+w
+w
+w
+h
+a
+"}
+(3,1,1) = {"
+a
+w
+G
+z
+z
+k
+w
+b
+"}
+(4,1,1) = {"
+a
+w
+K
+K
+K
+K
+w
+b
+"}
+(5,1,1) = {"
+a
+w
+v
+A
+z
+P
+w
+a
+"}
+(6,1,1) = {"
+a
+w
+K
+K
+K
+K
+w
+a
+"}
+(7,1,1) = {"
+a
+w
+w
+w
+w
+w
+w
+a
+"}
+(8,1,1) = {"
+a
+O
+Y
+C
+J
+N
+O
+a
+"}
+(9,1,1) = {"
+a
+O
+H
+x
+n
+H
+O
+a
+"}
+(10,1,1) = {"
+a
+m
+i
+Q
+Q
+O
+m
+a
+"}
+(11,1,1) = {"
+a
+a
+q
+a
+a
+a
+a
+a
+"}
+(12,1,1) = {"
+a
+V
+O
+O
+g
+R
+Z
+a
+"}
+(13,1,1) = {"
+a
+o
+Q
+c
+l
+j
+B
+a
+"}
+(14,1,1) = {"
+a
+f
+l
+M
+Q
+d
+u
+a
+"}
+(15,1,1) = {"
+a
+y
+t
+T
+E
+s
+p
+a
+"}
+(16,1,1) = {"
+a
+a
+a
+a
+a
+a
+a
+a
+"}

@@ -13,6 +13,7 @@
 	access = list(ACCESS_PHARMACY, ACCESS_COMMAND) // I want to use the number 69.
 	minimal_access = list(ACCESS_PHARMACY, ACCESS_COMMAND)
 	departments = DEPARTMENT_COMMAND
+	paycheck = 700
 	mapexclude = list("wonderlabs", "mini", "enkephalin_rush", "branch12")
 
 	job_abbreviation = "REP"
@@ -40,17 +41,22 @@
 /// Alternate corps you can pick
 /datum/job/representative
 	alt_titles = list(
-		"R Corp Representative",
-		"W Corp Representative",
+		"H Corp Representative",
+		"J Corp Representative",
 		"K Corp Representative",
 		"N Corp Representative",
 		"P Corp Representative",
-		"J Corp Representative",
+		"R Corp Representative",
+		"W Corp Representative",
 	)
 
 /datum/outfit/job/representative/rcorprepresentative
 	name = "R Corp Representative"
 	uniform = /obj/item/clothing/under/suit/lobotomy/rcorp
+
+/datum/outfit/job/representative/hcorprepresentative
+	name = "H Corp Representative"
+	uniform = /obj/item/clothing/under/suit/lobotomy/hcorp
 
 /datum/outfit/job/representative/wcorprepresentative
 	name = "W Corp Representative"
@@ -72,3 +78,7 @@
 /datum/outfit/job/representitive/jcorprepresentative
 	name = "J Corp Representative"
 	uniform = /obj/item/clothing/under/suit/lobotomy/jcorp
+
+/datum/outfit/job/representative/pcorprepresentative
+	name = "P Corp Representative"
+	uniform = /obj/item/clothing/under/suit/lobotomy/pcorp

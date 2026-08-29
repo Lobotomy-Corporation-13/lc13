@@ -15,6 +15,7 @@
 	del_on_death = FALSE
 	maxHealth = 1500
 	health = 1500
+	gender = FEMALE
 	pixel_x = -12
 	base_pixel_x = -12
 	damage_coeff = list(RED_DAMAGE = 1.5, WHITE_DAMAGE = 1.5, BLACK_DAMAGE = 0.5, PALE_DAMAGE = 2) //not that bad without a lover
@@ -333,9 +334,11 @@
 
 /obj/item/clothing/head/unrequited_crown/process()
 	if((love_cooldown < world.time) && loved && mermaid.workingflag != TRUE)
-		mermaid.datum_reference.qliphoth_change(-1)
-		new /obj/effect/temp_visual/heart(get_turf(loved))
-		to_chat(loved, span_warning("You feel as though you're forgetting someone..."))
+		var/obj/item/clothing/suit/armor/ego_gear/realization/forever/Z = loved.get_item_by_slot(ITEM_SLOT_OCLOTHING)
+		if(!istype(Z))
+			mermaid.datum_reference.qliphoth_change(-1)
+			new /obj/effect/temp_visual/heart(get_turf(loved))
+			to_chat(loved, span_warning("You feel as though you're forgetting someone..."))
 		love_cooldown = world.time + love_cooldown_time
 
 /obj/item/clothing/head/unrequited_crown/Destroy()

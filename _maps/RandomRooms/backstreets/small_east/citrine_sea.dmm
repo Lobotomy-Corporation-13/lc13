@@ -1,0 +1,86 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"a" = (
+/turf/closed/indestructible/reinforced,
+/area/city/backstreets_room)
+"m" = (
+/mob/living/simple_animal/hostile/ordeal/citrine/knight,
+/turf/open/floor/bronze,
+/area/city/backstreets_room)
+"v" = (
+/turf/open/floor/bronze,
+/area/city/backstreets_room)
+"w" = (
+/obj/structure/fluff/clockwork/alloy_shards/medium_gearbit,
+/turf/open/floor/bronze,
+/area/city/backstreets_room)
+"x" = (
+/obj/structure/fluff/clockwork/alloy_shards,
+/turf/open/floor/bronze,
+/area/city/backstreets_room)
+"J" = (
+/obj/structure/fluff/clockwork/clockgolem_remains,
+/turf/open/floor/bronze,
+/area/city/backstreets_room)
+"N" = (
+/obj/structure/fluff/clockwork/blind_eye,
+/turf/open/floor/bronze,
+/area/city/backstreets_room)
+"S" = (
+/obj/structure/fluff/clockwork/alloy_shards/medium,
+/obj/structure/fluff/clockwork/fallen_armor,
+/turf/open/floor/bronze,
+/area/city/backstreets_room)
+"T" = (
+/obj/structure/fluff/clockwork/alloy_shards/large,
+/turf/open/floor/bronze,
+/area/city/backstreets_room)
+"X" = (
+/obj/item/nullrod/spear,
+/turf/open/floor/bronze,
+/area/city/backstreets_room)
+
+(1,1,1) = {"
+a
+v
+v
+v
+v
+v
+a
+"}
+(2,1,1) = {"
+a
+J
+v
+w
+X
+v
+a
+"}
+(3,1,1) = {"
+a
+v
+x
+m
+v
+N
+a
+"}
+(4,1,1) = {"
+a
+S
+v
+v
+v
+T
+a
+"}
+(5,1,1) = {"
+a
+a
+a
+a
+a
+a
+a
+"}

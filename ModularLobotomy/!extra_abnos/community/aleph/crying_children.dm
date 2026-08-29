@@ -220,7 +220,7 @@
 	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/crying_children/death(gibbed)
-	if(!desperate && children_list.len <= 0)
+	if(!desperate && length(children_list) <= 0)
 		if(client)
 			FinalPhase()
 			return
@@ -247,10 +247,10 @@
 
 /mob/living/simple_animal/hostile/abnormality/crying_children/Destroy()
 	UnregisterSignal(SSdcs, COMSIG_GLOB_MOB_DEATH)
-
+	for(var/mob/living/simple_animal/hostile/child/C in children_list)
+		DeadChild(C)
 	// If for some reason admeme deletes it
-	for(var/mob/living/L in children_list)
-		L.death()
+	QDEL_LIST(children_list)
 	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/crying_children/OpenFire()
@@ -437,21 +437,22 @@
 
 	//I tried using subtype loop for this, but it ends a bit buggy
 	var/mob/living/simple_animal/hostile/child/unseeing/SE = new(teleport_target)
-	RegisterSignal(SE, COMSIG_LIVING_DEATH, PROC_REF(DeadChild), SE)
+	RegisterSignal(SE, list(COMSIG_PARENT_QDELETING, COMSIG_LIVING_DEATH), PROC_REF(DeadChild), SE)
 	teleport_potential -= teleport_target
 	teleport_target = pick(teleport_potential)
 	var/mob/living/simple_animal/hostile/child/unhearing/HE = new(teleport_target)
-	RegisterSignal(HE, COMSIG_LIVING_DEATH, PROC_REF(DeadChild), HE)
+	RegisterSignal(HE, list(COMSIG_PARENT_QDELETING, COMSIG_LIVING_DEATH), PROC_REF(DeadChild), HE)
 	teleport_potential -= teleport_target
 	teleport_target = pick(teleport_potential)
 	var/mob/living/simple_animal/hostile/child/unspeaking/PE = new(teleport_target)
-	RegisterSignal(PE, COMSIG_LIVING_DEATH, PROC_REF(DeadChild), PE)
+	RegisterSignal(PE, list(COMSIG_PARENT_QDELETING, COMSIG_LIVING_DEATH), PROC_REF(DeadChild), PE)
 	children_list = list(SE, HE, PE)
 
 /mob/living/simple_animal/hostile/abnormality/crying_children/proc/DeadChild(mob/living/deadchild)
 	children_list -= deadchild
+	UnregisterSignal(deadchild, list(COMSIG_PARENT_QDELETING, COMSIG_LIVING_DEATH))
 	charge = max(0, charge - 30) // Extra 30 Sec Per Kill
-	if(children_list.len <= 0)
+	if(children_list.len <= 0 && stat != DEAD && !QDELETED(src))
 		SLEEP_CHECK_DEATH(50)
 		FinalPhase()
 		var/turf/T = pick(GLOB.department_centers)
@@ -530,13 +531,14 @@
 		H.update_sight()
 		blinded += H
 
-/mob/living/simple_animal/hostile/child/unseeing/death(gibbed)
+/mob/living/simple_animal/hostile/child/unseeing/Destroy(gibbed)
 	for(var/mob/living/carbon/human/H in blinded)
 		REMOVE_TRAIT(H, TRAIT_BLIND, GENETIC_MUTATION)
 		H.update_blindness()
 		H.update_sight()
+	blinded = null
 	addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(show_global_blurb), 20, "The World Was Beautiful, Yet The Child Can't See It.", 25))
-	..()
+	return ..()
 
 // Unhearing
 /mob/living/simple_animal/hostile/child/unhearing
@@ -555,11 +557,11 @@
 		ADD_TRAIT(H, TRAIT_DEAF, GENETIC_MUTATION)
 		deafened += H
 
-/mob/living/simple_animal/hostile/child/unhearing/death(gibbed)
+/mob/living/simple_animal/hostile/child/unhearing/Destroy()
 	for(var/mob/living/carbon/human/H in deafened)
 		REMOVE_TRAIT(H, TRAIT_DEAF, GENETIC_MUTATION)
 	addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(show_global_blurb), 20, "Words Of Love And Encouragement Was Spoken, Yet The Child Can't Hear Them.", 25))
-	..()
+	return ..()
 
 // Unspeaking
 /mob/living/simple_animal/hostile/child/unspeaking
@@ -578,11 +580,12 @@
 		ADD_TRAIT(H, TRAIT_MUTE, GENETIC_MUTATION)
 		muted += H
 
-/mob/living/simple_animal/hostile/child/unspeaking/death(gibbed)
+/mob/living/simple_animal/hostile/child/unspeaking/Destroy()
 	for(var/mob/living/carbon/human/H in muted)
 		REMOVE_TRAIT(H, TRAIT_MUTE, GENETIC_MUTATION)
+	muted = null
 	addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(show_global_blurb), 20, "His Mind, Full Of Pain And Suffering, Yet The Child Can't Tell A Soul.", 25))
-	..()
+	return ..()
 
 /obj/projectile/beam/sorrow_beam
 	name = "wounds of sorrow"

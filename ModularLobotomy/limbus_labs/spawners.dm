@@ -4,12 +4,18 @@ GLOBAL_LIST_INIT(low_security, list(
 	/mob/living/simple_animal/hostile/limbus_abno/laetitia,
 	/mob/living/simple_animal/hostile/limbus_abno/simple_smile,
 	/mob/living/simple_animal/hostile/limbus_abno/helper,
-	/mob/living/simple_animal/hostile/limbus_abno/pbird
+	/mob/living/simple_animal/hostile/limbus_abno/pbird,
+	/mob/living/simple_animal/hostile/limbus_abno/lunar_rabbit,
+	/mob/living/simple_animal/hostile/limbus_abno/funeral
 ))
 
 GLOBAL_LIST_INIT(high_security, list(
 	/mob/living/simple_animal/hostile/limbus_abno/mountain,
-	/mob/living/simple_animal/hostile/limbus_abno/queen_bee
+	/mob/living/simple_animal/hostile/limbus_abno/queen_bee,
+	/mob/living/simple_animal/hostile/limbus_abno/despair_knight,
+	/mob/living/simple_animal/hostile/limbus_abno/hatred_queen,
+	/mob/living/simple_animal/hostile/limbus_abno/big_wolf,
+	/mob/living/simple_animal/hostile/limbus_abno/red_hood
 ))
 
 //These are the lcl abnos that can actually be used. The ones above are those that show in the preference list.
@@ -20,12 +26,20 @@ GLOBAL_LIST_INIT(available_low_sec_abno, list(
 	/mob/living/simple_animal/hostile/limbus_abno/laetitia,
 	/mob/living/simple_animal/hostile/limbus_abno/simple_smile,
 	/mob/living/simple_animal/hostile/limbus_abno/helper,
-	/mob/living/simple_animal/hostile/limbus_abno/pbird
+	/mob/living/simple_animal/hostile/limbus_abno/funeral,
+	//mob/living/simple_animal/hostile/limbus_abno/pbird,
+		//Caused SIGNIFICANT issues during multiple rounds. Keeping it in prefrences in case we fix it. - Kitsunemitsu
+	//mob/living/simple_animal/hostile/limbus_abno/lunar_rabbit,
 ))
 
 GLOBAL_LIST_INIT(available_high_sec_abno, list(
 	/mob/living/simple_animal/hostile/limbus_abno/mountain,
-	/mob/living/simple_animal/hostile/limbus_abno/queen_bee))
+	/mob/living/simple_animal/hostile/limbus_abno/queen_bee,
+	/mob/living/simple_animal/hostile/limbus_abno/despair_knight,
+	/mob/living/simple_animal/hostile/limbus_abno/hatred_queen,
+	/mob/living/simple_animal/hostile/limbus_abno/big_wolf,
+	/mob/living/simple_animal/hostile/limbus_abno/red_hood
+	))
 
 //This is to keep track of which lcl abno was already physically spawned.
 GLOBAL_LIST_EMPTY(lcl_spawned_abno)

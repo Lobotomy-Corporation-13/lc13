@@ -74,6 +74,7 @@
 
 		else if (!(GODMODE in user.status_flags))//If you already did repression, die.
 			TransferVar("cursed", user.ckey)
+			user.client?.give_award(/datum/award/achievement/abno/beauty_beast, user)
 			user.gib()
 			death()
 

@@ -72,3 +72,8 @@
 	name = "Candlelit Dinner - Small South A"
 	room_id = "candlelit_dinner"
 	mappath = "_maps/RandomRooms/backstreets/small_south/candlelit_dinner.dmm"
+
+/datum/map_template/random_room/backstreets/small_east/boluslab_ssa
+    name = "Bolus Lab - Small South A"
+    room_id = "boluslab_ssa"
+    mappath = "_maps/RandomRooms/backstreets/small_east/boluslab_ssa.dmm"

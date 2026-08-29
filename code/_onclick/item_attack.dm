@@ -195,14 +195,20 @@
 	else
 		. = list(target_turf)
 
-	new /obj/effect/temp_visual/swipe(get_step(user, SOUTHWEST), custom_sweep_icon, get_dir(user, target), swingcolor ? swingcolor : COLOR_GRAY, swipe_icon)
+	// We'll use gray as a colour fallback if we don't have a swingcolour set and we don't have forced_swingcolor enabled.
+	var/color_to_use = (forced_swingcolor || swingcolor) ? swingcolor : COLOR_GRAY
+	new /obj/effect/temp_visual/swipe(get_step(user, SOUTHWEST), custom_sweep_icon, get_dir(user, target), color_to_use, swipe_icon)
 
 	return
 
 /obj/item/proc/get_thrust_turfs(atom/target, mob/user)
 	. = getline(get_step_towards(user, target), target)
+
+	// We'll use gray as a colour fallback if we don't have a swingcolour set and we don't have forced_swingcolor enabled.
+	var/color_to_use = (forced_swingcolor || swingcolor) ? swingcolor : COLOR_GRAY
+
 	for(var/turf/T in .)
-		var/obj/effect/temp_visual/thrust/TT = new(T, swingcolor ? swingcolor : COLOR_GRAY, custom_thrust_icon, custom_thrust_state)
+		var/obj/effect/temp_visual/thrust/TT = new(T, color_to_use, custom_thrust_icon, custom_thrust_state)
 		var/matrix/M = matrix(TT.transform)
 		M.Turn(Get_Angle(user, target)-90)
 		TT.transform = M
@@ -289,7 +295,7 @@
 			justice_mod*=1.15
 		var/crit_chance = get_modified_attribute_level(user, PRUDENCE_ATTRIBUTE)/50	//prudence is crit chance, It's a very small percentage that maxes out at 2.6%
 
-		if(SSmaptype.chosen_trait == FACILITY_TRAIT_CRITICAL_HITS)
+		if(SSmaptype.trait_active_for(user, FACILITY_TRAIT_CRITICAL_HITS))
 			if(prob(crit_chance * I.crit_multiplier))	//Crit multiplier is by default 1.
 				new /obj/effect/temp_visual/crit(get_turf(user))
 				crit_bonus += get_modified_attribute_level(user, FORTITUDE_ATTRIBUTE)/100	//fortitude is crit bonus damage, bonus scaling off fortitude
@@ -297,19 +303,10 @@
 					var/obj/item/ego_weapon/critting = I
 					critting.CritEffect(src, user)
 
-		var/damage = I.force * justice_mod * crit_bonus * (1 + (user.extra_damage / 100))
+		var/damage = I.force * justice_mod * crit_bonus
 		if(istype(I, /obj/item/ego_weapon))
 			var/obj/item/ego_weapon/theweapon = I
 			damage *= theweapon.force_multiplier
-
-		if(I.damtype == RED_DAMAGE)
-			damage *= (1 + (user.extra_damage_red / 100))
-		if(I.damtype == WHITE_DAMAGE)
-			damage *= (1 + (user.extra_damage_white / 100))
-		if(I.damtype == BLACK_DAMAGE)
-			damage *= (1 + (user.extra_damage_black / 100))
-		if(I.damtype == PALE_DAMAGE)
-			damage *= (1 + (user.extra_damage_pale / 100))
 
 		deal_damage(damage, I.damtype, source = user, flags = (DAMAGE_WHITE_HEALABLE), attack_type = (ATTACK_TYPE_MELEE))
 		if(I.damtype in list(RED_DAMAGE, BLACK_DAMAGE, PALE_DAMAGE))

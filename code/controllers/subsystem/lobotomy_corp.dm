@@ -71,7 +71,8 @@ SUBSYSTEM_DEF(lobotomy_corp)
 	var/list/work_stats = list()
 	// List of facility upgrade datums
 	var/list/upgrades = list()
-
+	// Logs of EGO purchased throughout the round
+	var/list/ego_purchase_logs = list()
 	// PE available to be spent
 	var/available_box = 0
 	// PE specifically for PE Quota
@@ -135,6 +136,8 @@ SUBSYSTEM_DEF(lobotomy_corp)
 	addtimer(CALLBACK(src, PROC_REF(SetGoal)), 5 MINUTES)
 	addtimer(CALLBACK(src, PROC_REF(InitializeOrdeals)), 60 SECONDS)
 	addtimer(CALLBACK(src, PROC_REF(PickPotentialSuppressions)), 60 SECONDS)
+	// Initialize grid crafting weapon cache in background
+	addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(InitializeGridCraftWeaponCache)), 30 SECONDS)
 	for(var/F in subtypesof(/datum/facility_upgrade))
 		upgrades += new F
 
@@ -161,15 +164,12 @@ SUBSYSTEM_DEF(lobotomy_corp)
 		if(O.AbleToRun())
 			all_ordeals[O.level] += O
 
-	if(SSmaptype.chosen_trait == FACILITY_TRAIT_ABNO_BLITZ)
-		next_ordeal_level = 3
-		ordeal_timelock = list(0, 0, 30 MINUTES, 50 MINUTES, 0, 0, 0, 0, 0)
 	RollOrdeal()
 	return TRUE
 
 // Called when any normal midnight ends
 /datum/controller/subsystem/lobotomy_corp/proc/PickPotentialSuppressions(announce = FALSE, extra_core = FALSE)
-	if(SSmaptype.chosen_trait == FACILITY_TRAIT_ABNO_BLITZ)
+	if(SSlobotomy_corp.BlitzActive())
 		priority_announce("This shift is a 'Blitz' Shift. Cores have been disabled.", \
 						"Core Suppression", sound = 'sound/machines/dun_don_alert.ogg')
 		return
@@ -323,7 +323,7 @@ SUBSYSTEM_DEF(lobotomy_corp)
 			A.current.OnQliphothEvent()
 	var/ran_ordeal = FALSE
 	if(qliphoth_state + 1 >= next_ordeal_time) // If ordeal is supposed to happen on the meltdown after that one
-		if(SSmaptype.chosen_trait != FACILITY_TRAIT_ABNO_BLITZ)
+		if(!SSlobotomy_corp.BlitzActive())
 			if(istype(next_ordeal) && ordeal_timelock[next_ordeal.level] > ROUNDTIME) // And it's on timelock
 				next_ordeal_time += 1 // So it does not appear on the ordeal monitors until timelock is off
 	if(qliphoth_state >= next_ordeal_time)
@@ -491,31 +491,14 @@ SUBSYSTEM_DEF(lobotomy_corp)
 /// Proc called to adjust the gamespeed, hastens abnormality arrival time, sets new timelocks and recalculates next ordeal time.
 /datum/controller/subsystem/lobotomy_corp/proc/AdjustGamespeed(datum/gamespeed_setting/new_gamespeed)
 	if(!new_gamespeed) // If this somehow gets called with a null argument...
+		warning("GAMESPEED: Tried to adjust gamespeed with a null gamespeed setting.")
 		return FALSE
 	if(gamespeed.speed_coefficient <= 0 || new_gamespeed.speed_coefficient <= 0) // Checking we don't get something that would really mess things up like negative or 0 value
+		warning("GAMESPEED: Tried to adjust gamespeed from, or to a gamespeed setting with a negative speed coefficient.")
 		return FALSE
 
-	// Timelocks: we need to do these before setting the gamespeed so we can undo potential changes to the original timelock values
-	// As in, original Dawn timelock is 12000. If the speed gets changed by 1.25x, it will go down to 9600. We want to change it back to 12000 before applying
-	// any new speed.
-	var/list/new_timelocks = list()
-	for(var/current_timelock in ordeal_timelock)
-		var/modified_timelock = ((current_timelock) * (gamespeed.speed_coefficient)) * (1 / new_gamespeed.speed_coefficient)
-		new_timelocks.Add(modified_timelock)
+	new_gamespeed.ApplyChanges()
 
-	ordeal_timelock = new_timelocks
-
-	// Also set next abno spawn time back to whatever it was.
-	SSabnormality_queue.next_abno_spawn_time *= gamespeed.speed_coefficient
-
-	// Now we can set the gamespeed. We don't need the old one anymore.
-	gamespeed = new_gamespeed
-
-	// Ordeal time
-	SetNextOrdealTime(TRUE)
-
-	// Abno arrival speed
-	SSabnormality_queue.next_abno_spawn_time *= (1 / gamespeed.speed_coefficient)
 
 /// Proc that checks to see if there's a Manager in the round. If there isn't, allows any crewmember to start a Core Suppression.
 // Important: This is called by ticker.dm with a timer set on roundstart
@@ -533,3 +516,6 @@ SUBSYSTEM_DEF(lobotomy_corp)
 						This means any of our employees may begin a Suppression. The restrictions will remain lifted until a Manager for this shift awakens. Our employees are encouraged to Face the Fear, and Build the Future.",\
 						"Core Selection Override", 'sound/machines/dun_don_alert.ogg')
 	return TRUE
+
+/datum/controller/subsystem/lobotomy_corp/proc/BlitzActive()
+	return istype(gamespeed, /datum/gamespeed_setting/abno_blitz)

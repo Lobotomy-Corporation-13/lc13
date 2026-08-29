@@ -1,4 +1,17 @@
 //MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"ek" = (
+/obj/structure/holosign/barrier/cyborg,
+/obj/effect/landmark/wave_trigger{
+	controller_id = "open2"
+	},
+/turf/open/floor/carpet/royalblue,
+/area/city/outskirts)
+"gY" = (
+/obj/effect/landmark/wave_trigger{
+	controller_id = "open2"
+	},
+/turf/open/floor/carpet/blue,
+/area/city/outskirts)
 "je" = (
 /obj/effect/light_emitter{
 	light_power = 4;
@@ -8,11 +21,42 @@
 	},
 /turf/open/floor/carpet/blue,
 /area/city/outskirts)
+"nG" = (
+/obj/effect/landmark/wave_spawn/dynamic{
+	controller_id = "open2"
+	},
+/turf/open/floor/carpet/royalblue,
+/area/city/outskirts)
+"pT" = (
+/obj/effect/landmark/wave_trigger{
+	controller_id = "open2"
+	},
+/turf/open/floor/carpet/royalblue,
+/area/city/outskirts)
 "tV" = (
 /turf/open/floor/carpet/royalblue,
 /area/city/outskirts)
 "zo" = (
 /obj/structure/holosign/barrier/cyborg,
+/turf/open/floor/carpet/blue,
+/area/city/outskirts)
+"Hy" = (
+/obj/structure/holosign/barrier/cyborg,
+/obj/effect/landmark/wave_trigger{
+	controller_id = "open2"
+	},
+/turf/open/floor/carpet/blue,
+/area/city/outskirts)
+"Nc" = (
+/obj/structure/wave_barrier{
+	controller_id = "open2"
+	},
+/turf/open/floor/carpet/royalblue,
+/area/city/outskirts)
+"QS" = (
+/obj/structure/wave_barrier{
+	controller_id = "open2"
+	},
 /turf/open/floor/carpet/blue,
 /area/city/outskirts)
 "Rr" = (
@@ -22,9 +66,11 @@
 "Xn" = (
 /turf/closed/wall/mineral/plastitanium,
 /area/city/outskirts)
-"XB" = (
-/obj/effect/landmark/department_center,
-/turf/open/floor/carpet/royalblue,
+"Zg" = (
+/obj/structure/wave_barrier{
+	controller_id = "open2"
+	},
+/turf/closed/wall/mineral/plastitanium,
 /area/city/outskirts)
 "ZN" = (
 /turf/open/floor/carpet/blue,
@@ -32,15 +78,15 @@
 
 (1,1,1) = {"
 Xn
-tV
-Rr
-zo
-ZN
-ZN
-ZN
-ZN
-Rr
-tV
+pT
+ek
+Hy
+gY
+gY
+gY
+gY
+ek
+pT
 Xn
 "}
 (2,1,1) = {"
@@ -58,14 +104,14 @@ Xn
 "}
 (3,1,1) = {"
 Xn
+nG
 tV
-XB
 ZN
 ZN
 ZN
 ZN
 ZN
-XB
+tV
 Xn
 Xn
 "}
@@ -110,7 +156,7 @@ Xn
 "}
 (7,1,1) = {"
 Xn
-tV
+nG
 tV
 ZN
 ZN
@@ -118,7 +164,7 @@ je
 ZN
 ZN
 tV
-tV
+nG
 Xn
 "}
 (8,1,1) = {"
@@ -170,7 +216,7 @@ ZN
 ZN
 ZN
 tV
-tV
+nG
 Xn
 "}
 (12,1,1) = {"
@@ -188,14 +234,14 @@ Xn
 "}
 (13,1,1) = {"
 Xn
-Xn
-Xn
-ZN
-ZN
-ZN
-ZN
-ZN
-tV
-Xn
+Zg
+Zg
+QS
+QS
+QS
+QS
+QS
+Nc
+Zg
 Xn
 "}

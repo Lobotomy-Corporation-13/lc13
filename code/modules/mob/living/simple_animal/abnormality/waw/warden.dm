@@ -68,7 +68,7 @@
 	var/finishing = FALSE
 	var/locked_in = FALSE
 	var/mob/living/hooligan
-	var/AreasToPatrol = list()
+	var/areas_to_patrol = list()
 	var/breach_time = 3 MINUTES
 
 	// Frustration + Release mechanics
@@ -151,7 +151,7 @@
 /mob/living/simple_animal/hostile/abnormality/warden/Destroy()
 	UnregisterSignal(SSdcs, COMSIG_GLOB_ABNORMALITY_BREACH)
 	QDEL_NULL(soul_names) // It WOULD be fun if Warden saved all soul names that it has consumed but I cannot be assed to figure that out.
-	QDEL_NULL(AreasToPatrol)
+	QDEL_NULL(areas_to_patrol)
 	for(var/mob/living/carbon/human/L in GLOB.player_list) // Cleanse debuffs
 		if(faction_check_mob(L, FALSE) || L.stat == DEAD) // Dead? Fuck them
 			continue
@@ -442,7 +442,7 @@
 		for(var/mob/living/simple_animal/hostile/soulless/husk in indoctrinated_morons)
 			husk.Agitate(rand(4, 15))
 
-/mob/living/simple_animal/hostile/abnormality/warden/patrol_select()
+/mob/living/simple_animal/hostile/abnormality/warden/SelectPatrolLocation()
 	if(SSmaptype.maptype in SSmaptype.autopossess)
 		return
 	if(hooligan) // Lets just fucking copy this from NI, I am tired.
@@ -450,23 +450,18 @@
 		if(!trytorun)
 			hooligan = null
 			return
-		SEND_SIGNAL(src, COMSIG_PATROL_START, src, trytorun) //Overrides the usual proc to target a specific tile
-		SEND_GLOBAL_SIGNAL(src, COMSIG_GLOB_PATROL_START, src, trytorun)
-		patrol_to(trytorun)
-		return
+		return trytorun
 	if(!LAZYLEN(GLOB.department_centers))
 		return
 	var/turf/target_center
-	if(!LAZYLEN(AreasToPatrol))
+	if(!LAZYLEN(areas_to_patrol))
 		for(var/pos_targ in GLOB.department_centers)
 			var/possible_center_distance = get_dist(src, pos_targ)
 			if(possible_center_distance > 4 && possible_center_distance < 60)
-				AreasToPatrol += pos_targ
-	target_center = pick(AreasToPatrol)
-	SEND_SIGNAL(src, COMSIG_PATROL_START, src, target_center)
-	SEND_GLOBAL_SIGNAL(src, COMSIG_GLOB_PATROL_START, src, target_center)
-	patrol_path = get_path_to(src, target_center, TYPE_PROC_REF(/turf, Distance_cardinal), 0, 200)
-	AreasToPatrol -= target_center
+				areas_to_patrol |= pos_targ
+	target_center = pick(areas_to_patrol)
+	areas_to_patrol -= target_center
+	return target_center
 
 /mob/living/simple_animal/hostile/abnormality/warden/Life()
 	. = ..()

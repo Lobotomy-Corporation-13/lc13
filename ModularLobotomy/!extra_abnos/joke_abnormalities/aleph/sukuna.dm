@@ -9,6 +9,7 @@
 	del_on_death = FALSE
 	maxHealth = 12000
 	health = 12000
+	//Tracks tags
 	var/list/survivors = list()
 	var/cleave_cooldown
 	var/cleave_cooldown_time = 6 SECONDS
@@ -89,6 +90,10 @@
 	toggle_message = span_colossus("You will now eviscerate someone.")
 	button_icon_toggle_deactivated = "worldslash"
 
+/mob/living/simple_animal/hostile/abnormality/sukuna/Destroy()
+	survivors  = null
+	return ..()
+
 /mob/living/simple_animal/hostile/abnormality/sukuna/BreachEffect(mob/living/carbon/human/user, breach_type)
 	sound_to_playing_players_on_level("sound/abnormalities/maloventkitchen.ogg", 85, zlevel = z)
 	for(var/mob/M in GLOB.player_list)
@@ -101,7 +106,7 @@
 			to_chat(M, span_userdanger("Yo it's me Ryomen Sukuna from Jujutsu Kaisen here to obliterate you."))
 			flash_color(M, flash_color = COLOR_ALMOST_BLACK, flash_time = 60)
 		if(M.stat != DEAD && ishuman(M) && M.ckey)
-			survivors += M
+			survivors += M.tag
 	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/sukuna/FailureEffect(mob/living/carbon/human/user, work_type, pe)
@@ -220,11 +225,11 @@
 	density = FALSE
 	playsound(src, 'sound/effects/limbus_death.ogg', 100, 1)
 	animate(src, transform = matrix()*0.6,time = 0)
-	for(var/mob/living/carbon/human/survivor in survivors)
-		if(survivor.stat == DEAD || !survivor.ckey)
+	for(var/mob/living/carbon/human/survivor in GLOB.player_list)
+		if(survivor.stat == DEAD || !survivor.ckey || !(survivor.tag in survivors))
 			continue
 		var/area_check = get_area(src)
-		if(istype(area_check, /area/test_range))
+		if(istype(area_check, /area/test_range_arena))
 			return ..()
 		survivor.Apply_Gift(new /datum/ego_gifts/sukuna)
 		survivor.playsound_local(get_turf(survivor), 'sound/weapons/black_silence/snap.ogg', 50)

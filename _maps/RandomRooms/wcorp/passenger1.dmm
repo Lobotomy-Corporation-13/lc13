@@ -2,6 +2,24 @@
 "bI" = (
 /turf/open/floor/carpet/blue,
 /area/city/outskirts)
+"eJ" = (
+/obj/structure/wave_barrier{
+	controller_id = "passenger1"
+	},
+/turf/open/floor/plasteel/bluespace,
+/area/city/outskirts)
+"sD" = (
+/obj/structure/wave_barrier{
+	controller_id = "passenger1"
+	},
+/turf/open/floor/carpet/blue,
+/area/city/outskirts)
+"Dg" = (
+/obj/effect/landmark/wave_spawn/dynamic{
+	controller_id = "passenger1"
+	},
+/turf/open/floor/plasteel/bluespace,
+/area/city/outskirts)
 "Ds" = (
 /obj/structure/window/reinforced{
 	dir = 8
@@ -17,8 +35,10 @@
 	},
 /turf/open/floor/plasteel/bluespace,
 /area/city/outskirts)
-"MK" = (
-/obj/effect/landmark/department_center,
+"Oc" = (
+/obj/effect/landmark/wave_trigger{
+	controller_id = "passenger1"
+	},
 /turf/open/floor/carpet/blue,
 /area/city/outskirts)
 "QM" = (
@@ -30,15 +50,32 @@
 	},
 /turf/open/floor/carpet/blue,
 /area/city/outskirts)
+"Rh" = (
+/obj/effect/landmark/wave_trigger{
+	controller_id = "passenger1"
+	},
+/turf/open/floor/plasteel/bluespace,
+/area/city/outskirts)
+"RD" = (
+/obj/structure/chair/comfy/shuttle{
+	dir = 8
+	},
+/obj/effect/landmark/wave_spawn/dynamic{
+	controller_id = "passenger1"
+	},
+/turf/open/floor/plasteel/bluespace,
+/area/city/outskirts)
 "St" = (
 /obj/structure/window/reinforced{
 	dir = 8
 	},
 /turf/open/floor/plasteel/bluespace,
 /area/city/outskirts)
-"Ue" = (
-/obj/effect/landmark/department_center,
-/turf/open/floor/plasteel/bluespace,
+"UW" = (
+/obj/effect/landmark/wave_spawn/dynamic{
+	controller_id = "passenger1"
+	},
+/turf/open/floor/carpet/blue,
 /area/city/outskirts)
 "WD" = (
 /obj/structure/chair/comfy/shuttle{
@@ -61,15 +98,15 @@
 
 (1,1,1) = {"
 Xn
-QM
-QM
-QM
-QM
-QM
-QM
-bI
-QM
-QM
+Rh
+Rh
+Rh
+Rh
+Rh
+Rh
+Oc
+Rh
+Rh
 Xn
 "}
 (2,1,1) = {"
@@ -100,15 +137,15 @@ Xn
 "}
 (4,1,1) = {"
 Xn
-QM
-QM
-bI
+Dg
 QM
 bI
+QM
+bI
 bI
 QM
 QM
-bI
+UW
 Xn
 "}
 (5,1,1) = {"
@@ -191,7 +228,7 @@ Xn
 "}
 (11,1,1) = {"
 Xn
-WD
+RD
 QT
 bI
 QM
@@ -199,32 +236,32 @@ MA
 bI
 bI
 WD
-WD
+RD
 Xn
 "}
 (12,1,1) = {"
 Xn
 bI
-MK
 bI
 bI
 bI
 bI
 bI
-Ue
+bI
+QM
 QM
 Xn
 "}
 (13,1,1) = {"
 Xn
-QM
-QM
-QM
-QM
-QM
-QM
-bI
-bI
-bI
+eJ
+eJ
+eJ
+eJ
+eJ
+eJ
+sD
+sD
+sD
 Xn
 "}

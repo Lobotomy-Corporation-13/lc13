@@ -26,7 +26,8 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 	var/tmp/old_be_special = 0 //Bitflag version of be_special, used to update old savefiles and nothing more
 										//If it's 0, that's good, if it's anything but 0, the owner of this prefs file's antag choices were,
 										//autocorrected this round, not that you'd need to check that.
-	var/list/lcl_abno_pref = list() //A list of all available limbus specimen.
+	var/list/lcl_abno_pref = list() //Assoc typepath -> priority level (JP_HIGH/JP_MEDIUM/JP_LOW; 0/absent = NEVER).
+	var/datum/tgui_handler/lcl_specimen_prefs/lcl_prefs_ui = null //Lazily created, not saved.
 
 	var/UI_style = null
 	var/buttons_locked = FALSE
@@ -81,6 +82,7 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 	var/jumpsuit_style = PREF_SUIT		//suit/skirt
 	var/beret_enabled = TRUE // Spawns with a Beret on roles which have it available
 	var/sunglasses_enabled = TRUE // Spawns with Sunglasses on roles which have them available
+	var/work_notepad_type = WORK_NOTEPAD_PREFERENCE_CLIPBOARD // Determines which type, if any, of abno work notepad this character spawns with as an agent.
 	var/hairstyle = "Bald"				//Hair type
 	var/hair_color = "000"				//Hair color
 	var/gradient_color = "000"			//Hair gradient color
@@ -110,6 +112,14 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 		)
 	var/list/randomise = list(RANDOM_UNDERWEAR = TRUE, RANDOM_UNDERWEAR_COLOR = TRUE, RANDOM_UNDERSHIRT = TRUE, RANDOM_SOCKS = TRUE, RANDOM_BACKPACK = TRUE, RANDOM_JUMPSUIT_STYLE = TRUE, RANDOM_HAIRSTYLE = TRUE, RANDOM_HAIR_COLOR = TRUE, RANDOM_FACIAL_HAIRSTYLE = TRUE, RANDOM_FACIAL_HAIR_COLOR = TRUE, RANDOM_SKIN_TONE = TRUE, RANDOM_EYE_COLOR = TRUE)
 	var/phobia = "spiders"
+	var/pet_rat_color = "#888888"
+	/// Gacha ID-card skin id (string, e.g. "nf_silver") or null for default.
+	/// Picked via the prefs window; cross-checked against the persistence
+	/// ledger so a stale save can't equip an unowned skin.
+	var/equipped_id_skin = null
+	/// Lazily-built TGUI host for the ID skin picker. Constructed
+	/// the first time the player opens the picker from prefs.
+	var/datum/id_skin_picker/id_skin_picker
 
 	var/list/alt_titles_preferences = list() // Tegu
 
@@ -174,6 +184,8 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 	var/broadcast_login_logout = TRUE
 	///Selected achievement to display as specialization
 	var/chosen_achievement = null
+	///Lazily-created TGUI menu for picking the achievement specialization
+	var/datum/achievement_spec_menu/achievement_spec_menu
 	///What outfit typepaths we've favorited in the SelectEquipment menu
 	var/list/favorite_outfits = list()
 	///Language that will be used for some of the strings
@@ -219,6 +231,11 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 	save_character() //let's save this new random character so it doesn't keep generating new ones.
 	menuoptions = list()
 	return
+
+/datum/preferences/Destroy(force, ...)
+	QDEL_NULL(achievement_spec_menu)
+	QDEL_NULL(lcl_prefs_ui)
+	return ..()
 
 #define APPEARANCE_CATEGORY_COLUMN "<td valign='top' width='14%'>"
 #define MAX_MUTANT_ROWS 4
@@ -373,6 +390,8 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 
 			dat += "<br><b>Jumpsuit Style:</b><BR><a href ='byond://?_src_=prefs;preference=suit;task=input'>[jumpsuit_style]</a>"
 			dat += "<a href='byond://?_src_=prefs;preference=toggle_random;random_type=[RANDOM_JUMPSUIT_STYLE]'>[(randomise[RANDOM_JUMPSUIT_STYLE]) ? "Lock" : "Unlock"]</A>"
+
+			dat += "<br><b>Abnormality Work Tool (For Agents; Optional):</b><BR><a href ='byond://?_src_=prefs;preference=work_notepad_type;task=input'>[(work_notepad_type)]</a>"
 
 			dat += "<br><b>Beret (On Applicable Jobs):</b><BR><a href ='byond://?_src_=prefs;preference=beret_enabled;task=input'>[(beret_enabled ? "Yes" : "No")]</a>"
 
@@ -628,6 +647,21 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 
 				dat += "<a href='byond://?_src_=prefs;preference=phobia;task=input'>[phobia]</a><BR>"
 
+			if("Tagalong Rat" in all_quirks)
+				dat += "<h3>Pet Rat Color</h3>"
+				dat += "<a href='byond://?_src_=prefs;preference=pet_rat_color;task=input'><span style='background-color:[pet_rat_color]'>&nbsp;&nbsp;&nbsp;[pet_rat_color]&nbsp;&nbsp;&nbsp;</span></a><BR>"
+
+			// ID Card Skin picker — gacha-unlocked cosmetic. Always shown;
+			// the picker pop is gated server-side so a stale save can't
+			// equip an unowned skin.
+			dat += "<h3>ID Card Skin</h3>"
+			var/skin_display = "Default"
+			if(equipped_id_skin && SSrefraction_railway)
+				var/datum/id_skin/EQ = SSrefraction_railway.id_skins[equipped_id_skin]
+				if(istype(EQ))
+					skin_display = EQ.name
+			dat += "<a href='byond://?_src_=prefs;preference=equipped_id_skin;task=input'>[skin_display]</a><BR>"
+
 			if(CONFIG_GET(flag/join_with_mutant_humans))
 
 				if(pref_species.mutant_bodyparts["wings"] && GLOB.r_wings_list.len >1)
@@ -790,7 +824,7 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 						dat += "<b>Be [capitalize(special_role)]:</b> <a href='byond://?_src_=prefs;preference=be_special;be_special_type=[special_role]'>[(special_role in be_special) ? TeguTranslate("Enabled", src) : TeguTranslate("Disabled", src)]</a><br>"
 			dat += "<br>"
 			dat += "<b>Midround Antagonist:</b> <a href='byond://?_src_=prefs;preference=allow_midround_antag'>[(toggles & MIDROUND_ANTAG) ? TeguTranslate("Enabled", src) : TeguTranslate("Disabled", src)]</a><br>"
-			dat += "<b>[TeguTranslate("LCL Specimen Preferences", src)]:</b> <a href='byond://?_src_=prefs;task=input;preference=lcl_abno'>LCL ABNO LIST</a><br>"
+			dat += "<b>[TeguTranslate("LCL Specimen Preferences", src)]:</b> <a href='byond://?_src_=prefs;preference=lcl_specimen_window'>OPEN LCL SPECIMEN SELECTOR</a><br>"
 			dat += "</td></tr></table>"
 		if(2) //OOC Preferences
 			dat += "<table><tr><td width='340px' height='300px' valign='top'>"
@@ -1187,7 +1221,7 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 			if(initial(T.value) != 0)
 				font_color = initial(T.value) > 0 ? "#AAFFAA" : "#FFAAAA"
 			if(quirk_conflict)
-				dat += "<font color='[font_color]'>[quirk_name]</font> - [initial(T.desc)] \
+				dat += "<s><font color='[font_color]'>[quirk_name]</font> - [initial(T.desc)]</s> \
 				<font color='red'><b>LOCKED: [lock_reason]</b></font><br>"
 			else
 				if(has_quirk)
@@ -1226,6 +1260,22 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 		var/client/C = usr.client
 		if(C)
 			C.clear_character_previews()
+
+// Seeds any unset LCL specimen to a sane default level and prunes removed abnos.
+/datum/preferences/proc/reconcile_lcl_prefs()
+	var/list/all_abno = GLOB.low_security + GLOB.high_security
+	for(var/path in all_abno)
+		if(isnull(LAZYACCESS(lcl_abno_pref, path)))
+			LAZYSET(lcl_abno_pref, path, JP_MEDIUM)
+	for(var/path in lcl_abno_pref.Copy())
+		if(!(path in all_abno))
+			lcl_abno_pref -= path
+
+// Opens the TGUI specimen selector window for the given user.
+/datum/preferences/proc/open_lcl_specimen_ui(mob/user)
+	if(!lcl_prefs_ui)
+		lcl_prefs_ui = new(src)
+	lcl_prefs_ui.ui_interact(user)
 
 /datum/preferences/proc/process_link(mob/user, list/href_list)
 	if(href_list["bancheck"])
@@ -1266,6 +1316,9 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 				SetChoices(user)//tegu edit alt job titles
 			if("alt_title")
 				var/job_title = href_list["job_title"]
+				if(istype(SSjob.GetJob(job_title), /datum/job/limbus_specimen))
+					open_lcl_specimen_ui(user) //LC Specimen uses the specimen selector, not alt titles.
+					return 1
 				var/titles_list = list(job_title)
 				var/datum/job/J = SSjob.GetJob(job_title)
 				var/sen_timelock = CONFIG_GET(number/senior_timelock)
@@ -1291,6 +1344,10 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 				UpdateJobPreference(user, href_list["text"], text2num(href_list["level"]))
 			else
 				SetChoices(user)
+		return 1
+
+	else if(href_list["preference"] == "lcl_specimen_window")
+		open_lcl_specimen_ui(user)
 		return 1
 
 	else if(href_list["preference"] == "trait")
@@ -1367,6 +1424,8 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 					backpack = pick(GLOB.backpacklist)
 				if("suit")
 					jumpsuit_style = pick(GLOB.jumpsuitlist)
+				if("work_notepad_type")
+					work_notepad_type = pick(WORK_NOTEPAD_PREFERENCE_TABLET, WORK_NOTEPAD_PREFERENCE_CLIPBOARD, WORK_NOTEPAD_PREFERENCE_NONE)
 				if("beret_enabled")
 					beret_enabled = !beret_enabled
 				if("sunglasses_enabled")
@@ -1694,6 +1753,12 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 						jumpsuit_style = PREF_SKIRT
 					else
 						jumpsuit_style = PREF_SUIT
+
+				if("work_notepad_type")
+					var/new_type = input(user, "Choose which kind of optional work tool your agent will spawn with:", "Abnormality Work Tool") as null|anything in list(WORK_NOTEPAD_PREFERENCE_CLIPBOARD, WORK_NOTEPAD_PREFERENCE_TABLET, WORK_NOTEPAD_PREFERENCE_NONE)
+					if(new_type)
+						work_notepad_type = new_type
+
 				if("beret_enabled")
 					beret_enabled = !beret_enabled
 
@@ -1743,26 +1808,9 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 						to_chat(user, "<span class='warning'>You have no unlocked achievements!</span>")
 						return
 
-					var/list/choices = list("None")
-					var/list/achievement_map = list()
-
-					for(var/achievement_type in unlocked)
-						var/datum/award/achievement/A = SSachievements.achievements[achievement_type]
-						if(!A || !A.name)
-							continue
-						var/color = A.get_difficulty_color()
-						var/display_name = "<font color='[color]'>[A.name] ([A.difficulty])</font>"
-						choices += display_name
-						achievement_map[display_name] = achievement_type
-
-					var/choice = input(user, "Choose your achievement specialization:", "Achievement Specialization") as null|anything in choices
-					if(!choice)
-						return
-
-					if(choice == "None")
-						chosen_achievement = null
-					else
-						chosen_achievement = achievement_map[choice]
+					if(!achievement_spec_menu)
+						achievement_spec_menu = new(src)
+					achievement_spec_menu.ui_interact(user)
 
 				// The lore stuff
 				if("govrelation")
@@ -1829,6 +1877,23 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 					if(phobiaType)
 						phobia = phobiaType
 
+				if("pet_rat_color")
+					var/picked = input(user, "Choose your pet rat's color.", "Character Preference", pet_rat_color) as color|null
+					if(picked)
+						pet_rat_color = picked
+
+				if("equipped_id_skin")
+					if(!SSrefraction_railway)
+						to_chat(user, span_warning("ID skin registry not loaded yet — try again in a moment."))
+					else
+						// Open the visual catalogue. The picker datum is
+						// lazily attached to prefs so the user can re-open
+						// it cheaply, and it mutates equipped_id_skin
+						// directly on confirm.
+						if(!id_skin_picker)
+							id_skin_picker = new(src)
+						id_skin_picker.ui_interact(user)
+
 				if ("max_chat_length")
 					var/desiredlength = input(user, "Choose the max character length of shown Runechat messages. Valid range is 1 to [CHAT_MESSAGE_MAX_LENGTH] (default: [initial(max_chat_length)]))", "Character Preference", max_chat_length)  as null|num
 					if (!isnull(desiredlength))
@@ -1839,24 +1904,6 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 					if(!(new_lang in GLOB.allowed_client_languages)) // Invalid language
 						new_lang = CLIENT_LANGUAGE_ENGLISH
 					client_language = new_lang
-
-				if("lcl_abno") //Awful snowflake code that probably has a better solution, but I'm tired. Automatically makes a list of available LCL abnos to disable or enable.
-					var/list/abno_list = GLOB.low_security.Copy() + GLOB.high_security.Copy()
-					var/list/abno_names = list()
-					var/fill_pref_list = FALSE
-					if(LAZYLEN(lcl_abno_pref) != LAZYLEN(abno_list))
-						fill_pref_list = TRUE
-					for(var/abno in abno_list)
-						if(fill_pref_list && isnull(LAZYACCESS(lcl_abno_pref, abno)))
-							LAZYSET(lcl_abno_pref, abno, TRUE)
-						var/mob/living/simple_animal/hostile/limbus_abno/picked_abno = abno
-						var/enabled_string = "Disabled"
-						if(LAZYACCESS(lcl_abno_pref, abno))
-							enabled_string = "Enabled"
-						LAZYSET(abno_names, "[picked_abno.true_name] ([enabled_string])", abno)
-					var/input_abno = input(user, "Add or remove an abnormality you want to play.", "Character Preference", lcl_abno_pref)  as null|anything in sortList(abno_names)
-					input_abno = LAZYACCESS(abno_names, input_abno)
-					LAZYSET(lcl_abno_pref, input_abno, !LAZYACCESS(lcl_abno_pref, input_abno))
 
 				if("backpack_visibility")
 					backpack_visibility = !backpack_visibility
@@ -2214,6 +2261,7 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 	character.jumpsuit_style = jumpsuit_style
 	character.beret_enabled = beret_enabled
 	character.sunglasses_enabled = sunglasses_enabled
+	character.work_notepad_type = work_notepad_type
 
 	character.flavor_text = features["flavor_text"] //Let's update their flavor_text at least initially
 

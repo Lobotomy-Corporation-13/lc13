@@ -41,7 +41,7 @@
 			You plugged your ears silently. <br>No sound is heard."),
 	)
 
-	var/mob/living/carbon/human/calling = null
+	var/calling_tag
 	var/criesleft = 2
 
 
@@ -54,23 +54,23 @@
 	addtimer(CALLBACK(src, PROC_REF(IncreaseCries)), 3 MINUTES)
 	criesleft++
 
-
 /mob/living/simple_animal/hostile/abnormality/fetus/ZeroQliphoth(mob/living/carbon/human/user)
 	check_players()
 	check_range()
 
 	//Are they nearby?
 /mob/living/simple_animal/hostile/abnormality/fetus/proc/check_range()
-	if(calling && Adjacent(calling))
-		calling.gib()
-		calling = null
+	for(var/mob/living/carbon/human/L in orange(get_turf(src),1))
+		if(L.tag == calling_tag)
+			L.gib(TRUE,TRUE,TRUE)
 
-		for(var/mob/living/carbon/human/H in GLOB.player_list)
-			to_chat(H, span_userdanger("The creature is satisfied."))
+			for(var/mob/living/carbon/human/H in GLOB.player_list)
+				to_chat(H, span_userdanger("The creature is satisfied."))
 
-		notify_ghosts("The nameless fetus is satisfied.", source = src, action = NOTIFY_ORBIT, header="Something Interesting!") // bless this mess
-		datum_reference.qliphoth_change(1)
-		return
+			notify_ghosts("The nameless fetus is satisfied.", source = src, action = NOTIFY_ORBIT, header="Something Interesting!") // bless this mess
+			datum_reference.qliphoth_change(1)
+			calling_tag = null
+			return
 
 	addtimer(CALLBACK(src, PROC_REF(check_range)), 2 SECONDS)
 
@@ -92,7 +92,8 @@
 		if(H.z == z && H.stat != DEAD)
 			checking +=H
 	if(LAZYLEN(checking))
-		calling = pick(checking)
+		var/mob/living/calling = pick(checking)
+		calling_tag = calling.tag
 
 		//and make a global announce
 		for(var/mob/living/carbon/human/H in GLOB.player_list)

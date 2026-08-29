@@ -5,11 +5,12 @@
 	icon_state = "crate_lcb"
 	rarechance = 15
 	cosmeticchance = 25
+	ammochance = 25
 	lootlist =	list(
 		/obj/item/ego_weapon/mini/hayong,
-		/obj/item/ego_weapon/shield/walpurgisnacht,
+		/obj/item/ego_weapon/shield/parry/walpurgisnacht,
 		/obj/item/ego_weapon/lance/suenoimpossible,
-		/obj/item/ego_weapon/shield/sangria,
+		/obj/item/ego_weapon/shield/parry/sangria,
 		/obj/item/ego_weapon/mini/soleil,
 		/obj/item/ego_weapon/mini/crow,
 		/obj/item/ego_weapon/taixuhuanjing,
@@ -38,6 +39,11 @@
 		/obj/item/clothing/suit/armor/ego_gear/limbus/ego/minos,
 		/obj/item/clothing/suit/armor/ego_gear/limbus/ego/cast,
 		/obj/item/clothing/suit/armor/ego_gear/limbus/ego/branch,
+		/obj/item/ego_weapon/city/udjat_limbus,
+		/obj/item/ego_weapon/ranged/city/udjat,
+		/obj/item/clothing/suit/armor/ego_gear/city/udjat_limbus,
+		/obj/item/clothing/suit/armor/ego_gear/city/udjat_combat,
+
 	)
 
 	cosmeticloot = list(
@@ -46,11 +52,18 @@
 		/obj/item/clothing/under/limbus/prison,
 		/obj/item/clothing/neck/limbus_tie,
 	)
+
+	ammoloot =	list(
+		/obj/item/ego_mag/udjat,
+	)
+
+
 /obj/structure/lootcrate/money
 	name = "Money Crate"
 	desc = "You think there's ahn in here. Open with a Crowbar."
 	icon_state = "crate_money"
 	rarechance = 30
+	jcorp_banned = TRUE
 	lootlist =	list(
 		/obj/item/stack/spacecash/c50,
 		/obj/item/stack/spacecash/c100,

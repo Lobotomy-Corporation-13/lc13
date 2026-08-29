@@ -55,7 +55,7 @@
 
 // Dingle-Dangle - Dear Lutemia
 /datum/ego_datum/weapon/lutemia
-	item_path = /obj/item/ego_weapon/shield/lutemia
+	item_path = /obj/item/ego_weapon/shield/parry/lutemia
 	cost = 20
 
 /datum/ego_datum/armor/lutemia
@@ -295,7 +295,7 @@
 	cost = 20
 
 /datum/ego_datum/weapon/capote
-	item_path = /obj/item/ego_weapon/shield/capote
+	item_path = /obj/item/ego_weapon/shield/parry/capote
 	cost = 20
 
 // Fairy-Long-Legs - Four-Leaf Clover

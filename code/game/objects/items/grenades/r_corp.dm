@@ -12,6 +12,9 @@
 		if(user.mind.has_antag_datum(/datum/antagonist/wizard/arbiter/rcorp))
 			to_chat(user, span_notice("You wouldn't stoop so low as to use the weapons of those below you.")) //You are an arbiter not a demoman
 			return FALSE
+	// Track grenade priming for RCE leaderboard
+	if(SSgamedirector.rce_leaderboard)
+		SSgamedirector.rce_leaderboard.RecordGrenadePrimed()
 	..()
 
 /obj/item/grenade/r_corp/detonate(mob/living/lanced_by)

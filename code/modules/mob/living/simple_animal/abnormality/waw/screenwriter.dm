@@ -316,7 +316,7 @@
 	add_overlay(mutable_appearance('icons/effects/32x64.dmi', "abandoned", -ABOVE_MOB_LAYER))
 
 // Patrol Code
-/mob/living/simple_animal/hostile/actor/patrol_select() //Hunt down the "victim"s
+/mob/living/simple_animal/hostile/actor/SelectPatrolLocation() //Hunt down the "victim"s
 	var/mob/living/carbon/human/potential_target
 	for(var/mob/living/carbon/human/L in GLOB.player_list)
 		if(faction_check_mob(L, FALSE) || L.stat >= HARD_CRIT || L.sanity_lost || z != L.z) // Dead or in hard crit, insane, or on a different Z level.
@@ -326,13 +326,11 @@
 			continue
 		potential_target = L
 		if(S.role == "victim") //We found 'em!
-			patrol_to(get_turf(L))
-			return
+			return get_turf(L)
 	if(potential_target)
 		var/datum/status_effect/actor/S = potential_target.has_status_effect(/datum/status_effect/actor)
 		S.ChangeToVictim()
-		patrol_to(get_turf(potential_target))
-		return
+		return get_turf(potential_target)
 	return ..()
 
 /mob/living/simple_animal/hostile/actor/PickTarget(list/Targets)

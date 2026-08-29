@@ -869,3 +869,74 @@
 	)
 	result = /obj/item/food/pain_au_chocolat
 	subcategory = CAT_PASTRY
+
+
+////////////////////////////////////////////////MOCHI////////////////////////////////////////////////
+//Rice-flour cakes. Each is rice + sugar + a flavour reagent (and a fruit for the fruity ones).
+
+/datum/crafting_recipe/food/mochi
+	name = "mochi"
+	time = 15
+	reqs = list(
+		/datum/reagent/consumable/rice = 5,
+		/datum/reagent/consumable/sugar = 5,
+		/datum/reagent/consumable/milk = 2
+	)
+	result = /obj/item/food/mochi
+	subcategory = CAT_PASTRY
+
+/datum/crafting_recipe/food/mochi_peanut
+	name = "Peanut Butter Ice Cream Mochi"
+	time = 15
+	reqs = list(
+		/datum/reagent/consumable/rice = 5,
+		/datum/reagent/consumable/sugar = 5,
+		/datum/reagent/consumable/cream = 2,
+		/obj/item/food/waffles = 1
+	)
+	result = /obj/item/food/mochi/peanut
+	subcategory = CAT_PASTRY
+
+/datum/crafting_recipe/food/mochi_strawberry
+	name = "Strawberry Mochi"
+	time = 15
+	reqs = list(
+		/datum/reagent/consumable/rice = 5,
+		/datum/reagent/consumable/sugar = 5,
+		/obj/item/food/grown/berries = 1
+	)
+	result = /obj/item/food/mochi/strawberry
+	subcategory = CAT_PASTRY
+
+/datum/crafting_recipe/food/mochi_matcha
+	name = "Matcha Mochi"
+	time = 15
+	reqs = list(
+		/datum/reagent/consumable/rice = 5,
+		/datum/reagent/consumable/sugar = 5,
+		/obj/item/food/grown/tea = 1
+	)
+	result = /obj/item/food/mochi/matcha
+	subcategory = CAT_PASTRY
+
+/datum/crafting_recipe/food/mochi_blueberry
+	name = "Blueberry Mochi"
+	time = 15
+	reqs = list(
+		/datum/reagent/consumable/rice = 5,
+		/datum/reagent/consumable/sugar = 5,
+		/datum/reagent/consumable/bluecherryjelly = 4
+	)
+	result = /obj/item/food/mochi/blueberry
+	subcategory = CAT_PASTRY
+
+/datum/crafting_recipe/food/mochi_mango
+	name = "Mango Mochi"
+	time = 15
+	reqs = list(
+		/datum/reagent/consumable/rice = 5,
+		/datum/reagent/consumable/sugar = 5,
+		/datum/reagent/consumable/peachjuice = 4
+	)
+	result = /obj/item/food/mochi/mango
+	subcategory = CAT_PASTRY

@@ -104,7 +104,7 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 		/datum/ego_datum/weapon/perversion,
 	)
 
-	generic_bubbles = list(
+	generic_bubbles = alist(
 		1 = list("%PERSON is evidently not prepared to work with %ABNO...", "%PERSON is anxiously counting the seconds until they're allowed to leave the cell."),
 		2 = list("%PERSON can't muster up the courage to face away from %ABNO, but is starting to crack under the pressure of its gaze...", "%PERSON hurriedly flips through the instruction manual for %ABNO."),
 		3 = list("%PERSON is torn on whether to look at %ABNO or not.", "%PERSON keeps track of %ABNO's floaty movements..."),

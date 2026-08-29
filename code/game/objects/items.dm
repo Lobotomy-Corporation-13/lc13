@@ -203,6 +203,8 @@ GLOBAL_VAR_INIT(embedpocalypse, FALSE) // if true, all items will be able to emb
 	var/swingstyle = WEAPONSWING_NONE
 	/// What Color its swing animation is
 	var/swingcolor
+	/// If TRUE, we won't try to force gray as a fallback colour for when no swingcolour is set. In other words, set this to TRUE and swingcolor to null if you don't want any colour on your custom sweep/thrust sprite.
+	var/forced_swingcolor = FALSE
 
 	/// How many deciseconds between attacks, times ten.
 	var/attack_speed = 1

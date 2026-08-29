@@ -53,5 +53,5 @@
 	QDEL_NULL(head)
 	H.regenerate_icons()
 	H.visible_message("<span class='danger'>[H]'s head explodes!</span>")
-	new /obj/effect/gibspawner/generic/silent(get_turf(H))
+	new /obj/effect/bloodspawner(get_turf(H))
 	qdel(src)

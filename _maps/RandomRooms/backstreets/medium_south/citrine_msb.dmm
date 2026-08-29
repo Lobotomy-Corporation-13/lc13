@@ -1,0 +1,141 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"c" = (
+/turf/open/floor/plating/rust,
+/area/city/backstreets_room)
+"f" = (
+/obj/effect/decal/cleanable/oil/streak,
+/turf/open/floor/plating/rust,
+/area/city/backstreets_room)
+"k" = (
+/obj/effect/decal/remains/human,
+/obj/effect/decal/cleanable/blood/old,
+/turf/open/floor/plating/rust,
+/area/city/backstreets_room)
+"q" = (
+/obj/structure/lootcrate/money,
+/turf/open/floor/plating/rust,
+/area/city/backstreets_room)
+"r" = (
+/mob/living/simple_animal/hostile/ordeal/citrine/knight,
+/turf/open/floor/material{
+	icon_state = "damaged1"
+	},
+/area/city/backstreets_room)
+"t" = (
+/obj/effect/landmark/cratespawn/corpo,
+/turf/open/floor/plating/rust,
+/area/city/backstreets_room)
+"x" = (
+/obj/item/clothing/head/helmet/skull,
+/turf/open/floor/plating/rust,
+/area/city/backstreets_room)
+"P" = (
+/obj/effect/decal/cleanable/oil,
+/turf/open/floor/plating/rust,
+/area/city/backstreets_room)
+"Q" = (
+/turf/closed/indestructible/reinforced,
+/area/city/backstreets_room)
+"S" = (
+/obj/structure/lootcrate/money,
+/turf/open/floor/material{
+	icon_state = "damaged3"
+	},
+/area/city/backstreets_room)
+"W" = (
+/turf/open/floor/material{
+	icon_state = "damaged3"
+	},
+/area/city/backstreets_room)
+"X" = (
+/turf/open/floor/material{
+	icon_state = "damaged1"
+	},
+/area/city/backstreets_room)
+"Z" = (
+/obj/effect/landmark/cratespawn/corpo,
+/turf/open/floor/material{
+	icon_state = "damaged3"
+	},
+/area/city/backstreets_room)
+
+(1,1,1) = {"
+Q
+Q
+Q
+Q
+Q
+Q
+"}
+(2,1,1) = {"
+Q
+P
+W
+f
+x
+Q
+"}
+(3,1,1) = {"
+c
+c
+c
+X
+f
+Q
+"}
+(4,1,1) = {"
+Q
+f
+k
+c
+W
+Q
+"}
+(5,1,1) = {"
+Q
+Q
+Q
+c
+Q
+Q
+"}
+(6,1,1) = {"
+Q
+t
+c
+c
+t
+Q
+"}
+(7,1,1) = {"
+Q
+q
+c
+c
+c
+Q
+"}
+(8,1,1) = {"
+Q
+Z
+c
+r
+c
+Q
+"}
+(9,1,1) = {"
+Q
+c
+X
+c
+S
+Q
+"}
+(10,1,1) = {"
+Q
+Q
+Q
+Q
+Q
+Q
+"}

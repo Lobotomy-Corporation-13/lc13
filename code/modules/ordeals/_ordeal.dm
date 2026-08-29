@@ -61,7 +61,7 @@
 	SSlobotomy_corp.completed_challenges += akward_record_formatting
 	SSlobotomy_corp.completed_challenges[akward_record_formatting] = level
 
-	if(SSmaptype.chosen_trait != FACILITY_TRAIT_ABNO_BLITZ)
+	if(!SSlobotomy_corp.BlitzActive())
 		SSlobotomy_corp.ordeal_stats += 5
 	for(var/mob/living/carbon/human/person as anything in SSabnormality_queue.active_suppression_agents)
 		if(!istype(person) || QDELETED(person)) // gibbed or cryo'd, we no longer care about them

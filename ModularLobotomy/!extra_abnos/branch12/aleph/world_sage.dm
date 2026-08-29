@@ -40,6 +40,10 @@
 	var/list/effect_tiles = list()
 	var/worked
 
+/mob/living/simple_animal/hostile/abnormality/branch12/world_sage/Destroy()
+	QDEL_LIST(effect_tiles)
+	return ..()
+
 /mob/living/simple_animal/hostile/abnormality/branch12/world_sage/Move()
 	return FALSE
 
@@ -58,11 +62,8 @@
 	WorkDamageEffect()
 
 /mob/living/simple_animal/hostile/abnormality/branch12/world_sage/death()
-	..()
+	. = ..()
 	addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(show_global_blurb), 5 SECONDS, "Ciao ladies! Thank you for the show! 'Til we meet again!", 25))
-	for(var/V in effect_tiles)
-		qdel(V)
-		effect_tiles-=V
 
 /mob/living/simple_animal/hostile/abnormality/branch12/world_sage/BreachEffect()
 	..()
@@ -95,9 +96,7 @@
 
 //Unique attacks
 /mob/living/simple_animal/hostile/abnormality/branch12/world_sage/proc/TileSwap()
-	for(var/V in effect_tiles)
-		qdel(V)
-		effect_tiles-=V
+	QDEL_LIST(effect_tiles)
 
 	emote("giggles")
 	SLEEP_CHECK_DEATH(10)
@@ -187,98 +186,86 @@
 	plane = 4
 	max_integrity = 100000
 	base_icon_state = "red"
+	var/damage_type = RED_DAMAGE
 	var/mob/living/simple_animal/hostile/abnormality/branch12/world_sage/connected_abno
 
 /obj/structure/jester_tile/Initialize()
 	. = ..()
+
 	if(!connected_abno)
-		connected_abno = locate(/mob/living/simple_animal/hostile/abnormality/branch12/world_sage) in GLOB.abnormality_mob_list
+		RegisterSoul(locate(/mob/living/simple_animal/hostile/abnormality/branch12/world_sage) in GLOB.abnormality_mob_list)
+
+/obj/structure/jester_tile/red/Crossed(atom/movable/AM)
+	. = ..()
+	if(ishuman(AM))
+		MobEffect(AM)
+
+//Hard Delete Prevention
+/obj/structure/jester_tile/Destroy()
+	UnregisterSoul()
+	return ..()
+
+/obj/structure/jester_tile/proc/RegisterSoul(new_link)
+	if(!new_link)
+		return
+	connected_abno = new_link
+	connected_abno.effect_tiles += src
+	RegisterSignal(new_link, list(COMSIG_PARENT_QDELETING), PROC_REF(UnregisterSoul))
+
+/obj/structure/jester_tile/proc/UnregisterSoul()
 	if(connected_abno)
-		connected_abno.effect_tiles += src
+		connected_abno.effect_tiles -= src
+		UnregisterSignal(connected_abno, list(COMSIG_PARENT_QDELETING))
+	connected_abno = null
+
+/obj/structure/jester_tile/proc/MobEffect(mob/living/carbon/human/H)
+	H.deal_damage(50, damage_type, source = connected_abno, flags = (DAMAGE_FORCED | DAMAGE_UNTRACKABLE), attack_type = (ATTACK_TYPE_ENVIRONMENT))
 
 // Jester Tiles
 /obj/structure/jester_tile/red
 	name = "Red Tile"
 	icon_state = "red"
 
-/obj/structure/jester_tile/red/Crossed(atom/movable/AM)
-	. = ..()
-	if(ishuman(AM))
-		var/mob/living/carbon/human/H = AM
-		H.deal_damage(50, RED_DAMAGE, source = connected_abno, flags = (DAMAGE_FORCED | DAMAGE_UNTRACKABLE), attack_type = (ATTACK_TYPE_ENVIRONMENT))
-
-
 /obj/structure/jester_tile/white
 	name = "White Tile"
 	icon_state = "white"
-
-/obj/structure/jester_tile/white/Crossed(atom/movable/AM)
-	. = ..()
-	if(ishuman(AM))
-		var/mob/living/carbon/human/H = AM
-		H.deal_damage(50, WHITE_DAMAGE, source = connected_abno, flags = (DAMAGE_FORCED | DAMAGE_UNTRACKABLE), attack_type = (ATTACK_TYPE_ENVIRONMENT))
-
+	damage_type = WHITE_DAMAGE
 
 /obj/structure/jester_tile/black
 	name = "Black Tile"
 	icon_state = "black"
-
-/obj/structure/jester_tile/black/Crossed(atom/movable/AM)
-	. = ..()
-	if(ishuman(AM))
-		var/mob/living/carbon/human/H = AM
-		H.deal_damage(50, BLACK_DAMAGE, source = connected_abno, flags = (DAMAGE_FORCED | DAMAGE_UNTRACKABLE), attack_type = (ATTACK_TYPE_ENVIRONMENT))
-
+	damage_type = BLACK_DAMAGE
 
 /obj/structure/jester_tile/pale
 	name = "Pale Tile"
 	icon_state = "pale"
-
-/obj/structure/jester_tile/pale/Crossed(atom/movable/AM)
-	. = ..()
-	if(ishuman(AM))
-		var/mob/living/carbon/human/H = AM
-		H.deal_damage(50, PALE_DAMAGE, source = connected_abno, flags = (DAMAGE_FORCED | DAMAGE_UNTRACKABLE), attack_type = (ATTACK_TYPE_ENVIRONMENT))
-
+	damage_type = PALE_DAMAGE
 
 /obj/structure/jester_tile/stun
 	name = "Tremor Tile"
 	icon_state = "tremor"
 
-/obj/structure/jester_tile/stun/Crossed(atom/movable/AM)
-	. = ..()
-	if(ishuman(AM))
-		var/mob/living/carbon/human/H = AM
-		H.apply_lc_tremor(10, 40)
-
+/obj/structure/jester_tile/stun/MobEffect(mob/living/carbon/human/H)
+	H.apply_lc_tremor(10, 40)
 
 /obj/structure/jester_tile/drugs
 	name = "Confusion Tile"
 	icon_state = "confusion"
 
-/obj/structure/jester_tile/drugs/Crossed(atom/movable/AM)
-	. = ..()
-	if(ishuman(AM))
-		var/mob/living/carbon/human/H = AM
-		H.set_drugginess(15)
+/obj/structure/jester_tile/drugs/MobEffect(mob/living/carbon/human/H)
+	H.set_drugginess(15)
 
 /obj/structure/jester_tile/bleed
 	name = "Bleed Tile"
 	icon_state = "bleed"
 
-/obj/structure/jester_tile/bleed/Crossed(atom/movable/AM)
-	. = ..()
-	if(ishuman(AM))
-		var/mob/living/carbon/human/H = AM
-		H.apply_lc_bleed(10)
+/obj/structure/jester_tile/bleed/MobEffect(mob/living/carbon/human/H)
+	H.apply_lc_bleed(10)
 
 /obj/structure/jester_tile/statdown
 	name = "Stat Down Tile"
 	icon_state = "statdown"
 
-/obj/structure/jester_tile/statdown/Crossed(atom/movable/AM)
-	. = ..()
-	if(ishuman(AM))
-		var/mob/living/carbon/human/H = AM
-		H.adjust_all_attribute_levels(-1)
+/obj/structure/jester_tile/statdown/MobEffect(mob/living/carbon/human/H)
+	H.adjust_all_attribute_levels(-1)
 

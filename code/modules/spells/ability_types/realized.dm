@@ -74,6 +74,11 @@
 	action_icon_state = "lce_lantern"
 	target_type = /obj/item/ego_weapon/wield/eldtree
 
+/obj/effect/proc_holder/ability/ego_assimilation/dreaming
+	base_icon_state = "dreaming"
+	action_icon_state = "dreaming"
+	target_type = /obj/item/ego_weapon/ranged/dreaming
+
 /* Fragment of the Universe - One with the Universe */
 /obj/effect/proc_holder/ability/universe_song
 	name = "Song of the Universe"
@@ -1396,6 +1401,9 @@
 	action_icon_state = "ripper0"
 	base_icon_state = "ripper"
 	cooldown_time = 1 MINUTES
+	var/hit_damage = 100
+	var/hit_damtype = RED_DAMAGE
+	var/hit_sound = null
 
 /obj/effect/proc_holder/ability/rip_space/Perform(target, mob/living/user)
 	var/list/targets = list()
@@ -1411,11 +1419,24 @@
 		to_chat(user, span_warning("There are no enemies nearby!"))
 		return
 
+	var/obj/item/ego_weapon/held_weapon = user.get_active_held_item()
+	if(istype(held_weapon) && held_weapon.CanUseEgo(user)) // check for if the user has a weapon, then take force value, multiply it by the usual justice mod, and take the weapon's dmg type
+		var/justice_mod = 1 + (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE)/100)
+		hit_damage = held_weapon.force * justice_mod
+		hit_damtype = held_weapon.damtype
+		hit_sound = held_weapon.hitsound
+	else
+		hit_damage = 100 // no weapons? yeah, you're punching them, speed equals power so I guess you get to do 100 damage
+		hit_damtype = RED_DAMAGE
+		hit_sound = "punch"
+
 	cooldown = world.time + (7 SECONDS)
 	var/turf/origin = get_turf(user)
 	var/dash_count = min(targets.len*3, 30) //Max 10 targets (7 Seconds)
 	user.density = FALSE
-	ADD_TRAIT(user, TRAIT_IMMOBILIZED, type)
+	ADD_TRAIT(user, TRAIT_IMMOBILIZED, type) // so you don't move while you're doing your cool move
+	ADD_TRAIT(user, TRAIT_MOVE_FLYING, type) // so you don't 'fall on a glass table' while you're doing your cool move
+	user.status_flags |= GODMODE // so you don't die while you're doing your cool move
 	var/obj/effect/portal/warp/P = new(origin)
 	playsound(user, 'sound/abnormalities/wayward_passenger/ripspace_begin.ogg', 100, 0)
 	sleep(1 SECONDS)
@@ -1435,6 +1456,8 @@
 	user.forceMove(origin)
 	user.density = TRUE
 	REMOVE_TRAIT(user, TRAIT_IMMOBILIZED, type)
+	REMOVE_TRAIT(user, TRAIT_MOVE_FLYING, type)
+	user.status_flags &= ~GODMODE
 	playsound(user, 'sound/abnormalities/wayward_passenger/ripspace_end.ogg', 100, 0)
 	return ..()
 
@@ -1457,14 +1480,15 @@
 	user.orbit(DE, 0, 0, 0, 0, 0)
 
 	sleep(1)
-	target.deal_damage(100, RED_DAMAGE, user, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
+	target.deal_damage(hit_damage, hit_damtype, user, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)) // uses hit_damage and hit_damtype determined by the perform proc in this ability
 	new /obj/effect/temp_visual/rip_space_slash(get_turf(target))
 	new /obj/effect/temp_visual/ripped_space(get_turf(target))
-	playsound(user, 'sound/abnormalities/wayward_passenger/ripspace_hit.ogg', 75, 0)
+	playsound(user, 'sound/weapons/ego/lce_dimension_leap.ogg', 50, 0)
+	playsound(user, hit_sound, 50, 0) // uses hit_sound determined by the perform proc in this ability
 	sleep(1)
 	qdel(DE)
 
-/obj/projectile/ripper_dash_effect
+/obj/projectile/ripper_dash_effect // this does 10 red damage, I don't know if it's intentional, lazy or something else so i won't mess with it
 	speed = 0.32
 	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "ripper_dash"

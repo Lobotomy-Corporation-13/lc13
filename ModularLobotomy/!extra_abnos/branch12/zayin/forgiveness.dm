@@ -24,13 +24,12 @@
 	//gift_type =  /datum/ego_gifts/signal
 
 	abnormality_origin = ABNORMALITY_ORIGIN_BRANCH12
-
 	var/mob/living/carbon/human/gifted_human
 
 /mob/living/simple_animal/hostile/abnormality/branch12/statue_of_forgiveness/SuccessEffect(mob/living/carbon/human/user, work_type, pe)
 	. = ..()
 	if(user.stat != DEAD && !gifted_human) //check there's no gifted human and the worker isn't dead
-		gifted_human = TRUE
+		RegisterSoul(user)
 		to_chat(user, span_nicegreen("You feel protected."))
 		switch(work_type) //set protection type based on work type
 			if(ABNORMALITY_WORK_INSTINCT)
@@ -59,10 +58,25 @@
 	if(!gifted_human)
 		return
 	if (gifted_human.stat == DEAD)
-		gifted_human = FALSE
+		UnregisterSoul()
 
 /mob/living/simple_animal/hostile/abnormality/branch12/statue_of_forgiveness/PostWorkEffect(mob/living/carbon/human/user, work_type, pe, work_time, canceled)
 	if(user.sanity_lost)
 		QDEL_NULL(user.ai_controller)
 		user.ai_controller = /datum/ai_controller/insane/murder
 		user.InitializeAIController()
+
+/mob/living/simple_animal/hostile/abnormality/branch12/statue_of_forgiveness/Destroy()
+	UnregisterSoul()
+	return ..()
+
+/mob/living/simple_animal/hostile/abnormality/branch12/statue_of_forgiveness/proc/RegisterSoul(new_link)
+	if(!new_link)
+		return
+	gifted_human = new_link
+	RegisterSignal(new_link, list(COMSIG_PARENT_QDELETING, COMSIG_LIVING_DEATH), PROC_REF(UnregisterSoul))
+
+/mob/living/simple_animal/hostile/abnormality/branch12/statue_of_forgiveness/proc/UnregisterSoul()
+	if(gifted_human)
+		UnregisterSignal(gifted_human, list(COMSIG_PARENT_QDELETING, COMSIG_LIVING_DEATH))
+	gifted_human = null

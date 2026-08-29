@@ -74,7 +74,7 @@
 
 /obj/item/organ/liver/on_life()
 	var/mob/living/carbon/C = owner
-	..()	//perform general on_life()
+	. = ..()	//perform general on_life()
 	if(istype(C))
 		if(!(organ_flags & ORGAN_FAILING) && !HAS_TRAIT(C, TRAIT_NOMETABOLISM))//can't process reagents with a failing liver
 

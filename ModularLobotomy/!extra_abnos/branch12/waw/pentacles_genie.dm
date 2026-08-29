@@ -39,6 +39,10 @@
 	var/coinsleft
 	var/list/affected_players = list()
 
+/mob/living/simple_animal/hostile/abnormality/branch12/pentacle_genie/Destroy()
+	UnregisterAllMobs()
+	return ..()
+
 /mob/living/simple_animal/hostile/abnormality/branch12/pentacle_genie/CanAttack(atom/the_target)
 	return FALSE
 
@@ -70,36 +74,44 @@
 		var/turf/W = pick(GLOB.xeno_spawn)
 		new /obj/item/red_coin (get_turf(W))
 		coinsleft++
-	..()
+	. = ..()
 
 	var/turf/T = pick(GLOB.department_centers)
 	forceMove(T)
 	for(var/mob/living/carbon/human/H in GLOB.mob_list)
-		affected_players +=H
+		RegisterMob(H)
 		H.adjust_attribute_bonus(FORTITUDE_ATTRIBUTE, -40)
 		H.adjust_attribute_bonus(PRUDENCE_ATTRIBUTE, -40)
 		H.adjust_attribute_bonus(TEMPERANCE_ATTRIBUTE, -40)
 		H.adjust_attribute_bonus(JUSTICE_ATTRIBUTE, -40)
 	return
 
-/mob/living/simple_animal/hostile/abnormality/branch12/pentacle_genie/BreachEffect(mob/living/carbon/human/user, breach_type)
-	. = ..()
-
 /* Work effects */
 /mob/living/simple_animal/hostile/abnormality/branch12/pentacle_genie/NeutralEffect(mob/living/carbon/human/user, work_type, pe)
 	. = ..()
 	if(prob(15))
 		datum_reference.qliphoth_change(-1)
-	return
 
 /mob/living/simple_animal/hostile/abnormality/branch12/pentacle_genie/FailureEffect(mob/living/carbon/human/user, work_type, pe)
 	. = ..()
 	datum_reference.qliphoth_change(-1)
-	return
+
+/mob/living/simple_animal/hostile/abnormality/branch12/pentacle_genie/proc/UnregisterMob(mob/living/dude)
+	UnregisterSignal(dude, COMSIG_PARENT_QDELETING)
+	affected_players-=dude
+
+/mob/living/simple_animal/hostile/abnormality/branch12/pentacle_genie/proc/RegisterMob(mob/living/dude)
+	RegisterSignal(dude, COMSIG_PARENT_QDELETING, PROC_REF(UnregisterMob))
+	affected_players+=dude
+
+/mob/living/simple_animal/hostile/abnormality/branch12/pentacle_genie/proc/UnregisterAllMobs()
+	for(var/mob/living/L in affected_players)
+		UnregisterMob(L)
+	//Redundant but failsafe
+	affected_players.Cut()
 
 /obj/item/red_coin
 	name = "red coin"
 	desc = "A red coin. You feel like a genie might be able to use this."
 	icon = 'ModularLobotomy/_Lobotomyicons/branch12/32x32.dmi'
 	icon_state = "red_coin"
-

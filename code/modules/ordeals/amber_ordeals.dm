@@ -16,6 +16,24 @@
 /datum/ordeal/simplespawn/amber_dawn/DeploymentZone(turf/T, no_center = FALSE)
 	return T //deployment zone unnecessary since amber dawns burrow out of a 5x5 zone
 
+// Noon
+/datum/ordeal/simplespawn/amber_noon
+	name = "The Noon of Amber"
+	flavor_name = "Second Entree"
+	announce_text = "A little more; we hunger still."
+	end_announce_text = "We ate incessantly to live. The inevitable diminution, the waste..."
+	level = 2
+	reward_percent = 0.15
+	announce_sound = 'sound/effects/ordeals/amber_start.ogg'
+	end_sound = 'sound/effects/ordeals/amber_end.ogg'
+	color = "#FFBF00"
+	spawn_places =  6
+	spawn_amount = 1
+	spawn_type = /mob/living/simple_animal/hostile/ordeal/amber_noon
+
+/datum/ordeal/simplespawn/amber_dawn/DeploymentZone(turf/T, no_center = FALSE)
+	return T //deployment zone unnecessary since amber dawns burrow out of a 5x5 zone
+
 // Dusk
 /datum/ordeal/simplespawn/amber_dusk
 	name = "The Dusk of Amber"

@@ -3,7 +3,13 @@
 	if(!(flags & DAMAGE_FORCED) && (!PreDamageReaction(damage_amount, damage_type, source))) // If our forced argument isn't TRUE, then we expect to receive a TRUE from PreDamageReaction to continue the proc
 		return FALSE
 
-	. = dna.species.apply_damage(src, damage_amount, damage_type, source, flags, attack_type, blocked, def_zone, wound_bonus, bare_wound_bonus, sharpness)
+	if(QDELETED(src))
+		return FALSE
+
+	if(dna)
+		. = dna.species.apply_damage(src, damage_amount, damage_type, source, flags, attack_type, blocked, def_zone, wound_bonus, bare_wound_bonus, sharpness)
+	else
+		. = damage_amount
 
 	PostDamageReaction(., damage_type, flags & DAMAGE_UNTRACKABLE ? null : source)
 	return TRUE
@@ -14,7 +20,7 @@
 /mob/living/carbon/human/adjustRedLoss(amount, updating_health = TRUE, forced = FALSE)
 	if(stat != DEAD)
 		DamageEffect(amount, RED_DAMAGE)
-	. = ..()
+	return ..()
 
 /mob/living/carbon/human/adjustWhiteLoss(amount, updating_health = TRUE, forced = FALSE, white_healable = FALSE)
 	var/damage_amt = amount
@@ -44,17 +50,17 @@
 /mob/living/carbon/human/adjustPaleLoss(amount, updating_health = TRUE, forced = FALSE)
 	if(stat != DEAD)
 		DamageEffect(amount, PALE_DAMAGE)
-	. = ..()
+	return ..()
 
 /mob/living/carbon/human/adjustToxLoss(amount, updating_health = TRUE, forced = FALSE)
 	if(stat != DEAD)
 		DamageEffect(amount, TOX)
-	. = ..()
+	return ..()
 
 /mob/living/carbon/human/adjustFireLoss(amount, updating_health = TRUE, forced = FALSE, required_status)
 	if(stat != DEAD)
 		DamageEffect(amount, FIRE)
-	. = ..()
+	return ..()
 
 //
 

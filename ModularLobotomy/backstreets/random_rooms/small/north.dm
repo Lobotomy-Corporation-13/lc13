@@ -75,3 +75,9 @@
 	name = "Gamba Shrine - Small North"
 	room_id = "gamba_shrine"
 	mappath = "_maps/RandomRooms/backstreets/small_north/gamba_shrine.dmm"
+	stock = 1 //You've only got one shot at winning it big...
+
+/datum/map_template/random_room/backstreets/small_north/citrine_shrine
+	name = "Citrine Shrine - Small North"
+	room_id = "citrine_shrine"
+	mappath = "_maps/RandomRooms/backstreets/small_north/citrine_shrine.dmm"

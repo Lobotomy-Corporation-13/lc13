@@ -110,6 +110,7 @@
 					user.gib(FALSE,FALSE,TRUE)
 					say("Shame. Was quite fun havin' ya here, but you know how it is.")
 				else
+					user.client?.give_award(/datum/award/achievement/abno/dealer_gambler, user)
 					new /obj/item/ego_weapon/ranged/pistol/deathdealer(get_turf(user))
 					new /obj/effect/gibspawner/generic/silent(get_turf(src))
 					gib()

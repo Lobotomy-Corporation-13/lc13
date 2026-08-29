@@ -75,9 +75,10 @@
 	abno_type = /mob/living/simple_animal/hostile/abnormality/staining_rose
 	abno_code = "F-04-116"
 	abno_info = list(
-		"The first employee who works on Staining Rose will resonate with it and become the Chosen.",
-		"If anyone other than the Chosen worked on Staining Rose, they became more vulnerable to damage until Staining Rose wilted.",
+		"The first employee who works Repression on Staining Rose will resonate with it and become the Chosen.",
+		"If anyone other than the Chosen worked Repression on Staining Rose, they became more vulnerable to damage, and gained more damage until Staining Rose wilted.",
 		"When an employee with Justice 4 or lower finished their work, Staining Rose seemed to reset its satisfaction. The employee became more vulnerable to damage until Staining Rose wilted.",
+		"However, this increased the time between breaches, and when the effects wore off, the employee seemed to be stronger.",
 		"Every 15 minutes, the Qliphoth Counter lowered unless Staining Rose was worked on within the time period.",
 		"When the Qliphoth Counter reached 0, Staining Rose shed its petals, and everyone in the facility became more vulnerable to damage.")
 
@@ -239,14 +240,28 @@
 		BLACK_DAMAGE = "Resistant/Immune/Immune",
 		PALE_DAMAGE = "Weak/Normal/Endured")
 
+// Yinglong (WIP)
+/obj/item/paper/fluff/info/aleph/yinglong
+	abno_type = /mob/living/simple_animal/hostile/abnormality/yinglong
+	abno_code = "F-02-14-23"
+	abno_info = list(
+		"When F-02-14-23 breaches they will produce 4 dragon vortexes in random hallways around the facility every 10 seconds as long as they remain uncontained and without a target.",
+		"When engaged in combat F-02-14-23 will use certain abilities in a recognizable order.",
+		"F-02-14-23 will attack 3 times with a volley of pins, each pin volley has one that is slower than the others.",
+		"When this slow pin is hit with a ego it will be reflected and harm F-02-14-23, this will also weaken the intensity of future attacks.",
+		"F-02-14-23 will appear to have electricity arcing around its body before summoning 4 dragon vortexes around it. \
+		These vortexes deal damage to anyone who comes into contact with them before tossing them in a random direction.",
+		"F-02-14-23 will summon lighting that applies RUPTURE in a checkerboard pattern around it.",
+		"F-02-14-23 will then fire pins in a circular pattern around itself before restarting its attack pattern.",)
+	abno_breach_damage_type = "Red/White"
+
 // Black Sun
 /obj/item/paper/fluff/info/aleph/blacksun
 	abno_type = /mob/living/simple_animal/hostile/abnormality/black_sun
 	abno_code = "M-03-192"
 	abno_info = list(
 		"This abnormality will rise over the course of 12 minutes",
-		"The closer the sun is to the peak, the more PE was generated from M-03-192.",
-		"As time goes on, this abnormality boosts your stats significantly.",
+		"Each death of humans will stall M-03-192 by a short period of time.",
 		"Working on the abnormality will cause it to set once more, and cause all of it's boosts to subside.",
 		)
 

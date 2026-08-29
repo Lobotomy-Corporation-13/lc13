@@ -1,0 +1,15 @@
+{
+	"version": 1,
+	"map_name": "Facility F-117 LAKES",
+	"map_path": "map_files/LC13/Foxtrot-Lakes",
+	"map_file": [
+		"foxtrot.dmm"
+	],
+	"space_ruin_levels": 0,
+	"space_empty_levels": 0,
+	"shuttles": {
+		"emergency": "emergency_alpha"
+	},
+	"minetype": "none",
+	"maptype": "fishing"
+}

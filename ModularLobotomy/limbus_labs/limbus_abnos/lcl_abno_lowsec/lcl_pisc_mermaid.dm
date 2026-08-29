@@ -2,6 +2,7 @@
 	true_name = "Piscine Mermaid"
 	maxHealth = 1000
 	health = 1000
+	gender = FEMALE
 	damage_coeff = list(RED_DAMAGE = 1.5, WHITE_DAMAGE = 1.5, BLACK_DAMAGE = 0.5, PALE_DAMAGE = 2)
 	melee_damage_lower = 5
 	melee_damage_upper = 10
@@ -30,19 +31,20 @@
 	insight_cooldown_time = 2 MINUTES
 	liked_objects_list = list(/obj/effect/decal/cleanable/food/salt)
 	liked_objects_value = 10
-	ego_list = list(
-		/datum/ego_datum/weapon/unrequited,
-		/datum/ego_datum/armor/unrequited,
-	)
+	attunement_family = "unrequited"
+	ego_list = list(/datum/ego_datum/armor/lce/unrequited)
 	breach_overlay_z = 45
+
 	var/obj/item/clothing/head/unrequited_crown/crown
 	var/mob/living/carbon/human/love_target
 	var/mob/living/carbon/human/last_petter
 	var/pet_count = 0
 	var/mob/living/carbon/human/last_speaker
 	var/speak_count = 0
-	var/breached = FALSE
 	var/dashing = FALSE
+	///TRUE once the counter has bottomed out and the breach is being OFFERED. She does not
+	///breach on her own any more - the alert sits there flashing until she chooses to take it.
+	var/breach_ready = FALSE
 
 /mob/living/simple_animal/hostile/limbus_abno/pisc_mermaid/Initialize(mapload)
 	. = ..()
@@ -98,18 +100,20 @@
 		adjustBruteLoss(W.force * 1.5)
 
 /mob/living/simple_animal/hostile/limbus_abno/pisc_mermaid/updatehealth()
-	..()
+	. = ..()
 	if(breached && health < 400)
 		Unbreach()
 
 /mob/living/simple_animal/hostile/limbus_abno/pisc_mermaid/death()
 	. = ..()
+	breach_ready = FALSE
+	clear_alert("mermaid_breach")
 	Unbreach()
 	if(crown)
 		qdel(crown)
 
 /mob/living/simple_animal/hostile/limbus_abno/pisc_mermaid/funpet(mob/living/carbon/human/petter)
-	..()
+	. = ..()
 	petter.adjustWhiteLoss(10)
 	if(last_petter == petter)
 		pet_count++
@@ -130,7 +134,7 @@
 
 //It can trigger from radiospeak, but that's kind of funny so I'll keep it. Online dating.
 /mob/living/simple_animal/hostile/limbus_abno/pisc_mermaid/Hear(message, atom/movable/speaker, datum/language/message_language, raw_message, radio_freq, list/spans, list/message_mods)
-	..()
+	. = ..()
 	if(!ishuman(speaker))
 		return
 	if(last_speaker == speaker)
@@ -152,32 +156,58 @@
 		AdjustDesire(25)
 
 /mob/living/simple_animal/hostile/limbus_abno/pisc_mermaid/InsightRoomResults(room_score, list/room_obj_list)
-	..()
+	. = ..()
 	if(room_obj_list.Find(crown))
 		to_chat(src, span_warning("Why is your gift still there? Why didn't they take it? Why. Why. Why."))
 		AdjustDesire(-20)
 
 /mob/living/simple_animal/hostile/limbus_abno/pisc_mermaid/AdjustHunger(feeding_amount)
-	..()
-	if(starving && !IsPositive(feeding_amount))
+	. = ..()
+	if(starving && feeding_amount)
 		AdjustDesire(15) //Ironically, letting her starve increases her mood due to liking repression work and disliking instinct.
 
 /mob/living/simple_animal/hostile/limbus_abno/pisc_mermaid/AdjustCounter(counter_amount)
-	if(breached)
+	if(!IsContained())
 		return
-	..()
-	if(counter <= 0)
-		BreachState()
-		MermaidChokehold()
+	. = ..()
+	UpdateBreachOffer()
+
+///Hitting zero no longer breaches her by itself - it OFFERS the breach, and she takes it by
+///clicking the alert. The counter climbing back above zero withdraws the offer again, which
+///gives the facility a real window to talk her down after the fuse has already run out.
+/mob/living/simple_animal/hostile/limbus_abno/pisc_mermaid/proc/UpdateBreachOffer()
+	if(breached || counter > 0 || stat >= DEAD)
+		if(breach_ready)
+			breach_ready = FALSE
+			clear_alert("mermaid_breach")
+			to_chat(src, span_nicegreen("The water settles. You can wait a little longer."))
+		return
+	if(breach_ready)
+		return
+	breach_ready = TRUE
+	throw_alert("mermaid_breach", /atom/movable/screen/alert/mermaid_breach)
+	playsound(get_turf(src), 'sound/abnormalities/piscinemermaid/bigsplash.ogg', 50, 1)
+	to_chat(src, span_userdanger("You have waited long enough. The depths are open to you \
+		whenever you want them - click the warning on your screen to give in."))
+
+///Taking the offer. Everything from here is the old automatic behaviour, unchanged.
+/mob/living/simple_animal/hostile/limbus_abno/pisc_mermaid/proc/AcceptBreach()
+	if(!IsContained() || !breach_ready || stat >= DEAD)
+		return FALSE
+	breach_ready = FALSE
+	clear_alert("mermaid_breach")
+	Breach()
+	MermaidChokehold()
+	return TRUE
 
 /mob/living/simple_animal/hostile/limbus_abno/pisc_mermaid/AdjustDesire(desire_amount)
 	. = ..()
 	if(!.)
 		return FALSE
 
-	if(IsPositive(desire_amount) && desire_bar > 70)
+	if(0 < desire_amount && desire_bar > 70)
 		AdjustCounter(1)
-	else if(!IsPositive(desire_amount) && desire_bar < 35)
+	else if(0 > desire_amount && desire_bar < 35)
 		AdjustCounter(-1)
 	return TRUE
 
@@ -191,7 +221,10 @@
 	UpdateBars()
 
 ///Not a skill, only happens at counter 0 entirely outside the mermaid's control. Buffed skills, attacks, and generally a pain in the ass.
-/mob/living/simple_animal/hostile/limbus_abno/pisc_mermaid/proc/BreachState()
+/mob/living/simple_animal/hostile/limbus_abno/pisc_mermaid/Breach()
+	. = ..()
+	if(!.)
+		return
 	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	icon_state = "pmermaid_breach"
 	pixel_x = 0
@@ -203,9 +236,9 @@
 	melee_damage_upper = 30
 	melee_damage_type = BLACK_DAMAGE
 	unstable = TRUE
-	AddBreachEffect()
 
-/mob/living/simple_animal/hostile/limbus_abno/pisc_mermaid/proc/Unbreach()
+/mob/living/simple_animal/hostile/limbus_abno/pisc_mermaid/Unbreach()
+	. = ..()
 	manual_emote("calms down...")
 	icon = 'ModularLobotomy/_Lobotomyicons/48x32.dmi'
 	icon_state = "pmermaid_standing"
@@ -221,7 +254,27 @@
 	AdjustDesire(max_desire)
 	AdjustCounter(max_counter)
 	AdjustHunger(max_hunger)
-	RemoveBreachEffect()
+
+///The breach offer. A flashing hazard triangle that sits on her HUD once her counter bottoms
+///out; shift-clicking it explains what it is, and clicking it takes the breach.
+/atom/movable/screen/alert/mermaid_breach
+	name = "The Depths Are Open"
+	desc = "You have met the condition to breach. Click this to give in - you will surface beside the one you love, \
+		and everything around you will start to drown. Nothing but a beating will bring you back."
+	icon = 'ModularLobotomy/_Lobotomyicons/abno_hud.dmi'
+	icon_state = "mermaid_breach"
+
+/atom/movable/screen/alert/mermaid_breach/Click(location, control, params)
+	. = ..() //The parent handles the shift-click "examine" path, which prints name + desc.
+	if(!usr || usr != owner)
+		return
+	var/list/modifiers = params2list(params)
+	if(LAZYACCESS(modifiers, SHIFT_CLICK))
+		return
+	var/mob/living/simple_animal/hostile/limbus_abno/pisc_mermaid/mermaid = owner
+	if(!istype(mermaid))
+		return
+	mermaid.AcceptBreach()
 
 ///Allows telepathy to the love target specifically. A telepathy skill already exists, but I'd rather use the limbus abno action for consistency and ease of use.
 /datum/action/cooldown/limbus_abno_action/mermaid_telepathy
@@ -389,7 +442,8 @@
 		icon_living = "pmermaid_standing"
 		icon_state = icon_living
 	REMOVE_TRAIT(src, TRAIT_IMMOBILIZED, TRAIT_STATUS_EFFECT("mermaid_choke"))
-	REMOVE_TRAIT(love_target, TRAIT_IMMOBILIZED, TRAIT_STATUS_EFFECT("mermaid_choke"))
+	if(!QDELETED(victim))
+		REMOVE_TRAIT(victim, TRAIT_IMMOBILIZED, TRAIT_STATUS_EFFECT("mermaid_choke"))
 	for(var/obj/effect/mermaid_water/water in water_list)
 		if(QDELETED(water))
 			continue
@@ -434,6 +488,8 @@
 		mermaid.AssignLover(user) //If someone else wears it, it will override the previous love target.
 	else if(slot != ITEM_SLOT_HEAD && worn)
 		STOP_PROCESSING(SSobj, src)
+		mermaid.AssignLover(null, FALSE)
+		to_chat(mermaid, span_userdanger("They took it off. The water closes over the place where they were."))
 		mermaid.AdjustCounter(-mermaid.max_counter)
 		mermaid.AdjustDesire(-mermaid.max_desire)
 		qdel(src)

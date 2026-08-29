@@ -44,6 +44,9 @@ SUBSYSTEM_DEF(economy)
 /datum/controller/subsystem/economy/Initialize(timeofday)
 	var/budget_to_hand_out = round(budget_pool / department_accounts.len)
 	for(var/A in department_accounts)
+		if(A == ACCOUNT_CAR && SSmaptype.maptype == "limbus_labs")
+			new /datum/bank_account/department(A, LCE_STARTING_CARGO_BUDGET)
+			continue
 		new /datum/bank_account/department(A, budget_to_hand_out)
 	return ..()
 
@@ -80,11 +83,12 @@ SUBSYSTEM_DEF(economy)
  * Iterates over every department account for the same payment.
  */
 /datum/controller/subsystem/economy/proc/departmental_payouts()
+	var/grant = (SSmaptype.maptype == "limbus_labs") ? LCE_GRANT_DPT : MAX_GRANT_DPT
 	for(var/iteration in department_accounts)
 		var/datum/bank_account/dept_account = get_dep_account(iteration)
 		if(!dept_account)
 			continue
-		dept_account.adjust_money(MAX_GRANT_DPT)
+		dept_account.adjust_money(grant)
 
 /**
  * Updates the prices of all station vendors with the inflation_value, increasing/decreasing costs across the station, and alerts the crew.
