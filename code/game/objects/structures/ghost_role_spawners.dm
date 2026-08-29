@@ -64,9 +64,9 @@
 		return ..()
 	var/mob/living/carbon/human/yolk = new(get_turf(src))
 	INVOKE_ASYNC(yolk, TYPE_PROC_REF(/mob/living/carbon/human, set_species), /datum/species/lizard/ashwalker)
+	INVOKE_ASYNC(yolk, TYPE_PROC_REF(/mob/living/carbon/human, equipOutfit), /datum/outfit/ashwalker)//this is an authentic mess we're making
 	yolk.fully_replace_character_name(null,random_unique_lizard_name(gender))
 	yolk.underwear = "Nude"
-	UNLINT(yolk.equipOutfit(/datum/outfit/ashwalker))//this is an authentic mess we're making
 	yolk.update_body()
 	yolk.gib()
 	QDEL_NULL(egg)
