@@ -94,7 +94,7 @@
 		SSticker.rating_achieved = "A"
 
 	/// If it was a midnight and we got to it before time limit
-	if(level == 4 && start_time <= (CONFIG_GET(number/suppression_time_limit)))
+	if(level == 4 && start_time <= (CONFIG_GET(number/suppression_time_limit) + (GetFacilityUpgradeValue(UPGRADE_MELTDOWN_INCREASE) * 0 MINUTES)))
 		// Extra cores, and announced!
 		addtimer(CALLBACK(SSlobotomy_corp, TYPE_PROC_REF(/datum/controller/subsystem/lobotomy_corp, PickPotentialSuppressions), TRUE, TRUE), 15 SECONDS)
 		// Check to see if we have a Manager at this point, 'cause if we don't, we should at least allow the Agents to try an Extra on their own if they want.
