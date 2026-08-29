@@ -23,7 +23,7 @@
 
 	//LCL unique Variables
 	original_abno = /mob/living/simple_animal/hostile/abnormality/funeral
-	abno_additional_instructions = "You like insight work, \
+	abno_additional_instructions = "You like insight, repression, and instinct work, \
 	Before these scientists trapped you, you came here to bring \
 	peaceful death to the poor souls trapped here."
 

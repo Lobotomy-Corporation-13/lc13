@@ -37,12 +37,14 @@
 
 	//LCL unique Variables
 	original_abno = /mob/living/simple_animal/hostile/abnormality/red_hood
-	abno_additional_instructions = "You like insight and higher level instinct, \
+	abno_additional_instructions = "You like insight, repression, and higher level instinct, \
 	You are a supernatural mercenary for hire. Your jobs tend to be hunting \
 	your fellow abnormalities with little care for whoever gets in the way. \
 	You hold a burning hatred for the Big Bad Wolf. \
 	Your monies are used for attacks, -30 for hollowpoint & -10 for throwing \
-	knife. You can gain more monies if researchers use ahn on you. Its good business."
+	knife. You can gain more monies if researchers use ahn on you. Its good business. \
+	Your patience for Repression work is significantly lower than other abnormalities, \
+	you will start to lose desire when attacked at around 75% of your max health."
 
 	//Was going to make her eat money but i dont know if money exists in LCL
 	diet_list = list( // a lot of pastries to reference stuff she might've carried in her basket in some versions of the tale
