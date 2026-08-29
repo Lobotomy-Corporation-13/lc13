@@ -265,7 +265,7 @@
 	cost = 3
 	value = 0
 	max_value = 1
-	info = " - This upgrade inceases the amount of <b>Works</b> needed for a Qliphoth Meltdown by 1 per upgrade.<br> - This upgrade additionally increases the time limit of <b>Post Midnight Core Suppressions</b> by 30 Minutes."
+	info = " - This upgrade inceases the amount of <b>Works</b> needed for a Qliphoth Meltdown by 1 per upgrade.<br>
 
 /datum/facility_upgrade/meltdown_increase/Upgrade()
 	value = min(max_value, value + 1)
