@@ -41,6 +41,18 @@
 		)
 	gift_type = /datum/ego_gifts/capote
 
+	observation_prompt = "A pained moan echoes across the sweltering heat of the containment chamber.<br>\
+	It's hard to tell if it comes from a beast or a human...<br> A sizzle spreads into the air with the smell of burning flesh.<br>\
+	Please! I need water! Wont anyone give me water to drink?"
+	observation_choices = list(
+	"Give Water" = list(TRUE, "You pour some water into the mouth, only for it to immediately burst into steam<br>\
+	Its scorching body wont allow a single drop in..."
+	"Don't give water" = list(TRUE, "Unable to even lift its body, the bull lets out a great bellow.<br>\
+	It is a sorrowful wail that brings a tear to your eye..."
+	"Drink water" = list(FALSE, "It seems a bit pointless to pour water in there.<br>\
+	You drink the water, giving you a respite from the sweltering heat. The bull roars in despair<br>\
+	Before you finish your thought, the bull begins to charge in your direction."
+	)
 	abnormality_origin = ABNORMALITY_ORIGIN_LIMBUS
 
 	var/obj/effect/proc_holder/ability/aimed/dash/brazen_bull/ourdash
