@@ -197,12 +197,12 @@
 	ADD_TRAIT(L, TRAIT_IMMOBILIZED, type)
 	ADD_TRAIT(L, TRAIT_HANDS_BLOCKED, type)
 	L.adjustBruteLoss(-maxHealth * 0.2)
-	// if(!L.client)
-	// 	dropHardClothing(L, get_turf(L))
-	// 	qdel(L)
-	// else
-	// 	L.forceMove(src)
-	L.forceMove(src)
+	if(!L.client)
+		dropHardClothing(L, get_turf(L))
+		qdel(L)
+	else
+		L.forceMove(src)
+
 	AdjustHunger(20)
 	update_icon()
 	return TRUE
