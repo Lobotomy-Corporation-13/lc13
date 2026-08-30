@@ -43,7 +43,7 @@
 
 	ego_list = list(
 		/datum/ego_datum/weapon/effervescent,
-		/datum/ego_datum/weapon/effervescent,
+		/datum/ego_datum/armor/effervescent,
 		/datum/ego_datum/poisonheal,
 	)
 
