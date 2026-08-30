@@ -138,7 +138,7 @@
 	. += span_warning("The leaf has been torn out of the frame. Fitting a \
 		new one would take [repair_amount] sheets of [initial(needed.name)].")
 
-// ------------------------------------------------------------- wrecking
+// Wrecking.
 
 /obj/machinery/door/city/obj_destruction(damage_flag)
 	if(broken)
@@ -160,7 +160,7 @@
 	playsound(src, 'sound/effects/bang.ogg', 60, TRUE)
 	visible_message(span_danger("[src] is torn out of its frame!"))
 
-// -------------------------------------------------------------- repair
+// Repair.
 
 /obj/machinery/door/city/attackby(obj/item/I, mob/user, params)
 	if(broken)
@@ -202,7 +202,7 @@
 	if(autoclose)
 		autoclose_in(close_delay)
 
-// -------------------------------------------------------------- styles
+// Styles.
 
 /obj/machinery/door/city/clinic
 	name = "clinic door"

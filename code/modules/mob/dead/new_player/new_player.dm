@@ -474,10 +474,14 @@
 					altjobline = "(as [client.prefs.alt_titles_preferences[job_datum.title]])"//tegu edit - alt job titles
 				if(job in GLOB.command_positions)
 					command_bold = " command"
+				//The label shows display_title so a city faction job reads as its
+				//specialisation, but the href stays on title, which is the key
+				//AttemptLateSpawn() and name_occupations look the job up by.
+				var/shown = job_datum.display_title || job_datum.title
 				if(job_datum in SSjob.prioritized_jobs)
-					dept_dat += "<a class='job[command_bold]' href='byond://?src=[REF(src)];SelectedJob=[job_datum.title]'><span class='priority'>[job_datum.title] [altjobline] ([job_datum.current_positions])[leaderless]</span></a>"//tegu edit - alt job titles
+					dept_dat += "<a class='job[command_bold]' href='byond://?src=[REF(src)];SelectedJob=[job_datum.title]'><span class='priority'>[shown] [altjobline] ([job_datum.current_positions])[leaderless]</span></a>"//tegu edit - alt job titles
 				else
-					dept_dat += "<a class='job[command_bold]' href='byond://?src=[REF(src)];SelectedJob=[job_datum.title]'>[job_datum.title] [altjobline] ([job_datum.current_positions])[leaderless]</a>"//tegu edit - alt job titles
+					dept_dat += "<a class='job[command_bold]' href='byond://?src=[REF(src)];SelectedJob=[job_datum.title]'>[shown] [altjobline] ([job_datum.current_positions])[leaderless]</a>"//tegu edit - alt job titles
 		if(!dept_dat.len)
 			dept_dat += "<span class='nopositions'>No positions open.</span>"
 		dat += jointext(dept_dat, "")
