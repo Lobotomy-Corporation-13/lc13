@@ -77,7 +77,7 @@
 "oj" = (
 /obj/item/coupon{
 	pixel_x = 3;
-	pixel_y = -20;
+	pixel_y = -30;
 	color = "#8644a5";
 	name = "mysterious coupon";
 	desc = "This curious coupon seems out of place among these trophies. There must be an interesting story behind it.";
@@ -131,13 +131,6 @@
 	},
 /turf/open/floor/mineral/titanium/purple,
 /area/city/backstreets_room)
-"yB" = (
-/obj/structure/bed{
-	dir = 8
-	},
-/obj/item/bedsheet/purple,
-/turf/open/floor/carpet/purple,
-/area/city/backstreets_room)
 "Aq" = (
 /obj/machinery/shower{
 	dir = 8;
@@ -168,7 +161,6 @@
 /obj/structure/bed{
 	dir = 8
 	},
-/obj/item/bedsheet/rd,
 /turf/open/floor/carpet/purple,
 /area/city/backstreets_room)
 "ER" = (
@@ -373,9 +365,9 @@ KI
 oj
 "}
 (11,1,1) = {"
-yB
-yB
-yB
+DE
+DE
+DE
 wh
 Fx
 KI
