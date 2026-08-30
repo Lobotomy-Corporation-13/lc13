@@ -19,7 +19,7 @@
 	paycheck = 200
 	maptype = list("city")
 	job_important = "You are one of 2 udjat heavy infantry members, you lead the scouts in the frontline and report directly to the Captain. \
-	You wield a powerful rifle, but it is very expensive to fire. Use your weaponry sparingly.
+	You wield a powerful rifle, but it is very expensive to fire. Use your weaponry sparingly."
 
 
 	roundstart_attributes = list(
