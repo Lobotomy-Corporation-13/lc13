@@ -1,95 +1,120 @@
 //MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
 "am" = (
-/obj/structure/table/wood,
-/obj/structure/table/wood,
-/obj/item/food/pizza/meat{
-	pixel_x = 0;
-	pixel_y = 6
+/obj/structure/chair/wood/wings{
+	dir = 8
 	},
+/obj/structure/fluff/paper/stack,
 /turf/open/floor/mineral/titanium/purple,
 /area/city/backstreets_room)
 "cY" = (
-/obj/structure/closet/cabinet,
-/obj/item/clothing/glasses/middle_sunglasses,
-/obj/item/clothing/glasses/middle_sunglasses,
+/obj/machinery/vending/middle_jukebox,
 /turf/open/floor/mineral/titanium/purple,
 /area/city/backstreets_room)
 "dy" = (
-/obj/structure/chair/sofa/left{
-	dir = 4
+/obj/effect/decal/cleanable/ash{
+	pixel_x = 5;
+	pixel_y = 13
 	},
-/turf/open/space/basic,
-/turf/open/floor/mineral/titanium/purple,
-/turf/open/floor/carpet/purple,
+/obj/effect/decal/cleanable/blood/old,
+/obj/effect/decal/cleanable/blood/footprints{
+	dir = 8
+	},
+/turf/open/floor/pod/dark,
 /area/city/backstreets_room)
 "eg" = (
-/obj/structure/table/wood/fancy/purple,
-/obj/item/food/pizza/meat{
-	pixel_x = 1;
-	pixel_y = 9
-	},
-/turf/open/space/basic,
+/obj/structure/closet/crate/bin,
 /turf/open/floor/mineral/titanium/purple,
-/turf/open/floor/carpet/purple,
 /area/city/backstreets_room)
 "eX" = (
-/obj/machinery/jukebox/middle{
-	dir = 4
+/obj/structure/kitchenspike{
+	name = "comfortable seat";
+	desc = "A comfortable seat for guests that you need to talk to. Drag them onto it, but mind the spikes. They might get hurt a little bit when being seated or unseated."
 	},
-/turf/open/space/basic,
-/turf/open/floor/mineral/titanium/purple,
-/turf/open/floor/carpet/purple,
+/obj/effect/decal/cleanable/blood/old,
+/obj/effect/decal/cleanable/blood/gibs/old,
+/obj/item/reagent_containers/syringe{
+	pixel_x = 9
+	},
+/obj/item/reagent_containers/syringe{
+	pixel_x = -6;
+	pixel_y = -9
+	},
+/turf/open/floor/pod/dark,
 /area/city/backstreets_room)
 "gZ" = (
-/obj/structure/chair/sofa{
-	dir = 1
+/obj/structure/table/wood{
+	color = "#705937"
 	},
-/turf/open/space/basic,
-/turf/open/floor/mineral/titanium/purple,
-/turf/open/floor/carpet/purple,
+/obj/item/reagent_containers/food/drinks/bottle/wine{
+	pixel_x = -6;
+	pixel_y = 11;
+	desc = "A faint aura of unease and asspainery surrounds the bottle. You're unsure if it's actually wine in there, or..."
+	},
+/obj/item/reagent_containers/food/drinks/drinkingglass{
+	pixel_x = 5;
+	pixel_y = 1;
+	list_reagents = list(/datum/reagent/consumable/ethanol/wine = 15)
+	},
+/turf/open/floor/pod/dark,
+/area/city/backstreets_room)
+"hv" = (
+/obj/machinery/light/small/red{
+	dir = 4;
+	name = "ominous red light";
+	desc = "A small lighting fixture. You could be forgiven for thinking this may not be a regular guest room."
+	},
+/turf/open/floor/pod/dark,
 /area/city/backstreets_room)
 "jj" = (
-/obj/structure/chair/greyscale{
-	dir = 1
+/obj/structure/window/reinforced/fulltile{
+	max_integrity = 500;
+	armor = list("melee" = 30, "bullet" = 30, "laser" = 20, "energy" = 20, "bomb" = 10, "bio" = 100, "rad" = 100, "fire" = 80, "acid" = 70)
 	},
-/turf/open/floor/mineral/titanium/purple,
+/obj/structure/grille/indestructable,
+/turf/open/floor/mineral/titanium/tiled/purple,
 /area/city/backstreets_room)
 "jA" = (
-/obj/structure/table/wood/fancy/purple,
-/obj/item/storage/cans/sixbeer,
-/turf/open/space/basic,
+/obj/structure/filingcabinet/chestdrawer,
 /turf/open/floor/mineral/titanium/purple,
-/turf/open/floor/carpet/purple,
 /area/city/backstreets_room)
 "jB" = (
-/obj/structure/chair/comfy/black{
+/obj/structure/chair/wood/wings{
 	dir = 4
 	},
 /turf/open/floor/mineral/titanium/purple,
 /area/city/backstreets_room)
 "jY" = (
 /obj/machinery/door/airlock/wood{
-	name = "Quarters";
-	req_access_txt = "151"
+	name = "younger brother's quarters"
 	},
-/turf/open/floor/mineral/titanium/purple,
+/turf/open/floor/mineral/titanium/tiled/purple,
+/area/city/backstreets_room)
+"ku" = (
+/obj/structure/closet/cabinet,
+/obj/item/clothing/glasses/middle_sunglasses,
+/obj/item/clothing/glasses/middle_sunglasses,
+/turf/open/floor/mineral/titanium/tiled/purple,
 /area/city/backstreets_room)
 "oj" = (
-/obj/item/coupon{
-	pixel_x = 3;
-	pixel_y = -30;
-	color = "#8644a5";
-	name = "mysterious coupon";
-	desc = "This curious coupon seems out of place among these trophies. There must be an interesting story behind it.";
-	anchored = 1
+/obj/structure/chair/comfy/black{
+	dir = 8;
+	pixel_y = 4;
+	pixel_x = -5
 	},
 /turf/open/floor/carpet/purple,
 /area/city/backstreets_room)
 "oD" = (
-/obj/structure/closet/crate/bin,
-/turf/open/space/basic,
-/turf/open/floor/mineral/titanium/purple,
-/turf/open/floor/carpet/purple,
+/obj/item/crowbar{
+	pixel_y = -6;
+	desc = "A small crowbar. This handy tool is useful for lots of things, such as prying floor tiles or torture."
+	},
+/obj/item/surgical_drapes{
+	pixel_x = -5;
+	pixel_y = 8;
+	desc = "These drapes are mostly a formality.";
+	name = "dubious surgical drapes"
+	},
+/turf/open/floor/pod/dark,
 /area/city/backstreets_room)
 "pm" = (
 /turf/open/floor/plasteel/stairs{
@@ -97,12 +122,22 @@
 	},
 /area/city/backstreets_room)
 "sw" = (
-/obj/structure/chair/sofa/corner{
+/obj/effect/decal/cleanable/blood/footprints,
+/turf/open/floor/pod/dark,
+/area/city/backstreets_room)
+"tJ" = (
+/obj/effect/turf_decal/siding/brown{
+	dir = 1;
+	color = "#55391A"
+	},
+/obj/structure/curtain/cloth,
+/turf/open/floor/mineral/titanium/tiled/purple,
+/area/city/backstreets_room)
+"um" = (
+/obj/structure/chair/wood/wings{
 	dir = 1
 	},
-/turf/open/space/basic,
 /turf/open/floor/mineral/titanium/purple,
-/turf/open/floor/carpet/purple,
 /area/city/backstreets_room)
 "uy" = (
 /obj/structure/bed/pod,
@@ -121,15 +156,30 @@
 /turf/open/floor/carpet/purple,
 /area/city/backstreets_room)
 "xD" = (
-/obj/structure/chair/greyscale,
+/obj/structure/table/wood/fancy/purple,
+/obj/item/paper_bin,
+/obj/item/pen,
+/obj/item/pen,
+/obj/item/pen,
+/obj/item/pen,
+/obj/item/pen,
+/obj/item/pen,
+/obj/item/pen,
 /turf/open/floor/mineral/titanium/purple,
 /area/city/backstreets_room)
 "ye" = (
-/obj/machinery/door/airlock/wood{
-	name = "Meeting Hall";
-	req_access_txt = "151"
+/obj/structure/table/wood/fancy/purple,
+/obj/structure/delivery_radio/middle,
+/turf/open/floor/carpet/purple,
+/area/city/backstreets_room)
+"zb" = (
+/obj/effect/decal/cleanable/blood/footprints,
+/obj/effect/decal/cleanable/blood/old,
+/obj/effect/decal/cleanable/vomit/old,
+/obj/item/scalpel{
+	pixel_y = -3
 	},
-/turf/open/floor/mineral/titanium/purple,
+/turf/open/floor/pod/dark,
 /area/city/backstreets_room)
 "Aq" = (
 /obj/machinery/shower{
@@ -141,64 +191,121 @@
 /turf/open/floor/mineral/titanium/tiled/purple,
 /area/city/backstreets_room)
 "AI" = (
-/obj/structure/closet/crate,
+/obj/machinery/light/small{
+	dir = 8;
+	pixel_y = 8;
+	pixel_x = -8
+	},
+/turf/open/floor/mineral/titanium/tiled/purple,
+/area/city/backstreets_room)
+"BZ" = (
+/obj/structure/curtain/cloth,
+/obj/machinery/door/airlock/wood{
+	name = "middle delivery room"
+	},
 /turf/open/floor/carpet/purple,
 /area/city/backstreets_room)
 "Cm" = (
 /turf/open/floor/mineral/titanium/tiled/purple,
 /area/city/backstreets_room)
 "CW" = (
-/turf/open/floor/mineral/titanium/purple,
-/turf/closed/indestructible/reinforced{
-	color = "purple"
+/obj/machinery/light/small{
+	dir = 4;
+	pixel_x = 8;
+	pixel_y = 8
 	},
+/obj/structure/filingcabinet/chestdrawer,
+/turf/open/floor/mineral/titanium/purple,
+/area/city/backstreets_room)
+"Dd" = (
+/obj/structure/table/wood/fancy/purple,
+/turf/open/floor/mineral/titanium/purple,
 /area/city/backstreets_room)
 "Dh" = (
+/obj/machinery/door/airlock/grunge{
+	name = "middle meeting room"
+	},
 /turf/open/floor/mineral/titanium/purple,
-/turf/open/floor/carpet/purple,
 /area/city/backstreets_room)
-"DE" = (
-/obj/structure/bed{
+"Dz" = (
+/obj/structure/chair/wood/wings{
 	dir = 8
 	},
-/turf/open/floor/carpet/purple,
+/turf/open/floor/mineral/titanium/purple,
 /area/city/backstreets_room)
-"ER" = (
-/obj/structure/table/wood,
-/obj/structure/delivery_radio/middle{
-	pixel_x = 0;
-	pixel_y = 3
+"DE" = (
+/obj/structure/bed,
+/obj/item/bedsheet/purple{
+	name = "younger brother's bedsheet"
+	},
+/turf/open/floor/mineral/titanium/tiled/purple,
+/area/city/backstreets_room)
+"EO" = (
+/obj/machinery/light/small{
+	dir = 1;
+	pixel_y = 19
 	},
 /turf/open/floor/mineral/titanium/purple,
+/area/city/backstreets_room)
+"ER" = (
+/obj/machinery/light/broken{
+	dir = 8;
+	pixel_y = 4;
+	pixel_x = -9
+	},
+/obj/structure/fluff/paper/stack,
+/turf/open/floor/mineral/titanium/purple,
+/area/city/backstreets_room)
+"Fw" = (
+/obj/machinery/light{
+	dir = 1;
+	pixel_y = 19
+	},
+/obj/machinery/light{
+	dir = 8;
+	pixel_x = -9;
+	pixel_y = 4
+	},
+/obj/item/documents/ncorporation,
+/obj/item/shears,
+/obj/structure/closet/cabinet,
+/turf/open/floor/mineral/titanium/tiled/purple,
 /area/city/backstreets_room)
 "Fx" = (
 /turf/open/floor/mineral/titanium/purple,
 /area/city/backstreets_room)
 "Hz" = (
-/turf/open/space/basic,
-/turf/open/floor/mineral/titanium/purple,
-/turf/open/floor/carpet/purple,
+/obj/effect/decal/cleanable/blood/old,
+/obj/item/hatchet/wooden,
+/turf/open/floor/pod/dark,
+/area/city/backstreets_room)
+"JY" = (
+/obj/effect/decal/cleanable/oil,
+/turf/closed/indestructible/reinforced{
+	color = "purple"
+	},
 /area/city/backstreets_room)
 "KI" = (
 /turf/open/floor/carpet/purple,
 /area/city/backstreets_room)
-"Mi" = (
-/obj/structure/table/wood,
-/obj/item/reagent_containers/food/drinks/beer{
-	pixel_x = -7;
-	pixel_y = 2
+"KL" = (
+/obj/structure/chair/wood{
+	dir = 1;
+	desc = "This chair is for you to sit in, as you 'converse' with your 'guest'."
 	},
+/turf/open/floor/pod/dark,
+/area/city/backstreets_room)
+"Mi" = (
+/obj/structure/table/wood/fancy/purple,
+/obj/item/paper_bin,
 /turf/open/floor/mineral/titanium/purple,
 /area/city/backstreets_room)
 "Mj" = (
-/obj/structure/chair/comfy/black{
+/obj/machinery/light{
 	dir = 8;
-	pixel_y = 4;
-	pixel_x = -5
+	pixel_x = -9;
+	pixel_y = 4
 	},
-/turf/open/floor/mineral/titanium/tiled/purple,
-/area/city/backstreets_room)
-"QA" = (
 /obj/structure/table/wood,
 /obj/item/reagent_containers/food/drinks/bottle/wine{
 	pixel_x = -9;
@@ -209,7 +316,50 @@
 	pixel_y = 10
 	},
 /obj/item/stack/spacecash/c1000,
+/turf/open/floor/mineral/titanium/tiled/purple,
+/area/city/backstreets_room)
+"MD" = (
+/obj/machinery/light/small{
+	dir = 8;
+	pixel_y = 4;
+	pixel_x = -8
+	},
 /turf/open/floor/mineral/titanium/purple,
+/area/city/backstreets_room)
+"Os" = (
+/obj/item/coupon{
+	pixel_x = -1;
+	pixel_y = 64;
+	color = "#8644a5";
+	name = "mysterious coupon";
+	desc = "This curious coupon seems out of place among these trophies. There must be an interesting story behind it.";
+	anchored = 1
+	},
+/turf/open/floor/carpet/purple,
+/area/city/backstreets_room)
+"Qk" = (
+/obj/machinery/light/small{
+	dir = 1;
+	pixel_y = 19
+	},
+/turf/open/floor/plasteel/stairs{
+	dir = 4
+	},
+/area/city/backstreets_room)
+"QA" = (
+/obj/structure/closet/cabinet,
+/obj/item/clothing/glasses/middle_sunglasses,
+/turf/open/floor/mineral/titanium/tiled/purple,
+/area/city/backstreets_room)
+"Rg" = (
+/obj/item/wirecutters{
+	desc = "This cuts tendons. I mean, wires."
+	},
+/obj/machinery/light/small{
+	dir = 1;
+	pixel_y = 19
+	},
+/turf/open/floor/pod/dark,
 /area/city/backstreets_room)
 "TJ" = (
 /obj/structure/curtain/cloth/fancy,
@@ -220,29 +370,56 @@
 /turf/open/floor/plating/ashplanet/rocky,
 /area/city/backstreets_room)
 "Vl" = (
-/obj/structure/closet/cabinet,
-/obj/item/documents/ncorporation,
-/obj/item/shears,
+/obj/structure/bed,
+/obj/item/bedsheet/purple{
+	name = "little brother bedsheet";
+	anchored = 1
+	},
+/turf/open/floor/mineral/titanium/tiled/purple,
+/area/city/backstreets_room)
+"VF" = (
+/obj/item/screwdriver{
+	pixel_y = 16
+	},
+/obj/item/lighter/greyscale{
+	pixel_x = 8;
+	pixel_y = -10
+	},
+/obj/machinery/light/small{
+	dir = 1;
+	pixel_y = 19
+	},
+/turf/open/floor/pod/dark,
+/area/city/backstreets_room)
+"VU" = (
+/obj/machinery/light/broken{
+	dir = 1;
+	pixel_y = 19
+	},
+/obj/machinery/light{
+	dir = 8;
+	pixel_x = -9;
+	pixel_y = 4
+	},
+/obj/structure/chair/wood/wings{
+	dir = 4
+	},
 /turf/open/floor/mineral/titanium/purple,
 /area/city/backstreets_room)
 "Wq" = (
-/obj/structure/chair/sofa/right{
-	dir = 1
-	},
-/turf/open/space/basic,
-/turf/open/floor/mineral/titanium/purple,
-/turf/open/floor/carpet/purple,
+/obj/structure/curtain/cloth,
+/turf/open/floor/mineral/titanium/tiled/purple,
 /area/city/backstreets_room)
 
 (1,1,1) = {"
-Fx
+VU
 jB
-Fx
-wh
+jB
+ER
 wh
 pm
 wh
-Hz
+VF
 oD
 dy
 sw
@@ -250,111 +427,111 @@ sw
 (2,1,1) = {"
 xD
 Mi
-jj
+Dd
+um
 wh
-wh
-pm
+Qk
 wh
 eX
-Hz
-Hz
-gZ
+zb
+sw
+KL
 "}
 (3,1,1) = {"
-xD
+Dz
 am
-jj
-wh
-wh
+Dz
+Fx
+Dh
 pm
 wh
+Rg
 Hz
-Hz
-Hz
+hv
 gZ
 "}
 (4,1,1) = {"
-xD
-ER
+wh
+jj
 jj
 wh
-Fx
-KI
-Fx
-Hz
-Hz
-Hz
+wh
+pm
+wh
+Wq
+Wq
+tJ
 Wq
 "}
 (5,1,1) = {"
+Dd
+Vl
+Vl
+wh
+cY
+Fx
+MD
 Fx
 Fx
 Fx
-ye
 Fx
-Dh
-Fx
-Hz
-Hz
-Hz
-jA
 "}
 (6,1,1) = {"
-wh
-wh
-wh
-wh
-Fx
+ye
+Os
 KI
-Fx
-Hz
-Hz
-Hz
-eg
+BZ
+KI
+KI
+KI
+KI
+KI
+KI
+KI
 "}
 (7,1,1) = {"
-DE
-KI
-DE
-wh
+Dd
+Vl
+Vl
+JY
 Fx
 KI
 Fx
 CW
-CW
-CW
-CW
+jA
+jA
+eg
 "}
 (8,1,1) = {"
-AI
-KI
-AI
 wh
-Fx
+wh
+wh
+wh
+EO
 KI
 Fx
 wh
-Vl
-cY
-QA
+wh
+wh
+wh
 "}
 (9,1,1) = {"
-AI
-KI
+QA
+QA
 AI
 wh
 Fx
 KI
 Fx
 wh
-Cm
-Cm
+Fw
+ku
 Mj
 "}
 (10,1,1) = {"
-KI
-KI
-KI
+Cm
+Cm
+Cm
 jY
 Fx
 KI
@@ -367,7 +544,7 @@ oj
 (11,1,1) = {"
 DE
 DE
-DE
+Cm
 wh
 Fx
 KI
