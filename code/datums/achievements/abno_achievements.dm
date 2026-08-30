@@ -68,7 +68,7 @@
 	difficulty = ACHIEVEMENT_EASY
 
 /datum/award/achievement/abno/free_toad
-	name = "Gloomy, I said don't bother it!"
+	name = "Toad Harassment"
 	title = "Sad"
 	desc = "Let Blubbering Toad out of containment."
 	database_id = MEDAL_FREE_TOAD
