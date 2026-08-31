@@ -1,0 +1,1014 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"aV" = (
+/obj/item/modular_computer/laptop{
+	pixel_y = 4
+	},
+/obj/structure/table/wood,
+/obj/effect/turf_decal/siding/red{
+	color = "#440000";
+	dir = 1
+	},
+/obj/machinery/light{
+	dir = 8;
+	pixel_y = 4;
+	pixel_x = -10
+	},
+/turf/open/floor/carpet/red,
+/area/city/antag_base)
+"ce" = (
+/obj/structure/table/wood,
+/obj/machinery/light,
+/obj/item/storage/box/drinkingglasses,
+/turf/open/floor/wood,
+/area/city/antag_base)
+"cD" = (
+/obj/structure/table/wood,
+/obj/item/storage/firstaid/regular,
+/obj/item/restraints/handcuffs,
+/turf/open/floor/carpet/red,
+/area/city/antag_base)
+"cT" = (
+/obj/structure/closet/crate{
+	pixel_y = 5;
+	anchored = 1;
+	opened = 1
+	},
+/obj/item/clothing/suit/armor/ego_gear/city/thumb,
+/obj/item/clothing/suit/armor/ego_gear/city/thumb,
+/obj/machinery/light{
+	dir = 4;
+	pixel_x = 9;
+	pixel_y = 4
+	},
+/obj/item/ego_weapon/ranged/city/thumb/city,
+/obj/item/ego_weapon/ranged/city/thumb/city,
+/turf/open/floor/wood,
+/area/city/antag_base)
+"cX" = (
+/obj/item/reagent_containers/food/drinks/bottle/whiskey,
+/obj/structure/table/wood,
+/obj/machinery/light,
+/turf/open/floor/wood,
+/area/city/antag_base)
+"dh" = (
+/obj/machinery/light{
+	dir = 1;
+	pixel_y = 19
+	},
+/turf/open/floor/wood,
+/area/city/antag_base)
+"fQ" = (
+/obj/structure/table/wood,
+/turf/open/floor/wood,
+/area/city/antag_base)
+"gx" = (
+/obj/structure/closet/cabinet,
+/obj/item/clothing/suit/armor/ego_gear/city/thumb_capo,
+/obj/item/ego_weapon/city/thumbmelee/weak,
+/obj/item/clothing/suit/armor/ego_gear/city/thumb_capo/city,
+/obj/item/ego_weapon/ranged/city/thumb/capo/city,
+/obj/machinery/light{
+	dir = 4;
+	pixel_x = 9;
+	pixel_y = 4
+	},
+/turf/open/floor/carpet/red,
+/area/city/antag_base)
+"gM" = (
+/obj/structure/chair/sofa/right{
+	pixel_x = 3;
+	name = "fancy leather sofa";
+	desc = "Custom order, this piece of furniture. Its origins made - made apparent - from a wealthy nest in a far-away district.";
+	dir = 1;
+	mouse_opacity = 0
+	},
+/obj/structure/chair/sofa/left{
+	pixel_x = -3;
+	dir = 1;
+	name = "fancy leather sofa";
+	desc = "Custom order, this piece of furniture. Its origins made - made apparent - from a wealthy nest in a far-away district."
+	},
+/turf/open/floor/wood,
+/area/city/antag_base)
+"hA" = (
+/obj/effect/turf_decal/siding/wood{
+	dir = 1
+	},
+/obj/machinery/light{
+	dir = 8;
+	pixel_x = -9;
+	pixel_y = 4
+	},
+/turf/open/floor/wood,
+/area/city/antag_base)
+"hV" = (
+/obj/item/flashlight/lamp/green,
+/obj/structure/railing{
+	dir = 1
+	},
+/obj/structure/table/wood/fancy,
+/turf/open/floor/wood,
+/area/city/antag_base)
+"iu" = (
+/obj/structure/table/wood,
+/obj/machinery/light{
+	dir = 4;
+	pixel_x = 9;
+	pixel_y = 4
+	},
+/obj/item/storage/firstaid/regular,
+/obj/item/storage/firstaid/revival,
+/turf/open/floor/wood,
+/area/city/antag_base)
+"iF" = (
+/obj/structure/table/wood/fancy/red,
+/turf/open/floor/wood,
+/area/city/antag_base)
+"iO" = (
+/obj/item/banner/cargo/mundane{
+	color = "red";
+	pixel_y = 23
+	},
+/obj/effect/turf_decal/siding/wood{
+	dir = 1;
+	color = "#2e1f0e"
+	},
+/obj/machinery/light{
+	dir = 8;
+	pixel_x = -9;
+	pixel_y = 4
+	},
+/turf/open/floor/wood,
+/area/city/antag_base)
+"jq" = (
+/obj/structure/chair/comfy/brown{
+	dir = 8
+	},
+/turf/open/floor/wood,
+/area/city/antag_base)
+"jw" = (
+/obj/structure/table/wood,
+/obj/item/grenade/r_corp/thumb{
+	det_time = 20
+	},
+/obj/item/grenade/r_corp/thumb{
+	det_time = 20
+	},
+/obj/item/grenade/r_corp/thumb{
+	det_time = 20
+	},
+/obj/item/grenade/r_corp/thumb{
+	det_time = 20
+	},
+/obj/item/grenade/r_corp/thumb{
+	det_time = 20
+	},
+/obj/item/grenade/r_corp/thumb{
+	det_time = 20
+	},
+/turf/open/floor/wood,
+/area/city/antag_base)
+"jN" = (
+/obj/structure/chair/plastic{
+	dir = 4
+	},
+/turf/open/floor/carpet/red,
+/area/city/antag_base)
+"jS" = (
+/obj/structure/closet/cabinet,
+/obj/item/clothing/suit/armor/ego_gear/city/thumb_sottocapo,
+/obj/structure/window/reinforced/tinted{
+	dir = 1
+	},
+/turf/open/floor/carpet/red,
+/area/city/antag_base)
+"kw" = (
+/obj/structure/bed/pod,
+/obj/item/bedsheet/hos{
+	anchored = 1;
+	name = "capo's bedsheet";
+	desc = "It is decorated with a bullet emblem. The Thumbs see subordination and insubordination an equal parallel to life and death."
+	},
+/turf/open/floor/carpet/red,
+/area/city/antag_base)
+"la" = (
+/obj/effect/turf_decal/siding/wood{
+	dir = 1
+	},
+/obj/machinery/light{
+	dir = 4;
+	pixel_x = 9;
+	pixel_y = 4
+	},
+/turf/open/floor/wood,
+/area/city/antag_base)
+"lm" = (
+/obj/structure/bed/pod,
+/obj/item/bedsheet/random,
+/obj/machinery/light{
+	dir = 8;
+	pixel_x = -9;
+	pixel_y = 4
+	},
+/turf/open/floor/wood,
+/area/city/antag_base)
+"lz" = (
+/obj/structure/chair/sofa/corp/left,
+/turf/open/floor/wood,
+/area/city/antag_base)
+"lD" = (
+/obj/structure/bookcase/random{
+	pixel_y = 32;
+	density = 0
+	},
+/obj/structure/chair/comfy/brown{
+	dir = 8;
+	can_buckle = 0;
+	pixel_y = 4;
+	pixel_x = 5
+	},
+/obj/machinery/vending/boozeomat{
+	pixel_x = 32;
+	density = 0
+	},
+/turf/open/floor/carpet,
+/area/city/antag_base)
+"mB" = (
+/turf/open/floor/carpet/red,
+/area/city/antag_base)
+"nL" = (
+/obj/structure/window/reinforced/tinted{
+	dir = 1
+	},
+/obj/structure/table/wood,
+/obj/item/modular_computer/laptop,
+/obj/item/stack/spacecash/c1000,
+/obj/item/stack/spacecash/c1000,
+/obj/item/stack/spacecash/c1000,
+/obj/item/stack/spacecash/c1000,
+/obj/item/stack/spacecash/c1000,
+/turf/open/floor/carpet/red,
+/area/city/antag_base)
+"od" = (
+/obj/item/paper_bin{
+	pixel_y = 5
+	},
+/obj/item/pen/fountain/captain{
+	pixel_y = 5;
+	name = "sottocapo's fountain pen"
+	},
+/obj/structure/railing{
+	dir = 1
+	},
+/obj/structure/table/wood/fancy,
+/turf/open/floor/wood,
+/area/city/antag_base)
+"op" = (
+/obj/item/clothing/mask/breath/medical,
+/obj/item/tank/internals/anesthetic,
+/obj/structure/closet/crate{
+	anchored = 1;
+	opened = 1
+	},
+/obj/item/storage/backpack/duffelbag/med/surgery,
+/obj/item/storage/firstaid/revival,
+/turf/open/floor/carpet/red,
+/area/city/antag_base)
+"pr" = (
+/turf/open/floor/wood,
+/area/city/antag_base)
+"qI" = (
+/obj/structure/table/wood,
+/obj/item/grenade/r_corp/thumb{
+	det_time = 20
+	},
+/obj/item/grenade/r_corp/thumb{
+	det_time = 20
+	},
+/turf/open/floor/carpet/red,
+/area/city/antag_base)
+"qQ" = (
+/obj/structure/chair/comfy/brown{
+	dir = 4
+	},
+/turf/open/floor/wood,
+/area/city/antag_base)
+"rQ" = (
+/obj/structure/chair/wood{
+	dir = 4
+	},
+/turf/open/floor/wood,
+/area/city/antag_base)
+"tk" = (
+/obj/machinery/light{
+	dir = 4;
+	pixel_x = 9;
+	pixel_y = 4
+	},
+/turf/open/floor/wood,
+/area/city/antag_base)
+"tF" = (
+/obj/structure/table/wood/poker,
+/obj/item/toy/cards/deck,
+/turf/open/floor/wood,
+/area/city/antag_base)
+"xE" = (
+/obj/machinery/light{
+	dir = 8;
+	pixel_x = -9;
+	pixel_y = 4
+	},
+/obj/structure/window/reinforced/survival_pod{
+	dir = 4
+	},
+/turf/open/floor/wood,
+/area/city/antag_base)
+"yf" = (
+/obj/structure/table/wood/fancy/red,
+/obj/effect/spawner/lootdrop/donkpockets,
+/turf/open/floor/wood,
+/area/city/antag_base)
+"yk" = (
+/obj/item/reagent_containers/food/drinks/beer,
+/obj/item/reagent_containers/food/drinks/beer,
+/obj/item/reagent_containers/food/drinks/beer,
+/obj/item/reagent_containers/food/drinks/beer,
+/obj/item/reagent_containers/food/drinks/beer,
+/obj/item/reagent_containers/food/drinks/beer,
+/obj/structure/closet/mini_fridge,
+/obj/structure/table/wood,
+/turf/open/floor/wood,
+/area/city/antag_base)
+"zM" = (
+/obj/structure/chair/plastic{
+	dir = 8
+	},
+/turf/open/floor/carpet/red,
+/area/city/antag_base)
+"AG" = (
+/obj/structure/bed/pod,
+/obj/item/bedsheet/syndie{
+	name = "sottocapo bedsheet";
+	desc = "The fact that this bedsheet was tailored by the Carnival, speaks volumes on its price alone."
+	},
+/obj/machinery/light{
+	dir = 4;
+	pixel_x = 9;
+	pixel_y = 4
+	},
+/turf/open/floor/carpet/red,
+/area/city/antag_base)
+"AN" = (
+/obj/machinery/door/airlock/wood{
+	name = "capo office"
+	},
+/turf/open/floor/wood{
+	color = "#ccc8c0"
+	},
+/area/city/antag_base)
+"BK" = (
+/obj/structure/chair/wood/wings{
+	dir = 4
+	},
+/turf/open/floor/wood,
+/area/city/antag_base)
+"BM" = (
+/obj/structure/fireplace,
+/turf/open/floor/carpet,
+/area/city/antag_base)
+"BV" = (
+/obj/machinery/door/airlock/wood{
+	name = "sottocapo quarters";
+	req_access_txt = "151"
+	},
+/turf/open/floor/wood{
+	color = "#ccc8c0"
+	},
+/area/city/antag_base)
+"Cj" = (
+/obj/machinery/vending/boozeomat{
+	pixel_x = -32;
+	density = 0
+	},
+/turf/open/floor/wood,
+/area/city/antag_base)
+"Dg" = (
+/obj/structure/closet/cabinet,
+/obj/item/clothing/suit/armor/ego_gear/city/thumb_capo,
+/obj/item/clothing/suit/armor/ego_gear/city/thumb_capo/city,
+/obj/item/ego_weapon/ranged/city/thumb/capo/city,
+/obj/item/storage/belt/grenade,
+/obj/machinery/light{
+	dir = 4;
+	pixel_x = 9;
+	pixel_y = 4
+	},
+/obj/item/grenade/r_corp/thumb{
+	det_time = 20
+	},
+/obj/item/grenade/r_corp/thumb{
+	det_time = 20
+	},
+/obj/item/grenade/r_corp/thumb{
+	det_time = 20
+	},
+/obj/item/grenade/r_corp/thumb{
+	det_time = 20
+	},
+/obj/item/grenade/r_corp/thumb{
+	det_time = 20
+	},
+/turf/open/floor/carpet/red,
+/area/city/antag_base)
+"DB" = (
+/obj/machinery/door/window/survival_pod{
+	name = "sottocapo bedroom";
+	req_access_txt = "151";
+	dir = 4
+	},
+/turf/open/floor/wood,
+/area/city/antag_base)
+"Ez" = (
+/obj/structure/closet/crate{
+	anchored = 1;
+	opened = 1
+	},
+/obj/item/grenade/r_corp/thumb{
+	det_time = 20
+	},
+/obj/item/grenade/r_corp/thumb{
+	det_time = 20
+	},
+/obj/item/grenade/r_corp/thumb{
+	det_time = 20
+	},
+/turf/open/floor/wood,
+/area/city/antag_base)
+"Fp" = (
+/turf/closed/indestructible/fakeglass,
+/area/city/antag_base)
+"GU" = (
+/obj/structure/table/wood,
+/obj/item/reagent_containers/food/drinks/bottle/vodka,
+/turf/open/floor/wood,
+/area/city/antag_base)
+"Ha" = (
+/obj/structure/chair/sofa/corp/right{
+	dir = 4
+	},
+/turf/open/floor/wood,
+/area/city/antag_base)
+"HK" = (
+/turf/closed/indestructible/city/ironplate,
+/area/city/antag_base)
+"JZ" = (
+/obj/structure/chair/office,
+/obj/effect/turf_decal/siding/wood{
+	dir = 1
+	},
+/turf/open/floor/wood,
+/area/city/antag_base)
+"Lr" = (
+/obj/structure/chair/sofa/corp/corner{
+	dir = 4
+	},
+/obj/machinery/light{
+	dir = 1;
+	pixel_y = 19
+	},
+/turf/open/floor/wood,
+/area/city/antag_base)
+"Lt" = (
+/obj/machinery/light{
+	dir = 8;
+	pixel_x = -9;
+	pixel_y = 4
+	},
+/turf/open/floor/wood,
+/area/city/antag_base)
+"Mk" = (
+/obj/structure/chair/wood{
+	dir = 8
+	},
+/obj/machinery/light{
+	dir = 1;
+	pixel_y = 19
+	},
+/turf/open/floor/wood,
+/area/city/antag_base)
+"MD" = (
+/obj/machinery/light{
+	dir = 8;
+	pixel_y = 4;
+	pixel_x = -10
+	},
+/obj/structure/table/wood,
+/obj/item/shears/knife,
+/turf/open/floor/carpet/red,
+/area/city/antag_base)
+"MM" = (
+/obj/machinery/jukebox,
+/obj/machinery/light{
+	dir = 4;
+	pixel_x = 9;
+	pixel_y = 4
+	},
+/turf/open/floor/carpet,
+/area/city/antag_base)
+"MS" = (
+/obj/item/banner/cargo/mundane{
+	color = "red";
+	pixel_y = 23
+	},
+/obj/effect/turf_decal/siding/wood{
+	dir = 1;
+	color = "#2e1f0e"
+	},
+/obj/machinery/light{
+	dir = 4;
+	pixel_x = 9;
+	pixel_y = 4
+	},
+/turf/open/floor/wood,
+/area/city/antag_base)
+"NK" = (
+/obj/structure/table/wood,
+/obj/item/restraints/handcuffs,
+/turf/open/floor/wood,
+/area/city/antag_base)
+"OP" = (
+/obj/structure/table/wood/fancy/red,
+/obj/structure/railing{
+	dir = 1
+	},
+/obj/item/ego_weapon/ranged/city/thumb/sottocapo/city,
+/obj/item/ego_weapon/city/thumbcane/weak,
+/turf/open/floor/wood,
+/area/city/antag_base)
+"Qo" = (
+/turf/open/floor/carpet,
+/area/city/antag_base)
+"RD" = (
+/obj/machinery/door/airlock/grunge{
+	name = "syndicate hideout";
+	req_access_txt = "150"
+	},
+/turf/open/floor/facility/dark,
+/area/city/antag_base)
+"RM" = (
+/obj/machinery/light{
+	dir = 8;
+	pixel_x = -9;
+	pixel_y = 4
+	},
+/obj/structure/table/wood/poker,
+/obj/item/storage/fancy/cigarettes/cigars/havana{
+	pixel_y = 3
+	},
+/obj/item/storage/fancy/cigarettes/cigars/havana{
+	pixel_y = 7
+	},
+/turf/open/floor/wood,
+/area/city/antag_base)
+"SO" = (
+/obj/machinery/light{
+	dir = 4;
+	pixel_x = 9;
+	pixel_y = 4
+	},
+/obj/structure/dresser,
+/turf/open/floor/carpet/red,
+/area/city/antag_base)
+"Uo" = (
+/obj/machinery/light,
+/turf/open/floor/wood,
+/area/city/antag_base)
+"UF" = (
+/obj/machinery/door/airlock/wood,
+/turf/open/floor/wood,
+/area/city/antag_base)
+"Vz" = (
+/obj/structure/chair/sofa/left{
+	pixel_x = 3;
+	mouse_opacity = 0
+	},
+/obj/structure/chair/sofa/right{
+	pixel_x = -3;
+	name = "fancy leather sofa";
+	desc = "Custom order, this piece of furniture. Its origins made - made apparent - from a wealthy nest in a far-away district."
+	},
+/obj/structure/plaque{
+	pixel_y = 26
+	},
+/turf/open/floor/wood,
+/area/city/antag_base)
+"VG" = (
+/obj/structure/closet/crate{
+	pixel_y = 5;
+	anchored = 1;
+	opened = 1
+	},
+/obj/item/clothing/suit/armor/ego_gear/city/thumb,
+/obj/item/clothing/suit/armor/ego_gear/city/thumb,
+/obj/item/ego_weapon/ranged/city/thumb/city,
+/obj/item/ego_weapon/ranged/city/thumb/city,
+/turf/open/floor/wood,
+/area/city/antag_base)
+"Wa" = (
+/obj/structure/chair/wood/wings{
+	dir = 8
+	},
+/turf/open/floor/wood,
+/area/city/antag_base)
+"Wj" = (
+/obj/machinery/door/window/survival_pod{
+	name = "sottocapo bedroom";
+	dir = 4
+	},
+/turf/open/floor/wood,
+/area/city/antag_base)
+"Wx" = (
+/obj/structure/chair/sofa/corp,
+/turf/open/floor/wood,
+/area/city/antag_base)
+"WS" = (
+/obj/item/lipstick/purple,
+/obj/structure/table/wood/poker,
+/turf/open/floor/wood,
+/area/city/antag_base)
+"XQ" = (
+/obj/machinery/door/airlock/wood{
+	name = "sottocapo office";
+	req_access_txt = "151"
+	},
+/turf/open/floor/wood{
+	color = "#ccc8c0"
+	},
+/area/city/antag_base)
+"Yu" = (
+/obj/structure/chair/wood{
+	dir = 8
+	},
+/turf/open/floor/wood,
+/area/city/antag_base)
+"YA" = (
+/obj/structure/bed/pod,
+/obj/item/bedsheet/random,
+/turf/open/floor/wood,
+/area/city/antag_base)
+"YC" = (
+/obj/machinery/door/airlock/wood{
+	name = "sottocapo office";
+	req_access_txt = "151"
+	},
+/turf/open/floor/wood,
+/area/city/antag_base)
+"YN" = (
+/turf/closed/indestructible/wood,
+/area/city/antag_base)
+
+(1,1,1) = {"
+HK
+HK
+HK
+HK
+HK
+HK
+HK
+HK
+HK
+HK
+HK
+HK
+HK
+"}
+(2,1,1) = {"
+HK
+Lr
+Ha
+pr
+cX
+YN
+Ez
+pr
+YN
+lm
+pr
+lm
+HK
+"}
+(3,1,1) = {"
+HK
+Wx
+WS
+pr
+GU
+YN
+YN
+UF
+YN
+YA
+pr
+YA
+HK
+"}
+(4,1,1) = {"
+HK
+lz
+tF
+pr
+pr
+pr
+pr
+pr
+YN
+YA
+pr
+YA
+HK
+"}
+(5,1,1) = {"
+HK
+pr
+pr
+pr
+pr
+pr
+pr
+pr
+pr
+pr
+pr
+pr
+HK
+"}
+(6,1,1) = {"
+HK
+rQ
+rQ
+pr
+pr
+pr
+pr
+pr
+YN
+VG
+pr
+jw
+HK
+"}
+(7,1,1) = {"
+HK
+fQ
+fQ
+pr
+yk
+YN
+pr
+pr
+Fp
+VG
+pr
+NK
+HK
+"}
+(8,1,1) = {"
+HK
+Mk
+Yu
+pr
+ce
+YN
+pr
+pr
+Fp
+cT
+pr
+iu
+HK
+"}
+(9,1,1) = {"
+HK
+YN
+YN
+YN
+YN
+YN
+pr
+YN
+YN
+YN
+YN
+YN
+HK
+"}
+(10,1,1) = {"
+HK
+iO
+pr
+pr
+Lt
+pr
+pr
+pr
+jN
+jN
+jN
+jN
+HK
+"}
+(11,1,1) = {"
+HK
+pr
+qQ
+BK
+rQ
+rQ
+pr
+pr
+pr
+pr
+pr
+pr
+HK
+"}
+(12,1,1) = {"
+HK
+Vz
+yf
+iF
+iF
+iF
+pr
+pr
+pr
+pr
+pr
+pr
+RD
+"}
+(13,1,1) = {"
+HK
+pr
+jq
+Wa
+Yu
+Yu
+pr
+pr
+pr
+pr
+pr
+pr
+HK
+"}
+(14,1,1) = {"
+HK
+MS
+pr
+pr
+tk
+pr
+pr
+pr
+zM
+zM
+zM
+zM
+HK
+"}
+(15,1,1) = {"
+HK
+YN
+YN
+YN
+YN
+pr
+pr
+YN
+YN
+YN
+YN
+YN
+HK
+"}
+(16,1,1) = {"
+HK
+aV
+qI
+MD
+YN
+dh
+Uo
+YN
+hA
+hV
+Cj
+RM
+HK
+"}
+(17,1,1) = {"
+HK
+mB
+mB
+mB
+AN
+pr
+pr
+XQ
+JZ
+OP
+gM
+pr
+HK
+"}
+(18,1,1) = {"
+HK
+Dg
+kw
+SO
+YN
+pr
+pr
+YN
+la
+od
+pr
+pr
+HK
+"}
+(19,1,1) = {"
+HK
+YN
+YN
+YN
+YN
+dh
+Uo
+YN
+YN
+YN
+YN
+YC
+HK
+"}
+(20,1,1) = {"
+HK
+op
+cD
+MD
+YN
+pr
+pr
+BV
+xE
+DB
+xE
+Wj
+HK
+"}
+(21,1,1) = {"
+HK
+mB
+mB
+mB
+AN
+pr
+pr
+YN
+BM
+Qo
+nL
+mB
+HK
+"}
+(22,1,1) = {"
+HK
+gx
+kw
+SO
+YN
+pr
+pr
+YN
+lD
+MM
+jS
+AG
+HK
+"}
+(23,1,1) = {"
+HK
+HK
+HK
+HK
+HK
+HK
+HK
+HK
+HK
+HK
+HK
+HK
+HK
+"}
