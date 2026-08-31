@@ -397,17 +397,7 @@ Some other overrides like AttackingTarget() are in the Combat section instead.
 		target_turf = get_closest_atom(/turf/open, low_priority_turfs, src)
 
 	if(istype(target_turf))
-		patrol_path = get_path_to(src, target_turf, TYPE_PROC_REF(/turf, Distance_cardinal), 0, 200)
-		var/dest_distance = length(patrol_path)
-		if(dest_distance)
-			var/our_destination = patrol_path[dest_distance]
-			var/turf/the_promised_land =  our_destination// Yes yes I know .len is bad but if I use length(patrol_path) here it runtimes. For some reason...?
-			if(istype(the_promised_land))
-				SEND_SIGNAL(src, COMSIG_PATROL_START, the_promised_land) // LET'S FUCKING GOOOOOOOOOOOOOO (this makes our leadership component tell our goons to come with us)
-			return target_turf
-	//unsure if this patrol reset will cause the patrol cooldown even if there is not patrol path.
-	patrol_reset()
-	return FALSE
+		return target_turf
 
 
 /*
