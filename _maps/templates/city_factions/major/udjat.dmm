@@ -31,6 +31,15 @@
 	color = "#EDD956"
 	},
 /area/city/antag_base)
+"g" = (
+/obj/structure/rack{
+	pixel_x = -1
+	},
+/obj/item/clothing/head/udjat,
+/obj/item/ego_weapon/ranged/city/udjat_sniper,
+/obj/item/clothing/suit/armor/ego_gear/city/udjat_combat,
+/turf/open/floor/lce/plate/dark,
+/area/city/antag_base)
 "h" = (
 /obj/structure/table/wood/fancy,
 /obj/item/toy/cards/deck/tarot,
@@ -140,6 +149,14 @@
 	color = "#EDD956"
 	},
 /area/city/antag_base)
+"z" = (
+/obj/machinery/door/airlock/security/glass{
+	name = "Udjat Infantry Bedroom"
+	},
+/turf/open/floor/mineral/plastitanium{
+	color = "#EDD956"
+	},
+/area/city/antag_base)
 "A" = (
 /obj/structure/chair/comfy/shuttle{
 	color = "#9cadc7";
@@ -148,6 +165,13 @@
 	dir = 1
 	},
 /turf/open/floor/facility/dark,
+/area/city/antag_base)
+"B" = (
+/obj/structure/bed/pod,
+/obj/item/bedsheet/hos,
+/turf/open/floor/mineral/plastitanium{
+	color = "#EDD956"
+	},
 /area/city/antag_base)
 "C" = (
 /obj/structure/table/wood/fancy,
@@ -298,6 +322,19 @@
 /obj/item/ego_mag/udjat,
 /turf/open/floor/lce/plate/dark,
 /area/city/antag_base)
+"X" = (
+/obj/structure/rack{
+	pixel_x = -1
+	},
+/obj/item/ego_weapon/ranged/city/udjat,
+/obj/item/ego_mag/udjat,
+/obj/item/clothing/suit/armor/ego_gear/city/udjat_combat,
+/obj/item/ego_mag/udjat,
+/obj/item/clothing/head/udjat,
+/turf/open/floor/mineral/plastitanium{
+	color = "#EDD956"
+	},
+/area/city/antag_base)
 "Z" = (
 /obj/machinery/light{
 	dir = 4;
@@ -337,7 +374,7 @@ a
 O
 U
 a
-O
+g
 U
 a
 "}
@@ -368,7 +405,7 @@ a
 d
 a
 a
-d
+t
 a
 "}
 (5,1,1) = {"
@@ -397,8 +434,8 @@ a
 u
 a
 a
+z
 a
-t
 a
 "}
 (7,1,1) = {"
@@ -413,7 +450,7 @@ u
 a
 e
 T
-T
+X
 a
 "}
 (8,1,1) = {"
@@ -428,7 +465,7 @@ u
 a
 Z
 T
-T
+B
 a
 "}
 (9,1,1) = {"

@@ -22,10 +22,10 @@
 	job_notice = "Avoid killing other players without a reason."
 
 	roundstart_attributes = list(
-								FORTITUDE_ATTRIBUTE = 60,
-								PRUDENCE_ATTRIBUTE = 60,
-								TEMPERANCE_ATTRIBUTE = 60,
-								JUSTICE_ATTRIBUTE = 60
+								FORTITUDE_ATTRIBUTE = 59,
+								PRUDENCE_ATTRIBUTE = 59,
+								TEMPERANCE_ATTRIBUTE = 59,
+								JUSTICE_ATTRIBUTE = 59
 								)
 
 /datum/job/scout/after_spawn(mob/living/carbon/human/H, mob/M)

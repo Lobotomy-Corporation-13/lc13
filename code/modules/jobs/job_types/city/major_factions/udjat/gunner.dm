@@ -33,7 +33,7 @@
 	. = ..()
 
 
-/datum/outfit/job/capo
+/datum/outfit/job/gunner
 	name = "Udjat Heavy Gunner"
 	jobtype = /datum/job/gunner
 
