@@ -73,6 +73,7 @@
 #define ui_sanityhealth "EAST-1:28,CENTER:17"
 #define ui_internal "EAST-1:28,CENTER-3:10"
 #define ui_mood "EAST-1:28,CENTER+1:19"
+#define ui_faith "EAST-1:28,CENTER+1:18"
 #define ui_spacesuit "EAST-1:28,CENTER-4:10"
 
 //Pop-up inventory

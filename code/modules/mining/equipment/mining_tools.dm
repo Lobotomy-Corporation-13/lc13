@@ -19,6 +19,12 @@
 	attack_verb_continuous = list("hits", "pierces", "slices", "attacks")
 	attack_verb_simple = list("hit", "pierce", "slice", "attack")
 	custom_price = 25
+	/// Resurgence outpost durability (iron tier)
+	var/resurgence_durability = 200
+	/// Maximum durability for percentage calculations
+	var/resurgence_max_durability = 200
+	/// Resurgence quality tier (1-5, affects work bonus and durability)
+	var/resurgence_quality_tier = 1
 
 /obj/item/pickaxe/suicide_act(mob/living/user)
 	user.visible_message(span_suicide("[user] begins digging into [user.p_their()] chest! It looks like [user.p_theyre()] trying to commit suicide!"))
@@ -47,6 +53,7 @@
 	w_class = WEIGHT_CLASS_NORMAL
 	custom_materials = list(/datum/material/iron=1000)
 	custom_price = 100
+	// Iron tier durability (same as regular pickaxe)
 
 /obj/item/pickaxe/silver
 	name = "silver-plated pickaxe"
@@ -57,6 +64,9 @@
 	desc = "A silver-plated pickaxe that mines slightly faster than standard-issue."
 	force = 17
 	custom_price = 650
+	// Silver tier durability
+	resurgence_durability = 400
+	resurgence_max_durability = 400
 
 /obj/item/pickaxe/diamond
 	name = "diamond-tipped pickaxe"
@@ -124,6 +134,9 @@
 	slot_flags = ITEM_SLOT_BELT
 	w_class = WEIGHT_CLASS_NORMAL
 	custom_materials = list(/datum/material/iron=12050) //metal needed for a crowbar and for a knife, why the FUCK does a knife cost 6 metal sheets while a crowbar costs 0.025 sheets? shit makes no sense fuck this
+	// Wood tier durability (lower quality)
+	resurgence_durability = 100
+	resurgence_max_durability = 100
 
 /obj/item/shovel
 	name = "shovel"
@@ -146,6 +159,12 @@
 	attack_verb_continuous = list("bashes", "bludgeons", "thrashes", "whacks")
 	attack_verb_simple = list("bash", "bludgeon", "thrash", "whack")
 	sharpness = SHARP_EDGED
+	/// Resurgence outpost durability (iron tier)
+	var/resurgence_durability = 200
+	/// Maximum durability for percentage calculations
+	var/resurgence_max_durability = 200
+	/// Resurgence quality tier (1-5, affects work bonus and durability)
+	var/resurgence_quality_tier = 1
 
 /obj/item/shovel/Initialize()
 	. = ..()

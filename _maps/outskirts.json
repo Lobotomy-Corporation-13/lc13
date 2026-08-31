@@ -1,0 +1,20 @@
+{
+	"version": 1,
+	"map_name": "Resurgence Outpost",
+	"map_path": "map_files/Resurgence",
+	"map_file": [
+		"outskirts.dmm"
+	],
+	"traits": [
+		{
+			"Station": true,
+			"Resurgence": true,
+			"Resurgence Ruins": true,
+			"Baseturf": "/turf/open/floor/plating/ironsand"
+		}
+	],
+	"space_ruin_levels": 0,
+	"space_empty_levels": 0,
+	"minetype": "none",
+	"maptype": "outpost"
+}

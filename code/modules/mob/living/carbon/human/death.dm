@@ -22,7 +22,7 @@ GLOBAL_LIST_EMPTY(dead_players_during_shift)
 		return
 	stop_sound_channel(CHANNEL_HEARTBEAT)
 	var/obj/item/organ/heart/H = getorganslot(ORGAN_SLOT_HEART)
-	if(H)
+	if(istype(H))
 		H.beat = BEAT_NONE
 	SpreadPanic(TRUE)
 

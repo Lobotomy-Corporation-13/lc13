@@ -131,6 +131,12 @@
 	attack_verb_simple = list("chop", "tear", "lacerate", "cut")
 	hitsound = 'sound/weapons/bladeslice.ogg'
 	sharpness = SHARP_EDGED
+	/// Resurgence outpost durability (iron tier)
+	var/resurgence_durability = 200
+	/// Maximum durability for percentage calculations
+	var/resurgence_max_durability = 200
+	/// Resurgence quality tier (1-5, affects work bonus and durability)
+	var/resurgence_quality_tier = 1
 
 /obj/item/hatchet/Initialize()
 	. = ..()
@@ -146,6 +152,17 @@
 	icon_state = "woodhatchet"
 	custom_materials = null
 	flags_1 = NONE
+	// Wood tier durability
+	resurgence_durability = 100
+	resurgence_max_durability = 100
+
+/obj/item/hatchet/silver
+	name = "silver hatchet"
+	desc = "A sharp axe blade reinforced with silver on a sturdy handle. Chops faster and lasts longer."
+	force = 15
+	// Silver tier durability
+	resurgence_durability = 400
+	resurgence_max_durability = 400
 
 /obj/item/scythe
 	icon_state = "scythe0"
@@ -165,6 +182,12 @@
 	attack_verb_simple = list("chop", "slice", "cut", "reap")
 	hitsound = 'sound/weapons/bladeslice.ogg'
 	var/swiping = FALSE
+	/// Resurgence outpost durability (iron tier)
+	var/resurgence_durability = 200
+	/// Maximum durability for percentage calculations
+	var/resurgence_max_durability = 200
+	/// Resurgence quality tier (1-5, affects work bonus and durability)
+	var/resurgence_quality_tier = 1
 
 /obj/item/scythe/Initialize()
 	. = ..()
@@ -194,6 +217,20 @@
 				melee_attack_chain(user, V)
 	swiping = FALSE
 	return TRUE
+
+/obj/item/scythe/wooden
+	name = "wooden scythe"
+	desc = "A crude scythe with a wooden handle and a dull blade. Better than nothing for harvesting."
+	icon = 'icons/obj/hydroponics/equipment.dmi'
+	icon_state = "scythe_wooden"
+	lefthand_file = 'icons/mob/inhands/weapons/polearms_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/weapons/polearms_righthand.dmi'
+	inhand_icon_state = "scythe0"
+	force = 8
+	flags_1 = NONE
+	// Wood tier durability
+	resurgence_durability = 100
+	resurgence_max_durability = 100
 
 /obj/item/secateurs
 	name = "secateurs"

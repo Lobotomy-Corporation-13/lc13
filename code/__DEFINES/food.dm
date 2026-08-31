@@ -56,3 +56,11 @@
 #define FOOD_LIKED 1
 #define FOOD_DISLIKED 2
 #define FOOD_TOXIC 3
+
+/// Resurgence food quality tiers - faith bonus per tick for 1 minute when eating
+#define QUALITY_AWFUL 0
+#define QUALITY_POOR 2
+#define QUALITY_DECENT 5
+#define QUALITY_GOOD 8
+#define QUALITY_EXCELLENT 12
+#define QUALITY_MASTERWORK 18
