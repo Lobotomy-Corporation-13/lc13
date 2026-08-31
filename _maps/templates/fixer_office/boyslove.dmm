@@ -12,8 +12,8 @@
 /area/city/fixers)
 "d" = (
 /obj/structure/table/wood,
-/obj/item/ego_weapon/city/bladelineage{
-	pixel_x = 8;
+/obj/item/ego_weapon/city/bladelineage/city{
+	pixel_x = 5;
 	pixel_y = 4
 	},
 /turf/open/floor/stone{
@@ -216,7 +216,7 @@
 	},
 /obj/item/clothing/suit/armor/ego_gear/city/blade_lineage_salsu,
 /obj/item/clothing/suit/armor/ego_gear/city/blade_lineage_salsu,
-/obj/item/clothing/suit/armor/ego_gear/city/blade_lineage_salsu,
+/obj/item/clothing/suit/armor/ego_gear/city/blade_lineage_cutthroat,
 /obj/item/clothing/head/rice_hat,
 /obj/item/clothing/head/rice_hat,
 /obj/item/clothing/head/rice_hat,
@@ -261,11 +261,11 @@
 /area/city/fixers)
 "R" = (
 /obj/structure/table/wood,
-/obj/item/ego_weapon/city/bladelineage{
-	pixel_x = -4;
-	pixel_y = 4
+/obj/item/ego_weapon/city/bladelineage/city{
+	pixel_x = -5;
+	pixel_y = -3
 	},
-/obj/item/ego_weapon/city/bladelineage{
+/obj/item/ego_weapon/city/bladelineage/city{
 	pixel_y = 7;
 	pixel_x = 7
 	},
