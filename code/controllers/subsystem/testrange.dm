@@ -73,7 +73,7 @@ SUBSYSTEM_DEF(testrange)
 			var/datum/ego_datum/ED = new datumpath
 			if(!(ED.testrange_blacklisted) && (ED.item_path)) // Condition 1 eliminates evil datums like Sorrow and condition 2 eliminates templates that don't have a path (like /ego_datum/weapon/)
 				ego_datums |= ED
-				ego_datum_paths |= ED.item_path
+				ego_datum_paths |= ED.dispense_path || ED.item_path
 				ego_datums_by_path[ED.item_path] = ED
 				GenerateEgoPreviewIcon(ED.item_path)
 			else

@@ -147,7 +147,7 @@
 			ApplyIcon(button, force)
 
 		button.update_keybind_maptext()
-		
+
 		if(!IsAvailable())
 			button.color = transparent_when_unavailable ? rgb(128,0,0,128) : rgb(128,0,0)
 		else

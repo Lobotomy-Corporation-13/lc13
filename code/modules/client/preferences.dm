@@ -69,6 +69,9 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 
 	var/uses_glasses_colour = 0
 
+	/// Volume multiplier for player ambience music (nursefather themes, etc). 0-100, default 50.
+	var/player_ambience_volume = 50
+
 	//character preferences
 	var/slot_randomized					//keeps track of round-to-round randomization of the character slot, prevents overwriting
 	var/real_name						//our character's name

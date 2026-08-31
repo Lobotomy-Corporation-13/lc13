@@ -401,6 +401,9 @@
 	#define COMPONENT_BLOCK_MAGIC (1<<0)
 ///from base of mob/create_mob_hud(): ()
 #define COMSIG_MOB_HUD_CREATED "mob_hud_created"
+/// Sent on a mob when a Nursefather recruits them, so any prior Nursefather role they hold can self-clean.
+/// Handlers should remove their own Nursefather components/antagonist datums from the mob.
+#define COMSIG_NURSEFATHER_RECRUITMENT_OVERRIDE "nursefather_recruitment_override"
 
 ///from base of /mob/living/proc/apply_damage(): (damage, damagetype, def_zone, source, flags, attack_type)
 #define COMSIG_MOB_APPLY_DAMGE	"mob_apply_damage"
