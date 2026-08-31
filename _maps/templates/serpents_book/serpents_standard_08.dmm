@@ -1,0 +1,1141 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"am" = (
+/obj/effect/turf_decal/siding/red{
+	dir = 8
+	},
+/turf/open/floor/plasteel,
+/area/serpents_library)
+"aB" = (
+/obj/machinery/smartfridge/extraction_storage/ego_weapon,
+/turf/closed/indestructible/reinforced,
+/area/serpents_library)
+"aC" = (
+/obj/machinery/computer/extraction_cargo,
+/turf/open/floor/carpet/royalblack,
+/area/serpents_library)
+"aL" = (
+/obj/effect/turf_decal/siding/red{
+	dir = 4
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/plating,
+/area/serpents_library)
+"aZ" = (
+/obj/machinery/door/airlock/highsecurity{
+	name = "Control Department"
+	},
+/obj/effect/decal/cleanable/blood/tracks{
+	dir = 1
+	},
+/turf/open/floor/carpet,
+/area/serpents_library)
+"bn" = (
+/obj/machinery/holopad,
+/obj/effect/gibspawner/human,
+/turf/open/floor/plating,
+/area/serpents_library)
+"bK" = (
+/obj/effect/turf_decal/siding/red/corner{
+	dir = 1
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/plasteel/dark,
+/area/serpents_library)
+"bP" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/carpet,
+/area/serpents_library)
+"cm" = (
+/obj/effect/turf_decal/siding/red{
+	dir = 8
+	},
+/turf/open/floor/plasteel/dark,
+/area/serpents_library)
+"eT" = (
+/obj/effect/turf_decal/siding/red{
+	dir = 8
+	},
+/turf/open/floor/plating,
+/area/serpents_library)
+"eW" = (
+/obj/machinery/light,
+/obj/structure/rack,
+/obj/machinery/light,
+/obj/structure/rack,
+/turf/open/floor/carpet,
+/area/serpents_library)
+"fT" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/facility,
+/area/serpents_library)
+"gd" = (
+/obj/structure/rack,
+/obj/item/clothing/accessory/armband/lobotomy/extraction,
+/obj/item/clothing/accessory/armband/lobotomy/extraction,
+/obj/item/clothing/accessory/armband/lobotomy/extraction,
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/carpet/royalblack,
+/area/serpents_library)
+"gg" = (
+/obj/effect/turf_decal/siding/red{
+	dir = 8
+	},
+/obj/structure/rack,
+/turf/open/floor/plating,
+/area/serpents_library)
+"gu" = (
+/obj/effect/turf_decal/siding/red{
+	dir = 8
+	},
+/obj/structure/rack,
+/turf/open/floor/plasteel,
+/area/serpents_library)
+"hv" = (
+/obj/machinery/computer/security,
+/turf/open/floor/carpet,
+/area/serpents_library)
+"ih" = (
+/obj/effect/turf_decal/siding/red{
+	dir = 1
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/decal/cleanable/blood/tracks{
+	dir = 1
+	},
+/turf/open/floor/plasteel/dark,
+/area/serpents_library)
+"iu" = (
+/obj/structure/sign/poster/lobotomycorp/egoinfo{
+	pixel_x = 32
+	},
+/obj/structure/rack,
+/turf/open/floor/carpet/royalblack,
+/area/serpents_library)
+"jD" = (
+/obj/effect/turf_decal/siding/red{
+	dir = 8
+	},
+/obj/machinery/light/small{
+	dir = 8
+	},
+/obj/machinery/camera/autoname{
+	dir = 4
+	},
+/turf/open/floor/plasteel,
+/area/serpents_library)
+"jI" = (
+/turf/open/floor/facility,
+/area/serpents_library)
+"kx" = (
+/turf/open/floor/carpet,
+/area/serpents_library)
+"mB" = (
+/obj/effect/turf_decal/siding/red,
+/turf/open/floor/plasteel/dark,
+/area/serpents_library)
+"mC" = (
+/obj/machinery/button/door/indestructible{
+	id = "extraction";
+	name = "Extraction Access Shutters";
+	pixel_y = 32;
+	req_one_access_txt = "19"
+	},
+/obj/machinery/computer/abnormality_logs,
+/turf/open/floor/carpet/royalblack,
+/area/serpents_library)
+"nh" = (
+/obj/machinery/smartfridge/extraction_storage/ego_armor,
+/turf/closed/indestructible/reinforced,
+/area/serpents_library)
+"nB" = (
+/obj/effect/turf_decal/siding/red{
+	dir = 4
+	},
+/turf/open/floor/plasteel,
+/area/serpents_library)
+"nC" = (
+/obj/effect/turf_decal/siding/red,
+/turf/open/floor/plating,
+/area/serpents_library)
+"oB" = (
+/obj/effect/turf_decal/siding/red{
+	dir = 6
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/plasteel/dark,
+/area/serpents_library)
+"pj" = (
+/obj/structure/rack,
+/obj/item/storage/belt/ego,
+/obj/item/storage/belt/ego,
+/obj/item/storage/belt/ego,
+/obj/item/storage/belt/ego,
+/obj/item/storage/belt/ego,
+/turf/open/floor/plasteel/dark,
+/area/serpents_library)
+"qx" = (
+/obj/effect/turf_decal/siding/red{
+	dir = 9
+	},
+/obj/structure/rack,
+/turf/open/floor/plasteel,
+/area/serpents_library)
+"qT" = (
+/obj/structure/rack,
+/obj/item/clothing/suit/armor/vest/alt,
+/obj/item/clothing/suit/armor/vest/alt,
+/turf/open/floor/plasteel/dark,
+/area/serpents_library)
+"qV" = (
+/obj/structure/table/glass,
+/obj/item/reagent_containers/hypospray/medipen/l_health,
+/turf/open/floor/carpet,
+/area/serpents_library)
+"rV" = (
+/obj/effect/spawner/structure/window/reinforced,
+/turf/open/floor/plasteel/dark,
+/area/serpents_library)
+"ss" = (
+/obj/effect/turf_decal/siding/red{
+	dir = 4
+	},
+/obj/structure/rack,
+/turf/open/floor/plasteel,
+/area/serpents_library)
+"sw" = (
+/obj/item/paper/guides/jobs/he{
+	pixel_x = 5
+	},
+/obj/item/paper/guides/jobs/teth{
+	pixel_y = 5
+	},
+/obj/item/paper/guides/jobs/zayin{
+	pixel_x = -5
+	},
+/obj/structure/table/glass,
+/turf/open/floor/carpet,
+/area/serpents_library)
+"tH" = (
+/obj/effect/turf_decal/siding/red{
+	dir = 8
+	},
+/obj/structure/rack,
+/obj/item/storage/belt/ego,
+/turf/open/floor/plasteel,
+/area/serpents_library)
+"up" = (
+/obj/effect/turf_decal/siding{
+	color = "#212121";
+	dir = 1
+	},
+/obj/effect/spawner/structure/window/plasma/reinforced/plastitanium,
+/turf/open/floor/plating,
+/area/serpents_library)
+"uH" = (
+/obj/machinery/camera/autoname,
+/turf/open/floor/plating,
+/area/serpents_library)
+"vr" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/decal/cleanable/blood/tracks{
+	dir = 1
+	},
+/turf/open/floor/facility,
+/area/serpents_library)
+"vv" = (
+/obj/structure/table/reinforced,
+/obj/effect/turf_decal/siding/red{
+	dir = 8
+	},
+/turf/open/floor/carpet/royalblack,
+/area/serpents_library)
+"vG" = (
+/obj/machinery/light/small,
+/obj/machinery/camera/autoname{
+	dir = 1
+	},
+/turf/open/floor/plating,
+/area/serpents_library)
+"vK" = (
+/obj/effect/turf_decal/siding/red/corner{
+	dir = 8
+	},
+/turf/open/floor/plating,
+/area/serpents_library)
+"vL" = (
+/obj/effect/turf_decal/siding/red{
+	dir = 4
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/gibspawner/human,
+/turf/open/floor/plasteel/dark,
+/area/serpents_library)
+"vZ" = (
+/turf/open/floor/carpet/royalblack,
+/area/serpents_library)
+"we" = (
+/obj/item/rawpe,
+/obj/item/rawpe,
+/obj/item/rawpe,
+/obj/item/rawpe,
+/obj/item/rawpe,
+/obj/structure/closet/crate,
+/obj/machinery/light/small{
+	dir = 4
+	},
+/obj/machinery/light,
+/turf/open/floor/plasteel/dark,
+/area/serpents_library)
+"wV" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/carpet/royalblack,
+/area/serpents_library)
+"yi" = (
+/obj/machinery/light,
+/obj/structure/rack,
+/turf/open/floor/carpet,
+/area/serpents_library)
+"zp" = (
+/obj/structure/table/glass,
+/obj/machinery/cell_charger,
+/turf/open/floor/carpet,
+/area/serpents_library)
+"zu" = (
+/obj/effect/turf_decal/siding/red{
+	dir = 4
+	},
+/obj/structure/rack,
+/obj/item/storage/belt/ego,
+/turf/open/floor/plasteel,
+/area/serpents_library)
+"zH" = (
+/turf/closed/indestructible/rock,
+/area/serpents_library)
+"zO" = (
+/obj/machinery/newscaster{
+	pixel_x = 32
+	},
+/obj/machinery/light{
+	dir = 4
+	},
+/turf/open/floor/plating,
+/area/serpents_library)
+"Ae" = (
+/obj/effect/turf_decal/siding/red{
+	dir = 5
+	},
+/obj/structure/rack,
+/obj/item/storage/belt/ego,
+/turf/open/floor/plasteel,
+/area/serpents_library)
+"Ag" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/plating,
+/area/serpents_library)
+"Ah" = (
+/obj/structure/table/glass,
+/obj/item/storage/box/handcuffs,
+/obj/item/storage/box/handcuffs,
+/turf/open/floor/carpet,
+/area/serpents_library)
+"Aj" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/decal/cleanable/blood/tracks{
+	dir = 1
+	},
+/turf/open/floor/plating,
+/area/serpents_library)
+"Ay" = (
+/obj/machinery/door/airlock/highsecurity{
+	name = "Extraction Office"
+	},
+/obj/machinery/door/poddoor/shutters/window/preopen{
+	id = "extraction"
+	},
+/turf/open/floor/plasteel/dark,
+/area/serpents_library)
+"AM" = (
+/obj/effect/turf_decal/siding/red{
+	dir = 1
+	},
+/obj/machinery/light{
+	dir = 1
+	},
+/obj/structure/sign/departments/control{
+	pixel_y = 32
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/plasteel,
+/area/serpents_library)
+"BR" = (
+/obj/effect/turf_decal/siding/red,
+/obj/effect/decal/cleanable/blood/tracks{
+	dir = 1
+	},
+/turf/open/floor/plasteel/dark,
+/area/serpents_library)
+"CA" = (
+/obj/structure/serpent_door,
+/turf/open/floor/plasteel/dark,
+/area/serpents_library)
+"CQ" = (
+/obj/effect/turf_decal/siding/red{
+	dir = 4
+	},
+/obj/machinery/light/small{
+	dir = 4
+	},
+/turf/open/floor/plasteel,
+/area/serpents_library)
+"Df" = (
+/obj/machinery/text_adventure_console,
+/turf/open/floor/carpet/royalblack,
+/area/serpents_library)
+"DE" = (
+/obj/machinery/computer/security{
+	dir = 1
+	},
+/turf/open/floor/carpet,
+/area/serpents_library)
+"DO" = (
+/obj/effect/turf_decal/siding/red{
+	dir = 1
+	},
+/obj/effect/decal/cleanable/blood/tracks{
+	dir = 1
+	},
+/turf/open/floor/plasteel,
+/area/serpents_library)
+"Ec" = (
+/obj/structure/chair/comfy/black{
+	dir = 8
+	},
+/obj/item/toy/plush/binah,
+/turf/open/floor/carpet/royalblack,
+/area/serpents_library)
+"FB" = (
+/obj/machinery/camera/autoname{
+	dir = 1
+	},
+/obj/machinery/vending/custom/unbreakable,
+/obj/machinery/status_display{
+	pixel_y = -32
+	},
+/turf/open/floor/carpet,
+/area/serpents_library)
+"FR" = (
+/obj/structure/rack,
+/turf/open/floor/carpet/royalblack,
+/area/serpents_library)
+"Hq" = (
+/obj/effect/turf_decal/siding/red{
+	dir = 5
+	},
+/turf/open/floor/plasteel/dark,
+/area/serpents_library)
+"HR" = (
+/obj/machinery/door/airlock/highsecurity{
+	name = "Extraction Office"
+	},
+/turf/open/floor/plasteel/dark,
+/area/serpents_library)
+"Iv" = (
+/obj/effect/turf_decal/siding/red{
+	dir = 1
+	},
+/obj/machinery/light{
+	dir = 1
+	},
+/obj/structure/sign/departments/control{
+	pixel_y = 32
+	},
+/turf/open/floor/plasteel,
+/area/serpents_library)
+"JD" = (
+/obj/effect/decal/cleanable/blood/tracks{
+	dir = 1
+	},
+/turf/open/floor/facility,
+/area/serpents_library)
+"KL" = (
+/obj/structure/sink{
+	dir = 8;
+	pixel_x = 11
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/plating,
+/area/serpents_library)
+"KO" = (
+/obj/effect/decal/cleanable/blood/tracks{
+	dir = 1
+	},
+/turf/open/floor/plating,
+/area/serpents_library)
+"LE" = (
+/obj/structure/table,
+/turf/open/floor/carpet,
+/area/serpents_library)
+"LO" = (
+/obj/structure/table/glass,
+/obj/structure/lootcrate/l_corp,
+/turf/open/floor/carpet,
+/area/serpents_library)
+"Mz" = (
+/obj/effect/turf_decal/siding/red,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/plasteel/dark,
+/area/serpents_library)
+"MM" = (
+/obj/structure/rack,
+/obj/item/reagent_containers/spray/cleaner,
+/obj/machinery/camera/autoname{
+	dir = 10
+	},
+/turf/open/floor/plasteel/dark,
+/area/serpents_library)
+"Nc" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/plasteel/dark,
+/area/serpents_library)
+"Nh" = (
+/obj/effect/turf_decal/siding/red{
+	dir = 1
+	},
+/turf/open/floor/plasteel/dark,
+/area/serpents_library)
+"Ok" = (
+/obj/structure/table/glass,
+/obj/item/clothing/accessory/armband/lobotomy,
+/obj/item/clothing/accessory/armband/lobotomy,
+/obj/item/clothing/accessory/armband/lobotomy,
+/turf/open/floor/carpet,
+/area/serpents_library)
+"OD" = (
+/obj/effect/turf_decal/siding/red{
+	dir = 4
+	},
+/turf/open/floor/plasteel/dark,
+/area/serpents_library)
+"OI" = (
+/obj/machinery/camera/autoname{
+	dir = 9
+	},
+/obj/structure/sign/poster/official/twelve_gauge{
+	pixel_x = 32
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/carpet/royalblack,
+/area/serpents_library)
+"OJ" = (
+/obj/machinery/door/airlock/centcom,
+/turf/open/floor/plating,
+/area/serpents_library)
+"OM" = (
+/obj/structure/rack,
+/obj/item/reagent_containers/hypospray/medipen/l_sanity,
+/obj/item/reagent_containers/hypospray/medipen/l_sanity,
+/turf/open/floor/plating,
+/area/serpents_library)
+"Pq" = (
+/obj/effect/turf_decal/siding/red{
+	dir = 4
+	},
+/obj/structure/rack,
+/turf/open/floor/plating,
+/area/serpents_library)
+"PP" = (
+/obj/structure/table/glass,
+/obj/item/encryptionkey/headset_control,
+/obj/item/encryptionkey/headset_control,
+/obj/item/encryptionkey/headset_control,
+/turf/open/floor/carpet,
+/area/serpents_library)
+"PR" = (
+/turf/open/floor/plasteel/dark,
+/area/serpents_library)
+"RA" = (
+/turf/open/floor/plating,
+/area/serpents_library)
+"RP" = (
+/obj/machinery/light,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/plasteel/dark,
+/area/serpents_library)
+"RS" = (
+/obj/structure/extraction_belt,
+/turf/open/floor/carpet,
+/area/serpents_library)
+"ST" = (
+/obj/structure/rack,
+/obj/item/melee/classic_baton,
+/obj/item/melee/classic_baton,
+/obj/machinery/light{
+	dir = 1
+	},
+/turf/open/floor/plasteel/dark,
+/area/serpents_library)
+"Tk" = (
+/obj/effect/turf_decal/siding/red{
+	dir = 4
+	},
+/obj/effect/gibspawner/human,
+/turf/open/floor/plasteel/dark,
+/area/serpents_library)
+"Tq" = (
+/obj/effect/decal/cleanable/blood/tracks{
+	dir = 1
+	},
+/turf/open/floor/carpet,
+/area/serpents_library)
+"Tz" = (
+/obj/machinery/camera/autoname{
+	dir = 1
+	},
+/turf/open/floor/carpet,
+/area/serpents_library)
+"TK" = (
+/obj/structure/serpent_door/south,
+/turf/open/floor/plating,
+/area/serpents_library)
+"Ut" = (
+/obj/effect/turf_decal/siding/red{
+	dir = 8
+	},
+/obj/effect/spawner/structure/window/plasma/reinforced/plastitanium,
+/turf/open/floor/plating,
+/area/serpents_library)
+"UG" = (
+/obj/structure/chair/office{
+	dir = 1
+	},
+/turf/open/floor/plating,
+/area/serpents_library)
+"Vu" = (
+/obj/machinery/door/airlock/vault{
+	name = "Wishing Well containment zone"
+	},
+/turf/open/floor/plasteel/dark,
+/area/serpents_library)
+"Vx" = (
+/obj/machinery/light/small{
+	dir = 4
+	},
+/turf/open/floor/plasteel/dark,
+/area/serpents_library)
+"Vz" = (
+/obj/structure/chair/office,
+/turf/open/floor/carpet,
+/area/serpents_library)
+"VM" = (
+/obj/structure/rack,
+/obj/machinery/light{
+	dir = 4
+	},
+/turf/open/floor/carpet/royalblack,
+/area/serpents_library)
+"VY" = (
+/obj/structure/rack,
+/turf/open/floor/plating,
+/area/serpents_library)
+"Wc" = (
+/obj/structure/table/glass,
+/obj/item/paper/guides/jobs/aleph{
+	pixel_x = 5
+	},
+/obj/item/paper/guides/jobs/waw{
+	pixel_x = -5;
+	pixel_y = 5
+	},
+/turf/open/floor/carpet,
+/area/serpents_library)
+"Wn" = (
+/obj/structure/chair/office{
+	dir = 1
+	},
+/obj/item/toy/plush/malkuth,
+/turf/open/floor/carpet,
+/area/serpents_library)
+"Wq" = (
+/obj/machinery/computer/ego_purchase,
+/turf/open/floor/carpet/royalblack,
+/area/serpents_library)
+"XG" = (
+/obj/effect/turf_decal/siding/red{
+	dir = 8
+	},
+/obj/structure/table/reinforced,
+/turf/open/floor/carpet/royalblack,
+/area/serpents_library)
+"Ya" = (
+/obj/effect/spawner/structure/window/plasma/reinforced/plastitanium,
+/turf/open/floor/plating,
+/area/serpents_library)
+"Yt" = (
+/obj/structure/sign/poster/contraband/shamblers_juice{
+	pixel_x = 32
+	},
+/obj/structure/table,
+/obj/structure/lootcrate/l_corp,
+/turf/open/floor/plating,
+/area/serpents_library)
+"Yz" = (
+/obj/effect/turf_decal/siding/red{
+	dir = 4
+	},
+/turf/open/floor/plating,
+/area/serpents_library)
+"YT" = (
+/obj/structure/rack,
+/obj/item/ego_weapon/ranged/clerk,
+/obj/item/ego_weapon/ranged/clerk,
+/turf/open/floor/plasteel/dark,
+/area/serpents_library)
+"YU" = (
+/turf/closed/indestructible/reinforced,
+/area/serpents_library)
+"ZK" = (
+/turf/closed/indestructible/reinforced/cheap/cream,
+/area/serpents_library)
+
+(1,1,1) = {"
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+"}
+(2,1,1) = {"
+ZK
+Nh
+mB
+sw
+Wc
+kx
+LO
+Ah
+Nh
+mB
+yi
+YU
+qx
+eT
+am
+tH
+gg
+gu
+jD
+ZK
+"}
+(3,1,1) = {"
+ZK
+Nh
+nC
+hv
+UG
+bP
+Vz
+DE
+Nh
+mB
+Tz
+YU
+Iv
+RA
+RA
+RA
+RA
+fT
+jI
+ZK
+"}
+(4,1,1) = {"
+ZK
+Nh
+nC
+kx
+kx
+bn
+RA
+Tq
+ih
+BR
+KO
+aZ
+DO
+JD
+Aj
+vr
+TK
+jI
+fT
+ZK
+"}
+(5,1,1) = {"
+ZK
+Nh
+mB
+hv
+Wn
+kx
+Vz
+DE
+Nh
+mB
+kx
+YU
+AM
+fT
+jI
+jI
+jI
+jI
+RA
+ZK
+"}
+(6,1,1) = {"
+ZK
+Nh
+mB
+qV
+Ok
+RA
+PP
+zp
+Nh
+mB
+eW
+YU
+Ae
+Yz
+nB
+Pq
+zu
+ss
+CQ
+ZK
+"}
+(7,1,1) = {"
+ZK
+Nh
+vK
+cm
+cm
+cm
+cm
+cm
+bK
+Mz
+FB
+YU
+YU
+OJ
+YU
+YU
+YU
+YU
+YU
+ZK
+"}
+(8,1,1) = {"
+ZK
+Hq
+Tk
+aL
+OD
+OD
+OD
+Yz
+vL
+oB
+LE
+YU
+RA
+RA
+YU
+RA
+RA
+RA
+YU
+ZK
+"}
+(9,1,1) = {"
+ZK
+RS
+kx
+kx
+bP
+kx
+zO
+RA
+kx
+kx
+Yt
+YU
+VY
+vG
+YU
+RA
+RA
+RA
+YU
+ZK
+"}
+(10,1,1) = {"
+ZK
+aB
+vv
+vv
+XG
+nh
+YU
+Ut
+Ay
+Ut
+YU
+YU
+OM
+RA
+YU
+RA
+RA
+RA
+YU
+ZK
+"}
+(11,1,1) = {"
+ZK
+Wq
+Ec
+vZ
+RA
+RA
+HR
+RA
+PR
+PR
+RA
+YU
+YU
+YU
+YU
+RA
+RA
+RA
+YU
+ZK
+"}
+(12,1,1) = {"
+ZK
+mC
+wV
+KL
+Ag
+VY
+Ya
+YT
+Nc
+PR
+MM
+YU
+zH
+zH
+YU
+RA
+RA
+RA
+YU
+ZK
+"}
+(13,1,1) = {"
+ZK
+Df
+Ag
+gd
+vZ
+FR
+up
+qT
+PR
+RA
+pj
+YU
+zH
+zH
+YU
+YU
+YU
+YU
+YU
+ZK
+"}
+(14,1,1) = {"
+ZK
+aC
+vZ
+VY
+vZ
+FR
+YU
+ST
+RA
+Ag
+we
+YU
+zH
+zH
+YU
+RA
+RA
+RA
+YU
+ZK
+"}
+(15,1,1) = {"
+ZK
+vZ
+OI
+VM
+iu
+FR
+YU
+YU
+Nc
+PR
+YU
+YU
+YU
+YU
+YU
+RA
+RA
+RA
+YU
+ZK
+"}
+(16,1,1) = {"
+ZK
+YU
+YU
+YU
+YU
+YU
+zH
+YU
+PR
+PR
+rV
+uH
+PR
+Ag
+YU
+RA
+RA
+RA
+YU
+ZK
+"}
+(17,1,1) = {"
+ZK
+zH
+zH
+zH
+zH
+zH
+zH
+YU
+Ag
+RA
+Vu
+RA
+CA
+RP
+YU
+RA
+RA
+RA
+YU
+ZK
+"}
+(18,1,1) = {"
+ZK
+zH
+zH
+zH
+zH
+zH
+zH
+YU
+PR
+Vx
+rV
+PR
+Nc
+RA
+YU
+RA
+RA
+RA
+YU
+ZK
+"}
+(19,1,1) = {"
+ZK
+zH
+zH
+zH
+zH
+zH
+zH
+YU
+YU
+YU
+YU
+YU
+YU
+YU
+YU
+YU
+YU
+YU
+YU
+ZK
+"}
+(20,1,1) = {"
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+"}

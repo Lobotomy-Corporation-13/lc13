@@ -13,6 +13,7 @@
 #define FACILITY_TRAIT_PROSTHETICS "Prosthetic Agents"
 #define FACILITY_TRAIT_XP_MOD "XP Modifier"
 #define FACILITY_TRAIT_DARK_SOULS "Dark Souls"
+#define FACILITY_TRAIT_PATHSTRIDERS "Pathstriders"
 
 //Removed ones
 #define FACILITY_TRAIT_FUCKED_SELECTION "Selection Mishap"

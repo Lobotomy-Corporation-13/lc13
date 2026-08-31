@@ -75,6 +75,12 @@
 #define ui_mood "EAST-1:28,CENTER+1:19"
 #define ui_spacesuit "EAST-1:28,CENTER-4:10"
 
+//Pathstrider readouts, one column left of the vitals so each row lines up with
+//its neighbour. Only shown to path holders.
+#define ui_path_turn "EAST-2:26,CENTER:17"
+#define ui_path_ap "EAST-2:26,CENTER-1:15"
+#define ui_path_energy "EAST-2:26,CENTER-2:13"
+
 //Pop-up inventory
 #define ui_shoes "WEST+1:8,SOUTH:5"
 #define ui_iclothing "WEST:6,SOUTH+1:7"

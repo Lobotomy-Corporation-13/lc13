@@ -89,13 +89,22 @@
 				melt_text = " of Lunacy. Failure to clear the meltdown will cause another abnormality to breach"
 		. += span_warning("The containment unit is currently affected by a Qliphoth Meltdown[melt_text]. Time left: [meltdown_time].")
 	//Show what upgrades you have. I dont have visuals for the upgrades yet so for now just exsamine tell them.
-	. += span_info("This console is augmented with the following upgrades:")
-	var/upgrade_list = ""
+	var/list/upgrade_names = list()
 	for(var/i in mechanical_upgrades)
-		if(mechanical_upgrades[i] == 0)
+		var/obj/upgrade = mechanical_upgrades[i]
+		if(!istype(upgrade))
 			continue
-		upgrade_list += "[i]|"
-	. += upgrade_list
+		upgrade_names += upgrade.name
+	if(length(upgrade_names))
+		. += span_info("This console is augmented with the following upgrades: [jointext(upgrade_names, ", ")].")
+	var/obj/item/work_console_upgrade/pathstrider_extraction/emod = mechanical_upgrades["extraction"]
+	if(istype(emod))
+		. += span_notice("Extraction module: [emod.charges]/[emod.max_charges] breach charges[emod.TimeToNextCharge() ? " (next in [emod.TimeToNextCharge()]s)" : ""].")
+		var/ekey = SinToPathKey(datum_reference.current?.chem_type)
+		if(ekey)
+			. += span_notice("Working this abnormality yields [GetPathMatName("path", ekey, 1)].")
+		else
+			. += span_notice("This abnormality yields no extractable Path Material.")
 
 /obj/machinery/computer/abnormality/ui_interact(mob/user, via_notepad = FALSE)
 	. = ..()
@@ -143,6 +152,27 @@
 			dat += "<A href='byond://?src=[REF(src)];do_work=[wt]'>[work_display] \[[datum_reference.get_work_chance(wt, user)]%\]</A> <br>"
 		else
 			dat += "<A href='byond://?src=[REF(src)];do_work=[wt]'>[work_display]</A> <br>"
+
+	// Extraction module readout + force-breach button.
+	var/obj/item/work_console_upgrade/pathstrider_extraction/emod = mechanical_upgrades["extraction"]
+	if(istype(emod))
+		dat += "<hr><b>Extraction Module</b><br>"
+		var/ekey = SinToPathKey(datum_reference.current?.chem_type)
+		if(ekey)
+			var/emt = GetPathMatType("path", ekey, 1)
+			dat += "Yields: [icon2html(emt, user)] [GetPathMatName("path", ekey, 1)]<br>"
+		dat += "Breach charges: [emod.charges]/[emod.max_charges]"
+		if(emod.TimeToNextCharge())
+			dat += " (next in [emod.TimeToNextCharge()]s)"
+		dat += "<br>"
+		if(!ekey)
+			dat += "<span style='color: gray'>No extractable sin.</span><br>"
+		else if(!datum_reference.current?.can_breach)
+			dat += "<span style='color: gray'>Cannot be force-breached.</span><br>"
+		else if(emod.charges <= 0)
+			dat += "<span style='color: gray'>No breach charges remaining.</span><br>"
+		else
+			dat += "<A href='byond://?src=[REF(src)];extraction_breach=1'>Force Breach</A><br>"
 
 	var/datum/browser/popup = new(user, "abno_work", "Abnormality Work Console", 400, 350)
 	popup.set_content(dat)
@@ -202,6 +232,8 @@
 				to_chat(usr, span_warning("You should not even be able to attempt this!"))
 				return
 			datum_reference.current.FinalObservation(usr)
+		if(href_list["extraction_breach"])
+			INVOKE_ASYNC(src, PROC_REF(ExtractionForceBreach), usr)
 
 	add_fingerprint(usr)
 	updateUsrDialog()

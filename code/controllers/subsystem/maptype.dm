@@ -38,6 +38,7 @@ SUBSYSTEM_DEF(maptype)
 						FACILITY_TRAIT_JOKE_ABNOS = 1,			// Okay it's funny
 						FACILITY_TRAIT_VISIBLE_GHOSTS = 1,		// Very Metagamey but funny
 						FACILITY_TRAIT_PLAYABLES = 1,			//I'm going to kill myself
+						FACILITY_TRAIT_PATHSTRIDERS = 5,		//Enables Calyx incursions + spawns an Omni-Synthesizer
 
 						//Disabled traits becuase these suck lmao
 						//FACILITY_TRAIT_LEGACY_PALE = 0,			//You take 90% damage if pale damage hits you
@@ -45,6 +46,10 @@ SUBSYSTEM_DEF(maptype)
 						)
 
 	var/chosen_trait = "No Trait"
+
+	//TESTING: forces this trait every round, skipping both the 40% no-trait
+	//roll and the weighted pick below. Set to null to restore normal behaviour.
+	var/force_trait = FACILITY_TRAIT_PATHSTRIDERS
 
 	//All the map tags that are combat maps and need abnos to breach immediately
 	var/list/combatmaps = list("rcorp", "rcorp_factory", "wcorp", "limbus_labs", "fixers", "office")
@@ -80,9 +85,12 @@ SUBSYSTEM_DEF(maptype)
 		if(!CONFIG_GET(flag/enabletraits))
 			message_admins("Notice! Station Traits are disabled!")
 			return
-		if(prob(40))	//40% chance to not run a station trait
-			return
-		chosen_trait = pickweight(lc_trait)
+		if(force_trait)
+			chosen_trait = force_trait
+		else
+			if(prob(40))	//40% chance to not run a station trait
+				return
+			chosen_trait = pickweight(lc_trait)
 		switch(chosen_trait)
 			if(FACILITY_TRAIT_VISIBLE_GHOSTS)
 				var/msg = span_warning("You suddenly feel extremely obvious...")
