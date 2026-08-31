@@ -22,11 +22,8 @@
 	if(!.)
 		return FALSE
 	for(var/mob/living/L in hearers(1, target_turf))
-		var/aoe = 25
-		var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
-		var/justicemod = 1 + userjust / 100
-		aoe *= justicemod
-		aoe *= force_multiplier
+		var/aoe = force
+		aoe *= CalcDamage(user)
 		if(L == user || ishuman(L))
 			continue
 		L.deal_damage(aoe, BLACK_DAMAGE, user, attack_type = (ATTACK_TYPE_MELEE))
@@ -49,6 +46,7 @@
 	attribute_requirements = list(
 							JUSTICE_ATTRIBUTE = 80
 							)
+	special_multiplier = 5 //used for combo finisher
 	crit_multiplier = 1.5	//Rapier, little better crits
 	var/combo = 0
 	var/combo_time
@@ -78,7 +76,7 @@
 	if(combo==4)
 		combo = 0
 		user.changeNext_move(CLICK_CD_MELEE * 2)
-		force *= 5	// Should actually keep up with normal damage.
+		force *= special_multiplier	// Should actually keep up with normal damage.
 		playsound(src, 'sound/weapons/fwoosh.ogg', 300, FALSE, 9)
 		to_chat(user,span_warning("You are offbalance, you take a moment to reset your stance."))
 		balloon_alert(user, "You are offbalance, you take a moment to reset your stance.")
@@ -114,18 +112,24 @@
 	attribute_requirements = list(
 							FORTITUDE_ATTRIBUTE = 80
 							)
+	special_multiplier = 1.5
 	var/charged = FALSE
 	crit_multiplier = 0.7	//Less crits for you.
 
 /obj/item/ego_weapon/totalitarianism/attack(mob/living/M, mob/living/user)
 	..()
-	force = 80
+	force = initial(force)
 	charged = FALSE
 
 /obj/item/ego_weapon/totalitarianism/attack_self(mob/user)
+	if(charged)
+		to_chat(user,span_warning("You are already wound up!"))
+		balloon_alert(user, "You are already wound up!")
+		return
+
 	if(do_after(user, 12, src))
 		charged = TRUE
-		force = 120	//FULL POWER
+		force *= special_multiplier
 		to_chat(user,span_warning("You put your strength behind this attack."))
 		balloon_alert(user, "You put your strength behind this attack.")
 
@@ -150,6 +154,7 @@
 	crit_multiplier = 1.5	//Slightly better crits
 	var/charged = FALSE
 	var/meter = 0
+	var/meter_max = 60
 	var/meter_counter = 1
 
 /obj/item/ego_weapon/oppression/attack_self(mob/user)
@@ -166,11 +171,11 @@
 	meter += meter_counter
 	meter_counter += 1
 
-	meter = min(meter, 60)
+	meter = min(meter, meter_max)
 	..()
 	if(charged == TRUE)
 		charged = FALSE
-		force = 15
+		force = initial(force)
 		meter_counter = 0
 
 /obj/item/ego_weapon/remorse
@@ -191,8 +196,9 @@
 							PRUDENCE_ATTRIBUTE = 60,
 							JUSTICE_ATTRIBUTE = 60
 							)
+
+	special_multiplier = 2
 	var/list/targets = list()
-	var/ranged_damage = 60	//Fuckload of white on ability. Be careful!
 	var/mode = FALSE		//False for nail, true for hammer
 
 /obj/item/ego_weapon/remorse/attack(mob/living/M, mob/living/user)
@@ -206,6 +212,7 @@
 	if(mode)
 		if(M in targets)
 			playsound(M, 'sound/weapons/fixer/generic/nail1.ogg', 100, FALSE, 4)
+			var/ranged_damage = force * special_multiplier * CalcDamage(user)
 			M.deal_damage(ranged_damage, WHITE_DAMAGE, user, attack_type = (ATTACK_TYPE_SPECIAL))
 			new /obj/effect/temp_visual/remorse(get_turf(M))
 			targets -= M.tag
@@ -248,7 +255,7 @@
 	var/combo_wait = 20
 	// "Throwing" attack
 	var/special_attack = FALSE
-	var/special_damage = 100
+	special_damage = 100
 	var/special_cooldown
 	var/special_cooldown_time = 8 SECONDS
 	var/special_checks_faction = FALSE
@@ -374,9 +381,7 @@
 	var/dealing_damage = special_damage // Damage reduces a little with each mob hit
 	dealing_damage*=force_multiplier // %dmg increase from Faith & Promise, EO upgrade tool, etc
 	if(realization_active) // Apply Justice if wearing Crimson Lust realization
-		var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
-		var/justicemod = (1 + userjust/100) * 0.75 // Not full Justice scaling
-		dealing_damage*=justicemod
+		dealing_damage*=CalcDamage(user)
 
 	for(var/i = 1 to turfs_to_hit.len) // Basically, I copied my code from helper's realized ability. Yep.
 		var/turf/open/T = turfs_to_hit[i]
@@ -588,7 +593,7 @@
 
 
 // On the 13th hit, Force is substituted by the user's Power Modifier, and is still subject to an increase from Power Modifier itself.
-// For a nugget with 120 Justice this is (120 * 2.2) final damage
+// For a nugget with 120 Justice this is 120 final damage
 /obj/item/ego_weapon/thirteen/attack(mob/living/M, mob/living/user)
 	if(!CanUseEgo(user))
 		return
@@ -636,7 +641,7 @@
 	*/
 	var/channeling_duration_start = 1 SECONDS
 	var/channeling_cycle_max = 6
-	var/vine_damage = 40
+	special_damage = 40
 
 /obj/item/ego_weapon/stem/attack_self(mob/living/user)
 	. = ..()
@@ -669,7 +674,7 @@
 				if(user.faction_check_mob(C) && !vine_damage_bonus)
 					continue
 				new /obj/effect/temp_visual/vinespike(get_turf(C))
-				C.deal_damage(vine_damage + vine_damage_bonus, BLACK_DAMAGE, user, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_SPECIAL))
+				C.deal_damage(special_damage + vine_damage_bonus, BLACK_DAMAGE, user, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_SPECIAL))
 				affected_mobs += 1
 			playsound(loc, 'sound/creatures/venus_trap_hurt.ogg', min(75, affected_mobs * 15), TRUE, round( affected_mobs * 0.5))
 		AlterMoveResist(user, 0.4)
@@ -705,7 +710,7 @@
 							)
 	var/ranged_cooldown
 	var/ranged_cooldown_time = 1.2 SECONDS
-	var/ranged_damage = 60
+	special_damage = 60
 
 /obj/item/ego_weapon/ebony_stem/afterattack(atom/A, mob/living/user, proximity_flag, params)
 	if(ranged_cooldown > world.time)
@@ -722,7 +727,7 @@
 	..()
 	ranged_cooldown = world.time + ranged_cooldown_time
 	if(do_after(user, 5))
-		var/damage_dealt = (ranged_damage * force_multiplier)
+		var/damage_dealt = special_damage * CalcDamage(user)
 		playsound(target_turf, 'sound/abnormalities/ebonyqueen/attack.ogg', 50, TRUE)
 		for(var/turf/open/T in RANGE_TURFS(1, target_turf))
 			new /obj/effect/temp_visual/thornspike(T)
@@ -749,7 +754,7 @@
 	var/hit_count = 0
 	var/max_count = 16
 	var/special_cost = 4
-	var/special_force = 20
+	special_damage = 20	//Used in the AOE
 	var/special_combo = 0
 	var/special_combo_mult = 0.2
 	var/decay_time = 3 SECONDS
@@ -831,11 +836,8 @@
 	playsound(src, hitsound, 75, FALSE, 4)
 	for(var/turf/T in orange(1, user)) // Most of this code was jacked from Harvest tbh
 		new /obj/effect/temp_visual/smash_effect(T)
-	var/aoe = special_force * (1 + special_combo_mult * special_combo)
-	var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
-	var/justicemod = 1 + userjust/100
-	aoe*=justicemod
-	aoe*=force_multiplier
+	var/aoe = special_damage * (1 + special_combo_mult * special_combo)
+	aoe*=CalcDamage(user)
 	for(var/mob/living/L in range(1, user))
 		if(L == user) // Might remove FF immunity sometime
 			continue
@@ -861,11 +863,8 @@
 		for(var/turf/T in hit_turfs) // Once again mostly jacked from harvest, but modified to work with hit_turfs instead of an on-the-spot orange
 			new /obj/effect/temp_visual/smash_effect(T)
 			for(var/mob/living/L in T.contents)
-				var/aoe = special_force * 1 + (special_combo_mult * special_combo)
-				var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
-				var/justicemod = 1 + userjust/100
-				aoe*=justicemod
-				aoe*=force_multiplier
+				var/aoe = special_damage * 1 + (special_combo_mult * special_combo)
+				aoe *= CalcDamage(user)
 				if(L == user)
 					continue
 				if(ishuman(L))
@@ -1296,9 +1295,7 @@
 	if(!CanUseEgo(user))
 		return
 	if(!(target.status_flags & GODMODE) && target.stat != DEAD)
-		var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
-		var/justicemod = 1 + userjust/100
-		AdjustThirst(force * justicemod)
+		AdjustThirst(force * CalcDamage(user))
 		var/heal_amt = force* 0.05
 		if(siphoning)
 			heal_amt *= 4
@@ -1360,7 +1357,7 @@
 							JUSTICE_ATTRIBUTE = 80
 							)
 
-	var/aoe_damage = 15
+	special_damage = 15	//used for AOE
 	var/aoe_damage_type = BLACK_DAMAGE
 	var/aoe_range = 2
 	var/attacks = 0
@@ -1382,8 +1379,8 @@
 			hitsound = 'sound/abnormalities/wrath_servant/big_smash2.ogg'
 		if(2)
 			hitsound = 'sound/abnormalities/wrath_servant/big_smash3.ogg'
-	var/damage = aoe_damage * (1 + (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))/100)
-	damage *= force_multiplier
+	var/damage = special_damage
+	damage *= CalcDamage(user)
 	if(attacks == 0)
 		damage *= 3
 	if(user.sanity_lost)
@@ -1448,9 +1445,11 @@
 	hitsound = 'sound/weapons/blade1.ogg'
 	attribute_requirements = list(FORTITUDE_ATTRIBUTE = 80)
 
+	special_multiplier = 2	//Used for lower than max health
+
 /obj/item/ego_weapon/diffraction/attack(mob/living/target, mob/living/user)
 	if((target.health <= target.maxHealth * 0.4) && !(target.status_flags & GODMODE))
-		force *= 2
+		force *= special_multiplier
 	..()
 	force = initial(force)
 
@@ -1465,6 +1464,7 @@
 							JUSTICE_ATTRIBUTE = 80
 							)
 	damtype = PALE_DAMAGE
+	special_multiplier = 2
 	var/mark_damage
 	var/mark_type = RED_DAMAGE
 	crit_multiplier = 1.5
@@ -1481,12 +1481,8 @@
 		to_chat(user, span_danger("You enscribe a code on [target]!"))
 		balloon_alert(user, "You enscribe a code on [target]!")
 
-		mark_damage = force*2
-		//I gotta grab  justice here
-		var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
-		var/justicemod = 1 + userjust/100
-		mark_damage *= justicemod
-		mark_damage *= force_multiplier
+		mark_damage = force*special_multiplier
+		mark_damage *= CalcDamage(user)
 
 		var/obj/effect/infinity/P = new get_turf(target)
 		if(mark_type == RED_DAMAGE)
@@ -1566,14 +1562,11 @@
 	can_spin = FALSE
 	if(do_after(user, 13, src))
 		var/aoe = force
-		var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
-		var/justicemod = 1 + userjust/100
 		var/firsthit = TRUE //One target takes full damage
 		can_spin = TRUE
 		addtimer(CALLBACK(src, PROC_REF(spin_reset)), 13)
 		playsound(src, 'sound/abnormalities/clouded_monk/monk_bite.ogg', 75, FALSE, 4)
-		aoe*=justicemod
-		aoe*=force_multiplier
+		aoe*=CalcDamage(user)
 
 		for(var/turf/T in orange(2, user))
 			new /obj/effect/temp_visual/smash_effect(T)
@@ -1680,7 +1673,7 @@
 	attribute_requirements = list(
 							FORTITUDE_ATTRIBUTE = 80
 							)
-
+	special_damage = 25	//Used for the AOE
 	var/dash_cooldown
 	var/dash_cooldown_time = 6 SECONDS
 	var/dash_range = 10
@@ -1733,7 +1726,7 @@
 		user.pixel_z = 0
 
 /obj/item/ego_weapon/rimeshank/proc/JumpAttack(atom/A, mob/living/user, proximity_flag, params)
-	force = 25
+	force = special_damage
 	A.attackby(src,user)
 	force = initial(force)
 	can_attack = FALSE
@@ -1741,11 +1734,8 @@
 	for(var/mob/living/L in range(2, A))
 		if(L.z != user.z) // Not on our level
 			continue
-		var/aoe = 25
-		var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
-		var/justicemod = 1 + userjust/100
-		aoe*=justicemod
-		aoe*=force_multiplier
+		var/aoe = special_damage
+		aoe*=CalcDamage(user)
 		if(L == user || ishuman(L))
 			continue
 		L.deal_damage(aoe, RED_DAMAGE, user, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
@@ -1980,6 +1970,7 @@
 							FORTITUDE_ATTRIBUTE = 60,
 							TEMPERANCE_ATTRIBUTE = 60
 							)
+	special_damage = 16		//Used for Frenzy
 	crit_multiplier = 2
 
 /obj/item/ego_weapon/cobalt/attack(mob/living/target, mob/living/user)
@@ -2009,7 +2000,7 @@
 	if(prob(25))
 		wolf.visible_message(span_warning("[wolf] claws [those_we_rend] in a blind frenzy!"), span_warning("You swipe your claws at [those_we_rend]!"))
 	if(ishuman(wolf))
-		force = 16
+		force = special_damage
 		playsound(loc, hitsound, get_clamped_volume(), TRUE, extrarange = stealthy_audio ? SILENCED_SOUND_EXTRARANGE : -1, falloff_distance = 0)
 		wolf.do_attack_animation(those_we_rend)
 		those_we_rend.attacked_by(src, wolf)
@@ -2148,9 +2139,7 @@
 	var/turf/T = get_turf(src)
 	for(var/mob/living/L in view(1, T))
 		var/aoe = (charge_amount + 5) * 5
-		var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
-		var/justicemod = 1 + userjust/100
-		aoe*=justicemod
+		aoe*=CalcDamage(user)
 		if(L == user || ishuman(L))
 			continue
 		L.deal_damage(aoe, BLACK_DAMAGE, user, attack_type = (ATTACK_TYPE_THROWING | ATTACK_TYPE_SPECIAL))
@@ -2194,6 +2183,7 @@
 							FORTITUDE_ATTRIBUTE = 60,
 							PRUDENCE_ATTRIBUTE = 60
 							)
+	special_damage = 42		//Used for when transformed.
 	var/chosen_style
 	var/transformed = FALSE
 
@@ -2209,7 +2199,7 @@
 	playsound(get_turf(src),'sound/effects/limbus_death.ogg', 75, 1)//YEOWCH!
 	icon_state = ("hyde_" + chosen_style)
 	update_icon_state()
-	force = 42
+	force = special_damage
 	switch(chosen_style)
 		if("red")
 			user.deal_damage(50, RED_DAMAGE, flags = (DAMAGE_FORCED))
@@ -2307,9 +2297,7 @@
 /obj/item/ego_weapon/rosa/attack(mob/living/M, mob/living/user)
 	..()
 	if(M==user)
-		var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
-		var/justicemod = 1 + userjust/100
-		var/heal_amount = (force * justicemod * 0.75)
+		var/heal_amount = (force * CalcDamage(user) * 0.75)
 		var/armormod = (user.run_armor_check(null, WHITE_DAMAGE))
 		if(armormod)//skips all the math if you're not wearing armor
 			heal_amount -= (heal_amount * (armormod / 100))//wearing da capo will reduce it to 0
@@ -2540,14 +2528,14 @@
 	attribute_requirements = list(
 							JUSTICE_ATTRIBUTE = 80
 							)
+	special_multiplier = 1.2	//Used in the finisher
+	special_damage = 55			//Used in the AOE
 	var/combo = 0
 	var/combo_time
 	var/combo_wait = 10
 	var/combo_speed = 0.4
 	var/combo_on = TRUE
 	var/diving = FALSE
-	var/aoe_base_damage = 55
-	var/finisher_coeff = 1.2
 
 /obj/item/ego_weapon/abyssal_route/attack_self(mob/user)
 	..()
@@ -2571,7 +2559,7 @@
 		combo_time = world.time + combo_wait
 		if(diving)
 			combo = -1
-			force *= finisher_coeff
+			force *= special_multiplier
 			playsound(src, 'sound/weapons/fwoosh.ogg', 300, FALSE, 9)
 
 	..()
@@ -2632,11 +2620,8 @@
 	for(var/mob/living/L in range(1, user))
 		if(L.z != user.z) // Not on our level
 			continue
-		var/aoe = aoe_base_damage
-		var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
-		var/justicemod = 1 + userjust/100
-		aoe*=justicemod
-		aoe*=force_multiplier
+		var/aoe = special_Damage
+		aoe*=CalcDamage(user)
 		if(L == user || ishuman(L))
 			continue
 		L.deal_damage(aoe, BLACK_DAMAGE, user, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
@@ -2656,13 +2641,13 @@
 	attribute_requirements = list(
 							JUSTICE_ATTRIBUTE = 80
 							)
+	special_damage = 11		//How much damage you gain per charge.
 	var/charges = 0
-	var/force_per_charge = 11
 
 /obj/item/ego_weapon/windup/attack(mob/living/M, mob/living/user)
 	if(!CanUseEgo(user))
 		return
-	force = charges > 0 ? (charges * force_per_charge + initial(force)) : initial(force)
+	force = charges > 0 ? (charges * special_damage + initial(force)) : initial(force)
 	..()
 	if(charges > 0)
 		if(charges == 4)
@@ -2735,9 +2720,9 @@
 	attribute_requirements = list(
 							PRUDENCE_ATTRIBUTE = 60,
 							TEMPERANCE_ATTRIBUTE = 60)
-	var/spin_range = 3
 	/// Special attack damage, affected by Justice. Remember that you can use this while attacking.
-	var/spin_base_damage = 28
+	special_damage = 28
+	var/spin_range = 3
 	var/spin_windup = 1.2 SECONDS
 	var/spinning = FALSE
 	var/spam_prevention_cd
@@ -2769,11 +2754,8 @@
 
 	if(do_after(user, spin_windup, src, interaction_key = "sunyata_spin", max_interact_count = 1))
 		playsound(src, 'sound/abnormalities/myformempties/MFEattack.ogg', 75, FALSE, 4)//get a proper sound for this
-		var/aoe = spin_base_damage
-		var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
-		var/justicemod = 1 + userjust/100
-		aoe*=force_multiplier
-		aoe*=justicemod
+		var/aoe = special_damage
+		aoe*=CalcDamage(user)
 		var/turf/target_c = get_turf(src)
 		var/list/turf_list = list()
 		for(var/i = 1 to spin_range)
@@ -3132,6 +3114,7 @@
 		TEMPERANCE_ATTRIBUTE = 60,
 		JUSTICE_ATTRIBUTE = 60
 		)
+	special_multiplier = 2
 
 /obj/item/ego_weapon/encompassing/attack(mob/living/target, mob/living/user)
 	if(!CanUseEgo(user))
@@ -3139,7 +3122,7 @@
 	..()
 	if(do_after(user, 7, src))
 		force = initial(force)
-		force += 35
+		force *= special_multiplier
 	else
 		to_chat(user, "<span class= 'spider'><b>Your attack was unstrengthened!</b></span>")
 		balloon_alert(user, "Your attack was unstrengthened!")
