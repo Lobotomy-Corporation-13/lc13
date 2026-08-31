@@ -4535,6 +4535,8 @@
 #include "ModularLobotomy\extra_mobs\lc13_seed_of_greed.dm"
 #include "ModularLobotomy\extra_mobs\necromancer.dm"
 #include "ModularLobotomy\extra_mobs\necromancer_mobs.dm"
+#include "ModularLobotomy\extra_mobs\shrungeon_bosses.dm"
+#include "ModularLobotomy\extra_mobs\shrungeon_enemies.dm"
 #include "ModularLobotomy\extra_mobs\syndicatespaceman.dm"
 #include "ModularLobotomy\extra_mobs\tegu.dm"
 #include "ModularLobotomy\extra_mobs\the_claw.dm"
