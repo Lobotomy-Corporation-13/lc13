@@ -1,0 +1,216 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"a" = (
+/obj/item/chair/stool/bar,
+/turf/open/floor/facility/dark,
+/area/city/backstreets_room)
+"d" = (
+/obj/structure/chair/stool,
+/mob/living/simple_animal/hostile/humanoid/rat,
+/turf/open/floor/facility/dark,
+/area/city/backstreets_room)
+"e" = (
+/obj/machinery/door/airlock/grunge,
+/turf/open/floor/facility/dark,
+/area/city/backstreets_room)
+"i" = (
+/obj/structure/filingcabinet/chestdrawer,
+/turf/open/floor/facility/dark,
+/area/city/backstreets_room)
+"m" = (
+/obj/structure/chair/sofa/left{
+	dir = 1
+	},
+/turf/open/floor/facility/dark,
+/area/city/backstreets_room)
+"p" = (
+/obj/effect/turf_decal/weather/dirt,
+/obj/effect/decal/cleanable/blood/splatter/over_window,
+/turf/closed/wall/bathhouse,
+/area/city/backstreets_room)
+"q" = (
+/obj/effect/gibspawner/human/bodypartless,
+/turf/open/floor/facility/dark,
+/area/city/backstreets_room)
+"r" = (
+/mob/living/simple_animal/hostile/humanoid/rat/hammer,
+/turf/open/floor/facility/dark,
+/area/city/backstreets_room)
+"t" = (
+/obj/effect/turf_decal/weather/dirt,
+/turf/closed/wall/bathhouse,
+/area/city/backstreets_room)
+"w" = (
+/obj/structure/sign/poster/ripped,
+/turf/closed/wall/bathhouse,
+/area/city/backstreets_room)
+"x" = (
+/mob/living/simple_animal/hostile/humanoid/rat/knife,
+/turf/open/floor/facility/dark,
+/area/city/backstreets_room)
+"z" = (
+/obj/structure/sign/poster/official/get_your_legs,
+/turf/closed/indestructible/reinforced/old,
+/area/city/backstreets_room)
+"A" = (
+/obj/structure/table/greyscale,
+/obj/structure/lootcrate/workshopallas,
+/turf/open/floor/facility/dark,
+/area/city/backstreets_room)
+"B" = (
+/mob/living/simple_animal/hostile/humanoid/rat/pipe,
+/turf/open/floor/facility/dark,
+/area/city/backstreets_room)
+"J" = (
+/obj/structure/table/greyscale,
+/obj/item/reagent_containers/food/drinks/bottle{
+	pixel_y = -12;
+	pixel_x = -11
+	},
+/obj/structure/lootcrate/workshopallas,
+/turf/open/floor/facility/dark,
+/area/city/backstreets_room)
+"K" = (
+/turf/open/floor/facility/dark,
+/area/city/backstreets_room)
+"L" = (
+/obj/structure/table/greyscale,
+/obj/structure/frame/computer{
+	dir = 8
+	},
+/turf/open/floor/facility/dark,
+/area/city/backstreets_room)
+"O" = (
+/obj/structure/rack,
+/obj/item/ego_weapon/city/yun,
+/obj/item/ego_weapon/city/yun,
+/obj/item/ego_weapon/city/yun,
+/obj/structure/window/reinforced/survival_pod,
+/obj/machinery/door/window/survival_pod{
+	dir = 4
+	},
+/turf/open/floor/facility/dark,
+/area/city/backstreets_room)
+"S" = (
+/obj/structure/chair/sofa/right{
+	dir = 1
+	},
+/turf/open/floor/facility/dark,
+/area/city/backstreets_room)
+"U" = (
+/obj/structure/rack,
+/obj/item/ego_weapon/city/yun/fist,
+/obj/structure/window/reinforced/survival_pod{
+	dir = 1
+	},
+/obj/machinery/door/window/survival_pod{
+	dir = 4
+	},
+/turf/open/floor/facility/dark,
+/area/city/backstreets_room)
+"V" = (
+/obj/structure/lootcrate/money,
+/turf/open/floor/facility/dark,
+/area/city/backstreets_room)
+"W" = (
+/obj/structure/filingcabinet/chestdrawer,
+/obj/item/reagent_containers/food/drinks/bottle{
+	pixel_x = -12;
+	pixel_y = -8
+	},
+/turf/open/floor/facility/dark,
+/area/city/backstreets_room)
+"X" = (
+/obj/structure/table/greyscale,
+/obj/item/paper_bin,
+/turf/open/floor/facility/dark,
+/area/city/backstreets_room)
+"Y" = (
+/turf/closed/indestructible/reinforced/old,
+/area/city/backstreets_room)
+"Z" = (
+/obj/structure/chair/comfy{
+	dir = 4
+	},
+/turf/open/floor/facility/dark,
+/area/city/backstreets_room)
+
+(1,1,1) = {"
+Y
+Y
+Y
+Y
+Y
+Y
+"}
+(2,1,1) = {"
+Y
+U
+O
+V
+K
+Y
+"}
+(3,1,1) = {"
+w
+Z
+x
+K
+K
+Y
+"}
+(4,1,1) = {"
+Y
+L
+A
+i
+K
+Y
+"}
+(5,1,1) = {"
+p
+B
+q
+K
+K
+Y
+"}
+(6,1,1) = {"
+Y
+K
+K
+r
+m
+Y
+"}
+(7,1,1) = {"
+t
+K
+W
+K
+S
+Y
+"}
+(8,1,1) = {"
+Y
+d
+J
+a
+K
+Y
+"}
+(9,1,1) = {"
+w
+K
+X
+K
+K
+e
+"}
+(10,1,1) = {"
+Y
+Y
+z
+Y
+Y
+Y
+"}
