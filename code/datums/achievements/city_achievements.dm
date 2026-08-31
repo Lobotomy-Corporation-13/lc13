@@ -163,3 +163,34 @@
 	desc = "Forge 50 weapons as a workshop attendant on City of Light."
 	database_id = MEDAL_WEAPON_FORGER
 	difficulty = ACHIEVEMENT_HARD
+
+// Echo Office Fixer Achievements
+/datum/award/achievement/lc13/city/echo_nicholas
+	name = "Memory Forged"
+	desc = "You've defeated Nicholas, the Memory Forger, in a duel."
+	database_id = MEDAL_ECHO_NICHOLAS
+	difficulty = ACHIEVEMENT_HARD
+
+/datum/award/achievement/lc13/city/echo_asera
+	name = "Flames Quenched"
+	desc = "You've defeated Asera, the Sanguine Flame, in a duel."
+	database_id = MEDAL_ECHO_ASERA
+
+/datum/award/achievement/lc13/city/echo_remus
+	name = "Light Dimmed"
+	desc = "You've defeated Remus, the Amber Knight, in a duel."
+	database_id = MEDAL_ECHO_REMUS
+
+/datum/award/achievement/lc13/city/echo_all_solo
+	name = "Echo Office Challenger"
+	title = "Echo Challenger"
+	desc = "You've defeated all Echo Office fixers in solo duels."
+	database_id = MEDAL_ECHO_ALL_SOLO
+	difficulty = ACHIEVEMENT_HARD
+
+/datum/award/achievement/lc13/city/echo_duo_win
+	name = "Double Trouble"
+	title = "Duo Duelist"
+	desc = "You've won a duo duel against two Echo Office fixers."
+	database_id = MEDAL_ECHO_DUO_WIN
+	difficulty = ACHIEVEMENT_HARD

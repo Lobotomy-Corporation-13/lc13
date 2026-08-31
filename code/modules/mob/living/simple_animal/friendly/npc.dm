@@ -68,7 +68,7 @@
 	icon_state = "priest"
 	icon_living = "priest"
 	icon_dead = "none"
-	speech = list("Well, Well!", "I never expected guests around this time.", "Emote: bows", "You may call me the Redeemed Star, a humble priest.", "Feel free to rest here, As the church of the galaxy is open to all.", "Delay: 20")
+	speech = list("Ah, welcome.", "I did not expect visitors at this hour.", "Emote: bows", "You may call me the Redeemed Star. I serve as support for Echo Office.", "Feel free to rest here. This sanctuary is open to all weary travelers.", "Delay: 20")
 	default_delay = 30
 
 /mob/living/simple_animal/npc/priest/Leave()
@@ -77,7 +77,7 @@
 	pixel_x = -7
 	icon_state = "priest_wings_closed"
 	SLEEP_CHECK_DEATH(20)
-	say("Now, Please give me a moment to check on the surrounding area.")
+	say("If you would excuse me, I must check on the surrounding area.")
 	animate(src, pixel_z = 5, time = 1 SECONDS, flags = ANIMATION_RELATIVE)
 	SLEEP_CHECK_DEATH(10)
 	animate(src, pixel_z = -5, time = 1 SECONDS, flags = ANIMATION_RELATIVE)
@@ -99,7 +99,7 @@
 	icon_state = "electic"
 	icon_living = "electic"
 	icon_dead = "none"
-	speech = list("Oh! Another comrade has arived!", "I have been clearing out this area of those filthy sweepers!", "Emote: wipes their daggers clean", "You may call me the Amber Knight, Noblest of Knights!", "Now with your presence here, may I trust you finish clearing up this area?", "Only a few sweepers remain here, So they should be no problem.")
+	speech = list("Hark! Another comrade doth arrive!", "I have been purging this area of those wretched sweepers!", "Emote: wipes their daggers clean", "Thou mayest call me the Amber Knight, Noblest of Knights!", "Now with thy presence here, might I trust thee to finish clearing this area?", "Only a few sweepers remain, so they should pose no challenge to one such as thyself!")
 	default_delay = 30
 
 /mob/living/simple_animal/npc/electic/Leave()
@@ -108,14 +108,14 @@
 	dir = 4
 	SLEEP_CHECK_DEATH(10)
 	animate(src, pixel_x = -10, time = 1 SECONDS, flags = ANIMATION_RELATIVE)
-	say("I still have other errands to run!")
+	say("Alas, I still have other errands to attend to!")
 	dir = 8
 	SLEEP_CHECK_DEATH(10)
 	animate(src, pixel_x = 10, time = 1 SECONDS, flags = ANIMATION_RELATIVE)
 	dir = 4
 	SLEEP_CHECK_DEATH(10)
 	animate(src, pixel_x = -10, time = 1 SECONDS, flags = ANIMATION_RELATIVE)
-	say("Aser-, The Sanguine Flame must be wating for me!")
+	say("Aser-, The Sanguine Flame must be awaiting mine return!")
 	dir = 8
 	SLEEP_CHECK_DEATH(10)
 	new /obj/effect/temp_visual/dir_setting/ninja/phase/out (get_turf(src))

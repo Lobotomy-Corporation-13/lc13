@@ -284,6 +284,7 @@
 	name = "strange table"
 	},
 /obj/item/ksyringe,
+/obj/item/quest_ticket/echo_office,
 /turf/open/floor/facility/dark,
 /area/city/backstreets_room)
 "KU" = (
