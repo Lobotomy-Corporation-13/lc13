@@ -1,0 +1,658 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"a" = (
+/turf/closed/indestructible/city/ironplate,
+/area/city/antag_base)
+"b" = (
+/obj/machinery/light{
+	dir = 8;
+	pixel_y = 4;
+	pixel_x = -10
+	},
+/turf/open/floor/facility/dark,
+/area/city/antag_base)
+"d" = (
+/obj/machinery/door/airlock/security/glass{
+	name = "Udjat Scout Bedroom"
+	},
+/turf/open/floor/mineral/plastitanium{
+	color = "#EDD956"
+	},
+/area/city/antag_base)
+"e" = (
+/obj/structure/rack{
+	pixel_x = -1
+	},
+/obj/item/ego_weapon/ranged/city/udjat,
+/obj/item/clothing/suit/armor/ego_gear/city/udjat_combat,
+/obj/item/ego_mag/udjat,
+/obj/item/ego_mag/udjat,
+/obj/item/clothing/head/udjat,
+/turf/open/floor/mineral/plastitanium{
+	color = "#EDD956"
+	},
+/area/city/antag_base)
+"h" = (
+/obj/structure/table/wood/fancy,
+/obj/item/toy/cards/deck/tarot,
+/turf/open/floor/facility/dark,
+/area/city/antag_base)
+"i" = (
+/obj/structure/chair/plastic{
+	dir = 1
+	},
+/turf/open/floor/facility/dark,
+/area/city/antag_base)
+"j" = (
+/obj/machinery/vending/cola,
+/turf/open/floor/facility/dark,
+/area/city/antag_base)
+"k" = (
+/turf/closed/indestructible/fakeglass,
+/area/city/antag_base)
+"l" = (
+/obj/structure/table/wood/fancy,
+/obj/item/toy/cards/deck,
+/turf/open/floor/facility/dark,
+/area/city/antag_base)
+"m" = (
+/obj/structure/table/wood/fancy,
+/obj/item/reagent_containers/food/drinks/bottle/whiskey,
+/turf/open/floor/lce/plate/dark,
+/area/city/antag_base)
+"n" = (
+/obj/machinery/vending/bullets,
+/obj/machinery/light{
+	dir = 8;
+	pixel_y = 4;
+	pixel_x = -10
+	},
+/turf/open/floor/facility/dark,
+/area/city/antag_base)
+"p" = (
+/obj/structure/bed/pod,
+/obj/item/bedsheet/hos,
+/obj/machinery/light{
+	dir = 4;
+	pixel_x = 9;
+	pixel_y = 4
+	},
+/turf/open/floor/lce/plate/dark,
+/area/city/antag_base)
+"q" = (
+/obj/structure/rack{
+	pixel_x = -1
+	},
+/obj/item/clothing/suit/armor/ego_gear/city/udjat_limbus,
+/turf/open/floor/lce/plate/dark,
+/area/city/antag_base)
+"r" = (
+/obj/structure/dresser,
+/turf/open/floor/lce/plate/dark,
+/area/city/antag_base)
+"s" = (
+/obj/structure/chair/plastic{
+	dir = 8
+	},
+/obj/machinery/light{
+	dir = 4;
+	pixel_x = 9;
+	pixel_y = 4
+	},
+/turf/open/floor/facility/dark,
+/area/city/antag_base)
+"t" = (
+/obj/machinery/door/airlock/security/glass{
+	name = "Udjat Gunner Bedroom"
+	},
+/turf/open/floor/mineral/plastitanium{
+	color = "#EDD956"
+	},
+/area/city/antag_base)
+"u" = (
+/turf/open/floor/facility/dark,
+/area/city/antag_base)
+"v" = (
+/obj/machinery/door/airlock/grunge{
+	name = "syndicate hideout";
+	req_access_txt = "150"
+	},
+/turf/open/floor/facility/dark,
+/area/city/antag_base)
+"w" = (
+/obj/structure/chair/plastic{
+	dir = 4
+	},
+/turf/open/floor/facility/dark,
+/area/city/antag_base)
+"x" = (
+/obj/structure/barricade/sandbags,
+/turf/open/floor/facility/dark,
+/area/city/antag_base)
+"y" = (
+/obj/structure/chair/comfy/shuttle{
+	color = "#49473B";
+	name = "fancy chair";
+	desc = "A comfortable seat. Since its custom made, its quite expensive";
+	dir = 1;
+	pixel_y = 2
+	},
+/turf/open/floor/mineral/plastitanium{
+	color = "#EDD956"
+	},
+/area/city/antag_base)
+"A" = (
+/obj/structure/chair/comfy/shuttle{
+	color = "#9cadc7";
+	name = "fancy chair";
+	desc = "A comfortable seat. Since its custom made, its quite expensive";
+	dir = 1
+	},
+/turf/open/floor/facility/dark,
+/area/city/antag_base)
+"C" = (
+/obj/structure/table/wood/fancy,
+/obj/machinery/photocopier{
+	pixel_y = 7
+	},
+/turf/open/floor/lce/plate/dark,
+/area/city/antag_base)
+"D" = (
+/obj/item/clothing/head/udjat,
+/obj/structure/table/wood/fancy,
+/obj/item/clothing/head/hos/beret{
+	pixel_y = 10
+	},
+/obj/machinery/light{
+	dir = 8;
+	pixel_y = 4;
+	pixel_x = -10
+	},
+/turf/open/floor/lce/plate/dark,
+/area/city/antag_base)
+"E" = (
+/obj/machinery/light{
+	dir = 4;
+	pixel_x = 9;
+	pixel_y = 4
+	},
+/turf/open/floor/facility/dark,
+/area/city/antag_base)
+"F" = (
+/obj/structure/table/wood/fancy,
+/obj/item/paper_bin{
+	pixel_y = 6
+	},
+/obj/item/pen/fountain/captain{
+	pixel_y = 6
+	},
+/turf/open/floor/lce/plate/dark,
+/area/city/antag_base)
+"G" = (
+/obj/machinery/door/airlock/security/glass{
+	name = "Udjat Captain Office"
+	},
+/turf/open/floor/mineral/plastitanium{
+	color = "#EDD956"
+	},
+/area/city/antag_base)
+"H" = (
+/obj/machinery/light{
+	dir = 4;
+	pixel_x = 9;
+	pixel_y = 4
+	},
+/obj/structure/table/wood/fancy,
+/obj/item/reagent_containers/food/drinks/drinkingglass/shotglass,
+/turf/open/floor/lce/plate/dark,
+/area/city/antag_base)
+"I" = (
+/obj/structure/rack{
+	pixel_x = -1
+	},
+/obj/item/clothing/suit/armor/ego_gear/city/udjat_combat,
+/obj/machinery/light{
+	dir = 8;
+	pixel_y = 4;
+	pixel_x = -10
+	},
+/turf/open/floor/lce/plate/dark,
+/area/city/antag_base)
+"J" = (
+/obj/structure/barricade/sandbags,
+/obj/machinery/light{
+	dir = 8;
+	pixel_y = 4;
+	pixel_x = -10
+	},
+/turf/open/floor/facility/dark,
+/area/city/antag_base)
+"K" = (
+/obj/structure/barricade/sandbags,
+/obj/machinery/light{
+	dir = 4;
+	pixel_x = 9;
+	pixel_y = 4
+	},
+/turf/open/floor/facility/dark,
+/area/city/antag_base)
+"L" = (
+/obj/structure/curtain/cloth/fancy,
+/turf/open/floor/lce/plate/dark,
+/area/city/antag_base)
+"N" = (
+/obj/structure/chair/plastic{
+	dir = 8
+	},
+/turf/open/floor/facility/dark,
+/area/city/antag_base)
+"O" = (
+/obj/structure/rack{
+	pixel_x = -1
+	},
+/obj/item/ego_weapon/city/udjat_limbus,
+/obj/item/clothing/suit/armor/ego_gear/city/udjat_limbus,
+/obj/item/clothing/head/udjat,
+/turf/open/floor/lce/plate/dark,
+/area/city/antag_base)
+"P" = (
+/obj/machinery/door/airlock/security/glass{
+	name = "Udjat Break Room"
+	},
+/turf/open/floor/facility/dark,
+/area/city/antag_base)
+"S" = (
+/obj/structure/table/wood/fancy,
+/obj/machinery/light{
+	dir = 4;
+	pixel_x = 9;
+	pixel_y = 4
+	},
+/obj/item/modular_computer/laptop/preset,
+/turf/open/floor/lce/plate/dark,
+/area/city/antag_base)
+"T" = (
+/turf/open/floor/mineral/plastitanium{
+	color = "#EDD956"
+	},
+/area/city/antag_base)
+"U" = (
+/turf/open/floor/lce/plate/dark,
+/area/city/antag_base)
+"V" = (
+/obj/machinery/vending/snack/orange,
+/obj/machinery/light{
+	dir = 8;
+	pixel_y = 4;
+	pixel_x = -10
+	},
+/turf/open/floor/facility/dark,
+/area/city/antag_base)
+"W" = (
+/obj/structure/rack{
+	pixel_x = -1
+	},
+/obj/item/ego_weapon/ranged/city/udjat,
+/obj/item/ego_weapon/city/udjat_limbus,
+/obj/item/ego_mag/udjat,
+/obj/item/ego_mag/udjat,
+/obj/item/ego_mag/udjat,
+/turf/open/floor/lce/plate/dark,
+/area/city/antag_base)
+"Z" = (
+/obj/machinery/light{
+	dir = 4;
+	pixel_x = 9;
+	pixel_y = 4
+	},
+/obj/structure/bed/pod,
+/obj/item/bedsheet/hos,
+/turf/open/floor/mineral/plastitanium{
+	color = "#EDD956"
+	},
+/area/city/antag_base)
+
+(1,1,1) = {"
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+"}
+(2,1,1) = {"
+a
+O
+U
+a
+O
+U
+a
+O
+U
+a
+O
+U
+a
+"}
+(3,1,1) = {"
+a
+p
+U
+a
+p
+U
+a
+p
+U
+a
+p
+U
+a
+"}
+(4,1,1) = {"
+a
+a
+d
+a
+a
+d
+a
+a
+d
+a
+a
+d
+a
+"}
+(5,1,1) = {"
+a
+u
+u
+u
+u
+u
+u
+u
+u
+u
+u
+u
+a
+"}
+(6,1,1) = {"
+a
+a
+d
+a
+a
+d
+a
+u
+a
+a
+a
+t
+a
+"}
+(7,1,1) = {"
+a
+O
+U
+a
+O
+U
+a
+u
+a
+e
+T
+T
+a
+"}
+(8,1,1) = {"
+a
+p
+U
+a
+p
+U
+a
+u
+a
+Z
+T
+T
+a
+"}
+(9,1,1) = {"
+a
+a
+a
+a
+a
+a
+a
+u
+a
+a
+a
+a
+a
+"}
+(10,1,1) = {"
+a
+D
+U
+q
+I
+a
+u
+u
+w
+J
+u
+u
+a
+"}
+(11,1,1) = {"
+a
+C
+T
+T
+W
+a
+u
+u
+u
+x
+u
+u
+a
+"}
+(12,1,1) = {"
+a
+F
+y
+T
+U
+a
+u
+u
+u
+u
+u
+u
+v
+"}
+(13,1,1) = {"
+a
+S
+T
+T
+U
+G
+u
+u
+u
+x
+u
+u
+a
+"}
+(14,1,1) = {"
+a
+a
+L
+a
+a
+a
+u
+u
+N
+K
+u
+u
+a
+"}
+(15,1,1) = {"
+a
+r
+T
+T
+m
+a
+u
+u
+a
+a
+a
+a
+a
+"}
+(16,1,1) = {"
+a
+p
+T
+T
+H
+a
+u
+u
+k
+V
+j
+n
+a
+"}
+(17,1,1) = {"
+a
+a
+a
+a
+a
+a
+u
+u
+P
+u
+u
+u
+a
+"}
+(18,1,1) = {"
+a
+b
+u
+i
+b
+i
+u
+u
+k
+u
+u
+u
+a
+"}
+(19,1,1) = {"
+a
+u
+u
+i
+u
+i
+u
+u
+k
+w
+u
+u
+a
+"}
+(20,1,1) = {"
+a
+A
+u
+u
+u
+u
+u
+u
+k
+l
+u
+w
+a
+"}
+(21,1,1) = {"
+a
+u
+u
+i
+u
+i
+u
+u
+k
+N
+u
+h
+a
+"}
+(22,1,1) = {"
+a
+E
+u
+i
+E
+i
+u
+u
+k
+E
+u
+s
+a
+"}
+(23,1,1) = {"
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+"}
