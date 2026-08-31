@@ -8,7 +8,7 @@
 	/// We multiply timelocks and abno arrival times by the inverse of this. For example, coefficient of 1.5 would multiply our timelocks and arrivals by 0.667.
 	var/speed_coefficient = 1
 	/// Assoc list, the keys are ordeal levels and the values are the minimum amount of melts since the last ordeal for this ordeal to happen
-	var/minimum_ordeal_gap = alist(1 = 3, 2 = 4, 3 = 5, 4 = 8)
+	var/minimum_ordeal_gap = alist(1 = 3, 2 = 4, 3 = 5, 4 = 6)
 	/// Assoc list, the keys are ordeal levels and the values are how many meltdowns less should it take for each ordeal to happen. Will respect minimum_ordeal_gap
 	/// The values should be 0 or negative. If you make them positive you're actually delaying the ordeals further... which I guess is valid? For slower speeds?
 	// Sadly you have to fill this out manually, I mean I wish we could just apply the speed_coefficient but it just... won't work well with this.
@@ -22,7 +22,7 @@
 	player_facing_name = "Fast Speed (1.25x)"
 	available_setting = TRUE
 	speed_coefficient = 1.25
-	minimum_ordeal_gap = alist(1 = 3, 2 = 4, 3 = 4, 4 = 6)
+	minimum_ordeal_gap = alist(1 = 3, 2 = 4, 3 = 4, 4 = 5)
 	meltdowns_per_ordeal_adjustment = alist(1 = 0, 2 = -1, 3 = -1, 4 = -2)
 	applied_announcement = "Personnel must be advised: As a result of changes in internal Enkephalin filtering procedures, Ordeal events for this shift will occur within fewer meltdowns than is the norm. \
 	To compensate for this, Extraction has agreed to speed up Abnormality delivery accordingly."
