@@ -121,6 +121,11 @@
 	name = "Banking Office Capsule"
 	template_id = "bankciv_office"
 
+/obj/item/structurecapsule/fixer/bladelin
+	name = "Blade Lineage Base Capsule"
+	template_id = "Bladelin_office"
+	custom_access = list("bladelin")
+
 /obj/item/structurecapsule/fixer/bank/attack_self(mob/living/carbon/human/user)
 	. = ..()
 	if(used)
@@ -178,6 +183,11 @@
 	description = "WARNING: Rapid accumulation of net worth has been proven to cause permanent potentiality loss!."
 	mappath = "_maps/templates/fixer_office/bankciv.dmm"
 
+/datum/map_template/shelter/bladelin
+	name = "Blade Lineage base"
+	shelter_id = "bladelin_office"
+	description = "A small base capsule for the roaming members of the Blade Lineage"
+	mappath = "_maps/templates/city_factions/minor/bladelin.dmm"
 
 
 //Armor

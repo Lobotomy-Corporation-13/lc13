@@ -41,5 +41,5 @@
 	belt = /obj/item/pda/security
 	ears = /obj/item/radio/headset/faction
 	uniform = /obj/item/clothing/under/suit/lobotomy/plain
-	backpack_contents = list(/obj/item/structurecapsule/syndicate/bladelin)
+	backpack_contents = list(/obj/item/structurecapsule/fixer/bladelin)
 	shoes = /obj/item/clothing/shoes/laceup
