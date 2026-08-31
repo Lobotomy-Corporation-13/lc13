@@ -110,9 +110,11 @@
 		if(6)
 			ChasingShot()
 		if(7)
-			if(prob(50))
+			if(prob(30))
 				return
 				//StartRabbit()
+			else
+				WideVoid()
 
 //Nihil Attacks
 /mob/living/simple_animal/hostile/abnormality/nihil/proc/HomingBolts()
@@ -120,9 +122,11 @@
 		return
 	var/mob/living/shootat = target
 	can_act = FALSE
+	manual_emote("points at [shootat].")
+	SLEEP_CHECK_DEATH(5)
 	for(var/i in 1 to 10)
 		var/turf/T = get_step(get_turf(src), pick(1,2,4,5,6,8,9,10))
-		DeferProjectile(/obj/projectile/nihilspade, shootat, T, 3)
+		DeferProjectile(/obj/projectile/nihilspade, shootat, T, 5)
 
 	SLEEP_CHECK_DEATH(10)
 	can_act = TRUE
@@ -133,6 +137,8 @@
 		return
 	var/mob/living/shootat = target
 	can_act = FALSE
+	manual_emote("grins at [shootat].")
+	SLEEP_CHECK_DEATH(5)
 	for(var/i in 1 to 7)
 		var/turf/T = get_step(get_turf(src), pick(1,2,4,5,6,8,9,10))
 		DeferProjectile(/obj/projectile/nihilheart, shootat, T, 3)
@@ -145,6 +151,8 @@
 	if(!isliving(target))
 		return
 	var/mob/living/shootat = target
+	new /obj/effect/temp_visual/voidout(get_turf(src))
+	playsound(src, 'sound/effects/phasein.ogg', 75, FALSE, 4)
 	can_act = FALSE
 	SLEEP_CHECK_DEATH(7)
 	goonchem_vortex(get_turf(src), 1, 10)
@@ -154,7 +162,7 @@
 		var/turf/T = get_turf(src)
 		DeferProjectile(/obj/projectile/nihildiamond, shootat, T, 3)
 		SLEEP_CHECK_DEATH(8)
-	can_act = FALSE
+	can_act = TRUE
 
 /mob/living/simple_animal/hostile/abnormality/nihil/proc/Flak()
 	if(!isliving(target))
@@ -164,19 +172,21 @@
 	can_act = FALSE
 	SLEEP_CHECK_DEATH(25)
 	var/turf/T = get_turf(exploder)
+	exploder.Immobilize(5)
 	for(var/i in 1 to 10)
 		//This is subtly the most evil and fucked up line of code I have ever written.
-		DeferProjectile(/obj/projectile/nihilclub, src, T, 3)
+		DeferProjectile(/obj/projectile/nihilclub, src, T, 2)
 
 	can_act = TRUE
 
 /mob/living/simple_animal/hostile/abnormality/nihil/proc/VoidAOE()
 	can_act = FALSE
+	new /obj/effect/temp_visual/voidout(get_turf(src))
 	SLEEP_CHECK_DEATH(25)
 	var/turf/orgin = get_turf(src)
 	var/list/all_turfs = RANGE_TURFS(void_range, orgin)
 	for(var/i = 0 to void_range)
-		playsound(src, 'sound/weapons/guillotine.ogg', 75, FALSE, 4)
+		playsound(src, 'sound/effects/empulse.ogg', 75, FALSE, 4)
 		for(var/turf/T in all_turfs)
 			if(get_dist(orgin, T) > i)
 				continue
@@ -192,6 +202,19 @@
 	for(var/i in 1 to 7)
 		new /obj/effect/void_small(get_turf(target))
 		SLEEP_CHECK_DEATH(5)
+
+/mob/living/simple_animal/hostile/abnormality/nihil/proc/WideVoid()
+	var/list/voidtargets = list()
+	for(var/mob/living/carbon/human/H in view(7, src))
+		voidtargets+= H
+
+	var/mob/living/voidattack
+	for(var/i in 1 to 7)
+		if(!length(voidattack))
+			return
+		voidattack = pick(voidtargets)
+		new /obj/effect/void_small(get_turf(target))
+		SLEEP_CHECK_DEATH(3)
 
 
 
