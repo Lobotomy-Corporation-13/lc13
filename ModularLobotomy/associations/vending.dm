@@ -513,3 +513,21 @@
 
 	default_price = 10000
 	input_display_header = "Middle Jukebox Vendor"
+
+
+//Bulletvending
+/obj/machinery/vending/bullets
+	name = "\improper Bullet vending"
+	desc = "A machine used to purchase your clothing"
+	product_slogans = "Arm up!"
+	product_ads = "Are you out of ammo?"
+	icon_state = "bullets"
+	icon_deny = null
+	products = list(
+		/obj/item/ego_mag/udjat = 99,
+		/obj/item/ego_mag/fullstop = 99,
+	)
+
+	default_price = 1000
+	input_display_header = "Tres Association Bullet Vending"
+
