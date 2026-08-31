@@ -1,6 +1,6 @@
-#define STATUS_EFFECT_VOID /datum/status_effect/stacking/void
+
 //Coded by Coxswain, sprites by nutterbutter
-/mob/living/simple_animal/hostile/abnormality/nihil
+/mob/living/simple_animal/hostile/abnormality/nihil_old
 	name = "The Jester of Nihil"
 	desc = "What the heck is this... A clown?"
 	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
@@ -95,16 +95,16 @@
 	can_spawn = FALSE
 
 //Work Code
-/mob/living/simple_animal/hostile/abnormality/nihil/FailureEffect(mob/living/carbon/human/user, work_type, pe)
+/mob/living/simple_animal/hostile/abnormality/nihil_old/FailureEffect(mob/living/carbon/human/user, work_type, pe)
 	. = ..()
 	datum_reference.qliphoth_change(-2)
 	return
 
-/mob/living/simple_animal/hostile/abnormality/nihil/SuccessEffect(mob/living/carbon/human/user, work_type, pe)
+/mob/living/simple_animal/hostile/abnormality/nihil_old/SuccessEffect(mob/living/carbon/human/user, work_type, pe)
 	. = ..()
 	datum_reference.qliphoth_change(1)
 
-/mob/living/simple_animal/hostile/abnormality/nihil/AttemptWork(mob/living/carbon/human/user, work_type)
+/mob/living/simple_animal/hostile/abnormality/nihil_old/AttemptWork(mob/living/carbon/human/user, work_type)
 	work_damage_type = WHITE_DAMAGE
 	switch(work_type)
 		if(ABNORMALITY_WORK_REPRESSION)
@@ -112,11 +112,11 @@
 	return ..()
 
 //Qliphoth
-/mob/living/simple_animal/hostile/abnormality/nihil/PostSpawn()
+/mob/living/simple_animal/hostile/abnormality/nihil_old/PostSpawn()
 	. = ..()
 	RegisterSignal(SSdcs, COMSIG_GLOB_ABNORMALITY_BREACH, PROC_REF(OnAbnoBreach))
 
-/mob/living/simple_animal/hostile/abnormality/nihil/proc/OnAbnoBreach(datum/source, mob/living/simple_animal/hostile/abnormality/abno)
+/mob/living/simple_animal/hostile/abnormality/nihil_old/proc/OnAbnoBreach(datum/source, mob/living/simple_animal/hostile/abnormality/abno)
 	SIGNAL_HANDLER
 	if(GirlCheck(abno))
 		var/friendly_list = list(
@@ -128,11 +128,11 @@
 				return
 		datum_reference.qliphoth_change(-2)
 
-/mob/living/simple_animal/hostile/abnormality/nihil/proc/OnGirlGoneWild() //TODO: This will lower qliphoth when friendly magical girls turn hostile
+/mob/living/simple_animal/hostile/abnormality/nihil_old/proc/OnGirlGoneWild() //TODO: This will lower qliphoth when friendly magical girls turn hostile
 	datum_reference.qliphoth_change(-2)
 
 //Attacks
-/mob/living/simple_animal/hostile/abnormality/nihil/proc/AreaAttack() //Replaces normal attack
+/mob/living/simple_animal/hostile/abnormality/nihil_old/proc/AreaAttack() //Replaces normal attack
 	set waitfor = FALSE
 	changeNext_move(SSnpcpool.wait / rapid_melee) //Prevents attack spam
 	var/damage_dealt = rand(melee_damage_lower, melee_damage_upper)
@@ -152,7 +152,7 @@
 			if(GirlCheck(L)) //EXTRA magical girl damage to kill them faster
 				L.deal_damage((3 * damage_dealt), BRUTE, src, attack_type = (ATTACK_TYPE_SPECIAL))
 
-/mob/living/simple_animal/hostile/abnormality/nihil/proc/NukeAttack(forced) //Phase-change attack with a long cooldown
+/mob/living/simple_animal/hostile/abnormality/nihil_old/proc/NukeAttack(forced) //Phase-change attack with a long cooldown
 	if(nuke_cooldown > world.time && !forced)
 		return FALSE
 	if(!can_act && !forced)
@@ -196,10 +196,10 @@
 	can_act = TRUE
 	busy_attacking = FALSE
 
-/mob/living/simple_animal/hostile/abnormality/nihil/proc/NukeAttackEffectHelper(turf/open/T)
+/mob/living/simple_animal/hostile/abnormality/nihil_old/proc/NukeAttackEffectHelper(turf/open/T)
 	new /obj/effect/temp_visual/eldritch_smoke(T)
 
-/mob/living/simple_animal/hostile/abnormality/nihil/proc/TryTeleport(forced = FALSE)
+/mob/living/simple_animal/hostile/abnormality/nihil_old/proc/TryTeleport(forced = FALSE)
 	if(teleport_cooldown > world.time)
 		return FALSE
 	if(!can_act && !forced)
@@ -258,7 +258,7 @@
 		can_act = TRUE
 	teleport_cooldown = world.time + teleport_cooldown_time
 
-/mob/living/simple_animal/hostile/abnormality/nihil/proc/TeleportOut(turf/teleport_target)
+/mob/living/simple_animal/hostile/abnormality/nihil_old/proc/TeleportOut(turf/teleport_target)
 	set waitfor = FALSE
 	switch(current_phase)
 		if("GREED")
@@ -313,7 +313,7 @@
 				else
 					new /obj/effect/gibspawner/generic/silent/wrath_acid/bad(T)
 
-/mob/living/simple_animal/hostile/abnormality/nihil/proc/TeleportIn()
+/mob/living/simple_animal/hostile/abnormality/nihil_old/proc/TeleportIn()
 	switch(current_phase)
 		if("GREED")
 			animate(src, alpha = 0,pixel_x = 0, pixel_z = 16, time = 0)
@@ -349,7 +349,7 @@
 			TeleportOut()//Same effect but with a delay
 
 //Breaching behavior
-/mob/living/simple_animal/hostile/abnormality/nihil/Life()
+/mob/living/simple_animal/hostile/abnormality/nihil_old/Life()
 	. = ..()
 	if(IsContained()) // Contained
 		return
@@ -383,41 +383,41 @@
 			INVOKE_ASYNC(src, PROC_REF(TryTeleport))
 		return
 
-/mob/living/simple_animal/hostile/abnormality/nihil/AttackingTarget(atom/attacked_target)
+/mob/living/simple_animal/hostile/abnormality/nihil_old/AttackingTarget(atom/attacked_target)
 	if(!can_act)
 		return FALSE
 	. = AreaAttack()
 
-/mob/living/simple_animal/hostile/abnormality/nihil/OpenFire()
+/mob/living/simple_animal/hostile/abnormality/nihil_old/OpenFire()
 	if(!can_act || IsContained())
 		return
 	if(get_dist(src, target) > 4) //Prevents ranged attack when flinching
 		return
 	..()
 
-/mob/living/simple_animal/hostile/abnormality/nihil/Move()
+/mob/living/simple_animal/hostile/abnormality/nihil_old/Move()
 	if(!can_act)
 		return FALSE
 	return ..()
 
 //Stages/Boss mechanics
-/mob/living/simple_animal/hostile/abnormality/nihil/proc/GirlCheck(mob/living/themob) //I was temped to call this something cursed, but I won't.
+/mob/living/simple_animal/hostile/abnormality/nihil_old/proc/GirlCheck(mob/living/themob) //I was temped to call this something cursed, but I won't.
 	if(themob.type in girl_types)
 		return TRUE
 	return FALSE
 
-/mob/living/simple_animal/hostile/abnormality/nihil/proc/ChangePhase(phase)
+/mob/living/simple_animal/hostile/abnormality/nihil_old/proc/ChangePhase(phase)
 	//TODO: more stuff
 	current_phase = phase
 	NukeAttack(TRUE)
 
-/mob/living/simple_animal/hostile/abnormality/nihil/proc/StartEnding()
+/mob/living/simple_animal/hostile/abnormality/nihil_old/proc/StartEnding()
 	//TODO: more stuff
 	current_phase = null
 	death_ready = TRUE
 	can_act = FALSE
 
-/mob/living/simple_animal/hostile/abnormality/nihil/death(gibbed)
+/mob/living/simple_animal/hostile/abnormality/nihil_old/death(gibbed)
 	if(!death_ready)
 		return
 	UnregisterSignal(SSdcs, COMSIG_GLOB_ABNORMALITY_BREACH)
@@ -450,7 +450,7 @@
 	..()
 
 //Breach
-/mob/living/simple_animal/hostile/abnormality/nihil/ZeroQliphoth(mob/living/carbon/human/user)
+/mob/living/simple_animal/hostile/abnormality/nihil_old/ZeroQliphoth(mob/living/carbon/human/user)
 	var/counter = 0
 	for(var/mob/living/simple_animal/hostile/abnormality/A in GLOB.abnormality_mob_list)
 		if(!GirlCheck(A))
@@ -461,7 +461,7 @@
 	else
 		Debuff(0, TRUE)
 
-/mob/living/simple_animal/hostile/abnormality/nihil/proc/Debuff(attack_count,event_start)
+/mob/living/simple_animal/hostile/abnormality/nihil_old/proc/Debuff(attack_count,event_start)
 	if(attack_count > 13)
 		datum_reference.qliphoth_change(3)
 		return
@@ -485,7 +485,7 @@
 	attack_count += 1
 	Debuff(attack_count, event_start)
 
-/mob/living/simple_animal/hostile/abnormality/nihil/BreachEffect(mob/living/carbon/human/user, breach_type)
+/mob/living/simple_animal/hostile/abnormality/nihil_old/BreachEffect(mob/living/carbon/human/user, breach_type)
 	. = ..()
 	event_enabled = TRUE //We're not admin spawned
 	death_ready = FALSE
@@ -572,12 +572,12 @@
 /mob/living/simple_animal/nihil_portal/proc/StartEvent()
 	DeletePortals()
 	addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(show_global_blurb), 5 SECONDS, "Life, Dreams, Hope, where do they come from? And where will they go?", 25))
-	for(var/mob/living/simple_animal/hostile/abnormality/nihil/jester in contents)
+	for(var/mob/living/simple_animal/hostile/abnormality/nihil_old/jester in contents)
 		jester.forceMove(get_turf(src))
 		jester.AIStatus = AI_ON
 		jester.teleport_cooldown = world.time + 30 SECONDS //So they don't teleport right away
 		jester.can_act = TRUE
-		addtimer(CALLBACK(jester, TYPE_PROC_REF(/mob/living/simple_animal/hostile/abnormality/nihil, ChangePhase), "NIHIL"), 5 SECONDS)
+		addtimer(CALLBACK(jester, TYPE_PROC_REF(/mob/living/simple_animal/hostile/abnormality/nihil_old, ChangePhase), "NIHIL"), 5 SECONDS)
 	for(var/mob/living/simple_animal/hostile/abnormality/A in GLOB.abnormality_mob_list) //enable their AI again
 		if(!is_type_in_list(A, SSlobotomy_events.JN_breached))
 			continue
@@ -649,55 +649,6 @@
 	magical_girl = /mob/living/simple_animal/hostile/abnormality/wrath_servant
 	light_color = "#CC7722"
 	color = "#CC7722"
-
-//Void Status effect
-//Decrease everyone's attributes.
-/datum/status_effect/stacking/void
-	id = "stacking_void"
-	status_type = STATUS_EFFECT_UNIQUE
-	duration = 20 SECONDS
-	alert_type = null
-	stack_decay = 0
-	stacks = 1
-	max_stacks = 13
-	on_remove_on_mob_delete = TRUE
-	alert_type = /atom/movable/screen/alert/status_effect/void
-	consumed_on_threshold = FALSE
-
-/atom/movable/screen/alert/status_effect/void
-	name = "Void"
-	desc = "You are empty inside."
-	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
-	icon_state = "nihil"
-
-/datum/status_effect/stacking/void/on_apply()
-	. = ..()
-	to_chat(owner, span_warning("The whole world feels dark and empty..."))
-	if(owner.client)
-		owner.add_client_colour(/datum/client_colour/monochrome)
-
-/datum/status_effect/stacking/void/add_stacks(stacks_added)
-	. = ..()
-	if(!ishuman(owner))
-		return
-	var/mob/living/carbon/human/status_holder = owner
-	status_holder.adjust_attribute_bonus(FORTITUDE_ATTRIBUTE, -10 * stacks_added)
-	status_holder.adjust_attribute_bonus(PRUDENCE_ATTRIBUTE, -10 * stacks_added)
-	status_holder.adjust_attribute_bonus(TEMPERANCE_ATTRIBUTE, -10 * stacks_added)
-	status_holder.adjust_attribute_bonus(JUSTICE_ATTRIBUTE, -10 * stacks_added)
-
-/datum/status_effect/stacking/void/on_remove()
-	. = ..()
-	if(!ishuman(owner))
-		return
-	var/mob/living/carbon/human/status_holder = owner
-	status_holder.adjust_attribute_bonus(FORTITUDE_ATTRIBUTE, 10 * stacks)
-	status_holder.adjust_attribute_bonus(PRUDENCE_ATTRIBUTE, 10 * stacks)
-	status_holder.adjust_attribute_bonus(TEMPERANCE_ATTRIBUTE, 10 * stacks)
-	status_holder.adjust_attribute_bonus(JUSTICE_ATTRIBUTE, 10 * stacks)
-	to_chat(owner, span_nicegreen("You feel normal again."))
-	if(owner.client)
-		owner.remove_client_colour(/datum/client_colour/monochrome)
 
 //Items - Loot
 /obj/item/nihil
@@ -772,20 +723,3 @@
 			magicalgirl.can_act = TRUE
 		petrified_mob = null
 	return ..()
-
-//Mob Proc
-/mob/living/proc/apply_void(stacks)
-	var/datum/status_effect/stacking/void/V = src.has_status_effect(/datum/status_effect/stacking/void)
-	if(!V)
-		src.apply_status_effect(STATUS_EFFECT_VOID)
-		if(stacks <= 1)
-			return
-		var/datum/status_effect/stacking/void/G = src.has_status_effect(/datum/status_effect/stacking/void)
-		SLEEP_CHECK_DEATH(1) //Prevent runtimes
-		G.add_stacks(stacks - 1)
-	else
-		V.add_stacks(stacks)
-		V.refresh()
-		playsound(src, 'sound/abnormalities/nihil/filter.ogg', 15, FALSE, -3)
-
-#undef STATUS_EFFECT_VOID

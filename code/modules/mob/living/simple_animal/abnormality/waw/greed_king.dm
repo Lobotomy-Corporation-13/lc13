@@ -55,8 +55,6 @@
 
 	var/obj/effect/proc_holder/ability/aimed/dash/kog/ourdash
 
-	var/nihil_present = FALSE
-
 	ego_list = list(
 		/datum/ego_datum/weapon/goldrush,
 		/datum/ego_datum/armor/goldrush,
@@ -111,8 +109,6 @@
 	. = ..()
 	if(!.) // Dead
 		return FALSE
-	if(nihil_present)
-		return
 	if(!(status_flags & GODMODE))
 		if(!(!can_act || client))
 			charge_check()
@@ -123,7 +119,7 @@
 	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/greed_king/Move()
-	if(!client && !nihil_present)
+	if(!client)
 		return FALSE
 	if(!can_act)
 		return FALSE
@@ -142,8 +138,6 @@
 
 /mob/living/simple_animal/hostile/abnormality/greed_king/proc/startTeleport()
 	if(IsCombatMap())
-		return
-	if(nihil_present)
 		return
 	if(!can_act || teleport_cooldown > world.time || (status_flags & GODMODE) || stat == DEAD)
 		return
@@ -175,7 +169,7 @@
 	return
 
 /mob/living/simple_animal/hostile/abnormality/greed_king/OpenFire() // This exists so players can manually charge during playable abnormalities.
-	if(!can_act || (!client && !nihil_present))
+	if(!can_act)
 		return
 	switch(chosen_attack)
 		if(1)
@@ -198,93 +192,6 @@
 	if(prob(80))
 		datum_reference.qliphoth_change(-1)
 	return
-
-//Nihil Event Code - TODO: Add attacks TODO: Add a way to teleport to nihil
-/mob/living/simple_animal/hostile/abnormality/greed_king/proc/EventStart()
-	set waitfor = FALSE
-	NihilModeEnable()
-	ChangeResistances(list(RED_DAMAGE = 0, WHITE_DAMAGE = 0, BLACK_DAMAGE = 0, PALE_DAMAGE = 0))
-	SLEEP_CHECK_DEATH(6 SECONDS)
-	say("So, you've finally shown yourself.")
-	SLEEP_CHECK_DEATH(6 SECONDS)
-	say("With the Jester gone, the world can finally be free of sadness.")
-	SLEEP_CHECK_DEATH(6 SECONDS)
-	say("We'll defeat you once and for all.")
-	SLEEP_CHECK_DEATH(6 SECONDS)
-	say("For happiness!")
-	ChangeResistances(list(RED_DAMAGE = 0, WHITE_DAMAGE = 0.5, BLACK_DAMAGE = 1.2, PALE_DAMAGE = 1.5))
-
-/mob/living/simple_animal/hostile/abnormality/greed_king/proc/NihilModeEnable()
-	NihilIconUpdate()
-	nihil_present = TRUE
-	ourdash.nihil_present = nihil_present
-	fear_level = ZAYIN_LEVEL
-	faction = list("neutral")
-
-/mob/living/simple_animal/hostile/abnormality/greed_king/proc/NihilIconUpdate()
-	name = "Magical Girl of Happiness"
-	desc = "A real magical girl!"
-	icon = 'ModularLobotomy/_Lobotomyicons/48x64.dmi'
-	icon_state = "kog"
-	pixel_x = -8
-	base_pixel_x = -8
-	pixel_y = 0
-	base_pixel_y = 0
-
-/mob/living/simple_animal/hostile/abnormality/greed_king/Found(atom/A)
-	if(istype(A, /mob/living/simple_animal/hostile/abnormality/nihil)) // 1st Priority
-		return TRUE
-	return ..()
-
-/mob/living/simple_animal/hostile/abnormality/greed_king/petrify(statue_timer)
-	if(!isturf(loc))
-		MoveStatue()
-	AIStatus = AI_OFF
-	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
-	icon_state = "kog_statue"
-	pixel_x = -16
-	base_pixel_x = -16
-	var/obj/structure/statue/petrified/magicalgirl/S = new(loc, src, statue_timer)
-	S.name = "Fossilized Greed"
-	ADD_TRAIT(src, TRAIT_NOBLEED, MAGIC_TRAIT)
-	SLEEP_CHECK_DEATH(1)
-	S.icon = src.icon
-	S.icon_state = src.icon_state
-	S.pixel_x = -8
-	S.base_pixel_x = -8
-	var/newcolor = list(rgb(77,77,77), rgb(150,150,150), rgb(28,28,28), rgb(0,0,0))
-	S.add_atom_colour(newcolor, FIXED_COLOUR_PRIORITY)
-	stat = DEAD
-	return TRUE
-
-/mob/living/simple_animal/hostile/abnormality/greed_king/proc/MoveStatue()
-	var/list/teleport_potential = list()
-	if(!LAZYLEN(GLOB.department_centers))
-		for(var/mob/living/L in GLOB.mob_living_list)
-			if(L.stat == DEAD || L.z != z || L.status_flags & GODMODE)
-				continue
-			teleport_potential += get_turf(L)
-	if(!LAZYLEN(teleport_potential))
-		var/turf/P = pick(GLOB.department_centers)
-		teleport_potential += P
-	var/turf/teleport_target = pick(teleport_potential)
-	new /obj/effect/temp_visual/guardian/phase(get_turf(src))
-	new /obj/effect/temp_visual/guardian/phase/out(teleport_target)
-	forceMove(teleport_target)
-
-/mob/living/simple_animal/hostile/abnormality/greed_king/death(gibbed)
-	if(!nihil_present)
-		return ..()
-	adjustBruteLoss(-999999)
-	visible_message(span_boldwarning("Oh no, [src] has been defeated!"))
-	INVOKE_ASYNC(src, PROC_REF(petrify), 500000)
-	return FALSE
-
-/mob/living/simple_animal/hostile/abnormality/greed_king/gib()
-	if(nihil_present)
-		death()
-		return FALSE
-	return ..()
 
 //TODO: Make this do something
 /obj/structure/blissfragment
