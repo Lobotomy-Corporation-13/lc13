@@ -204,6 +204,5 @@
 
 /obj/structure/fluff/hedge/opaque/scarecrow
 	max_integrity = 10
-	integrity = 10
 	opacity = TRUE
 
