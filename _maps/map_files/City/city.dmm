@@ -3466,6 +3466,10 @@
 /obj/machinery/processor,
 /turf/open/indestructible/white,
 /area/city/hhpp)
+"Th" = (
+/obj/machinery/vending/bullets,
+/turf/open/floor/city/sidewalk,
+/area/city)
 "Tk" = (
 /obj/machinery/seed_extractor,
 /obj/machinery/light{
@@ -21496,9 +21500,9 @@ lV
 lV
 lV
 lV
-lV
-lV
-lV
+bE
+bE
+bE
 uE
 RI
 Ck
@@ -21754,8 +21758,8 @@ bE
 bE
 bE
 bE
-bE
-bE
+dY
+Th
 ux
 ux
 ux
@@ -35661,7 +35665,7 @@ kD
 ry
 ry
 ea
-ry
+xc
 xc
 fi
 Uv
