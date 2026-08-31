@@ -16,7 +16,7 @@
 
 	var/special_atk_combo = 0
 
-	abno_additional_instructions = "<h1>You are Thunderbird, A Support Role Abnormality.</h1><br>\
+	abno_additional_instructions = "<h1>You are Knight of Despair, A Support Role Abnormality.</h1><br>\
 		<b>|A Broken Heart|: You are unable to melee and instead may only perform ranged attacks. <br>\
 		<br>\
 		|Sword Sharpened With Tears|: When performing a ranged attack you will summon 4 swords behind you. \

@@ -127,7 +127,7 @@
 /mob/living/simple_animal/hostile/rcorp_abno/Destroy()
 	if(core)
 		CreateAbnoCore(name, core_icon)
-		. = ..()
+	. = ..()
 
 /mob/living/simple_animal/hostile/rcorp_abno/proc/CreateAbnoCore()//this is called by abnormalities on Destroy()
 	var/obj/structure/abno_core/C = new(get_turf(src))
