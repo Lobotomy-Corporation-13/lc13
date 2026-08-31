@@ -46,6 +46,12 @@
 	name = "insurgence base capsule"
 	desc = "Contains equipment for establishing an Insurgence Clan outpost."
 	template_id = "insurgence_base"
+
+/obj/item/structurecapsule/syndicate/udjat
+	name = "Udjat Capsule"
+	template_id = "udjat_base"
+	custom_access = list("udjat")
+
 //Office templates
 /datum/map_template/shelter/index
 	name = "Index Base"
@@ -63,7 +69,7 @@
 	name = "Thumb Base"
 	shelter_id = "thumbfinger_base"
 	description = "A place for the thumb."
-	mappath = "_maps/templates/syndicate_office/thumbfinger.dmm"
+	mappath = "_maps/templates/city_factions/major/thumbfinger.dmm"
 
 /datum/map_template/shelter/ncorp
 	name = "Ncorp Base"
@@ -94,3 +100,9 @@
 	shelter_id = "insurgence_base"
 	description = "A place for the Insurgence Clan."
 	mappath = "_maps/templates/syndicate_office/insurgence_clan.dmm"
+
+/datum/map_template/shelter/udjat
+	name = "Udjat Base"
+	shelter_id = "udjat_base"
+	description = "A place for the Udjat"
+	mappath = "_maps/templates/city_factions/major/udjat.dmm"

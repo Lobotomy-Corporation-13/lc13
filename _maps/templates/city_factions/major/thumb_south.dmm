@@ -379,7 +379,7 @@
 "BV" = (
 /obj/machinery/door/airlock/wood{
 	name = "sottocapo quarters";
-	req_access_txt = "151"
+	req_access_txt = "thumb_leader"
 	},
 /turf/open/floor/wood{
 	color = "#ccc8c0"
@@ -423,7 +423,7 @@
 "DB" = (
 /obj/machinery/door/window/survival_pod{
 	name = "sottocapo bedroom";
-	req_access_txt = "151";
+	req_access_txt = "thumb_leader";
 	dir = 4
 	},
 /turf/open/floor/wood,
@@ -639,7 +639,7 @@
 "XQ" = (
 /obj/machinery/door/airlock/wood{
 	name = "sottocapo office";
-	req_access_txt = "151"
+	req_access_txt = "thumb_leader"
 	},
 /turf/open/floor/wood{
 	color = "#ccc8c0"
@@ -659,7 +659,7 @@
 "YC" = (
 /obj/machinery/door/airlock/wood{
 	name = "sottocapo office";
-	req_access_txt = "151"
+	req_access_txt = "thumb_leader"
 	},
 /turf/open/floor/wood,
 /area/city/antag_base)
