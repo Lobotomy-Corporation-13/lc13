@@ -23,3 +23,9 @@
 	category = CITY_FACTION_MAJOR
 	leader_job = /datum/job/big_brother
 	requires_leader = TRUE
+
+/datum/city_faction/udjat
+	name = "the Udjat"
+	category = CITY_FACTION_MAJOR
+	leader_job = /datum/job/captain
+	requires_leader = TRUE
