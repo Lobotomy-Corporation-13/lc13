@@ -1,0 +1,9 @@
+author: "EnderMage99"
+delete-after: True
+changes:
+  - rscadd: "Added the Scuffed Lioness abnormality, along with its Mane/Pelt/Scar E.G.O."
+  - rscadd: "Added the Clambug abnormality, along with its Chitin E.G.O."
+  - rscadd: "Added The Rain Can Always Get Worse abnormality, along with its Rainfall E.G.O."
+  - rscadd: "Added the Rabbits abnormality, along with its Warren E.G.O."
+  - rscadd: "Added the Inkstained Squid abnormality, along with its Flourish E.G.O. and the Scattering Ink effect."
+  - imageadd: "Added sprites for the five new abnormalities and their E.G.O. gear."
