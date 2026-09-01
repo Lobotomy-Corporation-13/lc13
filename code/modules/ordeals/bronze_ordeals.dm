@@ -1,7 +1,7 @@
 // Dawn
 //Simplespawn but with very slight changes
-/datum/ordeal/brown_dawn
-	name = "The Dawn of Brown"
+/datum/ordeal/bronze_dawn
+	name = "The Dawn of Bronze"
 	flavor_name = "Peccata Capitalia"
 	announce_text = "Planted within the hearts of all are seeds with ever-present potential to bloom."
 	end_announce_text = "These reflections are merely twisted forms of the soul dreamt by those who are nothing."
@@ -9,7 +9,7 @@
 	reward_percent = 0.1
 	announce_sound = 'sound/effects/ordeals/brown_start.ogg'
 	end_sound = 'sound/effects/ordeals/brown_end.ogg'
-	color = "#69350b"
+	color = "#CD7F32"
 	var/spawn_places = 6
 	var/spawn_amount = 2
 	var/list/mob_spawn_type = list(
@@ -23,7 +23,7 @@
 	var/place_player_multiplicator = 0.1
 	var/spawn_player_multiplicator = 0.1
 
-/datum/ordeal/brown_dawn/Run() // So basically we want to spawn a crap ton of enemies - Identical to simplespawn, but one type per group
+/datum/ordeal/bronze_dawn/Run() // So basically we want to spawn a crap ton of enemies - Identical to simplespawn, but one type per group
 	..()
 	var/place_player_mod = round(length(AllLivingAgents(TRUE)) * place_player_multiplicator) // Ten players add a new spot
 	var/spawn_player_mod = round(length(AllLivingAgents(TRUE)) * spawn_player_multiplicator)
@@ -54,8 +54,8 @@
 			ordeal_mobs += M
 			M.ordeal_reference = src
 
-/datum/ordeal/specificcommanders/brown_noon
-	name = "The Noon of Brown"
+/datum/ordeal/specificcommanders/bronze_noon
+	name = "The Noon of Bronze"
 	flavor_name = "Pandæmonium"
 	announce_text = "Only those who define their own fate are awakened to their own dream."
 	end_announce_text = "It is pointless to waste your time on those whose path has ended."
@@ -63,7 +63,7 @@
 	reward_percent = 0.15
 	announce_sound = 'sound/effects/ordeals/brown_start.ogg'
 	end_sound = 'sound/effects/ordeals/brown_end.ogg'
-	color = "#69350b"
+	color = "#CD7F32"
 	potential_types = list(
 		/mob/living/simple_animal/hostile/ordeal/sin_gluttony/noon,
 		/mob/living/simple_animal/hostile/ordeal/sin_sloth/noon,
@@ -82,5 +82,5 @@
 		/mob/living/simple_animal/hostile/ordeal/sin_wrath,
 	)
 
-/datum/ordeal/specificcommanders/brown_noon/spawngrunts(turf/T, list/grunttype, spawn_amount = 7)
+/datum/ordeal/specificcommanders/bronze_noon/spawngrunts(turf/T, list/grunttype, spawn_amount = 7)
 	..() // Just changing spawn_amount
