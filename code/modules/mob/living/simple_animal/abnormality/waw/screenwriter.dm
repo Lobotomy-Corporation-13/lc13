@@ -90,7 +90,7 @@
 /mob/living/simple_animal/hostile/abnormality/screenwriter/Destroy()
 	if(!ending)
 		ending = TRUE
-		QDEL_NULL(our_actor)
+		qdel(our_actor)
 		EndScenario()
 	return ..()
 
