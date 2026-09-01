@@ -62,6 +62,8 @@
 	var/attack_healthmodifier = 0.05
 	var/target_hit = FALSE
 	var/hunger = FALSE
+	/// The breached Encyclopedia of Anthrophagy this scarecrow has roused to hunt (shared wisdom gimmick).
+	var/mob/living/simple_animal/hostile/abnormality/branch12/encyclopedia_of_anthrophagy/hunt_target
 
 	attack_action_types = list(/datum/action/cooldown/hungering)
 
@@ -151,6 +153,9 @@
 /mob/living/simple_animal/hostile/abnormality/scarecrow/CanAttack(atom/the_target)
 	if(finishing)
 		return FALSE
+	// Bypass the shared "hostile" abnormality faction so it can actually strike the Encyclopedia it hunts.
+	if(the_target == hunt_target && istype(hunt_target))
+		return !QDELETED(hunt_target) && !(hunt_target.status_flags & GODMODE) && hunt_target.stat <= stat_attack
 	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/scarecrow/Move()
@@ -222,4 +227,56 @@
 	. = ..()
 	icon_living = "scarecrow_breach"
 	icon_state = icon_living
-	GiveTarget(user)
+	if(!QDELETED(hunt_target))
+		GiveTarget(hunt_target)
+	else
+		GiveTarget(user)
+
+// Shared wisdom gimmick: both crave "knowledge"/Prudence, so when the Encyclopedia of Anthrophagy
+// breaks loose the scarecrow tears itself free to take that hoard of wisdom for itself.
+/mob/living/simple_animal/hostile/abnormality/scarecrow/Initialize()
+	. = ..()
+	RegisterSignal(SSdcs, COMSIG_GLOB_ABNORMALITY_BREACH, PROC_REF(OnAbnoBreach))
+
+/mob/living/simple_animal/hostile/abnormality/scarecrow/Destroy()
+	UnregisterSignal(SSdcs, COMSIG_GLOB_ABNORMALITY_BREACH)
+	return ..()
+
+// When the Encyclopedia breaches on our floor, break containment and go after it.
+/mob/living/simple_animal/hostile/abnormality/scarecrow/proc/OnAbnoBreach(datum/source, mob/living/simple_animal/hostile/abnormality/abno)
+	SIGNAL_HANDLER
+	if(hunt_target || !IsContained())
+		return
+	if(!istype(abno, /mob/living/simple_animal/hostile/abnormality/branch12/encyclopedia_of_anthrophagy))
+		return
+	if(abno.z != z)
+		return
+	hunt_target = abno
+	INVOKE_ASYNC(src, PROC_REF(RouseForHunt))
+
+/mob/living/simple_animal/hostile/abnormality/scarecrow/proc/RouseForHunt()
+	if(!IsContained() || QDELETED(hunt_target))
+		return
+	manual_emote("jerks upright, its rake scraping the floor, and turns toward the smell of old knowledge.")
+	if(datum_reference)
+		datum_reference.qliphoth_change(-datum_reference.qliphoth_meter)	// force our own breach
+
+// Path straight to the Encyclopedia while it is loose, instead of wandering.
+/mob/living/simple_animal/hostile/abnormality/scarecrow/SelectPatrolLocation()
+	if(!QDELETED(hunt_target) && !hunt_target.IsContained())
+		return get_turf(hunt_target)
+	return ..()
+
+// Value the Encyclopedia far above any bystanders it passes on the way.
+/mob/living/simple_animal/hostile/abnormality/scarecrow/ValueTarget(atom/target_thing)
+	. = ..()
+	if(target_thing == hunt_target)
+		. += 100
+
+// Drop the hunt once the Encyclopedia is dead, gone, or back in its cell.
+/mob/living/simple_animal/hostile/abnormality/scarecrow/Life()
+	. = ..()
+	if(!.)
+		return
+	if(hunt_target && (QDELETED(hunt_target) || hunt_target.stat == DEAD || hunt_target.z != z || hunt_target.IsContained()))
+		hunt_target = null

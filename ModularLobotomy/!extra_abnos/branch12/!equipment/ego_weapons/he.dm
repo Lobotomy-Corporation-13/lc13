@@ -290,3 +290,203 @@
 	. = ..()
 	var/mob/living/target_hit = target
 	target_hit.apply_status_effect(/datum/status_effect/mental_detonate)
+
+
+// Inkstained Squid E.G.O - Flourish (weapon). Inscribe in-hand (10% max SP) to charge the next strike
+// with Scattering Ink. As the marked target takes damage it fills with ink (1 stack per 50 damage); at
+// 10 it bursts, leaving 4 stacks of a damage-type fragility matching whatever hurt it most. Striking an
+// already-marked target with an inscribed pen bursts the ink at once. 3s between inscribings.
+
+/obj/item/ego_weapon/branch12/consumption
+	name = "consumption"
+	desc = "A heavy, fanged grimoire bound to the forearm. It reads what it kills, and shares a little of \
+		that knowledge back with the hand that holds it."
+	special = "Killing a foe or striking a corpse devours it - gibbing it and granting 50 shield, up to a \
+		200 limit. Ordinary hits grant 10 shield, up to a 50 limit."
+	icon_state = "consumption"
+	inhand_icon_state = "consumption"
+	force = 42
+	damtype = BLACK_DAMAGE
+	attack_speed = 1.1
+	attack_verb_continuous = list("bites", "gnaws", "devours")
+	attack_verb_simple = list("bite", "gnaw", "devour")
+	attribute_requirements = list(FORTITUDE_ATTRIBUTE = 40)
+	/// Shield from devouring a corpse/kill, and the ceiling that method fills toward.
+	var/devour_shield = 50
+	var/devour_cap = 200
+	/// Shield from an ordinary melee hit, and the ceiling that method fills toward.
+	var/hit_shield = 10
+	var/hit_cap = 50
+
+/obj/item/ego_weapon/branch12/consumption/attack(mob/living/target, mob/living/carbon/human/user)
+	if(!CanUseEgo(user))
+		return
+	..()
+	if(!ishuman(user) || !istype(target))
+		return
+	// Devour the dead (or the just-killed): gib it and feed a large shield, up to devour_cap.
+	if(target.stat == DEAD && !(target.status_flags & GODMODE))
+		FeedShield(user, devour_shield, devour_cap)
+		target.gib()
+		return
+	// Ordinary hit on the living: a small shield, up to hit_cap.
+	FeedShield(user, hit_shield, hit_cap)
+
+// Top the wielder's knowledge shield toward a per-method ceiling.
+/obj/item/ego_weapon/branch12/consumption/proc/FeedShield(mob/living/carbon/human/user, amount, ceiling)
+	var/datum/component/knowledge_shield/shield = user.GetComponent(/datum/component/knowledge_shield)
+	if(!shield)
+		shield = user.AddComponent(/datum/component/knowledge_shield)
+	var/room = ceiling - shield.shield_health
+	if(room <= 0)
+		return
+	shield.add_shield(min(amount, room))
+
+/obj/item/ego_weapon/branch12/flourish
+	name = "flourish"
+	desc = "A slender white fountain pen that weeps ink of no fixed colour. Writing with it \
+		feels a little like signing something away."
+	special = "Use in-hand to inscribe the pen, paying 10% of your max Sanity. Its next strike \
+		marks the target with Scattering Ink; striking an already-marked target shatters the ink at once."
+	icon_state = "flourish"
+	inhand_icon_state = "flourish"
+	force = 22
+	damtype = WHITE_DAMAGE
+	attack_speed = 1
+	attack_verb_continuous = list("scores", "nicks", "inks")
+	attack_verb_simple = list("score", "nick", "ink")
+	attribute_requirements = list(PRUDENCE_ATTRIBUTE = 40)
+	/// TRUE once inscribed; the next hit spends it.
+	var/inscribed = FALSE
+	COOLDOWN_DECLARE(inscribe_cd)
+	var/inscribe_cooldown = 3 SECONDS
+
+/obj/item/ego_weapon/branch12/flourish/attack_self(mob/user)
+	..()
+	if(!CanUseEgo(user))
+		return
+	if(!ishuman(user))
+		return
+	if(!COOLDOWN_FINISHED(src, inscribe_cd))
+		balloon_alert(user, "still drying: [DisplayTimeText(COOLDOWN_TIMELEFT(src, inscribe_cd))]")
+		return
+	var/mob/living/carbon/human/H = user
+	COOLDOWN_START(src, inscribe_cd, inscribe_cooldown)
+	H.adjustSanityLoss(H.maxSanity * 0.1)
+	inscribed = TRUE
+	to_chat(user, span_notice("You inscribe [src]; its next strike will scatter ink."))
+	balloon_alert(user, "pen inscribed")
+	playsound(get_turf(user), 'sound/effects/splat.ogg', 40, TRUE)
+
+/obj/item/ego_weapon/branch12/flourish/attack(mob/living/target, mob/living/user)
+	if(!CanUseEgo(user))
+		return
+	..()
+	if(!inscribed || !istype(target) || target.stat == DEAD)
+		return
+	inscribed = FALSE
+	var/datum/status_effect/stacking/scattering_ink/SI = target.has_status_effect(/datum/status_effect/stacking/scattering_ink)
+	if(SI)
+		SI.ForcePop(damtype)
+		target.visible_message(span_warning("[user]'s stroke shatters the ink already crawling over [target]!"))
+	else
+		target.apply_status_effect(/datum/status_effect/stacking/scattering_ink, 1)
+		target.visible_message(span_warning("[user] marks [target] with scattering ink."))
+
+/obj/item/ego_weapon/branch12/flourish/examine(mob/user)
+	. = ..()
+	if(!COOLDOWN_FINISHED(src, inscribe_cd))
+		. += span_notice("You can inscribe it again in [DisplayTimeText(COOLDOWN_TIMELEFT(src, inscribe_cd))].")
+	else
+		. += span_notice("The pen is ready to be inscribed.")
+
+/datum/status_effect/stacking/scattering_ink
+	id = "scattering_ink"
+	status_type = STATUS_EFFECT_MULTIPLE
+	duration = -1
+	tick_interval = 10 SECONDS
+	stack_decay = 0
+	max_stacks = 10
+	stack_threshold = 10
+	consumed_on_threshold = TRUE
+	stacking_display_name = "scattering_ink"
+	alert_type = null
+	/// Damage taken so far, tallied per colour, to decide the fragility on burst.
+	var/list/damage_by_type
+	/// Damage banked toward the next stack (1 stack per 50).
+	var/accumulated = 0
+
+/datum/status_effect/stacking/scattering_ink/on_apply()
+	. = ..()
+	if(!. || !owner)
+		return
+	damage_by_type = list(RED_DAMAGE = 0, WHITE_DAMAGE = 0, BLACK_DAMAGE = 0, PALE_DAMAGE = 0)
+	RegisterSignal(owner, COMSIG_MOB_APPLY_DAMGE, PROC_REF(on_damage_taken))
+
+/datum/status_effect/stacking/scattering_ink/on_remove()
+	if(owner)
+		UnregisterSignal(owner, COMSIG_MOB_APPLY_DAMGE)
+	return ..()
+
+/datum/status_effect/stacking/scattering_ink/proc/on_damage_taken(datum/source, damage, damage_type, def_zone, attacker, flags, attack_type)
+	SIGNAL_HANDLER
+	if(QDELETED(src) || damage <= 0)
+		return
+	if(IsColorDamageType(damage_type))
+		damage_by_type[damage_type] += damage
+	accumulated += damage
+	var/gained = FLOOR(accumulated / 50, 1)
+	if(gained > 0)
+		accumulated -= gained * 50
+		INVOKE_ASYNC(src, PROC_REF(GainStacks), gained)
+
+/datum/status_effect/stacking/scattering_ink/proc/GainStacks(amount)
+	if(QDELETED(src) || QDELETED(owner))
+		return
+	new /obj/effect/temp_visual/scattering_ink(get_turf(owner))
+	add_stacks(amount)	// may cross the threshold and burst
+
+// Threshold (10 stacks) reached naturally -> burst.
+/datum/status_effect/stacking/scattering_ink/threshold_cross_effect()
+	Burst(RED_DAMAGE)
+
+// Called by the weapon to shatter an existing mark immediately.
+/datum/status_effect/stacking/scattering_ink/proc/ForcePop(fallback = RED_DAMAGE)
+	Burst(fallback)
+	qdel(src)
+
+/datum/status_effect/stacking/scattering_ink/proc/Burst(fallback = RED_DAMAGE)
+	if(QDELETED(owner))
+		return
+	var/best = fallback
+	var/bestval = 0
+	for(var/dt in damage_by_type)
+		if(damage_by_type[dt] > bestval)
+			bestval = damage_by_type[dt]
+			best = dt
+	switch(best)
+		if(RED_DAMAGE)
+			owner.apply_lc_red_fragile(4)
+		if(WHITE_DAMAGE)
+			owner.apply_lc_white_fragile(4)
+		if(BLACK_DAMAGE)
+			owner.apply_lc_black_fragile(4)
+		if(PALE_DAMAGE)
+			owner.apply_lc_pale_fragile(4)
+	owner.visible_message(span_userdanger("The scattering ink over [owner] bursts, soaking them fragile!"))
+	playsound(get_turf(owner), 'sound/effects/splat.ogg', 70, TRUE)
+	for(var/i in 1 to 5)
+		new /obj/effect/temp_visual/scattering_ink(get_turf(owner))
+
+// Floating ink indicator (reuses the 10x10 status icon).
+/obj/effect/temp_visual/scattering_ink
+	icon = 'ModularLobotomy/_Lobotomyicons/tegu_effects10x10.dmi'
+	icon_state = "scattering_ink"
+	layer = ABOVE_ALL_MOB_LAYER
+	duration = 13
+
+/obj/effect/temp_visual/scattering_ink/Initialize(mapload)
+	. = ..()
+	pixel_x = rand(-7, 7)
+	pixel_y = rand(2, 8)
+	animate(src, pixel_y = pixel_y + 22, alpha = 0, time = duration, easing = SINE_EASING)

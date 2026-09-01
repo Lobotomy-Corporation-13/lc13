@@ -186,3 +186,35 @@
 	<br>
 
 	"We remind employees that Abnormalities are not meant to be treated as friends unless it is beneficial for the facility to do so. As the Abnormality does not benefit from such friendships, we require all employees to listen to it and nothing more."}
+
+//The Rain Can Always Get Worse
+/obj/item/paper/fluff/lore/zayin/rain_can
+	name = "T-04-217"
+	info = {"<h2><center>T-04-217</center></h2>	<br>
+	The Rain Can Always Get Worse	<br>
+	"A machine the size of a hunched man, built in the shape of a marionette - a boxy screen for a head, a dented tin body, and a pair of shoes that never quite touch the ground. It hangs from a tangle of cords that rise up out of sight, and no one has found what holds the other end. Its screen shows a single tired eye that weeps a fine, endless drizzle."<br>
+	<br>
+	"It was recovered from a shuttered arcade on the edge of the Backstreets, where it had stood by the door for decades. For a coin it would light up, read the sky, and give the forecast in a flat little voice. Whatever the weather outside, the forecast was always the same: 'It's raining. It can always get worse.' Children fed it coins just to hear it say so."<br>
+	<br>
+	"The strange thing is the rain. Stand under it and you do not truly get wet - the drizzle beads and rolls away, and while it falls, little can harm you. Blades slow. Blows soften. The cold and the dark keep their distance. It is as though the machine is holding an umbrella you cannot see, and holding it over you rather than itself."<br>
+	<br>
+	<h3><center>Excerpt from Observation Log</center></h3><br>
+	"I asked it, once, why it always says the same thing. It seemed to think about it - the screen ticked and flickered through its colours - and then it told me: 'Because it is true, and because it is kind. If it can always get worse, then this, right now, is not the worst. You can stand a little longer in this.' Then it rained on me, and I stood there far longer than my shift required. I have never felt safer at this job than I did under that ugly little cloud."<br>
+	<br>
+	<h3><center>Excerpt from Counseling Log</center></h3><br>
+	"It follows people. Not the way the dangerous ones follow - it just tags along. Whoever pokes its side last, it trots after on those little shoes that never reach the floor, raining quietly over their head the whole while. The staff have started taking turns; no one much likes being the one it is not following. (Omitted) It cannot stay out for long. After a while its screen dims and it winds itself back to its unit, worn through, and will not so much as blink for some minutes. Giving that much shelter must cost it something. It has never once asked for anything back."}
+
+//Rabbits
+/obj/item/paper/fluff/lore/zayin/rabbits
+	name = "F-01-88"
+	info = {"<h2><center>F-01-88</center></h2>	<br>
+	Rabbits	<br>
+	"A single grey rabbit, unremarkable but for its eyes, which are flat and old and follow a person around the room. It is only ever one rabbit - until it is watched too closely, or left too long, and then it is a great many, huddled and staring, pressed so tight together that they seem to breathe as a single thing."<br>
+	<br>
+	"It is afraid of being few. No one has worked out where the extra rabbits come from, or where they go when there is only one again; they do not seem to be born, and they do not seem to die. They are simply there, or not there, the way a crowd is there in an empty room the moment you begin to feel watched. What we have worked out is that the fear feeds on company. The more gentle attention it is given, the more of itself it makes, until the huddle is too large and too frightened to do anything but bolt."<br>
+	<br>
+	<h3><center>Excerpt from Observation Log</center></h3><br>
+	"You have to keep the sessions short and cool. Sit with it, be patient, be kind - all the things you are trained to do - and it takes it as an invitation. One rabbit becomes two, two become six, and every new one makes the whole huddle more nervous, harder to reach, more certain that something is about to go wrong. Push it too far and it turns to the only defence it has: it runs. Not at you. Away. Everywhere at once."<br>
+	<br>
+	<h3><center>Excerpt from Incident Report</center></h3><br>
+	"When it broke, the rabbits went through the walls like water and were gone before the alarm had finished. We found them one at a time over the next few hours - in vents, in store-rooms, behind the cafeteria counter - each one alone, each one bolting the instant it was seen. They never bit, never scratched, never so much as bared a tooth. They only ran, in a mad silent terror of being caught. Cornering the last of them, I understood the Abnormality a little better than I wanted to. It is not the multitude that is afraid. It is each single rabbit, alone in the dark, certain that it is the only one left."}

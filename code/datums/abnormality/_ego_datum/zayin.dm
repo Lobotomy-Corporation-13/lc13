@@ -156,4 +156,3 @@
 /datum/ego_datum/weapon/tidings
 	item_path = /obj/item/ego_weapon/mini/tidings
 	cost = 12
-
