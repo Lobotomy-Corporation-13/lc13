@@ -126,6 +126,11 @@
 	template_id = "Bladelin_office"
 	custom_access = list("bladelin")
 
+/obj/item/structurecapsule/fixer/fullstop
+	name = "Full Stop Office Capsule"
+	template_id = "fullstop_office"
+	custom_access = list("fullstop")
+
 /obj/item/structurecapsule/fixer/bank/attack_self(mob/living/carbon/human/user)
 	. = ..()
 	if(used)
@@ -189,6 +194,11 @@
 	description = "A small base capsule for the roaming members of the Blade Lineage"
 	mappath = "_maps/templates/city_factions/minor/bladelin.dmm"
 
+/datum/map_template/shelter/fullstop
+	name = "Full Stop Office Base"
+	shelter_id = "fullstop_office"
+	description = "A small capsule containing an outpost for the fixers of Full Stop office."
+	mappath = "_maps/templates/city_factions/minor/fullstopfixers.dmm"
 
 //Armor
 /obj/item/storage/box/miscarmor
