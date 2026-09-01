@@ -1,0 +1,5 @@
+author: "Destrok171"
+delete-after: True
+changes:
+  - bugfix: "Spawn Reagent Container works now, using a new TGUI interface."
+  - bugfix: "Removed a dummy EMAIS type."
