@@ -35,3 +35,9 @@
 	category = CITY_FACTION_MINOR
 	leader_job = /datum/job/cutthroat
 	requires_leader = TRUE
+
+/datum/city_faction/fullstop
+	name = "Full Stop Office"
+	category = CITY_FACTION_MINOR
+	leader_job = /datum/job/operator
+	requires_leader = TRUE
