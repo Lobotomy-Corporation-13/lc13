@@ -4482,6 +4482,7 @@
 #include "ModularLobotomy\ego_weapons\melee\city\weak_edits\rcorp.dm"
 #include "ModularLobotomy\ego_weapons\melee\subtype\charge.dm"
 #include "ModularLobotomy\ego_weapons\melee\subtype\lance.dm"
+#include "ModularLobotomy\ego_weapons\melee\subtype\scabbard_weapon.dm"
 #include "ModularLobotomy\ego_weapons\melee\subtype\shield.dm"
 #include "ModularLobotomy\ego_weapons\melee\subtype\wielded.dm"
 #include "ModularLobotomy\ego_weapons\ranged\_autofire_hooks.dm"
