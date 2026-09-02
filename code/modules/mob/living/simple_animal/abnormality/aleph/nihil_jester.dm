@@ -218,7 +218,6 @@
 			ChasingShot()
 		if(7)
 			if(prob(30))
-				return
 				StartRabbit()
 			else
 				WideVoid()
