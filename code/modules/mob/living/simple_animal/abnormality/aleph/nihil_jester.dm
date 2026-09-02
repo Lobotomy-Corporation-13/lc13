@@ -219,7 +219,7 @@
 		if(7)
 			if(prob(30))
 				return
-				//StartRabbit()
+				StartRabbit()
 			else
 				WideVoid()
 
