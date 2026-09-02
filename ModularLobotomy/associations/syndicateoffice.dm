@@ -15,7 +15,7 @@
 		return
 	..()
 
-/obj/item/structurecapsule/syndicate/bladelineage
+/obj/item/structurecapsule/syndicate/bladelineage // DEPRECIATED, NOT USED FOR CURRENT BLADE LINEAGE
 	name = "Blade Lineage Capsule"
 	template_id = "bladelineageswordmen_base"
 

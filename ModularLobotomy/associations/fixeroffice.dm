@@ -121,6 +121,16 @@
 	name = "Banking Office Capsule"
 	template_id = "bankciv_office"
 
+/obj/item/structurecapsule/fixer/bladelin
+	name = "Blade Lineage Base Capsule"
+	template_id = "Bladelin_office"
+	custom_access = list("bladelin")
+
+/obj/item/structurecapsule/fixer/fullstop
+	name = "Full Stop Office Capsule"
+	template_id = "fullstop_office"
+	custom_access = list("fullstop")
+
 /obj/item/structurecapsule/fixer/bank/attack_self(mob/living/carbon/human/user)
 	. = ..()
 	if(used)
@@ -178,7 +188,17 @@
 	description = "WARNING: Rapid accumulation of net worth has been proven to cause permanent potentiality loss!."
 	mappath = "_maps/templates/fixer_office/bankciv.dmm"
 
+/datum/map_template/shelter/bladelin
+	name = "Blade Lineage base"
+	shelter_id = "bladelin_office"
+	description = "A small base capsule for the roaming members of the Blade Lineage"
+	mappath = "_maps/templates/city_factions/minor/bladelin.dmm"
 
+/datum/map_template/shelter/fullstop
+	name = "Full Stop Office Base"
+	shelter_id = "fullstop_office"
+	description = "A small capsule containing an outpost for the fixers of Full Stop office."
+	mappath = "_maps/templates/city_factions/minor/fullstopfixers.dmm"
 
 //Armor
 /obj/item/storage/box/miscarmor
