@@ -18,6 +18,7 @@
 	threat_level = ALEPH_LEVEL
 	can_breach = TRUE
 	start_qliphoth = 3
+	attack_sound = 'sound/abnormalities/wrath_servant/small_smash1.ogg'
 
 	work_chances = list(
 		ABNORMALITY_WORK_INSTINCT = 30,
