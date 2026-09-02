@@ -845,12 +845,12 @@
 		return FALSE
 	if(!isliving(AM))
 		return FALSE
-	if(istype(AM, /mob/living/simple_animal/hostile/abnormality/wrath_servant))
+	if(istype(AM, /mob/living/simple_animal/hostile/abnormality/wrath_servant) || istype(AM, /mob/living/simple_animal/hostile/abnormality/nihil_jester))
 		return
 	var/mob/living/L = AM
 	L.apply_status_effect(STATUS_EFFECT_ACIDIC_GOO)
 
-/obj/effect/decal/cleanable/wrath_acid/bad/
+/obj/effect/decal/cleanable/wrath_acid/bad
 	name = "Acidic Goo"
 	desc = "It seems to burn whatever it touches, best to stay away!"
 

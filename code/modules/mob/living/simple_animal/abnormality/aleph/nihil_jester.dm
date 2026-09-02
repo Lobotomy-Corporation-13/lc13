@@ -1,4 +1,5 @@
 //Coded by Kitsunemitsu, InsightfulParasite and Blim!
+//Sprited by Nutterbutter, my homie
 /mob/living/simple_animal/hostile/abnormality/nihil
 	name = "The Jester of Nihil"
 	desc = "What the heck is this... A clown?"
@@ -119,15 +120,26 @@
 
 /mob/living/simple_animal/hostile/abnormality/nihil/BreachEffect(mob/living/carbon/human/user, breach_type)
 	. = ..()
+	var/red_buff = 1
+	var/white_buff = 1
+	var/black_buff = 1
+	var/pale_buff = 1
+
 	for(var/mob/living/simple_animal/hostile/abnormality/A in GLOB.abnormality_mob_list)
 		if(istype(A, /mob/living/simple_animal/hostile/abnormality/despair_knight))
 			knight_active = TRUE
+			pale_buff = 0.5
 		if(istype(A, /mob/living/simple_animal/hostile/abnormality/greed_king))
 			king_active = TRUE
+			red_buff = 0.5
 		if(istype(A, /mob/living/simple_animal/hostile/abnormality/hatred_queen))
 			queen_active = TRUE
+			black_buff = 0.5
 		if(istype(A, /mob/living/simple_animal/hostile/abnormality/wrath_servant))
 			servant_active = TRUE
+			white_buff = 0.5
+
+	ChangeResistances(list(RED_DAMAGE = red_buff, WHITE_DAMAGE = white_buff, BLACK_DAMAGE = black_buff, PALE_DAMAGE = pale_buff))
 
 
 
@@ -136,6 +148,10 @@
 	area_attack = new()
 	ourdash = new()
 
+/mob/living/simple_animal/hostile/abnormality/nihil/Destroy()
+	..()
+	for(var/obj/effect/item in wallslist)
+		qdel(item)
 
 /mob/living/simple_animal/hostile/abnormality/nihil/Move()
 	if(!can_act)
@@ -170,7 +186,7 @@
 				NihilAttacks()
 		if(3)
 			if(knight_active)
-				for(var/i = 1 to 4)
+				for(var/i = 1 to 2)
 					SwordVolley()
 			else
 				NihilAttacks()
@@ -265,12 +281,12 @@
 	can_act = FALSE
 	SLEEP_CHECK_DEATH(7)
 	goonchem_vortex(get_turf(src), 1, 10)
-	SLEEP_CHECK_DEATH(15)
+	SLEEP_CHECK_DEATH(10)
 
 	for(var/i in 1 to 5)
 		var/turf/T = get_turf(src)
 		DeferProjectile(/obj/projectile/nihildiamond, shootat, T, 3)
-		SLEEP_CHECK_DEATH(8)
+		SLEEP_CHECK_DEATH(5)
 	can_act = TRUE
 
 /mob/living/simple_animal/hostile/abnormality/nihil/proc/Flak()
@@ -513,7 +529,7 @@
 	var/list/been_hit = list()
 	for(var/turf/T in area_of_effect)
 		new /obj/effect/temp_visual/smash_effect(T)
-		been_hit = HurtInTurf(T, been_hit, 80, RED_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
+		been_hit = HurtInTurf(T, been_hit, 120, RED_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 		for(var/mob/living/L in T)
 			if(anchored)
 				continue
@@ -529,7 +545,7 @@
 		return
 	manual_emote("rears up to charge!")
 	var/list/possible_targets = list()
-	for(var/mob/living/carbon/human/H in view(20, src))
+	for(var/mob/living/carbon/human/H in view(8, src))
 		possible_targets += H
 	if(LAZYLEN(possible_targets))
 		FindTarget(list(pick(possible_targets)), TRUE) // The list(pick()) here makes it equally likely for anyone to be targeted. If you removed it, it'd be based on individual threat level
@@ -543,7 +559,7 @@
 	playsound(src, 'sound/abnormalities/wrath_servant/enrage.ogg', 75, FALSE, 20, falloff_distance = 10)
 	for(var/i = 1 to 30)
 		new /obj/effect/gibspawner/generic/silent/wrath_acid/bad(get_turf(src))
-		SLEEP_CHECK_DEATH(2)
+		SLEEP_CHECK_DEATH(1)
 	can_act = TRUE
 
 
@@ -614,9 +630,19 @@
 	RabbitLoop()
 
 /mob/living/simple_animal/hostile/abnormality/nihil/proc/RabbitLoop()
-	area_attack.Perform(target, src)
-	SLEEP_CHECK_DEATH (5 SECONDS)
-	EndRabbit()
+	switch(rand(1,3))
+		//First 4 are Projectile attacks
+		if(1)
+			HomingBolts()
+		if(2)
+			area_attack.Perform(target, src)
+		if(3)
+			Pushback()
+
+	if(prob(30))
+		EndRabbit()
+		return
+
 
 /mob/living/simple_animal/hostile/abnormality/nihil/proc/EndRabbit()
 	area_active = FALSE
