@@ -160,9 +160,26 @@
 		return FALSE
 	return ..()
 
-/mob/living/simple_animal/hostile/abnormality/nihil/AttackingTarget()
+/mob/living/simple_animal/hostile/abnormality/nihil/AttackingTarget(atom/attacked_target)
+	..()
+	if(!ishuman(attacked_target))
+		return
+	var/mob/living/carbon/human/H = attacked_target
+	if(!HasOne())
+		H.apply_void(3)
+
+	if(!knight_active)
+		H.deal_damage(20, PALE_DAMAGE, src, attack_type = (ATTACK_TYPE_MELEE))
+	if(!king_active)
+		H.deal_damage(20, RED_DAMAGE, src, attack_type = (ATTACK_TYPE_MELEE))
+	if(!queen_active)
+		H.deal_damage(20, BLACK_DAMAGE, src, attack_type = (ATTACK_TYPE_MELEE))
+	if(!servant_active)
+		H.deal_damage(20, WHITE_DAMAGE, src, attack_type = (ATTACK_TYPE_MELEE))
+
 	OpenFire()
 	return
+
 
 //All of the attacks are below.
 /mob/living/simple_animal/hostile/abnormality/nihil/OpenFire()
@@ -1072,3 +1089,17 @@
 		playsound(src, 'sound/abnormalities/nihil/filter.ogg', 15, FALSE, -3)
 
 #undef STATUS_EFFECT_VOID
+
+
+//Admin and Helper Procs
+/mob/living/simple_animal/hostile/abnormality/nihil/proc/SetAllActive()
+	knight_active = TRUE
+	king_active = TRUE
+	queen_active = TRUE
+	servant_active = TRUE
+
+
+/mob/living/simple_animal/hostile/abnormality/nihil/proc/HasOne()
+	if(knight_active || king_active || queen_active || servant_active)
+		return TRUE
+	return FALSE
