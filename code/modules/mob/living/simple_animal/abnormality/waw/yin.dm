@@ -308,7 +308,7 @@
 //Give players 10 Seconds to prepare
 // - Kitsunemitsu/Kirie
 /mob/living/simple_animal/hostile/abnormality/yin/proc/DragonEffect()
-	for(var/mob/living/carbon/human/H in GLOB.mob_list)
+	for(var/mob/living/carbon/human/H as anything in GLOB.human_list)
 		if(H.z != z)
 			continue
 		to_chat(H, span_userdanger("The Laws of the Universe are in Chaos!"))		//Exdeath's Grand Cross text.
