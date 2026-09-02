@@ -63,7 +63,7 @@
 //Work stuff
 /mob/living/simple_animal/hostile/abnormality/nihil/WorkChance(mob/living/carbon/human/user, chance)
 	work_damage_amount = initial(work_damage_amount)
-	work_rate_increase = 0
+	var/work_rate_increase = 0
 
 	for(var/mob/living/simple_animal/hostile/abnormality/A in GLOB.abnormality_mob_list)
 		if(istype(A, /mob/living/simple_animal/hostile/abnormality/despair_knight))
@@ -102,22 +102,22 @@
 
 
 /mob/living/simple_animal/hostile/abnormality/nihil/SuccessEffect(mob/living/carbon/human/user, work_type, pe)
-	if(prob(20)
+	if(prob(20))
 		datum_reference.qliphoth_change(1)
 
 	for(var/mob/living/simple_animal/hostile/abnormality/A in GLOB.abnormality_mob_list)
-			if(istype(A, /mob/living/simple_animal/hostile/abnormality/despair_knight) && prob(20))
-				A.datum_reference.qliphoth_change(1)
-			if(istype(A, /mob/living/simple_animal/hostile/abnormality/greed_king) && prob(20))
-				A.datum_reference.qliphoth_change(1)
-			if(istype(A, /mob/living/simple_animal/hostile/abnormality/hatred_queen) && prob(20))
-				A.datum_reference.qliphoth_change(1)
-			if(istype(A, /mob/living/simple_animal/hostile/abnormality/wrath_servant) && prob(20))
-				A.datum_reference.qliphoth_change(1)
+		if(istype(A, /mob/living/simple_animal/hostile/abnormality/despair_knight) && prob(20))
+			A.datum_reference.qliphoth_change(1)
+		if(istype(A, /mob/living/simple_animal/hostile/abnormality/greed_king) && prob(20))
+			A.datum_reference.qliphoth_change(1)
+		if(istype(A, /mob/living/simple_animal/hostile/abnormality/hatred_queen) && prob(20))
+			A.datum_reference.qliphoth_change(1)
+		if(istype(A, /mob/living/simple_animal/hostile/abnormality/wrath_servant) && prob(20))
+			A.datum_reference.qliphoth_change(1)
 
 
 
-/mob/living/simple_animal/hostile/abnormality/bluestar/BreachEffect(mob/living/carbon/human/user, breach_type)
+/mob/living/simple_animal/hostile/abnormality/nihil/BreachEffect(mob/living/carbon/human/user, breach_type)
 	. = ..()
 	for(var/mob/living/simple_animal/hostile/abnormality/A in GLOB.abnormality_mob_list)
 		if(istype(A, /mob/living/simple_animal/hostile/abnormality/despair_knight))
