@@ -41,3 +41,9 @@
 	category = CITY_FACTION_MINOR
 	leader_job = /datum/job/operator
 	requires_leader = TRUE
+
+/datum/city_faction/liu
+	name = "Liu South Section 6"
+	category = CITY_FACTION_MAJOR
+	leader_job = /datum/job/liudirector
+	requires_leader = TRUE
