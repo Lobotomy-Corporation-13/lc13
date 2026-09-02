@@ -1,4 +1,0 @@
-author: "neadsy"
-delete-after: True
-changes:
-  - balance: "Changed Qlipoth_Meltdown_Supressor to not make games last forever. buffed post midnight time gained from it to compensate."
