@@ -1,0 +1,46 @@
+//LCE Researcher
+/datum/job/cityresearcher
+	title = "LCE Researcher"
+	outfit = /datum/outfit/job/cityresearcher
+	department_head = list("The Lead Researcher")
+	faction = "Station"
+	supervisors = "The Lead Researcher"
+	selection_color = "#b0936f"
+	total_positions = 0
+	spawn_positions = 0
+	leader = /datum/job/headresearcher
+	faction_positions = 2
+	display_order = JOB_DISPLAY_ORDER_SYNDICATEVET
+	access = list("LCE",)
+	minimal_access = list("LCE")
+	radio_channel_name = "LCE"
+	radio_channel_color = "#a1a1a1"
+	departments = DEPARTMENT_CITY_ANTAGONIST
+	paycheck = 200
+	maptype = list("city")
+	job_important = "You are a researcher stationed at a temporary LCE outpost in this area, you report to your Lead Researcher. \ 
+	you manage 1 abnormality, your outpost doesnt have a security force so keep them happy."
+
+	roundstart_attributes = list(
+								FORTITUDE_ATTRIBUTE = 80,
+								PRUDENCE_ATTRIBUTE = 80,
+								TEMPERANCE_ATTRIBUTE = 80,
+								JUSTICE_ATTRIBUTE = 80
+								)
+
+/datum/job/capo/after_spawn(mob/living/carbon/human/H, mob/M)
+	ADD_TRAIT(H, TRAIT_COMBATFEAR_IMMUNE, JOB_TRAIT)
+	ADD_TRAIT(H, TRAIT_WORK_FORBIDDEN, JOB_TRAIT)
+	. = ..()
+
+
+/datum/outfit/job/cityresearcher
+	name = "LCE Researcher"
+	jobtype = /datum/job/cityresearcher
+
+	belt = /obj/item/pda/security
+	ears = /obj/item/radio/headset/faction
+	uniform = /obj/item/clothing/under/suit/lobotomy/plain
+	glasses = /obj/item/clothing/glasses/sunglasses
+	backpack_contents = list()
+	shoes = /obj/item/clothing/shoes/laceup

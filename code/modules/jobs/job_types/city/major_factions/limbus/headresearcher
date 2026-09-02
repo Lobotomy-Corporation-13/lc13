@@ -1,0 +1,48 @@
+//LCE Lead Researcher
+/datum/job/headresearcher
+	title = "LCE Lead Researcher"
+	outfit = /datum/outfit/job/headresearcher
+	department_head = list("Limbus Company.")
+	faction = "Station"
+	supervisors = "Limbus Company."
+	selection_color = "#856948"
+	total_positions = 0
+	spawn_positions = 0
+	leader = /datum/job/headresearcher
+	faction_positions = 1
+	display_order = JOB_DISPLAY_ORDER_SYNDICATEHEAD
+	trusted_only = TRUE
+	access = list("LCE", "LCE_leader")
+	minimal_access = list("LCE", "LCE_leader")
+	radio_channel_name = "LCE"
+	radio_channel_color = "#a1a1a1"
+	departments = DEPARTMENT_COMMAND | DEPARTMENT_CITY_ANTAGONIST
+	paycheck = 700
+	maptype = list("city")
+	job_important = "This is a roleplay role. you are the lead researcher of a temporary LCE holding facility \
+	your job is to oversee research on your 2 contained abnormalities \
+	and make a profit via the sale of EGO or Enkephalin to other faction."
+	
+
+	roundstart_attributes = list(
+								FORTITUDE_ATTRIBUTE = 100,
+								PRUDENCE_ATTRIBUTE = 100,
+								TEMPERANCE_ATTRIBUTE = 100,
+								JUSTICE_ATTRIBUTE = 100
+								)
+
+/datum/job/sottocapo/after_spawn(mob/living/carbon/human/H, mob/M)
+	ADD_TRAIT(H, TRAIT_COMBATFEAR_IMMUNE, JOB_TRAIT)
+	ADD_TRAIT(H, TRAIT_WORK_FORBIDDEN, JOB_TRAIT)
+	. = ..()
+
+
+/datum/outfit/job/headresearcher
+	name = "LCE Lead Researcher"
+	jobtype = /datum/job/headresearcher
+	belt = /obj/item/pda/security
+	ears = /obj/item/radio/headset/faction/heads
+	uniform = /obj/item/clothing/under/suit/lobotomy/plain
+	glasses = /obj/item/clothing/glasses/sunglasses
+	backpack_contents = list(/obj/item/structurecapsule/syndicate/lce, /obj/item/office_marker/syndicate)
+	shoes = /obj/item/clothing/shoes/laceup
