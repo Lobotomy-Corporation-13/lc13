@@ -645,6 +645,7 @@
 		all_turfs -= AT
 
 	//Start the Rabbit and Steel loop!
+	area_attack.Perform(target, src)
 	RabbitLoop()
 
 /mob/living/simple_animal/hostile/abnormality/nihil/proc/RabbitLoop()
