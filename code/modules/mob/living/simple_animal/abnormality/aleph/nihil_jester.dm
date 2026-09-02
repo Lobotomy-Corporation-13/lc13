@@ -20,12 +20,15 @@
 	var/knight_active
 
 	//Kinda need this unfortunately
+	var/obj/effect/proc_holder/ability/nix/area_attack
 	var/obj/effect/proc_holder/ability/aimed/dash/kog/ourdash
 	var/void_range = 5
 
+	var/list/wallslist = list()
 
 /mob/living/simple_animal/hostile/abnormality/nihil/Initialize()
 	.  = ..()
+	area_attack = new()
 	ourdash = new()
 
 
@@ -36,18 +39,17 @@
 		return FALSE
 	return ..()
 
+/mob/living/simple_animal/hostile/abnormality/nihil/AttackingTarget()
+	OpenFire()
+	return
 
 //All of the attacks are below.
 /mob/living/simple_animal/hostile/abnormality/nihil/OpenFire()
 	if(!can_act)
 		return
-	//Jester has two separate attack types, one if he is in a Department Centre with Area active
-	//And one if he is not.
+
 	if(area_active)
-		switch(rand(1,5))
-
-
-		return
+		return FALSE
 
 	//We're gonna roll the attacks, and if there's no magical girl, he will default to a different set of abilities.
 	switch(rand(1,8))
@@ -123,11 +125,13 @@
 	var/mob/living/shootat = target
 	can_act = FALSE
 	manual_emote("points at [shootat].")
+	playsound(src, 'sound/voice/human/manlaugh1.ogg', 75, FALSE, 4)
 	SLEEP_CHECK_DEATH(5)
 	for(var/i in 1 to 10)
 		var/turf/T = get_step(get_turf(src), pick(1,2,4,5,6,8,9,10))
 		DeferProjectile(/obj/projectile/nihilspade, shootat, T, 5)
 
+	playsound(src, 'sound/effects/curseattack.ogg', 75, FALSE, 4)
 	SLEEP_CHECK_DEATH(10)
 	can_act = TRUE
 
@@ -138,6 +142,7 @@
 	var/mob/living/shootat = target
 	can_act = FALSE
 	manual_emote("grins at [shootat].")
+	playsound(src, 'sound/voice/human/manlaugh1.ogg', 75, FALSE, 4)
 	SLEEP_CHECK_DEATH(5)
 	for(var/i in 1 to 7)
 		var/turf/T = get_step(get_turf(src), pick(1,2,4,5,6,8,9,10))
@@ -173,6 +178,7 @@
 	SLEEP_CHECK_DEATH(25)
 	var/turf/T = get_turf(exploder)
 	exploder.Immobilize(5)
+	playsound(src, 'sound/effects/constructform.ogg', 75, FALSE, 4)
 	for(var/i in 1 to 10)
 		//This is subtly the most evil and fucked up line of code I have ever written.
 		DeferProjectile(/obj/projectile/nihilclub, src, T, 2)
@@ -181,6 +187,9 @@
 
 /mob/living/simple_animal/hostile/abnormality/nihil/proc/VoidAOE()
 	can_act = FALSE
+	manual_emote("laughs.")
+	playsound(src, 'sound/voice/human/manlaugh1.ogg', 75, FALSE, 4)
+
 	new /obj/effect/temp_visual/voidout(get_turf(src))
 	SLEEP_CHECK_DEATH(25)
 	var/turf/orgin = get_turf(src)
@@ -199,11 +208,17 @@
 	can_act = TRUE
 
 /mob/living/simple_animal/hostile/abnormality/nihil/proc/ChasingShot()
+	manual_emote("laughs.")
+	playsound(src, 'sound/voice/human/manlaugh1.ogg', 75, FALSE, 4)
+
 	for(var/i in 1 to 7)
 		new /obj/effect/void_small(get_turf(target))
 		SLEEP_CHECK_DEATH(5)
 
 /mob/living/simple_animal/hostile/abnormality/nihil/proc/WideVoid()
+	manual_emote("laughs.")
+	playsound(src, 'sound/voice/human/manlaugh1.ogg', 75, FALSE, 4)
+
 	var/list/voidtargets = list()
 	for(var/mob/living/carbon/human/H in view(7, src))
 		voidtargets+= H
@@ -342,7 +357,7 @@
 /mob/living/simple_animal/hostile/abnormality/nihil/proc/Beatdown()
 	can_act = FALSE
 	manual_emote("winds up...")
-	playsound(src, 'sound/items/unsheath.ogg', 75, FALSE, 4)
+	playsound(src, 'sound/weapons/fwoosh.ogg', 75, FALSE, 4)
 
 	//Turfs we will be hitting
 	var/turf/area_of_effect = list()
@@ -457,6 +472,263 @@
 	can_act = TRUE
 
 
+//Area attacks
+//We gotta start the Area Attacks
+/mob/living/simple_animal/hostile/abnormality/nihil/proc/StartRabbit()
+	area_active = TRUE
+
+	//Get a Department Centre.
+	var/turf/T = pick(GLOB.department_centers)
+
+	for(var/mob/living/carbon/human/H in view(8, src))
+		H.forceMove(pick(T))
+	can_act = FALSE
+
+	//Animate out and then animate in again
+	animate(src, alpha = 0, time = 2 SECONDS)
+	SLEEP_CHECK_DEATH(2 SECONDS)
+	forceMove(T)
+	animate(src, alpha = 255, time = 5 SECONDS)
+	SLEEP_CHECK_DEATH(5 SECONDS)
+
+	//Lock them in!
+	var/turf/orgin = get_turf(src)
+	var/list/all_turfs = RANGE_TURFS(7, orgin)
+	for(var/turf/AT in all_turfs)
+		if(get_dist(orgin, AT) != 7)
+			continue
+
+		//Here's a wall around them.
+		//I tried to make this code nicer, but
+		var/obj/effect/spellbinder/wall = new /obj/effect/spellbinder get_turf(AT)
+		wallslist += wall
+		all_turfs -= AT
+
+	//Start the Rabbit and Steel loop!
+	RabbitLoop()
+
+/mob/living/simple_animal/hostile/abnormality/nihil/proc/RabbitLoop()
+	area_attack.Perform(target, src)
+	SLEEP_CHECK_DEATH (5 SECONDS)
+	EndRabbit()
+
+/mob/living/simple_animal/hostile/abnormality/nihil/proc/EndRabbit()
+	area_active = FALSE
+	for(var/obj/effect/item in wallslist)
+		qdel(item)
+
+
+
+/*--\
+|NIX|
+\--*/
+/obj/effect/proc_holder/ability/nix
+	name = "Nix"
+	desc = "\"Everybodys agony becomes one\" releases a wave of Hatred beams across \
+		the area. This attack releases a blessing of the magical girls for your \
+		opponent to use."
+	action_icon_state = "helper_dash0"
+	base_icon_state = "helper_dash"
+	cooldown_time = 10 SECONDS
+	var/wave_area_halfwidth = 7
+	var/wave_area_halfheight = 7
+	//How fast between telegraph and beam.
+	var/wave_speed = 2
+	//The larger the wave delay the longer window someone can jump between the beams.
+	var/wave_delay = 2
+
+/obj/effect/proc_holder/ability/nix/can_cast(mob/user = usr)
+	if(isabnormalitymob(user))
+		var/mob/living/simple_animal/hostile/abnormality/abno = user
+		if(abno.IsContained())
+			return FALSE
+	return ..()
+
+/obj/effect/proc_holder/ability/nix/Perform(target, mob/living/user, area_list)
+	. = ..()
+	//reset the emergency stop so we are not forever stuck.
+	if(!user)
+		return
+
+	if(!area_list || !length(area_list))
+		area_list = view(get_turf(user))
+	ToggleAct(user,FALSE)
+
+	AttackNow(user, area_list)
+
+	AbnoInteraction(user)
+	ToggleAct(user,TRUE)
+
+/obj/effect/proc_holder/ability/nix/proc/AttackNow(mob/living/caster, list/arena_turfs)
+	if(!caster || !arena_turfs)
+		return
+
+	var/caster_x = caster.x
+	var/caster_y = caster.y
+	var/caster_z = caster.z
+
+	if(length(arena_turfs))
+		//Yeah i basically put a buff into oncoming traffic. -IP
+		var/thing_to_place = pick(/obj/effect/temp_visual/blessing/qoh,/obj/effect/temp_visual/blessing/kod,
+			/obj/effect/temp_visual/blessing/kog,/obj/effect/temp_visual/blessing/sow)
+		new thing_to_place(pick(arena_turfs))
+
+	/*
+	* Changing this from a left to right wave
+	* to a top to bottom requires some math.
+	* farthest_y would need to have + wave_area_halfwidth
+	* instead of farthest_x.
+	* start_turf is the top right while end_turf is
+	* bottom left. So move the math alterations from
+	* farthest_y to farthest_x with start being +
+	* and end being -.
+	* Then finally make it
+	* farthest_y = farthest_y - 1. -IP
+	*/
+	var/farthest_x = caster_x - wave_area_halfwidth
+	var/farthest_y = caster_y
+	var/loop_amt = (wave_area_halfwidth * 2) + 1
+	for(var/loop = 1 to loop_amt)
+		var/turf/start_turf = locate(farthest_x,farthest_y + wave_area_halfheight,caster_z)
+		var/turf/end_turf = locate(farthest_x,farthest_y - wave_area_halfheight,caster_z)
+		TelegraphBeam(caster, start_turf, end_turf)
+		farthest_x = farthest_x + 1
+		if(!do_after(caster, wave_delay, target = caster))
+			break
+
+
+/obj/effect/proc_holder/ability/nix/proc/TelegraphBeam(mob/living/caster, turf/top, turf/bottom)
+	var/list/pure_turfs = block(bottom,top)
+	//purely visual warning
+	//I found this proc while just skimming the online refrence. -IP
+	missile(icon('icons/obj/projectiles.dmi', "nihil_heart"),top,bottom)
+	for(var/turf/T in pure_turfs)
+		if(isopenturf(T))
+			FlickOnAtom(T,'icons/effects/cult_effects.dmi',"floorglow_looping",1 SECONDS)
+			continue
+		pure_turfs -= T
+
+	if(!do_after(caster, wave_speed, target = caster))
+		return
+
+	new /datum/beam(top.Beam(bottom, "qoh", time = 3))
+	for(var/turf/damage_loc in pure_turfs)
+		for(var/mob/living/L in damage_loc)
+			if(IsPartOfCreature(caster, L))
+				continue
+			DamageThing(L, 60, BLACK_DAMAGE, caster, thing_flags = (DAMAGE_FORCED), thing_attack_type = (ATTACK_TYPE_SPECIAL))
+
+//Think about moving this up from subtype to root -IP
+/obj/effect/proc_holder/ability/nix/proc/IsPartOfCreature(creature, part)
+	if(part == creature)
+		return TRUE
+	if(istype(part, /mob/living/simple_animal/projectile_blocker_dummy))
+		var/mob/living/simple_animal/projectile_blocker_dummy/pbd = part
+		if(pbd.parent == creature)
+			return TRUE
+
+/*---------------\
+|Blessing of Hope|
+\---------------*/
+/obj/effect/temp_visual/blessing
+	name = "blessing of love"
+	icon = 'icons/obj/projectiles.dmi'
+	icon_state = "nihil_heart"
+	duration = 10 SECONDS
+	var/nice_text = ""
+	var/girl_type = /mob/living/simple_animal/hostile/abnormality/hatred_queen
+
+/obj/effect/temp_visual/blessing/Crossed(atom/movable/AM)
+	. = ..()
+	if(isliving(AM))
+		ApplyEffect(AM)
+		qdel(src)
+
+//Overridable Proc
+/obj/effect/temp_visual/blessing/proc/ApplyEffect(mob/living/L)
+	var/obj/effect/temp_visual/decoy/fading/halfsecond/H = new(get_turf(src), girl_type)
+	H.dir = 2
+	to_chat(L, span_nicegreen("[nice_text]"))
+
+/obj/effect/temp_visual/blessing/qoh
+	color = "RED"
+	nice_text = "Your wounds start closing as you feel determined to save the world."
+
+/obj/effect/temp_visual/blessing/qoh/ApplyEffect(mob/living/L)
+	L.apply_status_effect(/datum/status_effect/magical_blessing)
+	return ..()
+
+/obj/effect/temp_visual/blessing/kod
+	name = "blessing of justice"
+	icon = 'icons/obj/projectiles.dmi'
+	icon_state = "nihil_spade"
+	color = "blue"
+	nice_text = "It feels like someone is softening the attacks against you."
+	girl_type = /mob/living/simple_animal/hostile/abnormality/despair_knight
+
+/obj/effect/temp_visual/blessing/kod/ApplyEffect(mob/living/L)
+	L.apply_lc_protection(10)
+	return ..()
+
+/obj/effect/temp_visual/blessing/kog
+	name = "blessing of happiness"
+	icon = 'icons/obj/projectiles.dmi'
+	icon_state = "nihil_diamond"
+	color = "gold"
+	nice_text = "Your attacks feel energized and you cant help but crack a smile."
+	girl_type = /mob/living/simple_animal/hostile/abnormality/greed_king
+
+/obj/effect/temp_visual/blessing/kog/ApplyEffect(mob/living/L)
+	L.apply_lc_offense_level_up(10)
+	return ..()
+
+/obj/effect/temp_visual/blessing/sow
+	name = "blessing of courage"
+	icon = 'icons/obj/projectiles.dmi'
+	icon_state = "nihil_club"
+	color = "green"
+	nice_text = "You feel brave enough to make more risky hits."
+	girl_type = /mob/living/simple_animal/hostile/abnormality/wrath_servant
+
+/obj/effect/temp_visual/blessing/sow/ApplyEffect(mob/living/L)
+	L.apply_lc_poise(10)
+	return ..()
+
+/*-------------\
+|Status Effects|
+\-------------*/
+	//QOH
+/datum/status_effect/magical_blessing
+	id = "magical_blessing"
+	status_type = STATUS_EFFECT_UNIQUE
+	duration = 1 MINUTES
+	tick_interval = 10
+	alert_type = null
+	on_remove_on_mob_delete = TRUE
+
+/datum/status_effect/magical_blessing/on_apply()
+	ADD_TRAIT(owner, TRAIT_IGNOREDAMAGESLOWDOWN, id)
+	return TRUE
+
+/datum/status_effect/magical_blessing/tick()
+	. = ..()
+	if(!ishuman(owner))
+		QDEL_IN(src, 5)
+		return
+	var/mob/living/carbon/human/status_holder = owner
+	TickEffect()
+	if(status_holder.stat == DEAD)
+		qdel(src)
+
+/datum/status_effect/magical_blessing/on_remove()
+	REMOVE_TRAIT(owner, TRAIT_IGNOREDAMAGESLOWDOWN, id)
+
+/datum/status_effect/magical_blessing/proc/TickEffect()
+	var/mob/living/carbon/human/status_holder = owner
+	status_holder.adjustSanityLoss(-10)
+	status_holder.adjustBruteLoss(-10)
+
+
 //Projectiles
 /obj/projectile/nihilheart
 	name = "heart attack"
@@ -482,7 +754,7 @@
 	damage_type = PALE_DAMAGE
 
 	ricochets_max = 3
-	ricochet_chance = 70
+	ricochet_chance = 100
 	ricochet_decay_chance = 1
 	ricochet_decay_damage = 0.7	//Decays a bit
 	ricochet_auto_aim_range = 5	//Bounces towards you
@@ -557,6 +829,12 @@
 		L.deal_damage(boom_damage, WHITE_DAMAGE, src, flags = (DAMAGE_FORCED | DAMAGE_UNTRACKABLE), attack_type = (ATTACK_TYPE_SPECIAL))
 		L.apply_void(3)
 	qdel(src)
+
+//The Box
+/obj/effect/spellbinder
+	icon = 'icons/effects/atmospherics.dmi'
+	icon_state = "halon"
+	density = TRUE
 
 
 //Items
