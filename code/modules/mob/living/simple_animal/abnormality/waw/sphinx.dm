@@ -356,7 +356,7 @@
 	if(istype(A,/obj/structure/statue/petrified))
 		playsound(A, 'sound/effects/break_stone.ogg', rand(10,50), TRUE)
 		A.visible_message(span_danger("[A] returns to normal!"), span_userdanger("You break free of the stone!"))
-		A.Destroy()
+		qdel(A)
 		qdel(src)
 		return TRUE
 

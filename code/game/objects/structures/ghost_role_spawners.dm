@@ -62,14 +62,14 @@
 /obj/structure/ash_walker_eggshell/Destroy()
 	if(!egg)
 		return ..()
-	var/mob/living/carbon/human/yolk = new /mob/living/carbon/human/(get_turf(src))
+	var/mob/living/carbon/human/yolk = new(get_turf(src))
+	INVOKE_ASYNC(yolk, TYPE_PROC_REF(/mob/living/carbon/human, set_species), /datum/species/lizard/ashwalker)
+	INVOKE_ASYNC(yolk, TYPE_PROC_REF(/mob/living/carbon/human, equipOutfit), /datum/outfit/ashwalker)//this is an authentic mess we're making
 	yolk.fully_replace_character_name(null,random_unique_lizard_name(gender))
-	yolk.set_species(/datum/species/lizard/ashwalker)
 	yolk.underwear = "Nude"
-	yolk.equipOutfit(/datum/outfit/ashwalker)//this is an authentic mess we're making
 	yolk.update_body()
 	yolk.gib()
-	qdel(egg)
+	QDEL_NULL(egg)
 	return ..()
 
 
@@ -93,7 +93,13 @@
 	var/datum/team/ashwalkers/team
 	var/obj/structure/ash_walker_eggshell/eggshell
 
+/obj/effect/mob_spawn/human/ash_walker/Destroy()
+	eggshell = null
+	return ..()
+
 /obj/effect/mob_spawn/human/ash_walker/allow_spawn(mob/user)
+	if(isnull(team))
+		return FALSE
 	if(!(user.key in team.players_spawned))//one per person unless you get a bonus spawn
 		return TRUE
 	to_chat(user, span_warning("<b>You have exhausted your usefulness to the Necropolis</b>."))
