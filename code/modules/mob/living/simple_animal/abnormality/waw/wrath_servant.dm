@@ -845,7 +845,7 @@
 		return FALSE
 	if(!isliving(AM))
 		return FALSE
-	if(istype(AM, /mob/living/simple_animal/hostile/abnormality/wrath_servant) || istype(AM, /mob/living/simple_animal/hostile/abnormality/nihil_jester))
+	if(istype(AM, /mob/living/simple_animal/hostile/abnormality/wrath_servant) || istype(AM, /mob/living/simple_animal/hostile/abnormality/nihil))
 		return
 	var/mob/living/L = AM
 	L.apply_status_effect(STATUS_EFFECT_ACIDIC_GOO)
