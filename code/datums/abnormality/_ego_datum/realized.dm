@@ -36,7 +36,9 @@ Note: I chose to tag these Realizations based on their own active and passive ab
 /// Broken Crown - Bucket (Wishing Well)
 /datum/ego_datum/armor/realized/brokencrown
 	item_path = /obj/item/clothing/suit/armor/ego_gear/realization/brokencrown
-
+///Energy Conversion (We Can Change Anything)
+/datum/ego_datum/armor/realized/energyconversion
+	item_path = /obj/item/clothing/suit/armor/ego_gear/realization/energyconversion
 /* ------------------ TETH Realizations ------------------*/
 
 /// Mouth of God - Beak (Punishing Bird)
@@ -113,7 +115,9 @@ Note: I chose to tag these Realizations based on their own active and passive ab
 /datum/ego_datum/armor/realized/experimentation
 	item_path = /obj/item/clothing/suit/armor/ego_gear/realization/experimentation
 	ego_tags = list(EGO_TAG_SUSTAIN, EGO_TAG_AOE_RADIAL, EGO_TAG_SUPPORT, EGO_TAG_HAZARDOUS)
-
+/// Gift - Funny Prank (Laeitia)
+/datum/ego_datum/armor/realized/gift
+	item_path = /obj/item/clothing/suit/armor/ego_gear/realization/gift
 /// Rhythm - Rhythm (Singing Machine)
 /datum/ego_datum/armor/realized/rhythm
 	item_path = /obj/item/clothing/suit/armor/ego_gear/realization/rhythm
