@@ -43,6 +43,5 @@
 	belt = /obj/item/pda/security
 	ears = /obj/item/radio/headset/faction/heads
 	uniform = /obj/item/clothing/under/suit/lobotomy/plain
-	// PLACEHOLDER SYNDICATE CAPSULE, REPLACE PLEASE
-	backpack_contents = list(/obj/item/structurecapsule/syndicate/udjat, /obj/item/office_marker/syndicate)
+	backpack_contents = list(/obj/item/structurecapsule/syndicate/liu, /obj/item/office_marker/syndicate)
 	shoes = /obj/item/clothing/shoes/laceup
