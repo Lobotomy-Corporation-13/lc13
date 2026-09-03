@@ -52,6 +52,11 @@
 	template_id = "udjat_base"
 	custom_access = list("udjat")
 
+/obj/item/structurecapsule/syndicate/liu
+	name = "Liu Capsule"
+	template_id = "liu_base"
+	custom_access = list("liu")
+
 //Office templates
 /datum/map_template/shelter/index
 	name = "Index Base"
@@ -106,3 +111,9 @@
 	shelter_id = "udjat_base"
 	description = "A place for the Udjat"
 	mappath = "_maps/templates/city_factions/major/udjat.dmm"
+
+/datum/map_template/shelter/liu
+	name = "Liu Base"
+	shelter_id = "liu_base"
+	description = "A place for the section 6 of liu south"
+	mappath = "_maps/templates/city_factions/major/liu.dmm"
