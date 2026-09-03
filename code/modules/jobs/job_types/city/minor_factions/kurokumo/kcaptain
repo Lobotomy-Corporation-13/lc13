@@ -1,0 +1,46 @@
+//Kurokumo Captain
+/datum/job/kcaptain
+	title = "Kurokumo Captain"
+	outfit = /datum/outfit/job/kcaptain
+	department_head = list("The Thumb")
+	faction = "Station"
+	supervisors = "The Thumb"
+	selection_color = "#b0936f"
+	total_positions = 0
+	spawn_positions = 0
+	leader = /datum/job/kcaptain
+	faction_positions = 1
+	display_order = JOB_DISPLAY_ORDER_ANTAG
+	access = list("kuro")
+	minimal_access = list("kuro")
+	radio_channel_name = "Kurokumo"
+	radio_channel_color = "#2E347C"
+	departments = DEPARTMENT_CITY_ANTAGONIST
+	paycheck = 500
+	maptype = list("city")
+	job_important = "You are a captain of the kurokumo clan, a Thumb Subsidiary. \
+	as subsidiary of the Thumb. Hierarchy is king, you should take orders from the capo's and sottocapos of this region and respect others who rank above you. \
+	If the blade lineage dare show their face in your territory, make sure that is the last mistake they will make."
+
+	roundstart_attributes = list(
+								FORTITUDE_ATTRIBUTE = 80,
+								PRUDENCE_ATTRIBUTE = 80,
+								TEMPERANCE_ATTRIBUTE = 80,
+								JUSTICE_ATTRIBUTE = 80
+								)
+
+/datum/job/gunner/after_spawn(mob/living/carbon/human/H, mob/M)
+	ADD_TRAIT(H, TRAIT_COMBATFEAR_IMMUNE, JOB_TRAIT)
+	ADD_TRAIT(H, TRAIT_WORK_FORBIDDEN, JOB_TRAIT)
+	. = ..()
+
+
+/datum/outfit/job/kcaptain
+	name = "Kurokumo Clan Captain"
+	jobtype = /datum/job/kcaptain
+
+	belt = /obj/item/pda/security
+	ears = /obj/item/radio/headset/faction/heads
+	uniform = /obj/item/clothing/under/suit/lobotomy/plain
+	backpack_contents = list(/obj/item/structurecapsule/fixer/kuroclan)
+	shoes = /obj/item/clothing/shoes/laceup
