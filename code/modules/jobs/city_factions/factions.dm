@@ -47,3 +47,8 @@
 	category = CITY_FACTION_MAJOR
 	leader_job = /datum/job/liudirector
 	requires_leader = TRUE
+
+/datum/city_faction/kuroclan
+	name = "Kurokumo Clan"
+	category = CITY_FACTION_MINOR
+	requires_leader = TRUE
