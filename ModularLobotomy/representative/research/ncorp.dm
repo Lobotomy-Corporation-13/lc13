@@ -116,3 +116,22 @@
 	..()
 
 
+
+/datum/data/lc13research/nscrolls
+	research_name = "N-Corporation Expanded Scroll Cargo"
+	research_desc = "A permit to sell our scrolls.  <br>\
+		They're actually inscribed with ink made from our canned experience gel. <br>\
+		Not too difficult to produce, but still we need to recoup costs."
+	cost = AVERAGE_RESEARCH_PRICE
+	corp = N_CORP_REP
+
+/datum/data/lc13research/ntemp3/ResearchEffect(obj/structure/representative_console/requester)
+	ItemUnlock(requester.order_list, "N-Corp Sermon Scroll",	/obj/item/ncorp_scroll/spwide, 250)
+	ItemUnlock(requester.order_list, "N-Corp Area Strength Scroll",	/obj/item/ncorp_scroll/strengthwide, 300)
+	ItemUnlock(requester.order_list, "N-Corp Combat Scroll",	/obj/item/ncorp_scroll/combat, 250)
+	ItemUnlock(requester.order_list, "N-Corp Cleansing Scroll",	/obj/item/ncorp_scroll/cleanse, 100)
+	ItemUnlock(requester.order_list, "N-Corp Volatile Strength Scroll",	/obj/item/ncorp_scroll/randomstr, 200)
+	ItemUnlock(requester.order_list, "N-Corp Volatile Protection Scroll",	/obj/item/ncorp_scroll/randomprot, 200)
+	..()
+
+
