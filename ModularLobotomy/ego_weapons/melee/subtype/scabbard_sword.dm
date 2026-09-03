@@ -1,6 +1,6 @@
 // Weapons that usually come in a pair, a sword and a sheathe.
 // The scabbard here is a subtype of the shield, because they're meant to be used as a sheath for the actual weapon, though blocking with a sheath is cool as hell.
-// Preferably every scabbard and every scabbard_sword.
+// Preferably every scabbard and every scabbard_sword can be used with other ones even if they're not paired, but if the circumstances doesn't allow it, the worthy_sword var is there.
 /obj/item/ego_weapon/shield/scabbard
 	name = "scabbard"
 	desc = "this item should only be seen when debugging"
