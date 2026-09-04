@@ -31,7 +31,7 @@
 								JUSTICE_ATTRIBUTE = 100
 								)
 
-/datum/job/operator/after_spawn(mob/living/carbon/human/H, mob/M)
+/datum/job/fullop/after_spawn(mob/living/carbon/human/H, mob/M)
 	ADD_TRAIT(H, TRAIT_COMBATFEAR_IMMUNE, JOB_TRAIT)
 	ADD_TRAIT(H, TRAIT_WORK_FORBIDDEN, JOB_TRAIT)
 	. = ..()
