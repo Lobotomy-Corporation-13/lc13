@@ -8,7 +8,7 @@
 	selection_color = "#b0936f"
 	total_positions = 0
 	spawn_positions = 0
-	leader = /datum/job/operator
+	leader = /datum/job/fullop
 	faction_positions = 1
 	display_order = JOB_DISPLAY_ORDER_ANTAG
 	access = list("fullstop")
