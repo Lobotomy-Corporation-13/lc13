@@ -27,7 +27,7 @@
 								JUSTICE_ATTRIBUTE = 80
 								)
 
-/datum/job/capo/after_spawn(mob/living/carbon/human/H, mob/M)
+/datum/job/liuvet/after_spawn(mob/living/carbon/human/H, mob/M)
 	ADD_TRAIT(H, TRAIT_COMBATFEAR_IMMUNE, JOB_TRAIT)
 	ADD_TRAIT(H, TRAIT_WORK_FORBIDDEN, JOB_TRAIT)
 	. = ..()
