@@ -1,14 +1,14 @@
 //Full Stop Operator
-/datum/job/operator
+/datum/job/Fullop
 	title = "Full Stop Operator"
-	outfit = /datum/outfit/job/operator
+	outfit = /datum/outfit/job/fullop
 	department_head = list("")
 	faction = "Station"
 	supervisors = ""
 	selection_color = "#856948"
 	total_positions = 0
 	spawn_positions = 0
-	leader = /datum/job/operator
+	leader = /datum/job/fullop
 	faction_positions = 1
 	display_order = JOB_DISPLAY_ORDER_ANTAG
 	trusted_only = TRUE
@@ -37,7 +37,7 @@
 	. = ..()
 
 
-/datum/outfit/job/operator
+/datum/outfit/job/fullop
 	name = "Full Stop Operator"
 	jobtype = /datum/job/operator
 	belt = /obj/item/pda/security
