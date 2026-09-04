@@ -6,6 +6,8 @@ SUBSYSTEM_DEF(flowfield)
 	init_order = INIT_ORDER_PATH
 	//The maximum amount of attempts for the flowfield.
 	var/attempts = 0
+	var/max_range = 100
+	var/currently_running = 0
 
 	var/list/pending_maps = list()
 	var/list/maps = list()
@@ -19,16 +21,20 @@ SUBSYSTEM_DEF(flowfield)
 	return ..()
 
 /datum/controller/subsystem/flowfield/proc/MakeMyMap(atom/source, label)
-	if(!label)
+	currently_running++
+	if(!label || currently_running >= 5)
+		currently_running--
 		return
 
 	var/turf/thing_location = get_turf(source)
 	if(!thing_location)
+		currently_running--
 		return
 	var/list/flow_map = Start(thing_location)
 	if(!(label in maps))
 		maps += label
 	maps[label] = flow_map
+	currently_running--
 
 /datum/controller/subsystem/flowfield/proc/CopyMap(label)
 	if(!(label in maps))
@@ -51,7 +57,7 @@ SUBSYSTEM_DEF(flowfield)
 	var/list/closed_turfs = list()
 	for(var/cycle = 1 to max_cycles)
 		//This is to give a slight delay and ease the burdon of processing
-		if(cycle % 5)
+		if(!(cycle % 15))
 			//Hopefully every 10 cycles just pause for a moment
 			sleep(2)
 
@@ -102,7 +108,6 @@ SUBSYSTEM_DEF(flowfield)
 				//Appraise turf
 				openf[T] = AppraiseTurf(T,start)
 				if(openf[T] >= 1000)
-					dir_list[T] = "null"
 					closed_turfs += focus_turf
 					closed_turfs[focus_turf] = 1000
 
@@ -164,7 +169,7 @@ SUBSYSTEM_DEF(flowfield)
 		return 10000
 	//Gcost
 	var/g_cost = CountDist(T,start)
-	if(g_cost / 10)
+	if(g_cost / 10 == max_range)
 		return 10000
 
 	. += g_cost
@@ -245,6 +250,10 @@ SUBSYSTEM_DEF(flowfield)
 		return_list += block(fx,fy -1 ,fz,fx,fy + 1,fz) - focus_turf
 	else
 		return_list += block(fx -1,fy -1,fz,fx +1,fy +1,fz) - focus_turf
+
+	if(!length(return_list))
+		stack_trace("ReturnAdjacentTurfsFail")
+
 	return return_list
 
 /datum/controller/subsystem/flowfield/proc/CountDist(turf/T, turf/dest)
@@ -276,3 +285,14 @@ SUBSYSTEM_DEF(flowfield)
 			return SOUTH
 
 #undef PYTHAGOREAN
+
+/*------\
+|Testing|
+\------*/
+/obj/effect/findloc
+	icon_state = "gibspawner"// For the map editor
+
+/obj/effect/findloc/Initialize(mapload)
+	. = ..()
+
+	SSflowfield.MakeMyMap(src, AddIdentifier(get_turf(src)))
