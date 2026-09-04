@@ -1,14 +1,14 @@
 //Full Stop Operator
-/datum/job/operator
+/datum/job/Fullop
 	title = "Full Stop Operator"
-	outfit = /datum/outfit/job/operator
+	outfit = /datum/outfit/job/fullop
 	department_head = list("")
 	faction = "Station"
 	supervisors = ""
 	selection_color = "#856948"
 	total_positions = 0
 	spawn_positions = 0
-	leader = /datum/job/operator
+	leader = /datum/job/fullop
 	faction_positions = 1
 	display_order = JOB_DISPLAY_ORDER_ANTAG
 	trusted_only = TRUE
@@ -31,13 +31,13 @@
 								JUSTICE_ATTRIBUTE = 100
 								)
 
-/datum/job/captain/after_spawn(mob/living/carbon/human/H, mob/M)
+/datum/job/fullop/after_spawn(mob/living/carbon/human/H, mob/M)
 	ADD_TRAIT(H, TRAIT_COMBATFEAR_IMMUNE, JOB_TRAIT)
 	ADD_TRAIT(H, TRAIT_WORK_FORBIDDEN, JOB_TRAIT)
 	. = ..()
 
 
-/datum/outfit/job/operator
+/datum/outfit/job/fullop
 	name = "Full Stop Operator"
 	jobtype = /datum/job/operator
 	belt = /obj/item/pda/security

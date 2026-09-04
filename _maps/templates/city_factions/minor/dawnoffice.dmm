@@ -1,0 +1,405 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"a" = (
+/obj/structure/chair/comfy,
+/turf/open/floor/wood{
+	color = "#ccc8c0"
+	},
+/area/city/fixers)
+"d" = (
+/obj/structure/table/wood,
+/obj/item/food/benedict{
+	pixel_y = 5;
+	pixel_x = 5
+	},
+/obj/item/reagent_containers/food/drinks/mug/tea{
+	pixel_x = -8;
+	pixel_y = 6
+	},
+/turf/open/floor/wood,
+/area/city/fixers)
+"e" = (
+/obj/structure/closet/secure_closet/freezer/fridge,
+/obj/item/reagent_containers/food/drinks/mug/tea,
+/obj/item/reagent_containers/food/drinks/mug/tea,
+/obj/item/reagent_containers/food/drinks/mug/tea,
+/obj/item/reagent_containers/food/drinks/mug/tea,
+/turf/open/floor/wood,
+/area/city/fixers)
+"f" = (
+/obj/structure/chair/sofa/right{
+	pixel_y = 5
+	},
+/obj/machinery/light{
+	dir = 1;
+	pixel_y = 19
+	},
+/turf/open/floor/wood,
+/area/city/fixers)
+"g" = (
+/obj/effect/turf_decal/siding/wood/corner{
+	dir = 8
+	},
+/turf/open/floor/wood{
+	color = "#ccc8c0"
+	},
+/area/city/fixers)
+"i" = (
+/obj/structure/table/wood/fancy/red,
+/obj/item/folder/blue{
+	pixel_x = -6;
+	pixel_y = 3
+	},
+/turf/open/floor/wood,
+/area/city/fixers)
+"j" = (
+/turf/open/floor/wood,
+/area/city/fixers)
+"l" = (
+/obj/structure/window/reinforced/spawner{
+	resistance_flags = 115;
+	dir = 1
+	},
+/turf/open/floor/wood{
+	color = "#ccc8c0"
+	},
+/area/city/fixers)
+"m" = (
+/obj/structure/table/wood/fancy/red,
+/turf/open/floor/wood,
+/area/city/fixers)
+"n" = (
+/obj/structure/table/wood,
+/obj/item/food/croissant{
+	pixel_x = 3;
+	pixel_y = 5
+	},
+/turf/open/floor/wood,
+/area/city/fixers)
+"o" = (
+/obj/effect/turf_decal/siding/wood,
+/turf/open/floor/wood{
+	color = "#ccc8c0"
+	},
+/area/city/fixers)
+"p" = (
+/obj/structure/table/wood/fancy/red,
+/obj/item/reagent_containers/food/drinks/mug/tea{
+	pixel_x = -8;
+	pixel_y = 6
+	},
+/obj/item/paper_bin{
+	pixel_x = 9;
+	pixel_y = 10
+	},
+/obj/item/pen{
+	pixel_x = 9;
+	pixel_y = 11
+	},
+/obj/machinery/light{
+	dir = 8;
+	pixel_x = -9;
+	pixel_y = 4
+	},
+/turf/open/floor/wood,
+/area/city/fixers)
+"r" = (
+/obj/machinery/light{
+	dir = 4;
+	pixel_x = 9;
+	pixel_y = 4
+	},
+/turf/open/floor/wood,
+/area/city/fixers)
+"s" = (
+/obj/effect/turf_decal/siding/wood{
+	dir = 8
+	},
+/obj/structure/window/reinforced/spawner{
+	dir = 8;
+	resistance_flags = 115;
+	layer = 5
+	},
+/turf/open/floor/wood{
+	color = "#ccc8c0"
+	},
+/area/city/fixers)
+"t" = (
+/turf/open/floor/wood{
+	color = "#ccc8c0"
+	},
+/area/city/fixers)
+"u" = (
+/obj/structure/bookcase{
+	pixel_y = 5;
+	resistance_flags = 115
+	},
+/obj/item/statuebust/hippocratic{
+	pixel_y = 34;
+	mouse_opacity = 0
+	},
+/turf/open/floor/wood,
+/area/city/fixers)
+"w" = (
+/obj/structure/table/wood/fancy/black,
+/obj/item/food/croissant{
+	pixel_x = -6;
+	pixel_y = 9
+	},
+/obj/item/food/benedict{
+	pixel_y = -3;
+	pixel_x = 5
+	},
+/turf/open/floor/wood,
+/area/city/fixers)
+"x" = (
+/obj/structure/chair/wood{
+	dir = 1;
+	pixel_x = -9
+	},
+/obj/effect/turf_decal/siding/wood{
+	color = "#2e1f0e";
+	dir = 1
+	},
+/turf/open/floor/wood,
+/area/city/fixers)
+"z" = (
+/obj/structure/window/reinforced/spawner{
+	resistance_flags = 115;
+	dir = 1
+	},
+/obj/machinery/light{
+	dir = 8;
+	pixel_x = -9;
+	pixel_y = 4
+	},
+/turf/open/floor/wood{
+	color = "#ccc8c0"
+	},
+/area/city/fixers)
+"B" = (
+/obj/effect/turf_decal/siding/wood{
+	color = "#2e1f0e";
+	dir = 1
+	},
+/turf/open/floor/wood,
+/area/city/fixers)
+"E" = (
+/obj/structure/chair/wood{
+	dir = 4
+	},
+/turf/open/floor/wood,
+/area/city/fixers)
+"F" = (
+/obj/structure/table/wood/fancy/royalblack,
+/obj/item/ego_weapon/city/dawn/sword,
+/turf/open/floor/wood{
+	color = "#ccc8c0"
+	},
+/area/city/fixers)
+"G" = (
+/obj/effect/turf_decal/siding/wood,
+/turf/open/floor/wood,
+/area/city/fixers)
+"H" = (
+/obj/machinery/door/window{
+	layer = 5;
+	dir = 1
+	},
+/turf/open/floor/wood{
+	color = "#ccc8c0"
+	},
+/area/city/fixers)
+"I" = (
+/obj/effect/turf_decal/siding/wood/corner{
+	dir = 1;
+	color = "black"
+	},
+/turf/open/floor/wood{
+	color = "#ccc8c0"
+	},
+/area/city/fixers)
+"K" = (
+/obj/structure/chair/comfy/brown{
+	dir = 8;
+	pixel_x = -2
+	},
+/turf/open/floor/wood,
+/area/city/fixers)
+"L" = (
+/obj/machinery/griddle,
+/obj/machinery/light{
+	dir = 4;
+	pixel_x = 9;
+	pixel_y = 4
+	},
+/turf/open/floor/wood,
+/area/city/fixers)
+"P" = (
+/obj/effect/turf_decal/siding/wood{
+	color = "#2e1f0e";
+	dir = 8
+	},
+/turf/open/floor/wood{
+	color = "#ccc8c0"
+	},
+/area/city/fixers)
+"Q" = (
+/obj/machinery/jukebox{
+	pixel_y = 18;
+	density = 0;
+	pixel_x = 5
+	},
+/obj/effect/turf_decal/siding/wood{
+	color = "#2e1f0e";
+	dir = 8
+	},
+/obj/item/toy/clockwork_watch{
+	pixel_y = 40;
+	pixel_x = -8;
+	name = "wall clock";
+	desc = "A stylish steampunk clock mounted onto the wall.";
+	mouse_opacity = 0
+	},
+/turf/open/floor/wood{
+	color = "#ccc8c0"
+	},
+/area/city/fixers)
+"R" = (
+/obj/structure/table/wood/fancy/black,
+/turf/open/floor/wood,
+/area/city/fixers)
+"S" = (
+/obj/structure/chair/wood{
+	dir = 1;
+	pixel_x = 12
+	},
+/obj/effect/turf_decal/siding/wood{
+	color = "#2e1f0e";
+	dir = 1
+	},
+/turf/open/floor/wood,
+/area/city/fixers)
+"T" = (
+/obj/structure/chair/sofa/left{
+	pixel_y = 5
+	},
+/turf/open/floor/wood,
+/area/city/fixers)
+"W" = (
+/obj/structure/table/wood/fancy/royalblack,
+/obj/item/ego_weapon/city/dawn/cello{
+	pixel_y = 9;
+	pixel_x = -8
+	},
+/obj/item/ego_weapon/city/dawn/zwei{
+	pixel_x = 18;
+	pixel_y = 7
+	},
+/turf/open/floor/wood{
+	color = "#ccc8c0"
+	},
+/area/city/fixers)
+"X" = (
+/obj/structure/filingcabinet{
+	pixel_x = -6;
+	resistance_flags = 115;
+	pixel_y = 17;
+	density = 0
+	},
+/obj/structure/filingcabinet{
+	pixel_x = 14;
+	pixel_y = 17;
+	density = 0
+	},
+/obj/structure/filingcabinet{
+	pixel_y = 17;
+	density = 0;
+	pixel_x = 4
+	},
+/turf/open/floor/wood{
+	color = "#ccc8c0"
+	},
+/area/city/fixers)
+"Y" = (
+/obj/structure/statue/sandstone/venus{
+	dir = 1;
+	pixel_y = -1
+	},
+/turf/open/floor/wood,
+/area/city/fixers)
+"Z" = (
+/obj/structure/closet/cabinet{
+	anchored = 1
+	},
+/obj/item/clothing/suit/armor/ego_gear/city/dawn/vet,
+/obj/item/clothing/suit/armor/ego_gear/city/dawnleader,
+/obj/item/clothing/suit/armor/ego_gear/city/dawn,
+/obj/item/clothing/suit/armor/ego_gear/city/dawn/female,
+/turf/open/floor/wood{
+	color = "#ccc8c0"
+	},
+/area/city/fixers)
+
+(1,1,1) = {"
+u
+p
+S
+t
+G
+z
+W
+"}
+(2,1,1) = {"
+a
+i
+B
+t
+o
+H
+F
+"}
+(3,1,1) = {"
+X
+m
+x
+t
+G
+l
+Z
+"}
+(4,1,1) = {"
+Q
+P
+I
+t
+g
+s
+s
+"}
+(5,1,1) = {"
+f
+n
+j
+t
+j
+j
+j
+"}
+(6,1,1) = {"
+T
+d
+j
+t
+E
+j
+e
+"}
+(7,1,1) = {"
+Y
+K
+r
+t
+w
+L
+R
+"}

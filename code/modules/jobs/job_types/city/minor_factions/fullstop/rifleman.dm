@@ -8,7 +8,7 @@
 	selection_color = "#b0936f"
 	total_positions = 0
 	spawn_positions = 0
-	leader = /datum/job/operator
+	leader = /datum/job/fullop
 	faction_positions = 1
 	display_order = JOB_DISPLAY_ORDER_ANTAG
 	access = list("fullstop")
@@ -27,7 +27,7 @@
 								JUSTICE_ATTRIBUTE = 60
 								)
 
-/datum/job/gunner/after_spawn(mob/living/carbon/human/H, mob/M)
+/datum/job/rifleman/after_spawn(mob/living/carbon/human/H, mob/M)
 	ADD_TRAIT(H, TRAIT_COMBATFEAR_IMMUNE, JOB_TRAIT)
 	ADD_TRAIT(H, TRAIT_WORK_FORBIDDEN, JOB_TRAIT)
 	. = ..()

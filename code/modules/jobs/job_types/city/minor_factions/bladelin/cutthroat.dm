@@ -1,5 +1,5 @@
-//Blade Lineage Salsu
-/datum/job/salsu
+//Blade Lineage Cutthroat
+/datum/job/cutthroat
 	title = "Blade Lineage Cutthroat"
 	outfit = /datum/outfit/job/cutthroat
 	department_head = list("You answer to Nobody")
@@ -29,7 +29,7 @@
 								JUSTICE_ATTRIBUTE = 80
 								)
 
-/datum/job/gunner/after_spawn(mob/living/carbon/human/H, mob/M)
+/datum/job/cutthroat/after_spawn(mob/living/carbon/human/H, mob/M)
 	ADD_TRAIT(H, TRAIT_COMBATFEAR_IMMUNE, JOB_TRAIT)
 	ADD_TRAIT(H, TRAIT_WORK_FORBIDDEN, JOB_TRAIT)
 	. = ..()

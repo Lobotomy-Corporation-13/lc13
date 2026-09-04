@@ -1,24 +1,25 @@
-//Full Stop Sniper
-/datum/job/sniper
-	title = "Full Stop Sniper"
-	outfit = /datum/outfit/job/sniper
-	department_head = list("Full Stop Operator")
+//Dawn Office Veteran
+/datum/job/dawnvet
+	title = "Dawn Office Veteran"
+	outfit = /datum/outfit/job/dawnvet
+	department_head = list("Dawn Office Operator")
 	faction = "Station"
-	supervisors = "Full Stop Operator"
+	supervisors = "Dawn Office Operator"
 	selection_color = "#b0936f"
 	total_positions = 0
 	spawn_positions = 0
-	leader = /datum/job/fullop
+	leader = /datum/job/dawnop
 	faction_positions = 1
 	display_order = JOB_DISPLAY_ORDER_ANTAG
-	access = list("fullstop")
-	minimal_access = list("fullstop")
-	radio_channel_name = "Full Stop"
-	radio_channel_color = "#FF69B4"
+	access = list("dawn")
+	minimal_access = list("dawn")
+	radio_channel_name = "Dawn Office"
+	radio_channel_color = "#f0a129"
 	departments = DEPARTMENT_CITY_ANTAGONIST
 	paycheck = 200
 	maptype = list("city")
-	job_important = "You are the designated marksman of the full stop office, you take orders and jobs from your operator and use a powerful sniper to take down enemies from afar."
+	job_important = "You are a Veteran fixer of the Dawn Office, you use a case with mechanical fittings made by Stigma Workshop to burn opponents. \
+	You report to the operator."
 
 	roundstart_attributes = list(
 								FORTITUDE_ATTRIBUTE = 80,
@@ -27,15 +28,15 @@
 								JUSTICE_ATTRIBUTE = 80
 								)
 
-/datum/job/sniper/after_spawn(mob/living/carbon/human/H, mob/M)
+/datum/job/dawnvet/after_spawn(mob/living/carbon/human/H, mob/M)
 	ADD_TRAIT(H, TRAIT_COMBATFEAR_IMMUNE, JOB_TRAIT)
 	ADD_TRAIT(H, TRAIT_WORK_FORBIDDEN, JOB_TRAIT)
 	. = ..()
 
 
-/datum/outfit/job/sniper
-	name = "Full Stop Sniper"
-	jobtype = /datum/job/sniper
+/datum/outfit/job/dawnvet
+	name = "Dawn Office Veteran"
+	jobtype = /datum/job/dawnvet
 	belt = /obj/item/pda/security
 	ears = /obj/item/radio/headset/faction
 	uniform = /obj/item/clothing/under/suit/lobotomy/plain
