@@ -860,6 +860,14 @@
 	pixel_y = 0
 	pixel_x = -16
 
+/obj/effect/temp_visual/lightningstrike
+	name = "lightning strike"
+	icon = 'ModularLobotomy/_Lobotomyicons/tegu_effects32x48.dmi'
+	icon_state = "lightning"
+	duration = 4
+	randomdir = TRUE
+	color = "RED"
+
 /obj/effect/temp_visual/crit
 	icon_state = "critical"
 	layer = ABOVE_ALL_MOB_LAYER

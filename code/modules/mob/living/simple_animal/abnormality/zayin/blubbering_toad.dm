@@ -84,7 +84,8 @@
 	var/jump_cooldown
 	var/jump_cooldown_time = 6 SECONDS
 	var/retreating = FALSE
-	var/mob/living/idiot = null
+	var/idiot_tag
+	var/idiot_name
 	var/transformed = FALSE
 	var/broken = FALSE
 	var/persistant = FALSE
@@ -164,10 +165,13 @@
 	QDEL_NULL(src)
 
 /mob/living/simple_animal/hostile/abnormality/blubbering_toad/proc/SetIdiot(mob/living/L)
-	idiot = L
-	if(idiot)
-		to_chat(src, span_notice("You current target is [idiot]!"))
+	if(L)
+		idiot_tag = L.tag
+		idiot_name = L.real_name
+		to_chat(src, span_notice("You current target is [idiot_name]!"))
 	else
+		idiot_tag = null
+		idiot_name = null
 		to_chat(src, span_notice("Your work here is done, you should now return to your cell."))
 
 /mob/living/simple_animal/hostile/abnormality/blubbering_toad/death() //EGG! just kidding no egg....
@@ -175,12 +179,14 @@
 	playsound(src, 'sound/effects/limbus_death.ogg', 40, 0, FALSE)
 	animate(src, alpha = 0, time = 5 SECONDS)
 	QDEL_IN(src, 5 SECONDS)
-	..()
+	return ..()
 
 //Attacks
 /mob/living/simple_animal/hostile/abnormality/blubbering_toad/OpenFire()
-	if(target != idiot && !angry)
-		return
+	if(isliving(target))
+		var/mob/living/L = target
+		if(L.tag != idiot_tag && !angry)
+			return
 	var/dist = get_dist(target, src)
 	if((dist > 2) && (dist < 5))
 		TongueAttack(target)
@@ -202,13 +208,15 @@
 		for(var/turf/T in turfs_to_hit)
 			if(T.density)
 				break
-			if(idiot in T)
-				idiot.deal_damage(tongue_damage, BLACK_DAMAGE, src, attack_type = (ATTACK_TYPE_RANGED | ATTACK_TYPE_SPECIAL))
-				new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(idiot), pick(GLOB.alldirs))
-				if(!idiot.anchored)
+			for(var/mob/living/L in T)
+				if(L.tag != idiot_tag)
+					continue
+				L.deal_damage(tongue_damage, BLACK_DAMAGE, src, attack_type = (ATTACK_TYPE_RANGED | ATTACK_TYPE_SPECIAL))
+				new /obj/effect/temp_visual/dir_setting/bloodsplatter(T, pick(GLOB.alldirs))
+				if(!L.anchored)
 					var/whack_speed = (prob(60) ? 1 : 4)
-					idiot.throw_at(MT, rand(1, 2), whack_speed, src)
-		sleep(5)
+					L.throw_at(MT, rand(1, 2), whack_speed, src)
+		SLEEP_CHECK_DEATH(5)
 		tongue_cooldown = world.time + tongue_cooldown_time
 		can_act = TRUE
 		icon_state = icon_living
@@ -238,48 +246,52 @@
 	if(!can_act)
 		return FALSE
 	update_icon_state() //prevents icons from getting stuck
-	..()
+	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/blubbering_toad/AttackingTarget(atom/attacked_target)
 	if(angry)
 		return ..()
 	if(!ishuman(attacked_target))
 		return
-	if(attacked_target != idiot)
+	var/mob/living/carbon/human/H = attacked_target
+	if(H.tag != idiot_tag)
 		LoseTarget(attacked_target)
 		return
-	..()
-	var/mob/living/carbon/human/H = attacked_target
+	. = ..()
 	// Achievement for dying to Blubbering Toad
 	if(H.stat == DEAD && H.client)
 		H.client.player_details.achievements.unlock(/datum/award/achievement/abno/die_to_toad, H)
 	if(H.sanity_lost) //prevents hitting the same guy in an infinite loop
 		melee_damage_type = BLACK_DAMAGE
 	if(H.health < 0)
-		H.gib()
+		H.gib(FALSE,FALSE,TRUE)
 		if(!persistant)
 			addtimer(CALLBACK(src, PROC_REF(ReturnCell)), 10 SECONDS)
 			return
-		idiot = null
+		idiot_tag = null
+		idiot_name = null
+		var/mob/living/new_idiot
 		for(var/mob/living/carbon/human/HU in GLOB.player_list)
 			if(HU.z != z)
 				continue
 			if(HU.stat == DEAD)
 				continue
-			if(isnull(idiot))
-				idiot = HU
-			if(idiot.health > HU.health)
-				idiot = HU
-		if(isnull(idiot))
+			if(isnull(idiot_tag))
+				new_idiot = HU
+			if(new_idiot)
+				if(new_idiot.health > HU.health)
+					new_idiot = HU
+		if(isnull(new_idiot))
 			addtimer(CALLBACK(src, PROC_REF(ReturnCell)), 10 SECONDS)
 			return
-		SetIdiot(idiot)
+		SetIdiot(new_idiot)
 
 
 /mob/living/simple_animal/hostile/abnormality/blubbering_toad/ListTargets()
 	. = ..()
-	if(idiot in .)
-		return list(idiot)
+	for(var/mob/living/carbon/C in .)
+		if(C.tag == idiot_tag)
+			return list(C)
 	return
 
 //Transformation
@@ -325,14 +337,14 @@
 
 /datum/status_effect/blue_resin/on_apply()
 	. = ..()
-	if(ishuman(owner))
+	if(!ishuman(owner))
 		return
 	var/mob/living/carbon/human/status_holder = owner
 	status_holder.physiology.black_mod *= 0.9
 
 /datum/status_effect/blue_resin/on_remove()
 	. = ..()
-	if(ishuman(owner))
+	if(!ishuman(owner))
 		return
 	var/mob/living/carbon/human/status_holder = owner
 	status_holder.physiology.black_mod /= 0.9

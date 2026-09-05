@@ -26,7 +26,7 @@
 	return
 
 /mob/living/proc/spawn_gibs()
-	new /obj/effect/gibspawner/generic(drop_location(), src, get_static_viruses())
+	new /obj/effect/bloodspawner(drop_location(), src)
 
 /mob/living/proc/spill_organs()
 	return

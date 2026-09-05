@@ -193,7 +193,8 @@
 	log_message("[src.name] created.", LOG_MECHA)
 	GLOB.mechas_list += src //global mech list
 	prepare_huds()
-	for(var/datum/atom_hud/data/diagnostic/diag_hud in GLOB.huds)
+	for(var/hud in GLOB.huds)
+		var/datum/atom_hud/data/diagnostic/diag_hud = GLOB.huds[hud]
 		diag_hud.add_to_hud(src)
 	diag_hud_set_mechhealth()
 	diag_hud_set_mechcell()

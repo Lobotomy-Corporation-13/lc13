@@ -67,3 +67,8 @@
 	name = "Runaway Birds - Small West"
 	room_id = "runaway_bird"
 	mappath = "_maps/RandomRooms/backstreets/small_west/runaway_bird.dmm"
+
+/datum/map_template/random_room/backstreets/small_east/boluslab_swa
+    name = "Bolus Lab - Small West A"
+    room_id = "boluslab_swa"
+    mappath = "_maps/RandomRooms/backstreets/small_east/boluslab_swa.dmm"

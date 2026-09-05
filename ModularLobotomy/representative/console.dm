@@ -8,6 +8,7 @@
 #define N_CORP_REP "N corp"
 #define P_CORP_REP "P corp"
 #define J_CORP_REP "J corp"
+#define H_CORP_REP "H corp"
 #define IS_MONIES istype(I, /obj/item/holochip)
 #define IS_REFINED_PE istype(I, /obj/item/refinedpe)
 #define IS_RAW_PE istype(I, /obj/item/rawpe)
@@ -213,7 +214,11 @@
 		if("N Corp Representative")
 			our_corporation = N_CORP_REP
 			CustomizeOffice(null, /obj/structure/pe_sales/n_corp)
-			order_list = list()
+			order_list = list(
+				new /datum/data/extraction_cargo("N-Corp Sanity Scroll", /obj/item/ncorp_scroll/sp, 150, P_CORP_REP) = 1,
+				new /datum/data/extraction_cargo("N-Corp Strength Scroll", /obj/item/ncorp_scroll/strength, 200, P_CORP_REP) = 1,
+				new /datum/data/extraction_cargo("N-Corp Protection Scroll", /obj/item/ncorp_scroll/protection, 200, P_CORP_REP) = 1,
+				)
 
 		if("P Corp Representative")
 			our_corporation = P_CORP_REP
@@ -232,6 +237,17 @@
 				new /datum/data/extraction_cargo("Iron J Corp Casino Token", /obj/item/coin/casino_token/iron, 200, J_CORP_REP) = 1,
 			)
 
+		if("H Corp Representative")
+			our_corporation = H_CORP_REP
+			//CustomizeOffice(null, /obj/structure/pe_sales/hcorp)
+			order_list = list(
+				new /datum/data/extraction_cargo("H-Corp Simple Bolus", /obj/item/bolus/simple, 30, H_CORP_REP) = 1,
+				new /datum/data/extraction_cargo("Essence of Fire", /obj/item/essence/fire, 5, H_CORP_REP) = 1,
+				new /datum/data/extraction_cargo("Essence of Water", /obj/item/essence/water, 5, H_CORP_REP) = 1,
+				new /datum/data/extraction_cargo("Essence of Wood", /obj/item/essence/wood, 5, H_CORP_REP) = 1,
+				new /datum/data/extraction_cargo("Essence of Earth", /obj/item/essence/earth, 5, H_CORP_REP) = 1,
+				new /datum/data/extraction_cargo("Essence of Metal", /obj/item/essence/metal, 5, H_CORP_REP) = 1,
+			)
 
 		else
 			to_chat(usr, span_warning("ASSIGNMENT ERROR."))
@@ -262,6 +278,8 @@
 			corporationpick = /obj/item/storage/box/corporation/pcorp
 		if(J_CORP_REP)
 			corporationpick = /obj/item/storage/box/corporation/jcorp
+		if(H_CORP_REP)
+			corporationpick = /obj/item/storage/box/corporation/hcorp
 	//sendingpackage
 	var/obj/structure/closet/supplypod/bluespacepod/pod = new()
 	new corporationpick(pod)
@@ -321,6 +339,22 @@
 	new /obj/item/attribute_temporary/fortitudesmall(src)
 	new /obj/item/attribute_temporary/prudencesmall(src)
 	new /obj/item/attribute_temporary/stattemporary(src)
+
+/obj/item/storage/box/corporation/hcorp
+	name = "H-Corp care package"
+
+/obj/item/storage/box/corporation/hcorp/PopulateContents()
+	new /obj/item/bolus/simple(src)
+	new /obj/item/essence/wood(src)
+	new /obj/item/essence/wood(src)
+	new /obj/item/essence/fire(src)
+	new /obj/item/essence/fire(src)
+	new /obj/item/essence/water(src)
+	new /obj/item/essence/water(src)
+	new /obj/item/essence/earth(src)
+	new /obj/item/essence/earth(src)
+	new /obj/item/essence/metal(src)
+	new /obj/item/essence/metal(src)
 
 /obj/item/storage/box/corporation/pcorp
 	name = "P-Corp care package"

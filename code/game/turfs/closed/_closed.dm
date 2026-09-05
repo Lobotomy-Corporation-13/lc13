@@ -241,6 +241,9 @@
 	base_icon_state = "plastinum_wall"
 	smoothing_flags = SMOOTH_BITMASK | SMOOTH_DIAGONAL_CORNERS
 
+/turf/closed/indestructible/riveted/plastinum/nodiagonal
+	smoothing_flags = SMOOTH_BITMASK
+
 /turf/closed/indestructible/wood
 	icon = 'icons/turf/walls/wood_wall.dmi'
 	icon_state = "wood_wall-0"

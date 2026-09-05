@@ -10,6 +10,7 @@
 	ranged = TRUE
 	attack_verb_continuous = "cleans"
 	attack_verb_simple = "cleans"
+	move_to_delay = 1.2
 	attack_sound = 'sound/abnormalities/helper/attack.ogg'
 	stat_attack = HARD_CRIT
 	melee_damage_lower = 11
@@ -19,6 +20,7 @@
 	speech_span = SPAN_ROBOT
 	vision_range = 14
 	aggro_vision_range = 20
+	patrol_cooldown_time = 5 SECONDS
 
 	can_breach = TRUE
 	threat_level = TETH_LEVEL
@@ -70,6 +72,7 @@
 
 /mob/living/simple_animal/hostile/abnormality/cleaner/Move()
 	..()
+	move_to_delay = 1.2
 	//Throw your suds little dude
 	if(prob(5))
 		var/list/turfs_in_range = list()
@@ -89,11 +92,11 @@
 
 		var/rand_dir = pick(NORTH, SOUTH, EAST, WEST)
 		var/atom/throw_target = get_edge_target_turf(H, rand_dir)
-		if(!H.anchored)
-			H.throw_at(throw_target, rand(6, 10), 18, H)
-
 		if(H.stat == DEAD)
 			H.gib(FALSE, FALSE, FALSE)
+			continue
+		if(!H.anchored)
+			H.throw_at(throw_target, rand(6, 10), 18, H)
 
 	//destroy the unclean
 	for(var/turf/tile in view(src, 2))
@@ -112,6 +115,10 @@
 					cleaned_human.regenerate_icons()
 					to_chat(cleaned_human, span_danger("[src] flawlessly cleans you of your features!"))
 					ADD_TRAIT(cleaned_human, TRAIT_DISFIGURED, TRAIT_GENERIC) //cleans your face of uneeded features
+
+/mob/living/simple_animal/hostile/abnormality/cleaner/patrol_reset()
+	..()
+	move_to_delay = 3
 
 /mob/living/simple_animal/hostile/abnormality/cleaner/update_icon_state()
 	if(status_flags & GODMODE)

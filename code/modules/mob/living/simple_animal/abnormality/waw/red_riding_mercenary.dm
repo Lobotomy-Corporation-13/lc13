@@ -4,7 +4,8 @@ The fucker has arrived.
 
 It has now been over four months. Now we get her for real. -Coxswain
 */
-
+#define RED_GUN_TIMER 5 SECONDS
+#define RED_THROW_TIMER 11 SECONDS
 /mob/living/simple_animal/hostile/abnormality/red_hood
 	name = "Little Red Riding Hooded Mercenary"
 	desc = "A tall humanoid in ragged red robes."
@@ -18,6 +19,7 @@ It has now been over four months. Now we get her for real. -Coxswain
 	base_pixel_x = -8
 	maxHealth = 2400 // More health than standard
 	health = 2400 // Since she was apparently too easy to suppress
+	gender = FEMALE
 	rapid_melee = 2
 	speed = 0.5
 	threat_level = WAW_LEVEL
@@ -32,7 +34,10 @@ It has now been over four months. Now we get her for real. -Coxswain
 	ranged = TRUE
 	melee_damage_lower = 30
 	melee_damage_upper = 45
-	attack_action_types = list(/datum/action/innate/abnormality_attack/find_target, /datum/action/innate/abnormality_attack/catch_breath, /datum/action/innate/abnormality_attack/hollowpoint_shell, /datum/action/innate/abnormality_attack/strike_without_hesitation)
+	attack_action_types = list(/datum/action/innate/abnormality_attack/find_target,
+		/datum/action/innate/abnormality_attack/catch_breath,
+		/datum/action/innate/abnormality_attack/hollowpoint_shell,
+		/datum/action/innate/abnormality_attack/strike_without_hesitation)
 	melee_damage_type = RED_DAMAGE
 	stat_attack = HARD_CRIT
 	work_damage_amount = 10
@@ -115,17 +120,14 @@ It has now been over four months. Now we get her for real. -Coxswain
 	var/evading_attack = FALSE // Are you currently EVADING damage
 
 	var/gun_timer = 0
-	var/gun_cooldown = 5 SECONDS
-	var/gun_multishot_pause = 2.5 // How long to pause between shots in a volley
-	var/bullet_additional = 0 // How many extra times to shoot
-	var/bullet_damage = 30 // How much damage each hollowpoint shell does
+	var/gun_cooldown = RED_GUN_TIMER
 
 	var/throw_timer = 0
-	var/throw_cooldown = 11 SECONDS
-	var/throw_amount = 3 // How many blades to throw at once
-	var/throw_cone = 25 // Total firing angle of all red's projectiles.
-	var/throw_damage = 40 // Damage of each thrown blade
+	var/throw_cooldown = RED_THROW_TIMER
 	var/leaving = FALSE
+
+	var/obj/effect/proc_holder/ability/aimed/hollowpoint/hollowpoint_round
+	var/obj/effect/proc_holder/ability/aimed/red_blade/blade_throw
 
 	var/list/wolf_encounter_lines = list( // Encountering Big and Will Be Bad Wolf
 		"Found you, you bastard!",
@@ -255,10 +257,7 @@ It has now been over four months. Now we get her for real. -Coxswain
 		speed = 0
 		rapid_melee = 3
 		gun_cooldown = 3 SECONDS
-		bullet_additional = 2
 		throw_cooldown = 8 SECONDS
-		throw_amount = 5
-		throw_cone = 35
 		color = rgb(255, 64, 64)
 		set_light(1, 8, COLOR_VIVID_RED)
 		set_light_on(TRUE)
@@ -271,10 +270,6 @@ It has now been over four months. Now we get her for real. -Coxswain
 	speed = initial(speed)
 	rapid_melee = initial(rapid_melee)
 	gun_cooldown = initial(gun_cooldown)
-	bullet_additional = initial(bullet_additional)
-	throw_cooldown = initial(throw_cooldown)
-	throw_amount = initial(throw_amount)
-	throw_cone = initial(throw_cone)
 	color = initial(color)
 	set_light()
 	set_light_on(FALSE)
@@ -304,34 +299,14 @@ It has now been over four months. Now we get her for real. -Coxswain
 		if(client)
 			to_chat(src, span_danger("You can't do that now!"))
 		return FALSE
-	special_attacking = TRUE
 	gun_timer = world.time + gun_cooldown
-	addtimer(CALLBACK(src, PROC_REF(SpecialReset)), 10 + bullet_additional * gun_multishot_pause)
 	manual_emote("raises her gun.")
 	icon = 'ModularLobotomy/_Lobotomyicons/96x64.dmi'
 	icon_state = "redhood_shoot"
 	icon_living = "redhood_shoot"
 	pixel_x = -32
 	base_pixel_x = -32
-	addtimer(CALLBACK(src, PROC_REF(HunterBullet), target, bullet_additional), special_windup * 0.75)
-	return
-
-/mob/living/simple_animal/hostile/abnormality/red_hood/proc/HunterBullet(atom/target, shots_remaining = 0)
-	var/turf/startloc = get_turf(src)
-	var/angle_to_target = Get_Angle(src, target)
-	var/obj/projectile/red_hollowpoint/P = new(get_turf(src))
-	P.starting = startloc
-	P.firer = src
-	P.fired_from = src
-	P.Angle = angle_to_target
-	P.original = target
-	P.preparePixelProjectile(target, src)
-	P.damage = bullet_damage
-	P.fire()
-	playsound(src, 'sound/abnormalities/redhood/fire.ogg', 50, FALSE, 4)
-	if(shots_remaining)
-		addtimer(CALLBACK(src, PROC_REF(HunterBullet), target, shots_remaining - 1), gun_multishot_pause)
-	return
+	hollowpoint_round.Perform(target, src, red_rage)
 
 /datum/action/innate/abnormality_attack/strike_without_hesitation
 	name = "Blade Throw"
@@ -345,28 +320,9 @@ It has now been over four months. Now we get her for real. -Coxswain
 		if(client)
 			to_chat(src, span_danger("You can't do that now!"))
 		return FALSE
-	special_attacking = TRUE
-	addtimer(CALLBACK(src, PROC_REF(SpecialReset)), 15)
 	throw_timer = world.time + throw_cooldown
 	say(pick(weapon_throw_lines))
-	addtimer(CALLBACK(src, PROC_REF(GetThrown), target), special_windup)
-	return
-
-/mob/living/simple_animal/hostile/abnormality/red_hood/proc/GetThrown(atom/target)
-	playsound(src, 'sound/abnormalities/redhood/throw.ogg', 50, FALSE, 4)
-	var/turf/startloc = get_turf(src)
-	var/angle_to_target = Get_Angle(src, target)
-	var/projectile_angle_difference = (throw_cone / (throw_amount - 1))
-	for(var/i = 0 to throw_amount - 1) // Create throw_amount projectiles evenly spaced across an arc of throw_cone degrees centered aiming at enemy, and fire them.
-		var/obj/projectile/hunter_blade/P = new(get_turf(src))
-		P.nondirectional_sprite = TRUE
-		P.starting = startloc
-		P.firer = src
-		P.fired_from = src
-		P.original = target
-		P.preparePixelProjectile(target, src)
-		P.damage = throw_damage
-		P.fire(angle_to_target - (throw_cone / 2) + projectile_angle_difference * i)
+	blade_throw.Perform(target, src, red_rage)
 
 /mob/living/simple_animal/hostile/abnormality/red_hood/proc/SpecialReset()
 	special_attacking = FALSE
@@ -382,9 +338,15 @@ It has now been over four months. Now we get her for real. -Coxswain
 	if(IsCombatMap())
 		faction |= "hostile"
 	RegisterSignal(SSdcs, COMSIG_GLOB_ABNORMALITY_BREACH, PROC_REF(OnAbnoBreach))
+	hollowpoint_round = new
+	blade_throw = new
 
 /mob/living/simple_animal/hostile/abnormality/red_hood/Destroy()
 	UnregisterSignal(SSdcs, COMSIG_GLOB_ABNORMALITY_BREACH)
+	if(hollowpoint_round)
+		QDEL_NULL(hollowpoint_round)
+	if(blade_throw)
+		QDEL_NULL(blade_throw)
 	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/red_hood/AttemptWork(mob/living/carbon/human/user, work_type)
@@ -612,14 +574,11 @@ It has now been over four months. Now we get her for real. -Coxswain
 		ContractComplete()
 		return
 
-/mob/living/simple_animal/hostile/abnormality/red_hood/patrol_select() //Path right to our target
+/mob/living/simple_animal/hostile/abnormality/red_hood/SelectPatrolLocation() //Path right to our target
 	if(out_on_request || priority_target)
 		if(!priority_target) //For some reason we never got one
 			return ..()
-		SEND_SIGNAL(src, COMSIG_PATROL_START, src, get_turf(priority_target))
-		SEND_GLOBAL_SIGNAL(src, COMSIG_GLOB_PATROL_START, src, get_turf(priority_target))
-		patrol_path = get_path_to(src, get_turf(priority_target), TYPE_PROC_REF(/turf, Distance_cardinal), 0, 200)
-		return
+		return get_turf(priority_target)
 	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/red_hood/proc/ContractComplete()
@@ -651,3 +610,147 @@ It has now been over four months. Now we get her for real. -Coxswain
 	AIStatus = AI_OFF
 	animate(src, alpha = 0, time = 10)
 	QDEL_IN(src,10)
+
+/*--------\
+|Abilities|
+\--------*/
+
+/obj/effect/proc_holder/ability/aimed/hollowpoint
+	name = "Hollowpoint Round"
+	desc = "Fire a spray of bullets at the next creature you click on."
+	action_icon_state = "helper_dash0"
+	base_icon_state = "helper_dash"
+	cooldown_time = RED_GUN_TIMER - 2
+	var/bullet_additional = 1
+	var/gun_multishot_pause = 2.5 // How long to pause between shots in a volley
+
+/obj/effect/proc_holder/ability/aimed/hollowpoint/can_cast(mob/user = usr)
+	if(isabnormalitymob(user))
+		var/mob/living/simple_animal/hostile/abnormality/abno = usr
+		if(abno.IsContained())
+			return FALSE
+	return ..()
+
+/obj/effect/proc_holder/ability/aimed/hollowpoint/AbnoInteraction(mob/living/user)
+	if(!istype(user, /mob/living/simple_animal/hostile/abnormality/red_hood))
+		return
+	var/mob/living/simple_animal/hostile/abnormality/red_hood/abno = user
+	ToggleAct(abno,TRUE)
+	abno.SpecialReset()
+
+/obj/effect/proc_holder/ability/aimed/hollowpoint/Perform(target, mob/living/user, enraged = 0)
+	. = ..()
+	//reset the emergency stop so we are not forever stuck.
+	if(!user || !target)
+		AbnoInteraction(user)
+		return
+	ToggleAct(user,FALSE)
+	ResetStats()
+	if(enraged)
+		EnrageStats()
+
+	for(var/bullet = 1 to bullet_additional)
+		Hollowpoint(target, user)
+		sleep(gun_multishot_pause)
+
+	AbnoInteraction(user)
+	ToggleAct(user,TRUE)
+
+/obj/effect/proc_holder/ability/aimed/hollowpoint/proc/Hollowpoint(atom/target, mob/living/user)
+	sleep(8 * 0.75)
+	HunterBullet(user, target)
+
+/obj/effect/proc_holder/ability/aimed/hollowpoint/proc/HunterBullet(mob/living/user, atom/target)
+	var/turf/startloc = get_turf(user)
+	var/angle_to_target = Get_Angle(user, target)
+	var/obj/projectile/red_hollowpoint/P = new(get_turf(user))
+	P.starting = startloc
+	P.firer = user
+	P.fired_from = user
+	P.Angle = angle_to_target
+	P.original = target
+	P.preparePixelProjectile(target, user)
+	P.damage = 30
+	P.fire()
+	playsound(user, 'sound/abnormalities/redhood/fire.ogg', 50, FALSE, 4)
+
+/obj/effect/proc_holder/ability/aimed/hollowpoint/proc/EnrageStats()
+	cooldown_time = 3 SECONDS
+	bullet_additional = 2
+
+/obj/effect/proc_holder/ability/aimed/hollowpoint/proc/ResetStats()
+	cooldown_time = RED_GUN_TIMER
+	bullet_additional = 1
+
+/obj/effect/proc_holder/ability/aimed/red_blade
+	name = "Blade Throw"
+	desc = "You will now fire at whatever you next click on."
+	action_icon_state = "helper_dash0"
+	base_icon_state = "helper_dash"
+	cooldown_time = RED_THROW_TIMER - 2
+	var/throw_amount = 3 // How many blades to throw at once
+	var/throw_cone = 25 // Total firing angle of all red's projectiles.
+	var/throw_damage = 40 // Damage of each thrown blade
+
+/obj/effect/proc_holder/ability/aimed/red_blade/can_cast(mob/user = usr)
+	if(isabnormalitymob(user))
+		var/mob/living/simple_animal/hostile/abnormality/abno = usr
+		if(abno.IsContained())
+			return FALSE
+	return ..()
+
+/obj/effect/proc_holder/ability/aimed/red_blade/AbnoInteraction(mob/living/user)
+	if(!istype(user, /mob/living/simple_animal/hostile/abnormality/red_hood))
+		return
+	var/mob/living/simple_animal/hostile/abnormality/red_hood/abno = user
+	ToggleAct(abno,TRUE)
+	abno.SpecialReset()
+
+/obj/effect/proc_holder/ability/aimed/red_blade/Perform(target, mob/living/user, enraged = FALSE)
+	. = ..()
+	if(!user || !target)
+		AbnoInteraction(user)
+		return
+	ToggleAct(user,FALSE)
+	ResetStats()
+	if(enraged)
+		EnrageStats()
+
+	sleep(15)
+	BladeThrow(target, user)
+
+	AbnoInteraction(user)
+	ToggleAct(user,TRUE)
+
+/obj/effect/proc_holder/ability/aimed/red_blade/proc/BladeThrow(atom/target, mob/living/user)
+	playsound(user, 'sound/abnormalities/redhood/throw.ogg', 50, FALSE, 4)
+	var/turf/startloc = get_turf(user)
+	var/angle_to_target = Get_Angle(user, target)
+	var/projectile_angle_difference = (throw_cone / (throw_amount - 1))
+	for(var/i = 0 to throw_amount - 1) // Create throw_amount projectiles evenly spaced across an arc of throw_cone degrees centered aiming at enemy, and fire them.
+		var/obj/projectile/hunter_blade/P = new(get_turf(user))
+		P.nondirectional_sprite = TRUE
+		P.starting = startloc
+		P.firer = user
+		P.fired_from = user
+		P.original = target
+		P.preparePixelProjectile(target, user)
+		P.damage = throw_damage
+		P.fire(angle_to_target - (throw_cone / 2) + projectile_angle_difference * i)
+
+/obj/effect/proc_holder/ability/aimed/red_blade/proc/EnrageStats()
+	cooldown_time = 8 SECONDS
+	throw_amount = 5
+	throw_cone = 35
+
+/obj/effect/proc_holder/ability/aimed/red_blade/proc/ResetStats()
+	cooldown_time = RED_THROW_TIMER - 2
+	throw_amount = 3 // How many blades to throw at once
+	throw_cone = 25 // Total firing angle of all red's projectiles.
+	throw_damage = 40 // Damage of each thrown blade
+
+#undef RED_GUN_TIMER
+#undef RED_THROW_TIMER
+
+
+

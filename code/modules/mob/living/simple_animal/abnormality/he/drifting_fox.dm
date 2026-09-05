@@ -71,6 +71,7 @@
 			It seemed to reprimand your attitude of pursuing resolution without forethought."),
 	)
 
+	//Uses tags
 	var/list/pet = list()
 	pet_bonus = "yips"
 	var/umbrella_spawn_number = 1
@@ -78,6 +79,9 @@
 	var/umbrella_spawn_limit = 4
 	var/list/spawned_mobs = list()
 	var/initial_mobs_spawned
+	//Cooldown for teleporting unbrellas
+	var/teleport_cooldown_time = 10 SECONDS
+	var/teleport_cooldown
 
 /mob/living/simple_animal/hostile/abnormality/drifting_fox/Login()
 	. = ..()
@@ -91,29 +95,29 @@
 		However, if the umbrellas are broken you will lose 5% for each umbrella broken.<br></b>")
 
 /mob/living/simple_animal/hostile/abnormality/drifting_fox/funpet(mob/petter)
-	pet |= petter
+	pet |= petter.tag
 	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/drifting_fox/AttemptWork(mob/living/carbon/human/user, work_type)
-	if(user in pet)
+	if(user.tag in pet)
 		if(work_type == ABNORMALITY_WORK_ATTACHMENT)
 			to_chat(user, span_notice("The abnormality seems to like this type of work more than usual!"))
 		else
 			to_chat(user, span_warning("The abnormality does not seem happy with your choice of work."))
-	. = ..()
+	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/drifting_fox/WorkChance(mob/living/carbon/human/user, chance, work_type)
-	if(user in pet)
+	if(user.tag in pet)
 		if(work_type == ABNORMALITY_WORK_ATTACHMENT)
 			chance += 30
 		else
 			chance -= 10
 		return chance
-	. = ..()
+	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/drifting_fox/PostWorkEffect(mob/living/carbon/human/user, work_type, pe, work_time)
-	if(user in pet)
-		pet -= user
+	if(user.tag in pet)
+		pet -= user.tag
 	if(get_attribute_level(user, TEMPERANCE_ATTRIBUTE) < 40)
 		datum_reference.qliphoth_change(-1)
 	return
@@ -128,6 +132,10 @@
 	icon_state = icon_living
 	pixel_y = -6
 
+/mob/living/simple_animal/hostile/abnormality/drifting_fox/Destroy()
+	UnregisterAll()
+	return ..()
+
 /mob/living/simple_animal/hostile/abnormality/drifting_fox/death(gibbed)
 	icon = 'ModularLobotomy/_Lobotomyicons/abno_cores/he.dmi'
 	pixel_x = -16
@@ -135,7 +143,7 @@
 	density = FALSE
 	animate(src, alpha = 0, time = 10 SECONDS)
 	QDEL_IN(src, 10 SECONDS)
-	..()
+	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/drifting_fox/Life()
 	. = ..()
@@ -148,12 +156,17 @@
 		for(var/i=4, i>=1, i--) //spawn 4 umbrellas right off the bat
 			var/mob/living/simple_animal/hostile/umbrella/newmob = new(get_turf(src))
 			newmob.faction = faction
-			spawned_mobs+=newmob
-			newmob.friend = src
+			RegisterMob(newmob)
 			newmob.GoToFox()
 			newmob.ranged_cooldown_time = rand(20,80)
 			move_to_delay = clamp(move_to_delay - 1, 3, 7) //Speed up
 			UpdateSpeed()
+	if(length(spawned_mobs) && teleport_cooldown <= world.time)
+		for(var/mob/living/simple_animal/hostile/umbrella/L in spawned_mobs)
+			if(!L)
+				continue
+			L.GoToFox(src)
+		teleport_cooldown = world.time + teleport_cooldown_time
 
 /mob/living/simple_animal/hostile/abnormality/drifting_fox/AttackingTarget(atom/attacked_target)
 	..()
@@ -166,16 +179,11 @@
 		Dodge()
 
 /mob/living/simple_animal/hostile/abnormality/drifting_fox/proc/UmbrellaLoop()
-	listclearnulls(spawned_mobs)
-	for(var/mob/living/L in spawned_mobs)
-		if(L.stat == DEAD)
-			spawned_mobs -= L
-	if(length(spawned_mobs) > umbrella_spawn_limit)
+	if(length(spawned_mobs) >= umbrella_spawn_limit)
 		return
 	var/mob/living/simple_animal/hostile/umbrella/newmob = new(get_turf(src))
-	newmob.faction = faction
-	spawned_mobs+=newmob
-	newmob.friend = src
+	newmob.faction = faction.Copy()
+	RegisterMob(newmob)
 	newmob.GoToFox()
 	newmob.ranged_cooldown_time = rand(20,80)
 	move_to_delay = clamp(move_to_delay - 1, 3, 7) //Speed up
@@ -188,8 +196,8 @@
 	if(length(spawned_mobs) < umbrella_spawn_limit)
 		var/mob/living/simple_animal/hostile/umbrella/newmob = new(get_turf(src))
 		newmob.faction = faction
-		spawned_mobs+=newmob
-		newmob.friend = src
+		RegisterMob(newmob)
+		newmob.friends += tag
 		newmob.GoToFox()
 		newmob.ranged_cooldown_time = rand(20,80)
 
@@ -218,6 +226,23 @@
 
 	density = TRUE
 
+/mob/living/simple_animal/hostile/abnormality/drifting_fox/proc/RegisterMob(mob/living/L)
+	RegisterSignal(L, list(COMSIG_PARENT_QDELETING), PROC_REF(UnregisterMob))
+	spawned_mobs += L
+
+/mob/living/simple_animal/hostile/abnormality/drifting_fox/proc/UnregisterMob(mob/living/L)
+	UnregisterSignal(L, list(COMSIG_PARENT_QDELETING))
+	if(istype(L, /mob/living/simple_animal/hostile/umbrella) && stat != DEAD)
+		deal_damage(100, BLACK_DAMAGE, flags = (DAMAGE_FORCED | DAMAGE_UNTRACKABLE), attack_type = (ATTACK_TYPE_SPECIAL))
+		move_to_delay = clamp(move_to_delay + 1, 3, 7) //Slowdown
+	spawned_mobs -= L
+
+/mob/living/simple_animal/hostile/abnormality/drifting_fox/proc/UnregisterAll()
+	for(var/mob/living/L in spawned_mobs)
+		UnregisterMob(L)
+		if(!QDELETED(L))
+			L.death()
+	spawned_mobs.Cut()
 
 //Summons
 /mob/living/simple_animal/hostile/umbrella
@@ -235,36 +260,18 @@
 	del_on_death = FALSE
 	ranged = TRUE
 	ranged_cooldown_time = 3 SECONDS
-	var/teleport_cooldown_time = 10 SECONDS
-	var/teleport_cooldown
-	/// The drifting fox
-	var/mob/living/simple_animal/hostile/abnormality/friend
 
 /// Deal damge to the fox
 /mob/living/simple_animal/hostile/umbrella/death(gibbed)
 	visible_message(span_notice("[src] falls to the ground as the umbrella closes in on itself!"))
-	if(friend)
-		friend.deal_damage(100, BLACK_DAMAGE, flags = (DAMAGE_FORCED | DAMAGE_UNTRACKABLE), attack_type = (ATTACK_TYPE_SPECIAL))
-		friend.move_to_delay = clamp(move_to_delay + 1, 3, 7) //Slowdown
 	animate(src, alpha = 0, time = 10 SECONDS)
 	QDEL_IN(src, 10 SECONDS)
 	return ..()
 
-///checks if the fox is in view every 10 seconds, and if not teleports to it
-/mob/living/simple_animal/hostile/umbrella/Life()
-	. = ..()
-	if(!friend || stat == DEAD) //for some reason life() works on death ain't that something
-		return
-	if(QDELETED(friend) || friend.status_flags & GODMODE) //Fox died, we're gone too
-		death()
-		return
-	if(teleport_cooldown < world.time)
-		teleport_cooldown = world.time + teleport_cooldown_time
-		if(!can_see(src, friend, vision_range))
-			GoToFox()
-
-/mob/living/simple_animal/hostile/umbrella/proc/GoToFox()
+/mob/living/simple_animal/hostile/umbrella/proc/GoToFox(mob/living/friend)
 	if(!friend)
+		return
+	if(can_see(src, friend, vision_range))
 		return
 	var/turf/move_turf = get_step(friend, pick(1,2,4,5,6,8,9,10))
 	if(!isopenturf(move_turf))

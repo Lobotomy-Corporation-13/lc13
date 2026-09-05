@@ -60,11 +60,13 @@
 
 	var/buff_cooldown
 	var/buff_cooldown_time = 30 SECONDS
+	var/corebuffed = FALSE	//This is just for like, an achievement.
 
 	var/pulse_cooldown
 	var/pulse_cooldown_time = 12 SECONDS
 	var/pulse_damage = 100 // Scales with distance; Ideally, you shouldn't be able to outheal it with white V armor or less.
 	//Ramps up as time goes on.
+	var/pulse_cap = 200 // Scales with distance; Ideally, you shouldn't be able to outheal it with white V armor or less.
 
 	var/datum/looping_sound/bluestar/soundloop
 
@@ -87,7 +89,7 @@
 	QDEL_NULL(soundloop)
 	animate(src, alpha = 0, time = 5 SECONDS)
 	QDEL_IN(src, 5 SECONDS)
-	..()
+	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/bluestar/Move()
 	return FALSE
@@ -111,6 +113,7 @@
 
 	if((buff_cooldown < world.time) && (status_flags & GODMODE))
 		work_damage_amount = initial(work_damage_amount)
+		corebuffed = FALSE
 
 /mob/living/simple_animal/hostile/abnormality/bluestar/CanAttack(atom/the_target)
 	return FALSE
@@ -138,7 +141,8 @@
 	animate(src, transform = init_transform, time = 5)
 
 	//Pulse damage increases as time goes on.
-	pulse_damage += 10
+	if(pulse_damage <= pulse_cap)
+		pulse_damage += 10
 
 /mob/living/simple_animal/hostile/abnormality/bluestar/AttemptWork(mob/living/carbon/human/user, work_type)
 	if(get_attribute_level(user, TEMPERANCE_ATTRIBUTE) < 80)
@@ -161,6 +165,8 @@
 		user.death()
 		animate(user, transform = user.transform*0.01, time = 5)
 		QDEL_IN(user, 5)
+	if(corebuffed)
+		user.client?.give_award(/datum/award/achievement/abno/blue_core, user)
 	return
 
 /mob/living/simple_animal/hostile/abnormality/bluestar/BreachEffect(mob/living/carbon/human/user, breach_type)

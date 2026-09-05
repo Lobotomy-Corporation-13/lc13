@@ -1069,6 +1069,16 @@
 
 	back = /obj/item/storage/backpack
 
+/// Copies our character prefs to our Test Range agent.
+// Sloppy way to do it, but we can't do this in an equip override, since it doesn't allow us to access the client at that point.
+/obj/effect/mob_spawn/human/testrange/create(ckey, newname)
+	. = ..()
+	var/mob/H = get_mob_by_ckey(ckey)
+	if(!H || !H.client || !H.client.prefs)
+		return
+	var/datum/preferences/prefs = H.client.prefs
+	prefs.copy_to(H, roundstart_checks = FALSE)
+
 //Supplypod Mobspawner
 /obj/effect/mob_spawn/human/supplypod
 	invisibility = 49

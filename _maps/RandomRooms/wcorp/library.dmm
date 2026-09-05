@@ -1,5 +1,26 @@
 //MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"bP" = (
+/obj/structure/wave_barrier{
+	controller_id = "library"
+	},
+/turf/open/floor/wood,
+/area/city/outskirts)
 "fU" = (
+/turf/open/floor/wood,
+/area/city/outskirts)
+"ho" = (
+/obj/structure/chair/comfy/black{
+	dir = 1
+	},
+/obj/structure/wave_barrier{
+	controller_id = "library"
+	},
+/turf/open/floor/wood,
+/area/city/outskirts)
+"qJ" = (
+/obj/effect/landmark/wave_spawn/dynamic{
+	controller_id = "library"
+	},
 /turf/open/floor/wood,
 /area/city/outskirts)
 "rM" = (
@@ -9,6 +30,22 @@
 "se" = (
 /obj/effect/decal/cleanable/blood/tracks{
 	dir = 8
+	},
+/turf/open/floor/wood,
+/area/city/outskirts)
+"tE" = (
+/obj/structure/chair/stool,
+/obj/effect/landmark/wave_spawn/dynamic{
+	controller_id = "library"
+	},
+/turf/open/floor/wood,
+/area/city/outskirts)
+"vu" = (
+/obj/structure/chair/comfy/black{
+	dir = 1
+	},
+/obj/effect/landmark/wave_spawn/dynamic{
+	controller_id = "library"
 	},
 /turf/open/floor/wood,
 /area/city/outskirts)
@@ -25,6 +62,12 @@
 /area/city/outskirts)
 "BY" = (
 /obj/structure/table/wood,
+/turf/open/floor/wood,
+/area/city/outskirts)
+"NA" = (
+/obj/effect/landmark/wave_trigger{
+	controller_id = "library"
+	},
 /turf/open/floor/wood,
 /area/city/outskirts)
 "Pc" = (
@@ -59,15 +102,15 @@
 
 (1,1,1) = {"
 Xn
-fU
-fU
-fU
-fU
-fU
-fU
-fU
-fU
-fU
+NA
+NA
+NA
+NA
+NA
+NA
+NA
+NA
+NA
 Xn
 "}
 (2,1,1) = {"
@@ -98,7 +141,7 @@ Xn
 "}
 (4,1,1) = {"
 Xn
-fU
+qJ
 Pc
 vy
 Pc
@@ -106,7 +149,7 @@ fU
 fU
 fU
 fU
-fU
+qJ
 Xn
 "}
 (5,1,1) = {"
@@ -137,7 +180,7 @@ Xn
 "}
 (7,1,1) = {"
 Xn
-fU
+qJ
 fU
 fU
 fU
@@ -145,7 +188,7 @@ se
 fU
 fU
 fU
-fU
+qJ
 Xn
 "}
 (8,1,1) = {"
@@ -189,7 +232,7 @@ Xn
 "}
 (11,1,1) = {"
 Xn
-rM
+tE
 BY
 BY
 rM
@@ -197,7 +240,7 @@ fU
 fU
 fU
 fU
-VI
+vu
 Xn
 "}
 (12,1,1) = {"
@@ -215,14 +258,14 @@ Xn
 "}
 (13,1,1) = {"
 Xn
-fU
-fU
-fU
-fU
-fU
-fU
-fU
-fU
-VI
+bP
+bP
+bP
+bP
+bP
+bP
+bP
+bP
+ho
 Xn
 "}

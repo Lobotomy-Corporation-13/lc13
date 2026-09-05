@@ -78,3 +78,13 @@
     room_id = "ukulele"
     mappath = "_maps/RandomRooms/backstreets/small_east/ukulele.dmm"
     weight = 2
+
+/datum/map_template/random_room/backstreets/small_east/boluslab_sea
+    name = "Bolus Lab - Small East A"
+    room_id = "boluslab_sea"
+    mappath = "_maps/RandomRooms/backstreets/small_east/boluslab_sea.dmm"
+
+/datum/map_template/random_room/backstreets/small_east/citrine_sea
+    name = "Citrine - Small East A"
+    room_id = "citrine_sea"
+    mappath = "_maps/RandomRooms/backstreets/small_east/citrine_sea.dmm"

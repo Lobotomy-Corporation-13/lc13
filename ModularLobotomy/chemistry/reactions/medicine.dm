@@ -26,7 +26,28 @@
 
 // To make K-Corp Drugs you need Genetic Repair
 
-/datum/chemical_reaction/abnormality/healing_fast
+/datum/chemical_reaction/healing_fast
 	results = list(/datum/reagent/abnormality/healing_fast = 2)
 	required_reagents = list(/datum/reagent/hydrene = 1, /datum/reagent/verdite = 1,
 		/datum/reagent/abnormality/gene_repair = 1)
+
+/datum/chemical_reaction/gene_repair
+	results = list(/datum/reagent/abnormality/gene_repair = 3)
+	required_reagents = list(/datum/reagent/omnicarbide = 1, /datum/reagent/ferroxan = 1,
+		/datum/reagent/velocium = 1)
+
+/datum/chemical_reaction/purgall
+	results = list(/datum/reagent/purgall = 3)
+	required_reagents = list(/datum/reagent/antitoxin = 1, /datum/reagent/ionovium = 1,
+		/datum/reagent/hydrene = 1)
+
+/datum/chemical_reaction/lc13_synthflesh
+	results = list(/datum/reagent/medicine/c2/synthflesh = 3)
+	required_reagents = list(/datum/reagent/zephyrium_chloride = 1, /datum/reagent/abnormality/healing_gel = 1,
+		/datum/reagent/abnormality/burn_salve = 1)
+
+/datum/chemical_reaction/oxyheal
+	results = list(/datum/reagent/oxyheal = 2)
+	required_reagents = list(/datum/reagent/radionex = 1, /datum/reagent/hydrene = 1)
+	required_temp = 350
+

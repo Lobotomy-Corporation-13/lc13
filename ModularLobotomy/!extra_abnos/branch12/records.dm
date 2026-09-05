@@ -131,6 +131,33 @@
 			Employees that desecrate the shrine in this way should be aware that the consequences of doing so is unknown.",
 	)
 
+//The Rain Can Always Get Worse
+/obj/item/paper/fluff/info/branch12/rain_can
+	abno_type = /mob/living/simple_animal/hostile/abnormality/branch12/rain_can
+	abno_code = "T-04-217"
+	abno_info = list(
+		"Each completed work lit T-04-217's lens a colour matching the work type: red for Instinct, white for Insight, black for Attachment, pale for Repression.",
+		"A good work result restored a small amount of the employee's SP.",
+		"Repeating the work type the lens already showed permanently lowered the Success Rate of ALL further work. Varying the work type avoided this.",
+		"This penalty could only be cleared by releasing the machine.",
+		"Once the lens was lit, a 'Release' work became available, letting T-04-217 out of its unit. It could not be released while its lens was dark, nor for a short time after returning.",
+		"Once released, T-04-217 never attacked. It followed the last employee to disturb it, trailing a wide, coloured rain.",
+		"Employees within the rain were shielded against the damage type matching the lens colour.",
+		"After roaming for a time, T-04-217 returned to its unit on its own. Forcing it back early left it inert for several minutes.",
+	)
+
+//Rabbits
+/obj/item/paper/fluff/info/branch12/rabbits
+	abno_type = /mob/living/simple_animal/hostile/abnormality/branch12/rabbit_fever
+	abno_code = "F-01-88"
+	abno_info = list(
+		"Each completed Attachment work split F-01-88, adding another rabbit to the huddle around it. Its maximum PE rose by 2 for every rabbit.",
+		"Every rabbit in the huddle lowered the Success Rate of ALL work by 5%.",
+		"Repression work while F-01-88 had a huddle scattered the whole brood across the facility, and the main body vanished down a burrow.",
+		"While burrowed, F-01-88 could not be worked, and did not resurface until every loosed rabbit was put down.",
+		"The loosed rabbits did not fight. They only fled from anyone who drew near, and had to be cornered or shot down.",
+	)
+
 
 
 //	-------------TETH-------------
@@ -229,6 +256,52 @@
 	abno_info = list(
 		"When an employee died, the Qliphoth Counter Decreased.",
 	)
+
+// Scuffed Lioness
+/obj/item/paper/fluff/info/branch12/scuffed_lioness
+	abno_type = /mob/living/simple_animal/hostile/abnormality/branch12/scuffed_lioness
+	abno_code = "F-02-12-214"
+	abno_info = list(
+		"When the work result was Bad, the Qliphoth Counter lowered.",
+		"Its raking blows knocked employees backward. Being pinned against a wall or in a corner was dangerous during suppression.",
+		"When a target kept its distance, F-02-214 sprang the full gap in a single lunge and clawed everyone where it landed.",
+		"The more it was wounded, the faster and more vicious it grew - frantic below half of its health, and berserk near death.",
+	)
+	abno_breach_damage_type = "Red"
+	abno_breach_damage_count = "High"
+
+// Clambug
+/obj/item/paper/fluff/info/branch12/clambug
+	abno_type = /mob/living/simple_animal/hostile/abnormality/branch12/clambug
+	abno_code = "T-03-12-05"
+	abno_info = list(
+		"When the work result was Bad, the Qliphoth Counter lowered.",
+		"Insight and Repression work unsettled T-03-213. On completing such work the Qliphoth Counter always lowered, even when the work itself succeeded.",
+		"Employees of low Fortitude were nipped by its mandibles over the course of their work.",
+		"Upon escaping, T-03-213 burrowed into the floor. While underground it could not be seen, struck, or tracked, and it passed beneath walls and furnishings alike.",
+		"For a short while after burrowing it wandered without regard for the staff, before beginning to hunt.",
+		"It surfaced directly beneath a chosen employee and, after a brief tremor of warning, erupted from the ground to strike all those nearby. It repeated this three times before it was left on the surface.",
+		"When grievously wounded, T-03-213 immediately dug itself back beneath the ground.",
+	)
+	abno_breach_damage_type = "Red"
+	abno_breach_damage_count = "High"
+
+//Faces in the Light
+/obj/item/paper/fluff/info/branch12/faces_in_light
+	abno_type = /mob/living/simple_animal/hostile/abnormality/branch12/faces_in_light
+	abno_code = "T-03-12-54"
+	abno_info = list(
+		"Working on T-03-58 in a darkened cell raised the work success rate. Working under bright light lowered it.",
+		"While the cell was kept dark, however, its work dealt roughly 50% more damage to the employee.",
+		"When the work result was Neutral, the Qliphoth Counter lowered with a 50% chance.",
+		"When the work result was Bad, the Qliphoth Counter always lowered.",
+		"When the Qliphoth Counter reached zero, T-03-58 did not leave its unit. Instead, faces spilled out of its light and scattered across the facility.",
+		"While any light fell on a face, it could not be harmed and could barely be seen. Bringing a face into darkness - an unlit room, or cut lights - made it visible and vulnerable, and it could then be put down with ordinary force.",
+		"The faces attacked in melee for White damage. Their blows landed for only half while they stood in the light.",
+		"A face that struck an employee whose sanity was already lost stripped away their equipment, destroyed them, and gave rise to another face.",
+	)
+	abno_breach_damage_type = "White"
+	abno_breach_damage_count = "Low"
 
 //	-------------HE-------------
 // The Show Goes On
@@ -329,6 +402,27 @@
 		"Completing a work on O-04-12-775 would also deal considerable damage to all breached abnormalities.",
 		"Headquarters is confident that you could find some use for this.",
 	)
+
+// Inkstained Squid
+/obj/item/paper/fluff/info/branch12/inkstained_squid
+	abno_type = /mob/living/simple_animal/hostile/abnormality/branch12/inkstained_squid
+	abno_code = "F-04-12-63"
+	abno_info = list(
+		"Draw, Calculate, and Letter each add their colour to the sheet; Erase wipes the sheet even again. The bar over F-04-63 shows how the three colours stand.",
+		"Keeping the three colours even makes all work easier; leaning on any one colour makes all work harder.",
+		"A neutral result had a 50% chance to lower the Qliphoth Counter, and a bad result lowered it every time.",
+		"When breached it makes no attacks of its own, but it soaks up the colour of any damage it takes and grows resistant to that colour, turning fully immune once it has taken enough - so putting it down needs several damage types.",
+		"It strikes back with the colours it has soaked up, in the same mix, and everything it holds resets once it is contained.")
+
+/obj/item/paper/fluff/info/branch12/encyclopedia_of_anthrophagy
+	abno_type = /mob/living/simple_animal/hostile/abnormality/branch12/encyclopedia_of_anthrophagy
+	abno_code = "O-04-12-186"
+	abno_info = list(
+		"Working on O-04-186 grants the reader a fading shield. Insight work gives the most, the other three less, and a better work result gives more.",
+		"The more shield an employee carries, the higher their work success rate becomes.",
+		"At the end of each work session O-04-186 tries to devour the reader, with a chance equal to half the shield they are carrying - the better armoured they are, the greater the danger.",
+		"Every employee it devours lowers the Qliphoth Counter by one; at zero it breaches to hunt for more.",
+		"Once breached it chases the employee with the highest Prudence, deals more damage the more Prudence its target has - the single most learned person takes double - sprints when its prey is far off, and devours the downed to heal itself and grow stronger.")
 
 //	-------------WAW-------------
 // Queen Keres

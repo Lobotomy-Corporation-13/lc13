@@ -35,7 +35,7 @@
 	//gift_type =  /datum/ego_gifts/insanity
 	abnormality_origin = ABNORMALITY_ORIGIN_BRANCH12
 
-	var/mob/living/linked_human
+	var/mob/living/carbon/human/linked_human
 
 	//This shit is a blatany copypasta of Blue Star becuase the doc I was given is ALSO just bluestar in breach. I'm saving time.
 	var/pulse_cooldown
@@ -46,6 +46,10 @@
 	//This is for the server which is on life, and more constant
 	var/sever_damage = 10
 	var/sever_bleed = 3
+
+/mob/living/simple_animal/hostile/abnormality/branch12/madness/Destroy()
+	UnregisterSoul()
+	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/branch12/madness/Move()
 	return FALSE
@@ -106,7 +110,6 @@
 		if(H.sanity_lost)
 			H.apply_lc_bleed(sever_bleed*2) // Apply more bleed if you're insane, we're trying to kill you.
 
-
 /mob/living/simple_animal/hostile/abnormality/branch12/madness/BreachEffect(mob/living/carbon/human/user, breach_type)
 	. = ..()
 	var/turf/T = pick(GLOB.department_centers)
@@ -142,5 +145,16 @@
 		possible_links += L
 	if(!length(possible_links))
 		return
-	linked_human = pick(possible_links)
+	RegisterSoul(pick(possible_links))
 	to_chat(user, span_notice("The Heart of Madness has chosen [linked_human]."))
+
+/mob/living/simple_animal/hostile/abnormality/branch12/madness/proc/RegisterSoul(new_link)
+	if(!new_link)
+		return
+	linked_human = new_link
+	RegisterSignal(new_link, list(COMSIG_PARENT_QDELETING), PROC_REF(UnregisterSoul))
+
+/mob/living/simple_animal/hostile/abnormality/branch12/madness/proc/UnregisterSoul()
+	if(linked_human)
+		UnregisterSignal(linked_human, list(COMSIG_PARENT_QDELETING))
+	linked_human = null

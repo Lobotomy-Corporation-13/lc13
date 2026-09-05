@@ -33,6 +33,13 @@
 	gift_type =  /datum/ego_gifts/rapunzel
 	abnormality_origin = ABNORMALITY_ORIGIN_WONDERLAB
 
+	observation_prompt = "As you enter the chamber, knotted golden hair grows constantly around you constricting your movement. A colourful hairbrush is hanging from the wall... <br>\
+		In the distance, you hear a faint voice counting.. <br>"
+	observation_choices = list(
+		"Cut the hair constricting you" = list(TRUE, "You sever the knots of hair constricting you as you continue forward to the work console. <br>\
+		On one of the cut locks of hair you find a bow."),
+		"Use the brush to untangle the hair" = list(FALSE, "As you reach for the brush the abnormality grabs you, dragging you in to the mass of hair before continuing to count.. <br> 4985... 4986..."),
+		)
 	var/chosen
 	var/instinct_count
 
@@ -41,6 +48,30 @@
 
 /mob/living/simple_animal/hostile/abnormality/tangle/CanAttack(atom/the_target)
 	return FALSE
+
+/mob/living/simple_animal/hostile/abnormality/tangle/Life()
+	. = ..()
+	if(!.)
+		return
+	if(IsContained())
+		return
+
+	//This is here because the sprite is bugged and I have NO fucking clue why.
+	//It works perfectly fine in a local test but fucks up on the server.
+	//Fuck you. Fuck you. Fuck you.
+	//I am forcing you to have your correct icon, and you will LIKE it.
+	if(icon_state != "tangle" || icon!= 'ModularLobotomy/_Lobotomyicons/32x64.dmi')
+		icon_state = "tangle"
+		icon = 'ModularLobotomy/_Lobotomyicons/32x64.dmi'
+
+	for(var/mob/living/carbon/human/H in GLOB.mob_list)
+		if(locate(/obj/structure/spreading/tangle_hair) in range(0, H))
+			H.deal_damage(3, WHITE_DAMAGE, attack_type = (ATTACK_TYPE_ENVIRONMENT), blocked = H.run_armor_check(null, WHITE_DAMAGE))
+			if(H in view(3, src))
+				if(prob(30) && get_attribute_level(H, FORTITUDE_ATTRIBUTE) < 60)
+					H.Knockdown(1)
+					to_chat(H, span_warning("You get overwhelmed in the hair!"))
+
 
 //Grab a list of all agents and picks one
 /mob/living/simple_animal/hostile/abnormality/tangle/Initialize()
@@ -114,7 +145,7 @@
 	. = ..()
 	if(ishuman(AM))
 		var/mob/living/carbon/human/H = AM
-		H.deal_damage(1, WHITE_DAMAGE, attack_type = (ATTACK_TYPE_ENVIRONMENT), blocked = H.run_armor_check(null, RED_DAMAGE))
+		H.deal_damage(1, WHITE_DAMAGE, attack_type = (ATTACK_TYPE_ENVIRONMENT), blocked = H.run_armor_check(null, WHITE_DAMAGE))
 		if(prob(10))
 			H.Immobilize(5)
 			to_chat(H, span_warning("You get caught in the hair!"))

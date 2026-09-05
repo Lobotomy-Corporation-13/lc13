@@ -339,6 +339,9 @@
 /area/city/outskirtsfactory)
 "cR" = (
 /obj/structure/table/glass,
+/obj/item/storage/backpack/duffelbag/med/surgery,
+/obj/item/clothing/suit/armor/ego_gear/limbus_labs/doctor,
+/obj/item/clothing/head/beret/tegu/med,
 /turf/open/floor/plasteel/white,
 /area/facility_hallway/manager)
 "cS" = (
@@ -708,7 +711,6 @@
 /obj/machinery/light{
 	dir = 4
 	},
-/obj/item/clothing/head/beret/tegu/chem,
 /turf/open/floor/plasteel/white,
 /area/facility_hallway/manager)
 "fv" = (
@@ -719,8 +721,8 @@
 /turf/open/floor/facility/white,
 /area/city/outskirtsfactory)
 "fx" = (
-/obj/structure/chair/office,
-/turf/open/floor/plasteel/white,
+/obj/effect/landmark/salesspawn_extra,
+/turf/closed/indestructible/reinforced,
 /area/facility_hallway/manager)
 "fy" = (
 /obj/machinery/cryopod{
@@ -2381,12 +2383,16 @@
 	},
 /turf/open/floor/plasteel/dark,
 /area/department_main/manager)
+"rA" = (
+/obj/effect/landmark/machine/extra,
+/turf/open/floor/plasteel/white,
+/area/facility_hallway/manager)
 "rB" = (
 /mob/living/simple_animal/hostile/ordeal/green_bot/fast,
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
 "rD" = (
-/obj/structure/closet,
+/obj/effect/landmark/refinery/extra,
 /turf/open/floor/plasteel/white,
 /area/facility_hallway/manager)
 "rF" = (
@@ -3490,6 +3496,10 @@
 	},
 /turf/open/floor/carpet/black,
 /area/department_main/manager)
+"zT" = (
+/obj/structure/table/optable,
+/turf/open/floor/plasteel/white,
+/area/facility_hallway/manager)
 "zV" = (
 /obj/item/paper_bin,
 /obj/item/pen/fourcolor,
@@ -4896,6 +4906,10 @@
 	},
 /turf/open/floor/pod/light,
 /area/city/outskirtsfactory)
+"KW" = (
+/obj/effect/landmark/salesspawn_extra,
+/turf/closed/indestructible/reinforced,
+/area/department_main/manager)
 "Lc" = (
 /obj/structure/chair/wood{
 	dir = 8
@@ -5221,6 +5235,12 @@
 	},
 /turf/closed/indestructible/syndicate,
 /area/city/outskirtsfactory)
+"NI" = (
+/obj/structure/chair/office{
+	dir = 4
+	},
+/turf/open/floor/plasteel/white,
+/area/facility_hallway/manager)
 "NK" = (
 /obj/machinery/door/airlock/wood{
 	name = "Representative's Room"
@@ -6126,7 +6146,6 @@
 /turf/closed/indestructible/reinforced,
 /area/facility_hallway/manager)
 "WB" = (
-/obj/structure/table/glass,
 /obj/machinery/light{
 	dir = 8
 	},
@@ -19178,8 +19197,8 @@ QL
 Yw
 Qf
 Qf
-Qf
-YQ
+KW
+fx
 ND
 wz
 JT
@@ -19436,7 +19455,7 @@ Qf
 Qf
 rD
 WB
-rD
+Xy
 HZ
 jn
 JT
@@ -19688,11 +19707,11 @@ XL
 XL
 XL
 XL
-XL
 YQ
-cR
 fx
-cR
+rA
+Xy
+Xy
 Xy
 HZ
 Zi
@@ -19945,11 +19964,11 @@ XL
 XL
 XL
 XL
-XL
 YQ
-cR
+fx
 Xy
 Xy
+NI
 Xy
 iG
 Zi
@@ -20202,10 +20221,10 @@ XL
 XL
 XL
 XL
-XL
 YQ
+fx
 Xy
-Xy
+zT
 fr
 cR
 HZ

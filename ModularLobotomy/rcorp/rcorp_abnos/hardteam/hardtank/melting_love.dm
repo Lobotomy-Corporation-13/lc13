@@ -1,0 +1,388 @@
+#define STATUS_EFFECT_SLIMED  /datum/status_effect/rca_melty_slimed
+//Tank role because of multiple reasons
+//Plenty health
+//Self healing
+//Absorbs the most common damage type in RCA
+//AoE denial
+/mob/living/simple_animal/hostile/rcorp_abno/hard/melting_love
+	name = "Melting Love"
+	desc = "A pink hunched creature with long arms, there are also visible bones coming from insides of the slime."
+	/* Stats */
+	threat_level = ALEPH_LEVEL
+	health = 4000
+	maxHealth = 4000
+	obj_damage = 60
+	icon_dead = "melting_breach_dead"
+	damage_coeff = list(RED_DAMAGE = -1, WHITE_DAMAGE = 1, BLACK_DAMAGE = 1.5, PALE_DAMAGE = 0.8)
+	melee_damage_type = BLACK_DAMAGE
+	melee_damage_lower = 55
+	melee_damage_upper = 60 // AOE damage increases it drastically
+	projectiletype = /obj/projectile/rca_melting_blob
+	ranged = TRUE
+	stat_attack = DEAD
+	minimum_distance = 0
+	ranged_cooldown_time = 5 SECONDS
+	move_to_delay = 4
+	loot = list(/obj/item/reagent_containers/glass/bucket/melting)
+	del_on_death = FALSE
+	original_abno = /mob/living/simple_animal/hostile/abnormality/melting_love
+
+	/// Amount of BLACK damage done to all enemies around main target on melee attack. Also includes original target
+	var/radius_damage = 30
+
+	abno_additional_instructions = "<h1>You are Melting Love, A Tank Role Abnormality.</h1><br>\
+		<b>|Absorbing Slime|: RED damage heals you instead of damaging you, The same thing applies to your slime pawns.<br>\
+		<br>\
+		|Sticky Slime|: Some of your abilities will inflict 'SLIMED' on the target.\
+		Targets with 'SLIMED' will take BLACK damage over time and will become slowed down for it's duration.<br>\
+		<br>\
+		|Melting Slime|: As you move around, you will leave behind 'Melting Slime' on the turfs you cross. If any non-slime crosses this 'Melting Slime', They will be inflicted with 'SLIMED'.<br>\
+		<br>\
+		|Spreading Love...|: When you attack a dead body, you will convert it into a 'Slime Pawn.' Slime pawns exist for a short amount of time and detonate upon their death.\
+		When they detonate, they will deal BLACK damage to nearby humans and spread 'Melting Slime' around them.\
+		Also, If you attack your own 'Slime Pawn', You will devour them and heal 20% of your HP.<br>\
+		<br>\
+		|Stay Together...|: When you click on a tile outside your melee range, You will fire a slime projectile towards that tile. The projectile will inflict the target with 'SLIMED' and deal BLACK damage.\
+		If the projectile hits a dead body, it will convert it into a slime pawn.</b>"
+
+/mob/living/simple_animal/hostile/rcorp_abno/hard/melting_love/Initialize()
+	. = ..()
+	icon = 'ModularLobotomy/_Lobotomyicons/96x96.dmi'
+	icon_living = "melting_breach"
+	icon_state = icon_living
+	pixel_x = -32
+	base_pixel_x = -32
+	offsets_pixel_x = list("south" = -32, "north" = -32, "west" = -32, "east" = -32)
+	SetOccupiedTiles(up = 1)
+
+/mob/living/simple_animal/hostile/rcorp_abno/hard/melting_love/death(gibbed)
+	density = FALSE
+	animate(src, alpha = 0, time = (5 SECONDS))
+	QDEL_IN(src, (5 SECONDS))
+	return ..()
+
+/* Attacks */
+/mob/living/simple_animal/hostile/rcorp_abno/hard/melting_love/CanAttack(atom/the_target)
+	if(isliving(the_target) && !ishuman(the_target))
+		var/mob/living/L = the_target
+		if(L.stat == DEAD)
+			return FALSE
+		if(L.type == /mob/living/simple_animal/hostile/rca_slime && health <= maxHealth * 0.8) // We need healing
+			return TRUE
+	return ..()
+
+/mob/living/simple_animal/hostile/rcorp_abno/hard/melting_love/OpenFire(atom/A)
+	if(get_dist(src, A) < 2) // We can't fire normal ranged attack that close
+		return FALSE
+	return ..()
+
+/mob/living/simple_animal/hostile/rcorp_abno/hard/melting_love/AttackingTarget(atom/attacked_target)
+	// Convert
+	if(ishuman(attacked_target))
+		var/mob/living/carbon/human/H = attacked_target
+		if(H.stat == DEAD || H.health <= HEALTH_THRESHOLD_DEAD)
+			return SlimeConvert(H)
+
+	// Consume a slime. Cannot work on the big one, so the check is not istype()
+	if(attacked_target.type == /mob/living/simple_animal/hostile/rca_slime)
+		var/mob/living/simple_animal/hostile/rca_slime/S = attacked_target
+		visible_message(span_warning("[src] consumes \the [S], restoring its own health."))
+		. = ..() // We do a normal attack without AOE and then consume the slime to restore HP
+		adjustBruteLoss(-maxHealth * 0.2)
+		S.adjustBruteLoss(S.maxHealth) // To make sure it dies
+		return .
+
+	// AOE attack
+	if(isliving(attacked_target) || ismecha(attacked_target))
+		new /obj/effect/gibspawner/generic/silent/rca_melty_slime(get_turf(attacked_target))
+		for(var/turf/open/T in view(1, attacked_target))
+			var/obj/effect/temp_visual/small_smoke/halfsecond/S = new(T)
+			S.color = "#FF0081"
+			var/list/got_hit = list()
+			got_hit = HurtInTurf(T, got_hit, radius_damage, BLACK_DAMAGE, null, TRUE, FALSE, TRUE, attack_type = (ATTACK_TYPE_MELEE))
+			for(var/mob/living/L in got_hit)
+				L.apply_status_effect(STATUS_EFFECT_SLIMED)
+	return ..()
+
+/mob/living/simple_animal/hostile/rcorp_abno/hard/melting_love/bullet_act(obj/projectile/P)
+	if (P.damage_type == RED_DAMAGE && !ishuman(P.firer))
+		return BULLET_ACT_BLOCK
+	. = ..()
+
+/mob/living/simple_animal/hostile/rcorp_abno/hard/melting_love/Move()
+	. = ..()
+	var/turf/T = get_turf(src)
+	if(!isturf(T) || isspaceturf(T))
+		return
+	if(locate(/obj/effect/decal/cleanable/rca_melty_slime) in T)
+		for(var/obj/effect/decal/cleanable/rca_melty_slime/slime in T)
+			slime.Refresh()
+		return
+	new /obj/effect/decal/cleanable/rca_melty_slime(T)
+
+/* Slime Conversion */
+/mob/living/simple_animal/hostile/rcorp_abno/hard/melting_love/proc/SlimeConvert(mob/living/carbon/human/H)
+	if(!istype(H))
+		return FALSE
+	visible_message(span_danger("[src] glomps on \the [H] as another slime pawn appears!"))
+	new /mob/living/simple_animal/hostile/rca_slime(get_turf(H))
+	H.gib(FALSE, TRUE, TRUE)
+	return TRUE
+
+/* Slimes (HE) */
+/mob/living/simple_animal/hostile/rca_slime
+	name = "slime pawn"
+	desc = "The skeletal remains of a former employee is floating in it... Best kill it before it's absorbed."
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
+	icon_state = "little_slime"
+	icon_living = "little_slime"
+	speak_emote = list("gurgle")
+	attack_verb_continuous = "glomps"
+	attack_verb_simple = "glomp"
+	/* Stats */
+	health = 400
+	maxHealth = 400
+	obj_damage = 60
+	damage_coeff = list(RED_DAMAGE = -1, WHITE_DAMAGE = 1, BLACK_DAMAGE = 2, PALE_DAMAGE = 1)
+	melee_damage_type = BLACK_DAMAGE
+	melee_damage_lower = 20
+	melee_damage_upper = 25
+	rapid_melee = 2
+	speed = 2
+	move_to_delay = 3
+	/* Sounds */
+	death_sound = 'sound/abnormalities/meltinglove/pawn_death.ogg'
+	attack_sound = 'sound/abnormalities/meltinglove/pawn_attack.ogg'
+	/* Vars and others */
+	robust_searching = TRUE
+	stat_attack = DEAD
+	del_on_death = TRUE
+	var/spawn_sound = 'sound/abnormalities/meltinglove/pawn_convert.ogg'
+	var/statuschance = 25
+	var/death_damage = 20
+	var/death_slime_range = 1
+	var/decay_damage = 20
+	var/decay_timer = 4
+
+/mob/living/simple_animal/hostile/rca_slime/Login()
+	. = ..()
+	to_chat(src, "<h1>You are a Slime Pawn, A Melting Love minion.</h1><br>\
+		<b>|Combust...|: You take 20 BLACK damage every 4 Seconds, Which means you have 40 seconds to live, unless someone attacks you with RED damage. \
+		Once you die, you will explode and place down 'Slime' in a 3x3 area around you, and deal 20 BLACK damage to all foes near you.<br>\
+		<br>\
+		|Mother?|: Melting Love is able to attack you to devour you and heal 20% of her HP.</b>")
+
+/mob/living/simple_animal/hostile/rca_slime/Initialize()
+	. = ..()
+	playsound(get_turf(src), spawn_sound, 50, 1)
+	var/matrix/init_transform = transform
+	transform *= 0.1
+	alpha = 25
+	animate(src, alpha = 255, transform = init_transform, time = 5)
+	addtimer(CALLBACK(src, PROC_REF(decay)), decay_timer SECONDS, TIMER_STOPPABLE)
+
+/mob/living/simple_animal/hostile/rca_slime/proc/decay()
+	to_chat(src, span_userdanger("You feel yourself falling apart..."))
+	src.deal_damage(decay_damage, BLACK_DAMAGE, flags = (DAMAGE_FORCED))
+	if (stat != DEAD)
+		addtimer(CALLBACK(src, PROC_REF(decay)), decay_timer SECONDS, TIMER_STOPPABLE)
+
+/mob/living/simple_animal/hostile/rca_slime/death()
+	for(var/atom/movable/AM in src)
+		AM.forceMove(get_turf(src))
+	for(var/turf/open/R in range(death_slime_range, src))
+		new /obj/effect/decal/cleanable/rca_melty_slime(R)
+	for(var/mob/living/L in view(death_slime_range, src))
+		if(L.stat != DEAD && !istype(L, /mob/living/simple_animal/hostile/rca_slime))
+			L.deal_damage(death_damage, BLACK_DAMAGE, attack_type = (ATTACK_TYPE_SPECIAL))
+	return ..()
+
+/mob/living/simple_animal/hostile/rca_slime/CanAttack(atom/the_target)
+	if(isliving(the_target) && !ishuman(the_target))
+		var/mob/living/L = the_target
+		if(L.stat == DEAD)
+			return FALSE
+	return ..()
+
+/mob/living/simple_animal/hostile/rca_slime/AttackingTarget(atom/attacked_target)
+	// Convert
+	if(ishuman(attacked_target))
+		var/mob/living/carbon/human/H = attacked_target
+		if(H.stat == DEAD || H.health <= HEALTH_THRESHOLD_DEAD)
+			return SlimeConvert(H)
+		if(prob(statuschance))
+			H.apply_status_effect(STATUS_EFFECT_SLIMED)
+	return ..()
+
+/mob/living/simple_animal/hostile/rca_slime/proc/SlimeConvert(mob/living/carbon/human/H)
+	if(!istype(H))
+		return FALSE
+	visible_message(span_danger("[src] glomps on \the [H] as another slime pawn appears!"))
+	new /mob/living/simple_animal/hostile/rca_slime(get_turf(H))
+	H.gib(FALSE, TRUE, TRUE)
+	return TRUE
+
+/obj/projectile/rca_melting_blob
+	name = "slime projectile"
+	desc = "A glob of infectious slime. It's going for your heart."
+	icon_state = "slime"
+	hitsound = 'sound/abnormalities/meltinglove/ranged_hit.ogg'
+	damage_type = BLACK_DAMAGE
+
+	damage = 30 // Mainly a disabling tool, to pursue escaping opponents
+	spread = 5
+	slur = 5
+	eyeblur = 5
+	stamina = 30
+
+/obj/projectile/rca_melting_blob/prehit_pierce(atom/A)
+	if(isliving(A) && isliving(firer))
+		var/mob/living/mob_firer = firer
+		var/mob/living/L = A
+		if(mob_firer.faction_check_mob(L))
+			return PROJECTILE_PIERCE_PHASE
+	return ..()
+
+/obj/projectile/rca_melting_blob/on_hit(target)
+	if(isliving(target))
+		new /obj/effect/gibspawner/generic/silent/rca_melty_slime(get_turf(target))
+		var/mob/living/L = target
+		if(L.stat == DEAD && ishuman(L))
+			var/turf/T = get_turf(L)
+			visible_message("<span class='danger'>[L] is submerged in slime as another slime pawn appears!</span>")
+			L.gib()
+			new /mob/living/simple_animal/hostile/rca_slime(T)
+			return BULLET_ACT_HIT
+		if(!isbot(L))
+			L.visible_message("<span class='warning'>[L] is hit by [src], they seem to wither away!</span>")
+			L.apply_status_effect(/datum/status_effect/rca_melty_slimed)
+			return BULLET_ACT_HIT
+	return ..()
+
+//Slime trails
+/obj/effect/decal/cleanable/rca_melty_slime
+	name = "Slime"
+	desc = "It looks corrosive."
+	icon = 'ModularLobotomy/_Lobotomyicons/tegu_effects.dmi'
+	icon_state = "melty_slime3"
+	random_icon_states = list("melty_slime3")
+	mergeable_decal = TRUE
+	var/duration = 30 SECONDS
+	var/state = 3
+	var/timer1
+	var/timer2
+	var/list/slime_types = list(
+		/mob/living/simple_animal/hostile/rcorp_abno/hard/melting_love,
+		/mob/living/simple_animal/hostile/rca_slime,
+	)
+
+/obj/effect/decal/cleanable/rca_melty_slime/Initialize(mapload, list/datum/disease/diseases)
+	. = ..()
+	START_PROCESSING(SSobj, src)
+	duration += world.time
+	timer1 = addtimer(CALLBACK(src, PROC_REF(Reduce)), 10 SECONDS, TIMER_STOPPABLE)
+	timer2 = addtimer(CALLBACK(src, PROC_REF(Reduce)), 20 SECONDS, TIMER_STOPPABLE)
+
+/obj/effect/decal/cleanable/rca_melty_slime/proc/Refresh()
+	icon_state = "melty_slime3"
+	duration = 30 SECONDS
+	if(timer1)
+		deltimer(timer1)
+		timer1 = null
+	if(timer2)
+		deltimer(timer2)
+		timer2 = null
+	timer1 = addtimer(CALLBACK(src, PROC_REF(Reduce)), 10 SECONDS, TIMER_STOPPABLE)
+	timer2 = addtimer(CALLBACK(src, PROC_REF(Reduce)), 20 SECONDS, TIMER_STOPPABLE)
+
+
+/obj/effect/decal/cleanable/rca_melty_slime/proc/Reduce()
+	state -= 1
+	icon_state = "melty_slime[state]"
+	update_icon()
+
+/obj/effect/decal/cleanable/rca_melty_slime/process(delta_time)
+	if(world.time > duration)
+		Remove()
+
+/obj/effect/decal/cleanable/rca_melty_slime/proc/Remove()
+	STOP_PROCESSING(SSobj, src)
+	animate(src, time = (5 SECONDS), alpha = 0)
+	QDEL_IN(src, 5 SECONDS)
+
+/obj/effect/decal/cleanable/rca_melty_slime/proc/streak(list/directions, mapload=FALSE)
+	set waitfor = FALSE
+	var/direction = pick(directions)
+	for(var/i in 0 to pick(0, 200; 1, 150; 2, 50; 3, 17; 50)) //the 3% chance of 50 steps is intentional and played for laughs.
+		if (!mapload)
+			sleep(2)
+		if(!step_to(src, get_step(src, direction), 0))
+			break
+
+/obj/effect/decal/cleanable/rca_melty_slime/Crossed(atom/movable/AM)
+	. = ..()
+	if(!isliving(AM))
+		return FALSE
+	if(is_type_in_list(AM, slime_types, FALSE))
+		return
+	if(istype(AM, /mob/living/simple_animal/projectile_blocker_dummy))
+		var/mob/living/simple_animal/projectile_blocker_dummy/pbd = AM
+		if(is_type_in_list(pbd.parent, slime_types, FALSE))
+			return
+	var/mob/living/L = AM
+	if("hostile" in L.faction)
+		return
+	L.apply_status_effect(STATUS_EFFECT_SLIMED)
+
+/obj/effect/gibspawner/generic/silent/rca_melty_slime
+	gibtypes = list(/obj/effect/decal/cleanable/rca_melty_slime)
+	gibamounts = list(3)
+
+/obj/effect/gibspawner/generic/silent/rca_melty_slime/Initialize()
+	if(!gibdirections.len)
+		gibdirections = list(list(WEST, NORTHWEST, SOUTHWEST, NORTH))
+	. = ..()
+	return
+
+//Attack Status Effect
+/datum/status_effect/rca_melty_slimed
+	id = "rca_melty_slimed"
+	status_type = STATUS_EFFECT_REFRESH
+	alert_type = /atom/movable/screen/alert/status_effect/rca_melty_slimed
+	duration = 10 SECONDS // Hits 5 times
+	tick_interval = 2 SECONDS
+
+/atom/movable/screen/alert/status_effect/rca_melty_slimed
+	name = "Acidic Goo"
+	desc = "Slime is stuck to your skin, slowing you down and dealing BLACK damage!"
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
+	icon_state = "slimed"
+
+/datum/status_effect/rca_melty_slimed/tick()
+	. = ..()
+	if(!isliving(owner))
+		return
+	var/mob/living/L = owner
+	L.deal_damage(10, BLACK_DAMAGE, attack_type = (ATTACK_TYPE_STATUS))
+	owner.playsound_local(owner, 'sound/effects/wounds/sizzle2.ogg', 25, TRUE)
+	if(!ishuman(L))
+		return
+	if((L.sanityhealth <= 0) || (L.health <= 0))
+		var/turf/T = get_turf(L)
+		new /mob/living/simple_animal/hostile/rca_slime(T)
+		L.gib(TRUE, TRUE, TRUE)
+
+/datum/status_effect/rca_melty_slimed/on_apply()
+	owner.add_movespeed_modifier(/datum/movespeed_modifier/rca_slimed)
+	owner.playsound_local(owner, 'sound/abnormalities/meltinglove/ranged_hit.ogg', 50, TRUE)
+	return ..()
+
+/datum/status_effect/rca_melty_slimed/on_remove()
+	owner.remove_movespeed_modifier(/datum/movespeed_modifier/rca_slimed)
+	return ..()
+
+/datum/movespeed_modifier/rca_slimed
+	multiplicative_slowdown = 1
+	variable = FALSE
+
+#undef STATUS_EFFECT_SLIMED

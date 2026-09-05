@@ -24,7 +24,6 @@
 	damage_coeff = list(RED_DAMAGE = 1, WHITE_DAMAGE = 1, BLACK_DAMAGE = 1, PALE_DAMAGE = 1)
 	butcher_results = list(/obj/item/food/meat/slab/sinnew = 1)
 	guaranteed_butcher_results = list(/obj/item/food/meat/slab/sinnew = 1)
-	var/list/candidate_list = list()
 	var/outfit = /datum/outfit/job/scavenger/envy
 
 /mob/living/simple_animal/hostile/ordeal/sin_envy/Initialize()
@@ -47,8 +46,7 @@
 /mob/living/simple_animal/hostile/ordeal/sin_envy/proc/CopyPlayer()
 	var/mob/living/target_mob = null
 	var/mobprefs = null
-	for(var/mob/living/M in GLOB.player_list)
-		candidate_list += M
+	var/list/candidate_list = GLOB.player_list.Copy()
 	if(LAZYLEN(candidate_list))
 		target_mob = pick(candidate_list)
 		mobprefs = target_mob.client.prefs

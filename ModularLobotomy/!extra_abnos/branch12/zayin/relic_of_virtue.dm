@@ -39,16 +39,21 @@
 	//Now it's thrown up
 	var/thrown_up = FALSE
 
+
+/mob/living/simple_animal/hostile/abnormality/branch12/relic_of_virtue/Destroy()
+	UnregisterSoul()
+	return ..()
+
 /mob/living/simple_animal/hostile/abnormality/branch12/relic_of_virtue/Initialize()
-	..()
+	. = ..()
 	addtimer(CALLBACK(src, PROC_REF(SetActive)), 10 MINUTES)
 
 /mob/living/simple_animal/hostile/abnormality/branch12/relic_of_virtue/proc/SetActive()
 	active = TRUE
 
-
 /mob/living/simple_animal/hostile/abnormality/branch12/relic_of_virtue/AttemptWork(mob/living/carbon/human/user, work_type)
-	..()
+	. = ..()
+
 	if(eaten)
 		if(work_type == "Consume")
 			to_chat(user, span_danger("What is there to eat?"))
@@ -58,7 +63,7 @@
 	if(work_type == "Consume")
 		light_range = 0
 		light_power = 0
-		eaten = user
+		RegisterSoul(user)
 		switch(rand(1,4))
 			if(1)
 				to_chat(user, span_danger("You take the bone off the pedestal and crush it between your teeth."))
@@ -112,7 +117,7 @@
 
 //Here's the miracles and smites.
 /mob/living/simple_animal/hostile/abnormality/branch12/relic_of_virtue/Life()
-	..()
+	. = ..()
 	if(!eaten || thrown_up)
 		return
 	if(prob(99))
@@ -137,3 +142,14 @@
 		if(4)
 			to_chat(eaten, span_danger("You are punished for your sins."))
 			eaten.apply_lc_feeble(5)
+
+/mob/living/simple_animal/hostile/abnormality/branch12/relic_of_virtue/proc/RegisterSoul(new_link)
+	if(!new_link)
+		return
+	eaten = new_link
+	RegisterSignal(new_link, list(COMSIG_PARENT_QDELETING, COMSIG_LIVING_DEATH), PROC_REF(UnregisterSoul))
+
+/mob/living/simple_animal/hostile/abnormality/branch12/relic_of_virtue/proc/UnregisterSoul()
+	if(eaten)
+		UnregisterSignal(eaten, list(COMSIG_PARENT_QDELETING, COMSIG_LIVING_DEATH))
+	eaten = null

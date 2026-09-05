@@ -56,6 +56,12 @@
 			I feel something sprout from my body..."),
 	)
 
+	grouped_abnos = list(
+		/mob/living/simple_animal/hostile/abnormality/fallen_amurdad = 1.5,
+		/mob/living/simple_animal/hostile/abnormality/little_prince = 1.5,
+		/mob/living/simple_animal/hostile/abnormality/roses_waw = 1.5,
+	)
+
 	var/origin_cooldown = 0 //null when compared to numbers is a eldritch concept so world.time cannot be more or less.
 	var/static/list/blessed = list() //keeps track of status effected individuals
 	var/static/list/minions = list() //keeps track of minions if suppressed forcefully

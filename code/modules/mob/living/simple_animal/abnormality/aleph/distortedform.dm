@@ -355,7 +355,7 @@
 		if(survivor.stat == DEAD || !survivor.ckey)
 			continue
 		var/area_check = get_area(src)
-		if(istype(area_check, /area/test_range))
+		if(istype(area_check, /area/test_range_arena))
 			return ..()
 		survivor.Apply_Gift(new /datum/ego_gifts/fervor)
 		survivor.playsound_local(get_turf(survivor), 'sound/weapons/black_silence/snap.ogg', 50)
@@ -1105,7 +1105,7 @@
 			if(L.stat == DEAD)
 				for(var/i = 1 to 5) // Eventually turn this into a horizontal bisect. That would be cool.
 					new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(L), pick(GLOB.alldirs))
-				new /obj/effect/gibspawner/generic/silent(get_turf(L))
+				new /obj/effect/bloodspawner/silent(get_turf(L))
 				gibbed = TRUE
 	playsound(get_turf(src), (gibbed ? 'sound/abnormalities/whitenight/scythe_gib.ogg' : 'sound/abnormalities/whitenight/scythe_spell.ogg'), (gibbed ? 100 : 75), FALSE, (gibbed ? 12 : 5))
 	SLEEP_CHECK_DEATH(5)

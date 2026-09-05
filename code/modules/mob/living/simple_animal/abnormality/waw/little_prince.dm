@@ -36,6 +36,12 @@
 			Perhaps, we are standing on parallel lines. <br>Perhaps, we were looking at something that can never be reached."),
 	)
 
+	grouped_abnos = list(
+		/mob/living/simple_animal/hostile/abnormality/fallen_amurdad = 1.5,
+		/mob/living/simple_animal/hostile/abnormality/roses_waw = 1.5,
+		/mob/living/simple_animal/hostile/abnormality/parasite_tree = 1.5,
+	)
+
 	var/insight_count = 0
 	var/non_insight_count = 0
 	var/list/once = list()

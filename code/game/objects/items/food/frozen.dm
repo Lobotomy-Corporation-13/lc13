@@ -109,6 +109,62 @@
 	foodtypes = DAIRY | SUGAR
 	w_class = WEIGHT_CLASS_TINY
 
+
+///////////
+//  MOCHI //
+///////////
+//Base sprite is white; flavour subtypes recolour to pink/green/blue/yellow.
+/obj/item/food/mochi
+	name = "mochi"
+	desc = "A soft, chewy rice-flour cake dusted with starch."
+	icon = 'ModularLobotomy/_Lobotomyicons/mochi.dmi'
+	icon_state = "mochi_white"
+	food_reagents = list(/datum/reagent/consumable/nutriment = 4, /datum/reagent/consumable/sugar = 4)
+	tastes = list("mochi" = 1)
+	foodtypes = GRAIN | SUGAR | DAIRY
+	w_class = WEIGHT_CLASS_SMALL
+
+/obj/item/food/mochi/peanut
+	name = "peanut butter ice cream mochi"
+	desc = "A classic dessert at the Arabia Street Night Market in Prospect: a peanut-butter ice \
+		cream filling wrapped in mochi and rolled in crushed peanuts, Taiwanese style."
+	icon_state = "mochi_white"
+	food_reagents = list(/datum/reagent/consumable/nutriment = 4, /datum/reagent/consumable/sugar = 6, /datum/reagent/consumable/cream = 4, /datum/reagent/consumable/vanilla = 2)
+	tastes = list("peanut butter" = 2, "mochi" = 1)
+	foodtypes = GRAIN | SUGAR | DAIRY
+
+/obj/item/food/mochi/strawberry
+	name = "strawberry mochi"
+	desc = "A blush-pink mochi with a sweet-tart berry filling."
+	icon_state = "mochi_pink"
+	food_reagents = list(/datum/reagent/consumable/nutriment = 4, /datum/reagent/consumable/sugar = 4, /datum/reagent/consumable/berryjuice = 4)
+	tastes = list("strawberry" = 2, "mochi" = 1)
+	foodtypes = GRAIN | SUGAR | FRUIT
+
+/obj/item/food/mochi/matcha
+	name = "matcha mochi"
+	desc = "An earthy green tea mochi with a gentle bitterness."
+	icon_state = "mochi_green"
+	food_reagents = list(/datum/reagent/consumable/nutriment = 4, /datum/reagent/consumable/sugar = 4, /datum/reagent/consumable/tea = 4)
+	tastes = list("matcha" = 2, "mochi" = 1)
+	foodtypes = GRAIN | SUGAR
+
+/obj/item/food/mochi/blueberry
+	name = "blueberry mochi"
+	desc = "A deep-blue mochi bursting with jammy sweetness."
+	icon_state = "mochi_blue"
+	food_reagents = list(/datum/reagent/consumable/nutriment = 4, /datum/reagent/consumable/sugar = 4, /datum/reagent/consumable/bluecherryjelly = 4)
+	tastes = list("blueberry" = 2, "mochi" = 1)
+	foodtypes = GRAIN | SUGAR | FRUIT
+
+/obj/item/food/mochi/mango
+	name = "mango mochi"
+	desc = "A sunny-yellow mochi with a tropical, fragrant filling."
+	icon_state = "mochi_yellow"
+	food_reagents = list(/datum/reagent/consumable/nutriment = 4, /datum/reagent/consumable/sugar = 4, /datum/reagent/consumable/peachjuice = 4)
+	tastes = list("mango" = 2, "mochi" = 1)
+	foodtypes = GRAIN | SUGAR | FRUIT
+
 /////////////
 //SNOWCONES//
 /////////////

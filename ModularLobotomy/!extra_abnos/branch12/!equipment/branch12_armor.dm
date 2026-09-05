@@ -14,6 +14,13 @@
 
 
 // --------ZAYIN---------
+/obj/item/clothing/suit/armor/ego_gear/branch12/barostem
+	name = "barostem"
+	desc = "Made from the wool of the Baromez. \
+		provides no warmth but is very lightweight."
+	//icon_state = "barostem"
+	armor = list(RED_DAMAGE = 5, WHITE_DAMAGE = 10, BLACK_DAMAGE = 5, PALE_DAMAGE = -10)
+
 /obj/item/clothing/suit/armor/ego_gear/branch12/signal
 	name = "signal"
 	desc = "A simple black and white armor set."
@@ -37,6 +44,23 @@
 	desc = "A suit that reminds you of the golden age of man."
 	icon_state = "age"
 	armor = list(RED_DAMAGE = 0, WHITE_DAMAGE = 10, BLACK_DAMAGE = 0, PALE_DAMAGE = 0)
+
+// The Rain Can Always Get Worse - Rainfall (raincoat)
+/obj/item/clothing/suit/armor/ego_gear/branch12/rainfall
+	name = "rainfall"
+	desc = "A hooded grey raincoat, its hem stained with old mud. It sheds water without end, \
+		as though it were always raining somewhere just above the wearer's head."
+	icon_state = "raincoat"
+	flags_inv = HIDEHAIR
+	armor = list(RED_DAMAGE = 0, WHITE_DAMAGE = 10, BLACK_DAMAGE = 0, PALE_DAMAGE = 0)
+
+// Rabbits - Warren
+/obj/item/clothing/suit/armor/ego_gear/branch12/warren
+	name = "warren"
+	desc = "A dark, close-furred suit with a pair of tall, spotted ears sewn to its hood. It reeks \
+		faintly of turned earth, and moving in it is oddly quiet."
+	icon_state = "warren"
+	armor = list(RED_DAMAGE = 0, WHITE_DAMAGE = 0, BLACK_DAMAGE = 10, PALE_DAMAGE = 0)
 
 // --------TETH---------
 /obj/item/clothing/suit/armor/ego_gear/branch12/serenity
@@ -90,6 +114,29 @@
 	icon_state = "workshopping"
 	armor = list(RED_DAMAGE = 10, WHITE_DAMAGE = 10, BLACK_DAMAGE = 10, PALE_DAMAGE = 0)
 	slowdown = 0.15
+
+/obj/item/clothing/suit/armor/ego_gear/branch12/pelt
+	name = "pelt"
+	desc = "A mantle cut from the lioness's own grey hide, her snarling face left as a hood. It turns a blade well, but offers no comfort to a troubled mind."
+	icon_state = "pelt"
+	worn_icon_state = "pelt"
+	armor = list(RED_DAMAGE = 30, WHITE_DAMAGE = -20, BLACK_DAMAGE = 10, PALE_DAMAGE = 0)
+
+// Faces in the Light E.G.O - Gloaming (armor). Sum 20 (TETH standard).
+/obj/item/clothing/suit/armor/ego_gear/branch12/gloaming
+	name = "gloaming"
+	desc = "A hooded shroud the colour of a dead bulb, hemmed with a faint waking glow. It keeps the \
+		mind and the dark at bay, but does little against a solid blow."
+	icon_state = "gloaming_coat"
+	armor = list(RED_DAMAGE = -20, WHITE_DAMAGE = 30, BLACK_DAMAGE = 30, PALE_DAMAGE = -20) // 20
+
+// Clambug - Chitin
+/obj/item/clothing/suit/armor/ego_gear/branch12/chitin
+	name = "chitin"
+	desc = "A carapace peeled whole from the clambug and lashed into a mantle. Packed earth still clings to its grooves; it turns a blade like stone, though the cold of it seeps into the mind."
+	icon_state = "chitin"
+	worn_icon_state = "chitin"
+	armor = list(RED_DAMAGE = 35, WHITE_DAMAGE = -25, BLACK_DAMAGE = 10, PALE_DAMAGE = 0)
 
 // --------HE---------
 /obj/item/clothing/suit/armor/ego_gear/branch12/perfectionist
@@ -158,6 +205,27 @@
 	armor = list(RED_DAMAGE = 50, WHITE_DAMAGE = -20, BLACK_DAMAGE = 20, PALE_DAMAGE = 20)
 	attribute_requirements = list(
 							FORTITUDE_ATTRIBUTE = 40
+							)
+
+// Inkstained Squid E.G.O - Flourish (armor)
+/obj/item/clothing/suit/armor/ego_gear/branch12/consumption
+	name = "consumption"
+	desc = "A scholar's robe of layered pages, every one covered in a script that rewrites itself when you \
+		are not looking. It has read far more than you have."
+	icon_state = "consumption_coat"
+	armor = list(RED_DAMAGE = 20, WHITE_DAMAGE = 30, BLACK_DAMAGE = 20, PALE_DAMAGE = 0)
+	attribute_requirements = list(
+							PRUDENCE_ATTRIBUTE = 40
+							)
+
+/obj/item/clothing/suit/armor/ego_gear/branch12/flourish
+	name = "flourish"
+	desc = "A crisp white writer's coat, the cuffs stained where the ink has crept in. \
+		It never seems to take a stain anywhere else."
+	icon_state = "flourish_coat"
+	armor = list(RED_DAMAGE = 20, WHITE_DAMAGE = 20, BLACK_DAMAGE = 20, PALE_DAMAGE = 10)
+	attribute_requirements = list(
+							PRUDENCE_ATTRIBUTE = 40
 							)
 
 // --------WAW---------

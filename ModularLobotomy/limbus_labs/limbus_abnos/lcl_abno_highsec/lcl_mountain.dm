@@ -13,12 +13,14 @@
 	attack_action_types = list(/datum/action/cooldown/limbus_abno_action/scream,
 	/datum/action/cooldown/limbus_abno_action/slam,
 	/datum/action/cooldown/limbus_abno_action/mountain_spit,
-	/datum/action/cooldown/limbus_abno_action/rot_gas)
+	/datum/action/cooldown/limbus_abno_action/rot_gas,
+	/datum/action/cooldown/limbus_abno_action/mosb_garble)
 
 	original_abno = /mob/living/simple_animal/hostile/abnormality/mountain
 	abno_additional_instructions = "You like repression and instinct. You are hungry, always hungry, never satisfied. \
 	Seeing blood in your cell makes you even hungrier. Eating humanoid corpses can sate you for longer, but it won't last. \
-	If left starving, you'll breach, growing bigger with each corpse consumed, but you'll need even more food than usual. Only overwhelming force will calm you down once you're in this state."
+	If left starving, you'll breach, growing bigger with each corpse consumed, but you'll need even more food than usual. Only overwhelming force will calm you down once you're in this state. \
+	Your words come apart as you speak them, worse the larger you get - use Flesh-Voice to hold them together when you need to be understood."
 	max_counter = 3
 	kickstart_timer = 20 MINUTES //More generous timer due to it being a handful once it starts going off.
 	//Gets hungry REALLY fast, but will eat nearly anything edible, even if it doesn't give a lot of hunger.
@@ -37,10 +39,10 @@
 	hated_objects_list = list(/obj/effect/decal/cleanable/blood) //It's not that mountain hates it, but it makes it  thirst for blood even more if it lingers around.
 	hated_objects_value = 0.1
 	ego_desire_gained = 2
-	ego_list = list(
-		/datum/ego_datum/weapon/smile,
-		/datum/ego_datum/armor/smile,
-	)
+	attunement_family = "smile"
+	ego_list = list(/datum/ego_datum/armor/lce/smile)
+
+	can_breach = TRUE
 	var/phase_one_health = 2000
 	var/phase_two_health = 3000
 	var/phase_three_health = 4000
@@ -49,12 +51,17 @@
 	var/max_starving_patience = 4
 	var/starving_patience = 4
 	var/body_count = 0 //Only starts to add body counts on breach. Contributes to phase changes.
-	var/breached = FALSE
 	var/spit_ready = FALSE //If the next open_fire attack will be a spit.
 	var/spitting = FALSE
 	var/scream_damage = 40
 	var/slam_damage = 30
 	var/spit_amount = 16
+	///Whether speech is being mangled into its own broken voice. On by default - the
+	///instructions tell the player it can be switched off, so it is a choice rather than a trap.
+	var/garbling = TRUE
+	var/list/protected_words = list("clean", "cook", "fight")
+	var/list/growls_low = list("Grgh", "Ghhrg", "Krrgh")
+	var/list/growls_high = list("Krrrrh", "Grr… Ghrrrgh", "Ghrrr", "KHAAA")
 
 /mob/living/simple_animal/hostile/limbus_abno/mountain/funpet(mob/living/petter)
 	. = ..()
@@ -62,6 +69,14 @@
 	petter.adjustBlackLoss(40)
 	playsound(src, 'sound/abnormalities/mountain/bite.ogg', 70, TRUE)
 	to_chat(petter, span_warning("[src] bites your hand!")) //What did you expect.
+
+//Adds Mountain's unique phase/breach/body-count state to the player's numeric readout.
+/mob/living/simple_animal/hostile/limbus_abno/mountain/SelfStatusReadout()
+	. = ..()
+	. += "Phase: [phase] of 3"
+	. += "Breached: [breached ? "YES" : "no"]"
+	if(breached && phase < 3)
+		. += "Bodies until you grow: [max(0, 4 - body_count)]"
 
 /mob/living/simple_animal/hostile/limbus_abno/mountain/Login()
 	. = ..()
@@ -80,10 +95,10 @@
 			Unbreach()
 		else
 			ChangePhase(FALSE)
-	..()
+	return ..()
 
 /mob/living/simple_animal/hostile/limbus_abno/mountain/OpenFire(atom/A)
-	..()
+	. = ..()
 	if(phase <= 2)
 		spit_ready = FALSE
 		return FALSE
@@ -126,10 +141,14 @@
 
 ///Whenever mountain gets hungrier during starvation, it loses patience, until it severely loses out on desire.
 /mob/living/simple_animal/hostile/limbus_abno/mountain/AdjustHunger(feeding_amount)
-	..()
-	if(starving && !IsPositive(feeding_amount))
+	. = ..()
+	if(starving && 1 > feeding_amount)
 		starving_patience--
 		AdjustDesire(-5)
+		if(starving_patience == 2)
+			to_chat(src, span_warning("Your patience frays. Feed soon, or you'll lash out."))
+		else if(starving_patience == 1)
+			to_chat(src, span_boldwarning("You are on the verge of a frenzy. FEED."))
 
 	if(starving_patience <= 0)
 		starving_patience = max_starving_patience
@@ -142,16 +161,9 @@
 				Slam(TRUE)
 
 /mob/living/simple_animal/hostile/limbus_abno/mountain/AdjustDesire(desire_amount)
-	..()
-	if(desire_bar <= 10 && !IsPositive(desire_amount))
+	. = ..()
+	if(desire_bar <= 10 && 1 > desire_amount)
 		AdjustCounter(-1)
-
-/mob/living/simple_animal/hostile/limbus_abno/mountain/AdjustCounter()
-	..()
-	if(breached)
-		return
-	if(counter <= 0)
-		Breach()
 
 /mob/living/simple_animal/hostile/limbus_abno/mountain/AbnoEat(atom/food)
 	if(istype(food, /obj/item/bodypart/head))
@@ -170,15 +182,23 @@
 	if(mob_target.stat <= HARD_CRIT)
 		return FALSE
 
+	if(istype(mob_target, /mob/living/simple_animal/hostile/limbus_abno))
+		to_chat(src, span_warning("You bite down and something bites back. Another specimen is not food."))
+		return FALSE
+
 	if(iscarbon(mob_target))
 		starving_patience = max_starving_patience
 		if(breached)
 			adjustBruteLoss(-maxHealth * 0.3)
 			body_count++
+			if(phase < 3 && body_count < 4)
+				var/remaining = 4 - body_count
+				to_chat(src, span_notice("Flesh knits over your frame. [remaining] more [remaining == 1 ? "body" : "bodies"] until you swell to your next form."))
 		else
 			satiated = TRUE
 			addtimer(CALLBACK(src, PROC_REF(RegularHunger)), 20 MINUTES)
 			hunger_cooldown_time =  1.5 MINUTES //Will now lose a full hunger bar in 15 minutes instead of 2.5
+			to_chat(src, span_notice("The corpse fills you deeply. Your hunger will crawl slowly for a while."))
 		AdjustHunger(100)
 	else
 		AdjustHunger(50)
@@ -189,11 +209,16 @@
 		ChangePhase(TRUE)
 
 /mob/living/simple_animal/hostile/limbus_abno/mountain/proc/RegularHunger()
+	if(satiated)
+		to_chat(src, span_notice("The fullness from your last meal fades. Your hunger quickens again."))
 	hunger_cooldown_time =  15 SECONDS
 	satiated = FALSE
 
 //When breached, become incapable of being satiated. Gets hungry even faster, and will start losing health when starving for too long.
-/mob/living/simple_animal/hostile/limbus_abno/mountain/proc/Breach()
+/mob/living/simple_animal/hostile/limbus_abno/mountain/Breach()
+	. = ..()
+	if(!.)
+		return
 	melee_damage_lower = 30
 	melee_damage_upper = 25
 	hunger_cooldown_time = 5 SECONDS
@@ -201,9 +226,9 @@
 	breached = TRUE
 	satiated = FALSE
 	unstable = TRUE
-	AddBreachEffect()
+	to_chat(src, span_userdanger("You breach! You can no longer be sated the usual way. Devour humanoid corpses to grow larger and mend your wounds, but starving now tears at your health. Only overwhelming force will calm you."))
 
-/mob/living/simple_animal/hostile/limbus_abno/mountain/proc/Unbreach()
+/mob/living/simple_animal/hostile/limbus_abno/mountain/Unbreach()
 	melee_damage_lower = 5
 	melee_damage_upper = 10
 	breached = FALSE
@@ -215,12 +240,84 @@
 	AdjustHunger(max_hunger)
 	RegularHunger()
 	manual_emote("calms down.")
-	RemoveBreachEffect()
+	to_chat(src, span_notice("The frenzy drains away. You settle back down, whole and sated once more."))
+	return ..()
 
+//Speech mangling. treat_message() is the engine's own hook for this - it is where stuttering,
+//slurring and derpspeech are applied - so it catches player speech and nothing else. Emotes,
+//system messages and the forced "YOU NEED TO EAT" line all bypass it, which is what we want.
+//Garbling runs on the parent's OUTPUT, not before it. Reassigning the argument and then calling
+//a bare ..() sent the untouched line to the parent, so the mangling was thrown away and she
+//spoke normally. Doing it in this order also puts the garbling last, so capitalize() cannot
+//re-case a growl.
+/mob/living/simple_animal/hostile/limbus_abno/mountain/treat_message(message)
+	. = ..(message)
+	if(garbling)
+		. = GarbleFlesh(.)
+
+///TRUE if this word contains something another specimen is listening for, and so must not be
+///broken up. Matched case-insensitively, because findtext is.
+/mob/living/simple_animal/hostile/limbus_abno/mountain/proc/IsProtectedWord(word)
+	var/lower = lowertext(word)
+	for(var/protected in protected_words)
+		if(findtext(lower, protected))
+			return TRUE
+	return FALSE
+
+///Mangles a line into its own voice: words split mid-syllable, punctuation turned into
+///ellipses, a guttural thrown in front, and everything trailing off.
+
+///Strength scales with how far gone it is, so the toggle doubles as a status readout - the
+///facility can hear what phase it is in. Phase 2 is garbled HARDER than phase 3 on purpose:
+///it is the one stage with no coherent line to its name.
+/mob/living/simple_animal/hostile/limbus_abno/mountain/proc/GarbleFlesh(message)
+	if(!message)
+		return message
+	var/split_chance = 15
+	var/growl_chance = 20
+	var/list/growls = growls_low
+	if(breached)
+		growls = growls_high
+		switch(phase)
+			if(3)
+				split_chance = 50
+				growl_chance = 80
+			if(2)
+				split_chance = 60
+				growl_chance = 90
+			else
+				split_chance = 30
+				growl_chance = 50
+	var/list/out = list()
+	for(var/word in splittext(message, " "))
+		var/word_len = length_char(word)
+		if(word_len > 3 && prob(split_chance) && !IsProtectedWord(word))
+			var/at = rand(2, word_len - 1)
+			word = copytext_char(word, 1, at) + "…" + copytext_char(word, at)
+		out += word
+	message = jointext(out, " ")
+	message = replacetext(message, ".", "…")
+	message = replacetext(message, ",", "…")
+	message = replacetext(message, "!", "…!")
+	message = replacetext(message, "?", "…?")
+	if(prob(growl_chance))
+		message = "[pick(growls)]… [message]"
+	//Every line trails off. Skipped only where one is already sitting at the end, so a
+	//sentence never comes out with a doubled ellipsis.
+	var/last = copytext_char(message, -1)
+	if(last != "…" && last != "!" && last != "?")
+		message += "…"
+	return message
+
+/*------------------\
+|ABNO LIMBUS ACTIONS|
+\------------------*/
 ///An ability that makes everyone in area feel disgusted and puke. Cannot be used during a breach since the puke stun is kind of busted in combat.
 /datum/action/cooldown/limbus_abno_action/rot_gas
 	name = "Rot Gas"
 	desc = "Makes everyone puke in a wide area. Useful to show your discontent without screaming. Cannot be used during a breach."
+	button_icon = 'ModularLobotomy/_Lobotomyicons/lcl_abno_actions.dmi'
+	background_icon_state = "bg_mosb"
 	icon_icon = 'icons/effects/effects.dmi'
 	button_icon_state = "mustard"
 	transparent_when_unavailable = TRUE
@@ -306,12 +403,25 @@
 /datum/action/cooldown/limbus_abno_action/scream
 	name = "Scream"
 	desc = "Scream your heart right out. Only available when starving and your counter is below 3."
+	button_icon = 'ModularLobotomy/_Lobotomyicons/lcl_abno_actions.dmi'
+	background_icon_state = "bg_mosb"
 	icon_icon = 'icons/mob/actions/actions_ability.dmi'
 	button_icon_state = "screach0"
 	transparent_when_unavailable = TRUE
 	cooldown_time = 30 SECONDS
 	counter_req = 2
-	starving_req = TRUE
+	//Deliberately NOT starving_req. The base reads that flag as "unavailable WHILE starving"
+	//(lcl_abno.dm: `if(starving_req && abno_user.starving) return FALSE`), which is the exact
+	//opposite of this ability's own description and of what it is for - the hunger loop fires
+	//Scream by itself when patience runs out. The requirement is enforced below instead.
+
+/datum/action/cooldown/limbus_abno_action/scream/IsAvailable()
+	. = ..()
+	if(!.)
+		return FALSE
+	if(!abno_user.starving)
+		return FALSE
+	return TRUE
 
 /datum/action/cooldown/limbus_abno_action/scream/Trigger()
 	. = ..()
@@ -324,6 +434,8 @@
 /datum/action/cooldown/limbus_abno_action/slam
 	name = "Slam"
 	desc = "Deal damage in an area around you. Can only be used when breached in your second phase."
+	button_icon = 'ModularLobotomy/_Lobotomyicons/lcl_abno_actions.dmi'
+	background_icon_state = "bg_mosb"
 	icon_icon = 'icons/mob/actions/actions_spells.dmi'
 	button_icon_state = "repulse"
 	transparent_when_unavailable = TRUE
@@ -350,6 +462,8 @@
 /datum/action/cooldown/limbus_abno_action/mountain_spit
 	name = "Puke"
 	desc = "Puke out a vile bile. Only available on breach on your third phase."
+	button_icon = 'ModularLobotomy/_Lobotomyicons/lcl_abno_actions.dmi'
+	background_icon_state = "bg_mosb"
 	icon_icon = 'icons/effects/effects.dmi'
 	button_icon_state = "greenglow"
 	transparent_when_unavailable = TRUE
@@ -376,4 +490,28 @@
 	StartCooldown()
 	return TRUE
 
+///Toggles the speech mangling. This is the first LCL action to actually use a `_on` border -
+///every other abno sets background_icon_state once and never swaps it - so the frame itself
+///tells the player at a glance whether they are currently intelligible.
+/datum/action/cooldown/limbus_abno_action/mosb_garble
+	name = "Flesh-Voice"
+	desc = "Toggle whether your words come apart as you speak them. On by default. Turn it off when you actually need to be understood - asking for food, mostly."
+	button_icon = 'ModularLobotomy/_Lobotomyicons/lcl_abno_actions.dmi'
+	background_icon_state = "bg_mosb_on" //Matches garbling defaulting to TRUE.
+	icon_icon = 'icons/mob/actions/actions_changeling.dmi'
+	button_icon_state = "mimic_voice"
+	transparent_when_unavailable = TRUE
+	cooldown_time = 2 SECONDS
 
+/datum/action/cooldown/limbus_abno_action/mosb_garble/Trigger()
+	. = ..()
+	if(!.)
+		return FALSE
+	var/mob/living/simple_animal/hostile/limbus_abno/mountain/mosb = abno_user
+	mosb.garbling = !mosb.garbling
+	background_icon_state = mosb.garbling ? "bg_mosb_on" : "bg_mosb"
+	UpdateButtonIcon()
+	to_chat(mosb, mosb.garbling \
+		? span_warning("Your jaw slackens. The words come apart on the way out.") \
+		: span_notice("You gather the mouths together. You can make yourself understood, for now."))
+	StartCooldown()

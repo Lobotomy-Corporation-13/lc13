@@ -436,7 +436,8 @@
 	abno_code = "F-01-191"
 	abno_info = list(
 		"Tangle had a bad reaction when working on a random EMPLOYEE, and their Qliphoth Counter lowered.",
-		"Working large amounts of instinct works on tangle ended in it's Qliphoth Counter being lowered.",)
+		"Working large amounts of instinct works on tangle ended in it's Qliphoth Counter being lowered.",
+		"When assaulted by an employee with Instict of 2 or lower, F-01-191 could overpower them.",)
 
 //Generic Brand Modelling Clay
 /obj/item/paper/fluff/info/teth/clayman
@@ -457,7 +458,7 @@
 	abno_info = list(
 		"Once the Qliphoth Counter reaches 0, Sirocco leaves her containment cell to play.",
 		"Every two minutes, the Qliphoth Counter lowered by one.",
-		"When the work result was Normal, the Qliphoth Counter raised.",
+		"When the work result was Good the Qliphoth Counter raised. It raised by 2 when the work result was Neutral.",
 		"When the work result was Good, Sirocco was quicker to return to her cell in a later breach."
 	)
 
@@ -511,4 +512,19 @@
 		"One senior researcher believes that M-02-207 breaches possibly off the phases of the Moon. It is unknown how it assess this.",
 		"A second researcher believes that M-02-207 breaches based off the alignment of the planets.",
 		"A third researcher believes that M-02-207 can only breach when Mercury is in retrograde.",
+	)
+
+// Drenched Gossypium
+/obj/item/paper/fluff/info/teth/gossypium
+	abno_type = /mob/living/simple_animal/hostile/abnormality/gossypium
+	abno_code = "O-04-201"
+	abno_info = list(
+		"After completing a work on the abnormality without its EGO gift, the Qliphoth Counter lowered at a high probability.",
+		"When the work result was Neutral, the Qliphoth Counter lowered at a normal probability.",
+		"When the work result was Bad, the Qliphoth Counter lowered.",
+		"When the employee performed Approach work on the abnormality, they recieved its EGO gift.",
+		"When performing work on the abnormality while wearing the EGO gift, the Qliphoth Counter increased by 1 at a low probability.",
+		"When the abnormality breached, it began drinking the blood on the floor and the blood spilled from its attacks.",
+		"When the abnormality drank enough blood, it drove into a frenzy and started attacking faster in melee.",
+		"All of the abnormality's attacks inflicted wounds harsh enough to cause bleeding.",
 	)

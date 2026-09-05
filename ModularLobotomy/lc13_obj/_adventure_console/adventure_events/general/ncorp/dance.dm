@@ -22,13 +22,6 @@
 	'You know how to waltz?' She asks, face in concentration, listening to the music <br>\
 	'Here, take my hand, one hand on my waist.' She says, grabbing your shoulder.",
 
-	"The music ends it's tune, and exhausted, the both of you collapse into chairs around a table, laughing/<br>\
-	She looks you in the eye and smiles. 'Let's have some dinner' <br>\
-	As you dine on the variety of dishes at the table; the groom gets up to speak. <br>\
-	During his speech, your new partner turns to you.  <br>\
-	'It's so hot in here.' She smiles, and begins to remove her gloves and roll up her sleeves  <br>\
-	And you see it; her metalic arm shining in the light of the event",
-
 	"The music ends it's tune, and exhausted, the both of you collapse into chairs around a table, laughing.<br>\
 	She looks you in the eye and smiles. 'Let's have some dinner' <br>\
 	As you dine on the variety of dishes at the table; the groom gets up to speak. <br>\

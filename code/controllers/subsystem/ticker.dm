@@ -377,7 +377,10 @@ SUBSYSTEM_DEF(ticker)
 
 	// Gamespeed vote and no-Manager Core Suppression selection override for LobCorp gamemodes.
 	if((SSmaptype.maptype in SSmaptype.lc_maps) || SSmaptype.maptype == "mini")
-		addtimer(CALLBACK(src, PROC_REF(DoGamespeedVote)), 10 SECONDS)
+		// If there's an ongoing vote from like, people instantly doing mapvote in lobby, well, we can't have 2 votes at once, so stagger this one until after that one is done.
+		var/when_to_do_gamespeed_vote = (SSvote.time_remaining > 0) ? (SSvote.time_remaining SECONDS + 5 SECONDS) : 10 SECONDS
+		addtimer(CALLBACK(src, PROC_REF(DoGamespeedVote)), when_to_do_gamespeed_vote)
+
 		addtimer(CALLBACK(SSlobotomy_corp, TYPE_PROC_REF(/datum/controller/subsystem/lobotomy_corp, LiftCoreSelectionRestriction)), SSlobotomy_corp.core_selection_restriction_lift_timer)
 	else if((SSmaptype.maptype == "city")) // On City of Light specifically (not City Fixers or etc), add 2 Roamer slots at roundstart
 		for(var/datum/job/processing in SSjob.occupations)
@@ -704,6 +707,10 @@ SUBSYSTEM_DEF(ticker)
 
 /// Proc that does a gamespeed vote on Lobcorp Gamemodes
 /datum/controller/subsystem/ticker/proc/DoGamespeedVote()
+	// As a failsafe, if someone is being quirky and starting a vote in the window between the shift starting and the gamespeed vote going off, wait for that ongoing vote to finish before attempting this one (since we can't have parallel votes)
+	if(SSvote.time_remaining > 0)
+		addtimer(CALLBACK(src, PROC_REF(DoGamespeedVote)), SSvote.time_remaining + 5 SECONDS)
+		return
 	SSvote.initiate_vote("gamespeed", null)
 
 /datum/controller/subsystem/ticker/Shutdown()

@@ -2,6 +2,7 @@
 	true_name = "Queen Bee"
 	maxHealth = 3500
 	health = 3500 //A lot of HP due to not really being strong by itself, primarily relying on minions.
+	gender = FEMALE
 	pixel_x = -8
 	base_pixel_x = -8
 	damage_coeff = list(RED_DAMAGE = 1.2, WHITE_DAMAGE = 1.5, BLACK_DAMAGE = 0.8, PALE_DAMAGE = 2)
@@ -30,16 +31,19 @@
 	liked_objects_value = 5
 
 
-	ego_list = list(
-		/datum/ego_datum/weapon/hornet,
-		/datum/ego_datum/weapon/tattered_kingdom,
-		/datum/ego_datum/armor/hornet,
-	)
+	attunement_family = "hornet"
+	ego_list = list(/datum/ego_datum/armor/lce/hornet)
 
 /mob/living/simple_animal/hostile/limbus_abno/queen_bee/Initialize(mapload)
 	. = ..()
 	ADD_TRAIT(src, TRAIT_IMMOBILIZED, TRAIT_STATUS_EFFECT("queen_bee_root"))
 
+/mob/living/simple_animal/hostile/limbus_abno/queen_bee/Move()
+	return FALSE
+
+/*-----\
+|Spores|
+\-----*/
 ///More or less the same spores as the original queen bee, with the main difference that it creates the special controllable bees.
 /mob/living/simple_animal/hostile/limbus_abno/queen_bee/proc/EmitSpores(forced = FALSE)
 	var/turf/target_c = get_turf(src)
@@ -57,8 +61,11 @@
 				C.ForceContractDisease(D, FALSE, TRUE)
 	AdjustDesire(100)
 
+/*----------\
+|Containment|
+\----------*/
 /mob/living/simple_animal/hostile/limbus_abno/queen_bee/AdjustDesire(desire_amount)
-	..()
+	. = ..()
 	if(desire_bar <= 0)
 		EmitSpores(TRUE)
 
@@ -72,13 +79,18 @@
 	C.ForceContractDisease(D, FALSE, TRUE)
 
 /mob/living/simple_animal/hostile/limbus_abno/queen_bee/AdjustHunger(hunger_amount)
-	..()
+	. = ..()
 	if(starving)
 		AdjustDesire(-30)
 
+/*------------------\
+|ABNO LIMBUS ACTIONS|
+\------------------*/
 /datum/action/cooldown/limbus_abno_action/emit_spores
 	name = "Emit Spores"
 	desc = "Emit spores, infecting many in the facility with your children. This can only be used on low mood.."
+	button_icon = 'ModularLobotomy/_Lobotomyicons/lcl_abno_actions.dmi'
+	background_icon_state = "bg_qbee"
 	icon_icon = 'icons/effects/effects.dmi'
 	button_icon_state = "mustard"
 	transparent_when_unavailable = TRUE
@@ -96,6 +108,8 @@
 /datum/action/cooldown/limbus_abno_action/bee_egg
 	name = "Birth Worker"
 	desc = "Make an egg that will eventually grow into a worker bee who will fight and search for food. Costs nearly all your hunger to use. Severely increases your mood."
+	button_icon = 'ModularLobotomy/_Lobotomyicons/lcl_abno_actions.dmi'
+	background_icon_state = "bg_qbee"
 	icon_icon = 'icons/obj/food/food.dmi'
 	button_icon_state = "egg-yellow"
 	transparent_when_unavailable = TRUE
@@ -120,6 +134,9 @@
 	abno_user.AdjustHunger(-70) //Creating eggs like this is supposed to be very inefficient, living hosts are better.
 	abno_user.AdjustDesire(70)
 
+/*------\
+|Bee Egg|
+\------*/
 //We don't make this an egg subtype because it runs into some problems with the throwable code. Will make a controllable bee after some time.
 /obj/item/food/bee_egg
 	name = "Bee Egg"
@@ -138,6 +155,9 @@
 	new /mob/living/simple_animal/hostile/worker_bee/lcl_bee(get_turf(src))
 	qdel(src)
 
+/*--------\
+|Bee Spawn|
+\--------*/
 /mob/living/simple_animal/hostile/worker_bee/lcl_bee
 	faction = list("neutral") //Their AI lobotomy should prevent friendly attack, but better safe than sorry.
 	created_bee_type = /mob/living/simple_animal/hostile/worker_bee/lcl_bee
@@ -154,12 +174,23 @@
 
 /mob/living/simple_animal/hostile/worker_bee/lcl_bee/death()
 	if(queen)
-		mind.transfer_to(queen)
-	..()
+		//Swatted while she was riding it. Unlock first, or the body she is being sent back to
+		//stays flagged as occupied-elsewhere for the rest of the round.
+		queen.possession_locked = FALSE
+		if(mind)
+			mind.transfer_to(queen)
+		queen = null
+	return ..()
+
+/mob/living/simple_animal/hostile/worker_bee/lcl_bee/Destroy()
+	queen = null
+	return ..()
 
 /datum/action/cooldown/bee_scavenge
 	name = "Scavenge for meat."
 	desc = "Scavenge meat for the queen."
+	button_icon = 'ModularLobotomy/_Lobotomyicons/lcl_abno_actions.dmi'
+	background_icon_state = "bg_qbee"
 	icon_icon = 'icons/obj/food/food.dmi'
 	button_icon_state = "meat"
 	cooldown_time = 1.5 MINUTES
@@ -178,6 +209,8 @@
 /datum/action/cooldown/bee_swap
 	name = "Worker Possession"
 	desc = "Lets you take direct control of a worker bee as long as they are not already aware. If used as a worker bee, puts you back into your queen body."
+	button_icon = 'ModularLobotomy/_Lobotomyicons/lcl_abno_actions.dmi'
+	background_icon_state = "bg_qbee"
 	icon_icon = 'icons/mob/actions/actions_animal.dmi'
 	button_icon_state = "expand"
 	cooldown_time = 1 MINUTES
@@ -190,6 +223,7 @@
 	if(istype(owner, /mob/living/simple_animal/hostile/worker_bee/lcl_bee))
 		user_bee = owner
 		if(user_bee.queen)
+			user_bee.queen.possession_locked = FALSE //She is home; the hive body is hers again.
 			user_bee.queen.ckey = user_bee.ckey
 			user_bee.mind = null
 			user_bee.queen = null
@@ -198,6 +232,10 @@
 
 	for(var/mob/living/simple_animal/hostile/worker_bee/lcl_bee/bee in GLOB.alive_mob_list)
 		if(!bee.mind && !bee.ckey)
+			var/mob/living/simple_animal/hostile/limbus_abno/queen_bee/queen = owner
+			//Held before the ckey moves. Her body is about to look unoccupied to every ghost.
+			if(istype(queen))
+				queen.possession_locked = TRUE
 			bee.ckey = owner.ckey //We don't use transfer_to because it creates possession issues.
 			var/datum/action/cooldown/bee_swap/bs = new /datum/action/cooldown/bee_swap()
 			bs.Grant(bee)
@@ -207,6 +245,8 @@
 /datum/action/cooldown/bee_speech
 	name = "Hivemind Speech"
 	desc = "Lets you directly communicate with other bees."
+	button_icon = 'ModularLobotomy/_Lobotomyicons/lcl_abno_actions.dmi'
+	background_icon_state = "bg_qbee"
 	icon_icon = 'icons/mob/actions/actions_changeling.dmi'
 	button_icon_state = "hivemind_channel"
 	cooldown_time = 5 SECONDS

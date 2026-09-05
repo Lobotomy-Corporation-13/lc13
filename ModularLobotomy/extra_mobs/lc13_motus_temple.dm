@@ -207,6 +207,8 @@
 	var/mob/living/nesting_target
 	var/devouring_cooldown
 	var/devouring_cooldown_time = 2 SECONDS
+	/// Refraction-overridable. Default TRUE = stock burrow/devour behaviour.
+	var/use_base_nesting = TRUE
 
 /mob/living/simple_animal/hostile/mad_fly_swarm/Destroy()
 	if(nesting_target)
@@ -226,7 +228,7 @@
 	if(world.time < devouring_cooldown)
 		return
 	devouring_cooldown = world.time + devouring_cooldown_time
-	if(nesting_target)
+	if(use_base_nesting && nesting_target)
 		if(ishuman(nesting_target))
 			var/mob/living/carbon/human/devouring_target = nesting_target
 			if(devouring_target.sanity_lost)
@@ -247,7 +249,7 @@
 
 	var/target_turf = get_turf(attacked_target)
 	forceMove(target_turf)
-	if(ishuman(attacked_target))
+	if(use_base_nesting && ishuman(attacked_target))
 		var/mob/living/carbon/human/L = attacked_target
 		if(L.sanity_lost && L.stat != DEAD)
 			nesting_target = L
@@ -301,6 +303,11 @@
 	var/spawn_progress = 10 //spawn ready to produce flies
 	var/list/spawned_mobs = list()
 	var/producing = FALSE
+	/// Refraction-overridable. Defaults reproduce stock behaviour exactly.
+	var/spawn_fly_type = /mob/living/simple_animal/hostile/mad_fly_swarm
+	var/fly_cap = 2
+	var/spawn_threshold = 20
+	var/spawn_gib_on_death = TRUE
 	// Chemical harvesting handled by component
 
 /mob/living/simple_animal/hostile/mad_fly_nest/Initialize()
@@ -314,7 +321,8 @@
 	return FALSE
 
 /mob/living/simple_animal/hostile/mad_fly_nest/death(gibbed)
-	new /obj/effect/gibspawner/xeno/bodypartless(get_turf(src))
+	if(spawn_gib_on_death)
+		new /obj/effect/gibspawner/xeno/bodypartless(get_turf(src))
 	. = ..()
 
 /mob/living/simple_animal/hostile/mad_fly_nest/Life()
@@ -327,9 +335,9 @@
 			spawned_mobs -= L
 	if(producing)
 		return
-	if(length(spawned_mobs) >= 2)
+	if(length(spawned_mobs) >= fly_cap)
 		return
-	if(spawn_progress < 20)
+	if(spawn_progress < spawn_threshold)
 		spawn_progress += 1
 		return
 	Produce()
@@ -342,7 +350,7 @@
 	SLEEP_CHECK_DEATH(10)
 	visible_message(span_danger("\A new swarm climbs out of [src]!"))
 	var/turf/T = get_step(get_turf(src), pick(0, EAST))
-	var/mob/living/simple_animal/hostile/mad_fly_swarm/nb = new /mob/living/simple_animal/hostile/mad_fly_swarm(T)
+	var/mob/living/simple_animal/hostile/mad_fly_swarm/nb = new spawn_fly_type(T)
 	nb.return_to_origin = TRUE
 	spawned_mobs += nb
 	SLEEP_CHECK_DEATH(2)
@@ -370,6 +378,10 @@
 	var/vine_range = 10
 	var/ability_cooldown
 	var/ability_cooldown_time = 4 SECONDS
+	/// Refraction-overridable. Defaults reproduce stock behaviour exactly.
+	var/drop_rose_item = TRUE
+	var/manage_static_vines_on_destroy = TRUE
+	var/use_base_vine_life = TRUE
 	//All iterations share this list between eachother.
 	var/static/list/vine_list = list()
 	// Chemical harvesting handled by component
@@ -379,16 +391,18 @@
 	AddComponent(/datum/component/chemical_harvest, /datum/reagent/medicine/sal_acid, 15, 1 MINUTES)
 
 /mob/living/simple_animal/hostile/scarlet_rose/death(gibbed)
-	new /obj/item/scarlet_rose(get_turf(src))
+	if(drop_rose_item)
+		new /obj/item/scarlet_rose(get_turf(src))
 	..()
 
 /mob/living/simple_animal/hostile/scarlet_rose/Destroy()
-	for(var/obj/structure/spreading/scarlet_vine/vine in vine_list)
-		vine.can_expand = FALSE
-		var/del_time = rand(4,10) //all the vines dissapear at different interval so it looks more organic.
-		animate(vine, alpha = 0, time = del_time SECONDS)
-		QDEL_IN(vine, del_time SECONDS)
-	vine_list.Cut()
+	if(manage_static_vines_on_destroy)
+		for(var/obj/structure/spreading/scarlet_vine/vine in vine_list)
+			vine.can_expand = FALSE
+			var/del_time = rand(4,10) //all the vines dissapear at different interval so it looks more organic.
+			animate(vine, alpha = 0, time = del_time SECONDS)
+			QDEL_IN(vine, del_time SECONDS)
+		vine_list.Cut()
 	return ..()
 
 /mob/living/simple_animal/hostile/scarlet_rose/CanAttack(atom/the_target)
@@ -399,6 +413,8 @@
 
 /mob/living/simple_animal/hostile/scarlet_rose/Life()
 	. = ..()
+	if(!use_base_vine_life)
+		return
 	var/list/area_of_influence
 	area_of_influence = urange(vine_range, get_turf(src))
 	for(var/obj/structure/spreading/scarlet_vine/W in area_of_influence)
@@ -676,6 +692,13 @@
 	var/beep_time = 20
 	var/talking = FALSE
 	var/elliot_killed_once = FALSE
+	/// Refraction-overridable. Default reproduces stock behaviour. When
+	/// FALSE, death() performs a normal death (no ending/Self-Detonate/
+	/// achievements) and the StealElliot end-cutscene never fires.
+	var/run_ending = TRUE
+	/// Refraction-overridable. Default reproduces stock behaviour. When
+	/// FALSE, Elliot-specific branches are skipped.
+	var/use_elliot_interactions = TRUE
 
 /mob/living/simple_animal/hostile/clan/stone_keeper/Initialize()
 	. = ..()
@@ -797,6 +820,8 @@
 
 
 /mob/living/simple_animal/hostile/clan/stone_keeper/death(gibbed)
+	if(!run_ending)
+		return ..()
 	if(ending)
 		Unlock()
 		new /obj/item/keycard/motus_treasure(get_turf(src))
@@ -816,6 +841,8 @@
 	return FALSE
 
 /mob/living/simple_animal/hostile/clan/stone_keeper/proc/Self_Detonate_Timer()
+	if(!run_ending)
+		return
 	var/elliot_alive = FALSE
 	var/mob/living/simple_animal/hostile/ui_npc/elliot/hero
 	for(var/mob/living/simple_animal/hostile/ui_npc/elliot/victim in range(10, src))
@@ -914,7 +941,7 @@
 	visible_message(span_danger("[src] starts charging something at [cooler_target]!"))
 	say("Tinkerer's Order...")
 	var/mob/living/simple_animal/hostile/ui_npc/elliot/victim
-	if(is_elliot(cooler_target))
+	if(use_elliot_interactions && is_elliot(cooler_target))
 		victim = cooler_target
 	dir = get_cardinal_dir(src, target)
 	if(victim)
@@ -1017,10 +1044,12 @@
 			continue
 		if(L.stat != DEAD && !faction_check_mob(L, FALSE))
 			everyone_dead = FALSE
-	if(everyone_dead)
+	if(everyone_dead && run_ending)
 		StealElliot()
 
 /mob/living/simple_animal/hostile/clan/stone_keeper/proc/StealElliot()
+	if(!run_ending)
+		return
 	var/mob/living/simple_animal/hostile/ui_npc/elliot/victim
 	for(var/mob/living/simple_animal/hostile/ui_npc/elliot/steal_target in range(20, src))
 		victim = steal_target
@@ -1253,7 +1282,7 @@
 	var/active = FALSE
 
 /mob/living/simple_animal/hostile/keeper_piller/Initialize()
-	..()
+	. = ..()
 	addtimer(CALLBACK(src, PROC_REF(piller_fall)), 0)
 
 /mob/living/simple_animal/hostile/keeper_piller/proc/piller_fall()

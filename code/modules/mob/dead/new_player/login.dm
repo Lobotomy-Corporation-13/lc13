@@ -3,7 +3,9 @@
 		return
 	if(CONFIG_GET(flag/use_exp_tracking))
 		client.set_exp_from_db()
-		client.set_db_player_flags()
+		if(!isnull(client))
+			//For some reason we have been getting null runtimes here -IP
+			client.set_db_player_flags()
 	if(!mind)
 		mind = new /datum/mind(key)
 		mind.active = TRUE

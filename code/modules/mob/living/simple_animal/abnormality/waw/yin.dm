@@ -77,6 +77,7 @@
 
 	var/busy = FALSE
 
+	//Uses mob.tag and xyz identifiers
 	var/list/hit_people = list()
 	var/list/spawned_effects = list()
 	var/list/prohibitted_flips = list(
@@ -178,8 +179,7 @@
 	icon_state = icon_breach
 
 /mob/living/simple_animal/hostile/abnormality/yin/Destroy()
-	for(var/atom/AT in spawned_effects)
-		qdel(AT)
+	QDEL_LIST(spawned_effects)
 	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/yin/WorkChance(mob/living/carbon/human/user, chance, work_type)
@@ -249,8 +249,7 @@
 		beam.redrawing()
 		sleep(1)
 		new /obj/effect/temp_visual/revenant/cracks/yin(OT)
-	for(var/obj/effect/FX in spawned_effects)
-		qdel(FX)
+	QDEL_LIST(spawned_effects)
 	qdel(beam)
 	COOLDOWN_START(src, beam, beam_cooldown)
 	busy = FALSE
@@ -316,7 +315,8 @@
 
 /mob/living/simple_animal/hostile/abnormality/yin/proc/DragonFlip(obj/effect/yinyang_dragon/DP)
 	for(var/obj/machinery/computer/abnormality/AC in range(2, DP))
-		if(AC in hit_people)
+		var/identifier = "[AC.x],[AC.y],[AC.z]"
+		if(identifier in hit_people)
 			continue
 		if(!AC.datum_reference.current)
 			continue
@@ -325,9 +325,9 @@
 			continue
 		AC.datum_reference.qliphoth_change(999)
 		AC.datum_reference.qliphoth_change(-qlip)
-		hit_people += AC
+		hit_people += identifier
 	for(var/mob/living/L in range(2, DP))
-		if(L in hit_people)
+		if(L.tag in hit_people)
 			continue
 		if(L.type in prohibitted_flips)
 			continue
@@ -339,7 +339,7 @@
 			damage = H.sanityhealth
 			H.adjustSanityLoss(-H.maxSanity)
 			H.adjustSanityLoss(damage)
-		hit_people += L
+		hit_people += L.tag
 		to_chat(L, span_userdanger("All that is shall become all that isn't."))
 
 /mob/living/simple_animal/hostile/abnormality/yin/proc/YangCheck()

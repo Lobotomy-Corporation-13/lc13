@@ -213,12 +213,39 @@ GLOBAL_LIST_EMPTY(cryopod_computers)
 
 // This function can not be undone; do not call this unless you are sure
 /obj/machinery/cryopod/proc/despawn_occupant()
-	var/mob/living/mob_occupant = occupant
+	var/mob/living/carbon/mob_occupant = occupant
 	var/list/crew_member = list()
 
 	crew_member["name"] = mob_occupant.real_name
+	crew_member["fingerprint"] = md5(mob_occupant.dna.uni_identity) // This is their fingerprint, as it will appear in the datacore. We want it so we can remove the correct record from there.
+
+	var/list/these_roles_arent_actually_in_the_round = list(
+		"Test Range Agent", // Test Range
+		"Lobotomy Corporation Records Librarian", // Records Library
+		"Lobotomy Corporation Intern", // Tutorial
+		"Refraction Railway Agent", // Refraction Railway
+	)
 
 	if(mob_occupant.mind && mob_occupant.mind?.assigned_role)
+		// If we're dealing with a person who's one of the listed roles which aren't really in the round, end the proc early without announcing their storage and all that.
+		if(mob_occupant.mind.assigned_role in these_roles_arent_actually_in_the_round)
+			// Message
+			visible_message(span_notice("[src] hums and hisses as it moves [mob_occupant.real_name] into storage."))
+			// Drop items
+			for(var/obj/item/item_content as anything in mob_occupant)
+				if(!istype(item_content) || HAS_TRAIT(item_content, TRAIT_NODROP))
+					continue
+				if (issilicon(mob_occupant) && istype(item_content, /obj/item/mmi))
+					continue
+				mob_occupant.transferItemToLoc(item_content, drop_location(), force = TRUE, silent = TRUE)
+			// Delete
+			QDEL_NULL(occupant)
+			// Reset
+			open_machine()
+			name = initial(name)
+			return
+
+		// If we reach this point we're dealing with someone genuinely in the round.
 		// Handle job slot/tater cleanup.
 		var/job = mob_occupant.mind.assigned_role
 		crew_member["job"] = job
@@ -230,17 +257,24 @@ GLOBAL_LIST_EMPTY(cryopod_computers)
 		crew_member["job"] = "N/A"
 
 	// Delete them from datacore.
+	var/record_id
 	var/announce_rank = null
-	for(var/datum/data/record/medical_record as anything in GLOB.data_core.medical)
-		if(medical_record.fields["name"] == mob_occupant.real_name)
-			qdel(medical_record)
-	for(var/datum/data/record/security_record as anything in GLOB.data_core.security)
-		if(security_record.fields["name"] == mob_occupant.real_name)
-			qdel(security_record)
-	for(var/datum/data/record/general_record as anything in GLOB.data_core.general)
-		if(general_record.fields["name"] == mob_occupant.real_name)
-			announce_rank = general_record.fields["rank"]
-			qdel(general_record)
+
+	// We find the correct person's records via fingerprints.
+	// Why? Because people can share names, and more importantly, people can enter cryo, ghost, respawn, rejoin, and when their original body gets despawned, if we used names or ranks, now we can't reliably ensure the correct record is eliminated.
+	// There are only 2 situations where this method can fail, AFAIK: 1. Your DNA changes in some way - very rare, has to be stuff like Wabbajack. 2. Extremely unlikely scenario of 2 people having the same DNA.
+	var/datum/data/record/genrecord = find_record("fingerprint", crew_member["fingerprint"], GLOB.data_core.general)
+	if(genrecord)
+		record_id = genrecord.fields["id"] // An ID is shared across the same's person records in general, security and medical.
+		announce_rank = genrecord.fields["rank"]
+		qdel(genrecord)
+	if(record_id)
+		var/datum/data/record/secrecord = find_record("id", record_id, GLOB.data_core.security)
+		var/datum/data/record/medrecord = find_record("id", record_id, GLOB.data_core.medical)
+		if(secrecord)
+			qdel(secrecord)
+		if(medrecord)
+			qdel(medrecord)
 
 	control_computer?.frozen_crew += list(crew_member)
 
@@ -265,7 +299,7 @@ GLOBAL_LIST_EMPTY(cryopod_computers)
 	name = initial(name)
 
 /obj/machinery/cryopod/MouseDrop_T(mob/living/target, mob/user)
-	if(!istype(target) || !can_interact(user) || !target.Adjacent(user) || !ismob(target) || isanimal(target) || !istype(user.loc, /turf) || target.buckled)
+	if(!istype(target) || !can_interact(user) || !target.Adjacent(user) || !iscarbon(target) || !istype(user.loc, /turf) || target.buckled)
 		return
 
 	if(occupant)
@@ -300,7 +334,7 @@ GLOBAL_LIST_EMPTY(cryopod_computers)
 		if(antag)
 			tgalert(target, "You're \a [antag.name]! [AHELP_FIRST_MESSAGE]")
 
-	if(!istype(target) || !can_interact(user) || !target.Adjacent(user) || !ismob(target) || isanimal(target) || !istype(user.loc, /turf) || target.buckled)
+	if(!istype(target) || !can_interact(user) || !target.Adjacent(user) || !iscarbon(target) || !istype(user.loc, /turf) || target.buckled)
 		return
 		// rerun the checks in case of shenanigans
 

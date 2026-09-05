@@ -43,19 +43,17 @@
 	abnormality_origin = ABNORMALITY_ORIGIN_BRANCH12
 	var/list/current_weaves = list()
 
+/mob/living/simple_animal/hostile/abnormality/branch12/weave/Destroy()
+	QDEL_LIST(current_weaves)
+	return ..()
+
 /mob/living/simple_animal/hostile/abnormality/branch12/weave/Life()
 	..()
 	if(IsContained())
 		return
 	if(prob(40))
 		var/obj/structure/golden_weave/V = new(get_turf(src))
-		current_weaves+=V
-
-/mob/living/simple_animal/hostile/abnormality/branch12/weave/death()
-	for(var/V in current_weaves)
-		qdel(V)
-		current_weaves-=V
-	..()
+		V.RegisterSoul(src)
 
 /mob/living/simple_animal/hostile/abnormality/branch12/weave/SuccessEffect(mob/living/carbon/human/user, work_type, pe)
 	. = ..()
@@ -71,8 +69,6 @@
 /mob/living/simple_animal/hostile/abnormality/branch12/weave/WorkChance(mob/living/carbon/human/user, chance)
 	return chance
 
-
-
 /obj/structure/golden_weave
 	gender = PLURAL
 	name = "golden weave"
@@ -84,6 +80,7 @@
 	layer = LOW_OBJ_LAYER
 	plane = 4
 	max_integrity = 10
+	var/mob/living/simple_animal/hostile/abnormality/branch12/weave/connected_abno
 
 /obj/structure/golden_weave/Crossed(atom/movable/AM)
 	. = ..()
@@ -93,3 +90,21 @@
 		H.apply_lc_bleed(15)
 		H.Knockdown(20)
 		qdel(src)
+
+//Hard Delete Prevention
+/obj/structure/golden_weave/Destroy()
+	UnregisterSoul()
+	return ..()
+
+/obj/structure/golden_weave/proc/RegisterSoul(new_link)
+	if(!new_link)
+		return
+	connected_abno = new_link
+	connected_abno.current_weaves += src
+	RegisterSignal(new_link, list(COMSIG_PARENT_QDELETING), PROC_REF(UnregisterSoul))
+
+/obj/structure/golden_weave/proc/UnregisterSoul()
+	if(connected_abno)
+		connected_abno.current_weaves -= src
+		UnregisterSignal(connected_abno, list(COMSIG_PARENT_QDELETING))
+	connected_abno = null

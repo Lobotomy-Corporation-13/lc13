@@ -5,7 +5,7 @@
 /mob/living/simple_animal/hostile/abnormality/big_wolf
 	name = "Big and Will be Bad Wolf"
 	desc = "An abnormality taking the form of a large wolf."
-	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/abnormality/big_wolf64x64.dmi'
 	icon_state = "big_wolf"
 	icon_living = "big_wolf"
 	icon_dead = "big_wolf_slain"
@@ -76,6 +76,8 @@
 	var/hp_check_cooldown = 0
 	var/howl_cooldown = 0
 	var/howl_cooldown_time = BIGWOLF_COOLDOWN_HOWL
+	//If the wolf is fluffy or not
+	var/fluffy = FALSE
 
 	var/obj/effect/proc_holder/ability/aimed/dash/big_wolf/ourdash
 
@@ -113,11 +115,13 @@
 /mob/living/simple_animal/hostile/abnormality/big_wolf/Initialize()
 	.  = ..()
 	ourdash = new()
+	if(prob(30))
+		fluffy = TRUE
+		update_icon()
 
 /mob/living/simple_animal/hostile/abnormality/big_wolf/SuccessEffect(mob/living/carbon/human/user, work_type, pe)
 	. = ..()
 	if(work_type == ABNORMALITY_WORK_INSTINCT && user.stat != DEAD && locate(/mob/living) in contents)
-		flick("wolf_sad", src)
 		SpewStomach()
 	return ..()
 
@@ -125,7 +129,6 @@
 	. = ..()
 	datum_reference.qliphoth_change(-1)
 	EatWorker(user)
-	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/big_wolf/BreachEffect(mob/living/carbon/human/user, breach_type)
 	. = ..()
@@ -167,19 +170,22 @@
 	density = FALSE
 	animate(src, alpha = 0, time = 10 SECONDS)
 	QDEL_IN(src, 10 SECONDS)
-	..()
+	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/big_wolf/Move()
 	if(!can_act)
 		return FALSE
-	..()
+	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/big_wolf/update_icon_state()
+	var/alt_stuff = fluffy ? "_alt" : ""
 	if(IsContained())
-		icon = initial(icon)
+		icon = 'ModularLobotomy/_Lobotomyicons/abnormality/big_wolf64x64.dmi'
+		icon_state = "big_wolf[alt_stuff]"
 		pixel_x = initial(pixel_x)
 		base_pixel_x = initial(base_pixel_x)
-		icon_state = initial(icon_state)
+		if(length(contents))
+			icon_state = "wolf_full[alt_stuff]"
 	else
 		icon = 'ModularLobotomy/_Lobotomyicons/96x64.dmi'
 		pixel_x = -32
@@ -214,6 +220,13 @@
 	if(!client && can_act && howl_cooldown <= world.time && fleeing_now != TRUE)
 		Howl()
 
+/mob/living/simple_animal/hostile/abnormality/big_wolf/AttackingTarget(atom/attacked_target)
+	if(istype(attacked_target, /mob/living/simple_animal/hostile/abnormality/red_hood)) //Red takes triple damage from the wolf, becauser her resistances are high
+		var/mob/living/simple_animal/hostile/abnormality/red_hood/mercenary = attacked_target
+		var/bonus_damage_dealt = 2 * (rand(melee_damage_lower,melee_damage_upper))
+		mercenary.deal_damage(bonus_damage_dealt, RED_DAMAGE, src, attack_type = (ATTACK_TYPE_MELEE))
+	return ..()
+
 /mob/living/simple_animal/hostile/abnormality/big_wolf/OpenFire(atom/A)
 	if(!can_act || fleeing_now == TRUE)
 		return
@@ -232,6 +245,11 @@
 		ScratchDash(A)
 
 //Stuff that is overrided when fleeing
+/mob/living/simple_animal/hostile/abnormality/big_wolf/FindTarget()
+	if(fleeing_now == TRUE)
+		return
+	return ..()
+
 /mob/living/simple_animal/hostile/abnormality/big_wolf/attacked_by(obj/item/I, mob/living/L)
 	if(fleeing_now == TRUE)
 		return
@@ -240,7 +258,7 @@
 /mob/living/simple_animal/hostile/abnormality/big_wolf/bullet_act(obj/projectile/P)
 	if(fleeing_now == TRUE)
 		return BULLET_ACT_BLOCK
-	..()
+	return ..()
 
 //Unique Procs
 /* Base Lobotomy Corp wolf will occasionally run away from combat when wounded.
@@ -293,6 +311,7 @@
 	ADD_TRAIT(L, TRAIT_IMMOBILIZED, type)
 	ADD_TRAIT(L, TRAIT_HANDS_BLOCKED, type)
 	L.forceMove(src)
+	update_icon()
 	return TRUE
 
 /* Spew Stomach procs when the wolf dies. Since people who ghost are essentially dead we do not drop
@@ -315,6 +334,12 @@
 			REMOVE_TRAIT(L, TRAIT_IMMOBILIZED, type)
 			REMOVE_TRAIT(L, TRAIT_HANDS_BLOCKED, type)
 		i.forceMove(spew_turf)
+	if(IsContained())
+		sleep(1 SECONDS)
+		icon_state = "wolf_sad"
+		sleep(3 SECONDS)
+		fluffy = TRUE
+		update_icon()
 
 //Combat Skills
 // Simple dash attack that deals 50 damage to all those nearby. This is optimized for AI rather than players.
@@ -361,13 +386,6 @@
 		playsound(get_turf(src), 'sound/abnormalities/big_wolf/Wolf_Howl.ogg', 30, 0, 4)
 	cut_overlay(visual_overlay)
 	can_act = TRUE
-
-/mob/living/simple_animal/hostile/abnormality/big_wolf/AttackingTarget(atom/attacked_target)
-	if(istype(attacked_target, /mob/living/simple_animal/hostile/abnormality/red_hood)) //Red takes triple damage from the wolf, becauser her resistances are high
-		var/mob/living/simple_animal/hostile/abnormality/red_hood/mercenary = attacked_target
-		var/bonus_damage_dealt = 2 * (rand(melee_damage_lower,melee_damage_upper))
-		mercenary.deal_damage(bonus_damage_dealt, RED_DAMAGE, src, attack_type = (ATTACK_TYPE_MELEE))
-	return ..()
 
 #undef BIGWOLF_COOLDOWN_HOWL
 #undef BIGWOLF_COOLDOWN_DASH

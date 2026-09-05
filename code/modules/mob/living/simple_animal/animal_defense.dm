@@ -130,7 +130,7 @@
 /mob/living/simple_animal/proc/attack_threshold_check(damage, damagetype = BRUTE, actuallydamage = TRUE, source = null, attack_type = null)
 	var/temp_damage = damage
 	var/temp_damage_type = damagetype
-	var/should_shuffle = GLOB.damage_type_shuffler?.is_enabled && IsColorDamageType(damagetype)
+	var/should_shuffle = SSmaptype.shuffler_active_for(src) && IsColorDamageType(damagetype)
 	if(should_shuffle)
 		temp_damage_type = GLOB.damage_type_shuffler.mapping_offense[damagetype] // Calls to this proc will be made with the ORIGINAL damage type. We have to do the offensive shuffling here.
 

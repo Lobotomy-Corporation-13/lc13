@@ -108,6 +108,22 @@
 		else
 			return "#00FF00" // Default to green
 
+/// Returns a sortable numeric rank for this achievement's difficulty
+/datum/award/achievement/proc/get_difficulty_order()
+	switch(difficulty)
+		if(ACHIEVEMENT_EASY)
+			return 1
+		if(ACHIEVEMENT_NORMAL)
+			return 2
+		if(ACHIEVEMENT_HARD)
+			return 3
+		if(ACHIEVEMENT_VERYHARD)
+			return 4
+		if(ACHIEVEMENT_HARDEST)
+			return 5
+		else
+			return 2 // Default to normal
+
 ///Scores are for leaderboarded things, such as killcount of a specific boss
 /datum/award/score
 	desc = "you did it sooo many times."

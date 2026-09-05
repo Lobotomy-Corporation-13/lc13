@@ -4,8 +4,8 @@
 	title = "LC Specimen"
 	faction = "Station"
 	selection_color = "#BB9999"
-	total_positions = 8
-	spawn_positions = 8 //Only put as many positions as there exists LCL abnos and spawn points, even if the special_check_latejoin should stop any issse.
+	total_positions = 6
+	spawn_positions = 6 //One per abno cell that exists on the map: four lowsec, two highsec.
 	departments = DEPARTMENT_SECURITY
 	maptype = "limbus_labs"
 	job_abbreviation = "LCS"
@@ -13,19 +13,13 @@
 
 //This should stop someone to spawn as an abno if none of their preferences are available at round start.
 /datum/job/limbus_specimen/unique_job_check(client/C, occupation_divide)
-	if(!LAZYLEN(return_sec_list(GLOB.low_security.Copy(), C)) && !LAZYLEN(return_sec_list(GLOB.high_security.Copy(), C)))
-		return FALSE
 	return attribute_abno(C, occupation_divide)
 
-//Checks if any abnos are available for a latejoin.
+//Checks if any abnos are available for a latejoin. A dry run of the real assignment, so a
+//player who cannot be given a specimen is turned away at the join menu instead of being
+//dropped into the facility as a naked human.
 /datum/job/limbus_specimen/special_check_latejoin(client/C)
-	var/found_abno = LAZYACCESS(GLOB.attributed_lcl_abno, C)
-	if(LAZYFIND(GLOB.lcl_spawned_abno, found_abno)) //The player's attributed abno has already been spawned, not allowed to try again.
-		return FALSE
-	for(var/obj/effect/landmark/start/limbus_abnospawn/LAS in GLOB.start_landmarks_list)
-		if(LAZYLEN(return_sec_list(GLOB.available_low_sec_abno.Copy(), C)) || LAZYLEN(return_sec_list(GLOB.available_high_sec_abno.Copy(), C)))
-			return TRUE
-	return FALSE
+	return attribute_abno(C, TRUE)
 
 //This is absolute jank but it technically works. The job finds a spawner, creates an abnormality, and transfers the mind of the original person into it, then deletes the human.
 /datum/job/limbus_specimen/equip(mob/living/carbon/human/H, visualsOnly, announce, latejoin, datum/outfit/outfit_override, client/preference_source = null)
@@ -36,69 +30,103 @@
 		attribute_abno(preference_source)
 
 	var/abno_path = LAZYACCESS(GLOB.attributed_lcl_abno, preference_source)
-	var/turf/abno_turf
+	//The cell is looked up first and only consumed once the specimen is definitely appearing
+	//in it. A join that cannot finish used to destroy a landmark on its way out.
+	var/obj/effect/landmark/start/limbus_abnospawn/cell = FindCell(abno_path)
+	if(isnull(abno_path) || isnull(cell))
+		return NothingToBecome(H, preference_source)
 
-	if(LAZYFIND(GLOB.low_security, abno_path))
-		for(var/obj/effect/landmark/start/limbus_abnospawn/lowsec/LS in GLOB.start_landmarks_list)
-			GLOB.start_landmarks_list -= LS
-			abno_turf = get_turf(LS)
-			qdel(LS)
-			break
-	else
-		for(var/obj/effect/landmark/start/limbus_abnospawn/highsec/HS in GLOB.start_landmarks_list)
-			GLOB.start_landmarks_list -= HS
-			abno_turf = get_turf(HS)
-			qdel(HS)
-			break
-
-	if(!isnull(abno_path) && !isnull(abno_turf))
-		var/mob/living/simple_animal/hostile/limbus_abno/LA = new abno_path(abno_turf)
-		picked_abno = LA
-		H.mind.transfer_to(picked_abno)
-		qdel(H)
-		GLOB.lcl_spawned_abno += abno_path
-		return picked_abno
-	return FALSE
+	var/turf/abno_turf = get_turf(cell)
+	qdel(cell) //Destroy() takes it back out of GLOB.start_landmarks_list.
+	var/mob/living/simple_animal/hostile/limbus_abno/LA = new abno_path(abno_turf)
+	picked_abno = LA
+	H.mind.transfer_to(picked_abno)
+	qdel(H)
+	GLOB.lcl_spawned_abno += abno_path
+	return picked_abno
 
 /datum/job/limbus_specimen/override_latejoin_spawn()
 	return TRUE
 
-//Returns a list of abno that are both still available and enabled in preferences according to the list.
-//If the preference list is empty somehow, we panic and throw a default list where every lcl abno is allowed.
-/datum/job/limbus_specimen/proc/return_sec_list(list/abno_list, client/C)
-	var/list/abno_pref_list = C.prefs.lcl_abno_pref
-	if(!LAZYLEN(abno_pref_list))
-		var/list/new_pref_abno_list = GLOB.available_low_sec_abno.Copy() + GLOB.available_high_sec_abno.Copy()
-		for(var/abno in new_pref_abno_list)
-			if(isnull(LAZYACCESS(C.prefs.lcl_abno_pref, abno)))
-				LAZYSET(C.prefs.lcl_abno_pref, abno, TRUE)
-	for(var/limbus_abno in abno_pref_list)
-		if(LAZYFIND(abno_list, limbus_abno) && !LAZYACCESS(abno_pref_list, limbus_abno))
-			abno_list -= limbus_abno
-	return abno_list
+///The first free cell of this specimen's own wing, or one from the other wing if its own is
+///full. The wrong cell still beats no specimen at all.
+/datum/job/limbus_specimen/proc/FindCell(abno_path)
+	if(isnull(abno_path))
+		return null
+	var/wanted = (abno_path in GLOB.low_security) ? /obj/effect/landmark/start/limbus_abnospawn/lowsec : /obj/effect/landmark/start/limbus_abnospawn/highsec
+	var/obj/effect/landmark/start/limbus_abnospawn/fallback
+	for(var/obj/effect/landmark/start/limbus_abnospawn/LAS in GLOB.start_landmarks_list)
+		if(istype(LAS, wanted))
+			return LAS
+		fallback = LAS
+	return fallback
 
+///Cells of one wing that are still standing and not already promised to somebody. Roundstart
+///hands out every specimen before a single one spawns, so counting landmarks alone would
+///promise the same cell to two players.
+/datum/job/limbus_specimen/proc/UnclaimedCells(lowsec)
+	var/cells = 0
+	var/wanted = lowsec ? /obj/effect/landmark/start/limbus_abnospawn/lowsec : /obj/effect/landmark/start/limbus_abnospawn/highsec
+	for(var/obj/effect/landmark/start/limbus_abnospawn/LAS in GLOB.start_landmarks_list)
+		if(istype(LAS, wanted))
+			cells++
+	for(var/client/C in GLOB.attributed_lcl_abno)
+		var/claimed = GLOB.attributed_lcl_abno[C]
+		if(LAZYFIND(GLOB.lcl_spawned_abno, claimed)) //Already awake, its cell is long gone.
+			continue
+		if((claimed in GLOB.low_security) == lowsec)
+			cells--
+	return cells
+
+///Nothing left to wake up as. Hand the player back to the lobby rather than leaving a naked
+///human wandering the facility, and give the slot and the reservation back to the pool.
+/datum/job/limbus_specimen/proc/NothingToBecome(mob/living/carbon/human/H, client/C)
+	var/abno_path = LAZYACCESS(GLOB.attributed_lcl_abno, C)
+	if(abno_path && !LAZYFIND(GLOB.lcl_spawned_abno, abno_path))
+		if(abno_path in GLOB.low_security)
+			GLOB.available_low_sec_abno |= abno_path
+		else
+			GLOB.available_high_sec_abno |= abno_path
+	LAZYREMOVE(GLOB.attributed_lcl_abno, C)
+	SSjob.FreeRole(title)
+	to_chat(C, span_userdanger("There is no specimen left for you to wake up as. You are being sent back to the lobby."))
+	//Deferred: the join is still running further up the stack and expects this body to exist.
+	addtimer(CALLBACK(src, PROC_REF(SendToLobby), H, C), 1 SECONDS)
+	return FALSE
+
+/datum/job/limbus_specimen/proc/SendToLobby(mob/living/carbon/human/H, client/C)
+	if(C)
+		var/mob/dead/new_player/lobby = new()
+		lobby.key = C.key
+	if(!QDELETED(H))
+		qdel(H)
+
+//Assigns the highest-priority available specimen. Walks tiers HIGH -> MEDIUM -> LOW, picking at
+//random within a tier. Fixed order meant everyone who left their preferences alone sat at the
+//same MEDIUM tier and the first player assigned always drew whichever specimen happened to be
+//first in the list, round after round.
 /datum/job/limbus_specimen/proc/attribute_abno(client/C, occupation_divide = FALSE)
 	var/found_abno = LAZYACCESS(GLOB.attributed_lcl_abno, C)
-	if(LAZYFIND(GLOB.lcl_spawned_abno, found_abno)) //The player's attributed abno has already been spawned, not allowed to try again. Pick another job jackass.
+	if(LAZYFIND(GLOB.lcl_spawned_abno, found_abno)) //Their abno already spawned, not allowed to try again.
 		return FALSE
 	if(LAZYFIND(GLOB.attributed_lcl_abno, C))
-		return TRUE //In that case, they already have an abno assigned to you, but it hasn't been spawned so we skip the selection process.
-	var/spawning
-	var/list/low_sec_list = return_sec_list(GLOB.available_low_sec_abno.Copy(), C)
-	var/list/high_sec_list = return_sec_list(GLOB.available_high_sec_abno.Copy(), C)
-
-	spawning = pick_n_take(low_sec_list) //Prioritize lowsec spawns first.
-	if(!isnull(spawning))
-		if(!occupation_divide)
-			GLOB.available_low_sec_abno -= spawning
-			LAZYSET(GLOB.attributed_lcl_abno, C, spawning)
-		return TRUE
-
-//If no lowsec landmarks/abno are available, we go for highsec.
-	spawning = pick_n_take(high_sec_list)
-	if(!isnull(spawning))
-		if(!occupation_divide)
-			GLOB.available_high_sec_abno -= spawning
-			LAZYSET(GLOB.attributed_lcl_abno, C, spawning)
-		return TRUE
+		return TRUE //Already assigned but not spawned; skip selection.
+	C.prefs.reconcile_lcl_prefs()
+	var/list/canonical = shuffle(GLOB.low_security + GLOB.high_security)
+	for(var/level in list(JP_HIGH, JP_MEDIUM, JP_LOW))
+		for(var/path in canonical)
+			if(LAZYACCESS(C.prefs.lcl_abno_pref, path) != level)
+				continue
+			var/lowsec = (path in GLOB.available_low_sec_abno)
+			if(!lowsec && !(path in GLOB.available_high_sec_abno))
+				continue //Somebody else has it.
+			if(UnclaimedCells(lowsec) <= 0)
+				continue //Its wing is full, there is nowhere to put it.
+			if(!occupation_divide)
+				if(lowsec)
+					GLOB.available_low_sec_abno -= path
+				else
+					GLOB.available_high_sec_abno -= path
+				LAZYSET(GLOB.attributed_lcl_abno, C, path)
+			return TRUE
 	return FALSE

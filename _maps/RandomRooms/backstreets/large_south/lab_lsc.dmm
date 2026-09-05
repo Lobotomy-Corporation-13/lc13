@@ -1,0 +1,338 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"bd" = (
+/turf/closed/indestructible/reinforced,
+/area/city/backstreets_room)
+"cd" = (
+/obj/structure/table/glass,
+/obj/item/essence/wood,
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"cE" = (
+/obj/structure/table/glass,
+/obj/item/essence/earth,
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"ix" = (
+/obj/structure/table/glass,
+/obj/item/essence/fire,
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"kD" = (
+/obj/structure/window/shuttle{
+	name = "window"
+	},
+/obj/structure/grille/broken,
+/turf/open/floor/plating,
+/area/city/backstreets_room)
+"kI" = (
+/obj/structure/chair/office/light,
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"kK" = (
+/obj/structure/filingcabinet,
+/obj/structure/filingcabinet{
+	pixel_x = -9
+	},
+/obj/structure/filingcabinet{
+	pixel_x = 10
+	},
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"nj" = (
+/obj/structure/table/glass,
+/obj/item/flashlight/lamp,
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"qo" = (
+/obj/structure/table/glass,
+/obj/item/kirbyplants/random{
+	pixel_y = 10
+	},
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"sM" = (
+/obj/machinery/door/airlock/freezer{
+	name = "storage"
+	},
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"ti" = (
+/obj/structure/table/glass,
+/obj/item/bolus/simple,
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"vG" = (
+/obj/structure/table/glass,
+/obj/item/bolus/flower,
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"xd" = (
+/obj/machinery/modular_computer/console{
+	desc = "A corporate computer for private communications between persons of interest. This one appears to have its memory reset, however.";
+	name = "communications console"
+	},
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"yk" = (
+/obj/structure/table/glass,
+/obj/item/essence/water,
+/obj/item/essence/water,
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"zu" = (
+/obj/structure/closet/crate/medical{
+	name = "equipments crate"
+	},
+/obj/item/storage/box/hcorpmetal,
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"Cs" = (
+/obj/structure/closet/crate/medical{
+	name = "equipments crate"
+	},
+/obj/item/bolus/armor,
+/obj/item/storage/box/hcorpwood,
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"De" = (
+/obj/structure/table/glass,
+/obj/item/essence/water,
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"Fp" = (
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"Ho" = (
+/obj/structure/closet/crate/medical{
+	name = "equipments crate"
+	},
+/obj/item/bolus/charred,
+/obj/item/storage/box/hcorpwater,
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"HF" = (
+/obj/structure/table/glass,
+/obj/item/clipboard,
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"HR" = (
+/obj/structure/closet/crate/medical{
+	name = "equipments crate"
+	},
+/obj/item/storage/box/hcorpfire,
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"JD" = (
+/obj/structure/closet/crate/medical{
+	name = "equipments crate"
+	},
+/obj/item/storage/box/hcorpearth,
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"Kq" = (
+/turf/closed/indestructible/rock,
+/area/city/backstreets_room)
+"La" = (
+/obj/structure/closet/crate/medical{
+	name = "equipments crate"
+	},
+/obj/item/bolus/clay,
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"Oo" = (
+/obj/machinery/door/airlock/freezer{
+	name = "airlock"
+	},
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"PK" = (
+/obj/structure/table/glass,
+/obj/item/bolus/mossy,
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"QF" = (
+/obj/structure/table/glass,
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"RD" = (
+/obj/structure/table/glass,
+/obj/item/paper_bin,
+/obj/item/pen,
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"Ts" = (
+/obj/effect/decal/remains/human,
+/obj/effect/decal/cleanable/blood/old,
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"WZ" = (
+/obj/structure/chair/office/light{
+	dir = 1
+	},
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+"Yr" = (
+/mob/living/simple_animal/hostile/bloodfiend_mook,
+/turf/open/floor/holofloor/white,
+/area/city/backstreets_room)
+
+(1,1,1) = {"
+bd
+bd
+bd
+bd
+bd
+bd
+Kq
+Kq
+"}
+(2,1,1) = {"
+kD
+Fp
+kK
+qo
+yk
+bd
+Kq
+Kq
+"}
+(3,1,1) = {"
+Oo
+Fp
+Fp
+ti
+Fp
+bd
+Kq
+Kq
+"}
+(4,1,1) = {"
+kD
+Fp
+Fp
+HF
+WZ
+bd
+Kq
+Kq
+"}
+(5,1,1) = {"
+kD
+Fp
+Fp
+xd
+Fp
+bd
+Kq
+Kq
+"}
+(6,1,1) = {"
+kD
+Fp
+Fp
+Fp
+Fp
+bd
+Kq
+Kq
+"}
+(7,1,1) = {"
+bd
+bd
+bd
+Oo
+bd
+bd
+bd
+bd
+"}
+(8,1,1) = {"
+bd
+PK
+RD
+Fp
+nj
+RD
+vG
+bd
+"}
+(9,1,1) = {"
+bd
+QF
+Fp
+Fp
+Fp
+kI
+QF
+bd
+"}
+(10,1,1) = {"
+bd
+cd
+WZ
+Fp
+Fp
+Ts
+QF
+bd
+"}
+(11,1,1) = {"
+bd
+De
+QF
+Fp
+cE
+ix
+cE
+bd
+"}
+(12,1,1) = {"
+bd
+bd
+bd
+sM
+bd
+bd
+bd
+bd
+"}
+(13,1,1) = {"
+bd
+JD
+Fp
+Fp
+Fp
+Yr
+HR
+bd
+"}
+(14,1,1) = {"
+bd
+La
+Fp
+Yr
+Fp
+Fp
+Ho
+bd
+"}
+(15,1,1) = {"
+bd
+Cs
+Fp
+Fp
+Fp
+Yr
+zu
+bd
+"}
+(16,1,1) = {"
+bd
+bd
+bd
+bd
+bd
+bd
+bd
+bd
+"}

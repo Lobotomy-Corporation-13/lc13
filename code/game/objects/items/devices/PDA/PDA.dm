@@ -773,18 +773,31 @@ GLOBAL_LIST_EMPTY(PDAs)
 /obj/item/pda/proc/do_remove_id(mob/user)
 	if(!id)
 		return
+	. = id
+	var/obj/item/card/id/removed = id
 	if(user)
-		user.put_in_hands(id)
+		user.put_in_hands(removed)
 		to_chat(user, "<span class='notice'>You remove the ID from the [name].</span>")
 	else
-		id.forceMove(get_turf(src))
+		removed.forceMove(get_turf(src))
 
-	. = id
 	id = null
 	updateSelfDialog()
 	update_icon()
 	playsound(src, 'sound/machines/terminal_eject.ogg', 50, TRUE)
 
+	if(ishuman(loc))
+		var/mob/living/carbon/human/H = loc
+		if(H.wear_id == src)
+			H.sec_hud_set_ID()
+
+/obj/item/pda/Exited(atom/movable/AM, atom/newLoc)
+	. = ..()
+	if(AM != id)
+		return
+	id = null
+	updateSelfDialog()
+	update_icon()
 	if(ishuman(loc))
 		var/mob/living/carbon/human/H = loc
 		if(H.wear_id == src)

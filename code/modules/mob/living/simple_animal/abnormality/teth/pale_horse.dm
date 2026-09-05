@@ -53,7 +53,8 @@
 	var/teleport_cooldown
 	var/teleport_cooldown_time = 30 SECONDS
 	//attack
-	var/mob/living/set_target
+	//uses  tags
+	var/set_target
 	var/pulse_range = 11 //fairly large area - enough to breach several abnormalities
 	var/fog_damage = 3
 	var/ash_damage = 20
@@ -183,11 +184,11 @@
 		return FALSE
 	if(H.has_status_effect(/datum/status_effect/mortis)) //find something else to chase or go idle
 		return FALSE
-	set_target = H
+	set_target = H.tag
 	return ..()
 
 //Copied MOSB corpse-seeking behavior
-/mob/living/simple_animal/hostile/abnormality/pale_horse/patrol_select()
+/mob/living/simple_animal/hostile/abnormality/pale_horse/SelectPatrolLocation()
 	var/list/low_priority_turfs = list() // Oh, you're wounded, how nice.
 	var/list/medium_priority_turfs = list() // You're about to die and you are close? Splendid.
 	var/list/high_priority_turfs = list() // IS THAT A DEAD BODY?
@@ -217,8 +218,7 @@
 		target_turf = get_closest_atom(/turf/open, low_priority_turfs, src)
 
 	if(istype(target_turf))
-		patrol_path = get_path_to(src, target_turf, TYPE_PROC_REF(/turf, Distance_cardinal), 0, 200)
-		return
+		return target_turf
 	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/pale_horse/Goto(target, delay, minimum_distance)
@@ -254,12 +254,16 @@
 //If it's not our target, we ignore it
 /mob/living/simple_animal/hostile/abnormality/pale_horse/CanAllowThrough(atom/movable/mover, turf/target)
 	. = ..()
-	if(mover == set_target)
-		return FALSE
-	if(istype(mover, /obj/projectile))
-		var/obj/projectile/P = mover
-		if(P.firer == set_target)
+	if(isliving(mover))
+		var/mob/living/dude = mover
+		if(dude.tag == set_target)
 			return FALSE
+		if(istype(mover, /obj/projectile))
+			var/obj/projectile/P = mover
+			if(isliving(P.firer))
+				var/mob/living/L = P.firer
+				if(L.tag == set_target)
+					return FALSE
 
 //objects
 /obj/effect/temp_visual/palefog

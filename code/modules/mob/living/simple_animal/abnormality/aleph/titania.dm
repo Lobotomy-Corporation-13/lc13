@@ -8,6 +8,7 @@
 	portrait = "titania"
 	maxHealth = 3500
 	health = 3500
+	gender = FEMALE
 	is_flying_animal = TRUE
 	threat_level = ALEPH_LEVEL
 	work_chances = list(

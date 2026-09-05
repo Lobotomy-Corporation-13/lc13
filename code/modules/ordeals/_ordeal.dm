@@ -61,7 +61,7 @@
 	SSlobotomy_corp.completed_challenges += akward_record_formatting
 	SSlobotomy_corp.completed_challenges[akward_record_formatting] = level
 
-	if(SSmaptype.chosen_trait != FACILITY_TRAIT_ABNO_BLITZ)
+	if(!SSlobotomy_corp.BlitzActive())
 		SSlobotomy_corp.ordeal_stats += 5
 	for(var/mob/living/carbon/human/person as anything in SSabnormality_queue.active_suppression_agents)
 		if(!istype(person) || QDELETED(person)) // gibbed or cryo'd, we no longer care about them
@@ -94,7 +94,7 @@
 		SSticker.rating_achieved = "A"
 
 	/// If it was a midnight and we got to it before time limit
-	if(level == 4 && start_time <= (CONFIG_GET(number/suppression_time_limit) + (GetFacilityUpgradeValue(UPGRADE_MELTDOWN_INCREASE) * 20 MINUTES)))
+	if(level == 4 && start_time <= (CONFIG_GET(number/suppression_time_limit)))
 		// Extra cores, and announced!
 		addtimer(CALLBACK(SSlobotomy_corp, TYPE_PROC_REF(/datum/controller/subsystem/lobotomy_corp, PickPotentialSuppressions), TRUE, TRUE), 15 SECONDS)
 		// Check to see if we have a Manager at this point, 'cause if we don't, we should at least allow the Agents to try an Extra on their own if they want.

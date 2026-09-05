@@ -48,8 +48,8 @@
 	QDEL_NULL(soundloop)
 	for(var/turf/T in spaceturfs)
 		T.AddElement(/datum/element/forced_gravity, 1, TRUE)
-	for(var/V in spaceeffects)
-		qdel(V)
+	QDEL_LIST(spaceeffects)
+	spaceturfs = null
 	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/branch12/ascension_ceremony/WorktickFailure(mob/living/carbon/human/user)

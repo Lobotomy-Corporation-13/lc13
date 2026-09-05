@@ -21,6 +21,7 @@
 	)
 	abnormality_origin = ABNORMALITY_ORIGIN_BRANCH12
 
+	//Typepath
 	var/recently_departed
 
 /mob/living/simple_animal/hostile/abnormality/branch12/deus_ex_machina/Initialize()
@@ -30,6 +31,7 @@
 
 /mob/living/simple_animal/hostile/abnormality/branch12/deus_ex_machina/Destroy()
 	UnregisterSignal(SSdcs, COMSIG_GLOB_MOB_DEATH)
+	recently_departed = null
 	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/branch12/deus_ex_machina/proc/UpQliphoth()

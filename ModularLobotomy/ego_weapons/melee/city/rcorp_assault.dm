@@ -264,3 +264,98 @@
 	throwforce = 80
 	icon_state = "rabbitthrowing"
 
+// ========================================
+// IFF (No Friendly Fire) Gun Variants
+// These are the versions crafted by RCE factories
+// ========================================
+
+// Rifles
+/obj/item/gun/energy/e_gun/rabbitdash/iff
+	name = "R-Corporation R-2000 'Red Rifle' (IFF)"
+	desc = "An energy gun mass-produced by R corporation for the bulk of their force. This model has IFF targeting to prevent friendly fire."
+	ammo_type = list(/obj/item/ammo_casing/energy/laser/red/iff)
+
+/obj/item/gun/energy/e_gun/rabbitdash/white/iff
+	name = "R-Corporation R-2100 'White Rifle' (IFF)"
+	desc = "An energy gun mass-produced by R corporation for the bulk of their force. This model has IFF targeting to prevent friendly fire."
+	ammo_type = list(/obj/item/ammo_casing/energy/laser/white/iff)
+
+/obj/item/gun/energy/e_gun/rabbitdash/black/iff
+	name = "R-Corporation R-2400 'Black Rifle' (IFF)"
+	desc = "An energy gun mass-produced by R corporation for the bulk of their force. This model has IFF targeting to prevent friendly fire."
+	ammo_type = list(/obj/item/ammo_casing/energy/laser/black/iff)
+
+/obj/item/gun/energy/e_gun/rabbitdash/pale/iff
+	name = "R-Corporation R-2900 'The Solution' (IFF)"
+	desc = "An energy gun mass-produced by R corporation for the bulk of their force. This model has IFF targeting to prevent friendly fire."
+	ammo_type = list(/obj/item/ammo_casing/energy/laser/pale/iff)
+
+/obj/item/gun/energy/e_gun/rabbitdash/sniper/iff
+	name = "R-Corporation X-12 Marksman (IFF)"
+	desc = "An energy rifle sometimes used by Rcorp. Fires slower, and deals slightly more damage. Has a scope and IFF targeting."
+	ammo_type = list(/obj/item/ammo_casing/energy/laser/red/iff)
+
+// Pistols
+/obj/item/gun/energy/e_gun/rabbitdash/small/iff
+	name = "R-Corporation R-2020 'Little Iron' (IFF)"
+	desc = "An energy pistol sometimes used by Rcorp. This model has IFF targeting to prevent friendly fire."
+	ammo_type = list(/obj/item/ammo_casing/energy/laser/red/iff)
+
+/obj/item/gun/energy/e_gun/rabbitdash/small/white/iff
+	name = "R-Corporation R-2120 'Disco Panic' (IFF)"
+	desc = "An energy pistol sometimes used by Rcorp. This model has IFF targeting to prevent friendly fire."
+	ammo_type = list(/obj/item/ammo_casing/energy/laser/white/iff)
+
+/obj/item/gun/energy/e_gun/rabbitdash/small/black/iff
+	name = "R-Corporation R-2420 'Night Operator' (IFF)"
+	desc = "An energy pistol sometimes used by Rcorp. This model has IFF targeting to prevent friendly fire."
+	ammo_type = list(/obj/item/ammo_casing/energy/laser/black/iff)
+
+/obj/item/gun/energy/e_gun/rabbitdash/small/pale/iff
+	name = "R-Corporation R-2920 'Wakeup Call' (IFF)"
+	desc = "An energy pistol sometimes used by Rcorp. This model has IFF targeting to prevent friendly fire."
+	ammo_type = list(/obj/item/ammo_casing/energy/laser/pale/iff)
+
+/obj/item/gun/energy/e_gun/rabbitdash/small/tinypale/iff
+	name = "R-Corporation X-29 'Mistake' (IFF)"
+	desc = "An energy pistol sometimes used by Rcorp. This model has IFF targeting to prevent friendly fire."
+	ammo_type = list(/obj/item/ammo_casing/energy/laser/pale/iff)
+
+// SMGs
+/obj/item/gun/energy/e_gun/rabbitdash/small/smg/iff
+	name = "R-Corporation R-2540 'Hellspit' (IFF)"
+	desc = "An energy SMG created by Rcorp. This model has IFF targeting to prevent friendly fire."
+	ammo_type = list(/obj/item/ammo_casing/energy/laser/red/iff)
+
+/obj/item/gun/energy/e_gun/rabbitdash/small/smg/white/iff
+	name = "R-Corporation R-2550 'Skid' (IFF)"
+	desc = "An energy SMG created by Rcorp. This model has IFF targeting to prevent friendly fire."
+	ammo_type = list(/obj/item/ammo_casing/energy/laser/white/iff)
+
+/obj/item/gun/energy/e_gun/rabbitdash/small/smg/black/iff
+	name = "R-Corporation R-2560 'Dreamland' (IFF)"
+	desc = "An energy SMG created by Rcorp. This model has IFF targeting to prevent friendly fire."
+	ammo_type = list(/obj/item/ammo_casing/energy/laser/black/iff)
+
+// Shotguns
+/obj/item/gun/energy/e_gun/rabbitdash/shotgun/iff
+	name = "R-Corporation R-2300 'Chungid' (IFF)"
+	desc = "An energy shotgun mass-produced by R corporation. This model has IFF targeting to prevent friendly fire."
+	ammo_type = list(/obj/item/ammo_casing/energy/laser/red/shotgun/iff)
+
+/obj/item/gun/energy/e_gun/rabbitdash/shotgun/white/iff
+	name = "R-Corporation R-2330 'Fatty' (IFF)"
+	desc = "An energy shotgun mass-produced by R corporation. This model has IFF targeting to prevent friendly fire."
+	ammo_type = list(/obj/item/ammo_casing/energy/laser/white/shotgun/iff)
+
+/obj/item/gun/energy/e_gun/rabbitdash/shotgun/black/iff
+	name = "R-Corporation R-2430 'Moz' (IFF)"
+	desc = "An energy shotgun mass-produced by R corporation. This model has IFF targeting to prevent friendly fire."
+	ammo_type = list(/obj/item/ammo_casing/energy/laser/black/shotgun/iff)
+
+// Heavy
+/obj/item/gun/energy/e_gun/rabbitdash/heavy/iff
+	name = "R-Corporation X-9 Heavy Rifle (IFF)"
+	desc = "An energy gun mass-produced by R corporation. This model has IFF targeting to prevent friendly fire."
+	ammo_type = list(/obj/item/ammo_casing/energy/laser/red/heavy/iff)
+

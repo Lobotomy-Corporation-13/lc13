@@ -196,7 +196,7 @@ GLOBAL_LIST_EMPTY(marked_players)
 /mob/living/simple_animal/hostile/Destroy()
 	target = null
 	targets_from = null
-	target_memory = null
+	target_memory = list()
 	friends = null
 	patrol_path = null
 	if(mark_once_attacked)
@@ -239,11 +239,10 @@ GLOBAL_LIST_EMPTY(marked_players)
 		patrol_reset()
 		return
 	if(CanStartPatrol())
-		if(patrol_cooldown <= world.time)
-			if(!patrol_path || !patrol_path.len)
-				patrol_select()
-				if(patrol_path.len)
-					patrol_move(patrol_path[patrol_path.len])
+		if(!patrol_path || !length(patrol_path))
+			PatrolSelect()
+			if(length(patrol_path))
+				patrol_move(patrol_path[patrol_path.len])
 
 	/*		AIStatus
 	AI_ON will have the npcpool subsystem call handle_automated_action(),
@@ -305,15 +304,6 @@ GLOBAL_LIST_EMPTY(marked_players)
 
 /mob/living/simple_animal/hostile/attack_animal(mob/living/simple_animal/M, damage)
 	damage = rand(M.melee_damage_lower, M.melee_damage_upper)
-	damage *= (1 + (M.extra_damage / 100))
-	if(M.melee_damage_type == RED_DAMAGE)
-		damage *= (1 + (M.extra_damage_red / 100))
-	if(M.melee_damage_type == WHITE_DAMAGE)
-		damage *= (1 + (M.extra_damage_white / 100))
-	if(M.melee_damage_type == BLACK_DAMAGE)
-		damage *= (1 + (M.extra_damage_black / 100))
-	if(M.melee_damage_type == PALE_DAMAGE)
-		damage *= (1 + (M.extra_damage_pale / 100))
 	. = ..()
 	if(. && stat == CONSCIOUS && AIStatus != AI_OFF && !client)
 		if(!target)
@@ -384,7 +374,7 @@ GLOBAL_LIST_EMPTY(marked_players)
 	target_memory.Cut()
 	attack_is_on_cooldown = FALSE
 	LoseTarget()
-	..(gibbed)
+	return ..(gibbed)
 
 /mob/living/simple_animal/hostile/update_stamina()
 	if(staminaloss == 0)
@@ -547,6 +537,7 @@ GLOBAL_LIST_EMPTY(marked_players)
 /mob/living/simple_animal/hostile/proc/ListTargets(max_range = vision_range) //Step 1, find out what we can see
 	if(!can_act)
 		return list()
+
 	//The thorough mode, rarely used
 	if(search_objects)
 		. = oview(max_range, targets_from)
@@ -781,9 +772,10 @@ GLOBAL_LIST_EMPTY(marked_players)
 		. -= 60
 
 	//up to 25 points for damage taken from target_thing
-	if(target_memory[target_tag])
-		var/fraction_hp_lost_to_thing = min(target_memory[target_tag] / maxHealth, 1)
-		. += fraction_hp_lost_to_thing * 25
+	if(target_tag in target_memory)
+		if(target_memory[target_tag])
+			var/fraction_hp_lost_to_thing = min(target_memory[target_tag] / maxHealth, 1)
+			. += fraction_hp_lost_to_thing * 25
 
 /mob/living/simple_animal/hostile/proc/GiveTarget(atom/new_target)
 	if(!QDELETED(new_target))
@@ -954,7 +946,7 @@ GLOBAL_LIST_EMPTY(marked_players)
 		return FALSE
 
 	//Smashing code
-	if(environment_smash)
+	if(environment_smash && !isnull(target))
 		if(target.loc != null && get_dist(targets_from, target.loc) <= vision_range) //We can't see our target, but he's in our vision range still
 			if(ranged_ignores_vision && ranged_cooldown <= world.time) //we can't see our target... but we can fire at them!
 				OpenFire(target)
@@ -991,8 +983,9 @@ GLOBAL_LIST_EMPTY(marked_players)
 			to_chat(src, span_warning("You almost attack yourself, but then decide against it."))
 			return
 		if(SSmaptype.maptype == "rcorp" && faction_check_mob(target, FALSE))
-			to_chat(src, span_warning("You almost attack your teammate, but then decide against it."))
-			return
+			if(!istype(src, /mob/living/simple_animal/hostile/rca_nosferatu_mob))
+				to_chat(src, span_warning("You almost attack your teammate, but then decide against it."))
+				return
 
 	if(!attacked_target)
 		attacked_target = target
@@ -1359,6 +1352,8 @@ GLOBAL_LIST_EMPTY(marked_players)
 /mob/living/simple_animal/hostile/proc/CanStartPatrol()
 	if(!can_act)
 		return FALSE
+	if(patrol_cooldown > world.time)
+		return FALSE
 	return AIStatus == AI_IDLE //if AI is idle, begin checking for patrol
 
 /mob/living/simple_animal/hostile/proc/patrol_to(turf/target_location = null)
@@ -1371,26 +1366,36 @@ GLOBAL_LIST_EMPTY(marked_players)
 	patrol_move(patrol_path[patrol_path.len])
 	return TRUE
 
-/mob/living/simple_animal/hostile/proc/patrol_select()
+/mob/living/simple_animal/hostile/proc/PatrolSelect()
 	//Mobs should stay unpatroled on maps where they're intended to be possessed.
 	if(SSmaptype.maptype in SSmaptype.autopossess)
-		return
+		return FALSE
+
+	var/turf/target_center = SelectPatrolLocation()
+	if(!isturf(target_center))
+		target_center = get_turf(target_center)
+	if(!target_center)
+		return FALSE
+
+	SEND_SIGNAL(src, COMSIG_PATROL_START, src, target_center)
+	SEND_GLOBAL_SIGNAL(src, COMSIG_GLOB_PATROL_START, src, target_center)
+	var/temp_patrol_path = get_path_to(src, target_center, TYPE_PROC_REF(/turf, Distance_cardinal), 0, 200)
+	patrol_path = temp_patrol_path
+	return temp_patrol_path
+
+/mob/living/simple_animal/hostile/proc/SelectPatrolLocation()
 	if(!LAZYLEN(GLOB.department_centers))
 		return
 
-	var/turf/target_center
 	var/list/potential_centers = list()
 	for(var/pos_targ in GLOB.department_centers)
 		var/possible_center_distance = get_dist(src, pos_targ)
 		if(possible_center_distance > 4 && possible_center_distance < 46)
 			potential_centers += pos_targ
 	if(LAZYLEN(potential_centers))
-		target_center = pick(potential_centers)
+		return pick(potential_centers)
 	else
-		target_center = pick(GLOB.department_centers)
-	SEND_SIGNAL(src, COMSIG_PATROL_START, src, target_center)
-	SEND_GLOBAL_SIGNAL(src, COMSIG_GLOB_PATROL_START, src, target_center)
-	patrol_path = get_path_to(src, target_center, TYPE_PROC_REF(/turf, Distance_cardinal), 0, 200)
+		return pick(GLOB.department_centers)
 
 /mob/living/simple_animal/hostile/proc/patrol_reset()
 	patrol_path = list()

@@ -31,7 +31,7 @@
 		/obj/item/trait_injector/clerk_fear_immunity_injector,
 		/obj/item/trait_injector/officer_upgrade_injector,
 		/obj/item/ego_gift_extractor,
-		/obj/item/device/plushie_extractor,
+		/obj/item/plushie_extractor,
 	)
 
 //K Corporation
@@ -199,6 +199,7 @@
 		/obj/item/ego_weapon/city/wcorp/dagger,
 		/obj/item/ego_weapon/city/wcorp/hammer,
 		/obj/item/ego_weapon/city/wcorp/hatchet,
+		/obj/item/clothing/suit/armor/ego_gear/wcorp/recon,
 	)
 
 	veryrareloot = list(
@@ -206,10 +207,44 @@
 		/obj/item/ego_weapon/city/wcorp/shield/spear,
 		/obj/item/ego_weapon/city/wcorp/shield/club,
 		/obj/item/ego_weapon/city/wcorp/shield/axe,
+		/obj/item/clothing/suit/armor/ego_gear/wcorp/heavy,
 	)
 
 	cosmeticloot = list(
 		/obj/item/clothing/head/ego_hat/wcorp,
 		/obj/item/clothing/under/suit/lobotomy/wcorp,
+		/obj/item/clothing/under/suit/lobotomy/wsenior,
 		/obj/item/powered_gadget/teleporter,
 	)
+
+
+/obj/structure/lootcrate/h_corp
+	name = "H-Corporation Bolus Crate"
+	desc = "A crate recieved from H-Corporation. Open with a Crowbar."
+	icon_state = "crate_hcorp"
+	rarechance = 40
+	veryrarechance = 10
+	lootlist =	list(
+		/obj/item/storage/box/hcorpfire,
+		/obj/item/storage/box/hcorpwater,
+		/obj/item/storage/box/hcorpearth,
+		/obj/item/storage/box/hcorpmetal,
+		/obj/item/storage/box/hcorpwood,
+	)
+
+		//This should serve you well most of the time
+	rareloot =	list(
+		/obj/item/bolus/simple,
+	)
+
+		//Gave them a few mid-tier ones.
+	veryrareloot = list(
+		/obj/item/bolus/charred,
+		/obj/item/bolus/mossy,
+		/obj/item/bolus/soaked,
+		/obj/item/bolus/rust,
+		/obj/item/bolus/clay,
+		/obj/item/bolus/armor,
+		/obj/item/bolus/flower,
+	)
+

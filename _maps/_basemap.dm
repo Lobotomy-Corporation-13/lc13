@@ -7,8 +7,7 @@
 		#include "map_files\Mining\Lavaland.dmm"
 		#include "map_files\debug\runtimestation.dmm"
 		#include "map_files\debug\multiz.dmm"
-		#include "map_files\Alpha\alphacorp.dmm"
-		#include "map_files\Beta\betacorp.dmm"
+		#include "map_files\LC13\Alpha-Alpha\alpha.dmm"
 
 		#ifdef CIBUILDING
 			#include "templates.dm"

@@ -14,7 +14,7 @@ GLOBAL_LIST_INIT(l2dsquads, list("Axe", "Buckler", "Cleaver"))
 	maptype = "wcorp"
 
 	outfit = /datum/outfit/job/wcorpl2spear
-	display_order = 4.9
+	display_order = 4.8
 
 	access = list() //add accesses as necessary
 	minimal_access = list()
@@ -57,7 +57,7 @@ GLOBAL_LIST_INIT(l2dsquads, list("Axe", "Buckler", "Cleaver"))
 	ears = /obj/item/radio/headset/headset_welfare
 	glasses = /obj/item/clothing/glasses/sunglasses
 	uniform = /obj/item/clothing/under/suit/lobotomy/wcorp
-	belt = /obj/item/ego_weapon/city/wcorp/spear
+	belt = /obj/item/ego_weapon/city/wcorp/spear/cleanup
 	shoes = /obj/item/clothing/shoes/combat
 	gloves = /obj/item/clothing/gloves/color/black
 	implants = list(/obj/item/organ/cyberimp/eyes/hud/security)

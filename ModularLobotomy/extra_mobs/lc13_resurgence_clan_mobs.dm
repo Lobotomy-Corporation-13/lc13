@@ -257,25 +257,30 @@
 	var/max_speed = 1.5
 	var/normal_speed = 3
 
-	var/list/locked_list = list()
 	var/list/locked_tiles_list = list()
 	var/stunned = FALSE
 
 /mob/living/simple_animal/hostile/clan/defender/GainCharge()
-	if (!stunned)
-		. = ..()
+	if(!stunned)
+		return ..()
 
 /mob/living/simple_animal/hostile/clan/defender/AttackingTarget(atom/attacked_target)
 	if (stunned)  // dont attack if coiled or stunned
 		return FALSE
 	if (charge >= 10)
 		Lock()
-	. = ..()
+	return ..()
 
 /mob/living/simple_animal/hostile/clan/defender/Move()
 	if (stunned)
 		return FALSE
 	return ..()
+
+/mob/living/simple_animal/hostile/clan/defender/ChargeUpdated()
+	if (charge >= max_charge)
+		move_to_delay = max_speed
+	else
+		move_to_delay = normal_speed
 
 /mob/living/simple_animal/hostile/clan/defender/proc/Lock()
 	stunned = TRUE
@@ -288,8 +293,7 @@
 	ChangeResistances(list(RED_DAMAGE = 0.4, WHITE_DAMAGE = 0.4, BLACK_DAMAGE = 0.4, PALE_DAMAGE = 1))
 	for(var/turf/T in view(2, src))
 		var/obj/effect/defender_field/DF = new(T)
-		locked_tiles_list += DF
-		DF.defender = src
+		DF.RegisterMob(src)
 		for(var/mob/living/L in T)
 			ApplyLock(L)
 	// add timer to unstun and release players
@@ -300,7 +304,15 @@
 	if (stunned == TRUE)
 		Unlock()
 
-	. =  ..()
+	return  ..()
+
+// Catches any qdel path that bypasses death() — admin /vv kill, wave
+// controller cleanup, lane release. Without this, locked_tiles_list
+// fields and `/datum/status_effect/locked` on affected mobs leak.
+/mob/living/simple_animal/hostile/clan/defender/Destroy()
+	if(stunned == TRUE)
+		Unlock()
+	return ..()
 
 
 /mob/living/simple_animal/hostile/clan/defender/proc/ApplyLock(mob/living/L)
@@ -310,19 +322,12 @@
 			var/datum/status_effect/locked/S = L.has_status_effect(/datum/status_effect/locked)
 			if(!S)
 				S = L.apply_status_effect(/datum/status_effect/locked)
-			if (!S.list_of_defenders.Find(src))
-				S.list_of_defenders += src
-				locked_list += L
-			// keep a list of everyone locked
 	else
 		if(!faction_check_mob(L, TRUE))
 			// apply status effect
 			var/datum/status_effect/locked/S = L.has_status_effect(/datum/status_effect/locked)
 			if(!S)
 				S = L.apply_status_effect(/datum/status_effect/locked)
-			if (!S.list_of_defenders.Find(src))
-				S.list_of_defenders += src
-				locked_list += L
 			// keep a list of everyone locked
 
 
@@ -346,52 +351,69 @@
 	density = TRUE
 	// clear tiles
 	for(var/obj/effect/defender_field/DF in locked_tiles_list)
-		if (DF.defender == src)
+		var/ref_of_defender = DF.def
+		if(ref_of_defender == src)
 			qdel(DF)
 
-	// remove status effect
-	for(var/mob/living/L in locked_list)
-		var/datum/status_effect/locked/S = L.has_status_effect(/datum/status_effect/locked)
-		if (S)
-			if (S.list_of_defenders.len == 1)
-				L.remove_status_effect(/datum/status_effect/locked)
-			else
-				S.list_of_defenders -= src
-	locked_list = list()
 	locked_tiles_list = list()
 	// restart charge
 	charge = 0
 	stunned = FALSE
 	GainCharge()
 
+//locked players cannot walk on turf that doesnt have this.
 /obj/effect/defender_field
 	name = "Locked Down"
 	icon = 'icons/turf/floors.dmi'
 	icon_state = "locked_down"
 	alpha = 0
 	anchored = TRUE
-	var/mob/living/simple_animal/hostile/clan/defender/defender
+	//Automatically removed upon destruction of defender
+	var/mob/living/simple_animal/hostile/clan/defender/def
 
 /obj/effect/defender_field/Initialize()
 	. = ..()
 	animate(src, alpha = 255, time = 0.5 SECONDS)
 
+/obj/effect/defender_field/Destroy()
+	UnregisterMob()
+	return ..()
+
 /obj/effect/defender_field/Crossed(atom/movable/AM)
 	. = ..()
-	if (isliving(AM))
+	if(isliving(AM) && def)
 		var/mob/living/L = AM
-		defender.ApplyLock(L)
+		def.ApplyLock(L)
 		if(ishuman(L))
 			var/mob/living/carbon/human/H = L
 			H.deal_damage(10, BLACK_DAMAGE, attack_type = (ATTACK_TYPE_ENVIRONMENT))
 			to_chat(H, span_warning("You get shocked by the electic fields"))
 
+/obj/effect/defender_field/proc/RegisterMob(mob/living/L)
+	if(!L)
+		return
+	if(def)
+		UnregisterMob()
+	RegisterSignal(L, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING), PROC_REF(ForceUnregisterMob))
+	def = L
+	def.locked_tiles_list += src
+
+/obj/effect/defender_field/proc/UnregisterMob()
+	if(def)
+		def.locked_tiles_list -= src
+		UnregisterSignal(def, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING))
+	def = null
+
+/obj/effect/defender_field/proc/ForceUnregisterMob()
+	UnregisterMob()
+	QDEL_IN(src,1)
+
+//autodeletes self if not standing on defender field.
 /datum/status_effect/locked
 	id = "locked"
+	duration = -1
 	status_type = STATUS_EFFECT_UNIQUE
 	alert_type = /atom/movable/screen/alert/status_effect/locked
-	var/list/list_of_defenders = list()
-
 
 /atom/movable/screen/alert/status_effect/locked
 	name = "Locked"
@@ -399,11 +421,9 @@
 	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "locked"
 
-
 /datum/status_effect/locked/on_apply()
 	. = ..()
 	RegisterSignal(owner, COMSIG_MOVABLE_PRE_MOVE, PROC_REF(Moved))
-
 
 /datum/status_effect/locked/proc/Moved(mob/user, atom/new_location)
 	SIGNAL_HANDLER
@@ -669,6 +689,10 @@
 	var/stand_still = FALSE
 	var/mob/living/carbon/locked_target
 
+/mob/living/simple_animal/hostile/clan/drone/reforged/Destroy()
+	UnregisterMob()
+	return ..()
+
 /mob/living/simple_animal/hostile/clan/drone/reforged/Initialize()
 	. = ..()
 	faction = list("neutral")
@@ -679,11 +703,11 @@
 		var/robot_ask = alert("ask them", "[src] is listening to you.", "Act normal.", "Heal me.", "Stay here.", "Cancel")
 		if(robot_ask == "Act normal.")
 			M.say("Act normal.")
-			locked_target = null
+			UnregisterMob()
 			stand_still = FALSE
 		else if(robot_ask == "Heal me.")
 			M.say("Heal me.")
-			locked_target = M
+			RegisterMob(M)
 		else if(robot_ask == "Stay here.")
 			M.say("Stay here.")
 			stand_still = TRUE
@@ -717,3 +741,14 @@
 		FindTarget(list(potential_target), TRUE)
 		if(ai_controller)
 			ai_controller.current_movement_target = target
+
+/mob/living/simple_animal/hostile/clan/drone/reforged/proc/RegisterMob(mob/living/L)
+	if(!L)
+		return
+	RegisterSignal(L, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING), PROC_REF(UnregisterMob))
+	locked_target = L
+
+/mob/living/simple_animal/hostile/clan/drone/reforged/proc/UnregisterMob()
+	if(locked_target)
+		UnregisterSignal(locked_target, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING))
+	locked_target = null

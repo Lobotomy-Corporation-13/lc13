@@ -4,6 +4,7 @@
 	icon_state = "cinq"
 	armor = list(RED_DAMAGE = 30, WHITE_DAMAGE = 30, BLACK_DAMAGE = 30, PALE_DAMAGE = 0)
 	hat = /obj/item/clothing/head/ego_hat/cinq
+	neck = /obj/item/clothing/neck/ego_neck/cinq
 
 /obj/item/clothing/suit/armor/ego_gear/city/cinqwest
 	name = "cinq west association gear"
@@ -22,6 +23,11 @@
 /obj/item/clothing/head/ego_hat/cinq
 	name = "cinq association cavalier hat"
 	desc = "A cavalier hat worn by members of the cinq association, it gives you the urge to d-d-d-duel"
+	icon_state = "cinq"
+
+/obj/item/clothing/neck/ego_neck/cinq
+	name = "cinq association cape"
+	desc = "A cape worn by fixers of the cinq association."
 	icon_state = "cinq"
 
 /obj/item/clothing/head/ego_hat/cinqwest

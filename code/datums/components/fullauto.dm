@@ -100,17 +100,17 @@
 
 /datum/component/automatic_fire/proc/on_mouse_down(client/source, atom/_target, turf/location, control, params)
 	SIGNAL_HANDLER
-	var/list/L = params2list(params) //If they're shift+clicking, for example, let's not have them accidentally shoot.
+	var/list/modifiers = params2list(params) //If they're shift+clicking, for example, let's not have them accidentally shoot.
 
-	if (L[SHIFT_CLICK])
+	if(LAZYACCESS(modifiers, SHIFT_CLICK))
 		return
-	if (L[CTRL_CLICK])
+	if(LAZYACCESS(modifiers, CTRL_CLICK))
 		return
-	if (L[MIDDLE_CLICK])
+	if(LAZYACCESS(modifiers, MIDDLE_CLICK))
 		return
-	if (L[RIGHT_CLICK])
+	if(LAZYACCESS(modifiers, RIGHT_CLICK))
 		return
-	if (L[ALT_CLICK])
+	if(LAZYACCESS(modifiers, ALT_CLICK))
 		return
 	if(source.mob.in_throw_mode)
 		return
@@ -124,7 +124,8 @@
 	if(isnull(location)) //Clicking on a screen object.
 		if(_target.plane != CLICKCATCHER_PLANE) //The clickcatcher is a special case. We want the click to trigger then, under it.
 			return //If we click and drag on our worn backpack, for example, we want it to open instead.
-		_target = params2turf(L["screen-loc"], get_turf(source.eye), source)
+		_target = parse_caught_click_modifiers(modifiers, get_turf(source.eye), source)
+		params = list2params(modifiers)
 		if(!_target)
 			CRASH("Failed to get the turf under clickcatcher")
 
@@ -208,9 +209,10 @@
 
 /datum/component/automatic_fire/proc/on_mouse_drag(client/source, atom/src_object, atom/over_object, turf/src_location, turf/over_location, src_control, over_control, params)
 	SIGNAL_HANDLER
-	if(isnull(over_location) || istype(over_object, /atom/movable/screen)) //This happens when the mouse is over an inventory or screen object, or on entering deep darkness, for example.
+	if(isnull(over_location)) //This happens when the mouse is over an inventory or screen object, or on entering deep darkness, for example.
 		var/list/modifiers = params2list(params)
-		var/new_target = params2turf(modifiers["screen-loc"], get_turf(source.eye), source)
+		var/new_target = parse_caught_click_modifiers(modifiers, get_turf(source.eye), source)
+		params = list2params(modifiers)
 		mouse_parameters = params
 		if(!new_target)
 			if(QDELETED(target)) //No new target acquired, and old one was deleted, get us out of here.
@@ -237,7 +239,7 @@
 	if(get_dist(shooter, target) <= 0)
 		target = get_step(shooter, shooter.dir) //Shoot in the direction faced if the mouse is on the same tile as we are.
 		target_loc = target
-	else if(!in_view_range(shooter, target))
+	else if(!CAN_THEY_SEE(target, shooter))
 		stop_autofiring() //Elvis has left the building.
 		return FALSE
 	shooter.face_atom(target)

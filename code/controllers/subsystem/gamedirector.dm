@@ -31,6 +31,7 @@ SUBSYSTEM_DEF(gamedirector)
 	var/rematch = FALSE
 	var/timestamp_warning = 50000 // Stop announcing shit on other modes dumbass
 	var/timestamp_finalwave = 50000
+	var/timestamp_shuttle = 50000
 	var/timestamp_end = 50000
 
 	// Resource Well Raids variables
@@ -55,15 +56,52 @@ SUBSYSTEM_DEF(gamedirector)
 	var/corrupter_cooldown_max = 30 MINUTES
 	var/corrupter_rarity_threshold = 6
 
+	// Bloodfiend Heart Research tracking
+	/// Whether the Heart Research structure has been destroyed (disables raids and final wave)
+	var/heart_research_destroyed = FALSE
+
+	// Bloodfiend boss death tracking (for den spawn restrictions)
+	/// Whether the Barber boss has been killed
+	var/bloodfiend_barber_dead = FALSE
+	/// Whether the Priest boss has been killed
+	var/bloodfiend_priest_dead = FALSE
+	/// Whether Dulcinea boss has been killed
+	var/bloodfiend_dulcinea_dead = FALSE
+
 	// FoB entrance raid variables
 	var/fob_entrances_unlocked = FALSE
 	var/fob_unlock_time = 30 MINUTES
 	var/last_wave_started = FALSE
 	var/next_fob_raid_time = 0
 	var/fob_raid_cooldown = 4 MINUTES
+	var/first_well_activated = FALSE // Track if first well signal has been sent
 
 	var/list/raid_tiers = list()
 	var/list/seed_types = list()
+
+	// RCE Leaderboard tracking
+	var/datum/rce_leaderboard/rce_leaderboard
+
+	// Valid R-Corp factory roles for leaderboard tracking
+	var/list/usable_roles = list(
+		"Operations Commander",
+		"Executive Officer",
+		"Robin Squad Captain",
+		"Robin Section Leader",
+		"Robin Squad Sergeant",
+		"Section A Robin",
+		"Section B Robin",
+		"Section C Robin",
+		"R-Corp Rook",
+		"Rook Squad Captain",
+		"R-Corp Medical Officer",
+		"R-Corp Messenger Raven",
+		"R-Corp Raven MP",
+		"Raven Squad Captain",
+		"R-Corp Production Specialist",
+		"Production Officer",
+		"R-Corp Acquisitions Specialist"
+	)
 
 /datum/controller/subsystem/gamedirector/Initialize()
 	. = ..()
@@ -79,6 +117,18 @@ SUBSYSTEM_DEF(gamedirector)
 		next_active_seed_time = world.time + 35 MINUTES
 		next_passive_seed_time = world.time + passive_seed_cooldown
 		next_corrupter_time = world.time + rand(corrupter_cooldown_min, corrupter_cooldown_max)
+		// Initialize leaderboard
+		rce_leaderboard = new /datum/rce_leaderboard()
+		// Register for late-join player signals
+		RegisterSignal(SSdcs, COMSIG_GLOB_CREWMEMBER_JOINED, PROC_REF(OnPlayerJoined))
+		// Register for player death signals
+		RegisterSignal(SSdcs, COMSIG_GLOB_MOB_DEATH, PROC_REF(OnPlayerDeath))
+		// Register for bloodfiend boss death signals (for den spawn restrictions)
+		RegisterSignal(SSdcs, COMSIG_GLOB_BLOODFIEND_BARBER_DIED, PROC_REF(OnBarberDied))
+		RegisterSignal(SSdcs, COMSIG_GLOB_BLOODFIEND_PRIEST_DIED, PROC_REF(OnPriestDied))
+		RegisterSignal(SSdcs, COMSIG_GLOB_BLOODFIEND_DULCINEA_DIED, PROC_REF(OnDulcineaDied))
+		// Collect any round-start players after a delay (they spawn before this subsystem initializes)
+		addtimer(CALLBACK(src, PROC_REF(CollectRoundstartPlayers)), 400 SECONDS)
 
 /datum/controller/subsystem/gamedirector/fire(resumed = FALSE)
 	if(fightstage != PHASE_FIGHT && SSticker.current_state != GAME_STATE_FINISHED && gamestage < PHASE_NOT_RCE)
@@ -86,9 +136,12 @@ SUBSYSTEM_DEF(gamedirector)
 			gamestage = PHASE_ENDROUND
 			// Let the shuttle handle the evacuation
 		else if(world.time > timestamp_finalwave && gamestage < PHASE_LASTWAVE_PASSED)
-			to_chat(world, span_userdanger("A huge wave of greed is approaching!"))
+			to_chat(world, span_userdanger("A massive wave of greed is here!"))
 			gamestage = PHASE_LASTWAVE_PASSED
 			StartLastWave()
+		else if(world.time > timestamp_shuttle && gamestage < PHASE_SHUTTLE_CALLED)
+			to_chat(world, span_userdanger("A massive wave of greed will arrive in 10 minutes! Evacuate immediately!"))
+			gamestage = PHASE_SHUTTLE_CALLED
 			CallEvacuation()
 		else if(world.time > timestamp_warning && gamestage < PHASE_WARNING_PASSED)
 			to_chat(world, span_userdanger("There are 20 minutes left to kill the heart!"))
@@ -100,13 +153,12 @@ SUBSYSTEM_DEF(gamedirector)
 		if(!fob_entrances_unlocked && world.time >= fob_unlock_time)
 			fob_entrances_unlocked = TRUE
 
-		// Handle raids based on whether last wave has started
-		if(last_wave_started)
-			// After last wave, spawn powerful raids at FoB entrances every 4 minutes
-			if(world.time >= next_fob_raid_time)
-				TriggerFoBRaid()
-				next_fob_raid_time = world.time + fob_raid_cooldown
-		else
+		// Skip all raid/seed/corrupter spawning if Heart Research has been destroyed
+		if(heart_research_destroyed)
+			return
+
+		// Handle raids (only before last wave - after last wave, gateways handle spawning)
+		if(!last_wave_started)
 			// Normal raid spawning (before last wave)
 			if(world.time >= next_raid_time)
 				TriggerRaid()
@@ -134,7 +186,8 @@ SUBSYSTEM_DEF(gamedirector)
 
 /datum/controller/subsystem/gamedirector/proc/SetTimes(warningtime, endtime)
 	timestamp_warning = world.time + warningtime
-	timestamp_finalwave = world.time + warningtime + 10 MINUTES
+	timestamp_shuttle = world.time + 110 MINUTES // Shuttle called at 1 hour 50 minutes
+	timestamp_finalwave = world.time + 120 MINUTES // Final wave at 2 hours
 	timestamp_end = world.time + endtime
 
 /datum/controller/subsystem/gamedirector/proc/GetRandomTarget()
@@ -156,6 +209,9 @@ SUBSYSTEM_DEF(gamedirector)
 	return FALSE
 
 /datum/controller/subsystem/gamedirector/proc/StartLastWave()
+	// Don't spawn the final wave if the Heart Research has been destroyed
+	if(heart_research_destroyed)
+		return
 	last_wave_started = TRUE
 	next_fob_raid_time = world.time + fob_raid_cooldown
 
@@ -227,10 +283,59 @@ SUBSYSTEM_DEF(gamedirector)
 
 /datum/controller/subsystem/gamedirector/proc/RegisterMob(mob/living/simple_animal/hostile/M)
 	controlled_mobs.Add(M)
+	// Register for death tracking for leaderboard
+	if(rce_leaderboard)
+		RegisterSignal(M, COMSIG_LIVING_DEATH, PROC_REF(OnControlledMobDeath))
+
+/// Called when a controlled mob dies - records kill for leaderboard
+/datum/controller/subsystem/gamedirector/proc/OnControlledMobDeath(mob/living/simple_animal/hostile/M)
+	SIGNAL_HANDLER
+	if(rce_leaderboard)
+		rce_leaderboard.RecordMobKill(M.type)
+
+/// Called when a player late-joins - records participation for leaderboard
+/datum/controller/subsystem/gamedirector/proc/OnPlayerJoined(datum/source, mob/living/carbon/human/joined_mob, rank)
+	SIGNAL_HANDLER
+	if(!rce_leaderboard || !istype(joined_mob))
+		return
+	if(!joined_mob.mind || !joined_mob.ckey)
+		return
+	if(!rank || !(rank in usable_roles))
+		return
+	rce_leaderboard.AddParticipant(joined_mob.ckey, joined_mob.real_name, rank)
+
+/// Collect round-start players who spawned before this subsystem initialized
+/datum/controller/subsystem/gamedirector/proc/CollectRoundstartPlayers()
+	if(!rce_leaderboard)
+		return
+	// Iterate all human mobs and add any with minds/ckeys
+	for(var/mob/living/carbon/human/H in GLOB.human_list)
+		if(!H.mind || !H.ckey)
+			continue
+		var/job_title = H.mind.assigned_role
+		if(!job_title || !(job_title in usable_roles))
+			continue
+		// Only show expedition number if this is a new participant (not already tracked)
+		if(rce_leaderboard.AddParticipant(H.ckey, H.real_name, job_title))
+			SSpersistence.ShowExpeditionNumber(H)
+
+/// Called when any mob dies - tracks player deaths for leaderboard
+/datum/controller/subsystem/gamedirector/proc/OnPlayerDeath(datum/source, mob/living/died_mob, gibbed)
+	SIGNAL_HANDLER
+	if(!rce_leaderboard || !ishuman(died_mob))
+		return
+	var/mob/living/carbon/human/H = died_mob
+	if(!H.ckey)
+		return
+	rce_leaderboard.RecordPlayerDeathCount(H.ckey, H.real_name)
 
 /datum/controller/subsystem/gamedirector/proc/AnnounceVictory()
 	var/text = "The X-Corp Heart has been destroyed! Victory achieved."
 	show_global_blurb(60 SECONDS, text, 1 SECONDS, 2 SECONDS, "gold", "white")
+	// Mark heart killed for leaderboard
+	if(rce_leaderboard)
+		rce_leaderboard.heart_killed = TRUE
+		rce_leaderboard.end_condition = RCE_END_HEART_KILLED
 	SSticker.force_ending = 1
 
 /datum/controller/subsystem/gamedirector/proc/RegisterPortal(obj/structure/rce_portal/portal)
@@ -297,12 +402,20 @@ SUBSYSTEM_DEF(gamedirector)
 
 /datum/controller/subsystem/gamedirector/proc/UpdateActiveStatus(obj/structure/resourcepoint/well)
 	if(well.active > 0)
+		var/was_empty = !length(active_resourcewells)
 		active_resourcewells |= well
 		wells_with_passive_seeds -= well
+		// Send signal when first well is activated
+		if(was_empty && !first_well_activated)
+			first_well_activated = TRUE
+			SEND_GLOBAL_SIGNAL(COMSIG_GLOB_RCE_FIRST_WELL_ACTIVATED)
 	else
 		active_resourcewells -= well
 
 /datum/controller/subsystem/gamedirector/proc/TriggerRaid()
+	// Don't trigger raids if the Heart Research has been destroyed
+	if(heart_research_destroyed)
+		return
 	if(!length(active_resourcewells))
 		return
 
@@ -385,25 +498,6 @@ SUBSYSTEM_DEF(gamedirector)
 	else
 		show_global_blurb(5 SECONDS, "The '[raid_name]' has breached the FoB entrance!", text_align = "center", screen_location = "LEFT+0,TOP-2", text_color = "#FF0000")
 
-/datum/controller/subsystem/gamedirector/proc/TriggerFoBRaid()
-	// Check if fob_entrance spots exist in raid_spots
-	if(!raid_spots["fob_entrance"] || !length(raid_spots["fob_entrance"]))
-		return
-
-	var/list/spawn_spots = raid_spots["fob_entrance"]
-
-	// Use powerful raid composition for FoB raids after last wave
-	var/list/raid_data = GetPowerfulRaidData()
-	if(!raid_data)
-		return
-
-	var/raid_name = raid_data["name"]
-	var/list/raid_composition = raid_data["composition"]
-
-	show_global_blurb(10 SECONDS, "CRITICAL: Elite Greed forces '[raid_name]' assaulting FoB entrance!", text_align = "center", screen_location = "LEFT+0,TOP-2", text_color = "#FF0000")
-
-	addtimer(CALLBACK(src, PROC_REF(SpawnRaid), spawn_spots, raid_composition, null, raid_name), 12 SECONDS)
-
 /datum/controller/subsystem/gamedirector/proc/GetRaidData(rarity)
 	var/list/valid_raids = list()
 	for(var/list/raid in raid_tiers)
@@ -415,51 +509,6 @@ SUBSYSTEM_DEF(gamedirector)
 
 	var/list/chosen_raid = pick(valid_raids)
 	return chosen_raid
-
-/datum/controller/subsystem/gamedirector/proc/GetPowerfulRaidData()
-	// Elite raid compositions for FoB entrance raids after last wave
-	var/list/powerful_raids = list(
-		list(
-			"name" = "Elite Siege Force",
-			"composition" = list(
-				/mob/living/simple_animal/hostile/clan/demolisher/greed = 2,
-				/mob/living/simple_animal/hostile/clan/defender/greed = 4,
-				/mob/living/simple_animal/hostile/clan/ranged/sniper/greed = 4,
-				/mob/living/simple_animal/hostile/clan/drone/greed = 4
-			)
-		),
-		list(
-			"name" = "Elite Warper Battalion",
-			"composition" = list(
-				/mob/living/simple_animal/hostile/clan/ranged/warper/greed = 3,
-				/mob/living/simple_animal/hostile/clan/ranged/harpooner/greed = 5,
-				/mob/living/simple_animal/hostile/clan/assassin/greed = 4,
-				/mob/living/simple_animal/hostile/clan/ranged/rapid/greed = 10
-			)
-		),
-		list(
-			"name" = "Elite Extermination Squad",
-			"composition" = list(
-				/mob/living/simple_animal/hostile/clan/demolisher/greed = 1,
-				/mob/living/simple_animal/hostile/clan/ranged/warper/greed = 4,
-				/mob/living/simple_animal/hostile/clan/ranged/gunner/greed = 6,
-				/mob/living/simple_animal/hostile/clan/bomber_spider/greed = 8,
-				/mob/living/simple_animal/hostile/clan/ranged/sniper/greed = 4
-			)
-		),
-		list(
-			"name" = "Elite Apocalypse Force",
-			"composition" = list(
-				/mob/living/simple_animal/hostile/clan/demolisher/greed = 1,
-				/mob/living/simple_animal/hostile/clan/defender/greed = 3,
-				/mob/living/simple_animal/hostile/clan/ranged/warper/greed = 2,
-				/mob/living/simple_animal/hostile/clan/ranged/harpooner/greed = 6,
-				/mob/living/simple_animal/hostile/clan/scout/greed = 12
-			)
-		)
-	)
-
-	return pick(powerful_raids)
 
 /datum/controller/subsystem/gamedirector/proc/GetPriorityRaidTarget()
 	// Define the two priority lanes
@@ -606,5 +655,23 @@ SUBSYSTEM_DEF(gamedirector)
 	if(security_num >= SEC_LEVEL_RED)
 		set_security_level(SEC_LEVEL_BLUE)
 
-	// Call the evacuation shuttle
-	SSshuttle.requestEvac(null, "Critical threat detected: R-Corp evacuation protocols activated. Final defensive wave initiated.")
+	// Call the evacuation shuttle with different message based on heart research status
+	var/evac_message
+	if(heart_research_destroyed)
+		evac_message = "The Greed forces appear to have pulled back to defend the heart. Evacuation shuttle en route for extraction."
+	else
+		evac_message = "Critical threat detected: A massive wave of greed will arrive in 10 minutes. Evacuate immediately."
+	SSshuttle.requestEvac(null, evac_message)
+
+// Bloodfiend boss death signal handlers (for den spawn restrictions)
+/datum/controller/subsystem/gamedirector/proc/OnBarberDied()
+	SIGNAL_HANDLER
+	bloodfiend_barber_dead = TRUE
+
+/datum/controller/subsystem/gamedirector/proc/OnPriestDied()
+	SIGNAL_HANDLER
+	bloodfiend_priest_dead = TRUE
+
+/datum/controller/subsystem/gamedirector/proc/OnDulcineaDied()
+	SIGNAL_HANDLER
+	bloodfiend_dulcinea_dead = TRUE

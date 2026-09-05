@@ -126,6 +126,9 @@
 
 /datum/surgery/proc/complete()
 	SSblackbox.record_feedback("tally", "surgeries_completed", 1, type)
+	// Track surgery completion for RCE leaderboard
+	if(SSgamedirector.rce_leaderboard)
+		SSgamedirector.rce_leaderboard.RecordSurgeryCompleted()
 	qdel(src)
 
 /datum/surgery/advanced

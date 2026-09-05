@@ -13,6 +13,7 @@
 	speak_emote = list("honks")
 	maxHealth = 1800
 	health = 1800
+	gender = MALE
 	rapid_melee = 4
 	melee_queue_distance = 4
 	damage_coeff = list(BRUTE = 1.0, RED_DAMAGE = 1.0, WHITE_DAMAGE = 1.0, BLACK_DAMAGE = 1.3, PALE_DAMAGE = 1.5)
@@ -164,7 +165,7 @@
 	return ..()
 
 // Modified patrolling
-/mob/living/simple_animal/hostile/abnormality/clown/patrol_select()
+/mob/living/simple_animal/hostile/abnormality/clown/SelectPatrolLocation()
 	var/list/target_turfs = list() // Stolen from Punishing Bird
 	for(var/mob/living/carbon/human/H in GLOB.human_list)
 		if(H.z != z) // Not on our level
@@ -175,8 +176,7 @@
 
 	var/turf/target_turf = get_closest_atom(/turf/open, target_turfs, src)
 	if(istype(target_turf))
-		patrol_path = get_path_to(src, target_turf, TYPE_PROC_REF(/turf, Distance_cardinal), 0, 200)
-		return
+		return target_turf
 	return ..()
 
 //When the work result was good...

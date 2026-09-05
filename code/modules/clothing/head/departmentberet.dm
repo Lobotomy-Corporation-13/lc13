@@ -42,3 +42,21 @@
 	icon_state = "beret_mining"
 
 
+
+//Limbus Company Labs department heads. The only headwear either department issues, so it is
+//what marks the lead out from the staff wearing the same uniform.
+
+//LCE brown and gold for the LCE Lead Researcher
+/obj/item/clothing/head/beret/tegu/lce_research
+	name = "lead researcher's beret"
+	desc = "A brown beret in Limbus Company Extraction's own shade, pinned with the gold clasp \
+		from the LCE armband. Handed down rather than issued - the previous lead's initials are \
+		still inked inside the band."
+	icon_state = "beret_lce_research"
+
+//Steel blue and red for the Chief Medical Officer
+/obj/item/clothing/head/beret/tegu/lce_medical
+	name = "chief medical officer's beret"
+	desc = "A deep blue beret with a small red cross at the temple. Darker than the ones the \
+		nurses wear, which is the entire point of it."
+	icon_state = "beret_lce_medical"

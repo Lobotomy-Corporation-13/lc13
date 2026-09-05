@@ -31,17 +31,18 @@
 //	gift_type =  /datum/ego_gifts/purity
 	abnormality_origin = ABNORMALITY_ORIGIN_BRANCH12
 
-	var/list/innocent = list()
 	var/list/pale_list = list()
 
+/mob/living/simple_animal/hostile/abnormality/branch12/oldman_pale/Destroy()
+	//But do delete the pale obj's
+	QDEL_LIST(pale_list)
+	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/branch12/oldman_pale/SuccessEffect(mob/living/carbon/human/user, work_type, pe)
 	. = ..()
 	if(datum_reference.qliphoth_meter ==0 && work_type == "Inspire")
 		datum_reference.qliphoth_change(4)
-		for(var/V in pale_list)
-			qdel(V)
-			pale_list-=V
+		QDEL_LIST(pale_list)
 	if(work_type == ABNORMALITY_WORK_REPRESSION)
 		datum_reference.qliphoth_change(1)
 	return
@@ -52,7 +53,6 @@
 		datum_reference.qliphoth_change(-1)
 
 	if(datum_reference.qliphoth_meter ==0 && work_type == "Inspire")
-		innocent+=user
 		user.apply_status_effect(STATUS_EFFECT_INNOCENCE)
 	return
 
@@ -61,7 +61,6 @@
 	datum_reference.qliphoth_change(-1)
 
 	if(datum_reference.qliphoth_meter ==0 && work_type == "Inspire")
-		innocent+=user
 		user.apply_status_effect(STATUS_EFFECT_INNOCENCE)
 	return
 
@@ -74,21 +73,14 @@
 	return FALSE
 
 /mob/living/simple_animal/hostile/abnormality/branch12/oldman_pale/PostWorkEffect(mob/living/carbon/human/user, work_type, pe)
-	..()
+	. = ..()
 	if(user.sanity_lost)
 		addtimer(CALLBACK(src, PROC_REF(apply_innocence), user), 60 SECONDS)
 
 
 /mob/living/simple_animal/hostile/abnormality/branch12/oldman_pale/ZeroQliphoth()
-	..()
-	new /obj/structure/spreading/pale (src)
-
-/mob/living/simple_animal/hostile/abnormality/branch12/oldman_pale/death()
-	for(var/V in pale_list)
-		qdel(V)
-		pale_list-=V
-	..()
-
+	. = ..()
+	new /obj/structure/spreading/pale(src)
 
 /mob/living/simple_animal/hostile/abnormality/branch12/oldman_pale/proc/apply_innocence(mob/living/carbon/human/user, work_type, pe)
 	user.apply_status_effect(STATUS_EFFECT_INNOCENCE)
@@ -115,17 +107,13 @@
 
 /obj/structure/spreading/pale/Initialize()
 	. = ..()
-
 	if(!connected_abno)
-		connected_abno = locate(/mob/living/simple_animal/hostile/abnormality/branch12/oldman_pale) in GLOB.abnormality_mob_list
-	if(connected_abno)
-		connected_abno.pale_list += src
-	expand()
-
+		RegisterSoul(locate(/mob/living/simple_animal/hostile/abnormality/branch12/oldman_pale) in GLOB.abnormality_mob_list)
+	addtimer(CALLBACK(src, PROC_REF(expand)), 20 SECONDS)
 
 /obj/structure/spreading/pale/expand()
 	addtimer(CALLBACK(src, PROC_REF(expand)), 20 SECONDS)
-	..()
+	return ..()
 
 /obj/structure/spreading/pale/Crossed(atom/movable/AM)
 	. = ..()
@@ -135,6 +123,22 @@
 		H.set_blurriness(4)
 		H.apply_lc_fragile(2)
 
+/obj/structure/spreading/pale/Destroy()
+	UnregisterSoul()
+	return ..()
+
+/obj/structure/spreading/pale/proc/RegisterSoul(new_link)
+	if(!new_link)
+		return
+	connected_abno = new_link
+	connected_abno.pale_list += src
+	RegisterSignal(new_link, list(COMSIG_PARENT_QDELETING), PROC_REF(UnregisterSoul))
+
+/obj/structure/spreading/pale/proc/UnregisterSoul()
+	if(connected_abno)
+		connected_abno.pale_list -= src
+		UnregisterSignal(connected_abno, list(COMSIG_PARENT_QDELETING))
+	connected_abno = null
 
 //innocence status effect
 /datum/status_effect/display/innocence

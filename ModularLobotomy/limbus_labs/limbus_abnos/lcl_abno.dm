@@ -3,10 +3,14 @@
 /mob/living/simple_animal/hostile/limbus_abno
 	name = "Limbus specimen"
 	desc = "Unidentified creature."
+	gender = NEUTER
 	maxHealth = 400
 	health = 400
 	melee_damage_lower = 1
 	melee_damage_upper = 2
+	//They should always be player controlled?
+	vision_range = 0
+	aggro_vision_range = 0
 	attack_sound = 'sound/abnormalities/fragment/attack.ogg'
 	pet_bonus = TRUE //Don't forget to not call the parent proc if you don't want the heart effect when pet.
 	pet_bonus_emote = "shudders."
@@ -20,15 +24,73 @@
 	var/mob/living/simple_animal/hostile/abnormality/original_abno = null//The original abno type this is based on. If defined, it'll automatically add the name, description and sprite of that abno.
 
 	var/awakened = FALSE //If someone possessed them, we consider them permanently awakened, even after the player logs out.
+	///TRUE while the player is out of this body but still owns it - riding a worker bee, scouting
+	///through a marker, manifested beside a ward. The body has no ckey during that, which is all
+	///try_take_abnormality() used to check, so a ghost could walk in and take it out from under them.
+	var/possession_locked = FALSE
+	///ckeys that have already woken up in this body, so a reconnect is not a second awakening.
+	var/list/awakened_ckeys = list()
 	var/limbus_map = FALSE //If we're in the LCL gamemode.
 	var/attack_friend = FALSE //If they can hit their friends with unarmed attacks.
+	//Uses Tags
 	var/list/friend_list = list() //Similar to a faction list, but handpicked by the player abno itself.
 	var/list/attack_action_types = list()
 	var/kickstart_timer = 15 MINUTES //How long it will take before an abno's desire and hunger bar will start dropping due to their cooldown after the player logs in.
 
 	//Counter stuff
 	var/max_counter = 0 //If set to 0, they have no counter.
-	var/counter
+	var/counter = 0
+
+	//For unique emotions to end when the user moves.
+	var/abno_emoting = FALSE
+
+	//Unique Egg Sprite
+	var/egg_icon = 'ModularLobotomy/_Lobotomyicons/abno_cores/aleph.dmi'
+	var/egg_sprite = "nothing_egg"
+
+	//Used for certain abnormalities to determine what attacks they use
+	var/chosen_attack = 1
+
+/*
+* DESIRE LOSS
+* Was going to make these defines but too much -IP
+* ---
+* The loss of hunger and desire is naturally 1/10th
+* of the max hunger and desire.
+* Hunger is lost 1/10th every minute.
+* Hunger can be estimated easily by altering diet_value
+* to any fraction of max hunger.
+* Hunger allows the Abnormality to heal by 10% per check.
+* By default hunger does not reduce desire.
+* desire_on_eat_threshold is when you cannot gain desire
+* from feeding past this hunger value.
+* ---
+* Desire is lost 1/20th every minute.
+* by default it is effected by:
+* >Hunger			>Items in the room
+* >Damage it takes	>Each sentence spoken
+8 >Physical petting	>Eating
+* ---
+* Insight is determined by counting all liked and unliked
+* items in a 5 tile radius of the abnormality.
+* Liked objects amount times liked_objects_value
+* minus hated obj times hated_objects_value
+* equals a room score every minute.
+* By default the room score is added to desire.
+* This can result in situations where a abnormality has so
+* many liked objects that it offsets their desire loss.
+* ---
+* Every 10 seconds a abnormality generates
+* ego accumulation. When it reaches 100
+* accumulation it will be able to produce
+* ego at will. If desire is less than the
+* accumulation then no accumulation will be
+* generated.
+* ---
+* Currently the counter is not intigrated by
+* default into any of these procs and need
+* to be uniquely edited into abnormalities.
+*/
 
 	//Hunger stuff
 	var/hunger_active = FALSE
@@ -62,7 +124,7 @@
 
 	//Insight work stuff.
 	var/insight_active = FALSE
-	var/insight_cooldown_time = 0 //How often the abno will check its surroundings. Don't make this cooldown too low as it might check a lot of items at once.
+	var/insight_cooldown_time = 1 MINUTES //How often the abno will check its surroundings. Don't make this cooldown too low as it might check a lot of items at once.
 	var/insight_cooldown
 	var/list/liked_objects_list = list(/obj/item/toy/plush) //What objects the abnormality enjoys seeing. Plush by default.
 	var/liked_objects_value = 1 //How much a liked object adds to the room score.
@@ -74,8 +136,21 @@
 	var/ego_desire_gained = 3
 	var/required_ego_desire = 100
 	var/ego_desire_cooldown_time = 10 SECONDS
+	// --- Talking with people. Affinity is only paid for an actual exchange: they have to have
+	// --- heard us speak recently AND then speak themselves. Keyed by ckey rather than by mob
+	// --- ref so nothing here keeps a deleted player alive.
+	///ckey -> world.time of the last line of ours they were in earshot for.
+	var/list/heard_us_speak = list()
+	///ckey -> world.time before which they cannot earn conversation affinity again.
+	var/list/talk_affinity_cooldown = list()
+	///How long after we speak a reply still counts as a reply.
+	var/conversation_window = 30 SECONDS
+	///Per-person rate limit, so chat spam cannot farm affinity.
+	var/talk_affinity_cooldown_time = 10 SECONDS
+	var/talk_affinity = 3
 	var/ego_desire_cooldown
 	var/list/ego_list = list() //Unfortunately, I couldn't find any easy way of copying the ego list of the original abno, so you have to do it manually for now.
+	var/attunement_family = "" //LCE attunement family. Interacting with this abno builds a player's affinity for gear of this family.
 
 	//Breach overlay stuff.
 	var/mutable_appearance/breach_overlay
@@ -84,8 +159,29 @@
 	var/breach_overlay_z = 65
 	var/breach_overlay_scale = 1.5
 
+	var/breached = FALSE
+	//If they breach on zero quibolith
+	var/can_breach = FALSE
+
 	var/special_desc = "" //The description used when 'examine more' is done.
 	var/unstable = FALSE //Can't be affected by pacifiers and some other tools.
+
+	//Death and rebirth.
+	///How long the shell takes to split back open.
+	var/rebirth_time = 5 MINUTES
+	///world.time the current shell hatches at. Only meaningful while dead.
+	var/rebirth_at = 0
+	///Sprite offsets from before death, handed back on rebirth.
+	var/living_pixel_x
+	var/living_pixel_y
+	var/living_base_pixel_x
+	var/living_base_pixel_y
+	/*
+	* XYZ coords. Essentially when a abno is near
+	* these coords they will heal.
+	*/
+	var/cell_coords = "0,0,0"
+//Organize these catagories later -IP
 
 /mob/living/simple_animal/hostile/limbus_abno/Initialize(mapload)
 	. = ..()
@@ -97,20 +193,11 @@
 	breach_overlay.transform = matrix() * breach_overlay_scale
 	if(SSmaptype.maptype == "limbus_labs") //If for some reason they spawn outside the limbus map, we're not giving them a healspot since it's designed for their starting cell.
 		limbus_map = TRUE
-		for(var/turf/open/T in range(3, src)) // Covers most of the cell in healing spots for the abno.
-			var/obj/effect/abno_heal_spot/heal_spot = new(T)
-			heal_spot.abno = src
 
 	friend_list += src //Add yourself as a friend.
 
 	if(!isnull(original_abno)) //Any changes specific to limbus should be added after their initialize (For example if you want to add a unique death icon.)
-		icon = original_abno.icon
-		icon_state = original_abno.icon_state
-		icon_living = original_abno.icon_living
-		icon_dead = original_abno.icon_dead
-		true_name = original_abno.name
-		desc = original_abno.desc
-		//Find a way to set the ego list automatically somehow.
+		CopyAbnoVars()
 
 	counter = max_counter
 	//There's probably a way to grant actions that takes less words but whatever it works.
@@ -120,9 +207,13 @@
 	instant_satisf.Grant(src)
 	ego_maker.Grant(src)
 	small_action.Grant(src)
+	var/datum/action/cooldown/limbus_abno_action/ego_communion/commune_action = new()
+	commune_action.Grant(src)
 	for(var/action_type in attack_action_types)
 		var/datum/action/cooldown/abno_action = new action_type()
 		abno_action.Grant(src)
+
+	cell_coords = "[x],[y],[z]"
 
 ///A bunch of mechanics only start happening during login. This is to avoid hunger and desire being at 0 on posession because the player showed up later.
 /mob/living/simple_animal/hostile/limbus_abno/Login()
@@ -130,7 +221,11 @@
 	if(!. || !client)
 		return FALSE
 
-	manual_emote("awakens...")
+	//Once per person. Reconnecting is not a fresh awakening, and emoting it every time told
+	//the whole room the player had just dropped out.
+	if(!(ckey in awakened_ckeys))
+		awakened_ckeys += ckey
+		manual_emote("awakens...")
 	if(awakened)
 		return //We don't want to flood them with notes if they get repossessed multiple times.
 	RegisterSignal(src, COMSIG_MOB_CTRLSHIFTCLICKON, PROC_REF(OnCtrlShiftClick), TRUE)
@@ -155,8 +250,19 @@
 		mind.store_memory(food_text)
 
 /mob/living/simple_animal/hostile/limbus_abno/ghost()
-	..()
+	. = ..()
+	//Told on the way out as well as on death, since dying and immediately ghosting is the
+	//normal way to leave a shell and the death line would go to a body nobody is in.
+	var/left = RebirthCountdown()
+	if(left)
+		to_chat(get_ghost(TRUE, TRUE), span_notice("Your shell will split open in [left]. Return to it then."))
 	mind = null //We make it repossessable again so the abno at least has the opportunity of being played if someone gets bored of it. Doesn't include logout.
+
+/mob/living/simple_animal/hostile/limbus_abno/Move(turf/newloc, direction, step_x, step_y)
+	. = ..()
+	if(abno_emoting)
+		abno_emoting = FALSE
+		update_icon()
 
 ///Due to how repression works in LCL, we need to account for most source of damage inflicted by players, but abnos beating each other up shouldn't count by default.
 ///Ideally, we want even abnos that like repression to get pissed off if they get too close to death, to not encourage accidental killing during repression work.
@@ -177,15 +283,19 @@
 	var/calculated_damage = attack_damage * damage_coeff.getCoeff(damage_type)
 	if(calculated_damage <= rep_min_damage) //We don't acknowledge a hit that's too weak.
 		return
+	GainAffinity(user, 1)
 	if(health > rep_threshold)
 		added_desire = rep_desire_gain * calculated_damage
 	else
 		added_desire = -rep_desire_loss_at_threshold
 
-	AdjustDesire(added_desire)
+	return AdjustDesire(added_desire)
 
 /mob/living/simple_animal/hostile/limbus_abno/Life()
 	. = ..()
+	if(!.)
+		return
+
 	if(hunger_cooldown < world.time)
 		Hungrier(hunger_loss, FALSE)
 		hunger_cooldown = world.time + hunger_cooldown_time
@@ -194,7 +304,7 @@
 		AdjustDesire(-desire_loss)
 		desire_cooldown = world.time + desire_cooldown_time
 
-	if(ego_desire_cooldown < world.time && desire_active)
+	if(ego_desire_cooldown < world.time && desire_active && desire_bar >= ego_desire_gained)
 		ego_desire_accumulation += ego_desire_gained
 		ego_desire_cooldown = ego_desire_cooldown_time + world.time
 
@@ -205,8 +315,8 @@
 	var/turf/T = get_turf(src)
 	if(isnull(T))
 		return
-	for(var/obj/effect/abno_heal_spot/heal_spot in T.contents)
-		if(heal_spot.abno == src && (health < maxHealth))
+	if(IsNearOrigin(T))
+		if(health < maxHealth)
 			adjustHealth(-maxHealth * 0.01) //The heal is pretty low, but that's because we want abnos to stay in their cell for as long as possible for easier containment.
 
 ///Insight work stuff. Checks the immediate surrounding for specific objects, lowering or increasing a score depending on what it finds.
@@ -224,26 +334,54 @@
 
 ///Calculates the final desire gained from the room result, can be overriden for more unique calculations.
 /mob/living/simple_animal/hostile/limbus_abno/proc/InsightRoomResults(room_score, list/room_obj_list)
+	/*
+	* If you put enough plushies in a abnormalities
+	* room you can offset their desire loss
+	* i put min(room_score, desire_loss - 1)
+	* here but im so angry and tired tonight
+	* that i dont want to mess up anything else.
+	* -IP
+	*/
 	AdjustDesire(room_score)
 	if(room_score > 0)
 		to_chat(src,span_notice("You are happy with your surroundings."))
 	else
 		to_chat(src,span_notice("You are unhappy with your surroundings."))
 
+/*--------------\
+|TECHNICAL PROCS|
+\--------------*/
+/mob/living/simple_animal/hostile/limbus_abno/proc/CopyAbnoVars()
+	icon = original_abno.icon
+	icon_state = original_abno.icon_state
+	icon_living = OriginalLivingState() //Never left blank, see the proc.
+	icon_dead = original_abno.icon_dead
+	true_name = original_abno.name
+	desc = original_abno.desc
+	pixel_y = initial(original_abno.pixel_y)
+	base_pixel_y = initial(original_abno.base_pixel_y)
+	pixel_x = initial(original_abno.pixel_x)
+	base_pixel_x = initial(original_abno.base_pixel_x)
+	death_message = initial(original_abno.death_message)
+	attack_sound = initial(original_abno.attack_sound)
+	//Find a way to set the ego list automatically somehow.
+	// Initial(original_abno.ego_list) doesnt work nor does original_abno.ego_list.Copy() -IP
+
 ///Abnos can add someone to a friend list using ctrl + shift + click, which will be unharmed by most (but not all) skills of the abno.
-/mob/living/simple_animal/hostile/limbus_abno/proc/OnCtrlShiftClick(mob/living/user, atom/target)
-	if(!isliving(target) || (target == src))
+/mob/living/simple_animal/hostile/limbus_abno/proc/OnCtrlShiftClick(mob/living/user, atom/trg)
+	if(!isliving(trg) || (trg == src))
 		return
 
 	var/list/temp_friend_list = friend_list
 	for(var/mob/living/L in temp_friend_list)
-		if(target == L)
+		if(trg == L)
 			friend_list -= L
-			to_chat(src,span_notice("You no longer consider [target] a friend."))
+			to_chat(src,span_notice("You no longer consider [trg] a friend."))
 			return
 
-	friend_list += target
-	to_chat(src,span_notice("You now consider [target] a friend."))
+	friend_list += trg
+	GainAffinity(target, 5)
+	to_chat(src,span_notice("You now consider [trg] a friend."))
 
 //This proc triggers when the abno gets hungrier. Any specific changes caused by hunger should be made within the 'AdjustHunger' proc and not this one.
 /mob/living/simple_animal/hostile/limbus_abno/proc/Hungrier(hungry_amount, bypass_check = TRUE)
@@ -267,22 +405,76 @@
 
 //Abnos will revive after 5 minutes of timeout. Using NT egg as placeholder.
 /mob/living/simple_animal/hostile/limbus_abno/death()
-	icon = 'ModularLobotomy/_Lobotomyicons/48x48.dmi'
-	icon_state = "nothing_egg"
-	icon_dead = "nothing_egg"
-	addtimer(CALLBACK(src, PROC_REF(Rebirth)), 5 MINUTES)
-	to_chat(src,span_userdanger("Your shell burst apart at the seams, but you remain. 5 minutes before your return."))
-	..()
+	living_pixel_x = pixel_x
+	living_pixel_y = pixel_y
+	living_base_pixel_x = base_pixel_x
+	living_base_pixel_y = base_pixel_y
+	icon = egg_icon
+	icon_state = egg_sprite
+	icon_dead = egg_sprite
+	//The egg is one 48x48 sprite whatever the specimen was, so a big form's offsets would sit
+	//the shell off the side of its own tile.
+	pixel_x = -8
+	base_pixel_x = -8
+	pixel_y = 0
+	base_pixel_y = 0
+	//A shell is deadweight, not a specimen. Let people carry it back to its cell.
+	move_resist = MOVE_FORCE_DEFAULT
+	pull_force = MOVE_FORCE_DEFAULT
+	rebirth_at = world.time + rebirth_time
+	addtimer(CALLBACK(src, PROC_REF(Rebirth)), rebirth_time)
+	to_chat(src, span_userdanger("Your shell burst apart at the seams, but you remain. [DisplayTimeText(rebirth_time)] before your return."))
+	return ..()
+
+///How long is left before the shell splits open, or null while alive.
+/mob/living/simple_animal/hostile/limbus_abno/proc/RebirthCountdown()
+	if(stat != DEAD || rebirth_at <= world.time)
+		return null
+	return DisplayTimeText(rebirth_at - world.time)
+
+//Examining your own shell tells you how long you have left in it. Onlookers only ever see the
+//egg, so the countdown is for the specimen and for ghosts watching it.
+/mob/living/simple_animal/hostile/limbus_abno/examine(mob/user)
+	. = ..()
+	var/left = RebirthCountdown()
+	if(!left)
+		return
+	if(user == src)
+		. += span_notice("Your shell will split open in [left].")
+	else if(isobserver(user))
+		. += span_notice("The shell will split open in [left].")
 
 //Maybe make it distance related later, but for now I'm just making most base desire on talk really low.
+//Anyone in earshot of a line of ours is now "in conversation" with us for a while.
+/mob/living/simple_animal/hostile/limbus_abno/say(message, bubble_type, list/spans = list(), sanitize = TRUE, datum/language/language = null, ignore_spam = FALSE, forced = null)
+	. = ..()
+	if(!message)
+		return
+	for(var/mob/living/carbon/human/H in get_hearers_in_view(7, src))
+		if(H.ckey && H != src)
+			heard_us_speak[H.ckey] = world.time
+
 /mob/living/simple_animal/hostile/limbus_abno/Hear(message, atom/movable/speaker, datum/language/message_language, raw_message, radio_freq, list/spans, list/message_mods)
-	..()
+	. = ..()
 	if(desire_on_talk != 0 && speaker != src)
 		AdjustDesire(desire_on_talk)
+	//...and if one of them then answers us, that is a conversation, and it is worth something.
+	if(!ishuman(speaker) || speaker == src)
+		return
+	var/mob/living/carbon/human/H = speaker
+	if(!H.ckey)
+		return
+	if(world.time - (heard_us_speak[H.ckey] || 0) > conversation_window)
+		return
+	if(world.time < (talk_affinity_cooldown[H.ckey] || 0))
+		return
+	talk_affinity_cooldown[H.ckey] = world.time + talk_affinity_cooldown_time
+	GainAffinity(H, talk_affinity)
 
-
+//Possibly counts as insight if flavored as cleaning.
 /mob/living/simple_animal/hostile/limbus_abno/funpet(mob/living/carbon/human/petter)
-	..()
+	. = ..()
+	GainAffinity(petter, 2)
 	if(desire_on_pet != 0) //Adjusting desire with no value might trigger stuff we don't want.
 		AdjustDesire(desire_on_pet)
 
@@ -318,7 +510,7 @@
 			if(desire_on_eat > 0 && desire_on_eat_threshold < hunger_bar)
 				AdjustDesire(desire_on_eat)
 			playsound(src, 'sound/items/eatfood.ogg', 100, TRUE)
-			manual_emote("eats the [food]")
+			manual_emote("eats [food]") //DM articles the item itself, so no "the" of our own.
 			if(delete_food)
 				qdel(food)
 			return TRUE
@@ -331,14 +523,16 @@
 	desire_bar = round(desire_bar, 1)
 	UpdateBars()
 	update_action_buttons()
-	return TRUE
+	return desire_amount
 
 /mob/living/simple_animal/hostile/limbus_abno/proc/AdjustCounter(counter_amount)
-	if(counter_amount == 0)
-		return FALSE
 	var/original_counter = counter
-	var/pos_counter = IsPositive(counter_amount)
+	var/pos_counter = 0 < counter_amount ? TRUE : FALSE
 	counter = clamp(counter + counter_amount, 0, max_counter)
+	if(counter == 0)
+		if(can_breach)
+			Breach()
+		return FALSE
 	UpdateBars()
 	update_action_buttons()
 
@@ -367,30 +561,91 @@
 	update_action_buttons()
 	return TRUE
 
+	/*-----\
+	|Breach|
+	\-----*/
+/mob/living/simple_animal/hostile/limbus_abno/proc/Breach()
+	update_icon()
+	UpdateBars()
+	AddBreachEffect()
+
+/mob/living/simple_animal/hostile/limbus_abno/proc/Unbreach()
+	update_icon()
+	UpdateBars()
+	RemoveBreachEffect()
+
 /mob/living/simple_animal/hostile/limbus_abno/proc/AddBreachEffect()
+	if(!breach_overlay)
+		return
 	add_overlay(breach_overlay)
 
 /mob/living/simple_animal/hostile/limbus_abno/proc/RemoveBreachEffect()
+	if(!breach_overlay)
+		return
 	cut_overlay(breach_overlay)
 
+/*---------\
+|MISC PROCS|
+\---------*/
 //There's probably a proc for that already but I'm too lazy to find it. Just returns true if the value is positive or zero, false if negative.
 /mob/living/simple_animal/hostile/limbus_abno/proc/IsPositive(value)
 	if(value > 0)
 		return TRUE
-	else
+
+/mob/living/simple_animal/hostile/limbus_abno/proc/IsNearOrigin(turf/tile)
+	. = TRUE
+	if(!tile)
+		return FALSE
+	var/list/coords = splittext(cell_coords,",")
+	if(length(coords) != 3)
+		return FALSE
+	var/our_x = text2num(coords[1])
+	var/our_y = text2num(coords[2])
+	var/our_z = text2num(coords[3])
+	if(our_z != tile.z)
+		return FALSE
+	var/absolute_x = abs(our_x - tile.x)
+	var/absolute_y = abs(our_y - tile.y)
+	if(absolute_x > 3)
+		return FALSE
+	if(absolute_y > 3)
 		return FALSE
 
+//Determines if you are a friend by comparing your tag to tags we have in our friend list.
 /mob/living/simple_animal/hostile/limbus_abno/proc/IsFriend(mob/living/friend)
 	for(var/mob/living/L in friend_list)
 		if(L == friend)
 			return TRUE
 	return FALSE
 
+//Credits a player with attunement affinity for this abno's LCE family, capped. Higher
+//affinity raises the safe attunement limit of that family's gear for that player.
+/mob/living/simple_animal/hostile/limbus_abno/proc/GainAffinity(mob/user, amt = 1)
+	if(!user?.ckey || !attunement_family)
+		return
+	var/key = "[user.ckey]-[attunement_family]"
+	GLOB.lce_attunement_affinity[key] = min(300, (GLOB.lce_attunement_affinity[key] || 0) + amt)
+	RefreshLCEAttunement(user, attunement_family) //A suit already on their back follows the new bond.
+
 /mob/living/simple_animal/hostile/limbus_abno/examine_more(mob/user)
+	if(user == src) //The player sees exact numbers; onlookers only get the vague description.
+		return SelfStatusReadout()
 	if(special_desc == "" || isnull(special_desc))
 		return ..()
 
-	. = list(special_desc)
+	return list(special_desc)
+
+///A precise, numeric rundown of the abno's needs, shown only to the player controlling it.
+/mob/living/simple_animal/hostile/limbus_abno/proc/SelfStatusReadout()
+	var/list/readout = list()
+	readout += "<span class='notice'>--- Your current state ---</span>"
+	readout += "Hunger: [round(hunger_bar)]/[max_hunger][starving ? " (STARVING)" : ""]"
+	readout += "Desire: [round(desire_bar)]/[max_desire]"
+	if(max_counter != 0)
+		readout += "Qliphoth counter: [counter]/[max_counter]"
+	if(required_ego_desire > 0)
+		readout += "Ego progress: [round(min(ego_desire_accumulation, required_ego_desire))]/[required_ego_desire]"
+	return readout
 
 ///Updates ALL bars, hunger, sanity & counter. Also adds extra info in the description.
 /mob/living/simple_animal/hostile/limbus_abno/proc/UpdateBars()
@@ -400,33 +655,24 @@
 	switch(hunger_bar)
 		if(90 to INFINITY)
 			temp_desc += "It looks full, "
-			throw_alert("nutrition", /atom/movable/screen/alert/fat)
 		if(50 to 90)
 			temp_desc += "It looks well fed, "
-			clear_alert("nutrition")
 		if(25 to 50)
 			temp_desc += "It looks really hungry, "
-			throw_alert("nutrition", /atom/movable/screen/alert/hungry)
 		if(0 to 25)
 			temp_desc += "It looks like it's starving, "
-			throw_alert("nutrition", /atom/movable/screen/alert/starving)
 
 	switch(desire_bar)
 		if(90 to INFINITY)
 			temp_desc += "it also looks satisfied."
-			throw_alert("abno_mood", /atom/movable/screen/alert/abno_mood/happy)
 		if(70 to 90)
 			temp_desc += "it also looks content with the way things are."
-			throw_alert("abno_mood", /atom/movable/screen/alert/abno_mood/content)
 		if(50 to 70)
 			temp_desc += "it also doesn't look particularly satisfied or unsatisfied."
-			throw_alert("abno_mood", /atom/movable/screen/alert/abno_mood/neutral)
 		if(25 to 50)
 			temp_desc += "it also looks pissed off!"
-			throw_alert("abno_mood", /atom/movable/screen/alert/abno_mood/angry)
 		if(0 to 25)
 			temp_desc += "it also looks like its about to lose it!"
-			throw_alert("abno_mood", /atom/movable/screen/alert/abno_mood/rock_bottom)
 
 	temp_desc += " If you had to guess its qliphoth counter... "
 	if(max_counter != 0)
@@ -444,7 +690,29 @@
 
 	special_desc = temp_desc
 
-///Abno limbus actions.
+	//Persistent custom HUD bars, so the player can always read their two core needs at a glance.
+	clear_alert("nutrition") //The vanilla hunger alerts (including 'fat') are replaced by the hunger bar.
+	throw_alert("abno_hunger", /atom/movable/screen/alert/abno_hunger)
+	var/atom/movable/screen/alert/abno_hunger/hunger_alert = alerts["abno_hunger"]
+	if(hunger_alert)
+		hunger_alert.UpdateHunger(hunger_bar, max_hunger)
+
+	throw_alert("abno_mood", /atom/movable/screen/alert/abno_mood)
+	var/atom/movable/screen/alert/abno_mood/desire_alert = alerts["abno_mood"]
+	if(desire_alert)
+		desire_alert.UpdateDesire(desire_bar, max_desire)
+
+	if(max_counter != 0)
+		throw_alert("abno_counter", /atom/movable/screen/alert/abno_counter)
+		var/atom/movable/screen/alert/abno_counter/counter_alert = alerts["abno_counter"]
+		if(counter_alert)
+			counter_alert.UpdateCounter(counter, max_counter)
+	else
+		clear_alert("abno_counter")
+
+/*------------------\
+|ABNO LIMBUS ACTIONS|
+\------------------*/
 /datum/action/cooldown/limbus_abno_action
 	var/mob/living/simple_animal/hostile/limbus_abno/abno_user //It's better to use this instead of owner when using those actions.
 	//If the relevant needs are under that threshold, the action becomes available. For actions that only works above that number, override and set it manually.
@@ -452,21 +720,39 @@
 	var/hunger_req
 	var/counter_req
 	var/starving_req = FALSE
+	var/breached_req = FALSE
 
+//Regenerate from death
 /mob/living/simple_animal/hostile/limbus_abno/proc/Rebirth()
 	grab_ghost()
 	icon = original_abno.icon
-	icon_state = original_abno.icon_state
-	icon_living = original_abno.icon_living
+	icon_state = OriginalLivingState()
+	icon_living = icon_state
 	icon_dead = original_abno.icon_dead
+	pixel_x = living_pixel_x
+	pixel_y = living_pixel_y
+	base_pixel_x = living_base_pixel_x
+	base_pixel_y = living_base_pixel_y
+	move_resist = initial(move_resist)
+	pull_force = initial(pull_force)
+	rebirth_at = 0
 	revive(full_heal = TRUE, admin_revive = TRUE)
 	AdjustCounter(max_counter)
 	AdjustHunger(max_hunger)
 	AdjustDesire(max_desire)
+	Unbreach()
+
+///The sprite the original abnormality wears while alive. Plenty of them never set icon_living
+///at all - it defaults to "" - and revive() copies it straight onto icon_state, which is what
+///left Laetitia standing there as nothing at all after her first death.
+/mob/living/simple_animal/hostile/limbus_abno/proc/OriginalLivingState()
+	if(isnull(original_abno))
+		return icon_living || icon_state
+	return original_abno.icon_living || original_abno.icon_state
 
 ///Checks if the user is a limbus abno, and removes it if not.
 /datum/action/cooldown/limbus_abno_action/Grant(mob/M)
-	..()
+	. = ..()
 	if(istype(M, /mob/living/simple_animal/hostile/limbus_abno))
 		abno_user = M
 	else
@@ -495,6 +781,9 @@
 /datum/action/cooldown/limbus_abno_action/ego_refinement
 	name = "Expel Ego"
 	desc = "Create one of your associated ego. Require a long amount of time spent near your maximum amount of desire."
+	icon_icon = 'ModularLobotomy/_Lobotomyicons/abno_hud.dmi'
+	button_icon_state = "expel_ego"
+	transparent_when_unavailable = TRUE
 	cooldown_time = 1 MINUTES
 
 /datum/action/cooldown/limbus_abno_action/ego_refinement/IsAvailable()
@@ -540,6 +829,61 @@
 		abno_user.AdjustCounter(abno_user.max_counter)
 	StartCooldown()
 
+
+/datum/action/cooldown/limbus_abno_action/toggle_breached_form
+	name = "Toggle Breached Form."
+	desc = "Transform into your breached form."
+	icon_icon = 'icons/hud/screen_gen.dmi'
+	button_icon_state = "mood_happiness_bad"
+	transparent_when_unavailable = TRUE
+	counter_req = 0
+	cooldown_time = 10 MINUTES
+
+/datum/action/cooldown/limbus_abno_action/toggle_breached_form/IsAvailable()
+	. = ..()
+	if(!.)
+		return .
+	if(abno_user.stat == DEAD)
+		return FALSE
+	if(abno_user.counter > 0)
+		return FALSE
+
+/datum/action/cooldown/limbus_abno_action/toggle_breached_form/Trigger()
+	. = ..()
+	if(!.)
+		return FALSE
+	if(abno_user.breached)
+		abno_user.Unbreach()
+		return TRUE
+	abno_user.Breach()
+	StartCooldown()
+
+/datum/action/cooldown/limbus_abno_action/swap_attack
+	name = "ERROR."
+	desc = "This should set your attack choice to 1"
+	icon_icon = 'icons/mob/actions/actions_animal.dmi'
+	button_icon_state = "expand"
+	transparent_when_unavailable = TRUE
+	cooldown_time = 1 SECONDS
+	var/swap_attack = 1
+
+/datum/action/cooldown/limbus_abno_action/swap_attack/Trigger()
+	. = ..()
+	if(!.)
+		return FALSE
+	if(!istype(abno_user, /mob/living/simple_animal/hostile/limbus_abno))
+		return
+	var/mob/living/simple_animal/hostile/limbus_abno/F = abno_user
+	if(F.chosen_attack == swap_attack)
+		to_chat(abno_user, "you return to your regular attacks")
+		F.chosen_attack = 1
+		return
+	to_chat(abno_user, "you prepare a unique attack")
+	F.chosen_attack = swap_attack
+
+/*---\
+|HEAL|
+\---*/
 ///Abno heal spot
 /obj/effect/abno_heal_spot
 	name = "Abno heal spot"
@@ -547,36 +891,129 @@
 	opacity = FALSE
 	var/mob/living/simple_animal/hostile/limbus_abno/abno
 
-///Abno desire bar. This looks just like the old mood system, but making new icons would be more fitting.
+/*--\
+|Fun|
+\--*/
+//When a emote is made this will cause a unique visual effect if overriden.
+/mob/living/simple_animal/hostile/limbus_abno/proc/ShowEmotion(emotion)
+	abno_emoting = TRUE
+	return
+
+/*--------------\
+|LC13 COPY PROCS|
+\--------------*/
+/mob/living/simple_animal/hostile/limbus_abno/proc/IsContained()
+	return breached ? FALSE : TRUE
+
+/*---\
+|MOOD|
+\---*/
+/*
+* Desire (mood) HUD bar. One updating alert instead of five:
+* the face (mood1..mood9) plus a red->green tint show how
+* the abno feels at a glance.
+*/
 /atom/movable/screen/alert/abno_mood
+	name = "Desire"
+	desc = "How the abnormality feels."
 	icon = 'icons/hud/screen_gen.dmi'
-
-/atom/movable/screen/alert/abno_mood/happy
-	name = "Happy"
-	desc = "You feel fulfilled!"
-	icon_state = "mood8"
-	color = "#32b9b9"
-
-/atom/movable/screen/alert/abno_mood/content
-	name = "Content"
-	desc = "Things aren't so bad right now."
-	icon_state = "mood6"
-	color = "#6fb932"
-
-/atom/movable/screen/alert/abno_mood/neutral
-	name = "Neutral"
-	desc = "Could be better, could be worse."
 	icon_state = "mood5"
-	color = "#d3d023"
 
-/atom/movable/screen/alert/abno_mood/angry
-	name = "Angry"
-	desc = "You're at your limit."
-	icon_state = "mood3"
-	color = "#eb4d42"
+/atom/movable/screen/alert/abno_mood/proc/UpdateDesire(current, maximum)
+	var/frac = maximum ? clamp(current / maximum, 0, 1) : 0
+	icon_state = "mood[clamp(round(frac * 8) + 1, 1, 9)]" //mood1 = worst, mood9 = best.
+	//Tint from red (low) through yellow to green (high) so the feeling reads at a glance.
+	var/list/lo_col = frac < 0.5 ? list(226, 23, 23) : list(211, 208, 35)
+	var/list/hi_col = frac < 0.5 ? list(211, 208, 35) : list(111, 185, 50)
+	var/t = frac < 0.5 ? frac / 0.5 : (frac - 0.5) / 0.5
+	color = rgb(round(lo_col[1] + (hi_col[1] - lo_col[1]) * t), round(lo_col[2] + (hi_col[2] - lo_col[2]) * t), round(lo_col[3] + (hi_col[3] - lo_col[3]) * t))
+	desc = "Desire: [round(current)]/[maximum]."
 
-/atom/movable/screen/alert/abno_mood/rock_bottom
-	name = "Rock bottom"
-	desc = "You can't take it anymore."
-	icon_state = "mood1"
-	color = "#e21717ff"
+///Hunger HUD bar. A burger plus a thermometer that fills green (full) down to red (starving), built on the vanilla 'hungry' art.
+/atom/movable/screen/alert/abno_hunger
+	name = "Hunger"
+	desc = "How full the abnormality is."
+	icon = 'ModularLobotomy/_Lobotomyicons/abno_hud.dmi'
+	icon_state = "hunger10"
+
+/atom/movable/screen/alert/abno_hunger/proc/UpdateHunger(current, maximum)
+	var/frac = maximum ? clamp(current / maximum, 0, 1) : 0
+	icon_state = "hunger[round(frac * 10)]"
+	desc = "Hunger: [round(current)]/[maximum]. Eat from your diet to keep this up."
+
+///Qliphoth counter HUD alert. A custom badge showing your current and maximum counter as a coloured number, so you always know how close you are to breaching.
+/atom/movable/screen/alert/abno_counter
+	name = "Qliphoth Counter"
+	desc = "Your qliphoth counter. If it reaches zero, you breach."
+	icon = 'ModularLobotomy/_Lobotomyicons/abno_hud.dmi'
+	icon_state = "counter"
+	maptext_x = 6
+	maptext_y = 10
+
+/atom/movable/screen/alert/abno_counter/proc/UpdateCounter(current, maximum)
+	desc = "Your qliphoth counter is at [current] of [maximum]. If it reaches zero, you breach."
+	var/col = "#6fb932" //Green, comfortable.
+	if(current <= 0)
+		col = "#e21717" //Red, breaching.
+	else if(current == 1)
+		col = "#eb4d42" //Orange-red, one away.
+	else if(current == 2)
+		col = "#d3d023" //Yellow, getting close.
+	maptext = MAPTEXT("<span style='color: [col]'><b>[current]/[maximum]</b></span>")
+
+
+/*			LOOSE SPECIMEN ALARM			*/
+
+// The specimen's half of the corridor alarm. The area half - the per-area count and the light
+// switching - is in lce_areas.dm, and the lasso that clears trips_alarm is in lce_lasso.dm.
+//
+// This exists because /area/facility_hallway/RefreshLights() searches for /abnormality mobs and
+// LCL specimens are a separate type tree, so the stock alarm never matched one of us.
+
+/mob/living/simple_animal/hostile/limbus_abno
+	///Cleared while a lasso is attached - a tethered specimen does not trip the alarm.
+	var/trips_alarm = TRUE
+	///The area we are currently counted in, so the count can be moved rather than rebuilt.
+	var/area/lce/counted_area
+	///Refcount for render_target. The scan overlay and the lasso glow both want to mask against
+	///this mob, and whichever finished first used to clear it out from under the other.
+	var/render_target_users = 0
+
+/mob/living/simple_animal/hostile/limbus_abno/proc/ClaimRenderTarget()
+	if(!render_target)
+		render_target = "lce_[REF(src)]"
+	render_target_users++
+	return render_target
+
+/mob/living/simple_animal/hostile/limbus_abno/proc/ReleaseRenderTarget()
+	render_target_users = max(0, render_target_users - 1)
+	if(!render_target_users)
+		render_target = null
+
+/mob/living/simple_animal/hostile/limbus_abno/proc/RefreshAlarmPresence()
+	var/area/lce/here = null
+	if(trips_alarm && stat < DEAD && !QDELETED(src))
+		var/area/current = get_area(src)
+		if(istype(current, /area/lce))
+			here = current
+	if(here == counted_area)
+		return
+	if(counted_area)
+		counted_area.AdjustLooseSpecimens(-1)
+	counted_area = here
+	if(here)
+		here.AdjustLooseSpecimens(1)
+
+/mob/living/simple_animal/hostile/limbus_abno/Moved(atom/OldLoc, Dir)
+	. = ..()
+	RefreshAlarmPresence()
+
+/mob/living/simple_animal/hostile/limbus_abno/death(gibbed)
+	. = ..()
+	RefreshAlarmPresence()
+
+/mob/living/simple_animal/hostile/limbus_abno/Destroy()
+	if(counted_area)
+		counted_area.AdjustLooseSpecimens(-1)
+		counted_area = null
+	return ..()

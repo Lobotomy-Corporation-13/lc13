@@ -6,6 +6,11 @@
  * Called by /mob/dead/observer/MouseDrop(atom/over)
  */
 
+///TRUE if this body is only temporarily vacant because its player stepped out of it.
+/proc/IsPossessionLocked(mob/abnormality)
+	var/mob/living/simple_animal/hostile/limbus_abno/LA = abnormality
+	return istype(LA) && LA.possession_locked
+
 /datum/proc/try_take_abnormality(mob/dead/observer/possessing_player, mob/abnormality)
 	if(!SSlobotomy_corp.enable_possession) // uhhhh, how did you even access this proc?
 		to_chat(usr, span_userdanger("Abnormality possession is not enabled!"))
@@ -17,6 +22,12 @@
 
 	if(abnormality.ckey)
 		to_chat(possessing_player, span_userdanger("This abnormality already has a ghost in control of it, you can't possess it!"))
+		return
+
+	//An empty body is not always a free one. LCL specimens can step out of themselves - into a
+	//worker bee, a scouting marker, a manifestation - and the body they left behind keeps no ckey.
+	if(IsPossessionLocked(abnormality))
+		to_chat(possessing_player, span_userdanger("Something still occupies this one, even if it looks empty. You can't possess it!"))
 		return
 
 	var/title = "Do you wish to possess this abnormality?"

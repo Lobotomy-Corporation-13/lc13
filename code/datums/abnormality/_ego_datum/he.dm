@@ -55,7 +55,7 @@
 
 // Crumbling Armor - Life for a Daredevil
 /datum/ego_datum/weapon/daredevil
-	item_path = /obj/item/ego_weapon/shield/daredevil
+	item_path = /obj/item/ego_weapon/shield/parry/daredevil
 	cost = 35
 	ego_tags = list(EGO_TAG_RANKBUMP, EGO_TAG_LOCKED_POTENTIAL)
 
@@ -151,6 +151,7 @@
 /datum/ego_datum/armor/harmony
 	item_path = /obj/item/clothing/suit/armor/ego_gear/he/harmony
 	cost = 35
+	ego_tags = list(EGO_TAG_REALIZABLE)
 
 /datum/ego_datum/weapon/harmony
 	item_category = "Weapon (LMG)"
@@ -162,7 +163,7 @@
 	item_category = "Weapon (Guitar)"
 	item_path = /obj/item/ego_weapon/rhythm
 	cost = 35
-	ego_tags = list(EGO_TAG_HAZARDOUS, EGO_TAG_SUPPORT)
+	ego_tags = list(EGO_TAG_HAZARDOUS, EGO_TAG_SUPPORT, EGO_TAG_LOCKED_POTENTIAL)
 
 //The Watchman - Alleyway
 /datum/ego_datum/armor/alleyway
@@ -231,7 +232,7 @@
 	cost = 35
 
 /datum/ego_datum/weapon/maneater
-	item_path = /obj/item/ego_weapon/shield/maneater
+	item_path = /obj/item/ego_weapon/shield/parry/maneater
 	cost = 35
 
 //Pale Horse - Revelation
@@ -269,7 +270,7 @@
 	cost = 35
 
 /datum/ego_datum/weapon/legerdemain
-	item_path = /obj/item/ego_weapon/shield/legerdemain
+	item_path = /obj/item/ego_weapon/shield/parry/legerdemain
 	cost = 35
 	ego_tags = list(EGO_TAG_SUSTAIN)
 

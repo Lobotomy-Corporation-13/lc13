@@ -61,10 +61,10 @@ GLOBAL_LIST_INIT(command_positions, list(
 	// LCB Labs
 	"District Manager",
 	"LC Asset Protection",
+	"LCA Udjat Leader",
+	"LCE Lead Researcher",
 	"Chief Medical Officer",
 	"Lead Researcher",
-	"High Security Commander",
-	"Low Security Commander",
 
 	"Office Director",
 	))
@@ -78,10 +78,7 @@ GLOBAL_LIST_INIT(engineering_positions, list(
 GLOBAL_LIST_INIT(medical_positions, list(
 	// LCB Labs
 	"Chief Medical Officer",
-	"Surgeon",
 	"Nurse Practitioner",
-	"Pharmacist",
-	"Emergency Medical Technician",
 
 	// City
 	"Doctor",
@@ -97,12 +94,10 @@ GLOBAL_LIST_INIT(medical_positions, list(
 
 GLOBAL_LIST_INIT(science_positions, list(
 	// LCB Labs
+	"LCE Lead Researcher",
+	"LCE Researcher",
+	"LCE Clerk",
 	"Lead Researcher",
-	"Senior Researcher",
-	"Information Systems Tech",
-	"Research Archivist",
-	"Researcher",
-	"LC Staff",
 	))
 
 
@@ -124,9 +119,6 @@ GLOBAL_LIST_INIT(service_positions, list(
 	"Main Office Representative",
 	"Fishhook Office Fixer",
 
-	// LCB Labs
-	"LC Chef",
-	"LC Janitor",
 
 
 	//R-Corp Sixth Pack
@@ -152,13 +144,8 @@ GLOBAL_LIST_INIT(security_positions, list(
 	"Agent Intern",
 
 	// LCB Labs
-	"High Security Commander",
-	"Low Security Commander",
-	"High Security Officer",
-	"Low Security Officer",
-	"Damage Mitigation Officer",
-	"Damage Exasperation Officer",
-	"Internal Police",
+	"LCA Udjat Leader",
+	"LCA Udjat Agent",
 	"LC Specimen", //Not really a 'security role', but putting it as a silicon/nonhuman feels wrong.
 
 	//Sixth Pack
@@ -183,6 +170,7 @@ GLOBAL_LIST_INIT(w_corp_positions, list(
 	"W-Corp L2 Type B Support Agent",
 	"W-Corp L2 Type C Weapon Specialist",
 	"W-Corp L2 Type D Spear Agent",
+	"W-Corp L2 Type E Heavy Armor Specialist",
 	"W-Corp L1 Cleanup Agent",
 ))
 

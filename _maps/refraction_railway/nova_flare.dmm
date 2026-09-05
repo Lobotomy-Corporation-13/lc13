@@ -1,0 +1,3904 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"aa" = (
+/obj/effect/decal/cleanable/glass,
+/obj/effect/light_emitter{
+	light_power = 4;
+	light_range = 25;
+	set_cap = 3;
+	set_luminosity = 24
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/refraction/nova_flare)
+"ad" = (
+/turf/closed/indestructible/reinforced/cheap/blue,
+/area/refraction/nova_flare)
+"aq" = (
+/obj/effect/turf_decal/sand/plating,
+/obj/structure/flora/rock,
+/turf/open/floor/plating/rust,
+/area/refraction/nova_flare)
+"as" = (
+/turf/open/floor/light,
+/area/refraction/nova_flare)
+"aG" = (
+/obj/structure/spacevine,
+/turf/closed/indestructible/reinforced/cheap/blue,
+/area/refraction/nova_flare)
+"bm" = (
+/obj/effect/decal/cleanable/xenoblood/xsplatter,
+/turf/open/floor/stone,
+/area/refraction/nova_flare)
+"br" = (
+/turf/open/floor/plating/asteroid,
+/area/refraction/nova_flare)
+"bx" = (
+/obj/machinery/light/warm,
+/obj/structure/chair/sofa/corp{
+	dir = 1
+	},
+/turf/open/floor/mineral/titanium/blue,
+/area/refraction/nova_flare)
+"bH" = (
+/obj/effect/decal/cleanable/garbage,
+/turf/open/floor/wood,
+/area/refraction/nova_flare)
+"bR" = (
+/turf/open/floor/mineral/titanium/tiled/blue,
+/area/refraction/nova_flare)
+"cf" = (
+/obj/structure/fluff/paper/stack{
+	dir = 1
+	},
+/turf/open/floor/stone,
+/area/refraction/nova_flare)
+"cr" = (
+/obj/structure/bed/maint,
+/obj/effect/light_emitter{
+	light_power = 4;
+	light_range = 25;
+	set_cap = 3;
+	set_luminosity = 24
+	},
+/obj/effect/decal/cleanable/xenoblood/xgibs,
+/turf/open/floor/stone,
+/area/refraction/nova_flare)
+"cs" = (
+/obj/effect/landmark/refraction/checkpoint_spawn,
+/turf/open/floor/mineral/titanium/tiled/blue,
+/area/refraction/nova_flare)
+"ct" = (
+/obj/structure/fluff/divine/convertaltar{
+	density = 1;
+	mouse_opacity = 0
+	},
+/turf/open/floor/holofloor/chapel{
+	dir = 1
+	},
+/area/refraction/nova_flare)
+"dd" = (
+/obj/effect/landmark/refraction/start_point/nova_s2n1,
+/turf/open/floor/stone,
+/area/refraction/nova_flare)
+"dl" = (
+/obj/effect/light_emitter{
+	light_power = 4;
+	light_range = 25;
+	set_cap = 3;
+	set_luminosity = 24
+	},
+/turf/open/floor/wood,
+/area/refraction/nova_flare)
+"du" = (
+/turf/open/floor/wood{
+	icon_state = "wood-broken"
+	},
+/area/refraction/nova_flare)
+"dy" = (
+/obj/structure/flora/rock/pile/largejungle,
+/turf/open/water/jungle,
+/area/refraction/nova_flare)
+"dE" = (
+/obj/structure/bed/maint,
+/obj/effect/light_emitter{
+	light_power = 4;
+	light_range = 25;
+	set_cap = 3;
+	set_luminosity = 24
+	},
+/turf/open/floor/stone,
+/area/refraction/nova_flare)
+"dT" = (
+/obj/effect/landmark/refraction/start_point/nova_s2n2,
+/turf/open/floor/holofloor/chapel,
+/area/refraction/nova_flare)
+"fg" = (
+/obj/effect/landmark/refraction/start_point/nova_s1n1,
+/turf/open/floor/plating/asteroid,
+/area/refraction/nova_flare)
+"fH" = (
+/obj/machinery/computer/refraction_loadout,
+/turf/open/floor/mineral/titanium/blue,
+/area/refraction/nova_flare)
+"gp" = (
+/obj/effect/decal/cleanable/xenoblood/xsplatter,
+/obj/machinery/blackbox_recorder,
+/turf/open/floor/stone,
+/area/refraction/nova_flare)
+"hH" = (
+/obj/effect/landmark/refraction/spawner/nova_s2n3,
+/obj/effect/light_emitter{
+	light_power = 4;
+	light_range = 25;
+	set_cap = 3;
+	set_luminosity = 24
+	},
+/turf/open/floor/wood,
+/area/refraction/nova_flare)
+"hK" = (
+/obj/effect/landmark/refraction/start_point/nova_s2n2,
+/turf/open/floor/holofloor/chapel{
+	dir = 8
+	},
+/area/refraction/nova_flare)
+"io" = (
+/obj/structure/bed/maint,
+/turf/open/floor/stone,
+/area/refraction/nova_flare)
+"iq" = (
+/obj/structure/spreading/scarlet_vine,
+/turf/open/floor/mineral/plastitanium,
+/area/refraction/nova_flare)
+"je" = (
+/obj/structure/fence/corner{
+	dir = 1
+	},
+/turf/open/floor/stone,
+/area/refraction/nova_flare)
+"jI" = (
+/obj/effect/decal/cleanable/dirt,
+/turf/open/floor/wood,
+/area/refraction/nova_flare)
+"jO" = (
+/obj/effect/landmark/refraction/spawner/nova_s2n2,
+/turf/open/floor/holofloor/chapel{
+	dir = 1
+	},
+/area/refraction/nova_flare)
+"km" = (
+/obj/effect/landmark/refraction/start_point/nova_s2n2,
+/turf/open/floor/carpet/black,
+/area/refraction/nova_flare)
+"kn" = (
+/obj/structure/table/wood,
+/turf/open/floor/wood,
+/area/refraction/nova_flare)
+"kr" = (
+/obj/effect/decal/cleanable/dirt,
+/obj/effect/decal/cleanable/glitter/pink,
+/turf/open/floor/plasteel/vaporwave,
+/area/refraction/nova_flare)
+"ku" = (
+/obj/effect/wall_vent{
+	pixel_x = -32
+	},
+/turf/open/floor/stone,
+/area/refraction/nova_flare)
+"kH" = (
+/obj/effect/landmark/refraction/spawner/nova_s1n1,
+/obj/effect/light_emitter{
+	light_power = 4;
+	light_range = 25;
+	set_cap = 3;
+	set_luminosity = 24
+	},
+/turf/open/floor/plating/asteroid,
+/area/refraction/nova_flare)
+"kL" = (
+/obj/effect/light_emitter{
+	light_power = 4;
+	light_range = 25;
+	set_cap = 3;
+	set_luminosity = 24
+	},
+/turf/open/indestructible/necropolis/air,
+/area/refraction/nova_flare)
+"lg" = (
+/obj/structure/fluff/paper/stack{
+	dir = 4
+	},
+/turf/open/floor/stone,
+/area/refraction/nova_flare)
+"lo" = (
+/obj/structure/grille/broken,
+/turf/open/floor/wood,
+/area/refraction/nova_flare)
+"lu" = (
+/obj/structure/chair/pew/left{
+	dir = 1;
+	mouse_opacity = 0
+	},
+/turf/open/floor/holofloor/chapel{
+	dir = 8
+	},
+/area/refraction/nova_flare)
+"lA" = (
+/obj/structure/flora/ash/garden/waste,
+/turf/open/floor/plating/asteroid,
+/area/refraction/nova_flare)
+"lF" = (
+/obj/effect/landmark/refraction/spawner/nova_core,
+/obj/effect/light_emitter{
+	light_power = 4;
+	light_range = 25;
+	set_cap = 3;
+	set_luminosity = 24
+	},
+/turf/open/floor/light,
+/area/refraction/nova_flare)
+"lG" = (
+/obj/structure/flora/rock/jungle,
+/turf/open/floor/plating/ironsand,
+/area/refraction/nova_flare)
+"ma" = (
+/obj/effect/turf_decal/sand/plating,
+/turf/open/floor/plating/rust,
+/area/refraction/nova_flare)
+"mb" = (
+/turf/open/space/basic,
+/area/space)
+"mc" = (
+/obj/effect/decal/cleanable/dirt,
+/turf/open/floor/wood{
+	icon_state = "wood-broken"
+	},
+/area/refraction/nova_flare)
+"md" = (
+/turf/open/floor/holofloor/chapel{
+	dir = 4
+	},
+/area/refraction/nova_flare)
+"me" = (
+/turf/open/floor/carpet/black,
+/area/refraction/nova_flare)
+"mf" = (
+/obj/structure/chair/pew/right{
+	dir = 1;
+	mouse_opacity = 0
+	},
+/turf/open/floor/holofloor/chapel,
+/area/refraction/nova_flare)
+"mg" = (
+/turf/open/floor/circuit,
+/area/refraction/nova_flare)
+"mh" = (
+/obj/effect/light_emitter{
+	light_power = 4;
+	light_range = 25;
+	set_cap = 3;
+	set_luminosity = 24
+	},
+/turf/open/floor/stone,
+/area/refraction/nova_flare)
+"mi" = (
+/obj/effect/decal/cleanable/generic,
+/turf/open/floor/stone,
+/area/refraction/nova_flare)
+"mr" = (
+/obj/structure/chair/sofa/corp/corner{
+	dir = 8
+	},
+/turf/open/floor/mineral/titanium/blue,
+/area/refraction/nova_flare)
+"mw" = (
+/obj/effect/light_emitter{
+	light_power = 4;
+	light_range = 25;
+	set_cap = 3;
+	set_luminosity = 24
+	},
+/obj/effect/landmark/refraction/spawner/nova_s1n2,
+/turf/open/floor/plating/asteroid,
+/area/refraction/nova_flare)
+"mU" = (
+/obj/effect/decal/cleanable/glass,
+/turf/open/floor/mineral/plastitanium,
+/area/refraction/nova_flare)
+"nZ" = (
+/obj/effect/decal/cleanable/cobweb/cobweb2,
+/turf/open/floor/wood,
+/area/refraction/nova_flare)
+"ok" = (
+/turf/open/floor/plating/asteroid/basalt/wasteland,
+/area/refraction/nova_flare)
+"oG" = (
+/obj/structure/bookcase{
+	pixel_x = -32;
+	density = 0
+	},
+/obj/structure/chair/sofa/corner{
+	dir = 1
+	},
+/turf/open/floor/carpet/black,
+/area/refraction/nova_flare)
+"pa" = (
+/obj/structure/flora/rock,
+/turf/open/floor/plating/asteroid,
+/area/refraction/nova_flare)
+"pb" = (
+/turf/closed/indestructible/necropolis,
+/area/refraction/nova_flare)
+"pc" = (
+/turf/open/indestructible/necropolis/air,
+/area/refraction/nova_flare)
+"pd" = (
+/obj/structure/fence,
+/turf/open/floor/stone,
+/area/refraction/nova_flare)
+"pe" = (
+/turf/open/floor/wood,
+/area/refraction/nova_flare)
+"pf" = (
+/turf/open/floor/stone,
+/area/refraction/nova_flare)
+"pg" = (
+/obj/structure/bed{
+	pixel_y = 15;
+	layer = 2.95;
+	can_buckle = 0;
+	name = "bunk beds";
+	density = 1
+	},
+/obj/structure/bed{
+	name = "bunk beds";
+	can_buckle = 0;
+	density = 1
+	},
+/obj/structure/ladder{
+	pixel_x = 4;
+	pixel_y = -5;
+	layer = 2.97;
+	mouse_opacity = 0
+	},
+/obj/item/bedsheet/hop{
+	desc = "Fancy cloth earned through good deeds.";
+	name = "old bedsheet";
+	layer = 2.94
+	},
+/obj/item/bedsheet/hop{
+	desc = "Fancy cloth earned through good deeds.";
+	name = "old bedsheet";
+	layer = 2.96;
+	pixel_y = 15
+	},
+/obj/effect/gibspawner/robot,
+/obj/effect/decal/cleanable/cobweb,
+/turf/open/floor/wood,
+/area/refraction/nova_flare)
+"ph" = (
+/obj/structure/grille/broken,
+/turf/open/floor/stone,
+/area/refraction/nova_flare)
+"pi" = (
+/obj/structure/chair/wood{
+	dir = 4
+	},
+/turf/open/floor/wood,
+/area/refraction/nova_flare)
+"pl" = (
+/turf/open/floor/holofloor/chapel,
+/area/refraction/nova_flare)
+"qk" = (
+/obj/structure/bookcase/random/fiction,
+/turf/closed/indestructible/wood,
+/area/refraction/nova_flare)
+"qr" = (
+/obj/structure/meatfloor,
+/obj/structure/flora/rock/pile,
+/turf/open/floor/plating/asteroid,
+/area/refraction/nova_flare)
+"qB" = (
+/obj/structure/chair/pew{
+	dir = 1;
+	mouse_opacity = 0
+	},
+/turf/open/floor/holofloor/chapel{
+	dir = 8
+	},
+/area/refraction/nova_flare)
+"qX" = (
+/obj/machinery/computer/refraction_advance,
+/obj/machinery/light/warm{
+	dir = 1
+	},
+/turf/open/floor/mineral/titanium/blue,
+/area/refraction/nova_flare)
+"sm" = (
+/obj/effect/landmark/refraction/start_point/nova_s3n1,
+/turf/open/floor/plating/ironsand,
+/area/refraction/nova_flare)
+"so" = (
+/obj/structure/fluff/oldturret{
+	density = 0;
+	layer = 2.8;
+	name = "pedestal";
+	desc = "A pedestal for a statue."
+	},
+/turf/open/floor/carpet/black,
+/area/refraction/nova_flare)
+"sF" = (
+/turf/open/floor/holofloor/chapel{
+	dir = 1
+	},
+/area/refraction/nova_flare)
+"ts" = (
+/obj/structure/table/wood/fancy/blue,
+/obj/item/kirbyplants/photosynthetic,
+/turf/open/floor/mineral/titanium/blue,
+/area/refraction/nova_flare)
+"tR" = (
+/obj/effect/decal/cleanable/dirt,
+/turf/open/floor/wood{
+	icon_state = "wood-broken6"
+	},
+/area/refraction/nova_flare)
+"tV" = (
+/obj/effect/landmark/refraction/spawner/nova_s1n3,
+/turf/open/indestructible/necropolis/air,
+/area/refraction/nova_flare)
+"uv" = (
+/obj/effect/decal/cleanable/generic,
+/turf/closed/indestructible/iron,
+/area/refraction/nova_flare)
+"uE" = (
+/obj/structure/fence/door{
+	dir = 4
+	},
+/turf/open/floor/stone,
+/area/refraction/nova_flare)
+"vk" = (
+/obj/structure/glowshroom/single,
+/turf/open/floor/stone,
+/area/refraction/nova_flare)
+"vr" = (
+/turf/open/floor/holofloor/grass,
+/area/refraction/nova_flare)
+"vz" = (
+/obj/structure/chair/sofa/corp{
+	dir = 1
+	},
+/turf/open/floor/mineral/titanium/blue,
+/area/refraction/nova_flare)
+"vY" = (
+/obj/effect/light_emitter{
+	light_power = 4;
+	light_range = 25;
+	set_cap = 3;
+	set_luminosity = 24
+	},
+/turf/open/floor/plating/ironsand,
+/area/refraction/nova_flare)
+"wa" = (
+/obj/machinery/door/keycard/final_door,
+/turf/open/floor/mineral/gold,
+/area/refraction/nova_flare)
+"ww" = (
+/obj/effect/landmark/refraction/start_point/nova_core,
+/turf/open/floor/light,
+/area/refraction/nova_flare)
+"xp" = (
+/obj/structure/mineral_door/iron,
+/turf/open/floor/stone,
+/area/refraction/nova_flare)
+"xM" = (
+/obj/structure/fence/door{
+	dir = 1
+	},
+/turf/open/floor/stone,
+/area/refraction/nova_flare)
+"xT" = (
+/obj/structure/fluff/divine/convertaltar{
+	density = 1;
+	mouse_opacity = 0
+	},
+/turf/open/floor/holofloor/chapel{
+	dir = 4
+	},
+/area/refraction/nova_flare)
+"ya" = (
+/obj/structure/meatfloor,
+/turf/open/floor/plating/asteroid,
+/area/refraction/nova_flare)
+"yl" = (
+/obj/structure/chair/sofa/corp/left{
+	dir = 4
+	},
+/turf/open/floor/mineral/titanium/blue,
+/area/refraction/nova_flare)
+"ze" = (
+/obj/effect/landmark/refraction/start_point/nova_s2n3,
+/turf/open/floor/wood,
+/area/refraction/nova_flare)
+"zB" = (
+/obj/structure/chair/sofa{
+	dir = 1
+	},
+/turf/open/floor/carpet/black,
+/area/refraction/nova_flare)
+"zE" = (
+/obj/structure/fluff/paper/stack{
+	dir = 1
+	},
+/turf/open/floor/holofloor/grass,
+/area/refraction/nova_flare)
+"zF" = (
+/obj/item/chair/wood,
+/turf/open/floor/wood,
+/area/refraction/nova_flare)
+"zI" = (
+/obj/effect/light_emitter{
+	light_power = 4;
+	light_range = 25;
+	set_cap = 3;
+	set_luminosity = 24
+	},
+/turf/open/floor/holofloor/chapel{
+	dir = 4
+	},
+/area/refraction/nova_flare)
+"zX" = (
+/obj/effect/decal/cleanable/greenglow{
+	light_color = "#ff0037";
+	color = "#ff0037"
+	},
+/turf/open/indestructible/necropolis/air,
+/area/refraction/nova_flare)
+"Ab" = (
+/obj/effect/decal/cleanable/xenoblood/xgibs,
+/turf/open/floor/stone,
+/area/refraction/nova_flare)
+"Bt" = (
+/obj/structure/flora/ausbushes/fullgrass,
+/obj/effect/landmark/refraction/start_point/nova_s3n1,
+/turf/open/floor/plating/ironsand,
+/area/refraction/nova_flare)
+"BK" = (
+/obj/structure/flora/ausbushes/fullgrass,
+/turf/open/floor/plating/ironsand,
+/area/refraction/nova_flare)
+"EA" = (
+/turf/open/floor/holofloor/chapel{
+	dir = 8
+	},
+/area/refraction/nova_flare)
+"ES" = (
+/turf/closed/indestructible/iron,
+/area/refraction/nova_flare)
+"Fi" = (
+/obj/effect/light_emitter{
+	light_power = 4;
+	light_range = 25;
+	set_cap = 3;
+	set_luminosity = 24
+	},
+/turf/open/floor/holofloor/chapel{
+	dir = 1
+	},
+/area/refraction/nova_flare)
+"Fq" = (
+/obj/structure/spreading/scarlet_vine,
+/obj/effect/wall_vent{
+	pixel_x = 32
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/refraction/nova_flare)
+"Gz" = (
+/obj/structure/bed{
+	pixel_y = 15;
+	layer = 2.95;
+	can_buckle = 0;
+	name = "bunk beds";
+	density = 1
+	},
+/obj/structure/bed{
+	name = "bunk beds";
+	can_buckle = 0;
+	density = 1
+	},
+/obj/structure/ladder{
+	pixel_x = 4;
+	pixel_y = -5;
+	layer = 2.97;
+	mouse_opacity = 0
+	},
+/obj/item/bedsheet/hop{
+	desc = "Fancy cloth earned through good deeds.";
+	name = "old bedsheet";
+	layer = 2.94
+	},
+/obj/item/bedsheet/hop{
+	desc = "Fancy cloth earned through good deeds.";
+	name = "old bedsheet";
+	layer = 2.96;
+	pixel_y = 15
+	},
+/obj/effect/gibspawner/robot,
+/turf/open/floor/wood,
+/area/refraction/nova_flare)
+"GM" = (
+/obj/effect/landmark/refraction/spawner/nova_s2n1,
+/turf/open/floor/holofloor/grass,
+/area/refraction/nova_flare)
+"Iv" = (
+/obj/structure/flora/junglebush/large,
+/turf/open/floor/plating/ironsand,
+/area/refraction/nova_flare)
+"IC" = (
+/obj/structure/bookcase{
+	pixel_x = -32;
+	density = 0
+	},
+/obj/structure/chair/sofa/left{
+	dir = 4
+	},
+/turf/open/floor/carpet/black,
+/area/refraction/nova_flare)
+"IO" = (
+/obj/structure/glowshroom/single,
+/turf/open/floor/holofloor/grass,
+/area/refraction/nova_flare)
+"IV" = (
+/obj/structure/chair/sofa/right{
+	dir = 1
+	},
+/turf/open/floor/carpet/black,
+/area/refraction/nova_flare)
+"Jf" = (
+/obj/effect/landmark/refraction/start_point/nova_s3n2,
+/turf/open/floor/stone,
+/area/refraction/nova_flare)
+"Jq" = (
+/obj/structure/displaycase/labcage,
+/obj/structure/spreading/scarlet_vine,
+/turf/open/floor/mineral/plastitanium,
+/area/refraction/nova_flare)
+"JM" = (
+/obj/structure/fence/corner,
+/turf/open/floor/stone,
+/area/refraction/nova_flare)
+"Kr" = (
+/obj/structure/chair/sofa/corp/right{
+	dir = 8
+	},
+/turf/open/floor/mineral/titanium/blue,
+/area/refraction/nova_flare)
+"LI" = (
+/obj/effect/decal/cleanable/cobweb/cobweb2,
+/turf/open/floor/wood{
+	icon_state = "wood-broken6"
+	},
+/area/refraction/nova_flare)
+"LP" = (
+/obj/structure/table/greyscale{
+	color = "#8a8a8a"
+	},
+/turf/open/floor/stone,
+/area/refraction/nova_flare)
+"Md" = (
+/obj/structure/flora/ash/garden/arid,
+/turf/open/floor/plating/asteroid,
+/area/refraction/nova_flare)
+"Mi" = (
+/obj/structure/flora/junglebush/c,
+/turf/open/floor/plating/ironsand,
+/area/refraction/nova_flare)
+"MU" = (
+/obj/machinery/blackbox_recorder,
+/turf/open/floor/stone,
+/area/refraction/nova_flare)
+"NO" = (
+/obj/structure/chair/wood{
+	dir = 8
+	},
+/turf/open/floor/wood,
+/area/refraction/nova_flare)
+"OJ" = (
+/obj/effect/landmark/refraction/spawner/nova_s2n2,
+/turf/open/floor/holofloor/chapel{
+	dir = 4
+	},
+/area/refraction/nova_flare)
+"PE" = (
+/obj/effect/landmark/refraction/spawner/nova_s3n2,
+/obj/effect/light_emitter{
+	light_power = 4;
+	light_range = 25;
+	set_cap = 3;
+	set_luminosity = 24
+	},
+/turf/open/floor/stone,
+/area/refraction/nova_flare)
+"PN" = (
+/obj/structure/fluff/paper/stack{
+	dir = 8
+	},
+/turf/open/floor/stone,
+/area/refraction/nova_flare)
+"PX" = (
+/obj/structure/dresser,
+/turf/open/floor/wood,
+/area/refraction/nova_flare)
+"Qi" = (
+/obj/structure/meatfloor,
+/turf/open/indestructible/necropolis/air,
+/area/refraction/nova_flare)
+"Rg" = (
+/obj/structure/refraction_briefing{
+	custom_frame = 1;
+	inner_frame_color = "#00bcff";
+	outer_frame_color = "#0035ff"
+	},
+/turf/open/floor/mineral/titanium/tiled/blue,
+/area/refraction/nova_flare)
+"Rh" = (
+/obj/structure/chair/sofa/corp/corner{
+	dir = 1
+	},
+/turf/open/floor/mineral/titanium/blue,
+/area/refraction/nova_flare)
+"Se" = (
+/turf/open/floor/mineral/titanium/blue,
+/area/refraction/nova_flare)
+"SQ" = (
+/turf/open/floor/plating/ironsand,
+/area/refraction/nova_flare)
+"Tb" = (
+/obj/effect/landmark/refraction/start_point/nova_s1n3,
+/turf/open/indestructible/necropolis/air,
+/area/refraction/nova_flare)
+"Ts" = (
+/obj/structure/bed{
+	pixel_y = 15;
+	layer = 2.95;
+	can_buckle = 0;
+	name = "bunk beds";
+	density = 1
+	},
+/obj/structure/bed{
+	name = "bunk beds";
+	can_buckle = 0;
+	density = 1
+	},
+/obj/structure/ladder{
+	pixel_x = 4;
+	pixel_y = -5;
+	layer = 2.97;
+	mouse_opacity = 0
+	},
+/obj/item/bedsheet/hop{
+	desc = "Fancy cloth earned through good deeds.";
+	name = "old bedsheet";
+	layer = 2.94
+	},
+/obj/item/bedsheet/hop{
+	desc = "Fancy cloth earned through good deeds.";
+	name = "old bedsheet";
+	layer = 2.96;
+	pixel_y = 15
+	},
+/turf/open/floor/wood,
+/area/refraction/nova_flare)
+"Ty" = (
+/obj/effect/turf_decal/sand/plating,
+/obj/structure/table/reinforced{
+	color = "#875300"
+	},
+/turf/open/floor/plating/rust,
+/area/refraction/nova_flare)
+"Ua" = (
+/obj/structure/bookcase,
+/turf/closed/indestructible/iron,
+/area/refraction/nova_flare)
+"UA" = (
+/obj/structure/glowshroom/single,
+/obj/effect/decal/cleanable/xenoblood/xgibs,
+/turf/open/floor/stone,
+/area/refraction/nova_flare)
+"VV" = (
+/obj/structure/sign/departments/xenobio,
+/turf/closed/indestructible/iron,
+/area/refraction/nova_flare)
+"WF" = (
+/obj/structure/flora/rock/pile,
+/turf/open/floor/plating/asteroid,
+/area/refraction/nova_flare)
+"WM" = (
+/obj/structure/fence{
+	dir = 4
+	},
+/turf/open/floor/stone,
+/area/refraction/nova_flare)
+"WP" = (
+/obj/effect/decal/cleanable/dirt,
+/turf/open/floor/plasteel/vaporwave,
+/area/refraction/nova_flare)
+"WR" = (
+/turf/open/floor/wood{
+	icon_state = "wood-broken7"
+	},
+/area/refraction/nova_flare)
+"WS" = (
+/obj/effect/landmark/refraction/spawner/nova_s3n1,
+/turf/open/floor/plating/ironsand,
+/area/refraction/nova_flare)
+"WT" = (
+/obj/structure/fluff/paper/stack{
+	dir = 4
+	},
+/obj/structure/bed/maint,
+/turf/open/floor/stone,
+/area/refraction/nova_flare)
+"Xy" = (
+/obj/effect/turf_decal/tile{
+	color = "#333333";
+	dir = 1
+	},
+/obj/effect/turf_decal/tile{
+	color = "#333333"
+	},
+/obj/effect/turf_decal/tile{
+	color = "#333333";
+	dir = 8
+	},
+/obj/effect/turf_decal/tile{
+	color = "#333333";
+	dir = 4
+	},
+/obj/effect/decal/cleanable/blood/old,
+/obj/effect/decal/cleanable/dirt,
+/obj/effect/turf_decal/sand/plating,
+/obj/effect/decal/cleanable/cobweb/cobweb2,
+/obj/structure/table/reinforced{
+	color = "#875300"
+	},
+/turf/open/floor/plasteel/kitchen_coldroom,
+/area/refraction/nova_flare)
+"XD" = (
+/obj/structure/chair/pew{
+	dir = 1;
+	mouse_opacity = 0
+	},
+/turf/open/floor/holofloor/chapel,
+/area/refraction/nova_flare)
+"Yq" = (
+/obj/effect/landmark/refraction/start_point/nova_s1n2,
+/turf/open/floor/plating/asteroid,
+/area/refraction/nova_flare)
+"ZQ" = (
+/obj/structure/refraction_healing_pod,
+/turf/open/floor/mineral/titanium/blue,
+/area/refraction/nova_flare)
+
+(1,1,1) = {"
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+"}
+(2,1,1) = {"
+mb
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+mb
+aG
+aG
+aG
+aG
+aG
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+mb
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+"}
+(3,1,1) = {"
+mb
+ad
+br
+ok
+ok
+br
+br
+br
+lA
+ma
+ma
+ma
+ma
+ad
+mb
+aG
+vr
+vr
+vr
+cf
+pf
+pf
+gp
+WM
+cr
+io
+WT
+ad
+mb
+ad
+BK
+SQ
+Iv
+SQ
+SQ
+SQ
+SQ
+lG
+SQ
+SQ
+BK
+ad
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+"}
+(4,1,1) = {"
+mb
+ad
+br
+br
+br
+br
+br
+fg
+br
+ma
+ma
+ma
+ma
+ad
+mb
+ad
+vr
+GM
+vr
+Ab
+vk
+pf
+pf
+JM
+uE
+pd
+pd
+ad
+mb
+ad
+ES
+SQ
+SQ
+SQ
+SQ
+SQ
+lG
+dy
+lG
+SQ
+SQ
+ad
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+"}
+(5,1,1) = {"
+mb
+ad
+br
+lA
+br
+br
+fg
+fg
+fg
+br
+br
+ma
+ma
+ad
+mb
+ad
+vr
+vr
+pf
+pf
+pf
+pf
+pf
+pf
+pf
+pf
+vk
+ad
+mb
+ad
+ES
+SQ
+SQ
+SQ
+SQ
+SQ
+SQ
+lG
+SQ
+SQ
+Iv
+ad
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+"}
+(6,1,1) = {"
+mb
+ad
+br
+br
+br
+pa
+br
+br
+br
+br
+ok
+lA
+ma
+ad
+mb
+ad
+zE
+vr
+pf
+pf
+pf
+pf
+Ab
+pf
+pf
+pf
+bm
+ad
+mb
+ad
+ES
+SQ
+SQ
+Mi
+SQ
+SQ
+SQ
+SQ
+SQ
+SQ
+SQ
+ad
+mb
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+mb
+"}
+(7,1,1) = {"
+mb
+ad
+br
+br
+br
+br
+br
+br
+br
+br
+ok
+br
+ma
+ad
+mb
+ad
+pf
+pf
+pf
+lg
+pf
+pf
+pf
+PN
+pf
+pf
+pf
+ad
+mb
+ad
+xp
+SQ
+SQ
+SQ
+SQ
+SQ
+SQ
+SQ
+SQ
+SQ
+SQ
+ad
+mb
+ad
+fH
+Se
+Se
+ts
+yl
+Rh
+ad
+mb
+"}
+(8,1,1) = {"
+mb
+ad
+br
+ok
+ok
+br
+br
+br
+br
+br
+br
+br
+br
+ad
+mb
+ad
+bm
+pf
+Ab
+pf
+pf
+dd
+pf
+pf
+pf
+pf
+pf
+ad
+mb
+ad
+ES
+SQ
+SQ
+SQ
+SQ
+SQ
+SQ
+SQ
+SQ
+sm
+SQ
+ad
+mb
+ad
+Se
+bR
+bR
+bR
+cs
+vz
+ad
+mb
+"}
+(9,1,1) = {"
+mb
+ad
+br
+ok
+br
+br
+br
+kH
+br
+br
+br
+lA
+br
+ad
+mb
+ad
+pf
+pf
+pf
+pf
+dd
+pf
+dd
+pf
+pf
+UA
+pf
+aG
+mb
+ad
+ES
+SQ
+WS
+SQ
+SQ
+vY
+SQ
+SQ
+SQ
+Bt
+sm
+ad
+mb
+ad
+qX
+bR
+Rg
+bR
+cs
+bx
+ad
+mb
+"}
+(10,1,1) = {"
+mb
+ad
+br
+lA
+br
+br
+br
+br
+br
+br
+br
+br
+br
+ad
+mb
+ad
+pf
+vk
+pf
+pf
+pf
+dd
+pf
+pf
+pf
+pf
+pf
+aG
+mb
+ad
+ES
+SQ
+SQ
+SQ
+SQ
+SQ
+SQ
+SQ
+SQ
+sm
+SQ
+ad
+mb
+ad
+Se
+bR
+bR
+bR
+cs
+vz
+ad
+mb
+"}
+(11,1,1) = {"
+mb
+ad
+ma
+br
+br
+br
+br
+br
+br
+br
+br
+br
+br
+ad
+mb
+ad
+MU
+pf
+pf
+PN
+pf
+pf
+pf
+pf
+pf
+bm
+vr
+aG
+mb
+ad
+xp
+SQ
+SQ
+SQ
+SQ
+SQ
+SQ
+SQ
+SQ
+SQ
+SQ
+ad
+mb
+ad
+fH
+Se
+Se
+ts
+Kr
+mr
+ad
+mb
+"}
+(12,1,1) = {"
+mb
+ad
+ma
+ma
+br
+br
+br
+br
+ok
+br
+br
+br
+br
+ad
+mb
+ad
+pd
+je
+pf
+Ab
+pf
+pf
+pf
+pf
+pf
+pf
+vr
+aG
+mb
+ad
+ES
+SQ
+SQ
+SQ
+SQ
+BK
+SQ
+SQ
+SQ
+SQ
+SQ
+ad
+mb
+ad
+ad
+ad
+ZQ
+ad
+ad
+ad
+ad
+mb
+"}
+(13,1,1) = {"
+mb
+ad
+aq
+ma
+lA
+br
+ok
+ok
+br
+br
+br
+pa
+br
+ad
+mb
+ad
+dE
+xM
+pf
+pf
+cf
+pf
+Ab
+pf
+PN
+vr
+zE
+aG
+mb
+ad
+ES
+SQ
+SQ
+SQ
+lG
+SQ
+SQ
+SQ
+SQ
+SQ
+SQ
+ad
+mb
+mb
+mb
+ad
+ad
+ad
+mb
+mb
+mb
+mb
+"}
+(14,1,1) = {"
+mb
+ad
+Ty
+ma
+br
+br
+br
+br
+br
+br
+lA
+br
+ok
+ad
+mb
+ad
+io
+WM
+lg
+pf
+pf
+pf
+pf
+pf
+pf
+GM
+vr
+aG
+mb
+ad
+ES
+SQ
+SQ
+lG
+dy
+lG
+SQ
+SQ
+SQ
+SQ
+Mi
+ad
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+"}
+(15,1,1) = {"
+mb
+ad
+Xy
+Ty
+ma
+ma
+lA
+br
+br
+br
+ok
+ok
+ok
+ad
+mb
+ad
+io
+WM
+bm
+pf
+pf
+pf
+vk
+pf
+vr
+vr
+vr
+aG
+mb
+ad
+Mi
+SQ
+SQ
+SQ
+lG
+SQ
+SQ
+Iv
+SQ
+SQ
+SQ
+ad
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+"}
+(16,1,1) = {"
+mb
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+mb
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+aG
+aG
+aG
+aG
+mb
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+"}
+(17,1,1) = {"
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+"}
+(18,1,1) = {"
+mb
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+mb
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+mb
+mb
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+"}
+(19,1,1) = {"
+mb
+ad
+WP
+kr
+WP
+tR
+br
+br
+br
+br
+br
+br
+WF
+ad
+mb
+ad
+me
+me
+me
+sF
+lu
+me
+me
+me
+me
+me
+ad
+mb
+mb
+ad
+pf
+ES
+pf
+IO
+ES
+pg
+bH
+pe
+Ts
+ES
+Gz
+pe
+pe
+Ts
+ad
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+"}
+(20,1,1) = {"
+mb
+ad
+kr
+WP
+jI
+br
+br
+Yq
+br
+br
+br
+br
+br
+ad
+mb
+ad
+so
+sF
+EA
+md
+XD
+sF
+lu
+me
+me
+me
+ad
+mb
+mb
+ad
+pf
+ES
+pf
+vr
+ES
+pe
+pe
+dl
+pi
+ES
+pi
+zF
+dl
+pe
+ad
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+"}
+(21,1,1) = {"
+mb
+ad
+WP
+WP
+mc
+br
+Yq
+Yq
+Yq
+br
+br
+Md
+br
+ad
+mb
+ad
+so
+md
+pl
+Fi
+qB
+md
+XD
+sF
+lu
+me
+ad
+mb
+mb
+ad
+pf
+ES
+pf
+pf
+ES
+pe
+zF
+pe
+kn
+ES
+kn
+bH
+pe
+pe
+ad
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+"}
+(22,1,1) = {"
+mb
+ad
+WP
+tR
+br
+br
+br
+br
+br
+WF
+br
+br
+br
+ad
+mb
+ad
+me
+jO
+EA
+md
+mf
+sF
+qB
+md
+XD
+me
+ad
+mb
+mb
+ad
+pf
+ES
+pf
+vk
+ES
+Ts
+pe
+pe
+PX
+ES
+PX
+pe
+pe
+Ts
+ad
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+"}
+(23,1,1) = {"
+mb
+ad
+br
+br
+br
+br
+br
+br
+br
+br
+br
+ya
+br
+ad
+mb
+ad
+me
+md
+pl
+sF
+EA
+md
+mf
+sF
+qB
+me
+ad
+mb
+mb
+ad
+ES
+ES
+ph
+ph
+ES
+ES
+ES
+lo
+ES
+ES
+ES
+lo
+ES
+ES
+ad
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+"}
+(24,1,1) = {"
+mb
+ad
+Md
+br
+br
+br
+br
+Md
+br
+br
+br
+ya
+br
+ad
+mb
+ad
+me
+sF
+EA
+md
+pl
+sF
+EA
+md
+mf
+km
+ad
+mb
+mb
+ad
+pf
+ku
+pf
+pf
+pf
+mi
+pf
+pf
+pf
+pf
+pf
+pf
+pf
+pf
+ad
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+"}
+(25,1,1) = {"
+mb
+ad
+br
+br
+ya
+ya
+ya
+mw
+br
+br
+br
+ya
+ya
+ad
+mb
+ad
+me
+md
+pl
+ct
+EA
+md
+pl
+sF
+hK
+me
+ad
+mb
+mb
+ad
+pf
+PE
+pf
+pf
+pf
+pf
+pf
+pf
+pf
+pf
+pf
+mi
+pf
+pf
+ad
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+"}
+(26,1,1) = {"
+mb
+ad
+ya
+ya
+br
+br
+ya
+ya
+br
+br
+ya
+br
+qr
+ad
+mb
+ad
+me
+sF
+EA
+xT
+pl
+sF
+EA
+md
+dT
+me
+ad
+mb
+mb
+ad
+pf
+pf
+pf
+mi
+pf
+pf
+pf
+pf
+pf
+pf
+pf
+pf
+pf
+pf
+ad
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+"}
+(27,1,1) = {"
+mb
+ad
+WF
+ya
+br
+br
+br
+ya
+ya
+ya
+ya
+Md
+Qi
+ad
+mb
+ad
+me
+md
+pl
+sF
+EA
+md
+pl
+sF
+lu
+km
+ad
+mb
+mb
+ad
+ES
+ES
+ES
+lo
+ES
+ES
+ES
+VV
+ph
+VV
+ES
+pf
+pf
+pf
+ad
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+"}
+(28,1,1) = {"
+mb
+ad
+Md
+ya
+pc
+pc
+pc
+Qi
+br
+br
+br
+br
+Qi
+ad
+mb
+ad
+me
+sF
+EA
+md
+pl
+sF
+lu
+md
+XD
+me
+ad
+mb
+mb
+ad
+pf
+ES
+Ts
+pe
+pe
+PX
+ES
+ph
+ph
+ph
+ES
+pf
+Jf
+pf
+ad
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+"}
+(29,1,1) = {"
+mb
+ad
+br
+Qi
+pc
+pc
+pc
+Qi
+pc
+pc
+br
+pc
+Qi
+ad
+mb
+ad
+me
+OJ
+pl
+sF
+lu
+md
+XD
+sF
+qB
+me
+ad
+mb
+mb
+ad
+pf
+ES
+pe
+pe
+pe
+kn
+ES
+iq
+aa
+mU
+ES
+Jf
+mh
+Jf
+ad
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+"}
+(30,1,1) = {"
+mb
+ad
+Qi
+pc
+pc
+pc
+pc
+Qi
+pc
+pc
+pc
+pc
+Qi
+ad
+mb
+ad
+so
+sF
+EA
+zI
+XD
+sF
+qB
+md
+mf
+me
+ad
+mb
+mb
+ad
+pf
+ES
+Ts
+pe
+zF
+NO
+ES
+mU
+Jq
+Fq
+ES
+pf
+Jf
+pf
+ad
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+"}
+(31,1,1) = {"
+mb
+ad
+Qi
+Qi
+Qi
+Qi
+Qi
+Qi
+Qi
+Qi
+Qi
+Qi
+pc
+ad
+mb
+ad
+so
+md
+pl
+sF
+qB
+md
+mf
+me
+me
+me
+ad
+mb
+mb
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+"}
+(32,1,1) = {"
+mb
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+mb
+ad
+me
+me
+me
+md
+mf
+me
+me
+me
+me
+me
+ad
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+"}
+(33,1,1) = {"
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+mb
+mb
+mb
+mb
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+mb
+mb
+mb
+mb
+mb
+mb
+"}
+(34,1,1) = {"
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+ad
+ES
+ES
+ES
+ES
+ES
+ES
+ES
+ES
+ES
+ES
+ES
+ES
+ES
+ad
+mb
+mb
+mb
+mb
+mb
+mb
+"}
+(35,1,1) = {"
+mb
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+mb
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+mb
+ad
+ES
+pf
+pf
+pf
+pf
+pf
+pf
+pf
+pf
+pf
+mi
+mh
+ES
+ad
+mb
+mb
+mb
+mb
+mb
+mb
+"}
+(36,1,1) = {"
+mb
+ad
+pb
+pb
+pb
+pb
+pb
+pb
+pb
+pb
+pb
+pb
+pb
+pb
+pb
+ad
+mb
+ad
+Ua
+Ua
+Ua
+Ua
+Ua
+Ua
+Ua
+Ua
+Ua
+Ua
+Ua
+ad
+mb
+ad
+ES
+pf
+mi
+pf
+pf
+pf
+pf
+pf
+pf
+pf
+pf
+pf
+ES
+ad
+mb
+mb
+mb
+mb
+mb
+mb
+"}
+(37,1,1) = {"
+mb
+ad
+pb
+pb
+pb
+pc
+pc
+pc
+pc
+pc
+pc
+pc
+pb
+pb
+pb
+ad
+mb
+ad
+Ua
+pe
+WR
+ze
+pe
+pe
+qk
+me
+IC
+oG
+Ua
+ad
+mb
+ad
+ES
+pf
+pf
+as
+mg
+mg
+mg
+mg
+mg
+as
+pf
+pf
+ES
+ad
+mb
+mb
+mb
+mb
+mb
+mb
+"}
+(38,1,1) = {"
+mb
+ad
+pb
+pb
+pc
+zX
+pc
+pc
+Tb
+pc
+pc
+pc
+zX
+pb
+pb
+ad
+mb
+ad
+Ua
+pe
+pe
+pe
+pe
+pe
+pe
+ze
+me
+IV
+Ua
+ad
+mb
+ad
+ES
+pf
+pf
+mg
+ES
+ES
+ES
+ES
+ES
+mg
+pf
+pf
+ES
+ad
+mb
+mb
+mb
+mb
+mb
+mb
+"}
+(39,1,1) = {"
+mb
+ad
+pb
+pb
+zX
+pc
+pc
+Tb
+Tb
+Tb
+pc
+pc
+pc
+pb
+pb
+ad
+mb
+ad
+Ua
+pe
+pe
+qk
+qk
+dl
+pe
+pe
+qk
+qk
+Ua
+ad
+mb
+ad
+ES
+pf
+pf
+mg
+ES
+LP
+LP
+LP
+ES
+mg
+pf
+pf
+ES
+ad
+mb
+mb
+mb
+mb
+mb
+mb
+"}
+(40,1,1) = {"
+mb
+ad
+pb
+pb
+pc
+pc
+pc
+pc
+kL
+pc
+pc
+pc
+pc
+pb
+pb
+ad
+mb
+ad
+Ua
+ze
+pe
+zB
+qk
+ze
+pe
+pe
+pe
+pe
+Ua
+ad
+mb
+ad
+ES
+pf
+pf
+mg
+pf
+pf
+pf
+pf
+pf
+mg
+pf
+pf
+ES
+ad
+mb
+mb
+mb
+mb
+mb
+mb
+"}
+(41,1,1) = {"
+mb
+ad
+pb
+pc
+pc
+pc
+pc
+pc
+pc
+pc
+pc
+pc
+zX
+pc
+pb
+ad
+mb
+ad
+Ua
+nZ
+pe
+zB
+qk
+pe
+pe
+pe
+pe
+pe
+Ua
+ad
+mb
+ad
+ES
+pf
+pf
+mg
+mg
+mg
+ww
+mg
+mg
+mg
+pf
+pf
+ES
+ad
+mb
+mb
+mb
+mb
+mb
+mb
+"}
+(42,1,1) = {"
+mb
+ad
+pb
+pc
+pc
+pc
+pc
+pc
+zX
+pc
+pc
+pc
+pc
+pc
+pb
+ad
+mb
+ad
+Ua
+qk
+pe
+qk
+qk
+du
+pe
+qk
+qk
+pe
+Ua
+ad
+mb
+ad
+ES
+mi
+pf
+mg
+pf
+pf
+mg
+pf
+pf
+mg
+pf
+mi
+ES
+ad
+mb
+mb
+mb
+mb
+mb
+mb
+"}
+(43,1,1) = {"
+mb
+ad
+pb
+pc
+pc
+pc
+pc
+pc
+pc
+pc
+pc
+pc
+pc
+pc
+pb
+ad
+mb
+ad
+Ua
+pe
+pe
+pe
+pe
+pe
+pe
+qk
+pe
+WR
+Ua
+ad
+mb
+ad
+ES
+pf
+pf
+mg
+pf
+mg
+mg
+mg
+pf
+mg
+pf
+pf
+ES
+ad
+mb
+mb
+mb
+mb
+mb
+mb
+"}
+(44,1,1) = {"
+mb
+ad
+pb
+pc
+zX
+pc
+zX
+pc
+pc
+pc
+pc
+pc
+pc
+pc
+pb
+ad
+mb
+ad
+Ua
+pe
+dl
+pe
+pe
+pe
+qk
+qk
+pe
+pe
+Ua
+ad
+mb
+ad
+wa
+pf
+pf
+ww
+mg
+mg
+lF
+mg
+mg
+ww
+pf
+pf
+ES
+ad
+mb
+mb
+mb
+mb
+mb
+mb
+"}
+(45,1,1) = {"
+mb
+ad
+pb
+pb
+pc
+pc
+pc
+pc
+pc
+zX
+pc
+pc
+pc
+pc
+pb
+ad
+mb
+ad
+Ua
+pe
+qk
+qk
+pe
+pe
+pe
+pe
+pe
+pe
+Ua
+ad
+mb
+ad
+ES
+pf
+pf
+mg
+pf
+mg
+mg
+mg
+pf
+mg
+pf
+pf
+ES
+ad
+mb
+mb
+mb
+mb
+mb
+mb
+"}
+(46,1,1) = {"
+mb
+ad
+pb
+pb
+pc
+pc
+pc
+pc
+pc
+pc
+pc
+pc
+zX
+pc
+pb
+ad
+mb
+ad
+Ua
+pe
+pe
+qk
+LI
+pe
+pe
+pe
+du
+pe
+Ua
+ad
+mb
+ad
+ES
+pf
+pf
+mg
+pf
+pf
+mg
+pf
+pf
+mg
+pf
+pf
+ES
+ad
+mb
+mb
+mb
+mb
+mb
+mb
+"}
+(47,1,1) = {"
+mb
+ad
+pb
+pc
+pc
+pc
+pc
+pc
+tV
+pc
+pc
+pc
+pc
+pb
+pb
+ad
+mb
+ad
+Ua
+pe
+pe
+qk
+qk
+pe
+pe
+pe
+pe
+pe
+Ua
+ad
+mb
+ad
+ES
+pf
+pf
+mg
+mg
+mg
+ww
+mg
+mg
+mg
+pf
+pf
+ES
+ad
+mb
+mb
+mb
+mb
+mb
+mb
+"}
+(48,1,1) = {"
+mb
+ad
+pb
+pc
+zX
+pc
+pc
+pc
+pc
+pc
+pc
+pc
+pc
+pb
+pb
+ad
+mb
+ad
+Ua
+pe
+du
+pe
+pe
+pe
+pe
+qk
+qk
+pe
+Ua
+ad
+mb
+ad
+ES
+pf
+pf
+mg
+pf
+pf
+pf
+pf
+pf
+mg
+pf
+pf
+ES
+ad
+mb
+mb
+mb
+mb
+mb
+mb
+"}
+(49,1,1) = {"
+mb
+ad
+pb
+pc
+pc
+pc
+pc
+pc
+kL
+pc
+pc
+pc
+pc
+zX
+pb
+ad
+mb
+ad
+Ua
+pe
+pe
+pe
+pe
+hH
+pe
+pe
+qk
+dl
+Ua
+ad
+mb
+ad
+ES
+pf
+pf
+mg
+uv
+LP
+LP
+LP
+ES
+mg
+pf
+pf
+ES
+ad
+mb
+mb
+mb
+mb
+mb
+mb
+"}
+(50,1,1) = {"
+mb
+ad
+pb
+zX
+pc
+pc
+zX
+pc
+pc
+pc
+pc
+pc
+pc
+pc
+pb
+ad
+mb
+ad
+Ua
+pe
+pe
+qk
+nZ
+pe
+du
+pe
+qk
+pe
+Ua
+ad
+mb
+ad
+ES
+pf
+pf
+mg
+ES
+ES
+ES
+ES
+ES
+mg
+pf
+pf
+ES
+ad
+mb
+mb
+mb
+mb
+mb
+mb
+"}
+(51,1,1) = {"
+mb
+ad
+pb
+pb
+pc
+pc
+pc
+pc
+pc
+pc
+zX
+pc
+pc
+pc
+pb
+ad
+mb
+ad
+Ua
+WR
+qk
+qk
+qk
+pe
+pe
+pe
+pe
+pe
+Ua
+ad
+mb
+ad
+ES
+pf
+pf
+as
+mg
+mg
+mg
+mg
+mg
+as
+pf
+pf
+ES
+ad
+mb
+mb
+mb
+mb
+mb
+mb
+"}
+(52,1,1) = {"
+mb
+ad
+pb
+pb
+pb
+pb
+pc
+pc
+pc
+pc
+pc
+pc
+pb
+pb
+pb
+ad
+mb
+ad
+Ua
+pe
+pe
+pe
+pe
+pe
+pe
+qk
+nZ
+pe
+Ua
+ad
+mb
+ad
+ES
+mi
+pf
+pf
+pf
+pf
+mi
+pf
+pf
+pf
+pf
+pf
+ES
+ad
+mb
+mb
+mb
+mb
+mb
+mb
+"}
+(53,1,1) = {"
+mb
+ad
+pb
+pb
+pb
+pb
+pb
+pb
+pb
+pb
+pb
+pb
+pb
+pb
+pb
+ad
+mb
+ad
+Ua
+Ua
+Ua
+Ua
+Ua
+Ua
+Ua
+Ua
+Ua
+Ua
+Ua
+ad
+mb
+ad
+ES
+mh
+pf
+pf
+pf
+pf
+pf
+pf
+pf
+pf
+pf
+pf
+ES
+ad
+mb
+mb
+mb
+mb
+mb
+mb
+"}
+(54,1,1) = {"
+mb
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+mb
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+mb
+ad
+ES
+ES
+ES
+ES
+ES
+ES
+ES
+ES
+ES
+ES
+ES
+ES
+ES
+ad
+mb
+mb
+mb
+mb
+mb
+mb
+"}
+(55,1,1) = {"
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+ad
+mb
+mb
+mb
+mb
+mb
+mb
+"}
+(56,1,1) = {"
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+mb
+"}

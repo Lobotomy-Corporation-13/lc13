@@ -15,6 +15,7 @@
 	minimum_distance = 2
 	maxHealth = 2000
 	health = 2000
+	gender = FEMALE
 	damage_coeff = list(RED_DAMAGE = 1.2, WHITE_DAMAGE = 1.0, BLACK_DAMAGE = 0.8, PALE_DAMAGE = 0.5)
 	stat_attack = HARD_CRIT
 	del_on_death = FALSE
@@ -100,6 +101,11 @@
 	StartCooldown()
 	despair_knight.give_blessing()
 	return TRUE
+
+/mob/living/simple_animal/hostile/abnormality/despair_knight/Destroy()
+	blessed_human = null
+	UnregisterSignal(blessed_human, list(COMSIG_LIVING_DEATH,COMSIG_HUMAN_INSANE))
+	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/despair_knight/proc/give_blessing()
 	var/list/nearby = viewers(7, src) // first call viewers to get all mobs that see us
@@ -191,7 +197,7 @@
 	density = FALSE
 	animate(src, alpha = 0, time = 5 SECONDS)
 	QDEL_IN(src, 5 SECONDS)
-	..()
+	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/despair_knight/proc/BlessedDeath(datum/source, gibbed)
 	SIGNAL_HANDLER

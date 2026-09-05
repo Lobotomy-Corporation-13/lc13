@@ -82,8 +82,9 @@
 		if(charge_effect)
 			. += span_notice("ability: [charge_effect]")
 
-/obj/item/ego_weapon/proc/HandleCharge(added_charge, mob/target)
-	if(target)
+/obj/item/ego_weapon/proc/HandleCharge(added_charge, mob/target, skip_validation = FALSE)
+	//Target validation can be skipped if already checked before damage was dealt
+	if(target && !skip_validation)
 		if((target.stat == DEAD) || target.status_flags & GODMODE) // lets not give them charge for beating up contained abnormalities
 			return FALSE
 

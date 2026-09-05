@@ -1,4 +1,4 @@
-//First set of city stuff. Cane, Streetlight, Yun office, Leaflet, The Udjat and Mirae Life Insurance, as well as generic Grade 1 fixers.
+//First set of city stuff. Cane, Streetlight, Yun office, Leaflet, Mirae Life Insurance, as well as generic Grade 1 fixers.
 /obj/structure/lootcrate/workshopleaf
 	name = "leaflet workshop crate"
 	desc = "A crate recieved from the city workshop. Open with a Crowbar."
@@ -30,7 +30,6 @@
 		/obj/item/ego_weapon/city/donghwan,
 		/obj/item/ego_weapon/city/mirae,
 		/obj/item/ego_weapon/city/mirae/page,
-		/obj/item/clothing/suit/armor/ego_gear/city/udjat,
 	)
 
 //Includes Molar, Hook Office, Misc fixers, Gaze Office and Jeong's Office, as well as color fixers
@@ -71,6 +70,9 @@
 	icon_state = "crate_zelkova"
 	veryrarechance = 20	//20% chance for rare stuff
 	rarechance = 40	//40% chance for weapons, rest is on armor.
+
+	ammochance = 50	//This is for the Fullstop Ammo.
+
 	lootlist =	list(
 		/obj/item/ego_weapon/city/dawn/sword,
 		/obj/item/ego_weapon/city/dawn/cello,
@@ -96,6 +98,11 @@
 		/obj/item/clothing/suit/armor/ego_gear/city/dawnleader,
 		/obj/item/clothing/suit/armor/ego_gear/city/wedgeleader,
 		/obj/item/clothing/suit/armor/ego_gear/city/fullstopleader,
+	)
+
+	//Fullstop Ammo.
+	ammoloot =	list(
+		/obj/item/ego_mag/fullstop,
 	)
 
 //Rosespanner Workshop. Mostly cheap to actually take advantage of the Gearsystem

@@ -244,7 +244,7 @@
 		to_chat(H, span_warning("Reading interrupted."))
 		return
 	// Weighted random level: L1=50%, L2=25%, L3=15%, L4=7%, L5=3%
-	var/level = pickweight(list(1 = 50, 2 = 25, 3 = 15, 4 = 7, 5 = 3))
+	var/level = pickweight(alist(1 = 50, 2 = 25, 3 = 15, 4 = 7, 5 = 3))
 	if(!dk.add_active_knowledge(knowledge_type, level, null, "Knowledge Book"))
 		to_chat(H, span_warning("Failed to gain knowledge. Your Active Knowledge may be full."))
 		return

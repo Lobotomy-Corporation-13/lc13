@@ -40,6 +40,10 @@
 	desc = "An armband, worn by personnel to display which department they're assigned to. This one is black and gold."
 	icon_state = "extraction"
 
+/obj/item/clothing/accessory/armband/lobotomy/extraction/lce
+	name = "LCE armband"
+	desc = "An armband, worn by personnel to display which department they're assigned to. This one is black and gold, and marks its wearer as Limbus Company Extraction."
+
 /obj/item/clothing/accessory/armband/lobotomy/records
 	name = "records department armband"
 	desc = "An armband, worn by personnel to display which department they're assigned to. This one is black and white."

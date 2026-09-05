@@ -17,6 +17,8 @@
 		/datum/reagent/ionovium,
 	)
 
+	resistance_flags = INDESTRUCTIBLE
+
 /obj/machinery/chem_dispenser/lc13/Initialize()
 	. = ..()
 	component_parts = list()

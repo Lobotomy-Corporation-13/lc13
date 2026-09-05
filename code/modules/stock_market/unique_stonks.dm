@@ -54,6 +54,15 @@
 		Rival weapon store to Pams Arsenal."
 	product = "Weapons & Armor"
 
+/datum/stonk_company/joeysbodega
+	name = "Joey's Bodega"
+	desc = "A bodega owned by a man named Joey.<br>\
+		They have excellent deals on their cured meats!"
+	product = "Gabbagool"
+	market_value = 0.07	//Rather stable.
+	fluctuation_rate = 20	//and doesn't change super often
+
+
 //Less Effort More Risk.
 /datum/stonk_company/illigal
 	min_performance = 0

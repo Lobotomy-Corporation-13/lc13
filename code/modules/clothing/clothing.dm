@@ -395,7 +395,7 @@
  * Arguments:
  * * armor_value - Number we're converting
  */
-/obj/item/clothing/proc/armor_to_protection_class(armor_value)
+/proc/armor_to_protection_class(armor_value)
 	armor_value = round(armor_value,10) / 10
 	switch (armor_value)
 		if (-INFINITY to -10)

@@ -251,7 +251,7 @@
 	retreat_distance = 4
 	minimum_distance = 4
 
-/mob/living/simple_animal/hostile/better_memories_minion/patrol_select()
+/mob/living/simple_animal/hostile/better_memories_minion/SelectPatrolLocation()
 	//Due to some weird thing the values in hunt_target become null so this empty's the list out before it gets too long.
 	if(hunt_targets.len > 5)
 		hunt_targets.Cut()
@@ -262,8 +262,7 @@
 		hunt_targets += target_turf
 
 	if(istype(target_turf))
-		patrol_path = get_path_to(src, target_turf, /turf/proc/Distance_cardinal, 0, 200)
-		return
+		return target_turf
 	return ..()
 
 /mob/living/simple_animal/hostile/better_memories_minion/patrol_reset()

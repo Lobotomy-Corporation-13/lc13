@@ -125,6 +125,7 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_EMOTEMUTE			"emotemute"
 #define TRAIT_DEAF				"deaf"
 #define TRAIT_NEARSIGHT			"nearsighted"
+#define TRAIT_SEE_REAGENTS		"see_reagents"
 #define TRAIT_FAT				"fat"
 #define TRAIT_HUSK				"husk"
 #define TRAIT_BADDNA			"baddna"
@@ -186,6 +187,7 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_BETTER_GUNS		"better_guns"
 #define TRAIT_BONUS_EXP			"bonus_exp"
 #define TRAIT_NOEGOWEAPONS		"no_ego_weapons"
+#define TRAIT_BOLUSFATIGUE		"no_bolus"
 
 /// reduces the use time of syringes, pills, patches and medigels but only when using on someone
 #define TRAIT_FASTMED "fast_med_use"

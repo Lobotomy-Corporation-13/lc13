@@ -110,7 +110,7 @@ No Ability	250
 	name = "energy conversion"
 	desc = "Just open up the machine, step inside, and press the button to make it shut. Now everything will be just fine."
 	icon_state = "energy_conversion"
-	armor = list(RED_DAMAGE = 90, WHITE_DAMAGE = 60, BLACK_DAMAGE = 50, PALE_DAMAGE = 50) //Lower red damage when it gets an ability probably
+	armor = list(RED_DAMAGE = 80, WHITE_DAMAGE = 60, BLACK_DAMAGE = 60, PALE_DAMAGE = 50)
 
 /* TETH Realizations */
 
@@ -284,6 +284,14 @@ or until the damage cap on the debuff is hit. While Fairy Lure is active on your
 	icon_state = "dimension_ripper"
 	armor = list(RED_DAMAGE = 70, WHITE_DAMAGE = 50, BLACK_DAMAGE = 60, PALE_DAMAGE = 50)		//Melee
 	realized_ability = /obj/effect/proc_holder/ability/rip_space
+
+/obj/item/clothing/suit/armor/ego_gear/realization/dimension_ripper/examine(mob/user)
+	. = ..()
+	if(user == loc)
+		. += span_notice("The Realization of Dimension Shredder has given you the ability to Rip Space!")
+		. += span_notice("Rip Space allows you to hit up to 10 targets within range.")
+		. += span_notice("In addition, while you're using Rip Space, you're invulnerable.")
+		. += span_notice("Rip Space also takes into consideration your currently held weapon.")
 
 /obj/item/clothing/suit/armor/ego_gear/realization/gift
 	name = "gift"
@@ -1036,6 +1044,12 @@ If you land the killing blow on that enemy, you get a buff and a heal.
 	icon_state = "contempt" // Sprite by insiteparaful
 	armor = list(RED_DAMAGE = 70, WHITE_DAMAGE = 40, BLACK_DAMAGE = 80, PALE_DAMAGE = 60) // No Ability (For now. Until then it just gets a suspiciously alright statline (I didn't dare add a red 8/black 8 armour))
 
+/obj/item/clothing/suit/armor/ego_gear/realization/sole_focus
+	name = "sole focus"
+	desc = "She's always watching. Do not forget who it was that sprung the project to the skies."
+	icon_state = "sole_focus"
+	armor = list(RED_DAMAGE = 50, WHITE_DAMAGE = 80, BLACK_DAMAGE = 80, PALE_DAMAGE = 40) //Two slashes allows for free ranting in the files, so... first, sprites made by Monoman335, basically it's heaven's stats boosted, the 50 is for Red resist and 40 for pale because the weapon does Red and I think it fits. Also no ability. Yet.
+
 /* ALEPH Realizations */
 
 /obj/item/clothing/suit/armor/ego_gear/realization/alcoda
@@ -1142,3 +1156,10 @@ If you land the killing blow on that enemy, you get a buff and a heal.
 	icon_state = "gasharpoon"
 	armor = list(RED_DAMAGE = 60, WHITE_DAMAGE = 70, BLACK_DAMAGE = 20, PALE_DAMAGE = 80)//230, required for the corresponding weapon abilities
 	assimilation_ability = /obj/effect/proc_holder/ability/ego_assimilation/gasharpoon
+
+/obj/item/clothing/suit/armor/ego_gear/realization/dreaming
+	name = "dreaming"
+	desc = "A dream to be free."
+	icon_state = "dreaming"
+	armor = list(RED_DAMAGE = 40, WHITE_DAMAGE = 80, BLACK_DAMAGE = 60, PALE_DAMAGE = 70)
+	assimilation_ability = /obj/effect/proc_holder/ability/ego_assimilation/dreaming

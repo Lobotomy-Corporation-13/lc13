@@ -40,7 +40,7 @@
 /obj/item/organ/tongue/proc/handle_speech(datum/source, list/speech_args)
 
 /obj/item/organ/tongue/Insert(mob/living/carbon/M, special = 0)
-	..()
+	. = ..()
 	if(say_mod && M.dna && M.dna.species)
 		M.dna.species.say_mod = say_mod
 	if (modifies_speech)
@@ -57,7 +57,7 @@
 		ADD_TRAIT(M, TRAIT_AGEUSIA, ORGAN_TRAIT)
 
 /obj/item/organ/tongue/Remove(mob/living/carbon/M, special = 0)
-	..()
+	. = ..()
 	if(say_mod && M.dna && M.dna.species)
 		M.dna.species.say_mod = initial(M.dna.species.say_mod)
 	UnregisterSignal(M, COMSIG_MOB_SAY, PROC_REF(handle_speech))
@@ -365,7 +365,7 @@
 	REMOVE_TRAIT(M, TRAIT_MUTE, "tongue")
 
 /obj/item/organ/tongue/tied/Remove(mob/living/carbon/M, special = 0)
-	..()
+	. = ..()
 	M.verb_ask = initial(verb_ask)
 	M.verb_exclaim = initial(verb_exclaim)
 	M.verb_whisper = initial(verb_whisper)

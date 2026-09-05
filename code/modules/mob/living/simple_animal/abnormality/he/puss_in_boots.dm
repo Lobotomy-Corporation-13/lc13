@@ -72,10 +72,10 @@
 /datum/action/innate/abnormality_attack/toggle/puss_finisher_toggle
 	name = "Toggle Finisher"
 	button_icon_state = "puss_toggle0"
-	chosen_attack_num = 2
+	chosen_attack_num = 1
 	chosen_message = span_colossus("You will now perform a powerful finisher move.")
 	button_icon_toggle_activated = "puss_toggle1"
-	toggle_attack_num = 1
+	toggle_attack_num = 2
 	toggle_message = span_colossus("You will not perform a finisher anymore.")
 	button_icon_toggle_deactivated = "puss_toggle0"
 

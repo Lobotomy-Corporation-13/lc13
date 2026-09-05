@@ -7,6 +7,7 @@
 	portrait = "will_you_play"
 	maxHealth = 600
 	health = 600
+	gender = FEMALE
 	threat_level = HE_LEVEL
 	work_chances = list(
 		"Rock" = 60,
@@ -24,6 +25,15 @@
 	)
 	gift_type = /datum/ego_gifts/voodoo
 	abnormality_origin = ABNORMALITY_ORIGIN_LIMBUS
+
+	observation_prompt = "This here's ma turf. Here folks play by ma rules, or else!<br>\
+		Lets play rock, paper, scissors!<br> I'll go fer scissors. how 'bout you?"
+	observation_choices = list(
+		"Play rock" = list(FALSE, "As you ball up your hand, the abnormality lashes out at you with a large pair of scissors...<br>You lose."),
+		"Play paper" = list(TRUE, "The abnormality looks up at you before beginning to cry...<br> Scissors are useless without something to cut.<br>\
+		Here take this gift I made wiv my scissors and cloth."),
+		"Play scissors" = list(FALSE, "Looking at your hand, the abnormality proclaims:<br>I dont play with people who dont trust me... Get out."),
+	)
 	var/janken = 0			//0 for scissors, 1 for Rock, 2 for paper
 	var/player = 0			//0 for scissors, 1 for Rock, 2 for paper
 	var/last_worked	//You get less if you just worked her.
@@ -34,7 +44,7 @@
 		janken = 0
 	else
 		janken = pick(1,2)
-	if(user == last_worked)
+	if(user.tag == last_worked)
 		say("You again? Fine. We'll play again.")
 	else
 		say("I'll go fer scissors. How 'bout you?")
@@ -113,7 +123,7 @@
 
 /mob/living/simple_animal/hostile/abnormality/willyouplay/proc/Lose(mob/living/carbon/human/user, work_type)
 	var/statgain
-	if(user == last_worked)
+	if(user.tag == last_worked)
 		statgain = -2
 
 	if(janken == 0)
@@ -137,4 +147,4 @@
 				user.adjust_attribute_level(A, 1)
 			continue
 		user.adjust_attribute_level(A, statgain)
-	last_worked = user
+	last_worked = user.tag

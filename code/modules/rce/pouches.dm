@@ -204,3 +204,88 @@
 	STR.set_holdable(list(
 		/obj/item/ego_weapon/city/rabbit/throwing,
 		))
+
+// Specialist Gear Pouches - Hold specialist class gear but NOT EGO weapons
+
+/obj/item/storage/storm_gear_pouch
+	name = "Storm Ram Gear Pouch"
+	desc = "A specialized pouch for holding Storm Ram equipment. Does not hold EGO weapons."
+	icon_state = "tacpouch"
+	inhand_icon_state = "tacpouch"
+	color = "#4488ff"
+	slot_flags = ITEM_SLOT_POCKETS
+	w_class = WEIGHT_CLASS_BULKY
+	resistance_flags = NONE
+	max_integrity = 300
+
+/obj/item/storage/storm_gear_pouch/ComponentInitialize()
+	. = ..()
+	var/datum/component/storage/STR = GetComponent(/datum/component/storage)
+	STR.max_combined_w_class = 21
+	STR.max_w_class = WEIGHT_CLASS_NORMAL
+	STR.max_items = 4
+	STR.set_holdable(list(
+		/obj/item/storm_dash,
+		/obj/item/static_burst_generator,
+		/obj/item/grenade/r_corp/emp,
+		/obj/item/storm_surge_barrier,
+		/obj/item/thunderstorm_slam,
+		), list(
+		/obj/item/ego_weapon
+		))
+
+/obj/item/storage/hellfire_gear_pouch
+	name = "Hellfire Rooster Gear Pouch"
+	desc = "A specialized pouch for holding Hellfire Rooster equipment. Does not hold EGO weapons."
+	icon_state = "tacpouch"
+	inhand_icon_state = "tacpouch"
+	color = "#ff4444"
+	slot_flags = ITEM_SLOT_POCKETS
+	w_class = WEIGHT_CLASS_BULKY
+	resistance_flags = NONE
+	max_integrity = 300
+
+/obj/item/storage/hellfire_gear_pouch/ComponentInitialize()
+	. = ..()
+	var/datum/component/storage/STR = GetComponent(/datum/component/storage)
+	STR.max_combined_w_class = 21
+	STR.max_w_class = WEIGHT_CLASS_NORMAL
+	STR.max_items = 4
+	STR.set_holdable(list(
+		/obj/item/grenade/r_corp/pyro,
+		/obj/item/auto_flamethrower,
+		/obj/item/incendiary_mine,
+		/obj/item/fire_trap_dispenser,
+		/obj/item/inferno_cloud_generator,
+		/obj/item/thermite_spike_launcher,
+		/obj/item/inferno_field_generator,
+		/obj/item/flame_turret_deployable,
+		), list(
+		/obj/item/ego_weapon
+		))
+
+/obj/item/storage/venom_gear_pouch
+	name = "Venom Rattlesnake Gear Pouch"
+	desc = "A specialized pouch for holding Venom Rattlesnake equipment. Does not hold EGO weapons."
+	icon_state = "tacpouch"
+	inhand_icon_state = "tacpouch"
+	color = "#44ff44"
+	slot_flags = ITEM_SLOT_POCKETS
+	w_class = WEIGHT_CLASS_BULKY
+	resistance_flags = NONE
+	max_integrity = 300
+
+/obj/item/storage/venom_gear_pouch/ComponentInitialize()
+	. = ..()
+	var/datum/component/storage/STR = GetComponent(/datum/component/storage)
+	STR.max_combined_w_class = 21
+	STR.max_w_class = WEIGHT_CLASS_NORMAL
+	STR.max_items = 4
+	STR.set_holdable(list(
+		/obj/item/grenade/r_corp/acid,
+		/obj/item/toxic_mine,
+		/obj/item/corrosive_turret_deployable,
+		/obj/item/auto_acid_sprayer,
+		), list(
+		/obj/item/ego_weapon
+		))
