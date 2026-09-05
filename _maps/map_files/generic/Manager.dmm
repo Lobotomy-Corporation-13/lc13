@@ -855,7 +855,7 @@
 /turf/open/floor/wood,
 /area/facility_hallway/manager)
 "gG" = (
-/obj/machinery/light/small/red{
+/obj/machinery/light/small{
 	dir = 1
 	},
 /obj/structure/sigsystem/tower{
@@ -1250,14 +1250,18 @@
 /turf/closed/indestructible/syndicate,
 /area/city/outskirtsfactory)
 "jI" = (
+/obj/machinery/conveyor/auto{
+	dir = 4;
+	resistance_flags = 64;
+	tamperproof = 1
+	},
 /obj/structure/railing{
 	resistance_flags = 115;
 	name = "wing-grade railing";
 	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
 	mouse_opacity = 0;
-	dir = 8
+	dir = 4
 	},
-/mob/living/simple_animal/hostile/ordeal/green_bot_big,
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
 "jL" = (
@@ -1300,7 +1304,7 @@
 /turf/open/floor/carpet/royalblack,
 /area/department_main/manager)
 "kb" = (
-/obj/machinery/light/small/red,
+/obj/machinery/light/small,
 /turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
 "kd" = (
@@ -2305,7 +2309,7 @@
 /obj/effect/turf_decal/siding/red{
 	dir = 1
 	},
-/obj/machinery/light/small/red{
+/obj/machinery/light/small{
 	dir = 1
 	},
 /turf/open/floor/circuit/red,
@@ -2459,7 +2463,7 @@
 /area/city/outskirtsfactory)
 "sl" = (
 /obj/effect/decal/cleanable/dirt/dust,
-/obj/machinery/light/small/red{
+/obj/machinery/light/small{
 	dir = 1
 	},
 /turf/open/floor/pod/dark,
@@ -2707,7 +2711,7 @@
 /turf/open/floor/facility/dark,
 /area/city/outskirtsfactory)
 "ue" = (
-/obj/machinery/light/red,
+/obj/machinery/light,
 /turf/open/floor/facility/dark,
 /area/city/outskirtsfactory)
 "ug" = (
@@ -2962,7 +2966,7 @@
 /area/facility_hallway/manager)
 "wp" = (
 /obj/effect/decal/cleanable/dirt/dust,
-/obj/machinery/light/small/red,
+/obj/machinery/light/small,
 /turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
 "wq" = (
@@ -3695,8 +3699,14 @@
 /turf/open/floor/carpet/green,
 /area/facility_hallway/manager)
 "Bv" = (
-/obj/effect/decal/cleanable/dirt/dust,
-/mob/living/simple_animal/hostile/ordeal/green_bot,
+/obj/structure/railing{
+	resistance_flags = 115;
+	name = "wing-grade railing";
+	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
+	mouse_opacity = 0;
+	dir = 4
+	},
+/obj/item/tresmetal,
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
 "BD" = (
@@ -4477,7 +4487,7 @@
 	dir = 1;
 	happens_once = 1
 	},
-/obj/machinery/light/small/red,
+/obj/machinery/light/small,
 /turf/open/floor/circuit/red,
 /area/city/outskirtsfactory)
 "HH" = (
@@ -4684,7 +4694,7 @@
 /turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
 "Jf" = (
-/obj/machinery/light/small/red{
+/obj/machinery/light/small{
 	dir = 1
 	},
 /turf/open/floor/mineral/plastitanium,
@@ -4829,18 +4839,14 @@
 /turf/open/floor/facility/dark,
 /area/city/outskirtsfactory)
 "KD" = (
-/obj/machinery/conveyor/auto{
-	dir = 4;
-	resistance_flags = 64;
-	tamperproof = 1
-	},
 /obj/structure/railing{
 	resistance_flags = 115;
 	name = "wing-grade railing";
 	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
 	mouse_opacity = 0;
-	dir = 4
+	dir = 8
 	},
+/mob/living/simple_animal/hostile/ordeal/green_bot_big,
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
 "KM" = (
@@ -5821,7 +5827,7 @@
 /turf/open/floor/wood,
 /area/facility_hallway/manager)
 "Ua" = (
-/obj/machinery/light/red{
+/obj/machinery/light{
 	dir = 1
 	},
 /obj/effect/turf_decal/stripes{
@@ -6283,14 +6289,8 @@
 /turf/open/floor/facility/dark,
 /area/facility_hallway/manager)
 "XX" = (
-/obj/structure/railing{
-	resistance_flags = 115;
-	name = "wing-grade railing";
-	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
-	mouse_opacity = 0;
-	dir = 4
-	},
-/obj/item/tresmetal,
+/obj/effect/decal/cleanable/dirt/dust,
+/mob/living/simple_animal/hostile/ordeal/green_bot,
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
 "XZ" = (
@@ -6367,7 +6367,7 @@
 /turf/open/floor/wood,
 /area/facility_hallway/manager)
 "YD" = (
-/obj/machinery/light/red{
+/obj/machinery/light{
 	dir = 4
 	},
 /obj/effect/decal/cleanable/dirt/dust,
@@ -13330,7 +13330,7 @@ oq
 GY
 pq
 vF
-jI
+KD
 vF
 vF
 vF
@@ -13839,7 +13839,7 @@ oq
 Ve
 oq
 oq
-Bv
+XX
 Ve
 tb
 oq
@@ -13852,7 +13852,7 @@ Ve
 oq
 dF
 dF
-JQ
+iU
 dF
 dF
 dF
@@ -14103,8 +14103,8 @@ mT
 sq
 mT
 mT
-KD
-XX
+jI
+Bv
 mT
 sq
 dF
