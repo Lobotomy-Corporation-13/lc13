@@ -30,7 +30,7 @@ SUBSYSTEM_DEF(flowfield)
 
 /datum/controller/subsystem/flowfield/proc/MakeMyMap(atom/source, label)
 	currently_scanning_labels += label
-	if(!label || (locate(label) in currently_scanning_labels))
+	if(!label || (label in currently_scanning_labels))
 		currently_scanning_labels -= label
 		return
 
