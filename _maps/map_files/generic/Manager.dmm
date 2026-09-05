@@ -354,12 +354,6 @@
 	},
 /turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
-"cW" = (
-/obj/structure/sigsystem/connector{
-	happens_once = 1
-	},
-/turf/open/floor/facility/dark,
-/area/city/outskirtsfactory)
 "cY" = (
 /obj/machinery/vending/coffee,
 /turf/open/floor/plasteel/dark,
@@ -385,7 +379,7 @@
 /obj/structure/sigsystem/connector/split{
 	dir = 4
 	},
-/obj/machinery/light/red{
+/obj/machinery/light{
 	dir = 8
 	},
 /obj/structure/closet/crate,
@@ -748,17 +742,6 @@
 	},
 /turf/open/floor/plasteel/dark,
 /area/department_main/manager)
-"fL" = (
-/obj/structure/railing{
-	resistance_flags = 115;
-	name = "wing-grade railing";
-	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
-	mouse_opacity = 0;
-	dir = 8
-	},
-/obj/effect/decal/cleanable/oil/slippery,
-/turf/open/floor/mineral/plastitanium,
-/area/city/outskirtsfactory)
 "fU" = (
 /obj/structure/table/wood,
 /obj/item/clipboard,
@@ -842,12 +825,18 @@
 /turf/open/floor/plasteel/dark,
 /area/facility_hallway/manager)
 "gv" = (
-/obj/machinery/door/poddoor/shutters/indestructible{
-	lockpickable = 0;
+/obj/machinery/conveyor/auto{
+	dir = 8;
 	resistance_flags = 64;
-	id = "furnaceaccess"
+	tamperproof = 1
 	},
-/obj/structure/sigsystem/activator,
+/obj/structure/railing{
+	resistance_flags = 115;
+	name = "wing-grade railing";
+	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
+	mouse_opacity = 0;
+	dir = 4
+	},
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
 "gx" = (
@@ -1184,7 +1173,7 @@
 /turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
 "jg" = (
-/obj/machinery/light/red{
+/obj/machinery/light{
 	dir = 8
 	},
 /turf/open/floor/pod/light,
@@ -1261,11 +1250,14 @@
 /turf/closed/indestructible/syndicate,
 /area/city/outskirtsfactory)
 "jI" = (
-/obj/effect/decal/cleanable/dirt/dust,
-/obj/structure/sigsystem/connector{
-	dir = 1;
-	happens_once = 1
+/obj/structure/railing{
+	resistance_flags = 115;
+	name = "wing-grade railing";
+	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
+	mouse_opacity = 0;
+	dir = 8
 	},
+/mob/living/simple_animal/hostile/ordeal/green_bot_big,
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
 "jL" = (
@@ -1690,16 +1682,6 @@
 	},
 /turf/open/floor/carpet/green,
 /area/facility_hallway/manager)
-"mI" = (
-/obj/structure/railing{
-	resistance_flags = 115;
-	name = "wing-grade railing";
-	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
-	mouse_opacity = 0;
-	dir = 10
-	},
-/turf/open/floor/mineral/plastitanium,
-/area/city/outskirtsfactory)
 "mK" = (
 /obj/structure/rack,
 /obj/item/toy/plush/big_bad_wolf,
@@ -1829,7 +1811,6 @@
 "nh" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/structure/sigsystem/connector{
-	delay_time = 90;
 	dir = 1;
 	happens_once = 1
 	},
@@ -2091,7 +2072,6 @@
 	dir = 8
 	},
 /obj/effect/decal/cleanable/dirt/dust,
-/obj/effect/decal/cleanable/oil/slippery,
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
 "pv" = (
@@ -2285,10 +2265,6 @@
 	dir = 4
 	},
 /turf/open/floor/mineral/plastitanium,
-/area/city/outskirtsfactory)
-"qW" = (
-/obj/effect/decal/cleanable/oil/slippery,
-/turf/open/floor/facility,
 /area/city/outskirtsfactory)
 "qY" = (
 /obj/structure/table/wood/fancy/royalblack,
@@ -2769,7 +2745,7 @@
 /turf/open/floor/facility/dark,
 /area/department_main/manager)
 "uO" = (
-/obj/machinery/light/small/red{
+/obj/machinery/light/small{
 	dir = 4
 	},
 /turf/open/floor/pod/dark,
@@ -2891,7 +2867,7 @@
 /turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
 "vL" = (
-/obj/machinery/light/red,
+/obj/machinery/light,
 /turf/open/floor/pod/light,
 /area/city/outskirtsfactory)
 "vM" = (
@@ -3313,7 +3289,7 @@
 /turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
 "yx" = (
-/obj/machinery/light/red{
+/obj/machinery/light{
 	dir = 8
 	},
 /obj/effect/decal/cleanable/dirt/dust,
@@ -3382,18 +3358,6 @@
 	},
 /turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
-"yT" = (
-/obj/structure/railing{
-	resistance_flags = 115;
-	name = "wing-grade railing";
-	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
-	mouse_opacity = 0;
-	dir = 4
-	},
-/obj/effect/decal/cleanable/dirt/dust,
-/obj/effect/decal/cleanable/oil/slippery,
-/turf/open/floor/mineral/plastitanium,
-/area/city/outskirtsfactory)
 "yX" = (
 /obj/item/kirbyplants{
 	icon_state = "plant-11";
@@ -3417,19 +3381,6 @@
 	pixel_y = 19
 	},
 /turf/open/floor/pod/dark,
-/area/city/outskirtsfactory)
-"zr" = (
-/obj/machinery/door/poddoor/shutters/indestructible{
-	lockpickable = 0;
-	resistance_flags = 64;
-	id = "furnaceaccess"
-	},
-/obj/structure/sigsystem/activator,
-/obj/structure/sigsystem/connector{
-	dir = 8
-	},
-/obj/effect/decal/cleanable/oil/slippery,
-/turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
 "zv" = (
 /obj/structure/chair/comfy/black{
@@ -3541,7 +3492,6 @@
 /area/city/outskirtsfactory)
 "Aa" = (
 /obj/structure/sigsystem/connector{
-	delay_time = 90;
 	dir = 1;
 	happens_once = 1
 	},
@@ -3745,18 +3695,8 @@
 /turf/open/floor/carpet/green,
 /area/facility_hallway/manager)
 "Bv" = (
-/obj/machinery/conveyor/auto{
-	dir = 1;
-	resistance_flags = 64;
-	tamperproof = 1
-	},
-/obj/structure/railing{
-	resistance_flags = 115;
-	name = "wing-grade railing";
-	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
-	mouse_opacity = 0;
-	dir = 8
-	},
+/obj/effect/decal/cleanable/dirt/dust,
+/mob/living/simple_animal/hostile/ordeal/green_bot,
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
 "BD" = (
@@ -4002,10 +3942,6 @@
 	},
 /turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
-"DR" = (
-/obj/effect/decal/cleanable/oil/slippery,
-/turf/open/floor/mineral/plastitanium,
-/area/city/outskirtsfactory)
 "DU" = (
 /obj/effect/turf_decal/siding/red/corner{
 	dir = 4
@@ -4107,7 +4043,7 @@
 	},
 /obj/structure/sigsystem/connector{
 	dir = 1;
-	delay_time = 200
+	delay_time = 150
 	},
 /turf/open/floor/facility/dark,
 /area/city/outskirtsfactory)
@@ -4186,7 +4122,7 @@
 /turf/open/floor/carpet/royalblack,
 /area/facility_hallway/manager)
 "Fm" = (
-/obj/machinery/light/red{
+/obj/machinery/light{
 	dir = 1
 	},
 /turf/open/floor/pod/light,
@@ -4420,7 +4356,7 @@
 	name = "wing-grade railing";
 	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
 	mouse_opacity = 0;
-	dir = 1
+	dir = 8
 	},
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
@@ -4468,10 +4404,6 @@
 /obj/structure/sigsystem/tower/button{
 	pixel_x = 28;
 	signal_code = 09
-	},
-/obj/structure/sigsystem/tower{
-	signal_code = 09;
-	dir = 1
 	},
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
@@ -4539,12 +4471,6 @@
 	},
 /turf/open/floor/plasteel/white,
 /area/facility_hallway/manager)
-"HC" = (
-/obj/structure/sigsystem/tower{
-	signal_code = 92
-	},
-/turf/open/floor/mineral/gold,
-/area/city/outskirtsfactory)
 "HD" = (
 /obj/effect/turf_decal/siding/red,
 /obj/structure/sigsystem/connector/split{
@@ -4560,7 +4486,7 @@
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
 "HI" = (
-/obj/machinery/light/red{
+/obj/machinery/light{
 	dir = 4
 	},
 /turf/open/floor/pod/light,
@@ -4903,14 +4829,17 @@
 /turf/open/floor/facility/dark,
 /area/city/outskirtsfactory)
 "KD" = (
-/obj/machinery/door/poddoor/shutters/indestructible{
-	lockpickable = 0;
+/obj/machinery/conveyor/auto{
+	dir = 4;
 	resistance_flags = 64;
-	id = "furnaceaccess"
+	tamperproof = 1
 	},
-/obj/structure/sigsystem/activator,
-/obj/structure/sigsystem/connector{
-	dir = 8
+/obj/structure/railing{
+	resistance_flags = 115;
+	name = "wing-grade railing";
+	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
+	mouse_opacity = 0;
+	dir = 4
 	},
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
@@ -5113,7 +5042,7 @@
 /turf/open/floor/plasteel/showroomfloor,
 /area/facility_hallway/manager)
 "MC" = (
-/obj/machinery/light/red{
+/obj/machinery/light{
 	dir = 4
 	},
 /obj/effect/decal/cleanable/dirt/dust,
@@ -5348,17 +5277,6 @@
 /obj/effect/turf_decal,
 /turf/open/floor/plasteel/dark,
 /area/facility_hallway/manager)
-"OV" = (
-/obj/structure/railing{
-	resistance_flags = 115;
-	name = "wing-grade railing";
-	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
-	mouse_opacity = 0;
-	dir = 4
-	},
-/obj/effect/decal/cleanable/oil/slippery,
-/turf/open/floor/mineral/plastitanium,
-/area/city/outskirtsfactory)
 "OZ" = (
 /obj/machinery/door/airlock/public/glass{
 	name = "Arcade"
@@ -5411,13 +5329,6 @@
 	},
 /turf/open/floor/pod/light,
 /area/city/outskirtsfactory)
-"PA" = (
-/obj/effect/turf_decal/siding/thinplating/light{
-	dir = 8
-	},
-/obj/effect/decal/cleanable/oil/slippery,
-/turf/open/floor/facility,
-/area/city/outskirtsfactory)
 "PK" = (
 /obj/machinery/requests_console{
 	announcementConsole = 1;
@@ -5441,7 +5352,7 @@
 /turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
 "PR" = (
-/obj/machinery/light/red{
+/obj/machinery/light{
 	dir = 1
 	},
 /obj/effect/decal/cleanable/dirt/dust,
@@ -5807,7 +5718,7 @@
 /turf/open/floor/plasteel/white,
 /area/facility_hallway/manager)
 "SQ" = (
-/obj/machinery/light/small/red{
+/obj/machinery/light/small{
 	dir = 8
 	},
 /turf/open/floor/pod/light,
@@ -5902,14 +5813,6 @@
 	resistance_flags = 64
 	},
 /turf/open/floor/plating/asteroid/basalt,
-/area/city/outskirtsfactory)
-"TY" = (
-/obj/effect/decal/cleanable/dirt/dust,
-/obj/item/caution{
-	pixel_y = 7;
-	pixel_x = -3
-	},
-/turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
 "TZ" = (
 /obj/effect/turf_decal/siding/wood{
@@ -6283,12 +6186,6 @@
 /obj/item/food/bread/plain,
 /turf/open/floor/plasteel/white,
 /area/facility_hallway/manager)
-"Xq" = (
-/obj/structure/railing/corner{
-	dir = 8
-	},
-/turf/open/floor/mineral/plastitanium,
-/area/city/outskirtsfactory)
 "Xs" = (
 /obj/effect/turf_decal/siding/blue{
 	dir = 9
@@ -6386,18 +6283,14 @@
 /turf/open/floor/facility/dark,
 /area/facility_hallway/manager)
 "XX" = (
-/obj/machinery/conveyor/auto{
-	dir = 4;
-	resistance_flags = 64;
-	tamperproof = 1
-	},
 /obj/structure/railing{
 	resistance_flags = 115;
 	name = "wing-grade railing";
 	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
 	mouse_opacity = 0;
-	dir = 8
+	dir = 4
 	},
+/obj/item/tresmetal,
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
 "XZ" = (
@@ -13430,19 +13323,19 @@ Ve
 rm
 co
 rm
-gv
+oq
 Ve
 ar
 oq
 GY
 pq
 vF
-fL
-mI
-sr
-sr
-sr
-sr
+jI
+vF
+vF
+vF
+vF
+vF
 dF
 dF
 dF
@@ -13687,19 +13580,19 @@ oq
 rB
 oq
 oQ
-KD
+oq
 oq
 oq
 Ve
 tb
 Ve
-DR
+oq
 Ve
-Xq
-XX
-Bv
-Bv
-Bv
+oq
+co
+Ja
+Ja
+Ja
 gQ
 VE
 xE
@@ -13944,13 +13837,13 @@ wQ
 oq
 oq
 Ve
-zr
 oq
-Ve
+oq
+Bv
 Ve
 tb
 oq
-TY
+Ve
 pJ
 Ve
 co
@@ -13959,7 +13852,7 @@ Ve
 oq
 dF
 dF
-iU
+JQ
 dF
 dF
 dF
@@ -14198,20 +14091,20 @@ XO
 XO
 dF
 kZ
-DR
+oq
 Ve
 Ve
-KD
-jI
+oq
+Ve
 Hr
 Ve
-GY
+gv
 mT
-yT
-OV
+sq
 mT
-co
 mT
+KD
+XX
 mT
 sq
 dF
@@ -21101,8 +20994,8 @@ XO
 dF
 jl
 Vx
-HC
-cW
+Vx
+Lp
 gL
 Nm
 Hl
@@ -22189,7 +22082,7 @@ XO
 dF
 MW
 gh
-PA
+gh
 pc
 gh
 gh
@@ -22449,7 +22342,7 @@ DV
 DV
 Iv
 DV
-qW
+DV
 UW
 dF
 vp
@@ -22961,7 +22854,7 @@ dF
 bW
 Iv
 DV
-qW
+DV
 DV
 DV
 Ot
