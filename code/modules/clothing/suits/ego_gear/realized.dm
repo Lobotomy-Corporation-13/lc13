@@ -1134,7 +1134,7 @@ If you land the killing blow on that enemy, you get a buff and a heal.
 	name = "farmwatch"
 	desc = "Haha. You're right, the calf doesn't recognize me."
 	icon_state = "farmwatch"
-	armor = list(RED_DAMAGE = 70, WHITE_DAMAGE = 70, BLACK_DAMAGE = 40, PALE_DAMAGE = 60)
+	armor = list(RED_DAMAGE = 70, WHITE_DAMAGE = 80, BLACK_DAMAGE = 40, PALE_DAMAGE = 60)
 	hat = /obj/item/clothing/head/ego_hat/farmwatch_hat
 	assimilation_ability = /obj/effect/proc_holder/ability/ego_assimilation/farmwatch
 
@@ -1147,7 +1147,7 @@ If you land the killing blow on that enemy, you get a buff and a heal.
 	name = "spicebush"
 	desc = "I've always wished to be a bud. Soon to bloom, bearing a scent within."
 	icon_state = "spicebush"
-	armor = list(RED_DAMAGE = 40, WHITE_DAMAGE = 70, BLACK_DAMAGE = 70, PALE_DAMAGE = 60)
+	armor = list(RED_DAMAGE = 50, WHITE_DAMAGE = 70, BLACK_DAMAGE = 70, PALE_DAMAGE = 60)
 	assimilation_ability = /obj/effect/proc_holder/ability/ego_assimilation/spicebush
 
 /obj/item/clothing/suit/armor/ego_gear/realization/desperation
