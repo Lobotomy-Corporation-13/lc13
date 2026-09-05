@@ -86,6 +86,20 @@
 		"Violence... I need violence....",
 	)
 
+	generic_bubbles = alist(
+		1 = list("%PERSON looks in horror at %ABNO.", "%ABNO is unmoving, but the dial shadows seem to move faster than what they should", "The blood Sings."),
+		2 = list("%PERSON is burned by the warmt of the black sun.", "The containament cell bleeds with the rise of the sun"),
+		3 = list("The Black Sun blinds %PERSON.", "%PERSON steps backwards to look at the abnormality. they stepped on something wet.", "the blood speaks to %PERSON, shifting to engrave itself on %PERSON's shoes"),
+		4 = list("The sky grows brighter, yet darker.", "The floor of the Containament cell gains a red tint."),
+		5 = list("%PERSON's skin sizzles.", "The Black Sun burns %PERSON.", "%PERSON has tears in their eyes while working."),
+	)
+	work_bubbles = list(
+		ABNORMALITY_WORK_INSTINCT = list("%PERSON stares at %ABNO.", "'If you just work with it, everything will be fine, right?'"),
+		ABNORMALITY_WORK_INSIGHT = list("%PERSON Tries to understand the timing of %ABNO.", "%PERSON attempts to syncronize their digital clock with %ABNO"),
+		ABNORMALITY_WORK_ATTACHMENT = list("%PERSON Praises %ABNO to no avail.", "%PERSON prays.", "The beauty of the dark Horizon is too much to handle.", "%PERSON tries to accept the warmth of the black sun", "%PERSON tries to stare at %ABNO with sunglasses. they are blinded imediately.", "%PERSON tries to sing the hours on %ABNO, their mouth is now dry."),
+		ABNORMALITY_WORK_REPRESSION = list("You may try, but you cannot.", "The blood is soothed by your pain.", "You feared thunder, rain and lightning, but now you will fear the Sun that rises in the dark Horizon."),
+	)
+
 //-----------------------------------------------------
 //-----------------------------------------------------
 //--------------The Old Black Sun stuff---------------
