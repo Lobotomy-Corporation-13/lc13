@@ -262,3 +262,31 @@
 	damtype = WHITE_DAMAGE
 
 
+
+//Throwing weapon
+/obj/item/ego_weapon/city/ncorp_nail/thrown
+	name = "WerfenNagel"
+	desc = "A small nail used by junior Ncorp inquisitors."
+	special = "Hit an enemy with this weapon to mark it. \
+		Hit this weapon with an N-Corp hammer to hurt all marked enemies."
+	icon_state = "werfennagel"
+	force = 13
+	damtype = RED_DAMAGE
+	throwforce = 30
+	throw_speed = 1
+	throw_range = 7
+
+	attack_verb_continuous = list("jabs", "stabs")
+	attack_verb_simple = list("jab", "stab")
+	hitsound = 'sound/weapons/fixer/generic/nail1.ogg'
+
+/obj/item/ego_weapon/city/ncorp_nail/thrown/throw_impact(atom/hit_atom, datum/thrownthing/throwingdatum)
+	var/caught = hit_atom.hitby(src, FALSE, FALSE, throwingdatum=throwingdatum)
+	if(caught)
+		return
+
+	if(isliving(hit_atom))
+		if(!(hit_atom in marked))
+			marked+=hit_atom
+
+	..()

@@ -81,3 +81,45 @@
 							JUSTICE_ATTRIBUTE = 60
 							)
 
+
+//The Gun
+/obj/item/ego_weapon/ranged/city/leaflet
+	name = "leaflet smoke gun"
+	desc = "A gun used by the leaflet workshop."
+	icon_state = "leaflet_gun"
+	inhand_icon_state = "leaflet_gun"
+	force = 14
+	projectile_path = /obj/projectile/ego_bullet/leaflet
+	weapon_weight = WEAPON_HEAVY
+	fire_sound = 'sound/weapons/gun/rifle/shot_alt.ogg'
+	shotsleft = 55
+	reloadtime = 2 SECONDS
+
+	magazine_type = /obj/item/ego_mag/leaflet
+	magazine_name = "Leaflet Magazine"
+	ammo_name = "Leaflet Smoke"
+
+	spread = 20
+	fire_sound = 'sound/effects/smoke.ogg'
+	autofire = 0.06 SECONDS
+	fire_sound_volume = 5
+	attribute_requirements = list(
+							FORTITUDE_ATTRIBUTE = 80,
+							PRUDENCE_ATTRIBUTE = 60,
+							TEMPERANCE_ATTRIBUTE = 60,
+							JUSTICE_ATTRIBUTE = 60
+							)
+
+/obj/projectile/ego_bullet/leaflet
+	name = "leaflet"
+	icon_state = "smoke"
+	damage = 6
+	damage_type = RED_DAMAGE
+	speed = 2
+	range = 6
+
+/obj/item/ego_mag/leaflet
+	name = "leaflet magazine"
+	desc = "Load into the leaflet smoke gun."
+	icon_state = "leaflet_magazine"
+
