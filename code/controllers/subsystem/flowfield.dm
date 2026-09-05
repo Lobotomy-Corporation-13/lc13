@@ -9,7 +9,10 @@ SUBSYSTEM_DEF(flowfield)
 	var/max_range = 100
 	var/currently_running = 0
 
-	var/list/pending_maps = list()
+	//Labels currently being scanned so we dont get duplicates.
+	var/list/currently_scanning_labels = list()
+
+	//List of directional world maps.
 	var/list/maps = list()
 
 /datum/controller/subsystem/flowfield/Recover()
@@ -17,29 +20,39 @@ SUBSYSTEM_DEF(flowfield)
 
 /datum/controller/subsystem/flowfield/Initialize()
 	attempts = world.maxz * world.maxy
-
 	return ..()
 
+/datum/controller/subsystem/flowfield/stat_entry(msg)
+	msg = "MAPS:[length(maps)]"
+	return ..()
+
+//These procs are called remotely from atoms.
+
 /datum/controller/subsystem/flowfield/proc/MakeMyMap(atom/source, label)
-	currently_running++
-	if(!label || currently_running >= 5)
-		currently_running--
+	currently_scanning_labels += label
+	if(!label || (locate(label) in currently_scanning_labels))
+		currently_scanning_labels -= label
 		return
 
 	var/turf/thing_location = get_turf(source)
 	if(!thing_location)
-		currently_running--
+		currently_scanning_labels -= label
 		return
 	var/list/flow_map = Start(thing_location)
 	if(!(label in maps))
 		maps += label
 	maps[label] = flow_map
-	currently_running--
+	currently_scanning_labels -= label
+
+/datum/controller/subsystem/flowfield/proc/FindMap(label)
+	if(label in maps)
+		return TRUE
 
 /datum/controller/subsystem/flowfield/proc/CopyMap(label)
 	if(!(label in maps))
 		return list()
-	return maps[label]
+	var/list/return_map = maps[label]
+	return return_map.Copy()
 
 /*
 * The purpose of this system is to create a map when called by an object.
@@ -49,17 +62,15 @@ SUBSYSTEM_DEF(flowfield)
 */
 
 /datum/controller/subsystem/flowfield/proc/Start(atom/source)
-	var/max_cycles = attempts
 	var/turf/start = get_turf(source)
 	var/turf/focus_turf = start
 	var/list/openf = list()
 	var/list/dir_list = list()
 	var/list/closed_turfs = list()
-	for(var/cycle = 1 to max_cycles)
+	for(var/cycle = 1 to attempts)
 		//This is to give a slight delay and ease the burdon of processing
 		if(!(cycle % 15))
-			//Hopefully every 10 cycles just pause for a moment
-			sleep(2)
+			sleep(5)
 
 		if(!focus_turf)
 			//If no focus_turf then something has gone terribly wrong.
@@ -147,21 +158,6 @@ SUBSYSTEM_DEF(flowfield)
 		return_list[tag_turf] = direction_thing
 
 	return return_list
-
-//Remove later
-/datum/controller/subsystem/flowfield/proc/UnpackCoords(turf_tag)
-	if(isnum(turf_tag))
-		stack_trace("UnpackCoordsFail")
-		return FALSE
-	if(!turf_tag)
-		return
-	var/list/splitter = splittext(turf_tag,",")
-	var/turfx = splitter[1]
-	var/turfy = splitter[2]
-	turfx = text2num(turfx)
-	turfy = text2num(turfy)
-
-	return alist("x" = turfx, "y" = turfy)
 
 /datum/controller/subsystem/flowfield/proc/AppraiseTurf(turf/T, turf/start)
 	. = 0
@@ -285,14 +281,3 @@ SUBSYSTEM_DEF(flowfield)
 			return SOUTH
 
 #undef PYTHAGOREAN
-
-/*------\
-|Testing|
-\------*/
-/obj/effect/findloc
-	icon_state = "gibspawner"// For the map editor
-
-/obj/effect/findloc/Initialize(mapload)
-	. = ..()
-
-	SSflowfield.MakeMyMap(src, AddIdentifier(get_turf(src)))
