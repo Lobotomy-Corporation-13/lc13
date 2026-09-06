@@ -1269,7 +1269,7 @@
 	mouse_opacity = 0;
 	dir = 8
 	},
-/mob/living/simple_animal/hostile/ordeal/green_bot_big,
+/mob/living/simple_animal/hostile/ordeal/green_bot,
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
 "jL" = (
