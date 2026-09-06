@@ -583,12 +583,6 @@
 	name = "asphalt"
 	},
 /area/city/outskirtsfactory)
-"lP" = (
-/mob/living/simple_animal/hostile/ordeal/green_bot,
-/obj/machinery/light,
-/obj/effect/decal/cleanable/dirt/dust,
-/turf/open/floor/pod/dark,
-/area/city/outskirtsfactory)
 "lW" = (
 /obj/structure/plasticflaps/opaque{
 	resistance_flags = 64
@@ -6223,7 +6217,7 @@ xE
 xE
 mL
 tQ
-lP
+tV
 xE
 Pn
 Pn

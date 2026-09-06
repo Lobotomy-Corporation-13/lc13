@@ -22,7 +22,7 @@
 	melee_damage_lower = 10
 	melee_damage_upper = 10
 	ranged = TRUE
-	damage_coeff = list(RED_DAMAGE = 0.5, WHITE_DAMAGE = 0.8, BLACK_DAMAGE = 1.2, PALE_DAMAGE = 1)
+	damage_coeff = list(RED_DAMAGE = 0.6, WHITE_DAMAGE = 1, BLACK_DAMAGE = 1.2, PALE_DAMAGE = 1)
 	butcher_results = list(/obj/item/food/meat/slab/robot = 22)
 	guaranteed_butcher_results = list(/obj/item/food/meat/slab/robot = 16, /obj/item/head_trophy/grungeon_cell = 1, /obj/item/keycard/grungeon = 1)
 	death_sound = 'sound/effects/ordeals/green/midnight_dead.ogg'
@@ -30,7 +30,6 @@
 	damage_effect_scale = 1.25
 	rapid = 50
 	rapid_fire_delay = 0.4
-	ranged_cooldown_time = 15
 	projectilesound = 'sound/weapons/gun/smg/shot.ogg'
 	casingtype = /obj/item/ammo_casing/caseless/soda_mini
 	var/datum/beam/current_beam = null
