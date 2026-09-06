@@ -332,6 +332,13 @@
 	},
 /turf/open/indestructible/white,
 /area/city/shop)
+"cN" = (
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 8
+	},
+/obj/machinery/body_modification_fabricator,
+/turf/open/floor/facility/dark,
+/area/city/house)
 "cR" = (
 /obj/structure/table/wood,
 /obj/item/flashlight/lamp,
@@ -1006,13 +1013,13 @@
 /obj/item/storage/secure/safe{
 	pixel_x = -22
 	},
-/obj/structure/table,
 /obj/machinery/light{
 	dir = 1
 	},
 /obj/effect/turf_decal/siding/wideplating/dark{
 	dir = 9
 	},
+/obj/structure/table,
 /turf/open/floor/facility/dark,
 /area/city/house)
 "iR" = (
@@ -3368,6 +3375,9 @@
 /area/city)
 "CM" = (
 /obj/machinery/light,
+/obj/machinery/body_modification_fabricator/public{
+	resistance_flags = 64
+	},
 /turf/open/floor/wood{
 	color = "#ccc8c0"
 	},
@@ -3433,13 +3443,14 @@
 /area/city/house)
 "Dw" = (
 /obj/structure/rack,
-/obj/item/forginghammer,
-/obj/item/forginghammer,
-/obj/item/forginghammer,
 /obj/effect/turf_decal/siding/thinplating/dark{
 	dir = 1
 	},
 /obj/effect/turf_decal/siding/thinplating/dark,
+/obj/item/augment_tester,
+/obj/item/body_modification_remover,
+/obj/item/body_modification_tester,
+/obj/item/augment_remover,
 /turf/open/floor/facility/dark,
 /area/city/house)
 "DB" = (
@@ -3597,6 +3608,13 @@
 	},
 /turf/open/indestructible/white,
 /area/city/shop)
+"EK" = (
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 4
+	},
+/obj/machinery/augment_fabricator,
+/turf/open/floor/facility/dark,
+/area/city/house)
 "EM" = (
 /obj/structure/table/greyscale,
 /obj/structure/sink{
@@ -5649,6 +5667,15 @@
 	},
 /turf/open/indestructible/white,
 /area/city/shop)
+"Ye" = (
+/obj/machinery/augment_catalogue{
+	pixel_x = 32;
+	pixel_y = 0
+	},
+/turf/open/floor/wood{
+	color = "#ccc8c0"
+	},
+/area/city/house)
 "Yf" = (
 /obj/structure/curtain,
 /turf/open/indestructible/white,
@@ -30991,7 +31018,7 @@ Na
 qn
 iQ
 fA
-fA
+cN
 Cp
 rg
 FX
@@ -32019,10 +32046,10 @@ Na
 qn
 JX
 bv
-bv
+EK
 bz
 tB
-FX
+Ye
 CM
 qn
 Na

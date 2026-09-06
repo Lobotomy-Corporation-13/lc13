@@ -8,37 +8,38 @@
 	log_admin("[key_name(usr)] is forcing a random map rotation.")
 	SSmapping.maprotate()
 
-/client/proc/adminchangesubmap(datum/map_config/map_config = null)
+/client/proc/adminchangesubmap()
 	set category = "Server"
 	set name = "Change Submap"
-	
+	set desc = "Set the next map's variant, if it has any."
+
+	var/datum/map_config/map_config = SSmapping.next_map_config
+
 	if(!map_config)
-		map_config = SSmapping.next_map_config
-		if(!map_config)
-			to_chat(usr, span_warning("No map is currently selected!"))
-			return
-	
+		to_chat(usr, span_warning("No map is currently selected!"))
+		return
+
 	if(!map_config.has_submaps || map_config.available_submaps.len <= 1)
 		to_chat(usr, span_warning("[map_config.map_name] does not have multiple variants!"))
 		return
-	
+
 	var/list/submap_choices = list()
 	for(var/submap in map_config.available_submaps)
 		var/display_name
 		// Check if we have a custom display name
-		if(submap in map_config.submap_display_names)
-			display_name = map_config.submap_display_names[submap]
+		if(istext(map_config.available_submaps[submap]))
+			display_name = map_config.available_submaps[submap]
 		else
 			// Fall back to cleaned up filename
 			display_name = replacetext(submap, ".dmm", "")
 			display_name = replacetext(display_name, "_", " ")
 			display_name = capitalize(display_name)
 		submap_choices[display_name] = submap
-	
+
 	var/chosen_submap = input("Choose a variant for [map_config.map_name]", "Submap Selection") as null|anything in sortList(submap_choices)
 	if(!chosen_submap)
 		return
-	
+
 	var/actual_file = submap_choices[chosen_submap]
 	if(map_config.SetSelectedSubmap(actual_file))
 		map_config.MakeNextMap()
@@ -50,19 +51,19 @@
 /client/proc/adminforcesubmapvote()
 	set category = "Server"
 	set name = "Force Submap Vote"
-	
+
 	if(!SSmapping.next_map_config)
 		to_chat(usr, span_warning("No map is currently selected!"))
 		return
-	
+
 	if(!SSmapping.next_map_config.has_submaps || SSmapping.next_map_config.available_submaps.len <= 1)
 		to_chat(usr, span_warning("The selected map does not have multiple variants!"))
 		return
-	
+
 	if(SSvote.mode)
 		to_chat(usr, span_warning("There is already a vote in progress!"))
 		return
-	
+
 	SSvote.initiate_vote("submap", key_name(usr))
 	message_admins("[key_name_admin(usr)] forced a submap vote for [SSmapping.next_map_config.map_name]")
 	log_admin("[key_name(usr)] forced a submap vote for [SSmapping.next_map_config.map_name]")
@@ -161,27 +162,26 @@
 		var/datum/map_config/source_config = maprotatechoices[chosenmap]
 		message_admins("[key_name_admin(usr)] is changing the map to [source_config.map_name]")
 		log_admin("[key_name(usr)] is changing the map to [source_config.map_name]")
-		
+
 		// We need to load a fresh copy of the config to modify
 		var/datum/map_config/VM = load_map_config(source_config.config_filename, error_if_missing = FALSE)
 		if(!VM)
 			to_chat(usr, span_warning("Failed to load map config!"))
 			return
-		
+
 		// Check if this map has submaps and ask admin if they want to select one BEFORE changemap
 		if(VM.has_submaps && VM.available_submaps.len > 1)
 			var/submap_choice = alert("This map has multiple variants. Do you want to select a specific one?", "Submap Selection", "Select Variant", "Start Vote", "Random")
 			switch(submap_choice)
 				if("Select Variant")
-					adminchangesubmap(VM)
+					SSmapping.next_map_config = VM
+					adminchangesubmap()
 				if("Start Vote")
-					// Let changemap handle the vote timing
-					// Just mark that admin wants a vote
+					addtimer(CALLBACK(SSmapping, TYPE_PROC_REF(/datum/controller/subsystem/mapping, AttemptSubmapVote)), 5 SECONDS)
+					to_chat(world, span_boldannounce("An administrator is opening a vote for a selected map's variant. A vote will start shortly to choose which one to play!"))
 				if("Random")
-					// Pick a random submap now
-					var/selected = pick(VM.available_submaps)
-					VM.SetSelectedSubmap(selected)
-					message_admins("[key_name_admin(usr)] randomly selected '[selected]' variant for [VM.map_name]")
-		
-		if (SSmapping.changemap(VM))
+					VM.SetSelectedSubmap(SUBMAP_DEFAULT_RANDOM)
+					message_admins("[key_name_admin(usr)] randomly selected [VM.available_submaps[VM.map_file]] variant for [VM.map_name]")
+
+		if(SSmapping.changemap(VM))
 			message_admins("[key_name_admin(usr)] has changed the map to [VM.map_name]")
