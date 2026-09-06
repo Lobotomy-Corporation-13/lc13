@@ -225,8 +225,8 @@
 	abno_info = list(
 		"When the work result was Bad, the Qliphoth Counter decreased.",
 		"When the work result was Neutral, the Qliphoth Counter lowered with a moderate probability.",
-		"When employees with Temperance Level 3 or higher worked on The Watchman, the work rates were reduced.",
-		"While breached, The Watchman flooded the surrounding area with darkness. This darkness had the same propogation characteristics as light.")
+		"While breached, O-01-132 flooded the surrounding area with darkness. This darkness had the same propogation characteristics as light.",
+		"Until attacked by a human, accidentally or not, O-01-132 would assist humans in combat.")
 	abno_breach_damage_type = "None"
 	abno_breach_damage_count = "None"
 
