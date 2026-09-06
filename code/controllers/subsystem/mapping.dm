@@ -403,11 +403,6 @@ GLOBAL_LIST_EMPTY(the_station_areas)
 
 	next_map_config = VM
 
-	// If this map has submaps and no specific one was selected, initiate a submap vote
-	if(VM.has_submaps && VM.available_submaps.len > 1 && islist(VM.map_file))
-		addtimer(CALLBACK(src, PROC_REF(AttemptSubmapVote)), 5 SECONDS)
-		to_chat(world, span_boldannounce("The selected map has multiple variants. A vote will start shortly to choose which one to play!"))
-
 	return TRUE
 
 /datum/controller/subsystem/mapping/proc/AttemptSubmapVote()
