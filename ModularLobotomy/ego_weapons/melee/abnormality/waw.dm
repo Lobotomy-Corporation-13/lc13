@@ -205,7 +205,6 @@
 
 	if(mode)
 		if(M in targets)
-			to_chat(user, "THIS IS WORKING")
 			playsound(M, 'sound/weapons/fixer/generic/nail1.ogg', 100, FALSE, 4)
 			M.deal_damage(ranged_damage, WHITE_DAMAGE, user, attack_type = (ATTACK_TYPE_SPECIAL))
 			new /obj/effect/temp_visual/remorse(get_turf(M))
