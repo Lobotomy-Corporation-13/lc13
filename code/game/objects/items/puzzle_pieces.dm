@@ -45,7 +45,7 @@
 	/// Make sure that the key has the same puzzle_id as the keycard door!
 	var/puzzle_id = null
 	/// Message that occurs when the door is opened
-	var/open_message = "The door beeps, and slides opens."
+	var/open_message = "The door beeps, and slides open."
 
 //Standard Expressions to make keycard doors basically un-cheeseable
 /obj/machinery/door/keycard/Bumped(atom/movable/AM)
