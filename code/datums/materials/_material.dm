@@ -76,7 +76,8 @@ Simple datum which is instanced once per type and is used for every object of sa
 	if(material_flags & MATERIAL_ADD_PREFIX)
 		source.name = "[name] [source.name]"
 
-	if(beauty_modifier)
+	// Only add beauty to structures and turfs, not to items (prevents spam from glass items)
+	if(beauty_modifier && !isitem(source))
 		source.AddComponent(/datum/component/beauty, beauty_modifier * amount)
 
 	if(istype(source, /obj)) //objs
@@ -145,7 +146,8 @@ Simple datum which is instanced once per type and is used for every object of sa
 	if(material_flags & MATERIAL_ADD_PREFIX)
 		source.name = initial(source.name)
 
-	if(beauty_modifier) //component/beauty/InheritComponent() will handle the removal.
+	// Only remove beauty from structures and turfs (matches on_applied check)
+	if(beauty_modifier && !isitem(source))
 		source.AddComponent(/datum/component/beauty, -beauty_modifier * amount)
 
 	if(istype(source, /obj)) //objs

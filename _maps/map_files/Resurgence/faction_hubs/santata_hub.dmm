@@ -1,0 +1,2098 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"ag" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/wood,
+/area/resurgence/faction_hub/santata_factory)
+"aK" = (
+/obj/item/toy/xmas_cracker,
+/obj/structure/closet/crate/miningcar,
+/turf/open/floor/wood{
+	icon_state = "wood-broken"
+	},
+/area/resurgence/faction_hub/santata_factory/entrance)
+"by" = (
+/obj/structure/table/wood,
+/obj/effect/spawner/lootdrop/three_course_meal,
+/turf/open/floor/carpet/red,
+/area/resurgence/faction_hub/santata_factory/entrance)
+"ca" = (
+/turf/closed/indestructible/wood,
+/area/resurgence/faction_hub/santata_factory)
+"cy" = (
+/obj/effect/turf_decal/weather/snow/corner{
+	dir = 4
+	},
+/turf/open/floor/holofloor/snow{
+	base_icon_state = "snow";
+	icon_state = "snow_dug";
+	name = "dug snow"
+	},
+/area/resurgence/faction_hub/santata_factory)
+"de" = (
+/obj/structure/flora/stump,
+/turf/open/floor/plating/asteroid/snow,
+/area/resurgence/faction_hub/santata_factory)
+"dr" = (
+/turf/closed/indestructible/rock/snow/ice,
+/area/resurgence/faction_hub/santata_factory)
+"dw" = (
+/obj/effect/turf_decal/weather/snow/corner,
+/turf/open/floor/holofloor/snow{
+	base_icon_state = "snow";
+	icon_state = "snow_dug";
+	name = "dug snow"
+	},
+/area/resurgence/faction_hub/santata_factory)
+"dN" = (
+/turf/open/floor/wood{
+	icon_state = "wood-broken6"
+	},
+/area/resurgence/faction_hub/santata_factory/entrance)
+"dP" = (
+/turf/open/floor/wood,
+/area/resurgence/faction_hub/santata_factory/entrance)
+"dR" = (
+/turf/open/floor/holofloor/snow{
+	base_icon_state = "snow"
+	},
+/area/resurgence/faction_hub/santata_factory)
+"eo" = (
+/turf/open/floor/wood,
+/area/resurgence/faction_hub/santata_factory/office)
+"fq" = (
+/obj/structure/mineral_door/wood,
+/turf/open/floor/wood,
+/area/resurgence/faction_hub/santata_factory/entrance)
+"gO" = (
+/obj/structure/statue/snow/snowlegion,
+/obj/structure/statue/custom{
+	resistance_flags = 64;
+	mouse_opacity = 0
+	},
+/turf/open/floor/wood,
+/area/resurgence/faction_hub/santata_factory/office)
+"gT" = (
+/obj/item/hot_potato/harmless/toy,
+/turf/open/floor/carpet/red,
+/area/resurgence/faction_hub/santata_factory/entrance)
+"jL" = (
+/turf/closed/indestructible/fakeglass,
+/area/resurgence/faction_hub/santata_factory/entrance)
+"kN" = (
+/obj/structure/table/wood/fancy,
+/obj/item/clothing/head/santa,
+/obj/item/clothing/head/santa,
+/obj/item/clothing/head/santa,
+/turf/open/floor/wood,
+/area/resurgence/faction_hub/santata_factory/entrance)
+"lK" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/item/toy/xmas_cracker,
+/turf/open/floor/wood,
+/area/resurgence/faction_hub/santata_factory/entrance)
+"mv" = (
+/turf/closed/indestructible/fakeglass,
+/area/resurgence/faction_hub/santata_factory)
+"oF" = (
+/obj/structure/flora/tree/pine,
+/turf/open/floor/plating/asteroid/snow,
+/area/resurgence/faction_hub/santata_factory)
+"pj" = (
+/turf/closed/indestructible/wood,
+/area/resurgence/faction_hub/santata_factory/office)
+"pn" = (
+/mob/living/simple_animal/hostile/faction_hub_civilian/santata_factory,
+/turf/open/floor/wood,
+/area/resurgence/faction_hub/santata_factory)
+"qi" = (
+/obj/effect/landmark/faction_trader_spawn/santata_factory,
+/turf/open/floor/carpet/red,
+/area/resurgence/faction_hub/santata_factory/office)
+"qu" = (
+/turf/open/floor/holofloor/snow{
+	base_icon_state = "snow";
+	icon_state = "snow_dug";
+	name = "dug snow"
+	},
+/area/resurgence/faction_hub/santata_factory)
+"qE" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/wood,
+/area/resurgence/faction_hub/santata_factory/office)
+"qG" = (
+/obj/effect/turf_decal/loading_area/red,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/wood,
+/area/resurgence/faction_hub/santata_factory/entrance)
+"rd" = (
+/obj/structure/mineral_door/wood,
+/turf/open/floor/wood,
+/area/resurgence/faction_hub/santata_factory/office)
+"sK" = (
+/obj/structure/flora/bush,
+/turf/open/floor/plating/asteroid/snow,
+/area/resurgence/faction_hub/santata_factory)
+"tj" = (
+/obj/structure/flora/grass/both,
+/turf/open/floor/plating/asteroid/snow,
+/area/resurgence/faction_hub/santata_factory)
+"tz" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/carpet/red,
+/area/resurgence/faction_hub/santata_factory/office)
+"tJ" = (
+/turf/closed/indestructible/rock/snow/ice,
+/area/space)
+"uf" = (
+/obj/structure/chair/sofa/corner{
+	dir = 8
+	},
+/obj/effect/landmark/faction_hub_spawn/santata_factory,
+/obj/effect/turf_decal/delivery,
+/turf/open/floor/carpet/red,
+/area/resurgence/faction_hub/santata_factory/entrance)
+"uA" = (
+/turf/open/floor/wood{
+	icon_state = "wood-broken7"
+	},
+/area/resurgence/faction_hub/santata_factory/entrance)
+"vj" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/wood,
+/area/resurgence/faction_hub/santata_factory/entrance)
+"wb" = (
+/obj/structure/chair/sofa/left{
+	dir = 4
+	},
+/turf/open/floor/carpet/red,
+/area/resurgence/faction_hub/santata_factory/entrance)
+"xW" = (
+/obj/structure/fluff/paper/stack{
+	dir = 4
+	},
+/turf/open/floor/carpet/red,
+/area/resurgence/faction_hub/santata_factory/office)
+"AQ" = (
+/obj/structure/fluff/paper/stack,
+/turf/open/floor/wood,
+/area/resurgence/faction_hub/santata_factory/office)
+"BP" = (
+/obj/structure/table/wood/fancy/red,
+/obj/item/pen/fountain,
+/turf/open/floor/carpet/red,
+/area/resurgence/faction_hub/santata_factory/office)
+"CK" = (
+/obj/item/toy/braintoy,
+/turf/open/floor/carpet/red,
+/area/resurgence/faction_hub/santata_factory/entrance)
+"CP" = (
+/obj/item/toy/xmas_cracker,
+/obj/structure/closet/crate/miningcar,
+/turf/open/floor/wood,
+/area/resurgence/faction_hub/santata_factory/entrance)
+"ED" = (
+/obj/structure/sign/painting/library,
+/turf/closed/indestructible/wood,
+/area/resurgence/faction_hub/santata_factory/entrance)
+"EE" = (
+/obj/machinery/door/keycard/cuckoo_nest{
+	resistance_flags = 64
+	},
+/turf/closed/indestructible/wood,
+/area/resurgence/faction_hub/santata_factory/entrance)
+"FT" = (
+/obj/effect/decal/cleanable/blood/tracks{
+	dir = 7
+	},
+/mob/living/simple_animal/hostile/faction_hub_civilian/santata_factory,
+/turf/open/floor/wood{
+	icon_state = "wood-broken7"
+	},
+/area/resurgence/faction_hub/santata_factory)
+"Gt" = (
+/obj/structure/fluff/paper/stack{
+	dir = 8
+	},
+/mob/living/simple_animal/hostile/faction_hub_civilian/santata_factory,
+/turf/open/floor/wood{
+	icon_state = "wood-broken"
+	},
+/area/resurgence/faction_hub/santata_factory/office)
+"Hc" = (
+/obj/effect/turf_decal/weather/snow/corner{
+	dir = 5
+	},
+/turf/open/floor/holofloor/snow{
+	base_icon_state = "snow";
+	icon_state = "snow_dug";
+	name = "dug snow"
+	},
+/area/resurgence/faction_hub/santata_factory)
+"HH" = (
+/obj/structure/chair/sofa/corner{
+	dir = 1
+	},
+/obj/effect/landmark/faction_hub_spawn/santata_factory,
+/obj/effect/turf_decal/delivery,
+/turf/open/floor/carpet/red,
+/area/resurgence/faction_hub/santata_factory/entrance)
+"Jo" = (
+/obj/structure/statue/snow/snowman,
+/turf/open/floor/holofloor/snow{
+	base_icon_state = "snow"
+	},
+/area/resurgence/faction_hub/santata_factory)
+"Js" = (
+/turf/open/floor/carpet/red,
+/area/resurgence/faction_hub/santata_factory/office)
+"LH" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/closet/crate/miningcar,
+/turf/open/floor/wood,
+/area/resurgence/faction_hub/santata_factory)
+"LR" = (
+/obj/effect/turf_decal/weather/snow/corner{
+	dir = 8
+	},
+/turf/open/floor/holofloor/snow{
+	base_icon_state = "snow";
+	icon_state = "snow_dug";
+	name = "dug snow"
+	},
+/area/resurgence/faction_hub/santata_factory)
+"MP" = (
+/obj/effect/turf_decal/loading_area/red,
+/turf/open/floor/wood,
+/area/resurgence/faction_hub/santata_factory/entrance)
+"NA" = (
+/turf/open/floor/carpet/red,
+/area/resurgence/faction_hub/santata_factory/entrance)
+"Of" = (
+/obj/structure/table/wood/fancy/red,
+/obj/item/paper_bin,
+/turf/open/floor/carpet/red,
+/area/resurgence/faction_hub/santata_factory/office)
+"OL" = (
+/turf/open/floor/wood{
+	icon_state = "wood-broken7"
+	},
+/area/resurgence/faction_hub/santata_factory)
+"Pl" = (
+/obj/effect/turf_decal/weather/snow/corner{
+	dir = 10
+	},
+/turf/open/floor/holofloor/snow{
+	base_icon_state = "snow";
+	icon_state = "snow_dug";
+	name = "dug snow"
+	},
+/area/resurgence/faction_hub/santata_factory)
+"Qp" = (
+/obj/structure/chair/sofa{
+	dir = 1
+	},
+/obj/effect/landmark/faction_hub_spawn/santata_factory,
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/turf_decal/delivery,
+/turf/open/floor/carpet/red,
+/area/resurgence/faction_hub/santata_factory/entrance)
+"Qy" = (
+/obj/structure/sign/painting/library,
+/turf/closed/indestructible/wood,
+/area/resurgence/faction_hub/santata_factory/office)
+"QH" = (
+/turf/closed/indestructible/wood,
+/area/resurgence/faction_hub/santata_factory/entrance)
+"QL" = (
+/turf/open/floor/wood,
+/area/resurgence/faction_hub/santata_factory)
+"QQ" = (
+/obj/structure/table/wood/fancy,
+/obj/item/storage/backpack/santabag,
+/obj/item/storage/backpack/santabag,
+/obj/item/storage/backpack/santabag,
+/turf/open/floor/wood,
+/area/resurgence/faction_hub/santata_factory/entrance)
+"Rh" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/decal/cleanable/blood/tracks{
+	dir = 7
+	},
+/turf/open/floor/wood,
+/area/resurgence/faction_hub/santata_factory)
+"Rt" = (
+/obj/structure/chair/sofa/right{
+	dir = 8
+	},
+/turf/open/floor/carpet/red,
+/area/resurgence/faction_hub/santata_factory/entrance)
+"Se" = (
+/obj/structure/fireplace,
+/obj/item/lighter/greyscale,
+/turf/open/floor/wood,
+/area/resurgence/faction_hub/santata_factory/entrance)
+"Sf" = (
+/obj/item/toy/xmas_cracker,
+/turf/open/floor/carpet/red,
+/area/resurgence/faction_hub/santata_factory/entrance)
+"SX" = (
+/obj/effect/decal/cleanable/blood/tracks{
+	dir = 10
+	},
+/turf/open/floor/wood,
+/area/resurgence/faction_hub/santata_factory)
+"Tw" = (
+/obj/machinery/door/keycard/cuckoo_nest{
+	resistance_flags = 64
+	},
+/turf/closed/indestructible/wood,
+/area/resurgence/faction_hub/santata_factory)
+"Ue" = (
+/obj/structure/table/wood/fancy,
+/obj/item/clothing/suit/space/santa,
+/obj/item/clothing/suit/space/santa,
+/turf/open/floor/wood,
+/area/resurgence/faction_hub/santata_factory/entrance)
+"Vp" = (
+/turf/open/floor/wood{
+	icon_state = "wood-broken6"
+	},
+/area/resurgence/faction_hub/santata_factory/office)
+"VL" = (
+/turf/open/floor/wood{
+	icon_state = "wood-broken"
+	},
+/area/resurgence/faction_hub/santata_factory)
+"WQ" = (
+/obj/effect/turf_decal/weather/snow/corner{
+	dir = 9
+	},
+/turf/open/floor/holofloor/snow{
+	base_icon_state = "snow";
+	icon_state = "snow_dug";
+	name = "dug snow"
+	},
+/area/resurgence/faction_hub/santata_factory)
+"Xa" = (
+/obj/effect/turf_decal/weather/snow/corner{
+	dir = 1
+	},
+/turf/open/floor/holofloor/snow{
+	base_icon_state = "snow";
+	icon_state = "snow_dug";
+	name = "dug snow"
+	},
+/area/resurgence/faction_hub/santata_factory)
+"Xr" = (
+/turf/open/floor/wood{
+	icon_state = "wood-broken"
+	},
+/area/resurgence/faction_hub/santata_factory/entrance)
+"XF" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/mob/living/simple_animal/hostile/faction_hub_civilian/santata_factory,
+/turf/open/floor/wood,
+/area/resurgence/faction_hub/santata_factory/entrance)
+"XW" = (
+/obj/effect/landmark/faction_hub_exit/santata_factory,
+/obj/effect/turf_decal/delivery/red,
+/turf/open/floor/wood,
+/area/resurgence/faction_hub/santata_factory/entrance)
+"Yd" = (
+/obj/structure/flora/tree/pine/xmas,
+/turf/open/floor/carpet/red,
+/area/resurgence/faction_hub/santata_factory/entrance)
+"Zc" = (
+/obj/structure/sign/painting/library,
+/turf/closed/indestructible/wood,
+/area/resurgence/faction_hub/santata_factory)
+"Zg" = (
+/turf/open/floor/wood{
+	icon_state = "wood-broken6"
+	},
+/area/resurgence/faction_hub/santata_factory)
+"Zm" = (
+/mob/living/simple_animal/hostile/faction_hub_civilian/santata_factory,
+/turf/open/floor/wood,
+/area/resurgence/faction_hub/santata_factory/entrance)
+
+(1,1,1) = {"
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+dr
+"}
+(2,1,1) = {"
+dr
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dr
+"}
+(3,1,1) = {"
+dr
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dr
+"}
+(4,1,1) = {"
+dr
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+tj
+dR
+dR
+tj
+dR
+dR
+dR
+dR
+dR
+sK
+dR
+dR
+dR
+de
+dR
+dR
+dR
+dR
+dR
+dr
+"}
+(5,1,1) = {"
+dr
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+de
+dR
+dR
+dr
+"}
+(6,1,1) = {"
+dr
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+de
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dr
+"}
+(7,1,1) = {"
+dr
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+oF
+de
+dR
+dR
+dR
+dR
+dR
+dR
+tj
+dR
+dR
+oF
+dR
+dR
+dR
+dR
+dR
+dR
+dr
+"}
+(8,1,1) = {"
+dr
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+tj
+de
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+de
+sK
+dR
+dR
+dR
+dr
+"}
+(9,1,1) = {"
+dr
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+sK
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dr
+"}
+(10,1,1) = {"
+dr
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+tj
+dR
+de
+dR
+dR
+oF
+dR
+dR
+dR
+tj
+dR
+dR
+dR
+dR
+dR
+dR
+de
+dR
+dr
+"}
+(11,1,1) = {"
+dr
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+Jo
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+de
+dR
+dR
+dR
+dR
+dr
+"}
+(12,1,1) = {"
+dr
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+ca
+ca
+ca
+ca
+ca
+ca
+ca
+ca
+ca
+ca
+ca
+ca
+QH
+QH
+ED
+QH
+jL
+jL
+jL
+QH
+QH
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+sK
+dR
+dR
+dr
+"}
+(13,1,1) = {"
+dr
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+ca
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QH
+CP
+uA
+Zm
+dP
+lK
+MP
+XW
+QH
+WQ
+Pl
+dR
+oF
+dR
+tj
+dR
+dR
+tj
+dR
+dr
+"}
+(14,1,1) = {"
+dr
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+ca
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+ED
+dP
+vj
+wb
+HH
+dP
+qG
+XW
+EE
+qu
+qu
+LR
+LR
+LR
+Pl
+dR
+dR
+dR
+dR
+dr
+"}
+(15,1,1) = {"
+dr
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+ca
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QH
+Se
+dP
+by
+Qp
+dP
+MP
+XW
+ED
+Hc
+cy
+cy
+qu
+qu
+dw
+dR
+dR
+dR
+dR
+dr
+"}
+(16,1,1) = {"
+dr
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+ca
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QH
+dP
+vj
+Rt
+uf
+dP
+Xr
+XF
+jL
+dR
+sK
+dR
+Hc
+qu
+dw
+dR
+dR
+de
+dR
+dr
+"}
+(17,1,1) = {"
+dr
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+ca
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QH
+uA
+dP
+dP
+XF
+dP
+dP
+Ue
+jL
+dR
+oF
+dR
+dR
+Xa
+dw
+dR
+dR
+dR
+dR
+dr
+"}
+(18,1,1) = {"
+dr
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+ca
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QH
+CK
+NA
+Sf
+dP
+dP
+dP
+kN
+jL
+dR
+dR
+de
+dR
+Hc
+qu
+Pl
+dR
+oF
+dR
+dr
+"}
+(19,1,1) = {"
+dr
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+ca
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QH
+NA
+Yd
+NA
+dP
+vj
+dP
+QQ
+QH
+dR
+dR
+dR
+dR
+dR
+Hc
+qu
+Pl
+dR
+dR
+dr
+"}
+(20,1,1) = {"
+dr
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+ca
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+ED
+NA
+Sf
+gT
+dP
+dP
+aK
+dN
+ED
+dR
+tj
+dR
+dR
+dR
+dR
+Hc
+qu
+Pl
+dR
+dr
+"}
+(21,1,1) = {"
+dr
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+ca
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QH
+Zm
+Xr
+vj
+Zm
+dP
+dN
+vj
+QH
+dR
+de
+tj
+dR
+dR
+tj
+dR
+Hc
+qu
+Pl
+dr
+"}
+(22,1,1) = {"
+dr
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+ca
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QH
+QH
+QH
+ED
+QH
+fq
+ED
+QH
+QH
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+Xa
+qu
+dr
+"}
+(23,1,1) = {"
+dr
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+ca
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+ca
+LH
+QL
+ag
+OL
+QL
+ag
+pn
+mv
+tj
+dR
+dR
+dR
+dR
+oF
+dR
+dR
+Hc
+qu
+dr
+"}
+(24,1,1) = {"
+dr
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+ca
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+Tw
+FT
+Rh
+SX
+ag
+QL
+ag
+OL
+mv
+dR
+de
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+Hc
+dr
+"}
+(25,1,1) = {"
+dr
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+ca
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+ca
+ca
+Zc
+Tw
+pj
+pj
+pj
+rd
+pj
+dR
+dR
+dR
+dR
+sK
+dR
+de
+dR
+dR
+dR
+dr
+"}
+(26,1,1) = {"
+dr
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+ca
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+ca
+QL
+QL
+QL
+pj
+gO
+eo
+Vp
+pj
+dR
+sK
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+sK
+dr
+"}
+(27,1,1) = {"
+dr
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+ca
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+ca
+QL
+VL
+QL
+Qy
+Gt
+qE
+AQ
+pj
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dr
+"}
+(28,1,1) = {"
+dr
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+ca
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+ca
+QL
+QL
+QL
+pj
+Of
+BP
+Js
+pj
+dR
+dR
+dR
+dR
+oF
+dR
+sK
+dR
+dR
+dR
+dr
+"}
+(29,1,1) = {"
+dr
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+ca
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+ca
+Zg
+QL
+VL
+pj
+qi
+xW
+tz
+pj
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+oF
+dR
+dr
+"}
+(30,1,1) = {"
+dr
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+ca
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+ca
+ca
+ca
+ca
+pj
+pj
+pj
+pj
+pj
+dR
+oF
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dr
+"}
+(31,1,1) = {"
+dr
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+ca
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+ca
+dR
+dR
+sK
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dr
+"}
+(32,1,1) = {"
+dr
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+ca
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+ca
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+oF
+dR
+dR
+dr
+"}
+(33,1,1) = {"
+dr
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+ca
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+ca
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dr
+"}
+(34,1,1) = {"
+dr
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+ca
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+QL
+ca
+dR
+dR
+dR
+de
+dR
+dR
+dR
+dR
+dR
+sK
+dr
+"}
+(35,1,1) = {"
+dr
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+ca
+ca
+ca
+ca
+ca
+ca
+ca
+ca
+ca
+ca
+ca
+ca
+ca
+ca
+ca
+ca
+ca
+ca
+ca
+ca
+ca
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dr
+"}
+(36,1,1) = {"
+dr
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+sK
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dr
+"}
+(37,1,1) = {"
+dr
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dr
+"}
+(38,1,1) = {"
+dr
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+de
+dR
+dr
+"}
+(39,1,1) = {"
+dr
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dR
+dr
+"}
+(40,1,1) = {"
+tJ
+tJ
+tJ
+tJ
+tJ
+tJ
+tJ
+tJ
+tJ
+tJ
+tJ
+tJ
+tJ
+tJ
+tJ
+tJ
+tJ
+tJ
+tJ
+tJ
+tJ
+tJ
+tJ
+tJ
+tJ
+tJ
+tJ
+tJ
+tJ
+tJ
+tJ
+tJ
+tJ
+tJ
+tJ
+tJ
+tJ
+tJ
+tJ
+tJ
+"}

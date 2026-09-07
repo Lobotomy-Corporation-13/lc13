@@ -44,6 +44,8 @@ Behavior that's still missing from this component that original food items had t
 	var/list/tastes
 	///The type of atom this creates when the object is microwaved.
 	var/microwaved_type
+	/// Quality tier of this food - affects faith bonus when eaten by resurgence machines
+	var/quality = QUALITY_DECENT
 
 /datum/component/edible/Initialize(list/initial_reagents,
 								food_flags = NONE,
@@ -69,6 +71,7 @@ Behavior that's still missing from this component that original food items had t
 	RegisterSignal(parent, COMSIG_ITEM_MICROWAVE_COOKED, PROC_REF(OnMicrowaveCooked))
 	RegisterSignal(parent, COMSIG_MOVABLE_CROSSED, PROC_REF(onCrossed))
 	RegisterSignal(parent, COMSIG_EDIBLE_INGREDIENT_ADDED, PROC_REF(edible_ingredient_added))
+	RegisterSignal(parent, COMSIG_FOOD_CRAFTED_BY, PROC_REF(on_food_crafted))
 
 	if(isitem(parent))
 		RegisterSignal(parent, COMSIG_ITEM_ATTACK, PROC_REF(UseFromHand))
@@ -95,6 +98,10 @@ Behavior that's still missing from this component that original food items had t
 	src.tastes = string_assoc_list(tastes)
 	src.microwaved_type = microwaved_type
 	src.check_liked = check_liked
+
+	// Raw, gross, and grown foods start with awful quality
+	if((src.foodtypes & RAW) || (src.foodtypes & GROSS) || istype(parent, /obj/item/food/grown) || istype(parent, /obj/item/food/meat/slab/meatwheat))
+		quality = QUALITY_AWFUL
 
 	var/atom/owner = parent
 
@@ -142,13 +149,21 @@ Behavior that's still missing from this component that original food items had t
 	if(!(food_flags & FOOD_IN_CONTAINER))
 		switch (bitecount)
 			if (0)
-				return
+				pass()
 			if(1)
 				examine_list += "[parent] was bitten by someone!"
 			if(2,3)
 				examine_list += "[parent] was bitten [bitecount] times!"
 			else
 				examine_list += "[parent] was bitten multiple times!"
+
+	// Show quality to resurgence machines
+	if(ishuman(user))
+		var/mob/living/carbon/human/H = user
+		var/obj/item/organ/resurgence_core/core = H.getorganslot(ORGAN_SLOT_HEART)
+		if(istype(core))
+			var/quality_name = get_quality_name(quality)
+			examine_list += span_notice("Quality: [quality_name]")
 
 /datum/component/edible/proc/UseFromHand(obj/item/source, mob/living/M, mob/living/user)
 	SIGNAL_HANDLER
@@ -333,6 +348,46 @@ Behavior that's still missing from this component that original food items had t
 			On_Consume(eater, feeder)
 		checkLiked(fraction, eater)
 
+		// Faith events for resurgence machines
+		if(ishuman(eater))
+			var/mob/living/carbon/human/H = eater
+			var/obj/item/organ/resurgence_core/core = H.getorganslot(ORGAN_SLOT_HEART)
+			if(istype(core))
+				// Common room eating bonus
+				var/tier_bonus = get_common_room_eating_bonus(H)
+				if(tier_bonus > 0)
+					// Apply temporary faith boost for eating in common room
+					var/datum/faith_event/common_eating/event = new(
+						"Enjoying a meal in the common room.",
+						0.5, // Small bonus per tick while event active
+						30 SECONDS,
+						"common_eating"
+					)
+					core.add_faith_event("common_eating", event)
+					to_chat(H, span_notice("Eating with company lifts your spirits!"))
+
+				// Meal quality faith event
+				var/effective_quality = quality
+				// Common room bonus: +1 quality tier
+				if(tier_bonus > 0)
+					effective_quality = get_next_quality_tier(quality)
+
+				// Only add faith event if quality is above Awful
+				if(effective_quality > QUALITY_AWFUL)
+					// Check if existing meal event is better quality - don't replace if so
+					var/datum/faith_event/existing = core.faith_events["meal_quality"]
+					if(!existing || effective_quality > existing.faith_change)
+						var/quality_name = get_quality_name(effective_quality)
+						// Duration based on bite_consumption * 5 seconds, max 30 seconds
+						var/event_duration = min(bite_consumption * 5 SECONDS, 30 SECONDS)
+						var/datum/faith_event/meal_quality/meal_event = new(
+							"Ate [quality_name] quality food.",
+							effective_quality,
+							event_duration,
+							"meal_quality"
+						)
+						core.add_faith_event("meal_quality", meal_event)
+
 		//Invoke our after eat callback if it is valid
 		if(after_eat)
 			after_eat.Invoke(eater, feeder, bitecount)
@@ -453,3 +508,16 @@ Behavior that's still missing from this component that original food items had t
 		for (var/t in E.tastes)
 			tastes[t] += E.tastes[t]
 	foodtypes |= E.foodtypes
+
+/// Called when food is crafted to set quality based on crafter's cooking skill
+/datum/component/edible/proc/on_food_crafted(datum/source, mob/living/crafter)
+	SIGNAL_HANDLER
+
+	if(!crafter)
+		return
+
+	var/skill = get_cooking_skill(crafter)
+	quality = calculate_food_quality(skill, FALSE)
+
+	// Award cooking XP to the crafter
+	award_cooking_xp(crafter, 10)

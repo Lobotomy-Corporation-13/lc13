@@ -55,3 +55,11 @@
 #define CALIBER_HOOK		"hook"
 /// The caliber used by the changeling tentacle mutation.
 #define CALIBER_TENTACLE	"tentacle"
+/// The caliber used by clan pistols.
+#define CALIBER_CLAN_PISTOL	"clan_pistol"
+/// The caliber used by clan rifles.
+#define CALIBER_CLAN_RIFLE	"clan_rifle"
+/// The caliber used by clan SMGs (repeater).
+#define CALIBER_CLAN_SMG	"clan_smg"
+/// The caliber used by clan shotguns.
+#define CALIBER_CLAN_SHOTGUN	"clan_shotgun"

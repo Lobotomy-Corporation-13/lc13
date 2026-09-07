@@ -1,0 +1,2902 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"ae" = (
+/obj/machinery/light{
+	dir = 8
+	},
+/obj/effect/turf_decal/siding/thinplating{
+	dir = 4
+	},
+/mob/living/simple_animal/hostile/clan/defender,
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"ar" = (
+/obj/structure/railing,
+/turf/open/floor/carpet/black,
+/area/resurgence/faction_hub/insurgence_clan)
+"aH" = (
+/obj/structure/flora/junglebush/large,
+/mob/living/simple_animal/hostile/clan/ranged/sniper,
+/turf/open/floor/plating/ironsand,
+/area/resurgence/faction_hub/insurgence_clan)
+"bb" = (
+/obj/effect/turf_decal{
+	dir = 3
+	},
+/obj/structure/closet/crate/large,
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/item/stack/ore/gold{
+	amount = 25
+	},
+/obj/item/stack/sheet/mineral/wood/fifty,
+/turf/open/floor/engine,
+/area/resurgence/faction_hub/insurgence_clan)
+"bf" = (
+/obj/effect/turf_decal{
+	dir = 3
+	},
+/turf/open/floor/engine,
+/area/resurgence/faction_hub/insurgence_clan)
+"bw" = (
+/obj/structure/fence/corner{
+	dir = 6
+	},
+/turf/open/floor/plating/ironsand,
+/area/resurgence/faction_hub/insurgence_clan)
+"bD" = (
+/obj/structure/fence,
+/turf/open/floor/plating/ironsand,
+/area/resurgence/faction_hub/insurgence_clan)
+"cm" = (
+/obj/effect/turf_decal/siding/thinplating{
+	dir = 6
+	},
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"dw" = (
+/obj/structure/flora/stump,
+/turf/open/floor/plating/ironsand,
+/area/resurgence/faction_hub/insurgence_clan)
+"dP" = (
+/obj/effect/turf_decal{
+	dir = 1
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/closet/crate/large,
+/obj/item/stack/spacecash/c100,
+/obj/item/stack/spacecash/c100,
+/obj/item/stack/spacecash/c100,
+/obj/item/stack/spacecash/c100,
+/obj/item/stack/spacecash/c100,
+/obj/item/stack/spacecash/c200,
+/obj/item/stack/spacecash/c200,
+/turf/open/floor/engine,
+/area/resurgence/faction_hub/insurgence_clan)
+"ec" = (
+/obj/effect/turf_decal{
+	dir = 4
+	},
+/obj/effect/landmark/cratespawn/corpo,
+/obj/machinery/light{
+	dir = 4;
+	light_color = "#e8eaff"
+	},
+/turf/open/floor/engine,
+/area/resurgence/faction_hub/insurgence_clan)
+"eK" = (
+/obj/effect/turf_decal/siding/thinplating/corner{
+	dir = 8
+	},
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"eM" = (
+/obj/structure/chair/greyscale,
+/obj/effect/landmark/npc_reveal_spawn{
+	sensor_id = "entering";
+	mobtype = /mob/living/simple_animal/npc/tinkerer
+	},
+/mob/living/simple_animal/hostile/clan/ranged/gunner,
+/turf/open/floor/carpet/black,
+/area/resurgence/faction_hub/insurgence_clan)
+"eU" = (
+/obj/structure/closet/crate/large,
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/turf_decal{
+	dir = 9
+	},
+/obj/item/stack/ore/gold{
+	amount = 25
+	},
+/obj/item/stack/sheet/metal/fifty,
+/obj/item/stack/sheet/metal/fifty,
+/obj/item/stack/sheet/cotton/cloth/ten,
+/obj/item/stack/sheet/cotton/cloth/ten,
+/turf/open/floor/engine,
+/area/resurgence/faction_hub/insurgence_clan)
+"fd" = (
+/obj/structure/railing{
+	dir = 1
+	},
+/turf/open/floor/carpet/black,
+/area/resurgence/faction_hub/insurgence_clan)
+"fz" = (
+/obj/effect/turf_decal{
+	dir = 1
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/closet/crate/wooden,
+/turf/open/floor/engine,
+/area/resurgence/faction_hub/insurgence_clan)
+"fQ" = (
+/obj/effect/turf_decal{
+	dir = 1
+	},
+/obj/machinery/light{
+	dir = 1
+	},
+/mob/living/simple_animal/hostile/clan/drone,
+/turf/open/floor/engine,
+/area/resurgence/faction_hub/insurgence_clan)
+"fX" = (
+/obj/structure/chair/greyscale,
+/mob/living/simple_animal/hostile/clan/ranged/gunner,
+/turf/open/floor/carpet/black,
+/area/resurgence/faction_hub/insurgence_clan)
+"gv" = (
+/obj/structure/flora/rock/jungle,
+/turf/open/floor/plating/ironsand,
+/area/resurgence/faction_hub/insurgence_clan)
+"gZ" = (
+/obj/structure/flora/junglebush/large,
+/mob/living/simple_animal/hostile/clan/assassin,
+/turf/open/floor/plating/ironsand,
+/area/resurgence/faction_hub/insurgence_clan)
+"hk" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/turf_decal/siding/thinplating{
+	dir = 8
+	},
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"hl" = (
+/obj/effect/turf_decal/siding/thinplating{
+	dir = 10
+	},
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"ho" = (
+/obj/machinery/light{
+	dir = 8
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/rack,
+/obj/item/stack/sheet/metal/five,
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"ht" = (
+/mob/living/simple_animal/hostile/clan/ranged/gunner,
+/turf/open/floor/plating/dirt/jungle/wasteland{
+	slowdown = 0
+	},
+/area/resurgence/faction_hub/insurgence_clan)
+"hT" = (
+/obj/effect/turf_decal{
+	dir = 1
+	},
+/obj/effect/landmark/cratespawn/corpo,
+/turf/open/floor/engine,
+/area/resurgence/faction_hub/insurgence_clan)
+"io" = (
+/obj/effect/landmark/faction_hub_spawn/insurgence_clan,
+/obj/effect/turf_decal/delivery,
+/turf/open/floor/plating/dirt/jungle/wasteland{
+	slowdown = 0
+	},
+/area/resurgence/faction_hub/insurgence_clan)
+"iG" = (
+/obj/machinery/light{
+	dir = 8
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"jl" = (
+/obj/structure/statue/diamond/ai2,
+/turf/open/floor/mineral/diamond,
+/area/resurgence/faction_hub/insurgence_clan)
+"jw" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/mob/living/simple_animal/hostile/clan/ranged/rapid,
+/turf/open/floor/plasteel/dark,
+/area/resurgence/faction_hub/insurgence_clan)
+"kU" = (
+/obj/effect/turf_decal{
+	dir = 1
+	},
+/obj/structure/closet/crate/wooden,
+/turf/open/floor/engine,
+/area/resurgence/faction_hub/insurgence_clan)
+"li" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/turf_decal/siding/thinplating/corner,
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"lj" = (
+/obj/structure/railing{
+	dir = 10
+	},
+/obj/structure/statue/bronze/marx,
+/obj/structure/statue/custom,
+/turf/open/floor/carpet/black,
+/area/resurgence/faction_hub/insurgence_clan)
+"lI" = (
+/obj/structure/closet/crate/large,
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/item/stack/ore/silver{
+	amount = 30
+	},
+/obj/item/stack/sheet/mineral/wood/fifty,
+/turf/open/floor/engine,
+/area/resurgence/faction_hub/insurgence_clan)
+"lW" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/engine,
+/area/resurgence/faction_hub/insurgence_clan)
+"mn" = (
+/obj/machinery/modular_computer/console{
+	desc = "For all your warehousing needs.";
+	name = "warehouse console";
+	dir = 1
+	},
+/turf/open/floor/facility/dark,
+/area/resurgence/faction_hub/insurgence_clan)
+"mA" = (
+/obj/structure/chair/sofa/corp{
+	dir = 4
+	},
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"mI" = (
+/obj/structure/flora/ausbushes/fullgrass,
+/turf/open/floor/plating/dirt/jungle/wasteland{
+	slowdown = 0
+	},
+/area/resurgence/faction_hub/insurgence_clan)
+"mT" = (
+/mob/living/simple_animal/hostile/clan/defender,
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"mU" = (
+/obj/effect/turf_decal/siding/thinplating{
+	dir = 8
+	},
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"nw" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/turf_decal/siding/thinplating{
+	dir = 6
+	},
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"nG" = (
+/obj/effect/turf_decal/siding/thinplating{
+	dir = 3
+	},
+/obj/effect/turf_decal/siding/thinplating/corner{
+	dir = 1
+	},
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"og" = (
+/turf/open/floor/plasteel/dark,
+/area/resurgence/faction_hub/insurgence_clan)
+"oh" = (
+/obj/structure/mineral_door/iron,
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"oy" = (
+/obj/machinery/light{
+	dir = 4;
+	light_color = "#e8eaff"
+	},
+/obj/effect/turf_decal/siding/thinplating{
+	dir = 8
+	},
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"oZ" = (
+/turf/closed/indestructible/iron,
+/area/resurgence/faction_hub/insurgence_clan)
+"pn" = (
+/obj/structure/fence/corner{
+	dir = 10
+	},
+/turf/open/floor/plating/ironsand,
+/area/resurgence/faction_hub/insurgence_clan)
+"pB" = (
+/obj/effect/turf_decal{
+	dir = 1
+	},
+/mob/living/simple_animal/hostile/clan/drone,
+/turf/open/floor/engine,
+/area/resurgence/faction_hub/insurgence_clan)
+"pS" = (
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"qn" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/rack,
+/obj/item/stack/sheet/metal/five,
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"qx" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/turf_decal/trimline/blue/filled/warning{
+	dir = 8
+	},
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"qO" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"qS" = (
+/obj/machinery/light{
+	dir = 4;
+	light_color = "#e8eaff"
+	},
+/obj/effect/spawner/lootdrop/garbage_spawner,
+/mob/living/simple_animal/hostile/clan/assassin,
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"qU" = (
+/obj/structure/table/reinforced,
+/obj/item/paper_bin,
+/obj/item/pen,
+/turf/open/floor/carpet/black,
+/area/resurgence/faction_hub/insurgence_clan)
+"qZ" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/turf_decal/siding/thinplating{
+	dir = 4
+	},
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"rb" = (
+/obj/effect/turf_decal/trimline/blue/filled/warning{
+	dir = 1
+	},
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"rf" = (
+/obj/effect/turf_decal/trimline/blue/filled/warning{
+	dir = 4
+	},
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"rg" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/item/living_heart{
+	pixel_x = 6;
+	pixel_y = 6
+	},
+/obj/item/living_heart{
+	pixel_x = 6;
+	pixel_y = 6
+	},
+/obj/item/living_heart,
+/obj/item/living_heart,
+/obj/structure/table/reinforced,
+/obj/item/tape/resurgence/podcast_seven,
+/turf/open/floor/plasteel/dark,
+/area/resurgence/faction_hub/insurgence_clan)
+"ro" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/closed/indestructible/iron,
+/area/resurgence/faction_hub/insurgence_clan)
+"rz" = (
+/obj/structure/fence{
+	dir = 4
+	},
+/turf/open/floor/plating/dirt/jungle/wasteland{
+	slowdown = 0
+	},
+/area/resurgence/faction_hub/insurgence_clan)
+"sJ" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/chair/sofa/corp/left{
+	dir = 4
+	},
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"tA" = (
+/obj/effect/turf_decal{
+	dir = 5
+	},
+/obj/structure/closet/crate/wooden,
+/turf/open/floor/engine,
+/area/resurgence/faction_hub/insurgence_clan)
+"tU" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/mob/living/simple_animal/hostile/clan/scout,
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"ua" = (
+/obj/structure/closet/crate/large,
+/obj/item/clothing/suit/armor/ego_gear/city/azure_armor,
+/obj/item/clothing/suit/armor/ego_gear/city/azure_armor,
+/obj/item/clothing/suit/armor/ego_gear/city/azure_armor,
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/item/tape/resurgence/first,
+/turf/open/floor/engine,
+/area/resurgence/faction_hub/insurgence_clan)
+"ud" = (
+/obj/effect/turf_decal/trimline/blue/filled/warning,
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"ue" = (
+/obj/effect/turf_decal{
+	dir = 8
+	},
+/turf/open/floor/engine,
+/area/resurgence/faction_hub/insurgence_clan)
+"uh" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/closed/indestructible/iron,
+/area/resurgence/faction_hub/insurgence_clan)
+"un" = (
+/obj/structure/railing/corner,
+/turf/open/floor/mineral/diamond,
+/area/resurgence/faction_hub/insurgence_clan)
+"uI" = (
+/obj/effect/landmark/faction_hub_exit/insurgence_clan,
+/obj/effect/turf_decal/delivery/red,
+/turf/open/floor/plating/dirt/jungle/wasteland{
+	slowdown = 0
+	},
+/area/resurgence/faction_hub/insurgence_clan)
+"uO" = (
+/turf/open/floor/plating/ironsand,
+/area/resurgence/faction_hub/insurgence_clan)
+"vq" = (
+/obj/machinery/light{
+	dir = 8
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/plasteel/dark,
+/area/resurgence/faction_hub/insurgence_clan)
+"vz" = (
+/obj/structure/table/reinforced,
+/obj/effect/spawner/lootdrop/organ_spawner,
+/obj/effect/spawner/lootdrop/armory_contraband/cybersun,
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"vT" = (
+/obj/structure/rack,
+/obj/item/implanter/tracking,
+/obj/item/implanter/tracking,
+/obj/item/implanter/tracking,
+/obj/item/implanter/tracking,
+/obj/item/implanter/tracking/gps,
+/obj/item/implanter/tracking/gps,
+/obj/item/grown/cotton,
+/obj/item/grown/cotton,
+/obj/item/grown/cotton,
+/obj/item/grown/cotton,
+/obj/item/grown/cotton,
+/obj/item/stack/sheet/cotton{
+	amount = 25
+	},
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"wm" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/decal/cleanable/dirt/dust,
+/mob/living/simple_animal/hostile/clan/ranged/rapid,
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"wK" = (
+/obj/structure/chair/sofa/corp/right{
+	dir = 4
+	},
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"wP" = (
+/obj/effect/spawner/lootdrop/garbage_spawner,
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"xv" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/railing/corner{
+	dir = 1
+	},
+/turf/open/floor/mineral/diamond,
+/area/resurgence/faction_hub/insurgence_clan)
+"xx" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/turf_decal/trimline/blue/filled/warning{
+	dir = 1
+	},
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"xU" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/engine,
+/area/resurgence/faction_hub/insurgence_clan)
+"yb" = (
+/obj/structure/flora/junglebush/large,
+/turf/open/floor/plating/ironsand,
+/area/resurgence/faction_hub/insurgence_clan)
+"ys" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/turf_decal/siding/thinplating,
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"yG" = (
+/obj/effect/turf_decal/siding/thinplating{
+	dir = 1
+	},
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"yP" = (
+/obj/structure/flora/rock,
+/turf/open/floor/plating/ironsand,
+/area/resurgence/faction_hub/insurgence_clan)
+"yW" = (
+/obj/machinery/door/airlock/centcom{
+	desc = "A bit too sturdy...";
+	max_integrity = 10000;
+	name = "Strange Airlock";
+	normal_integrity = 100000;
+	req_access_txt = "19"
+	},
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"zh" = (
+/obj/machinery/light{
+	dir = 4;
+	light_color = "#e8eaff"
+	},
+/obj/effect/turf_decal/siding/thinplating{
+	dir = 10
+	},
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"zz" = (
+/turf/open/floor/plating/dirt/jungle/wasteland{
+	slowdown = 0
+	},
+/area/resurgence/faction_hub/insurgence_clan)
+"zZ" = (
+/obj/effect/turf_decal/siding/thinplating{
+	dir = 4
+	},
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"Af" = (
+/obj/effect/turf_decal{
+	dir = 3
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/mob/living/simple_animal/hostile/clan/defender,
+/turf/open/floor/engine,
+/area/resurgence/faction_hub/insurgence_clan)
+"Au" = (
+/obj/effect/turf_decal/siding/thinplating/corner,
+/obj/effect/turf_decal/siding/thinplating{
+	dir = 1
+	},
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"Av" = (
+/obj/effect/turf_decal/siding/thinplating{
+	dir = 4
+	},
+/obj/effect/landmark/npc_reveal_sensor{
+	sensor_id = "entering";
+	cooldown_duration = 6000
+	},
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"Ay" = (
+/obj/effect/turf_decal{
+	dir = 10
+	},
+/obj/effect/landmark/cratespawn/corpo,
+/obj/machinery/light{
+	dir = 8
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/engine,
+/area/resurgence/faction_hub/insurgence_clan)
+"AC" = (
+/obj/structure/fence{
+	dir = 4
+	},
+/turf/open/floor/plating/ironsand,
+/area/resurgence/faction_hub/insurgence_clan)
+"AF" = (
+/mob/living/simple_animal/hostile/clan/drone,
+/turf/open/floor/plating/ironsand,
+/area/resurgence/faction_hub/insurgence_clan)
+"Bl" = (
+/obj/effect/landmark/npc_reveal_sensor{
+	sensor_id = "entering";
+	cooldown_duration = 6000
+	},
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"Bz" = (
+/obj/structure/table/reinforced,
+/turf/open/floor/carpet/black,
+/area/resurgence/faction_hub/insurgence_clan)
+"Cm" = (
+/obj/effect/landmark/npc_reveal_sensor{
+	sensor_id = "ai";
+	cooldown_duration = 6000
+	},
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"CU" = (
+/mob/living/simple_animal/hostile/clan/scout,
+/obj/structure/flora/junglebush/large,
+/turf/open/floor/plating/ironsand,
+/area/resurgence/faction_hub/insurgence_clan)
+"Dw" = (
+/mob/living/simple_animal/hostile/clan/drone,
+/turf/open/floor/carpet/black,
+/area/resurgence/faction_hub/insurgence_clan)
+"Dy" = (
+/obj/effect/turf_decal{
+	dir = 6
+	},
+/obj/effect/landmark/cratespawn/corpo,
+/turf/open/floor/engine,
+/area/resurgence/faction_hub/insurgence_clan)
+"Eh" = (
+/obj/machinery/light{
+	dir = 4;
+	light_color = "#e8eaff"
+	},
+/obj/effect/turf_decal/trimline/blue/filled/warning{
+	dir = 8
+	},
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"Ei" = (
+/obj/structure/railing/corner{
+	dir = 4
+	},
+/mob/living/simple_animal/hostile/clan/drone,
+/turf/open/floor/mineral/diamond,
+/area/resurgence/faction_hub/insurgence_clan)
+"En" = (
+/obj/effect/turf_decal{
+	dir = 1
+	},
+/obj/structure/closet/crate/large,
+/obj/item/stack/spacecash/c200,
+/obj/item/stack/spacecash/c200,
+/obj/item/stack/spacecash/c200,
+/obj/item/stack/spacecash/c200,
+/obj/item/stack/spacecash/c1000,
+/turf/open/floor/engine,
+/area/resurgence/faction_hub/insurgence_clan)
+"EM" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/plasteel/dark,
+/area/resurgence/faction_hub/insurgence_clan)
+"Fb" = (
+/obj/effect/turf_decal{
+	dir = 10
+	},
+/turf/open/floor/engine,
+/area/resurgence/faction_hub/insurgence_clan)
+"Fw" = (
+/obj/structure/railing{
+	dir = 9
+	},
+/turf/open/floor/carpet/black,
+/area/resurgence/faction_hub/insurgence_clan)
+"FA" = (
+/obj/structure/railing{
+	dir = 1
+	},
+/obj/structure/statue/petrified,
+/obj/structure/statue/custom,
+/turf/open/floor/carpet/black,
+/area/resurgence/faction_hub/insurgence_clan)
+"FB" = (
+/obj/effect/turf_decal/siding/thinplating{
+	dir = 9
+	},
+/obj/structure/table/reinforced,
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"FD" = (
+/obj/machinery/light{
+	dir = 8
+	},
+/mob/living/simple_animal/hostile/clan/scout,
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"FM" = (
+/obj/effect/turf_decal/loading_area/red,
+/turf/open/floor/plating/dirt/jungle/wasteland{
+	slowdown = 0
+	},
+/area/resurgence/faction_hub/insurgence_clan)
+"FP" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/closet/crate/wooden,
+/turf/open/floor/engine,
+/area/resurgence/faction_hub/insurgence_clan)
+"Gd" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/railing,
+/turf/open/floor/mineral/diamond,
+/area/resurgence/faction_hub/insurgence_clan)
+"Gl" = (
+/obj/structure/flora/ausbushes/fullgrass,
+/turf/open/floor/plating/ironsand,
+/area/resurgence/faction_hub/insurgence_clan)
+"GF" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/sign/warning/securearea{
+	pixel_x = -32
+	},
+/obj/effect/turf_decal/siding/thinplating/corner,
+/mob/living/simple_animal/hostile/clan/drone,
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"GG" = (
+/obj/effect/turf_decal{
+	dir = 3
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/engine,
+/area/resurgence/faction_hub/insurgence_clan)
+"GQ" = (
+/obj/structure/spacevine{
+	name = "old vines"
+	},
+/turf/closed/indestructible/rock,
+/area/resurgence/faction_hub/insurgence_clan)
+"GV" = (
+/obj/structure/railing{
+	dir = 4
+	},
+/turf/open/floor/mineral/diamond,
+/area/resurgence/faction_hub/insurgence_clan)
+"GX" = (
+/obj/machinery/light{
+	dir = 4;
+	light_color = "#e8eaff"
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"Ho" = (
+/obj/machinery/light{
+	dir = 4;
+	light_color = "#e8eaff"
+	},
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"Hp" = (
+/obj/effect/gibspawner/generic,
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/spawner/lootdrop/garbage_spawner,
+/turf/open/floor/plasteel/dark,
+/area/resurgence/faction_hub/insurgence_clan)
+"Hr" = (
+/obj/structure/closet/crate/wooden,
+/turf/open/floor/engine,
+/area/resurgence/faction_hub/insurgence_clan)
+"Hv" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/mob/living/simple_animal/hostile/clan/assassin,
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"Hy" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/decal/cleanable/dirt/dust,
+/mob/living/simple_animal/hostile/clan/scout,
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"HJ" = (
+/obj/structure/mineral_door/iron,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"Ij" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/sign/warning/securearea{
+	pixel_y = 32
+	},
+/obj/effect/turf_decal/siding/thinplating/corner,
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"Il" = (
+/obj/effect/landmark/cratespawn/corpo,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/engine,
+/area/resurgence/faction_hub/insurgence_clan)
+"IM" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/machinery/door/airlock/centcom{
+	desc = "A bit too sturdy...";
+	max_integrity = 10000;
+	name = "Strange Airlock";
+	normal_integrity = 100000;
+	req_access_txt = "19"
+	},
+/turf/open/floor/engine,
+/area/resurgence/faction_hub/insurgence_clan)
+"IX" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/railing{
+	dir = 5
+	},
+/obj/item/statuebust/hippocratic,
+/obj/structure/statue/custom,
+/turf/open/floor/carpet/black,
+/area/resurgence/faction_hub/insurgence_clan)
+"Jq" = (
+/obj/structure/railing,
+/obj/structure/statue/silver/md,
+/obj/structure/statue/custom,
+/turf/open/floor/carpet/black,
+/area/resurgence/faction_hub/insurgence_clan)
+"Jv" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/turf_decal/trimline/blue/filled/warning,
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"Kb" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/sign/warning/securearea{
+	pixel_y = 32
+	},
+/mob/living/simple_animal/hostile/clan/drone,
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"Kd" = (
+/obj/effect/turf_decal{
+	dir = 3
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/engine,
+/area/resurgence/faction_hub/insurgence_clan)
+"KD" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/decal/cleanable/dirt/dust,
+/mob/living/simple_animal/hostile/clan/drone,
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"LZ" = (
+/obj/structure/flora/stump,
+/turf/open/floor/plating/dirt/jungle/wasteland{
+	slowdown = 0
+	},
+/area/resurgence/faction_hub/insurgence_clan)
+"MY" = (
+/obj/effect/turf_decal{
+	dir = 9
+	},
+/obj/effect/landmark/cratespawn/corpo,
+/turf/open/floor/engine,
+/area/resurgence/faction_hub/insurgence_clan)
+"Nw" = (
+/mob/living/simple_animal/hostile/clan/assassin,
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"Ny" = (
+/obj/effect/turf_decal/siding/thinplating/corner,
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"NA" = (
+/obj/machinery/light{
+	dir = 8
+	},
+/mob/living/simple_animal/hostile/clan/defender,
+/obj/effect/turf_decal/trimline/blue/filled/warning{
+	dir = 4
+	},
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"NK" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/turf_decal/siding/thinplating{
+	dir = 3
+	},
+/obj/effect/spawner/lootdrop/garbage_spawner,
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"OG" = (
+/mob/living/simple_animal/hostile/clan/scout,
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"ON" = (
+/obj/effect/turf_decal/siding/thinplating{
+	dir = 5
+	},
+/obj/structure/table/reinforced,
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"OX" = (
+/obj/structure/mineral_door/iron,
+/obj/structure/barricade/wooden/crude,
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"Ph" = (
+/obj/structure/flora/rock/jungle,
+/obj/effect/turf_decal/siding/thinplating{
+	dir = 9
+	},
+/turf/open/floor/plating/dirt/jungle/dark,
+/area/resurgence/faction_hub/insurgence_clan)
+"Px" = (
+/obj/structure/sign/warning/securearea{
+	pixel_y = 32
+	},
+/obj/effect/turf_decal/trimline/blue/filled/warning,
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"PE" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/railing{
+	dir = 6
+	},
+/turf/open/floor/carpet/black,
+/area/resurgence/faction_hub/insurgence_clan)
+"PG" = (
+/obj/structure/flora/ash/garden/waste,
+/turf/open/floor/plating/ironsand,
+/area/resurgence/faction_hub/insurgence_clan)
+"PN" = (
+/mob/living/simple_animal/hostile/clan/scout,
+/turf/open/floor/plating/dirt/jungle/wasteland{
+	slowdown = 0
+	},
+/area/resurgence/faction_hub/insurgence_clan)
+"PU" = (
+/obj/effect/turf_decal/siding/thinplating/corner{
+	dir = 4
+	},
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"Qp" = (
+/obj/effect/turf_decal{
+	dir = 3
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/engine,
+/area/resurgence/faction_hub/insurgence_clan)
+"Qq" = (
+/obj/effect/turf_decal/loading_area/red,
+/turf/open/floor/plating/ironsand,
+/area/resurgence/faction_hub/insurgence_clan)
+"QQ" = (
+/obj/structure/fence,
+/turf/open/floor/plating/dirt/jungle/wasteland{
+	slowdown = 0
+	},
+/area/resurgence/faction_hub/insurgence_clan)
+"QT" = (
+/obj/structure/flora/rock/pile{
+	density = 0
+	},
+/turf/open/floor/plating/ironsand,
+/area/resurgence/faction_hub/insurgence_clan)
+"Re" = (
+/obj/effect/turf_decal{
+	dir = 4
+	},
+/obj/effect/landmark/cratespawn/corpo,
+/turf/open/floor/engine,
+/area/resurgence/faction_hub/insurgence_clan)
+"Rh" = (
+/obj/effect/turf_decal{
+	dir = 1
+	},
+/turf/open/floor/engine,
+/area/resurgence/faction_hub/insurgence_clan)
+"Rl" = (
+/obj/effect/gibspawner/generic,
+/obj/effect/spawner/lootdrop/garbage_spawner,
+/turf/open/floor/plasteel/dark,
+/area/resurgence/faction_hub/insurgence_clan)
+"RM" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"RR" = (
+/obj/machinery/light{
+	dir = 8
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/mob/living/simple_animal/hostile/clan/scout,
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"Sv" = (
+/obj/structure/railing/corner{
+	dir = 8
+	},
+/mob/living/simple_animal/hostile/clan/scout,
+/obj/effect/landmark/npc_reveal_spawn{
+	sensor_id = "ai";
+	mobtype = /mob/living/simple_animal/npc/tinkerer
+	},
+/turf/open/floor/mineral/diamond,
+/area/resurgence/faction_hub/insurgence_clan)
+"Sy" = (
+/obj/structure/farm_plot,
+/turf/open/floor/plating/dirt/jungle/wasteland{
+	slowdown = 0
+	},
+/area/resurgence/faction_hub/insurgence_clan)
+"SG" = (
+/obj/structure/flora/ausbushes/sparsegrass,
+/obj/effect/turf_decal/siding/thinplating/corner{
+	dir = 1
+	},
+/turf/open/floor/plating/dirt/jungle/dark,
+/area/resurgence/faction_hub/insurgence_clan)
+"SN" = (
+/obj/effect/turf_decal{
+	dir = 8
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/closet/crate/wooden,
+/turf/open/floor/engine,
+/area/resurgence/faction_hub/insurgence_clan)
+"Ta" = (
+/obj/machinery/light{
+	dir = 8
+	},
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"Tt" = (
+/obj/structure/spacevine{
+	name = "old vines"
+	},
+/turf/closed/indestructible/iron,
+/area/resurgence/faction_hub/insurgence_clan)
+"TY" = (
+/obj/effect/turf_decal/siding/thinplating{
+	dir = 3
+	},
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"Ud" = (
+/obj/structure/filingcabinet,
+/obj/structure/filingcabinet{
+	pixel_x = -9
+	},
+/obj/structure/filingcabinet{
+	pixel_x = 10
+	},
+/turf/open/floor/facility/dark,
+/area/resurgence/faction_hub/insurgence_clan)
+"Uf" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/railing{
+	dir = 1
+	},
+/turf/open/floor/mineral/diamond,
+/area/resurgence/faction_hub/insurgence_clan)
+"Uh" = (
+/obj/structure/flora/rock/jungle,
+/turf/open/floor/plating/dirt/jungle/wasteland{
+	slowdown = 0
+	},
+/area/resurgence/faction_hub/insurgence_clan)
+"Uz" = (
+/obj/effect/turf_decal/siding/thinplating{
+	dir = 8
+	},
+/obj/effect/spawner/lootdrop/garbage_spawner,
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"UT" = (
+/obj/structure/table/reinforced,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/carpet/black,
+/area/resurgence/faction_hub/insurgence_clan)
+"Vh" = (
+/turf/open/floor/carpet/black,
+/area/resurgence/faction_hub/insurgence_clan)
+"Vp" = (
+/obj/structure/sign/warning/securearea{
+	pixel_y = 32
+	},
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"VI" = (
+/obj/structure/fence/door/opened,
+/turf/open/floor/plating/dirt/jungle/wasteland{
+	slowdown = 0
+	},
+/area/resurgence/faction_hub/insurgence_clan)
+"VM" = (
+/obj/effect/turf_decal{
+	dir = 5
+	},
+/obj/effect/landmark/cratespawn/corpo,
+/obj/machinery/light{
+	dir = 4;
+	light_color = "#e8eaff"
+	},
+/turf/open/floor/engine,
+/area/resurgence/faction_hub/insurgence_clan)
+"Wh" = (
+/obj/effect/turf_decal/trimline/blue/filled/warning{
+	dir = 8
+	},
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"Wi" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/railing{
+	dir = 8
+	},
+/turf/open/floor/mineral/diamond,
+/area/resurgence/faction_hub/insurgence_clan)
+"WQ" = (
+/obj/structure/rack,
+/obj/item/stack/sheet/metal/twenty,
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"Xv" = (
+/obj/structure/table/reinforced,
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/item/taperecorder/empty,
+/turf/open/floor/carpet/black,
+/area/resurgence/faction_hub/insurgence_clan)
+"XT" = (
+/obj/structure/closet/crate/large,
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/turf_decal{
+	dir = 6
+	},
+/obj/item/stack/ore/silver{
+	amount = 30
+	},
+/obj/item/stack/sheet/metal/twenty,
+/obj/item/stack/sheet/cotton/cloth/ten,
+/obj/item/stack/sheet/cotton/cloth/ten,
+/turf/open/floor/engine,
+/area/resurgence/faction_hub/insurgence_clan)
+"YJ" = (
+/obj/structure/closet/crate/large,
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/turf_decal{
+	dir = 1
+	},
+/obj/item/stack/sheet/mineral/wood/fifty,
+/obj/item/stack/sheet/mineral/wood/fifty,
+/obj/item/stack/sheet/cotton/cloth/ten,
+/obj/item/stack/sheet/cotton/cloth/ten,
+/turf/open/floor/engine,
+/area/resurgence/faction_hub/insurgence_clan)
+"YZ" = (
+/obj/machinery/light,
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"Zn" = (
+/obj/machinery/light{
+	dir = 4;
+	light_color = "#e8eaff"
+	},
+/turf/open/floor/plasteel/dark,
+/area/resurgence/faction_hub/insurgence_clan)
+"Zp" = (
+/mob/living/simple_animal/hostile/clan/ranged/warper,
+/turf/open/floor/stone,
+/area/resurgence/faction_hub/insurgence_clan)
+"Zy" = (
+/turf/closed/indestructible/rock,
+/area/resurgence/faction_hub/insurgence_clan)
+"ZN" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/engine,
+/area/resurgence/faction_hub/insurgence_clan)
+
+(1,1,1) = {"
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+GQ
+GQ
+GQ
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+"}
+(2,1,1) = {"
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+uO
+QT
+uO
+gv
+uO
+yP
+GQ
+GQ
+GQ
+Zy
+Zy
+yP
+uO
+uO
+uO
+uO
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+"}
+(3,1,1) = {"
+Zy
+GQ
+GQ
+GQ
+Zy
+Zy
+yP
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+QT
+uO
+uO
+uO
+uO
+uO
+gv
+uO
+yP
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+"}
+(4,1,1) = {"
+Zy
+GQ
+uO
+uO
+gv
+uO
+uO
+uO
+zz
+uO
+uO
+uO
+uO
+dw
+uO
+uO
+uO
+uO
+gv
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+QT
+aH
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+"}
+(5,1,1) = {"
+Zy
+yP
+uO
+zz
+zz
+uO
+zz
+zz
+Gl
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+gv
+uO
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+"}
+(6,1,1) = {"
+Zy
+QQ
+QQ
+QQ
+bD
+QQ
+QQ
+bD
+bD
+QQ
+bD
+bD
+bD
+bD
+bD
+bD
+bD
+bD
+bD
+bD
+bD
+bD
+bD
+bD
+bD
+pn
+uO
+uO
+uO
+uO
+uO
+uO
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+"}
+(7,1,1) = {"
+Zy
+Sy
+Sy
+Sy
+Sy
+Sy
+Sy
+dw
+uO
+Gl
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+gv
+uO
+uO
+uO
+uO
+AC
+uO
+uO
+uO
+uO
+uO
+uO
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+"}
+(8,1,1) = {"
+Zy
+Sy
+Sy
+Sy
+Sy
+Sy
+Sy
+uO
+uO
+zz
+zz
+uO
+zz
+uO
+uO
+uO
+gv
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+AC
+uO
+uO
+uO
+uO
+uO
+QT
+uO
+GQ
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+"}
+(9,1,1) = {"
+Zy
+Sy
+Sy
+Sy
+Sy
+Sy
+Sy
+zz
+mI
+zz
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+Gl
+uO
+uO
+uO
+uO
+dw
+uO
+uO
+AC
+uO
+uO
+uO
+gv
+uO
+uO
+uO
+GQ
+GQ
+gv
+Zy
+Zy
+Zy
+Zy
+"}
+(10,1,1) = {"
+Zy
+Sy
+Sy
+Sy
+Sy
+Sy
+Sy
+zz
+zz
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+AC
+uO
+uO
+uO
+uO
+uO
+uO
+yP
+uO
+uO
+uO
+uO
+Zy
+Zy
+Zy
+"}
+(11,1,1) = {"
+oZ
+oZ
+ro
+ro
+oh
+oZ
+oZ
+oZ
+oZ
+ro
+uh
+oZ
+oZ
+oZ
+oZ
+ro
+oZ
+oZ
+oZ
+Tt
+uO
+uO
+uO
+uO
+uO
+AC
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+yb
+Zy
+Zy
+"}
+(12,1,1) = {"
+oZ
+MY
+Ay
+oZ
+wP
+OG
+Ta
+pS
+oZ
+ua
+ro
+pS
+FD
+pS
+pS
+TY
+og
+jw
+Hp
+Tt
+uO
+uO
+uO
+uO
+uO
+AC
+uO
+uO
+uO
+dw
+uO
+uO
+uO
+uO
+uO
+Gl
+uO
+uO
+yP
+Zy
+"}
+(13,1,1) = {"
+oZ
+En
+Kd
+oZ
+pS
+Fw
+lj
+tU
+oZ
+IM
+oZ
+Ny
+qZ
+PU
+pS
+eK
+zh
+og
+EM
+Tt
+gZ
+uO
+uO
+gv
+uO
+AC
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+Zy
+"}
+(14,1,1) = {"
+oZ
+kU
+GG
+oZ
+Kb
+FA
+ar
+RM
+oZ
+RM
+GF
+nw
+EM
+ro
+ro
+oZ
+ro
+hk
+hk
+ro
+uO
+uO
+uO
+uO
+uO
+AC
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+CU
+uO
+uO
+dw
+uO
+uO
+GQ
+"}
+(15,1,1) = {"
+oZ
+fz
+Qp
+yW
+qO
+fd
+Jq
+pS
+oh
+RM
+ys
+EM
+Ud
+oZ
+vz
+iG
+RM
+RM
+OG
+oZ
+uO
+uO
+uO
+uO
+uO
+AC
+uO
+PG
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+QT
+GQ
+"}
+(16,1,1) = {"
+oZ
+dP
+bf
+oZ
+Vp
+IX
+PE
+pS
+oZ
+qS
+ys
+EM
+Ud
+oZ
+vz
+pS
+RM
+pS
+pS
+oZ
+uO
+uO
+Gl
+uO
+uO
+AC
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+CU
+uO
+uO
+uO
+GQ
+"}
+(17,1,1) = {"
+oZ
+VM
+Dy
+oZ
+Zp
+GX
+pS
+mT
+oZ
+ro
+oh
+oZ
+oZ
+oZ
+oZ
+oh
+oZ
+oZ
+oZ
+oZ
+ht
+uO
+uO
+PG
+uO
+AC
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+Zy
+"}
+(18,1,1) = {"
+oZ
+ro
+oZ
+ro
+oZ
+oZ
+oZ
+ro
+ro
+pS
+Cm
+oZ
+Vh
+ON
+ae
+PU
+sJ
+mA
+wK
+oZ
+PN
+zz
+uO
+uO
+uO
+AC
+zz
+zz
+uO
+uO
+uO
+PG
+uO
+uO
+uO
+uO
+uO
+uO
+yb
+Zy
+"}
+(19,1,1) = {"
+oZ
+vT
+ho
+qn
+pS
+oZ
+Vp
+NA
+rf
+rf
+wP
+oZ
+Dw
+Bz
+qU
+yG
+pS
+pS
+pS
+oZ
+zz
+zz
+zz
+zz
+zz
+VI
+zz
+zz
+LZ
+zz
+uO
+zz
+zz
+zz
+io
+zz
+uO
+Qq
+uI
+Zy
+"}
+(20,1,1) = {"
+oZ
+WQ
+pS
+pS
+RM
+HJ
+Jv
+un
+GV
+Ei
+rb
+oZ
+Vh
+eM
+Xv
+yG
+RM
+RM
+Bl
+oh
+zz
+zz
+zz
+zz
+zz
+rz
+zz
+zz
+zz
+zz
+zz
+zz
+zz
+zz
+io
+zz
+zz
+FM
+uI
+Zy
+"}
+(21,1,1) = {"
+oZ
+RM
+pS
+Hy
+pS
+oZ
+Px
+Gd
+jl
+Uf
+rb
+oZ
+Vh
+fX
+UT
+yG
+li
+zZ
+Av
+OX
+zz
+zz
+zz
+zz
+zz
+rz
+zz
+zz
+zz
+zz
+zz
+zz
+zz
+zz
+io
+zz
+zz
+FM
+uI
+Zy
+"}
+(22,1,1) = {"
+oZ
+RM
+qO
+qO
+YZ
+oZ
+ud
+Sv
+Wi
+xv
+xx
+ro
+Vh
+Bz
+qU
+Au
+nw
+EM
+EM
+oZ
+zz
+zz
+zz
+uO
+zz
+VI
+zz
+zz
+zz
+zz
+zz
+zz
+uO
+zz
+io
+zz
+zz
+FM
+uI
+Zy
+"}
+(23,1,1) = {"
+oZ
+eU
+SN
+ue
+Fb
+oZ
+pS
+Wh
+qx
+Eh
+Hv
+oZ
+Vh
+FB
+oy
+nG
+og
+EM
+Rl
+oZ
+PN
+zz
+uO
+uO
+uO
+AC
+aH
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+Zy
+"}
+(24,1,1) = {"
+oZ
+fQ
+lW
+xU
+Af
+oZ
+oZ
+oZ
+oh
+ro
+ro
+ro
+oZ
+oZ
+oZ
+oh
+oZ
+oZ
+oZ
+oZ
+ht
+uO
+uO
+uO
+Gl
+AC
+uO
+PG
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+QT
+uO
+Zy
+"}
+(25,1,1) = {"
+oZ
+hT
+Il
+FP
+bf
+Ta
+pS
+oZ
+Nw
+RM
+TY
+vq
+og
+mn
+oZ
+RM
+RM
+qO
+qO
+oZ
+uO
+uO
+uO
+uO
+uO
+AC
+uO
+uO
+uO
+Gl
+uO
+uO
+uO
+uO
+uO
+Gl
+uO
+uO
+uO
+GQ
+"}
+(26,1,1) = {"
+oZ
+pB
+lW
+ZN
+Kd
+tU
+pS
+oZ
+RM
+RM
+eK
+hl
+og
+og
+oZ
+pS
+GX
+RM
+wm
+oZ
+AF
+uO
+uO
+uO
+uO
+AC
+uO
+uO
+uO
+uO
+dw
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+yb
+GQ
+"}
+(27,1,1) = {"
+oZ
+YJ
+Hr
+lI
+bb
+qO
+RM
+ro
+ro
+oh
+ro
+ro
+mU
+Uz
+oZ
+oZ
+oZ
+pS
+RM
+oZ
+PG
+uO
+uO
+gv
+uO
+AC
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+CU
+uO
+dw
+uO
+uO
+uO
+GQ
+"}
+(28,1,1) = {"
+oZ
+Rh
+lW
+lW
+Kd
+RM
+Hy
+ro
+Ij
+cm
+og
+oZ
+pS
+OG
+pS
+pS
+RR
+RM
+Ph
+Tt
+uO
+uO
+uO
+uO
+uO
+AC
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+yP
+uO
+GQ
+"}
+(29,1,1) = {"
+oZ
+tA
+ec
+Re
+XT
+pS
+pS
+HJ
+NK
+Zn
+rg
+oZ
+Ho
+RM
+KD
+RM
+RM
+Ph
+SG
+Tt
+uO
+uO
+uO
+uO
+uO
+AC
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+GQ
+GQ
+"}
+(30,1,1) = {"
+oZ
+oZ
+oZ
+oZ
+oZ
+ro
+oZ
+oZ
+oZ
+ro
+ro
+oZ
+oZ
+oZ
+oZ
+oZ
+oZ
+oZ
+Tt
+Tt
+uO
+uO
+uO
+uO
+uO
+AC
+uO
+uO
+Gl
+uO
+uO
+uO
+uO
+uO
+Zy
+Zy
+gv
+Zy
+Zy
+Zy
+"}
+(31,1,1) = {"
+Zy
+gv
+uO
+zz
+uO
+uO
+uO
+uO
+uO
+gv
+uO
+uO
+uO
+Gl
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+AC
+uO
+uO
+uO
+uO
+uO
+uO
+QT
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+"}
+(32,1,1) = {"
+Zy
+zz
+uO
+zz
+uO
+uO
+zz
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+AC
+uO
+uO
+dw
+uO
+uO
+uO
+yP
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+"}
+(33,1,1) = {"
+Zy
+zz
+LZ
+Gl
+uO
+zz
+uO
+uO
+uO
+uO
+Gl
+uO
+uO
+uO
+uO
+uO
+uO
+dw
+uO
+uO
+uO
+uO
+gv
+uO
+uO
+AC
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+"}
+(34,1,1) = {"
+Zy
+zz
+zz
+zz
+uO
+gv
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+gv
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+AC
+uO
+uO
+uO
+uO
+uO
+uO
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+"}
+(35,1,1) = {"
+Zy
+QQ
+QQ
+QQ
+QQ
+bD
+bD
+QQ
+bD
+bD
+bD
+bD
+bD
+bD
+bD
+bD
+bD
+bD
+bD
+bD
+bD
+bD
+bD
+bD
+bD
+bw
+uO
+uO
+uO
+uO
+gv
+GQ
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+"}
+(36,1,1) = {"
+Zy
+zz
+uO
+zz
+Uh
+zz
+Gl
+uO
+dw
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+dw
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+GQ
+GQ
+GQ
+GQ
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+"}
+(37,1,1) = {"
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+uO
+uO
+uO
+yP
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+yP
+GQ
+GQ
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+"}
+(38,1,1) = {"
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+gv
+uO
+uO
+QT
+GQ
+uO
+uO
+uO
+uO
+uO
+uO
+uO
+QT
+uO
+uO
+gv
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+"}
+(39,1,1) = {"
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+GQ
+GQ
+GQ
+GQ
+Zy
+gv
+uO
+uO
+yP
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+"}
+(40,1,1) = {"
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+Zy
+"}

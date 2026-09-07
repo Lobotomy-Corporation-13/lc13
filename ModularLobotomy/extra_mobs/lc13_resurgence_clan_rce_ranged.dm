@@ -216,6 +216,244 @@
 //////////////
 // PROJECTILES
 //////////////
+// ==================== MILITIA RANGED VARIANTS ====================
+// Weaker early-game ranged units for raids before 45 minutes.
+
+/// Militia Rapid - weaker suppression unit for early raids
+/mob/living/simple_animal/hostile/clan/ranged/rapid/militia
+	name = "militia rapid unit"
+	desc = "A crudely built rapid-fire unit. Its weapons are inaccurate and underpowered."
+	maxHealth = 150
+	health = 150
+	rapid = 2
+	projectiletype = /obj/projectile/clan_bullet/rapid/militia
+
+/// Militia rapid units have no overdrive special attack
+/mob/living/simple_animal/hostile/clan/ranged/rapid/militia/SpecialAttack(atom/target)
+	return
+
+/// Militia Gunner - weaker gunner for early raids
+/mob/living/simple_animal/hostile/clan/ranged/gunner/militia
+	name = "militia gunner"
+	desc = "A makeshift ranged unit with a weak energy weapon. Its shots lack punch."
+	maxHealth = 300
+	health = 300
+	ranged_cooldown_time = 15
+	projectiletype = /obj/projectile/clan_bullet/medium/militia
+
+/// Militia gunners fire 2-shot bursts instead of 3
+/mob/living/simple_animal/hostile/clan/ranged/gunner/militia/SpecialAttack(atom/target)
+	if(charge < special_attack_cost || world.time < special_attack_cooldown)
+		return
+	charge -= special_attack_cost
+	special_attack_cooldown = world.time + special_attack_cooldown_time
+	visible_message(span_danger("[src] unleashes a burst of fire!"))
+	playsound(src, 'sound/weapons/fixer/generic/energy1.ogg', 75, TRUE)
+	for(var/i in 1 to 2)
+		addtimer(CALLBACK(src, PROC_REF(BurstFire), target), i * 2)
+
+// ==================== VETERAN RANGED VARIANTS ====================
+// Stronger ranged units for mid-late game (60-90 minutes).
+
+/// Veteran Rapid - tougher suppression unit
+/mob/living/simple_animal/hostile/clan/ranged/rapid/veteran
+	name = "veteran rapid unit"
+	desc = "A battle-proven rapid-fire unit with upgraded targeting systems."
+	maxHealth = 450
+	health = 450
+	projectiletype = /obj/projectile/clan_bullet/rapid/veteran
+
+/// Veteran Gunner - tougher gunner
+/mob/living/simple_animal/hostile/clan/ranged/gunner/veteran
+	name = "veteran gunner"
+	desc = "A hardened ranged unit with a high-output energy weapon."
+	maxHealth = 900
+	health = 900
+	projectiletype = /obj/projectile/clan_bullet/medium/veteran
+
+/// Veteran Sniper - tougher sniper
+/mob/living/simple_animal/hostile/clan/ranged/sniper/veteran
+	name = "veteran sniper unit"
+	desc = "A seasoned marksman unit. Its shots hit harder and its aim is unerring."
+	maxHealth = 600
+	health = 600
+	projectiletype = /obj/projectile/clan_bullet/sniper/veteran
+
+/// Veteran Harpooner - tougher harpooner with higher drop damage
+/mob/living/simple_animal/hostile/clan/ranged/harpooner/veteran
+	name = "veteran harpooner"
+	desc = "An experienced chain specialist with reinforced harpoons and stronger winches."
+	maxHealth = 900
+	health = 900
+	projectiletype = /obj/projectile/clan_bullet/medium/veteran
+	final_damage = 70
+
+/// Veteran Warper - tougher warper with faster channel
+/mob/living/simple_animal/hostile/clan/ranged/warper/veteran
+	name = "veteran warper"
+	desc = "A practiced spatial manipulator. Its teleportation channels complete faster."
+	maxHealth = 700
+	health = 700
+	projectiletype = /obj/projectile/clan_bullet/warper/veteran
+
+/// Veteran warper channels in 8 seconds instead of 10
+/mob/living/simple_animal/hostile/clan/ranged/warper/veteran/SpecialAttack(atom/target)
+	if(charge < special_attack_cost || world.time < special_attack_cooldown || casting || !isliving(target))
+		return
+	var/found_allies = FALSE
+	for(var/mob/living/L in range(2, src))
+		if(L == src)
+			continue
+		if(faction_check_mob(L))
+			found_allies = TRUE
+			break
+	if(!found_allies)
+		return
+	charge -= special_attack_cost
+	special_attack_cooldown = world.time + special_attack_cooldown_time
+	var/turf/target_turf = get_turf(target)
+	visible_message(span_danger("[src] marks [target] for spatial displacement!"))
+	playsound(src, 'sound/magic/blind.ogg', 75, TRUE)
+	if(current_mark)
+		qdel(current_mark)
+	current_mark = new /obj/effect/warper_mark(target_turf)
+	casting = TRUE
+	magic_circle = new /obj/effect/clan_magic_circle(get_turf(src))
+	magic_circle.icon_state = "fellcircle"
+	var/matrix/M = matrix(magic_circle.transform)
+	M.Translate(0, 16)
+	var/rot_angle = Get_Angle(get_turf(src), target_turf)
+	M.Turn(rot_angle)
+	switch(dir)
+		if(EAST)
+			M.Scale(0.5, 1)
+		if(WEST)
+			M.Scale(0.5, 1)
+		if(NORTH)
+			magic_circle.layer -= 0.2
+	magic_circle.transform = M
+	var/turf/center = get_turf(src)
+	for(var/turf/T in range(4, center))
+		var/obj/effect/temp_visual/warper_area/W = new(T)
+		area_markers += W
+	visible_message(span_userdanger("[src] begins channeling a mass teleportation!"))
+	playsound(src, 'sound/magic/charge.ogg', 100, TRUE)
+	addtimer(CALLBACK(src, PROC_REF(CompleteTeleport), center), 8 SECONDS)
+
+// ==================== ELITE RANGED VARIANTS ====================
+// Endgame ranged units for 90+ minutes.
+
+/// Elite Rapid - endgame suppression with 4-shot volleys
+/mob/living/simple_animal/hostile/clan/ranged/rapid/elite
+	name = "elite rapid unit"
+	desc = "A masterwork suppression platform. Its quad-barrel design delivers withering barrages."
+	maxHealth = 600
+	health = 600
+	rapid = 4
+	projectiletype = /obj/projectile/clan_bullet/rapid/elite
+
+/// Elite rapid overdrive fires 6 shots for 7 seconds
+/mob/living/simple_animal/hostile/clan/ranged/rapid/elite/SpecialAttack(atom/target)
+	if(charge < special_attack_cost || world.time < special_attack_cooldown)
+		return
+	charge -= special_attack_cost
+	special_attack_cooldown = world.time + special_attack_cooldown_time
+	visible_message(span_danger("[src] overclocks its weapons!"))
+	playsound(src, 'sound/weapons/marauder.ogg', 75, TRUE)
+	rapid = 6
+	ranged_cooldown_time = 8
+	addtimer(CALLBACK(src, PROC_REF(ResetFireRate)), 7 SECONDS)
+
+/// Elite Gunner - endgame gunner with 4-shot burst
+/mob/living/simple_animal/hostile/clan/ranged/gunner/elite
+	name = "elite gunner"
+	desc = "A devastating ranged platform with an overcharged energy cannon."
+	maxHealth = 1200
+	health = 1200
+	projectiletype = /obj/projectile/clan_bullet/medium/elite
+
+/// Elite gunner fires 4-shot bursts
+/mob/living/simple_animal/hostile/clan/ranged/gunner/elite/SpecialAttack(atom/target)
+	if(charge < special_attack_cost || world.time < special_attack_cooldown)
+		return
+	charge -= special_attack_cost
+	special_attack_cooldown = world.time + special_attack_cooldown_time
+	visible_message(span_danger("[src] unleashes a devastating burst!"))
+	playsound(src, 'sound/weapons/fixer/generic/energy1.ogg', 75, TRUE)
+	for(var/i in 1 to 4)
+		addtimer(CALLBACK(src, PROC_REF(BurstFire), target), i * 2)
+
+/// Elite Sniper - endgame sniper
+/mob/living/simple_animal/hostile/clan/ranged/sniper/elite
+	name = "elite sniper unit"
+	desc = "The pinnacle of clan marksman engineering. A single shot can pierce through an entire squad."
+	maxHealth = 800
+	health = 800
+	projectiletype = /obj/projectile/clan_bullet/sniper/elite
+
+/// Elite Harpooner - endgame harpooner
+/mob/living/simple_animal/hostile/clan/ranged/harpooner/elite
+	name = "elite harpooner"
+	desc = "A masterwork chain specialist. Its harpoons are barbed and its winch can drag targets at terrifying speed."
+	maxHealth = 1200
+	health = 1200
+	projectiletype = /obj/projectile/clan_bullet/medium/elite
+	final_damage = 80
+
+/// Elite Warper - endgame warper with 7s channel
+/mob/living/simple_animal/hostile/clan/ranged/warper/elite
+	name = "elite warper"
+	desc = "A master of spatial manipulation. Its teleportation channels are nearly instant."
+	maxHealth = 800
+	health = 800
+	projectiletype = /obj/projectile/clan_bullet/warper/elite
+
+/// Elite warper channels in 7 seconds instead of 10
+/mob/living/simple_animal/hostile/clan/ranged/warper/elite/SpecialAttack(atom/target)
+	if(charge < special_attack_cost || world.time < special_attack_cooldown || casting || !isliving(target))
+		return
+	var/found_allies = FALSE
+	for(var/mob/living/L in range(2, src))
+		if(L == src)
+			continue
+		if(faction_check_mob(L))
+			found_allies = TRUE
+			break
+	if(!found_allies)
+		return
+	charge -= special_attack_cost
+	special_attack_cooldown = world.time + special_attack_cooldown_time
+	var/turf/target_turf = get_turf(target)
+	visible_message(span_danger("[src] marks [target] for spatial displacement!"))
+	playsound(src, 'sound/magic/blind.ogg', 75, TRUE)
+	if(current_mark)
+		qdel(current_mark)
+	current_mark = new /obj/effect/warper_mark(target_turf)
+	casting = TRUE
+	magic_circle = new /obj/effect/clan_magic_circle(get_turf(src))
+	magic_circle.icon_state = "fellcircle"
+	var/matrix/M = matrix(magic_circle.transform)
+	M.Translate(0, 16)
+	var/rot_angle = Get_Angle(get_turf(src), target_turf)
+	M.Turn(rot_angle)
+	switch(dir)
+		if(EAST)
+			M.Scale(0.5, 1)
+		if(WEST)
+			M.Scale(0.5, 1)
+		if(NORTH)
+			magic_circle.layer -= 0.2
+	magic_circle.transform = M
+	var/turf/center = get_turf(src)
+	for(var/turf/T in range(4, center))
+		var/obj/effect/temp_visual/warper_area/W = new(T)
+		area_markers += W
+	visible_message(span_userdanger("[src] begins channeling a mass teleportation!"))
+	playsound(src, 'sound/magic/charge.ogg', 100, TRUE)
+	addtimer(CALLBACK(src, PROC_REF(CompleteTeleport), center), 7 SECONDS)
+
+// ==================== PROJECTILES ====================
+
 /obj/projectile/clan_bullet
 	name = "energy bolt"
 	icon_state = "laser"
@@ -223,6 +461,8 @@
 	damage_type = RED_DAMAGE
 	projectile_piercing = PASSMOB
 	var/passed_faction_mobs = 0
+	/// Damage multiplier against resurgence_machine species
+	var/resurgence_damage_mult = 1.5
 
 /obj/projectile/clan_bullet/on_hit(atom/target, blocked = FALSE)
 	if(isliving(target) && isliving(firer))
@@ -231,6 +471,11 @@
 		if(shooter.faction_check_mob(L))
 			passed_faction_mobs++
 			return BULLET_ACT_FORCE_PIERCE
+	// Deal triple damage to resurgence_machine species
+	if(ishuman(target))
+		var/mob/living/carbon/human/H = target
+		if(H.dna?.species?.id == "resurgence_machine")
+			damage *= resurgence_damage_mult
 	..()
 
 /obj/projectile/clan_bullet/prehit_pierce(atom/A)
@@ -258,6 +503,60 @@
 	name = "micro energy bolt"
 	damage = 5
 	speed = 0.5
+
+/obj/projectile/clan_bullet/rapid/militia
+	name = "weak micro bolt"
+	damage = 3
+
+/obj/projectile/clan_bullet/medium/militia
+	name = "weak energy bolt"
+	damage = 10
+
+// Veteran projectiles
+/obj/projectile/clan_bullet/rapid/veteran
+	name = "hardened micro bolt"
+	damage = 7
+
+/obj/projectile/clan_bullet/medium/veteran
+	name = "hardened energy bolt"
+	damage = 20
+
+/obj/projectile/clan_bullet/sniper/veteran
+	name = "hardened high-energy bolt"
+	damage = 65
+
+/obj/projectile/clan_bullet/piercing/veteran
+	name = "hardened piercing bolt"
+	damage = 80
+
+/obj/projectile/clan_bullet/warper/veteran
+	name = "hardened void bolt"
+	icon_state = "purplelaser"
+	damage = 25
+	damage_type = BLACK_DAMAGE
+
+// Elite projectiles
+/obj/projectile/clan_bullet/rapid/elite
+	name = "supercharged micro bolt"
+	damage = 10
+
+/obj/projectile/clan_bullet/medium/elite
+	name = "supercharged energy bolt"
+	damage = 25
+
+/obj/projectile/clan_bullet/sniper/elite
+	name = "supercharged high-energy bolt"
+	damage = 80
+
+/obj/projectile/clan_bullet/piercing/elite
+	name = "supercharged piercing bolt"
+	damage = 100
+
+/obj/projectile/clan_bullet/warper/elite
+	name = "supercharged void bolt"
+	icon_state = "purplelaser"
+	damage = 30
+	damage_type = BLACK_DAMAGE
 
 /obj/projectile/clan_bullet/warper
 	name = "void bolt"

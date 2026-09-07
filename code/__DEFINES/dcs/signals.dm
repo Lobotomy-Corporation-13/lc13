@@ -722,6 +722,11 @@
 // /obj/item signals for economy
 ///called when an item is sold by the exports subsystem
 #define COMSIG_ITEM_SOLD "item_sold"
+///called when a mineral door finishes opening
+#define COMSIG_MINERAL_DOOR_OPEN "mineral_door_open"
+///called when a mineral door finishes closing
+#define COMSIG_MINERAL_DOOR_CLOSE "mineral_door_close"
+
 ///called when a wrapped up structure is opened by hand
 #define COMSIG_STRUCTURE_UNWRAPPED "structure_unwrapped"
 ///called when a wrapped up item is opened by hand
@@ -874,6 +879,9 @@
 
 ///from base of Component/edible/On_Consume: (mob/living/eater, mob/living/feeder)
 #define COMSIG_FOOD_CONSUMED "food_consumed"
+
+///from crafting.dm when food is crafted: (mob/living/crafter)
+#define COMSIG_FOOD_CRAFTED_BY "food_crafted_by"
 
 #define COMSIG_ITEM_FRIED "item_fried"
 	#define COMSIG_FRYING_HANDLED (1<<0)

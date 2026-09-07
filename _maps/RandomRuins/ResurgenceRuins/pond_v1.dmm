@@ -1,0 +1,32 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"a" = (
+/obj/structure/flora/rock/jungle,
+/turf/template_noop,
+/area/template_noop)
+"e" = (
+/turf/template_noop,
+/area/template_noop)
+"A" = (
+/obj/structure/flora/rock/pile/largejungle,
+/turf/open/water,
+/area/ruin/resurgence)
+"S" = (
+/obj/structure/flora/ausbushes/brflowers,
+/turf/template_noop,
+/area/template_noop)
+
+(1,1,1) = {"
+a
+a
+S
+"}
+(2,1,1) = {"
+a
+A
+a
+"}
+(3,1,1) = {"
+S
+a
+e
+"}

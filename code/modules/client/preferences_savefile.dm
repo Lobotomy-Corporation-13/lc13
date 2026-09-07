@@ -479,6 +479,9 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	//Quirks
 	READ_FILE(S["all_quirks"], all_quirks)
 
+	//Resurgence personalization
+	load_resurgence_prefs(S)
+
 	//try to fix any outdated data if necessary
 	//preference updating will handle saving the updated data for us.
 	if(needs_update >= 0)
@@ -656,6 +659,9 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 
 	//Alt job titles - tegu
 	WRITE_FILE(S["alt_titles_preferences"]		,alt_titles_preferences)
+
+	//Resurgence personalization
+	save_resurgence_prefs(S)
 
 	return TRUE
 

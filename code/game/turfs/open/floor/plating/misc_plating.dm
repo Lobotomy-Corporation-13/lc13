@@ -192,14 +192,18 @@
 	name = "iron sand"
 	desc = "Like sand, but more <i>metal</i>."
 	icon_state = "ironsand1"
-	base_icon_state = "ironsand1"
+	base_icon_state = "ironsand"
 	footstep = FOOTSTEP_SAND
 	barefootstep = FOOTSTEP_SAND
 	clawfootstep = FOOTSTEP_SAND
 	heavyfootstep = FOOTSTEP_GENERIC_HEAVY
+	/// Whether the turf has been dug or not
+	var/dug = FALSE
+	/// Itemstack to drop when dug by a shovel
+	var/digResult = /obj/item/stack/ore/glass/ironsand
 
 /turf/open/floor/plating/ironsand/setup_broken_states()
-	return list("ironsand1")
+	return list()  // Ironsand doesn't have broken states - prevents broken=TRUE from blocking tile placement
 
 /turf/open/floor/plating/ironsand/Initialize()
 	. = ..()
@@ -208,8 +212,48 @@
 /turf/open/floor/plating/ironsand/burn_tile()
 	return
 
-/turf/open/floor/plating/ironsand/try_replace_tile(obj/item/stack/tile/T, mob/user, params)
-	return
+/// If the user can dig the turf
+/turf/open/floor/plating/ironsand/proc/can_dig(mob/user)
+	if(!dug)
+		return TRUE
+	if(user)
+		to_chat(user, span_warning("Looks like someone has dug here already!"))
+	return FALSE
+
+/// Drops itemstack when dug and changes icon
+/turf/open/floor/plating/ironsand/proc/getDug()
+	dug = TRUE
+	new digResult(src, 5)
+	icon_state = "ironsand_dug"
+
+/// Allow tiles to be placed on ironsand and digging
+/turf/open/floor/plating/ironsand/attackby(obj/item/C, mob/user, params)
+	// Allow tile placement
+	if(istype(C, /obj/item/stack/tile))
+		var/obj/item/stack/tile/T = C
+		if(T.use(1))
+			PlaceOnTop(T.turf_type, flags = CHANGETURF_INHERIT_AIR)
+			playsound(src, 'sound/weapons/genhit.ogg', 50, TRUE)
+		return
+
+	// Allow digging with shovel or mining tools
+	if(C.tool_behaviour == TOOL_SHOVEL || C.tool_behaviour == TOOL_MINING)
+		if(!can_dig(user))
+			return TRUE
+
+		if(!isturf(user.loc))
+			return
+
+		to_chat(user, span_notice("You start digging..."))
+
+		if(C.use_tool(src, user, 40, volume=50))
+			if(!can_dig(user))
+				return TRUE
+			to_chat(user, span_notice("You dig a hole."))
+			getDug()
+			return TRUE
+
+	return ..()
 
 /turf/open/floor/plating/ice
 	name = "ice sheet"

@@ -492,3 +492,338 @@
 	name = "URGENT!"
 	info = "A hastily written note has been scribbled here... <br><br> Please use the ore redemption machine in the cargo office for smelting. PLEASE! <br><br>--The Research Staff"
 
+// ============================================
+// RESURGENCE OUTPOST GUIDES
+// Written by the Historian for new outpost members
+// ============================================
+
+/obj/item/paper/fluff/resurgence/guide_welcome
+	name = "Outpost Guide: Welcome"
+	info = {"<center><b>Welcome to the Outpost</b></center><br>
+	<i>A guide prepared by the Historian</i><br>
+	<br>
+	Greetings, fellow machine. If you are reading this, you have been entrusted with establishing a new outpost for our clan. This is a tremendous responsibility, and I have prepared these guides to help you succeed.<br>
+	<br>
+	<b>What We Are Building</b><br>
+	The Warlord once dreamed of reaching the City. Though that dream proved... complicated, we must continue forward. This outpost will gather resources to send back to our village, proving that we can provide for ourselves and others.<br>
+	<br>
+	<b>Your Core Status</b><br>
+	Press the 'Check Core Status' button to view your objectives and Faith level at any time. Your Faith is essential - it represents your connection to our clan's purpose. Without Faith, you cannot work.<br>
+	<br>
+	<b>The Two Phases</b><br>
+	Phase 1: Build the required rooms - Living Quarters, Workshop, Kitchen, Farming Zones, and Export Warehouse.<br>
+	Phase 2: Export resources back to the village using the Resources Recorder.<br>
+	<br>
+	<b>Work Together</b><br>
+	No machine succeeds alone. Share resources, help build rooms, and support each other. The clan prospers when we prosper together.<br>
+	<br>
+	<i>May your servos remain strong,</i><br>
+	<i>- The Historian</i>"}
+
+/obj/item/paper/fluff/resurgence/guide_harvesting
+	name = "Outpost Guide: Harvesting Resources"
+	info = {"<center><b>Harvesting Resources</b></center><br>
+	<i>A guide prepared by the Historian</i><br>
+	<br>
+	The outskirts are harsh, but they provide. Here is how to gather what we need.<br>
+	<br>
+	<b>Trees</b><br>
+	Trees provide wood, essential for construction. Strike them with your hatchet repeatedly. Each strike takes time and drains a small amount of Faith, but yields valuable wood.<br>
+	<br>
+	<b>Ore Deposits</b><br>
+	Rocky outcrops contain iron, coal, silver, gold, and other minerals. Use your pickaxe to mine them. The work is slow but rewarding. Ores must be smelted at a Forge to become usable metal sheets.<br>
+	<br>
+	<b>Wild Plants</b><br>
+	Cotton plants and other vegetation grow wild in these lands. Harvest them by hand or with tools. Cotton can be processed into cloth at a Loom.<br>
+	<br>
+	<b>Water Sources</b><br>
+	Fill buckets at rivers or ponds. Water is needed for farming - plants will not grow without it.<br>
+	<br>
+	<b>Faith and Work</b><br>
+	All work drains Faith slowly. If your Faith is low, rest in a good room or eat quality food to recover.<br>
+	<br>
+	<b>Leveling Skills</b><br>
+	Mining and Harvesting skills improve with practice. Higher levels mean faster work and better yields. Check your Core Status to see your skill levels.<br>
+	<br>
+	<i>- The Historian</i>"}
+
+/obj/item/paper/fluff/resurgence/guide_crafting
+	name = "Outpost Guide: Crafting"
+	info = {"<center><b>Crafting</b></center><br>
+	<i>A guide prepared by the Historian</i><br>
+	<br>
+	Raw materials must be refined before they become useful. Our crafting stations make this possible.<br>
+	<br>
+	<b>Crafting Table</b><br>
+	The basic workbench. Here you can create rope from cloth, metal rods from metal, tools, floor tiles, and many other items. Click the table to open the crafting menu and select what to make.<br>
+	<br>
+	<b>Forge</b><br>
+	The forge smelts raw ores into metal sheets. Iron ore becomes metal, sand becomes glass, and precious ores become their refined forms.<br>
+	<br>
+	<b>Loom</b><br>
+	The loom processes cotton into cloth and creates fabric items. Cotton must be spun into cloth before it can be used for crafting clothes or other textile goods.<br>
+	<br>
+	<b>Workshop Bonus</b><br>
+	Crafting is much faster when done inside a designated Workshop room. Building a Workshop early should be a priority for your outpost.<br>
+	<br>
+	<b>Materials Location</b><br>
+	Crafting stations draw materials from your hands, your backpack, and any closed crates or chests within one tile. Keep organized storage nearby for efficient crafting.<br>
+	<br>
+	<b>Progress Saving</b><br>
+	If you stop crafting partway through, your progress is saved. Anyone can continue where you left off. Canceling a craft loses the materials, so only cancel if necessary.<br>
+	<br>
+	<i>- The Historian</i>"}
+
+/obj/item/paper/fluff/resurgence/guide_planner_blueprints
+	name = "Outpost Guide: The Planner (Blueprints)"
+	info = {"<center><b>Using the Outpost Planner: Blueprints</b></center><br>
+	<i>A guide prepared by the Historian</i><br>
+	<br>
+	The Outpost Planner is your most important tool. It allows you to place construction blueprints and designate rooms. Click it in your hand to open the interface.<br>
+	<br>
+	<b>Blueprint Categories</b><br>
+	- Construction: Walls, doors, and floors<br>
+	- Storage: Crates, chests, freezers, dressers<br>
+	- Production: Crafting tables, forges, looms, kitchen equipment<br>
+	- Furniture: Beds, chairs, tables, sofas<br>
+	<br>
+	<b>Placing Blueprints</b><br>
+	1. Select a category tab<br>
+	2. Click on a structure to select it<br>
+	3. Choose a direction (for directional items)<br>
+	4. Click on the ground to place the blueprint<br>
+	<br>
+	<b>Building Blueprints</b><br>
+	Once placed, a blueprint shows what materials are needed. Click the blueprint to see requirements. Add the required materials by clicking with them in hand or dropping stacks on the blueprint. When all materials are added, the structure is built automatically.<br>
+	<br>
+	<b>Wall Materials</b><br>
+	- Sandstone walls: Only valid for Living Quarters or Workshop<br>
+	- Wood walls: Basic but quite decorative<br>
+	- Iron walls: Strong and reliable<br>
+	- Silver/Gold walls: Decorative and prestigious<br>
+	<br>
+	<i>- The Historian</i>"}
+
+/obj/item/paper/fluff/resurgence/guide_planner_rooms
+	name = "Outpost Guide: The Planner (Rooms)"
+	info = {"<center><b>Using the Outpost Planner: Rooms</b></center><br>
+	<i>A guide prepared by the Historian</i><br>
+	<br>
+	Rooms provide shelter and improve Faith regeneration. Here is how to create them.<br>
+	<br>
+	<b>Room Requirements</b><br>
+	A valid room must be:<br>
+	- Fully enclosed by walls on all sides<br>
+	- Have at least one door for entry<br>
+	- Be no larger than the maximum size limit<br>
+	- Have at least 11 tiles (smaller rooms are cramped)<br>
+	<br>
+	<b>Designating a Room</b><br>
+	1. Stand inside the enclosed space<br>
+	2. Open the Outpost Planner<br>
+	3. Go to the Room tab<br>
+	4. Click 'Designate Room'<br>
+	5. Choose the room type (based on contents)<br>
+	<br>
+	<b>Room Types by Contents</b><br>
+	- Living Quarters: Contains a bed<br>
+	- Workshop: Contains a crafting station<br>
+	- Kitchen: Contains cooking equipment<br>
+	- Storage: Contains storage containers<br>
+	- Export Warehouse: Contains a Resources Recorder<br>
+	- Common Room: Default if no special contents<br>
+	<br>
+	<b>Room Integrity</b><br>
+	If a wall or door forming the room boundary is destroyed, the room will dissolve automatically. Keep your walls intact!<br>
+	<br>
+	<i>- The Historian</i>"}
+
+/obj/item/paper/fluff/resurgence/guide_claiming
+	name = "Outpost Guide: Claiming Living Quarters"
+	info = {"<center><b>Claiming Your Personal Room</b></center><br>
+	<i>A guide prepared by the Historian</i><br>
+	<br>
+	Every machine deserves a place to call their own. Here is how to claim a Living Quarters room.<br>
+	<br>
+	<b>Requirements</b><br>
+	- The room must be designated as Living Quarters (must contain a bed)<br>
+	- The room must not already be claimed by another<br>
+	- You can only claim one room at a time<br>
+	<br>
+	<b>How to Claim</b><br>
+	1. Stand inside an unclaimed Living Quarters<br>
+	2. Open the Outpost Planner<br>
+	3. Go to the Room tab<br>
+	4. Click 'Claim Room'<br>
+	<br>
+	<b>Benefits of Ownership</b><br>
+	Owning a personal room provides a steady Faith bonus. Without a room, you receive a 'Homeless' penalty that slowly drains your Faith.<br>
+	<br>
+	<b>Unclaiming</b><br>
+	If you wish to claim a different room, simply claim the new one - your old room will be automatically unclaimed. You can also manually unclaim from the Room tab.<br>
+	<br>
+	<b>New Arrivals</b><br>
+	When you first awaken at the outpost, you receive a temporary 'Newcomer' bonus that offsets the homeless penalty. Use this time to find or build a room to claim.<br>
+	<br>
+	<i>- The Historian</i>"}
+
+/obj/item/paper/fluff/resurgence/guide_room_quality
+	name = "Outpost Guide: Room Types and Beauty"
+	info = {"<center><b>Room Types and Beauty</b></center><br>
+	<i>A guide prepared by the Historian</i><br>
+	<br>
+	Different rooms serve different purposes in your outpost. Understanding this helps you plan effectively.<br>
+	<br>
+	<b>Room Types</b><br>
+	- Living Quarters: Personal sanctuary (requires bed)<br>
+	- Common Room: Community gathering (requires table + chair)<br>
+	- Kitchen: Food preparation (requires stove or fridge)<br>
+	- Workshop: Production focused (requires crafting station)<br>
+	- Storage Room: Organized goods (requires crates/closets)<br>
+	- Export Warehouse: Logistics hub (requires Resources Recorder)<br>
+	- Basic Room: Simple shelter (any enclosed space)<br>
+	<br>
+	<b>Room Beauty</b><br>
+	Rooms have a 'quality' rating based on their contents:<br>
+	- Luxurious: 50+ beauty per tile<br>
+	- Comfortable: 30+ beauty per tile<br>
+	- Adequate: 10+ beauty per tile<br>
+	- Bare: 0+ beauty per tile<br>
+	- Shabby: Below 0 beauty per tile<br>
+	<br>
+	<b>Improving Quality</b><br>
+	Add furniture, decorations, and carpet to increase room quality. Higher quality rooms are more pleasant to inhabit.<br>
+	<br>
+	<i>- The Historian</i>"}
+
+/obj/item/paper/fluff/resurgence/guide_exporting
+	name = "Outpost Guide: Exporting Resources"
+	info = {"<center><b>Exporting Resources</b></center><br>
+	<i>A guide prepared by the Historian</i><br>
+	<br>
+	Once all building objectives are complete, Phase 2 begins. Now we send resources back to the village.<br>
+	<br>
+	<b>The Resources Recorder</b><br>
+	This wall-mounted console is the heart of our export operation. It must be placed in a designated Export Warehouse room to function.<br>
+	<br>
+	<b>Preparing Exports</b><br>
+	1. Place crates or chests in the Export Warehouse<br>
+	2. Fill them with resources to export<br>
+	3. Click the Resources Recorder to open the interface<br>
+	<br>
+	<b>Scanning and Selecting</b><br>
+	1. Click 'Scan Warehouse' to detect all containers<br>
+	2. Review the contents of each container<br>
+	3. Items that contribute to objectives are highlighted<br>
+	4. Select which containers to export<br>
+	<br>
+	<b>Exporting</b><br>
+	Click 'Export Selected' to send the containers and their contents to the village. A fulton balloon will lift them away - quite dramatic, I must say.<br>
+	<br>
+	<b>Export Objectives</b><br>
+	Phase 2 objectives require specific quantities of resources:<br>
+	- 50 Metal Sheets<br>
+	- 100 Wood<br>
+	- 5 Harvesters<br>
+	- 25 Gold<br>
+	- 30 Cloth<br>
+	<br>
+	<b>Complete all export objectives to win.</b><br>
+	<br>
+	<i>- The Historian</i>"}
+
+/obj/item/paper/fluff/resurgence/guide_farming
+	name = "Outpost Guide: Farming"
+	info = {"<center><b>Farming</b></center><br>
+	<i>A guide prepared by the Historian</i><br>
+	<br>
+	Farming provides renewable food and materials. It requires patience but rewards persistence.<br>
+	<br>
+	<b>Creating Farm Zones</b><br>
+	1. Open the Outpost Planner<br>
+	2. Go to the Farming tab<br>
+	3. Click 'Toggle Farm Mode'<br>
+	4. Click tiles to select them (must be adjacent)<br>
+	5. Each tile requires 1 Fertilizer<br>
+	6. Click 'Confirm Zone' and name it<br>
+	<br>
+	<b>Making Fertilizer</b><br>
+	Craft fertilizer at a Crafting Table using 5 Coal per fertilizer.<br>
+	<br>
+	<b>Planting</b><br>
+	Use any standard seed on a farm plot to plant it. Seeds can be found from wild plants or extracted from harvested produce using a Seed Extractor.<br>
+	<br>
+	<b>Watering</b><br>
+	Plants need water to grow. Fill a bucket at a water source and pour it on your farm plots. Plants will not grow when water is below 10%.<br>
+	<br>
+	<b>Harvesting</b><br>
+	When plants are ready (shown by harvest indicator), click them to harvest. Using a scythe speeds up the process. Harvested plants will regrow from the same seed.<br>
+	<br>
+	<b>Growth Speed</b><br>
+	Farm plots grow slower than hydroponic trays (3x longer). Plan accordingly and keep multiple plots growing.<br>
+	<br>
+	<b>Building Objective</b><br>
+	You need at least 2 farming zones with 6+ tiles each to complete the farming objective.<br>
+	<br>
+	<i>- The Historian</i>"}
+
+/obj/item/paper/fluff/resurgence/guide_faith
+	name = "Outpost Guide: Faith and Wellbeing"
+	info = {"<center><b>Faith and Wellbeing</b></center><br>
+	<i>A guide prepared by the Historian</i><br>
+	<br>
+	Faith is the essence of our purpose. It represents your connection to the clan's dream. Understanding Faith is crucial to your survival.<br>
+	<br>
+	<b>What Affects Faith</b><br>
+	<u>Positive:</u><br>
+	- Owning a personal room<br>
+	- Being in high-quality rooms<br>
+	- Completing objectives (temporary bonus)<br>
+	- Eating good food<br>
+	- The Newcomer bonus (first 10 minutes)<br>
+	<br>
+	<u>Negative:</u><br>
+	- Being homeless (no claimed room)<br>
+	- Working (small drain per action)<br>
+	- Being in low-quality spaces<br>
+	- Poor living conditions<br>
+	<br>
+	<b>Faith Thresholds</b><br>
+	- 100: Maximum Faith - You are at peace<br>
+	- 50+: Comfortable - Work proceeds normally<br>
+	- 25-50: Strained - Consider resting soon<br>
+	- 5-25: Exhausted - Working is difficult<br>
+	- Below 5: Cannot work - Must rest<br>
+	<br>
+	<b>Recovering Faith</b><br>
+	- Claim a personal room for steady regeneration<br>
+	- Spend time in Common Rooms or Kitchens<br>
+	- Eat quality meals<br>
+	- Complete objectives for temporary boosts<br>
+	<br>
+	<b>Check Core Status</b><br>
+	Use 'Check Core Status' in your abilities to see your current Faith, active effects, skills, and objectives at any time.<br>
+	<br>
+	<i>Remember: We work not just to survive, but to prove we can be more than survivors.</i><br>
+	<br>
+	<i>- The Historian</i>"}
+
+// Folder to hold all Resurgence guides
+/obj/item/folder/resurgence_guides
+	name = "Outpost Handbook"
+	desc = "A folder containing guides prepared by the Historian for new outpost members."
+
+/obj/item/folder/resurgence_guides/Initialize(mapload)
+	. = ..()
+	// Add all the guides to the folder
+	new /obj/item/paper/fluff/resurgence/guide_welcome(src)
+	new /obj/item/paper/fluff/resurgence/guide_harvesting(src)
+	new /obj/item/paper/fluff/resurgence/guide_crafting(src)
+	new /obj/item/paper/fluff/resurgence/guide_planner_blueprints(src)
+	new /obj/item/paper/fluff/resurgence/guide_planner_rooms(src)
+	new /obj/item/paper/fluff/resurgence/guide_claiming(src)
+	new /obj/item/paper/fluff/resurgence/guide_room_quality(src)
+	new /obj/item/paper/fluff/resurgence/guide_exporting(src)
+	new /obj/item/paper/fluff/resurgence/guide_farming(src)
+	new /obj/item/paper/fluff/resurgence/guide_faith(src)
+

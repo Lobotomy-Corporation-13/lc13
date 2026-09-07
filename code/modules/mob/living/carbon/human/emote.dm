@@ -40,6 +40,32 @@
 	message_param = "hugs %t."
 	hands_use_check = TRUE
 
+/datum/emote/living/carbon/human/hug/run_emote(mob/user, params, type_override, intentional)
+	. = ..()
+	if(!.)
+		return
+	if(!params)
+		return  // Hugging self, no Kind trait effect
+
+	// Find the target mob by name
+	if(!ishuman(user))
+		return
+	var/mob/living/carbon/human/hugger = user
+
+	// Check if the hugger has the Kind trait available
+	if(!check_kind_hug_available(hugger))
+		return
+
+	// Search for a human with matching name in view
+	var/target_name = lowertext(params)
+	for(var/mob/living/carbon/human/H in view(1, hugger))
+		if(H == hugger)
+			continue
+		if(lowertext(H.name) == target_name || findtext(lowertext(H.name), target_name))
+			// Apply the Kind trait hug effect
+			apply_kind_hug(hugger, H)
+			return
+
 /datum/emote/living/carbon/human/mumble
 	key = "mumble"
 	key_third_person = "mumbles"

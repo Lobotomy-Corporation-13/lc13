@@ -73,7 +73,53 @@
 		T.buildstack = carpet_type
 	if(custom_materials)
 		T.set_custom_materials(custom_materials)
+	// Transfer resurgence beauty component to the new table
+	var/datum/component/resurgence_beauty/beauty_comp = GetComponent(/datum/component/resurgence_beauty)
+	if(beauty_comp)
+		// Transfer existing beauty plus a material bonus
+		var/material_bonus = get_table_material_beauty(custom_materials, table_type)
+		T.AddComponent(/datum/component/resurgence_beauty, beauty_comp.beauty + material_bonus)
 	qdel(src)
+
+/// Calculate beauty bonus from the material used to build a table
+/obj/structure/table_frame/proc/get_table_material_beauty(list/custom_materials, table_type)
+	// Fancy wood tables (carpet-topped)
+	if(ispath(table_type, /obj/structure/table/wood/fancy))
+		return 5
+	// Poker tables
+	if(ispath(table_type, /obj/structure/table/wood/poker))
+		return 3
+	// Check custom materials for precious metals
+	if(custom_materials)
+		for(var/mat_type in custom_materials)
+			if(ispath(mat_type, /datum/material/gold))
+				return 8
+			if(ispath(mat_type, /datum/material/diamond))
+				return 10
+			if(ispath(mat_type, /datum/material/silver))
+				return 6
+			if(ispath(mat_type, /datum/material/bronze))
+				return 4
+			if(ispath(mat_type, /datum/material/uranium))
+				return 3
+			if(ispath(mat_type, /datum/material/plasma))
+				return 3
+			if(ispath(mat_type, /datum/material/titanium))
+				return 4
+			if(ispath(mat_type, /datum/material/bananium))
+				return 5
+	// Glass table
+	if(ispath(table_type, /obj/structure/table/glass))
+		return 3
+	// Reinforced table
+	if(ispath(table_type, /obj/structure/table/reinforced))
+		return 2
+	// Basic wood or metal table
+	if(ispath(table_type, /obj/structure/table/wood))
+		return 1
+	if(ispath(table_type, /obj/structure/table))
+		return 1
+	return 0
 
 /obj/structure/table_frame/deconstruct(disassembled = TRUE)
 	new framestack(get_turf(src), framestackamount)

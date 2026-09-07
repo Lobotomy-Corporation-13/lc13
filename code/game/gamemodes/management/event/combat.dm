@@ -31,6 +31,11 @@ GLOBAL_VAR_INIT(wcorp_enemy_faction, "") //decides which faction WCorp will be u
 		CONFIG_SET(flag/norespawn, 0) //I think it's at 0 by default but I'd rather make sure.
 		to_chat(world, "<B>Due to gamemode, the OOC channel has been globally disabled.</B>")
 
+	// Initialize resurgence outpost objectives
+	if(SSmaptype.maptype == "outpost")
+		initialize_resurgence_objectives()
+		to_chat(world, span_notice("<B>Resurgence Outpost objectives have been initialized. Check your Core status to view them.</B>"))
+
 	//Breach all
 	for(var/mob/living/simple_animal/hostile/abnormality/A in GLOB.mob_list)
 		INVOKE_ASYNC(A, TYPE_PROC_REF(/mob/living/simple_animal/hostile/abnormality, BreachEffect))

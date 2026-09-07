@@ -190,6 +190,9 @@
 			var/list/parts = del_reqs(R, a)
 			var/atom/movable/I = new R.result (get_turf(a.loc))
 			I.CheckParts(parts, R)
+			// Send signal for food quality calculation if crafted by a mob
+			if(ismob(a))
+				SEND_SIGNAL(I, COMSIG_FOOD_CRAFTED_BY, a)
 			if(send_feedback)
 				SSblackbox.record_feedback("tally", "object_crafted", 1, I.type)
 			return I //Send the item back to whatever called this proc so it can handle whatever it wants to do with the new item
