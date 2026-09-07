@@ -341,7 +341,7 @@
 							TEMPERANCE_ATTRIBUTE = 100,
 							JUSTICE_ATTRIBUTE = 80
 							)
-	aoe_damage = 30
+	special_damage = 30
 	aoe_range = 3
 
 /obj/item/ego_weapon/blind_rage/nihil/attackby(obj/item/I, mob/living/user, params)

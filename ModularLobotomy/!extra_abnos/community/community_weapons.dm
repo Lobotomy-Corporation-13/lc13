@@ -208,7 +208,7 @@
 							JUSTICE_ATTRIBUTE = 80
 							)
 	var/special_attack = FALSE
-	var/special_damage = 100
+	special_damage = 100
 	var/special_cooldown
 	var/special_cooldown_time = 10 SECONDS
 	var/special_checks_faction = TRUE

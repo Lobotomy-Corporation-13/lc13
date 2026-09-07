@@ -247,17 +247,9 @@
 							)
 	var/ranged_cooldown
 	var/ranged_cooldown_time = 1.3 SECONDS
-	var/ranged_damage = 20
-
-	//light_system = MOVABLE_LIGHT_DIRECTIONAL
-	//light_color = COLOR_ORANGE
-	//light_range = 4
-	//light_power = 5
-	//light_on = FALSE
 
 /obj/item/ego_weapon/hearth/proc/IconOff()
 	icon_state = icon_off
-	//light_on = FALSE
 
 /obj/item/ego_weapon/hearth/afterattack(atom/A, mob/living/user, proximity_flag, params)
 	if(ranged_cooldown > world.time)
@@ -272,15 +264,12 @@
 	..()
 	ranged_cooldown = world.time + ranged_cooldown_time
 	icon_state = icon_on
-	//light_on = TRUE
 	addtimer(CALLBACK(src, PROC_REF(IconOff)), 20)
 	playsound(target_turf, 'sound/weapons/pulse.ogg', 50, TRUE)
-	var/damage_dealt = 0
 	for(var/turf/open/T in range(target_turf, 0))
 		new /obj/effect/temp_visual/smash1(T)
-		for(var/mob/living/L in user.HurtInTurf(T, list(), ranged_damage, BLACK_DAMAGE, hurt_mechs = TRUE, attack_type = (ATTACK_TYPE_SPECIAL)))
-			if((L.stat < DEAD) && !(L.status_flags & GODMODE))
-				damage_dealt += ranged_damage
+		var/ranged_damage = force*CalcDamage(user)
+		HurtInTurf(T, list(), ranged_damage, BLACK_DAMAGE, hurt_mechs = TRUE, attack_type = (ATTACK_TYPE_SPECIAL))
 
 /obj/effect/temp_visual/smash1
 	icon = 'icons/effects/effects.dmi'
@@ -337,10 +326,7 @@
 		return
 	if(proximity_flag && (LAZYLEN(traps) < traplimit))
 		var/obj/effect/temp_visual/lanterntrap/trap = new(T, user, src, mode)
-		var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
-		var/justicemod = 1 + userjust/100
-		trap.damage_multiplier*=justicemod
-		trap.damage_multiplier*=force_multiplier
+		trap.damage_multiplier*= CalcDamage(user)
 		user.changeNext_move(CLICK_CD_MELEE)
 
 /obj/item/ego_weapon/lantern/afterattack(atom/target, mob/living/user, proximity_flag, params)
@@ -486,6 +472,7 @@
 	attack_verb_simple = list("slice", "slash", "stab")
 	hitsound = 'sound/weapons/fixer/generic/knife2.ogg'
 	crit_multiplier = 0	//This weapon doesn't have crits because of poise being better crits.
+	special_multiplier = 3
 	var/poise = 0
 
 /obj/item/ego_weapon/mini/fourleaf_clover/examine(mob/user)
@@ -501,7 +488,7 @@
 
 	//Crit itself.
 	if(prob(poise*2))
-		force*=3
+		force*=special_multiplier
 		to_chat(user, span_userdanger("Critical!"))
 		balloon_alert(user, "Critical!")
 		poise = 0
@@ -680,6 +667,7 @@
 	damtype = WHITE_DAMAGE
 	attack_verb_continuous = list("smacks", "hammers", "beats")
 	attack_verb_simple = list("smack", "hammer", "beat")
+	special_multiplier = 0.025	//Used for healing amount.
 
 /obj/item/ego_weapon/philia/attack(mob/living/target, mob/living/carbon/human/user)
 	var/turf/target_turf = get_turf(target)
@@ -689,11 +677,8 @@
 	if(target.status_flags & GODMODE || (target.stat == DEAD))
 		return
 	for(var/mob/living/L in hearers(2, target_turf))
-		var/heal_amt = force*0.025
-		var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
-		var/justicemod = 1 + userjust / 100
-		heal_amt *= justicemod
-		heal_amt *= force_multiplier
+		var/heal_amt = force*special_multiplier
+		heal_amt *= CalcDamage(user)
 		if(!ishuman(L))
 			continue
 		var/mob/living/carbon/human/H = L
@@ -712,6 +697,7 @@
 	damtype = RED_DAMAGE
 	attack_verb_continuous = list("smacks", "hammers", "beats")
 	attack_verb_simple = list("smack", "hammer", "beat")
+	special_multiplier = 5	//Used for combo Finisher.
 	var/combo = 0
 	var/combo_time
 	var/combo_wait = 10
@@ -740,17 +726,14 @@
 		hitsound = 'sound/weapons/ego/farmwatch.ogg'
 		combo = 0
 		user.changeNext_move(CLICK_CD_MELEE * 2)
-		force *= 5	// Should actually keep up with normal damage.
+		force *= special_multiplier	// Should actually keep up with normal damage.
 		to_chat(user,span_warning("You are offbalance, you take a moment to reset your stance."))
 		balloon_alert(user, "You are offbalance, you take a moment to reset your stance.")
 		if(!(M.status_flags & GODMODE) && M.stat != DEAD)
 			var/turf/target_turf = get_turf(M)
 			for(var/mob/living/L in hearers(2, target_turf))
 				var/heal_amt = force*0.05
-				var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
-				var/justicemod = 1 + userjust / 100
-				heal_amt *= justicemod
-				heal_amt *= force_multiplier
+				heal_amt *= CalcDamage(user)
 				if(!ishuman(L))
 					continue
 				var/mob/living/carbon/human/H = L
@@ -786,7 +769,7 @@
 		new /obj/effect/temp_visual/explosion(get_turf(src))
 		playsound(loc, 'sound/effects/ordeals/steel/gcorp_boom.ogg', 60, TRUE)
 		for(var/mob/living/L in ohearers(3, src))
-			L.deal_damage(30, RED_DAMAGE, user, flags = (DAMAGE_UNTRACKABLE), attack_type = (ATTACK_TYPE_OTHER))
+			L.deal_damage(force, RED_DAMAGE, user, flags = (DAMAGE_UNTRACKABLE), attack_type = (ATTACK_TYPE_OTHER))
 		qdel(src)
 
 //Placeholder
