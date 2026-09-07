@@ -1312,7 +1312,7 @@
 #define STATUS_EFFECT_LCOVERHEAT /datum/status_effect/stacking/lc_overheat // Deals true damage every 5 sec, can't be applied to godmode (contained abos)
 /datum/status_effect/stacking/lc_overheat
 	id = "lc_overheat"
-	alert_type = /atom/movable/screen/alert/status_effect/overheat
+	alert_type = /atom/movable/screen/alert/status_effect/augment_overheat
 	stacking_display_name = "flame"
 	max_stacks = 50
 	tick_interval = 5 SECONDS
@@ -1320,7 +1320,7 @@
 	var/new_stack = FALSE
 	var/safety = TRUE
 
-/atom/movable/screen/alert/status_effect/overheat
+/atom/movable/screen/alert/status_effect/augment_overheat
 	name = "Overheated"
 	desc = "You're burning up from your augment!!"
 	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'

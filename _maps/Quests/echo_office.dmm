@@ -1,0 +1,7658 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"ag" = (
+/obj/machinery/light{
+	dir = 4
+	},
+/turf/open/floor/wood,
+/area/city/fixers)
+"al" = (
+/obj/structure/closet/cabinet,
+/obj/item/reagent_containers/food/drinks/beer,
+/obj/item/reagent_containers/food/drinks/beer,
+/obj/item/reagent_containers/food/drinks/bottle/applejack,
+/obj/item/reagent_containers/food/drinks/bottle/cognac,
+/turf/open/floor/oldshuttle,
+/area/city/house)
+"aq" = (
+/obj/machinery/telecomms/server/presets/service,
+/obj/effect/turf_decal/bot,
+/turf/open/floor/circuit/telecomms/mainframe,
+/area/facility_hallway/north)
+"av" = (
+/obj/machinery/light{
+	dir = 4
+	},
+/turf/open/floor/plating/ashplanet/ash,
+/area/city/fixers)
+"aS" = (
+/obj/structure/mineral_door/wood,
+/turf/open/floor/mineral/silver,
+/area/city/house)
+"aZ" = (
+/obj/structure/closet/secure_closet/personal/cabinet,
+/obj/item/clothing/under/pants/blackjeans,
+/turf/open/floor/carpet/black,
+/area/city/house)
+"bf" = (
+/obj/effect/turf_decal/trimline/purple/filled/warning{
+	dir = 4
+	},
+/obj/structure/window/reinforced/spawner{
+	dir = 4;
+	resistance_flags = 115
+	},
+/turf/open/floor/mineral/titanium/tiled/white,
+/area/city/fixers)
+"bi" = (
+/obj/effect/turf_decal/siding/wood{
+	dir = 8
+	},
+/turf/open/floor/wood,
+/area/city/fixers)
+"br" = (
+/obj/effect/light_emitter{
+	light_power = 4;
+	light_range = 25;
+	set_cap = 3;
+	set_luminosity = 24
+	},
+/turf/open/floor/holofloor/chapel{
+	dir = 1
+	},
+/area/city/fixers)
+"bs" = (
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 4
+	},
+/obj/machinery/light{
+	dir = 4
+	},
+/turf/open/floor/stone,
+/area/city/fixers)
+"bS" = (
+/obj/machinery/light{
+	dir = 1
+	},
+/obj/structure/table/wood,
+/obj/item/reagent_containers/food/drinks/drinkingglass,
+/turf/open/floor/carpet/royalblack,
+/area/city/house)
+"ce" = (
+/obj/effect/turf_decal/siding/wideplating/dark/corner{
+	dir = 4
+	},
+/turf/open/floor/mineral/titanium/tiled,
+/area/city/fixers)
+"co" = (
+/obj/machinery/door/keycard/cuckoo_nest{
+	resistance_flags = 64
+	},
+/turf/closed/indestructible/reinforced,
+/area/city/fixers)
+"cr" = (
+/obj/effect/turf_decal/siding/wideplating{
+	dir = 10
+	},
+/turf/open/floor/holofloor/chapel{
+	dir = 8
+	},
+/area/city/fixers)
+"ct" = (
+/obj/machinery/light{
+	dir = 8
+	},
+/turf/open/floor/wood,
+/area/city/fixers)
+"cK" = (
+/turf/open/floor/wood,
+/area/city/house)
+"cY" = (
+/obj/machinery/light{
+	dir = 1
+	},
+/obj/structure/table/wood,
+/obj/item/reagent_containers/food/drinks/drinkingglass,
+/turf/open/floor/carpet/black,
+/area/city/house)
+"df" = (
+/obj/effect/turf_decal/trimline/yellow/filled/line{
+	pixel_y = 5
+	},
+/obj/effect/turf_decal/trimline/yellow/filled/line{
+	dir = 1;
+	pixel_y = -5
+	},
+/turf/open/floor/plating/ashplanet{
+	name = "asphalt"
+	},
+/area/city)
+"do" = (
+/obj/effect/turf_decal/siding/wood{
+	dir = 9;
+	color = "#2e1f0e"
+	},
+/turf/open/floor/plating/beach/sand,
+/area/city/fixers)
+"dy" = (
+/obj/machinery/door/keycard/cuckoo_nest{
+	resistance_flags = 64
+	},
+/turf/open/floor/oldshuttle,
+/area/city/house)
+"dF" = (
+/obj/structure/plaque{
+	pixel_x = -32
+	},
+/turf/open/floor/holofloor/carpet,
+/area/city/fixers)
+"dH" = (
+/turf/closed/indestructible/wood,
+/area/city/fixers)
+"dL" = (
+/turf/open/floor/holofloor/chapel{
+	dir = 1
+	},
+/area/city/fixers)
+"dO" = (
+/obj/machinery/griddle,
+/turf/open/floor/oldshuttle,
+/area/city/house)
+"dY" = (
+/obj/effect/turf_decal/trimline/white/filled/line{
+	pixel_y = 10
+	},
+/turf/open/floor/plating/ashplanet{
+	name = "asphalt"
+	},
+/area/city)
+"em" = (
+/obj/structure/table/reinforced,
+/obj/machinery/reagentgrinder{
+	pixel_y = 2
+	},
+/turf/open/floor/wood,
+/area/city/house)
+"en" = (
+/obj/effect/turf_decal/siding/purple{
+	dir = 8
+	},
+/turf/open/floor/mineral/titanium/white,
+/area/city/fixers)
+"ev" = (
+/turf/closed/indestructible/reinforced/cheap/cream,
+/area/city/fixers)
+"ew" = (
+/obj/effect/turf_decal/siding/wood{
+	color = "#2e1f0e";
+	dir = 1
+	},
+/turf/open/floor/plating/beach/sand,
+/area/city/fixers)
+"eX" = (
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 4
+	},
+/turf/open/floor/mineral/titanium/tiled,
+/area/city/fixers)
+"fg" = (
+/obj/structure/chair/comfy/black{
+	dir = 1
+	},
+/turf/open/floor/mineral/titanium/tiled/white,
+/area/city/fixers)
+"fh" = (
+/obj/effect/turf_decal/trimline/white/filled/line,
+/turf/open/floor/plating/ashplanet{
+	name = "asphalt"
+	},
+/area/city)
+"fv" = (
+/turf/open/floor/plating/ashplanet/rocky{
+	layer = 1.98
+	},
+/area/city)
+"fA" = (
+/obj/structure/table,
+/obj/item/reagent_containers/glass/bottle/nutrient,
+/obj/item/reagent_containers/glass/bottle/nutrient,
+/obj/item/reagent_containers/glass/bottle/nutrient,
+/obj/item/reagent_containers/glass/bottle/nutrient,
+/obj/item/reagent_containers/glass/bottle/nutrient,
+/obj/item/reagent_containers/glass/bottle/nutrient,
+/obj/item/reagent_containers/glass/bottle/nutrient,
+/turf/open/floor/wood,
+/area/city/house)
+"fJ" = (
+/obj/effect/turf_decal/trimline/purple/filled/warning,
+/obj/machinery/light{
+	dir = 8
+	},
+/obj/effect/turf_decal/siding/purple{
+	dir = 8
+	},
+/turf/open/floor/mineral/titanium/tiled/white,
+/area/city/fixers)
+"fZ" = (
+/obj/effect/turf_decal/siding/wideplating{
+	dir = 1
+	},
+/turf/open/floor/holofloor/chapel{
+	dir = 1
+	},
+/area/city/fixers)
+"ga" = (
+/obj/structure/sink/kitchen{
+	dir = 1;
+	pixel_y = -10
+	},
+/turf/open/floor/oldshuttle,
+/area/city/house)
+"gq" = (
+/obj/effect/turf_decal/bot,
+/obj/machinery/telecomms/relay/preset/telecomms,
+/turf/open/floor/circuit/telecomms/mainframe,
+/area/facility_hallway/north)
+"gu" = (
+/obj/effect/turf_decal/trimline/yellow/filled/line{
+	dir = 10
+	},
+/turf/open/floor/plating/ashplanet{
+	density = 1;
+	name = "asphalt"
+	},
+/area/city)
+"gz" = (
+/obj/effect/turf_decal/siding/purple{
+	dir = 5
+	},
+/turf/open/floor/mineral/titanium/white,
+/area/city/fixers)
+"gA" = (
+/obj/machinery/light{
+	dir = 4
+	},
+/turf/open/floor/holofloor/chapel{
+	dir = 4
+	},
+/area/city/fixers)
+"gP" = (
+/obj/effect/turf_decal/siding/wood{
+	dir = 8
+	},
+/turf/open/floor/plating/beach/sand,
+/area/city/fixers)
+"gV" = (
+/obj/structure/chair/sofa/corp/left{
+	dir = 1
+	},
+/obj/effect/turf_decal/siding/purple,
+/turf/open/floor/mineral/titanium/tiled/purple,
+/area/city/fixers)
+"hm" = (
+/turf/open/floor/plating/ashplanet{
+	name = "asphalt"
+	},
+/area/city)
+"hs" = (
+/obj/effect/turf_decal/siding/wideplating/corner{
+	dir = 4
+	},
+/turf/open/floor/holofloor/chapel,
+/area/city/fixers)
+"hy" = (
+/obj/effect/turf_decal/siding/wideplating{
+	dir = 8
+	},
+/turf/open/floor/holofloor/chapel{
+	dir = 8
+	},
+/area/city/fixers)
+"hE" = (
+/obj/structure/sink{
+	dir = 1;
+	pixel_y = -15
+	},
+/obj/structure/mirror{
+	pixel_x = -1;
+	pixel_y = -35
+	},
+/turf/open/indestructible/hoteltile,
+/area/city/house)
+"hF" = (
+/obj/effect/turf_decal/siding/wideplating/dark/corner{
+	dir = 4
+	},
+/turf/open/floor/stone,
+/area/city/fixers)
+"hG" = (
+/turf/closed/indestructible/reinforced,
+/area/city/house)
+"hH" = (
+/obj/machinery/light{
+	dir = 8
+	},
+/turf/open/floor/holofloor/carpet,
+/area/city/fixers)
+"hN" = (
+/obj/structure/dresser,
+/obj/machinery/light{
+	dir = 1
+	},
+/turf/open/floor/mineral/silver,
+/area/city/house)
+"hR" = (
+/obj/effect/turf_decal/siding/wideplating/dark/corner{
+	dir = 5
+	},
+/turf/open/floor/stone,
+/area/city/fixers)
+"hU" = (
+/obj/effect/turf_decal/bot,
+/obj/effect/decal/cleanable/dirt,
+/obj/machinery/telecomms/bus/preset_one,
+/turf/open/floor/circuit/telecomms/mainframe,
+/area/facility_hallway/north)
+"ie" = (
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 4
+	},
+/turf/open/floor/plating/ashplanet/rocky{
+	layer = 1.98
+	},
+/area/city)
+"iw" = (
+/obj/structure/table/reinforced,
+/obj/machinery/reagentgrinder{
+	pixel_y = 2
+	},
+/turf/open/floor/oldshuttle,
+/area/city/house)
+"iI" = (
+/turf/open/floor/plating/ashplanet/ash,
+/area/city/fixers)
+"iU" = (
+/obj/structure/table/reinforced,
+/turf/open/floor/wood,
+/area/city/house)
+"js" = (
+/turf/open/floor/mineral/titanium/tiled,
+/area/city/fixers)
+"jG" = (
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 1
+	},
+/turf/open/floor/mineral/titanium/tiled,
+/area/city/fixers)
+"jH" = (
+/obj/structure/table/reinforced,
+/turf/open/indestructible/hoteltile,
+/area/city/house)
+"jX" = (
+/obj/machinery/telecomms/server/presets/command{
+	name = "Command Server"
+	},
+/obj/effect/turf_decal/bot,
+/turf/open/floor/circuit/telecomms/mainframe,
+/area/facility_hallway/north)
+"kf" = (
+/obj/machinery/door/airlock/wood{
+	name = "fixer office"
+	},
+/obj/effect/turf_decal/siding/purple/corner{
+	dir = 1
+	},
+/obj/effect/turf_decal/siding/purple/corner{
+	dir = 4
+	},
+/turf/open/floor/mineral/titanium/tiled/white,
+/area/city/fixers)
+"kg" = (
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 1
+	},
+/turf/open/floor/plating/ashplanet/rocky{
+	layer = 1.98
+	},
+/area/city)
+"ks" = (
+/obj/machinery/telecomms/server/presets/supply,
+/obj/effect/turf_decal/bot,
+/turf/open/floor/circuit/telecomms/mainframe,
+/area/facility_hallway/north)
+"ku" = (
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 1
+	},
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 8
+	},
+/turf/open/floor/stone,
+/area/city/fixers)
+"kz" = (
+/obj/effect/turf_decal/bot,
+/obj/effect/decal/cleanable/dirt,
+/obj/machinery/telecomms/processor/preset_three,
+/turf/open/floor/circuit/telecomms/mainframe,
+/area/facility_hallway/north)
+"kE" = (
+/obj/effect/turf_decal/siding/purple{
+	dir = 1
+	},
+/turf/open/floor/mineral/titanium/white,
+/area/city/fixers)
+"kF" = (
+/obj/machinery/light{
+	dir = 1
+	},
+/obj/structure/table/reinforced,
+/obj/machinery/microwave,
+/turf/open/floor/oldshuttle,
+/area/city/house)
+"lg" = (
+/obj/machinery/light,
+/turf/open/floor/glass/reinforced,
+/area/city/fixers)
+"lk" = (
+/obj/structure/dresser,
+/obj/machinery/light{
+	dir = 1
+	},
+/turf/open/floor/carpet/royalblack,
+/area/city/house)
+"lq" = (
+/obj/effect/landmark/fixer_duel/fixer_spawn/remus,
+/turf/open/floor/carpet/blue,
+/area/city/fixers)
+"lw" = (
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 6
+	},
+/turf/open/floor/mineral/titanium/tiled,
+/area/city/fixers)
+"lH" = (
+/obj/effect/turf_decal/bot,
+/obj/machinery/telecomms/processor/preset_two,
+/turf/open/floor/circuit/telecomms/mainframe,
+/area/facility_hallway/north)
+"lL" = (
+/obj/effect/turf_decal/bot,
+/obj/machinery/telecomms/processor/preset_four,
+/turf/open/floor/circuit/telecomms/mainframe,
+/area/facility_hallway/north)
+"mh" = (
+/turf/open/floor/carpet/blue,
+/area/city/fixers)
+"mt" = (
+/obj/structure/closet/cabinet,
+/obj/item/reagent_containers/glass/bowl,
+/obj/item/kitchen/knife,
+/obj/item/kitchen/rollingpin,
+/obj/item/kitchen/fork,
+/obj/item/kitchen/spoon,
+/obj/item/reagent_containers/food/drinks/drinkingglass,
+/obj/item/reagent_containers/food/drinks/drinkingglass,
+/turf/open/floor/wood,
+/area/city/house)
+"my" = (
+/obj/item/bedsheet/dorms,
+/obj/structure/bed,
+/turf/open/floor/carpet/black,
+/area/city/house)
+"mH" = (
+/turf/open/floor/mineral/titanium/white,
+/area/city/fixers)
+"nc" = (
+/obj/effect/turf_decal/siding/wood{
+	color = "#2e1f0e"
+	},
+/obj/structure/flora/ausbushes/lavendergrass,
+/turf/open/floor/plating/beach/sand,
+/area/city/fixers)
+"nt" = (
+/obj/machinery/light{
+	dir = 8
+	},
+/turf/open/floor/stone,
+/area/city/fixers)
+"nD" = (
+/obj/effect/turf_decal/siding/wood{
+	color = "#2e1f0e"
+	},
+/turf/open/floor/plating/beach/sand,
+/area/city/fixers)
+"nP" = (
+/turf/open/indestructible/hoteltile,
+/area/city/house)
+"nQ" = (
+/obj/effect/turf_decal/siding/wood{
+	dir = 7
+	},
+/turf/open/floor/wood,
+/area/city/fixers)
+"nT" = (
+/obj/effect/turf_decal/trimline/red/filled/warning{
+	dir = 8
+	},
+/turf/open/floor/plating/ashplanet{
+	name = "asphalt"
+	},
+/area/city)
+"nW" = (
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 9
+	},
+/turf/open/floor/mineral/titanium/tiled,
+/area/city/fixers)
+"ok" = (
+/obj/effect/turf_decal/bot,
+/obj/machinery/telecomms/receiver/preset_right,
+/turf/open/floor/circuit/telecomms/mainframe,
+/area/facility_hallway/north)
+"ol" = (
+/obj/effect/turf_decal/trimline/red/filled/warning,
+/obj/docking_port/stationary{
+	dwidth = 5;
+	height = 5;
+	id = "echo_office_floor";
+	name = "echo office";
+	width = 10
+	},
+/turf/open/floor/plating/ashplanet{
+	name = "asphalt"
+	},
+/area/city)
+"oD" = (
+/obj/machinery/telecomms/server/presets/common,
+/turf/open/floor/circuit/telecomms/mainframe,
+/area/facility_hallway/north)
+"oE" = (
+/obj/machinery/hydroponics,
+/turf/open/floor/wood,
+/area/city/house)
+"oG" = (
+/obj/effect/landmark/fixer_duel/player_spawn/lauel,
+/turf/open/floor/glass,
+/area/city/fixers)
+"oR" = (
+/obj/structure/chair/sofa/corp/corner{
+	dir = 8
+	},
+/obj/effect/turf_decal/siding/purple{
+	dir = 6
+	},
+/turf/open/floor/mineral/titanium/tiled/purple,
+/area/city/fixers)
+"oZ" = (
+/obj/effect/turf_decal/siding/wideplating{
+	dir = 5
+	},
+/turf/open/floor/holofloor/chapel{
+	dir = 4
+	},
+/area/city/fixers)
+"pp" = (
+/obj/effect/turf_decal/bot,
+/obj/machinery/telecomms/receiver/preset_left,
+/turf/open/floor/circuit/telecomms/mainframe,
+/area/facility_hallway/north)
+"pr" = (
+/obj/effect/turf_decal/trimline/red/filled/warning{
+	dir = 10
+	},
+/turf/open/floor/plating/ashplanet{
+	name = "asphalt"
+	},
+/area/city)
+"px" = (
+/turf/open/floor/stone,
+/area/city/fixers)
+"pE" = (
+/obj/structure/sink/kitchen{
+	dir = 1;
+	pixel_y = -10
+	},
+/turf/open/floor/wood,
+/area/city/house)
+"pI" = (
+/obj/structure/mineral_door/wood,
+/turf/open/floor/carpet/black,
+/area/city/house)
+"pJ" = (
+/obj/effect/turf_decal/bot,
+/obj/machinery/telecomms/hub/preset,
+/turf/open/floor/circuit/telecomms/mainframe,
+/area/facility_hallway/north)
+"pV" = (
+/obj/effect/turf_decal/siding/wood{
+	color = "#2e1f0e";
+	dir = 4
+	},
+/obj/effect/turf_decal/siding/wood{
+	dir = 4
+	},
+/obj/structure/flora/ausbushes/lavendergrass,
+/turf/open/floor/plating/beach/sand,
+/area/city/fixers)
+"qa" = (
+/obj/effect/turf_decal/bot,
+/obj/machinery/telecomms/bus/preset_three,
+/turf/open/floor/circuit/telecomms/mainframe,
+/area/facility_hallway/north)
+"qr" = (
+/turf/open/floor/holofloor/chapel{
+	dir = 8
+	},
+/area/city/fixers)
+"qB" = (
+/obj/effect/turf_decal/trimline/yellow/filled/line{
+	dir = 8;
+	pixel_x = 5
+	},
+/obj/effect/turf_decal/trimline/yellow/filled/line{
+	dir = 4;
+	pixel_x = -5
+	},
+/obj/effect/turf_decal/trimline/white/filled/line,
+/turf/open/floor/plating/ashplanet{
+	name = "asphalt"
+	},
+/area/city)
+"qQ" = (
+/obj/machinery/light{
+	dir = 1
+	},
+/turf/open/floor/carpet/royalblack,
+/area/city/fixers)
+"rg" = (
+/obj/effect/landmark/speedwagon_trigger,
+/turf/open/floor/plating/ashplanet/rocky{
+	layer = 1.98
+	},
+/area/city)
+"rl" = (
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 5
+	},
+/turf/open/floor/mineral/titanium/tiled,
+/area/city/fixers)
+"ry" = (
+/obj/effect/turf_decal/siding/wideplating{
+	dir = 9
+	},
+/turf/open/floor/holofloor/chapel,
+/area/city/fixers)
+"rG" = (
+/obj/effect/turf_decal/siding/wideplating{
+	dir = 10
+	},
+/turf/open/floor/holofloor/chapel{
+	dir = 4
+	},
+/area/city/fixers)
+"rH" = (
+/obj/effect/turf_decal/siding/wood{
+	dir = 5;
+	color = "#2e1f0e"
+	},
+/turf/open/floor/plating/beach/sand,
+/area/city/fixers)
+"rR" = (
+/obj/structure/table/wood/fancy/purple{
+	name = "wing-grade fancy table";
+	pixel_y = -21;
+	resistance_flags = 115
+	},
+/obj/structure/chair/comfy/black{
+	layer = 2.5
+	},
+/mob/living/simple_animal/hostile/ui_npc/echo_fixer/lauel{
+	layer = 2.7
+	},
+/turf/open/floor/carpet/purple,
+/area/city/fixers)
+"rU" = (
+/obj/effect/turf_decal/siding/wideplating{
+	dir = 4
+	},
+/turf/open/floor/holofloor/chapel{
+	dir = 8
+	},
+/area/city/fixers)
+"rW" = (
+/obj/structure/chair/sofa/corp/left{
+	dir = 4
+	},
+/obj/effect/turf_decal/siding/purple{
+	dir = 8
+	},
+/mob/living/simple_animal/hostile/ui_npc/echo_fixer/nicholas{
+	dir = 4
+	},
+/turf/open/floor/mineral/titanium/tiled/purple,
+/area/city/fixers)
+"sd" = (
+/obj/machinery/light{
+	dir = 1
+	},
+/obj/structure/table/wood,
+/obj/item/reagent_containers/food/drinks/drinkingglass,
+/turf/open/floor/mineral/silver,
+/area/city/house)
+"sh" = (
+/obj/effect/turf_decal/siding/wood{
+	color = "#2e1f0e";
+	dir = 1
+	},
+/obj/structure/flora/ausbushes/lavendergrass,
+/turf/open/floor/plating/beach/sand,
+/area/city/fixers)
+"so" = (
+/obj/effect/turf_decal/trimline/white/filled/line{
+	dir = 4;
+	pixel_x = -10
+	},
+/turf/open/floor/plating/ashplanet{
+	density = 1;
+	name = "asphalt"
+	},
+/area/city)
+"sz" = (
+/obj/structure/dresser,
+/obj/machinery/light{
+	dir = 1
+	},
+/turf/open/floor/carpet/black,
+/area/city/house)
+"te" = (
+/obj/effect/turf_decal/siding/wood{
+	dir = 1
+	},
+/turf/open/floor/wood,
+/area/city/fixers)
+"th" = (
+/obj/effect/turf_decal/trimline/purple/filled/warning,
+/obj/structure/window/reinforced/spawner{
+	resistance_flags = 115
+	},
+/turf/open/floor/mineral/titanium/tiled/white,
+/area/city/fixers)
+"tl" = (
+/obj/effect/turf_decal/bot,
+/obj/machinery/ntnet_relay,
+/turf/open/floor/circuit/telecomms/mainframe,
+/area/facility_hallway/north)
+"tt" = (
+/obj/effect/landmark/fixer_duel/fixer_spawn/lauel,
+/turf/open/floor/glass,
+/area/city/fixers)
+"tB" = (
+/obj/effect/turf_decal/siding/wood{
+	color = "#2e1f0e";
+	dir = 4
+	},
+/turf/open/floor/plating/beach/sand,
+/area/city/fixers)
+"tS" = (
+/obj/effect/turf_decal/trimline/yellow/filled/line{
+	dir = 8;
+	pixel_x = 5
+	},
+/obj/effect/turf_decal/trimline/yellow/filled/line{
+	dir = 4;
+	pixel_x = -5
+	},
+/turf/open/floor/plating/ashplanet{
+	density = 1;
+	name = "asphalt"
+	},
+/area/city)
+"tW" = (
+/turf/closed/indestructible/reinforced,
+/area/city)
+"ug" = (
+/obj/effect/turf_decal/trimline/red/filled/warning{
+	dir = 6
+	},
+/turf/open/floor/plating/ashplanet{
+	name = "asphalt"
+	},
+/area/city)
+"uB" = (
+/turf/open/floor/mineral/silver,
+/area/city/house)
+"uV" = (
+/obj/item/bedsheet/dorms,
+/obj/structure/bed,
+/turf/open/floor/carpet/royalblack,
+/area/city/house)
+"vf" = (
+/obj/effect/turf_decal/siding/wideplating{
+	dir = 8
+	},
+/turf/open/floor/holofloor/chapel{
+	dir = 1
+	},
+/area/city/fixers)
+"vi" = (
+/obj/structure/chair/pew/right,
+/turf/open/floor/plating/ashplanet/rocky{
+	layer = 1.98
+	},
+/area/city)
+"vP" = (
+/obj/structure/chair/wood,
+/turf/open/floor/wood,
+/area/city/house)
+"vT" = (
+/obj/effect/turf_decal/tile/purple,
+/obj/effect/turf_decal/tile/purple{
+	dir = 8
+	},
+/obj/effect/turf_decal/trimline/purple/filled/warning{
+	dir = 1
+	},
+/obj/effect/turf_decal/siding/purple/corner{
+	dir = 8
+	},
+/obj/effect/turf_decal/siding/purple/corner,
+/turf/open/floor/mineral/titanium/tiled/white,
+/area/city/fixers)
+"vV" = (
+/obj/machinery/telecomms/relay/preset/telecomms,
+/obj/structure/emergency_shield,
+/obj/effect/turf_decal/bot,
+/turf/open/floor/circuit/telecomms/mainframe,
+/area/facility_hallway/north)
+"vY" = (
+/obj/effect/turf_decal/siding/wood/corner,
+/turf/open/floor/wood,
+/area/city/fixers)
+"wi" = (
+/obj/machinery/light{
+	dir = 4
+	},
+/turf/open/floor/glass/reinforced,
+/area/city/fixers)
+"wn" = (
+/obj/effect/landmark/fixer_duel/player_spawn/nicholas,
+/turf/open/floor/carpet/royalblack,
+/area/city/fixers)
+"wz" = (
+/obj/effect/landmark/fixer_duel/fixer_spawn/asera,
+/turf/open/floor/carpet/red,
+/area/city/fixers)
+"wD" = (
+/turf/open/floor/holofloor/chapel{
+	dir = 4
+	},
+/area/city/fixers)
+"wN" = (
+/obj/effect/turf_decal/bot,
+/obj/effect/decal/cleanable/dirt,
+/obj/machinery/telecomms/processor/preset_one,
+/turf/open/floor/circuit/telecomms/mainframe,
+/area/facility_hallway/north)
+"wO" = (
+/obj/structure/table/wood,
+/obj/item/reagent_containers/food/drinks/drinkingglass,
+/turf/open/floor/carpet/royalblack,
+/area/city/house)
+"wR" = (
+/obj/structure/mineral_door/wood,
+/turf/open/indestructible/hoteltile,
+/area/city/house)
+"xe" = (
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 8
+	},
+/obj/effect/turf_decal/siding/wideplating/dark,
+/turf/open/floor/stone,
+/area/city/fixers)
+"xh" = (
+/turf/closed/indestructible/iron,
+/area/city/fixers)
+"xr" = (
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 5
+	},
+/turf/open/floor/plating/ashplanet/rocky{
+	layer = 1.98
+	},
+/area/city)
+"xu" = (
+/obj/machinery/light{
+	dir = 1
+	},
+/obj/structure/table/reinforced,
+/obj/machinery/microwave,
+/turf/open/floor/wood,
+/area/city/house)
+"xv" = (
+/obj/structure/chair/pew/left,
+/turf/open/floor/plating/ashplanet/rocky{
+	layer = 1.98
+	},
+/area/city)
+"xM" = (
+/turf/closed/indestructible/reinforced/cheap/blue,
+/area/city/fixers)
+"xP" = (
+/obj/machinery/shower{
+	pixel_y = 19
+	},
+/obj/structure/curtain,
+/turf/open/floor/noslip,
+/area/city/house)
+"xR" = (
+/obj/machinery/light{
+	dir = 4
+	},
+/turf/open/floor/stone,
+/area/city/fixers)
+"xW" = (
+/obj/effect/turf_decal/siding/wood{
+	dir = 10
+	},
+/turf/open/floor/wood,
+/area/city/fixers)
+"ye" = (
+/obj/structure/statue/sandstone/venus{
+	anchored = 1;
+	dir = 8
+	},
+/turf/open/floor/plating/ashplanet/ash,
+/area/city/fixers)
+"yg" = (
+/obj/effect/turf_decal/siding/wideplating{
+	dir = 1
+	},
+/turf/open/floor/holofloor/chapel{
+	dir = 4
+	},
+/area/city/fixers)
+"yx" = (
+/obj/structure/chair/sofa/corp/right{
+	dir = 8
+	},
+/obj/effect/turf_decal/siding/purple{
+	dir = 4
+	},
+/mob/living/simple_animal/hostile/ui_npc/echo_fixer/remus{
+	dir = 8
+	},
+/turf/open/floor/mineral/titanium/tiled/purple,
+/area/city/fixers)
+"yE" = (
+/obj/structure/chair/wood{
+	dir = 1
+	},
+/turf/open/floor/wood,
+/area/city/house)
+"yG" = (
+/obj/effect/turf_decal/trimline/red/filled/warning,
+/turf/open/floor/plating/ashplanet{
+	name = "asphalt"
+	},
+/area/city)
+"yK" = (
+/obj/machinery/light{
+	dir = 8
+	},
+/turf/open/floor/glass/reinforced,
+/area/city/fixers)
+"yS" = (
+/turf/open/floor/carpet/red,
+/area/city/fixers)
+"za" = (
+/obj/effect/turf_decal/siding/wideplating/corner{
+	dir = 1
+	},
+/turf/open/floor/holofloor/chapel{
+	dir = 8
+	},
+/area/city/fixers)
+"zj" = (
+/obj/effect/turf_decal/siding/wood{
+	dir = 5
+	},
+/turf/open/floor/wood,
+/area/city/fixers)
+"zk" = (
+/obj/machinery/griddle,
+/turf/open/indestructible/hoteltile,
+/area/city/house)
+"zn" = (
+/obj/machinery/telecomms/server/presets/medical,
+/turf/open/floor/circuit/telecomms/mainframe,
+/area/facility_hallway/north)
+"zz" = (
+/obj/effect/turf_decal/bot,
+/obj/effect/decal/cleanable/dirt,
+/obj/machinery/telecomms/bus/preset_four,
+/turf/open/floor/circuit/telecomms/mainframe,
+/area/facility_hallway/north)
+"zE" = (
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 8
+	},
+/turf/open/floor/stone,
+/area/city/fixers)
+"Af" = (
+/obj/structure/fluff/street_light{
+	density = 0
+	},
+/obj/effect/landmark/speedwagon_trigger,
+/turf/open/floor/plating/ashplanet/rocky{
+	layer = 1.98
+	},
+/area/city)
+"Am" = (
+/obj/structure/chair/sofa/corp/corner{
+	dir = 1
+	},
+/obj/effect/turf_decal/siding/purple{
+	dir = 10
+	},
+/turf/open/floor/mineral/titanium/tiled/purple,
+/area/city/fixers)
+"AG" = (
+/obj/structure/fluff/drake_statue,
+/turf/open/floor/holofloor/carpet,
+/area/city/fixers)
+"AP" = (
+/obj/effect/turf_decal/siding/wideplating{
+	dir = 6
+	},
+/turf/open/floor/holofloor/chapel{
+	dir = 1
+	},
+/area/city/fixers)
+"Bd" = (
+/obj/machinery/telecomms/message_server/preset,
+/turf/open/floor/circuit/telecomms/mainframe,
+/area/facility_hallway/north)
+"Be" = (
+/obj/effect/turf_decal/siding/wideplating/dark/corner{
+	dir = 1
+	},
+/turf/open/floor/stone,
+/area/city/fixers)
+"Bf" = (
+/obj/effect/turf_decal/trimline/red/filled/warning{
+	dir = 9
+	},
+/turf/open/floor/plating/ashplanet{
+	name = "asphalt"
+	},
+/area/city)
+"Bo" = (
+/obj/structure/closet/cabinet,
+/obj/item/reagent_containers/glass/bowl,
+/obj/item/kitchen/knife,
+/obj/item/kitchen/rollingpin,
+/obj/item/kitchen/fork,
+/obj/item/kitchen/spoon,
+/obj/item/reagent_containers/food/drinks/drinkingglass,
+/obj/item/reagent_containers/food/drinks/drinkingglass,
+/turf/open/floor/oldshuttle,
+/area/city/house)
+"Bq" = (
+/obj/structure/table/wood/fancy/purple{
+	name = "wing-grade fancy table";
+	pixel_y = -21;
+	resistance_flags = 115
+	},
+/obj/item/pen{
+	pixel_y = -16
+	},
+/obj/effect/turf_decal/siding/purple/corner,
+/turf/closed/indestructible/reinforced,
+/area/city/fixers)
+"Bw" = (
+/turf/open/floor/holofloor/chapel,
+/area/city/fixers)
+"BI" = (
+/obj/machinery/light{
+	dir = 1
+	},
+/turf/open/floor/carpet/purple,
+/area/city/fixers)
+"BT" = (
+/obj/structure/plaque{
+	pixel_x = 32
+	},
+/turf/open/floor/holofloor/carpet,
+/area/city/fixers)
+"Ck" = (
+/obj/effect/turf_decal/siding/wideplating/dark/corner{
+	dir = 1
+	},
+/turf/open/floor/mineral/titanium/tiled,
+/area/city/fixers)
+"Cz" = (
+/obj/structure/toilet{
+	dir = 4
+	},
+/obj/machinery/light{
+	dir = 1
+	},
+/turf/open/indestructible/hoteltile,
+/area/city/house)
+"CE" = (
+/turf/closed/indestructible/reinforced,
+/area/space)
+"CJ" = (
+/obj/machinery/telecomms/server/presets/engineering,
+/obj/effect/turf_decal/bot,
+/turf/open/floor/circuit/telecomms/mainframe,
+/area/facility_hallway/north)
+"CK" = (
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 5
+	},
+/obj/structure/fluff/street_light{
+	density = 0
+	},
+/turf/open/floor/plating/ashplanet/rocky{
+	layer = 1.98
+	},
+/area/city)
+"CN" = (
+/obj/structure/chair/wood{
+	dir = 1
+	},
+/turf/open/floor/oldshuttle,
+/area/city/house)
+"CX" = (
+/turf/open/floor/carpet/royalblack,
+/area/city/fixers)
+"De" = (
+/obj/effect/turf_decal/siding/wood{
+	color = "#2e1f0e";
+	dir = 8
+	},
+/obj/effect/turf_decal/siding/wood{
+	dir = 8
+	},
+/obj/structure/flora/ausbushes/lavendergrass,
+/turf/open/floor/plating/beach/sand,
+/area/city/fixers)
+"Dl" = (
+/turf/open/floor/holofloor/carpet,
+/area/city/fixers)
+"Dp" = (
+/obj/machinery/light{
+	dir = 1
+	},
+/obj/structure/table/reinforced,
+/obj/machinery/microwave,
+/turf/open/indestructible/hoteltile,
+/area/city/house)
+"Dq" = (
+/obj/structure/closet/cabinet,
+/obj/item/reagent_containers/food/drinks/beer,
+/obj/item/reagent_containers/food/drinks/beer,
+/obj/item/reagent_containers/food/drinks/bottle/applejack,
+/obj/item/reagent_containers/food/drinks/bottle/cognac,
+/turf/open/floor/wood,
+/area/city/house)
+"Dz" = (
+/obj/effect/landmark/fixer_duel/player_spawn/asera,
+/obj/machinery/light,
+/turf/open/floor/carpet/red,
+/area/city/fixers)
+"DA" = (
+/turf/closed/indestructible/rock,
+/area/space)
+"DS" = (
+/obj/machinery/computer/shuttle/mining{
+	dir = 1;
+	name = "bus console";
+	possible_destinations = "echo_office_floor";
+	shuttleId = "quest";
+	resistance_flags = 64
+	},
+/turf/open/floor/plating/ashplanet/rocky{
+	layer = 1.98
+	},
+/area/city)
+"DT" = (
+/obj/structure/flora/ausbushes/lavendergrass,
+/turf/open/floor/plating/beach/sand,
+/area/city/fixers)
+"Eb" = (
+/obj/machinery/light{
+	dir = 8
+	},
+/turf/open/floor/carpet/royalblue,
+/area/city/fixers)
+"Ec" = (
+/turf/open/floor/mineral/titanium/tiled/white,
+/area/city/fixers)
+"Ed" = (
+/obj/effect/turf_decal/siding/wideplating{
+	dir = 5
+	},
+/turf/open/floor/holofloor/chapel{
+	dir = 8
+	},
+/area/city/fixers)
+"Ee" = (
+/turf/open/floor/glass,
+/area/city/fixers)
+"El" = (
+/obj/machinery/griddle,
+/turf/open/floor/wood,
+/area/city/house)
+"EE" = (
+/obj/machinery/telecomms/server/presets/science,
+/obj/effect/turf_decal/bot,
+/turf/open/floor/circuit/telecomms/mainframe,
+/area/facility_hallway/north)
+"EG" = (
+/obj/effect/turf_decal/trimline/white/filled/warning,
+/turf/open/floor/carpet/purple,
+/area/city/fixers)
+"EJ" = (
+/obj/effect/turf_decal/siding/wood{
+	dir = 4
+	},
+/turf/open/floor/plating/beach/sand,
+/area/city/fixers)
+"EK" = (
+/obj/structure/table/wood,
+/obj/item/modular_computer/laptop/preset/civilian,
+/turf/open/floor/wood,
+/area/city/house)
+"EO" = (
+/obj/effect/light_emitter{
+	light_power = 4;
+	light_range = 25;
+	set_cap = 3;
+	set_luminosity = 24
+	},
+/turf/open/floor/wood,
+/area/city/fixers)
+"EZ" = (
+/obj/effect/turf_decal/siding/wideplating/dark/corner{
+	dir = 8
+	},
+/turf/open/floor/stone,
+/area/city/fixers)
+"Fb" = (
+/obj/structure/table/wood,
+/obj/item/flashlight/lamp,
+/turf/open/floor/mineral/silver,
+/area/city/house)
+"Fo" = (
+/obj/effect/turf_decal/bot,
+/obj/machinery/telecomms/bus/preset_two,
+/turf/open/floor/circuit/telecomms/mainframe,
+/area/facility_hallway/north)
+"Fw" = (
+/obj/effect/turf_decal/trimline/white/filled/line{
+	dir = 1
+	},
+/obj/effect/turf_decal/trimline/white/filled/line,
+/turf/open/floor/plating/ashplanet{
+	name = "asphalt"
+	},
+/area/city)
+"FC" = (
+/obj/structure/closet/secure_closet/personal/cabinet,
+/obj/item/reagent_containers/food/drinks/bottle/vodka/badminka,
+/obj/item/reagent_containers/food/drinks/bottle/vodka/badminka,
+/obj/item/reagent_containers/food/drinks/bottle/vodka/badminka,
+/obj/item/reagent_containers/food/drinks/bottle/vodka/badminka,
+/obj/item/reagent_containers/food/drinks/bottle/vodka/badminka,
+/obj/item/reagent_containers/food/drinks/bottle/vodka/badminka,
+/obj/item/reagent_containers/food/drinks/bottle/vodka/badminka,
+/obj/item/reagent_containers/food/drinks/bottle/vodka/badminka,
+/obj/item/reagent_containers/food/drinks/bottle/vodka/badminka,
+/obj/item/clothing/under/mercenary/rus_army,
+/turf/open/floor/carpet/black,
+/area/city/house)
+"FG" = (
+/obj/effect/turf_decal/trimline/red/filled/warning{
+	dir = 5
+	},
+/turf/open/floor/plating/ashplanet{
+	name = "asphalt"
+	},
+/area/city)
+"FK" = (
+/obj/structure/table/wood,
+/obj/item/flashlight/lamp,
+/turf/open/floor/carpet/royalblack,
+/area/city/house)
+"FQ" = (
+/obj/effect/turf_decal/siding/wideplating{
+	dir = 4
+	},
+/turf/open/floor/holofloor/chapel{
+	dir = 1
+	},
+/area/city/fixers)
+"Gd" = (
+/obj/structure/mineral_door/wood,
+/turf/open/floor/carpet/royalblack,
+/area/city/house)
+"Gm" = (
+/obj/effect/turf_decal/trimline/yellow/filled/line{
+	pixel_y = 5
+	},
+/obj/effect/turf_decal/trimline/yellow/filled/line{
+	dir = 1;
+	pixel_y = -5
+	},
+/turf/open/floor/plating/ashplanet{
+	density = 1;
+	name = "asphalt"
+	},
+/area/city)
+"Gu" = (
+/obj/effect/turf_decal/trimline/purple/filled/warning{
+	dir = 1
+	},
+/obj/effect/turf_decal/siding/purple,
+/turf/open/floor/mineral/titanium/tiled/white,
+/area/city/fixers)
+"Gw" = (
+/obj/effect/turf_decal/siding/wood{
+	dir = 6
+	},
+/turf/open/floor/wood,
+/area/city/fixers)
+"Hn" = (
+/obj/machinery/light{
+	dir = 1
+	},
+/turf/open/floor/carpet/royalblue,
+/area/city/fixers)
+"Hq" = (
+/obj/effect/turf_decal/siding/wood{
+	dir = 6;
+	color = "#2e1f0e"
+	},
+/turf/open/floor/plating/beach/sand,
+/area/city/fixers)
+"Hx" = (
+/obj/structure/sink/kitchen{
+	dir = 4;
+	pixel_x = -11
+	},
+/turf/open/indestructible/hoteltile,
+/area/city/house)
+"Hy" = (
+/obj/effect/turf_decal/trimline/blue/filled/corner{
+	dir = 4
+	},
+/turf/open/floor/plating/ashplanet/rocky{
+	layer = 1.98
+	},
+/area/city)
+"Hz" = (
+/obj/effect/landmark/fixer_duel/player_spawn/remus,
+/turf/open/floor/carpet/blue,
+/area/city/fixers)
+"HE" = (
+/obj/effect/turf_decal/trimline/purple/filled/warning,
+/obj/machinery/light{
+	dir = 4
+	},
+/obj/effect/turf_decal/siding/purple{
+	dir = 4
+	},
+/turf/open/floor/mineral/titanium/tiled/white,
+/area/city/fixers)
+"Im" = (
+/obj/effect/turf_decal/trimline/white/filled/line{
+	dir = 1
+	},
+/turf/open/floor/plating/ashplanet{
+	name = "asphalt"
+	},
+/area/city)
+"In" = (
+/obj/effect/turf_decal/siding/wideplating/dark/corner{
+	dir = 8
+	},
+/turf/open/floor/mineral/titanium/tiled,
+/area/city/fixers)
+"Iq" = (
+/obj/effect/light_emitter{
+	light_power = 4;
+	light_range = 25;
+	set_cap = 3;
+	set_luminosity = 24
+	},
+/turf/open/floor/stone,
+/area/city/fixers)
+"It" = (
+/obj/effect/turf_decal/trimline/red/filled/warning{
+	dir = 4
+	},
+/turf/open/floor/plating/ashplanet{
+	name = "asphalt"
+	},
+/area/city)
+"Iv" = (
+/obj/effect/landmark/speedwagon_spawner,
+/turf/open/floor/plating/ashplanet{
+	density = 1;
+	name = "asphalt"
+	},
+/area/city)
+"Iy" = (
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 3
+	},
+/turf/open/floor/stone,
+/area/city/fixers)
+"IP" = (
+/obj/structure/table/wood,
+/obj/item/reagent_containers/food/drinks/drinkingglass,
+/turf/open/floor/carpet/black,
+/area/city/house)
+"Jd" = (
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 8
+	},
+/turf/open/floor/mineral/titanium/tiled,
+/area/city/fixers)
+"Jm" = (
+/obj/machinery/light{
+	dir = 4
+	},
+/turf/open/floor/holofloor/chapel,
+/area/city/fixers)
+"Jz" = (
+/obj/effect/turf_decal/siding/purple{
+	dir = 9
+	},
+/turf/open/floor/mineral/titanium/white,
+/area/city/fixers)
+"JD" = (
+/obj/structure/fluff/big_chain,
+/turf/open/floor/glass/reinforced,
+/area/city/fixers)
+"JN" = (
+/obj/structure/fluff/street_light{
+	density = 0
+	},
+/turf/open/floor/plating/ashplanet/rocky{
+	layer = 1.98
+	},
+/area/city)
+"JP" = (
+/obj/effect/turf_decal/trimline/red/filled/warning{
+	dir = 1
+	},
+/turf/open/floor/plating/ashplanet{
+	name = "asphalt"
+	},
+/area/city)
+"JS" = (
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 8
+	},
+/obj/machinery/light{
+	dir = 8
+	},
+/turf/open/floor/stone,
+/area/city/fixers)
+"JZ" = (
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 5
+	},
+/turf/open/floor/stone,
+/area/city/fixers)
+"Kd" = (
+/obj/effect/landmark/fixer_duel/fixer_spawn/nicholas,
+/turf/open/floor/carpet/royalblack,
+/area/city/fixers)
+"Kj" = (
+/obj/effect/turf_decal/siding/wood{
+	color = "#2e1f0e";
+	dir = 8
+	},
+/turf/open/floor/plating/beach/sand,
+/area/city/fixers)
+"Kr" = (
+/obj/structure/table/wood/fancy/purple{
+	name = "wing-grade fancy table";
+	pixel_y = -21;
+	resistance_flags = 115
+	},
+/obj/item/pen{
+	pixel_y = -16
+	},
+/obj/effect/turf_decal/siding/purple/corner{
+	dir = 8
+	},
+/turf/closed/indestructible/reinforced,
+/area/city/fixers)
+"KA" = (
+/turf/closed/indestructible/fakeglass,
+/area/city/house)
+"KD" = (
+/obj/effect/turf_decal/trimline/yellow/filled/line{
+	dir = 8;
+	pixel_x = 5
+	},
+/obj/effect/turf_decal/trimline/yellow/filled/line{
+	dir = 4;
+	pixel_x = -5
+	},
+/obj/effect/light_emitter{
+	light_power = 4;
+	light_range = 25;
+	set_cap = 3;
+	set_luminosity = 24
+	},
+/turf/open/floor/plating/ashplanet{
+	density = 1;
+	name = "asphalt"
+	},
+/area/city)
+"KE" = (
+/obj/structure/table/wood,
+/obj/item/kirbyplants{
+	icon_state = "plant-07";
+	pixel_y = 18;
+	pixel_x = 10
+	},
+/turf/open/floor/mineral/titanium/tiled/purple,
+/area/city/fixers)
+"KQ" = (
+/obj/effect/turf_decal/siding/wideplating{
+	dir = 6
+	},
+/turf/open/floor/holofloor/chapel,
+/area/city/fixers)
+"KY" = (
+/obj/structure/table/wood,
+/obj/item/flashlight/lamp,
+/turf/open/floor/carpet/black,
+/area/city/house)
+"Lb" = (
+/obj/effect/turf_decal/siding/wood/corner{
+	dir = 8
+	},
+/turf/open/floor/wood,
+/area/city/fixers)
+"Lr" = (
+/turf/closed/indestructible/reinforced,
+/area/facility_hallway/north)
+"LJ" = (
+/obj/structure/fluff/arc,
+/turf/open/floor/mineral/titanium/white,
+/area/city/fixers)
+"LO" = (
+/obj/machinery/telecomms/broadcaster/preset_right,
+/obj/effect/turf_decal/bot,
+/turf/open/floor/circuit/telecomms/mainframe,
+/area/facility_hallway/north)
+"LS" = (
+/turf/closed/indestructible/rock,
+/area/city)
+"LX" = (
+/obj/effect/turf_decal/siding/wideplating/corner,
+/turf/open/floor/holofloor/chapel{
+	dir = 4
+	},
+/area/city/fixers)
+"Mi" = (
+/obj/item/paper_bin/carbon{
+	pixel_y = 14
+	},
+/obj/structure/chair/comfy/black{
+	dir = 1
+	},
+/obj/effect/turf_decal/siding/purple/corner{
+	dir = 1
+	},
+/turf/open/floor/mineral/titanium/tiled/white,
+/area/city/fixers)
+"Mv" = (
+/obj/effect/turf_decal/trimline/purple/filled/warning{
+	dir = 8
+	},
+/obj/structure/window/reinforced/spawner{
+	dir = 8;
+	resistance_flags = 115
+	},
+/turf/open/floor/mineral/titanium/tiled/white,
+/area/city/fixers)
+"Mw" = (
+/obj/effect/turf_decal/siding/wideplating/corner{
+	dir = 8
+	},
+/turf/open/floor/holofloor/chapel{
+	dir = 1
+	},
+/area/city/fixers)
+"ME" = (
+/obj/machinery/telecomms/broadcaster/preset_left,
+/obj/effect/turf_decal/bot,
+/turf/open/floor/circuit/telecomms/mainframe,
+/area/facility_hallway/north)
+"Nm" = (
+/obj/structure/closet/secure_closet/personal/cabinet,
+/obj/item/reagent_containers/food/drinks/bottle/vodka/badminka,
+/obj/item/reagent_containers/food/drinks/bottle/vodka/badminka,
+/obj/item/reagent_containers/food/drinks/bottle/vodka/badminka,
+/obj/item/reagent_containers/food/drinks/bottle/vodka/badminka,
+/obj/item/reagent_containers/food/drinks/bottle/vodka/badminka,
+/obj/item/reagent_containers/food/drinks/bottle/vodka/badminka,
+/obj/item/reagent_containers/food/drinks/bottle/vodka/badminka,
+/obj/item/reagent_containers/food/drinks/bottle/vodka/badminka,
+/obj/item/reagent_containers/food/drinks/bottle/vodka/badminka,
+/obj/item/clothing/under/mercenary/rus_army,
+/turf/open/floor/mineral/silver,
+/area/city/house)
+"Nu" = (
+/obj/machinery/light{
+	dir = 4
+	},
+/turf/open/floor/holofloor/carpet,
+/area/city/fixers)
+"ND" = (
+/obj/machinery/light{
+	dir = 4
+	},
+/turf/open/floor/carpet/royalblue,
+/area/city/fixers)
+"NR" = (
+/obj/effect/turf_decal/siding/wood{
+	dir = 9
+	},
+/turf/open/floor/wood,
+/area/city/fixers)
+"NZ" = (
+/obj/effect/turf_decal/siding/wideplating,
+/turf/open/floor/holofloor/chapel{
+	dir = 8
+	},
+/area/city/fixers)
+"Oi" = (
+/obj/structure/table/reinforced,
+/turf/open/floor/oldshuttle,
+/area/city/house)
+"OZ" = (
+/obj/structure/statue/sandstone/venus,
+/turf/open/floor/plating/ashplanet/ash,
+/area/city/fixers)
+"Pc" = (
+/obj/machinery/door/keycard/cuckoo_nest{
+	resistance_flags = 64
+	},
+/turf/open/floor/wood,
+/area/city/house)
+"Pn" = (
+/obj/effect/turf_decal/siding/wideplating{
+	dir = 9
+	},
+/turf/open/floor/holofloor/chapel{
+	dir = 1
+	},
+/area/city/fixers)
+"Pq" = (
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 3
+	},
+/turf/open/floor/mineral/titanium/tiled,
+/area/city/fixers)
+"Pt" = (
+/obj/machinery/light{
+	dir = 8
+	},
+/turf/open/floor/mineral/titanium/tiled,
+/area/city/fixers)
+"Pw" = (
+/turf/open/floor/plating/beach/sand,
+/area/city/fixers)
+"PQ" = (
+/turf/open/floor/carpet/black,
+/area/city/house)
+"PU" = (
+/obj/effect/turf_decal/siding/purple{
+	dir = 4
+	},
+/turf/open/floor/mineral/titanium/white,
+/area/city/fixers)
+"Qa" = (
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 1
+	},
+/turf/open/floor/stone,
+/area/city/fixers)
+"Qd" = (
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 10
+	},
+/turf/open/floor/mineral/titanium/tiled,
+/area/city/fixers)
+"Qi" = (
+/obj/machinery/light{
+	dir = 8
+	},
+/turf/open/floor/plating/ashplanet/ash,
+/area/city/fixers)
+"QH" = (
+/turf/open/floor/oldshuttle,
+/area/city/house)
+"Rg" = (
+/obj/effect/turf_decal/siding/wideplating,
+/turf/open/floor/holofloor/chapel,
+/area/city/fixers)
+"Rk" = (
+/obj/machinery/light{
+	dir = 8
+	},
+/turf/open/floor/holofloor/chapel{
+	dir = 1
+	},
+/area/city/fixers)
+"Rm" = (
+/obj/effect/turf_decal/trimline/yellow/filled/line{
+	dir = 8;
+	pixel_x = 5
+	},
+/obj/effect/turf_decal/trimline/yellow/filled/line{
+	dir = 4;
+	pixel_x = -5
+	},
+/obj/effect/turf_decal/trimline/white/filled/line{
+	dir = 1
+	},
+/obj/effect/turf_decal/trimline/white/filled/line,
+/obj/effect/light_emitter{
+	light_power = 4;
+	light_range = 25;
+	set_cap = 3;
+	set_luminosity = 24
+	},
+/turf/open/floor/plating/ashplanet{
+	name = "asphalt"
+	},
+/area/city)
+"Rw" = (
+/obj/effect/turf_decal/siding/wideplating{
+	dir = 4
+	},
+/turf/open/floor/holofloor/chapel,
+/area/city/fixers)
+"RA" = (
+/turf/open/floor/glass/reinforced,
+/area/city/fixers)
+"RB" = (
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 4
+	},
+/turf/open/floor/stone,
+/area/city/fixers)
+"RH" = (
+/obj/machinery/light{
+	dir = 4
+	},
+/turf/open/floor/mineral/titanium/tiled,
+/area/city/fixers)
+"RX" = (
+/obj/structure/fluff/divine/nexus{
+	color = "#ffbb69"
+	},
+/turf/open/floor/carpet/royalblue,
+/area/city/fixers)
+"Sg" = (
+/obj/effect/turf_decal/siding/wood{
+	dir = 4
+	},
+/turf/open/floor/wood,
+/area/city/fixers)
+"Sl" = (
+/obj/structure/closet/cabinet,
+/obj/item/reagent_containers/glass/bowl,
+/obj/item/kitchen/knife,
+/obj/item/kitchen/rollingpin,
+/obj/item/reagent_containers/food/drinks/drinkingglass,
+/obj/item/reagent_containers/food/drinks/drinkingglass,
+/obj/item/kitchen/fork,
+/obj/item/kitchen/spoon,
+/turf/open/indestructible/hoteltile,
+/area/city/house)
+"Sn" = (
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 6
+	},
+/turf/open/floor/stone,
+/area/city/fixers)
+"SW" = (
+/obj/machinery/hydroponics,
+/obj/machinery/light{
+	dir = 1
+	},
+/turf/open/floor/wood,
+/area/city/house)
+"Tb" = (
+/obj/item/bedsheet/dorms,
+/obj/structure/bed,
+/turf/open/floor/mineral/silver,
+/area/city/house)
+"Th" = (
+/obj/structure/sink{
+	pixel_y = 16
+	},
+/obj/structure/mirror{
+	pixel_x = -1;
+	pixel_y = 34
+	},
+/turf/open/indestructible/hoteltile,
+/area/city/house)
+"Ti" = (
+/obj/structure/table/wood,
+/obj/item/reagent_containers/food/drinks/drinkingglass,
+/turf/open/floor/mineral/silver,
+/area/city/house)
+"Tw" = (
+/obj/structure/table,
+/obj/item/seeds/onion,
+/obj/item/seeds/onion,
+/obj/item/seeds/apple,
+/obj/item/seeds/apple,
+/obj/item/seeds/carrot,
+/obj/item/seeds/carrot,
+/obj/item/seeds/chili,
+/obj/item/seeds/eggplant,
+/obj/item/seeds/peas,
+/obj/item/seeds/peas,
+/turf/open/floor/wood,
+/area/city/house)
+"TC" = (
+/turf/open/floor/carpet/royalblue,
+/area/city/fixers)
+"TQ" = (
+/obj/structure/table/wood,
+/obj/item/modular_computer/laptop/preset/fixer,
+/turf/open/floor/wood,
+/area/city/house)
+"Ul" = (
+/obj/machinery/light,
+/turf/open/floor/carpet/royalblue,
+/area/city/fixers)
+"Uw" = (
+/obj/structure/table/wood,
+/obj/item/modular_computer/laptop/preset/fixer,
+/turf/open/floor/oldshuttle,
+/area/city/house)
+"UD" = (
+/obj/effect/light_emitter{
+	light_power = 4;
+	light_range = 25;
+	set_cap = 3;
+	set_luminosity = 24
+	},
+/turf/open/floor/carpet/blue,
+/area/city/fixers)
+"UP" = (
+/obj/effect/turf_decal/trimline/white/filled/line{
+	pixel_y = 10
+	},
+/turf/open/floor/plating/ashplanet{
+	density = 1;
+	name = "asphalt"
+	},
+/area/city)
+"Vg" = (
+/obj/effect/turf_decal/siding/wideplating/dark,
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 4
+	},
+/turf/open/floor/stone,
+/area/city/fixers)
+"Vl" = (
+/obj/machinery/light{
+	dir = 1
+	},
+/turf/open/floor/glass/reinforced,
+/area/city/fixers)
+"Vt" = (
+/obj/machinery/telecomms/server/presets/security,
+/turf/open/floor/circuit/telecomms/mainframe,
+/area/facility_hallway/north)
+"Vw" = (
+/obj/effect/turf_decal/siding/wideplating{
+	dir = 8
+	},
+/turf/open/floor/holofloor/chapel{
+	dir = 4
+	},
+/area/city/fixers)
+"VF" = (
+/turf/open/floor/wood,
+/area/city/fixers)
+"VQ" = (
+/obj/effect/turf_decal/siding/wood{
+	dir = 10;
+	color = "#2e1f0e"
+	},
+/turf/open/floor/plating/beach/sand,
+/area/city/fixers)
+"We" = (
+/obj/effect/turf_decal/siding/wideplating/dark/corner{
+	dir = 5
+	},
+/turf/open/floor/mineral/titanium/tiled,
+/area/city/fixers)
+"Wf" = (
+/obj/effect/turf_decal/siding/wideplating{
+	dir = 8
+	},
+/turf/open/floor/holofloor/chapel,
+/area/city/fixers)
+"Wg" = (
+/obj/structure/chair/sofa/corp/right{
+	dir = 1
+	},
+/obj/effect/turf_decal/siding/purple,
+/mob/living/simple_animal/hostile/ui_npc/echo_fixer/asera{
+	dir = 1
+	},
+/turf/open/floor/mineral/titanium/tiled/purple,
+/area/city/fixers)
+"Wt" = (
+/turf/closed/indestructible/fakeglass,
+/area/city/fixers)
+"WB" = (
+/obj/effect/light_emitter{
+	light_power = 4;
+	light_range = 25;
+	set_cap = 3;
+	set_luminosity = 24
+	},
+/turf/open/floor/holofloor/chapel{
+	dir = 4
+	},
+/area/city/fixers)
+"WG" = (
+/turf/open/floor/carpet/purple,
+/area/city/fixers)
+"WX" = (
+/obj/effect/turf_decal/trimline/yellow/filled/line{
+	dir = 8;
+	pixel_x = 5
+	},
+/obj/effect/turf_decal/trimline/yellow/filled/line{
+	dir = 4;
+	pixel_x = -5
+	},
+/obj/effect/turf_decal/trimline/white/filled/line{
+	dir = 1
+	},
+/turf/open/floor/plating/ashplanet{
+	name = "asphalt"
+	},
+/area/city)
+"Xc" = (
+/obj/item/paper_bin/carbon{
+	pixel_y = 14
+	},
+/obj/structure/chair/comfy/black{
+	dir = 1
+	},
+/obj/effect/turf_decal/siding/purple/corner{
+	dir = 4
+	},
+/turf/open/floor/mineral/titanium/tiled/white,
+/area/city/fixers)
+"Xo" = (
+/obj/machinery/light,
+/turf/open/floor/carpet/royalblack,
+/area/city/fixers)
+"Xz" = (
+/turf/closed/indestructible/reinforced,
+/area/city/fixers)
+"XV" = (
+/turf/open/floor/carpet/royalblack,
+/area/city/house)
+"Yj" = (
+/obj/machinery/light{
+	dir = 1
+	},
+/turf/open/floor/holofloor/carpet,
+/area/city/fixers)
+"Yn" = (
+/obj/effect/turf_decal/siding/wideplating/dark,
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 8
+	},
+/turf/open/floor/stone,
+/area/city/fixers)
+"YA" = (
+/obj/effect/turf_decal/siding/wideplating{
+	dir = 4
+	},
+/turf/open/floor/holofloor/chapel{
+	dir = 4
+	},
+/area/city/fixers)
+"YJ" = (
+/obj/structure/closet/secure_closet/personal/cabinet,
+/obj/item/reagent_containers/food/drinks/bottle/vodka/badminka,
+/obj/item/reagent_containers/food/drinks/bottle/vodka/badminka,
+/obj/item/reagent_containers/food/drinks/bottle/vodka/badminka,
+/obj/item/reagent_containers/food/drinks/bottle/vodka/badminka,
+/obj/item/reagent_containers/food/drinks/bottle/vodka/badminka,
+/obj/item/reagent_containers/food/drinks/bottle/vodka/badminka,
+/obj/item/reagent_containers/food/drinks/bottle/vodka/badminka,
+/obj/item/reagent_containers/food/drinks/bottle/vodka/badminka,
+/obj/item/reagent_containers/food/drinks/bottle/vodka/badminka,
+/obj/item/clothing/under/mercenary/rus_army,
+/turf/open/floor/carpet/royalblack,
+/area/city/house)
+"Zi" = (
+/obj/machinery/light{
+	dir = 8
+	},
+/turf/open/floor/holofloor/chapel{
+	dir = 8
+	},
+/area/city/fixers)
+"Zo" = (
+/obj/structure/chair/plastic{
+	dir = 1
+	},
+/turf/open/floor/plating/ashplanet/rocky{
+	layer = 1.98
+	},
+/area/city)
+"ZK" = (
+/turf/open/floor/plating/ashplanet{
+	density = 1;
+	name = "asphalt"
+	},
+/area/city)
+"ZS" = (
+/turf/closed/indestructible/reinforced/cheap/fancy,
+/area/city/fixers)
+
+(1,1,1) = {"
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+tW
+tW
+tW
+tW
+tW
+tW
+tW
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+"}
+(2,1,1) = {"
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+CE
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+tW
+JN
+fv
+fv
+fv
+fv
+tW
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+"}
+(3,1,1) = {"
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+CE
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+tW
+xv
+fv
+fv
+fv
+fv
+tW
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+"}
+(4,1,1) = {"
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+CE
+CE
+Xz
+Xz
+Xz
+Xz
+Xz
+Xz
+Xz
+Xz
+Xz
+Xz
+vi
+fv
+fv
+fv
+JN
+hG
+hG
+hG
+hG
+hG
+hG
+hG
+hG
+hG
+hG
+DA
+DA
+DA
+DA
+"}
+(5,1,1) = {"
+DA
+DA
+DA
+DA
+xh
+xh
+xh
+xh
+xh
+xh
+xh
+xh
+xh
+xh
+xh
+xh
+xh
+xh
+xh
+xh
+xh
+xh
+xh
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+Xz
+BI
+EG
+Xz
+Jz
+en
+fJ
+rW
+Am
+Xz
+fv
+fv
+fv
+fv
+fv
+hG
+TQ
+yE
+Dq
+hG
+sd
+Ti
+hG
+Cz
+hG
+DA
+DA
+DA
+DA
+"}
+(6,1,1) = {"
+DA
+DA
+DA
+DA
+xh
+OZ
+iI
+iI
+iI
+Qi
+iI
+iI
+iI
+iI
+iI
+iI
+iI
+Qi
+iI
+iI
+iI
+iI
+xh
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+co
+WG
+EG
+co
+kE
+Ec
+th
+KE
+gV
+Wt
+fv
+fv
+fv
+fv
+fv
+Pc
+cK
+cK
+cK
+uB
+uB
+uB
+wR
+hE
+hG
+DA
+DA
+DA
+DA
+"}
+(7,1,1) = {"
+DA
+DA
+DA
+DA
+xh
+iI
+ku
+zE
+zE
+zE
+zE
+zE
+zE
+zE
+zE
+zE
+zE
+zE
+zE
+zE
+Yn
+iI
+xh
+DA
+DA
+DA
+DA
+DA
+DA
+CE
+CE
+Xz
+WG
+EG
+Xz
+kE
+Ec
+Ec
+Mv
+Gu
+Wt
+fv
+fv
+fv
+fv
+fv
+KA
+iU
+cK
+cK
+hG
+hG
+aS
+hG
+xP
+hG
+DA
+DA
+DA
+DA
+"}
+(8,1,1) = {"
+DA
+DA
+DA
+DA
+xh
+iI
+Qa
+px
+px
+px
+px
+px
+px
+px
+px
+px
+px
+px
+px
+px
+Iy
+iI
+xh
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+co
+WG
+EG
+Kr
+Mi
+Ec
+mH
+Ec
+Gu
+Xz
+fv
+fv
+fv
+fv
+fv
+KA
+El
+cK
+pE
+hG
+hN
+uB
+hG
+hG
+hG
+DA
+DA
+DA
+DA
+"}
+(9,1,1) = {"
+DA
+DA
+DA
+DA
+xh
+iI
+Qa
+px
+xh
+xh
+px
+px
+px
+Iq
+px
+px
+px
+xh
+xh
+px
+Iy
+iI
+xh
+DA
+DA
+DA
+DA
+DA
+DA
+CE
+CE
+Xz
+BI
+WG
+rR
+fg
+mH
+LJ
+mH
+vT
+kf
+fv
+fv
+fv
+fv
+fv
+hG
+xu
+em
+mt
+hG
+Fb
+Tb
+aS
+Nm
+hG
+DA
+DA
+DA
+DA
+"}
+(10,1,1) = {"
+DA
+DA
+DA
+DA
+xh
+iI
+Qa
+px
+xh
+xh
+px
+px
+px
+px
+px
+px
+px
+xh
+xh
+px
+Iy
+iI
+xh
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+co
+WG
+EG
+Bq
+Xc
+Ec
+mH
+Ec
+Gu
+Xz
+fv
+fv
+fv
+fv
+JN
+hG
+hG
+hG
+hG
+hG
+hG
+hG
+hG
+hG
+hG
+DA
+DA
+DA
+DA
+"}
+(11,1,1) = {"
+DA
+DA
+DA
+DA
+xh
+iI
+Qa
+px
+nt
+px
+px
+px
+px
+px
+px
+px
+px
+px
+nt
+px
+Iy
+iI
+xh
+DA
+DA
+DA
+DA
+DA
+DA
+CE
+CE
+Xz
+WG
+EG
+Xz
+kE
+Ec
+Ec
+bf
+Gu
+Wt
+fv
+fv
+fv
+fv
+fv
+tW
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+"}
+(12,1,1) = {"
+DA
+DA
+DA
+DA
+xh
+CX
+JZ
+hF
+px
+px
+px
+px
+px
+px
+px
+px
+px
+px
+px
+hR
+Sn
+CX
+xh
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+co
+WG
+EG
+co
+kE
+Ec
+th
+KE
+Wg
+Wt
+fv
+fv
+fv
+fv
+fv
+tW
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+"}
+(13,1,1) = {"
+DA
+DA
+DA
+DA
+xh
+CX
+CX
+JZ
+RB
+RB
+RB
+RB
+RB
+bs
+RB
+RB
+RB
+RB
+RB
+Vg
+CX
+CX
+xh
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+Xz
+BI
+EG
+Xz
+gz
+PU
+HE
+yx
+oR
+Xz
+JN
+fv
+fv
+fv
+fv
+tW
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+"}
+(14,1,1) = {"
+DA
+DA
+DA
+DA
+xh
+qQ
+Kd
+CX
+CX
+CX
+CX
+CX
+xh
+xh
+xh
+CX
+CX
+CX
+CX
+CX
+wn
+Xo
+xh
+DA
+DA
+DA
+DA
+DA
+DA
+CE
+CE
+Xz
+Xz
+Xz
+Xz
+Xz
+Xz
+Xz
+Xz
+Xz
+Xz
+xv
+fv
+fv
+fv
+fv
+hG
+hG
+hG
+hG
+hG
+hG
+hG
+hG
+hG
+hG
+DA
+DA
+DA
+DA
+"}
+(15,1,1) = {"
+DA
+DA
+DA
+DA
+xh
+CX
+CX
+ku
+zE
+zE
+zE
+zE
+zE
+JS
+zE
+zE
+zE
+zE
+zE
+Yn
+CX
+CX
+xh
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+CE
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+tW
+vi
+fv
+fv
+fv
+fv
+hG
+TQ
+yE
+Dq
+hG
+cY
+IP
+hG
+Cz
+hG
+DA
+DA
+DA
+DA
+"}
+(16,1,1) = {"
+DA
+DA
+DA
+DA
+xh
+CX
+ku
+Be
+px
+px
+px
+px
+px
+px
+px
+px
+px
+px
+px
+EZ
+xe
+CX
+xh
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+CE
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+tW
+fv
+fv
+fv
+fv
+fv
+Pc
+cK
+cK
+cK
+PQ
+PQ
+PQ
+wR
+hE
+hG
+DA
+DA
+DA
+DA
+"}
+(17,1,1) = {"
+DA
+DA
+DA
+DA
+xh
+iI
+Qa
+px
+xR
+px
+px
+px
+px
+px
+px
+px
+px
+px
+xR
+px
+Iy
+iI
+xh
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+tW
+fv
+fv
+fv
+fv
+fv
+KA
+iU
+cK
+cK
+hG
+hG
+pI
+hG
+xP
+hG
+DA
+DA
+DA
+DA
+"}
+(18,1,1) = {"
+DA
+DA
+DA
+DA
+xh
+iI
+Qa
+px
+xh
+xh
+px
+px
+px
+px
+px
+px
+px
+xh
+xh
+px
+Iy
+iI
+xh
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+tW
+fv
+fv
+fv
+fv
+fv
+KA
+El
+cK
+pE
+hG
+sz
+PQ
+hG
+hG
+hG
+DA
+DA
+DA
+DA
+"}
+(19,1,1) = {"
+DA
+DA
+DA
+DA
+xh
+iI
+Qa
+px
+xh
+xh
+px
+px
+px
+Iq
+px
+px
+px
+xh
+xh
+px
+Iy
+iI
+xh
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+tW
+rg
+rg
+rg
+rg
+rg
+hG
+xu
+em
+mt
+hG
+KY
+my
+pI
+FC
+hG
+DA
+DA
+DA
+DA
+"}
+(20,1,1) = {"
+DA
+DA
+DA
+DA
+xh
+iI
+Qa
+px
+px
+px
+px
+px
+px
+px
+px
+px
+px
+px
+px
+px
+Iy
+iI
+xh
+DA
+DA
+DA
+DA
+tW
+tW
+tW
+tW
+tW
+tW
+tW
+tW
+tW
+tW
+tW
+tW
+tW
+tW
+Af
+rg
+rg
+rg
+rg
+hG
+hG
+hG
+hG
+hG
+hG
+hG
+hG
+hG
+hG
+tW
+tW
+tW
+tW
+"}
+(21,1,1) = {"
+DA
+DA
+DA
+DA
+xh
+iI
+JZ
+RB
+RB
+RB
+RB
+RB
+RB
+RB
+RB
+RB
+RB
+RB
+RB
+RB
+Sn
+iI
+xh
+DA
+DA
+DA
+DA
+LS
+ZK
+so
+ZK
+ZK
+ZK
+so
+ZK
+ZK
+ZK
+so
+ZK
+ZK
+ZK
+Im
+Im
+Fw
+fh
+fh
+ZK
+ZK
+ZK
+so
+ZK
+ZK
+ZK
+so
+ZK
+ZK
+ZK
+so
+ZK
+LS
+"}
+(22,1,1) = {"
+DA
+DA
+DA
+DA
+xh
+ye
+iI
+iI
+av
+iI
+iI
+iI
+iI
+iI
+iI
+iI
+iI
+iI
+av
+iI
+iI
+iI
+xh
+DA
+DA
+DA
+DA
+LS
+Iv
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+Im
+Im
+Fw
+fh
+fh
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+LS
+"}
+(23,1,1) = {"
+DA
+DA
+DA
+DA
+xh
+xh
+xh
+xh
+xh
+xh
+xh
+xh
+xh
+xh
+xh
+xh
+xh
+xh
+xh
+xh
+xh
+xh
+xh
+DA
+DA
+DA
+DA
+LS
+ZK
+ZK
+ZK
+so
+ZK
+ZK
+ZK
+so
+ZK
+ZK
+ZK
+so
+ZK
+Im
+Im
+Fw
+fh
+fh
+ZK
+so
+ZK
+ZK
+ZK
+so
+ZK
+ZK
+ZK
+so
+ZK
+ZK
+ZK
+LS
+"}
+(24,1,1) = {"
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+LS
+tS
+tS
+tS
+tS
+tS
+tS
+tS
+tS
+tS
+tS
+tS
+tS
+tS
+WX
+WX
+Rm
+qB
+qB
+tS
+tS
+tS
+tS
+tS
+tS
+tS
+tS
+tS
+tS
+tS
+tS
+tS
+LS
+"}
+(25,1,1) = {"
+DA
+DA
+DA
+dH
+dH
+dH
+dH
+dH
+dH
+dH
+dH
+dH
+dH
+dH
+dH
+dH
+dH
+dH
+dH
+dH
+dH
+dH
+dH
+DA
+DA
+DA
+DA
+LS
+ZK
+ZK
+ZK
+so
+ZK
+ZK
+ZK
+so
+ZK
+ZK
+ZK
+so
+ZK
+Im
+Im
+Fw
+fh
+fh
+ZK
+so
+ZK
+ZK
+ZK
+so
+ZK
+ZK
+ZK
+so
+ZK
+ZK
+ZK
+LS
+"}
+(26,1,1) = {"
+DA
+DA
+DA
+dH
+AG
+dF
+Dl
+Dl
+hH
+dF
+Dl
+Dl
+Dl
+Dl
+Dl
+dF
+Dl
+hH
+Dl
+Dl
+dF
+Dl
+dH
+DA
+DA
+DA
+DA
+LS
+Iv
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+Im
+Im
+Fw
+fh
+fh
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+LS
+"}
+(27,1,1) = {"
+DA
+DA
+DA
+dH
+Dl
+NR
+bi
+bi
+bi
+bi
+bi
+bi
+bi
+bi
+bi
+bi
+bi
+bi
+bi
+bi
+xW
+Dl
+dH
+DA
+DA
+DA
+DA
+LS
+ZK
+so
+ZK
+ZK
+ZK
+so
+ZK
+ZK
+ZK
+so
+ZK
+ZK
+ZK
+Im
+Im
+Fw
+fh
+fh
+ZK
+ZK
+ZK
+so
+ZK
+ZK
+ZK
+so
+ZK
+ZK
+ZK
+so
+ZK
+LS
+"}
+(28,1,1) = {"
+DA
+DA
+DA
+dH
+Dl
+te
+VF
+VF
+VF
+VF
+VF
+VF
+VF
+VF
+VF
+VF
+VF
+VF
+VF
+VF
+nQ
+Dl
+dH
+DA
+DA
+DA
+DA
+tW
+tW
+tW
+tW
+hG
+hG
+hG
+hG
+hG
+hG
+hG
+hG
+hG
+tW
+Af
+rg
+rg
+rg
+rg
+tW
+tW
+tW
+tW
+tW
+tW
+tW
+tW
+tW
+tW
+tW
+tW
+tW
+tW
+"}
+(29,1,1) = {"
+DA
+DA
+DA
+dH
+Dl
+te
+VF
+dH
+dH
+VF
+VF
+VF
+EO
+VF
+VF
+VF
+VF
+dH
+dH
+VF
+nQ
+Dl
+dH
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+hG
+Cz
+hG
+zk
+Hx
+Sl
+vP
+EK
+KA
+rg
+rg
+rg
+rg
+rg
+rg
+tW
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+"}
+(30,1,1) = {"
+DA
+DA
+DA
+dH
+Dl
+te
+VF
+dH
+dH
+VF
+VF
+VF
+VF
+VF
+VF
+VF
+VF
+dH
+dH
+VF
+nQ
+Dl
+dH
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+hG
+Th
+wR
+nP
+nP
+nP
+cK
+cK
+KA
+fv
+fv
+fv
+fv
+fv
+fv
+tW
+hG
+hG
+hG
+hG
+hG
+hG
+hG
+hG
+hG
+hG
+DA
+DA
+DA
+"}
+(31,1,1) = {"
+DA
+DA
+DA
+dH
+Dl
+te
+VF
+ct
+VF
+VF
+VF
+VF
+VF
+VF
+VF
+VF
+VF
+VF
+ct
+VF
+nQ
+Dl
+dH
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+hG
+xP
+hG
+Dp
+jH
+jH
+cK
+cK
+Pc
+fv
+fv
+fv
+fv
+fv
+fv
+JN
+hG
+Uw
+CN
+al
+hG
+bS
+wO
+hG
+Cz
+hG
+DA
+DA
+DA
+"}
+(32,1,1) = {"
+DA
+DA
+DA
+dH
+Dl
+te
+VF
+vY
+Sg
+Sg
+do
+Kj
+De
+Kj
+VQ
+VF
+VF
+VF
+VF
+VF
+nQ
+Dl
+dH
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+hG
+hG
+hG
+hG
+hG
+cK
+cK
+Tw
+hG
+fv
+fv
+fv
+fv
+fv
+fv
+fv
+dy
+QH
+QH
+QH
+XV
+XV
+XV
+wR
+hE
+hG
+DA
+DA
+DA
+"}
+(33,1,1) = {"
+DA
+DA
+DA
+dH
+Dl
+te
+VF
+nQ
+yS
+yS
+sh
+Pw
+gP
+Pw
+nc
+Sg
+Sg
+Sg
+Sg
+Sg
+Gw
+yS
+dH
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+hG
+sz
+PQ
+PQ
+pI
+cK
+cK
+fA
+hG
+ie
+ie
+ie
+ie
+ie
+Hy
+fv
+KA
+Oi
+QH
+QH
+hG
+hG
+Gd
+hG
+xP
+hG
+DA
+DA
+DA
+"}
+(34,1,1) = {"
+DA
+DA
+DA
+dH
+Yj
+te
+VF
+nQ
+wz
+yS
+ew
+Pw
+Pw
+DT
+nD
+yS
+yS
+yS
+yS
+yS
+yS
+Dz
+dH
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+hG
+KY
+my
+aZ
+hG
+SW
+oE
+oE
+hG
+Bf
+hm
+nT
+df
+pr
+kg
+fv
+KA
+dO
+QH
+ga
+hG
+lk
+XV
+hG
+hG
+hG
+DA
+DA
+DA
+"}
+(35,1,1) = {"
+DA
+DA
+DA
+dH
+Dl
+te
+VF
+nQ
+yS
+yS
+sh
+Pw
+EJ
+Pw
+nD
+bi
+bi
+bi
+bi
+bi
+xW
+yS
+dH
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+hG
+hG
+hG
+hG
+hG
+hG
+hG
+hG
+hG
+hm
+hm
+hm
+df
+hm
+kg
+fv
+hG
+kF
+iw
+Bo
+hG
+FK
+uV
+Gd
+YJ
+hG
+DA
+DA
+DA
+"}
+(36,1,1) = {"
+DA
+DA
+DA
+dH
+Dl
+te
+VF
+Lb
+bi
+bi
+rH
+tB
+pV
+tB
+Hq
+VF
+VF
+VF
+VF
+VF
+nQ
+Dl
+dH
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+tW
+JP
+hm
+dY
+df
+yG
+kg
+fv
+hG
+hG
+hG
+hG
+hG
+hG
+hG
+hG
+hG
+hG
+DA
+DA
+DA
+"}
+(37,1,1) = {"
+DA
+DA
+DA
+dH
+Dl
+te
+VF
+ag
+VF
+VF
+VF
+VF
+VF
+VF
+VF
+VF
+VF
+VF
+ag
+VF
+nQ
+Dl
+dH
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+tW
+hm
+hm
+hm
+df
+hm
+kg
+Zo
+tW
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+"}
+(38,1,1) = {"
+DA
+DA
+DA
+dH
+Dl
+te
+VF
+dH
+dH
+VF
+VF
+VF
+VF
+VF
+VF
+VF
+VF
+dH
+dH
+VF
+nQ
+Dl
+dH
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+tW
+JP
+hm
+hm
+df
+ol
+kg
+Zo
+tW
+tW
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+"}
+(39,1,1) = {"
+DA
+DA
+DA
+dH
+Dl
+te
+VF
+dH
+dH
+VF
+VF
+VF
+EO
+VF
+VF
+VF
+VF
+dH
+dH
+VF
+nQ
+Dl
+dH
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+tW
+hm
+dY
+hm
+df
+hm
+kg
+fv
+DS
+tW
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+"}
+(40,1,1) = {"
+DA
+DA
+DA
+dH
+Dl
+te
+VF
+VF
+VF
+VF
+VF
+VF
+VF
+VF
+VF
+VF
+VF
+VF
+VF
+VF
+nQ
+Dl
+dH
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+tW
+JP
+hm
+hm
+df
+yG
+kg
+Zo
+tW
+tW
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+"}
+(41,1,1) = {"
+DA
+DA
+DA
+dH
+Dl
+zj
+Sg
+Sg
+Sg
+Sg
+Sg
+Sg
+Sg
+Sg
+Sg
+Sg
+Sg
+Sg
+Sg
+Sg
+Gw
+Dl
+dH
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+tW
+hm
+hm
+hm
+df
+hm
+kg
+Zo
+tW
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+"}
+(42,1,1) = {"
+DA
+DA
+DA
+dH
+AG
+BT
+Dl
+Dl
+Nu
+BT
+Dl
+Dl
+Dl
+Dl
+Dl
+BT
+Dl
+Nu
+Dl
+Dl
+BT
+Dl
+dH
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+tW
+FG
+hm
+It
+df
+ug
+xr
+Hy
+tW
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+"}
+(43,1,1) = {"
+DA
+DA
+DA
+dH
+dH
+dH
+dH
+dH
+dH
+dH
+dH
+dH
+dH
+dH
+dH
+dH
+dH
+dH
+dH
+dH
+dH
+dH
+dH
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+tW
+ZK
+ZK
+ZK
+Gm
+ZK
+ZK
+CK
+tW
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+"}
+(44,1,1) = {"
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+tW
+ZK
+ZK
+ZK
+Gm
+ZK
+ZK
+ZK
+tW
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+"}
+(45,1,1) = {"
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+tW
+ZK
+UP
+ZK
+Gm
+ZK
+UP
+ZK
+tW
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+"}
+(46,1,1) = {"
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+tW
+ZK
+ZK
+ZK
+Gm
+ZK
+ZK
+ZK
+tW
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+"}
+(47,1,1) = {"
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+tW
+ZK
+ZK
+ZK
+Gm
+ZK
+ZK
+ZK
+tW
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+"}
+(48,1,1) = {"
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+tW
+ZK
+ZK
+UP
+Gm
+UP
+ZK
+ZK
+tW
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+"}
+(49,1,1) = {"
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+tW
+ZK
+ZK
+ZK
+Gm
+ZK
+ZK
+ZK
+tW
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+"}
+(50,1,1) = {"
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+tW
+ZK
+ZK
+ZK
+Gm
+ZK
+ZK
+ZK
+tW
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+"}
+(51,1,1) = {"
+DA
+Lr
+Lr
+Lr
+Lr
+Lr
+Lr
+DA
+DA
+DA
+DA
+DA
+xM
+xM
+xM
+xM
+xM
+xM
+xM
+xM
+xM
+xM
+xM
+xM
+xM
+xM
+xM
+xM
+xM
+xM
+xM
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+tW
+ZK
+UP
+ZK
+Gm
+ZK
+UP
+ZK
+tW
+tW
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+"}
+(52,1,1) = {"
+DA
+Lr
+zn
+Bd
+Lr
+Lr
+Lr
+DA
+DA
+DA
+DA
+DA
+xM
+RX
+TC
+TC
+TC
+Eb
+TC
+TC
+TC
+TC
+TC
+TC
+TC
+Eb
+TC
+TC
+TC
+RX
+xM
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+tW
+ZK
+ZK
+ZK
+Gm
+ZK
+ZK
+ZK
+ZK
+tW
+tW
+tW
+tW
+tW
+tW
+tW
+tW
+tW
+tW
+tW
+tW
+"}
+(53,1,1) = {"
+DA
+Lr
+lH
+wN
+Fo
+EE
+Lr
+DA
+DA
+DA
+DA
+DA
+xM
+TC
+nW
+Jd
+Jd
+Jd
+Jd
+Jd
+Qd
+mh
+nW
+Jd
+Jd
+Jd
+Jd
+Jd
+Qd
+TC
+xM
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+tW
+ZK
+ZK
+ZK
+Gm
+ZK
+ZK
+ZK
+ZK
+so
+ZK
+ZK
+ZK
+so
+ZK
+ZK
+ZK
+so
+ZK
+ZK
+LS
+"}
+(54,1,1) = {"
+DA
+Lr
+pJ
+pp
+hU
+CJ
+Lr
+DA
+DA
+DA
+DA
+DA
+xM
+TC
+jG
+js
+js
+js
+js
+js
+Pq
+mh
+jG
+js
+js
+js
+js
+js
+Pq
+TC
+xM
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+tW
+ZK
+ZK
+UP
+Gm
+UP
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+LS
+"}
+(55,1,1) = {"
+DA
+Lr
+lL
+kz
+qa
+ks
+Lr
+DA
+DA
+DA
+DA
+DA
+xM
+TC
+jG
+js
+ZS
+ZS
+js
+js
+Pq
+UD
+jG
+js
+js
+ZS
+ZS
+js
+Pq
+TC
+xM
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+tW
+ZK
+ZK
+ZK
+Gm
+ZK
+ZK
+so
+ZK
+ZK
+ZK
+so
+ZK
+ZK
+ZK
+so
+ZK
+ZK
+ZK
+so
+LS
+"}
+(56,1,1) = {"
+DA
+Lr
+gq
+ok
+zz
+aq
+Lr
+DA
+DA
+DA
+DA
+DA
+xM
+TC
+jG
+js
+ZS
+ZS
+js
+js
+Pq
+mh
+jG
+js
+js
+ZS
+ZS
+js
+Pq
+TC
+xM
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+tW
+ZK
+ZK
+ZK
+gu
+tS
+KD
+tS
+tS
+tS
+tS
+tS
+tS
+tS
+tS
+tS
+tS
+tS
+tS
+tS
+LS
+"}
+(57,1,1) = {"
+DA
+Lr
+ME
+tl
+LO
+jX
+Lr
+DA
+DA
+DA
+DA
+DA
+xM
+TC
+jG
+js
+Pt
+js
+js
+js
+Pq
+mh
+jG
+js
+js
+js
+Pt
+js
+Pq
+TC
+xM
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+tW
+tW
+ZK
+ZK
+ZK
+ZK
+ZK
+so
+ZK
+ZK
+ZK
+so
+ZK
+ZK
+ZK
+so
+ZK
+ZK
+ZK
+so
+LS
+"}
+(58,1,1) = {"
+DA
+Lr
+oD
+Vt
+Lr
+vV
+Lr
+DA
+DA
+DA
+DA
+DA
+xM
+TC
+rl
+ce
+js
+js
+js
+js
+Pq
+mh
+jG
+js
+js
+js
+js
+We
+lw
+TC
+xM
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+tW
+tW
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+LS
+"}
+(59,1,1) = {"
+DA
+Lr
+Lr
+Lr
+Lr
+Lr
+Lr
+DA
+DA
+DA
+DA
+DA
+xM
+TC
+mh
+rl
+eX
+eX
+eX
+eX
+lw
+mh
+rl
+eX
+eX
+eX
+eX
+lw
+mh
+TC
+xM
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+tW
+tW
+ZK
+ZK
+ZK
+ZK
+ZK
+so
+ZK
+ZK
+ZK
+so
+ZK
+ZK
+ZK
+so
+ZK
+ZK
+LS
+"}
+(60,1,1) = {"
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+xM
+Hn
+lq
+mh
+mh
+mh
+mh
+mh
+mh
+mh
+mh
+mh
+mh
+mh
+mh
+mh
+Hz
+Ul
+xM
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+tW
+tW
+tW
+tW
+tW
+tW
+tW
+tW
+tW
+tW
+tW
+tW
+tW
+tW
+tW
+tW
+tW
+tW
+"}
+(61,1,1) = {"
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+xM
+TC
+mh
+nW
+Jd
+Jd
+Jd
+Jd
+Qd
+mh
+nW
+Jd
+Jd
+Jd
+Jd
+Qd
+mh
+TC
+xM
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+"}
+(62,1,1) = {"
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+xM
+TC
+nW
+Ck
+js
+js
+js
+js
+Pq
+mh
+jG
+js
+js
+js
+js
+In
+Qd
+TC
+xM
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+"}
+(63,1,1) = {"
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+xM
+TC
+jG
+js
+RH
+js
+js
+js
+Pq
+mh
+jG
+js
+js
+js
+RH
+js
+Pq
+TC
+xM
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+"}
+(64,1,1) = {"
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+xM
+TC
+jG
+js
+ZS
+ZS
+js
+js
+Pq
+mh
+jG
+js
+js
+ZS
+ZS
+js
+Pq
+TC
+xM
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+"}
+(65,1,1) = {"
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+xM
+TC
+jG
+js
+ZS
+ZS
+js
+js
+Pq
+UD
+jG
+js
+js
+ZS
+ZS
+js
+Pq
+TC
+xM
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+"}
+(66,1,1) = {"
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+xM
+TC
+jG
+js
+js
+js
+js
+js
+Pq
+mh
+jG
+js
+js
+js
+js
+js
+Pq
+TC
+xM
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+"}
+(67,1,1) = {"
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+xM
+TC
+rl
+eX
+eX
+eX
+eX
+eX
+lw
+mh
+rl
+eX
+eX
+eX
+eX
+eX
+lw
+TC
+xM
+DA
+DA
+DA
+DA
+DA
+ev
+ev
+ev
+ev
+ev
+ev
+ev
+ev
+ev
+ev
+ev
+ev
+ev
+ev
+ev
+ev
+ev
+ev
+ev
+ev
+DA
+DA
+DA
+DA
+"}
+(68,1,1) = {"
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+xM
+RX
+TC
+TC
+ND
+TC
+TC
+TC
+TC
+TC
+TC
+TC
+TC
+TC
+ND
+TC
+TC
+RX
+xM
+DA
+DA
+DA
+DA
+DA
+ev
+JD
+RA
+RA
+RA
+yK
+RA
+RA
+RA
+yK
+RA
+RA
+RA
+RA
+yK
+RA
+RA
+RA
+JD
+ev
+DA
+DA
+DA
+DA
+"}
+(69,1,1) = {"
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+xM
+xM
+xM
+xM
+xM
+xM
+xM
+xM
+xM
+xM
+xM
+xM
+xM
+xM
+xM
+xM
+xM
+xM
+xM
+DA
+DA
+DA
+DA
+DA
+ev
+RA
+Pn
+hy
+vf
+hy
+vf
+hy
+vf
+hy
+vf
+hy
+vf
+hy
+vf
+hy
+vf
+cr
+RA
+ev
+DA
+DA
+DA
+DA
+"}
+(70,1,1) = {"
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+ev
+RA
+yg
+Bw
+wD
+Bw
+wD
+Bw
+wD
+Bw
+wD
+Bw
+wD
+Bw
+wD
+Bw
+wD
+Rg
+RA
+ev
+DA
+DA
+DA
+DA
+"}
+(71,1,1) = {"
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+ev
+RA
+fZ
+qr
+ev
+ev
+dL
+qr
+dL
+qr
+br
+qr
+dL
+qr
+ev
+ev
+dL
+NZ
+RA
+ev
+DA
+DA
+DA
+DA
+"}
+(72,1,1) = {"
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+ev
+RA
+yg
+Bw
+ev
+ev
+wD
+Bw
+wD
+Bw
+wD
+Bw
+wD
+Bw
+ev
+ev
+wD
+Rg
+RA
+ev
+DA
+DA
+DA
+DA
+"}
+(73,1,1) = {"
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+ev
+RA
+fZ
+qr
+Rk
+qr
+dL
+qr
+dL
+qr
+dL
+qr
+dL
+qr
+dL
+Zi
+dL
+NZ
+RA
+ev
+DA
+DA
+DA
+DA
+"}
+(74,1,1) = {"
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+ev
+RA
+oZ
+hs
+wD
+Bw
+wD
+Bw
+LX
+Rw
+YA
+hs
+wD
+Bw
+wD
+Bw
+LX
+KQ
+RA
+ev
+DA
+DA
+DA
+DA
+"}
+(75,1,1) = {"
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+ev
+RA
+Ee
+Ed
+FQ
+rU
+FQ
+rU
+AP
+Ee
+Ee
+Ed
+FQ
+rU
+FQ
+rU
+AP
+Ee
+RA
+ev
+DA
+DA
+DA
+DA
+"}
+(76,1,1) = {"
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+ev
+Vl
+tt
+Ee
+Ee
+Ee
+Ee
+Ee
+Ee
+Ee
+Ee
+Ee
+Ee
+Ee
+Ee
+Ee
+Ee
+oG
+lg
+ev
+DA
+DA
+DA
+DA
+"}
+(77,1,1) = {"
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+ev
+RA
+Ee
+ry
+Vw
+Wf
+Vw
+Wf
+rG
+Ee
+Ee
+ry
+Vw
+Wf
+Vw
+Wf
+rG
+Ee
+RA
+ev
+DA
+DA
+DA
+DA
+"}
+(78,1,1) = {"
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+ev
+RA
+Pn
+za
+dL
+qr
+dL
+qr
+Mw
+hy
+vf
+za
+dL
+qr
+dL
+qr
+Mw
+cr
+RA
+ev
+DA
+DA
+DA
+DA
+"}
+(79,1,1) = {"
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+ev
+RA
+yg
+Bw
+gA
+Bw
+wD
+Bw
+wD
+Bw
+wD
+Bw
+wD
+Bw
+wD
+Jm
+wD
+Rg
+RA
+ev
+DA
+DA
+DA
+DA
+"}
+(80,1,1) = {"
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+ev
+RA
+fZ
+qr
+ev
+ev
+dL
+qr
+dL
+qr
+dL
+qr
+dL
+qr
+ev
+ev
+dL
+NZ
+RA
+ev
+DA
+DA
+DA
+DA
+"}
+(81,1,1) = {"
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+ev
+RA
+yg
+Bw
+ev
+ev
+wD
+Bw
+wD
+Bw
+WB
+Bw
+wD
+Bw
+ev
+ev
+wD
+Rg
+RA
+ev
+DA
+DA
+DA
+DA
+"}
+(82,1,1) = {"
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+ev
+RA
+fZ
+qr
+dL
+qr
+dL
+qr
+dL
+qr
+dL
+qr
+dL
+qr
+dL
+qr
+dL
+NZ
+RA
+ev
+DA
+DA
+DA
+DA
+"}
+(83,1,1) = {"
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+ev
+RA
+oZ
+Rw
+YA
+Rw
+YA
+Rw
+YA
+Rw
+YA
+Rw
+YA
+Rw
+YA
+Rw
+YA
+KQ
+RA
+ev
+DA
+DA
+DA
+DA
+"}
+(84,1,1) = {"
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+ev
+JD
+RA
+RA
+wi
+RA
+RA
+RA
+RA
+wi
+RA
+RA
+RA
+RA
+RA
+wi
+RA
+RA
+JD
+ev
+DA
+DA
+DA
+DA
+"}
+(85,1,1) = {"
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+ev
+ev
+ev
+ev
+ev
+ev
+ev
+ev
+ev
+ev
+ev
+ev
+ev
+ev
+ev
+ev
+ev
+ev
+ev
+ev
+DA
+DA
+DA
+DA
+"}
+(86,1,1) = {"
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+"}
+(87,1,1) = {"
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+"}
+(88,1,1) = {"
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+"}
+(89,1,1) = {"
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+"}
+(90,1,1) = {"
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+DA
+"}

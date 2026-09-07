@@ -12,7 +12,7 @@ export const SpeakingNpc = (props, context) => {
     typing_speed = 100,
   } = data || {};
   return (
-    <Window title={title}>
+    <Window title={title} width={550} height={500}>
       <Window.Content>
         <Section>
           <Flex direction="column" height="100%">

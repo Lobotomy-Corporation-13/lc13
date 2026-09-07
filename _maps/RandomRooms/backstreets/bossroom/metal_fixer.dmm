@@ -28,7 +28,6 @@
 /obj/structure/table/reinforced,
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/item/chisel,
-/obj/item/workshop_mod/sharp/pale,
 /turf/open/floor/plating/ashplanet/ash,
 /area/city/backstreets_room)
 "g" = (
@@ -36,23 +35,6 @@
 /mob/living/simple_animal/hostile/ordeal/green_bot_big{
 	name = "constructed bot"
 	},
-/turf/open/floor/plating/ashplanet/ash,
-/area/city/backstreets_room)
-"h" = (
-/obj/effect/decal/cleanable/dirt/dust,
-/mob/living/simple_animal/hostile/humanoid/fixer/metal{
-	return_to_origin = 1
-	},
-/obj/item/gps/mining{
-	anchored = 1;
-	gpstag = "Metal Signal";
-	alpha = 10
-	},
-/turf/open/floor/plating/ashplanet/ash,
-/area/city/backstreets_room)
-"i" = (
-/obj/effect/decal/cleanable/dirt/dust,
-/obj/effect/landmark/cratespawn,
 /turf/open/floor/plating/ashplanet/ash,
 /area/city/backstreets_room)
 "j" = (
@@ -80,6 +62,13 @@
 	anchored = 1
 	},
 /turf/open/floor/stone,
+/area/city/backstreets_room)
+"n" = (
+/obj/structure/table/reinforced,
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/lootcrate/syndicate,
+/obj/structure/lootcrate/money,
+/turf/open/floor/plating/ashplanet/ash,
 /area/city/backstreets_room)
 "p" = (
 /obj/effect/decal/cleanable/dirt/dust,
@@ -207,9 +196,9 @@
 "N" = (
 /obj/structure/table/reinforced,
 /obj/effect/decal/cleanable/dirt/dust,
-/obj/structure/lootcrate/money,
 /obj/structure/lootcrate/syndicate,
 /obj/structure/lootcrate/money,
+/obj/item/quest_ticket/echo_office,
 /turf/open/floor/plating/ashplanet/ash,
 /area/city/backstreets_room)
 "P" = (
@@ -422,7 +411,7 @@ r
 "}
 (7,1,1) = {"
 r
-i
+b
 U
 a
 a
@@ -489,7 +478,7 @@ b
 (10,1,1) = {"
 r
 N
-h
+b
 b
 U
 a
@@ -510,7 +499,7 @@ V
 "}
 (11,1,1) = {"
 r
-N
+n
 b
 b
 U
@@ -576,7 +565,7 @@ r
 "}
 (14,1,1) = {"
 r
-i
+b
 U
 a
 a
