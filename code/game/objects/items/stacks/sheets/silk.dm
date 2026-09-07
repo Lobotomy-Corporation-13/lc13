@@ -11,6 +11,13 @@
 	return M.silk_results || ishuman(M)
 
 /datum/component/butchering/silkbutchering/ButcherEffects(mob/living/meat)
+	if(ishuman(meat))
+		var/mob/living/carbon/human/meat_human = meat
+		var/obj/item/bodypart/head/head = meat_human.get_bodypart(BODY_ZONE_HEAD)
+		if(head)
+			head.drop_limb()
+			head.forceMove(meat_human.drop_location())
+
 	var/turf/T = meat.drop_location()
 
 	// Track silk harvesting for achievement
