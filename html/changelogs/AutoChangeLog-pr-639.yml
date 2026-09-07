@@ -1,4 +1,0 @@
-author: "Deadkung"
-delete-after: True
-changes:
-  - bugfix: "removes debug message from remorse weapon"
