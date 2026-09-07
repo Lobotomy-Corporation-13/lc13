@@ -522,8 +522,9 @@
 
 /obj/structure/rose_work/Destroy()
 	if(killed)
-		master.datum_reference.qliphoth_change(-1)
+		INVOKE_ASYNC(master.datum_reference, TYPE_PROC_REF(/datum/abnormality, qliphoth_change), -1)
 	master.work_roses -= src
+	master = null
 	return ..()
 
 //debuff definition

@@ -425,7 +425,7 @@
 		return ..()
 	var/girlpower = 0
 	for(var/obj/structure/statue/petrified/magicalgirl/StoneStatue in world) //Break any statues that are still up
-		StoneStatue.Destroy()
+		qdel(StoneStatue)
 	for(var/mob/living/simple_animal/hostile/abnormality/A in GLOB.abnormality_mob_list) //Delete the girls and spawn the loots
 		if(!is_type_in_list(A, SSlobotomy_events.JN_breached))
 			continue

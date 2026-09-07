@@ -400,9 +400,9 @@
 /mob/living/simple_animal/hostile/ordeal/sin_lust/bullet_act(obj/projectile/P)
 	if(prob(25))
 		visible_message(span_userdanger("[P] is blocked by [src]!"))
-		P.Destroy()
-		return
-	..()
+		qdel(P)
+		return BULLET_ACT_BLOCK
+	return ..()
 
 /mob/living/simple_animal/hostile/ordeal/sin_lust/attacked_by(obj/item/I, mob/living/user)
 	var/checkdir = check_target_facings(user, src)

@@ -343,8 +343,8 @@
 /mob/living/simple_animal/hostile/abnormality/jangsan/bullet_act(obj/projectile/P)
 	if(P.damage <= bullet_threshold)
 		visible_message(span_userdanger("[P] is caught in [src]'s thick fur!"))
-		P.Destroy()
-		return
+		qdel(P)
+		return BULLET_ACT_BLOCK
 	return ..()
 
 //on-kill effect

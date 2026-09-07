@@ -555,7 +555,7 @@
 
 /obj/structure/clan_factory/process()
 	if(!owner || owner.stat == DEAD)
-		Destroy()
+		qdel(src)
 		return
 
 	// Clean up dead units

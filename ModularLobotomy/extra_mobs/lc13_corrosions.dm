@@ -250,7 +250,8 @@
 	if((get_dist(P.firer, src) > 4))
 		new /obj/effect/temp_visual/healing/no_dam(get_turf(src))
 		visible_message(span_userdanger("[src] blocks \the [P]!"))
-		P.Destroy()
+		qdel(P)
+		return BULLET_ACT_BLOCK
 	return ..()
 
 #define STATUS_EFFECT_VENOM /datum/status_effect/stacking/venom
@@ -377,8 +378,8 @@
 	if(charging || charge_ready)
 		new /obj/effect/temp_visual/healing/no_dam(get_turf(src))
 		visible_message(span_userdanger("[src] swiftly avoids \the [P]!"))
-		P.Destroy()
-		return
+		qdel(P)
+		return BULLET_ACT_BLOCK
 	return ..()
 
 /mob/living/simple_animal/hostile/ordeal/dog_corrosion/AttackingTarget(atom/attacked_target)

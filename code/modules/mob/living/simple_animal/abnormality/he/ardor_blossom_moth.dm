@@ -14,7 +14,6 @@
 	attack_verb_continuous = "sears"
 	attack_verb_simple = "sear"
 	is_flying_animal = TRUE
-	ranged = TRUE
 	stat_attack = HARD_CRIT
 	melee_damage_lower = 11
 	melee_damage_upper = 12
@@ -71,6 +70,10 @@
 	light_power = 7
 	light_on = FALSE
 
+/mob/living/simple_animal/hostile/abnormality/ardor_moth/Destroy(force)
+	deltimer(stoke_timer)
+	return ..()
+
 /mob/living/simple_animal/hostile/abnormality/ardor_moth/WorkChance(mob/living/carbon/human/user, chance, work_type)
 	if(stoked)
 		chance+=10
@@ -100,13 +103,6 @@
 	stoked = FALSE
 	light_on = FALSE
 	update_light()
-
-/mob/living/simple_animal/hostile/abnormality/ardor_moth/Destroy(force)
-	deltimer(stoke_timer)
-	if(!prepping_fire)
-		prepping_fire = TRUE
-		Explosion()
-	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/ardor_moth/Move()
 	if(prepping_fire)
