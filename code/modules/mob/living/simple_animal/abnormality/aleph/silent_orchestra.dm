@@ -44,8 +44,6 @@
 		"Gave an applause" = list(FALSE, "The performance never ends. <br>And Da Capo."),
 	)
 
-	/// Range of the damage
-	var/symphony_range = 20
 	/// Amount of white damage every tick
 	var/symphony_damage = 10
 	/// When to perform next movement
@@ -54,6 +52,8 @@
 	var/current_movement_num = -1
 	/// List of effects currently spawned
 	var/list/performers = list()
+	/// List of people on your Z level
+	var/list/on_z = list()
 
 /mob/living/simple_animal/hostile/abnormality/silentorchestra/Move()
 	return FALSE
@@ -76,18 +76,47 @@
 
 /mob/living/simple_animal/hostile/abnormality/silentorchestra/proc/DamagePulse()
 	if(current_movement_num < 5)
-		for(var/mob/living/L in livinginrange(symphony_range, get_turf(src)))
-			if(L.z != z)
-				continue
+		for(var/mob/living/L as anything in GLOB.mob_living_list)
 			if(faction_check_mob(L))
 				continue
-			var/dealt_damage = max(6, symphony_damage - round(get_dist(src, L) * 0.1))
-			L.deal_damage(dealt_damage, WHITE_DAMAGE, src, flags = (DAMAGE_FORCED | DAMAGE_UNTRACKABLE))
+
+			//Man. This is for simplemobs
+			if(!ishuman(L))
+				if(L.z == z)
+					L.deal_damage(symphony_damage, WHITE_DAMAGE, src, flags = (DAMAGE_FORCED | DAMAGE_UNTRACKABLE))
+				continue
+
+			var/mob/living/carbon/human/H = L
+			if(H.z != z)
+				//Kill them if they change Z levels.
+				if(H.tag in on_z)
+					if(H.stat == DEAD)	//They can't live without a head, so if we got here, they're dead.
+						continue
+
+					to_chat(H, span_boldwarning("The performance is not over!"))
+
+					//Just blow their fucking head off.
+					var/obj/item/bodypart/head/head = H.get_bodypart("head")
+					head.dismember()
+					QDEL_NULL(head)
+					H.regenerate_icons()
+					H.visible_message(span_danger("[H]'s head explodes!"))
+					new /obj/effect/gibspawner/generic/silent(get_turf(H))
+				continue
+
+			H.deal_damage(symphony_damage, WHITE_DAMAGE, src, flags = (DAMAGE_FORCED | DAMAGE_UNTRACKABLE))
+
+			//Logging you if you're new.
+			if(!(H.tag in on_z))
+				on_z |= H.tag
+				to_chat(H, span_warning("You shouldn't leave until the performance is over..."))
+
+			//#TODO
+			//Give it unique debuffs for each phase.
 
 	if(world.time >= next_movement_time) // Next movement
 		var/movement_volume = 50
 		current_movement_num += 1
-		symphony_range += 5
 		switch(current_movement_num)
 			if(0)
 				next_movement_time = world.time + 4 SECONDS
@@ -114,15 +143,26 @@
 				next_movement_time = world.time + 999 SECONDS // Never
 				ChangeResistances(list(RED_DAMAGE = 0))
 				movement_volume = 65 // TA-DA!!!
+
+		//Lower your stats by 2 at the end of breach.
+				for(var/mob/living/carbon/human/H as anything in GLOB.human_list)
+					if(H.z != z)
+						continue
+					if(!HAS_TRAIT(H, TRAIT_WORK_FORBIDDEN))
+						H.adjust_all_attribute_levels(-2)
+
+
 		if(current_movement_num < 6)
 			sound_to_playing_players_on_level("sound/abnormalities/silentorchestra/movement[current_movement_num].ogg", movement_volume, zlevel = z)
 			if(current_movement_num == 5)
 				// Award achievement to all humans who heard the full performance
 				for(var/mob/living/carbon/human/listener in GLOB.player_list)
-					if(listener.z == z && listener.stat != DEAD && get_dist(listener, src) <= symphony_range)
+					if(listener.z == z && listener.stat != DEAD)
 						listener.client?.give_award(/datum/award/achievement/abno/orchestra_listener, listener)
 
-				for(var/mob/living/carbon/human/H in livinginrange(symphony_range, get_turf(src)))
+				for(var/mob/living/carbon/human/H as anything in GLOB.human_list)
+					if(H.z != z)
+						continue
 					if(H.sanity_lost || (H.sanityhealth < H.maxSanity * 0.5))
 						var/obj/item/bodypart/head/head = H.get_bodypart("head")
 						if(QDELETED(head))
@@ -147,6 +187,10 @@
 	O.update_icon()
 	performers += O
 	return
+
+/mob/living/simple_animal/hostile/abnormality/silentorchestra/Destroy()
+	..()
+	on_z = null
 
 /mob/living/simple_animal/hostile/abnormality/silentorchestra/SuccessEffect(mob/living/carbon/human/user, work_type, pe)
 	. = ..()
