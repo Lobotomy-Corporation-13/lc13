@@ -459,6 +459,20 @@ INITIALIZE_IMMEDIATE(/obj/effect/landmark/start/new_player)
 	GLOB.department_centers += get_turf(src)
 	return INITIALIZE_HINT_QDEL
 
+// Mirage Reaper spawn points for Achiyalabopa storm
+/obj/effect/landmark/mirage_reaper_spawn
+	name = "mirage_reaper_spawn"
+	icon_state = "xeno_spawn"
+
+/obj/effect/landmark/mirage_reaper_spawn/Initialize(mapload)
+	..()
+	GLOB.mirage_reaper_spawns += src
+	return INITIALIZE_HINT_NORMAL
+
+/obj/effect/landmark/mirage_reaper_spawn/Destroy()
+	GLOB.mirage_reaper_spawns -= src
+	return ..()
+
 /obj/effect/landmark/abnormality_spawn/training_rabbit
 	name = "training rabbit spawn"
 
@@ -520,3 +534,17 @@ INITIALIZE_IMMEDIATE(/obj/effect/landmark/start/new_player)
 /obj/effect/radiojammer/Initialize()
 	. = ..()
 	GLOB.active_jammers |= src
+
+/// Mirage Reaper spawn point for Achiyalabopa storm
+/obj/effect/landmark/mirage_reaper_spawn
+	name = "Mirage Reaper Spawn"
+	desc = "A spawn point for Mirage Reapers during the Achiyalabopa storm."
+	icon_state = "x2"
+
+/obj/effect/landmark/mirage_reaper_spawn/Initialize()
+	. = ..()
+	GLOB.mirage_reaper_spawns += src
+
+/obj/effect/landmark/mirage_reaper_spawn/Destroy()
+	GLOB.mirage_reaper_spawns -= src
+	return ..()
