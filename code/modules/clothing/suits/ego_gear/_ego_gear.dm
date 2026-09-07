@@ -103,6 +103,9 @@
 	if(user.mind)
 		if(user.mind.assigned_role == "Sephirah") //This is an RP role
 			return FALSE
+	// Path holders can wear any armor (no stat requirements) but gain no protection
+	if(HAS_TRAIT(user, TRAIT_NO_EGO_ARMOR))
+		return TRUE
 
 	for(var/atr in attribute_requirements)
 		if(attribute_requirements[atr] > get_attribute_level(user, atr) + equip_bonus)

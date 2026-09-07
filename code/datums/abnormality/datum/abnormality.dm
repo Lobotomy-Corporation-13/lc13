@@ -283,6 +283,8 @@
 			UpdateUnderstanding(5, pe)
 	stored_boxes += round(pe * SSlobotomy_corp.box_work_multiplier)
 	overload_chance[user.ckey] = max(overload_chance[user.ckey] + overload_chance_amount, overload_chance_limit)
+	if(console && !canceled) // Pathstrider extraction module trickle
+		console.TryExtractionReward(user, src, pe)
 
 /datum/abnormality/proc/UpdateUnderstanding(percent, pe)
 	// Lower agent pop gets a bonus

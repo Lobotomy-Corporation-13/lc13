@@ -1,0 +1,756 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"a" = (
+/turf/closed/indestructible/rock/snow{
+	name = "closed book"
+	},
+/area/serpents_library)
+"b" = (
+/obj/effect/turf_decal/siding/wood{
+	dir = 5
+	},
+/turf/open/floor/wood,
+/area/serpents_library)
+"c" = (
+/obj/effect/turf_decal/siding/wood/corner{
+	dir = 8
+	},
+/turf/open/floor/wood,
+/area/serpents_library)
+"d" = (
+/obj/structure/railing{
+	dir = 8;
+	max_integrity = 1e+007;
+	name = "invincible railing"
+	},
+/turf/open/water/deep/saltwater/extradeep,
+/area/serpents_library)
+"e" = (
+/obj/effect/turf_decal/siding/wood{
+	dir = 4
+	},
+/obj/structure/table/wood,
+/obj/item/reagent_containers/food/drinks/soda_cans/wellcheers_red,
+/obj/item/reagent_containers/food/drinks/soda_cans/wellcheers_red,
+/obj/item/reagent_containers/food/drinks/soda_cans/wellcheers_red,
+/obj/item/reagent_containers/food/drinks/soda_cans/wellcheers_red,
+/turf/open/floor/wood,
+/area/serpents_library)
+"f" = (
+/obj/effect/turf_decal/siding/wood{
+	dir = 8
+	},
+/obj/structure/table/wood,
+/obj/item/reagent_containers/food/drinks/soda_cans/wellcheers_white,
+/obj/item/reagent_containers/food/drinks/soda_cans/wellcheers_white,
+/obj/item/reagent_containers/food/drinks/soda_cans/wellcheers_white,
+/obj/item/reagent_containers/food/drinks/soda_cans/wellcheers_white,
+/turf/open/floor/wood,
+/area/serpents_library)
+"g" = (
+/obj/structure/serpent_door,
+/turf/open/floor/wood,
+/area/serpents_library)
+"h" = (
+/obj/effect/turf_decal/siding/wood{
+	dir = 4
+	},
+/obj/structure/table/wood,
+/obj/item/reagent_containers/food/drinks/soda_cans/wellcheers_purple,
+/obj/item/reagent_containers/food/drinks/soda_cans/wellcheers_purple,
+/obj/item/reagent_containers/food/drinks/soda_cans/wellcheers_purple,
+/obj/item/reagent_containers/food/drinks/soda_cans/wellcheers_purple,
+/turf/open/floor/wood,
+/area/serpents_library)
+"i" = (
+/obj/structure/railing{
+	dir = 4;
+	max_integrity = 1e+007;
+	name = "invincible railing"
+	},
+/turf/open/water/deep/saltwater/extradeep,
+/area/serpents_library)
+"j" = (
+/obj/item/reagent_containers/glass/bucket/wooden,
+/obj/structure/serpent_door/south,
+/turf/open/floor/wood,
+/area/serpents_library)
+"k" = (
+/obj/effect/turf_decal/siding/wood{
+	dir = 8
+	},
+/turf/open/floor/wood,
+/area/serpents_library)
+"l" = (
+/obj/effect/turf_decal/siding/wood,
+/turf/open/water/deep/saltwater/extradeep,
+/area/serpents_library)
+"m" = (
+/turf/open/floor/wood,
+/area/serpents_library)
+"n" = (
+/obj/structure/railing{
+	name = "invincible railing";
+	resistance_flags = 64
+	},
+/obj/effect/turf_decal/siding/wood{
+	dir = 6
+	},
+/turf/open/water/deep/saltwater/extradeep,
+/area/serpents_library)
+"o" = (
+/obj/item/fish_feed,
+/turf/open/floor/wood,
+/area/serpents_library)
+"q" = (
+/obj/effect/light_emitter{
+	light_power = 4;
+	light_range = 25;
+	set_cap = 3;
+	set_luminosity = 50
+	},
+/turf/open/floor/wood,
+/area/serpents_library)
+"r" = (
+/obj/effect/turf_decal/siding/wood{
+	dir = 8
+	},
+/obj/structure/chair/wood/wings{
+	dir = 8
+	},
+/mob/living/simple_animal/hostile/abnormality/shrimp_exec,
+/turf/open/floor/wood,
+/area/serpents_library)
+"s" = (
+/obj/structure/railing{
+	dir = 6;
+	max_integrity = 1e+007;
+	name = "invincible railing"
+	},
+/turf/open/water/deep/saltwater/extradeep,
+/area/serpents_library)
+"t" = (
+/obj/effect/turf_decal/siding/wood{
+	dir = 4
+	},
+/obj/structure/chair/wood/wings{
+	dir = 4
+	},
+/mob/living/simple_animal/hostile/shrimp/friendly,
+/turf/open/floor/wood,
+/area/serpents_library)
+"u" = (
+/obj/structure/table/wood,
+/obj/item/storage/box/fishing,
+/obj/item/storage/box/fishing,
+/obj/item/storage/box/fishing,
+/obj/item/storage/box/fishing,
+/obj/item/storage/box/fishing,
+/obj/item/fishing_component/hook/bone,
+/obj/item/fishing_component/line/sinew,
+/obj/item/fishing_rod,
+/turf/open/floor/wood,
+/area/serpents_library)
+"v" = (
+/obj/structure/railing{
+	dir = 10;
+	max_integrity = 1e+007;
+	name = "invincible railing"
+	},
+/turf/open/water/deep/saltwater/extradeep,
+/area/serpents_library)
+"w" = (
+/obj/structure/railing{
+	name = "invincible railing";
+	resistance_flags = 64
+	},
+/obj/structure/riser/wood,
+/turf/open/floor/wood,
+/area/serpents_library)
+"x" = (
+/obj/effect/turf_decal/siding/wood{
+	dir = 6
+	},
+/turf/open/floor/wood,
+/area/serpents_library)
+"y" = (
+/turf/open/water/deep/saltwater/extradeep,
+/area/serpents_library)
+"z" = (
+/obj/structure/aquarium,
+/turf/open/floor/wood,
+/area/serpents_library)
+"A" = (
+/obj/structure/railing/corner{
+	dir = 1
+	},
+/turf/open/water/deep/saltwater/extradeep,
+/area/serpents_library)
+"C" = (
+/obj/structure/railing{
+	name = "invincible railing";
+	resistance_flags = 64
+	},
+/obj/effect/turf_decal/siding/wood{
+	dir = 10
+	},
+/turf/open/water/deep/saltwater/extradeep,
+/area/serpents_library)
+"E" = (
+/obj/effect/turf_decal/siding/wood/corner{
+	dir = 1
+	},
+/turf/open/floor/wood,
+/area/serpents_library)
+"F" = (
+/obj/effect/turf_decal/siding/wood{
+	dir = 8
+	},
+/obj/structure/table/wood,
+/obj/item/reagent_containers/food/drinks/soda_cans/wellcheers_purple,
+/obj/item/reagent_containers/food/drinks/soda_cans/wellcheers_purple,
+/obj/item/reagent_containers/food/drinks/soda_cans/wellcheers_purple,
+/obj/item/reagent_containers/food/drinks/soda_cans/wellcheers_purple,
+/turf/open/floor/wood,
+/area/serpents_library)
+"G" = (
+/obj/structure/railing{
+	dir = 1
+	},
+/turf/open/water/deep/saltwater/extradeep,
+/area/serpents_library)
+"H" = (
+/obj/structure/railing/corner,
+/turf/open/water/deep/saltwater/extradeep,
+/area/serpents_library)
+"I" = (
+/obj/structure/railing{
+	dir = 5
+	},
+/turf/open/water/deep/saltwater/extradeep,
+/area/serpents_library)
+"J" = (
+/obj/structure/railing{
+	dir = 9;
+	max_integrity = 1e+007
+	},
+/turf/open/water/deep/saltwater/extradeep,
+/area/serpents_library)
+"L" = (
+/obj/effect/turf_decal/siding/wood{
+	dir = 10
+	},
+/turf/open/floor/wood,
+/area/serpents_library)
+"M" = (
+/obj/structure/railing/corner{
+	dir = 8
+	},
+/turf/open/water/deep/saltwater/extradeep,
+/area/serpents_library)
+"O" = (
+/obj/effect/turf_decal/siding/wood{
+	dir = 9
+	},
+/turf/open/floor/wood,
+/area/serpents_library)
+"Q" = (
+/obj/effect/turf_decal/siding/wood/corner{
+	dir = 5
+	},
+/turf/open/floor/wood,
+/area/serpents_library)
+"S" = (
+/obj/structure/railing/corner{
+	dir = 4
+	},
+/turf/open/water/deep/saltwater/extradeep,
+/area/serpents_library)
+"T" = (
+/obj/effect/turf_decal/siding/wood{
+	dir = 8
+	},
+/obj/structure/chair/wood/wings{
+	dir = 8
+	},
+/mob/living/simple_animal/hostile/shrimp/friendly,
+/turf/open/floor/wood,
+/area/serpents_library)
+"U" = (
+/obj/machinery/fish_market,
+/turf/open/floor/wood,
+/area/serpents_library)
+"V" = (
+/obj/effect/radiojammer{
+	range = 15
+	},
+/turf/closed/indestructible/wood,
+/area/serpents_library)
+"W" = (
+/obj/effect/turf_decal/siding/wood,
+/turf/open/floor/wood,
+/area/serpents_library)
+"X" = (
+/obj/structure/table/wood,
+/obj/item/fishing_net,
+/obj/item/storage/bag/fish,
+/obj/item/book/fish_catalog,
+/obj/item/storage/fish_case,
+/obj/item/fishing_net,
+/obj/item/fishing_net,
+/obj/item/fishing_net,
+/obj/item/fishing_net,
+/turf/open/floor/wood,
+/area/serpents_library)
+"Y" = (
+/obj/effect/turf_decal/siding/wood/corner{
+	dir = 4
+	},
+/turf/open/floor/wood,
+/area/serpents_library)
+"Z" = (
+/obj/effect/turf_decal/siding/wood{
+	dir = 4
+	},
+/turf/open/floor/wood,
+/area/serpents_library)
+
+(1,1,1) = {"
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+"}
+(2,1,1) = {"
+a
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+a
+"}
+(3,1,1) = {"
+a
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+a
+"}
+(4,1,1) = {"
+a
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+a
+"}
+(5,1,1) = {"
+a
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+a
+"}
+(6,1,1) = {"
+a
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+a
+"}
+(7,1,1) = {"
+a
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+a
+"}
+(8,1,1) = {"
+a
+y
+y
+y
+H
+i
+i
+i
+i
+i
+i
+i
+i
+i
+i
+S
+y
+y
+y
+a
+"}
+(9,1,1) = {"
+a
+y
+y
+H
+s
+O
+k
+T
+F
+r
+k
+T
+f
+T
+L
+I
+i
+S
+y
+a
+"}
+(10,1,1) = {"
+a
+y
+y
+n
+k
+E
+m
+m
+m
+m
+m
+m
+m
+m
+c
+k
+L
+G
+y
+a
+"}
+(11,1,1) = {"
+a
+y
+l
+w
+m
+g
+q
+U
+u
+V
+X
+m
+q
+o
+z
+j
+W
+G
+y
+a
+"}
+(12,1,1) = {"
+a
+y
+y
+C
+Z
+Y
+m
+m
+m
+m
+m
+m
+m
+m
+Q
+Z
+x
+G
+y
+a
+"}
+(13,1,1) = {"
+a
+y
+y
+M
+v
+b
+Z
+t
+e
+t
+Z
+t
+h
+t
+x
+J
+d
+A
+y
+a
+"}
+(14,1,1) = {"
+a
+y
+y
+y
+M
+d
+d
+d
+d
+d
+d
+d
+d
+d
+d
+A
+y
+y
+y
+a
+"}
+(15,1,1) = {"
+a
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+a
+"}
+(16,1,1) = {"
+a
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+a
+"}
+(17,1,1) = {"
+a
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+a
+"}
+(18,1,1) = {"
+a
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+a
+"}
+(19,1,1) = {"
+a
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+a
+"}
+(20,1,1) = {"
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+"}

@@ -1,0 +1,591 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"a" = (
+/turf/closed/indestructible/serpent_wall,
+/area/serpents_library)
+"b" = (
+/obj/effect/turf_decal/weather/snow/corner{
+	dir = 5
+	},
+/turf/open/floor/plating/ashplanet/rocky,
+/area/serpents_library)
+"c" = (
+/turf/open/floor/holofloor/snow,
+/area/serpents_library)
+"d" = (
+/obj/structure/chair/wood/wings,
+/turf/open/floor/wood,
+/area/serpents_library)
+"e" = (
+/obj/effect/turf_decal/weather/snow/corner{
+	dir = 9
+	},
+/turf/open/floor/plating/ashplanet/ash,
+/area/serpents_library)
+"g" = (
+/obj/effect/turf_decal/weather/snow/corner{
+	dir = 9
+	},
+/turf/open/floor/plating/ashplanet/rocky,
+/area/serpents_library)
+"h" = (
+/turf/open/floor/plating/ashplanet/rocky,
+/area/serpents_library)
+"i" = (
+/obj/effect/turf_decal/weather/snow/corner{
+	dir = 8
+	},
+/turf/open/floor/plating/ashplanet/ash,
+/area/serpents_library)
+"l" = (
+/obj/structure/serpent_door,
+/turf/open/floor/plating/ashplanet/ash,
+/area/serpents_library)
+"m" = (
+/obj/effect/turf_decal/weather/snow/corner,
+/turf/open/floor/plating/ashplanet/ash,
+/area/serpents_library)
+"n" = (
+/obj/machinery/door/keycard/library,
+/turf/closed/indestructible/wood,
+/area/serpents_library)
+"p" = (
+/obj/structure/chair/wood/wings,
+/mob/living/simple_animal/hostile/illusion{
+	dir = 1
+	},
+/turf/open/floor/wood,
+/area/serpents_library)
+"q" = (
+/obj/structure/chair/sofa{
+	dir = 1
+	},
+/mob/living/simple_animal/hostile/illusion{
+	dir = 1
+	},
+/turf/open/floor/carpet/red,
+/area/serpents_library)
+"r" = (
+/obj/structure/barricade/wooden/crude/snow,
+/turf/closed/indestructible/fakeglass,
+/area/serpents_library)
+"s" = (
+/mob/living/simple_animal/hostile/abnormality/scorched_girl,
+/turf/open/floor/plating/ashplanet/ash,
+/area/serpents_library)
+"v" = (
+/obj/effect/turf_decal/weather/snow/corner{
+	dir = 6
+	},
+/turf/open/floor/plating/ashplanet/rocky,
+/area/serpents_library)
+"w" = (
+/turf/open/floor/wood,
+/area/serpents_library)
+"x" = (
+/obj/structure/table/wood/fancy/red,
+/obj/item/food/cake/triple_berry,
+/turf/open/floor/wood,
+/area/serpents_library)
+"y" = (
+/turf/open/floor/white,
+/area/serpents_library)
+"E" = (
+/obj/structure/fireplace,
+/turf/open/floor/wood,
+/area/serpents_library)
+"F" = (
+/obj/structure/chair/sofa/left{
+	dir = 1
+	},
+/mob/living/simple_animal/hostile/illusion{
+	dir = 1
+	},
+/turf/open/floor/carpet/red,
+/area/serpents_library)
+"G" = (
+/obj/structure/serpent_door/south,
+/turf/open/floor/plating/ashplanet/ash,
+/area/serpents_library)
+"I" = (
+/obj/structure/table/wood/fancy/red,
+/turf/open/floor/wood,
+/area/serpents_library)
+"J" = (
+/obj/structure/chair/sofa/right{
+	dir = 1
+	},
+/mob/living/simple_animal/hostile/illusion{
+	dir = 1
+	},
+/turf/open/floor/carpet/red,
+/area/serpents_library)
+"K" = (
+/obj/structure/table/wood,
+/obj/item/food/salad/oatmeal,
+/obj/item/food/salad/oatmeal,
+/obj/item/food/salad/oatmeal,
+/obj/item/food/pancakes/chocolatechip,
+/obj/item/food/pancakes/chocolatechip,
+/turf/open/floor/wood,
+/area/serpents_library)
+"N" = (
+/turf/open/floor/plating/ashplanet/ash,
+/area/serpents_library)
+"T" = (
+/obj/effect/turf_decal/weather/snow/corner{
+	dir = 6
+	},
+/turf/open/floor/plating/ashplanet/ash,
+/area/serpents_library)
+"U" = (
+/obj/structure/barricade/wooden/snowed,
+/turf/closed/indestructible/fakeglass,
+/area/serpents_library)
+"Y" = (
+/obj/item/toy/plush/scorched,
+/turf/open/floor/plating/ashplanet/ash,
+/area/serpents_library)
+"Z" = (
+/turf/closed/indestructible/wood,
+/area/serpents_library)
+
+(1,1,1) = {"
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+"}
+(2,1,1) = {"
+a
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+a
+"}
+(3,1,1) = {"
+a
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+a
+"}
+(4,1,1) = {"
+a
+y
+y
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+y
+y
+y
+y
+y
+a
+"}
+(5,1,1) = {"
+a
+y
+y
+a
+c
+c
+c
+g
+h
+h
+h
+h
+h
+a
+y
+y
+y
+y
+y
+a
+"}
+(6,1,1) = {"
+a
+y
+y
+a
+c
+e
+i
+N
+N
+N
+N
+N
+h
+a
+y
+y
+y
+y
+y
+a
+"}
+(7,1,1) = {"
+a
+y
+y
+a
+g
+N
+Z
+Z
+Z
+Z
+Z
+N
+h
+a
+y
+y
+y
+y
+y
+a
+"}
+(8,1,1) = {"
+a
+y
+y
+a
+h
+N
+Z
+w
+p
+x
+U
+N
+h
+a
+y
+y
+y
+y
+y
+a
+"}
+(9,1,1) = {"
+a
+a
+a
+a
+h
+s
+r
+w
+d
+I
+U
+N
+h
+a
+a
+a
+a
+a
+a
+a
+"}
+(10,1,1) = {"
+a
+h
+h
+h
+h
+Y
+r
+w
+w
+w
+n
+N
+h
+h
+h
+h
+h
+h
+h
+a
+"}
+(11,1,1) = {"
+a
+h
+l
+N
+N
+N
+Z
+w
+w
+F
+Z
+N
+N
+N
+N
+N
+N
+G
+h
+a
+"}
+(12,1,1) = {"
+a
+h
+h
+h
+h
+N
+Z
+E
+K
+q
+Z
+N
+h
+h
+h
+h
+h
+h
+h
+a
+"}
+(13,1,1) = {"
+a
+a
+a
+a
+h
+N
+Z
+w
+w
+J
+Z
+N
+v
+a
+a
+a
+a
+a
+a
+a
+"}
+(14,1,1) = {"
+a
+y
+y
+a
+h
+N
+Z
+U
+U
+Z
+Z
+m
+c
+a
+y
+y
+y
+y
+y
+a
+"}
+(15,1,1) = {"
+a
+y
+y
+a
+b
+N
+N
+N
+N
+N
+N
+T
+c
+a
+y
+y
+y
+y
+y
+a
+"}
+(16,1,1) = {"
+a
+y
+y
+a
+c
+b
+h
+h
+h
+h
+v
+c
+c
+a
+y
+y
+y
+y
+y
+a
+"}
+(17,1,1) = {"
+a
+y
+y
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+y
+y
+y
+y
+y
+a
+"}
+(18,1,1) = {"
+a
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+a
+"}
+(19,1,1) = {"
+a
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+y
+a
+"}
+(20,1,1) = {"
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+"}
