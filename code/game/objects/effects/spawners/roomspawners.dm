@@ -12,7 +12,7 @@
 	var/spawn_delay_max = 900
 
 /obj/effect/spawner/room/Initialize()
-	..()/*
+	. = ..()/*
 	return INITIALIZE_HINT_LATELOAD
 
 /obj/effect/spawner/room/LateInitialize()*/
