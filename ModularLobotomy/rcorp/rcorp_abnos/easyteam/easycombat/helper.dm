@@ -239,19 +239,3 @@
 	dash_cooldown = world.time + dash_cooldown_time
 	color = null
 
-
-//If you get shot while you are spinning, throw bullets back
-/mob/living/simple_animal/hostile/rcorp_abno/easy/helper/bullet_act(obj/projectile/P)
-	if(charging)
-		if(is_A_facing_B(src,P.firer))
-			if(P.reflectable != NONE)
-				visible_message(span_userdanger("[src] deflects [P] with it's spinning blades!"))
-				if(P.starting)
-					var/new_x = P.starting.x + pick(0, 0, 0, 0, 0, -1, 1, -2, 2)
-					var/new_y = P.starting.y + pick(0, 0, 0, 0, 0, -1, 1, -2, 2)
-					// redirect the projectile
-					P.firer = src
-					P.preparePixelProjectile(locate(clamp(new_x, 1, world.maxx), clamp(new_y, 1, world.maxy), z), src)
-				return BULLET_ACT_FORCE_PIERCE
-			return BULLET_ACT_BLOCK
-	..()

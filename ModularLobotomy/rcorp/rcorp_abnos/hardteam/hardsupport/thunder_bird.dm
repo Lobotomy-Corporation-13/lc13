@@ -7,8 +7,8 @@
 	light_color = LIGHT_COLOR_BLUE
 	light_range = 5
 	light_power = 7
-	maxHealth = 2000
-	health = 2000
+	maxHealth = 1200	//Reduced due to snowballing and range.
+	health = 1200
 	move_to_delay = 4
 	damage_coeff = list(RED_DAMAGE = 0.8, WHITE_DAMAGE = 0.5, BLACK_DAMAGE = 1, PALE_DAMAGE = 0.7)
 	original_abno = /mob/living/simple_animal/hostile/abnormality/thunder_bird

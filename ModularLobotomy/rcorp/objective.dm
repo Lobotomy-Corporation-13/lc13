@@ -441,9 +441,11 @@ GLOBAL_VAR_INIT(rcorp_payload, null)
 	desc = "A machine R-Corp needs to communicate with the outside."
 	icon = 'icons/obj/objects.dmi'
 	icon_state = "hivebot_fab_on"
+	max_integrity = 300
 	density = 1
 	anchored = 1
 	resistance_flags = INDESTRUCTIBLE
+	var/obj/item/radio/Radio
 
 /obj/structure/rcorpcomms/Initialize()
 	. = ..()
@@ -452,6 +454,12 @@ GLOBAL_VAR_INIT(rcorp_payload, null)
 			return
 		else
 			addtimer(CALLBACK(src, PROC_REF(vulnerable)), 15 MINUTES)
+
+
+/obj/structure/rcorpcomms/take_damage(damage_amount, damage_type = BRUTE, sound_effect = TRUE, attack_dir, armour_penetration = 0)
+	..()
+	Radio.talk_into(src, "PRIORITY ALERT: Communications taking damage.", FREQ_COMMON)
+
 
 /obj/structure/rcorpcomms/proc/vulnerable()
 	minor_announce("Warning: The communications shields are now disabled. Communications are now vulnerable" , "R-Corporation Command Update")

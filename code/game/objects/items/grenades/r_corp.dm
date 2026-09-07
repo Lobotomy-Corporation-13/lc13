@@ -137,6 +137,23 @@
 	icon_state = "r_corp_pale"
 	explosion_damage_type = PALE_DAMAGE
 
+
+/obj/item/grenade/lobotomy/all
+	name = "anti-abnormality stun grenade"
+	desc = "Grenades that apply both fragile and stun to everything in range."
+	icon_state = "r_corp"
+
+/obj/item/grenade/lobotomy/all/detonate(mob/living/lanced_by)
+	. = ..()
+	update_mob()
+	new /obj/effect/temp_visual/explosion(get_turf(src))
+	playsound(loc, 'sound/effects/ordeals/steel/gcorp_boom.ogg', 75, TRUE)
+	for(var/mob/living/simple_animal/H in view(explosion_range, src))
+		H.apply_lc_fragile(5)
+		H.apply_status_effect(/datum/status_effect/qliphothoverload)
+	qdel(src)
+
+
 /obj/item/storage/box/lobotomygrenades
 	name = "box of grenades"
 	desc = "A box, it has a small lobotomy corporation logo on the back."
