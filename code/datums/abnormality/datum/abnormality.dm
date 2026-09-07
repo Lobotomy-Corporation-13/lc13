@@ -7,6 +7,10 @@
 	var/qliphoth_meter = 0
 	/// Maximum level of qliphoth. If 0 or below - it has no effects
 	var/qliphoth_meter_max = 0
+	/// How many meter drops are we storing, if we don't want the abno to lose qliphoth mid work
+	var/qliphoth_midworkchange = 0
+	/// Do we want to lose counter midwork
+	var/midwork_meter_loss = FALSE
 	/// Path of the mob it contains
 	var/mob/living/simple_animal/hostile/abnormality/abno_path
 	/// Reference to the door we own, only used for records swapping
@@ -134,6 +138,7 @@
 	current.status_flags |= GODMODE
 	current.setDir(EAST)
 	if(!stupid)
+		midwork_meter_loss = initial(current.midwork_drop)
 		threat_level = current.threat_level
 		qliphoth_meter_max = current.start_qliphoth
 		qliphoth_meter = qliphoth_meter_max
@@ -235,6 +240,7 @@
 			// noop
 		else
 			qliphoth_change(-1, user)
+
 	if(!console?.recorded && !console?.tutorial) //only training rabbit should not train stats
 		return
 	if(console?.mechanical_upgrades["free work"])	//No stats for free works
@@ -284,6 +290,11 @@
 	stored_boxes += round(pe * SSlobotomy_corp.box_work_multiplier)
 	overload_chance[user.ckey] = max(overload_chance[user.ckey] + overload_chance_amount, overload_chance_limit)
 
+	//If we stored some qliphoth changes? Dump eet.
+	if(midwork_meter_loss && qliphoth_midworkchange)
+		qliphoth_change(qliphoth_midworkchange, user)
+		qliphoth_midworkchange = 0
+
 /datum/abnormality/proc/UpdateUnderstanding(percent, pe)
 	// Lower agent pop gets a bonus
 	var/agent_count = max(AvailableAgentCount(), 1)
@@ -315,6 +326,10 @@
 		console.ApplyEOTool(EXTRACTION_KEY, TRUE)
 
 /datum/abnormality/proc/qliphoth_change(amount, user)
+	if(midwork_meter_loss && working)
+		qliphoth_midworkchange += amount
+		return
+
 	var/pre_qlip = qliphoth_meter
 	qliphoth_meter = clamp(qliphoth_meter + amount, 0, qliphoth_meter_max)
 	if((qliphoth_meter_max > 0) && (qliphoth_meter <= 0) && (pre_qlip > 0))
