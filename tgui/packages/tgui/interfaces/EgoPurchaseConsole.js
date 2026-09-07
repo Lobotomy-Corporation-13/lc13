@@ -13,7 +13,7 @@ grouping the E.G.O. by Abnormality and the Abnormalities by Threat Class.
 
 export const EgoPurchaseConsole = (props, context) => {
   const { act, data } = useBackend(context);
-  const { abnormalities, abnormality_portraits,
+  const { abnormalities,
     all_tags, log, user_price_multiplier, selected_level } = data;
 
   /* ------------ React Hooks ------------*/
@@ -547,17 +547,6 @@ export const EgoPurchaseConsole = (props, context) => {
         <Collapsible title={datum.name + " - " + datum.boxes + " PE"} color={ActiveFilters() && PassesFilters(datum) ? "green" : "default"} key={datum.name} open={collapsiblesStateList[datum.name]}
           onClick={() => UpdateCollapsibleStatesList(datum.name)}>
           <Flex direction="column" align="center">
-            <FlexItem
-              as="img"
-              m={2}
-              src={`data:image/jpeg;base64,
-                ${abnormality_portraits[datum.reference]}`}
-              height="64px"
-              width="64px"
-              style={{
-                '-ms-interpolation-mode': 'nearest-neighbor',
-              }} />
-
             <FlexItem>
               {datum.boxes} PE
             </FlexItem>
