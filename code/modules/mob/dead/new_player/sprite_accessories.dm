@@ -847,6 +847,10 @@
 	name = "LoneWolf"
 	icon_state = "hair_terrybodgard"
 
+/datum/sprite_accessory/hair/terry
+	name = "Poetic Machine"
+	icon_state = "hair_angelaLC"
+
 /*
 /////////////////////////////////////
 /  =---------------------------=    /
@@ -909,6 +913,10 @@
 /datum/sprite_accessory/hair_gradient/wavy_spike
 	name = "Spiked Wavy"
 	icon_state = "wavy_spiked"
+
+/datum/sprite_accessory/hair_gradient/test_pelletstorm
+	name = "Pellet Storm"
+	icon_state = "test_pelletstorm"
 
 /////////////////////////////
 // Facial Hair Definitions //
@@ -1057,8 +1065,16 @@
 	icon_state = "facial_mutton"
 
 /datum/sprite_accessory/facial_hair/sideburn
+	name = "Evil Eggnog"
+	icon_state = "face_eggman"
+
+/datum/sprite_accessory/facial_hair/eggman
 	name = "Sideburns"
 	icon_state = "facial_sideburn"
+
+/datum/sprite_accessory/facial_hair/mmwily
+	name = "Crazed Roboticist"
+	icon_state = "face_mmwily"
 
 /datum/sprite_accessory/facial_hair/shaved
 	name = "Shaved"
