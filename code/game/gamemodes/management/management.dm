@@ -159,3 +159,23 @@
 	abno_types = list(
 		ABNORMALITY_ORIGIN_BRANCH12
 		)
+
+
+/datum/game_mode/management/ss13
+	name = "L Corp - SS13 Abnormalities"
+	config_tag = "ss13"
+	votable = 0
+
+	announce_span = "notice"
+	announce_text = "Manage a wide cast of abnormalities from all normal sources, plus some familiar faces!"
+	abno_types = list(
+		ABNORMALITY_ORIGIN_LOBOTOMY,
+		ABNORMALITY_ORIGIN_ALTERED,
+		ABNORMALITY_ORIGIN_ARTBOOK,
+		ABNORMALITY_ORIGIN_WONDERLAB,
+		ABNORMALITY_ORIGIN_RUINA,
+		ABNORMALITY_ORIGIN_LIMBUS,
+		ABNORMALITY_ORIGIN_ORIGINAL,
+		ABNORMALITY_ORIGIN_SS13MINING,
+
+		)

@@ -27,6 +27,7 @@ SUBSYSTEM_DEF(maptype)
 						FACILITY_TRAIT_CRITICAL_HITS = 10,		//EGO can Critical hit.
 						FACILITY_TRAIT_DEPARTMENTAL_BUFFS = 10,	//Departmental Agent Buffs
 						FACILITY_TRAIT_XP_MOD = 7,				//XP works differently on HP/SP
+						FACILITY_TRAIT_SS13_ABNOS = 7,			//You also get SS13 mobs as abnos.
 						FACILITY_TRAIT_DARK_SOULS = 5,			//You get estus flasks and rolling
 						FACILITY_TRAIT_NO_EGO = 3,				//No EGO, works like our events with double the outputs and refineries
 						FACILITY_TRAIT_PROSTHETICS = 3,			//There's a new prosthetics vendor!
