@@ -28,6 +28,7 @@
 	death_sound = 'sound/effects/ordeals/green/midnight_dead.ogg'
 	offsets_pixel_x = list("south" = -96, "north" = -96, "west" = -96, "east" = -96)
 	damage_effect_scale = 1.25
+	ranged_cooldown_time = 30
 	rapid = 50
 	rapid_fire_delay = 0.4
 	projectilesound = 'sound/weapons/gun/smg/shot.ogg'
