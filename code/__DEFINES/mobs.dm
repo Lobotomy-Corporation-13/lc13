@@ -80,6 +80,8 @@
 /// Absolute MAXIMUM oxyloss that can be dealt by any individual source for each breath-tick. They can stack, but this number is the guideline for all others (as it represents missing your lungs entirely.)
 #define HUMAN_MAX_OXYLOSS_RATE		(5 * TICKS_PER_BREATH)
 #define HUMAN_HIGH_OXYLOSS_RATE		(4 * TICKS_PER_BREATH)
+/// This one is specifically used for the amount of oxygen regenerated per successful breath.
+#define HUMAN_BREATHING_OXYLOSS_RATE (3 * TICKS_PER_BREATH)
 #define HUMAN_MEDIUM_OXYLOSS_RATE	(2 * TICKS_PER_BREATH)
 #define HUMAN_LOW_OXYLOSS_RATE		(1 * TICKS_PER_BREATH)
 
