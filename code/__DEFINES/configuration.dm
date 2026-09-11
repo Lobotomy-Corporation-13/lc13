@@ -9,3 +9,9 @@
 #define CONFIG_ENTRY_LOCKED 1
 /// can't see value
 #define CONFIG_ENTRY_HIDDEN 2
+
+// Submaps
+/// If no submap is chosen, chooses the first map file as a default.
+#define SUBMAP_DEFAULT_STANDARD "standard"
+/// If no submap is chosen, chooses a random map file to play on.
+#define SUBMAP_DEFAULT_RANDOM "random"

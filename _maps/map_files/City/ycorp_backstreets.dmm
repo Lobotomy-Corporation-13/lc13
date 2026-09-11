@@ -577,8 +577,9 @@
 /turf/open/floor/eighties,
 /area/city/shop)
 "fF" = (
-/obj/structure/rack,
 /obj/effect/turf_decal/siding/thinplating/dark,
+/obj/structure/table,
+/obj/item/storage/toolbox/electrical,
 /turf/open/floor/plasteel/dark,
 /area/city/shop)
 "fI" = (
@@ -1638,11 +1639,13 @@
 /area/city/shop)
 "pp" = (
 /obj/structure/rack,
-/obj/item/stack/spacecash/c1000,
-/obj/item/stack/spacecash/c1000,
 /obj/effect/turf_decal/siding/thinplating/dark{
 	dir = 1
 	},
+/obj/item/augment_tester,
+/obj/item/body_modification_remover,
+/obj/item/augment_remover,
+/obj/item/body_modification_tester,
 /turf/open/floor/plasteel/dark,
 /area/city/shop)
 "pr" = (
@@ -2513,10 +2516,11 @@
 /turf/open/floor/wood,
 /area/city/shop)
 "wQ" = (
-/obj/structure/rack,
 /obj/effect/turf_decal/siding/thinplating/dark{
 	dir = 6
 	},
+/obj/structure/table,
+/obj/item/storage/toolbox/mechanical,
 /turf/open/floor/plasteel/dark,
 /area/city/shop)
 "wR" = (
@@ -2811,8 +2815,10 @@
 /obj/machinery/door/poddoor/shutters/window/preopen{
 	id = "extraction"
 	},
-/obj/machinery/vending/custom/unbreakable,
 /obj/effect/turf_decal/siding/thinplating/corner,
+/obj/machinery/body_modification_fabricator/public{
+	resistance_flags = 64
+	},
 /turf/open/floor/plasteel/grimy,
 /area/city/shop)
 "zy" = (
@@ -3188,6 +3194,13 @@
 /obj/item/clothing/under/suit/charcoal,
 /turf/open/floor/facility,
 /area/city/shop)
+"Db" = (
+/obj/machinery/augment_catalogue{
+	pixel_x = 32;
+	pixel_y = 0
+	},
+/turf/open/floor/plasteel/grimy,
+/area/city/shop)
 "Dd" = (
 /turf/closed/indestructible/rock,
 /area/city/backstreets_checkpoint)
@@ -3255,14 +3268,13 @@
 /turf/open/floor/plasteel/grimy,
 /area/city/shop)
 "DH" = (
-/obj/structure/table,
 /obj/effect/turf_decal/siding/thinplating/dark{
 	dir = 1
 	},
-/obj/item/storage/toolbox/mechanical,
 /obj/machinery/light{
 	dir = 1
 	},
+/obj/machinery/body_modification_fabricator,
 /turf/open/floor/plasteel/dark,
 /area/city/shop)
 "DT" = (
@@ -3401,6 +3413,12 @@
 /obj/item/reagent_containers/food/drinks/beer,
 /turf/open/floor/wood,
 /area/city/shop)
+"ED" = (
+/obj/effect/landmark/observer_start,
+/turf/open/floor/plating/ashplanet/rocky{
+	layer = 1.98
+	},
+/area/city)
 "EE" = (
 /turf/open/floor/carpet/black,
 /area/city/fixers)
@@ -3470,12 +3488,6 @@
 /area/city/shop)
 "Fh" = (
 /obj/effect/mapping_helpers/airlock/abandoned,
-/obj/machinery/atmospherics/pipe/simple/scrubbers/hidden/layer2{
-	dir = 4
-	},
-/obj/machinery/atmospherics/pipe/simple/supply/hidden/layer4{
-	dir = 4
-	},
 /obj/machinery/door/airlock/grunge{
 	name = "Vacant Office A"
 	},
@@ -4500,14 +4512,10 @@
 /turf/open/floor/pod,
 /area/city/shop)
 "Ng" = (
-/obj/structure/table,
-/obj/item/storage/secure/safe{
-	pixel_x = -22
-	},
 /obj/effect/turf_decal/siding/thinplating/dark{
 	dir = 9
 	},
-/obj/item/storage/toolbox/electrical,
+/obj/machinery/augment_fabricator,
 /turf/open/floor/plasteel/dark,
 /area/city/shop)
 "Ni" = (
@@ -4812,6 +4820,8 @@
 /obj/effect/turf_decal/siding/thinplating/dark{
 	dir = 5
 	},
+/obj/item/stack/spacecash/c1000,
+/obj/item/stack/spacecash/c1000,
 /turf/open/floor/plasteel/dark,
 /area/city/shop)
 "Qk" = (
@@ -4901,6 +4911,15 @@
 /area/city)
 "Rb" = (
 /turf/open/floor/facility/dark,
+/area/city/shop)
+"Re" = (
+/obj/effect/turf_decal/siding/thinplating/dark{
+	dir = 4
+	},
+/obj/item/storage/secure/safe{
+	pixel_x = 32
+	},
+/turf/open/floor/plasteel/dark,
 /area/city/shop)
 "Rf" = (
 /turf/closed/indestructible/brick,
@@ -57874,9 +57893,9 @@ De
 Aq
 PO
 YV
+Db
 NY
-xQ
-tS
+Rf
 Ue
 bO
 bO
@@ -59453,7 +59472,7 @@ Rf
 Ue
 bO
 bO
-bO
+ED
 bO
 bO
 bO
@@ -59669,7 +59688,7 @@ ix
 RY
 Rf
 Qg
-De
+Re
 wQ
 Rf
 Dy

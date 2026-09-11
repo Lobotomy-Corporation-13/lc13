@@ -2,9 +2,7 @@
 	"version": 1,
 	"map_name": "City Of Light",
 	"map_path": "map_files/City",
-	"map_file": [
-		"city.dmm"
-	],
+	"map_file": "city.dmm",
 	"traits": [
 		{
 			"Baseturf": "/turf/open/floor/plating/asteroid"
@@ -13,5 +11,14 @@
 	"space_ruin_levels": 0,
 	"space_empty_levels": 0,
 	"minetype": "none",
-	"maptype": "city"
+	"maptype": "city",
+	"has_submaps": 1,
+	"no_submap_behavior": "standard",
+	"available_submaps": {
+		"city.dmm": "Standard City",
+		"ycorp_backstreets.dmm": "Y-Corp Backstreets",
+		"jcorpcity.dmm": "J-Corp Backstreets",
+		"kcorp_nest_complete.dmm": "K-Corp Nest Town",
+		"ucorp_port_complete.dmm": "U-Corp Port Town"
+	}
 }

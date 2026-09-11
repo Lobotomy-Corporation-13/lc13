@@ -877,6 +877,15 @@
 	},
 /turf/open/floor/plasteel/dark,
 /area/city/fixers)
+"eQ" = (
+/obj/effect/turf_decal/siding/thinplating/dark{
+	dir = 4
+	},
+/obj/item/storage/secure/safe{
+	pixel_x = 32
+	},
+/turf/open/floor/stone,
+/area/city/shop)
 "eR" = (
 /obj/effect/turf_decal/siding/thinplating/dark/corner{
 	dir = 1
@@ -1951,9 +1960,8 @@
 	},
 /area/city/backstreets_checkpoint)
 "jV" = (
-/obj/structure/table,
-/obj/item/storage/toolbox/mechanical,
 /obj/effect/turf_decal/siding/thinplating/dark,
+/obj/machinery/body_modification_fabricator,
 /turf/open/floor/stone,
 /area/city/shop)
 "jW" = (
@@ -2443,6 +2451,8 @@
 /obj/effect/turf_decal/siding/thinplating/dark{
 	dir = 6
 	},
+/obj/item/stack/spacecash/c1000,
+/obj/item/stack/spacecash/c1000,
 /turf/open/floor/stone,
 /area/city/shop)
 "lR" = (
@@ -5144,9 +5154,10 @@
 /area/city)
 "yq" = (
 /obj/structure/rack,
-/obj/item/stack/spacecash/c1000,
-/obj/item/stack/spacecash/c1000,
-/obj/effect/turf_decal/siding/thinplating/dark,
+/obj/item/body_modification_tester,
+/obj/item/augment_remover,
+/obj/item/body_modification_remover,
+/obj/item/augment_tester,
 /turf/open/floor/stone,
 /area/city/shop)
 "yr" = (
@@ -5896,6 +5907,13 @@
 	color = "#b5b5b5"
 	},
 /area/city)
+"BF" = (
+/obj/machinery/augment_catalogue{
+	pixel_x = 32;
+	pixel_y = 0
+	},
+/turf/open/floor/facility/halls,
+/area/city/shop)
 "BG" = (
 /obj/effect/turf_decal/siding/thinplating/dark/corner{
 	dir = 8
@@ -6563,6 +6581,12 @@
 	color = "#8f8f8f"
 	},
 /area/city/fixers)
+"EY" = (
+/obj/machinery/body_modification_fabricator/public{
+	resistance_flags = 64
+	},
+/turf/open/floor/facility/halls,
+/area/city/shop)
 "Fc" = (
 /obj/docking_port/stationary{
 	dwidth = 3;
@@ -6823,12 +6847,6 @@
 /area/city/house)
 "Gl" = (
 /obj/effect/mapping_helpers/airlock/abandoned,
-/obj/machinery/atmospherics/pipe/simple/scrubbers/hidden/layer2{
-	dir = 4
-	},
-/obj/machinery/atmospherics/pipe/simple/supply/hidden/layer4{
-	dir = 4
-	},
 /obj/machinery/door/airlock/grunge{
 	name = "Vacant Office A"
 	},
@@ -7515,10 +7533,11 @@
 	},
 /area/city)
 "JC" = (
-/obj/structure/rack,
 /obj/effect/turf_decal/siding/thinplating/dark{
 	dir = 1
 	},
+/obj/structure/table,
+/obj/item/storage/toolbox/electrical,
 /turf/open/floor/stone,
 /area/city/shop)
 "JE" = (
@@ -8828,13 +8847,14 @@
 /turf/open/floor/facility/halls,
 /area/city/fixers)
 "Pg" = (
-/obj/structure/rack,
 /obj/effect/turf_decal/siding/thinplating/dark{
 	dir = 5
 	},
 /obj/machinery/light{
 	dir = 1
 	},
+/obj/structure/table,
+/obj/item/storage/toolbox/mechanical,
 /turf/open/floor/stone,
 /area/city/shop)
 "Pi" = (
@@ -10760,14 +10780,10 @@
 /turf/open/floor/mineral/titanium/tiled/white,
 /area/city/shop)
 "YZ" = (
-/obj/structure/table,
-/obj/item/storage/secure/safe{
-	pixel_x = -22
-	},
-/obj/item/storage/toolbox/electrical,
 /obj/effect/turf_decal/siding/thinplating/dark{
 	dir = 10
 	},
+/obj/machinery/augment_fabricator,
 /turf/open/floor/stone,
 /area/city/shop)
 "Zf" = (
@@ -53074,7 +53090,7 @@ PP
 AS
 Rm
 lN
-uE
+EY
 SP
 PX
 cp
@@ -54874,7 +54890,7 @@ Oy
 vm
 lN
 uE
-iG
+BF
 iG
 xb
 vv
@@ -56677,7 +56693,7 @@ Oy
 vm
 pv
 Pg
-dT
+eQ
 lQ
 pv
 vm
