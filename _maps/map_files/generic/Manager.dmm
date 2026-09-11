@@ -1,6 +1,8 @@
 //MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
 "ac" = (
-/obj/machinery/light,
+/obj/machinery/light{
+	bulb_colour = "#FF3232"
+	},
 /obj/structure/chair/plastic{
 	dir = 8
 	},
@@ -70,7 +72,9 @@
 /turf/open/floor/plasteel/dark,
 /area/facility_hallway/manager)
 "an" = (
-/obj/machinery/light,
+/obj/machinery/light{
+	bulb_colour = "#FF3232"
+	},
 /obj/effect/turf_decal/siding/brown,
 /turf/open/floor/carpet/orange,
 /area/facility_hallway/manager)
@@ -93,7 +97,9 @@
 /turf/closed/indestructible/syndicate,
 /area/city/outskirtsfactory)
 "ay" = (
-/obj/machinery/light,
+/obj/machinery/light{
+	bulb_colour = "#FF3232"
+	},
 /obj/structure/chair/plastic{
 	dir = 4
 	},
@@ -194,7 +200,9 @@
 /turf/open/floor/carpet/cyan,
 /area/department_main/manager)
 "bG" = (
-/obj/machinery/light,
+/obj/machinery/light{
+	bulb_colour = "#FF3232"
+	},
 /turf/open/floor/plasteel/white,
 /area/facility_hallway/manager)
 "bH" = (
@@ -354,12 +362,6 @@
 	},
 /turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
-"cW" = (
-/obj/structure/sigsystem/connector{
-	happens_once = 1
-	},
-/turf/open/floor/facility/dark,
-/area/city/outskirtsfactory)
 "cY" = (
 /obj/machinery/vending/coffee,
 /turf/open/floor/plasteel/dark,
@@ -385,8 +387,9 @@
 /obj/structure/sigsystem/connector/split{
 	dir = 4
 	},
-/obj/machinery/light/red{
-	dir = 8
+/obj/machinery/light{
+	dir = 8;
+	bulb_colour = "#FF3232"
 	},
 /obj/structure/closet/crate,
 /obj/item/tresmetal,
@@ -709,7 +712,8 @@
 "fr" = (
 /obj/structure/table/glass,
 /obj/machinery/light{
-	dir = 4
+	dir = 4;
+	bulb_colour = "#FF3232"
 	},
 /turf/open/floor/plasteel/white,
 /area/facility_hallway/manager)
@@ -831,12 +835,14 @@
 /turf/open/floor/plasteel/dark,
 /area/facility_hallway/manager)
 "gv" = (
-/obj/machinery/door/poddoor/shutters/indestructible{
-	lockpickable = 0;
-	resistance_flags = 64;
-	id = "furnaceaccess"
+/obj/structure/railing{
+	resistance_flags = 115;
+	name = "wing-grade railing";
+	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
+	mouse_opacity = 0;
+	dir = 4
 	},
-/obj/structure/sigsystem/activator,
+/obj/item/tresmetal,
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
 "gx" = (
@@ -855,8 +861,9 @@
 /turf/open/floor/wood,
 /area/facility_hallway/manager)
 "gG" = (
-/obj/machinery/light/small/red{
-	dir = 1
+/obj/machinery/light/small{
+	dir = 1;
+	bulb_colour = "#FF3232"
 	},
 /obj/structure/sigsystem/tower{
 	dir = 8;
@@ -866,10 +873,11 @@
 /turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
 "gL" = (
-/obj/machinery/door/poddoor/shutters/indestructible{
-	lockpickable = 0
+/obj/machinery/door/keycard{
+	puzzle_id = 32;
+	desc = "A high security vault door. This door only opens when a keycard is swiped. It looks virtually indestructable.";
+	name = "vault door"
 	},
-/obj/structure/sigsystem/activator,
 /turf/open/floor/facility/dark,
 /area/city/outskirtsfactory)
 "gP" = (
@@ -928,7 +936,9 @@
 	dir = 1;
 	light_color = "#333333"
 	},
-/obj/machinery/light,
+/obj/machinery/light{
+	bulb_colour = "#FF3232"
+	},
 /obj/structure/table/reinforced,
 /obj/item/food/bread/banana,
 /obj/item/food/bread/banana,
@@ -1131,7 +1141,9 @@
 	pixel_x = -5;
 	pixel_y = 5
 	},
-/obj/machinery/light,
+/obj/machinery/light{
+	bulb_colour = "#FF3232"
+	},
 /turf/open/floor/carpet/green,
 /area/facility_hallway/manager)
 "iK" = (
@@ -1172,8 +1184,9 @@
 /turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
 "jg" = (
-/obj/machinery/light/red{
-	dir = 8
+/obj/machinery/light{
+	dir = 8;
+	bulb_colour = "#FF3232"
 	},
 /turf/open/floor/pod/light,
 /area/city/outskirtsfactory)
@@ -1249,11 +1262,14 @@
 /turf/closed/indestructible/syndicate,
 /area/city/outskirtsfactory)
 "jI" = (
-/obj/effect/decal/cleanable/dirt/dust,
-/obj/structure/sigsystem/connector{
-	dir = 1;
-	happens_once = 1
+/obj/structure/railing{
+	resistance_flags = 115;
+	name = "wing-grade railing";
+	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
+	mouse_opacity = 0;
+	dir = 8
 	},
+/mob/living/simple_animal/hostile/ordeal/green_bot,
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
 "jL" = (
@@ -1296,7 +1312,9 @@
 /turf/open/floor/carpet/royalblack,
 /area/department_main/manager)
 "kb" = (
-/obj/machinery/light/small/red,
+/obj/machinery/light/small{
+	bulb_colour = "#FF3232"
+	},
 /turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
 "kd" = (
@@ -1481,7 +1499,8 @@
 /area/city/outskirtsfactory)
 "lw" = (
 /obj/machinery/light{
-	dir = 4
+	dir = 4;
+	bulb_colour = "#FF3232"
 	},
 /obj/machinery/roulette,
 /turf/open/floor/plasteel/dark,
@@ -1678,13 +1697,6 @@
 	},
 /turf/open/floor/carpet/green,
 /area/facility_hallway/manager)
-"mI" = (
-/obj/structure/sigsystem/tower/button{
-	signal_code = 92;
-	signal_range = 3
-	},
-/turf/closed/indestructible/syndicate,
-/area/city/outskirtsfactory)
 "mK" = (
 /obj/structure/rack,
 /obj/item/toy/plush/big_bad_wolf,
@@ -1704,7 +1716,8 @@
 /area/facility_hallway/manager)
 "mM" = (
 /obj/machinery/light{
-	dir = 1
+	dir = 1;
+	bulb_colour = "#FF3232"
 	},
 /obj/machinery/newscaster/security_unit{
 	pixel_y = 32
@@ -1814,7 +1827,6 @@
 "nh" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/structure/sigsystem/connector{
-	delay_time = 90;
 	dir = 1;
 	happens_once = 1
 	},
@@ -1840,7 +1852,9 @@
 /turf/open/floor/facility/dark,
 /area/department_main/manager)
 "no" = (
-/obj/machinery/light/small/red,
+/obj/machinery/light/small{
+	bulb_colour = "#FF3232"
+	},
 /turf/open/floor/mineral/plastitanium/red,
 /area/city/outskirtsfactory)
 "np" = (
@@ -2024,7 +2038,9 @@
 /turf/open/floor/plasteel/white,
 /area/facility_hallway/manager)
 "oZ" = (
-/obj/machinery/light,
+/obj/machinery/light{
+	bulb_colour = "#FF3232"
+	},
 /obj/effect/turf_decal/siding/wood{
 	dir = 7
 	},
@@ -2035,7 +2051,8 @@
 /area/facility_hallway/manager)
 "pb" = (
 /obj/machinery/light{
-	dir = 4
+	dir = 4;
+	bulb_colour = "#FF3232"
 	},
 /obj/machinery/computer/shuttle/mining{
 	dir = 1;
@@ -2062,7 +2079,8 @@
 /area/facility_hallway/manager)
 "pp" = (
 /obj/machinery/light{
-	dir = 4
+	dir = 4;
+	bulb_colour = "#FF3232"
 	},
 /obj/structure/table/reinforced,
 /turf/open/floor/plasteel/white,
@@ -2076,7 +2094,6 @@
 	dir = 8
 	},
 /obj/effect/decal/cleanable/dirt/dust,
-/obj/effect/decal/cleanable/oil/slippery,
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
 "pv" = (
@@ -2202,8 +2219,9 @@
 /turf/open/floor/plasteel/white,
 /area/facility_hallway/manager)
 "qx" = (
-/obj/machinery/light/small/red{
-	dir = 4
+/obj/machinery/light/small{
+	dir = 4;
+	bulb_colour = "#FF3232"
 	},
 /obj/effect/turf_decal/siding/green{
 	dir = 4
@@ -2211,8 +2229,9 @@
 /turf/open/floor/pod/light,
 /area/city/outskirtsfactory)
 "qy" = (
-/obj/machinery/light/small/red{
-	dir = 8
+/obj/machinery/light/small{
+	dir = 8;
+	bulb_colour = "#FF3232"
 	},
 /turf/open/floor/mineral/plastitanium/red,
 /area/city/outskirtsfactory)
@@ -2222,7 +2241,8 @@
 /area/city/outskirtsfactory)
 "qC" = (
 /obj/machinery/light{
-	dir = 4
+	dir = 4;
+	bulb_colour = "#FF3232"
 	},
 /obj/effect/turf_decal/siding/wood{
 	dir = 4
@@ -2266,14 +2286,11 @@
 /turf/open/floor/plasteel/dark,
 /area/facility_hallway/manager)
 "qU" = (
-/obj/machinery/light/red{
-	dir = 4
+/obj/machinery/light{
+	dir = 4;
+	bulb_colour = "#FF3232"
 	},
 /turf/open/floor/mineral/plastitanium,
-/area/city/outskirtsfactory)
-"qW" = (
-/obj/effect/decal/cleanable/oil/slippery,
-/turf/open/floor/facility,
 /area/city/outskirtsfactory)
 "qY" = (
 /obj/structure/table/wood/fancy/royalblack,
@@ -2296,7 +2313,9 @@
 /turf/open/floor/carpet/orange,
 /area/facility_hallway/manager)
 "rd" = (
-/obj/machinery/light,
+/obj/machinery/light{
+	bulb_colour = "#FF3232"
+	},
 /turf/open/floor/plasteel,
 /area/department_main/manager)
 "rg" = (
@@ -2314,8 +2333,9 @@
 /obj/effect/turf_decal/siding/red{
 	dir = 1
 	},
-/obj/machinery/light/small/red{
-	dir = 1
+/obj/machinery/light/small{
+	dir = 1;
+	bulb_colour = "#FF3232"
 	},
 /turf/open/floor/circuit/red,
 /area/city/outskirtsfactory)
@@ -2416,8 +2436,9 @@
 /turf/open/floor/wood,
 /area/facility_hallway/manager)
 "rL" = (
-/obj/machinery/light/small/red{
-	dir = 4
+/obj/machinery/light/small{
+	dir = 4;
+	bulb_colour = "#FF3232"
 	},
 /obj/structure/sigsystem/connector{
 	dir = 1
@@ -2448,7 +2469,8 @@
 /area/city/outskirtsfactory)
 "sg" = (
 /obj/machinery/light{
-	dir = 4
+	dir = 4;
+	bulb_colour = "#FF3232"
 	},
 /turf/open/floor/plasteel/dark,
 /area/facility_hallway/manager)
@@ -2468,8 +2490,9 @@
 /area/city/outskirtsfactory)
 "sl" = (
 /obj/effect/decal/cleanable/dirt/dust,
-/obj/machinery/light/small/red{
-	dir = 1
+/obj/machinery/light/small{
+	dir = 1;
+	bulb_colour = "#FF3232"
 	},
 /turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
@@ -2514,7 +2537,8 @@
 	},
 /obj/item/bedsheet,
 /obj/machinery/light{
-	dir = 1
+	dir = 1;
+	bulb_colour = "#FF3232"
 	},
 /obj/effect/turf_decal/siding/wood{
 	dir = 5
@@ -2564,7 +2588,8 @@
 /obj/structure/bed/pod,
 /obj/item/bedsheet/black,
 /obj/machinery/light{
-	dir = 1
+	dir = 1;
+	bulb_colour = "#FF3232"
 	},
 /obj/effect/turf_decal/siding/wood{
 	dir = 5
@@ -2629,7 +2654,8 @@
 /area/city/outskirtsfactory)
 "tn" = (
 /obj/machinery/light{
-	dir = 4
+	dir = 4;
+	bulb_colour = "#FF3232"
 	},
 /obj/machinery/newscaster/security_unit{
 	pixel_x = 32
@@ -2716,7 +2742,9 @@
 /turf/open/floor/facility/dark,
 /area/city/outskirtsfactory)
 "ue" = (
-/obj/machinery/light/red,
+/obj/machinery/light{
+	bulb_colour = "#FF3232"
+	},
 /turf/open/floor/facility/dark,
 /area/city/outskirtsfactory)
 "ug" = (
@@ -2754,8 +2782,9 @@
 /turf/open/floor/facility/dark,
 /area/department_main/manager)
 "uO" = (
-/obj/machinery/light/small/red{
-	dir = 4
+/obj/machinery/light/small{
+	dir = 4;
+	bulb_colour = "#FF3232"
 	},
 /turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
@@ -2820,7 +2849,8 @@
 /area/department_main/manager)
 "vz" = (
 /obj/machinery/light{
-	dir = 1
+	dir = 1;
+	bulb_colour = "#FF3232"
 	},
 /turf/open/floor/plasteel,
 /area/department_main/manager)
@@ -2876,7 +2906,9 @@
 /turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
 "vL" = (
-/obj/machinery/light/red,
+/obj/machinery/light{
+	bulb_colour = "#FF3232"
+	},
 /turf/open/floor/pod/light,
 /area/city/outskirtsfactory)
 "vM" = (
@@ -2971,7 +3003,9 @@
 /area/facility_hallway/manager)
 "wp" = (
 /obj/effect/decal/cleanable/dirt/dust,
-/obj/machinery/light/small/red,
+/obj/machinery/light/small{
+	bulb_colour = "#FF3232"
+	},
 /turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
 "wq" = (
@@ -2980,7 +3014,8 @@
 /area/city/outskirtsfactory)
 "ws" = (
 /obj/machinery/light{
-	dir = 1
+	dir = 1;
+	bulb_colour = "#FF3232"
 	},
 /obj/effect/turf_decal/siding/white{
 	dir = 1
@@ -3092,7 +3127,8 @@
 	dir = 8
 	},
 /obj/machinery/light{
-	dir = 1
+	dir = 1;
+	bulb_colour = "#FF3232"
 	},
 /turf/open/floor/carpet/red,
 /area/facility_hallway/manager)
@@ -3107,7 +3143,9 @@
 /area/department_main/manager)
 "xq" = (
 /obj/machinery/vending/lobotomyuniform,
-/obj/machinery/light,
+/obj/machinery/light{
+	bulb_colour = "#FF3232"
+	},
 /turf/open/floor/plasteel/white,
 /area/facility_hallway/manager)
 "xs" = (
@@ -3248,8 +3286,9 @@
 /turf/open/floor/wood,
 /area/facility_hallway/manager)
 "yl" = (
-/obj/machinery/light/small/red{
-	dir = 8
+/obj/machinery/light/small{
+	dir = 8;
+	bulb_colour = "#FF3232"
 	},
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/turf_decal/siding/green{
@@ -3298,8 +3337,9 @@
 /turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
 "yx" = (
-/obj/machinery/light/red{
-	dir = 8
+/obj/machinery/light{
+	dir = 8;
+	bulb_colour = "#FF3232"
 	},
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/pod/light,
@@ -3329,7 +3369,9 @@
 /turf/open/floor/wood,
 /area/facility_hallway/manager)
 "yH" = (
-/obj/machinery/light,
+/obj/machinery/light{
+	bulb_colour = "#FF3232"
+	},
 /turf/open/floor/facility/dark,
 /area/facility_hallway/manager)
 "yM" = (
@@ -3367,18 +3409,6 @@
 	},
 /turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
-"yT" = (
-/obj/structure/railing{
-	resistance_flags = 115;
-	name = "wing-grade railing";
-	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
-	mouse_opacity = 0;
-	dir = 4
-	},
-/obj/effect/decal/cleanable/dirt/dust,
-/obj/effect/decal/cleanable/oil/slippery,
-/turf/open/floor/mineral/plastitanium,
-/area/city/outskirtsfactory)
 "yX" = (
 /obj/item/kirbyplants{
 	icon_state = "plant-11";
@@ -3400,13 +3430,6 @@
 /obj/structure/sign/warning/securearea{
 	pixel_x = -32;
 	pixel_y = 19
-	},
-/turf/open/floor/pod/dark,
-/area/city/outskirtsfactory)
-"zr" = (
-/obj/structure/sigsystem/connector{
-	dir = 4;
-	delay_time = 30
 	},
 /turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
@@ -3440,7 +3463,8 @@
 /area/department_main/manager)
 "zE" = (
 /obj/machinery/light{
-	dir = 1
+	dir = 1;
+	bulb_colour = "#FF3232"
 	},
 /obj/effect/turf_decal/siding/brown{
 	dir = 1
@@ -3520,7 +3544,6 @@
 /area/city/outskirtsfactory)
 "Aa" = (
 /obj/structure/sigsystem/connector{
-	delay_time = 90;
 	dir = 1;
 	happens_once = 1
 	},
@@ -3544,7 +3567,8 @@
 /area/facility_hallway/manager)
 "Ag" = (
 /obj/machinery/light{
-	dir = 1
+	dir = 1;
+	bulb_colour = "#FF3232"
 	},
 /turf/open/floor/plasteel/white,
 /area/facility_hallway/manager)
@@ -3725,7 +3749,7 @@
 /area/facility_hallway/manager)
 "Bv" = (
 /obj/machinery/conveyor/auto{
-	dir = 1;
+	dir = 8;
 	resistance_flags = 64;
 	tamperproof = 1
 	},
@@ -3813,7 +3837,8 @@
 "Cr" = (
 /obj/structure/closet/cabinet,
 /obj/machinery/light{
-	dir = 1
+	dir = 1;
+	bulb_colour = "#FF3232"
 	},
 /turf/open/floor/wood,
 /area/department_main/manager)
@@ -3914,7 +3939,8 @@
 "Dd" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/machinery/light/small/red{
-	dir = 4
+	dir = 4;
+	nightshift_allowed = 1
 	},
 /mob/living/simple_animal/hostile/ordeal/grungeon_shielder,
 /turf/open/floor/facility/dark,
@@ -3981,10 +4007,6 @@
 	},
 /turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
-"DR" = (
-/obj/effect/decal/cleanable/oil/slippery,
-/turf/open/floor/mineral/plastitanium,
-/area/city/outskirtsfactory)
 "DU" = (
 /obj/effect/turf_decal/siding/red/corner{
 	dir = 4
@@ -4030,8 +4052,9 @@
 /turf/open/floor/wood,
 /area/facility_hallway/manager)
 "Ek" = (
-/obj/machinery/light/small/red{
-	dir = 4
+/obj/machinery/light/small{
+	dir = 4;
+	bulb_colour = "#FF3232"
 	},
 /turf/open/floor/mineral/plastitanium/red,
 /area/city/outskirtsfactory)
@@ -4059,8 +4082,9 @@
 /turf/open/floor/wood,
 /area/facility_hallway/manager)
 "Et" = (
-/obj/machinery/light/red{
-	dir = 1
+/obj/machinery/light{
+	dir = 1;
+	bulb_colour = "#FF3232"
 	},
 /turf/open/floor/mineral/plastitanium/red,
 /area/city/outskirtsfactory)
@@ -4086,7 +4110,7 @@
 	},
 /obj/structure/sigsystem/connector{
 	dir = 1;
-	delay_time = 250
+	delay_time = 150
 	},
 /turf/open/floor/facility/dark,
 /area/city/outskirtsfactory)
@@ -4147,7 +4171,9 @@
 /area/city/outskirtsfactory)
 "Fg" = (
 /obj/structure/table,
-/obj/machinery/light,
+/obj/machinery/light{
+	bulb_colour = "#FF3232"
+	},
 /obj/item/toy/plush/bongbong,
 /turf/open/floor/plasteel/dark,
 /area/facility_hallway/manager)
@@ -4165,8 +4191,9 @@
 /turf/open/floor/carpet/royalblack,
 /area/facility_hallway/manager)
 "Fm" = (
-/obj/machinery/light/red{
-	dir = 1
+/obj/machinery/light{
+	dir = 1;
+	bulb_colour = "#FF3232"
 	},
 /turf/open/floor/pod/light,
 /area/city/outskirtsfactory)
@@ -4175,7 +4202,8 @@
 	dir = 4
 	},
 /obj/machinery/light{
-	dir = 4
+	dir = 4;
+	bulb_colour = "#FF3232"
 	},
 /obj/structure/table/reinforced,
 /obj/item/weldingtool/largetank{
@@ -4399,7 +4427,7 @@
 	name = "wing-grade railing";
 	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
 	mouse_opacity = 0;
-	dir = 1
+	dir = 4
 	},
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
@@ -4447,10 +4475,6 @@
 /obj/structure/sigsystem/tower/button{
 	pixel_x = 28;
 	signal_code = 09
-	},
-/obj/structure/sigsystem/tower{
-	signal_code = 09;
-	dir = 1
 	},
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
@@ -4502,7 +4526,8 @@
 	light_color = "#333333"
 	},
 /obj/machinery/light{
-	dir = 1
+	dir = 1;
+	bulb_colour = "#FF3232"
 	},
 /obj/effect/turf_decal/siding/wood{
 	dir = 1
@@ -4514,28 +4539,31 @@
 "HA" = (
 /obj/machinery/vending/lobotomyuniform,
 /obj/machinery/light{
-	dir = 1
+	dir = 1;
+	bulb_colour = "#FF3232"
 	},
 /turf/open/floor/plasteel/white,
 /area/facility_hallway/manager)
-"HC" = (
-/obj/structure/sigsystem/tower{
-	signal_code = 92
-	},
-/turf/open/floor/mineral/gold,
-/area/city/outskirtsfactory)
 "HD" = (
 /obj/effect/turf_decal/siding/red,
 /obj/structure/sigsystem/connector/split{
 	dir = 1;
 	happens_once = 1
 	},
-/obj/machinery/light/small/red,
+/obj/machinery/light/small{
+	bulb_colour = "#FF3232"
+	},
 /turf/open/floor/circuit/red,
 /area/city/outskirtsfactory)
+"HH" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/machinery/light,
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirtsfactory)
 "HI" = (
-/obj/machinery/light/red{
-	dir = 4
+/obj/machinery/light{
+	dir = 4;
+	bulb_colour = "#FF3232"
 	},
 /turf/open/floor/pod/light,
 /area/city/outskirtsfactory)
@@ -4714,7 +4742,9 @@
 /obj/structure/table/wood,
 /obj/item/clothing/suit/apron/chef,
 /obj/item/clothing/head/chefhat,
-/obj/machinery/light,
+/obj/machinery/light{
+	bulb_colour = "#FF3232"
+	},
 /turf/open/floor/wood,
 /area/department_main/manager)
 "Jc" = (
@@ -4732,7 +4762,7 @@
 /turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
 "Jf" = (
-/obj/machinery/light/small/red{
+/obj/machinery/light/small{
 	dir = 1
 	},
 /turf/open/floor/mineral/plastitanium,
@@ -4741,7 +4771,8 @@
 /obj/item/bedsheet/dorms,
 /obj/structure/bed,
 /obj/machinery/light{
-	dir = 1
+	dir = 1;
+	bulb_colour = "#FF3232"
 	},
 /turf/open/floor/wood,
 /area/department_main/manager)
@@ -4847,14 +4878,15 @@
 /area/city/outskirtsfactory)
 "Kk" = (
 /obj/structure/sigsystem/announcer{
-	message_range = 5;
+	message_range = 7;
 	message = "Unauthorized access detected. Door opening delayed."
 	},
 /turf/closed/indestructible/syndicate,
 /area/city/outskirtsfactory)
 "Kl" = (
 /obj/machinery/light{
-	dir = 1
+	dir = 1;
+	bulb_colour = "#FF3232"
 	},
 /turf/open/floor/carpet/red,
 /area/facility_hallway/manager)
@@ -4877,14 +4909,17 @@
 /turf/open/floor/facility/dark,
 /area/city/outskirtsfactory)
 "KD" = (
-/obj/machinery/door/poddoor/shutters/indestructible{
-	lockpickable = 0;
+/obj/machinery/conveyor/auto{
+	dir = 4;
 	resistance_flags = 64;
-	id = "furnaceaccess"
+	tamperproof = 1
 	},
-/obj/structure/sigsystem/activator,
-/obj/structure/sigsystem/connector{
-	dir = 8
+/obj/structure/railing{
+	resistance_flags = 115;
+	name = "wing-grade railing";
+	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
+	mouse_opacity = 0;
+	dir = 4
 	},
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
@@ -4892,13 +4927,15 @@
 /obj/structure/table/wood,
 /obj/item/flashlight/lamp,
 /obj/machinery/light{
-	dir = 1
+	dir = 1;
+	bulb_colour = "#FF3232"
 	},
 /turf/open/floor/carpet/royalblack,
 /area/department_main/manager)
 "KR" = (
-/obj/machinery/light/small/red{
-	dir = 4
+/obj/machinery/light/small{
+	dir = 4;
+	bulb_colour = "#FF3232"
 	},
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/turf_decal/siding/green{
@@ -4928,7 +4965,8 @@
 /area/facility_hallway/manager)
 "Li" = (
 /obj/machinery/light{
-	dir = 1
+	dir = 1;
+	bulb_colour = "#FF3232"
 	},
 /obj/structure/lootcrate/tres,
 /obj/effect/decal/cleanable/dirt/dust,
@@ -4936,8 +4974,9 @@
 /area/city/outskirtsfactory)
 "Lj" = (
 /obj/effect/decal/cleanable/blood/gibs/old,
-/obj/machinery/light/small/red{
-	dir = 4
+/obj/machinery/light/small{
+	dir = 4;
+	bulb_colour = "#FF3232"
 	},
 /turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
@@ -4976,7 +5015,9 @@
 /turf/open/floor/carpet/royalblue,
 /area/facility_hallway/manager)
 "LB" = (
-/obj/machinery/light,
+/obj/machinery/light{
+	bulb_colour = "#FF3232"
+	},
 /obj/machinery/newscaster/security_unit{
 	pixel_y = -32
 	},
@@ -4989,7 +5030,9 @@
 /turf/open/floor/carpet/royalblack,
 /area/facility_hallway/manager)
 "LF" = (
-/obj/machinery/light,
+/obj/machinery/light{
+	bulb_colour = "#FF3232"
+	},
 /obj/machinery/vending/snack/green,
 /turf/open/floor/plasteel,
 /area/department_main/manager)
@@ -5015,7 +5058,9 @@
 /obj/structure/chair/wood{
 	dir = 4
 	},
-/obj/machinery/light,
+/obj/machinery/light{
+	bulb_colour = "#FF3232"
+	},
 /turf/open/floor/wood,
 /area/department_main/manager)
 "LR" = (
@@ -5087,8 +5132,9 @@
 /turf/open/floor/plasteel/showroomfloor,
 /area/facility_hallway/manager)
 "MC" = (
-/obj/machinery/light/red{
-	dir = 4
+/obj/machinery/light{
+	dir = 4;
+	bulb_colour = "#FF3232"
 	},
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/pod/light,
@@ -5123,7 +5169,8 @@
 /obj/machinery/shower,
 /obj/item/soap/deluxe,
 /obj/machinery/light{
-	dir = 4
+	dir = 4;
+	bulb_colour = "#FF3232"
 	},
 /turf/open/floor/noslip,
 /area/facility_hallway/manager)
@@ -5203,7 +5250,8 @@
 /area/city/outskirtsfactory)
 "Nx" = (
 /obj/machinery/light{
-	dir = 1
+	dir = 1;
+	bulb_colour = "#FF3232"
 	},
 /turf/open/floor/plasteel/dark,
 /area/facility_hallway/manager)
@@ -5227,6 +5275,12 @@
 	dir = 4
 	},
 /obj/structure/table/glass,
+/obj/machinery/button/door/indestructible{
+	id = "disc_blast";
+	name = "External Elevator Opening";
+	req_access_txt = "20";
+	pixel_y = 7
+	},
 /turf/open/floor/carpet/cyan,
 /area/department_main/manager)
 "NH" = (
@@ -5248,8 +5302,9 @@
 /turf/open/floor/wood,
 /area/facility_hallway/manager)
 "NV" = (
-/obj/machinery/light/small/red{
-	dir = 8
+/obj/machinery/light/small{
+	dir = 8;
+	bulb_colour = "#FF3232"
 	},
 /obj/effect/turf_decal/siding/green{
 	dir = 8
@@ -5316,15 +5371,6 @@
 /obj/effect/turf_decal,
 /turf/open/floor/plasteel/dark,
 /area/facility_hallway/manager)
-"OV" = (
-/obj/structure/destructible/cult/forge{
-	resistance_flags = 64;
-	desc = "A forge used in crafting various parts.";
-	name = "forge"
-	},
-/obj/machinery/light,
-/turf/open/floor/mineral/plastitanium,
-/area/city/outskirtsfactory)
 "OZ" = (
 /obj/machinery/door/airlock/public/glass{
 	name = "Arcade"
@@ -5377,13 +5423,6 @@
 	},
 /turf/open/floor/pod/light,
 /area/city/outskirtsfactory)
-"PA" = (
-/obj/effect/turf_decal/siding/thinplating/light{
-	dir = 8
-	},
-/obj/effect/decal/cleanable/oil/slippery,
-/turf/open/floor/facility,
-/area/city/outskirtsfactory)
 "PK" = (
 /obj/machinery/requests_console{
 	announcementConsole = 1;
@@ -5401,14 +5440,16 @@
 /turf/open/floor/wood,
 /area/department_main/manager)
 "PP" = (
-/obj/machinery/light/small/red{
-	dir = 8
+/obj/machinery/light/small{
+	dir = 8;
+	bulb_colour = "#FF3232"
 	},
 /turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
 "PR" = (
-/obj/machinery/light/red{
-	dir = 1
+/obj/machinery/light{
+	dir = 1;
+	bulb_colour = "#FF3232"
 	},
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/pod/light,
@@ -5427,7 +5468,8 @@
 /obj/item/storage/fancy/candle_box,
 /obj/item/lighter,
 /obj/machinery/light{
-	dir = 1
+	dir = 1;
+	bulb_colour = "#FF3232"
 	},
 /turf/open/floor/wood,
 /area/department_main/manager)
@@ -5464,7 +5506,9 @@
 /turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
 "Qq" = (
-/obj/machinery/light,
+/obj/machinery/light{
+	bulb_colour = "#FF3232"
+	},
 /obj/structure/table/wood,
 /obj/item/reagent_containers/food/drinks/bottle/champagne,
 /turf/open/floor/wood,
@@ -5575,8 +5619,9 @@
 /turf/open/floor/plasteel/white,
 /area/facility_hallway/manager)
 "QW" = (
-/obj/machinery/light/red{
-	dir = 8
+/obj/machinery/light{
+	dir = 8;
+	bulb_colour = "#FF3232"
 	},
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
@@ -5594,10 +5639,14 @@
 /turf/open/floor/facility/dark,
 /area/facility_hallway/manager)
 "Rm" = (
-/obj/machinery/light,
+/obj/machinery/light{
+	bulb_colour = "#FF3232"
+	},
 /obj/structure/table/wood,
 /obj/machinery/computer/security/wooden_tv,
-/obj/machinery/light,
+/obj/machinery/light{
+	bulb_colour = "#FF3232"
+	},
 /turf/open/floor/wood,
 /area/department_main/manager)
 "Rn" = (
@@ -5716,7 +5765,8 @@
 /area/department_main/manager)
 "SA" = (
 /obj/machinery/light{
-	dir = 1
+	dir = 1;
+	bulb_colour = "#FF3232"
 	},
 /obj/structure/chair/sofa/corp,
 /turf/open/floor/facility/dark,
@@ -5731,7 +5781,8 @@
 "SH" = (
 /obj/machinery/griddle,
 /obj/machinery/light{
-	dir = 1
+	dir = 1;
+	bulb_colour = "#FF3232"
 	},
 /turf/open/floor/wood,
 /area/department_main/manager)
@@ -5773,8 +5824,9 @@
 /turf/open/floor/plasteel/white,
 /area/facility_hallway/manager)
 "SQ" = (
-/obj/machinery/light/small/red{
-	dir = 8
+/obj/machinery/light/small{
+	dir = 8;
+	bulb_colour = "#FF3232"
 	},
 /turf/open/floor/pod/light,
 /area/city/outskirtsfactory)
@@ -5869,13 +5921,6 @@
 	},
 /turf/open/floor/plating/asteroid/basalt,
 /area/city/outskirtsfactory)
-"TY" = (
-/obj/item/caution{
-	pixel_y = 7;
-	pixel_x = -3
-	},
-/turf/open/floor/mineral/plastitanium,
-/area/city/outskirtsfactory)
 "TZ" = (
 /obj/effect/turf_decal/siding/wood{
 	dir = 6
@@ -5883,8 +5928,9 @@
 /turf/open/floor/wood,
 /area/facility_hallway/manager)
 "Ua" = (
-/obj/machinery/light/red{
-	dir = 1
+/obj/machinery/light{
+	dir = 1;
+	bulb_colour = "#FF3232"
 	},
 /obj/effect/turf_decal/stripes{
 	dir = 1
@@ -6111,7 +6157,7 @@
 /area/facility_hallway/manager)
 "Wc" = (
 /obj/structure/sigsystem/connector{
-	delay_time = 100;
+	delay_time = 30;
 	dir = 4
 	},
 /turf/closed/indestructible/syndicate,
@@ -6199,8 +6245,9 @@
 /turf/open/floor/carpet/cyan,
 /area/department_main/manager)
 "Xg" = (
-/obj/machinery/light/small/red{
-	dir = 8
+/obj/machinery/light/small{
+	dir = 8;
+	bulb_colour = "#FF3232"
 	},
 /obj/structure/sigsystem/connector{
 	dir = 1
@@ -6226,7 +6273,9 @@
 /obj/machinery/computer/crew{
 	dir = 1
 	},
-/obj/machinery/light,
+/obj/machinery/light{
+	bulb_colour = "#FF3232"
+	},
 /obj/effect/turf_decal/siding/wood{
 	dir = 7
 	},
@@ -6248,18 +6297,6 @@
 /obj/item/food/bread/plain,
 /turf/open/floor/plasteel/white,
 /area/facility_hallway/manager)
-"Xq" = (
-/obj/effect/turf_decal/siding/blue{
-	dir = 5
-	},
-/obj/machinery/button/door/indestructible{
-	id = "disc_blast";
-	name = "External Elevator Opening";
-	pixel_y = -25;
-	req_access_txt = "20"
-	},
-/turf/open/floor/carpet/cyan,
-/area/department_main/manager)
 "Xs" = (
 /obj/effect/turf_decal/siding/blue{
 	dir = 9
@@ -6332,7 +6369,8 @@
 	dir = 4
 	},
 /obj/machinery/light{
-	dir = 1
+	dir = 1;
+	bulb_colour = "#FF3232"
 	},
 /obj/effect/turf_decal/siding/white{
 	dir = 1
@@ -6357,18 +6395,8 @@
 /turf/open/floor/facility/dark,
 /area/facility_hallway/manager)
 "XX" = (
-/obj/machinery/conveyor/auto{
-	dir = 4;
-	resistance_flags = 64;
-	tamperproof = 1
-	},
-/obj/structure/railing{
-	resistance_flags = 115;
-	name = "wing-grade railing";
-	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
-	mouse_opacity = 0;
-	dir = 8
-	},
+/obj/effect/decal/cleanable/dirt/dust,
+/mob/living/simple_animal/hostile/ordeal/green_bot,
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
 "XZ" = (
@@ -6445,8 +6473,9 @@
 /turf/open/floor/wood,
 /area/facility_hallway/manager)
 "YD" = (
-/obj/machinery/light/red{
-	dir = 4
+/obj/machinery/light{
+	dir = 4;
+	bulb_colour = "#FF3232"
 	},
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/facility/dark,
@@ -6556,8 +6585,9 @@
 /turf/open/floor/carpet/royalblack,
 /area/department_main/manager)
 "Zh" = (
-/obj/machinery/light/red{
-	dir = 1
+/obj/machinery/light{
+	dir = 1;
+	bulb_colour = "#FF3232"
 	},
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
@@ -6617,7 +6647,8 @@
 	dir = 8
 	},
 /obj/machinery/light{
-	dir = 4
+	dir = 4;
+	bulb_colour = "#FF3232"
 	},
 /turf/open/floor/plasteel/showroomfloor,
 /area/facility_hallway/manager)
@@ -6651,7 +6682,8 @@
 /area/facility_hallway/manager)
 "ZV" = (
 /obj/machinery/light{
-	dir = 1
+	dir = 1;
+	bulb_colour = "#FF3232"
 	},
 /turf/open/floor/facility/dark,
 /area/facility_hallway/manager)
@@ -13143,10 +13175,10 @@ dF
 Uq
 Ve
 co
-Ve
+HH
 dF
-XO
-XO
+dF
+dF
 dF
 aP
 sr
@@ -13400,20 +13432,20 @@ dF
 Ve
 rm
 co
-OV
-dF
-dF
-dF
-dF
-aP
-sr
-sr
-sr
-sr
-sr
-sr
-sr
-sr
+rm
+oq
+Ve
+ar
+oq
+Bv
+pq
+vF
+jI
+vF
+vF
+vF
+vF
+vF
 dF
 dF
 dF
@@ -13658,19 +13690,19 @@ oq
 rB
 oq
 oQ
-gv
+oq
+oq
+oq
 Ve
-ar
-TY
-GY
-pq
-vF
-pq
-vF
-XX
-Bv
-Bv
-Bv
+tb
+Ve
+oq
+Ve
+oq
+co
+Ja
+Ja
+Ja
 gQ
 VE
 xE
@@ -13915,9 +13947,9 @@ wQ
 oq
 oq
 Ve
-KD
 oq
-Ve
+oq
+XX
 Ve
 tb
 oq
@@ -14169,20 +14201,20 @@ XO
 XO
 dF
 kZ
-DR
+oq
 Ve
 Ve
-KD
-jI
+oq
+Ve
 Hr
 Ve
 GY
 mT
-yT
+sq
 mT
 mT
-co
-mT
+KD
+gv
 mT
 sq
 dF
@@ -14194,7 +14226,7 @@ dF
 JV
 RI
 lB
-zr
+cU
 lB
 Fi
 cs
@@ -18166,7 +18198,7 @@ wy
 AV
 Qf
 PN
-Xq
+Sy
 NF
 Ao
 Gy
@@ -19056,7 +19088,7 @@ dF
 Jr
 dF
 xA
-sk
+lB
 lB
 Qn
 lB
@@ -21072,8 +21104,8 @@ XO
 dF
 jl
 Vx
-HC
-cW
+Vx
+Lp
 gL
 Nm
 Hl
@@ -21331,7 +21363,7 @@ Gh
 Vx
 Vx
 zA
-mI
+dF
 Nm
 oq
 Nm
@@ -22160,7 +22192,7 @@ XO
 dF
 MW
 gh
-PA
+gh
 pc
 gh
 gh
@@ -22420,7 +22452,7 @@ DV
 DV
 Iv
 DV
-qW
+DV
 UW
 dF
 vp
@@ -22932,7 +22964,7 @@ dF
 bW
 Iv
 DV
-qW
+DV
 DV
 DV
 Ot
