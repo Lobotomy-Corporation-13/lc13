@@ -20,6 +20,8 @@
 		return FALSE
 	if(target.do_not_possess)
 		return FALSE
+	if(is_tutorial_level(target.z)) // Don't bully the interns please
+		return FALSE
 	if(target.ckey || target.mind || (target in GLOB.player_list)) //Home, or on the way back.
 		return FALSE
 	if(IsPossessionLocked(target))

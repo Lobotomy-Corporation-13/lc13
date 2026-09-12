@@ -646,7 +646,7 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 
 	var/list/possessible = list()
 	for(var/mob/living/L in GLOB.alive_mob_list)
-		if(!is_centcom_level(L.z))
+		if(SSmaptype.maptype == "limbus_labs" && !is_centcom_level(L.z)) // Apply a Z level restriction but only on LCL. (CentCom is the LCL Z level!)
 			continue
 		// LOBOTOMYCORPORATION EDIT -- one shared gate, see ModularLobotomy/misc_procs.dm
 		if(!IsGhostPossessable(L))
