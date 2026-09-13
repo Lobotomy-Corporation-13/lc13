@@ -1,5 +1,0 @@
-author: "tile4"
-delete-after: True
-changes:
-  - balance: "rebalanced realized armor values"
-  - bugfix: "fixed some missing datums and some code placement"
