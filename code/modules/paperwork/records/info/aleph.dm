@@ -6,6 +6,7 @@
 		"When the work result was Good, the Qliphoth Counter lowered.",
 		"When the work result was Bad, the Qliphoth Counter lowered.",
 		"The music that is played by The Silent Orchestra when it escapes consists of 4 Movements. As the piece progresses, the employees listening will suffer WHITE damage and the size of the audible area of the music will expand.",
+		"When movement changed, each agent in the facility was sapped of their strength.",
 		"For each Movement, the weakness of The Silent Orchestra changed. The 1st Movement was Pale, while the 2nd Movement was Black. For the 3rd Movement it was White, and lastly, during the 4th Movement, only Red type attacks were effective. When the music reached the climax, The Silent Orchestra became immune to all forms of attack.")
 	abno_breach_damage_type = "White"
 	abno_breach_damage_count = "Moderate to High"
