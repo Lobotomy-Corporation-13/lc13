@@ -146,7 +146,7 @@
 	return FALSE
 
 /obj/projectile/clown_throw_rca/on_hit(atom/target, blocked = FALSE)
-	if(ishuman(target))
+	if(ishuman(target) && !isrcabnormalitymob(target))
 		damage = 5
 		nodamage = FALSE
 		var/mob/living/carbon/human/H = target
@@ -156,7 +156,7 @@
 		qdel(src)
 
 	if(isrcabnormalitymob(target))
-		to_chat(target, "The [src] flies right past you!")
+		to_chat(target, "[src] flies right past you!")
 		return
 	..()
 
