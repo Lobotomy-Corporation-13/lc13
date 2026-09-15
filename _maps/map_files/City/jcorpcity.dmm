@@ -1795,14 +1795,19 @@
 /turf/open/floor/wood,
 /area/city/house)
 "qF" = (
-/obj/structure/rack,
-/obj/item/workshop_mod/regular/white,
 /obj/effect/turf_decal/siding/thinplating/dark{
 	dir = 1
 	},
 /obj/effect/turf_decal/siding/thinplating/dark{
 	dir = 10
 	},
+/obj/structure/rack,
+/obj/structure/lootcrate/tres,
+/obj/structure/lootcrate/tres,
+/obj/structure/lootcrate/tres,
+/obj/structure/lootcrate/tres,
+/obj/structure/lootcrate/tres,
+/obj/item/crowbar/red,
 /turf/open/floor/facility/dark,
 /area/city/house)
 "qJ" = (
@@ -2937,13 +2942,6 @@
 /turf/open/indestructible/white,
 /area/city/shop)
 "zv" = (
-/obj/structure/rack,
-/obj/structure/lootcrate/tres,
-/obj/structure/lootcrate/tres,
-/obj/structure/lootcrate/tres,
-/obj/structure/lootcrate/tres,
-/obj/structure/lootcrate/tres,
-/obj/item/crowbar/red,
 /obj/machinery/light{
 	dir = 1
 	},
@@ -2951,6 +2949,7 @@
 /obj/effect/turf_decal/siding/thinplating/dark{
 	dir = 9
 	},
+/obj/machinery/vending/prosthetic,
 /turf/open/floor/facility/dark,
 /area/city/house)
 "zB" = (
@@ -4720,6 +4719,7 @@
 /obj/effect/turf_decal/siding/thinplating/dark{
 	dir = 1
 	},
+/obj/item/workshop_mod/regular/white,
 /turf/open/floor/facility/dark,
 /area/city/house)
 "OT" = (
@@ -5775,6 +5775,14 @@
 	},
 /turf/open/floor/wood,
 /area/city/shop)
+"Zf" = (
+/obj/machinery/body_modification_catalogue{
+	pixel_x = -32
+	},
+/turf/open/floor/wood{
+	color = "#ccc8c0"
+	},
+/area/city/house)
 "Zk" = (
 /obj/effect/spawner/room/backstreets/large_north,
 /turf/closed/indestructible/reinforced,
@@ -5855,6 +5863,15 @@
 	},
 /turf/open/floor/plasteel/dark,
 /area/city/house)
+"ZK" = (
+/obj/machinery/door/airlock/grunge{
+	name = "NO ENTRY";
+	req_access_txt = "150"
+	},
+/turf/open/floor/plating/dirt/jungle/dark{
+	slowdown = 0
+	},
+/area/city)
 "ZP" = (
 /obj/machinery/computer/operating{
 	dir = 4
@@ -31021,7 +31038,7 @@ fA
 cN
 Cp
 rg
-FX
+Zf
 jJ
 bk
 Na
@@ -52322,8 +52339,8 @@ Zq
 YF
 qn
 qn
-im
-im
+Na
+Na
 Na
 Na
 Na
@@ -52580,9 +52597,9 @@ qn
 qn
 qn
 im
-im
-im
-im
+Na
+Na
+Na
 Na
 Na
 Na
@@ -52828,6 +52845,7 @@ Na
 Na
 Na
 Na
+Fr
 Na
 Na
 Na
@@ -52839,7 +52857,6 @@ Na
 Na
 Na
 Na
-im
 Na
 DJ
 Na
@@ -53085,6 +53102,7 @@ Na
 Na
 Na
 Na
+ZK
 Na
 Na
 Na
@@ -53096,7 +53114,6 @@ Na
 Na
 Na
 Na
-im
 Na
 Na
 Na
@@ -53342,7 +53359,7 @@ Na
 Na
 Na
 Na
-Na
+im
 Na
 Na
 Na

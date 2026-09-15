@@ -2891,19 +2891,13 @@
 /turf/open/floor/stone,
 /area/city/shop)
 "sg" = (
-/obj/structure/rack,
-/obj/structure/lootcrate/tres,
-/obj/structure/lootcrate/tres,
-/obj/structure/lootcrate/tres,
-/obj/structure/lootcrate/tres,
-/obj/structure/lootcrate/tres,
-/obj/item/crowbar/red,
 /obj/machinery/light{
 	dir = 1
 	},
 /obj/effect/turf_decal/siding/thinplating/dark{
 	dir = 9
 	},
+/obj/machinery/vending/prosthetic,
 /turf/open/floor/stone,
 /area/city/shop)
 "sh" = (
@@ -3183,12 +3177,9 @@
 /turf/open/floor/wood,
 /area/city/fixers)
 "tO" = (
-/obj/item/wirecutters,
-/obj/item/wirecutters,
-/obj/item/wirecutters,
-/obj/item/wirecutters,
-/turf/open/floor/stone,
-/area/city/backstreets_room)
+/obj/structure/flora/ausbushes/ywflowers,
+/turf/open/floor/plating/ashplanet/rocky,
+/area/city)
 "tP" = (
 /obj/structure/table/rolling,
 /obj/item/roller{
@@ -3395,6 +3386,10 @@
 	dir = 4
 	},
 /turf/open/floor/stone,
+/area/city/shop)
+"vk" = (
+/obj/machinery/body_modification_catalogue,
+/turf/closed/indestructible/wood,
 /area/city/shop)
 "vq" = (
 /obj/structure/table/wood,
@@ -3858,11 +3853,16 @@
 /turf/open/floor/wood,
 /area/city/house)
 "ys" = (
-/obj/structure/rack,
-/obj/item/workshop_mod/regular/white,
 /obj/effect/turf_decal/siding/thinplating/dark{
 	dir = 10
 	},
+/obj/structure/rack,
+/obj/structure/lootcrate/tres,
+/obj/structure/lootcrate/tres,
+/obj/structure/lootcrate/tres,
+/obj/structure/lootcrate/tres,
+/obj/structure/lootcrate/tres,
+/obj/item/crowbar/red,
 /turf/open/floor/stone,
 /area/city/shop)
 "yw" = (
@@ -3948,6 +3948,16 @@
 	},
 /turf/open/floor/wood,
 /area/city/fixers)
+"zk" = (
+/obj/structure/delivery_door{
+	density = 1;
+	icon = 'icons/obj/votebox.dmi';
+	icon_state = "votebox_maint";
+	name = "mail box";
+	desc = "A mailbox for this evil mountain lair."
+	},
+/turf/closed/indestructible/reinforced,
+/area/city/backstreets_alley)
 "zl" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/machinery/button/door{
@@ -4968,6 +4978,9 @@
 	},
 /turf/open/floor/plating/grass,
 /area/city)
+"Ft" = (
+/turf/closed/indestructible/reinforced,
+/area/city/backstreets_alley)
 "Fw" = (
 /obj/effect/turf_decal/bot,
 /obj/structure/closet/crate/bin,
@@ -5629,6 +5642,13 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/closed/wall/mineral/iron,
 /area/city/fixers)
+"Js" = (
+/obj/machinery/door/airlock/grunge{
+	name = "NO ENTRY";
+	req_access_txt = "150"
+	},
+/turf/closed/indestructible/rock,
+/area/city/backstreets_alley)
 "Jv" = (
 /obj/item/statuebust{
 	anchored = 1
@@ -7972,6 +7992,7 @@
 /obj/structure/rack,
 /obj/item/workshop_mod/regular/black,
 /obj/effect/turf_decal/siding/thinplating/dark,
+/obj/item/workshop_mod/regular/white,
 /turf/open/floor/stone,
 /area/city/shop)
 "XJ" = (
@@ -51674,7 +51695,7 @@ Ih
 wB
 gr
 gr
-gl
+vk
 bw
 cq
 ZS
@@ -52705,8 +52726,8 @@ bw
 bw
 bw
 bw
-bw
-RT
+ZS
+tO
 bw
 bw
 bw
@@ -52962,8 +52983,8 @@ bw
 bw
 bw
 bw
-bw
-bw
+ZS
+ZS
 bw
 bw
 bw
@@ -53216,11 +53237,11 @@ gl
 px
 dy
 bw
+iC
 bw
-bw
-bw
-bw
-bw
+gu
+ZS
+ZS
 dy
 bw
 bw
@@ -53475,8 +53496,8 @@ bw
 bw
 bw
 bw
-cm
-bw
+gu
+gu
 bw
 bw
 bw
@@ -53730,7 +53751,7 @@ gl
 bw
 bw
 bw
-iC
+gu
 bw
 bw
 bw
@@ -53988,9 +54009,9 @@ FH
 bw
 bw
 bw
+gu
 bw
-bw
-bw
+cm
 bw
 bw
 bw
@@ -54243,7 +54264,7 @@ bw
 sN
 bw
 bw
-bw
+gu
 bw
 FH
 bw
@@ -54499,8 +54520,8 @@ bw
 ji
 VG
 cm
-bw
-bw
+gu
+gu
 bw
 bw
 bw
@@ -54755,9 +54776,9 @@ UM
 UM
 UM
 cw
-UM
 eo
-UM
+eo
+eo
 UM
 UM
 UM
@@ -55012,9 +55033,9 @@ gu
 gu
 gu
 oH
-oH
+AU
 gu
-gu
+AU
 gu
 gu
 gu
@@ -57577,14 +57598,14 @@ IR
 IR
 IR
 IR
-IR
-IR
-IR
-IR
-YS
-YS
-YS
-IR
+Bx
+Bx
+Bx
+Bx
+zk
+Js
+Ft
+Bx
 IR
 IR
 IR
@@ -57835,12 +57856,12 @@ Bx
 Bx
 Bx
 Bx
-Bx
-Bx
-Bx
-Bx
-Bx
-Bx
+Ft
+Ft
+Ft
+YS
+YS
+Ft
 Bx
 Bx
 Bx
@@ -58350,7 +58371,7 @@ pG
 pG
 pG
 Mo
-tO
+dw
 dw
 dw
 dw
