@@ -358,5 +358,5 @@
 	new /obj/effect/temp_visual/tbirdlightning (get_turf(L))
 	L.deal_damage(lightning_damage, WHITE_DAMAGE, firer, attack_type = (ATTACK_TYPE_SPECIAL))
 	playsound(src, 'sound/effects/impact_thunder.ogg', 50, FALSE, 40, falloff_distance = 10)
-	..()
+	return ..()
 
