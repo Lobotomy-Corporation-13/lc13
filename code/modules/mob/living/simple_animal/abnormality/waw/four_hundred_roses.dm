@@ -121,7 +121,7 @@
 /mob/living/simple_animal/hostile/mini_roses/Destroy()
 	boss = null
 	QDEL_LIST(vines)
-	..()
+	return ..()
 
 /mob/living/simple_animal/hostile/mini_roses/Life()
 	. = ..()
