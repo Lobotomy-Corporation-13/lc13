@@ -56,7 +56,7 @@
 		"T-04-111 was capable of holding both Fragility and Strength 'stacks', that it would release over time.",
 		"When the work result was Bad, T-04-111 gained many 'stacks' of fragility.",
 		"When work was completed, T-04-111 gains a few 'stacks' of strength.",
-		"When employees with Prudence Level 3 or higher completed their work, they were consumed by T-04-111 unless their Fortitude was Level 4 or higher.",
+		"When employees with Prudence Level 3 or higher completed their work, they were consumed by T-04-111 unless their Fortitude was Level 3 or higher.",
 		"The above action generates many 'stacks' of Strength.",
 		"When employees with Prudence Level 1 completed their work with T-04-111, the Qliphoth Counter decreased.",
 		"The above action generates 'stacks' of Strength.",

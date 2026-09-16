@@ -54,7 +54,7 @@
 		if(H.z!=z)
 			continue
 		targets+=H
-	
+
 	if(!length(targets))
 		return
 
@@ -89,11 +89,11 @@
 	//if your prudence is low, give a short hallucination, apply empowerment and lower counter.
 	if(get_attribute_level(user, PRUDENCE_ATTRIBUTE) < 40) // below level 2
 		user.hallucination += 20
-		empower_stacks += 4
+		empower_stacks += 5
 		datum_reference.qliphoth_change(-1)
 		return ..()
 
-	if(get_attribute_level(user, FORTITUDE_ATTRIBUTE) >= 80) // fort 4 or higher
+	if(get_attribute_level(user, FORTITUDE_ATTRIBUTE) >= 60) // fort 3 or higher
 		return ..()
 
 	if(get_attribute_level(user, PRUDENCE_ATTRIBUTE) < 60) // below level 3, don't dust.
