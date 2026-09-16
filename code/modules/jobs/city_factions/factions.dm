@@ -39,7 +39,7 @@
 /datum/city_faction/fullstop
 	name = "Full Stop Office"
 	category = CITY_FACTION_MINOR
-	leader_job = /datum/job/operator
+	leader_job = /datum/job/Fullop
 	requires_leader = TRUE
 
 /datum/city_faction/liu
