@@ -121,7 +121,7 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 	if(C.current_ticket)
 		var/datum/admin_help/T = C.current_ticket
 		T.AddInteraction("Client disconnected.")
-		SSblackbox.LogAhelp(T, "Disconnected", "Client disconnected", C.ckey)
+		INVOKE_ASYNC(SSblackbox, TYPE_PROC_REF(/datum/controller/subsystem/blackbox, LogAhelp), T, "Disconnected", "Client disconnected", C.ckey)
 		T.initiator = null
 
 //Get a ticket given a ckey
