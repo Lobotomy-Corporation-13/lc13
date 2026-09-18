@@ -5,11 +5,14 @@
 	/// Does this weapon support charge mechanics?
 	var/charge = FALSE
 	/// Is this weapon's special attack on attacking a target or using the weapon itself?
-	/// avaible flags: ABILITY_ON_ATTACK || ABILITY_ON_ACTIVATION || ABILITY_UNIQUE
+	/// avaible flags: ABILITY_ON_ATTACK || ABILITY_ON_ACTIVATION || ABILITY_UNIQUE || ABILITY_PARRY
 	var/ability_type = ABILITY_ON_ATTACK
 
 	/// do we gain charge from successfully hitting a non-dead/godmode enemy?
 	var/attack_charge_gain = TRUE
+
+	/// do we gain charge from taking damage?
+	var/damage_charge_gain = FALSE
 
 	/// The current amount of charge we are storing.
 	var/charge_amount = 0
@@ -33,6 +36,10 @@
 	var/visible_activation
 	/// The message given if you fail to activate charge
 	var/failed_activation = "you try to charge your special attack... but your weapon does not respond!"
+
+	//Sounds and Visuals
+	var/charge_sound = 'sound/abnormalities/thunderbird/tbird_bolt.ogg'
+	var/charge_visual = /obj/effect/temp_visual/justitia_effect
 
 /obj/item/ego_weapon/Initialize(mapload)
 	. = ..()
@@ -109,9 +116,31 @@
 /// Default is to just play a sound effect and such
 /obj/item/ego_weapon/proc/ChargeAttack(mob/living/target, mob/living/user)
 	sleep(0.2 SECONDS)
-	playsound(src, 'sound/abnormalities/thunderbird/tbird_bolt.ogg', 50, TRUE)
+	playsound(src, charge_sound, 50, TRUE)
 	if(ability_type == ABILITY_ON_ATTACK)
 		currently_charging = FALSE
-		new /obj/effect/temp_visual/justitia_effect(get_turf(target))
+		new charge_visual(get_turf(target))
 	else
-		new /obj/effect/temp_visual/justitia_effect(get_turf(src))
+		new charge_visual(get_turf(src))
+
+
+//Parry charge weapons,
+/obj/item/ego_weapon/hit_reaction(mob/living/carbon/human/owner, atom/movable/hitby, attack_text = "the attack", final_block_chance = 0, damage = 0, attack_type = MELEE_ATTACK)
+	if(!charge)
+		return ..()
+
+	if(damage_charge_gain)
+		HandleCharge(1, skip_validation = TRUE)
+
+	if(ability_type != ABILITY_PARRY)
+		return..()
+
+	//Handle charge if you are a parry-type weapon.
+	if(charge_amount >= charge_cost)
+		charge_amount -= charge_cost
+		to_chat(user, span_notice(successfull_activation))
+		ChargeAttack(owner, owner)
+		if(visible_activation) // oh shit oh fuck
+			visible_message(span_danger(visible_activation))
+
+	return ..()
