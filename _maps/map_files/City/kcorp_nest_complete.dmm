@@ -583,6 +583,15 @@
 	},
 /turf/open/floor/carpet/royalblue,
 /area/city/shop)
+"dI" = (
+/obj/structure/railing{
+	dir = 1
+	},
+/obj/structure/railing{
+	dir = 1
+	},
+/turf/open/floor/plating,
+/area/city)
 "dN" = (
 /obj/structure/aquarium,
 /obj/structure/table,
@@ -5635,6 +5644,12 @@
 	},
 /turf/open/floor/facility/dark,
 /area/city/backstreets_room)
+"Jn" = (
+/obj/machinery/light/small{
+	dir = 4
+	},
+/turf/open/floor/stone,
+/area/city/backstreets_room)
 "Jq" = (
 /turf/open/floor/carpet/stellar,
 /area/city/shop)
@@ -5647,7 +5662,7 @@
 	name = "NO ENTRY";
 	req_access_txt = "150"
 	},
-/turf/closed/indestructible/rock,
+/turf/open/floor/stone,
 /area/city/backstreets_alley)
 "Jv" = (
 /obj/item/statuebust{
@@ -56105,9 +56120,9 @@ nx
 nx
 nx
 nx
-IR
-IR
-HK
+nx
+nx
+nx
 HK
 HK
 IR
@@ -56361,10 +56376,10 @@ pl
 pl
 pl
 pl
+pl
+pl
+pl
 nx
-HK
-IR
-IR
 HK
 IR
 IR
@@ -56618,10 +56633,10 @@ pl
 pl
 pl
 pl
+pl
+pl
+pl
 nx
-IR
-IR
-IR
 HK
 IR
 IR
@@ -56875,10 +56890,10 @@ pl
 pl
 pl
 pl
+pl
+pl
+pl
 nx
-IR
-IR
-IR
 IR
 HK
 HK
@@ -57132,10 +57147,10 @@ pl
 pl
 pl
 pl
+pl
+pl
+pl
 nx
-IR
-IR
-HK
 HK
 IR
 IR
@@ -57389,10 +57404,10 @@ pl
 pl
 pl
 pl
+pl
+pl
+pl
 nx
-IR
-HK
-IR
 IR
 IR
 IR
@@ -57646,10 +57661,10 @@ pl
 pl
 pl
 pl
+pl
+pl
+pl
 nx
-IR
-IR
-IR
 IR
 IR
 IR
@@ -57859,7 +57874,7 @@ Bx
 Ft
 Ft
 Ft
-YS
+Ft
 YS
 Ft
 Bx
@@ -57903,10 +57918,10 @@ pl
 pl
 pl
 pl
+pl
+pl
+pl
 nx
-Bx
-Bx
-Bx
 Bx
 Bx
 Bx
@@ -58151,7 +58166,10 @@ ZS
 ZS
 Ab
 Xl
-wu
+pl
+pl
+pl
+pl
 pl
 pl
 pl
@@ -58161,9 +58179,6 @@ pl
 pl
 pl
 nx
-pG
-pG
-pG
 pG
 pG
 pG
@@ -58373,7 +58388,7 @@ pG
 Mo
 dw
 dw
-dw
+Jn
 dw
 Mo
 pG
@@ -58417,6 +58432,9 @@ pl
 pl
 pl
 pl
+pl
+pl
+pl
 nx
 pG
 pG
@@ -58424,9 +58442,6 @@ pG
 DZ
 DZ
 DZ
-pG
-pG
-pG
 pG
 pG
 pG
@@ -58674,6 +58689,9 @@ pl
 pl
 pl
 pl
+pl
+pl
+pl
 nx
 pG
 pG
@@ -58684,9 +58702,6 @@ DZ
 DZ
 DZ
 DZ
-pG
-pG
-pG
 pG
 pG
 pG
@@ -58922,6 +58937,9 @@ ZS
 ZS
 Ab
 Xl
+wu
+pl
+pl
 pl
 pl
 pl
@@ -58941,9 +58959,6 @@ DZ
 DZ
 DZ
 DZ
-pG
-pG
-pG
 pG
 pG
 pG
@@ -59179,8 +59194,11 @@ ZS
 ZS
 ZA
 Xl
+dI
 pl
-lT
+pl
+pl
+pl
 pl
 pl
 pl
@@ -59196,9 +59214,6 @@ pG
 pG
 DZ
 DZ
-pG
-pG
-pG
 pG
 pG
 pG
@@ -59436,6 +59451,9 @@ ZS
 ZS
 Ab
 Xl
+wu
+pl
+pl
 pl
 pl
 pl
@@ -59455,9 +59473,6 @@ DZ
 DZ
 DZ
 DZ
-pG
-pG
-pG
 pG
 pG
 pG
@@ -59693,7 +59708,10 @@ ZS
 ZS
 Ab
 Xl
-wu
+pl
+lT
+pl
+pl
 pl
 pl
 pl
@@ -59712,9 +59730,6 @@ DZ
 DZ
 DZ
 DZ
-pG
-pG
-pG
 pG
 pG
 pG
@@ -59950,7 +59965,10 @@ ZS
 ZS
 Ab
 Xl
-wu
+pl
+pl
+pl
+pl
 pl
 pl
 pl
@@ -59960,9 +59978,6 @@ pl
 pl
 pl
 nx
-pG
-pG
-pG
 pG
 pG
 pG
@@ -60207,7 +60222,10 @@ ZS
 ZS
 Ab
 Xl
-wu
+pl
+pl
+pl
+pl
 pl
 pl
 pl
@@ -60217,9 +60235,6 @@ pl
 pl
 pl
 nx
-pG
-pG
-pG
 pG
 pG
 pG
@@ -60473,10 +60488,10 @@ pl
 pl
 pl
 pl
+pl
+pl
+pl
 nx
-pG
-pG
-pG
 pG
 pG
 pG
@@ -60730,10 +60745,10 @@ pl
 pl
 pl
 pl
+pl
+pl
+pl
 nx
-pG
-pG
-pG
 pG
 pG
 pG
@@ -60987,10 +61002,10 @@ pl
 pl
 pl
 pl
+pl
+pl
+pl
 nx
-pG
-pG
-pG
 pG
 pG
 pG
@@ -61244,10 +61259,10 @@ pl
 pl
 pl
 pl
+pl
+pl
+pl
 nx
-pG
-pG
-pG
 pG
 pG
 pG
@@ -61501,10 +61516,10 @@ pl
 pl
 pl
 pl
+pl
+pl
+pl
 nx
-pG
-pG
-pG
 pG
 pG
 pG
@@ -61758,10 +61773,10 @@ pl
 pl
 pl
 pl
+pl
+pl
+pl
 nx
-pG
-pG
-pG
 pG
 pG
 pG
@@ -62015,10 +62030,10 @@ pl
 pl
 pl
 pl
+pl
+pl
+pl
 nx
-pG
-pG
-pG
 pG
 pG
 pG
@@ -62272,10 +62287,10 @@ pl
 pl
 pl
 pl
+pl
+pl
+pl
 nx
-pG
-pG
-pG
 pG
 pG
 pG
@@ -62529,10 +62544,10 @@ pl
 pl
 pl
 pl
+pl
+pl
+pl
 nx
-pG
-pG
-pG
 pG
 pG
 pG
@@ -62786,10 +62801,10 @@ pl
 pl
 pl
 pl
+pl
+pl
+pl
 nx
-pG
-pG
-pG
 pG
 pG
 pG
@@ -63044,9 +63059,9 @@ nx
 nx
 nx
 nx
-pG
-pG
-pG
+nx
+nx
+nx
 pG
 pG
 pG

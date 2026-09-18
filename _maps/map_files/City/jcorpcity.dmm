@@ -4049,6 +4049,14 @@
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/wood,
 /area/city/house)
+"IS" = (
+/obj/machinery/light/small{
+	dir = 8
+	},
+/turf/open/floor/plating/dirt/jungle/dark{
+	slowdown = 0
+	},
+/area/city)
 "IU" = (
 /obj/effect/turf_decal/siding/yellow/corner{
 	dir = 8
@@ -39546,8 +39554,8 @@ hW
 hW
 hW
 im
-WL
-WL
+im
+im
 WL
 WL
 WL
@@ -39802,9 +39810,9 @@ hW
 hW
 hW
 hW
+hW
+hW
 im
-WL
-WL
 WL
 WL
 WL
@@ -40059,9 +40067,9 @@ hW
 hW
 ry
 hW
+hW
+hW
 im
-WL
-WL
 WL
 WL
 WL
@@ -40316,9 +40324,9 @@ hW
 hW
 hW
 hW
+hW
+hW
 im
-WL
-WL
 WL
 WL
 WL
@@ -40561,6 +40569,8 @@ im
 im
 im
 im
+im
+im
 qn
 qn
 qn
@@ -40574,8 +40584,6 @@ hW
 hW
 hW
 im
-WL
-WL
 WL
 WL
 WL
@@ -40817,7 +40825,9 @@ lE
 lE
 lE
 lE
-im
+lE
+lE
+lE
 qn
 oK
 qn
@@ -40831,8 +40841,6 @@ hW
 hW
 hW
 im
-WL
-WL
 WL
 WL
 WL
@@ -41074,7 +41082,9 @@ lE
 lE
 lE
 lE
-im
+lE
+lE
+lE
 qn
 Hc
 ln
@@ -41088,8 +41098,6 @@ hW
 hW
 hW
 im
-WL
-WL
 WL
 WL
 WL
@@ -41331,7 +41339,9 @@ lE
 lE
 lE
 lE
-im
+lE
+lE
+lE
 qn
 pe
 qn
@@ -41345,8 +41355,6 @@ hW
 hW
 hW
 im
-WL
-WL
 WL
 WL
 WL
@@ -41588,7 +41596,9 @@ lE
 lE
 lE
 lE
-im
+lE
+lE
+lE
 qn
 qn
 qn
@@ -41602,8 +41612,6 @@ hW
 hW
 hW
 im
-WL
-WL
 WL
 WL
 WL
@@ -41845,7 +41853,9 @@ lE
 lE
 lE
 lE
-im
+lE
+lE
+lE
 qn
 DB
 bD
@@ -41859,8 +41869,6 @@ hW
 hW
 hW
 im
-WL
-WL
 WL
 WL
 WL
@@ -42102,7 +42110,9 @@ lE
 lE
 lE
 lE
-im
+lE
+lE
+lE
 qn
 WU
 yp
@@ -42116,8 +42126,6 @@ hW
 hW
 hW
 im
-WL
-WL
 WL
 WL
 WL
@@ -42350,7 +42358,6 @@ hW
 hW
 sB
 PK
-XJ
 lE
 lE
 lE
@@ -42359,7 +42366,10 @@ lE
 lE
 lE
 lE
-im
+lE
+lE
+lE
+lE
 qn
 qn
 qn
@@ -42373,8 +42383,6 @@ hW
 hW
 hW
 im
-WL
-WL
 WL
 WL
 WL
@@ -42616,7 +42624,9 @@ lE
 lE
 lE
 lE
-im
+lE
+lE
+lE
 qn
 oK
 qn
@@ -42630,8 +42640,6 @@ hW
 hW
 hW
 im
-WL
-WL
 WL
 WL
 WL
@@ -42873,7 +42881,9 @@ lE
 lE
 lE
 lE
-im
+lE
+lE
+lE
 qn
 Hc
 ln
@@ -42887,8 +42897,6 @@ hW
 hW
 hW
 im
-WL
-WL
 WL
 WL
 WL
@@ -43130,7 +43138,9 @@ lE
 lE
 lE
 lE
-im
+lE
+lE
+lE
 qn
 pe
 qn
@@ -43144,8 +43154,6 @@ hW
 hW
 hW
 im
-WL
-WL
 WL
 WL
 WL
@@ -43378,6 +43386,7 @@ hW
 hW
 sB
 Bj
+XJ
 lE
 lE
 lE
@@ -43387,7 +43396,8 @@ lE
 lE
 lE
 lE
-im
+lE
+lE
 qn
 qn
 qn
@@ -43401,8 +43411,6 @@ hW
 hW
 hW
 im
-WL
-WL
 WL
 WL
 WL
@@ -43635,16 +43643,18 @@ hW
 CO
 sB
 Bj
-lE
-Lr
-lE
+XJ
 lE
 lE
 lE
 lE
 lE
 lE
-im
+lE
+lE
+lE
+lE
+lE
 qn
 iB
 qn
@@ -43658,8 +43668,6 @@ hW
 hW
 hW
 im
-WL
-WL
 WL
 WL
 WL
@@ -43893,6 +43901,7 @@ hW
 sB
 Bj
 lE
+Lr
 lE
 lE
 lE
@@ -43901,7 +43910,8 @@ lE
 lE
 lE
 lE
-im
+lE
+lE
 qn
 iB
 qn
@@ -43915,8 +43925,6 @@ hW
 hW
 hW
 im
-WL
-WL
 WL
 WL
 WL
@@ -44149,7 +44157,6 @@ hW
 hW
 sB
 Bj
-XJ
 lE
 lE
 lE
@@ -44158,7 +44165,10 @@ lE
 lE
 lE
 lE
-im
+lE
+lE
+lE
+lE
 qn
 qn
 qn
@@ -44172,8 +44182,6 @@ hW
 hW
 hW
 im
-WL
-WL
 WL
 WL
 WL
@@ -44406,7 +44414,6 @@ hW
 hW
 sB
 Bj
-XJ
 lE
 lE
 lE
@@ -44415,7 +44422,10 @@ lE
 lE
 lE
 lE
-im
+lE
+lE
+lE
+lE
 qn
 oK
 qn
@@ -44429,8 +44439,6 @@ hW
 hW
 hW
 im
-WL
-WL
 WL
 WL
 WL
@@ -44672,7 +44680,9 @@ lE
 lE
 lE
 lE
-im
+lE
+lE
+lE
 qn
 Hc
 ln
@@ -44686,8 +44696,6 @@ hW
 hW
 hW
 im
-WL
-WL
 WL
 WL
 WL
@@ -44929,7 +44937,9 @@ lE
 lE
 lE
 lE
-im
+lE
+lE
+lE
 qn
 pe
 qn
@@ -44943,8 +44953,6 @@ hW
 hW
 hW
 im
-WL
-WL
 WL
 WL
 WL
@@ -45186,7 +45194,9 @@ lE
 lE
 lE
 lE
-im
+lE
+lE
+lE
 qn
 qn
 qn
@@ -45200,8 +45210,6 @@ hW
 hW
 hW
 im
-WL
-WL
 WL
 WL
 WL
@@ -45443,7 +45451,9 @@ lE
 lE
 lE
 lE
-im
+lE
+lE
+lE
 qn
 DB
 bD
@@ -45457,8 +45467,6 @@ hW
 hW
 hW
 im
-WL
-WL
 WL
 WL
 WL
@@ -45700,7 +45708,9 @@ lE
 lE
 lE
 lE
-im
+lE
+lE
+lE
 qn
 WU
 yp
@@ -45714,8 +45724,6 @@ hW
 hW
 hW
 im
-WL
-WL
 WL
 WL
 WL
@@ -45957,7 +45965,9 @@ lE
 lE
 lE
 lE
-im
+lE
+lE
+lE
 qn
 qn
 qn
@@ -45971,8 +45981,6 @@ im
 im
 im
 im
-WL
-WL
 WL
 WL
 WL
@@ -46214,10 +46222,10 @@ lE
 lE
 lE
 lE
+lE
+lE
+lE
 im
-WL
-WL
-WL
 WL
 WL
 WL
@@ -46471,10 +46479,10 @@ lE
 lE
 lE
 lE
+lE
+lE
+lE
 im
-WL
-WL
-WL
 WL
 WL
 WL
@@ -46728,10 +46736,10 @@ lE
 lE
 lE
 lE
+lE
+lE
+lE
 im
-WL
-WL
-WL
 WL
 WL
 WL
@@ -46985,10 +46993,10 @@ lE
 lE
 lE
 lE
+lE
+lE
+lE
 im
-WL
-WL
-WL
 WL
 WL
 WL
@@ -47242,10 +47250,10 @@ lE
 lE
 lE
 lE
+lE
+lE
+lE
 im
-WL
-WL
-WL
 WL
 WL
 WL
@@ -47500,9 +47508,9 @@ im
 im
 im
 im
-WL
-WL
-WL
+im
+im
+im
 WL
 WL
 WL
@@ -52842,7 +52850,7 @@ WL
 im
 im
 Na
-Na
+IS
 Na
 Na
 Fr

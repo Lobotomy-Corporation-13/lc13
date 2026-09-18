@@ -4504,7 +4504,8 @@
 /area/city)
 "va" = (
 /obj/item/camera/detective{
-	desc = "A polaroid camera with extra capacity for crime investigations...but it seems like this one's had its film ripped out."
+	desc = "A polaroid camera with extra capacity for crime investigations...but it seems like this one's had its film ripped out.";
+	pictures_left = 0
 	},
 /turf/open/floor/plating/asteroid/basalt,
 /area/city)
@@ -10254,7 +10255,7 @@
 	name = "NO ENTRY";
 	req_access_txt = "150"
 	},
-/turf/open/space/basic,
+/turf/open/floor/carpet/black,
 /area/city)
 "VN" = (
 /obj/effect/turf_decal/trimline/blue/arrow_cw{

@@ -345,9 +345,14 @@
 /turf/open/floor/wood,
 /area/city/shop)
 "dn" = (
-/obj/effect/turf_decal/siding/thinplating,
-/turf/open/floor/stone,
-/area/city/shop)
+/obj/structure/fence/corner{
+	dir = 9
+	},
+/obj/effect/turf_decal/siding/thinplating/corner{
+	dir = 8
+	},
+/turf/open/floor/holofloor/snow,
+/area/city)
 "dp" = (
 /obj/machinery/computer/slot_machine,
 /turf/open/floor/eighties,
@@ -2213,15 +2218,6 @@
 /obj/effect/turf_decal/siding/blue,
 /turf/open/floor/pod,
 /area/city/shop)
-"tQ" = (
-/obj/effect/turf_decal/weather/snow/corner{
-	dir = 5
-	},
-/obj/effect/turf_decal/siding/thinplating/corner{
-	dir = 8
-	},
-/turf/open/floor/stone,
-/area/city/shop)
 "tS" = (
 /turf/closed/indestructible/fakeglass,
 /area/city/shop)
@@ -2554,12 +2550,6 @@
 "wb" = (
 /obj/structure/potential,
 /turf/open/floor/plasteel/grimy,
-/area/city/shop)
-"we" = (
-/obj/effect/turf_decal/siding/thinplating{
-	dir = 8
-	},
-/turf/open/floor/stone,
 /area/city/shop)
 "wh" = (
 /turf/open/floor/wood{
@@ -3687,12 +3677,6 @@
 /obj/structure/barricade/wooden,
 /turf/open/floor/facility/dark,
 /area/city/shop)
-"FD" = (
-/obj/effect/turf_decal/siding/thinplating{
-	dir = 6
-	},
-/turf/open/floor/stone,
-/area/city/shop)
 "FE" = (
 /obj/machinery/telecomms/server/presets/service,
 /obj/effect/turf_decal/bot,
@@ -3808,8 +3792,9 @@
 /obj/effect/turf_decal/weather/snow/corner{
 	dir = 8
 	},
+/obj/effect/turf_decal/siding/thinplating,
 /turf/open/floor/stone,
-/area/city/shop)
+/area/city)
 "GK" = (
 /obj/machinery/light{
 	dir = 1
@@ -4246,12 +4231,6 @@
 	},
 /turf/open/floor/plasteel/grimy,
 /area/city/fixers)
-"JB" = (
-/obj/effect/turf_decal/siding/thinplating{
-	dir = 4
-	},
-/turf/open/floor/stone,
-/area/city/shop)
 "JE" = (
 /obj/structure/plasticflaps/opaque,
 /turf/open/floor/plasteel/dark,
@@ -5525,8 +5504,9 @@
 /obj/effect/turf_decal/weather/snow/corner{
 	dir = 4
 	},
+/obj/effect/turf_decal/siding/thinplating,
 /turf/open/floor/stone,
-/area/city/shop)
+/area/city)
 "Um" = (
 /obj/structure/chair{
 	dir = 1
@@ -5819,13 +5799,6 @@
 /obj/effect/turf_decal/siding/blue,
 /turf/open/floor/pod,
 /area/city/shop)
-"Wt" = (
-/obj/effect/turf_decal/weather/snow/corner{
-	dir = 9
-	},
-/obj/effect/turf_decal/siding/thinplating/corner,
-/turf/open/floor/stone,
-/area/city/shop)
 "Wx" = (
 /obj/machinery/light{
 	dir = 4
@@ -5861,11 +5834,12 @@
 /turf/open/floor/stone,
 /area/city/house)
 "WP" = (
-/obj/effect/turf_decal/siding/thinplating{
-	dir = 10
+/obj/structure/fence/corner{
+	dir = 4
 	},
-/turf/open/floor/stone,
-/area/city/shop)
+/obj/effect/turf_decal/siding/thinplating/corner,
+/turf/open/floor/holofloor/snow,
+/area/city)
 "WX" = (
 /obj/effect/turf_decal/weather/snow/corner{
 	dir = 6
@@ -56933,8 +56907,8 @@ VH
 BV
 BV
 Rf
-Vr
 Rf
+KA
 KA
 KA
 KA
@@ -57190,8 +57164,8 @@ BV
 BV
 BV
 Rf
-Vr
 Rf
+KA
 KA
 KA
 KA
@@ -57447,8 +57421,8 @@ BV
 BV
 BV
 Rf
-Vr
 Rf
+KA
 KA
 KA
 KA
@@ -57704,8 +57678,8 @@ BV
 BV
 YT
 Rf
-Vr
 Rf
+KA
 KA
 KA
 KA
@@ -57959,10 +57933,10 @@ BV
 BV
 BV
 MB
-aW
+QX
 Rf
 Rf
-Rf
+KA
 KA
 KA
 KA
@@ -58215,11 +58189,11 @@ MB
 aW
 aW
 aW
-jf
-Wt
+WP
 oZ
 Rf
 Rf
+KA
 KA
 KA
 KA
@@ -58473,10 +58447,10 @@ gp
 vM
 pc
 GI
-dn
 Es
 rw
 Nt
+KA
 KA
 KA
 KA
@@ -58729,10 +58703,10 @@ ax
 aa
 aa
 aa
-JB
-FD
+kF
 Es
 Zm
+KA
 KA
 KA
 KA
@@ -58986,11 +58960,11 @@ bO
 bO
 bO
 bO
-Je
-Je
+bO
 Es
 Zm
 Nt
+KA
 KA
 KA
 KA
@@ -59243,11 +59217,11 @@ bO
 bO
 bO
 bO
-Je
-Je
+bO
 Es
 Zm
 Nt
+KA
 KA
 KA
 KA
@@ -59500,11 +59474,11 @@ kt
 bO
 bO
 bO
-Je
-Je
+bO
 Es
 Zm
 Nt
+KA
 KA
 KA
 KA
@@ -59757,11 +59731,11 @@ kt
 bO
 bO
 bO
-Je
-Je
+bO
 Es
 Zm
 Nt
+KA
 KA
 KA
 KA
@@ -60014,11 +59988,11 @@ kt
 bO
 bO
 bO
-Je
-Je
+bO
 Es
 Zm
 Nt
+KA
 KA
 KA
 KA
@@ -60271,12 +60245,12 @@ bO
 bO
 bO
 bO
-Je
-Je
+bO
 Es
 Zm
 KA
 lP
+KA
 KA
 KA
 KA
@@ -60528,10 +60502,10 @@ bO
 bO
 bO
 bO
-Je
-Je
+bO
 Es
 Zm
+KA
 KA
 KA
 KA
@@ -60785,10 +60759,10 @@ VN
 zi
 zi
 zi
-we
-WP
+lz
 Es
 Zm
+KA
 KA
 KA
 KA
@@ -61043,10 +61017,10 @@ Qs
 CF
 ue
 Ui
-dn
 Es
 ai
 Nt
+KA
 KA
 KA
 KA
@@ -61299,11 +61273,11 @@ jf
 aW
 aW
 aW
-MB
-tQ
+dn
 hk
 Rf
 Rf
+KA
 KA
 KA
 KA
@@ -61557,10 +61531,10 @@ BV
 BV
 BV
 jf
-aW
+QX
 Rf
 Rf
-Rf
+KA
 KA
 KA
 KA
@@ -61816,8 +61790,8 @@ Hy
 BV
 BV
 Rf
-Vr
 Rf
+KA
 KA
 KA
 KA
@@ -62073,8 +62047,8 @@ BV
 BV
 jY
 Rf
-Vr
 Rf
+KA
 KA
 KA
 KA
@@ -62330,8 +62304,8 @@ BV
 BV
 kD
 Rf
-Vr
 Rf
+KA
 KA
 KA
 KA
@@ -62587,8 +62561,8 @@ BV
 BV
 BV
 Rf
-Vr
 Rf
+KA
 KA
 KA
 KA
@@ -62844,8 +62818,8 @@ BV
 BV
 BV
 Rf
-Vr
 Rf
+KA
 KA
 KA
 KA
@@ -63101,8 +63075,8 @@ BV
 BV
 BV
 Rf
-Vr
 Rf
+KA
 KA
 KA
 KA
@@ -63358,8 +63332,8 @@ yE
 BV
 BV
 Rf
-Vr
 Rf
+KA
 KA
 KA
 KA
