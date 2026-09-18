@@ -24,7 +24,9 @@
 
 /datum/tgs_chat_command/tgscheck/Run(datum/tgs_chat_user/sender, params)
 	var/server = CONFIG_GET(string/server)
-	var/check = "[GLOB.round_id ? "Round #[GLOB.round_id]: " : ""][GLOB.clients.len] players on [SSmapping.config.map_name]; Alert level: [capitalize(get_security_level())].\n"
+	var/datum/map_config/current_map_config = SSmapping.config
+	var/map_name = current_map_config.has_submaps ? "[current_map_config.map_name]" + ": " + "[current_map_config.available_submaps[current_map_config.map_file]]" : current_map_config.map_name
+	var/check = "[GLOB.round_id ? "Round #[GLOB.round_id]: " : ""][GLOB.clients.len] players on [map_name]; Alert level: [capitalize(get_security_level())].\n"
 	var/round_time = world.time - SSticker.round_start_time
 	check += "Gamemode: [GLOB.master_mode]; Round Time: [round_time > MIDNIGHT_ROLLOVER ? "[round(round_time/MIDNIGHT_ROLLOVER)]:[gameTimestamp("hh:mm:ss", round_time)]" : gameTimestamp("hh:mm:ss", round_time)].\n"
 	if(!(SSmaptype.maptype in SSmaptype.combatmaps))
