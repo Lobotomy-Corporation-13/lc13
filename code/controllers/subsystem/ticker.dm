@@ -262,6 +262,8 @@ SUBSYSTEM_DEF(ticker)
 		switch(SSmaptype.chosen_trait)
 			if(FACILITY_TRAIT_JOKE_ABNOS)
 				mode = new /datum/game_mode/management/joke
+			if(FACILITY_TRAIT_SS13_ABNOS)
+				mode = new /datum/game_mode/management/joke
 			if(FACILITY_TRAIT_FUCKED_SELECTION)
 				var/choosingmode = pick(
 							/datum/game_mode/management/pure,

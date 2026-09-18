@@ -31,8 +31,8 @@
 	footstep_type = FOOTSTEP_MOB_CLAW
 
 
-	maxHealth = 1000
-	health = 1000
+	maxHealth = 900
+	health = 900
 	rapid_melee = 2
 	melee_damage_type = RED_DAMAGE
 	move_to_delay = 6
