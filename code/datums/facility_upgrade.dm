@@ -423,3 +423,39 @@
 	name = UPGRADE_ARCHITECT_2
 	info = " - The Manager gets better infomation when inspecting an Abnormality or Agent."
 	requires_one_of = list(UPGRADE_ARCHITECT_1)
+
+
+
+
+//Rep Upgrades
+//To transfer them stuff as the manajuh
+/datum/facility_upgrade/rep_pe
+	name = UPGRADE_REP_PE
+	category = "Facility"
+	value = 1
+	max_value = 2
+	info = " - This transfers 10 PE to the Representative to spend as they choose."
+
+/datum/facility_upgrade/rep_pe/Upgrade()
+	for(var/obj/structure/representative_console/R in GLOB.lobotomy_devices)
+		R.pe_points+=10
+	. = ..()
+	cost += 1
+
+
+
+//Rep Upgrades
+//To transfer them stuff as the manajuh
+/datum/facility_upgrade/rep_ahn
+	name = UPGRADE_REP_AHN
+	category = "Facility"
+	value = 1
+	max_value = 2
+	info = " - This transfers 3000 Ahn to the Representative to spend as they choose."
+
+/datum/facility_upgrade/rep_ahn/Upgrade()
+	for(var/obj/structure/representative_console/R in GLOB.lobotomy_devices)
+		R.monies+=3000
+	. = ..()
+	cost += 1
+
