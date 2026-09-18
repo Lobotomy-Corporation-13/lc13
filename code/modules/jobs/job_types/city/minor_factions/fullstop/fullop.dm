@@ -1,7 +1,7 @@
 //Full Stop Operator
 /datum/job/Fullop
 	title = "Full Stop Operator"
-	outfit = /datum/outfit/job/fullop
+	outfit = /datum/outfit/job/Fullop
 	department_head = list("")
 	faction = "Station"
 	supervisors = ""
@@ -37,9 +37,9 @@
 	. = ..()
 
 
-/datum/outfit/job/fullop
+/datum/outfit/job/Fullop
 	name = "Full Stop Operator"
-	jobtype = /datum/job/operator
+	jobtype = /datum/job/Fullop
 	belt = /obj/item/pda/security
 	ears = /obj/item/radio/headset/faction/heads
 	uniform = /obj/item/clothing/under/suit/lobotomy/plain
