@@ -3422,10 +3422,6 @@
 /obj/machinery/door/airlock/glass_large,
 /turf/open/floor/wood,
 /area/city/outskirts)
-"Qc" = (
-/obj/effect/landmark/abnospawn/rhinobuster,
-/turf/open/floor/plating/ashplanet/rocky,
-/area/city/outskirts)
 "Qi" = (
 /obj/structure/closet/crate/trashcart,
 /obj/item/bodypart/l_arm,
@@ -3706,10 +3702,6 @@
 "Td" = (
 /obj/structure/rack,
 /turf/open/floor/wood,
-/area/city/outskirts)
-"Tf" = (
-/obj/effect/landmark/abnospawn/hardsupport,
-/turf/open/floor/plating/ashplanet/rocky,
 /area/city/outskirts)
 "Tp" = (
 /obj/structure/mineral_door/wood,
@@ -14726,7 +14718,6 @@ Au
 Au
 Au
 Au
-Qc
 Au
 Au
 Au
@@ -14735,7 +14726,8 @@ Au
 Au
 Au
 Au
-Tf
+Au
+Au
 Au
 Au
 Au
@@ -15059,7 +15051,7 @@ Au
 Au
 Ef
 Au
-Tf
+Au
 Au
 Au
 Au
@@ -15705,7 +15697,7 @@ Pu
 hs
 RH
 Vg
-Vq
+Au
 aF
 Vg
 Cy

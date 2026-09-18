@@ -9,8 +9,8 @@
 	desc = "A pink hunched creature with long arms, there are also visible bones coming from insides of the slime."
 	/* Stats */
 	threat_level = ALEPH_LEVEL
-	health = 4000
-	maxHealth = 4000
+	health = 3000
+	maxHealth = 3000
 	obj_damage = 60
 	icon_dead = "melting_breach_dead"
 	damage_coeff = list(RED_DAMAGE = -1, WHITE_DAMAGE = 1, BLACK_DAMAGE = 1.5, PALE_DAMAGE = 0.8)
