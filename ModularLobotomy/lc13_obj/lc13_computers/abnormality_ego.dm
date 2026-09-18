@@ -348,7 +348,7 @@
 
 			ego_list |= list(datum_data)
 
-		// Actual Abnormality data. Portrait not included here, it's in static data and linked to the abno via its reference in the UI.
+		// Actual Abnormality data.
 		var/list/abno_data = list(
 			"name" = AD.name,
 			"desc" = AD.desc,
@@ -366,13 +366,16 @@
 /obj/machinery/computer/ego_purchase/ui_static_data(mob/user)
 	var/list/data = list()
 	data["all_tags"] = list()
+
+	// Abnormality portraits commented out due to performance concerns.
+	/*
 	data["abnormality_portraits"] = list()
 
 	for(var/datum/abnormality/AD in SSlobotomy_corp.all_abnormality_datums)
 		var/list/abno_data = list(REF(AD) = GetPortraitOrPreview(AD))
 
 		data["abnormality_portraits"] += abno_data
-
+	*/
 
 	// Get all the EGO tags defined in EGO_TAGS_DESCRIPTION_LIST and send an object consisting of their name and description, also tag_checked so we can easily turn their filtering on and off in the frontend
 	for(var/tag in EGO_TAGS_DESCRIPTION_LIST)
