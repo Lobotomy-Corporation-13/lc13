@@ -282,6 +282,7 @@
 	var/turf/end_turf = get_turf_in_angle(angle, start_turf, 300)
 	var/list/path = getline(start_turf, end_turf)
 	sound_to_playing_players_on_level("sound/abnormalities/yin/dragon_spawn.ogg", 75, zlevel = src.z)
+	DragonEffect()
 	for(var/i = 0 to 7)
 		var/obj/effect/yinyang_dragon/DP
 		var/turf/T = path[15-(i*2)]
@@ -302,6 +303,47 @@
 		DP.transform = M
 		MoveDragon(DP, temp_path)
 
+//The dragon now does this on spawn, and is a global effect.
+//Why not on hit? Players would never get hit by it, due to our maps, unlike Express Train, which can run a train on the players.
+//Give players 10 Seconds to prepare
+// - Kitsunemitsu/Kirie
+/mob/living/simple_animal/hostile/abnormality/yin/proc/DragonEffect()
+	for(var/mob/living/carbon/human/H as anything in GLOB.human_list)
+		if(H.z != z)
+			continue
+		to_chat(H, span_userdanger("The Laws of the Universe are in Chaos!"))		//Exdeath's Grand Cross text.
+
+	for(var/mob/living/simple_animal/hostile/abnormality/A as anything in GLOB.abnormality_mob_list)
+		if(!A.datum_reference.current)
+			continue
+		var/qlip = A.datum_reference.qliphoth_meter
+		if(!qlip)
+			continue
+
+		if(prob(80))
+			continue
+		A.datum_reference.qliphoth_change(999)
+		A.datum_reference.qliphoth_change(-qlip)
+
+	//Odd numbers are Yin
+	//Even numbers are Yang.
+	//69 fits both.
+	addtimer(CALLBACK(src, PROC_REF(DragonDamage)), 69)
+
+
+/mob/living/simple_animal/hostile/abnormality/yin/proc/DragonDamage()
+	for(var/mob/living/carbon/human/H as anything in GLOB.human_list)
+		if(H.z != z)
+			continue
+		to_chat(H, span_userdanger("All that is shall become all that isn't."))
+		var/damage = H.health
+		H.adjustBruteLoss(-H.maxHealth)
+		H.adjustBruteLoss(damage)
+		damage = H.sanityhealth
+		H.adjustSanityLoss(-H.maxSanity)
+		H.adjustSanityLoss(damage)
+
+
 /mob/living/simple_animal/hostile/abnormality/yin/proc/MoveDragon(obj/effect/yinyang_dragon/DP, list/path = list())
 	set waitfor = FALSE
 	if(path.len <= 0)
@@ -309,38 +351,8 @@
 		return
 	for(var/turf/T in path)
 		DP.forceMove(T)
-		DragonFlip(DP)
 		sleep(1)
 	qdel(DP)
-
-/mob/living/simple_animal/hostile/abnormality/yin/proc/DragonFlip(obj/effect/yinyang_dragon/DP)
-	for(var/obj/machinery/computer/abnormality/AC in range(2, DP))
-		var/identifier = "[AC.x],[AC.y],[AC.z]"
-		if(identifier in hit_people)
-			continue
-		if(!AC.datum_reference.current)
-			continue
-		var/qlip = AC.datum_reference.qliphoth_meter
-		if(!qlip)
-			continue
-		AC.datum_reference.qliphoth_change(999)
-		AC.datum_reference.qliphoth_change(-qlip)
-		hit_people += identifier
-	for(var/mob/living/L in range(2, DP))
-		if(L.tag in hit_people)
-			continue
-		if(L.type in prohibitted_flips)
-			continue
-		var/damage = L.health
-		L.adjustBruteLoss(-L.maxHealth+40)
-		L.adjustBruteLoss(damage+40)
-		if(ishuman(L))
-			var/mob/living/carbon/human/H = L
-			damage = H.sanityhealth
-			H.adjustSanityLoss(-H.maxSanity)
-			H.adjustSanityLoss(damage)
-		hit_people += L.tag
-		to_chat(L, span_userdanger("All that is shall become all that isn't."))
 
 /mob/living/simple_animal/hostile/abnormality/yin/proc/YangCheck()
 	for(var/datum/abnormality/AD in SSlobotomy_corp.all_abnormality_datums)
