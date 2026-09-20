@@ -522,7 +522,7 @@
 		"After completing a work on the abnormality without its EGO gift, the Qliphoth Counter lowered at a high probability.",
 		"When the work result was Neutral, the Qliphoth Counter lowered at a normal probability.",
 		"When the work result was Bad, the Qliphoth Counter lowered.",
-		"When the employee performed Approach work on the abnormality, they recieved its EGO gift.",
+		"When the employee performed Approach work on the abnormality, they received its EGO gift.",
 		"When performing work on the abnormality while wearing the EGO gift, the Qliphoth Counter increased by 1 at a low probability.",
 		"When the abnormality breached, it began drinking the blood on the floor and the blood spilled from its attacks.",
 		"When the abnormality drank enough blood, it drove into a frenzy and started attacking faster in melee.",
