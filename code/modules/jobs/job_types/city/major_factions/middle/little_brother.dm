@@ -2,14 +2,14 @@
 /datum/job/little_brother
 	title = "Little Brother"
 	outfit = /datum/outfit/job/little_brother
-	department_head = list("Younger Brother and Big Brother.")
+	department_head = list("Big Brother.")
 	faction = "Station"
-	supervisors = "Younger Brother and Big Brother."
+	supervisors = "Big Brother."
 	selection_color = "#b0936f"
 	total_positions = 0
 	spawn_positions = 0
 	leader = /datum/job/big_brother
-	faction_positions = 4
+	faction_positions = 8
 	display_order = JOB_DISPLAY_ORDER_SYNDICATEGOON
 	access = list("middle")
 	minimal_access = list("middle")
@@ -18,10 +18,9 @@
 	departments = DEPARTMENT_CITY_ANTAGONIST
 	paycheck = 100
 	maptype = list("city")
-	job_important = "The little brother of this Middle section. Your goal is to follow the orders of your younger and big brothers. \
+	job_important = "The little brother of this Middle section. Your goal is to follow the orders of your big brother. \
 		The Middle values family above all else, so if anyone harms or disrespect your family make sure they will suffer for it. \
-		You also have a delivery radio at your base. It will allow you earn money by delivering U-Corp goods. \
-		Your base is hidden in the alleyway in the east behind the NO ENTRY Door."
+		You also have a delivery radio at your base. It will allow you earn money by delivering U-Corp goods."
 	job_notice = "You may harm other players for any disrespect to the middle; avoid killing players for too minor infractions."
 
 
