@@ -388,6 +388,11 @@
 	color = LIGHT_COLOR_GREEN
 	light_color = LIGHT_COLOR_GREEN
 
+/obj/item/flashlight/lantern/paper //Sprites courtesy of InsightfulParasite
+	name = "paper lantern"
+	desc = "An ornate paper lantern."
+	icon_state = "paperlantern"
+
 /obj/item/flashlight/slime
 	gender = PLURAL
 	name = "glowing slime extract"
