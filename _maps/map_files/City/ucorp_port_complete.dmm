@@ -1050,6 +1050,9 @@
 /area/facility_hallway/north)
 "fp" = (
 /obj/structure/table/greyscale,
+/obj/machinery/association_contract_terminal{
+	density = 0
+	},
 /turf/open/floor/facility{
 	color = "#8f8f8f"
 	},
@@ -6433,6 +6436,14 @@
 /obj/item/kitchen/spoon,
 /turf/open/indestructible/hoteltile,
 /area/city/house)
+"DV" = (
+/obj/structure/table/greyscale,
+/obj/structure/railing,
+/obj/machinery/association_contract_terminal{
+	density = 0
+	},
+/turf/open/floor/facility/halls,
+/area/city/fixers)
 "DX" = (
 /obj/effect/turf_decal/stripes/line{
 	dir = 10
@@ -48856,7 +48867,7 @@ AX
 yh
 JV
 wN
-no
+DV
 oc
 oc
 oc

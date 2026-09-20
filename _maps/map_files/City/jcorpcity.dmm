@@ -1592,6 +1592,13 @@
 /obj/effect/mine/shrapnel,
 /turf/open/floor/facility/dark,
 /area/city/house)
+"oO" = (
+/obj/structure/table/wood,
+/obj/machinery/association_contract_terminal{
+	density = 0
+	},
+/turf/open/floor/wood,
+/area/city/house)
 "oP" = (
 /obj/structure/chair/plastic,
 /turf/open/indestructible/white,
@@ -2670,6 +2677,16 @@
 	slowdown = 0
 	},
 /area/city)
+"xl" = (
+/obj/structure/table/wood,
+/obj/structure/railing{
+	dir = 1
+	},
+/obj/machinery/association_contract_terminal{
+	density = 0
+	},
+/turf/open/floor/facility/white,
+/area/city/fixers)
 "xp" = (
 /obj/machinery/door/airlock/wood{
 	name = "Roulette Room"
@@ -41834,7 +41851,7 @@ Rm
 yu
 yu
 yu
-FY
+xl
 yu
 yu
 uB
@@ -42589,7 +42606,7 @@ Mh
 bD
 FL
 QQ
-ke
+oO
 fP
 fP
 CI

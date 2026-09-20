@@ -1827,6 +1827,7 @@
 /area/city/shop)
 "qS" = (
 /obj/structure/table/wood,
+/obj/machinery/association_contract_terminal,
 /turf/open/floor/wood,
 /area/city/fixers)
 "qU" = (
@@ -3765,6 +3766,14 @@
 "Gr" = (
 /obj/structure/chair/sofa/left,
 /turf/open/floor/wood,
+/area/city/shop)
+"Gs" = (
+/obj/structure/table/wood,
+/obj/structure/railing{
+	dir = 1
+	},
+/obj/machinery/association_contract_terminal,
+/turf/open/floor/plasteel/grimy,
 /area/city/shop)
 "Gt" = (
 /obj/effect/turf_decal/siding/blue{
@@ -55854,7 +55863,7 @@ kY
 qd
 qd
 qd
-oM
+Gs
 NY
 NY
 Cx

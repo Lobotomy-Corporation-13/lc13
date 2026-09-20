@@ -7859,6 +7859,14 @@
 /obj/machinery/body_modification_fabricator,
 /turf/open/floor/stone,
 /area/city/shop)
+"WE" = (
+/obj/structure/table/wood,
+/obj/structure/railing,
+/obj/machinery/association_contract_terminal{
+	density = 0
+	},
+/turf/open/floor/wood,
+/area/city/fixers)
 "WF" = (
 /obj/structure/window/reinforced/tinted/fulltile,
 /obj/structure/barricade/wooden,
@@ -8012,6 +8020,9 @@
 /area/city/shop)
 "XJ" = (
 /obj/structure/table/wood,
+/obj/machinery/association_contract_terminal{
+	density = 0
+	},
 /turf/open/floor/wood,
 /area/city/fixers)
 "XK" = (
@@ -46309,7 +46320,7 @@ Gb
 jC
 XL
 be
-tv
+WE
 lS
 lS
 lS
