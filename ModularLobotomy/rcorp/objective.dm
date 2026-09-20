@@ -457,7 +457,7 @@ GLOBAL_VAR_INIT(rcorp_payload, null)
 
 
 /obj/structure/rcorpcomms/take_damage(damage_amount, damage_type = BRUTE, sound_effect = TRUE, attack_dir, armour_penetration = 0)
-	..()
+	. = ..()
 	Radio.talk_into(src, "PRIORITY ALERT: Communications taking damage.", FREQ_COMMON)
 
 
