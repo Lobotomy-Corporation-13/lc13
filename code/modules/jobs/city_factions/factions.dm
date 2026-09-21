@@ -51,4 +51,5 @@
 /datum/city_faction/kuroclan
 	name = "the Kurokumo Clan"
 	category = CITY_FACTION_MINOR
+	leader_job = /datum/job/wakashu
 	requires_leader = TRUE

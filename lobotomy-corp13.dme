@@ -2463,6 +2463,8 @@
 #include "code\modules\jobs\job_types\city\major_factions\udjat\gunner.dm"
 #include "code\modules\jobs\job_types\city\major_factions\udjat\infantry.dm"
 #include "code\modules\jobs\job_types\city\major_factions\udjat\scout.dm"
+#include "code\modules\jobs\job_types\city\minor_factions\bladelin\cutthroat.dm"
+#include "code\modules\jobs\job_types\city\minor_factions\bladelin\salsu.dm"
 #include "code\modules\jobs\job_types\city\minor_factions\dawn\dawnop.dm"
 #include "code\modules\jobs\job_types\city\minor_factions\dawn\junior.dm"
 #include "code\modules\jobs\job_types\city\minor_factions\dawn\veteran.dm"
