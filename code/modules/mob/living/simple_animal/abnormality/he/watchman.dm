@@ -130,7 +130,7 @@
 		buff_cycle = 0
 		for(var/mob/living/carbon/human/H in view(8, get_turf(src)))
 			H.apply_lc_black_strength(3)
-			H.adjustSanityLoss(-2)
+			H.adjustSanityLoss(-10)
 
 
 
