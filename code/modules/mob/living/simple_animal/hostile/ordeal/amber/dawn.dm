@@ -302,7 +302,7 @@
 
 /obj/item/organ/amber_bug/proc/UnlinkOrdeal(datum/source, datum/ordeal/hopefully_amber_ordeal)
 	SIGNAL_HANDLER
-	if(istype(hopefully_amber_ordeal, /datum/ordeal/simplespawn/amber_dawn))
+	if(hopefully_amber_ordeal == ordeal_reference || QDELETED(ordeal_reference))
 		ordeal_reference = null
 
 /obj/item/organ/amber_bug/on_find(mob/living/finder)
