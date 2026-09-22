@@ -18,6 +18,7 @@
 	threat_level = ZAYIN_LEVEL
 	max_boxes = 10
 	chem_type = /datum/reagent/abnormality/sin/gloom
+
 	ego_list = list(
 		/datum/ego_datum/weapon/tidings,
 		//datum/ego_datum/armor/placeholder,
