@@ -124,7 +124,9 @@
 //Applies buffs if he's breached and you're near him
 /mob/living/simple_animal/hostile/abnormality/watchman/Life()
 	. = ..()
-	if(beneficial)
+	buff_cycle++
+	if(beneficial && buff_cycle >= 5)
+		buff_cycle = 0
 		for(var/mob/living/carbon/human/H in view(8, get_turf(src)))
 			H.apply_lc_black_strength(4)
 			H.adjustSanityLoss(-2)
