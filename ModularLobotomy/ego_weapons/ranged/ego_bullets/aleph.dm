@@ -347,13 +347,16 @@
 	var/user_damage = 15
 
 /obj/projectile/ego_bullet/tarnished_pin/on_hit(atom/target, blocked, pierce_hit)
+	sleep(10)
+	if(!isliving(target))
+		return
+
+	//Hit the user with some damage. Visuals to come sometime tm
 	if(isliving(firer))
 		var/mob/living/L = firer
 		L.deal_damage(L, RED_DAMAGE, firer, attack_type = (ATTACK_TYPE_SPECIAL))
 		new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(L), pick(GLOB.alldirs))
-	sleep(10)
-	if(!isliving(target))
-		return
+
 	var/mob/living/L = target
 	new /obj/effect/temp_visual/tbirdlightning (get_turf(L))
 	L.deal_damage(lightning_damage, WHITE_DAMAGE, firer, attack_type = (ATTACK_TYPE_SPECIAL))
