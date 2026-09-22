@@ -138,7 +138,7 @@
 	//Handle charge if you are a parry-type weapon.
 	if(charge_amount >= charge_cost)
 		charge_amount -= charge_cost
-		to_chat(user, span_notice(successfull_activation))
+		to_chat(owner, span_notice(successfull_activation))
 		ChargeAttack(owner, owner)
 		if(visible_activation) // oh shit oh fuck
 			visible_message(span_danger(visible_activation))
