@@ -304,6 +304,7 @@
 	SIGNAL_HANDLER
 	if(hopefully_amber_ordeal == ordeal_reference || QDELETED(ordeal_reference))
 		ordeal_reference = null
+		UnregisterSignal(SSdcs, COMSIG_GLOB_ORDEAL_END)
 
 /obj/item/organ/amber_bug/on_find(mob/living/finder)
 	. = ..()
