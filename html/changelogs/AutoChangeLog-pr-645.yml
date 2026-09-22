@@ -1,0 +1,4 @@
+author: "Destrok171"
+delete-after: True
+changes:
+  - server: "Modified changelog.html to include LC13 relevant content rather than TGStation."
