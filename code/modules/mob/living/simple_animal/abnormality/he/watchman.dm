@@ -95,7 +95,8 @@
 	)
 
 	var/beneficial = TRUE
-
+	//A numerical cycle for when watchman applies buffs to surrounding humans
+	var/buff_cycle = 1
 	// Breached Abno tracker.
 	// Remembers enemies by their tag.
 	var/list/dangers = list()
