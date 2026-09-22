@@ -86,6 +86,8 @@
 	pixel_x = 9;
 	pixel_y = 4
 	},
+/obj/item/ego_weapon/city/liu/fist,
+/obj/item/clothing/suit/armor/ego_gear/city/liu,
 /turf/open/floor/city/interior/boards,
 /area/city/assoc_base)
 "nY" = (
@@ -128,6 +130,8 @@
 	pixel_y = 4;
 	pixel_x = -10
 	},
+/obj/item/clothing/suit/armor/ego_gear/city/liuleader,
+/obj/item/ego_weapon/city/liu/fist/vet,
 /turf/open/floor/carpet/red,
 /area/city/assoc_base)
 "ul" = (
@@ -143,6 +147,8 @@
 	pixel_y = 4;
 	pixel_x = -10
 	},
+/obj/item/ego_weapon/city/liu/fist,
+/obj/item/clothing/suit/armor/ego_gear/city/liu,
 /turf/open/floor/city/interior/boards,
 /area/city/assoc_base)
 "uT" = (
@@ -166,7 +172,8 @@
 /area/city/assoc_base)
 "vt" = (
 /obj/machinery/door/airlock/security{
-	name = "Director's Office"
+	name = "Director's Office";
+	req_access_txt = "liu_leader"
 	},
 /turf/open/floor/city/interior/boards,
 /area/city/assoc_base)
@@ -186,9 +193,15 @@
 /area/city/assoc_base)
 "wE" = (
 /obj/machinery/door/airlock/security{
-	name = "Veteran's Quarters"
+	name = "Veteran's Quarters";
+	req_access_txt = "liu"
 	},
 /turf/open/floor/carpet/orange,
+/area/city/assoc_base)
+"xm" = (
+/obj/structure/table/wood/fancy,
+/obj/item/documents/syndicate/red,
+/turf/open/floor/carpet/red,
 /area/city/assoc_base)
 "zM" = (
 /obj/structure/table/wood/fancy,
@@ -257,13 +270,20 @@
 /turf/open/floor/city/interior/boards,
 /area/city/assoc_base)
 "Ek" = (
-/obj/machinery/door/airlock/wood{
-	name = "Liu Member Quarters"
+/obj/structure/city_prop/sign_chinese1{
+	pixel_x = 7;
+	pixel_y = 0;
+	name = "traning area sign";
+	desc = "A painted board sign, containing training motivation"
 	},
-/turf/open/floor/city/interior/boards,
+/turf/closed/indestructible/city/corrugated{
+	color = "#AE3F1A"
+	},
 /area/city/assoc_base)
 "Es" = (
-/obj/machinery/door/airlock/survival_pod,
+/obj/machinery/door/airlock/survival_pod{
+	req_access_txt = "liu"
+	},
 /turf/open/floor/carpet/red,
 /area/city/assoc_base)
 "EY" = (
@@ -280,7 +300,10 @@
 /turf/open/floor/city/interior/boards,
 /area/city/assoc_base)
 "Hq" = (
-/obj/machinery/door/airlock/wood,
+/obj/machinery/door/airlock/wood{
+	name = "Liu Member Quarters";
+	req_access_txt = "liu"
+	},
 /turf/open/floor/city/interior/boards,
 /area/city/assoc_base)
 "HI" = (
@@ -339,6 +362,8 @@
 /area/city/assoc_base)
 "MM" = (
 /obj/structure/closet/cabinet,
+/obj/item/ego_weapon/city/liu/fist/vet,
+/obj/item/clothing/suit/armor/ego_gear/city/liuvet,
 /turf/open/floor/carpet/orange,
 /area/city/assoc_base)
 "PY" = (
@@ -515,7 +540,7 @@ jo
 "}
 (7,1,1) = {"
 jo
-Ek
+Hq
 jo
 jo
 jo
@@ -574,7 +599,7 @@ jo
 jo
 "}
 (11,1,1) = {"
-jo
+Ek
 rF
 UT
 Bw
@@ -604,7 +629,7 @@ ha
 Es
 "}
 (13,1,1) = {"
-jo
+Ek
 rF
 UT
 UT
@@ -732,7 +757,7 @@ wE
 Jk
 Jk
 jo
-Ws
+xm
 ha
 ha
 ha

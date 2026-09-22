@@ -1,6 +1,8 @@
 //MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
 "a" = (
 /obj/structure/rack,
+/obj/item/restraints/handcuffs/cable/pink,
+/obj/item/restraints/handcuffs/cable/pink,
 /turf/open/floor/mineral/titanium/purple,
 /area/city/antag_base)
 "b" = (
@@ -138,8 +140,10 @@
 /turf/open/floor/mineral/titanium/purple,
 /area/city/antag_base)
 "v" = (
-/obj/structure/railing,
-/turf/open/floor/mineral/titanium/purple,
+/obj/structure/chair/plastic{
+	dir = 4
+	},
+/turf/open/floor/facility/white,
 /area/city/antag_base)
 "w" = (
 /obj/structure/filingcabinet/chestdrawer,
@@ -211,6 +215,7 @@
 	dir = 1;
 	pixel_y = 19
 	},
+/obj/item/restraints/handcuffs/cable/pink,
 /turf/open/floor/facility/white,
 /area/city/antag_base)
 "F" = (
@@ -508,7 +513,7 @@ R
 R
 G
 q
-v
+D
 P
 V
 V
@@ -537,7 +542,7 @@ u
 (13,1,1) = {"
 R
 E
-q
+v
 D
 V
 V
