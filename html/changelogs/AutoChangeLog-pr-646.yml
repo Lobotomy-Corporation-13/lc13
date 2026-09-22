@@ -1,0 +1,4 @@
+author: "foose7495"
+delete-after: True
+changes:
+  - bugfix: "added sin affinity to message of the future"
