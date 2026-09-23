@@ -54,7 +54,7 @@
 	It’s the byproduct of some horrid experiment in a certain laboratory that eventually failed."
 	icon_state = "adoration"
 	inhand_icon_state = "adoration"
-	special = "Use in hand to swap between AOE, DOT and shotgun modes."
+	special = "Alt click to swap between AOE, DOT and shotgun modes."
 
 	force = 56
 	damtype = BLACK_DAMAGE
@@ -79,7 +79,7 @@
 							)
 	var/mode = 0
 
-/obj/item/ego_weapon/ranged/adoration/attack_self(mob/user)
+/obj/item/ego_weapon/ranged/adoration/AltClick(mob/user)
 	. = ..()
 	switch(mode)
 		if(SHOT_MODE)
