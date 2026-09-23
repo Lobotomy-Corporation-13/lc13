@@ -31,13 +31,25 @@
 	requires_leader = TRUE
 
 /datum/city_faction/bladelin
-	name = "Blade Lineage"
+	name = "the Blade Lineage"
 	category = CITY_FACTION_MINOR
 	leader_job = /datum/job/cutthroat
 	requires_leader = TRUE
 
 /datum/city_faction/fullstop
-	name = "Full Stop Office"
+	name = "the Full Stop Office"
 	category = CITY_FACTION_MINOR
-	leader_job = /datum/job/operator
+	leader_job = /datum/job/Fullop
+	requires_leader = TRUE
+
+/datum/city_faction/liu
+	name = "Liu South Section 6"
+	category = CITY_FACTION_MAJOR
+	leader_job = /datum/job/liudirector
+	requires_leader = TRUE
+
+/datum/city_faction/kuroclan
+	name = "the Kurokumo Clan"
+	category = CITY_FACTION_MINOR
+	leader_job = /datum/job/wakashu
 	requires_leader = TRUE

@@ -1,0 +1,795 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"aT" = (
+/obj/structure/table/wood{
+	pixel_x = 1
+	},
+/obj/item/reagent_containers/food/drinks/bottle/sake{
+	pixel_y = 9;
+	pixel_x = 9
+	},
+/obj/item/food/spaghetti/beefnoodle,
+/turf/open/floor/wood,
+/area/city/assoc_base)
+"bB" = (
+/obj/machinery/light{
+	dir = 1;
+	pixel_y = 19
+	},
+/turf/open/floor/lce/tile/dark{
+	name = "dark tiling"
+	},
+/area/city/assoc_base)
+"dv" = (
+/turf/open/floor/lce/tile/dark{
+	name = "dark tiling"
+	},
+/area/city/assoc_base)
+"fW" = (
+/obj/structure/dresser,
+/turf/open/floor/carpet/orange,
+/area/city/assoc_base)
+"gm" = (
+/obj/structure/chair/wood/wings,
+/obj/machinery/light{
+	dir = 1;
+	pixel_y = 19
+	},
+/turf/open/floor/wood,
+/area/city/assoc_base)
+"gx" = (
+/obj/machinery/light{
+	dir = 1;
+	pixel_y = 19
+	},
+/turf/open/floor/wood{
+	color = "#ccc8c0"
+	},
+/area/city/assoc_base)
+"ha" = (
+/turf/open/floor/carpet/red,
+/area/city/assoc_base)
+"hZ" = (
+/turf/open/floor/city/interior/boards,
+/area/city/assoc_base)
+"jo" = (
+/turf/closed/indestructible/city/corrugated{
+	color = "#AE3F1A"
+	},
+/area/city/assoc_base)
+"lt" = (
+/obj/machinery/light{
+	dir = 8;
+	pixel_y = 4;
+	pixel_x = -10
+	},
+/turf/open/floor/lce/tile{
+	name = "brown tiling"
+	},
+/area/city/assoc_base)
+"nq" = (
+/obj/structure/table/wood{
+	pixel_x = 1
+	},
+/obj/item/paper{
+	info = "Hey, sorry we couldn't get all your stuff moved in. One of the asshats that were supposed to transport your stuff got lost on the way here and jumped by some Syndicate goons, the poor bastard. In any case, it'll take a bit before we can get your proper decorations in here. Hopefully we at Xero's Moving Co. are able to get this nonsense sorted out soon.";
+	name = "Note from the movers"
+	},
+/turf/open/floor/wood,
+/area/city/assoc_base)
+"nA" = (
+/turf/open/floor/wood,
+/area/city/assoc_base)
+"nL" = (
+/obj/structure/closet/cabinet,
+/obj/machinery/light{
+	dir = 4;
+	pixel_x = 9;
+	pixel_y = 4
+	},
+/obj/item/ego_weapon/city/liu/fist,
+/obj/item/clothing/suit/armor/ego_gear/city/liu,
+/turf/open/floor/city/interior/boards,
+/area/city/assoc_base)
+"nY" = (
+/obj/structure/chair/comfy{
+	dir = 1
+	},
+/turf/open/floor/city/interior/boards,
+/area/city/assoc_base)
+"pv" = (
+/obj/machinery/light{
+	dir = 4;
+	pixel_x = 9;
+	pixel_y = 4
+	},
+/turf/open/floor/carpet/red,
+/area/city/assoc_base)
+"pG" = (
+/obj/item/kirbyplants{
+	pixel_y = 2;
+	pixel_x = 4
+	},
+/turf/open/floor/wood,
+/area/city/assoc_base)
+"pV" = (
+/obj/structure/chair/wood/wings,
+/turf/open/floor/wood,
+/area/city/assoc_base)
+"rF" = (
+/obj/structure/punching_bag{
+	resistance_flags = 115
+	},
+/turf/open/floor/wood{
+	color = "#ccc8c0"
+	},
+/area/city/assoc_base)
+"sx" = (
+/obj/structure/closet/cabinet,
+/obj/machinery/light{
+	dir = 8;
+	pixel_y = 4;
+	pixel_x = -10
+	},
+/obj/item/clothing/suit/armor/ego_gear/city/liuleader,
+/obj/item/ego_weapon/city/liu/fist/vet,
+/turf/open/floor/carpet/red,
+/area/city/assoc_base)
+"ul" = (
+/obj/structure/chair/wood{
+	dir = 4
+	},
+/turf/open/floor/wood,
+/area/city/assoc_base)
+"uw" = (
+/obj/structure/closet/cabinet,
+/obj/machinery/light{
+	dir = 8;
+	pixel_y = 4;
+	pixel_x = -10
+	},
+/obj/item/ego_weapon/city/liu/fist,
+/obj/item/clothing/suit/armor/ego_gear/city/liu,
+/turf/open/floor/city/interior/boards,
+/area/city/assoc_base)
+"uT" = (
+/obj/structure/table/wood{
+	pixel_x = 1
+	},
+/obj/item/reagent_containers/food/drinks/bottle/sake{
+	pixel_y = 6
+	},
+/turf/open/floor/wood,
+/area/city/assoc_base)
+"vs" = (
+/obj/machinery/light{
+	dir = 4;
+	pixel_x = 9;
+	pixel_y = 4
+	},
+/turf/open/floor/lce/plate{
+	name = "floor"
+	},
+/area/city/assoc_base)
+"vt" = (
+/obj/machinery/door/airlock/security{
+	name = "Director's Office";
+	req_access_txt = "liu_leader"
+	},
+/turf/open/floor/city/interior/boards,
+/area/city/assoc_base)
+"vD" = (
+/obj/machinery/light{
+	dir = 8;
+	pixel_y = 4;
+	pixel_x = -10
+	},
+/turf/open/floor/wood,
+/area/city/assoc_base)
+"vE" = (
+/obj/item/kirbyplants,
+/turf/open/floor/lce/tile/dark{
+	name = "dark tiling"
+	},
+/area/city/assoc_base)
+"wE" = (
+/obj/machinery/door/airlock/security{
+	name = "Veteran's Quarters";
+	req_access_txt = "liu"
+	},
+/turf/open/floor/carpet/orange,
+/area/city/assoc_base)
+"xm" = (
+/obj/structure/table/wood/fancy,
+/obj/item/documents/syndicate/red,
+/turf/open/floor/carpet/red,
+/area/city/assoc_base)
+"zM" = (
+/obj/structure/table/wood/fancy,
+/turf/open/floor/carpet/orange,
+/area/city/assoc_base)
+"Ai" = (
+/obj/structure/chair/plastic{
+	dir = 4
+	},
+/turf/open/floor/carpet/red,
+/area/city/assoc_base)
+"AK" = (
+/obj/machinery/light{
+	dir = 4;
+	pixel_x = 9;
+	pixel_y = 4
+	},
+/turf/open/floor/lce/tile/dark{
+	name = "dark tiling"
+	},
+/area/city/assoc_base)
+"AQ" = (
+/obj/structure/table/wood{
+	pixel_x = 1
+	},
+/turf/open/floor/wood,
+/area/city/assoc_base)
+"Ba" = (
+/obj/machinery/light{
+	dir = 8;
+	pixel_y = 4;
+	pixel_x = -10
+	},
+/turf/open/floor/city/interior/boards,
+/area/city/assoc_base)
+"Bw" = (
+/obj/machinery/light{
+	dir = 8;
+	pixel_y = 4;
+	pixel_x = -10
+	},
+/turf/open/floor/wood{
+	color = "#ccc8c0"
+	},
+/area/city/assoc_base)
+"Cg" = (
+/obj/structure/bed/pod,
+/obj/item/bedsheet/red,
+/turf/open/floor/carpet/orange,
+/area/city/assoc_base)
+"Cu" = (
+/obj/structure/table/wood{
+	pixel_x = 1
+	},
+/obj/item/food/spaghetti/beefnoodle{
+	pixel_x = -2;
+	pixel_y = 2
+	},
+/turf/open/floor/wood,
+/area/city/assoc_base)
+"DB" = (
+/obj/structure/table/wood,
+/obj/machinery/photocopier{
+	pixel_y = 7
+	},
+/turf/open/floor/city/interior/boards,
+/area/city/assoc_base)
+"Ek" = (
+/obj/structure/city_prop/sign_chinese1{
+	pixel_x = 7;
+	pixel_y = 0;
+	name = "traning area sign";
+	desc = "A painted board sign, containing training motivation"
+	},
+/turf/closed/indestructible/city/corrugated{
+	color = "#AE3F1A"
+	},
+/area/city/assoc_base)
+"Es" = (
+/obj/machinery/door/airlock/survival_pod{
+	req_access_txt = "liu"
+	},
+/turf/open/floor/carpet/red,
+/area/city/assoc_base)
+"EY" = (
+/obj/structure/table/wood,
+/obj/item/paper_bin{
+	pixel_y = 3;
+	pixel_x = 8
+	},
+/obj/item/pen/fountain/captain{
+	pixel_y = 4;
+	name = "director's fountain pen";
+	pixel_x = 8
+	},
+/turf/open/floor/city/interior/boards,
+/area/city/assoc_base)
+"Hq" = (
+/obj/machinery/door/airlock/wood{
+	name = "Liu Member Quarters";
+	req_access_txt = "liu"
+	},
+/turf/open/floor/city/interior/boards,
+/area/city/assoc_base)
+"HI" = (
+/obj/structure/dresser,
+/turf/open/floor/carpet/red,
+/area/city/assoc_base)
+"Jk" = (
+/turf/open/floor/lce/tile{
+	name = "brown tiling"
+	},
+/area/city/assoc_base)
+"Lo" = (
+/obj/structure/table/wood,
+/obj/item/modular_computer/laptop/preset,
+/turf/open/floor/city/interior/boards,
+/area/city/assoc_base)
+"Lq" = (
+/obj/structure/filingcabinet{
+	pixel_x = 12;
+	pixel_y = 18;
+	density = 0
+	},
+/obj/structure/filingcabinet{
+	pixel_y = 18;
+	density = 0;
+	pixel_x = 1
+	},
+/obj/structure/filingcabinet{
+	pixel_x = -10;
+	resistance_flags = 115;
+	pixel_y = 18;
+	density = 0
+	},
+/turf/open/floor/city/interior/boards,
+/area/city/assoc_base)
+"Mp" = (
+/obj/structure/bed/pod,
+/obj/item/bedsheet/red,
+/turf/open/floor/city/interior/boards,
+/area/city/assoc_base)
+"My" = (
+/obj/structure/table/wood/fancy,
+/obj/item/reagent_containers/food/drinks/bottle/sake{
+	pixel_y = 6;
+	pixel_x = 8
+	},
+/turf/open/floor/carpet/red,
+/area/city/assoc_base)
+"MK" = (
+/obj/structure/mineral_door/paperframe{
+	name = "Director's Quarters";
+	resistance_flags = 115;
+	max_integrity = 2000
+	},
+/turf/open/floor/carpet/red,
+/area/city/assoc_base)
+"MM" = (
+/obj/structure/closet/cabinet,
+/obj/item/ego_weapon/city/liu/fist/vet,
+/obj/item/clothing/suit/armor/ego_gear/city/liuvet,
+/turf/open/floor/carpet/orange,
+/area/city/assoc_base)
+"PY" = (
+/obj/structure/chair/wood{
+	dir = 8
+	},
+/turf/open/floor/wood,
+/area/city/assoc_base)
+"QO" = (
+/obj/machinery/light{
+	dir = 4;
+	pixel_x = 9;
+	pixel_y = 4
+	},
+/turf/open/floor/wood,
+/area/city/assoc_base)
+"RN" = (
+/obj/structure/table/wood/fancy,
+/obj/item/paper_bin{
+	pixel_y = 6
+	},
+/obj/item/pen{
+	pixel_y = 7
+	},
+/turf/open/floor/carpet/orange,
+/area/city/assoc_base)
+"SP" = (
+/obj/structure/table/wood{
+	pixel_x = 1
+	},
+/obj/item/food/spaghetti/beefnoodle,
+/turf/open/floor/wood,
+/area/city/assoc_base)
+"Tb" = (
+/turf/open/floor/carpet/orange,
+/area/city/assoc_base)
+"TP" = (
+/obj/machinery/light{
+	dir = 4;
+	pixel_x = 9;
+	pixel_y = 4
+	},
+/turf/open/floor/carpet/orange,
+/area/city/assoc_base)
+"UH" = (
+/obj/item/bedsheet/hos{
+	name = "director's bedsheet"
+	},
+/obj/structure/bed/pod,
+/turf/open/floor/carpet/red,
+/area/city/assoc_base)
+"UT" = (
+/turf/open/floor/wood{
+	color = "#ccc8c0"
+	},
+/area/city/assoc_base)
+"Ws" = (
+/obj/structure/table/wood/fancy,
+/turf/open/floor/carpet/red,
+/area/city/assoc_base)
+"Wx" = (
+/turf/open/floor/lce/plate{
+	name = "floor"
+	},
+/area/city/assoc_base)
+"XA" = (
+/obj/structure/chair/comfy/brown{
+	dir = 8;
+	pixel_x = -1
+	},
+/turf/open/floor/carpet/orange,
+/area/city/assoc_base)
+"ZL" = (
+/obj/structure/chair/wood{
+	dir = 8
+	},
+/obj/machinery/light{
+	dir = 4;
+	pixel_x = 9;
+	pixel_y = 4
+	},
+/turf/open/floor/wood,
+/area/city/assoc_base)
+
+(1,1,1) = {"
+jo
+jo
+jo
+jo
+jo
+jo
+jo
+jo
+jo
+jo
+jo
+jo
+jo
+"}
+(2,1,1) = {"
+jo
+Mp
+uw
+jo
+Mp
+uw
+jo
+Mp
+uw
+jo
+Mp
+uw
+jo
+"}
+(3,1,1) = {"
+jo
+hZ
+hZ
+jo
+hZ
+hZ
+jo
+hZ
+hZ
+jo
+hZ
+hZ
+jo
+"}
+(4,1,1) = {"
+jo
+Hq
+jo
+jo
+Hq
+jo
+jo
+Hq
+jo
+jo
+Hq
+jo
+jo
+"}
+(5,1,1) = {"
+jo
+Jk
+Jk
+Jk
+Jk
+Jk
+lt
+Jk
+Jk
+Jk
+Jk
+dv
+jo
+"}
+(6,1,1) = {"
+jo
+Jk
+AK
+dv
+dv
+dv
+Jk
+dv
+dv
+dv
+Jk
+AK
+jo
+"}
+(7,1,1) = {"
+jo
+Hq
+jo
+jo
+jo
+dv
+Jk
+dv
+jo
+jo
+Hq
+jo
+jo
+"}
+(8,1,1) = {"
+jo
+hZ
+hZ
+jo
+jo
+bB
+Jk
+dv
+jo
+jo
+hZ
+hZ
+jo
+"}
+(9,1,1) = {"
+jo
+Mp
+nL
+jo
+jo
+dv
+Jk
+dv
+jo
+jo
+Mp
+nL
+jo
+"}
+(10,1,1) = {"
+jo
+jo
+jo
+jo
+vE
+dv
+Jk
+dv
+vE
+jo
+jo
+jo
+jo
+"}
+(11,1,1) = {"
+Ek
+rF
+UT
+Bw
+nA
+nA
+Jk
+nA
+nA
+vD
+Ai
+Ai
+jo
+"}
+(12,1,1) = {"
+jo
+gx
+UT
+UT
+nA
+nA
+Jk
+Jk
+Jk
+Jk
+ha
+ha
+Es
+"}
+(13,1,1) = {"
+Ek
+rF
+UT
+UT
+nA
+nA
+Jk
+nA
+nA
+nA
+ha
+ha
+jo
+"}
+(14,1,1) = {"
+jo
+nA
+nA
+nA
+nA
+nA
+Jk
+nA
+nA
+QO
+ha
+ha
+jo
+"}
+(15,1,1) = {"
+jo
+nA
+ul
+ul
+ul
+nA
+Jk
+jo
+jo
+jo
+jo
+jo
+jo
+"}
+(16,1,1) = {"
+jo
+gm
+Cu
+AQ
+nq
+nA
+Jk
+jo
+hZ
+Ba
+hZ
+hZ
+jo
+"}
+(17,1,1) = {"
+jo
+pV
+aT
+uT
+SP
+nA
+Jk
+vt
+hZ
+hZ
+EY
+nY
+jo
+"}
+(18,1,1) = {"
+jo
+pG
+PY
+PY
+ZL
+nA
+Jk
+jo
+Lq
+hZ
+Lo
+DB
+jo
+"}
+(19,1,1) = {"
+jo
+jo
+jo
+jo
+jo
+Wx
+Jk
+jo
+jo
+MK
+jo
+jo
+jo
+"}
+(20,1,1) = {"
+jo
+MM
+zM
+RN
+jo
+Wx
+Jk
+jo
+Ws
+ha
+sx
+HI
+jo
+"}
+(21,1,1) = {"
+jo
+Tb
+XA
+Tb
+wE
+Jk
+Jk
+jo
+xm
+ha
+ha
+ha
+jo
+"}
+(22,1,1) = {"
+jo
+Cg
+TP
+fW
+jo
+Wx
+vs
+jo
+My
+pv
+ha
+UH
+jo
+"}
+(23,1,1) = {"
+jo
+jo
+jo
+jo
+jo
+jo
+jo
+jo
+jo
+jo
+jo
+jo
+jo
+"}
