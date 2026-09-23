@@ -135,7 +135,7 @@
 
 
 /mob/living/simple_animal/hostile/abnormality/watchman/bullet_act(obj/projectile/Proj)
-	..()
+	. = ..()
 	if(!ishuman(Proj.firer))
 		return
 	beneficial = FALSE
