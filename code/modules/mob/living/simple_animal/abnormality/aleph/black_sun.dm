@@ -68,6 +68,7 @@
 
 /mob/living/simple_animal/hostile/abnormality/black_sun/BreachEffect()
 	datum_reference.qliphoth_change(1)
+	breach_when = world.time + breach_timer
 	//Okay we're gonna make everyone go murder insane for like 12 seconds
 
 	//Thank you Branch 12
