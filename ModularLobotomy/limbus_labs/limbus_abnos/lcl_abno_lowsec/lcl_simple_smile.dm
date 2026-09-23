@@ -76,7 +76,7 @@
 \-----*/
 /mob/living/simple_animal/hostile/limbus_abno/simple_smile/AbnoEat(food)
 	var/obj/object = food
-	if(!gobble || istype(object, /obj/item/bodypart/head))
+	if(!gobble || istype(object, /obj/item/bodypart/head) || !istype(object))
 		return FALSE
 	if((object.resistance_flags & INDESTRUCTIBLE) || object.anchored) //Letting it eat nearly anything is 100% going to bite me in the ass somehow but fuck it, it's funny.
 		return FALSE

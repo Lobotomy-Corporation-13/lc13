@@ -22,7 +22,7 @@
 		return FALSE
 	if(is_tutorial_level(target.z)) // Don't bully the interns please
 		return FALSE
-	if(target.ckey || target.mind || (target in GLOB.player_list)) //Home, or on the way back.
+	if(target.ckey || target.mind?.active || (target in GLOB.player_list)) //Home, or on the way back.
 		return FALSE
 	if(IsPossessionLocked(target))
 		return FALSE
@@ -44,9 +44,9 @@
 	return !body.ckey || (body.ckey == returning?.ckey)
 
 ///Whether a ghost dragged onto this is attempting possession at all, rather than misclicking.
-///Narrower than IsGhostPossessable(): the drag path only ever meant to reach abnormalities.
+// Note: This seems to have been restricted to "isabnormalitymob(src)" prior but I believe this is way too restrictive and stops players from clickdragging onto stuff like Ordeals.
 /mob/living/proc/CanGhostDragPossess()
-	return isabnormalitymob(src)
+	return isliving(src)
 
 /datum/proc/try_take_abnormality(mob/dead/observer/possessing_player, mob/abnormality)
 	if(!SSlobotomy_corp.enable_possession) // uhhhh, how did you even access this proc?

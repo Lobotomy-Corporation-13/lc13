@@ -62,8 +62,6 @@ GLOBAL_VAR_INIT(observer_default_invisibility, INVISIBILITY_OBSERVER)
 	var/datum/orbit_menu/orbit_menu
 	var/datum/spawners_menu/spawners_menu
 
-	var/possession_cooldown = 0 // LOBOTOMYCORPORATION ADDITION -- Possession cooldown
-
 /mob/dead/observer/Initialize()
 	set_invisibility(GLOB.observer_default_invisibility)
 
@@ -148,8 +146,6 @@ GLOBAL_VAR_INIT(observer_default_invisibility, INVISIBILITY_OBSERVER)
 	grant_all_languages()
 	show_data_huds()
 	data_huds_on = 1
-
-	possession_cooldown = world.time + (10 SECONDS) // LOBOTOMYCORPORATION ADDITION -- Possession cooldown
 
 /mob/dead/observer/get_photo_description(obj/item/camera/camera)
 	if(!invisibility || camera.see_ghosts)
@@ -638,10 +634,6 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 	if(!SSlobotomy_corp.enable_possession)
 		to_chat(usr, span_userdanger("Abnormality possession is not enabled!"))
 		return FALSE
-
-	if(possession_cooldown >= world.time)
-		to_chat(src, span_userdanger("You are under a cooldown for possessing for [(possession_cooldown - world.time) / 10] more seconds!"))
-		return FALSE
 	// LOBOTOMYCORPORATION ADDITION END
 
 	var/list/possessible = list()
@@ -723,20 +715,12 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 		to_chat(usr, span_userdanger("This abnormality is blacklisted from being possessed!"))
 		return ..()
 
-	if(!target.CanGhostDragPossess()) // we want them to ONLY be able to possess abnormalities
-		to_chat(usr, span_userdanger("You can only possess abnormalities!"))
-		return ..()
-
 	if(!IsGhostPossessable(target)) // empty is not the same as free
 		to_chat(usr, span_userdanger("Something still occupies this one. You can't possess it!"))
 		return ..()
 
-	if(possession_cooldown >= world.time)
-		to_chat(src, span_userdanger("You are under a cooldown for possessing for [(possession_cooldown - world.time) / 10] more seconds!"))
-		return ..()
-
 	if(!usr.client) // who are we talking to again...? whatever
-		to_chat(usr, span_userdanger("You dont exist, so you cant possess!"))
+		to_chat(usr, span_userdanger("You don't exist, so you cant possess!"))
 		return ..()
 
 	try_take_abnormality(src, target)

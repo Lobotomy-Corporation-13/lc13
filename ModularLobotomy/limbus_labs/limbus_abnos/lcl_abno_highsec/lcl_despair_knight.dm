@@ -176,7 +176,6 @@
 		to_chat(src, span_nicegreen("It is the right colour. For a moment, that is almost a comfort."))
 
 // Blessing - choose a human, watch/hear/whisper, and raise their attunement safe limit.
-//Not gated on breached: the only block is someone already holding the blessing.
 /mob/living/simple_animal/hostile/limbus_abno/despair_knight/proc/BlessHuman()
 	if(blessed_human)
 		to_chat(src, span_warning("You have already given your blessing to [blessed_human]. Such a vow cannot be taken back."))
@@ -528,6 +527,11 @@
 	to_chat(src, span_notice("<b>You manifest beside [blessed].</b> Only they can see or hear you. Stay close to them."))
 	Show()
 
+/mob/camera/despair_manifest/Logout()
+	. = ..()
+	if(body && !QDELETED(body))
+		body.ReturnToBody()
+
 //A light-blue ghostly image of the knight, shown only to the blessed (and to the manifest).
 /mob/camera/despair_manifest/proc/Show()
 	if(blessed?.client)
@@ -569,7 +573,7 @@
 	forceMove(home)
 
 //Speech only reaches the blessed (and the manifest itself).
-/mob/camera/despair_manifest/say(message, bubble_type, list/spans = list(), sanitize = TRUE, datum/language/language = null, ignore_spam = FALSE, forced = null)
+/mob/camera/despair_manifest/say(message, bubble_type, list/spans = list(), sanitize = TRUE, datum/language/language = /datum/language/common, ignore_spam = FALSE, forced = null)
 	if(!message)
 		return
 	message = capitalize(trim(copytext_char(sanitize(message), 1, MAX_MESSAGE_LEN)))

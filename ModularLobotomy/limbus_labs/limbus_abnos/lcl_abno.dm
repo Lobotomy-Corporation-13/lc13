@@ -169,8 +169,8 @@
 	//Death and rebirth.
 	///How long the shell takes to split back open.
 	var/rebirth_time = 5 MINUTES
-	///world.time the current shell hatches at. Only meaningful while dead.
-	var/rebirth_at = 0
+	/// Timer ID for a rebirth timer. Use timeleft(rebirth_timer) to view time left.
+	var/rebirth_timer = null
 	///Sprite offsets from before death, handed back on rebirth.
 	var/living_pixel_x
 	var/living_pixel_y
@@ -283,7 +283,16 @@
 	var/area/lce/containment/cell = get_area(src)
 	if(istype(cell) && cell.specimen_cell)
 		for(var/turf/open/T in cell)
-			turfs += T
+			// This check exists to check we're |not| adding the turfs which are part of the cell area but lie outside the cell.
+			// Why do these exist? Because the cell area is stretched out to include one turf with a console on it so it can easily pull the area it has access to.
+			// We could also make it check turf type or some other stuff, but eh, this works.
+			var/actually_in_cell = TRUE
+			for(var/obj/machinery/computer/camera_advanced/lce_claw/claw_console in T)
+				actually_in_cell = FALSE
+				break
+
+			if(actually_in_cell)
+				turfs += T
 		return turfs
 	//Somewhere that is not a cell - an admin drop, a test room. Back to a square around us.
 	for(var/turf/open/T in range(fallback_range, src))
@@ -370,9 +379,9 @@
 	*/
 	AdjustDesire(room_score)
 	if(room_score > 0)
-		to_chat(src,span_notice("You are happy with your surroundings."))
+		to_chat(src, span_notice("You are happy with your surroundings."))
 	else
-		to_chat(src,span_notice("You are unhappy with your surroundings."))
+		to_chat(src, span_notice("You are unhappy with your surroundings."))
 
 /*--------------\
 |TECHNICAL PROCS|
@@ -402,7 +411,7 @@
 	for(var/mob/living/L in temp_friend_list)
 		if(trg == L)
 			friend_list -= L
-			to_chat(src,span_notice("You no longer consider [trg] a friend."))
+			to_chat(src, span_notice("You no longer consider [trg] a friend."))
 			return
 
 	friend_list += trg
@@ -413,7 +422,7 @@
 /mob/living/simple_animal/hostile/limbus_abno/proc/Hungrier(hungry_amount, bypass_check = TRUE)
 	if(hunger_bar > (max_hunger * 0.9) && health < maxHealth)
 		adjustBruteLoss(-maxHealth * 0.1) //This might be too much healing, but we'll see.
-		to_chat(src,span_notice("As your hunger is satisfied, you heal some of your wounds."))
+		to_chat(src, span_notice("As your hunger is satisfied, you heal some of your wounds."))
 	if(!hunger_active && !bypass_check)
 		return
 
@@ -424,7 +433,7 @@
 	if(isliving(A))
 		L = A
 		if(IsFriend(L) && !attack_friend)
-			to_chat(src,span_warning("You don't feel like hurting [L], they're on your side."))
+			to_chat(src, span_warning("You don't feel like hurting [L], they're on your side."))
 			return
 	. = ..()
 	AbnoEat(A)
@@ -447,16 +456,15 @@
 	//A shell is deadweight, not a specimen. Let people carry it back to its cell.
 	move_resist = MOVE_FORCE_DEFAULT
 	pull_force = MOVE_FORCE_DEFAULT
-	rebirth_at = world.time + rebirth_time
-	addtimer(CALLBACK(src, PROC_REF(Rebirth)), rebirth_time)
+	rebirth_timer = addtimer(CALLBACK(src, PROC_REF(Rebirth)), rebirth_time, TIMER_STOPPABLE)
 	to_chat(src, span_userdanger("Your shell burst apart at the seams, but you remain. [DisplayTimeText(rebirth_time)] before your return."))
 	return ..()
 
 ///How long is left before the shell splits open, or null while alive.
 /mob/living/simple_animal/hostile/limbus_abno/proc/RebirthCountdown()
-	if(stat != DEAD || rebirth_at <= world.time)
+	if(stat != DEAD || timeleft(rebirth_timer) <= world.time)
 		return null
-	return DisplayTimeText(rebirth_at - world.time)
+	return DisplayTimeText(timeleft(rebirth_timer) - world.time)
 
 //Examining your own shell tells you how long you have left in it. Onlookers only ever see the
 //egg, so the countdown is for the specimen and for ghosts watching it.
@@ -536,7 +544,7 @@
 			if(desire_on_eat > 0 && desire_on_eat_threshold < hunger_bar)
 				AdjustDesire(desire_on_eat)
 			playsound(src, 'sound/items/eatfood.ogg', 100, TRUE)
-			manual_emote("eats [food]") //DM articles the item itself, so no "the" of our own.
+			manual_emote("eats [food].") //DM articles the item itself, so no "the" of our own.
 			if(delete_food)
 				qdel(food)
 			return TRUE
@@ -594,11 +602,13 @@
 	update_icon()
 	UpdateBars()
 	AddBreachEffect()
+	breached = TRUE
 
 /mob/living/simple_animal/hostile/limbus_abno/proc/Unbreach()
 	update_icon()
 	UpdateBars()
 	RemoveBreachEffect()
+	breached = FALSE
 
 /mob/living/simple_animal/hostile/limbus_abno/proc/AddBreachEffect()
 	if(!breach_overlay)
@@ -750,7 +760,9 @@
 
 //Regenerate from death
 /mob/living/simple_animal/hostile/limbus_abno/proc/Rebirth()
+	// Come back here
 	grab_ghost()
+	// Reset visuals
 	icon = original_abno.icon
 	icon_state = OriginalLivingState()
 	icon_living = icon_state
@@ -759,14 +771,21 @@
 	pixel_y = living_pixel_y
 	base_pixel_x = living_base_pixel_x
 	base_pixel_y = living_base_pixel_y
+	// Reset forces
 	move_resist = initial(move_resist)
 	pull_force = initial(pull_force)
-	rebirth_at = 0
+	// Clear rebirth timer
+	deltimer(rebirth_timer)
+	rebirth_timer = null
+	// Revive!
 	revive(full_heal = TRUE, admin_revive = TRUE)
+	// Adjust meters
 	AdjustCounter(max_counter)
 	AdjustHunger(max_hunger)
 	AdjustDesire(max_desire)
+	// Cleanup
 	Unbreach()
+	update_action_buttons_icon()
 
 ///The sprite the original abnormality wears while alive. Plenty of them never set icon_living
 ///at all - it defaults to "" - and revive() copies it straight onto icon_state, which is what

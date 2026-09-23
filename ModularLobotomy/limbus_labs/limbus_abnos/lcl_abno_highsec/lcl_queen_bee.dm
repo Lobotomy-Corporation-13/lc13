@@ -213,6 +213,13 @@
 	var/datum/action/cooldown/bee_scavenge/beenge = new() //I'm kinda pushing it with that one.
 	beenge.Grant(src)
 
+/mob/living/simple_animal/hostile/worker_bee/lcl_bee/UnarmedAttack(atom/A)
+	if(A == mother)
+		to_chat(src, span_warning("You're overcome by a compulsion - you <b>cannot</b> attack [mother]."))
+		return FALSE
+	. = ..()
+
+
 //Ghost-playable on purpose - that is what the spawn message is for. It is not a way into the hive.
 /mob/living/simple_animal/hostile/worker_bee/lcl_bee/CanGhostDragPossess()
 	return TRUE
@@ -340,7 +347,7 @@
 	background_icon_state = "bg_qbee"
 	icon_icon = 'icons/mob/actions/actions_changeling.dmi'
 	button_icon_state = "hivemind_channel"
-	cooldown_time = 5 SECONDS
+	cooldown_time = 2 SECONDS
 
 /datum/action/cooldown/bee_speech/Trigger()
 	. = ..()
