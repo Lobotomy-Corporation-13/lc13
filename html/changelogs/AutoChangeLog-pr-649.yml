@@ -1,4 +1,0 @@
-author: "foose7495"
-delete-after: True
-changes:
-  - bugfix: "adoration now uses alt click to change firing mode"
