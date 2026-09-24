@@ -928,7 +928,7 @@
 	hitsound = "sound/effects/wounds/pierce1.ogg"
 
 	reload_start_sound = null
-	reload_success_sound = 'sound/effects/light_flicker'
+	reload_success_sound = 'sound/effects/light_flicker.ogg'
 	projectile_path = /obj/projectile/ego_bullet/tarnished
 	weapon_weight = WEAPON_MEDIUM
 	spread = 10
