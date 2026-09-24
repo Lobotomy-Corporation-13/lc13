@@ -48,8 +48,6 @@
 	color = "#65350F"
 	boss_amount = 1
 	grunt_amount = 149
-	place_player_multiplicator = 0
-	spawn_player_multiplicator = 0
 	boss_type = list(/mob/living/simple_animal/hostile/hogs/albino)
 	grunt_type = list(/mob/living/simple_animal/hostile/hogs)
 	can_run = FALSE
