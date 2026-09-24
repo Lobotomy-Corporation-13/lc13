@@ -61,6 +61,10 @@
 	else
 		name = random_unique_name(gender, 1)
 	desc = "Is that really [name]?"
+	color = "#B063C7"
+	light_color = "#B063C7"
+	light_range = 3
+	light_power = 7
 
 /mob/living/simple_animal/hostile/ordeal/sin_envy/death(gibbed)
 	appearance = initial(appearance) // Remove our human overlay
