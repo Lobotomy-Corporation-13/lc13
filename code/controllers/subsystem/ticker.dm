@@ -158,7 +158,9 @@ SUBSYSTEM_DEF(ticker)
 			for(var/client/C in GLOB.clients)
 				window_flash(C, ignorepref = TRUE) //let them know lobby has opened up.
 			to_chat(world, "<span class='boldnotice'>Welcome to [station_name()]!</span>")
-			send2chat("New round starting on [SSmapping.config.map_name]!", CONFIG_GET(string/chat_announce_new_game))
+			var/datum/map_config/map_config = SSmapping.config
+			var/map_name = (map_config.has_submaps ? map_config.map_name + ": " + map_config.available_submaps[map_config.map_file] : map_config.map_name)
+			send2chat("New round starting on [map_name]!", CONFIG_GET(string/chat_announce_new_game))
 			current_state = GAME_STATE_PREGAME
 			//Everyone who wants to be an observer is now spawned
 			create_observers()

@@ -583,6 +583,15 @@
 	},
 /turf/open/floor/carpet/royalblue,
 /area/city/shop)
+"dI" = (
+/obj/structure/railing{
+	dir = 1
+	},
+/obj/structure/railing{
+	dir = 1
+	},
+/turf/open/floor/plating,
+/area/city)
 "dN" = (
 /obj/structure/aquarium,
 /obj/structure/table,
@@ -914,6 +923,10 @@
 /obj/machinery/photocopier,
 /turf/open/floor/carpet/black,
 /area/city/fixers)
+"ft" = (
+/obj/machinery/augment_catalogue,
+/turf/closed/indestructible/wood,
+/area/city/shop)
 "fv" = (
 /obj/structure/statue/sandstone/venus{
 	anchored = 1;
@@ -2531,6 +2544,15 @@
 	},
 /turf/open/floor/carpet/stellar,
 /area/city/shop)
+"pO" = (
+/obj/effect/turf_decal/siding/thinplating/dark{
+	dir = 4
+	},
+/obj/item/storage/secure/safe{
+	pixel_x = 35
+	},
+/turf/open/floor/stone,
+/area/city/shop)
 "pU" = (
 /obj/effect/turf_decal/bot,
 /obj/effect/decal/cleanable/dirt,
@@ -2878,19 +2900,13 @@
 /turf/open/floor/stone,
 /area/city/shop)
 "sg" = (
-/obj/structure/rack,
-/obj/structure/lootcrate/tres,
-/obj/structure/lootcrate/tres,
-/obj/structure/lootcrate/tres,
-/obj/structure/lootcrate/tres,
-/obj/structure/lootcrate/tres,
-/obj/item/crowbar/red,
 /obj/machinery/light{
 	dir = 1
 	},
 /obj/effect/turf_decal/siding/thinplating/dark{
 	dir = 9
 	},
+/obj/machinery/vending/prosthetic,
 /turf/open/floor/stone,
 /area/city/shop)
 "sh" = (
@@ -2963,13 +2979,16 @@
 /area/city/fixers)
 "sJ" = (
 /obj/structure/rack,
-/obj/item/price_tagger,
 /obj/machinery/light{
 	dir = 1
 	},
 /obj/effect/turf_decal/siding/thinplating/dark{
 	dir = 5
 	},
+/obj/item/body_modification_tester,
+/obj/item/augment_remover,
+/obj/item/body_modification_remover,
+/obj/item/augment_tester,
 /turf/open/floor/stone,
 /area/city/shop)
 "sL" = (
@@ -3167,12 +3186,9 @@
 /turf/open/floor/wood,
 /area/city/fixers)
 "tO" = (
-/obj/item/wirecutters,
-/obj/item/wirecutters,
-/obj/item/wirecutters,
-/obj/item/wirecutters,
-/turf/open/floor/stone,
-/area/city/backstreets_room)
+/obj/structure/flora/ausbushes/ywflowers,
+/turf/open/floor/plating/ashplanet/rocky,
+/area/city)
 "tP" = (
 /obj/structure/table/rolling,
 /obj/item/roller{
@@ -3379,6 +3395,10 @@
 	dir = 4
 	},
 /turf/open/floor/stone,
+/area/city/shop)
+"vk" = (
+/obj/machinery/body_modification_catalogue,
+/turf/closed/indestructible/wood,
 /area/city/shop)
 "vq" = (
 /obj/structure/table/wood,
@@ -3842,11 +3862,16 @@
 /turf/open/floor/wood,
 /area/city/house)
 "ys" = (
-/obj/structure/rack,
-/obj/item/workshop_mod/regular/white,
 /obj/effect/turf_decal/siding/thinplating/dark{
 	dir = 10
 	},
+/obj/structure/rack,
+/obj/structure/lootcrate/tres,
+/obj/structure/lootcrate/tres,
+/obj/structure/lootcrate/tres,
+/obj/structure/lootcrate/tres,
+/obj/structure/lootcrate/tres,
+/obj/item/crowbar/red,
 /turf/open/floor/stone,
 /area/city/shop)
 "yw" = (
@@ -3932,6 +3957,16 @@
 	},
 /turf/open/floor/wood,
 /area/city/fixers)
+"zk" = (
+/obj/structure/delivery_door{
+	density = 1;
+	icon = 'icons/obj/votebox.dmi';
+	icon_state = "votebox_maint";
+	name = "mail box";
+	desc = "A mailbox for this evil mountain lair."
+	},
+/turf/closed/indestructible/reinforced,
+/area/city/backstreets_alley)
 "zl" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/machinery/button/door{
@@ -4952,6 +4987,9 @@
 	},
 /turf/open/floor/plating/grass,
 /area/city)
+"Ft" = (
+/turf/closed/indestructible/reinforced,
+/area/city/backstreets_alley)
 "Fw" = (
 /obj/effect/turf_decal/bot,
 /obj/structure/closet/crate/bin,
@@ -5236,8 +5274,10 @@
 /obj/machinery/door/poddoor/shutters/window/preopen{
 	id = "extraction"
 	},
-/obj/machinery/vending/custom/unbreakable,
 /obj/effect/turf_decal/siding/thinplating/corner,
+/obj/machinery/body_modification_fabricator/public{
+	resistance_flags = 64
+	},
 /turf/open/floor/wood{
 	color = "#ccc8c0"
 	},
@@ -5471,14 +5511,10 @@
 /turf/open/floor/circuit/telecomms/mainframe,
 /area/facility_hallway/north)
 "IC" = (
-/obj/structure/table,
-/obj/item/storage/secure/safe{
-	pixel_x = -22
-	},
 /obj/effect/turf_decal/siding/thinplating/dark{
 	dir = 9
 	},
-/obj/item/storage/toolbox/electrical,
+/obj/machinery/augment_fabricator,
 /turf/open/floor/stone,
 /area/city/shop)
 "ID" = (
@@ -5608,6 +5644,12 @@
 	},
 /turf/open/floor/facility/dark,
 /area/city/backstreets_room)
+"Jn" = (
+/obj/machinery/light/small{
+	dir = 4
+	},
+/turf/open/floor/stone,
+/area/city/backstreets_room)
 "Jq" = (
 /turf/open/floor/carpet/stellar,
 /area/city/shop)
@@ -5615,6 +5657,13 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/closed/wall/mineral/iron,
 /area/city/fixers)
+"Js" = (
+/obj/machinery/door/airlock/grunge{
+	name = "NO ENTRY";
+	req_access_txt = "150"
+	},
+/turf/open/floor/stone,
+/area/city/backstreets_alley)
 "Jv" = (
 /obj/item/statuebust{
 	anchored = 1
@@ -7089,12 +7138,6 @@
 /area/city/shop)
 "RO" = (
 /obj/effect/mapping_helpers/airlock/abandoned,
-/obj/machinery/atmospherics/pipe/simple/scrubbers/hidden/layer2{
-	dir = 4
-	},
-/obj/machinery/atmospherics/pipe/simple/supply/hidden/layer4{
-	dir = 4
-	},
 /obj/machinery/door/airlock/grunge{
 	name = "Vacant Office A"
 	},
@@ -7398,8 +7441,9 @@
 /turf/open/indestructible/hoteltile,
 /area/city/house)
 "TB" = (
-/obj/structure/rack,
 /obj/effect/turf_decal/siding/thinplating/dark,
+/obj/structure/table,
+/obj/item/storage/toolbox/electrical,
 /turf/open/floor/stone,
 /area/city/shop)
 "TC" = (
@@ -7806,16 +7850,23 @@
 /turf/open/floor/carpet/green,
 /area/city/shop)
 "WD" = (
-/obj/structure/table,
 /obj/effect/turf_decal/siding/thinplating/dark{
 	dir = 1
 	},
-/obj/item/storage/toolbox/mechanical,
 /obj/machinery/light{
 	dir = 1
 	},
+/obj/machinery/body_modification_fabricator,
 /turf/open/floor/stone,
 /area/city/shop)
+"WE" = (
+/obj/structure/table/wood,
+/obj/structure/railing,
+/obj/machinery/association_contract_terminal{
+	density = 0
+	},
+/turf/open/floor/wood,
+/area/city/fixers)
 "WF" = (
 /obj/structure/window/reinforced/tinted/fulltile,
 /obj/structure/barricade/wooden,
@@ -7964,10 +8015,14 @@
 /obj/structure/rack,
 /obj/item/workshop_mod/regular/black,
 /obj/effect/turf_decal/siding/thinplating/dark,
+/obj/item/workshop_mod/regular/white,
 /turf/open/floor/stone,
 /area/city/shop)
 "XJ" = (
 /obj/structure/table/wood,
+/obj/machinery/association_contract_terminal{
+	density = 0
+	},
 /turf/open/floor/wood,
 /area/city/fixers)
 "XK" = (
@@ -8007,10 +8062,11 @@
 /turf/open/floor/stone,
 /area/city/shop)
 "XY" = (
-/obj/structure/rack,
 /obj/effect/turf_decal/siding/thinplating/dark{
 	dir = 6
 	},
+/obj/structure/table,
+/obj/item/storage/toolbox/mechanical,
 /turf/open/floor/stone,
 /area/city/shop)
 "XZ" = (
@@ -8038,6 +8094,7 @@
 /obj/effect/turf_decal/siding/thinplating/dark{
 	dir = 1
 	},
+/obj/item/price_tagger,
 /turf/open/floor/stone,
 /area/city/shop)
 "Ye" = (
@@ -46263,7 +46320,7 @@ Gb
 jC
 XL
 be
-tv
+WE
 lS
 lS
 lS
@@ -51663,8 +51720,8 @@ Gv
 Ih
 wB
 gr
-fL
-jU
+gr
+vk
 bw
 cq
 ZS
@@ -51919,7 +51976,7 @@ Xe
 gl
 gl
 gl
-gl
+ft
 gl
 gl
 bw
@@ -52695,8 +52752,8 @@ bw
 bw
 bw
 bw
-bw
-RT
+ZS
+tO
 bw
 bw
 bw
@@ -52952,8 +53009,8 @@ bw
 bw
 bw
 bw
-bw
-bw
+ZS
+ZS
 bw
 bw
 bw
@@ -53206,11 +53263,11 @@ gl
 px
 dy
 bw
+iC
 bw
-bw
-bw
-bw
-bw
+gu
+ZS
+ZS
 dy
 bw
 bw
@@ -53457,7 +53514,7 @@ bw
 bw
 gl
 sJ
-bP
+pO
 XY
 gl
 px
@@ -53465,8 +53522,8 @@ bw
 bw
 bw
 bw
-cm
-bw
+gu
+gu
 bw
 bw
 bw
@@ -53720,7 +53777,7 @@ gl
 bw
 bw
 bw
-iC
+gu
 bw
 bw
 bw
@@ -53978,9 +54035,9 @@ FH
 bw
 bw
 bw
+gu
 bw
-bw
-bw
+cm
 bw
 bw
 bw
@@ -54233,7 +54290,7 @@ bw
 sN
 bw
 bw
-bw
+gu
 bw
 FH
 bw
@@ -54489,8 +54546,8 @@ bw
 ji
 VG
 cm
-bw
-bw
+gu
+gu
 bw
 bw
 bw
@@ -54745,9 +54802,9 @@ UM
 UM
 UM
 cw
-UM
 eo
-UM
+eo
+eo
 UM
 UM
 UM
@@ -55002,9 +55059,9 @@ gu
 gu
 gu
 oH
-oH
+AU
 gu
-gu
+AU
 gu
 gu
 gu
@@ -56074,9 +56131,9 @@ nx
 nx
 nx
 nx
-IR
-IR
-HK
+nx
+nx
+nx
 HK
 HK
 IR
@@ -56330,10 +56387,10 @@ pl
 pl
 pl
 pl
+pl
+pl
+pl
 nx
-HK
-IR
-IR
 HK
 IR
 IR
@@ -56587,10 +56644,10 @@ pl
 pl
 pl
 pl
+pl
+pl
+pl
 nx
-IR
-IR
-IR
 HK
 IR
 IR
@@ -56844,10 +56901,10 @@ pl
 pl
 pl
 pl
+pl
+pl
+pl
 nx
-IR
-IR
-IR
 IR
 HK
 HK
@@ -57101,10 +57158,10 @@ pl
 pl
 pl
 pl
+pl
+pl
+pl
 nx
-IR
-IR
-HK
 HK
 IR
 IR
@@ -57358,10 +57415,10 @@ pl
 pl
 pl
 pl
+pl
+pl
+pl
 nx
-IR
-HK
-IR
 IR
 IR
 IR
@@ -57567,14 +57624,14 @@ IR
 IR
 IR
 IR
-IR
-IR
-IR
-IR
-YS
-YS
-YS
-IR
+Bx
+Bx
+Bx
+Bx
+zk
+Js
+Ft
+Bx
 IR
 IR
 IR
@@ -57615,10 +57672,10 @@ pl
 pl
 pl
 pl
+pl
+pl
+pl
 nx
-IR
-IR
-IR
 IR
 IR
 IR
@@ -57825,12 +57882,12 @@ Bx
 Bx
 Bx
 Bx
-Bx
-Bx
-Bx
-Bx
-Bx
-Bx
+Ft
+Ft
+Ft
+Ft
+YS
+Ft
 Bx
 Bx
 Bx
@@ -57872,10 +57929,10 @@ pl
 pl
 pl
 pl
+pl
+pl
+pl
 nx
-Bx
-Bx
-Bx
 Bx
 Bx
 Bx
@@ -58120,7 +58177,10 @@ ZS
 ZS
 Ab
 Xl
-wu
+pl
+pl
+pl
+pl
 pl
 pl
 pl
@@ -58130,9 +58190,6 @@ pl
 pl
 pl
 nx
-pG
-pG
-pG
 pG
 pG
 pG
@@ -58340,9 +58397,9 @@ pG
 pG
 pG
 Mo
-tO
 dw
 dw
+Jn
 dw
 Mo
 pG
@@ -58386,6 +58443,9 @@ pl
 pl
 pl
 pl
+pl
+pl
+pl
 nx
 pG
 pG
@@ -58393,9 +58453,6 @@ pG
 DZ
 DZ
 DZ
-pG
-pG
-pG
 pG
 pG
 pG
@@ -58643,6 +58700,9 @@ pl
 pl
 pl
 pl
+pl
+pl
+pl
 nx
 pG
 pG
@@ -58653,9 +58713,6 @@ DZ
 DZ
 DZ
 DZ
-pG
-pG
-pG
 pG
 pG
 pG
@@ -58891,6 +58948,9 @@ ZS
 ZS
 Ab
 Xl
+wu
+pl
+pl
 pl
 pl
 pl
@@ -58910,9 +58970,6 @@ DZ
 DZ
 DZ
 DZ
-pG
-pG
-pG
 pG
 pG
 pG
@@ -59148,8 +59205,11 @@ ZS
 ZS
 ZA
 Xl
+dI
 pl
-lT
+pl
+pl
+pl
 pl
 pl
 pl
@@ -59165,9 +59225,6 @@ pG
 pG
 DZ
 DZ
-pG
-pG
-pG
 pG
 pG
 pG
@@ -59405,6 +59462,9 @@ ZS
 ZS
 Ab
 Xl
+wu
+pl
+pl
 pl
 pl
 pl
@@ -59424,9 +59484,6 @@ DZ
 DZ
 DZ
 DZ
-pG
-pG
-pG
 pG
 pG
 pG
@@ -59662,7 +59719,10 @@ ZS
 ZS
 Ab
 Xl
-wu
+pl
+lT
+pl
+pl
 pl
 pl
 pl
@@ -59681,9 +59741,6 @@ DZ
 DZ
 DZ
 DZ
-pG
-pG
-pG
 pG
 pG
 pG
@@ -59919,7 +59976,10 @@ ZS
 ZS
 Ab
 Xl
-wu
+pl
+pl
+pl
+pl
 pl
 pl
 pl
@@ -59929,9 +59989,6 @@ pl
 pl
 pl
 nx
-pG
-pG
-pG
 pG
 pG
 pG
@@ -60176,7 +60233,10 @@ ZS
 ZS
 Ab
 Xl
-wu
+pl
+pl
+pl
+pl
 pl
 pl
 pl
@@ -60186,9 +60246,6 @@ pl
 pl
 pl
 nx
-pG
-pG
-pG
 pG
 pG
 pG
@@ -60442,10 +60499,10 @@ pl
 pl
 pl
 pl
+pl
+pl
+pl
 nx
-pG
-pG
-pG
 pG
 pG
 pG
@@ -60699,10 +60756,10 @@ pl
 pl
 pl
 pl
+pl
+pl
+pl
 nx
-pG
-pG
-pG
 pG
 pG
 pG
@@ -60956,10 +61013,10 @@ pl
 pl
 pl
 pl
+pl
+pl
+pl
 nx
-pG
-pG
-pG
 pG
 pG
 pG
@@ -61213,10 +61270,10 @@ pl
 pl
 pl
 pl
+pl
+pl
+pl
 nx
-pG
-pG
-pG
 pG
 pG
 pG
@@ -61470,10 +61527,10 @@ pl
 pl
 pl
 pl
+pl
+pl
+pl
 nx
-pG
-pG
-pG
 pG
 pG
 pG
@@ -61727,10 +61784,10 @@ pl
 pl
 pl
 pl
+pl
+pl
+pl
 nx
-pG
-pG
-pG
 pG
 pG
 pG
@@ -61984,10 +62041,10 @@ pl
 pl
 pl
 pl
+pl
+pl
+pl
 nx
-pG
-pG
-pG
 pG
 pG
 pG
@@ -62241,10 +62298,10 @@ pl
 pl
 pl
 pl
+pl
+pl
+pl
 nx
-pG
-pG
-pG
 pG
 pG
 pG
@@ -62498,10 +62555,10 @@ pl
 pl
 pl
 pl
+pl
+pl
+pl
 nx
-pG
-pG
-pG
 pG
 pG
 pG
@@ -62755,10 +62812,10 @@ pl
 pl
 pl
 pl
+pl
+pl
+pl
 nx
-pG
-pG
-pG
 pG
 pG
 pG
@@ -63013,9 +63070,9 @@ nx
 nx
 nx
 nx
-pG
-pG
-pG
+nx
+nx
+nx
 pG
 pG
 pG
