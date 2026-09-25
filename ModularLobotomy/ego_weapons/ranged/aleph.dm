@@ -54,19 +54,17 @@
 	It’s the byproduct of some horrid experiment in a certain laboratory that eventually failed."
 	icon_state = "adoration"
 	inhand_icon_state = "adoration"
-	special = "Alt click to swap between AOE, DOT and shotgun modes."
+	special = "Alt Click to swap between AOE, Rend Black and Slow modes."
 
 	force = 56
 	damtype = BLACK_DAMAGE
 
 	projectile_path = /obj/projectile/ego_bullet/adoration
 	weapon_weight = WEAPON_HEAVY
-	fire_delay = 10
+	fire_delay = 14
 	shotsleft = 5
 	reloadtime = 1.2 SECONDS
 
-	pellets = 3
-	variance = 20
 
 	fire_sound = 'sound/effects/attackblob.ogg'
 	fire_sound_volume = 50
@@ -83,22 +81,18 @@
 	. = ..()
 	switch(mode)
 		if(SHOT_MODE)
-			to_chat(user,"<span class='warning'>You focus, changing for a DOT blast</span>")
-			projectile_path = /obj/projectile/ego_bullet/adoration/dot
-			pellets = 1
-			variance = 0
+			to_chat(user, span_warning("You focus, changing to a rending bullet."))
+			projectile_path = /obj/projectile/ego_bullet/adoration/rend
 			mode = DOT_MODE
 			return
 		if(DOT_MODE)
-			to_chat(user,"<span class='warning'>You focus, changing for an AOE blast</span>")
+			to_chat(user, span_warning("You focus, changing to an AOE blast."))
 			projectile_path = /obj/projectile/ego_bullet/adoration/aoe
 			mode = AOE_MODE
 			return
 		if(AOE_MODE)
-			to_chat(user,"<span class='warning'>You focus, changing for a shotgun blast</span>")
-			projectile_path = /obj/projectile/ego_bullet/adoration
-			pellets = initial(pellets)
-			variance = initial(variance)
+			to_chat(user, span_warning("You focus, changing to a slow bullet."))
+			projectile_path = /obj/projectile/ego_bullet/adoration/slow
 			mode = SHOT_MODE
 			return
 
