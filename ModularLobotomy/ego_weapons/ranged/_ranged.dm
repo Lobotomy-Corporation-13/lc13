@@ -344,7 +344,7 @@
 	var/correct_reload_time = (alternate_selected && alternate_reload_type == RANGEDEGO_ALTERNATEFIRE_RELOADTYPE_INDIVIDUAL_RELOAD) ? alternate_reload_time : reloadtime
 	is_reloading = TRUE
 	to_chat(user,span_notice("You start loading a new magazine."))
-	if(reload_start_sound != null)
+	if(reload_start_sound)
 		playsound(src, reload_start_sound, 50, TRUE)
 	if(do_after(user, correct_reload_time, src)) //gotta reload
 		playsound(src, reload_success_sound, 50, TRUE)
