@@ -15,6 +15,8 @@
 	reloadtime = 0.4 SECONDS
 	roundsreload = TRUE
 	fire_sound = 'sound/weapons/gun/shotgun/shot_auto.ogg'
+	reload_start_sound = null
+	reload_success_sound = 'sound/weapons/gun/shotgun/insert_shell.ogg'
 
 	alternate_fire_name = "warden"
 	alternate_pellets = 1
@@ -45,6 +47,9 @@
 	projectile_path = /obj/projectile/ego_bullet/ego_hornet
 	weapon_weight = WEAPON_HEAVY
 	fire_sound = 'sound/weapons/gun/rifle/leveraction.ogg'
+
+	reload_start_sound = 'sound/weapons/gun/general/bolt_drop.ogg'
+	reload_success_sound = 'sound/weapons/gun/general/chunkyrack.ogg'
 	fire_delay = 5
 	shotsleft = 10	//Hornet has 10 bullets
 	reloadtime = 2.3 SECONDS	//You gotta load both shells and bullets
@@ -82,6 +87,8 @@
 	reloadtime = 2 SECONDS
 
 	fire_sound = 'sound/abnormalities/hatredqueen/attack.ogg'
+	reload_start_sound = 'sound/magic/teleport_diss.ogg'
+	reload_success_sound = 'sound/magic/mandswap.ogg'
 
 	attribute_requirements = list(
 							FORTITUDE_ATTRIBUTE = 60,
@@ -159,6 +166,8 @@
 	shotsleft = 18
 	reloadtime = 0.7 SECONDS
 	fire_sound = 'sound/abnormalities/funeral/spiritgunwhite.ogg'
+	reload_start_sound = 'sound/weapons/gun/pistol/mag_release.ogg'
+	reload_success_sound = 'sound/weapons/gun/pistol/rack_small.ogg'
 	fire_sound_volume = 30
 	attribute_requirements = list(PRUDENCE_ATTRIBUTE = 80)
 	var/cached_multiplier
@@ -196,6 +205,8 @@
 	shotsleft = 18
 	reloadtime = 0.7 SECONDS
 	fire_sound = 'sound/abnormalities/funeral/spiritgunblack.ogg'
+	reload_start_sound = 'sound/weapons/gun/pistol/mag_release.ogg'
+	reload_success_sound = 'sound/weapons/gun/pistol/rack_small.ogg'
 	fire_sound_volume = 30
 	var/cached_multiplier
 	attribute_requirements = list(JUSTICE_ATTRIBUTE = 80)
@@ -290,6 +301,8 @@
 	shotsleft = 10
 	reloadtime = 0.7 SECONDS
 	fire_sound = 'sound/weapons/gun/pistol/shot.ogg'
+	reload_start_sound = 'sound/weapons/gun/pistol/mag_release.ogg'
+	reload_success_sound = 'sound/weapons/gun/pistol/rack_small.ogg'
 	vary_fire_sound = FALSE
 	fire_sound_volume = 70
 	projectile_path = /obj/projectile/ego_bullet/ego_executive
@@ -321,6 +334,8 @@
 	shotsleft = 9
 	reloadtime = 1 SECONDS
 	fire_sound = 'sound/abnormalities/redhood/fire.ogg'
+	reload_start_sound = 'sound/weapons/gun/pistol/mag_release.ogg'
+	reload_success_sound = 'sound/weapons/gun/pistol/rack_small.ogg'
 	attribute_requirements = list(
 							FORTITUDE_ATTRIBUTE = 60,
 							JUSTICE_ATTRIBUTE = 60
@@ -463,6 +478,8 @@
 	projectile_path = /obj/projectile/ego_bullet/ego_ecstasy
 	weapon_weight = WEAPON_MEDIUM
 	spread = 40
+	reload_start_sound = 'sound/magic/teleport_diss.ogg'
+	reload_success_sound = 'sound/magic/mandswap.ogg'
 	fire_sound = 'sound/weapons/ego/ecstasy.ogg'
 	autofire = 0.08 SECONDS
 	shotsleft = 40
@@ -481,6 +498,8 @@
 	force = 28
 	projectile_path = /obj/projectile/ego_bullet/ego_praetorian
 	fire_sound = 'sound/weapons/gun/pistol/tp17.ogg'
+	reload_start_sound = 'sound/weapons/gun/pistol/mag_release.ogg'
+	reload_success_sound = 'sound/weapons/gun/pistol/rack_small.ogg'
 	autofire = 0.12 SECONDS
 	shotsleft = 12
 	reloadtime = 0.6 SECONDS
@@ -545,6 +564,8 @@
 	reloadtime = 7 SECONDS
 	roundsreload = TRUE
 	fire_sound = 'sound/weapons/gun/shotgun/shot_auto.ogg'
+	reload_start_sound = null
+	reload_success_sound = 'sound/weapons/gun/shotgun/insert_shell.ogg'
 	attribute_requirements = list(
 							FORTITUDE_ATTRIBUTE = 80
 							)
@@ -561,6 +582,8 @@
 	projectile_path = /obj/projectile/ego_bullet/ego_intention
 	weapon_weight = WEAPON_MEDIUM
 	spread = 24
+	reload_start_sound = 'sound/weapons/gun/pistol/mag_release.ogg'
+	reload_success_sound = 'sound/weapons/gun/pistol/rack_small.ogg'
 	fire_sound = 'sound/weapons/gun/smg/mp7.ogg'
 	autofire = 0.09 SECONDS
 	shotsleft = 50
@@ -672,6 +695,8 @@
 	fire_delay = 10
 	shotsleft = 8
 	reloadtime = 1.6 SECONDS
+	reload_start_sound = 'sound/weapons/plasma_cutter.ogg'
+	reload_success_sound = 'sound/weapons/kenetic_reload.ogg'
 	fire_sound = 'sound/weapons/gun/smg/mp7.ogg'
 	attribute_requirements = list(
 							PRUDENCE_ATTRIBUTE = 80
@@ -1225,6 +1250,8 @@
 	shotsleft = 10
 	reloadtime = 0.2 SECONDS
 	roundsreload = TRUE
+	reload_start_sound = null
+	reload_success_sound = 'sound/weapons/gun/rifle/bolt_in.ogg'
 	fire_sound = 'sound/weapons/gun/rifle/leveraction.ogg'
 	attribute_requirements = list(
 							FORTITUDE_ATTRIBUTE = 80

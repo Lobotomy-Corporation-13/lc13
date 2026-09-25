@@ -24,6 +24,8 @@
 	fire_sound = 'sound/weapons/ego/star.ogg'
 	vary_fire_sound = TRUE
 	fire_sound_volume = 25
+	reload_start_sound = 'sound/magic/teleport_diss.ogg'
+	reload_success_sound = 'sound/magic/blind.ogg'
 
 	attribute_requirements = list(
 							FORTITUDE_ATTRIBUTE = 80,
@@ -68,6 +70,8 @@
 	pellets = 3
 	variance = 20
 
+	reload_start_sound = null
+	reload_success_sound = 'sound/effects/footstep/slime1.ogg'
 	fire_sound = 'sound/effects/attackblob.ogg'
 	fire_sound_volume = 50
 
@@ -270,6 +274,8 @@
 	knockback = KNOCKBACK_LIGHT
 	spread = 5
 	recoil = 1.5
+	reload_start_sound = null
+	reload_success_sound = 'sound/weapons/gun/rifle/bolt_in.ogg'
 	fire_sound = 'sound/weapons/gun/rifle/shot_atelier.ogg'
 	vary_fire_sound = TRUE
 	fire_sound_volume = 30
@@ -921,6 +927,8 @@
 	swingstyle = WEAPONSWING_LARGESWEEP
 	hitsound = "sound/effects/wounds/pierce1.ogg"
 
+	reload_start_sound = null
+	reload_success_sound = 'sound/effects/light_flicker.ogg'
 	projectile_path = /obj/projectile/ego_bullet/tarnished
 	weapon_weight = WEAPON_MEDIUM
 	spread = 10
