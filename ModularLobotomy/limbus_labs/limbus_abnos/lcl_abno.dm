@@ -462,9 +462,9 @@
 
 ///How long is left before the shell splits open, or null while alive.
 /mob/living/simple_animal/hostile/limbus_abno/proc/RebirthCountdown()
-	if(stat != DEAD || timeleft(rebirth_timer) <= world.time)
+	if(stat != DEAD || !timeleft(rebirth_timer))
 		return null
-	return DisplayTimeText(timeleft(rebirth_timer) - world.time)
+	return DisplayTimeText(timeleft(rebirth_timer))
 
 //Examining your own shell tells you how long you have left in it. Onlookers only ever see the
 //egg, so the countdown is for the specimen and for ghosts watching it.
