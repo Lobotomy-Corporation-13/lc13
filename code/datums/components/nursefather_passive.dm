@@ -30,7 +30,11 @@
 	if(!istype(H))
 		return
 
-	var/is_evadable_attack = (attack_type & ATTACK_TYPE_MELEE) || (attack_type & ATTACK_TYPE_RANGED)
+	// You're not even conscious, you're not dodging anything.
+	if(H.stat > 0)
+		return
+
+	var/is_evadable_attack = (attack_type & (ATTACK_TYPE_MELEE | ATTACK_TYPE_RANGED))
 
 	if(is_evadable_attack && guaranteed_evade_ready)
 		var/turf/T = get_step(H, pick(GLOB.cardinals))
@@ -51,7 +55,8 @@
 			playsound(H, 'sound/weapons/black_silence/evasion.ogg', 50, TRUE)
 			return COMPONENT_MOB_DENY_DAMAGE
 
-	if(!istype(attack_source, /mob/living/simple_animal))
+	// Clone damage applied only from other humans or rhinos. This is so stuff like environmental damage or other nonsense doesn't cause clone.
+	if((ishuman(attack_source) && attack_source != parent)  || ismecha(attack_source))
 		var/clone_damage = damage * 0.05
 		if(clone_damage > 0)
 			INVOKE_ASYNC(src, PROC_REF(apply_clone_damage), clone_damage)
@@ -76,7 +81,12 @@
 	if(!istype(H))
 		return
 
-	if(!istype(attack_source, /mob/living/simple_animal))
+	// You're not even conscious, you're not dodging anything.
+	if(H.stat > 0)
+		return
+
+	// Clone damage applied only from humans or rhinos. This is so stuff like environmental damage or other nonsense doesn't cause clone.
+	if((ishuman(attack_source) && attack_source != parent)  || ismecha(attack_source))
 		var/clone_damage = damage * 0.025
 		if(clone_damage > 0)
 			INVOKE_ASYNC(src, PROC_REF(apply_clone_damage), clone_damage)
