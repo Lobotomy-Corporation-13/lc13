@@ -15,7 +15,7 @@
 		return
 	..()
 
-/obj/item/structurecapsule/syndicate/bladelineage
+/obj/item/structurecapsule/syndicate/bladelineage // DEPRECIATED, NOT USED FOR CURRENT BLADE LINEAGE
 	name = "Blade Lineage Capsule"
 	template_id = "bladelineageswordmen_base"
 
@@ -23,6 +23,7 @@
 /obj/item/structurecapsule/syndicate/thumb
 	name = "Thumb Capsule"
 	template_id = "thumbfinger_base"
+	custom_access = list("thumb_south")
 
 /obj/item/structurecapsule/syndicate/ncorp
 	name = "N-Corp Capsule"
@@ -39,11 +40,23 @@
 /obj/item/structurecapsule/syndicate/middle
 	name = "Middle Capsule"
 	template_id = "middle_base"
+	custom_access = list("middle")
 
 /obj/item/structurecapsule/syndicate/insurgence
 	name = "insurgence base capsule"
 	desc = "Contains equipment for establishing an Insurgence Clan outpost."
 	template_id = "insurgence_base"
+
+/obj/item/structurecapsule/syndicate/udjat
+	name = "Udjat Capsule"
+	template_id = "udjat_base"
+	custom_access = list("udjat")
+
+/obj/item/structurecapsule/syndicate/liu
+	name = "Liu Capsule"
+	template_id = "liu_base"
+	custom_access = list("liu")
+
 //Office templates
 /datum/map_template/shelter/index
 	name = "Index Base"
@@ -61,7 +74,7 @@
 	name = "Thumb Base"
 	shelter_id = "thumbfinger_base"
 	description = "A place for the thumb."
-	mappath = "_maps/templates/syndicate_office/thumbfinger.dmm"
+	mappath = "_maps/templates/city_factions/major/thumbfinger.dmm"
 
 /datum/map_template/shelter/ncorp
 	name = "Ncorp Base"
@@ -92,3 +105,15 @@
 	shelter_id = "insurgence_base"
 	description = "A place for the Insurgence Clan."
 	mappath = "_maps/templates/syndicate_office/insurgence_clan.dmm"
+
+/datum/map_template/shelter/udjat
+	name = "Udjat Base"
+	shelter_id = "udjat_base"
+	description = "A place for the Udjat"
+	mappath = "_maps/templates/city_factions/major/udjat.dmm"
+
+/datum/map_template/shelter/liu
+	name = "Liu Base"
+	shelter_id = "liu_base"
+	description = "A place for the section 6 of liu south"
+	mappath = "_maps/templates/city_factions/major/liu.dmm"

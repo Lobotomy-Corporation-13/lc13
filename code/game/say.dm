@@ -48,7 +48,7 @@ GLOBAL_LIST_INIT(freqtospan, list(
 /atom/movable/proc/compose_message(atom/movable/speaker, datum/language/message_language, raw_message, radio_freq, list/spans, list/message_mods = list(), face_name = FALSE)
 	//This proc uses text() because it is faster than appending strings. Thanks BYOND.
 	//Basic span
-	var/spanpart1 = "<span class='[radio_freq ? get_radio_span(radio_freq) : "game say"]'>"
+	var/spanpart1 = "<span class='[radio_freq ? get_radio_span(radio_freq) : "game say"]'[radio_freq ? get_radio_style(radio_freq) : ""]>"
 	//Start name span.
 	var/spanpart2 = "<span class='name'>"
 	//Radio freq/name display
@@ -140,6 +140,13 @@ GLOBAL_LIST_INIT(freqtospan, list(
 	if(returntext)
 		return returntext
 	return "radio"
+
+/// Inline colour for job-declared channels, since they have no CSS class.
+/proc/get_radio_style(freq)
+	var/channel_color = GLOB.freqtocolor["[freq]"]
+	if(channel_color)
+		return " style='color: [channel_color]'"
+	return ""
 
 /proc/get_radio_name(freq)
 	var/returntext = GLOB.reverseradiochannels["[freq]"]

@@ -141,7 +141,7 @@
 
 	var/mob/living/carbon/human/H = user
 	if(!public_use)
-		if(!H.mind || H.mind.assigned_role != "Paramedic")
+		if(!H.mind || H.mind.assigned_role != "Clinic Field Agent")
 			to_chat(user, span_warning("This tool's systems do not recognize you."))
 			return
 

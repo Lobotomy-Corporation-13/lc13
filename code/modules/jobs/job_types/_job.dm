@@ -110,9 +110,35 @@
 	///Job abbreviation used when humans talk on radio. If null should not add anything to radio messages
 	var/job_abbreviation
 
+	/// Name of this job's private radio channel, e.g. "Thumb South". Null for none.
+	var/radio_channel_name
+	/// Hex colour this channel's chat lines are printed in.
+	var/radio_channel_color = "#8f4a4b"
+
+	/// The city faction this job belongs to. Set by SScity_factions.
+	var/datum/city_faction/city_faction
+	/// The job that has to be filled before this one opens. A faction leader
+	/// points at itself. Null means the job is not part of a faction.
+	var/leader
+	/// Slots this job opens with once its leader is in place.
+	var/faction_positions = 0
+	/// TRUE hides the plain `title` from the alt title picker, leaving only the
+	/// alt titles. For a job that is always one faction or another, offering
+	/// the bare title implies an unaffiliated version exists that does not.
+	var/alt_titles_only = FALSE
+	/// What players are told this job is called. Defaults to `title`, and a
+	/// city faction variant overwrites it so the same job can read as its
+	/// specialisation without `title` moving. `title` keys name_occupations,
+	/// the lobby preference menu and every assigned_role check, so it cannot.
+	var/display_title
+
 
 /datum/job/New()
 	. = ..()
+	if(!display_title)
+		display_title = title
+	if(radio_channel_name)
+		RegisterJobRadioChannel(radio_channel_name, radio_channel_color)
 	var/list/jobs_changes = GetMapChanges()
 	if(!jobs_changes)
 		return
@@ -130,6 +156,8 @@
 /datum/job/proc/after_spawn(mob/living/H, mob/M, latejoin = FALSE)
 	//do actions on H but send messages to M as the key may not have been transferred_yet
 	SEND_GLOBAL_SIGNAL(COMSIG_GLOB_JOB_AFTER_SPAWN, src, H, M, latejoin)
+	if(city_faction && leader == type)
+		city_faction.OpenMembers()
 	if(mind_traits)
 		for(var/t in mind_traits)
 			ADD_TRAIT(H.mind, t, JOB_TRAIT)
@@ -299,7 +327,18 @@
 
 	return job_changes[endpart]
 
+/// What to call this job in front of a player. A title the player chose wins,
+/// then one a faction variant set, then the job's own.
+/datum/job/proc/GetDisplayTitle(client/preference_source)
+	var/chosen = preference_source?.prefs?.alt_titles_preferences[title]
+	if(chosen)
+		return chosen
+	return display_title || title
+
 /datum/job/proc/radio_help_message(mob/M)
+	if(radio_channel_name)
+		to_chat(M, "<b>Prefix your message with :j to speak on the [radio_channel_name] radio. To see other prefixes, look closely at your headset.</b>")
+		return
 	to_chat(M, "<b>Prefix your message with :h to speak on your department's radio. To see other prefixes, look closely at your headset.</b>")
 
 /datum/outfit/job
@@ -376,10 +415,7 @@
 		shuffle_inplace(C.access) // Shuffle access list to make NTNet passkeys less predictable
 		C.registered_name = H.real_name
 		// Tegu edit - Alt job titles
-		if(preference_source && preference_source.prefs && preference_source.prefs.alt_titles_preferences[J.title])
-			C.assignment = preference_source.prefs.alt_titles_preferences[J.title]
-		else
-			C.assignment = J.title
+		C.assignment = J.GetDisplayTitle(preference_source)
 		// Tegu end
 		if(H.age)
 			C.registered_age = H.age
@@ -389,8 +425,9 @@
 		// Starlight ledger and slams its icon_state onto the card.
 		// Falls through silently if the player has no equipped skin
 		// or the skin id is stale.
-		if(H.ckey)
-			var/equipped_skin = SSrefraction_railway.GetEquippedIdSkin(H.ckey)
+		var/skin_ckey = H.ckey || preference_source?.ckey
+		if(skin_ckey)
+			var/equipped_skin = SSrefraction_railway.GetEquippedIdSkin(skin_ckey)
 			if(equipped_skin)
 				var/datum/id_skin/S = SSrefraction_railway.id_skins[equipped_skin]
 				if(istype(S))
@@ -401,6 +438,11 @@
 			C.registered_account = B
 			B.bank_cards += C
 		H.sec_hud_set_ID()
+
+	if(J.radio_channel_name)
+		var/obj/item/radio/R = H.ears
+		if(istype(R))
+			R.SetJobChannel(J.radio_channel_name)
 
 	var/obj/item/pda/PDA = H.get_item_by_slot(pda_slot)
 	if(istype(PDA))
@@ -416,10 +458,7 @@
 					GLOB.PDAs -= could_this_be_our_echo_from_a_past_life
 
 		// Tegu edit - Alt job titles
-		if(preference_source && preference_source.prefs && preference_source.prefs.alt_titles_preferences[J.title])
-			PDA.ownjob = preference_source.prefs.alt_titles_preferences[J.title]
-		else
-			PDA.ownjob = J.title
+		PDA.ownjob = J.GetDisplayTitle(preference_source)
 		// Tegu end
 		PDA.update_label()
 

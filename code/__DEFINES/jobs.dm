@@ -4,8 +4,17 @@
 #define JOB_UNAVAILABLE_PLAYTIME 3
 #define JOB_UNAVAILABLE_ACCOUNTAGE 4
 #define JOB_UNAVAILABLE_SLOTFULL 5
+#define JOB_UNAVAILABLE_NO_LEADER 6
 #define JOB_NOT_TRUSTED 8
 #define JOB_NOT_MENTOR 9
+
+//City factions. ALWAYS is always enabled, MAJOR and MINOR are drawn for each round.
+#define CITY_FACTION_ALWAYS "always"
+#define CITY_FACTION_MAJOR "major"
+#define CITY_FACTION_MINOR "minor"
+
+#define CITY_FACTION_MAJOR_COUNT 3
+#define CITY_FACTION_MINOR_COUNT 5
 
 #define DEFAULT_RELIGION "Christianity"
 #define DEFAULT_DEITY "Space Jesus"

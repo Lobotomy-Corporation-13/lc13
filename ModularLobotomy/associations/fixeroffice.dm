@@ -8,6 +8,11 @@
 	var/datum/map_template/shelter/template
 	var/used = FALSE
 	var/delay_time = 50
+	/// Freeform accesses granted to every door in the scan rectangle on deploy.
+	var/list/custom_access
+	/// Size of the door scan rectangle, centred on the deploy turf.
+	var/access_scan_width = 23
+	var/access_scan_height = 13
 
 /obj/item/structurecapsule/proc/get_template()
 	if(template)
@@ -16,6 +21,23 @@
 	if(!template)
 		WARNING("Shelter template ([template_id]) not found!")
 		qdel(src)
+
+/// Adds custom_access to every door in the scan rectangle centred on `center`.
+/obj/item/structurecapsule/proc/GrantDoorAccess(turf/center)
+	if(!custom_access)
+		return
+	var/turf/corner = locate(center.x - round(access_scan_width / 2), center.y - round(access_scan_height / 2), center.z)
+	if(!corner)
+		return
+	var/turf/far = locate(corner.x + access_scan_width - 1, corner.y + access_scan_height - 1, corner.z)
+	for(var/turf/T in block(corner, far))
+		for(var/obj/machinery/door/D in T)
+			D.gen_access()
+			for(var/access_id in custom_access)
+				if(access_id in D.req_access)
+					continue
+				D.req_access_txt = "[D.req_access_txt];[access_id]"
+				D.req_access += access_id
 
 /obj/item/structurecapsule/Destroy()
 	template = null // without this, capsules would be one use. per round.
@@ -47,6 +69,7 @@
 			used = FALSE
 			return
 		playsound(src, 'sound/effects/phasein.ogg', 100, TRUE)
+		GrantDoorAccess(deploy_location)
 		template.load(deploy_location, centered = TRUE)
 		new /obj/effect/particle_effect/smoke(get_turf(src))
 		qdel(src)
@@ -97,6 +120,26 @@
 /obj/item/structurecapsule/fixer/bank
 	name = "Banking Office Capsule"
 	template_id = "bankciv_office"
+
+/obj/item/structurecapsule/fixer/bladelin
+	name = "Blade Lineage Base Capsule"
+	template_id = "Bladelin_office"
+	custom_access = list("bladelin")
+
+/obj/item/structurecapsule/fixer/fullstop
+	name = "Full Stop Office Capsule"
+	template_id = "fullstop_office"
+	custom_access = list("fullstop")
+
+/obj/item/structurecapsule/fixer/kuroclan
+	name = "Kurokumo Clan Capsule"
+	template_id = "kurokumo_office"
+	custom_access = list("kuro")
+
+/obj/item/structurecapsule/fixer/dawn
+	name = "Dawn Office Capsule"
+	template_id = "dawn_office"
+	custom_access = list("dawn")
 
 /obj/item/structurecapsule/fixer/bank/attack_self(mob/living/carbon/human/user)
 	. = ..()
@@ -155,7 +198,29 @@
 	description = "WARNING: Rapid accumulation of net worth has been proven to cause permanent potentiality loss!."
 	mappath = "_maps/templates/fixer_office/bankciv.dmm"
 
+/datum/map_template/shelter/bladelin
+	name = "Blade Lineage base"
+	shelter_id = "bladelin_office"
+	description = "A small base capsule for the roaming members of the Blade Lineage"
+	mappath = "_maps/templates/city_factions/minor/bladelin.dmm"
 
+/datum/map_template/shelter/fullstop
+	name = "Full Stop Office Base"
+	shelter_id = "fullstop_office"
+	description = "A small capsule containing an outpost for the fixers of Full Stop office."
+	mappath = "_maps/templates/city_factions/minor/fullstopfixers.dmm"
+
+/datum/map_template/shelter/kuroclan
+	name = "Kurokumo Clan Base"
+	shelter_id = "kurokumo_office"
+	description = "A small capsule containing an outpost for the members of the kurokumo clan."
+	mappath = "_maps/templates/city_factions/minor/kurokumo.dmm"
+
+/datum/map_template/shelter/dawn
+	name = "Dawn Office Base"
+	shelter_id = "dawn_office"
+	description = "A small capsule containing a quiet retreat for the fixers of dawn office."
+	mappath = "_maps/templates/city_factions/minor/dawnoffice.dmm"
 
 //Armor
 /obj/item/storage/box/miscarmor
