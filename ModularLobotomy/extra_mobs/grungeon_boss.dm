@@ -19,8 +19,8 @@
 	mob_biotypes = MOB_ROBOTIC
 	maxHealth = 12500
 	health = 12500
-	melee_damage_lower = 10
-	melee_damage_upper = 10
+	melee_damage_lower = 15
+	melee_damage_upper = 15
 	ranged = TRUE
 	damage_coeff = list(RED_DAMAGE = 0.6, WHITE_DAMAGE = 1, BLACK_DAMAGE = 1.2, PALE_DAMAGE = 1)
 	butcher_results = list(/obj/item/food/meat/slab/robot = 22)
@@ -128,7 +128,7 @@
 	density = 0
 	mob_biotypes = MOB_ROBOTIC
 	death_sound = 'sound/effects/ordeals/green/dusk_dead.ogg'
-	var/spawn_progress = 18 //spawn ready to produce robots
+	var/spawn_progress = 16 //spawn ready to produce robots
 	var/list/spawned_mobs = list()
 	var/producing = FALSE
 
