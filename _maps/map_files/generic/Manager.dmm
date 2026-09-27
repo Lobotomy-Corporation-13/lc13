@@ -5200,10 +5200,6 @@
 /turf/open/floor/carpet/royalblack,
 /area/facility_hallway/manager)
 "Nb" = (
-/obj/structure/sigsystem/tower/button{
-	pixel_y = 27;
-	signal_code = 26
-	},
 /obj/structure/sigsystem/announcer{
 	message_range = 5;
 	message = "Unauthorized access detected. Door opening delayed."
@@ -6185,6 +6181,12 @@
 	},
 /turf/open/floor/carpet/royalblue,
 /area/facility_hallway/manager)
+"Wy" = (
+/obj/structure/sigsystem/tower/button{
+	signal_code = 26
+	},
+/turf/closed/indestructible/syndicate,
+/area/city/outskirtsfactory)
 "Wz" = (
 /obj/machinery/vending/lobotomyarmband{
 	pixel_x = -10
@@ -18314,7 +18316,7 @@ Tf
 ex
 Fi
 lL
-dF
+Wy
 Nb
 aI
 Fi

@@ -1666,10 +1666,6 @@
 /turf/open/floor/facility,
 /area/city/outskirtsfactory)
 "It" = (
-/obj/structure/sigsystem/tower/button{
-	pixel_y = 27;
-	signal_code = 26
-	},
 /obj/structure/sigsystem/announcer{
 	message_range = 5;
 	message = "Unauthorized access detected. Door opening delayed."
@@ -2057,6 +2053,12 @@
 "RK" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/mineral/plastitanium,
+/area/city/outskirtsfactory)
+"RR" = (
+/obj/structure/sigsystem/tower/button{
+	signal_code = 26
+	},
+/turf/closed/indestructible/syndicate,
 /area/city/outskirtsfactory)
 "RU" = (
 /obj/structure/sigsystem/deployer{
@@ -5725,7 +5727,7 @@ ca
 tQ
 et
 tV
-xE
+RR
 It
 JD
 et
