@@ -1,6 +1,6 @@
 // Der Fluchshutze, implemnted by neadsy_ - Sprites by Cringelord
-/mob/living/simple_animal/hostile/abnormality/der_fluchschutze
-	name = "Der Fluchschütze"
+/* /mob/living/simple_animal/hostile/abnormality/der_fluchschutze
+	name = "Der FluchschÃ¼tze"
 	desc = "A tall man adorned in some sort of military uniform, they loom over you, holding their large shotgun."
 	icon = 'ModularLobotomy/_Lobotomyicons/32x64.dmi'
 	icon_state = "DrFluShots"
@@ -54,16 +54,6 @@
 		 You manage to escape before you are seriously hurt."),
 	)
 
-
-/mob/living/simple_animal/hostile/abnormality/redblooded/MoveToTarget(list/possible_targets)
-	if(ranged_cooldown <= world.time)
-		OpenFire(target)
-	return ..()
-
-	var/ammo = 2
-	var/max_ammo = 2
-	var/reload_time = 2 SECONDS
-
 	/obj/projectile/fellround
 	name = "Fell Bullet Round"
 	desc = "A shotgun shell, its headed straight for you."
@@ -76,4 +66,4 @@
 /obj/projectile/fellround/Initialize()
 	. = ..()
 	hitsound = "sound/abnormalities/fluchschutze/fell_bullet2.ogg"
-	animate(src, alpha = 255, time = 1)
+	animate(src, alpha = 255, time = 1) \*
