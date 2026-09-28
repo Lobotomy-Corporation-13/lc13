@@ -3,7 +3,7 @@
 	name = "Der Fluchschütze"
 	desc = "A tall man adorned in some sort of military uniform, they loom over you, holding their large shotgun."
 	icon = 'ModularLobotomy/_Lobotomyicons/32x64.dmi'
-	icon_state = "DrFluShots" // Make sure to get your flu shot from the best doctor this side of the city, file autonamed to this and i am NOT changing it 
+	icon_state = "DrFluShots" // Make sure to get your flu shot from the best doctor this side of the city, file autonamed to this and i am NOT changing it
 	icon_living = "DrFluShots"
 	portrait = "Der_Fluchschutze"
 	del_on_death = TRUE
@@ -62,7 +62,7 @@
 	var/last_reload_time = 0
 
 
-	
+
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/Login()
 	. = ..()
@@ -72,15 +72,15 @@
 		<b>|I shall Fire|: When you click on a tile or enemy at least 2 tiles away, You will consume 1 ammo to fire 5 pellets which deal 25 red damage each.<br>\
 		<b>|Ammo|: You have a max of 2 ammo at any given time. You passively reload 1 ammo every second, but you can also reload 1 ammo by hitting humans or mechs.</b>")
 
-/mob/living/simple_animal/hostile/abnormality/der_fluchschutze/SuccessEffect(mob/living/carbon/human/user, work_type, pe
+/mob/living/simple_animal/hostile/abnormality/der_fluchschutze/SuccessEffect(mob/living/carbon/human/user, work_type, pe)
 	. = ..()
 	if (prob(35))
-		datum_reference.qliphoth_change(+1) // once his counter lowers it will be tough to raise it
+		datum_reference.qliphoth_change(1) // once his counter lowers it will be tough to raise it
 	return
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/NeutralEffect(mob/living/carbon/human/user, work_type, pe)
 	. = ..()
-	if(prob(50)) 
+	if(prob(50))
 		datum_reference.qliphoth_change(-1)
 	return
 
@@ -90,9 +90,10 @@
 	return
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/PostWorkEffect(mob/living/carbon/human/user, work_type, pe)
-	if(work_type == ABNORMALITY_WORK_ATTATCHMENT)
-	if (prob(25))
-	datum_reference.qliphoth_change(-2) // big qlipoth dip at a low chance, go big or go home.
+	if(work_type = ABNORMALITY_WORK_ATTACHMENT)
+		if (prob(25))
+			datum_reference.qliphoth_change(-2) // big qlipoth dip at a low chance, go big or go home.
+		return ..()
 	return ..()
 
 
