@@ -3,12 +3,12 @@
 	name = "Der Fluchschütze"
 	desc = "A tall man adorned in some sort of military uniform, they loom over you, holding their large shotgun."
 	icon = 'ModularLobotomy/_Lobotomyicons/32x64.dmi'
-	icon_state = "DrFluShots"
+	icon_state = "DrFluShots" // Make sure to get your flu shot from the best doctor this side of the city, file autonamed to this and i am NOT changing it 
 	icon_living = "DrFluShots"
 	portrait = "Der_Fluchschutze"
 	del_on_death = TRUE
 	maxHealth = 1000
-	health = 1000
+	health = 1000 // Chunky lad, will be standing still for long amounts of time, needs to not get destroyed instantly
 	rapid_melee = 1
 	melee_queue_distance = 2
 	move_to_delay = 4
@@ -18,20 +18,20 @@
 	melee_damage_type = BLACK_DAMAGE
 	stat_attack = HARD_CRIT
 	ranged = TRUE
-	ranged_cooldown_time = 4 SECONDS
+	ranged_cooldown_time = 3 SECONDS
 	casingtype = /obj/item/ammo_casing/caseless/fellround
 	projectilesound = 'sound/weapons/black_silence/shotgun.ogg' // I like the sound, very weighty gun sound for his big ass shotgun
-	damage_coeff = list(RED_DAMAGE = 0.5, WHITE_DAMAGE = 1.5, BLACK_DAMAGE = 0.75, PALE_DAMAGE = 0.75, FIRE = 0.5)
+	damage_coeff = list(RED_DAMAGE = 0.5, WHITE_DAMAGE = 1.5, BLACK_DAMAGE = 0.75, PALE_DAMAGE = 0.75, FIRE = 0.5) // again, needs to be tough
 	melee_damage_lower = 15
-	melee_damage_upper = 25
-	faction = list("derfluchschutze")
+	melee_damage_upper = 25 // get the fuck away from me
+	faction = list("derfluchschutze") // *incoming call...* "KILL EVERYONE"
 	can_breach = TRUE
 	threat_level = HE_LEVEL
 	start_qliphoth = 3
 	work_chances = list(
 		ABNORMALITY_WORK_INSTINCT = 35,
 		ABNORMALITY_WORK_INSIGHT = 20,
-		ABNORMALITY_WORK_ATTACHMENT = 50,
+		ABNORMALITY_WORK_ATTACHMENT = 60,
 		ABNORMALITY_WORK_REPRESSION = 45,
 	)
 	max_boxes = 16
@@ -69,9 +69,14 @@
 	if(!. || !client)
 		return FALSE
 	to_chat(src, "<h1>You are Der Fluchschutze, A Support Role Abnormality.</h1><br>\
-		<b>|I shall Fire|: When you pick on a tile at least 2 sqrs away, You will consume 1 ammo to fire 5 pellets which deal 25 red damage each.<br>\
-		You passively reload 1 ammo every second, but you can also reload 1 ammo by hitting humans or mechs.</b>")
+		<b>|I shall Fire|: When you click on a tile or enemy at least 2 tiles away, You will consume 1 ammo to fire 5 pellets which deal 25 red damage each.<br>\
+		<b>|Ammo|: You have a max of 2 ammo at any given time. You passively reload 1 ammo every second, but you can also reload 1 ammo by hitting humans or mechs.</b>")
 
+/mob/living/simple_animal/hostile/abnormality/der_fluchschutze/SuccessEffect(mob/living/carbon/human/user, work_type, pe
+	. = ..()
+	if (prob(35))
+		datum_reference.qliphoth_change(+1) // once his counter lowers it will be tough to raise it
+	return
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/NeutralEffect(mob/living/carbon/human/user, work_type, pe)
 	. = ..()
@@ -86,8 +91,8 @@
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/PostWorkEffect(mob/living/carbon/human/user, work_type, pe)
 	if(work_type == ABNORMALITY_WORK_ATTATCHMENT)
-	if (prob(75))
-	datum_reference.qliphoth_change(-1)
+	if (prob(25))
+	datum_reference.qliphoth_change(-2) // big qlipoth dip at a low chance, go big or go home.
 	return ..()
 
 
@@ -106,7 +111,7 @@
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/AttackingTarget(atom/attacked_target)
 	if(ammo < max_ammo)
-		if(isliving(attacked_target))
+		if(isliving(attacked_target)) // same as RBA, getting hit by him lets him reload, potentially denying your escape
 			Reload()
 		if(ismecha(attacked_target))
 			Reload()
@@ -150,6 +155,3 @@
 /obj/projectile/fellround/Initialize()
 	. = ..()
 	hitsound = "sound/abnormalities/fluchschutze/fell_bullet2.ogg"
-
-
-
