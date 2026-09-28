@@ -1,49 +1,51 @@
 // Der Fluchshutze, implemnted by neadsy_ - Sprites by Cringelord
-/* /mob/living/simple_animal/hostile/abnormality/der_fluchschutze
+/mob/living/simple_animal/hostile/abnormality/der_fluchschutze
 	name = "Der Fluchschütze"
 	desc = "A tall man adorned in some sort of military uniform, they loom over you, holding their large shotgun."
 	icon = 'ModularLobotomy/_Lobotomyicons/32x64.dmi'
 	icon_state = "DrFluShots"
 	icon_living = "DrFluShots"
 	portrait = "Der_Fluchschutze"
+	del_on_death = TRUE
 	maxHealth = 1000
 	health = 1000
-	ranged = TRUE
-	minimum_distance = 1
-	retreat_distance = 2
-	attack_sound = 'sound/weapons/black_silence/shotgun.ogg'
-	projectiletype = /obj/projectile/fellround
-	ranged_cooldown_time = 4 SECONDS
-	move_to_delay = 5
-	can_breach = TRUE
-	damage_coeff = list(RED_DAMAGE = 0.7, WHITE_DAMAGE = 1.2, BLACK_DAMAGE = 0.7, PALE_DAMAGE = 0.7, FIRE = 0.5)
+	rapid_melee = 1
+	melee_queue_distance = 2
+	move_to_delay = 4
+	attack_sound = 'sound/weapons/ego/mace1.ogg'
+	attack_verb_continuous = "bashes"
+	attack_verb_simple = "hit"
+	melee_damage_type = BLACK_DAMAGE
 	stat_attack = HARD_CRIT
-	vision_range = 20
-	aggro_vision_range = 25
-	del_on_death = FALSE
-
+	ranged = TRUE
+	ranged_cooldown_time = 4 SECONDS
+	casingtype = /obj/item/ammo_casing/caseless/fellround
+	projectilesound = 'sound/weapons/black_silence/shotgun.ogg' // I like the sound, very weighty gun sound for his big ass shotgun
+	damage_coeff = list(RED_DAMAGE = 0.5, WHITE_DAMAGE = 1.5, BLACK_DAMAGE = 0.75, PALE_DAMAGE = 0.75, FIRE = 0.5)
+	melee_damage_lower = 15
+	melee_damage_upper = 25
+	faction = list("derfluchschutze")
 	can_breach = TRUE
 	threat_level = HE_LEVEL
-	faction = list("der_fluchschutze") // Scrap with them abnos!!!!
 	start_qliphoth = 3
 	work_chances = list(
 		ABNORMALITY_WORK_INSTINCT = 35,
-		ABNORMALITY_WORK_INSIGHT = 20, // the only thing he cares about is shooting you
-		ABNORMALITY_WORK_ATTACHMENT = 60,
-		ABNORMALITY_WORK_REPRESSION = 50,
+		ABNORMALITY_WORK_INSIGHT = 20,
+		ABNORMALITY_WORK_ATTACHMENT = 50,
+		ABNORMALITY_WORK_REPRESSION = 45,
 	)
 	max_boxes = 16
-	work_damage_amount = 8
+	work_damage_amount = 10
 	work_damage_type = RED_DAMAGE
 	chem_type = /datum/reagent/abnormality/sin/wrath
-	patrol_cooldown_time = 10 SECONDS
 
 	ego_list = list(
 		/datum/ego_datum/weapon/fellbullet,
 		/datum/ego_datum/weapon/fellscatter,
 		/datum/ego_datum/armor/fellbullet,
 	)
-	gift_type =  /datum/ego_gifts/
+	gift_type = /datum/ego_gifts/
+	gift_message = "You too, chose to deal with the devil."
 	abnormality_origin = ABNORMALITY_ORIGIN_LIMBUS
 
 	observation_prompt = "The Abnormality towers over you, it prepares its shotgun. Ready to fire, it says... 'This is a warzone, and my gun must blow somebody up...' \
@@ -54,11 +56,93 @@
 		 You manage to escape before you are seriously hurt."),
 	)
 
-	/obj/projectile/fellround
+	var/ammo = 2
+	var/max_ammo = 2
+	var/reload_time = 1 SECONDS
+	var/last_reload_time = 0
+
+
+	
+
+/mob/living/simple_animal/hostile/abnormality/der_fluchschutze/Login()
+	. = ..()
+	if(!. || !client)
+		return FALSE
+	to_chat(src, "<h1>You are Der Fluchschutze, A Support Role Abnormality.</h1><br>\
+		<b>|I shall Fire|: When you pick on a tile at least 2 sqrs away, You will consume 1 ammo to fire 5 pellets which deal 25 red damage each.<br>\
+		You passively reload 1 ammo every second, but you can also reload 1 ammo by hitting humans or mechs.</b>")
+
+
+/mob/living/simple_animal/hostile/abnormality/der_fluchschutze/NeutralEffect(mob/living/carbon/human/user, work_type, pe)
+	. = ..()
+	if(prob(50)) 
+		datum_reference.qliphoth_change(-1)
+	return
+
+/mob/living/simple_animal/hostile/abnormality/der_fluchschutze/FailureEffect(mob/living/carbon/human/user, work_type, pe)
+	. = ..()
+	datum_reference.qliphoth_change(-1)
+	return
+
+/mob/living/simple_animal/hostile/abnormality/der_fluchschutze/PostWorkEffect(mob/living/carbon/human/user, work_type, pe)
+	if(work_type == ABNORMALITY_WORK_ATTATCHMENT)
+	if (prob(75))
+	datum_reference.qliphoth_change(-1)
+	return ..()
+
+
+//Breach
+/mob/living/simple_animal/hostile/abnormality/der_fluchschutze/proc/Reload()
+	playsound(src, 'sound/weapons/gun/general/bolt_rack.ogg', 25, TRUE)
+	to_chat(src, span_nicegreen("You reload your shotgun..."))
+	ammo += 1
+
+/mob/living/simple_animal/hostile/abnormality/der_fluchschutze/Life()
+	. = ..()
+	if (last_reload_time < world.time - reload_time)
+		last_reload_time = world.time
+		if (ammo < max_ammo)
+			Reload()
+
+/mob/living/simple_animal/hostile/abnormality/der_fluchschutze/AttackingTarget(atom/attacked_target)
+	if(ammo < max_ammo)
+		if(isliving(attacked_target))
+			Reload()
+		if(ismecha(attacked_target))
+			Reload()
+	return ..()
+
+
+/mob/living/simple_animal/hostile/abnormality/der_fluchschutze/MoveToTarget(list/possible_targets)
+	if(ranged_cooldown <= world.time)
+		OpenFire(target)
+	return ..()
+
+/mob/living/simple_animal/hostile/abnormality/der_fluchschutze/OpenFire(atom/A)
+	if(get_dist(src, A) >= 2)
+		if(ammo <= 0)
+			to_chat(src, span_warning("Out of ammo!"))
+			return FALSE
+		else
+			ammo -= 1
+			return ..()
+	else
+		return FALSE
+
+//gunstuff
+/obj/item/ammo_casing/caseless/fellround
+	name = "Fell Bullet Casing"
+	desc = "a casing from the gun destined to pierce the one who the wielder loves most."
+	projectile_type = /obj/projectile/fellround
+	pellets = 5
+	variance = 25
+
+
+/obj/projectile/fellround
 	name = "Fell Bullet Round"
-	desc = "A shotgun shell, its headed straight for you."
+	desc = "A shotgun pellet, its headed straight for you."
 	damage_type = RED_DAMAGE
-	damage = 20
+	damage = 25
 	speed = 5
 	alpha = 0
 	spread = 20
@@ -66,4 +150,6 @@
 /obj/projectile/fellround/Initialize()
 	. = ..()
 	hitsound = "sound/abnormalities/fluchschutze/fell_bullet2.ogg"
-	animate(src, alpha = 255, time = 1) \*
+
+
+
