@@ -5,7 +5,7 @@
 	icon = 'ModularLobotomy/_Lobotomyicons/32x64.dmi'
 	icon_state = "DrFluShots" // Make sure to get your flu shot from the best doctor this side of the city, file autonamed to this and i am NOT changing it
 	icon_living = "DrFluShots"
-	portrait = "Der_Fluchschutze"
+	portrait = "Der_Fluschutz"
 	del_on_death = TRUE
 	maxHealth = 1000
 	health = 1000 // Chunky lad, will be standing still for long amounts of time, needs to not get destroyed instantly
