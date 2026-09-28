@@ -5,7 +5,7 @@
 	icon = 'ModularLobotomy/_Lobotomyicons/32x64.dmi'
 	icon_state = "DrFluShots" // Make sure to get your flu shot from the best doctor this side of the city, file autonamed to this and i am NOT changing it
 	icon_living = "DrFluShots"
-	portrait = "Der_Fluschutz"
+	portrait = "derfluschutz"
 	del_on_death = TRUE
 	maxHealth = 1000
 	health = 1000 // Chunky lad, will be standing still for long amounts of time, needs to not get destroyed instantly
@@ -18,12 +18,12 @@
 	melee_damage_type = BLACK_DAMAGE
 	stat_attack = HARD_CRIT
 	ranged = TRUE
-	ranged_cooldown_time = 3 SECONDS
+	ranged_cooldown_time = 2 SECONDS
 	casingtype = /obj/item/ammo_casing/caseless/fellround
 	projectilesound = 'sound/weapons/black_silence/shotgun.ogg' // I like the sound, very weighty gun sound for his big ass shotgun
 	damage_coeff = list(RED_DAMAGE = 0.5, WHITE_DAMAGE = 1.5, BLACK_DAMAGE = 0.75, PALE_DAMAGE = 0.75, FIRE = 0.5) // again, needs to be tough
-	melee_damage_lower = 20
-	melee_damage_upper = 25 // "get the fuck away from me" - Der fluch probably, do NOT let this lad melee you
+	melee_damage_lower = 25
+	melee_damage_upper = 35 // "get the fuck away from me" - Der fluch probably, do NOT let this lad melee you
 	faction = list("derfluchschutze") // *incoming call...* "KILL EVERYONE"
 	can_breach = TRUE
 	threat_level = HE_LEVEL
@@ -58,10 +58,13 @@
 
 	var/ammo = 2
 	var/max_ammo = 2
-	var/reload_time = 1 SECONDS
+	var/reload_time = 5 SECONDS
 	var/last_reload_time = 0
 
-
+/mob/living/simple_animal/hostile/abnormality/der_fluchschutze/Move()
+	if(ammo = 0)
+		return FALSE
+	return ..()
 
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/Login()
@@ -125,7 +128,7 @@
 	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/OpenFire(atom/A)
-	if(get_dist(src, A) >= 2)
+	if(get_dist(src, A) >= 1)
 		if(ammo <= 0)
 			to_chat(src, span_warning("Out of ammo!"))
 			return FALSE
@@ -149,7 +152,7 @@
 	desc = "A shotgun pellet, its headed straight for you."
 	damage_type = RED_DAMAGE
 	damage = 25
-	speed = 5
+	speed = 10
 	alpha = 0
 	spread = 20
 
