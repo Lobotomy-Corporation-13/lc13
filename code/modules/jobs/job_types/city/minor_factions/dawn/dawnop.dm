@@ -10,7 +10,7 @@
 	spawn_positions = 0
 	leader = /datum/job/dawnop
 	faction_positions = 1
-	display_order = JOB_DISPLAY_ORDER_ANTAG
+	display_order = 102
 	access = list("dawn")
 	minimal_access = list("dawn")
 	radio_channel_name = "Dawn Office"

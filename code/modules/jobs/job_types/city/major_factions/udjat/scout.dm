@@ -10,7 +10,7 @@
 	spawn_positions = 0
 	leader = /datum/job/captain
 	faction_positions = 6
-	display_order = JOB_DISPLAY_ORDER_SYNDICATEGOON
+	display_order = 4.3
 	access = list("udjat")
 	minimal_access = list("udjat")
 	radio_channel_name = "Udjat"

@@ -10,7 +10,7 @@
 	spawn_positions = 0
 	leader = /datum/job/fullop
 	faction_positions = 1
-	display_order = JOB_DISPLAY_ORDER_ANTAG
+	display_order = 103
 	trusted_only = TRUE
 	access = list("fullstop")
 	minimal_access = list("fullstop")

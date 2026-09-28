@@ -10,7 +10,7 @@
 	spawn_positions = 0
 	leader = /datum/job/big_brother
 	faction_positions = 1
-	display_order = JOB_DISPLAY_ORDER_SYNDICATEHEAD
+	display_order = 2
 	trusted_only = TRUE
 	access = list("middle", "middle_leader")
 	minimal_access = list("middle", "middle_leader")

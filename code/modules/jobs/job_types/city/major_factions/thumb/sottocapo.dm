@@ -10,7 +10,7 @@
 	spawn_positions = 0
 	leader = /datum/job/sottocapo
 	faction_positions = 1
-	display_order = JOB_DISPLAY_ORDER_SYNDICATEHEAD
+	faction_positions = 3
 	trusted_only = TRUE
 	access = list("thumb_south", "thumb_south_leader")
 	minimal_access = list("thumb_south", "thumb_south_leader")

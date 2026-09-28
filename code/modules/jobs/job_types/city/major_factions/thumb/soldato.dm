@@ -10,7 +10,7 @@
 	spawn_positions = 0
 	leader = /datum/job/sottocapo
 	faction_positions = 4
-	display_order = JOB_DISPLAY_ORDER_SYNDICATEGOON
+	display_order = 3.2
 	access = list("thumb_south")
 	minimal_access = list("thumb_south")
 	radio_channel_name = "Thumb South"

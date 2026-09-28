@@ -10,7 +10,7 @@
 	spawn_positions = 0
 	leader = /datum/job/cutthroat
 	faction_positions = 2
-	display_order = JOB_DISPLAY_ORDER_ANTAG
+	display_order = 101.1
 	access = list("bladelin")
 	minimal_access = list("bladelin")
 	radio_channel_name = "Blade Lineage"

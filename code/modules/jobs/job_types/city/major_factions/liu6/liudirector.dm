@@ -10,7 +10,7 @@
 	spawn_positions = 0
 	leader = /datum/job/liudirector
 	faction_positions = 1
-	display_order = JOB_DISPLAY_ORDER_SYNDICATEHEAD
+	display_order = 1
 	trusted_only = TRUE
 	access = list("liu", "liu_leader")
 	minimal_access = list("liu", "liu_leader")

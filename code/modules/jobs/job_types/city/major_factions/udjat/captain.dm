@@ -10,7 +10,7 @@
 	spawn_positions = 0
 	leader = /datum/job/captain
 	faction_positions = 1
-	display_order = JOB_DISPLAY_ORDER_SYNDICATEHEAD
+	display_order = 4
 	trusted_only = TRUE
 	access = list("udjat", "udjat_leader")
 	minimal_access = list("udjat", "udjat_leader")

@@ -10,7 +10,7 @@
 	spawn_positions = 0
 	leader = /datum/job/big_brother
 	faction_positions = 8
-	display_order = JOB_DISPLAY_ORDER_SYNDICATEGOON
+	display_order = 2.2
 	access = list("middle")
 	minimal_access = list("middle")
 	radio_channel_name = "Middle"

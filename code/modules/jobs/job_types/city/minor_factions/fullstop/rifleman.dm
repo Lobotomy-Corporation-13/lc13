@@ -10,7 +10,7 @@
 	spawn_positions = 0
 	leader = /datum/job/fullop
 	faction_positions = 1
-	display_order = JOB_DISPLAY_ORDER_ANTAG
+	display_order = 103.2
 	access = list("fullstop")
 	minimal_access = list("fullstop")
 	radio_channel_name = "Full Stop"

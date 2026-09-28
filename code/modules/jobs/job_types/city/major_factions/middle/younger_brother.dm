@@ -8,7 +8,7 @@
 	selection_color = "#b0936f"
 	total_positions = 0
 	spawn_positions = 0
-	display_order = JOB_DISPLAY_ORDER_SYNDICATEVET
+	display_order = 2.1
 	access = list("middle")
 	minimal_access = list("middle")
 	radio_channel_name = "Middle"

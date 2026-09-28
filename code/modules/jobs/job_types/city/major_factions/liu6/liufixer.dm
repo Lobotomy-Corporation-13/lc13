@@ -10,7 +10,7 @@
 	spawn_positions = 0
 	leader = /datum/job/liudirector
 	faction_positions = 6
-	display_order = JOB_DISPLAY_ORDER_SYNDICATEGOON
+	display_order = 1.2
 	access = list("liu")
 	minimal_access = list("liu")
 	radio_channel_name = "Liu Association"

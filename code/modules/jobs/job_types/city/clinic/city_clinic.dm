@@ -37,14 +37,13 @@
 	alt_titles_only = TRUE
 	alt_titles = list(
 		"Mirae Clinic Director",
-		"K-Corp Clinic Director",
 	)
 	access = list(ACCESS_MEDICAL, "clinic", "clinic_leader")
 	minimal_access = list(ACCESS_MEDICAL, "clinic", "clinic_leader")
 	radio_channel_name = "Clinic"
 	radio_channel_color = "#4a8f7b"
 	departments = DEPARTMENT_COMMAND | DEPARTMENT_MEDICAL
-	display_order = JOB_DISPLAY_ORDER_MEDICAL
+	display_order = 201
 	paycheck = PAYCHECK_MEDIUM
 	paycheck_department = ACCOUNT_MED
 	exp_requirements = 600
@@ -112,7 +111,7 @@
 	access = list(ACCESS_MEDICAL, "clinic")
 	minimal_access = list(ACCESS_MEDICAL, "clinic")
 	departments = DEPARTMENT_MEDICAL
-	display_order = JOB_DISPLAY_ORDER_MEDICALASSIST
+	display_order = 201.1
 	exp_requirements = 180
 	//Left where the old clinic sat. The ward coat asks for 20, so this is
 	//already more than enough, and Staff are not meant to be a fighting role.
@@ -160,7 +159,7 @@
 	access = list(ACCESS_MEDICAL, "clinic")
 	minimal_access = list(ACCESS_MEDICAL, "clinic")
 	departments = DEPARTMENT_MEDICAL
-	display_order = JOB_DISPLAY_ORDER_MEDICALASSIST
+	display_order = 201.2
 	exp_requirements = 180
 	job_attribute_limit = 80
 	roundstart_attributes = list(

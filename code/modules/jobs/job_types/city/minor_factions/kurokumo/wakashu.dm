@@ -10,7 +10,7 @@
 	spawn_positions = 0
 	leader = /datum/job/kcaptain
 	faction_positions = 2
-	display_order = JOB_DISPLAY_ORDER_ANTAG
+	display_order = 104.1
 	access = list("kuro")
 	minimal_access = list("kuro")
 	radio_channel_name = "Kurokumo"

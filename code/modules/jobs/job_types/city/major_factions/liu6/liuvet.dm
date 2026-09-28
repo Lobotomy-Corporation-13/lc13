@@ -10,7 +10,7 @@
 	spawn_positions = 0
 	leader = /datum/job/liuvet
 	faction_positions = 1
-	display_order = JOB_DISPLAY_ORDER_SYNDICATEVET
+	display_order = 1.1
 	access = list("liu")
 	minimal_access = list("liu")
 	radio_channel_name = "Liu Association"
