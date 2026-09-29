@@ -61,12 +61,6 @@
 	var/reload_time = 5 SECONDS
 	var/last_reload_time = 0
 
-/mob/living/simple_animal/hostile/abnormality/der_fluchschutze/Move()
-	if(ammo = 0)
-		return FALSE
-	return ..()
-
-
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/Login()
 	. = ..()
 	if(!. || !client)
@@ -134,9 +128,23 @@
 			return FALSE
 		else
 			ammo -= 1
+			say("DEBUG: NORMAL FIRE")
 			return ..()
 	else
 		return FALSE
+
+/mob/living/simple_animal/hostile/abnormality/der_fluchschutze/AttackingTarget(atom/A)
+	if(ranged_cooldown <= world.time + 1) // Delays Point-Blanks a bit because they fucking HURT
+		if(ammo > 0)
+			if(prob(50))
+				OpenFire()
+				say("DEBUG: POINT BLANK FIRE")
+			return
+		else
+			to_chat(src, span_warning("Out of ammo!"))
+			say("DEBUG: MELEE")
+		return ..()
+	return FALSE
 
 //gunstuff
 /obj/item/ammo_casing/caseless/fellround
