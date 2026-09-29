@@ -161,7 +161,7 @@
 	desc = "A shotgun pellet, its headed straight for you."
 	damage_type = RED_DAMAGE
 	damage = 25
-	speed = 10
+	speed = 20
 	alpha = 0
 	spread = 20
 
