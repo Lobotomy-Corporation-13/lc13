@@ -18,12 +18,13 @@
 	melee_damage_type = BLACK_DAMAGE
 	stat_attack = HARD_CRIT
 	ranged = TRUE
+	enablePB = TRUE
 	ranged_cooldown_time = 2 SECONDS
 	casingtype = /obj/item/ammo_casing/caseless/fellround
 	projectilesound = 'sound/weapons/black_silence/shotgun.ogg' // I like the sound, very weighty gun sound for his big ass shotgun
 	damage_coeff = list(RED_DAMAGE = 0.5, WHITE_DAMAGE = 1.5, BLACK_DAMAGE = 0.75, PALE_DAMAGE = 0.75, FIRE = 0.5) // again, needs to be tough
 	melee_damage_lower = 25
-	melee_damage_upper = 35 // "get the fuck away from me" - Der fluch probably, do NOT let this lad melee you
+	melee_damage_upper = 35 // "get away from me" - Der fluch probably, do NOT let this lad melee you
 	faction = list("derfluchschutze") // *incoming call...* "KILL EVERYONE"
 	can_breach = TRUE
 	threat_level = HE_LEVEL
@@ -87,7 +88,7 @@
 	return
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/PostWorkEffect(mob/living/carbon/human/user, work_type, pe)
-	if(work_type = ABNORMALITY_WORK_ATTACHMENT)
+	if(work_type == ABNORMALITY_WORK_ATTACHMENT)
 		if (prob(25))
 			datum_reference.qliphoth_change(-2) // big qlipoth dip at a low chance, go big or go home.
 		return ..()
@@ -134,7 +135,7 @@
 		return FALSE
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/AttackingTarget(atom/A)
-	if(ranged_cooldown <= world.time + 1) // Delays Point-Blanks a bit because they fucking HURT
+	if(ranged_cooldown <= world.time + 1) // Delays Point-Blanks a bit because they HURT
 		if(ammo > 0)
 			if(prob(50))
 				OpenFire(target)
