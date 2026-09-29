@@ -7,8 +7,8 @@
 	icon_living = "DrFluShots"
 	portrait = "derfluschutz"
 	del_on_death = TRUE
-	maxHealth = 1000
-	health = 1000 // Chunky lad, will be standing still for long amounts of time, needs to not get destroyed instantly
+	maxHealth = 1300
+	health = 1300 // Chunky lad, will be standing still for long amounts of time, needs to not get destroyed instantly
 	rapid_melee = 1
 	melee_queue_distance = 2
 	move_to_delay = 4
@@ -22,7 +22,7 @@
 	ranged_cooldown_time = 2 SECONDS
 	casingtype = /obj/item/ammo_casing/caseless/fellround
 	projectilesound = 'sound/weapons/black_silence/shotgun.ogg' // I like the sound, very weighty gun sound for his big ass shotgun
-	damage_coeff = list(RED_DAMAGE = 0.5, WHITE_DAMAGE = 1.5, BLACK_DAMAGE = 0.75, PALE_DAMAGE = 0.75, FIRE = 0.5) // again, needs to be tough
+	damage_coeff = list(RED_DAMAGE = 0.5, WHITE_DAMAGE = 1.5, BLACK_DAMAGE = 0.7, PALE_DAMAGE = 0.7, FIRE = 0.5) // again, needs to be tough
 	melee_damage_lower = 25
 	melee_damage_upper = 35 // "get away from me" - Der fluch probably, do NOT let this lad melee you
 	faction = list("derfluchschutze") // *incoming call...* "KILL EVERYONE"
