@@ -10,7 +10,7 @@
 	ranged = TRUE
 	attack_verb_continuous = "cleans"
 	attack_verb_simple = "cleans"
-	move_to_delay = 1.2
+	move_to_delay = 2.2
 	attack_sound = 'sound/abnormalities/helper/attack.ogg'
 	stat_attack = HARD_CRIT
 	melee_damage_lower = 11
@@ -72,7 +72,7 @@
 
 /mob/living/simple_animal/hostile/abnormality/cleaner/Move()
 	..()
-	move_to_delay = 1.2
+	move_to_delay = 2.2
 	//Throw your suds little dude
 	if(prob(5))
 		var/list/turfs_in_range = list()
