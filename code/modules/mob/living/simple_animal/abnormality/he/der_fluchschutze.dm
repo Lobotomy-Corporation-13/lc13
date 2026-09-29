@@ -129,7 +129,6 @@
 			return FALSE
 		else
 			ammo -= 1
-			say("DEBUG: NORMAL FIRE")
 			return ..()
 	else
 		return FALSE
@@ -139,11 +138,9 @@
 		if(ammo > 0)
 			if(prob(50))
 				OpenFire(target)
-				say("DEBUG: POINT BLANK FIRE")
 			return
 		else
 			to_chat(src, span_warning("Out of ammo!"))
-			say("DEBUG: MELEE")
 		return ..()
 	return FALSE
 
