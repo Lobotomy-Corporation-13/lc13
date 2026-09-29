@@ -137,7 +137,7 @@
 	if(ranged_cooldown <= world.time + 1) // Delays Point-Blanks a bit because they fucking HURT
 		if(ammo > 0)
 			if(prob(50))
-				OpenFire()
+				OpenFire(target)
 				say("DEBUG: POINT BLANK FIRE")
 			return
 		else
