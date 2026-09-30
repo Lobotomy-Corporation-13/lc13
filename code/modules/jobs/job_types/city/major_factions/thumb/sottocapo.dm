@@ -5,12 +5,12 @@
 	department_head = list("money and order.")
 	faction = "Station"
 	supervisors = "money and order."
-	selection_color = "#856948"
+	selection_color = "#a82350"
 	total_positions = 0
 	spawn_positions = 0
 	leader = /datum/job/sottocapo
 	faction_positions = 1
-	faction_positions = 3
+	display_order = 3
 	trusted_only = TRUE
 	access = list("thumb_south", "thumb_south_leader")
 	minimal_access = list("thumb_south", "thumb_south_leader")

@@ -1,11 +1,11 @@
 //Udjat Scout
 /datum/job/scout
-	title = "Thumb Soldato"
+	title = "Udjat Light Infantry"
 	outfit = /datum/outfit/job/scout
 	department_head = list("the heavy infantry and the captain")
 	faction = "Station"
 	supervisors = "the heavy infantry and the captain"
-	selection_color = "#b0936f"
+	selection_color = "#c2b66d"
 	total_positions = 0
 	spawn_positions = 0
 	leader = /datum/job/captain

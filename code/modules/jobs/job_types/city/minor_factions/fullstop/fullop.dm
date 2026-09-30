@@ -2,10 +2,10 @@
 /datum/job/Fullop
 	title = "Full Stop Operator"
 	outfit = /datum/outfit/job/Fullop
-	department_head = list("")
+	department_head = list("The Hana Association")
 	faction = "Station"
-	supervisors = ""
-	selection_color = "#856948"
+	supervisors = "The Hana Association"
+	selection_color = "#8e8f9e"
 	total_positions = 0
 	spawn_positions = 0
 	leader = /datum/job/fullop

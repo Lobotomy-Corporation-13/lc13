@@ -5,7 +5,7 @@
 	department_head = list("money and family.")
 	faction = "Station"
 	supervisors = "money and family."
-	selection_color = "#856948"
+	selection_color = "#893cbd"
 	total_positions = 0
 	spawn_positions = 0
 	leader = /datum/job/big_brother

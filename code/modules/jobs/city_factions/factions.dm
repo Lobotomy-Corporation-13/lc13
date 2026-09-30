@@ -39,7 +39,7 @@
 /datum/city_faction/fullstop
 	name = "the Full Stop Office"
 	category = CITY_FACTION_MINOR
-	leader_job = /datum/job/Fullop
+	leader_job = /datum/job/fullop
 	requires_leader = TRUE
 
 /datum/city_faction/liu
@@ -51,5 +51,5 @@
 /datum/city_faction/kuroclan
 	name = "the Kurokumo Clan"
 	category = CITY_FACTION_MINOR
-	leader_job = /datum/job/wakashu
+	leader_job = /datum/job/kcaptain
 	requires_leader = TRUE

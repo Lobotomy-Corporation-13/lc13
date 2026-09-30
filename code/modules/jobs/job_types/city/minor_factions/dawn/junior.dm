@@ -5,7 +5,7 @@
 	department_head = list("Dawn Office Operator")
 	faction = "Station"
 	supervisors = "Dawn Office Operator"
-	selection_color = "#b0936f"
+	selection_color = "#f0f0f0"
 	total_positions = 0
 	spawn_positions = 0
 	leader = /datum/job/dawnop

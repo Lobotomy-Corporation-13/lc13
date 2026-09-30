@@ -5,7 +5,7 @@
 	department_head = list("You answer to Nobody")
 	faction = "Station"
 	supervisors = "You answer to Nobody"
-	selection_color = "#b0936f"
+	selection_color = "#537696"
 	total_positions = 0
 	spawn_positions = 0
 	leader = /datum/job/cutthroat

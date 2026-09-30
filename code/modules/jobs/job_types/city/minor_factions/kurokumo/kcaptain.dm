@@ -1,11 +1,11 @@
 //Kurokumo Captain
 /datum/job/kcaptain
-	title = "Kurokumo Captain"
+	title = "Kurokumo Kashira"
 	outfit = /datum/outfit/job/kcaptain
 	department_head = list("The Thumb")
 	faction = "Station"
 	supervisors = "The Thumb"
-	selection_color = "#b0936f"
+	selection_color = "#626266"
 	total_positions = 0
 	spawn_positions = 0
 	leader = /datum/job/kcaptain

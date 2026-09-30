@@ -5,7 +5,7 @@
 	department_head = list("The Captain")
 	faction = "Station"
 	supervisors = "The Captain"
-	selection_color = "#b0936f"
+	selection_color = "#c2b66d"
 	total_positions = 0
 	spawn_positions = 0
 	leader = /datum/job/captain

@@ -5,7 +5,7 @@
 	department_head = list("The Hana Association")
 	faction = "Station"
 	supervisors = "The Hana Association"
-	selection_color = "#b0936f"
+	selection_color = "#c3c3c3"
 	total_positions = 0
 	spawn_positions = 0
 	leader = /datum/job/dawnop

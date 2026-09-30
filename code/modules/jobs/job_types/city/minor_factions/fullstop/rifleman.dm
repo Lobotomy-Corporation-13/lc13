@@ -5,7 +5,7 @@
 	department_head = list("Full Stop Operator")
 	faction = "Station"
 	supervisors = "Full Stop Operator"
-	selection_color = "#b0936f"
+	selection_color = "#b4b5c2"
 	total_positions = 0
 	spawn_positions = 0
 	leader = /datum/job/fullop

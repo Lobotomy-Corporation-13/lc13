@@ -67,7 +67,21 @@ GLOBAL_LIST_INIT(command_positions, list(
 	"Chief Medical Officer",
 	"Lead Researcher",
 
+	//Fixer Office
 	"Office Director",
+
+
+	//NeoCity Major
+	"Liu South Section 6 Director",
+	"Big Brother",
+	"Thumb Sottocapo",
+	"Udjat Captain",
+
+	//NeoCity Minor
+	"Blade Lineage Cutthroat",
+	"Dawn Office Operator",
+	"Full Stop Operator",
+	"Kurokumo Captain",
 	))
 
 
@@ -122,8 +136,6 @@ GLOBAL_LIST_INIT(service_positions, list(
 	"Main Office Representative",
 	"Fishhook Office Fixer",
 
-
-
 	//R-Corp Sixth Pack
 	"R-Corp Acquisitions Specialist",
 	"R-Corp Production Specialist",
@@ -158,6 +170,21 @@ GLOBAL_LIST_INIT(security_positions, list(
 	"Section B Robin",
 	"Section C Robin",
 	"R-Corp Rook",
+
+	//NeoCity Major
+	"Thumb Sottocapo",
+	"Thumb Capo",
+	"Thumb Soldato",
+
+	"Big Brother",
+	"Little Brother",
+
+	//Neocity Minor
+	"Blade Lineage Cutthroat",
+	"Blade Lineage Salsu",
+
+	"Kurokumo Kashira",
+	"Kurokumo Wakashu",
 	))
 
 
@@ -244,6 +271,21 @@ GLOBAL_LIST_INIT(fixer_positions, list(
 	"Rat", // most fitting, somehow
 
 	"Office Fixer",
+
+	//Neocity Major
+	"Liu Veteran Fixer",
+	"Liu Fixer",
+
+	"Udjat Heavy Gunner",
+	"Udjat Heavy Infantry",
+	"Udjat Light Infantry"
+
+	//Neocity Minor
+	"Dawn Office Junior",
+	"Dawn Office Veteran",
+
+	"Full Stop Rifleman",
+	"Full Stop Sniper",
 ))
 
 GLOBAL_LIST_INIT(association_positions, list(
@@ -251,40 +293,15 @@ GLOBAL_LIST_INIT(association_positions, list(
 	"Association Veteran",
 	"Association Fixer",
 	"Roaming Association Fixer",
+
+	//Neocity Major
+	"Liu Veteran Fixer",
+	"Liu Fixer",
 ))
 
 GLOBAL_LIST_INIT(city_antagonist_positions, list(
-	"Index Messenger",
-	"Index Proxy",
-	"Index Proselyte",
 
-	"Blade Lineage Cutthroat",
-	"Blade Lineage Salsu",
-	"Blade Lineage Ronin",
-	"Blade Lineage Roaming Salsu",
 
-	"Grand Inquisitor",
-	"N Corp Grosshammer",
-	"N Corp Mittlehammer",
-	"N Corp Kleinhammer",
-
-	"Thumb Sottocapo",
-	"Thumb Capo",
-	"Thumb Soldato",
-
-	"Kurokumo Kashira",
-	"Kurokumo Hosa",
-	"Kurokumo Wakashu",
-
-	"Thumb East Capo",
-	"Thumb East Soldato",
-
-	"Big Brother",
-	"Younger Brother",
-	"Little Brother",
-
-	"Insurgence Nightwatch Agent",
-	"Insurgence Transport Agent",
 ))
 
 

@@ -1,11 +1,11 @@
 //Kurokumo Clan Wakashu
 /datum/job/wakashu
-	title = "Kurokumo Clan Wakashu"
+	title = "Kurokumo Wakashu"
 	outfit = /datum/outfit/job/wakashu
 	department_head = list("The kurokumo captain")
 	faction = "Station"
 	supervisors = "The kurokumo captain"
-	selection_color = "#b0936f"
+	selection_color = "#a9a9ab"
 	total_positions = 0
 	spawn_positions = 0
 	leader = /datum/job/kcaptain

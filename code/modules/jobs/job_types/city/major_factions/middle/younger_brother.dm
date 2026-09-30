@@ -5,9 +5,11 @@
 	department_head = list("Big Brother.")
 	faction = "Station"
 	supervisors = "Big Brother."
-	selection_color = "#b0936f"
+	selection_color = "#ac7ccc"
 	total_positions = 0
 	spawn_positions = 0
+	leader = /datum/job/big_brother
+	faction_positions = 0
 	display_order = 2.1
 	access = list("middle")
 	minimal_access = list("middle")

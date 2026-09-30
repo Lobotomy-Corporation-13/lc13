@@ -5,10 +5,10 @@
 	department_head = list("the director")
 	faction = "Station"
 	supervisors = "the director."
-	selection_color = "#b0936f"
+	selection_color = "#e3a964"
 	total_positions = 0
 	spawn_positions = 0
-	leader = /datum/job/liuvet
+	leader = /datum/job/liudirector
 	faction_positions = 1
 	display_order = 1.1
 	access = list("liu")
