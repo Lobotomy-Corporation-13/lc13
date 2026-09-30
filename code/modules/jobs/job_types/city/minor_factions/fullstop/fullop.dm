@@ -1,7 +1,7 @@
 //Full Stop Operator
-/datum/job/Fullop
+/datum/job/fullop
 	title = "Full Stop Operator"
-	outfit = /datum/outfit/job/Fullop
+	outfit = /datum/outfit/job/fullop
 	department_head = list("The Hana Association")
 	faction = "Station"
 	supervisors = "The Hana Association"
@@ -37,7 +37,7 @@
 	. = ..()
 
 
-/datum/outfit/job/Fullop
+/datum/outfit/job/fullop
 	name = "Full Stop Operator"
 	jobtype = /datum/job/Fullop
 	belt = /obj/item/pda/security

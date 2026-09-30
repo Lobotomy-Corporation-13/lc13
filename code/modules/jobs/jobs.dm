@@ -278,7 +278,7 @@ GLOBAL_LIST_INIT(fixer_positions, list(
 
 	"Udjat Heavy Gunner",
 	"Udjat Heavy Infantry",
-	"Udjat Light Infantry"
+	"Udjat Light Infantry",
 
 	//Neocity Minor
 	"Dawn Office Junior",

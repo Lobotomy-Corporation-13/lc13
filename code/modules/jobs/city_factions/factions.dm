@@ -7,10 +7,9 @@
 	leader_job = /datum/job/city_clinic
 	requires_leader = TRUE
 	variants = list(
-		/datum/city_faction_variant/clinic/mirae,
 		/datum/city_faction_variant/clinic/kcorp,
 	)
-	default_variant = /datum/city_faction_variant/clinic/mirae
+	default_variant = /datum/city_faction_variant/clinic/kcorp
 
 /datum/city_faction/thumb_south
 	name = "the Thumb South"
