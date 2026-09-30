@@ -14,7 +14,7 @@
 #define CITY_FACTION_MINOR "minor"
 
 #define CITY_FACTION_MAJOR_COUNT 3
-#define CITY_FACTION_MINOR_COUNT 5
+#define CITY_FACTION_MINOR_COUNT 3
 
 #define DEFAULT_RELIGION "Christianity"
 #define DEFAULT_DEITY "Space Jesus"
