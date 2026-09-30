@@ -61,6 +61,8 @@
 	var/max_ammo = 2
 	var/reload_time = 5 SECONDS
 	var/last_reload_time = 0
+	var/sacrifice_spawn = 10
+	var/firecooldown = 40s
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/Login()
 	. = ..()
@@ -116,12 +118,6 @@
 			Reload()
 	return ..()
 
-
-/mob/living/simple_animal/hostile/abnormality/der_fluchschutze/MoveToTarget(list/possible_targets)
-	if(ranged_cooldown <= world.time)
-		OpenFire(target)
-	return ..()
-
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/OpenFire(atom/A)
 	if(get_dist(src, A) >= 1)
 		if(ammo <= 0)
@@ -138,10 +134,7 @@
 		if(ammo > 0)
 			if(prob(50))
 				OpenFire(target)
-			return
-		else
-			to_chat(src, span_warning("Out of ammo!"))
-		return ..()
+			return ..()
 	return FALSE
 
 //gunstuff
@@ -166,14 +159,16 @@
 	. = ..()
 	hitsound = "sound/abnormalities/fluchschutze/fell_bullet2.ogg"
 
+
+// he spawns sacrifices around the facility that if not killed deal large RED damage in an area around them.
 /mob/living/simple_animal/hostile/der_flusch_sacrifice
 	name = "Refracted G-Corp Soldier"
 	desc = "A strange G-Corp Soldier, It seems unresponsive. A portal hovers behind its head. You feel like you are being watched. <br> \
 	<b>Refracted in the lens of the shooter, Der Fluchschütze is using this target as a sacrifice!</b>"
-	icon = '' // Make a special G corp Soldier Icon with a der flusch portal behind it.
-	icon_state = "freicircle3" 
-	icon_living = "freicircle3"
-	var/icon_selected = "freicircle2"
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi' // Make a special G corp Soldier Icon with a der flusch portal behind it.
+	icon_state = "fluch_sacrifice"
+	icon_living = "fluch_sacrifice"
+	var/icon_selected = "fluch_sacrifice"
 	maxHealth = 300
 	health = 300
 	can_patrol = FALSE
