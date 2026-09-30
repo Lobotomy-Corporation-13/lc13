@@ -273,19 +273,23 @@ GLOBAL_LIST_INIT(fixer_positions, list(
 	"Office Fixer",
 
 	//Neocity Major
+	"Liu South Section 6 Director",
 	"Liu Veteran Fixer",
 	"Liu Fixer",
 
+	"Udjat Captain",
 	"Udjat Heavy Gunner",
 	"Udjat Heavy Infantry",
 	"Udjat Light Infantry",
 
 	//Neocity Minor
-	"Dawn Office Junior",
+	"Dawn Office Operator",
 	"Dawn Office Veteran",
+	"Dawn Office Junior",
 
-	"Full Stop Rifleman",
+	"Full Stop Operator",
 	"Full Stop Sniper",
+	"Full Stop Rifleman",
 ))
 
 GLOBAL_LIST_INIT(association_positions, list(
@@ -295,6 +299,7 @@ GLOBAL_LIST_INIT(association_positions, list(
 	"Roaming Association Fixer",
 
 	//Neocity Major
+	"Liu South Section 6 Director",
 	"Liu Veteran Fixer",
 	"Liu Fixer",
 ))

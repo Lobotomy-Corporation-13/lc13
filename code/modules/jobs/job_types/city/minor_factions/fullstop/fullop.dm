@@ -39,7 +39,7 @@
 
 /datum/outfit/job/fullop
 	name = "Full Stop Operator"
-	jobtype = /datum/job/Fullop
+	jobtype = /datum/job/fullop
 	belt = /obj/item/pda/security
 	ears = /obj/item/radio/headset/faction/heads
 	uniform = /obj/item/clothing/under/suit/lobotomy/plain
