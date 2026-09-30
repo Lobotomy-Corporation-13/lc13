@@ -18,7 +18,7 @@
 	melee_damage_type = BLACK_DAMAGE
 	stat_attack = HARD_CRIT
 	ranged = TRUE
-	enablePB = TRUE
+	enablePB = TRUE // This is a new var made specifically for derflusch, If TRUE it skips the check that disables using guns in melee range
 	ranged_cooldown_time = 2 SECONDS
 	casingtype = /obj/item/ammo_casing/caseless/fellround
 	projectilesound = 'sound/weapons/black_silence/shotgun.ogg' // I like the sound, very weighty gun sound for his big ass shotgun
