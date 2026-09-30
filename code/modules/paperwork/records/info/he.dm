@@ -590,7 +590,7 @@
 	abno_type = /mob/living/simple_animal/hostile/abnormality/der_fluchschutze
 	abno_code = "F-01-16"
 	abno_info = list(
-		"Attachtment work provided the best results, but occassional caused a large drop in qlipoth",
+		"Attachment work provided the best results, but occassional caused a large drop in qlipoth",
 		"When the work result was neutral, the Qliphoth counter lowered.",
 		"When the work result was bad, the Qliphoth counter lowered.",
 		"When the work result was good, the Qliphoth counter increased at a low probability.",

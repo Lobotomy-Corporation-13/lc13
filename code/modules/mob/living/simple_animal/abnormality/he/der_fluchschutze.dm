@@ -62,7 +62,8 @@
 	var/reload_time = 5 SECONDS
 	var/last_reload_time = 0
 	var/sacrifice_spawn = 10
-	var/firecooldown = 40s
+	var/firecooldown = 40 SECONDS
+	var/aiming = FALSE
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/Login()
 	. = ..()
@@ -109,6 +110,14 @@
 		last_reload_time = world.time
 		if (ammo < max_ammo)
 			Reload()
+		. = ..()
+	if(firecooldown <= world.time)
+		if(prob(25))
+			var/aiming = TRUE
+			for(var/i = 1 to sacrifice_spawn)
+        		var/turf/W = pick(GLOB.xeno_spawn)
+       			var/mob/living/simple_animal/hostile/der_flusch_sacrifice/E = new(get_turf(W))
+        		E.boss = src
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/AttackingTarget(atom/attacked_target)
 	if(ammo < max_ammo)
@@ -165,7 +174,7 @@
 	name = "Refracted G-Corp Soldier"
 	desc = "A strange G-Corp Soldier, It seems unresponsive. A portal hovers behind its head. You feel like you are being watched. <br> \
 	<b>Refracted in the lens of the shooter, Der Fluchschütze is using this target as a sacrifice!</b>"
-	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi' // Make a special G corp Soldier Icon with a der flusch portal behind it.
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "fluch_sacrifice"
 	icon_living = "fluch_sacrifice"
 	var/icon_selected = "fluch_sacrifice"
@@ -181,3 +190,9 @@
 	environment_smash = ENVIRONMENT_SMASH_NONE
 	death_message = "Shatters..."
 	AIStatus = AI_OFF
+
+/mob/living/simple_animal/hostile/der_flusch_sacrifice/proc/ShatterSoul()
+	if(master)
+		UnregisterSignal(master, list(COMSIG_PARENT_QDELETING))
+	master = null
+	dust(TRUE,TRUE,TRUE)
