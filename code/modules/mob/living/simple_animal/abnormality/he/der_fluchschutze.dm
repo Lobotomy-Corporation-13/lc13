@@ -165,3 +165,24 @@
 /obj/projectile/fellround/Initialize()
 	. = ..()
 	hitsound = "sound/abnormalities/fluchschutze/fell_bullet2.ogg"
+
+/mob/living/simple_animal/hostile/der_flusch_sacrifice
+	name = "Refracted G-Corp Soldier"
+	desc = "A strange G-Corp Soldier, It seems unresponsive. A portal hovers behind its head. You feel like you are being watched. <br> \
+	Refracted in the lens of the shooter, Der Fluchschütze is using this target as a sacrifice!"
+	icon = '' // Make a special G corp Soldier Icon with a der flusch portal behind it.
+	icon_state = "freicircle3" 
+	icon_living = "freicircle3"
+	var/icon_selected = "freicircle2"
+	maxHealth = 300
+	health = 300
+	can_patrol = FALSE
+	wander = 0
+	damage_coeff = list(RED_DAMAGE = 1, WHITE_DAMAGE = 1, BLACK_DAMAGE = 1, PALE_DAMAGE = 1)
+	obj_damage = 0
+	del_on_death = TRUE
+	alpha = 0
+	density = TRUE
+	environment_smash = ENVIRONMENT_SMASH_NONE
+	death_message = "Shatters..."
+	AIStatus = AI_OFF
