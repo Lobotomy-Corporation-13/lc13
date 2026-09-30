@@ -169,7 +169,7 @@
 /mob/living/simple_animal/hostile/der_flusch_sacrifice
 	name = "Refracted G-Corp Soldier"
 	desc = "A strange G-Corp Soldier, It seems unresponsive. A portal hovers behind its head. You feel like you are being watched. <br> \
-	Refracted in the lens of the shooter, Der Fluchschütze is using this target as a sacrifice!"
+	<b>Refracted in the lens of the shooter, Der Fluchschütze is using this target as a sacrifice!</b>"
 	icon = '' // Make a special G corp Soldier Icon with a der flusch portal behind it.
 	icon_state = "freicircle3" 
 	icon_living = "freicircle3"
