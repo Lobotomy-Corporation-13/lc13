@@ -21,7 +21,7 @@
 
 /datum/job/city_clinic
 	title = "Clinic Director"
-	display_title = "Mirae Clinic Director"
+	display_title = "K-Corp Clinic Director"
 	outfit = /datum/outfit/job/city_clinic
 	department_head = list("your own judgement")
 	faction = "Station"
@@ -36,7 +36,7 @@
 	//played. Choosing nothing still lands on Mirae.
 	alt_titles_only = TRUE
 	alt_titles = list(
-		"Mirae Clinic Director",
+		"K-Corp Clinic Director",
 	)
 	access = list(ACCESS_MEDICAL, "clinic", "clinic_leader")
 	minimal_access = list(ACCESS_MEDICAL, "clinic", "clinic_leader")

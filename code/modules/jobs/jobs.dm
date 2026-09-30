@@ -11,20 +11,6 @@ GLOBAL_LIST_INIT(command_positions, list(
 	"Agent Captain",
 
 	// City heads
-	"Doctor",
-	"Clinic Director",
-	"Hana Administrator",
-	"Association Section Director",
-	"Association Assistant Director",
-	"Subsidary Office Director",
-	"Index Messenger",
-	"Blade Lineage Cutthroat",
-	"Grand Inquisitor",
-	"Thumb Sottocapo",
-	"Kurokumo Kashira",
-	"Thumb East Capo",
-	"Big Brother",
-	"Insurgence Nightwatch Agent",
 
 	// R-corp Officers
 	"Ground Commander",
@@ -171,20 +157,6 @@ GLOBAL_LIST_INIT(security_positions, list(
 	"Section C Robin",
 	"R-Corp Rook",
 
-	//NeoCity Major
-	"Thumb Sottocapo",
-	"Thumb Capo",
-	"Thumb Soldato",
-
-	"Big Brother",
-	"Little Brother",
-
-	//Neocity Minor
-	"Blade Lineage Cutthroat",
-	"Blade Lineage Salsu",
-
-	"Kurokumo Kashira",
-	"Kurokumo Wakashu",
 	))
 
 
@@ -305,7 +277,20 @@ GLOBAL_LIST_INIT(association_positions, list(
 ))
 
 GLOBAL_LIST_INIT(city_antagonist_positions, list(
+	//NeoCity Major
+	"Thumb Sottocapo",
+	"Thumb Capo",
+	"Thumb Soldato",
 
+	"Big Brother",
+	"Little Brother",
+
+	//Neocity Minor
+	"Blade Lineage Cutthroat",
+	"Blade Lineage Salsu",
+
+	"Kurokumo Kashira",
+	"Kurokumo Wakashu",
 
 ))
 

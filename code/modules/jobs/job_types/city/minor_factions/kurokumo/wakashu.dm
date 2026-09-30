@@ -35,7 +35,7 @@
 
 
 /datum/outfit/job/wakashu
-	name = "Kurokumo Clan Wakashu"
+	name = "Kurokumo Wakashu"
 	jobtype = /datum/job/wakashu
 
 	belt = /obj/item/pda/security

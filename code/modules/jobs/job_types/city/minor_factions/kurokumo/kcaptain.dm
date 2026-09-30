@@ -36,7 +36,7 @@
 
 
 /datum/outfit/job/kcaptain
-	name = "Kurokumo Clan Captain"
+	name = "Kurokumo Kashira"
 	jobtype = /datum/job/kcaptain
 
 	belt = /obj/item/pda/security
