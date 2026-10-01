@@ -66,3 +66,10 @@ I have NO fucking clue why.
 	leader_job = /datum/job/kcaptain
 	requires_leader = TRUE
 	*/
+
+/datum/city_faction/streetlight
+	name = "Streetlight Office"
+	category = CITY_FACTION_MINOR
+	leader_job = /datum/job/streetop
+	requires_leader = TRUE
+
