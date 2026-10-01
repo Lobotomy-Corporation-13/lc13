@@ -34,7 +34,7 @@
 
 	display_order = JOB_DISPLAY_ORDER_MEDICAL
 	//alt_titles for this job live in ModularLobotomy/altjobtitles/altjobtitles.dm
-	maptype = list("wonderlabs", "fixers", "lcorp_city", "enkephalin_rush")
+	maptype = list("wonderlabs", "fixers", "lcorp_city", "enkephalin_rush", "city")
 	job_important = "You are the town doctor, visit your clinic to the east of town and start healing peopl who come in. You must charge money for your services."
 
 /datum/job/doctor/after_spawn(mob/living/carbon/human/H, mob/M, latejoin = FALSE)
@@ -78,7 +78,7 @@
 	exp_requirements = 180
 
 	display_order = JOB_DISPLAY_ORDER_MEDICALASSIST
-	maptype = list("wonderlabs", "fixers", "lcorp_city")
+	maptype = list("wonderlabs", "fixers", "lcorp_city", "city",)
 	job_important = "You are an assistant to the town doctor, visit your clinic to the east of town and start healing people who come in. You must charge money for your services."
 
 /datum/outfit/job/doctor/nurse

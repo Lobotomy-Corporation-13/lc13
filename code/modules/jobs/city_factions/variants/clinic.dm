@@ -33,27 +33,6 @@
 	if(limit)
 		J.job_attribute_limit = limit
 
-/datum/city_faction_variant/clinic/ApplyToJob(datum/job/J)
-	. = ..()
-	// Sub-roles first: both are subtypes of the Director's job, so testing the
-	// base type first would swallow them.
-	if(istype(J, /datum/job/city_clinic/staff))
-		J.display_title = staff_title
-		if(staff_outfit)
-			J.outfit = staff_outfit
-		SetStats(J, staff_attributes, staff_limit)
-	else if(istype(J, /datum/job/city_clinic/field))
-		J.display_title = field_title
-		if(field_outfit)
-			J.outfit = field_outfit
-		SetStats(J, field_attributes, field_limit)
-	else if(istype(J, /datum/job/city_clinic))
-		// Normally the Director reads as whatever alt title they picked, and
-		// that wins over this. It is here for the Director who picked nothing
-		// and had a company chosen for them, who would otherwise be the only
-		// person in the building with no company on their ID.
-		J.display_title = leader_alt_title
-		SetStats(J, director_attributes, director_limit)
 
 /datum/city_faction_variant/clinic/kcorp
 	name = "K-Corp"
@@ -69,8 +48,6 @@
 	leader_alt_title = "Mirae Clinic Director"
 	staff_title = "Mirae Physician"
 	field_title = "Mirae Insurer"
-	staff_outfit = /datum/outfit/job/city_clinic/staff
-	field_outfit = /datum/outfit/job/city_clinic/field
 	//Stated here rather than left to the job's defaults, even though Mirae is
 	//the default variant and the numbers currently agree. A company's stats
 	//belong next to the gear they were chosen for, or the next person to

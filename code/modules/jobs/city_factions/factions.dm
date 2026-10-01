@@ -1,15 +1,4 @@
 // Members are not listed here. A job joins a faction by setting its `leader`.
-// The Clinic is always open, everything else is drawn for at roundstart.
-
-/datum/city_faction/clinic
-	name = "the Clinic"
-	category = CITY_FACTION_ALWAYS
-	leader_job = /datum/job/city_clinic
-	requires_leader = TRUE
-	variants = list(
-		/datum/city_faction_variant/clinic/kcorp,
-	)
-	default_variant = /datum/city_faction_variant/clinic/kcorp
 
 //Major Factions
 /datum/city_faction/thumb_south
