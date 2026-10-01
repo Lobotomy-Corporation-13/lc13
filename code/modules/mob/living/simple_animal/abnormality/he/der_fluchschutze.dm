@@ -117,7 +117,7 @@
 			for(var/i = 1 to sacrifice_spawn)
         		var/turf/W = pick(GLOB.xeno_spawn)
        			var/mob/living/simple_animal/hostile/der_flusch_sacrifice/E = new(get_turf(W))
-        		E.boss = src
+        		E.Boss = src
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/AttackingTarget(atom/attacked_target)
 	if(ammo < max_ammo)
@@ -190,9 +190,9 @@
 	environment_smash = ENVIRONMENT_SMASH_NONE
 	death_message = "Shatters..."
 	AIStatus = AI_OFF
+	var/mob/living/simple_animal/hostile/abnormality/der_fluchschutze/Boss
 
 /mob/living/simple_animal/hostile/der_flusch_sacrifice/proc/ShatterSoul()
-	if(master)
-		UnregisterSignal(master, list(COMSIG_PARENT_QDELETING))
-	master = null
+	if(boss)
+		boss = null
 	dust(TRUE,TRUE,TRUE)
