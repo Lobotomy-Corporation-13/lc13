@@ -1,6 +1,8 @@
-//Liu Section 6 Director
+//Liu Section 5 Director
+
+//Whoops. Forgot it was South 5 and not South 6 we had haha
 /datum/job/liudirector
-	title = "Liu South Section 6 Director"
+	title = "Liu South Section 5 Director"
 	outfit = /datum/outfit/job/liudirector
 	department_head = list("the liu.")
 	faction = "Station"

@@ -19,6 +19,17 @@
 	name = "dark tiling"
 	},
 /area/city/assoc_base)
+"bP" = (
+/obj/structure/closet/cabinet,
+/obj/machinery/light{
+	dir = 4;
+	pixel_x = 9;
+	pixel_y = 4
+	},
+/obj/item/ego_weapon/city/liu/fist,
+/obj/item/clothing/suit/armor/ego_gear/city/liu/section5,
+/turf/open/floor/city/interior/boards,
+/area/city/assoc_base)
 "dv" = (
 /turf/open/floor/lce/tile/dark{
 	name = "dark tiling"
@@ -87,7 +98,6 @@
 	pixel_y = 4
 	},
 /obj/item/ego_weapon/city/liu/fist,
-/obj/item/clothing/suit/armor/ego_gear/city/liu,
 /turf/open/floor/city/interior/boards,
 /area/city/assoc_base)
 "nY" = (
@@ -118,7 +128,7 @@
 "rF" = (
 /obj/structure/closet/cabinet,
 /obj/item/ego_weapon/city/liu/fist/vet,
-/obj/item/clothing/suit/armor/ego_gear/city/liu,
+/obj/item/clothing/suit/armor/ego_gear/city/liuvet/section5,
 /turf/open/floor/carpet/orange,
 /area/city/assoc_base)
 "sx" = (
@@ -128,8 +138,8 @@
 	pixel_y = 4;
 	pixel_x = -10
 	},
-/obj/item/clothing/suit/armor/ego_gear/city/liuleader,
 /obj/item/ego_weapon/city/liu/fist/vet,
+/obj/item/clothing/suit/armor/ego_gear/city/liuleader/section5,
 /turf/open/floor/carpet/red,
 /area/city/assoc_base)
 "ul" = (
@@ -146,7 +156,7 @@
 	pixel_x = -10
 	},
 /obj/item/ego_weapon/city/liu/fist,
-/obj/item/clothing/suit/armor/ego_gear/city/liu,
+/obj/item/clothing/suit/armor/ego_gear/city/liu/section5,
 /turf/open/floor/city/interior/boards,
 /area/city/assoc_base)
 "uT" = (
@@ -530,7 +540,7 @@ hZ
 "}
 (8,1,1) = {"
 Mp
-nL
+bP
 jo
 jo
 dv

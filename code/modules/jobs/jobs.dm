@@ -58,7 +58,7 @@ GLOBAL_LIST_INIT(command_positions, list(
 
 
 	//NeoCity Major
-	"Liu South Section 6 Director",
+	"Liu South Section 5 Director",
 	"Big Brother",
 	"Thumb Sottocapo",
 	"Udjat Captain",
@@ -245,10 +245,6 @@ GLOBAL_LIST_INIT(fixer_positions, list(
 	"Office Fixer",
 
 	//Neocity Major
-	"Liu South Section 6 Director",
-	"Liu Veteran Fixer",
-	"Liu Fixer",
-
 	"Udjat Captain",
 	"Udjat Heavy Gunner",
 	"Udjat Heavy Infantry",
@@ -271,7 +267,7 @@ GLOBAL_LIST_INIT(association_positions, list(
 	"Roaming Association Fixer",
 
 	//Neocity Major
-	"Liu South Section 6 Director",
+	"Liu South Section 5 Director",
 	"Liu Veteran Fixer",
 	"Liu Fixer",
 ))
