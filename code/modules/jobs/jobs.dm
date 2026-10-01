@@ -114,7 +114,6 @@ GLOBAL_LIST_INIT(service_positions, list(
 	"Facility Support Clerk",
 
 	"Proshetics Surgeon",
-	"HHPP Chef",
 	"Civilian",
 	"Backstreets Butcher",
 	"Carnival",
@@ -127,6 +126,9 @@ GLOBAL_LIST_INIT(service_positions, list(
 	"R-Corp Production Specialist",
 	"R-Corp Raven MP",
 	"R-Corp Messenger Raven",
+
+	//Neocity
+	"HHPP Chef",
 	))
 
 

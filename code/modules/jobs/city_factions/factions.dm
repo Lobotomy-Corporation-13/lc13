@@ -70,5 +70,5 @@
 /datum/city_faction/shisouth
 	name = "Shi South Section 2"
 	category = CITY_FACTION_MINOR
-	leader_job = /datum/job/kcaptain
+	leader_job = /datum/job/shidir
 	requires_leader = TRUE

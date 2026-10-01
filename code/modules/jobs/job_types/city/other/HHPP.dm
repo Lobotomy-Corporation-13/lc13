@@ -4,8 +4,8 @@ HHPP Employee
 /datum/job/chef
 	title = "HHPP Chef"
 	faction = "Station"
-	total_positions = 0	//Disabled pending the city job rework
-	spawn_positions = 0
+	total_positions = 2
+	spawn_positions = 2
 	supervisors = "no one but god."
 	selection_color = "#dddddd"
 	access = list(ACCESS_KITCHEN)
@@ -13,7 +13,7 @@ HHPP Employee
 	departments = DEPARTMENT_SERVICE
 	outfit = /datum/outfit/job/chef
 	antag_rep = 7
-	display_order = JOB_DISPLAY_ORDER_HHPP
+	display_order = 251	//Not a singlet, but they fit under the thing.
 	exp_requirements = 60
 
 	job_attribute_limit = 0

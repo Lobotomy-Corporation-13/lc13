@@ -5,7 +5,7 @@
 	department_head = list("Shi Director")
 	faction = "Station"
 	supervisors = "Shi Director"
-	selection_color = "#693733"
+	selection_color = "#7d514d"
 	total_positions = 0
 	spawn_positions = 0
 	leader = /datum/job/shidir
@@ -14,7 +14,7 @@
 	access = list("shisouth")
 	minimal_access = list("shisouth")
 	radio_channel_name = "Shi Association"
-	radio_channel_color = "#7d514d"
+	radio_channel_color = "#693733"
 	departments = DEPARTMENT_CITY_ANTAGONIST
 	paycheck = 200
 	maptype = list("city")
