@@ -458,9 +458,6 @@
 	},
 /turf/open/floor/wood,
 /area/city/antag_base)
-"HK" = (
-/turf/closed/indestructible/city/ironplate,
-/area/city/antag_base)
 "JZ" = (
 /obj/structure/chair/office,
 /obj/effect/turf_decal/siding/wood{
@@ -547,13 +544,6 @@
 /area/city/antag_base)
 "Qo" = (
 /turf/open/floor/carpet,
-/area/city/antag_base)
-"RD" = (
-/obj/machinery/door/airlock/grunge{
-	name = "syndicate hideout";
-	req_access_txt = "150"
-	},
-/turf/open/floor/facility/dark,
 /area/city/antag_base)
 "RM" = (
 /obj/machinery/light{
@@ -668,22 +658,6 @@
 /area/city/antag_base)
 
 (1,1,1) = {"
-HK
-HK
-HK
-HK
-HK
-HK
-HK
-HK
-HK
-HK
-HK
-HK
-HK
-"}
-(2,1,1) = {"
-HK
 Lr
 Ha
 pr
@@ -695,10 +669,8 @@ YN
 lm
 pr
 lm
-HK
 "}
-(3,1,1) = {"
-HK
+(2,1,1) = {"
 Wx
 WS
 pr
@@ -710,10 +682,8 @@ YN
 YA
 pr
 YA
-HK
 "}
-(4,1,1) = {"
-HK
+(3,1,1) = {"
 lz
 tF
 pr
@@ -725,25 +695,21 @@ YN
 YA
 pr
 YA
-HK
+"}
+(4,1,1) = {"
+pr
+pr
+pr
+pr
+pr
+pr
+pr
+pr
+pr
+pr
+pr
 "}
 (5,1,1) = {"
-HK
-pr
-pr
-pr
-pr
-pr
-pr
-pr
-pr
-pr
-pr
-pr
-HK
-"}
-(6,1,1) = {"
-HK
 rQ
 rQ
 pr
@@ -755,10 +721,8 @@ YN
 VG
 pr
 jw
-HK
 "}
-(7,1,1) = {"
-HK
+(6,1,1) = {"
 fQ
 fQ
 pr
@@ -770,10 +734,8 @@ Fp
 VG
 pr
 NK
-HK
 "}
-(8,1,1) = {"
-HK
+(7,1,1) = {"
 Mk
 Yu
 pr
@@ -785,10 +747,8 @@ Fp
 cT
 pr
 iu
-HK
 "}
-(9,1,1) = {"
-HK
+(8,1,1) = {"
 YN
 YN
 YN
@@ -800,10 +760,8 @@ YN
 YN
 YN
 YN
-HK
 "}
-(10,1,1) = {"
-HK
+(9,1,1) = {"
 iO
 pr
 pr
@@ -815,10 +773,8 @@ jN
 jN
 jN
 jN
-HK
 "}
-(11,1,1) = {"
-HK
+(10,1,1) = {"
 pr
 qQ
 BK
@@ -830,10 +786,8 @@ pr
 pr
 pr
 pr
-HK
 "}
-(12,1,1) = {"
-HK
+(11,1,1) = {"
 Vz
 yf
 iF
@@ -845,10 +799,8 @@ pr
 pr
 pr
 pr
-RD
 "}
-(13,1,1) = {"
-HK
+(12,1,1) = {"
 pr
 jq
 Wa
@@ -860,10 +812,8 @@ pr
 pr
 pr
 pr
-HK
 "}
-(14,1,1) = {"
-HK
+(13,1,1) = {"
 MS
 pr
 pr
@@ -875,25 +825,21 @@ zM
 zM
 zM
 zM
-HK
+"}
+(14,1,1) = {"
+YN
+YN
+YN
+YN
+pr
+pr
+YN
+YN
+YN
+YN
+YN
 "}
 (15,1,1) = {"
-HK
-YN
-YN
-YN
-YN
-pr
-pr
-YN
-YN
-YN
-YN
-YN
-HK
-"}
-(16,1,1) = {"
-HK
 aV
 qI
 MD
@@ -905,10 +851,8 @@ hA
 hV
 Cj
 RM
-HK
 "}
-(17,1,1) = {"
-HK
+(16,1,1) = {"
 mB
 mB
 mB
@@ -920,10 +864,8 @@ JZ
 OP
 gM
 pr
-HK
 "}
-(18,1,1) = {"
-HK
+(17,1,1) = {"
 Dg
 kw
 SO
@@ -935,10 +877,8 @@ la
 od
 pr
 pr
-HK
 "}
-(19,1,1) = {"
-HK
+(18,1,1) = {"
 YN
 YN
 YN
@@ -950,10 +890,8 @@ YN
 YN
 YN
 YC
-HK
 "}
-(20,1,1) = {"
-HK
+(19,1,1) = {"
 op
 cD
 MD
@@ -965,10 +903,8 @@ xE
 DB
 xE
 Wj
-HK
 "}
-(21,1,1) = {"
-HK
+(20,1,1) = {"
 mB
 mB
 mB
@@ -980,10 +916,8 @@ BM
 Qo
 nL
 mB
-HK
 "}
-(22,1,1) = {"
-HK
+(21,1,1) = {"
 gx
 kw
 SO
@@ -995,20 +929,4 @@ lD
 MM
 jS
 AG
-HK
-"}
-(23,1,1) = {"
-HK
-HK
-HK
-HK
-HK
-HK
-HK
-HK
-HK
-HK
-HK
-HK
-HK
 "}

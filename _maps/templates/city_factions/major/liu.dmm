@@ -116,12 +116,10 @@
 /turf/open/floor/wood,
 /area/city/assoc_base)
 "rF" = (
-/obj/structure/punching_bag{
-	resistance_flags = 115
-	},
-/turf/open/floor/wood{
-	color = "#ccc8c0"
-	},
+/obj/structure/closet/cabinet,
+/obj/item/ego_weapon/city/liu/fist/vet,
+/obj/item/clothing/suit/armor/ego_gear/city/liu,
+/turf/open/floor/carpet/orange,
 /area/city/assoc_base)
 "sx" = (
 /obj/structure/closet/cabinet,
@@ -270,21 +268,18 @@
 /turf/open/floor/city/interior/boards,
 /area/city/assoc_base)
 "Ek" = (
+/obj/structure/punching_bag{
+	resistance_flags = 115
+	},
 /obj/structure/city_prop/sign_chinese1{
 	pixel_x = 7;
-	pixel_y = 0;
+	pixel_y = 34;
 	name = "traning area sign";
 	desc = "A painted board sign, containing training motivation"
 	},
-/turf/closed/indestructible/city/corrugated{
-	color = "#AE3F1A"
+/turf/open/floor/wood{
+	color = "#ccc8c0"
 	},
-/area/city/assoc_base)
-"Es" = (
-/obj/machinery/door/airlock/survival_pod{
-	req_access_txt = "liu"
-	},
-/turf/open/floor/carpet/red,
 /area/city/assoc_base)
 "EY" = (
 /obj/structure/table/wood,
@@ -359,12 +354,6 @@
 	max_integrity = 2000
 	},
 /turf/open/floor/carpet/red,
-/area/city/assoc_base)
-"MM" = (
-/obj/structure/closet/cabinet,
-/obj/item/ego_weapon/city/liu/fist/vet,
-/obj/item/clothing/suit/armor/ego_gear/city/liuvet,
-/turf/open/floor/carpet/orange,
 /area/city/assoc_base)
 "PY" = (
 /obj/structure/chair/wood{
@@ -449,67 +438,45 @@
 /area/city/assoc_base)
 
 (1,1,1) = {"
+Mp
+uw
 jo
+Mp
+uw
 jo
+Mp
+uw
 jo
-jo
-jo
-jo
-jo
-jo
-jo
-jo
-jo
-jo
-jo
+Mp
+uw
 "}
 (2,1,1) = {"
+hZ
+hZ
 jo
-Mp
-uw
+hZ
+hZ
 jo
-Mp
-uw
+hZ
+hZ
 jo
-Mp
-uw
-jo
-Mp
-uw
-jo
+hZ
+hZ
 "}
 (3,1,1) = {"
+Hq
 jo
-hZ
-hZ
 jo
-hZ
-hZ
+Hq
 jo
-hZ
-hZ
 jo
-hZ
-hZ
+Hq
+jo
+jo
+Hq
 jo
 "}
 (4,1,1) = {"
-jo
-Hq
-jo
-jo
-Hq
-jo
-jo
-Hq
-jo
-jo
-Hq
-jo
-jo
-"}
-(5,1,1) = {"
-jo
 Jk
 Jk
 Jk
@@ -521,40 +488,34 @@ Jk
 Jk
 Jk
 dv
-jo
+"}
+(5,1,1) = {"
+Jk
+AK
+dv
+dv
+dv
+Jk
+dv
+dv
+dv
+Jk
+AK
 "}
 (6,1,1) = {"
+Hq
 jo
-Jk
-AK
-dv
-dv
+jo
+jo
 dv
 Jk
 dv
-dv
-dv
-Jk
-AK
+jo
+jo
+Hq
 jo
 "}
 (7,1,1) = {"
-jo
-Hq
-jo
-jo
-jo
-dv
-Jk
-dv
-jo
-jo
-Hq
-jo
-jo
-"}
-(8,1,1) = {"
-jo
 hZ
 hZ
 jo
@@ -566,26 +527,22 @@ jo
 jo
 hZ
 hZ
+"}
+(8,1,1) = {"
+Mp
+nL
 jo
+jo
+dv
+Jk
+dv
+jo
+jo
+Mp
+nL
 "}
 (9,1,1) = {"
 jo
-Mp
-nL
-jo
-jo
-dv
-Jk
-dv
-jo
-jo
-Mp
-nL
-jo
-"}
-(10,1,1) = {"
-jo
-jo
 jo
 jo
 vE
@@ -593,14 +550,12 @@ dv
 Jk
 dv
 vE
-jo
 jo
 jo
 jo
 "}
-(11,1,1) = {"
+(10,1,1) = {"
 Ek
-rF
 UT
 Bw
 nA
@@ -611,10 +566,8 @@ nA
 vD
 Ai
 Ai
-jo
 "}
-(12,1,1) = {"
-jo
+(11,1,1) = {"
 gx
 UT
 UT
@@ -626,11 +579,9 @@ Jk
 Jk
 ha
 ha
-Es
 "}
-(13,1,1) = {"
+(12,1,1) = {"
 Ek
-rF
 UT
 UT
 nA
@@ -641,10 +592,8 @@ nA
 nA
 ha
 ha
-jo
 "}
-(14,1,1) = {"
-jo
+(13,1,1) = {"
 nA
 nA
 nA
@@ -656,10 +605,8 @@ nA
 QO
 ha
 ha
-jo
 "}
-(15,1,1) = {"
-jo
+(14,1,1) = {"
 nA
 ul
 ul
@@ -671,10 +618,8 @@ jo
 jo
 jo
 jo
-jo
 "}
-(16,1,1) = {"
-jo
+(15,1,1) = {"
 gm
 Cu
 AQ
@@ -686,10 +631,8 @@ hZ
 Ba
 hZ
 hZ
-jo
 "}
-(17,1,1) = {"
-jo
+(16,1,1) = {"
 pV
 aT
 uT
@@ -701,10 +644,8 @@ hZ
 hZ
 EY
 nY
-jo
 "}
-(18,1,1) = {"
-jo
+(17,1,1) = {"
 pG
 PY
 PY
@@ -716,10 +657,8 @@ Lq
 hZ
 Lo
 DB
-jo
 "}
-(19,1,1) = {"
-jo
+(18,1,1) = {"
 jo
 jo
 jo
@@ -731,11 +670,9 @@ jo
 MK
 jo
 jo
-jo
 "}
-(20,1,1) = {"
-jo
-MM
+(19,1,1) = {"
+rF
 zM
 RN
 jo
@@ -746,10 +683,8 @@ Ws
 ha
 sx
 HI
-jo
 "}
-(21,1,1) = {"
-jo
+(20,1,1) = {"
 Tb
 XA
 Tb
@@ -761,10 +696,8 @@ xm
 ha
 ha
 ha
-jo
 "}
-(22,1,1) = {"
-jo
+(21,1,1) = {"
 Cg
 TP
 fW
@@ -776,20 +709,4 @@ My
 pv
 ha
 UH
-jo
-"}
-(23,1,1) = {"
-jo
-jo
-jo
-jo
-jo
-jo
-jo
-jo
-jo
-jo
-jo
-jo
-jo
 "}

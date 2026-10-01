@@ -132,13 +132,6 @@
 "t" = (
 /turf/open/floor/carpet/purple,
 /area/city/antag_base)
-"u" = (
-/obj/machinery/door/airlock/grunge{
-	name = "syndicate hideout";
-	req_access_txt = "middle"
-	},
-/turf/open/floor/mineral/titanium/purple,
-/area/city/antag_base)
 "v" = (
 /obj/structure/chair/plastic{
 	dir = 4
@@ -242,12 +235,6 @@
 	dir = 4
 	},
 /turf/open/floor/mineral/titanium/purple,
-/area/city/antag_base)
-"I" = (
-/obj/structure/mirror,
-/turf/closed/indestructible/reinforced{
-	color = "purple"
-	},
 /area/city/antag_base)
 "J" = (
 /obj/structure/table/wood,
@@ -361,83 +348,59 @@
 
 (1,1,1) = {"
 R
+O
+t
+O
 R
+V
+V
 R
-R
-R
-R
-R
-R
-R
-R
-R
-R
-R
+O
+t
+O
 "}
 (2,1,1) = {"
 R
-R
-O
+e
 t
-O
+l
 R
 V
 V
 R
-O
+e
 t
-O
-R
+l
 "}
 (3,1,1) = {"
 R
 R
-e
-t
-l
+N
+R
 R
 V
-V
+b
 R
-e
-t
-l
+R
+N
 R
 "}
 (4,1,1) = {"
 R
-R
-R
-N
-R
-R
 V
-b
-R
-R
-N
-R
-R
+V
+V
+V
+V
+V
+V
+V
+V
+V
 "}
 (5,1,1) = {"
 R
 R
-V
-V
-V
-V
-V
-V
-V
-V
-V
-V
-R
-"}
-(6,1,1) = {"
-R
-R
-R
 N
 R
 R
@@ -447,55 +410,47 @@ R
 R
 N
 R
+"}
+(6,1,1) = {"
 R
+O
+t
+O
+R
+V
+V
+R
+O
+t
+O
 "}
 (7,1,1) = {"
 R
-R
-O
+e
 t
-O
+l
 R
 V
 V
 R
-O
+e
 t
-O
-R
+l
 "}
 (8,1,1) = {"
 R
 R
-e
-t
-l
-R
-V
-V
-R
-e
-t
-l
-R
-"}
-(9,1,1) = {"
-R
-R
-R
 R
 R
 R
 V
 V
-R
 R
 R
 R
 R
 "}
-(10,1,1) = {"
-R
+(9,1,1) = {"
 q
 A
 A
@@ -507,10 +462,8 @@ i
 w
 w
 t
-R
 "}
-(11,1,1) = {"
-R
+(10,1,1) = {"
 G
 q
 D
@@ -522,10 +475,8 @@ t
 t
 t
 h
-R
 "}
-(12,1,1) = {"
-R
+(11,1,1) = {"
 Y
 Z
 D
@@ -537,10 +488,8 @@ t
 t
 t
 t
-u
 "}
-(13,1,1) = {"
-R
+(12,1,1) = {"
 E
 v
 D
@@ -552,10 +501,8 @@ t
 t
 t
 h
-R
 "}
-(14,1,1) = {"
-R
+(13,1,1) = {"
 s
 q
 D
@@ -567,10 +514,8 @@ t
 U
 n
 t
-R
 "}
-(15,1,1) = {"
-R
+(14,1,1) = {"
 R
 g
 R
@@ -582,10 +527,8 @@ R
 R
 R
 R
-R
 "}
-(16,1,1) = {"
-R
+(15,1,1) = {"
 V
 d
 T
@@ -597,25 +540,21 @@ t
 S
 t
 t
+"}
+(16,1,1) = {"
+V
+V
+V
+V
 R
+V
+V
+t
+t
+t
+t
 "}
 (17,1,1) = {"
-R
-V
-V
-V
-V
-R
-V
-V
-t
-t
-t
-t
-R
-"}
-(18,1,1) = {"
-R
 a
 V
 V
@@ -627,10 +566,8 @@ L
 t
 i
 t
-R
 "}
-(19,1,1) = {"
-R
+(18,1,1) = {"
 m
 V
 V
@@ -642,10 +579,8 @@ W
 t
 o
 t
-R
 "}
-(20,1,1) = {"
-R
+(19,1,1) = {"
 K
 t
 t
@@ -657,10 +592,8 @@ f
 t
 F
 x
-R
 "}
-(21,1,1) = {"
-I
+(20,1,1) = {"
 t
 t
 p
@@ -672,10 +605,8 @@ f
 t
 t
 t
-R
 "}
-(22,1,1) = {"
-R
+(21,1,1) = {"
 t
 C
 t
@@ -687,20 +618,4 @@ k
 j
 y
 M
-R
-"}
-(23,1,1) = {"
-R
-R
-R
-R
-R
-R
-R
-R
-R
-R
-R
-R
-R
 "}

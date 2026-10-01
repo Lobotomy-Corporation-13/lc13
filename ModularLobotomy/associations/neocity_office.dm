@@ -41,7 +41,7 @@
 	name = "Thumb Base"
 	shelter_id = "thumbfinger_base"
 	description = "A place for the thumb."
-	mappath = "_maps/templates/city_factions/major/thumbfinger.dmm"
+	mappath = "_maps/templates/city_factions/major/thumb_south.dmm"
 
 /datum/map_template/shelter/middle
 	name = "Middle Base"
