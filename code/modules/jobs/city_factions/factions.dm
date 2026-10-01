@@ -37,7 +37,6 @@
 	requires_leader = TRUE
 
 //Minor Factions
-
 /datum/city_faction/bladelin
 	name = "the Blade Lineage"
 	category = CITY_FACTION_MINOR
@@ -56,8 +55,14 @@
 	leader_job = /datum/job/dawnop
 	requires_leader = TRUE
 
+/*
+
+Removed because, for some godforsaken reason, isn't showing up on the latejoin menu.
+I have NO fucking clue why.
+
 /datum/city_faction/kuroclan
 	name = "the Kurokumo Clan"
 	category = CITY_FACTION_MINOR
 	leader_job = /datum/job/kcaptain
 	requires_leader = TRUE
+	*/
