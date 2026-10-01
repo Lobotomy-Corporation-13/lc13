@@ -1,0 +1,239 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"a" = (
+/obj/structure/table/wood,
+/obj/item/storage/box/donkpockets/donkpocketteriyaki,
+/turf/open/floor/wood{
+	color = "#ccc8c0"
+	},
+/area/city/fixers)
+"b" = (
+/obj/item/kirbyplants{
+	icon_state = "plant-10";
+	pixel_y = -1;
+	pixel_x = 3;
+	anchored = 1;
+	layer = 3.8
+	},
+/turf/open/floor/wood{
+	color = "#ccc8c0"
+	},
+/area/city/fixers)
+"c" = (
+/obj/structure/rack,
+/obj/item/ego_weapon/city/shi_assassin/serpent,
+/turf/open/floor/facility/dark,
+/area/city/fixers)
+"e" = (
+/obj/structure/table/wood,
+/obj/machinery/microwave{
+	pixel_y = 9;
+	pixel_x = -3
+	},
+/turf/open/floor/wood{
+	color = "#ccc8c0"
+	},
+/area/city/fixers)
+"i" = (
+/obj/structure/bed,
+/obj/item/bedsheet/hos,
+/turf/open/floor/facility/dark,
+/area/city/fixers)
+"j" = (
+/turf/open/floor/wood,
+/area/city/fixers)
+"l" = (
+/obj/structure/rack,
+/obj/item/ego_weapon/city/shi_assassin,
+/obj/item/ego_weapon/city/shi_assassin/yokai,
+/turf/open/floor/facility/dark,
+/area/city/fixers)
+"q" = (
+/obj/machinery/light{
+	dir = 1;
+	pixel_y = 19
+	},
+/obj/structure/rack,
+/obj/item/clothing/suit/armor/ego_gear/city/shi/vet,
+/turf/open/floor/facility/dark,
+/area/city/fixers)
+"s" = (
+/obj/structure/window/paperframe{
+	resistance_flags = 115
+	},
+/turf/open/floor/wood,
+/area/city/fixers)
+"t" = (
+/obj/machinery/light/floor,
+/obj/structure/table/wood,
+/obj/item/ego_weapon/city/shi_knife,
+/turf/open/floor/wood,
+/area/city/fixers)
+"w" = (
+/obj/structure/table/reinforced,
+/obj/machinery/light{
+	dir = 1;
+	pixel_y = 19
+	},
+/obj/item/ego_weapon/city/shi_assassin/director,
+/turf/open/floor/facility/dark,
+/area/city/fixers)
+"z" = (
+/obj/machinery/light{
+	dir = 8;
+	pixel_x = -9;
+	pixel_y = 4
+	},
+/obj/effect/decal/cleanable/blood/tracks,
+/turf/open/floor/wood{
+	color = "#ccc8c0"
+	},
+/area/city/fixers)
+"F" = (
+/obj/effect/decal/cleanable/blood/tracks,
+/turf/open/floor/wood{
+	color = "#ccc8c0"
+	},
+/area/city/fixers)
+"K" = (
+/obj/structure/rack,
+/obj/item/ego_weapon/city/shi_assassin/sakura,
+/turf/open/floor/facility/dark,
+/area/city/fixers)
+"L" = (
+/turf/open/floor/wood{
+	color = "#ccc8c0"
+	},
+/area/city/fixers)
+"O" = (
+/obj/structure/rack,
+/obj/item/clothing/suit/armor/ego_gear/city/shi,
+/turf/open/floor/facility/dark,
+/area/city/fixers)
+"P" = (
+/obj/structure/mineral_door/paperframe{
+	name = "kurokumo armory"
+	},
+/turf/open/floor/wood,
+/area/city/fixers)
+"Q" = (
+/obj/item/reagent_containers/food/drinks/drinkingglass/shotglass{
+	pixel_y = 4;
+	pixel_x = -3
+	},
+/obj/item/storage/box/drinkingglasses{
+	pixel_x = 5;
+	pixel_y = -4
+	},
+/obj/structure/table/wood,
+/turf/open/floor/wood{
+	color = "#ccc8c0"
+	},
+/area/city/fixers)
+"R" = (
+/obj/item/reagent_containers/food/drinks/drinkingglass/shotglass{
+	pixel_y = 1;
+	pixel_x = 4
+	},
+/obj/item/reagent_containers/food/drinks/drinkingglass/shotglass{
+	pixel_y = 1;
+	pixel_x = -4
+	},
+/obj/item/reagent_containers/food/drinks/drinkingglass,
+/obj/item/reagent_containers/food/drinks/bottle/sake{
+	pixel_y = 11;
+	pixel_x = -10
+	},
+/obj/structure/table/wood,
+/turf/open/floor/wood{
+	color = "#ccc8c0"
+	},
+/area/city/fixers)
+"S" = (
+/obj/effect/decal/cleanable/blood/gibs/body,
+/obj/effect/decal/cleanable/blood/tracks,
+/turf/open/floor/wood,
+/area/city/fixers)
+"T" = (
+/obj/machinery/light{
+	dir = 4;
+	pixel_x = 9;
+	pixel_y = 4
+	},
+/turf/open/floor/wood{
+	color = "#ccc8c0"
+	},
+/area/city/fixers)
+"X" = (
+/obj/structure/closet/cabinet{
+	anchored = 1
+	},
+/obj/item/clothing/suit/armor/ego_gear/city/shi/director,
+/turf/open/floor/facility/dark,
+/area/city/fixers)
+"Y" = (
+/turf/open/floor/facility/dark,
+/area/city/fixers)
+
+(1,1,1) = {"
+X
+Y
+s
+S
+z
+F
+R
+"}
+(2,1,1) = {"
+w
+Y
+P
+j
+L
+L
+Q
+"}
+(3,1,1) = {"
+i
+Y
+s
+j
+L
+L
+L
+"}
+(4,1,1) = {"
+s
+s
+s
+t
+j
+j
+j
+"}
+(5,1,1) = {"
+q
+K
+s
+j
+L
+L
+a
+"}
+(6,1,1) = {"
+l
+Y
+P
+j
+L
+L
+e
+"}
+(7,1,1) = {"
+O
+c
+s
+j
+T
+L
+b
+"}

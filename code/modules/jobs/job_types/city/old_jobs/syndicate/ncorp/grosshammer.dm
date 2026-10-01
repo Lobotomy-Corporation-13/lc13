@@ -29,14 +29,3 @@
 	ADD_TRAIT(H, TRAIT_COMBATFEAR_IMMUNE, JOB_TRAIT)
 	ADD_TRAIT(H, TRAIT_WORK_FORBIDDEN, JOB_TRAIT)
 	. = ..()
-
-
-/datum/outfit/job/grosshammer
-	name = "N Corp Grosshammer"
-	jobtype = /datum/job/grosshammer
-
-	belt = /obj/item/pda/security
-	ears = /obj/item/radio/headset/syndicatecity
-	uniform = /obj/item/clothing/under/suit/lobotomy/plain
-	backpack_contents = list()
-	shoes = /obj/item/clothing/shoes/laceup

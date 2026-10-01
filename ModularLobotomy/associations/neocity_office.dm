@@ -82,6 +82,16 @@
 	template_id = "dawn_office"
 	custom_access = list("dawn")
 
+/obj/item/structurecapsule/fixer/shisouth
+	name = "Shi Office Capsule"
+	template_id = "shi_s_office"
+	custom_access = list("shisouth")
+
+/obj/item/structurecapsule/fixer/streetlight
+	name = "Streetlight Office Capsule"
+	template_id = "streetlight_office"
+	custom_access = list("streetlight")
+
 //Minor Templates
 /datum/map_template/shelter/bladelin
 	name = "Blade Lineage base"
@@ -106,3 +116,15 @@
 	shelter_id = "dawn_office"
 	description = "A small capsule containing a quiet retreat for the fixers of dawn office."
 	mappath = "_maps/templates/city_factions/minor/dawnoffice.dmm"
+
+/datum/map_template/shelter/shisouth
+	name = "Shi South Office Base"
+	shelter_id = "shi_s_office"
+	description = "A small capsule containing a den for the fixers of Shi association."
+	mappath = "_maps/templates/city_factions/minor/shisouth.dmm"
+
+/datum/map_template/shelter/streetlight
+	name = "Streetlight Office Base"
+	shelter_id = "streetlight_office"
+	description = "A small capsule containing an office for a small set of local fixers"
+	mappath = "_maps/templates/city_factions/minor/streetlight.dmm"

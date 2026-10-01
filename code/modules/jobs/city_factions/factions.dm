@@ -31,7 +31,7 @@
 	requires_leader = TRUE
 
 /datum/city_faction/liu
-	name = "Liu South Section 6"
+	name = "Liu South Section 5"
 	category = CITY_FACTION_MAJOR
 	leader_job = /datum/job/liudirector
 	requires_leader = TRUE
@@ -55,17 +55,11 @@
 	leader_job = /datum/job/dawnop
 	requires_leader = TRUE
 
-/*
-
-Removed because, for some godforsaken reason, isn't showing up on the latejoin menu.
-I have NO fucking clue why.
-
 /datum/city_faction/kuroclan
 	name = "the Kurokumo Clan"
 	category = CITY_FACTION_MINOR
 	leader_job = /datum/job/kcaptain
 	requires_leader = TRUE
-	*/
 
 /datum/city_faction/streetlight
 	name = "Streetlight Office"
@@ -73,3 +67,8 @@ I have NO fucking clue why.
 	leader_job = /datum/job/streetop
 	requires_leader = TRUE
 
+/datum/city_faction/shisouth
+	name = "Shi South Section 2"
+	category = CITY_FACTION_MINOR
+	leader_job = /datum/job/kcaptain
+	requires_leader = TRUE

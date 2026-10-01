@@ -10,8 +10,6 @@ GLOBAL_LIST_INIT(command_positions, list(
 	"Department Head",
 	"Agent Captain",
 
-	// City heads
-
 	// R-corp Officers
 	"Ground Commander",
 	"Lieutenant Commander",
@@ -56,7 +54,7 @@ GLOBAL_LIST_INIT(command_positions, list(
 	//Fixer Office
 	"Office Director",
 
-
+	// City heads
 	//NeoCity Major
 	"Liu South Section 5 Director",
 	"Big Brother",
@@ -67,7 +65,9 @@ GLOBAL_LIST_INIT(command_positions, list(
 	"Blade Lineage Cutthroat",
 	"Dawn Office Operator",
 	"Full Stop Operator",
-	"Kurokumo Captain",
+	"Kurokumo Kashira",
+	"Shi South Section 2 Director",
+	"Streetlight Office Operator",
 	))
 
 
@@ -156,6 +156,7 @@ GLOBAL_LIST_INIT(security_positions, list(
 	"Section B Robin",
 	"Section C Robin",
 	"R-Corp Rook",
+
 
 	))
 
@@ -258,6 +259,9 @@ GLOBAL_LIST_INIT(fixer_positions, list(
 	"Full Stop Operator",
 	"Full Stop Sniper",
 	"Full Stop Rifleman",
+
+	"Streetlight Office Operator",
+	"Streetlight Office Fixer",
 ))
 
 GLOBAL_LIST_INIT(association_positions, list(
@@ -270,6 +274,10 @@ GLOBAL_LIST_INIT(association_positions, list(
 	"Liu South Section 5 Director",
 	"Liu Veteran Fixer",
 	"Liu Fixer",
+
+	//Neocity Minor
+	"Shi South Section 2 Director",
+	"Shi Fixer",
 ))
 
 GLOBAL_LIST_INIT(city_antagonist_positions, list(
