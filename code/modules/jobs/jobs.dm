@@ -10,8 +10,6 @@ GLOBAL_LIST_INIT(command_positions, list(
 	"Department Head",
 	"Agent Captain",
 
-	// City heads
-
 	// R-corp Officers
 	"Ground Commander",
 	"Lieutenant Commander",
@@ -56,7 +54,7 @@ GLOBAL_LIST_INIT(command_positions, list(
 	//Fixer Office
 	"Office Director",
 
-
+	// City heads
 	//NeoCity Major
 	"Liu South Section 5 Director",
 	"Big Brother",
@@ -67,7 +65,7 @@ GLOBAL_LIST_INIT(command_positions, list(
 	"Blade Lineage Cutthroat",
 	"Dawn Office Operator",
 	"Full Stop Operator",
-	"Kurokumo Captain",
+	"Kurokumo Kashira",
 	))
 
 
@@ -156,6 +154,7 @@ GLOBAL_LIST_INIT(security_positions, list(
 	"Section B Robin",
 	"Section C Robin",
 	"R-Corp Rook",
+
 
 	))
 

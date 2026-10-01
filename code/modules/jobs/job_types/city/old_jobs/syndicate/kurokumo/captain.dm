@@ -45,14 +45,3 @@
 			processing.total_positions ++
 	. = ..()
 
-
-/datum/outfit/job/kurocaptain
-	name = "Kurokumo Kashira"
-	jobtype = /datum/job/kurocaptain
-
-	belt = /obj/item/pda/security
-	ears = /obj/item/radio/headset/syndicatecity/heads
-	uniform = /obj/item/clothing/under/suit/lobotomy/plain
-	glasses = /obj/item/clothing/glasses/sunglasses
-	backpack_contents = list(/obj/item/office_marker/syndicate)
-	shoes = /obj/item/clothing/shoes/laceup

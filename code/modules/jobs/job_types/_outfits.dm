@@ -82,3 +82,32 @@
 	suit = /obj/item/clothing/suit/space/hardsuit/mining
 	mask = /obj/item/clothing/mask/breath
 
+
+//Outfits used for Railway. No clue why they are used, they don't like, DO anything.
+/datum/outfit/job/kurocaptain
+	name = "Kurokumo Kashira"
+	belt = /obj/item/pda/security
+	ears = /obj/item/radio/headset/syndicatecity/heads
+	uniform = /obj/item/clothing/under/suit/lobotomy/plain
+	glasses = /obj/item/clothing/glasses/sunglasses
+	backpack_contents = list(/obj/item/office_marker/syndicate)
+	shoes = /obj/item/clothing/shoes/laceup
+
+
+/datum/outfit/job/messenger
+	name = "Index Messenger"
+	belt = /obj/item/pda/security
+	ears = /obj/item/radio/headset/syndicatecity/heads
+	uniform = /obj/item/clothing/under/suit/lobotomy/plain
+	glasses = /obj/item/clothing/glasses/sunglasses
+	backpack_contents = list(/obj/item/office_marker/syndicate)
+	shoes = /obj/item/clothing/shoes/laceup
+
+
+/datum/outfit/job/grosshammer
+	name = "N Corp Grosshammer"
+	belt = /obj/item/pda/security
+	ears = /obj/item/radio/headset/syndicatecity
+	uniform = /obj/item/clothing/under/suit/lobotomy/plain
+	backpack_contents = list()
+	shoes = /obj/item/clothing/shoes/laceup
