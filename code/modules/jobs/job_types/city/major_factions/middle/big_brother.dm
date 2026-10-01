@@ -48,5 +48,5 @@
 	ears = /obj/item/radio/headset/faction/heads
 	uniform = /obj/item/clothing/under/suit/lobotomy/plain
 	glasses = /obj/item/clothing/glasses/middle_sunglasses
-	backpack_contents = list(/obj/item/structurecapsule/syndicate/middle, /obj/item/choice_beacon/middle/big)
+	backpack_contents = list(/obj/item/structurecapsule/major/middle, /obj/item/choice_beacon/middle/big)
 	shoes = /obj/item/clothing/shoes/laceup

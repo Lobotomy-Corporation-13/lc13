@@ -121,26 +121,6 @@
 	name = "Banking Office Capsule"
 	template_id = "bankciv_office"
 
-/obj/item/structurecapsule/fixer/bladelin
-	name = "Blade Lineage Base Capsule"
-	template_id = "Bladelin_office"
-	custom_access = list("bladelin")
-
-/obj/item/structurecapsule/fixer/fullstop
-	name = "Full Stop Office Capsule"
-	template_id = "fullstop_office"
-	custom_access = list("fullstop")
-
-/obj/item/structurecapsule/fixer/kuroclan
-	name = "Kurokumo Clan Capsule"
-	template_id = "kurokumo_office"
-	custom_access = list("kuro")
-
-/obj/item/structurecapsule/fixer/dawn
-	name = "Dawn Office Capsule"
-	template_id = "dawn_office"
-	custom_access = list("dawn")
-
 /obj/item/structurecapsule/fixer/bank/attack_self(mob/living/carbon/human/user)
 	. = ..()
 	if(used)
@@ -197,30 +177,6 @@
 	shelter_id = "bankciv_office"
 	description = "WARNING: Rapid accumulation of net worth has been proven to cause permanent potentiality loss!."
 	mappath = "_maps/templates/fixer_office/bankciv.dmm"
-
-/datum/map_template/shelter/bladelin
-	name = "Blade Lineage base"
-	shelter_id = "bladelin_office"
-	description = "A small base capsule for the roaming members of the Blade Lineage"
-	mappath = "_maps/templates/city_factions/minor/bladelin.dmm"
-
-/datum/map_template/shelter/fullstop
-	name = "Full Stop Office Base"
-	shelter_id = "fullstop_office"
-	description = "A small capsule containing an outpost for the fixers of Full Stop office."
-	mappath = "_maps/templates/city_factions/minor/fullstopfixers.dmm"
-
-/datum/map_template/shelter/kuroclan
-	name = "Kurokumo Clan Base"
-	shelter_id = "kurokumo_office"
-	description = "A small capsule containing an outpost for the members of the kurokumo clan."
-	mappath = "_maps/templates/city_factions/minor/kurokumo.dmm"
-
-/datum/map_template/shelter/dawn
-	name = "Dawn Office Base"
-	shelter_id = "dawn_office"
-	description = "A small capsule containing a quiet retreat for the fixers of dawn office."
-	mappath = "_maps/templates/city_factions/minor/dawnoffice.dmm"
 
 //Armor
 /obj/item/storage/box/miscarmor
