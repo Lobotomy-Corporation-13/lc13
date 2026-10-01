@@ -69,8 +69,8 @@
 	leader_alt_title = "Mirae Clinic Director"
 	staff_title = "Mirae Physician"
 	field_title = "Mirae Insurer"
-	staff_outfit = /datum/outfit/job/city_clinic/staff/mirae
-	field_outfit = /datum/outfit/job/city_clinic/field/mirae
+	staff_outfit = /datum/outfit/job/city_clinic/staff
+	field_outfit = /datum/outfit/job/city_clinic/field
 	//Stated here rather than left to the job's defaults, even though Mirae is
 	//the default variant and the numbers currently agree. A company's stats
 	//belong next to the gear they were chosen for, or the next person to
