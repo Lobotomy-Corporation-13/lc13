@@ -66,6 +66,8 @@ GLOBAL_LIST_INIT(command_positions, list(
 	"Dawn Office Operator",
 	"Full Stop Operator",
 	"Kurokumo Kashira",
+	"Shi South Section 2 Director",
+	"Streetlight Office Operator",
 	))
 
 
@@ -257,6 +259,9 @@ GLOBAL_LIST_INIT(fixer_positions, list(
 	"Full Stop Operator",
 	"Full Stop Sniper",
 	"Full Stop Rifleman",
+
+	"Streetlight Office Operator",
+	"Streetlight Office Fixer",
 ))
 
 GLOBAL_LIST_INIT(association_positions, list(
@@ -269,6 +274,10 @@ GLOBAL_LIST_INIT(association_positions, list(
 	"Liu South Section 5 Director",
 	"Liu Veteran Fixer",
 	"Liu Fixer",
+
+	//Neocity Minor
+	"Shi South Section 2 Director",
+	"Shi Fixer",
 ))
 
 GLOBAL_LIST_INIT(city_antagonist_positions, list(
