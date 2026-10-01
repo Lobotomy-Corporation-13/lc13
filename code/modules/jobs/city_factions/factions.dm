@@ -61,6 +61,12 @@
 	leader_job = /datum/job/kcaptain
 	requires_leader = TRUE
 
+/datum/city_faction/streetlight
+	name = "Streetlight Office"
+	category = CITY_FACTION_MINOR
+	leader_job = /datum/job/streetop
+	requires_leader = TRUE
+
 /datum/city_faction/shisouth
 	name = "Shi South Section 2"
 	category = CITY_FACTION_MINOR
