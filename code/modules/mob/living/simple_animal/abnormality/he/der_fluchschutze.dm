@@ -125,7 +125,7 @@
 		if(prob(25))
 			aiming = TRUE
 			for(var/i = 1 to sacrifice_spawn)
-				var/lastfired = world.time
+				lastfired = world.time
 				var/turf/W = pick(GLOB.xeno_spawn)
 				var/mob/living/simple_animal/hostile/der_flusch_sacrifice/E = new(get_turf(W))
 				playsound(get_turf(src), 'sound/abnormalities/fluchschutze/fell_aim.ogg', 35, 0, 20)
@@ -232,13 +232,13 @@
 /mob/living/simple_animal/hostile/der_flusch_sacrifice/life()
 	if(deathtimer >= world.time)
 		explode()
-		var/exploded = TRUE
+		exploded = TRUE
 		playsound('sound/abnormalities/fluchschutze/fell_scatter.ogg', 35, 0, 20)
 	return
 
 /mob/living/simple_animal/hostile/der_flusch_sacrifice/death()
 	if(exploded != TRUE)
-		var/mob/living/simple_animal/hostile/abnormality/der_fluchschutze/stagger += 1
+		stagger += 1
 		playsound(get_turf(src), 'sound/effects/ordeals/brown_end.ogg', 35, 0, 20)
 	return
 
