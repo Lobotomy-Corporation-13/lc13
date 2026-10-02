@@ -77,6 +77,7 @@
 /turf/open/floor/carpet/black,
 /area/city/fixers)
 "n" = (
+/obj/machinery/vending/bullets,
 /turf/open/floor/mineral/plastitanium,
 /area/city/fixers)
 "p" = (

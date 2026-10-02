@@ -2027,20 +2027,17 @@
 /turf/open/indestructible/hoteltile,
 /area/city/house)
 "wl" = (
+/obj/effect/turf_decal/road/kerb{
+	dir = 4
+	},
+/obj/effect/turf_decal/road/kerb{
+	dir = 8
+	},
 /obj/effect/light_emitter{
 	light_power = 4;
 	light_range = 25;
 	set_cap = 3;
 	set_luminosity = 24
-	},
-/obj/effect/turf_decal/road/kerb{
-	dir = 4
-	},
-/obj/effect/turf_decal/road/kerb/box{
-	dir = 1
-	},
-/obj/effect/turf_decal/road/kerb/box{
-	dir = 8
 	},
 /turf/open/floor/city/road,
 /area/city)
@@ -4328,7 +4325,7 @@
 /turf/open/floor/city/road,
 /area/city)
 "Vt" = (
-/obj/machinery/body_preservation_unit,
+/obj/machinery/vending/bullets,
 /turf/open/floor/city/industrial/steelplate,
 /area/city/shop)
 "Vw" = (
@@ -44092,11 +44089,11 @@ XE
 XE
 XE
 XE
-XE
-XE
-XE
-XE
 wl
+XE
+XE
+XE
+EA
 XE
 XE
 XE
