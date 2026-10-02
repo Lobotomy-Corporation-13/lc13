@@ -123,7 +123,7 @@
 
 	if(firecooldown <= world.time)
 		if(prob(25))
-			var/aiming = TRUE
+			aiming = TRUE
 			for(var/i = 1 to sacrifice_spawn)
 				var/lastfired = world.time
 				var/turf/W = pick(GLOB.xeno_spawn)
@@ -186,7 +186,7 @@
 	speed = 25
 	spread = 15
 
-/obj/projectile/fellround/Initialize()
+/obj/projectile/fellround/proc/Initialize()
 	. = ..()
 	hitsound = "sound/abnormalities/fluchschutze/fell_scatter2.ogg"
 
@@ -242,7 +242,7 @@
 		playsound(get_turf(src), 'sound/effects/ordeals/brown_end.ogg', 35, 0, 20)
 	return
 
-/obj/item/der_flusch_sacrifice/proc/explode()
+/mob/living/simple_animal/hostile/der_flusch_sacrifice/proc/explode()
 	playsound(get_turf(src), 'sound/effects/explosion2.ogg', 50, 0, 8)
 	for(var/turf/T in range(1, src))
 		new /obj/effect/temp_visual/small_smoke/halfsecond(T)
