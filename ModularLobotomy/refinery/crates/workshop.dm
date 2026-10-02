@@ -5,6 +5,7 @@
 	icon_state = "crate_leaf"
 	rarechance = 30
 	veryrarechance = 5
+	ammochance = 50	//This is for the leaflet ammo.
 	lootlist =	list(
 		/obj/item/ego_weapon/city/yun,
 		/obj/item/ego_weapon/city/yun/shortsword,
@@ -23,6 +24,7 @@
 		/obj/item/ego_weapon/city/cane/briefcase,
 		/obj/item/ego_weapon/city/cane/fist,
 		/obj/item/ego_weapon/city/leaflet/square,
+		/obj/item/ego_weapon/ranged/city/leaflet,
 	)
 
 	veryrareloot =	list(
@@ -30,6 +32,11 @@
 		/obj/item/ego_weapon/city/donghwan,
 		/obj/item/ego_weapon/city/mirae,
 		/obj/item/ego_weapon/city/mirae/page,
+	)
+
+	//leaflet
+	ammoloot =	list(
+		/obj/item/ego_mag/leaflet,
 	)
 
 //Includes Molar, Hook Office, Misc fixers, Gaze Office and Jeong's Office, as well as color fixers
@@ -95,6 +102,7 @@
 	veryrareloot =	list(
 		/obj/item/ego_weapon/city/dawn/zwei,
 		/obj/item/ego_weapon/ranged/city/fullstop/deagle,
+		/obj/item/ego_weapon/ranged/city/fullstop/lmg,
 		/obj/item/clothing/suit/armor/ego_gear/city/dawnleader,
 		/obj/item/clothing/suit/armor/ego_gear/city/wedgeleader,
 		/obj/item/clothing/suit/armor/ego_gear/city/fullstopleader,
