@@ -13,8 +13,8 @@
 	threat_level = HE_LEVEL
 	start_qliphoth = 1
 	work_chances = list(
-		ABNORMALITY_WORK_INSTINCT = 10,
-		ABNORMALITY_WORK_INSIGHT = 80, //insert botany joke somewhere here
+		ABNORMALITY_WORK_INSTINCT = 10, //tad too punishing maybe? then again its he.
+		ABNORMALITY_WORK_INSIGHT = 80, //insert botany joke somewhere here //might be too high?
 		ABNORMALITY_WORK_ATTACHMENT = 40,
 		ABNORMALITY_WORK_REPRESSION = 40,
 	)
@@ -46,7 +46,7 @@
 	return
 
 /mob/living/simple_animal/hostile/abnormality/cupid/PostWorkEffect(mob/living/carbon/human/user, work_type, pe, work_time)
-	user.reagents.add_reagent(/datum/reagent/toxin/histamine, 5)
+	user.reagents.add_reagent(/datum/reagent/toxin/histamine, 4)
 	visible_message(span_notice("You find yourself sniffling after work. Should probably be careful breathing near it."))
 //breach stuff time
 
