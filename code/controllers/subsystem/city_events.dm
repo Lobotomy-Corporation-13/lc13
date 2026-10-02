@@ -25,7 +25,6 @@ SUBSYSTEM_DEF(cityevents)
 	var/list/processing
 
 /datum/controller/subsystem/cityevents/Initialize(timeofday)
-
 	..()
 	InitializeLandmarks()
 	InitializeEvents()

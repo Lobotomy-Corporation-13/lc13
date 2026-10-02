@@ -14,7 +14,7 @@
 	access = list("middle")
 	minimal_access = list("middle")
 	radio_channel_name = "Middle"
-	radio_channel_color = "#5f1683"
+	radio_channel_color = "#b685c7"
 	departments = DEPARTMENT_CITY_ANTAGONIST
 	paycheck = 200
 	maptype = list("city")

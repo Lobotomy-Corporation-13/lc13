@@ -4296,6 +4296,7 @@
 #include "ModularLobotomy\anomaly_items\anomaly_tools.dm"
 #include "ModularLobotomy\anomaly_items\anomaly_weapons.dm"
 #include "ModularLobotomy\associations\!overwrites.dm"
+#include "ModularLobotomy\associations\assassination_terminal.dm"
 #include "ModularLobotomy\associations\association_beacon.dm"
 #include "ModularLobotomy\associations\association_registry.dm"
 #include "ModularLobotomy\associations\association_squad.dm"

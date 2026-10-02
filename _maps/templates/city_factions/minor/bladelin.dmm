@@ -133,6 +133,7 @@
 /obj/structure/table/wood{
 	pixel_y = -1
 	},
+/obj/structure/assassination,
 /turf/open/floor/stone{
 	color = "#ccc8c0"
 	},
@@ -205,6 +206,17 @@
 	dir = 10
 	},
 /turf/open/floor/plating/beach/sand,
+/area/city/fixers)
+"G" = (
+/obj/structure/table/wood{
+	pixel_y = -1
+	},
+/obj/item/assassin_link,
+/obj/item/assassin_link,
+/obj/item/assassin_link,
+/turf/open/floor/stone{
+	color = "#ccc8c0"
+	},
 /area/city/fixers)
 "H" = (
 /obj/effect/turf_decal/siding/wood,
@@ -331,7 +343,7 @@ a
 w
 r
 r
-r
+G
 "}
 (4,1,1) = {"
 a

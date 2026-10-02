@@ -84,12 +84,18 @@
 	pixel_y = 4
 	},
 /obj/effect/decal/cleanable/blood/tracks,
+/obj/item/assassin_link,
+/obj/item/assassin_link,
+/obj/item/assassin_link,
+/obj/structure/table/wood,
 /turf/open/floor/wood{
 	color = "#ccc8c0"
 	},
 /area/city/fixers)
 "F" = (
 /obj/effect/decal/cleanable/blood/tracks,
+/obj/structure/assassination,
+/obj/structure/table/wood,
 /turf/open/floor/wood{
 	color = "#ccc8c0"
 	},

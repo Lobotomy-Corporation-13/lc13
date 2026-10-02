@@ -14,7 +14,7 @@
 	access = list("shisouth")
 	minimal_access = list("shisouth")
 	radio_channel_name = "Shi Association"
-	radio_channel_color = "#693733"
+	radio_channel_color = "#ab6d68"
 	departments = DEPARTMENT_CITY_ANTAGONIST
 	paycheck = 200
 	maptype = list("city")

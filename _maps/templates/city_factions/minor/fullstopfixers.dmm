@@ -255,6 +255,10 @@
 /obj/effect/turf_decal/siding/white{
 	dir = 1
 	},
+/obj/structure/assassination,
+/obj/item/assassin_link,
+/obj/item/assassin_link,
+/obj/item/assassin_link,
 /turf/open/floor/carpet/black,
 /area/city/fixers)
 "P" = (
