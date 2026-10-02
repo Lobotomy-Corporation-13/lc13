@@ -225,7 +225,6 @@ Pretty Basic HE with a cool gimmick */
 	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "fluch_sacrifice"
 	icon_living = "fluch_sacrifice"
-	var/icon_selected = "fluch_sacrifice"
 	maxHealth = 250
 	health = 250
 	can_patrol = FALSE
