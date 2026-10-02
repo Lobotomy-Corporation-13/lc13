@@ -223,13 +223,13 @@
 		Boss = null
 	dust(TRUE,TRUE,TRUE)
 
-/mob/living/simple_animal/hostile/der_flusch_sacrifice/move()
+/mob/living/simple_animal/hostile/der_flusch_sacrifice/Move()
 	return FALSE
 
-/mob/living/simple_animal/hostile/der_flusch_sacrifice/initialize()
+/mob/living/simple_animal/hostile/der_flusch_sacrifice/Initialize()
 	deathtimer = world.time + 15 SECONDS
 
-/mob/living/simple_animal/hostile/der_flusch_sacrifice/life()
+/mob/living/simple_animal/hostile/der_flusch_sacrifice/Life()
 	if(deathtimer >= world.time)
 		explode()
 		exploded = TRUE
