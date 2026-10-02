@@ -186,7 +186,7 @@
 	speed = 25
 	spread = 15
 
-/obj/projectile/fellround/proc/Initialize()
+/obj/projectile/fellround/Initialize()
 	. = ..()
 	hitsound = "sound/abnormalities/fluchschutze/fell_scatter2.ogg"
 
@@ -231,8 +231,8 @@
 
 /mob/living/simple_animal/hostile/der_flusch_sacrifice/Life()
 	if(deathtimer >= world.time)
-		explode()
 		exploded = TRUE
+		explode()
 		playsound('sound/abnormalities/fluchschutze/fell_scatter.ogg', 35, 0, 20)
 	return
 
