@@ -33,6 +33,7 @@
 
 	target = pick(available_targets)
 	say("Target Selected: [target.name].")
+	addtimer(CALLBACK(src, PROC_REF(NewTarget)), 10 MINUTES)
 
 /obj/structure/assassination/attackby(obj/item/I, mob/living/user, params)
 	. = ..()
@@ -44,9 +45,10 @@
 	if(link.held_target == target)
 		say("Target Slain. Issuing payment.")
 		new /obj/item/stack/spacecash/c1000 (get_turf(src))
+		target = null
 	else
 		say("Invalid Target.")
-	addtimer(CALLBACK(src, PROC_REF(NewTarget)), 10 MINUTES)
+		return
 
 
 /obj/structure/assassination/proc/NewTarget()
