@@ -56,7 +56,7 @@
 	observation_choices = list(
 		"Inform the Abnormality you are on their side." = list(TRUE, "'alright then, keep the fight going for me.'"),
 		"Return the pendant to the Abnormality." = list(FALSE, "The Abnormality opens the pendant and begins lashing out, firing bullets indescriminantly.\
-	You manage to escape before you are seriously hurt."),
+			You manage to escape before you are seriously hurt."),
 	)
 
 	var/ammo = 2
