@@ -225,8 +225,8 @@ Pretty Basic HE with a cool gimmick */
 	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "fluch_sacrifice"
 	icon_living = "fluch_sacrifice"
-	maxHealth = 250
-	health = 250
+	maxHealth = 200
+	health = 200
 	can_patrol = FALSE
 	wander = 0
 	damage_coeff = list(RED_DAMAGE = 1, WHITE_DAMAGE = 1, BLACK_DAMAGE = 1, PALE_DAMAGE = 1)
