@@ -170,7 +170,7 @@
 			return ..()
 	return FALSE
 
-/mob/living/simple_animal/hostile/abnormality/der_fluchschutze/proc/sacrificedestroyed
+/mob/living/simple_animal/hostile/abnormality/der_fluchschutze/proc/sacrificedestroyed(/mob/living/simple_animal/hostile/der_flusch_sacrifice/E)
 	stagger += 1
 
 //gunstuff
