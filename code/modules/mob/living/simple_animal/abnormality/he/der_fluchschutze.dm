@@ -256,8 +256,8 @@ Pretty Basic HE with a cool gimmick */
 
 /mob/living/simple_animal/hostile/der_flusch_sacrifice/Life()
 	if(deathtimer <= world.time)
-		explode()
 		playsound('sound/abnormalities/fluchschutze/fell_scatter.ogg', 35, 0, 20)
+		explode()
 	return
 
 /mob/living/simple_animal/hostile/der_flusch_sacrifice/death()
