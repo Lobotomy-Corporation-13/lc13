@@ -595,4 +595,5 @@
 		"When the work result was bad, the Qliphoth counter lowered.",
 		"When the work result was good, the Qliphoth counter increased at a low probability.",
 		"During a breach, Der Fluchschutze will roam and fire at employees and abnormalities alike.",
-		"Occassionally, it will summon and attempt to fire at sacrifices around the facility, if left alive the sacrifices will be killed causing large RED damage to nearby employees and abnormalities.")
+		"Occassionally, it will summon and attempt to fire at sacrifices around the facility, if left alive the sacrifices will be killed causing large RED damage to nearby employees and abnormalities.",
+		"If two or more of the above sacrifices were killed, Der Fluchschutze will become temporarily staggered and will be unable to fire or move for a short period of time.")
