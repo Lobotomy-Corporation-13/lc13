@@ -116,6 +116,8 @@ Pretty Basic HE with a cool gimmick */
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/Life()
 	. = ..()
+	if (!breached)
+		return
 	if (last_reload_time < world.time - reload_time)
 		last_reload_time = world.time
 		if (ammo < max_ammo)
@@ -185,6 +187,7 @@ Pretty Basic HE with a cool gimmick */
 		update_icon()
 	else
 		icon = 'ModularLobotomy/_Lobotomyicons/32x64.dmi'
+		update_icon()
 //gunstuff
 /obj/item/ammo_casing/caseless/fellround
 	name = "Fell Bullet Casing"
