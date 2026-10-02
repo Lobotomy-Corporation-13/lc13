@@ -252,11 +252,10 @@ Pretty Basic HE with a cool gimmick */
 
 /mob/living/simple_animal/hostile/der_flusch_sacrifice/Initialize()
 	..()
-	deathtimer = world.time + 15 SECONDS
+	addtimer(CALLBACK(src, PROC_REF(explode)), 15 SECONDS)
 
 /mob/living/simple_animal/hostile/der_flusch_sacrifice/Life()
 	if(deathtimer <= world.time)
-		exploded = TRUE
 		explode()
 		playsound('sound/abnormalities/fluchschutze/fell_scatter.ogg', 35, 0, 20)
 	return
@@ -268,6 +267,8 @@ Pretty Basic HE with a cool gimmick */
 	return
 
 /mob/living/simple_animal/hostile/der_flusch_sacrifice/proc/explode()
+	//NEed to set the var for when we fucking die
+	exploded = TRUE
 	playsound(get_turf(src), 'sound/effects/explosion2.ogg', 50, 0, 8)
 	for(var/turf/T in range(1, src))
 		new /obj/effect/temp_visual/small_smoke/halfsecond(T)
