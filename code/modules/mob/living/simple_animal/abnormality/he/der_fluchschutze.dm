@@ -227,6 +227,7 @@
 	return FALSE
 
 /mob/living/simple_animal/hostile/der_flusch_sacrifice/Initialize()
+	..()
 	deathtimer = world.time + 15 SECONDS
 
 /mob/living/simple_animal/hostile/der_flusch_sacrifice/Life()
