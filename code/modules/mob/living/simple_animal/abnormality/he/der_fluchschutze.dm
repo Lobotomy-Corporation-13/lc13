@@ -1,4 +1,6 @@
-// Der Fluchshutze, implemnted by neadsy_ - Sprites by Cringelord
+/* Der Fluchshutze, implemnted by neadsy_ - Sprites by Cringelord
+ This was ACTUAL hell to make, I was cooking up straight EVIL in a kettle
+ Pretty Basic HE with a cool gimmick */
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze
 	name = "Der Fluchschütze"
 	desc = "A tall man adorned in some sort of military uniform, they loom over you, holding their large shotgun."
@@ -107,7 +109,7 @@
 		return FALSE
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/proc/Reload()
-	playsound(src, 'sound/weapons/gun/general/bolt_rack.ogg', 25, TRUE)
+	playsound(src, 'sound/abnormalities/fluchschutze/fell_aim.ogg', 25, TRUE)
 	to_chat(src, span_nicegreen("You reload your shotgun..."))
 	ammo += 1
 
