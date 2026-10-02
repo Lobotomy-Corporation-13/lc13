@@ -2812,9 +2812,6 @@
 	},
 /turf/open/indestructible/white,
 /area/city/hhpp)
-"Eo" = (
-/turf/closed/indestructible/rock,
-/area/city)
 "Ep" = (
 /obj/structure/table/wood,
 /obj/item/paper_bin,
@@ -3508,10 +3505,11 @@
 /turf/open/water/deep/polluted,
 /area/city/alleyways)
 "LW" = (
-/obj/machinery/gibber,
 /obj/machinery/light/small{
 	dir = 1
 	},
+/obj/structure/kitchenspike,
+/obj/effect/mob_spawn/human/corpse,
 /turf/open/floor/plasteel/dark,
 /area/city/bistro)
 "LX" = (
@@ -27131,7 +27129,7 @@ ly
 Gv
 Yy
 Gv
-rD
+hR
 rD
 rD
 rD
@@ -27388,7 +27386,7 @@ vo
 Gv
 Yy
 Gv
-rD
+hR
 rD
 rD
 rD
@@ -27645,7 +27643,7 @@ ly
 Gv
 Yy
 Gv
-rD
+hR
 rD
 rD
 rD
@@ -29701,7 +29699,7 @@ gH
 Gv
 Yy
 Gv
-rD
+hR
 rD
 rD
 rD
@@ -29958,7 +29956,7 @@ gH
 pw
 Yy
 Gv
-rD
+hR
 rD
 rD
 rD
@@ -30215,7 +30213,7 @@ gH
 Gv
 Yy
 Gv
-rD
+hR
 rD
 rD
 rD
@@ -30472,7 +30470,7 @@ gH
 Gv
 Yy
 Gv
-rD
+hR
 rD
 rD
 rD
@@ -30729,7 +30727,7 @@ gH
 Gv
 Yy
 Gv
-rD
+hR
 rD
 rD
 rD
@@ -30986,7 +30984,7 @@ gH
 Gv
 Yy
 Gv
-rD
+hR
 rD
 rD
 rD
@@ -31243,7 +31241,7 @@ gH
 Gv
 Yy
 Gv
-rD
+hR
 rD
 rD
 rD
@@ -31500,7 +31498,7 @@ gH
 Gv
 Yy
 Gv
-rD
+hR
 rD
 rD
 rD
@@ -31757,7 +31755,7 @@ gH
 Gv
 Yy
 Gv
-rD
+hR
 rD
 rD
 rD
@@ -32014,7 +32012,7 @@ Gv
 pw
 Yy
 Gv
-rD
+hR
 rD
 rD
 rD
@@ -32271,7 +32269,7 @@ AE
 Gv
 Yy
 Gv
-rD
+hR
 rD
 rD
 rD
@@ -32528,7 +32526,7 @@ Gv
 Gv
 Yy
 Gv
-rD
+hR
 rD
 rD
 rD
@@ -32785,7 +32783,7 @@ Vw
 Vw
 mX
 Gv
-rD
+hR
 rD
 rD
 rD
@@ -33042,7 +33040,7 @@ Gv
 Gv
 dz
 Gv
-rD
+hR
 rD
 rD
 rD
@@ -33299,7 +33297,7 @@ QP
 Gv
 BX
 Gv
-rD
+hR
 rD
 rD
 rD
@@ -33556,7 +33554,7 @@ QP
 Gv
 BX
 Gv
-Eo
+bE
 lV
 lV
 lV
