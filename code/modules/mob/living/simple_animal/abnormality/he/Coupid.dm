@@ -48,16 +48,16 @@
 /mob/living/simple_animal/hostile/abnormality/cupid/PostWorkEffect(mob/living/carbon/human/user, work_type, pe, work_time)
 	user.reagents.add_reagent(/datum/reagent/toxin/histamine, 4)
 	visible_message(span_notice("You find yourself sniffling after work. Should probably be careful breathing near it."))
-//breach stuff time
 
+//breach stuff time
 /mob/living/simple_animal/hostile/abnormality/cupid/ZeroQliphoth(mob/living/carbon/human/user)
 	SSweather.run_weather(/datum/weather/pollen)
 
 /mob/living/simple_animal/hostile/abnormality/cupid/BreachEffect()
 	. = ..()
 	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
-	icon_living = "coupid_breach"
-	GiveTarget(user)
+	icon_state = "coupid_breach"
+	return..()
 
 //egg
 /mob/living/simple_animal/hostile/abnormality/coupid/death(gibbed)
