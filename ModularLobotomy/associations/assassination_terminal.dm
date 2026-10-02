@@ -14,10 +14,9 @@
 /obj/structure/assassination/attack_hand(mob/user)
 	if(!isready)
 		say("No new targets available.")
-		return
 
-	if(target)
-		say("Current Target: [target.name]")
+		if(target)
+			say("Current Target: [target.name]")
 		return
 
 

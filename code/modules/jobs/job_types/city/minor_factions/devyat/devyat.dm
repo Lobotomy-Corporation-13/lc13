@@ -9,7 +9,7 @@
 	total_positions = 0
 	spawn_positions = 0
 	leader = /datum/job/devyatdir
-	faction_positions = 2
+	faction_positions = 1
 	display_order = 107.1
 	access = list("devyat")
 	minimal_access = list("devyat")

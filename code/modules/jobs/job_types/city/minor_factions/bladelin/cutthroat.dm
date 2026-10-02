@@ -14,7 +14,7 @@
 	access = list("bladelin")
 	minimal_access = list("bladelin")
 	radio_channel_name = "Blade Lineage"
-	radio_channel_color = "#2E347C"
+	radio_channel_color = "#8085c4"
 	departments = DEPARTMENT_CITY_ANTAGONIST
 	paycheck = 500
 	maptype = list("city")
