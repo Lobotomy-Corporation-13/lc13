@@ -102,7 +102,7 @@
 
 //Breach
 
-/mob/living/simple_animal/hostile/abnormality/der_fluchschutze/move()
+/mob/living/simple_animal/hostile/abnormality/der_fluchschutze/proc/move()
 	if(aiming == TRUE || staggered == TRUE)
 		return FALSE
 
@@ -125,17 +125,17 @@
 			for(var/i = 1 to sacrifice_spawn)
 				var/lastfired = world.time
 				var/turf/W = pick(GLOB.xeno_spawn)
-       			var/mob/living/simple_animal/hostile/der_flusch_sacrifice/E = new(get_turf(W))
-				playsound(getturf(src), 'sound/abnormalities/fluchschutze/fell_aim.ogg', 35, 0, 20)
+				var/mob/living/simple_animal/hostile/der_flusch_sacrifice/E = new(get_turf(W))
+				playsound(get_turf(src), 'sound/abnormalities/fluchschutze/fell_aim.ogg', 35, 0, 20)
 				playsound('sound/abnormalities/fluchschutze/fell_magic.ogg', 35, 0, 20)
-        		E.Boss = src
+				E.Boss = src
 
-	if(stagger >== 2)
+	if(var/mob/living/simple_animal/hostile/abnormality/der_fluchschutze/stagger >= 2)
 		staggered = TRUE
 		to_chat(src, span_warning("You are staggered!"))
-	if(worldtime >= lastfired + 30 SECONDS)
+	if(world.time >= lastfired + 30 SECONDS)
 		staggered = FALSE
-		stagger = 0
+		var/mob/living/simple_animal/hostile/abnormality/der_fluchschutze/stagger = 0
 		to_chat(src, span_nicegreen("You are no longer staggered!"))
 
 
@@ -182,8 +182,7 @@
 	damage_type = RED_DAMAGE
 	damage = 20
 	speed = 25
-	alpha = 0
-	spread = 20
+	spread = 15
 
 /obj/projectile/fellround/Initialize()
 	. = ..()
@@ -215,6 +214,7 @@
 	var/mob/living/simple_animal/hostile/abnormality/der_fluchschutze/stagger = 0
 	var/deathtimer = 0
 	var/exploded = FALSE
+	var/mob/living/simple_animal/hostile/der_flusch_sacrifice/E
 
 /mob/living/simple_animal/hostile/der_flusch_sacrifice/proc/ShatterSoul()
 	if(Boss)
@@ -236,7 +236,7 @@
 
 /mob/living/simple_animal/hostile/der_flusch_sacrifice/death()
 	if(exploded != TRUE)
-		var/mob/living/simple_animal/hostile/abnormality/der_fluchschutze/stagger = stagger + 1
+		var/mob/living/simple_animal/hostile/abnormality/der_fluchschutze/stagger += 1
 		playsound(get_turf(src), 'sound/effects/ordeals/brown_end.ogg', 35, 0, 20)
 	return
 
