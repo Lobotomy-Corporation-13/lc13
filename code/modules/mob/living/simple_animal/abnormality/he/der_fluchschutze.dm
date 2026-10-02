@@ -256,7 +256,7 @@ Pretty Basic HE with a cool gimmick */
 	deathtimer = world.time + 15 SECONDS
 
 /mob/living/simple_animal/hostile/der_flusch_sacrifice/Life()
-	if(deathtimer >= world.time)
+	if(deathtimer <= world.time)
 		exploded = TRUE
 		explode()
 		playsound('sound/abnormalities/fluchschutze/fell_scatter.ogg', 35, 0, 20)
