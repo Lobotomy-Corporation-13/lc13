@@ -52,7 +52,7 @@
 	abnormality_origin = ABNORMALITY_ORIGIN_LIMBUS
 
 	observation_prompt = "The Abnormality towers over you, it prepares its shotgun. Ready to fire, it says... 'This is a warzone, and my gun must blow somebody up...' \
-	 In the corner of your eye, you see a silver glimmer: A pendant the Abnormality lost? or perhaps intentionally discarded..."
+	In the corner of your eye, you see a silver glimmer: A pendant the Abnormality lost? or perhaps intentionally discarded..."
 	observation_choices = list(
 		"Inform the Abnormality you are on their side." = list(TRUE, "'alright then, keep the fight going for me.'"),
 		"Return the pendant to the Abnormality." = list(FALSE, "The Abnormality opens the pendant and begins lashing out, firing bullets indescriminantly.\
