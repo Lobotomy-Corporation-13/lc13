@@ -116,7 +116,7 @@ Pretty Basic HE with a cool gimmick */
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/Life()
 	. = ..()
-	if (!iscontained)
+	if (!IsContained())
 
 		if (last_reload_time < world.time - reload_time)
 			last_reload_time = world.time
