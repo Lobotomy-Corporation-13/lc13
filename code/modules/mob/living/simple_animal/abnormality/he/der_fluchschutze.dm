@@ -132,12 +132,12 @@
 				playsound('sound/abnormalities/fluchschutze/fell_magic.ogg', 35, 0, 20)
 				E.Boss = src
 
-	if(var/mob/living/simple_animal/hostile/abnormality/der_fluchschutze/stagger >= 2)
+	if(stagger >= 2)
 		staggered = TRUE
 		to_chat(src, span_warning("You are staggered!"))
 	if(world.time >= lastfired + 30 SECONDS)
 		staggered = FALSE
-		var/mob/living/simple_animal/hostile/abnormality/der_fluchschutze/stagger = 0
+		stagger = 0
 		to_chat(src, span_nicegreen("You are no longer staggered!"))
 
 
