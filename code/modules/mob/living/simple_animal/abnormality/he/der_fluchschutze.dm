@@ -242,7 +242,7 @@
 
 /mob/living/simple_animal/hostile/der_flusch_sacrifice/death()
 	if(exploded != TRUE)
-		boss.sacrificedestroyed(src)
+		Boss.sacrificedestroyed(src)
 		playsound(get_turf(src), 'sound/effects/ordeals/brown_end.ogg', 35, 0, 20)
 	return
 
