@@ -70,6 +70,9 @@ Pretty Basic HE with a cool gimmick */
 	var/staggered = FALSE
 	var/stagger = 0
 
+	//Simple bool check if we're breached or not to use less processing power.
+	var/breached = FALSE
+
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/Login()
 	. = ..()
 	if(!. || !client)
@@ -105,6 +108,10 @@ Pretty Basic HE with a cool gimmick */
 
 //Breach
 
+/mob/living/simple_animal/hostile/abnormality/der_fluchschutze/BreachEffect(mob/living/carbon/human/user, breach_type)
+	. = ..()
+	breached = TRUE
+
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/proc/move()
 	if(aiming == TRUE || staggered == TRUE)
 		return FALSE
@@ -116,39 +123,38 @@ Pretty Basic HE with a cool gimmick */
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/Life()
 	. = ..()
-	if (!IsContained())
+	if (!breached)
+		return
 
-		if (last_reload_time < world.time - reload_time)
-			last_reload_time = world.time
-			if (ammo < max_ammo)
-				Reload()
-			. = ..()
+	if (last_reload_time < world.time - reload_time)
+		last_reload_time = world.time
+		if (ammo < max_ammo)
+			Reload()
+		. = ..()
 
-		if(firecooldown <= world.time)
-			if(prob(25))
-				aiming = TRUE
-				for(var/i = 1 to sacrifice_spawn)
-					lastfired = world.time
-					var/turf/W = pick(GLOB.xeno_spawn)
-					var/mob/living/simple_animal/hostile/der_flusch_sacrifice/E = new(get_turf(W))
-					playsound(get_turf(src), 'sound/abnormalities/fluchschutze/fell_aim.ogg', 35, 0, 20)
-					playsound('sound/abnormalities/fluchschutze/fell_magic.ogg', 35, 0, 20)
-					IconChange(aiming = TRUE)
-					E.Boss = src
+	if(firecooldown <= world.time)
+		if(prob(25))
+			aiming = TRUE
+			for(var/i = 1 to sacrifice_spawn)
+				lastfired = world.time
+				var/turf/W = pick(GLOB.xeno_spawn)
+				var/mob/living/simple_animal/hostile/der_flusch_sacrifice/E = new(get_turf(W))
+				playsound(get_turf(src), 'sound/abnormalities/fluchschutze/fell_aim.ogg', 35, 0, 20)
+				playsound('sound/abnormalities/fluchschutze/fell_magic.ogg', 35, 0, 20)
+				IconChange(aiming = TRUE)
+				E.Boss = src
 
-		if(lastfired + 16 SECONDS <= world.time && staggered == FALSE)
-			aiming = FALSE
-			IconChange(aiming = FALSE)
+	if(lastfired + 16 SECONDS <= world.time && staggered == FALSE)
+		aiming = FALSE
+		IconChange(aiming = FALSE)
 
-		if(stagger >= 2)
-			staggered = TRUE
-			to_chat(src, span_warning("You are staggered!"))
-		if(world.time >= lastfired + 30 SECONDS)
-			staggered = FALSE
-			stagger = 0
-			to_chat(src, span_nicegreen("You are no longer staggered!"))
-	else
-		return FALSE
+	if(stagger >= 2)
+		staggered = TRUE
+		to_chat(src, span_warning("You are staggered!"))
+	if(world.time >= lastfired + 30 SECONDS)
+		staggered = FALSE
+		stagger = 0
+		to_chat(src, span_nicegreen("You are no longer staggered!"))
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/AttackingTarget(atom/attacked_target)
 	if(ammo < max_ammo)
