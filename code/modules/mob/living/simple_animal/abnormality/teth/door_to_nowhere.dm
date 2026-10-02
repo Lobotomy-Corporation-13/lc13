@@ -757,9 +757,9 @@ GLOBAL_LIST_EMPTY(repentance_spawn_points)            // Valid spawn locations i
 	light_color = "#7092BE"
 	del_on_death = TRUE
 	death_message = "lets out a final, mournful wail before fading into nothingness..."
+	do_not_possess = TRUE // This thing shouldn't even be a mob in the first place please turn it into an effect :pleading_face:
 	var/obj/structure/regret_door/associated_door
 	var/list/regret_phrases = list()
-
 
 /mob/living/simple_animal/hostile/regret_spirit/Destroy()
 	associated_door = null
