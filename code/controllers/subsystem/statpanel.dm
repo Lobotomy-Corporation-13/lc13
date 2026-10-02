@@ -11,11 +11,22 @@ SUBSYSTEM_DEF(statpanels)
 
 /datum/controller/subsystem/statpanels/fire(resumed = FALSE)
 	if (!resumed)
-		var/datum/map_config/cached = SSmapping.next_map_config
 		var/round_time = ROUNDTIME
+		// Check for the current map and next map's display names. If they are submap-capable maps, make sure we list their correct display name, based on which map file is actually loaded!
+		var/datum/map_config/current_map_config = SSmapping.config
+		var/datum/map_config/next_map_config = SSmapping.next_map_config
+		// Current map's name.
+		var/current_map_name = SSmapping.config?.map_name || null
+		if(current_map_name && current_map_config.has_submaps)
+			current_map_name += ": [current_map_config.available_submaps[current_map_config.map_file]]"
+		// If we have a next map, get its name, too.
+		var/next_map_name = next_map_config?.map_name || null
+		if(next_map_name && next_map_config.has_submaps)
+			next_map_name += ": [next_map_config.available_submaps[next_map_config.map_file]]"
+
 		var/list/global_data = list(
-			"Map: [SSmapping.config?.map_name || "Loading..."]",
-			cached ? "Next Map: [cached.map_name]" : null,
+			"Map: [current_map_name || "Loading..."]",
+			next_map_name ? "Next Map: [next_map_name]" : null,
 			"Round ID: [GLOB.round_id ? GLOB.round_id : "NULL"]",
 			"Server Time: [time2text(world.timeofday, "YYYY-MM-DD hh:mm:ss")]",
 			"Round Time: [round_time > MIDNIGHT_ROLLOVER ? "[round(round_time/MIDNIGHT_ROLLOVER)]:[gameTimestamp("hh:mm:ss", round_time)]" : gameTimestamp("hh:mm:ss", round_time)]",

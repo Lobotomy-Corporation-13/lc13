@@ -17,7 +17,7 @@
 	immunity_type = "freezing"
 
 	telegraph_message = span_warning("The temperature is dropping rapidly. A freezing storm is approaching!")
-	telegraph_duration = 30 SECONDS
+	telegraph_duration = 45 SECONDS
 	telegraph_overlay = "snowfall_calm"
 	// telegraph_sound = 'sound/weather/wind/wind_2_1.ogg'
 
@@ -58,7 +58,7 @@
 /datum/weather/city_freezing_storm/end()
 	. = ..()
 	// Start a timer to remove snow effects after 4-6 minutes
-	addtimer(CALLBACK(src, PROC_REF(remove_snow_effects)), rand(4 MINUTES, 6 MINUTES))
+	addtimer(CALLBACK(src, PROC_REF(remove_snow_effects)), rand(3 MINUTES, 5 MINUTES))
 
 	// Clean all turfs immediately
 	for(var/area/affected_area in impacted_areas)
