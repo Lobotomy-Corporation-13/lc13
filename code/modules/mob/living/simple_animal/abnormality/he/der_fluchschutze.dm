@@ -21,7 +21,7 @@
 	enablePB = TRUE // This is a new var made specifically for derflusch, If TRUE it skips the check that disables using guns in melee range
 	ranged_cooldown_time = 2 SECONDS
 	casingtype = /obj/item/ammo_casing/caseless/fellround
-	projectilesound = 'sound/weapons/black_silence/shotgun.ogg' // I like the sound, very weighty gun sound for his big ass shotgun
+	projectilesound = 'sound/abnormalities/fluchschutze/fell_bullet.ogg'
 	damage_coeff = list(RED_DAMAGE = 0.5, WHITE_DAMAGE = 1.5, BLACK_DAMAGE = 0.7, PALE_DAMAGE = 0.7, FIRE = 0.5) // again, needs to be tough
 	melee_damage_lower = 25
 	melee_damage_upper = 35 // "get away from me" - Der fluch probably, do NOT let this lad melee you
@@ -45,7 +45,7 @@
 		/datum/ego_datum/weapon/fellscatter,
 		/datum/ego_datum/armor/fellbullet,
 	)
-	gift_type = /datum/ego_gifts/
+	gift_type = /datum/ego_gifts/fellbullet
 	gift_message = "You too, chose to deal with the devil."
 	abnormality_origin = ABNORMALITY_ORIGIN_LIMBUS
 
@@ -62,8 +62,10 @@
 	var/reload_time = 5 SECONDS
 	var/last_reload_time = 0
 	var/sacrifice_spawn = 10
-	var/firecooldown = 40 SECONDS
+	var/firecooldown = 60 SECONDS
 	var/aiming = FALSE
+	var/lastfired = 0
+	var/mob/living/simple_animal/hostile/abnormality/der_fluchschutze/staggered = FALSE
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/Login()
 	. = ..()
@@ -99,6 +101,11 @@
 
 
 //Breach
+
+/mob/living/simple_animal/hostile/abnormality/der_fluchschutze/move()
+	if(aiming == TRUE || staggered == TRUE)
+		return FALSE
+
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/proc/Reload()
 	playsound(src, 'sound/weapons/gun/general/bolt_rack.ogg', 25, TRUE)
 	to_chat(src, span_nicegreen("You reload your shotgun..."))
@@ -111,13 +118,26 @@
 		if (ammo < max_ammo)
 			Reload()
 		. = ..()
+
 	if(firecooldown <= world.time)
 		if(prob(25))
 			var/aiming = TRUE
 			for(var/i = 1 to sacrifice_spawn)
-        		var/turf/W = pick(GLOB.xeno_spawn)
+				var/lastfired = world.time
+				var/turf/W = pick(GLOB.xeno_spawn)
        			var/mob/living/simple_animal/hostile/der_flusch_sacrifice/E = new(get_turf(W))
+				playsound(getturf(src), 'sound/abnormalities/fluchschutze/fell_aim.ogg', 35, 0, 20)
+				playsound('sound/abnormalities/fluchschutze/fell_magic.ogg', 35, 0, 20)
         		E.Boss = src
+
+	if(stagger >== 2)
+		staggered = TRUE
+		to_chat(src, span_warning("You are staggered!"))
+	if(worldtime >= lastfired + 30 SECONDS)
+		staggered = FALSE
+		stagger = 0
+		to_chat(src, span_nicegreen("You are no longer staggered!"))
+
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/AttackingTarget(atom/attacked_target)
 	if(ammo < max_ammo)
@@ -128,13 +148,14 @@
 	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/OpenFire(atom/A)
-	if(get_dist(src, A) >= 1)
-		if(ammo <= 0)
-			to_chat(src, span_warning("Out of ammo!"))
-			return FALSE
-		else
-			ammo -= 1
-			return ..()
+	if(staggered == FALSE || aiming == FALSE)
+		if(get_dist(src, A) >= 1)
+			if(ammo <= 0)
+				to_chat(src, span_warning("Out of ammo!"))
+				return FALSE
+			else
+				ammo -= 1
+				return ..()
 	else
 		return FALSE
 
@@ -159,17 +180,17 @@
 	name = "Fell Bullet Round"
 	desc = "A shotgun pellet, its headed straight for you."
 	damage_type = RED_DAMAGE
-	damage = 25
-	speed = 20
+	damage = 20
+	speed = 25
 	alpha = 0
 	spread = 20
 
 /obj/projectile/fellround/Initialize()
 	. = ..()
-	hitsound = "sound/abnormalities/fluchschutze/fell_bullet2.ogg"
+	hitsound = "sound/abnormalities/fluchschutze/fell_scatter2.ogg"
 
 
-// he spawns sacrifices around the facility that if not killed deal large RED damage in an area around them.
+// Sacrifice and their related effects
 /mob/living/simple_animal/hostile/der_flusch_sacrifice
 	name = "Refracted G-Corp Soldier"
 	desc = "A strange G-Corp Soldier, It seems unresponsive. A portal hovers behind its head. You feel like you are being watched. <br> \
@@ -178,8 +199,8 @@
 	icon_state = "fluch_sacrifice"
 	icon_living = "fluch_sacrifice"
 	var/icon_selected = "fluch_sacrifice"
-	maxHealth = 300
-	health = 300
+	maxHealth = 250
+	health = 250
 	can_patrol = FALSE
 	wander = 0
 	damage_coeff = list(RED_DAMAGE = 1, WHITE_DAMAGE = 1, BLACK_DAMAGE = 1, PALE_DAMAGE = 1)
@@ -191,8 +212,43 @@
 	death_message = "Shatters..."
 	AIStatus = AI_OFF
 	var/mob/living/simple_animal/hostile/abnormality/der_fluchschutze/Boss
+	var/mob/living/simple_animal/hostile/abnormality/der_fluchschutze/stagger = 0
+	var/deathtimer = 0
+	var/exploded = FALSE
 
 /mob/living/simple_animal/hostile/der_flusch_sacrifice/proc/ShatterSoul()
-	if(boss)
-		boss = null
+	if(Boss)
+		Boss = null
 	dust(TRUE,TRUE,TRUE)
+
+/mob/living/simple_animal/hostile/der_flusch_sacrifice/move()
+	return FALSE
+
+/mob/living/simple_animal/hostile/der_flusch_sacrifice/initialize()
+	deathtimer = world.time + 15 SECONDS
+
+/mob/living/simple_animal/hostile/der_flusch_sacrifice/life()
+	if(deathtimer >= world.time)
+		explode()
+		var/exploded = TRUE
+		playsound('sound/abnormalities/fluchschutze/fell_scatter.ogg', 35, 0, 20)
+	return
+
+/mob/living/simple_animal/hostile/der_flusch_sacrifice/death()
+	if(exploded != TRUE)
+		var/mob/living/simple_animal/hostile/abnormality/der_fluchschutze/stagger = stagger + 1
+		playsound(get_turf(src), 'sound/effects/ordeals/brown_end.ogg', 35, 0, 20)
+	return
+
+/obj/item/der_flusch_sacrifice/proc/explode()
+	playsound(get_turf(src), 'sound/effects/explosion2.ogg', 50, 0, 8)
+	for(var/turf/T in range(1, src))
+		new /obj/effect/temp_visual/small_smoke/halfsecond(T)
+		for(var/mob/living/L in T)
+			var/throw_dir = get_dir(src, L)
+			if(!throw_dir)
+				throw_dir = pick(NORTH, SOUTH, EAST, WEST) // random dir if on same tile
+			var/throw_target = get_edge_target_turf(L, throw_dir)
+			L.throw_at(throw_target, 4, 2)
+			L.deal_damage(70, RED_DAMAGE)
+	qdel(src)
