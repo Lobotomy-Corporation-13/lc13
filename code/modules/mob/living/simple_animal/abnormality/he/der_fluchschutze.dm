@@ -67,7 +67,8 @@
 	var/firecooldown = 60 SECONDS
 	var/aiming = FALSE
 	var/lastfired = 0
-	var/mob/living/simple_animal/hostile/abnormality/der_fluchschutze/staggered = FALSE
+	var/staggered = FALSE
+	var/stagger = 0
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/Login()
 	. = ..()
@@ -169,6 +170,9 @@
 			return ..()
 	return FALSE
 
+/mob/living/simple_animal/hostile/abnormality/der_fluchschutze/proc/sacrificedestroyed
+	stagger += 1
+
 //gunstuff
 /obj/item/ammo_casing/caseless/fellround
 	name = "Fell Bullet Casing"
@@ -213,7 +217,6 @@
 	death_message = "Shatters..."
 	AIStatus = AI_OFF
 	var/mob/living/simple_animal/hostile/abnormality/der_fluchschutze/Boss
-	var/mob/living/simple_animal/hostile/abnormality/der_fluchschutze/stagger = 0
 	var/deathtimer = 0
 	var/exploded = FALSE
 	var/mob/living/simple_animal/hostile/der_flusch_sacrifice/E
@@ -239,7 +242,7 @@
 
 /mob/living/simple_animal/hostile/der_flusch_sacrifice/death()
 	if(exploded != TRUE)
-		stagger += 1
+		boss.sacrificedestroyed(src)
 		playsound(get_turf(src), 'sound/effects/ordeals/brown_end.ogg', 35, 0, 20)
 	return
 
