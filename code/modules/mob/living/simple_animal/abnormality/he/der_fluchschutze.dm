@@ -159,7 +159,7 @@ Pretty Basic HE with a cool gimmick */
 	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/OpenFire(atom/A)
-	if(staggered == FALSE || aiming == FALSE)
+	if(staggered == FALSE && aiming == FALSE)
 		if(get_dist(src, A) >= 1)
 			if(ammo <= 0)
 				to_chat(src, span_warning("Out of ammo!"))
