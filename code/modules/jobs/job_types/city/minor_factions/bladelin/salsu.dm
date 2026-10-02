@@ -16,7 +16,7 @@
 	radio_channel_name = "Blade Lineage"
 	radio_channel_color = "#8085c4"
 	departments = DEPARTMENT_CITY_ANTAGONIST
-	paycheck = 200
+	paycheck = 20
 	maptype = list("city")
 	job_important = "You are a roaming Blade Lineage salsu,\
 	you have no direct superior though should respect your cutthroat. \

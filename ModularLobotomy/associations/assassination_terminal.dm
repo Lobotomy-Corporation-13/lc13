@@ -19,20 +19,8 @@
 			say("Current Target: [target.name]")
 		return
 
-
 	isready = FALSE
-
-	var/list/available_targets = list()
-	for(var/mob/living/carbon/human/H in GLOB.player_list)
-		if(H == user)
-			continue
-		if(H.stat == DEAD)
-			continue
-		available_targets += H
-
-	target = pick(available_targets)
-	say("Target Selected: [target.name].")
-	addtimer(CALLBACK(src, PROC_REF(NewTarget)), 10 MINUTES)
+	FindTarget()
 
 /obj/structure/assassination/attackby(obj/item/I, mob/living/user, params)
 	. = ..()
@@ -49,10 +37,21 @@
 		say("Invalid Target.")
 		return
 
+/obj/structure/assassination/proc/FindTarget()
+	var/list/available_targets = list()
+	for(var/mob/living/carbon/human/H in GLOB.player_list)
+		if(H == user)
+			continue
+		if(H.stat == DEAD)
+			continue
+		available_targets += H
+
+	target = pick(available_targets)
+	say("Target Selected: [target.name].")
+	addtimer(CALLBACK(src, PROC_REF(NewTarget)), 10 MINUTES)
 
 /obj/structure/assassination/proc/NewTarget()
 	isready = TRUE
-
 
 /obj/item/assassin_link
 	name = "assassin's confirmation"

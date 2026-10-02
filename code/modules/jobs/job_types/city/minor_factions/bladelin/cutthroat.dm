@@ -16,7 +16,7 @@
 	radio_channel_name = "Blade Lineage"
 	radio_channel_color = "#8085c4"
 	departments = DEPARTMENT_CITY_ANTAGONIST
-	paycheck = 500
+	paycheck = 30
 	maptype = list("city")
 	job_important = "You are a roaming Blade Lineage cutthroat,\
 	you have no direct power over your salsu's, the blade lineage are allies not a strict heirachy like the kurokumo. Treat your salsu with respect. \
