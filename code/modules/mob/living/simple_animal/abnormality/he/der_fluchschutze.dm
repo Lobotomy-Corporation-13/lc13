@@ -1,6 +1,6 @@
 /* Der Fluchshutze, implemnted by neadsy_ - Sprites by Cringelord
- This was ACTUAL hell to make, I was cooking up straight EVIL in a kettle
- Pretty Basic HE with a cool gimmick */
+This was ACTUAL hell to make, I was cooking up straight EVIL in a kettle
+Pretty Basic HE with a cool gimmick */
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze
 	name = "Der Fluchschütze"
 	desc = "A tall man adorned in some sort of military uniform, they loom over you, holding their large shotgun."
@@ -131,7 +131,12 @@
 				var/mob/living/simple_animal/hostile/der_flusch_sacrifice/E = new(get_turf(W))
 				playsound(get_turf(src), 'sound/abnormalities/fluchschutze/fell_aim.ogg', 35, 0, 20)
 				playsound('sound/abnormalities/fluchschutze/fell_magic.ogg', 35, 0, 20)
+				IconChange(aiming = TRUE)
 				E.Boss = src
+
+	if(lastfired + 16 SECONDS <= world.time && staggered == FALSE)
+		aiming = FALSE
+		IconChange(aiming = FALSE)
 
 	if(stagger >= 2)
 		staggered = TRUE
@@ -173,6 +178,13 @@
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/proc/sacrificedestroyed(/mob/living/simple_animal/hostile/der_flusch_sacrifice/E)
 	stagger += 1
 
+/mob/living/simple_animal/hostile/abnormality/der_fluchschutze/proc/IconChange(aiming)
+	if(aiming == TRUE)
+		pixel_x -= 32
+		icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
+		update_icon()
+	else
+		icon = 'ModularLobotomy/_Lobotomyicons/32x64.dmi'
 //gunstuff
 /obj/item/ammo_casing/caseless/fellround
 	name = "Fell Bullet Casing"
