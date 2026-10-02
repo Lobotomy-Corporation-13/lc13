@@ -13,6 +13,8 @@
 	display_order = 5.1
 	access = list("nagel")
 	minimal_access = list("nagel")
+	radio_channel_name = "Nagel Und Hammer"
+	radio_channel_color = "#ada890"
 	departments = DEPARTMENT_CITY_ANTAGONIST
 	paycheck = 70
 	maptype = list("city")

@@ -2472,6 +2472,8 @@
 #include "code\modules\jobs\job_types\city\minor_factions\dawn\dawnop.dm"
 #include "code\modules\jobs\job_types\city\minor_factions\dawn\junior.dm"
 #include "code\modules\jobs\job_types\city\minor_factions\dawn\veteran.dm"
+#include "code\modules\jobs\job_types\city\minor_factions\devyat\devyat.dm"
+#include "code\modules\jobs\job_types\city\minor_factions\devyat\director.dm"
 #include "code\modules\jobs\job_types\city\minor_factions\fullstop\fullop.dm"
 #include "code\modules\jobs\job_types\city\minor_factions\fullstop\rifleman.dm"
 #include "code\modules\jobs\job_types\city\minor_factions\fullstop\sniper.dm"

@@ -2076,9 +2076,6 @@
 /obj/effect/landmark/cityloot,
 /turf/open/floor/city/sidewalk/old,
 /area/city)
-"wC" = (
-/turf/open/space/basic,
-/area/city/fixers)
 "wD" = (
 /obj/machinery/computer/operating{
 	dir = 8
@@ -39232,7 +39229,7 @@ nS
 nS
 nS
 sU
-wC
+TI
 pw
 bX
 dT
@@ -39489,7 +39486,7 @@ nS
 nS
 nS
 nS
-TI
+iU
 Gv
 bX
 IX

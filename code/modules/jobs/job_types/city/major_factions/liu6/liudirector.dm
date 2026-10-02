@@ -39,7 +39,7 @@
 
 
 /datum/outfit/job/liudirector
-	name = "Liu South Section 6 Director"
+	name = "Liu South Section 5 Director"
 	jobtype = /datum/job/liudirector
 
 	belt = /obj/item/pda/security

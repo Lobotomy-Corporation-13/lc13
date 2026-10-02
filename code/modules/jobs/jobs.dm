@@ -62,6 +62,7 @@ GLOBAL_LIST_INIT(command_positions, list(
 	"Big Brother",
 	"Thumb Sottocapo",
 	"Udjat Captain",
+	"Grand Inquisitor",
 
 	//NeoCity Minor
 	"Blade Lineage Cutthroat",
@@ -70,6 +71,7 @@ GLOBAL_LIST_INIT(command_positions, list(
 	"Kurokumo Kashira",
 	"Shi South Section 2 Director",
 	"Streetlight Office Operator",
+	"Devyat North Section 3 Director",
 	))
 
 
@@ -161,7 +163,11 @@ GLOBAL_LIST_INIT(security_positions, list(
 	"Section C Robin",
 	"R-Corp Rook",
 
-
+	//Neocity
+	"Grand Inquisitor",
+	"N Corp Grosshammer",
+	"N Corp Mittlehammer",
+	"N Corp Kleinhammer",
 	))
 
 
@@ -282,6 +288,9 @@ GLOBAL_LIST_INIT(association_positions, list(
 	//Neocity Minor
 	"Shi South Section 2 Director",
 	"Shi Fixer",
+
+	"Devyat North Section 3 Director",
+	"Devyat Fixer",
 ))
 
 GLOBAL_LIST_INIT(city_antagonist_positions, list(

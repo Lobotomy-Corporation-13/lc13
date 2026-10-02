@@ -14,6 +14,8 @@
 	trusted_only = TRUE
 	access = list("nagel")
 	minimal_access = list("nagel")
+	radio_channel_name = "Nagel Und Hammer"
+	radio_channel_color = "#ada890"
 	departments = DEPARTMENT_COMMAND | DEPARTMENT_CITY_ANTAGONIST
 	paycheck = 700
 	maptype = list("city")

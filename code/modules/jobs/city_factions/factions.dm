@@ -28,7 +28,7 @@
 /datum/city_faction/nagel
 	name = "Nagel Und Hammer"
 	category = CITY_FACTION_MAJOR
-	leader_job = /datum/job/liudirector
+	leader_job = /datum/job/grandinquis
 	requires_leader = TRUE
 
 //Minor Factions
@@ -57,7 +57,7 @@
 	requires_leader = TRUE
 
 /datum/city_faction/streetlight
-	name = "Streetlight Office"
+	name = "the Streetlight Office"
 	category = CITY_FACTION_MINOR
 	leader_job = /datum/job/streetop
 	requires_leader = TRUE
@@ -66,4 +66,10 @@
 	name = "Shi South Section 2"
 	category = CITY_FACTION_MINOR
 	leader_job = /datum/job/shidir
+	requires_leader = TRUE
+
+/datum/city_faction/devyatnorth
+	name = "Devyat North Section 3"
+	category = CITY_FACTION_MINOR
+	leader_job = /datum/job/devyatdir
 	requires_leader = TRUE

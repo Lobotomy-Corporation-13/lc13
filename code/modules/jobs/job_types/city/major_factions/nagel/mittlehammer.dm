@@ -5,7 +5,7 @@
 	department_head = list("the will of the grandinquisitor.")
 	faction = "Station"
 	supervisors = "the will of the grandinquisitor."
-	selection_color = "#94833d"
+	selection_color = "#bdb9aa"
 	total_positions = 0
 	spawn_positions = 0
 	leader = /datum/job/grandinquis
@@ -13,6 +13,8 @@
 	display_order = 5.2
 	access = list("nagel")
 	minimal_access = list("nagel")
+	radio_channel_name = "Nagel Und Hammer"
+	radio_channel_color = "#ada890"
 	departments = DEPARTMENT_CITY_ANTAGONIST
 	paycheck = 70
 	maptype = list("city")

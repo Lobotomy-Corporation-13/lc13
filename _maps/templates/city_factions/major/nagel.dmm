@@ -55,6 +55,11 @@
 /obj/item/bedsheet/hos,
 /turf/open/floor/wood,
 /area/city/antag_base)
+"n" = (
+/obj/structure/table/wood/fancy,
+/obj/item/ncorp_scroll/spwide,
+/turf/open/floor/wood,
+/area/city/antag_base)
 "p" = (
 /turf/open/floor/wood,
 /area/city/antag_base)
@@ -65,6 +70,9 @@
 /obj/item/ego_weapon/city/ncorp_brassnail/big,
 /obj/item/ego_weapon/city/ncorp_brassnail/big,
 /obj/item/ego_weapon/city/ncorp_brassnail/big,
+/obj/item/ego_weapon/city/ncorp_hammer/big,
+/obj/item/ego_weapon/city/ncorp_hammer/big,
+/obj/item/ego_weapon/city/ncorp_hammer/big,
 /turf/open/floor/stone{
 	color = "#ccc8c0"
 	},
@@ -80,6 +88,13 @@
 /obj/item/food/pizzaslice/moldy,
 /turf/open/floor/grass,
 /area/city/antag_base)
+"w" = (
+/obj/structure/rack,
+/obj/item/ncorp_scroll/death,
+/turf/open/floor/stone{
+	color = "#ccc8c0"
+	},
+/area/city/antag_base)
 "x" = (
 /obj/structure/chair/wood{
 	dir = 8
@@ -90,6 +105,7 @@
 /obj/structure/rack,
 /obj/item/ego_weapon/city/ncorp_brassnail/rose,
 /obj/item/ego_weapon/city/ncorp_hammer/grippy,
+/obj/item/clothing/suit/armor/ego_gear/city/ncorpcommander,
 /turf/open/floor/wood,
 /area/city/antag_base)
 "B" = (
@@ -141,6 +157,7 @@
 	pixel_y = 4
 	},
 /obj/structure/table/wood/fancy,
+/obj/item/ncorp_scroll/combat,
 /turf/open/floor/wood,
 /area/city/antag_base)
 "K" = (
@@ -151,6 +168,7 @@
 /area/city/antag_base)
 "L" = (
 /obj/structure/table/wood/fancy,
+/obj/item/ncorp_scroll/strengthwide,
 /turf/open/floor/wood,
 /area/city/antag_base)
 "N" = (
@@ -161,6 +179,7 @@
 /obj/structure/rack,
 /obj/item/ego_weapon/city/ncorp_brassnail/huge,
 /obj/item/ego_weapon/city/ncorp_hammer/hand,
+/obj/item/clothing/suit/armor/ego_gear/city/grosshammmer,
 /turf/open/floor/wood,
 /area/city/antag_base)
 "P" = (
@@ -181,9 +200,12 @@
 /obj/structure/rack{
 	pixel_x = -1
 	},
-/obj/item/ego_weapon/city/ncorp_hammer/big,
-/obj/item/ego_weapon/city/ncorp_hammer/big,
-/obj/item/ego_weapon/city/ncorp_hammer/big,
+/obj/item/ncorp_scroll/combat,
+/obj/item/ncorp_scroll/strength,
+/obj/item/ncorp_scroll/protection,
+/obj/item/clothing/suit/armor/ego_gear/city/ncorp/vet,
+/obj/item/clothing/suit/armor/ego_gear/city/ncorp/vet,
+/obj/item/clothing/suit/armor/ego_gear/city/ncorp/vet,
 /turf/open/floor/stone{
 	color = "#ccc8c0"
 	},
@@ -226,7 +248,7 @@
 (1,1,1) = {"
 O
 p
-L
+n
 L
 P
 a
@@ -328,7 +350,7 @@ W
 a
 "}
 (9,1,1) = {"
-D
+w
 T
 T
 T

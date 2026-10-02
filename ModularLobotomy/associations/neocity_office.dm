@@ -105,6 +105,12 @@
 	template_id = "streetlight_office"
 	custom_access = list("streetlight")
 
+/obj/item/structurecapsule/fixer/devyat
+	name = "Devyat Office Capsule"
+	template_id = "devyat_office"
+	custom_access = list("devyat")
+
+
 //Minor Templates
 /datum/map_template/shelter/bladelin
 	name = "Blade Lineage base"
@@ -141,3 +147,9 @@
 	shelter_id = "streetlight_office"
 	description = "A small capsule containing an office for a small set of local fixers"
 	mappath = "_maps/templates/city_factions/minor/streetlight.dmm"
+
+/datum/map_template/shelter/devyat
+	name = "Devyat North Base"
+	shelter_id = "devyat_office"
+	description = "A small capsule containing an office for Devyat delivery fixers"
+	mappath = "_maps/templates/city_factions/minor/devyat.dmm"
