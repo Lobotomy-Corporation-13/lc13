@@ -5,7 +5,7 @@ Pretty Basic HE with a cool gimmick */
 	name = "Der Fluchschütze"
 	desc = "A tall man adorned in some sort of military uniform, they loom over you, holding their large shotgun."
 	icon = 'ModularLobotomy/_Lobotomyicons/32x64.dmi'
-	icon_state = "DrFluShots" // Make sure to get your flu shot from the best doctor this side of the city, file autonamed to this and i am NOT changing it
+	icon_state = "DrFluShots"
 	icon_living = "DrFluShots"
 	portrait = "derfluschutz"
 	del_on_death = TRUE
