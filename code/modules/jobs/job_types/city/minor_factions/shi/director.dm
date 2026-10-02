@@ -39,7 +39,7 @@
 	name = "Shi Association South Section 2 Director"
 	jobtype = /datum/job/shidir
 	belt = /obj/item/pda/security
-	ears = /obj/item/radio/headset/faction
+	ears = /obj/item/radio/headset/faction/heads
 	uniform = /obj/item/clothing/under/suit/lobotomy/plain
 	backpack_contents = list(/obj/item/structurecapsule/fixer/shisouth)
 	shoes = /obj/item/clothing/shoes/laceup

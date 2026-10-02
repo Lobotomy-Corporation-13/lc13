@@ -16,6 +16,8 @@ SUBSYSTEM_DEF(city_factions)
 
 	var/list/majors = list()
 	var/list/minors = list()
+	var/list/singlets = list()
+	var/list/clinics = list()
 	for(var/faction_type in subtypesof(/datum/city_faction))
 		var/datum/city_faction/faction = new faction_type()
 		faction.BuildVariants()
@@ -27,6 +29,10 @@ SUBSYSTEM_DEF(city_factions)
 				majors += faction
 			if(CITY_FACTION_MINOR)
 				minors += faction
+			if(CITY_FACTION_SINGLET)
+				singlets += faction
+			if(CITY_FACTION_CLINIC)
+				clinics += faction
 
 	for(var/i in 1 to CITY_FACTION_MAJOR_COUNT)
 		if(!majors.len)
@@ -37,6 +43,14 @@ SUBSYSTEM_DEF(city_factions)
 		if(!minors.len)
 			break
 		active_factions += pick_n_take(minors)
+
+	for(var/i in 1 to CITY_FACTION_SINGLET_COUNT)
+		if(!singlets.len)
+			break
+		active_factions += pick_n_take(singlets)
+
+	var/active_clinic = pick(clinics)
+	active_factions += active_clinic
 
 	return ..()
 

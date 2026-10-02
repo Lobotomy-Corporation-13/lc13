@@ -12,9 +12,13 @@
 #define CITY_FACTION_ALWAYS "always"
 #define CITY_FACTION_MAJOR "major"
 #define CITY_FACTION_MINOR "minor"
+#define CITY_FACTION_SINGLET "singlet"
+#define CITY_FACTION_CLINIC "clinic"
+
 
 #define CITY_FACTION_MAJOR_COUNT 3
 #define CITY_FACTION_MINOR_COUNT 3
+#define CITY_FACTION_SINGLET_COUNT 5
 
 #define DEFAULT_RELIGION "Christianity"
 #define DEFAULT_DEITY "Space Jesus"

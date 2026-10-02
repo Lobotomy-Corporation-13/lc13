@@ -25,6 +25,12 @@
 	leader_job = /datum/job/liudirector
 	requires_leader = TRUE
 
+/datum/city_faction/nagel
+	name = "Nagel Und Hammer"
+	category = CITY_FACTION_MAJOR
+	leader_job = /datum/job/liudirector
+	requires_leader = TRUE
+
 //Minor Factions
 /datum/city_faction/bladelin
 	name = "the Blade Lineage"

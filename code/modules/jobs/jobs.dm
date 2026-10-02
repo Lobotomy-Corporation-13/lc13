@@ -55,6 +55,8 @@ GLOBAL_LIST_INIT(command_positions, list(
 	"Office Director",
 
 	// City heads
+	"Doctor",
+
 	//NeoCity Major
 	"Liu South Section 5 Director",
 	"Big Brother",

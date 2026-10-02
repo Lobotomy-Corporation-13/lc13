@@ -4,13 +4,15 @@
 	outfit = /datum/outfit/job/grosshammer
 	department_head = list("the will of the grandinquisitor.")
 	faction = "Station"
-	supervisors = "the will of the grandinquisitor."
-	selection_color = "#94833d"
+	supervisors = "the will of the grand inquisitor."
+	selection_color = "#bdb9aa"
 	total_positions = 0
 	spawn_positions = 0
-	display_order = JOB_DISPLAY_ORDER_SYNDICATEVET
-	access = list(ACCESS_SYNDICATE)
-	minimal_access = list(ACCESS_SYNDICATE)
+	leader = /datum/job/grandinquis
+	faction_positions = 1
+	display_order = 5.1
+	access = list("nagel")
+	minimal_access = list("nagel")
 	departments = DEPARTMENT_CITY_ANTAGONIST
 	paycheck = 70
 	maptype = list("city")
@@ -33,7 +35,7 @@
 /datum/outfit/job/grosshammer
 	name = "N Corp Grosshammer"
 	belt = /obj/item/pda/security
-	ears = /obj/item/radio/headset/syndicatecity
+	ears = /obj/item/radio/headset/faction
 	uniform = /obj/item/clothing/under/suit/lobotomy/plain
 	backpack_contents = list()
 	shoes = /obj/item/clothing/shoes/laceup

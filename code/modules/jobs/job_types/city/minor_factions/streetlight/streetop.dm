@@ -38,7 +38,7 @@
 	jobtype = /datum/job/streetop
 
 	belt = /obj/item/pda/security
-	ears = /obj/item/radio/headset/faction
+	ears = /obj/item/radio/headset/faction/heads
 	uniform = /obj/item/clothing/under/suit/lobotomy/plain
 	backpack_contents = list(/obj/item/structurecapsule/fixer/streetlight)
 	shoes = /obj/item/clothing/shoes/laceup

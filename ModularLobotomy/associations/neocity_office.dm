@@ -36,6 +36,11 @@
 	template_id = "liu_base"
 	custom_access = list("liu")
 
+/obj/item/structurecapsule/major/nagel
+	name = "Nagel Capsule"
+	template_id = "nagel_base"
+	custom_access = list("nagel")
+
 //Office templates
 /datum/map_template/shelter/thumb
 	name = "Thumb Base"
@@ -58,8 +63,16 @@
 /datum/map_template/shelter/liu
 	name = "Liu Base"
 	shelter_id = "liu_base"
-	description = "A place for the section 6 of liu south"
+	description = "A place for the section 5 of liu south"
 	mappath = "_maps/templates/city_factions/major/liu.dmm"
+
+/datum/map_template/shelter/nagel
+	name = "NCorp Base"
+	shelter_id = "nagel_base"
+	description = "A place of operations for Nagel Und Hammer."
+	mappath = "_maps/templates/city_factions/major/nagel.dmm"
+
+
 
 //Minor Factions
 /obj/item/structurecapsule/fixer/bladelin

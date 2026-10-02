@@ -103,11 +103,3 @@
 	backpack_contents = list(/obj/item/office_marker/syndicate)
 	shoes = /obj/item/clothing/shoes/laceup
 
-
-/datum/outfit/job/grosshammer
-	name = "N Corp Grosshammer"
-	belt = /obj/item/pda/security
-	ears = /obj/item/radio/headset/syndicatecity
-	uniform = /obj/item/clothing/under/suit/lobotomy/plain
-	backpack_contents = list()
-	shoes = /obj/item/clothing/shoes/laceup
