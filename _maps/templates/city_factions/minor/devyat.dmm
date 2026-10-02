@@ -1,37 +1,190 @@
-"a" = (/obj/effect/decal/city/litter/paper/paper2,/turf/open/floor/pod/light,/area/city/fixers)
-"c" = (/turf/open/floor/pod/light,/area/city/fixers)
-"d" = (/obj/effect/decal/city/litter/paper/paper5,/turf/open/floor/pod/light,/area/city/fixers)
-"e" = (/obj/structure/table/wood,/obj/item/clothing/head/beret/tegu/mint{name = "director's beret"},/turf/open/floor/pod/light,/area/city/fixers)
-"f" = (/obj/effect/decal/city/litter/paper/paper1,/turf/open/floor/pod/light,/area/city/fixers)
-"h" = (/obj/structure/table/wood,/obj/item/food/pizzaslice/vegetable,/turf/open/floor/pod/light,/area/city/fixers)
-"i" = (/obj/structure/table/wood,/obj/structure/delivery_radio{pixel_y = 3},/turf/open/floor/pod/light,/area/city/fixers)
-"l" = (/obj/structure/railing{dir = 8},/turf/open/floor/pod/light,/area/city/fixers)
-"m" = (/obj/effect/decal/city/litter/paper/paper12,/turf/open/floor/pod/light,/area/city/fixers)
-"n" = (/obj/structure/table/wood,/obj/effect/spawner/lootdrop/donkpockets,/turf/open/floor/pod/light,/area/city/fixers)
-"p" = (/obj/machinery/vending/coffee,/turf/open/floor/pod/light,/area/city/fixers)
-"q" = (/obj/effect/decal/city/litter/paper/paper3,/turf/open/floor/pod/light,/area/city/fixers)
-"r" = (/obj/structure/bed/pod,/turf/open/floor/pod/light,/area/city/fixers)
-"v" = (/obj/effect/decal/city/litter/paper/paper9,/turf/open/floor/pod/light,/area/city/fixers)
-"w" = (/obj/structure/railing,/obj/effect/decal/city/litter/paper/paper4,/turf/open/floor/pod/light,/area/city/fixers)
-"x" = (/obj/structure/table/wood,/obj/item/food/pizzaslice/mushroom,/turf/open/floor/pod/light,/area/city/fixers)
-"B" = (/obj/effect/decal/city/litter/paper/paper11,/turf/open/floor/pod/light,/area/city/fixers)
-"D" = (/obj/structure/table/wood,/obj/item/food/pizzaslice/pineapple,/turf/open/floor/pod/light,/area/city/fixers)
-"F" = (/obj/structure/table/wood,/turf/open/floor/pod/light,/area/city/fixers)
-"L" = (/obj/effect/decal/city/litter/paper/paper7,/turf/open/floor/pod/light,/area/city/fixers)
-"M" = (/obj/effect/decal/city/litter/paper/paper8,/turf/open/floor/pod/light,/area/city/fixers)
-"N" = (/obj/structure/rack,/obj/item/clothing/suit/armor/ego_gear/city/devyat_suit,/obj/item/ego_weapon/city/devyat_trunk,/turf/open/floor/pod/light,/area/city/fixers)
-"R" = (/obj/structure/chair/comfy/black,/turf/open/floor/pod/light,/area/city/fixers)
-"S" = (/obj/effect/decal/city/litter/paper/paper6,/turf/open/floor/pod/light,/area/city/fixers)
-"T" = (/obj/structure/table/wood,/obj/effect/spawner/lootdrop/donkpockets,/obj/item/food/pizzaslice/dank,/turf/open/floor/pod/light,/area/city/fixers)
-"U" = (/obj/structure/table/wood,/obj/machinery/microwave,/turf/open/floor/pod/light,/area/city/fixers)
-"W" = (/obj/structure/railing,/turf/open/floor/pod/light,/area/city/fixers)
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"a" = (
+/obj/effect/decal/city/litter/paper/paper2,
+/turf/open/floor/pod/light,
+/area/city/fixers)
+"c" = (
+/turf/open/floor/pod/light,
+/area/city/fixers)
+"d" = (
+/obj/effect/decal/city/litter/paper/paper5,
+/turf/open/floor/pod/light,
+/area/city/fixers)
+"e" = (
+/obj/structure/table/wood,
+/obj/item/clothing/head/beret/tegu/mint{
+	name = "director's beret"
+	},
+/turf/open/floor/pod/light,
+/area/city/fixers)
+"f" = (
+/obj/effect/decal/city/litter/paper/paper1,
+/turf/open/floor/pod/light,
+/area/city/fixers)
+"h" = (
+/obj/structure/table/wood,
+/obj/item/food/pizzaslice/vegetable,
+/turf/open/floor/pod/light,
+/area/city/fixers)
+"i" = (
+/obj/structure/table/wood,
+/obj/structure/delivery_radio{
+	pixel_y = 3
+	},
+/turf/open/floor/pod/light,
+/area/city/fixers)
+"l" = (
+/obj/structure/railing{
+	dir = 8
+	},
+/turf/open/floor/pod/light,
+/area/city/fixers)
+"m" = (
+/obj/effect/decal/city/litter/paper/paper12,
+/turf/open/floor/pod/light,
+/area/city/fixers)
+"n" = (
+/obj/structure/table/wood,
+/obj/effect/spawner/lootdrop/donkpockets,
+/turf/open/floor/pod/light,
+/area/city/fixers)
+"p" = (
+/obj/machinery/vending/coffee,
+/turf/open/floor/pod/light,
+/area/city/fixers)
+"q" = (
+/obj/effect/decal/city/litter/paper/paper3,
+/turf/open/floor/pod/light,
+/area/city/fixers)
+"r" = (
+/obj/structure/bed/pod,
+/turf/open/floor/pod/light,
+/area/city/fixers)
+"v" = (
+/obj/effect/decal/city/litter/paper/paper9,
+/turf/open/floor/pod/light,
+/area/city/fixers)
+"w" = (
+/obj/structure/railing,
+/obj/effect/decal/city/litter/paper/paper4,
+/turf/open/floor/pod/light,
+/area/city/fixers)
+"x" = (
+/obj/structure/table/wood,
+/obj/item/food/pizzaslice/mushroom,
+/turf/open/floor/pod/light,
+/area/city/fixers)
+"B" = (
+/obj/effect/decal/city/litter/paper/paper11,
+/turf/open/floor/pod/light,
+/area/city/fixers)
+"D" = (
+/obj/structure/table/wood,
+/obj/item/food/pizzaslice/pineapple,
+/turf/open/floor/pod/light,
+/area/city/fixers)
+"F" = (
+/obj/structure/table/wood,
+/turf/open/floor/pod/light,
+/area/city/fixers)
+"L" = (
+/obj/effect/decal/city/litter/paper/paper7,
+/turf/open/floor/pod/light,
+/area/city/fixers)
+"M" = (
+/obj/effect/decal/city/litter/paper/paper8,
+/turf/open/floor/pod/light,
+/area/city/fixers)
+"N" = (
+/obj/structure/rack,
+/obj/item/clothing/suit/armor/ego_gear/city/devyat_suit,
+/obj/item/ego_weapon/city/devyat_trunk,
+/turf/open/floor/pod/light,
+/area/city/fixers)
+"R" = (
+/obj/structure/chair/comfy/black,
+/turf/open/floor/pod/light,
+/area/city/fixers)
+"S" = (
+/obj/effect/decal/city/litter/paper/paper6,
+/turf/open/floor/pod/light,
+/area/city/fixers)
+"T" = (
+/obj/structure/table/wood,
+/obj/effect/spawner/lootdrop/donkpockets,
+/obj/item/food/pizzaslice/dank,
+/turf/open/floor/pod/light,
+/area/city/fixers)
+"U" = (
+/obj/structure/table/wood,
+/obj/machinery/microwave,
+/turf/open/floor/pod/light,
+/area/city/fixers)
+"W" = (
+/obj/structure/railing,
+/turf/open/floor/pod/light,
+/area/city/fixers)
 
 (1,1,1) = {"
-dRccUnT
-eFicqcc
-acBvccS
-pcfcMwW
-DcrlccN
-hLrlmcN
-xcrlcBN
+d
+e
+a
+p
+D
+h
+x
+"}
+(2,1,1) = {"
+R
+F
+c
+c
+c
+L
+c
+"}
+(3,1,1) = {"
+c
+i
+B
+f
+r
+r
+r
+"}
+(4,1,1) = {"
+c
+c
+v
+c
+l
+l
+l
+"}
+(5,1,1) = {"
+U
+q
+c
+M
+c
+m
+c
+"}
+(6,1,1) = {"
+n
+c
+c
+w
+c
+c
+B
+"}
+(7,1,1) = {"
+T
+c
+S
+W
+N
+N
+N
 "}
