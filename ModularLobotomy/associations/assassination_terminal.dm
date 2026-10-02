@@ -20,7 +20,7 @@
 		return
 
 	isready = FALSE
-	FindTarget()
+	FindTarget(user)
 
 /obj/structure/assassination/attackby(obj/item/I, mob/living/user, params)
 	. = ..()
@@ -37,7 +37,7 @@
 		say("Invalid Target.")
 		return
 
-/obj/structure/assassination/proc/FindTarget()
+/obj/structure/assassination/proc/FindTarget(mob/living/user)
 	var/list/available_targets = list()
 	for(var/mob/living/carbon/human/H in GLOB.player_list)
 		if(H == user)
