@@ -41,17 +41,27 @@
 		for(var/_target in target)
 			var/client/client = CLIENT_FROM_VAR(_target)
 			if(client)
-				// Send to tgchat
-				client.tgui_panel?.window.send_raw_message(message_blob)
-				// Send to old chat
-				SEND_TEXT(client, message_html)
+				var/list/distorted = arayashiki_distort_message(client, message)
+				if(distorted)
+					client.tgui_panel?.window.send_raw_message(TGUI_CREATE_MESSAGE("chat/message", distorted))
+					SEND_TEXT(client, message_to_html(distorted))
+				else
+					// Send to tgchat
+					client.tgui_panel?.window.send_raw_message(message_blob)
+					// Send to old chat
+					SEND_TEXT(client, message_html)
 		return
 	var/client/client = CLIENT_FROM_VAR(target)
 	if(client)
-		// Send to tgchat
-		client.tgui_panel?.window.send_raw_message(message_blob)
-		// Send to old chat
-		SEND_TEXT(client, message_html)
+		var/list/distorted = arayashiki_distort_message(client, message)
+		if(distorted)
+			client.tgui_panel?.window.send_raw_message(TGUI_CREATE_MESSAGE("chat/message", distorted))
+			SEND_TEXT(client, message_to_html(distorted))
+		else
+			// Send to tgchat
+			client.tgui_panel?.window.send_raw_message(message_blob)
+			// Send to old chat
+			SEND_TEXT(client, message_html)
 
 /**
  * Sends the message to the recipient (target).

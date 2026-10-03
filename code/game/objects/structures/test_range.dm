@@ -161,6 +161,7 @@
 
 		var/list/datum_data = list(
 			"path" = ED.item_path,
+			"dispense_path" = ED.dispense_path || ED.item_path,
 			"cost" = ED.cost,
 			"information" = ED.information,
 			"tags" = ED.ego_tags,

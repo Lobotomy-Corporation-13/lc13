@@ -188,6 +188,7 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_BONUS_EXP			"bonus_exp"
 #define TRAIT_NOEGOWEAPONS		"no_ego_weapons"
 #define TRAIT_BOLUSFATIGUE		"no_bolus"
+#define TRAIT_RING_ARTIST		"ring_artist"
 
 /// reduces the use time of syringes, pills, patches and medigels but only when using on someone
 #define TRAIT_FASTMED "fast_med_use"
