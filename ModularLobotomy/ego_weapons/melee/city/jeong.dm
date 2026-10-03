@@ -45,11 +45,14 @@
 		return
 	if(!(length(deck)))
 		balloon_alert(user, "You start to shuffle your deck...")
-		if(do_after(user, 7, src))
+		if(do_after(user, 14, src))
 			Reload()
 			return
 		to_chat(user, "<span class= 'spider'><b>Your shuffle was interrupted!</b></span>")
 		balloon_alert(user, "Your shuffle was interrupted!")
+		return
+
+	if(!do_after(user, 14, src))
 		return
 	var/drawn = pick(deck)
 	deck -= drawn
