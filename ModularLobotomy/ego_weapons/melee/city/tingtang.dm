@@ -6,7 +6,7 @@
 	desc = "A twisted piece of metal. The shape makes very open wounds."
 	icon_state = "tingtang_shank"
 	inhand_icon_state = "tingtang_shank"
-	force = 27
+	force = 22
 	attack_speed = 1
 	damtype = WHITE_DAMAGE //Almost everyone and their mother in this god forsaken district does something with sanity.
 
@@ -42,7 +42,7 @@
 	desc = "It's quite heavy, clearly made for throwing your weight around."
 	icon_state = "tingtang_cleaver"
 	inhand_icon_state = "tingtang_cleaver"
-	force = 40
+	force = 30
 	attack_speed = 1.5
 	hitsound = 'sound/weapons/fixer/generic/blade5.ogg'
 
@@ -51,7 +51,7 @@
 	desc = "A heavy pipe that you're pretty sure used to belong in a car."
 	icon_state = "tingtang_pipe"
 	inhand_icon_state = "tingtang_pipe"
-	force = 54
+	force = 38
 	attack_speed = 2
 	attack_verb_continuous = list("smacks", "bludgeons", "beats")
 	attack_verb_simple = list("smack", "bludgeon", "beat")
@@ -62,7 +62,7 @@
 	desc = "The finger hook at the end lets you pull off some sick tricks. If you had the skill."
 	icon_state = "tingtang_knife"
 	inhand_icon_state = "tingtang_knife"
-	force = 37
+	force = 30
 	swingstyle = WEAPONSWING_LARGESWEEP
 	attack_speed = 1
 	hitsound = 'sound/weapons/fixer/generic/knife1.ogg'
