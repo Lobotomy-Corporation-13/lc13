@@ -24,7 +24,7 @@
 
 
 /obj/item/ego_weapon/city/ting_tang/attack(mob/living/target, mob/living/user) //mostly stolen from dice code
-	var/roll = pick(1,2,3,4,5,6)
+	var/roll = rand(1, 6)
 	balloon_alert(user, "Roll: [roll]")
 	switch(roll)
 		if(1)
