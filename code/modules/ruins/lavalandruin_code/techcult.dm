@@ -508,7 +508,7 @@
 /obj/item/organ/cyberimp/arm/surgery/plus
 	name = "advanced surgical toolset implant"
 	desc = "A set of advanced surgical tools hidden behind a concealed panel on the user's arm."
-	contents = newlist(/obj/item/retractor/advanced/augment, /obj/item/surgicaldrill/advanced/augment, /obj/item/scalpel/advanced/augment, /obj/item/surgical_drapes)
+	contents = newlist(/obj/item/retractor/advanced/augment, /obj/item/cautery/advanced, /obj/item/scalpel/advanced/augment, /obj/item/surgical_drapes)
 
 /obj/item/organ/cyberimp/arm/surgery/plus/emag_act(mob/user)
 	if(!(locate(/obj/item/reagent_containers/borghypo/hacked/augment) in items_list))
