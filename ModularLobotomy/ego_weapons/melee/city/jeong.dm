@@ -114,7 +114,7 @@
 				user.adjustSanityLoss(-force/5)
 
 			if("Ono no Michikaze")
-				attack(target, user)
+				user.apply_lc_strength(2)
 
 			if("Hoo")
 				force *= 5
@@ -188,7 +188,7 @@
 			return "SP is recovered by damage done"
 
 		if("Ono no Michikaze")
-			return "Attack twice."
+			return "Gain 3 Strength"
 
 		if("Hoo")
 			return "Deal 5x Damage."
@@ -200,7 +200,7 @@
 		if("Lesser Cuckoo")
 			return "Deal 2x Damage, but stun yourself for 0.3 seconds"
 
-		if("Eight-Planked Bridge")
+		if("Eight-Plank Bridge")
 			return "Gain 2 Protection, and gain 1 Feeble"
 
 		if("Butterflies")
