@@ -55,8 +55,7 @@
 	if(!do_after(user, 3, src))
 		balloon_alert(user, "Your discard is interrupted.")
 		return
-	var/drawn = pick(deck)
-	deck -= drawn
+	var/drawn = pick_n_take(deck)
 	discard += drawn
 	user.adjustSanityLoss(-1)
 	balloon_alert(user, "Discard: [drawn]")
