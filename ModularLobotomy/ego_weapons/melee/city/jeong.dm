@@ -94,7 +94,7 @@
 				"Sika Deer",
 				"Barn Swallow"
 				)
-	discard = initial(discard)
+	discard.Cut()
 
 /obj/item/ego_weapon/city/jeong/attack(mob/living/target, mob/living/carbon/human/user)
 	if(length(deck))
