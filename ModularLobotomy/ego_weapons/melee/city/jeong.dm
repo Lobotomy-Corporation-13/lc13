@@ -52,7 +52,8 @@
 		balloon_alert(user, "Your shuffle was interrupted!")
 		return
 
-	if(!do_after(user, 14, src))
+	if(!do_after(user, 3, src))
+		balloon_alert(user, "Your discard is interrupted.")
 		return
 	var/drawn = pick(deck)
 	deck -= drawn
