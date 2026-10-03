@@ -100,8 +100,7 @@
 	if(length(deck))
 
 		//Pick a card, take from the deck and put to discard.
-		var/drawn = pick(deck)
-		deck -= drawn
+		var/drawn = pick_n_take(deck)
 		discard += drawn
 		balloon_alert(user, "Drawn: [drawn]")
 
