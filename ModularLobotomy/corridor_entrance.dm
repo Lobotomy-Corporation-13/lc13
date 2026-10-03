@@ -3,6 +3,10 @@
 // While open, a "showcase" reveals the destination tile through the doorway.
 // Always opaque to lighting (the door tile blocks light propagation even when open).
 
+// 2026/10/03 REVIEW NOTE: This doesn't work properly at the moment. Don't spawn these in or make them craftable or whatever.
+// The preview doesn't work correctly as it doesn't factor in the user's direction, instead using the door's own.
+// This means you can |theoretically| use them in mapping, but please test extensively beforehand.
+
 GLOBAL_LIST_EMPTY(corridor_entrances)
 
 /obj/structure/corridor_entrance

@@ -13,52 +13,62 @@
 	if(used)
 		to_chat(user, span_warning("This has already been used."))
 		return
-	if(!ishuman(target))
+
+	if(!EligibilityCheck(target, user)) // Message is handled in this
+		return
+
+	// Ask target if they accept
+	var/response = alert(target, get_offer_text(user), get_offer_title(), "Accept", "Decline")
+
+	if(response != "Accept")
+		to_chat(user, span_warning("[target] declined your offer."))
+		return
+
+	// Check if user still has the item and is nearby
+	if(QDELETED(src) || used || !user.is_holding(src))
+		return
+	if(get_dist(user, target) > 2)
+		to_chat(user, span_warning("[target] is too far away now."))
+		return
+
+	// Notify any prior Nursefather role on the target so it can self-clean before we overwrite it.
+	SEND_SIGNAL(target, COMSIG_NURSEFATHER_RECRUITMENT_OVERRIDE, user, src)
+
+	// Mark as used
+	used = TRUE
+
+	// Perform subtype-specific recruitment
+	recruit_apprentice(target, user)
+
+	// Consume the item
+	qdel(src)
+
+/obj/item/apprentice_recruitment/proc/EligibilityCheck(mob/living/candidate, mob/living/user = usr)
+	if(!ishuman(candidate))
 		to_chat(user, span_warning("You can only recruit humans."))
 		return
-	if(target == user)
+	if(candidate == user)
 		to_chat(user, span_warning("You cannot recruit yourself."))
 		return
 
-	var/mob/living/carbon/human/H = target
+	var/mob/living/carbon/human/H = candidate
 
 	// Block recruitment of cuckoospawn
 	if(istype(H.dna?.species, /datum/species/cuckoospawn))
 		to_chat(user, span_warning("[H] is not human enough to be recruited."))
 		return
 
-	// Block recruitment of trusted roles (too high-ranking)
-	if(H.mind)
-		var/datum/job/target_job = SSjob.GetJob(H.mind.assigned_role)
-		if(target_job?.trusted_only)
-			to_chat(user, span_warning("[H] holds too important a position to be recruited."))
-			return
-
-	// Ask target if they accept
-	var/response = alert(H, get_offer_text(user), get_offer_title(), "Accept", "Decline")
-
-	if(response != "Accept")
-		to_chat(user, span_warning("[H] declined your offer."))
+	if(!(H.mind) || !(H.mind.active))
+		to_chat(user, span_warning("[H] is currently mindless (or perhaps their mind has gone adrift). You can't really expect them to accept or refuse your offer at the moment."))
 		return
 
-	// Check if user still has the item and is nearby
-	if(QDELETED(src) || used || !user.is_holding(src))
+	// Block recruitment of Command roles (too high-ranking)
+	var/datum/job/target_job = SSjob.GetJob(H.mind.assigned_role)
+	if(target_job && target_job?.departments & DEPARTMENT_COMMAND) // This is a bitfield!
+		to_chat(user, span_warning("[H] holds too important a position to be recruited - it's best if you don't tangle your own web with their threads."))
 		return
-	if(get_dist(user, H) > 2)
-		to_chat(user, span_warning("[H] is too far away now."))
-		return
 
-	// Notify any prior Nursefather role on the target so it can self-clean before we overwrite it.
-	SEND_SIGNAL(H, COMSIG_NURSEFATHER_RECRUITMENT_OVERRIDE, user, src)
-
-	// Mark as used
-	used = TRUE
-
-	// Perform subtype-specific recruitment
-	recruit_apprentice(H, user)
-
-	// Consume the item
-	qdel(src)
+	return TRUE
 
 /// Returns the text shown to the target when offered recruitment
 /obj/item/apprentice_recruitment/proc/get_offer_text(mob/living/user)
