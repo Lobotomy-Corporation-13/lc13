@@ -46,6 +46,8 @@
 			continue
 		available_targets += H
 
+	//If someone else wants to make this not target the doctor I'll give you a kiss on the cheek - Kirie/Kitsunemitsu
+
 	target = pick(available_targets)
 	say("Target Selected: [target.name].")
 	addtimer(CALLBACK(src, PROC_REF(NewTarget)), 10 MINUTES)
