@@ -48,7 +48,10 @@
 	var/list/split = splittext(access_text,";")
 	for(var/x in split)
 		var/n = text2num(x)
-		if(n)
+		if(isnull(n))	//A freeform string access, e.g. "thumb_south"
+			if(length(x))
+				. += x
+		else if(n)
 			. += n
 
 //Call this before using req_access or req_one_access directly

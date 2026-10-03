@@ -85,6 +85,12 @@
 #define FREQ_EXTRACTION 1363 // Extractions comms frequency, dark gold
 #define FREQ_ARCHITECTURE 1365  // Architecture comms frequency, light grey
 
+// Pool that job-declared radio channels are allocated from, see
+// ModularLobotomy\associations\job_radio_channels.dm. Radios without freerange
+// are clamped to MIN_FREQ..MAX_FREQ, so they cannot reach this range.
+#define FREQ_JOB_CHANNEL_MIN 1367
+#define FREQ_JOB_CHANNEL_MAX 1431
+
 #define FREQ_HOLOGRID_SOLUTION 1433
 #define FREQ_STATUS_DISPLAYS 1435
 #define FREQ_ATMOS_ALARMS 1437  // air alarms <-> alert computers

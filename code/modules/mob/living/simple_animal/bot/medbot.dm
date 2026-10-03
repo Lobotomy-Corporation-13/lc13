@@ -106,10 +106,12 @@
 
 /mob/living/simple_animal/bot/medbot/Initialize(mapload, new_skin)
 	. = ..()
-	var/datum/job/paramedic/J = new /datum/job/paramedic
-	access_card.access += J.get_access()
+	//Was built from a /datum/job/paramedic, which only ever existed because an
+	//alt-titles file declared vars on a type nothing defined. It carried no
+	//access list, so this added nothing and medbots have been running without
+	//medical access. Granting it directly is what the line was reaching for.
+	access_card.access |= list(ACCESS_MEDICAL)
 	prev_access = access_card.access
-	qdel(J)
 	skin = new_skin
 	update_icon()
 	linked_techweb = SSresearch.science_tech
