@@ -2605,6 +2605,12 @@
 "Ck" = (
 /turf/open/indestructible/hoteltile,
 /area/city/house)
+"Cl" = (
+/obj/item/gun/ballistic/revolver,
+/obj/structure/closet/secure_closet/personal/cabinet,
+/obj/item/melee/classic_baton/telescopic,
+/turf/open/floor/wood,
+/area/city/clinic)
 "Cm" = (
 /obj/effect/landmark/cityloot,
 /turf/open/floor/city/industrial/steelplate,
@@ -28159,7 +28165,7 @@ EE
 xt
 xt
 oE
-oE
+Cl
 Jr
 Jr
 Jr
