@@ -6,7 +6,7 @@
 	special = "On attack, draw a Hanafuda card from your deck. Use in hand to discard a card from your deck and gain 1 SP"
 	icon_state = "jeong_fixer"
 	force = 39
-	attack_speed = 0.7
+	attack_speed = 1
 	damtype = BLACK_DAMAGE
 	swingstyle = WEAPONSWING_LARGESWEEP
 
