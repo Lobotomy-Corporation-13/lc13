@@ -81,10 +81,6 @@
 	if(!istype(H))
 		return
 
-	// You're not even conscious, you're not dodging anything.
-	if(H.stat > 0)
-		return
-
 	// Clone damage applied only from humans or rhinos. This is so stuff like environmental damage or other nonsense doesn't cause clone.
 	if((ishuman(attack_source) && attack_source != parent)  || ismecha(attack_source))
 		var/clone_damage = damage * 0.025
