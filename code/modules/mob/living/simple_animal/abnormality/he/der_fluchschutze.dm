@@ -25,8 +25,8 @@ Pretty Basic HE with a cool gimmick */
 	casingtype = /obj/item/ammo_casing/caseless/fellround
 	projectilesound = 'sound/abnormalities/fluchschutze/fell_bullet.ogg'
 	damage_coeff = list(RED_DAMAGE = 0.5, WHITE_DAMAGE = 1.5, BLACK_DAMAGE = 0.7, PALE_DAMAGE = 0.7, FIRE = 0.5) // again, needs to be tough
-	melee_damage_lower = 25
-	melee_damage_upper = 35 // "get away from me" - Der fluch probably, do NOT let this lad melee you
+	melee_damage_lower = 15
+	melee_damage_upper = 25 // "get away from me" - Der fluch probably, do NOT let this lad melee you
 	faction = list("derfluchschutze") // *incoming call...* "KILL EVERYONE"
 	can_breach = TRUE
 	can_act = TRUE
@@ -60,16 +60,16 @@ Pretty Basic HE with a cool gimmick */
 			You manage to escape before you are seriously hurt."),
 	)
 
-	var/ammo = 2
-	var/max_ammo = 2
-	var/reload_time = 5 SECONDS
-	var/last_reload_time = 0
-	var/sacrifice_spawn = 10
-	var/firecooldown = 60 SECONDS
-	var/aiming = FALSE
-	var/lastfired = 0
-	var/staggered = FALSE
-	var/stagger = 0
+	var/ammo = 2 // How much ammo he starts with
+	var/max_ammo = 2 // max ammo he can have at any given time
+	var/reload_time = 5 SECONDS // how long for passive reload
+	var/last_reload_time = 0 // when he last reloaded
+	var/sacrifice_spawn = 10 // How many sacrifices he spawns
+	var/firecooldown = 60 SECONDS // how often he can use his sacrifice spawn
+	var/lastfired = 0 // when he last used his sacrifice spawn
+	var/staggered = FALSE // if he is staggered
+	var/stagger = 0 // how many sacrifices have been destroyed
+	var/aiming = FALSE // if he is aiming at sacrifices
 
 	//Simple bool check if we're breached or not to use less processing power.
 	var/breached = FALSE
@@ -141,7 +141,7 @@ Pretty Basic HE with a cool gimmick */
 				IconChange(aiming = TRUE)
 				E.Boss = src
 
-	if(lastfired + 16 SECONDS <= world.time && staggered == FALSE)
+	if(lastfired + 21 SECONDS <= world.time && staggered == FALSE)
 		aiming = FALSE
 		can_act = TRUE
 		IconChange(aiming = FALSE)
@@ -149,7 +149,7 @@ Pretty Basic HE with a cool gimmick */
 	if(stagger >= 2)
 		staggered = TRUE
 		to_chat(src, span_warning("You are staggered!"))
-	if(world.time >= lastfired + 30 SECONDS)
+	if(world.time >= lastfired + 40 SECONDS)
 		staggered = FALSE
 		stagger = 0
 		to_chat(src, span_nicegreen("You are no longer staggered!"))
@@ -169,7 +169,7 @@ Pretty Basic HE with a cool gimmick */
 	return FALSE
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/OpenFire(atom/A)
-	if(staggered == FALSE && aiming == FALSE)
+	if(staggered == FALSE && can_act == TRUE)
 		if(get_dist(src, A) >= 1)
 			if(ammo <= 0)
 				to_chat(src, span_warning("Out of ammo!"))
@@ -205,8 +205,8 @@ Pretty Basic HE with a cool gimmick */
 	name = "Fell Bullet Round"
 	desc = "A shotgun pellet, its headed straight for you."
 	damage_type = RED_DAMAGE
-	damage = 35
-	speed = 45
+	damage = 20
+	speed = 75
 	spread = 15
 
 /obj/projectile/fellround/Initialize()
@@ -222,8 +222,8 @@ Pretty Basic HE with a cool gimmick */
 	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "fluch_sacrifice"
 	icon_living = "fluch_sacrifice"
-	maxHealth = 200
-	health = 200
+	maxHealth = 150
+	health = 150
 	can_patrol = FALSE
 	faction = list("derfluchschutze")
 	wander = 0
@@ -249,7 +249,7 @@ Pretty Basic HE with a cool gimmick */
 
 /mob/living/simple_animal/hostile/der_flusch_sacrifice/Initialize()
 	..()
-	addtimer(CALLBACK(src, PROC_REF(explode)), 15 SECONDS)
+	addtimer(CALLBACK(src, PROC_REF(explode)), 20 SECONDS)
 
 /mob/living/simple_animal/hostile/der_flusch_sacrifice/death()
 	if(exploded != TRUE)
