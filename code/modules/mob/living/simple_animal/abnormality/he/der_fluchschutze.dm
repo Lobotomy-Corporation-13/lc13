@@ -85,13 +85,13 @@ Pretty Basic HE with a cool gimmick */
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/SuccessEffect(mob/living/carbon/human/user, work_type, pe)
 	. = ..()
-	if (prob(35))
+	if (prob(30))
 		datum_reference.qliphoth_change(1) // once his counter lowers it will be tough to raise it
 	return
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/NeutralEffect(mob/living/carbon/human/user, work_type, pe)
 	. = ..()
-	if(prob(50))
+	if(prob(40))
 		datum_reference.qliphoth_change(-1)
 	return
 
@@ -102,7 +102,7 @@ Pretty Basic HE with a cool gimmick */
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/PostWorkEffect(mob/living/carbon/human/user, work_type, pe)
 	if(work_type == ABNORMALITY_WORK_ATTACHMENT)
-		if (prob(25))
+		if (prob(20))
 			datum_reference.qliphoth_change(-2) // big qlipoth dip at a low chance, go big or go home.
 		return ..()
 	return ..()
