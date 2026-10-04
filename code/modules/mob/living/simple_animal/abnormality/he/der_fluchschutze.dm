@@ -20,6 +20,7 @@ Pretty Basic HE with a cool gimmick */
 	melee_damage_type = BLACK_DAMAGE
 	stat_attack = HARD_CRIT
 	ranged = TRUE
+	being_tested = TRUE
 	enablePB = TRUE // This is a new var made specifically for derflusch, If TRUE it skips the check that disables using guns in melee range
 	ranged_cooldown_time = 2 SECONDS
 	casingtype = /obj/item/ammo_casing/caseless/fellround
