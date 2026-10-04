@@ -82,19 +82,19 @@ Pretty Basic HE with a cool gimmick */
 		<b>|Ammo|: You have a max of 2 ammo at any given time. You passively reload 1 ammo every second, but you can also reload 1 ammo by hitting humans or mechs.</b>")
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/SuccessEffect(mob/living/carbon/human/user, work_type, pe)
-	..()
+	. = ..()
 	if (prob(35))
 		datum_reference.qliphoth_change(1) // once his counter lowers it will be tough to raise it
 	return
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/NeutralEffect(mob/living/carbon/human/user, work_type, pe)
-	..()
+	. = ..()
 	if(prob(50))
 		datum_reference.qliphoth_change(-1)
 	return
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/FailureEffect(mob/living/carbon/human/user, work_type, pe)
-	..()
+	. = ..()
 	datum_reference.qliphoth_change(-1)
 	return
 
@@ -109,7 +109,7 @@ Pretty Basic HE with a cool gimmick */
 //Breach
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/BreachEffect(mob/living/carbon/human/user, breach_type)
-	..()
+	. = ..()
 	breached = TRUE
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/proc/move()
@@ -159,8 +159,6 @@ Pretty Basic HE with a cool gimmick */
 		to_chat(src, span_nicegreen("You are no longer staggered!"))
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/AttackingTarget(atom/attacked_target)
-	if(staggered == TRUE)
-		return FALSE
 	if(ammo < max_ammo)
 		if(isliving(attacked_target)) // same as RBA, getting hit by him lets him reload, potentially denying your escape
 			Reload()
