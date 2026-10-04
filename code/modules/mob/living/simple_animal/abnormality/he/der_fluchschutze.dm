@@ -134,7 +134,7 @@ Pretty Basic HE with a cool gimmick */
 		if (ammo < max_ammo)
 			Reload()
 
-	if(firecooldown <= world.time)
+	if(lastfired + firecooldown <= world.time)
 		if(prob(25))
 			aiming = TRUE
 			for(var/i = 1 to sacrifice_spawn)
