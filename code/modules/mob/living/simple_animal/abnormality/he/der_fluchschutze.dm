@@ -187,13 +187,12 @@ Pretty Basic HE with a cool gimmick */
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/proc/IconChange(aiming)
 	if(aiming == TRUE && icon != 'ModularLobotomy/_Lobotomyicons/64x64.dmi')
-		pixel_x -= 32
 		icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 		update_icon()
 	else
 		icon = 'ModularLobotomy/_Lobotomyicons/32x64.dmi'
-		pixel_x += 32
 		update_icon()
+
 //gunstuff
 /obj/item/ammo_casing/caseless/fellround
 	name = "Fell Bullet Casing"
