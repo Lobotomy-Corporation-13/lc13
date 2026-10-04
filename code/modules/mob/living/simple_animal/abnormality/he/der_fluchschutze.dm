@@ -151,9 +151,12 @@ Pretty Basic HE with a cool gimmick */
 
 	if(stagger >= 2)
 		staggered = TRUE
+		aiming = FALSE
+		can_act = FALSE
 		to_chat(src, span_warning("You are staggered!"))
 	if(world.time >= lastfired + 40 SECONDS)
 		staggered = FALSE
+		can_act = TRUE
 		stagger = 0
 		to_chat(src, span_nicegreen("You are no longer staggered!"))
 
