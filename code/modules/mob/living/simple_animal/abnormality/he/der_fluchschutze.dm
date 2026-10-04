@@ -113,7 +113,6 @@ Pretty Basic HE with a cool gimmick */
 	breached = TRUE
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/proc/move()
-	..()
 	if(aiming == TRUE)
 		return FALSE
 	if(staggered == TRUE)
