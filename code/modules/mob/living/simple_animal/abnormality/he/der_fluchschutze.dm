@@ -228,6 +228,7 @@ Pretty Basic HE with a cool gimmick */
 	maxHealth = 200
 	health = 200
 	can_patrol = FALSE
+	faction = list("derfluchschutze")
 	wander = 0
 	damage_coeff = list(RED_DAMAGE = 1, WHITE_DAMAGE = 1, BLACK_DAMAGE = 1, PALE_DAMAGE = 1)
 	obj_damage = 0
