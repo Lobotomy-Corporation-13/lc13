@@ -529,6 +529,6 @@
 		/obj/item/ego_mag/fullstop = 99,
 	)
 
-	default_price = 1000
+	default_price = 400
 	input_display_header = "Tres Association Bullet Vending"
 
