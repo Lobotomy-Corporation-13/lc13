@@ -29,6 +29,7 @@ Pretty Basic HE with a cool gimmick */
 	melee_damage_upper = 35 // "get away from me" - Der fluch probably, do NOT let this lad melee you
 	faction = list("derfluchschutze") // *incoming call...* "KILL EVERYONE"
 	can_breach = TRUE
+	can_act = TRUE
 	threat_level = HE_LEVEL
 	start_qliphoth = 3
 	work_chances = list(
@@ -113,7 +114,7 @@ Pretty Basic HE with a cool gimmick */
 	breached = TRUE
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/move()
-	if(aiming == TRUE || staggered == TRUE)
+	if(!can_act)
 		return FALSE
 	return ..()
 
@@ -137,6 +138,7 @@ Pretty Basic HE with a cool gimmick */
 			aiming = TRUE
 			for(var/i = 1 to sacrifice_spawn)
 				lastfired = world.time
+				can_act = FALSE
 				var/turf/W = pick(GLOB.xeno_spawn)
 				var/mob/living/simple_animal/hostile/der_flusch_sacrifice/E = new(get_turf(W))
 				playsound(get_turf(src), 'sound/abnormalities/fluchschutze/fell_aim.ogg', 35, 0, 20)
@@ -146,6 +148,7 @@ Pretty Basic HE with a cool gimmick */
 
 	if(lastfired + 16 SECONDS <= world.time && staggered == FALSE)
 		aiming = FALSE
+		can_act = TRUE
 		IconChange(aiming = FALSE)
 
 	if(stagger >= 2)
