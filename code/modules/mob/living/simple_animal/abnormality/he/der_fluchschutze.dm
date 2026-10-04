@@ -132,7 +132,7 @@ Pretty Basic HE with a cool gimmick */
 	if(lastfired + firecooldown <= world.time)
 		if(prob(25))
 			aiming = TRUE
-			defenseupdate()
+			updatedefense()
 			lastfired = world.time
 			can_act = FALSE
 			for(var/i = 1 to sacrifice_spawn)
@@ -146,7 +146,7 @@ Pretty Basic HE with a cool gimmick */
 	if(lastfired + 21 SECONDS <= world.time && staggered == FALSE)
 		aiming = FALSE
 		can_act = TRUE
-		defenseupdate()
+		updatedefense()
 		IconChange(aiming = FALSE)
 
 	if(stagger >= 2)
