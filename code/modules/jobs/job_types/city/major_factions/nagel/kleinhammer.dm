@@ -23,10 +23,10 @@
 	job_notice = "You may kill anyone with prosthetics, or anyone sympathetic to prosthetics."
 
 	roundstart_attributes = list(
-								FORTITUDE_ATTRIBUTE = 60,
-								PRUDENCE_ATTRIBUTE = 60,
-								TEMPERANCE_ATTRIBUTE = 60,
-								JUSTICE_ATTRIBUTE = 60
+								FORTITUDE_ATTRIBUTE = 80,
+								PRUDENCE_ATTRIBUTE = 80,
+								TEMPERANCE_ATTRIBUTE = 80,
+								JUSTICE_ATTRIBUTE = 80
 								)
 
 /datum/job/kleinhammer/after_spawn(mob/living/carbon/human/H, mob/M)
