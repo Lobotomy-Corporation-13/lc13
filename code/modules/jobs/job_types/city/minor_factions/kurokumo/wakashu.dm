@@ -14,7 +14,7 @@
 	access = list("kuro")
 	minimal_access = list("kuro")
 	radio_channel_name = "Kurokumo"
-	radio_channel_color = "#2E347C"
+	radio_channel_color = "#a2a4b3"
 	departments = DEPARTMENT_CITY_ANTAGONIST
 	paycheck = 200
 	maptype = list("city")

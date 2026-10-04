@@ -376,15 +376,6 @@
 /obj/structure/fireplace,
 /turf/open/floor/carpet,
 /area/city/antag_base)
-"BV" = (
-/obj/machinery/door/airlock/wood{
-	name = "sottocapo quarters";
-	req_access_txt = "thumb_leader"
-	},
-/turf/open/floor/wood{
-	color = "#ccc8c0"
-	},
-/area/city/antag_base)
 "Cj" = (
 /obj/machinery/vending/boozeomat{
 	pixel_x = -32;
@@ -419,14 +410,6 @@
 	det_time = 20
 	},
 /turf/open/floor/carpet/red,
-/area/city/antag_base)
-"DB" = (
-/obj/machinery/door/window/survival_pod{
-	name = "sottocapo bedroom";
-	req_access_txt = "thumb_leader";
-	dir = 4
-	},
-/turf/open/floor/wood,
 /area/city/antag_base)
 "Ez" = (
 /obj/structure/closet/crate{
@@ -628,8 +611,7 @@
 /area/city/antag_base)
 "XQ" = (
 /obj/machinery/door/airlock/wood{
-	name = "sottocapo office";
-	req_access_txt = "thumb_leader"
+	name = "sottocapo office"
 	},
 /turf/open/floor/wood{
 	color = "#ccc8c0"
@@ -648,8 +630,7 @@
 /area/city/antag_base)
 "YC" = (
 /obj/machinery/door/airlock/wood{
-	name = "sottocapo office";
-	req_access_txt = "thumb_leader"
+	name = "sottocapo office"
 	},
 /turf/open/floor/wood,
 /area/city/antag_base)
@@ -898,9 +879,9 @@ MD
 YN
 pr
 pr
-BV
+XQ
 xE
-DB
+Wj
 xE
 Wj
 "}
