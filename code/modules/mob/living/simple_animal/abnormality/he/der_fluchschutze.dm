@@ -206,7 +206,7 @@ Pretty Basic HE with a cool gimmick */
 	desc = "A shotgun pellet, its headed straight for you."
 	damage_type = RED_DAMAGE
 	damage = 20
-	speed = 75
+	speed = 100
 	spread = 15
 
 /obj/projectile/fellround/Initialize()
@@ -255,6 +255,7 @@ Pretty Basic HE with a cool gimmick */
 	if(exploded != TRUE)
 		Boss.sacrificedestroyed(src)
 		playsound(get_turf(src), 'sound/effects/ordeals/brown_end.ogg', 35, 0, 20)
+		qdel(src)
 	return
 
 /mob/living/simple_animal/hostile/der_flusch_sacrifice/proc/explode()
