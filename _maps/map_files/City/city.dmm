@@ -1924,7 +1924,7 @@
 /area/city/alleyway_room)
 "vx" = (
 /obj/structure/lattice/catwalk,
-/turf/open/water/deep/polluted,
+/turf/open/floor/plating,
 /area/city/alleyways)
 "vB" = (
 /obj/structure/chair{
@@ -3505,7 +3505,7 @@
 "LU" = (
 /obj/structure/lattice/catwalk,
 /obj/structure/lattice/catwalk,
-/turf/open/water/deep/polluted,
+/turf/open/floor/plating,
 /area/city/alleyways)
 "LW" = (
 /obj/machinery/light/small{
@@ -4616,7 +4616,7 @@
 /obj/structure/railing{
 	dir = 1
 	},
-/turf/open/water/deep/freshwater,
+/turf/open/floor/plating,
 /area/city/alleyways)
 "YS" = (
 /obj/structure/shipping_container/hcorp,
