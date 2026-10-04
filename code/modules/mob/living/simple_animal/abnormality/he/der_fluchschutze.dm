@@ -187,7 +187,7 @@ Pretty Basic HE with a cool gimmick */
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/proc/sacrificedestroyed(/mob/living/simple_animal/hostile/der_flusch_sacrifice/E)
 	stagger += 1
 
-/mob/living/simple_animal/hostile/abnormality/der_fluchschutze/proc/defenseupdate()
+/mob/living/simple_animal/hostile/abnormality/der_fluchschutze/proc/updatedefense()
 	if(aiming == TRUE)
 		damage_coeff = list(RED_DAMAGE = 0.5, WHITE_DAMAGE = 0.5, BLACK_DAMAGE = 0.5, PALE_DAMAGE = 0.5, FIRE = 0.5)
 	else
