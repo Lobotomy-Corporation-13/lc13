@@ -162,6 +162,7 @@ Pretty Basic HE with a cool gimmick */
 		if(ismecha(attacked_target))
 			Reload()
 	return ..()
+
 	if(ranged_cooldown <= world.time + 1) // Delays Point-Blanks a bit because they HURT
 		if(ammo > 0)
 			if(prob(50))
