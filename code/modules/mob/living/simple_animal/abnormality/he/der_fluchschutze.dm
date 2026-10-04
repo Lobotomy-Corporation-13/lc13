@@ -112,11 +112,10 @@ Pretty Basic HE with a cool gimmick */
 	. = ..()
 	breached = TRUE
 
-/mob/living/simple_animal/hostile/abnormality/der_fluchschutze/proc/move()
-	if(aiming == TRUE)
+/mob/living/simple_animal/hostile/abnormality/der_fluchschutze/move()
+	if(aiming == TRUE || staggered == TRUE)
 		return FALSE
-	if(staggered == TRUE)
-		return FALSE
+	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/proc/Reload()
 	playsound(src, 'sound/abnormalities/fluchschutze/fell_aim.ogg', 25, TRUE)
