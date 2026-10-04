@@ -153,6 +153,7 @@ Pretty Basic HE with a cool gimmick */
 		staggered = TRUE
 		aiming = FALSE
 		can_act = FALSE
+		updatedefense()
 		to_chat(src, span_warning("You are staggered!"))
 	if(world.time >= lastfired + 40 SECONDS)
 		staggered = FALSE
