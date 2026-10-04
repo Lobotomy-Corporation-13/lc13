@@ -132,9 +132,10 @@ Pretty Basic HE with a cool gimmick */
 	if(lastfired + firecooldown <= world.time)
 		if(prob(25))
 			aiming = TRUE
+			updatedefense()
+			lastfired = world.time
+			can_act = FALSE
 			for(var/i = 1 to sacrifice_spawn)
-				lastfired = world.time
-				can_act = FALSE
 				var/turf/W = pick(GLOB.xeno_spawn)
 				var/mob/living/simple_animal/hostile/der_flusch_sacrifice/E = new(get_turf(W))
 				playsound(get_turf(src), 'sound/abnormalities/fluchschutze/fell_aim.ogg', 35, 0, 20)
@@ -145,6 +146,7 @@ Pretty Basic HE with a cool gimmick */
 	if(lastfired + 21 SECONDS <= world.time && staggered == FALSE)
 		aiming = FALSE
 		can_act = TRUE
+		updatedefense()
 		IconChange(aiming = FALSE)
 
 	if(stagger >= 2)
@@ -184,6 +186,12 @@ Pretty Basic HE with a cool gimmick */
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/proc/sacrificedestroyed(/mob/living/simple_animal/hostile/der_flusch_sacrifice/E)
 	stagger += 1
+
+/mob/living/simple_animal/hostile/abnormality/der_fluchschutze/proc/defenseupdate()
+	if(aiming == TRUE)
+		damage_coeff = list(RED_DAMAGE = 0.5, WHITE_DAMAGE = 0.5, BLACK_DAMAGE = 0.5, PALE_DAMAGE = 0.5, FIRE = 0.5)
+	else
+		damage_coeff = list(RED_DAMAGE = 0.5, WHITE_DAMAGE = 1.5, BLACK_DAMAGE = 0.7, PALE_DAMAGE = 0.7, FIRE = 0.5)
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/proc/IconChange(aiming)
 	if(aiming == TRUE)
