@@ -122,7 +122,7 @@ Pretty Basic HE with a cool gimmick */
 	ammo += 1
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/Life()
-	. = ..()
+	..()
 	if (!breached)
 		return
 
@@ -130,7 +130,6 @@ Pretty Basic HE with a cool gimmick */
 		last_reload_time = world.time
 		if (ammo < max_ammo)
 			Reload()
-		. = ..()
 
 	if(firecooldown <= world.time)
 		if(prob(25))
@@ -163,6 +162,12 @@ Pretty Basic HE with a cool gimmick */
 		if(ismecha(attacked_target))
 			Reload()
 	return ..()
+	if(ranged_cooldown <= world.time + 1) // Delays Point-Blanks a bit because they HURT
+		if(ammo > 0)
+			if(prob(50))
+				OpenFire(target)
+			return ..()
+	return FALSE
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/OpenFire(atom/A)
 	if(staggered == FALSE && aiming == FALSE)
@@ -176,24 +181,18 @@ Pretty Basic HE with a cool gimmick */
 	else
 		return FALSE
 
-/mob/living/simple_animal/hostile/abnormality/der_fluchschutze/AttackingTarget(atom/A)
-	if(ranged_cooldown <= world.time + 1) // Delays Point-Blanks a bit because they HURT
-		if(ammo > 0)
-			if(prob(50))
-				OpenFire(target)
-			return ..()
-	return FALSE
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/proc/sacrificedestroyed(/mob/living/simple_animal/hostile/der_flusch_sacrifice/E)
 	stagger += 1
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/proc/IconChange(aiming)
-	if(aiming == TRUE)
+	if(aiming == TRUE && icon != 'ModularLobotomy/_Lobotomyicons/64x64.dmi')
 		pixel_x -= 32
 		icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 		update_icon()
 	else
 		icon = 'ModularLobotomy/_Lobotomyicons/32x64.dmi'
+		pixel_x += 32
 		update_icon()
 //gunstuff
 /obj/item/ammo_casing/caseless/fellround
@@ -232,7 +231,6 @@ Pretty Basic HE with a cool gimmick */
 	damage_coeff = list(RED_DAMAGE = 1, WHITE_DAMAGE = 1, BLACK_DAMAGE = 1, PALE_DAMAGE = 1)
 	obj_damage = 0
 	del_on_death = TRUE
-	alpha = 0
 	density = TRUE
 	environment_smash = ENVIRONMENT_SMASH_NONE
 	death_message = "Shatters..."
