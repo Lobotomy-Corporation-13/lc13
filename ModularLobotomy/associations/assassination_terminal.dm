@@ -44,7 +44,7 @@
 			continue
 		if(H.stat == DEAD)
 			continue
-		if(istype(H) && (H?.mind?.assigned_role in list("Doctor", "Surgeon", "Nurse", "Physician"))) //No more being paid to get rid of the guy that revives your ass - Xeros
+		if(H.mind?.assigned_role in list("Doctor", "Surgeon", "Nurse", "Physician")) //No more being paid to get rid of the guy that revives your ass - Xeros
 			continue
 		available_targets += H
 
