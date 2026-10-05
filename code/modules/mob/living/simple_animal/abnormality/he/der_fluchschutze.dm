@@ -193,9 +193,9 @@ Pretty Basic HE with a cool gimmick */
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/proc/updatedefense()
 	if(aiming == TRUE)
-		damage_coeff = list(RED_DAMAGE = 0.5, WHITE_DAMAGE = 0.5, BLACK_DAMAGE = 0.5, PALE_DAMAGE = 0.5, FIRE = 0.5)
+		ChangeResistances(list(RED_DAMAGE = 0.5, WHITE_DAMAGE = 0.5, BLACK_DAMAGE = 0.5, PALE_DAMAGE = 0.5, FIRE = 0.5))
 	else
-		damage_coeff = list(RED_DAMAGE = 0.5, WHITE_DAMAGE = 1.5, BLACK_DAMAGE = 0.7, PALE_DAMAGE = 0.7, FIRE = 0.5)
+		ChangeResistances(list(RED_DAMAGE = 0.5, WHITE_DAMAGE = 1.5, BLACK_DAMAGE = 0.7, PALE_DAMAGE = 0.7, FIRE = 0.5))
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/proc/IconChange(aiming)
 	if(aiming == TRUE)
