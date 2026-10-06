@@ -44,6 +44,8 @@
 			continue
 		if(H.stat == DEAD)
 			continue
+		if(H.mind?.assigned_role in list("Doctor", "Surgeon", "Nurse", "Physician")) //No more being paid to get rid of the guy that revives your ass - Xeros
+			continue
 		available_targets += H
 
 	//If someone else wants to make this not target the doctor I'll give you a kiss on the cheek - Kirie/Kitsunemitsu
