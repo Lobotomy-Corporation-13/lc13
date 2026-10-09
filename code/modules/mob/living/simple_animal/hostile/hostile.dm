@@ -110,6 +110,13 @@ GLOBAL_LIST_EMPTY(marked_players)
 	//can attack and move
 	var/can_act = TRUE
 
+	/*
+	* Works like a timer where if they cannot find
+	* a path to their patrol destination
+	* they freak out and start smashing everything. -IP
+	*/
+	var/beserk = 0
+
 /mob/living/simple_animal/hostile/Initialize()
 	/*Update Speed overrides set speed and sets it
 		to the equivilent of move_to_delay. Basically
@@ -243,6 +250,9 @@ GLOBAL_LIST_EMPTY(marked_players)
 			PatrolSelect()
 			if(length(patrol_path))
 				patrol_move(patrol_path[patrol_path.len])
+				return
+			if(isabnormalitymob(src))
+				Claustrophobia(10 SECONDS)
 
 	/*		AIStatus
 	AI_ON will have the npcpool subsystem call handle_automated_action(),
@@ -539,7 +549,7 @@ GLOBAL_LIST_EMPTY(marked_players)
 		return list()
 
 	//The thorough mode, rarely used
-	if(search_objects)
+	if(search_objects || beserk > world.time)
 		. = oview(max_range, targets_from)
 		return
 	//the standard mode
@@ -668,6 +678,11 @@ GLOBAL_LIST_EMPTY(marked_players)
 	if(isobj(the_target))
 		if(attack_all_objects || is_type_in_typecache(the_target, wanted_objects))
 			return TRUE
+		if(beserk > world.time)
+			//Causes issues pathing to go attack it.
+			if(istype(the_target, /obj/structure/window/reinforced))
+				return FALSE
+			return IsSmashable(the_target)
 
 	return FALSE
 
@@ -1123,6 +1138,11 @@ GLOBAL_LIST_EMPTY(marked_players)
 
 /mob/living/simple_animal/hostile/proc/IsSmashable(obj/O)
 	if(ismecha(O) || ismachinery(O) || isstructure(O))
+		if(beserk > world.time && istype(O, /obj/machinery/door/airlock))
+			var/obj/machinery/door/airlock/D = O
+			//Thats a unlocked door. May be a bad choice to put it here.
+			if(!D.locked)
+				return FALSE
 		if(O.resistance_flags & INDESTRUCTIBLE)
 			return FALSE
 		if(!O.density)
@@ -1448,5 +1468,10 @@ GLOBAL_LIST_EMPTY(marked_players)
 		step_to(src, dest)
 		patrol_reset()
 	return TRUE
+
+//SMASH EVERYTHING
+/mob/living/simple_animal/hostile/proc/Claustrophobia(add_on = 0)
+	beserk = world.time + add_on
+
 
 #undef MAX_DAMAGE_SUFFERED
