@@ -65,7 +65,8 @@
 				for(var/ckey in GLOB.admin_datums)
 					var/datum/admins/D = GLOB.admin_datums[ckey]
 					dat += "[ckey] - [D.rank.name]<br>"
-				holder << browse(dat, "window=showadmins;size=600x500")
+				//holder << browse(dat, "window=showadmins;size=600x500") // LOBOTOMYCORPORATION EDIT CHANGE OLD
+				holder << browse(dat, "window=showadmins;[scaled_browse_size(holder, 600, 500)]") // LOBOTOMYCORPORATION EDIT CHANGE NEW -- scale for DPI
 		//Buttons for debug.
 		if("maint_access_engiebrig")
 			if(!is_debugger)
@@ -111,12 +112,14 @@
 			var/dat = "<B>Showing last [length(GLOB.lastsignalers)] signalers.</B><HR>"
 			for(var/sig in GLOB.lastsignalers)
 				dat += "[sig]<BR>"
-			holder << browse(dat, "window=lastsignalers;size=800x500")
+			//holder << browse(dat, "window=lastsignalers;size=800x500") // LOBOTOMYCORPORATION EDIT CHANGE OLD
+			holder << browse(dat, "window=lastsignalers;[scaled_browse_size(holder, 800, 500)]") // LOBOTOMYCORPORATION EDIT CHANGE NEW -- scale for DPI
 		if("list_lawchanges")
 			var/dat = "<B>Showing last [length(GLOB.lawchanges)] law changes.</B><HR>"
 			for(var/sig in GLOB.lawchanges)
 				dat += "[sig]<BR>"
-			holder << browse(dat, "window=lawchanges;size=800x500")
+			//holder << browse(dat, "window=lawchanges;size=800x500") // LOBOTOMYCORPORATION EDIT CHANGE OLD
+			holder << browse(dat, "window=lawchanges;[scaled_browse_size(holder, 800, 500)]") // LOBOTOMYCORPORATION EDIT CHANGE NEW -- scale for DPI
 		if("showailaws")
 			holder.holder.output_ai_laws()//huh, inconvenient var naming, huh?
 		if("showgm")
@@ -132,7 +135,8 @@
 			for(var/datum/data/record/t in GLOB.data_core.general)
 				dat += "<tr><td>[t.fields["name"]]</td><td>[t.fields["rank"]]</td></tr>"
 			dat += "</table>"
-			holder << browse(dat, "window=manifest;size=440x410")
+			//holder << browse(dat, "window=manifest;size=440x410") // LOBOTOMYCORPORATION EDIT CHANGE OLD
+			holder << browse(dat, "window=manifest;[scaled_browse_size(holder, 440, 410)]") // LOBOTOMYCORPORATION EDIT CHANGE NEW -- scale for DPI
 		if("dna")
 			var/dat = "<B>Showing DNA from blood.</B><HR>"
 			dat += "<table cellspacing=5><tr><th>Name</th><th>DNA</th><th>Blood Type</th></tr>"
@@ -141,7 +145,8 @@
 				if(H.ckey)
 					dat += "<tr><td>[H]</td><td>[H.dna.unique_enzymes]</td><td>[H.dna.blood_type]</td></tr>"
 			dat += "</table>"
-			holder << browse(dat, "window=DNA;size=440x410")
+			//holder << browse(dat, "window=DNA;size=440x410") // LOBOTOMYCORPORATION EDIT CHANGE OLD
+			holder << browse(dat, "window=DNA;[scaled_browse_size(holder, 440, 410)]") // LOBOTOMYCORPORATION EDIT CHANGE NEW -- scale for DPI
 		if("fingerprints")
 			var/dat = "<B>Showing Fingerprints.</B><HR>"
 			dat += "<table cellspacing=5><tr><th>Name</th><th>Fingerprints</th></tr>"
@@ -150,7 +155,8 @@
 				if(H.ckey)
 					dat += "<tr><td>[H]</td><td>[md5(H.dna.uni_identity)]</td></tr>"
 			dat += "</table>"
-			holder << browse(dat, "window=fingerprints;size=440x410")
+			//holder << browse(dat, "window=fingerprints;size=440x410") // LOBOTOMYCORPORATION EDIT CHANGE OLD
+			holder << browse(dat, "window=fingerprints;[scaled_browse_size(holder, 440, 410)]") // LOBOTOMYCORPORATION EDIT CHANGE NEW -- scale for DPI
 		if("ctfbutton")
 			toggle_id_ctf(holder, "centcom")
 		if("tdomereset")

@@ -129,7 +129,8 @@
 		output += "</table></div><div id='top'><b>Search:</b> <input type='text' id='filter' value='' style='width:70%;' onkeyup='updateSearch();'></div></body>"
 	if(QDELETED(usr))
 		return
-	usr << browse("<!DOCTYPE html><html>[jointext(output, "")]</html>","window=editrights;size=1000x650")
+	//usr << browse("<!DOCTYPE html><html>[jointext(output, "")]</html>","window=editrights;size=1000x650") // LOBOTOMYCORPORATION EDIT CHANGE OLD
+	usr << browse("<!DOCTYPE html><html>[jointext(output, "")]</html>","window=editrights;[scaled_browse_size(usr, 1000, 650)]") // LOBOTOMYCORPORATION EDIT CHANGE NEW -- scale for DPI
 
 /datum/admins/proc/edit_rights_topic(list/href_list)
 	if(!check_rights(R_PERMISSIONS))

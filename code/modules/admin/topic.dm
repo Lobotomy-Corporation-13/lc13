@@ -2026,7 +2026,8 @@
 		var/list/dat = list("Related accounts by [uppertext(href_list["showrelatedacc"])]:")
 		dat += thing_to_check
 
-		usr << browse(dat.Join("<br>"), "window=related_[C];size=420x300")
+		//usr << browse(dat.Join("<br>"), "window=related_[C];size=420x300") // LOBOTOMYCORPORATION EDIT CHANGE OLD
+		usr << browse(dat.Join("<br>"), "window=related_[C];[scaled_browse_size(usr, 420, 300)]") // LOBOTOMYCORPORATION EDIT CHANGE NEW -- scale for DPI
 
 	else if(href_list["centcomlookup"])
 		if(!check_rights(R_ADMIN))

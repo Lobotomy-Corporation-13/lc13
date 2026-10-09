@@ -477,7 +477,8 @@ GLOBAL_LIST_EMPTY(PDAs)
 	if (!underline_flag)
 		dat = replacetext(dat, "text-decoration:underline", "text-decoration:none")
 
-	user << browse(dat, "window=pda;size=400x450;border=1;can_resize=1;can_minimize=0")
+	//user << browse(dat, "window=pda;size=400x450;border=1;can_resize=1;can_minimize=0") // LOBOTOMYCORPORATION EDIT CHANGE OLD
+	user << browse(dat, "window=pda;[scaled_browse_size(user, 400, 450)];border=1;can_resize=1;can_minimize=0") // LOBOTOMYCORPORATION EDIT CHANGE NEW -- scale for DPI
 	onclose(user, "pda", src)
 
 /obj/item/pda/Topic(href, href_list)
@@ -1283,7 +1284,8 @@ GLOBAL_LIST_EMPTY(PDAs)
 		return
 	if(!isnull(aiPDA))
 		var/HTML = "<html><head><meta http-equiv='Content-Type' content='text/html; charset=UTF-8'><title>AI PDA Message Log</title></head><body>[aiPDA.tnote]</body></html>"
-		user << browse(HTML, "window=log;size=400x444;border=1;can_resize=1;can_close=1;can_minimize=0")
+		//user << browse(HTML, "window=log;size=400x444;border=1;can_resize=1;can_close=1;can_minimize=0") // LOBOTOMYCORPORATION EDIT CHANGE OLD
+		user << browse(HTML, "window=log;[scaled_browse_size(user, 400, 444)];border=1;can_resize=1;can_close=1;can_minimize=0") // LOBOTOMYCORPORATION EDIT CHANGE NEW -- scale for DPI
 	else
 		to_chat(user, "<span class='warning'>You do not have a PDA! You should make an issue report about this.</span>")
 

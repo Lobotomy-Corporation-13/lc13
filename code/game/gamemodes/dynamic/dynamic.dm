@@ -134,7 +134,8 @@ GLOBAL_VAR_INIT(dynamic_forced_threat_level, -1)
 	dat += "<br>Injection Timers: (<b>[get_injection_chance(TRUE)]%</b> chance)<BR>"
 	dat += "Latejoin: [(latejoin_injection_cooldown-world.time)>60*10 ? "[round((latejoin_injection_cooldown-world.time)/60/10,0.1)] minutes" : "[(latejoin_injection_cooldown-world.time)] seconds"] <a href='byond://?src=\ref[src];[HrefToken()];injectlate=1'>\[Now!\]</a><BR>"
 	dat += "Midround: [(midround_injection_cooldown-world.time)>60*10 ? "[round((midround_injection_cooldown-world.time)/60/10,0.1)] minutes" : "[(midround_injection_cooldown-world.time)] seconds"] <a href='byond://?src=\ref[src];[HrefToken()];injectmid=1'>\[Now!\]</a><BR>"
-	usr << browse(dat.Join(), "window=gamemode_panel;size=500x500")
+	//usr << browse(dat.Join(), "window=gamemode_panel;size=500x500") // LOBOTOMYCORPORATION EDIT CHANGE OLD
+	usr << browse(dat.Join(), "window=gamemode_panel;[scaled_browse_size(usr, 500, 500)]") // LOBOTOMYCORPORATION EDIT CHANGE NEW -- scale for DPI
 
 /datum/game_mode/dynamic/Topic(href, href_list)
 	if (..()) // Sanity, maybe ?
@@ -269,7 +270,8 @@ GLOBAL_VAR_INIT(dynamic_forced_threat_level, -1)
 
 	out += "<B>Remaining threat/threat_level:</B> [threat]/[threat_level]"
 
-	usr << browse(out.Join(), "window=threatlog;size=700x500")
+	//usr << browse(out.Join(), "window=threatlog;size=700x500") // LOBOTOMYCORPORATION EDIT CHANGE OLD
+	usr << browse(out.Join(), "window=threatlog;[scaled_browse_size(usr, 700, 500)]") // LOBOTOMYCORPORATION EDIT CHANGE NEW -- scale for DPI
 
 /// Generates the threat level using lorentz distribution and assigns peaceful_percentage.
 /datum/game_mode/dynamic/proc/generate_threat()

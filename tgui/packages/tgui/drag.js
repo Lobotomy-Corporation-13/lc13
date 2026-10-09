@@ -121,7 +121,8 @@ export const recallWindowGeometry = async (options = {}) => {
     logger.log('recalled geometry:', geometry);
   }
   let pos = geometry?.pos || options.pos;
-  let size = options.size;
+  // Interfaces declare their size in CSS pixels; BYOND wants physical pixels.
+  let size = options.size && toByondPixels(options.size);
   // Wait until screen offset gets resolved
   await screenOffsetPromise;
   const areaAvailable = getScreenSize();

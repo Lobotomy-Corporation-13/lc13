@@ -39,7 +39,8 @@
 				html += "<ul><li>[messages.Join("</li><li>")]</li></ul>"
 			html += "</li>"
 		html += "</ul></p>"
-	C << browse(html.Join(), "window=[tag];size=600x400")
+	//C << browse(html.Join(), "window=[tag];size=600x400") // LOBOTOMYCORPORATION EDIT CHANGE OLD
+	C << browse(html.Join(), "window=[tag];[scaled_browse_size(C, 600, 400)]") // LOBOTOMYCORPORATION EDIT CHANGE NEW -- scale for DPI
 
 /datum/map_report/Topic(href, href_list)
 	. = ..()

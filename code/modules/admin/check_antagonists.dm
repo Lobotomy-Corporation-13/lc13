@@ -217,4 +217,5 @@
 	dat += build_antag_listing()
 
 	dat += "</body></html>"
-	usr << browse(dat.Join(), "window=roundstatus;size=500x500")
+	//usr << browse(dat.Join(), "window=roundstatus;size=500x500") // LOBOTOMYCORPORATION EDIT CHANGE OLD
+	usr << browse(dat.Join(), "window=roundstatus;[scaled_browse_size(usr, 500, 500)]") // LOBOTOMYCORPORATION EDIT CHANGE NEW -- scale for DPI
