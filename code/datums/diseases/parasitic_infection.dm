@@ -1,6 +1,6 @@
 /datum/disease/parasite
 	form = "Parasite"
-	name = "Parasitic Infection"
+	name = "Liver Parasites"
 	max_stages = 4
 	cure_text = "Surgical removal of the liver."
 	agent = "Consuming Live Parasites"
@@ -30,12 +30,12 @@
 		return FALSE
 	//We have a liver. Cool. Is that liver inside the person who has the parasite?
 	if(affected_liver.owner != affected_mob)
-		affected_mob.visible_message("<span class='notice'><B>[affected_mob]'s liver is covered in tiny larva! They quickly shrivel and die after being exposed to the open air.</B></span>")
+		affected_mob.visible_message(span_notice("<B>[affected_mob]'s liver is covered in tiny larva! They quickly shrivel and die after being exposed to the open air.</B>"))
 		cure()
 		return FALSE
 	//Thats not a liver thats a hunk of plastic.
 	if(affected_liver.organ_flags & ORGAN_SYNTHETIC)
-		to_chat(affected_mob, "<span class='nicegreen'>Your liver starts whirring and making noises like someone threw popcorn into a blender.</span>")
+		to_chat(affected_mob, span_nicegreen("Your liver starts whirring and making noises like someone threw popcorn into a blender."))
 		//That cant be good for your liver.
 		affected_mob.adjustOrganLoss(ORGAN_SLOT_LIVER, 20, 200)
 		cure()
@@ -48,18 +48,18 @@
 		if(2)
 			if(prob(10))
 				if(prob(50))
-					to_chat(affected_mob, "<span class='notice'>You feel the weight loss already!</span>")
+					to_chat(affected_mob, span_notice("You feel the weight loss already!"))
 				affected_mob.adjust_nutrition(-3)
 		if(3)
 			if(prob(20))
 				if(prob(20))
-					to_chat(affected_mob, "<span class='notice'>You're... REALLY starting to feel the weight loss.</span>")
+					to_chat(affected_mob, span_notice("You're... REALLY starting to feel the weight loss."))
 				affected_mob.adjust_nutrition(-6)
 		if(4)
 			if(prob(30))
 				if(affected_mob.nutrition >= 100)
 					if(prob(10))
-						to_chat(affected_mob, "<span class='warning'>You feel like your body's shedding weight rapidly!</span>")
+						to_chat(affected_mob, span_warning("You feel like your body's shedding weight rapidly!"))
 					affected_mob.adjust_nutrition(-12)
 				else
 					affected_mob.adjustOrganLoss(ORGAN_SLOT_LIVER, 5, 200)
