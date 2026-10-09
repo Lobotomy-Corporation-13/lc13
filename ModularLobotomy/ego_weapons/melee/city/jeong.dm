@@ -160,7 +160,7 @@
 
 
 
-	..()
+	. = ..()
 	force = initial(force)
 
 //Grade 4
