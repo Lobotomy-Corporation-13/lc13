@@ -30,6 +30,8 @@
 	var/fear_level = null
 	/// Maximum qliphoth level, passed to datum
 	var/start_qliphoth = 0
+	/// Do we want to have our counter drop midwork?
+	var/midwork_drop = FALSE
 	/// Can it breach? If TRUE - ZeroQliphoth() calls BreachEffect()
 	var/can_breach = FALSE
 	/// The % chance for it to drop Q on each result.
