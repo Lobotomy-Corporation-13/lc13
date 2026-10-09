@@ -64,10 +64,7 @@
 	var/list/followers = list()
 
 	//Flow Field Variables
-	var/careful = TRUE
-	var/max_range = 70
-	var/attempts = 1000
-	var/list/flow_map = list()
+	var/got_world_map = FALSE
 
 /mob/living/simple_animal/hostile/abnormality/branch12/baromez/Initialize()
 	. = ..()
@@ -78,7 +75,7 @@
 	if(length(GLOB.department_centers) && !active)
 		var/turf/W = pick(GLOB.department_centers)
 		forceMove(W)
-	Start()
+	NaturalStart()
 	. = ..()
 	invisibility = initial(invisibility)
 	update_icon()
@@ -107,6 +104,11 @@
 		return
 	if(!active)
 		return
+	//If we got a world map check once and share with minions
+	if(!got_world_map && SSflowfield.FindMap(AddIdentifier(get_turf(src))))
+		ShareMap()
+		got_world_map = TRUE
+
 	//If less than 5 followers and at least 10 resources, spawn a follower
 	if(LAZYLEN(followers) < max_followers && (resources >= 10 && resources < max_resources))
 		var/mob/living/simple_animal/hostile/baroputian/stealer = new(get_turf(src))
@@ -122,9 +124,6 @@
 			if(istype(L, /mob/living/simple_animal/hostile/baroputian))
 				var/mob/living/simple_animal/hostile/baroputian/I = L
 				I.behavior_mode = LILI_BEHAVIOR_MODE_RETURN
-				//Too far away we will leave you behind
-				if(get_dist(src,L) > max_range)
-					continue
 				where_is_everyone = TRUE
 				continue
 
@@ -161,17 +160,19 @@
 		size = 3
 	update_icon()
 
-
 /mob/living/simple_animal/hostile/abnormality/branch12/baromez/proc/NaturalStart()
 	if(IsContained())
 		return
-	Start()
+	SSflowfield.MakeMyMap(src, AddIdentifier(get_turf(src)))
+	active = TRUE
+	update_icon()
 
 /mob/living/simple_animal/hostile/abnormality/branch12/baromez/proc/ShareMap()
+	var/our_identifier = AddIdentifier(get_turf(src))
 	for(var/L in followers)
 		if(istype(L, /mob/living/simple_animal/hostile/baroputian))
 			var/mob/living/simple_animal/hostile/baroputian/I = L
-			I.world_map = flow_map.Copy()
+			I.GrabHomeMap(our_identifier)
 
 /mob/living/simple_animal/hostile/abnormality/branch12/baromez/proc/EnrageAll(mob/living/offender)
 	for(var/L in followers)
@@ -191,8 +192,7 @@
 		var/mob/living/simple_animal/hostile/baroputian/entity = L
 		entity.home = tag
 		entity.faction = faction.Copy()
-		if(length(flow_map))
-			entity.world_map = flow_map.Copy()
+		entity.GrabHomeMap(AddIdentifier(get_turf(src)))
 		followers += L
 
 /mob/living/simple_animal/hostile/abnormality/branch12/baromez/proc/UnregisterMob(mob/living/L)
@@ -207,220 +207,6 @@
 	for(var/mob/living/L in followers)
 		UnregisterMob(L)
 	followers.Cut()
-
-/*------------------------\
-|Experimental Flow Mapping|
-\------------------------*/
-/*
-* Since the Baromez is integrel to the functions of
-* the Baroputians a map to the Baromez must be made.
-* Upon calling Start() we scan all the tiles around it
-* and make a coordnate map that is stifled by a sleep
-* for every 10 loops. At the end of this proc we then
-* have a list of coords and directions that point towards
-* the Baromez. This world map is then given to Baroputians
-* so that when they are out of sight of the Baromez they
-* always have a direction to follow back.
-*/
-/mob/living/simple_animal/hostile/abnormality/branch12/baromez/proc/Start()
-	flow_map = list()
-	var/max_cycles = attempts
-	var/turf/start = get_turf(src)
-	var/turf/focus_turf = start
-	var/list/openf = list()
-	var/list/dir_list = list()
-	var/list/closed_turfs = list()
-	for(var/cycle = 1 to max_cycles)
-		//This is to give a slight delay and ease the burdon of processing
-		if(!(cycle % 10))
-			//Hopefully every 10 cycles just pause for a moment
-			SLEEP_CHECK_DEATH(2)
-
-		if(!focus_turf)
-			//If no focus_turf then something has gone terribly wrong.
-			stack_trace("FormPath:focus_turfmissing:cycle[cycle]:[type]")
-			return
-
-		var/list/temp_list = ReturnAdjacentTurfs(focus_turf)
-		var/list/total_list = openf + closed_turfs
-		for(var/turf/T in temp_list)
-			var/new_dir = get_dir(T,focus_turf)
-			//Replace dir if new check is made.
-			if(T in dir_list)
-				//Skip steps that are already paths.
-			//	if(T in closed_turfs && T != start)
-			//		continue
-				var/tval = total_list[T]
-				var/nval
-				//If its pointing at something that is cheaper than it then steal its val
-				var/turf/pointing_at = get_step(T, dir_list[T])
-				//Dont bother if its just a wall
-				if(tval >= 1000)
-					if(careful)
-						var/list/double_check_turfs = ReturnAdjacentTurfs(T, TRUE)
-						for(var/turf/check in double_check_turfs)
-							if(!(check in dir_list))
-								continue
-							var/flattened_dir = FlattenDiagonal(dir_list[check], get_dir(check,T))
-							if(flattened_dir)
-								dir_list[check] = flattened_dir
-					continue
-				//If in total_list with a openf value and is diagonal
-				if(pointing_at in total_list && pointing_at.y != T.y && pointing_at.x != T.x)
-					nval = total_list[pointing_at]
-				if(nval && nval < tval)
-					dir_list[T] = new_dir
-					openf[T] = nval
-
-			else
-				dir_list += T
-				dir_list[T] = new_dir
-				//This is so that they stop when they are within 1 tile of the destination
-				if(get_dist(start, T) <= 1)
-					dir_list[T] = "dest"
-				//Add turf to openf
-				if(!(T in openf))
-					openf += T
-				//Appraise turf
-				openf[T] = AppraiseTurf(T,start)
-				if(openf[T] >= 1000)
-					dir_list[T] = "null"
-					closed_turfs += focus_turf
-					closed_turfs[focus_turf] = 1000
-
-	/* Only good for seeing how far the scanning is going.
-		var/image/effect_flick = image('icons/effects/cult_effects.dmi',focus_turf,"bloodsparkles",CLOSED_FIREDOOR_LAYER)
-		flick_overlay_view(effect_flick, focus_turf, 1)
-		*/
-
-		//Add checked focus_turfs to closed_turfs list.
-		closed_turfs += focus_turf
-		if(focus_turf in openf)
-			closed_turfs[focus_turf] = openf[focus_turf]
-		closed_turfs[focus_turf] = 0
-
-		//If we have openf turfs to choose from then pick one of those to check.
-		if(length(openf))
-			var/good_options = openf - closed_turfs
-			focus_turf = ReturnLowestValue(good_options)
-			//Look i dont care whats behind that wall your not pathing through it. Unless.
-			if(good_options[focus_turf] >= 1000)
-				break
-
-	var/list/replace_flow_map = FormatDirections(dir_list, start)
-
-	flow_map = replace_flow_map.Copy()
-	active = TRUE
-	update_icon()
-	return
-
-/mob/living/simple_animal/hostile/abnormality/branch12/baromez/proc/FormatDirections(list/dir_list = list())
-	. = list()
-	if(!length(dir_list))
-		stack_trace("FormatDirections:NoDirList:[type]")
-		return
-
-	var/list/return_list = list()
-	for(var/turf/floor in dir_list)
-		var/tag_turf = "[floor.x],[floor.y]"
-		var/direction_thing = dir_list[floor]
-		if(direction_thing == "null")
-			continue
-		return_list += tag_turf
-		return_list[tag_turf] = direction_thing
-
-	return return_list
-
-//Remove later
-/mob/living/simple_animal/hostile/abnormality/branch12/baromez/proc/UnpackCoords(turf_tag)
-	if(isnum(turf_tag))
-		stack_trace("UnpackCoordsFail")
-		return FALSE
-	if(!turf_tag)
-		return
-	var/list/splitter = splittext(turf_tag,",")
-	var/turfx = splitter[1]
-	var/turfy = splitter[2]
-	turfx = text2num(turfx)
-	turfy = text2num(turfy)
-
-	return alist("x" = turfx, "y" = turfy)
-
-/mob/living/simple_animal/hostile/abnormality/branch12/baromez/proc/AppraiseTurf(turf/T, turf/start)
-	. = 0
-	if(T.density || !istype(T, /turf/open))
-		return 10000
-	//Gcost
-	var/g_cost = CountDist(T,start)
-	if(g_cost / 10 == max_range)
-		return 10000
-
-	. += g_cost
-
-
-	//If not open turf its likely a wall.
-	var/turf/open/O = T
-	if(istype(O, /turf/open/water/deep))
-		var/turf/open/water/deep/watar = O
-		if(!watar.safe)
-			return 10000
-	if(O.slowdown)
-		. += O.slowdown
-
-	//Do not go on forever, stop when we reach critical mass.
-	var/total_extra = 0
-	/*
-	* Lets just get silly with it, a total of 20 items can be checked
-	* If one item cycle returns early then we can use the extra charges
-	* on the next.
-	*/
-	var/total_check = 0
-
-	for(var/obj/structure/S in O)
-		total_check++
-		if(total_extra > 50 || total_check >= 15)
-			break
-		if(S.density)
-			if(S.resistance_flags & INDESTRUCTIBLE || istype(S, /obj/structure/railing))
-				return 10000
-			. += 20
-			total_extra += 20
-			break
-
-	for(var/obj/machinery/M in O)
-		total_check++
-		if(total_extra > 50 || total_check >= 20)
-			break
-		if(M.density)
-			if(!istype(M,/obj/machinery/door))
-				if(M.resistance_flags & INDESTRUCTIBLE)
-					return 10000
-				. += 20
-				total_extra += 20
-				break
-			//Mostly because im sick of them ignoring doors.
-			. -= 10
-			total_extra -= 10
-
-	for(var/obj/effect/turf_fire/F in O)
-		total_check++
-		if(total_extra > 50 || total_check >= 5)
-			break
-		if(QDELETED(F))
-			continue
-		. += 100
-		break
-
-	if(total_extra > 50)
-		return
-
-	for(var/mob/living/L in O)
-		total_check++
-		if(total_check >= 10)
-			break
-		if(L.density)
-			. += 10
-			break
 
 //---------------------------------------------------
 /*------\
@@ -682,6 +468,11 @@
 		var/mob/living/simple_animal/hostile/abnormality/branch12/baromez/bag = L
 		if(bag.tag == home)
 			return TRUE
+
+/mob/living/simple_animal/hostile/baroputian/proc/GrabHomeMap(label)
+	if(!(SSflowfield.FindMap(label)))
+		return
+	world_map = SSflowfield.CopyMap(label)
 
 /*---------------------------\
 |Experimental Map Pathfinding|
