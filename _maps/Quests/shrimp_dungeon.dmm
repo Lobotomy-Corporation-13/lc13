@@ -1,0 +1,7900 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"af" = (
+/obj/machinery/door/poddoor/shutters/preopen{
+	resistance_flags = 64;
+	lockpickable = 0
+	},
+/obj/structure/sigsystem/connector{
+	dir = 8
+	},
+/obj/structure/sigsystem/activator,
+/turf/open/floor/mineral/titanium,
+/area/city/unregisteredportindoors)
+"an" = (
+/turf/open/water/deep/saltwater,
+/area/city/unregisteredportoutdoors)
+"aR" = (
+/obj/structure/lattice/catwalk{
+	resistance_flags = 64;
+	mouse_opacity = 0
+	},
+/mob/living/simple_animal/hostile/shrimp_comms,
+/turf/open/water/deep/saltwater/extradeep,
+/area/city/unregisteredportoutdoors)
+"aT" = (
+/obj/structure/railing/corner{
+	resistance_flags = 64
+	},
+/turf/open/floor/mineral/titanium,
+/area/city/unregisteredportindoors)
+"bn" = (
+/obj/item/fishing_rod/wellcheers,
+/turf/open/floor/holofloor/beach,
+/area/city/unregisteredportoutdoors)
+"bt" = (
+/obj/structure/sigsystem/connector,
+/turf/open/floor/mineral/titanium,
+/area/city/unregisteredportindoors)
+"bO" = (
+/mob/living/simple_animal/hostile/shrimp_soldier/dungeon,
+/turf/open/floor/mineral/titanium,
+/area/city/unregisteredportindoors)
+"bX" = (
+/obj/structure/sigsystem/connector/split{
+	dir = 4
+	},
+/turf/open/floor/mineral/titanium,
+/area/city/unregisteredportindoors)
+"cs" = (
+/obj/structure/table/reinforced,
+/turf/open/floor/mineral/titanium/white,
+/area/city/unregisteredportindoors)
+"cu" = (
+/mob/living/simple_animal/hostile/shrimp_soldier/dungeon,
+/obj/effect/decal/cleanable/dirt,
+/turf/open/floor/mineral/titanium/purple,
+/area/city/unregisteredportindoors)
+"cB" = (
+/mob/living/simple_animal/hostile/shrimp_security,
+/obj/effect/decal/cleanable/dirt,
+/turf/open/floor/mineral/titanium/purple,
+/area/city/unregisteredportindoors)
+"de" = (
+/obj/machinery/light{
+	dir = 1
+	},
+/turf/open/floor/mineral/titanium/purple,
+/area/city/unregisteredportindoors)
+"dl" = (
+/obj/structure/lattice/catwalk{
+	resistance_flags = 64;
+	mouse_opacity = 0
+	},
+/obj/machinery/light/red{
+	dir = 4
+	},
+/turf/open/water/deep/saltwater/extradeep,
+/area/city/unregisteredportoutdoors)
+"dy" = (
+/obj/machinery/light{
+	dir = 1
+	},
+/obj/structure/closet/crate,
+/obj/effect/decal/cleanable/dirt,
+/turf/open/floor/mineral/titanium/purple,
+/area/city/unregisteredportindoors)
+"dM" = (
+/obj/structure/lootcrate/s_corp,
+/obj/machinery/light{
+	dir = 1
+	},
+/obj/effect/decal/cleanable/dirt,
+/turf/open/floor/pod/light,
+/area/city/unregisteredportindoors)
+"dS" = (
+/obj/structure/table,
+/turf/open/floor/carpet/purple,
+/area/city/unregisteredportindoors)
+"dY" = (
+/turf/open/water/deep/saltwater/extradeep,
+/area/city/unregisteredportoutdoors)
+"et" = (
+/obj/structure/table/reinforced,
+/obj/effect/landmark/cratespawn,
+/turf/open/floor/oldshuttle,
+/area/city/unregisteredportoutdoors)
+"ex" = (
+/obj/structure/table/wood,
+/obj/item/fishing_rod{
+	pixel_y = 7
+	},
+/turf/open/floor/wood,
+/area/city/unregisteredportoutdoors)
+"eC" = (
+/obj/machinery/door/airlock/sandstone{
+	name = "Cargo Bay"
+	},
+/obj/machinery/door/poddoor/shutters/preopen{
+	resistance_flags = 64;
+	lockpickable = 0
+	},
+/turf/open/floor/mineral/titanium/white,
+/area/city/unregisteredportindoors)
+"eF" = (
+/mob/living/simple_animal/hostile/shrimp/dungeon,
+/turf/open/floor/mineral/titanium/white,
+/area/city/unregisteredportindoors)
+"eM" = (
+/obj/structure/railing{
+	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
+	name = "wing-grade railing";
+	resistance_flags = 115
+	},
+/turf/open/floor/pod/light,
+/area/city/unregisteredportindoors)
+"eO" = (
+/obj/structure/chair/office/light{
+	dir = 8
+	},
+/mob/living/simple_animal/hostile/shrimp/dungeon,
+/turf/open/floor/carpet/purple,
+/area/city/unregisteredportindoors)
+"ff" = (
+/obj/structure/lootcrate/money,
+/obj/structure/lootcrate/money,
+/turf/open/floor/oldshuttle,
+/area/city/unregisteredportoutdoors)
+"fg" = (
+/obj/structure/fluff/fokoff_sign{
+	desc = "A crudely-made sign which reads, 'All non-authorized personnel will be eliminated, including any foreign shrimp.'";
+	name = "warning sign"
+	},
+/turf/open/floor/plating/dirt,
+/area/city/unregisteredportoutdoors)
+"fw" = (
+/obj/structure/closet/crate/freezer,
+/obj/item/food/fish/fresh_water/ratfish,
+/obj/item/food/fish/fresh_water/mosb,
+/obj/item/food/fish/salt_water/sheephead,
+/obj/item/food/fish/salt_water,
+/turf/open/floor/mineral/titanium/white,
+/area/city/unregisteredportoutdoors)
+"fG" = (
+/turf/closed/indestructible/fakeglass{
+	baseturfs = /turf/open/water/deep/saltwater/extradeep
+	},
+/area/city/unregisteredportoutdoors)
+"fJ" = (
+/obj/item/ego_weapon/ranged/sodarifle{
+	pixel_y = 5;
+	pixel_x = 11
+	},
+/obj/structure/table/reinforced,
+/turf/open/floor/mineral/titanium/white,
+/area/city/unregisteredportindoors)
+"gA" = (
+/obj/machinery/light{
+	dir = 4
+	},
+/turf/open/floor/mineral/titanium,
+/area/city/unregisteredportindoors)
+"gH" = (
+/obj/effect/turf_decal/trimline/red/filled/warning,
+/obj/docking_port/stationary{
+	dwidth = 5;
+	height = 5;
+	id = "shrungeon_floor";
+	name = "unregistered port";
+	width = 10
+	},
+/turf/open/floor/plating/ashplanet{
+	name = "asphalt"
+	},
+/area/city/unregisteredportoutdoors)
+"hc" = (
+/obj/structure/lootcrate/money,
+/obj/structure/lootcrate/money,
+/turf/open/floor/holofloor/beach,
+/area/city/unregisteredportoutdoors)
+"hs" = (
+/obj/structure/closet/crate/bin,
+/obj/item/trash/can,
+/obj/item/trash/can,
+/obj/item/trash/plate,
+/turf/open/floor/carpet/purple,
+/area/city/unregisteredportindoors)
+"hK" = (
+/obj/structure/sigsystem/connector,
+/turf/closed/indestructible/iron,
+/area/city/unregisteredportindoors)
+"hT" = (
+/obj/structure/lattice/catwalk{
+	resistance_flags = 64;
+	mouse_opacity = 0
+	},
+/turf/open/water/deep/saltwater/extradeep,
+/area/city/unregisteredportoutdoors)
+"hU" = (
+/obj/machinery/light,
+/turf/open/floor/mineral/titanium/white,
+/area/city/unregisteredportindoors)
+"hV" = (
+/obj/machinery/light{
+	dir = 8
+	},
+/turf/open/floor/mineral/titanium/purple,
+/area/city/unregisteredportindoors)
+"hY" = (
+/obj/structure/sigsystem/connector{
+	dir = 1
+	},
+/turf/closed/indestructible/iron,
+/area/city/unregisteredportindoors)
+"ie" = (
+/obj/effect/decal/cleanable/dirt,
+/turf/open/floor/mineral/titanium/white,
+/area/city/unregisteredportoutdoors)
+"je" = (
+/obj/effect/light_emitter{
+	light_power = 4;
+	light_range = 10;
+	set_cap = 3;
+	set_luminosity = 24
+	},
+/turf/open/floor/plating/ashplanet{
+	name = "asphalt";
+	density = 1
+	},
+/area/city/unregisteredportoutdoors)
+"jg" = (
+/obj/structure/railing/corner{
+	dir = 4;
+	resistance_flags = 64
+	},
+/obj/structure/sigsystem/connector{
+	dir = 4
+	},
+/obj/structure/sigsystem/activator,
+/obj/machinery/door/poddoor{
+	resistance_flags = 64
+	},
+/turf/open/water/deep/saltwater/extradeep,
+/area/city/unregisteredportindoors)
+"jG" = (
+/obj/machinery/door/airlock/sandstone{
+	name = "Firing Range"
+	},
+/obj/effect/decal/cleanable/dirt,
+/turf/open/floor/mineral/titanium/purple,
+/area/city/unregisteredportindoors)
+"kp" = (
+/obj/structure/sigsystem/connector{
+	dir = 4;
+	delay_time = 5
+	},
+/turf/open/floor/mineral/titanium,
+/area/city/unregisteredportindoors)
+"ky" = (
+/obj/machinery/light{
+	dir = 8
+	},
+/obj/effect/decal/cleanable/dirt,
+/turf/open/floor/mineral/titanium/white,
+/area/city/unregisteredportindoors)
+"kN" = (
+/obj/structure/stairs/west{
+	desc = "A flight of stairs. Unfortunately, the upper deck appears to be blocked off."
+	},
+/turf/open/floor/pod/light,
+/area/city/unregisteredportindoors)
+"kS" = (
+/obj/structure/lattice/catwalk{
+	resistance_flags = 64;
+	mouse_opacity = 0
+	},
+/obj/structure/lattice/catwalk{
+	resistance_flags = 64;
+	mouse_opacity = 0
+	},
+/turf/closed/indestructible/fakeglass{
+	baseturfs = /turf/open/water/deep/saltwater/extradeep
+	},
+/area/city/unregisteredportoutdoors)
+"la" = (
+/obj/structure/table/reinforced,
+/turf/open/floor/oldshuttle,
+/area/city/unregisteredportoutdoors)
+"le" = (
+/obj/effect/decal/cleanable/dirt,
+/turf/open/floor/vault,
+/area/city/unregisteredportoutdoors)
+"lf" = (
+/obj/structure/sigsystem/connector{
+	dir = 1
+	},
+/turf/open/water/deep/saltwater/extradeep,
+/area/city/unregisteredportindoors)
+"lm" = (
+/obj/structure/lattice/catwalk{
+	resistance_flags = 64;
+	mouse_opacity = 0
+	},
+/obj/machinery/light/red,
+/turf/open/water/deep/saltwater/extradeep,
+/area/city/unregisteredportoutdoors)
+"lw" = (
+/obj/machinery/door/poddoor/shutters/indestructible{
+	lockpickable = 0;
+	resistance_flags = 64
+	},
+/obj/effect/decal/cleanable/dirt,
+/turf/open/floor/mineral/titanium/purple,
+/area/city/unregisteredportindoors)
+"lG" = (
+/obj/effect/turf_decal/trimline/blue/filled/corner{
+	dir = 4
+	},
+/turf/open/floor/plating/dirt,
+/area/city/unregisteredportoutdoors)
+"lK" = (
+/obj/structure/lattice/catwalk{
+	resistance_flags = 64;
+	mouse_opacity = 0
+	},
+/obj/structure/railing{
+	resistance_flags = 115;
+	name = "wing-grade railing";
+	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
+	mouse_opacity = 0;
+	dir = 8
+	},
+/turf/open/water/deep/saltwater/extradeep,
+/area/city/unregisteredportoutdoors)
+"lS" = (
+/obj/structure/lootcrate/s_corp,
+/obj/structure/lootcrate/s_corp,
+/turf/open/floor/holofloor/beach,
+/area/city/unregisteredportoutdoors)
+"lW" = (
+/turf/open/floor/pod/light,
+/area/city/unregisteredportindoors)
+"lZ" = (
+/turf/open/floor/pod/light,
+/area/city/unregisteredportoutdoors)
+"mi" = (
+/obj/structure/lattice/catwalk{
+	resistance_flags = 64;
+	mouse_opacity = 0
+	},
+/turf/closed/indestructible/fakeglass{
+	baseturfs = /turf/open/water/deep/saltwater/extradeep
+	},
+/area/city/unregisteredportoutdoors)
+"mo" = (
+/turf/open/floor/plating/ashplanet{
+	name = "asphalt"
+	},
+/area/city/unregisteredportoutdoors)
+"mK" = (
+/obj/machinery/light{
+	dir = 4
+	},
+/obj/effect/decal/cleanable/dirt,
+/turf/open/floor/mineral/titanium/white,
+/area/city/unregisteredportoutdoors)
+"mU" = (
+/obj/structure/table,
+/obj/machinery/microwave{
+	pixel_x = 3;
+	pixel_y = 5
+	},
+/turf/open/floor/carpet/purple,
+/area/city/unregisteredportindoors)
+"nb" = (
+/obj/structure/table/reinforced,
+/obj/structure/lootcrate/s_corp,
+/obj/structure/lootcrate/s_corp,
+/obj/structure/lootcrate/s_corp,
+/turf/open/floor/oldshuttle,
+/area/city/unregisteredportoutdoors)
+"nh" = (
+/obj/structure/closet/crate/bin{
+	pixel_y = 8
+	},
+/obj/item/cigbutt/cigarbutt,
+/obj/item/cigbutt,
+/obj/item/cigbutt{
+	pixel_y = 7;
+	pixel_x = -5
+	},
+/obj/item/trash/can{
+	pixel_y = 7;
+	pixel_x = 6
+	},
+/obj/item/trash/can,
+/obj/effect/decal/cleanable/dirt,
+/turf/open/floor/wood,
+/area/city/unregisteredportoutdoors)
+"nl" = (
+/turf/closed/indestructible/iron,
+/area/city/unregisteredportoutdoors)
+"nq" = (
+/obj/structure/sign/departments/cargo{
+	resistance_flags = 64;
+	pixel_y = 32
+	},
+/obj/structure/closet/crate,
+/obj/item/fishing_rod/fiberglass,
+/obj/item/fishing_rod,
+/obj/item/fishing_rod,
+/obj/item/fishing_component/line,
+/obj/item/fishing_component/line,
+/obj/item/reagent_containers/food/drinks/soda_cans/wellcheers_red,
+/turf/open/floor/mineral/titanium/white,
+/area/city/unregisteredportoutdoors)
+"nx" = (
+/mob/living/simple_animal/hostile/shrimp_soldier/dungeon,
+/turf/open/floor/pod/light,
+/area/city/unregisteredportindoors)
+"nI" = (
+/obj/machinery/door/poddoor/shutters/indestructible{
+	lockpickable = 0;
+	resistance_flags = 64
+	},
+/turf/open/space/basic,
+/area/city/unregisteredportindoors)
+"nR" = (
+/obj/structure/railing/corner{
+	dir = 8;
+	resistance_flags = 64
+	},
+/obj/structure/sigsystem/connector,
+/obj/structure/sigsystem/activator,
+/obj/machinery/door/poddoor{
+	resistance_flags = 64
+	},
+/turf/open/water/deep/saltwater/extradeep,
+/area/city/unregisteredportindoors)
+"nT" = (
+/obj/structure/closet/crate,
+/obj/item/fishing_component/line,
+/obj/item/fishing_component/hook,
+/obj/item/fishing_rod,
+/turf/open/floor/pod/light,
+/area/city/unregisteredportoutdoors)
+"ob" = (
+/turf/closed/indestructible/rock,
+/area/city/unregisteredportindoors)
+"og" = (
+/obj/machinery/light{
+	dir = 8
+	},
+/turf/open/floor/mineral/titanium,
+/area/city/unregisteredportindoors)
+"oh" = (
+/obj/machinery/door/airlock/sandstone{
+	name = "Break Room"
+	},
+/turf/open/floor/carpet/purple,
+/area/city/unregisteredportindoors)
+"ov" = (
+/turf/open/water/deep/saltwater/safe{
+	name = "shallow water";
+	desc = "Smells of the ocean. Seems shallow enough to wade through."
+	},
+/area/city/unregisteredportoutdoors)
+"ox" = (
+/obj/structure/table/glass,
+/turf/open/floor/mineral/titanium/white,
+/area/city/unregisteredportindoors)
+"oz" = (
+/mob/living/simple_animal/hostile/shrimp/dungeon{
+	name = "wellcheers corp receptionist"
+	},
+/turf/open/floor/mineral/titanium/white,
+/area/city/unregisteredportindoors)
+"oB" = (
+/obj/structure/railing{
+	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
+	dir = 9;
+	name = "wing-grade railing";
+	resistance_flags = 115
+	},
+/obj/machinery/light{
+	dir = 1
+	},
+/turf/open/floor/mineral/titanium/white,
+/area/city/unregisteredportoutdoors)
+"oM" = (
+/obj/structure/lootcrate/money,
+/turf/open/floor/holofloor/beach,
+/area/city/unregisteredportoutdoors)
+"oT" = (
+/obj/machinery/light,
+/obj/effect/decal/cleanable/dirt,
+/turf/open/floor/pod/light,
+/area/city/unregisteredportindoors)
+"oU" = (
+/obj/effect/landmark/cratespawn/corpo,
+/turf/open/floor/oldshuttle,
+/area/city/unregisteredportoutdoors)
+"oW" = (
+/obj/structure/sigsystem/connector{
+	delay_time = 250;
+	dir = 8
+	},
+/turf/closed/indestructible/iron,
+/area/city/unregisteredportindoors)
+"pd" = (
+/obj/structure/railing{
+	dir = 4;
+	resistance_flags = 64
+	},
+/obj/structure/sigsystem/connector{
+	dir = 8
+	},
+/turf/open/floor/mineral/titanium,
+/area/city/unregisteredportindoors)
+"pi" = (
+/obj/structure/sigsystem/deployer{
+	atom_path = /mob/living/simple_animal/hostile/ordeal/shrimp
+	},
+/turf/open/floor/mineral/titanium,
+/area/city/unregisteredportindoors)
+"ps" = (
+/obj/machinery/door/poddoor/shutters/preopen{
+	resistance_flags = 64;
+	lockpickable = 0
+	},
+/obj/structure/sigsystem/connector{
+	dir = 4
+	},
+/obj/structure/sigsystem/activator,
+/turf/open/floor/mineral/titanium,
+/area/city/unregisteredportindoors)
+"pz" = (
+/obj/effect/light_emitter{
+	light_power = 4;
+	light_range = 25;
+	set_cap = 3;
+	set_luminosity = 24
+	},
+/turf/open/water/deep/saltwater/extradeep,
+/area/city/unregisteredportoutdoors)
+"pC" = (
+/obj/structure/lattice/catwalk{
+	resistance_flags = 64;
+	mouse_opacity = 0
+	},
+/obj/machinery/light/red{
+	dir = 1
+	},
+/turf/open/water/deep/saltwater/extradeep,
+/area/city/unregisteredportoutdoors)
+"pF" = (
+/turf/open/floor/carpet/purple,
+/area/city/unregisteredportindoors)
+"pY" = (
+/obj/machinery/door/poddoor/shutters/preopen{
+	resistance_flags = 64;
+	lockpickable = 0
+	},
+/turf/open/floor/mineral/titanium/white,
+/area/city/unregisteredportindoors)
+"qj" = (
+/obj/structure/sign/poster/lobotomycorp/wellcheers{
+	pixel_y = 32
+	},
+/turf/open/floor/holofloor/asteroid{
+	name = "sand"
+	},
+/area/city/unregisteredportoutdoors)
+"qU" = (
+/turf/open/floor/holofloor/beach/coast_t{
+	dir = 5
+	},
+/area/city/unregisteredportoutdoors)
+"qX" = (
+/obj/structure/closet/crate,
+/obj/effect/decal/cleanable/dirt,
+/turf/open/floor/mineral/titanium/purple,
+/area/city/unregisteredportindoors)
+"rg" = (
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 5
+	},
+/turf/open/floor/plating/dirt,
+/area/city/unregisteredportoutdoors)
+"rr" = (
+/turf/open/floor/holofloor/beach/coast_t{
+	dir = 8
+	},
+/area/city/unregisteredportoutdoors)
+"rP" = (
+/obj/effect/turf_decal/trimline/white/filled/line{
+	pixel_y = 10
+	},
+/turf/open/floor/plating/ashplanet{
+	name = "asphalt";
+	density = 1
+	},
+/area/city/unregisteredportoutdoors)
+"rZ" = (
+/obj/structure/lootcrate/s_corp,
+/obj/machinery/light,
+/obj/effect/decal/cleanable/dirt,
+/turf/open/floor/pod/light,
+/area/city/unregisteredportindoors)
+"sJ" = (
+/turf/open/floor/mineral/titanium,
+/area/city/unregisteredportindoors)
+"sL" = (
+/obj/structure/lootcrate/k_corp,
+/turf/open/floor/oldshuttle,
+/area/city/unregisteredportoutdoors)
+"sP" = (
+/obj/structure/closet/crate/freezer,
+/turf/open/floor/mineral/titanium/purple,
+/area/city/unregisteredportindoors)
+"tf" = (
+/obj/structure/lattice/catwalk{
+	resistance_flags = 64;
+	mouse_opacity = 0
+	},
+/obj/structure/railing{
+	resistance_flags = 115;
+	name = "wing-grade railing";
+	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
+	mouse_opacity = 0;
+	dir = 1
+	},
+/turf/open/water/deep/saltwater/extradeep,
+/area/city/unregisteredportoutdoors)
+"tm" = (
+/obj/structure/railing{
+	dir = 1;
+	resistance_flags = 64
+	},
+/turf/open/floor/mineral/titanium,
+/area/city/unregisteredportindoors)
+"tz" = (
+/obj/structure/railing{
+	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
+	name = "wing-grade railing";
+	resistance_flags = 115;
+	dir = 8
+	},
+/obj/structure/chair/wood{
+	dir = 8;
+	pixel_x = 9
+	},
+/turf/open/floor/wood,
+/area/city/unregisteredportoutdoors)
+"tG" = (
+/obj/structure/railing{
+	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
+	dir = 10;
+	name = "wing-grade railing";
+	resistance_flags = 115
+	},
+/turf/open/floor/wood,
+/area/city/unregisteredportoutdoors)
+"tL" = (
+/obj/structure/sign/departments/cargo{
+	resistance_flags = 64;
+	pixel_y = 32
+	},
+/turf/open/floor/mineral/titanium/white,
+/area/city/unregisteredportindoors)
+"tO" = (
+/obj/structure/railing{
+	resistance_flags = 64
+	},
+/obj/structure/sigsystem/connector/split{
+	dir = 4
+	},
+/obj/structure/sigsystem/activator,
+/obj/machinery/door/poddoor{
+	resistance_flags = 64
+	},
+/turf/open/water/deep/saltwater/extradeep,
+/area/city/unregisteredportindoors)
+"tV" = (
+/obj/structure/railing{
+	dir = 1;
+	resistance_flags = 64
+	},
+/obj/structure/sigsystem/activator,
+/obj/machinery/door/poddoor{
+	resistance_flags = 64
+	},
+/turf/open/water/deep/saltwater/extradeep,
+/area/city/unregisteredportindoors)
+"uc" = (
+/obj/structure/railing{
+	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
+	name = "wing-grade railing";
+	resistance_flags = 115;
+	dir = 8
+	},
+/turf/open/floor/wood,
+/area/city/unregisteredportoutdoors)
+"uo" = (
+/obj/item/ego_weapon/ranged/pistol/soda{
+	pixel_y = 9;
+	pixel_x = -4
+	},
+/obj/structure/table/reinforced,
+/obj/effect/decal/cleanable/dirt,
+/turf/open/floor/mineral/titanium/white,
+/area/city/unregisteredportindoors)
+"ur" = (
+/obj/structure/lattice/catwalk{
+	resistance_flags = 64;
+	mouse_opacity = 0
+	},
+/obj/structure/railing{
+	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
+	dir = 10;
+	name = "wing-grade railing";
+	resistance_flags = 115
+	},
+/turf/open/water/deep/saltwater/extradeep,
+/area/city/unregisteredportoutdoors)
+"uC" = (
+/obj/machinery/light{
+	dir = 4
+	},
+/obj/structure/table,
+/obj/structure/fishcooker{
+	pixel_y = 2;
+	pixel_x = 2
+	},
+/turf/open/floor/carpet/purple,
+/area/city/unregisteredportindoors)
+"uF" = (
+/turf/closed/indestructible/iron,
+/area/city/unregisteredportindoors)
+"uI" = (
+/obj/structure/railing{
+	dir = 4;
+	resistance_flags = 64
+	},
+/obj/structure/sigsystem/connector{
+	dir = 4
+	},
+/turf/open/floor/mineral/titanium,
+/area/city/unregisteredportindoors)
+"uJ" = (
+/obj/structure/lattice/catwalk{
+	resistance_flags = 64;
+	mouse_opacity = 0
+	},
+/obj/structure/railing{
+	resistance_flags = 115;
+	name = "wing-grade railing";
+	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
+	mouse_opacity = 0;
+	dir = 6
+	},
+/turf/open/water/deep/saltwater/extradeep,
+/area/city/unregisteredportoutdoors)
+"uM" = (
+/turf/open/floor/holofloor/beach,
+/area/city/unregisteredportoutdoors)
+"uW" = (
+/obj/machinery/light{
+	dir = 8
+	},
+/obj/effect/decal/cleanable/dirt,
+/turf/open/floor/mineral/titanium/purple,
+/area/city/unregisteredportindoors)
+"vd" = (
+/obj/structure/sigsystem/connector{
+	dir = 4
+	},
+/turf/open/floor/mineral/titanium,
+/area/city/unregisteredportindoors)
+"vm" = (
+/obj/machinery/door/poddoor/shutters/preopen{
+	resistance_flags = 64;
+	lockpickable = 0
+	},
+/obj/structure/sigsystem/activator,
+/turf/open/floor/mineral/titanium,
+/area/city/unregisteredportindoors)
+"vx" = (
+/obj/effect/light_emitter{
+	light_power = 4;
+	light_range = 25;
+	set_cap = 3;
+	set_luminosity = 24
+	},
+/turf/open/floor/plating/dirt,
+/area/city/unregisteredportoutdoors)
+"vz" = (
+/mob/living/simple_animal/hostile/shrimp_soldier/dungeon,
+/turf/open/floor/mineral/titanium/white,
+/area/city/unregisteredportindoors)
+"vH" = (
+/obj/machinery/light{
+	dir = 1
+	},
+/obj/structure/lootcrate/money,
+/obj/effect/decal/cleanable/dirt,
+/turf/open/floor/pod/light,
+/area/city/unregisteredportindoors)
+"vK" = (
+/turf/closed/indestructible/riveted,
+/area/city/unregisteredportoutdoors)
+"vQ" = (
+/turf/open/floor/plating/ashplanet{
+	name = "asphalt";
+	density = 1
+	},
+/area/city/unregisteredportoutdoors)
+"vW" = (
+/obj/machinery/computer/shuttle/mining{
+	dir = 1;
+	name = "bus console";
+	possible_destinations = "shrungeon_floor";
+	shuttleId = "quest";
+	resistance_flags = 64
+	},
+/obj/machinery/computer/shuttle/mining{
+	dir = 1;
+	name = "bus console";
+	possible_destinations = "shrungeon_floor";
+	shuttleId = "quest";
+	resistance_flags = 64
+	},
+/turf/open/floor/plating/dirt,
+/area/city/unregisteredportoutdoors)
+"wn" = (
+/obj/structure/fluff/big_chain,
+/obj/effect/light_emitter{
+	light_power = 4;
+	light_range = 3;
+	set_cap = 3;
+	set_luminosity = 24
+	},
+/turf/open/water/deep/saltwater/extradeep,
+/area/city/unregisteredportindoors)
+"wo" = (
+/obj/effect/turf_decal/trimline/red/filled/warning{
+	dir = 4
+	},
+/turf/open/floor/plating/ashplanet{
+	name = "asphalt"
+	},
+/area/city/unregisteredportoutdoors)
+"wp" = (
+/obj/effect/turf_decal/trimline/red/filled/warning,
+/turf/open/floor/plating/ashplanet{
+	name = "asphalt"
+	},
+/area/city/unregisteredportoutdoors)
+"wt" = (
+/obj/structure/table/reinforced,
+/obj/structure/lootcrate/s_corp,
+/obj/structure/lootcrate/s_corp,
+/obj/structure/lootcrate/s_corp,
+/obj/structure/lootcrate/s_corp,
+/obj/structure/lootcrate/s_corp,
+/turf/open/floor/oldshuttle,
+/area/city/unregisteredportoutdoors)
+"wu" = (
+/obj/structure/closet/crate,
+/turf/open/floor/mineral/titanium/purple,
+/area/city/unregisteredportindoors)
+"wK" = (
+/obj/structure/lattice/catwalk{
+	resistance_flags = 64;
+	mouse_opacity = 0
+	},
+/obj/structure/railing/corner{
+	dir = 1;
+	name = "wing-grade railing";
+	resistance_flags = 115
+	},
+/turf/open/water/deep/saltwater/extradeep,
+/area/city/unregisteredportoutdoors)
+"wN" = (
+/obj/structure/railing{
+	dir = 8;
+	resistance_flags = 64
+	},
+/obj/structure/sigsystem/connector,
+/obj/structure/sigsystem/activator,
+/obj/machinery/door/poddoor{
+	resistance_flags = 64
+	},
+/turf/open/water/deep/saltwater/extradeep,
+/area/city/unregisteredportindoors)
+"wV" = (
+/obj/structure/lattice/catwalk{
+	resistance_flags = 64;
+	mouse_opacity = 0
+	},
+/obj/structure/lattice/catwalk{
+	resistance_flags = 64;
+	mouse_opacity = 0
+	},
+/obj/structure/railing/corner{
+	dir = 8;
+	name = "wing-grade railing";
+	resistance_flags = 115
+	},
+/turf/open/water/deep/saltwater/extradeep,
+/area/city/unregisteredportoutdoors)
+"xc" = (
+/obj/machinery/light,
+/obj/effect/decal/cleanable/dirt,
+/turf/open/floor/mineral/titanium/purple,
+/area/city/unregisteredportindoors)
+"xs" = (
+/obj/structure/sigsystem/connector/split{
+	dir = 4
+	},
+/turf/closed/indestructible/iron,
+/area/city/unregisteredportindoors)
+"xA" = (
+/obj/structure/railing/corner{
+	name = "wing-grade railing";
+	resistance_flags = 115
+	},
+/turf/open/floor/pod/light,
+/area/city/unregisteredportoutdoors)
+"xO" = (
+/obj/structure/lootcrate/s_corp,
+/turf/open/floor/holofloor/beach,
+/area/city/unregisteredportoutdoors)
+"yo" = (
+/obj/structure/sign/poster/lobotomycorp/wellcheers{
+	pixel_y = 32
+	},
+/turf/open/floor/plating/dirt,
+/area/city/unregisteredportoutdoors)
+"ys" = (
+/obj/structure/railing{
+	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
+	name = "wing-grade railing";
+	resistance_flags = 115;
+	dir = 4
+	},
+/obj/structure/closet/crate,
+/obj/item/fishing_component/line/reinforced,
+/obj/item/fishing_net,
+/obj/item/fishing_net,
+/obj/item/fishing_component/hook,
+/obj/item/fishing_rod,
+/obj/item/reagent_containers/food/drinks/soda_cans/wellcheers_purple,
+/turf/open/floor/pod/light,
+/area/city/unregisteredportoutdoors)
+"yO" = (
+/turf/open/floor/holofloor/beach/coast_t{
+	dir = 1
+	},
+/area/city/unregisteredportoutdoors)
+"zl" = (
+/obj/structure/lattice/catwalk{
+	resistance_flags = 64;
+	mouse_opacity = 0
+	},
+/obj/structure/railing/corner{
+	name = "wing-grade railing";
+	resistance_flags = 115
+	},
+/turf/open/water/deep/saltwater/extradeep,
+/area/city/unregisteredportoutdoors)
+"zp" = (
+/obj/structure/sigsystem/connector{
+	dir = 8
+	},
+/turf/open/floor/mineral/titanium,
+/area/city/unregisteredportindoors)
+"zr" = (
+/obj/structure/sigsystem/pressure_plate{
+	mobs_only = 1
+	},
+/obj/machinery/light{
+	dir = 8
+	},
+/turf/open/floor/mineral/titanium,
+/area/city/unregisteredportindoors)
+"zE" = (
+/obj/structure/railing{
+	dir = 8;
+	resistance_flags = 64
+	},
+/turf/open/floor/mineral/titanium,
+/area/city/unregisteredportindoors)
+"zH" = (
+/obj/structure/lattice/catwalk{
+	resistance_flags = 64;
+	mouse_opacity = 0
+	},
+/obj/machinery/light/red{
+	dir = 8
+	},
+/turf/open/water/deep/saltwater/extradeep,
+/area/city/unregisteredportoutdoors)
+"zS" = (
+/obj/structure/lattice/catwalk{
+	resistance_flags = 64;
+	mouse_opacity = 0
+	},
+/mob/living/simple_animal/hostile/shrimp_hos,
+/turf/open/water/deep/saltwater/extradeep,
+/area/city/unregisteredportoutdoors)
+"zT" = (
+/obj/structure/railing{
+	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
+	dir = 10;
+	name = "wing-grade railing";
+	resistance_flags = 115
+	},
+/obj/machinery/light,
+/obj/effect/decal/cleanable/dirt,
+/turf/open/floor/mineral/titanium/white,
+/area/city/unregisteredportoutdoors)
+"zW" = (
+/obj/machinery/door/poddoor/shutters/indestructible{
+	lockpickable = 0;
+	resistance_flags = 64
+	},
+/turf/open/floor/oldshuttle,
+/area/city/unregisteredportoutdoors)
+"Aj" = (
+/turf/closed/indestructible/opshuttle{
+	color = "#bc7ad6"
+	},
+/area/city/unregisteredportindoors)
+"Al" = (
+/obj/item/target,
+/obj/effect/decal/cleanable/dirt,
+/turf/open/floor/mineral/titanium,
+/area/city/unregisteredportindoors)
+"Ao" = (
+/mob/living/simple_animal/hostile/shrimp_security,
+/turf/open/floor/mineral/titanium/purple,
+/area/city/unregisteredportindoors)
+"Ar" = (
+/obj/effect/turf_decal/trimline/red/filled/warning{
+	dir = 5
+	},
+/turf/open/floor/plating/ashplanet{
+	name = "asphalt"
+	},
+/area/city/unregisteredportoutdoors)
+"AG" = (
+/obj/structure/railing{
+	dir = 8;
+	resistance_flags = 64
+	},
+/obj/structure/sigsystem/connector{
+	dir = 4
+	},
+/turf/open/floor/mineral/titanium,
+/area/city/unregisteredportindoors)
+"AK" = (
+/obj/structure/lootcrate/s_corp,
+/obj/effect/decal/cleanable/dirt,
+/turf/open/floor/pod/light,
+/area/city/unregisteredportindoors)
+"AP" = (
+/obj/machinery/light{
+	dir = 1
+	},
+/turf/open/floor/mineral/titanium/white,
+/area/city/unregisteredportindoors)
+"Bi" = (
+/obj/structure/lootcrate/money,
+/turf/open/floor/pod/light,
+/area/city/unregisteredportindoors)
+"Bp" = (
+/obj/effect/decal/cleanable/dirt,
+/mob/living/simple_animal/hostile/shrimp/dungeon,
+/turf/open/floor/mineral/titanium/white,
+/area/city/unregisteredportoutdoors)
+"BL" = (
+/obj/structure/sigsystem/connector{
+	dir = 8
+	},
+/turf/closed/indestructible/iron,
+/area/city/unregisteredportindoors)
+"BZ" = (
+/turf/open/floor/wood,
+/area/city/unregisteredportoutdoors)
+"Cc" = (
+/mob/living/simple_animal/hostile/shrimp/dungeon,
+/obj/effect/decal/cleanable/dirt,
+/turf/open/floor/mineral/titanium/purple,
+/area/city/unregisteredportindoors)
+"Cg" = (
+/obj/effect/turf_decal/trimline/white/filled/line{
+	pixel_y = 10
+	},
+/turf/open/floor/plating/ashplanet{
+	name = "asphalt"
+	},
+/area/city/unregisteredportoutdoors)
+"Cv" = (
+/obj/machinery/light,
+/obj/structure/chair/office/light{
+	dir = 4
+	},
+/turf/open/floor/carpet/purple,
+/area/city/unregisteredportindoors)
+"Dk" = (
+/obj/structure/sigsystem/tower{
+	dir = 1;
+	signal_code = 63
+	},
+/turf/open/floor/mineral/titanium,
+/area/city/unregisteredportindoors)
+"Do" = (
+/obj/structure/sigsystem/connector/split{
+	dir = 4
+	},
+/obj/machinery/light{
+	dir = 1
+	},
+/turf/open/floor/mineral/titanium,
+/area/city/unregisteredportindoors)
+"Dp" = (
+/obj/effect/decal/cleanable/dirt,
+/turf/open/floor/wood,
+/area/city/unregisteredportoutdoors)
+"Dq" = (
+/mob/living/simple_animal/hostile/shrimp_soldier/dungeon,
+/turf/open/floor/mineral/titanium/purple,
+/area/city/unregisteredportindoors)
+"DB" = (
+/obj/structure/railing{
+	dir = 1;
+	resistance_flags = 64
+	},
+/obj/structure/sigsystem/connector{
+	delay_time = 5
+	},
+/turf/open/floor/mineral/titanium,
+/area/city/unregisteredportindoors)
+"DG" = (
+/obj/item/ego_weapon/ranged/pistol/soda{
+	pixel_x = 8;
+	pixel_y = -8
+	},
+/obj/structure/table/reinforced,
+/obj/effect/decal/cleanable/dirt,
+/turf/open/floor/mineral/titanium/white,
+/area/city/unregisteredportindoors)
+"DW" = (
+/turf/open/floor/vault,
+/area/city/unregisteredportoutdoors)
+"DZ" = (
+/obj/structure/railing{
+	dir = 8;
+	resistance_flags = 64
+	},
+/obj/structure/sigsystem/connector{
+	dir = 8
+	},
+/turf/open/floor/mineral/titanium,
+/area/city/unregisteredportindoors)
+"Ed" = (
+/obj/effect/decal/cleanable/dirt,
+/turf/open/floor/pod/light,
+/area/city/unregisteredportoutdoors)
+"EI" = (
+/obj/effect/landmark/cratespawn,
+/turf/open/floor/oldshuttle,
+/area/city/unregisteredportoutdoors)
+"EM" = (
+/obj/effect/turf_decal/trimline/red/filled/warning{
+	dir = 8
+	},
+/turf/open/floor/plating/ashplanet{
+	name = "asphalt"
+	},
+/area/city/unregisteredportoutdoors)
+"Fa" = (
+/turf/open/floor/mineral/titanium/white,
+/area/city/unregisteredportindoors)
+"Fh" = (
+/obj/item/target,
+/obj/machinery/light{
+	dir = 4
+	},
+/obj/effect/decal/cleanable/dirt,
+/turf/open/floor/mineral/titanium,
+/area/city/unregisteredportindoors)
+"Fi" = (
+/obj/effect/turf_decal/trimline/yellow/filled/line{
+	pixel_y = 5
+	},
+/obj/effect/turf_decal/trimline/yellow/filled/line{
+	dir = 1;
+	pixel_y = -5
+	},
+/turf/open/floor/plating/ashplanet{
+	name = "asphalt";
+	density = 1
+	},
+/area/city/unregisteredportoutdoors)
+"Fk" = (
+/obj/machinery/light,
+/turf/open/floor/mineral/titanium/purple,
+/area/city/unregisteredportindoors)
+"Fq" = (
+/obj/structure/table/reinforced,
+/obj/effect/decal/cleanable/dirt,
+/turf/open/floor/mineral/titanium/white,
+/area/city/unregisteredportindoors)
+"FI" = (
+/obj/machinery/light/red{
+	dir = 4
+	},
+/obj/structure/lattice/catwalk{
+	resistance_flags = 64;
+	mouse_opacity = 0
+	},
+/turf/open/water/deep/saltwater/extradeep,
+/area/city/unregisteredportoutdoors)
+"FP" = (
+/obj/machinery/door/poddoor/shutters/indestructible{
+	lockpickable = 0;
+	resistance_flags = 64
+	},
+/turf/open/floor/mineral/titanium/white,
+/area/city/unregisteredportindoors)
+"FY" = (
+/obj/effect/decal/cleanable/dirt,
+/turf/open/floor/pod/light,
+/area/city/unregisteredportindoors)
+"Ga" = (
+/obj/machinery/door/airlock/sandstone,
+/turf/open/floor/pod/light,
+/area/city/unregisteredportindoors)
+"Gc" = (
+/obj/structure/lattice/catwalk{
+	resistance_flags = 64;
+	mouse_opacity = 0
+	},
+/obj/structure/railing{
+	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
+	dir = 9;
+	name = "wing-grade railing";
+	resistance_flags = 115
+	},
+/turf/open/water/deep/saltwater/extradeep,
+/area/city/unregisteredportoutdoors)
+"Gj" = (
+/obj/structure/railing{
+	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
+	dir = 10;
+	name = "wing-grade railing";
+	resistance_flags = 115
+	},
+/turf/open/floor/mineral/titanium/white,
+/area/city/unregisteredportoutdoors)
+"GH" = (
+/obj/structure/railing/corner{
+	dir = 8;
+	name = "wing-grade railing";
+	resistance_flags = 115
+	},
+/obj/effect/decal/cleanable/dirt,
+/turf/open/floor/mineral/titanium/white,
+/area/city/unregisteredportoutdoors)
+"GO" = (
+/obj/structure/closet/secure_closet/freezer/fridge,
+/obj/item/reagent_containers/food/drinks/soda_cans/wellcheers_red,
+/obj/item/reagent_containers/food/drinks/soda_cans/wellcheers_red,
+/obj/item/reagent_containers/food/drinks/soda_cans/wellcheers_white,
+/obj/item/reagent_containers/food/drinks/soda_cans/wellcheers_white,
+/obj/item/reagent_containers/food/drinks/soda_cans/wellcheers_purple,
+/turf/open/floor/carpet/purple,
+/area/city/unregisteredportindoors)
+"GQ" = (
+/obj/structure/railing/corner{
+	dir = 1;
+	resistance_flags = 64
+	},
+/obj/structure/sigsystem/activator,
+/obj/machinery/door/poddoor{
+	resistance_flags = 64
+	},
+/turf/open/water/deep/saltwater/extradeep,
+/area/city/unregisteredportindoors)
+"GT" = (
+/obj/effect/light_emitter{
+	light_power = 4;
+	light_range = 10;
+	set_cap = 3;
+	set_luminosity = 24
+	},
+/turf/open/water/deep/saltwater/safe{
+	name = "shallow water";
+	desc = "Smells of the ocean. Seems shallow enough to wade through."
+	},
+/area/city/unregisteredportoutdoors)
+"Hb" = (
+/obj/effect/decal/cleanable/dirt,
+/turf/open/floor/mineral/titanium/purple,
+/area/city/unregisteredportindoors)
+"Hf" = (
+/obj/machinery/light,
+/obj/item/kirbyplants{
+	icon_state = "plant-09"
+	},
+/turf/open/floor/mineral/titanium/white,
+/area/city/unregisteredportindoors)
+"Hl" = (
+/obj/structure/railing{
+	dir = 4;
+	resistance_flags = 64
+	},
+/obj/structure/sigsystem/connector,
+/obj/structure/sigsystem/activator,
+/obj/machinery/door/poddoor{
+	resistance_flags = 64
+	},
+/turf/open/water/deep/saltwater/extradeep,
+/area/city/unregisteredportindoors)
+"Hy" = (
+/obj/structure/lattice/catwalk{
+	resistance_flags = 64;
+	mouse_opacity = 0
+	},
+/mob/living/simple_animal/hostile/shrimp_qm,
+/turf/open/water/deep/saltwater/extradeep,
+/area/city/unregisteredportoutdoors)
+"HA" = (
+/obj/structure/railing{
+	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
+	name = "wing-grade railing";
+	resistance_flags = 115;
+	dir = 4
+	},
+/turf/open/floor/pod/light,
+/area/city/unregisteredportoutdoors)
+"HI" = (
+/obj/structure/railing{
+	resistance_flags = 64
+	},
+/obj/structure/sigsystem/connector{
+	dir = 4
+	},
+/turf/open/floor/mineral/titanium,
+/area/city/unregisteredportindoors)
+"HJ" = (
+/obj/structure/sigsystem/tower{
+	signal_code = 14
+	},
+/turf/closed/indestructible/iron,
+/area/city/unregisteredportindoors)
+"HR" = (
+/obj/effect/decal/cleanable/dirt,
+/turf/open/floor/mineral/titanium,
+/area/city/unregisteredportindoors)
+"Ih" = (
+/obj/structure/lattice/catwalk{
+	resistance_flags = 64;
+	mouse_opacity = 0
+	},
+/obj/structure/railing/corner{
+	dir = 8;
+	name = "wing-grade railing";
+	resistance_flags = 115
+	},
+/turf/open/water/deep/saltwater/extradeep,
+/area/city/unregisteredportoutdoors)
+"Io" = (
+/obj/structure/railing{
+	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
+	dir = 9;
+	name = "wing-grade railing";
+	resistance_flags = 115
+	},
+/mob/living/simple_animal/hostile/shrimp/dungeon,
+/turf/open/floor/mineral/titanium/white,
+/area/city/unregisteredportoutdoors)
+"Ip" = (
+/obj/structure/sigsystem/tower{
+	dir = 8;
+	signal_code = 63
+	},
+/turf/closed/indestructible/iron,
+/area/city/unregisteredportindoors)
+"IO" = (
+/obj/structure/sigsystem/connector{
+	dir = 8
+	},
+/turf/open/water/deep/saltwater/extradeep,
+/area/city/unregisteredportindoors)
+"IY" = (
+/turf/open/floor/mineral/titanium/purple,
+/area/city/unregisteredportindoors)
+"Je" = (
+/obj/effect/decal/cleanable/dirt,
+/turf/open/floor/mineral/titanium/white,
+/area/city/unregisteredportindoors)
+"Ji" = (
+/mob/living/simple_animal/hostile/senior_shrimp/dungeon,
+/turf/open/floor/mineral/titanium/purple,
+/area/city/unregisteredportindoors)
+"Jm" = (
+/obj/structure/sign/warning/firingrange{
+	pixel_x = 32
+	},
+/turf/open/floor/mineral/titanium/purple,
+/area/city/unregisteredportindoors)
+"JE" = (
+/obj/machinery/door/poddoor/shutters/indestructible{
+	resistance_flags = 64;
+	desc = "Heavy duty mechanical shutters with an atmospheric seal that keeps them airtight once closed. These ones seem less secure than the others..."
+	},
+/turf/open/space/basic,
+/area/city/unregisteredportindoors)
+"JK" = (
+/obj/structure/table,
+/obj/item/trash/can{
+	pixel_y = 7;
+	pixel_x = 6
+	},
+/obj/item/reagent_containers/food/drinks/soda_cans/wellcheers_purple{
+	pixel_y = 5;
+	pixel_x = -8
+	},
+/obj/machinery/light{
+	dir = 1
+	},
+/turf/open/floor/carpet/purple,
+/area/city/unregisteredportindoors)
+"Ka" = (
+/obj/structure/lattice/catwalk{
+	resistance_flags = 64;
+	mouse_opacity = 0
+	},
+/obj/structure/lattice/catwalk{
+	resistance_flags = 64;
+	mouse_opacity = 0
+	},
+/turf/open/water/deep/saltwater/extradeep,
+/area/city/unregisteredportoutdoors)
+"Ks" = (
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 4
+	},
+/turf/open/floor/plating/dirt,
+/area/city/unregisteredportoutdoors)
+"Kt" = (
+/turf/open/floor/oldshuttle,
+/area/city/unregisteredportoutdoors)
+"Kw" = (
+/obj/structure/sigsystem/tower{
+	dir = 8;
+	signal_code = 24
+	},
+/turf/closed/indestructible/iron,
+/area/city/unregisteredportindoors)
+"Ky" = (
+/obj/structure/sigsystem/tower{
+	signal_code = 24
+	},
+/turf/open/floor/mineral/titanium,
+/area/city/unregisteredportindoors)
+"KX" = (
+/obj/structure/railing/corner{
+	dir = 8;
+	name = "wing-grade railing";
+	resistance_flags = 115
+	},
+/turf/open/floor/mineral/titanium/white,
+/area/city/unregisteredportoutdoors)
+"KY" = (
+/obj/effect/turf_decal/trimline/red/filled/warning{
+	dir = 9
+	},
+/turf/open/floor/plating/ashplanet{
+	name = "asphalt"
+	},
+/area/city/unregisteredportoutdoors)
+"La" = (
+/obj/structure/lattice/catwalk{
+	resistance_flags = 64;
+	mouse_opacity = 0
+	},
+/obj/structure/railing/corner{
+	name = "wing-grade railing";
+	resistance_flags = 115;
+	dir = 4
+	},
+/turf/open/water/deep/saltwater/extradeep,
+/area/city/unregisteredportoutdoors)
+"Lb" = (
+/obj/structure/railing{
+	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
+	name = "wing-grade railing";
+	resistance_flags = 115
+	},
+/turf/open/floor/wood,
+/area/city/unregisteredportoutdoors)
+"Lc" = (
+/obj/structure/chair/office/light,
+/mob/living/simple_animal/hostile/senior_shrimp/dungeon,
+/turf/open/floor/carpet/purple,
+/area/city/unregisteredportindoors)
+"Lh" = (
+/obj/machinery/light{
+	dir = 4
+	},
+/obj/effect/decal/cleanable/dirt,
+/turf/open/floor/mineral/titanium/purple,
+/area/city/unregisteredportindoors)
+"Lk" = (
+/turf/closed/indestructible/rock,
+/area/city/unregisteredportoutdoors)
+"Lp" = (
+/obj/structure/sigsystem/connector{
+	dir = 8
+	},
+/obj/machinery/light,
+/turf/open/floor/mineral/titanium,
+/area/city/unregisteredportindoors)
+"Lt" = (
+/obj/structure/railing{
+	resistance_flags = 64
+	},
+/obj/structure/sigsystem/connector{
+	dir = 1;
+	delay_time = 5
+	},
+/turf/open/floor/mineral/titanium,
+/area/city/unregisteredportindoors)
+"LK" = (
+/mob/living/simple_animal/hostile/shrimp/dungeon,
+/obj/effect/decal/cleanable/dirt,
+/turf/open/floor/pod/light,
+/area/city/unregisteredportindoors)
+"Me" = (
+/obj/structure/railing/corner{
+	dir = 1;
+	name = "wing-grade railing";
+	resistance_flags = 115
+	},
+/obj/structure/closet/crate/freezer,
+/obj/item/food/fish/fresh_water/angelfish,
+/obj/item/food/fish/fresh_water/eel,
+/obj/item/food/fish/fresh_water/northernpike,
+/obj/item/food/fish/salt_water/blue_tang,
+/turf/open/floor/mineral/titanium/white,
+/area/city/unregisteredportoutdoors)
+"Mh" = (
+/mob/living/simple_animal/hostile/shrimp_security,
+/turf/open/floor/mineral/titanium/white,
+/area/city/unregisteredportindoors)
+"Mm" = (
+/obj/machinery/light{
+	dir = 4
+	},
+/obj/structure/closet/crate,
+/obj/item/fishing_net,
+/obj/item/fishing_net,
+/obj/item/fishing_net,
+/obj/item/fishing_net,
+/obj/item/fishing_component/hook,
+/obj/item/fishing_component/hook,
+/obj/item/reagent_containers/food/drinks/soda_cans/wellcheers_white,
+/turf/open/floor/mineral/titanium/white,
+/area/city/unregisteredportoutdoors)
+"Ms" = (
+/turf/closed/indestructible/sandstone,
+/area/city/unregisteredportindoors)
+"Mw" = (
+/obj/structure/sigsystem/tower{
+	dir = 8;
+	signal_code = 14
+	},
+/turf/open/water/deep/saltwater/extradeep,
+/area/city/unregisteredportindoors)
+"ML" = (
+/obj/structure/sigsystem/connector,
+/turf/open/water/deep/saltwater/extradeep,
+/area/city/unregisteredportindoors)
+"Ni" = (
+/obj/machinery/door/poddoor/shutters/indestructible{
+	lockpickable = 0;
+	resistance_flags = 64
+	},
+/turf/open/floor/carpet/purple,
+/area/city/unregisteredportindoors)
+"NF" = (
+/obj/effect/turf_decal/trimline/yellow/filled/line{
+	pixel_y = 5
+	},
+/obj/effect/turf_decal/trimline/yellow/filled/line{
+	dir = 1;
+	pixel_y = -5
+	},
+/turf/open/floor/plating/ashplanet{
+	name = "asphalt"
+	},
+/area/city/unregisteredportoutdoors)
+"NI" = (
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 1
+	},
+/turf/open/floor/plating/dirt,
+/area/city/unregisteredportoutdoors)
+"OJ" = (
+/obj/structure/lootcrate/money,
+/obj/effect/decal/cleanable/dirt,
+/turf/open/floor/pod/light,
+/area/city/unregisteredportindoors)
+"ON" = (
+/obj/structure/railing{
+	dir = 1;
+	resistance_flags = 64
+	},
+/obj/structure/sigsystem/connector{
+	dir = 8
+	},
+/turf/open/floor/mineral/titanium,
+/area/city/unregisteredportindoors)
+"OU" = (
+/obj/structure/railing{
+	dir = 8;
+	resistance_flags = 64
+	},
+/obj/structure/sigsystem/pressure_plate{
+	mobs_only = 1
+	},
+/turf/open/floor/mineral/titanium,
+/area/city/unregisteredportindoors)
+"Qp" = (
+/obj/structure/chair/office/light{
+	dir = 1
+	},
+/mob/living/simple_animal/hostile/shrimp/dungeon,
+/turf/open/floor/carpet/purple,
+/area/city/unregisteredportindoors)
+"Qz" = (
+/obj/structure/table,
+/obj/item/trash/plate{
+	pixel_y = -5;
+	pixel_x = -5
+	},
+/obj/item/food/sashimi/shrimp{
+	pixel_y = 5;
+	pixel_x = 3
+	},
+/turf/open/floor/carpet/purple,
+/area/city/unregisteredportindoors)
+"Re" = (
+/obj/machinery/door/poddoor/shutters/preopen{
+	resistance_flags = 64;
+	lockpickable = 0
+	},
+/obj/structure/sigsystem/connector/split{
+	dir = 4
+	},
+/obj/structure/sigsystem/activator,
+/turf/open/floor/mineral/titanium,
+/area/city/unregisteredportindoors)
+"Rj" = (
+/obj/structure/sigsystem/connector/split,
+/turf/open/water/deep/saltwater/extradeep,
+/area/city/unregisteredportindoors)
+"Rp" = (
+/turf/closed/indestructible/fakeglass{
+	baseturfs = /turf/open/water/deep/saltwater/extradeep
+	},
+/area/city/unregisteredportindoors)
+"Rq" = (
+/obj/machinery/light{
+	dir = 8
+	},
+/turf/open/floor/mineral/titanium/white,
+/area/city/unregisteredportindoors)
+"Sz" = (
+/obj/structure/lattice/catwalk{
+	resistance_flags = 64;
+	mouse_opacity = 0
+	},
+/obj/structure/railing{
+	resistance_flags = 115;
+	name = "wing-grade railing";
+	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
+	mouse_opacity = 0;
+	dir = 4
+	},
+/turf/open/water/deep/saltwater/extradeep,
+/area/city/unregisteredportoutdoors)
+"SB" = (
+/obj/structure/sigsystem/connector{
+	dir = 4
+	},
+/obj/machinery/light,
+/turf/open/floor/mineral/titanium,
+/area/city/unregisteredportindoors)
+"SG" = (
+/obj/structure/railing/corner{
+	dir = 1;
+	name = "wing-grade railing";
+	resistance_flags = 115
+	},
+/mob/living/simple_animal/hostile/senior_shrimp/dungeon,
+/turf/open/floor/mineral/titanium/white,
+/area/city/unregisteredportoutdoors)
+"SV" = (
+/mob/living/simple_animal/hostile/shrimp/dungeon,
+/turf/open/floor/mineral/titanium/purple,
+/area/city/unregisteredportindoors)
+"Td" = (
+/obj/item/target,
+/turf/open/floor/mineral/titanium,
+/area/city/unregisteredportindoors)
+"Te" = (
+/obj/structure/railing/corner{
+	name = "wing-grade railing";
+	resistance_flags = 115;
+	dir = 4
+	},
+/turf/open/floor/pod/light,
+/area/city/unregisteredportoutdoors)
+"Tj" = (
+/obj/machinery/light{
+	dir = 4
+	},
+/turf/open/floor/mineral/titanium/white,
+/area/city/unregisteredportindoors)
+"Tm" = (
+/obj/effect/turf_decal/trimline/red/filled/warning{
+	dir = 6
+	},
+/turf/open/floor/plating/ashplanet{
+	name = "asphalt"
+	},
+/area/city/unregisteredportoutdoors)
+"Tu" = (
+/turf/open/floor/holofloor/beach/coast_t{
+	dir = 4
+	},
+/area/city/unregisteredportoutdoors)
+"TS" = (
+/turf/open/floor/holofloor/asteroid{
+	name = "sand"
+	},
+/area/city/unregisteredportoutdoors)
+"TX" = (
+/turf/closed/indestructible/oldshuttle,
+/area/city/unregisteredportoutdoors)
+"Uh" = (
+/obj/machinery/light{
+	dir = 4
+	},
+/turf/open/floor/mineral/titanium/purple,
+/area/city/unregisteredportindoors)
+"Uo" = (
+/obj/structure/fluff/big_chain,
+/obj/effect/light_emitter{
+	light_power = 4;
+	light_range = 10;
+	set_cap = 3;
+	set_luminosity = 24
+	},
+/turf/open/water/deep/saltwater/extradeep,
+/area/city/unregisteredportoutdoors)
+"UJ" = (
+/turf/open/floor/mineral/titanium/white,
+/area/city/unregisteredportoutdoors)
+"UM" = (
+/obj/structure/railing/corner{
+	dir = 8;
+	resistance_flags = 64
+	},
+/obj/structure/sigsystem/connector/split{
+	dir = 1;
+	delay_time = 5
+	},
+/turf/open/floor/mineral/titanium,
+/area/city/unregisteredportindoors)
+"UP" = (
+/obj/structure/sign/departments/cargo{
+	resistance_flags = 64;
+	pixel_y = 32
+	},
+/obj/effect/decal/cleanable/dirt,
+/turf/open/floor/mineral/titanium/white,
+/area/city/unregisteredportindoors)
+"UW" = (
+/obj/structure/railing/corner{
+	dir = 4;
+	resistance_flags = 64
+	},
+/turf/open/floor/mineral/titanium,
+/area/city/unregisteredportindoors)
+"UY" = (
+/obj/structure/lootcrate/hana,
+/turf/open/floor/oldshuttle,
+/area/city/unregisteredportoutdoors)
+"Vd" = (
+/obj/structure/railing{
+	dir = 8;
+	resistance_flags = 64
+	},
+/obj/structure/sigsystem/connector,
+/turf/open/floor/mineral/titanium,
+/area/city/unregisteredportindoors)
+"Vm" = (
+/obj/item/kirbyplants{
+	icon_state = "plant-04"
+	},
+/turf/open/floor/carpet/purple,
+/area/city/unregisteredportindoors)
+"Vy" = (
+/obj/machinery/light,
+/obj/effect/decal/cleanable/dirt,
+/turf/open/floor/mineral/titanium,
+/area/city/unregisteredportindoors)
+"Vz" = (
+/obj/machinery/door/poddoor/shutters/indestructible{
+	lockpickable = 0;
+	resistance_flags = 64
+	},
+/turf/open/floor/mineral/titanium/purple,
+/area/city/unregisteredportindoors)
+"VL" = (
+/obj/machinery/light{
+	dir = 1
+	},
+/turf/open/floor/mineral/titanium,
+/area/city/unregisteredportindoors)
+"VU" = (
+/obj/structure/railing/corner{
+	dir = 1;
+	resistance_flags = 64
+	},
+/obj/structure/sigsystem/connector{
+	dir = 8
+	},
+/turf/open/floor/mineral/titanium,
+/area/city/unregisteredportindoors)
+"Wd" = (
+/obj/structure/sign/poster/official/soft_cap_pop_art{
+	pixel_x = -28;
+	pixel_y = 5
+	},
+/obj/structure/table,
+/obj/item/trash/plate{
+	pixel_y = -5;
+	pixel_x = -5
+	},
+/turf/open/floor/carpet/purple,
+/area/city/unregisteredportindoors)
+"Wg" = (
+/obj/structure/sigsystem/connector{
+	dir = 4
+	},
+/turf/closed/indestructible/iron,
+/area/city/unregisteredportindoors)
+"Wi" = (
+/obj/machinery/door/airlock/sandstone,
+/turf/open/floor/mineral/titanium/white,
+/area/city/unregisteredportindoors)
+"WI" = (
+/obj/structure/railing/corner{
+	dir = 1;
+	name = "wing-grade railing";
+	resistance_flags = 115
+	},
+/turf/open/floor/mineral/titanium/white,
+/area/city/unregisteredportoutdoors)
+"WT" = (
+/obj/effect/turf_decal/trimline/red/filled/warning{
+	dir = 10
+	},
+/turf/open/floor/plating/ashplanet{
+	name = "asphalt"
+	},
+/area/city/unregisteredportoutdoors)
+"Xb" = (
+/obj/structure/lootcrate/s_corp,
+/turf/open/floor/pod/light,
+/area/city/unregisteredportindoors)
+"Xm" = (
+/obj/structure/railing{
+	dir = 4;
+	resistance_flags = 64
+	},
+/turf/open/floor/mineral/titanium,
+/area/city/unregisteredportindoors)
+"Xq" = (
+/obj/structure/lattice/catwalk{
+	resistance_flags = 64;
+	mouse_opacity = 0
+	},
+/obj/structure/lattice/catwalk{
+	resistance_flags = 64;
+	mouse_opacity = 0
+	},
+/obj/structure/railing/corner{
+	name = "wing-grade railing";
+	resistance_flags = 115
+	},
+/turf/open/water/deep/saltwater/extradeep,
+/area/city/unregisteredportoutdoors)
+"XB" = (
+/turf/closed/indestructible/riveted,
+/area/city/unregisteredportindoors)
+"XG" = (
+/obj/effect/turf_decal/trimline/red/filled/warning{
+	dir = 1
+	},
+/turf/open/floor/plating/ashplanet{
+	name = "asphalt"
+	},
+/area/city/unregisteredportoutdoors)
+"XV" = (
+/turf/open/water/deep/saltwater/extradeep,
+/area/city/unregisteredportindoors)
+"Yi" = (
+/obj/structure/railing/corner{
+	resistance_flags = 64
+	},
+/obj/structure/sigsystem/connector,
+/obj/structure/sigsystem/activator,
+/obj/machinery/door/poddoor{
+	resistance_flags = 64
+	},
+/turf/open/water/deep/saltwater/extradeep,
+/area/city/unregisteredportindoors)
+"Yl" = (
+/obj/structure/railing{
+	dir = 4;
+	resistance_flags = 64
+	},
+/obj/structure/sigsystem/pressure_plate{
+	mobs_only = 1
+	},
+/turf/open/floor/mineral/titanium,
+/area/city/unregisteredportindoors)
+"Ys" = (
+/obj/structure/sigsystem/connector/split{
+	happens_once = 1
+	},
+/turf/closed/indestructible/iron,
+/area/city/unregisteredportindoors)
+"Yz" = (
+/obj/structure/sign/poster/official/walk,
+/turf/closed/indestructible/iron,
+/area/city/unregisteredportindoors)
+"YN" = (
+/turf/open/floor/plating/dirt,
+/area/city/unregisteredportoutdoors)
+"YX" = (
+/obj/effect/light_emitter{
+	light_power = 4;
+	light_range = 10;
+	set_cap = 3;
+	set_luminosity = 24
+	},
+/obj/structure/fluff/big_chain,
+/turf/open/water/deep/saltwater/extradeep,
+/area/city/unregisteredportoutdoors)
+"Zu" = (
+/obj/structure/lootcrate/money,
+/obj/structure/lootcrate/money,
+/obj/structure/lootcrate/money,
+/turf/open/floor/holofloor/beach,
+/area/city/unregisteredportoutdoors)
+"ZF" = (
+/obj/structure/lootcrate/money,
+/turf/open/floor/oldshuttle,
+/area/city/unregisteredportoutdoors)
+"ZJ" = (
+/obj/structure/sigsystem/pressure_plate{
+	mobs_only = 1
+	},
+/obj/machinery/light{
+	dir = 4
+	},
+/turf/open/floor/mineral/titanium,
+/area/city/unregisteredportindoors)
+"ZQ" = (
+/obj/structure/lattice/catwalk{
+	resistance_flags = 64;
+	mouse_opacity = 0
+	},
+/obj/structure/railing{
+	resistance_flags = 115;
+	name = "wing-grade railing";
+	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
+	mouse_opacity = 0;
+	dir = 5
+	},
+/turf/open/water/deep/saltwater/extradeep,
+/area/city/unregisteredportoutdoors)
+
+(1,1,1) = {"
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+"}
+(2,1,1) = {"
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+"}
+(3,1,1) = {"
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+"}
+(4,1,1) = {"
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+an
+ov
+yO
+oM
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+"}
+(5,1,1) = {"
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+an
+ov
+yO
+lS
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+"}
+(6,1,1) = {"
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+an
+ov
+yO
+xO
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+"}
+(7,1,1) = {"
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+an
+ov
+yO
+hc
+xO
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+"}
+(8,1,1) = {"
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+pz
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+pz
+dY
+dY
+dY
+an
+ov
+yO
+bn
+xO
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+"}
+(9,1,1) = {"
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+XB
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+an
+ov
+yO
+uM
+Zu
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+"}
+(10,1,1) = {"
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+XB
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+an
+ov
+yO
+uM
+oM
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+Lk
+"}
+(11,1,1) = {"
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+XB
+XB
+XB
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+an
+ov
+qU
+Tu
+Tu
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+Lk
+"}
+(12,1,1) = {"
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+XB
+XB
+FY
+XB
+XB
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+an
+ov
+ov
+ov
+ov
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+Lk
+"}
+(13,1,1) = {"
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+XB
+XB
+FY
+LK
+FY
+XB
+XB
+dY
+dY
+dY
+dY
+dY
+dY
+an
+an
+an
+an
+an
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+Lk
+"}
+(14,1,1) = {"
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+XB
+XB
+OJ
+lW
+FY
+eM
+kN
+XB
+XB
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+Lk
+"}
+(15,1,1) = {"
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+XB
+XB
+vH
+lW
+lW
+FY
+oT
+XB
+XB
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+Lk
+"}
+(16,1,1) = {"
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+XB
+XB
+nx
+FY
+lW
+lW
+Bi
+XB
+XB
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+Lk
+"}
+(17,1,1) = {"
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+XB
+XB
+XB
+XB
+Ga
+XB
+XB
+XB
+XB
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+Lk
+"}
+(18,1,1) = {"
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+dY
+pz
+dY
+dY
+dY
+XB
+XB
+lW
+lW
+FY
+lW
+AK
+XB
+XB
+dY
+dY
+dY
+pz
+dY
+dY
+dY
+dY
+dY
+dY
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+Lk
+"}
+(19,1,1) = {"
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+XB
+Xb
+lW
+FY
+lW
+lW
+AK
+AK
+XB
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+an
+an
+an
+an
+an
+an
+an
+an
+an
+an
+dY
+Lk
+"}
+(20,1,1) = {"
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+XB
+dM
+FY
+lW
+FY
+lW
+lW
+rZ
+XB
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+an
+an
+an
+an
+an
+an
+an
+an
+an
+an
+dY
+Lk
+"}
+(21,1,1) = {"
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+XB
+XB
+lW
+lW
+lW
+lW
+FY
+XB
+XB
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+uc
+tz
+tG
+an
+an
+an
+an
+an
+an
+an
+Lk
+Lk
+"}
+(22,1,1) = {"
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+XB
+XB
+XB
+JE
+JE
+JE
+XB
+XB
+XB
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+BZ
+BZ
+Lb
+an
+an
+an
+an
+an
+an
+Lk
+Lk
+Lk
+"}
+(23,1,1) = {"
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+vK
+lZ
+Ed
+lZ
+lZ
+Ed
+lZ
+lZ
+vK
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+ex
+BZ
+Lb
+an
+an
+an
+an
+an
+Lk
+Lk
+Lk
+Lk
+"}
+(24,1,1) = {"
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+vK
+vK
+nT
+Ed
+lZ
+lZ
+Ed
+vK
+vK
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+nh
+BZ
+Lb
+ov
+ov
+ov
+ov
+ov
+Lk
+Lk
+Lk
+Lk
+"}
+(25,1,1) = {"
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+vK
+HA
+Te
+Ed
+xA
+ys
+vK
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Dp
+BZ
+Lb
+ov
+GT
+ov
+ov
+ov
+Lk
+Lk
+Lk
+Lk
+"}
+(26,1,1) = {"
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+pz
+dY
+dY
+dY
+dY
+le
+DW
+DW
+dY
+dY
+dY
+dY
+pz
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+BZ
+Lb
+rr
+rr
+rr
+rr
+rr
+Lk
+Lk
+Lk
+Lk
+"}
+(27,1,1) = {"
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+DW
+DW
+le
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+uM
+uM
+uM
+uM
+uM
+uM
+uM
+uM
+Lk
+Lk
+Lk
+"}
+(28,1,1) = {"
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+DW
+le
+DW
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+uM
+uM
+uM
+uM
+uM
+uM
+uM
+uM
+uM
+Lk
+Lk
+"}
+(29,1,1) = {"
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+uF
+dY
+dY
+Io
+WI
+UJ
+KX
+Gj
+dY
+dY
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+uM
+uM
+uM
+uM
+uM
+uM
+uM
+uM
+uM
+Lk
+Lk
+"}
+(30,1,1) = {"
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+uF
+uF
+oB
+Me
+UJ
+ie
+UJ
+GH
+zT
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+uM
+uM
+uM
+uM
+uM
+uM
+uM
+uM
+uM
+uM
+Lk
+Lk
+"}
+(31,1,1) = {"
+Lk
+Lk
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+uF
+uF
+SG
+ie
+UJ
+UJ
+UJ
+UJ
+GH
+uF
+UP
+ky
+Fa
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+Kw
+Ip
+hY
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uM
+uM
+uM
+uM
+uM
+uM
+uM
+uM
+uM
+uM
+Lk
+Lk
+"}
+(32,1,1) = {"
+Lk
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+uF
+uF
+nq
+UJ
+UJ
+UJ
+ie
+UJ
+UJ
+eC
+Je
+Fa
+Je
+Je
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+oW
+Ys
+xs
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uM
+uM
+uM
+uM
+uM
+uM
+uM
+uM
+TS
+TS
+Lk
+"}
+(33,1,1) = {"
+Lk
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+Lk
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+Lk
+uF
+Yz
+UJ
+UJ
+Bp
+UJ
+UJ
+UJ
+UJ
+uF
+tL
+Fa
+Fa
+Je
+eF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+BL
+HJ
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uM
+TS
+TS
+TS
+TS
+TS
+TS
+TS
+TS
+TS
+Lk
+"}
+(34,1,1) = {"
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+Lk
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+Lk
+uF
+uF
+UJ
+Mm
+UJ
+UJ
+UJ
+mK
+fw
+uF
+uF
+Je
+Je
+Fa
+hU
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+sJ
+sJ
+sJ
+zr
+vd
+zp
+sJ
+uF
+uF
+uF
+uF
+Fa
+Fa
+Rq
+Fa
+uF
+uF
+uF
+TS
+TS
+TS
+TS
+TS
+TS
+TS
+TS
+TS
+TS
+Lk
+"}
+(35,1,1) = {"
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+dY
+pz
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+pz
+dY
+dY
+Lk
+Lk
+Lk
+dY
+dY
+dY
+Lk
+Lk
+uF
+uF
+Aj
+Aj
+Vz
+Vz
+lw
+Aj
+Aj
+uF
+uF
+uF
+Fa
+Je
+Je
+uF
+uF
+uF
+uF
+uF
+uF
+pi
+aT
+Xm
+Xm
+Yl
+uI
+pd
+UW
+pi
+uF
+uF
+Fa
+Fa
+Fa
+Fa
+Mh
+Fa
+uF
+uF
+qj
+TS
+TS
+TS
+TS
+TS
+TS
+TS
+TS
+TS
+Lk
+"}
+(36,1,1) = {"
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+uF
+uF
+Aj
+Ao
+Hb
+IY
+IY
+cB
+Aj
+uF
+uF
+uF
+UP
+Je
+Fa
+Fa
+uF
+uF
+uF
+uF
+uF
+Do
+Lt
+lf
+lf
+lf
+Rj
+IO
+tm
+Lp
+uF
+Fa
+Fa
+hU
+uF
+ox
+ox
+Fa
+Hf
+uF
+UJ
+TS
+TS
+TS
+TS
+TS
+TS
+TS
+TS
+YN
+Lk
+"}
+(37,1,1) = {"
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+uF
+uF
+Aj
+Hb
+Hb
+IY
+Hb
+wu
+Aj
+uF
+uF
+uF
+Fa
+Fa
+Fa
+Fa
+Fa
+sJ
+HR
+sJ
+vm
+bt
+HI
+XV
+Yi
+Hl
+jg
+IO
+tm
+zp
+vm
+Fa
+Fa
+Fa
+uF
+Fa
+ox
+Fa
+Fa
+uF
+UJ
+UJ
+TS
+YN
+YN
+YN
+YN
+YN
+YN
+YN
+Lk
+"}
+(38,1,1) = {"
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+uF
+uF
+Aj
+IY
+Cc
+Hb
+Hb
+Hb
+Aj
+uF
+uF
+uF
+uF
+Je
+Je
+Je
+Fa
+HR
+HR
+Ky
+Re
+Dk
+HI
+ML
+tO
+bO
+tV
+IO
+DB
+bX
+af
+Fa
+Fa
+Fa
+Wi
+oz
+ox
+Fa
+Fa
+Wi
+UJ
+UJ
+YN
+YN
+YN
+YN
+YN
+YN
+YN
+YN
+Lk
+"}
+(39,1,1) = {"
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+uF
+uF
+Aj
+dy
+IY
+IY
+SV
+Fk
+Aj
+uF
+uF
+uF
+uF
+uF
+Fa
+Fa
+Je
+gA
+sJ
+sJ
+ps
+sJ
+HI
+Mw
+nR
+wN
+GQ
+IO
+ON
+kp
+af
+Fa
+Fa
+Fa
+uF
+Fa
+ox
+Fa
+Fa
+uF
+UJ
+UJ
+YN
+YN
+YN
+YN
+YN
+YN
+YN
+YN
+Lk
+"}
+(40,1,1) = {"
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+fG
+fG
+fG
+fG
+fG
+fG
+fG
+fG
+fG
+fG
+fG
+dY
+dY
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+uF
+uF
+Aj
+Hb
+Hb
+IY
+Hb
+Hb
+Aj
+uF
+uF
+uF
+uF
+uF
+Je
+Fa
+Fa
+uF
+uF
+uF
+Wg
+VL
+HI
+XV
+XV
+XV
+XV
+IO
+ON
+SB
+BL
+Fa
+Fa
+hU
+uF
+ox
+ox
+Fa
+Hf
+uF
+UJ
+YN
+YN
+YN
+YN
+YN
+YN
+YN
+YN
+YN
+Lk
+"}
+(41,1,1) = {"
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+fG
+fG
+Gc
+lK
+lK
+lK
+lK
+lK
+lK
+lK
+ur
+fG
+fG
+dY
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+uF
+uF
+Aj
+sP
+IY
+cu
+IY
+qX
+Aj
+uF
+uF
+uF
+uF
+uF
+Je
+Je
+Fa
+uF
+uF
+uF
+Wg
+pi
+UM
+AG
+zE
+OU
+Vd
+DZ
+VU
+pi
+BL
+uF
+Fa
+Fa
+Fa
+Fa
+Mh
+Fa
+uF
+uF
+yo
+YN
+YN
+YN
+YN
+vx
+YN
+YN
+YN
+YN
+Lk
+"}
+(42,1,1) = {"
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+dY
+fG
+fG
+Gc
+wK
+hT
+hT
+hT
+hT
+hT
+hT
+hT
+wV
+ur
+fG
+fG
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+uF
+uF
+Aj
+Aj
+lw
+Vz
+Vz
+Aj
+Aj
+uF
+uF
+uF
+uF
+uF
+Fa
+Fa
+Je
+uF
+uF
+uF
+Wg
+uF
+sJ
+vd
+sJ
+ZJ
+bt
+zp
+zp
+uF
+BL
+uF
+uF
+Fa
+Fa
+Tj
+Fa
+uF
+uF
+uF
+fg
+YN
+YN
+YN
+YN
+YN
+YN
+YN
+YN
+YN
+Lk
+"}
+(43,1,1) = {"
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+fG
+fG
+Gc
+wK
+hT
+dl
+hT
+hT
+hT
+hT
+hT
+FI
+hT
+Ih
+ur
+fG
+ob
+ob
+ob
+ob
+ob
+ob
+ob
+Aj
+Aj
+Aj
+uW
+IY
+Hb
+IY
+hV
+Aj
+Aj
+Aj
+Ms
+Ms
+Ms
+Ms
+oh
+Ms
+Ms
+Ms
+Ms
+Wg
+uF
+uF
+Wg
+uF
+uF
+uF
+uF
+BL
+uF
+BL
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+YN
+YN
+YN
+YN
+YN
+YN
+YN
+YN
+YN
+YN
+Lk
+"}
+(44,1,1) = {"
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+fG
+Gc
+wK
+hT
+mi
+mi
+mi
+hT
+zS
+hT
+mi
+mi
+kS
+hT
+Ih
+ur
+ob
+ob
+ob
+ob
+ob
+ob
+ob
+Aj
+Aj
+IY
+IY
+IY
+Hb
+Hb
+IY
+Hb
+Aj
+Aj
+Ms
+Lc
+Wd
+pF
+pF
+pF
+hs
+Vm
+Ms
+Wg
+uF
+uF
+hK
+hK
+hK
+hK
+hK
+BL
+uF
+BL
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+YN
+YN
+YN
+YN
+YN
+YN
+YN
+YN
+YN
+YN
+Lk
+"}
+(45,1,1) = {"
+Lk
+Lk
+Lk
+TX
+TX
+TX
+TX
+TX
+fG
+tf
+hT
+lm
+mi
+Uo
+mi
+pC
+hT
+lm
+mi
+Uo
+kS
+pC
+hT
+Ih
+XB
+XB
+XB
+XB
+XB
+XB
+XB
+Aj
+Hb
+Hb
+IY
+Cc
+IY
+IY
+Hb
+IY
+IY
+nI
+Ni
+pF
+pF
+pF
+pF
+pF
+pF
+Cv
+Ms
+hK
+hK
+hK
+hK
+hK
+hK
+hK
+hK
+hK
+hK
+BL
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+Ks
+Ks
+Ks
+Ks
+Ks
+lG
+YN
+YN
+YN
+YN
+YN
+Lk
+"}
+(46,1,1) = {"
+Lk
+Lk
+Lk
+TX
+wt
+ZF
+oU
+TX
+TX
+tf
+hT
+hT
+mi
+mi
+mi
+hT
+hT
+hT
+mi
+mi
+kS
+hT
+hT
+hT
+XB
+AP
+Mh
+pY
+Fa
+Fa
+XB
+Aj
+de
+IY
+Hb
+IY
+Hb
+IY
+Cc
+IY
+Fk
+Aj
+Ms
+JK
+Qp
+pF
+pF
+pF
+pF
+Qz
+Ms
+nl
+nl
+nl
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+KY
+mo
+EM
+NF
+WT
+NI
+YN
+YN
+YN
+YN
+YN
+Lk
+"}
+(47,1,1) = {"
+Lk
+Lk
+Lk
+TX
+nb
+Kt
+oU
+ff
+TX
+hT
+hT
+hT
+hT
+zH
+hT
+hT
+hT
+hT
+hT
+zH
+Ka
+hT
+hT
+hT
+FP
+Fa
+Fa
+pY
+Fa
+Fa
+Rq
+Vz
+Ji
+IY
+IY
+Rp
+Rp
+Rp
+Hb
+IY
+Ji
+Aj
+Ms
+GO
+pF
+mU
+uC
+dS
+pF
+eO
+Ms
+nl
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+mo
+mo
+mo
+NF
+mo
+NI
+YN
+YN
+YN
+YN
+Lk
+Lk
+"}
+(48,1,1) = {"
+Lk
+Lk
+Lk
+TX
+la
+Kt
+Kt
+Kt
+zW
+hT
+hT
+hT
+hT
+hT
+hT
+hT
+hT
+Hy
+hT
+hT
+Ka
+hT
+hT
+hT
+FP
+Fa
+Fa
+pY
+Fa
+Fa
+Fa
+Vz
+IY
+IY
+IY
+Rp
+wn
+Rp
+IY
+IY
+Hb
+Aj
+Ms
+Ms
+Ms
+Ms
+Ms
+Ms
+Ms
+Ms
+Ms
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+XG
+mo
+Cg
+NF
+wp
+NI
+YN
+YN
+YN
+Lk
+Lk
+Lk
+"}
+(49,1,1) = {"
+Lk
+Lk
+Lk
+TX
+la
+Kt
+EI
+UY
+TX
+hT
+hT
+hT
+hT
+dl
+hT
+hT
+hT
+hT
+hT
+dl
+Ka
+hT
+hT
+hT
+FP
+Fa
+Fa
+pY
+Fa
+Fa
+Tj
+Vz
+IY
+IY
+IY
+Rp
+Rp
+Rp
+IY
+Hb
+Hb
+Aj
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+mo
+mo
+mo
+NF
+mo
+NI
+YN
+YN
+YN
+Lk
+Lk
+Lk
+"}
+(50,1,1) = {"
+Lk
+Lk
+Lk
+TX
+et
+UY
+sL
+TX
+TX
+tf
+hT
+hT
+mi
+mi
+mi
+hT
+hT
+hT
+mi
+mi
+kS
+hT
+hT
+hT
+XB
+AP
+Mh
+pY
+Fa
+Fa
+XB
+Aj
+de
+Dq
+IY
+Hb
+Hb
+Hb
+Hb
+Dq
+xc
+Aj
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+XG
+mo
+mo
+NF
+gH
+NI
+YN
+YN
+Lk
+Lk
+Lk
+Lk
+"}
+(51,1,1) = {"
+Lk
+Lk
+Lk
+TX
+TX
+TX
+TX
+TX
+fG
+tf
+hT
+lm
+mi
+YX
+mi
+pC
+hT
+lm
+mi
+Uo
+kS
+pC
+hT
+zl
+XB
+XB
+XB
+XB
+XB
+XB
+XB
+Aj
+IY
+Hb
+IY
+IY
+Ji
+IY
+IY
+Hb
+IY
+Aj
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+mo
+Cg
+mo
+NF
+mo
+NI
+YN
+YN
+Lk
+Lk
+Lk
+Lk
+"}
+(52,1,1) = {"
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+fG
+ZQ
+La
+hT
+mi
+mi
+mi
+hT
+aR
+hT
+mi
+mi
+kS
+hT
+zl
+uJ
+ob
+ob
+ob
+ob
+ob
+ob
+ob
+Aj
+Aj
+IY
+Uh
+Jm
+IY
+IY
+Lh
+Hb
+Aj
+Aj
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+XG
+mo
+mo
+NF
+wp
+NI
+YN
+YN
+Lk
+Lk
+Lk
+Lk
+"}
+(53,1,1) = {"
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+fG
+fG
+ZQ
+La
+hT
+zH
+hT
+hT
+hT
+hT
+hT
+zH
+hT
+zl
+uJ
+fG
+Lk
+ob
+ob
+ob
+ob
+ob
+ob
+Aj
+Aj
+Aj
+Aj
+Aj
+jG
+Aj
+Aj
+Aj
+Aj
+Aj
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+mo
+mo
+mo
+NF
+mo
+NI
+YN
+YN
+Lk
+Lk
+Lk
+Lk
+"}
+(54,1,1) = {"
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+dY
+fG
+fG
+ZQ
+La
+hT
+hT
+hT
+hT
+hT
+hT
+hT
+Xq
+uJ
+fG
+fG
+dY
+dY
+Lk
+Lk
+Lk
+Lk
+Lk
+uF
+uF
+uF
+uF
+uF
+Fa
+uF
+uF
+uF
+uF
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Ar
+mo
+wo
+NF
+Tm
+rg
+lG
+YN
+Lk
+Lk
+Lk
+Lk
+"}
+(55,1,1) = {"
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+fG
+fG
+ZQ
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+Sz
+uJ
+fG
+fG
+dY
+dY
+dY
+dY
+Lk
+Lk
+Lk
+Lk
+uF
+DG
+fJ
+Fq
+Je
+Fa
+Je
+Je
+Fa
+uF
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+vQ
+vQ
+vQ
+Fi
+vQ
+vQ
+NI
+vW
+Lk
+Lk
+Lk
+Lk
+"}
+(56,1,1) = {"
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+fG
+fG
+fG
+fG
+fG
+fG
+fG
+fG
+fG
+fG
+fG
+dY
+dY
+dY
+dY
+dY
+Lk
+Lk
+Lk
+Lk
+uF
+Fa
+Je
+Fa
+Fa
+Fa
+Fa
+Fa
+Fa
+uF
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+vQ
+vQ
+vQ
+Fi
+vQ
+vQ
+rg
+Lk
+Lk
+Lk
+Lk
+Lk
+"}
+(57,1,1) = {"
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+Lk
+Lk
+Lk
+uF
+Je
+Je
+Tj
+Je
+Je
+Tj
+Je
+Je
+uF
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+vQ
+vQ
+vQ
+Fi
+vQ
+vQ
+vQ
+Lk
+Lk
+Lk
+Lk
+Lk
+"}
+(58,1,1) = {"
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+Lk
+Lk
+Lk
+uF
+vz
+Fa
+uF
+Fa
+Je
+uF
+Fa
+Je
+uF
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+vQ
+rP
+vQ
+Fi
+je
+rP
+vQ
+Lk
+Lk
+Lk
+Lk
+Lk
+"}
+(59,1,1) = {"
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+Lk
+Lk
+Lk
+uF
+Fq
+cs
+uF
+cs
+Fq
+uF
+uo
+cs
+uF
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+vQ
+vQ
+vQ
+Fi
+vQ
+vQ
+vQ
+Lk
+Lk
+Lk
+Lk
+Lk
+"}
+(60,1,1) = {"
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+Lk
+Lk
+Lk
+uF
+sJ
+sJ
+og
+HR
+sJ
+og
+sJ
+HR
+uF
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+vQ
+vQ
+vQ
+Fi
+vQ
+vQ
+vQ
+Lk
+Lk
+Lk
+Lk
+Lk
+"}
+(61,1,1) = {"
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+dY
+pz
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+pz
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+Lk
+Lk
+Lk
+uF
+HR
+sJ
+HR
+sJ
+HR
+HR
+HR
+sJ
+uF
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+vQ
+vQ
+rP
+Fi
+rP
+vQ
+vQ
+Lk
+Lk
+Lk
+Lk
+Lk
+"}
+(62,1,1) = {"
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+Lk
+Lk
+Lk
+uF
+Al
+sJ
+HR
+sJ
+HR
+Td
+sJ
+HR
+uF
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+vQ
+vQ
+vQ
+Fi
+vQ
+vQ
+vQ
+Lk
+Lk
+Lk
+Lk
+Lk
+"}
+(63,1,1) = {"
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+Lk
+Lk
+Lk
+Lk
+uF
+VL
+sJ
+HR
+sJ
+sJ
+sJ
+sJ
+Vy
+uF
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+vQ
+vQ
+vQ
+Fi
+vQ
+vQ
+vQ
+Lk
+Lk
+Lk
+Lk
+Lk
+"}
+(64,1,1) = {"
+Lk
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+uF
+sJ
+Al
+sJ
+HR
+Td
+sJ
+Al
+sJ
+uF
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+vQ
+rP
+vQ
+Fi
+vQ
+rP
+vQ
+Lk
+Lk
+Lk
+Lk
+Lk
+"}
+(65,1,1) = {"
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+dY
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+uF
+HR
+sJ
+HR
+Al
+HR
+sJ
+sJ
+HR
+uF
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+vQ
+vQ
+vQ
+Fi
+vQ
+vQ
+vQ
+Lk
+Lk
+Lk
+Lk
+Lk
+"}
+(66,1,1) = {"
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+uF
+HR
+HR
+Fh
+sJ
+HR
+gA
+HR
+Td
+uF
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+vQ
+vQ
+vQ
+Fi
+vQ
+vQ
+vQ
+Lk
+Lk
+Lk
+Lk
+Lk
+"}
+(67,1,1) = {"
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+uF
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+"}
+(68,1,1) = {"
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+"}
+(69,1,1) = {"
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+"}
+(70,1,1) = {"
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+Lk
+"}

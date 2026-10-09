@@ -406,6 +406,16 @@
 	in_city = FALSE
 	outdoors = FALSE
 
+/area/city/unregisteredportoutdoors
+	name = "Unregistered Port"
+	in_city = FALSE
+	outdoors = TRUE
+
+/area/city/unregisteredportindoors
+	name = "Unregistered Port"
+	in_city = FALSE
+	outdoors = FALSE
+
 /area/city/backstreets_room/resurgence_village/Entered(atom/movable/M)
 	set waitfor = FALSE
 	SEND_SIGNAL(src, COMSIG_AREA_ENTERED, M)
