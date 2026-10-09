@@ -28,7 +28,7 @@
 	work_chances = list(
 		ABNORMALITY_WORK_INSTINCT = list(20, 20, 25, 30, 30),
 		ABNORMALITY_WORK_INSIGHT = 60,
-		ABNORMALITY_WORK_ATTACHMENT = 30,
+		ABNORMALITY_WORK_ATTACHMENT = 50,
 		ABNORMALITY_WORK_REPRESSION = list(40, 45, 50, 55, 60),
 	)
 	work_damage_amount = 5
@@ -46,7 +46,7 @@
 	. = ..()
 	if(ishuman(attacked_target))
 		var/mob/living/carbon/human/L = attacked_target
-		L.apply_lc_bleed(18)
+		L.apply_lc_bleed(10)
 
 /mob/living/simple_animal/hostile/abnormality/branch12/dove/PostWorkEffect(mob/living/carbon/human/user, work_type, pe, work_time)
 	if(get_attribute_level(user, TEMPERANCE_ATTRIBUTE) <40)

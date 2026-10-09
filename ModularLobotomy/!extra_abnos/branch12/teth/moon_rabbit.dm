@@ -29,9 +29,9 @@
 	retreat_distance = 3
 	minimum_distance = 1
 	work_chances = list(
-		ABNORMALITY_WORK_INSTINCT = 60,
+		ABNORMALITY_WORK_INSTINCT = 30,
 		ABNORMALITY_WORK_INSIGHT = 50,
-		ABNORMALITY_WORK_ATTACHMENT = 30,
+		ABNORMALITY_WORK_ATTACHMENT = 60,
 		ABNORMALITY_WORK_REPRESSION = 60,
 	)
 	work_damage_amount = 8
