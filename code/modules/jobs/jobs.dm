@@ -282,6 +282,11 @@ GLOBAL_LIST_INIT(city_antagonist_positions, list(
 
 	"Insurgence Nightwatch Agent",
 	"Insurgence Transport Agent",
+
+	"Oracle Proxy",
+	"Corporist Maestro",
+	"Ex Thumb Sottocapo",
+	"Ex Great Brother",
 ))
 
 
