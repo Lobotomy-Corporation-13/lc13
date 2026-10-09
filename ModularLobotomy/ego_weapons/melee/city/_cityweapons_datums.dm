@@ -554,6 +554,17 @@ Association gear is mostly HE for grunts, low WAW for veterans and high WAW for 
 	cost = 120
 	ego_tags = list(EGO_TAG_SUSTAIN)
 
+/// Gladius (Red Gaze)
+/datum/ego_datum/weapon/city/red_gaze
+	item_path = /obj/item/ego_weapon/city/gladius
+	cost = 120
+	ego_tags = list(EGO_TAG_SUSTAIN, EGO_TAG_HAZARDOUS, EGO_TAG_AOE_RADIAL, EGO_TAG_DOT)
+
+/// Cobalt Suit (Red Gaze) - kept here alongside the weapon; base type is defined in _cityarmor_datums.dm
+/datum/ego_datum/armor/city/red_gaze
+	item_path = /obj/item/clothing/suit/armor/ego_gear/city/red_gaze
+	cost = 120
+
 /* I'm also commenting this one because it's causing runtimes - I believe this one is just a simple unregister signal warning for shift click when it is "dropped" (spawned)
 /// Viper's Blade / Serpent's Fang / Serpentine Greatsword / Sheathed Serpentine Greatsword (Purple Tear)
 // If you are wondering why this is aiming at specifically the blunt subtype, it's because:
