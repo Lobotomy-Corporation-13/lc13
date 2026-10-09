@@ -213,6 +213,7 @@
 /area/city/backstreets_room)
 "V" = (
 /obj/structure/sacrificealtar,
+/obj/item/quest_ticket/echo_office,
 /turf/open/floor/carpet/cyan,
 /area/city/backstreets_room)
 "W" = (

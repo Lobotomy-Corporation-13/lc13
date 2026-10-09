@@ -228,10 +228,10 @@
 	if(!user || !action)
 		return
 
-	// Execute all proc callbacks
+	// Execute all proc callbacks, passing the current user
 	for(var/datum/callback/callback in action.proc_callbacks)
 		if(callback)
-			callback.Invoke()
+			callback.Invoke(user)
 
 	// Process variable updates
 	if(islist(action.var_updates) && action.var_updates.len)
