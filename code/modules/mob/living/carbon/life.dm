@@ -86,14 +86,20 @@
 					losebreath += HUMAN_MEDIUM_OXYLOSS_RATE  // You are struggling a lot to breathe
 				if(SOFT_CRIT)
 					losebreath += HUMAN_LOW_OXYLOSS_RATE  // You are struggling a bit to breathe
+		// Note: I'm not sure what this elif is accomplishing. We only access this if we have Epinephrine, but only deal the damage if we don't have the NOCRITDAMAGE trait.
+		// ...which Epinephrine gives us, so... uh, I don't know.
 		else if(!(HAS_TRAIT(src, TRAIT_NOCRITDAMAGE)))
 			adjustBruteLoss(TICKS_PER_BREATH)
 
 	// Breathe!
 	if(losebreath <= 0)
+		// Alert is cleared here to avoid having the alert get stuck in some rare edge cases.
+		// This does cause one list access and one IF check on breaths that otherwise might not need them, but that's, like, not even that bad, still leagues ahead of the old atmos-breathing.
+		// The only better way I can think of handling clearing this alert is having a signal be sent whenever oxygen damage is changed or set, and if it's at 0 or above, clear the alert.
+		// The problem is that... that doesn't account for losebreath, lung failure, etc. So, you could still be suffocating but not have the alert then!
+		clear_alert("not_enough_oxy", /atom/movable/screen/alert/not_enough_oxy)
 		if(oxyloss && !non_breathler) // If any of the conditions above is true, we cannot breathe on our own, even if we are not actively suffocating, so we will not recover oxyloss naturally.
-			clear_alert("not_enough_oxy", /atom/movable/screen/alert/not_enough_oxy)
-			adjustOxyLoss(-(HUMAN_HIGH_OXYLOSS_RATE))
+			adjustOxyLoss(-(HUMAN_BREATHING_OXYLOSS_RATE))
 		losebreath = 0
 		return TRUE
 

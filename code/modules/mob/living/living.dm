@@ -697,7 +697,7 @@
 	else if(admin_revive)
 		updatehealth()
 		get_up(TRUE)
-
+	update_blindness() // Gets rid of an annoying bug with revivals that leave your vision monochrome.
 
 /mob/living/proc/remove_CC()
 	SetStun(0)
