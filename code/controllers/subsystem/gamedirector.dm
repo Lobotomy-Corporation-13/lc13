@@ -103,6 +103,10 @@ SUBSYSTEM_DEF(gamedirector)
 		"R-Corp Acquisitions Specialist"
 	)
 
+/*-----------\
+|CORE SYSTEMS|
+\-----------*/
+
 /datum/controller/subsystem/gamedirector/Initialize()
 	. = ..()
 	if(SSmaptype.maptype != "rcorp_factory")
@@ -184,11 +188,20 @@ SUBSYSTEM_DEF(gamedirector)
 			next_corrupter_time = world.time + rand(corrupter_cooldown_min, corrupter_cooldown_max)
 	return
 
+/*---------\
+|MISC PROCS|
+\---------*/
+	/*----------------------------\
+	|SELECTION AND NUMERICAL PROCS|
+	\----------------------------*/
 /datum/controller/subsystem/gamedirector/proc/SetTimes(warningtime, endtime)
 	timestamp_warning = world.time + warningtime
 	timestamp_shuttle = world.time + 110 MINUTES // Shuttle called at 1 hour 50 minutes
 	timestamp_finalwave = world.time + 120 MINUTES // Final wave at 2 hours
 	timestamp_end = world.time + endtime
+
+/datum/controller/subsystem/gamedirector/proc/GetTargetById(id)
+	return targets_by_id[id]
 
 /datum/controller/subsystem/gamedirector/proc/GetRandomTarget()
 	return pick(rce_targets)
@@ -202,12 +215,244 @@ SUBSYSTEM_DEF(gamedirector)
 		if(10)
 			return pick(low_level)
 
+/datum/controller/subsystem/gamedirector/proc/GetPriorityRaidTarget()
+	// Define the two priority lanes
+	// Lane 1: green -> blue -> orange (priority: orange > blue > green)
+	// Lane 2: red -> purple -> silver (priority: silver > purple > red)
+
+	var/list/lane1_priority = list("orange", "blue", "green")
+	var/list/lane2_priority = list("silver", "purple", "red")
+
+	// Check what's active in each lane
+	var/list/active_lane1 = list()
+	var/list/active_lane2 = list()
+
+	for(var/obj/structure/resourcepoint/well in active_resourcewells)
+		if(well.id in lane1_priority)
+			active_lane1[well.id] = well
+		else if(well.id in lane2_priority)
+			active_lane2[well.id] = well
+
+	// Find the highest priority target in lane 1
+	var/obj/structure/resourcepoint/lane1_target
+	for(var/priority_id in lane1_priority)
+		if(active_lane1[priority_id])
+			lane1_target = active_lane1[priority_id]
+			break
+
+	// Find the highest priority target in lane 2
+	var/obj/structure/resourcepoint/lane2_target
+	for(var/priority_id in lane2_priority)
+		if(active_lane2[priority_id])
+			lane2_target = active_lane2[priority_id]
+			break
+
+	// Choose between the two lanes based on which has higher priority
+	if(lane1_target && lane2_target)
+		// Compare priorities - lower index = higher priority
+		var/lane1_priority_index = lane1_priority.Find(lane1_target.id)
+		var/lane2_priority_index = lane2_priority.Find(lane2_target.id)
+
+		// Lower index means higher priority
+		if(lane1_priority_index < lane2_priority_index)
+			return lane1_target
+		else if(lane2_priority_index < lane1_priority_index)
+			return lane2_target
+		else
+			// Equal priority, pick randomly
+			return pick(lane1_target, lane2_target)
+	else if(lane1_target)
+		return lane1_target
+	else if(lane2_target)
+		return lane2_target
+	else
+		return null
+
+	/*------------\
+	|ANNOUNCEMENTS|
+	\------------*/
 /datum/controller/subsystem/gamedirector/proc/RegisterAsWaveAnnouncer(datum/component/monwave_spawner/applicant)
 	if(!wave_announcer)
 		wave_announcer = applicant
 		return TRUE
 	return FALSE
 
+/datum/controller/subsystem/gamedirector/proc/AnnounceWave()
+	if(first_announce)
+		first_announce = FALSE
+		return
+	var/text = "A strong X-Corp attack wave is inbound."
+	show_global_blurb(5 SECONDS, text, 1 SECONDS, 2 SECONDS, "red", "black")
+
+	sleep(30)
+	wave_announcer.SwitchTarget(pick(rce_targets))
+
+/datum/controller/subsystem/gamedirector/proc/BeginPrefightPhase()
+	fightstage = PHASE_PREFIGHT
+	show_global_blurb(10 SECONDS, "The Heart of Greed has been challenged! Register quickly!", text_color = "#cc2200", outline_color = "#000000", text_align = "center", screen_location="LEFT+0,TOP-1")
+
+/datum/controller/subsystem/gamedirector/proc/BeginRematchPhase()
+	print_command_report("The Heart is tired from the fight and is going to sleep, no rematch today. Thank you for playing the RCE demo.", "Heart of Greed Tired", TRUE)
+	SSticker.force_ending = 1
+
+/datum/controller/subsystem/gamedirector/proc/AnnounceVictory()
+	var/text = "The X-Corp Heart has been destroyed! Victory achieved."
+	show_global_blurb(60 SECONDS, text, 1 SECONDS, 2 SECONDS, "gold", "white")
+	// Mark heart killed for leaderboard
+	if(rce_leaderboard)
+		rce_leaderboard.heart_killed = TRUE
+		rce_leaderboard.end_condition = RCE_END_HEART_KILLED
+	SSticker.force_ending = 1
+
+/datum/controller/subsystem/gamedirector/proc/CallEvacuation()
+	// Ensure security level is not RED or DELTA for 20 minute evacuation
+	var/security_num = seclevel2num(get_security_level())
+	if(security_num >= SEC_LEVEL_RED)
+		set_security_level(SEC_LEVEL_BLUE)
+
+	// Call the evacuation shuttle with different message based on heart research status
+	var/evac_message
+	if(heart_research_destroyed)
+		evac_message = "The Greed forces appear to have pulled back to defend the heart. Evacuation shuttle en route for extraction."
+	else
+		evac_message = "Critical threat detected: A massive wave of greed will arrive in 10 minutes. Evacuate immediately."
+	SSshuttle.requestEvac(null, evac_message)
+
+	/*-----------\
+	|REGISTRATION|
+	\-----------*/
+/datum/controller/subsystem/gamedirector/proc/RegisterTarget(obj/effect/landmark/rce_target/target, type, id = NONE)
+	rce_targets.Add(target)
+	switch(type)
+		if(RCE_TARGET_TYPE_FOB_ENTRANCE)
+			fob_entrance.Add(target)
+		if(RCE_TARGET_TYPE_LOW_LEVEL)
+			low_level.Add(target)
+		if(RCE_TARGET_TYPE_MID_LEVEL)
+			mid_level.Add(target)
+		if(RCE_TARGET_TYPE_HIGH_LEVEL)
+			high_level.Add(target)
+		if(RCE_TARGET_TYPE_XCORP_BASE)
+			xcorp_base.Add(target)
+
+	if(id)
+		targets_by_id[id] = target
+
+/datum/controller/subsystem/gamedirector/proc/RegisterSpawner(datum/component/monwave_spawner/spawner)
+	spawners += spawner
+
+/datum/controller/subsystem/gamedirector/proc/RegisterHeart(mob/heart)
+	heart = heart
+
+/datum/controller/subsystem/gamedirector/proc/RegisterPortal(obj/structure/rce_portal/portal)
+	portal = portal
+
+/datum/controller/subsystem/gamedirector/proc/RegisterLobby(obj/effect/landmark/lobby)
+	rce_arena_teleport += lobby
+
+/datum/controller/subsystem/gamedirector/proc/RegisterFOB(obj/effect/landmark/fob)
+	rce_fob += fob
+
+/datum/controller/subsystem/gamedirector/proc/RegisterVictoryTeleport(obj/effect/landmark/postfight)
+	rce_postfight_teleport += postfight
+
+/datum/controller/subsystem/gamedirector/proc/RegisterHeartfightPylon(obj/effect/landmark/pylon)
+	heartfight_pylon += pylon
+
+/datum/controller/subsystem/gamedirector/proc/RegisterGatewaySpawn(obj/effect/landmark/lastwave_gateway/gateway)
+	lastwave_gateway += gateway
+
+/datum/controller/subsystem/gamedirector/proc/RegisterEscapeShuttle(obj/effect/landmark/fob_escape_shuttle/shuttle)
+	fob_escape_shuttle += shuttle
+
+/datum/controller/subsystem/gamedirector/proc/RegisterCombatant(mob/living/combatant)
+	if(fightstage == PHASE_NOT_STARTED || fightstage == PHASE_PREFIGHT || fightstage == PHASE_OVER_LOST)
+		if(length(combatants) == 0)
+			if(fightstage == PHASE_OVER_LOST)
+				BeginRematchPhase()
+			else
+				BeginPrefightPhase()
+		combatants += combatant
+		RegisterSignal(combatant, COMSIG_LIVING_DEATH, PROC_REF(CombatantSlain))
+		combatant.forceMove(get_turf(pick(rce_arena_teleport)))
+		to_chat(combatant, span_alert("You find yourself in front of the arena! Prepare!"))
+	else if(fightstage == PHASE_FIGHT)
+		to_chat(combatant, span_danger("The intense aura of the fight prevents you from joining!"))
+	else if(fightstage == PHASE_OVER_WON)
+		combatant.forceMove(get_turf(pick(rce_postfight_teleport)))
+		to_chat(combatant, span_alert("You find yourself at the end of the trial..."))
+
+// Resource Well Raid procedures
+/datum/controller/subsystem/gamedirector/proc/RegisterResourceWell(obj/structure/resourcepoint/well)
+	resourcewells += well
+
+/datum/controller/subsystem/gamedirector/proc/RegisterRaidSpot(obj/effect/landmark/clan_raid_spot/spot)
+	if(!raid_spots[spot.id])
+		raid_spots[spot.id] = list()
+	raid_spots[spot.id] += spot
+
+/datum/controller/subsystem/gamedirector/proc/CombatantSlain(mob/living/combatant)
+	SIGNAL_HANDLER
+
+/datum/controller/subsystem/gamedirector/proc/UnregisterResourceWell(obj/structure/resourcepoint/well)
+	resourcewells -= well
+	active_resourcewells -= well
+
+	/*----------\
+	|LEADERBOARD|
+	\----------*/
+/// Collect round-start players who spawned before this subsystem initialized
+/datum/controller/subsystem/gamedirector/proc/CollectRoundstartPlayers()
+	if(!rce_leaderboard)
+		return
+	// Iterate all human mobs and add any with minds/ckeys
+	for(var/mob/living/carbon/human/H in GLOB.human_list)
+		if(!H.mind || !H.ckey)
+			continue
+		var/job_title = H.mind.assigned_role
+		if(!job_title || !(job_title in usable_roles))
+			continue
+		// Only show expedition number if this is a new participant (not already tracked)
+		if(rce_leaderboard.AddParticipant(H.ckey, H.real_name, job_title))
+			SSpersistence.ShowExpeditionNumber(H)
+
+/datum/controller/subsystem/gamedirector/proc/RegisterMob(mob/living/simple_animal/hostile/M)
+	controlled_mobs.Add(M)
+	// Register for death tracking for leaderboard
+	if(rce_leaderboard)
+		RegisterSignal(M, COMSIG_LIVING_DEATH, PROC_REF(OnControlledMobDeath))
+
+/// Called when a controlled mob dies - records kill for leaderboard
+/datum/controller/subsystem/gamedirector/proc/OnControlledMobDeath(mob/living/simple_animal/hostile/M)
+	SIGNAL_HANDLER
+	if(rce_leaderboard)
+		rce_leaderboard.RecordMobKill(M.type)
+	controlled_mobs -= M
+
+/// Called when a player late-joins - records participation for leaderboard
+/datum/controller/subsystem/gamedirector/proc/OnPlayerJoined(datum/source, mob/living/carbon/human/joined_mob, rank)
+	SIGNAL_HANDLER
+	if(!rce_leaderboard || !istype(joined_mob))
+		return
+	if(!joined_mob.mind || !joined_mob.ckey)
+		return
+	if(!rank || !(rank in usable_roles))
+		return
+	rce_leaderboard.AddParticipant(joined_mob.ckey, joined_mob.real_name, rank)
+
+/// Called when any mob dies - tracks player deaths for leaderboard
+/datum/controller/subsystem/gamedirector/proc/OnPlayerDeath(datum/source, mob/living/died_mob, gibbed)
+	SIGNAL_HANDLER
+	if(!rce_leaderboard || !ishuman(died_mob))
+		return
+	var/mob/living/carbon/human/H = died_mob
+	if(!H.ckey)
+		return
+	rce_leaderboard.RecordPlayerDeathCount(H.ckey, H.real_name)
+
+	/*------\
+	|RAIDING|
+	\------*/
 /datum/controller/subsystem/gamedirector/proc/StartLastWave()
 	// Don't spawn the final wave if the Heart Research has been destroyed
 	if(heart_research_destroyed)
@@ -243,162 +488,6 @@ SUBSYSTEM_DEF(gamedirector)
 		var/obj/effect/landmark/fob_escape_shuttle/target_shuttle = pick(fob_escape_shuttle)
 		for(var/mob/living/simple_animal/hostile/M in controlled_mobs)
 			walk_to(M, target_shuttle, 5, 50, M.move_to_delay)
-
-/datum/controller/subsystem/gamedirector/proc/RegisterTarget(obj/effect/landmark/rce_target/target, type, id = NONE)
-	rce_targets.Add(target)
-	switch(type)
-		if(RCE_TARGET_TYPE_FOB_ENTRANCE)
-			fob_entrance.Add(target)
-		if(RCE_TARGET_TYPE_LOW_LEVEL)
-			low_level.Add(target)
-		if(RCE_TARGET_TYPE_MID_LEVEL)
-			mid_level.Add(target)
-		if(RCE_TARGET_TYPE_HIGH_LEVEL)
-			high_level.Add(target)
-		if(RCE_TARGET_TYPE_XCORP_BASE)
-			xcorp_base.Add(target)
-
-	if(id)
-		targets_by_id[id] = target
-
-/datum/controller/subsystem/gamedirector/proc/GetTargetById(id)
-	return targets_by_id[id]
-
-
-/datum/controller/subsystem/gamedirector/proc/AnnounceWave()
-	if(first_announce)
-		first_announce = FALSE
-		return
-	var/text = "A strong X-Corp attack wave is inbound."
-	show_global_blurb(5 SECONDS, text, 1 SECONDS, 2 SECONDS, "red", "black")
-
-	sleep(30)
-	wave_announcer.SwitchTarget(pick(rce_targets))
-
-/datum/controller/subsystem/gamedirector/proc/RegisterSpawner(datum/component/monwave_spawner/spawner)
-	spawners += spawner
-
-/datum/controller/subsystem/gamedirector/proc/RegisterHeart(mob/heart)
-	heart = heart
-
-/datum/controller/subsystem/gamedirector/proc/RegisterMob(mob/living/simple_animal/hostile/M)
-	controlled_mobs.Add(M)
-	// Register for death tracking for leaderboard
-	if(rce_leaderboard)
-		RegisterSignal(M, COMSIG_LIVING_DEATH, PROC_REF(OnControlledMobDeath))
-
-/// Called when a controlled mob dies - records kill for leaderboard
-/datum/controller/subsystem/gamedirector/proc/OnControlledMobDeath(mob/living/simple_animal/hostile/M)
-	SIGNAL_HANDLER
-	if(rce_leaderboard)
-		rce_leaderboard.RecordMobKill(M.type)
-
-/// Called when a player late-joins - records participation for leaderboard
-/datum/controller/subsystem/gamedirector/proc/OnPlayerJoined(datum/source, mob/living/carbon/human/joined_mob, rank)
-	SIGNAL_HANDLER
-	if(!rce_leaderboard || !istype(joined_mob))
-		return
-	if(!joined_mob.mind || !joined_mob.ckey)
-		return
-	if(!rank || !(rank in usable_roles))
-		return
-	rce_leaderboard.AddParticipant(joined_mob.ckey, joined_mob.real_name, rank)
-
-/// Collect round-start players who spawned before this subsystem initialized
-/datum/controller/subsystem/gamedirector/proc/CollectRoundstartPlayers()
-	if(!rce_leaderboard)
-		return
-	// Iterate all human mobs and add any with minds/ckeys
-	for(var/mob/living/carbon/human/H in GLOB.human_list)
-		if(!H.mind || !H.ckey)
-			continue
-		var/job_title = H.mind.assigned_role
-		if(!job_title || !(job_title in usable_roles))
-			continue
-		// Only show expedition number if this is a new participant (not already tracked)
-		if(rce_leaderboard.AddParticipant(H.ckey, H.real_name, job_title))
-			SSpersistence.ShowExpeditionNumber(H)
-
-/// Called when any mob dies - tracks player deaths for leaderboard
-/datum/controller/subsystem/gamedirector/proc/OnPlayerDeath(datum/source, mob/living/died_mob, gibbed)
-	SIGNAL_HANDLER
-	if(!rce_leaderboard || !ishuman(died_mob))
-		return
-	var/mob/living/carbon/human/H = died_mob
-	if(!H.ckey)
-		return
-	rce_leaderboard.RecordPlayerDeathCount(H.ckey, H.real_name)
-
-/datum/controller/subsystem/gamedirector/proc/AnnounceVictory()
-	var/text = "The X-Corp Heart has been destroyed! Victory achieved."
-	show_global_blurb(60 SECONDS, text, 1 SECONDS, 2 SECONDS, "gold", "white")
-	// Mark heart killed for leaderboard
-	if(rce_leaderboard)
-		rce_leaderboard.heart_killed = TRUE
-		rce_leaderboard.end_condition = RCE_END_HEART_KILLED
-	SSticker.force_ending = 1
-
-/datum/controller/subsystem/gamedirector/proc/RegisterPortal(obj/structure/rce_portal/portal)
-	portal = portal
-
-/datum/controller/subsystem/gamedirector/proc/RegisterLobby(obj/effect/landmark/lobby)
-	rce_arena_teleport += lobby
-
-/datum/controller/subsystem/gamedirector/proc/RegisterFOB(obj/effect/landmark/fob)
-	rce_fob += fob
-
-/datum/controller/subsystem/gamedirector/proc/RegisterVictoryTeleport(obj/effect/landmark/postfight)
-	rce_postfight_teleport += postfight
-
-/datum/controller/subsystem/gamedirector/proc/RegisterHeartfightPylon(obj/effect/landmark/pylon)
-	heartfight_pylon += pylon
-
-/datum/controller/subsystem/gamedirector/proc/RegisterGatewaySpawn(obj/effect/landmark/lastwave_gateway/gateway)
-	lastwave_gateway += gateway
-
-/datum/controller/subsystem/gamedirector/proc/RegisterEscapeShuttle(obj/effect/landmark/fob_escape_shuttle/shuttle)
-	fob_escape_shuttle += shuttle
-
-/datum/controller/subsystem/gamedirector/proc/BeginPrefightPhase()
-	fightstage = PHASE_PREFIGHT
-	show_global_blurb(10 SECONDS, "The Heart of Greed has been challenged! Register quickly!", text_color = "#cc2200", outline_color = "#000000", text_align = "center", screen_location="LEFT+0,TOP-1")
-
-/datum/controller/subsystem/gamedirector/proc/BeginRematchPhase()
-	print_command_report("The Heart is tired from the fight and is going to sleep, no rematch today. Thank you for playing the RCE demo.", "Heart of Greed Tired", TRUE)
-	SSticker.force_ending = 1
-
-/datum/controller/subsystem/gamedirector/proc/RegisterCombatant(mob/living/combatant)
-	if(fightstage == PHASE_NOT_STARTED || fightstage == PHASE_PREFIGHT || fightstage == PHASE_OVER_LOST)
-		if(length(combatants) == 0)
-			if(fightstage == PHASE_OVER_LOST)
-				BeginRematchPhase()
-			else
-				BeginPrefightPhase()
-		combatants += combatant
-		RegisterSignal(combatant, COMSIG_LIVING_DEATH, PROC_REF(CombatantSlain))
-		combatant.forceMove(get_turf(pick(rce_arena_teleport)))
-		to_chat(combatant, span_alert("You find yourself in front of the arena! Prepare!"))
-	else if(fightstage == PHASE_FIGHT)
-		to_chat(combatant, span_danger("The intense aura of the fight prevents you from joining!"))
-	else if(fightstage == PHASE_OVER_WON)
-		combatant.forceMove(get_turf(pick(rce_postfight_teleport)))
-		to_chat(combatant, span_alert("You find yourself at the end of the trial..."))
-
-/datum/controller/subsystem/gamedirector/proc/CombatantSlain(mob/living/combatant)
-	SIGNAL_HANDLER
-
-// Resource Well Raid procedures
-/datum/controller/subsystem/gamedirector/proc/RegisterResourceWell(obj/structure/resourcepoint/well)
-	resourcewells += well
-
-/datum/controller/subsystem/gamedirector/proc/UnregisterResourceWell(obj/structure/resourcepoint/well)
-	resourcewells -= well
-	active_resourcewells -= well
-
-/datum/controller/subsystem/gamedirector/proc/RegisterRaidSpot(obj/effect/landmark/clan_raid_spot/spot)
-	if(!raid_spots[spot.id])
-		raid_spots[spot.id] = list()
-	raid_spots[spot.id] += spot
 
 /datum/controller/subsystem/gamedirector/proc/UpdateActiveStatus(obj/structure/resourcepoint/well)
 	if(well.active > 0)
@@ -510,58 +599,19 @@ SUBSYSTEM_DEF(gamedirector)
 	var/list/chosen_raid = pick(valid_raids)
 	return chosen_raid
 
-/datum/controller/subsystem/gamedirector/proc/GetPriorityRaidTarget()
-	// Define the two priority lanes
-	// Lane 1: green -> blue -> orange (priority: orange > blue > green)
-	// Lane 2: red -> purple -> silver (priority: silver > purple > red)
+	/*---------\
+	|CORRUPTORS|
+	\---------*/
+/datum/controller/subsystem/gamedirector/proc/PlaceSeed(obj/structure/resourcepoint/target_well, seed_type)
+	new seed_type(get_turf(target_well))
+	show_global_blurb(5 SECONDS, "Seed of Greed has materialized at [target_well.name]!", text_align = "center", screen_location = "LEFT+0,TOP-2", text_color = "#FF0000")
 
-	var/list/lane1_priority = list("orange", "blue", "green")
-	var/list/lane2_priority = list("silver", "purple", "red")
-
-	// Check what's active in each lane
-	var/list/active_lane1 = list()
-	var/list/active_lane2 = list()
-
-	for(var/obj/structure/resourcepoint/well in active_resourcewells)
-		if(well.id in lane1_priority)
-			active_lane1[well.id] = well
-		else if(well.id in lane2_priority)
-			active_lane2[well.id] = well
-
-	// Find the highest priority target in lane 1
-	var/obj/structure/resourcepoint/lane1_target
-	for(var/priority_id in lane1_priority)
-		if(active_lane1[priority_id])
-			lane1_target = active_lane1[priority_id]
-			break
-
-	// Find the highest priority target in lane 2
-	var/obj/structure/resourcepoint/lane2_target
-	for(var/priority_id in lane2_priority)
-		if(active_lane2[priority_id])
-			lane2_target = active_lane2[priority_id]
-			break
-
-	// Choose between the two lanes based on which has higher priority
-	if(lane1_target && lane2_target)
-		// Compare priorities - lower index = higher priority
-		var/lane1_priority_index = lane1_priority.Find(lane1_target.id)
-		var/lane2_priority_index = lane2_priority.Find(lane2_target.id)
-
-		// Lower index means higher priority
-		if(lane1_priority_index < lane2_priority_index)
-			return lane1_target
-		else if(lane2_priority_index < lane1_priority_index)
-			return lane2_target
-		else
-			// Equal priority, pick randomly
-			return pick(lane1_target, lane2_target)
-	else if(lane1_target)
-		return lane1_target
-	else if(lane2_target)
-		return lane2_target
-	else
-		return null
+/datum/controller/subsystem/gamedirector/proc/GetSeedType(rarity)
+	for(var/list/tier in seed_types)
+		if(rarity >= tier["min_rarity"] && rarity <= tier["max_rarity"])
+			var/list/types = tier["types"]
+			return pick(types)
+	return null
 
 /datum/controller/subsystem/gamedirector/proc/SpawnActiveSeed()
 	if(!length(active_resourcewells))
@@ -602,17 +652,6 @@ SUBSYSTEM_DEF(gamedirector)
 	// No warning for passive seeds - they spawn silently
 	new seed_type(get_turf(target_well))
 
-/datum/controller/subsystem/gamedirector/proc/PlaceSeed(obj/structure/resourcepoint/target_well, seed_type)
-	new seed_type(get_turf(target_well))
-	show_global_blurb(5 SECONDS, "Seed of Greed has materialized at [target_well.name]!", text_align = "center", screen_location = "LEFT+0,TOP-2", text_color = "#FF0000")
-
-/datum/controller/subsystem/gamedirector/proc/GetSeedType(rarity)
-	for(var/list/tier in seed_types)
-		if(rarity >= tier["min_rarity"] && rarity <= tier["max_rarity"])
-			var/list/types = tier["types"]
-			return pick(types)
-	return null
-
 /datum/controller/subsystem/gamedirector/proc/SpawnCorrupter()
 	// Get all raid spots from all IDs
 	var/list/all_raid_spots = list()
@@ -649,19 +688,9 @@ SUBSYSTEM_DEF(gamedirector)
 	new /mob/living/simple_animal/hostile/clan/ranged/corrupter/greed(spawn_turf)
 	show_global_blurb(5 SECONDS, "Greed-touched Corrupter has arrived near [location_text]! Extreme caution advised!", text_align = "center", screen_location = "LEFT+0,TOP-2", text_color = "#FF0000")
 
-/datum/controller/subsystem/gamedirector/proc/CallEvacuation()
-	// Ensure security level is not RED or DELTA for 20 minute evacuation
-	var/security_num = seclevel2num(get_security_level())
-	if(security_num >= SEC_LEVEL_RED)
-		set_security_level(SEC_LEVEL_BLUE)
-
-	// Call the evacuation shuttle with different message based on heart research status
-	var/evac_message
-	if(heart_research_destroyed)
-		evac_message = "The Greed forces appear to have pulled back to defend the heart. Evacuation shuttle en route for extraction."
-	else
-		evac_message = "Critical threat detected: A massive wave of greed will arrive in 10 minutes. Evacuate immediately."
-	SSshuttle.requestEvac(null, evac_message)
+	/*-------\
+	|UNSORTED|
+	\-------*/
 
 // Bloodfiend boss death signal handlers (for den spawn restrictions)
 /datum/controller/subsystem/gamedirector/proc/OnBarberDied()
