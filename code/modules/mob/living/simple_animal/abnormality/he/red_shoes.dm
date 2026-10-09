@@ -145,7 +145,7 @@
 		return
 	if(possessee)//If the first check fails
 		return
-	SLEEP_CHECK_DEATH(30)
+	SLEEP_CHECK_DEATH(3 SECONDS)
 	if(LAZYLEN(GLOB.player_list) < 3)//solo breach if there aren't many players
 		BreachEffect()
 		return

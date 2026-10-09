@@ -172,8 +172,8 @@
 		return ..()
 	new /obj/effect/temp_visual/healing/no_dam(get_turf(src))
 	visible_message(span_userdanger("[P] is easily deflected by [src]!"))
-	P.Destroy()
-	return
+	qdel(P)
+	return BULLET_ACT_BLOCK
 
 /mob/living/simple_animal/hostile/ordeal/white_lake_corrosion/attacked_by(obj/item/I, mob/living/user)
 	if(!can_act) //Too busy attacking to block

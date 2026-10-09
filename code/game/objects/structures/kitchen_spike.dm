@@ -128,13 +128,13 @@
 	M.adjustBruteLoss(30)
 	src.visible_message(text("<span class='danger'>[M] falls free of [src]!</span>"))
 	unbuckle_mob(M,force=1)
-	M.emote("scream")
+	INVOKE_ASYNC(M, TYPE_PROC_REF(/mob, emote), "scream")
 	M.AdjustParalyzed(20)
 
 /obj/structure/kitchenspike/Destroy()
 	if(has_buckled_mobs())
-		for(var/mob/living/L in buckled_mobs)
-			release_mob(L)
+		for(var/mob/living/spiked_lad as anything in buckled_mobs)
+			release_mob(spiked_lad)
 	return ..()
 
 /obj/structure/kitchenspike/deconstruct(disassembled = TRUE)

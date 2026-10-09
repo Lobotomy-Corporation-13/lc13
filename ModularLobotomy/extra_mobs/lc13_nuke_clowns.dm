@@ -187,7 +187,7 @@
 	. = ..()
 	for(var/mob/living/simple_animal/hostile/mutant_clown/C in GLOB.mob_living_list)
 		if(C.current_stage == 1)
-			C.BreakMask()
+			INVOKE_ASYNC(C, TYPE_PROC_REF(/mob/living/simple_animal/hostile/mutant_clown, BreakMask))
 
 /mob/living/simple_animal/hostile/mutant_heart
 	name = "decaying heart"

@@ -228,7 +228,7 @@ GLOBAL_LIST_EMPTY(active_selfie_sticks)
 	if(streaming)
 		GLOB.active_selfie_sticks -= src
 		for(var/obj/item/pda/P in viewers)
-			P.stop_watching()
+			INVOKE_ASYNC(P, TYPE_PROC_REF(/obj/item/pda, stop_watching))
 	return ..()
 
 // Handle being dropped
