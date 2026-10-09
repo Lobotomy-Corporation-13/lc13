@@ -108,7 +108,7 @@
 /mob/living/simple_animal/hostile/abnormality/mining/leaper/adjustHealth(amount, updating_health = TRUE, forced = FALSE)
 	if(prob(33) && !ckey)
 		ranged_cooldown = 0 //Keeps em on their toes instead of a constant rotation
-	..()
+	. = ..()
 
 /mob/living/simple_animal/hostile/abnormality/mining/leaper/OpenFire()
 	face_atom(target)
