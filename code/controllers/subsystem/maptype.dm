@@ -12,7 +12,7 @@ SUBSYSTEM_DEF(maptype)
 	var/jobtype		//If a map RNGs which jobs are available, use this
 
 	//All the map tags that delete all jobs and replace them with others.
-	var/list/clearmaps = list("rcorp", "city", "wcorp", "limbus_labs", "fixers", "rcorp_factory", "office")
+	var/list/clearmaps = list("rcorp", "city", "wcorp", "limbus_labs", "fixers", "rcorp_factory", "office", "outpost")
 
 	//LC13 Maps, this enables Traits and cores
 	var/list/lc_maps = list("standard", "fishing")
@@ -47,7 +47,7 @@ SUBSYSTEM_DEF(maptype)
 	var/chosen_trait = "No Trait"
 
 	//All the map tags that are combat maps and need abnos to breach immediately
-	var/list/combatmaps = list("rcorp", "rcorp_factory", "wcorp", "limbus_labs", "fixers", "office")
+	var/list/combatmaps = list("rcorp", "rcorp_factory", "wcorp", "limbus_labs", "fixers", "office", "outpost")
 
 	//Ghosts should be possessbale at all times
 	var/list/autopossess = list("rcorp", "limbus_labs")

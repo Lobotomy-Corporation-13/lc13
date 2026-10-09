@@ -66,6 +66,7 @@ GLOBAL_LIST_INIT(available_ui_styles, list(
 	var/atom/movable/screen/stats
 	var/atom/movable/screen/wanted/wanted_lvl
 	var/atom/movable/screen/spacesuit
+	var/atom/movable/screen/faith/faith_display
 	// subtypes can override this to force a specific UI style
 	var/ui_style
 

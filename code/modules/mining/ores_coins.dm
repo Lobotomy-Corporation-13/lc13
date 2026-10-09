@@ -112,6 +112,9 @@ GLOBAL_LIST_INIT(sand_recipes, list(\
 
 /obj/item/stack/ore/glass/get_main_recipes()
 	. = ..()
+	// Disable sand recipes in management gamemode (use forge instead)
+	if(SSticker?.mode && istype(SSticker.mode, /datum/game_mode/management))
+		return
 	. += GLOB.sand_recipes
 
 /obj/item/stack/ore/glass/throw_impact(atom/hit_atom, datum/thrownthing/throwingdatum)
@@ -139,6 +142,15 @@ GLOBAL_LIST_INIT(sand_recipes, list(\
 	singular_name = "volcanic ash pile"
 	mine_experience = 0
 	merge_type = /obj/item/stack/ore/glass/basalt
+
+/obj/item/stack/ore/glass/ironsand
+	name = "iron sand pile"
+	icon_state = "Glass ore"
+	inhand_icon_state = "Glass ore"
+	singular_name = "iron sand pile"
+	color = "#e8a060"  // Light orange tint
+	mine_experience = 0
+	merge_type = /obj/item/stack/ore/glass/ironsand
 
 /obj/item/stack/ore/plasma
 	name = "plasma ore"

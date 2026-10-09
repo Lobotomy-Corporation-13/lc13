@@ -1,0 +1,315 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"a" = (
+/turf/template_noop,
+/area/template_noop)
+"b" = (
+/obj/structure/table/wood/poker,
+/obj/item/coin/iron,
+/turf/open/floor/carpet/red,
+/area/resurgence_outpost/outdoors)
+"f" = (
+/obj/structure/table/wood/poker,
+/turf/open/floor/carpet/red,
+/area/resurgence_outpost/outdoors)
+"g" = (
+/obj/item/coin/gold,
+/turf/template_noop,
+/area/template_noop)
+"o" = (
+/turf/closed/indestructible/riveted/plastinum,
+/area/resurgence_outpost/outdoors)
+"r" = (
+/turf/open/floor/carpet/red,
+/area/resurgence_outpost/outdoors)
+"t" = (
+/obj/structure/cursed_slot_machine,
+/turf/open/floor/carpet/red,
+/area/resurgence_outpost/outdoors)
+"D" = (
+/turf/closed/mineral/resurgence,
+/area/resurgence_outpost/outdoors)
+"E" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/carpet/red,
+/area/resurgence_outpost/outdoors)
+"F" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/carpet/red,
+/area/resurgence_outpost/outdoors)
+"G" = (
+/turf/closed/mineral/resurgence/random/any{
+	color = "#FF4444"
+	},
+/area/resurgence_outpost/outdoors)
+"M" = (
+/obj/structure/mineral_door/gold,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/carpet/red,
+/area/resurgence_outpost/outdoors)
+"P" = (
+/obj/structure/table/wood/poker,
+/obj/item/toy/cards/deck/syndicate,
+/turf/open/floor/carpet/red,
+/area/resurgence_outpost/outdoors)
+"W" = (
+/obj/structure/table/wood/poker,
+/obj/item/ego_weapon/ranged/pistol/deathdealer,
+/turf/open/floor/carpet/red,
+/area/resurgence_outpost/outdoors)
+
+(1,1,1) = {"
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+"}
+(2,1,1) = {"
+a
+a
+a
+a
+g
+D
+D
+D
+D
+D
+g
+a
+a
+g
+a
+"}
+(3,1,1) = {"
+a
+a
+a
+G
+D
+D
+D
+D
+D
+D
+D
+D
+G
+a
+a
+"}
+(4,1,1) = {"
+a
+a
+g
+D
+D
+D
+D
+D
+D
+D
+D
+D
+D
+D
+a
+"}
+(5,1,1) = {"
+a
+a
+a
+D
+D
+o
+o
+D
+D
+D
+D
+D
+D
+D
+a
+"}
+(6,1,1) = {"
+a
+a
+D
+D
+D
+o
+t
+E
+r
+D
+D
+D
+D
+D
+a
+"}
+(7,1,1) = {"
+a
+a
+D
+D
+D
+o
+b
+P
+r
+o
+D
+D
+D
+g
+a
+"}
+(8,1,1) = {"
+a
+a
+D
+D
+D
+D
+r
+W
+F
+M
+D
+D
+D
+D
+a
+"}
+(9,1,1) = {"
+a
+a
+D
+D
+D
+D
+E
+f
+r
+o
+D
+D
+D
+D
+a
+"}
+(10,1,1) = {"
+a
+a
+D
+D
+D
+D
+r
+E
+r
+o
+D
+D
+D
+D
+a
+"}
+(11,1,1) = {"
+a
+a
+D
+D
+D
+D
+D
+o
+o
+o
+D
+D
+D
+D
+a
+"}
+(12,1,1) = {"
+a
+g
+D
+D
+D
+D
+D
+D
+D
+D
+D
+D
+D
+G
+a
+"}
+(13,1,1) = {"
+a
+a
+a
+G
+D
+D
+D
+D
+D
+D
+D
+D
+D
+a
+a
+"}
+(14,1,1) = {"
+a
+a
+a
+g
+a
+D
+g
+D
+D
+g
+D
+D
+a
+a
+a
+"}
+(15,1,1) = {"
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+"}

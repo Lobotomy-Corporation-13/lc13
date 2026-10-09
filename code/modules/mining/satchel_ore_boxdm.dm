@@ -10,10 +10,11 @@
 	// pressure_resistance = 5*ONE_ATMOSPHERE
 
 /obj/structure/ore_box/attackby(obj/item/W, mob/user, params)
-	if (istype(W, /obj/item/stack/ore))
+	if (istype(W, /obj/item/stack/ore) || istype(W, /obj/item/stack/sheet/mineral/coal))
 		user.transferItemToLoc(W, src)
 	else if(SEND_SIGNAL(W, COMSIG_CONTAINS_STORAGE))
 		SEND_SIGNAL(W, COMSIG_TRY_STORAGE_TAKE_TYPE, /obj/item/stack/ore, src)
+		SEND_SIGNAL(W, COMSIG_TRY_STORAGE_TAKE_TYPE, /obj/item/stack/sheet/mineral/coal, src)
 		to_chat(user, span_notice("You empty the ore in [W] into \the [src]."))
 	else
 		return ..()
@@ -48,12 +49,15 @@
 
 /obj/structure/ore_box/proc/dump_box_contents()
 	var/drop = drop_location()
-	for(var/obj/item/stack/ore/O in src)
-		if(QDELETED(O))
+	for(var/obj/item/stack/S in src)
+		// Only dump ores and coal
+		if(!istype(S, /obj/item/stack/ore) && !istype(S, /obj/item/stack/sheet/mineral/coal))
+			continue
+		if(QDELETED(S))
 			continue
 		if(QDELETED(src))
 			break
-		O.forceMove(drop)
+		S.forceMove(drop)
 		if(TICK_CHECK)
 			stoplag()
 			drop = drop_location()
@@ -68,12 +72,15 @@
 	var/contents = list()
 	for(var/obj/item/stack/ore/O in src)
 		contents[O.type] += O.amount
+	// Also include coal
+	for(var/obj/item/stack/sheet/mineral/coal/C in src)
+		contents[C.type] += C.amount
 
 	var/data = list()
 	data["materials"] = list()
 	for(var/type in contents)
-		var/obj/item/stack/ore/O = type
-		var/name = initial(O.name)
+		var/obj/item/stack/S = type
+		var/name = initial(S.name)
 		data["materials"] += list(list("name" = name, "amount" = contents[type], "id" = type))
 
 	return data

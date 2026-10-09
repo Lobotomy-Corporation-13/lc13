@@ -118,13 +118,26 @@ GLOBAL_VAR_INIT(observer_default_invisibility, INVISIBILITY_OBSERVER)
 	update_icon()
 
 	if(!T)
+		// Try arrival shuttle first
 		var/list/turfs = get_area_turfs(/area/shuttle/arrival)
 		if(turfs.len)
 			T = pick(turfs)
 		else
-			T = SSmapping.get_station_center()
+			// Try observer start landmark
+			var/obj/effect/landmark/observer_start/O = locate(/obj/effect/landmark/observer_start) in GLOB.landmarks_list
+			if(O)
+				T = get_turf(O)
+			else
+				// Try station center if available
+				var/list/station_levels = SSmapping.levels_by_trait(ZTRAIT_STATION)
+				if(station_levels.len)
+					T = SSmapping.get_station_center()
+				else
+					// Fallback to center of Z=1
+					T = locate(round(world.maxx * 0.5, 1), round(world.maxy * 0.5, 1), 1)
 
-	forceMove(T)
+	if(T)
+		forceMove(T)
 
 	if(!name)							//To prevent nameless ghosts
 		name = random_unique_name(gender)

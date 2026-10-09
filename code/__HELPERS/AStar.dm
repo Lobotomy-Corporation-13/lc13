@@ -210,3 +210,89 @@ Actual Adjacent procs :
 			return TRUE
 
 	return FALSE
+
+// ==================== Raider-Aware Pathfinding ====================
+
+/**
+ * Raider-aware turf test - allows pathing through smashable obstacles.
+ * Used by raiders with environment_smash capability to path through walls and doors.
+ *
+ * Arguments:
+ * * requester - The mob requesting the path
+ * * T - The target turf to check
+ * * ID - Access ID for door checks
+ * * simulated_only - Whether to exclude space turfs
+ *
+ * Returns: TRUE if turf is reachable (including via smashing), FALSE otherwise
+ */
+/turf/proc/reachableTurftestRaider(requester, turf/T, ID, simulated_only)
+	if(!T)
+		return FALSE
+
+	// Standard space check
+	if(simulated_only && SSpathfinder.space_type_cache[T.type])
+		return FALSE
+
+	// Check if requester can smash through obstacles
+	var/can_smash_walls = FALSE
+	var/can_smash_structures = FALSE
+	if(ishostile(requester))
+		var/mob/living/simple_animal/hostile/H = requester
+		can_smash_walls = (H.environment_smash & ENVIRONMENT_SMASH_WALLS)
+		can_smash_structures = (H.environment_smash & ENVIRONMENT_SMASH_STRUCTURES)
+
+	// Check turf density (walls)
+	if(T.density)
+		if(can_smash_walls && istype(T, /turf/closed/wall))
+			// Wall is smashable - treat as passable for pathing
+			return TRUE
+		return FALSE
+
+	// Turf is open - check for blocking objects
+	return !LinkBlockedWithAccessRaider(T, requester, ID, can_smash_structures)
+
+/**
+ * Raider-aware link check - allows pathing through smashable doors/structures.
+ *
+ * Arguments:
+ * * T - The target turf to check
+ * * requester - The mob requesting the path
+ * * ID - Access ID for door checks
+ * * can_smash_structures - Whether the requester can smash structures
+ *
+ * Returns: TRUE if path is blocked, FALSE if passable
+ */
+/turf/proc/LinkBlockedWithAccessRaider(turf/T, requester, ID, can_smash_structures)
+	var/adir = get_dir(src, T)
+	var/rdir = ((adir & MASK_ODD)<<1)|((adir & MASK_EVEN)>>1)
+
+	// Check windows (same as original)
+	for(var/obj/structure/window/W in src)
+		if(!W.CanAStarPass(ID, adir))
+			if(can_smash_structures && !(W.resistance_flags & INDESTRUCTIBLE))
+				continue
+			return TRUE
+
+	// Check railings (same as original)
+	for(var/obj/structure/railing/R in src)
+		if(!R.CanAStarPass(ID, adir, requester))
+			return TRUE
+
+	// Check door windows (same as original)
+	for(var/obj/machinery/door/window/W in src)
+		if(!W.CanAStarPass(ID, adir))
+			if(can_smash_structures && !(W.resistance_flags & INDESTRUCTIBLE))
+				continue
+			return TRUE
+
+	// Check objects in target turf
+	for(var/obj/O in T)
+		if(!O.CanAStarPass(ID, rdir, requester))
+			// Check if it's a smashable door/structure
+			if(can_smash_structures && O.density)
+				if(istype(O, /obj/machinery/door) || istype(O, /obj/structure))
+					if(!(O.resistance_flags & INDESTRUCTIBLE))
+						continue
+			return TRUE
+
+	return FALSE

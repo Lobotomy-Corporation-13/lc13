@@ -295,6 +295,13 @@
 	sanityhealth.hud = src
 	infodisplay += sanityhealth
 
+	// Add faith display for resurgence machines
+	// var/mob/living/carbon/human/H = owner
+	// if(istype(H?.dna?.species, /datum/species/resurgence_machine))
+	faith_display = new /atom/movable/screen/faith()
+	faith_display.hud = src
+	infodisplay += faith_display
+
 	pull_icon = new /atom/movable/screen/pull()
 	pull_icon.icon = ui_style
 	pull_icon.update_icon()

@@ -209,3 +209,8 @@
 	name = "stone brick floor"
 	desc = "A floor made out of stone bricks, it's sturdy!"
 	icon_state = "stone_floor"
+
+/turf/open/floor/sandstone
+	name = "sandstone floor"
+	desc = "A floor made from compressed sandstone blocks."
+	icon_state = "sandstone_floor"

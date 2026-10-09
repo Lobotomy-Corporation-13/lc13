@@ -84,6 +84,9 @@
 
 /turf/closed/wall/proc/break_wall()
 	new sheet_type(src, sheet_amount)
+	// No girders in outpost mode
+	if(SSmaptype.maptype == "outpost")
+		return null
 	return new girder_type(src)
 
 /turf/closed/wall/proc/devastate_wall()

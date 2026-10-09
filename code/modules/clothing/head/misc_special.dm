@@ -225,6 +225,8 @@
 	color = "#000"
 	var/hairstyle = "Very Long Hair"
 	var/adjustablecolor = TRUE //can color be changed manually?
+	var/gradient_style = null // Hair gradient style name
+	var/gradient_color = null // Hair gradient color (hex without #)
 
 /obj/item/clothing/head/wig/Initialize(mapload)
 	. = ..()
@@ -244,21 +246,44 @@
 		var/datum/sprite_accessory/S = GLOB.hairstyles_list[hairstyle]
 		if(!S)
 			return
-		var/mutable_appearance/M = mutable_appearance(S.icon, S.icon_state,layer = -HAIR_LAYER)
+		var/mutable_appearance/M = mutable_appearance(S.icon, S.icon_state, layer = -HAIR_LAYER)
 		M.appearance_flags |= RESET_COLOR
 		M.color = color
 		. += M
 
+		// Add gradient overlay if set
+		if(gradient_style && gradient_color)
+			var/datum/sprite_accessory/gradient = GLOB.hair_gradients_list[gradient_style]
+			if(gradient)
+				var/icon/gradient_icon = icon(gradient.icon, gradient.icon_state)
+				var/icon/hair_icon = icon(S.icon, S.icon_state)
+				gradient_icon.Blend(hair_icon, ICON_ADD)
+				var/mutable_appearance/gradient_overlay = mutable_appearance(gradient_icon, layer = -HAIR_LAYER)
+				gradient_overlay.appearance_flags |= RESET_COLOR
+				gradient_overlay.color = "#[gradient_color]"
+				. += gradient_overlay
+
 /obj/item/clothing/head/wig/attack_self(mob/user)
-	var/new_style = input(user, "Select a hairstyle", "Wig Styling")  as null|anything in (GLOB.hairstyles_list - "Bald")
-	var/newcolor = adjustablecolor ? input(usr,"","Choose Color",color) as color|null : null
+	var/new_style = input(user, "Select a hairstyle", "Wig Styling") as null|anything in (GLOB.hairstyles_list - "Bald")
+	var/newcolor = adjustablecolor ? input(usr, "", "Choose Hair Color", color) as color|null : null
+	var/new_gradient = input(user, "Select a gradient style (or None)", "Wig Gradient") as null|anything in (list("None") + GLOB.hair_gradients_list)
+	var/new_gradient_color = null
+	if(new_gradient && new_gradient != "None")
+		new_gradient_color = input(usr, "", "Choose Gradient Color", gradient_color ? "#[gradient_color]" : "#FFFFFF") as color|null
 	if(!user.canUseTopic(src, BE_CLOSE))
 		return
 	if(new_style && new_style != hairstyle)
 		hairstyle = new_style
 		user.visible_message("<span class='notice'>[user] changes \the [src]'s hairstyle to [new_style].</span>", "<span class='notice'>You change \the [src]'s hairstyle to [new_style].</span>")
-	if(newcolor && newcolor != color) // only update if necessary
+	if(newcolor && newcolor != color)
 		add_atom_colour(newcolor, FIXED_COLOUR_PRIORITY)
+	if(new_gradient == "None")
+		gradient_style = null
+		gradient_color = null
+	else if(new_gradient)
+		gradient_style = new_gradient
+		if(new_gradient_color)
+			gradient_color = copytext(new_gradient_color, 2) // Remove the # prefix
 	update_icon()
 
 /obj/item/clothing/head/wig/afterattack(mob/living/carbon/human/target, mob/user)
@@ -267,6 +292,8 @@
 		to_chat(user, "<span class='notice'>You adjust the [src] to look just like [target.name]'s [target.hairstyle].</span>")
 		add_atom_colour("#[target.hair_color]", FIXED_COLOUR_PRIORITY)
 		hairstyle = target.hairstyle
+		gradient_style = target.gradient_style
+		gradient_color = target.gradient_color
 		update_icon()
 
 /obj/item/clothing/head/wig/random/Initialize(mapload)
