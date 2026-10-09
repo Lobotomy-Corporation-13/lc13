@@ -69,7 +69,7 @@
 	if(!ishuman(attacked_target))
 		return ..()
 	var/mob/living/carbon/human/H = attacked_target
-	H.drunkenness += 5
+	H.drunkenness += 10
 	to_chat(H, span_warning("Yuck, some of it got in your mouth!"))
 	if(H.sanity_lost)
 		melee_damage_type = RED_DAMAGE
