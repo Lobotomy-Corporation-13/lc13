@@ -1,7 +1,7 @@
 import {
   Component,
   createRef,
-} from 'inferno';
+} from 'react';
 import {
   useBackend,
   useSharedState,
@@ -61,13 +61,17 @@ export const CityMapDisplay = props => {
     map_legend = [],
   } = data;
   const [selColor, setSelColor]
-    = useSharedState('selColor', '');
+    = useSharedState('selColor', '',
+    );
   const [zoom, setZoom]
-    = useSharedState('zoom', 1);
+    = useSharedState('zoom', 1,
+    );
   const [focusX, setFocusX]
-    = useSharedState('focusX', -1);
+    = useSharedState('focusX', -1,
+    );
   const [focusY, setFocusY]
-    = useSharedState('focusY', -1);
+    = useSharedState('focusY', -1,
+    );
   const toggleColor = color => {
     setSelColor(
       selColor === color ? '' : color,

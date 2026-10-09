@@ -16,12 +16,15 @@ const createBabelConfig = options => {
         loose: true,
         targets: [],
       }],
+      ['@babel/preset-react', {
+        runtime: 'automatic',
+      }],
       ...presets,
     ],
     plugins: [
-      '@babel/plugin-transform-jscript',
-      'babel-plugin-inferno',
-      'babel-plugin-transform-remove-console',
+      // Production only: in development it would also strip React's own
+      // warnings (keys, unknown props, style names) from node_modules.
+      ...(mode === 'production' ? ['babel-plugin-transform-remove-console'] : []),
       'common/string.babel-plugin.cjs',
       ...plugins,
     ],

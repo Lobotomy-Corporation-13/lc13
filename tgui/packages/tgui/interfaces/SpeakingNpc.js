@@ -21,7 +21,7 @@ export const SpeakingNpc = props => {
                 {img_url && (
                   <Flex.Item mr={1}>
                     <img
-                      class="fit-picture"
+                      className="fit-picture"
                       width="192"
                       height="192"
                       src={img_url}

@@ -182,8 +182,8 @@ export const CombatLogBook = props => {
                     height="64px"
                     width="64px"
                     style={{
-                      'vertical-align': 'middle',
-                      'image-rendering': 'pixelated',
+                      verticalAlign: 'middle',
+                      imageRendering: 'pixelated',
                       '-ms-interpolation-mode': 'nearest-neighbor',
                     }}
                   />

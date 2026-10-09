@@ -5,7 +5,7 @@
  */
 
 import { classes } from 'common/react';
-import { Component, createRef } from 'inferno';
+import { Component, createRef } from 'react';
 import { Box } from './Box';
 import { KEY_ESCAPE, KEY_ENTER } from 'common/keycodes';
 
@@ -19,11 +19,9 @@ export class Input extends Component {
   constructor() {
     super();
     this.inputRef = createRef();
-    this.state = {
-      editing: false,
-    };
+    this.editing = false;
     this.handleInput = e => {
-      const { editing } = this.state;
+      const { editing } = this;
       const { onInput } = this.props;
       if (!editing) {
         this.setEditing(true);
@@ -33,13 +31,13 @@ export class Input extends Component {
       }
     };
     this.handleFocus = e => {
-      const { editing } = this.state;
+      const { editing } = this;
       if (!editing) {
         this.setEditing(true);
       }
     };
     this.handleBlur = e => {
-      const { editing } = this.state;
+      const { editing } = this;
       const { onChange } = this.props;
       if (editing) {
         this.setEditing(false);
@@ -89,7 +87,7 @@ export class Input extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { editing } = this.state;
+    const { editing } = this;
     const prevValue = prevProps.value;
     const nextValue = this.props.value;
     const input = this.inputRef.current;
@@ -99,7 +97,10 @@ export class Input extends Component {
   }
 
   setEditing(editing) {
-    this.setState({ editing });
+    // Kept as an instance field rather than state: React batches setState,
+    // so handlers running in the same event (e.g. Enter -> blur) would see
+    // a stale value. Nothing renders from it.
+    this.editing = editing;
   }
 
   render() {

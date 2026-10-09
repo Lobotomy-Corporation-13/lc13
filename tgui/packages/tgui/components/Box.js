@@ -5,8 +5,7 @@
  */
 
 import { classes, pureComponentHooks } from 'common/react';
-import { createVNode } from 'inferno';
-import { ChildFlags, VNodeFlags } from 'inferno-vnode-flags';
+import { createElement } from 'react';
 import { CSS_COLORS } from '../constants';
 
 /**
@@ -155,6 +154,15 @@ const styleMapperByPropName = {
   },
 };
 
+/**
+ * Converts a CSS property name to the camelCase key React expects
+ * in a style object ('font-size' -> 'fontSize'). Custom properties
+ * ('--foo') are left alone.
+ */
+const toStyleKey = attrName => (attrName.startsWith('--')
+  ? attrName
+  : attrName.replace(/-([a-z])/g, (_, c) => c.toUpperCase()));
+
 export const computeBoxProps = props => {
   const computedProps = {};
   const computedStyles = {};
@@ -177,19 +185,20 @@ export const computeBoxProps = props => {
       computedProps[propName] = propValue;
     }
   }
-  // Concatenate styles
-  let style = '';
+  // Merge styles (React wants an object with camelCase keys, Inferno took
+  // a CSS string, so kebab-case keys from props.style are converted too).
+  let style;
   for (let attrName of Object.keys(computedStyles)) {
-    const attrValue = computedStyles[attrName];
-    style += attrName + ':' + attrValue + ';';
+    style = style || {};
+    style[toStyleKey(attrName)] = computedStyles[attrName];
   }
   if (props.style) {
     for (let attrName of Object.keys(props.style)) {
-      const attrValue = props.style[attrName];
-      style += attrName + ':' + attrValue + ';';
+      style = style || {};
+      style[toStyleKey(attrName)] = props.style[attrName];
     }
   }
-  if (style.length > 0) {
+  if (style) {
     computedProps.style = style;
   }
   return computedProps;
@@ -220,13 +229,10 @@ export const Box = props => {
     : computeBoxClassName(rest);
   const computedProps = computeBoxProps(rest);
   // Render a wrapper element
-  return createVNode(
-    VNodeFlags.HtmlElement,
-    as,
-    computedClassName,
-    children,
-    ChildFlags.UnknownChildren,
-    computedProps);
+  return createElement(as, {
+    ...computedProps,
+    className: computedClassName,
+  }, children);
 };
 
 Box.defaultHooks = pureComponentHooks;

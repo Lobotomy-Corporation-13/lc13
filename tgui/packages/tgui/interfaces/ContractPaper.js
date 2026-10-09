@@ -22,7 +22,8 @@ export const ContractPaper = props => {
     state = 'pending',
     has_map = false,
   } = data;
-  const [tab, setTab] = useSharedState('paperTab', 0);
+  const [tab, setTab] = useSharedState('paperTab', 0,
+  );
   const showTabs = has_map;
   return (
     <Window
