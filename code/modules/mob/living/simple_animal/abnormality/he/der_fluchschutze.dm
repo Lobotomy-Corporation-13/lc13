@@ -155,7 +155,7 @@ Pretty Basic HE with a cool gimmick */
 		can_act = FALSE
 		updatedefense()
 		to_chat(src, span_warning("You are staggered!"))
-	if(world.time >= lastfired + 40 SECONDS)
+	if(world.time >= lastfired + 40 SECONDS && staggered == TRUE)
 		staggered = FALSE
 		can_act = TRUE
 		stagger = 0
@@ -193,7 +193,7 @@ Pretty Basic HE with a cool gimmick */
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/proc/updatedefense()
 	if(aiming == TRUE)
-		ChangeResistances(list(RED_DAMAGE = 0.5, WHITE_DAMAGE = 0.5, BLACK_DAMAGE = 0.5, PALE_DAMAGE = 0.5, FIRE = 0.5))
+		ChangeResistances(list(RED_DAMAGE = 0.3, WHITE_DAMAGE = 0.5, BLACK_DAMAGE = 0.3, PALE_DAMAGE = 0.3, FIRE = 0.3))
 	else
 		ChangeResistances(list(RED_DAMAGE = 0.5, WHITE_DAMAGE = 1.5, BLACK_DAMAGE = 0.7, PALE_DAMAGE = 0.7, FIRE = 0.5))
 
