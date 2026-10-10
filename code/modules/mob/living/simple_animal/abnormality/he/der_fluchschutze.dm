@@ -236,8 +236,8 @@ Pretty Basic HE with a cool gimmick */
 	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "fluch_sacrifice"
 	icon_living = "fluch_sacrifice"
-	maxHealth = 150
-	health = 150
+	maxHealth = 100
+	health = 100
 	can_patrol = FALSE
 	faction = list("derfluchschutze")
 	wander = 0
