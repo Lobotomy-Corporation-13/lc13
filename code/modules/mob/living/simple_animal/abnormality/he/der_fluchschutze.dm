@@ -91,13 +91,14 @@ Pretty Basic HE with a cool gimmick */
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/NeutralEffect(mob/living/carbon/human/user, work_type, pe)
 	. = ..()
-	if(prob(40))
+	if(prob(40) && work_type != ABNORMALITY_WORK_ATTACHMENT)
 		datum_reference.qliphoth_change(-1)
 	return
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/FailureEffect(mob/living/carbon/human/user, work_type, pe)
 	. = ..()
-	datum_reference.qliphoth_change(-1)
+	if(work_type != ABNORMALITY_WORK_ATTACHMENT)
+		datum_reference.qliphoth_change(-1)
 	return
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/PostWorkEffect(mob/living/carbon/human/user, work_type, pe)
