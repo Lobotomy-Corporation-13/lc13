@@ -4,8 +4,8 @@
 /turf/open/water,
 /area/city/outskirts)
 "bN" = (
-/obj/effect/landmark/abnospawn/hardtank,
-/turf/open/floor/plasteel/dark,
+/obj/effect/landmark/abnospawn/hardsupport,
+/turf/open/floor/plating/ashplanet/rocky,
 /area/city/outskirts)
 "cl" = (
 /obj/machinery/light/broken{
@@ -34,12 +34,12 @@
 /turf/open/floor/plating,
 /area/city/outskirts)
 "gM" = (
-/obj/effect/landmark/abnospawn/hardsupport,
-/turf/open/floor/plasteel/dark,
+/obj/effect/landmark/abnospawn/rhinobuster,
+/turf/open/floor/plating/ashplanet/rocky,
 /area/city/outskirts)
 "ij" = (
 /obj/effect/landmark/abnospawn/hardcombat,
-/turf/open/floor/plasteel/dark,
+/turf/open/floor/plating/ashplanet/rocky,
 /area/city/outskirts)
 "iD" = (
 /turf/open/floor/plating,
@@ -61,8 +61,8 @@
 /turf/open/floor/plating,
 /area/city/outskirts)
 "kE" = (
-/obj/effect/landmark/abnospawn/rhinobuster,
-/turf/open/floor/plasteel/dark,
+/obj/effect/landmark/abnospawn/hardtank,
+/turf/open/floor/plating/ashplanet/rocky,
 /area/city/outskirts)
 "kI" = (
 /turf/closed/indestructible/fakedoor{
@@ -654,7 +654,7 @@ vQ
 vQ
 vQ
 sY
-kE
+sY
 sY
 sY
 sY
@@ -719,7 +719,7 @@ vQ
 sY
 sY
 sY
-gM
+sY
 sY
 vQ
 vQ
@@ -880,7 +880,7 @@ vQ
 vQ
 vQ
 sY
-bN
+sY
 sY
 sY
 sY
@@ -981,7 +981,7 @@ vQ
 vQ
 sY
 sY
-gM
+sY
 sY
 sY
 vQ
@@ -1308,7 +1308,7 @@ vQ
 sY
 sY
 sY
-ij
+sY
 sY
 vQ
 vQ
@@ -1369,7 +1369,7 @@ vQ
 vQ
 vQ
 sY
-ij
+sY
 sY
 sY
 sY
@@ -12736,9 +12736,9 @@ ez
 ez
 ez
 vQ
+bN
 vQ
-vQ
-vQ
+bN
 vQ
 vQ
 vQ
@@ -13062,12 +13062,12 @@ vQ
 vQ
 vQ
 vQ
-vQ
+gM
 vQ
 vQ
 jx
 vQ
-vQ
+kE
 vQ
 vQ
 uU
@@ -13388,9 +13388,9 @@ vQ
 vQ
 vQ
 vQ
+ij
 vQ
-vQ
-vQ
+ij
 vQ
 vQ
 vQ

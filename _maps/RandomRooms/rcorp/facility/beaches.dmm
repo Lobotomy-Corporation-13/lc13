@@ -73,8 +73,8 @@
 /turf/open/floor/plating/ashplanet/rocky,
 /area/city/outskirts)
 "ot" = (
-/obj/effect/landmark/abnospawn/rhinobuster,
-/turf/open/floor/plasteel/dark,
+/obj/effect/landmark/abnospawn/hardcombat,
+/turf/open/floor/plating/ashplanet/rocky,
 /area/city/outskirts)
 "pm" = (
 /turf/open/floor/plasteel/stairs/medium,
@@ -127,8 +127,8 @@
 /turf/open/floor/plating,
 /area/city/outskirts)
 "Fl" = (
-/obj/effect/landmark/abnospawn/hardsupport,
-/turf/open/floor/plasteel/dark,
+/obj/effect/landmark/abnospawn/rhinobuster,
+/turf/open/floor/plating/ashplanet/rocky,
 /area/city/outskirts)
 "FZ" = (
 /obj/effect/landmark/nobasic_incorp_move,
@@ -160,8 +160,8 @@
 /turf/open/floor/plating/asteroid,
 /area/city/outskirts)
 "HE" = (
-/obj/effect/landmark/abnospawn/hardtank,
-/turf/open/floor/plasteel/dark,
+/obj/effect/landmark/abnospawn/hardsupport,
+/turf/open/floor/plating/ashplanet/rocky,
 /area/city/outskirts)
 "HG" = (
 /obj/effect/decal/cleanable/blood/tracks{
@@ -225,8 +225,8 @@
 /turf/open/water,
 /area/city/outskirts)
 "Ri" = (
-/obj/effect/landmark/abnospawn/hardcombat,
-/turf/open/floor/plasteel/dark,
+/obj/effect/landmark/abnospawn/hardtank,
+/turf/open/floor/plating/ashplanet/rocky,
 /area/city/outskirts)
 "Sp" = (
 /obj/machinery/light{
@@ -642,7 +642,7 @@ vQ
 vQ
 vQ
 sY
-ot
+sY
 sY
 sY
 sY
@@ -707,7 +707,7 @@ vQ
 sY
 sY
 sY
-Fl
+sY
 sY
 vQ
 vQ
@@ -868,7 +868,7 @@ vQ
 vQ
 vQ
 sY
-HE
+sY
 sY
 sY
 sY
@@ -969,7 +969,7 @@ vQ
 vQ
 sY
 sY
-Fl
+sY
 sY
 sY
 vQ
@@ -1296,7 +1296,7 @@ vQ
 sY
 sY
 sY
-Ri
+sY
 sY
 vQ
 vQ
@@ -1357,7 +1357,7 @@ vQ
 vQ
 vQ
 sY
-Ri
+sY
 sY
 sY
 sY
@@ -12724,9 +12724,9 @@ ez
 ez
 ez
 vQ
+HE
 vQ
-vQ
-vQ
+HE
 vQ
 vQ
 vQ
@@ -13050,12 +13050,12 @@ vQ
 vQ
 vQ
 vQ
-vQ
+Fl
 vQ
 vQ
 Bq
 vQ
-vQ
+Ri
 vQ
 vQ
 GC
@@ -13376,9 +13376,9 @@ vQ
 vQ
 vQ
 vQ
+ot
 vQ
-vQ
-vQ
+ot
 vQ
 vQ
 vQ
