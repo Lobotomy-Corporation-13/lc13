@@ -103,7 +103,7 @@ Pretty Basic HE with a cool gimmick */
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/PostWorkEffect(mob/living/carbon/human/user, work_type, pe)
 	if(work_type == ABNORMALITY_WORK_ATTACHMENT)
-		if (prob(20))
+		if (prob(25))
 			datum_reference.qliphoth_change(-2) // big qlipoth dip at a low chance, go big or go home.
 		return ..()
 	return ..()
