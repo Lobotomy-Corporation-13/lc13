@@ -584,3 +584,16 @@
 	abno_info = list(
 		"When another abnormality breached, the Qliphoth counter lowered.",
 		"F-02-182 returned to it's containment after 5 minutes.")
+
+// Der Fluchschutze
+/obj/item/paper/fluff/info/he/derfluch
+	abno_type = /mob/living/simple_animal/hostile/abnormality/der_fluchschutze
+	abno_code = "F-01-16"
+	abno_info = list(
+		"Attachment work provided the best results, but occassional caused a large drop in qlipoth",
+		"When the work result was neutral, the Qliphoth counter lowered.",
+		"When the work result was bad, the Qliphoth counter lowered.",
+		"When the work result was good, the Qliphoth counter increased at a low probability.",
+		"During a breach, Der Fluchschutze will roam and fire at employees and abnormalities alike.",
+		"Occassionally, it will summon and attempt to fire at sacrifices around the facility, if left alive the sacrifices will be killed causing large RED damage to nearby employees and abnormalities.",
+		"If two or more of the above sacrifices were killed, Der Fluchschutze will become temporarily staggered and will be unable to fire or move for a short period of time.")

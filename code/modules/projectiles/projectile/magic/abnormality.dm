@@ -501,3 +501,17 @@
 		var/mob/living/simple_animal/hostile/abnormality/yinglong/dragon = firer
 		dragon.flower_pins++
 	return ..()
+
+/obj/projectile/fellround
+	name = "Fell Bullet Round"
+	desc = "A shotgun shell, its headed straight for you."
+	damage_type = RED_DAMAGE
+	damage = 20
+	speed = 5
+	alpha = 0
+	spread = 20
+
+/obj/projectile/fellround/Initialize()
+	. = ..()
+	hitsound = "sound/abnormalities/fluchschutze/fell_bullet2.ogg"
+	animate(src, alpha = 255, time = 1)
