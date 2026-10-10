@@ -285,5 +285,5 @@ Pretty Basic HE with a cool gimmick */
 				throw_dir = pick(NORTH, SOUTH, EAST, WEST) // random dir if on same tile
 			var/throw_target = get_edge_target_turf(L, throw_dir)
 			L.throw_at(throw_target, 4, 2)
-			L.deal_damage(70, RED_DAMAGE)
+			L.deal_damage(75, RED_DAMAGE)
 	qdel(src)
