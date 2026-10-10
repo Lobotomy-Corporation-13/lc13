@@ -211,7 +211,7 @@ Pretty Basic HE with a cool gimmick */
 	name = "Fell Bullet Casing"
 	desc = "a casing from the gun destined to pierce the one who the wielder loves most."
 	projectile_type = /obj/projectile/fellround
-	pellets = 5
+	pellets = 6
 	variance = 25
 
 
