@@ -277,7 +277,7 @@ Pretty Basic HE with a cool gimmick */
 	playsound('sound/abnormalities/fluchschutze/fell_scatter.ogg', 35, 0, 20)
 	exploded = TRUE
 	playsound(get_turf(src), 'sound/effects/explosion2.ogg', 50, 0, 8)
-	for(var/turf/T in range(3, src))
+	for(var/turf/T in range(4, src))
 		new /obj/effect/temp_visual/small_smoke/halfsecond(T)
 		for(var/mob/living/L in T)
 			var/throw_dir = get_dir(src, L)
