@@ -97,11 +97,23 @@
 	our_corporation = "L corp"
 
 /obj/structure/pe_sales/limbus
-	name = "Limbus Company Power Input"
+	name = "Limbus Company Bus Power Input"
 	desc = "A machine used to send PE to limbus company."
 	icon_state = "machinelcb"
 	crate = /obj/structure/lootcrate/limbus
 	our_corporation = "P corp" // Extremely questionable P-Corp~
+
+/obj/structure/pe_sales/limbus_c
+	name = "Limbus Company Clearance Power Input"
+	desc = "A machine used to send PE to limbus company."
+	icon_state = "machinelcc"
+	crate = /obj/structure/lootcrate/limbus_c
+
+/obj/structure/pe_sales/limbus_e
+	name = "Limbus Company Extraction Power Input"
+	desc = "A machine used to send PE to limbus company."
+	icon_state = "machinelce"
+	crate = /obj/structure/lootcrate/limbus_e
 
 /obj/structure/pe_sales/k_corp
 	name = "K-Corp Power Input"
@@ -116,7 +128,7 @@
 	desc = "A machine used to send PE to R-Corp."
 	icon_state = "machiner"
 	crate = /obj/structure/lootcrate/r_corp
-	crate_timer = 360	//One of the most expensive because it's R corp stuff
+	crate_timer = 240	//One of the more expensive because it's R corp stuff
 	our_corporation = "R corp"
 
 /obj/structure/pe_sales/s_corp
@@ -172,7 +184,7 @@
 	icon_state = "machinehana"
 	crate = /obj/structure/lootcrate/hana
 	power_timer = 180 	//Takes a long fucking time
-	crate_timer = 540	//Very expensive stuff. Takes 10 minutes to get 1 box.
+	crate_timer = 360	//Very expensive stuff. Takes 10 minutes to get 1 box.
 
 /obj/structure/pe_sales/zwei
 	name = "Zwei Association Power Input"
@@ -205,7 +217,7 @@
 	desc = "A machine used to send PE to the syndicate workshop"
 	icon_state = "machinesyndicate"
 	crate = /obj/structure/lootcrate/syndicate
-	crate_timer = 360	//The most expensive sales, takes about 3.5 boxes. The worst you'll get is still extremely good
+	crate_timer = 240	//The most expensive sales, takes about 3.5 boxes. The worst you'll get is still extremely good
 	our_corporation = "P corp" // Extremely questionable P-Corp~
 
 /obj/structure/pe_sales/backstreet
@@ -238,9 +250,9 @@
 
 /obj/structure/pe_sales/h_corp
 	name = "H-Corp Power Input"
-	desc = "A machine used to send PE to K-Corp."
+	desc = "A machine used to send PE to H-Corp."
 	icon_state = "machineh"
 	crate = /obj/structure/lootcrate/h_corp
-	crate_timer = 60	//2 Crates per
+	crate_timer = 120	//1 Crate per, gives you one bolus and one set of essences.
 	our_corporation = "H corp"
 

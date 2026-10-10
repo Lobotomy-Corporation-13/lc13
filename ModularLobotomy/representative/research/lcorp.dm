@@ -116,6 +116,27 @@ GLOBAL_LIST_EMPTY(lcorp_upgrades)
 	new /obj/item/understandingbooster(get_turf(requester))
 	..()
 
+//The department chips
+/datum/data/lc13research/departmentchips
+	research_name = "Department Agent Chips"
+	research_desc = "Allows you to buy chips that give you some sweet sweet agent buffs."
+	cost = AVERAGE_RESEARCH_PRICE
+	corp = L_CORP_REP
+
+/datum/data/lc13research/departmentchips/ResearchEffect(obj/structure/representative_console/requester)
+	..()
+	ItemUnlock(requester.order_list, "Control Agent Chip",	/obj/item/department_chip/control, 500)
+	ItemUnlock(requester.order_list, "Information Agent Chip",	/obj/item/department_chip/info, 500)
+	ItemUnlock(requester.order_list, "Training Agent Chip",	/obj/item/department_chip, 500)
+	ItemUnlock(requester.order_list, "Safety Agent Chip",	/obj/item/department_chip/safety, 500)
+	ItemUnlock(requester.order_list, "Command Agent Chip",	/obj/item/department_chip/command, 500)
+	ItemUnlock(requester.order_list, "Welfare Agent Chip",	/obj/item/department_chip/welfare, 500)
+	ItemUnlock(requester.order_list, "Disciplinary Agent Chip",	/obj/item/department_chip/discipline, 500)
+	ItemUnlock(requester.order_list, "Extraction Agent Chip",	/obj/item/department_chip/extraction, 500)
+	ItemUnlock(requester.order_list, "Records Agent Chip",	/obj/item/department_chip/records, 500)
+
+
+
 //Level 2 Clerks
 /datum/data/lc13research/clerkbuff
 	research_name = "Clerk Advanced Training"
