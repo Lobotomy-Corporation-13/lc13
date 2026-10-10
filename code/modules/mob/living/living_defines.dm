@@ -196,3 +196,6 @@
 
 	/// Index used to interact with the moblist of the area they are currently in.
 	var/area_index = MOB_LIVING_INDEX
+
+	/// If a ghost should never be allowed to take this body, even where possession is enabled.
+	var/do_not_possess = FALSE

@@ -76,10 +76,16 @@
 \-----*/
 /mob/living/simple_animal/hostile/limbus_abno/simple_smile/AbnoEat(food)
 	var/obj/object = food
-	if(!gobble || istype(object, /obj/item/bodypart/head))
+	if(!gobble || istype(object, /obj/item/bodypart/head) || !istype(object))
 		return FALSE
 	if((object.resistance_flags & INDESTRUCTIBLE) || object.anchored) //Letting it eat nearly anything is 100% going to bite me in the ass somehow but fuck it, it's funny.
 		return FALSE
+	//Its own leash is not food, same as it cannot pick one up or drag one around.
+	if(istype(object, /obj/item/qliphoth_lasso))
+		var/obj/item/qliphoth_lasso/lasso = object
+		if(lasso.tethered == src)
+			to_chat(src, span_warning("Your teeth will not close on it. It is earthed to you."))
+			return FALSE
 
 	. = ..()
 	if(!.)
