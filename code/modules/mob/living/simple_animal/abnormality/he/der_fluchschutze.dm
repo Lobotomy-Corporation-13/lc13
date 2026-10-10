@@ -236,8 +236,8 @@ Pretty Basic HE with a cool gimmick */
 	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "fluch_sacrifice"
 	icon_living = "fluch_sacrifice"
-	maxHealth = 100
-	health = 100
+	maxHealth = 150
+	health = 150
 	can_patrol = FALSE
 	faction = list("derfluchschutze")
 	wander = 0
@@ -273,7 +273,7 @@ Pretty Basic HE with a cool gimmick */
 	return
 
 /mob/living/simple_animal/hostile/der_flusch_sacrifice/proc/explode()
-	//NEed to set the var for when we fucking die
+	//Need to set the var for when we fucking die
 	playsound('sound/abnormalities/fluchschutze/fell_scatter.ogg', 35, 0, 20)
 	exploded = TRUE
 	playsound(get_turf(src), 'sound/effects/explosion2.ogg', 50, 0, 8)
