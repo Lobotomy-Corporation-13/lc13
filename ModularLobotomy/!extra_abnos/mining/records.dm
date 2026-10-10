@@ -37,20 +37,37 @@
 //Goliath
 /obj/item/paper/fluff/info/mining/goliath
 	abno_type = /mob/living/simple_animal/hostile/abnormality/mining/goliath
-	abno_code = "S-04-13-01"
+	abno_code = "S-02-13-01"
 	abno_info = list(
 		"When the work result was Good, the Qliphoth Counter lowered at a low rate.",
 		"When the work result was Bad, the Qliphoth Counter lowered.",
 	)
 
+//Mook
+/obj/item/paper/fluff/info/mining/mook
+	abno_type = /mob/living/simple_animal/hostile/abnormality/mining/mook
+	abno_code = "S-01-13-16"
+	abno_info = list(
+		"When the work result was Normal, the Qliphoth Counter lowered at a low rate.",
+		"When the work result was Bad, the Qliphoth Counter lowered.",
+	)
 
+
+//Lobstrosity
+/obj/item/paper/fluff/info/mining/lobstrosity
+	abno_type = /mob/living/simple_animal/hostile/abnormality/mining/lobstrosity
+	abno_code = "S-01-13-17"
+	abno_info = list(
+		"When the work result was Normal, the Qliphoth Counter lowered at a low rate.",
+		"When the work result was Bad, the Qliphoth Counter lowered.",
+	)
 
 
 //	-------------HE-------------
 // Herald
 /obj/item/paper/fluff/info/mining/herald
 	abno_type = /mob/living/simple_animal/hostile/abnormality/mining/herald
-	abno_code = "S-03-13-05"	//S for "Space" because "M" is for "Myth"
+	abno_code = "S-02-13-05"	//S for "Space" because "M" is for "Myth"
 	abno_info = list(
 		"When the work result was Normal, the Qliphoth Counter lowered with a normal probability.",
 		"When the work result was Bad, the Qliphoth Counter lowered with a high probability.",
@@ -72,6 +89,16 @@
 	abno_info = list(
 		"When the work result was Normal, the Qliphoth Counter lowered with a normal probability.",
 		"When the work result was Bad, the Qliphoth Counter lowered with a high probability.",
+	)
+
+//	-------------WAW-------------
+// Leaper
+/obj/item/paper/fluff/info/mining/leaper
+	abno_type = /mob/living/simple_animal/hostile/abnormality/mining//leaper
+	abno_code = "S-02-13-14"
+	abno_info = list(
+		"When the work result was Normal, the Qliphoth Counter lowered.",
+		"When the work result was Bad, the Qliphoth Counter lowered with a normal probability.",
 	)
 
 

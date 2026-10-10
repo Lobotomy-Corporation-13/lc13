@@ -55,7 +55,7 @@ Difficulty: Hard
 	melee_damage_upper = 60
 	melee_damage_type = RED_DAMAGE
 	can_breach = TRUE
-	threat_level = TETH_LEVEL
+	threat_level = ALEPH_LEVEL
 	start_qliphoth = 1
 	work_chances = list(
 		ABNORMALITY_WORK_INSTINCT = 40,
@@ -217,12 +217,3 @@ Difficulty: Hard
 	SLEEP_CHECK_DEATH(12)
 	can_move = TRUE
 	teleport()
-
-/mob/living/simple_animal/hostile/abnormality/mining/wendigo/death(gibbed, list/force_grant)
-	if(health > 0)
-		return
-	var/obj/effect/portal/permanent/one_way/exit = new /obj/effect/portal/permanent/one_way(starting)
-	exit.id = "wendigo arena exit"
-	exit.add_atom_colour(COLOR_RED_LIGHT, ADMIN_COLOUR_PRIORITY)
-	exit.set_light(20, 1, COLOR_SOFT_RED)
-	return ..()
