@@ -219,7 +219,7 @@ Pretty Basic HE with a cool gimmick */
 	name = "Fell Bullet Round"
 	desc = "A shotgun pellet, its headed straight for you."
 	damage_type = RED_DAMAGE
-	damage = 20
+	damage = 15
 	speed = 0.4
 	spread = 15
 
