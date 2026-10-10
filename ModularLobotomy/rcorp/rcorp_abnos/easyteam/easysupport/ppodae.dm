@@ -132,7 +132,7 @@
 		var/obj/item/bodypart/bp = pick(parts)
 		bp.dismember()
 		adjustHealth(-(maxHealth * limb_heal))
-		QDEL_NULL(src)
+		QDEL_NULL(bp)
 
 //AoE attack taken from woodsman
 /mob/living/simple_animal/hostile/rcorp_abno/easy/ppodae/proc/Smash(target)

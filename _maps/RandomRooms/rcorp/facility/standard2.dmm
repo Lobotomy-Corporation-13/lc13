@@ -2011,6 +2011,11 @@
 	},
 /turf/open/floor/carpet/orange,
 /area/city/outskirts)
+"KA" = (
+/obj/effect/turf_decal/sand/plating,
+/obj/effect/landmark/abnospawn/hardcombat,
+/turf/open/floor/carpet/black,
+/area/city/outskirts)
 "KF" = (
 /obj/effect/turf_decal/siding/brown,
 /turf/open/floor/plasteel/dark,
@@ -2458,6 +2463,11 @@
 /obj/item/shard,
 /obj/effect/turf_decal/sand,
 /turf/open/floor/plasteel/dark,
+/area/city/outskirts)
+"Th" = (
+/obj/effect/turf_decal/sand/plating,
+/obj/effect/landmark/abnospawn/hardsupport,
+/turf/open/floor/plating,
 /area/city/outskirts)
 "Tk" = (
 /obj/machinery/computer/security,
@@ -14794,7 +14804,7 @@ Im
 Im
 Im
 Im
-pa
+KA
 Im
 Im
 cI
@@ -15617,7 +15627,7 @@ Im
 Im
 Im
 Im
-gB
+Th
 Im
 Im
 Im

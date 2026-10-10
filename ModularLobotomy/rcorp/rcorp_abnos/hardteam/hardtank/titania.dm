@@ -19,8 +19,8 @@
 	abno_additional_instructions = "<h1>You are Titania, A Tank Role Abnormality.</h1><br>\
 		<b>|Wingbeat|: As a fairy you may use your wings to fly over ground terrain such as chasms or water. <br>\
 		<br>\
-		|Fairy Queen|: When attacking a human below level 4, you will rid them of their pain. \
-		This action will instantly kill the human, if done on a corpse it will destroy the body. \
+		|Fairy Queen|: When attacking a human corpse, you will rid them of their pain. \
+		This action will destroy the body. \
 		Upon using this on a human you will create 2 |Fairy Swarm|. \
 		If killed all |Fairy Swarm| you have created will disappear along with you. <br>\
 		<br>\
@@ -74,6 +74,18 @@
 /mob/living/simple_animal/hostile/rcorp_abno/hard/titania/Destroy()
 	UnregisterAll()
 	return ..()
+
+//Attacking code
+/mob/living/simple_animal/hostile/rcorp_abno/hard/titania/AttackingTarget(atom/attacked_target)
+	var/mob/living/carbon/human/H = attacked_target
+	//Spawns fairies from the dead
+	if(ishuman(H) && isdead(H))
+		say("I rid you of your pain, mere human.")
+		//Double Check
+		SpawnFairies(fairy_spawn_number * 2, H)
+		H.gib()
+		return
+	. = ..()
 
 /mob/living/simple_animal/hostile/rcorp_abno/hard/titania/proc/SpawnFairies(amount, mob/turf_mob)
 	var/turf/spawn_turf
