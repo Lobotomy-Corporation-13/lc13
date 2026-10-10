@@ -220,7 +220,7 @@ Pretty Basic HE with a cool gimmick */
 	desc = "A shotgun pellet, its headed straight for you."
 	damage_type = RED_DAMAGE
 	damage = 15
-	speed = 0.4
+	speed = 0.6
 	spread = 15
 
 /obj/projectile/fellround/Initialize()
