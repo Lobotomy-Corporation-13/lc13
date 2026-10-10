@@ -131,7 +131,7 @@ Pretty Basic HE with a cool gimmick */
 			Reload()
 
 	if(lastfired + firecooldown <= world.time)
-		if(prob(25))
+		if(prob(15))
 			aiming = TRUE
 			updatedefense()
 			lastfired = world.time
