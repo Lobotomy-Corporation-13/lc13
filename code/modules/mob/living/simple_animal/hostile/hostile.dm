@@ -116,21 +116,21 @@ GLOBAL_LIST_EMPTY(marked_players)
 	//Flow field map
 	var/datum/mapholder/world_map
 	//Possibly a terrible attempt at sorting
-	var/alist/walk_variables = list(
-		"thinking" = FALSE,
+	var/alist/walk_variables = alist(
+		PATH_THINKING = FALSE,
 		//If we redraw a map when we reach our dest
-		"remap_on_dest" = TRUE,
+		PATH_REMAP = TRUE,
 		//Countdown for how many times we keep our map.
-		"redraw" = 0,
+		PATH_REDRAW = 0,
 		//Travels strictly in adjacent tiles
-		"no_diagonals" = FALSE,
+		PATH_NODIAG = FALSE,
 		//checks closed turfs afterwards to avoid them
-		"careful" = TRUE,
+		PATH_CAREFUL = TRUE,
 		/*
 		* To prevent the path_step from jolting forward
 		* this value tracks the last time we took a step.
 		*/
-		"walk_cooldown" = 0,
+		PATH_COOLDOWN = 0,
 		)
 
 /mob/living/simple_animal/hostile/Initialize()
@@ -365,7 +365,7 @@ GLOBAL_LIST_EMPTY(marked_players)
 		return dodge(newloc,dir)
 	. = ..()
 	if(.)
-		walk_variables["walk_cooldown"] = world.time + move_to_delay
+		walk_variables[PATH_COOLDOWN] = world.time + move_to_delay
 
 /mob/living/simple_animal/hostile/CanAllowThrough(atom/movable/mover, turf/target)
 	. = ..()
@@ -1497,17 +1497,17 @@ GLOBAL_LIST_EMPTY(marked_players)
 \-----------------------*/
 /mob/living/simple_animal/hostile/proc/PathStep(atom/trg)
 	var/turf/trg_turf = get_turf(trg)
-	if(!trg || !trg_turf || walk_variables["thinking"])
+	if(!trg || !trg_turf || walk_variables[PATH_THINKING])
 		return
 	var/turf/our_turf = get_turf(src)
 	var/good_path = FALSE
 	//true false seems to not play well with alists
-	walk_variables["thinking"] = TRUE
+	walk_variables[PATH_THINKING] = TRUE
 	var/our_tag = "[x],[y]"
 	var/trg_tag = "[trg.x],[trg.y]"
 	var/walk_path_dir = null
 	//If our tag is in the map and our targets tag is in the map just reuse.
-	if((our_tag in walk_path) && (trg_tag in walk_path) && walk_variables["redraw"] < 2)
+	if((our_tag in walk_path) && (trg_tag in walk_path) && walk_variables[PATH_REDRAW] < 2)
 		walk_path_dir = walk_path[trg_tag]
 
 	//If our target isnt stationary just keep the map.
@@ -1516,12 +1516,12 @@ GLOBAL_LIST_EMPTY(marked_players)
 			good_path = TRUE
 
 	//To prevent us using the same map forever we will redraw after 2 attempts
-	walk_variables["redraw"] += 1
+	walk_variables[PATH_REDRAW] += 1
 
-	walk_variables["thinking"] = FALSE
+	walk_variables[PATH_THINKING] = FALSE
 	if(length(walk_path) && good_path)
 		WalkPing(0)
-		walk_variables["redraw"] = 0
+		walk_variables[PATH_REDRAW] = 0
 		return TRUE
 	//reset redraw counter
 
@@ -1555,11 +1555,11 @@ GLOBAL_LIST_EMPTY(marked_players)
 
 		if(walk_tag == "dest")
 			//causes "jolts" of movement
-			if(target && walk_variables["remap_on_dest"])
+			if(target && walk_variables[PATH_REMAP])
 				Goto(target, move_to_delay)
 			return
 		//No double stepping
-		if(walk_variables["walk_cooldown"] <= world.time)
+		if(walk_variables[PATH_COOLDOWN] <= world.time)
 			Move(steppers, walk_path[our_tag])
 		if(timer_called < 20)
 			walk_timer = addtimer(CALLBACK(src, PROC_REF(WalkPing), timer_called + 1), timer_cooldown, TIMER_STOPPABLE)
@@ -1578,7 +1578,7 @@ GLOBAL_LIST_EMPTY(marked_players)
 			return
 		if(get_dist(focus_turf, start) > 20)
 			break
-		var/list/temp_list = ReturnAdjacentTurfs(focus_turf, walk_variables["no_diagonals"])
+		var/list/temp_list = ReturnAdjacentTurfs(focus_turf, walk_variables[PATH_NODIAG])
 		var/list/total_list = openf + closed_turfs
 		for(var/turf/T in temp_list)
 			var/new_dir = get_dir(T,focus_turf)
@@ -1593,7 +1593,7 @@ GLOBAL_LIST_EMPTY(marked_players)
 				var/turf/pointing_at = get_step(T, dir_list[T])
 				//Dont bother if its just a wall
 				if(tval >= 1000)
-					if(walk_variables["careful"])
+					if(walk_variables[PATH_CAREFUL])
 						var/list/double_check_turfs = ReturnAdjacentTurfs(T, TRUE)
 						for(var/turf/check in double_check_turfs)
 							if(!(check in dir_list))
@@ -1793,14 +1793,13 @@ GLOBAL_LIST_EMPTY(marked_players)
 	if(stat == DEAD || !can_act) // Dead
 		return FALSE
 
-	if(!target)
-		if(world_map)
-			var/our_coords = "[x],[y]"
-			var/list/temp_walkpath = world_map.CheckMap(our_coords)
-			if(temp_walkpath)
-				walk_path = temp_walkpath
-				WalkPing()
-				return
+	if(target || isnull(world_map))
+		return
+
+	var/list/temp_walkpath = world_map.CheckMap("[x],[y]")
+	if(length(temp_walkpath))
+		walk_path = temp_walkpath
+		WalkPing()
 
 /*
 * This grabs a flow map from the flowfield subsystem.

@@ -187,7 +187,6 @@ SUBSYSTEM_DEF(flowfield)
 				openf[T] = nval
 
 		else
-			dir_list += temp_coords
 			dir_list[temp_coords] = new_dir
 			//This is so that they stop when they are within 1 tile of the destination
 			if(get_dist(start, T) <= 1)

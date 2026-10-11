@@ -166,6 +166,7 @@
 #include "code\__DEFINES\~lobotomy_defines\abnormalities.dm"
 #include "code\__DEFINES\~lobotomy_defines\adventure.dm"
 #include "code\__DEFINES\~lobotomy_defines\ego_tags.dm"
+#include "code\__DEFINES\~lobotomy_defines\experimental_pathing.dm"
 #include "code\__DEFINES\~lobotomy_defines\grid_crafting.dm"
 #include "code\__DEFINES\~lobotomy_defines\is_helpers.dm"
 #include "code\__DEFINES\~lobotomy_defines\jobs.dm"
