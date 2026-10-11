@@ -1111,7 +1111,7 @@
 		to_chat(occupier, "<span class='danger'>Primary core damaged, unable to return core processes.</span>")
 		if(forced)
 			occupier.forceMove(drop_location())
-			occupier.death()
+			INVOKE_ASYNC(occupier, TYPE_PROC_REF(/mob/living, death))
 			occupier.gib()
 			for(var/obj/item/pinpointer/nuke/P in GLOB.pinpointer_list)
 				P.switch_mode_to(TRACK_NUKE_DISK) //Pinpointers go back to tracking the nuke disk

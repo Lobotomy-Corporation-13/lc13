@@ -71,11 +71,12 @@
 
 	turn_into_burger(user)
 
-/mob/living/simple_animal/hostile/abnormality/spider/proc/turn_into_burger(mob/living/carbon/human/user, skip_waiting = FALSE)
+/mob/living/simple_animal/hostile/abnormality/spider/proc/turn_into_burger(mob/living/carbon/human/user, force = FALSE)
 	icon_state = "spider_open"
 	if(GODMODE in user.status_flags)
 		manual_emote("stares at [user], visibly annoyed.")
-		SLEEP_CHECK_DEATH(3 SECONDS)
+		if(!force)
+			SLEEP_CHECK_DEATH(3 SECONDS)
 		icon_state = "spider_closed"
 		return
 
@@ -84,7 +85,7 @@
 	user.forceMove(casing)
 
 	user.death()
-	if(!skip_waiting)
+	if(!force)
 		SLEEP_CHECK_DEATH(3 SECONDS)
 
 	icon_state = "spider_closed"
@@ -133,7 +134,7 @@
 		sinner.deal_damage(50 * spooder.metagame_list[sinner.ckey], RED_DAMAGE, flags = (DAMAGE_FORCED))
 		to_chat(sinner, span_userdanger("As the cocoon breaks tiny spiders swarm you and tear out some of your flesh before returning to [spooder]!"))
 		if(sinner.stat == DEAD) // if they are dead after our attack, burger them
-			spooder.turn_into_burger(sinner, TRUE)
+			INVOKE_ASYNC(spooder, TYPE_PROC_REF(/mob/living/simple_animal/hostile/abnormality/spider, turn_into_burger), sinner, TRUE)
 
 	return ..()
 

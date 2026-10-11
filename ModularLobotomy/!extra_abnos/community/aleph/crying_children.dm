@@ -247,10 +247,9 @@
 
 /mob/living/simple_animal/hostile/abnormality/crying_children/Destroy()
 	UnregisterSignal(SSdcs, COMSIG_GLOB_MOB_DEATH)
-	for(var/mob/living/simple_animal/hostile/child/C in children_list)
-		DeadChild(C)
-	// If for some reason admeme deletes it
-	QDEL_LIST(children_list)
+	for(var/mob/living/simple_animal/hostile/child/child as anything in children_list)
+		clear_child(child)
+		qdel(child)
 	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/crying_children/OpenFire()
@@ -448,9 +447,12 @@
 	RegisterSignal(PE, list(COMSIG_PARENT_QDELETING, COMSIG_LIVING_DEATH), PROC_REF(DeadChild), PE)
 	children_list = list(SE, HE, PE)
 
-/mob/living/simple_animal/hostile/abnormality/crying_children/proc/DeadChild(mob/living/deadchild)
-	children_list -= deadchild
-	UnregisterSignal(deadchild, list(COMSIG_PARENT_QDELETING, COMSIG_LIVING_DEATH))
+/mob/living/simple_animal/hostile/abnormality/crying_children/proc/clear_child(mob/living/child)
+	children_list -= child
+	UnregisterSignal(child, list(COMSIG_PARENT_QDELETING, COMSIG_LIVING_DEATH))
+
+/mob/living/simple_animal/hostile/abnormality/crying_children/proc/DeadChild(mob/living/child)
+	clear_child(child)
 	charge = max(0, charge - 30) // Extra 30 Sec Per Kill
 	if(children_list.len <= 0 && stat != DEAD && !QDELETED(src))
 		SLEEP_CHECK_DEATH(50)

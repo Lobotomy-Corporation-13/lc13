@@ -28,7 +28,7 @@
 		return
 	if(!isliving(A))
 		if(gunpointing) //Cancelling a gunpoint by shift + MMB on a non-mob
-			gunpointing.Destroy()
+			QDEL_NULL(gunpointing)
 		return
 	var/mob/living/L = A
 	if(gunpointing && L == gunpointing.target) //Cancelling a gunpoint by shift + MMB on the target
@@ -37,7 +37,7 @@
 		if(!CanGunpointAt(L, TRUE))
 			return
 		if(gunpointing) //We're gunpoint and we already know we're locking onto a different, valid target
-			gunpointing.Destroy()
+			qdel(gunpointing)
 		gunpointing = new(src, L, G)
 
 /mob/living/proc/CanGunpointAt(mob/living/L, notice = FALSE)

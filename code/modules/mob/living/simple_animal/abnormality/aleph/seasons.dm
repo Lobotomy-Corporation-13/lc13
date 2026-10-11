@@ -351,7 +351,7 @@
 	SSweather.run_weather(season_stats[current_season][1])
 
 /mob/living/simple_animal/hostile/abnormality/seasons/proc/EndWeather()
-	SSweather.end_weather(season_stats[current_season][1])
+	INVOKE_ASYNC(SSweather, TYPE_PROC_REF(/datum/controller/subsystem/weather, end_weather), season_stats[current_season][1])
 
 //Combat
 /mob/living/simple_animal/hostile/abnormality/seasons/AttackingTarget(atom/attacked_target)

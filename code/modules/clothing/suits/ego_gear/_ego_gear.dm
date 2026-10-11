@@ -67,17 +67,17 @@
 		var/obj/item/clothing/head/headgear = user.get_item_by_slot(ITEM_SLOT_HEAD)
 		if(!istype(headgear, hat))
 			return
-		headgear.Destroy()
+		qdel(headgear)
 	if(neck)
 		var/obj/item/clothing/neck/neckwear = user.get_item_by_slot(ITEM_SLOT_NECK)
 		if(!istype(neckwear, neck))
 			return
-		neckwear.Destroy()
+		qdel(neckwear)
 	if(mask)
 		var/obj/item/clothing/mask/maskwear = user.get_item_by_slot(ITEM_SLOT_MASK)
 		if(!istype(maskwear, mask))
 			return
-		maskwear.Destroy()
+		qdel(maskwear)
 
 /obj/item/clothing/suit/armor/ego_gear/dropped(mob/user)
 	. = ..()
@@ -85,17 +85,17 @@
 		var/obj/item/clothing/head/headgear = user.get_item_by_slot(ITEM_SLOT_HEAD)
 		if(!istype(headgear, hat))
 			return
-		headgear.Destroy()
+		qdel(headgear)
 	if(neck)
 		var/obj/item/clothing/neck/neckwear = user.get_item_by_slot(ITEM_SLOT_NECK)
 		if(!istype(neckwear, neck))
 			return
-		neckwear.Destroy()
+		qdel(neckwear)
 	if(mask)
 		var/obj/item/clothing/mask/maskwear = user.get_item_by_slot(ITEM_SLOT_MASK)
 		if(!istype(maskwear, mask))
 			return
-		maskwear.Destroy()
+		qdel(maskwear)
 
 /obj/item/clothing/suit/armor/ego_gear/proc/CanUseEgo(mob/living/carbon/human/user)
 	if(!ishuman(user))
