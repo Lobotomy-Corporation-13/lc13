@@ -48,6 +48,9 @@
 
 #define ATAN2(x, y) ( !(x) && !(y) ? 0 : (y) >= 0 ? arccos((x) / sqrt((x)*(x) + (y)*(y))) : -arccos((x) / sqrt((x)*(x) + (y)*(y))) )
 
+//Pythagorian for determining distance
+#define PYTHAGOREAN(A,B,C,D) sqrt(((A-B)**2)+((C-D)**2))
+
 // Greatest Common Divisor - Euclid's algorithm
 /proc/Gcd(a, b)
 	return b ? Gcd(b, (a) % (b)) : a
