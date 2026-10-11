@@ -311,7 +311,7 @@ GLOBAL_LIST_EMPTY(marked_players)
 		else //Otherwise randomize it to make the players guessing.
 			addtimer(cb,rand(1,SSnpcpool.wait))
 
-	if(!!stop_automated_movement && smart_pathing)
+	if(smart_pathing)
 		WalkWithMap()
 
 /mob/living/simple_animal/hostile/attacked_by(obj/item/I, mob/living/user)

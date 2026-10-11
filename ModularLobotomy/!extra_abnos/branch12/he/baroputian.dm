@@ -56,7 +56,6 @@
 	)
 
 	abnormality_origin = ABNORMALITY_ORIGIN_BRANCH12
-	smart_pathing = TRUE
 	var/active = FALSE
 	var/size = 1
 	var/max_followers = 6
@@ -238,6 +237,7 @@
 	mob_size = MOB_SIZE_SMALL
 	can_be_held = TRUE
 	del_on_death = TRUE
+	smart_pathing = TRUE
 	var/obj/item/held_item
 	var/allies = 0
 	var/behavior_mode = LILI_BEHAVIOR_MODE_STEAL

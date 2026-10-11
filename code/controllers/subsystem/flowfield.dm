@@ -201,9 +201,10 @@ SUBSYSTEM_DEF(flowfield)
 				closed_turfs += focus_turf
 				closed_turfs[focus_turf] = 1000
 
-// Only good for seeing how far the scanning is going.
+/* Only good for seeing how far the scanning is going.
 	var/image/effect_flick = image('icons/effects/cult_effects.dmi',focus_turf,"bloodsparkles",CLOSED_FIREDOOR_LAYER)
 	flick_overlay_view(effect_flick, focus_turf, 1)
+*/
 
 	//Add checked focus_turfs to closed_turfs list.
 	closed_turfs += focus_turf
