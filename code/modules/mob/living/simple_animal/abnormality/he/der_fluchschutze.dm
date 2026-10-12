@@ -201,7 +201,7 @@ Pretty Basic HE with a cool gimmick */
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/proc/updatedefense()
 	if(aiming == TRUE)
-		ChangeResistances(list(RED_DAMAGE = 0.0, WHITE_DAMAGE = 0.0, BLACK_DAMAGE = 0.0, PALE_DAMAGE = 0.0, FIRE = 0.0))
+		ChangeResistances(list(RED_DAMAGE = 0.1, WHITE_DAMAGE = 0.1, BLACK_DAMAGE = 0.1, PALE_DAMAGE = 0.1, FIRE = 0.1))
 	else
 		ChangeResistances(list(RED_DAMAGE = 0.5, WHITE_DAMAGE = 1.5, BLACK_DAMAGE = 0.7, PALE_DAMAGE = 0.7, FIRE = 0.5))
 
