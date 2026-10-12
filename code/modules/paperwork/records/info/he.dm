@@ -590,10 +590,12 @@
 	abno_type = /mob/living/simple_animal/hostile/abnormality/der_fluchschutze
 	abno_code = "F-01-16"
 	abno_info = list(
-		"Attachment work provided the best results, but occassional caused a large drop in qlipoth",
-		"When the work result was neutral, the Qliphoth counter lowered.",
-		"When the work result was bad, the Qliphoth counter lowered.",
-		"When the work result was good, the Qliphoth counter increased at a low probability.",
+		"Attachment work provided the best results, but has a low chance to greatly lower the Qlipoth counter.",
+		"When the work result was neutral and the work type was not Attachment, the Qliphoth counter lowered.",
+		"When the work result was bad and the work type was not Attachment, the Qliphoth counter lowered.",
+		"When the work result was good and the work type was not Attachment, the Qliphoth counter increased at a low probability.",
 		"During a breach, Der Fluchschutze will roam and fire at employees and abnormalities alike.",
-		"Occassionally, it will summon and attempt to fire at sacrifices around the facility, if left alive the sacrifices will be killed causing large RED damage to nearby employees and abnormalities.",
-		"If two or more of the above sacrifices were killed, Der Fluchschutze will become temporarily staggered and will be unable to fire or move for a short period of time.")
+		"Occassionally, it will summon and attempt to fire at sacrifices around the facility, \
+		 if left alive the sacrifices will be killed causing large RED damage to nearby employees and abnormalities.",
+		"during the above effect, Der Fluchschutze was observed to be immune to all damage types.",
+		"If two or more of the above sacrifices were killed, Der Fluchschutze will become temporarily staggered and will be unable to fire or move for a short period of time and taking double damage from all sources.")

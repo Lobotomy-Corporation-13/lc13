@@ -34,9 +34,9 @@ Pretty Basic HE with a cool gimmick */
 	threat_level = HE_LEVEL
 	start_qliphoth = 3
 	work_chances = list(
-		ABNORMALITY_WORK_INSTINCT = 35,
+		ABNORMALITY_WORK_INSTINCT = 40,
 		ABNORMALITY_WORK_INSIGHT = 20,
-		ABNORMALITY_WORK_ATTACHMENT = 60,
+		ABNORMALITY_WORK_ATTACHMENT = 65,
 		ABNORMALITY_WORK_REPRESSION = 45,
 	)
 	max_boxes = 16
@@ -85,7 +85,7 @@ Pretty Basic HE with a cool gimmick */
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/SuccessEffect(mob/living/carbon/human/user, work_type, pe)
 	. = ..()
-	if (prob(30))
+	if (prob(30) && work_type != ABNORMALITY_WORK_ATTACHMENT)
 		datum_reference.qliphoth_change(1) // once his counter lowers it will be tough to raise it
 	return
 
@@ -154,12 +154,13 @@ Pretty Basic HE with a cool gimmick */
 		staggered = TRUE
 		aiming = FALSE
 		can_act = FALSE
-		updatedefense()
+		staggerdefense()
 		to_chat(src, span_warning("You are staggered!"))
 	if(world.time >= lastfired + 40 SECONDS && staggered == TRUE)
 		staggered = FALSE
 		can_act = TRUE
 		stagger = 0
+		staggerdefense()
 		to_chat(src, span_nicegreen("You are no longer staggered!"))
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/AttackingTarget(atom/attacked_target)
@@ -192,9 +193,15 @@ Pretty Basic HE with a cool gimmick */
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/proc/sacrificedestroyed(/mob/living/simple_animal/hostile/der_flusch_sacrifice/E)
 	stagger += 1
 
+/mob/living/simple_animal/hostile/abnormality/der_fluchschutze/proc/staggerdefense()
+	if(staggered == TRUE)
+		ChangeResistances(list(RED_DAMAGE = 2.0 , WHITE_DAMAGE = 2.0, BLACK_DAMAGE = 2.0, PALE_DAMAGE = 2.0, FIRE = 2.0))
+	else
+		ChangeResistances(list(RED_DAMAGE = 0.5, WHITE_DAMAGE = 1.5, BLACK_DAMAGE = 0.7, PALE_DAMAGE = 0.7, FIRE = 0.5))
+
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/proc/updatedefense()
 	if(aiming == TRUE)
-		ChangeResistances(list(RED_DAMAGE = 0.3, WHITE_DAMAGE = 0.5, BLACK_DAMAGE = 0.3, PALE_DAMAGE = 0.3, FIRE = 0.3))
+		ChangeResistances(list(RED_DAMAGE = 0.0, WHITE_DAMAGE = 0.0, BLACK_DAMAGE = 0.0, PALE_DAMAGE = 0.0, FIRE = 0.0))
 	else
 		ChangeResistances(list(RED_DAMAGE = 0.5, WHITE_DAMAGE = 1.5, BLACK_DAMAGE = 0.7, PALE_DAMAGE = 0.7, FIRE = 0.5))
 
