@@ -4309,6 +4309,7 @@
 #include "ModularLobotomy\associations\cityspawners.dm"
 #include "ModularLobotomy\associations\converted_mob.dm"
 #include "ModularLobotomy\associations\corroded_cassowary.dm"
+#include "ModularLobotomy\associations\distortion_terminal.dm"
 #include "ModularLobotomy\associations\door_lock_display.dm"
 #include "ModularLobotomy\associations\fixer.dm"
 #include "ModularLobotomy\associations\fixeroffice.dm"

@@ -10,6 +10,11 @@
 	},
 /turf/open/floor/facility/dark,
 /area/city/antag_base)
+"c" = (
+/obj/structure/table,
+/obj/structure/distortionradio,
+/turf/open/floor/facility/dark,
+/area/city/antag_base)
 "d" = (
 /obj/machinery/door/airlock/security/glass{
 	name = "Udjat Scout Bedroom"
@@ -565,7 +570,7 @@ u
 u
 "}
 (18,1,1) = {"
-u
+c
 u
 i
 u
