@@ -26,7 +26,8 @@ export const AssociationSkillTree = props => {
     invested_branch_count = 0,
     branches = [],
   } = data;
-  const [tab, setTab] = useSharedState('tab', 0);
+  const [tab, setTab] = useSharedState('tab', 0,
+  );
   const activeIdx = Math.min(
     tab,
     Math.max(branches.length - 1, 0),

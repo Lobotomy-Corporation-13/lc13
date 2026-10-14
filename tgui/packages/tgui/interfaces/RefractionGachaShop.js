@@ -1,4 +1,4 @@
-import { Component } from 'inferno';
+import { Component } from 'react';
 import { useBackend, useLocalState } from '../backend';
 import { Box, Button, Flex, Section } from '../components';
 import { Window } from '../layouts';
@@ -82,9 +82,9 @@ const RarityBadge = props => {
       style={{
         'background': RARITY_COLOUR[rarity] || '#444',
         'color': rarity === '000' ? '#000' : '#fff',
-        'font-weight': 'bold',
-        'border-radius': '3px',
-        'font-size': '10px',
+        fontWeight: 'bold',
+        borderRadius: '3px',
+        fontSize: '10px',
       }}>
       {rarity}
     </Box>
@@ -102,7 +102,7 @@ export const ZoomCard = props => {
   return (
     <Box className="gacha-card-flash" onClick={onClose}>
       <Box
-        style={{ 'text-align': 'center' }}
+        style={{ textAlign: 'center' }}
         onClick={e => e.stopPropagation()}>
         <Box
           style={{
@@ -114,12 +114,12 @@ export const ZoomCard = props => {
                 + '#5a4010 100%)'
               : 'linear-gradient(135deg, #303030 0%, '
                 + '#101010 100%)',
-            'border-radius': '10px',
-            'box-shadow': '0 0 32px ' + colour,
+            borderRadius: '10px',
+            boxShadow: '0 0 32px ' + colour,
             'margin': '0 auto',
             'display': 'flex',
-            'align-items': 'center',
-            'justify-content': 'center',
+            alignItems: 'center',
+            justifyContent: 'center',
           }}>
           {skin.icon_data ? (
             <img
@@ -127,7 +127,7 @@ export const ZoomCard = props => {
               style={{
                 'width': '180px',
                 'height': '180px',
-                'image-rendering': 'pixelated',
+                imageRendering: 'pixelated',
               }}
             />
           ) : (
@@ -135,7 +135,7 @@ export const ZoomCard = props => {
               bold
               style={{
                 'color': skin.rarity === '000' ? '#000' : '#fff',
-                'font-size': '24px',
+                fontSize: '24px',
               }}>
               ID
             </Box>
@@ -144,7 +144,7 @@ export const ZoomCard = props => {
         <Box
           mt={1}
           bold
-          style={{ 'color': colour, 'font-size': '14px' }}>
+          style={{ 'color': colour, fontSize: '14px' }}>
           {skin.name}
         </Box>
         <Box mt={0.5}>
@@ -152,7 +152,7 @@ export const ZoomCard = props => {
         </Box>
         <Box
           mt={1.5}
-          style={{ 'font-size': '10px' }}
+          style={{ fontSize: '10px' }}
           color="label"
           onClick={onClose}>
           Click anywhere to close.
@@ -186,7 +186,7 @@ const InspectorOverlay = props => {
       right={0}
       bottom={0}
       backgroundColor="rgba(0, 0, 0, 0.7)"
-      style={{ 'z-index': 40 }}
+      style={{ zIndex: 40 }}
       onClick={onClose}>
       <Box
         position="fixed"
@@ -198,26 +198,26 @@ const InspectorOverlay = props => {
           'background': 'linear-gradient(180deg, '
             + '#1a1a1a 0%, #0a0a0a 100%)',
           'border': '2px solid ' + (banner.color || '#555'),
-          'border-radius': '8px',
+          borderRadius: '8px',
           'padding': '14px',
-          'max-height': '80vh',
-          'overflow-y': 'auto',
-          'box-shadow': '0 0 32px rgba(0, 0, 0, 0.8)',
+          maxHeight: '80vh',
+          overflowY: 'auto',
+          boxShadow: '0 0 32px rgba(0, 0, 0, 0.8)',
         }}
         onClick={e => e.stopPropagation()}>
         <Box
           mb={1}
           bold
           style={{
-            'font-size': '14px',
-            'text-align': 'center',
+            fontSize: '14px',
+            textAlign: 'center',
             'color': banner.color || '#fff',
           }}>
           {banner.name} — Featured Skins
         </Box>
         <Box
           mb={1}
-          style={{ 'text-align': 'center', 'font-size': '11px' }}
+          style={{ textAlign: 'center', fontSize: '11px' }}
           color={canClaim ? 'good' : 'label'}>
           Pity: {pity}/{pityThreshold}
           {!!canClaim && (
@@ -229,7 +229,7 @@ const InspectorOverlay = props => {
         <Box
           style={{
             'display': 'grid',
-            'grid-template-columns':
+            gridTemplateColumns:
               'repeat(auto-fill, minmax(150px, 1fr))',
             'gap': '10px',
           }}>
@@ -243,12 +243,12 @@ const InspectorOverlay = props => {
                   'position': 'relative',
                   'padding': '8px',
                   'border': '2px solid ' + colour,
-                  'border-radius': '6px',
+                  borderRadius: '6px',
                   'background': 'linear-gradient(135deg, '
                     + '#1f1f1f 0%, #0a0a0a 100%)',
                   'cursor': 'pointer',
-                  'text-align': 'center',
-                  'box-shadow': '0 0 6px ' + colour + '40',
+                  textAlign: 'center',
+                  boxShadow: '0 0 6px ' + colour + '40',
                 }}>
                 {s.icon_data && (
                   <Box mb={0.5}>
@@ -257,7 +257,7 @@ const InspectorOverlay = props => {
                       style={{
                         'width': '64px',
                         'height': '64px',
-                        'image-rendering': 'pixelated',
+                        imageRendering: 'pixelated',
                       }}
                     />
                   </Box>
@@ -353,7 +353,7 @@ const HomeView = props => {
   };
   return (
     <Flex>
-      <Flex.Item style={{ 'min-width': '200px' }}>
+      <Flex.Item style={{ minWidth: '200px' }}>
         <Section title="Banners">
           {banners.map((b, idx) => (
             <Box
@@ -363,15 +363,15 @@ const HomeView = props => {
               onClick={() => setSelectedBannerIdx(idx)}
               style={{
                 'cursor': 'pointer',
-                'border-left': '4px solid ' + (b.color || '#888'),
+                borderLeft: '4px solid ' + (b.color || '#888'),
                 'background': idx === selectedBannerIdx
                   ? 'rgba(255,255,255,0.08)'
                   : 'rgba(255,255,255,0.02)',
-                'border-radius': '4px',
+                borderRadius: '4px',
               }}>
               <Box bold>{b.name}</Box>
               <Box
-                style={{ 'font-size': '10px' }}
+                style={{ fontSize: '10px' }}
                 color="label">
                 {(b.skins || []).length} skin
                 {(b.skins || []).length === 1 ? '' : 's'}
@@ -400,7 +400,7 @@ const HomeView = props => {
               'background': 'radial-gradient('
                 + 'circle at center, #3a1a14 0%, '
                 + '#0d0303 70%, #000 100%)',
-              'border-radius': '6px',
+              borderRadius: '6px',
               'position': 'relative',
               'overflow': 'hidden',
             }}>
@@ -418,11 +418,11 @@ const HomeView = props => {
                 style={{
                   'width': '110px',
                   'height': '110px',
-                  'border-radius': '50%',
+                  borderRadius: '50%',
                   'background': 'radial-gradient(circle, '
                     + (banner.color || '#c04020') + ' 0%, '
                     + '#5a1810 55%, #1a0808 100%)',
-                  'box-shadow': '0 0 28px '
+                  boxShadow: '0 0 28px '
                     + (banner.color || '#c04020'),
                 }}
               />
@@ -445,7 +445,7 @@ const HomeView = props => {
                       'top': y + 'px',
                       'border': '1px solid '
                         + (RARITY_COLOUR[s.rarity] || '#888'),
-                      'box-shadow': '0 0 10px '
+                      boxShadow: '0 0 10px '
                         + (RARITY_COLOUR[s.rarity] || '#444'),
                     }}>
                     {s.icon_data ? (
@@ -461,7 +461,7 @@ const HomeView = props => {
                           'height': '20px',
                           'background': RARITY_COLOUR[s.rarity]
                             || '#888',
-                          'border-radius': '3px',
+                          borderRadius: '3px',
                         }}
                       />
                     )}
@@ -472,7 +472,7 @@ const HomeView = props => {
           </Box>
           <Box
             mb={1}
-            style={{ 'font-size': '11px' }}
+            style={{ fontSize: '11px' }}
             color="label">
             Featured skins — every 000 you pull here is one of these;
             lower tiers get a 2x rate-up on top of the base pool.
@@ -487,7 +487,7 @@ const HomeView = props => {
                 style={{
                   'border': '1px solid '
                     + (RARITY_COLOUR[s.rarity] || '#888'),
-                  'border-radius': '3px',
+                  borderRadius: '3px',
                   'opacity': s.owned ? 1 : 0.55,
                 }}>
                 <RarityBadge rarity={s.rarity} />
@@ -526,10 +526,10 @@ const HomeView = props => {
           <Box
             mt={1}
             style={{
-              'text-align': 'center',
-              'font-size': '11px',
+              textAlign: 'center',
+              fontSize: '11px',
               'padding': '4px',
-              'border-radius': '3px',
+              borderRadius: '3px',
               'background': pityFull
                 ? 'rgba(34, 197, 94, 0.15)'
                 : 'rgba(255, 255, 255, 0.04)',
@@ -616,7 +616,7 @@ const ConfirmOverlay = props => {
       right={0}
       bottom={0}
       backgroundColor="rgba(0, 0, 0, 0.7)"
-      style={{ 'z-index': 50 }}
+      style={{ zIndex: 50 }}
       onClick={cancel}>
       <Box
         position="fixed"
@@ -628,22 +628,22 @@ const ConfirmOverlay = props => {
           'background': 'linear-gradient(180deg, '
             + '#1a1a1a 0%, #0a0a0a 100%)',
           'border': '2px solid #555',
-          'border-radius': '8px',
+          borderRadius: '8px',
           'padding': '18px',
-          'box-shadow': '0 0 32px rgba(0, 0, 0, 0.8)',
+          boxShadow: '0 0 32px rgba(0, 0, 0, 0.8)',
         }}
         onClick={e => e.stopPropagation()}>
         <Box
           mb={1}
           bold
           style={{
-            'font-size': '14px',
-            'text-align': 'center',
+            fontSize: '14px',
+            textAlign: 'center',
             'color': '#d4af37',
           }}>
           Proceeding with Extraction
         </Box>
-        <Box mb={1} style={{ 'text-align': 'center' }}>
+        <Box mb={1} style={{ textAlign: 'center' }}>
           Spend <b>{cost} Starlight</b> to do an Extract
           {' '}{pendingCount} on <b>{banner.name}</b>?
         </Box>
@@ -652,7 +652,7 @@ const ConfirmOverlay = props => {
             mb={1}
             color="bad"
             bold
-            style={{ 'text-align': 'center' }}>
+            style={{ textAlign: 'center' }}>
             Insufficient Starlight (need {cost}, have {balance}).
           </Box>
         )}
@@ -754,7 +754,7 @@ class CrackIntroCanvas extends Component {
         className="gacha-enter"
         style={{
           'width': '100%',
-          'min-height': '500px',
+          minHeight: '500px',
           'background': visibleGoldRoll
             ? 'radial-gradient(circle at center, '
               + '#5a4a10 0%, #1a1208 70%, #000 100%)'
@@ -777,13 +777,13 @@ class CrackIntroCanvas extends Component {
             style={{
               'width': '180px',
               'height': '180px',
-              'border-radius': '50%',
+              borderRadius: '50%',
               'background': visibleGoldRoll
                 ? 'radial-gradient(circle, #d4af37 0%, '
                   + '#5a4010 50%, #1a1208 100%)'
                 : 'radial-gradient(circle, #c04020 0%, '
                   + '#5a1810 50%, #1a0808 100%)',
-              'box-shadow': visibleGoldRoll
+              boxShadow: visibleGoldRoll
                 ? '0 0 40px #d4af37'
                 : '0 0 24px #c04020',
             }}
@@ -1049,7 +1049,7 @@ class CrackBurstCanvas extends Component {
         className="gacha-enter"
         style={{
           'width': '100%',
-          'min-height': '500px',
+          minHeight: '500px',
           'background': visibleGoldRoll
             ? 'radial-gradient(circle, #5a4a10 0%, '
               + '#1a1208 70%, #000 100%)'
@@ -1105,20 +1105,20 @@ class CrackBurstCanvas extends Component {
             'top': '50%',
             'left': '50%',
             'transform': 'translate(-50%, -50%)',
-            'z-index': 3,
+            zIndex: 3,
             'cursor': ballLocked ? 'wait' : 'pointer',
           }}>
           <Box
             style={{
               'width': '140px',
               'height': '140px',
-              'border-radius': '50%',
+              borderRadius: '50%',
               'background': visibleGoldRoll
                 ? 'radial-gradient(circle, #d4af37 0%, '
                   + '#5a4010 50%, #1a1208 100%)'
                 : 'radial-gradient(circle, #c04020 0%, '
                   + '#5a1810 50%, #1a0808 100%)',
-              'box-shadow': visibleGoldRoll
+              boxShadow: visibleGoldRoll
                 ? '0 0 32px #d4af37'
                 : '0 0 24px #c04020',
             }}
@@ -1157,8 +1157,8 @@ class CrackBurstCanvas extends Component {
                 'width': FRACTURE_SIZE + 'px',
                 'height': FRACTURE_SIZE + 'px',
                 'cursor': state === 'present' ? 'pointer' : 'default',
-                'z-index': 2,
-                'box-shadow': hovered
+                zIndex: 2,
+                boxShadow: hovered
                   ? '0 0 24px ' + colour + ', 0 0 8px #fff'
                   : '0 0 10px ' + colour,
               }}>
@@ -1168,7 +1168,7 @@ class CrackBurstCanvas extends Component {
                   style={{
                     'width': '100%',
                     'height': '100%',
-                    'image-rendering': 'pixelated',
+                    imageRendering: 'pixelated',
                   }}
                 />
               ) : (
@@ -1176,7 +1176,7 @@ class CrackBurstCanvas extends Component {
                   style={{
                     'width': '100%',
                     'height': '100%',
-                    'border-radius': '50%',
+                    borderRadius: '50%',
                     'background': 'radial-gradient(circle, '
                       + colour + ' 0%, #000 100%)',
                   }}
@@ -1204,7 +1204,7 @@ const FlashCard = props => {
   const isGoldenSparkle = p.rarity === '000' && p.stealth_lucky;
   return (
     <Box className="gacha-card-flash" onClick={onClick}>
-      <Box style={{ 'text-align': 'center' }}>
+      <Box style={{ textAlign: 'center' }}>
         <Box
           style={{
             'width': '180px',
@@ -1215,12 +1215,12 @@ const FlashCard = props => {
                 + '#5a4010 100%)'
               : 'linear-gradient(135deg, #303030 0%, '
                 + '#101010 100%)',
-            'border-radius': '8px',
-            'box-shadow': '0 0 24px ' + colour,
+            borderRadius: '8px',
+            boxShadow: '0 0 24px ' + colour,
             'margin': '0 auto',
             'display': 'flex',
-            'align-items': 'center',
-            'justify-content': 'center',
+            alignItems: 'center',
+            justifyContent: 'center',
           }}>
           {p.icon_data ? (
             <img
@@ -1228,7 +1228,7 @@ const FlashCard = props => {
               style={{
                 'width': '128px',
                 'height': '128px',
-                'image-rendering': 'pixelated',
+                imageRendering: 'pixelated',
               }}
             />
           ) : (
@@ -1236,7 +1236,7 @@ const FlashCard = props => {
               bold
               style={{
                 'color': p.rarity === '000' ? '#000' : '#fff',
-                'font-size': '20px',
+                fontSize: '20px',
               }}>
               ID
             </Box>
@@ -1260,7 +1260,7 @@ const FlashCard = props => {
         </Box>
         <Box
           mt={2}
-          style={{ 'font-size': '10px' }}
+          style={{ fontSize: '10px' }}
           color="label">
           Click anywhere to dismiss.
         </Box>
@@ -1349,7 +1349,7 @@ class ShowcaseCanvas extends Component {
         onClick={onAdvance}
         style={{
           'width': '100%',
-          'min-height': '500px',
+          minHeight: '500px',
           'background': p.rarity === '000'
             ? 'radial-gradient(circle, #5a4a10 0%, '
               + '#1a1208 70%, #000 100%)'
@@ -1364,7 +1364,7 @@ class ShowcaseCanvas extends Component {
             'top': '50%',
             'left': '50%',
             'transform': 'translate(-50%, -50%)',
-            'text-align': 'center',
+            textAlign: 'center',
           }}>
           <Box
             style={{
@@ -1376,12 +1376,12 @@ class ShowcaseCanvas extends Component {
                   + '#5a4010 100%)'
                 : 'linear-gradient(135deg, #303030 0%, '
                   + '#101010 100%)',
-              'border-radius': '8px',
-              'box-shadow': '0 0 24px ' + colour,
+              borderRadius: '8px',
+              boxShadow: '0 0 24px ' + colour,
               'margin': '0 auto',
               'display': 'flex',
-              'align-items': 'center',
-              'justify-content': 'center',
+              alignItems: 'center',
+              justifyContent: 'center',
             }}>
             {p.icon_data ? (
               <img
@@ -1389,7 +1389,7 @@ class ShowcaseCanvas extends Component {
                 style={{
                   'width': '128px',
                   'height': '128px',
-                  'image-rendering': 'pixelated',
+                  imageRendering: 'pixelated',
                 }}
               />
             ) : (
@@ -1397,7 +1397,7 @@ class ShowcaseCanvas extends Component {
                 bold
                 style={{
                   'color': p.rarity === '000' ? '#000' : '#fff',
-                  'font-size': '20px',
+                  fontSize: '20px',
                 }}>
                 ID
               </Box>
@@ -1421,7 +1421,7 @@ class ShowcaseCanvas extends Component {
           </Box>
           <Box
             mt={2}
-            style={{ 'font-size': '10px' }}
+            style={{ fontSize: '10px' }}
             color="label">
             Click anywhere to continue ({currentIdx + 1}/{total})
           </Box>
@@ -1445,14 +1445,14 @@ const ResultTile = props => {
         'position': 'relative',
         'padding': '8px',
         'border': '2px solid ' + colour,
-        'border-radius': '6px',
+        borderRadius: '6px',
         'background': p.rarity === '000'
           ? 'linear-gradient(135deg, '
             + '#3a3010 0%, #1a1208 100%)'
           : 'linear-gradient(135deg, '
             + '#202020 0%, #0a0a0a 100%)',
-        'text-align': 'center',
-        'box-shadow': '0 0 8px ' + colour + '40',
+        textAlign: 'center',
+        boxShadow: '0 0 8px ' + colour + '40',
       }}>
       {!p.was_duplicate && (
         <Box className="gacha-new-badge">NEW</Box>
@@ -1464,7 +1464,7 @@ const ResultTile = props => {
             style={{
               'width': '64px',
               'height': '64px',
-              'image-rendering': 'pixelated',
+              imageRendering: 'pixelated',
             }}
           />
         </Box>
@@ -1479,7 +1479,7 @@ const ResultTile = props => {
         <Box
           mt={0.5}
           color="label"
-          style={{ 'font-size': '10px' }}>
+          style={{ fontSize: '10px' }}>
           duplicate, +{p.dupe_refund}
         </Box>
       )}
@@ -1602,7 +1602,7 @@ class ResultsCanvas extends Component {
         className="gacha-enter"
         style={{
           'width': '100%',
-          'min-height': '500px',
+          minHeight: '500px',
           // Persistent backdrop so the results screen doesn't drop
           // back to the plain tgui window background when the
           // showcase exits.
@@ -1619,7 +1619,7 @@ class ResultsCanvas extends Component {
               mb={1}
               style={{
                 'display': 'grid',
-                'grid-template-columns': 'repeat(5, 1fr)',
+                gridTemplateColumns: 'repeat(5, 1fr)',
                 'gap': '10px',
               }}>
               {pending_pull.map((p, i) => (
@@ -1634,7 +1634,7 @@ class ResultsCanvas extends Component {
             </Box>
           ) : (
             <Flex justify="center" mb={1}>
-              <Flex.Item style={{ 'min-width': '160px' }}>
+              <Flex.Item style={{ minWidth: '160px' }}>
                 {pending_pull[0] && visibleCount > 0 && (
                   <ResultTile p={pending_pull[0]} />
                 )}
@@ -1645,11 +1645,11 @@ class ResultsCanvas extends Component {
             <Box
               mb={1}
               color="good"
-              style={{ 'text-align': 'center' }}>
+              style={{ textAlign: 'center' }}>
               Duplicate refund: <b>+{totalRefund} Starlight</b>
             </Box>
           )}
-          <Box mb={1} style={{ 'text-align': 'center' }}>
+          <Box mb={1} style={{ textAlign: 'center' }}>
             Balance: <b>{balance} Starlight</b>
           </Box>
           {!!insufficient && (
@@ -1657,20 +1657,20 @@ class ResultsCanvas extends Component {
               mb={1}
               color="bad"
               bold
-              style={{ 'text-align': 'center' }}>
+              style={{ textAlign: 'center' }}>
               Insufficient Starlight to Extract {pendingCount}{' '}
               again (need {cost}, have {balance}).
             </Box>
           )}
           <Flex justify="center" mt={2}>
-            <Flex.Item mr={1} style={{ 'min-width': '180px' }}>
+            <Flex.Item mr={1} style={{ minWidth: '180px' }}>
               <Button
                 fluid
                 content="Return"
                 onClick={onReturn}
               />
             </Flex.Item>
-            <Flex.Item style={{ 'min-width': '180px' }}>
+            <Flex.Item style={{ minWidth: '180px' }}>
               <Button
                 fluid
                 color="good"
@@ -1703,7 +1703,7 @@ export const RefractionGachaShop = props => {
           <Flex align="center" justify="space-between">
             <Flex.Item
               bold
-              style={{ 'font-size': '14px' }}>
+              style={{ fontSize: '14px' }}>
               Balance:
               {' '}
               <Box inline style={{ 'color': '#ffd86b' }}>
@@ -1711,7 +1711,7 @@ export const RefractionGachaShop = props => {
               </Box>
             </Flex.Item>
             <Flex.Item
-              style={{ 'font-size': '11px' }}
+              style={{ fontSize: '11px' }}
               color="label">
               Rates: 0 - 83.0%, 00 - 12.8%, 000 - 2.9%
             </Flex.Item>

@@ -1,4 +1,4 @@
-import { Component } from "inferno";
+import { Component } from "react";
 
 export class TypingScroller extends Component {
   constructor(props) {
