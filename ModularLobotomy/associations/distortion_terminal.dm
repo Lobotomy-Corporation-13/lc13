@@ -10,7 +10,7 @@
 	resistance_flags = INDESTRUCTIBLE
 	var/isready = TRUE
 	var/docheck = FALSE
-	var/mob/target
+	var/mob/living/target
 	var/list/deploy_pool = list()
 
 /obj/structure/distortionradio/attack_hand(mob/user)
@@ -26,7 +26,7 @@
 	docheck = TRUE
 
 /obj/structure/distortionradio/proc/CheckTarget()
-	if(!target || target.STAT == DEAD)
+	if(!target || target.stat == DEAD)
 		say("Distortion resolved. Issuing payment.")
 		new /obj/item/stack/spacecash/c1000 (get_turf(src))
 		target = null

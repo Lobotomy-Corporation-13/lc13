@@ -142,6 +142,15 @@
 /obj/item/clothing/suit/armor/ego_gear/city/liuleader/section5,
 /turf/open/floor/carpet/red,
 /area/city/assoc_base)
+"tZ" = (
+/obj/structure/table/wood{
+	pixel_x = 1
+	},
+/obj/structure/warradio,
+/turf/open/floor/lce/tile/dark{
+	name = "dark tiling"
+	},
+/area/city/assoc_base)
 "ul" = (
 /obj/structure/chair/wood{
 	dir = 4
@@ -555,7 +564,7 @@ nL
 jo
 jo
 jo
-vE
+tZ
 dv
 Jk
 dv
