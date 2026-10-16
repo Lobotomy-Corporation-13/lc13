@@ -137,3 +137,22 @@
 	flags_inv = NONE
 	armor = list(RED_DAMAGE = 10, WHITE_DAMAGE = 10, BLACK_DAMAGE = 10, PALE_DAMAGE = 0)
 	equip_delay_self = 0
+
+
+//LCC Armor
+
+/obj/item/clothing/suit/armor/ego_gear/lccb
+	name = "lccb armor"
+	desc = "It says Limbus Company on the tag. Used by lccb agents."
+	icon_state = "lccb"
+	icon = 'icons/obj/clothing/ego_gear/limbus_labs.dmi'
+	worn_icon = 'icons/mob/clothing/ego_gear/limbus_labs.dmi'
+	armor = list(RED_DAMAGE = 20, WHITE_DAMAGE = 20, BLACK_DAMAGE = 20, PALE_DAMAGE = 0)
+
+/obj/item/clothing/suit/armor/ego_gear/lccb/command
+	name = "LCC command coat"
+	desc = "It says Limbus Company on the tag. Used by limbus company command officers."
+	flags_inv = NONE
+	icon_state = "damageofficer"
+	armor = list(RED_DAMAGE = 40, WHITE_DAMAGE = 40, BLACK_DAMAGE = 40, PALE_DAMAGE = 0)
+

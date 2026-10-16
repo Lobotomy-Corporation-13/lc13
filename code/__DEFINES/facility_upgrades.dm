@@ -39,3 +39,7 @@
 #define UPGRADE_EXTRACTION_2 "Extraction Specialization  Level 2"
 	#define UPGRADE_EXTRACTION_2_PRICE_MULT 0.85 // Multiplier to E.G.O. prices applied by the above upgrade.
 #define UPGRADE_ARCHITECT_2 "Architect Specialization  Level 2"
+
+//To help out your rep
+#define UPGRADE_REP_PE "Representative PE transfer"
+#define UPGRADE_REP_AHN "Representative PE transfer"
