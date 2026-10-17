@@ -524,11 +524,14 @@
 	icon_state = "bullets"
 	icon_deny = null
 	products = list(
+		/obj/item/ego_mag/fullstop = 99,
+	)
+	premium = list(
 		/obj/item/ego_mag/udjat = 99,
 		/obj/item/ego_mag/udjat_sniper = 99,
-		/obj/item/ego_mag/fullstop = 99,
 	)
 
 	default_price = 400
+	extra_price = 1000
 	input_display_header = "Tres Association Bullet Vending"
 

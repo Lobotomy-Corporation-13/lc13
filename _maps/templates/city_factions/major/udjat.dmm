@@ -23,19 +23,6 @@
 	color = "#EDD956"
 	},
 /area/city/antag_base)
-"e" = (
-/obj/structure/rack{
-	pixel_x = -1
-	},
-/obj/item/ego_weapon/ranged/city/udjat,
-/obj/item/clothing/suit/armor/ego_gear/city/udjat_combat,
-/obj/item/ego_mag/udjat,
-/obj/item/ego_mag/udjat,
-/obj/item/clothing/head/udjat,
-/turf/open/floor/mineral/plastitanium{
-	color = "#EDD956"
-	},
-/area/city/antag_base)
 "g" = (
 /obj/structure/rack{
 	pixel_x = -1
@@ -319,7 +306,6 @@
 /obj/item/ego_weapon/city/udjat_limbus,
 /obj/item/ego_mag/udjat,
 /obj/item/ego_mag/udjat,
-/obj/item/ego_mag/udjat,
 /turf/open/floor/lce/plate/dark,
 /area/city/antag_base)
 "X" = (
@@ -327,7 +313,6 @@
 	pixel_x = -1
 	},
 /obj/item/ego_weapon/ranged/city/udjat,
-/obj/item/ego_mag/udjat,
 /obj/item/clothing/suit/armor/ego_gear/city/udjat_combat,
 /obj/item/ego_mag/udjat,
 /obj/item/clothing/head/udjat,
@@ -422,7 +407,7 @@ U
 a
 u
 a
-e
+X
 T
 X
 "}
