@@ -32,6 +32,14 @@
 	/// Extra damage flags OR'd into the flags argument when this weapon deals damage (e.g. DAMAGE_NO_SINKING)
 	var/extra_damage_flags = 0
 
+	//Do note when these are used and why.
+	///What's the multiplier during special attacks?
+	var/special_multiplier
+
+	///What raw number number do we want to use as Special?
+	///DO NOT USE UNLESS NECESSARY!
+	var/special_damage
+
 /obj/item/ego_weapon/Initialize()
 	. = ..()
 	if(swingstyle == WEAPONSWING_SMALLSWEEP && reach > 1)
@@ -257,6 +265,14 @@
 
 /obj/item/ego_weapon/proc/CritEffect(mob/living/target, mob/living/user)
 	return
+
+/obj/item/ego_weapon/proc/CalcDamage(mob/living/user)
+	var/damage_mult = 1
+	var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
+	var/justicemod = 1 + userjust/100
+	damage_mult*=justicemod
+	damage_mult*=force_multiplier
+	return damage_mult
 
 /obj/item/ego_weapon/proc/EgoAttackInfo(mob/user)
 	var/damage_type = damtype
