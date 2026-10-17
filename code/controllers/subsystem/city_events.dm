@@ -25,7 +25,6 @@ SUBSYSTEM_DEF(cityevents)
 	var/list/processing
 
 /datum/controller/subsystem/cityevents/Initialize(timeofday)
-
 	..()
 	InitializeLandmarks()
 	InitializeEvents()
@@ -134,8 +133,9 @@ SUBSYSTEM_DEF(cityevents)
 		if("swag")
 			spawnitem(/obj/item/clothing/shoes/swagshoes, 2)	// Swag out, man
 	wavetime+=1
-	if(prob(50))
-		JobAddition()
+	//Disabled while the city job roster is reworked. JobAddition() is kept for later.
+	//if(prob(50))
+	//	JobAddition()
 
 //Spawning Mobs, can spawn up to 3
 /datum/controller/subsystem/cityevents/proc/spawnatlandmark(thing_to_spawn, chance)

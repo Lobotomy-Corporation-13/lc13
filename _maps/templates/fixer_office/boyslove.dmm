@@ -1,0 +1,371 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"a" = (
+/obj/structure/window/paperframe{
+	resistance_flags = 115
+	},
+/turf/open/floor/stone{
+	color = "#ccc8c0"
+	},
+/area/city/fixers)
+"c" = (
+/turf/open/floor/wood,
+/area/city/fixers)
+"d" = (
+/obj/structure/table/wood,
+/obj/item/ego_weapon/city/bladelineage/city{
+	pixel_x = 5;
+	pixel_y = 4
+	},
+/turf/open/floor/stone{
+	color = "#ccc8c0"
+	},
+/area/city/fixers)
+"e" = (
+/obj/item/flashlight/lantern/jade{
+	pixel_x = -16;
+	pixel_y = 4;
+	layer = 3.3;
+	anchored = 1;
+	light_on = 1
+	},
+/obj/machinery/light{
+	dir = 8;
+	alpha = 0;
+	mouse_opacity = 0
+	},
+/obj/item/kirbyplants{
+	icon_state = "plant-10";
+	pixel_y = -2;
+	pixel_x = -2;
+	anchored = 1;
+	layer = 3.8
+	},
+/turf/open/floor/stone{
+	color = "#ccc8c0"
+	},
+/area/city/fixers)
+"f" = (
+/obj/structure/mineral_door/paperframe,
+/turf/open/floor/stone{
+	color = "#ccc8c0"
+	},
+/area/city/fixers)
+"h" = (
+/obj/structure/table/wood{
+	pixel_y = -1
+	},
+/obj/structure/sushimat,
+/turf/open/floor/stone{
+	color = "#ccc8c0"
+	},
+/area/city/fixers)
+"i" = (
+/obj/item/flashlight/lantern/jade{
+	pixel_y = 4;
+	pixel_x = 16;
+	layer = 3.3;
+	anchored = 1;
+	light_on = 1
+	},
+/obj/machinery/light{
+	dir = 4;
+	alpha = 0;
+	mouse_opacity = 0
+	},
+/turf/open/floor/stone{
+	color = "#ccc8c0"
+	},
+/area/city/fixers)
+"l" = (
+/obj/effect/turf_decal/siding/wood{
+	dir = 4
+	},
+/turf/open/floor/plating/beach/sand,
+/area/city/fixers)
+"m" = (
+/obj/structure/table/wood{
+	pixel_y = -1
+	},
+/obj/item/reagent_containers/food/drinks/mug/tea{
+	pixel_x = -8;
+	pixel_y = 6
+	},
+/obj/item/food/sashimi{
+	pixel_y = -5;
+	pixel_x = 3
+	},
+/turf/open/floor/wood,
+/area/city/fixers)
+"n" = (
+/obj/structure/flora/tree/jungle/small{
+	pixel_y = 5
+	},
+/obj/effect/turf_decal/siding/wood{
+	dir = 1
+	},
+/turf/open/floor/plating/beach/sand,
+/area/city/fixers)
+"p" = (
+/obj/structure/table/wood{
+	pixel_y = -1
+	},
+/obj/item/food/sashimi{
+	pixel_y = 7;
+	pixel_x = 4
+	},
+/obj/item/reagent_containers/food/drinks/bottle/sake{
+	pixel_x = -10
+	},
+/turf/open/floor/wood,
+/area/city/fixers)
+"q" = (
+/obj/effect/turf_decal/siding/wood{
+	dir = 8
+	},
+/turf/open/floor/plating/beach/sand,
+/area/city/fixers)
+"r" = (
+/turf/open/floor/stone{
+	color = "#ccc8c0"
+	},
+/area/city/fixers)
+"t" = (
+/obj/structure/table/wood{
+	pixel_y = -1
+	},
+/turf/open/floor/stone{
+	color = "#ccc8c0"
+	},
+/area/city/fixers)
+"v" = (
+/obj/item/flashlight/lantern/jade{
+	pixel_y = 24;
+	layer = 3.3;
+	anchored = 1;
+	light_on = 1
+	},
+/obj/machinery/light{
+	dir = 1;
+	alpha = 0;
+	mouse_opacity = 0
+	},
+/turf/open/floor/wood{
+	color = "#ccc8c0"
+	},
+/area/city/fixers)
+"w" = (
+/turf/open/floor/wood{
+	color = "#ccc8c0"
+	},
+/area/city/fixers)
+"x" = (
+/obj/structure/table/wood{
+	pixel_y = -1
+	},
+/obj/item/reagent_containers/food/drinks/bottle/sake,
+/obj/item/reagent_containers/food/drinks/bottle/sake{
+	pixel_x = -10
+	},
+/turf/open/floor/stone{
+	color = "#ccc8c0"
+	},
+/area/city/fixers)
+"B" = (
+/obj/structure/chair/wood/wings{
+	dir = 1;
+	pixel_y = 4
+	},
+/turf/open/floor/wood,
+/area/city/fixers)
+"D" = (
+/obj/item/flashlight/lantern/jade{
+	pixel_x = -16;
+	pixel_y = 4;
+	layer = 3.3;
+	anchored = 1;
+	light_on = 1
+	},
+/obj/structure/table/wood{
+	pixel_y = -1
+	},
+/obj/item/food/sashimi{
+	pixel_y = 5
+	},
+/obj/machinery/light{
+	dir = 8;
+	alpha = 0;
+	mouse_opacity = 0
+	},
+/turf/open/floor/stone{
+	color = "#ccc8c0"
+	},
+/area/city/fixers)
+"F" = (
+/obj/effect/turf_decal/siding/wood{
+	dir = 10
+	},
+/turf/open/floor/plating/beach/sand,
+/area/city/fixers)
+"H" = (
+/obj/effect/turf_decal/siding/wood,
+/turf/open/floor/plating/beach/sand,
+/area/city/fixers)
+"I" = (
+/obj/structure/closet/cabinet{
+	anchored = 1
+	},
+/obj/item/clothing/suit/armor/ego_gear/city/blade_lineage_salsu,
+/obj/item/clothing/suit/armor/ego_gear/city/blade_lineage_salsu,
+/obj/item/clothing/suit/armor/ego_gear/city/blade_lineage_cutthroat,
+/obj/item/clothing/head/rice_hat,
+/obj/item/clothing/head/rice_hat,
+/obj/item/clothing/head/rice_hat,
+/turf/open/floor/stone{
+	color = "#ccc8c0"
+	},
+/area/city/fixers)
+"L" = (
+/obj/structure/chair/wood/wings{
+	dir = 8;
+	pixel_x = -3
+	},
+/turf/open/floor/wood,
+/area/city/fixers)
+"M" = (
+/obj/structure/flora/ausbushes/lavendergrass{
+	pixel_y = -13;
+	pixel_x = -8
+	},
+/obj/effect/light_emitter{
+	light_power = 4;
+	light_range = 25;
+	set_cap = 3;
+	set_luminosity = 24
+	},
+/turf/open/floor/plating/beach/sand,
+/area/city/fixers)
+"N" = (
+/obj/item/flashlight/lantern/jade{
+	pixel_y = 4;
+	pixel_x = 16;
+	layer = 3.3;
+	anchored = 1;
+	light_on = 1
+	},
+/obj/machinery/light{
+	dir = 4;
+	alpha = 0;
+	mouse_opacity = 0
+	},
+/turf/open/floor/wood,
+/area/city/fixers)
+"R" = (
+/obj/structure/table/wood,
+/obj/item/ego_weapon/city/bladelineage/city{
+	pixel_x = -5;
+	pixel_y = -3
+	},
+/obj/item/ego_weapon/city/bladelineage/city{
+	pixel_y = 7;
+	pixel_x = 7
+	},
+/turf/open/floor/stone{
+	color = "#ccc8c0"
+	},
+/area/city/fixers)
+"S" = (
+/obj/effect/turf_decal/siding/wood{
+	dir = 6
+	},
+/turf/open/floor/plating/beach/sand,
+/area/city/fixers)
+"T" = (
+/obj/effect/turf_decal/siding/wood{
+	dir = 5
+	},
+/turf/open/floor/plating/beach/sand,
+/area/city/fixers)
+"U" = (
+/obj/effect/turf_decal/siding/wood{
+	dir = 9
+	},
+/obj/structure/flora/ausbushes/lavendergrass{
+	pixel_y = -4;
+	pixel_x = 5
+	},
+/turf/open/floor/plating/beach/sand,
+/area/city/fixers)
+"W" = (
+/obj/item/kirbyplants{
+	icon_state = "plant-10";
+	pixel_y = -1;
+	pixel_x = 3;
+	anchored = 1;
+	layer = 3.8
+	},
+/turf/open/floor/wood,
+/area/city/fixers)
+
+(1,1,1) = {"
+d
+e
+a
+w
+D
+h
+x
+"}
+(2,1,1) = {"
+R
+r
+f
+w
+r
+r
+t
+"}
+(3,1,1) = {"
+I
+i
+a
+w
+r
+r
+r
+"}
+(4,1,1) = {"
+a
+a
+a
+v
+w
+w
+w
+"}
+(5,1,1) = {"
+U
+q
+F
+w
+c
+m
+B
+"}
+(6,1,1) = {"
+n
+M
+H
+w
+c
+p
+B
+"}
+(7,1,1) = {"
+T
+l
+S
+w
+N
+L
+W
+"}
