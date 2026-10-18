@@ -35,7 +35,7 @@
 	var/rolled_status = status_list[rand(1, length(status_list))]
 	var/has_status = target.has_status_effect(rolled_status)
 	if(!special_toggled)
-		..()
+		. = ..()
 		if(!has_status)
 			target.apply_status_effect(rolled_status, stacks)
 		else
@@ -63,7 +63,7 @@
 		special_toggled = FALSE
 
 /obj/item/ego_weapon/city/pointillist/attack_self(mob/user)
-	..()
+	. = ..()
 	if(!special_toggled)
 		if(world.time >= special_cooldown)
 			balloon_alert(user, "You prepare to use your special on your next hit.")
