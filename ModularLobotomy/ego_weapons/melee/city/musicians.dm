@@ -36,7 +36,7 @@
 		var/list/nearby_players
 		for(var/mob/living/carbon/human/L in range(5, get_turf(user)))
 			if(L == user)
-				return
+				continue
 			nearby_players +=L
 
 		lucky = pick(nearby_players)
