@@ -39,7 +39,7 @@
 	user.adjustStaminaLoss(15, TRUE, TRUE)
 	user.throw_at(dodgelanding, 3, 2, spin = FALSE)
 	user.Immobilize(1 SECONDS)
-	..()
+	return ..()
 
 /obj/item/ego_weapon/shield/parry/osir/hit_reaction(mob/living/carbon/human/owner, atom/movable/hitby, attack_text = "the attack", final_block_chance = 0, damage = 0, attack_type = MELEE_ATTACK)
 	..()
