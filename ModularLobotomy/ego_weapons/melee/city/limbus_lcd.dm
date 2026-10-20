@@ -42,7 +42,7 @@
 	return ..()
 
 /obj/item/ego_weapon/shield/parry/osir/hit_reaction(mob/living/carbon/human/owner, atom/movable/hitby, attack_text = "the attack", final_block_chance = 0, damage = 0, attack_type = MELEE_ATTACK)
-	..()
+	. = ..()
 	if(attack_type == MELEE_ATTACK && active_block)
 		owner.add_movespeed_modifier(/datum/movespeed_modifier/osir_blade)
 		addtimer(CALLBACK(owner, TYPE_PROC_REF(/mob, remove_movespeed_modifier), /datum/movespeed_modifier/osir_blade), 5 SECONDS, TIMER_UNIQUE | TIMER_OVERRIDE)
