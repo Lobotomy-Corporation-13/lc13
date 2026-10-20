@@ -40,7 +40,7 @@
 			nearby_players +=L
 
 		lucky = pick(nearby_players)
-		lucky.apply_lc_strength(1)
+			lucky.apply_lc_strength(1)
 
 	inuse = FALSE
 
