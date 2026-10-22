@@ -1,5 +1,3 @@
-GLOBAL_VAR_INIT(gates, world.time)
-
 GLOBAL_LIST_INIT(easycombat, list(
 	/mob/living/simple_animal/hostile/rcorp_abno/easy/blue_shepherd,
 	/mob/living/simple_animal/hostile/rcorp_abno/easy/helper,
@@ -103,8 +101,9 @@ GLOBAL_LIST_INIT(raidboss, list(
 
 /obj/effect/landmark/abnospawn/reifeasycombat/Initialize()
 	..()
+	var/internaltimer = world.time
 	var/total_players = 0
-	if(world.time < gates + 600 SECONDS)
+	if(world.time < internaltimer + 600 SECONDS)
 		do
 			for(var/mob/living/carbon/human/H in GLOB.player_list)
 				total_players +=1
@@ -113,7 +112,7 @@ GLOBAL_LIST_INIT(raidboss, list(
 				var/mob/living/simple_animal/hostile/rcorp_abno/A = new spawning(get_turf(src))
 				A.rcorp_team = "easy"
 				return INITIALIZE_HINT_QDEL
-		while(total_players < 20 && world.time < gates + 600 SECONDS)
+		while(total_players < 20 && world.time < internaltimer + 600 SECONDS)
 
 /obj/effect/landmark/abnospawn/easysupport
 	name = "easy support abno spawner"
@@ -137,7 +136,8 @@ GLOBAL_LIST_INIT(raidboss, list(
 /obj/effect/landmark/abnospawn/reinfeasysupport/Initialize()
 	..()
 	var/total_players = 0
-	if(world.time < gates + 600 SECONDS)
+	var/internaltimer = world.time
+	if(world.time < internaltimer + 600 SECONDS)
 		do
 			for(var/mob/living/carbon/human/H in GLOB.player_list)
 				total_players +=1
@@ -146,7 +146,7 @@ GLOBAL_LIST_INIT(raidboss, list(
 				var/mob/living/simple_animal/hostile/rcorp_abno/A = new spawning(get_turf(src))
 				A.rcorp_team = "easy"
 				return INITIALIZE_HINT_QDEL
-		while(total_players < 20 && world.time < gates + 600 SECONDS)
+		while(total_players < 20 && world.time < internaltimer + 600 SECONDS)
 
 /obj/effect/landmark/abnospawn/easytank
 	name = "easy tank abno spawner"
@@ -171,7 +171,8 @@ GLOBAL_LIST_INIT(raidboss, list(
 /obj/effect/landmark/abnospawn/reinfeasytank/Initialize()
 	..()
 	var/total_players = 0
-	if(world.time < gates + 600 SECONDS)
+	var/internaltimer = world.time
+	if(world.time < internaltimer + 600 SECONDS)
 		do
 			for(var/mob/living/carbon/human/H in GLOB.player_list)
 				total_players +=1
@@ -180,7 +181,7 @@ GLOBAL_LIST_INIT(raidboss, list(
 				var/mob/living/simple_animal/hostile/rcorp_abno/A = new spawning(get_turf(src))
 				A.rcorp_team = "easy"
 				return INITIALIZE_HINT_QDEL
-		while(total_players < 25 && world.time < gates + 600 SECONDS)
+		while(total_players < 25 && world.time < internaltimer + 600 SECONDS)
 
 /obj/effect/landmark/abnospawn/hardcombat
 	name = "hard combat abno spawner"
