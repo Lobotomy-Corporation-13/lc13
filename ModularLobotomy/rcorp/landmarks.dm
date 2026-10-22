@@ -103,7 +103,7 @@ GLOBAL_LIST_INIT(raidboss, list(
 	..()
 	var/internaltimer = world.time
 	var/total_players = 0
-	if(world.time < internaltimer + 600 SECONDS)
+	if(world.time < internaltimer + 300 SECONDS)
 		do
 			for(var/mob/living/carbon/human/H in GLOB.player_list)
 				total_players +=1
@@ -112,7 +112,7 @@ GLOBAL_LIST_INIT(raidboss, list(
 				var/mob/living/simple_animal/hostile/rcorp_abno/A = new spawning(get_turf(src))
 				A.rcorp_team = "easy"
 				return INITIALIZE_HINT_QDEL
-		while(total_players < 20 && world.time < internaltimer + 600 SECONDS)
+		while(total_players < 20 && world.time < internaltimer + 300 SECONDS)
 
 /obj/effect/landmark/abnospawn/easysupport
 	name = "easy support abno spawner"
@@ -137,7 +137,7 @@ GLOBAL_LIST_INIT(raidboss, list(
 	..()
 	var/total_players = 0
 	var/internaltimer = world.time
-	if(world.time < internaltimer + 600 SECONDS)
+	if(world.time < internaltimer + 300 SECONDS)
 		do
 			for(var/mob/living/carbon/human/H in GLOB.player_list)
 				total_players +=1
@@ -146,7 +146,7 @@ GLOBAL_LIST_INIT(raidboss, list(
 				var/mob/living/simple_animal/hostile/rcorp_abno/A = new spawning(get_turf(src))
 				A.rcorp_team = "easy"
 				return INITIALIZE_HINT_QDEL
-		while(total_players < 20 && world.time < internaltimer + 600 SECONDS)
+		while(total_players < 20 && world.time < internaltimer + 300 SECONDS)
 
 /obj/effect/landmark/abnospawn/easytank
 	name = "easy tank abno spawner"
@@ -172,7 +172,7 @@ GLOBAL_LIST_INIT(raidboss, list(
 	..()
 	var/total_players = 0
 	var/internaltimer = world.time
-	if(world.time < internaltimer + 600 SECONDS)
+	if(world.time < internaltimer + 300 SECONDS)
 		do
 			for(var/mob/living/carbon/human/H in GLOB.player_list)
 				total_players +=1
@@ -181,7 +181,7 @@ GLOBAL_LIST_INIT(raidboss, list(
 				var/mob/living/simple_animal/hostile/rcorp_abno/A = new spawning(get_turf(src))
 				A.rcorp_team = "easy"
 				return INITIALIZE_HINT_QDEL
-		while(total_players < 25 && world.time < internaltimer + 600 SECONDS)
+		while(total_players < 25 && world.time < internaltimer + 300 SECONDS)
 
 /obj/effect/landmark/abnospawn/hardcombat
 	name = "hard combat abno spawner"
