@@ -300,7 +300,7 @@ GLOBAL_LIST_INIT(raidboss, list(
 			var/spawning = pick_n_take(GLOB.rhinobuster)
 			new spawning(get_turf(src))
 			return INITIALIZE_HINT_QDEL
-		while(total_players < 30)
+	while(total_players < 30)
 
 /obj/effect/landmark/abnospawn/raidboss
 	name = "raidboss spawner"
