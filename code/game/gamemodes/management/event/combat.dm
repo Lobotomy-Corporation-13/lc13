@@ -214,7 +214,7 @@ GLOBAL_VAR_INIT(wcorp_enemy_faction, "") //decides which faction WCorp will be u
 	minor_announce("WARNING, The facility gates will open in T-10 Minutes." , "R-Corp Intelligence Office")
 
 /datum/game_mode/combat/proc/facility_warning_2()
-	minor_announce("WARNING, The facility gates will open in T-5 Minutes, Please start moving into the facility." , "R-Corp Intelligence Office")
+	minor_announce("WARNING, The facility gates will open in T-5 Minutes, no more abnormalities have been detected escaping the facility." , "R-Corp Intelligence Office")
 
 /datum/game_mode/combat/proc/facility_warning_3()
 	minor_announce("WARNING, The facility gates will open in T-1 Minute, Please be ready for enemies of a higher threat level." , "R-Corp Intelligence Office")
