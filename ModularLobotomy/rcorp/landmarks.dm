@@ -1,3 +1,5 @@
+GLOBAL_VAR_INIT(gates, world.time)
+
 GLOBAL_LIST_INIT(easycombat, list(
 	/mob/living/simple_animal/hostile/rcorp_abno/easy/blue_shepherd,
 	/mob/living/simple_animal/hostile/rcorp_abno/easy/helper,
@@ -93,6 +95,26 @@ GLOBAL_LIST_INIT(raidboss, list(
 	A.rcorp_team = "easy"
 	return INITIALIZE_HINT_QDEL
 
+/obj/effect/landmark/abnospawn/reifeasycombat // EASY TEAM REINFORCMENTS FOR HIPOP
+	name = "Reinforcement easy combat abno spawner"
+	desc = "It spawns a reinforcement abno. Notify a coder. Thanks!"
+	icon = 'icons/effects/landmarks_static.dmi'
+	icon_state = "x4"
+
+/obj/effect/landmark/abnospawn/reifeasycombat/Initialize()
+	..()
+	var/total_players = 0
+	if(world.time < gates + 600 SECONDS)
+		do
+			for(var/mob/living/carbon/human/H in GLOB.player_list)
+				total_players +=1
+			if (total_players > 20)
+				var/spawning = pick_n_take(GLOB.easycombat)
+				var/mob/living/simple_animal/hostile/rcorp_abno/A = new spawning(get_turf(src))
+				A.rcorp_team = "easy"
+				return INITIALIZE_HINT_QDEL
+		while(total_players < 20 && world.time < gates + 600 SECONDS)
+
 /obj/effect/landmark/abnospawn/easysupport
 	name = "easy support abno spawner"
 	desc = "It spawns an abno. Notify a coder. Thanks!"
@@ -106,6 +128,26 @@ GLOBAL_LIST_INIT(raidboss, list(
 	A.rcorp_team = "easy"
 	return INITIALIZE_HINT_QDEL
 
+/obj/effect/landmark/abnospawn/reinfeasysupport
+	name = "reinforcement easy support abno spawner"
+	desc = "It spawns a reinforcement abno. Notify a coder. Thanks!"
+	icon = 'icons/effects/landmarks_static.dmi'
+	icon_state = "x3"
+
+/obj/effect/landmark/abnospawn/reinfeasysupport/Initialize()
+	..()
+	var/total_players = 0
+	if(world.time < gates + 600 SECONDS)
+		do
+			for(var/mob/living/carbon/human/H in GLOB.player_list)
+				total_players +=1
+			if (total_players > 20)
+				var/spawning = pick_n_take(GLOB.easysupport)
+				var/mob/living/simple_animal/hostile/rcorp_abno/A = new spawning(get_turf(src))
+				A.rcorp_team = "easy"
+				return INITIALIZE_HINT_QDEL
+		while(total_players < 20 && world.time < gates + 600 SECONDS)
+
 /obj/effect/landmark/abnospawn/easytank
 	name = "easy tank abno spawner"
 	desc = "It spawns an abno. Notify a coder. Thanks!"
@@ -114,10 +156,31 @@ GLOBAL_LIST_INIT(raidboss, list(
 
 /obj/effect/landmark/abnospawn/easytank/Initialize()
 	..()
+
 	var/spawning = pick_n_take(GLOB.easytank)
 	var/mob/living/simple_animal/hostile/rcorp_abno/A = new spawning(get_turf(src))
 	A.rcorp_team = "easy"
 	return INITIALIZE_HINT_QDEL
+
+/obj/effect/landmark/abnospawn/reinfeasytank
+	name = "reinforcement easy tank abno spawner"
+	desc = "It spawns a reinforcement abno. Notify a coder. Thanks!"
+	icon = 'icons/effects/landmarks_static.dmi'
+	icon_state = "x2"
+
+/obj/effect/landmark/abnospawn/reinfeasytank/Initialize()
+	..()
+	var/total_players = 0
+	if(world.time < gates + 600 SECONDS)
+		do
+			for(var/mob/living/carbon/human/H in GLOB.player_list)
+				total_players +=1
+			if (total_players > 25)
+				var/spawning = pick_n_take(GLOB.easytank)
+				var/mob/living/simple_animal/hostile/rcorp_abno/A = new spawning(get_turf(src))
+				A.rcorp_team = "easy"
+				return INITIALIZE_HINT_QDEL
+		while(total_players < 25 && world.time < gates + 600 SECONDS)
 
 /obj/effect/landmark/abnospawn/hardcombat
 	name = "hard combat abno spawner"
@@ -131,6 +194,23 @@ GLOBAL_LIST_INIT(raidboss, list(
 	new spawning(get_turf(src))
 	return INITIALIZE_HINT_QDEL
 
+/obj/effect/landmark/abnospawn/reinfhardcombat
+	name = "reinforcement hard combat abno spawner"
+	desc = "It spawns a reinforcement abno. Notify a coder. Thanks!"
+	icon = 'icons/effects/landmarks_static.dmi'
+	icon_state = "x4"
+
+/obj/effect/landmark/abnospawn/reinfhardcombat/Initialize()
+	..()
+	var/total_players = 0
+	do
+		for(var/mob/living/carbon/human/H in GLOB.player_list)
+			total_players +=1
+		if (total_players > 20)
+			var/spawning = pick_n_take(GLOB.hardcombat)
+			new spawning(get_turf(src))
+			return INITIALIZE_HINT_QDEL
+	while(total_players < 20)
 
 /obj/effect/landmark/abnospawn/hardsupport
 	name = "hard support abno spawner"
@@ -144,6 +224,23 @@ GLOBAL_LIST_INIT(raidboss, list(
 	new spawning(get_turf(src))
 	return INITIALIZE_HINT_QDEL
 
+/obj/effect/landmark/abnospawn/reinfhardsupport
+	name = "reinforcement hard support abno spawner"
+	desc = "It spawns a reinforcement abno. Notify a coder. Thanks!"
+	icon = 'icons/effects/landmarks_static.dmi'
+	icon_state = "x3"
+
+/obj/effect/landmark/abnospawn/reinfhardsupport/Initialize()
+	..()
+	var/total_players = 0
+	do
+		for(var/mob/living/carbon/human/H in GLOB.player_list)
+			total_players +=1
+		if (total_players > 20)
+			var/spawning = pick_n_take(GLOB.hardsupport)
+			new spawning(get_turf(src))
+			return INITIALIZE_HINT_QDEL
+	while(total_players < 20)
 
 /obj/effect/landmark/abnospawn/hardtank
 	name = "hard tank abno spawner"
@@ -157,6 +254,23 @@ GLOBAL_LIST_INIT(raidboss, list(
 	new spawning(get_turf(src))
 	return INITIALIZE_HINT_QDEL
 
+/obj/effect/landmark/abnospawn/reinfhardtank
+	name = "reinforcement hard tank abno spawner"
+	desc = "It spawns a reinforcement abno. Notify a coder. Thanks!"
+	icon = 'icons/effects/landmarks_static.dmi'
+	icon_state = "x2"
+
+/obj/effect/landmark/abnospawn/reinfhardtank/Initialize()
+	..()
+	var/total_players = 0
+	do
+		for(var/mob/living/carbon/human/H in GLOB.player_list)
+			total_players +=1
+		if (total_players > 25)
+			var/spawning = pick_n_take(GLOB.hardtank)
+			new spawning(get_turf(src))
+			return INITIALIZE_HINT_QDEL
+	while(total_players < 25)
 
 /obj/effect/landmark/abnospawn/rhinobuster
 	name = "hard tank abno spawner"
@@ -169,6 +283,24 @@ GLOBAL_LIST_INIT(raidboss, list(
 	var/spawning = pick_n_take(GLOB.rhinobuster)
 	new spawning(get_turf(src))
 	return INITIALIZE_HINT_QDEL
+
+/obj/effect/landmark/abnospawn/reinfrhinobuster
+	name = "reinforcement rhinobuster abno spawner"
+	desc = "It spawns a reinforcement abno. Notify a coder. Thanks!"
+	icon = 'icons/effects/landmarks_static.dmi'
+	icon_state = "tdome_admin"
+
+/obj/effect/landmark/abnospawn/reinfrhinobuster/Initialize()
+	..()
+	var/total_players = 0
+	do
+		for(var/mob/living/carbon/human/H in GLOB.player_list)
+			total_players +=1
+		if (total_players > 30)
+			var/spawning = pick_n_take(GLOB.rhinobuster)
+			new spawning(get_turf(src))
+			return INITIALIZE_HINT_QDEL
+		while(total_players < 30)
 
 /obj/effect/landmark/abnospawn/raidboss
 	name = "raidboss spawner"
