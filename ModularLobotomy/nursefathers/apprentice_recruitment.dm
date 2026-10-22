@@ -84,15 +84,26 @@
 
 /// Helper to update target's ID card assignment
 /obj/item/apprentice_recruitment/proc/update_id_card(mob/living/carbon/human/H, assignment)
+	// Try to just get an ID card
 	var/obj/item/card/id/id_card = H.get_idcard(TRUE)
 
-	// If no ID found directly, check PDA
-	if(!id_card)
-		for(var/obj/item/pda/P in H.GetAllContents())
+	var/obj/item/pda/pda
+
+	// Find PDAs on their person
+	for(var/obj/item/pda/P in H.GetAllContents())
+		// If we find their PDA, save it for later
+		if(P.owner == H.real_name)
+			pda = P
+			// People often put their ID in their PDA.
 			if(P.id)
 				id_card = P.id
 				break
 
+	// If we found the person's PDA, update their job assignment.
+	if(pda)
+		pda.ownjob = assignment
+		pda.update_label()
+	// Wherever we found their ID, update it.
 	if(id_card)
 		id_card.assignment = assignment
 		id_card.update_label()
