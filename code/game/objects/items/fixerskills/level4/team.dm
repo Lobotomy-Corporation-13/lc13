@@ -103,3 +103,38 @@
 	variable = TRUE
 	multiplicative_slowdown = -0.3
 
+
+/datum/action/cooldown/focusfire
+	name = "Focus Fire"
+	icon_icon = 'icons/hud/screen_skills.dmi'
+	button_icon_state = "focusfire"
+	cooldown_time = 3 MINUTES
+	var/list/affected = list()
+	var/range = 2
+	var/affect_self = TRUE
+
+/datum/action/cooldown/focusfire/Trigger()
+	. = ..()
+	if(!.)
+		return FALSE
+
+	if (owner.stat == DEAD)
+		return FALSE
+
+	owner.say("AIM TRUE!!")
+	for(var/mob/living/carbon/human/human in view(range, get_turf(src)))
+		if (human == owner && !affect_self)
+			continue
+
+		human.apply_lc_strength(2)
+		affected+=human
+
+	addtimer(CALLBACK(src, PROC_REF(FocusFire)), 0.5 SECONDS, TIMER_UNIQUE | TIMER_OVERRIDE)
+	StartCooldown()
+
+/datum/action/cooldown/focusfire/proc/FocusFire()
+	for(var/mob/living/carbon/human/human in affected)
+		if(human == owner)
+			continue
+		human.say("YES SIR!")
+		affected-=human

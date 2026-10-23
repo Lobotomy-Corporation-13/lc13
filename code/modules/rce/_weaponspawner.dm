@@ -75,6 +75,7 @@
 		/obj/item/grenade/r_corp/white,
 		/obj/item/grenade/r_corp/black,
 		/obj/item/grenade/r_corp/pale,
+		/obj/item/mshell,
 	)
 
 
