@@ -574,7 +574,7 @@
 
 /obj/machinery/factory_machine/fed_effect/regen/PowerEffect()
 	. = ..()
-	for(var/mob/living/carbon/patient in oview(get_turf(src), 5))
+	for(var/mob/living/carbon/human/patient in oview(get_turf(src), 5))
 		//Find a patient
 		if(patient)
 			//If patient is in hard crit do not attempt to sew them together.
