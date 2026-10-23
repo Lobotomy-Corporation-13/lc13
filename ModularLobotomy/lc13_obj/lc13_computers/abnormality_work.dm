@@ -406,17 +406,20 @@
 		else
 			audible_message(span_notice("Work Result: Bad"),\
 				span_notice("Work Result: Bad"))
-
+        
+	//Moved here, shouldn't cause issues.
+	datum_reference.working = FALSE
+  
 	if(mechanical_upgrades["radio"])
 		Radio.set_frequency(FREQ_COMMON)
 		Radio.talk_into(src, "[user.name] completed work on [datum_reference.GetName()] is completed. Result: [pe] PE generated.", FREQ_COMMON)
+    
 	if(istype(user))
 		datum_reference.work_complete(user, work_type, pe, work_speed*datum_reference.max_boxes, was_melting, canceled)
 		if(recorded && !mechanical_upgrades["free work"]) //neither rabbit nor tutorial calls this
 			SSlobotomy_corp.WorkComplete(pe, (meltdown_time <= 0))
 	chem_charges ++
 	meltdown_time = 0
-	datum_reference.working = FALSE
 	return TRUE
 
 /obj/machinery/computer/abnormality/process()
