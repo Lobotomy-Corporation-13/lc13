@@ -65,10 +65,16 @@ GLOBAL_LIST_INIT(sandstone_recipes, list ( \
 	w_class = WEIGHT_CLASS_BULKY
 
 GLOBAL_LIST_INIT(sandbag_recipes, list ( \
-	new/datum/stack_recipe("sandbags", /obj/structure/barricade/sandbags, 1, time = 8, one_per_turf = TRUE, on_floor = TRUE), \
+	new/datum/stack_recipe("barricade sandbags", /obj/structure/barricade/sandbags, 1, time = 8, one_per_turf = TRUE, on_floor = TRUE), \
 	new/datum/stack_recipe("concrete barrier", /obj/structure/barricade/sandbags/grey, 3, time = 8, one_per_turf = TRUE, on_floor = TRUE), \
 	new/datum/stack_recipe("concrete tunnel", /obj/structure/barricade/sandbags/grey/hole, 2, time = 12, one_per_turf = TRUE, on_floor = TRUE), \
-	new/datum/stack_recipe("concrete ramp", /obj/structure/barricade/sandbags/ramp, 2, time = 12, one_per_turf = TRUE, on_floor = TRUE) \
+	new/datum/stack_recipe("concrete ramp", /obj/structure/barricade/sandbags/ramp, 2, time = 12, one_per_turf = TRUE, on_floor = TRUE), \
+
+	//Items for factory
+	new/datum/stack_recipe("factory filter", /obj/item/stack/conveyor_filter, 20, time = 12, one_per_turf = TRUE, on_floor = TRUE), \
+	new/datum/stack_recipe("factory splitter", /obj/item/stack/conveyor_splitter, 20, time = 12, one_per_turf = TRUE, on_floor = TRUE), \
+	new/datum/stack_recipe("factory tunnel", /obj/item/structureconstruction/tunnel, 20, time = 12, one_per_turf = TRUE, on_floor = TRUE), \
+	new/datum/stack_recipe("factory cross tunnel", /obj/item/structureconstruction/cross, 20, time = 12, one_per_turf = TRUE, on_floor = TRUE), \
 	))
 
 /obj/item/stack/sheet/mineral/sandbags/ten
