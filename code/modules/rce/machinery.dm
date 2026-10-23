@@ -307,7 +307,7 @@
 	dropped_item = /obj/item/structureconstruction/artillery
 	storage_type = /obj/item/factoryitem/red
 	var/artillery_range = 6
-	var/artillery_damage = 30
+	var/artillery_damage = 60
 
 /obj/machinery/factory_machine/artillery/examine(mob/user)
 	. = ..()
@@ -567,13 +567,14 @@
 		A label on the side warns not to rely on the machine in life or death situations."
 	icon_state = "regen"
 	output_delay = 10
+	fuel_value = 15
 	//Storage type for the regen is actually fuel
 	storage_type = /obj/item/factoryitem/red
 	dropped_item = /obj/item/structureconstruction/regen
 
 /obj/machinery/factory_machine/fed_effect/regen/PowerEffect()
 	. = ..()
-	for(var/mob/living/carbon/patient in oview(get_turf(src), 3))
+	for(var/mob/living/carbon/patient in oview(get_turf(src), 5))
 		//Find a patient
 		if(patient)
 			//If patient is in hard crit do not attempt to sew them together.
@@ -582,6 +583,7 @@
 			//If patient is damaged then restore 3 health as a default regenerator would.
 			if(patient.getBruteLoss())
 				patient.adjustBruteLoss(-3)
+				patient.adjustSanityLoss(-3)
 				new /obj/effect/temp_visual/heal(get_turf(patient), "#FF4444")
 
 /*---------\
@@ -596,7 +598,7 @@
 	storage_type = /obj/item/factoryitem/green
 	skin = "floodlight"
 	storage_max = 180
-	fuel_value = 20
+	fuel_value = 40
 	light_range = 15
 	light_power = 3
 	light_system = MOVABLE_LIGHT_DIRECTIONAL
