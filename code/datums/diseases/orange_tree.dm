@@ -20,7 +20,7 @@
 	if(!ishuman(affected_mob))
 		return ..()
 	var/mob/living/carbon/human/H = affected_mob
-	affected_mob.visible_message("<span class='nicegreen'>[H] outwardly appears to have been cleansed of the floating lights.</span>")
+	affected_mob.visible_message(span_nicegreen("[H] outwardly appears to have been cleansed of the floating lights."))
 	if(H.sanity_lost)
 		SanityCheck(TRUE)
 	return ..()
@@ -69,7 +69,7 @@
 
 /datum/disease/orange_tree/proc/SanityCheck(cured)
 	var/mob/living/carbon/human/H = affected_mob
-	H.visible_message("<span class='danger'>[H] begins mumbling to themselves, seemingly unaware of the rest of the world.</span>")
+	H.visible_message(span_danger("[H] begins mumbling to themselves, seemingly unaware of the rest of the world."))
 	QDEL_NULL(H.ai_controller)
 	if(cured)
 		H.ai_controller = /datum/ai_controller/insane/suicide

@@ -20,7 +20,7 @@
 	switch(stage)
 		if(2)
 			if(affected_mob.body_position == LYING_DOWN && prob(20))
-				to_chat(affected_mob, "<span class='notice'>You feel better.</span>")
+				to_chat(affected_mob, span_notice("You feel better."))
 				stage--
 				return
 			if(prob(1))
@@ -28,17 +28,17 @@
 			if(prob(1))
 				affected_mob.emote("cough")
 			if(prob(1))
-				to_chat(affected_mob, "<span class='danger'>Your muscles ache.</span>")
+				to_chat(affected_mob, span_danger("Your muscles ache."))
 				if(prob(20))
 					affected_mob.take_bodypart_damage(1, updating_health = FALSE)
 			if(prob(1))
-				to_chat(affected_mob, "<span class='danger'>Your stomach hurts.</span>")
+				to_chat(affected_mob, span_danger("Your stomach hurts."))
 				if(prob(20))
 					affected_mob.adjustToxLoss(1, FALSE)
 
 		if(3)
 			if(affected_mob.body_position == LYING_DOWN && prob(15))
-				to_chat(affected_mob, "<span class='notice'>You feel better.</span>")
+				to_chat(affected_mob, span_notice("You feel better."))
 				stage--
 				return
 			if(prob(1))
@@ -46,10 +46,10 @@
 			if(prob(1))
 				affected_mob.emote("cough")
 			if(prob(1))
-				to_chat(affected_mob, "<span class='danger'>Your muscles ache.</span>")
+				to_chat(affected_mob, span_danger("Your muscles ache."))
 				if(prob(20))
 					affected_mob.take_bodypart_damage(1, updating_health = FALSE)
 			if(prob(1))
-				to_chat(affected_mob, "<span class='danger'>Your stomach hurts.</span>")
+				to_chat(affected_mob, span_danger("Your stomach hurts."))
 				if(prob(20))
 					affected_mob.adjustToxLoss(1, FALSE)
