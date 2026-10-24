@@ -584,3 +584,18 @@
 	abno_info = list(
 		"When another abnormality breached, the Qliphoth counter lowered.",
 		"F-02-182 returned to it's containment after 5 minutes.")
+
+// Der Fluchschutze
+/obj/item/paper/fluff/info/he/derfluch
+	abno_type = /mob/living/simple_animal/hostile/abnormality/der_fluchschutze
+	abno_code = "F-01-16"
+	abno_info = list(
+		"When the work result was Bad, the Qlipoth counter lowered. \
+		When the work result was Neutral, the Qlipoth counter lowered with a low probablity. \
+		When the work result was Good, the Qlipoth counter increased with a moderate probablity. \
+		During attachment work, the agent would inform the abnormality they are on their side. After repeated attachment works, the abnormality may realise. Lowering the Qlipoth counter. \
+		The above affect could be prevented by performing another worktype. <br> \
+		<b> BREACH INFORMATION </b> \
+		When the abnormality breached, it was observed to fire at agents, ordeals & abnormalities alike. \
+		Occasionally the abnormality may create sacrifices in the form of G-Corp soldiers, during this state the abnormality became ressistant to all damage. \
+		If 2 or more of the above soldiers were killed, the abnormality becamed staggered & highly vulnerable to attacks.")

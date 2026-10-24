@@ -8,6 +8,7 @@ GLOBAL_LIST_EMPTY(marked_players)
 	area_index = MOB_HOSTILE_INDEX
 	var/atom/target
 	var/ranged = FALSE
+	var/enablePB = FALSE // Allows POINTBLANKS, ovveriding the check for them.
 	var/rapid = 0 //How many shots per volley.
 	var/rapid_fire_delay = 2 //Time between rapid fire shots
 
@@ -1038,7 +1039,11 @@ GLOBAL_LIST_EMPTY(marked_players)
 			OpenFire(shootem)
 		return TRUE
 
+
+
+
 //This is called by a callback sometimes so check to make sure we have not violently died.
+
 /mob/living/simple_animal/hostile/proc/OpenFire(atom/A)
 	if(QDELETED(src))
 		return
@@ -1046,9 +1051,10 @@ GLOBAL_LIST_EMPTY(marked_players)
 		return
 	if(!target)
 		return
-	var/in_range = melee_reach > 1 ? target.Adjacent(targets_from) || (get_dist(src, A) <= melee_reach && (target in view(src, melee_reach))) : target.Adjacent(targets_from)
-	if(in_range)
-		return
+	if(!enablePB)
+		var/in_range = melee_reach > 1 ? target.Adjacent(targets_from) || (get_dist(src, A) <= melee_reach && (target in view(src, melee_reach))) : target.Adjacent(targets_from)
+		if(in_range)
+			return
 
 	if(CheckFriendlyFire(A))
 		return
