@@ -74,18 +74,16 @@ Pretty Basic HE with a cool gimmick */
 	var/aiming = FALSE // if he is aiming at sacrifices
 	var/limit = 0 // how many attaches before a qlip drop
 	var/current = 0 // how many attaches we are at
+	var/breached = FALSE //Simple bool check if we're breached or not to use less processing power.
 
 
 	// qoutes to say during attachment work
-	var/list/attachmentqoutes(
+	var/list/attachmentqoutes = list(
 		"Glad to have someone likeminded on my side.",
 		"Let me out and continue the party with me.",
 		"This is a warzone, you better be prepared.",
 		"If you are going to stay complacent, let me do the fighting for you",
 	)
-
-	//Simple bool check if we're breached or not to use less processing power.
-	var/breached = FALSE
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/Login()
 	. = ..()
@@ -97,6 +95,7 @@ Pretty Basic HE with a cool gimmick */
 
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/Initialize()
+	..()
 	overattatched() // to set the initial amount of attachment works
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/SuccessEffect(mob/living/carbon/human/user, work_type, pe)
@@ -118,11 +117,11 @@ Pretty Basic HE with a cool gimmick */
 			datum_reference.qliphoth_change(-1)
 			say("Lying bastard! You were with them all along!")
 		else
-			current ++ 1
+			current += 1
 			say(pick(attachmentqoutes))
 
 
-/mob/living/simple_animal/hostile/abnormality/der_fluchschutze/proc/overattatched
+/mob/living/simple_animal/hostile/abnormality/der_fluchschutze/proc/overattatched()
 	limit = rand(1, 4)
 
 //Breach
@@ -153,14 +152,14 @@ Pretty Basic HE with a cool gimmick */
 			return FALSE
 
 	if(stagger >= 2)
-	staggerself()
+		staggerself()
 
 	if(world.time >= staggertime)
 		unstagger()
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/proc/SacrificeFire()
 	aiming = TRUE
-	updatedefense(AIMING = TRUE)
+	updatedefense()
 	lastfired = world.time
 	can_act = FALSE
 	for(var/i = 1 to sacrifice_spawn)
@@ -187,8 +186,8 @@ Pretty Basic HE with a cool gimmick */
 	staggerdefense()
 	to_chat(src, span_warning("You are staggered!"))
 	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
-	icon_state = 'DrStagger'
-	updateicon()
+	icon_state = "DrStagger"
+	update_icon()
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/proc/unstagger()
 	staggered = FALSE
