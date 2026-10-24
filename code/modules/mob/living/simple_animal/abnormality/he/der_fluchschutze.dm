@@ -155,8 +155,6 @@ Pretty Basic HE with a cool gimmick */
 	if(stagger >= 2)
 		staggered = TRUE
 		staggertime = stagger * 20 SECONDS
-		if(staggertime > 100)
-		staggertime = 100 SECONDS
 		aiming = FALSE
 		can_act = FALSE
 		staggerdefense()
@@ -164,6 +162,9 @@ Pretty Basic HE with a cool gimmick */
 		icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 		icon_state = "DrStagger"
 		update_icon()
+		if(staggertime > 100)
+			staggertime = 100 SECONDS
+
 
 	if(world.time >= staggertime && aiming == FALSE)
 		unstagger()
