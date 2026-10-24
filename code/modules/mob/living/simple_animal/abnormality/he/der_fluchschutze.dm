@@ -148,13 +148,14 @@ Pretty Basic HE with a cool gimmick */
 	if(lastfired + firecooldown <= world.time)
 		if(prob(15))
 			SacrificeFire()
+			can_act = FALSE
 		else
 			return FALSE
 
 	if(stagger >= 2)
 		staggerself()
 
-	if(world.time >= staggertime)
+	if(world.time >= staggertime && aiming == FALSE)
 		unstagger()
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/proc/SacrificeFire()
@@ -205,7 +206,7 @@ Pretty Basic HE with a cool gimmick */
 			Reload()
 
 	if(ranged_cooldown <= world.time + 1) // Delays Point-Blanks a bit because they HURT
-		if(ammo > 0)
+		if(ammo > 0 && can_act == TRUE)
 			if(prob(50))
 				OpenFire(target)
 			return ..()
@@ -261,7 +262,7 @@ Pretty Basic HE with a cool gimmick */
 	desc = "A shotgun pellet, its headed straight for you."
 	damage_type = RED_DAMAGE
 	damage = 15
-	speed = 0.6
+	speed = 0.8
 	spread = 15
 
 /obj/projectile/fellround/Initialize()
