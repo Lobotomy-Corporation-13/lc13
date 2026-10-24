@@ -152,7 +152,7 @@ Pretty Basic HE with a cool gimmick */
 		else
 			return FALSE
 
-	if(stagger >= 2)
+	if(stagger >= 2 && staggered == FALSE)
 		staggered = TRUE
 		staggertime = stagger * 20 SECONDS
 		aiming = FALSE
@@ -161,12 +161,12 @@ Pretty Basic HE with a cool gimmick */
 		to_chat(src, span_warning("You are staggered!"))
 		icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 		icon_state = "DrStagger"
+		update_icon_state()
 		update_icon()
-		if(staggertime > 100)
+		if(staggertime > 100 SECONDS)
 			staggertime = 100 SECONDS
 
-
-	if(world.time >= staggertime && aiming == FALSE)
+	if(world.time >= staggertime SECONDS && aiming == FALSE && staggered == TRUE)
 		unstagger()
 
 	if(lastfired + 21 SECONDS <= world.time && staggered == FALSE)
@@ -242,10 +242,12 @@ Pretty Basic HE with a cool gimmick */
 	if(aiming == TRUE)
 		icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 		icon_state = "DrFluShots"
+		update_icon_state()
 		update_icon()
 	else
 		icon = 'ModularLobotomy/_Lobotomyicons/32x64.dmi'
 		icon_state = "DrFluShots"
+		update_icon_state()
 		update_icon()
 
 //gunstuff
