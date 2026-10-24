@@ -332,6 +332,13 @@
 	},
 /turf/open/indestructible/white,
 /area/city/shop)
+"cN" = (
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 8
+	},
+/obj/machinery/body_modification_fabricator,
+/turf/open/floor/facility/dark,
+/area/city/house)
 "cR" = (
 /obj/structure/table/wood,
 /obj/item/flashlight/lamp,
@@ -1006,13 +1013,13 @@
 /obj/item/storage/secure/safe{
 	pixel_x = -22
 	},
-/obj/structure/table,
 /obj/machinery/light{
 	dir = 1
 	},
 /obj/effect/turf_decal/siding/wideplating/dark{
 	dir = 9
 	},
+/obj/structure/table,
 /turf/open/floor/facility/dark,
 /area/city/house)
 "iR" = (
@@ -1585,6 +1592,13 @@
 /obj/effect/mine/shrapnel,
 /turf/open/floor/facility/dark,
 /area/city/house)
+"oO" = (
+/obj/structure/table/wood,
+/obj/machinery/association_contract_terminal{
+	density = 0
+	},
+/turf/open/floor/wood,
+/area/city/house)
 "oP" = (
 /obj/structure/chair/plastic,
 /turf/open/indestructible/white,
@@ -1788,14 +1802,19 @@
 /turf/open/floor/wood,
 /area/city/house)
 "qF" = (
-/obj/structure/rack,
-/obj/item/workshop_mod/regular/white,
 /obj/effect/turf_decal/siding/thinplating/dark{
 	dir = 1
 	},
 /obj/effect/turf_decal/siding/thinplating/dark{
 	dir = 10
 	},
+/obj/structure/rack,
+/obj/structure/lootcrate/tres,
+/obj/structure/lootcrate/tres,
+/obj/structure/lootcrate/tres,
+/obj/structure/lootcrate/tres,
+/obj/structure/lootcrate/tres,
+/obj/item/crowbar/red,
 /turf/open/floor/facility/dark,
 /area/city/house)
 "qJ" = (
@@ -2658,6 +2677,16 @@
 	slowdown = 0
 	},
 /area/city)
+"xl" = (
+/obj/structure/table/wood,
+/obj/structure/railing{
+	dir = 1
+	},
+/obj/machinery/association_contract_terminal{
+	density = 0
+	},
+/turf/open/floor/facility/white,
+/area/city/fixers)
 "xp" = (
 /obj/machinery/door/airlock/wood{
 	name = "Roulette Room"
@@ -2930,13 +2959,6 @@
 /turf/open/indestructible/white,
 /area/city/shop)
 "zv" = (
-/obj/structure/rack,
-/obj/structure/lootcrate/tres,
-/obj/structure/lootcrate/tres,
-/obj/structure/lootcrate/tres,
-/obj/structure/lootcrate/tres,
-/obj/structure/lootcrate/tres,
-/obj/item/crowbar/red,
 /obj/machinery/light{
 	dir = 1
 	},
@@ -2944,6 +2966,7 @@
 /obj/effect/turf_decal/siding/thinplating/dark{
 	dir = 9
 	},
+/obj/machinery/vending/prosthetic,
 /turf/open/floor/facility/dark,
 /area/city/house)
 "zB" = (
@@ -3368,6 +3391,9 @@
 /area/city)
 "CM" = (
 /obj/machinery/light,
+/obj/machinery/body_modification_fabricator/public{
+	resistance_flags = 64
+	},
 /turf/open/floor/wood{
 	color = "#ccc8c0"
 	},
@@ -3433,13 +3459,14 @@
 /area/city/house)
 "Dw" = (
 /obj/structure/rack,
-/obj/item/forginghammer,
-/obj/item/forginghammer,
-/obj/item/forginghammer,
 /obj/effect/turf_decal/siding/thinplating/dark{
 	dir = 1
 	},
 /obj/effect/turf_decal/siding/thinplating/dark,
+/obj/item/augment_tester,
+/obj/item/body_modification_remover,
+/obj/item/body_modification_tester,
+/obj/item/augment_remover,
 /turf/open/floor/facility/dark,
 /area/city/house)
 "DB" = (
@@ -3597,6 +3624,13 @@
 	},
 /turf/open/indestructible/white,
 /area/city/shop)
+"EK" = (
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 4
+	},
+/obj/machinery/augment_fabricator,
+/turf/open/floor/facility/dark,
+/area/city/house)
 "EM" = (
 /obj/structure/table/greyscale,
 /obj/structure/sink{
@@ -4032,6 +4066,14 @@
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/wood,
 /area/city/house)
+"IS" = (
+/obj/machinery/light/small{
+	dir = 8
+	},
+/turf/open/floor/plating/dirt/jungle/dark{
+	slowdown = 0
+	},
+/area/city)
 "IU" = (
 /obj/effect/turf_decal/siding/yellow/corner{
 	dir = 8
@@ -4702,6 +4744,7 @@
 /obj/effect/turf_decal/siding/thinplating/dark{
 	dir = 1
 	},
+/obj/item/workshop_mod/regular/white,
 /turf/open/floor/facility/dark,
 /area/city/house)
 "OT" = (
@@ -5649,6 +5692,15 @@
 	},
 /turf/open/indestructible/white,
 /area/city/shop)
+"Ye" = (
+/obj/machinery/augment_catalogue{
+	pixel_x = 32;
+	pixel_y = 0
+	},
+/turf/open/floor/wood{
+	color = "#ccc8c0"
+	},
+/area/city/house)
 "Yf" = (
 /obj/structure/curtain,
 /turf/open/indestructible/white,
@@ -5748,6 +5800,14 @@
 	},
 /turf/open/floor/wood,
 /area/city/shop)
+"Zf" = (
+/obj/machinery/body_modification_catalogue{
+	pixel_x = -32
+	},
+/turf/open/floor/wood{
+	color = "#ccc8c0"
+	},
+/area/city/house)
 "Zk" = (
 /obj/effect/spawner/room/backstreets/large_north,
 /turf/closed/indestructible/reinforced,
@@ -5828,6 +5888,15 @@
 	},
 /turf/open/floor/plasteel/dark,
 /area/city/house)
+"ZK" = (
+/obj/machinery/door/airlock/grunge{
+	name = "NO ENTRY";
+	req_access_txt = "150"
+	},
+/turf/open/floor/plating/dirt/jungle/dark{
+	slowdown = 0
+	},
+/area/city)
 "ZP" = (
 /obj/machinery/computer/operating{
 	dir = 4
@@ -30991,10 +31060,10 @@ Na
 qn
 iQ
 fA
-fA
+cN
 Cp
 rg
-FX
+Zf
 jJ
 bk
 Na
@@ -32019,10 +32088,10 @@ Na
 qn
 JX
 bv
-bv
+EK
 bz
 tB
-FX
+Ye
 CM
 qn
 Na
@@ -39502,8 +39571,8 @@ hW
 hW
 hW
 im
-WL
-WL
+im
+im
 WL
 WL
 WL
@@ -39758,9 +39827,9 @@ hW
 hW
 hW
 hW
+hW
+hW
 im
-WL
-WL
 WL
 WL
 WL
@@ -40015,9 +40084,9 @@ hW
 hW
 ry
 hW
+hW
+hW
 im
-WL
-WL
 WL
 WL
 WL
@@ -40272,9 +40341,9 @@ hW
 hW
 hW
 hW
+hW
+hW
 im
-WL
-WL
 WL
 WL
 WL
@@ -40517,6 +40586,8 @@ im
 im
 im
 im
+im
+im
 qn
 qn
 qn
@@ -40530,8 +40601,6 @@ hW
 hW
 hW
 im
-WL
-WL
 WL
 WL
 WL
@@ -40773,7 +40842,9 @@ lE
 lE
 lE
 lE
-im
+lE
+lE
+lE
 qn
 oK
 qn
@@ -40787,8 +40858,6 @@ hW
 hW
 hW
 im
-WL
-WL
 WL
 WL
 WL
@@ -41030,7 +41099,9 @@ lE
 lE
 lE
 lE
-im
+lE
+lE
+lE
 qn
 Hc
 ln
@@ -41044,8 +41115,6 @@ hW
 hW
 hW
 im
-WL
-WL
 WL
 WL
 WL
@@ -41287,7 +41356,9 @@ lE
 lE
 lE
 lE
-im
+lE
+lE
+lE
 qn
 pe
 qn
@@ -41301,8 +41372,6 @@ hW
 hW
 hW
 im
-WL
-WL
 WL
 WL
 WL
@@ -41544,7 +41613,9 @@ lE
 lE
 lE
 lE
-im
+lE
+lE
+lE
 qn
 qn
 qn
@@ -41558,8 +41629,6 @@ hW
 hW
 hW
 im
-WL
-WL
 WL
 WL
 WL
@@ -41782,7 +41851,7 @@ Rm
 yu
 yu
 yu
-FY
+xl
 yu
 yu
 uB
@@ -41801,7 +41870,9 @@ lE
 lE
 lE
 lE
-im
+lE
+lE
+lE
 qn
 DB
 bD
@@ -41815,8 +41886,6 @@ hW
 hW
 hW
 im
-WL
-WL
 WL
 WL
 WL
@@ -42058,7 +42127,9 @@ lE
 lE
 lE
 lE
-im
+lE
+lE
+lE
 qn
 WU
 yp
@@ -42072,8 +42143,6 @@ hW
 hW
 hW
 im
-WL
-WL
 WL
 WL
 WL
@@ -42306,7 +42375,6 @@ hW
 hW
 sB
 PK
-XJ
 lE
 lE
 lE
@@ -42315,7 +42383,10 @@ lE
 lE
 lE
 lE
-im
+lE
+lE
+lE
+lE
 qn
 qn
 qn
@@ -42329,8 +42400,6 @@ hW
 hW
 hW
 im
-WL
-WL
 WL
 WL
 WL
@@ -42537,7 +42606,7 @@ Mh
 bD
 FL
 QQ
-ke
+oO
 fP
 fP
 CI
@@ -42572,7 +42641,9 @@ lE
 lE
 lE
 lE
-im
+lE
+lE
+lE
 qn
 oK
 qn
@@ -42586,8 +42657,6 @@ hW
 hW
 hW
 im
-WL
-WL
 WL
 WL
 WL
@@ -42829,7 +42898,9 @@ lE
 lE
 lE
 lE
-im
+lE
+lE
+lE
 qn
 Hc
 ln
@@ -42843,8 +42914,6 @@ hW
 hW
 hW
 im
-WL
-WL
 WL
 WL
 WL
@@ -43086,7 +43155,9 @@ lE
 lE
 lE
 lE
-im
+lE
+lE
+lE
 qn
 pe
 qn
@@ -43100,8 +43171,6 @@ hW
 hW
 hW
 im
-WL
-WL
 WL
 WL
 WL
@@ -43334,6 +43403,7 @@ hW
 hW
 sB
 Bj
+XJ
 lE
 lE
 lE
@@ -43343,7 +43413,8 @@ lE
 lE
 lE
 lE
-im
+lE
+lE
 qn
 qn
 qn
@@ -43357,8 +43428,6 @@ hW
 hW
 hW
 im
-WL
-WL
 WL
 WL
 WL
@@ -43591,16 +43660,18 @@ hW
 CO
 sB
 Bj
-lE
-Lr
-lE
+XJ
 lE
 lE
 lE
 lE
 lE
 lE
-im
+lE
+lE
+lE
+lE
+lE
 qn
 iB
 qn
@@ -43614,8 +43685,6 @@ hW
 hW
 hW
 im
-WL
-WL
 WL
 WL
 WL
@@ -43849,6 +43918,7 @@ hW
 sB
 Bj
 lE
+Lr
 lE
 lE
 lE
@@ -43857,7 +43927,8 @@ lE
 lE
 lE
 lE
-im
+lE
+lE
 qn
 iB
 qn
@@ -43871,8 +43942,6 @@ hW
 hW
 hW
 im
-WL
-WL
 WL
 WL
 WL
@@ -44105,7 +44174,6 @@ hW
 hW
 sB
 Bj
-XJ
 lE
 lE
 lE
@@ -44114,7 +44182,10 @@ lE
 lE
 lE
 lE
-im
+lE
+lE
+lE
+lE
 qn
 qn
 qn
@@ -44128,8 +44199,6 @@ hW
 hW
 hW
 im
-WL
-WL
 WL
 WL
 WL
@@ -44362,7 +44431,6 @@ hW
 hW
 sB
 Bj
-XJ
 lE
 lE
 lE
@@ -44371,7 +44439,10 @@ lE
 lE
 lE
 lE
-im
+lE
+lE
+lE
+lE
 qn
 oK
 qn
@@ -44385,8 +44456,6 @@ hW
 hW
 hW
 im
-WL
-WL
 WL
 WL
 WL
@@ -44628,7 +44697,9 @@ lE
 lE
 lE
 lE
-im
+lE
+lE
+lE
 qn
 Hc
 ln
@@ -44642,8 +44713,6 @@ hW
 hW
 hW
 im
-WL
-WL
 WL
 WL
 WL
@@ -44885,7 +44954,9 @@ lE
 lE
 lE
 lE
-im
+lE
+lE
+lE
 qn
 pe
 qn
@@ -44899,8 +44970,6 @@ hW
 hW
 hW
 im
-WL
-WL
 WL
 WL
 WL
@@ -45142,7 +45211,9 @@ lE
 lE
 lE
 lE
-im
+lE
+lE
+lE
 qn
 qn
 qn
@@ -45156,8 +45227,6 @@ hW
 hW
 hW
 im
-WL
-WL
 WL
 WL
 WL
@@ -45399,7 +45468,9 @@ lE
 lE
 lE
 lE
-im
+lE
+lE
+lE
 qn
 DB
 bD
@@ -45413,8 +45484,6 @@ hW
 hW
 hW
 im
-WL
-WL
 WL
 WL
 WL
@@ -45656,7 +45725,9 @@ lE
 lE
 lE
 lE
-im
+lE
+lE
+lE
 qn
 WU
 yp
@@ -45670,8 +45741,6 @@ hW
 hW
 hW
 im
-WL
-WL
 WL
 WL
 WL
@@ -45913,7 +45982,9 @@ lE
 lE
 lE
 lE
-im
+lE
+lE
+lE
 qn
 qn
 qn
@@ -45927,8 +45998,6 @@ im
 im
 im
 im
-WL
-WL
 WL
 WL
 WL
@@ -46170,10 +46239,10 @@ lE
 lE
 lE
 lE
+lE
+lE
+lE
 im
-WL
-WL
-WL
 WL
 WL
 WL
@@ -46427,10 +46496,10 @@ lE
 lE
 lE
 lE
+lE
+lE
+lE
 im
-WL
-WL
-WL
 WL
 WL
 WL
@@ -46684,10 +46753,10 @@ lE
 lE
 lE
 lE
+lE
+lE
+lE
 im
-WL
-WL
-WL
 WL
 WL
 WL
@@ -46941,10 +47010,10 @@ lE
 lE
 lE
 lE
+lE
+lE
+lE
 im
-WL
-WL
-WL
 WL
 WL
 WL
@@ -47198,10 +47267,10 @@ lE
 lE
 lE
 lE
+lE
+lE
+lE
 im
-WL
-WL
-WL
 WL
 WL
 WL
@@ -47456,9 +47525,9 @@ im
 im
 im
 im
-WL
-WL
-WL
+im
+im
+im
 WL
 WL
 WL
@@ -52295,8 +52364,8 @@ Zq
 YF
 qn
 qn
-im
-im
+Na
+Na
 Na
 Na
 Na
@@ -52553,9 +52622,9 @@ qn
 qn
 qn
 im
-im
-im
-im
+Na
+Na
+Na
 Na
 Na
 Na
@@ -52798,6 +52867,10 @@ WL
 im
 im
 Na
+IS
+Na
+Na
+Fr
 Na
 Na
 Na
@@ -52809,10 +52882,6 @@ Na
 Na
 Na
 Na
-Na
-Na
-Na
-im
 Na
 DJ
 Na
@@ -53058,6 +53127,7 @@ Na
 Na
 Na
 Na
+ZK
 Na
 Na
 Na
@@ -53069,7 +53139,6 @@ Na
 Na
 Na
 Na
-im
 Na
 Na
 Na
@@ -53315,7 +53384,7 @@ Na
 Na
 Na
 Na
-Na
+im
 Na
 Na
 Na

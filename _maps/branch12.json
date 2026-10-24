@@ -2,12 +2,10 @@
 	"version": 1,
 	"map_name": "Branch 12",
 	"map_path": "map_files/Branch12",
-	"map_file": [
-		"Alpha12.dmm",
-		"Proto12.dmm"
-	],
-	"pick_one": 1,
-	"submap_names": {
+	"map_file": "Alpha12.dmm",
+	"has_submaps": 1,
+	"no_submap_behavior": "standard",
+	"available_submaps": {
 		"Alpha12.dmm": "Alpha-12",
 		"Proto12.dmm": "Proto-12"
 	},
