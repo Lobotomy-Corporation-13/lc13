@@ -590,12 +590,12 @@
 	abno_type = /mob/living/simple_animal/hostile/abnormality/der_fluchschutze
 	abno_code = "F-01-16"
 	abno_info = list(
-		"Attachment work provided the best results, but has a low chance to greatly lower the Qlipoth counter.",
-		"When the work result was neutral and the work type was not Attachment, the Qliphoth counter lowered.",
-		"When the work result was bad and the work type was not Attachment, the Qliphoth counter lowered.",
-		"When the work result was good and the work type was not Attachment, the Qliphoth counter increased at a low probability.",
-		"During a breach, Der Fluchschutze will roam and fire at employees and abnormalities alike.",
-		"Occassionally, it will summon and attempt to fire at sacrifices around the facility, \
-			if left alive the sacrifices will be killed causing large RED damage to nearby employees and abnormalities.",
-		"during the above effect, Der Fluchschutze was observed to be immune to all damage types.",
-		"If two or more of the above sacrifices were killed, Der Fluchschutze will become temporarily staggered and will be unable to fire or move for a short period of time and taking double damage from all sources.")
+		"When the work result was Bad, the Qlipoth counter lowered. \
+		When the work result was Neutral, the Qlipoth counter lowered with a low probablity. \
+		When the work result was Good, the Qlipoth counter increased with a moderate probablity. \
+		During attachment work, the agent would inform the abnormality they are on their side. After repeated attachment works, the abnormality may realise. Lowering the Qlipoth counter. \
+		The above affect could be prevented by performing another worktype. <br> \
+		<b> BREACH INFORMATION </b> \
+		When the abnormality breached, it was observed to fire at agents, ordeals & abnormalities alike. \
+		Occasionally the abnormality may create sacrifices in the form of G-Corp soldiers, during this state the abnormality became ressistant to all damage. \
+		If 2 or more of the above soldiers were killed, the abnormality becamed staggered & highly vulnerable to attacks.")

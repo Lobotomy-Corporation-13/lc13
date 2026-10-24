@@ -34,10 +34,10 @@ Pretty Basic HE with a cool gimmick */
 	threat_level = HE_LEVEL
 	start_qliphoth = 3
 	work_chances = list(
-		ABNORMALITY_WORK_INSTINCT = 40,
+		ABNORMALITY_WORK_INSTINCT = 45,
 		ABNORMALITY_WORK_INSIGHT = 20,
-		ABNORMALITY_WORK_ATTACHMENT = 65,
-		ABNORMALITY_WORK_REPRESSION = 45,
+		ABNORMALITY_WORK_ATTACHMENT = 70,
+		ABNORMALITY_WORK_REPRESSION = 50,
 	)
 	max_boxes = 16
 	work_damage_amount = 10
@@ -70,7 +70,19 @@ Pretty Basic HE with a cool gimmick */
 	var/lastfired = 0 // when he last used his sacrifice spawn
 	var/staggered = FALSE // if he is staggered
 	var/stagger = 0 // how many sacrifices have been destroyed
+	var/staggertime = 0 SECONDS // how long we are staggered for
 	var/aiming = FALSE // if he is aiming at sacrifices
+	var/limit = 0 // how many attaches before a qlip drop
+	var/current = 0 // how many attaches we are at
+
+
+	// qoutes to say during attachment work
+	var/list/attachmentqoutes(
+		"Glad to have someone likeminded on my side."
+		"Let me out and continue the party with me."
+		"This is a warzone, you better be prepared."
+		"If you are going to stay complacent, let me do the fighting for you"
+	)
 
 	//Simple bool check if we're breached or not to use less processing power.
 	var/breached = FALSE
@@ -83,31 +95,35 @@ Pretty Basic HE with a cool gimmick */
 		<b>|I shall Fire|: When you click on a tile or enemy at least 2 tiles away, You will consume 1 ammo to fire 5 pellets which deal 25 red damage each.<br>\
 		<b>|Ammo|: You have a max of 2 ammo at any given time. You passively reload 1 ammo every second, but you can also reload 1 ammo by hitting humans or mechs.</b>")
 
+
+/mob/living/simple_animal/hostile/abnormality/der_fluchschutze/Initialize()
+	overattatched() // to set the initial amount of attachment works
+
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/SuccessEffect(mob/living/carbon/human/user, work_type, pe)
-	. = ..()
-	if (prob(30) && work_type != ABNORMALITY_WORK_ATTACHMENT)
-		datum_reference.qliphoth_change(1) // once his counter lowers it will be tough to raise it
-	return
+	if(prob(40))
+		datum_reference.qliphoth_change(1)
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/NeutralEffect(mob/living/carbon/human/user, work_type, pe)
-	. = ..()
-	if(prob(40) && work_type != ABNORMALITY_WORK_ATTACHMENT)
+	if(work_type != ABNORMALITY_WORK_ATTACHMENT && prob(25))
 		datum_reference.qliphoth_change(-1)
-	return
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/FailureEffect(mob/living/carbon/human/user, work_type, pe)
-	. = ..()
-	if(work_type != ABNORMALITY_WORK_ATTACHMENT)
-		datum_reference.qliphoth_change(-1)
-	return
+	datum_reference.qliphoth_change(-1)
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/PostWorkEffect(mob/living/carbon/human/user, work_type, pe)
 	if(work_type == ABNORMALITY_WORK_ATTACHMENT)
-		if (prob(25))
-			datum_reference.qliphoth_change(-2) // big qlipoth dip at a low chance, go big or go home.
-		return ..()
-	return ..()
+		if(current >= limit)
+			overattatched()
+			user.DamageEffect(50, RED_DAMAGE)
+			datum_reference.qliphoth_change(-1)
+			say("Lying bastard! You were with them all along!")
+		else
+			current ++ 1
+			say(pick(attachmentqoutes))
 
+
+/mob/living/simple_animal/hostile/abnormality/der_fluchschutze/proc/overattatched
+	limit = rand(1, 4)
 
 //Breach
 
@@ -132,17 +148,28 @@ Pretty Basic HE with a cool gimmick */
 
 	if(lastfired + firecooldown <= world.time)
 		if(prob(15))
-			aiming = TRUE
-			updatedefense()
-			lastfired = world.time
-			can_act = FALSE
-			for(var/i = 1 to sacrifice_spawn)
-				var/turf/W = pick(GLOB.xeno_spawn)
-				var/mob/living/simple_animal/hostile/der_flusch_sacrifice/E = new(get_turf(W))
-				playsound(get_turf(src), 'sound/abnormalities/fluchschutze/fell_aim.ogg', 35, 0, 20)
-				playsound('sound/abnormalities/fluchschutze/fell_magic.ogg', 35, 0, 20)
-				IconChange(aiming = TRUE)
-				E.Boss = src
+			SacrificeFire()
+		else
+			return FALSE
+
+	if(stagger >= 2)
+	staggerself()
+
+	if(world.time >= staggertime)
+		unstagger()
+
+/mob/living/simple_animal/hostile/abnormality/der_fluchschutze/proc/SacrificeFire()
+	aiming = TRUE
+	updatedefense(AIMING = TRUE)
+	lastfired = world.time
+	can_act = FALSE
+	for(var/i = 1 to sacrifice_spawn)
+		var/turf/W = pick(GLOB.xeno_spawn)
+		var/mob/living/simple_animal/hostile/der_flusch_sacrifice/E = new(get_turf(W))
+		playsound(get_turf(src), 'sound/abnormalities/fluchschutze/fell_aim.ogg', 35, 0, 20)
+		playsound('sound/abnormalities/fluchschutze/fell_magic.ogg', 35, 0, 20)
+		IconChange(aiming = TRUE)
+		E.Boss = src
 
 	if(lastfired + 21 SECONDS <= world.time && staggered == FALSE)
 		aiming = FALSE
@@ -150,18 +177,26 @@ Pretty Basic HE with a cool gimmick */
 		updatedefense()
 		IconChange(aiming = FALSE)
 
-	if(stagger >= 2)
-		staggered = TRUE
-		aiming = FALSE
-		can_act = FALSE
-		staggerdefense()
-		to_chat(src, span_warning("You are staggered!"))
-	if(world.time >= lastfired + 40 SECONDS && staggered == TRUE)
-		staggered = FALSE
-		can_act = TRUE
-		stagger = 0
-		staggerdefense()
-		to_chat(src, span_nicegreen("You are no longer staggered!"))
+/mob/living/simple_animal/hostile/abnormality/der_fluchschutze/proc/staggerself()
+	staggered = TRUE
+	staggertime = stagger * 20 SECONDS
+	if(staggertime > 100)
+		staggertime = 100 SECONDS
+	aiming = FALSE
+	can_act = FALSE
+	staggerdefense()
+	to_chat(src, span_warning("You are staggered!"))
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
+	icon_state = 'DrStagger'
+	updateicon()
+
+/mob/living/simple_animal/hostile/abnormality/der_fluchschutze/proc/unstagger()
+	staggered = FALSE
+	can_act = TRUE
+	stagger = 0
+	IconChange(aiming = FALSE)
+	staggerdefense()
+	to_chat(src, span_nicegreen("You are no longer staggered!"))
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/AttackingTarget(atom/attacked_target)
 	if(ammo < max_ammo)
