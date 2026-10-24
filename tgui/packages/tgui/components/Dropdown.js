@@ -5,7 +5,7 @@
  */
 
 import { classes } from 'common/react';
-import { Component } from 'inferno';
+import { Component } from 'react';
 import { Box } from './Box';
 import { Icon } from './Icon';
 
@@ -30,8 +30,11 @@ export class Dropdown extends Component {
   setOpen(open) {
     this.setState({ open: open });
     if (open) {
-      setTimeout(() => window.addEventListener('click', this.handleClick));
-      this.menuRef.focus();
+      setTimeout(() => {
+        window.addEventListener('click', this.handleClick);
+        // The menu is rendered asynchronously by React; focus it once mounted.
+        this.menuRef?.focus();
+      });
     }
     else {
       window.removeEventListener('click', this.handleClick);
@@ -76,6 +79,9 @@ export class Dropdown extends Component {
       selected,
       disabled,
       displayText,
+      // Used by other methods; keep them off the DOM element.
+      options,
+      onSelected,
       ...boxProps
     } = props;
     const {

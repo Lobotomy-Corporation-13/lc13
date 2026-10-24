@@ -65,19 +65,9 @@ it is used a lot in this framework.
 
 **Event handlers.**
 Event handlers are callbacks that you can attack to various element to
-listen for browser events. Inferno supports camelcase (`onClick`) and
-lowercase (`onclick`) event names.
+listen for browser events. React only supports camelcase event names (`onClick`).
 
-- Camel case names are what's called *synthetic* events, and are the
-**preferred way** of handling events in React, for efficiency and
-performance reasons. Please read
-[Inferno Event Handling](https://infernojs.org/docs/guides/event-handling)
-to understand what this is about.
-- Lower case names are native browser events and should be used sparingly,
-for example when you need an explicit IE8 support. **DO NOT** use
-lowercase event handlers unless you really know what you are doing.
-- [Button](#button) component does not support the lowercase `onclick` event.
-Use the camel case `onClick` instead.
+See [Responding to Events](https://react.dev/learn/responding-to-events).
 
 ## `tgui/components`
 

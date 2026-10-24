@@ -46,16 +46,16 @@ const SpecimenCard = props => {
             height="64px"
             style={{
               'display': 'flex',
-              'align-items': 'center',
-              'justify-content': 'center',
+              alignItems: 'center',
+              justifyContent: 'center',
             }}>
             <Box
               as="img"
               src={`data:image/png;base64,${portrait}`}
               style={{
-                'max-width': '64px',
-                'max-height': '64px',
-                'object-fit': 'contain',
+                maxWidth: '64px',
+                maxHeight: '64px',
+                objectFit: 'contain',
                 '-ms-interpolation-mode': 'nearest-neighbor',
               }} />
           </Box>

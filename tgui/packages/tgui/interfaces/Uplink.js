@@ -160,8 +160,8 @@ const ItemList = props => {
                 disabled={item.disabled}
                 tooltip={item.desc}
                 tooltipPosition="left"
-                onmouseover={() => setHoveredItem(item)}
-                onmouseout={() => setHoveredItem({})}
+                onMouseOver={() => setHoveredItem(item)}
+                onMouseOut={() => setHoveredItem({})}
                 onClick={() => act('buy', {
                   name: item.name,
                 })} />
@@ -180,8 +180,8 @@ const ItemList = props => {
         <Button
           content={item.cost + ' ' + currencySymbol}
           disabled={item.disabled}
-          onmouseover={() => setHoveredItem(item)}
-          onmouseout={() => setHoveredItem({})}
+          onMouseOver={() => setHoveredItem(item)}
+          onMouseOut={() => setHoveredItem({})}
           onClick={() => act('buy', {
             name: item.name,
           })} />

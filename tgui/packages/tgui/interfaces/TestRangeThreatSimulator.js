@@ -70,7 +70,7 @@ export const TestRangeThreatSimulator = props => {
 
         <Flex.Item my={1} grow>
           <Collapsible content="View Battle Guide">
-            <BlockQuote inline style={{ 'white-space': 'pre-wrap' }}>
+            <BlockQuote inline style={{ whiteSpace: 'pre-wrap' }}>
               {datum.battle_guide}
             </BlockQuote>
           </Collapsible>
