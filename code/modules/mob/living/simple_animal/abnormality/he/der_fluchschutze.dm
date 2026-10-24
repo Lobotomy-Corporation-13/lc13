@@ -145,7 +145,7 @@ Pretty Basic HE with a cool gimmick */
 		if (ammo < max_ammo)
 			Reload()
 
-	if(lastfired + firecooldown <= world.time)
+	if(lastfired + firecooldown <= world.time && can_act == TRUE)
 		if(prob(15))
 			SacrificeFire()
 			can_act = FALSE
@@ -243,9 +243,11 @@ Pretty Basic HE with a cool gimmick */
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/proc/IconChange(aiming)
 	if(aiming == TRUE)
 		icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
+		icon_state = "DrFluShots"
 		update_icon()
 	else
 		icon = 'ModularLobotomy/_Lobotomyicons/32x64.dmi'
+		icon_state = "DrFluShots"
 		update_icon()
 
 //gunstuff
