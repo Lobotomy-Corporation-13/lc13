@@ -78,10 +78,10 @@ Pretty Basic HE with a cool gimmick */
 
 	// qoutes to say during attachment work
 	var/list/attachmentqoutes(
-		"Glad to have someone likeminded on my side."
-		"Let me out and continue the party with me."
-		"This is a warzone, you better be prepared."
-		"If you are going to stay complacent, let me do the fighting for you"
+		"Glad to have someone likeminded on my side.",
+		"Let me out and continue the party with me.",
+		"This is a warzone, you better be prepared.",
+		"If you are going to stay complacent, let me do the fighting for you",
 	)
 
 	//Simple bool check if we're breached or not to use less processing power.
