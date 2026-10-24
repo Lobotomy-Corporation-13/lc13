@@ -14,12 +14,15 @@
 	var/ability_cooldown_time = 12 SECONDS
 
 	abno_additional_instructions = "<h1>You are Void Dream, A Support Role Abnormality.</h1><br>\
-		<b>|Dream Cloud|: Due to your capability to float you may fly over certain obstacles, useful around chasms.<br>\
+		<b>|Dream Cloud|: Due to your capability to float you may fly over certain obstacles, useful around chasms. <br>\
 		<br>\
 		|Engulfing Dream|: Every 12 seconds you will automatically fire a projectile at any hostile non-sleeping human. \
 		This projectile will have slight homing onto the closest valid target within 9 tiles. \
 		Upon hitting it's target it will put them to sleep for 30 seconds. \
-		This projectile will do nothing to non-human entities it hits. \
+		This projectile will do nothing to non-human entities it hits. <br>\
+		<br>\
+		|Void Dream|: If your projectile somehow hits a sleeping human they will take sanity damage equal to their maximum sanity. \
+		U<br>\
 		</b>"
 
 /mob/living/simple_animal/hostile/rcorp_abno/easy/voiddream/PickTarget(list/Targets)
@@ -70,7 +73,9 @@
 	name = "void dream"
 	icon_state = "antimagic"
 	color = "#FCF344"
+	nodamage = TRUE
 	damage = 0
+	projectile_piercing = PASSMOB
 	speed = 3
 	homing = TRUE
 	homing_turn_speed = 25 //Angle per tick.
@@ -88,12 +93,20 @@
 	homing_target = pick(targetslist)
 
 /obj/projectile/rca_sleepdart/on_hit(atom/target, blocked = FALSE)
-	if(!ishuman(target))
+	if(ishuman(target) && !ishostile(target))
+		var/mob/living/carbon/human/H = target
+		if(H.IsSleeping()) //Your projectile doesnt aim for sleeping people and will just fly over them, so this is a just in case
+			H.SetSleeping(0)
+			H.adjustSanityLoss(H.maxSanity)
+			H.apply_status_effect(/datum/status_effect/panicked_lvl_4)
+			qdel(src)
+			return
+		H.SetSleeping(30 SECONDS) // Used to be a full minute
+		var/datum/status_effect/incapacitating/sleeping/S = H.IsSleeping()
+		S.remove_on_damage = TRUE
+		playsound(get_turf(H), 'sound/abnormalities/voiddream/skill.ogg', 50, TRUE)
+		qdel(src)
+
+	if(ishostile(target))
+		to_chat(target, "[src] flies right past you!")
 		return
-	var/mob/living/carbon/human/H = target
-	if(H.IsSleeping())
-		return
-	H.SetSleeping(30 SECONDS) // Used to be a full minute
-	var/datum/status_effect/incapacitating/sleeping/S = H.IsSleeping()
-	S.remove_on_damage = TRUE
-	playsound(get_turf(H), 'sound/abnormalities/voiddream/skill.ogg', 50, TRUE)

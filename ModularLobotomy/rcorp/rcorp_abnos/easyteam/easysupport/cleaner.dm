@@ -9,8 +9,13 @@
 	original_abno = /mob/living/simple_animal/hostile/abnormality/cleaner
 
 	abno_additional_instructions = "<h1>You are All-Around Cleaner, A Support Role Abnormality.</h1><br>\
-		<b>|Special Cleaning|: When moving within 2 tile range of a mess you will clean it. \
-		When said mess is a human you will violently toss them if they are not in crit. </b>"
+		<b>|Special Cleaning|: When moving within 2 tile range of a mess you will clean it and spread |Sanitizer|. \
+		|Sanitizer| will linger on affected tiles for 10 seconds. <br>\
+		<br>\
+		|Sanitizer|: Any human being that walks into sanitizer foam will slip and fall dropping any items they were holding out. \
+		Slipped humans will be forced to crawl for 4 seconds, humans which are already crawling cannot be slipped. \
+		Sanitizer foam does not (normally) affect abnormalities. <br>\
+		</b>"
 
 	var/bumpdamage = 4
 
