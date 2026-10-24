@@ -10,7 +10,7 @@ Pretty Basic HE with a cool gimmick */
 	portrait = "derfluschutz"
 	icon_dead = "flusch_egg"
 	core_icon = "flusch_egg"
-	del_on_death = false
+	del_on_death = FALSE
 	maxHealth = 1300
 	health = 1300 // Chunky lad, will be standing still for long amounts of time, needs to not get destroyed instantly
 	rapid_melee = 1
