@@ -90,12 +90,6 @@ HOW ALT TITLES PICK OUTFITS
 	suit_store = null
 	mask = /obj/item/clothing/mask/surgical
 
-/datum/outfit/job/doctor/nurse
- 	name = "Medical Doctor (Nurse)"
- 	head = /obj/item/clothing/head/nursehat
- 	suit = null
- 	suit_store = null
-
 /// Chemist
 
 /datum/outfit/job/chemist/seniorchemist

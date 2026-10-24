@@ -1035,15 +1035,19 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 
 			HTML += "<tr bgcolor='[job.selection_color]'><td width='60%' align='right'>"
 			var/rank = job.title
-			var/displayed_rank = rank//tegu edit - alt job titles
+			//Falls back to display_title rather than title, so a job whose real
+			//name comes from a city faction is not advertised here under a
+			//generic one. Identical for every other job, since display_title
+			//defaults to title.
+			var/displayed_rank = job.display_title || rank//tegu edit - alt job titles
 			if(job.alt_titles.len && (rank in alt_titles_preferences))
 				displayed_rank = alt_titles_preferences[rank]//tegu end
 			lastJob = job
 			if(is_banned_from(user.ckey, rank))
-				HTML += "<font color=red>[rank]</font></td><td><a href='byond://?_src_=prefs;bancheck=[rank]'> BANNED</a></td></tr>"
+				HTML += "<font color=red>[displayed_rank]</font></td><td><a href='byond://?_src_=prefs;bancheck=[rank]'> BANNED</a></td></tr>"
 				continue
 			if(job.trusted_only && !is_trusted_player(user.client))
-				HTML += "<font color=black>[rank]</font></td><td><font color=black> \[ROLEPLAY\]</font></td></tr>"
+				HTML += "<font color=black>[displayed_rank]</font></td><td><font color=black> \[ROLEPLAY\]</font></td></tr>"
 				continue
 
 			var/required_playtime_remaining = job.required_playtime_remaining(user.client)
@@ -1319,8 +1323,14 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 				if(istype(SSjob.GetJob(job_title), /datum/job/limbus_specimen))
 					open_lcl_specimen_ui(user) //LC Specimen uses the specimen selector, not alt titles.
 					return 1
-				var/titles_list = list(job_title)
 				var/datum/job/J = SSjob.GetJob(job_title)
+				//A job flagged alt_titles_only never offers its plain title, so
+				//nothing in the menu suggests an unaffiliated version of it.
+				//alt_titles_only hides the plain title, but only when there is
+				//something else to pick. Without that check a job that sets the
+				//flag and declares no alt titles opens an empty dialog.
+				var/hide_plain = J && J.alt_titles_only && length(J.alt_titles)
+				var/titles_list = hide_plain ? list() : list(job_title)
 				var/sen_timelock = CONFIG_GET(number/senior_timelock)
 				var/ulsen_timelock = CONFIG_GET(number/ultra_senior_timelock)
 				if(user.client.prefs.exp[job_title] >= sen_timelock) //If they have more than 50 hours (300 Minutes) past the required time needed for the job, give them access to the senior title
