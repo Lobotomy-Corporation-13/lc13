@@ -153,7 +153,17 @@ Pretty Basic HE with a cool gimmick */
 			return FALSE
 
 	if(stagger >= 2)
-		staggerself()
+		staggered = TRUE
+		staggertime = stagger * 20 SECONDS
+		if(staggertime > 100)
+		staggertime = 100 SECONDS
+		aiming = FALSE
+		can_act = FALSE
+		staggerdefense()
+		to_chat(src, span_warning("You are staggered!"))
+		icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
+		icon_state = "DrStagger"
+		update_icon()
 
 	if(world.time >= staggertime && aiming == FALSE)
 		unstagger()
@@ -173,23 +183,9 @@ Pretty Basic HE with a cool gimmick */
 		var/turf/W = pick(GLOB.xeno_spawn)
 		var/mob/living/simple_animal/hostile/der_flusch_sacrifice/E = new(get_turf(W))
 		playsound(get_turf(src), 'sound/abnormalities/fluchschutze/fell_aim.ogg', 35, 0, 20)
-		playsound('sound/abnormalities/fluchschutze/fell_magic.ogg', 35, 0, 20)
+		playsound(get_turf(src), 'sound/abnormalities/fluchschutze/fell_magic.ogg', 35, 0, 20)
 		IconChange(aiming = TRUE)
 		E.Boss = src
-
-
-/mob/living/simple_animal/hostile/abnormality/der_fluchschutze/proc/staggerself()
-	staggered = TRUE
-	staggertime = stagger * 20 SECONDS
-	if(staggertime > 100)
-		staggertime = 100 SECONDS
-	aiming = FALSE
-	can_act = FALSE
-	staggerdefense()
-	to_chat(src, span_warning("You are staggered!"))
-	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
-	icon_state = "DrStagger"
-	update_icon()
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/proc/unstagger()
 	staggered = FALSE
