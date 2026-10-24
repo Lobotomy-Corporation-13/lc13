@@ -158,6 +158,12 @@ Pretty Basic HE with a cool gimmick */
 	if(world.time >= staggertime && aiming == FALSE)
 		unstagger()
 
+	if(lastfired + 21 SECONDS <= world.time && staggered == FALSE)
+		aiming = FALSE
+		can_act = TRUE
+		updatedefense()
+		IconChange(aiming = FALSE)
+
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/proc/SacrificeFire()
 	aiming = TRUE
 	updatedefense()
@@ -171,11 +177,6 @@ Pretty Basic HE with a cool gimmick */
 		IconChange(aiming = TRUE)
 		E.Boss = src
 
-	if(lastfired + 21 SECONDS <= world.time && staggered == FALSE)
-		aiming = FALSE
-		can_act = TRUE
-		updatedefense()
-		IconChange(aiming = FALSE)
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/proc/staggerself()
 	staggered = TRUE
