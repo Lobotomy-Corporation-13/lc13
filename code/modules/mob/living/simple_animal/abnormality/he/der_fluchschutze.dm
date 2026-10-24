@@ -8,7 +8,9 @@ Pretty Basic HE with a cool gimmick */
 	icon_state = "DrFluShots"
 	icon_living = "DrFluShots"
 	portrait = "derfluschutz"
-	del_on_death = TRUE
+	icon_dead = "flusch_egg"
+	core_icon = "flusch_egg
+	del_on_death = false
 	maxHealth = 1300
 	health = 1300 // Chunky lad, will be standing still for long amounts of time, needs to not get destroyed instantly
 	rapid_melee = 1
@@ -247,6 +249,14 @@ Pretty Basic HE with a cool gimmick */
 		icon_state = "DrFluShots"
 		update_icon_state()
 		update_icon()
+
+/mob/living/simple_animal/hostile/abnormality/der_fluchschutze/death()
+	icon = 'ModularLobotomy/_Lobotomyicons/abno_cores/he.dmi'
+	icon_state = icon_dead
+	pixel_x = -16
+	base_pixel_x = -16
+	animate(src, alpha = 0, time = 10 SECONDS)
+	QDEL_IN(src, 10 SECONDS)
 
 //gunstuff
 /obj/item/ammo_casing/caseless/fellround
