@@ -154,19 +154,17 @@ Pretty Basic HE with a cool gimmick */
 
 	if(stagger >= 2 && staggered == FALSE)
 		staggered = TRUE
-		staggertime = stagger * 20 SECONDS
 		aiming = FALSE
 		can_act = FALSE
+		staggertime = world.time
 		staggerdefense()
 		to_chat(src, span_warning("You are staggered!"))
 		icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 		icon_state = "DrStagger"
 		update_icon_state()
 		update_icon()
-		if(staggertime > 100 SECONDS)
-			staggertime = 100 SECONDS
 
-	if(world.time >= staggertime SECONDS && aiming == FALSE && staggered == TRUE)
+	if(world.time >= staggertime + 30 SECONDS && staggered == TRUE)
 		unstagger()
 
 	if(lastfired + 21 SECONDS <= world.time && staggered == FALSE)
