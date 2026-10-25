@@ -9,10 +9,10 @@ Pretty Basic HE with a cool gimmick */
 	icon_living = "DrFluShots"
 	portrait = "derfluschutz"
 	icon_dead = "flusch_egg"
-	core_icon = "flusch_egg
-	del_on_death = false
-	maxHealth = 1300
-	health = 1300 // Chunky lad, will be standing still for long amounts of time, needs to not get destroyed instantly
+	core_icon = "flusch_egg"
+	del_on_death = FALSE
+	maxHealth = 1400
+	health = 1400 // Chunky lad, will be standing still for long amounts of time, needs to not get destroyed instantly
 	rapid_melee = 1
 	melee_queue_distance = 2
 	move_to_delay = 4
@@ -121,6 +121,8 @@ Pretty Basic HE with a cool gimmick */
 		else
 			current += 1
 			say(pick(attachmentqoutes))
+	else
+		current -= 1
 
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/proc/overattatched()
@@ -183,8 +185,8 @@ Pretty Basic HE with a cool gimmick */
 	for(var/i = 1 to sacrifice_spawn)
 		var/turf/W = pick(GLOB.xeno_spawn)
 		var/mob/living/simple_animal/hostile/der_flusch_sacrifice/E = new(get_turf(W))
-		playsound(get_turf(src), 'sound/abnormalities/fluchschutze/fell_aim.ogg', 35, 0, 20)
-		playsound(get_turf(src), 'sound/abnormalities/fluchschutze/fell_magic.ogg', 35, 0, 20)
+		playsound(get_turf(src), 'sound/abnormalities/fluchschutze/fell_aim.ogg', 25, 0, 20)
+		playsound(get_turf(src), 'sound/abnormalities/fluchschutze/fell_magic.ogg', 40, 0, 20)
 		IconChange(aiming = TRUE)
 		E.Boss = src
 
@@ -337,5 +339,5 @@ Pretty Basic HE with a cool gimmick */
 				throw_dir = pick(NORTH, SOUTH, EAST, WEST) // random dir if on same tile
 			var/throw_target = get_edge_target_turf(L, throw_dir)
 			L.throw_at(throw_target, 4, 2)
-			L.deal_damage(75, RED_DAMAGE)
-	qdel(src)
+			L.deal_damage(50, RED_DAMAGE)
+		qdel(src)
