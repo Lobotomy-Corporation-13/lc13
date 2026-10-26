@@ -61,12 +61,6 @@ export const CityMapDisplay = props => {
     map_legend = [],
     pings = [],
   } = data;
-  // Looked up by name rather than held as an object, so the panel follows the
-  // client as their position and health are pushed rather than freezing on
-  // whatever they looked like when they were clicked.
-  const selected = pings.filter(
-    p => p.name === selPing,
-  )[0];
   const [selColor, setSelColor]
     = useSharedState('selColor', '');
   const [zoom, setZoom]
@@ -74,13 +68,15 @@ export const CityMapDisplay = props => {
   const [focusX, setFocusX]
     = useSharedState('focusX', -1);
   const [focusY, setFocusY]
-    = useSharedState(
-      context, 'focusY', -1,
-    );
+    = useSharedState('focusY', -1);
   const [selPing, setSelPing]
-    = useSharedState(
-      context, 'selPing', '',
-    );
+    = useSharedState('selPing', '');
+  // Looked up by name rather than held as an object, so the panel follows the
+  // client as their position and health are pushed rather than freezing on
+  // whatever they looked like when they were clicked.
+  const selected = pings.filter(
+    p => p.name === selPing,
+  )[0];
   const toggleColor = color => {
     setSelColor(
       selColor === color ? '' : color,

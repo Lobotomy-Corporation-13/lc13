@@ -68,8 +68,8 @@ const coverList = held => {
   return names.length ? names.join(', ') : 'None';
 };
 
-export const MiraeTerminal = (props, context) => {
-  const { data } = useBackend(context);
+export const MiraeTerminal = props => {
+  const { data } = useBackend();
   const { has_account, is_staff } = data;
   // Staff are shown the company's book instead of a shopfront. Nothing they
   // could buy is theirs to buy, so none of the customer panels are rendered.
@@ -103,8 +103,8 @@ export const MiraeTerminal = (props, context) => {
 // The same tiers the customer screen sells, with the buttons taken off. Staff
 // are the ones talking a client into a policy, so they need the prices to hand
 // even though the terminal will not let them buy one.
-const PriceListPanel = (props, context) => {
-  const { data } = useBackend(context);
+const PriceListPanel = props => {
+  const { data } = useBackend();
   const { tiers = [], period = 0 } = data;
   return (
     <Section title="Cover We Sell">
@@ -141,8 +141,8 @@ const PriceListPanel = (props, context) => {
   );
 };
 
-const RosterPanel = (props, context) => {
-  const { act, data } = useBackend(context);
+const RosterPanel = props => {
+  const { act, data } = useBackend();
   const { clients = [], is_director } = data;
   return (
     <Section title="Client Register">
@@ -210,8 +210,8 @@ const RosterPanel = (props, context) => {
   );
 };
 
-const AccountPanel = (props, context) => {
-  const { act, data } = useBackend(context);
+const AccountPanel = props => {
+  const { act, data } = useBackend();
   const {
     balance = 0,
     debt = 0,
@@ -286,8 +286,8 @@ const AccountPanel = (props, context) => {
   );
 };
 
-const CoverPanel = (props, context) => {
-  const { act, data } = useBackend(context);
+const CoverPanel = props => {
+  const { act, data } = useBackend();
   const { tiers = [], held = 0, balance = 0, has_card } = data;
   return (
     <Section title="Cover">
@@ -327,8 +327,8 @@ const CoverPanel = (props, context) => {
   );
 };
 
-const DebtPanel = (props, context) => {
-  const { act, data } = useBackend(context);
+const DebtPanel = props => {
+  const { act, data } = useBackend();
   const { debt = 0, balance = 0 } = data;
   if (!debt) {
     return null;
