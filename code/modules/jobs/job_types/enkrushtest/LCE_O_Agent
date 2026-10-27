@@ -1,0 +1,29 @@
+/datum/job/LCEOagent
+	title = "LCE Operations Agent"
+	department_head = list("Manager")
+	faction = "Station"
+	total_positions = -1
+	spawn_positions = -1
+	supervisors = "the Manager"
+	selection_color = "#ccaaaa"
+	exp_requirements = 240
+	exp_type = EXP_TYPE_SECURITY
+	exp_type_department = EXP_TYPE_SECURITY
+	minimal_player_age = 1
+
+	outfit = /datum/outfit/job/agent
+	display_order = JOB_DISPLAY_ORDER_AGENT
+
+	access = list() // LC13:To-Do
+	minimal_access = list()
+
+	allow_bureaucratic_error = FALSE
+	departments = DEPARTMENT_SECURITY
+
+	job_important = "You are a L-Corp Agent. Your job is to work on and suppress Abnormalities. Use :h to talk on your departmental radio."
+
+	job_abbreviation = "AGT"
+
+	/// Values set in after_spawn() depending on var/normal_attribute_level and abnormality number per total abnormality cells
+	roundstart_attributes = list(FORTITUDE_ATTRIBUTE, PRUDENCE_ATTRIBUTE, TEMPERANCE_ATTRIBUTE, JUSTICE_ATTRIBUTE)
+	var/normal_attribute_level = 20 // Scales with round time & facility upgrades
