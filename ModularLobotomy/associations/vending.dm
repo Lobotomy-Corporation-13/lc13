@@ -524,8 +524,6 @@
 	icon_state = "bullets"
 	icon_deny = null
 	products = list(
-		/obj/item/ego_mag/udjat = 99,
-		/obj/item/ego_mag/udjat_sniper = 99,
 		/obj/item/ego_mag/fullstop = 99,
 	)
 
