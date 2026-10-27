@@ -1,0 +1,28 @@
+/datum/job/assistant/LCEfacility_support
+	title = "LCE Recovery Clerk"
+	faction = "Station"
+	total_positions = -1
+	spawn_positions = -1
+	supervisors = "absolutely everyone"
+	selection_color = "#dddddd"
+	access = list(ACCESS_ROBOTICS)
+	minimal_access = list(ACCESS_ROBOTICS)
+	outfit = /datum/outfit/job/assistant
+	antag_rep = 7
+	display_order = JOB_DISPLAY_ORDER_CLERK
+
+	liver_traits = list(TRAIT_GREYTIDE_METABOLISM)
+
+	allow_bureaucratic_error = FALSE
+//	loadalways = TRUE
+	job_important = "\
+		You are a Facility Support Clerk. \n\
+		You are unable to do work, but are expected to assist the facility in any way that you can. In your belt are various tools to assist them."
+
+	job_abbreviation = "F-CLK"
+
+	alt_titles = list("Safety Department Clerk", "Information Department Clerk",
+			"Training Department Clerk",)
+	senior_title = "Extraction Department Clerk"
+	ultra_senior_title = "Assistinator"
+	clerk_belts = /obj/item/storage/belt/clerk/facility
