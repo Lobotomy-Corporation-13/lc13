@@ -67,6 +67,12 @@ GLOBAL_LIST_INIT(command_positions, list(
 	"Lead Researcher",
 
 	"Office Director",
+
+	// Enk Rush Rework
+	//"LCE Recovery Officer",
+	//"LCE Operations Officer",
+	//"LCE Agent Captain",
+
 	))
 
 
@@ -126,6 +132,10 @@ GLOBAL_LIST_INIT(service_positions, list(
 	"R-Corp Production Specialist",
 	"R-Corp Raven MP",
 	"R-Corp Messenger Raven",
+
+	//Enk Rush Rework
+	//"LCE Recovery Clerk",
+	//"LCE Operations Clerk",
 	))
 
 
@@ -155,6 +165,10 @@ GLOBAL_LIST_INIT(security_positions, list(
 	"Section B Robin",
 	"Section C Robin",
 	"R-Corp Rook",
+
+	//Enk Rush Rework
+	//"LCE Recovery Agent",
+	//"LCE Operations Agent",
 	))
 
 
@@ -284,6 +298,15 @@ GLOBAL_LIST_INIT(city_antagonist_positions, list(
 	"Insurgence Transport Agent",
 ))
 
+GLOBAL_LIST_INIT(enk_rush_quicktest, list(
+	"LCE Recovery Officer",
+	"LCE Operations Officer",
+	"LCE Agent Captain",
+	"LCE Recovery Agent",
+	"LCE Operations Agent",
+	"LCE Recovery Clerk",
+	"LCE Operations Clerk",
+))
 
 // job categories for rendering the late join menu
 GLOBAL_LIST_INIT(position_categories, list(

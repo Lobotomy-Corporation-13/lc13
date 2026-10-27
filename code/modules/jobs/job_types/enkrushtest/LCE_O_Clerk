@@ -1,0 +1,28 @@
+/datum/job/assistant/LCEagent_support
+	title = "LCE Operations Clerk"
+	faction = "Station"
+	total_positions = -1
+	spawn_positions = -1
+	supervisors = "absolutely everyone"
+	selection_color = "#dddddd"
+	access = list(ACCESS_ROBOTICS)
+	minimal_access = list(ACCESS_ROBOTICS)
+	outfit = /datum/outfit/job/assistant
+	antag_rep = 7
+	display_order = JOB_DISPLAY_ORDER_CLERK
+
+	liver_traits = list(TRAIT_GREYTIDE_METABOLISM)
+
+	allow_bureaucratic_error = FALSE
+	job_important = "\
+		You are an Agent Support Clerk. \n\
+		You are unable to do work, but are expected to assist agents in any way that you can. In your belt are various tools to assist them."
+
+	job_abbreviation = "A-CLK"
+
+	alt_titles = list("Control Department Clerk", "Command Department Clerk",
+			"Welfare Department Clerk", "Disciplinary Department Clerk",
+			)
+	senior_title = "Record Department Clerk"
+	ultra_senior_title = "Architecture Department Clerk"
+	clerk_belts = /obj/item/storage/belt/clerk/agent
