@@ -42,6 +42,8 @@
 	for(var/mob/living/carbon/human/H in GLOB.player_list)
 		if(H == user)
 			continue
+		if(H.z != z)
+			continue
 		if(H.stat == DEAD)
 			continue
 		if(H.mind?.assigned_role in list("Doctor", "Surgeon", "Nurse", "Physician")) //No more being paid to get rid of the guy that revives your ass - Xeros

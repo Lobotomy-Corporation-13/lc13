@@ -611,7 +611,8 @@
 /area/city/antag_base)
 "XQ" = (
 /obj/machinery/door/airlock/wood{
-	name = "sottocapo office"
+	name = "sottocapo office";
+	req_access_txt = "thumb_south_leader"
 	},
 /turf/open/floor/wood{
 	color = "#ccc8c0"
@@ -630,7 +631,8 @@
 /area/city/antag_base)
 "YC" = (
 /obj/machinery/door/airlock/wood{
-	name = "sottocapo office"
+	name = "sottocapo office";
+	req_access_txt = "thumb_south_leader"
 	},
 /turf/open/floor/wood,
 /area/city/antag_base)

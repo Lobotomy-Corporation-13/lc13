@@ -33,7 +33,7 @@
 		deploy_pool += landmark
 	var/deploy_spot = pick(deploy_pool)
 	for(var/i in 1 to 10)
-		new nexttarget(deploy_spot)
+		new nexttarget(get_turf(deploy_spot))
 	say("New target detected, payment issued preemptively.")
 	new /obj/item/stack/spacecash/c1000 (get_turf(src))
 	addtimer(CALLBACK(src, PROC_REF(NewTarget)), 10 MINUTES)

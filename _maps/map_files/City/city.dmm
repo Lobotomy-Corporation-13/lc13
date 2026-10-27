@@ -2592,16 +2592,6 @@
 /obj/structure/table/wood,
 /turf/open/floor/carpet/black,
 /area/city/clinic)
-"Cf" = (
-/obj/structure/delivery_door{
-	density = 1;
-	desc = "A mailbox for this house.";
-	icon = 'icons/obj/votebox.dmi';
-	icon_state = "votebox_maint";
-	name = "mail box"
-	},
-/turf/closed/indestructible/city/concrete,
-/area/space)
 "Ck" = (
 /turf/open/indestructible/hoteltile,
 /area/city/house)
@@ -37713,7 +37703,7 @@ vq
 vq
 vq
 eI
-Cf
+vq
 vq
 TD
 vq
@@ -40031,7 +40021,7 @@ dm
 dm
 dm
 dm
-Cf
+vq
 lV
 lV
 lV
