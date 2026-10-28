@@ -29,9 +29,10 @@
 	icon_state = "protoemitter_+p"
 	anchored = FALSE
 	projectile_type = /obj/projectile/beam/laser/heavylaser/pale	//Nothing is immune nor absorbs pale
-	rate_of_fire = 2
-	number_of_shots = 6
+	rate_of_fire = 3
+	number_of_shots = 3
 	view_range = 3
+	cooldown_duration = 2 SECONDS
 
 /obj/machinery/manned_turret/rcorp/rook/attackby(obj/item/I, mob/user, params)
 	..()
