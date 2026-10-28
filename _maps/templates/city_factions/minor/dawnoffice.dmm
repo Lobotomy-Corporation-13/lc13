@@ -65,6 +65,7 @@
 /area/city/fixers)
 "m" = (
 /obj/structure/table/wood/fancy/red,
+/obj/structure/warradio,
 /turf/open/floor/wood,
 /area/city/fixers)
 "n" = (

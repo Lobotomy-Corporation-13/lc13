@@ -215,6 +215,10 @@
 	name = "Udjat Captain Office";
 	req_access_txt = "udjat_leader"
 	},
+/obj/machinery/door/airlock/security/glass{
+	name = "Udjat Break Room";
+	req_access_txt = "udjat"
+	},
 /turf/open/floor/mineral/plastitanium{
 	color = "#EDD956"
 	},
@@ -280,7 +284,8 @@
 /area/city/antag_base)
 "P" = (
 /obj/machinery/door/airlock/security/glass{
-	name = "Udjat Break Room"
+	name = "Udjat Break Room";
+	req_access_txt = "udjat"
 	},
 /turf/open/floor/facility/dark,
 /area/city/antag_base)

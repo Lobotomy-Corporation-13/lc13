@@ -31,7 +31,9 @@
 	var/nexttarget = pick(available_targets)
 	for(var/obj/effect/landmark/cityspawner/landmark in GLOB.landmarks_list)
 		deploy_pool += landmark
-	var/deploy_spot = pick(deploy_pool)
+	if(!length(deploy_pool))
+		return
+	var/turf/deploy_spot = get_turf(pick(deploy_pool))
 	for(var/i in 1 to 10)
 		new nexttarget(deploy_spot)
 	say("New target detected, payment issued preemptively.")

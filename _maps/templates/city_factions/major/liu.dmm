@@ -129,6 +129,10 @@
 /obj/structure/closet/cabinet,
 /obj/item/ego_weapon/city/liu/fist/vet,
 /obj/item/clothing/suit/armor/ego_gear/city/liuvet/section5,
+/obj/machinery/door/airlock/security{
+	name = "Veteran's Quarters";
+	req_access_txt = "liu"
+	},
 /turf/open/floor/carpet/orange,
 /area/city/assoc_base)
 "sx" = (

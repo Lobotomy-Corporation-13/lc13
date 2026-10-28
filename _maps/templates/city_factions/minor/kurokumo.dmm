@@ -40,7 +40,8 @@
 /obj/structure/table/reinforced,
 /obj/item/ego_weapon/city/kurokumo{
 	name = "captain kurokumo blade";
-	force = 60
+	force = 60;
+	attribute_requirements = list("Fortitude" = 80, "Prudence" = 80, "Temperance" = 60, "Justice" = 80)
 	},
 /turf/open/floor/facility/dark,
 /area/city/fixers)

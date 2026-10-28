@@ -47,7 +47,7 @@
 	for(var/obj/effect/landmark/cityspawner/landmark in GLOB.landmarks_list)
 		deploy_pool += landmark
 	var/deploy_spot = pick(deploy_pool)
-	var/mob/living/simple_animal/hostile/M = new nexttarget(deploy_spot)
+	var/mob/living/simple_animal/hostile/M = new nexttarget(get_turf(deploy_spot))
 	target = M
 	say("New target detected.")
 	addtimer(CALLBACK(src, PROC_REF(NewTarget)), 10 MINUTES)
