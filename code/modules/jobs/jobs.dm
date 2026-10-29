@@ -298,7 +298,7 @@ GLOBAL_LIST_INIT(city_antagonist_positions, list(
 	"Insurgence Transport Agent",
 ))
 
-GLOBAL_LIST_INIT(enk_rush_quicktest, list(
+GLOBAL_LIST_INIT(enkrush_positions, list(
 	"LCE Recovery Officer",
 	"LCE Operations Officer",
 	"LCE Agent Captain",
@@ -317,7 +317,7 @@ GLOBAL_LIST_INIT(position_categories, list(
 	"Association" = list("jobs" = association_positions, "color" = "#5baa27"),
 	"Syndicate" = list("jobs" = city_antagonist_positions, "color" = "#db2828"),
 	"Fixers" = list("jobs" = fixer_positions, "color" = "#767676"),
-	"Limbus Company Enkephalin" = list("jobs" = enk_rush_quicktest, "color" = "#ff6600"),
+	"Limbus Company Enkephalin" = list("jobs" = enkrush_positions, "color" = "#ff6600"),
 	// LOBOTOMYCORPORATION ADDITION END
 	EXP_TYPE_COMMAND = list("jobs" = command_positions, "color" = "#ccccff"),
 	EXP_TYPE_ENGINEERING = list("jobs" = engineering_positions, "color" = "#ffeeaa"),
