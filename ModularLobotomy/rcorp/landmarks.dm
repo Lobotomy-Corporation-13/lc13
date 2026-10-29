@@ -63,7 +63,7 @@ GLOBAL_LIST_INIT(hardtank, list(
 	/mob/living/simple_animal/hostile/rcorp_abno/hard/general_b,
 ))
 
-GLOBAL_LIST_INIT(rhinobuster, list(,
+GLOBAL_LIST_INIT(rhinobuster, list(
 	/mob/living/simple_animal/hostile/rcorp_abno/hard/dimensional_refraction,
 	/mob/living/simple_animal/hostile/rcorp_abno/hard/rudolta,
 	/mob/living/simple_animal/hostile/rcorp_abno/hard/judgement_bird,
@@ -159,7 +159,7 @@ GLOBAL_LIST_INIT(raidboss, list(
 
 
 /obj/effect/landmark/abnospawn/rhinobuster
-	name = "hard tank abno spawner"
+	name = "rhinobuster abno spawner"
 	desc = "It spawns an abno. Notify a coder. Thanks!"
 	icon = 'icons/effects/landmarks_static.dmi'
 	icon_state = "tdome_admin"
