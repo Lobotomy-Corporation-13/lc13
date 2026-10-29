@@ -10,6 +10,8 @@
 	#define ABILITY_UNIQUE (1<<1)
 // Should be set on charge abilities that trigger when using the weapon itself
 #define ABILITY_ON_ACTIVATION (1<<2)
+// Should be set on charge abilities that trigger when takind damage
+#define ABILITY_PARRY (1<<3)
 
 /// Sweeping and Thrusting Defines
 #define WEAPONSWING_NONE (1<<0)
