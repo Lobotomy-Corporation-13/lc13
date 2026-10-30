@@ -2157,6 +2157,7 @@
 #include "code\modules\clothing\suits\ego_gear\non_abnormality\devyat.dm"
 #include "code\modules\clothing\suits\ego_gear\non_abnormality\dieci.dm"
 #include "code\modules\clothing\suits\ego_gear\non_abnormality\echo_office.dm"
+#include "code\modules\clothing\suits\ego_gear\non_abnormality\enkephalin_rush.dm"
 #include "code\modules\clothing\suits\ego_gear\non_abnormality\fanghunt.dm"
 #include "code\modules\clothing\suits\ego_gear\non_abnormality\fullstop.dm"
 #include "code\modules\clothing\suits\ego_gear\non_abnormality\hana.dm"
