@@ -55,7 +55,8 @@ export const shallowDiffers = (a, b) => {
 };
 
 /**
- * Default inferno hooks for pure components.
+ * Inferno's pure component hooks. React ignores `defaultHooks`, so this
+ * no longer has any effect.
  */
 export const pureComponentHooks = {
   onComponentShouldUpdate: (lastProps, nextProps) => {

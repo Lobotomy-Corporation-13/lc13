@@ -38,15 +38,15 @@ export const MiningVendor = props => {
                     <span
                       className={classes(['vending32x32', product.path])}
                       style={{
-                        'vertical-align': 'middle',
+                        verticalAlign: 'middle',
                       }} />
                     {' '}<b>{product.name}</b>
                   </Table.Cell>
                   <Table.Cell>
                     <Button
                       style={{
-                        'min-width': '95px',
-                        'text-align': 'center',
+                        minWidth: '95px',
+                        textAlign: 'center',
                       }}
                       disabled={!data.user
                         || product.price > data.user.points}

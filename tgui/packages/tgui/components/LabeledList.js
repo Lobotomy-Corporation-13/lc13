@@ -12,7 +12,9 @@ export const LabeledList = props => {
   const { children } = props;
   return (
     <table className="LabeledList">
-      {children}
+      <tbody>
+        {children}
+      </tbody>
     </table>
   );
 };
@@ -77,8 +79,8 @@ export const LabeledListDivider = props => {
       <td
         colSpan={3}
         style={{
-          'padding-top': padding,
-          'padding-bottom': padding,
+          paddingTop: padding,
+          paddingBottom: padding,
         }}>
         <Divider />
       </td>

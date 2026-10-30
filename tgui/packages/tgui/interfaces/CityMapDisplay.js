@@ -1,7 +1,7 @@
 import {
   Component,
   createRef,
-} from 'inferno';
+} from 'react';
 import {
   useBackend,
   useSharedState,

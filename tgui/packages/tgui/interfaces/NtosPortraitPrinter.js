@@ -69,7 +69,7 @@ export const NtosPortraitPrinter = props => {
                     height="128px"
                     width="128px"
                     style={{
-                      'vertical-align': 'middle',
+                      verticalAlign: 'middle',
                       '-ms-interpolation-mode': 'nearest-neighbor',
                     }} />
                 </Stack.Item>
