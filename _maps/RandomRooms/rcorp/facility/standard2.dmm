@@ -1007,6 +1007,11 @@
 	},
 /turf/open/floor/plasteel/dark,
 /area/city/outskirts)
+"sY" = (
+/obj/effect/turf_decal/sand/plating,
+/obj/effect/landmark/abnospawn/reinfhardtank,
+/turf/open/floor/plating,
+/area/city/outskirts)
 "sZ" = (
 /obj/structure/disposalpipe/segment,
 /turf/open/floor/carpet/green,
@@ -1198,6 +1203,11 @@
 	},
 /obj/effect/turf_decal/sand,
 /turf/open/floor/carpet/orange,
+/area/city/outskirts)
+"xo" = (
+/obj/effect/turf_decal/sand/plating,
+/obj/effect/landmark/abnospawn/reinfhardcombat,
+/turf/open/floor/plating,
 /area/city/outskirts)
 "xt" = (
 /obj/machinery/light{
@@ -1400,6 +1410,11 @@
 /obj/structure/rack,
 /obj/item/clothing/under/suit/lobotomy/control,
 /turf/open/floor/plasteel/dark,
+/area/city/outskirts)
+"AW" = (
+/obj/effect/turf_decal/sand/plating,
+/obj/effect/landmark/abnospawn/reinfhardsupport,
+/turf/open/floor/plating,
 /area/city/outskirts)
 "AZ" = (
 /obj/effect/turf_decal/stripes/corner{
@@ -14148,7 +14163,7 @@ Im
 Im
 Im
 Im
-gB
+xo
 Im
 Im
 Im
@@ -14803,7 +14818,7 @@ Im
 LN
 Im
 Im
-gB
+sY
 Im
 Im
 gB
@@ -15617,7 +15632,7 @@ Im
 Im
 Im
 Im
-gB
+AW
 Im
 Im
 Im

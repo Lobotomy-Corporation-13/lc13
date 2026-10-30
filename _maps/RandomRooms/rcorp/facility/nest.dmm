@@ -564,6 +564,10 @@
 /obj/structure/railing,
 /turf/open/floor/wood,
 /area/city/outskirts)
+"lm" = (
+/obj/effect/landmark/abnospawn/reinfhardtank,
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirts)
 "lo" = (
 /obj/effect/turf_decal/siding/wideplating/dark{
 	dir = 10
@@ -1398,6 +1402,10 @@
 /obj/effect/decal/cleanable/robot_debris,
 /turf/open/floor/plasteel/dark,
 /area/city/outskirts)
+"Ac" = (
+/obj/effect/landmark/abnospawn/reinfhardcombat,
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirts)
 "Ae" = (
 /obj/effect/turf_decal/trimline/green/filled/line,
 /obj/effect/turf_decal/trimline/green/filled/line{
@@ -1802,6 +1810,10 @@
 "IW" = (
 /obj/structure/filingcabinet,
 /turf/open/floor/wood,
+/area/city/outskirts)
+"IZ" = (
+/obj/effect/landmark/abnospawn/reinfhardsupport,
+/turf/open/floor/mineral/plastitanium,
 /area/city/outskirts)
 "Jb" = (
 /obj/effect/turf_decal/trimline/yellow/filled/line{
@@ -4066,7 +4078,7 @@ Hx
 rn
 XF
 eU
-Lo
+IZ
 Lo
 Lo
 Lo
@@ -4881,12 +4893,12 @@ Hx
 rn
 XF
 eU
-Lo
+Ac
 Lo
 Lo
 Lo
 cA
-Lo
+lm
 YN
 Lo
 Lo
