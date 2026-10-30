@@ -2461,9 +2461,7 @@
 /area/city/house)
 "ji" = (
 /obj/effect/decal/cleanable/dirt,
-/obj/machinery/modular_computer/console/preset/research{
-	name = "information department console"
-	},
+/obj/machinery/modular_computer/console/preset/research,
 /turf/open/floor/carpet/purple,
 /area/department_main/information)
 "jk" = (
@@ -9865,9 +9863,7 @@
 /turf/open/floor/wood,
 /area/city/shop)
 "JX" = (
-/obj/machinery/modular_computer/console/preset/research{
-	name = "information department console"
-	},
+/obj/machinery/modular_computer/console/preset/research,
 /obj/effect/turf_decal/siding/purple{
 	dir = 9
 	},
@@ -11408,9 +11404,7 @@
 /obj/machinery/newscaster{
 	pixel_y = 32
 	},
-/obj/machinery/modular_computer/console/preset/research{
-	name = "information department console"
-	},
+/obj/machinery/modular_computer/console/preset/research,
 /obj/effect/turf_decal/siding/purple{
 	dir = 5
 	},
@@ -13205,9 +13199,7 @@
 /turf/open/floor/plasteel/dark,
 /area/maintenance/disposal)
 "Wb" = (
-/obj/machinery/modular_computer/console/preset/research{
-	name = "information department console"
-	},
+/obj/machinery/modular_computer/console/preset/research,
 /obj/machinery/camera/autoname,
 /obj/effect/turf_decal/siding/purple{
 	dir = 9
