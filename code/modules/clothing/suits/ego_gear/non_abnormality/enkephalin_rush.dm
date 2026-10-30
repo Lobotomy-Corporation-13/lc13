@@ -1,4 +1,3 @@
-/*
 /obj/item/clothing/suit/armor/ego_gear/enk_rush/lce_opsofficer
 	name = "LCE Operations Officer Coat"
 	desc = "A Heavy Duty Overcoat used by the LCE"
@@ -14,7 +13,7 @@
 
 /obj/item/clothing/suit/armor/ego_gear/enk_rush/lce_recofficer
 	name = "LCE Recovery Officer Coat"
-	desc = "A Heavy Duty Overcoat used by the LCE
+	desc = "A Heavy Duty Overcoat used by the LCE"
 	icon_state = "lcerec"
 	icon = 'icons/obj/clothing/ego_gear/limbus_labs.dmi'
 	armor = list(RED_DAMAGE = 30, WHITE_DAMAGE = 30, BLACK_DAMAGE = 30, PALE_DAMAGE = 30)
@@ -24,7 +23,6 @@
 							TEMPERANCE_ATTRIBUTE = 60,
 							JUSTICE_ATTRIBUTE = 60
 							)
-*/
 
 /obj/item/clothing/suit/armor/ego_gear/enk_rush/lce_captain
 	name = "LCE Captain Trenchcoat"
