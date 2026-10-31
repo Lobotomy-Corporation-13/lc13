@@ -86,7 +86,6 @@
 	var/stunned = FALSE
 	var/ending = FALSE
 	var/hunted_target
-	var/nihil_present = FALSE
 
 	//PLAYABLES ACTIONS
 	attack_action_types = list(
@@ -343,8 +342,6 @@
 		return FALSE
 	if(!datum_reference)
 		friendly = FALSE
-	if(nihil_present) //nihil is here and we must fight them!
-		return ..()
 	if(friendly)
 		instability += 10
 		icon_state = icon_living
@@ -574,11 +571,6 @@
 	swap_area_index(MOB_ABNORMALITY_INDEX)
 	if(!datum_reference)
 		return ..()
-	if(nihil_present)
-		adjustBruteLoss(-999999)
-		visible_message(span_boldwarning("Oh no, [src] has been defeated!"))
-		INVOKE_ASYNC(src, PROC_REF(petrify), 500000)
-		return FALSE
 	if(ending)
 		return FALSE
 	INVOKE_ASYNC(src, PROC_REF(Downed))
@@ -589,76 +581,6 @@
 		return FALSE
 	death()
 	return FALSE
-
-//Nihil Event Code
-/mob/living/simple_animal/hostile/abnormality/wrath_servant/proc/EventStart()
-	set waitfor = FALSE
-	NihilModeEnable()
-	ChangeResistances(list(RED_DAMAGE = 0, WHITE_DAMAGE = 0, BLACK_DAMAGE = 0, PALE_DAMAGE = 0))
-	SLEEP_CHECK_DEATH(6 SECONDS)
-	say("This is really bad...")
-	SLEEP_CHECK_DEATH(6 SECONDS)
-	say("With this, we can restore balance to the world...")
-	SLEEP_CHECK_DEATH(6 SECONDS)
-	say("We can't lose this time!")
-	SLEEP_CHECK_DEATH(6 SECONDS)
-	say("For the Justice and Balance of this Land!")
-	ChangeResistances(list(RED_DAMAGE = 0.3, WHITE_DAMAGE = 1.5, BLACK_DAMAGE = 0.7, PALE_DAMAGE = 1.5))
-
-/mob/living/simple_animal/hostile/abnormality/wrath_servant/proc/NihilModeEnable()
-	NihilIconUpdate()
-	nihil_present = TRUE
-	friendly = TRUE
-	fear_level = ZAYIN_LEVEL
-	faction = list("neutral")
-	for(var/mob/living/simple_animal/hostile/azure_hermit/badguy in world)
-		badguy.gib(TRUE)
-
-/mob/living/simple_animal/hostile/abnormality/wrath_servant/proc/NihilIconUpdate()
-	name = "Magical Girl of Courage"
-	desc = "A real magical girl!"
-	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
-	icon_state = "wrath"
-	pixel_x = 0
-	base_pixel_x = 0
-	pixel_y = 0
-	base_pixel_y = 0
-
-/mob/living/simple_animal/hostile/abnormality/wrath_servant/petrify(statue_timer)
-	if(!isturf(loc))
-		MoveStatue()
-	AIStatus = AI_OFF
-	src.icon = 'ModularLobotomy/_Lobotomyicons/96x64.dmi'
-	icon_state = "wrath"
-	pixel_x = -32
-	base_pixel_x = -32
-	var/obj/structure/statue/petrified/magicalgirl/S = new(loc, src, statue_timer)
-	S.name = "Lapidified Wrath"
-	ADD_TRAIT(src, TRAIT_NOBLEED, MAGIC_TRAIT)
-	SLEEP_CHECK_DEATH(1)
-	S.icon = src.icon
-	S.icon_state = src.icon_state
-	S.pixel_x = -32
-	S.base_pixel_x = -32
-	var/newcolor = list(rgb(77,77,77), rgb(150,150,150), rgb(28,28,28), rgb(0,0,0))
-	S.add_atom_colour(newcolor, FIXED_COLOUR_PRIORITY)
-	stat = DEAD
-	return TRUE
-
-/mob/living/simple_animal/hostile/abnormality/wrath_servant/proc/MoveStatue()
-	var/list/teleport_potential = list()
-	if(!LAZYLEN(GLOB.department_centers))
-		for(var/mob/living/L in GLOB.mob_living_list)
-			if(L.stat == DEAD || L.z != z || L.status_flags & GODMODE)
-				continue
-			teleport_potential += get_turf(L)
-	if(!LAZYLEN(teleport_potential))
-		var/turf/P = pick(GLOB.department_centers)
-		teleport_potential += P
-	var/turf/teleport_target = pick(teleport_potential)
-	new /obj/effect/temp_visual/guardian/phase(get_turf(src))
-	new /obj/effect/temp_visual/guardian/phase/out(teleport_target)
-	forceMove(teleport_target)
 
 //Rival's code
 /mob/living/simple_animal/hostile/azure_hermit
@@ -923,12 +845,12 @@
 		return FALSE
 	if(!isliving(AM))
 		return FALSE
-	if(istype(AM, /mob/living/simple_animal/hostile/abnormality/wrath_servant))
+	if(istype(AM, /mob/living/simple_animal/hostile/abnormality/wrath_servant) || istype(AM, /mob/living/simple_animal/hostile/abnormality/nihil))
 		return
 	var/mob/living/L = AM
 	L.apply_status_effect(STATUS_EFFECT_ACIDIC_GOO)
 
-/obj/effect/decal/cleanable/wrath_acid/bad/
+/obj/effect/decal/cleanable/wrath_acid/bad
 	name = "Acidic Goo"
 	desc = "It seems to burn whatever it touches, best to stay away!"
 
@@ -948,7 +870,7 @@
 
 /obj/effect/gibspawner/generic/silent/wrath_acid/Initialize()
 	if(!gibdirections.len)
-		gibdirections = list(list(WEST, NORTHWEST, SOUTHWEST, NORTH))
+		gibdirections = list(list(WEST, NORTHWEST, SOUTHWEST, NORTH, EAST, NORTHEAST, SOUTH, SOUTHEAST))
 	. = ..()
 	return
 
