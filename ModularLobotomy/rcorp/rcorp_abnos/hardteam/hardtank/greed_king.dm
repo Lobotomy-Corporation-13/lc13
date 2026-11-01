@@ -3,6 +3,7 @@
 	name = "King of Greed"
 	desc = "A shell of what she once was, the longer she charges the more devastating her bite."
 	health = 3200
+	maxHealth = 3200
 	ranged = TRUE
 	damage_coeff = list(RED_DAMAGE = 0, WHITE_DAMAGE = 0.5, BLACK_DAMAGE = 1.2, PALE_DAMAGE = 1.5)
 	vision_range = 14
