@@ -32,6 +32,8 @@
 	reloadtime = 1.3 SECONDS
 	fire_sound = 'sound/weapons/gun/smg/mp7.ogg'
 	autofire = 0.14 SECONDS
+	reload_start_sound = 'sound/weapons/gun/pistol/mag_release.ogg'
+	reload_success_sound = 'sound/weapons/gun/pistol/rack_small.ogg'
 
 /obj/item/ego_weapon/ranged/pistol/beakmagnum
 	name = "beak mk2"
@@ -44,6 +46,8 @@
 	fire_delay = 10
 	shotsleft = 7
 	reloadtime = 2.4 SECONDS		//It's very powerful.
+	reload_start_sound = 'sound/weapons/gun/pistol/mag_release.ogg'
+	reload_success_sound = 'sound/weapons/gun/pistol/rack.ogg'
 	fire_sound = 'sound/weapons/gun/revolver/shot_alt.ogg'
 	vary_fire_sound = FALSE
 	fire_sound_volume = 70
@@ -65,6 +69,8 @@
 	reloadtime = 0.5 SECONDS
 	fire_sound = 'sound/weapons/gun/shotgun/shot_auto.ogg'
 	roundsreload = TRUE
+	reload_start_sound = null
+	reload_success_sound = 'sound/weapons/gun/shotgun/insert_shell.ogg'
 
 	alternate_fire_name = "Callsign"
 	alternate_pellets = 1
@@ -94,6 +100,8 @@
 	vary_fire_sound = FALSE
 	fire_sound_volume = 70
 	roundsreload = TRUE
+	reload_start_sound = null
+	reload_success_sound = 'sound/weapons/gun/revolver/load_bullet.ogg'
 
 /obj/item/ego_weapon/ranged/pistol/shy
 	name = "todays expression"
@@ -104,6 +112,8 @@
 	force = 8
 	damtype = BLACK_DAMAGE
 	projectile_path = /obj/projectile/ego_bullet/ego_shy
+	reload_start_sound = 'sound/weapons/gun/pistol/mag_release.ogg'
+	reload_success_sound = 'sound/weapons/gun/pistol/rack.ogg'
 	fire_sound = 'sound/effects/meatslap.ogg'
 	vary_fire_sound = FALSE
 	shotsleft = 20
@@ -211,6 +221,8 @@
 	reloadtime = 0.5 SECONDS
 	fire_sound = 'sound/weapons/gun/shotgun/shot.ogg'
 	roundsreload = TRUE
+	reload_start_sound = null
+	reload_success_sound = 'sound/weapons/gun/shotgun/insert_shell.ogg'
 
 /obj/item/ego_weapon/ranged/luckdraw
 	name = "luck of the draw"
@@ -224,6 +236,8 @@
 	weapon_weight = WEAPON_HEAVY
 	autofire = 0.6 SECONDS
 	fire_sound = 'sound/items/handling/paper_pickup.ogg' //Mostly just using this for a lack of a better "card-flicking" noise
+	reload_start_sound = null
+	reload_success_sound = 'sound/weapons/gun/revolver/load_bullet.ogg'
 
 /obj/item/ego_weapon/ranged/pistol/tough
 	name = "tough pistol"
@@ -238,6 +252,8 @@
 	fire_sound = 'sound/weapons/gun/pistol/shot.ogg'
 	vary_fire_sound = FALSE
 	fire_sound_volume = 70
+	reload_start_sound = 'sound/weapons/gun/pistol/mag_release.ogg'
+	reload_success_sound = 'sound/weapons/gun/pistol/rack.ogg'
 	var/pulse_cooldown
 	var/pulse_cooldown_time = 60 SECONDS
 	var/blast_delay = 3 SECONDS

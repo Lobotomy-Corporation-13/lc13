@@ -27,6 +27,8 @@
 	shotsleft = 8
 	reloadtime = 1.8 SECONDS
 	fire_sound = 'sound/weapons/gun/pistol/deagle.ogg'
+	reload_start_sound = 'sound/weapons/gun/pistol/mag_release.ogg'
+	reload_success_sound = 'sound/weapons/gun/pistol/slide_drop.ogg'
 	vary_fire_sound = FALSE
 	weapon_weight = WEAPON_HEAVY
 	fire_sound_volume = 70
@@ -54,6 +56,10 @@
 							TEMPERANCE_ATTRIBUTE = 40
 							)
 	var/homing = FALSE
+
+	reload_start_sound = 'sound/magic/teleport_diss.ogg'
+	reload_success_sound = 'sound/magic/mandswap.ogg'
+
 	fire_sound = 'sound/magic/staff_change.ogg'
 	alternate_fire_name = "Homing"
 	alternate_shotsleft = 10
@@ -168,6 +174,8 @@
 	attack_speed = 1.8
 	projectile_path = /obj/projectile/ego_bullet/ego_harmony
 	fire_sound = 'sound/weapons/ego/harmony1.ogg'
+	reload_start_sound = 'sound/weapons/etherealhit.ogg'
+	reload_success_sound = 'sound/weapons/circsawhit.ogg'
 	vary_fire_sound = FALSE
 	weapon_weight = WEAPON_HEAVY
 	fire_sound_volume = 70
@@ -203,6 +211,8 @@
 	fire_delay = 5
 	shotsleft = 10
 	reloadtime = 1.4 SECONDS
+	reload_start_sound = 'sound/weapons/gun/general/bolt_drop.ogg'
+	reload_success_sound = 'sound/weapons/gun/general/chunkyrack.ogg'
 	fire_sound = 'sound/weapons/gun/rifle/shot_alt.ogg'
 	attribute_requirements = list(
 							FORTITUDE_ATTRIBUTE = 40
@@ -334,6 +344,8 @@
 	shotsleft = 40
 	reloadtime = 2 SECONDS
 	fire_sound = 'sound/weapons/ego/ecstasy.ogg'
+	fire_sound = 'sound/abnormalities/hatredqueen/attack.ogg'
+	reload_start_sound = 'sound/magic/teleport_diss.ogg'
 	autofire = 0.08 SECONDS
 	attribute_requirements = list(
 							PRUDENCE_ATTRIBUTE = 40
@@ -349,6 +361,8 @@
 	attack_speed = 1.8
 	projectile_path = /obj/projectile/ego_bullet/ardor_star
 	weapon_weight = WEAPON_HEAVY
+	reload_start_sound = 'sound/weapons/gun/general/bolt_drop.ogg'
+	reload_success_sound = 'sound/weapons/gun/general/chunkyrack.ogg'
 	fire_sound = 'sound/weapons/gun/sniper/shot.ogg'
 	fire_delay = 15
 	shotsleft = 4
@@ -381,6 +395,8 @@
 	fire_delay = 8
 	shotsleft = 6
 	reloadtime = 1.3 SECONDS
+	reload_start_sound = null
+	reload_success_sound = 'sound/weapons/gun/revolver/load_bullet.ogg'
 	fire_sound = 'sound/weapons/gun/revolver/shot_alt.ogg'
 	vary_fire_sound = FALSE
 	var/list/ammotypes = list(
@@ -419,4 +435,6 @@
 	shotsleft = 30
 	reloadtime = 1.3 SECONDS
 	fire_sound = 'sound/weapons/gun/smg/mp7.ogg'
+	reload_start_sound = 'sound/weapons/gun/pistol/mag_release.ogg'
+	reload_success_sound = 'sound/weapons/gun/pistol/rack.ogg'
 	autofire = 0.14 SECONDS

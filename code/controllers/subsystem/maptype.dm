@@ -30,6 +30,7 @@ SUBSYSTEM_DEF(maptype)
 						FACILITY_TRAIT_DARK_SOULS = 5,			//You get estus flasks and rolling
 						FACILITY_TRAIT_NO_EGO = 3,				//No EGO, works like our events with double the outputs and refineries
 						FACILITY_TRAIT_PROSTHETICS = 3,			//There's a new prosthetics vendor!
+						FACILITY_TRAIT_SS13_ABNOS = 3,			//You also get SS13 mobs as abnos.
 
 						//Joke stuff is below, should all be low
 						FACILITY_TRAIT_DAMAGE_TYPE_SHUFFLE = 2, //Shuffles all lob corp color damage types randomly. Attack and armor damage types shuffled separately.

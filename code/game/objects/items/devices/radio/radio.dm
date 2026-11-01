@@ -42,6 +42,8 @@
 	var/independent = FALSE  // If true, can say/hear on the special CentCom channel.
 	var/syndie = FALSE  // If true, hears all well-known channels automatically, and can say/hear on the Syndicate channel.
 	var/list/channels = list()  // Map from name (see communications.dm) to on/off. First entry is current department (:h)
+	/// The single job-granted channel on this radio. Survives recalculateChannels().
+	var/job_channel
 	var/list/secure_radio_connections
 	var/list/radio_sounds = list('sound/effects/radio/radio1.ogg','sound/effects/radio/radio2.ogg','sound/effects/radio/radio3.ogg')
 
@@ -71,6 +73,13 @@
 
 	for(var/ch_name in channels)
 		secure_radio_connections[ch_name] = add_radio(src, GLOB.radiochannels[ch_name])
+
+/// Gives this radio a job's private channel and tunes it to that frequency.
+/// Replaces any channel a previous job granted, a radio only ever holds one.
+/obj/item/radio/proc/SetJobChannel(channel_name)
+	job_channel = channel_name
+	freerange = TRUE
+	set_frequency(GLOB.radiochannels[channel_name])
 
 // Used for cyborg override
 /obj/item/radio/proc/resetChannels()
@@ -279,6 +288,16 @@
 		signal.data["compression"] = 0
 		signal.transmission_method = TRANSMISSION_SUPERSPACE
 		signal.levels = list(0)  // reaches all Z-levels
+		signal.broadcast()
+		return
+
+	// Job channels are private faction comms. No telecomms bus listens on their
+	// frequencies, and headsets are subspace-only with no backup transmission,
+	// so relaying them would drop the message. Broadcast straight to the radios
+	// on the frequency instead, which also keeps them off the station network.
+	if(job_channel && freq == GLOB.radiochannels[job_channel])
+		signal.data["compression"] = 0
+		signal.levels = list(0)
 		signal.broadcast()
 		return
 

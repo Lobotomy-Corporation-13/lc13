@@ -101,15 +101,19 @@
 //airlock helpers
 /obj/effect/mapping_helpers/airlock
 	layer = DOOR_HELPER_LAYER
+	/// What the helper looks for underneath itself. Most of these set vars
+	/// that only exist on the airlock subtype, but unres_sides lives on
+	/// /obj/machinery/door, so that one widens this to accept any door.
+	var/target_type = /obj/machinery/door/airlock
 
 /obj/effect/mapping_helpers/airlock/Initialize(mapload)
 	. = ..()
 	if(!mapload)
 		log_mapping("[src] spawned outside of mapload!")
 		return
-	var/obj/machinery/door/airlock/airlock = locate(/obj/machinery/door/airlock) in loc
+	var/obj/machinery/door/airlock = locate(target_type) in loc
 	if(!airlock)
-		log_mapping("[src] failed to find an airlock at [AREACOORD(src)]")
+		log_mapping("[src] failed to find a door at [AREACOORD(src)]")
 	else
 		payload(airlock)
 
@@ -141,9 +145,10 @@
 /obj/effect/mapping_helpers/airlock/unres
 	name = "airlock unresctricted side helper"
 	icon_state = "airlock_unres_helper"
+	target_type = /obj/machinery/door
 
-/obj/effect/mapping_helpers/airlock/unres/payload(obj/machinery/door/airlock/airlock)
-	airlock.unres_sides ^= dir
+/obj/effect/mapping_helpers/airlock/unres/payload(obj/machinery/door/door)
+	door.unres_sides ^= dir
 
 /obj/effect/mapping_helpers/airlock/abandoned
 	name = "airlock abandoned helper"
