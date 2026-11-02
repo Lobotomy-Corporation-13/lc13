@@ -10,16 +10,33 @@
 		/obj/item/gun/energy/e_gun/rabbitdash/white/iff,
 		/obj/item/gun/energy/e_gun/rabbitdash/black/iff,
 	)
+	/// Components given to spawned items, as item type (subtypes included) = list of components.
+	/// A component can carry named arguments: list(/datum/component/deadshot = list("damage_mult" = 3)).
+	var/list/item_components = list(
+		/obj/item/gun/energy/e_gun/rabbitdash/sniper = list(/datum/component/deadshot),
+		/obj/item/gun/energy/e_gun/rabbitdash/heavysniper = list(/datum/component/deadshot),
+	)
 
 
 /obj/effect/landmark/rcorp/Initialize()
 	. = ..()
 	var/spawning = pick(possible_items)
 	var/atom/spawned = new spawning(get_turf(src))
-	// RCE sniper rifles get the Deadshot ability
-	if(istype(spawned, /obj/item/gun/energy/e_gun/rabbitdash/sniper) || istype(spawned, /obj/item/gun/energy/e_gun/rabbitdash/heavysniper))
-		spawned.AddComponent(/datum/component/deadshot)
+	ApplyItemComponents(spawned)
 	qdel(src)
+
+/// Adds every component from item_components whose item type matches the spawned item.
+/obj/effect/landmark/rcorp/proc/ApplyItemComponents(atom/spawned)
+	for(var/item_type in item_components)
+		if(!istype(spawned, item_type))
+			continue
+		var/list/components = item_components[item_type]
+		for(var/component_type in components)
+			var/list/arguments = list(component_type)
+			var/list/named_args = components[component_type]
+			for(var/arg_name in named_args)
+				arguments[arg_name] = named_args[arg_name]
+			spawned._AddComponent(arguments)
 
 /obj/effect/landmark/rcorp/midweapon
 	possible_items = list(
