@@ -49,6 +49,7 @@ SUBSYSTEM_DEF(gamedirector)
 	var/next_passive_seed_time = 0
 	var/passive_seed_cooldown = 40 MINUTES
 	var/list/wells_with_passive_seeds = list()
+	var/seed_rarity_threshold = 4
 
 	// Corrupter spawning variables
 	var/next_corrupter_time = 0
@@ -622,6 +623,8 @@ SUBSYSTEM_DEF(gamedirector)
 	var/total_rarity = 0
 	for(var/obj/structure/resourcepoint/well in active_resourcewells)
 		total_rarity += well.rarity
+	if(total_rarity < seed_rarity_threshold)
+		return
 
 	var/seed_type = GetSeedType(total_rarity)
 	if(!seed_type)
@@ -635,6 +638,12 @@ SUBSYSTEM_DEF(gamedirector)
 	var/list/inactive_wells = resourcewells - active_resourcewells - wells_with_passive_seeds
 
 	if(!length(inactive_wells))
+		return
+
+	var/total_rarity = 0
+	for(var/obj/structure/resourcepoint/well in active_resourcewells)
+		total_rarity += well.rarity
+	if(total_rarity < seed_rarity_threshold)
 		return
 
 	var/obj/structure/resourcepoint/target_well = pick(inactive_wells)

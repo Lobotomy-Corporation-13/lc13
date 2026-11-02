@@ -55,6 +55,7 @@
 	melee_damage_upper = 10
 	var/datum/beam/current_beam = null
 	var/aiming = FALSE
+	var/piercing_projectile = /obj/projectile/clan_bullet/piercing
 
 /mob/living/simple_animal/hostile/clan/ranged/sniper/Destroy()
 	if(current_beam)
@@ -121,7 +122,7 @@
 
 	visible_message(span_danger("[src] fires a piercing shot!"))
 	var/turf/startloc = get_turf(src)
-	var/obj/projectile/clan_bullet/piercing/P = new(startloc)
+	var/obj/projectile/P = new piercing_projectile(startloc)
 	P.preparePixelProjectile(target, src)
 	P.firer = src
 	P.fire()
@@ -145,6 +146,7 @@
 	minimum_distance = 5
 	projectiletype = /obj/projectile/clan_bullet/medium
 	move_to_delay = 3
+	var/burst_projectile = /obj/projectile/clan_bullet/medium
 
 /mob/living/simple_animal/hostile/clan/ranged/gunner/SpecialAttack(atom/target)
 	if(charge < special_attack_cost || world.time < special_attack_cooldown)
@@ -165,7 +167,7 @@
 		return
 
 	var/turf/startloc = get_turf(src)
-	var/obj/projectile/clan_bullet/medium/P = new(startloc)
+	var/obj/projectile/P = new burst_projectile(startloc)
 	P.preparePixelProjectile(target, src)
 	P.firer = src
 	P.fire()

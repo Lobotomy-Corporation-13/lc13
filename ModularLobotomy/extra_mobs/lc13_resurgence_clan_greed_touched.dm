@@ -133,8 +133,17 @@
 	maxHealth = 440
 	retreat_distance = 6
 	minimum_distance = 7
+	move_to_delay = 6
 	teleport_away = TRUE
 	projectilesound = 'sound/weapons/lasercannonfire.ogg'
+	projectiletype = /obj/projectile/clan_bullet/sniper/greed
+	piercing_projectile = /obj/projectile/clan_bullet/piercing/greed
+
+/obj/projectile/clan_bullet/sniper/greed
+	damage = 30
+
+/obj/projectile/clan_bullet/piercing/greed
+	damage = 36
 
 // Pulsating eye effect
 /mob/living/simple_animal/hostile/clan/ranged/sniper/greed/PrepareToFire(atom/A)
@@ -154,9 +163,15 @@
 	maxHealth = 660
 	retreat_distance = 2
 	minimum_distance = 3
+	move_to_delay = 4
 	teleport_away = TRUE
 	projectilesound = 'sound/weapons/taser2.ogg'
 	projectiletype = /obj/projectile/clan_bullet/greed_gunner
+	burst_projectile = /obj/projectile/clan_bullet/medium/greed
+
+// Greed gunner burst shots and greed harpooner bolts
+/obj/projectile/clan_bullet/medium/greed
+	damage = 4
 
 // Gunner corrupted projectile
 /obj/projectile/clan_bullet/greed_gunner
@@ -178,6 +193,7 @@
 	maxHealth = 385
 	retreat_distance = 2
 	minimum_distance = 3
+	move_to_delay = 3
 	teleport_away = TRUE
 	projectilesound = 'sound/weapons/pulse3.ogg'
 	projectiletype = /obj/projectile/clan_bullet/greed_rapid
@@ -226,7 +242,12 @@
 	maxHealth = 550
 	retreat_distance = 2
 	minimum_distance = 3
+	move_to_delay = 5
 	teleport_away = TRUE
+	projectiletype = /obj/projectile/clan_bullet/warper/greed
+
+/obj/projectile/clan_bullet/warper/greed
+	damage = 5
 
 // Corrupted warper special attack with chanting
 /mob/living/simple_animal/hostile/clan/ranged/warper/greed/SpecialAttack(atom/target)
@@ -339,6 +360,8 @@
 	maxHealth = 660
 	retreat_distance = 3
 	minimum_distance = 3
+	move_to_delay = 4
+	projectiletype = /obj/projectile/clan_bullet/medium/greed
 	final_damage = 60 // More drop damage
 	teleport_away = TRUE
 
@@ -360,7 +383,7 @@
 /obj/projectile/clan_tentacle
 	name = "flesh tentacle"
 	icon_state = "tentacle_end"
-	damage = 25
+	damage = 6
 	damage_type = RED_DAMAGE
 	speed = 0.6
 	projectile_piercing = PASSMOB
