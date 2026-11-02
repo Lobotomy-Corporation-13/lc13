@@ -15,7 +15,10 @@
 /obj/effect/landmark/rcorp/Initialize()
 	. = ..()
 	var/spawning = pick(possible_items)
-	new spawning(get_turf(src))
+	var/atom/spawned = new spawning(get_turf(src))
+	// RCE sniper rifles get the Deadshot ability
+	if(istype(spawned, /obj/item/gun/energy/e_gun/rabbitdash/sniper) || istype(spawned, /obj/item/gun/energy/e_gun/rabbitdash/heavysniper))
+		spawned.AddComponent(/datum/component/deadshot)
 	qdel(src)
 
 /obj/effect/landmark/rcorp/midweapon
