@@ -18,7 +18,8 @@
 	var/datum/beam/lock_beam
 	/// The gunpoint reticle shown on the locked target
 	var/obj/effect/overlay/gunpoint_effect/lock_marker
-	var/lock_timer
+	/// Counts locks, so a countdown from a cancelled lock never fires a newer one
+	var/lock_serial = 0
 	/// The next projectile the gun fires is the deadshot
 	var/firing = FALSE
 	var/next_use = 0
@@ -114,7 +115,8 @@
 	aiming = FALSE
 	locked_target = target
 	RegisterSignal(target, COMSIG_PARENT_QDELETING, PROC_REF(CancelLock))
-	var/datum/beam/deadshot/beam = new(user, target, 'icons/effects/beam.dmi', "1-full", lock_time, INFINITY, /obj/effect/ebeam/deadshot)
+	// No beam lifetime, so no QDEL_IN timer; CancelLock() deletes it
+	var/datum/beam/deadshot/beam = new(user, target, 'icons/effects/beam.dmi', "1-full", INFINITY, INFINITY, /obj/effect/ebeam/deadshot)
 	beam.fade_start = world.time
 	beam.fade_time = lock_time
 	INVOKE_ASYNC(beam, TYPE_PROC_REF(/datum/beam, Start))
@@ -124,13 +126,18 @@
 	playsound(get_turf(user), 'code/modules/gunpoint/sound/targeton.ogg', 50, TRUE)
 	user.visible_message(span_danger("[user] locks [parent] onto [target]!"), span_notice("You lock onto [target]. Hold steady..."))
 	to_chat(target, span_userdanger("[user] has you in [user.p_their()] sights!"))
-	lock_timer = addtimer(CALLBACK(src, PROC_REF(FireDeadshot), user), lock_time, TIMER_STOPPABLE)
+	lock_serial++
+	INVOKE_ASYNC(src, PROC_REF(LockCountdown), user, lock_serial)
+
+/// Sleeps through the lock instead of using a timer, then fires if the same lock is still running.
+/datum/component/deadshot/proc/LockCountdown(mob/living/user, serial)
+	sleep(lock_time)
+	if(QDELETED(src) || serial != lock_serial || !locked_target)
+		return
+	FireDeadshot(user)
 
 /datum/component/deadshot/proc/CancelLock()
 	SIGNAL_HANDLER
-	if(lock_timer)
-		deltimer(lock_timer)
-		lock_timer = null
 	QDEL_NULL(lock_beam)
 	if(locked_target)
 		locked_target.vis_contents -= lock_marker
@@ -141,7 +148,6 @@
 
 /// Fires through the gun's normal afterattack so pins, two-handing and role bans still apply.
 /datum/component/deadshot/proc/FireDeadshot(mob/living/user)
-	lock_timer = null
 	var/mob/living/target = locked_target
 	CancelLock()
 	if(target.stat == DEAD || target.z != user.z)
@@ -164,12 +170,19 @@
 		return
 	next_use = world.time + cooldown_time
 	action.UpdateButtonIcon(status_only = TRUE)
-	addtimer(CALLBACK(action, TYPE_PROC_REF(/datum/action, UpdateButtonIcon), TRUE), cooldown_time)
+	INVOKE_ASYNC(src, PROC_REF(RefreshAfterCooldown))
 	shot.damage *= damage_mult
 	shot.speed = shot_speed
 	shot.projectile_phasing = PASSMOB // Passes through every mob...
 	shot.phasing_ignore_direct_target = TRUE // ...except the locked target
 	shot.projectile_piercing = NONE
+
+/// Un-greys the button once the cooldown ends, sleeping instead of using a timer.
+/datum/component/deadshot/proc/RefreshAfterCooldown()
+	sleep(cooldown_time)
+	if(QDELETED(src))
+		return
+	action.UpdateButtonIcon(status_only = TRUE)
 
 /datum/action/deadshot
 	name = "Deadshot"
