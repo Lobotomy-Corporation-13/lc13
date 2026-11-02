@@ -235,6 +235,12 @@
 /obj/structure/flora/rock,
 /turf/open/water,
 /area/rce/xcorp/rce_2_0)
+"dh" = (
+/obj/effect/decal/cleanable/dirt,
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/rcorp_factory/venom_kit,
+/turf/open/floor/facility/halls,
+/area/rce/rcorp_base)
 "ds" = (
 /turf/closed/indestructible/rock,
 /area/rce/xcorp/rce_0_3)
@@ -1090,6 +1096,12 @@
 /obj/item/stack/conveyor/thirty,
 /turf/open/floor/pod/light,
 /area/rce/rcorp_base)
+"oG" = (
+/obj/effect/decal/cleanable/dirt,
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/rcorp_factory/hellfire_kit,
+/turf/open/floor/facility/halls,
+/area/rce/rcorp_base)
 "oJ" = (
 /turf/open/water/jungle,
 /area/rce/xcorp/rce_2_3)
@@ -1786,6 +1798,11 @@
 "zj" = (
 /turf/open/water,
 /area/rce/xcorp/rce_2_0)
+"zn" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/rcorp_factory/storm_kit,
+/turf/open/floor/facility/halls,
+/area/rce/rcorp_base)
 "zu" = (
 /obj/structure/lattice/catwalk,
 /obj/structure/railing{
@@ -2313,6 +2330,13 @@
 	},
 /turf/open/water,
 /area/rce/xcorp/rce_3_0)
+"GE" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/machinery/conveyor/auto{
+	dir = 4
+	},
+/turf/open/floor/pod/light,
+/area/rce/rcorp_base)
 "GG" = (
 /obj/structure/flora/tree/jungle,
 /turf/open/floor/grass,
@@ -3193,6 +3217,14 @@
 /area/rce/xcorp/rce_0_0)
 "To" = (
 /obj/machinery/fat_sucker,
+/turf/open/floor/pod/light,
+/area/rce/rcorp_base)
+"Tp" = (
+/obj/effect/decal/cleanable/dirt,
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/machinery/conveyor/auto{
+	dir = 4
+	},
 /turf/open/floor/pod/light,
 /area/rce/rcorp_base)
 "Ts" = (
@@ -11270,9 +11302,9 @@ jT
 jT
 jT
 Zi
-HU
-Zi
-Zi
+GE
+GE
+GE
 jT
 jT
 jT
@@ -11527,9 +11559,9 @@ ud
 jT
 jT
 Zi
-Zi
-Kc
-Kc
+GE
+Tp
+Tp
 ud
 ud
 jT
@@ -11784,9 +11816,9 @@ ud
 jT
 jT
 Zi
-Zi
-Kc
-Kc
+zn
+oG
+dh
 ud
 ud
 jT

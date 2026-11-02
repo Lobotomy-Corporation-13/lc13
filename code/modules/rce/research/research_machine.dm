@@ -14,7 +14,7 @@
 	var/static/list/completed_research = list()
 	var/datum/rce_research_node/selected_research // Which research to feed parts to
 	var/static/list/research_progress = list() // Tracks progress for each research project
-	var/static/list/research_completions = list() // Tracks how many times each research has been completed (for starter kits)
+	var/static/list/research_completions = list() // How many times each repeatable research has been completed, for the statistics tab
 	var/list/stored_parts = list() // Body parts waiting to be processed
 	var/processing_part = FALSE
 	var/process_time = 3 SECONDS
@@ -37,8 +37,7 @@
 	. = ..()
 	if(selected_research)
 		var/progress = research_progress[selected_research.id] || 0
-		var/effective_cost = get_effective_cost(selected_research)
-		. += span_notice("Selected research target: [selected_research.name] ([progress]/[effective_cost] points)")
+		. += span_notice("Selected research target: [selected_research.name] ([progress]/[selected_research.cost] points)")
 	. += span_notice("Stored samples: [length(stored_parts)]")
 	. += span_notice("Alt-click to open the research interface.")
 
@@ -117,16 +116,12 @@
 	for(var/node_id in GLOB.rce_research_nodes)
 		var/datum/rce_research_node/node = GLOB.rce_research_nodes[node_id]
 		var/status = get_node_status(node)
-		var/effective_cost = get_effective_cost(node)
 		tree_data += list(list(
 			"id" = node.id,
 			"name" = node.name,
 			"desc" = node.desc,
 			"tier" = node.tier,
-			"cost" = effective_cost,
-			"baseCost" = node.cost,
-			"isStarterKit" = node.is_starter_kit,
-			"completions" = research_completions[node.id] || 0,
+			"cost" = node.cost,
 			"status" = status,
 			"progress" = research_progress[node.id] || 0,
 			"prerequisites" = node.prerequisites,
@@ -170,11 +165,7 @@
 		var/datum/rce_research_node/node = GLOB.rce_research_nodes[node_id]
 		if(!node)
 			continue
-		// Only count repeatable items (starter kits and non-factory items)
-		if(node.is_starter_kit || !istype(node.unlocked_path, /obj/item/portable_factory))
-			var/completions = research_completions[node_id]
-			if(completions > 0)
-				stats_data[node.branch] += completions
+		stats_data[node.branch] += research_completions[node_id]
 	data["researchStats"] = stats_data
 
 	// Bestiary data - static list of harvestable mobs
@@ -335,9 +326,8 @@
 			return RESEARCH_LOCKED
 
 	// Check if research is completed and not repeatable
-	var/effective_cost = get_effective_cost(node)
 	var/current_progress = research_progress[node.id] || 0
-	if(node.id in completed_research && current_progress >= effective_cost)
+	if(node.id in completed_research && current_progress >= node.cost)
 		return RESEARCH_COMPLETED
 
 	return RESEARCH_AVAILABLE
@@ -353,13 +343,6 @@
 		if("utility")
 			return utility_branch_enabled
 	return TRUE
-
-/// Returns the effective cost for a research node, accounting for starter kit cost doubling
-/obj/machinery/rce_research/proc/get_effective_cost(datum/rce_research_node/node)
-	if(!node.is_starter_kit)
-		return node.cost
-	var/completions = research_completions[node.id] || 0
-	return node.cost * (2 ** completions) // Cost doubles each completion: base, 2x, 4x, 8x...
 
 /obj/machinery/rce_research/proc/process_next_part()
 	if(!length(stored_parts) || processing_part || !selected_research)
@@ -391,14 +374,13 @@
 		return
 
 	// Add points to selected research
-	var/effective_cost = get_effective_cost(selected_research)
 	var/current_progress = research_progress[selected_research.id] || 0
-	current_progress = min(current_progress + value, effective_cost)
+	current_progress = min(current_progress + value, selected_research.cost)
 	research_progress[selected_research.id] = current_progress
-	to_chat(usr, span_notice("Added [value] points to [selected_research.name]. ([current_progress]/[effective_cost])"))
+	to_chat(usr, span_notice("Added [value] points to [selected_research.name]. ([current_progress]/[selected_research.cost])"))
 
 	// Check if research is complete
-	if(current_progress >= effective_cost)
+	if(current_progress >= selected_research.cost)
 		complete_research(selected_research)
 
 	qdel(part)
@@ -442,14 +424,13 @@
 		return
 
 	// Add points to selected research
-	var/effective_cost = get_effective_cost(selected_research)
 	var/current_progress = research_progress[selected_research.id] || 0
-	current_progress = min(current_progress + value, effective_cost)
+	current_progress = min(current_progress + value, selected_research.cost)
 	research_progress[selected_research.id] = current_progress
-	to_chat(usr, span_notice("Added [value] points to [selected_research.name]. ([current_progress]/[effective_cost])"))
+	to_chat(usr, span_notice("Added [value] points to [selected_research.name]. ([current_progress]/[selected_research.cost])"))
 
 	// Check if research is complete
-	if(current_progress >= effective_cost)
+	if(current_progress >= selected_research.cost)
 		complete_research(selected_research)
 
 	qdel(part)
@@ -474,25 +455,18 @@
 
 	if(is_factory)
 		// Factories are one-time research - keep progress at max
-		var/effective_cost = get_effective_cost(node)
-		research_progress[node.id] = effective_cost // Mark as fully complete
+		research_progress[node.id] = node.cost // Mark as fully complete
 		say("Research complete: [node.name]. Factory module dispensed.")
 
 		// Special handling for portable factories
 		var/obj/item/portable_factory/PF = result
 		PF.factory_name = node.name
 		PF.factory_desc = node.desc
-	else if(node.is_starter_kit)
-		// Starter kits are repeatable but cost doubles each time
-		var/completions = research_completions[node.id] || 0
-		research_completions[node.id] = completions + 1
-		research_progress[node.id] = 0 // Reset progress for next research
-		var/next_cost = get_effective_cost(node)
-		say("Production complete: [node.name]. Kit dispensed. Next production cost: [next_cost] points.")
 	else
 		// Non-factory items (weapons, armor, etc.) are repeatable
 		// Reset progress to 0 to allow re-research
 		research_progress[node.id] = 0
+		research_completions[node.id] = (research_completions[node.id] || 0) + 1
 		say("Production complete: [node.name]. Item dispensed. Ready for next production cycle.")
 
 // Portable factory item that can be deployed

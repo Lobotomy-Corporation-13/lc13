@@ -35,3 +35,25 @@
 	ocost = 2
 	item = /obj/vehicle/sealed/mecha/combat/rhinosmall
 
+// Specialist starter kits, one factory per class
+/obj/structure/rcorp_factory/hellfire_kit
+	name = "Hellfire Rooster kit factory"
+	desc = "A machine used to craft Hellfire Rooster starter kits."
+	icon_state = "highfactory"
+	ocost = 5
+	item = /obj/item/storage/box/fuel_tank_starter_kit
+
+/obj/structure/rcorp_factory/venom_kit
+	name = "Venom Rattlesnake kit factory"
+	desc = "A machine used to craft Venom Rattlesnake starter kits."
+	icon_state = "highfactory"
+	ocost = 5
+	item = /obj/item/storage/box/acid_tank_starter_kit
+
+/obj/structure/rcorp_factory/storm_kit
+	name = "Storm Ram kit factory"
+	desc = "A machine used to craft Storm Ram starter kits."
+	icon_state = "highfactory"
+	ocost = 5
+	item = /obj/item/storage/box/capacitor_pack_starter_kit
+

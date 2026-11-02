@@ -1962,6 +1962,12 @@
 	intact = 0
 	},
 /area/rce/xcorp/rce_1_3)
+"qK" = (
+/obj/effect/decal/cleanable/dirt,
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/rcorp_factory/venom_kit,
+/turf/open/floor/facility/halls,
+/area/rce/rcorp_base)
 "qL" = (
 /obj/effect/decal/cleanable/confetti,
 /turf/open/indestructible/necropolis/air,
@@ -2224,6 +2230,14 @@
 	color = "#da82ff"
 	},
 /area/rce/xcorp/rce_2_3)
+"sB" = (
+/obj/effect/decal/cleanable/dirt,
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/machinery/conveyor/auto{
+	dir = 4
+	},
+/turf/open/floor/pod/light,
+/area/rce/rcorp_base)
 "sF" = (
 /obj/structure/table/wood,
 /obj/item/food/canned/pcorp,
@@ -2308,6 +2322,12 @@
 	},
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/structure/rcorp_factory/radio,
+/turf/open/floor/facility/halls,
+/area/rce/rcorp_base)
+"ti" = (
+/obj/effect/decal/cleanable/dirt,
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/rcorp_factory/hellfire_kit,
 /turf/open/floor/facility/halls,
 /area/rce/rcorp_base)
 "tj" = (
@@ -5470,6 +5490,13 @@
 /obj/item/wrench,
 /turf/open/floor/pod/light,
 /area/rce/rcorp_base)
+"Uc" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/machinery/conveyor/auto{
+	dir = 4
+	},
+/turf/open/floor/pod/light,
+/area/rce/rcorp_base)
 "Uf" = (
 /obj/structure/den/rce_defender{
 	id = "basesouth";
@@ -5885,6 +5912,11 @@
 "Yf" = (
 /obj/effect/turf_decal/caution/white,
 /turf/open/floor/pod/light,
+/area/rce/rcorp_base)
+"Yj" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/rcorp_factory/storm_kit,
+/turf/open/floor/facility/halls,
 /area/rce/rcorp_base)
 "Yl" = (
 /obj/machinery/door/airlock/survival_pod,
@@ -34137,9 +34169,9 @@ bK
 bK
 bK
 uN
-RN
-uN
-uN
+Uc
+Uc
+Uc
 bK
 bK
 bK
@@ -34449,9 +34481,9 @@ bw
 bK
 bK
 uN
-uN
-BA
-BA
+Uc
+sB
+sB
 bw
 bw
 bK
@@ -34761,9 +34793,9 @@ bw
 bK
 bK
 uN
-uN
-BA
-BA
+Yj
+ti
+qK
 bw
 bw
 bK

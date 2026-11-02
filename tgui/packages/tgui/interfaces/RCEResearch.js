@@ -358,7 +358,7 @@ const ResearchNodeCard = props => {
 
       {/* Tier */}
       <Box fontSize="10px" color="label" mt={0.5}>
-        Tier: {node.tier === 0 ? 'ROOT' : node.tier} | Cost: {node.cost} points
+        Tier: {node.tier} | Cost: {node.cost} points
       </Box>
 
       {/* Prerequisites - IMPORTANT: Shows what you need */}
@@ -772,7 +772,7 @@ const ProgressTab = props => {
           </Box>
         </LabeledList.Item>
         <LabeledList.Item label="Tier">
-          {currentResearch.tier === 0 ? 'ROOT' : currentResearch.tier}
+          {currentResearch.tier}
         </LabeledList.Item>
         <LabeledList.Item label="Progress">
           <ProgressBar

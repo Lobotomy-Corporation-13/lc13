@@ -679,6 +679,10 @@
 	},
 /turf/open/indestructible/necropolis/air,
 /area/rce/xcorp)
+"od" = (
+/obj/structure/rcorp_factory/venom_kit,
+/turf/open/floor/pod/light,
+/area/rce/rcorp_base)
 "oq" = (
 /obj/structure/den/rce/high{
 	id = "right5"
@@ -1630,6 +1634,10 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/pod/light,
 /area/rce/rcorp_base)
+"Ld" = (
+/obj/structure/rcorp_factory/storm_kit,
+/turf/open/floor/pod/light,
+/area/rce/rcorp_base)
 "Lt" = (
 /obj/machinery/conveyor/auto{
 	dir = 8
@@ -2098,6 +2106,10 @@
 /obj/machinery/telecomms/receiver/preset_left,
 /turf/open/floor/circuit/telecomms/mainframe,
 /area/lavaland)
+"XQ" = (
+/obj/structure/rcorp_factory/hellfire_kit,
+/turf/open/floor/pod/light,
+/area/rce/rcorp_base)
 "XV" = (
 /obj/effect/mob_spawn/human/corpse,
 /obj/effect/gibspawner/human,
@@ -16671,7 +16683,7 @@ ma
 ma
 ma
 ma
-ma
+Ld
 ma
 ma
 jt
@@ -18217,7 +18229,7 @@ vG
 ma
 ma
 yQ
-ma
+XQ
 yQ
 ma
 Ia
@@ -19249,7 +19261,7 @@ Re
 ma
 ma
 Ia
-ma
+od
 Ia
 ma
 yQ
