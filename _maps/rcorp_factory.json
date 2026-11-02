@@ -3,11 +3,11 @@
 	"map_name": "R-Corp Expedition",
 	"map_path": "map_files/RCE",
 	"map_file": "rcorp_factory.dmm",
-	"has_submaps": 0,
+	"has_submaps": 1,
 	"no_submap_behavior": "standard",
 	"available_submaps": {
 		"rcorp_factory.dmm": "Caves",
-		"rcorp_factory_mancha.dmm": "La Manchaland",
+		"rcorp_factory_echo.dmm": "Echo",
 		"rcorp_factory_bravo.dmm": "City"
 	},
 	"traits": [
