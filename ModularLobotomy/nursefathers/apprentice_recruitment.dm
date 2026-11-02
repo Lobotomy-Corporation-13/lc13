@@ -8,10 +8,20 @@
 	w_class = WEIGHT_CLASS_TINY
 	/// Whether this item has been used
 	var/used = FALSE
+	/// mind.assigned_role needs to be this string in order to actually use the recruiter on someone else
+	var/allowed_user_role = ""
 
 /obj/item/apprentice_recruitment/attack(mob/living/target, mob/living/user)
 	if(used)
 		to_chat(user, span_warning("This has already been used."))
+		return
+
+	var/our_role = user.mind?.assigned_role
+	if(!our_role)
+		to_chat(user, span_warning("Error: You don't have a mind?"))
+		return
+	if(our_role != allowed_user_role)
+		to_chat(user, span_warning("You can't recruit someone; you're a <b>[our_role]</b>, but this item may only be used by <b>[allowed_user_role]</b>."))
 		return
 
 	if(!EligibilityCheck(target, user)) // Message is handled in this
