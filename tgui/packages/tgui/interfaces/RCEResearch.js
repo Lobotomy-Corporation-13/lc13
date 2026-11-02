@@ -54,6 +54,13 @@ const BRANCH_LABELS = {
   utility: 'Utility (General)',
 };
 
+// Specialist class whose implant unlocks each branch
+const BRANCH_CLASSES = {
+  hellfire: 'Hellfire Rooster',
+  venom: 'Venom Rattlesnake',
+  storm: 'Storm Ram',
+};
+
 export const RCEResearch = props => {
   const { act, data } = useBackend();
   const [tab, setTab] = useLocalState('tab', 'tree');
@@ -65,6 +72,7 @@ export const RCEResearch = props => {
     partsList = [],
     researchProgress = {},
     branchEnabled = { hellfire: true, venom: true, storm: true, utility: true },
+    branchPrinted = { hellfire: true, venom: true, storm: true, utility: true },
     researchStats = { hellfire: 0, venom: 0, storm: 0, utility: 0 },
     bestiary = [],
     isProcessing = false,
@@ -121,6 +129,7 @@ export const RCEResearch = props => {
                 selectedResearch={selectedResearch}
                 researchProgress={researchProgress}
                 branchEnabled={branchEnabled}
+                branchPrinted={branchPrinted}
                 isProcessing={isProcessing}
               />
             )}
@@ -168,6 +177,7 @@ const ResearchTreeTab = props => {
     selectedResearch,
     researchProgress,
     branchEnabled,
+    branchPrinted,
     isProcessing,
   } = props;
 
@@ -194,7 +204,10 @@ const ResearchTreeTab = props => {
     <Section fill scrollable title="Research Tree">
       <Stack>
         {['hellfire', 'venom', 'storm', 'utility'].map(branch => (
-          <Stack.Item key={branch} grow basis="25%">
+          <Stack.Item
+            key={branch}
+            grow={branchPrinted[branch]}
+            basis={branchPrinted[branch] ? '25%' : '15%'}>
             <BranchList
               branch={branch}
               nodes={branches[branch]}
@@ -202,6 +215,7 @@ const ResearchTreeTab = props => {
               researchProgress={researchProgress}
               nodeMap={nodeMap}
               isEnabled={branchEnabled[branch]}
+              isPrinted={branchPrinted[branch]}
               isProcessing={isProcessing}
             />
           </Stack.Item>
@@ -221,6 +235,7 @@ const BranchList = props => {
     researchProgress,
     nodeMap,
     isEnabled,
+    isPrinted,
     isProcessing,
   } = props;
 
@@ -258,6 +273,10 @@ const BranchList = props => {
         {!isEnabled ? (
           <Box color="label" textAlign="center" p={2}>
             This research branch is currently disabled.
+          </Box>
+        ) : !isPrinted ? (
+          <Box color="label" textAlign="center" p={2}>
+            Print at least one {BRANCH_CLASSES[branch]} implant to unlock this research.
           </Box>
         ) : nodes.length === 0 ? (
           <Box color="label" textAlign="center" p={2}>

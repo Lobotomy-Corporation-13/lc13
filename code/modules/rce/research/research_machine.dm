@@ -111,6 +111,14 @@
 		"utility" = utility_branch_enabled
 	)
 
+	// Specialist branches stay locked until one of their implants has been made
+	data["branchPrinted"] = list(
+		"hellfire" = is_branch_printed("hellfire"),
+		"venom" = is_branch_printed("venom"),
+		"storm" = is_branch_printed("storm"),
+		"utility" = is_branch_printed("utility")
+	)
+
 	// Research tree data
 	var/list/tree_data = list()
 	for(var/node_id in GLOB.rce_research_nodes)
@@ -317,7 +325,7 @@
 
 /obj/machinery/rce_research/proc/get_node_status(datum/rce_research_node/node)
 	// Check if branch is enabled
-	if(!is_branch_enabled(node.branch))
+	if(!is_branch_enabled(node.branch) || !is_branch_printed(node.branch))
 		return RESEARCH_LOCKED
 
 	// Check prerequisites first
@@ -331,6 +339,12 @@
 		return RESEARCH_COMPLETED
 
 	return RESEARCH_AVAILABLE
+
+/// Specialist branches open once an implant of their class has been made. Utility is always open.
+/obj/machinery/rce_research/proc/is_branch_printed(branch)
+	if(branch == "utility")
+		return TRUE
+	return (branch in GLOB.rce_specialists_printed)
 
 /obj/machinery/rce_research/proc/is_branch_enabled(branch)
 	switch(branch)

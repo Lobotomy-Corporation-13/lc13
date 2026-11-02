@@ -3,6 +3,8 @@
 
 // Global research nodes list
 GLOBAL_LIST_EMPTY(rce_research_nodes)
+// Specialist classes that have had at least one implant made; each unlocks its research branch
+GLOBAL_LIST_EMPTY(rce_specialists_printed)
 
 // Research system defines
 #define RCE_RESEARCH_TIER_1 1

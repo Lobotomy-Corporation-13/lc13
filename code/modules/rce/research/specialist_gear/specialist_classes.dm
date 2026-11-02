@@ -23,6 +23,11 @@
 		"Section C Robin"
 	)
 
+/obj/item/organ/cyberimp/rce_specialist/Initialize()
+	. = ..()
+	if(specialist_type)
+		GLOB.rce_specialists_printed |= specialist_type
+
 /obj/item/organ/cyberimp/rce_specialist/Insert(mob/living/carbon/M, special, drop_if_replaced)
 	. = ..()
 	if(!ishuman(M))
