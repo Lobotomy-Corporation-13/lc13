@@ -94,3 +94,108 @@ GLOBAL_VAR(lobotomy_repairs)
 		GLOB.lobotomy_repairs += 1
 		qdel(src)
 
+/obj/broken_safety
+	name = "broken safety ordering console"
+	desc = "A console that could once requistion chemicals and medical gear from the site storage, now lies dormant"
+	icon = 'icons/obj/modular_console.dmi'
+	icon_state = "broken"
+	density = TRUE
+	anchored = TRUE
+	resistance_flags = INDESTRUCTIBLE
+	layer = ABOVE_OBJ_LAYER
+/obj/broken_safety/examine(mob/user)
+	. = ..()
+	. += span_notice("A Console repair kit could be used to fix this!")
+
+/obj/broken_safety/Initialize()
+	..()
+	GLOB.lobotomy_damages += 1
+	return INITIALIZE_HINT_NORMAL
+
+/obj/broken_safety/attackby(obj/item/O, mob/user, params)
+	if(istype(O, /obj/item/consolerepairkit))
+		qdel(O)
+		new /obj/machinery/computer/extraction_cargo/chemistry(get_turf(src))
+		GLOB.lobotomy_repairs += 1
+		qdel(src)
+
+/obj/broken_disciplinary
+	name = "broken disciplinary ordering console"
+	desc = "A console that could once requistion weaponry and upgrades from the site storage, now lies dormant"
+	icon = 'icons/obj/modular_console.dmi'
+	icon_state = "broken"
+	density = TRUE
+	anchored = TRUE
+	resistance_flags = INDESTRUCTIBLE
+	layer = ABOVE_OBJ_LAYER
+/obj/broken_disciplinary/examine(mob/user)
+	. = ..()
+	. += span_notice("A Console repair kit could be used to fix this!")
+
+/obj/broken_disciplinary/Initialize()
+	..()
+	GLOB.lobotomy_damages += 1
+	return INITIALIZE_HINT_NORMAL
+/obj/broken_disciplinary/attackby(obj/item/O, mob/user, params)
+	if(istype(O, /obj/item/consolerepairkit))
+		qdel(O)
+		new /obj/machinery/computer/extraction_cargo/discipline(get_turf(src))
+		GLOB.lobotomy_repairs += 1
+		qdel(src)
+
+GLOBAL_LIST_INIT(unspawned_refiners, list(
+	/obj/structure/altrefiner/blood,
+	/obj/structure/altrefiner/quick,
+	/obj/structure/altrefiner/timed,
+	/obj/structure/altrefiner/weapon,
+	/obj/structure/altrefiner/chance,
+))
+
+/obj/broken_refinery
+	name = "broken PE refinery"
+	desc = "A machine that could once refine large amounts of PE boxes, for a cost."
+	icon = 'icons/obj/stock_parts.dmi'
+	icon_state = "box_2"
+	density = TRUE
+	anchored = TRUE
+	resistance_flags = INDESTRUCTIBLE
+	layer = ABOVE_OBJ_LAYER
+/obj/broken_refinery/examine(mob/user)
+	. = ..()
+	. += span_notice("A Console repair kit could be used to fix this!")
+
+/obj/broken_refinery/Initialize()
+	..()
+	GLOB.lobotomy_damages += 1
+	return INITIALIZE_HINT_NORMAL
+
+/obj/broken_refinery/attackby(obj/item/O, mob/user, params)
+	if(istype(O, /obj/item/consolerepairkit))
+		qdel(O)
+		var/obj/structure/altrefiner/spawning = pick_n_take(GLOB.unspawned_refiners)
+		new spawning(get_turf(src))
+		GLOB.lobotomy_repairs += 1
+		qdel(src)
+
+/obj/broken_gridcraft
+	name = "broken gridcrafting device"
+	desc = "A console that could once use the essence of abnormalities to create gear"
+	icon = 'icons/obj/modular_console.dmi'
+	icon_state = "broken"
+	density = TRUE
+	anchored = TRUE
+	resistance_flags = INDESTRUCTIBLE
+	layer = ABOVE_OBJ_LAYER
+/obj/broken_gridcraft/examine(mob/user)
+	. = ..()
+	. += span_notice("A Console repair kit could be used to fix this!")
+/obj/broken_gridcraft/Initialize()
+	..()
+	GLOB.lobotomy_damages += 1
+	return INITIALIZE_HINT_NORMAL
+/obj/broken_gridcraft/attackby(obj/item/O, mob/user, params)
+	if(istype(O, /obj/item/consolerepairkit))
+		qdel(O)
+		new /obj/structure/grid_crafting_station(get_turf(src))
+		GLOB.lobotomy_repairs += 1
+		qdel(src)
