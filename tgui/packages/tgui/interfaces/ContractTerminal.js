@@ -1,4 +1,4 @@
-import { Component, createRef } from 'inferno';
+import { Component, createRef } from 'react';
 import {
   useBackend,
   useSharedState,
@@ -23,7 +23,8 @@ const CANVAS_PX = VP_SIZE * CELL_PX;
 
 export const ContractTerminal = props => {
   const { act, data } = useBackend();
-  const [tab, setTab] = useSharedState('termTab', 0);
+  const [tab, setTab] = useSharedState('termTab', 0,
+  );
   return (
     <Window
       title="Contract Terminal"

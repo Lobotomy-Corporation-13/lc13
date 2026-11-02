@@ -430,9 +430,9 @@ const ItemRow = props => {
       p={1}
       mb={0.5}
       style={{
-        'border-radius': '4px',
+        borderRadius: '4px',
         ...(usedBefore && {
-          'border-left': '4px solid #fbbf24',
+          borderLeft: '4px solid #fbbf24',
         }),
       }}
       backgroundColor={

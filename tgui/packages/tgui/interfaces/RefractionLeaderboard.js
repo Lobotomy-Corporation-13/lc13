@@ -31,8 +31,8 @@ const LineSidebar = props => {
               ? 'rgba(255, 255, 255, 0.10)'
               : 'rgba(255, 255, 255, 0.04)'}
             style={{
-              'border-radius': '4px',
-              'border-left': `4px solid ${accent}`,
+              borderRadius: '4px',
+              borderLeft: `4px solid ${accent}`,
               'cursor': 'pointer',
             }}
             onClick={() => onSelect(line.id)}>
@@ -88,7 +88,7 @@ const LeaderboardPane = props => {
           color="label"
           fontSize="11px"
           backgroundColor="rgba(255, 200, 60, 0.08)"
-          style={{ 'border-radius': '4px' }}>
+          style={{ borderRadius: '4px' }}>
           Records set before <b>{cutoff}</b> are no longer shown.
           Pre-cutoff runs sat under different balance — station
           traits, ordeals, and meltdowns could distort their timing,

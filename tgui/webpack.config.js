@@ -29,7 +29,8 @@ module.exports = (env = {}, argv) => {
   const config = {
     mode,
     context: path.resolve(__dirname),
-    target: ['web', 'es3', 'browserslist:ie 8'],
+    // BYOND 516 (WebView2) only: IE8/es3 output is no longer needed.
+    target: ['web', 'es5'],
     entry: {
       'tgui': [
         './packages/tgui-polyfill',

@@ -6,7 +6,7 @@
  */
 
 import { classes } from 'common/react';
-import { Component, createRef } from 'inferno';
+import { Component, createRef } from 'react';
 import { Box } from './Box';
 import { toInputValue } from './Input';
 import { KEY_ESCAPE } from 'common/keycodes';
@@ -16,14 +16,12 @@ export class TextArea extends Component {
     super(props);
     this.textareaRef = createRef();
     this.fillerRef = createRef();
-    this.state = {
-      editing: false,
-    };
+    this.editing = false;
     const {
       dontUseTabForIndent = false,
     } = props;
     this.handleOnInput = e => {
-      const { editing } = this.state;
+      const { editing } = this;
       const { onInput } = this.props;
       if (!editing) {
         this.setEditing(true);
@@ -32,18 +30,8 @@ export class TextArea extends Component {
         onInput(e, e.target.value);
       }
     };
-    this.handleOnChange = e => {
-      const { editing } = this.state;
-      const { onChange } = this.props;
-      if (editing) {
-        this.setEditing(false);
-      }
-      if (onChange) {
-        onChange(e, e.target.value);
-      }
-    };
     this.handleKeyPress = e => {
-      const { editing } = this.state;
+      const { editing } = this;
       const { onKeyPress } = this.props;
       if (!editing) {
         this.setEditing(true);
@@ -53,7 +41,7 @@ export class TextArea extends Component {
       }
     };
     this.handleKeyDown = e => {
-      const { editing } = this.state;
+      const { editing } = this;
       const { onKeyDown } = this.props;
       if (e.keyCode === KEY_ESCAPE) {
         this.setEditing(false);
@@ -81,13 +69,13 @@ export class TextArea extends Component {
       }
     };
     this.handleFocus = e => {
-      const { editing } = this.state;
+      const { editing } = this;
       if (!editing) {
         this.setEditing(true);
       }
     };
     this.handleBlur = e => {
-      const { editing } = this.state;
+      const { editing } = this;
       const { onChange } = this.props;
       if (editing) {
         this.setEditing(false);
@@ -107,7 +95,7 @@ export class TextArea extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { editing } = this.state;
+    const { editing } = this;
     const prevValue = prevProps.value;
     const nextValue = this.props.value;
     const input = this.textareaRef.current;
@@ -117,7 +105,10 @@ export class TextArea extends Component {
   }
 
   setEditing(editing) {
-    this.setState({ editing });
+    // Kept as an instance field rather than state: React batches setState,
+    // so handlers running in the same event (e.g. Enter -> blur) would see
+    // a stale value. Nothing renders from it.
+    this.editing = editing;
   }
 
   getValue() {
@@ -157,7 +148,6 @@ export class TextArea extends Component {
           ref={this.textareaRef}
           className="TextArea__textarea"
           placeholder={placeholder}
-          onChange={this.handleOnChange}
           onKeyDown={this.handleKeyDown}
           onKeyPress={this.handleKeyPress}
           onInput={this.handleOnInput}

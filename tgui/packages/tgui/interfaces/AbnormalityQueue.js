@@ -36,7 +36,7 @@ export const AbnormalityQueue = props => {
               height="100%"
               justify="space-between">
               {items.map(item => (
-                <Flex.Item key={item.name} grow={1} mb={0.3}>
+                <Flex.Item key={item} grow={1} mb={0.3}>
                   <Button
                     icon="plus"
                     fluid

@@ -26,7 +26,7 @@ const LoadoutIcons = props => {
               src={`data:image/jpeg;base64,${icon}`}
               style={{
                 'height': '32px',
-                'image-rendering': 'pixelated',
+                imageRendering: 'pixelated',
               }}
             />
           ) : (
@@ -54,7 +54,7 @@ const MemberRow = props => {
       p={1}
       mb={0.5}
       backgroundColor="rgba(255, 255, 255, 0.04)"
-      style={{ 'border-radius': '4px' }}>
+      style={{ borderRadius: '4px' }}>
       <Stack>
         <Stack.Item width="20px" color={dot} bold>
           &bull;
@@ -84,7 +84,7 @@ const SectorResultRow = props => {
       p={1}
       mb={0.5}
       backgroundColor="rgba(255, 255, 255, 0.04)"
-      style={{ 'border-radius': '4px' }}>
+      style={{ borderRadius: '4px' }}>
       <Stack>
         <Stack.Item grow={1}>
           <Box bold>
@@ -254,7 +254,7 @@ const StagingView = props => {
           p={1}
           backgroundColor="rgba(0, 200, 0, 0.08)"
           color="good"
-          style={{ 'border-radius': '4px' }}>
+          style={{ borderRadius: '4px' }}>
           {`Sector ${currentSector} cleared in ${formatDs(lastSectorTimeDs)}`}
         </Box>
       )}

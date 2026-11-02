@@ -82,8 +82,8 @@ export const EnkephalinGridStation = props => {
           <Stack.Item
             basis="340px"
             style={{
-              'overflow-y': 'auto',
-              'overflow-x': 'hidden',
+              overflowY: 'auto',
+              overflowX: 'hidden',
             }}>
             <Stack vertical>
               <Stack.Item>
@@ -401,11 +401,11 @@ const GridMap = props => {
         'width': '100%',
         // Height tracks the window, so a short window gets a short map.
         'height': '34vh',
-        'min-height': MAP_MIN_HEIGHT + 'px',
-        'max-height': MAP_SIZE + 'px',
-        'background-color': '#1a1a2e',
+        minHeight: MAP_MIN_HEIGHT + 'px',
+        maxHeight: MAP_SIZE + 'px',
+        backgroundColor: '#1a1a2e',
         'border': '2px solid #444',
-        'border-radius': '4px',
+        borderRadius: '4px',
         'overflow': 'hidden',
       }}>
       <svg
@@ -596,7 +596,7 @@ const GridMap = props => {
           'position': 'absolute',
           'bottom': '4px',
           'left': '4px',
-          'font-size': '9px',
+          fontSize: '9px',
           'color': '#888',
         }}>
         <Icon name="circle" color="#00ff00" /> You
