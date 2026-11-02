@@ -241,6 +241,24 @@
 			return PROJECTILE_PIERCE_HIT
 	return ..()
 
+/obj/projectile/clan_bullet/CanPassThrough(atom/blocker, turf/target, blocker_opinion)
+	. = ..()
+	if(.)
+		return ClanSandbagPass(src, blocker)
+
+/**
+ * Sandbags let a shot through for free when its firer is adjacent or it starts on a barricade tile.
+ * Clan shots get no free pass and roll the sandbags' proj_pass_rate in those cases too.
+ * Only call when the sandbags already allowed the shot. Returns whether it may pass.
+ */
+/proc/ClanSandbagPass(obj/projectile/shot, atom/blocker)
+	var/obj/structure/barricade/sandbags/cover = blocker
+	if(!istype(cover) || !cover.anchored)
+		return TRUE
+	if(!(locate(/obj/structure/barricade) in shot.loc) && !(shot.firer && cover.Adjacent(shot.firer)))
+		return TRUE // No free pass was given, so the sandbags already rolled their own chance
+	return prob(cover.proj_pass_rate)
+
 /obj/projectile/clan_bullet/sniper
 	name = "high-energy bolt"
 	damage = 50

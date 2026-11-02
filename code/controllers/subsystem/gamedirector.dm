@@ -39,22 +39,22 @@ SUBSYSTEM_DEF(gamedirector)
 	var/list/active_resourcewells = list()
 	var/list/raid_spots = list()
 	var/next_raid_time = 0
-	var/raid_cooldown_min = 8 MINUTES
-	var/raid_cooldown_max = 10 MINUTES
+	var/raid_cooldown_min = 12 MINUTES
+	var/raid_cooldown_max = 15 MINUTES
 
 	// Seed spawning variables
 	var/next_active_seed_time = 0
-	var/active_seed_cooldown_min = 20 MINUTES
-	var/active_seed_cooldown_max = 24 MINUTES
+	var/active_seed_cooldown_min = 40 MINUTES
+	var/active_seed_cooldown_max = 60 MINUTES
 	var/next_passive_seed_time = 0
-	var/passive_seed_cooldown = 20 MINUTES
+	var/passive_seed_cooldown = 40 MINUTES
 	var/list/wells_with_passive_seeds = list()
 
 	// Corrupter spawning variables
 	var/next_corrupter_time = 0
-	var/corrupter_cooldown_min = 20 MINUTES
-	var/corrupter_cooldown_max = 30 MINUTES
-	var/corrupter_rarity_threshold = 6
+	var/corrupter_cooldown_min = 40 MINUTES
+	var/corrupter_cooldown_max = 60 MINUTES
+	var/corrupter_rarity_threshold = 8
 
 	// Bloodfiend Heart Research tracking
 	/// Whether the Heart Research structure has been destroyed (disables raids and final wave)

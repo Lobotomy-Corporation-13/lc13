@@ -131,6 +131,8 @@
 	silk_results = list(/obj/item/stack/sheet/silk/azure_advanced = 1)
 	health = 440 // More health
 	maxHealth = 440
+	retreat_distance = 6
+	minimum_distance = 7
 	teleport_away = TRUE
 	projectilesound = 'sound/weapons/lasercannonfire.ogg'
 
@@ -150,6 +152,8 @@
 	silk_results = list(/obj/item/stack/sheet/silk/azure_advanced = 1)
 	health = 660 // More health
 	maxHealth = 660
+	retreat_distance = 2
+	minimum_distance = 3
 	teleport_away = TRUE
 	projectilesound = 'sound/weapons/taser2.ogg'
 	projectiletype = /obj/projectile/clan_bullet/greed_gunner
@@ -158,7 +162,7 @@
 /obj/projectile/clan_bullet/greed_gunner
 	name = "corrupted bolt"
 	icon_state = "toxin"
-	damage = 7
+	damage = 3
 	damage_type = RED_DAMAGE
 	color = "#7CFC00"
 
@@ -172,6 +176,8 @@
 	silk_results = list(/obj/item/stack/sheet/silk/azure_advanced = 1)
 	health = 385 // More health
 	maxHealth = 385
+	retreat_distance = 2
+	minimum_distance = 3
 	teleport_away = TRUE
 	projectilesound = 'sound/weapons/pulse3.ogg'
 	projectiletype = /obj/projectile/clan_bullet/greed_rapid
@@ -185,7 +191,7 @@
 /obj/projectile/clan_bullet/greed_rapid
 	name = "flesh bolt"
 	icon_state = "toxin"
-	damage = 5
+	damage = 2
 	damage_type = RED_DAMAGE
 	color = "#7CFC00"
 
@@ -218,6 +224,8 @@
 	silk_results = list(/obj/item/stack/sheet/silk/azure_advanced = 1)
 	health = 550 // More health
 	maxHealth = 550
+	retreat_distance = 2
+	minimum_distance = 3
 	teleport_away = TRUE
 
 // Corrupted warper special attack with chanting
@@ -329,6 +337,8 @@
 	silk_results = list(/obj/item/stack/sheet/silk/azure_advanced = 1)
 	health = 660 // More health
 	maxHealth = 660
+	retreat_distance = 3
+	minimum_distance = 3
 	final_damage = 60 // More drop damage
 	teleport_away = TRUE
 
@@ -383,6 +393,11 @@
 		if(shooter.faction_check_mob(L))
 			return PROJECTILE_PIERCE_HIT
 	return ..()
+
+/obj/projectile/clan_tentacle/CanPassThrough(atom/blocker, turf/target, blocker_opinion)
+	. = ..()
+	if(.)
+		return ClanSandbagPass(src, blocker)
 
 // Tentacle chain visual
 /mob/living/simple_animal/hostile/clan/ranged/harpooner/greed/UpdateChainVisuals()

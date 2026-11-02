@@ -20,8 +20,7 @@
 			"max_rarity" = 2,
 			"composition" = list(
 				/mob/living/simple_animal/hostile/clan/ranged/gunner/greed = 4,
-				/mob/living/simple_animal/hostile/clan/ranged/rapid/greed = 2,
-				/mob/living/simple_animal/hostile/clan/drone/greed = 1
+				/mob/living/simple_animal/hostile/clan/ranged/rapid/greed = 2
 			)
 		),
 		// Rapid response
@@ -34,15 +33,6 @@
 				/mob/living/simple_animal/hostile/clan/scout/greed = 6
 			)
 		),
-		// Bomber spider swarm
-		list(
-			"name" = "Spider Swarm",
-			"min_rarity" = 1,
-			"max_rarity" = 6,
-			"composition" = list(
-				/mob/living/simple_animal/hostile/clan/bomber_spider/greed = 8
-			)
-		),
 		// Sniper with drone support
 		list(
 			"name" = "Sniper Team",
@@ -50,7 +40,7 @@
 			"max_rarity" = 2,
 			"composition" = list(
 				/mob/living/simple_animal/hostile/clan/ranged/sniper/greed = 3,
-				/mob/living/simple_animal/hostile/clan/drone/greed = 2
+				/mob/living/simple_animal/hostile/clan/drone/greed = 1
 			)
 		),
 		// Gunner squad
@@ -110,7 +100,7 @@
 		// Warper teleport assault
 		list(
 			"name" = "Warp Strike",
-			"min_rarity" = 5,
+			"min_rarity" = 8,
 			"max_rarity" = 11,
 			"composition" = list(
 				/mob/living/simple_animal/hostile/clan/ranged/warper/greed = 1,
@@ -121,7 +111,7 @@
 		// Harpooner ambush
 		list(
 			"name" = "Hook Squad",
-			"min_rarity" = 6,
+			"min_rarity" = 8,
 			"max_rarity" = 11,
 			"composition" = list(
 				/mob/living/simple_animal/hostile/clan/ranged/harpooner/greed = 3,
