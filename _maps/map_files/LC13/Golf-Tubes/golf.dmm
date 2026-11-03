@@ -510,7 +510,7 @@
 /obj/effect/turf_decal/bot,
 /obj/machinery/telecomms/processor/preset_four,
 /turf/open/floor/circuit/telecomms/mainframe,
-/area/space)
+/area/facility_hallway/south)
 "dq" = (
 /obj/machinery/hydroponics/constructable,
 /obj/machinery/light{
@@ -1234,7 +1234,7 @@
 /obj/effect/decal/cleanable/dirt,
 /obj/machinery/telecomms/bus/preset_four,
 /turf/open/floor/circuit/telecomms/mainframe,
-/area/space)
+/area/facility_hallway/south)
 "iK" = (
 /obj/effect/turf_decal/siding/purple,
 /obj/machinery/light{
@@ -1371,7 +1371,7 @@
 "jG" = (
 /obj/machinery/telecomms/message_server/preset,
 /turf/open/floor/circuit/telecomms/mainframe,
-/area/space)
+/area/facility_hallway/south)
 "jH" = (
 /obj/structure/sign/poster/lobotomycorp/random{
 	pixel_x = -32
@@ -1699,7 +1699,7 @@
 /obj/effect/turf_decal/bot,
 /obj/machinery/telecomms/processor/preset_two,
 /turf/open/floor/circuit/telecomms/mainframe,
-/area/space)
+/area/facility_hallway/south)
 "lz" = (
 /obj/machinery/disposal/bin,
 /obj/structure/disposalpipe/trunk{
@@ -2200,7 +2200,7 @@
 /obj/effect/turf_decal/bot,
 /obj/machinery/telecomms/receiver/preset_right,
 /turf/open/floor/circuit/telecomms/mainframe,
-/area/space)
+/area/facility_hallway/south)
 "oL" = (
 /obj/effect/turf_decal/tile/brown{
 	dir = 4
@@ -2391,7 +2391,7 @@
 /obj/machinery/telecomms/broadcaster/preset_right,
 /obj/effect/turf_decal/bot,
 /turf/open/floor/circuit/telecomms/mainframe,
-/area/space)
+/area/facility_hallway/south)
 "pS" = (
 /obj/structure/bookcase/random,
 /obj/machinery/light,
@@ -2578,7 +2578,7 @@
 /obj/effect/turf_decal/bot,
 /obj/machinery/telecomms/relay/preset/telecomms,
 /turf/open/floor/circuit/telecomms/mainframe,
-/area/space)
+/area/facility_hallway/south)
 "rc" = (
 /obj/machinery/door/poddoor/shutters/window/preopen{
 	id = "cellthree"
@@ -3732,12 +3732,12 @@
 /obj/effect/turf_decal/bot,
 /obj/machinery/telecomms/receiver/preset_left,
 /turf/open/floor/circuit/telecomms/mainframe,
-/area/space)
+/area/facility_hallway/south)
 "yR" = (
 /obj/effect/turf_decal/bot,
 /obj/machinery/telecomms/bus/preset_two,
 /turf/open/floor/circuit/telecomms/mainframe,
-/area/space)
+/area/facility_hallway/south)
 "yZ" = (
 /turf/open/floor/mineral/plastitanium,
 /area/department_main/information)
@@ -4726,7 +4726,7 @@
 /obj/effect/turf_decal/bot,
 /obj/machinery/telecomms/hub/preset,
 /turf/open/floor/circuit/telecomms/mainframe,
-/area/space)
+/area/facility_hallway/south)
 "EP" = (
 /obj/structure/window/plasma/fulltile{
 	opacity = 1;
@@ -4747,7 +4747,7 @@
 "EV" = (
 /obj/machinery/telecomms/server/presets/command,
 /turf/open/floor/circuit/telecomms/mainframe,
-/area/space)
+/area/facility_hallway/south)
 "EW" = (
 /obj/structure/closet/secure_closet/freezer/fridge/open{
 	anchored = 1
@@ -5306,7 +5306,7 @@
 /obj/effect/decal/cleanable/dirt,
 /obj/machinery/telecomms/processor/preset_three,
 /turf/open/floor/circuit/telecomms/mainframe,
-/area/space)
+/area/facility_hallway/south)
 "IH" = (
 /obj/effect/turf_decal/tile/purple{
 	dir = 8
@@ -5378,7 +5378,7 @@
 /obj/machinery/telecomms/broadcaster/preset_left,
 /obj/effect/turf_decal/bot,
 /turf/open/floor/circuit/telecomms/mainframe,
-/area/space)
+/area/facility_hallway/south)
 "Jj" = (
 /obj/machinery/door/airlock/wood/glass,
 /turf/open/floor/plasteel/dark,
@@ -5544,7 +5544,7 @@
 /obj/effect/turf_decal/bot,
 /obj/machinery/telecomms/bus/preset_three,
 /turf/open/floor/circuit/telecomms/mainframe,
-/area/space)
+/area/facility_hallway/south)
 "KA" = (
 /obj/machinery/disposal/delivery_chute{
 	pixel_y = 13;
@@ -5657,7 +5657,7 @@
 /obj/effect/decal/cleanable/dirt,
 /obj/machinery/telecomms/processor/preset_one,
 /turf/open/floor/circuit/telecomms/mainframe,
-/area/space)
+/area/facility_hallway/south)
 "Lj" = (
 /obj/effect/turf_decal/tile/purple{
 	dir = 1
@@ -5967,7 +5967,7 @@
 "Nf" = (
 /obj/machinery/telecomms/server/presets/medical,
 /turf/open/floor/circuit/telecomms/mainframe,
-/area/space)
+/area/facility_hallway/south)
 "Ng" = (
 /obj/effect/turf_decal/tile/brown{
 	dir = 1
@@ -6047,7 +6047,7 @@
 /obj/effect/turf_decal/bot,
 /obj/machinery/ntnet_relay,
 /turf/open/floor/circuit/telecomms/mainframe,
-/area/space)
+/area/facility_hallway/south)
 "NK" = (
 /turf/open/floor/mineral/gold,
 /area/department_main/architecture)
@@ -6350,9 +6350,6 @@
 	},
 /turf/open/floor/plasteel/white,
 /area/department_main/training)
-"Pn" = (
-/turf/closed/indestructible/reinforced,
-/area/space)
 "Pr" = (
 /obj/effect/turf_decal/siding/wideplating{
 	dir = 6
@@ -6580,7 +6577,7 @@
 "Re" = (
 /obj/machinery/telecomms/server/presets/security,
 /turf/open/floor/circuit/telecomms/mainframe,
-/area/space)
+/area/facility_hallway/south)
 "Rg" = (
 /obj/machinery/light{
 	dir = 8
@@ -6714,7 +6711,7 @@
 "RN" = (
 /obj/machinery/telecomms/server/presets/common,
 /turf/open/floor/circuit/telecomms/mainframe,
-/area/space)
+/area/facility_hallway/south)
 "RP" = (
 /obj/machinery/computer/extraction_cargo/discipline{
 	dir = 1
@@ -6958,7 +6955,7 @@
 /obj/effect/decal/cleanable/dirt,
 /obj/machinery/telecomms/bus/preset_one,
 /turf/open/floor/circuit/telecomms/mainframe,
-/area/space)
+/area/facility_hallway/south)
 "TN" = (
 /obj/effect/turf_decal/box/white,
 /obj/structure/toolabnormality/realization,
@@ -7445,7 +7442,7 @@
 "Wm" = (
 /obj/machinery/telecomms/server/presets/science,
 /turf/open/floor/circuit/telecomms/mainframe,
-/area/space)
+/area/facility_hallway/south)
 "Wp" = (
 /obj/effect/spawner/abnormality_room,
 /turf/closed/indestructible/reinforced,
@@ -8439,11 +8436,11 @@ Ne
 Ne
 Ne
 Ne
-Pn
-Pn
-Pn
-Pn
-Pn
+Km
+Km
+Km
+Km
+Km
 Ne
 Ne
 Ne
@@ -8533,11 +8530,11 @@ Ne
 Ne
 Ne
 Ne
-Pn
+Km
 Wm
 jG
 Nf
-Pn
+Km
 Ne
 Ne
 Ne
@@ -8627,11 +8624,11 @@ Ne
 Ne
 Ne
 Ne
-Pn
+Km
 lt
 yR
 oK
-Pn
+Km
 Ne
 Ne
 Ne
@@ -8721,11 +8718,11 @@ Ne
 Ne
 Ne
 Ne
-Pn
+Km
 Lg
 TM
 yO
-Pn
+Km
 Ne
 Ne
 Ne
@@ -8815,11 +8812,11 @@ Ne
 Ne
 Ne
 Ne
-Pn
+Km
 dp
 Ky
 pO
-Pn
+Km
 Ne
 Ne
 Ne
@@ -8909,11 +8906,11 @@ Ne
 Ne
 Ne
 Ne
-Pn
+Km
 IF
 iJ
 Jg
-Pn
+Km
 Ne
 Ne
 Ne
@@ -9003,11 +9000,11 @@ Ne
 Ne
 Ne
 Ne
-Pn
+Km
 rb
 NE
 EO
-Pn
+Km
 Ne
 Ne
 Ne
@@ -9097,11 +9094,11 @@ Ne
 Ne
 Ne
 Ne
-Pn
+Km
 RN
 EV
 Re
-Pn
+Km
 Ne
 Ne
 Ne
@@ -9191,11 +9188,11 @@ Ne
 Ne
 Ne
 Ne
-Pn
-Pn
-Pn
-Pn
-Pn
+Km
+Km
+Km
+Km
+Km
 Ne
 Ne
 Ne
