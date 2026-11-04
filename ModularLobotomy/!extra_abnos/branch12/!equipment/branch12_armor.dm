@@ -18,7 +18,7 @@
 	name = "barostem"
 	desc = "Made from the wool of the Baromez. \
 		provides no warmth but is very lightweight."
-	//icon_state = "barostem"
+	icon_state = "barostem"
 	armor = list(RED_DAMAGE = 5, WHITE_DAMAGE = 10, BLACK_DAMAGE = 5, PALE_DAMAGE = -10)
 
 /obj/item/clothing/suit/armor/ego_gear/branch12/signal
