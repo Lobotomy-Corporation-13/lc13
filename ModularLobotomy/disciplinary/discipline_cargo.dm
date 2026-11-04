@@ -26,9 +26,8 @@
 
 		//Equipment - L-Corp Gear
 		new /datum/data/extraction_cargo("L-Corp Submachine Gun V1 ",		/obj/item/ego_weapon/ranged/discsmg,								100, CAT_EQUIP) = 1,
-		new /datum/data/extraction_cargo("L-Corp Smg Ammo (Red) ",			/obj/item/ego_mag/discsmg,											 20, CAT_EQUIP) = 1,
-		new /datum/data/extraction_cargo("Anti-Abnormality Grenade Box ",	/obj/item/ego_mag/discsmg/white,									 20, CAT_GADGET) = 1,
-		new /datum/data/extraction_cargo("Grenade Launcher ",				/obj/item/gun/grenadelauncher,										500, CAT_GADGET) = 1,
+		new /datum/data/extraction_cargo("L-Corp Disciplinary Bat ",		/obj/item/ego_weapon/disc/baton,									140, CAT_EQUIP) = 1,
+		new /datum/data/extraction_cargo("Grenade Launcher ",				/obj/item/gun/grenadelauncher,										500, CAT_EQUIP) = 1,
 		/*		EGOShard gear has been obliterated for sucking.
 		new /datum/data/extraction_cargo("L-Corp Machete Template " ,		/obj/item/ego_weapon/city/lcorp/machete,							100, CAT_EQUIP) = 1,
 		new /datum/data/extraction_cargo("L-Corp Club Template ",			/obj/item/ego_weapon/city/lcorp/club,								100, CAT_EQUIP) = 1,
@@ -66,6 +65,10 @@
 		new /datum/data/extraction_cargo("Tier 4 EGOSHARD (White) ",	/obj/item/egoshard/great/white,					900, CAT_RESOURCE) = 1,
 		new /datum/data/extraction_cargo("Tier 4 EGOSHARD (Black) ",	/obj/item/egoshard/great/black,					900, CAT_RESOURCE) = 1,
 		new /datum/data/extraction_cargo("Tier 4 EGOSHARD (Pale) ",		/obj/item/egoshard/great/pale,					900, CAT_RESOURCE) = 1,*/
+
+		new /datum/data/extraction_cargo("L-Corp Smg Ammo (Red) ",			/obj/item/ego_mag/discsmg,											 20, CAT_RESOURCE) = 1,
+		new /datum/data/extraction_cargo("L-Corp Smg Ammo (White) ",		/obj/item/ego_mag/discsmg/white,									 20, CAT_RESOURCE) = 1,
+		new /datum/data/extraction_cargo("Anti-Abnormality Grenade Box ",	/obj/item/storage/box/lobotomygrenades,								300, CAT_RESOURCE) = 1,
 
 		//Random stuff
 		new /datum/data/extraction_cargo("Bubblegum Gum Packet ",		/obj/item/storage/box/gum/bubblegum,								 15, CAT_OTHER) = 1,
