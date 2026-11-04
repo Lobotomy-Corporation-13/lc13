@@ -4445,6 +4445,7 @@
 #include "ModularLobotomy\disciplinary\combat_page\level1.dm"
 #include "ModularLobotomy\disciplinary\combat_page\level2.dm"
 #include "ModularLobotomy\disciplinary\combat_page\level3.dm"
+#include "ModularLobotomy\disciplinary\weapon\discbaton.dm"
 #include "ModularLobotomy\disciplinary\weapon\discsmg.dm"
 #include "ModularLobotomy\ego_weapons\_ego_weapon.dm"
 #include "ModularLobotomy\ego_weapons\melee\_lists.dm"
