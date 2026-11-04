@@ -1,0 +1,5 @@
+author: "Kitsunemitsu"
+delete-after: True
+changes:
+  - rscdel: "Removed DO gear."
+  - rscadd: "Added new Disc gear"
