@@ -25,13 +25,14 @@
 		new /datum/data/extraction_cargo("Vitals Projector ",			/obj/item/powered_gadget/vitals_projector,							300, CAT_GADGET) = 1,
 
 		//Equipment - L-Corp Gear
+		/*
 		new /datum/data/extraction_cargo("L-Corp Baton Template ",			/obj/item/ego_weapon/city/lcorp/baton,								100, CAT_EQUIP) = 1,
 		new /datum/data/extraction_cargo("L-Corp Machete Template " ,		/obj/item/ego_weapon/city/lcorp/machete,							100, CAT_EQUIP) = 1,
 		new /datum/data/extraction_cargo("L-Corp Club Template ",			/obj/item/ego_weapon/city/lcorp/club,								100, CAT_EQUIP) = 1,
 		new /datum/data/extraction_cargo("L-Corp Shield Template ",			/obj/item/ego_weapon/shield/lcorp_shield,							100, CAT_EQUIP) = 1,
 		new /datum/data/extraction_cargo("L-Corp Pistol Template ",			/obj/item/ego_weapon/ranged/city/lcorp/pistol,						100, CAT_EQUIP) = 1,
 		new /datum/data/extraction_cargo("L-Corp Machinepistol Template ",	/obj/item/ego_weapon/ranged/city/lcorp/automatic_pistol,			100, CAT_EQUIP) = 1,
-		new /datum/data/extraction_cargo("L-Corp Armored Vest Template ",	/obj/item/clothing/suit/armor/ego_gear/city/lcorp_vest,				100, CAT_EQUIP) = 1,
+		new /datum/data/extraction_cargo("L-Corp Armored Vest Template ",	/obj/item/clothing/suit/armor/ego_gear/city/lcorp_vest,				100, CAT_EQUIP) = 1,*/
 		new /datum/data/extraction_cargo("Anti-Abnormality Grenade Box ",	/obj/item/storage/box/lobotomygrenades,								300, CAT_GADGET) = 1,
 		new /datum/data/extraction_cargo("Grenade Launcher ",				/obj/item/gun/grenadelauncher,										500, CAT_GADGET) = 1,
 
@@ -48,6 +49,8 @@
 		//new /datum/data/extraction_cargo("L1 Combat Page ",				/obj/item/combat_page/level1,					200, CAT_RESOURCE) = 1,
 		//new /datum/data/extraction_cargo("L2 Combat Page ",				/obj/item/combat_page/level2,					400, CAT_RESOURCE) = 1,
 		//new /datum/data/extraction_cargo("L3 Combat Page ",				/obj/item/combat_page/level3,					800, CAT_RESOURCE) = 1,
+
+		/* Removed for being really bad for game balance
 		new /datum/data/extraction_cargo("Tier 1 EGOSHARD (Red) ",		/obj/item/egoshard,								50, CAT_RESOURCE) = 1,
 		new /datum/data/extraction_cargo("Tier 1 EGOSHARD (White) ",	/obj/item/egoshard/white,						100, CAT_RESOURCE) = 1,
 		new /datum/data/extraction_cargo("Tier 1 EGOSHARD (Black) ",	/obj/item/egoshard/black,						100, CAT_RESOURCE) = 1,
@@ -61,7 +64,7 @@
 		new /datum/data/extraction_cargo("Tier 4 EGOSHARD (Red) ",		/obj/item/egoshard/great,						900, CAT_RESOURCE) = 1,
 		new /datum/data/extraction_cargo("Tier 4 EGOSHARD (White) ",	/obj/item/egoshard/great/white,					900, CAT_RESOURCE) = 1,
 		new /datum/data/extraction_cargo("Tier 4 EGOSHARD (Black) ",	/obj/item/egoshard/great/black,					900, CAT_RESOURCE) = 1,
-		new /datum/data/extraction_cargo("Tier 4 EGOSHARD (Pale) ",		/obj/item/egoshard/great/pale,					900, CAT_RESOURCE) = 1,
+		new /datum/data/extraction_cargo("Tier 4 EGOSHARD (Pale) ",		/obj/item/egoshard/great/pale,					900, CAT_RESOURCE) = 1,*/
 
 		//Random stuff
 		new /datum/data/extraction_cargo("Bubblegum Gum Packet ",		/obj/item/storage/box/gum/bubblegum,								15, CAT_OTHER) = 1,
