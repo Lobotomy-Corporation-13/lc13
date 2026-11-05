@@ -89,6 +89,12 @@ GLOBAL_VAR_INIT(wcorp_enemy_faction, "") //decides which faction WCorp will be u
 				to_chat(world, span_userdanger("Destroy the Heart of Greed within two hours!"))
 				RegisterSignal(SSdcs, COMSIG_GLOB_MOB_DEATH, PROC_REF(CheckLiving))
 
+			//Enkephalin Rush
+			if("enkephalin_rush")
+				roundstartannounce() //being stored as a proc at the bottom because its very long
+				addtimer(CALLBACK(src, PROC_REF(infodevistationwarning)), 2 MINUTES)
+				
+
 			//Fixers
 			if("fixers")
 				addtimer(CALLBACK(src, PROC_REF(roundendwarning)), 80 MINUTES)
@@ -125,7 +131,7 @@ GLOBAL_VAR_INIT(wcorp_enemy_faction, "") //decides which faction WCorp will be u
 		if(hooman.stat != DEAD && hooman.ckey && !istype(hooman, /mob/living/carbon/human/species/rca_pinocchio))
 			return
 
-	if(SSticker.force_ending == TRUE) // they lost another way before we could do it, how rude.
+	if(SSticker.force_ending == TRUE || SSmaptype.maptype == "enkephalin_rush") // they lost another way before we could do it, how rude. Or they are rushing their enk
 		return
 
 	SSticker.force_ending = TRUE
@@ -166,6 +172,9 @@ GLOBAL_VAR_INIT(wcorp_enemy_faction, "") //decides which faction WCorp will be u
 /datum/game_mode/combat/proc/endroundRcorp(text)
 	SSticker.force_ending = TRUE
 	to_chat(world, span_userdanger(text))
+
+/datum/game_mode/combat/proc/infodevistationwarning()
+	minor_announce("Facility Primary Servers offline, comms distruption will occur untill the servers are repaired, You are on your own LCE.", LCCB Preliminary Observation)
 
 /datum/game_mode/combat/proc/roundendwarning()
 	switch (SSmaptype.maptype)
@@ -243,3 +252,6 @@ GLOBAL_VAR_INIT(wcorp_enemy_faction, "") //decides which faction WCorp will be u
 		qdel(L)
 	for(var/mob/living/simple_animal/hostile/abnormality/A in GLOB.abnormality_mob_list)
 		to_chat(A, "Incorporeal barrier is broken!")
+
+/datum/game_mode/combat/proc/roundstartannouncement() //being stored here because its long, see line 92.
+	minor_announce("ROUNDSTART TEXT HERE", LCCB Preliminary Observation)
