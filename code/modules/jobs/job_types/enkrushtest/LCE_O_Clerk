@@ -14,6 +14,7 @@
 	liver_traits = list(TRAIT_GREYTIDE_METABOLISM)
 
 	allow_bureaucratic_error = FALSE
+	departments = DEPARTMENT_LCE
 	job_important = "\
 		You are an Agent Support Clerk. \n\
 		You are unable to do work, but are expected to assist agents in any way that you can. In your belt are various tools to assist them."

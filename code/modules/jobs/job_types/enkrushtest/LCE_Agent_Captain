@@ -9,7 +9,7 @@
 
 	access = list(ACCESS_COMMAND, ACCESS_SECURITY) // LC13:To-Do
 	minimal_access = list(ACCESS_COMMAND, ACCESS_SECURITY)
-	departments = DEPARTMENT_COMMAND | DEPARTMENT_SECURITY
+	departments = DEPARTMENT_COMMAND | DEPARTMENT_SECURITY | DEPARTMENT_LCE
 	exp_requirements = 6000
 	exp_type = EXP_TYPE_CREW
 	exp_type_department = EXP_TYPE_SECURITY

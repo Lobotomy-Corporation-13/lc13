@@ -12,6 +12,7 @@
 	job_notice = "Being in charge of handling Abnormality documentation, you should also assist new Interns and Clerks in learning how to work at L-Corp."
 
 	job_abbreviation = "RO"
+	departments = DEPARTMENT_LCE
 
 /datum/job/command/records/after_spawn(mob/living/outfit_owner, mob/M)
 	. = ..()
