@@ -360,7 +360,7 @@ GLOBAL_LIST_INIT(exp_jobsmap, list(
 	EXP_TYPE_SCIENCE = list("titles" = science_positions),
 	EXP_TYPE_SUPPLY = list("titles" = supply_positions),
 //	EXP_TYPE_SECURITY = list("titles" = security_positions), // LOBOTOMYCORPORATION EDIT OLD
-	EXP_TYPE_SECURITY = list("titles" = security_positions | city_antagonist_positions | association_positions | w_corp_positions | r_corp_positions | fixer_positions ), // LOBOTOMYCORPORATION EDIT NEW
+	EXP_TYPE_SECURITY = list("titles" = security_positions | city_antagonist_positions | association_positions | w_corp_positions | r_corp_positions | fixer_positions), // LOBOTOMYCORPORATION EDIT NEW
 	EXP_TYPE_SILICON = list("titles" = list("AI","Cyborg")),
 	EXP_TYPE_SERVICE = list("titles" = service_positions)
 ))
