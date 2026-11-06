@@ -22,6 +22,7 @@
 	var/burst_cooldown = FALSE // Whether it's operational due to Burst Cooldown
 	var/short_duration = 30 SECONDS
 	var/long_duration = 60 SECONDS
+	var/enkrush_duration = 75 SECONDS
 	var/reset_timer = 0
 	var/colored_overlay
 
@@ -58,6 +59,9 @@
 	var/regen_amt = regeneration_amount
 	var/regen_mult = 1
 	var/regen_add = GetFacilityUpgradeValue(UPGRADE_REGENERATOR_HEALING)
+	//All your text is gone 2.
+	if(SSmaptype.maptype == "enkephalin_rush" && SSlobotomy_corp.fixed_departments["Safety"] == FALSE)
+		regen_mult = 0.75
 	if(burst)
 		regen_mult *= 7.5
 		burst = FALSE
@@ -100,6 +104,14 @@
 	colored_overlay.color = Icon_Color
 	add_overlay(colored_overlay)
 
+
+//If Safety wasn't fixed, set delay to Enkrush's.
+/obj/machinery/regenerator/proc/func_timer()
+	if(func_check("Safety"))
+		reset_timer = enkrush_duration + world.time
+	else
+		return
+
 /*----------------\
 |Regenerator Modes|
 \----------------*/
@@ -110,6 +122,7 @@
 	sp_bonus = -1
 	reset_timer = long_duration + world.time
 	ProduceIcon("#B90E0A", "regenspores") //Crimson
+	func_timer()
 
 /obj/machinery/regenerator/proc/SpFocus(mob/living/user)
 	if(user)
@@ -118,6 +131,7 @@
 	sp_bonus = 3
 	reset_timer = long_duration + world.time
 	ProduceIcon("#4ADED", "regenpuffs_heavy") //Teal
+	func_timer()
 
 /obj/machinery/regenerator/proc/EqualFocus(mob/living/user)
 	if(user)
@@ -129,6 +143,7 @@
 	add_overlay(mutable_appearance('icons/effects/atmospherics.dmi', "miasma_old"))
 	ProduceIcon("#AF69EE", "regenpuffs") //Orchid
 	ProduceIcon("#B90E0A", "regenspores") //Crimson
+	func_timer()
 
 /obj/machinery/regenerator/proc/CriticalFocus(mob/living/user)
 	if(user)
@@ -139,6 +154,7 @@
 	reset_timer = short_duration + world.time
 	add_overlay("redregenlight")
 	ProduceIcon("#E30B5D", "regenspores") //Raspberry
+	func_timer()
 
 /obj/machinery/regenerator/proc/OverloadHeal(mob/living/user)
 	if(user)
@@ -146,7 +162,7 @@
 	burst = TRUE
 	ProduceIcon("#800000", "regenpuffs_heavy") //Maroon
 	ProduceIcon("#B90E0A", "regenspores_heavy") //Crimson
-	// No Timer as it's an "instant" effect. Also handles turning off over there
+	// No Timer as it's an "instant" effect. Also handles turning off over there.
 
 //Safety Plant Regenerator
 /obj/machinery/regenerator/safety
