@@ -7,6 +7,11 @@
 	if(istype(I))
 		text = Gibberish(text, TRUE, I.gibberish_value)
 
+	//All your text is gone 2.
+	if(func_check("Information"))
+		if(ROUNDTIME > 3 MINUTES)
+			text = Gibberish(text, TRUE, 7)
+
 	var/announcement
 	if(!sound)
 		sound = SSstation.announcer.get_rand_alert_sound()
@@ -65,6 +70,11 @@
 /proc/minor_announce(message, title = "Attention:", alert, html_encode = TRUE)
 	if(!message)
 		return
+
+	//All your text is gone 2.
+	if(func_check("Information"))
+		if(ROUNDTIME > 3 MINUTES)
+			message = Gibberish(message, TRUE, 7)
 
 	if (html_encode)
 		title = html_encode(title)
