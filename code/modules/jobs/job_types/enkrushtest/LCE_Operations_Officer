@@ -1,4 +1,4 @@
-/datum/job/command/LCErecords
+/datum/job/command/enkrush_operations_officer
 	title = "LCE Operations Officer"
 	outfit = /datum/outfit/job/command/records
 	exp_requirements = 600

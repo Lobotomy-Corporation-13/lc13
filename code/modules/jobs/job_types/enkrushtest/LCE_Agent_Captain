@@ -1,5 +1,5 @@
 // Captain
-/datum/job/agent/EnkRushcaptain
+/datum/job/agent/enkrush_captain
 	title = "LCE Agent Captain"
 	selection_color = "#BB9999"
 	total_positions = 1

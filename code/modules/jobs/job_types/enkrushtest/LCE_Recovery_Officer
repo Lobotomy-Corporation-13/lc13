@@ -1,4 +1,4 @@
-/datum/job/LCEcommand
+/datum/job/enkrush_recovery_officer
 	title = "LCE Recovery Officer"
 	department_head = list("Manager")
 	faction = "Station"
@@ -12,23 +12,25 @@
 	exp_type = EXP_TYPE_CREW
 	minimal_player_age = 5
 
-	outfit = /datum/outfit/job/command/extraction
+	outfit = /datum/outfit/job/command/LCERecoveryO
 
 	access = list(ACCESS_COMMAND, ACCESS_SECURITY) // LC13:To-Do
 	minimal_access = list(ACCESS_COMMAND, ACCESS_SECURITY)
 	departments = DEPARTMENT_COMMAND | DEPARTMENT_LCE
 
 	mapexclude = list("mini")
-	job_important = "You are the Extraction Officer. Your job is to manage the EGO console, Extraction purchase console, and power generation system. Your main goal is to ensure Agents are well-equipped with EGO."
+	job_important = "\
+	You are the Recovery Officer. Your job is to manage the expansion of the Departments, E.G.O. Equipment, and it's Distribution. \
+	 Ultimately, your goal is to Repair the former Lobotomy Corporation branch."
 
-	job_abbreviation = "EO"
+	job_abbreviation = "LCE-RO"
 
 	job_attribute_limit = 60
 	roundstart_attributes = list(
-		FORTITUDE_ATTRIBUTE = 20,
-		PRUDENCE_ATTRIBUTE = 20,
-		TEMPERANCE_ATTRIBUTE = 20,
-		JUSTICE_ATTRIBUTE = 20,
+		FORTITUDE_ATTRIBUTE = 60,
+		PRUDENCE_ATTRIBUTE = 60,
+		TEMPERANCE_ATTRIBUTE = 60,
+		JUSTICE_ATTRIBUTE = 60,
 	)
 
 /datum/job/command/after_spawn(mob/living/carbon/human/outfit_owner, mob/M)
@@ -44,8 +46,8 @@
 	if(SSmaptype.chosen_trait == FACILITY_TRAIT_DARK_SOULS)
 		outfit_owner.equip_to_slot_or_del(new /obj/item/estus(outfit_owner), ITEM_SLOT_HANDS, TRUE)
 
-/datum/outfit/job/command/extraction
-	name = "Extraction Officer"
+/datum/outfit/job/command/LCERecoveryO
+	name = "LCE Recovery Officer"
 	jobtype = /datum/job/command
 	suit =  /obj/item/clothing/suit/armor/extraction
 	ears = /obj/item/radio/headset/heads/extraction
