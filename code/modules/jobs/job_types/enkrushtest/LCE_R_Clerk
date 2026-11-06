@@ -1,4 +1,4 @@
-/datum/job/assistant/LCEfacility_support
+/datum/job/assistant/enkrush_recover_clerk
 	title = "LCE Recovery Clerk"
 	faction = "Station"
 	total_positions = -1
