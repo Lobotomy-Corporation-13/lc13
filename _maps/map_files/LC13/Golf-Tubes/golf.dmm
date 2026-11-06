@@ -5997,6 +5997,14 @@
 	},
 /turf/open/floor/plasteel,
 /area/facility_hallway/information)
+"Nj" = (
+/obj/machinery/conveyor_switch/oneway{
+	dir = 4;
+	id = "garbage";
+	name = "disposal conveyor"
+	},
+/turf/open/floor/plasteel/dark,
+/area/facility_hallway/east)
 "Np" = (
 /obj/structure/chair/comfy/black{
 	dir = 8
@@ -14662,7 +14670,7 @@ mX
 jP
 oQ
 oQ
-oQ
+Nj
 nr
 BG
 Ne
