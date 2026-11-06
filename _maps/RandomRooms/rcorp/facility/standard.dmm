@@ -109,6 +109,11 @@
 /obj/machinery/photocopier,
 /turf/open/floor/carpet/black,
 /area/city/outskirts)
+"di" = (
+/obj/effect/turf_decal/sand/plating,
+/obj/effect/landmark/abnospawn/hardsupport,
+/turf/open/floor/plating,
+/area/city/outskirts)
 "dr" = (
 /obj/machinery/computer/crew,
 /obj/machinery/light{
@@ -881,6 +886,11 @@
 	},
 /obj/machinery/camera/autoname,
 /turf/open/floor/carpet/orange,
+/area/city/outskirts)
+"rk" = (
+/obj/effect/turf_decal/sand/plating,
+/obj/effect/landmark/abnospawn/hardcombat,
+/turf/open/floor/carpet/black,
 /area/city/outskirts)
 "rl" = (
 /obj/structure/closet/crate/freezer/surplus_limbs,
@@ -14780,7 +14790,7 @@ Im
 Im
 Im
 Im
-pa
+rk
 Im
 Im
 cI
@@ -15603,7 +15613,7 @@ Im
 Im
 Im
 Im
-gB
+di
 Im
 Im
 Im

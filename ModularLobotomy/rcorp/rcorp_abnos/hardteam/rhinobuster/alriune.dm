@@ -17,7 +17,7 @@
 	/// Delay used for petals_next
 	var/petals_next_time = PETALS_COOLDOWN
 	/// Amount of white damage done to everyone in view by the attack
-	var/pulse_damage = 100 //Lowered because rabbits thought they could facetank 180 WHITE
+	var/pulse_damage = 120 //Lowered from 180 to 120, just enough to 3 shot infantry/rhino captains while 2 shotting rhinos (each pulse takes 21 seconds to perform)
 	/// Attack_type
 	var/pulsing = FALSE
 	var/attacking = FALSE

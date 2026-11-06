@@ -40,13 +40,13 @@
 	. = ..()
 	if(!.)
 		return
-	for(var/mob/living/carbon/human/H in oview(src, suffocation_range))
+	for(var/mob/living/carbon/human/H in livinginview(src, suffocation_range))
 		if(faction_check(src.faction, H.faction)) // I LOVE NESTING IF STATEMENTS
 			continue
 		//they suffocate everyone they can see but you can just get out of her view to stop it
-		 //Medium oxyloss is technically the same damage as Low Oxyloss as while normally youd stop breathing while being choked in Piscines case youre still breathing, so the Oxyloss applied here is only half as efficient balancing out the damage.
-		 //This means that in 4 ticks you will do 32 oxyloss then have 16 of it healed on the final tick for a total of 16
-		 //a human passes out at over 50 oxy so theyll pass out within 11 lifeticks (56 oxy) though theyll wake up on the 12th lifetick as it heals 16 taking their oxy to 48, however they pass out again on the 13th lifetick and sleep for good
-		H.adjustOxyLoss(HUMAN_MEDIUM_OXYLOSS_RATE, updating_health=TRUE, forced=TRUE)
+		 //Halved breathing oxyloss is technically only 1.5 damage instead of 3 as while normally youd stop breathing while being choked in Piscines case youre still breathing, so the Oxyloss applied here is only half as efficient balancing out the damage.
+		 //This means that in 4 ticks you will do 24 oxyloss then have 12 of it healed on the final tick for a total of 12
+		 //a human passes out at over 50 oxy so theyll pass out within 16 lifeticks (60 oxy), should translate to 32 seconds
+		H.adjustOxyLoss(HUMAN_BREATHING_OXYLOSS_RATE/2, updating_health=TRUE, forced=TRUE)
 		new /obj/effect/temp_visual/mermaid_drowning(get_turf(H))
 	return
