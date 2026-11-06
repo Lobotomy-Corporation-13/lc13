@@ -1,4 +1,4 @@
-/datum/job/LCERagent
+/datum/job/enkrush_recover
 	title = "LCE Recovery Agent"
 	department_head = list("Manager")
 	faction = "Station"

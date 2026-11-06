@@ -1,4 +1,4 @@
-/datum/job/LCEOagent
+/datum/job/enkrush_operations
 	title = "LCE Operations Agent"
 	department_head = list("Manager")
 	faction = "Station"

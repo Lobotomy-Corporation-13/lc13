@@ -113,8 +113,7 @@ SUBSYSTEM_DEF(maptype)
 		if("lcorp_city")
 			departments = list("Command", "Security", "Service", "Association", "Fixers", "Medical")
 		if("enkephalin_rush")
-			departments = list("Command", "Security", "Fixers", "enkrush_positions")
-			//remove everything but enk_rush_quicktest when actually adding this
+			departments = list("Command", "Security", "Service")
 
 	var/list/all_jobs = subtypesof(/datum/job)
 	if(!all_jobs.len)

@@ -69,9 +69,9 @@ GLOBAL_LIST_INIT(command_positions, list(
 	"Office Director",
 
 	// Enk Rush Rework
-	//"LCE Recovery Officer",
-	//"LCE Operations Officer",
-	//"LCE Agent Captain",
+	"LCE Recovery Officer",
+	"LCE Operations Officer",
+	"LCE Agent Captain",
 
 	))
 
@@ -134,8 +134,8 @@ GLOBAL_LIST_INIT(service_positions, list(
 	"R-Corp Messenger Raven",
 
 	//Enk Rush Rework
-	//"LCE Recovery Clerk",
-	//"LCE Operations Clerk",
+	"LCE Recovery Clerk",
+	"LCE Operations Clerk",
 	))
 
 
@@ -167,8 +167,8 @@ GLOBAL_LIST_INIT(security_positions, list(
 	"R-Corp Rook",
 
 	//Enk Rush Rework
-	//"LCE Recovery Agent",
-	//"LCE Operations Agent",
+	"LCE Recovery Agent",
+	"LCE Operations Agent",
 	))
 
 
@@ -298,16 +298,6 @@ GLOBAL_LIST_INIT(city_antagonist_positions, list(
 	"Insurgence Transport Agent",
 ))
 
-GLOBAL_LIST_INIT(enkrush_positions, list(
-	"LCE Recovery Officer",
-	"LCE Operations Officer",
-	"LCE Agent Captain",
-	"LCE Recovery Agent",
-	"LCE Operations Agent",
-	"LCE Recovery Clerk",
-	"LCE Operations Clerk",
-))
-
 // job categories for rendering the late join menu
 GLOBAL_LIST_INIT(position_categories, list(
 	// LOBOTOMYCORPORATION ADDITION START
@@ -317,7 +307,6 @@ GLOBAL_LIST_INIT(position_categories, list(
 	"Association" = list("jobs" = association_positions, "color" = "#5baa27"),
 	"Syndicate" = list("jobs" = city_antagonist_positions, "color" = "#db2828"),
 	"Fixers" = list("jobs" = fixer_positions, "color" = "#767676"),
-	"Limbus Company Enkephalin" = list("jobs" = enkrush_positions, "color" = "#ff6600"),
 	// LOBOTOMYCORPORATION ADDITION END
 	EXP_TYPE_COMMAND = list("jobs" = command_positions, "color" = "#ccccff"),
 	EXP_TYPE_ENGINEERING = list("jobs" = engineering_positions, "color" = "#ffeeaa"),
@@ -333,7 +322,7 @@ GLOBAL_LIST_INIT(exp_jobsmap, list(
 // LOBOTOMYCORPORATION EDIT START
 //	EXP_TYPE_CREW = list("titles" = command_positions | engineering_positions | medical_positions | science_positions | supply_positions | security_positions | service_positions | list("AI","Cyborg")), // crew positions
 //	EXP_TYPE_COMMAND = list("titles" = command_positions),
-	EXP_TYPE_CREW = list("titles" = command_positions | engineering_positions | medical_positions | science_positions | supply_positions | security_positions | service_positions | w_corp_positions | r_corp_positions | hana_positions | association_positions | city_antagonist_positions | enkrush_positions | list("AI","Cyborg")), // crew positions
+	EXP_TYPE_CREW = list("titles" = command_positions | engineering_positions | medical_positions | science_positions | supply_positions | security_positions | service_positions | w_corp_positions | r_corp_positions | hana_positions | association_positions | city_antagonist_positions | list("AI","Cyborg")), // crew positions
 	EXP_TYPE_COMMAND = list("titles" = command_positions | hana_positions),
 // LOBOTOMYCORPORATION EDIT END
 	EXP_TYPE_ENGINEERING = list("titles" = engineering_positions),
@@ -341,7 +330,7 @@ GLOBAL_LIST_INIT(exp_jobsmap, list(
 	EXP_TYPE_SCIENCE = list("titles" = science_positions),
 	EXP_TYPE_SUPPLY = list("titles" = supply_positions),
 //	EXP_TYPE_SECURITY = list("titles" = security_positions), // LOBOTOMYCORPORATION EDIT OLD
-	EXP_TYPE_SECURITY = list("titles" = security_positions | city_antagonist_positions | association_positions | w_corp_positions | r_corp_positions | fixer_positions | enkrush_positions), // LOBOTOMYCORPORATION EDIT NEW
+	EXP_TYPE_SECURITY = list("titles" = security_positions | city_antagonist_positions | association_positions | w_corp_positions | r_corp_positions | fixer_positions ), // LOBOTOMYCORPORATION EDIT NEW
 	EXP_TYPE_SILICON = list("titles" = list("AI","Cyborg")),
 	EXP_TYPE_SERVICE = list("titles" = service_positions)
 ))
