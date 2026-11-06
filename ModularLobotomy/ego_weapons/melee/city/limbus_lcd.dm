@@ -106,7 +106,7 @@
 		user.say("Rip 'em to shreds!")
 		hit_number = 0
 		//Screw Atelier is Black, and Nester workshop is white, they will synergize a bit.
-		user.apply_lc_fragile(3)
+		target.apply_lc_fragile(3)
 
 
 //Nester is supposed to synergize with Screw Atelier.
@@ -144,7 +144,7 @@
 	if(hit_number >= hit_target)
 		to_chat(user, span_danger("They're not getting away!"))
 		hit_number = 0
-		user.apply_lc_black_fragile(2)
+		target.apply_lc_black_fragile(2)
 		if(ishuman(target))
 			var/mob/living/carbon/human/H = target
 			H.add_movespeed_modifier(/datum/movespeed_modifier/nester)
