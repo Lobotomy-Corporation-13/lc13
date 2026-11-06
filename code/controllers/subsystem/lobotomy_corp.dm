@@ -121,6 +121,17 @@ SUBSYSTEM_DEF(lobotomy_corp)
 	// Should start as FALSE, then after the amount of time specified in the above var, set to TRUE if there's no Manager, then after a Manager spawns, set to FALSE again.
 	var/core_selection_restriction_lifted = FALSE
 
+	//Enk Rush rework stuff.
+
+	//List of fixed departments.
+	var/fixed_departments = list(
+		"Information" = FALSE,
+		"Safety" = FALSE,
+		"Control" = FALSE,
+		"Training" = FALSE
+		"Disciplinary" = FALSE
+	)
+
 /datum/controller/subsystem/lobotomy_corp/Initialize(timeofday)
 	if(SSmaptype.maptype in SSmaptype.combatmaps) // sleep
 		flags |= SS_NO_FIRE
