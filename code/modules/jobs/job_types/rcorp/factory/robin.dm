@@ -35,6 +35,13 @@ GLOBAL_LIST_INIT(robin_sergeants, list("Section A", "Section B", "Section C"))
 	ADD_TRAIT(H, TRAIT_COMBATFEAR_IMMUNE, JOB_TRAIT)
 	SSpersistence.ShowExpeditionNumber(H)
 
+
+	var/datum/action/G = new /datum/action/cooldown/warcry/captain
+	G.Grant(H)
+	G = new /datum/action/cooldown/focusfire/captain
+	G.Grant(H)
+
+
 /datum/outfit/job/robin_captain
 	name = "Robin Squad Captain"
 	jobtype = /datum/job/rcorp_captain/robin
@@ -101,6 +108,9 @@ GLOBAL_LIST_INIT(robin_sergeants, list("Section A", "Section B", "Section C"))
 		if(outfit_owner.head)
 			qdel(outfit_owner.head)
 		outfit_owner.equip_to_slot_or_del(new head(outfit_owner),ITEM_SLOT_HEAD)
+
+	var/datum/action/G = new /datum/action/cooldown/warcry/captain
+	G.Grant(outfit_owner)
 
 
 /datum/outfit/job/robin_leader

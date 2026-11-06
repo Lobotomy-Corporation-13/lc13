@@ -59,6 +59,9 @@
 	. = ..()
 	SSpersistence.ShowExpeditionNumber(H)
 
+	var/datum/action/G = new /datum/action/cooldown/warbanner/captain
+	G.Grant(H)
+
 /datum/job/rook/after_spawn(mob/living/carbon/human/H, mob/M)
 	. = ..()
 	ADD_TRAIT(H, TRAIT_COMBATFEAR_IMMUNE, JOB_TRAIT)
