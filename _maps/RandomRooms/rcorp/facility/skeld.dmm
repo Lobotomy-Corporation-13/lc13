@@ -100,6 +100,10 @@
 /obj/structure/chair/stool/bar,
 /turf/open/floor/carpet/royalblue,
 /area/city/outskirts)
+"ff" = (
+/obj/effect/landmark/abnospawn/reinfhardtank,
+/turf/open/floor/carpet,
+/area/city/outskirts)
 "fl" = (
 /obj/item/paper/guides/jobs/he{
 	pixel_x = 5
@@ -410,6 +414,10 @@
 	pixel_y = -32
 	},
 /turf/open/floor/plasteel,
+/area/city/outskirts)
+"lU" = (
+/obj/effect/landmark/abnospawn/reinfhardcombat,
+/turf/open/floor/carpet,
 /area/city/outskirts)
 "lX" = (
 /obj/structure/table/wood,
@@ -1972,6 +1980,10 @@
 	dir = 4
 	},
 /turf/open/floor/plasteel/white,
+/area/city/outskirts)
+"XG" = (
+/obj/effect/landmark/abnospawn/reinfhardsupport,
+/turf/open/floor/plasteel,
 /area/city/outskirts)
 "XH" = (
 /turf/open/floor/plasteel/white,
@@ -15541,7 +15553,7 @@ iD
 iD
 Ze
 Lh
-Lh
+XG
 Lh
 Yb
 Tf
@@ -16520,7 +16532,7 @@ cl
 cl
 cl
 cl
-cl
+ff
 cl
 cl
 cl
@@ -17658,7 +17670,7 @@ Tf
 Yb
 cl
 cl
-cl
+lU
 cl
 cl
 cl

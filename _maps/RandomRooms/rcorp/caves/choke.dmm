@@ -5,6 +5,10 @@
 "i" = (
 /turf/open/floor/plating/asteroid,
 /area/city/outskirts)
+"k" = (
+/obj/effect/landmark/abnospawn/reinfeasytank,
+/turf/open/floor/plating/asteroid,
+/area/city/outskirts)
 "m" = (
 /obj/effect/landmark/abnospawn/easycombat,
 /turf/open/floor/plating/asteroid,
@@ -12,6 +16,14 @@
 "r" = (
 /obj/effect/landmark/nobasic_incorp_move,
 /turf/closed/indestructible/rock,
+/area/city/outskirts)
+"x" = (
+/obj/effect/landmark/abnospawn/reifeasycombat,
+/turf/open/floor/plating/asteroid,
+/area/city/outskirts)
+"y" = (
+/obj/effect/landmark/abnospawn/reinfeasysupport,
+/turf/open/floor/plating/asteroid,
 /area/city/outskirts)
 "G" = (
 /obj/effect/landmark/abnospawn/easysupport,
@@ -5015,7 +5027,7 @@ i
 G
 i
 i
-i
+k
 i
 H
 i
@@ -5634,7 +5646,7 @@ i
 i
 i
 i
-m
+i
 i
 i
 i
@@ -5757,11 +5769,11 @@ i
 i
 i
 i
+x
 i
 i
+y
 i
-i
-G
 i
 i
 i

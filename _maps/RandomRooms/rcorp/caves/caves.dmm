@@ -13,6 +13,18 @@
 /obj/effect/landmark/abnospawn/easytank,
 /turf/open/floor/plating/asteroid,
 /area/city/outskirts)
+"t" = (
+/obj/effect/landmark/abnospawn/reinfeasysupport,
+/turf/open/floor/plating/asteroid,
+/area/city/outskirts)
+"w" = (
+/obj/effect/landmark/abnospawn/reifeasycombat,
+/turf/open/floor/plating/asteroid,
+/area/city/outskirts)
+"A" = (
+/obj/effect/landmark/abnospawn/reinfeasytank,
+/turf/open/floor/plating/asteroid,
+/area/city/outskirts)
 "G" = (
 /obj/effect/landmark/abnospawn/easysupport,
 /turf/open/floor/plating/asteroid,
@@ -3346,7 +3358,7 @@ i
 i
 i
 i
-i
+A
 i
 i
 g
@@ -3468,7 +3480,7 @@ i
 i
 H
 i
-G
+t
 i
 i
 i
@@ -3715,7 +3727,7 @@ i
 i
 i
 i
-H
+w
 i
 i
 g

@@ -70,7 +70,7 @@ GLOBAL_VAR_INIT(wcorp_enemy_faction, "") //decides which faction WCorp will be u
 						to_chat(world, span_userdanger("Round will end in a draw after 40 minutes."))
 				addtimer(CALLBACK(src, PROC_REF(rcorp_announce)), 3 MINUTES)
 				addtimer(CALLBACK(src, PROC_REF(ClearIncorpBarriers)), 12 MINUTES)
-				minor_announce("WARNING, The facility gates will open in T-12 Minutes." , "R-Corp Intelligence Office")
+				minor_announce("WARNING, The facility gates will open in T-12 Minutes. Additional Abnormalities may breach to reinforce enemy numbers." , "R-Corp Intelligence Office")
 				addtimer(CALLBACK(src, PROC_REF(rcorp_opendoor)), 12 MINUTES)
 				addtimer(CALLBACK(src, PROC_REF(facility_warning_1)), 2 MINUTES)
 				addtimer(CALLBACK(src, PROC_REF(facility_warning_2)), 7 MINUTES)
@@ -214,7 +214,7 @@ GLOBAL_VAR_INIT(wcorp_enemy_faction, "") //decides which faction WCorp will be u
 	minor_announce("WARNING, The facility gates will open in T-10 Minutes." , "R-Corp Intelligence Office")
 
 /datum/game_mode/combat/proc/facility_warning_2()
-	minor_announce("WARNING, The facility gates will open in T-5 Minutes, Please start moving into the facility." , "R-Corp Intelligence Office")
+	minor_announce("WARNING, The facility gates will open in T-5 Minutes, no more abnormalities have been detected escaping the facility." , "R-Corp Intelligence Office")
 
 /datum/game_mode/combat/proc/facility_warning_3()
 	minor_announce("WARNING, The facility gates will open in T-1 Minute, Please be ready for enemies of a higher threat level." , "R-Corp Intelligence Office")

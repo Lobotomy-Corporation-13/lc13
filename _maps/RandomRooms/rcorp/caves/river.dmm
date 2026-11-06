@@ -9,6 +9,18 @@
 "q" = (
 /turf/open/water,
 /area/city/outskirts)
+"u" = (
+/obj/effect/landmark/abnospawn/reinfeasysupport,
+/turf/open/floor/plating/ashplanet/rocky,
+/area/city/outskirts)
+"x" = (
+/obj/effect/landmark/abnospawn/reifeasycombat,
+/turf/open/floor/plating/ashplanet/rocky,
+/area/city/outskirts)
+"E" = (
+/obj/effect/landmark/abnospawn/reinfeasytank,
+/turf/open/floor/plating/ashplanet/rocky,
+/area/city/outskirts)
 "H" = (
 /turf/open/floor/plating/ashplanet/rocky,
 /area/city/outskirts)
@@ -1593,10 +1605,10 @@ H
 H
 H
 H
-T
 H
 H
 H
+E
 H
 H
 H
@@ -2563,7 +2575,7 @@ Y
 H
 H
 H
-H
+u
 H
 H
 H
@@ -2809,7 +2821,7 @@ H
 H
 H
 H
-N
+H
 H
 H
 q
@@ -3774,8 +3786,8 @@ a
 Y
 H
 H
-d
 H
+x
 H
 H
 q
