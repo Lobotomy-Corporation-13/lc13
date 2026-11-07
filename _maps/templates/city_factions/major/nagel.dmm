@@ -123,6 +123,8 @@
 /obj/item/flashlight/flare/torch,
 /obj/item/flashlight/flare/torch,
 /obj/structure/rack,
+/obj/item/healthanalyzer,
+/obj/item/healthanalyzer,
 /turf/open/floor/stone{
 	color = "#ccc8c0"
 	},
