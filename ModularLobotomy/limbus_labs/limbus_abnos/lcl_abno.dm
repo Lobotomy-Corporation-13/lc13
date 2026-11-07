@@ -169,8 +169,8 @@
 	//Death and rebirth.
 	///How long the shell takes to split back open.
 	var/rebirth_time = 5 MINUTES
-	///world.time the current shell hatches at. Only meaningful while dead.
-	var/rebirth_at = 0
+	/// Timer ID for a rebirth timer. Use timeleft(rebirth_timer) to view time left.
+	var/rebirth_timer = null
 	///Sprite offsets from before death, handed back on rebirth.
 	var/living_pixel_x
 	var/living_pixel_y
@@ -193,6 +193,9 @@
 	breach_overlay.transform = matrix() * breach_overlay_scale
 	if(SSmaptype.maptype == "limbus_labs") //If for some reason they spawn outside the limbus map, we're not giving them a healspot since it's designed for their starting cell.
 		limbus_map = TRUE
+		for(var/turf/open/T in CellTurfs()) // Covers the cell in healing spots for the abno.
+			var/obj/effect/abno_heal_spot/heal_spot = new(T)
+			heal_spot.abno = src
 
 	friend_list += src //Add yourself as a friend.
 
@@ -264,6 +267,38 @@
 		abno_emoting = FALSE
 		update_icon()
 
+//A specimen is not an /abnormality mob, so the drag path's type check would refuse all of them.
+/mob/living/simple_animal/hostile/limbus_abno/CanGhostDragPossess()
+	return TRUE
+
+///Whether this body is spoken for. Subtypes that can step out of themselves also answer TRUE
+///off the projection itself, so a missed possession_locked can never leave the body open.
+/mob/living/simple_animal/hostile/limbus_abno/proc/PossessionLocked()
+	return possession_locked
+
+///The open turfs of the cell this specimen woke up in. Cells are areas of their own, so this
+///stays in step with a cell whatever size it is redrawn at; a square around the spawn does not.
+/mob/living/simple_animal/hostile/limbus_abno/proc/CellTurfs(fallback_range = 3)
+	var/list/turfs = list()
+	var/area/lce/containment/cell = get_area(src)
+	if(istype(cell) && cell.specimen_cell)
+		for(var/turf/open/T in cell)
+			// This check exists to check we're |not| adding the turfs which are part of the cell area but lie outside the cell.
+			// Why do these exist? Because the cell area is stretched out to include one turf with a console on it so it can easily pull the area it has access to.
+			// We could also make it check turf type or some other stuff, but eh, this works.
+			var/actually_in_cell = TRUE
+			for(var/obj/machinery/computer/camera_advanced/lce_claw/claw_console in T)
+				actually_in_cell = FALSE
+				break
+
+			if(actually_in_cell)
+				turfs += T
+		return turfs
+	//Somewhere that is not a cell - an admin drop, a test room. Back to a square around us.
+	for(var/turf/open/T in range(fallback_range, src))
+		turfs += T
+	return turfs
+
 ///Due to how repression works in LCL, we need to account for most source of damage inflicted by players, but abnos beating each other up shouldn't count by default.
 ///Ideally, we want even abnos that like repression to get pissed off if they get too close to death, to not encourage accidental killing during repression work.
 ///This doesn't include stuff like special damage effects like non projectiles or attacks, but I'm too lazy to code it better and account for every edge case.
@@ -293,7 +328,7 @@
 
 /mob/living/simple_animal/hostile/limbus_abno/Life()
 	. = ..()
-	if(!.)
+	if(!.) // Dead!
 		return
 
 	if(hunger_cooldown < world.time)
@@ -344,9 +379,9 @@
 	*/
 	AdjustDesire(room_score)
 	if(room_score > 0)
-		to_chat(src,span_notice("You are happy with your surroundings."))
+		to_chat(src, span_notice("You are happy with your surroundings."))
 	else
-		to_chat(src,span_notice("You are unhappy with your surroundings."))
+		to_chat(src, span_notice("You are unhappy with your surroundings."))
 
 /*--------------\
 |TECHNICAL PROCS|
@@ -376,7 +411,7 @@
 	for(var/mob/living/L in temp_friend_list)
 		if(trg == L)
 			friend_list -= L
-			to_chat(src,span_notice("You no longer consider [trg] a friend."))
+			to_chat(src, span_notice("You no longer consider [trg] a friend."))
 			return
 
 	friend_list += trg
@@ -387,7 +422,7 @@
 /mob/living/simple_animal/hostile/limbus_abno/proc/Hungrier(hungry_amount, bypass_check = TRUE)
 	if(hunger_bar > (max_hunger * 0.9) && health < maxHealth)
 		adjustBruteLoss(-maxHealth * 0.1) //This might be too much healing, but we'll see.
-		to_chat(src,span_notice("As your hunger is satisfied, you heal some of your wounds."))
+		to_chat(src, span_notice("As your hunger is satisfied, you heal some of your wounds."))
 	if(!hunger_active && !bypass_check)
 		return
 
@@ -398,7 +433,7 @@
 	if(isliving(A))
 		L = A
 		if(IsFriend(L) && !attack_friend)
-			to_chat(src,span_warning("You don't feel like hurting [L], they're on your side."))
+			to_chat(src, span_warning("You don't feel like hurting [L], they're on your side."))
 			return
 	. = ..()
 	AbnoEat(A)
@@ -421,16 +456,15 @@
 	//A shell is deadweight, not a specimen. Let people carry it back to its cell.
 	move_resist = MOVE_FORCE_DEFAULT
 	pull_force = MOVE_FORCE_DEFAULT
-	rebirth_at = world.time + rebirth_time
-	addtimer(CALLBACK(src, PROC_REF(Rebirth)), rebirth_time)
+	rebirth_timer = addtimer(CALLBACK(src, PROC_REF(Rebirth)), rebirth_time, TIMER_STOPPABLE)
 	to_chat(src, span_userdanger("Your shell burst apart at the seams, but you remain. [DisplayTimeText(rebirth_time)] before your return."))
 	return ..()
 
 ///How long is left before the shell splits open, or null while alive.
 /mob/living/simple_animal/hostile/limbus_abno/proc/RebirthCountdown()
-	if(stat != DEAD || rebirth_at <= world.time)
+	if(stat != DEAD || !timeleft(rebirth_timer))
 		return null
-	return DisplayTimeText(rebirth_at - world.time)
+	return DisplayTimeText(timeleft(rebirth_timer))
 
 //Examining your own shell tells you how long you have left in it. Onlookers only ever see the
 //egg, so the countdown is for the specimen and for ghosts watching it.
@@ -510,7 +544,7 @@
 			if(desire_on_eat > 0 && desire_on_eat_threshold < hunger_bar)
 				AdjustDesire(desire_on_eat)
 			playsound(src, 'sound/items/eatfood.ogg', 100, TRUE)
-			manual_emote("eats [food]") //DM articles the item itself, so no "the" of our own.
+			manual_emote("eats [food].") //DM articles the item itself, so no "the" of our own.
 			if(delete_food)
 				qdel(food)
 			return TRUE
@@ -568,11 +602,13 @@
 	update_icon()
 	UpdateBars()
 	AddBreachEffect()
+	breached = TRUE
 
 /mob/living/simple_animal/hostile/limbus_abno/proc/Unbreach()
 	update_icon()
 	UpdateBars()
 	RemoveBreachEffect()
+	breached = FALSE
 
 /mob/living/simple_animal/hostile/limbus_abno/proc/AddBreachEffect()
 	if(!breach_overlay)
@@ -724,7 +760,9 @@
 
 //Regenerate from death
 /mob/living/simple_animal/hostile/limbus_abno/proc/Rebirth()
+	// Come back here
 	grab_ghost()
+	// Reset visuals
 	icon = original_abno.icon
 	icon_state = OriginalLivingState()
 	icon_living = icon_state
@@ -733,14 +771,21 @@
 	pixel_y = living_pixel_y
 	base_pixel_x = living_base_pixel_x
 	base_pixel_y = living_base_pixel_y
+	// Reset forces
 	move_resist = initial(move_resist)
 	pull_force = initial(pull_force)
-	rebirth_at = 0
+	// Clear rebirth timer
+	deltimer(rebirth_timer)
+	rebirth_timer = null
+	// Revive!
 	revive(full_heal = TRUE, admin_revive = TRUE)
+	// Adjust meters
 	AdjustCounter(max_counter)
 	AdjustHunger(max_hunger)
 	AdjustDesire(max_desire)
+	// Cleanup
 	Unbreach()
+	update_action_buttons_icon()
 
 ///The sprite the original abnormality wears while alive. Plenty of them never set icon_living
 ///at all - it defaults to "" - and revive() copies it straight onto icon_state, which is what
@@ -884,11 +929,15 @@
 /*---\
 |HEAL|
 \---*/
-///Abno heal spot
+///Abno heal spot. Bookkeeping laid over a cell floor, so it gets a landmark's treatment: nothing
+///can examine it, drag it out of the cell or shut it in a crate.
 /obj/effect/abno_heal_spot
 	name = "Abno heal spot"
 	desc = "Where an abno can heal. You shouldn't be able to read this."
 	opacity = FALSE
+	anchored = TRUE
+	invisibility = INVISIBILITY_ABSTRACT
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	var/mob/living/simple_animal/hostile/limbus_abno/abno
 
 /*--\
