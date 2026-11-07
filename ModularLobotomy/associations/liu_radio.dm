@@ -168,3 +168,4 @@
 							JUSTICE_ATTRIBUTE = 60
 							)
 	swingstyle = WEAPONSWING_LARGESWEEP
+
