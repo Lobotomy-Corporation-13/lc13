@@ -22,8 +22,9 @@
 	status = BODYPART_ROBOTIC
 	disable_threshold = 1
 
-	brute_reduction = 5
-	burn_reduction = 4
+	//LC13 Removal: Comments out all instances of robot limb damage reduction to a immortality bug related to damage spread
+	// brute_reduction = 5
+	// burn_reduction = 4
 
 	light_brute_msg = ROBOTIC_LIGHT_BRUTE_MSG
 	medium_brute_msg = ROBOTIC_MEDIUM_BRUTE_MSG
@@ -45,8 +46,8 @@
 	status = BODYPART_ROBOTIC
 	disable_threshold = 1
 
-	brute_reduction = 5
-	burn_reduction = 4
+	// brute_reduction = 5
+	// burn_reduction = 4
 
 	light_brute_msg = ROBOTIC_LIGHT_BRUTE_MSG
 	medium_brute_msg = ROBOTIC_MEDIUM_BRUTE_MSG
@@ -68,8 +69,8 @@
 	status = BODYPART_ROBOTIC
 	disable_threshold = 1
 
-	brute_reduction = 5
-	burn_reduction = 4
+	// brute_reduction = 5
+	// burn_reduction = 4
 
 	light_brute_msg = ROBOTIC_LIGHT_BRUTE_MSG
 	medium_brute_msg = ROBOTIC_MEDIUM_BRUTE_MSG
@@ -91,8 +92,8 @@
 	status = BODYPART_ROBOTIC
 	disable_threshold = 1
 
-	brute_reduction = 5
-	burn_reduction = 4
+	// brute_reduction = 5
+	// burn_reduction = 4
 
 	light_brute_msg = ROBOTIC_LIGHT_BRUTE_MSG
 	medium_brute_msg = ROBOTIC_MEDIUM_BRUTE_MSG
@@ -111,8 +112,8 @@
 	icon_state = "borg_chest"
 	status = BODYPART_ROBOTIC
 
-	brute_reduction = 5
-	burn_reduction = 4
+	// brute_reduction = 5
+	// burn_reduction = 4
 
 	light_brute_msg = ROBOTIC_LIGHT_BRUTE_MSG
 	medium_brute_msg = ROBOTIC_MEDIUM_BRUTE_MSG
@@ -214,8 +215,8 @@
 	icon_state = "borg_head"
 	status = BODYPART_ROBOTIC
 
-	brute_reduction = 5
-	burn_reduction = 4
+	// brute_reduction = 5
+	// burn_reduction = 4
 
 	light_brute_msg = ROBOTIC_LIGHT_BRUTE_MSG
 	medium_brute_msg = ROBOTIC_MEDIUM_BRUTE_MSG
