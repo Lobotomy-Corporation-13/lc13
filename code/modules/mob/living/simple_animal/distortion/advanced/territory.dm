@@ -14,6 +14,9 @@
 	var/paused = FALSE
 	var/growth_rate
 	var/growth_timer
+	var/oddity_interval = 20 SECONDS
+	var/oddity_player_range = 7
+	var/oddity_timer
 
 /datum/distortion_territory/New(mob/living/simple_animal/hostile/distortion/advanced/new_owner, turf/new_origin)
 	owner = new_owner
@@ -25,9 +28,22 @@
 	frontier[origin] = 0
 
 /datum/distortion_territory/Destroy()
+	Revert()
 	owner = null
 	origin = null
 	return ..()
+
+//Removes all claimed turfs and frontier turfs, and stops the growth timer.
+//Called when the territory is destroyed, such as on the death of the distortion.
+/datum/distortion_territory/proc/Revert()
+	if(growth_timer)
+		deltimer(growth_timer)
+		growth_timer = null
+	if(oddity_timer)
+		deltimer(oddity_timer)
+		oddity_timer = null
+	claimed.Cut()
+	frontier.Cut()
 
 // It's a loop, where as long as there is amount left, the territory is below its cap, and there are frontier turfs, it claims the cheapest one.
 /datum/distortion_territory/proc/Claim(amount)
@@ -62,6 +78,7 @@
 	if(growth_timer)
 		deltimer(growth_timer)
 	growth_timer = addtimer(CALLBACK(src, PROC_REF(Grow)), interval, TIMER_STOPPABLE | TIMER_LOOP)
+	ScheduleOddity()
 
 //Gets triggered every growth interval, and causes the distortion to claim turfs passively.
 /datum/distortion_territory/proc/Grow()
@@ -99,13 +116,16 @@
 //That way, once it starts expanding really far, it will start creeping into buildings later on.
 /datum/distortion_territory/proc/ClaimTurf(turf/T, distance = 0)
 	claimed[T] = distance
+	//Check each cardinal direction for a new frontier turf.
 	for(var/dir in GLOB.cardinals)
 		var/turf/next = get_step(T, dir)
 		if(!next || Contains(next) || !Eligible(next))
 			continue
 		var/next_cost = distance + TurfCost(next)
+		//Only update the new frontier turf's cost if it's new or cheaper than the existing cost.
 		if(isnull(frontier[next]) || frontier[next] > next_cost)
 			frontier[next] = next_cost
+	owner.OnTurfClaimed(T)
 
 //Just make sure they don't expand to some place weird like water or space.
 /datum/distortion_territory/proc/Eligible(turf/T)
@@ -118,3 +138,66 @@
 //Checks if a turf is within the territory.
 /datum/distortion_territory/proc/Contains(turf/T)
 	return !isnull(claimed[T])
+
+/datum/distortion_territory/proc/Size()
+	return claimed.len
+
+/datum/distortion_territory/proc/RandomTurf()
+	if(!claimed.len)
+		return get_turf(owner)
+	return pick(claimed)
+
+//This allows the distortion to get a list of the nearest claimed turfs, from origin. With n being the total number of turfs we want to find.
+//This uses a breadth-first search to find the nearest claimed turfs.
+/datum/distortion_territory/proc/NearestTurfs(n)
+	var/list/result = list(origin)
+	var/list/seen = list()
+	seen[origin] = TRUE
+	var/i = 1
+	//While we still have turfs to check and haven't found enough claimed turfs, check each one's neighbors.
+	while(i <= result.len && result.len < n)
+		var/turf/T = result[i++]
+		//Check each cardinal direction for a new claimed turf.
+		for(var/dir in GLOB.cardinals)
+			var/turf/next = get_step(T, dir)
+			//Skip invalid, already seen, or unclaimed turfs.
+			if(!next || seen[next] || !Contains(next))
+				continue
+			seen[next] = TRUE
+			result += next
+			if(result.len >= n)
+				break
+	return result
+
+//Sets up a timer to start spawning oddities.
+//The interval between oddity spawns decreases as the territory stage increases.
+/datum/distortion_territory/proc/ScheduleOddity()
+	if(oddity_timer)
+		deltimer(oddity_timer)
+	oddity_timer = addtimer(CALLBACK(src, PROC_REF(TickOddity)), oddity_interval / (stage + 1), TIMER_STOPPABLE)
+
+/datum/distortion_territory/proc/TickOddity()
+	oddity_timer = null
+	if(!owner || owner.stat == DEAD)
+		return
+	ScheduleOddity()
+	if(!claimed.len || !length(owner.oddities))
+		return
+	//Try to find a claimed turf with a player nearby. After 5 attempts, we don't spawn an oddity.
+	for(var/i in 1 to 5)
+		var/turf/T = pick(claimed)
+		if(!PlayerNear(T))
+			continue
+		var/path = pick(owner.oddities)
+		new path(T, owner)
+		return
+
+//Checks if there is a player nearby, so we don't spawn an oddity where nobody can see it.
+//This would not be laggy, since in the worse case of 20 living players, we only check 20 distances a max of 5 times.
+/datum/distortion_territory/proc/PlayerNear(turf/T)
+	for(var/mob/M as anything in GLOB.player_list)
+		if(!isliving(M) || M.stat == DEAD)
+			continue
+		if(M.z == T.z && get_dist(M, T) <= oddity_player_range)
+			return TRUE
+	return FALSE
