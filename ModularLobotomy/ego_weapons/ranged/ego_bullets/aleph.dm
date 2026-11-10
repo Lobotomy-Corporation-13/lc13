@@ -8,31 +8,42 @@
 	name = "slime projectile"
 	icon_state = "slime"
 	desc = "A glob of infectious slime. It's going for your heart."
-	damage = 40	//Fires 3
+	damage = 120
 	speed = 0.8
 	damage_type = BLACK_DAMAGE
 	hitsound = "sound/effects/footstep/slime1.ogg"
 
-/obj/projectile/ego_bullet/adoration/dot
-	color = "#111111"
-	speed = 1.3
+//I can never remember if I have to initialize this, but I will just in case.
+/obj/projectile/ego_bullet/adoration/slow
 
-/obj/projectile/ego_bullet/adoration/dot/on_hit(target)
+/obj/projectile/ego_bullet/adoration/slow/on_hit(target)
 	. = ..()
 	var/mob/living/H = target
 	if(!isbot(H) && isliving(H) && !QDELETED(H))
-		H.visible_message("<span class='warning'>[target] is hit by [src], they seem to wither away!</span>")
-		for(var/i = 1 to 14)
-			addtimer(CALLBACK(H, TYPE_PROC_REF(/mob/living, deal_damage), rand(4,8), BLACK_DAMAGE, firer, null, (ATTACK_TYPE_STATUS)), 2 SECONDS * i)
+		H.visible_message(span_warning("[target] is hit by [src], covering them with goop!"))
+		H.apply_status_effect(/datum/status_effect/qliphothoverload)
+
+
+/obj/projectile/ego_bullet/adoration/rend
+	color = "#111111"
+	speed = 1.3
+
+/obj/projectile/ego_bullet/adoration/rend/on_hit(target)
+	. = ..()
+	var/mob/living/H = target
+	if(!isbot(H) && isliving(H) && !QDELETED(H))
+		H.visible_message(span_warning("[target] is hit by [src], they seem to wither away!"))
+		H.apply_lc_black_fragile(2)
 
 /obj/projectile/ego_bullet/adoration/aoe
 	color = "#6666BB"
+	damage = 20
 
 /obj/projectile/ego_bullet/adoration/aoe/on_hit(target)
 	. = ..()
 	for(var/mob/living/L in view(2, target))
 		new /obj/effect/temp_visual/revenant/cracks(get_turf(L))
-		L.deal_damage(50, BLACK_DAMAGE, firer, attack_type = (ATTACK_TYPE_RANGED))
+		L.deal_damage(80, BLACK_DAMAGE, firer, attack_type = (ATTACK_TYPE_RANGED))
 	return BULLET_ACT_HIT
 
 /obj/projectile/ego_bullet/nihil
