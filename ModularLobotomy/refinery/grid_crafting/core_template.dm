@@ -43,8 +43,8 @@
 		if(chem_data)
 			var/movement_type = chem_data[1]
 			var/bypasses = chem_data[2]
-			var/quantity_mod = GetQuantityModifier(reagents.total_volume, bypasses)
-			. += span_notice("<b>Reagent:</b> [R.name] ([reagents.total_volume]u)")
+			var/quantity_mod = GetQuantityModifier(R.volume, bypasses)
+			. += span_notice("<b>Reagent:</b> [R.name] ([R.volume]u)")
 			. += span_notice("<b>Movement Type:</b> [GetMovementTypeName(movement_type)]")
 			if(bypasses)
 				. += span_notice("<b>Quantity Modifier:</b> 100% (advanced chem)")
@@ -88,11 +88,6 @@
 		to_chat(user, span_warning("The template is empty! Add enkephalin-derived chemicals first."))
 		return
 
-	// Check minimum amount
-	if(reagents.total_volume < CHEM_QUANTITY_MIN)
-		to_chat(user, span_warning("Not enough reagent! Need at least [CHEM_QUANTITY_MIN]u."))
-		return
-
 	// Get the primary reagent
 	var/datum/reagent/primary_reagent = reagents.reagent_list[1]
 	var/list/chem_data = GetMovementFromChem(primary_reagent)
@@ -101,11 +96,16 @@
 		to_chat(user, span_warning("[primary_reagent.name] is not a valid navigation chemical!"))
 		return
 
+	// Only the primary reagent counts toward quantity, so filler chems add nothing
+	if(primary_reagent.volume < CHEM_QUANTITY_MIN)
+		to_chat(user, span_warning("Not enough [primary_reagent.name]! Need at least [CHEM_QUANTITY_MIN]u."))
+		return
+
 	// Create the navigation core
 	var/movement_type = chem_data[1]
 	var/bypasses_quantity = chem_data[2]
 	var/sin_type = chem_data[3]
-	var/quantity_mod = GetQuantityModifier(reagents.total_volume, bypasses_quantity)
+	var/quantity_mod = GetQuantityModifier(primary_reagent.volume, bypasses_quantity)
 
 	var/obj/item/navigation_core/new_core = new(get_turf(src))
 	new_core.nav_movement_type = movement_type
