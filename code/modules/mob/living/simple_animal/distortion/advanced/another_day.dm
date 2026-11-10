@@ -34,6 +34,7 @@
 	var/obj/item/clothing/neck/tie/horrible/another_day/name_tie
 	//All of the humans within its territory.
 	var/list/listening = list()
+	var/forced_whisper_text
 	//Colours that are currently drained and their remaining duration.
 	var/list/drained = list()
 	var/list/drain_overlays = list()
@@ -170,6 +171,9 @@
 /mob/living/simple_animal/hostile/distortion/advanced/another_day/proc/OnSpeech(mob/living/carbon/human/speaker, list/speech_args)
 	SIGNAL_HANDLER
 	var/message = speech_args[SPEECH_MESSAGE]
+	if(forced_whisper_text)
+		speech_args[SPEECH_MESSAGE] = forced_whisper_text
+		return
 	if(!message)
 		return
 	for(var/colour in colour_roles)
@@ -180,9 +184,11 @@
 	// If the cap on territory has been reached and the presence is active, force the speaker to whisper.
 	if(territory.Size() < territory.cap || !PresenceActive())
 		return
-	// Clear the original message before forcing the whisper.
+	// Clear the original message before forcing the whisper by placing a # before their messsage. We prevent an endless loop by checking whether a forced whisper is already in progress.
 	speech_args[SPEECH_MESSAGE] = ""
-	ForceWhisper(speaker, message, speech_args[SPEECH_SPANS], speech_args[SPEECH_LANGUAGE])
+	forced_whisper_text = message
+	INVOKE_ASYNC(speaker, TYPE_PROC_REF(/atom/movable, say), "#[message]", null, null, FALSE, speech_args[SPEECH_LANGUAGE])
+	forced_whisper_text = null
 
 //Removes a color from the distortion, adds a gray overlay to hide that color and sets a timer to restore it after a while!
 /mob/living/simple_animal/hostile/distortion/advanced/another_day/proc/DrainColour(colour, mob/living/carbon/human/speaker)
@@ -425,17 +431,6 @@
 		heard = TRUE
 	if(heard)
 		Mutter(line)
-
-//Forces the speaker to whisper the message by forcing the whisper mode, and sending the message asynchronously.
-//The reason why their original message is not sent is due to OnSpeech() clearing it before it is sent.
-/mob/living/simple_animal/hostile/distortion/advanced/another_day/proc/ForceWhisper(mob/living/carbon/human/speaker, message, list/spans, language)
-	spans |= SPAN_ITALICS
-	if(speaker.speech_span)
-		spans |= speaker.speech_span
-	var/datum/language/spoken = GLOB.language_datum_instances[language]
-	if(spoken)
-		spans |= spoken.spans
-	INVOKE_ASYNC(speaker, TYPE_PROC_REF(/atom/movable, send_speech), message, 1, speaker, speaker.bubble_icon, spans, language, list(WHISPER_MODE = MODE_WHISPER))
 
 /mob/living/simple_animal/hostile/distortion/advanced/another_day/OnTerritoryGrown()
 	UpdateQuilt()
