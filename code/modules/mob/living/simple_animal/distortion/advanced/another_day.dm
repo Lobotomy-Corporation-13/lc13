@@ -26,6 +26,15 @@
 	//This will make it so the territory grows quickly at first, then slows down.
 	territory_growth_rate = 467
 	gimmick_stage = 3
+	oddities = list(
+		/obj/effect/temp_visual/distortion_oddity/paper_drift,
+		/obj/effect/temp_visual/distortion_oddity/paper_drift,
+		/obj/effect/temp_visual/distortion_oddity/paper_drift,
+		/obj/effect/temp_visual/distortion_oddity/paper_drift,
+		/obj/item/paperplane/distortion,
+		/obj/item/paperplane/distortion,
+		/obj/effect/temp_visual/distortion_oddity/paper_drift/clue,
+	)
 	//Lists of people, drained colours, and drain overlays for tracking the state of the mob.
 	//It could look like: people = list("boss" = "Paige Turner", "coworker" = "Larry Sal", "friend" = "Nota Dollar", "self" = "Donnar Profit")
 	var/list/people = list()
@@ -84,6 +93,15 @@
 	)
 	//A list of ties that are hanging people! How wonderful...
 	var/list/ties = list()
+	//A list of clues for each person. Could look like this:
+	//list("boss" = list(...), "coworker" = list(...), "friend" = list(...))
+	var/list/clues = list()
+	var/clues_per_person = 2
+	var/list/clue_types = list(
+		"boss" = /obj/item/paper/distortion/clue/boss,
+		"coworker" = /obj/item/paper/distortion/clue/coworker,
+		"friend" = /obj/item/paper/distortion/clue/friend,
+	)
 
 /mob/living/simple_animal/hostile/distortion/advanced/another_day/Initialize(mapload)
 	. = ..()
@@ -114,6 +132,8 @@
 	. = ..()
 	if(source == name_tie)
 		name_tie = null
+	for(var/role in clues)
+		LAZYREMOVE(clues[role], source)
 
 /mob/living/simple_animal/hostile/distortion/advanced/another_day/Life()
 	. = ..()
@@ -636,6 +656,10 @@
 	anchored = TRUE
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 
+/mob/living/simple_animal/hostile/distortion/advanced/another_day/OnStageChange(old_stage, new_stage)
+	if(new_stage >= gimmick_stage)
+		oddities |= /obj/effect/temp_visual/distortion_oddity/shade
+
 /mob/living/simple_animal/hostile/distortion/advanced/another_day/OnTerritoryGrown()
 	UpdateQuilt()
 
@@ -684,12 +708,172 @@
 	desc = "A neosilk clip-on tie. This one is disgusting. There is a name on the label."
 	var/lifetime = 3 MINUTES
 	var/fade_time = 10 SECONDS
+	var/drift_time = 4.5 SECONDS
 
 /obj/item/clothing/neck/tie/horrible/another_day/Initialize(mapload, who)
 	. = ..()
 	desc = "A neosilk clip-on tie. This one is disgusting. The label reads: [who]."
 	addtimer(CALLBACK(src, PROC_REF(Expire)), lifetime)
+	AnotherDayDrift(src, drift_time, fade_in = TRUE, centred = TRUE)
 
 /obj/item/clothing/neck/tie/horrible/another_day/proc/Expire()
 	animate(src, alpha = 0, time = fade_time)
 	QDEL_IN(src, fade_time)
+
+/obj/effect/temp_visual/distortion_oddity/paper_drift
+	icon = 'icons/obj/bureaucracy.dmi'
+	icon_state = "paper"
+	alpha = 220
+	duration = 4.5 SECONDS
+	var/fades = TRUE
+	var/from
+
+/obj/effect/temp_visual/distortion_oddity/paper_drift/Initialize(mapload)
+	. = ..()
+	from = AnotherDayDrift(src, duration, fade_out = fades)
+
+//A simple drifting animation for objects that this distortion can spawn.
+/proc/AnotherDayDrift(atom/movable/thing, duration, fade_in = FALSE, fade_out = FALSE, centred = FALSE)
+	var/from = pick(-1, 1)
+	var/sway = -from * 8
+	var/shown_alpha = fade_in ? 255 : thing.alpha
+	if(fade_in)
+		thing.alpha = 0
+	thing.pixel_x = from * 56
+	thing.pixel_y = 28
+	animate(thing, alpha = shown_alpha, pixel_x = from * 12, pixel_y = 34, time = duration * 0.3, easing = SINE_EASING | EASE_OUT)
+	animate(pixel_x = from * 12 + sway, pixel_y = 22, time = duration * 0.25, easing = SINE_EASING)
+	animate(pixel_x = from * 12 - sway, pixel_y = 10, time = duration * 0.25, easing = SINE_EASING)
+	animate(pixel_x = centred ? 0 : from * 12, pixel_y = 0, alpha = fade_out ? 0 : shown_alpha, time = duration * 0.2, easing = SINE_EASING | EASE_IN)
+	return from
+
+/obj/item/paperplane/distortion
+	alpha = 0
+	hit_probability = 0
+	var/fade_in = 4.5 SECONDS
+	var/linger = 10 SECONDS
+	var/glide_speed = 0.2
+	var/min_throw = 4
+	var/max_throw = 7
+	var/clue_chance = 30
+	var/turf/target_turf
+
+/obj/item/paperplane/distortion/Initialize(mapload, mob/living/simple_animal/hostile/distortion/advanced/another_day/owner)
+	var/role = (istype(owner) && prob(clue_chance)) ? owner.ClueRole() : null
+	var/obj/item/paper/distortion/page
+	if(role)
+		// If they roll a clue, create it and place it into the paper airplane's page var.
+		page = owner.NewClue(loc, role)
+	else
+		page = new /obj/item/paper/distortion(loc)
+	. = ..(mapload, page)
+	target_turf = PickTarget()
+	if(target_turf)
+		setDir(get_cardinal_dir(src, target_turf))
+	var/sway = pick(-8, 8)
+	pixel_y = 36
+	animate(src, alpha = 255, pixel_x = sway, pixel_y = 28, time = fade_in * 0.3, easing = SINE_EASING | EASE_OUT)
+	animate(pixel_x = -sway, pixel_y = 20, time = fade_in * 0.25, easing = SINE_EASING)
+	animate(pixel_x = sway, pixel_y = 14, time = fade_in * 0.25, easing = SINE_EASING)
+	animate(pixel_x = 0, pixel_y = 10, time = fade_in * 0.2, easing = SINE_EASING | EASE_IN)
+	addtimer(CALLBACK(src, PROC_REF(Launch)), fade_in)
+
+/obj/item/paperplane/distortion/proc/PickTarget()
+	var/list/far = list()
+	for(var/turf/open/T in view(max_throw, src))
+		if(get_dist(src, T) >= min_throw)
+			far += T
+	if(!far.len)
+		return null
+	return pick(far)
+
+/obj/item/paperplane/distortion/proc/Launch()
+	if(!isturf(loc))
+		return
+	if(!target_turf)
+		animate(src, pixel_y = 0, time = 1 SECONDS, easing = SINE_EASING | EASE_IN)
+		addtimer(CALLBACK(src, PROC_REF(Landed)), 1 SECONDS)
+		return
+	throw_at(target_turf, get_dist(src, target_turf), glide_speed, callback = CALLBACK(src, PROC_REF(Landed)))
+
+/obj/item/paperplane/distortion/proc/Landed()
+	animate(src, pixel_y = 0, alpha = 0, time = linger)
+	QDEL_IN(src, linger)
+
+//Now you opened the paper plane, the page inside starts fading. You better read fast!
+/obj/item/paperplane/distortion/Exited(atom/movable/AM, atom/newLoc)
+	if(AM == internalPaper && !istype(AM, /obj/item/paper/distortion/clue))
+		var/obj/item/paper/distortion/page = AM
+		page.StartFading()
+	return ..()
+
+/obj/item/paper/distortion
+	name = "limp page"
+	desc = "A sheet of paper, damp and soft as cloth. Whatever was written on it has run."
+	var/linger = 10 SECONDS
+
+/obj/item/paper/distortion/proc/StartFading()
+	animate(src, alpha = 0, time = linger)
+	QDEL_IN(src, linger)
+
+/obj/item/paper/distortion/examine(mob/user)
+	. = ..()
+	. -= "<span class='notice'>Alt-click [src] to fold it into a paper plane.</span>"
+	. += span_notice("It is far too limp to hold a fold.")
+
+/obj/item/paper/distortion/AltClick(mob/living/user, obj/item/I)
+	if(!user.canUseTopic(src, BE_CLOSE, NO_DEXTERITY, FALSE, TRUE))
+		return
+	to_chat(user, span_warning("[src] sags in your hands. It will not hold a fold."))
+
+// Checks if a role has less than clues_per_person clues within the territory, if they do, returns a random role out of the available roles.
+/mob/living/simple_animal/hostile/distortion/advanced/another_day/proc/ClueRole()
+	var/list/open = list()
+	for(var/colour in colour_roles)
+		var/role = colour_roles[colour]
+		var/count = 0
+		for(var/obj/item/paper/distortion/clue/C in clues[role])
+			if(isturf(C.loc) && territory.Contains(C.loc))
+				count++
+		if(count < clues_per_person)
+			open += role
+	if(!open.len)
+		return null
+	return pick(open)
+
+/mob/living/simple_animal/hostile/distortion/advanced/another_day/proc/RegisterClue(obj/item/paper/distortion/clue/C, role)
+	LAZYADD(clues[role], C)
+	Own(C)
+
+// Creates a new clue of the given role at the given turf.
+/mob/living/simple_animal/hostile/distortion/advanced/another_day/proc/NewClue(turf/T, role, start_alpha = 255)
+	var/clue_path = pick(subtypesof(clue_types[role]))
+	return new clue_path(T, src, start_alpha)
+
+/obj/effect/temp_visual/distortion_oddity/paper_drift/clue
+	icon_state = "paper_words"
+	fades = FALSE
+	var/mob/living/simple_animal/hostile/distortion/advanced/another_day/owner
+	var/role
+
+/obj/effect/temp_visual/distortion_oddity/paper_drift/clue/Initialize(mapload, mob/living/simple_animal/hostile/distortion/advanced/another_day/new_owner)
+	. = ..()
+	role = istype(new_owner) ? new_owner.ClueRole() : null
+	if(!role)
+		new /obj/effect/temp_visual/distortion_oddity/paper_drift(loc)
+		return INITIALIZE_HINT_QDEL
+	owner = new_owner
+	addtimer(CALLBACK(src, PROC_REF(Settle)), duration - 1)
+
+/obj/effect/temp_visual/distortion_oddity/paper_drift/clue/proc/Settle()
+	if(QDELETED(owner))
+		return
+	var/obj/item/paper/distortion/clue/page = owner.NewClue(loc, role, alpha)
+	page.pixel_x = from * 12
+	page.pixel_y = 0
+	qdel(src)
+
+/obj/effect/temp_visual/distortion_oddity/paper_drift/clue/Destroy()
+	owner = null
+	return ..()
+
