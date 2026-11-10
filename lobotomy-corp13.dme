@@ -3082,6 +3082,7 @@
 #include "code\modules\mob\living\simple_animal\distortion\monolith.dm"
 #include "code\modules\mob\living\simple_animal\distortion\advanced\_advanced.dm"
 #include "code\modules\mob\living\simple_animal\distortion\advanced\another_day.dm"
+#include "code\modules\mob\living\simple_animal\distortion\advanced\another_day_clues.dm"
 #include "code\modules\mob\living\simple_animal\distortion\advanced\territory.dm"
 #include "code\modules\mob\living\simple_animal\distortion\canard\_canard.dm"
 #include "code\modules\mob\living\simple_animal\distortion\legend\_legend.dm"
