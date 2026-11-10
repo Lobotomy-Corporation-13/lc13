@@ -48,7 +48,6 @@
 	var/list/drained = list()
 	var/list/drain_overlays = list()
 	var/drain_duration = 60 SECONDS
-	var/tie_overlay_icon = 'ModularLobotomy/_Lobotomyicons/another_day_ties.dmi'
 	var/undistort_timer
 	var/undistort_time = 30 SECONDS
 	var/gives_workload = TRUE
@@ -231,7 +230,7 @@
 	speaker.Shake(3, 3, 2.5 SECONDS)
 	to_chat(speaker, span_nicegreen("Something in this place flinches at that name."))
 	drained[colour] = addtimer(CALLBACK(src, PROC_REF(RestoreColour), colour), drain_duration, TIMER_STOPPABLE)
-	var/mutable_appearance/MA = mutable_appearance(tie_overlay_icon, colour)
+	var/mutable_appearance/MA = mutable_appearance(icon, "work_drained_[colour]")
 	drain_overlays[colour] = MA
 	add_overlay(MA)
 	ApplyColour(colour, FALSE)
@@ -358,8 +357,8 @@
 	stack_threshold = 6
 	consumed_on_threshold = FALSE
 	tick_interval = 1 SECONDS
-	overlay_file = 'ModularLobotomy/_Lobotomyicons/another_day_workload.dmi'
-	overlay_state = "workload_"
+	overlay_file = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
+	overlay_state = "another_day_workload_"
 	var/mob/living/simple_animal/hostile/distortion/advanced/another_day/distortion
 	var/decay_interval = 20 SECONDS
 	var/next_decay = 0
@@ -370,8 +369,8 @@
 /atom/movable/screen/alert/status_effect/distortion_workload
 	name = "Workload"
 	desc = "It is piling up. You could put it down if you stepped away."
-	icon = 'ModularLobotomy/_Lobotomyicons/another_day_workload.dmi'
-	icon_state = "alert"
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
+	icon_state = "another_day_workload"
 
 /datum/status_effect/stacking/distortion_workload/on_apply()
 	. = ..()
@@ -410,7 +409,7 @@
 		owner.adjust_blurriness(1)
 	var/inside = distortion && distortion.territory.Contains(get_turf(owner))
 	if(linked_alert)
-		linked_alert.icon_state = inside ? "alert_inside" : "alert"
+		linked_alert.icon_state = inside ? "another_day_workload_inside" : "another_day_workload"
 	if(world.time < next_decay)
 		return
 	next_decay = world.time + decay_interval
@@ -484,8 +483,8 @@
 /obj/structure/another_day_tie
 	name = "long tie"
 	desc = "A tie that reaches up past where the ceiling should be. It is pulled very tight."
-	icon = 'ModularLobotomy/_Lobotomyicons/another_day_hang.dmi'
-	icon_state = "rope_red"
+	icon = 'ModularLobotomy/_Lobotomyicons/48x96.dmi'
+	icon_state = "work_rope_red"
 	pixel_x = -8
 	base_pixel_x = -8
 	pixel_y = 96
@@ -514,7 +513,7 @@
 	. = ..()
 	owner = new_owner
 	colour = new_colour
-	icon_state = "rope_[colour]"
+	icon_state = "work_rope_[colour]"
 	SetTieLayer(BELOW_MOB_LAYER)
 
 /obj/structure/another_day_tie/Destroy()
@@ -556,7 +555,7 @@
 /obj/structure/another_day_tie/proc/SetTieLayer(new_layer)
 	if(tie_part)
 		cut_overlay(tie_part)
-	tie_part = mutable_appearance(icon, "tie_[colour]", new_layer)
+	tie_part = mutable_appearance(icon, "work_tie_[colour]", new_layer)
 	add_overlay(tie_part)
 
 // And then animate them moving up from the floor, and then begin choking them.
@@ -654,8 +653,8 @@
 /obj/effect/another_day_shadow
 	name = "shadow"
 	desc = "The shadow of someone who is not standing there."
-	icon = 'ModularLobotomy/_Lobotomyicons/another_day_hang.dmi'
-	icon_state = "shadow"
+	icon = 'ModularLobotomy/_Lobotomyicons/48x96.dmi'
+	icon_state = "work_shadow"
 	pixel_x = -8
 	base_pixel_x = -8
 	alpha = 0
@@ -665,10 +664,13 @@
 
 // Once the gimmick stage is reached, add the figure and paper drift oddities are added.
 /mob/living/simple_animal/hostile/distortion/advanced/another_day/OnStageChange(old_stage, new_stage)
-	if(new_stage >= gimmick_stage)
-		oddities |= /obj/effect/temp_visual/distortion_oddity/figure
-		oddities |= /obj/effect/temp_visual/distortion_oddity/figure
-		oddities |= /obj/effect/temp_visual/distortion_oddity/paper_drift/clue
+	if(new_stage < gimmick_stage)
+		return
+	if(old_stage < gimmick_stage)
+		oddities += /obj/effect/temp_visual/distortion_oddity/figure
+		oddities += /obj/effect/temp_visual/distortion_oddity/figure
+		oddities += /obj/effect/temp_visual/distortion_oddity/paper_drift/clue
+	UpdateQuilt()
 
 /mob/living/simple_animal/hostile/distortion/advanced/another_day/OnTerritoryGrown()
 	UpdateQuilt()

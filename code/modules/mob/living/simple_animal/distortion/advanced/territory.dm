@@ -72,6 +72,7 @@
 		return
 	var/old_stage = stage
 	stage = new_stage
+	message_admins("[owner] reached territory stage [new_stage] ([claimed.len] turfs) [ADMIN_FLW(owner)] in [ADMIN_VERBOSEJMP(owner)].")
 	owner.OnStageChange(old_stage, new_stage)
 
 /datum/distortion_territory/proc/StartGrowing(interval)
