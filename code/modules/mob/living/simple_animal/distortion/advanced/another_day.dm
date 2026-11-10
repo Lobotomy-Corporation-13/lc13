@@ -35,16 +35,16 @@
 		/obj/item/paperplane/distortion,
 		/obj/effect/temp_visual/distortion_oddity/paper_drift/clue,
 	)
-	//Lists of people, drained colours, and drain overlays for tracking the state of the mob.
+	//Lists of people, drained colors, and drain overlays for tracking the state of the mob.
 	//It could look like: people = list("boss" = "Paige Turner", "coworker" = "Larry Sal", "friend" = "Nota Dollar", "self" = "Donnar Profit")
 	var/list/people = list()
-	//Defines the roles associated with each colour tie.
-	var/list/colour_roles = list("red" = "boss", "blue" = "coworker", "yellow" = "friend")
+	//Defines the roles associated with each color tie.
+	var/list/color_roles = list("red" = "boss", "blue" = "coworker", "yellow" = "friend")
 	var/obj/item/clothing/neck/tie/horrible/another_day/name_tie
 	//All of the humans within its territory.
 	var/list/listening = list()
 	var/forced_whisper_text
-	//Colours that are currently drained and their remaining duration.
+	//Colors that are currently drained and their remaining duration.
 	var/list/drained = list()
 	var/list/drain_overlays = list()
 	var/drain_duration = 60 SECONDS
@@ -112,9 +112,9 @@
 	. = ..()
 	if(!territory)
 		return
-	//Creates a list of people for each colour tie.
-	for(var/colour in colour_roles)
-		people[colour_roles[colour]] = random_unique_name(pick(MALE, FEMALE))
+	//Creates a list of people for each color tie.
+	for(var/tie_color in color_roles)
+		people[color_roles[tie_color]] = random_unique_name(pick(MALE, FEMALE))
 	people["self"] = pick(egoist_names)
 	egoist_names = list(people["self"])
 	SpawnNameTie()
@@ -146,7 +146,7 @@
 		return
 	TerritoryTick()
 
-//Got to remove the speech signal from every human we are listening to, and the timers for drained colours and other things that the distortion is tracking.
+//Got to remove the speech signal from every human we are listening to, and the timers for drained colors and other things that the distortion is tracking.
 /mob/living/simple_animal/hostile/distortion/advanced/another_day/Teardown()
 	if(torn_down)
 		return
@@ -159,8 +159,8 @@
 	for(var/mob/living/carbon/human/H in listening)
 		UnregisterSignal(H, COMSIG_MOB_SAY)
 	listening.Cut()
-	for(var/colour in drained)
-		deltimer(drained[colour])
+	for(var/tie_color in drained)
+		deltimer(drained[tie_color])
 	drained.Cut()
 	if(undistort_timer)
 		deltimer(undistort_timer)
@@ -197,7 +197,7 @@
 	if(!name_tie)
 		SpawnNameTie()
 
-//If they say the correct name, tada! They remove one of the colours. Also, got to hear his own name after saying the other 3 names to undistort.
+//If they say the correct name, tada! They remove one of the colors. Also, got to hear his own name after saying the other 3 names to undistort.
 /mob/living/simple_animal/hostile/distortion/advanced/another_day/proc/OnSpeech(mob/living/carbon/human/speaker, list/speech_args)
 	SIGNAL_HANDLER
 	var/message = speech_args[SPEECH_MESSAGE]
@@ -206,9 +206,9 @@
 		return
 	if(!message)
 		return
-	for(var/colour in colour_roles)
-		if(findtext(message, people[colour_roles[colour]]))
-			DrainColour(colour, speaker)
+	for(var/tie_color in color_roles)
+		if(findtext(message, people[color_roles[tie_color]]))
+			DrainColor(tie_color, speaker)
 	if(findtext(message, people["self"]))
 		HearOwnName(speaker)
 	// If the cap on territory has been reached and the presence is active, force the speaker to whisper.
@@ -221,31 +221,31 @@
 	forced_whisper_text = null
 
 //Removes a color from the distortion, adds a gray overlay to hide that color and sets a timer to restore it after a while!
-/mob/living/simple_animal/hostile/distortion/advanced/another_day/proc/DrainColour(colour, mob/living/carbon/human/speaker)
-	if(colour in drained)
-		deltimer(drained[colour])
-		drained[colour] = addtimer(CALLBACK(src, PROC_REF(RestoreColour), colour), drain_duration, TIMER_STOPPABLE)
+/mob/living/simple_animal/hostile/distortion/advanced/another_day/proc/DrainColor(tie_color, mob/living/carbon/human/speaker)
+	if(tie_color in drained)
+		deltimer(drained[tie_color])
+		drained[tie_color] = addtimer(CALLBACK(src, PROC_REF(RestoreColor), tie_color), drain_duration, TIMER_STOPPABLE)
 		to_chat(speaker, span_warning("It is already hurting from that name."))
 		return
 	speaker.Shake(3, 3, 2.5 SECONDS)
 	to_chat(speaker, span_nicegreen("Something in this place flinches at that name."))
-	drained[colour] = addtimer(CALLBACK(src, PROC_REF(RestoreColour), colour), drain_duration, TIMER_STOPPABLE)
-	var/mutable_appearance/MA = mutable_appearance(icon, "work_drained_[colour]")
-	drain_overlays[colour] = MA
+	drained[tie_color] = addtimer(CALLBACK(src, PROC_REF(RestoreColor), tie_color), drain_duration, TIMER_STOPPABLE)
+	var/mutable_appearance/MA = mutable_appearance(icon, "work_drained_[tie_color]")
+	drain_overlays[tie_color] = MA
 	add_overlay(MA)
-	ApplyColour(colour, FALSE)
+	ApplyColor(tie_color, FALSE)
 
-/mob/living/simple_animal/hostile/distortion/advanced/another_day/proc/RestoreColour(colour)
-	if(!(colour in drained))
+/mob/living/simple_animal/hostile/distortion/advanced/another_day/proc/RestoreColor(tie_color)
+	if(!(tie_color in drained))
 		return
-	drained -= colour
-	cut_overlay(drain_overlays[colour])
-	drain_overlays -= colour
-	ApplyColour(colour, TRUE)
+	drained -= tie_color
+	cut_overlay(drain_overlays[tie_color])
+	drain_overlays -= tie_color
+	ApplyColor(tie_color, TRUE)
 
-//Toggles the effect of a specific colour on the distortion, with present determining whether it is turning the effect on or off.
-/mob/living/simple_animal/hostile/distortion/advanced/another_day/proc/ApplyColour(colour, present)
-	switch(colour)
+//Toggles the effect of a specific color on the distortion, with present determining whether it is turning the effect on or off.
+/mob/living/simple_animal/hostile/distortion/advanced/another_day/proc/ApplyColor(tie_color, present)
+	switch(tie_color)
 		if("red")
 			gives_workload = present
 		if("blue")
@@ -265,7 +265,7 @@
 /mob/living/simple_animal/hostile/distortion/advanced/another_day/proc/HearOwnName(mob/living/carbon/human/speaker)
 	if(undistort_timer)
 		return
-	if(drained.len < colour_roles.len)
+	if(drained.len < color_roles.len)
 		to_chat(speaker, span_nicegreen("You were close. Other voices are drowning yours out."))
 		return
 	if(!(src in view(speaker)))
@@ -273,10 +273,10 @@
 		return
 	StartUndistorting(speaker)
 
-//Basically, restores all drained colours and starts a rays effect around them, then unmanifests after a delay.
+//Basically, restores all drained colors and starts a rays effect around them, then unmanifests after a delay.
 /mob/living/simple_animal/hostile/distortion/advanced/another_day/proc/StartUndistorting(mob/living/carbon/human/speaker)
-	for(var/colour in drained.Copy())
-		RestoreColour(colour)
+	for(var/tie_color in drained.Copy())
+		RestoreColor(tie_color)
 	undistort_timer = addtimer(CALLBACK(src, PROC_REF(Unmanifest)), undistort_time, TIMER_STOPPABLE)
 	UpdatePaused()
 	visible_message(span_notice("The ties go slack, one after another, and something behind them starts to shine."))
@@ -466,16 +466,16 @@
 /mob/living/simple_animal/hostile/distortion/advanced/another_day/proc/TryHang(list/inside)
 	if(!PresenceActive())
 		return
-	var/list/colours = list()
-	for(var/colour in colour_roles)
-		if(!(colour in drained))
-			colours += colour
-	if(!colours.len)
+	var/list/tie_colors = list()
+	for(var/tie_color in color_roles)
+		if(!(tie_color in drained))
+			tie_colors += tie_color
+	if(!tie_colors.len)
 		return
 	for(var/mob/living/carbon/human/H in inside)
 		if(H.buckled || H.sanityhealth > H.maxSanity * hang_threshold)
 			continue
-		var/obj/structure/another_day_tie/tie = new(get_turf(H), src, pick(colours))
+		var/obj/structure/another_day_tie/tie = new(get_turf(H), src, pick(tie_colors))
 		ties += tie
 		tie.Drop(H)
 		territory.Grow()
@@ -496,7 +496,7 @@
 	can_buckle = TRUE
 	buckle_lying = 0
 	buckle_prevents_pull = TRUE
-	var/colour = "red"
+	var/tie_color = "red"
 	var/mutable_appearance/tie_part
 	var/mob/living/simple_animal/hostile/distortion/advanced/another_day/owner
 	var/mob/living/carbon/human/victim
@@ -509,11 +509,11 @@
 	var/choke_timer
 	var/hold_source = "another_day_tie"
 
-/obj/structure/another_day_tie/Initialize(mapload, mob/living/simple_animal/hostile/distortion/advanced/another_day/new_owner, new_colour)
+/obj/structure/another_day_tie/Initialize(mapload, mob/living/simple_animal/hostile/distortion/advanced/another_day/new_owner, new_tie_color)
 	. = ..()
 	owner = new_owner
-	colour = new_colour
-	icon_state = "work_rope_[colour]"
+	tie_color = new_tie_color
+	icon_state = "work_rope_[tie_color]"
 	SetTieLayer(BELOW_MOB_LAYER)
 
 /obj/structure/another_day_tie/Destroy()
@@ -555,7 +555,7 @@
 /obj/structure/another_day_tie/proc/SetTieLayer(new_layer)
 	if(tie_part)
 		cut_overlay(tie_part)
-	tie_part = mutable_appearance(icon, "work_tie_[colour]", new_layer)
+	tie_part = mutable_appearance(icon, "work_tie_[tie_color]", new_layer)
 	add_overlay(tie_part)
 
 // And then animate them moving up from the floor, and then begin choking them.
@@ -726,7 +726,7 @@
 	. = ..()
 	desc = "A neosilk clip-on tie. This one is disgusting. The label reads: [who]."
 	addtimer(CALLBACK(src, PROC_REF(Expire)), lifetime)
-	AnotherDayDrift(src, drift_time, fade_in = TRUE, centred = TRUE)
+	AnotherDayDrift(src, drift_time, fade_in = TRUE, centered = TRUE)
 
 /obj/item/clothing/neck/tie/horrible/another_day/proc/Expire()
 	animate(src, alpha = 0, time = fade_time)
@@ -745,7 +745,7 @@
 	from = AnotherDayDrift(src, duration, fade_out = fades)
 
 //A simple drifting animation for objects that this distortion can spawn.
-/proc/AnotherDayDrift(atom/movable/thing, duration, fade_in = FALSE, fade_out = FALSE, centred = FALSE)
+/proc/AnotherDayDrift(atom/movable/thing, duration, fade_in = FALSE, fade_out = FALSE, centered = FALSE)
 	var/from = pick(-1, 1)
 	var/sway = -from * 8
 	var/shown_alpha = fade_in ? 255 : thing.alpha
@@ -756,7 +756,7 @@
 	animate(thing, alpha = shown_alpha, pixel_x = from * 12, pixel_y = 34, time = duration * 0.3, easing = SINE_EASING | EASE_OUT)
 	animate(pixel_x = from * 12 + sway, pixel_y = 22, time = duration * 0.25, easing = SINE_EASING)
 	animate(pixel_x = from * 12 - sway, pixel_y = 10, time = duration * 0.25, easing = SINE_EASING)
-	animate(pixel_x = centred ? 0 : from * 12, pixel_y = 0, alpha = fade_out ? 0 : shown_alpha, time = duration * 0.2, easing = SINE_EASING | EASE_IN)
+	animate(pixel_x = centered ? 0 : from * 12, pixel_y = 0, alpha = fade_out ? 0 : shown_alpha, time = duration * 0.2, easing = SINE_EASING | EASE_IN)
 	return from
 
 /obj/item/paperplane/distortion
@@ -841,8 +841,8 @@
 // Checks if a role has less than clues_per_person clues within the territory, if they do, returns a random role out of the available roles.
 /mob/living/simple_animal/hostile/distortion/advanced/another_day/proc/ClueRole()
 	var/list/open = list()
-	for(var/colour in colour_roles)
-		var/role = colour_roles[colour]
+	for(var/tie_color in color_roles)
+		var/role = color_roles[tie_color]
 		var/count = 0
 		for(var/obj/item/paper/distortion/clue/C in clues[role])
 			if(isturf(C.loc) && territory.Contains(C.loc))
