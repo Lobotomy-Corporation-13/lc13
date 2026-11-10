@@ -41,6 +41,7 @@
 	var/tie_overlay_icon = 'ModularLobotomy/_Lobotomyicons/another_day_ties.dmi'
 	var/undistort_timer
 	var/undistort_time = 30 SECONDS
+	var/gives_workload = TRUE
 	var/list/next_taboo = list()
 	var/taboo_cooldown = 2 SECONDS
 	var/sulk_damage = 15
@@ -61,6 +62,25 @@
 		"I said I was fine.",
 		"Please. Not today.",
 	)
+	//For changing the turfs around the center of the territory.
+	var/floor_type = /turf/open/floor/distortion/another_day
+	var/wall_type = /turf/closed/indestructible/city/another_day
+	var/list/quilt_turf_types = list(/turf/open/floor, /turf/open/indestructible)
+	var/list/converted = list()
+	var/quilt_fraction = 0.35
+	var/quilt_growth_power = 0.5
+	//The passive pressure that turns on, once the gimmick stage is reached.
+	var/drain_sanity = 1
+	var/drain_interval = 10 SECONDS
+	var/drain_interval_fast = 3 SECONDS
+	var/next_drain = 0
+	var/idle_message_chance = 25
+	var/list/idle_messages = list(
+		"It is later than you think.",
+		"Is it still Monday?",
+		"The lights have been humming all week.",
+		"Just one more thing before I go.",
+	)
 
 /mob/living/simple_animal/hostile/distortion/advanced/another_day/Initialize(mapload)
 	. = ..()
@@ -78,10 +98,6 @@
 
 /mob/living/simple_animal/hostile/distortion/advanced/another_day/CanAttack(atom/the_target)
 	return FALSE
-
-/mob/living/simple_animal/hostile/distortion/advanced/another_day/examine(mob/user)
-	. = ..()
-	. += span_notice("He does not look up.")
 
 /mob/living/simple_animal/hostile/distortion/advanced/another_day/PostUnmanifest(mob/living/carbon/human/egoist)
 	new /obj/item/clothing/neck/tie/horrible(get_turf(src))
@@ -102,10 +118,14 @@
 		return
 	TerritoryTick()
 
-//Got to remove the speech signal from every human we are listening to, and the timers for drained colours.
+//Got to remove the speech signal from every human we are listening to, and the timers for drained colours and other things that the distortion is tracking.
 /mob/living/simple_animal/hostile/distortion/advanced/another_day/Teardown()
 	if(torn_down)
 		return
+	for(var/turf/T in converted)
+		if(istype(T, floor_type) || istype(T, wall_type))
+			T.ChangeTurf(converted[T])
+	converted.Cut()
 	for(var/mob/living/carbon/human/H in listening)
 		UnregisterSignal(H, COMSIG_MOB_SAY)
 	listening.Cut()
@@ -142,6 +162,7 @@
 	for(var/attacker in next_taboo)
 		if(next_taboo[attacker] <= world.time)
 			next_taboo -= attacker
+	PassiveEffects(inside)
 	if(!name_tie)
 		SpawnNameTie()
 
@@ -156,6 +177,12 @@
 			DrainColour(colour, speaker)
 	if(findtext(message, people["self"]))
 		HearOwnName(speaker)
+	// If the cap on territory has been reached and the presence is active, force the speaker to whisper.
+	if(territory.Size() < territory.cap || !PresenceActive())
+		return
+	// Clear the original message before forcing the whisper.
+	speech_args[SPEECH_MESSAGE] = ""
+	ForceWhisper(speaker, message, speech_args[SPEECH_SPANS], speech_args[SPEECH_LANGUAGE])
 
 //Removes a color from the distortion, adds a gray overlay to hide that color and sets a timer to restore it after a while!
 /mob/living/simple_animal/hostile/distortion/advanced/another_day/proc/DrainColour(colour, mob/living/carbon/human/speaker)
@@ -183,6 +210,8 @@
 //Toggles the effect of a specific colour on the distortion, with present determining whether it is turning the effect on or off.
 /mob/living/simple_animal/hostile/distortion/advanced/another_day/proc/ApplyColour(colour, present)
 	switch(colour)
+		if("red")
+			gives_workload = present
 		if("blue")
 			UpdatePaused()
 		if("yellow")
@@ -241,7 +270,7 @@
 		return
 	next_taboo[attacker] = world.time + taboo_cooldown
 	//Said the bosses name? Well, the taboo will not be triggered!
-	if(!("red" in drained))
+	if(gives_workload)
 		AddWorkload(attacker)
 	Sulk(attacker)
 
@@ -379,6 +408,74 @@
 /datum/movespeed_modifier/distortion_workload
 	multiplicative_slowdown = 0
 	variable = TRUE
+
+// Once the gimmick stage has been reached and the presence is active, drains the sanity of nearby humans and occasionally speaks to them.
+// The presence can be turned off by saying the coworker's name.
+/mob/living/simple_animal/hostile/distortion/advanced/another_day/proc/PassiveEffects(list/inside)
+	if(territory.stage < gimmick_stage || !PresenceActive() || world.time < next_drain)
+		return
+	next_drain = world.time + (territory.Size() >= territory.cap ? drain_interval_fast : drain_interval)
+	var/line = pick(idle_messages)
+	var/heard = FALSE
+	for(var/mob/living/carbon/human/H in inside)
+		WearDown(H, drain_sanity)
+		if(!prob(idle_message_chance))
+			continue
+		MindSpeak(H, line)
+		heard = TRUE
+	if(heard)
+		Mutter(line)
+
+//Forces the speaker to whisper the message by forcing the whisper mode, and sending the message asynchronously.
+//The reason why their original message is not sent is due to OnSpeech() clearing it before it is sent.
+/mob/living/simple_animal/hostile/distortion/advanced/another_day/proc/ForceWhisper(mob/living/carbon/human/speaker, message, list/spans, language)
+	spans |= SPAN_ITALICS
+	if(speaker.speech_span)
+		spans |= speaker.speech_span
+	var/datum/language/spoken = GLOB.language_datum_instances[language]
+	if(spoken)
+		spans |= spoken.spans
+	INVOKE_ASYNC(speaker, TYPE_PROC_REF(/atom/movable, send_speech), message, 1, speaker, speaker.bubble_icon, spans, language, list(WHISPER_MODE = MODE_WHISPER))
+
+/mob/living/simple_animal/hostile/distortion/advanced/another_day/OnTerritoryGrown()
+	UpdateQuilt()
+
+// Adds the corrupted tiles around the center of the territory, once gimmick stage is reached.
+/mob/living/simple_animal/hostile/distortion/advanced/another_day/proc/UpdateQuilt()
+	if(territory.stage < gimmick_stage)
+		return
+	ApplyCenterEffects(territory.NearestTurfs(QuiltSize()))
+
+// Returns the size of the quilt based on the territory's growth. Which means it increases as the territory grows.
+/mob/living/simple_animal/hostile/distortion/advanced/another_day/proc/QuiltSize()
+	var/growth = territory.Size() / max(1, territory_start_size)
+	return max(1, round(quilt_fraction * territory_start_size * (growth ** quilt_growth_power)))
+
+/mob/living/simple_animal/hostile/distortion/advanced/another_day/ApplyCenterEffects(list/turfs)
+	for(var/turf/open/T in turfs)
+		if(!is_type_in_list(T, quilt_turf_types))
+			continue
+		if(!converted[T] && !istype(T, floor_type))
+			converted[T] = T.type
+			T.ChangeTurf(floor_type)
+		//This is done to create a border of walls around the quilt, since NearestTurfs does not find closed turfs.
+		for(var/dir in GLOB.cardinals)
+			var/turf/next = get_step(T, dir)
+			if(!next || converted[next] || !isclosedturf(next) || istype(next, wall_type))
+				continue
+			converted[next] = next.type
+			next.ChangeTurf(wall_type)
+
+/turf/open/floor/distortion/another_day/Initialize(mapload)
+	. = ..()
+	icon_state = pick("another_day1", "another_day2", "another_day3", "another_day4")
+
+/turf/closed/indestructible/city/another_day
+	name = "quilted wall"
+	desc = "Ties, hundreds of them, stitched edge to edge and hung over whatever was here before."
+	icon = 'icons/turf/walls/city_another_day.dmi'
+	icon_state = "another_day-0"
+	base_icon_state = "another_day"
 
 /datum/dc_change/another_day_exposed
 	potency = 4
