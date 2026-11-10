@@ -21,10 +21,10 @@
 	gender = MALE
 	sin_reward = /obj/item/solidified_sin/gloom
 	monolith_abnormality = /mob/living/simple_animal/hostile/abnormality/black_swan
-	territory_cap = 1000
-	territory_stages = list(50, 200, 500)
+	territory_cap = 1500
+	territory_stages = list(75, 300, 750)
 	//This will make it so the territory grows quickly at first, then slows down.
-	territory_growth_rate = 467
+	territory_growth_rate = 1250
 	gimmick_stage = 3
 	oddities = list(
 		/obj/effect/temp_visual/distortion_oddity/paper_drift,
@@ -54,8 +54,8 @@
 	var/gives_workload = TRUE
 	var/list/next_taboo = list()
 	var/taboo_cooldown = 2 SECONDS
-	var/sulk_damage = 15
-	var/sulk_sanity = 2
+	var/sulk_damage = 25
+	var/sulk_sanity = 3
 	var/hang_threshold = 0.1
 	var/list/mind_prefixes = list(
 		"A voice moves through your mind.",
@@ -75,12 +75,13 @@
 	//For changing the turfs around the center of the territory.
 	var/floor_type = /turf/open/floor/distortion/another_day
 	var/wall_type = /turf/closed/indestructible/city/another_day
+	// What open turfs it could go over
 	var/list/quilt_turf_types = list(/turf/open/floor, /turf/open/indestructible)
 	var/list/converted = list()
 	var/quilt_fraction = 0.35
 	var/quilt_growth_power = 0.5
 	//The passive pressure that turns on, once the gimmick stage is reached.
-	var/drain_sanity = 1
+	var/drain_sanity = 2
 	var/drain_interval = 10 SECONDS
 	var/drain_interval_fast = 3 SECONDS
 	var/next_drain = 0
@@ -97,6 +98,11 @@
 	//list("boss" = list(...), "coworker" = list(...), "friend" = list(...))
 	var/list/clues = list()
 	var/clues_per_person = 2
+	var/list/figure_lines = list(
+		"boss" = list("See me before you go home.", "This should have been done yesterday.", "I need it on my desk by morning."),
+		"coworker" = list("Can you cover for me again?", "I'll make it up to you, promise.", "You don't mind, do you?"),
+		"friend" = list("Are you coming tonight?", "It's always work with you.", "Call me back. Please."),
+	)
 	var/list/clue_types = list(
 		"boss" = /obj/item/paper/distortion/clue/boss,
 		"coworker" = /obj/item/paper/distortion/clue/coworker,
@@ -459,7 +465,7 @@
 
 //Checks if there is a human with sanity below the hang_threshold, if there is one and it has at least one color, it will hang them.
 /mob/living/simple_animal/hostile/distortion/advanced/another_day/proc/TryHang(list/inside)
-	if(territory.stage < gimmick_stage || !PresenceActive())
+	if(!PresenceActive())
 		return
 	var/list/colours = list()
 	for(var/colour in colour_roles)
@@ -473,6 +479,7 @@
 		var/obj/structure/another_day_tie/tie = new(get_turf(H), src, pick(colours))
 		ties += tie
 		tie.Drop(H)
+		territory.Grow()
 
 /obj/structure/another_day_tie
 	name = "long tie"
@@ -656,9 +663,12 @@
 	anchored = TRUE
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 
+// Once the gimmick stage is reached, add the figure and paper drift oddities are added.
 /mob/living/simple_animal/hostile/distortion/advanced/another_day/OnStageChange(old_stage, new_stage)
 	if(new_stage >= gimmick_stage)
-		oddities |= /obj/effect/temp_visual/distortion_oddity/shade
+		oddities |= /obj/effect/temp_visual/distortion_oddity/figure
+		oddities |= /obj/effect/temp_visual/distortion_oddity/figure
+		oddities |= /obj/effect/temp_visual/distortion_oddity/paper_drift/clue
 
 /mob/living/simple_animal/hostile/distortion/advanced/another_day/OnTerritoryGrown()
 	UpdateQuilt()
@@ -877,3 +887,24 @@
 	owner = null
 	return ..()
 
+/obj/effect/temp_visual/distortion_oddity/figure
+	name = "someone"
+	icon = 'icons/mob/human.dmi'
+	icon_state = "human_basic"
+	color = "#000000"
+	alpha = 0
+	layer = ABOVE_MOB_LAYER
+	duration = 5 SECONDS
+	var/appear_time = 1 SECONDS
+	var/walk_distance = 64
+
+/obj/effect/temp_visual/distortion_oddity/figure/Initialize(mapload, mob/living/simple_animal/hostile/distortion/advanced/another_day/owner)
+	. = ..()
+	var/walk_dir = pick(GLOB.cardinals)
+	setDir(walk_dir)
+	var/dx = (walk_dir == EAST ? 1 : (walk_dir == WEST ? -1 : 0)) * walk_distance
+	var/dy = (walk_dir == NORTH ? 1 : (walk_dir == SOUTH ? -1 : 0)) * walk_distance
+	animate(src, alpha = 200, time = appear_time)
+	animate(pixel_x = dx, pixel_y = dy, alpha = 0, time = duration - appear_time)
+	if(istype(owner))
+		say(pick(owner.figure_lines[pick(owner.figure_lines)]), spans = list(SPAN_ITALICS))
