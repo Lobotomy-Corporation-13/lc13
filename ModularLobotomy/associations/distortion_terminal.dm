@@ -1,7 +1,7 @@
 
 /obj/structure/distortionradio
 	name = "Distortion radio"
-	desc = "A radio used by the Udjat to locate distortions."
+	desc = "A radio used by the Udjat to locate distortions. You could sell solidified sins here."
 	icon = 'icons/obj/radio.dmi'
 	icon_state = "radio"
 	max_integrity = 300
