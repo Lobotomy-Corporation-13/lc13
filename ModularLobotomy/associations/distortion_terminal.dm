@@ -69,12 +69,10 @@
 		say("Current distortion still active.")
 		return
 
+//Removing the other distortions, for the sake of testing.
 /obj/structure/distortionradio/proc/FindTarget(mob/living/user)
 	var/list/available_targets = list(
-		/mob/living/simple_animal/hostile/distortion/papa_bongy,
-		/mob/living/simple_animal/hostile/distortion/another_day_work,
-		/mob/living/simple_animal/hostile/distortion/bunnyman,
-		/mob/living/simple_animal/hostile/distortion/lantern,
+		/mob/living/simple_animal/hostile/distortion/advanced/another_day,
 	)
 
 	var/nexttarget = pick(available_targets)
