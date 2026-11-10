@@ -253,6 +253,8 @@ Pretty Basic HE with a cool gimmick */
 		update_icon()
 
 /mob/living/simple_animal/hostile/abnormality/der_fluchschutze/death()
+	can_act = FALSE
+	breached = FALSE
 	icon = 'ModularLobotomy/_Lobotomyicons/abno_cores/he.dmi'
 	icon_state = icon_dead
 	pixel_x = -16
