@@ -138,7 +138,7 @@
 
 //Checks if a turf is within the territory.
 /datum/distortion_territory/proc/Contains(turf/T)
-	return !isnull(claimed[T])
+	return claimed[T]
 
 /datum/distortion_territory/proc/Size()
 	return claimed.len
