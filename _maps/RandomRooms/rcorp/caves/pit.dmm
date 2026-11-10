@@ -70,6 +70,10 @@
 	},
 /turf/open/floor/fakepit,
 /area/city/outskirts)
+"l" = (
+/obj/effect/landmark/abnospawn/reifeasycombat,
+/turf/open/floor/plating/asteroid,
+/area/city/outskirts)
 "m" = (
 /obj/effect/landmark/abnospawn/easycombat,
 /turf/open/floor/plating/asteroid,
@@ -134,6 +138,10 @@
 	},
 /turf/open/floor/fakepit,
 /area/city/outskirts)
+"A" = (
+/obj/effect/landmark/abnospawn/reinfeasysupport,
+/turf/open/floor/plating/asteroid,
+/area/city/outskirts)
 "C" = (
 /obj/effect/landmark/abnospawn/easytank,
 /turf/open/floor/plating/asteroid,
@@ -183,6 +191,10 @@
 	resistance_flags = 115
 	},
 /turf/open/floor/fakepit,
+/area/city/outskirts)
+"N" = (
+/obj/effect/landmark/abnospawn/reinfeasytank,
+/turf/open/floor/plating/asteroid,
 /area/city/outskirts)
 "O" = (
 /obj/structure/lattice/catwalk{
@@ -5169,7 +5181,7 @@ v
 i
 i
 i
-C
+i
 x
 p
 R
@@ -5293,7 +5305,7 @@ i
 i
 i
 i
-i
+N
 i
 D
 R
@@ -5415,7 +5427,7 @@ i
 i
 i
 i
-G
+A
 i
 i
 i
@@ -5660,8 +5672,8 @@ a
 a
 a
 i
-m
 i
+l
 i
 i
 i

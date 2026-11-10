@@ -224,6 +224,10 @@
 /obj/structure/grille/broken,
 /turf/open/water,
 /area/city/outskirts)
+"PC" = (
+/obj/effect/landmark/abnospawn/reinfhardtank,
+/turf/open/floor/plasteel/dark,
+/area/city/outskirts)
 "Ri" = (
 /obj/effect/landmark/abnospawn/hardcombat,
 /turf/open/floor/plasteel/dark,
@@ -253,10 +257,18 @@
 /obj/item/reagent_containers/food/drinks/soda_cans/wellcheers_purple,
 /turf/open/floor/plating/ashplanet/rocky,
 /area/city/outskirts)
+"VV" = (
+/obj/effect/landmark/abnospawn/reinfhardsupport,
+/turf/open/floor/plasteel/dark,
+/area/city/outskirts)
 "Wn" = (
 /obj/machinery/button/door/indestructible/rcorp,
 /obj/effect/landmark/nobasic_incorp_move,
 /turf/closed/indestructible/syndicate,
+/area/city/outskirts)
+"XB" = (
+/obj/effect/landmark/abnospawn/reinfhardcombat,
+/turf/open/floor/plasteel/dark,
 /area/city/outskirts)
 "YI" = (
 /obj/item/shard,
@@ -707,7 +719,7 @@ vQ
 sY
 sY
 sY
-Fl
+PC
 sY
 vQ
 vQ
@@ -1033,7 +1045,7 @@ vQ
 sY
 sY
 sY
-sY
+XB
 sY
 vQ
 vQ
@@ -1359,7 +1371,7 @@ vQ
 sY
 Ri
 sY
-sY
+Fl
 sY
 vQ
 vQ
@@ -1684,7 +1696,7 @@ vQ
 vQ
 vQ
 sY
-sY
+VV
 sY
 vQ
 vQ
