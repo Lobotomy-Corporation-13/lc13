@@ -82,6 +82,8 @@
 		"The lights have been humming all week.",
 		"Just one more thing before I go.",
 	)
+	//A list of ties that are hanging people! How wonderful...
+	var/list/ties = list()
 
 /mob/living/simple_animal/hostile/distortion/advanced/another_day/Initialize(mapload)
 	. = ..()
@@ -127,6 +129,8 @@
 		if(istype(T, floor_type) || istype(T, wall_type))
 			T.ChangeTurf(converted[T])
 	converted.Cut()
+	for(var/obj/structure/another_day_tie/tie in ties)
+		qdel(tie)
 	for(var/mob/living/carbon/human/H in listening)
 		UnregisterSignal(H, COMSIG_MOB_SAY)
 	listening.Cut()
@@ -164,6 +168,7 @@
 		if(next_taboo[attacker] <= world.time)
 			next_taboo -= attacker
 	PassiveEffects(inside)
+	TryHang(inside)
 	if(!name_tie)
 		SpawnNameTie()
 
@@ -431,6 +436,205 @@
 		heard = TRUE
 	if(heard)
 		Mutter(line)
+
+//Checks if there is a human with sanity below the hang_threshold, if there is one and it has at least one color, it will hang them.
+/mob/living/simple_animal/hostile/distortion/advanced/another_day/proc/TryHang(list/inside)
+	if(territory.stage < gimmick_stage || !PresenceActive())
+		return
+	var/list/colours = list()
+	for(var/colour in colour_roles)
+		if(!(colour in drained))
+			colours += colour
+	if(!colours.len)
+		return
+	for(var/mob/living/carbon/human/H in inside)
+		if(H.buckled || H.sanityhealth > H.maxSanity * hang_threshold)
+			continue
+		var/obj/structure/another_day_tie/tie = new(get_turf(H), src, pick(colours))
+		ties += tie
+		tie.Drop(H)
+
+/obj/structure/another_day_tie
+	name = "long tie"
+	desc = "A tie that reaches up past where the ceiling should be. It is pulled very tight."
+	icon = 'ModularLobotomy/_Lobotomyicons/another_day_hang.dmi'
+	icon_state = "rope_red"
+	pixel_x = -8
+	base_pixel_x = -8
+	pixel_y = 96
+	alpha = 0
+	layer = BELOW_MOB_LAYER
+	max_integrity = 40
+	density = FALSE
+	anchored = TRUE
+	can_buckle = TRUE
+	buckle_lying = 0
+	buckle_prevents_pull = TRUE
+	var/colour = "red"
+	var/mutable_appearance/tie_part
+	var/mob/living/simple_animal/hostile/distortion/advanced/another_day/owner
+	var/mob/living/carbon/human/victim
+	var/obj/effect/another_day_shadow/shadow
+	var/fall_time = 1 SECONDS
+	var/lift_time = 1 SECONDS
+	var/lift_height = 48
+	var/oxy_per_tick = 30
+	var/choke_interval = 1 SECONDS
+	var/choke_timer
+	var/hold_source = "another_day_tie"
+
+/obj/structure/another_day_tie/Initialize(mapload, mob/living/simple_animal/hostile/distortion/advanced/another_day/new_owner, new_colour)
+	. = ..()
+	owner = new_owner
+	colour = new_colour
+	icon_state = "rope_[colour]"
+	SetTieLayer(BELOW_MOB_LAYER)
+
+/obj/structure/another_day_tie/Destroy()
+	Release()
+	if(owner)
+		owner.ties -= src
+		owner = null
+	QDEL_NULL(shadow)
+	return ..()
+
+/obj/structure/another_day_tie/proc/Drop(mob/living/carbon/human/H)
+	victim = H
+	H.Stun(fall_time + lift_time + 2 SECONDS, TRUE)
+	ADD_TRAIT(H, TRAIT_IMMOBILIZED, hold_source)
+	ADD_TRAIT(H, TRAIT_HANDS_BLOCKED, hold_source)
+	buckle_mob(H, TRUE, FALSE)
+	H.density = FALSE
+	//Just incase they are panicing, disable their AI so it doesn't mess with things.
+	H.ai_controller?.set_ai_status(AI_STATUS_OFF)
+	H.setDir(SOUTH)
+	H.visible_message(span_warning("Something long and dark drops out of the air above [H]."), span_userdanger("Something drops out of the air above you."))
+	animate(src, pixel_y = 0, alpha = 255, time = fall_time, easing = QUAD_EASING | EASE_IN)
+	addtimer(CALLBACK(src, PROC_REF(Tighten)), fall_time)
+
+/obj/structure/another_day_tie/proc/Tighten()
+	if(QDELETED(victim) || victim.buckled != src)
+		qdel(src)
+		return
+	playsound(src, 'sound/abnormalities/judgementbird/hang.ogg', 60, TRUE)
+	animate(src, transform = matrix().Scale(1.4, 1), time = 1.5)
+	animate(transform = matrix(), time = 1.5)
+	victim.setDir(SOUTH)
+	SetTieLayer(ABOVE_MOB_LAYER)
+	victim.visible_message(span_danger("The tie winds around [victim]'s neck and pulls tight."), span_userdanger("The tie winds around your neck and pulls tight."))
+	RegisterSignal(victim, COMSIG_LIVING_DEATH, PROC_REF(OnDeath))
+	addtimer(CALLBACK(src, PROC_REF(Lift)), 3)
+
+//Creates an overlay over the target, to make it look like the tie is wrapped around their neck.
+/obj/structure/another_day_tie/proc/SetTieLayer(new_layer)
+	if(tie_part)
+		cut_overlay(tie_part)
+	tie_part = mutable_appearance(icon, "tie_[colour]", new_layer)
+	add_overlay(tie_part)
+
+// And then animate them moving up from the floor, and then begin choking them.
+/obj/structure/another_day_tie/proc/Lift()
+	if(QDELETED(victim))
+		qdel(src)
+		return
+	animate(victim, pixel_z = lift_height, time = lift_time, easing = SINE_EASING | EASE_OUT)
+	animate(src, pixel_y = lift_height, time = lift_time, easing = SINE_EASING | EASE_OUT)
+	shadow = new(loc)
+	animate(shadow, alpha = 255, time = lift_time)
+	victim.visible_message(span_danger("[victim] is hauled up off the floor."), span_userdanger("Your feet leave the floor."))
+	choke_timer = addtimer(CALLBACK(src, PROC_REF(Choke)), choke_interval, TIMER_STOPPABLE | TIMER_LOOP)
+
+/obj/structure/another_day_tie/proc/Choke()
+	if(QDELETED(victim) || victim.buckled != src)
+		qdel(src)
+		return
+	if(victim.stat == DEAD)
+		return
+	victim.deal_damage(oxy_per_tick, OXY, owner, null, ATTACK_TYPE_SPECIAL)
+
+//They died, well time to make them sway.
+/obj/structure/another_day_tie/proc/OnDeath(datum/source, gibbed)
+	SIGNAL_HANDLER
+	if(choke_timer)
+		deltimer(choke_timer)
+		choke_timer = null
+	if(gibbed)
+		qdel(src)
+		return
+	victim.visible_message(span_danger("[victim] goes still."))
+	Sway()
+
+//Fun animation of them swaying back and forth. Adds atmosphere once it has killed a few people!
+/obj/structure/another_day_tie/proc/Sway(angle = 6, period = 2 SECONDS)
+	var/shift = round(80 * sin(angle))
+	animate(src, transform = PivotTurn(48, -angle), time = period, loop = -1, easing = SINE_EASING)
+	animate(transform = PivotTurn(48, angle), time = period, easing = SINE_EASING)
+	animate(victim, transform = PivotTurn(80, -angle), time = period, loop = -1, easing = SINE_EASING)
+	animate(transform = PivotTurn(80, angle), time = period, easing = SINE_EASING)
+	animate(shadow, pixel_x = shadow.base_pixel_x + shift, time = period, loop = -1, easing = SINE_EASING)
+	animate(pixel_x = shadow.base_pixel_x - shift, time = period, easing = SINE_EASING)
+
+/obj/structure/another_day_tie/proc/PivotTurn(pivot, angle)
+	var/matrix/M = matrix()
+	M.Translate(0, -pivot)
+	M.Turn(angle)
+	M.Translate(0, pivot)
+	return M
+
+//Well, once the distortion is killed or the tie is destroyed, release the victim. Removing
+//traits like immobilized and hands blocked.
+/obj/structure/another_day_tie/proc/Release()
+	if(!victim)
+		return
+	var/mob/living/carbon/human/H = victim
+	victim = null
+	if(choke_timer)
+		deltimer(choke_timer)
+		choke_timer = null
+	if(QDELETED(H))
+		return
+	UnregisterSignal(H, COMSIG_LIVING_DEATH)
+	H.density = TRUE
+	if(H.buckled == src)
+		unbuckle_mob(H, TRUE)
+	REMOVE_TRAIT(H, TRAIT_IMMOBILIZED, hold_source)
+	REMOVE_TRAIT(H, TRAIT_HANDS_BLOCKED, hold_source)
+	animate(H)
+	H.pixel_z = 0
+	H.update_transform()
+	if(H.stat != DEAD)
+		H.Knockdown(2 SECONDS)
+		if(H.sanity_lost)
+			H.ai_controller?.set_ai_status(AI_STATUS_ON)
+	H.visible_message(span_danger("[H] falls free of the tie!"))
+
+//It's far too high in the sky to unbuckle.
+/obj/structure/another_day_tie/user_unbuckle_mob(mob/living/buckled_mob, mob/user)
+	to_chat(user, span_warning("The knot is too tight to loosen."))
+	return FALSE
+
+/obj/structure/another_day_tie/unbuckle_mob(mob/living/buckled_mob, force = FALSE)
+	if(!force)
+		return
+	return ..()
+
+/obj/structure/another_day_tie/attacked_by(obj/item/I, mob/living/user)
+	if(I.reach < 2)
+		to_chat(user, span_warning("You cannot reach the knot with [I]."))
+		return
+	return ..()
+
+/obj/effect/another_day_shadow
+	name = "shadow"
+	desc = "The shadow of someone who is not standing there."
+	icon = 'ModularLobotomy/_Lobotomyicons/another_day_hang.dmi'
+	icon_state = "shadow"
+	pixel_x = -8
+	base_pixel_x = -8
+	alpha = 0
+	layer = BELOW_MOB_LAYER
+	anchored = TRUE
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 
 /mob/living/simple_animal/hostile/distortion/advanced/another_day/OnTerritoryGrown()
 	UpdateQuilt()
