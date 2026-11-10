@@ -41,7 +41,7 @@
 //This should allow for easier custom prices in the future.
 /obj/structure/distortionradio/proc/SpawnCash(value)
 	for(var/obj/item/stack/spacecash/cash as anything in cash_types)
-		var/count = round(value / initial(cash.value))
+		var/count = floor(value / initial(cash.value))
 		if(!count)
 			continue
 		new cash(get_turf(src), count)
