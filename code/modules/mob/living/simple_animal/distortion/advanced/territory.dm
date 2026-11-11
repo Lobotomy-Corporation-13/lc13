@@ -45,9 +45,11 @@
 	claimed.Cut()
 	frontier.Cut()
 
-// It's a loop, where as long as there is amount left, the territory is below its cap, and there are frontier turfs, it claims the cheapest one.
+// It's a loop where the territory claims the cheapest one while it is below its cap, and there are frontier turfs.
 /datum/distortion_territory/proc/Claim(amount)
-	while(amount > 0 && claimed.len < cap && frontier.len)
+	for(var/i in 1 to cap - claimed.len)
+		if(amount <= 0 || !frontier.len)
+			break
 		var/turf/T = CheapestFrontierTurf()
 		var/distance = frontier[T]
 		frontier -= T
@@ -150,14 +152,14 @@
 
 //This allows the distortion to get a list of the nearest claimed turfs, from origin. With n being the total number of turfs we want to find.
 //This uses a breadth-first search to find the nearest claimed turfs.
+//The reason why we have we are marking the turfs with = TRUE, is to make the check on line 167 work, and not add duplicates.
 /datum/distortion_territory/proc/NearestTurfs(n)
 	var/list/result = list(origin)
 	var/list/seen = list()
 	seen[origin] = TRUE
-	var/i = 1
 	//While we still have turfs to check and haven't found enough claimed turfs, check each one's neighbors.
-	while(i <= result.len && result.len < n)
-		var/turf/T = result[i++]
+	for(var/i = 1, i <= result.len && result.len < n, i++)
+		var/turf/T = result[i]
 		//Check each cardinal direction for a new claimed turf.
 		for(var/dir in GLOB.cardinals)
 			var/turf/next = get_step(T, dir)
@@ -189,7 +191,7 @@
 		var/turf/T = pick(claimed)
 		if(!PlayerNear(T))
 			continue
-		var/path = pick(owner.oddities)
+		var/path = pickweight(owner.oddities)
 		new path(T, owner)
 		return
 
