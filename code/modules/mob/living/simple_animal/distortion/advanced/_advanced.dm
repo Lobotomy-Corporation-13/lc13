@@ -114,6 +114,7 @@
 //Updates the list so that we don't try to delete objects that are already deleted.
 /mob/living/simple_animal/hostile/distortion/advanced/proc/OnOwnedDeleted(datum/source)
 	SIGNAL_HANDLER
+	UnregisterSignal(source, COMSIG_PARENT_QDELETING)
 	owned -= source
 
 //Hey, we don't want to just... qdel the human when the distortion dies since they could be carrying important stuff.
