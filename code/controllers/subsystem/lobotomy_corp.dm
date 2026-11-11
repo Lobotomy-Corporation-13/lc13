@@ -129,7 +129,6 @@ SUBSYSTEM_DEF(lobotomy_corp)
 		"Safety" = FALSE,
 		"Control" = FALSE,
 		"Training" = FALSE
-		"Disciplinary" = FALSE
 	)
 
 /datum/controller/subsystem/lobotomy_corp/Initialize(timeofday)
