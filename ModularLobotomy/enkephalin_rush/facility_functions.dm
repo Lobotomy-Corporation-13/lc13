@@ -47,11 +47,6 @@
 	icon_state = "exonet_node_off"
 	department = "Training"
 
-/obj/machinery/enkrush_func/
-	name = "Disciplinary Whatever Come Up For A Better Name Before The Test"
-	icon_state = "exonet_node_off"
-	department = "Disciplinary"
-
 /obj/machinery/enkrush_func/control
 	name = "Agent Work Optimization Algorithm Server"
 	icon_state = "exonet_node_off"
