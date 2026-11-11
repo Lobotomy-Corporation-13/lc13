@@ -39,13 +39,9 @@ TERRAIN: 394 - the stuff it spawns in it's territory.
 	territory_growth_rate = 1250
 	gimmick_stage = 3
 	oddities = list(
-		/obj/effect/temp_visual/distortion_oddity/paper_drift,
-		/obj/effect/temp_visual/distortion_oddity/paper_drift,
-		/obj/effect/temp_visual/distortion_oddity/paper_drift,
-		/obj/effect/temp_visual/distortion_oddity/paper_drift,
-		/obj/item/paperplane/distortion,
-		/obj/item/paperplane/distortion,
-		/obj/effect/temp_visual/distortion_oddity/paper_drift/clue,
+		/obj/effect/temp_visual/distortion_oddity/paper_drift = 4,
+		/obj/item/paperplane/distortion = 2,
+		/obj/effect/temp_visual/distortion_oddity/paper_drift/clue = 1,
 	)
 	//Lists of people, drained colors, and drain overlays for tracking the state of the mob.
 	//It could look like: people = list("boss" = "Paige Turner", "coworker" = "Larry Sal", "friend" = "Nota Dollar", "self" = "Donnar Profit")
@@ -213,9 +209,8 @@ Along with the procs that handle what happens when a stage changes.
 	if(new_stage < gimmick_stage)
 		return
 	if(old_stage < gimmick_stage)
-		oddities += /obj/effect/temp_visual/distortion_oddity/figure
-		oddities += /obj/effect/temp_visual/distortion_oddity/figure
-		oddities += /obj/effect/temp_visual/distortion_oddity/paper_drift/clue
+		oddities[/obj/effect/temp_visual/distortion_oddity/figure] = 2
+		oddities[/obj/effect/temp_visual/distortion_oddity/paper_drift/clue] += 1
 	UpdateQuilt()
 
 /mob/living/simple_animal/hostile/distortion/advanced/another_day/OnTerritoryGrown()
