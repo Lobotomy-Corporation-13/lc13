@@ -283,7 +283,7 @@
 		/obj/item/organ/cyberimp/arm/zippy = 100,
 		/obj/item/organ/cyberimp/arm/fixertools = 100,
 
-		//Body modification batteries
+		/*Body modification batteries
 		/obj/item/body_modification_battery = 100,
 		/obj/item/body_modification_battery/tier2 = 100,
 		/obj/item/body_modification_battery/tier3 = 100,
@@ -292,7 +292,7 @@
 		//Body modification tools
 		/obj/item/body_modification_tester = 100,
 		/obj/item/body_modification_remover = 100,
-	)
+	)*/
 
 	premium = list(
 		/obj/item/shears = 1,
@@ -565,7 +565,7 @@
 		/obj/item/organ/cyberimp/arm/zippy = 100,
 		/obj/item/organ/cyberimp/arm/fixertools = 100,
 
-		//Body modification batteries
+		/*Body modification batteries
 		/obj/item/body_modification_battery = 100,
 		/obj/item/body_modification_battery/tier2 = 100,
 		/obj/item/body_modification_battery/tier3 = 100,
@@ -574,7 +574,7 @@
 		//Body modification tools
 		/obj/item/body_modification_tester = 100,
 		/obj/item/body_modification_remover = 100,
-	)
+	)*/
 
 	premium = list(
 		/obj/item/shears = 1,
