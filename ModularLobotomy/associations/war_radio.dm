@@ -1,7 +1,7 @@
 
 /obj/structure/warradio
 	name = "War radio"
-	desc = "A radio used by the Udjat to locate distortions."
+	desc = "A radio used by Liu associated fixers to locate targets."
 	icon = 'icons/obj/radio.dmi'
 	icon_state = "radio"
 	max_integrity = 300

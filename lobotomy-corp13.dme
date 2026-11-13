@@ -4324,6 +4324,7 @@
 #include "ModularLobotomy\associations\insurgence_items.dm"
 #include "ModularLobotomy\associations\items.dm"
 #include "ModularLobotomy\associations\job_radio_channels.dm"
+#include "ModularLobotomy\associations\liu_radio.dm"
 #include "ModularLobotomy\associations\machines.dm"
 #include "ModularLobotomy\associations\neocity_office.dm"
 #include "ModularLobotomy\associations\office_upgrades.dm"

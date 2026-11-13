@@ -268,7 +268,7 @@
 
 		//Regular shit
 		/obj/item/bodypart/head/robot = 100,
-		/obj/item/bodypart/chest/robot = 100,	//testing shows that robot limbs do not make you damage immune, they just redistribute your damage to other limbs, so I'll reenable them
+//		/obj/item/bodypart/chest/robot = 100,
 		/obj/item/bodypart/l_arm/robot = 100,
 		/obj/item/bodypart/r_arm/robot = 100,
 		/obj/item/bodypart/l_leg/robot = 100,
@@ -283,7 +283,7 @@
 		/obj/item/organ/cyberimp/arm/zippy = 100,
 		/obj/item/organ/cyberimp/arm/fixertools = 100,
 
-		//Body modification batteries
+		/*Body modification batteries
 		/obj/item/body_modification_battery = 100,
 		/obj/item/body_modification_battery/tier2 = 100,
 		/obj/item/body_modification_battery/tier3 = 100,
@@ -292,8 +292,8 @@
 		//Body modification tools
 		/obj/item/body_modification_tester = 100,
 		/obj/item/body_modification_remover = 100,
-	)
-
+	*/)
+	
 	premium = list(
 		/obj/item/shears = 1,
 		/obj/item/bodypart/l_arm/robot/explosive = 100,
@@ -529,4 +529,91 @@
 
 	default_price = 400
 	input_display_header = "Tres Association Bullet Vending"
+
+
+
+
+//cityvending
+/obj/machinery/vending/prosthetic/ncorp
+	name = "\improper Prosthetic plus vending"
+	desc = "A machine used to purchase new prosthetic limbs"
+	resistance_flags = INDESTRUCTIBLE | LAVA_PROOF | FIRE_PROOF | UNACIDABLE | ACID_PROOF | FREEZE_PROOF
+	product_slogans = "Looking good!"
+	product_ads = "You need it!"
+	icon_state = "robotics"
+	icon_deny = null
+	products = list(
+		//Healing shit
+		/obj/item/weldingtool = 100,
+		/obj/item/stack/cable_coil = 100,
+		/obj/item/stock_parts/cell/high = 100,
+
+		//Regular shit
+		/obj/item/bodypart/head/robot = 100,
+//		/obj/item/bodypart/chest/robot = 100,
+		/obj/item/bodypart/l_arm/robot = 100,
+		/obj/item/bodypart/r_arm/robot = 100,
+		/obj/item/bodypart/l_leg/robot = 100,
+		/obj/item/bodypart/r_leg/robot = 100,
+		/obj/item/organ/stomach/cybernetic/tier2 = 100,
+		/obj/item/organ/heart/cybernetic/tier2 = 100,
+		/obj/item/organ/lungs/cybernetic/tier2 = 100,
+		/obj/item/organ/liver/cybernetic/tier2 = 100,
+		/obj/item/organ/eyes/robotic/glow = 100,
+		/obj/item/organ/ears/cybernetic = 100,
+		/obj/item/organ/tongue/robot = 100,
+		/obj/item/organ/cyberimp/arm/zippy = 100,
+		/obj/item/organ/cyberimp/arm/fixertools = 100,
+
+		/*Body modification batteries
+		/obj/item/body_modification_battery = 100,
+		/obj/item/body_modification_battery/tier2 = 100,
+		/obj/item/body_modification_battery/tier3 = 100,
+		/obj/item/body_modification_battery/tier4 = 100,
+
+		//Body modification tools
+		/obj/item/body_modification_tester = 100,
+		/obj/item/body_modification_remover = 100,
+	*/)
+
+	premium = list(
+		/obj/item/shears = 1,
+		/obj/item/bodypart/l_arm/robot/explosive = 100,
+		/obj/item/bodypart/r_arm/robot/explosive = 100,
+		//obj/item/bodypart/l_arm/robot/timestop = 100,
+		//obj/item/bodypart/r_arm/robot/timestop = 100,
+		/obj/item/organ/cyberimp/arm/mantis = 100,
+		/obj/item/organ/cyberimp/arm/mantis/black = 100,
+		/obj/item/organ/cyberimp/arm/chainsword = 100,
+		/obj/item/organ/cyberimp/arm/briefcase = 100,
+		/obj/item/organ/cyberimp/arm/surgery = 100,
+		/obj/item/organ/cyberimp/arm/overdrive = 100,
+		/obj/item/organ/stomach/cybernetic/tier3 = 100,
+		/obj/item/organ/heart/cybernetic/tier3 = 100,
+		/obj/item/organ/lungs/cybernetic/tier3 = 100,
+		/obj/item/organ/liver/cybernetic/tier3 = 100,
+		/obj/item/organ/eyes/robotic/nightvision = 100,
+		/obj/item/organ/eyes/robotic/infofixer = 100,
+		/obj/item/organ/ears/cybernetic/upgraded/bangproof = 100,
+		/obj/item/extra_arm = 100,
+		/obj/item/extra_arm/double = 100,
+		/obj/item/autosurgeon = 100,
+	)
+
+	default_price = 300
+	extra_price = 700
+	input_display_header = "Prosthetic plus"
+
+/obj/effect/landmark/ncorppros
+	name = "Ncorp Prosthetic vendor"
+	desc = "It spawns an item. Notify a coder. Thanks!"
+	icon = 'icons/effects/landmarks_static.dmi'
+	icon_state = "x4"
+
+/obj/effect/landmark/ncorppros/Initialize()
+	. = ..()
+	for(var/datum/city_faction/CF in SScity_factions.active_factions)
+		if(CF.name == "Nagel Und Hammer")
+			new /obj/machinery/vending/prosthetic/ncorp(get_turf(src))
+			qdel(src)
 

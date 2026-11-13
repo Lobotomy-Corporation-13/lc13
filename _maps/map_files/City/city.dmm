@@ -471,6 +471,10 @@
 	},
 /turf/open/floor/city/industrial/plank,
 /area/space)
+"eN" = (
+/obj/effect/landmark/ncorppros,
+/turf/open/indestructible/white,
+/area/city/clinic)
 "eQ" = (
 /obj/effect/decal/cleanable/garbage,
 /turf/open/floor/city/canal/concrete,
@@ -1450,6 +1454,10 @@
 /obj/machinery/sleeper/syndie,
 /turf/open/indestructible/white,
 /area/city/clinic)
+"pp" = (
+/obj/effect/landmark/ncorppros,
+/turf/open/floor/city/sidewalk/old,
+/area/city/alleyways)
 "pr" = (
 /obj/structure/table/wood/bar,
 /obj/item/storage/box/lights/mixed,
@@ -2536,6 +2544,10 @@
 	},
 /turf/open/floor/city/road,
 /area/city)
+"BC" = (
+/obj/machinery/vending/prosthetic,
+/turf/open/floor/wood,
+/area/city/clinic)
 "BD" = (
 /obj/structure/bookcase/random,
 /obj/machinery/light/small{
@@ -4319,6 +4331,11 @@
 /obj/effect/decal/city/litter/any,
 /obj/effect/turf_decal/road/kerb,
 /turf/open/floor/city/road,
+/area/city)
+"Vs" = (
+/obj/effect/decal/cleanable/dirt,
+/obj/effect/landmark/ncorppros,
+/turf/open/floor/facility/white,
 /area/city)
 "Vt" = (
 /obj/machinery/vending/bullets,
@@ -24002,7 +24019,7 @@ lV
 lV
 lV
 Uv
-fi
+pp
 fi
 fi
 fi
@@ -24538,7 +24555,7 @@ pw
 Yy
 Gv
 ux
-bV
+Vs
 Dh
 bV
 bV
@@ -29183,7 +29200,7 @@ Ha
 xt
 xt
 oE
-oE
+BC
 Jr
 Jr
 vb
@@ -29963,7 +29980,7 @@ WX
 RC
 BS
 Jr
-RC
+eN
 RC
 RC
 RC
@@ -30224,7 +30241,7 @@ Vy
 yC
 vP
 RC
-Ys
+RC
 EN
 Gv
 bX
