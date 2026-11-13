@@ -16,6 +16,9 @@
 /datum/job/rcorp_captain/commander/operations/after_spawn(mob/living/carbon/human/H, mob/M)
 	. = ..()
 	SSpersistence.ShowExpeditionNumber(H)
+	var/datum/action/G = new /datum/action/cooldown/focusfire/captain
+	G.Grant(H)
+
 
 /datum/outfit/job/commander/operations
 	name = "Operations Commander"
