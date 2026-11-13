@@ -292,7 +292,7 @@
 		//Body modification tools
 		/obj/item/body_modification_tester = 100,
 		/obj/item/body_modification_remover = 100,
-	)*/
+	*/)
 
 	premium = list(
 		/obj/item/shears = 1,
@@ -574,7 +574,7 @@
 		//Body modification tools
 		/obj/item/body_modification_tester = 100,
 		/obj/item/body_modification_remover = 100,
-	)*/
+	*/)
 
 	premium = list(
 		/obj/item/shears = 1,
