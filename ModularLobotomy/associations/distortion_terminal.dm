@@ -1,7 +1,7 @@
 
 /obj/structure/distortionradio
 	name = "Distortion radio"
-	desc = "A radio used by the Udjat to locate distortions."
+	desc = "A radio used by the Udjat to locate distortions. You could sell solidified sins here."
 	icon = 'icons/obj/radio.dmi'
 	icon_state = "radio"
 	max_integrity = 300
@@ -12,6 +12,40 @@
 	var/docheck = FALSE
 	var/mob/living/target
 	var/list/deploy_pool = list()
+	var/resolve_payment = 750
+	var/list/sin_prices = list(
+		/obj/item/solidified_sin = 1250,
+	)
+	var/list/cash_types = list(
+		/obj/item/stack/spacecash/c10000,
+		/obj/item/stack/spacecash/c1000,
+		/obj/item/stack/spacecash/c500,
+		/obj/item/stack/spacecash/c200,
+		/obj/item/stack/spacecash/c100,
+		/obj/item/stack/spacecash/c50,
+		/obj/item/stack/spacecash/c20,
+		/obj/item/stack/spacecash/c10,
+		/obj/item/stack/spacecash/c1,
+	)
+
+/obj/structure/distortionradio/attackby(obj/item/I, mob/living/user, params)
+	for(var/sin_type in sin_prices)
+		if(!istype(I, sin_type))
+			continue
+		say("Solidified sin received. Issuing payment.")
+		SpawnCash(sin_prices[sin_type])
+		qdel(I)
+		return TRUE
+	return ..()
+
+//This should allow for easier custom prices in the future.
+/obj/structure/distortionradio/proc/SpawnCash(value)
+	for(var/obj/item/stack/spacecash/cash as anything in cash_types)
+		var/count = floor(value / initial(cash.value))
+		if(!count)
+			continue
+		new cash(get_turf(src), count)
+		value -= count * initial(cash.value)
 
 /obj/structure/distortionradio/attack_hand(mob/user)
 	if(!isready)
@@ -28,7 +62,7 @@
 /obj/structure/distortionradio/proc/CheckTarget()
 	if(!target || target.stat == DEAD)
 		say("Distortion resolved. Issuing payment.")
-		new /obj/item/stack/spacecash/c1000 (get_turf(src))
+		SpawnCash(resolve_payment)
 		target = null
 		docheck = FALSE
 	else
