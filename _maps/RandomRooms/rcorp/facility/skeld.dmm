@@ -672,6 +672,7 @@
 "rD" = (
 /obj/structure/bed,
 /obj/item/reagent_containers/hypospray/medipen/mental,
+/obj/effect/landmark/abnospawn/hardcombat,
 /turf/open/floor/plasteel/dark,
 /area/city/outskirts)
 "rP" = (
@@ -1689,6 +1690,12 @@
 	dir = 4
 	},
 /turf/open/floor/wood,
+/area/city/outskirts)
+"OA" = (
+/obj/structure/bed,
+/obj/item/reagent_containers/hypospray/medipen/mental,
+/obj/effect/landmark/abnospawn/hardsupport,
+/turf/open/floor/plasteel/dark,
 /area/city/outskirts)
 "Pc" = (
 /obj/structure/table/wood,
@@ -17175,7 +17182,7 @@ cl
 cl
 fu
 sY
-rD
+OA
 Yb
 Tf
 Tf

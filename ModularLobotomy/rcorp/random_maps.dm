@@ -65,21 +65,21 @@
 	name = "Rcorp - City alt"
 	room_id = "rcorp_inside_cityalt"
 	mappath = "_maps/RandomRooms/rcorp/facility/city2.dmm"
-	weight = 5
+	weight = 10
 
 //Skeld type maps
 /datum/map_template/random_room/rcorp/skeld
 	name = "Rcorp - Skeld"
 	room_id = "rcorp_inside_skeld"
 	mappath = "_maps/RandomRooms/rcorp/facility/skeld.dmm"
-	weight = 5
+	weight = 10
 
 //Nest type maps
 /datum/map_template/random_room/rcorp/nest
 	name = "Rcorp - Nest"
 	room_id = "rcorp_inside_nest"
 	mappath = "_maps/RandomRooms/rcorp/facility/nest.dmm"
-	weight = 5
+	weight = 10
 
 //Special Types.
 // /datum/map_template/random_room/rcorp/raidboss
@@ -92,7 +92,7 @@
 // 	name = "Rcorp - City"
 // 	room_id = "rcorp_inside_city"
 // 	mappath = "_maps/RandomRooms/rcorp/facility/city.dmm"
-// 	weight = 10
+// 	weight = 1
 
 // /datum/map_template/random_room/rcorp/xenos
 // 	name = "Rcorp - Xenos"

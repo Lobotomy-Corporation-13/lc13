@@ -45,6 +45,9 @@
 	if(pulse_cooldown < world.time)
 		crispynugget()
 
+/mob/living/simple_animal/hostile/rcorp_abno/hard/fire_bird/AttackingTarget(atom/attacked_target)
+	return FALSE
+
 //Attacks
 /mob/living/simple_animal/hostile/rcorp_abno/hard/fire_bird/proc/crispynugget()
 	pulse_cooldown = world.time + pulse_cooldown_time
