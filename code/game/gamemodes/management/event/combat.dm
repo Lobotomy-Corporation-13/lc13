@@ -254,4 +254,6 @@ GLOBAL_VAR_INIT(wcorp_enemy_faction, "") //decides which faction WCorp will be u
 		to_chat(A, "Incorporeal barrier is broken!")
 
 /datum/game_mode/combat/proc/roundstartannouncement() //being stored here because its long, see line 92.
-	minor_announce("ROUNDSTART TEXT HERE", LCCB Preliminary Observation)
+	minor_announce("Branch D-5681 has been approved for recovery by the LCCB. every team we send in wont come back, practically feeding the abnormalities at this point. \
+Despite the damage the site automated systems are still online, that means we cant get into the golden bough untill most of the facility is fixed. \
+Almost every department is devistated so expect distruption to pretty much every system down there. Good Luck.", LCCB Preliminary Observation)
