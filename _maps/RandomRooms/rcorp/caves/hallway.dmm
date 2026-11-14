@@ -14,11 +14,23 @@
 /obj/effect/landmark/abnospawn/easysupport,
 /turf/open/floor/pod/dark,
 /area/city/outskirts)
+"r" = (
+/obj/effect/landmark/abnospawn/reinfeasytank,
+/turf/open/floor/pod/dark,
+/area/city/outskirts)
 "G" = (
 /turf/open/floor/pod/dark,
 /area/city/outskirts)
 "H" = (
 /turf/closed/wall/mineral/titanium/survival/pod,
+/area/city/outskirts)
+"K" = (
+/obj/effect/landmark/abnospawn/reifeasycombat,
+/turf/open/floor/pod/dark,
+/area/city/outskirts)
+"L" = (
+/obj/effect/landmark/abnospawn/reinfeasysupport,
+/turf/open/floor/pod/dark,
 /area/city/outskirts)
 "N" = (
 /obj/effect/landmark/abnospawn/easycombat,
@@ -1051,7 +1063,7 @@ X
 G
 G
 G
-G
+K
 G
 G
 G
@@ -1060,11 +1072,11 @@ G
 G
 G
 G
-q
+L
 G
 G
-d
 G
+r
 G
 G
 G
@@ -1297,7 +1309,7 @@ a
 a
 X
 G
-N
+G
 G
 G
 G
@@ -1315,7 +1327,7 @@ G
 G
 G
 G
-d
+G
 G
 G
 G

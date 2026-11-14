@@ -17,9 +17,21 @@
 /obj/effect/landmark/abnospawn/easycombat,
 /turf/open/floor/plating/asteroid,
 /area/city/outskirts)
+"N" = (
+/obj/effect/landmark/abnospawn/reifeasycombat,
+/turf/open/floor/plating/asteroid,
+/area/city/outskirts)
 "P" = (
 /obj/effect/landmark/nobasic_incorp_move,
 /turf/closed/indestructible/rock,
+/area/city/outskirts)
+"X" = (
+/obj/effect/landmark/abnospawn/reinfeasysupport,
+/turf/open/floor/plating/asteroid,
+/area/city/outskirts)
+"Z" = (
+/obj/effect/landmark/abnospawn/reinfeasytank,
+/turf/open/floor/plating/asteroid,
 /area/city/outskirts)
 
 (1,1,1) = {"
@@ -3346,7 +3358,7 @@ i
 i
 i
 i
-i
+Z
 i
 i
 P
@@ -3468,7 +3480,7 @@ i
 i
 H
 i
-G
+X
 i
 i
 i
@@ -3715,7 +3727,7 @@ i
 i
 i
 i
-H
+N
 i
 i
 P

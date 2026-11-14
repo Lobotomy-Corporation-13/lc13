@@ -682,6 +682,10 @@
 	},
 /turf/open/floor/plasteel/white,
 /area/city/outskirts)
+"oC" = (
+/obj/effect/landmark/abnospawn/reinfhardsupport,
+/turf/open/floor/plating/asteroid,
+/area/city/outskirts)
 "oD" = (
 /obj/machinery/camera/autoname{
 	dir = 5
@@ -1002,6 +1006,10 @@
 "sZ" = (
 /obj/structure/disposalpipe/segment,
 /turf/open/floor/carpet/green,
+/area/city/outskirts)
+"tn" = (
+/obj/effect/landmark/abnospawn/reinfhardtank,
+/turf/open/floor/plating/asteroid,
 /area/city/outskirts)
 "tt" = (
 /obj/effect/turf_decal/siding/brown{
@@ -2391,6 +2399,10 @@
 	name = "Training Department"
 	},
 /turf/open/floor/plasteel/dark,
+/area/city/outskirts)
+"RC" = (
+/obj/effect/landmark/abnospawn/reinfhardcombat,
+/turf/open/floor/plating/asteroid,
 /area/city/outskirts)
 "RI" = (
 /obj/machinery/light{
@@ -14295,7 +14307,7 @@ XG
 Im
 Im
 Im
-Im
+RC
 Im
 Im
 Im
@@ -14788,7 +14800,7 @@ Im
 Im
 LN
 Im
-Im
+tn
 gB
 Im
 Im
@@ -15762,7 +15774,7 @@ Im
 Im
 GX
 Im
-Im
+oC
 Im
 Im
 Im

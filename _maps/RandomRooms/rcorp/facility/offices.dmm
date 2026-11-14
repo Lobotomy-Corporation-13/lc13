@@ -360,6 +360,10 @@
 /obj/effect/landmark/abnospawn/rhinobuster,
 /turf/open/floor/facility/dark,
 /area/city/outskirts)
+"JL" = (
+/obj/effect/landmark/abnospawn/reinfhardsupport,
+/turf/open/floor/facility/dark,
+/area/city/outskirts)
 "JR" = (
 /turf/open/floor/plasteel,
 /area/city/outskirts)
@@ -471,6 +475,10 @@
 "WS" = (
 /turf/closed/indestructible/rock,
 /area/city/outskirts)
+"XE" = (
+/obj/effect/landmark/abnospawn/reinfhardtank,
+/turf/open/floor/facility/dark,
+/area/city/outskirts)
 "XP" = (
 /obj/structure/table/wood,
 /obj/item/paper_bin,
@@ -482,6 +490,10 @@
 /obj/machinery/light{
 	dir = 8
 	},
+/turf/open/floor/facility,
+/area/city/outskirts)
+"Zi" = (
+/obj/effect/landmark/abnospawn/reinfhardcombat,
 /turf/open/floor/facility,
 /area/city/outskirts)
 "ZA" = (
@@ -12658,7 +12670,7 @@ HD
 qT
 Fl
 Ke
-Ke
+JL
 Ke
 Fl
 aM
@@ -13632,7 +13644,7 @@ qF
 Ke
 Fl
 aM
-HD
+Zi
 qT
 Fl
 Ke
@@ -13644,7 +13656,7 @@ JR
 TX
 Fl
 Ke
-Ke
+XE
 Ke
 Fl
 aM
