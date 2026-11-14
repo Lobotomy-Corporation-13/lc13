@@ -9,6 +9,7 @@
 							TEMPERANCE_ATTRIBUTE = 80,
 							JUSTICE_ATTRIBUTE = 80
 							)
+	hat = /obj/item/clothing/head/ego_hat/wedgeleader
 
 /obj/item/clothing/suit/armor/ego_gear/city/wedge
 	name = "wedge office jacket"
@@ -26,3 +27,13 @@
 	name = "wedge office dress"
 	desc = "An armored jacket worn by female wedge office fixers. While the undersuit is well-built, the design of a gothic doll is hardly ideal for combat."
 	icon_state = "wedge_fem"
+
+/obj/item/clothing/head/ego_hat/wedgeleader
+	name = "wedge office leader hat"
+	desc = "A dark, wide-brimmed hat with a white plume, worn by the leader of wedge office."
+	icon_state = "wedgeleader"
+
+/obj/item/clothing/glasses/eyepatch/wedgeleader
+	name = "wedge office leader eyepatch"
+	desc = "A large, angular eyepatch worn by the leader of wedge office."
+	icon_state = "wedgeleader_eyepatch"
