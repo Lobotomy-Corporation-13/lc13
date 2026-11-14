@@ -24,16 +24,16 @@ export const reactionSearch = (reactions, searchText = '') => {
   ])(reactions);
 };
 
-export const ReagentList = (props, context) => {
-  const { act, data } = useBackend(context);
+export const ReagentList = props => {
+  const { act, data } = useBackend();
   const [
     searchText,
     setSearchText,
-  ] = useLocalState(context, 'searchText', '');
+  ] = useLocalState('searchText', '');
   const [
     screen,
     setScreen,
-  ] = useLocalState(context, 'screen', "reagent_screen");
+  ] = useLocalState('screen', "reagent_screen");
 
   const chems = chemSearch(data.chems, searchText);
   const reactions = reactionSearch(data.reactions, searchText);
@@ -101,7 +101,7 @@ export const ReagentList = (props, context) => {
 
 const ChemTable = Table;
 
-const ChemStats = (props, context) => {
+const ChemStats = props => {
   const { chemical } = props;
   return (
     <Table.Row key={chemical.id}>
@@ -202,7 +202,7 @@ const ChemStats = (props, context) => {
 
 const ReactionTable = Table;
 
-const ReactionRecipe = (props, context) => {
+const ReactionRecipe = props => {
   const { reaction } = props;
   const requirements = reaction.requirements;
   const output = reaction.output;

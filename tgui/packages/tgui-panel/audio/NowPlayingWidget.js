@@ -10,10 +10,10 @@ import { Button, Flex, Knob } from 'tgui/components';
 import { useSettings } from '../settings';
 import { selectAudio } from './selectors';
 
-export const NowPlayingWidget = (props, context) => {
-  const audio = useSelector(context, selectAudio);
-  const dispatch = useDispatch(context);
-  const settings = useSettings(context);
+export const NowPlayingWidget = props => {
+  const audio = useSelector(selectAudio);
+  const dispatch = useDispatch();
+  const settings = useSettings();
   const title = audio.meta?.title;
   return (
     <Flex align="center">

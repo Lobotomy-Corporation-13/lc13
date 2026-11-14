@@ -23,17 +23,17 @@ export const selectAbnos = (abnormalities, searchText = '') => {
   ])(abnormalities);
 };
 
-export const LC13AbnormalityArchive = (props, context) => {
-  const { act, data } = useBackend(context);
+export const LC13AbnormalityArchive = props => {
+  const { act, data } = useBackend();
 
   const [
     current_abnormality,
     setcurrent_abnormality,
-  ] = useLocalState(context, 'current_abnormality', null);
+  ] = useLocalState('current_abnormality', null);
   const [
     searchText,
     setSearchText,
-  ] = useLocalState(context, 'searchText', '');
+  ] = useLocalState('searchText', '');
 
   const abnormality_by_name = selectAbnos(data.abnormality_info, searchText);
 
@@ -98,7 +98,7 @@ export const LC13AbnormalityArchive = (props, context) => {
 };
 
 // Theres a tower on this island.
-const Linesoftext = (props, context) => {
+const Linesoftext = props => {
   const { subject } = props;
   const the_tower = []; // The bottom of the_tower
   if (!subject) {
@@ -132,7 +132,7 @@ const Linesoftext = (props, context) => {
 
 // Towergear does not work unless it has capitalization.
 // Apparently all consts must be in pascaltext
-const Towergear = (props, context) => {
+const Towergear = props => {
   const { tower_subject, line_place } = props;
   let tower_gear_sound = "line" + [line_place];
   // Coding this has the feeling of being lost

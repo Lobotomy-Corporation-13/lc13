@@ -4,24 +4,20 @@ import {
 } from '../components';
 import { Window } from '../layouts';
 
-export const GridDebugVendor = (props, context) => {
-  const { act, data } = useBackend(context);
+export const GridDebugVendor = props => {
+  const { act, data } = useBackend();
   const {
     movement_types = [],
     grades = [],
   } = data;
 
-  const [selectedMovement, setSelectedMovement] = useLocalState(
-    context, 'movement', 1
+  const [selectedMovement, setSelectedMovement] = useLocalState('movement', 1
   );
-  const [selectedGrade, setSelectedGrade] = useLocalState(
-    context, 'grade', 1
+  const [selectedGrade, setSelectedGrade] = useLocalState('grade', 1
   );
-  const [quantityMod, setQuantityMod] = useLocalState(
-    context, 'quantity', 1.0
+  const [quantityMod, setQuantityMod] = useLocalState('quantity', 1.0
   );
-  const [bypasses, setBypasses] = useLocalState(
-    context, 'bypasses', false
+  const [bypasses, setBypasses] = useLocalState('bypasses', false
   );
 
   const selectedGradeData = grades.find(g => g.id === selectedGrade) || {};

@@ -49,21 +49,15 @@ const LineSidebar = props => {
   );
 };
 
-const LeaderboardPane = (props, context) => {
+const LeaderboardPane = props => {
   const { line, rows, cutoff } = props;
-  const [expandedIdx, setExpandedIdx] = useLocalState(
-    context,
-    'leaderboardExpandedIdx',
+  const [expandedIdx, setExpandedIdx] = useLocalState('leaderboardExpandedIdx',
     null
   );
-  const [expandedGroups, setExpandedGroups] = useLocalState(
-    context,
-    'leaderboardGroupExpanded',
+  const [expandedGroups, setExpandedGroups] = useLocalState('leaderboardGroupExpanded',
     {}
   );
-  const [search, setSearch] = useLocalState(
-    context,
-    'leaderboardSearch',
+  const [search, setSearch] = useLocalState('leaderboardSearch',
     ''
   );
   if (!line) {
@@ -165,13 +159,11 @@ const LeaderboardPane = (props, context) => {
   );
 };
 
-export const RefractionLeaderboard = (props, context) => {
-  const { data } = useBackend(context);
+export const RefractionLeaderboard = props => {
+  const { data } = useBackend();
   const lines = data.lines || [];
   const leaderboards = data.leaderboards || {};
-  const [selectedId, setSelectedId] = useLocalState(
-    context,
-    'leaderboardSelectedLine',
+  const [selectedId, setSelectedId] = useLocalState('leaderboardSelectedLine',
     lines[0] ? lines[0].id : null
   );
   // Re-sync the selection if the previously-selected line disappears or no

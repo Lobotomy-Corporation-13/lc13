@@ -219,3 +219,132 @@
 		return
 	var/mob/living/L = hit_atom
 	L.apply_lc_tremor(5,15)
+
+// Faces in the Light E.G.O - Gloaming (weapon): a claw that bites harder in the dark.
+/obj/item/ego_weapon/branch12/gloaming
+	name = "gloaming"
+	desc = "A gauntlet of hooked claws that drink what little light falls on them. In the dark they \
+		wake, and bite far deeper than they have any right to."
+	special = "Deals 50% more damage while the wielder stands in darkness."
+	icon_state = "gloaming"
+	inhand_icon_state = "gloaming"
+	force = 24
+	damtype = BLACK_DAMAGE
+	attack_speed = 1
+	attack_verb_continuous = list("rakes", "claws", "rends")
+	attack_verb_simple = list("rake", "claw", "rend")
+	attribute_requirements = list(JUSTICE_ATTRIBUTE = 30)
+
+// Stronger in the dark: boost force when the wielder's tile is unlit, else normal.
+/obj/item/ego_weapon/branch12/gloaming/attack(mob/living/target, mob/living/user)
+	var/turf/T = get_turf(user)
+	if(T && T.lighting_object && T.get_lumcount() < 0.5)
+		force = round(initial(force) * 1.5)
+	else
+		force = initial(force)
+	return ..()
+
+// Scuffed Lioness - Mane
+/obj/item/ego_weapon/branch12/pelt
+	name = "pelt"
+	desc = "A raking claw strung from the lioness's own bones and hide. It cuts in quick, shallow rows -- many small wounds that refuse to close."
+	icon_state = "mane"
+	inhand_icon_state = "mane"
+	force = 20
+	damtype = RED_DAMAGE
+	attack_speed = 0.9
+	attack_verb_continuous = list("claws", "rakes", "slashes")
+	attack_verb_simple = list("claw", "rake", "slash")
+	hitsound = 'sound/weapons/slashmiss.ogg'
+	special = "As the wielder's health runs low, the claw grows swift: sluggish at full health, but quicker with every wound taken."
+	/// Attack speed by wielder HP tier - healthy is slow, near-death is fast.
+	var/speed_healthy = 1.2   // 100-66% HP: slower than baseline
+	var/speed_wounded = 0.9   // 65-34% HP: baseline
+	var/speed_dying = 0.6     // 33-0% HP: faster than baseline
+
+// The claw quickens as the wielder is wounded (mirrors the lioness's own fury).
+/obj/item/ego_weapon/branch12/pelt/melee_attack_chain(mob/user, atom/target, params)
+	if(ishuman(user))
+		var/mob/living/carbon/human/H = user
+		var/ratio = H.health / H.maxHealth
+		if(ratio > 0.65)
+			attack_speed = speed_healthy
+		else if(ratio > 0.33)
+			attack_speed = speed_wounded
+		else
+			attack_speed = speed_dying
+	. = ..()
+
+// Clambug - Chitin
+/obj/item/ego_weapon/branch12/chitin
+	name = "chitin"
+	desc = "A pair of grinding mandibles bound into a gauntlet, still caked with soil. They remember the shape of the tunnels."
+	special = "Attack a distant tile to burrow into the earth and erupt beneath it, striking everything around where you surface. 10 second cooldown."
+	icon_state = "chitin_active"
+	inhand_icon_state = "chitin_active"
+	force = 24
+	damtype = RED_DAMAGE
+	attack_speed = 1
+	attack_verb_continuous = list("bites", "rends", "grinds")
+	attack_verb_simple = list("bite", "rend", "grind")
+	hitsound = 'sound/weapons/bladeslice.ogg'
+	attribute_requirements = list(
+		FORTITUDE_ATTRIBUTE = 45
+	)
+	/// Cooldown tracking for the Erupt dive.
+	var/erupt_cooldown = 0
+	var/erupt_cooldown_time = 10 SECONDS
+	/// Max tiles away the wielder can target for the dive.
+	var/erupt_range = 6
+	/// RED damage dealt to everyone in the 3x3 on resurfacing.
+	var/erupt_damage = 30
+
+// Erupt: burrow at your feet, travel underground, and surface at the clicked tile
+// for a 3x3 blast. The wielder is hidden and immobile for the full second.
+/obj/item/ego_weapon/branch12/chitin/afterattack(atom/A, mob/living/user, proximity_flag, params)
+	if(erupt_cooldown > world.time)
+		return
+	if(!CanUseEgo(user))
+		return
+	var/turf/target_turf = get_turf(A)
+	if(!istype(target_turf))
+		return
+	if(get_dist(user, target_turf) < 2 || !(target_turf in view(erupt_range, user)))
+		return
+	if(target_turf.is_blocked_turf(TRUE))
+		return
+	. = ..()
+	erupt_cooldown = world.time + erupt_cooldown_time
+	INVOKE_ASYNC(src, PROC_REF(EruptDive), user, target_turf)
+
+/obj/item/ego_weapon/branch12/chitin/proc/EruptDive(mob/living/carbon/human/user, turf/target_turf)
+	if(QDELETED(user) || QDELETED(target_turf))
+		return
+	var/had_godmode = (user.status_flags & GODMODE)
+	user.Immobilize(1 SECONDS)
+	user.status_flags |= GODMODE
+	// Dig in (0.5s), amber-style alpha fade.
+	user.visible_message(span_danger("[user] burrows into the ground!"))
+	playsound(get_turf(user), 'sound/effects/ordeals/amber/dawn_dig_in.ogg', 50, TRUE)
+	animate(user, alpha = 0, time = 5)
+	sleep(5)
+	if(QDELETED(user))
+		return
+	// Travel underground to the clicked tile.
+	user.forceMove(target_turf)
+	new /obj/effect/temp_visual/small_smoke/halfsecond(target_turf)
+	// Dig out (0.5s).
+	playsound(target_turf, 'sound/effects/ordeals/amber/dawn_dig_out.ogg', 50, TRUE)
+	animate(user, alpha = 255, time = 5)
+	sleep(5)
+	if(QDELETED(user))
+		return
+	user.alpha = initial(user.alpha)
+	if(!had_godmode)
+		user.status_flags &= ~GODMODE
+	// Erupt: 3x3 blast the moment it resurfaces.
+	user.visible_message(span_bolddanger("[user] erupts from the ground!"))
+	var/list/been_hit = list()
+	for(var/turf/T in range(target_turf, 1))
+		new /obj/effect/temp_visual/small_smoke/halfsecond(T)
+		been_hit = user.HurtInTurf(T, been_hit, erupt_damage, RED_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, attack_type = ATTACK_TYPE_SPECIAL)

@@ -763,7 +763,8 @@
 		dat += cat_dat[category]
 		dat += "</div>"
 
-	user << browse(wrap(dat), "window=spellbook;size=700x500")
+	//user << browse(wrap(dat), "window=spellbook;size=700x500") // LOBOTOMYCORPORATION EDIT CHANGE OLD
+	user << browse(wrap(dat), "window=spellbook;[scaled_browse_size(user, 700, 500)]") // LOBOTOMYCORPORATION EDIT CHANGE NEW -- scale for DPI
 	onclose(user, "spellbook")
 	return
 

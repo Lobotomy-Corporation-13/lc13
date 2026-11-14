@@ -12,6 +12,7 @@
  */
 
 import { perf } from 'common/perf';
+import { getGlobalStore } from 'common/redux';
 import { setupDrag } from './drag';
 import { focusMap } from './focus';
 import { createLogger } from './logging';
@@ -304,8 +305,8 @@ export const selectBackend = state => state.backend || {};
  *   act: sendAct,
  * }}
  */
-export const useBackend = context => {
-  const { store } = context;
+export const useBackend = () => {
+  const store = getGlobalStore();
   const state = selectBackend(store.getState());
   return {
     ...state,
@@ -322,12 +323,11 @@ export const useBackend = context => {
  *
  * It is a lot more performant than `setSharedState`.
  *
- * @param {any} context React context.
  * @param {string} key Key which uniquely identifies this state in Redux store.
  * @param {any} initialState Initializes your global variable with this value.
  */
-export const useLocalState = (context, key, initialState) => {
-  const { store } = context;
+export const useLocalState = (key, initialState) => {
+  const store = getGlobalStore();
   const state = selectBackend(store.getState());
   const sharedStates = state.shared ?? {};
   const sharedState = (key in sharedStates)
@@ -355,12 +355,11 @@ export const useLocalState = (context, key, initialState) => {
  *
  * This makes creation of observable s
  *
- * @param {any} context React context.
  * @param {string} key Key which uniquely identifies this state in Redux store.
  * @param {any} initialState Initializes your global variable with this value.
  */
-export const useSharedState = (context, key, initialState) => {
-  const { store } = context;
+export const useSharedState = (key, initialState) => {
+  const store = getGlobalStore();
   const state = selectBackend(store.getState());
   const sharedStates = state.shared ?? {};
   const sharedState = (key in sharedStates)

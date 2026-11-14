@@ -16,9 +16,9 @@ import { Window } from '../layouts';
 
 const isValidHex = color => /^#([0-9A-F]{3}){1,2}$/i.test(color);
 
-export const AugmentFabricator = (props, context) => {
-  const { data = {} } = useBackend(context);
-  const [page, setPage] = useSharedState(context, 'page', 'template');
+export const AugmentFabricator = props => {
+  const { data = {} } = useBackend();
+  const [page, setPage] = useSharedState('page', 'template');
   const hasLoaded = data && data.forms && Array.isArray(data.forms);
 
   return (
@@ -30,9 +30,8 @@ export const AugmentFabricator = (props, context) => {
         {!hasLoaded ? (<NoticeBox>Loading configuration...</NoticeBox>) : (
           <>
             {page === 'template' && <TemplatePage setPage={setPage} /> }
-            {/* Pass context to EffectsPage */}
             {page === 'effects' && (
-              <EffectsPage setPage={setPage} context={context} />
+              <EffectsPage setPage={setPage} />
             )}
           </>
         )}
@@ -42,27 +41,21 @@ export const AugmentFabricator = (props, context) => {
 };
 
 // Page 1: Template & Flavor (RESTORED)
-const TemplatePage = (props, context) => {
+const TemplatePage = props => {
   const { setPage } = props;
-  const { act, data } = useBackend(context);
+  const { act, data } = useBackend();
 
   // State Hooks
-  const [selectedFormId, setSelectedFormId] = useSharedState(
-    context,
-    'formId',
+  const [selectedFormId, setSelectedFormId] = useSharedState('formId',
     null
   );
-  const [selectedRank, setSelectedRank] = useSharedState(context, 'rank', 1);
-  const [augName, setAugName] = useSharedState(context, 'augName', '');
-  const [augDesc, setAugDesc] = useSharedState(context, 'augDesc', '');
-  const [primaryColor, setPrimaryColor] = useSharedState(
-    context,
-    'primaryColor',
+  const [selectedRank, setSelectedRank] = useSharedState('rank', 1);
+  const [augName, setAugName] = useSharedState('augName', '');
+  const [augDesc, setAugDesc] = useSharedState('augDesc', '');
+  const [primaryColor, setPrimaryColor] = useSharedState('primaryColor',
     '#FFFFFF'
   );
-  const [secondaryColor, setSecondaryColor] = useSharedState(
-    context,
-    'secondaryColor',
+  const [secondaryColor, setSecondaryColor] = useSharedState('secondaryColor',
     '#CCCCCC'
   );
 
@@ -354,26 +347,24 @@ const TemplatePage = (props, context) => {
 };
 
 // --- EffectsPage component (UPDATED to use formId) ---
-const EffectsPage = (props, context) => {
+const EffectsPage = props => {
   const { setPage } = props;
-  const { act, data } = useBackend(context);
+  const { act, data } = useBackend();
 
   // --- UPDATED: Read form ID ---
-  const [selectedFormId] = useSharedState(context, 'formId');
+  const [selectedFormId] = useSharedState('formId');
   // Keep other shared state hooks
-  const [selectedRank] = useSharedState(context, 'rank', 1);
-  const [augName] = useSharedState(context, 'augName', '');
-  const [augDesc] = useSharedState(context, 'augDesc', '');
-  const [primaryColor] = useSharedState(context, 'primaryColor', '#FFFFFF');
-  const [secondaryColor] = useSharedState(
-    context, 'secondaryColor', '#CCCCCC'
+  const [selectedRank] = useSharedState('rank', 1);
+  const [augName] = useSharedState('augName', '');
+  const [augDesc] = useSharedState('augDesc', '');
+  const [primaryColor] = useSharedState('primaryColor', '#FFFFFF');
+  const [secondaryColor] = useSharedState('secondaryColor', '#CCCCCC'
   );
-  const [selectedEffects, setSelectedEffects] = useSharedState(
-    context, 'selectedEffects', []
+  const [selectedEffects, setSelectedEffects] = useSharedState('selectedEffects', []
   ); // Array of effect IDs
 
   // Search state for filtering effects
-  const [searchQuery, setSearchQuery] = useSharedState(context, 'searchQuery', '');
+  const [searchQuery, setSearchQuery] = useSharedState('searchQuery', '');
 
   const {
     forms = [],

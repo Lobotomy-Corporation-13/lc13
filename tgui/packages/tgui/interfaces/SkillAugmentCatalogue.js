@@ -15,9 +15,9 @@ import {
 } from '../components';
 import { Window } from '../layouts';
 
-export const SkillAugmentCatalogue = (props, context) => {
-  const { act, data } = useBackend(context);
-  const [tabIndex, setTabIndex] = useLocalState(context, 'tabIndex', 0);
+export const SkillAugmentCatalogue = props => {
+  const { act, data } = useBackend();
+  const [tabIndex, setTabIndex] = useLocalState('tabIndex', 0);
 
   return (
     <Window width={1200} height={700}>
@@ -77,8 +77,8 @@ export const SkillAugmentCatalogue = (props, context) => {
   );
 };
 
-const TemplateSelection = (props, context) => {
-  const { act, data } = useBackend(context);
+const TemplateSelection = props => {
+  const { act, data } = useBackend();
   const { templates = [] } = data;
 
   return (
@@ -122,9 +122,9 @@ const TemplateSelection = (props, context) => {
   );
 };
 
-const SkillConfiguration = (props, context) => {
-  const { act, data } = useBackend(context);
-  const [searchText, setSearchText] = useLocalState(context, 'skillSearch', '');
+const SkillConfiguration = props => {
+  const { act, data } = useBackend();
+  const [searchText, setSearchText] = useLocalState('skillSearch', '');
   const {
     current_rank,
     current_slots,
@@ -278,8 +278,8 @@ const SkillConfiguration = (props, context) => {
   );
 };
 
-const CreateOrderTab = (props, context) => {
-  const { act, data } = useBackend(context);
+const CreateOrderTab = props => {
+  const { act, data } = useBackend();
   const {
     current_rank,
     current_slots,
@@ -372,8 +372,8 @@ const CreateOrderTab = (props, context) => {
   );
 };
 
-const CatalogueInfo = (props, context) => {
-  const { act, data } = useBackend(context);
+const CatalogueInfo = props => {
+  const { act, data } = useBackend();
 
   return (
     <Section title="Catalogue Information">
@@ -397,8 +397,8 @@ const CatalogueInfo = (props, context) => {
   );
 };
 
-const CurrentDesign = (props, context) => {
-  const { act, data } = useBackend(context);
+const CurrentDesign = props => {
+  const { act, data } = useBackend();
   const {
     current_rank,
     current_slots,
@@ -449,8 +449,8 @@ const CurrentDesign = (props, context) => {
   );
 };
 
-const ServicesTab = (props, context) => {
-  const { act, data } = useBackend(context);
+const ServicesTab = props => {
+  const { act, data } = useBackend();
   const { scan_cost, removal_cost, busy } = data;
 
   return (

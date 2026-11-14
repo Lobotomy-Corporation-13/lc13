@@ -85,7 +85,6 @@
 	jobtype = /datum/job/reindeer
 
 	ears = /obj/item/radio/headset/headset_welfare
-	glasses = /obj/item/clothing/glasses/sunglasses
 	uniform = /obj/item/clothing/under/suit/lobotomy/rabbit
 	shoes = /obj/item/clothing/shoes/combat
 	gloves = /obj/item/clothing/gloves/color/black

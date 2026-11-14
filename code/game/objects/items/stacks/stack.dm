@@ -434,7 +434,8 @@
 	else
 		transfer = min(transfer, (limit ? limit : S.max_amount) - S.amount)
 	if(pulledby)
-		pulledby.start_pulling(S)
+		//pulledby.start_pulling(S) // LOBOTOMYCORPORATION EDIT CHANGE OLD
+		INVOKE_ASYNC(pulledby, TYPE_PROC_REF(/atom/movable, start_pulling), S) // LOBOTOMYCORPORATION EDIT CHANGE NEW -- start_pulling() can reach do_mob(), and merge() runs inside storage signal handlers that must not sleep
 	S.copy_evidences(src)
 	use(transfer, TRUE)
 	S.add(transfer)

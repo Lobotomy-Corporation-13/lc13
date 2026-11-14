@@ -635,7 +635,7 @@
 	abno_type = /mob/living/simple_animal/hostile/abnormality/ambling_pearl
 	abno_code = "O-02-205"
 	abno_info = list(
-		"WARNING: O-02-205 excretes chemicals that are considered harmful to the human biologu.",
+		"WARNING: O-02-205 excretes chemicals that are considered harmful to the human biology.",
 		"Should these toxins build up in the body, L-Corporation offers you Anti-toxin at the cost of a handful of PE boxes.",
 		"When the work result was Normal, the Qliphoth Counter lowered at a low rate.",
 		"When the work result was Bad, the Qliphoth Counter lowered.")

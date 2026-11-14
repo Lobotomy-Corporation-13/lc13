@@ -8,8 +8,8 @@ import {
 } from '../components';
 import { Window } from '../layouts';
 
-export const SevenDossier = (props, context) => {
-  const { act, data } = useBackend(context);
+export const SevenDossier = props => {
+  const { act, data } = useBackend();
   const {
     total_filed,
     subjects = [],
@@ -17,7 +17,7 @@ export const SevenDossier = (props, context) => {
   const [
     expanded,
     setExpanded,
-  ] = useLocalState(context, 'expanded', null);
+  ] = useLocalState('expanded', null);
   return (
     <Window
       width={450}
@@ -57,7 +57,7 @@ export const SevenDossier = (props, context) => {
   );
 };
 
-const SubjectRow = (props, context) => {
+const SubjectRow = props => {
   const {
     subject, expanded, onToggle, act,
   } = props;

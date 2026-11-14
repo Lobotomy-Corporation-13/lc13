@@ -103,7 +103,8 @@
 	set category = "OOC"
 	var/datum/asset/simple/namespaced/changelog = get_asset_datum(/datum/asset/simple/namespaced/changelog)
 	changelog.send(src)
-	src << browse(changelog.get_htmlloader("changelog.html"), "window=changes;size=675x650")
+	//src << browse(changelog.get_htmlloader("changelog.html"), "window=changes;size=675x650") // LOBOTOMYCORPORATION EDIT CHANGE OLD
+	src << browse(changelog.get_htmlloader("changelog.html"), "window=changes;[scaled_browse_size(src, 675, 650)]") // LOBOTOMYCORPORATION EDIT CHANGE NEW -- scale for DPI
 	if(prefs.lastchangelog != GLOB.changelog_hash)
 		prefs.lastchangelog = GLOB.changelog_hash
 		prefs.save_preferences()

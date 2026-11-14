@@ -77,7 +77,8 @@
 		var/obj/item/P = contents[i]
 		dat += "<tr><td><a href='byond://?src=[REF(src)];retrieve=[REF(P)]'>[P.name]</a></td></tr>"
 	dat += "</table></center>"
-	user << browse("<html><head><meta http-equiv='Content-Type' content='text/html; charset=UTF-8'><title>[name]</title></head><body>[dat]</body></html>", "window=filingcabinet;size=350x300")
+	//user << browse("<html><head><meta http-equiv='Content-Type' content='text/html; charset=UTF-8'><title>[name]</title></head><body>[dat]</body></html>", "window=filingcabinet;size=350x300") // LOBOTOMYCORPORATION EDIT CHANGE OLD
+	user << browse("<html><head><meta http-equiv='Content-Type' content='text/html; charset=UTF-8'><title>[name]</title></head><body>[dat]</body></html>", "window=filingcabinet;[scaled_browse_size(user, 350, 300)]") // LOBOTOMYCORPORATION EDIT CHANGE NEW -- scale for DPI
 
 
 /obj/structure/filingcabinet/attack_tk(mob/user)

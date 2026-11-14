@@ -29,7 +29,7 @@ GLOBAL_LIST_INIT(available_low_sec_abno, list(
 	/mob/living/simple_animal/hostile/limbus_abno/funeral,
 	//mob/living/simple_animal/hostile/limbus_abno/pbird,
 		//Caused SIGNIFICANT issues during multiple rounds. Keeping it in prefrences in case we fix it. - Kitsunemitsu
-	//mob/living/simple_animal/hostile/limbus_abno/lunar_rabbit,
+	/mob/living/simple_animal/hostile/limbus_abno/lunar_rabbit,
 ))
 
 GLOBAL_LIST_INIT(available_high_sec_abno, list(

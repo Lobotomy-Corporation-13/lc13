@@ -2,10 +2,10 @@ import { useBackend, useLocalState } from '../backend';
 import { Box, Button, Section } from '../components';
 import { Window } from '../layouts';
 
-export const KeyComboModal = (props, context) => {
-  const { act, data } = useBackend(context);
-  const [keysPressed, setKeysPressed] = useLocalState(context, 'keysPressed', []);
-  const [keyCombo, setKeyCombo] = useLocalState(context, 'keyCombo', '');
+export const KeyComboModal = props => {
+  const { act, data } = useBackend();
+  const [keysPressed, setKeysPressed] = useLocalState('keysPressed', []);
+  const [keyCombo, setKeyCombo] = useLocalState('keyCombo', '');
 
   const handleKeyDown = e => {
     e.preventDefault();

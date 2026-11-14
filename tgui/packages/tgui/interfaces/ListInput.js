@@ -14,8 +14,8 @@ const ARROW_KEY_DOWN = 40;
 
 let lastScrollTime = 0;
 
-export const ListInput = (props, context) => {
-  const { act, data } = useBackend(context);
+export const ListInput = props => {
+  const { act, data } = useBackend();
   const {
     title,
     message,
@@ -24,22 +24,16 @@ export const ListInput = (props, context) => {
   } = data;
 
   // Search
-  const [showSearchBar, setShowSearchBar] = useLocalState(
-    context, 'search_bar', false);
-  const [displayedArray, setDisplayedArray] = useLocalState(
-    context, 'displayed_array', buttons);
+  const [showSearchBar, setShowSearchBar] = useLocalState('search_bar', false);
+  const [displayedArray, setDisplayedArray] = useLocalState('displayed_array', buttons);
 
   // KeyPress
-  const [searchArray, setSearchArray] = useLocalState(
-    context, 'search_array', []);
-  const [searchIndex, setSearchIndex] = useLocalState(
-    context, 'search_index', 0);
-  const [lastCharCode, setLastCharCode] = useLocalState(
-    context, 'last_char_code', null);
+  const [searchArray, setSearchArray] = useLocalState('search_array', []);
+  const [searchIndex, setSearchIndex] = useLocalState('search_index', 0);
+  const [lastCharCode, setLastCharCode] = useLocalState('last_char_code', null);
 
   // Selected Button
-  const [selectedButton, setSelectedButton] = useLocalState(
-    context, 'selected_button', buttons[0]);
+  const [selectedButton, setSelectedButton] = useLocalState('selected_button', buttons[0]);
 
   const handleKeyDown = e => {
     e.preventDefault();

@@ -201,7 +201,8 @@
 	body += "<br>"
 	body += "</body></html>"
 
-	usr << browse(body, "window=adminplayeropts-[REF(M)];size=550x515")
+	//usr << browse(body, "window=adminplayeropts-[REF(M)];size=550x515") // LOBOTOMYCORPORATION EDIT CHANGE OLD
+	usr << browse(body, "window=adminplayeropts-[REF(M)];[scaled_browse_size(usr, 550, 515)]") // LOBOTOMYCORPORATION EDIT CHANGE NEW -- scale for DPI
 	SSblackbox.record_feedback("tally", "admin_verb", 1, "Player Panel") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 
 
@@ -409,7 +410,8 @@
 		else
 			dat+="I'm sorry to break your immersion. This shit's bugged. Report this bug to Agouri, polyxenitopalidou@gmail.com"
 
-	usr << browse(dat, "window=admincaster_main;size=400x600")
+	//usr << browse(dat, "window=admincaster_main;size=400x600") // LOBOTOMYCORPORATION EDIT CHANGE OLD
+	usr << browse(dat, "window=admincaster_main;[scaled_browse_size(usr, 400, 600)]") // LOBOTOMYCORPORATION EDIT CHANGE NEW -- scale for DPI
 	onclose(usr, "admincaster_main")
 
 
@@ -908,7 +910,8 @@
 		Maximum: <A href='byond://?src=[REF(src)];[HrefToken()];f_dynamic_roundstart_midround_max=1'>-> [GLOB.dynamic_midround_delay_max / 60 / 10] <-</A> Minutes<br>
 		"}
 
-	user << browse(dat, "window=dyn_mode_options;size=900x650")
+	//user << browse(dat, "window=dyn_mode_options;size=900x650") // LOBOTOMYCORPORATION EDIT CHANGE OLD
+	user << browse(dat, "window=dyn_mode_options;[scaled_browse_size(user, 900, 650)]") // LOBOTOMYCORPORATION EDIT CHANGE NEW -- scale for DPI
 
 /datum/admins/proc/create_or_modify_area()
 	set category = "Debug"

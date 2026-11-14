@@ -121,5 +121,3 @@ Any attempt to code risk class armor will result in a 10 day Github ban.*/
 	desc = "A suit that resembles a sweater.."
 	icon_state = "cord"
 	armor = list(RED_DAMAGE = 0, WHITE_DAMAGE = 10, BLACK_DAMAGE = 0, PALE_DAMAGE = 0)
-
-

@@ -15,9 +15,9 @@ import {
 } from '../components';
 import { Window } from '../layouts';
 
-export const RCELeaderboard = (props, context) => {
-  const { act, data } = useBackend(context);
-  const [tab, setTab] = useLocalState(context, 'tab', 'current');
+export const RCELeaderboard = props => {
+  const { act, data } = useBackend();
+  const [tab, setTab] = useLocalState('tab', 'current');
 
   const {
     error,
@@ -65,7 +65,7 @@ export const RCELeaderboard = (props, context) => {
   );
 };
 
-const CurrentTab = (props, context) => {
+const CurrentTab = props => {
   const { data } = props;
   const current = data.current || {};
   const currentFactories = data.current_factories || [];
@@ -208,11 +208,9 @@ const CurrentTab = (props, context) => {
   );
 };
 
-const HistoryTab = (props, context) => {
+const HistoryTab = props => {
   const { history = [] } = props;
-  const [selectedExpedition, setSelectedExpedition] = useLocalState(
-    context,
-    'selectedExpedition',
+  const [selectedExpedition, setSelectedExpedition] = useLocalState('selectedExpedition',
     null
   );
 
@@ -272,7 +270,7 @@ const HistoryTab = (props, context) => {
   );
 };
 
-const AllTimeTab = (props, context) => {
+const AllTimeTab = props => {
   const { allTime = {} } = props;
   const materials = allTime.total_materials_consumed || {};
 

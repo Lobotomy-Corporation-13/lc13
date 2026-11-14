@@ -118,8 +118,8 @@ const getResistanceColor = value => {
   return 'red';
 };
 
-export const CombatLogBook = (props, context) => {
-  const { act, data } = useBackend(context);
+export const CombatLogBook = props => {
+  const { act, data } = useBackend();
   const {
     current_creature,
     current_page,

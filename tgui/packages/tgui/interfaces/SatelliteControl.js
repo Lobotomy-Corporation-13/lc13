@@ -3,8 +3,8 @@ import { Box, Button, LabeledList, ProgressBar, Section } from '../components';
 import { LabeledListItem } from '../components/LabeledList';
 import { Window } from '../layouts';
 
-export const SatelliteControl = (props, context) => {
-  const { act, data } = useBackend(context);
+export const SatelliteControl = props => {
+  const { act, data } = useBackend();
   const satellites = data.satellites || [];
   return (
     <Window

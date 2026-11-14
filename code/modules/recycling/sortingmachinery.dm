@@ -366,7 +366,8 @@
 
 	dat += "</tr></table><br>Current Selection: [currTag ? GLOB.TAGGERLOCATIONS[currTag] : "None"]</tt>"
 
-	user << browse(dat, "window=destTagScreen;size=450x350")
+	//user << browse(dat, "window=destTagScreen;size=450x350") // LOBOTOMYCORPORATION EDIT CHANGE OLD
+	user << browse(dat, "window=destTagScreen;[scaled_browse_size(user, 450, 350)]") // LOBOTOMYCORPORATION EDIT CHANGE NEW -- scale for DPI
 	onclose(user, "destTagScreen")
 
 /obj/item/dest_tagger/attack_self(mob/user)

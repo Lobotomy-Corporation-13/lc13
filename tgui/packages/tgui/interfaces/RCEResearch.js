@@ -54,9 +54,9 @@ const BRANCH_LABELS = {
   utility: 'Utility (General)',
 };
 
-export const RCEResearch = (props, context) => {
-  const { act, data } = useBackend(context);
-  const [tab, setTab] = useLocalState(context, 'tab', 'tree');
+export const RCEResearch = props => {
+  const { act, data } = useBackend();
+  const [tab, setTab] = useLocalState('tab', 'tree');
 
   const {
     selectedResearch,
@@ -70,9 +70,7 @@ export const RCEResearch = (props, context) => {
     isProcessing = false,
   } = data;
 
-  const [bestiarySearch, setBestiarySearch] = useLocalState(
-    context,
-    'bestiarySearch',
+  const [bestiarySearch, setBestiarySearch] = useLocalState('bestiarySearch',
     ''
   );
 
@@ -163,8 +161,8 @@ export const RCEResearch = (props, context) => {
 };
 
 // Research Tree Tab - Simple list layout with three branches
-const ResearchTreeTab = (props, context) => {
-  const { act } = useBackend(context);
+const ResearchTreeTab = props => {
+  const { act } = useBackend();
   const {
     researchTree,
     selectedResearch,
@@ -214,8 +212,8 @@ const ResearchTreeTab = (props, context) => {
 };
 
 // Branch list component
-const BranchList = (props, context) => {
-  const { act } = useBackend(context);
+const BranchList = props => {
+  const { act } = useBackend();
   const {
     branch,
     nodes,
@@ -284,8 +282,8 @@ const BranchList = (props, context) => {
 };
 
 // Individual research node card
-const ResearchNodeCard = (props, context) => {
-  const { act } = useBackend(context);
+const ResearchNodeCard = props => {
+  const { act } = useBackend();
   const {
     node,
     selected,
@@ -481,8 +479,8 @@ const getRecommendedMobs = (currentResearch, bestiary) => {
 };
 
 // Samples Tab
-const SamplesTab = (props, context) => {
-  const { act } = useBackend(context);
+const SamplesTab = props => {
+  const { act } = useBackend();
   const {
     partsList,
     selectedResearch,
@@ -739,8 +737,8 @@ const SamplesTab = (props, context) => {
 };
 
 // Progress Tab
-const ProgressTab = (props, context) => {
-  const { act } = useBackend(context);
+const ProgressTab = props => {
+  const { act } = useBackend();
   const { currentResearch, researchProgress, selectedResearch } = props;
 
   if (!selectedResearch || !currentResearch) {

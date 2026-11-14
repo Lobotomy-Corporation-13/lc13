@@ -67,7 +67,8 @@ GLOBAL_LIST_INIT(sandstone_recipes, list ( \
 GLOBAL_LIST_INIT(sandbag_recipes, list ( \
 	new/datum/stack_recipe("sandbags", /obj/structure/barricade/sandbags, 1, time = 8, one_per_turf = TRUE, on_floor = TRUE), \
 	new/datum/stack_recipe("concrete barrier", /obj/structure/barricade/sandbags/grey, 3, time = 8, one_per_turf = TRUE, on_floor = TRUE), \
-	new/datum/stack_recipe("concrete tunnel", /obj/structure/barricade/sandbags/grey/hole, 2, time = 12, one_per_turf = TRUE, on_floor = TRUE) \
+	new/datum/stack_recipe("concrete tunnel", /obj/structure/barricade/sandbags/grey/hole, 2, time = 12, one_per_turf = TRUE, on_floor = TRUE), \
+	new/datum/stack_recipe("concrete ramp", /obj/structure/barricade/sandbags/ramp, 2, time = 12, one_per_turf = TRUE, on_floor = TRUE) \
 	))
 
 /obj/item/stack/sheet/mineral/sandbags/ten

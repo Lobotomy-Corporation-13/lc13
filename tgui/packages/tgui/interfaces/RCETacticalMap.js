@@ -600,8 +600,8 @@ const AnnotationList = props => {
 };
 
 // Main component
-export const RCETacticalMap = (props, context) => {
-  const { act, data } = useBackend(context);
+export const RCETacticalMap = props => {
+  const { act, data } = useBackend();
   const {
     annotations = [],
     mapGrid,
@@ -612,26 +612,18 @@ export const RCETacticalMap = (props, context) => {
     isAdmin = false,
   } = data;
 
-  const [selectedTool, setSelectedTool] = useLocalState(
-    context,
-    'selectedTool',
+  const [selectedTool, setSelectedTool] = useLocalState('selectedTool',
     TOOL_PENCIL
   );
-  const [selectedColor, setSelectedColor] = useLocalState(
-    context,
-    'selectedColor',
+  const [selectedColor, setSelectedColor] = useLocalState('selectedColor',
     '#ff4444'
   );
-  const [selectedIcon, setSelectedIcon] = useLocalState(
-    context,
-    'selectedIcon',
+  const [selectedIcon, setSelectedIcon] = useLocalState('selectedIcon',
     'target'
   );
-  const [textInput, setTextInput] = useLocalState(context, 'textInput', '');
-  const [textPos, setTextPos] = useLocalState(context, 'textPos', null);
-  const [showAnnotationList, setShowAnnotationList] = useLocalState(
-    context,
-    'showAnnotationList',
+  const [textInput, setTextInput] = useLocalState('textInput', '');
+  const [textPos, setTextPos] = useLocalState('textPos', null);
+  const [showAnnotationList, setShowAnnotationList] = useLocalState('showAnnotationList',
     false
   );
 

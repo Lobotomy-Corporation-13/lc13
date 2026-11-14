@@ -20,8 +20,8 @@ const formatReqs = reqs => {
   return parts.length > 0 ? parts.join(' ') : '-';
 };
 
-export const EgoArmorVend = (props, context) => {
-  const { act, data } = useBackend(context);
+export const EgoArmorVend = props => {
+  const { act, data } = useBackend();
   return (
     <Window width={600} height={550}>
       <Window.Content scrollable>

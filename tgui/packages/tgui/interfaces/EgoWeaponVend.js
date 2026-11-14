@@ -46,8 +46,8 @@ const formatRangedSpeed = (fireRate, fireDelay) => {
   return 'Semi';
 };
 
-export const EgoWeaponVend = (props, context) => {
-  const { act, data } = useBackend(context);
+export const EgoWeaponVend = props => {
+  const { act, data } = useBackend();
   return (
     <Window width={620} height={550}>
       <Window.Content scrollable>

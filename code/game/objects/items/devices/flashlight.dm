@@ -256,6 +256,15 @@
 	if(!usr.stat)
 		attack_self(usr)
 
+// Lava Lamp, Sprite by InsightfulParasite
+/obj/item/flashlight/lamp/lava
+	name = "lava lamp"
+	desc = "A small lava lamp. It's hot to the touch."
+	icon = 'icons/obj/lighting.dmi'
+	icon_state = "lamplava"
+	inhand_icon_state = "lamplava"
+	light_range = 4 //Bit less bright than a proper desklamp
+
 //Bananalamp
 /obj/item/flashlight/lamp/bananalamp
 	name = "banana lamp"
@@ -378,6 +387,11 @@
 	desc = "An ornate, green lantern."
 	color = LIGHT_COLOR_GREEN
 	light_color = LIGHT_COLOR_GREEN
+
+/obj/item/flashlight/lantern/paper //Sprites courtesy of InsightfulParasite
+	name = "paper lantern"
+	desc = "An ornate paper lantern."
+	icon_state = "paperlantern"
 
 /obj/item/flashlight/slime
 	gender = PLURAL

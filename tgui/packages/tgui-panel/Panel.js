@@ -13,19 +13,19 @@ import { Notifications } from './Notifications';
 import { PingIndicator } from './ping';
 import { SettingsPanel, useSettings } from './settings';
 
-export const Panel = (props, context) => {
+export const Panel = props => {
   // IE8-10: Needs special treatment due to missing Flex support
   if (Byond.IS_LTE_IE10) {
     return (
       <HoboPanel />
     );
   }
-  const audio = useAudio(context);
-  const settings = useSettings(context);
-  const game = useGame(context);
+  const audio = useAudio();
+  const settings = useSettings();
+  const game = useGame();
   if (process.env.NODE_ENV !== 'production') {
     const { useDebug, KitchenSink } = require('tgui/debug');
-    const debug = useDebug(context);
+    const debug = useDebug();
     if (debug.kitchenSink) {
       return (
         <KitchenSink panel />
@@ -80,7 +80,8 @@ export const Panel = (props, context) => {
         )}
         <Stack.Item grow>
           <Section fill fitted position="relative">
-            <Pane.Content scrollable>
+            {/* LOBOTOMYCORPORATION EDIT - id used by chat/renderer.js mount() (as in tg #94514) */}
+            <Pane.Content scrollable id="chat-pane">
               <ChatPanel lineHeight={settings.lineHeight} />
             </Pane.Content>
             <Notifications>
@@ -111,11 +112,12 @@ export const Panel = (props, context) => {
   );
 };
 
-const HoboPanel = (props, context) => {
-  const settings = useSettings(context);
+const HoboPanel = props => {
+  const settings = useSettings();
   return (
     <Pane theme={settings.theme}>
-      <Pane.Content scrollable>
+      {/* LOBOTOMYCORPORATION EDIT - id used by chat/renderer.js mount() (as in tg #94514) */}
+      <Pane.Content scrollable id="chat-pane">
         <Button
           style={{
             position: 'fixed',

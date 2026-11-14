@@ -40,22 +40,25 @@ GLOBAL_LIST_INIT(channel_tokens, list(
 	. = ..()
 
 	if(item_flags & IN_INVENTORY && loc == user)
-		// construction of frequency description
-		var/list/avail_chans = list("Use [RADIO_KEY_COMMON] for the currently tuned frequency")
-		if(translate_binary)
-			avail_chans += "use [MODE_TOKEN_BINARY] for [MODE_BINARY]"
-		if(length(channels))
-			for(var/i in 1 to length(channels))
-				if(i == 1)
-					avail_chans += "use [MODE_TOKEN_DEPARTMENT] or [GLOB.channel_tokens[channels[i]]] for [lowertext(channels[i])]"
-				else
-					avail_chans += "use [GLOB.channel_tokens[channels[i]]] for [lowertext(channels[i])]"
-		. += "<span class='notice'>A small screen on the headset displays the following available frequencies:\n[english_list(avail_chans)].</span>"
+		. += screen_text()
 
 		if(command)
 			. += "<span class='info'>Alt-click to toggle the high-volume mode.</span>"
 	else
 		. += "<span class='notice'>A small screen on the headset flashes, it's too small to read without holding or wearing the headset.</span>"
+
+/// The frequency readout shown on examine while the headset is held or worn.
+/obj/item/radio/headset/proc/screen_text()
+	var/list/avail_chans = list("Use [RADIO_KEY_COMMON] for the currently tuned frequency")
+	if(translate_binary)
+		avail_chans += "use [MODE_TOKEN_BINARY] for [MODE_BINARY]"
+	if(length(channels))
+		for(var/i in 1 to length(channels))
+			if(i == 1)
+				avail_chans += "use [MODE_TOKEN_DEPARTMENT] or [GLOB.channel_tokens[channels[i]]] for [lowertext(channels[i])]"
+			else
+				avail_chans += "use [GLOB.channel_tokens[channels[i]]] for [lowertext(channels[i])]"
+	return "<span class='notice'>A small screen on the headset displays the following available frequencies:\n[english_list(avail_chans)].</span>"
 
 /obj/item/radio/headset/Initialize()
 	. = ..()
@@ -199,6 +202,23 @@ GLOBAL_LIST_INIT(channel_tokens, list(
 
 //LC13 syndicate headset
 /obj/item/radio/headset/syndicatecity/heads
+	command = TRUE
+
+//LC13 faction headset. Carries one job-declared channel, spoken on with ; only.
+/obj/item/radio/headset/faction
+	name = "faction headset"
+	desc = "An unmarked headset that binds itself to a single faction's private channel."
+	icon_state = "headset"
+	inhand_icon_state = "headset"
+	freerange = TRUE
+	freqlock = TRUE
+
+/obj/item/radio/headset/faction/screen_text()
+	if(!job_channel)
+		return "<span class='notice'>A small screen on the headset reads UNASSIGNED. Use [RADIO_KEY_COMMON] to speak on the frequency it is tuned to.</span>"
+	return "<span class='notice'>A small screen on the headset reads [job_channel]. Use [RADIO_KEY_COMMON] to speak with your faction.</span>"
+
+/obj/item/radio/headset/faction/heads
 	command = TRUE
 
 //LC13 Association when mixed

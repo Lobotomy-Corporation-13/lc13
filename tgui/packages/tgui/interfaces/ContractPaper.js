@@ -15,21 +15,14 @@ import {
   PatrolRouteCanvas,
 } from './PatrolRouteMap';
 
-export const ContractPaper = (
-  props,
-  context,
-) => {
-  const { act, data } = useBackend(
-    context,
-  );
+export const ContractPaper = props => {
+  const { act, data } = useBackend();
   const {
     contract_name = 'Contract',
     state = 'pending',
     has_map = false,
   } = data;
-  const [tab, setTab] = useSharedState(
-    context, 'paperTab', 0,
-  );
+  const [tab, setTab] = useSharedState('paperTab', 0);
   const showTabs = has_map;
   return (
     <Window

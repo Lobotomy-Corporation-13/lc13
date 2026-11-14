@@ -158,7 +158,9 @@ SUBSYSTEM_DEF(ticker)
 			for(var/client/C in GLOB.clients)
 				window_flash(C, ignorepref = TRUE) //let them know lobby has opened up.
 			to_chat(world, "<span class='boldnotice'>Welcome to [station_name()]!</span>")
-			send2chat("New round starting on [SSmapping.config.map_name]!", CONFIG_GET(string/chat_announce_new_game))
+			var/datum/map_config/map_config = SSmapping.config
+			var/map_name = (map_config.has_submaps ? map_config.map_name + ": " + map_config.available_submaps[map_config.map_file] : map_config.map_name)
+			send2chat("New round starting on [map_name]!", CONFIG_GET(string/chat_announce_new_game))
 			current_state = GAME_STATE_PREGAME
 			//Everyone who wants to be an observer is now spawned
 			create_observers()
@@ -262,6 +264,8 @@ SUBSYSTEM_DEF(ticker)
 		switch(SSmaptype.chosen_trait)
 			if(FACILITY_TRAIT_JOKE_ABNOS)
 				mode = new /datum/game_mode/management/joke
+			if(FACILITY_TRAIT_SS13_ABNOS)
+				mode = new /datum/game_mode/management/ss13
 			if(FACILITY_TRAIT_FUCKED_SELECTION)
 				var/choosingmode = pick(
 							/datum/game_mode/management/pure,
@@ -382,11 +386,6 @@ SUBSYSTEM_DEF(ticker)
 		addtimer(CALLBACK(src, PROC_REF(DoGamespeedVote)), when_to_do_gamespeed_vote)
 
 		addtimer(CALLBACK(SSlobotomy_corp, TYPE_PROC_REF(/datum/controller/subsystem/lobotomy_corp, LiftCoreSelectionRestriction)), SSlobotomy_corp.core_selection_restriction_lift_timer)
-	else if((SSmaptype.maptype == "city")) // On City of Light specifically (not City Fixers or etc), add 2 Roamer slots at roundstart
-		for(var/datum/job/processing in SSjob.occupations)
-			if((istype(processing, /datum/job/associateroaming)))
-				processing.total_positions += 2
-				break
 
 //These callbacks will fire after roundstart key transfer
 /datum/controller/subsystem/ticker/proc/OnRoundstart(datum/callback/cb)

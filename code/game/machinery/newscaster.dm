@@ -969,7 +969,8 @@ GLOBAL_LIST_EMPTY(allCasters)
 					dat+="<BR><I>There is a small scribble near the end of this page... It reads: \"[scribble]\"</I>"
 				dat+= "<HR><DIV STYLE='float:left;'><A href='byond://?src=[REF(src)];prev_page=1'>Previous Page</A></DIV>"
 		dat+="<BR><HR><div align='center'>[curr_page+1]</div>"
-		human_user << browse(dat, "window=newspaper_main;size=300x400")
+		//human_user << browse(dat, "window=newspaper_main;size=300x400") // LOBOTOMYCORPORATION EDIT CHANGE OLD
+		human_user << browse(dat, "window=newspaper_main;[scaled_browse_size(human_user, 300, 400)]") // LOBOTOMYCORPORATION EDIT CHANGE NEW -- scale for DPI
 		onclose(human_user, "newspaper_main")
 	else
 		to_chat(user, "<span class='warning'>The paper is full of unintelligible symbols!</span>")

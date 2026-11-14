@@ -144,10 +144,22 @@ export const createAction = (type, prepare) => {
 // Implementation specific
 // --------------------------------------------------------
 
-export const useDispatch = context => {
-  return context.store.dispatch;
+let globalStore;
+
+/**
+ * Sets the store used by useDispatch/useSelector (and tgui backend hooks).
+ * Replaces passing the store around via Inferno context.
+ */
+export const setGlobalStore = store => {
+  globalStore = store;
 };
 
-export const useSelector = (context, selector) => {
-  return selector(context.store.getState());
+export const getGlobalStore = () => globalStore;
+
+export const useDispatch = () => {
+  return globalStore.dispatch;
+};
+
+export const useSelector = selector => {
+  return selector(globalStore.getState());
 };

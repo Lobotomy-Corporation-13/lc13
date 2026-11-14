@@ -118,8 +118,8 @@ const getResistanceColor = value => {
   return 'red';
 };
 
-export const CreatureReport = (props, context) => {
-  const { data } = useBackend(context);
+export const CreatureReport = props => {
+  const { data } = useBackend();
   const { creature } = data;
 
   if (!creature) {

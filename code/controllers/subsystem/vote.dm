@@ -159,12 +159,15 @@ SUBSYSTEM_DEF(vote)
 						GLOB.master_mode = chosen_mode
 			*/
 			if("map")
-				SSmapping.changemap(global.config.maplist[.])
+				var/datum/map_config/chosen = global.config.maplist[.]
+				SSmapping.changemap(chosen)
 				SSmapping.map_voted = TRUE
+				if(chosen.has_submaps && length(chosen.available_submaps) > 1)
+					addtimer(CALLBACK(SSmapping, TYPE_PROC_REF(/datum/controller/subsystem/mapping, AttemptSubmapVote)), 5 SECONDS)
+					to_chat(world, span_boldannounce("The selected map has multiple variants. A vote will start shortly to choose which one to play!"))
 			if("submap")
 				var/selected_file = choice_tags[choices.Find(.)]
 				if(SSmapping.next_map_config && SSmapping.next_map_config.SetSelectedSubmap(selected_file))
-					to_chat(world, span_boldannounce("Map variant selected: [.]"))
 					// Save the updated config
 					SSmapping.next_map_config.MakeNextMap()
 				else
@@ -190,6 +193,14 @@ SUBSYSTEM_DEF(vote)
 					if((. == setting.player_facing_name) && (SSlobotomy_corp.gamespeed.player_facing_name != .))
 						// Adjust the gamespeed to the new one and announce it.
 						SSlobotomy_corp.AdjustGamespeed(setting)
+	// The vote result is null, if we were voting for submap we now need to force it to choose based on its no_submap_behavior
+	else
+		if(mode == "submap")
+			if(SSmapping.next_map_config && SSmapping.next_map_config.SetSelectedSubmap(null))
+				// Save the updated config
+				SSmapping.next_map_config.MakeNextMap()
+			else
+				to_chat(world, span_warning("Failed to set map variant!"))
 
 	if(restart)
 		var/active_admins = FALSE
@@ -302,11 +313,12 @@ SUBSYSTEM_DEF(vote)
 			if(!SSmapping.next_map_config || !SSmapping.next_map_config.has_submaps)
 				return FALSE
 			question = "Select a variant for [SSmapping.next_map_config.map_name]:"
-			for(var/submap in SSmapping.next_map_config.available_submaps)
+			var/list/submaps_list = SSmapping.next_map_config.available_submaps
+			for(var/submap in submaps_list)
 				var/display_name
 				// Check if we have a custom display name
-				if(submap in SSmapping.next_map_config.submap_display_names)
-					display_name = SSmapping.next_map_config.submap_display_names[submap]
+				if(istext(submaps_list[submap]))
+					display_name = submaps_list[submap]
 				else
 					// Fall back to cleaned up filename
 					display_name = replacetext(submap, ".dmm", "")

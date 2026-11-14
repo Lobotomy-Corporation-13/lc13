@@ -23,7 +23,7 @@ const DEFAULT_SIZE = [400, 600];
 
 export class Window extends Component {
   componentDidMount() {
-    const { suspended } = useBackend(this.context);
+    const { suspended } = useBackend();
     if (suspended) {
       return;
     }
@@ -42,7 +42,7 @@ export class Window extends Component {
   }
 
   updateGeometry() {
-    const { config } = useBackend(this.context);
+    const { config } = useBackend();
     const options = {
       size: DEFAULT_SIZE,
       ...config.window,
@@ -66,9 +66,9 @@ export class Window extends Component {
     const {
       config,
       suspended,
-    } = useBackend(this.context);
-    const { debugLayout } = useDebug(this.context);
-    const dispatch = useDispatch(this.context);
+    } = useBackend();
+    const { debugLayout } = useDebug();
+    const dispatch = useDispatch();
     const fancy = config.window?.fancy;
     // Determine when to show dimmer
     const showDimmer = config.user && (
@@ -153,7 +153,7 @@ const statusToColor = status => {
   }
 };
 
-const TitleBar = (props, context) => {
+const TitleBar = props => {
   const {
     className,
     title,
@@ -163,7 +163,7 @@ const TitleBar = (props, context) => {
     onDragStart,
     onClose,
   } = props;
-  const dispatch = useDispatch(context);
+  const dispatch = useDispatch();
   return (
     <div
       className={classes([

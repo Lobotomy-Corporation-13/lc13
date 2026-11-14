@@ -17,6 +17,8 @@ const logger = createLogger('chatRenderer');
 // that is still trackable.
 const SCROLL_TRACKING_TOLERANCE = 24;
 
+// LOBOTOMYCORPORATION EDIT START - no longer used, see mount()
+/*
 const findNearestScrollableParent = startingNode => {
   const body = document.body;
   let node = startingNode;
@@ -31,6 +33,8 @@ const findNearestScrollableParent = startingNode => {
   }
   return window;
 };
+*/
+// LOBOTOMYCORPORATION EDIT END
 
 const createHighlightNode = (text, color) => {
   const node = document.createElement('span');
@@ -148,8 +152,14 @@ class ChatRenderer {
     else {
       this.rootNode = node;
     }
-    // Find scrollable parent
-    this.scrollNode = findNearestScrollableParent(this.rootNode);
+    // LOBOTOMYCORPORATION EDIT START - look up the chat pane by id, as tg
+    // does since #94514. The old scrollbar check ran while the panel was still
+    // 0x0 at startup, found no scrollbar, fell back to `window`, and chat then
+    // never auto-scrolled.
+    // // Find scrollable parent
+    // this.scrollNode = findNearestScrollableParent(this.rootNode);
+    this.scrollNode = document.getElementById('chat-pane');
+    // LOBOTOMYCORPORATION EDIT END
     this.scrollNode.addEventListener('scroll', this.handleScroll);
     setImmediate(() => {
       this.scrollToBottom();

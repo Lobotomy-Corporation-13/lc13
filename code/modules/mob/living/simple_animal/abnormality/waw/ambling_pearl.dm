@@ -29,10 +29,10 @@
 	threat_level = WAW_LEVEL
 	start_qliphoth = 3
 	work_chances = list(
-		ABNORMALITY_WORK_INSTINCT = list(0, 0, 35, 40, 45),
-		ABNORMALITY_WORK_INSIGHT = list(0, 0, 20, 25, 30),
+		ABNORMALITY_WORK_INSTINCT = list(0, 0, 45, 50, 55),
+		ABNORMALITY_WORK_INSIGHT = list(0, 0, 30, 40, 40),
 		ABNORMALITY_WORK_ATTACHMENT = 0,
-		ABNORMALITY_WORK_REPRESSION = list(0, 0, 40, 45, 50),
+		ABNORMALITY_WORK_REPRESSION = list(0, 0, 45, 50, 55),
 	)
 	neutral_droprate = 30
 	bad_droprate = 100
@@ -43,7 +43,7 @@
 
 	ego_list = list(
 		/datum/ego_datum/weapon/effervescent,
-		/datum/ego_datum/weapon/effervescent,
+		/datum/ego_datum/armor/effervescent,
 		/datum/ego_datum/poisonheal,
 	)
 

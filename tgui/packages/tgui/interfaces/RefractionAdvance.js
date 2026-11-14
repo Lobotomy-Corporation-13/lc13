@@ -136,8 +136,8 @@ const SectorResultRow = props => {
   );
 };
 
-const FinishedView = (props, context) => {
-  const { act, data } = useBackend(context);
+const FinishedView = props => {
+  const { act, data } = useBackend();
   const results = data.results || {};
   const sectors = results.sectors || [];
   return (
@@ -216,8 +216,8 @@ const ThemeMusicPanel = props => {
   );
 };
 
-const StagingView = (props, context) => {
-  const { act, data } = useBackend(context);
+const StagingView = props => {
+  const { act, data } = useBackend();
   const members = data.members || [];
   const isOwner = data.is_lobby_owner;
   const isOwnerActive = data.is_owner_active;
@@ -231,19 +231,13 @@ const StagingView = (props, context) => {
   const currentSector = data.current_sector || 0;
   // Anyone can pull the rip cord if the owner is AFK / disconnected.
   const canAbandon = isOwner || !isOwnerActive;
-  const [abandonArmed, setAbandonArmed] = useLocalState(
-    context,
-    'abandonArmed',
+  const [abandonArmed, setAbandonArmed] = useLocalState('abandonArmed',
     false
   );
-  const [forceArmed, setForceArmed] = useLocalState(
-    context,
-    'forceArmed',
+  const [forceArmed, setForceArmed] = useLocalState('forceArmed',
     false
   );
-  const [endEarlyArmed, setEndEarlyArmed] = useLocalState(
-    context,
-    'endEarlyArmed',
+  const [endEarlyArmed, setEndEarlyArmed] = useLocalState('endEarlyArmed',
     false
   );
   const earlyPercent = sectionCount > 0
@@ -402,12 +396,10 @@ const StagingView = (props, context) => {
   );
 };
 
-export const RefractionAdvance = (props, context) => {
-  const { data } = useBackend(context);
+export const RefractionAdvance = props => {
+  const { data } = useBackend();
   const isFinished = data.lobby_state === 'lobby_finished';
-  const [showRecords, setShowRecords] = useLocalState(
-    context,
-    'showRecords',
+  const [showRecords, setShowRecords] = useLocalState('showRecords',
     false
   );
   return (

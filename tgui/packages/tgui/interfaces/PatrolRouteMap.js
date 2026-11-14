@@ -11,11 +11,8 @@ const WP_COLOR = '#d4a017';
 const WP_ACTIVE = '#44ff44';
 const LINE_COLOR = '#d4a017';
 
-export const PatrolRouteMap = (
-  props,
-  context,
-) => {
-  const { data } = useBackend(context);
+export const PatrolRouteMap = props => {
+  const { data } = useBackend();
   const { statusText = '' } = data;
   return (
     <Window

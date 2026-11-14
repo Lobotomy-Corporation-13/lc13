@@ -463,3 +463,54 @@
 	"Employee F5004: <Redacted> was a colleague of mine for whom I cared deeply. Well, I cared for all my coworkers, but <Redacted> was different. The amount of passion they poured into their work was something I have rarely witnessed in life. Anyways, I have no idea how she, that Abnormality, learned <Redacted>’s name. Maybe someone called it out to them while they were inside the Containment Unit and she heard it. We should have sent two in for work with her. The common procedure was to have a team of two sent into the Containment Unit, but as you know, we’re always shorthanded. Besides, that Abnormality was low on the threat scale. If we followed the procedure and sent two inside, the powers that be would not have been happy about it one bit. (Omitted)<br>
 	Well, you know the rest. The day the incident happened, <Redacted> was sent to the Containment Unit as usual, but they didn’t come out for a long time. I know <Redacted> was a prompt and diligent worker, so I headed straight for the Containment Unit fearing the worst. Thankfully, I found them without even a scratch, but the kid looked out of it. Like, way out of it. (Omitted)<br>
 	The next day, the kid was resigned. I heard they sent ‘em to an asylum, but no one ever saw <Redacted> again. The kid just kept staring at the wall, murmuring and not responding to anyone. That was the very last time I saw <Redacted>. No one knows what happened inside the Containment Unit. You won’t find it out from the kid either."}
+
+//Scuffed Lioness
+/obj/item/paper/fluff/lore/teth/scuffed_lioness
+	name = "F-02-214"
+	info = {"<h2><center>F-02-214</center></h2>	<br>
+	Scuffed Lioness	<br>
+	"An Abnormality in the shape of a lean, grey lioness. Her front half still walks on solid legs, but her hindquarters have worn away to bare, drifting bone. No matter how thin she grows, she carries herself as though she were still the largest thing on the plains."<br>
+
+	"She was the pride of her pride. The other lionesses hunted, and she ate first; the cubs learned her gait before they learned to run. She never once questioned that the grass and the herds and the shade of every tree belonged to her by right. To bow her head to another was a thing she did not know how to do, and so she never learned."<br>
+
+	"The lean years came, as they always do. The herds thinned, the pride scattered, and one by one the others left to beg a place in stronger territories. She did not go with them. To arrive at another’s border with her ears low would have been a smaller death than starving, and she knew which death she preferred. So she stayed, and she starved, and her hindquarters wasted away until there was nothing left of them but the memory of a shape."<br>
+
+	<h3><center>Excerpt from Observation Log</center></h3><br>
+	"Feed her and she is calm; she takes the offering the way a queen accepts tribute, without thanks and without shame. The trouble is in the eyes. She holds your gaze and waits to see whether you will hold it back. Meet her, plainly, as you would an equal, and she settles - she has decided you are worth the courtesy. Look away, or worse, soften your face toward her, and it curdles. She does not want your care. She reads pity as the lowest thing one animal can offer another, an admission that you have already decided she is beneath you. The employees who came out of her unit shaken were, without exception, the kind ones."<br>
+
+	<h3><center>Excerpt from Counseling Log</center></h3><br>
+	"I kept thinking there was nothing left of her to be afraid of. Half her body is gone. You can see clean through where her legs should be. And I felt sorry for her, I really did, and I think that was the mistake. The moment my face changed she was up off the floor. Nothing about her is slow. (Omitted) The strange part is that she gets worse as you hurt her, not better. Every wound just makes her faster, meaner, like being brought lower is the one thing she will never forgive you for. She would rather die in a single furious minute than let anyone watch her fade. I understand the feeling. I just wish I had understood it from the far side of the door."}
+
+//Clambug
+/obj/item/paper/fluff/lore/teth/clambug
+	name = "T-03-213"
+	info = {"<h2><center>T-03-213</center></h2>	<br>
+	Clambug	<br>
+	"An Abnormality resembling a hunched beetle roughly the size of a large hound. Its dark carapace is grooved and packed like turned soil, and its soil-caked mandibles never stop working, even when there is nothing between them to chew."<br>
+
+	"It does not chase. It does not corner. It waits. Somewhere beneath the floor of its unit it sits in the dark with its jaws grinding on nothing, and it is patient in a way that nothing which needs to breathe air can be patient. The hunger is always there, but the hunger has learned to wait, because waiting is how the hunger has always been fed."<br>
+
+	"When it takes something, it takes it from below. There is a tremor, a shifting of the ground, and then the floor opens where a person is standing. Whatever comes up does so all at once, and by the time it has gone back down the ground is undisturbed again, as though it had never been broken at all. It leaves no trail to follow. That is the worst of it - there is nothing to find, and so there is nothing to warn the next one."<br>
+
+	<h3><center>Excerpt from Voice Records</center></h3><br>
+	"Reyes: You feel that? Floor’s been shaking on and off all shift. Maintenance running something under us?<br>
+	Okonkwo: There’s nothing scheduled. There’s nothing under this level. It’s solid all the way down.<br>
+	Reyes: Then what am I standing on that keeps - hold on. It stopped.<br>
+	Okonkwo: Reyes. Do not move. Whatever you do, do not - <br>
+	Reyes: It’s fine, it stopped, I told you it was just the - <br>
+	(The recording ends here.)"<br>
+
+	<h3><center>Excerpt from Observation Log</center></h3><br>
+	"It resents being studied, and it makes this plain. Insight and Repression work both leave it agitated for the rest of the day, mandibles snapping faster, and its Qliphoth Counter suffers for it even when the session went well by every other measure. Our reading is that it does not like being looked at closely. A thing that survives by never being seen coming would not, I suppose. Low-Fortitude staff should also be warned that it will nip at them throughout the work - never enough to be dangerous, but enough to remind them that the jaws are always working, and that they are, for the moment, on the wrong side of them."}
+
+//Faces in the Light
+/obj/item/paper/fluff/lore/teth/faces_in_light
+	name = "T-03-58"
+	info = {"<h2><center>T-03-58</center></h2>	<br>
+	Faces in the Light	<br>
+	"A crook-necked lamp of the sort that leans over a desk or a lonely stretch of pavement, throwing a slanted cone of tired light. It moves for nothing and no one. Watch the beam long enough, though, and faces surface in it - a pair of eyes, a grin - and sink away again the instant the light shifts."<br>
+	<br>
+	"It was recovered from an underpass on the Backstreets where a single lamp had held back the dark for as long as anyone could remember. People slept in its cone of light, because the things in the dark would not cross into it. Over the years the light grew crowded. The faces, we think, are the ones who stayed under it too long, and were kept."<br>
+	<br>
+	<h3><center>Excerpt from Containment Log</center></h3><br>
+	"The rule the old hands drill into you is simple: keep its cell dim and the work comes easy, but never, ever let the floor go dark. In the light the faces are only a nuisance you cannot touch - they drift and they grin and your blades pass clean through them. It is the dark that gives them teeth. Cut the lights to put one down, and in the same breath you have made every other one deadly. (Omitted) The worst of it is the broken ones. Let a face reach someone already lost to the strain and it simply... wears them. There is a grin where the person was, and now there is one more face than there was a moment ago."}

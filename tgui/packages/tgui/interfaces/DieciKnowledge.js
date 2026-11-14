@@ -14,8 +14,8 @@ const KNOWLEDGE_TYPES = [
   'Spiritual',
 ];
 
-export const DieciKnowledge = (props, context) => {
-  const { act, data } = useBackend(context);
+export const DieciKnowledge = props => {
+  const { act, data } = useBackend();
   const {
     active_knowledge = [],
     max_knowledge = 20,

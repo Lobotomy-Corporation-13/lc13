@@ -4,7 +4,7 @@ import { useBackend } from '../backend';
 import { Box, Button, Flex, Icon, NoticeBox, Section } from '../components';
 import { NtosWindow } from '../layouts';
 
-export const NtosRadar = (props, context) => {
+export const NtosRadar = props => {
   return (
     <NtosWindow
       width={800}
@@ -15,8 +15,8 @@ export const NtosRadar = (props, context) => {
   );
 };
 
-export const NtosRadarContent = (props, context) => {
-  const { act, data } = useBackend(context);
+export const NtosRadarContent = props => {
+  const { act, data } = useBackend();
   const {
     selected,
     object = [],

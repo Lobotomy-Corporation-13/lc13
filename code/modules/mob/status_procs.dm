@@ -67,7 +67,8 @@
 	else
 		clear_alert("blind")
 		clear_fullscreen("blind")
-		remove_client_colour(/datum/client_colour/monochrome/blind)
+		for(var/datum/client_colour/monochrome/blind/why_are_there_multiple in src.client_colours) // ??? i guess we can have multiple of the same for some reason?
+			remove_client_colour(/datum/client_colour/monochrome/blind)
 
 
 /**

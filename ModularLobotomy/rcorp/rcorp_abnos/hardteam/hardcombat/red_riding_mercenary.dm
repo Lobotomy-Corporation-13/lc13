@@ -100,7 +100,8 @@
 		If 'Rage' is active you will throw 5 scythe axes in a greater cone instead. \
 		The cooldown of this attack is 11 seconds, if 'Rage' is active cooldown is reduced to 8 seconds. <br>\
 		<br>\
-		|Rage|: If your health is below 80% and you are hit by a attack from 'Big and Will be Bad Wolf' or 'Reddened Buddy' you will enter a Rage state. \
+		|Rage|: If you are hit by a attack from 'Big and Will be Bad Wolf' you will enter a Rage state. \
+		If your health is below 80% and you are hit by a attack from 'Reddened Buddy' you will enter a Rage state. \
 		While Rage is active your speed and melee attack speed drastically increase, all your attacks are also buffed. \
 		When the source of your Rage is killed (depending on circumstance) it is possible that Rage will be cancelled and you will return to your default state. <br>\
 		<br>\
@@ -122,7 +123,7 @@
 /mob/living/simple_animal/hostile/rcorp_abno/hard/red_hood/proc/AttemptEvade()
 	if((world.time < evade_timer) || evading_attack)
 		if(client)
-			to_chat(src, span_danger(" You can't do that now!"))
+			to_chat(src, span_danger("You can't do that now!"))
 		return FALSE
 	evading_attack = TRUE
 	addtimer(CALLBACK(src, PROC_REF(EndEvade)), 20)
@@ -137,10 +138,10 @@
 
 /mob/living/simple_animal/hostile/rcorp_abno/hard/red_hood/PostDamageReaction(damage_amount, damage_type, source, attack_type)
 	. = ..()
-	if(health > (maxHealth * 0.8))
-		return
 	if(istype(source, rival))
 		RageUpdate(2)
+	if(health > (maxHealth * 0.8))
+		return
 /*	else if(istype(source, /mob/living/simple_animal/hostile/abnormality/red_buddy) && red_rage < 1) //Red buddy isnt in RCA yet
 		RageUpdate(1) */ //Buddy update any day now
 

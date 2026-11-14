@@ -39,4 +39,5 @@
 	if(!fexists(F))
 		to_chat(src, span_danger("No [selected] logfile was found."), confidential = TRUE)
 		return
-	src << browse(F,"window=investigate[selected];size=800x300")
+	//src << browse(F,"window=investigate[selected];size=800x300") // LOBOTOMYCORPORATION EDIT CHANGE OLD
+	src << browse(F,"window=investigate[selected];[scaled_browse_size(src, 800, 300)]") // LOBOTOMYCORPORATION EDIT CHANGE NEW -- scale for DPI

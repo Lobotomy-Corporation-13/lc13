@@ -449,3 +449,20 @@
 	1. Expunging all records the company has about the employee.<br>
 	2. Sacrificing the employee to the Abnormality.<br>
 	3. Informing the employee’s family that they have been transferred to another branch."}
+
+//Inkstained Squid
+/obj/item/paper/fluff/lore/he/inkstained_squid
+	name = "F-04-63"
+	info = {"<h2><center>F-04-63</center></h2>	<br>
+	Inkstained Squid	<br>
+	"A great fountain pen given the body of a squid. Its nib serves for a beak, a pair of spread quills for wings, and beneath them hangs a fringe of long, trailing tendrils. It hangs nib-down in its unit and weeps a slow ink that is never quite the same colour twice."<br>
+	<br>
+	"It was recovered from a scriptorium that had no record of being commissioned and no record of ever closing - a long room of empty desks, every inkwell run dry, and a single unfinished manuscript left open on the last desk. The final line stops partway through a word. The squid was found curled around the pen that had been writing it."<br>
+	<br>
+	"It does not seem to want the page finished so much as to keep writing it. Offer it a colour and it takes the colour gladly; offer it three in even measure and it works quickest of all, contented, as though a balanced palette were the whole of its happiness. Lean too hard on any one shade and the work sours, the ink clots, and the page grows fretful beneath the pen."<br>
+	<br>
+	<h3><center>Excerpt from Observation Log</center></h3><br>
+	"You learn to read the little bar over it the way you would read a mood. Three even bands and it fairly hums along. Let one band swallow the others and everything you try comes out wrong - the nib skipping, the ink refusing to take. The remedy is never to press harder. It is to go back and lay down the colours you have been neglecting until the three sit level again. Or you wet a rag and wipe the whole sheet blank and begin over. It does not mind being wiped. I think it rather likes the fresh page."<br>
+	<br>
+	<h3><center>Excerpt from Suppression Report</center></h3><br>
+	"It never lifts a tendril to strike first - it only answers. But here is the trouble with answering it in kind: it drinks. Strike it with the one colour long enough and that colour ceases to mean anything to it; the ink across its body deepens to that shade, and your blows begin to land like a dry brush on dry paper. And every colour you feed it, it hoards, and paints straight back at you in the very measure you gave. The teams that put it down quickest were the ones that never let it settle into a single colour - they kept changing the hand they wrote with, and never once let the page dry."}

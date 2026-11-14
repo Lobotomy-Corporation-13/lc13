@@ -214,7 +214,11 @@
 		if("N Corp Representative")
 			our_corporation = N_CORP_REP
 			CustomizeOffice(null, /obj/structure/pe_sales/n_corp)
-			order_list = list()
+			order_list = list(
+				new /datum/data/extraction_cargo("N-Corp Sanity Scroll", /obj/item/ncorp_scroll/sp, 150, P_CORP_REP) = 1,
+				new /datum/data/extraction_cargo("N-Corp Strength Scroll", /obj/item/ncorp_scroll/strength, 200, P_CORP_REP) = 1,
+				new /datum/data/extraction_cargo("N-Corp Protection Scroll", /obj/item/ncorp_scroll/protection, 200, P_CORP_REP) = 1,
+				)
 
 		if("P Corp Representative")
 			our_corporation = P_CORP_REP

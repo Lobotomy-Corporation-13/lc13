@@ -13,11 +13,8 @@ import {
 } from '../components';
 import { Window } from '../layouts';
 
-export const AssociationSkillTree = (
-  props,
-  context,
-) => {
-  const { act, data } = useBackend(context);
+export const AssociationSkillTree = props => {
+  const { act, data } = useBackend();
   const {
     association_name = 'Association',
     current_exp = 0,
@@ -29,9 +26,7 @@ export const AssociationSkillTree = (
     invested_branch_count = 0,
     branches = [],
   } = data;
-  const [tab, setTab] = useSharedState(
-    context, 'tab', 0,
-  );
+  const [tab, setTab] = useSharedState('tab', 0);
   const activeIdx = Math.min(
     tab,
     Math.max(branches.length - 1, 0),

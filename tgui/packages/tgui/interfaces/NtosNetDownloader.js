@@ -2,8 +2,8 @@ import { useBackend } from '../backend';
 import { Box, Button, Flex, Icon, LabeledList, NoticeBox, ProgressBar, Section } from '../components';
 import { NtosWindow } from '../layouts';
 
-export const NtosNetDownloader = (props, context) => {
-  const { act, data } = useBackend(context);
+export const NtosNetDownloader = props => {
+  const { act, data } = useBackend();
   const {
     PC_device_theme,
     disk_size,
@@ -75,9 +75,9 @@ export const NtosNetDownloader = (props, context) => {
   );
 };
 
-const Program = (props, context) => {
+const Program = props => {
   const { program } = props;
-  const { act, data } = useBackend(context);
+  const { act, data } = useBackend();
   const {
     disk_size,
     disk_used,

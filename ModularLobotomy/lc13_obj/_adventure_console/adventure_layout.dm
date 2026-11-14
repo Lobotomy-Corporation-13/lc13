@@ -1,5 +1,5 @@
 /**
- * ADVENTURE CONSOLE V2.3
+ * ADVENTURE CONSOLE V2.4
  * TEXT BASED ADVENTURES
  * Adventures that are mostly predefined paths.
  * This was difficult to finalize since i havent made a text based adventure before.

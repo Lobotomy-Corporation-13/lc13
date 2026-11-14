@@ -185,7 +185,7 @@ const pauseEvent = e => {
   return false;
 };
 
-const Stamp = (props, context) => {
+const Stamp = props => {
   const {
     image,
     opacity,
@@ -216,7 +216,7 @@ const setInputReadonly = (text, readonly) => {
 
 // got to make this a full component if we
 // want to control updates
-const PaperSheetView = (props, context) => {
+const PaperSheetView = props => {
   const {
     value = "",
     stamps = [],
@@ -253,8 +253,8 @@ const PaperSheetView = (props, context) => {
 
 // again, need the states for dragging and such
 class PaperSheetStamper extends Component {
-  constructor(props, context) {
-    super(props, context);
+  constructor(props) {
+    super(props);
     this.state = {
       x: 0,
       y: 0,
@@ -270,7 +270,7 @@ class PaperSheetStamper extends Component {
     };
     this.handleMouseClick = e => {
       if (e.pageY <= 30) { return; }
-      const { act, data } = useBackend(this.context);
+      const { act, data } = useBackend();
       const stamp_obj = {
         x: this.state.x, y: this.state.y, r: this.state.rotate,
         stamp_class: this.props.stamp_class,
@@ -363,8 +363,8 @@ class PaperSheetStamper extends Component {
 // component too if I want to keep updates
 // low and keep the weird flashing down
 class PaperSheetEdit extends Component {
-  constructor(props, context) {
-    super(props, context);
+  constructor(props) {
+    super(props);
     this.state = {
       previewSelected: "Preview",
       textarea_text: "",
@@ -375,7 +375,7 @@ class PaperSheetEdit extends Component {
   // This is the main rendering part, this creates the html from marked text
   // as well as the form fields
   createPreview(value, do_fields = false) {
-    const { data } = useBackend(this.context);
+    const { data } = useBackend();
     const {
       text,
       pen_color,
@@ -444,7 +444,7 @@ class PaperSheetEdit extends Component {
       new_text = new_text.substr(0, MAX_PAPER_LENGTH);
     }
 
-    const { act } = useBackend(this.context);
+    const { act } = useBackend();
     const final_processing = this.createPreview(new_text, true);
 
     act('save', final_processing);
@@ -555,8 +555,8 @@ class PaperSheetEdit extends Component {
   }
 }
 
-export const PaperSheet = (props, context) => {
-  const { data } = useBackend(context);
+export const PaperSheet = props => {
+  const { data } = useBackend();
   const {
     edit_mode,
     text,

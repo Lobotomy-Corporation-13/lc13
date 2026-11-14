@@ -56,7 +56,8 @@
 
 
 
-	user << browse(dat, "window=comm_monitor;size=575x400")
+	//user << browse(dat, "window=comm_monitor;size=575x400") // LOBOTOMYCORPORATION EDIT CHANGE OLD
+	user << browse(dat, "window=comm_monitor;[scaled_browse_size(user, 575, 400)]") // LOBOTOMYCORPORATION EDIT CHANGE NEW -- scale for DPI
 	onclose(user, "server_control")
 
 	temp = ""
