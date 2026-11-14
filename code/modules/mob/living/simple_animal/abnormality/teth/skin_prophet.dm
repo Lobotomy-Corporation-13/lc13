@@ -147,8 +147,7 @@
 		C.prophet_reference = src
 		breach_candles += C
 
-/mob/living/simple_animal/hostile/abnormality/skin_prophet/proc/CandleDestroyed(obj/structure/prophet_candle/C)
-	breach_candles -= C
+/mob/living/simple_animal/hostile/abnormality/skin_prophet/proc/CandleDestroyed()
 	if(!LAZYLEN(breach_candles) && breaching)
 		// All candles destroyed, kill the prophet
 		say("@#$!!@#*!")
@@ -213,6 +212,14 @@
 	add_filter("prophet_glow", 2, list("type" = "outline", "color" = "#ff000060", "size" = 2))
 	addtimer(CALLBACK(src, PROC_REF(glow_loop)), rand(1,19))
 
+/obj/structure/prophet_candle/Destroy()
+	remove_filter("prophet_glow")
+	if(prophet_reference)
+		prophet_reference.breach_candles -= src
+		INVOKE_ASYNC(prophet_reference, TYPE_PROC_REF(/mob/living/simple_animal/hostile/abnormality/skin_prophet, CandleDestroyed))
+		prophet_reference = null
+	return ..()
+
 /obj/structure/prophet_candle/proc/glow_loop()
 	var/filter = get_filter("prophet_glow")
 	if(filter)
@@ -222,10 +229,3 @@
 /obj/structure/prophet_candle/examine(mob/user)
 	. = ..()
 	. += span_warning("It must be destroyed to contain the Skin Prophet!")
-
-/obj/structure/prophet_candle/Destroy()
-	remove_filter("prophet_glow")
-	if(prophet_reference)
-		prophet_reference.CandleDestroyed(src)
-	return ..()
-

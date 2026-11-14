@@ -302,6 +302,8 @@
 	var/sanity_gain = 60
 	var/attribute_gain = 30
 	var/previous_addict = FALSE
+	/// Are we currently exploding our host's head?
+	var/exploding = FALSE
 
 /atom/movable/screen/alert/status_effect/porccubus_addiction
 	name = "Indescribable pleasure"
@@ -335,6 +337,9 @@
 
 //wow this sure feels great I sure do hope there are no negative consequences for my hubris
 /datum/status_effect/porccubus_addiction/tick()
+	if(exploding)
+		return
+
 	var/mob/living/carbon/human/addict = owner
 	if(withdrawal_cooldown < world.time)
 		addict.adjustSanityLoss(-sanity_gain)
@@ -343,8 +348,8 @@
 		withdrawal_cooldown = withdrawal_cooldown_time + world.time
 
 	if(addict.sanity_lost && sanity_gain < 0)
+		explode_head()
 		addict.remove_status_effect(src)
-	return ..()
 
 //every time you take another hit the effects decrease
 /datum/status_effect/porccubus_addiction/proc/IncreaseTolerance(extra_attribute = TRUE, tolerance_amount = 0)
@@ -368,46 +373,47 @@
 
 /datum/status_effect/porccubus_addiction/on_remove()
 	. = ..()
-	if(!ishuman(owner))
-		return
 	var/mob/living/carbon/human/addict = owner
-	if(previous_addict)
+	if(istype(addict) && previous_addict)
 		to_chat(addict, span_userdanger("Your body has a sudden allergic reaction to the substance!"))
 		addict.vomit()
+
+/datum/status_effect/porccubus_addiction/proc/explode_head()
+	exploding = TRUE
+	var/mob/living/carbon/human/addict = owner
+	if(!istype(addict))
 		return
 	var/obj/item/bodypart/head/head = addict.get_bodypart("head")
 	if(QDELETED(head))
 		return
 	playsound(addict, 'sound/abnormalities/porccubus/head_explode_laugh.ogg', 50, FALSE, 4)
-	var/obj/expanding_head = HeadExplode(head)
+	var/obj/effect/expanding_head = make_visuals(head)
 	sleep(2 SECONDS) //mostly so the head exploding is synced in with the sound effect and animation
 	head.dismember(silent = TRUE)
-	QDEL_NULL(head)
+	qdel(head)
 	addict.regenerate_icons()
 	addict.vis_contents -= expanding_head
 	playsound(addict, 'sound/abnormalities/porccubus/head_explode.ogg', 50, FALSE, 4)
-	var/turf/orgin = get_turf(addict)
-	var/list/all_turfs = RANGE_TURFS(2, orgin)
-	new /obj/effect/bloodspawner/silent(get_turf(addict))
+	var/turf/addict_turf = get_turf(addict)
+	var/list/all_turfs = RANGE_TURFS(2, addict_turf) - addict_turf
+	new /obj/effect/bloodspawner/silent(addict_turf)
 	for(var/i = 1 to 3)
-		var/obj/item/porccubus_drug/drug = new(get_turf(addict)) //if you still want to try it out after seeing a man's head fucking explode
-		var/turf/open/Y = pick(all_turfs - orgin)
-		if(!LAZYLEN(all_turfs))
+		var/obj/item/porccubus_drug/drug = new(addict_turf) //if you still want to try it out after seeing a man's head fucking explode
+		if(!length(all_turfs))
 			return
+		var/turf/open/Y = pick_n_take(all_turfs)
 		drug.throw_at(Y, 2, 3)
-		all_turfs -= Y //so it doesn't throw all of them on the same tiles
 
 //we copy the head icon and apply it as a vis content. because while overlays can't be animated, visual objects that have overlays on them can
-/datum/status_effect/porccubus_addiction/proc/HeadExplode(obj/item/bodypart/head/head)
-	var/mob/living/carbon/human/addict = owner
-	var/obj/expanding_head = new()
+/datum/status_effect/porccubus_addiction/proc/make_visuals(obj/item/bodypart/head/head)
+	var/obj/effect/expanding_head = new(owner)
 	expanding_head.layer = -BODY_FRONT_LAYER
 	expanding_head.plane = FLOAT_PLANE
 	expanding_head.mouse_opacity = 0
 	expanding_head.vis_flags = VIS_INHERIT_DIR|VIS_INHERIT_DIR
 	expanding_head.add_overlay(head.get_limb_icon(TRUE, TRUE, TRUE))
-	addict.vis_contents += expanding_head
-	addict.managed_vis_overlays += expanding_head
+	owner.vis_contents += expanding_head
+	owner.managed_vis_overlays += expanding_head
 	animate(expanding_head, transform = matrix()*2, color = "#FF0000", pixel_y = expanding_head.pixel_y - 5, time = 2 SECONDS) //you can actually still somewhat see the head under it but the overlay should hide it well enough
 	return expanding_head
 

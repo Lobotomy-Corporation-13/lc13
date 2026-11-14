@@ -286,7 +286,7 @@
 			var/obj/effect/qoh_sygil/QS = FX
 			QS.fade_out()
 			continue
-		FX.Destroy()
+		qdel(FX)
 	beamloop.stop(user)
 	listclearnulls(spawned_effects)
 
@@ -294,7 +294,7 @@
 
 /datum/action/spell_action/ability/item/ego_arcana_slave/New(Target)
 	. = ..()
-	button.Destroy()
+	qdel(button)
 	button = new /atom/movable/screen/movable/action_button/ego_arcana_slave
 	button.linked_action = src
 	button.name = name

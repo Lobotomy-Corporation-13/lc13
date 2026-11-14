@@ -227,8 +227,8 @@
 /mob/living/simple_animal/hostile/abnormality/norinori/bullet_act(obj/projectile/P)
 	if(transformed) //guns are ineffective on the split form
 		visible_message(span_userdanger("[src] swiftly dodges [P]!"))
-		P.Destroy()
-		return
+		qdel(P)
+		return BULLET_ACT_BLOCK
 	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/norinori/LoseTarget()
