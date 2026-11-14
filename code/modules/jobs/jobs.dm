@@ -73,6 +73,7 @@ GLOBAL_LIST_INIT(command_positions, list(
 	"Streetlight Office Operator",
 	"Devyat North Section 3 Director",
 	"Zwei Veteran Fixer",
+	"Wedge Office Operator",
 	))
 
 
@@ -273,6 +274,9 @@ GLOBAL_LIST_INIT(fixer_positions, list(
 
 	"Streetlight Office Operator",
 	"Streetlight Office Fixer",
+
+	"Wedge Office Operator",
+	"Wedge Office Fixer",
 ))
 
 GLOBAL_LIST_INIT(association_positions, list(

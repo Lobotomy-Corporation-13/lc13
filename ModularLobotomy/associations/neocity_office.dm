@@ -115,6 +115,10 @@
 	template_id = "zwei_office"
 	custom_access = list("zwei")
 
+/obj/item/structurecapsule/fixer/wedge
+	name = "Wedge Office Capsule"
+	template_id = "wedge_office"
+	custom_access = list("wedge")
 
 //Minor Templates
 /datum/map_template/shelter/bladelin
@@ -164,3 +168,9 @@
 	shelter_id = "zwei_office"
 	description = "A small base capsule for a group of Zwei Fixers"
 	mappath = "_maps/templates/city_factions/minor/zwei.dmm"
+
+/datum/map_template/shelter/wedge
+	name = "Wedge Office Base"
+	shelter_id = "wedge_office"
+	description = "A small capsule containing an office for the fixers of the Wedge office."
+	mappath = "_maps/templates/city_factions/minor/wedge.dmm"
