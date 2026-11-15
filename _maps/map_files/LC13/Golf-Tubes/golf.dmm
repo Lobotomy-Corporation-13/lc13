@@ -275,6 +275,12 @@
 /obj/effect/spawner/structure/window/plasma/reinforced/plastitanium,
 /turf/open/floor/plasteel/dark,
 /area/department_main/control)
+"bF" = (
+/obj/machinery/facility_holomap{
+	dir = 8
+	},
+/turf/open/floor/facility/dark,
+/area/department_main/architecture)
 "bI" = (
 /obj/machinery/door/airlock/external/glass,
 /obj/effect/turf_decal/stripes/full,
@@ -933,7 +939,7 @@
 /turf/open/floor/plasteel,
 /area/facility_hallway/records)
 "gv" = (
-/obj/machinery/vending/coffee,
+/obj/machinery/vending/cigarette,
 /turf/open/floor/carpet,
 /area/department_main/control)
 "gy" = (
@@ -1073,6 +1079,12 @@
 /obj/machinery/light,
 /turf/open/floor/carpet,
 /area/department_main/control)
+"hj" = (
+/obj/structure/disposalpipe/segment{
+	dir = 6
+	},
+/turf/open/floor/facility/dark,
+/area/department_main/architecture)
 "ho" = (
 /obj/effect/turf_decal/siding/wideplating/dark/corner,
 /obj/effect/turf_decal/siding/wideplating/dark/corner{
@@ -6689,10 +6701,11 @@
 /turf/open/floor/plasteel/dark,
 /area/facility_hallway/east)
 "RH" = (
-/obj/machinery/facility_holomap{
+/obj/machinery/light,
+/obj/machinery/disposal/bin,
+/obj/structure/disposalpipe/trunk{
 	dir = 8
 	},
-/obj/machinery/light,
 /turf/open/floor/facility/dark,
 /area/department_main/architecture)
 "RI" = (
@@ -12942,7 +12955,7 @@ Wa
 Wa
 Wa
 Wa
-lB
+hj
 NA
 rD
 Ma
@@ -13129,7 +13142,7 @@ Wa
 Wa
 Wa
 Wa
-lB
+bF
 yr
 yr
 Ne
