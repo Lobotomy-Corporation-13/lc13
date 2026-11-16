@@ -1,12 +1,3 @@
-// Angle between where the target faces and where the attacker stands: 0 front, 45 front diagonal, 90 side,
-// 135 back diagonal, 180 back. Null when they share a tile, since there is no direction between them.
-/proc/WedgeAttackAngle(mob/living/target, mob/living/attacker)
-	var/to_attacker = get_dir(target, attacker)
-	if(!to_attacker)
-		return null
-	var/angle = abs(dir2angle(target.dir) - dir2angle(to_attacker))
-	return angle > 180 ? 360 - angle : angle
-
 //Wedge - Grade 4 with two range.
 /obj/item/ego_weapon/city/wedge
 	name = "wedge office spear"
@@ -30,7 +21,7 @@
 
 /obj/item/ego_weapon/city/wedge/neocity
 	name = "wedge office operator spear"
-	special = "Hits grant poise, more the further you strike from the target's front. Hits from behind grant concentration instead. \
+	special = "Hits on a target within 1 tile grant 4 poise. Hits on a target 2 tiles away grant 2 concentration. \
 		Use in hand to rally, granting yourself 5 poise, and nearby Wedge Office members 5 poise and 2 black strength. \
 		While the winds are active, click a target out of reach to wind up, then dash through them and strike. If that strike crits, it consumes all \
 		your poise and concentration to deal 1% extra damage per poise, multiplied by concentration, up to 400%."
@@ -41,6 +32,10 @@
 		TEMPERANCE_ATTRIBUTE = 60,
 		JUSTICE_ATTRIBUTE = 60,
 	)
+	// Poise granted by a hit on a target within 1 tile.
+	var/close_hit_poise = 4
+	// Concentration granted by a hit on a target 2 tiles away.
+	var/far_hit_concentration = 2
 	// How much poise is required to show the wind.
 	var/wind_poise = 10
 	// Whether the wind is currently shown.
@@ -121,37 +116,25 @@
 		ally.apply_lc_poise(rally_poise)
 		ally.apply_lc_black_strength(rally_black_strength)
 		to_chat(ally, span_nicegreen("[user]'s call steadies you."))
-		// Show the wind on an ally's own spear right away instead of on their next hit.
 		var/obj/item/ego_weapon/city/wedge/neocity/ally_spear = ally.get_active_held_item()
 		if(istype(ally_spear))
 			ally_spear.UpdateWind(ally)
 
-// Stops the attack chain, swings included, while the finisher winds up.
-/obj/item/ego_weapon/city/wedge/neocity/pre_attack(atom/A, mob/living/user, params)
-	if(finisher_charging)
-		return TRUE
-	return ..()
-
 /obj/item/ego_weapon/city/wedge/neocity/attack(mob/living/target, mob/living/user)
+	if(finisher_charging)
+		return
 	var/target_living = FALSE
 	if(target.stat != DEAD)
 		target_living = TRUE
 	. = ..()
-	// FALSE when the user could not use the weapon, so the hit never happened.
 	if(!. || QDELETED(user))
 		return
 	if(target_living)
-		var/relative_angle = WedgeAttackAngle(target, user)
-		if(isnull(relative_angle))
-			return
-		if(relative_angle < 45)
-			user.apply_lc_poise(1)
-		else if(relative_angle < 90)
-			user.apply_lc_poise(2)
-		else if(relative_angle < 135)
-			user.apply_lc_poise(4)
-		else
-			user.apply_lc_concentration(2)
+		var/distance = get_dist(user, target)
+		if(distance <= 1)
+			user.apply_lc_poise(close_hit_poise)
+		else if(distance == 2)
+			user.apply_lc_concentration(far_hit_concentration)
 	UpdateWind(user)
 
 // Clicking out of reach looks for a finisher target around the clicked tile and winds up on it.
@@ -207,15 +190,14 @@
 // Plays the wind and charge sound and holds the user turned away from the target. TRUE if the windup finished.
 /obj/item/ego_weapon/city/wedge/neocity/proc/FinisherWindup(mob/living/target, mob/living/user)
 	user.visible_message(span_userdanger("[user] lowers [src] and fixes [user.p_their()] eyes on [target]...!"), span_danger("You fix your eyes on [target]...!"))
-	// Centered on the user; overlays take the user's dir, so the wind turns with them.
 	var/mutable_appearance/wind_overlay = mutable_appearance('icons/effects/96x96.dmi', "wedge_finisher_wind", ABOVE_MOB_LAYER)
 	wind_overlay.pixel_x = -32
 	wind_overlay.pixel_y = -32
 	user.add_overlay(wind_overlay)
-	playsound(user, 'sound/weapons/fixer/wedge_leader_charge.ogg', 100, TRUE)
+	playsound(user, 'sound/weapons/fixer/wedge_leader_charge.ogg', 70, TRUE)
 	finisher_charging = TRUE
 	FinisherCheck(user, target)
-	var/wound_up = do_after(user, finisher_windup, target, IGNORE_TARGET_LOC_CHANGE, TRUE, CALLBACK(src, PROC_REF(FinisherCheck), user, target), "wedge_finisher", 1)
+	var/wound_up = do_after(user, finisher_windup, target, IGNORE_TARGET_LOC_CHANGE, TRUE, CALLBACK(src, PROC_REF(FinisherCheck), user, target))
 	finisher_charging = FALSE
 	user.cut_overlay(wind_overlay)
 	return wound_up
@@ -246,17 +228,13 @@
 	user.remove_status_effect(/datum/status_effect/stacking/concentration)
 	UpdateWind(user)
 
-// Draws the finisher dash: a beam from start to landing, a burst on the target and a spear tip on the beam's end.
 /obj/item/ego_weapon/city/wedge/neocity/proc/DashVisuals(turf/start, turf/landing, turf/target_turf)
 	if(start != landing)
 		start.Beam(landing, "wedge_transpierce", time = 6)
 		var/obj/effect/temp_visual/wedge_transpierce_tip/tip = new(landing)
-		var/matrix/M = matrix()
-		M.Turn(Get_Angle(start, landing))
-		tip.transform = M
+		tip.transform = matrix().Turn(Get_Angle(start, landing))
 	new /obj/effect/temp_visual/wedge_transpierce_burst(target_turf)
 
-// Checked every tick of the finisher windup: fails once the target is out of sight, and keeps the user turned away from them.
 /obj/item/ego_weapon/city/wedge/neocity/proc/FinisherCheck(mob/living/user, mob/living/target)
 	if(!can_see(user, target, finisher_range))
 		return FALSE
@@ -265,32 +243,27 @@
 		user.setDir(away)
 	return TRUE
 
-// Shows or hides the wind to match the user's current poise.
+// Shows the wind while the user has enough poise and the spear is in the active hand. Redraws only on a change.
 /obj/item/ego_weapon/city/wedge/neocity/proc/UpdateWind(mob/living/user)
 	var/datum/status_effect/stacking/poise/P = user.has_status_effect(/datum/status_effect/stacking/poise)
-	SetWind(user, P ? P.stacks : 0)
-
-// Shows the wind when the given poise is high enough and the spear is in the active hand. Redraws only on a change.
-/obj/item/ego_weapon/city/wedge/neocity/proc/SetWind(mob/living/user, poise)
-	var/should_show = (poise >= wind_poise && src == user.get_active_held_item())
+	var/should_show = (P && P.stacks >= wind_poise && src == user.get_active_held_item())
 	if(should_show == wind_active)
 		return
 	wind_active = should_show
 	user.update_inv_hands()
 
+// Sent mid-attack, after the crit roll and before the hit's damage, with full stacks, so raising force here boosts this hit.
 /obj/item/ego_weapon/city/wedge/neocity/proc/OnPoiseCrit(mob/living/user, mob/living/target, bonus_damage)
 	SIGNAL_HANDLER
 	var/datum/status_effect/stacking/poise/P = user.has_status_effect(/datum/status_effect/stacking/poise)
 	if(!P)
 		return
 	var/datum/status_effect/stacking/concentration/C = user.has_status_effect(/datum/status_effect/stacking/concentration)
-	// Sent mid-attack, after the crit roll and before the hit's damage, with full stacks, so raising force here boosts this hit.
 	if(finisher_striking)
 		finisher_crit = TRUE
 		var/concentration = C ? max(C.stacks, 1) : 1
 		var/bonus_percent = min(P.stacks * finisher_bonus_per_poise * concentration, finisher_max_bonus)
 		force = finisher_base_force * (1 + bonus_percent / 100)
-	SetWind(user, (C && C.stacks > 0) ? P.stacks : round(P.stacks / 2))
 
 /obj/item/ego_weapon/city/wedge/neocity/worn_overlays(isinhands = FALSE, icon_file)
 	. = ..()
@@ -326,7 +299,7 @@
 /obj/item/ego_weapon/lance/wedge
 	name = "wedge office fixer lance"
 	desc = "A black lance with a long, tapered head. Wedge office fixers favor it for keeping a suspect at a distance."
-	special = "Hits outside a charge grant poise, more the further you strike from the target's front. Hits from behind grant concentration instead. \
+	special = "Hits outside a charge on a target within 1 tile grant 4 poise. Hits outside a charge on a target 2 tiles away grant 2 concentration. \
 		Charging with 15+ poise starts the charge at high speed and builds damage faster, but it stops shortly after reaching full damage and consumes all poise."
 	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons.dmi'
 	icon_state = "wedge_lance"
@@ -348,6 +321,10 @@
 		TEMPERANCE_ATTRIBUTE = 40,
 		JUSTICE_ATTRIBUTE = 40,
 	)
+	// Poise granted by a hit outside a charge on a target within 1 tile.
+	var/close_hit_poise = 4
+	// Concentration granted by a hit outside a charge on a target 2 tiles away.
+	var/far_hit_concentration = 2
 	// How much poise is required to activate the wind effect.
 	var/wind_poise = 15
 	// Whether the wind effect is currently active.
@@ -362,17 +339,9 @@
 	var/tiles_past_cap = 0
 	var/max_tiles_past_cap = 4
 
-/obj/item/ego_weapon/lance/wedge/equipped(mob/living/carbon/human/user, slot)
-	. = ..()
-	if(!user)
-		return
-	RegisterSignal(user, COMSIG_POISE_CRIT_ATTACKER, PROC_REF(OnPoiseCrit), override = TRUE)
-
 /obj/item/ego_weapon/lance/wedge/dropped(mob/user)
 	. = ..()
 	wind_active = FALSE
-	if(user)
-		UnregisterSignal(user, COMSIG_POISE_CRIT_ATTACKER)
 
 /obj/item/ego_weapon/lance/wedge/attack(mob/living/target, mob/living/user)
 	if(!CanUseEgo(user))
@@ -384,27 +353,20 @@
 	if(QDELETED(user))
 		return
 	if(target_living && raised)
-		var/relative_angle = WedgeAttackAngle(target, user)
-		if(isnull(relative_angle))
-			return
-		if(relative_angle < 45)
-			user.apply_lc_poise(1)
-		else if(relative_angle < 90)
-			user.apply_lc_poise(2)
-		else if(relative_angle < 135)
-			user.apply_lc_poise(4)
-		else
-			user.apply_lc_concentration(2)
-	var/datum/status_effect/stacking/poise/P = user.has_status_effect(/datum/status_effect/stacking/poise)
-	SetWind(user, P ? P.stacks : 0)
+		var/distance = get_dist(user, target)
+		if(distance <= 1)
+			user.apply_lc_poise(close_hit_poise)
+		else if(distance == 2)
+			user.apply_lc_concentration(far_hit_concentration)
+	UpdateWind(user)
 
 /obj/item/ego_weapon/lance/wedge/LowerLance(user)
 	. = ..()
 	if(!isliving(user))
 		return
 	var/mob/living/living_user = user
+	UpdateWind(living_user)
 	var/datum/status_effect/stacking/poise/P = living_user.has_status_effect(/datum/status_effect/stacking/poise)
-	SetWind(living_user, P ? P.stacks : 0)
 	if(P && P.stacks >= wind_poise)
 		boosted_charge = TRUE
 		playsound(living_user, 'sound/weapons/fixer/wedge_charge.ogg', 100, TRUE)
@@ -430,24 +392,17 @@
 	if(isliving(user))
 		var/mob/living/living_user = user
 		living_user.remove_status_effect(/datum/status_effect/stacking/poise)
-		SetWind(living_user, 0)
+		UpdateWind(living_user)
 	RaiseLance(user)
 
-// Shows the wind when the given poise is high enough and the lance is in the active hand. Redraws only on a change.
-/obj/item/ego_weapon/lance/wedge/proc/SetWind(mob/living/user, poise)
-	var/should_show = (poise >= wind_poise && src == user.get_active_held_item())
+// Shows the wind while the user has enough poise and the lance is in the active hand. Redraws only on a change.
+/obj/item/ego_weapon/lance/wedge/proc/UpdateWind(mob/living/user)
+	var/datum/status_effect/stacking/poise/P = user.has_status_effect(/datum/status_effect/stacking/poise)
+	var/should_show = (P && P.stacks >= wind_poise && src == user.get_active_held_item())
 	if(should_show == wind_active)
 		return
 	wind_active = should_show
 	user.update_inv_hands()
-
-/obj/item/ego_weapon/lance/wedge/proc/OnPoiseCrit(mob/living/user, mob/living/target, bonus_damage)
-	SIGNAL_HANDLER
-	var/datum/status_effect/stacking/poise/P = user.has_status_effect(/datum/status_effect/stacking/poise)
-	if(!P)
-		return
-	var/datum/status_effect/stacking/concentration/C = user.has_status_effect(/datum/status_effect/stacking/concentration)
-	SetWind(user, (C && C.stacks > 0) ? P.stacks : round(P.stacks / 2))
 
 /obj/item/ego_weapon/lance/wedge/worn_overlays(isinhands = FALSE, icon_file)
 	. = ..()
