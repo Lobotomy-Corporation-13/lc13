@@ -178,6 +178,10 @@
 /obj/effect/mob_spawn/human/corpse,
 /turf/open/floor/plasteel/dark,
 /area/city/bistro)
+"cr" = (
+/obj/effect/landmark/ncorppros,
+/turf/open/floor/city/sidewalk/old,
+/area/city/bistro)
 "ct" = (
 /turf/closed/indestructible/city/glazedtile,
 /area/city)
@@ -2887,6 +2891,10 @@
 	},
 /turf/open/floor/carpet/black,
 /area/city/clinic)
+"EJ" = (
+/obj/effect/landmark/ncorppros,
+/turf/open/floor/city/industrial/tread,
+/area/city/shop)
 "EN" = (
 /obj/machinery/door/city/clinic/glass,
 /turf/open/floor/city/interior/clinictile,
@@ -3742,6 +3750,10 @@
 /obj/effect/landmark/latejoin,
 /turf/open/floor/city/road,
 /area/city)
+"NW" = (
+/obj/effect/landmark/cityspawner,
+/turf/open/floor/city/concrete,
+/area/city)
 "NZ" = (
 /obj/machinery/door/city/wood{
 	name = "old warehouse";
@@ -4280,6 +4292,10 @@
 "Uv" = (
 /turf/closed/indestructible/city/concrete,
 /area/city/alleyways)
+"Uy" = (
+/obj/effect/landmark/cityspawner,
+/turf/open/floor/wood,
+/area/city/bistro)
 "UB" = (
 /obj/structure/rack,
 /obj/item/fishing_rod,
@@ -10178,7 +10194,7 @@ lV
 lV
 lV
 yt
-Tu
+cr
 Ig
 oe
 yt
@@ -11462,7 +11478,7 @@ yt
 yj
 bI
 wu
-yj
+Uy
 NJ
 dV
 tk
@@ -11473,7 +11489,7 @@ lV
 Uv
 SG
 Ov
-fi
+GX
 Ov
 Ov
 Uv
@@ -43339,7 +43355,7 @@ CG
 Vt
 Nr
 CG
-LL
+EJ
 Tm
 CG
 Gv
@@ -43574,7 +43590,7 @@ lV
 lV
 lV
 Uv
-fi
+pp
 fi
 fi
 fi
@@ -47191,7 +47207,7 @@ AV
 AV
 AV
 AV
-AV
+NW
 AV
 AV
 AV

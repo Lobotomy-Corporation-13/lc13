@@ -52,12 +52,12 @@
 	var/roll = rand(0,escalation)
 	var/reward = /obj/item/stack/spacecash/c1000
 	switch(roll)
-		if(0 to 3)
+		if(0 to 2)
 			nexttarget = pick(t1_targets)
 			spawncount = (escalation + 2) * 3
 			if(prob(5))
 				reward = /obj/item/choice_beacon/liu
-		if(4 to 6)
+		if(3 to 6)
 			nexttarget = pick(t2_targets)
 			spawncount = (escalation - 2) * 2
 			if(prob(65))

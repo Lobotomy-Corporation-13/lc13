@@ -124,29 +124,30 @@
 	icon_deny = null
 	products = list(
 		/obj/item/flashlight/seclite = 100,
-		/obj/item/attribute_increase/fixer = 1500,
-		/obj/item/attribute_increase/fixer/office = 1500,
+//		/obj/item/attribute_increase/fixer = 1500,
+//		/obj/item/attribute_increase/fixer/office = 1500,
 		/obj/item/radio/headset = 200,
 		/obj/item/crowbar = 100,
+		/obj/item/screwdriver = 100,
 		/obj/item/clothing/suit/armor/ego_gear/city/misc/lone = 100,
-		/obj/item/ego_weapon/city/fixerblade = 20,
-		/obj/item/ego_weapon/city/fixergreatsword = 20,
-		/obj/item/ego_weapon/city/fixerhammer = 20,
-		/obj/item/ego_weapon/city/zweibaton/protection = 20,
+//		/obj/item/ego_weapon/city/fixerblade = 20,
+//		/obj/item/ego_weapon/city/fixergreatsword = 20,
+//		/obj/item/ego_weapon/city/fixerhammer = 20,
+//		/obj/item/ego_weapon/city/zweibaton/protection = 20,
 		/obj/item/storage/box/fishing = 20,
 		/obj/item/kitchen/knife/combat/survival = 100,
 		/obj/item/weldingtool/mini = 100,
-		/obj/item/reagent_containers/hypospray/medipen/l_health = 100,
-		/obj/item/reagent_containers/hypospray/medipen/l_sanity = 100,
+		/obj/item/reagent_containers/hypospray/medipen/l_health = 9999,
+		/obj/item/reagent_containers/hypospray/medipen/l_sanity = 9999,
 		/obj/item/gps/fixer = 100,
 		/obj/item/pinpointer/coordinate = 20,
 
-		//Imported Body modification batteries
+		/*Imported Body modification batteries
 		/obj/item/body_modification_battery/imported = 100,
 		/obj/item/body_modification_battery/tier2/imported = 100,
 		/obj/item/body_modification_battery/tier3/imported = 100,
 		/obj/item/body_modification_battery/tier4/imported = 100,
-
+		*/
 	)
 
 	default_price = 300
@@ -614,6 +615,7 @@
 	. = ..()
 	for(var/datum/city_faction/CF in SScity_factions.active_factions)
 		if(CF.name == "Nagel Und Hammer")
-			new /obj/machinery/vending/prosthetic/ncorp(get_turf(src))
+			if(prob(50))
+				new /obj/machinery/vending/prosthetic/ncorp(get_turf(src))
 			qdel(src)
 

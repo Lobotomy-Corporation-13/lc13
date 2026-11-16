@@ -23,7 +23,7 @@
 	maptype = list("city")
 	job_important = "This is a roleplay role. You are a director of the Liu Association, a highly prestigous association. \
 	You deal in all out war, the Liu sells their overpowering force to the highest bidder. \
-	you shouldn't be working as heros like the zwei, though as an official association should be keeping the reputation of the liu clean in the eyes of the Hana."
+	you shouldn't be working as heroes like the zwei, though as an official association should be keeping the reputation of the liu clean in the eyes of the Hana."
 
 	roundstart_attributes = list(
 								FORTITUDE_ATTRIBUTE = 100,
