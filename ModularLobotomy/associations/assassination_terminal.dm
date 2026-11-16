@@ -32,7 +32,8 @@
 	if(link.held_target == target)
 		if(target.mind?.assigned_role in GLOB.command_positions)
 			say("High Value Target Slain. Issuing payment.")
-			new /obj/item/stack/spacecash/c2000 (get_turf(src))
+			new /obj/item/stack/spacecash/c1000 (get_turf(src))
+			new /obj/item/stack/spacecash/c1000 (get_turf(src))
 			target = "No Target"
 		else
 			say("Target Slain. Issuing payment.")
