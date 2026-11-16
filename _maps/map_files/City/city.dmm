@@ -1,4 +1,8 @@
 //MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"aa" = (
+/obj/structure/closet/crate/bin,
+/turf/open/floor/wood,
+/area/city/clinic)
 "ab" = (
 /obj/machinery/telecomms/server/presets/common,
 /turf/open/floor/circuit/telecomms/mainframe,
@@ -3559,6 +3563,10 @@
 "Mq" = (
 /turf/closed/indestructible/city/window,
 /area/city/bistro)
+"Mu" = (
+/obj/structure/closet/crate/bin,
+/turf/open/indestructible/white,
+/area/city/clinic)
 "Mx" = (
 /obj/structure/shipping_container/pcorp,
 /turf/open/floor/city/concrete,
@@ -27147,7 +27155,7 @@ rD
 rD
 rD
 rD
-rD
+Jr
 Jr
 Jr
 Jr
@@ -27404,9 +27412,9 @@ rD
 rD
 rD
 rD
-rD
 Jr
 xz
+aa
 oE
 LF
 Jr
@@ -27661,9 +27669,9 @@ rD
 rD
 rD
 rD
-rD
 Jr
 Ri
+oE
 oE
 qf
 Jr
@@ -27918,9 +27926,9 @@ Jr
 Jr
 Jr
 rD
-rD
 Jr
 Hy
+oE
 oE
 hO
 Jr
@@ -28440,7 +28448,7 @@ FV
 Jr
 hu
 RC
-RC
+Mu
 RC
 jt
 Jr

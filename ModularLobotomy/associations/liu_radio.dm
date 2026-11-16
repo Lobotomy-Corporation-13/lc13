@@ -55,17 +55,17 @@
 		if(0 to 3)
 			nexttarget = pick(t1_targets)
 			spawncount = (escalation + 2) * 3
-			if(prob(10))
+			if(prob(5))
 				reward = /obj/item/choice_beacon/liu
 		if(4 to 6)
 			nexttarget = pick(t2_targets)
 			spawncount = (escalation - 2) * 2
-			if(prob(50))
+			if(prob(65))
 				reward = /obj/item/choice_beacon/liu
 		if(7 to INFINITY)
 			nexttarget = pick(t3_targets)
 			spawncount = (escalation - 6)
-			if(prob(75))
+			if(prob(85))
 				reward = /obj/item/choice_beacon/liu
 
 	for(var/obj/effect/landmark/cityspawner/landmark in GLOB.landmarks_list)
@@ -82,7 +82,7 @@
 	if(escalation < 8)
 		escalation += 1
 	new reward (get_turf(src))
-	addtimer(CALLBACK(src, PROC_REF(NewTarget)), 10 MINUTES)
+	addtimer(CALLBACK(src, PROC_REF(NewTarget)), 5 MINUTES)
 
 /obj/structure/liuradio/proc/NewTarget()
 	isready = TRUE

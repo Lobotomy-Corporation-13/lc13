@@ -293,7 +293,7 @@
 		/obj/item/body_modification_tester = 100,
 		/obj/item/body_modification_remover = 100,
 	*/)
-	
+
 	premium = list(
 		/obj/item/shears = 1,
 		/obj/item/bodypart/l_arm/robot/explosive = 100,
@@ -597,7 +597,7 @@
 		/obj/item/organ/ears/cybernetic/upgraded/bangproof = 100,
 		/obj/item/extra_arm = 100,
 		/obj/item/extra_arm/double = 100,
-		/obj/item/autosurgeon = 100,
+		/obj/item/autosurgeon/organ = 100,
 	)
 
 	default_price = 300

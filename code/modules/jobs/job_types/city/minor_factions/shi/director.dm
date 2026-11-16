@@ -18,7 +18,7 @@
 	departments = DEPARTMENT_CITY_ANTAGONIST
 	paycheck = 500
 	maptype = list("city")
-	job_important = "You are the Shi Association South Section 2 Director, \
+	job_important = "You are a Shi Association Director, \
 	You are an assassin for hire. \
 	Take money for kill contracts. You know you want to."
 

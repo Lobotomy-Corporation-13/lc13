@@ -127,7 +127,9 @@
 /area/city/assoc_base)
 "rF" = (
 /obj/structure/closet/cabinet,
-/obj/item/ego_weapon/city/liu/fist/vet,
+/obj/item/ego_weapon/city/liu/fist/vet{
+	attribute_requirements = list("Fortitude" = 80, "Prudence" = 80, "Temperance" = 80, "Justice" = 80)
+	},
 /obj/item/clothing/suit/armor/ego_gear/city/liuvet/section5,
 /turf/open/floor/carpet/orange,
 /area/city/assoc_base)

@@ -38,7 +38,7 @@
 		new nexttarget(deploy_spot)
 	say("New target detected, payment issued preemptively.")
 	new /obj/item/stack/spacecash/c1000 (get_turf(src))
-	addtimer(CALLBACK(src, PROC_REF(NewTarget)), 10 MINUTES)
+	addtimer(CALLBACK(src, PROC_REF(NewTarget)), 5 MINUTES)
 
 /obj/structure/warradio/proc/NewTarget()
 	isready = TRUE
