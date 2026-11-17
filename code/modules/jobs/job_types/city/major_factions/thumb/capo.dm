@@ -18,8 +18,9 @@
 	departments = DEPARTMENT_CITY_ANTAGONIST
 	paycheck = 200
 	maptype = list("city")
-	job_important = "You are a lieutenant in the Thumb Syndicate. You are to be respectful and follow orders from the sottocapo. Not doing either will result in death. \
-		Under you is two soldatos, you may treat them as you will. Heirarchy is king."
+	job_important = "You are a lieutenant in the Thumb Syndicate. You are to be respectful and follow orders from the Sottocapo. Not doing either will result in death. \
+		Under you are three Soldatos, you may treat them as you will. Heirarchy is king. Should the Kurokumo Clan be present, their Kashira is equivalent to you. \
+		They should work for you, but the sottocapo may always decide to purge them."
 	job_notice = "Avoid killing other players without a reason, any fixers or soldatos disrespecting you is a valid reason."
 
 	roundstart_attributes = list(

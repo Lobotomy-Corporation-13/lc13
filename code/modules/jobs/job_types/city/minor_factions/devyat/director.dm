@@ -18,7 +18,7 @@
 	departments = DEPARTMENT_CITY_ANTAGONIST
 	paycheck = 700
 	maptype = list("city")
-	job_important = "You are the Devyat Association North Section 3 Director, \
+	job_important = "You are a Devyat Association Director, \
 	You are a courier for money. \
 	Use the delivery office radio to start deliveries."
 

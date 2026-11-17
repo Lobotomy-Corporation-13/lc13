@@ -18,8 +18,9 @@
 	departments = DEPARTMENT_CITY_ANTAGONIST
 	paycheck = 500
 	maptype = list("city")
-	job_important = "You are a captain of the kurokumo clan, a Thumb Subsidiary. \
-	as subsidiary of the Thumb. Hierarchy is king, you should take orders from the capo's and sottocapos of this region and respect others who rank above you. \
+	job_important = "You are a captain of the Kurokumo clan, a Thumb Subsidiary. \
+	as subsidiary of the Thumb, Hierarchy is king, you should take orders from the Sottocapo of this region and respect others who rank above you. \
+	You functionally act as an extra Capo for your Sottocapo, but are at a much higher risk of purging. \
 	If the blade lineage dare show their face in your territory, make sure that is the last mistake they will make."
 
 	roundstart_attributes = list(

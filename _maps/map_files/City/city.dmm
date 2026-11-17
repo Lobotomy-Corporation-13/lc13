@@ -1,4 +1,8 @@
 //MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"aa" = (
+/obj/structure/closet/crate/bin,
+/turf/open/floor/wood,
+/area/city/clinic)
 "ab" = (
 /obj/machinery/telecomms/server/presets/common,
 /turf/open/floor/circuit/telecomms/mainframe,
@@ -173,6 +177,10 @@
 /obj/structure/kitchenspike,
 /obj/effect/mob_spawn/human/corpse,
 /turf/open/floor/plasteel/dark,
+/area/city/bistro)
+"cr" = (
+/obj/effect/landmark/ncorppros,
+/turf/open/floor/city/sidewalk/old,
 /area/city/bistro)
 "ct" = (
 /turf/closed/indestructible/city/glazedtile,
@@ -471,6 +479,10 @@
 	},
 /turf/open/floor/city/industrial/plank,
 /area/space)
+"eN" = (
+/obj/effect/landmark/ncorppros,
+/turf/open/indestructible/white,
+/area/city/clinic)
 "eQ" = (
 /obj/effect/decal/cleanable/garbage,
 /turf/open/floor/city/canal/concrete,
@@ -1450,6 +1462,10 @@
 /obj/machinery/sleeper/syndie,
 /turf/open/indestructible/white,
 /area/city/clinic)
+"pp" = (
+/obj/effect/landmark/ncorppros,
+/turf/open/floor/city/sidewalk/old,
+/area/city/alleyways)
 "pr" = (
 /obj/structure/table/wood/bar,
 /obj/item/storage/box/lights/mixed,
@@ -2536,6 +2552,10 @@
 	},
 /turf/open/floor/city/road,
 /area/city)
+"BC" = (
+/obj/machinery/vending/prosthetic,
+/turf/open/floor/wood,
+/area/city/clinic)
 "BD" = (
 /obj/structure/bookcase/random,
 /obj/machinery/light/small{
@@ -2871,6 +2891,10 @@
 	},
 /turf/open/floor/carpet/black,
 /area/city/clinic)
+"EJ" = (
+/obj/effect/landmark/ncorppros,
+/turf/open/floor/city/industrial/tread,
+/area/city/shop)
 "EN" = (
 /obj/machinery/door/city/clinic/glass,
 /turf/open/floor/city/interior/clinictile,
@@ -3547,6 +3571,10 @@
 "Mq" = (
 /turf/closed/indestructible/city/window,
 /area/city/bistro)
+"Mu" = (
+/obj/structure/closet/crate/bin,
+/turf/open/indestructible/white,
+/area/city/clinic)
 "Mx" = (
 /obj/structure/shipping_container/pcorp,
 /turf/open/floor/city/concrete,
@@ -3721,6 +3749,10 @@
 "NS" = (
 /obj/effect/landmark/latejoin,
 /turf/open/floor/city/road,
+/area/city)
+"NW" = (
+/obj/effect/landmark/cityspawner,
+/turf/open/floor/city/concrete,
 /area/city)
 "NZ" = (
 /obj/machinery/door/city/wood{
@@ -4260,6 +4292,10 @@
 "Uv" = (
 /turf/closed/indestructible/city/concrete,
 /area/city/alleyways)
+"Uy" = (
+/obj/effect/landmark/cityspawner,
+/turf/open/floor/wood,
+/area/city/bistro)
 "UB" = (
 /obj/structure/rack,
 /obj/item/fishing_rod,
@@ -4319,6 +4355,11 @@
 /obj/effect/decal/city/litter/any,
 /obj/effect/turf_decal/road/kerb,
 /turf/open/floor/city/road,
+/area/city)
+"Vs" = (
+/obj/effect/decal/cleanable/dirt,
+/obj/effect/landmark/ncorppros,
+/turf/open/floor/facility/white,
 /area/city)
 "Vt" = (
 /obj/machinery/vending/bullets,
@@ -10153,7 +10194,7 @@ lV
 lV
 lV
 yt
-Tu
+cr
 Ig
 oe
 yt
@@ -11437,7 +11478,7 @@ yt
 yj
 bI
 wu
-yj
+Uy
 NJ
 dV
 tk
@@ -11448,7 +11489,7 @@ lV
 Uv
 SG
 Ov
-fi
+GX
 Ov
 Ov
 Uv
@@ -24002,7 +24043,7 @@ lV
 lV
 lV
 Uv
-fi
+pp
 fi
 fi
 fi
@@ -24538,7 +24579,7 @@ pw
 Yy
 Gv
 ux
-bV
+Vs
 Dh
 bV
 bV
@@ -27130,7 +27171,7 @@ rD
 rD
 rD
 rD
-rD
+Jr
 Jr
 Jr
 Jr
@@ -27387,9 +27428,9 @@ rD
 rD
 rD
 rD
-rD
 Jr
 xz
+aa
 oE
 LF
 Jr
@@ -27644,9 +27685,9 @@ rD
 rD
 rD
 rD
-rD
 Jr
 Ri
+oE
 oE
 qf
 Jr
@@ -27901,9 +27942,9 @@ Jr
 Jr
 Jr
 rD
-rD
 Jr
 Hy
+oE
 oE
 hO
 Jr
@@ -28423,7 +28464,7 @@ FV
 Jr
 hu
 RC
-RC
+Mu
 RC
 jt
 Jr
@@ -29183,7 +29224,7 @@ Ha
 xt
 xt
 oE
-oE
+BC
 Jr
 Jr
 vb
@@ -29963,7 +30004,7 @@ WX
 RC
 BS
 Jr
-RC
+eN
 RC
 RC
 RC
@@ -30224,7 +30265,7 @@ Vy
 yC
 vP
 RC
-Ys
+RC
 EN
 Gv
 bX
@@ -43314,7 +43355,7 @@ CG
 Vt
 Nr
 CG
-LL
+EJ
 Tm
 CG
 Gv
@@ -43549,7 +43590,7 @@ lV
 lV
 lV
 Uv
-fi
+pp
 fi
 fi
 fi
@@ -47166,7 +47207,7 @@ AV
 AV
 AV
 AV
-AV
+NW
 AV
 AV
 AV

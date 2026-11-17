@@ -32,6 +32,7 @@
 /obj/item/ego_mag/udjat,
 /obj/item/ego_mag/udjat,
 /obj/item/clothing/head/udjat,
+/obj/item/ego_weapon/city/udjat_limbus,
 /turf/open/floor/mineral/plastitanium{
 	color = "#EDD956"
 	},
@@ -44,6 +45,7 @@
 /obj/item/ego_weapon/ranged/city/udjat_sniper,
 /obj/item/clothing/suit/armor/ego_gear/city/udjat_combat,
 /obj/item/ego_mag/udjat_sniper,
+/obj/item/ego_weapon/city/udjat_limbus,
 /turf/open/floor/lce/plate/dark,
 /area/city/antag_base)
 "h" = (
@@ -73,15 +75,6 @@
 /obj/structure/table/wood/fancy,
 /obj/item/reagent_containers/food/drinks/bottle/whiskey,
 /turf/open/floor/lce/plate/dark,
-/area/city/antag_base)
-"n" = (
-/obj/machinery/vending/bullets,
-/obj/machinery/light{
-	dir = 8;
-	pixel_y = 4;
-	pixel_x = -10
-	},
-/turf/open/floor/facility/dark,
 /area/city/antag_base)
 "p" = (
 /obj/structure/bed/pod,
@@ -336,6 +329,7 @@
 /obj/item/clothing/suit/armor/ego_gear/city/udjat_combat,
 /obj/item/ego_mag/udjat,
 /obj/item/clothing/head/udjat,
+/obj/item/ego_weapon/city/udjat_limbus,
 /turf/open/floor/mineral/plastitanium{
 	color = "#EDD956"
 	},
@@ -546,7 +540,7 @@ u
 k
 V
 j
-n
+b
 "}
 (16,1,1) = {"
 a
