@@ -25,7 +25,8 @@
 /obj/machinery/jukebox{
 	pixel_y = 18;
 	density = 0;
-	pixel_x = 5
+	pixel_x = 5;
+	req_access = list()
 	},
 /obj/item/toy/clockwork_watch{
 	pixel_y = 40;
@@ -205,10 +206,17 @@
 "C" = (
 /obj/structure/table/wood/fancy/royalblack,
 /obj/item/ego_weapon/city/wedge/neocity,
+/obj/item/detective_scanner,
+/obj/item/camera,
+/obj/item/camera_film,
+/obj/item/camera_film,
 /turf/open/floor/carpet/royalblack,
 /area/city/fixers)
 "D" = (
 /obj/structure/table/wood/fancy/royalblack,
+/obj/structure/case_radio{
+	pixel_y = 6
+	},
 /turf/open/floor/carpet/black,
 /area/city/fixers)
 "G" = (
@@ -277,6 +285,8 @@
 	pixel_y = 4
 	},
 /obj/structure/table/wood/fancy/royalblack,
+/obj/item/pinpointer/coordinate,
+/obj/item/pinpointer/coordinate,
 /turf/open/floor/carpet/black,
 /area/city/fixers)
 "O" = (
