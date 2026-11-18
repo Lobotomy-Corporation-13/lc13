@@ -21,10 +21,9 @@
 
 /obj/item/ego_weapon/city/wedge/neocity
 	name = "wedge office operator spear"
-	special = "Hits on a target within 1 tile grant 4 poise. Hits on a target 2 tiles away grant 2 concentration. \
-		Use in hand to rally, granting yourself 5 poise, and nearby Wedge Office members 5 poise and 2 black strength. \
-		While the winds are active, click a target out of reach to wind up, then dash through them and strike. If that strike crits, it consumes all \
-		your poise and concentration to deal 1% extra damage per poise, multiplied by concentration, up to 400%."
+	special = "Repeated hits on one target build momentum (+1, +2, +3...). Switching targets or 5 seconds idle resets it. \
+		Use in hand to rally nearby Wedge allies: +5 momentum and 2 black strength. \
+		At 15+ momentum, click a distant target to dash through them, spending all momentum for +10% damage each (max 400%)."
 	force = 68
 	attribute_requirements = list(
 		FORTITUDE_ATTRIBUTE = 80,
@@ -32,20 +31,26 @@
 		TEMPERANCE_ATTRIBUTE = 60,
 		JUSTICE_ATTRIBUTE = 60,
 	)
-	// Poise granted by a hit on a target within 1 tile.
-	var/close_hit_poise = 4
-	// Concentration granted by a hit on a target 2 tiles away.
-	var/far_hit_concentration = 2
-	// How much poise is required to show the wind.
-	var/wind_poise = 10
+	// Current momentum stacks.
+	var/momentum = 0
+	// Momentum the next hit on the same target grants. Goes up by 1 with each hit.
+	var/momentum_gain = 1
+	// The target the current momentum chain is built on.
+	var/datum/weakref/momentum_target
+	// How long without a hit before momentum resets.
+	var/momentum_decay_time = 5 SECONDS
+	// Timer that resets momentum once it runs out.
+	var/momentum_decay_timer
+	// How much momentum is required to show the wind.
+	var/wind_momentum = 15
 	// Whether the wind is currently shown.
 	var/wind_active = FALSE
 	// How long the rally takes to call.
 	var/rally_delay = 2 SECONDS
 	// Range in tiles the rally reaches allies in.
 	var/rally_range = 5
-	// Poise the rally grants to the user and each ally.
-	var/rally_poise = 5
+	// Momentum the rally grants to the user's spear and to each ally's Wedge weapon.
+	var/rally_momentum = 5
 	// Black strength the rally grants to each ally.
 	var/rally_black_strength = 2
 	// World time when the next rally is allowed.
@@ -56,34 +61,25 @@
 	var/finisher_windup = 3 SECONDS
 	// Range in tiles the finisher target has to stay seen within.
 	var/finisher_range = 7
-	// Extra damage percent a crit finisher deals per poise, multiplied by concentration.
-	var/finisher_bonus_per_poise = 1
-	// Most extra damage percent a crit finisher can deal.
+	// Extra damage percent the finisher deals per momentum.
+	var/finisher_bonus_per_momentum = 10
+	// Most extra damage percent the finisher can deal.
 	var/finisher_max_bonus = 400
 	// World time when the next finisher is allowed.
 	var/finisher_cooldown = 0
 	// Cooldown between finishers, started when one lands.
-	var/finisher_cooldown_time = 25 SECONDS
+	var/finisher_cooldown_time = 15 SECONDS
 	// Whether the finisher is winding up. The user cannot attack or rally while it is.
 	var/finisher_charging = FALSE
-	// Whether the finisher strike is being dealt right now, so OnPoiseCrit knows to record the crit.
-	var/finisher_striking = FALSE
-	// Whether the finisher strike crit.
-	var/finisher_crit = FALSE
-	// Force before the finisher strike changed it, restored after the strike.
-	var/finisher_base_force = 0
-
-/obj/item/ego_weapon/city/wedge/neocity/equipped(mob/living/carbon/human/user, slot)
-	. = ..()
-	if(!user)
-		return
-	RegisterSignal(user, COMSIG_POISE_CRIT_ATTACKER, PROC_REF(OnPoiseCrit), override = TRUE)
 
 /obj/item/ego_weapon/city/wedge/neocity/dropped(mob/user)
 	. = ..()
+	ResetMomentum()
 	wind_active = FALSE
-	if(user)
-		UnregisterSignal(user, COMSIG_POISE_CRIT_ATTACKER)
+
+/obj/item/ego_weapon/city/wedge/neocity/examine(mob/user)
+	. = ..()
+	. += span_notice("Momentum: [momentum] ([wind_momentum] needed for the finisher).")
 
 /obj/item/ego_weapon/city/wedge/neocity/attack_self(mob/living/carbon/human/user)
 	. = ..()
@@ -101,24 +97,26 @@
 	user.cut_overlay(visual_overlay)
 	Rally(user)
 
-// Starts the rally cooldown and grants poise to the user, and poise and black strength to nearby Wedge Office members.
+// Starts the rally cooldown and grants momentum to the user's spear, and momentum and black strength to nearby Wedge Office members.
 /obj/item/ego_weapon/city/wedge/neocity/proc/Rally(mob/living/carbon/human/user)
 	rally_cooldown = world.time + rally_cooldown_time
 	new /obj/effect/temp_visual/screech(get_turf(user))
 	playsound(loc, 'sound/effects/ordeals/steel/gcorp_chitter.ogg', 40, TRUE)
-	user.apply_lc_poise(rally_poise)
-	UpdateWind(user)
+	AddMomentum(rally_momentum, user)
 	for(var/mob/living/carbon/human/ally in view(rally_range, user))
 		if(ally == user || ally.stat == DEAD)
 			continue
 		if(!istype(ally.wear_suit, /obj/item/clothing/suit/armor/ego_gear/city/wedge))
 			continue
-		ally.apply_lc_poise(rally_poise)
 		ally.apply_lc_black_strength(rally_black_strength)
 		to_chat(ally, span_nicegreen("[user]'s call steadies you."))
-		var/obj/item/ego_weapon/city/wedge/neocity/ally_spear = ally.get_active_held_item()
-		if(istype(ally_spear))
-			ally_spear.UpdateWind(ally)
+		var/obj/item/held = ally.get_active_held_item()
+		if(istype(held, /obj/item/ego_weapon/city/wedge/neocity))
+			var/obj/item/ego_weapon/city/wedge/neocity/ally_spear = held
+			ally_spear.AddMomentum(rally_momentum, ally)
+		else if(istype(held, /obj/item/ego_weapon/lance/wedge))
+			var/obj/item/ego_weapon/lance/wedge/ally_lance = held
+			ally_lance.AddMomentum(rally_momentum, ally)
 
 /obj/item/ego_weapon/city/wedge/neocity/attack(mob/living/target, mob/living/user)
 	if(finisher_charging)
@@ -130,12 +128,32 @@
 	if(!. || QDELETED(user))
 		return
 	if(target_living)
-		var/distance = get_dist(user, target)
-		if(distance <= 1)
-			user.apply_lc_poise(close_hit_poise)
-		else if(distance == 2)
-			user.apply_lc_concentration(far_hit_concentration)
+		HitMomentum(target, user)
+
+// Grants momentum for a hit on target, 1 more than the last hit. A hit on a different target than the last one restarts the chain.
+/obj/item/ego_weapon/city/wedge/neocity/proc/HitMomentum(mob/living/target, mob/living/user)
+	var/mob/living/last_target = momentum_target?.resolve()
+	if(last_target && last_target != target)
+		ResetMomentum()
+	momentum_target = WEAKREF(target)
+	AddMomentum(momentum_gain, user)
+	momentum_gain++
+
+// Adds momentum and restarts the decay timer.
+/obj/item/ego_weapon/city/wedge/neocity/proc/AddMomentum(amount, mob/living/user)
+	momentum += amount
+	momentum_decay_timer = addtimer(CALLBACK(src, PROC_REF(ResetMomentum)), momentum_decay_time, TIMER_UNIQUE | TIMER_OVERRIDE | TIMER_STOPPABLE)
 	UpdateWind(user)
+
+// Clears momentum, the per-hit gain and the tracked target.
+/obj/item/ego_weapon/city/wedge/neocity/proc/ResetMomentum()
+	momentum = 0
+	momentum_gain = initial(momentum_gain)
+	momentum_target = null
+	deltimer(momentum_decay_timer)
+	momentum_decay_timer = null
+	if(isliving(loc))
+		UpdateWind(loc)
 
 // Clicking out of reach looks for a finisher target around the clicked tile and winds up on it.
 /obj/item/ego_weapon/city/wedge/neocity/afterattack(atom/target, mob/living/user, proximity_flag, click_parameters)
@@ -147,7 +165,7 @@
 		return
 	if(!CanUseEgo(user))
 		return
-	// Refresh first, in case poise decayed since the last hit.
+	// Refresh first, in case the spear changed hands since the last hit.
 	UpdateWind(user)
 	if(!wind_active)
 		return
@@ -175,7 +193,7 @@
 			return H
 	return null
 
-// Winds up on the user, then dashes through the target and strikes. A crit spends all poise and concentration for extra damage.
+// Winds up on the user, then dashes through the target and strikes, spending all momentum for extra damage.
 /obj/item/ego_weapon/city/wedge/neocity/proc/Finisher(mob/living/target, mob/living/user)
 	if(!FinisherWindup(target, user))
 		to_chat(user, span_warning("You lose sight of your opening!"))
@@ -212,21 +230,16 @@
 	user.face_atom(target)
 	DashVisuals(start, landing, get_turf(target))
 
-// Hits the target with the finisher's bonus force and sound, then spends all poise and concentration if it crit.
+// Hits the target with force raised by the current momentum and the finisher's sound, then resets momentum.
 /obj/item/ego_weapon/city/wedge/neocity/proc/FinisherStrike(mob/living/target, mob/living/user)
-	finisher_crit = FALSE
-	finisher_striking = TRUE
-	finisher_base_force = force
+	var/base_force = force
+	var/bonus_percent = min(momentum * finisher_bonus_per_momentum, finisher_max_bonus)
+	force = base_force * (1 + bonus_percent / 100)
 	hitsound = 'sound/weapons/fixer/wedge_leader_transpierce.ogg'
 	target.attackby(src, user)
 	hitsound = initial(hitsound)
-	force = finisher_base_force
-	finisher_striking = FALSE
-	if(QDELETED(user) || !finisher_crit)
-		return
-	user.remove_status_effect(/datum/status_effect/stacking/poise)
-	user.remove_status_effect(/datum/status_effect/stacking/concentration)
-	UpdateWind(user)
+	force = base_force
+	ResetMomentum()
 
 /obj/item/ego_weapon/city/wedge/neocity/proc/DashVisuals(turf/start, turf/landing, turf/target_turf)
 	if(start != landing)
@@ -243,27 +256,13 @@
 		user.setDir(away)
 	return TRUE
 
-// Shows the wind while the user has enough poise and the spear is in the active hand. Redraws only on a change.
+// Shows the wind while the spear has enough momentum and is in the active hand. Redraws only on a change.
 /obj/item/ego_weapon/city/wedge/neocity/proc/UpdateWind(mob/living/user)
-	var/datum/status_effect/stacking/poise/P = user.has_status_effect(/datum/status_effect/stacking/poise)
-	var/should_show = (P && P.stacks >= wind_poise && src == user.get_active_held_item())
+	var/should_show = (momentum >= wind_momentum && src == user.get_active_held_item())
 	if(should_show == wind_active)
 		return
 	wind_active = should_show
 	user.update_inv_hands()
-
-// Sent mid-attack, after the crit roll and before the hit's damage, with full stacks, so raising force here boosts this hit.
-/obj/item/ego_weapon/city/wedge/neocity/proc/OnPoiseCrit(mob/living/user, mob/living/target, bonus_damage)
-	SIGNAL_HANDLER
-	var/datum/status_effect/stacking/poise/P = user.has_status_effect(/datum/status_effect/stacking/poise)
-	if(!P)
-		return
-	var/datum/status_effect/stacking/concentration/C = user.has_status_effect(/datum/status_effect/stacking/concentration)
-	if(finisher_striking)
-		finisher_crit = TRUE
-		var/concentration = C ? max(C.stacks, 1) : 1
-		var/bonus_percent = min(P.stacks * finisher_bonus_per_poise * concentration, finisher_max_bonus)
-		force = finisher_base_force * (1 + bonus_percent / 100)
 
 /obj/item/ego_weapon/city/wedge/neocity/worn_overlays(isinhands = FALSE, icon_file)
 	. = ..()
@@ -299,8 +298,8 @@
 /obj/item/ego_weapon/lance/wedge
 	name = "wedge office fixer lance"
 	desc = "A black lance with a long, tapered head. Wedge office fixers favor it for keeping a suspect at a distance."
-	special = "Hits outside a charge on a target within 1 tile grant 4 poise. Hits outside a charge on a target 2 tiles away grant 2 concentration. \
-		Charging with 15+ poise starts the charge at high speed and builds damage faster, but it stops shortly after reaching full damage and consumes all poise."
+	special = "Repeated uncharged hits on one target build momentum (+1, +2, +3...). Switching targets or 8 seconds idle resets it. \
+		Charging at 6+ momentum starts at high speed, but stops after 4 tiles and spends all momentum."
 	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons.dmi'
 	icon_state = "wedge_lance"
 	lefthand_file = 'icons/mob/inhands/96x96_lefthand.dmi'
@@ -321,27 +320,37 @@
 		TEMPERANCE_ATTRIBUTE = 40,
 		JUSTICE_ATTRIBUTE = 40,
 	)
-	// Poise granted by a hit outside a charge on a target within 1 tile.
-	var/close_hit_poise = 4
-	// Concentration granted by a hit outside a charge on a target 2 tiles away.
-	var/far_hit_concentration = 2
-	// How much poise is required to activate the wind effect.
-	var/wind_poise = 15
+	// Current momentum stacks.
+	var/momentum = 0
+	// Momentum the next hit on the same target grants. Goes up by 1 with each hit.
+	var/momentum_gain = 1
+	// The target the current momentum chain is built on.
+	var/datum/weakref/momentum_target
+	// How long without a hit before momentum resets.
+	var/momentum_decay_time = 8 SECONDS
+	// Timer that resets momentum once it runs out.
+	var/momentum_decay_timer
+	// How much momentum is required to activate the wind effect.
+	var/wind_momentum = 6
 	// Whether the wind effect is currently active.
 	var/wind_active = FALSE
 	// Starting charge speed when boosted
 	var/increased_charge_speed = -1.5
-	// How much force is added per tile while boosted.
-	var/increased_force_per_tile = 6
-	// Whether the current charge was started with enough poise.
+	// Whether the current charge was started with enough momentum.
 	var/boosted_charge = FALSE
-	// Tiles moved since this charge hit force_cap.
-	var/tiles_past_cap = 0
-	var/max_tiles_past_cap = 4
+	// Tiles moved during this boosted charge.
+	var/boosted_tiles = 0
+	// Most tiles a boosted charge can move before it ends.
+	var/max_boosted_tiles = 4
 
 /obj/item/ego_weapon/lance/wedge/dropped(mob/user)
 	. = ..()
+	ResetMomentum()
 	wind_active = FALSE
+
+/obj/item/ego_weapon/lance/wedge/examine(mob/user)
+	. = ..()
+	. += span_notice("Momentum: [momentum] ([wind_momentum] needed for an empowered charge).")
 
 /obj/item/ego_weapon/lance/wedge/attack(mob/living/target, mob/living/user)
 	if(!CanUseEgo(user))
@@ -353,12 +362,39 @@
 	if(QDELETED(user))
 		return
 	if(target_living && raised)
-		var/distance = get_dist(user, target)
-		if(distance <= 1)
-			user.apply_lc_poise(close_hit_poise)
-		else if(distance == 2)
-			user.apply_lc_concentration(far_hit_concentration)
+		HitMomentum(target, user)
+	else if(boosted_charge)
+		ResetMomentum()
+
+/obj/item/ego_weapon/lance/wedge/UserBump(mob/living/carbon/human/user, atom/A)
+	if(boosted_charge && ishuman(A))
+		ResetMomentum()
+	return ..()
+
+// Grants momentum for a hit on target, 1 more than the last hit. A hit on a different target than the last one restarts the chain.
+/obj/item/ego_weapon/lance/wedge/proc/HitMomentum(mob/living/target, mob/living/user)
+	var/mob/living/last_target = momentum_target?.resolve()
+	if(last_target && last_target != target)
+		ResetMomentum()
+	momentum_target = WEAKREF(target)
+	AddMomentum(momentum_gain, user)
+	momentum_gain++
+
+// Adds momentum and restarts the decay timer.
+/obj/item/ego_weapon/lance/wedge/proc/AddMomentum(amount, mob/living/user)
+	momentum += amount
+	momentum_decay_timer = addtimer(CALLBACK(src, PROC_REF(ResetMomentum)), momentum_decay_time, TIMER_UNIQUE | TIMER_OVERRIDE | TIMER_STOPPABLE)
 	UpdateWind(user)
+
+// Clears momentum, the per-hit gain and the tracked target.
+/obj/item/ego_weapon/lance/wedge/proc/ResetMomentum()
+	momentum = 0
+	momentum_gain = initial(momentum_gain)
+	momentum_target = null
+	deltimer(momentum_decay_timer)
+	momentum_decay_timer = null
+	if(isliving(loc))
+		UpdateWind(loc)
 
 /obj/item/ego_weapon/lance/wedge/LowerLance(user)
 	. = ..()
@@ -366,39 +402,31 @@
 		return
 	var/mob/living/living_user = user
 	UpdateWind(living_user)
-	var/datum/status_effect/stacking/poise/P = living_user.has_status_effect(/datum/status_effect/stacking/poise)
-	if(P && P.stacks >= wind_poise)
+	if(momentum >= wind_momentum)
 		boosted_charge = TRUE
 		playsound(living_user, 'sound/weapons/fixer/wedge_charge.ogg', 100, TRUE)
 		charge_speed = increased_charge_speed
 		living_user.add_or_update_variable_movespeed_modifier(/datum/movespeed_modifier/charge, multiplicative_slowdown = charge_speed)
-		force_per_tile = increased_force_per_tile
 
 /obj/item/ego_weapon/lance/wedge/RaiseLance(user)
 	. = ..()
-	force_per_tile = initial(force_per_tile)
 	boosted_charge = FALSE
-	tiles_past_cap = 0
+	boosted_tiles = 0
 
 /obj/item/ego_weapon/lance/wedge/UserMoved(mob/user)
-	var/was_capped = (force >= force_cap)
 	. = ..()
-	if(raised || !boosted_charge || !was_capped)
+	if(raised || !boosted_charge)
 		return
-	tiles_past_cap++
-	if(tiles_past_cap < max_tiles_past_cap)
+	boosted_tiles++
+	if(boosted_tiles < max_boosted_tiles)
 		return
 	to_chat(user, span_warning("The winds around [src] die down and your charge loses its momentum."))
-	if(isliving(user))
-		var/mob/living/living_user = user
-		living_user.remove_status_effect(/datum/status_effect/stacking/poise)
-		UpdateWind(living_user)
+	ResetMomentum()
 	RaiseLance(user)
 
-// Shows the wind while the user has enough poise and the lance is in the active hand. Redraws only on a change.
+// Shows the wind while the lance has enough momentum and is in the active hand. Redraws only on a change.
 /obj/item/ego_weapon/lance/wedge/proc/UpdateWind(mob/living/user)
-	var/datum/status_effect/stacking/poise/P = user.has_status_effect(/datum/status_effect/stacking/poise)
-	var/should_show = (P && P.stacks >= wind_poise && src == user.get_active_held_item())
+	var/should_show = (momentum >= wind_momentum && src == user.get_active_held_item())
 	if(should_show == wind_active)
 		return
 	wind_active = should_show
