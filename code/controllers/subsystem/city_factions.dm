@@ -105,3 +105,26 @@ SUBSYSTEM_DEF(city_factions)
 	if(!V)
 		V = faction.DefaultVariant()
 	faction.SetVariant(V)
+
+// Checks if a faction is enabled in this round. If it is within the round, it will remove it from active faction and Close it for future joiners.
+/datum/controller/subsystem/city_factions/proc/DisableFaction(datum/city_faction/faction)
+	if(!(faction in active_factions))
+		return FALSE
+	active_factions -= faction
+	faction.CloseFaction()
+	return TRUE
+
+// Checks if a faction is disabled in this round. If it is not within the round, it will add it to active faction and Open it for future joiners.
+// If this is before the start of the game, it will also pick the default variant for the faction, and make the job roles available for players to pick from.
+/datum/controller/subsystem/city_factions/proc/EnableFaction(datum/city_faction/faction)
+	if(faction in active_factions)
+		return FALSE
+	active_factions += faction
+	faction.LinkJobs()
+	if(SSticker.current_state < GAME_STATE_PLAYING)
+		return TRUE
+	ChooseVariant(faction, null)
+	var/datum/job/leader = SSjob.GetJobType(faction.leader_job)
+	if(leader?.current_positions)
+		faction.OpenMembers()
+	return TRUE
