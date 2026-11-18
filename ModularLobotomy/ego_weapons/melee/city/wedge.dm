@@ -31,45 +31,28 @@
 		TEMPERANCE_ATTRIBUTE = 60,
 		JUSTICE_ATTRIBUTE = 60,
 	)
-	// Current momentum stacks.
+	// Momentum vars
 	var/momentum = 0
-	// Momentum the next hit on the same target grants. Goes up by 1 with each hit.
 	var/momentum_gain = 1
-	// The target the current momentum chain is built on.
 	var/datum/weakref/momentum_target
-	// How long without a hit before momentum resets.
 	var/momentum_decay_time = 5 SECONDS
-	// Timer that resets momentum once it runs out.
 	var/momentum_decay_timer
-	// How much momentum is required to show the wind.
 	var/wind_momentum = 15
-	// Whether the wind is currently shown.
 	var/wind_active = FALSE
-	// How long the rally takes to call.
+	// Rally vars
 	var/rally_delay = 2 SECONDS
-	// Range in tiles the rally reaches allies in.
 	var/rally_range = 5
-	// Momentum the rally grants to the user's spear and to each ally's Wedge weapon.
 	var/rally_momentum = 5
-	// Black strength the rally grants to each ally.
 	var/rally_black_strength = 2
-	// World time when the next rally is allowed.
 	var/rally_cooldown = 0
-	// Cooldown between rallies.
 	var/rally_cooldown_time = 10 SECONDS
-	// How long the finisher winds up before teleporting.
+	// Finisher vars
 	var/finisher_windup = 3 SECONDS
-	// Range in tiles the finisher target has to stay seen within.
 	var/finisher_range = 7
-	// Extra damage percent the finisher deals per momentum.
 	var/finisher_bonus_per_momentum = 10
-	// Most extra damage percent the finisher can deal.
 	var/finisher_max_bonus = 400
-	// World time when the next finisher is allowed.
 	var/finisher_cooldown = 0
-	// Cooldown between finishers, started when one lands.
 	var/finisher_cooldown_time = 15 SECONDS
-	// Whether the finisher is winding up. The user cannot attack or rally while it is.
 	var/finisher_charging = FALSE
 
 /obj/item/ego_weapon/city/wedge/neocity/dropped(mob/user)
@@ -320,27 +303,18 @@
 		TEMPERANCE_ATTRIBUTE = 40,
 		JUSTICE_ATTRIBUTE = 40,
 	)
-	// Current momentum stacks.
+	// Momentum vars
 	var/momentum = 0
-	// Momentum the next hit on the same target grants. Goes up by 1 with each hit.
 	var/momentum_gain = 1
-	// The target the current momentum chain is built on.
 	var/datum/weakref/momentum_target
-	// How long without a hit before momentum resets.
 	var/momentum_decay_time = 8 SECONDS
-	// Timer that resets momentum once it runs out.
 	var/momentum_decay_timer
-	// How much momentum is required to activate the wind effect.
 	var/wind_momentum = 6
-	// Whether the wind effect is currently active.
 	var/wind_active = FALSE
-	// Starting charge speed when boosted
+	// Charge vars
 	var/increased_charge_speed = -1.5
-	// Whether the current charge was started with enough momentum.
 	var/boosted_charge = FALSE
-	// Tiles moved during this boosted charge.
 	var/boosted_tiles = 0
-	// Most tiles a boosted charge can move before it ends.
 	var/max_boosted_tiles = 4
 
 /obj/item/ego_weapon/lance/wedge/dropped(mob/user)
