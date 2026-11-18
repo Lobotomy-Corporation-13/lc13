@@ -72,6 +72,7 @@ GLOBAL_LIST_INIT(command_positions, list(
 	"Shi South Section 2 Director",
 	"Streetlight Office Operator",
 	"Devyat North Section 3 Director",
+	"Zwei Veteran Fixer",
 	))
 
 
@@ -288,6 +289,9 @@ GLOBAL_LIST_INIT(association_positions, list(
 	//Neocity Minor
 	"Shi South Section 2 Director",
 	"Shi Fixer",
+
+	"Zwei Fixer",
+	"Zwei Veteran Fixer",
 
 	"Devyat North Section 3 Director",
 	"Devyat Fixer",
