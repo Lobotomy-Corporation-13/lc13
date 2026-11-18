@@ -55,7 +55,7 @@
 
 /mob/living/simple_animal/hostile/shrimp_hos/proc/thrownade()
 	grenade_cooldown = world.time + grenade_cooldown_time
-	playsound(src,'
+	playsound(src,'sound/weapons/gun/shotgun/rack.ogg')
 	var/list/hit_turfs = list()
 	for(var/mob/living/carbon/human/L in range(grenade_range, src))
 		if(faction_check_mob(L, FALSE))
