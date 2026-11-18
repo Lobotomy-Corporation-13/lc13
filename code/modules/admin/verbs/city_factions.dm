@@ -10,11 +10,13 @@
 		return
 	for(var/i in 1 to CITY_FACTION_MENU_MAX_TOGGLES)
 		var/list/choices = list()
+		//This builds the list of faction, in the order of categories to make it more easy to read. With majors being at the top, and minors below them.
 		for(var/category in list(CITY_FACTION_ALWAYS, CITY_FACTION_MAJOR, CITY_FACTION_MINOR, CITY_FACTION_SINGLET, CITY_FACTION_CLINIC))
 			for(var/datum/city_faction/faction in SScity_factions.all_factions)
 				if(faction.category != category)
 					continue
 				var/state = (faction in SScity_factions.active_factions) ? "ON" : "OFF"
+				//Makes a string that shows info about the faction, and connects it to the faction datum for later use.
 				choices["\[[state]\] [faction.name] ([category], [faction.Headcount()] playing)"] = faction
 		var/picked = tgui_input_list(src, "Pick a faction to turn on or off. Players already in a faction keep their jobs.", "Manage City Factions", choices)
 		if(!picked || !check_rights(R_ADMIN))
