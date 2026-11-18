@@ -30,7 +30,7 @@
 
 	if(H.health <= 0)
 		var/turf/T = get_turf(H)
-		H.visible_message("<span class='danger'>[H] explodes in a shower of gore, as a giant bee appears out of [H.p_them()]!</span>")
+		H.visible_message(span_danger("[H] explodes in a shower of gore, as a giant bee appears out of [H.p_them()]!"))
 		H.emote("scream")
 		var/mob/living/simple_animal/hostile/worker_bee/bee = new spawned_bee_type(T)
 		if(control_bee_on_death && H.mind)
