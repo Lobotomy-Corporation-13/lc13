@@ -2075,6 +2075,11 @@
 		else
 			return FALSE
 
+/obj/item/ego_weapon/shield/faithmarble/dropped(mob/user)
+	. = ..()
+	UnregisterSignal(user, COMSIG_ATOM_ATTACK_HAND, PROC_REF(NoParry))
+	UnregisterSignal(user, COMSIG_PARENT_ATTACKBY, PROC_REF(NoParry))
+
 /obj/item/ego_weapon/shield/faithmarble/proc/NoParry(mob/living/carbon/human/user, obj/item/L)//Disables AnnounceBlock when attacked by an item or a human
 	SIGNAL_HANDLER
 	UnregisterSignal(user, COMSIG_MOB_APPLY_DAMGE)
