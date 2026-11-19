@@ -8,7 +8,6 @@
 	base_pixel_y = -10
 	icon_state = "aurafarm"
 	icon_living = "aurafarm"
-	portrait = "aurafarmer"
 	maxHealth = 9999//he can have this
 	health = 9999
 	attack_verb_continuous = "mogs, spares"
