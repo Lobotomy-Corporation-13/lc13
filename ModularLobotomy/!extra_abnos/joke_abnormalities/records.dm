@@ -14,10 +14,10 @@
 	abno_type = /mob/living/simple_animal/hostile/abnormality/aurafarmer
 	abno_code = "O-77-AURA"
 	abno_info = list(
-		"When the work result was Bad, he comes to aura farm."
-		"When the work result was Normal, the Qlipoth Counter lowered with a high probability."
-		"When the Qlipoth Counter reached 0, he arrives."
-		"Agent Kel found him absolutely harmless, but extremely annoying."
+		"When the work result was Bad, he comes to aura farm.",
+		"When the work result was Normal, the Qlipoth Counter lowered with a high probability.",
+		"When the Qlipoth Counter reached 0, he arrives.",
+		"Agent Kel found him absolutely harmless, but extremely annoying.",
 	)
 
 //He
