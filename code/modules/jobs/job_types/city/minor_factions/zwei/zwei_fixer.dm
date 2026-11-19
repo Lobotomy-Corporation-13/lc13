@@ -8,7 +8,7 @@
 	selection_color = "#26294F"
 	total_positions = 0
 	spawn_positions = 0
-	leader = /datum/job/zweiVet
+	leader = /datum/job/zweivet
 	faction_positions = 2
 	display_order = 1.2
 	access = list("zwei")
