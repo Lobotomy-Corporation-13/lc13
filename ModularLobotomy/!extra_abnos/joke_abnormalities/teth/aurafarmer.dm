@@ -109,6 +109,8 @@ var/list/combat_lines = list(
 /mob/living/simple_animal/hostile/abnormality/aurafarmer/BreachEffect(mob/living/carbon/human/user, breach_type)
 	. = ..()
 	var/turf/T = pick(GLOB.department_centers)
+	if(breach_type != BREACH_MINING)
+		forceMove(T)
 	icon_living = "aurafarm"
 	icon_state = icon_living
 	addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(show_global_blurb), 5 SECONDS, "So the Aura Farming begins...", 25))
