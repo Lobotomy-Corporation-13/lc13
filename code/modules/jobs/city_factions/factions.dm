@@ -73,3 +73,9 @@
 	category = CITY_FACTION_MINOR
 	leader_job = /datum/job/devyatdir
 	requires_leader = TRUE
+
+/datum/city_faction/zweiSouth
+	name = "Zwei South Section"
+	category = CITY_FACTION_MINOR
+	leader_job = /datum/job/zweiVet
+	requires_leader = TRUE

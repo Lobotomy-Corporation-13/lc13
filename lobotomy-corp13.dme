@@ -2483,6 +2483,8 @@
 #include "code\modules\jobs\job_types\city\minor_factions\shi\shifixer.dm"
 #include "code\modules\jobs\job_types\city\minor_factions\streetlight\streetfixer.dm"
 #include "code\modules\jobs\job_types\city\minor_factions\streetlight\streetop.dm"
+#include "code\modules\jobs\job_types\city\minor_factions\zwei\zwei_fixer.dm"
+#include "code\modules\jobs\job_types\city\minor_factions\zwei\zwei_vet.dm"
 #include "code\modules\jobs\job_types\city\old_jobs\backstreets_butcher.dm"
 #include "code\modules\jobs\job_types\city\old_jobs\carnival.dm"
 #include "code\modules\jobs\job_types\city\old_jobs\civilian.dm"
