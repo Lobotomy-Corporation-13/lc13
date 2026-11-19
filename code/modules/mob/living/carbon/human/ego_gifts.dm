@@ -960,6 +960,14 @@
 	prudence_bonus = -2
 	slot = LEFTBACK
 
+/datum/ego_gifts/fellbullet
+	name = "Fell Bullet"
+	icon_state = "fell_bullet"
+	fortitude_bonus = 3
+	justice_bonus = 3
+	prudence_bonus = -2
+	slot = NECKWEAR
+
 /**
  * WAW EGO Gifts
  */
