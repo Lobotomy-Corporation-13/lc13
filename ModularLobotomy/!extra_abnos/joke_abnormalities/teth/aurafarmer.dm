@@ -90,7 +90,7 @@ var/list/combat_lines = list(
 		"If I were yo-.. Actually, I would never be a bum.",
 )
 
-/mob/living/simple_animal/hostile/abnormality/aurafarmer/PreDamageReaction(damage_amount, damage_type, source, attack_type)
+/mob/living/simple_animal/hostile/abnormality/aurafarmer/PostDamageReaction(damage_amount, damage_type, source, attack_type)
 	. = ..()
 	if(prob(20))
 		say(pick(combat_lines))
@@ -111,8 +111,7 @@ var/list/combat_lines = list(
 	var/turf/T = pick(GLOB.department_centers)
 	icon_living = "aurafarm"
 	icon_state = icon_living
-	if(!combat_map)
-		addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(show_global_blurb), 5 SECONDS, "So the Aura Farming begins...", 25))
+	addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(show_global_blurb), 5 SECONDS, "So the Aura Farming begins...", 25))
 
 /mob/living/simple_animal/hostile/abnormality/aurafarmer/death(gibbed)
 	animate(src, alpha = 0, time = 4 SECONDS)
