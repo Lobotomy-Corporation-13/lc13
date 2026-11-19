@@ -31,7 +31,7 @@
 	melee_damage_upper = 1
 	can_breach = TRUE
 	start_qliphoth = 2
-    max_boxes = 15
+	max_boxes = 15
 	can_patrol = FALSE
 	wander = FALSE
 	light_color = COLOR_WHITE
@@ -39,6 +39,7 @@
 	light_power = 5
 	del_on_death = FALSE
 	faction = list("friendly")//other abnos will help you kill him
+
 	ego_list = list(
 		/datum/ego_datum/weapon/aura,
 		/datum/ego_datum/armor/aura,
