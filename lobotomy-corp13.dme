@@ -4332,6 +4332,7 @@
 #include "ModularLobotomy\associations\neocity_office.dm"
 #include "ModularLobotomy\associations\office_upgrades.dm"
 #include "ModularLobotomy\associations\official_office.dm"
+#include "ModularLobotomy\associations\protection_terminal.dm"
 #include "ModularLobotomy\associations\tinkerer_corrosion_antag.dm"
 #include "ModularLobotomy\associations\tinkerer_npc.dm"
 #include "ModularLobotomy\associations\tutorial_tapes.dm"

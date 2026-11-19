@@ -1194,3 +1194,9 @@
 /obj/structure/city_prop/lamppost/chinese/snow
 	name = "snowed signposted lamp"
 	icon_state = "chinese-snow"
+
+// ------------------------------------------------------- various minor items
+/obj/structure/city_prop/projector
+	icon = 'ModularLobotomy/_Lobotomyicons/city_props.dmi'
+	name = "Projector"
+	icon_state = "projector_zwei"
