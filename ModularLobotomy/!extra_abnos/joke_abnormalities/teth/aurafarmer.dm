@@ -1,5 +1,5 @@
 /mob/living/simple_animal/hostile/abnormality/aurafarmer
-	name = "Aura Farmer"
+    name = "Aura Farmer"
 	desc = "A flying, magnificent large horse humanoid. Just looking at him fills you with dread and fear."
 	icon = 'ModularLobotomy/_Lobotomyicons/128x128.dmi'
 	pixel_x = -48
@@ -45,10 +45,6 @@
 	)
 	gift_type = /datum/ego_gifts/aura_farmer
 	abnormality_origin = ABNORMALITY_ORIGIN_JOKE
-
-//	grouped_abnos = list(
-//		/mob/living/simple_animal/hostile/abnormality/lordverity = 2
-//	)
 
 	observation_prompt = "Before you, flying above the ground is a man with a horse head. <br>\
 		He begins his loud speech. You feel unable to say anything in his immense presence. <br>\
