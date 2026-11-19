@@ -16,8 +16,16 @@
 /obj/structure/chair,
 /turf/open/floor/plasteel/dark,
 /area/city/fixers)
+"p" = (
+/obj/structure/closet,
+/obj/item/clothing/suit/armor/ego_gear/city/zweiriot,
+/obj/item/ego_weapon/city/zweihander,
+/turf/open/floor/plasteel/dark,
+/area/city/fixers)
 "r" = (
 /obj/structure/closet,
+/obj/item/clothing/suit/armor/ego_gear/city/zweivet,
+/obj/item/ego_weapon/city/zweihander/vet,
 /turf/open/floor/plasteel/dark,
 /area/city/fixers)
 "s" = (
@@ -45,9 +53,27 @@
 /obj/structure/table,
 /turf/open/floor/plasteel/dark,
 /area/city/fixers)
+"J" = (
+/obj/structure/table,
+/obj/structure/city_prop/projector{
+	dir = 4;
+	pixel_y = 5
+	},
+/turf/open/floor/plasteel/dark,
+/area/city/fixers)
 "L" = (
 /obj/structure/closet/crate,
 /turf/open/floor/plasteel/dark,
+/area/city/fixers)
+"O" = (
+/obj/structure/closet,
+/obj/item/clothing/suit/armor/ego_gear/city/zwei,
+/obj/item/ego_weapon/city/zweibaton,
+/turf/open/floor/plasteel/dark,
+/area/city/fixers)
+"P" = (
+/obj/structure/sign/departments/zwei,
+/turf/closed/indestructible/city/glazedtile,
 /area/city/fixers)
 "R" = (
 /obj/structure/closet/crate/large,
@@ -62,15 +88,12 @@
 /area/city/fixers)
 "W" = (
 /obj/structure/table/reinforced,
-/turf/open/floor/plasteel/dark,
-/area/city/fixers)
-"X" = (
-/obj/machinery/vending/coffee,
+/obj/structure/protection,
 /turf/open/floor/plasteel/dark,
 /area/city/fixers)
 
 (1,1,1) = {"
-u
+P
 s
 s
 s
@@ -88,9 +111,9 @@ s
 F
 "}
 (3,1,1) = {"
-X
+u
 m
-I
+J
 t
 m
 s
@@ -124,8 +147,8 @@ s
 e
 "}
 (7,1,1) = {"
-r
-r
+O
+p
 r
 s
 s
