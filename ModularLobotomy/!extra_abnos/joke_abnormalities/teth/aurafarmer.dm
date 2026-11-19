@@ -10,8 +10,8 @@
 	icon_living = "aurafarm"
 	maxHealth = 9999//he can have this
 	health = 9999
-	attack_verb_continuous = "mogs, spares"
-	attack_verb_simple = "mog, spare"
+	attack_verb_continuous = "mogs"
+	attack_verb_simple = "mog"
 	threat_level = TETH_LEVEL
 	attack_sound = 'sound/weapons/bite.ogg'//no fun sound since he can't really attack
 	work_chances = list(
