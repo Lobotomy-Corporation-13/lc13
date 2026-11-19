@@ -117,5 +117,4 @@ var/list/combat_lines = list(
 /mob/living/simple_animal/hostile/abnormality/aurafarmer/death(gibbed)
 	animate(src, alpha = 0, time = 4 SECONDS)
 	QDEL_IN(src, 4 SECONDS)
-	to_chat(src, span_danger("<b>You simply can't fight me one on one..</b>"))
 	return ..()
