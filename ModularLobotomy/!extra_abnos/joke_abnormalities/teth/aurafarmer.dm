@@ -1,5 +1,5 @@
 /mob/living/simple_animal/hostile/abnormality/aurafarmer
-    name = "Aura Farmer"
+	name = "Aura Farmer"
 	desc = "A flying, magnificent large horse humanoid. Just looking at him fills you with dread and fear."
 	icon = 'ModularLobotomy/_Lobotomyicons/128x128.dmi'
 	pixel_x = -48
@@ -86,9 +86,9 @@ var/list/combat_lines = list(
 		"Do something more useful.",
 		"L, ratio.",
 		"You're just tickling me.",
-		"Not even a claw could stop me, what makes you think you will?"
-		"If I were yo-.. Actually, I would never be a bum."
-	)
+		"Not even a claw could stop me, what makes you think you will?",
+		"If I were yo-.. Actually, I would never be a bum.",
+)
 
 /mob/living/simple_animal/hostile/abnormality/aurafarmer/PreDamageReaction(damage_amount, damage_type, source, attack_type)
 	. = ..()
