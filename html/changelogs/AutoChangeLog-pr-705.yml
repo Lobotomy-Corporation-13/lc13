@@ -1,0 +1,4 @@
+author: "EnderMage99"
+delete-after: True
+changes:
+  - admin: "Added the Manage City Factions verb, which turns city factions on or off\nfor the round."
