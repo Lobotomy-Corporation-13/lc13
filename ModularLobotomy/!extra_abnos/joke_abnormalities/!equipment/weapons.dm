@@ -1,6 +1,22 @@
 //All ZAYIN joke E.G.O
 
 // All TETH joke E.G.O
+
+/obj/item/ego_weapon/aura
+	name = "aura"
+	desc = "The secret of life resides in your hands."
+	special = "This weapon deals no damage, but throws your enemies away."
+	icon_state = "a_ura"
+	icon = 'ModularLobotomy/_Lobotomyicons/joke_abnos/joke_weapons.dmi'
+	force = 0
+	damtype = RED_DAMAGE
+	attack_verb_continuous = list("mogs", "spares", "humbles")
+	attack_verb_simple = list("mog", "spare", "humble")
+	hitsound = 'sound/effects/space_wind.ogg'
+	knockback = KNOCKBACK_HEAVY
+	attack_speed = 0.5
+	reach = 3
+
 /obj/item/ego_weapon/an_ego
 	name = "an ego"
 	desc = "A weapon that can be used to attack things. Unfortunately, it is missing textures because you failed to install Counter-Strike : Source."

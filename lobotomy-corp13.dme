@@ -4269,6 +4269,7 @@
 #include "ModularLobotomy\!extra_abnos\joke_abnormalities\aleph\sukuna.dm"
 #include "ModularLobotomy\!extra_abnos\joke_abnormalities\aleph\wild_ride.dm"
 #include "ModularLobotomy\!extra_abnos\joke_abnormalities\teth\abnormality.dm"
+#include "ModularLobotomy\!extra_abnos\joke_abnormalities\teth\aurafarmer.dm"
 #include "ModularLobotomy\!extra_abnos\joke_abnormalities\waw\skub.dm"
 #include "ModularLobotomy\!extra_abnos\joke_abnormalities\zayin\riblin.dm"
 #include "ModularLobotomy\!extra_abnos\mining\baseabno.dm"
