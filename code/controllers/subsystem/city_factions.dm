@@ -9,6 +9,7 @@ SUBSYSTEM_DEF(city_factions)
 	var/list/datum/city_faction/all_factions = list()
 	/// The factions enabled this round.
 	var/list/datum/city_faction/active_factions = list()
+	var/faction_limit = TRUE
 
 /datum/controller/subsystem/city_factions/Initialize(timeofday)
 	if(!(SSmaptype.maptype in SSmaptype.citymaps))
@@ -52,6 +53,12 @@ SUBSYSTEM_DEF(city_factions)
 	var/active_clinic = pick(clinics)
 	active_factions += active_clinic
 
+	return ..()
+
+/datum/controller/subsystem/city_factions/vv_edit_var(var_name, var_value)
+	//NAMEOF checks the faction_limit, when it was first compiled. So even if it gets changed in the middle of the round, it will prevent the admin verb from being used.
+	if(var_name == NAMEOF(src, faction_limit))
+		return FALSE
 	return ..()
 
 /// Re-stamps every faction onto the job datums. SetupOccupations() rebuilds all
@@ -128,3 +135,23 @@ SUBSYSTEM_DEF(city_factions)
 	if(leader?.current_positions)
 		faction.OpenMembers()
 	return TRUE
+
+//Checks if a faction has already reached it's limit.
+/datum/controller/subsystem/city_factions/proc/CategoryFull(category)
+	var/cap
+	switch(category)
+		if(CITY_FACTION_MAJOR)
+			cap = CITY_FACTION_MAJOR_COUNT
+		if(CITY_FACTION_MINOR)
+			cap = CITY_FACTION_MINOR_COUNT
+		if(CITY_FACTION_SINGLET)
+			cap = CITY_FACTION_SINGLET_COUNT
+		if(CITY_FACTION_CLINIC)
+			cap = CITY_FACTION_CLINIC_COUNT
+		else
+			return FALSE
+	var/count = 0
+	for(var/datum/city_faction/faction in active_factions)
+		if(faction.category == category)
+			count++
+	return count >= cap

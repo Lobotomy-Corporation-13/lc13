@@ -31,12 +31,17 @@
 				continue
 			if(!check_rights(R_ADMIN) || !SScity_factions.DisableFaction(faction))
 				continue
-			log_admin("[key_name(src)] disabled the city faction [faction.name].")
-			message_admins("[key_name_admin(src)] disabled the city faction [faction.name].")
+			ReportCityFactionChange("disabled the city faction [faction.name].")
 		else
 			SScity_factions.EnableFaction(faction)
-			log_admin("[key_name(src)] enabled the city faction [faction.name].")
-			message_admins("[key_name_admin(src)] enabled the city faction [faction.name].")
-		SSblackbox.record_feedback("tally", "admin_verb", 1, "Manage City Factions")
+			ReportCityFactionChange("enabled the city faction [faction.name].")
+
+// Sending the message to admin TGS, copied from code\modules\client\client_procs.dm, when people log out.
+/client/proc/ReportCityFactionChange(message)
+	log_admin("[key_name(src)] [message]")
+	message_admins("[key_name_admin(src)] [message]")
+	if(!CONFIG_GET(flag/no_city_faction_oversight))
+		send2adminchat("CITY FACTIONS", "[key_name(src)] [message]")
+	SSblackbox.record_feedback("tally", "admin_verb", 1, "Manage City Factions")
 
 #undef CITY_FACTION_MENU_MAX_TOGGLES
