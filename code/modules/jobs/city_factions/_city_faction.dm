@@ -130,3 +130,10 @@
 		return
 	leader.total_positions = 0
 	leader.spawn_positions = 0
+
+//Just checks how many players are in the faction. Used for warning the admin when disabling a faction that has players in it.
+/datum/city_faction/proc/Headcount()
+	. = 0
+	for(var/datum/job/job in SSjob.occupations)
+		if(job.leader == leader_job)
+			. += job.current_positions
