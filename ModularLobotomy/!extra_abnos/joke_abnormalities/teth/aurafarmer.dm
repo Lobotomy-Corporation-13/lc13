@@ -93,7 +93,7 @@ var/list/combat_lines = list(
 		"If I were yo-.. Actually, I would never be a bum."
 	)
 
-/mob/living/simple_animal/hostile/ordeal/NT_corrosion/PreDamageReaction(damage_amount, damage_type, source, attack_type)
+/mob/living/simple_animal/hostile/abnormality/aurafarmer/PreDamageReaction(damage_amount, damage_type, source, attack_type)
 	. = ..()
 	if(prob(20))
 		say(pick(combat_lines))
