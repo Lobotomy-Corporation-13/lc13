@@ -1,14 +1,14 @@
 //Zwei Assoc Veteran
-/datum/job/zweiVet
+/datum/job/zweivet
 	title = "Zwei Veteran Fixer"
-	outfit = /datum/outfit/job/zweiVet
-	department_head = list("the director")
+	outfit = /datum/outfit/job/zweivet
+	department_head = list("The Director")
 	faction = "Station"
-	supervisors = "the director."
+	supervisors = "The Director."
 	selection_color = "#26294F"
 	total_positions = 0
 	spawn_positions = 0
-	leader = /datum/job/zweiVet
+	leader = /datum/job/zweivet
 	faction_positions = 1
 	display_order = 1.1
 	access = list("zwei")
@@ -27,18 +27,18 @@
 								JUSTICE_ATTRIBUTE = 80
 								)
 
-/datum/job/zweiVet/after_spawn(mob/living/carbon/human/H, mob/M)
+/datum/job/zweivet/after_spawn(mob/living/carbon/human/H, mob/M)
 	ADD_TRAIT(H, TRAIT_COMBATFEAR_IMMUNE, JOB_TRAIT)
 	ADD_TRAIT(H, TRAIT_WORK_FORBIDDEN, JOB_TRAIT)
 	. = ..()
 
 
-/datum/outfit/job/zweiVet
-	name = "Zwei South Section Veteran"
-	jobtype = /datum/job/zweiVet
+/datum/outfit/job/zweivet
+	name = "Zwei Veteran Fixer"
+	jobtype = /datum/job/zweivet
 
 	belt = /obj/item/pda/security
 	ears = /obj/item/radio/headset/faction
 	uniform = /obj/item/clothing/under/suit/lobotomy/plain
-	backpack_contents = list()
+	backpack_contents = list(/obj/item/structurecapsule/fixer/zwei)
 	shoes = /obj/item/clothing/shoes/laceup
