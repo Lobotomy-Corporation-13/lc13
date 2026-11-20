@@ -1,20 +1,23 @@
 /mob/living/simple_animal/hostile/abnormality/cupid
-	name = "Cupid"
+	name = "Coupid"
 	desc = "The tiniest rabbit with a flower on its head. It makes you itch looking at it."
 	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
-	icon_state = "coupid"
-	core_icon = "coupid_core"
+	icon_state = "cupid_contained"
+	icon_living = "cupid_contained"
+	portrait = "cupid"
+	var/breach_icon = "cupid_breach"
+	core_icon = "cupid_egg"
 	del_on_death = TRUE
-	maxHealth = 1000
-	health = 1000
+	maxHealth = 1500
+	health = 1500
 	damage_coeff = list(RED_DAMAGE = 0.5, WHITE_DAMAGE = 2, BLACK_DAMAGE = 0, PALE_DAMAGE = 1) //0 is like no damage, 2 is high damage? right???
 	melee_damage_type = BLACK_DAMAGE
 	can_breach = TRUE
 	threat_level = HE_LEVEL
 	start_qliphoth = 1
 	work_chances = list(
-		ABNORMALITY_WORK_INSTINCT = 10, //tad too punishing maybe? then again its he.
-		ABNORMALITY_WORK_INSIGHT = 80, //insert botany joke somewhere here //might be too high?
+		ABNORMALITY_WORK_INSTINCT = 10,
+		ABNORMALITY_WORK_INSIGHT = 80, //insert botany joke somewhere here
 		ABNORMALITY_WORK_ATTACHMENT = 40,
 		ABNORMALITY_WORK_REPRESSION = 40,
 	)
@@ -28,6 +31,7 @@
 	)
 	gift_type = /datum/ego_gifts/allergen
 	abnormality_origin = ABNORMALITY_ORIGIN_ORIGINAL
+
 
 	observation_prompt = "There's a field of wheat ahead of you. It's a beautiful sunset, But you're feeling ill."
 	observation_choices = list(
@@ -46,28 +50,19 @@
 	return
 
 /mob/living/simple_animal/hostile/abnormality/cupid/PostWorkEffect(mob/living/carbon/human/user, work_type, pe, work_time)
-	user.reagents.add_reagent(/datum/reagent/toxin/histamine, 4)
+	user.reagents.add_reagent(/datum/reagent/toxin/histamine, 5)
 	visible_message(span_notice("You find yourself sniffling after work. Should probably be careful breathing near it."))
 
-//breach stuff time
-/mob/living/simple_animal/hostile/abnormality/cupid/ZeroQliphoth(mob/living/carbon/human/user)
+/mob/living/simple_animal/hostile/abnormality/cupid/BreachEffect(mob/living/carbon/human/user, breach_type)
 	SSweather.run_weather(/datum/weather/pollen)
+	icon_state = "cupid_breach"
+	..()
 
-/mob/living/simple_animal/hostile/abnormality/cupid/BreachEffect()
-	. = ..()
-	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
-	icon_state = "coupid_breach"
-	return..()
-
-//egg
-/mob/living/simple_animal/hostile/abnormality/coupid/death(gibbed)
-	icon = 'ModularLobotomy/_Lobotomyicons/abno_cores/he.dmi'
-	pixel_x = -16
-	pixel_y = 0
-	density = FALSE
-	QDEL_IN(src, 10 SECONDS)
-	return ..()
-
+	//okay. the bnuuy is nuzzling people when he sees them. he's supposed to be a wild bunny not a pet bunny. so let's make some BUULLLLSHIT
+/mob/living/simple_animal/hostile/abnormality/cupid/PickTarget(list/Targets)
+	return
+/mob/living/simple_animal/hostile/abnormality/cupid/Move()
+	..()
 
 	//FANCY TIME
 /datum/weather/pollen
@@ -88,13 +83,11 @@
 	target_trait = ZTRAIT_STATION
 	//it lasts until...
 /mob/living/simple_animal/hostile/abnormality/cupid/Destroy()
-	EndWeather()
-/mob/living/simple_animal/hostile/abnormality/cupid/proc/EndWeather() //end weather means END WEATHER
-	SSweather.end_weather()
+	SSweather.end_weather(/datum/weather/pollen)
 
 /datum/weather/pollen/weather_act(mob/living/carbon/human/L)
 	if(ishuman(L))
-		L.deal_damage(1, BLACK_DAMAGE, attack_type = (ATTACK_TYPE_ENVIRONMENT)) //okay i felt histans was too mean
+		L.deal_damage(3, BLACK_DAMAGE, attack_type = (ATTACK_TYPE_ENVIRONMENT)) //okay i felt histans was too mean
 		return
 //	if(prob(1))
 //	user.reagents.add_reagent(/datum/reagent/toxin/histamine, 2) //DON'T RISK KILLING PEOPLE. we want a pest not a murderer.
