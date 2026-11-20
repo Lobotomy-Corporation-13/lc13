@@ -41,7 +41,7 @@
 		If the target falls into a critical state from the leap they will be instantly gibbed. <br> \
 		<br>\
 		|Stimulating Smell|: Your melee attacks do WHITE, however when attacking insane targets you will instead inflict RED damage. \
-		Targets hit by your leap will be made slightly drunk, if the leap hits a target that is overly drunk the damage will be nullified and you will be staggered. <br>\
+		Targets hit by your leap will be made mildly drunk, if the leap hits a target that is overly drunk (three times back to back) the damage will be nullified and you will be staggered. <br>\
 		</b>"
 
 
@@ -69,7 +69,7 @@
 	if(!ishuman(attacked_target))
 		return ..()
 	var/mob/living/carbon/human/H = attacked_target
-	H.drunkenness += 10
+	H.drunkenness += 50
 	to_chat(H, span_warning("Yuck, some of it got in your mouth!"))
 	if(H.sanity_lost)
 		melee_damage_type = RED_DAMAGE
