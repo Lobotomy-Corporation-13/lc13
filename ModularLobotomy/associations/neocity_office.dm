@@ -110,6 +110,10 @@
 	template_id = "devyat_office"
 	custom_access = list("devyat")
 
+/obj/item/structurecapsule/fixer/kcorp
+	name = "Kcorp Office Capsule"
+	template_id = "devyat_office"
+	custom_access = list("kcorp")
 
 //Minor Templates
 /datum/map_template/shelter/bladelin

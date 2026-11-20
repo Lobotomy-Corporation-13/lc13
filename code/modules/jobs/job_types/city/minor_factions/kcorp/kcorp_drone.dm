@@ -9,7 +9,8 @@
 	spawn_positions = 0
 	leader = /datum/job/kcorpdrone
 	faction_positions = 1
-	display_order = 1.1
+	display_order = 110
+	trusted_only = FALSE
 	access = list("kcorp")
 	minimal_access = list("kcorp")
 	radio_channel_name = "Kcorp"
@@ -19,6 +20,7 @@
 	maptype = list("city")
 	job_important = "."
 
-/datum/job/kcorpdrone/after_spawn(mob/living/carbon/human/H, mob/M)
-	. = ..()
-	H.change_mob_type(/mob/living/simple_animal/hostile/kcorp/drone/kcorp_recorder,get_turf(H),null,TRUE)
+/datum/job/kcorpdrone/equip(mob/living/carbon/human/H, visualsOnly = FALSE, announce = TRUE, latejoin = FALSE, datum/outfit/outfit_override = null, client/preference_source)
+	if(!H)
+		return
+	return H.change_mob_type(/mob/living/simple_animal/hostile/kcorp/drone/kcorp_recorder,get_turf(H),title,TRUE)

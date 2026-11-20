@@ -10,8 +10,8 @@
 	spawn_positions = 0
 	leader = /datum/job/kcorp_goon
 	faction_positions = 1
-	display_order = 103
-	trusted_only = TRUE
+	display_order = 110.1
+	trusted_only = FALSE
 	access = list("kcorp")
 	minimal_access = list("kcorp")
 	radio_channel_name = "Kcorp"
@@ -24,13 +24,15 @@
 /datum/job/kcorp_goon/after_spawn(mob/living/carbon/human/H, mob/M)
 	ADD_TRAIT(H, TRAIT_COMBATFEAR_IMMUNE, JOB_TRAIT)
 	ADD_TRAIT(H, TRAIT_WORK_FORBIDDEN, JOB_TRAIT)
-	. = ..()
+	return ..()
 
 
 /datum/outfit/job/kcorp_goon
-	name = "Full Stop Operator"
+	name = "Kcorp Filmographer"
 	jobtype = /datum/job/kcorp_goon
 	belt = /obj/item/pda/security
-	ears = /obj/item/radio/headset/faction/heads
+	ears = /obj/item/radio/headset/faction
 	uniform = /obj/item/clothing/under/suit/lobotomy/plain
+	backpack_contents = list(/obj/item/camera, /obj/item/camera_film,
+		/obj/item/camera_film,)
 	shoes = /obj/item/clothing/shoes/laceup

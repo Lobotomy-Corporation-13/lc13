@@ -60,8 +60,12 @@
 \---*/
 /mob/living/simple_animal/hostile/kcorp/drone/kcorp_recorder/Initialize(mapload)
 	. = ..()
+	var/datum/action/place_room/place_action = new
+	place_action.Grant(src)
 	var/datum/action/cooldown/dispense_monies/attack_action = new
 	attack_action.Grant(src)
+	access_card = new(src)
+	access_card.access = list("kcorp")
 
 /mob/living/simple_animal/hostile/kcorp/drone/kcorp_recorder/Login()
 	. = ..()
@@ -75,6 +79,7 @@
 
 /mob/living/simple_animal/hostile/kcorp/drone/kcorp_recorder/Destroy()
 	UnregisterAll()
+	QDEL_NULL(access_card)
 	return ..()
 
 /mob/living/simple_animal/hostile/kcorp/drone/kcorp_recorder/death(gibbed)
@@ -196,3 +201,32 @@
 	for(var/mob/living/L in scan_buffer)
 		UnregisterMob(L)
 	scan_buffer.Cut()
+
+/*----------------------\
+|City Specific Abilities|
+\----------------------*/
+/datum/action/place_room
+	name = "Place Room"
+	desc = "Places a room in the location."
+	icon_icon = 'icons/mob/actions/actions_changeling.dmi'
+	button_icon_state = "resonant_shriek"
+
+/datum/action/place_room/Trigger()
+	var/mob/living/user = owner
+	var/ready
+	for(var/obj/effect/landmark/fixerbase/landmark in GLOB.landmarks_list)
+		if((get_turf(landmark)) == (get_turf(user)))
+			ready = TRUE
+			break
+	if(!ready)
+		to_chat(user, span_warning("\The ability will not function in this area. Please move to a designated fixer office space."))
+		return
+	PlaceRoom(user)
+	. = ..()
+	Remove(user)
+
+//Extremely sloppy way to do this for me. -IP
+/datum/action/place_room/proc/PlaceRoom(mob/user)
+	var/obj/item/structurecapsule/fixer/kcorp/K = new(get_turf(user))
+	K.attack_self()
+
