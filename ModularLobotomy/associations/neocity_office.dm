@@ -115,6 +115,10 @@
 	template_id = "zwei_office"
 	custom_access = list("zwei")
 
+/obj/item/structurecapsule/fixer/kcorp
+	name = "Kcorp Office Capsule"
+	template_id = "kcorp_office"
+	custom_access = list("kcorp")
 
 //Minor Templates
 /datum/map_template/shelter/bladelin
@@ -164,3 +168,9 @@
 	shelter_id = "zwei_office"
 	description = "A small base capsule for a group of Zwei Fixers"
 	mappath = "_maps/templates/city_factions/minor/zwei.dmm"
+
+/datum/map_template/shelter/kcorp
+	name = "Kcorp Filmographers Base"
+	shelter_id = "kcorp_office"
+	description = "A small capsule containing an office for Kcorp film studio"
+	mappath = "_maps/templates/city_factions/minor/kcorp.dmm"

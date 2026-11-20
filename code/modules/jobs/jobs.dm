@@ -73,6 +73,7 @@ GLOBAL_LIST_INIT(command_positions, list(
 	"Streetlight Office Operator",
 	"Devyat North Section 3 Director",
 	"Zwei Veteran Fixer",
+	"Kcorp Lead Film Director",
 	))
 
 
@@ -313,6 +314,8 @@ GLOBAL_LIST_INIT(city_antagonist_positions, list(
 	"Kurokumo Kashira",
 	"Kurokumo Wakashu",
 
+	"Kcorp Lead Film Director",
+	"Kcorp Filmographer",
 ))
 
 
