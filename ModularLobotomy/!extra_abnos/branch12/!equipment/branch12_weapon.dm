@@ -228,11 +228,36 @@
 	name = "barostem"
 	desc = "The baroputians despise those that decorate themselves \
 		as much as any non-baroputian. This one is safer in your care then theirs."
+	special = "50% chance for the red ear'ed baroputian to appear and deal additional damage \
+		or provide minor healing for brute damage."
 	icon_state = "barostem"
-	force = 14
+	force = 18
 	damtype = RED_DAMAGE
 	attack_verb_continuous = list("slams", "strikes", "smashes")
 	attack_verb_simple = list("slam", "strike", "smash")
+
+/obj/item/ego_weapon/branch12/barostem/attack(mob/living/target, mob/living/carbon/human/user)
+	..()
+	if(isliving(target))
+		if(target.stat != DEAD && prob(50))
+			var/mob/living/animation_trg
+			var/animation_state
+			if(prob(50) && user.get_damage_amount(BRUTE))
+				//Its very cheap sututres
+				animation_trg = user
+				animation_state = "baroputian_heal"
+				user.adjustBruteLoss(-5)
+			else
+				animation_trg = target
+				animation_state = "baroputian_atk"
+				target.deal_damage(force*1.5, RED_DAMAGE, null, attack_type = (ATTACK_TYPE_SPECIAL))
+			//Shows a animation of a baroputian slamming itself into the enemy.
+			var/image/effect_flick = image('ModularLobotomy/_Lobotomyicons/baroputian.dmi',animation_trg,animation_state,animation_trg.layer + 1)
+			effect_flick.pixel_x = -target.pixel_x
+			effect_flick.pixel_y = -target.pixel_y
+			effect_flick.plane = GAME_PLANE
+			effect_flick.appearance_flags = APPEARANCE_UI_IGNORE_ALPHA
+			flick_overlay_view(effect_flick, target, 8)
 
 //Relic of Virtue
 /obj/item/ego_weapon/branch12/mini/virtue
