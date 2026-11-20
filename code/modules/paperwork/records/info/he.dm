@@ -584,3 +584,14 @@
 	abno_info = list(
 		"When another abnormality breached, the Qliphoth counter lowered.",
 		"F-02-182 returned to it's containment after 5 minutes.")
+
+// Coupid
+/obj/item/paper/fluff/info/he/cupid
+	abno_type = /mob/living/simple_animal/hostile/abnormality/cupid
+	abno_code = "O-02-1402"
+	abno_info = list(
+		"After a work, Agents will start suffering an allergic response regardless of confirmed allergies. It is believed that this is because the allergic response is not tied to a common allergen.",
+		"If the work result was Bad, Qliphoth reduced.",
+		"On breach, Coupid will spread pollen all around the facility, Causing small amounts of black damage frequently. It is believed that if we lowered its security, This would become a fatal allergic response.",
+		"Do not Reunite the holidays.")
+
