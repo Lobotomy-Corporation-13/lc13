@@ -153,3 +153,9 @@
 	shelter_id = "devyat_office"
 	description = "A small capsule containing an office for Devyat delivery fixers"
 	mappath = "_maps/templates/city_factions/minor/devyat.dmm"
+
+/datum/map_template/shelter/kcorp
+	name = "Kcorp Filmographers Base"
+	shelter_id = "kcorpfilm_office"
+	description = "A small capsule containing an office for Kcorp film studio"
+	mappath = "_maps/templates/city_factions/minor/devyat.dmm"
