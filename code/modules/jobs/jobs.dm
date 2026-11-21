@@ -73,6 +73,8 @@ GLOBAL_LIST_INIT(command_positions, list(
 	"Streetlight Office Operator",
 	"Devyat North Section 3 Director",
 	"Zwei Veteran Fixer",
+	"Kcorp Lead Film Director",
+	"Kcorp Filmographer",
 	))
 
 

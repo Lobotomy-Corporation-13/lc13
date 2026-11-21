@@ -79,3 +79,9 @@
 	category = CITY_FACTION_MINOR
 	leader_job = /datum/job/zweiVet
 	requires_leader = TRUE
+
+/datum/city_faction/kcorpfilm
+	name = "Kcorp Filmographers"
+	category = CITY_FACTION_MINOR
+	leader_job = /datum/job/kcorpdrone
+	requires_leader = TRUE

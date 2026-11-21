@@ -110,6 +110,10 @@
 	template_id = "devyat_office"
 	custom_access = list("devyat")
 
+/obj/item/structurecapsule/fixer/kcorp
+	name = "Kcorp Office Capsule"
+	template_id = "devyat_office"
+	custom_access = list("kcorp")
 
 //Minor Templates
 /datum/map_template/shelter/bladelin
@@ -152,4 +156,10 @@
 	name = "Devyat North Base"
 	shelter_id = "devyat_office"
 	description = "A small capsule containing an office for Devyat delivery fixers"
+	mappath = "_maps/templates/city_factions/minor/devyat.dmm"
+
+/datum/map_template/shelter/kcorp
+	name = "Kcorp Filmographers Base"
+	shelter_id = "kcorpfilm_office"
+	description = "A small capsule containing an office for Kcorp film studio"
 	mappath = "_maps/templates/city_factions/minor/devyat.dmm"
