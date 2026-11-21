@@ -5,7 +5,7 @@
 	department_head = list("The veteran superior.")
 	faction = "Station"
 	supervisors = "the veteran"
-	selection_color = "#26294F"
+	selection_color = "#326ba8"
 	total_positions = 0
 	spawn_positions = 0
 	leader = /datum/job/zweiVet
@@ -14,7 +14,7 @@
 	access = list("zwei")
 	minimal_access = list("zwei")
 	radio_channel_name = "Zwei Assocation"
-	radio_channel_color = "#26294F"
+	radio_channel_color = "#326ba8"
 	departments = DEPARTMENT_CITY_ANTAGONIST
 	paycheck = 100
 	maptype = list("city")
