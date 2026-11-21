@@ -4485,6 +4485,7 @@
 #include "ModularLobotomy\ego_weapons\melee\city\insurgence.dm"
 #include "ModularLobotomy\ego_weapons\melee\city\jeong.dm"
 #include "ModularLobotomy\ego_weapons\melee\city\kcorp.dm"
+#include "ModularLobotomy\ego_weapons\melee\city\kurokumo.dm"
 #include "ModularLobotomy\ego_weapons\melee\city\lcorp_melee.dm"
 #include "ModularLobotomy\ego_weapons\melee\city\lcorp_ranged.dm"
 #include "ModularLobotomy\ego_weapons\melee\city\leaflet.dm"

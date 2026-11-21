@@ -22,6 +22,8 @@
 		/obj/item/ego_weapon/city/index,
 		/obj/item/ego_weapon/city/awl,
 		/obj/item/ego_weapon/city/kurokumo,
+		/obj/item/ego_weapon/city/kurokumo/ink,
+		/obj/item/ego_weapon/city/kurokumo/lenticular,
 		/obj/item/ego_weapon/city/bladelineage,
 		/obj/item/ego_weapon/shield/middle_chain/younger,
 		/obj/item/clothing/suit/armor/ego_gear/city/middle_younger,
