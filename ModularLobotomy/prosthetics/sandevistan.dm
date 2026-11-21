@@ -16,8 +16,8 @@
 		to_chat(user, span_warning("Implant is charging up!"))
 		return FALSE
 	if(prob(5))
-		user.SanityLossEffect(FORTITUDE	_ATTRIBUTE)
 		user.adjustSanityLoss(5000)
+		user.SanityLossEffect(FORTITUDE_ATTRIBUTE)
 		user.visible_message(span_boldwarning("Look out! [user.name] is going Cyberpsycho!", "LAMBS FOR THE SLAUGHTER HOUSE!"))
 	RegisterSignal(user, COMSIG_MOB_APPLY_DAMGE, PROC_REF(sandy_dodge))
 	RegisterSignal(user, COMSIG_MOVABLE_MOVED, PROC_REF(sandy_visual))
