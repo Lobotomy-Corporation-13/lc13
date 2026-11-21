@@ -18,14 +18,7 @@
 /area/city/fixers)
 "p" = (
 /obj/structure/closet,
-/obj/item/clothing/suit/armor/ego_gear/city/zweiriot,
-/obj/item/ego_weapon/city/zweihander,
-/turf/open/floor/plasteel/dark,
-/area/city/fixers)
-"r" = (
-/obj/structure/closet,
-/obj/item/clothing/suit/armor/ego_gear/city/zweivet,
-/obj/item/ego_weapon/city/zweihander/vet,
+/obj/item/loadout_beacon/zwei,
 /turf/open/floor/plasteel/dark,
 /area/city/fixers)
 "s" = (
@@ -67,13 +60,17 @@
 /area/city/fixers)
 "O" = (
 /obj/structure/closet,
-/obj/item/clothing/suit/armor/ego_gear/city/zwei,
-/obj/item/ego_weapon/city/zweibaton,
+/obj/structure/sign/departments/zwei{
+	pixel_y = 33
+	},
+/obj/item/loadout_beacon/zweivet,
 /turf/open/floor/plasteel/dark,
 /area/city/fixers)
 "P" = (
-/obj/structure/sign/departments/zwei,
-/turf/closed/indestructible/city/glazedtile,
+/obj/structure/sign/departments/zwei{
+	pixel_y = 33
+	},
+/turf/open/floor/plasteel/dark,
 /area/city/fixers)
 "R" = (
 /obj/structure/closet/crate/large,
@@ -149,7 +146,7 @@ e
 (7,1,1) = {"
 O
 p
-r
+p
 s
 s
 L
