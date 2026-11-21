@@ -7,7 +7,7 @@
 	portrait = "cupid"
 	var/breach_icon = "cupid_breach"
 	core_icon = "cupid_egg"
-	del_on_death = TRUE
+	del_on_death = FALSE
 	maxHealth = 1500
 	health = 1500
 	damage_coeff = list(RED_DAMAGE = 0.5, WHITE_DAMAGE = 2, BLACK_DAMAGE = 0, PALE_DAMAGE = 1) //0 is like no damage, 2 is high damage? right???
@@ -81,9 +81,7 @@
 	end_overlay = "Pollen_Fading"
 	area_type = /area
 	target_trait = ZTRAIT_STATION
-	//it lasts until...
-/mob/living/simple_animal/hostile/abnormality/cupid/Destroy()
-	SSweather.end_weather(/datum/weather/pollen)
+	//it lasts until death, see gibbed code
 
 /datum/weather/pollen/weather_act(mob/living/carbon/human/L)
 	if(ishuman(L))
@@ -96,13 +94,14 @@
 // HOW DID I FORGET DEATH CODE???
 
 // /mob/living/simple_animal/hostile/abnormality/cupid/Destroy()
-	SSweather.end_weather(/datum/weather/pollen)
-	density = FALSE //i cannot for the life of me figure out why 1. the egg isn't egging, 2. why the delete is not deleting, and 3. why he stopped dying normally
-	QDEL_IN(src, 1 SECONDS)
-	return ..()
+//	SSweather.end_weather(/datum/weather/pollen)
+//	density = FALSE //i cannot for the life of me figure out why 1. the egg isn't egging, 2. why the delete is not deleting, and 3. why he stopped dying normally
+//	QDEL_IN(src, 1 SECONDS)
+//	..()
 
 /mob/living/simple_animal/hostile/abnormality/cupid/death(gibbed)
 	SSweather.end_weather(/datum/weather/pollen)
 	density = FALSE //i cannot for the life of me figure out why 1. the egg isn't egging, 2. why the delete is not deleting, and 3. why he stopped dying normally
-	QDEL_IN(src, 1 SECONDS)
-	return ..()
+	animate(src, alpha = 0, time = 4 SECONDS)
+	QDEL_IN(src, 4 SECONDS)
+	..()
