@@ -25,6 +25,7 @@
 	icon_state = "lce_light_block"
 	area_flags = BLOBS_ALLOWED | UNIQUE_AREA | CULT_PERMITTED
 	sound_environment = SOUND_AREA_TUNNEL_ENCLOSED
+	var/specimen_cell = FALSE
 
 /area/lce/containment/light
 	name = "Light Containment"
@@ -33,18 +34,22 @@
 /area/lce/containment/light/one
 	name = "Light Containment Unit 1"
 	icon_state = "lce_light_1"
+	specimen_cell = TRUE
 
 /area/lce/containment/light/two
 	name = "Light Containment Unit 2"
 	icon_state = "lce_light_2"
+	specimen_cell = TRUE
 
 /area/lce/containment/light/three
 	name = "Light Containment Unit 3"
 	icon_state = "lce_light_3"
+	specimen_cell = TRUE
 
 /area/lce/containment/light/four
 	name = "Light Containment Unit 4"
 	icon_state = "lce_light_4"
+	specimen_cell = TRUE
 
 // One booth per column, serving the unit above and the unit below through separate poddoor banks.
 /area/lce/containment/light/control_west
@@ -68,10 +73,12 @@
 /area/lce/containment/heavy/one
 	name = "Heavy Containment Unit 1"
 	icon_state = "lce_heavy_1"
+	specimen_cell = TRUE
 
 /area/lce/containment/heavy/two
 	name = "Heavy Containment Unit 2"
 	icon_state = "lce_heavy_2"
+	specimen_cell = TRUE
 
 /area/lce/containment/heavy/control_one
 	name = "Heavy Containment Control 1"
