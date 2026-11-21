@@ -41,6 +41,8 @@
 	return OpenFire()
 
 /mob/living/simple_animal/hostile/rcorp_abno/hard/despair_knight/OpenFire()
+	if(ranged_cooldown > world.time)
+		return
 	if(!can_act)
 		return FALSE
 	if(!client && get_dist(get_turf(src), get_turf(target)) == 1 && attack_cooldown <= world.time && target)

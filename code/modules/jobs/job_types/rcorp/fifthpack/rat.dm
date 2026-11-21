@@ -101,4 +101,5 @@
 
 	belt = /obj/item/ego_weapon/city/rabbit_blade
 	head = /obj/item/clothing/head/beret/tegu/rcorpofficer
+	mask = /obj/item/clothing/mask/gas/sechailer
 	ears = /obj/item/radio/headset/heads/headset_welfare

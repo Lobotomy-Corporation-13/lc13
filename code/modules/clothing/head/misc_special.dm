@@ -378,6 +378,7 @@
 	icon_state = "rabbit"
 	icon = 'icons/obj/clothing/ego_gear/head.dmi'
 	worn_icon = 'icons/mob/clothing/ego_gear/head.dmi'
+	clothing_flags = BLOCK_GAS_SMOKE_EFFECT
 	flags_inv = HIDEFACIALHAIR | HIDEFACE | HIDEEYES | HIDEEARS | HIDEHAIR | HIDESNOUT
 	visor_flags_inv = 0
 	dynamic_hair_suffix = ""

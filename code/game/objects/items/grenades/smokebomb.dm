@@ -23,7 +23,7 @@
 	. = ..()
 	update_mob()
 	playsound(src, 'sound/effects/smoke.ogg', 50, TRUE, -3)
-	var/datum/effect_system/smoke_spread/bad/smoke = new
+	var/datum/effect_system/smoke_spread/normal/smoke = new
 	smoke.set_up(4, src)
 	smoke.start()
 	qdel(smoke) //And deleted again. Sad really.

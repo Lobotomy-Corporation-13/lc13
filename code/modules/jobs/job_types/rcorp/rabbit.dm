@@ -128,5 +128,6 @@
 	suit = /obj/item/clothing/suit/armor/ego_gear/rabbit
 	belt = /obj/item/ego_weapon/city/rabbit_blade
 	head = null
+	mask = /obj/item/clothing/mask/gas/sechailer
 	suit_store = null
 	ears = /obj/item/radio/headset/heads/headset_control

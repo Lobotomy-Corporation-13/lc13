@@ -1864,7 +1864,7 @@
 
 /atom/movable/screen/alert/status_effect/damage_up/down
 	name = "Damage Down"
-	desc = "You are weakend! Your melee damage is decreased by "
+	desc = "You are weakened! Your melee damage is decreased by "
 	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "feeble"
 
@@ -1889,7 +1889,7 @@
 
 /atom/movable/screen/alert/status_effect/red_damage_up/down
 	name = "Red Damage Down"
-	desc = "You are weakend! Your RED melee damage is decreased by "
+	desc = "You are weakened! Your RED melee damage is decreased by "
 	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "red_feeble"
 
@@ -1912,7 +1912,7 @@
 
 /atom/movable/screen/alert/status_effect/white_damage_up/down
 	name = "White Damage Down"
-	desc = "You are weakend! Your WHITE melee damage is reduced by "
+	desc = "You are weakened! Your WHITE melee damage is reduced by "
 	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "white_feeble"
 
@@ -1935,7 +1935,7 @@
 
 /atom/movable/screen/alert/status_effect/black_damage_up/down
 	name = "Black Damage Down"
-	desc = "You are weakend! Your BLACK melee damage is reduced by "
+	desc = "You are weakened! Your BLACK melee damage is reduced by "
 	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "black_feeble"
 
@@ -1958,7 +1958,7 @@
 
 /atom/movable/screen/alert/status_effect/pale_damage_up/down
 	name = "Pale Damage Down"
-	desc = "You are weakend! Your PALE melee damage is reduced by "
+	desc = "You are weakened! Your PALE melee damage is reduced by "
 	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "pale_feeble"
 

@@ -82,6 +82,7 @@
 	name = "Roadrunner Squad Leader"
 	jobtype = /datum/job/rcorp_captain/roadrunner
 
+	mask = /obj/item/clothing/mask/gas/sechailer
 	belt = /obj/item/ego_weapon/city/rabbit_blade/raven
 	suit_store = null
 	suit = /obj/item/clothing/suit/armor/ego_gear/rabbit/roadrunnercap
