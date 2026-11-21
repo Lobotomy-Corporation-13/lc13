@@ -4780,6 +4780,7 @@
 #include "ModularLobotomy\prosthetics\resurgence_core.dm"
 #include "ModularLobotomy\prosthetics\sandevistan.dm"
 #include "ModularLobotomy\prosthetics\scrying.dm"
+#include "ModularLobotomy\prosthetics\shield_implant.dm"
 #include "ModularLobotomy\prosthetics\storage.dm"
 #include "ModularLobotomy\prosthetics\timestop.dm"
 #include "ModularLobotomy\prosthetics\zippyarm.dm"
