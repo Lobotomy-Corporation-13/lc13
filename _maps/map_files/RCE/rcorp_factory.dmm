@@ -229,6 +229,7 @@
 /obj/item/powered_gadget/handheld_taser,
 /obj/item/restraints/handcuffs,
 /obj/item/ego_weapon/city/rabbit/white,
+/obj/item/reagent_containers/hypospray/medipen,
 /turf/open/floor/pod/light,
 /area/rce/rcorp_base)
 "df" = (
@@ -298,7 +299,7 @@
 /obj/machinery/conveyor/auto{
 	dir = 4
 	},
-/obj/structure/rcorp_factory/melee2,
+/obj/structure/rcorp_factory/pistol2,
 /turf/open/floor/facility/halls,
 /area/rce/rcorp_base)
 "eg" = (
@@ -397,6 +398,7 @@
 /obj/item/restraints/handcuffs,
 /obj/item/gun/energy/taser,
 /obj/item/ego_weapon/city/rabbit_blade,
+/obj/item/rangefinder,
 /turf/open/floor/pod,
 /area/rce/rcorp_base)
 "gf" = (
@@ -591,6 +593,8 @@
 /obj/item/food/grown/tobacco,
 /obj/item/clothing/mask/cigarette/pipe,
 /obj/item/lighter,
+/obj/item/binoculars,
+/obj/item/megaphone/command,
 /turf/open/floor/pod,
 /area/rce/rcorp_base)
 "iJ" = (
@@ -704,6 +708,7 @@
 "kf" = (
 /obj/item/storage/lockbox/medal/officer,
 /obj/structure/table/abductor,
+/obj/item/megaphone/command,
 /turf/open/floor/pod,
 /area/rce/rcorp_base)
 "ku" = (
@@ -976,6 +981,8 @@
 /obj/item/powered_gadget/handheld_taser,
 /obj/item/restraints/handcuffs,
 /obj/item/ego_weapon/city/rabbit/white,
+/obj/item/reagent_containers/hypospray/medipen,
+/obj/item/reagent_containers/hypospray/medipen,
 /turf/open/floor/pod/light,
 /area/rce/rcorp_base)
 "nn" = (
@@ -2841,6 +2848,10 @@
 /obj/structure/table/abductor,
 /obj/item/storage/rcorp_grenade,
 /obj/effect/landmark/rcorp/grenade,
+/obj/effect/landmark/rcorp/grenade,
+/obj/effect/landmark/rcorp/grenade,
+/obj/effect/landmark/rcorp/grenade,
+/obj/effect/landmark/rcorp/grenade,
 /turf/open/floor/pod,
 /area/rce/rcorp_base)
 "OO" = (
@@ -2889,7 +2900,12 @@
 "Pq" = (
 /obj/structure/rack,
 /obj/effect/decal/cleanable/dirt,
-/obj/item/toy/cards/deck,
+/obj/effect/spawner/lootdrop/mortar_emplacement,
+/obj/item/mshell,
+/obj/item/mshell,
+/obj/item/mshell,
+/obj/item/mshell,
+/obj/item/mshell,
 /turf/open/floor/pod/light,
 /area/rce/rcorp_base)
 "Ps" = (
@@ -2901,6 +2917,32 @@
 /area/rce/xcorp/rce_0_3)
 "Px" = (
 /obj/effect/turf_decal/sand,
+/turf/open/floor/pod/light,
+/area/rce/rcorp_base)
+"PA" = (
+/obj/structure/rack,
+/obj/item/reagent_containers/hypospray/medipen,
+/obj/item/reagent_containers/hypospray/medipen,
+/obj/item/reagent_containers/hypospray/medipen,
+/obj/item/reagent_containers/hypospray/medipen,
+/obj/item/reagent_containers/hypospray/medipen,
+/obj/item/reagent_containers/hypospray/medipen,
+/obj/item/reagent_containers/hypospray/medipen,
+/obj/item/reagent_containers/hypospray/medipen,
+/obj/item/reagent_containers/hypospray/medipen,
+/obj/item/reagent_containers/hypospray/medipen,
+/obj/item/reagent_containers/hypospray/medipen,
+/obj/item/reagent_containers/hypospray/medipen,
+/obj/item/reagent_containers/hypospray/medipen,
+/obj/item/reagent_containers/hypospray/medipen,
+/obj/item/reagent_containers/hypospray/medipen,
+/obj/item/reagent_containers/hypospray/medipen,
+/obj/item/reagent_containers/hypospray/medipen,
+/obj/item/reagent_containers/hypospray/medipen,
+/obj/item/reagent_containers/hypospray/medipen,
+/obj/item/reagent_containers/hypospray/medipen,
+/obj/item/reagent_containers/hypospray/medipen,
+/obj/item/reagent_containers/hypospray/medipen,
 /turf/open/floor/pod/light,
 /area/rce/rcorp_base)
 "PD" = (
@@ -2942,6 +2984,7 @@
 /obj/item/clothing/suit/armor/ego_gear/rcorp_officer,
 /obj/item/clothing/under/mercenary/camo,
 /obj/item/ego_weapon/city/zweihander/knife/lcdr,
+/obj/item/megaphone/command,
 /turf/open/floor/pod,
 /area/rce/rcorp_base)
 "PW" = (
@@ -3279,6 +3322,7 @@
 /obj/item/clothing/suit/armor/ego_gear/rabbit/grunts{
 	name = "\improper robin captain suit"
 	},
+/obj/item/rangefinder,
 /turf/open/floor/pod,
 /area/rce/rcorp_base)
 "UV" = (
@@ -3415,6 +3459,13 @@
 /obj/structure/table,
 /turf/open/floor/plating/ashplanet/ash,
 /area/rce/xcorp/rce_2_1)
+"WY" = (
+/obj/structure/rack,
+/obj/effect/turf_decal/delivery,
+/obj/machinery/mortar,
+/obj/item/rangefinder,
+/turf/open/floor/pod/light,
+/area/rce/rcorp_base)
 "Xh" = (
 /obj/structure/flora/ash/leaf_shroom,
 /turf/open/floor/plating/asteroid/basalt,
@@ -11040,7 +11091,7 @@ ld
 ld
 ld
 MA
-Hi
+PA
 jT
 jT
 ud
@@ -17454,7 +17505,7 @@ Qt
 jB
 jB
 Qt
-jB
+WY
 jT
 rE
 rE
