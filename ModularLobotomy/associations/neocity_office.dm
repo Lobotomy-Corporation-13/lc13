@@ -110,6 +110,11 @@
 	template_id = "devyat_office"
 	custom_access = list("devyat")
 
+/obj/item/structurecapsule/fixer/zwei
+	name = "Zwei Office Capsule"
+	template_id = "zwei_office"
+	custom_access = list("zwei")
+
 
 //Minor Templates
 /datum/map_template/shelter/bladelin
@@ -153,3 +158,9 @@
 	shelter_id = "devyat_office"
 	description = "A small capsule containing an office for Devyat delivery fixers"
 	mappath = "_maps/templates/city_factions/minor/devyat.dmm"
+
+/datum/map_template/shelter/zwei
+	name = "Zwei base"
+	shelter_id = "zwei_office"
+	description = "A small base capsule for a group of Zwei Fixers"
+	mappath = "_maps/templates/city_factions/minor/zwei.dmm"

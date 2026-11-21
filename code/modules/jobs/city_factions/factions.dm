@@ -74,8 +74,8 @@
 	leader_job = /datum/job/devyatdir
 	requires_leader = TRUE
 
-/datum/city_faction/zweiSouth
-	name = "Zwei South Section"
+/datum/city_faction/zwei
+	name = "Zwei Association"
 	category = CITY_FACTION_MINOR
-	leader_job = /datum/job/zweiVet
+	leader_job = /datum/job/zweivet
 	requires_leader = TRUE
