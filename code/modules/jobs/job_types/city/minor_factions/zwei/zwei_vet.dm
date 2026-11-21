@@ -10,7 +10,7 @@
 	spawn_positions = 0
 	leader = /datum/job/zweivet
 	faction_positions = 1
-	display_order = 1.1
+	display_order = 107
 	access = list("zwei")
 	minimal_access = list("zwei")
 	radio_channel_name = "Zwei Assocation"
