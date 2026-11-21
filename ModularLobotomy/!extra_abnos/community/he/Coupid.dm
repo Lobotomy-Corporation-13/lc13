@@ -8,8 +8,8 @@
 	var/breach_icon = "cupid_breach"
 	core_icon = "cupid_egg"
 	del_on_death = FALSE
-	maxHealth = 1500
-	health = 1500
+	maxHealth = 1000
+	health = 1000
 	pet_bonus = "flops" //like a true bnuuy
 	faction = list("hostile")
 	damage_coeff = list(RED_DAMAGE = 0.5, WHITE_DAMAGE = 2, BLACK_DAMAGE = 0, PALE_DAMAGE = 1) //0 is like no damage, 2 is high damage? right???
@@ -47,7 +47,7 @@
 	var/spawn_tried = 0
 	var/flip_cooldown_time = 10 SECONDS
 	var/flip_cooldown = 0
-
+ // - - - WORKS - - -
 /mob/living/simple_animal/hostile/abnormality/cupid/FailureEffect(mob/living/carbon/human/user, work_type, pe)
 	. = ..()
 	if(prob(80))
@@ -62,12 +62,15 @@
 	SSweather.run_weather(/datum/weather/pollen)
 	icon_state = "cupid_breach"
 	..()
-
+ // - - - BE BNUUY - - -
 	//okay. the bnuuy is nuzzling people when he sees them. he's supposed to be a wild bunny not a pet bunny. so let's make some BUULLLLSHIT
 /mob/living/simple_animal/hostile/abnormality/cupid/PickTarget(list/Targets)
 	return
-/mob/living/simple_animal/hostile/abnormality/cupid/Move()
-	..() //please help how do i make him move more often why is this guy so fucking weak.
+
+/mob/living/simple_animal/hostile/abnormality/cupid/funpet(mob/living/carbon/human/user) //do not pet the flower bunny
+		say("Do not pet me, You're going to make yourself sick.")
+		manual_emote("thumps")
+		user.reagents.add_reagent(/datum/reagent/toxin/histamine, 10)
 
 	//FANCY TIME
 /datum/weather/pollen
