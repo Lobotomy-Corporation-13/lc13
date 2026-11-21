@@ -62,7 +62,7 @@
 /mob/living/simple_animal/hostile/abnormality/cupid/PickTarget(list/Targets)
 	return
 /mob/living/simple_animal/hostile/abnormality/cupid/Move()
-	..()
+	..() //please help how do i make him move more often why is this guy so fucking weak.
 
 	//FANCY TIME
 /datum/weather/pollen
@@ -72,13 +72,13 @@
 	telegraph_message = span_warning("It's a wonderful day...")
 	telegraph_duration = 150
 	weather_message = span_userdanger("...As pollen begins to choke you from the inside out.")
-	weather_overlay = "pollen"
+	weather_overlay = "Pollen"
 	weather_duration_lower = 1200		//600 per Minute?
 	weather_duration_upper = 3000
 	perpetual = TRUE //lasts forever!
 	end_duration = 100
 	end_message = span_boldannounce("Your throat begins to clear!")
-	end_overlay = "pollen_fading"
+	end_overlay = "Pollen_Fading"
 	area_type = /area
 	target_trait = ZTRAIT_STATION
 	//it lasts until...
@@ -92,3 +92,17 @@
 //	if(prob(1))
 //	user.reagents.add_reagent(/datum/reagent/toxin/histamine, 2) //DON'T RISK KILLING PEOPLE. we want a pest not a murderer.
 //		return
+
+// HOW DID I FORGET DEATH CODE???
+
+// /mob/living/simple_animal/hostile/abnormality/cupid/Destroy()
+	SSweather.end_weather(/datum/weather/pollen)
+	density = FALSE //i cannot for the life of me figure out why 1. the egg isn't egging, 2. why the delete is not deleting, and 3. why he stopped dying normally
+	QDEL_IN(src, 1 SECONDS)
+	return ..()
+
+/mob/living/simple_animal/hostile/abnormality/cupid/death(gibbed)
+	SSweather.end_weather(/datum/weather/pollen)
+	density = FALSE //i cannot for the life of me figure out why 1. the egg isn't egging, 2. why the delete is not deleting, and 3. why he stopped dying normally
+	QDEL_IN(src, 1 SECONDS)
+	return ..()

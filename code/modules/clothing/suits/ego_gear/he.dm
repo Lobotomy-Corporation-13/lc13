@@ -517,13 +517,3 @@ Any attempt to code risk class armor will result in a 10 day Github ban.*/
 	attribute_requirements = list(
 							PRUDENCE_ATTRIBUTE = 40
 							)
-
-/obj/item/clothing/suit/armor/ego_gear/he/allergen
-	name = "allergen"
-	desc = "A coat made of many petals of a flower. It's itchy inside."
-	icon_state = "allergen"
-	flags_inv = HIDEJUMPSUIT
-	armor = list(RED_DAMAGE = 20, WHITE_DAMAGE = 20, BLACK_DAMAGE = 50, PALE_DAMAGE = 0)
-	attribute_requirements = list(
-							PRUDENCE_ATTRIBUTE = 40
-							)

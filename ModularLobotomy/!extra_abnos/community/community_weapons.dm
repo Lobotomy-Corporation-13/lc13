@@ -54,6 +54,27 @@
 /obj/item/ego_weapon/security_ego/proc/Scan(mob/living/user)
 	user.apply_status_effect(/datum/status_effect/display/glimpse_thermal)
 
+/obj/item/ego_weapon/allergen
+	name = "allergen"
+	desc = "It starts with a cough, And ends in flowers."
+	special = "This weapon attracts the attention of the target you attack, Even if they were attacking someone else."
+	icon_state = "bloomed"
+	force = 54	//just christmas but a little funky
+	attack_speed = 2.3
+	damtype = BLACK_DAMAGE
+	attack_verb_continuous = list("jabs", "cleaves")
+	attack_verb_simple = list("jab", "cleave")
+	hitsound = 'sound/abnormalities/goldenapple/Legerdemain.ogg'
+	attribute_requirements = list(
+							PRUDENCE_ATTRIBUTE = 40
+							)
+
+/obj/item/ego_weapon/allergen/attack(mob/living/target, mob/living/carbon/human/user) //first is target, other is user
+	..()
+	if(ishostile(target))
+		var/mob/living/simple_animal/hostile/hostilemob1 = target
+		hostilemob1.GiveTarget(user)
+
 //WAW
 /obj/item/ego_weapon/sunspit
 	name = "sunspit"

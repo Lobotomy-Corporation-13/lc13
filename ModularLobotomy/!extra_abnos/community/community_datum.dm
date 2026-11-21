@@ -39,6 +39,16 @@
 	item_path = /obj/item/clothing/suit/armor/ego_gear/he/security_ego
 	cost = 35
 
+// Coupid - Allergen
+/datum/ego_datum/weapon/allergen
+	item_path = /obj/item/ego_weapon/allergen
+	cost = 35
+
+/datum/ego_datum/armor/allergen
+	item_path = /obj/item/clothing/suit/armor/ego_gear/he/allergen
+	cost = 35
+
+
 /////////
 // Waw //
 /////////
