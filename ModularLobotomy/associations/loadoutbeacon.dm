@@ -126,3 +126,4 @@
 	weapon = /obj/item/ego_weapon/city/zweihander/vet
 	armor = /obj/item/clothing/suit/armor/ego_gear/city/zweivet
 	extra = /obj/item/ego_weapon/city/zweihander/vet
+
