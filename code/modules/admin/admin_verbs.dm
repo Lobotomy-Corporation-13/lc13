@@ -86,6 +86,7 @@ GLOBAL_PROTECT(admin_verbs_admin)
 	/client/proc/FullUnderstandAbno,
 	/client/proc/BreachAbno,
 	/client/proc/ChangeGameSpeed,
+	/client/proc/ManageCityFactions,
 	)
 GLOBAL_LIST_INIT(admin_verbs_ban, list(/client/proc/unban_panel, /client/proc/ban_panel, /client/proc/stickybanpanel))
 GLOBAL_PROTECT(admin_verbs_ban)

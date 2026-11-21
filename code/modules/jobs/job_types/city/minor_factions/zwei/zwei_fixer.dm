@@ -4,8 +4,8 @@
 	outfit = /datum/outfit/job/zweifixer
 	department_head = list("The Veteran Superior.")
 	faction = "Station"
-	supervisors = "The Veteran"
-	selection_color = "#26294F"
+	supervisors = "the veteran"
+	selection_color = "#326ba8"
 	total_positions = 0
 	spawn_positions = 0
 	leader = /datum/job/zweivet
@@ -14,7 +14,7 @@
 	access = list("zwei")
 	minimal_access = list("zwei")
 	radio_channel_name = "Zwei Assocation"
-	radio_channel_color = "#26294F"
+	radio_channel_color = "#326ba8"
 	departments = DEPARTMENT_CITY_ANTAGONIST
 	paycheck = 100
 	maptype = list("city")

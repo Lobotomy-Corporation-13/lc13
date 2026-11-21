@@ -125,8 +125,18 @@
 /// Shuts the whole faction, leader included, for factions the round did not draw.
 /datum/city_faction/proc/CloseFaction()
 	CloseMembers()
+	for(var/datum/job/member in members)
+		member.city_faction = null
 	var/datum/job/leader = SSjob.type_occupations[leader_job]
 	if(!leader)
 		return
+	leader.city_faction = null
 	leader.total_positions = 0
 	leader.spawn_positions = 0
+
+//Just checks how many players are in the faction. Used for warning the admin when disabling a faction that has players in it.
+/datum/city_faction/proc/Headcount()
+	. = 0
+	for(var/datum/job/job in SSjob.occupations)
+		if(job.leader == leader_job)
+			. += job.current_positions
