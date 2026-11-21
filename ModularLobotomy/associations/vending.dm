@@ -597,7 +597,7 @@
 		/obj/item/organ/ears/cybernetic/upgraded/bangproof = 100,
 		/obj/item/extra_arm = 100,
 		/obj/item/extra_arm/double = 100,
-		/obj/item/autosurgeon/organ = 100,
+		/obj/item/autosurgeon/organ/syndicate = 100,
 		/obj/item/organ/cyberimp/chest/sandevistan = 250,
 		/obj/item/organ/cyberimp/chest/dermal_armor = 200,
 		/obj/item/organ/cyberimp/arm/good_zippy = 200,
