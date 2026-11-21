@@ -4771,6 +4771,7 @@
 #include "ModularLobotomy\primitive_farming\farming_structures.dm"
 #include "ModularLobotomy\prosthetics\carnival.dm"
 #include "ModularLobotomy\prosthetics\chainsword.dm"
+#include "ModularLobotomy\prosthetics\dermal_armor.dm"
 #include "ModularLobotomy\prosthetics\explosivearm.dm"
 #include "ModularLobotomy\prosthetics\extra_arm_implant.dm"
 #include "ModularLobotomy\prosthetics\fixertools.dm"
