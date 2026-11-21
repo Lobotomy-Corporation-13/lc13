@@ -16,8 +16,5 @@
 	"no_submap_behavior": "standard",
 	"available_submaps": {
 		"city.dmm": "Standard City",
-		"ycorp_backstreets.dmm": "Y-Corp Backstreets",
-		"jcorpcity.dmm": "J-Corp Backstreets",
-		"kcorp_nest_complete.dmm": "K-Corp Nest Town"
 	}
 }
