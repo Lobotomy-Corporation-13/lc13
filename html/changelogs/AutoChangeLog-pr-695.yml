@@ -1,9 +1,0 @@
-author: "EnderMage99"
-delete-after: True
-changes:
-  - rscadd: "Added advanced distortions, which take over and change the area around them as they grow."
-  - rscadd: "Added Another Day at Work, a distortion that rewards investigation over violence."
-  - rscadd: "Added solidified sins, dropped by undistorted advanced distortions and sold at the distortion radio."
-  - balance: "The distortion radio pays 750 Ahn per resolved distortion, down from 1000."
-  - imageadd: "Added sprites for solidified sins and Another Day at Work."
-  - admin: "Admins are notified, with jump links, when an advanced distortion reaches a new stage."
