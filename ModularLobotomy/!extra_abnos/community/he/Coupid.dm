@@ -10,9 +10,14 @@
 	del_on_death = FALSE
 	maxHealth = 1500
 	health = 1500
+	pet_bonus = "flops" //like a true bnuuy
+	faction = list("hostile")
 	damage_coeff = list(RED_DAMAGE = 0.5, WHITE_DAMAGE = 2, BLACK_DAMAGE = 0, PALE_DAMAGE = 1) //0 is like no damage, 2 is high damage? right???
 	melee_damage_type = BLACK_DAMAGE
 	can_breach = TRUE
+	move_to_delay = 2 //move faster
+	patrol_cooldown_time = 2 //idle less
+	density = FALSE //be a slippy bunny
 	threat_level = HE_LEVEL
 	start_qliphoth = 1
 	work_chances = list(
@@ -85,7 +90,7 @@
 
 /datum/weather/pollen/weather_act(mob/living/carbon/human/L)
 	if(ishuman(L))
-		L.deal_damage(3, BLACK_DAMAGE, attack_type = (ATTACK_TYPE_ENVIRONMENT)) //okay i felt histans was too mean
+		L.deal_damage(2, BLACK_DAMAGE, attack_type = (ATTACK_TYPE_ENVIRONMENT)) //okay i felt histans was too mean
 		return
 //	if(prob(1))
 //	user.reagents.add_reagent(/datum/reagent/toxin/histamine, 2) //DON'T RISK KILLING PEOPLE. we want a pest not a murderer.
@@ -94,8 +99,7 @@
 // HOW DID I FORGET DEATH CODE???
 
 /mob/living/simple_animal/hostile/abnormality/cupid/death(gibbed)
-	SSweather.end_weather(/datum/weather/pollen)
-	density = FALSE //i cannot for the life of me figure out why 1. the egg isn't egging, 2. why the delete is not deleting, and 3. why he stopped dying normally
+	SSweather.end_weather(/datum/weather/pollen) //i cannot for the life of me figure out why 1. the egg isn't egging, 2. why the delete is not deleting, and 3. why he stopped dying normally
 	animate(src, alpha = 0, time = 4 SECONDS)
 	QDEL_IN(src, 4 SECONDS)
 	..()
