@@ -113,4 +113,5 @@
 	suit = /obj/item/clothing/suit/armor/ego_gear/rabbit/reindeercap
 	belt = /obj/item/ego_weapon/city/rabbit_blade
 	head = /obj/item/clothing/head/rabbit_helmet/reindeer
+	mask = /obj/item/clothing/mask/gas/sechailer
 	ears = /obj/item/radio/headset/heads/headset_welfare

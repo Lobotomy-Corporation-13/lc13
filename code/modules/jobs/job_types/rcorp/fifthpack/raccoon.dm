@@ -108,6 +108,7 @@
 	jobtype = /datum/job/rcorp_captain/raccoon
 
 	head = /obj/item/clothing/head/rabbit_helmet/raccooncap
+	mask = /obj/item/clothing/mask/gas/sechailer
 	suit = /obj/item/clothing/suit/armor/ego_gear/rabbit/raccooncap
 	belt = /obj/item/ego_weapon/city/rabbit_blade
 	suit_store = /obj/item/gun/energy/e_gun/rabbitdash/heavysniper
