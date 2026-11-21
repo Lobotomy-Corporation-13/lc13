@@ -1,15 +1,15 @@
 //Zwei Assoc Fixer
-/datum/job/zweiFixer
+/datum/job/zweifixer
 	title = "Zwei Fixer"
-	outfit = /datum/outfit/job/zweiFixer
-	department_head = list("The veteran superior.")
+	outfit = /datum/outfit/job/zweifixer
+	department_head = list("The Veteran Superior.")
 	faction = "Station"
-	supervisors = "the veteran"
+	supervisors = "The Veteran"
 	selection_color = "#26294F"
 	total_positions = 0
 	spawn_positions = 0
-	leader = /datum/job/zweiVet
-	faction_positions = 6
+	leader = /datum/job/zweivet
+	faction_positions = 2
 	display_order = 1.2
 	access = list("zwei")
 	minimal_access = list("zwei")
@@ -27,15 +27,15 @@
 								JUSTICE_ATTRIBUTE = 60
 								)
 
-/datum/job/zweiFixer/after_spawn(mob/living/carbon/human/H, mob/M)
+/datum/job/zweifixer/after_spawn(mob/living/carbon/human/H, mob/M)
 	ADD_TRAIT(H, TRAIT_COMBATFEAR_IMMUNE, JOB_TRAIT)
 	ADD_TRAIT(H, TRAIT_WORK_FORBIDDEN, JOB_TRAIT)
 	. = ..()
 
 
-/datum/outfit/job/zweiFixer
-	name = "Zwei South Section Fixer"
-	jobtype = /datum/job/zweiFixer
+/datum/outfit/job/zweifixer
+	name = "Zwei Fixer"
+	jobtype = /datum/job/zweifixer
 
 	belt = /obj/item/pda/security
 	ears = /obj/item/radio/headset/faction

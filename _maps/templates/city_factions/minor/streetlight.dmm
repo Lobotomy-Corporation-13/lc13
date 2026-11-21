@@ -117,6 +117,7 @@
 	pixel_y = 4
 	},
 /obj/structure/table/wood,
+/obj/structure/protection,
 /turf/open/floor/facility/dark,
 /area/city/fixers)
 "Q" = (
