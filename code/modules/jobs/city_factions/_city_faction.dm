@@ -125,9 +125,12 @@
 /// Shuts the whole faction, leader included, for factions the round did not draw.
 /datum/city_faction/proc/CloseFaction()
 	CloseMembers()
+	for(var/datum/job/member in members)
+		member.city_faction = null
 	var/datum/job/leader = SSjob.type_occupations[leader_job]
 	if(!leader)
 		return
+	leader.city_faction = null
 	leader.total_positions = 0
 	leader.spawn_positions = 0
 
