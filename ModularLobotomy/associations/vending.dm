@@ -565,7 +565,6 @@
 		/obj/item/organ/tongue/robot = 100,
 		/obj/item/organ/cyberimp/arm/zippy = 100,
 		/obj/item/organ/cyberimp/arm/fixertools = 100,
-
 		/*Body modification batteries
 		/obj/item/body_modification_battery = 100,
 		/obj/item/body_modification_battery/tier2 = 100,
@@ -599,6 +598,7 @@
 		/obj/item/extra_arm = 100,
 		/obj/item/extra_arm/double = 100,
 		/obj/item/autosurgeon/organ = 100,
+		/obj/item/organ/cyberimp/chest/sandevistan = 500,
 	)
 
 	default_price = 300
