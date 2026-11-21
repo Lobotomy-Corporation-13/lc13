@@ -14,7 +14,7 @@
 	access = list("zwei")
 	minimal_access = list("zwei")
 	radio_channel_name = "Zwei Assocation"
-	selection_color = "#326ba8"
+	radio_channel_color =  = "#326ba8"
 	departments = DEPARTMENT_CITY_ANTAGONIST
 	paycheck = 100
 	maptype = list("city")
