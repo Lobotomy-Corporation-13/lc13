@@ -1,7 +1,7 @@
 /obj/item/organ/cyberimp/chest/sandevistan
 	name = "\improper Quicksilver Implant"
 	desc = "Experimental military augments made by an unknown Wing before leaked to the market. <br>\
-			Increases your speed exponentially but risks"
+			Increases your speed exponentially but risks insanity from psychosis."
 	syndicate_implant = TRUE
 	actions_types = list(/datum/action/item_action/organ_action/use/sandevistan)
 	implant_overlay = "implant-reinforcers"
@@ -32,11 +32,16 @@
 	UnregisterSignal(user, COMSIG_MOVABLE_MOVED)
 	user.remove_movespeed_modifier(/datum/movespeed_modifier/sandevistan)
 
-/datum/action/item_action/organ_action/use/sandevistan/proc/sandy_dodge(datum/source, damage, damagetype, def_zone, attack_source, flags, attack_type)
+/datum/action/item_action/organ_action/use/sandevistan/proc/sandy_dodge(datum_source, amount, damagetype, def_zone)
 	SIGNAL_HANDLER
 	var/mob/living/carbon/human/user = usr
-	if(damage > 0 && prob(100)) //prob 100 to test it for
+
+	if(amount > 0 && prob(100))
 		user.visible_message("[user.name] dodged the attack completely!", "You dodged the attack easily!")
+		new /obj/effect/sandevistan(get_turf(user), user)
+		var/turf/T = get_step(user, pick(GLOB.cardinals))
+		if(T && !T.density)
+			user.forceMove(T)
 		playsound(user, pick('sound/weapons/fixer/generic/dodge3.ogg', 'sound/weapons/fixer/generic/dodge.ogg', 'sound/weapons/fixer/generic/dodge2.ogg'), 50, TRUE)
 		return COMPONENT_MOB_DENY_DAMAGE
 
@@ -57,13 +62,13 @@
 	var/effect_alpha = 155
 	var/effect_fadeout = 0.5 SECONDS
 
-/obj/effect/temporis/Initialize(mapload, mob/living/creator)
+/obj/effect/sandevistan/Initialize(mapload, mob/living/creator)
 	. = ..()
 
 	name = creator?.name
 	appearance = creator?.appearance
 	dir = creator?.dir
-
+	color = pick(COLOR_SILVER, COLOR_WHITE, COLOR_VERY_LIGHT_GRAY, COLOR_GRAY, COLOR_FLOORTILE_GRAY, COLOR_ALMOST_BLACK, COLOR_BLACK, COLOR_HALF_TRANSPARENT_BLACK)
 	animate(src, pixel_x = rand(-32,32), pixel_y = rand(-32,32), alpha = effect_alpha, time = effect_fadeout)
 
 	// Delete this effect after half a second
