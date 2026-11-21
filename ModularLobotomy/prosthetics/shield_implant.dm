@@ -22,6 +22,8 @@
 
 	if(ishuman(owner))
 		var/mob/living/carbon/human/user = owner
+		if(user.sanityhealth < 50) //not enough sanity
+			to_chat(user, span_boldwarning("Not enough sanity to activate implant."))
 		user.apply_status_effect(/datum/status_effect/interventionshield/quad)
 		user.adjustSanityLoss(50)
 
