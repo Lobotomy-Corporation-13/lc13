@@ -110,6 +110,10 @@
 	template_id = "devyat_office"
 	custom_access = list("devyat")
 
+/obj/item/structurecapsule/fixer/wedge
+	name = "Wedge Office Capsule"
+	template_id = "wedge_office"
+	custom_access = list("wedge")
 
 //Minor Templates
 /datum/map_template/shelter/bladelin
@@ -153,3 +157,9 @@
 	shelter_id = "devyat_office"
 	description = "A small capsule containing an office for Devyat delivery fixers"
 	mappath = "_maps/templates/city_factions/minor/devyat.dmm"
+
+/datum/map_template/shelter/wedge
+	name = "Wedge Office Base"
+	shelter_id = "wedge_office"
+	description = "A small capsule containing an office for the fixers of the Wedge office."
+	mappath = "_maps/templates/city_factions/minor/wedge.dmm"
