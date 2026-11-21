@@ -93,12 +93,6 @@
 
 // HOW DID I FORGET DEATH CODE???
 
-// /mob/living/simple_animal/hostile/abnormality/cupid/Destroy()
-//	SSweather.end_weather(/datum/weather/pollen)
-//	density = FALSE //i cannot for the life of me figure out why 1. the egg isn't egging, 2. why the delete is not deleting, and 3. why he stopped dying normally
-//	QDEL_IN(src, 1 SECONDS)
-//	..()
-
 /mob/living/simple_animal/hostile/abnormality/cupid/death(gibbed)
 	SSweather.end_weather(/datum/weather/pollen)
 	density = FALSE //i cannot for the life of me figure out why 1. the egg isn't egging, 2. why the delete is not deleting, and 3. why he stopped dying normally
