@@ -598,7 +598,8 @@
 		/obj/item/extra_arm = 100,
 		/obj/item/extra_arm/double = 100,
 		/obj/item/autosurgeon/organ = 100,
-		/obj/item/organ/cyberimp/chest/sandevistan = 500,
+		/obj/item/organ/cyberimp/chest/sandevistan = 250,
+		/obj/item/organ/cyberimp/chest/dermal_armor = 200,
 	)
 
 	default_price = 300
