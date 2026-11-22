@@ -1,4 +1,4 @@
-//Zwei Assoc Veteran
+//Kcorp Simplemob Leader
 /datum/job/kcorpdrone
 	title = "Kcorp Lead Film Director"
 	department_head = list("Kcorp Lead Film Director")
