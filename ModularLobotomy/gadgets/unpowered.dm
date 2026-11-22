@@ -1007,3 +1007,10 @@
 	playsound(get_turf(src), usesound, usesound_volume, FALSE)
 	cooldown = world.time + 1.2 SECONDS
 	return
+
+/obj/item/consolerepairkit
+	name = "LCE Console Repair Kit" // this item does fucking nothing other than repair stuff in enkrush
+	desc = "A box filled with wires and tools, can be used to repair derelict lcorp equipment."
+	icon = 'icons/obj/vending_restock.dmi'
+	icon_state = "refill_engi"
+	inhand_icon_state = null
