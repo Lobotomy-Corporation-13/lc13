@@ -143,14 +143,6 @@ GLOBAL_VAR(lobotomy_repairs)
 		GLOB.lobotomy_repairs += 1
 		qdel(src)
 
-GLOBAL_LIST_INIT(unspawned_refiners, list(
-	/obj/structure/altrefiner/blood,
-	/obj/structure/altrefiner/quick,
-	/obj/structure/altrefiner/timed,
-	/obj/structure/altrefiner/weapon,
-	/obj/structure/altrefiner/chance,
-))
-
 /obj/broken_refinery
 	name = "broken PE refinery"
 	desc = "A machine that could once refine large amounts of PE boxes, for a cost."

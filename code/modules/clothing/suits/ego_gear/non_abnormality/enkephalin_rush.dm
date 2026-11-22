@@ -3,12 +3,13 @@
 	desc = "A Heavy Duty Overcoat used by the LCE"
 	icon_state = "lceops"
 	icon = 'icons/obj/clothing/ego_gear/limbus_labs.dmi'
-	armor = list(RED_DAMAGE = 20, WHITE_DAMAGE = 20, BLACK_DAMAGE = 20, PALE_DAMAGE = 20)
+	worn_icon = 'icons/obj/clothing/ego_gear/limbus_labs.dmi'
+	armor = list(RED_DAMAGE = 30, WHITE_DAMAGE = 30, BLACK_DAMAGE = 30, PALE_DAMAGE = 30)
 	attribute_requirements = list(
-							FORTITUDE_ATTRIBUTE = 40,
-							PRUDENCE_ATTRIBUTE = 40,
-							TEMPERANCE_ATTRIBUTE = 40,
-							JUSTICE_ATTRIBUTE = 40
+							FORTITUDE_ATTRIBUTE = 60,
+							PRUDENCE_ATTRIBUTE = 60,
+							TEMPERANCE_ATTRIBUTE = 60,
+							JUSTICE_ATTRIBUTE = 60
 							)
 
 /obj/item/clothing/suit/armor/ego_gear/enk_rush/lce_recofficer
@@ -16,12 +17,13 @@
 	desc = "A Heavy Duty Overcoat used by the LCE"
 	icon_state = "lcerec"
 	icon = 'icons/obj/clothing/ego_gear/limbus_labs.dmi'
-	armor = list(RED_DAMAGE = 20, WHITE_DAMAGE = 20, BLACK_DAMAGE = 20, PALE_DAMAGE = 20)
+	worn_icon = 'icons/obj/clothing/ego_gear/limbus_labs.dmi'
+	armor = list(RED_DAMAGE = 30, WHITE_DAMAGE = 30, BLACK_DAMAGE = 30, PALE_DAMAGE = 30)
 	attribute_requirements = list(
-							FORTITUDE_ATTRIBUTE = 40,
-							PRUDENCE_ATTRIBUTE = 40,
-							TEMPERANCE_ATTRIBUTE = 40,
-							JUSTICE_ATTRIBUTE = 40
+							FORTITUDE_ATTRIBUTE = 60,
+							PRUDENCE_ATTRIBUTE = 60,
+							TEMPERANCE_ATTRIBUTE = 60,
+							JUSTICE_ATTRIBUTE = 60
 							)
 
 /obj/item/clothing/suit/armor/ego_gear/enk_rush/lce_captain
@@ -29,6 +31,7 @@
 	desc = "A thick & armoured coat used by LCE captains"
 	icon_state = "lccb_officer"
 	icon = 'icons/obj/clothing/ego_gear/limbus_labs.dmi'
+	worn_icon = 'icons/obj/clothing/ego_gear/limbus_labs.dmi'
 	armor = list(RED_DAMAGE = 20, WHITE_DAMAGE = 20, BLACK_DAMAGE = 20, PALE_DAMAGE = 20)
 	attribute_requirements = list(
 							FORTITUDE_ATTRIBUTE = 40,
@@ -42,6 +45,7 @@
 	desc = "Standard Issue Gear used by the LCE Operations team."
 	icon_state = "lowsec"
 	icon = 'icons/obj/clothing/ego_gear/limbus_labs.dmi'
+	worn_icon = 'icons/obj/clothing/ego_gear/limbus_labs.dmi'
 	armor = list(RED_DAMAGE = 20, WHITE_DAMAGE = 20, BLACK_DAMAGE = 20, PALE_DAMAGE = 20)
 	attribute_requirements = list(
 							FORTITUDE_ATTRIBUTE = 40,
@@ -55,6 +59,7 @@
 	desc = "Standard Issue Gear used by the LCE Recovery team."
 	icon_state = "lccb"
 	icon = 'icons/obj/clothing/ego_gear/limbus_labs.dmi'
+	worn_icon = 'icons/obj/clothing/ego_gear/limbus_labs.dmi'
 	armor = list(RED_DAMAGE = 20, WHITE_DAMAGE = 20, BLACK_DAMAGE = 20, PALE_DAMAGE = 20)
 	attribute_requirements = list(
 							FORTITUDE_ATTRIBUTE = 40,
