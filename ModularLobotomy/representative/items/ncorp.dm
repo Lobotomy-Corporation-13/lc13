@@ -537,7 +537,7 @@
 	name = "N-Corp Area Unladen Scroll"
 	desc = "A scroll sold by N-Corp"
 	special = "This Scroll removes certain slowdown from all allies when read. when finishing, gives a boost to speed."
-	icon_state = "ncorp_nailup"
+	icon_state = "ncorp_nailupaoe"
 	ticks_left = 3
 	tick_speed = 5 SECONDS
 	custom_price = 450
@@ -617,7 +617,7 @@
 	name = "N-Corp Nailing Scroll"
 	desc = "A scroll sold by N-Corp"
 	special = "When this scroll is fully read all nearby humans are slowed by nails"
-	icon_state = "ncorp_explode"
+	icon_state = "ncorp_naildown"
 	ticks_left = 1
 	tick_speed = 4 SECONDS
 	say_lines = list("HAMMERS SHALL NAIL YOU DOWN!!", "SIN WEIGHS UPON YOU!!")
