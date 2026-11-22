@@ -209,116 +209,15 @@
 				visible_message(span_danger("Damaged machinery in the [src] causes a qliphoth meltdown!"))
 				SSlobotomy_corp.InitiateMeltdown(round(SSlobotomy_corp.qliphoth_meltdown_amount), TRUE)
 	else
-		visible_message(span_danger("You feel a sudden rush of air as [src] crumbles!"))
-		var/mychem = PickChems(risk_level)
-		var/obj/effect/gas_spawner/G
-		G = new(get_turf(src))
-		G.chem_type = mychem
-		G.risk_level = risk_level
-
-/turf/closed/mineral/random/facility/proc/PickChems(risk_level)//TODO: make sure these are actually dangerous
-	switch(risk_level)
-		if(1)
-			chem_list = list(
-			/datum/reagent/toxin/minttoxin = 10,//fatties get ownzoned
-			/datum/reagent/drug/space_drugs = 30,
-			/datum/reagent/toxin/chloralhydrate = 30,
-			/datum/reagent/toxin/staminatoxin = 50,
-			/datum/reagent/toxin/lc13_toxin/weak = 25,
-			/datum/reagent/toxin/lc13_toxin/white/weak = 25,
-			)
-		if(2)
-			chem_list = list(
-			/datum/reagent/toxin/acid = 5,
-			/datum/reagent/toxin/minttoxin = 10,
-			/datum/reagent/drug/space_drugs = 15,
-			/datum/reagent/toxin/chloralhydrate = 20,
-			/datum/reagent/toxin/lc13_toxin/weak = 25,
-			/datum/reagent/toxin/lc13_toxin/white/weak = 25,
-			/datum/reagent/toxin/lc13_toxin/black/weak = 25,
-			/datum/reagent/toxin/lc13_toxin/pale/weak = 12,
-			)
-		if(3)
-			chem_list = list(
-			/datum/reagent/toxin/cyanide = 1,
-			/datum/reagent/toxin = 10,
-			/datum/reagent/toxin/acid = 10,
-			/datum/reagent/toxin/minttoxin = 10,
-			/datum/reagent/toxin/mindbreaker = 10,
-			/datum/reagent/toxin/chloralhydrate = 10,
-			/datum/reagent/toxin/lc13_toxin = 25,
-			/datum/reagent/toxin/lc13_toxin/white = 25,
-			/datum/reagent/toxin/lc13_toxin/black = 25,
-			/datum/reagent/toxin/lc13_toxin/pale = 12,
-			)
-		if(4)
-			chem_list = list(
-			/datum/reagent/toxin/cyanide = 1,
-			/datum/reagent/toxin = 20,
-			/datum/reagent/toxin/acid = 20,
-			/datum/reagent/toxin/minttoxin = 5,
-			/datum/reagent/toxin/mindbreaker = 15,
-			/datum/reagent/toxin/chloralhydrate = 20,
-			/datum/reagent/toxin/lc13_toxin = 50,
-			/datum/reagent/toxin/lc13_toxin/white = 50,
-			/datum/reagent/toxin/lc13_toxin/black = 50,
-			/datum/reagent/toxin/lc13_toxin/pale = 25,
-			)
-		else//5, or 6 if it somehow appears
-			chem_list = list(
-			/datum/reagent/toxin/cyanide = 1,
-			/datum/reagent/toxin/mutagen = 1,
-			/datum/reagent/toxin = 30,
-			/datum/reagent/toxin/acid = 30,
-			/datum/reagent/toxin/minttoxin = 1,
-			/datum/reagent/toxin/mindbreaker = 10,
-			/datum/reagent/toxin/chloralhydrate = 30,
-			/datum/reagent/toxin/lc13_toxin/strong = 25,
-			/datum/reagent/toxin/lc13_toxin/white/strong = 25,
-			/datum/reagent/toxin/lc13_toxin/black/strong = 25,
-			/datum/reagent/toxin/lc13_toxin/pale/strong = 25,
-			)
-
-	var/chosen_reagent = pickweight(chem_list)
-	return chosen_reagent
-
-//for the poison gas event
-/obj/effect/gas_spawner
-	name = "gas spawner"
-	desc = "CLEAR THE WAY!!"
-	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
-	var/chem_type = /datum/reagent/toxin/lc13_toxin
-	var/risk_level
-	var/ignore_list = list(
-		/datum/reagent/toxin/lc13_toxin/pale/weak,
-		/datum/reagent/toxin/lc13_toxin,
-		/datum/reagent/toxin/lc13_toxin/white,
-		/datum/reagent/toxin/lc13_toxin/black,
-		/datum/reagent/toxin/lc13_toxin/pale,
-		/datum/reagent/toxin/lc13_toxin/strong,
-		/datum/reagent/toxin/lc13_toxin/white/strong,
-		/datum/reagent/toxin/lc13_toxin/black/strong,
-		/datum/reagent/toxin/lc13_toxin/pale/strong,
-		/datum/reagent/toxin,
-		)
-
-/obj/effect/gas_spawner/Initialize()
-	. = ..()
-	addtimer(CALLBACK(src, PROC_REF(explode)), 3 SECONDS)
-	playsound(get_turf(src), 'sound/effects/refill.ogg', 50, FALSE, 8)
-
-/obj/effect/gas_spawner/proc/explode()
-	playsound(get_turf(src), 'sound/effects/smoke.ogg', 50, FALSE, 8)
-	var/datum/effect_system/smoke_spread/chem/S = new
-	// Create the reagents to put into the air
-	create_reagents(100)
-	reagents.add_reagent(chem_type, (risk_level * 20))
-	if(chem_type in ignore_list)
-		S.ignore_protection = TRUE
-	S.attach(loc)
-	S.set_up(reagents, 4, loc)
-	S.start()
-	qdel(src)
+		visible_message(span_danger("Rocks crumble in around you!"))
+		for(var/turf/T in range(1, src))
+			new /turf/closed/mineral/random/facility
+		for(var/mob/living/L in T)
+			var/throw_dir = get_dir(src, L)
+			if(!throw_dir)
+				throw_dir = pick(NORTH, SOUTH, EAST, WEST) // random dir if on same tile
+			var/throw_target = get_edge_target_turf(L, throw_dir)
+			L.throw_at(throw_target, 4, 2)
 
 //Rockfall spawner
 /obj/effect/rock_fall
