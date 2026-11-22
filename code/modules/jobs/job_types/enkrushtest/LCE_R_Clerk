@@ -17,13 +17,9 @@
 	departments = DEPARTMENT_LCE
 //	loadalways = TRUE
 	job_important = "\
-		You are a Facility Support Clerk. \n\
-		You are unable to do work, but are expected to assist the facility in any way that you can. In your belt are various tools to assist them."
+		You are a Recovery Clerk. \n\
+		You are unable to do work, but are expected to assist in repairing the damaged Lobotomy Corporation Branch. You also have tools in your belt to help Researchers."
 
-	job_abbreviation = "F-CLK"
+	job_abbreviation = "R-CLK"
 
-	alt_titles = list("Safety Department Clerk", "Information Department Clerk",
-			"Training Department Clerk",)
-	senior_title = "Extraction Department Clerk"
-	ultra_senior_title = "Assistinator"
 	clerk_belts = /obj/item/storage/belt/clerk/facility

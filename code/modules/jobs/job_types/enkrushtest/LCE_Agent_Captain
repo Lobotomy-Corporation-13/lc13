@@ -2,19 +2,19 @@
 /datum/job/agent/enkrush_captain
 	title = "LCE Agent Captain"
 	selection_color = "#BB9999"
-	total_positions = 1
-	spawn_positions = 1
-	outfit = /datum/outfit/job/agent/captain
+	total_positions = 2
+	spawn_positions = 2
+	outfit = /datum/outfit/job/agent/enkrush_captain
 	display_order = JOB_DISPLAY_ORDER_CAPTAIN
 
 	access = list(ACCESS_COMMAND, ACCESS_SECURITY) // LC13:To-Do
 	minimal_access = list(ACCESS_COMMAND, ACCESS_SECURITY)
-	departments = DEPARTMENT_COMMAND | DEPARTMENT_SECURITY | DEPARTMENT_LCE
+	departments = DEPARTMENT_COMMAND | DEPARTMENT_SECURITY
 	exp_requirements = 6000
 	exp_type = EXP_TYPE_CREW
 	exp_type_department = EXP_TYPE_SECURITY
 	mapexclude = list("wonderlabs", "mini", "branch12")
-	job_important = "You are an Agent Captain. As an experienced Agent, you are expected to disseminate important information and use your experience lead other Agents."
+	job_important = "You are a Lead Researcher. You are in charge of your respective branch, either Researching Abnormalities, or Repairing the Lobotomy Corporation Branch."
 
 	job_abbreviation = "CPT"
 
@@ -26,9 +26,9 @@
 	G = new /datum/action/cooldown/warcry/captain
 	G.Grant(outfit_owner)
 
-/datum/outfit/job/agent/captain
-	name = "Agent Captain"
-	jobtype = /datum/job/agent/captain
+/datum/outfit/job/agent/enkrush_captain
+	name = "LCE Agent Captain"
+	jobtype = /datum/job/agent/enkrush_captain
 	head = /obj/item/clothing/head/hos/beret
 	ears = /obj/item/radio/headset/heads/agent_captain/alt
 	l_pocket = /obj/item/commandprojector

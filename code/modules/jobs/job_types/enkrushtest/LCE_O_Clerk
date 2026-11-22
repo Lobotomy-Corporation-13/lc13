@@ -16,14 +16,9 @@
 	allow_bureaucratic_error = FALSE
 	departments = DEPARTMENT_LCE
 	job_important = "\
-		You are an Agent Support Clerk. \n\
-		You are unable to do work, but are expected to assist agents in any way that you can. In your belt are various tools to assist them."
+		You are a Operations Clerk. \n\
+		You are unable to do work, but are expected to assist Researchers in any way that you can. In your belt are various tools to assist them."
 
-	job_abbreviation = "A-CLK"
+	job_abbreviation = "O-CLK"
 
-	alt_titles = list("Control Department Clerk", "Command Department Clerk",
-			"Welfare Department Clerk", "Disciplinary Department Clerk",
-			)
-	senior_title = "Record Department Clerk"
-	ultra_senior_title = "Architecture Department Clerk"
 	clerk_belts = /obj/item/storage/belt/clerk/agent
