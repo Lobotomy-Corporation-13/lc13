@@ -14,7 +14,7 @@
 	liver_traits = list(TRAIT_GREYTIDE_METABOLISM)
 
 	allow_bureaucratic_error = FALSE
-	departments = DEPARTMENT_LCE
+	departments = DEPARTMENT_SERVICE
 //	loadalways = TRUE
 	job_important = "\
 		You are a Recovery Clerk. \n\
