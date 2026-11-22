@@ -3,6 +3,7 @@
 	name = "maraca"
 	desc = "A single maraca used by Los Mariachis."
 	special = "This weapon gains 1 poise for every attack. 1 poise gives you a 2% chance to crit at 3x damage, stacking linearly. Critical hits reduce poise to 0."
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/jcorp.dmi'
 	icon_state = "maracas"
 	inhand_icon_state = "maracas"
 	force = 22
@@ -45,6 +46,7 @@
 	name = "dual machetes"
 	desc = "A pair of machetes used by the Los Mariachis."
 	special = "On kill, heal 15 sanity."
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/jcorp.dmi'
 	icon_state = "mariachi_blades"
 	inhand_icon_state = "mariachi_blades"
 	force = 22
@@ -69,6 +71,7 @@
 /obj/item/ego_weapon/city/mariachi/dual
 	name = "maracas"
 	desc = "A pair of maracas used by the leader of Los Mariachis."
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/jcorp.dmi'
 	icon_state = "dualmaracas"
 	inhand_icon_state = "dualmaracas"
 	force = 19		//Double the maracas twice the attack speed.

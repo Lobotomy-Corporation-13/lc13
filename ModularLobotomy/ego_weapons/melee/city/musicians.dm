@@ -5,6 +5,7 @@
 	name = "cat's claw"
 	desc = "A sword used by a long lost musician."
 	special = "User this weapon in hand to give a random ally nearby Strength."
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/musician.dmi'
 	icon_state = "meow"
 	inhand_icon_state = "meow"
 	force = 30

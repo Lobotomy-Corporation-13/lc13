@@ -2,6 +2,7 @@
 /obj/item/ego_weapon/ranged/city/udjat
 	name = "LCA Udjat Rifle"
 	desc = "A rifle used by the LCA Udjat staff."
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/udjat.dmi'
 	icon_state = "udjat_gun"
 	inhand_icon_state = "udjat_gun"
 	force = 14
@@ -68,13 +69,14 @@
 /obj/item/ego_mag/udjat
 	name = "udjat mag"
 	desc = "load into an Udjat Gun."
-	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/udjat.dmi'
 	icon_state = "udjat_magazine"
 
 /obj/item/ego_weapon/city/udjat_limbus
 	name = "LCA Udjat Khopesh"
 	desc = "A Khopesh used by the LCA Udjat ."
 	special = "Use in hand to prepare a stun attack."
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/udjat.dmi'
 	icon_state = "udjat_khopesh"
 	force = 55
 	swingstyle = WEAPONSWING_LARGESWEEP

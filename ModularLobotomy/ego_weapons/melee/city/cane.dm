@@ -3,6 +3,7 @@
 /obj/item/ego_weapon/city/cane
 	name = "cane office template"
 	desc = "This is a template and should not be seen."
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/cane.dmi'
 	force = 18
 	damtype = WHITE_DAMAGE
 
