@@ -12,7 +12,7 @@
 
 /obj/structure/case_radio
 	name = "case radio"
-	desc = "A case radio Liu dispatch uses to send the Wedge Office its cases."
+	desc = "A case radio dispatch uses to send its cases."
 	icon = 'icons/obj/radio.dmi'
 	icon_state = "radio"
 	max_integrity = 300
@@ -129,8 +129,8 @@
 			MarkClue(new item_type(pick(floors)))
 
 /obj/structure/case_radio/proc/MarkClue(atom/movable/clue)
-	clue.add_filter("wedge_clue", 2, list("type" = "outline", "color" = clue_outline_color, "size" = 1))
-	animate(clue.get_filter("wedge_clue"), alpha = 0, time = clue_flicker_time, loop = -1)
+	clue.add_filter("case_clue", 2, list("type" = "outline", "color" = clue_outline_color, "size" = 1))
+	animate(clue.get_filter("case_clue"), alpha = 0, time = clue_flicker_time, loop = -1)
 	animate(alpha = 255, time = clue_flicker_time)
 	evidence += WEAKREF(clue)
 
@@ -161,7 +161,7 @@
 
 /obj/structure/case_radio/proc/Accuse(datum/case_suspect/S)
 	if(S == culprit)
-		say("Liu confirms it: [S.name] was the culprit. Issuing payment.")
+		say("Client confirms it: [S.name] was the culprit. Issuing payment.")
 		new reward_type(get_turf(src))
 	else
 		say("Wrong. The culprit was [culprit.name]. Case closed.")
