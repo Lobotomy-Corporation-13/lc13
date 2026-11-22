@@ -2,7 +2,6 @@
 	name = "\improper Quicksilver Implant"
 	desc = "Experimental military augments made by an unknown Wing before leaked to the market. <br>\
 			Increases your speed exponentially but risks insanity from psychosis."
-	syndicate_implant = TRUE
 	actions_types = list(/datum/action/item_action/organ_action/use/sandevistan)
 	implant_overlay = "implant-reinforcers"
 
@@ -18,7 +17,7 @@
 	if(prob(5))
 		user.adjustSanityLoss(5000)
 		user.SanityLossEffect(FORTITUDE_ATTRIBUTE)
-		user.visible_message(span_boldwarning("Look out! [user.name] is going Cyberpsycho!", "LAMBS FOR THE SLAUGHTER HOUSE!"))
+		user.visible_message(span_boldwarning("Look out! [user.name] is going Cyberpsycho!"), span_alertsyndie("LAMBS FOR THE SLAUGHTER HOUSE!"))
 	RegisterSignal(user, COMSIG_MOB_APPLY_DAMGE, PROC_REF(sandy_dodge))
 	RegisterSignal(user, COMSIG_MOVABLE_MOVED, PROC_REF(sandy_visual))
 	user.add_movespeed_modifier(/datum/movespeed_modifier/sandevistan)

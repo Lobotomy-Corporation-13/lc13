@@ -2,7 +2,6 @@
 	name = "\improper Omni-Shield Emitter Implant"
 	desc = "Prototypes from an anonymous Workshop that were slavaging L Corp technology. <br>\
 			Costs 50 Sanity to apply LC13 Omnishield. Also apply 10% slowdown."
-	syndicate_implant = TRUE
 	actions_types = list(/datum/action/item_action/organ_action/use/omni_shield)
 	implant_overlay = "implant-reinforcers"
 

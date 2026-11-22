@@ -2,7 +2,6 @@
 	name = "\improper Dermal Armor."
 	desc = "Armor made from plating and designed to be inserted at the dermal layer for extra protection. \
 			Unfortunately it's not made of the same weave out of outfits so the plating makes you a bit slower."
-	syndicate_implant = TRUE
 	implant_overlay = "chest_resurgence_core"
 
 /obj/item/organ/cyberimp/chest/dermal_armor/Insert(mob/living/carbon/M, special, drop_if_replaced)
