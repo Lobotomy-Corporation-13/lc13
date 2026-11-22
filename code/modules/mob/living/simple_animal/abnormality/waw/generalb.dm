@@ -5,6 +5,7 @@
 	icon_state = "generalbee"
 	icon_living = "generalbee"
 	core_icon = "gbee_egg"
+	gender = FEMALE
 	speak_emote = list("buzzes")
 	pixel_x = -8
 	base_pixel_x = -8

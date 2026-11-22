@@ -8,6 +8,7 @@
 	del_on_death = TRUE
 	maxHealth = 3200
 	health = 3200
+	gender = FEMALE
 	damage_coeff = list(RED_DAMAGE = 0.7, WHITE_DAMAGE = 0, BLACK_DAMAGE = 0, PALE_DAMAGE = 1)
 	faction = list("hostile")
 	can_breach = TRUE

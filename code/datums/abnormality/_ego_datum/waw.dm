@@ -615,3 +615,4 @@
 /datum/ego_datum/armor/yearningmircalla
 	item_path = /obj/item/clothing/suit/armor/ego_gear/waw/yearningmircalla
 	cost = 50
+

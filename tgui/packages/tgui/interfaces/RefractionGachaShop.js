@@ -166,8 +166,8 @@ export const ZoomCard = props => {
 // button. Tiles for every highlight on the banner, click-to-zoom by
 // default, plus a "Claim" button on each tile when the banner's pity
 // has capped out.
-const InspectorOverlay = (props, context) => {
-  const { act } = useBackend(context);
+const InspectorOverlay = props => {
+  const { act } = useBackend();
   const {
     banner,
     pity,
@@ -308,24 +308,24 @@ const InspectorOverlay = (props, context) => {
 };
 
 // ---------- Home / banner select ----------
-const HomeView = (props, context) => {
-  const { act, data } = useBackend(context);
+const HomeView = props => {
+  const { act, data } = useBackend();
   const balance = data.balance || 0;
   const banners = data.banners || [];
   const pull_costs = data.pull_costs || { single: 50, ten: 500 };
   const pity = data.pity || {};
   const pityThreshold = data.pity_threshold || 100;
   const [selectedBannerIdx, setSelectedBannerIdx]
-    = useLocalState(context, 'banner', 0);
-  const [, setStage] = useLocalState(context, 'stage', STAGE_HOME);
+    = useLocalState('banner', 0);
+  const [, setStage] = useLocalState('stage', STAGE_HOME);
   const [, setPendingCount]
-    = useLocalState(context, 'pendingCount', 1);
+    = useLocalState('pendingCount', 1);
   const [, setConfirmReturn]
-    = useLocalState(context, 'confirmReturn', STAGE_HOME);
+    = useLocalState('confirmReturn', STAGE_HOME);
   const [inspectorOpen, setInspectorOpen]
-    = useLocalState(context, 'inspectorOpen', false);
+    = useLocalState('inspectorOpen', false);
   const [zoomedSkin, setZoomedSkin]
-    = useLocalState(context, 'zoomedSkin', null);
+    = useLocalState('zoomedSkin', null);
   const banner = banners[selectedBannerIdx] || banners[0];
   if (!banner) {
     return (
@@ -565,27 +565,27 @@ const HomeView = (props, context) => {
 };
 
 // ---------- Confirm modal (overlay on top of the underlying view) --
-const ConfirmOverlay = (props, context) => {
-  const { act, data } = useBackend(context);
+const ConfirmOverlay = props => {
+  const { act, data } = useBackend();
   const balance = data.balance || 0;
   const banners = data.banners || [];
   const pull_costs = data.pull_costs || { single: 50, ten: 500 };
   const [selectedBannerIdx]
-    = useLocalState(context, 'banner', 0);
+    = useLocalState('banner', 0);
   const [pendingCount]
-    = useLocalState(context, 'pendingCount', 1);
-  const [, setStage] = useLocalState(context, 'stage', STAGE_HOME);
+    = useLocalState('pendingCount', 1);
+  const [, setStage] = useLocalState('stage', STAGE_HOME);
   const [confirmReturn]
-    = useLocalState(context, 'confirmReturn', STAGE_HOME);
-  const [, setClicks] = useLocalState(context, 'crackClicks', 0);
+    = useLocalState('confirmReturn', STAGE_HOME);
+  const [, setClicks] = useLocalState('crackClicks', 0);
   const [, setRevealed]
-    = useLocalState(context, 'revealed', []);
+    = useLocalState('revealed', []);
   const [, setBallClicks]
-    = useLocalState(context, 'ballClicks', 0);
+    = useLocalState('ballClicks', 0);
   const [, setShowcaseIdx]
-    = useLocalState(context, 'showcaseIdx', 0);
+    = useLocalState('showcaseIdx', 0);
   const [, setShowcaseIndices]
-    = useLocalState(context, 'showcaseIndices', null);
+    = useLocalState('showcaseIndices', null);
   const banner = banners[selectedBannerIdx] || banners[0];
   if (!banner) return null;
   const cost = pendingCount === 10
@@ -682,10 +682,10 @@ const ConfirmOverlay = (props, context) => {
 };
 
 // ---------- Crack intro (click ball to crack) ----------
-const CrackIntroView = (props, context) => {
-  const { act, data } = useBackend(context);
+const CrackIntroView = props => {
+  const { act, data } = useBackend();
   const pending_pull = data.pending_pull || [];
-  const [, setStage] = useLocalState(context, 'stage', STAGE_HOME);
+  const [, setStage] = useLocalState('stage', STAGE_HOME);
   const waiting = pending_pull.length === 0;
   const visibleGoldRoll = pending_pull.some(
     p => p.rarity === '000' && !p.stealth_lucky);
@@ -799,13 +799,13 @@ class CrackIntroCanvas extends Component {
 // transitions. The actual chain state machine lives in the inner
 // class component so we can use setTimeout + componentWillUnmount
 // for proper timer cleanup and stable state-updater semantics.
-const CrackBurstView = (props, context) => {
-  const { act, data } = useBackend(context);
+const CrackBurstView = props => {
+  const { act, data } = useBackend();
   const pending_pull = data.pending_pull || [];
   const fracture_icons = data.fracture_icons || {};
-  const [, setStage] = useLocalState(context, 'stage', STAGE_HOME);
+  const [, setStage] = useLocalState('stage', STAGE_HOME);
   const [, setShowcaseIndices]
-    = useLocalState(context, 'showcaseIndices', null);
+    = useLocalState('showcaseIndices', null);
   const visibleGoldRoll = pending_pull.some(
     p => p.rarity === '000' && !p.stealth_lucky);
   const onFinish = bulkRetractedIndices => {
@@ -1274,14 +1274,14 @@ const FlashCard = props => {
 // inner class runs componentDidMount so the initial card can fire
 // got_000 too (covers the edge case where the very first showcase
 // card is a 000 — e.g. an all-000 bulk pull).
-const ShowcaseView = (props, context) => {
-  const { act, data } = useBackend(context);
+const ShowcaseView = props => {
+  const { act, data } = useBackend();
   const pending_pull = data.pending_pull || [];
   const [idx, setIdx]
-    = useLocalState(context, 'showcaseIdx', 0);
+    = useLocalState('showcaseIdx', 0);
   const [showcaseIndices]
-    = useLocalState(context, 'showcaseIndices', null);
-  const [, setStage] = useLocalState(context, 'stage', STAGE_HOME);
+    = useLocalState('showcaseIndices', null);
+  const [, setStage] = useLocalState('stage', STAGE_HOME);
   // showcaseIndices is set by the burst stage to the list of chains
   // pulled via the ball (skipping the ones the user already saw via
   // single-click flashes). Null means "no burst happened yet" — fall
@@ -1491,26 +1491,26 @@ const ResultTile = props => {
 // Wrapper reads ui_data + manages stage transitions; the inner class
 // component owns the staggered fade-in timeline and the per-tile
 // idResult sound triggers.
-const ResultsView = (props, context) => {
-  const { act, data } = useBackend(context);
+const ResultsView = props => {
+  const { act, data } = useBackend();
   const balance = data.balance || 0;
   const pending_pull = data.pending_pull || [];
   const banners = data.banners || [];
   const pull_costs = data.pull_costs || { single: 50, ten: 500 };
   const [selectedBannerIdx]
-    = useLocalState(context, 'banner', 0);
+    = useLocalState('banner', 0);
   const [pendingCount]
-    = useLocalState(context, 'pendingCount', 1);
-  const [, setStage] = useLocalState(context, 'stage', STAGE_HOME);
-  const [, setClicks] = useLocalState(context, 'crackClicks', 0);
-  const [, setRevealed] = useLocalState(context, 'revealed', []);
-  const [, setBallClicks] = useLocalState(context, 'ballClicks', 0);
+    = useLocalState('pendingCount', 1);
+  const [, setStage] = useLocalState('stage', STAGE_HOME);
+  const [, setClicks] = useLocalState('crackClicks', 0);
+  const [, setRevealed] = useLocalState('revealed', []);
+  const [, setBallClicks] = useLocalState('ballClicks', 0);
   const [, setShowcaseIdx]
-    = useLocalState(context, 'showcaseIdx', 0);
+    = useLocalState('showcaseIdx', 0);
   const [, setShowcaseIndices]
-    = useLocalState(context, 'showcaseIndices', null);
+    = useLocalState('showcaseIndices', null);
   const [, setConfirmReturn]
-    = useLocalState(context, 'confirmReturn', STAGE_HOME);
+    = useLocalState('confirmReturn', STAGE_HOME);
   const banner = banners[selectedBannerIdx] || banners[0];
   let totalRefund = 0;
   for (let i = 0; i < pending_pull.length; i++) {
@@ -1687,12 +1687,12 @@ class ResultsCanvas extends Component {
 }
 
 // ---------- Top-level wrapper ----------
-export const RefractionGachaShop = (props, context) => {
-  const { data } = useBackend(context);
+export const RefractionGachaShop = props => {
+  const { data } = useBackend();
   const balance = data.balance || 0;
-  const [stage] = useLocalState(context, 'stage', STAGE_HOME);
+  const [stage] = useLocalState('stage', STAGE_HOME);
   const [confirmReturn]
-    = useLocalState(context, 'confirmReturn', STAGE_HOME);
+    = useLocalState('confirmReturn', STAGE_HOME);
   const underlyingStage = stage === STAGE_CONFIRM
     ? confirmReturn
     : stage;

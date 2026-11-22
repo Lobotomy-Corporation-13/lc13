@@ -3,6 +3,7 @@
 	name = "mirae cane"
 	desc = "An elegant cane. There's the logo of a life insurance company on the top."
 	special = "On kill, heal yourself and get a small payday. 20% of the force is done as pale."
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/mirae.dmi'
 	icon_state = "miraecane"
 	force = 50
 	damtype = WHITE_DAMAGE	//Also does a small bit of pale, because lawyers hurt your mind and soul.

@@ -11,8 +11,8 @@ const LEVELS = [
   { level: 0, label: 'Never' },
 ];
 
-export const LCSpecimenPrefs = (props, context) => {
-  const { data } = useBackend(context);
+export const LCSpecimenPrefs = props => {
+  const { data } = useBackend();
   const { cards = [], portraits = {} } = data;
   return (
     <Window title="LC Specimen Preferences" width={640} height={700}>
@@ -33,8 +33,8 @@ export const LCSpecimenPrefs = (props, context) => {
   );
 };
 
-const SpecimenCard = (props, context) => {
-  const { act } = useBackend(context);
+const SpecimenCard = props => {
+  const { act } = useBackend();
   const { card, portrait } = props;
   const secColor = card.sec === 'highsec' ? 'red' : 'label';
   return (

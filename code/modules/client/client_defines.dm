@@ -213,3 +213,8 @@
 
 	/// If the client is currently under the restrictions of the interview system
 	var/interviewee = FALSE
+
+	// LOBOTOMYCORPORATION ADDITION START -- DPI scaling for browser popups (ported from /tg/)
+	/// The client's display scaling factor (1 at 100%, 2 at 200%), or null until acquire_dpi() returns
+	var/window_scaling
+	// LOBOTOMYCORPORATION ADDITION END

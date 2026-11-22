@@ -2,6 +2,7 @@
 	true_name = "Queen Bee"
 	maxHealth = 3500
 	health = 3500 //A lot of HP due to not really being strong by itself, primarily relying on minions.
+	gender = FEMALE
 	pixel_x = -8
 	base_pixel_x = -8
 	damage_coeff = list(RED_DAMAGE = 1.2, WHITE_DAMAGE = 1.5, BLACK_DAMAGE = 0.8, PALE_DAMAGE = 2)

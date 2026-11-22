@@ -4,11 +4,14 @@ import {
 } from '../components';
 import { Window } from '../layouts';
 
+// MAP_SIZE is the SVG coordinate space, not a pixel size. The rendered map
+// scales to its container, so all the toScreenX/Y math stays in these units.
 const MAP_SIZE = 300;
+const MAP_MIN_HEIGHT = 160;
 const GRID_ZONE_CELL_SIZE = 10;
 
-export const EnkephalinGridStation = (props, context) => {
-  const { act, data } = useBackend(context);
+export const EnkephalinGridStation = props => {
+  const { act, data } = useBackend();
   const {
     focus_x,
     focus_y,
@@ -35,9 +38,8 @@ export const EnkephalinGridStation = (props, context) => {
     has_previous_move = false,
   } = data;
 
-  const [zoom, setZoom] = useLocalState(context, 'zoom', 2);
-  const [hoveredDir, setHoveredDir] = useLocalState(
-    context, 'hoveredDir', null
+  const [zoom, setZoom] = useLocalState('zoom', 2);
+  const [hoveredDir, setHoveredDir] = useLocalState('hoveredDir', null
   );
 
   const zoomIn = () => setZoom(Math.min(zoom + 1, 5));
@@ -75,11 +77,17 @@ export const EnkephalinGridStation = (props, context) => {
       height={700}>
       <Window.Content>
         <Stack fill>
-          <Stack.Item basis="340px">
-            <Stack vertical fill>
-              <Stack.Item grow>
+          {/* Sections below have fixed heights and can outgrow a laptop
+              screen, so the whole column scrolls instead of clipping. */}
+          <Stack.Item
+            basis="340px"
+            style={{
+              'overflow-y': 'auto',
+              'overflow-x': 'hidden',
+            }}>
+            <Stack vertical>
+              <Stack.Item>
                 <Section
-                  fill
                   title={(
                     <Box>
                       <Icon name="map" mr={1} />
@@ -194,7 +202,6 @@ export const EnkephalinGridStation = (props, context) => {
                     focus_y={focus_y}
                     zoneDistMult={zoneDistMult}
                     act={act}
-                    context={context}
                     setHoveredDir={setHoveredDir} />
                 </Section>
               </Stack.Item>
@@ -390,18 +397,27 @@ const GridMap = props => {
   return (
     <Box
       style={{
-        position: 'relative',
-        width: MAP_SIZE + 'px',
-        height: MAP_SIZE + 'px',
-        backgroundColor: '#1a1a2e',
-        border: '2px solid #444',
-        borderRadius: '4px',
-        overflow: 'hidden',
+        'position': 'relative',
+        'width': '100%',
+        // Height tracks the window, so a short window gets a short map.
+        'height': '34vh',
+        'min-height': MAP_MIN_HEIGHT + 'px',
+        'max-height': MAP_SIZE + 'px',
+        'background-color': '#1a1a2e',
+        'border': '2px solid #444',
+        'border-radius': '4px',
+        'overflow': 'hidden',
       }}>
       <svg
-        width={MAP_SIZE}
-        height={MAP_SIZE}
-        style={{ position: 'absolute', top: 0, left: 0 }}>
+        viewBox={'0 0 ' + MAP_SIZE + ' ' + MAP_SIZE}
+        preserveAspectRatio="xMidYMid meet"
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+        }}>
         <defs>
           <style>
             {`
@@ -562,28 +578,26 @@ const GridMap = props => {
           stroke="#00ff00"
           strokeWidth={1}
           strokeDasharray="2,2" />
-      </svg>
 
-      {Math.abs(focus_x) < viewRadius && Math.abs(focus_y) < viewRadius && (
-        <Box
-          style={{
-            position: 'absolute',
-            left: toScreenX(0) - 10 + 'px',
-            top: toScreenY(0) - 10 + 'px',
-            color: '#666',
-            fontSize: '10px',
-          }}>
-          (0,0)
-        </Box>
-      )}
+        {/* Drawn inside the svg so it scales with the rest of the map. */}
+        {Math.abs(focus_x) < viewRadius && Math.abs(focus_y) < viewRadius && (
+          <text
+            x={toScreenX(0) + 6}
+            y={toScreenY(0) - 6}
+            fill="#666"
+            font-size="10">
+            (0,0)
+          </text>
+        )}
+      </svg>
 
       <Box
         style={{
-          position: 'absolute',
-          bottom: '4px',
-          left: '4px',
-          fontSize: '9px',
-          color: '#888',
+          'position': 'absolute',
+          'bottom': '4px',
+          'left': '4px',
+          'font-size': '9px',
+          'color': '#888',
         }}>
         <Icon name="circle" color="#00ff00" /> You
         {' | '}
@@ -1090,7 +1104,7 @@ const MovementPrediction = props => {
 const MovementControls = props => {
   const {
     selected_core, focus_x, focus_y, zoneDistMult = 1.0,
-    act, context, setHoveredDir,
+    act, setHoveredDir,
   } = props;
 
   if (!selected_core) {
@@ -1128,7 +1142,6 @@ const MovementControls = props => {
           focus_x={focus_x}
           focus_y={focus_y}
           act={act}
-          context={context}
           setHoveredDir={setHoveredDir} />
       ) : mt === 2 || mt === 3 || mt === 7 ? (
         <Box textAlign="center">
@@ -1239,9 +1252,9 @@ const DirBtn = props => {
 };
 
 const TeleportControls = props => {
-  const { max_range, focus_x, focus_y, act, context, setHoveredDir } = props;
-  const [targetX, setTargetX] = useLocalState(context, 'teleportX', focus_x);
-  const [targetY, setTargetY] = useLocalState(context, 'teleportY', focus_y);
+  const { max_range, focus_x, focus_y, act, setHoveredDir } = props;
+  const [targetX, setTargetX] = useLocalState('teleportX', focus_x);
+  const [targetY, setTargetY] = useLocalState('teleportY', focus_y);
 
   const distance = Math.sqrt(
     Math.pow(targetX - focus_x, 2) + Math.pow(targetY - focus_y, 2)

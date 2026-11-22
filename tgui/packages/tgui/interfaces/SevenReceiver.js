@@ -48,8 +48,8 @@ const dirIcon = dir => {
   }
 };
 
-export const SevenReceiver = (props, context) => {
-  const { act, data } = useBackend(context);
+export const SevenReceiver = props => {
+  const { act, data } = useBackend();
   const {
     recorders = [],
     feed = [],

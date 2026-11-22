@@ -8,7 +8,7 @@ import { NtosWindow } from '../layouts';
 
 const logScale = value => Math.log2(16 + Math.max(0, value)) - 4;
 
-export const NtosSupermatterMonitor = (props, context) => {
+export const NtosSupermatterMonitor = props => {
   return (
     <NtosWindow
       width={600}
@@ -20,8 +20,8 @@ export const NtosSupermatterMonitor = (props, context) => {
   );
 };
 
-export const NtosSupermatterMonitorContent = (props, context) => {
-  const { act, data } = useBackend(context);
+export const NtosSupermatterMonitorContent = props => {
+  const { act, data } = useBackend();
   const {
     active,
     SM_integrity,
@@ -126,8 +126,8 @@ export const NtosSupermatterMonitorContent = (props, context) => {
   );
 };
 
-const SupermatterList = (props, context) => {
-  const { act, data } = useBackend(context);
+const SupermatterList = props => {
+  const { act, data } = useBackend();
   const { supermatters = [] } = data;
   return (
     <Section

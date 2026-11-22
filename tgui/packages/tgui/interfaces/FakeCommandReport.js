@@ -2,8 +2,8 @@ import { useBackend } from '../backend';
 import { Button, Dropdown, Input, Section, Stack, TextArea } from '../components';
 import { Window } from '../layouts';
 
-export const FakeCommandReport = (props, context) => {
-  const { act, data } = useBackend(context);
+export const FakeCommandReport = props => {
+  const { act, data } = useBackend();
   const {
     command_name,
     command_report_content,

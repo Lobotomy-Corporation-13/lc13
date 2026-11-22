@@ -7,6 +7,7 @@
 	portrait = "fairy_gentleman"
 	maxHealth = 900
 	health = 900
+	gender = MALE
 	ranged = TRUE
 	rapid_melee = 1
 	melee_queue_distance = 2

@@ -9,6 +9,7 @@
 	portrait = "scorched_girl"
 	maxHealth = 400
 	health = 400
+	gender = FEMALE
 	threat_level = TETH_LEVEL
 	stat_attack = HARD_CRIT
 	ranged = TRUE

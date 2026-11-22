@@ -2,8 +2,8 @@ import { useBackend } from "../backend";
 import { Button, Flex, Section, TypingScroller } from "../components";
 import { Window } from "../layouts";
 
-export const SpeakingNpc = (props, context) => {
-  const { act, data } = useBackend(context);
+export const SpeakingNpc = props => {
+  const { act, data } = useBackend();
   const {
     title = "",
     text = "",

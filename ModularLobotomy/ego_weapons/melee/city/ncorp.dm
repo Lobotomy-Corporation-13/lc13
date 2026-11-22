@@ -4,6 +4,7 @@
 	desc = "A red seal used by Ncorp."
 	special = "Use on an N corp hammer to change its damage. \
 		This weapon is single use."
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/ncorp.dmi'
 	icon_state = "mark"
 	force = 40
 	damtype = RED_DAMAGE
@@ -39,6 +40,7 @@
 	desc = "A small nail used by junior Ncorp inquisitors."
 	special = "Hit an enemy with this weapon to mark it. \
 		Hit this weapon with an N-Corp hammer to hurt all marked enemies."
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/ncorp.dmi'
 	icon_state = "kleinnagel"
 	force = 18
 	damtype = RED_DAMAGE
@@ -109,6 +111,7 @@
 	desc = "A small hammer used by junior Ncorp inquisitors."
 	special = "Use a mark on this weapon to change its damage type. \
 		This weapon doubles as an N-Corp hammer"
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/ncorp.dmi'
 	icon_state = "kleinhammer"
 	force = 30
 	attack_speed = 1.5
@@ -192,6 +195,7 @@
 	desc = "A small brass nail used by junior Ncorp inquisitors."
 	special = "Hit an enemy with this weapon to gain nails. \
 		Hit this weapon with an N-Corp hammer to increase the damage of it's next attack by 10% for each nail on this weapon."
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/ncorp.dmi'
 	icon_state = "messingnagel"
 	force = 18
 	damtype = RED_DAMAGE
@@ -262,3 +266,32 @@
 	damtype = WHITE_DAMAGE
 
 
+
+//Throwing weapon
+/obj/item/ego_weapon/city/ncorp_nail/thrown
+	name = "WerfenNagel"
+	desc = "A small nail used by junior Ncorp inquisitors."
+	special = "Hit an enemy with this weapon to mark it. \
+		Hit this weapon with an N-Corp hammer to hurt all marked enemies."
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/ncorp.dmi'
+	icon_state = "werfennagel"
+	force = 13
+	damtype = RED_DAMAGE
+	throwforce = 30
+	throw_speed = 1
+	throw_range = 7
+
+	attack_verb_continuous = list("jabs", "stabs")
+	attack_verb_simple = list("jab", "stab")
+	hitsound = 'sound/weapons/fixer/generic/nail1.ogg'
+
+/obj/item/ego_weapon/city/ncorp_nail/thrown/throw_impact(atom/hit_atom, datum/thrownthing/throwingdatum)
+	var/caught = hit_atom.hitby(src, FALSE, FALSE, throwingdatum=throwingdatum)
+	if(caught)
+		return
+
+	if(isliving(hit_atom))
+		if(!(hit_atom in marked))
+			marked+=hit_atom
+
+	..()

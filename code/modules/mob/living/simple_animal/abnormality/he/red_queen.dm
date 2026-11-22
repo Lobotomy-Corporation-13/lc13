@@ -8,6 +8,7 @@
 	base_pixel_x = -8
 	maxHealth = 650
 	health = 650
+	gender = FEMALE
 	threat_level = HE_LEVEL
 	work_chances = list(
 		ABNORMALITY_WORK_INSTINCT = 65,

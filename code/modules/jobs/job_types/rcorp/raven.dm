@@ -96,7 +96,8 @@
 	belt = /obj/item/ego_weapon/city/rabbit_blade/raven
 	r_pocket = /obj/item/pinpointer/nuke/rcorp
 	backpack_contents = list(
-		/obj/item/grenade/smokebomb = 1)
+		/obj/item/grenade/smokebomb = 1,
+		/obj/item/grenade/lobotomy/all = 1,)
 
 /datum/outfit/job/raven/support
 	name = "R-Corp Support Raven"
@@ -107,7 +108,9 @@
 		/obj/item/powered_gadget/detector_gadget/abnormality = 1,
 		/obj/item/powered_gadget/vitals_projector = 1,
 		/obj/item/powered_gadget/handheld_taser = 1,
-		/obj/item/grenade/smokebomb = 1)
+		/obj/item/grenade/smokebomb = 1,
+		/obj/item/grenade/lobotomy/all = 1,
+		)
 
 /datum/outfit/job/raven/captain
 	name = "Raven Squad Captain"

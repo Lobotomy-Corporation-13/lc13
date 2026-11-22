@@ -7,8 +7,8 @@ import { Window } from '../layouts';
 // into the held container, shows contents, and renames/recolors each chemical.
 const AMOUNTS = [1, 5, 10, 15, 20, 25, 30, 50];
 
-export const LunarDispensary = (props, context) => {
-  const { act, data } = useBackend(context);
+export const LunarDispensary = props => {
+  const { act, data } = useBackend();
   const {
     amount,
     hasContainer,
@@ -19,7 +19,7 @@ export const LunarDispensary = (props, context) => {
     purgeReady,
     chemicals = [],
   } = data;
-  const [search, setSearch] = useLocalState(context, 'search', '');
+  const [search, setSearch] = useLocalState('search', '');
   const query = search.toLowerCase();
   const filtered = chemicals.filter(
     c => c.name.toLowerCase().includes(query));

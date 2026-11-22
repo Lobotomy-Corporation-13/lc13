@@ -2,8 +2,8 @@ import { useBackend } from '../backend';
 import { Button, Section, Flex, Box } from '../components';
 import { Window } from '../layouts';
 
-export const AbnormalityQueue = (props, context) => {
-  const { act, data } = useBackend(context);
+export const AbnormalityQueue = props => {
+  const { act, data } = useBackend();
   const {
     current,
     threatcurrent,

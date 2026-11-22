@@ -14,21 +14,21 @@ Also, I wished to leave a lot more comments but since comment length is
 capped at 80 in the linter, unfortunately I can't leave too many without
 making this file look like a hot mess
 */
-export const TestRangeEgoPrinter = (props, context) => {
-  const { act, data } = useBackend(context);
+export const TestRangeEgoPrinter = props => {
+  const { act, data } = useBackend();
   const { ego_weapon_datums, ego_armor_datums,
     ego_auxiliary_datums, all_tags } = data;
 
   /* ------------ React Hooks ------------*/
 
-  const [tab, setTab] = useLocalState(context, 'tab', 1);
-  const [nameSearchText, setNameSearchText] = useLocalState(context, "nameSearchText", "");
-  const [armorResistanceFilters, setArmorResistanceFilters] = useLocalState(context, "armorResistanceFilters", { "red": -10, "white": -10, "black": -10, "pale": -10 });
-  const [threatClassFilters, setThreatClassFilters] = useLocalState(context, "threatClassFilters", { 1: true, 2: true, 3: true, 4: true, 5: true });
-  const [originFilters, setOriginFilters] = useLocalState(context, "originFilters", { "LC13": true, "Branch 12": false, "City": false });
-  const [egoTagList, setEgoTagList] = useLocalState(context, "egoTagList", all_tags);
-  const [currentWeaponDamtypeFilter, setCurrentWeaponDamtypeFilter] = useLocalState(context, "currentWeaponDamtypeFilter", null);
-  const [currentlyDetailedEgoDatum, setCurrentlyDetailedEgoDatum] = useLocalState(context, "currentlyDetailedEgoDatum", null);
+  const [tab, setTab] = useLocalState('tab', 1);
+  const [nameSearchText, setNameSearchText] = useLocalState("nameSearchText", "");
+  const [armorResistanceFilters, setArmorResistanceFilters] = useLocalState("armorResistanceFilters", { "red": -10, "white": -10, "black": -10, "pale": -10 });
+  const [threatClassFilters, setThreatClassFilters] = useLocalState("threatClassFilters", { 1: true, 2: true, 3: true, 4: true, 5: true });
+  const [originFilters, setOriginFilters] = useLocalState("originFilters", { "LC13": true, "Branch 12": false, "City": false });
+  const [egoTagList, setEgoTagList] = useLocalState("egoTagList", all_tags);
+  const [currentWeaponDamtypeFilter, setCurrentWeaponDamtypeFilter] = useLocalState("currentWeaponDamtypeFilter", null);
+  const [currentlyDetailedEgoDatum, setCurrentlyDetailedEgoDatum] = useLocalState("currentlyDetailedEgoDatum", null);
 
   /* ------------ Other Variables ------------*/
 
@@ -139,7 +139,7 @@ export const TestRangeEgoPrinter = (props, context) => {
   /* ------------ Functional Components ------------*/
 
   // A list of all the EGO tag filter checkboxes.
-  const AllEgoTagCheckboxes = (props, context) => {
+  const AllEgoTagCheckboxes = props => {
     const ChangeEgoTagFilters = id => {
       const newEgoTagList = egoTagList?.map(tag => {
         if (tag.tag_name === id) {
@@ -170,7 +170,7 @@ export const TestRangeEgoPrinter = (props, context) => {
   };
 
   // A list of all the weapon datums that pass the filter checks.
-  const AllWeaponDatums = (props, context) => {
+  const AllWeaponDatums = props => {
     const { datum_list } = props;
 
     return (
@@ -182,8 +182,8 @@ export const TestRangeEgoPrinter = (props, context) => {
   };
 
   // A list of all the armour datums that pass the filter checks.
-  const AllArmorDatums = (props, context) => {
-    const { act, data } = useBackend(context);
+  const AllArmorDatums = props => {
+    const { act, data } = useBackend();
     const { datum_list } = props;
 
     return (
@@ -195,8 +195,8 @@ export const TestRangeEgoPrinter = (props, context) => {
   };
 
   // A list of all the auxiliary datums that pass the filter checks.
-  const AllAuxiliaryDatums = (props, context) => {
-    const { act, data } = useBackend(context);
+  const AllAuxiliaryDatums = props => {
+    const { act, data } = useBackend();
     const { datum_list } = props;
 
     return (
@@ -215,7 +215,7 @@ export const TestRangeEgoPrinter = (props, context) => {
   path as its payload.
   The preview image is a base64 string generated and cached in the backend.
   */
-  const EgoDatumEntry = (props, context) => {
+  const EgoDatumEntry = props => {
     const { datum, type } = props;
 
     return (
@@ -292,7 +292,7 @@ export const TestRangeEgoPrinter = (props, context) => {
   };
 
   // Basic description of the core stats of a melee weapon.
-  const MeleeWeaponEntryDescription = (props, context) => {
+  const MeleeWeaponEntryDescription = props => {
     const { datum } = props;
 
     return (
@@ -315,7 +315,7 @@ export const TestRangeEgoPrinter = (props, context) => {
   };
 
   // Basic description of the core stats of a ranged weapon.
-  const RangedWeaponEntryDescription = (props, context) => {
+  const RangedWeaponEntryDescription = props => {
     const { datum } = props;
 
     return (
@@ -345,7 +345,7 @@ export const TestRangeEgoPrinter = (props, context) => {
   };
 
   // Basic description of the resistances of an armour.
-  const ArmorEntryDescription = (props, context) => {
+  const ArmorEntryDescription = props => {
     const { datum } = props;
 
     return (
@@ -369,7 +369,7 @@ export const TestRangeEgoPrinter = (props, context) => {
   };
 
   // Basic description of the core stats of a melee weapon.
-  const AuxiliaryEntryDescription = (props, context) => {
+  const AuxiliaryEntryDescription = props => {
     const { datum } = props;
 
     return (
@@ -392,7 +392,7 @@ export const TestRangeEgoPrinter = (props, context) => {
   that an armour needs to have to be displayed in the EGO list.
   Holds numerical values [-10; 10] but displays in roman numeral format.
   */
-  const ArmorResistanceFilterSlider = (props, context) => {
+  const ArmorResistanceFilterSlider = props => {
     const { resistance_color, color } = props;
 
     const AdjustArmorResistanceFilter = value => {
@@ -417,7 +417,7 @@ export const TestRangeEgoPrinter = (props, context) => {
   };
 
   // Holds either all the weapon or armour datums depending on which tab.
-  const EGOList = (props, context) => {
+  const EGOList = props => {
     const { ego_weapon_datums, ego_armor_datums } = props;
 
     return (
@@ -451,7 +451,7 @@ export const TestRangeEgoPrinter = (props, context) => {
   In theory you should just save the scroll position as a local state,
   but I don't really know how to access or modify it.
   */
-  const EGODetails = (props, context) => {
+  const EGODetails = props => {
     const { detailed_datum } = props;
     const section_title = ("E.G.O. Details - " + detailed_datum.information?.name);
     const common_path_eliminated_string = detailed_datum.path.slice(10);
@@ -485,7 +485,7 @@ export const TestRangeEgoPrinter = (props, context) => {
   Includes a preview image, name, threat class, PE cost, path, attribute
   requirements, description and special info.
   */
-  const CommonDetails = (props, context) => {
+  const CommonDetails = props => {
     const { detailed_datum, hide_special, hide_attribute_requirements } = props;
 
     return (
@@ -555,7 +555,7 @@ export const TestRangeEgoPrinter = (props, context) => {
   };
 
   // Details specific to armour.
-  const ArmorDetails = (props, context) => {
+  const ArmorDetails = props => {
     const { datum } = props;
 
     return (
@@ -581,7 +581,7 @@ export const TestRangeEgoPrinter = (props, context) => {
   };
 
   // Details specific to guns.
-  const GunDetails = (props, context) => {
+  const GunDetails = props => {
     const { datum } = props;
     const damtype_cell_background_color = damage_type => {
       return damage_type === "red" ? "red"
@@ -655,7 +655,7 @@ export const TestRangeEgoPrinter = (props, context) => {
   };
 
   // Details specific to common melee weapons.
-  const AuxiliaryDetails = (props, context) => {
+  const AuxiliaryDetails = props => {
     const { datum } = props;
 
     return (
@@ -669,7 +669,7 @@ export const TestRangeEgoPrinter = (props, context) => {
   };
 
   // Details specific to shield weapons.
-  const ShieldDetails = (props, context) => {
+  const ShieldDetails = props => {
     const { datum } = props;
 
     return (
@@ -688,7 +688,7 @@ export const TestRangeEgoPrinter = (props, context) => {
   };
 
   // Details specific to common melee weapons.
-  const MeleeDetails = (props, context) => {
+  const MeleeDetails = props => {
     const { datum } = props;
 
     return (
@@ -704,7 +704,7 @@ export const TestRangeEgoPrinter = (props, context) => {
   };
 
   // This is a table of the melee properties of a weapon.
-  const BaseMeleeStatsTable = (props, context) => {
+  const BaseMeleeStatsTable = props => {
     const { datum } = props;
     const damtype_cell_background_color = datum.information.damtype_melee === "red" ? "red"
       : datum.information.damtype_melee === "white" ? "white"
@@ -788,7 +788,7 @@ export const TestRangeEgoPrinter = (props, context) => {
   };
 
   // This is a table of resistances per damtype for a shield weapon.
-  const ShieldWeaponResistancesTable = (props, context) => {
+  const ShieldWeaponResistancesTable = props => {
     const { datum } = props;
 
     return (
@@ -877,7 +877,7 @@ export const TestRangeEgoPrinter = (props, context) => {
   };
 
   // A button that exits out of the EGO details view.
-  const ExitDetailsButton = (props, context) => {
+  const ExitDetailsButton = props => {
     return (<Button mx={1} icon="arrow-left" color="red" content="Back"
       onClick={() => { setCurrentlyDetailedEgoDatum(null); }} />);
   };

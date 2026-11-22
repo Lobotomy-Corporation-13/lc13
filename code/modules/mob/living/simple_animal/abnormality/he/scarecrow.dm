@@ -16,6 +16,8 @@
 	melee_damage_upper = 24
 	melee_damage_type = BLACK_DAMAGE
 	stat_attack = HARD_CRIT
+	ranged = TRUE
+	ranged_cooldown_time = 5 SECONDS
 	attack_sound = 'sound/abnormalities/scarecrow/attack.ogg'
 	attack_verb_continuous = "stabs"
 	attack_verb_simple = "stab"
@@ -60,92 +62,9 @@
 	var/braineating = TRUE
 	var/healthmodifier = 0.05	// Can restore 30% of HP
 	var/attack_healthmodifier = 0.05
+	var/blitz = 0
+	var/hunger
 	var/target_hit = FALSE
-	var/hunger = FALSE
-
-	attack_action_types = list(/datum/action/cooldown/hungering)
-
-/mob/living/simple_animal/hostile/abnormality/scarecrow/Login()
-	. = ..()
-	if(!. || !client)
-		return FALSE
-	to_chat(src, "<h1>You are Scarecrow Searching for Wisdom, A Tank Role Abnormality.</h1><br>\
-		<b>|Seeking Wisdom|: When you attack corpses, You heal.<br>\
-		Unlike other abnormalities which use corpses, you are able to reuse the corpses you drain as many times as you would like.<br>\
-		|Hungering for Wisdom|: You have an ability which causes you to enter a 'Hungering' State.<br>\
-		While you are in the 'Hungering' State, You have increased movement speed and melee damage. As well, Your melee attack heal 5% of your max HP on hit.<br>\
-		You will need to hit at least on human every 6 seconds in order to keep this state active.<br>\
-		However, If you don't hit any humans you will lose 5% of your max HP, become slowed down for 3.5 seconds and lose your 'Hungering' state.</b>")
-
-/datum/action/cooldown/hungering
-	name = "Hungering for Wisdom"
-	icon_icon = 'icons/mob/actions/actions_rcorp.dmi'
-	button_icon_state = "hungering"
-	desc = "Gain a short speed/damage boost to rush at your foes!"
-	cooldown_time = 300
-	var/speeded_up = 1.5
-	var/punishment_speed = 6
-	var/speed_duration = 60
-	var/weaken_duration = 30
-	var/min_dam_buff = 25
-	var/max_dam_buff = 30
-	var/min_dam_old
-	var/max_dam_old
-	var/old_speed
-
-/datum/action/cooldown/hungering/Trigger()
-	if(!..())
-		return FALSE
-	if (istype(owner, /mob/living/simple_animal/hostile/abnormality/scarecrow))
-		var/sound/heartbeat = sound('sound/health/fastbeat.ogg', repeat = TRUE)
-		var/mob/living/simple_animal/hostile/abnormality/scarecrow/H = owner
-		if(H.hunger == TRUE)
-			to_chat(H, span_nicegreen("YOU ARE RUSHING RIGHT NOW!"))
-			return FALSE
-		else
-			old_speed = H.move_to_delay
-			H.move_to_delay = speeded_up
-			H.playsound_local(get_turf(H),heartbeat,40,0, channel = CHANNEL_HEARTBEAT, use_reverb = FALSE)
-			H.UpdateSpeed()
-			H.target_hit = FALSE
-			H.color = "#ff5770"
-			H.manual_emote("starts twitching...")
-			H.hunger = TRUE
-			min_dam_old = H.melee_damage_lower
-			max_dam_old = H.melee_damage_upper
-			H.melee_damage_lower = min_dam_buff
-			H.melee_damage_upper = max_dam_buff
-			to_chat(H, span_nicegreen("THEIR WISDOM, SHALL BE YOURS!"))
-			addtimer(CALLBACK(src, PROC_REF(Hunger)), speed_duration)
-			StartCooldown()
-
-/datum/action/cooldown/hungering/proc/Hunger()
-	if (istype(owner, /mob/living/simple_animal/hostile/abnormality/scarecrow))
-		var/mob/living/simple_animal/hostile/abnormality/scarecrow/H = owner
-		if (H.target_hit)
-			addtimer(CALLBACK(src, PROC_REF(Hunger)), speed_duration)
-			H.target_hit = FALSE
-			to_chat(H, span_nicegreen("YOUR FEAST CONTINUES!"))
-		else
-			H.stop_sound_channel(CHANNEL_HEARTBEAT)
-			H.melee_damage_lower = min_dam_old
-			H.melee_damage_upper = max_dam_old
-			H.move_to_delay = punishment_speed
-			H.deal_damage(100, WHITE_DAMAGE, flags = (DAMAGE_FORCED))
-			H.color = null
-			H.manual_emote("starts slowing down...")
-			to_chat(H, span_userdanger("No... I need that wisdom..."))
-			H.target_hit = TRUE
-			addtimer(CALLBACK(src, PROC_REF(RushEnd)), weaken_duration)
-			H.UpdateSpeed()
-
-/datum/action/cooldown/hungering/proc/RushEnd()
-	if (istype(owner, /mob/living/simple_animal/hostile/abnormality/scarecrow))
-		var/mob/living/simple_animal/hostile/abnormality/scarecrow/H = owner
-		H.move_to_delay = old_speed
-		to_chat(H, span_nicegreen("You calm down from your feast..."))
-		H.hunger = FALSE
-		H.UpdateSpeed()
 
 
 /mob/living/simple_animal/hostile/abnormality/scarecrow/CanAttack(atom/the_target)
@@ -163,6 +82,25 @@
 	animate(src, alpha = 0, time = 10 SECONDS)
 	QDEL_IN(src, 10 SECONDS)
 	return ..()
+
+/mob/living/simple_animal/hostile/abnormality/scarecrow/OpenFire()
+	if(finishing)
+		return FALSE
+	if(blitz)
+		BlitzBuff()
+		blitz--
+		return
+
+	if(prob(70))
+		return
+	for(var/i in 1 to 3)
+		new /obj/effect/hedge_warning(get_turf(target))
+		SLEEP_CHECK_DEATH(2)
+
+/mob/living/simple_animal/hostile/abnormality/scarecrow/proc/BlitzBuff()
+	health *= 0.8
+	var/duration = 10 SECONDS
+	TemporarySpeedChange(-1.4, duration)
 
 /mob/living/simple_animal/hostile/abnormality/scarecrow/AttackingTarget(atom/attacked_target)
 	. = ..()
@@ -198,6 +136,9 @@
 					O.Remove(H)
 					QDEL_NULL(O)
 			finishing = FALSE
+			hunger++
+			return
+
 
 /mob/living/simple_animal/hostile/abnormality/scarecrow/WorkChance(mob/living/carbon/human/user, chance, work_type)
 	var/newchance = chance
@@ -223,3 +164,45 @@
 	icon_living = "scarecrow_breach"
 	icon_state = icon_living
 	GiveTarget(user)
+
+
+//Hedge effects
+/obj/effect/hedge_warning
+	name = "hedge warning"
+	desc = "A target warning you of incoming pain"
+	icon = 'icons/effects/effects.dmi'
+	icon_state = "shreds"
+	move_force = INFINITY
+	pull_force = INFINITY
+	generic_canpass = FALSE
+	movement_type = PHASING | FLYING
+	var/boom_damage = 30
+	var/lifetime = 2 SECONDS
+	layer = POINT_LAYER
+
+/obj/effect/hedge_warning/Initialize()
+	. = ..()
+	addtimer(CALLBACK(src, PROC_REF(explode)), lifetime)
+
+/obj/effect/hedge_warning/proc/explode()
+	playsound(get_turf(src), 'sound/creatures/venus_trap_hit.ogg', 50, 0, 8)
+	if(locate(/obj/structure/fluff/hedge/opaque/scarecrow) in get_turf(src))
+		for(var/obj/structure/fluff/hedge/opaque/scarecrow/existing in get_turf(src))
+			qdel(existing)
+
+	new /obj/structure/fluff/hedge/opaque/scarecrow(get_turf(src))
+	for(var/mob/living/H in get_turf(src))
+		H.deal_damage(boom_damage, BLACK_DAMAGE, src, flags = (DAMAGE_FORCED | DAMAGE_UNTRACKABLE), attack_type = (ATTACK_TYPE_SPECIAL))
+
+		var/rand_dir = pick(NORTH, SOUTH, EAST, WEST)
+		var/atom/throw_target = get_edge_target_turf(H, rand_dir)
+		if(!H.anchored)
+			H.throw_at(throw_target, rand(1, 4), 5, H)
+
+	qdel(src)
+
+
+/obj/structure/fluff/hedge/opaque/scarecrow
+	max_integrity = 10
+	opacity = TRUE
+

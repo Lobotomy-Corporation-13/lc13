@@ -3,8 +3,8 @@ import { useBackend } from '../backend';
 import { Button, Grid, NumberInput, Section } from '../components';
 import { Window } from '../layouts';
 
-export const Signaler = (props, context) => {
-  const { act, data } = useBackend(context);
+export const Signaler = props => {
+  const { act, data } = useBackend();
   const {
     code,
     frequency,

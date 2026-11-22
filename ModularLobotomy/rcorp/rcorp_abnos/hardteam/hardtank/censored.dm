@@ -7,8 +7,8 @@
 	name = "CENSORED"
 	desc = "What is this... It's too disgusting to even look at... If that thing touches you... You cant even imagine..."
 	/* Stats */
-	health = 4000
-	maxHealth = 4000
+	health = 2900
+	maxHealth = 2900
 	damage_coeff = list(RED_DAMAGE = 0.6, WHITE_DAMAGE = 0.8, BLACK_DAMAGE = 0.4, PALE_DAMAGE = 1)
 	melee_damage_type = BLACK_DAMAGE
 	melee_damage_lower = 75

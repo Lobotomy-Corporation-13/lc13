@@ -6,8 +6,8 @@ import { LabeledList, ProgressBar, Section } from '../components';
 import { getGasColor, getGasLabel } from '../constants';
 import { NtosWindow } from '../layouts';
 
-export const NtosAtmos = (props, context) => {
-  const { act, data } = useBackend(context);
+export const NtosAtmos = props => {
+  const { act, data } = useBackend();
   const {
     AirTemp,
     AirPressure,

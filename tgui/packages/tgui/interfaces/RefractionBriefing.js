@@ -4,12 +4,12 @@ import { Window } from '../layouts';
 import { MobCard, MobModal } from './RefractionMobCards';
 import { AchievementList } from './common/AchievementList';
 
-export const RefractionBriefing = (props, context) => {
-  const { data } = useBackend(context);
+export const RefractionBriefing = props => {
+  const { data } = useBackend();
   const sector = data.sector;
   const sectorIndex = data.sector_index || 1;
   const nodes = data.nodes || [];
-  const [modalMob, setModalMob] = useLocalState(context, 'modalMob', null);
+  const [modalMob, setModalMob] = useLocalState('modalMob', null);
   if (data.finished) {
     return (
       <Window width={640} height={300} theme="syndicate">

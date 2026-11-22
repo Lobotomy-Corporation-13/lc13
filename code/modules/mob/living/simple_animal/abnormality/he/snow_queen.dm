@@ -20,6 +20,7 @@
 	mob_biotypes = MOB_MINERAL
 	maxHealth = 1500
 	health = 1500
+	gender = FEMALE
 	blood_volume = 0
 	move_to_delay = 5
 	damage_coeff = list(BRUTE = 1, RED_DAMAGE = 1.1, WHITE_DAMAGE = 0.8, BLACK_DAMAGE = 0.8, PALE_DAMAGE = 0.8, FIRE = 2) //ASK SOMEONE GOOD AT BALANCING ABOUT THIS -IP

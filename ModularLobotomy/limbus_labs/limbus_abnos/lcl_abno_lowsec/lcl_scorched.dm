@@ -2,6 +2,7 @@
 	true_name = "Scorched Girl"
 	maxHealth = 400
 	health = 400
+	gender = FEMALE
 	damage_coeff = list(RED_DAMAGE = 0.5, WHITE_DAMAGE = 2, BLACK_DAMAGE = 1, PALE_DAMAGE = 2)
 	max_counter = 2
 	original_abno = /mob/living/simple_animal/hostile/abnormality/scorched_girl

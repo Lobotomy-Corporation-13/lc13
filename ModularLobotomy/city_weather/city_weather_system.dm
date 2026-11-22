@@ -6,10 +6,10 @@ GLOBAL_DATUM(city_weather_controller, /datum/city_weather_controller)
 	var/storm_active = FALSE
 	var/datum/weather/city_freezing_storm/current_weather
 	var/z_level
-	var/min_time_between_storms = 10 MINUTES
-	var/max_time_between_storms = 15 MINUTES
-	var/min_storm_duration = 4 MINUTES
-	var/max_storm_duration = 6 MINUTES
+	var/min_time_between_storms = 16 MINUTES
+	var/max_time_between_storms = 24 MINUTES
+	var/min_storm_duration = 3 MINUTES
+	var/max_storm_duration = 4.5 MINUTES
 
 /datum/city_weather_controller/New(zlevel)
 	..()

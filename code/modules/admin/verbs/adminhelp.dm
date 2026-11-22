@@ -85,7 +85,8 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 		var/datum/admin_help/AH = I
 		dat += "<span class='adminnotice'><span class='adminhelp'>Ticket #[AH.id]</span>: <A href='byond://?_src_=holder;[HrefToken()];ahelp=[REF(AH)];ahelp_action=ticket'>[AH.initiator_key_name]: [AH.name]</A></span><br>"
 
-	usr << browse(dat.Join(), "window=ahelp_list[state];size=600x480")
+	//usr << browse(dat.Join(), "window=ahelp_list[state];size=600x480") // LOBOTOMYCORPORATION EDIT CHANGE OLD
+	usr << browse(dat.Join(), "window=ahelp_list[state];[scaled_browse_size(usr, 600, 480)]") // LOBOTOMYCORPORATION EDIT CHANGE NEW -- scale for DPI
 
 //Tickets statpanel
 /datum/admin_help_tickets/proc/stat_entry()
@@ -436,7 +437,8 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 	for(var/I in _interactions)
 		dat += "[I]<br>"
 
-	usr << browse(dat.Join(), "window=ahelp[id];size=620x480")
+	//usr << browse(dat.Join(), "window=ahelp[id];size=620x480") // LOBOTOMYCORPORATION EDIT CHANGE OLD
+	usr << browse(dat.Join(), "window=ahelp[id];[scaled_browse_size(usr, 620, 480)]") // LOBOTOMYCORPORATION EDIT CHANGE NEW -- scale for DPI
 
 /datum/admin_help/proc/Retitle()
 	var/new_title = input(usr, "Enter a title for the ticket", "Rename Ticket", name) as text|null

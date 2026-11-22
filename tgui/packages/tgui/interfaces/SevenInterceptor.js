@@ -7,8 +7,8 @@ import {
 } from '../components';
 import { Window } from '../layouts';
 
-export const SevenInterceptor = (props, context) => {
-  const { act, data } = useBackend(context);
+export const SevenInterceptor = props => {
+  const { act, data } = useBackend();
   const {
     active,
     messages = [],

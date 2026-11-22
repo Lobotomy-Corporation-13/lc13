@@ -262,22 +262,16 @@ export const RecordRow = props => {
   );
 };
 
-export const RecordsModal = (props, context) => {
+export const RecordsModal = props => {
   const { lineId, lineName, leaderboard, onClose } = props;
   const rows = leaderboard || [];
-  const [expandedIdx, setExpandedIdx] = useLocalState(
-    context,
-    'recordsExpanded',
+  const [expandedIdx, setExpandedIdx] = useLocalState('recordsExpanded',
     null
   );
-  const [expandedGroups, setExpandedGroups] = useLocalState(
-    context,
-    'recordsGroupExpanded',
+  const [expandedGroups, setExpandedGroups] = useLocalState('recordsGroupExpanded',
     {}
   );
-  const [search, setSearch] = useLocalState(
-    context,
-    'recordsSearch',
+  const [search, setSearch] = useLocalState('recordsSearch',
     ''
   );
   const trimmed = (search || '').trim();
@@ -393,11 +387,10 @@ export const RecordsModal = (props, context) => {
 // Modal panel that shows every mob in a single combat / boss node, using
 // the shared MobCard component. Click a card to drill into the full
 // datasheet (or silhouette if the player hasn't fought it yet).
-const NodeMobsModal = (props, context) => {
+const NodeMobsModal = props => {
   const { node, onClose } = props;
-  const { data } = useBackend(context);
-  const [modalMob, setModalMob] = useLocalState(
-    context, 'nodeModalMob', null);
+  const { data } = useBackend();
+  const [modalMob, setModalMob] = useLocalState('nodeModalMob', null);
   if (!node) return null;
   return (
     <Box
@@ -715,15 +708,14 @@ const LinesTab = props => {
 // Left column: a tab strip switching between the line picker (Lines) and the
 // lobby controls (Lobby), so a growing line list can't push the lobby —
 // and its Start button — off the bottom of the window.
-const LineSidebar = (props, context) => {
-  const { act } = useBackend(context);
+const LineSidebar = props => {
+  const { act } = useBackend();
   const {
     lines, selectedId, onSelect, myRun, openLobbies, compensations,
   } = props;
   const selectedLine = (lines || []).find(l => l.id === selectedId) || null;
   const selectedLineLocked = !!(selectedLine && selectedLine.locked);
-  const [sidebarTab, setSidebarTab] = useLocalState(
-    context, 'sidebarTab', myRun ? 'lobby' : 'lines');
+  const [sidebarTab, setSidebarTab] = useLocalState('sidebarTab', myRun ? 'lobby' : 'lines');
   return (
     <Stack vertical fill>
       <Stack.Item>
@@ -898,25 +890,19 @@ const LobbyPanel = props => {
   );
 };
 
-export const RefractionRailway = (props, context) => {
-  const { data } = useBackend(context);
+export const RefractionRailway = props => {
+  const { data } = useBackend();
   const lines = data.lines || [];
   const myRun = data.my_run;
   const openLobbies = data.open_lobbies || [];
   const leaderboards = data.leaderboards || {};
-  const [selectedId, setSelectedId] = useLocalState(
-    context,
-    'selectedLine',
+  const [selectedId, setSelectedId] = useLocalState('selectedLine',
     lines[0] ? lines[0].id : null
   );
-  const [recordsLineId, setRecordsLineId] = useLocalState(
-    context,
-    'recordsLineId',
+  const [recordsLineId, setRecordsLineId] = useLocalState('recordsLineId',
     null
   );
-  const [previewNode, setPreviewNode] = useLocalState(
-    context,
-    'previewNode',
+  const [previewNode, setPreviewNode] = useLocalState('previewNode',
     null
   );
   const selectedLine = lines.find(l => l.id === selectedId) || null;

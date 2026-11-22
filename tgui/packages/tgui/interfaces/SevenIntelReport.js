@@ -9,8 +9,8 @@ import {
 } from '../components';
 import { Window } from '../layouts';
 
-export const SevenIntelReport = (props, context) => {
-  const { act, data } = useBackend(context);
+export const SevenIntelReport = props => {
+  const { act, data } = useBackend();
   const {
     filed,
     has_photo,
@@ -218,7 +218,7 @@ export const SevenIntelReport = (props, context) => {
   );
 };
 
-const FeedbackEntry = (props, context) => {
+const FeedbackEntry = props => {
   const { feedback } = props;
   if (feedback.items) {
     return (

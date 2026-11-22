@@ -261,8 +261,7 @@
 	abno_code = "M-03-192"
 	abno_info = list(
 		"This abnormality will rise over the course of 12 minutes",
-		"The closer the sun is to the peak, the more PE was generated from M-03-192.",
-		"As time goes on, this abnormality boosts your stats significantly.",
+		"Each death of humans will stall M-03-192 by a short period of time.",
 		"Working on the abnormality will cause it to set once more, and cause all of it's boosts to subside.",
 		)
 

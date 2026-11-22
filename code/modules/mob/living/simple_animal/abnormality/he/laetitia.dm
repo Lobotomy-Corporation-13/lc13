@@ -7,6 +7,7 @@
 	portrait = "laetitia"
 	maxHealth = 1500
 	health = 1500
+	gender = FEMALE
 	threat_level = HE_LEVEL
 	work_chances = list(
 		ABNORMALITY_WORK_INSTINCT = list(40, 45, 50, 50, 50),

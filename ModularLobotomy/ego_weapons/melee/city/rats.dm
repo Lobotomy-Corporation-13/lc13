@@ -2,6 +2,7 @@
 /obj/item/ego_weapon/city/rats
 	name = "rat hammer"
 	desc = "A hammer sometimes found in the hands of rats. This one belonged to a rat who lost nearly everything to sweepers."
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/rat.dmi'
 	icon_state = "rathammer"
 	force = 18
 	damtype = RED_DAMAGE
@@ -67,7 +68,7 @@
 		XX-Corp abandoned the project. It is rumored that they dumped the remaining thousands of products in an alleyway. \
 		There's little other explanation to how this got into the hands of so many rats."
 	icon_state = "zippy"
-	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/rat.dmi'
 	inhand_icon_state = "gun"
 	worn_icon_state = "gun"
 	lefthand_file = 'icons/mob/inhands/weapons/guns_lefthand.dmi'

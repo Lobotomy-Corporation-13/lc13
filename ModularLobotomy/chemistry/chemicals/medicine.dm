@@ -2,7 +2,7 @@
 /datum/reagent/abnormality/healing_gel
 	name = "L-Corp Healing Gel"
 	description = "Gel used by L-Corp for healing agents.."
-	color = "#6baf65"
+	color = "#a13d3d"
 	health_restore = 3
 	overdose_threshold = 30
 
@@ -15,7 +15,7 @@
 /datum/reagent/abnormality/sanity_gel
 	name = "L-Corp SP Plus"
 	description = "Gel used by L-Corp for healing agent's mental state."
-	color = "#6baf65"
+	color = "#3d67a1"
 	sanity_restore = 3
 	overdose_threshold = 30
 
@@ -29,7 +29,7 @@
 /datum/reagent/abnormality/burn_salve
 	name = "L-Corp BurnSalve"
 	description = "Gel used by L-Corp for healing agent's burns. Works slowly, and damages eyes."
-	color = "#6baf65"
+	color = "#c4a66a"
 
 /datum/reagent/abnormality/burn_salve/on_mob_life(mob/living/M)
 	M.adjustFireLoss(-2*REM)
@@ -41,7 +41,7 @@
 /datum/reagent/abnormality/mixed_gel
 	name = "L-Corp mixed drink"
 	description = "Gel used by L-Corp for healing agents physical and mental state."
-	color = "#6baf65"
+	color = "#ac63b0"
 	health_restore = 1
 	sanity_restore = 1
 	overdose_threshold = 30
@@ -57,7 +57,7 @@
 	name = "K-Corp regeneration solution"
 	description = "Goo used by K-Corp for healing agents Overdose leads to your body rotting away."
 	metabolization_rate = REAGENTS_METABOLISM
-	color = "#6baf65"
+	color = "#00cc00"	//Good ol' Ooccoo
 	health_restore = 8
 	overdose_threshold = 10
 
@@ -71,7 +71,7 @@
 	name = "M-Corp powdered moonstone"
 	description = "powdered M-Corp moonstone used for regenerating sanity."
 	metabolization_rate = REAGENTS_METABOLISM
-	color = "#6baf65"
+	color = "#dd00ff"
 	sanity_restore = 8
 	overdose_threshold = 30
 
@@ -86,7 +86,7 @@
 	name = "Universal antitoxin"
 	description = "A universal anti-toxin used in the city for various purposes."
 	metabolization_rate = REAGENTS_METABOLISM
-	color = "#6baf65"
+	color = "#597355"
 	overdose_threshold = 30
 
 /datum/reagent/antitoxin/on_mob_life(mob/living/M)
@@ -100,7 +100,7 @@
 	name = "Genetic repair solution"
 	description = "A rare genetic reparation solution that heals damage to DNA slowly."
 	metabolization_rate = 0.1*REAGENTS_METABOLISM
-	color = "#6baf65"
+	color = "#17abad"
 	overdose_threshold = 30
 
 /datum/reagent/abnormality/healing_fast/on_mob_life(mob/living/M)
@@ -114,6 +114,7 @@
 	name = "K-Corp Purge-All"
 	description = "A serum that purges all chemicals from a system."
 	metabolization_rate = REAGENTS_METABOLISM
+	color = "#e5ff00"
 
 /datum/reagent/purgall/on_mob_life(mob/living/M)
 	for(var/datum/reagent/R in M.reagents.reagent_list)

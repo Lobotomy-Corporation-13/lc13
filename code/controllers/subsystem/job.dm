@@ -90,6 +90,9 @@ SUBSYSTEM_DEF(job)
 		name_occupations[job.title] = job
 		type_occupations[J] = job
 
+	//Job datums are rebuilt from scratch here, so the factions have to be re-stamped.
+	SScity_factions.ApplyToJobs()
+
 	return TRUE
 
 
@@ -326,6 +329,11 @@ SUBSYSTEM_DEF(job)
 	FillAIPosition()
 	JobDebug("DO, AI Check end")
 
+	//City factions shut if nobody wanted to lead them, before members get handed out
+	JobDebug("DO, Running Faction Leader Check")
+	SScity_factions.FillFactionLeaders()
+	JobDebug("DO, Faction Leader Check end")
+
 	//Other jobs are now checked
 	JobDebug("DO, Running Standard Check")
 
@@ -498,9 +506,7 @@ SUBSYSTEM_DEF(job)
 		living_mob.mind.assigned_role = rank
 
 	//Tegu edit start - Alt job titles
-	var/display_rank = rank
-	if(M.client && M.client.prefs && M.client.prefs.alt_titles_preferences[rank])
-		display_rank = M.client.prefs.alt_titles_preferences[rank]
+	var/display_rank = job ? job.GetDisplayTitle(M.client) : rank
 	//Tegu edit end
 
 	to_chat(M, "<b>You are the [display_rank].</b>")

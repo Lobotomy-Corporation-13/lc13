@@ -5,6 +5,7 @@
 	special = "Use in hand to cut HP in half. Each kill for the next 15 seconds increases damage by 1.5x, and heals you 10%."
 	icon_state = "vermillion"
 	inhand_icon_state = "vermillion"
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/color_fixers.dmi'
 	lefthand_file = 'ModularLobotomy/_Lobotomyicons/lc13_left_64x64.dmi'
 	righthand_file = 'ModularLobotomy/_Lobotomyicons/lc13_right_64x64.dmi'
 	inhand_x_dimension = 64
@@ -72,7 +73,7 @@
 /obj/item/ego_weapon/mimicry/kali
 	name = "True Mimicry"
 	desc = "What is the meaning of 'Human'? Does it matter?"
-	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/color_fixers.dmi'
 	icon_state = "mimicry"
 	inhand_icon_state = "mimisword"
 	lefthand_file = 'ModularLobotomy/_Lobotomyicons/lc13_left_64x64.dmi'

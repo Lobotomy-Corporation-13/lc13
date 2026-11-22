@@ -394,7 +394,8 @@
 		[banhtml.Join("")]
 	</body>
 	"}
-	usr << browse(html,"window=stickybans;size=700x400")
+	//usr << browse(html,"window=stickybans;size=700x400") // LOBOTOMYCORPORATION EDIT CHANGE OLD
+	usr << browse(html,"window=stickybans;[scaled_browse_size(usr, 700, 400)]") // LOBOTOMYCORPORATION EDIT CHANGE NEW -- scale for DPI
 
 /proc/sticky_banned_ckeys()
 	if (SSdbcore.Connect() || length(SSstickyban.dbcache))

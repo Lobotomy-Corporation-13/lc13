@@ -12,6 +12,7 @@
 
 	maxHealth = 2000
 	health = 2000
+	gender = FEMALE
 	damage_coeff = list(BRUTE = 1, RED_DAMAGE = 1.2, WHITE_DAMAGE = 0, BLACK_DAMAGE = 0.7, PALE_DAMAGE = 1.5)
 
 	threat_level = WAW_LEVEL

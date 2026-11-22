@@ -2,6 +2,7 @@
 /obj/item/ego_weapon/ranged/city/fullstop
 	name = "fullstop template"
 	desc = "a template for fullstop."
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/fullstop.dmi'
 	icon_state = "fullstop"
 	inhand_icon_state = "fullstop"
 	force = 14
@@ -98,10 +99,31 @@
 							JUSTICE_ATTRIBUTE = 80
 							)
 
+/obj/item/ego_weapon/ranged/city/fullstop/lmg
+	name = "fullstop light machine gun"
+	desc = "An lmg. The bullets were gotten on sale. \
+		Guns like these are expensive in the City. You could buy a whole other weapon of good quality with the money for this one's bullets."
+	icon_state = "fullstoplmg"
+	inhand_icon_state = "fullstoplmg"
+	force = 20
+	fire_sound = 'sound/weapons/gun/rifle/shot_alt.ogg'
+	projectile_path = /obj/projectile/ego_bullet/fullstop_lmg
+	shotsleft = 200
+	reloadtime = 5 SECONDS
+
+	autofire = 0.12 SECONDS
+	spread = 10
+	attribute_requirements = list(
+							FORTITUDE_ATTRIBUTE = 60,
+							PRUDENCE_ATTRIBUTE = 60,
+							TEMPERANCE_ATTRIBUTE = 60,
+							JUSTICE_ATTRIBUTE = 60
+							)
 
 /obj/item/ego_mag/fullstop
 	name = "fullstop magazine"
 	desc = "Load into fullstop guns of various types."
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/fullstop.dmi'
 	icon_state = "fullstop_ammo"
 
 
@@ -110,6 +132,10 @@
 /obj/projectile/ego_bullet/fullstop_rifle
 	name = "bullet"
 	damage = 17
+
+/obj/projectile/ego_bullet/fullstop_lmg
+	name = "bullet"
+	damage = 10
 
 /obj/projectile/ego_bullet/fullstop_pistol
 	name = "bullet"

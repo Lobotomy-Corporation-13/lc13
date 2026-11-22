@@ -60,8 +60,10 @@
 	and checking if the thing can have the turfs ability used on it IE melting things. If sink stuff returns
 	False it stops checking and accepts that the thing is immune to its ability. If it returns true it will
 	use its ability until that thing is gone.*/
-/turf/open/water/deep/Entered(atom/movable/AM)
+/turf/open/water/deep/Entered(atom/movable/AM, atom/oldloc)
 	if(is_type_in_typecache(AM, cant_sink_types))
+		return
+	if(!oldloc)
 		return
 	if(SinkStuff(AM))
 		START_PROCESSING(SSobj, src)
@@ -177,8 +179,6 @@
 /turf/open/water/deep/proc/MobSink(mob/living/drowner)
 	//Deal light initial damage - the drowning effect will be the main threat
 	if(drowner.stat != DEAD)
-		if(!(drowner.flags_1 & INITIALIZED_1))
-			return
 		if(ishuman(drowner))
 			var/mob/living/carbon/human/H = drowner
 			H.adjustOxyLoss(5)

@@ -17,6 +17,14 @@
 	worn_icon = 'ModularLobotomy/_Lobotomyicons/joke_abnos/joke_worn.dmi'
 	armor = list(RED_DAMAGE = -10, WHITE_DAMAGE = -10, BLACK_DAMAGE = 0, PALE_DAMAGE = 40) // Has horrible stat spread
 
+/obj/item/clothing/suit/armor/ego_gear/teth/aura
+	name = "aura"
+	desc = "An amazing ultra-luxury suit only worn by Aura Farmers of the City."
+	icon = 'ModularLobotomy/_Lobotomyicons/joke_abnos/joke_armor.dmi'
+	worn_icon = 'ModularLobotomy/_Lobotomyicons/joke_abnos/joke_worn.dmi'
+	icon_state = "a_ura"
+	armor = list(RED_DAMAGE = 30, WHITE_DAMAGE = 30, BLACK_DAMAGE = 30, PALE_DAMAGE = -50) //aura farming?
+
 // All HE joke E.G.O
 
 // All WAW joke E.G.O

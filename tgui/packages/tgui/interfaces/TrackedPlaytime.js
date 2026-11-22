@@ -49,8 +49,8 @@ const PlaytimeSection = props => {
   );
 };
 
-export const TrackedPlaytime = (props, context) => {
-  const { data } = useBackend(context);
+export const TrackedPlaytime = props => {
+  const { data } = useBackend();
   const {
     failReason,
     jobPlaytimes,

@@ -4,8 +4,8 @@ import { useBackend } from '../backend';
 import { Box, Button, Collapsible, Flex, NoticeBox, Section, Stack, TimeDisplay } from '../components';
 import { Window } from '../layouts';
 
-export const MafiaPanel = (props, context) => {
-  const { act, data } = useBackend(context);
+export const MafiaPanel = props => {
+  const { act, data } = useBackend();
   const {
     actions,
     phase,
@@ -82,8 +82,8 @@ export const MafiaPanel = (props, context) => {
   );
 };
 
-const MafiaLobby = (props, context) => {
-  const { act, data } = useBackend(context);
+const MafiaLobby = props => {
+  const { act, data } = useBackend();
   const {
     lobbydata,
     phase,
@@ -152,8 +152,8 @@ const MafiaLobby = (props, context) => {
   );
 };
 
-const MafiaRole = (props, context) => {
-  const { act, data } = useBackend(context);
+const MafiaRole = props => {
+  const { act, data } = useBackend();
   const {
     phase,
     roleinfo,
@@ -209,8 +209,8 @@ const MafiaRole = (props, context) => {
   );
 };
 
-const MafiaListOfRoles = (props, context) => {
-  const { act, data } = useBackend(context);
+const MafiaListOfRoles = props => {
+  const { act, data } = useBackend();
   const {
     all_roles,
   } = data;
@@ -274,8 +274,8 @@ const MafiaListOfRoles = (props, context) => {
   );
 };
 
-const MafiaJudgement = (props, context) => {
-  const { act, data } = useBackend(context);
+const MafiaJudgement = props => {
+  const { act, data } = useBackend();
   const {
     judgement_phase,
   } = data;
@@ -333,8 +333,8 @@ const MafiaJudgement = (props, context) => {
   );
 };
 
-const MafiaPlayers = (props, context) => {
-  const { act, data } = useBackend(context);
+const MafiaPlayers = props => {
+  const { act, data } = useBackend();
   const {
     players,
   } = data;
@@ -376,8 +376,8 @@ const MafiaPlayers = (props, context) => {
   );
 };
 
-const MafiaAdmin = (props, context) => {
-  const { act, data } = useBackend(context);
+const MafiaAdmin = props => {
+  const { act, data } = useBackend();
   return (
     <Collapsible
       title="ADMIN CONTROLS"

@@ -5,6 +5,7 @@
 	icon_state = "queen_bee"
 	icon_living = "queen_bee"
 	portrait = "queen_bee"
+	gender = FEMALE
 	faction = list("hostile")
 	speak_emote = list("buzzes")
 

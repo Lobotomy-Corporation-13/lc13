@@ -5,6 +5,7 @@
 	name = "shi association knife"
 	desc = "A blade that is used by Shi Section 2 assassins to go out with honour."
 	special = "Attack yourself with this weapon to instantly kill yourself."
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/shi.dmi'
 	icon_state = "shi_dagger"
 	force = 40
 	damtype = RED_DAMAGE
@@ -43,6 +44,7 @@
 	name = "shi association sheathed blade"
 	desc = "A blade that is used by Shi Section 2."
 	special = "Use this weapon in hand to immobilize yourself for 1 second, cut your HP by 25%, and deal 2x damage in pale."
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/shi.dmi'
 	icon_state = "shiassassin"
 	force = 42
 	attack_speed = 1.2

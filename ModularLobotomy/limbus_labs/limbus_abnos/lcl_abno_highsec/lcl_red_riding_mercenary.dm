@@ -1,6 +1,7 @@
 /mob/living/simple_animal/hostile/limbus_abno/red_hood
 	maxHealth = 2400 // More health than standard
 	health = 2400 // Since she was apparently too easy to suppress
+	gender = FEMALE
 	rapid_melee = 2
 	speed = 0.5
 
@@ -36,24 +37,41 @@
 
 	//LCL unique Variables
 	original_abno = /mob/living/simple_animal/hostile/abnormality/red_hood
-	abno_additional_instructions = "You like insight and higher level instinct, \
+	abno_additional_instructions = "You like insight, repression, and higher level instinct, \
 	You are a supernatural mercenary for hire. Your jobs tend to be hunting \
 	your fellow abnormalities with little care for whoever gets in the way. \
 	You hold a burning hatred for the Big Bad Wolf. \
 	Your monies are used for attacks, -30 for hollowpoint & -10 for throwing \
-	knife. You can gain more monies if researchers use ahn on you. Its good business."
+	knife. You can gain more monies if researchers use ahn on you. Its good business. \
+	Your patience for Repression work is significantly lower than other abnormalities, \
+	you will start to lose desire when attacked at around 75% of your max health."
 
 	//Was going to make her eat money but i dont know if money exists in LCL
-	liked_objects_list = list(
-		/obj/structure/chair/wood,
-		/obj/item/food/grown/harebell, /obj/item/stack/sheet/leather,
-		)
+	diet_list = list( // a lot of pastries to reference stuff she might've carried in her basket in some versions of the tale
+		/obj/item/food/pie,
+		/obj/item/food/donut,
+		/obj/item/food/muffin,
+		/obj/item/food/cookie,
+		/obj/item/food/cake, //past here references the grimm brothers version specifically
+		/obj/item/food/cakeslice,
+		/obj/item/reagent_containers/food/drinks/bottle/wine //I don't know how attainable this actually is
+		) //finish this
+	liked_objects_list = list( //taking away the chair since there's only 4 on the map and you can't make more
+		/obj/item/food/grown/harebell, //flowers since in the original tale she picked a bouqette for grandma
+		/obj/item/food/grown/poppy,
+		/obj/item/grown/sunflower,
+		/obj/item/stack/sheet/leather)
+	liked_objects_value = 0.5 //hopefully this is small enough to prevent her from being ignorable
 	desire_active = TRUE
 	max_counter = 3
 	kickstart_timer = 5 MINUTES
+	desire_on_eat = 10
 	desire_on_talk = 1
-	desire_on_pet = 5
-	rep_desire_gain = -5
+	desire_on_pet = -30 //do not the Little Red
+	rep_desire_gain = 0.2 //relatively ineffective but there is some amount of success rate
+	rep_threshold = 1800 // if it goes beyond sparring (around 75% health) you'll piss her off
+	rep_desire_loss_at_threshold = 20
+
 
 	can_breach = TRUE
 

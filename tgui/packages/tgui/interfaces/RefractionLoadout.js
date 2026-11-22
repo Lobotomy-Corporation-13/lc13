@@ -612,8 +612,8 @@ const DetailsView = props => {
   );
 };
 
-export const RefractionLoadout = (props, context) => {
-  const { act, data } = useBackend(context);
+export const RefractionLoadout = props => {
+  const { act, data } = useBackend();
   const weapons = data.weapons || [];
   const armor = data.armor || [];
   const briefing = data.briefing_header || {};
@@ -621,29 +621,23 @@ export const RefractionLoadout = (props, context) => {
   const current = data.current_loadout || [];
   const allTags = data.all_tags || [];
 
-  const [tab, setTab] = useLocalState(context, 'tab', 'weapons');
-  const [name, setName] = useLocalState(context, 'name', '');
-  const [threats, setThreats] = useLocalState(context, 'threats', {});
-  const [origins, setOrigins] = useLocalState(context, 'origins', {
+  const [tab, setTab] = useLocalState('tab', 'weapons');
+  const [name, setName] = useLocalState('name', '');
+  const [threats, setThreats] = useLocalState('threats', {});
+  const [origins, setOrigins] = useLocalState('origins', {
     LC13: true,
   });
-  const [tags, setTags] = useLocalState(context, 'tags', {});
+  const [tags, setTags] = useLocalState('tags', {});
   const [weaponDamtype, setWeaponDamtype]
-    = useLocalState(context, 'weaponDamtype', null);
-  const [armorResist, setArmorResist] = useLocalState(
-    context,
-    'armorResist',
+    = useLocalState('weaponDamtype', null);
+  const [armorResist, setArmorResist] = useLocalState('armorResist',
     { red: -10, white: -10, black: -10, pale: -10 }
   );
-  const [detailed, setDetailed] = useLocalState(context, 'detailed', null);
-  const [pickedWeapons, setPickedWeapons] = useLocalState(
-    context,
-    'pickedWeapons',
+  const [detailed, setDetailed] = useLocalState('detailed', null);
+  const [pickedWeapons, setPickedWeapons] = useLocalState('pickedWeapons',
     current.slice(0, 2).filter(Boolean)
   );
-  const [pickedArmor, setPickedArmor] = useLocalState(
-    context,
-    'pickedArmor',
+  const [pickedArmor, setPickedArmor] = useLocalState('pickedArmor',
     current[2] || null
   );
 

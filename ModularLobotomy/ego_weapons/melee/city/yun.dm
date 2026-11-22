@@ -2,6 +2,7 @@
 /obj/item/ego_weapon/city/yun
 	name = "yun office baton"
 	desc = "A stern baton. It's easy to see how callous the previous user must have been."
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/yun.dmi'
 	icon_state = "yun_fixer"
 	force = 18
 	damtype = RED_DAMAGE

@@ -325,4 +325,5 @@
 	</body></html>
 	"}
 
-	usr << browse(dat, "window=players;size=600x480")
+	//usr << browse(dat, "window=players;size=600x480") // LOBOTOMYCORPORATION EDIT CHANGE OLD
+	usr << browse(dat, "window=players;[scaled_browse_size(usr, 600, 480)]") // LOBOTOMYCORPORATION EDIT CHANGE NEW -- scale for DPI

@@ -25,8 +25,8 @@ const TAB_LABELS = {
   events: 'Events',
 };
 
-export const DieciTome = (props, context) => {
-  const { act, data } = useBackend(context);
+export const DieciTome = props => {
+  const { act, data } = useBackend();
   const { tab = 'knowledge' } = data;
 
   return (
@@ -73,8 +73,8 @@ export const DieciTome = (props, context) => {
   );
 };
 
-const KnowledgeTab = (props, context) => {
-  const { act, data } = useBackend(context);
+const KnowledgeTab = props => {
+  const { act, data } = useBackend();
   const {
     stored_knowledge = [],
     stored_count = 0,
@@ -295,8 +295,8 @@ const LEVEL_COLORS = {
   3: 'good',
 };
 
-const StudiesTab = (props, context) => {
-  const { act, data } = useBackend(context);
+const StudiesTab = props => {
+  const { act, data } = useBackend();
   const {
     tome_studies = [],
     balance = 0,
@@ -395,8 +395,8 @@ const StudiesTab = (props, context) => {
   );
 };
 
-const BestiaryTab = (props, context) => {
-  const { act, data } = useBackend(context);
+const BestiaryTab = props => {
+  const { act, data } = useBackend();
   const {
     bestiary = [],
     bestiary_page = 1,
@@ -498,8 +498,8 @@ const BestiaryTab = (props, context) => {
   );
 };
 
-const ShopTab = (props, context) => {
-  const { act, data } = useBackend(context);
+const ShopTab = props => {
+  const { act, data } = useBackend();
   const {
     shop_items = [],
     balance = 0,
@@ -567,8 +567,8 @@ const AVAILABLE_EVENTS = [
   },
 ];
 
-const EventsTab = (props, context) => {
-  const { act, data } = useBackend(context);
+const EventsTab = props => {
+  const { act, data } = useBackend();
   const {
     is_director = false,
     has_active_event = false,

@@ -29,6 +29,8 @@
 	var/start_time
 	/// Achivement for Surviving the Ordeal
 	var/ordeal_achievement
+	/// Let's avoid Ordeals completing more than once.
+	var/ended = FALSE
 
 /datum/ordeal/New()
 	..()
@@ -38,6 +40,7 @@
 // Runs the event itself
 /datum/ordeal/proc/Run()
 	start_time = ROUNDTIME
+	ended = FALSE
 	SSlobotomy_corp.current_ordeals += src
 	priority_announce(announce_text, name, sound='sound/vox_fem/..ogg') // We want this to be silent, so play a silent sound since null uses defaults
 	/// If dawn started - clear suppression options
@@ -53,6 +56,10 @@
 
 // Ends the event
 /datum/ordeal/proc/End()
+	if(ended)
+		return
+	ended = TRUE
+
 	var/total_reward = max(SSlobotomy_corp.box_goal, 3000) * reward_percent
 	priority_announce("The Ordeal has ended. Facility has been rewarded with [reward_percent*100]% PE.", name, sound='sound/vox_fem/..ogg')
 	SSlobotomy_corp.AdjustAvailableBoxes(total_reward)
@@ -94,7 +101,7 @@
 		SSticker.rating_achieved = "A"
 
 	/// If it was a midnight and we got to it before time limit
-	if(level == 4 && start_time <= (CONFIG_GET(number/suppression_time_limit) + (GetFacilityUpgradeValue(UPGRADE_MELTDOWN_INCREASE) * 20 MINUTES)))
+	if(level == 4 && start_time <= (CONFIG_GET(number/suppression_time_limit)))
 		// Extra cores, and announced!
 		addtimer(CALLBACK(SSlobotomy_corp, TYPE_PROC_REF(/datum/controller/subsystem/lobotomy_corp, PickPotentialSuppressions), TRUE, TRUE), 15 SECONDS)
 		// Check to see if we have a Manager at this point, 'cause if we don't, we should at least allow the Agents to try an Extra on their own if they want.

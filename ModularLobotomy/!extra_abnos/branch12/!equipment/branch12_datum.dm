@@ -82,6 +82,27 @@
 	item_path = /obj/item/clothing/suit/armor/ego_gear/branch12/virtue
 	cost = 10*/
 
+// The Rain Can Always Get Worse - Rainfall
+/datum/ego_datum/weapon/branch12/rainfall
+	item_path = /obj/item/ego_weapon/support/rainfall
+	cost = 12
+	ego_tags = list(EGO_TAG_SUPPORT)
+
+/datum/ego_datum/armor/branch12/rainfall
+	item_path = /obj/item/clothing/suit/armor/ego_gear/branch12/rainfall
+	cost = 12
+
+// Rabbits - Warren
+/datum/ego_datum/weapon/branch12/warren
+	item_path = /obj/item/ego_weapon/support/warren
+	cost = 12
+	ego_tags = list(EGO_TAG_SUPPORT)
+
+/datum/ego_datum/armor/branch12/warren
+	item_path = /obj/item/clothing/suit/armor/ego_gear/branch12/warren
+	cost = 12
+
+
 
 
 // --------TETH---------
@@ -170,6 +191,33 @@
 	item_path = /obj/item/clothing/suit/armor/ego_gear/branch12/iai
 	cost = 20*/
 
+// Faces in the Light E.G.O - Gloaming
+/datum/ego_datum/weapon/branch12/gloaming
+	item_path = /obj/item/ego_weapon/branch12/gloaming
+	cost = 20
+
+/datum/ego_datum/armor/branch12/gloaming
+	item_path = /obj/item/clothing/suit/armor/ego_gear/branch12/gloaming
+	cost = 20
+
+// Scuffed Lioness - Mane / Pelt
+/datum/ego_datum/weapon/branch12/pelt
+	item_path = /obj/item/ego_weapon/branch12/pelt
+	cost = 20
+
+/datum/ego_datum/armor/branch12/pelt
+	item_path = /obj/item/clothing/suit/armor/ego_gear/branch12/pelt
+	cost = 20
+
+// Clambug - Chitin
+/datum/ego_datum/weapon/branch12/chitin
+	item_path = /obj/item/ego_weapon/branch12/chitin
+	cost = 20
+
+/datum/ego_datum/armor/branch12/chitin
+	item_path = /obj/item/clothing/suit/armor/ego_gear/branch12/chitin
+	cost = 20
+
 // --------HE---------
 // The Show Goes On - Perfectionist
 /datum/ego_datum/weapon/branch12/perfectionist
@@ -233,6 +281,24 @@
 
 /datum/ego_datum/armor/branch12/exterminator
 	item_path = /obj/item/clothing/suit/armor/ego_gear/branch12/exterminator
+	cost = 35
+
+// Encyclopedia of Anthrophagy - Consumption
+/datum/ego_datum/weapon/branch12/consumption
+	item_path = /obj/item/ego_weapon/branch12/consumption
+	cost = 35
+
+/datum/ego_datum/armor/branch12/consumption
+	item_path = /obj/item/clothing/suit/armor/ego_gear/branch12/consumption
+	cost = 35
+
+// Inkstained Squid E.G.O - Flourish
+/datum/ego_datum/weapon/branch12/flourish
+	item_path = /obj/item/ego_weapon/branch12/flourish
+	cost = 35
+
+/datum/ego_datum/armor/branch12/flourish
+	item_path = /obj/item/clothing/suit/armor/ego_gear/branch12/flourish
 	cost = 35
 
 // --------WAW---------

@@ -35,12 +35,18 @@
 						)
 	work_damage_amount = 7
 	work_damage_type = RED_DAMAGE
+	chem_type = /datum/reagent/abnormality/sin/wrath
 	ego_list = list(
 		/datum/ego_datum/weapon/capote,
 		/datum/ego_datum/armor/capote
 		)
 	gift_type = /datum/ego_gifts/capote
 
+	observation_prompt = "The containment chamber is swelteringly hot, sorrowful wails echo across the containment chamber.<br> Wont anyone give me water! Someone help me!"
+	observation_choices = list(
+		"Give Water" = list(TRUE, "As you pour the water in the mouth of the bull, it evaporates into steam instantly, the bull is still wailing for water...<br>\
+		But you know that it will never get what it desires..."),
+	)
 	abnormality_origin = ABNORMALITY_ORIGIN_LIMBUS
 
 	var/obj/effect/proc_holder/ability/aimed/dash/brazen_bull/ourdash

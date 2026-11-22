@@ -100,7 +100,8 @@
 		return
 	var/window_size = ""
 	if (width && height)
-		window_size = "size=[width]x[height];"
+		//window_size = "size=[width]x[height];" // LOBOTOMYCORPORATION EDIT CHANGE OLD
+		window_size = "[scaled_browse_size(user, width, height)];" // LOBOTOMYCORPORATION EDIT CHANGE NEW -- scale for DPI
 	common_asset.send(user)
 	if (stylesheets.len)
 		SSassets.transport.send_assets(user, stylesheets)

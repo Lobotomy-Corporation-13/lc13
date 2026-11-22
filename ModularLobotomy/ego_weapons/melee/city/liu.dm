@@ -1,6 +1,7 @@
 //This is a massive file and all the liu weapons kill humans while insane
 /obj/item/ego_weapon/city/liu
 	name = "Liu template"
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/liu.dmi'
 	damtype = WHITE_DAMAGE
 
 

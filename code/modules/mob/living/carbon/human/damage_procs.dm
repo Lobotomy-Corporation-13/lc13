@@ -28,7 +28,9 @@
 		damage_amt *= -1
 	if(stat != DEAD)
 		DamageEffect(damage_amt, WHITE_DAMAGE)
-	if(HAS_TRAIT(src, TRAIT_BRUTESANITY))
+
+	//Do we have brute Sanity? Or is it COL?
+	if(HAS_TRAIT(src, TRAIT_BRUTESANITY) || SSmaptype.maptype == "city")
 		adjustBruteLoss(amount, forced = forced)
 	else
 		adjustSanityLoss(damage_amt, forced)
@@ -43,8 +45,11 @@
 	if(stat != DEAD)
 		DamageEffect(amount, BLACK_DAMAGE)
 	adjustBruteLoss(amount, forced = forced)
-	if(!HAS_TRAIT(src, TRAIT_BRUTESANITY))
+
+	//Black also only does physical on city
+	if(!HAS_TRAIT(src, TRAIT_BRUTESANITY) && SSmaptype.maptype != "city")
 		adjustSanityLoss(damage_amt, forced = forced)
+
 	return damage_amt
 
 /mob/living/carbon/human/adjustPaleLoss(amount, updating_health = TRUE, forced = FALSE)

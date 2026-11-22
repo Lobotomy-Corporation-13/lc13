@@ -2,12 +2,11 @@ import { useBackend, useLocalState } from '../backend';
 import { Box, Button, Flex, Section } from '../components';
 import { Window } from '../layouts';
 
-export const AchievementSpec = (props, context) => {
-  const { act, data } = useBackend(context);
+export const AchievementSpec = props => {
+  const { act, data } = useBackend();
   const { chosen } = data;
   const achievements = data.achievements || [];
-  const [sortMode, setSortMode] = useLocalState(
-    context, 'sortMode', 'name');
+  const [sortMode, setSortMode] = useLocalState('sortMode', 'name');
 
   const sorted = [...achievements].sort((a, b) => {
     if (sortMode === 'difficulty'
@@ -66,8 +65,8 @@ export const AchievementSpec = (props, context) => {
   );
 };
 
-const AchievementCard = (props, context) => {
-  const { act } = useBackend(context);
+const AchievementCard = props => {
+  const { act } = useBackend();
   const { achievement, selected } = props;
   const {
     type,

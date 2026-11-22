@@ -20,6 +20,7 @@
 
 	maxHealth = 2000
 	health = 2000
+	gender = FEMALE
 	damage_coeff = list(RED_DAMAGE = 0.7, WHITE_DAMAGE = 1.2, BLACK_DAMAGE = 0.3, PALE_DAMAGE = 1.5)
 	stat_attack = HARD_CRIT
 	ranged_cooldown_time = 12

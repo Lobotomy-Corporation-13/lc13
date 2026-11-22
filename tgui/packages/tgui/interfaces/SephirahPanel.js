@@ -4,7 +4,7 @@ import { useBackend } from '../backend';
 import { Box, Button, Collapsible, ProgressBar, AnimatedNumber, Section, LabeledList } from '../components';
 import { Window } from '../layouts';
 
-export const SephirahPanel = (props, context) => {
+export const SephirahPanel = props => {
   return (
     <Window title="Sephirah game control panel" width="1000" height="550">
       <Window.Content>
@@ -15,8 +15,8 @@ export const SephirahPanel = (props, context) => {
   );
 };
 
-const AbnoInfo = (props, context) => {
-  const { data } = useBackend(context);
+const AbnoInfo = props => {
+  const { data } = useBackend();
   const {
     abno_number,
     queued_abno,
@@ -50,8 +50,8 @@ const AbnoInfo = (props, context) => {
   );
 };
 
-const ButtonPanel = (props, context) => {
-  const { act, data } = useBackend(context);
+const ButtonPanel = props => {
+  const { act, data } = useBackend();
   const { abnormality_arrival, meltdown_speed } = data;
 
   return (

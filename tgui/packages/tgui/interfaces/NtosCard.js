@@ -3,7 +3,7 @@ import { Box, Button, Flex, Input, NoticeBox, Section, Tabs } from '../component
 import { NtosWindow } from '../layouts';
 import { AccessList } from './common/AccessList';
 
-export const NtosCard = (props, context) => {
+export const NtosCard = props => {
   return (
     <NtosWindow
       width={450}
@@ -15,9 +15,9 @@ export const NtosCard = (props, context) => {
   );
 };
 
-export const NtosCardContent = (props, context) => {
-  const { act, data } = useBackend(context);
-  const [tab, setTab] = useLocalState(context, 'tab', 1);
+export const NtosCardContent = props => {
+  const { act, data } = useBackend();
+  const [tab, setTab] = useLocalState('tab', 1);
   const {
     authenticated,
     regions = [],
@@ -33,7 +33,7 @@ export const NtosCardContent = (props, context) => {
   const [
     selectedDepartment,
     setSelectedDepartment,
-  ] = useLocalState(context, 'department', Object.keys(jobs)[0]);
+  ] = useLocalState('department', Object.keys(jobs)[0]);
   if (!have_id_slot) {
     return (
       <NoticeBox>

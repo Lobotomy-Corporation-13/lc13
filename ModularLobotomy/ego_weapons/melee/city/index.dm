@@ -4,6 +4,7 @@
 /obj/item/ego_weapon/city/index
 	name = "index recruit sword"
 	desc = "A sheathed sword used by index recruits."
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/index.dmi'
 	icon_state = "index"
 	inhand_icon_state = "index"
 	force = 37

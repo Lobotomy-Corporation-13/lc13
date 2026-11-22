@@ -5,8 +5,7 @@
  */
 
 import { flow } from 'common/fp';
-import { applyMiddleware, combineReducers, createStore } from 'common/redux';
-import { Component } from 'inferno';
+import { applyMiddleware, combineReducers, createStore, setGlobalStore } from 'common/redux';
 import { assetMiddleware } from './assets';
 import { backendMiddleware, backendReducer } from './backend';
 import { debugMiddleware, debugReducer, relayMiddleware } from './debug';
@@ -36,6 +35,7 @@ export const configureStore = (options = {}) => {
   }
   const enhancer = applyMiddleware(...middleware);
   const store = createStore(reducer, enhancer);
+  setGlobalStore(store);
   // Globals
   window.__store__ = store;
   window.__augmentStack__ = createStackAugmentor(store);
@@ -79,15 +79,7 @@ const createStackAugmentor = store => (stack, error) => {
 };
 
 /**
- * Store provider for Inferno apps.
+ * Kept for compatibility: the store is now global (see common/redux
+ * setGlobalStore), so this only renders its children.
  */
-export class StoreProvider extends Component {
-  getChildContext() {
-    const { store } = this.props;
-    return { store };
-  }
-
-  render() {
-    return this.props.children;
-  }
-}
+export const StoreProvider = props => props.children;

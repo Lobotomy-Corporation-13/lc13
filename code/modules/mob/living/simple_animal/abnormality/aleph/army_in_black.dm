@@ -63,6 +63,20 @@ GLOBAL_LIST_EMPTY(army)
 		"Salute him back" = list(FALSE, "The soldier in pink smiles. <br>\"Glad to have you on board Sir, with our help, there will be no more black hearts.\""),
 	)
 
+	generic_bubbles = alist(
+		1 = list("%PERSON ignores %ABNO as they walk in.", "%ABNO 's color darken as %PERSON makes annotations."),
+		2 = list("A Heart thump can be heard through the Containament Cell.", "Even... the smallest speck... of evil... must... be cleaned... "),
+		3 = list("%ABNO tells %PERSON all about the color of Humanity's hearts", "%PERSON say they doesnt trust %ABNO."),
+		4 = list("The Pink heart floats and glows","%PERSON feels hope from seeing %ABNO’s friendly color."),
+		5 = list("'If anything happens, just call us,%PERSON'.", "%ABNO 's Goal is to make sure Goodhearted people are safe."),
+	)
+	work_bubbles = list(
+		ABNORMALITY_WORK_INSTINCT = list("%PERSON starts an audio recording, but forgets to Salute.", "%ABNO preaches his usual lines, but something is off."),
+		ABNORMALITY_WORK_INSIGHT = list("%PERSON Converses with %ABNO about human nature.", "%ABNO says 'Yes, the human heart is pink, and we wear the same color. We will drive away bad thoughts.'"),
+		ABNORMALITY_WORK_ATTACHMENT = list("%PERSON tries to pay respect to %ABNO.", "%ABNO floats gently"),
+		ABNORMALITY_WORK_REPRESSION = list("%PERSON tries to pull a rank on %ABNO.", "%PERSON expresses their lack of care for the human heart.", "%ABNO enquires, but $%PERSON will never change their ways."),
+	)
+
 	//Unique variables
 	var/death_counter = 0
 	var/protection_duration = 120 SECONDS

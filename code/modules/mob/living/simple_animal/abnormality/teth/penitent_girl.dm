@@ -9,6 +9,7 @@
 	portrait = "penitent"
 	maxHealth = 400
 	health = 400
+	gender = FEMALE
 	threat_level = TETH_LEVEL
 	work_chances = list(
 		ABNORMALITY_WORK_INSTINCT = 50,

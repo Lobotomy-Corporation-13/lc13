@@ -15,9 +15,9 @@ import {
 } from '../components';
 import { Window } from '../layouts';
 
-export const SkillAugmentFabricator = (props, context) => {
-  const { act, data } = useBackend(context);
-  const [tabIndex, setTabIndex] = useLocalState(context, 'tabIndex', 0);
+export const SkillAugmentFabricator = props => {
+  const { act, data } = useBackend();
+  const [tabIndex, setTabIndex] = useLocalState('tabIndex', 0);
 
   return (
     <Window width={1200} height={700}>
@@ -70,8 +70,8 @@ export const SkillAugmentFabricator = (props, context) => {
   );
 };
 
-const TemplateSelection = (props, context) => {
-  const { act, data } = useBackend(context);
+const TemplateSelection = props => {
+  const { act, data } = useBackend();
   const { templates = [] } = data;
 
   return (
@@ -116,9 +116,9 @@ const TemplateSelection = (props, context) => {
   );
 };
 
-const SkillConfiguration = (props, context) => {
-  const { act, data } = useBackend(context);
-  const [searchText, setSearchText] = useLocalState(context, 'skillSearch', '');
+const SkillConfiguration = props => {
+  const { act, data } = useBackend();
+  const [searchText, setSearchText] = useLocalState('skillSearch', '');
   const {
     current_rank,
     current_slots,
@@ -272,8 +272,8 @@ const SkillConfiguration = (props, context) => {
   );
 };
 
-const FabricationTab = (props, context) => {
-  const { act, data } = useBackend(context);
+const FabricationTab = props => {
+  const { act, data } = useBackend();
   const {
     current_rank,
     current_slots,
@@ -354,8 +354,8 @@ const FabricationTab = (props, context) => {
   );
 };
 
-const MaterialsDisplay = (props, context) => {
-  const { act, data } = useBackend(context);
+const MaterialsDisplay = props => {
+  const { act, data } = useBackend();
   const { total_materials = 0 } = data;
 
   return (
@@ -374,8 +374,8 @@ const MaterialsDisplay = (props, context) => {
   );
 };
 
-const CurrentDesign = (props, context) => {
-  const { act, data } = useBackend(context);
+const CurrentDesign = props => {
+  const { act, data } = useBackend();
   const {
     current_rank,
     current_slots,

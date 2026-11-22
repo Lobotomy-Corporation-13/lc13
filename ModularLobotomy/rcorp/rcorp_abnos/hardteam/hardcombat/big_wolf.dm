@@ -30,7 +30,7 @@
 	var/howl_cooldown_time = BIGWOLF_COOLDOWN_HOWL
 	var/obj/effect/proc_holder/ability/aimed/rca_dash/big_wolf/ourdash
 	var/mob/living/simple_animal/hostile/rcorp_abno/hard/red_hood/rival
-	var/hit_rival = 0 //I LOVE FIGHTING MY LONGLIFE LIFELONG RIVAL
+	var/hit_rival = 1 //I LOVE FIGHTING MY LONGLIFE LIFELONG RIVAL
 	//Dont get stuck in a wall for the love of god
 	var/turf/starting_location
 
@@ -213,7 +213,7 @@
 	windup_delay = 1 SECONDS
 	cooldown_time = 30 SECONDS
 	env_breaking = TRUE
-	var/hit_rival = 0 //I LOVE FIGHTING MY LONGLIFE LIFELONG RIVAL
+	var/hit_rival = 1 //I LOVE FIGHTING MY LONGLIFE LIFELONG RIVAL
 
 /obj/effect/proc_holder/ability/aimed/rca_dash/big_wolf/Finalize(target, mob/living/user, list/path_list)
 	user.do_shaky_animation(2)
@@ -230,14 +230,14 @@
 		if(!HasIdentList(TF))
 			FlickOnAtom(TF,'icons/effects/effects.dmi',"slice",4)
 		if(istype(ourthing,/mob/living/simple_animal/hostile/rcorp_abno/hard/big_wolf))
-			for(var/mob/living/simple_animal/hostile/abnormality/red_hood/rival in hit_mob)
-				rival.deal_damage(dash_damage*3 , RED_DAMAGE, ourthing, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)) //triple damage to red and double damage to everyone else
+			for(var/mob/living/simple_animal/hostile/rcorp_abno/hard/red_hood/rival in hit_mob)
+				rival.deal_damage(dash_damage * 3, RED_DAMAGE, ourthing, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)) //triple damage to red and double damage to everyone else
 				hit_rival = 2 //Janky way of doing it but eh
 		hit_mob = HurtInTurf(ourthing, TF, hit_mob, dash_damage*hit_rival, RED_DAMAGE, null, TRUE, FALSE, TRUE, hurt_structure = TRUE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 	return ..()
 
 /obj/effect/proc_holder/ability/aimed/rca_dash/big_wolf/EndCharge(mob/living/user)
-	hit_rival = 0
+	hit_rival = 1
 	..()
 
 // Very simple ranged howl that applies white damage.
@@ -261,20 +261,13 @@
 				continue
 			if(L.stat == DEAD)
 				continue
-			L.deal_damage(50*hit_rival, WHITE_DAMAGE, src, attack_type = (ATTACK_TYPE_SPECIAL))
+			L.deal_damage(50 * hit_rival, WHITE_DAMAGE, src, attack_type = (ATTACK_TYPE_SPECIAL))
 		for(var/obj/vehicle/V in turfs_to_check)
-			V.take_damage(50*hit_rival, WHITE_DAMAGE)
+			V.take_damage(50 * hit_rival, WHITE_DAMAGE)
 		playsound(get_turf(src), 'sound/abnormalities/big_wolf/Wolf_Howl.ogg', 30, 0, 4)
 	cut_overlay(visual_overlay)
-	hit_rival = 0
+	hit_rival = 1
 	can_act = TRUE
-
-/mob/living/simple_animal/hostile/rcorp_abno/hard/big_wolf/AttackingTarget(atom/attacked_target)
-	if(istype(attacked_target, /mob/living/simple_animal/hostile/abnormality/red_hood)) //Red takes triple damage from the wolf, because of the gimmick, not that youll even be allowed to hit her
-		var/mob/living/simple_animal/hostile/abnormality/red_hood/mercenary = attacked_target
-		var/bonus_damage_dealt = 2 * (rand(melee_damage_lower,melee_damage_upper))
-		mercenary.deal_damage(bonus_damage_dealt, RED_DAMAGE, src, attack_type = (ATTACK_TYPE_MELEE))
-	return ..()
 
 #undef BIGWOLF_COOLDOWN_HOWL
 #undef BIGWOLF_COOLDOWN_DASH

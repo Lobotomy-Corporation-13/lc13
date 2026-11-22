@@ -8,6 +8,7 @@
 	portrait = "pinocchio"
 	maxHealth = 600
 	health = 600
+	gender = MALE
 	threat_level = HE_LEVEL
 	can_breach = TRUE
 	start_qliphoth = 1

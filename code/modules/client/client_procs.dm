@@ -327,6 +327,7 @@ GLOBAL_LIST_INIT(blacklisted_builds, list(
 	// Initialize tgui panel
 	src << browse(file('html/statbrowser.html'), "window=statbrowser")
 	addtimer(CALLBACK(src, PROC_REF(check_panel_loaded)), 30 SECONDS)
+	INVOKE_ASYNC(src, PROC_REF(acquire_dpi)) // LOBOTOMYCORPORATION ADDITION -- DPI scaling for browser popups
 	tgui_panel.initialize()
 
 	if(alert_mob_dupe_login)
@@ -1067,6 +1068,35 @@ GLOBAL_LIST_INIT(blacklisted_builds, list(
 	if(statbrowser_ready)
 		return
 	to_chat(src, "<span class='userdanger'>Statpanel failed to load, click <a href='byond://?src=[REF(src)];reload_statbrowser=1'>here</a> to reload the panel </span>")
+
+// LOBOTOMYCORPORATION ADDITION START -- DPI scaling for browser popups (ported from /tg/)
+/// Grabs the client's display scaling from their skin. Sleeps on winget(), so call it async.
+/client/proc/acquire_dpi()
+	window_scaling = text2num(winget(src, null, "dpi"))
+	// The lobby panel opens during mob Login(), before we know the scaling, so reopen it at the right size.
+	// browse() ignores size= on a window that's already open, so close it first.
+	if(window_scaling && window_scaling != 1 && isnewplayer(mob))
+		var/mob/dead/new_player/lobby_mob = mob
+		src << browse(null, "window=playersetup")
+		lobby_mob.new_player_panel()
+
+/**
+ * Returns a "size=WxH" browse() parameter scaled to the viewer's display scaling.
+ * HTML layouts are in CSS pixels, but BYOND sizes windows in physical pixels, so at 200% scaling
+ * an unscaled window is half as big as its content.
+ *
+ * Arguments:
+ * * viewer - the mob or client the window is shown to
+ * * width, height - the window size in CSS pixels
+ */
+/proc/scaled_browse_size(viewer, width, height)
+	var/client/viewer_client = viewer
+	if(ismob(viewer))
+		var/mob/viewer_mob = viewer
+		viewer_client = viewer_mob.client
+	var/scaling = (istype(viewer_client) && viewer_client.window_scaling) || 1
+	return "size=[round(width * scaling)]x[round(height * scaling)]"
+// LOBOTOMYCORPORATION ADDITION END
 
 /**
  * Initializes dropdown menus on client

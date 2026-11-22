@@ -21,14 +21,9 @@ const VP_SIZE = 20;
 const CELL_PX = 25;
 const CANVAS_PX = VP_SIZE * CELL_PX;
 
-export const ContractTerminal = (
-  props,
-  context,
-) => {
-  const { act, data } = useBackend(context);
-  const [tab, setTab] = useSharedState(
-    context, 'termTab', 0,
-  );
+export const ContractTerminal = props => {
+  const { act, data } = useBackend();
+  const [tab, setTab] = useSharedState('termTab', 0);
   return (
     <Window
       title="Contract Terminal"
@@ -51,14 +46,12 @@ export const ContractTerminal = (
           <ContractsView
             act={act}
             data={data}
-            ctx={context}
           />
         )}
         {tab === 1 && (
           <CityMapView
             act={act}
             data={data}
-            ctx={context}
           />
         )}
       </Window.Content>
@@ -67,7 +60,7 @@ export const ContractTerminal = (
 };
 
 const ContractsView = props => {
-  const { act, data, ctx } = props;
+  const { act, data } = props;
   const {
     is_fixer = false,
     user_balance = 0,
@@ -96,7 +89,6 @@ const ContractsView = props => {
           hasAccount={has_account}
           types={contract_types}
           targets={targets}
-          ctx={ctx}
           wpCount={waypoint_count}
           patrolCost={patrol_cost}
         />
@@ -120,21 +112,20 @@ const CreatePanel = props => {
     hasAccount,
     types,
     targets,
-    ctx,
     wpCount,
     patrolCost,
   } = props;
   const [selType, setSelType]
     = useSharedState(
-      ctx, 'selType', '',
+      'selType', '',
     );
   const [selTier, setSelTier]
     = useSharedState(
-      ctx, 'selTier', 0,
+      'selTier', 0,
     );
   const [selTarget, setSelTarget]
     = useSharedState(
-      ctx, 'selTarget', '',
+      'selTarget', '',
     );
   const typeDef = types.find(
     t => t.type === selType,
@@ -530,7 +521,7 @@ class CityMapCanvas extends Component {
 }
 
 const CityMapView = props => {
-  const { act, data, ctx } = props;
+  const { act, data } = props;
   const {
     mapGrid,
     viewWorldX = 0,
@@ -544,7 +535,7 @@ const CityMapView = props => {
     map_legend = [],
   } = data;
   const [selType] = useSharedState(
-    ctx, 'selType', '',
+    'selType', '',
   );
   const typeDef = contract_types.find(
     t => t.type === selType,

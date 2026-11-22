@@ -28,8 +28,8 @@
 	loot = list(/obj/item/organ/regenerative_core)
 	var/brood_type = /mob/living/simple_animal/hostile/hivelordbrood
 
-	maxHealth = 900
-	health = 900
+	maxHealth = 800
+	health = 800
 	rapid_melee = 2
 	melee_damage_type = BLACK_DAMAGE
 	move_to_delay = 5

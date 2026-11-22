@@ -4,11 +4,10 @@
 	desc = "A wooden humanoid puppet, may be possessed by higher forces. Looks highly flammable, aside from that youd have to harm its soul. "
 	maxHealth = 600
 	health = 600
-	//If you kill unconscious Pino youll have to kill him with a welder or magic soul damage, fuck you if you want a free kill
+	//If you kill unconscious Pino youll have to kill him with a welder or magic soul damage, no free kill for you
 	damage_coeff = list(RED_DAMAGE = 0, WHITE_DAMAGE = 0, BLACK_DAMAGE = 0, PALE_DAMAGE = 0.1, FIRE = 2)
 	del_on_death = FALSE
 	core = FALSE
-	move_resist = MOVE_RESIST_DEFAULT //So the abnos can drag him outta there
 	original_abno = /mob/living/simple_animal/hostile/abnormality/pinocchio
 
 	var/mob/living/carbon/human/species/rca_pinocchio/realboy = null
@@ -38,12 +37,15 @@
 /mob/living/simple_animal/hostile/rcorp_abno/easy/pinocchio/CanAttack()
 	return
 
-/mob/living/simple_animal/hostile/rcorp_abno/easy/pinocchio/death()
+/mob/living/simple_animal/hostile/rcorp_abno/easy/pinocchio/death(gibbed)
 	//Did you think itd be free? Summoning a angry fort insane pino on your head
 	RealBoy()
-	. = ..()
+	..()
+
 //Breach
 /mob/living/simple_animal/hostile/rcorp_abno/easy/pinocchio/proc/RealBoy()
+	if(QDELETED(src))
+		return
 	playsound(src, 'sound/abnormalities/pinocchio/activate.ogg', 40, 0, 1)
 	density = FALSE
 	animate(src, alpha = 0,pixel_x = 0, pixel_z = 16, time = 4 SECONDS)

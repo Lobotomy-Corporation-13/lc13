@@ -290,6 +290,7 @@
 
 /obj/item/organ/amber_bug/Destroy()
 	ordeal_reference = null
+	UnregisterSignal(SSdcs, COMSIG_GLOB_ORDEAL_END)
 	return ..()
 
 /obj/item/organ/amber_bug/Initialize()
@@ -297,6 +298,13 @@
 	if(ishuman(loc))
 		feeding_duration = world.time + (feeding_interval)
 		Insert(loc)
+		RegisterSignal(SSdcs, COMSIG_GLOB_ORDEAL_END, PROC_REF(UnlinkOrdeal))
+
+/obj/item/organ/amber_bug/proc/UnlinkOrdeal(datum/source, datum/ordeal/hopefully_amber_ordeal)
+	SIGNAL_HANDLER
+	if(hopefully_amber_ordeal == ordeal_reference || QDELETED(ordeal_reference))
+		ordeal_reference = null
+		UnregisterSignal(SSdcs, COMSIG_GLOB_ORDEAL_END)
 
 /obj/item/organ/amber_bug/on_find(mob/living/finder)
 	. = ..()

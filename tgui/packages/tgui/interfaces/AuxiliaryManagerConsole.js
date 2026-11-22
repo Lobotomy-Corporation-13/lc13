@@ -5,8 +5,8 @@ import { useBackend, useLocalState } from '../backend';
 import { Box, Button, LabeledList, NoticeBox, Section, Tabs, Collapsible } from '../components';
 import { Window } from '../layouts';
 
-export const AuxiliaryManagerConsole = (props, context) => {
-  const [tab, setTab] = useLocalState(context, 'tab', 1);
+export const AuxiliaryManagerConsole = props => {
+  const [tab, setTab] = useLocalState('tab', 1);
 
   return (
     <Window title="Auxiliary Managerial Console" width="850" height="600">
@@ -50,8 +50,8 @@ export const AuxiliaryManagerConsole = (props, context) => {
   );
 };
 
-const BulletFacilityUpgrades = (props, context) => {
-  const { act, data } = useBackend(context);
+const BulletFacilityUpgrades = props => {
+  const { act, data } = useBackend();
   const { Upgrade_points, is_admin } = data;
 
   return (
@@ -150,8 +150,8 @@ const BulletFacilityUpgrades = (props, context) => {
   );
 };
 
-const FacilityUpgrades = (props, context) => {
-  const { act, data } = useBackend(context);
+const FacilityUpgrades = props => {
+  const { act, data } = useBackend();
   const { Upgrade_points, is_admin } = data;
 
   return (
@@ -250,8 +250,8 @@ const FacilityUpgrades = (props, context) => {
   );
 };
 
-const SpecialUpgrades = (props, context) => {
-  const { act, data } = useBackend(context);
+const SpecialUpgrades = props => {
+  const { act, data } = useBackend();
   const { Upgrade_points, is_admin } = data;
 
   return (
@@ -350,8 +350,8 @@ const SpecialUpgrades = (props, context) => {
   );
 };
 
-const CoreSuppressionSelector = (props, context) => {
-  const { act, data } = useBackend(context);
+const CoreSuppressionSelector = props => {
+  const { act, data } = useBackend();
   const {
     is_admin,
     current_suppression,
@@ -479,8 +479,8 @@ const CoreSuppressionSelector = (props, context) => {
  * Tons of copy paste down below
  */
 
-const BulletUpgrades = (props, context) => {
-  const { act, data } = useBackend(context);
+const BulletUpgrades = props => {
+  const { act, data } = useBackend();
   const { Upgrade_points, bullet_upgrades } = data;
 
   if (bullet_upgrades.length < 1) {
@@ -526,8 +526,8 @@ const BulletUpgrades = (props, context) => {
   );
 };
 
-const MoreBulletUpgrades = (props, context) => {
-  const { act, data } = useBackend(context);
+const MoreBulletUpgrades = props => {
+  const { act, data } = useBackend();
   const { Upgrade_points, real_bullet_upgrades } = data;
 
   if (real_bullet_upgrades.length < 1) {
@@ -573,8 +573,8 @@ const MoreBulletUpgrades = (props, context) => {
   );
 };
 
-const AbnormalityUpgrades = (props, context) => {
-  const { act, data } = useBackend(context);
+const AbnormalityUpgrades = props => {
+  const { act, data } = useBackend();
   const { Upgrade_points, abnormality_upgrades } = data;
 
   if (abnormality_upgrades.length < 1) {
@@ -620,8 +620,8 @@ const AbnormalityUpgrades = (props, context) => {
   );
 };
 
-const Lvl1Upgrades = (props, context) => {
-  const { act, data } = useBackend(context);
+const Lvl1Upgrades = props => {
+  const { act, data } = useBackend();
   const { Upgrade_points, lvl1_upgrades } = data;
 
   if (lvl1_upgrades.length < 1) {
@@ -667,8 +667,8 @@ const Lvl1Upgrades = (props, context) => {
   );
 };
 
-const Lvl2Upgrades = (props, context) => {
-  const { act, data } = useBackend(context);
+const Lvl2Upgrades = props => {
+  const { act, data } = useBackend();
   const { Upgrade_points, lvl2_upgrades } = data;
 
   if (lvl2_upgrades.length < 1) {
@@ -714,8 +714,8 @@ const Lvl2Upgrades = (props, context) => {
   );
 };
 
-const MiscUpgrades = (props, context) => {
-  const { act, data } = useBackend(context);
+const MiscUpgrades = props => {
+  const { act, data } = useBackend();
   const { Upgrade_points, misc_upgrades } = data;
 
   if (misc_upgrades.length < 1) {
@@ -761,8 +761,8 @@ const MiscUpgrades = (props, context) => {
   );
 };
 
-const AllCores = (props, context) => {
-  const { act, data } = useBackend(context);
+const AllCores = props => {
+  const { act, data } = useBackend();
   const { all_core_suppressions } = data;
 
   if (all_core_suppressions.length < 1) {

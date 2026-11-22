@@ -10,6 +10,7 @@
 	portrait = "ebony_queen"
 	maxHealth = 2000
 	health = 2000
+	gender = FEMALE
 	pixel_x = -16
 	base_pixel_x = -16
 	blood_volume = 0

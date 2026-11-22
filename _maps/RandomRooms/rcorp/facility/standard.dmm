@@ -1969,10 +1969,6 @@
 	},
 /turf/open/floor/plasteel/dark,
 /area/city/outskirts)
-"Kf" = (
-/obj/effect/landmark/abnospawn/hardsupport,
-/turf/open/floor/plating/asteroid,
-/area/city/outskirts)
 "Kh" = (
 /obj/effect/turf_decal/siding/green,
 /obj/machinery/vending/snack/green,
@@ -14301,7 +14297,7 @@ Im
 Im
 Im
 Im
-cI
+Im
 Im
 Im
 Im
@@ -14792,7 +14788,7 @@ Im
 Im
 LN
 Im
-Kf
+Im
 gB
 Im
 Im

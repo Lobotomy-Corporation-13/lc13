@@ -15,9 +15,9 @@ import { changeSettingsTab, updateSettings } from './actions';
 import { FONTS, SETTINGS_TABS } from './constants';
 import { selectActiveTab, selectSettings } from './selectors';
 
-export const SettingsPanel = (props, context) => {
-  const activeTab = useSelector(context, selectActiveTab);
-  const dispatch = useDispatch(context);
+export const SettingsPanel = props => {
+  const activeTab = useSelector(selectActiveTab);
+  const dispatch = useDispatch();
   return (
     <Stack fill>
       <Stack.Item>
@@ -48,7 +48,7 @@ export const SettingsPanel = (props, context) => {
   );
 };
 
-export const SettingsGeneral = (props, context) => {
+export const SettingsGeneral = props => {
   const {
     theme,
     fontFamily,
@@ -56,9 +56,9 @@ export const SettingsGeneral = (props, context) => {
     lineHeight,
     highlightText,
     highlightColor,
-  } = useSelector(context, selectSettings);
-  const dispatch = useDispatch(context);
-  const [freeFont, setFreeFont] = useLocalState(context, "freeFont", false);
+  } = useSelector(selectSettings);
+  const dispatch = useDispatch();
+  const [freeFont, setFreeFont] = useLocalState("freeFont", false);
   return (
     <Section>
       <LabeledList>

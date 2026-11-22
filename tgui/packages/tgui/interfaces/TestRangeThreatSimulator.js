@@ -3,13 +3,13 @@ import { Button, Divider, LabeledList, Section, Flex, Tabs, Stack, Box, Icon, Co
 import { FlexItem } from '../components/Flex';
 import { Window } from '../layouts';
 
-export const TestRangeThreatSimulator = (props, context) => {
-  const { act, data } = useBackend(context);
+export const TestRangeThreatSimulator = props => {
+  const { act, data } = useBackend();
   const { threats, arenas, map_ref, current_arena } = data;
 
-  const [currentlyDetailedThreat, setCurrentlyDetailedThreat] = useLocalState(context, "currentlyDetailedThreat", null);
-  const [mainTab, setMainTab] = useLocalState(context, "mainTab", 1);
-  const [tuningSliders, setTuningSliders] = useLocalState(context, "tuningSliders", {});
+  const [currentlyDetailedThreat, setCurrentlyDetailedThreat] = useLocalState("currentlyDetailedThreat", null);
+  const [mainTab, setMainTab] = useLocalState("mainTab", 1);
+  const [tuningSliders, setTuningSliders] = useLocalState("tuningSliders", {});
 
   /* Returns a slider for the datum's tuning parameter,
   using its minimum and maximum values.
@@ -45,7 +45,7 @@ export const TestRangeThreatSimulator = (props, context) => {
   };
 
   // Functional component: details of a selected threat.
-  const SelectedThreatDetails = (props, context) => {
+  const SelectedThreatDetails = props => {
     const { datum } = props;
 
     return (
@@ -120,7 +120,7 @@ export const TestRangeThreatSimulator = (props, context) => {
   };
 
   // Functional component: shows up when no threat is selected.
-  const EmptyThreatDetails = (props, context) => {
+  const EmptyThreatDetails = props => {
     return (
       <Flex>
         <BlockQuote>
@@ -135,7 +135,7 @@ export const TestRangeThreatSimulator = (props, context) => {
   /* Functional component: returns
   EmptyThreatDetails/SelectedThreatDetails as appropiate.
   */
-  const ThreatDetails = (props, context) => {
+  const ThreatDetails = props => {
     return (
       <Section scrollable fill title="Threat Details">
         {currentlyDetailedThreat !== null
@@ -148,7 +148,7 @@ export const TestRangeThreatSimulator = (props, context) => {
 
 
   // Functional component: threat entry in our list.
-  const ThreatDatumEntry = (props, context) => {
+  const ThreatDatumEntry = props => {
     const { datum } = props;
 
     return (
@@ -214,7 +214,7 @@ export const TestRangeThreatSimulator = (props, context) => {
   };
 
   // Functional component: our list of threats.
-  const ThreatsList = (props, context) => {
+  const ThreatsList = props => {
 
     return (
       <Flex direction="column">
@@ -229,7 +229,7 @@ export const TestRangeThreatSimulator = (props, context) => {
   /* Functional component: window content, including tabs,
   threat list (left) and threat details (right).
   */
-  const ThreatsWindow = (props, context) => {
+  const ThreatsWindow = props => {
 
     return (
 
@@ -256,7 +256,7 @@ export const TestRangeThreatSimulator = (props, context) => {
 
 
   // Functional component: our list of arenas.
-  const ArenasList = (props, context) => {
+  const ArenasList = props => {
 
     return (
       <Flex direction="column" fill>
@@ -272,7 +272,7 @@ export const TestRangeThreatSimulator = (props, context) => {
   };
 
   // Functional component: roughly emulates the CameraConsole.js layout.
-  const ArenasWindow = (props, context) => {
+  const ArenasWindow = props => {
 
     return (
       <Window.Content scrollable>
@@ -301,7 +301,7 @@ export const TestRangeThreatSimulator = (props, context) => {
   };
 
   // Functional component: list of tabs (threats, arenas)
-  const MainTabs = (props, context) => {
+  const MainTabs = props => {
 
     return (
       <Tabs>

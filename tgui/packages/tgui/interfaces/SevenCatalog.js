@@ -8,8 +8,8 @@ import {
 import { formatMoney } from '../format';
 import { Window } from '../layouts';
 
-export const SevenCatalog = (props, context) => {
-  const { act, data } = useBackend(context);
+export const SevenCatalog = props => {
+  const { act, data } = useBackend();
   const {
     balance = 0,
     items = [],

@@ -4,8 +4,8 @@ import {
 } from '../components';
 import { Window } from '../layouts';
 
-export const CoreTemplateVendor = (props, context) => {
-  const { act, data } = useBackend(context);
+export const CoreTemplateVendor = props => {
+  const { act, data } = useBackend();
   const {
     balance = 0,
     templates = [],

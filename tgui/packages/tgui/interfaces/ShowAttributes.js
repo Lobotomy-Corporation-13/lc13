@@ -2,8 +2,8 @@ import { useBackend } from '../backend';
 import { Box, AnimatedNumber, Button } from '../components';
 import { Window } from '../layouts';
 
-export const ShowAttributes = (props, context) => {
-  const { act, data } = useBackend(context);
+export const ShowAttributes = props => {
+  const { act, data } = useBackend();
   const {
     name,
     level,

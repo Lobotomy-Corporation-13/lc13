@@ -17,9 +17,9 @@ import { Window } from '../layouts';
 
 const isValidHex = color => /^#([0-9A-F]{3}){1,2}$/i.test(color);
 
-export const AugmentCatalogue = (props, context) => {
-  const { data = {} } = useBackend(context);
-  const [page, setPage] = useSharedState(context, 'page', 'template');
+export const AugmentCatalogue = props => {
+  const { data = {} } = useBackend();
+  const [page, setPage] = useSharedState('page', 'template');
   const hasLoaded = data && data.forms && Array.isArray(data.forms);
 
   return (
@@ -30,12 +30,12 @@ export const AugmentCatalogue = (props, context) => {
       <Window.Content scrollable>
         {!hasLoaded ? (<NoticeBox>Loading configuration...</NoticeBox>) : (
           <>
-            {page === 'template' && <TemplatePage setPage={setPage} context={context} />}
-            {page === 'effects' && <EffectsPage setPage={setPage} context={context} />}
-            {page === 'services' && <ServicesPage setPage={setPage} context={context} />}
-            {page === 'upload' && <UploadPage setPage={setPage} context={context} />}
-            {page === 'library' && <LibraryPage setPage={setPage} context={context} />}
-            {page === 'index' && <IndexPage setPage={setPage} context={context} />}
+            {page === 'template' && <TemplatePage setPage={setPage} />}
+            {page === 'effects' && <EffectsPage setPage={setPage} />}
+            {page === 'services' && <ServicesPage setPage={setPage} />}
+            {page === 'upload' && <UploadPage setPage={setPage} />}
+            {page === 'library' && <LibraryPage setPage={setPage} />}
+            {page === 'index' && <IndexPage setPage={setPage} />}
           </>
         )}
       </Window.Content>
@@ -44,17 +44,17 @@ export const AugmentCatalogue = (props, context) => {
 };
 
 // Page 1: Template & Customization
-const TemplatePage = (props, context) => {
+const TemplatePage = props => {
   const { setPage } = props;
-  const { act, data } = useBackend(context);
+  const { act, data } = useBackend();
 
   // Shared state for UI (persists across re-renders)
-  const [selectedFormId, setSelectedFormId] = useSharedState(context, 'selectedFormId', null);
-  const [selectedRank, setSelectedRank] = useSharedState(context, 'selectedRank', 1);
-  const [augName, setAugName] = useSharedState(context, 'augName', '');
-  const [augDesc, setAugDesc] = useSharedState(context, 'augDesc', '');
-  const [primaryColor, setPrimaryColor] = useSharedState(context, 'primaryColor', '#FFFFFF');
-  const [secondaryColor, setSecondaryColor] = useSharedState(context, 'secondaryColor', '#CCCCCC');
+  const [selectedFormId, setSelectedFormId] = useSharedState('selectedFormId', null);
+  const [selectedRank, setSelectedRank] = useSharedState('selectedRank', 1);
+  const [augName, setAugName] = useSharedState('augName', '');
+  const [augDesc, setAugDesc] = useSharedState('augDesc', '');
+  const [primaryColor, setPrimaryColor] = useSharedState('primaryColor', '#FFFFFF');
+  const [secondaryColor, setSecondaryColor] = useSharedState('secondaryColor', '#CCCCCC');
 
   const {
     forms = [],
@@ -283,19 +283,19 @@ const TemplatePage = (props, context) => {
 };
 
 // Page 2: Effects Selection
-const EffectsPage = (props, context) => {
+const EffectsPage = props => {
   const { setPage } = props;
-  const { act, data } = useBackend(context);
+  const { act, data } = useBackend();
 
   // Read shared state
-  const [selectedFormId] = useSharedState(context, 'selectedFormId', null);
-  const [selectedRank] = useSharedState(context, 'selectedRank', 1);
-  const [augName] = useSharedState(context, 'augName', '');
-  const [augDesc] = useSharedState(context, 'augDesc', '');
-  const [primaryColor] = useSharedState(context, 'primaryColor', '#FFFFFF');
-  const [secondaryColor] = useSharedState(context, 'secondaryColor', '#CCCCCC');
-  const [selectedEffects, setSelectedEffects] = useSharedState(context, 'selectedEffects', []);
-  const [searchQuery, setSearchQuery] = useSharedState(context, 'searchQuery', '');
+  const [selectedFormId] = useSharedState('selectedFormId', null);
+  const [selectedRank] = useSharedState('selectedRank', 1);
+  const [augName] = useSharedState('augName', '');
+  const [augDesc] = useSharedState('augDesc', '');
+  const [primaryColor] = useSharedState('primaryColor', '#FFFFFF');
+  const [secondaryColor] = useSharedState('secondaryColor', '#CCCCCC');
+  const [selectedEffects, setSelectedEffects] = useSharedState('selectedEffects', []);
+  const [searchQuery, setSearchQuery] = useSharedState('searchQuery', '');
 
   const {
     forms = [],
@@ -677,9 +677,9 @@ const EffectsPage = (props, context) => {
 };
 
 // Page 3: Services (Scan & Remove)
-const ServicesPage = (props, context) => {
+const ServicesPage = props => {
   const { setPage } = props;
-  const { act, data } = useBackend(context);
+  const { act, data } = useBackend();
 
   const {
     scanCost = 20,
@@ -757,19 +757,19 @@ const ServicesPage = (props, context) => {
 };
 
 // Page 4: Upload Design
-const UploadPage = (props, context) => {
+const UploadPage = props => {
   const { setPage } = props;
-  const { act, data } = useBackend(context);
+  const { act, data } = useBackend();
 
   // Read shared state for design info
-  const [selectedFormId] = useSharedState(context, 'selectedFormId', null);
-  const [selectedRank] = useSharedState(context, 'selectedRank', 1);
-  const [augName] = useSharedState(context, 'augName', '');
-  const [augDesc] = useSharedState(context, 'augDesc', '');
-  const [primaryColor] = useSharedState(context, 'primaryColor', '#FFFFFF');
-  const [secondaryColor] = useSharedState(context, 'secondaryColor', '#CCCCCC');
-  const [selectedEffects] = useSharedState(context, 'selectedEffects', []);
-  const [explanation, setExplanation] = useSharedState(context, 'explanation', '');
+  const [selectedFormId] = useSharedState('selectedFormId', null);
+  const [selectedRank] = useSharedState('selectedRank', 1);
+  const [augName] = useSharedState('augName', '');
+  const [augDesc] = useSharedState('augDesc', '');
+  const [primaryColor] = useSharedState('primaryColor', '#FFFFFF');
+  const [secondaryColor] = useSharedState('secondaryColor', '#CCCCCC');
+  const [selectedEffects] = useSharedState('selectedEffects', []);
+  const [explanation, setExplanation] = useSharedState('explanation', '');
 
   const {
     forms = [],
@@ -883,15 +883,15 @@ const UploadPage = (props, context) => {
 };
 
 // Page 5: Index (Status Effects Reference)
-const IndexPage = (props, context) => {
+const IndexPage = props => {
   const { setPage } = props;
-  const { data } = useBackend(context);
+  const { data } = useBackend();
 
   const {
     statusEffects = [],
   } = data;
 
-  const [searchQuery, setSearchQuery] = useSharedState(context, 'indexSearch', '');
+  const [searchQuery, setSearchQuery] = useSharedState('indexSearch', '');
 
   // Filter status effects based on search
   const filteredEffects = statusEffects.filter(effect => {
@@ -1013,9 +1013,9 @@ const IndexPage = (props, context) => {
 };
 
 // Page 6: Library Browser
-const LibraryPage = (props, context) => {
+const LibraryPage = props => {
   const { setPage } = props;
-  const { act, data } = useBackend(context);
+  const { act, data } = useBackend();
 
   const {
     augmentLibrary = [],
@@ -1026,8 +1026,8 @@ const LibraryPage = (props, context) => {
     busy = false,
   } = data;
 
-  const [searchQuery, setSearchQuery] = useSharedState(context, 'librarySearch', '');
-  const [selectedLibraryId, setSelectedLibraryId] = useSharedState(context, 'selectedLibraryId', null);
+  const [searchQuery, setSearchQuery] = useSharedState('librarySearch', '');
+  const [selectedLibraryId, setSelectedLibraryId] = useSharedState('selectedLibraryId', null);
 
   // Filter library entries based on search
   const filteredLibrary = augmentLibrary.filter(entry => {

@@ -2,6 +2,7 @@
 /obj/item/ego_weapon/ranged/city/udjat
 	name = "LCA Udjat Rifle"
 	desc = "A rifle used by the LCA Udjat staff."
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/udjat.dmi'
 	icon_state = "udjat_gun"
 	inhand_icon_state = "udjat_gun"
 	force = 14
@@ -24,21 +25,58 @@
 							JUSTICE_ATTRIBUTE = 60
 							)
 
+// Heavy gunner stuff
+/obj/item/ego_weapon/ranged/city/udjat_sniper
+	name = "Udjat Support Rifle"
+	desc = "A sniper rifle used by Udjat gunners, accurate but bulky."
+	icon_state = "udjat_gun"
+	inhand_icon_state = "udjat_gun"
+	ammo_name = "Udjat FMJ"
+	weapon_weight = WEAPON_HEAVY
+	force = 20
+	damtype = WHITE_DAMAGE
+	fire_sound = 'sound/weapons/gun/sniper/shot.ogg'
+	zoom_amt = 10
+	zoomable = TRUE
+	zoom_out_amt = 5
+	projectile_path = /obj/projectile/ego_bullet/ego_noise/udjat_sniper
+	magazine_type = /obj/item/ego_mag/udjat_sniper
+	magazine_name = "Udjat Sniper Rounds"
+	shotsleft = 10
+	fire_delay = 20
+	reloadtime = 3 SECONDS
+	attribute_requirements = list(
+							FORTITUDE_ATTRIBUTE = 60,
+							PRUDENCE_ATTRIBUTE = 60,
+							TEMPERANCE_ATTRIBUTE = 60,
+							JUSTICE_ATTRIBUTE = 60
+							)
+
+/obj/projectile/ego_bullet/ego_noise/udjat_sniper
+	name = "lca udjat sniper round"
+	damage = 75
 
 /obj/projectile/ego_bullet/ego_noise/udjat
 	name = "lca udjat round"
 	damage = 20
 
+/obj/item/ego_mag/udjat_sniper
+	name = "Udjat Sniper Rounds"
+	desc = "Used for the Udjat SSW's sniper, load with care"
+	icon = 'ModularLobotomy/_Lobotomyicons/lce_udjat_ammo.dmi'
+	icon_state = "udjat_mag_birdshot"
+
 /obj/item/ego_mag/udjat
 	name = "udjat mag"
 	desc = "load into an Udjat Gun."
-	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/udjat.dmi'
 	icon_state = "udjat_magazine"
 
 /obj/item/ego_weapon/city/udjat_limbus
 	name = "LCA Udjat Khopesh"
 	desc = "A Khopesh used by the LCA Udjat ."
 	special = "Use in hand to prepare a stun attack."
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/udjat.dmi'
 	icon_state = "udjat_khopesh"
 	force = 55
 	swingstyle = WEAPONSWING_LARGESWEEP

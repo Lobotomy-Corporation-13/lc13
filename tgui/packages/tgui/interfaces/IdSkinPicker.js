@@ -31,8 +31,8 @@ const RarityBadge = props => {
 // zoom-in icon button; unowned skins render as a completely black
 // silhouette with a "???" name, are not clickable, and don't open
 // the zoom view.
-const SkinTile = (props, context) => {
-  const { act } = useBackend(context);
+const SkinTile = props => {
+  const { act } = useBackend();
   const { skin, equipped, isDefault, onZoom } = props;
   const owned = isDefault || (skin && skin.owned);
   const colour = isDefault
@@ -159,15 +159,15 @@ const SkinTile = (props, context) => {
   );
 };
 
-export const IdSkinPicker = (props, context) => {
-  const { data } = useBackend(context);
+export const IdSkinPicker = props => {
+  const { data } = useBackend();
   const skins = data.skins || [];
   const equipped = data.equipped;
   const equippedSkin = equipped
     ? skins.find(s => s.id === equipped)
     : null;
   const [zoomedSkin, setZoomedSkin]
-    = useLocalState(context, 'zoomedSkin', null);
+    = useLocalState('zoomedSkin', null);
   const ownedCount = skins.filter(s => s.owned).length;
   return (
     <Window width={560} height={520} title="ID Card Skin">

@@ -10,6 +10,7 @@
 	del_on_death = TRUE
 	maxHealth = 300	//She's a fast motherfucker.
 	health = 300
+	gender = FEMALE
 	rapid_melee = 2
 	move_to_delay = 1.2
 	damage_coeff = list(RED_DAMAGE = 1.2, WHITE_DAMAGE = 0.8, BLACK_DAMAGE = 1.2, PALE_DAMAGE = 2)
@@ -36,6 +37,7 @@
 	)
 	work_damage_amount = 5
 	work_damage_type = BLACK_DAMAGE
+	chem_type = /datum/reagent/abnormality/sin/lust
 
 	ego_list = list(
 		/datum/ego_datum/weapon/patch,

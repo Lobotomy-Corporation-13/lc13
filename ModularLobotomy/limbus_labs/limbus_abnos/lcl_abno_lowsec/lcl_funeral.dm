@@ -23,22 +23,26 @@
 
 	//LCL unique Variables
 	original_abno = /mob/living/simple_animal/hostile/abnormality/funeral
-	abno_additional_instructions = "You like insight work, \
+	abno_additional_instructions = "You like insight, repression, and instinct work, \
 	Before these scientists trapped you, you came here to bring \
 	peaceful death to the poor souls trapped here."
 
 	desire_active = TRUE
 	liked_objects_list = list(
-		/obj/structure/chair/wood,
+		/obj/structure/chair/wood, // I'm letting him keep the chair since he'll be eating the other insight items
 		/obj/item/food/grown/harebell,
+		/obj/item/food/grown/poppy,
 		)
+	diet_list = list(
+		/obj/item/food/grown/poppy,
+		/obj/item/grown/sunflower,
+		/obj/item/food/grown/harebell) //flowers because butterfly and funeral.
+	diet_value = 20 //i don't think this matters but letting the players fill their bars is good for visual satisfaction
 	desire_loss = 15
-	desire_on_pet = 3
+	desire_on_eat = 10 //not sure if i'm giving him too much desire gain
+	desire_on_pet = -20 //attachment work is bad
 	desire_on_talk = 1
-	rep_desire_gain = -5
-	delete_food = FALSE
-	diet_value = 0
-	diet_list = list()
+	rep_desire_gain = 1 //repression work is good
 
 	can_breach = TRUE
 	attack_action_types = list(
@@ -90,7 +94,8 @@
 	. = ..()
 	if(.) //Desire Amount equals zero
 		return
-	AdjustCounter(-1)
+	if(desire_bar <= 10 && 1 > desire_amount)
+		AdjustCounter(-1)
 
 /mob/living/simple_animal/hostile/limbus_abno/funeral/Breach()
 	breached = TRUE

@@ -11,7 +11,7 @@ import { Window } from '../layouts';
 // orders are charged and podded immediately - so the two consoles genuinely
 // differ.
 
-export const LimbusCargo = (props, context) => {
+export const LimbusCargo = props => {
   return (
     <Window
       width={700}
@@ -24,8 +24,8 @@ export const LimbusCargo = (props, context) => {
   );
 };
 
-const LimbusCargoStatus = (props, context) => {
-  const { act, data } = useBackend(context);
+const LimbusCargoStatus = props => {
+  const { act, data } = useBackend();
   const {
     points,
     pad_found,
@@ -55,13 +55,13 @@ const LimbusCargoStatus = (props, context) => {
   );
 };
 
-const LimbusCargoCatalog = (props, context) => {
-  const { act, data } = useBackend(context);
+const LimbusCargoCatalog = props => {
+  const { act, data } = useBackend();
   const supplies = toArray(data.supplies);
   const [
     activeSupplyName,
     setActiveSupplyName,
-  ] = useSharedState(context, 'lce_supply', supplies[0]?.name);
+  ] = useSharedState('lce_supply', supplies[0]?.name);
   const activeSupply = supplies.find(supply => {
     return supply.name === activeSupplyName;
   });
