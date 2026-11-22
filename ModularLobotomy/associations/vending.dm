@@ -619,3 +619,33 @@
 				new /obj/machinery/vending/prosthetic/ncorp(get_turf(src))
 			qdel(src)
 
+
+//ncorp consumables
+/obj/machinery/vending/ncorpholy
+	desc = "A machine used to purchase your clothing"
+	product_slogans = "Toward the purest world!;Flesh, blood and bone, all else is filth.;Hammers always wait in place, ready to be gripped.;Doctrine of scripture must be followed."
+	product_ads = "With hammer in hand;Purge!;Unto the fire;Strip the Blight;Purge the heretic;Purge the evil;Purge!;Recite your scripture;Partake of the rations;Purify!;Eliminate the heretic"
+	vend_reply = "For the One Who Grips."
+	icon_state = "chapdrobe" //good old placeholder eh?
+	icon_deny = null
+	products = list(
+		/obj/item/ncorp_scroll/sp = 99,
+		/obj/item/ncorp_scroll/spwide = 99,
+		/obj/item/ncorp_scroll/cleanse = 99,
+		/obj/item/ncorp_scroll/strength = 99,
+		/obj/item/ncorp_scroll/randomstr = 99,
+		/obj/item/ncorp_scroll/strengthwide/col = 99,
+		/obj/item/ncorp_scroll/protection = 99,
+		/obj/item/ncorp_scroll/randomprot = 99,
+		/obj/item/ncorp_scroll/combat = 99,
+		/obj/item/ncorp_scroll/nailup = 99,
+		/obj/item/ncorp_scroll/nailupwide/col = 99,
+		/obj/item/ncorp_scroll/flame = 99,
+		/obj/item/ncorp_scroll/naildown = 99,
+		/obj/item/ncorp_scroll/death = 3,
+
+	)
+
+	default_price = 400
+	input_display_header = "N-Corp Inquisition Crusade Requisitions"
+
