@@ -515,7 +515,7 @@
 /obj/item/ncorp_scroll/nailup
 	name = "N-Corp Unladen Scroll"
 	desc = "A scroll sold by N-Corp"
-	special = "This Scroll removes certain slowdown when read. when finishing, gives a boost to speed."
+	special = "This Scroll grants speed when read. when finishing, gives slowdown immunities."
 	icon_state = "ncorp_nailup"
 	ticks_left = 5
 	custom_price = 300
@@ -523,20 +523,20 @@
 
 //for NCorpers this means moving much faster
 /obj/item/ncorp_scroll/nailup/TickAbility(mob/living/carbon/human/user)
-	user.add_movespeed_mod_immunities(type, /datum/movespeed_modifier/damage_slowdown)
-	user.add_movespeed_mod_immunities(type, /datum/movespeed_modifier/equipment_speedmod)
-	addtimer(CALLBACK(user, TYPE_PROC_REF(/mob/living, remove_movespeed_mod_immunities), /datum/movespeed_modifier/damage_slowdown), 10 SECONDS, TIMER_UNIQUE | TIMER_OVERRIDE)
-	addtimer(CALLBACK(user, TYPE_PROC_REF(/mob/living, remove_movespeed_mod_immunities), /datum/movespeed_modifier/equipment_speedmod), 10 SECONDS, TIMER_UNIQUE | TIMER_OVERRIDE)
-
-/obj/item/ncorp_scroll/nailup/EndLoop(mob/living/carbon/human/user)
 	user.add_movespeed_modifier(/datum/movespeed_modifier/unladen)
 	addtimer(CALLBACK(user, TYPE_PROC_REF(/mob, remove_movespeed_modifier), /datum/movespeed_modifier/unladen), 10 SECONDS, TIMER_UNIQUE | TIMER_OVERRIDE)
+
+/obj/item/ncorp_scroll/nailup/EndLoop(mob/living/carbon/human/user)
+	user.add_movespeed_mod_immunities(type, /datum/movespeed_modifier/damage_slowdown)
+	user.add_movespeed_mod_immunities(type, /datum/movespeed_modifier/equipment_speedmod)
+	addtimer(CALLBACK(user, TYPE_PROC_REF(/mob/living, remove_movespeed_mod_immunities), type, /datum/movespeed_modifier/damage_slowdown), 10 SECONDS, TIMER_UNIQUE | TIMER_OVERRIDE)
+	addtimer(CALLBACK(user, TYPE_PROC_REF(/mob/living, remove_movespeed_mod_immunities), type, /datum/movespeed_modifier/equipment_speedmod), 10 SECONDS, TIMER_UNIQUE | TIMER_OVERRIDE)
 
 
 /obj/item/ncorp_scroll/nailupwide
 	name = "N-Corp Area Unladen Scroll"
 	desc = "A scroll sold by N-Corp"
-	special = "This Scroll removes certain slowdown from all allies when read. when finishing, gives a boost to speed."
+	special = "This Scroll grants speed to all allies when read. when finishing, gives slowdown immunities."
 	icon_state = "ncorp_nailupaoe"
 	ticks_left = 3
 	tick_speed = 5 SECONDS
@@ -548,17 +548,17 @@
 	for(var/mob/living/carbon/human/H in view(5, user))
 		if(H == user)
 			continue
-		H.add_movespeed_mod_immunities(H, /datum/movespeed_modifier/damage_slowdown)
-		H.add_movespeed_mod_immunities(H, /datum/movespeed_modifier/equipment_speedmod)
-		addtimer(CALLBACK(H, TYPE_PROC_REF(/mob/living, remove_movespeed_mod_immunities), /datum/movespeed_modifier/damage_slowdown), 10 SECONDS, TIMER_UNIQUE | TIMER_OVERRIDE)
-		addtimer(CALLBACK(H, TYPE_PROC_REF(/mob/living, remove_movespeed_mod_immunities), /datum/movespeed_modifier/equipment_speedmod), 10 SECONDS, TIMER_UNIQUE | TIMER_OVERRIDE)
+		H.add_movespeed_modifier(/datum/movespeed_modifier/unladen)
+		addtimer(CALLBACK(H, TYPE_PROC_REF(/mob, remove_movespeed_modifier), /datum/movespeed_modifier/unladen), 10 SECONDS, TIMER_UNIQUE | TIMER_OVERRIDE)
 
 /obj/item/ncorp_scroll/nailupwide/EndLoop(mob/living/carbon/human/user)
 	for(var/mob/living/carbon/human/H in view(5, user))
 		if(H == user)
 			continue
-		H.add_movespeed_modifier(/datum/movespeed_modifier/unladen)
-		addtimer(CALLBACK(H, TYPE_PROC_REF(/mob, remove_movespeed_modifier), /datum/movespeed_modifier/unladen), 10 SECONDS, TIMER_UNIQUE | TIMER_OVERRIDE)
+		H.add_movespeed_mod_immunities(H, /datum/movespeed_modifier/damage_slowdown)
+		H.add_movespeed_mod_immunities(H, /datum/movespeed_modifier/equipment_speedmod)
+		addtimer(CALLBACK(H, TYPE_PROC_REF(/mob/living, remove_movespeed_mod_immunities), type, /datum/movespeed_modifier/damage_slowdown), 10 SECONDS, TIMER_UNIQUE | TIMER_OVERRIDE)
+		addtimer(CALLBACK(H, TYPE_PROC_REF(/mob/living, remove_movespeed_mod_immunities), type, /datum/movespeed_modifier/equipment_speedmod), 10 SECONDS, TIMER_UNIQUE | TIMER_OVERRIDE)
 
 /datum/movespeed_modifier/unladen
 	multiplicative_slowdown = -0.3
@@ -624,7 +624,7 @@
 	say_chance = 100
 	custom_price = 600 //Costliest scroll so far because slowdown is absurdly strong
 
-/obj/item/ncorp_scroll/flame/TickAbility(mob/living/carbon/human/user)
+/obj/item/ncorp_scroll/naildown/TickAbility(mob/living/carbon/human/user)
 	for(var/mob/living/carbon/human/H in view(5, user))
 		if(!ArmorCheck(H))
 			H.add_movespeed_modifier(/datum/movespeed_modifier/naileddown)
@@ -661,16 +661,16 @@
 		if(H == user)
 			continue
 		if(ArmorCheck(H))
-			H.add_movespeed_mod_immunities(type, /datum/movespeed_modifier/damage_slowdown)
-			H.add_movespeed_mod_immunities(type, /datum/movespeed_modifier/equipment_speedmod)
-			addtimer(CALLBACK(H, TYPE_PROC_REF(/mob/living, remove_movespeed_mod_immunities), /datum/movespeed_modifier/damage_slowdown), 10 SECONDS, TIMER_UNIQUE | TIMER_OVERRIDE)
-			addtimer(CALLBACK(H, TYPE_PROC_REF(/mob/living, remove_movespeed_mod_immunities), /datum/movespeed_modifier/equipment_speedmod), 10 SECONDS, TIMER_UNIQUE | TIMER_OVERRIDE)
+			H.add_movespeed_modifier(/datum/movespeed_modifier/unladen)
+			addtimer(CALLBACK(H, TYPE_PROC_REF(/mob, remove_movespeed_modifier), /datum/movespeed_modifier/unladen), 10 SECONDS, TIMER_UNIQUE | TIMER_OVERRIDE)
 
 /obj/item/ncorp_scroll/nailupwide/col/EndLoop(mob/living/carbon/human/user)
 	for(var/mob/living/carbon/human/H in view(5, user))
 		if(H == user)
 			continue
 		if(ArmorCheck(H))
-			H.add_movespeed_modifier(/datum/movespeed_modifier/unladen)
-			addtimer(CALLBACK(H, TYPE_PROC_REF(/mob, remove_movespeed_modifier), /datum/movespeed_modifier/unladen), 10 SECONDS, TIMER_UNIQUE | TIMER_OVERRIDE)
+			H.add_movespeed_mod_immunities(type, /datum/movespeed_modifier/damage_slowdown)
+			H.add_movespeed_mod_immunities(type, /datum/movespeed_modifier/equipment_speedmod)
+			addtimer(CALLBACK(H, TYPE_PROC_REF(/mob/living, remove_movespeed_mod_immunities), type, /datum/movespeed_modifier/damage_slowdown), 10 SECONDS, TIMER_UNIQUE | TIMER_OVERRIDE)
+			addtimer(CALLBACK(H, TYPE_PROC_REF(/mob/living, remove_movespeed_mod_immunities), type, /datum/movespeed_modifier/equipment_speedmod), 10 SECONDS, TIMER_UNIQUE | TIMER_OVERRIDE)
 
