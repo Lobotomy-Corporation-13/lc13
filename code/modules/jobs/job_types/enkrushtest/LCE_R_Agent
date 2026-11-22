@@ -20,9 +20,9 @@
 	allow_bureaucratic_error = FALSE
 	departments = DEPARTMENT_SECURITY | DEPARTMENT_LCE
 
-	job_important = "You are a L-Corp Agent. Your job is to work on and suppress Abnormalities. Use :h to talk on your departmental radio."
+	job_important = "You are a Limbus Company Enkephalin Researcher. As a member of the Recovery divion, your job is to repair the damaged Lobotomy Corporation Branch, and secondarily to work on and suppress Abnormalities. Use :h to talk on your departmental radio."
 
-	job_abbreviation = "AGT"
+	job_abbreviation = "R-AGT"
 
 	/// Values set in after_spawn() depending on var/normal_attribute_level and abnormality number per total abnormality cells
 	roundstart_attributes = list(FORTITUDE_ATTRIBUTE, PRUDENCE_ATTRIBUTE, TEMPERANCE_ATTRIBUTE, JUSTICE_ATTRIBUTE)
