@@ -15,6 +15,6 @@
 	"has_submaps": 1,
 	"no_submap_behavior": "standard",
 	"available_submaps": {
-		"city.dmm": "Standard City",
+		"city.dmm": "Standard City"
 	}
 }
