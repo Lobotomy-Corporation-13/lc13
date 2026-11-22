@@ -222,6 +222,9 @@ SUBSYSTEM_DEF(vote)
 		return FALSE
 	if(CONFIG_GET(flag/no_dead_vote) && usr.stat == DEAD && !usr.client.holder)
 		return FALSE
+	if(!(their_vote in current_vote.choices))
+		message_admins("POSSIBLE EXPLOIT: [key_name(voter)] tried to submit a vote for an option that didn't exist. They tried to call a vote for the following option: [sanitize(their_vote)]")
+		return
 	if(!vote || vote < 1 || vote > choices.len)
 		return FALSE
 	// If user has already voted, remove their specific vote
