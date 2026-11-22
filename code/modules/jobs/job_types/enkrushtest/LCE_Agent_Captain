@@ -26,6 +26,7 @@
 	G = new /datum/action/cooldown/warcry/captain
 	G.Grant(outfit_owner)
 
+//mostly just set up for when we do have official stuff
 /datum/outfit/job/agent/enkrush_captain
 	name = "LCE Agent Captain"
 	jobtype = /datum/job/agent/enkrush_captain

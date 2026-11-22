@@ -46,7 +46,8 @@
 	if(SSmaptype.chosen_trait == FACILITY_TRAIT_DARK_SOULS)
 		outfit_owner.equip_to_slot_or_del(new /obj/item/estus(outfit_owner), ITEM_SLOT_HANDS, TRUE)
 
-/datum/outfit/job/command/LCERecoveryO
+//mainly just set up for when we do have official stuff
+/datum/outfit/job/command/lce_recovery_o
 	name = "LCE Recovery Officer"
 	jobtype = /datum/job/command
 	suit =  /obj/item/clothing/suit/armor/extraction
