@@ -59,6 +59,7 @@
 	desc = "It starts with a cough, And ends in flowers."
 	special = "This weapon attracts the attention of the target you attack, Even if they were attacking someone else."
 	icon_state = "bloomed"
+	icon = 'ModularLobotomy/!extra_abnos/community/!icons/community_weapons.dmi'
 	force = 54	//just christmas but a little funky
 	attack_speed = 2.3
 	damtype = BLACK_DAMAGE

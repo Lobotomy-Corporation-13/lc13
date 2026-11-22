@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/abnormality/cupid
 	name = "Coupid"
 	desc = "The tiniest rabbit with a flower on its head. It makes you itch looking at it."
-	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
+	icon = 'ModularLobotomy/!extra_abnos/community/!icons/communityAbnos/32x32.dmi'
 	icon_state = "cupid_contained"
 	icon_living = "cupid_contained"
 	portrait = "cupid"
@@ -35,7 +35,7 @@
 		/datum/ego_datum/armor/allergen,
 	)
 	gift_type = /datum/ego_gifts/allergen
-	abnormality_origin = ABNORMALITY_ORIGIN_ORIGINAL
+	abnormality_origin = ABNORMALITY_ORIGIN_COMMUNITY
 
 
 	observation_prompt = "There's a field of wheat ahead of you. It's a beautiful sunset, But you're feeling ill."
