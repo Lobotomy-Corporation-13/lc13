@@ -217,13 +217,13 @@ SUBSYSTEM_DEF(vote)
 
 	return .
 
-/datum/controller/subsystem/vote/proc/submit_vote(vote)
+/datum/controller/subsystem/vote/proc/submit_vote(mob/voter ,vote)
 	if(!mode)
 		return FALSE
 	if(CONFIG_GET(flag/no_dead_vote) && usr.stat == DEAD && !usr.client.holder)
 		return FALSE
-	if(!(their_vote in current_vote.choices))
-		message_admins("POSSIBLE EXPLOIT: [key_name(voter)] tried to submit a vote for an option that didn't exist. They tried to call a vote for the following option: [sanitize(their_vote)]")
+	if(!(vote in choices))
+		message_admins("POSSIBLE EXPLOIT: [key_name(voter)] tried to submit a vote for an option that didn't exist. They tried to call a vote for the following option: [sanitize(vote)]")
 		return
 	if(!vote || vote < 1 || vote > choices.len)
 		return FALSE
@@ -414,6 +414,8 @@ SUBSYSTEM_DEF(vote)
 	if(.)
 		return
 
+	var/mob/voter = usr
+
 	var/upper_admin = FALSE
 	if(usr.client.holder)
 		if(check_rights_for(usr.client, R_ADMIN))
@@ -459,7 +461,7 @@ SUBSYSTEM_DEF(vote)
 			if(usr.client.holder)
 				initiate_vote("custom",usr.key)
 		if("vote")
-			submit_vote(round(text2num(params["index"])))
+			submit_vote(voter, round(text2num(params["index"])))
 	return TRUE
 
 /datum/controller/subsystem/vote/proc/remove_action_buttons()
