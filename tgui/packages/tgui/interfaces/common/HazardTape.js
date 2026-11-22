@@ -9,7 +9,7 @@
  * pipeline change required. Each strip's animation delay + duration is
  * randomized at mount so two adjacent tape overlays don't pulse in sync.
  */
-import { Component } from 'inferno';
+import { Component } from 'react';
 import { Box } from '../../components';
 
 const TAPE_BASE_ANGLES = [-65, -35, 35, 65];

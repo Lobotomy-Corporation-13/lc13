@@ -875,7 +875,7 @@ const GenomeImage = props => {
       style={{
         width: '64px',
         margin: '2px',
-        'margin-left': '4px',
+        marginLeft: '4px',
         outline,
       }}
       onClick={onClick} />

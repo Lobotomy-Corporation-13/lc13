@@ -86,7 +86,7 @@ const AchievementCard = props => {
       onClick={() => act('select', { type })}
       style={{
         'border': '2px solid ' + borderColor,
-        'border-radius': '3px',
+        borderRadius: '3px',
         'cursor': 'pointer',
       }}>
       <Flex align="center">

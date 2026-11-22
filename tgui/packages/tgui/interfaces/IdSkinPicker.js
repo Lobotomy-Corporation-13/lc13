@@ -18,9 +18,9 @@ const RarityBadge = props => {
       style={{
         'background': RARITY_COLOUR[rarity] || '#444',
         'color': rarity === '000' ? '#000' : '#fff',
-        'font-weight': 'bold',
-        'border-radius': '3px',
-        'font-size': '10px',
+        fontWeight: 'bold',
+        borderRadius: '3px',
+        fontSize: '10px',
       }}>
       {rarity}
     </Box>
@@ -58,17 +58,17 @@ const SkinTile = props => {
         'border': equipped
           ? '3px solid #d4af37'
           : '2px solid ' + colour,
-        'border-radius': '6px',
+        borderRadius: '6px',
         'background': equipped
           ? 'linear-gradient(135deg, '
             + '#3a3010 0%, #1a1208 100%)'
           : 'linear-gradient(135deg, '
             + '#1f1f1f 0%, #0a0a0a 100%)',
-        'box-shadow': equipped
+        boxShadow: equipped
           ? '0 0 14px #d4af37'
           : '0 0 6px ' + colour + '40',
-        'min-width': '120px',
-        'text-align': 'center',
+        minWidth: '120px',
+        textAlign: 'center',
         'opacity': owned ? 1 : 0.7,
       }}>
       {!!equipped && (
@@ -80,11 +80,11 @@ const SkinTile = props => {
             'transform': 'translateX(-50%)',
             'background': '#d4af37',
             'color': '#000',
-            'font-weight': 'bold',
-            'font-size': '10px',
+            fontWeight: 'bold',
+            fontSize: '10px',
             'padding': '2px 8px',
-            'border-radius': '3px',
-            'letter-spacing': '0.5px',
+            borderRadius: '3px',
+            letterSpacing: '0.5px',
           }}>
           EQUIPPED
         </Box>
@@ -95,7 +95,7 @@ const SkinTile = props => {
             'position': 'absolute',
             'top': '4px',
             'right': '4px',
-            'z-index': 2,
+            zIndex: 2,
           }}>
           <Button
             compact
@@ -113,12 +113,12 @@ const SkinTile = props => {
               'height': '64px',
               'margin': '0 auto',
               'border': '1px dashed #555',
-              'border-radius': '4px',
+              borderRadius: '4px',
               'display': 'flex',
-              'align-items': 'center',
-              'justify-content': 'center',
+              alignItems: 'center',
+              justifyContent: 'center',
               'color': '#777',
-              'font-size': '10px',
+              fontSize: '10px',
             }}>
             Default
           </Box>
@@ -128,7 +128,7 @@ const SkinTile = props => {
             style={{
               'width': '64px',
               'height': '64px',
-              'image-rendering': 'pixelated',
+              imageRendering: 'pixelated',
               // Mask unowned skins to a flat black silhouette so the
               // contents stay hidden until pulled.
               'filter': owned
@@ -149,7 +149,7 @@ const SkinTile = props => {
               inline
               ml={0.5}
               color="good"
-              style={{ 'font-size': '10px' }}>
+              style={{ fontSize: '10px' }}>
               x{skin.copies}
             </Box>
           )}
@@ -182,7 +182,7 @@ export const IdSkinPicker = props => {
                   style={{
                     'width': '48px',
                     'height': '48px',
-                    'image-rendering': 'pixelated',
+                    imageRendering: 'pixelated',
                   }}
                 />
               ) : (
@@ -191,12 +191,12 @@ export const IdSkinPicker = props => {
                     'width': '48px',
                     'height': '48px',
                     'border': '1px dashed #555',
-                    'border-radius': '4px',
+                    borderRadius: '4px',
                     'display': 'flex',
-                    'align-items': 'center',
-                    'justify-content': 'center',
+                    alignItems: 'center',
+                    justifyContent: 'center',
                     'color': '#777',
-                    'font-size': '10px',
+                    fontSize: '10px',
                   }}>
                   Default
                 </Box>
@@ -214,7 +214,7 @@ export const IdSkinPicker = props => {
               <Box
                 mt={0.5}
                 color="label"
-                style={{ 'font-size': '11px' }}>
+                style={{ fontSize: '11px' }}>
                 Worn on your spawned ID card. Cosmetic only —
                 access and registered name are unchanged.
               </Box>
@@ -227,7 +227,7 @@ export const IdSkinPicker = props => {
           <Box
             style={{
               'display': 'grid',
-              'grid-template-columns': 'repeat(auto-fill, '
+              gridTemplateColumns: 'repeat(auto-fill, '
                 + 'minmax(140px, 1fr))',
               'gap': '10px',
             }}>

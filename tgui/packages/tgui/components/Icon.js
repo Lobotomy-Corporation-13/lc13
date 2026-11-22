@@ -57,7 +57,7 @@ export const IconStack = props => {
   return (
     <Box
       as="span"
-      class={classes([
+      className={classes([
         'IconStack',
         className,
       ])}

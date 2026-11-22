@@ -56,7 +56,7 @@ export const RecordSectorBreakdown = props => {
           p={0.5}
           mb={0.5}
           backgroundColor="rgba(255, 255, 255, 0.06)"
-          style={{ 'border-radius': '4px' }}>
+          style={{ borderRadius: '4px' }}>
           <Stack>
             <Stack.Item grow={1} bold>
               {`Sector ${sector.index}`}
@@ -98,7 +98,7 @@ export const RecordSectorBreakdown = props => {
                               src={`data:image/jpeg;base64,${icon}`}
                               style={{
                                 'height': '24px',
-                                'image-rendering': 'pixelated',
+                                imageRendering: 'pixelated',
                               }}
                             />
                           ) : (
@@ -196,9 +196,9 @@ export const RecordRow = props => {
           : 'rgba(255, 255, 255, 0.04)'
       }
       style={{
-        'border-radius': '4px',
+        borderRadius: '4px',
         ...(mini && {
-          'border-left': '3px solid rgba(255, 255, 255, 0.12)',
+          borderLeft: '3px solid rgba(255, 255, 255, 0.12)',
         }),
       }}>
       <Stack>
@@ -292,7 +292,7 @@ export const RecordsModal = props => {
       right={0}
       bottom={0}
       backgroundColor="rgba(0, 0, 0, 0.75)"
-      style={{ 'z-index': 50 }}
+      style={{ zIndex: 50 }}
       onClick={onClose}>
       <Box
         position="fixed"
@@ -301,7 +301,7 @@ export const RecordsModal = props => {
         width="680px"
         style={{
           'transform': 'translate(-50%, 0)',
-          'max-height': 'calc(100vh - 40px)',
+          maxHeight: 'calc(100vh - 40px)',
         }}
         onClick={e => e.stopPropagation()}>
         <Section
@@ -309,7 +309,7 @@ export const RecordsModal = props => {
           buttons={
             <Button icon="times" content="Close" onClick={onClose} />
           }
-          style={{ 'max-height': 'calc(100vh - 40px)' }}>
+          style={{ maxHeight: 'calc(100vh - 40px)' }}>
           <Box mb={1}>
             <Input
               fluid
@@ -325,9 +325,9 @@ export const RecordsModal = props => {
           </Box>
           <Box
             style={{
-              'overflow-y': 'auto',
-              'max-height': 'calc(100vh - 180px)',
-              'padding-right': '4px',
+              overflowY: 'auto',
+              maxHeight: 'calc(100vh - 180px)',
+              paddingRight: '4px',
             }}>
             {rows.length === 0 && (
               <Box color="label">No records yet for this line.</Box>
@@ -400,7 +400,7 @@ const NodeMobsModal = props => {
       right={0}
       bottom={0}
       backgroundColor="rgba(0, 0, 0, 0.75)"
-      style={{ 'z-index': 40 }}
+      style={{ zIndex: 40 }}
       onClick={onClose}>
       <Box
         position="absolute"
@@ -581,7 +581,7 @@ const RailwayMap = props => {
                 fontSize="14"
                 fontWeight="bold"
                 textAnchor="middle"
-                style={{ 'pointer-events': 'none' }}>
+                style={{ pointerEvents: 'none' }}>
                 ✕
               </text>
             ) : null}
@@ -632,13 +632,13 @@ const CompensationsPanel = props => {
       </Box>
       <Box
         maxHeight="140px"
-        style={{ 'overflow-y': 'auto' }}>
+        style={{ overflowY: 'auto' }}>
         {visible.map((c, i) => (
           <Box
             key={i}
             p={0.5}
             mb={0.25}
-            style={{ 'border-radius': '3px' }}
+            style={{ borderRadius: '3px' }}
             backgroundColor="rgba(34, 197, 94, 0.08)">
             <Box bold fontSize="11px">{c.name}</Box>
             <Box color="label" fontSize="10px">
@@ -660,7 +660,7 @@ const LinesTab = props => {
         <Section title="Lines">
           <Box
             maxHeight="180px"
-            style={{ 'overflow-y': 'auto' }}>
+            style={{ overflowY: 'auto' }}>
             {(lines || []).map(line => {
               const isSelected = line.id === selectedId;
               return (
@@ -675,7 +675,7 @@ const LinesTab = props => {
                   }
                   style={{
                     'cursor': 'pointer',
-                    'border-radius': '4px',
+                    borderRadius: '4px',
                     'position': 'relative',
                     'overflow': 'hidden',
                   }}
@@ -734,7 +734,7 @@ const LineSidebar = props => {
         </Tabs>
       </Stack.Item>
       <Stack.Item grow={1}>
-        <Box height="100%" style={{ 'overflow-y': 'auto' }}>
+        <Box height="100%" style={{ overflowY: 'auto' }}>
           {sidebarTab === 'lines' ? (
             <LinesTab
               lines={lines}

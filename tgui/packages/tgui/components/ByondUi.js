@@ -6,7 +6,7 @@
 
 import { shallowDiffers } from 'common/react';
 import { debounce } from 'common/timer';
-import { Component, createRef } from 'inferno';
+import { Component, createRef } from 'react';
 import { createLogger } from '../logging';
 import { computeBoxProps } from './Box';
 
@@ -140,7 +140,7 @@ export class ByondUi extends Component {
         ref={this.containerRef}
         {...boxProps}>
         {/* Filler */}
-        <div style={{ 'min-height': '22px' }} />
+        <div style={{ minHeight: '22px' }} />
       </div>
     );
   }

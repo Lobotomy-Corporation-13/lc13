@@ -60,7 +60,7 @@ export const RoundGauge = props => {
         ])}
         {...computeBoxProps({
           style: {
-            'font-size': size + 'em',
+            fontSize: size + 'em',
             ...style,
           },
           ...rest,
@@ -90,7 +90,7 @@ export const RoundGauge = props => {
                   className={`RoundGauge__ringFill RoundGauge--color--${x}`}
                   key={i}
                   style={{
-                    'stroke-dashoffset': (
+                    strokeDashoffset: (
                       Math.max((2.0 - (col_ranges[1] - col_ranges[0]))
                         * Math.PI * 50, 0)
                     ),

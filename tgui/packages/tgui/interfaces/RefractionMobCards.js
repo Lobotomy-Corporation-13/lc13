@@ -106,7 +106,7 @@ const renderGlossary = (text, glossary, keyBase) => {
         inline
         position="relative"
         style={{
-          'text-decoration': 'underline dotted',
+          textDecoration: 'underline dotted',
           'cursor': 'help',
         }}>
         {g.icon && (
@@ -114,9 +114,9 @@ const renderGlossary = (text, glossary, keyBase) => {
             src={`data:image/png;base64,${g.icon}`}
             style={{
               'height': '1em',
-              'vertical-align': 'middle',
-              'image-rendering': 'pixelated',
-              'margin-right': '2px',
+              verticalAlign: 'middle',
+              imageRendering: 'pixelated',
+              marginRight: '2px',
             }}
           />
         )}
@@ -159,7 +159,7 @@ export const MobCardSilhouette = props => {
           style={{
             'height': size,
             'filter': 'brightness(0)',
-            'image-rendering': 'pixelated',
+            imageRendering: 'pixelated',
           }}
         />
       )}
@@ -177,7 +177,7 @@ export const MobCardIcon = props => {
           src={`data:image/jpeg;base64,${mob.icon}`}
           style={{
             'height': size,
-            'image-rendering': 'pixelated',
+            imageRendering: 'pixelated',
           }}
         />
       )}
@@ -271,7 +271,7 @@ const LoreBlock = props => {
       mt={0.5}
       pt={0.5}
       style={{
-        'border-top': '1px solid #4b3a23',
+        borderTop: '1px solid #4b3a23',
       }}>
       {paragraphs.map((para, i) => (
         <Box
@@ -280,7 +280,7 @@ const LoreBlock = props => {
           mt={i > 0 ? 0.5 : 0}
           style={{
             'color': '#c89358',
-            'font-style': 'italic',
+            fontStyle: 'italic',
           }}>
           {para}
         </Box>
@@ -302,11 +302,11 @@ const UndiscoveredCard = () => (
     style={{
       'background': '#000000',
       'border': '1px solid #4b5563',
-      'border-radius': '3px',
+      borderRadius: '3px',
       'color': '#9ca3af',
-      'font-style': 'italic',
-      'font-size': '11px',
-      'letter-spacing': '0.05em',
+      fontStyle: 'italic',
+      fontSize: '11px',
+      letterSpacing: '0.05em',
     }}>
     Undiscovered
   </Box>
@@ -324,7 +324,7 @@ const AttackCard = props => {
       mb={1}
       style={{
         'background': 'rgba(0, 0, 0, 0.45)',
-        'border-radius': '3px',
+        borderRadius: '3px',
       }}>
       <Box
         px={1}
@@ -332,8 +332,8 @@ const AttackCard = props => {
         bold
         style={{
           'background': '#374151',
-          'border-top-left-radius': '3px',
-          'border-top-right-radius': '3px',
+          borderTopLeftRadius: '3px',
+          borderTopRightRadius: '3px',
           'color': '#e5e7eb',
         }}>
         {attack.name}
@@ -393,7 +393,7 @@ const PassiveCard = props => {
       mb={1}
       style={{
         'background': 'rgba(0, 0, 0, 0.45)',
-        'border-radius': '3px',
+        borderRadius: '3px',
       }}>
       <Stack align="center">
         <Stack.Item>
@@ -403,8 +403,8 @@ const PassiveCard = props => {
             bold
             style={{
               'background': preset.banner,
-              'border-top-left-radius': '3px',
-              'border-bottom-right-radius': '3px',
+              borderTopLeftRadius: '3px',
+              borderBottomRightRadius: '3px',
               'color': '#1c1810',
             }}>
             {passive.title}
@@ -510,8 +510,8 @@ export const MobCard = props => {
       mb={0.5}
       style={{
         'cursor': 'pointer',
-        'border-radius': '4px',
-        'min-width': '140px',
+        borderRadius: '4px',
+        minWidth: '140px',
       }}
       backgroundColor="rgba(255, 255, 255, 0.05)"
       onClick={onClick}>
@@ -552,7 +552,7 @@ export const MobModal = props => {
       right={0}
       bottom={0}
       backgroundColor="rgba(0, 0, 0, 0.85)"
-      style={{ 'z-index': 50 }}
+      style={{ zIndex: 50 }}
       onClick={onClose}>
       <Box
         position="fixed"
@@ -561,8 +561,8 @@ export const MobModal = props => {
         width="520px"
         style={{
           'transform': 'translate(-50%, -50%)',
-          'max-height': '90vh',
-          'overflow-y': 'auto',
+          maxHeight: '90vh',
+          overflowY: 'auto',
         }}
         onClick={e => e.stopPropagation()}>
         {mob.revealed ? (
