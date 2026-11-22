@@ -3,6 +3,7 @@
 	name = "molar chainsword"
 	desc = "A chainsword used by the Molar Office. It's heavy, and well made."
 	special = "On kill, heal 30 sanity."
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/molar.dmi'
 	icon_state = "mika"
 	force = 44
 	damtype = RED_DAMAGE

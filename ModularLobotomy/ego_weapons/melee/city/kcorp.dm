@@ -1,6 +1,7 @@
 /obj/item/ego_weapon/city/kcorp
 	name = "K corp baton"
 	desc = "A green baton used by K corp employees."
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/kcorp.dmi'
 	icon_state = "kbatong"
 	inhand_icon_state = "kbatong"
 	force = 22
@@ -72,7 +73,7 @@
 	name = "K corp riot shield"
 	desc = "A riot shield used by K corp employees."
 	special = "Slows down the user significantly."
-	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/kcorp.dmi'
 	icon_state = "kshield"
 	lefthand_file = 'ModularLobotomy/_Lobotomyicons/lc13_left.dmi'
 	righthand_file = 'ModularLobotomy/_Lobotomyicons/lc13_right.dmi'
@@ -93,7 +94,7 @@
 	name = "Kcorp pistol"
 	desc = "A lime green pistol used by Kcorp."
 	icon_state = "kpistol"
-	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/kcorp.dmi'
 	inhand_icon_state = "kpistol"
 	lefthand_file = 'ModularLobotomy/_Lobotomyicons/lc13_left.dmi'
 	righthand_file = 'ModularLobotomy/_Lobotomyicons/lc13_right.dmi'

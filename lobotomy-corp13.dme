@@ -4509,7 +4509,6 @@
 #include "ModularLobotomy\ego_weapons\melee\city\rcorp_assault.dm"
 #include "ModularLobotomy\ego_weapons\melee\city\rosespanner.dm"
 #include "ModularLobotomy\ego_weapons\melee\city\seven.dm"
-#include "ModularLobotomy\ego_weapons\melee\city\seven_s4.dm"
 #include "ModularLobotomy\ego_weapons\melee\city\shi.dm"
 #include "ModularLobotomy\ego_weapons\melee\city\shrimp.dm"
 #include "ModularLobotomy\ego_weapons\melee\city\smiling_faces.dm"

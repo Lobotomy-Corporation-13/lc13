@@ -5,6 +5,7 @@
 	name = "smiling faces shortsword"
 	desc = "A shortsword, that is uncharacteristically clean."
 	special = "This weapon gains smoke on hit. Use in hand to release smoke. Releasing smoke gives a strength and fragility boost for a period of time"
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/smiling_faces.dmi'
 	icon_state = "smiling_shortsword"
 	inhand_icon_state = "smiling_shortsword"
 	force = 30

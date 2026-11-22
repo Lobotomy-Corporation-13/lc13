@@ -3,6 +3,7 @@
 	name = "cinq association rapier"
 	desc = "A long rapier."
 	special = "Use this weapon in hand to hop backwards. Your next attack has 2 range, and you deal double damage for 3 seconds."
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/cinq.dmi'
 	icon_state = "cinq"
 	force = 28
 	damtype = RED_DAMAGE

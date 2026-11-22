@@ -2,6 +2,7 @@
 /obj/item/ego_weapon/ranged/city/thumb
 	name = "thumb soldato rifle"
 	desc = "A 5 round magazine rifle used by The Thumb."
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/thumb.dmi'
 	icon_state = "thumb_soldato"
 	inhand_icon_state = "thumb_soldato"
 	force = 30

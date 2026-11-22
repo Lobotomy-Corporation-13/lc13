@@ -6,6 +6,7 @@
 	name = "zweihander"
 	desc = "A zweihander used by the zwei association."
 	special = "Use in hand to buff your defense, and those of everyone around you."
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/zwei.dmi'
 	icon_state = "zwei"
 	force = 55
 	attack_speed = 2
@@ -110,6 +111,7 @@
 	name = "zwei association baton"
 	desc = "A riot club used by the zwei association."
 	special = "Attack a human to stun them after a period of time."
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/zwei.dmi'
 	icon_state = "zwei_baton"
 	inhand_icon_state = "zwei_baton"
 	force = 40
@@ -144,6 +146,7 @@
 	name = "zwei knight greatsword"
 	desc = "A bulky rectangular greatsword used by the zwei of the west."
 	special = "If used at 2 range you will lunge fowards then block, if you fail to lunge you will hesitate."
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/zwei.dmi'
 	icon_state = "zweiwest"
 	inhand_icon_state = "zweiwest"
 	force = 50
