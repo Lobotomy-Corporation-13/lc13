@@ -16,7 +16,7 @@
 
 	access = list(ACCESS_COMMAND, ACCESS_SECURITY) // LC13:To-Do
 	minimal_access = list(ACCESS_COMMAND, ACCESS_SECURITY)
-	departments = DEPARTMENT_COMMAND | DEPARTMENT_LCE
+	departments = DEPARTMENT_COMMAND
 
 	mapexclude = list("mini")
 	job_important = "\

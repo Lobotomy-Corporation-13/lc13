@@ -18,7 +18,7 @@
 	minimal_access = list()
 
 	allow_bureaucratic_error = FALSE
-	departments = DEPARTMENT_SECURITY | DEPARTMENT_LCE
+	departments = DEPARTMENT_SECURITY
 
 	job_important = "You are a Limbus Company Enkephalin Researcher. As a member of the Recovery divion, your job is to repair the damaged Lobotomy Corporation Branch, and secondarily to work on and suppress Abnormalities. Use :h to talk on your departmental radio."
 
