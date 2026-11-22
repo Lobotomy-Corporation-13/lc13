@@ -22,8 +22,8 @@
 	medsensor.add_hud_to(outfit_owner)
 	outfit_owner.apply_status_effect(/datum/status_effect/autovitals)
 
-/datum/outfit/job/command/records
-	name = "Records Officer"
+/datum/outfit/job/command/lce_operations_o
+	name = "LCE Operations Officer"
 	jobtype = /datum/job/command/records
 	suit =  /obj/item/clothing/suit/armor/records
 	ears = /obj/item/radio/headset/heads/records
