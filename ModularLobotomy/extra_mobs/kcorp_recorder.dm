@@ -83,6 +83,16 @@
 	R.command = TRUE
 	access_card = new(src)
 	access_card.access = list("kcorp")
+	//Your silly claw machine hand cant fire gun
+	ADD_TRAIT(src, TRAIT_CHUNKYFINGERS, TRAIT_GENERIC)
+	ADD_TRAIT(src, TRAIT_PACIFISM, TRAIT_GENERIC)
+
+/mob/living/simple_animal/hostile/kcorp/drone/examine(mob/user)
+	. = ..()
+	for(var/obj/item/I in held_items)
+		if(!I)
+			continue
+		. += "It is holding [I]."
 
 /mob/living/simple_animal/hostile/kcorp/drone/kcorp_recorder/Login()
 	. = ..()
