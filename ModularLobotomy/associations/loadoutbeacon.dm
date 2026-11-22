@@ -42,7 +42,7 @@
 		new option.extra (get_turf(user))
 
 
-//This is just for posterity.
+/*This is just for posterity.
 /obj/item/loadout_beacon/zwei
 	name = "Zwei Loadout Beacon"
 	available_loadouts = list(
@@ -67,15 +67,16 @@
 	rare_loadouts = list(
 		/datum/loadout/zweivet/zweiwest,
 	)
-
+*/
 /datum/loadout
 	var/name = "Generic Loadout"
+	var/helmet
 	var/weapon
 	var/armor
 	var/extra
 
 
-//Zwei Loadouts
+/*Zwei Loadouts
 /datum/loadout/zwei/zweihander
 	name = "Zwei South Zweihander"
 	weapon = /obj/item/ego_weapon/city/zweihander
@@ -126,4 +127,6 @@
 	weapon = /obj/item/ego_weapon/city/zweihander/vet
 	armor = /obj/item/clothing/suit/armor/ego_gear/city/zweivet
 	extra = /obj/item/ego_weapon/city/zweihander/vet
+
+*/
 
