@@ -43,6 +43,7 @@
 
 
 /*This is just for posterity.
+//This is just for posterity.
 /obj/item/loadout_beacon/zwei
 	name = "Zwei Loadout Beacon"
 	available_loadouts = list(
@@ -71,12 +72,16 @@
 /datum/loadout
 	var/name = "Generic Loadout"
 	var/helmet
+
+/datum/loadout
+	var/name = "Generic Loadout"
 	var/weapon
 	var/armor
 	var/extra
 
 
 /*Zwei Loadouts
+//Zwei Loadouts
 /datum/loadout/zwei/zweihander
 	name = "Zwei South Zweihander"
 	weapon = /obj/item/ego_weapon/city/zweihander
