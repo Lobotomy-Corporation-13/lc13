@@ -64,7 +64,6 @@
 	return INITIALIZE_HINT_QDEL
 
 /datum/enemy
-	var/ordeal_types = list()
 
 //amber ordeals
 /datum/enemy/amber

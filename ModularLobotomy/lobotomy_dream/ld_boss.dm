@@ -1,6 +1,5 @@
-/mob/living/simple_animal/hostile/LD_boss/Titania
-
-name = "Titania"
+/mob/living/simple_animal/hostile/Titania
+	name = "Titania"
 	desc = "The Queen of Fairies, empowered by a Golden Bough. This wont be an easy fight."
 	icon = 'ModularLobotomy/_Lobotomyicons/32x64.dmi'
 	icon_state = "titania"
@@ -9,14 +8,13 @@ name = "Titania"
 	health = 4000
 	gender = FEMALE
 	is_flying_animal = TRUE
-	threat_level = ALEPH_LEVEL
 	move_to_delay = 4
 	melee_damage_lower = 70
 	melee_damage_upper = 78
 	melee_damage_type = RED_DAMAGE
 	damage_coeff = list(RED_DAMAGE = 1.2, WHITE_DAMAGE = 0.3, BLACK_DAMAGE = 0.5, PALE_DAMAGE = 1)
 	stat_attack = HARD_CRIT
-	team = ("Fairy")
+	faction = ("Fairy")
 
 	var/fairy_spawn_number = 2
 	var/fairy_spawn_time = 5 SECONDS
@@ -31,10 +29,8 @@ name = "Titania"
 	var/law_timer = 60 SECONDS
 	var/law_startup = 3 SECONDS
 
-	/mob/living/simple_animal/hostile/LD_boss/Titania/Life()
-	. = ..()
-	if(mob/living/carbon in view(20,src()))
-		if(prob(30))
+/mob/living/simple_animal/hostile/Titania/Life()
+	if(prob(30))
 		var/mob/living/getting_shelled
 		var/list/players_near = list()
 
@@ -60,15 +56,13 @@ name = "Titania"
 				for(var/i in 1 to 5)//Then make them suffer
 					new /obj/effect/titania_small(get_turf(getting_shelled))
 					SLEEP_CHECK_DEATH(2)
-	else
-		return FALSE
 
-/mob/living/simple_animal/hostile/LD_boss/Titania/Destroy()
+/mob/living/simple_animal/hostile/Titania/Destroy()
 	UnregisterAll()
 	new /obj/structure/bough/mining (get_turf(src))
 	return ..()
 
-	/mob/living/simple_animal/hostile/LD_boss/Titania/AttackingTarget(atom/attacked_target)
+/mob/living/simple_animal/hostile/Titania/AttackingTarget(atom/attacked_target)
 	var/mob/living/carbon/human/H = attacked_target
 	//Kills the weak immediately.
 	if(ishuman(H) && get_user_level(H) < 3)
@@ -78,13 +72,13 @@ name = "Titania"
 		H.gib()
 		return
 
-		/mob/living/simple_animal/hostile/LD_boss/Titania/proc/FairyLoop()
+/mob/living/simple_animal/hostile/Titania/proc/FairyLoop()
 	if(IsCombatMap())
 		return
 	SpawnFairies(fairy_spawn_number)
 	addtimer(CALLBACK(src, PROC_REF(FairyLoop)), fairy_spawn_time)
 
-/mob/living/simple_animal/hostile/LD_boss/Titania/proc/SpawnFairies(amount, mob/turf_mob, ignore_cap = FALSE)
+/mob/living/simple_animal/hostile/Titania/proc/SpawnFairies(amount, mob/turf_mob, ignore_cap = FALSE)
 	if(!ignore_cap && (length(spawned_mobs) > fairy_spawn_limit))
 		return
 
@@ -95,17 +89,17 @@ name = "Titania"
 		spawn_turf = get_turf(src)
 
 	for(var/i in 1 to amount)
-		var//mob/living/simple_animal/hostile/LD_boss/Titania/Fairy = new(spawn_turf)
+		var/mob/living/simple_animal/hostile/Titania/Fairyswarm/fairy = new(spawn_turf)
 		fairy.faction = faction
 		RegisterMob(fairy)
 
 //Cleaning fairies
-/mob/living/simple_animal/hostile/LD_boss/Titania/death(gibbed)
+/mob/living/simple_animal/hostile/Titania/death(gibbed)
 	for(var/mob/living/A in spawned_mobs)
 		A.death()
 	return ..()
 
-/mob/living/simple_animal/hostile/LD_boss/Titania/proc/SetLaw()
+/mob/living/simple_animal/hostile/Titania/proc/SetLaw()
 	if(IsCombatMap())
 		return
 
@@ -124,15 +118,16 @@ name = "Titania"
 		if("ranged fairy")
 			lawmessage = "Mine fairies will come to my aid if you strike me with ranged attacks."
 
-	for(var/mob/living/carbon/human/H in GLOB.player_list)
-		to_chat(mob/living/carbon/human/H in View(20, src), span_colossus("[lawmessage]"))
+	for(var/mob/living/carbon/human/H in view(20, src))
+		to_chat(H, span_colossus("[lawmessage]"))
 	addtimer(CALLBACK(src, PROC_REF(ActivateLaw)), law_startup)	//Start Law 3 Seconds
 
 
-/mob/living/simple_animal/hostile/LD_boss/Titania/proc/ActivateLaw()
+/mob/living/simple_animal/hostile/Titania/proc/ActivateLaw()
 	addtimer(CALLBACK(src, PROC_REF(SetLaw)), law_timer)	//Set Laws in 30 Seconds
 	currentlaw = nextlaw
-	to_chat(mob/living/carbon/human/H in View(20, src), span_danger("The new law is now in effect."))
+	for(var/mob/living/carbon/human/L in view(20, src))
+		to_chat(L, span_danger("The new law is now in effect."))
 
 	if(currentlaw == "fairies")
 		for(var/mob/living/simple_animal/L in spawned_mobs)
@@ -142,13 +137,13 @@ name = "Titania"
 			L.ChangeResistances(list(RED_DAMAGE = 1, WHITE_DAMAGE = 1, BLACK_DAMAGE = 1, PALE_DAMAGE = 1))
 
 
-/mob/living/simple_animal/hostile/LD_boss/Titania/proc/Punishment(mob/living/sinner)
+/mob/living/simple_animal/hostile/Titania/proc/Punishment(mob/living/sinner)
 	to_chat(sinner, span_userdanger("You are hurt due to breaking Fairy Law."))
 	sinner.deal_damage(law_damage, PALE_DAMAGE, src, flags = (DAMAGE_FORCED | DAMAGE_UNTRACKABLE), attack_type = (ATTACK_TYPE_SPECIAL))
 	new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(sinner), pick(GLOB.alldirs))
 
 //Ranged stuff
-/mob/living/simple_animal/hostile/LD_boss/Titania/bullet_act(obj/projectile/Proj)
+/mob/living/simple_animal/hostile/Titania/bullet_act(obj/projectile/Proj)
 	..()
 
 	if(!ishuman(Proj.firer))
@@ -167,7 +162,7 @@ name = "Titania"
 		SpawnFairies(1)
 
 //Melee stuff
-/mob/living/simple_animal/hostile/LD_boss/Titania/attacked_by(obj/item/I, mob/living/user)
+/mob/living/simple_animal/hostile/Titania/attacked_by(obj/item/I, mob/living/user)
 	..()
 
 	if(!user)
@@ -180,62 +175,22 @@ name = "Titania"
 	if(currentlaw == "armor" && I.damtype == RED_DAMAGE && I.force >= 10)
 		Punishment(user)
 
-/obj/effect/LD/titania_aoe
-	name = "titania warning"
-	desc = "A target warning you of incoming pain"
-	icon = 'icons/effects/96x96.dmi'
-	icon_state = "warning_gray"
-	move_force = INFINITY
-	pull_force = INFINITY
-	pixel_x = -32
-	pixel_y = -32
-	generic_canpass = FALSE
-	movement_type = PHASING | FLYING
-	var/boom_damage = 60 //Just white.
-	var/lifetime = 2 SECONDS
-	layer = POINT_LAYER	//We want this HIGH. SUPER HIGH. We want it so that you can absolutely, guaranteed, see exactly what is about to hit you.
+/mob/living/simple_animal/hostile/Titania/proc/RegisterMob(mob/living/L)
+	RegisterSignal(L, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING), PROC_REF(UnregisterMob))
+	spawned_mobs += L
 
-/obj/effect/LD/titania_aoe/Initialize()
-	. = ..()
-	addtimer(CALLBACK(src, PROC_REF(explode)), lifetime)
+/mob/living/simple_animal/hostile/Titania/proc/UnregisterMob(mob/living/L)
+	UnregisterSignal(L, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING))
+	spawned_mobs -= L
 
-/obj/effect/LD/titania_aoe/proc/explode()
-	playsound(get_turf(src), 'sound/magic/magic_missile.ogg', 50, 0, 8)
-	for(var/turf/T in range(2, src))
-		new /obj/effect/temp_visual/pale_eye_attack(T)
-	for(var/mob/living/L in view(2, src))
-		L.deal_damage(boom_damage, WHITE_DAMAGE, src, flags = (DAMAGE_FORCED | DAMAGE_UNTRACKABLE), attack_type = (ATTACK_TYPE_SPECIAL))
-	qdel(src)
-
-//AOE
-/obj/effect/LD/titania_small
-	name = "titania warning"
-	desc = "A target warning you of incoming pain"
-	icon = 'icons/effects/effects.dmi'
-	icon_state = "tbird_bolt"
-	move_force = INFINITY
-	pull_force = INFINITY
-	generic_canpass = FALSE
-	movement_type = PHASING | FLYING
-	var/boom_damage = 40 //Applies fragile
-	var/lifetime = 1.2 SECONDS
-	layer = POINT_LAYER	//We want this HIGH. SUPER HIGH. We want it so that you can absolutely, guaranteed, see exactly what is about to hit you.
-
-/obj/effect/titania_small/Initialize()
-	. = ..()
-	addtimer(CALLBACK(src, PROC_REF(explode)), lifetime)
-
-/obj/effect/titania_small/proc/explode()
-	playsound(get_turf(src), 'sound/magic/blind.ogg', 50, 0, 8)
-	new /obj/effect/temp_visual/pale_eye_attack(get_turf(src))
-	for(var/mob/living/L in get_turf(src))
-		L.deal_damage(boom_damage, WHITE_DAMAGE, src, flags = (DAMAGE_FORCED | DAMAGE_UNTRACKABLE), attack_type = (ATTACK_TYPE_SPECIAL))
-		L.apply_lc_red_fragile(1)
-		L.apply.lc_white_fragile(2)
-	qdel(src)
+/mob/living/simple_animal/hostile/Titania/proc/UnregisterAll()
+	for(var/mob/living/L in spawned_mobs)
+		UnregisterMob(L)
+		qdel(L)
+	spawned_mobs.Cut()
 
 
-/mob/living/simple_animal/hostile/LD_boss/Titania/Fairy
+/mob/living/simple_animal/hostile/Titania/Fairy
 	name = "fairy"
 	desc = "A tiny, extremely hungry fairy."
 	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
@@ -258,12 +213,12 @@ name = "Titania"
 	mob_size = MOB_SIZE_TINY
 	del_on_death = TRUE
 
-/mob/living/simple_animal/hostile/LD_boss/Titania/Fairy/Initialize()
+/mob/living/simple_animal/hostile/Titania/Fairyswarm/Initialize()
 	. = ..()
 	pixel_x = rand(-16, 16)
 	pixel_y = rand(-16, 16)
 
-/mob/living/simple_animal/hostile/LD_boss/Titania/Fairy/AttackingTarget(atom/attacked_target)
+/mob/living/simple_animal/hostile/Titania/Fairy/AttackingTarget(atom/attacked_target)
 	..()
 	if(ishuman(attacked_target))
 		var/mob/living/carbon/human/H = attacked_target
@@ -271,12 +226,12 @@ name = "Titania"
 		H.apply_lc_red_fragile(1)
 
 
-/mob/living/simple_animal/hostile/LD_boss/Titania/Corroded
+/mob/living/simple_animal/hostile/Titania/Corroded
 // 2 tile AOE, heals /titania mobs in range, icon files included
-// For the 2 tile AOE look at ModularLobotomy/rcorp/rcorp_abnos/easyteam/easycombat/blue_shepard.dm
+// For the 2 tile AOE look at ModularLobotomy/rcorp/rcorp_abnos/easyfaction/easycombat/blue_shepard.dm
 // for the healing look at /mob/living/simple_animal/hostile/abnormality/eris/proc/healpulse() in code/modules/mob/living/simple_animal/abnormality/he/eris.dm
 	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
 	icon_state = "fairy_mass"
 	icon_living = "fairy_mass"
 	icon_dead = "fairy_mass_dead"
-	team = ("Fairy")
+	faction = ("Fairy")
