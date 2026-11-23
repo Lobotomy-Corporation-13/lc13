@@ -21,7 +21,7 @@
 		JUSTICE_ATTRIBUTE = 60,
 	)
 
-	var/draw_chance
+	var/draw_chance = 20
 	var/list/deck = list(
 				//Bright Cards
 				"Red Crane and Sun",
