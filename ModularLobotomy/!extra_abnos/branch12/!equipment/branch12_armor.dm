@@ -14,13 +14,6 @@
 
 
 // --------ZAYIN---------
-/obj/item/clothing/suit/armor/ego_gear/branch12/barostem
-	name = "barostem"
-	desc = "Made from the wool of the Baromez. \
-		provides no warmth but is very lightweight."
-	//icon_state = "barostem"
-	armor = list(RED_DAMAGE = 5, WHITE_DAMAGE = 10, BLACK_DAMAGE = 5, PALE_DAMAGE = -10)
-
 /obj/item/clothing/suit/armor/ego_gear/branch12/signal
 	name = "signal"
 	desc = "A simple black and white armor set."
@@ -176,6 +169,18 @@
 	armor = list(RED_DAMAGE = 40, WHITE_DAMAGE = 40, BLACK_DAMAGE = -10, PALE_DAMAGE = 0)
 	attribute_requirements = list(
 							PRUDENCE_ATTRIBUTE = 40
+							)
+
+/obj/item/clothing/suit/armor/ego_gear/branch12/barostem
+	name = "barostem"
+	desc = "Made from the wool of the Baromez. \
+		provides no warmth but is very lightweight."
+	icon_state = "barostem"
+	armor = list(RED_DAMAGE = 35, WHITE_DAMAGE = 35, BLACK_DAMAGE = 15, PALE_DAMAGE = -25)
+
+	attribute_requirements = list(
+							FORTITUDE_ATTRIBUTE = 30,
+							TEMPERANCE_ATTRIBUTE = 30,
 							)
 
 /obj/item/clothing/suit/armor/ego_gear/branch12/egoification

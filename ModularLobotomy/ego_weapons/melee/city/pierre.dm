@@ -4,6 +4,7 @@
 	name = "district 23 butcher knife"
 	desc = "A cleaver found in the backstreets of district 23. This one is rusted, but still performs it's functions."
 	special = "This weapon heals you on hit."
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/backstreet_butcher.dmi'
 	icon_state = "jack"
 	force = 28
 	attack_speed = 2

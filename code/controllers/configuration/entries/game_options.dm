@@ -407,3 +407,6 @@
 	min_val = 0
 
 /datum/config_entry/flag/dynamic_config_enabled
+
+/datum/config_entry/flag/no_city_faction_oversight
+	protection = CONFIG_ENTRY_LOCKED

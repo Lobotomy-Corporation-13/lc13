@@ -6,6 +6,7 @@
 	name = "Elogio Bianco"
 	desc = "This Scythe constantly emits a low hum, transfered to things you strike with it. \
 		If your Vibration matches the target's, you resonate. This deals Pale Damage instead of White Damage and deals more of it."
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/color_fixers.dmi'
 	icon_state = "reverberation"
 	inhand_icon_state = "reverberation"
 	force = 60 // 85 DPS w/o Vibration, 128 with.

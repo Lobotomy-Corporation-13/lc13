@@ -10,21 +10,6 @@ GLOBAL_LIST_INIT(command_positions, list(
 	"Department Head",
 	"Agent Captain",
 
-	// City heads
-	"Doctor",
-	"Hana Administrator",
-	"Association Section Director",
-	"Association Assistant Director",
-	"Subsidary Office Director",
-	"Index Messenger",
-	"Blade Lineage Cutthroat",
-	"Grand Inquisitor",
-	"Thumb Sottocapo",
-	"Kurokumo Kashira",
-	"Thumb East Capo",
-	"Big Brother",
-	"Insurgence Nightwatch Agent",
-
 	// R-corp Officers
 	"Ground Commander",
 	"Lieutenant Commander",
@@ -66,6 +51,7 @@ GLOBAL_LIST_INIT(command_positions, list(
 	"Chief Medical Officer",
 	"Lead Researcher",
 
+	//Fixer Office
 	"Office Director",
 
 	// Enk Rush Rework
@@ -73,6 +59,25 @@ GLOBAL_LIST_INIT(command_positions, list(
 	"LCE Operations Officer",
 	"LCE Agent Captain",
 
+	// City heads
+	"Doctor",
+
+	//NeoCity Major
+	"Liu South Section 5 Director",
+	"Big Brother",
+	"Thumb Sottocapo",
+	"Udjat Captain",
+	"Grand Inquisitor",
+
+	//NeoCity Minor
+	"Blade Lineage Cutthroat",
+	"Dawn Office Operator",
+	"Full Stop Operator",
+	"Kurokumo Kashira",
+	"Shi South Section 2 Director",
+	"Streetlight Office Operator",
+	"Devyat North Section 3 Director",
+	"Zwei Veteran Fixer",
 	))
 
 
@@ -87,9 +92,11 @@ GLOBAL_LIST_INIT(medical_positions, list(
 	"Nurse Practitioner",
 
 	// City
+	"Clinic Director",
+	"Clinic Staff",
+	"Clinic Field Agent",
 	"Doctor",
 	"Nurse",
-	"Paramedic",
 	"Medical Fixer Assistant",
 	"Prosthetics Surgeon",
 
@@ -117,15 +124,12 @@ GLOBAL_LIST_INIT(service_positions, list(
 	"Facility Support Clerk",
 
 	"Proshetics Surgeon",
-	"HHPP Chef",
 	"Civilian",
 	"Backstreets Butcher",
 	"Carnival",
 	"Workshop Attendant",
 	"Main Office Representative",
 	"Fishhook Office Fixer",
-
-
 
 	//R-Corp Sixth Pack
 	"R-Corp Acquisitions Specialist",
@@ -136,6 +140,9 @@ GLOBAL_LIST_INIT(service_positions, list(
 	//Enk Rush Rework
 	"LCE Recovery Clerk",
 	"LCE Operations Clerk",
+  
+	//Neocity
+	"HHPP Chef",
 	))
 
 
@@ -169,6 +176,12 @@ GLOBAL_LIST_INIT(security_positions, list(
 	//Enk Rush Rework
 	"LCE Recovery Agent",
 	"LCE Operations Agent",
+  
+	//Neocity
+	"Grand Inquisitor",
+	"N Corp Grosshammer",
+	"N Corp Mittlehammer",
+	"N Corp Kleinhammer",
 	))
 
 
@@ -255,6 +268,24 @@ GLOBAL_LIST_INIT(fixer_positions, list(
 	"Rat", // most fitting, somehow
 
 	"Office Fixer",
+
+	//Neocity Major
+	"Udjat Captain",
+	"Udjat Heavy Gunner",
+	"Udjat Heavy Infantry",
+	"Udjat Light Infantry",
+
+	//Neocity Minor
+	"Dawn Office Operator",
+	"Dawn Office Veteran",
+	"Dawn Office Junior",
+
+	"Full Stop Operator",
+	"Full Stop Sniper",
+	"Full Stop Rifleman",
+
+	"Streetlight Office Operator",
+	"Streetlight Office Fixer",
 ))
 
 GLOBAL_LIST_INIT(association_positions, list(
@@ -262,40 +293,39 @@ GLOBAL_LIST_INIT(association_positions, list(
 	"Association Veteran",
 	"Association Fixer",
 	"Roaming Association Fixer",
+
+	//Neocity Major
+	"Liu South Section 5 Director",
+	"Liu Veteran Fixer",
+	"Liu Fixer",
+
+	//Neocity Minor
+	"Shi South Section 2 Director",
+	"Shi Fixer",
+
+	"Zwei Fixer",
+	"Zwei Veteran Fixer",
+
+	"Devyat North Section 3 Director",
+	"Devyat Fixer",
 ))
 
 GLOBAL_LIST_INIT(city_antagonist_positions, list(
-	"Index Messenger",
-	"Index Proxy",
-	"Index Proselyte",
-
-	"Blade Lineage Cutthroat",
-	"Blade Lineage Salsu",
-	"Blade Lineage Ronin",
-	"Blade Lineage Roaming Salsu",
-
-	"Grand Inquisitor",
-	"N Corp Grosshammer",
-	"N Corp Mittlehammer",
-	"N Corp Kleinhammer",
-
+	//NeoCity Major
 	"Thumb Sottocapo",
 	"Thumb Capo",
 	"Thumb Soldato",
 
-	"Kurokumo Kashira",
-	"Kurokumo Hosa",
-	"Kurokumo Wakashu",
-
-	"Thumb East Capo",
-	"Thumb East Soldato",
-
 	"Big Brother",
-	"Younger Brother",
 	"Little Brother",
 
-	"Insurgence Nightwatch Agent",
-	"Insurgence Transport Agent",
+	//Neocity Minor
+	"Blade Lineage Cutthroat",
+	"Blade Lineage Salsu",
+
+	"Kurokumo Kashira",
+	"Kurokumo Wakashu",
+
 ))
 
 // job categories for rendering the late join menu

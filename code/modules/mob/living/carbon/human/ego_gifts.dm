@@ -1696,3 +1696,9 @@
 	justice_bonus = 8
 	temperance_bonus = -2 //smoking kills
 	slot = LEFTBACK
+
+/datum/ego_gifts/aura_farmer
+	name = "Aura"
+	icon_state = "aura"
+	justice_bonus = 3
+	slot = EYE

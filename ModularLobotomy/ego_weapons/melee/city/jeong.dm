@@ -4,6 +4,7 @@
 	name = "jeong's office wakizashi"
 	desc = "A small blade, easy to keep with you. It would be nice to have on hand in a casino brawl."
 	special = "On attack, draw a Hanafuda card from your deck. Use in hand to discard a card from your deck and gain 1 SP"
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/jeong.dmi'
 	icon_state = "jeong_fixer"
 	force = 39
 	attack_speed = 1
@@ -19,6 +20,8 @@
 		TEMPERANCE_ATTRIBUTE = 80,
 		JUSTICE_ATTRIBUTE = 60,
 	)
+
+	var/draw_chance = 20
 	var/list/deck = list(
 				//Bright Cards
 				"Red Crane and Sun",
@@ -96,7 +99,7 @@
 	discard.Cut()
 
 /obj/item/ego_weapon/city/jeong/attack(mob/living/target, mob/living/carbon/human/user)
-	if(length(deck))
+	if(length(deck) && prob(draw_chance))
 
 		//Pick a card, take from the deck and put to discard.
 		var/drawn = pick_n_take(deck)
