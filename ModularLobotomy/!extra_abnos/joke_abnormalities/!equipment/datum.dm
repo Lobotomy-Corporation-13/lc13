@@ -46,6 +46,15 @@ Keep things balanced if they aren't going to be admin only.  - Coxswain
 	cost = 50
 
 //Aleph
+// Baldi - Math Perfection
+/datum/ego_datum/weapon/baldi
+	item_path = /obj/item/ego_weapon/math_perfection
+	cost = 100
+
+/datum/ego_datum/armor/baldi
+	item_path = /obj/item/clothing/suit/armor/ego_gear/aleph/math_perfection
+	cost = 100
+
 // Buff Rudolta - Ultimate Christmas
 /datum/ego_datum/weapon/buff_christmas
 	item_path = /obj/item/ego_weapon/ultimate_christmas

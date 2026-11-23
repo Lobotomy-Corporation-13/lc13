@@ -1690,6 +1690,13 @@
 	prudence_bonus = 2
 	slot = BROOCH
 
+/datum/ego_gifts/baldi
+	name = "Baldi"
+	icon_state = "baldie"
+	justice_bonus = 8
+	prudence_bonus = 8
+	slot = FACE
+
 /datum/ego_gifts/caterpillar
 	name = "Havana"
 	icon_state = "havana"

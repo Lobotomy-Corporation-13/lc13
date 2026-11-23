@@ -72,6 +72,20 @@
 							JUSTICE_ATTRIBUTE = 80
 							)
 
+/obj/item/clothing/suit/armor/ego_gear/aleph/math_perfection
+	name = "math perfection"
+	desc = "It's time for Basic Maths."
+	icon = 'ModularLobotomy/_Lobotomyicons/joke_abnos/joke_armor.dmi'
+	worn_icon = 'ModularLobotomy/_Lobotomyicons/joke_abnos/joke_worn.dmi'
+	icon_state = "math_perfection"
+	armor = list(RED_DAMAGE = 70, WHITE_DAMAGE = 60, BLACK_DAMAGE = 80, PALE_DAMAGE = 30) //240
+	attribute_requirements = list(
+							FORTITUDE_ATTRIBUTE = 100,
+							PRUDENCE_ATTRIBUTE = 120,
+							TEMPERANCE_ATTRIBUTE = 100,
+							JUSTICE_ATTRIBUTE = 100
+							)
+
 /obj/item/clothing/suit/armor/ego_gear/aleph/sukuna
 	name = "heian era robes"
 	desc = "Wearing these makes you want to dismember a white haired sorcerer."
