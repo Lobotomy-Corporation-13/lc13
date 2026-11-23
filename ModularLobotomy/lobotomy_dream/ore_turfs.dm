@@ -208,7 +208,7 @@
 			if(risk_level >= 3)
 				visible_message(span_danger("Damaged machinery in the [src] causes a qliphoth meltdown!"))
 				SSlobotomy_corp.InitiateMeltdown(round(SSlobotomy_corp.qliphoth_meltdown_amount), TRUE)
-	elseif(prob(20))
+	else if(prob(20))
 		visible_message(span_danger("Rocks crumble in around you!"))
 		for(var/turf/T in range(1, src))
 			new /turf/closed/mineral/random/facility

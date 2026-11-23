@@ -89,12 +89,6 @@ GLOBAL_VAR_INIT(wcorp_enemy_faction, "") //decides which faction WCorp will be u
 				to_chat(world, span_userdanger("Destroy the Heart of Greed within two hours!"))
 				RegisterSignal(SSdcs, COMSIG_GLOB_MOB_DEATH, PROC_REF(CheckLiving))
 
-			//Enkephalin Rush
-			if("enkephalin_rush")
-				roundstartannounce() //being stored as a proc at the bottom because its very long
-				addtimer(CALLBACK(src, PROC_REF(infodevistationwarning)), 2 MINUTES)
-				
-
 			//Fixers
 			if("fixers")
 				addtimer(CALLBACK(src, PROC_REF(roundendwarning)), 80 MINUTES)
@@ -173,9 +167,6 @@ GLOBAL_VAR_INIT(wcorp_enemy_faction, "") //decides which faction WCorp will be u
 	SSticker.force_ending = TRUE
 	to_chat(world, span_userdanger(text))
 
-/datum/game_mode/combat/proc/infodevistationwarning()
-	minor_announce("Facility Primary Servers offline, comms distruption will occur untill the servers are repaired, You are on your own LCE.", LCCB Preliminary Observation)
-
 /datum/game_mode/combat/proc/roundendwarning()
 	switch (SSmaptype.maptype)
 		if("limbus_labs")
@@ -252,8 +243,3 @@ GLOBAL_VAR_INIT(wcorp_enemy_faction, "") //decides which faction WCorp will be u
 		qdel(L)
 	for(var/mob/living/simple_animal/hostile/abnormality/A in GLOB.abnormality_mob_list)
 		to_chat(A, "Incorporeal barrier is broken!")
-
-/datum/game_mode/combat/proc/roundstartannouncement() //being stored here because its long, see line 92.
-	minor_announce("Branch D-5681 has been approved for recovery by the LCCB. every team we send in wont come back, practically feeding the abnormalities at this point. \
-Despite the damage the site automated systems are still online, that means we cant get into the golden bough untill most of the facility is fixed. \
-Almost every department is devistated so expect distruption to pretty much every system down there. Good Luck.", LCCB Preliminary Observation)
