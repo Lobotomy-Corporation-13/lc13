@@ -17,11 +17,4 @@
 		user.forceMove(T)
 		to_chat(user,span_notice("You've returned to safety!"))
 
-/*//Re-introduce and map this when the formatting is unfucked
-/obj/item/book/manual/wiki/enkephalin_rush
-	name = "Site Recovery Manual"
-	icon_state ="barbook"
-	author = "Dr. Heavenly, Lobotomy Corporation"
-	title = "Site Recovery Operations & Procedures"
-	page_link = "Guide_to_Enkephalin_Rush"
-*/
+
