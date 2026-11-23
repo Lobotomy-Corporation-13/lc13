@@ -35,7 +35,7 @@
 							JUSTICE_ATTRIBUTE = 40
 							)
 
-/obj/item/clothing/suit/armor/ego_gear/he/allergen
+/obj/item/clothing/suit/armor/ego_gear/community/allergen
 	name = "allergen"
 	desc = "A coat made of many petals of a flower. It's itchy inside."
 	icon = 'ModularLobotomy/!extra_abnos/community/!icons/community_armor.dmi' //Icon location
