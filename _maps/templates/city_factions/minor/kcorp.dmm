@@ -87,10 +87,7 @@
 /area/city/fixers)
 "I" = (
 /obj/structure/closet,
-/obj/item/clothing/suit/armor/ego_gear/city/kcorp_l1/weak,
-/obj/item/clothing/head/ego_hat/helmet/kcorp,
-/obj/item/ego_weapon/city/kcorp/axe,
-/obj/item/ego_weapon/shield/kcorp,
+/obj/item/loadout_beacon/kcorp,
 /turf/open/floor/facility/dark,
 /area/city/fixers)
 "N" = (
@@ -104,14 +101,11 @@
 /area/city/fixers)
 "R" = (
 /obj/structure/closet,
-/obj/item/clothing/suit/armor/ego_gear/city/kcorp_l1/weak,
-/obj/item/clothing/head/ego_hat/helmet/kcorp/visor,
-/obj/item/ego_weapon/city/kcorp,
-/obj/item/ego_weapon/shield/kcorp,
 /obj/machinery/light{
 	dir = 1;
 	pixel_y = 19
 	},
+/obj/item/loadout_beacon/kcorp,
 /turf/open/floor/facility/dark,
 /area/city/fixers)
 "S" = (
