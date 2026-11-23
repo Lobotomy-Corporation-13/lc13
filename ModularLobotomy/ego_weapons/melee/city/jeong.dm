@@ -20,6 +20,8 @@
 		TEMPERANCE_ATTRIBUTE = 80,
 		JUSTICE_ATTRIBUTE = 60,
 	)
+
+	var/draw_chance = 20
 	var/list/deck = list(
 				//Bright Cards
 				"Red Crane and Sun",
@@ -97,7 +99,7 @@
 	discard.Cut()
 
 /obj/item/ego_weapon/city/jeong/attack(mob/living/target, mob/living/carbon/human/user)
-	if(length(deck))
+	if(length(deck) && prob(draw_chance))
 
 		//Pick a card, take from the deck and put to discard.
 		var/drawn = pick_n_take(deck)
