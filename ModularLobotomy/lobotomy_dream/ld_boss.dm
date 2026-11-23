@@ -256,8 +256,7 @@
 			T.adjustBruteLoss(-heal_amount)
 			new /obj/effect/temp_visual/heal(get_turf(T), "#FF4444")
 
-/mob/living/simple_animal/hostile/Titania/Corroded/proc/AttackingTarget(atom/attacked_target)
-	. = ..()
+/mob/living/simple_animal/hostile/Titania/Corroded/AttackingTarget(atom/attacked_target)
 	for(var/turf/T in view(2, src))
 		new /obj/.effect/temp_visual/smash_effect(T)
 	addtimer(CALLBACK(src, PROC_REF(Attack2)), 2 SECONDS)
