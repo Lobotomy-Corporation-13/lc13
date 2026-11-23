@@ -1,5 +1,5 @@
 //Mainly supplies for latejoiners
-/obj/effect/landmark/enkritemspawn
+/obj/effect/landmark/lditemspawn
 	name = "site burial requisitions"
 	desc = "It spawns an item. Notify a coder. Thanks!"
 	icon = 'icons/effects/landmarks_static.dmi'

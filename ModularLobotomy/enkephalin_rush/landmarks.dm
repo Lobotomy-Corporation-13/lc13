@@ -1,4 +1,4 @@
-//Abnormalities that are mapped into enkephalin rush. Generally none should teleport or overall cause inconvenience to people outside the surrounding area
+//Abnormalities that are mapped into The Lobotomy Dream. Generally none should teleport or overall cause inconvenience to people outside the surrounding area
 GLOBAL_LIST_INIT(assiyah, list(//HE's and TETHs
 //	/mob/living/simple_animal/hostile/abnormality/puss_in_boots,//difficulty needs testing
 //	/mob/living/simple_animal/hostile/abnormality/red_shoes,//re-introduce after breach rework
@@ -28,7 +28,7 @@ GLOBAL_LIST_INIT(atziluth, list(//ALEPH
 	null,
 ))
 
-/obj/effect/landmark/abnospawn/enkephalin_rush
+/obj/effect/landmark/abnospawn/lobotomy_dream
 	name = "assiyah abno spawner"
 	desc = "It spawns an abno. Notify a coder. Thanks!"
 	icon = 'icons/effects/landmarks_static.dmi'
@@ -36,7 +36,7 @@ GLOBAL_LIST_INIT(atziluth, list(//ALEPH
 	var/list/abno_list = list()
 	var/threat_level = ZAYIN_LEVEL
 
-/obj/effect/landmark/abnospawn/enkephalin_rush/Initialize(mapload)
+/obj/effect/landmark/abnospawn/lobotomy_dream/Initialize(mapload)
 	..()
 	if(!length(abno_list))
 		return INITIALIZE_HINT_LATELOAD
@@ -47,7 +47,7 @@ GLOBAL_LIST_INIT(atziluth, list(//ALEPH
 		return INITIALIZE_HINT_LATELOAD
 	return INITIALIZE_HINT_QDEL
 
-/obj/effect/landmark/abnospawn/enkephalin_rush/proc/CutQueue(mob/living/simple_animal/hostile/abnormality/abno)
+/obj/effect/landmark/abnospawn/lobotomy_dream/proc/CutQueue(mob/living/simple_animal/hostile/abnormality/abno)
 	if(abno.type in SSabnormality_queue.possible_abnormalities[threat_level])
 		addtimer(CALLBACK(abno, TYPE_PROC_REF(/mob/living/simple_animal/hostile/abnormality, BreachEffect), null, BREACH_MINING), 20 SECONDS)
 		SSabnormality_queue.possible_abnormalities[threat_level] -= abno.type
@@ -55,26 +55,26 @@ GLOBAL_LIST_INIT(atziluth, list(//ALEPH
 	sleep(50)
 	CutQueue(abno)
 
-/obj/effect/landmark/abnospawn/enkephalin_rush/he
+/obj/effect/landmark/abnospawn/lobotomy_dream/he
 	threat_level = HE_LEVEL
 
-/obj/effect/landmark/abnospawn/enkephalin_rush/he/Initialize(mapload)
+/obj/effect/landmark/abnospawn/lobotomy_dream/he/Initialize(mapload)
 	abno_list = GLOB.assiyah
 	..()
 	return INITIALIZE_HINT_QDEL//clogs the initialize() log otherwise
 
-/obj/effect/landmark/abnospawn/enkephalin_rush/waw
+/obj/effect/landmark/abnospawn/lobotomy_dream/waw
 	threat_level = WAW_LEVEL
 
-/obj/effect/landmark/abnospawn/enkephalin_rush/waw/Initialize(mapload)
+/obj/effect/landmark/abnospawn/lobotomy_dream/waw/Initialize(mapload)
 	abno_list = GLOB.briah
 	..()
 	return INITIALIZE_HINT_QDEL
 
-/obj/effect/landmark/abnospawn/enkephalin_rush/aleph
+/obj/effect/landmark/abnospawn/lobotomy_dream/aleph
 	threat_level = ALEPH_LEVEL
 
-/obj/effect/landmark/abnospawn/enkephalin_rush/aleph/Initialize(mapload)
+/obj/effect/landmark/abnospawn/lobotomy_dream/aleph/Initialize(mapload)
 	abno_list = GLOB.atziluth
 	..()
 	return INITIALIZE_HINT_QDEL
