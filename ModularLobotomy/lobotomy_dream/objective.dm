@@ -15,7 +15,7 @@ GLOBAL_VAR(bough_collected)//roundend text
 
 	if(!SSticker.force_ending)
 		//Round End Effects
-		endround()
+		SSticker.force_ending = 1
 		GLOB.roundend_music = file("sound/roundend/canto_1.ogg")
 		for(var/mob/M in GLOB.player_list)
 			to_chat(M, span_userdanger("[uppertext(user.real_name)] has slain the boss and collected the bough!"))

@@ -10,7 +10,7 @@
 		/obj/item/reagent_containers/hypospray/medipen/mental,
 	)
 
-/obj/effect/landmark/enkritemspawn/Initialize()
+/obj/effect/landmark/lditemspawn/Initialize()
 	..()
 	var/spawning = pick(possible_items)
 	new spawning(get_turf(src))
@@ -18,13 +18,12 @@
 	addtimer(CALLBACK(src, PROC_REF(spawnagain)), timeradd)
 	return INITIALIZE_HINT_NORMAL
 
-/obj/effect/landmark/enkritemspawn/proc/spawnagain()
+/obj/effect/landmark/lditemspawn/proc/spawnagain()
 	var/timeradd = rand(1200, 1800)
 	addtimer(CALLBACK(src, PROC_REF(spawnagain)), timeradd)
 
 	if(prob(50))	//50% to spawn
 		return
-
 	var/spawning = pick(possible_items)
 	new spawning(get_turf(src))
 
@@ -64,6 +63,7 @@
 	return INITIALIZE_HINT_QDEL
 
 /datum/enemy
+	var/list/ordeal_types = list()
 
 //amber ordeals
 /datum/enemy/amber
