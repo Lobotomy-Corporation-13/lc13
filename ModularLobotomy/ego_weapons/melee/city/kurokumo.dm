@@ -4,6 +4,7 @@
 	name = "kurokumo blade - skyclearing cut"
 	desc = "A very sharp blade used by the Kurokumo clan. Get it bloody. Uses the Skyclearing Slash as a technique."
 	special = "Skyclearing Cut - Use in hand to empower your next attack. The power increase and stuntime improve with more Dark Cloud Stacks."
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/kurokumo.dmi'
 	icon_state = "kurokumo_sheathed"
 	inhand_icon_state = "kurokumo_sheathed"
 	force = 52
