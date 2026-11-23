@@ -208,11 +208,11 @@
 			if(risk_level >= 3)
 				visible_message(span_danger("Damaged machinery in the [src] causes a qliphoth meltdown!"))
 				SSlobotomy_corp.InitiateMeltdown(round(SSlobotomy_corp.qliphoth_meltdown_amount), TRUE)
-	else
+	elseif(prob(20))
 		visible_message(span_danger("Rocks crumble in around you!"))
 		for(var/turf/T in range(1, src))
 			new /turf/closed/mineral/random/facility
-		for(var/mob/living/L in T)
+		for(var/mob/living/L in range(2, src))
 			var/throw_dir = get_dir(src, L)
 			if(!throw_dir)
 				throw_dir = pick(NORTH, SOUTH, EAST, WEST) // random dir if on same tile
