@@ -230,8 +230,28 @@
 // 2 tile AOE, heals /titania mobs in range, icon files included
 // For the 2 tile AOE look at ModularLobotomy/rcorp/rcorp_abnos/easyfaction/easycombat/blue_shepard.dm
 // for the healing look at /mob/living/simple_animal/hostile/abnormality/eris/proc/healpulse() in code/modules/mob/living/simple_animal/abnormality/he/eris.dm
+	name = 'Corroded' //todo confirm if this is correct or not please thanks
+	desc = "heals around itself or something idk" //todo hi i dont know what it is so i cant write this
 	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
 	icon_state = "fairy_mass"
 	icon_living = "fairy_mass"
 	icon_dead = "fairy_mass_dead"
 	faction = ("Fairy")
+	last_heal = 0
+	heal_cd = 10 SECONDS
+	heal_amount = 25
+/mob/living/simple_animal/hostile/Titania/Corroded/Initialize()
+	. = ..()
+	pixel_x = rand(-16, 16)
+	pixel_y = rand(-16, 16)
+
+/mob/living/simple_animal/hostile/Titania/Corroded/Life()
+	..()
+	healbomb()
+
+/mob/living/simple_animal/hostile/Titania/Corroded/proc/healbomb()
+	if(world.time > last_heal + heal_cd)
+		last_heal = world.time
+		for(var/mob/living/simple_animal/hostile/Titania/T in view(2, src))
+			T.adjustBruteLoss(-heal_amount)
+			new /obj/effect/temp_visual/heal(get_turf(T), "#FF4444")
