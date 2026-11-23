@@ -197,8 +197,8 @@
 	layer = LARGE_MOB_LAYER
 	a_intent = INTENT_HARM
 	see_in_dark = 7//where I am?!?!!
-	vision_range = 100
-	aggro_vision_range = 100//I don't need to hear to know where you are
+	vision_range = 12
+	aggro_vision_range = 20//I don't need to hear to know where you are
 	pull_force = MOVE_FORCE_STRONG
 	can_buckle_to = FALSE
 	mob_size = MOB_SIZE_HUGE
@@ -254,7 +254,6 @@
 	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "director"
 	icon_living = "director"
-	icon_dead = "director_dead"
 	faction = list("baldi") //fighting with others for power
 	maxHealth = 1600 //weaker than baldi
 	health = 1600
@@ -289,47 +288,41 @@
 
 /mob/living/simple_animal/hostile/math_bully
 	name = "Bully"
-	desc = "A bulky pixelated boy in an orange shirt. He is blocking your path. This is it for you."
+	desc = "A bulky pixelated boy in an orange shirt. He is gonna block your path. This is it for you."
 	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "bully"
 	icon_living = "bully"
-	maxHealth = 100
-	health = 100
-	attack_verb_continuous = "burps"
-	attack_verb_simple = "burp"
-	damage_coeff = list(BRUTE = 0, RED_DAMAGE = 0, WHITE_DAMAGE = 0, BLACK_DAMAGE = 0.2, PALE_DAMAGE = 0)
-	speak_emote = list("yawns")
-	faction = list("hostile", "baldi")
+	faction = list("baldi") //fighting with others for power
+	maxHealth = 2200 //bulkier, but weaker
+	health = 2200
+	melee_damage_type = RED_DAMAGE
+	melee_damage_lower = 10 //bully is weak
+	melee_damage_upper = 20
+	attack_verb_continuous = "slams"
+	attack_verb_simple = "slam"
+	damage_coeff = list(RED_DAMAGE = 0.7, WHITE_DAMAGE = 1, BLACK_DAMAGE = 1.5, PALE_DAMAGE = 0.7)
+	attack_sound = 'sound/abnormalities/steam/attack.ogg' //baam
+	del_on_death = FALSE
+	can_patrol = TRUE
+	gender = MALE
+	stat_attack = HARD_CRIT
+	layer = LARGE_MOB_LAYER
+	a_intent = INTENT_HARM
+	see_in_dark = 7
+	vision_range = 12
+	aggro_vision_range = 20
+	move_resist = MOVE_FORCE_STRONG
+	pull_force = MOVE_FORCE_STRONG
+	can_buckle_to = FALSE
+	mob_size = MOB_SIZE_HUGE
+	blood_volume = BLOOD_VOLUME_NORMAL
+	patrol_cooldown_time = 5 SECONDS
 
-	var/list/structures = list()
-
-/mob/living/simple_animal/hostile/math_bully/Life()
-	. = ..()
-	addtimer(CALLBACK(src, PROC_REF(Berightback)), 3 MINUTES)
-	dir = pick(list(NORTH, SOUTH, WEST, EAST))
-	for(var/turf/open/U in range(2, src))
-		var/obj/structure/math_bullypath/P = new(U)
-		structures += P
-
-/mob/living/simple_animal/hostile/math_bully/Destroy()
-	QDEL_LIST(structures)
-	return ..()
-
-/mob/living/simple_animal/hostile/math_bully/Move()
-	return FALSE
-
-/mob/living/simple_animal/hostile/math_bully/CanAttack(atom/the_target)
-	return FALSE
-
-/mob/living/simple_animal/hostile/math_bully/proc/Berightback()
-	QDEL_LIST(structures)
-	QDEL_NULL(src)
-
-/obj/structure/math_bullypath
-	name = "bully path"
-	icon_state = "blank"
-	max_integrity = 666666
-	density = 1
+/mob/living/simple_animal/hostile/math_bully/death(gibbed)
+	density = FALSE
+	animate(src, alpha = 0, time = 5 SECONDS)
+	QDEL_IN(src, 5 SECONDS)
+	..()
 
 /mob/living/simple_animal/hostile/math_playtime
 	name = "Playtime"
@@ -396,11 +389,11 @@
 	pull_force = MOVE_FORCE_STRONG
 	can_buckle_to = FALSE
 	mob_size = MOB_SIZE_HUGE
-	maxHealth = 1000 //have mercy on them
-	health = 1000
+	maxHealth = 400 //have mercy on them
+	health = 400
 	rapid_melee = 2
 	move_to_delay = 2.2
-	damage_coeff = list(RED_DAMAGE = 1.5, WHITE_DAMAGE = 1, BLACK_DAMAGE = 1, PALE_DAMAGE = 1)
+	damage_coeff = list(RED_DAMAGE = 2, WHITE_DAMAGE = 2, BLACK_DAMAGE = 2, PALE_DAMAGE = 2)
 	melee_damage_lower = 9
 	melee_damage_upper = 9
 	melee_damage_type = BLACK_DAMAGE
