@@ -23,6 +23,7 @@
 #define FESTIVE_SEASON			"Festive Season"
 #define GARBAGEDAY				"Garbage Day"
 #define MONKEYDAY				"Monkey Day"
+#define SS13BDAY				"Birthday of Space Station 13"
 /*
 
 Days of the week to make it easier to reference them.

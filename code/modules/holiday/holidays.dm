@@ -99,7 +99,7 @@
 	begin_month = JUNE
 
 /datum/holiday/birthday
-	name = "Birthday of Space Station 13"
+	name = SS13BDAY
 	begin_day = 16
 	begin_month = FEBRUARY
 	drone_hat = /obj/item/clothing/head/festive
@@ -130,6 +130,11 @@
 		Fact = " SS13 is now [game_age] years old!"
 
 	return "Say 'Happy Birthday' to Space Station 13, first publicly playable on February 16th, 2003![Fact]"
+
+/datum/holiday/birthday/proc/roundstart_celebrate()
+	SSabnormality_queue.possible_abnormalities[ALEPH_LEVEL][/mob/living/simple_animal/hostile/abnormality/branch12/black_hole] = 1
+	SSabnormality_queue.possible_abnormalities[ALEPH_LEVEL][/mob/living/simple_animal/hostile/abnormality/branch12/ss13] = 1
+
 
 /datum/holiday/random_kindness
 	name = "Random Acts of Kindness Day"
@@ -392,6 +397,9 @@
 
 /datum/holiday/halloween/getStationPrefix()
 	return pick("Bone-Rattling","Mr. Bones' Own","2SPOOKY","Spooky","Scary","Skeletons")
+
+/datum/holiday/halloween/proc/roundstart_celebrate()
+	SSabnormality_queue.possible_abnormalities[ALEPH_LEVEL][/mob/living/simple_animal/hostile/abnormality/wild_ride] = 1
 
 /datum/holiday/vegan
 	name = "Vegan Day"

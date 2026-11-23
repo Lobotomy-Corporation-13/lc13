@@ -274,8 +274,12 @@ SUBSYSTEM_DEF(ticker)
 			else
 				mode = new /datum/game_mode/management/classic
 
+		//holiday stuff
 		if(SSevents.holidays && SSevents.holidays[APRIL_FOOLS]) //runs in April 1st
 			mode = new /datum/game_mode/management/joke
+		if(SSevents.holidays && SSevents.holidays[SS13BDAY]) //runs in February 16th
+			mode = new /datum/game_mode/management/ss13
+
 
 	CHECK_TICK
 
