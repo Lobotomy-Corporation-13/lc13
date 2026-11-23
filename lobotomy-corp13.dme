@@ -4511,7 +4511,6 @@
 #include "ModularLobotomy\ego_weapons\ranged\ego_bullets\teth.dm"
 #include "ModularLobotomy\ego_weapons\ranged\ego_bullets\waw.dm"
 #include "ModularLobotomy\ego_weapons\ranged\ego_bullets\zayin.dm"
-#include "ModularLobotomy\enkephalin_rush\enkr_spawners.dm"
 #include "ModularLobotomy\extra_mobs\alligator.dm"
 #include "ModularLobotomy\extra_mobs\apocalypse_bird.dm"
 #include "ModularLobotomy\extra_mobs\apostle_antag.dm"

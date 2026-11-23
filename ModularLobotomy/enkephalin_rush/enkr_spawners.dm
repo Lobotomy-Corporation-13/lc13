@@ -5,9 +5,9 @@
 	icon = 'icons/effects/landmarks_static.dmi'
 	icon_state = "x4"
 	var/list/possible_items = list(
-	/obj/item/ksyringe,
-	/obj/item/reagent_containers/hypospray/medipen/salacid,
-	/obj/item/reagent_containers/hypospray/medipen/mental,
+		/obj/item/ksyringe,
+		/obj/item/reagent_containers/hypospray/medipen/salacid,
+		/obj/item/reagent_containers/hypospray/medipen/mental,
 	)
 
 /obj/effect/landmark/lditemspawn/Initialize()
