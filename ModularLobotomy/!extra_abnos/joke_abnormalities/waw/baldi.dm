@@ -15,7 +15,7 @@
 		"5" = 0,
 		"6" = 0,
 		"8" = 0,
-		"&%^@$#%@@!#%" = -100,//there's still a chance baldi could accept this
+		"Gibberish" = -100,//there's still a chance baldi could accept this
 	)
 	work_attribute_types = list(
 		"3" = FORTITUDE_ATTRIBUTE,
