@@ -16,6 +16,7 @@ name = "Titania"
 	melee_damage_type = RED_DAMAGE
 	damage_coeff = list(RED_DAMAGE = 1.2, WHITE_DAMAGE = 0.3, BLACK_DAMAGE = 0.5, PALE_DAMAGE = 1)
 	stat_attack = HARD_CRIT
+	team = ("Fairy")
 
 	var/fairy_spawn_number = 2
 	var/fairy_spawn_time = 5 SECONDS
@@ -272,7 +273,10 @@ name = "Titania"
 
 /mob/living/simple_animal/hostile/Enkr_boss/Titania/Corroded
 // 2 tile AOE, heals /titania mobs in range, icon files included
+// For the 2 tile AOE look at ModularLobotomy/rcorp/rcorp_abnos/easyteam/easycombat/blue_shepard.dm
+// for the healing look at /mob/living/simple_animal/hostile/abnormality/eris/proc/healpulse() in code/modules/mob/living/simple_animal/abnormality/he/eris.dm
 	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
 	icon_state = "fairy_mass"
 	icon_living = "fairy_mass"
 	icon_dead = "fairy_mass_dead"
+	team = ("Fairy")
