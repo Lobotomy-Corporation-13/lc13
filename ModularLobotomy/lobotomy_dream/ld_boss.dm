@@ -230,16 +230,16 @@
 // 2 tile AOE, heals /titania mobs in range, icon files included
 // For the 2 tile AOE look at ModularLobotomy/rcorp/rcorp_abnos/easyfaction/easycombat/blue_shepard.dm
 // for the healing look at /mob/living/simple_animal/hostile/abnormality/eris/proc/healpulse() in code/modules/mob/living/simple_animal/abnormality/he/eris.dm
-	name = 'Corroded' //todo confirm if this is correct or not please thanks
+	name = "Forest" //todo confirm if this is correct or not please thanks
 	desc = "heals around itself or something idk" //todo hi i dont know what it is so i cant write this
 	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
 	icon_state = "fairy_mass"
 	icon_living = "fairy_mass"
 	icon_dead = "fairy_mass_dead"
 	faction = ("Fairy")
-	last_heal = 0
-	heal_cd = 10 SECONDS
-	heal_amount = 25
+	var/last_heal = 0
+	var/heal_cd = 10 SECONDS
+	var/heal_amount = 25
 /mob/living/simple_animal/hostile/Titania/Corroded/Initialize()
 	. = ..()
 	pixel_x = rand(-16, 16)
@@ -255,3 +255,16 @@
 		for(var/mob/living/simple_animal/hostile/Titania/T in view(2, src))
 			T.adjustBruteLoss(-heal_amount)
 			new /obj/effect/temp_visual/heal(get_turf(T), "#FF4444")
+
+/mob/living/simple_animal/hostile/Titania/Corroded/proc/AttackingTarget(atom/attacked_target)
+	. = ..()
+	for(var/turf/T in view(2, src))
+		new /obj/.effect/temp_visual/smash_effect(T)
+	addtimer(CALLBACK(src, PROC_REF(Attack2)), 2 SECONDS)
+	can_act = FALSE
+
+/mob/living/simple_animal/hostile/Titania/Corroded/proc/Attack2()
+	for(var/mob/living/carbon/human/A in view(2,src))
+		A.deal_damage(30, RED_DAMAGE, src, flags = (DAMAGE_FORCED | DAMAGE_UNTRACKABLE), attack_type = (ATTACK_TYPE_SPECIAL))
+		A.apply_lc_red_fragile(2)
+	can_act = TRUE
