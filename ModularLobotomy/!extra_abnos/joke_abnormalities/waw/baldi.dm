@@ -292,7 +292,7 @@
 	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "bully"
 	icon_living = "bully"
-	faction = list("baldi") //fighting with others for power
+	faction = list("baldi") //fighting with others for food
 	maxHealth = 2200 //bulkier, but weaker
 	health = 2200
 	melee_damage_type = RED_DAMAGE
