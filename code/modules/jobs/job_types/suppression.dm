@@ -44,6 +44,9 @@
 		set_attribute *= 4
 		set_attribute += GetFacilityUpgradeValue(UPGRADE_AGENT_STATS)
 
+	if(SSmaptype.chosen_trait == FACILITY_TRAIT_DARK_SOULS)
+		outfit_owner.equip_to_slot_or_del(new /obj/item/estus(outfit_owner), ITEM_SLOT_HANDS, TRUE)
+
 
 	else		//Only check percentage if it's NOT blitz mode
 		switch(facility_full_percentage)
