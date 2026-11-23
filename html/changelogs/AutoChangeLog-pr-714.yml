@@ -1,0 +1,5 @@
+author: "Kitsunemitsu"
+delete-after: True
+changes:
+  - rscadd: "Added 3 new Kurokumo Blades"
+  - rscdel: "Removed old Kurokumo Blade"
