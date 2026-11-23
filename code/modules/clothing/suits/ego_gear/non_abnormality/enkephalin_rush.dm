@@ -1,4 +1,4 @@
-/obj/item/clothing/suit/armor/ego_gear/enk_rush/lce_opsofficer
+/obj/item/clothing/suit/armor/ego_gear/lob_dream/lce_opsofficer
 	name = "LCE Operations Officer Coat"
 	desc = "A Heavy Duty Overcoat used by the LCE"
 	icon_state = "lceops"
@@ -11,7 +11,7 @@
 							JUSTICE_ATTRIBUTE = 40
 							)
 
-/obj/item/clothing/suit/armor/ego_gear/enk_rush/lce_recofficer
+/obj/item/clothing/suit/armor/ego_gear/lob_dream/lce_recofficer
 	name = "LCE Recovery Officer Coat"
 	desc = "A Heavy Duty Overcoat used by the LCE"
 	icon_state = "lcerec"
@@ -24,7 +24,7 @@
 							JUSTICE_ATTRIBUTE = 40
 							)
 
-/obj/item/clothing/suit/armor/ego_gear/enk_rush/lce_captain
+/obj/item/clothing/suit/armor/ego_gear/lob_dream/lce_captain
 	name = "LCE Captain Trenchcoat"
 	desc = "A thick & armoured coat used by LCE captains"
 	icon_state = "lccb_officer"
@@ -37,7 +37,7 @@
 							JUSTICE_ATTRIBUTE = 40
 							)
 
-/obj/item/clothing/suit/armor/ego_gear/enk_rush/lce_operations
+/obj/item/clothing/suit/armor/ego_gear/lob_dream/lce_operations
 	name = "LCE Operations Armour"
 	desc = "Standard Issue Gear used by the LCE Operations team."
 	icon_state = "lowsec"
@@ -50,7 +50,7 @@
 							JUSTICE_ATTRIBUTE = 40
 							)
 
-/obj/item/clothing/suit/armor/ego_gear/enk_rush/lce_recovery
+/obj/item/clothing/suit/armor/ego_gear/lob_dream/lce_recovery
 	name = "LCE Recovery Armour"
 	desc = "Standard Issue Gear used by the LCE Recovery team."
 	icon_state = "lccb"
