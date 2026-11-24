@@ -458,7 +458,7 @@
 				M.apply_lc_offense_level_down(40)
 				M.apply_lc_defense_level_down(40)
 			if(41 to 100)
-				to_chat(C, span_notice("You manage to resist the gas but your form is still steadily weakening, you must get out."))
+				to_chat(M, span_notice("You manage to resist the gas but your form is still steadily weakening, you must get out."))
 
 /datum/effect_system/smoke_spread/rca/antiabno
 	effect_type = /obj/effect/particle_effect/smoke/rca/antiabno
