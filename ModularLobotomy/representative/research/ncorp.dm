@@ -125,7 +125,7 @@
 	cost = AVERAGE_RESEARCH_PRICE
 	corp = N_CORP_REP
 
-/datum/data/lc13research/ntemp3/ResearchEffect(obj/structure/representative_console/requester)
+/datum/data/lc13research/nscrolls/ResearchEffect(obj/structure/representative_console/requester)
 	ItemUnlock(requester.order_list, "N-Corp Sermon Scroll",	/obj/item/ncorp_scroll/spwide, 250)
 	ItemUnlock(requester.order_list, "N-Corp Area Strength Scroll",	/obj/item/ncorp_scroll/strengthwide, 300)
 	ItemUnlock(requester.order_list, "N-Corp Combat Scroll",	/obj/item/ncorp_scroll/combat, 250)
