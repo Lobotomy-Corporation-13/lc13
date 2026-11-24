@@ -254,6 +254,10 @@
 /obj/machinery/regenerator,
 /turf/open/floor/mineral/titanium/white,
 /area/department_main/records)
+"bv" = (
+/obj/effect/landmark/xeno_spawn,
+/turf/open/floor/facility/dark,
+/area/facility_hallway/safety)
 "bw" = (
 /obj/effect/turf_decal/siding/wideplating/corner{
 	dir = 4
@@ -1561,6 +1565,13 @@
 	},
 /turf/open/floor/mineral/silver,
 /area/department_main/architecture)
+"kw" = (
+/obj/structure/disposalpipe/segment{
+	dir = 4
+	},
+/obj/effect/landmark/xeno_spawn,
+/turf/open/floor/facility/dark,
+/area/facility_hallway/safety)
 "kA" = (
 /obj/machinery/door/airlock/wood/glass,
 /turf/open/floor/plasteel/checker,
@@ -3876,7 +3887,6 @@
 /area/facility_hallway/information)
 "zW" = (
 /obj/structure/table/glass,
-/obj/structure/lootcrate/l_corp,
 /turf/open/floor/carpet,
 /area/department_main/control)
 "zZ" = (
@@ -7088,7 +7098,6 @@
 "Uy" = (
 /obj/structure/table/reinforced,
 /obj/machinery/light/floor,
-/obj/structure/lootcrate/l_corp,
 /turf/open/floor/mineral/plastitanium,
 /area/department_main/architecture)
 "Uz" = (
@@ -15952,7 +15961,7 @@ ic
 ic
 ic
 ic
-Hj
+kw
 ic
 ic
 ic
@@ -16700,7 +16709,7 @@ Ty
 Ty
 Wp
 zi
-ic
+bv
 Su
 Ty
 Ty
@@ -16708,7 +16717,7 @@ Ty
 Ty
 Wp
 UE
-ic
+bv
 VB
 Ty
 Ne
