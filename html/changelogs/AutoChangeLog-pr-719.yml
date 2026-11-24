@@ -1,5 +1,0 @@
-author: "Blimwe0"
-delete-after: True
-changes:
-  - code_imp: "moved the zwei and zweivet beacon code to their own DM files"
-  - rscadd: "added a louadout beacon for Kcorp"
