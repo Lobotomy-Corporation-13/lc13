@@ -20,8 +20,8 @@
 	abno_code = "O-04-0258"
 	abno_info = list(
 		"When the work result was Bad, Baldi arrived.",
-		"When Baldi arrived, his students did so too."
-		"Agent Kel found himself crushed by a heavy broom after Qlipoth Counter reached 0."
+		"When Baldi arrived, his students did so too.",
+		"Agent Kel found himself crushed by a heavy broom after Qlipoth Counter reached 0.",
 	)
 
 //Skub
