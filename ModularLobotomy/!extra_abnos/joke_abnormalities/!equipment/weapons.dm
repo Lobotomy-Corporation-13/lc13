@@ -280,6 +280,26 @@
 							JUSTICE_ATTRIBUTE = 80
 	)
 
+//BALDI
+/obj/item/ego_weapon/math_perfection
+	name = "math perfection"
+	desc = "The equations are hard, but they hold near infinite power. With this knowledge in your hands, you can divide anyone by zero."
+	icon_state = "math_perfection"//todo: improve sprite, add inhands
+	icon = 'ModularLobotomy/_Lobotomyicons/joke_abnos/joke_weapons.dmi'
+	force = 180
+	attack_speed = 3
+	damtype = BLACK_DAMAGE
+	knockback = KNOCKBACK_MEDIUM
+	attack_verb_continuous = list("divides")
+	attack_verb_simple = list("divide")
+	hitsound = 'sound/abnormalities/baldi/baldi-jumpscare.ogg'
+	attribute_requirements = list(
+							FORTITUDE_ATTRIBUTE = 100,
+							PRUDENCE_ATTRIBUTE = 120,
+							TEMPERANCE_ATTRIBUTE = 100,
+							JUSTICE_ATTRIBUTE = 100
+	)
+
 //Sukuna
 /obj/item/ego_weapon/sukuna
 	name = "Sukuna's Cursed Technique"
