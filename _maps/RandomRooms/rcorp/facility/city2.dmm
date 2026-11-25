@@ -1367,10 +1367,18 @@
 /mob/living/simple_animal/pet/fox,
 /turf/open/floor/plating/grass,
 /area/city/outskirts)
+"ro" = (
+/obj/effect/landmark/abnospawn/reinfhardcombat,
+/turf/open/floor/plating/ashplanet/rocky,
+/area/city/outskirts)
 "rp" = (
 /obj/structure/closet/cabinet,
 /obj/item/reagent_containers/food/drinks/bottle/maltliquor,
 /turf/open/floor/carpet/donk,
+/area/city/outskirts)
+"rr" = (
+/obj/effect/landmark/abnospawn/reinfhardtank,
+/turf/open/floor/plating/ashplanet/rocky,
 /area/city/outskirts)
 "rz" = (
 /turf/open/floor/plasteel/grimy,
@@ -3888,6 +3896,10 @@
 	dir = 1
 	},
 /turf/open/floor/wood,
+/area/city/outskirts)
+"VK" = (
+/obj/effect/landmark/abnospawn/reinfhardsupport,
+/turf/open/floor/plating/ashplanet/rocky,
 /area/city/outskirts)
 "VM" = (
 /obj/machinery/processor,
@@ -14381,7 +14393,7 @@ um
 aJ
 Vg
 Au
-Au
+ro
 Au
 Vg
 WS
@@ -14860,7 +14872,7 @@ Au
 Au
 Au
 Au
-Au
+rr
 Au
 Au
 qJ
@@ -15035,7 +15047,7 @@ Au
 Au
 Au
 Au
-Au
+VK
 Au
 Au
 Au

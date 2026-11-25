@@ -19,6 +19,10 @@
 	},
 /turf/open/water,
 /area/city/outskirts)
+"eo" = (
+/obj/effect/landmark/abnospawn/reinfhardsupport,
+/turf/open/floor/plasteel/dark,
+/area/city/outskirts)
 "ez" = (
 /turf/open/water,
 /area/city/outskirts)
@@ -109,6 +113,10 @@
 "tU" = (
 /obj/effect/decal/cleanable/blood,
 /turf/open/floor/plating/ashplanet/rocky,
+/area/city/outskirts)
+"uq" = (
+/obj/effect/landmark/abnospawn/reinfhardcombat,
+/turf/open/floor/plasteel/dark,
 /area/city/outskirts)
 "uO" = (
 /turf/open/floor/plating/ashplanet/ash,
@@ -209,6 +217,10 @@
 	list_reagents = list(/datum/reagent/consumable/wellcheers_red = 0)
 	},
 /turf/open/floor/plating/ashplanet/rocky,
+/area/city/outskirts)
+"Mh" = (
+/obj/effect/landmark/abnospawn/reinfhardtank,
+/turf/open/floor/plasteel/dark,
 /area/city/outskirts)
 "Mq" = (
 /turf/closed/indestructible/syndicate,
@@ -719,7 +731,7 @@ vQ
 sY
 sY
 sY
-gM
+Mh
 sY
 vQ
 vQ
@@ -1045,7 +1057,7 @@ vQ
 sY
 sY
 sY
-sY
+uq
 sY
 vQ
 vQ
@@ -1371,7 +1383,7 @@ vQ
 sY
 ij
 sY
-sY
+gM
 sY
 vQ
 vQ
@@ -1696,7 +1708,7 @@ vQ
 vQ
 vQ
 sY
-sY
+eo
 sY
 vQ
 vQ

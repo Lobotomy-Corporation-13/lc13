@@ -35,6 +35,10 @@
 "gS" = (
 /turf/open/floor/stone,
 /area/city/outskirts)
+"hu" = (
+/obj/effect/landmark/abnospawn/reinfhardcombat,
+/turf/open/floor/plasteel/dark,
+/area/city/outskirts)
 "hV" = (
 /obj/effect/turf_decal/siding/wideplating/dark/corner{
 	dir = 8
@@ -150,6 +154,10 @@
 	slowdown = 0
 	},
 /area/city/outskirts)
+"tX" = (
+/obj/effect/landmark/abnospawn/reinfhardtank,
+/turf/open/floor/plasteel/dark,
+/area/city/outskirts)
 "uY" = (
 /obj/effect/turf_decal/siding/wideplating/dark{
 	dir = 1
@@ -253,6 +261,10 @@
 /obj/machinery/button/door/indestructible/rcorp,
 /obj/effect/landmark/nobasic_incorp_move,
 /turf/closed/indestructible/syndicate,
+/area/city/outskirts)
+"Ia" = (
+/obj/effect/landmark/abnospawn/reinfhardsupport,
+/turf/open/floor/plasteel/dark,
 /area/city/outskirts)
 "IF" = (
 /obj/machinery/light/small{
@@ -15291,10 +15303,10 @@ AE
 Fl
 Fl
 oS
+Ia
 oS
 oS
-oS
-oS
+tX
 oS
 oS
 oS
@@ -15460,7 +15472,7 @@ oS
 oS
 oS
 oS
-oS
+hu
 oS
 oS
 oS

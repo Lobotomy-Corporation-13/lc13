@@ -197,6 +197,10 @@
 	slowdown = 0
 	},
 /area/city/outskirts)
+"xC" = (
+/obj/effect/landmark/abnospawn/reinfhardsupport,
+/turf/open/floor/plasteel/dark,
+/area/city/outskirts)
 "yq" = (
 /obj/effect/landmark/nobasic_incorp_move,
 /turf/closed/indestructible/syndicate,
@@ -328,10 +332,18 @@
 	slowdown = 0
 	},
 /area/city/outskirts)
+"Nm" = (
+/obj/effect/landmark/abnospawn/reinfhardcombat,
+/turf/open/floor/plasteel/dark,
+/area/city/outskirts)
 "NP" = (
 /obj/machinery/light/small{
 	dir = 1
 	},
+/turf/open/floor/plasteel/dark,
+/area/city/outskirts)
+"SD" = (
+/obj/effect/landmark/abnospawn/reinfhardtank,
 /turf/open/floor/plasteel/dark,
 /area/city/outskirts)
 "SL" = (
@@ -15258,11 +15270,11 @@ yq
 yq
 tZ
 cg
+xC
 cg
 cg
 cg
-cg
-cg
+SD
 cg
 cg
 cg
@@ -15586,7 +15598,7 @@ th
 cg
 cg
 cg
-cg
+Nm
 cg
 cg
 cg
