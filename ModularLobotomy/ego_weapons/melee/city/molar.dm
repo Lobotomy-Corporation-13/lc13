@@ -21,6 +21,7 @@
 	var/rev_min = 30
 	var/rev_max = 60
 	var/on = TRUE	//To save on processing power, if we're at min power we turn off the engine.
+	var/inuse
 
 /obj/item/ego_weapon/city/molar/examine(mob/user)
 	. = ..()
