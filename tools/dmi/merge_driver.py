@@ -59,6 +59,11 @@ def three_way_merge(base, left, right):
         return True, None
 
     base_states, left_states, right_states = dictify(base), dictify(left), dictify(right)
+    # LOBOTOMYCORPORATION ADDITION - all but one of the duplicates would be lost
+    for sheet, states in ((base, base_states), (left, left_states), (right, right_states)):
+        if len(sheet.states) != len(states):
+            print("Icon states with duplicate names can't be merged.")
+            return True, None
 
     new_left = {k: v for k, v in left_states.items() if k not in base_states}
     new_right = {k: v for k, v in right_states.items() if k not in base_states}
@@ -97,13 +102,17 @@ def three_way_merge(base, left, right):
             print(f"    {state.name!r}: deleted in left")
             if not right_equals:
                 print(f"    ... but modified in right")
-                final_states.append(in_right)
+                # LOBOTOMYCORPORATION EDIT - was final_states.append(in_right)
+                in_right.name = f"{state.name} !CONFLICT! right"
+                conflicts.append(in_right)
         elif not in_right:
             # right deletes
             print(f"    {state.name!r}: deleted in right")
             if not left_equals:
                 print(f"    ... but modified in left")
-                final_states.append(in_left)
+                # LOBOTOMYCORPORATION EDIT - was final_states.append(in_left)
+                in_left.name = f"{state.name} !CONFLICT! left"
+                conflicts.append(in_left)
         elif left_equals and right_equals:
             # changed in neither
             #print(f"Same in both: {state.name!r}")

@@ -25,6 +25,13 @@ PythonDir="$Cache/python-$PythonVersion"
 PythonExe="$PythonDir/python.exe"
 Log="$Cache/last-command.log"
 
+# LOBOTOMYCORPORATION ADDITION - On Windows, install the portable Python if it isn't present. Git hooks apply to
+# every worktree, but each worktree has its own cache, so this may be needed even
+# if the hooks were installed properly.
+if [ ! -f "$PythonExe" ] && [ "$(uname -o 2>/dev/null)" = "Msys" ]; then
+	"$Bootstrap/python.bat" --version || echo "Failed to install portable Python, trying system Python instead..."
+fi
+
 # If a portable Python for Windows is not present, search on $PATH.
 if [ "$(uname)" = "Linux" ] || [ ! -f "$PythonExe" ]; then
 	# Strip the "App Execution Aliases" from $PATH. Even if the user installed
