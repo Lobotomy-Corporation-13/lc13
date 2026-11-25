@@ -1,4 +1,0 @@
-author: "KingSuperBOB"
-delete-after: True
-changes:
-  - bugfix: "Fixed scroll rep upgrade not unlocking scrolls due to pathing issues."
