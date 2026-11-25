@@ -21,7 +21,7 @@
 
 /obj/item/ego_weapon/city/wedge/neocity
 	name = "wedge office operator spear"
-	special = "Repeated hits on one target build momentum (+1, +2, +3...). Switching targets or 5 seconds idle resets it. \
+	special = "Repeated hits on one target build momentum (+1, +2, +3...). Switching targets drops the gain back to +1. 8 seconds idle resets all momentum. \
 		Use in hand to rally nearby Wedge allies: +5 momentum and 2 black strength. \
 		At 15+ momentum, click a distant target to dash through them, spending all momentum for +10% damage each (max 400%)."
 	force = 68
@@ -35,7 +35,7 @@
 	var/momentum = 0
 	var/momentum_gain = 1
 	var/datum/weakref/momentum_target
-	var/momentum_decay_time = 5 SECONDS
+	var/momentum_decay_time = 8 SECONDS
 	var/momentum_decay_timer
 	var/wind_momentum = 15
 	var/wind_active = FALSE
@@ -113,11 +113,11 @@
 	if(target_living)
 		HitMomentum(target, user)
 
-// Grants momentum for a hit on target, 1 more than the last hit. A hit on a different target than the last one restarts the chain.
+// Grants momentum for a hit on target, 1 more than the last hit. A hit on a different target keeps the momentum but drops the gain back to 1.
 /obj/item/ego_weapon/city/wedge/neocity/proc/HitMomentum(mob/living/target, mob/living/user)
 	var/mob/living/last_target = momentum_target?.resolve()
 	if(last_target && last_target != target)
-		ResetMomentum()
+		momentum_gain = initial(momentum_gain)
 	momentum_target = WEAKREF(target)
 	AddMomentum(momentum_gain, user)
 	momentum_gain++
@@ -281,7 +281,7 @@
 /obj/item/ego_weapon/lance/wedge
 	name = "wedge office fixer lance"
 	desc = "A black lance with a long, tapered head. Wedge office fixers favor it for keeping a suspect at a distance."
-	special = "Repeated uncharged hits on one target build momentum (+1, +2, +3...). Switching targets or 8 seconds idle resets it. \
+	special = "Repeated uncharged hits on one target build momentum (+1, +2, +3...). Switching targets drops the gain back to +1. 11 seconds idle resets all momentum. \
 		Charging at 6+ momentum starts at high speed, but stops after 4 tiles and spends all momentum."
 	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons.dmi'
 	icon_state = "wedge_lance"
@@ -307,7 +307,7 @@
 	var/momentum = 0
 	var/momentum_gain = 1
 	var/datum/weakref/momentum_target
-	var/momentum_decay_time = 8 SECONDS
+	var/momentum_decay_time = 11 SECONDS
 	var/momentum_decay_timer
 	var/wind_momentum = 6
 	var/wind_active = FALSE
@@ -345,11 +345,11 @@
 		ResetMomentum()
 	return ..()
 
-// Grants momentum for a hit on target, 1 more than the last hit. A hit on a different target than the last one restarts the chain.
+// Grants momentum for a hit on target, 1 more than the last hit. A hit on a different target keeps the momentum but drops the gain back to 1.
 /obj/item/ego_weapon/lance/wedge/proc/HitMomentum(mob/living/target, mob/living/user)
 	var/mob/living/last_target = momentum_target?.resolve()
 	if(last_target && last_target != target)
-		ResetMomentum()
+		momentum_gain = initial(momentum_gain)
 	momentum_target = WEAKREF(target)
 	AddMomentum(momentum_gain, user)
 	momentum_gain++
