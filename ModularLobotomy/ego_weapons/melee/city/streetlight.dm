@@ -116,16 +116,11 @@
 							TEMPERANCE_ATTRIBUTE = 40,
 							JUSTICE_ATTRIBUTE = 40
 							)
+
 	var/ready = TRUE
 	var/defense_buff_self = 0.8
 	var/defense_buff_others = 0.7
 	var/list/buffed_people = list()
-	attribute_requirements = list(
-		FORTITUDE_ATTRIBUTE = 60,
-		PRUDENCE_ATTRIBUTE = 40,
-		TEMPERANCE_ATTRIBUTE = 40,
-		JUSTICE_ATTRIBUTE = 40,
-	)
 
 
 /obj/item/ego_weapon/city/zweibaton/attack(mob/living/target, mob/living/carbon/human/user)
