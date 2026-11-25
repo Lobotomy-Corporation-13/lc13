@@ -113,7 +113,7 @@
 	desc = "A kit containing Stretlight Office gear."
 
 /obj/item/storage/box/fixerhard/streetlight/PopulateContents()
-	new /obj/item/ego_weapon/city/zweihander/streetlight_baton(src)
+	new /obj/item/ego_weapon/city/streetlight_baton(src)
 	new /obj/item/ego_weapon/city/streetlight_greatsword(src)
 	new /obj/item/ego_weapon/city/streetlight_bat(src)
 	new /obj/item/clothing/suit/armor/ego_gear/city/misc(src)

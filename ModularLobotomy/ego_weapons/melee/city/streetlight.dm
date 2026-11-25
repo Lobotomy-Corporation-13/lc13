@@ -100,7 +100,7 @@
 /obj/item/ego_weapon/city/streetlight_baton
 	name = "streetlight office baton"
 	desc = "A  baton compatible with Zwei techniques. It carries a sense of regret..."
-	special = "Use in hand to buff your defense and speed, and the defense and speed of everyone around you."
+	special = "Use in hand to buff your defense and speed, and the defense and speed of everyone around you. Deals Stamina Damage."
 	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/streetlight.dmi'
 	icon_state = "streetlight_founder"
 	inhand_icon_state = "streetlight_founder"
@@ -127,6 +127,13 @@
 		JUSTICE_ATTRIBUTE = 40,
 	)
 
+
+/obj/item/ego_weapon/city/zweibaton/attack(mob/living/target, mob/living/carbon/human/user)
+	..()
+	if(!ishuman(target))
+		return
+	var/mob/living/carbon/human/T = target
+	T.adjustStaminaLoss(force*2, TRUE, TRUE)
 
 /obj/item/ego_weapon/city/streetlight_baton/attack_self(mob/living/carbon/human/user)
 	..()

@@ -11,7 +11,7 @@
 		/obj/item/ego_weapon/city/yun/shortsword,
 		/obj/item/ego_weapon/city/yun/chainsaw,
 		/obj/item/ego_weapon/city/yun/fist,
-		/obj/item/ego_weapon/city/zweihander/streetlight_baton,
+		/obj/item/ego_weapon/city/streetlight_baton,
 		/obj/item/ego_weapon/city/streetlight_bat,
 		/obj/item/ego_weapon/city/streetlight_greatsword,
 		/obj/item/ego_weapon/city/leaflet/round,
