@@ -125,46 +125,6 @@
 	new /obj/item/assoc_skill_granter/liu/veteran(src)
 	new /obj/item/assoc_skill_granter/liu/director(src)
 
-//Seven Asso — Section 4 (new Rupture + Adaptive weapons)
-/obj/item/storage/box/association/seven
-	name = "Seven Association Section 4"
-	desc = "A kit from Section 1 containing Seven Association Section 4 gear."
-
-/obj/item/storage/box/association/seven/PopulateContents()
-	// Associate weapons (3)
-	new /obj/item/ego_weapon/city/seven_s4_blade(src)
-	new /obj/item/ego_weapon/city/seven_s4_foil(src)
-	new /obj/item/ego_weapon/city/seven_s4_blade(src)
-	// Associate sidearms (3)
-	new /obj/item/ego_weapon/city/seven_s4_foil(src)
-	new /obj/item/ego_weapon/city/seven_s4_foil(src)
-	new /obj/item/ego_weapon/city/seven_s4_foil(src)
-	// Veteran weapon (1) + sidearm
-	new /obj/item/ego_weapon/city/seven_s4_blade/vet(src)
-	new /obj/item/ego_weapon/city/seven_s4_foil/dagger(src)
-	// Director weapons (blade + cane choice) + sidearm
-	new /obj/item/ego_weapon/city/seven_s4_blade/director(src)
-	new /obj/item/ego_weapon/city/seven_s4_blade/cane(src)
-	new /obj/item/ego_weapon/city/seven_s4_foil/dagger(src)
-	// Associate armor (3)
-	new /obj/item/clothing/suit/armor/ego_gear/city/seven_s4(src)
-	new /obj/item/clothing/suit/armor/ego_gear/city/seven_s4(src)
-	new /obj/item/clothing/suit/armor/ego_gear/city/seven_s4/recon(src)
-	// Veteran armor (1)
-	new /obj/item/clothing/suit/armor/ego_gear/city/seven_s4/vet(src)
-	// Director armor (1)
-	new /obj/item/clothing/suit/armor/ego_gear/city/seven_s4/director(src)
-	// Equipment
-	new /obj/item/binoculars(src)
-	new /obj/item/binoculars(src)
-	// Investigation toolkit
-	new /obj/item/camera/seven_intel(src)
-	new /obj/item/intel_report(src)
-	new /obj/item/intel_report(src)
-	new /obj/item/intel_report(src)
-	new /obj/item/seven_dossier(src)
-	new /obj/item/seven_catalog(src)
-
 //Seven Asso — Section 6 (legacy stored-target weapons)
 /obj/item/storage/box/association/seven/section6
 	name = "Seven Association Section 6"

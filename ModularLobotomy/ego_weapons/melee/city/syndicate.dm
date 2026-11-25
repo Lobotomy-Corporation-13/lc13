@@ -3,6 +3,7 @@
 	name = "night awl stilleto"
 	desc = "A thin stabbing knife, used by the Night Awls syndicate group."
 	special = "This weapon has a 10% chance to deal double damage. This weapon fits in an EGO belt."
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/syndicate.dmi'
 	icon_state = "nightawl"
 	force = 40
 	attack_speed = 1.2
@@ -33,6 +34,7 @@
 	name = "kurokumo blade"
 	desc = "A very sharp blade used by the Kurokumo clan. Get it bloody."
 	special = "This weapon gains 1 poise for every attack. 1 poise gives you a 2% chance to crit at 3x damage, stacking linearly. Critical hits reduce poise to 0."
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/kurokumo.dmi'
 	icon_state = "kurokumo_sheathed"
 	inhand_icon_state = "kurokumo_sheathed"
 	force = 52
@@ -81,6 +83,7 @@
 	desc = "A blade that is standard among blade lineage."
 	special = "Use this weapon in hand to immobilize yourself for 3 seconds and deal 5x damage on the next attack within 5 seconds. This empowered attack also deals 2% extra damage per 1% of your missing HP, on top of the 5x damage. \
 	This weapon allows you to resist differing levels of lethal damage while using it's active ability when worn with it's corresponding armor."
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/syndicate.dmi'
 	icon_state = "blade_lineage"
 	inhand_icon_state = "blade_lineage"
 	force = 46

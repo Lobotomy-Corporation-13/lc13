@@ -11,6 +11,7 @@
 	desc = "A sheathed blade used by Seven Association Section 6 fixers."
 	special = "Deal 50% more damage to the stored target. \
 				Use weapon in hand to see stored target, and its current health."
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/seven.dmi'
 	icon_state = "sevenassociation"
 	inhand_icon_state = "sevenassociation"
 	force = 36
@@ -131,6 +132,7 @@
 	name = "Seven Association Section 6 fencing foil"
 	desc = "A fencing foil used by Seven Association Section 6 fixers to destroy singular targets."
 	special = "This weapon does 35% more damage when attacking the same target more than once."
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/seven.dmi'
 	icon_state = "sevenfencing"
 	hitsound = 'sound/weapons/rapierhit.ogg'
 	force = 38

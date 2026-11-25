@@ -14,6 +14,7 @@
 /// Dieci Association combat gloves. Defensive weapon granting shield HP on empowerment.
 /obj/item/ego_weapon/city/dieci
 	name = "dieci combat gloves"
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/dieci.dmi'
 	icon_state = "dieci_glove"
 	inhand_icon_state = "yun_fist"
 	desc = "Heavy gauntlets issued to Dieci Association members. The reinforced plating channels accumulated knowledge into a protective barrier around the wearer."

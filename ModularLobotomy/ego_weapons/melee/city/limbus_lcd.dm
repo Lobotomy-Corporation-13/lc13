@@ -4,7 +4,7 @@
 	desc = "My dream of the homeland is dead. This is who I am now."
 	special = "Use in hand to dash and start a parry. Successfully parrying applies a speedboost."
 	icon_state = "osir_blade"
-	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/lcd.dmi'
 	lefthand_file = 'ModularLobotomy/_Lobotomyicons/lc13_left.dmi'
 	righthand_file = 'ModularLobotomy/_Lobotomyicons/lc13_right.dmi'
 	force = 40
@@ -52,10 +52,10 @@
 	multiplicative_slowdown = -0.5
 
 //Kim and Ezra's Gear is all G3.
-
 /obj/item/ego_weapon/city/bladelineage/lcd
 	name = "lcd swordsman blade"
 	desc = "A blade that is used by some LCD agents."
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/lcd.dmi'
 	icon_state = "kim_lcd"
 	inhand_icon_state = "blade_lineage"
 	force = 58
@@ -75,6 +75,7 @@
 	name = "Screw Atelier Drill Hammer"
 	desc = "A weapon used by the LCD team. Made by Atelier Workshop!"
 	special = "Attack the same target repeatedly to apply Fragile."
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/lcd.dmi'
 	icon_state = "screw_atelier"
 	inhand_icon_state = "screw_atelier"
 	force = 60
@@ -114,7 +115,8 @@
 	name = "Nester Workshop Hammer"
 	desc = "A weapon used by the LCD team. Made in Nester workshop!"
 	special = "Attack the same target repeatedly to slow them down on hit and apply Black Fragile."
-	icon_state = "nesterr"
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/lcd.dmi'
+	icon_state = "nester"
 	inhand_icon_state = "nester"
 	force = 60
 	damtype = WHITE_DAMAGE

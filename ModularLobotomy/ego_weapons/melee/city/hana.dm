@@ -3,6 +3,7 @@
 	name = "hana weapon system"
 	desc = "The weapons system used by hana association"
 	special = "Use this weapon to change its mode between spear, sword and fist."	//like a different rabbit knife. No black though
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/hana.dmi'
 	icon_state = "hana_sword"
 	force = 50
 	damtype = PALE_DAMAGE

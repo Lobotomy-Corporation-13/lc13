@@ -1,6 +1,7 @@
 /obj/item/ego_weapon/city/fixerblade
 	name = "fixer blade"
 	desc = "A common fixer blade, mass-produced and easy to use."
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/misc_fixers.dmi'
 	icon_state = "fixer_blade"
 	force = 20
 	damtype = RED_DAMAGE
@@ -26,6 +27,7 @@
 /obj/item/ego_weapon/city/fixerhammer
 	name = "fixer hammer"
 	desc = "A poorly balanced hammer used by many fixers."
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/misc_fixers.dmi'
 	icon_state = "fixer_hammer"
 	force = 32
 	attack_speed = 1.4

@@ -2,6 +2,7 @@
 /obj/item/ego_weapon/city/rosespanner
 	name = "rosespanner template"
 	desc = "A template for the rosespanner workshop"
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/rosespanner.dmi'
 	icon_state = "rosespanner"
 	inhand_icon_state = "rosespanner"
 	force = 18
@@ -116,7 +117,7 @@
 /obj/item/rosespanner_gear
 	name = "rosespanner red gear"
 	desc = "A gear used by Rosespanner workshop. Use them on a rosespanner weapon to augment the weapon."
-	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/rosespanner.dmi'
 	icon_state = "redgear"
 	lefthand_file = 'ModularLobotomy/_Lobotomyicons/lc13_left.dmi'
 	righthand_file = 'ModularLobotomy/_Lobotomyicons/lc13_right.dmi'

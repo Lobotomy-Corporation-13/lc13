@@ -170,7 +170,7 @@
 /area/city/antag_base)
 "L" = (
 /obj/structure/table/wood/fancy,
-/obj/item/ncorp_scroll/strengthwide,
+/obj/item/ncorp_scroll/strengthwide/col,
 /turf/open/floor/wood,
 /area/city/antag_base)
 "N" = (

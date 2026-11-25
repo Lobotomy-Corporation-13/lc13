@@ -3,7 +3,7 @@
 /obj/item/ego_weapon/ranged/shrimp/minigun
 	name = "soda minigun"
 	desc = "A gun used by shrimp corp, apparently."
-	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/shrimp.dmi'
 	icon_state = "sodaminigun"
 	inhand_icon_state = "sodaminigun"
 	force = 31
@@ -27,7 +27,7 @@
 /obj/item/ego_weapon/ranged/shrimp/assault
 	name = "soda assault rifle"
 	desc = "A gun used by shrimp corp, apparently."
-	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/shrimp.dmi'
 	icon_state = "sodaassault"
 	inhand_icon_state = "sodaassault"
 	force = 11
@@ -40,7 +40,7 @@
 /obj/item/ego_weapon/ranged/shrimp/rambominigun
 	name = "Shrimp Rambo's Minigun"
 	desc = "A gun used by THE shrimp rambo."
-	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/shrimp.dmi'
 	icon_state = "sodaminigun"
 	inhand_icon_state = "sodaminigun"
 	force = 105

@@ -3,6 +3,7 @@
 	name = "sweeper hook"
 	desc = "A hook cut off a sweeper. When night comes in the backstreets..."
 	special = "Attack dead bodies to heal."
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/sweeper.dmi'
 	icon_state = "sweeper_hook"
 	force = 27
 	damtype = BLACK_DAMAGE
