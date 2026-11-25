@@ -105,16 +105,14 @@
 	if(do_after(user, 20))	//2 Seconds for a party buff.
 		inuse = FALSE
 		playsound(src, 'sound/misc/whistle.ogg', 50, TRUE)
-		var/mob/living/carbon/human/lucky
-		var/list/nearby_players
 		for(var/mob/living/carbon/human/L in range(3, get_turf(user)))
 			if(L == user)
 				continue
 			L.apply_lc_protection(2)
 
 		user.apply_lc_fragile(1)
-		owner.add_movespeed_modifier(/datum/movespeed_modifier/yun)
-		addtimer(CALLBACK(owner, TYPE_PROC_REF(/mob, remove_movespeed_modifier), /datum/movespeed_modifieryun), 2 SECONDS, TIMER_UNIQUE | TIMER_OVERRIDE)
+		user.add_movespeed_modifier(/datum/movespeed_modifier/yun)
+		addtimer(CALLBACK(user, TYPE_PROC_REF(/mob, remove_movespeed_modifier), /datum/movespeed_modifier/yun), 2 SECONDS, TIMER_UNIQUE | TIMER_OVERRIDE)
 
 	inuse = FALSE
 
