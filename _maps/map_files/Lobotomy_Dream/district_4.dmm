@@ -558,7 +558,7 @@
 /area/city/shop)
 "cU" = (
 /obj/structure/rack,
-/obj/effect/landmark/enkritemspawn,
+/obj/effect/landmark/lditemspawn,
 /turf/open/floor/pod,
 /area/city/shop)
 "cV" = (
@@ -1160,7 +1160,7 @@
 /turf/open/floor/city/sidewalk,
 /area/city)
 "go" = (
-/obj/effect/landmark/abnospawn/enkephalin_rush/aleph,
+/obj/effect/landmark/abnospawn/lobotomy_dream/aleph,
 /turf/open/floor/plating/rust,
 /area/facility_hallway/discipline)
 "gt" = (
@@ -2916,7 +2916,7 @@
 /turf/open/floor/carpet/donk,
 /area/city)
 "qL" = (
-/obj/effect/landmark/abnospawn/enkephalin_rush/he,
+/obj/effect/landmark/abnospawn/lobotomy_dream/he,
 /turf/open/floor/plating,
 /area/department_main/safety)
 "qO" = (
@@ -4007,7 +4007,7 @@
 /turf/closed/mineral/random/facility,
 /area/facility_hallway/control)
 "yS" = (
-/obj/effect/landmark/abnospawn/enkephalin_rush/waw,
+/obj/effect/landmark/abnospawn/lobotomy_dream/waw,
 /turf/open/floor/plating,
 /area/facility_hallway/discipline)
 "yT" = (
@@ -4284,7 +4284,7 @@
 /area/department_main/training)
 "Ay" = (
 /obj/effect/decal/cleanable/dirt,
-/obj/effect/landmark/abnospawn/enkephalin_rush/he,
+/obj/effect/landmark/abnospawn/lobotomy_dream/he,
 /turf/open/floor/plating,
 /area/department_main/training)
 "AG" = (
