@@ -38,7 +38,7 @@
 		hitsound = 'sound/weapons/genhit1.ogg'
 		return
 	force --
-	addtimer(CALLBACK(src, PROC_REF(RevLoop), user), 1 SECONDS)
+	addtimer(CALLBACK(src, PROC_REF(RevLoop)), 1 SECONDS)
 
 
 /obj/item/ego_weapon/city/molar/attack_self(mob/living/carbon/human/user)
