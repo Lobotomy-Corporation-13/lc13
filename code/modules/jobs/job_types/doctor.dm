@@ -84,13 +84,13 @@
 /datum/outfit/job/doctor/nurse
 	name = "Nurse"
 	jobtype = /datum/job/doctor/nurse
-
+	belt = /obj/item/pda/medical
 	uniform = /obj/item/clothing/under/rank/medical/doctor/blue
 	head = /obj/item/clothing/head/beret/tegu/med
 	suit =  null
 
 //Paramedic but with a gun
-/datum/job/doctor/fixer
+/*/datum/job/doctor/fixer
 	title = "Medical Fixer Assistant"
 	selection_color = "#ccddee"
 	department_head = list("Doctor")
@@ -117,3 +117,5 @@
 	suit =  /obj/item/clothing/suit/toggle/labcoat/paramedic
 	backpack_contents = list(/obj/item/pinpointer/crew=1)
 	l_hand = /obj/item/ego_weapon/ranged/pistol/kcorp
+	*/
+

@@ -9,7 +9,7 @@
 	anchored = 1
 	resistance_flags = INDESTRUCTIBLE
 	var/isready = TRUE
-	var/mob/target
+	var/mob/target = "No Target"
 
 /obj/structure/assassination/attack_hand(mob/user)
 	if(!isready)
@@ -30,9 +30,15 @@
 
 	var/obj/item/assassin_link/link = I
 	if(link.held_target == target)
-		say("Target Slain. Issuing payment.")
-		new /obj/item/stack/spacecash/c1000 (get_turf(src))
-		target = null
+		if(target.mind?.assigned_role in GLOB.command_positions)
+			say("High Value Target Slain. Issuing payment.")
+			new /obj/item/stack/spacecash/c1000 (get_turf(src))
+			new /obj/item/stack/spacecash/c1000 (get_turf(src))
+			target = "No Target"
+		else
+			say("Target Slain. Issuing payment.")
+			new /obj/item/stack/spacecash/c1000 (get_turf(src))
+			target = "No Target"
 	else
 		say("Invalid Target.")
 		return
@@ -47,6 +53,11 @@
 		if(H.stat == DEAD)
 			continue
 		if(H.mind?.assigned_role in list("Doctor", "Surgeon", "Nurse", "Physician")) //No more being paid to get rid of the guy that revives your ass - Xeros
+			continue
+		if(H.mind?.assigned_role in GLOB.command_positions)
+			if(prob(50))
+				continue
+		if(H == target)
 			continue
 		available_targets += H
 

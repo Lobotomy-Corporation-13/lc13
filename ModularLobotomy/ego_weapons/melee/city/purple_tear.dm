@@ -3,6 +3,7 @@
 /obj/item/ego_weapon/city/pt //This shouldn't be obtainable, like at all
 	name = "A Purple Tear"
 	desc = "You really shouldn't be seeing this."
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/color_fixers.dmi'
 	icon_state = "Jeong"
 	damtype = RED_DAMAGE
 

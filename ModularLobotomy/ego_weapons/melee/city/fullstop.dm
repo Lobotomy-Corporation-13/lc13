@@ -2,6 +2,7 @@
 /obj/item/ego_weapon/ranged/city/fullstop
 	name = "fullstop template"
 	desc = "a template for fullstop."
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/fullstop.dmi'
 	icon_state = "fullstop"
 	inhand_icon_state = "fullstop"
 	force = 14
@@ -122,6 +123,7 @@
 /obj/item/ego_mag/fullstop
 	name = "fullstop magazine"
 	desc = "Load into fullstop guns of various types."
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/fullstop.dmi'
 	icon_state = "fullstop_ammo"
 
 

@@ -129,3 +129,12 @@
 	//icon by mannhandle
 	icon_state = "wcorp_logo"
 	is_editable = FALSE
+
+/obj/structure/sign/departments/zwei
+	name = "\improper Zwei assoc logo"
+	sign_change_name = "Zwei"
+	icon = 'ModularLobotomy/_Lobotomyicons/lcsigns.dmi'
+	desc = "The logo of Zwei Association. Your Shield."
+	//icon by Yuraizz
+	icon_state = "zwei_logo"
+	is_editable = FALSE

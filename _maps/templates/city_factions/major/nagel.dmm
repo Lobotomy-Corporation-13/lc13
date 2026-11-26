@@ -123,6 +123,8 @@
 /obj/item/flashlight/flare/torch,
 /obj/item/flashlight/flare/torch,
 /obj/structure/rack,
+/obj/item/healthanalyzer,
+/obj/item/healthanalyzer,
 /turf/open/floor/stone{
 	color = "#ccc8c0"
 	},
@@ -168,7 +170,7 @@
 /area/city/antag_base)
 "L" = (
 /obj/structure/table/wood/fancy,
-/obj/item/ncorp_scroll/strengthwide,
+/obj/item/ncorp_scroll/strengthwide/col,
 /turf/open/floor/wood,
 /area/city/antag_base)
 "N" = (

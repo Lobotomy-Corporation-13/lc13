@@ -68,6 +68,13 @@
 /obj/item/ego_weapon/city/shi_knife,
 /turf/open/floor/wood,
 /area/city/fixers)
+"u" = (
+/obj/structure/mineral_door/paperframe{
+	name = "Shi armory"
+	},
+/obj/item/ego_weapon/city/liu/fist/vet,
+/turf/open/floor/wood,
+/area/city/fixers)
 "w" = (
 /obj/structure/table/reinforced,
 /obj/machinery/light{
@@ -228,7 +235,7 @@ a
 (6,1,1) = {"
 l
 Y
-P
+u
 j
 L
 L

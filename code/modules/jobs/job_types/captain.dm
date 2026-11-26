@@ -48,3 +48,7 @@
 /datum/action/cooldown/warcry/captain
 	range = 6
 	affect_self = FALSE
+
+/datum/action/cooldown/focusfire/captain
+	range = 6
+	affect_self = FALSE

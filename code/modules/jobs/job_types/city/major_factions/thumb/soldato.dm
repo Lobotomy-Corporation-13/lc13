@@ -18,7 +18,8 @@
 	departments = DEPARTMENT_CITY_ANTAGONIST
 	paycheck = 100
 	maptype = list("city")
-	job_important = "You are a soldier in the Thumb Syndicate. You are to stay quiet and follow orders from your capo and sottocapo. Not doing either will result in  death."
+	job_important = "You are a soldier in the Thumb Syndicate. You are to stay quiet and follow orders from your Capo and Sottocapo. Not doing either will result in death. \
+		The Kurokumo Kashira, should they be present, outranks you. Obey them, unless their orders conflict with your Capo or Sottocapo."
 	job_notice = "Avoid killing other players without a reason."
 
 	roundstart_attributes = list(

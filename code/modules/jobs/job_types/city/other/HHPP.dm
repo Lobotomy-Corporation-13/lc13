@@ -37,4 +37,5 @@ HHPP Employee
 	uniform = /obj/item/clothing/under/rank/civilian/chef
 	belt = /obj/item/melee/baton/loaded	//hit the chefs and fucking die.
 	suit = /obj/item/clothing/suit/apron/chef
+	l_pocket = /obj/item/pda
 	ears = null

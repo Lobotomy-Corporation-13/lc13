@@ -3,6 +3,7 @@
 	name = "dawn office template"
 	desc = "A template for dawn office weapons."
 	special = "Hit one enemy, then the other to unleash a weak aoe attack."
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/dawn.dmi'
 	icon_state = "philip"
 	inhand_icon_state = "philip"
 	damtype = WHITE_DAMAGE

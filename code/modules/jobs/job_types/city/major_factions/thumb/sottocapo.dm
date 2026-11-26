@@ -21,10 +21,10 @@
 	maptype = list("city")
 	job_important = "This is a roleplay role. You are the leader of this thumb branch. Your goal is to make money and riches, and exert the thumb's will. \
 		You are not to tolerate anyone talking down to you, and none of the thumb may use disguises. \
-		You may order the death of any other player aside from the Hana association and Association Director that does not give you the respect you deserve. \
-		You may order the death of any of your capos or soldatos for so much as questioning you. \
+		You may order the death of any other player that does not give you the respect you deserve. \
+		You may order the death of any of your Capos or Soldatos for so much as questioning you. \
 		You yourself probably does not need to fight, and can guide from your office if needed. \
-		Your base is hidden in the alleyway in the east behind the NO ENTRY Door."
+		The Kurokumo clan fall under your command, use them as you would your own soldiers."
 	job_notice = "You may kill other players for any major disrespect; avoid killing players for minor infractions."
 
 	roundstart_attributes = list(

@@ -18,8 +18,8 @@
 	departments = DEPARTMENT_CITY_ANTAGONIST
 	paycheck = 200
 	maptype = list("city")
-	job_important = "You are a Wakashu of the kurokumo clan, a subsidiary of the thumb. In the thumb, hierachy is king. Do not disrespect your captain or anyone above you. \
-	if the Blade Bineage dare show their face around here, show em not to mess with the Kurokumo clan."
+	job_important = "You are a Wakashu of the Kurokumo clan, a subsidiary of the Thumb. In the Thumb, Hierarchy is king. Do not disrespect your Captain or anyone above you. \
+	if the Blade Lineage dare show their face around here, show 'em not to mess with the Kurokumo clan."
 
 	roundstart_attributes = list(
 								FORTITUDE_ATTRIBUTE = 60,

@@ -5,6 +5,7 @@ GLOBAL_LIST_EMPTY(active_selfie_sticks)
 	name = "cinqwest selfie stick"
 	desc = "A selfie stick that can broadcast livestreams. Use in hand to toggle streaming or open chat."
 	special = "Use in hand to toggle livestreaming mode or open chat window."
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/cinq.dmi'
 	icon_state = "cinqwest_selfie"
 	force = 20
 	damtype = RED_DAMAGE

@@ -1,7 +1,7 @@
 
 /obj/structure/warradio
 	name = "War radio"
-	desc = "A radio used by the Udjat to locate distortions."
+	desc = "A radio used by Liu associated fixers to locate targets."
 	icon = 'icons/obj/radio.dmi'
 	icon_state = "radio"
 	max_integrity = 300
@@ -38,7 +38,7 @@
 		new nexttarget(deploy_spot)
 	say("New target detected, payment issued preemptively.")
 	new /obj/item/stack/spacecash/c1000 (get_turf(src))
-	addtimer(CALLBACK(src, PROC_REF(NewTarget)), 10 MINUTES)
+	addtimer(CALLBACK(src, PROC_REF(NewTarget)), 5 MINUTES)
 
 /obj/structure/warradio/proc/NewTarget()
 	isready = TRUE
