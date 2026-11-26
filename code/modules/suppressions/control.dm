@@ -12,7 +12,7 @@
 /datum/suppression/control/End(silent = FALSE)
 	UnregisterSignal(SSdcs, COMSIG_GLOB_MELTDOWN_START)
 	for(var/obj/machinery/computer/abnormality/C in GLOB.lobotomy_devices)
-		C.scramble_list = list()
+		C.scramble_list = alist()
 	// Reward!
 	SSlobotomy_corp.AddLobPoints(10, "[CONTROL_CORE_SUPPRESSION] completion reward")
 	// Award achievement for completing Malkuth's core suppression
@@ -21,14 +21,16 @@
 			H.client?.give_award(/datum/award/achievement/lc13/suppress_malkuth, H)
 	return ..()
 
-// On lobotomy_corp meltdown event
+/// Randomizes the works at every meltdown using the Fisher-Yates shuffle (https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle)
 /datum/suppression/control/proc/OnMeltdown(datum/source, ordeal = FALSE)
 	SIGNAL_HANDLER
-	var/list/normal_works = shuffle(list(ABNORMALITY_WORK_INSTINCT, ABNORMALITY_WORK_INSIGHT, ABNORMALITY_WORK_ATTACHMENT, ABNORMALITY_WORK_REPRESSION))
-	var/list/application_scramble_list = list()
-	var/list/choose_from = normal_works.Copy()
-	for(var/work in normal_works)
-		application_scramble_list[work] = pick(choose_from - work)
-		choose_from -= application_scramble_list[work]
-	for(var/obj/machinery/computer/abnormality/C in GLOB.lobotomy_devices)
-		C.scramble_list = application_scramble_list
+	var/alist/final_list = alist()
+	var/list/normal_works = list(ABNORMALITY_WORK_INSTINCT, ABNORMALITY_WORK_INSIGHT, ABNORMALITY_WORK_ATTACHMENT, ABNORMALITY_WORK_REPRESSION)
+	var/list/swapped_works = normal_works.Copy()
+	for(var/i in 1 to 3)
+		swapped_works.Swap(i, rand(i + 1, 4))
+		final_list[normal_works[i]] = swapped_works[i]
+
+	final_list[normal_works[4]] = swapped_works[4]
+	for(var/obj/machinery/computer/abnormality/console in GLOB.lobotomy_devices)
+		console.scramble_list = final_list

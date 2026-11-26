@@ -17,7 +17,8 @@
 	/// Special tutorial abnormality behaviors
 	var/tutorial = FALSE
 	/// Work types will instead redirect to those, if listed
-	var/list/scramble_list = list()
+	/// Keep in mind while usually these are seperate for every console control core uses a singular alist for all
+	var/alist/scramble_list = alist()
 	///Linked Panel
 	var/obj/machinery/containment_panel/linked_panel
 	/// Accumulated abnormality chemical.
@@ -134,7 +135,7 @@
 		work_list = shuffle(work_list) // A minor annoyance, at most
 	for(var/wt in work_list)
 		var/work_display = "[wt] Work"
-		if(scramble_list[wt] != null)
+		if(wt in scramble_list)
 			work_display += "?"
 		var/datum/suppression/information/I = GetCoreSuppression(/datum/suppression/information)
 		if(!tutorial && istype(I))
@@ -448,18 +449,15 @@
 	SEND_GLOBAL_SIGNAL(COMSIG_GLOB_MELTDOWN_FINISHED, datum_reference, FALSE)
 	return TRUE
 
-// Scrambles work types for this specific console
+/// Scrambles work types for this specific console
 /obj/machinery/computer/abnormality/proc/Scramble()
-	var/list/normal_works = shuffle(list(
-		ABNORMALITY_WORK_INSTINCT,
-		ABNORMALITY_WORK_INSIGHT,
-		ABNORMALITY_WORK_ATTACHMENT,
-		ABNORMALITY_WORK_REPRESSION,
-	))
-	var/list/choose_from = normal_works.Copy()
-	for(var/work in normal_works)
-		scramble_list[work] = pick(choose_from - work)
-		choose_from -= scramble_list[work]
+	scramble_list = alist() // This just ensures we aren't linked by control core and changing 20 computers at once
+	var/list/normal_works = list(ABNORMALITY_WORK_INSTINCT, ABNORMALITY_WORK_INSIGHT, ABNORMALITY_WORK_ATTACHMENT, ABNORMALITY_WORK_REPRESSION)
+	var/list/swapped_works = normal_works.Copy()
+	for(var/i in 1 to 3)
+		swapped_works.Swap(i, rand(i + 1, 4))
+		scramble_list[normal_works[i]] = swapped_works[i]
+	scramble_list[normal_works[4]] = swapped_works[4]
 
 //Links to containment panel
 /obj/machinery/computer/abnormality/proc/LinkPanel(obj/machinery/panel)
