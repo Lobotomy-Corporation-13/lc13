@@ -96,6 +96,9 @@
 
 //Spawns the body, and applies the body mark traits to it, if the culprit has any of those traits.
 /obj/structure/case_radio/proc/SpawnVictim()
+	//Do not spawn victem if there is no culprit
+	if(!culprit)
+		return
 	var/mob/living/carbon/human/victim = new(scene_turf)
 	randomize_human(victim)
 	if("Heavy build" in culprit.traits)
