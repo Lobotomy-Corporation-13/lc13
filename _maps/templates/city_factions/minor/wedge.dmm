@@ -205,7 +205,7 @@
 /area/city/fixers)
 "C" = (
 /obj/structure/table/wood/fancy/royalblack,
-/obj/item/ego_weapon/city/wedge/neocity,
+/obj/item/ego_weapon/city/wedge,
 /obj/item/detective_scanner,
 /obj/item/camera,
 /obj/item/camera_film,

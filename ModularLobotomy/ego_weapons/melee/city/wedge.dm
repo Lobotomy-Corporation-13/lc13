@@ -1,9 +1,12 @@
 //Wedge - Grade 4 with two range.
 /obj/item/ego_weapon/city/wedge
-	name = "wedge office spear"
+	name = "wedge office operator spear"
 	desc = "A black, ornate spear. Some say it pierces any weakness... Though that may just be what the office who used these says."
+	special = "Repeated hits on one target build momentum (+1, +2, +3...). Switching targets drops the gain back to +1. 8 seconds idle resets all momentum. \
+		Use in hand to rally nearby Wedge allies: +5 momentum and 2 black strength. \
+		At 15+ momentum, click a distant target to dash through them, spending all momentum for +10% damage each (max 400%)."
 	icon_state = "wedge"
-	force = 74
+	force = 68
 	reach = 2		//Has 2 Square Reach.
 	attack_speed = 1
 	stuntime = 5
@@ -12,19 +15,6 @@
 	attack_verb_continuous = list("pokes", "jabs", "tears", "lacerates", "gores")
 	attack_verb_simple = list("poke", "jab", "tear", "lacerate", "gore")
 	hitsound = 'sound/weapons/ego/spear1.ogg'
-	attribute_requirements = list(
-		FORTITUDE_ATTRIBUTE = 80,
-		PRUDENCE_ATTRIBUTE = 80,
-		TEMPERANCE_ATTRIBUTE = 60,
-		JUSTICE_ATTRIBUTE = 100,
-	)
-
-/obj/item/ego_weapon/city/wedge/neocity
-	name = "wedge office operator spear"
-	special = "Repeated hits on one target build momentum (+1, +2, +3...). Switching targets drops the gain back to +1. 8 seconds idle resets all momentum. \
-		Use in hand to rally nearby Wedge allies: +5 momentum and 2 black strength. \
-		At 15+ momentum, click a distant target to dash through them, spending all momentum for +10% damage each (max 400%)."
-	force = 68
 	attribute_requirements = list(
 		FORTITUDE_ATTRIBUTE = 80,
 		PRUDENCE_ATTRIBUTE = 60,
@@ -55,16 +45,16 @@
 	var/finisher_cooldown_time = 15 SECONDS
 	var/finisher_charging = FALSE
 
-/obj/item/ego_weapon/city/wedge/neocity/dropped(mob/user)
+/obj/item/ego_weapon/city/wedge/dropped(mob/user)
 	. = ..()
 	ResetMomentum()
 	wind_active = FALSE
 
-/obj/item/ego_weapon/city/wedge/neocity/examine(mob/user)
+/obj/item/ego_weapon/city/wedge/examine(mob/user)
 	. = ..()
 	. += span_notice("Momentum: [momentum] ([wind_momentum] needed for the finisher).")
 
-/obj/item/ego_weapon/city/wedge/neocity/attack_self(mob/living/carbon/human/user)
+/obj/item/ego_weapon/city/wedge/attack_self(mob/living/carbon/human/user)
 	. = ..()
 	if(finisher_charging || !CanUseEgo(user))
 		return
@@ -81,7 +71,7 @@
 	Rally(user)
 
 // Starts the rally cooldown and grants momentum to the user's spear, and momentum and black strength to nearby Wedge Office members.
-/obj/item/ego_weapon/city/wedge/neocity/proc/Rally(mob/living/carbon/human/user)
+/obj/item/ego_weapon/city/wedge/proc/Rally(mob/living/carbon/human/user)
 	rally_cooldown = world.time + rally_cooldown_time
 	new /obj/effect/temp_visual/screech(get_turf(user))
 	playsound(loc, 'sound/effects/ordeals/steel/gcorp_chitter.ogg', 40, TRUE)
@@ -94,14 +84,14 @@
 		ally.apply_lc_black_strength(rally_black_strength)
 		to_chat(ally, span_nicegreen("[user]'s call steadies you."))
 		var/obj/item/held = ally.get_active_held_item()
-		if(istype(held, /obj/item/ego_weapon/city/wedge/neocity))
-			var/obj/item/ego_weapon/city/wedge/neocity/ally_spear = held
+		if(istype(held, /obj/item/ego_weapon/city/wedge))
+			var/obj/item/ego_weapon/city/wedge/ally_spear = held
 			ally_spear.AddMomentum(rally_momentum, ally)
 		else if(istype(held, /obj/item/ego_weapon/lance/wedge))
 			var/obj/item/ego_weapon/lance/wedge/ally_lance = held
 			ally_lance.AddMomentum(rally_momentum, ally)
 
-/obj/item/ego_weapon/city/wedge/neocity/attack(mob/living/target, mob/living/user)
+/obj/item/ego_weapon/city/wedge/attack(mob/living/target, mob/living/user)
 	if(finisher_charging)
 		return
 	var/target_living = FALSE
@@ -114,7 +104,7 @@
 		HitMomentum(target, user)
 
 // Grants momentum for a hit on target, 1 more than the last hit. A hit on a different target keeps the momentum but drops the gain back to 1.
-/obj/item/ego_weapon/city/wedge/neocity/proc/HitMomentum(mob/living/target, mob/living/user)
+/obj/item/ego_weapon/city/wedge/proc/HitMomentum(mob/living/target, mob/living/user)
 	var/mob/living/last_target = momentum_target?.resolve()
 	if(last_target && last_target != target)
 		momentum_gain = initial(momentum_gain)
@@ -123,13 +113,13 @@
 	momentum_gain++
 
 // Adds momentum and restarts the decay timer.
-/obj/item/ego_weapon/city/wedge/neocity/proc/AddMomentum(amount, mob/living/user)
+/obj/item/ego_weapon/city/wedge/proc/AddMomentum(amount, mob/living/user)
 	momentum += amount
 	momentum_decay_timer = addtimer(CALLBACK(src, PROC_REF(ResetMomentum)), momentum_decay_time, TIMER_UNIQUE | TIMER_OVERRIDE | TIMER_STOPPABLE)
 	UpdateWind(user)
 
 // Clears momentum, the per-hit gain and the tracked target.
-/obj/item/ego_weapon/city/wedge/neocity/proc/ResetMomentum()
+/obj/item/ego_weapon/city/wedge/proc/ResetMomentum()
 	momentum = 0
 	momentum_gain = initial(momentum_gain)
 	momentum_target = null
@@ -139,7 +129,7 @@
 		UpdateWind(loc)
 
 // Clicking out of reach looks for a finisher target around the clicked tile and winds up on it.
-/obj/item/ego_weapon/city/wedge/neocity/afterattack(atom/target, mob/living/user, proximity_flag, click_parameters)
+/obj/item/ego_weapon/city/wedge/afterattack(atom/target, mob/living/user, proximity_flag, click_parameters)
 	. = ..()
 	if(finisher_charging)
 		return
@@ -161,7 +151,7 @@
 	Finisher(finisher_target, user)
 
 // Picks a target in the 3x3 around center, center tile first. Hostile mobs come first, then humans outside the Wedge Office.
-/obj/item/ego_weapon/city/wedge/neocity/proc/FindFinisherTarget(turf/center, mob/living/user)
+/obj/item/ego_weapon/city/wedge/proc/FindFinisherTarget(turf/center, mob/living/user)
 	var/list/turfs = list(center) + (RANGE_TURFS(1, center) - center)
 	for(var/turf/T as anything in turfs)
 		for(var/mob/living/simple_animal/hostile/H in T)
@@ -177,7 +167,7 @@
 	return null
 
 // Winds up on the user, then dashes through the target and strikes, spending all momentum for extra damage.
-/obj/item/ego_weapon/city/wedge/neocity/proc/Finisher(mob/living/target, mob/living/user)
+/obj/item/ego_weapon/city/wedge/proc/Finisher(mob/living/target, mob/living/user)
 	if(!FinisherWindup(target, user))
 		to_chat(user, span_warning("You lose sight of your opening!"))
 		return
@@ -189,7 +179,7 @@
 	FinisherStrike(target, user)
 
 // Plays the wind and charge sound and holds the user turned away from the target. TRUE if the windup finished.
-/obj/item/ego_weapon/city/wedge/neocity/proc/FinisherWindup(mob/living/target, mob/living/user)
+/obj/item/ego_weapon/city/wedge/proc/FinisherWindup(mob/living/target, mob/living/user)
 	user.visible_message(span_userdanger("[user] lowers [src] and fixes [user.p_their()] eyes on [target]...!"), span_danger("You fix your eyes on [target]...!"))
 	var/mutable_appearance/wind_overlay = mutable_appearance('icons/effects/96x96.dmi', "wedge_finisher_wind", ABOVE_MOB_LAYER)
 	wind_overlay.pixel_x = -32
@@ -204,7 +194,7 @@
 	return wound_up
 
 // Moves the user through the target to the far side of them, or onto their tile if that one is blocked.
-/obj/item/ego_weapon/city/wedge/neocity/proc/FinisherDash(mob/living/target, mob/living/user)
+/obj/item/ego_weapon/city/wedge/proc/FinisherDash(mob/living/target, mob/living/user)
 	var/turf/start = get_turf(user)
 	var/turf/landing = get_step(target, get_dir(start, target))
 	if(!landing || landing.is_blocked_turf(TRUE))
@@ -214,7 +204,7 @@
 	DashVisuals(start, landing, get_turf(target))
 
 // Hits the target with force raised by the current momentum and the finisher's sound, then resets momentum.
-/obj/item/ego_weapon/city/wedge/neocity/proc/FinisherStrike(mob/living/target, mob/living/user)
+/obj/item/ego_weapon/city/wedge/proc/FinisherStrike(mob/living/target, mob/living/user)
 	var/base_force = force
 	var/bonus_percent = min(momentum * finisher_bonus_per_momentum, finisher_max_bonus)
 	force = base_force * (1 + bonus_percent / 100)
@@ -224,14 +214,14 @@
 	force = base_force
 	ResetMomentum()
 
-/obj/item/ego_weapon/city/wedge/neocity/proc/DashVisuals(turf/start, turf/landing, turf/target_turf)
+/obj/item/ego_weapon/city/wedge/proc/DashVisuals(turf/start, turf/landing, turf/target_turf)
 	if(start != landing)
 		start.Beam(landing, "wedge_transpierce", time = 6)
 		var/obj/effect/temp_visual/wedge_transpierce_tip/tip = new(landing)
 		tip.transform = matrix().Turn(Get_Angle(start, landing))
 	new /obj/effect/temp_visual/wedge_transpierce_burst(target_turf)
 
-/obj/item/ego_weapon/city/wedge/neocity/proc/FinisherCheck(mob/living/user, mob/living/target)
+/obj/item/ego_weapon/city/wedge/proc/FinisherCheck(mob/living/user, mob/living/target)
 	if(!can_see(user, target, finisher_range))
 		return FALSE
 	var/away = get_dir(target, user)
@@ -240,14 +230,14 @@
 	return TRUE
 
 // Shows the wind while the spear has enough momentum and is in the active hand. Redraws only on a change.
-/obj/item/ego_weapon/city/wedge/neocity/proc/UpdateWind(mob/living/user)
+/obj/item/ego_weapon/city/wedge/proc/UpdateWind(mob/living/user)
 	var/should_show = (momentum >= wind_momentum && src == user.get_active_held_item())
 	if(should_show == wind_active)
 		return
 	wind_active = should_show
 	user.update_inv_hands()
 
-/obj/item/ego_weapon/city/wedge/neocity/worn_overlays(isinhands = FALSE, icon_file)
+/obj/item/ego_weapon/city/wedge/worn_overlays(isinhands = FALSE, icon_file)
 	. = ..()
 	if(!isinhands || !wind_active)
 		return
