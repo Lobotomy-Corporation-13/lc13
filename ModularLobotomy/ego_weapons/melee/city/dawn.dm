@@ -138,3 +138,4 @@
 		swingstyle = WEAPONSWING_STAB
 	else
 		swingstyle = initial(swingstyle)
+
