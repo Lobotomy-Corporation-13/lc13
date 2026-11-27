@@ -75,7 +75,7 @@
 //So using the ability gives people around you protection, but the user Fragile and Speed.
 /obj/item/ego_weapon/city/yun/fist
 	name = "yun office gloves"
-	desc = "Gloves used by the lead of the yun office."
+	desc = "Gloves used by the operator of yun office."
 	special = "User this weapon in hand to give nearby allies protection, the user gains fragile and a movespeed buff."
 	icon_state = "yun_fist"
 	force = 32
