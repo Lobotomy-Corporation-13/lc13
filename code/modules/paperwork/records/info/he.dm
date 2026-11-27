@@ -584,3 +584,4 @@
 	abno_info = list(
 		"When another abnormality breached, the Qliphoth counter lowered.",
 		"F-02-182 returned to it's containment after 5 minutes.")
+

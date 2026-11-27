@@ -4265,6 +4265,7 @@
 #include "ModularLobotomy\!extra_abnos\community\community_datum.dm"
 #include "ModularLobotomy\!extra_abnos\community\community_weapons.dm"
 #include "ModularLobotomy\!extra_abnos\community\aleph\crying_children.dm"
+#include "ModularLobotomy\!extra_abnos\community\he\Coupid.dm"
 #include "ModularLobotomy\!extra_abnos\community\tools\zayin\dragon_skull.dm"
 #include "ModularLobotomy\!extra_abnos\joke_abnormalities\records.dm"
 #include "ModularLobotomy\!extra_abnos\joke_abnormalities\!equipment\armor.dm"

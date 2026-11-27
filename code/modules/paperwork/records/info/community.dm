@@ -50,6 +50,25 @@
 	- When the work result was Bad, the Qliphoth Counter lowered.	<br>
 	- When Creek Transporation Agency escaped, it occupied a corridor of the facility."}
 
+// Coupid
+/obj/item/paper/fluff/info/he/cupid
+/*	abno_type = /mob/living/simple_animal/hostile/abnormality/cupid
+	abno_code = "O-02-1402"
+	abno_info = list(
+		"After a work, Agents will start suffering an allergic response regardless of confirmed allergies. It is believed that this is because the allergic response is not tied to a common allergen.",
+		"If the work result was Bad, Qliphoth reduced.",
+		"On breach, Coupid will spread pollen all around the facility, Causing small amounts of black damage frequently. It is believed that if we lowered its security, This would become a fatal allergic response.",
+		"Do not Reunite the holidays.")
+)*/
+	name = "Coupid - O-02-1402"
+	info = {"<h1><center>O-02-1402</center></h1>	<br>
+	Name : Coupid<br>
+	Risk Class : HE	<br>
+	- After a work, Agents will start suffering an allergic response regardless of confirmed allergies. It is believed that this is because the allergic response is not tied to a common allergen.	<br>
+	- If the work result was Bad, Qliphoth reduced.	<br>
+	- On breach, Coupid will spread pollen all around the facility, Causing small amounts of black damage frequently. It is believed that if we lowered its security, This would become a fatal allergic response.	<br>
+	- Do not Reunite the holidays."}
+
 /obj/item/paper/fluff/info/community/district4/farmhand//WAW
 /*	abno_type = /mob/living/simple_animal/hostile/abnormality/farmhand
 	abno_code = "O-05-04-12"
