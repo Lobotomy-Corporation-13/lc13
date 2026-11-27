@@ -320,7 +320,7 @@ Association gear is mostly HE for grunts, low WAW for veterans and high WAW for 
 	cost = 25
 /// Streetlight Baton
 /datum/ego_datum/weapon/city/streetlight/baton
-	item_path = /obj/item/ego_weapon/city/zweihander/streetlight_baton
+	item_path = /obj/item/ego_weapon/city/streetlight_baton
 	cost = 35
 
 /* ------------------ Full-Stop Office ------------------*/
