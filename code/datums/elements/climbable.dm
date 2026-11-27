@@ -81,7 +81,10 @@
 
 /datum/element/climbable/proc/do_climb(atom/climbed_thing, mob/living/user)
 	climbed_thing.density = FALSE
-	. = step(user, get_dir(user,climbed_thing.loc))
+	if(istype(climbed_thing, /obj/structure/railing) && user.loc == climbed_thing.loc)
+		. = step(user, climbed_thing.dir) // cheap hack for railings (since otherwise, you're on the same tile thus you can't get your relative dir to it). TODO: steal another codebase's rework of this component
+	else
+		. = step(user, get_dir(user, climbed_thing.loc))
 	climbed_thing.density = TRUE
 
 ///Handles climbing onto the atom when you click-drag

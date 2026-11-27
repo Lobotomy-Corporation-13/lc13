@@ -1061,6 +1061,7 @@
 	},
 /obj/item/ego_weapon/ranged/city/udjat,
 /obj/item/ego_weapon/city/udjat_limbus,
+/obj/item/clothing/mask/udjat,
 /turf/open/floor/lce/plate/dark,
 /area/lce/security/udjat_quarters)
 "gh" = (
@@ -1798,7 +1799,9 @@
 /obj/item/ego_weapon/ranged/city/udjat,
 /obj/item/ego_weapon/city/udjat_limbus,
 /obj/item/clothing/suit/armor/ego_gear/city/udjat_limbus,
-/obj/item/clothing/head/udjat,
+/obj/item/clothing/mask/udjat,
+/obj/item/ego_mag/udjat,
+/obj/item/ego_mag/udjat,
 /turf/open/floor/lce/plate/dark,
 /area/lce/security/udjat_armoury)
 "kE" = (
@@ -3936,13 +3939,6 @@
 /obj/effect/turf_decal/bot,
 /turf/open/floor/circuit/telecomms/mainframe,
 /area/lce/support/telecomms)
-"xi" = (
-/obj/effect/turf_decal/siding/blue{
-	dir = 8;
-	color = "#955C23"
-	},
-/turf/open/floor/lce/plate/bright,
-/area/lce/containment/light/four)
 "xl" = (
 /obj/effect/turf_decal/stripes/white/line{
 	color = "#5269e9";
@@ -6984,10 +6980,6 @@
 /obj/structure/rack{
 	pixel_x = -1
 	},
-/obj/item/udjat_mag,
-/obj/item/udjat_mag,
-/obj/item/udjat_mag,
-/obj/item/udjat_mag,
 /obj/machinery/light{
 	dir = 4;
 	pixel_x = 9;
@@ -6996,6 +6988,8 @@
 /obj/item/reagent_containers/food/drinks/bottle/whiskey{
 	pixel_y = 18
 	},
+/obj/item/ego_mag/udjat,
+/obj/item/ego_mag/udjat,
 /turf/open/floor/lce/plate/dark,
 /area/lce/security/udjat_quarters)
 "Om" = (
@@ -7934,7 +7928,7 @@
 	color = "#955C23"
 	},
 /turf/open/floor/lce/plate/bright,
-/area/lce/containment/light/three)
+/area/lce/containment/light/control_west)
 "Tk" = (
 /obj/effect/turf_decal/trimline/red/filled/line{
 	dir = 1;
@@ -8725,8 +8719,6 @@
 	pixel_x = 9;
 	pixel_y = 4
 	},
-/obj/item/udjat_mag,
-/obj/item/udjat_mag,
 /obj/item/clothing/suit/armor/ego_gear/city/udjat_combat,
 /turf/open/floor/lce/plate/dark,
 /area/lce/security/udjat_armoury)
@@ -8879,7 +8871,7 @@
 	color = "#955C23"
 	},
 /turf/open/floor/lce/plate/bright,
-/area/lce/containment/light/three)
+/area/lce/containment/light/control_west)
 "Xp" = (
 /obj/structure/cable,
 /obj/effect/decal/cleanable/dirt/dust,
@@ -9101,7 +9093,7 @@
 	color = "#955C23"
 	},
 /turf/open/floor/lce/plate/bright,
-/area/lce/containment/light/four)
+/area/lce/containment/light/control_west)
 "Yl" = (
 /turf/open/floor/lce/tile/bright,
 /area/lce/medical/aid_heavy)
@@ -32747,7 +32739,7 @@ ch
 cW
 JD
 Yk
-xi
+Tg
 Sx
 bd
 cD

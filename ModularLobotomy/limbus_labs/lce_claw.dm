@@ -80,9 +80,7 @@
 	. += span_notice("It is holding [length(contents)] of [max_stored] items.")
 	. += span_notice("Water: [round(reagents.get_reagent_amount(/datum/reagent/water))]/[water_capacity] units.")
 	if(!claw)
-		. += span_warning(rebuild_at > world.time \
-			? "The claw is being rebuilt. [DisplayTimeText(rebuild_at - world.time)] remaining." \
-			: "No claw is deployed.")
+		. += rebuild_at > world.time ? span_warning("The claw is being rebuilt. [DisplayTimeText(rebuild_at - world.time)] remaining.") : span_warning("No claw is deployed.")
 
 ///Somewhere in the cell to hang a new claw from. Prefers open floor; anything at all beats nothing.
 /obj/machinery/computer/camera_advanced/lce_claw/proc/FindClawSpot()

@@ -176,7 +176,6 @@
 		to_chat(src, span_nicegreen("It is the right colour. For a moment, that is almost a comfort."))
 
 // Blessing - choose a human, watch/hear/whisper, and raise their attunement safe limit.
-//Not gated on breached: the only block is someone already holding the blessing.
 /mob/living/simple_animal/hostile/limbus_abno/despair_knight/proc/BlessHuman()
 	if(blessed_human)
 		to_chat(src, span_warning("You have already given your blessing to [blessed_human]. Such a vow cannot be taken back."))
@@ -264,6 +263,10 @@
 	possession_locked = TRUE //The crystal is not vacant, whatever a ghost sees.
 	mind.transfer_to(manifest)
 
+//The crystal is never vacant while she is out in the manifest, flag or no flag.
+/mob/living/simple_animal/hostile/limbus_abno/despair_knight/PossessionLocked()
+	return ..() || !QDELETED(manifest) || crystallized
+
 //Cannot commune through EGO while manifested (and vice versa - manifest is blocked above).
 /mob/living/simple_animal/hostile/limbus_abno/despair_knight/CommuneMenu()
 	if(manifest || crystallized)
@@ -279,7 +282,11 @@
 	//stranded in the player's client pointing at a deleted mob.
 	manifest.ClearImage()
 	if(manifest.mind)
-		manifest.mind.transfer_to(src)
+		if(CanReturnTo(src, manifest))
+			manifest.mind.transfer_to(src)
+		else //Someone else got in. Moving a mind into an occupied mob drops their client.
+			to_chat(manifest, span_userdanger("Something else is wearing your body. There is nothing to go back to."))
+			manifest.ghostize(FALSE)
 	QDEL_NULL(manifest)
 	possession_locked = FALSE
 	Crystallize(FALSE)
@@ -520,6 +527,11 @@
 	to_chat(src, span_notice("<b>You manifest beside [blessed].</b> Only they can see or hear you. Stay close to them."))
 	Show()
 
+/mob/camera/despair_manifest/Logout()
+	. = ..()
+	if(body && !QDELETED(body))
+		body.ReturnToBody()
+
 //A light-blue ghostly image of the knight, shown only to the blessed (and to the manifest).
 /mob/camera/despair_manifest/proc/Show()
 	if(blessed?.client)
@@ -561,7 +573,7 @@
 	forceMove(home)
 
 //Speech only reaches the blessed (and the manifest itself).
-/mob/camera/despair_manifest/say(message, bubble_type, list/spans = list(), sanitize = TRUE, datum/language/language = null, ignore_spam = FALSE, forced = null)
+/mob/camera/despair_manifest/say(message, bubble_type, list/spans = list(), sanitize = TRUE, datum/language/language = /datum/language/common, ignore_spam = FALSE, forced = null)
 	if(!message)
 		return
 	message = capitalize(trim(copytext_char(sanitize(message), 1, MAX_MESSAGE_LEN)))
