@@ -4,7 +4,8 @@
 	desc = "A black, ornate spear. Some say it pierces any weakness... Though that may just be what the office who used these says."
 	special = "Repeated hits on one target build momentum (+1, +2, +3...). Switching targets drops the gain back to +1. 8 seconds idle resets all momentum. \
 		Use in hand to rally nearby Wedge allies: +5 momentum and 2 black strength. \
-		At 15+ momentum, click a distant target to dash through them, spending all momentum for +10% damage each (max 400%)."
+		At 15+ momentum, click a distant target and spend 10 SP to dash through them, spending all momentum for +10% damage each (max 400%). \
+		Fails with less than 10 SP."
 	icon_state = "wedge"
 	force = 68
 	reach = 2		//Has 2 Square Reach.
@@ -44,6 +45,7 @@
 	var/finisher_cooldown = 0
 	var/finisher_cooldown_time = 15 SECONDS
 	var/finisher_charging = FALSE
+	var/finisher_sp_cost = 10
 
 /obj/item/ego_weapon/city/wedge/dropped(mob/user)
 	. = ..()
@@ -148,7 +150,20 @@
 	var/mob/living/finisher_target = FindFinisherTarget(clicked_turf, user)
 	if(!finisher_target)
 		return
+	if(!SpendSanity(user))
+		return
 	Finisher(finisher_target, user)
+
+// Takes finisher_sp_cost SP from the user. FALSE, with a warning, if they have less than that.
+/obj/item/ego_weapon/city/wedge/proc/SpendSanity(mob/living/user)
+	if(!ishuman(user))
+		return FALSE
+	var/mob/living/carbon/human/human_user = user
+	if(human_user.sanityhealth < finisher_sp_cost)
+		to_chat(user, span_warning("Your mind is too frayed to focus on a finisher."))
+		return FALSE
+	human_user.adjustSanityLoss(finisher_sp_cost)
+	return TRUE
 
 // Picks a target in the 3x3 around center, center tile first. Hostile mobs come first, then humans outside the Wedge Office.
 /obj/item/ego_weapon/city/wedge/proc/FindFinisherTarget(turf/center, mob/living/user)
@@ -272,7 +287,8 @@
 	name = "wedge office fixer lance"
 	desc = "A black lance with a long, tapered head. Wedge office fixers favor it for keeping a suspect at a distance."
 	special = "Repeated uncharged hits on one target build momentum (+1, +2, +3...). Switching targets drops the gain back to +1. 11 seconds idle resets all momentum. \
-		Charging at 6+ momentum starts at high speed, but stops after 4 tiles and spends all momentum."
+		Charging at 6+ momentum spends 10 SP to start at high speed, but stops after 4 tiles and spends all momentum. \
+		With less than 10 SP the charge is not boosted."
 	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons.dmi'
 	icon_state = "wedge_lance"
 	lefthand_file = 'icons/mob/inhands/96x96_lefthand.dmi'
@@ -306,6 +322,7 @@
 	var/boosted_charge = FALSE
 	var/boosted_tiles = 0
 	var/max_boosted_tiles = 4
+	var/boosted_sp_cost = 10
 
 /obj/item/ego_weapon/lance/wedge/dropped(mob/user)
 	. = ..()
@@ -366,11 +383,22 @@
 		return
 	var/mob/living/living_user = user
 	UpdateWind(living_user)
-	if(momentum >= wind_momentum)
+	if(momentum >= wind_momentum && SpendSanity(living_user))
 		boosted_charge = TRUE
 		playsound(living_user, 'sound/weapons/fixer/wedge_charge.ogg', 100, TRUE)
 		charge_speed = increased_charge_speed
 		living_user.add_or_update_variable_movespeed_modifier(/datum/movespeed_modifier/charge, multiplicative_slowdown = charge_speed)
+
+// Takes boosted_sp_cost SP from the user. FALSE, with a warning, if they have less than that.
+/obj/item/ego_weapon/lance/wedge/proc/SpendSanity(mob/living/user)
+	if(!ishuman(user))
+		return FALSE
+	var/mob/living/carbon/human/human_user = user
+	if(human_user.sanityhealth < boosted_sp_cost)
+		to_chat(user, span_warning("Your mind is too frayed to push the charge any harder."))
+		return FALSE
+	human_user.adjustSanityLoss(boosted_sp_cost)
+	return TRUE
 
 /obj/item/ego_weapon/lance/wedge/RaiseLance(user)
 	. = ..()
