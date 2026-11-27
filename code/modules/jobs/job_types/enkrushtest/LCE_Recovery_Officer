@@ -1,10 +1,8 @@
 /datum/job/enkrush_recovery_officer
 	title = "LCE Recovery Officer"
-	department_head = list("Manager")
 	faction = "Station"
 	total_positions = 1
 	spawn_positions = 1
-	supervisors = "the manager"
 	selection_color = "#ccccff"
 	display_order = JOB_DISPLAY_ORDER_COMMAND
 
@@ -19,9 +17,7 @@
 	departments = DEPARTMENT_COMMAND
 
 	mapexclude = list("mini")
-	job_important = "\
-	You are the Recovery Officer. Your job is to manage the expansion of the Departments, E.G.O. Equipment, and it's Distribution. \
-	 Ultimately, your goal is to Repair the former Lobotomy Corporation branch."
+	job_important = "You are the Recovery Officer. Your job is to manage the expansion of the Departments, E.G.O. Equipment, and it's Distribution. Ultimately, your goal is to Repair the former Lobotomy Corporation branch."
 
 	job_abbreviation = "LCE-RO"
 
@@ -39,12 +35,6 @@
 	ADD_TRAIT(outfit_owner, TRAIT_WORK_FORBIDDEN, JOB_TRAIT)
 	ADD_TRAIT(outfit_owner, TRAIT_ATTRIBUTES_VISION, JOB_TRAIT)
 	outfit_owner.grant_language(/datum/language/bong, TRUE, FALSE, LANGUAGE_MIND) //So they can understand the bong-bong but not speak it
-
-	if(SSlobotomy_corp.BlitzActive())
-		outfit_owner.adjust_all_attribute_levels(40)
-
-	if(SSmaptype.chosen_trait == FACILITY_TRAIT_DARK_SOULS)
-		outfit_owner.equip_to_slot_or_del(new /obj/item/estus(outfit_owner), ITEM_SLOT_HANDS, TRUE)
 
 //mainly just set up for when we do have official stuff
 /datum/outfit/job/command/lce_recovery_o
