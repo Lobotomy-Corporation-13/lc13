@@ -1,22 +1,21 @@
 /obj/item/loadout_beacon/streetlight
 	name = "Streetlight office Loadout Beacon"
-		available_loadouts = list(
-			/datum/loadout/streetlight/buddy,
-			/datum/loadout/streetlight/friend,
-			/datum/loadout/streetlight/brawler,
-			/datum/loadout/streetlight/heavy,
-		)
+	available_loadouts = list(
+		/datum/loadout/streetlight/buddy,
+		/datum/loadout/streetlight/friend,
+		/datum/loadout/streetlight/brawler,
+		/datum/loadout/streetlight/heavy,
+	)
 
-		rare_loadouts = list(
-			/datum/loadout/streetlight/zwei,
-		)
+	rare_loadouts = list(
+		/datum/loadout/streetlight/zwei,
+	)
 
 
 /datum/loadout/streetlight/heavy
 	name = "Streetlight Heavy"
 	armor = /obj/item/clothing/suit/armor/ego_gear/city/mars
 	weapon = /obj/item/ego_weapon/city/streetlight_greatsword
-	extra =
 
 /datum/loadout/streetlight/brawler
 	name = "Streetlight Brawler"

@@ -62,7 +62,7 @@
 			return
 		user.adjustSanityLoss(cost)
 
-/obj/item/ego_weapon/city/kcorp/dropped(mob/user)
+/obj/item/ego_weapon/city/fixerblade/dropped(mob/user)
 	.=..()
 	active = FALSE
 	attack_speed = initial(attack_speed)
@@ -96,7 +96,7 @@
 	attack_verb_simple = list("bashes", "clubs")
 	hitsound = 'sound/weapons/fixer/generic/club1.ogg'
 
-/obj/item/ego_weapon/city/fixerhammer/attack_self(mob/living/user)
+/obj/item/ego_weapon/city/fixerhammer/attack_self(mob/living/carbon/human/user)
 	if(user.sanityhealth >= 25)
 		user.adjustSanityLoss(cost)
 		to_chat(user, span_notice("You brace the hammer to block incoming attacks."))
