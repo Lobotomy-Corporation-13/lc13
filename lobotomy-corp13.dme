@@ -2478,6 +2478,8 @@
 #include "code\modules\jobs\job_types\city\minor_factions\fullstop\fullop.dm"
 #include "code\modules\jobs\job_types\city\minor_factions\fullstop\rifleman.dm"
 #include "code\modules\jobs\job_types\city\minor_factions\fullstop\sniper.dm"
+#include "code\modules\jobs\job_types\city\minor_factions\kcorp\kcorp_drone.dm"
+#include "code\modules\jobs\job_types\city\minor_factions\kcorp\kcorp_goon.dm"
 #include "code\modules\jobs\job_types\city\minor_factions\kurokumo\kcaptain.dm"
 #include "code\modules\jobs\job_types\city\minor_factions\kurokumo\wakashu.dm"
 #include "code\modules\jobs\job_types\city\minor_factions\shi\director.dm"

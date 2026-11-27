@@ -12,15 +12,19 @@
 	//Simply a shell for a player
 	AIStatus = AI_OFF
 	pass_flags = PASSTABLE
-	mob_size = MOB_SIZE_TINY
+	density = FALSE
+	a_intent = INTENT_HELP
+	// Holding items code is weird because its reliant on the held_items list
+	dextrous = TRUE
+	held_items = list(null)
+	speech_span = SPAN_ROBOT
+	possible_a_intents = list(INTENT_HELP, INTENT_GRAB, INTENT_HARM)
 	move_to_delay = 2
-	melee_damage_lower = 1
-	melee_damage_upper = 8 // should annoy, not kill
 	turns_per_move = 3
 	death_message = "Smashes on the ground."
 	loot = list(/obj/effect/decal/cleanable/robot_debris)
 	flash_cooldown_time = 30 SECONDS
-	flash_range = 2
+	flash_range = 1
 
 	var/scan_cooldown = 0
 	//You must witness a entity go from living to dead within this time limit
@@ -60,21 +64,45 @@
 \---*/
 /mob/living/simple_animal/hostile/kcorp/drone/kcorp_recorder/Initialize(mapload)
 	. = ..()
+	var/datum/action/place_room/place_action = new
+	place_action.Grant(src)
 	var/datum/action/cooldown/dispense_monies/attack_action = new
 	attack_action.Grant(src)
+	RegisterJobRadioChannel("Kcorp", COLOR_VERY_PALE_LIME_GREEN)
+	/*
+	* Sorry about this overly complicated
+	* rework of a slime internal radio. -IP
+	*/
+	var/obj/item/implant/radio/slime/imp = new(src)
+	imp.implant(src, null, TRUE, TRUE)
+	var/obj/item/radio/R = imp.radio
+	R.freerange = TRUE
+	RegisterJobRadioChannel("Kcorp", COLOR_VERY_PALE_LIME_GREEN)
+	R.SetJobChannel("Kcorp")
+	R.freqlock = TRUE
+	R.command = TRUE
+	access_card = new(src)
+	access_card.access = list("kcorp")
+	//Your silly claw machine hand cant fire gun
+	ADD_TRAIT(src, TRAIT_CHUNKYFINGERS, TRAIT_GENERIC)
+	ADD_TRAIT(src, TRAIT_PACIFISM, TRAIT_GENERIC)
+
+/mob/living/simple_animal/hostile/kcorp/drone/examine(mob/user)
+	. = ..()
+	for(var/obj/item/I in held_items)
+		if(!I)
+			continue
+		. += "It is holding [I]."
 
 /mob/living/simple_animal/hostile/kcorp/drone/kcorp_recorder/Login()
 	. = ..()
 	if(!. || !client)
 		return FALSE
-	to_chat(src, "As leader of the K corp faction it is your responsibility to \
-		record moments of carnage for use by your superiors. Every entity that \
-		dies near you grants you 10 ahn that you can dispense for your \
-		subordinates.")
 	update_icon()
 
 /mob/living/simple_animal/hostile/kcorp/drone/kcorp_recorder/Destroy()
 	UnregisterAll()
+	QDEL_NULL(access_card)
 	return ..()
 
 /mob/living/simple_animal/hostile/kcorp/drone/kcorp_recorder/death(gibbed)
@@ -85,6 +113,14 @@
 	. = ..()
 	if(!. || !client)
 		return
+
+	/*
+	* Sutures would normally heal the drone but due to the
+	* niche nature of sutures we will give the drone passive heal.
+	*/
+	if(health <= maxHealth*0.95 && stat != DEAD)
+		adjustBruteLoss(-5)
+
 	if(scan_cooldown <= world.time)
 		Scan()
 		scan_cooldown = world.time + scan_delay
@@ -196,3 +232,32 @@
 	for(var/mob/living/L in scan_buffer)
 		UnregisterMob(L)
 	scan_buffer.Cut()
+
+/*----------------------\
+|City Specific Abilities|
+\----------------------*/
+/datum/action/place_room
+	name = "Place Room"
+	desc = "Places a room in the location."
+	icon_icon = 'icons/mob/actions/actions_changeling.dmi'
+	button_icon_state = "resonant_shriek"
+
+/datum/action/place_room/Trigger()
+	var/mob/living/user = owner
+	var/ready
+	for(var/obj/effect/landmark/fixerbase/landmark in GLOB.landmarks_list)
+		if((get_turf(landmark)) == (get_turf(user)))
+			ready = TRUE
+			break
+	if(!ready)
+		to_chat(user, span_warning("\The ability will not function in this area. Please move to a designated fixer office space."))
+		return
+	PlaceRoom(user)
+	. = ..()
+	Remove(user)
+
+//Extremely sloppy way to do this for me. -IP
+/datum/action/place_room/proc/PlaceRoom(mob/user)
+	var/obj/item/structurecapsule/fixer/kcorp/K = new(get_turf(user))
+	K.attack_self()
+
