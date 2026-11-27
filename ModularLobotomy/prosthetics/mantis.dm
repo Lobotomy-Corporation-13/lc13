@@ -2,7 +2,6 @@
 	name = "Mantis blade implants"
 	desc = "Mantis blades designed by some sicko in district 6."
 	contents = newlist(/obj/item/ego_weapon/city/mantis)
-	syndicate_implant = TRUE
 
 /obj/item/organ/cyberimp/arm/mantis/l
 	zone = BODY_ZONE_L_ARM
@@ -40,11 +39,9 @@
 	name = "Mantis blade (B) implants"
 	desc = "Mantis blades designed by some sicko in district 6."
 	contents = newlist(/obj/item/ego_weapon/city/mantis/black)
-	syndicate_implant = TRUE
 
 /obj/item/organ/cyberimp/arm/mantis/black/l
 	zone = BODY_ZONE_L_ARM
-	syndicate_implant = TRUE
 
 /obj/item/ego_weapon/city/mantis/black
 	name = "mantis blade (B)"

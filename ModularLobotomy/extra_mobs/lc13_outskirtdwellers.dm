@@ -454,11 +454,6 @@
 	icon_state = "kcorp_drone_idle"
 	can_act = TRUE
 
-/mob/living/simple_animal/hostile/kcorp/drone/Move()
-	if (!can_act)
-		return FALSE
-	. = ..()
-
 /mob/living/simple_animal/hostile/kcorp/drone/AttackingTarget(target)
 	if (!can_act)
 		return

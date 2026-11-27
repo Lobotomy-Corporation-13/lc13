@@ -221,42 +221,6 @@ Association gear is mostly HE for grunts, low WAW for veterans and high WAW for 
 	item_path = /obj/item/ego_weapon/city/seven_fencing/dagger
 	cost = 90
 
-// | Seven South Section 4: Reworked Gear |
-//
-// 'Sidearm' weapons - used to build Rupture.
-/// Seven South Section 4 Fencing Foil
-/datum/ego_datum/weapon/city/seven_south_s4_foil
-	item_path = /obj/item/ego_weapon/city/seven_s4_foil
-	cost = 60
-	ego_tags = list(EGO_TAG_DEBUFFER)
-/// Seven South Section 4 Veteran Fencing Foil
-/datum/ego_datum/weapon/city/seven_south_s4_foil/vet
-	item_path = /obj/item/ego_weapon/city/seven_s4_foil/vet
-	cost = 75
-/// Seven South Section 4 Fencing Dagger
-/datum/ego_datum/weapon/city/seven_south_s4_foil/dagger
-	item_path = /obj/item/ego_weapon/city/seven_s4_foil/dagger
-	cost = 90
-
-// 'Adaptive' weapons - change damtype to lowest resistance, but only if the target has enough Rupture.
-/// Seven South Section 4 Blade
-/datum/ego_datum/weapon/city/seven_south_s4_adaptive
-	item_path = /obj/item/ego_weapon/city/seven_s4_blade
-	cost = 60
-	ego_tags = list(EGO_TAG_VERSATILE_DAMAGE)
-/// Seven South Section 4 Veteran Blade
-/datum/ego_datum/weapon/city/seven_south_s4_adaptive/vet
-	item_path = /obj/item/ego_weapon/city/seven_s4_blade/vet
-	cost = 75
-/// Seven South Section 4 Director Blade
-/datum/ego_datum/weapon/city/seven_south_s4_adaptive/director
-	item_path = /obj/item/ego_weapon/city/seven_s4_blade/director
-	cost = 90
-/// Seven South Section 4 Director Cane
-/datum/ego_datum/weapon/city/seven_south_s4_adaptive/cane
-	item_path = /obj/item/ego_weapon/city/seven_s4_blade/cane
-	cost = 90
-
 /* ------------------ 9 - Devyat ------------------*/
 
 // | Devyat North |

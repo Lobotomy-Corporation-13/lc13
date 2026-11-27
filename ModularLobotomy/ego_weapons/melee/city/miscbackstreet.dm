@@ -3,6 +3,7 @@
 /obj/item/ego_weapon/city/axegang
 	name = "axe gang axe"
 	desc = "An axe used by the axe gangs of the backstreets."
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/syndicate.dmi'
 	icon_state = "axe_grunt"
 	force = 32
 	attack_speed = 1.4

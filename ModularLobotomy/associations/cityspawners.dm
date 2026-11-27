@@ -30,6 +30,10 @@
 	name = "syndicate base landmark"
 	icon_state = "x"
 
+/obj/effect/landmark/clinicbase
+	name = "clinic base landmark"
+	icon_state = "x"
+
 /obj/effect/landmark/distortion
 	name = "distortion landmark"
 	icon_state = "x"

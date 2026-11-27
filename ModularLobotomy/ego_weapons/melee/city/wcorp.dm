@@ -2,6 +2,7 @@
 /obj/item/ego_weapon/city/wcorp
 	name = "W corp baton"
 	desc = "A glowing blue baton used by W corp employees."
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/wcorp.dmi'
 	icon_state = "wbatong"
 	inhand_icon_state = "wbatong"
 	force = 18
@@ -217,6 +218,7 @@
 /obj/item/ego_weapon/city/wcorp/shield
 	name = "w-corp type-C shieldblade"
 	desc = "A glowing blue W-Corp blade used to project barriers. The glowing end is dangerous, and can slice through about anything"
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/wcorp.dmi'
 	icon_state = "wcorp_sword"
 	inhand_icon_state = "wcorp_sword"
 	force = 35 //Meant originally as a support device, used as a mace in a pinch.

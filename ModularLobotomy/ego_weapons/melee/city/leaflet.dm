@@ -2,6 +2,7 @@
 /obj/item/ego_weapon/city/leaflet
 	name = "leaflet base"
 	desc = "The Leaflet template."
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/leaflet.dmi'
 	icon_state = "leaflet"
 	force = 20
 	damtype = RED_DAMAGE
@@ -86,6 +87,7 @@
 /obj/item/ego_weapon/ranged/city/leaflet
 	name = "leaflet smoke gun"
 	desc = "A gun used by the leaflet workshop."
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/kcorp.dmi'
 	icon_state = "leaflet_gun"
 	inhand_icon_state = "leaflet_gun"
 	force = 14
@@ -121,5 +123,6 @@
 /obj/item/ego_mag/leaflet
 	name = "leaflet magazine"
 	desc = "Load into the leaflet smoke gun."
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/kcorp.dmi'
 	icon_state = "leaflet_magazine"
 

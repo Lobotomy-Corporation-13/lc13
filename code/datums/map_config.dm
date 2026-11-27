@@ -36,12 +36,15 @@
 	/// Dictionary of job sub-typepath to template changes dictionary
 	var/job_changes = list()
 
-	/// If this map has multiple submaps to choose from
+	/// If this map has multiple submaps to choose from.
 	var/has_submaps = FALSE
-	/// List of available submaps if pick_one was set
+	/// What happens when no submap is chosen?
+	// code/__DEFINES/configuration.dm: current options are SUBMAP_DEFAULT_STANDARD ("standard") and SUBMAP_DEFAULT_RANDOM ("random")
+	var/no_submap_behavior = SUBMAP_DEFAULT_STANDARD
+	/// List of available submaps if has_submaps was set
+	// This should be an associative list. The keys are the map files and their value is their display name.
+	// e.g: "city.dmm": "Standard City"
 	var/list/available_submaps = list()
-	/// Custom display names for submaps (optional)
-	var/list/submap_display_names = list()
 
 /proc/load_map_config(filename = "data/next_map.json", default_to_box, delete_after, error_if_missing = TRUE)
 	var/datum/map_config/config = new
@@ -95,37 +98,43 @@
 
 	map_file = json["map_file"]
 	// "map_file": "MetaStation.dmm"
-	if (istext(map_file))
+	if(istext(map_file))
 		if (!fexists("_maps/[map_path]/[map_file]"))
 			log_world("Map file ([map_path]/[map_file]) does not exist!")
 			return
 	// "map_file": ["Lower.dmm", "Upper.dmm"]
-	else if (islist(map_file))
-		for (var/file in map_file)
-			if (!fexists("_maps/[map_path]/[file]"))
+	else if(islist(map_file))
+		for(var/file in map_file)
+			if(!fexists("_maps/[map_path]/[file]"))
 				log_world("Map file ([map_path]/[file]) does not exist!")
 				return
 	else
 		log_world("map_file missing from json!")
 		return
 
-	if (json["pick_one"] && islist(map_file))
+	has_submaps = json["has_submaps"]
+	// Just in case someone puts weird stuff in this field
+	if(has_submaps != TRUE)
+		has_submaps = FALSE
+	else
 		has_submaps = TRUE
-		var/list/L = map_file
-		available_submaps = L.Copy()
-		// Don't pick yet - will be decided by vote
 
-		// Load custom display names if provided
-		if(json["submap_names"] && islist(json["submap_names"]))
-			var/list/names = json["submap_names"]
-			submap_display_names = names.Copy()
+	// If this is a map with submaps available, make sure all the listed ones have files for them.
+	if(has_submaps)
+		available_submaps = json["available_submaps"]
+		if(islist(json["available_submaps"]) && length(available_submaps) > 1)
+			for(var/file in available_submaps)
+				if(!fexists("_maps/[map_path]/[file]"))
+					log_world("Submap file ([map_path]/[file]) does not exist!")
+					return
+		no_submap_behavior = json["no_submap_behavior"]
 
-	if (islist(json["shuttles"]))
+	if(islist(json["shuttles"]))
 		var/list/L = json["shuttles"]
 		for(var/key in L)
 			var/value = L[key]
 			shuttles[key] = value
-	else if ("shuttles" in json)
+	else if("shuttles" in json)
 		log_world("map_config shuttles is not a list!")
 		return
 
@@ -196,7 +205,10 @@
 			"traits" = traits,
 			"space_ruin_levels" = space_ruin_levels,
 			"space_empty_levels" = space_empty_levels,
-			"minetype" = minetype
+			"minetype" = minetype,
+			// These two help us identify when we're already playing on a submap for certain reasons like the stat panel accurately displaying its name
+			"has_submaps" = has_submaps,
+			"available_submaps" = available_submaps
 		)
 
 		if(faction)
@@ -216,8 +228,35 @@
 	return config_filename == "data/next_map.json" || fcopy(config_filename, "data/next_map.json")
 
 /datum/map_config/proc/SetSelectedSubmap(selected_file)
-	if(!has_submaps || !(selected_file in available_submaps))
+	if(!has_submaps)
 		return FALSE
+	// We got "random" as our selected_file. Random submap!
+	if(selected_file == SUBMAP_DEFAULT_RANDOM)
+		return RandomSubmap()
+	// We didn't get a selected file, but we have submaps. Choose one based on a possibly defined no_submap_behavior
+	if(!selected_file && islist(available_submaps) && length(available_submaps) > 1)
+		switch(no_submap_behavior)
+			// Pick the very first listed available submap as the default.
+			if(SUBMAP_DEFAULT_STANDARD)
+				map_file = available_submaps[1]
+				to_chat(world, span_boldannounce("Map variant set to the default: [available_submaps[map_file]]"))
+				return TRUE
+			// Pick a random submap.
+			if(SUBMAP_DEFAULT_RANDOM)
+				return RandomSubmap()
+
+		// We don't have a defined no_submap_behavior...
+		return FALSE
+
 	map_file = selected_file
-	// Keep has_submaps and available_submaps intact so admins can change selection later
+	to_chat(world, span_boldannounce("Map variant selected: [available_submaps[map_file]]"))
+
+	return TRUE
+
+/datum/map_config/proc/RandomSubmap()
+	if(!has_submaps)
+		return FALSE
+	var/picked = pick(available_submaps)
+	map_file = picked
+	to_chat(world, span_boldannounce("Map variant randomly rolled to: [available_submaps[map_file]]"))
 	return TRUE

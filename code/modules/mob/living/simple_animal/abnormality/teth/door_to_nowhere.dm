@@ -223,6 +223,7 @@ GLOBAL_LIST_EMPTY(repentance_spawn_points)            // Valid spawn locations i
 	)
 	work_damage_amount = 6
 	work_damage_type = WHITE_DAMAGE
+	chem_type = /datum/reagent/abnormality/sin/gloom
 
 	ego_list = list(
 		/datum/ego_datum/weapon/liminal,

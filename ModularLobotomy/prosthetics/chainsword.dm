@@ -2,7 +2,6 @@
 	name = "chainsword implant"
 	desc = "A chainsword that can be retracted into your arm.."
 	contents = newlist(/obj/item/ego_weapon/city/handchainsword)
-	syndicate_implant = TRUE
 
 /obj/item/organ/cyberimp/arm/chainsword/l
 	zone = BODY_ZONE_L_ARM

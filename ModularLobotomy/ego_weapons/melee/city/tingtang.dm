@@ -4,6 +4,7 @@
 /obj/item/ego_weapon/city/ting_tang
 	name = "ting tang shank"
 	desc = "A twisted piece of metal. The shape makes very open wounds."
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/jcorp.dmi'
 	icon_state = "tingtang_shank"
 	inhand_icon_state = "tingtang_shank"
 	force = 22
