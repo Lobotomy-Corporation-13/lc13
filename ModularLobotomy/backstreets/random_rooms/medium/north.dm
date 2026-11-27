@@ -78,3 +78,9 @@
 	name = "Slime Hut - Medium North A"
 	room_id = "slime_hut"
 	mappath = "_maps/RandomRooms/backstreets/medium_north/slime_hut.dmm"
+
+/datum/map_template/random_room/backstreets/medium_north/yun_office
+	name = "Yun Office - Medium North"
+	room_id = "yun_office"
+	mappath = "_maps/RandomRooms/backstreets/medium_north/yun_office.dmm"
+	weight = 99

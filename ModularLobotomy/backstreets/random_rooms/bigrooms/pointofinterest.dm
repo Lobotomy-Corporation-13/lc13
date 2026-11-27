@@ -40,3 +40,10 @@
 	name = "Inquisition - Point of Interest"
 	room_id = "n_corp_poi"
 	mappath = "_maps/RandomRooms/backstreets/pointofinterest/n_corp.dmm"
+
+/datum/map_template/random_room/backstreets/pointofinterest/gcorp_slums
+	name = "Gcorp Slums - Point of Interest"
+	room_id = "gcorp_slums_poi"
+	mappath = "_maps/RandomRooms/backstreets/pointofinterest/gcorp_slums.dmm"
+	weight = 99
+
