@@ -1,8 +1,0 @@
-author: "EnderMage99"
-delete-after: True
-changes:
-  - rscadd: "Added the Wedge Office, a minor city faction with an Operator and Fixers."
-  - rscadd: "Added the Wedge operator spear and fixer lance, which build momentum by hitting the same target."
-  - rscadd: "Added the Wedge case radio, which sends the office to crime scenes to find the culprit."
-  - imageadd: "Added sprites for the Wedge spear, lance, leader hat, eyepatch and finisher effects."
-  - soundadd: "Added Wedge charge and finisher sounds."

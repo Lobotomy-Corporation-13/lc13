@@ -1,4 +1,0 @@
-author: "Gboster-0"
-delete-after: True
-changes:
-  - bugfix: "work scrambling (for control core) now uses the fisher-yates algorithm so it wont sometimes fail to randomize between meltdowns"
