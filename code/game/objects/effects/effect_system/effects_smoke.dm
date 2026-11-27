@@ -354,3 +354,111 @@
 
 /datum/effect_system/smoke_spread/bad/green
 	effect_type = /obj/effect/particle_effect/smoke/bad/green
+
+/////////////////////////////////////////////
+// Harmless bad smoke
+/////////////////////////////////////////////
+
+//did this because theres no long non-harmful smoke
+/obj/effect/particle_effect/smoke/normal
+	lifetime = 8
+
+/obj/effect/particle_effect/smoke/normal/smoke_mob(mob/living/carbon/M)
+	. = ..()
+	if(.)
+		M.emote("cough")
+		return TRUE
+
+/obj/effect/particle_effect/smoke/normal/Crossed(atom/movable/AM, oldloc)
+	. = ..()
+	if(istype(AM, /obj/projectile/beam))
+		var/obj/projectile/beam/B = AM
+		B.damage = (B.damage/2)
+
+/datum/effect_system/smoke_spread/normal
+	effect_type = /obj/effect/particle_effect/smoke/normal
+
+/////////////////////////////////////////////
+// RCA smoke
+/////////////////////////////////////////////
+
+//Mostly made to bypass the carbon restriction
+/obj/effect/particle_effect/smoke/rca
+	lifetime = 8
+
+/obj/effect/particle_effect/smoke/rca/smoke_mob(mob/living/M)
+	if(lifetime<1)
+		return FALSE
+	if(iscarbon(M))
+		var/mob/living/carbon/C = M
+		if(C.internal != null || C.has_smoke_protection())
+			return FALSE
+	if(M.smoke_delay)
+		return FALSE
+	M.smoke_delay++
+	addtimer(CALLBACK(src, PROC_REF(remove_smoke_delay), M), 10)
+	return TRUE
+
+/obj/effect/particle_effect/smoke/rca/Crossed(atom/movable/AM, oldloc)
+	. = ..()
+	if(istype(AM, /obj/projectile/beam))
+		var/obj/projectile/beam/B = AM
+		B.damage = (B.damage/2)
+
+/datum/effect_system/smoke_spread/rca
+	effect_type = /obj/effect/particle_effect/smoke/rca
+
+
+
+//anti-Abno gas
+/obj/effect/particle_effect/smoke/rca/antiabno
+	name = "anti-Abnormality gas"
+	alpha = 10 //Around Apexs visibility
+	opaque = FALSE
+
+/obj/effect/particle_effect/smoke/rca/antiabno/smoke_mob(mob/living/M)
+	. = ..()
+	if(iscarbon(M))
+		var/mob/living/carbon/C = M
+		C.adjustOxyLoss(2)
+		C.apply_lc_bleed(1)
+		//49% chance of something, 51% chance of nothing
+		switch(rand(1,100))
+			if(1 to 15)
+				to_chat(C, span_danger("What's that smell?"))
+				C.adjustOxyLoss(4)
+			if(16 to 30)
+				to_chat(C, span_danger("Are your ears... bleeding?"))
+				C.apply_lc_bleed(2)
+			if(31 to 39)
+				to_chat(C, span_danger("You feel short of breath"))
+				C.adjustOxyLoss(8)
+			if(40 to 48)
+				to_chat(C, span_danger("You cough up some blood staining the edges of your mouth"))
+				C.apply_lc_bleed(4)
+			if(49)
+				to_chat(C, span_bolddanger("You talk but you only hear yourself gurgling, you can hardly breathe, you NEED to breathe, you NEED to GET OUT!"))
+				C.adjustOxyLoss(20)
+				C.apply_lc_bleed(10)
+			if(50 to 100)
+				to_chat(C, span_notice("Your instincts tell you something feels wrong"))
+	else
+		//the values may be high but the stack doesnt refresh and its halved every 5 seconds
+		to_chat(M, span_danger("You can feel the gas weaken you the longer your remain, we must move elsewhere."))
+		M.apply_lc_offense_level_down(10)
+		M.apply_lc_defense_level_down(10)
+		switch(rand(1,100))
+			if(1 to 25)
+				M.apply_lc_offense_level_down(10)
+				M.apply_lc_defense_level_down(10)
+			if(26 to 35)
+				M.apply_lc_offense_level_down(20)
+				M.apply_lc_defense_level_down(20)
+			if(36 to 40)
+				M.apply_lc_offense_level_down(40)
+				M.apply_lc_defense_level_down(40)
+			if(41 to 100)
+				to_chat(M, span_notice("You manage to resist the gas but your form is still steadily weakening, you must get out."))
+
+/datum/effect_system/smoke_spread/rca/antiabno
+	effect_type = /obj/effect/particle_effect/smoke/rca/antiabno

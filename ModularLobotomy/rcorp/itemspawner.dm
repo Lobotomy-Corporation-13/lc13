@@ -16,6 +16,7 @@
 	/obj/item/grenade/r_corp/white,
 	/obj/item/grenade/r_corp/black,
 	/obj/item/grenade/r_corp/pale,
+	/obj/item/grenade/qliphothsmoke,
 	)
 
 	var/list/possible_weapons = list(

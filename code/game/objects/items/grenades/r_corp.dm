@@ -165,3 +165,37 @@
 		/obj/item/grenade/lobotomy/black = 3,
 		/obj/item/grenade/lobotomy/pale = 2)
 	generate_items_inside(items_inside,src)
+
+
+//rcorp smokes, not a subtype of the smoke grenade because of initialize code
+/obj/item/grenade/qliphothsmoke
+	name = "anti-Abnormality gas grenade"
+	desc = "Gas grenades designed by L-Corp and often lended to R-Corp, the near invisible gas released by this grenade gradually weakens abnormalities."
+	icon = 'icons/obj/grenade.dmi'
+	icon_state = "smokeyellow"
+	inhand_icon_state = "smoke"
+	slot_flags = ITEM_SLOT_BELT
+
+/obj/item/grenade/qliphothsmoke/detonate(mob/living/lanced_by)
+	. = ..()
+	update_mob()
+	playsound(src, 'sound/effects/smoke.ogg', 50, TRUE, -3)
+	var/datum/effect_system/smoke_spread/rca/antiabno/smoke = new
+	smoke.set_up(4, src)
+	smoke.start()
+	qdel(smoke) //And deleted again. Sad really.
+	//Since this is a gas grenade you get a strong punishment for being in the immediate 1 tile radius
+	for(var/mob/living/M in view(1,src))
+		if(iscarbon(M))
+			var/mob/living/carbon/C = M
+			C.adjustOxyLoss(30)
+			C.apply_lc_bleed(25)
+			to_chat(C, span_danger("The pressurized gas grenade releases a burst of air next to you, the highly concentrated gas quickly disperses but you can already feel the immediate aftermath."))
+		else
+			//Due to its absurdly long detonation timer of 10 seconds Im punishing you for being right next to it
+			M.apply_status_effect(/datum/status_effect/qliphothoverload)
+			M.apply_lc_offense_level_down(50)
+			M.apply_lc_defense_level_down(50)
+			to_chat(M, span_bolddanger("You feel a sudden burst of air from the grenade as your movement slows down and your body weakens."))
+	qdel(src)
+

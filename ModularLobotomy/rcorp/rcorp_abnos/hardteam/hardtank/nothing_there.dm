@@ -15,7 +15,7 @@
 	var/last_heal_time = 0
 	var/heal_percent_per_second = 0.01275
 	var/regen_on = TRUE
-	var/regen_start = 0.5 //Rabbits kept being stupid so now he only heals up to 50%
+	var/regen_start = 1 //Rabbits have started to display intelligence, so healing is buffed back to 100%
 
 	var/datum/looping_sound/nothingthere_ambience/soundloop
 
@@ -25,9 +25,9 @@
 	var/utterance = 5 // 10 for testing, 5 for base
 
 	abno_additional_instructions = "<h1>You are Nothing There, A Tank Role Abnormality.</h1><br>\
-		<b>|Regenerative|: If your HP falls below 50% you will begin to passively regenerate, if it falls below 30% regeneration rate doubles. \
+		<b>|Regenerative|: If your HP falls below 100% you will begin to passively regenerate, if it falls below 30% regeneration rate doubles. \
 		If damaged regeneration is interrupted, regeneration will only commence again if you go 10 seconds without being damaged. \
-		You only heal up to 50% of your HP.<br>\
+		You only heal up to 100% of your HP.<br>\
 		<br>\
 		|Mimicry|: You will repeat phrases you hear said by humans. </b>"
 
@@ -84,5 +84,5 @@
 	. = ..()
 	if(. < 10)
 		return
-	last_heal_time = world.time + 10 SECONDS // Heal delayed when taking damage; Doubled because it was a little too quick.
+	last_heal_time = world.time + 15 SECONDS // Heal delayed when taking damage; Doubled because it was a little too quick.
 

@@ -97,6 +97,7 @@
 	r_pocket = /obj/item/pinpointer/nuke/rcorp
 	backpack_contents = list(
 		/obj/item/grenade/smokebomb = 1,
+		/obj/item/grenade/qliphothsmoke = 1, //temporary for testing
 		/obj/item/grenade/lobotomy/all = 1,)
 
 /datum/outfit/job/raven/support
@@ -117,6 +118,7 @@
 	jobtype = /datum/job/rcorp_captain/raven
 	glasses = /obj/item/clothing/glasses/hud/health/night/rabbit
 	head = /obj/item/clothing/head/rabbit_helmet/raven
+	mask = /obj/item/clothing/mask/gas/sechailer
 	suit = /obj/item/clothing/suit/armor/ego_gear/rabbit/ravencap
 	suit_store = null
 	ears = /obj/item/radio/headset/heads/headset_information

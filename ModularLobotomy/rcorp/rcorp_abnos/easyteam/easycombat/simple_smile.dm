@@ -9,6 +9,7 @@
 	melee_damage_lower = 5
 	melee_damage_upper = 5
 	is_flying_animal = TRUE
+	density = FALSE //Most fragile abno in the game and its gimmick is melee centric while being slowed down from stealing
 	melee_damage_type = BLACK_DAMAGE
 	original_abno = /mob/living/simple_animal/hostile/abnormality/smile
 
