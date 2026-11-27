@@ -1,0 +1,17 @@
+{
+	"version": 1,
+	"map_name": "Facility T-053 TUBES",
+	"map_path": "map_files/LC13/Golf-Tubes",
+	"map_file": [
+		"golf.dmm"
+	],
+	"traits": [
+		{
+			"Baseturf": "/turf/open/floor/plating/asteroid"
+		}
+	],
+	"space_ruin_levels": 0,
+	"space_empty_levels": 0,
+	"minetype": "none",
+	"maptype": "standard"
+}
