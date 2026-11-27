@@ -1,0 +1,200 @@
+# Resolves icon conflicts on a pull request when a maintainer comments `/resolve-dmi`,
+# or the author does if it's from their own fork.
+#
+# This runs with access to secrets, so nothing from the pull request may be executed
+# or checked out. The only code used is from the default branch. Icons are untrusted
+# input too, so they're merged by a job that has no write permissions or secrets.
+name: Resolve icon conflicts
+
+on:
+  issue_comment:
+    types:
+      - created
+
+permissions: {}
+
+concurrency:
+  # Other comments must not cancel a run that's waiting
+  group: resolve-dmi-${{ github.event.issue.number }}-${{ github.event.comment.body == '/resolve-dmi' && 'run' || github.run_id }}
+
+jobs:
+  authorize:
+    name: Check permissions
+    if: github.event.issue.pull_request && startsWith(github.event.comment.body, '/resolve-dmi')
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      issues: write
+      pull-requests: write
+    outputs:
+      proceed: ${{ steps.authorize.outputs.proceed }}
+      head_sha: ${{ steps.authorize.outputs.head_sha }}
+      head_ref: ${{ steps.authorize.outputs.head_ref }}
+      head_repo: ${{ steps.authorize.outputs.head_repo }}
+      base_ref: ${{ steps.authorize.outputs.base_ref }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+          sparse-checkout: tools/pull_request_hooks
+      - name: Check permissions
+        id: authorize
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { authorize } = await import('${{ github.workspace }}/tools/pull_request_hooks/resolveDmi.js')
+            await authorize({ github, context, core })
+
+  merge:
+    name: Merge icons
+    needs: authorize
+    if: needs.authorize.outputs.proceed == 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    outputs:
+      status: ${{ steps.merge.outputs.status }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            tools/ci
+            tools/dmi
+            tools/hooks
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: |
+          python3 -m pip install --only-binary :all: -r tools/requirements.txt
+      - name: Fetch commits
+        env:
+          BASE_REF: ${{ needs.authorize.outputs.base_ref }}
+          HEAD_SHA: ${{ needs.authorize.outputs.head_sha }}
+          NUMBER: ${{ github.event.issue.number }}
+        run: |
+          git clone --quiet --bare --filter=blob:none --single-branch --branch "$BASE_REF" "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY" "$RUNNER_TEMP/repo"
+          cd "$RUNNER_TEMP/repo"
+          git rev-parse "refs/heads/$BASE_REF" > "$RUNNER_TEMP/base_sha"
+          git fetch --quiet origin "refs/pull/$NUMBER/head:refs/pull/head" "$GITHUB_SHA"
+          git cat-file -e "$HEAD_SHA^{commit}"
+      - name: Merge
+        id: merge
+        env:
+          HEAD_SHA: ${{ needs.authorize.outputs.head_sha }}
+          GIT_AUTHOR_NAME: lc13-automation[bot]
+          GIT_AUTHOR_EMAIL: 230900368+lc13-automation[bot]@users.noreply.github.com
+          GIT_COMMITTER_NAME: lc13-automation[bot]
+          GIT_COMMITTER_EMAIL: 230900368+lc13-automation[bot]@users.noreply.github.com
+        run: |
+          bash tools/ci/merge_dmi.sh "$RUNNER_TEMP/repo" tools "$(cat "$RUNNER_TEMP/base_sha")" "$HEAD_SHA" "$GITHUB_SHA" "$RUNNER_TEMP/output"
+          echo "status=$(cat "$RUNNER_TEMP/output/status")" >> "$GITHUB_OUTPUT"
+      - name: Upload result
+        uses: actions/upload-artifact@v4
+        with:
+          name: merge
+          path: ${{ runner.temp }}/output
+          retention-days: 7
+
+  push:
+    name: Push
+    needs: [authorize, merge]
+    if: needs.merge.outputs.status == 'resolved'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - name: Download result
+        uses: actions/download-artifact@v4
+        with:
+          name: merge
+          path: ${{ runner.temp }}/output
+      - name: Verify
+        env:
+          BASE_REF: ${{ needs.authorize.outputs.base_ref }}
+          HEAD_SHA: ${{ needs.authorize.outputs.head_sha }}
+          NUMBER: ${{ github.event.issue.number }}
+        run: |
+          git clone --quiet --bare --filter=blob:none --single-branch --branch "$BASE_REF" "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY" "$RUNNER_TEMP/repo"
+          cd "$RUNNER_TEMP/repo"
+          git fetch --quiet origin "refs/pull/$NUMBER/head:refs/pull/head"
+          git -c fetch.fsckObjects=true fetch --quiet "$RUNNER_TEMP/output/merge.bundle" refs/heads/resolve-dmi:refs/heads/resolve-dmi
+          # It must be a merge of exactly the PR and a commit that's in the base branch
+          read -r -a parents <<< "$(git show -s --format=%P refs/heads/resolve-dmi)"
+          [ "${#parents[@]}" -eq 2 ]
+          [ "${parents[0]}" = "$HEAD_SHA" ]
+          git merge-base --is-ancestor "${parents[1]}" "refs/heads/$BASE_REF"
+      - name: Generate App Token
+        id: app-token-generation
+        uses: actions/create-github-app-token@v2
+        if: env.APP_PRIVATE_KEY != '' && env.APP_ID != ''
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+        env:
+          APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
+          APP_ID: ${{ secrets.APP_ID }}
+      - name: Push
+        env:
+          HEAD_REF: ${{ needs.authorize.outputs.head_ref }}
+          HEAD_REPO: ${{ needs.authorize.outputs.head_repo }}
+          TOKEN: ${{ steps.app-token-generation.outputs.token || secrets.GITHUB_TOKEN }}
+        run: |
+          cd "$RUNNER_TEMP/repo"
+          auth="$(printf 'x-access-token:%s' "$TOKEN" | base64 -w0)"
+          echo "::add-mask::$auth"
+          export GIT_CONFIG_COUNT=1
+          export GIT_CONFIG_KEY_0="http.$GITHUB_SERVER_URL/.extraheader"
+          export GIT_CONFIG_VALUE_0="AUTHORIZATION: basic $auth"
+          # Not a force push, so this fails if the branch has changed since
+          git push "$GITHUB_SERVER_URL/$HEAD_REPO" "refs/heads/resolve-dmi:refs/heads/$HEAD_REF"
+
+  report:
+    name: Report
+    needs: [authorize, merge, push]
+    if: always() && needs.authorize.outputs.proceed == 'true'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      issues: write
+      pull-requests: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+          sparse-checkout: tools/pull_request_hooks
+      - name: Download result
+        uses: actions/download-artifact@v4
+        if: needs.merge.result == 'success'
+        with:
+          name: merge
+          path: ${{ runner.temp }}/output
+      - name: Comment
+        uses: actions/github-script@v7
+        env:
+          OUTPUT: ${{ runner.temp }}/output
+          PUSHED: ${{ needs.push.result == 'success' }}
+          STATUS: ${{ needs.merge.result == 'success' && needs.merge.outputs.status || '' }}
+        with:
+          script: |
+            const fs = require('fs')
+            const { postResult } = await import('${{ github.workspace }}/tools/pull_request_hooks/resolveDmi.js')
+            const read = (name) => {
+              const path = `${process.env.OUTPUT}/${name}`
+              return fs.existsSync(path) ? fs.readFileSync(path, 'utf8') : ''
+            }
+            await postResult({
+              github,
+              context,
+              status: process.env.STATUS,
+              pushed: process.env.PUSHED === 'true',
+              report: read('report.txt'),
+              conflicts: read('conflicts.txt'),
+            })

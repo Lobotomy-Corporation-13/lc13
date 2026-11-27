@@ -16,6 +16,13 @@ or other script you can run instead - see the links below for details.
 * **DMI merger**: Attempts to [fix icon conflicts] when performing a Git merge.
 * **DMM merger**: Attempts to [fix map conflicts] when performing a Git merge.
 
+## Resolving Icon Conflicts on GitHub
+
+GitHub does not run merge drivers itself. If a pull request has icon conflicts,
+a maintainer can comment `/resolve-dmi` on it to merge the base branch using the
+DMI merger. Authors can do this too, if it's from their own fork. Nothing is pushed unless every conflict can be resolved. The author
+must have "Allow edits by maintainers" enabled if the pull request is from a fork.
+
 ## Adding New Hooks
 
 New Git [hooks] may be added by creating a file named `<hook-name>.hook` in
