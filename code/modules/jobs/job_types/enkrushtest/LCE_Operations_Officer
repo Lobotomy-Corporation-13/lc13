@@ -2,10 +2,7 @@
 	title = "LCE Operations Officer"
 	outfit = /datum/outfit/job/command/records
 	exp_requirements = 600
-	job_important = "\
-		You are the Limbus Company Operations Officer. Your job is to oversee the research of Abnormalities.\
-		You should be able to find some more information of them in the rubble.
-	""
+	job_important = "You are the Limbus Company Operations Officer. Your job is to oversee the research of Abnormalities. You should be able to find some more information of them in the rubble."
 //wanted to add more to this but i can't really think of anything else to add
 //unrelated, SHUT THE FUCK UP COPILOT HOW DO I DISABLE YOU
 	job_notice = "Being in charge of handling Abnormality documentation, you should also assist new Interns and Clerks in learning how to work at LCE."

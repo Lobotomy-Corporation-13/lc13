@@ -1,10 +1,10 @@
 /datum/job/enkrush_recover
 	title = "LCE Recovery Agent"
-	department_head = list("Manager")
+	department_head = list("LCE Recovery Officer")
 	faction = "Station"
 	total_positions = -1
 	spawn_positions = -1
-	supervisors = "the Manager"
+	supervisors = "The Recovery Officer and Captain"
 	selection_color = "#ccaaaa"
 	exp_requirements = 240
 	exp_type = EXP_TYPE_SECURITY

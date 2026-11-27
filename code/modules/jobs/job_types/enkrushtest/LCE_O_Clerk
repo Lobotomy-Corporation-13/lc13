@@ -15,9 +15,7 @@
 
 	allow_bureaucratic_error = FALSE
 	departments = DEPARTMENT_SERVICE
-	job_important = "\
-		You are a Operations Clerk. \n\
-		You are unable to do work, but are expected to assist Researchers in any way that you can. In your belt are various tools to assist them."
+	job_important = "You are a Operations Clerk. You are unable to do work, but are expected to assist Researchers in any way that you can. In your belt are various tools to assist them."
 
 	job_abbreviation = "O-CLK"
 

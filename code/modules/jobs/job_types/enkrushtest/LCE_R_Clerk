@@ -16,9 +16,7 @@
 	allow_bureaucratic_error = FALSE
 	departments = DEPARTMENT_SERVICE
 //	loadalways = TRUE
-	job_important = "\
-		You are a Recovery Clerk. \n\
-		You are unable to do work, but are expected to assist in repairing the damaged Lobotomy Corporation Branch. You also have tools in your belt to help Researchers."
+	job_important = "You are a Recovery Clerk. You are unable to do work, but are expected to assist in repairing the damaged Lobotomy Corporation Branch. You also have tools in your belt to help Researchers."
 
 	job_abbreviation = "R-CLK"
 
