@@ -424,6 +424,11 @@ Association gear is mostly HE for grunts, low WAW for veterans and high WAW for 
 /datum/ego_datum/weapon/city/wedge
 	item_path = /obj/item/ego_weapon/city/wedge
 	cost = 75
+	ego_tags = list(EGO_TAG_SUPPORT)
+/// Wedge Lance
+/datum/ego_datum/weapon/city/wedge_lance
+	item_path = /obj/item/ego_weapon/lance/wedge
+	cost = 40
 
 /* ------------------ Cane Office ------------------*/
 
