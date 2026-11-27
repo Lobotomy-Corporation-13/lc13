@@ -80,6 +80,10 @@ SUBSYSTEM_DEF(lobotomy_events)
 
 /datum/controller/subsystem/lobotomy_events/proc/OnAbnoBreach(datum/source, mob/living/simple_animal/hostile/abnormality/abno)
 	SIGNAL_HANDLER
+	// Threat range spawner does add them to this list before calling BreachEffect, so this works (stops apoc from spawning from test range threats)
+	if(abno in SStestrange.test_range_living_threats)
+		return
+
 	if(abno.type in AB_types)
 		for(var/mob/living/simple_animal/hostile/abnormality/A in AB_breached)
 			if(A.type == abno.type)
@@ -148,6 +152,8 @@ SUBSYSTEM_DEF(lobotomy_events)
 					portal = new(T)
 					break
 			for(var/mob/living/simple_animal/hostile/abnormality/A in AB_breached)
+				if(A in SStestrange.test_range_living_threats)
+					continue
 				if(A.IsContained())
 					A.datum_reference.qliphoth_change(-999) // Breach it!
 				if(istype(A, /mob/living/simple_animal/hostile/abnormality/punishing_bird))
