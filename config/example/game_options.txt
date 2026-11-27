@@ -571,6 +571,3 @@ RATCAP 64
 
 ## Maximum fine for a citation
 MAXFINE 5000
-
-## Turns off the city faction limit, and the reason and Admin TGS notice required to change a city faction with Manage City Factions.
-#NO_CITY_FACTION_OVERSIGHT

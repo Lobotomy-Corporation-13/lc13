@@ -2,7 +2,6 @@
 /obj/item/ego_weapon/city/wedge
 	name = "wedge office spear"
 	desc = "A black, ornate spear. Some say it pierces any weakness... Though that may just be what the office who used these says."
-	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons/misc_fixers.dmi'
 	icon_state = "wedge"
 	force = 74
 	reach = 2		//Has 2 Square Reach.

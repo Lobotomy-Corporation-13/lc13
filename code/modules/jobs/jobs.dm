@@ -94,25 +94,6 @@ GLOBAL_LIST_INIT(command_positions, list(
 	"LCE Operations Officer",
 	"LCE Agent Captain",
 
-	// City heads
-	"Doctor",
-
-	//NeoCity Major
-	"Liu South Section 5 Director",
-	"Big Brother",
-	"Thumb Sottocapo",
-	"Udjat Captain",
-	"Grand Inquisitor",
-
-	//NeoCity Minor
-	"Blade Lineage Cutthroat",
-	"Dawn Office Operator",
-	"Full Stop Operator",
-	"Kurokumo Kashira",
-	"Shi South Section 2 Director",
-	"Streetlight Office Operator",
-	"Devyat North Section 3 Director",
-	"Zwei Veteran Fixer",
 	))
 
 
@@ -180,7 +161,6 @@ GLOBAL_LIST_INIT(service_positions, list(
 	"LCE Recovery Clerk",
 	"LCE Operations Clerk",
 
-
 	//Neocity
 	"HHPP Chef",
 	))
@@ -222,6 +202,7 @@ GLOBAL_LIST_INIT(security_positions, list(
 	//Enk Rush Rework
 	"LCE Recovery Agent",
 	"LCE Operations Agent",
+<<<<<<< HEAD
 
 
 	//Neocity
@@ -229,6 +210,8 @@ GLOBAL_LIST_INIT(security_positions, list(
 	"N Corp Grosshammer",
 	"N Corp Mittlehammer",
 	"N Corp Kleinhammer",
+=======
+>>>>>>> parent of 19c2a9bcef (Merge branch 'master' into enkephain-rush)
 	))
 
 
