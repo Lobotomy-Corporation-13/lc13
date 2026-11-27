@@ -165,6 +165,7 @@ GLOBAL_LIST_INIT(service_positions, list(
 	"LCE Recovery Clerk",
 	"LCE Operations Clerk",
 
+
 	//Neocity
 	"HHPP Chef",
 	))
@@ -206,6 +207,7 @@ GLOBAL_LIST_INIT(security_positions, list(
 	//Enk Rush Rework
 	"LCE Recovery Agent",
 	"LCE Operations Agent",
+
 
 	//Neocity
 	"Grand Inquisitor",
