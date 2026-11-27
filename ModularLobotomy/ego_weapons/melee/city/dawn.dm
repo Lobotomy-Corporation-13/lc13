@@ -135,7 +135,7 @@
 	target.apply_lc_feeble(2)
 	user.apply_lc_protection(2)
 	if(get_dist(target, user) >= 2)
-		swingstyle = WEAPONSWING_STAB
+		swingstyle = WEAPONSWING_THRUST
 	else
 		swingstyle = initial(swingstyle)
 
