@@ -1702,3 +1702,10 @@
 	icon_state = "aura"
 	justice_bonus = 3
 	slot = EYE
+
+/datum/ego_gifts/baldi
+	name = "Baldi"
+	icon_state = "baldie"
+	justice_bonus = 6
+	prudence_bonus = 6
+	slot = FACE
