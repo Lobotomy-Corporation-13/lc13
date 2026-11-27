@@ -1,0 +1,5 @@
+author: "azenkov"
+delete-after: True
+changes:
+  - bugfix: "dmi merge hook"
+  - rscadd: "GH action"
