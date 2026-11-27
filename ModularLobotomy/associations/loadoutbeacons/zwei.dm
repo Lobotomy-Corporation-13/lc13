@@ -14,37 +14,37 @@
 				)
 
 /datum/loadout/zwei/zweihander
-	name = "Zwei South Zweihander"
+	name = "Zwei Frontliner"
 	weapon = /obj/item/ego_weapon/city/zweihander
 	armor = /obj/item/clothing/suit/armor/ego_gear/city/zwei
 
 /datum/loadout/zwei/einhander
-	name = "Zwei South Einhander"
+	name = "Zwei Skirmisher"
 	weapon = /obj/item/ego_weapon/city/zweihander/knife
 	armor = /obj/item/clothing/suit/armor/ego_gear/city/zwei
 
 /datum/loadout/zwei/einhanderrare
-	name = "Zwei West Einhander"
+	name = "Zwei Enforcer"
 	weapon = /obj/item/ego_weapon/city/zweihander/knife
 	armor = /obj/item/clothing/suit/armor/ego_gear/city/zweiwest
 
 /datum/loadout/zwei/zweibaton
-	name = "Zwei South Baton"
+	name = "Zwei Controller"
 	weapon = /obj/item/ego_weapon/city/zweibaton
 	armor = /obj/item/clothing/suit/armor/ego_gear/city/zwei
 
 /datum/loadout/zwei/zweiwest
-	name = "Zwei West Greatsword"
+	name = "Zwei Bulwark"
 	weapon = /obj/item/ego_weapon/city/zweiwest
 	armor = /obj/item/clothing/suit/armor/ego_gear/city/zweiwest
 
 /datum/loadout/zwei/zweihanderriot
-	name = "Zwei Riot Zweihander"
+	name = "Zwei Reinforced Frontliner"
 	weapon = /obj/item/ego_weapon/city/zweihander
 	armor = /obj/item/clothing/suit/armor/ego_gear/city/zweiriot
 
 /datum/loadout/zwei/zweibatonriot
-	name = "Zwei Riot Baton"
+	name = "Zwei Reinforced Controller"
 	weapon = /obj/item/ego_weapon/city/zweibaton
 	armor = /obj/item/clothing/suit/armor/ego_gear/city/zweiriot
 

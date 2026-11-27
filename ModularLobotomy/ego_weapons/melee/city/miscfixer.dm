@@ -5,11 +5,46 @@
 	icon_state = "fixer_blade"
 	force = 20
 	damtype = RED_DAMAGE
+	var/cost = 5
+	var/active = FALSE
 
 	hitsound = 'sound/weapons/bladeslice.ogg'
 	attack_verb_continuous = list("attacks", "slashes", "stabs", "slices", "tears", "lacerates", "rips", "dices", "cuts")
 	attack_verb_simple = list("attack", "slash", "stab", "slice", "tear", "lacerate", "rip", "dice", "cut")
 	swingstyle = WEAPONSWING_LARGESWEEP
+
+/obj/item/ego_weapon/city/fixerblade/attack_self(mob/living/user)
+	..()
+	if(!CanUseEgo(user))
+		return
+	if(user.sanityhealth > cost && active == FALSE)
+		active = TRUE
+		attack_speed = 0.4
+		to_chat(user, span_notice("You ready yourself to release a flurry of blows."))
+		return
+	else if(active == TRUE)
+		active = FALSE
+		attack_speed = initial(attack_speed)
+		to_chat(user, span_notice("You unready yourself."))
+		return
+	else
+		to_chat(user, span_notice("You must wait before attempting this again."))
+
+/obj/item/ego_weapon/city/fixerblade/attack(mob/living/target, mob/living/carbon/human/user)
+	..()
+	if(active == TRUE)
+		if(user.sanityhealth <= 10)
+			active = FALSE
+			attack_speed = initial(attack_speed)
+			to_chat(user, span_notice("You are no longer able to exert yourself this way."))
+			return
+		user.adjustSanityLoss(cost)
+
+/obj/item/ego_weapon/city/fixerblade/dropped(mob/user)
+	.=..()
+	active = FALSE
+	attack_speed = initial(attack_speed)
+
 
 /obj/item/ego_weapon/city/fixergreatsword
 	name = "fixer greatsword"
@@ -32,10 +67,20 @@
 	force = 32
 	attack_speed = 1.4
 	damtype = RED_DAMAGE
+	knockback = KNOCKBACK_LIGHT
+	var/cost = 15
 
 	attack_verb_continuous = list("bashes", "clubs")
 	attack_verb_simple = list("bashes", "clubs")
 	hitsound = 'sound/weapons/fixer/generic/club1.ogg'
+
+/obj/item/ego_weapon/city/fixerhammer/attack_self(mob/living/carbon/human/user)
+	if(user.sanityhealth >= 25)
+		user.adjustSanityLoss(cost)
+		to_chat(user, span_notice("You brace the hammer to block incoming attacks."))
+		user.apply_lc_protection(2)
+	else
+		to_chat(user, span_notice("You are not able to brace the hammer."))
 
 /obj/item/ego_weapon/city/fixerpen
 	name = "fixer pen"

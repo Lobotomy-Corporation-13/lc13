@@ -8,16 +8,52 @@
 	damtype = RED_DAMAGE
 	attack_verb_continuous = list("bashes", "crushes")
 	attack_verb_simple = list("bash", "crush")
+	var/lifesteal = FALSE
+	var/cost = 10
+	var/heal = 10
+
+/obj/item/ego_weapon/city/kcorp/dropped(mob/user)
+	.=..()
+	lifesteal = FALSE
+
+/obj/item/ego_weapon/city/kcorp/attack(mob/living/target, mob/living/carbon/human/user)
+	..()
+	if(lifesteal == TRUE)
+		user.adjustBruteLoss(-heal)
+		user.adjustSanityLoss(cost)
+		if(user.sanityhealth <= cost)
+			lifesteal = FALSE
+			to_chat(user, span_notice("Your Kcorp Impact Serum System is deactivated."))
+
+/obj/item/ego_weapon/city/kcorp/attack_self(mob/living/carbon/human/user)
+	..()
+	if(!CanUseEgo(user))
+		return
+	if(user.sanityhealth > cost && lifesteal == FALSE)
+		lifesteal = TRUE
+		to_chat(user, span_notice("You activate your Kcorp Impact Serum System."))
+		return
+	else if(lifesteal == TRUE)
+		lifesteal = FALSE
+		to_chat(user, span_notice("You deactivate your Kcorp Impact Serum System."))
+		return
+	else
+		to_chat(user, span_notice("Your Kcorp Impact Serum System requires recharge."))
 
 /obj/item/ego_weapon/city/kcorp/axe
 	name = "K corp axe"
 	desc = "A green axe used by K corp employees."
 	icon_state = "kaxe"
 	inhand_icon_state = "kaxe"
-	force = 35
+	force = 50
+	stuntime = 5
+	swingstyle = WEAPONSWING_LARGESWEEP
 	attack_speed = 1.7
 	attack_verb_continuous = list("bashes", "crushes", "cleaves")
 	attack_verb_simple = list("bash", "crush", "cleave")
+	cost = 15
+	heal = 20
+
 
 //High level Kcorp weapons are grade 5
 /obj/item/ego_weapon/city/kcorp/spear
@@ -37,6 +73,8 @@
 	hitsound = 'sound/weapons/fixer/generic/kcorp1.ogg'
 	attack_verb_continuous = list("whacks", "slashes")
 	attack_verb_simple = list("whack", "slash")
+	cost = 20
+	heal = 15
 	attribute_requirements = list(
 							FORTITUDE_ATTRIBUTE = 80,
 							PRUDENCE_ATTRIBUTE = 60,
@@ -61,6 +99,8 @@
 	hitsound = 'sound/weapons/fixer/generic/kcorp1.ogg'
 	attack_verb_continuous = list("whacks", "slashes")
 	attack_verb_simple = list("whack", "slash")
+	cost = 5
+	heal = 5
 	attribute_requirements = list(
 							FORTITUDE_ATTRIBUTE = 80,
 							PRUDENCE_ATTRIBUTE = 60,
