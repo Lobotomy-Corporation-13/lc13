@@ -1,10 +1,10 @@
 /datum/job/enkrush_operations
 	title = "LCE Operations Agent"
-	department_head = list("Manager")
+	department_head = list("LCE Operations Officer")
 	faction = "Station"
 	total_positions = -1
 	spawn_positions = -1
-	supervisors = "the Manager"
+	supervisors = "The Operations Officer and Captain"
 	selection_color = "#ccaaaa"
 	exp_requirements = 240
 	exp_type = EXP_TYPE_SECURITY
@@ -20,10 +20,7 @@
 	allow_bureaucratic_error = FALSE
 	departments = DEPARTMENT_SECURITY
 
-	job_important = "\
-		You are a Limbus Company Enkephalin Researcher. \
-	 	As a member of the Operations division, your job is to work on and suppress Abnormalities, and secondarily to repair the damaged Lobotomy Corporation Branch. \
-		Use :h to talk on your departmental radio."
+	job_important = "You are a Limbus Company Enkephalin Researcher. As a member of the Operations division, your job is to work on and suppress Abnormalities, and secondarily to repair the damaged Lobotomy Corporation Branch. Use :h to talk on your departmental radio."
 
 	job_abbreviation = "O-AGT"
 

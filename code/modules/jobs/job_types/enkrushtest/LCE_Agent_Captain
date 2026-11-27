@@ -30,7 +30,6 @@
 /datum/outfit/job/agent/enkrush_captain
 	name = "LCE Agent Captain"
 	jobtype = /datum/job/agent/enkrush_captain
-	head = /obj/item/clothing/head/hos/beret
 	ears = /obj/item/radio/headset/heads/agent_captain/alt
 	l_pocket = /obj/item/commandprojector
 	l_hand = null
