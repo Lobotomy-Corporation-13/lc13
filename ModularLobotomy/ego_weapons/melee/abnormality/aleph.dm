@@ -2032,6 +2032,63 @@
 	to_chat(user, "<span class='warning'>You dash to [A]!")
 	balloon_alert(user, "You dash to [A]!")
 
+/obj/item/ego_weapon/shield/faithmarble//was thinking of making this a light source aswell, but nah
+    name = "astral aegis"//weapon made by sigma
+    desc = "The hands desperately try to reach the blue marble. \
+    Belief. Trust. Passion. The Stars illuminate the path to salvation, and countless hands reach forward to grasp it."
+    special = "This weapon reduces your sanity on a successful block."
+    icon_state = "marble"
+    inhand_icon_state = "marble"
+    force = 35//high armor stats penalty
+    damtype = BLACK_DAMAGE
+    attack_speed = 3
+    attack_verb_continuous = list("slams", "bashes", "blockades")
+    attack_verb_simple = list("slam", "bash", "blockade")
+    hitsound = 'sound/abnormalities/bluestar/pulse.ogg'
+    reductions = list(80, 50, 80, 50)//260, orders from high above
+    projectile_block_duration = 3 SECONDS
+    block_duration = 3 SECONDS
+    block_cooldown = 3 SECONDS
+    block_sound = 'sound/abnormalities/bluestar/pulse.ogg'
+    projectile_block_message = "Your star evaporates the unfaithful projectile!"
+    block_message = "You attempt to block the attack!"
+    hit_message = "blocks the attack!"
+    block_cooldown_message = "You rearm your shield."
+    attribute_requirements = list(
+							FORTITUDE_ATTRIBUTE = 100,
+							PRUDENCE_ATTRIBUTE = 100,
+							TEMPERANCE_ATTRIBUTE = 80,
+							JUSTICE_ATTRIBUTE = 80
+							)
+    color = LIGHT_COLOR_BLUE
+    light_system = MOVABLE_LIGHT
+    light_range = 0
+    light_power = 1
+    light_on = FALSE
+
+/obj/item/ego_weapon/shield/faithmarble/attack_self(mob/user)//Kindly took this from Eria code.
+	if(block == 0) //Extra check because shields returns nothing on 1
+		if(..())
+			RegisterSignal(user, COMSIG_ATOM_ATTACK_HAND, PROC_REF(NoParry), override = TRUE)//creates runtimes without overrides, double check if something's screwed
+			RegisterSignal(user, COMSIG_PARENT_ATTACKBY, PROC_REF(NoParry), override = TRUE)//728 and 729 must be able to unregister the signal of 730
+			return TRUE
+		else
+			return FALSE
+
+/obj/item/ego_weapon/shield/faithmarble/dropped(mob/user)
+	. = ..()
+	UnregisterSignal(user, COMSIG_ATOM_ATTACK_HAND, PROC_REF(NoParry))
+	UnregisterSignal(user, COMSIG_PARENT_ATTACKBY, PROC_REF(NoParry))
+
+/obj/item/ego_weapon/shield/faithmarble/proc/NoParry(mob/living/carbon/human/user, obj/item/L)//Disables AnnounceBlock when attacked by an item or a human
+	SIGNAL_HANDLER
+	UnregisterSignal(user, COMSIG_MOB_APPLY_DAMGE)
+
+/obj/item/ego_weapon/shield/faithmarble/AnnounceBlock(mob/living/carbon/human/source, damage, damagetype, def_zone)
+	to_chat(source,span_danger("You come closer to being a Star."))
+	source.adjustSanityLoss(15)//high
+	..()
+
 /obj/item/ego_weapon/faith
 	name = "starbound faith"
 	desc = "The blue marble is desperately clasped between two blackened hands. \

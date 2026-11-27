@@ -29,6 +29,11 @@
 	cost = 100
 	ego_tags = list(EGO_TAG_SUSTAIN, EGO_TAG_GUNBLADE)
 
+/datum/ego_datum/weapon/faithmarble
+	item_path = /obj/item/ego_weapon/shield/faithmarble
+	cost = 100
+	ego_tags = list(EGO_TAG_GUARD)
+
 /datum/ego_datum/armor/faith
 	item_path = /obj/item/clothing/suit/armor/ego_gear/aleph/faith
 	cost = 100

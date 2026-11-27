@@ -42,6 +42,7 @@
 	del_on_death = FALSE
 	ego_list = list(
 		/datum/ego_datum/weapon/faith,
+		/datum/ego_datum/weapon/faithmarble,
 		/datum/ego_datum/armor/faith,
 	)
 	gift_type =  /datum/ego_gifts/faith
