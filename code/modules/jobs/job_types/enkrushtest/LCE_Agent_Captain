@@ -1,0 +1,49 @@
+// Captain
+/datum/job/agent/enkrush_captain
+	title = "LCE Agent Captain"
+	selection_color = "#BB9999"
+	total_positions = 2
+	spawn_positions = 2
+	outfit = /datum/outfit/job/agent/enkrush_captain
+	display_order = JOB_DISPLAY_ORDER_CAPTAIN
+
+	access = list(ACCESS_COMMAND, ACCESS_SECURITY) // LC13:To-Do
+	minimal_access = list(ACCESS_COMMAND, ACCESS_SECURITY)
+	departments = DEPARTMENT_COMMAND | DEPARTMENT_SECURITY
+	exp_requirements = 6000
+	exp_type = EXP_TYPE_CREW
+	exp_type_department = EXP_TYPE_SECURITY
+	mapexclude = list("wonderlabs", "mini", "branch12")
+	job_important = "You are a Lead Researcher. You are in charge of your respective branch, either Researching Abnormalities, or Repairing the Lobotomy Corporation Branch."
+
+	job_abbreviation = "CPT"
+
+/datum/job/agent/captain/after_spawn(mob/living/carbon/human/outfit_owner, mob/M, latejoin = FALSE)
+	..()
+	var/datum/action/G = new /datum/action/cooldown/warbanner/captain
+	G.Grant(outfit_owner)
+
+	G = new /datum/action/cooldown/warcry/captain
+	G.Grant(outfit_owner)
+
+//mostly just set up for when we do have official stuff
+/datum/outfit/job/agent/enkrush_captain
+	name = "LCE Agent Captain"
+	jobtype = /datum/job/agent/enkrush_captain
+	ears = /obj/item/radio/headset/heads/agent_captain/alt
+	l_pocket = /obj/item/commandprojector
+	l_hand = null
+
+	backpack_contents = list(
+		/obj/item/melee/classic_baton,
+		/obj/item/info_printer,
+		/obj/item/announcementmaker/lcorp,
+	)
+
+/datum/action/cooldown/warbanner/captain
+	range = 6
+	affect_self = FALSE
+
+/datum/action/cooldown/warcry/captain
+	range = 6
+	affect_self = FALSE

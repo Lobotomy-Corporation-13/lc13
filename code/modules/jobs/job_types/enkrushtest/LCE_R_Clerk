@@ -1,0 +1,23 @@
+/datum/job/assistant/enkrush_recover_clerk
+	title = "LCE Recovery Clerk"
+	faction = "Station"
+	total_positions = -1
+	spawn_positions = -1
+	supervisors = "absolutely everyone"
+	selection_color = "#dddddd"
+	access = list(ACCESS_ROBOTICS)
+	minimal_access = list(ACCESS_ROBOTICS)
+	outfit = /datum/outfit/job/assistant
+	antag_rep = 7
+	display_order = JOB_DISPLAY_ORDER_CLERK
+
+	liver_traits = list(TRAIT_GREYTIDE_METABOLISM)
+
+	allow_bureaucratic_error = FALSE
+	departments = DEPARTMENT_SERVICE
+//	loadalways = TRUE
+	job_important = "You are a Recovery Clerk. You are unable to do work, but are expected to assist in repairing the damaged Lobotomy Corporation Branch. You also have tools in your belt to help Researchers."
+
+	job_abbreviation = "R-CLK"
+
+	clerk_belts = /obj/item/storage/belt/clerk/facility

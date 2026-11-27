@@ -67,6 +67,33 @@ GLOBAL_LIST_INIT(command_positions, list(
 	"Lead Researcher",
 
 	"Office Director",
+
+	// City heads
+	"Doctor",
+
+	//NeoCity Major
+	"Liu South Section 5 Director",
+	"Big Brother",
+	"Thumb Sottocapo",
+	"Udjat Captain",
+	"Grand Inquisitor",
+
+	//NeoCity Minor
+	"Blade Lineage Cutthroat",
+	"Dawn Office Operator",
+	"Full Stop Operator",
+	"Kurokumo Kashira",
+	"Shi South Section 2 Director",
+	"Streetlight Office Operator",
+	"Devyat North Section 3 Director",
+	"Zwei Veteran Fixer",
+	"Wedge Office Operator",
+
+	// Enk Rush Rework
+	"LCE Recovery Officer",
+	"LCE Operations Officer",
+	"LCE Agent Captain",
+
 	))
 
 
@@ -126,6 +153,16 @@ GLOBAL_LIST_INIT(service_positions, list(
 	"R-Corp Production Specialist",
 	"R-Corp Raven MP",
 	"R-Corp Messenger Raven",
+
+	//Neocity
+	"HHPP Chef",
+
+	//Enk Rush Rework
+	"LCE Recovery Clerk",
+	"LCE Operations Clerk",
+
+	//Neocity
+	"HHPP Chef",
 	))
 
 
@@ -155,6 +192,26 @@ GLOBAL_LIST_INIT(security_positions, list(
 	"Section B Robin",
 	"Section C Robin",
 	"R-Corp Rook",
+
+	//Neocity
+	"Grand Inquisitor",
+	"N Corp Grosshammer",
+	"N Corp Mittlehammer",
+	"N Corp Kleinhammer",
+
+	//Enk Rush Rework
+	"LCE Recovery Agent",
+	"LCE Operations Agent",
+<<<<<<< HEAD
+
+
+	//Neocity
+	"Grand Inquisitor",
+	"N Corp Grosshammer",
+	"N Corp Mittlehammer",
+	"N Corp Kleinhammer",
+=======
+>>>>>>> parent of 19c2a9bcef (Merge branch 'master' into enkephain-rush)
 	))
 
 
@@ -283,7 +340,6 @@ GLOBAL_LIST_INIT(city_antagonist_positions, list(
 	"Insurgence Nightwatch Agent",
 	"Insurgence Transport Agent",
 ))
-
 
 // job categories for rendering the late join menu
 GLOBAL_LIST_INIT(position_categories, list(
