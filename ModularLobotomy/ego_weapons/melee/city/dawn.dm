@@ -134,7 +134,7 @@
 /obj/item/ego_weapon/city/dawn/zwei/DawnAttack(mob/living/target, mob/living/carbon/human/user)
 	target.apply_lc_feeble(2)
 	user.apply_lc_protection(2)
-	if(get_dist(target, user) >= 2)]
+	if(get_dist(target, user) >= 2)
 		swingstyle = WEAPONSWING_STAB
 	else
 		swingstyle = initial(swingstyle)
