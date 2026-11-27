@@ -60,6 +60,11 @@
 			AdjustBlood(B.bloodiness)
 			new /obj/effect/temp_visual/cult/sparks(get_turf(B))
 		qdel(B)
+	for(var/obj/effect/decal/cleanable/trail_holder/TH in view(T, absorb_range)) //blood trails (not a child of /blood), worth a flat amount each
+		playsound(get_turf(TH), 'sound/abnormalities/nosferatu/bloodcollect.ogg', 5, 1)
+		AdjustBlood(10)
+		new /obj/effect/temp_visual/cult/sparks(get_turf(TH))
+		qdel(TH)
 
 // Visual blood splatters that appear in the same range as ScanForBlood(). This is just fluff.
 /datum/component/bloodfeast/proc/VisualEffect()

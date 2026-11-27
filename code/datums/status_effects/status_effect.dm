@@ -306,7 +306,7 @@ GLOBAL_LIST_EMPTY(status_display_numbers)
 	var/mutable_appearance/status_underlay
 	/// If set, this stacking effect shows a small 10x10 display icon on the mob in the same grid as /datum/status_effect/display
 	var/stacking_display_name
-	/// DMI from which we're getting our display icon
+	/// The .dmi the stacking display icon (the stacking_display_name state) is pulled from.
 	var/display_icon_file = 'ModularLobotomy/_Lobotomyicons/tegu_effects10x10.dmi'
 	/// The display icon image (client-side)
 	var/image/display_icon
